@@ -4,20 +4,20 @@
 = render 'search/meta_tags'
 
 - content_for :mixed_locations do
-  - if locations.any?
+  - if @searcher.results.any?
     .locations
       .hidden-locations
-        = render partial: 'search/map/location_marker', collection: locations, as: :location
-        %input{type: 'hidden', id: 'result_count', value: result_count}
-        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, search)}
-      = render 'search/mixed/pagination', locations: locations, result_count: result_count
-      = render partial: 'search/mixed/location', collection: locations, locals: {search: search}
-      = render 'search/mixed/pagination', locations: locations, result_count: result_count
-  - elsif !@located
+        = render partial: 'search/map/location_marker', collection: @searcher.results, as: :location
+        %input{type: 'hidden', id: 'result_count', value: @searcher.result_count}
+        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, @searcher.search)}
+      = render 'search/mixed/pagination', locations: @searcher.results, result_count: @searcher.result_count
+      = render partial: 'search/mixed/location', collection: @searcher.results, locals: {search: @searcher.search}
+      = render 'search/mixed/pagination', locations: @searcher.results, result_count: @searcher.result_count
+  - elsif !@searcher.located
     .locations
       .hidden-locations
-        %input{type: 'hidden', id: 'result_count', value: result_count}
-        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, search)}
+        %input{type: 'hidden', id: 'result_count', value: @searcher.result_count}
+        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, @searcher.search)}
       %div.no_results
         = render 'shared/loading_spinner'
         .text-center
@@ -28,8 +28,8 @@
   - else
     .locations
       .hidden-locations
-        %input{type: 'hidden', id: 'result_count', value: result_count}
-        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, search)}
+        %input{type: 'hidden', id: 'result_count', value: @searcher.result_count}
+        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, @searcher.search)}
       %div.no_results
         = render 'shared/loading_spinner'
         .text-center
@@ -37,7 +37,7 @@
           %br/
           %h1.tk-adelle.fat No results found, but!
           #search-notification
-            = render 'search_notifications/form', search_notification: search_notification
+            = render 'search_notifications/form', search_notification: @searcher.search_notification
 
 - content_for :hero do
   = render 'search/mixed/header'
@@ -50,14 +50,14 @@
           #listings_map.inner
     .list{:'data-list' => true}
       .filters{:'data-search-filters-container' => true}
-        = render :partial => 'search/mixed/filter', :locals => { :header_name => "#{platform_context.bookable_noun} Types", :selected_values => search.lgtypes_filters || [], :input_name => 'listing_types_ids[]', :options => @filterable_listing_types.map { |lt| [lt.name.downcase, lt.name] } }
-        = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Pricing', :selected_values => search.lgpricing_filters || [], :input_name => 'listing_pricing[]', :options => @filterable_pricing }
-        = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Location Type', :selected_values => search.lntypes_filters || [], :input_name => 'location_types_ids[]', :options => @filterable_location_types.map { |lt| [lt.name.downcase, lt.name ] } }
+        = render :partial => 'search/mixed/filter', :locals => { :header_name => "#{platform_context.bookable_noun} Types", :selected_values => @searcher.search.lgtypes_filters || [], :input_name => 'listing_types_ids[]', :options => @searcher.filterable_listing_types.map { |lt| [lt.name.downcase, lt.name] } }
+        = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Pricing', :selected_values => @searcher.search.lgpricing_filters || [], :input_name => 'listing_pricing[]', :options => @searcher.filterable_pricing }
+        = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Location Type', :selected_values => @searcher.search.lntypes_filters || [], :input_name => 'location_types_ids[]', :options => @searcher.filterable_location_types.map { |lt| [lt.name.downcase, lt.name ] } }
 
       .sort
         .results-count
           %h3#search_results_count
-            = result_count
+            = @searcher.result_count
             results
         .sort-by
           %span sort by

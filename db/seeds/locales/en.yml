@@ -152,6 +152,7 @@ en:
       marked_transferred: "Marked payment transfer as transferred"
     search_notifications:
       you_will_be_notified: "You will be notified when a %{bookable_noun} is added at this location."
+      you_will_not_be_notified: "We could not add you to the notifcation list because your email \"%{email}\" %{errors}"
     listings:
       listing_inactive: "This listing is inactive. Displaying other listings in this location."
       listing_disabled: "This listing has been temporarily disabled by the owner. Displaying other listings in this location."

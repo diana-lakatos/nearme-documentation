@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
   prepend_view_path FooterResolver.instance
+  prepend_view_path InstanceViewResolver.instance
+
   before_filter :require_ssl
   before_filter :log_out_if_token_exists
   before_filter :log_out_if_sso_logout
@@ -363,5 +365,12 @@ class ApplicationController < ActionController::Base
     Raygun.configuration.failsafe_logger = true
     Raygun.track_exception(exception)
     Raygun.configuration.failsafe_logger = false
+  end
+
+  def details_for_lookup
+    {
+      :instance_type_id => PlatformContext.current.try(:instance_type).try(:id),
+      :instance_id => PlatformContext.current.try(:instance).try(:id)
+    }
   end
 end

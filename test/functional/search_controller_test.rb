@@ -82,8 +82,8 @@ class SearchControllerTest < ActionController::TestCase
 
           get :index, { :loc => 'Auckland', :industries_ids => [filtered_industry.id], :v => 'list' }
 
-          assert_location_in_result(filtered_auckland) 
-          refute_location_in_result(another_auckland) 
+          assert_location_in_result(filtered_auckland)
+          refute_location_in_result(another_auckland)
         end
       end
 
@@ -130,8 +130,8 @@ class SearchControllerTest < ActionController::TestCase
 
           should 'in mixed view' do
             get :index, loc: 'Adelaide', v: 'mixed'
-            assert_location_in_result(@adelaide) 
-            refute_location_in_result(@auckland) 
+            assert_location_in_result(@adelaide)
+            refute_location_in_result(@auckland)
           end
 
           context 'in list view' do
@@ -198,9 +198,9 @@ class SearchControllerTest < ActionController::TestCase
       @location_type = FactoryGirl.create(:location_type)
       @industry = FactoryGirl.create(:industry)
       expected_custom_options = {
-        search_query: 'adelaide', 
+        search_query: 'adelaide',
         result_view: 'list',
-        result_count: 0, 
+        result_count: 0,
         listing_type_filter: [@listing_type.name],
         location_type_filter: [@location_type.name],
         industry_filter: [@industry.name]
@@ -215,9 +215,9 @@ class SearchControllerTest < ActionController::TestCase
       @listing_type = FactoryGirl.create(:listing_type)
       @location_type = FactoryGirl.create(:location_type)
       expected_custom_options = {
-        search_query: 'adelaide', 
+        search_query: 'adelaide',
         result_view: 'mixed',
-        result_count: 0, 
+        result_count: 0,
         listing_type_filter: [@listing_type.name],
         location_type_filter: [@location_type.name],
         listing_pricing_filter: ['daily']
@@ -240,7 +240,6 @@ class SearchControllerTest < ActionController::TestCase
 
     should 'not track second search for the same query if filters have not been changed' do
       @tracker.expects(:conducted_a_search).once
-      Rails.logger.debug 'failingtest'
       get :index, :loc => 'adelaide'
       get :index, :loc => 'adelaide'
     end

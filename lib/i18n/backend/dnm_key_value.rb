@@ -93,6 +93,8 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
     locales.compact!
     locales.map! { |k| k.to_sym }
     locales
+  rescue
+    []
   end
 
 

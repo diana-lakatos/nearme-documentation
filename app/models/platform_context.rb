@@ -18,7 +18,7 @@
 # only records that belong to current platform context. See these classes at app/models/platform_context/ for more information.
 
 class PlatformContext
-  attr_reader :domain, :platform_context_detail, :instance, :theme, :domain,
+  attr_reader :domain, :platform_context_detail, :instance_type, :instance, :theme, :domain,
     :white_label_company, :partner, :request_host, :blog_instance
 
   class_attribute :root_secured
@@ -103,6 +103,7 @@ class PlatformContext
     @partner = partner
     @platform_context_detail = @partner
     @instance = @partner.instance
+    @instance_type = @instance.instance_type
     @theme = @partner.theme.presence
     @domain ||= @partner.domain
     self
@@ -113,6 +114,7 @@ class PlatformContext
       @white_label_company = company
       @platform_context_detail = @white_label_company
       @instance = company.instance
+      @instance_type = @instance.instance_type
       @theme = company.theme
       @domain ||= company.domain
     else
@@ -127,6 +129,7 @@ class PlatformContext
 
   def initialize_with_instance(instance)
     @instance = instance
+    @instance_type = @instance.instance_type
     @platform_context_detail = @instance
     @theme = @instance.theme
     # the reason why we don't want default instance to have domain is that currently it has assigned only one domain as a hack - api.desksnear.me and

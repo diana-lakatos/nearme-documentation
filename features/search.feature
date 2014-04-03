@@ -9,12 +9,12 @@ Feature: A user can search for a listing
 
   Scenario: Returning to the search results shows the previous results
     Given a listing in Auckland exists
-      And a listing in Adelaide exists
-     When I search for "Adelaide"
-      And I make another search for "Auckland"
-      And I leave the page and hit back
-     Then I see a search result for the Auckland listing
-      And I do not see a search result for the Adelaide listing
+    And a listing in Adelaide exists
+    When I search for "Adelaide"
+    And I make another search for "Auckland"
+    And I leave the page and hit back
+    Then I see a search result for the Auckland listing
+    And I do not see a search result for the Adelaide listing
 
   Scenario: Subscribing on notification about new listings if no listings found for valid location.
     When I search for located "New Zealand"
@@ -25,7 +25,7 @@ Feature: A user can search for a listing
     And search notification created with "New Zealand"
 
   Scenario: Subscribing on notification about new listings if no listings found for valid location
-            for registered user.
+    for registered user.
     Given the user exists
     And I log in as a user
     When I search for located "New Zealand"

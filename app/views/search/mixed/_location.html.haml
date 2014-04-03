@@ -43,7 +43,7 @@
                   = listing_type_data[:name]
                   (#{listing_type_data[:count]})
 
-    .tabbable 
+    .tabbable
       .tab-content
         - listing_types_data.each_with_index do |(listing_type_id, listing_type_data), i|
           .tab-pane{id: "listing-types-#{location.id}-#{listing_type_id}", class: i.zero? ? 'active' : '' }
