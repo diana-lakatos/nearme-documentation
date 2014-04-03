@@ -9,9 +9,9 @@ class Search.MapMixed extends Search.Map
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     disableDefaultUI: true,
     zoomControl: true
-  
+
   constructor: (@container, controller) ->
-    super 
+    super
 
   initializeGoogleMap: ->
     @googleMap = SmartGoogleMap.createMap(@container, GOOGLE_MAP_OPTIONS, { exclude: ['draggable'] })
@@ -30,10 +30,10 @@ class Search.MapMixed extends Search.Map
 
     google.maps.event.addListener @googleMap, 'zoom_changed', =>
       @trigger 'viewportChanged'
-    
+
     google.maps.event.addListener @googleMap, 'click', (e)=>
-      @trigger 'click' 
-      
+      @trigger 'click'
+
     null
 
 
@@ -61,7 +61,7 @@ class Search.MapMixed extends Search.Map
 
     google.maps.event.addListener marker, 'click', =>
       @search_controller.markerClicked(marker)
-    
+
     marker.setVisible(true)
 
 
