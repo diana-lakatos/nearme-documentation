@@ -5,7 +5,7 @@ module Metadata
     included do
 
       def populate_listings_metadata!
-        update_metadata({ 
+        update_metadata({
           has_draft_listings: listings.reload.draft.any?,
           has_any_active_listings: listings.reload.active.any?
         })
@@ -18,7 +18,7 @@ module Metadata
       end
 
       def build_instance_admins_metadata
-        instance_admins.reload.inject({}) do |instance_admin_hash, instance_admin|
+        InstanceAdmin.unscoped.where(:user_id => self.id).all.inject({}) do |instance_admin_hash, instance_admin|
           instance_admin_hash[instance_admin.instance_id.to_s] = instance_admin.first_permission_have_access_to
           instance_admin_hash
         end

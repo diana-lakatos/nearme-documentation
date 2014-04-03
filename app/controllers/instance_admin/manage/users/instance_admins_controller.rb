@@ -7,8 +7,12 @@ class InstanceAdmin::Manage::Users::InstanceAdminsController < InstanceAdmin::Ma
   def create
     @user = User.where(:email => params[:email]).first
     if @user
-      InstanceAdmin.create(:user_id => @user.id) unless InstanceAdmin.where(:user_id => @user.id).first.present?
-      flash[:success] = "User with email #{@user.email} has been successfully added as admin"
+      if InstanceAdmin.where(:user_id => @user.id).first.present?
+        flash[:warning] = "User with email #{@user.email} has already been added as admin"
+      else
+        InstanceAdmin.create(:user_id => @user.id)
+        flash[:success] = "User with email #{@user.email} has been successfully added as admin"
+      end
       redirect_to instance_admin_manage_users_path
     else
       flash[:error] = "Unfortunately we could not find user with email \"#{params[:email]}\""
