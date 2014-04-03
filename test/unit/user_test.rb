@@ -169,7 +169,7 @@ class UserTest < ActiveSupport::TestCase
     should 'find rejected reservations' do
       @user = FactoryGirl.create(:user, :reservations => [
         FactoryGirl.create(:reservation, :state => 'unconfirmed'),
-        FactoryGirl.create(:reservation, :state => 'rejected') 
+        FactoryGirl.create(:reservation, :state => 'rejected')
       ])
       assert_equal 1, @user.rejected_reservations.count
     end
@@ -177,7 +177,7 @@ class UserTest < ActiveSupport::TestCase
     should 'find confirmed reservations' do
       @user = FactoryGirl.create(:user, :reservations => [
         FactoryGirl.create(:reservation, :state => 'unconfirmed'),
-        FactoryGirl.create(:reservation, :state => 'confirmed') 
+        FactoryGirl.create(:reservation, :state => 'confirmed')
       ])
       assert_equal 1, @user.confirmed_reservations.count
     end
@@ -185,7 +185,7 @@ class UserTest < ActiveSupport::TestCase
     should 'find expired reservations' do
       @user = FactoryGirl.create(:user, :reservations => [
         FactoryGirl.create(:reservation, :state => 'unconfirmed'),
-        FactoryGirl.create(:reservation, :state => 'expired') 
+        FactoryGirl.create(:reservation, :state => 'expired')
       ])
       assert_equal 1, @user.expired_reservations.count
     end
@@ -434,7 +434,7 @@ class UserTest < ActiveSupport::TestCase
 
     should 'not spam user' do
       UserMailer.expects(:notify_about_wrong_phone_number).returns(mailer_stub).once
-      5.times do 
+      5.times do
         @user.notify_about_wrong_phone_number
       end
     end
@@ -622,7 +622,7 @@ class UserTest < ActiveSupport::TestCase
       listing_second = FactoryGirl.create(:listing_in_auckland)
       reservation = FactoryGirl.create(:reservation, listing: listing_first, user: @user)
       reservation.reject
-      assert_equal [listing_second], @user.listings_in_near(3, 100, true) 
+      assert_equal [listing_second], @user.listings_in_near(3, 100, true)
     end
   end
 
@@ -760,10 +760,15 @@ class UserTest < ActiveSupport::TestCase
         @user = @instance_admin.user
       end
 
-      should 'populate correct instance_admin hash' do
-        @user.expects(:update_metadata).with({ 
+      should 'populate correct instance_admin hash across instances' do
+        PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
+        @random_instance_admin = FactoryGirl.create(:instance_admin)
+        PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
+        @other_instance_admin = FactoryGirl.create(:instance_admin, user: @user)
+        @user.expects(:update_metadata).with({
           :instance_admins_metadata => {
-            "#{@instance_admin.instance_id}" => 'analytics'
+            "#{@instance_admin.instance_id}" => 'analytics',
+            "#{@other_instance_admin.instance_id}" => 'analytics'
           }
         })
         @user.populate_instance_admins_metadata!
@@ -788,8 +793,8 @@ class UserTest < ActiveSupport::TestCase
     @reservation_charge = FactoryGirl.create(:reservation_charge, :reservation => @reservation)
     @charge = FactoryGirl.create(:charge, :reference => @reservation_charge)
     @payment_transfer = FactoryGirl.create(:payment_transfer, :company_id => @company.id)
-    @objects = [@user, @user_industry, @authentication, @company, @company_industry, 
-                @location, @listing, @photo, @reservation, @reservation_period, 
+    @objects = [@user, @user_industry, @authentication, @company, @company_industry,
+                @location, @listing, @photo, @reservation, @reservation_period,
                 @payment_transfer, @reservation_charge, @charge]
   end
 
