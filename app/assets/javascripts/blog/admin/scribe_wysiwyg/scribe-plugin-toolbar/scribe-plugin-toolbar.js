@@ -60,4 +60,3 @@ define('scribe-plugin-toolbar',[],function () {
 
 });
 
-//# sourceMappingURL=scribe-plugin-toolbar.js.map

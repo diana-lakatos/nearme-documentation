@@ -4248,4 +4248,3 @@ define('scribe',[
 
 });
 
-//# sourceMappingURL=scribe.js.map

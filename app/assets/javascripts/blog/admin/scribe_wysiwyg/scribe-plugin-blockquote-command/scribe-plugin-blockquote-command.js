@@ -55,4 +55,3 @@ define('scribe-plugin-blockquote-command',[],function () {
 
 });
 
-//# sourceMappingURL=scribe-plugin-blockquote-command.js.map

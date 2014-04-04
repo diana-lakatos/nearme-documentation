@@ -97,4 +97,3 @@ define('scribe-plugin-smart-lists',[],function () {
 
 });
 
-//# sourceMappingURL=scribe-plugin-smart-lists.js.map
