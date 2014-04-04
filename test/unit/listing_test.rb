@@ -125,18 +125,18 @@ class ListingTest < ActiveSupport::TestCase
       refute @listing.valid?
     end
 
-    context 'instance has pricing constraints' do
+    context 'instance observes min/max pricing constraints specified by instance admin' do
 
       setup do
         PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance_with_price_constraints))
       end
 
-      should 'be valid if hourly price in range' do
+      should 'be valid if hourly price within specified range' do
         listing = FactoryGirl.create(:listing_from_instance_with_price_constraints)
         assert listing.valid?
       end
 
-      should 'be invalid if hourly price out of range' do
+      should 'be invalid if hourly price outside specified range' do
         listing = FactoryGirl.create(:thousand_dollar_listing_from_instance_with_price_constraints)
         listing.hourly_price = 100000
         refute listing.valid?
@@ -153,6 +153,28 @@ class ListingTest < ActiveSupport::TestCase
         listing.instance.min_hourly_price = nil
         assert listing.valid?
       end
+    end
+  end
+
+  context 'instance observes default min/max pricing constraints' do
+
+    setup do
+      @listing = FactoryGirl.create(:listing)
+    end
+
+    should 'be valid if hourly price within range' do
+      @listing.hourly_price = 1
+      assert @listing.valid?
+    end
+
+    should 'be invalid if hourly price outside min range' do
+      @listing.hourly_price = -1
+      refute @listing.valid?
+    end
+
+    should 'be invalid if hourly price outside max range' do
+      @listing.hourly_price = 2147483648
+      refute @listing.valid?
     end
   end
 
