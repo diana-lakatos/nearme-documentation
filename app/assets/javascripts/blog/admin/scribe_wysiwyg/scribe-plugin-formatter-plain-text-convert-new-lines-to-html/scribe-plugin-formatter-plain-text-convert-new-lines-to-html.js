@@ -12,4 +12,3 @@ define('scribe-plugin-formatter-plain-text-convert-new-lines-to-html',[],functio
 
 });
 
-//# sourceMappingURL=scribe-plugin-formatter-plain-text-convert-new-lines-to-html.js.map

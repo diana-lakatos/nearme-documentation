@@ -50,4 +50,3 @@ define('scribe-plugin-intelligent-unlink-command',[],function () {
 
 });
 
-//# sourceMappingURL=scribe-plugin-intelligent-unlink-command.js.map

@@ -53,4 +53,3 @@ define('scribe-plugin-heading-command',[],function () {
 
 });
 
-//# sourceMappingURL=scribe-plugin-heading-command.js.map

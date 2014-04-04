@@ -1410,4 +1410,3 @@ define('scribe-plugin-keyboard-shortcuts',[
 
 });
 
-//# sourceMappingURL=scribe-plugin-keyboard-shortcuts.js.map
