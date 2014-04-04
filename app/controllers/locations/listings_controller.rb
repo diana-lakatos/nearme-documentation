@@ -8,7 +8,7 @@ class Locations::ListingsController < ApplicationController
   protected
 
   def find_listing
-    @listing = Listing.with_deleted.find(params[:id])
+    @listing = Transactable.with_deleted.find(params[:id])
     @location = @listing.location
   end
 

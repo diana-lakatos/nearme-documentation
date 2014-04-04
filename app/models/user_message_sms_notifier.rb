@@ -1,7 +1,7 @@
 class UserMessageSmsNotifier < SmsNotifier
   def notify_user_about_new_message(user_message)
     return unless user_message.recipient.accepts_sms_with_type?(:user_message)
-    @user_message = user_message
+    @user_message = user_message.decorate
     @user = user_message.recipient
     @message_size = 10
     user_message_body = @user_message.body

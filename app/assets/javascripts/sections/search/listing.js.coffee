@@ -34,10 +34,10 @@ class Search.Listing
     @setElement(html)
 
   bindEvents: ->
-  
+
   element: ->
     @_element
-  
+
   id: ->
     @_id
 

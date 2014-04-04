@@ -4,8 +4,8 @@
 #  1) platform context is instance
 #
 #   In this case, we would like to add WHERE('models.instance_id = ?', <instance_id>) to all queries. This assumes that model
-#   has already instance_id column in db. All white label companies have possibility to say, that they want their listings to be private, meaning 
-#   they want them to be accessible only via their domain. That's why we want to also add WHERE('models.listings_public = ?', true) to models that support this 
+#   has already instance_id column in db. All white label companies have possibility to say, that they want their listings to be private, meaning
+#   they want them to be accessible only via their domain. That's why we want to also add WHERE('models.listings_public = ?', true) to models that support this
 #   setting.
 #
 #  2) platform context is a partner
@@ -14,8 +14,8 @@
 #
 #   a) partner has scoping enabled [ partner.search_scope_option == 'all_associated_listings' ]
 #   In this case we want to add WHERE('models.partner_id = ?', <partner_id) to all queries. This will be applied only to models that have
-#   column partner_id. If they don't have it, we assume that model should not be scoped to partner and then we just add query for instance_id 
-#   instead ( This is the case for example for AmenityType, ListingType, LocationType etc. - they are shared between partners). 
+#   column partner_id. If they don't have it, we assume that model should not be scoped to partner and then we just add query for instance_id
+#   instead ( This is the case for example for AmenityType, ListingType, LocationType etc. - they are shared between partners).
 #   We also want to scope to listings_public = true where appropriate.
 #
 #   b) partner has scoping disabled [ partner.search_scope_option == 'no_scoping' ]
@@ -40,15 +40,15 @@
 #  PlatformContext.scope_to_instance . This will make PlatformContext.scoped_to_instance? return true, and we will just add WHERE('models.instance_id = ?', <instance_id>) no matter
 #  if we are on white label company domain, partner domain and no matter if models respond to listings_public.
 #
-#  4) Similary in dashboard, we want to force instance scope via PlatformContext.scope_to_instance. There is an edge case for default scoping: 
-#  if logged in user has created white label company with listings_public = false, and he enters instance domain, by default we scope to listings_public = true, 
+#  4) Similary in dashboard, we want to force instance scope via PlatformContext.scope_to_instance. There is an edge case for default scoping:
+#  if logged in user has created white label company with listings_public = false, and he enters instance domain, by default we scope to listings_public = true,
 #  meaning he wouldn't be able to change his settings via instance domain. To allow him to do this, we scope to company in dashboard manually.
 
 #  Usage:
 #
 #  add scoped_to_platform_context to model, for example
 #
-#  Listing.rb
+#  Transactable.rb
 #  scoped_to_platform_context
 #
 #  Method takes as argument options hash, with keys:
@@ -101,12 +101,12 @@ module PlatformContext::DefaultScoper
   # has much more complex scoping logic - it is scoped to white label company and/or partner and/or instance.
   # The purpose of this class is to recognize to what scopes model should respond [ based on db columns - we
   # assume that if model has partner_id column, it should be scoped also to partner, if it has company_id, it should
-  # be scoped to white label company etc ]. 
+  # be scoped to white label company etc ].
   #
-  # Usage: 
+  # Usage:
   #
   # None. This is internal class, used only by this method to generate proper string for class. Should not be used in application.
- 
+
   class ::DefaultScopeBuilder
 
     def initialize(klass, options = {})

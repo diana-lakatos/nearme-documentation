@@ -18,11 +18,11 @@ class User < ActiveRecord::Base
   has_many :companies, :through => :company_users, :order => "company_users.created_at ASC"
   has_many :created_companies, :class_name => "Company", :foreign_key => 'creator_id', :inverse_of => :creator
   has_many :administered_locations, :class_name => "Location", :foreign_key => 'administrator_id', :inverse_of => :administrator
-  has_many :administered_listings, :class_name => "Listing", :through => :administered_locations, :source => :listings
+  has_many :administered_listings, :class_name => "Transactable", :through => :administered_locations, :source => :listings
   has_many :instance_admins, :foreign_key => 'user_id', :dependent => :destroy
   has_many :locations, :through => :companies
   has_many :reservations, :foreign_key => 'owner_id'
-  has_many :listings, :through => :locations
+  has_many :listings, :through => :locations, class_name: 'Transactable'
   has_many :photos, :foreign_key => 'creator_id'
   has_many :listing_reservations, :through => :listings, :source => :reservations
   has_many :relationships, :class_name => "UserRelationship", :foreign_key => 'follower_id', :dependent => :destroy
@@ -49,7 +49,7 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :companies
 
   scope :patron_of, lambda { |listing|
-    joins(:reservations).where(:reservations => { :listing_id => listing.id }).uniq
+    joins(:reservations).where(:reservations => { :transactable_id => listing.id }).uniq
   }
 
   scope :needs_mailchimp_update, -> {
@@ -406,12 +406,12 @@ class User < ActiveRecord::Base
       locations_in_near = Location.near([last_geolocated_location_latitude, last_geolocated_location_longitude], radius_in_km, units: :km, order: :distance)
     end
 
-    listing_ids_of_cancelled_reservations = self.reservations.cancelled_or_expired_or_rejected.pluck(:listing_id) if without_listings_from_cancelled_reservations
+    listing_ids_of_cancelled_reservations = self.reservations.cancelled_or_expired_or_rejected.pluck(:transactable_id) if without_listings_from_cancelled_reservations
 
     listings = []
     locations_in_near.includes(:listings).each do |location|
       if without_listings_from_cancelled_reservations and !listing_ids_of_cancelled_reservations.empty?
-        listings += location.listings.searchable.where('listings.id NOT IN (?)', listing_ids_of_cancelled_reservations).limit((listings.size - results_size).abs)
+        listings += location.listings.searchable.where('transactables.id NOT IN (?)', listing_ids_of_cancelled_reservations).limit((listings.size - results_size).abs)
       else
         listings += location.listings.searchable.limit((listings.size - results_size).abs)
       end

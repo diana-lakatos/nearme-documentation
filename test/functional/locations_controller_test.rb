@@ -3,9 +3,9 @@ require 'test_helper'
 class LocationsControllerTest < ActionController::TestCase
 
   setup do
-    @location = FactoryGirl.create(:location_in_auckland) 
-    @listing = FactoryGirl.create(:listing, :location => @location)
-    @second_listing = FactoryGirl.create(:listing, :location => @location)
+    @location = FactoryGirl.create(:location_in_auckland)
+    @listing = FactoryGirl.create(:transactable, :location => @location)
+    @second_listing = FactoryGirl.create(:transactable, :location => @location)
     stub_mixpanel
   end
 

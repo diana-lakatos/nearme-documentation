@@ -3,7 +3,7 @@ require "test_helper"
 class Listing::WebSerializationTest < ActiveSupport::TestCase
   context "a listing should have all the default attributes" do
     setup do
-      @listing = FactoryGirl.create(:listing)
+      @listing = FactoryGirl.create(:transactable)
       @serializer = ListingWebSerializer.new(@listing)
       @json = @serializer.as_json[:listing]
     end

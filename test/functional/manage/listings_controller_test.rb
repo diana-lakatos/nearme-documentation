@@ -14,7 +14,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
 
   context "#create" do
     setup do
-      @attributes = FactoryGirl.attributes_for(:listing).reverse_merge!({:photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type_id => @listing_type.id, :daily_price => 10 })
+      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge!({:photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type_id => @listing_type.id, :daily_price => 10 })
       @attributes.delete(:photo_not_required)
     end
 
@@ -46,7 +46,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
   context "with listing" do
 
     setup do
-      @listing = FactoryGirl.create(:listing, :location => @location, :photos_count_to_be_created => 1, :quantity => 2)
+      @listing = FactoryGirl.create(:transactable, :location => @location, :photos_count_to_be_created => 1, :quantity => 2)
     end
 
     context 'CRUD' do
@@ -57,7 +57,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
 
         @related_company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id, instance: @related_instance)
         @related_location = FactoryGirl.create(:location_in_auckland, company: @related_company)
-        @related_listing = FactoryGirl.create(:listing, location: @related_location)
+        @related_listing = FactoryGirl.create(:transactable, location: @related_location)
       end
 
       context "#edit" do
@@ -67,7 +67,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
         end
 
         should 'not allow show edit form for unrelated listing' do
-          assert_raises(Listing::NotFound) { get :edit, :id => @listing.id, :location_id => @location.id }
+          assert_raises(Transactable::NotFound) { get :edit, :id => @listing.id, :location_id => @location.id }
         end
       end
 
@@ -80,7 +80,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
         end
 
         should 'not allow update for unrelated listing' do
-          assert_raises(Listing::NotFound) { put :update, :id => @listing.id, :listing => { :name => 'new name', :daily_price => 10 } }
+          assert_raises(Transactable::NotFound) { put :update, :id => @listing.id, :listing => { :name => 'new name', :daily_price => 10 } }
           @listing.reload
           refute_equal 'new name', @related_listing.name
         end
@@ -91,15 +91,15 @@ class Manage::ListingsControllerTest < ActionController::TestCase
           @tracker.expects(:deleted_a_listing).with do |listing, custom_options|
             listing == assigns(:listing)
           end
-          assert_difference 'Listing.count', -1 do
+          assert_difference 'Transactable.count', -1 do
             delete :destroy, :id => @related_listing.id
           end
           assert_redirected_to manage_locations_path
         end
 
         should 'not allow destroy for unrelated listing' do
-          assert_no_difference('Listing.count') do
-            assert_raises(Listing::NotFound) { delete :destroy, :id => @listing.id }
+          assert_no_difference('Transactable.count') do
+            assert_raises(Transactable::NotFound) { delete :destroy, :id => @listing.id }
           end
         end
       end
@@ -170,7 +170,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
         ReservationMailer.stubs(:notify_host_of_expiration).returns(stub(deliver: true))
 
         delete :destroy, :id => @listing.id
-        assert_equal 'expired', @reservation1.reload.state 
+        assert_equal 'expired', @reservation1.reload.state
         assert_equal 'expired', @reservation2.reload.state
       end
     end
@@ -186,24 +186,24 @@ class Manage::ListingsControllerTest < ActionController::TestCase
 
       should "not create listing" do
         assert_raise Location::NotFound do
-          post :create, { :listing => FactoryGirl.attributes_for(:listing).reverse_merge!({:listing_type_id => @listing_type.id}), :location_id => @location.id}
+          post :create, { :listing => FactoryGirl.attributes_for(:transactable).reverse_merge!({:listing_type_id => @listing_type.id}), :location_id => @location.id}
         end
       end
 
       should 'handle lack of permission to edit properly' do
-        assert_raise Listing::NotFound do
+        assert_raise Transactable::NotFound do
           get :edit, :id => @listing.id
         end
       end
 
       should "not update listing" do
-        assert_raise Listing::NotFound do
+        assert_raise Transactable::NotFound do
           put :update, :id => @listing.id, :listing => { :name => 'new name' }
         end
       end
 
       should "not destroy listing" do
-        assert_raise Listing::NotFound do
+        assert_raise Transactable::NotFound do
           delete :destroy, :id => @listing.id
         end
       end
@@ -213,10 +213,10 @@ class Manage::ListingsControllerTest < ActionController::TestCase
   context 'versions' do
 
     should 'track version change on create' do
-      @attributes = FactoryGirl.attributes_for(:listing).reverse_merge!({:photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type_id => @listing_type.id, :daily_price => 10 })
+      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge!({:photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type_id => @listing_type.id, :daily_price => 10 })
       @attributes.delete(:photo_not_required)
       stub_mixpanel
-      assert_difference('Version.where("item_type = ? AND event = ?", "Listing", "create").count') do
+      assert_difference('Version.where("item_type = ? AND event = ?", "Transactable", "create").count') do
         with_versioning do
           post :create, { :listing => @attributes, :location_id => @location2.id }
         end
@@ -225,8 +225,8 @@ class Manage::ListingsControllerTest < ActionController::TestCase
     end
 
     should 'track version change on update' do
-      @listing = FactoryGirl.create(:listing, :location => @location, :photos_count => 1, :quantity => 2)
-      assert_difference('Version.where("item_type = ? AND event = ?", "Listing", "update").count') do
+      @listing = FactoryGirl.create(:transactable, :location => @location, :quantity => 2)
+      assert_difference('Version.where("item_type = ? AND event = ?", "Transactable", "update").count') do
         with_versioning do
           put :update, :id => @listing.id, :listing => { :name => 'new name', :daily_price => 10 }
         end
@@ -235,8 +235,8 @@ class Manage::ListingsControllerTest < ActionController::TestCase
 
     should 'track version change on destroy' do
       stub_mixpanel
-      @listing = FactoryGirl.create(:listing, :location => @location, :photos_count => 1, :quantity => 2)
-      assert_difference('Version.where("item_type = ? AND event = ?", "Listing", "destroy").count') do
+      @listing = FactoryGirl.create(:transactable, :location => @location, :quantity => 2)
+      assert_difference('Version.where("item_type = ? AND event = ?", "Transactable", "destroy").count') do
         with_versioning do
           delete :destroy, :id => @listing.id
         end

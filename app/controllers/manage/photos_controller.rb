@@ -9,14 +9,14 @@ class Manage::PhotosController < Manage::BaseController
     @photo.creator_id = current_user.id
     if @photo.save
       render :text => {
-        :id => @photo.id, 
-        :listing_id => @photo.listing_id,
+        :id => @photo.id,
+        :transactable_id => @photo.transactable_id,
         :thumbnail_dimensions => @photo.image.thumbnail_dimensions[:medium],
         :url => @photo.image_url(:medium),
         :destroy_url => destroy_space_wizard_photo_path(@photo),
         :resize_url =>  edit_manage_photo_path(@photo)
-      }.to_json, 
-      :content_type => 'text/plain' 
+      }.to_json,
+      :content_type => 'text/plain'
     else
       render :text => [{:error => @photo.errors.full_messages}], :content_type => 'text/plain', :status => 422
     end
@@ -54,7 +54,7 @@ class Manage::PhotosController < Manage::BaseController
     # we came from list your space flow
     if params[:user]
       photo_params = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"]
-      @listing = Listing.find(photo_params[:id]) if photo_params[:id]
+      @listing = Transactable.find(photo_params[:id]) if photo_params[:id]
     # we came from dashboard
     elsif params[:listing]
       photo_params = params[:listing]

@@ -1,6 +1,6 @@
 class UserMessageThreadConfigurator
 
-  AVAILABLE_CONTEXTS = [Listing, User, Reservation]
+  AVAILABLE_CONTEXTS = [Transactable, User, Reservation]
 
   def initialize(user_message, request_params)
     @user_message = user_message
@@ -20,11 +20,12 @@ class UserMessageThreadConfigurator
 
     AVAILABLE_CONTEXTS.each do |context_class|
       context_id_key = context_class.to_s.foreign_key.to_sym
+      context_id_key = :listing_id if context_id_key == :transactable_id
       if @request_params[context_id_key].present?
         @message_context = context_class.with_deleted.find(@request_params[context_id_key]).decorate
       end
     end
-    
+
     raise DNM::MessageContextNotAvailable if @message_context.nil?
   end
 

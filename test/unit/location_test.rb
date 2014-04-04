@@ -27,7 +27,7 @@ class LocationTest < ActiveSupport::TestCase
 
   should "be valid even if its listing is not valid" do
     @location = FactoryGirl.create(:location)
-    @listing = FactoryGirl.create(:listing, :location => @location)
+    @listing = FactoryGirl.create(:transactable, :location => @location)
     @listing.name = nil
     @listing.save(:validate => false)
     @location.reload
@@ -68,7 +68,7 @@ class LocationTest < ActiveSupport::TestCase
       context "and there is a listing with a description" do
         should "return the first listings description" do
           location = Location.new
-          listing = Listing.new(description: "listing description")
+          listing = Transactable.new(description: "listing description")
           location.listings << listing
           assert_equal "listing description", location.description
         end
@@ -207,7 +207,7 @@ class LocationTest < ActiveSupport::TestCase
 
     context 'populating hash' do
       setup do
-        @location = FactoryGirl.create(:listing).location
+        @location = FactoryGirl.create(:transactable).location
         @photo = @location.photos.first
       end
 

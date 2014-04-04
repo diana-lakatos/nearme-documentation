@@ -55,4 +55,8 @@ class ReservationSerializer < ApplicationSerializer
       currency_code: object.total_amount.currency.iso_code
     }
   end
+
+  def listing_id
+    object.transactable_id
+  end
 end

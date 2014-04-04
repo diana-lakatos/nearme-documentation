@@ -123,7 +123,7 @@ namespace :populate do
   task :top_cities => :environment do
     Utils::FakeDataSeeder::Data.top_cities.each do |city_name, city|
       city.reverse.each_with_index do |listing_id, index|
-        listing = Listing.find_by_id(listing_id)
+        listing = Transactablefind_by_id(listing_id)
         if listing
           puts "#{listing.id} > #{index+1}"
           listing.update_attribute(:rank, index+1)
@@ -156,6 +156,21 @@ namespace :populate do
   desc "Populate instance views"
   task :instance_views => :environment do
     Utils::InstanceViewsSeeder.new.go!
+  end
+
+  desc "Populate transactable"
+  task :transactables => :environment do
+    Listing.find_each do |listing|
+      puts "Creating Transactable #{listing.id}"
+      next if listing.location.blank?
+      t = Transactable.new
+      listing.attributes.each do |attr, value|
+        next if attr == "photos_count"
+        t.send("#{attr}=", value)
+      end
+      t.save(validate: false)
+    end
+    ActiveRecord::Base.connection.reset_pk_sequence!(:transactables)
   end
 
 end

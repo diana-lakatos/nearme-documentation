@@ -2,7 +2,7 @@ require 'test_helper'
 class ReservationSmsNotifierTest < ActiveSupport::TestCase
   setup do
     Googl.stubs(:shorten).returns(stub(:short_url => "http://goo.gl/abf324"))
-    @listing = FactoryGirl.create(:listing)
+    @listing = FactoryGirl.create(:transactable)
     @listing_owner = @listing.creator
     @listing_owner.mobile_number = "124456789"
     @listing_owner.save!

@@ -2,7 +2,7 @@ class InquiryMailerPreview < MailView
 
   def inquiring_user_notification
     inquiry_from_db = Inquiry.first
-    inquiry = inquiry_from_db || FactoryGirl.create(:inquiry, inquiring_user: User.first, listing: Listing.first)
+    inquiry = inquiry_from_db || FactoryGirl.create(:inquiry, inquiring_user: User.first, listing: Transactablefirst)
 
     mailer = ::InquiryMailer.inquiring_user_notification(inquiry)
 
@@ -12,7 +12,7 @@ class InquiryMailerPreview < MailView
 
   def listing_creator_notification
     inquiry_from_db = Inquiry.first
-    inquiry = inquiry_from_db || FactoryGirl.create(:inquiry, inquiring_user: User.first, listing: Listing.first)
+    inquiry = inquiry_from_db || FactoryGirl.create(:inquiry, inquiring_user: User.first, listing: Transactablefirst)
 
     mailer = ::InquiryMailer.listing_creator_notification(inquiry)
 

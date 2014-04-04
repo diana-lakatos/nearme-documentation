@@ -4,7 +4,7 @@ class ListingMailerTest < ActiveSupport::TestCase
 
   setup do
     stub_mixpanel
-    @listing = FactoryGirl.create(:listing)
+    @listing = FactoryGirl.create(:transactable)
     @user = FactoryGirl.create(:user)
     PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))
     @platform_context = PlatformContext.current

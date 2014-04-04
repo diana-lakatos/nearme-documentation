@@ -10,6 +10,7 @@ class DataImporter::CsvToXmlConverter
 
   def add_object(klass, builder, &block)
     klass_symbol = klass.name.underscore.to_sym
+    klass_symbol = :listing if klass_symbol == :transactable
     insert_to_xml(klass_symbol, klass.xml_attributes, @hash[klass_symbol], builder, &block)
   end
 
@@ -37,7 +38,7 @@ class DataImporter::CsvToXmlConverter
   end
 
   def convert
-    File.open(@output_path, 'w') do |f| 
+    File.open(@output_path, 'w') do |f|
       f << Nokogiri::XML::Builder.new do |xml|
         @xml = xml
         build_xml
@@ -117,7 +118,7 @@ class DataImporter::CsvToXmlConverter
   def clear_amenities
     @stored_amenities = []
   end
-  
+
   def store_amenity(amenity)
     @stored_amenities << amenity
   end
@@ -144,7 +145,7 @@ class DataImporter::CsvToXmlConverter
 
   def build_listing
     @scope = :listing
-    add_object(Listing, @listing_builder) do 
+    add_object(Transactable, @listing_builder) do
       @listing_builder.availability_rules do |availabilities|
         @availability_builder = Nokogiri::XML::Builder.new({}, availabilities.parent)
       end

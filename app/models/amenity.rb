@@ -3,7 +3,7 @@ class Amenity < ActiveRecord::Base
 
   belongs_to :amenity_type
   has_many :amenity_holders, dependent: :destroy
-  has_many :listings, through: :amenity_holders, source: :holder, source_type: 'Listing'
+  has_many :listings, through: :amenity_holders, source: :holder, source_type: 'Transactable'
   has_many :locations, through: :amenity_holders, source: :holder, source_type: 'Location'
 
   validates_presence_of :name

@@ -5,7 +5,7 @@ class LocationSerializer < ActiveModel::Serializer
 
   attribute :availability_full_week, :key => :availability_rules_attributes
 
-  has_many :listings, :serializer => ListingWebSerializer
+  has_many :listings, class_name: "Transactable", serializer: ListingWebSerializer
 
   def availability_template_id
     (!object.availability_template_id.nil?) ? object.availability_template_id : "custom"

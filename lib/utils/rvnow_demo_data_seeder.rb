@@ -90,7 +90,7 @@ module Utils
 
     def load_data!
       do_task "Loading data" do
-        User.transaction do 
+        User.transaction do
 
           # === INSTANCES / PAGES ================================
 
@@ -191,9 +191,9 @@ module Utils
         theme.homepage_content = Data.load_page_content('homepage.txt')
         theme.tagline = 'Rent from trustworthy people all over America'
         theme.call_to_action = 'Find out more'
-        theme.logo_image = File.open(Rails.root.join('db', 'seeds', 'demo', 'rvnow', 'brand_assets', 'RVnow.png'), 'rb')        
-        theme.logo_retina_image = File.open(Rails.root.join('db', 'seeds', 'demo', 'rvnow', 'brand_assets', 'RVnow_retina.png'), 'rb')        
-        theme.hero_image = File.open(Rails.root.join('db', 'seeds', 'demo', 'rvnow', 'brand_assets', 'RVnow_hero.jpg'), 'rb')        
+        theme.logo_image = File.open(Rails.root.join('db', 'seeds', 'demo', 'rvnow', 'brand_assets', 'RVnow.png'), 'rb')
+        theme.logo_retina_image = File.open(Rails.root.join('db', 'seeds', 'demo', 'rvnow', 'brand_assets', 'RVnow_retina.png'), 'rb')
+        theme.hero_image = File.open(Rails.root.join('db', 'seeds', 'demo', 'rvnow', 'brand_assets', 'RVnow_hero.jpg'), 'rb')
         theme.color_black = 'F2B42E'
         theme.color_green = 'F2B42E'
         theme.color_blue = 'DB8B00'
@@ -214,7 +214,7 @@ module Utils
         pages = []
         Dir.glob(Rails.root.join('db', 'seeds', 'demo', 'rvnow', 'pages', '*.txt')).each do |page_filename|
           page_content = File.open(page_filename, 'r') { |f| f.read }
-          page_content_splited = page_content.split(/\n/) 
+          page_content_splited = page_content.split(/\n/)
           page = Page.new(path: page_content_splited.first, content: page_content_splited[1..-1].join)
           page.theme = instance.theme
           page.save!
@@ -260,13 +260,13 @@ module Utils
             })
 
             location.amenities = amenities
-            
+
             location.save!
             locations << location
           end
 
           # LISTING
-          listing = Listing.new({
+          listing = Transactable.new({
             location_id: location.id,
             name: row['listing_title'],
             listing_type_id: listing_types.first{|lt| lt.name == row['listing_type']}.id,

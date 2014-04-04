@@ -1,7 +1,7 @@
 Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed, reserver|
   lister = User.find_by_name(lister)
   reserver = User.find_by_name(reserver)
-  @listing = FactoryGirl.create(:listing)
+  @listing = FactoryGirl.create(:transactable)
   @listing.company.update_attribute(:creator_id, lister.id)
   @listing.company.add_creator_to_company_users
   @listing.reload
@@ -186,7 +186,7 @@ Then(/^I should see the booking confirmation screen for:$/) do |table|
     # Daily booking
     assert page.has_content?("#{reservation[:listing].name}")
   end
-  
+
 end
 
 Then(/^I should be asked to sign up before making a booking$/) do

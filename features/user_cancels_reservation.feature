@@ -8,16 +8,16 @@ Feature: User Cancels Reservation
     Given a user exists
       And I freeze time at "17th October 2010"
       And I am logged in as the user
-      And the following listings exist:
-        | listing          | name               |
+      And the following transactables exist:
+        | transactable          | name               |
         | Joe's Codin Garage | Joe's Codin Garage |
         | WoughThorks        | WoughThorks        |
       And the following reservations exist:
        | listing                      | date       | user     |
-       | listing "Joe's Codin Garage" | 2010-10-18 | the user |
-       | listing "WoughThorks"        | 2010-10-19 | the user |
-       | listing "WoughThorks"        | 2010-10-20 | the user |
-       | listing "Joe's Codin Garage" | 2010-10-21 | the user |
+       | transactable "Joe's Codin Garage" | 2010-10-18 | the user |
+       | transactable "WoughThorks"        | 2010-10-19 | the user |
+       | transactable "WoughThorks"        | 2010-10-20 | the user |
+       | transactable "Joe's Codin Garage" | 2010-10-21 | the user |
 
   Scenario: A user can see a list of their reservations
     When I go to the bookings page

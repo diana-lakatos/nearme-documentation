@@ -6,7 +6,7 @@ class RecurringMailerShareJob < Job
   end
 
   def perform
-    Listing.searchable.each do |listing|
+    Transactable.searchable.each do |listing|
       PlatformContext.current = PlatformContext.new(listing.company)
       next unless listing.administrator
       next if listing.administrator.unsubscribed?('recurring_mailer/share')

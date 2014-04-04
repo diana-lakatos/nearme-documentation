@@ -53,7 +53,7 @@
       .booking-description
         %h3 Description
         %span= listing.description
-      - listing_availability = pretty_availability_sentence(listing.availability) 
+      - listing_availability = pretty_availability_sentence(listing.availability)
       - if listing_availability != location_pretty_availability
         .booking-opening-hours
           %h3 Hours
