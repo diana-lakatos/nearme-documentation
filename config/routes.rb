@@ -33,10 +33,6 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
-  constraints host: 'near-me-app.com' do
-    match "/(*path)" => redirect("http://near-me.com/")
-  end
-
   root :to => "home#index"
 
   match '/404', :to => 'errors#not_found'
@@ -149,7 +145,7 @@ DesksnearMe::Application.routes.draw do
       resource :settings, only: [:edit, :update]
     end
   end
- 
+
   resources :blog_posts, path: 'blog', only: [:index, :show], controller: 'blog/blog_posts'
 
   resources :locations, :only => [] do
@@ -289,7 +285,6 @@ DesksnearMe::Application.routes.draw do
   end
 
   match "/search", :to => "search#index", :as => :search
-  match "/search/show/:id", :to => "search#show"
 
   resources :search_notifications, only: [:create]
 
