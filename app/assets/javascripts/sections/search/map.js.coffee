@@ -9,7 +9,7 @@ class Search.Map
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     disableDefaultUI: true,
     zoomControl: true
-    
+
   GOOGLE_MAP_OPTIONS.clusterer =
     maxZoom: GOOGLE_MAP_OPTIONS.maxZoom + 1
     averageCenter: true
@@ -23,7 +23,7 @@ class Search.Map
     calculator: (markers, numStyles) ->
       idx = MarkerClusterer.CALCULATOR(markers, numStyles).index
       return { index: idx, text: markers.length.toString(), title: markers.length.toString() }
-  
+
   constructor: (@container, controller) ->
     @initializeGoogleMap()
     @bindEvents()
@@ -66,24 +66,24 @@ class Search.Map
       @trigger 'viewportChanged'
       @clusterer.setZoomOnClick(@googleMap.getZoom() < GOOGLE_MAP_OPTIONS.maxZoom)
       @popover.close()
-    
+
     google.maps.event.addListener @googleMap, 'click', (e)=>
       @popover.close()
       @trigger 'click'
-    
+
     @clusterer.addListener 'mouseover', (cluster)=>
       _.defer => @showInfoWindowForCluster(cluster) # Clashes with map.click on some devices, need to add small delay to show
 
     @clusterer.addListener 'click', (cluster)=>
       return if @googleMap.getZoom() < GOOGLE_MAP_OPTIONS.maxZoom
       _.defer => @showInfoWindowForCluster(cluster) # Clashes with map.click on some devices, need to add small delay to show
-      
+
     null
-  
+
   # Adds one of our custom map controls to the map
   addControl: (control) ->
     control.setMap(@googleMap)
-  
+
   # Clears any plotted listings and resets the map
   resetMapMarkers: ->
     if @markers
@@ -114,7 +114,7 @@ class Search.Map
 
   plotListings: (listings) ->
     @plotListing(listing) for listing in listings
-  
+
   # Only plot a listing if it fits within the map bounds.
   # Returns whether or not a listing was plotted.
   plotListingIfInMapBounds: (listing) ->
@@ -141,7 +141,7 @@ class Search.Map
     @listings[listing.id()] = listing
     @bounds.extend(listing.latLng())
     @clusterer.addMarker(marker)
-    
+
     marker.setVisible(true)
 
   fitBounds: (bounds) ->
@@ -149,14 +149,14 @@ class Search.Map
 
   setCenter: (latLng) ->
     @googleMap.setCenter(latLng)
-  
+
   resizeToFillViewport: ->
     offset = $(@container).offset()
     viewport = $(window).height()
     $(@container).height(viewport - offset.top)
     _.defer => google.maps.event.trigger(@googleMap, 'resize')
     true
-  
+
   # Return an array of [nx, ny, sx, sy] coordinates
   getBoundsArray: ->
     bounds = @googleMap.getBounds()
@@ -166,7 +166,7 @@ class Search.Map
       [ne.lat(), ne.lng(), sw.lat(), sw.lng()]
     else
       [0, 0, 0, 0]
-    
+
   getListingForMarker: (marker) ->
     listing_id = null
     for idx, _marker of @markers
@@ -176,7 +176,7 @@ class Search.Map
     return @listings[listing_id]
 
   showInfoWindowForCluster: (cluster) ->
-    
+
     if !@loading && @current_position != cluster.center_
       @current_cluster_position = cluster.center_
       if cluster.getMarkers().length > 100
@@ -192,7 +192,7 @@ class Search.Map
             for location, group of listingsByLocation
               html += group[0].popoverTitleContent()
               html += listing.popoverContent() for listing in group
-              
+
             @popover.setContent html
             @loading = false
           , =>
@@ -200,7 +200,7 @@ class Search.Map
             @loading = false
           )
       @popover.open @googleMap, { getPosition: -> cluster.center_ }
-    
+
     true
 
   showInfoWindowForListing: (listing) ->
@@ -212,6 +212,6 @@ class Search.Map
 
   show: ->
     $(@container).show()
-    
+
   hide: ->
     $(@container).hide()

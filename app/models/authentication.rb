@@ -29,14 +29,20 @@ class Authentication < ActiveRecord::Base
   after_create :find_friends
   after_create :update_info
 
-  AVAILABLE_PROVIDERS = ["Facebook", "LinkedIn", "Twitter", "Instagram"]
+  PROVIDERS = ["Facebook", "LinkedIn", "Twitter", "Instagram"]
+  ALLOWED_LOGIN_PROVIDERS = PROVIDERS - ["Instagram"]
 
   def social_connection
     @social_connection ||= self.class.provider_class(provider).new_from_authentication(self)
   end
 
   def self.available_providers
-    AVAILABLE_PROVIDERS.select { |provider| PlatformContext.current.instance.authentication_supported?(provider) }
+    PROVIDERS.select { |provider| PlatformContext.current.instance.authentication_supported?(provider) }
+  end
+
+  def self.available_login_providers
+    providers = PROVIDERS.select { |provider| PlatformContext.current.instance.authentication_supported?(provider) }
+    providers & ALLOWED_LOGIN_PROVIDERS
   end
 
   def self.provider(provider)

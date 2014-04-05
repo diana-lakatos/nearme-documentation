@@ -37,7 +37,7 @@ DesksnearMe::Application.routes.draw do
     match "/(*path)" => redirect("http://near-me.com/")
   end
 
-  root :to => "public#index"
+  root :to => "home#index"
 
   match '/404', :to => 'errors#not_found'
   match '/422', :to => 'errors#server_error'

@@ -23,6 +23,7 @@ body.blog {
   }
 
   .header {
+    position: relative;
     display: block;
     overflow: hidden;
     margin:auto;
@@ -58,17 +59,97 @@ body.blog {
       margin: auto;
       width: 100%;
       text-align: center;
-
-      img {
-        max-width: none;
-      }
+      max-width: 850px; 
     }
 
     .logo {
       position: fixed;
       z-index: 10;
     }
-  } 
+
+    .header-text-and-logo {
+      position: absolute;
+      height: 100%;
+      text-align: center;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      margin: auto;
+
+      .v-wrap{
+        height: 100%;
+        white-space: nowrap;
+        text-align: center;
+      }
+
+      .v-wrap:before{
+        content: "";
+        display: inline-block;
+        vertical-align: middle;
+        width: 0;
+        margin-right: -0.25em;
+        height: 100%;
+      }
+
+      .v-box{
+        display: inline-block;
+        vertical-align: middle;
+        white-space: normal;
+        width: 100%;
+      }
+
+      span.header-text {
+        font-size: 24px;
+        color: $white;
+
+        &.with-border {
+          margin-left: 15px;
+          padding-left: 15px;
+          border-left: 1px solid $white;
+        }
+      }
+
+      p.header-motto {
+        margin-bottom: 0;
+        padding-top: 5px;
+        color: $white;
+      }
+
+      img {
+        max-height: 15%;
+        vertical-align: bottom;
+
+        &.blog-logo {
+          @media (max-width: $ipad-width) {
+            display: none;
+          }
+        }
+
+        &.blog-icon {
+          display: none;
+
+          @media (max-width: $ipad-width) {
+            display: inline;
+          }
+        }
+      }
+    }
+
+    @media (max-width: $iphone-landscape) {
+      height: auto;
+
+      .header-text-and-logo {
+        img {
+          vertical-align: text-bottom;
+        }
+      }
+    }
+  }
+
+  .blog-posts {
+    margin-bottom: 20px;
+  }
 
   .blog-post {
     margin-top: 20px;
@@ -88,6 +169,24 @@ body.blog {
       font-size: 14px;
       color: $gray;
       line-height: 28px;
+    }
+
+    b {
+      font-weight: bold !important;
+    }
+
+    i {
+      font-style: italic !important;
+    }
+
+    ol {
+      list-style-type: decimal !important;
+      padding-left: 20px;
+    }
+
+    ul {
+      list-style-type: disc !important;
+      padding-left: 20px;
     }
 
     .date {
@@ -133,6 +232,24 @@ body.blog {
         margin: 40px 0 10px 0;
         font-family: 'MontserratBold';
         font-size: 30px;
+      }
+
+      b {
+        font-weight: bold !important;
+      }
+
+      i {
+        font-style: italic !important;
+      }
+
+      ol {
+        list-style-type: decimal !important;
+        padding-left: 20px;
+      }
+
+      ul {
+        list-style-type: disc !important;
+        padding-left: 20px;
       }
 
       .social-buttons-wrapper {

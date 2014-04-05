@@ -4,7 +4,4 @@
   = f.input :query, as: :hidden
   = f.input :latitude, as: :hidden
   = f.input :longitude, as: :hidden
-  = f.submit 'Subscribe', class: 'btn-blue'
-
-- content_for :domready do
-  new Search.SearchNotificationController($('#search-notification'))
+  = f.submit 'Subscribe', id: 'notification-submit', class: 'btn-blue'

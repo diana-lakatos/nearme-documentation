@@ -14,3 +14,6 @@ class @BlogPostsForm
       if not @slug_changed
         value = URLify(@title.val())
         @slug.val(value)
+
+    @form.find('.toolbar button').click (e) ->
+      e.preventDefault()

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140328093851) do
+ActiveRecord::Schema.define(:version => 20140328162434) do
 
 
 
@@ -92,6 +92,10 @@ ActiveRecord::Schema.define(:version => 20140328093851) do
     t.boolean  "enabled",         :default => false
     t.datetime "created_at",                         :null => false
     t.datetime "updated_at",                         :null => false
+    t.string   "header_logo"
+    t.string   "header_icon"
+    t.string   "header_text"
+    t.string   "header_motto"
   end
 
   create_table "blog_posts", :force => true do |t|

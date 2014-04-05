@@ -152,4 +152,10 @@ namespace :populate do
   task :en_locales => :environment do
     Utils::EnLocalesSeeder.new.go!
   end
+
+  desc "Populate instance views"
+  task :instance_views => :environment do
+    Utils::InstanceViewsSeeder.new.go!
+  end
+
 end

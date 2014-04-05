@@ -27,7 +27,7 @@ class Search.SearchController extends Search.Controller
     @form.bind 'submit', (event) =>
       event.preventDefault()
       @triggerSearchFromQuery()
-    
+
     @closeFilterIfClickedOutside()
 
     @filters.on 'click', (event) ->
@@ -46,16 +46,19 @@ class Search.SearchController extends Search.Controller
     @searchField = @form.find('#search')
     @searchField.on 'focus', => $(@form).addClass('query-active')
     @searchField.on 'blur', => $(@form).removeClass('query-active')
-    
+
     if @map?
       @bindMapEvents()
-      
+
 
   bindMapEvents: =>
     @map.on 'click', =>
       @searchField.blur()
 
     @map.on 'viewportChanged', =>
+      return if @processingResults && !@force_viewport_change
+      return unless @redoSearchMapControl.isEnabled()
+      @force_viewport_change = false
       $('#search_results_count').text('Loading...')
       $('.search-pagination').find('.page-entries-info').html('')
       $('.search-pagination').find('.pagination').html('')
@@ -75,9 +78,9 @@ class Search.SearchController extends Search.Controller
         @hideFilters()
   # for browsers without native html 5 support for history [ mainly IE lte 9 ] the url looks like:
   # /search?q=OLDQUERY#search?q=NEWQUERY. Initially, results are loaded for OLDQUERY.
-  # This methods checks, if OLDQUERY == NEWQUERY, and if not, it redirect to the url after # 
+  # This methods checks, if OLDQUERY == NEWQUERY, and if not, it redirect to the url after #
   # [ which is stored in History.getState() and contains NEWQUERY ].
-  # Updating the form instead of redirecting could be a little bit better, 
+  # Updating the form instead of redirecting could be a little bit better,
   # but there are issues with updating google maps view etc. - remember to check it if you update the code
   redirectIfNecessary: ->
     if History.getState() && !window.history?.replaceState
@@ -86,7 +89,7 @@ class Search.SearchController extends Search.Controller
           if param.value != DNM.util.Url.getParameterByName('loc')
             document.location = History.getState().url
 
-  
+
   initializeDateRangeField: ->
     @rangeDatePicker = new Search.RangeDatePickerFilter(
       @form.find('.availability-date-start'),
@@ -121,12 +124,12 @@ class Search.SearchController extends Search.Controller
     # Add our map viewport search control, which enables/disables searching on map move
     @redoSearchMapControl = new Search.RedoSearchMapControl(enabled: true)
     @map.addControl(@redoSearchMapControl)
-    
+
     resizeMapThrottle = _.throttle((=> @map.resizeToFillViewport()), 200)
-    
+
     $(window).resize resizeMapThrottle
     $(window).trigger('resize')
-    
+
     @updateMapWithListingResults()
 
   showResults: (html) ->
@@ -138,23 +141,23 @@ class Search.SearchController extends Search.Controller
     inflection = 'result'
     inflection += 's' unless count == 1
     @resultsCountContainer.html("#{count} #{inflection}")
-  
+
   # Update the map with the current listing results, and adjust the map display.
   updateMapWithListingResults: ->
     @map.popover.close()
-    
+
     listings = @getListingsFromResults()
-    
+
     if listings? and listings.length > 0
       @map.plotListings(listings)
-      
+
       # Only show bounds of new results
       bounds = new google.maps.LatLngBounds()
       bounds.extend(listing.latLng()) for listing in listings
       _.defer => @map.fitBounds(bounds)
-      
+
       @map.show()
-      
+
       # In case the map is hidden
       @map.resizeToFillViewport()
     else

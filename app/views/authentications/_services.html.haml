@@ -1,7 +1,7 @@
 - if Authentication.available_providers.any?
   %span#service_buttons
 
-    - Authentication.available_providers.each do |provider|
+    - Authentication.available_login_providers.each do |provider|
       - provider.downcase!
       = link_to provider_auth_url(provider), :class => "btn btn-blue btn-large #{provider} submit", :id => provider do
         %i{:class => "icon ico-#{provider}"}

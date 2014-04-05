@@ -7,9 +7,9 @@
       #listings_map.inner
 
 = render 'shared/loading_spinner'
-- if listings.any?
+- if @searcher.results.any?
   %section#results.map
-    = render partial: 'search/map/marker', collection: listings, as: :listing
+    = render partial: 'search/map/marker', collection: @searcher.results, as: :listing
 - elsif !@located
   %section#results.no_results
     = render 'shared/loading_spinner'

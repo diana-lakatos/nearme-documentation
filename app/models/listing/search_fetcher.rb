@@ -70,7 +70,7 @@ class Listing
         end
     end
 
-    private 
+    private
     def filtered_locations
       @search_scope = Location.scoped
       @search_scope = @search_scope.near(@midpoint, @radius, :order => 'distance ASC') if @midpoint && @radius
@@ -83,8 +83,8 @@ class Listing
       return if @filters[:available_dates].blank?
       @filters[:available_dates].each do |date|
         @listings.reject! { |listing| listing.fully_booked_on?(date) }
-      end 
-    end 
+      end
+    end
 
   end
 end

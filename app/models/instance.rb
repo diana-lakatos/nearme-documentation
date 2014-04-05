@@ -18,6 +18,7 @@ class Instance < ActiveRecord::Base
                  :instagram_consumer_key, :instagram_consumer_secret,
                  :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
+  belongs_to :instance_type
   has_one :theme, :as => :owner, dependent: :destroy
 
   has_many :companies, :inverse_of => :instance
@@ -90,6 +91,11 @@ class Instance < ActiveRecord::Base
       # Mark price fields as attr-accessible
       attr_accessible "#{edge}_#{price}_price_cents", "#{edge}_#{price}_price"
     end
+  end
+
+  def pricing_options_hash
+    instance_pricing_options = pricing_options.select { |k,v| v == "1" }
+    instance_pricing_options.map { |k,v| [k.downcase, k.capitalize] }
   end
 
   def is_desksnearme?
