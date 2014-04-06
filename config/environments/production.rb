@@ -27,14 +27,16 @@ DesksnearMe::Application.configure do
   config.assets.js_compressor = :uglifier
 
   # Clould services credentials
-  config.fog_credentials = {
-    :provider                   => 'AWS',
-    :aws_access_key_id          => 'AKIAI5EVP6HB47OZZXXA',
-    :aws_secret_access_key      => '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'
-  }
-  config.fog_directory        = 'desksnearme.production'
-  config.asset_host           = 'https://s3.amazonaws.com/desksnearme.production'
-  config.storage              = :fog
+  CarrierWave.configure do |config|
+    config.fog_credentials = {
+      :provider                   => 'AWS',
+      :aws_access_key_id          => 'AKIAI5EVP6HB47OZZXXA',
+      :aws_secret_access_key      => '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'
+    }
+    config.fog_directory        = 'desksnearme.production'
+    config.asset_host           = 'https://s3.amazonaws.com/desksnearme.production'
+    config.storage              = :fog
+  end
 
   config.action_controller.asset_host = "//desksnear.me"
 
