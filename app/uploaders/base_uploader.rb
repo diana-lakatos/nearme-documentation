@@ -24,7 +24,7 @@ class BaseUploader < CarrierWave::Uploader::Base
 
   def image
     # we don't want to assign this to variable, becuase there are issues with serialization in versions_regeneration_job
-   img_path = self.respond_to?(:current_url) ? current_url : self.url
+   img_path = self.respond_to?(:current_url) ? current_url(:original) : self.url
    MiniMagick::Image.open(img_path[0] == '/' ? Rails.root.join('public', img_path[1..-1]) : img_path)
   end
 
