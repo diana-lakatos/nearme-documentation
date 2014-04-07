@@ -30,14 +30,16 @@ DesksnearMe::Application.configure do
   config.test_email = "notifications-staging@desksnear.me"
 
   # Clould services credentials
-  config.fog_credentials = {
-    :provider                   => 'AWS',
-    :aws_access_key_id          => 'AKIAI5EVP6HB47OZZXXA',
-    :aws_secret_access_key      => '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'
-  }
-  config.fog_directory        = 'desksnearme.staging-prod-copy'
-  config.asset_host           = 'https://s3.amazonaws.com/desksnearme.staging-prod-copy'
-  config.storage              = :fog
+  CarrierWave.configure do |config|
+    config.fog_credentials = {
+      :provider                   => 'AWS',
+      :aws_access_key_id          => 'AKIAI5EVP6HB47OZZXXA',
+      :aws_secret_access_key      => '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'
+    }
+    config.fog_directory        = 'desksnearme.staging-prod-copy'
+    config.asset_host           = 'https://s3.amazonaws.com/desksnearme.staging-prod-copy'
+    config.storage              = :fog
+  end
 
   # Staging specific keys/secrets for social properties.
   config.linkedin_key = "26pmsiwpsh8a"
