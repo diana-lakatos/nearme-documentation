@@ -159,7 +159,7 @@ class ListingTest < ActiveSupport::TestCase
   context 'instance observes default min/max pricing constraints' do
 
     setup do
-      @listing = FactoryGirl.create(:listing)
+      @listing = FactoryGirl.build(:listing)
     end
 
     should 'be valid if hourly price within range' do

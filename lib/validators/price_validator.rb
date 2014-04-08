@@ -26,7 +26,7 @@ class PriceValidator < ActiveModel::Validator
 
         if record.instance.send("max_#{price}_price").present? &&
           record_price > record.instance.send("max_#{price}_price") or
-          record_price > 2147483647
+          record_price > 2147483647 # http://www.postgresql.org/docs/9.3/interactive/datatype-numeric.html
           record.errors.add("#{price}_price".to_sym, I18n.t('validation_messages.price_too_high', price: price.capitalize))
         end
       end
