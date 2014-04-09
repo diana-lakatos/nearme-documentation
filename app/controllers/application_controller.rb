@@ -54,7 +54,7 @@ class ApplicationController < ActionController::Base
     PlatformContext.scope_to_instance
   end
 
-  def authenticate_user!
+  def authenticate_scope!
     super
     set_cache_buster
   end
