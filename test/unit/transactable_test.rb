@@ -162,7 +162,7 @@ class TransactableTest < ActiveSupport::TestCase
   context 'instance observes default min/max pricing constraints' do
 
     setup do
-      @listing = FactoryGirl.build(:listing)
+      @listing = FactoryGirl.build(:transactable)
     end
 
     should 'be valid if hourly price within range' do

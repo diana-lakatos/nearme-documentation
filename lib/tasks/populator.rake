@@ -173,4 +173,20 @@ namespace :populate do
     ActiveRecord::Base.connection.reset_pk_sequence!(:transactables)
   end
 
+  desc "Populate transactable"
+  task :millions_transactables => :environment do
+    head_sql = "INSERT INTO transactables (activated_at, administrator_id, company_id, created_at, creator_id, deleted_at, description, draft, enabled, instance_id, instance_type_id, listing_type_id, listings_public, location_id, metadata, name, partner_id, properties, updated_at) VALUES "
+    colors = ["red", "green", "blue"]
+    1000.times do |i|
+      Transactable.transaction do
+        values = []
+        1000.times do |j|
+          values << %Q((NULL, NULL,143, now(), 246, NULL, 'jkl', NULL, false, 1, NULL, 2, true, 261, NULL, 'jkljkl', NULL, '"quantity"=>"#{Random.rand(20)}","capacity"=>"#{Random.rand(20)}","free"=>"false","hourly_reservations"=>"false","weekly_price_cents"=>"6700","color" => "#{colors[Random.rand(3)]}", "confirm_reservations"=>"0", "delta"=>"true", "rank"=>"#{Random.rand(20)}"', now()))
+        end
+        Transactable.connection.execute head_sql + values.join(", ")
+        puts "added #{(i+1)}"
+      end
+    end
+  end
+
 end
