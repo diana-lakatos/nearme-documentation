@@ -1,4 +1,5 @@
 require({
+  waitSeconds: 14,
   paths: {
     'scribe': '/assets/blog/admin/scribe_wysiwyg/scribe/scribe',
     'scribe-plugin-blockquote-command': '/assets/blog/admin/scribe_wysiwyg/scribe-plugin-blockquote-command/scribe-plugin-blockquote-command',
@@ -43,16 +44,16 @@ require({
   var prevElementSibling = (function(){
     var supported = !!document.body.previousElementSibling,
       prev = (supported) ? 'previousElementSibling' : 'previousSibling';
-    
+
     return function(currentElement) {
       return currentElement[prev];
     };
   }());
-   
+
   var nextElementSibling = (function(){
     var supported = !!document.getElementsByTagName('head')[0].nextElementSibling,
       next = (supported) ? 'nextElementSibling' : 'nextSibling';
-    
+
     return function(currentElement) {
       return currentElement[next];
     };
@@ -65,7 +66,7 @@ require({
 
     scribe.on('content-changed', function(){
       nextElementSibling(this.el).querySelector('input[type=hidden]').value = this.getHTML()
-    }); 
+    });
 
     /**
      * Plugins
@@ -88,6 +89,7 @@ require({
         strong: {},
         i: {},
         s: {},
+        strike: {},
         blockquote: {},
         ol: {},
         ul: {},
