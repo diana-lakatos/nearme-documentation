@@ -2,6 +2,7 @@ class Support::Ticket < ActiveRecord::Base
   self.table_name = 'support_tickets'
 
   has_paper_trail
+  has_metadata :without_db_column => true
   auto_set_platform_context
   scoped_to_platform_context
 
@@ -9,6 +10,8 @@ class Support::Ticket < ActiveRecord::Base
   belongs_to :assigned_to, class_name: 'User'
   belongs_to :instance
   has_many :messages, class_name: 'Support::TicketMessage', order: 'created_at DESC', dependent: :destroy
+  scope :metadata, -> {select('state, COUNT(*) as count').group(:state)}
+  scope :user_metadata, -> {select('instance_id, COUNT(*) as count').group(:instance_id)}
 
   state_machine :state, initial: :open do
     event :resolve do

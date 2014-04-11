@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   auto_set_platform_context
 
   extend FriendlyId
-  has_metadata :accessors => [:has_draft_listings, :has_any_active_listings, :companies_metadata, :instance_admins_metadata]
+  has_metadata :accessors => [:has_draft_listings, :has_any_active_listings, :companies_metadata, :instance_admins_metadata, :support_metadata]
   friendly_id :name, use: :slugged
 
   has_many :authentications, :dependent => :destroy

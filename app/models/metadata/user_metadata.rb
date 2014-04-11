@@ -4,6 +4,14 @@ module Metadata
 
     included do
 
+      def populate_user_support_metadata!
+        update_metadata({ support_metadata: build_support_metadata })
+      end
+
+      def build_support_metadata
+        self.tickets.unscoped.user_metadata.collect{|t| {t.instance_id => t.count.to_i }}
+      end
+
       def populate_listings_metadata!
         update_metadata({
           has_draft_listings: listings.reload.draft.any?,
