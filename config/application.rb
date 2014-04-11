@@ -87,8 +87,10 @@ module DesksnearMe
     config.assets.digest = true
 
     # Clould services credentials
-    config.fog_attributes = {'Cache-Control'=>'max-age=315576000, public'}
-    config.storage              = :file
+    CarrierWave.configure do |config|
+      config.fog_attributes = {'Cache-Control'=>'max-age=315576000, public'}
+      config.storage        = :file
+    end
 
     # Development/Test specific keys/secrets for social properties.
     config.linkedin_key = "4q9xfgn60bik"
