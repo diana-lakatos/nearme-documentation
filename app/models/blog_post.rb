@@ -4,7 +4,7 @@ class BlogPost < ActiveRecord::Base
   belongs_to :user # user who created this post
 
   extend FriendlyId
-  friendly_id :title, use: :slugged
+  friendly_id :title, use: [:slugged, :history]
 
   before_validation :sanitize_content
   validates_presence_of :blog_instance, :user, :title, :content
