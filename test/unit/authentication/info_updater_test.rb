@@ -6,13 +6,14 @@ class Authentication::InfoUpdaterTest < ActiveSupport::TestCase
     setup do
       @authentication = FactoryGirl.create(:authentication)
       @user = @authentication.user
+      @user.biography = nil
     end
 
     should 'update authentication and its user according to social info' do
       raw = OpenStruct.new(id: 'dnm',
                            username: 'desksnearme',
                            name: 'Desks Near Me',
-                           description: 'Something about me',
+                           description: Faker::Lorem.paragraph(50),
                            url: 'http://twitter.com/desksnearme')
       raw.stubs(:profile_image_url).returns('http://twitter.com/avatar.jpg')
       stub_request(:get, 'http://twitter.com/avatar.jpg').to_return(:status => 200,:body => File.read(Rails.root.join("test", "assets", "foobear.jpeg")), :headers => {'Content-Type' => 'image/jpeg'})
