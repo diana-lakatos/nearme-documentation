@@ -9,7 +9,7 @@ class Authentication::InfoUpdater
   end
 
   def update
-    return if @authentication.token_expires && @authentication.token_expires_at && @authentication.token_expires_at.utc < Time.zone.now.utc
+    return if @authentication.token_expired?
     info = @provider.info
     info_hash = info.to_hash
 

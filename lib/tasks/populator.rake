@@ -140,7 +140,7 @@ namespace :populate do
         puts "Authentication #{authentication.id}: updated with #{updater.authentication_changes.inspect}"
         puts "User #{authentication.user_id}: updated with #{updater.user_changes.inspect}"
       rescue Authentication::InvalidToken
-        authentication.update_column(:token_expired, true) if authentication.token_expires?
+        authentication.expire_token! if authentication.token_expires?
         puts "Authentication #{authentication.id}: InvalidToken"
       rescue => e
         puts "Authentication #{authentication.id}: #{e}"
