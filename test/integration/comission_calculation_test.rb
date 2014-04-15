@@ -7,7 +7,7 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     @instance = Instance.default_instance
     @instance.update_attribute(:service_fee_host_percent, 10)
     @instance.update_attribute(:service_fee_guest_percent, 15)
-    @listing = FactoryGirl.create(:listing, :daily_price => 25.00)
+    @listing = FactoryGirl.create(:transactable, :daily_price => 25.00)
     @instance.update_attribute(:paypal_email, 'sender@example.com')
     @listing.company.update_attribute(:paypal_email, 'receiver@example.com')
     create_logged_in_user
@@ -18,7 +18,7 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     @reservation = Reservation.last
     @reservation.confirm!
 
-    post_via_redirect "/listings/#{FactoryGirl.create(:listing).id}/reservations", booking_params
+    post_via_redirect "/listings/#{FactoryGirl.create(:transactable).id}/reservations", booking_params
 
     @reservation_charge = @reservation.reservation_charges.last
     assert @reservation_charge.paid?

@@ -26,7 +26,7 @@ class DataImporter::CsvFile < DataImporter::File
   end
 
   def company_attributes
-    { 
+    {
       :name => @current_row[3],
       :email => @current_row[9].downcase,
       :description => @current_row[12],
@@ -37,22 +37,22 @@ class DataImporter::CsvFile < DataImporter::File
   def location_attributes
     {
       :address => ([@current_row[4], @current_row[5], @current_row[6], @current_row[7], @current_row[8]]*", "),
-      :address2 => @current_row[5], 
-      :city => @current_row[6], 
-      :state => @current_row[7], 
-      #:street => @current_row[4], 
-      :postcode => @current_row[8], 
-      :email => @current_row[9].downcase, 
-      :phone => @current_row[10], 
-      :description => @current_row[12], 
-      :special_notes => (@current_row[13].to_s + "\n" + @current_row[14].to_s).strip, 
+      :address2 => @current_row[5],
+      :city => @current_row[6],
+      :state => @current_row[7],
+      #:street => @current_row[4],
+      :postcode => @current_row[8],
+      :email => @current_row[9].downcase,
+      :phone => @current_row[10],
+      :description => @current_row[12],
+      :special_notes => (@current_row[13].to_s + "\n" + @current_row[14].to_s).strip,
       :availability_rule_attributes => parse_availability_rules(@current_row[11]),
       :amenities => provided_amenities.compact.uniq
     }.tap { |arr| arr[:formatted_address] = arr[:address] }
   end
 
   def provided_amenities
-    (22..52).inject([]) do |arr, cell_number| 
+    (22..52).inject([]) do |arr, cell_number|
         arr.tap { |a| a << amenities[cell_number-22] unless @current_row[cell_number].blank? }
     end
   end
@@ -81,7 +81,7 @@ class DataImporter::CsvFile < DataImporter::File
     open_close_array = availability_string.split('-')
     open_array = open_close_array[0].split(':')
     close_array = open_close_array[1].split(':')
-    { 
+    {
       :open_hour => open_array[0],
       :open_minute => open_array[1].to_i,
       :close_hour => close_array[0].to_i + 12,

@@ -173,7 +173,7 @@ namespace :report do
   desc "Export listing data."
   task :listings => :environment do
 
-    listings = Listing.all
+    listings = Transactableall
     path = "tmp/csv_data/listings_#{Time.now.strftime('%Y-%m-%d')}.csv"
 
     CSV.open(path, File::WRONLY|File::CREAT|File::EXCL) do |csv|

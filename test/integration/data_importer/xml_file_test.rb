@@ -18,7 +18,7 @@ end
 
 class DataImporter::XmlFileTest < ActiveSupport::TestCase
 
-  describe 'skip those tests for now' do 
+  describe 'skip those tests for now' do
     context '#instances' do
       setup do
         Photo.any_instance.stubs(:remote_image_url=)
@@ -111,7 +111,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
           context '#industries' do
 
             should 'assign right industries' do
-              assert_equal ['Commercial Real Estate'], @instance.companies.last.industries.pluck(:name) 
+              assert_equal ['Commercial Real Estate'], @instance.companies.last.industries.pluck(:name)
             end
           end
 
@@ -130,7 +130,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
             end
 
             should 'not aggregate locations with the same address that belong to different companies' do
-              assert_equal 2, @instance.locations.where('address like ?', "%520 Broadway%").count            
+              assert_equal 2, @instance.locations.where('address like ?', "%520 Broadway%").count
             end
 
             should 'aggregate locations with the same address within the same company' do
@@ -234,7 +234,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
               end
 
               should 'correctly aggregate amenities from all listings that belong to WTC' do
-                assert_equal ["Administrative Assistant", "Catering", "Coffee/Tea","Copier", 
+                assert_equal ["Administrative Assistant", "Catering", "Coffee/Tea","Copier",
                               "Fax","Internet Access" , "Lounge Area", "Printer","Projector", "Scanner","Telephone",
                               "Videoconferencing Facilities", "Whiteboard", "Wi-Fi", "Yard Area"], @location.amenities.pluck(:name).sort
               end
@@ -320,15 +320,15 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
   end
 
   def get_counts_of_all_relevant_objects
-    { :instance => Instance.count, 
-      :user => User.count, 
-      :company => Company.count, 
-      :company_industries => CompanyIndustry.count, 
-      :location => Location.count, 
-      :location_availability_rules => AvailabilityRule.where(:target_type => 'Location').count, 
-      :listing_availability_rules => AvailabilityRule.where(:target_type => 'Listing').count, 
-      :location_amenities => LocationAmenity.count, 
-      :listing => Listing.count
+    { :instance => Instance.count,
+      :user => User.count,
+      :company => Company.count,
+      :company_industries => CompanyIndustry.count,
+      :location => Location.count,
+      :location_availability_rules => AvailabilityRule.where(:target_type => 'Location').count,
+      :listing_availability_rules => AvailabilityRule.where(:target_type => 'Transactable').count,
+      :location_amenities => LocationAmenity.count,
+      :listing => Transactable.count
     }
   end
 end

@@ -3,7 +3,7 @@ require 'test_helper'
 class Listing::SearchFetcherTest < ActiveSupport::TestCase
 
   setup do
-    Listing.destroy_all
+    Transactable.destroy_all
     @public_location_type = FactoryGirl.create(:location_type, :name => 'public')
     @private_location_type = FactoryGirl.create(:location_type, :name => 'private')
 
@@ -14,10 +14,10 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
     @private_listing_type = FactoryGirl.create(:listing_type, :name => 'private')
     @office_listing_type = FactoryGirl.create(:listing_type, :name => 'office')
 
-    @public_listing = FactoryGirl.create(:listing, :listing_type => @public_listing_type, :location => @public_location)
-    @public_office_listing = FactoryGirl.create(:listing, :listing_type => @office_listing_type, :location => @public_location)
-    @private_listing = FactoryGirl.create(:listing, :listing_type => @private_listing_type, :location => @private_location)
-    @private_office_listing = FactoryGirl.create(:listing, :listing_type => @office_listing_type, :location => @private_location)
+    @public_listing = FactoryGirl.create(:transactable, :listing_type => @public_listing_type, :location => @public_location)
+    @public_office_listing = FactoryGirl.create(:transactable, :listing_type => @office_listing_type, :location => @public_location)
+    @private_listing = FactoryGirl.create(:transactable, :listing_type => @private_listing_type, :location => @private_location)
+    @private_office_listing = FactoryGirl.create(:transactable, :listing_type => @office_listing_type, :location => @private_location)
 
     @filters = { :midpoint => [7, 7], :radius => 1000 }
   end
@@ -91,8 +91,8 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
         @location2 = FactoryGirl.create(:location, :company => @economics_food_company, :latitude => 5, :longitude => 5)
         @filters = { :midpoint => [7, 7], :radius => 1000 }
 
-        @listing1 = FactoryGirl.create(:listing, :location => @location1)
-        @listing2 = FactoryGirl.create(:listing, :location => @location2)
+        @listing1 = FactoryGirl.create(:transactable, :location => @location1)
+        @listing2 = FactoryGirl.create(:transactable, :location => @location2)
 
       end
 

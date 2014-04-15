@@ -85,7 +85,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
     end
 
     should 'include nearme listings when it is present' do
-      @listing = FactoryGirl.create(:listing)
+      @listing = FactoryGirl.create(:transactable)
       User.any_instance.stubs(:listings_in_near).returns([@listing])
 
       mail = ReservationMailer.notify_guest_of_rejection(@reservation)

@@ -19,7 +19,7 @@ Feature: A user can edit their settings
   Scenario: A user with listing will see settings
     Given a company exists with creator: the user
     Given a location exists with company: the company
-    Given a listing exists with location: the location
+    Given a transactable exists with location: the location
     And I am on the home page
     When I follow "Manage Desks"
     Then I should see "Company"
@@ -48,6 +48,6 @@ Feature: A user can edit their settings
   Scenario: A user with one inactive listing will not see settings
     Given a company exists with creator: the user
       And a location exists with company: the company
-      And a listing exists with location: the location, draft: "#{Time.zone.now}"
+      And a transactable exists with location: the location, draft: "#{Time.zone.now}"
       And I am on the home page
     Then I should not see "Manage Desks"

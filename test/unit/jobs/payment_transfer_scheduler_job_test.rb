@@ -73,7 +73,7 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
         :currency => 'NZD'
       )
 
-      listing = FactoryGirl.create(:listing,
+      listing = FactoryGirl.create(:transactable,
         :daily_price => 50,
         :location => location
       )

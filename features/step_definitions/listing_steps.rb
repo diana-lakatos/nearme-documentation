@@ -16,11 +16,11 @@ Given /^a( disabled)? listing( with nil prices)? in (.*) exists( with that ameni
 end
 
 Given /^a listed location( without (amenities))?$/ do |_,_|
-  @listing = FactoryGirl.create(:listing)
+  @listing = FactoryGirl.create(:transactable)
 end
 
 Given /^a listed location with a creator whose email is (.*)?$/ do |email|
-  @listing = FactoryGirl.create(:listing)
+  @listing = FactoryGirl.create(:transactable)
   @listing.creator.email = email
   @listing.creator.save
 end
@@ -30,15 +30,15 @@ Given /^a listed location in San Francisco that does( not)? require confirmation
 end
 
 Given /^(.*) does( not)? require confirmation for his listing$/ do |person, with_confirmation|
-  @listing = FactoryGirl.create(:listing)
+  @listing = FactoryGirl.create(:transactable)
   @listing.confirm_reservations = !with_confirmation
   @listing.save
   @listing.company.update_attribute(:creator_id, User.find_by_name(person).id)
   @listing.reload
 end
 
-When /^I view that listing's edit page$/ do
-  visit edit_manage_location_path(model!('listing').location)
+When /^I view that transactable's edit page$/ do
+  visit edit_manage_location_path(model!('transactable').location)
 end
 
 Then /^I (do not )?see a search result for the ([^\$].*) listing$/ do |negative, city|

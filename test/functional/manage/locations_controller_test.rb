@@ -57,7 +57,7 @@ class Manage::LocationsControllerTest < ActionController::TestCase
 
         @related_company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id, instance: @related_instance)
         @related_location = FactoryGirl.create(:location_in_auckland, company: @related_company)
-        @related_listing = FactoryGirl.create(:listing, location: @related_location)
+        @related_listing = FactoryGirl.create(:transactable, location: @related_location)
       end
 
       context '#edit' do
@@ -119,7 +119,7 @@ class Manage::LocationsControllerTest < ActionController::TestCase
 
     should "should use default template if custom availability rules were not checked" do
       put :update, :id => @location.id, :location => {
-        :availability_template_id=>"custom", 
+        :availability_template_id=>"custom",
         :availability_rules_attributes=>availability_rules_params
       }
       @location.reload
@@ -128,9 +128,9 @@ class Manage::LocationsControllerTest < ActionController::TestCase
 
     should "require availability rule to be opened for at least 1 hour" do
       put :update, :id => @location.id, :location => {
-        :availability_template_id=>"custom", 
-        :availability_rules_attributes=> { 
-          "0" => { "day" => "1", "open_hour" => '9', "close_hour" => '9' } 
+        :availability_template_id=>"custom",
+        :availability_rules_attributes=> {
+          "0" => { "day" => "1", "open_hour" => '9', "close_hour" => '9' }
         }
 
       }
@@ -218,7 +218,7 @@ class Manage::LocationsControllerTest < ActionController::TestCase
     end
   end
 
-  private 
+  private
 
   def availability_rules_params
     @location.availability_rules.each.with_index.inject([]) do |arr, (a, index)|

@@ -80,7 +80,7 @@ class PostActionMailerTest < ActiveSupport::TestCase
   end
 
   test "list works ok" do
-    @listing = FactoryGirl.create(:listing)
+    @listing = FactoryGirl.create(:transactable)
     @user = @listing.creator
     mail = PostActionMailer.list(@user)
     subject = "#{@user.first_name}, your new listing looks amazing!"

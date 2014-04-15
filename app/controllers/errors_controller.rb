@@ -9,7 +9,7 @@ class ErrorsController < ApplicationController
       case env["action_dispatch.exception"].class.name
       when "Page::NotFound"
         render :template => 'errors/instance_page_not_found', :status => 404, :formats => [:html]
-      when "Listing::NotFound"
+      when "Transactable::NotFound"
         @object_name = "listing"
         render :template => 'errors/manage_listing_or_location_no_permission', :status => 404, :formats => [:html]
       when "Location::NotFound"

@@ -5,7 +5,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
 
 
   setup do
-    @listing = FactoryGirl.create(:listing)
+    @listing = FactoryGirl.create(:transactable)
   end
 
   ##
@@ -34,7 +34,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
     listing = get_authenticated_listing
     new_name = 'My listing'
     put :update, id: listing, listing: { name: new_name, daily_price: "10-50" }, format: 'json'
-    listing = Listing.find(listing.id)
+    listing = Transactable.find(listing.id)
     assert_equal new_name, listing.name
     assert_response :success
   end
@@ -99,7 +99,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
       ReservationMailer.expects(:notify_guest_with_confirmation).returns(stub(deliver: true)).once
 
       raw_post :reservation, { id: @listing.id }, valid_reservation_params.to_json
-      @reservation = Listing.find_by_id(@listing.id).reservations.first
+      @reservation = Transactable.find_by_id(@listing.id).reservations.first
     end
 
     should "respond with success" do
@@ -161,7 +161,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
   test "should accept inquiry" do
     stub_mixpanel
     authenticate!
-    listing         = Listing.find(@listing.id)
+    listing         = Transactable.find(@listing.id)
     listing.creator = FactoryGirl.create(:user)
     listing.save
 
@@ -180,7 +180,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
   test "inquiry should raise when json is missing" do
     assert_raise DNM::MissingJSONData do
       authenticate!
-      assert_no_difference "Listing.find(@listing.id).inquiries.count" do
+      assert_no_difference "Transactable.find(@listing.id).inquiries.count" do
         assert_no_difference "ActionMailer::Base.deliveries.count" do
           raw_post :inquiry, {id: @listing.id}, '{ "no_message": "I am missing!" }'
         end
@@ -246,7 +246,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
 
   def get_authenticated_listing
     location = get_authenticated_location
-    listing = FactoryGirl.create(:listing, :location_id => location.id, :photos_count_to_be_created => 1)
+    listing = FactoryGirl.create(:transactable, :location_id => location.id, :photos_count_to_be_created => 1)
   end
 
   def valid_search_params

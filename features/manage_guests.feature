@@ -9,7 +9,7 @@ Feature: As a user of the site
       And a company exists with creator: the user
       And a location exists with company: the company, creator: the user, street: "Rad Annex House"
       And a location exists with company: the company, creator: the user, street: "Annex Red House"
-      And a listing exists with location: the location, creator: the user, name: "Rad Annex", confirm_reservations: true
+      And a transactable exists with location: the location, creator: the user, name: "Rad Annex", confirm_reservations: true
 
   Scenario: A user will see tweet links for locations from the first company
     Given the user has second company with location "Second location"
@@ -19,12 +19,12 @@ Feature: As a user of the site
       And I should not see "Second location"
 
   Scenario: User rejects reservation
-    Given a reservation exists with listing: the listing
+    Given a reservation exists with listing: the transactable
     Given I am on the manage guests dashboard page
     And I reject reservation with reason
-    Then I should see "You have rejected the reservation. Maybe next time!" 
+    Then I should see "You have rejected the reservation. Maybe next time!"
 
   Scenario: A user will see information about no reservation
-    Given a reservation exists with listing: the listing, state: "confirmed"
+    Given a reservation exists with listing: the transactable, state: "confirmed"
     Given I am on the manage guests dashboard page
     Then I should see "You have no unconfirmed reservations. Have a nice day!"

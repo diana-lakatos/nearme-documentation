@@ -7,7 +7,7 @@ class Instance < ActiveRecord::Base
                   :live_paypal_client_id, :live_paypal_client_secret, :live_balanced_api_key, :instance_billing_gateways_attributes, :marketplace_password,
                   :translations_attributes, :test_stripe_api_key, :test_stripe_public_key, :test_paypal_username, :test_paypal_password,
                   :test_paypal_signature, :test_paypal_app_id, :test_paypal_client_id, :test_paypal_client_secret, :test_balanced_api_key,
-                  :password_protected, :test_mode, :olark_api_key, :olark_enabled, :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key, 
+                  :password_protected, :test_mode, :olark_api_key, :olark_enabled, :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key,
                   :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret, :instagram_consumer_key, :instagram_consumer_secret,
                   :paypal_email
 
@@ -27,7 +27,7 @@ class Instance < ActiveRecord::Base
   has_many :location_types, :inverse_of => :instance
   has_many :listing_amenity_types, :inverse_of => :instance
   has_many :location_amenity_types, :inverse_of => :instance
-  has_many :listings, :inverse_of => :instance
+  has_many :listings, class_name: "Transactable", :inverse_of => :instance
   has_many :listing_types, :inverse_of => :instance
   has_many :domains, :as => :target
   has_many :partners, :inverse_of => :instance

@@ -20,7 +20,7 @@ class V1::ListingsController < V1::BaseController
   end
 
   def create
-    @listing = Listing.new(params[:listing])
+    @listing = Transactable.new(params[:listing])
     if @listing.save
       render :json => {:success => true, :id => @listing.id}
     else
@@ -51,7 +51,7 @@ class V1::ListingsController < V1::BaseController
   end
 
   def show
-    render :json => Listing.active.find(params[:id])
+    render :json => Transactable.active.find(params[:id])
   end
 
   def search
@@ -67,7 +67,7 @@ class V1::ListingsController < V1::BaseController
 
   # Create a new reservation
   def reservation
-    listing     = Listing.find(params[:id])
+    listing     = Transactable.find(params[:id])
     reservation = listing.reserve!(current_user, @dates, @quantity)
 
     # Render the newly created reservation
@@ -76,12 +76,12 @@ class V1::ListingsController < V1::BaseController
 
   # Retrieve the reservation availability for a listing
   def availability
-    listing = Listing.find(params[:id])
+    listing = Transactable.find(params[:id])
     render :json => formatted_availability_for(listing, @dates)
   end
 
   def inquiry
-    listing = Listing.find(params[:id])
+    listing = Transactable.find(params[:id])
     @message = json_params["message"]
 
     inquiry = listing.inquiry_from!(current_user, message: @message)
@@ -93,7 +93,7 @@ class V1::ListingsController < V1::BaseController
 
   def share
     users = validate_share_params!
-    listing = Listing.find(params[:id])
+    listing = Transactable.find(params[:id])
     message = json_params["query"]
     users.each do |user|
       ListingMailer.enqueue.share(listing, user["email"], user["name"], current_user, message)
@@ -103,16 +103,16 @@ class V1::ListingsController < V1::BaseController
   end
 
   def patrons
-    listing = Listing.find(params[:id])
+    listing = Transactable.find(params[:id])
     patrons = User.patron_of(listing)
     render json: formatted_patrons(listing, patrons)
   end
 
   # Return the user's connections associated with the listing
   def connections
-    listing = Listing.find(params[:id])
+    listing = Transactable.find(params[:id])
     users = current_user.followed_users.patron_of(listing)
-    patrons = User.joins(:reservations).where(:reservations => { :listing_id => listing.id }).where(:id => users.pluck('users.id')).uniq
+    patrons = User.joins(:reservations).where(:reservations => { :transactable_id => listing.id }).where(:id => users.pluck('users.id')).uniq
     render json: formatted_patrons(listing, patrons)
   end
 

@@ -1,5 +1,5 @@
-Given /^I ask a question about a listing$/ do
-  @listing = model('listing')
+Given /^I ask a question about a transactable$/ do
+  @listing = model('transactable')
   @user = model('user')
   visit location_path(@listing.location, @listing)
   click_link "Contact Host"
@@ -89,7 +89,7 @@ Then /^I should see this( reservation)? message in my inbox marked as read$/ do 
   page.should have_content('Inbox')
   if reservation_message
     page.should have_content @reservation.listing.administrator.first_name
-    page.should have_content @reservation.name     
+    page.should have_content @reservation.name
   else
     page.should have_content model('user').first_name
     page.should have_content @another_user.name
@@ -110,7 +110,7 @@ Then /^I should see this( reservation)? message in my inbox marked as unread$/ d
   page.should have_content('Inbox (1)')
   if reservation_message
     page.should have_content @reservation.listing.administrator.first_name
-    page.should have_content @reservation.name     
+    page.should have_content @reservation.name
   else
     page.should have_content model('user').first_name
     page.should have_content @another_user.name

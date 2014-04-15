@@ -94,7 +94,7 @@ class UserMessagesDecoratorTest < ActionView::TestCase
   context 'With a message sent from owner to listings creator' do
     setup do
       @owner = FactoryGirl.create(:user)
-      @listing = FactoryGirl.create(:listing)
+      @listing = FactoryGirl.create(:transactable)
       @user_message = FactoryGirl.create(:user_message,
                                             thread_context: @listing,
                                             thread_recipient: @listing.administrator,
@@ -109,7 +109,7 @@ class UserMessagesDecoratorTest < ActionView::TestCase
                                                    thread_owner: @owner,
                                                    author: @listing_administrator)
 
-      @listing2 = FactoryGirl.create(:listing)
+      @listing2 = FactoryGirl.create(:transactable)
       @archived_user_message = FactoryGirl.create(:user_message,
                                                      thread_owner: @owner,
                                                      thread_recipient: @listing2.administrator,

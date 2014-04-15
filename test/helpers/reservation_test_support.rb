@@ -4,7 +4,7 @@ module ReservationTestSupport
   def prepare_company_with_charged_reservations(options = {})
     options.reverse_merge!(:reservation_count => 1, :listing => { :daily_price => 50 })
 
-    listing = FactoryGirl.create(:listing, options[:listing])
+    listing = FactoryGirl.create(:transactable, options[:listing])
     prepare_charged_reservations_for_listing(listing, options[:reservation_count])
     listing.company
   end

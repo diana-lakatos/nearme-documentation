@@ -2,21 +2,21 @@
 Feature: A user can book at a space
   In order to have a place to work
   As a user
-  I want to book a listing
+  I want to book a transactable
 
   Background:
     Given a company exists
       And a location exists with company: that company, currency: "USD"
-      And a listing exists with location: that location, quantity: 10
+      And a transactable exists with location: that location, quantity: 10
       And a user exists
 
   Scenario: Booking for a non-'automatically confirm' listing should show relevant details
-    Given bookings for that listing do need to be confirmed
+    Given bookings for that transactable do need to be confirmed
     And I am logged in as the user
     When I go to the location's page
     And I select to book and review space for:
-      | Listing     | Date   | Quantity |
-      | the listing | Monday | 1        |
+      | Transactable     | Date   | Quantity |
+      | the transactable | Monday | 1        |
     Then I should see "This host manually confirms all bookings."
     And the reservation subtotal should show $50.00
     And the reservation service fee should show $5.00
@@ -24,26 +24,26 @@ Feature: A user can book at a space
 
   Scenario: Paying manually should not incur a service fee
     Given a location exists with company: that company, currency: "RUB"
-    And a listing exists with location: that location, quantity: 10
+    And a transactable exists with location: that location, quantity: 10
     And I am logged in as the user
     When I go to the location's page
     And I select to book and review space for:
-      | Listing | Date | Quantity|
-      | the listing | Monday | 1 |
+      | Transactable | Date | Quantity|
+      | the transactable | Monday | 1 |
     Then the reservation total should show $50.00
 
   Scenario: Free booking should show 'Free' in place of rates and $0.00 for the total
     Given I am logged in as the user
     And a location exists with company: that company, currency: "USD"
-    And a listing exists with location: that location, quantity: 10, daily_price_cents: nil, free: true
+    And a transactable exists with location: that location, quantity: 10, daily_price_cents: nil, free: true
     When I go to the location's page
     Then I should see a free booking module
 
   Scenario: Booking and paying by credit card via Stripe
      Given I am logged in as the user
        When I book space for:
-        | Listing     | Date   | Quantity |
-        | the listing | Monday | 1        |
+        | Transactable     | Date   | Quantity |
+        | the transactable | Monday | 1        |
        When I follow "Manage Booking"
        Then I should be redirected to bookings page
        Then I should see "credit card will be charged when your reservation is confirmed"
@@ -52,10 +52,10 @@ Feature: A user can book at a space
   Scenario: Booking and paying by credit card via Paypal
      Given I am logged in as the user
        And a location exists with company: that company, currency: "JPY"
-       And a listing exists with location: that location, quantity: 10
+       And a transactable exists with location: that location, quantity: 10
        When I book space for:
-        | Listing     | Date   | Quantity |
-        | the listing | Monday | 1        |
+        | Transactable     | Date   | Quantity |
+        | the transactable | Monday | 1        |
        When I follow "Manage Booking"
        Then I should be redirected to bookings page
        Then I should see "credit card will be charged when your reservation is confirmed"
@@ -63,107 +63,107 @@ Feature: A user can book at a space
 
   Scenario: As an anonymous user I should be asked to sign up before booking
     When I select to book and review space for:
-      | Listing     | Date   | Quantity |
-      | the listing | Monday | 2        |
+      | Transactable     | Date   | Quantity |
+      | the transactable | Monday | 2        |
     Then I should be asked to sign up before making a booking
 
   Scenario: As an anonymous user I should return to my booking state after logging in
     When I select to book and review space for:
-      | Listing     | Date   | Quantity |
-      | the listing | Monday | 2        |
+      | Transactable     | Date   | Quantity |
+      | the transactable | Monday | 2        |
     And I log in to continue booking
     Then I should see the booking confirmation screen for:
-      | Listing     | Date   | Quantity |
-      | the listing | Monday | 2        |
+      | Transactable     | Date   | Quantity |
+      | the transactable | Monday | 2        |
 
   Scenario: As an anonymous user I should return to my booking state after signing up
     When I select to book and review space for:
-      | Listing     | Date   | Quantity |
-      | the listing | Monday | 2        |
+      | Transactable     | Date   | Quantity |
+      | the transactable | Monday | 2        |
     And I sign up as a user in the modal
     Then I should see the booking confirmation screen for:
-      | Listing     | Date   | Quantity |
-      | the listing | Monday | 2        |
+      | Transactable     | Date   | Quantity |
+      | the transactable | Monday | 2        |
 
   Scenario: Not logged in user is prompted to log in during booking flow
      When I book space as new user for:
-          | Listing     | Date         | Quantity  |
-          | the listing | next week Monday  | 1         |
-          | the listing | next week Tuesday | 1         |
-     Then user should have the listing reserved for 'next week Monday'
-      And user should have the listing reserved for 'next week Tuesday'
+          | Transactable     | Date         | Quantity  |
+          | the transactable | next week Monday  | 1         |
+          | the transactable | next week Tuesday | 1         |
+     Then user should have the transactable reserved for 'next week Monday'
+      And user should have the transactable reserved for 'next week Tuesday'
 
   Scenario: Hourly reserved listing can be booked
-    Given the listing is reserved hourly
-    And   the listing has an hourly price of 100.00
+    Given the transactable is reserved hourly
+    And   the transactable has an hourly price of 100.00
     And I am logged in as the user
     When I go to the location's page
     And I select to book and review space for:
-      | Listing     | Date   | Quantity | Start | End   |
-      | the listing | Monday | 1        | 9:00  | 14:00 |
+      | Transactable     | Date   | Quantity | Start | End   |
+      | the transactable | Monday | 1        | 9:00  | 14:00 |
     Then I should see the booking confirmation screen for:
-      | Listing     | Date   | Quantity | Start | End   |
-      | the listing | Monday | 1        | 9:00  | 14:00 |
+      | Transactable     | Date   | Quantity | Start | End   |
+      | the transactable | Monday | 1        | 9:00  | 14:00 |
     And the reservation subtotal should show $500.00
     And the reservation service fee should show $50.00
     And the reservation total should show $550.00
     And I provide reservation credit card details
     When I click to confirm the booking
     Then the user should have a reservation:
-      | Listing     | Date   | Quantity | Start | End   |
-      | the listing | Monday | 1        | 9:00  | 14:00 |
+      | Transactable     | Date   | Quantity | Start | End   |
+      | the transactable | Monday | 1        | 9:00  | 14:00 |
 
   Scenario: Hourly reserved listing can be booked for full day
-    Given the listing is reserved hourly
-    And   the listing has an hourly price of 100.00
+    Given the transactable is reserved hourly
+    And   the transactable has an hourly price of 100.00
     And I am logged in as the user
     When I go to the location's page
     And I select to book and review space for:
-      | Listing     | Date   | Quantity | Start | End   |
-      | the listing | Monday | 1        | 9:00  | 17:00 |
+      | Transactable     | Date   | Quantity | Start | End   |
+      | the transactable | Monday | 1        | 9:00  | 17:00 |
     And I provide reservation credit card details
     And I click to confirm the booking
     Then the user should have a reservation:
-      | Listing     | Date   | Quantity | Start | End   |
-      | the listing | Monday | 1        | 9:00  | 17:00 |
+      | Transactable     | Date   | Quantity | Start | End   |
+      | the transactable | Monday | 1        | 9:00  | 17:00 |
 
   Scenario: User sees booking confirmation details after successful reservation
     Given I am logged in as the user
      When I book space for:
-          | Listing     | Date         | Quantity  |
-          | the listing | next week Monday  | 1         |
-          | the listing | next week Tuesday | 1         |
+          | Transactable     | Date         | Quantity  |
+          | the transactable | next week Monday  | 1         |
+          | the transactable | next week Tuesday | 1         |
      Then I should be offered with sharing options
 
   Scenario: Last bookings is highlighted
     Given I am logged in as the user
      When I book space for:
-          | Listing     | Date         | Quantity  |
-          | the listing | next week Monday  | 1         |
-          | the listing | next week Tuesday | 1         |
+          | Transactable     | Date         | Quantity  |
+          | the transactable | next week Monday  | 1         |
+          | the transactable | next week Tuesday | 1         |
      When I book space for:
-          | Listing     | Date         | Quantity  |
-          | the listing | next Wednesday  | 1      |
+          | Transactable     | Date         | Quantity  |
+          | the transactable | next Wednesday  | 1      |
      Then I should be offered with sharing options
      When I follow "Manage Booking"
      Then I should be redirected to bookings page
      Then The second booking should be highlighted
 
-  Scenario: A logged in user can book a listing
+  Scenario: A logged in user can book a transactable
     Given I am logged in as the user
       When I book space for:
-          | Listing     | Date         | Quantity  |
-          | the listing | next week Monday  | 1         |
-          | the listing | next week Tuesday | 1         |
-     Then the user should have the listing reserved for 'next week Monday'
-      And the user should have the listing reserved for 'next week Tuesday'
+          | Transactable     | Date         | Quantity  |
+          | the transactable | next week Monday  | 1         |
+          | the transactable | next week Tuesday | 1         |
+     Then the user should have the transactable reserved for 'next week Monday'
+      And the user should have the transactable reserved for 'next week Tuesday'
 
   @borked
   Scenario: Booking for a 'automatically confirm' listing should show relevant details
-    Given bookings for the listing do not need to be confirmed
+    Given bookings for the transactable do not need to be confirmed
     And I am logged in as the user
     When I go to the location's page
     And I select to book and review space for:
-      | Listing | Date | Quantity|
-      | the listing | Monday | 1 |
+      | Transactable | Date | Quantity|
+      | the transactable | Monday | 1 |
     Then I should not see "This host manually confirms all bookings before payment"

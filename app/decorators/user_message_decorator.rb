@@ -1,4 +1,6 @@
 class UserMessageDecorator < Draper::Decorator
+  include Rails.application.routes.url_helpers
+  include ActionDispatch::Routing::PolymorphicRoutes
   delegate_all
 
   def recipient_name
@@ -21,5 +23,31 @@ class UserMessageDecorator < Draper::Decorator
   def available_for_reply?
     thread_context.present? && thread_owner.present? && thread_recipient.present?
   end
+
+  def create_path(um = nil)
+    um ||= self.object
+    if Transactable === self.thread_context
+      listing_user_messages_path(self.thread_context)
+    else
+      polymorphic_path([self.thread_context, um])
+    end
+  end
+
+  def show_path(options = {})
+    if Transactable === self.thread_context
+      listing_user_message_path(self.thread_context, self.object, options)
+    else
+      polymorphic_path([self.thread_context, self.object], options)
+    end
+  end
+
+  def archive_path(options = {})
+    if Transactable === self.thread_context
+      listing_user_message_archive_path(self.thread_context, self.object, options)
+    else
+      polymorphic_path([self.thread_context, self.object, :archive], options)
+    end
+  end
+
 
 end

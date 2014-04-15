@@ -1,6 +1,7 @@
 class Inquiry < ActiveRecord::Base
 
-  belongs_to :listing
+  belongs_to :listing, class_name: 'Transactable', foreign_key: 'transactable_id'
+
   delegate :creator_name, to: :listing, :prefix => true
   delegate :instance, to: :listing
 

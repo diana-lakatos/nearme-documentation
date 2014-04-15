@@ -5,11 +5,11 @@ class Photo < ActiveRecord::Base
   include RankedModel
   has_metadata :without_db_column => true
 
-  ranks :position, with_same: [:listing_id]
+  ranks :position, with_same: [:transactable_id]
 
-  attr_accessible :creator_id, :listing_id, :caption, :image, :image_versions_generated_at, :image_transformation_data, :position
-  belongs_to :listing
+  belongs_to :listing, class_name: "Transactable", foreign_key: 'transactable_id'
   belongs_to :creator, class_name: "User"
+  attr_accessible :creator_id, :transactable_id, :caption, :image, :image_versions_generated_at, :image_transformation_data, :position
 
   default_scope -> { rank(:position) }
 

@@ -16,7 +16,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
   context 'scopes current partner for new company' do
     should 'match partner_id' do
       PlatformContext.any_instance.stubs(:partner).returns(@partner)
-      assert_difference 'Listing.count' do
+      assert_difference 'Transactable.count' do
         post :submit_listing, get_params
       end
       @company = Company.last
@@ -25,7 +25,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
   end
 
   should 'set correct foreign keys' do
-    assert_difference 'Listing.count' do
+    assert_difference 'Transactable.count' do
       post :submit_listing, get_params
     end
     @company = Company.last
@@ -44,7 +44,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
   context "price must be formatted" do
 
     should "ignore invalid characters in price" do
-      assert_difference('Listing.count', 1) do
+      assert_difference('Transactable.count', 1) do
         post :submit_listing, get_params("249.31-300.00", '!@#$%^&*()_+=_:;"[]}{\,<.>/?`~', 'i am not valid price I guess', "0")
       end
       @listing = assigns(:listing)
@@ -54,7 +54,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
     end
 
     should "handle nil and empty prices" do
-      assert_difference('Listing.count', 1) do
+      assert_difference('Transactable.count', 1) do
         post :submit_listing, get_params(nil, "", "249.00", "0")
       end
       @listing = assigns(:listing)
@@ -64,7 +64,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
     end
 
     should "not raise exception if hash is incomplete" do
-      assert_no_difference('Listing.count') do
+      assert_no_difference('Transactable.count') do
         post :submit_listing, { "user" => {"companies_attributes" => {"0"=> { "name"=>"International Secret Intelligence Service" }}}}
       end
     end
@@ -146,7 +146,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
     context '#user has already bookable' do
 
       setup do
-        @listing = FactoryGirl.create(:listing)
+        @listing = FactoryGirl.create(:transactable)
         @listing.company.tap { |c| c.creator = @user }.save!
         @listing.company.add_creator_to_company_users
       end
@@ -194,7 +194,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
       params_without_company_name['user']['companies_attributes']['0'].delete('name')
       params_without_company_name['user']['companies_attributes']['0'].delete('industry_ids')
 
-      assert_difference('Listing.count', 1) do
+      assert_difference('Transactable.count', 1) do
         post :submit_listing, params_without_company_name
       end
     end
@@ -207,32 +207,32 @@ class SpaceWizardControllerTest < ActionController::TestCase
      {"companies_attributes"=>
       {"0" =>
        {
-         "name"=>"International Secret Intelligence Service", 
+         "name"=>"International Secret Intelligence Service",
          "industry_ids"=>["#{@industry.id}"],
          "locations_attributes"=>
          {"0"=>
-          {"description"=>"Our historic 11-story Southern Pacific Building, also known as \"The Landmark\", was completed in 1916. We are in the 172 m Spear Tower.", 
+          {"description"=>"Our historic 11-story Southern Pacific Building, also known as \"The Landmark\", was completed in 1916. We are in the 172 m Spear Tower.",
            "name" => 'Location',
-           "address"=>"usa", 
-           "local_geocoding"=>"10", 
-           "latitude"=>"5", 
-           "longitude"=>"8", 
-           "formatted_address"=>"formatted usa", 
-           "location_type_id"=>"1", 
+           "address"=>"usa",
+           "local_geocoding"=>"10",
+           "latitude"=>"5",
+           "longitude"=>"8",
+           "formatted_address"=>"formatted usa",
+           "location_type_id"=>"1",
            "listings_attributes"=>
           {"0"=>
-           {"name"=>"Desk", 
+           {"name"=>"Desk",
             "description"=>"We have a group of several shared desks available.",
             "hourly_reservations" => false,
-            "listing_type_id"=>"1", 
-            "quantity"=>"1", 
-            "daily_price"=>daily_price, 
-            "weekly_price"=>weekly_price, 
-            "monthly_price"=> monthly_price, 
-            "free"=>free, 
+            "listing_type_id"=>"1",
+            "quantity"=>"1",
+            "daily_price"=>daily_price,
+            "weekly_price"=>weekly_price,
+            "monthly_price"=> monthly_price,
+            "free"=>free,
             "confirm_reservations"=>"0",
             "photos_attributes" => [FactoryGirl.attributes_for(:photo)]}
-          }, 
+          },
           "currency"=>"USD"}
          }
        },
@@ -246,7 +246,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
   def create_listing
     @company = FactoryGirl.create(:company, :creator => @user)
     @location = FactoryGirl.create(:location, :company => @company)
-    FactoryGirl.create(:listing, :location => @location)
+    FactoryGirl.create(:transactable, :location => @location)
   end
 
 end

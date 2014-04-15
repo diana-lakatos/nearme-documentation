@@ -42,7 +42,9 @@ class Location < ActiveRecord::Base
 
   has_many :listings,
     dependent:  :destroy,
-    inverse_of: :location
+    inverse_of: :location,
+    class_name: 'Transactable'
+
   has_many :reservations, :through => :listings
   has_many :reservation_charges, :through => :reservations
   has_many :photos, :through => :listings
@@ -53,7 +55,7 @@ class Location < ActiveRecord::Base
   has_many :reviews, :through => :listings
 
   validates_presence_of :company, :address, :latitude, :longitude, :location_type_id, :currency
-  validates_presence_of :description 
+  validates_presence_of :description
   validates_presence_of :name, :if => :name_required
   validates :email, email: true, allow_nil: true
   validates :currency, currency: true, allow_nil: false
@@ -150,7 +152,7 @@ class Location < ActiveRecord::Base
   end
 
   def description
-    read_attribute(:description).presence || (listings.first || NullListing.new).description
+    read_attribute(:description).presence || listings.first.try(:description).presence || ""
   end
 
   def administrator
@@ -163,7 +165,7 @@ class Location < ActiveRecord::Base
   end
 
   def email
-    read_attribute(:email).presence || creator.try(:email) 
+    read_attribute(:email).presence || creator.try(:email)
   end
 
   def phone=(phone)

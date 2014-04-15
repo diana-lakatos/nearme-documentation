@@ -9,7 +9,7 @@ class UserMessage < ActiveRecord::Base
   belongs_to :author, class_name: 'User'           # person that wrote this message
   belongs_to :thread_owner, class_name: 'User'     # user that started conversation
   belongs_to :thread_recipient, class_name: 'User' # user that is conversation recipient
-  belongs_to :thread_context, polymorphic: true    # conversation context: Listing, Reservation, User
+  belongs_to :thread_context, polymorphic: true    # conversation context: Transactable, Reservation, User
   belongs_to :instance
 
   validates_presence_of :author_id
@@ -84,8 +84,8 @@ class UserMessage < ActiveRecord::Base
 
   def send_notification
     return if thread_context_type.blank?
-    UserMessageSmsNotifier.notify_user_about_new_message(self).deliver
-    return if thread_context_type != 'Listing'
+    UserMessageSmsNotifier.notify_user_about_new_message(self.decorate).deliver
+    return if thread_context_type != 'Transactable'
 
     if author == thread_context.administrator
       UserMessageMailer.enqueue.email_message_from_host(self)
@@ -122,7 +122,7 @@ class UserMessage < ActiveRecord::Base
   # check if author of this message can join conversation in message_context
   def author_has_access_to_message_context?
     case thread_context
-    when Listing, User
+    when Transactable, User
       true
     when Reservation
       author == thread_context.owner ||

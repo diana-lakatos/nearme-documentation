@@ -49,21 +49,21 @@ Feature: As a user of the site
 
   Scenario: A user can edit existing listing
     Given the location exists with company: the company
-      And the listing exists with location: the location
+      And the transactable exists with location: the location
       And I am on the manage locations page
      When I click edit listing icon
       And I provide new listing data
       And I submit the form
       And I should see "Great, your listing's details have been updated."
-     Then the listing should be updated
+     Then the transactable should be updated
      When I click edit listing icon
       And I click delete bookable noun link
       And I should see "That listing has been deleted."
-     Then the listing should not exist
+     Then the transactable should not exist
 
   Scenario: A user can disable existing price in listing
     Given a location exists with company: the company
-      And a listing exists with location: the location, daily_price_cents: 1000, photos_count_to_be_created: 1
+      And a transactable exists with location: the location, daily_price_cents: 1000, photos_count_to_be_created: 1
       And I am on the manage locations page
      When I click edit listing icon
       And I disable daily pricing
@@ -74,7 +74,7 @@ Feature: As a user of the site
 
   Scenario: A user can enable new pricing in listing
     Given a location exists with company: the company
-      And a listing exists with location: the location, daily_price_cents: 1000, photos_count_to_be_created: 1
+      And a transactable exists with location: the location, daily_price_cents: 1000, photos_count_to_be_created: 1
       And I am on the manage locations page
      When I click edit listing icon
       And I enable weekly pricing
@@ -82,9 +82,9 @@ Feature: As a user of the site
       And I click edit listing icon
      Then Listing weekly pricing should be enabled
 
-  Scenario: A user can set availability rules on a listing
+  Scenario: A user can set availability rules on a transactable
     Given a location exists with company: the company
-    And   a listing exists with location: the location, photos_count_to_be_created: 1
+    And   a transactable exists with location: the location, photos_count_to_be_created: 1
     And   I am on the manage locations page
     When I click edit listing icon
     And  I select custom availability:
@@ -93,7 +93,7 @@ Feature: As a user of the site
         | 2   | Yes        | 9:00      | 17:00      |
     And I submit the form
     And I should see "Great, your listing's details have been updated."
-    Then the listing should have availability:
+    Then the transactable should have availability:
         | Day | Availabile | Open Time | Close Time |
         | 1   | Yes        | 9:00      | 17:00      |
         | 2   | Yes        | 9:00      | 17:00      |

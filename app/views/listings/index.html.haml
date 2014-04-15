@@ -3,6 +3,6 @@
   %p Ordered by most recently created. Hover over a day to see how many #{platform_context.bookable_noun.pluralize} are available.
 
 %section.list
-  = render @listings
+  = render :partial => 'listings/listing', :collection => @listings
 = will_paginate @listings
 

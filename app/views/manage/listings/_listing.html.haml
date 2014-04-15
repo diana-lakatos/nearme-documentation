@@ -1,4 +1,4 @@
-= simple_form_for [:manage, location, listing], :html => { :class => "form-horizontal", :multipart => true, :id => 'listing-form' } do |f|
+= simple_form_for [:manage, location, listing], as: 'listing', url: (listing.persisted? ? manage_location_listing_path(location, listing) : manage_location_listings_path(location)), :html => { :class => "form-horizontal", :multipart => true, :id => 'listing-form' } do |f|
 
   = render :partial => 'listings/listing_form', :locals => { :f => f, :listing => listing, photos: photos}
 

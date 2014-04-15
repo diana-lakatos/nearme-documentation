@@ -11,7 +11,7 @@ class UserMessageMailerPreview < MailView
   private
 
   def user_message
-    UserMessage.last || FactoryGirl.create(:user_message, author: User.last, thread_context: Listing.searchable.last)
+    UserMessage.last || FactoryGirl.create(:user_message, author: User.last, thread_context: Transactablesearchable.last)
   end
 
 end

@@ -12,7 +12,6 @@ class Manage::ListingsController < Manage::BaseController
       :daily_price_cents => 50_00,
       :availability_template_id => AvailabilityRule.default_template.id
     )
-
   end
 
   def create
@@ -89,7 +88,7 @@ class Manage::ListingsController < Manage::BaseController
   private
 
   def find_location
-    begin 
+    begin
       @location = if @listing
                     @listing.location
                   else
@@ -101,15 +100,15 @@ class Manage::ListingsController < Manage::BaseController
   end
 
   def find_listing
-    begin 
-      @listing = Listing.where(location_id: locations_scope.pluck(:id)).find(params[:id])
+    begin
+      @listing = Transactable.where(location_id: locations_scope.pluck(:id)).find(params[:id])
     rescue ActiveRecord::RecordNotFound
-      raise Listing::NotFound
+      raise Transactable::NotFound
     end
   end
 
   def disable_unchecked_prices
-    Listing::PRICE_TYPES.each do |price|
+    Transactable::PRICE_TYPES.each do |price|
       if params[:listing]["#{price}_price"].blank?
         @listing.send("#{price}_price=", nil)
       end
