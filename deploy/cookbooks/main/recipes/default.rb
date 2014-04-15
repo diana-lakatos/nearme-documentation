@@ -12,11 +12,11 @@ require_recipe "redis-yml"
 require_recipe "resque"
 
 #enable Extension modules for a given Postgresql database
-# if ['solo','db_master', 'db_slave'].include?(node[:instance_role])
+if ['solo','db_master', 'db_slave'].include?(node[:instance_role])
   # Extensions that support both Postgres 9.0, 9.1 and 9.2
   # postgresql9_autoexplain "dbname"
-  # postgresql9_btree_gin "dbname"
-  # postgresql9_btree_gist "dbname"
+  postgresql9_btree_gin "desksnearme"
+  postgresql9_btree_gist "desksnearme"
   # postgresql9_chkpass "dbname"
   # postgresql9_citext "dbname"
   # postgresql9_cube "dbname"
@@ -25,7 +25,7 @@ require_recipe "resque"
   # postgresql9_dict_xsyn "dbname"
   # postgresql9_earthdistance "dbname"
   # postgresql9_fuzzystrmatch "dbname"
-  # postgresql9_hstore "dbname"
+  postgresql9_hstore "desksnearme"
   # postgresql9_intarray "dbname"
   # postgresql9_isn "dbname"
   # postgresql9_lo "dbname"
@@ -52,4 +52,4 @@ require_recipe "resque"
   #Admin-Level Contribs
   # postgresql9_pg_buffercache "postgres"
   # postgresql9_pg_freespacemap "postgres"
-#end
+end
