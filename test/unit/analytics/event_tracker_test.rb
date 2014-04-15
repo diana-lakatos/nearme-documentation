@@ -13,7 +13,7 @@ class EventTrackerTest < ActiveSupport::TestCase
 
   context 'track_charge' do
     setup do
-      @listing = FactoryGirl.create(:listing, :daily_price => 89.39)
+      @listing = FactoryGirl.create(:transactable, :daily_price => 89.39)
       @reservation = FactoryGirl.create(:reservation_with_credit_card, :listing => @listing)
       @reservation.reservation_charges = [FactoryGirl.create(:reservation_charge)]
       @reservation.save!
@@ -39,7 +39,7 @@ class EventTrackerTest < ActiveSupport::TestCase
 
   context 'store relevant invoked events' do
 
-    setup do 
+    setup do
       @category = "User events"
       expect_set_person_properties user_properties
       expect_event 'Logged In', user_properties
@@ -56,12 +56,12 @@ class EventTrackerTest < ActiveSupport::TestCase
       @tracker.signed_up(@user)
       assert_equal ['Logged in', 'Signed up'], @tracker.triggered_client_taggable_methods
     end
-    
+
   end
 
   context 'Listings' do
     setup do
-      @listing = FactoryGirl.create(:listing)
+      @listing = FactoryGirl.create(:transactable)
       @category = "Listing events"
     end
 

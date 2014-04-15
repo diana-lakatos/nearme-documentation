@@ -32,7 +32,7 @@ class Instance < ActiveRecord::Base
   has_many :location_types, :inverse_of => :instance
   has_many :listing_amenity_types, :inverse_of => :instance
   has_many :location_amenity_types, :inverse_of => :instance
-  has_many :listings, :inverse_of => :instance
+  has_many :listings, class_name: "Transactable", :inverse_of => :instance
   has_many :listing_types, :inverse_of => :instance
   has_many :domains, :as => :target
   has_many :partners, :inverse_of => :instance

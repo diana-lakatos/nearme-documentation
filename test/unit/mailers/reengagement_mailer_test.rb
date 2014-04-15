@@ -12,7 +12,7 @@ class ReengagementMailerTest < ActiveSupport::TestCase
 
   context 'with suggestions' do
     setup do
-      @user.stubs(:listings_in_near).returns([FactoryGirl.create(:listing)])
+      @user.stubs(:listings_in_near).returns([FactoryGirl.create(:transactable)])
     end
 
     should "send no_bookings" do

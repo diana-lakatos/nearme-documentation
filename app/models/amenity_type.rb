@@ -7,13 +7,9 @@ class AmenityType < ActiveRecord::Base
   validates :name, :uniqueness => { scope: :instance_id }
 
   belongs_to :instance
-  has_many :amenities,
-    order: 'amenities.name ASC',
-    dependent: :destroy
-  has_many :locations,
-    through: :amenities
-  has_many :listings,
-    through: :amenities
+  has_many :amenities, order: 'amenities.name ASC', dependent: :destroy
+  has_many :locations, through: :amenities
+  has_many :listings, through: :amenities, class_name: "Transactable"
 
   accepts_nested_attributes_for :amenities, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
 

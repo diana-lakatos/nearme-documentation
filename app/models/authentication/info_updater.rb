@@ -9,7 +9,7 @@ class Authentication::InfoUpdater
   end
 
   def update
-    return if @authentication.token_expires && @authentication.token_expires_at && @authentication.token_expires_at.utc < Time.zone.now.utc
+    return if @authentication.token_expired?
     info = @provider.info
     info_hash = info.to_hash
 
@@ -20,7 +20,7 @@ class Authentication::InfoUpdater
     @authentication.save!
 
     @user.name ||= info_hash['name']
-    @user.biography ||= info_hash['description']
+    @user.biography ||= ActionController::Base.helpers.truncate(info_hash['description'], length: User::BIOGRAPHY_MAX_LENGTH)
     @user.current_location ||= info_hash['location']
     @user.country_name ||= Geocoder.search(info_hash['location']).first.country rescue nil
 

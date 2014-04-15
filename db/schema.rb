@@ -11,9 +11,10 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140328162434) do
+ActiveRecord::Schema.define(:version => 20140403153457) do
 
 
+  create_extension "hstore", :version => "1.2"
 
   create_table "amenities", :force => true do |t|
     t.string   "name"
@@ -292,7 +293,7 @@ ActiveRecord::Schema.define(:version => 20140328162434) do
   end
 
   create_table "inquiries", :force => true do |t|
-    t.integer  "listing_id"
+    t.integer  "transactable_id"
     t.integer  "inquiring_user_id"
     t.text     "message"
     t.datetime "created_at",        :null => false
@@ -300,7 +301,7 @@ ActiveRecord::Schema.define(:version => 20140328162434) do
   end
 
   add_index "inquiries", ["inquiring_user_id"], :name => "index_inquiries_on_inquiring_user_id"
-  add_index "inquiries", ["listing_id"], :name => "index_inquiries_on_listing_id"
+  add_index "inquiries", ["transactable_id"], :name => "index_inquiries_on_listing_id"
 
   create_table "instance_admin_roles", :force => true do |t|
     t.string   "name"
@@ -357,8 +358,9 @@ ActiveRecord::Schema.define(:version => 20140328162434) do
 
   create_table "instance_types", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.string   "product_type"
   end
 
   create_table "instance_views", :force => true do |t|
@@ -378,16 +380,16 @@ ActiveRecord::Schema.define(:version => 20140328162434) do
 
   create_table "instances", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                                                                            :null => false
-    t.datetime "updated_at",                                                                            :null => false
-    t.string   "bookable_noun",                                                     :default => "Desk"
-    t.decimal  "service_fee_guest_percent",           :precision => 5, :scale => 2, :default => 0.0
+    t.datetime "created_at",                                                                                 :null => false
+    t.datetime "updated_at",                                                                                 :null => false
+    t.string   "bookable_noun",                                                          :default => "Desk"
+    t.decimal  "service_fee_guest_percent",                :precision => 5, :scale => 2, :default => 0.0
     t.string   "lessor"
     t.string   "lessee"
-    t.boolean  "skip_company",                                                      :default => false
+    t.boolean  "skip_company",                                                           :default => false
     t.text     "pricing_options"
-    t.boolean  "default_instance",                                                  :default => false
-    t.decimal  "service_fee_host_percent",            :precision => 5, :scale => 2, :default => 0.0
+    t.boolean  "default_instance",                                                       :default => false
+    t.decimal  "service_fee_host_percent",                 :precision => 5, :scale => 2, :default => 0.0
     t.string   "live_stripe_public_key"
     t.string   "paypal_email"
     t.string   "encrypted_live_paypal_username"
@@ -407,8 +409,8 @@ ActiveRecord::Schema.define(:version => 20140328162434) do
     t.integer  "max_weekly_price_cents"
     t.integer  "min_monthly_price_cents"
     t.integer  "max_monthly_price_cents"
-    t.boolean  "password_protected",                                                :default => false
-    t.boolean  "test_mode",                                                         :default => false
+    t.boolean  "password_protected",                                                     :default => false
+    t.boolean  "test_mode",                                                              :default => false
     t.string   "encrypted_test_paypal_username"
     t.string   "encrypted_test_paypal_password"
     t.string   "encrypted_test_paypal_signature"
@@ -419,7 +421,7 @@ ActiveRecord::Schema.define(:version => 20140328162434) do
     t.string   "test_stripe_public_key"
     t.string   "encrypted_test_balanced_api_key"
     t.string   "encrypted_olark_api_key"
-    t.boolean  "olark_enabled",                                                     :default => false
+    t.boolean  "olark_enabled",                                                          :default => false
     t.string   "encrypted_facebook_consumer_key"
     t.string   "encrypted_facebook_consumer_secret"
     t.string   "encrypted_linkedin_consumer_key"
@@ -432,6 +434,9 @@ ActiveRecord::Schema.define(:version => 20140328162434) do
     t.text     "metadata"
     t.text     "support_imap_hash"
     t.string   "support_email"
+    t.text     "transactable_properties_types"
+    t.text     "transactable_properties_defaults"
+    t.text     "transactable_properties_validation_rules"
   end
 
   add_index "instances", ["instance_type_id"], :name => "index_instances_on_instance_type_id"
@@ -618,7 +623,7 @@ ActiveRecord::Schema.define(:version => 20140328162434) do
   create_table "photos", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "listing_id"
+    t.integer  "transactable_id"
     t.string   "image"
     t.string   "caption"
     t.integer  "position"
@@ -639,7 +644,7 @@ ActiveRecord::Schema.define(:version => 20140328162434) do
   end
 
   add_index "photos", ["creator_id"], :name => "index_photos_on_creator_id"
-  add_index "photos", ["listing_id"], :name => "index_photos_on_listing_id"
+  add_index "photos", ["transactable_id"], :name => "index_photos_on_listing_id"
 
   create_table "platform_contacts", :force => true do |t|
     t.string   "name"
@@ -742,7 +747,7 @@ ActiveRecord::Schema.define(:version => 20140328162434) do
   add_index "reservation_seats", ["user_id"], :name => "index_reservation_seats_on_user_id"
 
   create_table "reservations", :force => true do |t|
-    t.integer  "listing_id"
+    t.integer  "transactable_id"
     t.integer  "owner_id"
     t.string   "state"
     t.string   "confirmation_email"
@@ -775,10 +780,10 @@ ActiveRecord::Schema.define(:version => 20140328162434) do
   add_index "reservations", ["company_id"], :name => "index_reservations_on_company_id"
   add_index "reservations", ["creator_id"], :name => "index_reservations_on_creator_id"
   add_index "reservations", ["instance_id"], :name => "index_reservations_on_instance_id"
-  add_index "reservations", ["listing_id"], :name => "index_reservations_on_listing_id"
   add_index "reservations", ["owner_id"], :name => "index_reservations_on_owner_id"
   add_index "reservations", ["partner_id"], :name => "index_reservations_on_partner_id"
   add_index "reservations", ["platform_context_detail_id"], :name => "index_reservations_on_platform_context_detail_id"
+  add_index "reservations", ["transactable_id"], :name => "index_reservations_on_listing_id"
 
   create_table "search_notifications", :force => true do |t|
     t.string   "email"
@@ -941,6 +946,30 @@ ActiveRecord::Schema.define(:version => 20140328162434) do
 
   add_index "themes", ["owner_id", "owner_type"], :name => "index_themes_on_owner_id_and_owner_type"
 
+  create_table "transactables", :force => true do |t|
+    t.string   "name"
+    t.integer  "instance_type_id"
+    t.integer  "instance_id"
+    t.integer  "partner_id"
+    t.integer  "creator_id"
+    t.integer  "company_id"
+    t.integer  "location_id"
+    t.integer  "listing_type_id"
+    t.integer  "administrator_id"
+    t.text     "description"
+    t.hstore   "properties"
+    t.datetime "deleted_at"
+    t.datetime "draft"
+    t.datetime "activated_at"
+    t.boolean  "listings_public"
+    t.boolean  "enabled"
+    t.text     "metadata"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  add_index "transactables", ["properties"], :name => "transactables_gin_properties", :using => "gin"
+
   create_table "translations", :force => true do |t|
     t.string   "locale"
     t.string   "key"
@@ -955,14 +984,14 @@ ActiveRecord::Schema.define(:version => 20140328162434) do
   add_index "translations", ["instance_id", "updated_at"], :name => "index_translations_on_instance_id_and_updated_at"
 
   create_table "unit_prices", :force => true do |t|
-    t.integer  "listing_id"
+    t.integer  "transactable_id"
     t.integer  "price_cents"
     t.integer  "period"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
-  add_index "unit_prices", ["listing_id"], :name => "index_unit_prices_on_listing_id"
+  add_index "unit_prices", ["transactable_id"], :name => "index_unit_prices_on_listing_id"
 
   create_table "user_industries", :force => true do |t|
     t.integer  "industry_id"

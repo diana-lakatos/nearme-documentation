@@ -112,7 +112,7 @@ class RegistrationsControllerTest < ActionController::TestCase
     should "redirect verified user with listing to dashboard" do
       @company = FactoryGirl.create(:company, :creator => @user)
       @location = FactoryGirl.create(:location, :company => @company)
-      FactoryGirl.create(:listing, :location => @location)
+      FactoryGirl.create(:transactable, :location => @location)
       get :verify, :id => @user.id, :token => @user.email_verification_token
       assert_redirected_to manage_locations_path
     end
@@ -193,12 +193,12 @@ class RegistrationsControllerTest < ActionController::TestCase
       end
     end
 
-    context 'avatar' do 
+    context 'avatar' do
 
       should 'store transformation data and rotate' do
         sign_in @user
         stub_image_url("http://www.example.com/image.jpg")
-        post :update_avatar, { :crop => { :w => 1, :h => 2, :x => 10, :y => 20 }, :rotate => 90 } 
+        post :update_avatar, { :crop => { :w => 1, :h => 2, :x => 10, :y => 20 }, :rotate => 90 }
         @user = assigns(:user)
         assert_not_nil @user.avatar_transformation_data
         assert_equal({ 'w' => '1', 'h' => '2', 'x' => '10', 'y' => '20' }, @user.avatar_transformation_data[:crop])
@@ -211,7 +211,7 @@ class RegistrationsControllerTest < ActionController::TestCase
         @user.avatar_versions_generated_at = Time.zone.now
         @user.avatar_original_url = "example.jpg"
         @user.save!
-        delete :destroy_avatar, { :crop => { :w => 1, :h => 2, :x => 10, :y => 20 }, :rotate => 90 } 
+        delete :destroy_avatar, { :crop => { :w => 1, :h => 2, :x => 10, :y => 20 }, :rotate => 90 }
         @user = assigns(:user)
         assert_nil @user.avatar_transformation_data
         assert_nil @user.avatar_versions_generated_at

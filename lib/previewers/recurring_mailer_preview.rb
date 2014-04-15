@@ -5,11 +5,11 @@ class RecurringMailerPreview < MailView
   end
 
   def request_photos
-    ::RecurringMailer.request_photos(Listing.first)
+    ::RecurringMailer.request_photos(Transactablefirst)
   end
 
   def share
-    ::RecurringMailer.share(Listing.first)
+    ::RecurringMailer.share(Transactablefirst)
   end
 
 end

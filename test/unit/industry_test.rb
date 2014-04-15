@@ -57,10 +57,10 @@ class IndustryTest < ActiveSupport::TestCase
     @company.save!
     @location = FactoryGirl.create(:location, :company => @company)
     3.times do
-      FactoryGirl.create(:listing, :location => @location)
+      FactoryGirl.create(:transactable, :location => @location)
     end
-    FactoryGirl.create(:listing, :draft => Time.zone.now, :location => @location)
-    FactoryGirl.create(:listing, :enabled => false, :location => @location)
+    FactoryGirl.create(:transactable, :draft => Time.zone.now, :location => @location)
+    FactoryGirl.create(:transactable, :enabled => false, :location => @location)
   end
 
 end

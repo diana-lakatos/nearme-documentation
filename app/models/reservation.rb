@@ -23,7 +23,7 @@ class Reservation < ActiveRecord::Base
   }
 
   belongs_to :instance
-  belongs_to :listing
+  belongs_to :listing, class_name: 'Transactable', foreign_key: 'transactable_id'
   belongs_to :owner, :class_name => "User"
   belongs_to :creator, class_name: "User"
   belongs_to :administrator, class_name: "User"
@@ -31,17 +31,17 @@ class Reservation < ActiveRecord::Base
   belongs_to :platform_context_detail, :polymorphic => true
   has_many :user_messages, as: :thread_context
 
-  attr_accessible :cancelable, :confirmation_email, :date, :listing_id,
+  attr_accessible :cancelable, :confirmation_email, :date, :transactable_id,
     :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method, :rejection_reason
 
-  has_many :reviews, 
-    :class_name => 'GuestRating', 
-    :inverse_of => :reservation, 
+  has_many :reviews,
+    :class_name => 'GuestRating',
+    :inverse_of => :reservation,
     :dependent => :destroy
 
-  has_many :comments_about_guests, 
-    :class_name => 'HostRating', 
-    :inverse_of => :reservation, 
+  has_many :comments_about_guests,
+    :class_name => 'HostRating',
+    :inverse_of => :reservation,
     :dependent => :destroy
 
   has_many :periods,
@@ -53,7 +53,7 @@ class Reservation < ActiveRecord::Base
     inverse_of: :reservation,
     dependent: :destroy
 
-  validates :listing_id, :presence => true
+  validates :transactable_id, :presence => true
   # the if statement for periods is needed to make .recover work - otherwise reservation would be considered not valid even though it is
   validates :periods, :length => { :minimum => 1 }, :if => lambda { self.deleted_at_changed? && self.periods.with_deleted.count.zero? }
   validates :quantity, :numericality => { :greater_than_or_equal_to => 1 }
@@ -187,7 +187,7 @@ class Reservation < ActiveRecord::Base
     where('DATE(reservations.created_at) >= ? ', days_in_past.days.ago)
   }
 
-  scope :for_listing, ->(listing) {where(:listing_id => listing.id)}
+  scope :for_listing, ->(listing) {where(:transactable_id => listing.id)}
 
   validates_presence_of :payment_method, :in => PAYMENT_METHODS.values
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
@@ -347,7 +347,7 @@ class Reservation < ActiveRecord::Base
     date_last = last_date.strftime('%-e %b')
     dates_description = date_first == date_last ? date_first : "#{date_first}-#{date_last}"
     "Reservation of #{listing.try(:name)}, user: #{owner.try(:name)}, #{dates_description}"
-  end 
+  end
 
   private
 

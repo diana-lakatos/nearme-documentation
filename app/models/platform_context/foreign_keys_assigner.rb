@@ -1,13 +1,13 @@
 #  Module responsible for setting PlatformContext for new records
 #
-#  It makes sure that all new records will have correctly populated instance_id/domain_id/partner_id/company_id 
+#  It makes sure that all new records will have correctly populated instance_id/domain_id/partner_id/company_id
 #  based on PlatformContext.current. It also makes sure that user won't be able to fake any of these keys.
 #
 #  Usage:
 #
 #  add auto_set_platform_context to model, for example
 #
-#  Listing.rb
+#  Transactable.rb
 #  auto_set_platform_context
 #
 #  Method takes as argument options hash, with keys:
@@ -25,7 +25,7 @@ module PlatformContext::ForeignKeysAssigner
           #{"validates_presence_of :instance_id" if !options[:allow_nil].try(:include?, :instance_id) && self.column_names.include?('instance_id')}
 
           before_validation do
-            return if self.persisted? 
+            return if self.persisted?
             return if PlatformContext.current.nil?
             #{"self.instance_id = PlatformContext.current.instance.id" if self.column_names.include?('instance_id') && !options[:allow_nil].try(:include?, :instance_id)}
             #{"self.domain_id = PlatformContext.current.domain.try(:id)" if self.column_names.include?('domain_id')}

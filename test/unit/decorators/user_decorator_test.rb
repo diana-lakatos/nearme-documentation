@@ -5,7 +5,7 @@ class UserDecoratorTest < ActionView::TestCase
   context 'with one message sent to listings creator' do
     setup do
       @instance = FactoryGirl.create(:instance)
-      @listing = FactoryGirl.create(:listing)
+      @listing = FactoryGirl.create(:transactable)
       @listing_creator = @listing.creator.decorate
       @author = FactoryGirl.create(:user)
       PlatformContext.current = PlatformContext.new(@instance)

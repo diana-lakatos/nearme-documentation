@@ -3,7 +3,7 @@ class ListingsController < ApplicationController
   before_filter :find_listing, :only => [:show]
 
   def index
-    @listings = Listing.latest.includes(:location).paginate(:page => params[:page])
+    @listings = Transactable.latest.includes(:location).paginate(:page => params[:page])
   end
 
   def show
@@ -19,7 +19,7 @@ class ListingsController < ApplicationController
   end
 
   def find_listing
-    @listing = Listing.with_deleted.find(params[:id])
+    @listing = Transactable.with_deleted.find(params[:id])
     @location = @listing.location
   end
 

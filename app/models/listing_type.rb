@@ -8,6 +8,6 @@ class ListingType < ActiveRecord::Base
   validates :name, :uniqueness => { scope: :instance_id }
 
   belongs_to :instance
-  has_many :listings
+  has_many :listings, class_name: 'Transactable'
 
 end

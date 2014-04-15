@@ -120,7 +120,7 @@ class Listings::ReservationsController < ApplicationController
   end
 
   def find_listing
-    @listing = Listing.find(params[:listing_id])
+    @listing = Transactable.find(params[:listing_id])
   end
 
   def find_reservation

@@ -64,7 +64,7 @@ class UserTest < ActiveSupport::TestCase
   context 'social scopes' do
     setup do
       @me = FactoryGirl.create(:user)
-      @listing = FactoryGirl.create(:listing)
+      @listing = FactoryGirl.create(:transactable)
     end
 
     context 'visited_listing' do
@@ -100,7 +100,7 @@ class UserTest < ActiveSupport::TestCase
 
         @me.add_friend(@friend)
 
-        @listing = FactoryGirl.create(:listing)
+        @listing = FactoryGirl.create(:transactable)
         host = FactoryGirl.create(:user)
         @listing.location.update_attribute(:administrator_id, host.id)
         @listing.reload
@@ -504,8 +504,8 @@ class UserTest < ActiveSupport::TestCase
         @company = FactoryGirl.create(:company, :creator => @user)
         @location = FactoryGirl.create(:location, :company => @company)
         @location2 = FactoryGirl.create(:location, :company => @company)
-        FactoryGirl.create(:listing, :location => @location, :daily_price_cents => 10)
-        FactoryGirl.create(:listing, :location => @location, :daily_price_cents => 20)
+        FactoryGirl.create(:transactable, :location => @location, :daily_price_cents => 10)
+        FactoryGirl.create(:transactable, :location => @location, :daily_price_cents => 20)
       end
 
       should "has listing without price return false if all listings have price" do
@@ -513,12 +513,12 @@ class UserTest < ActiveSupport::TestCase
       end
 
       should "be false if location has only one listing without prices" do
-        FactoryGirl.create(:listing, :location => @location2, :daily_price_cents => nil, :weekly_price_cents => nil, :monthly_price_cents => nil, :free => true)
+        FactoryGirl.create(:transactable, :location => @location2, :daily_price_cents => nil, :weekly_price_cents => nil, :monthly_price_cents => nil, :free => true)
         assert @user.reload.has_listing_without_price?
       end
 
       should "be false if location has many listing, and at least one is without price" do
-        FactoryGirl.create(:listing, :location => @location, :daily_price_cents => nil, :weekly_price_cents => nil, :monthly_price_cents => nil, :free => true)
+        FactoryGirl.create(:transactable, :location => @location, :daily_price_cents => nil, :weekly_price_cents => nil, :monthly_price_cents => nil, :free => true)
         assert @user.reload.has_listing_without_price?
       end
 
@@ -531,7 +531,7 @@ class UserTest < ActiveSupport::TestCase
     context 'user is the only owner of company' do
 
       should 'destroy company' do
-        @listing = FactoryGirl.create(:listing)
+        @listing = FactoryGirl.create(:transactable)
         @location = @listing.location
         @company = @location.company
         @company.add_creator_to_company_users
@@ -547,7 +547,7 @@ class UserTest < ActiveSupport::TestCase
     context 'company has multiple administrators' do
 
       setup do
-        @listing = FactoryGirl.create(:listing)
+        @listing = FactoryGirl.create(:transactable)
         @user = @listing.creator
         @company = @listing.company
         @company.add_creator_to_company_users
@@ -680,7 +680,7 @@ class UserTest < ActiveSupport::TestCase
     context 'listings_metadata' do
 
       setup do
-        @listing = FactoryGirl.create(:listing)
+        @listing = FactoryGirl.create(:transactable)
         @user = @listing.creator
       end
 
@@ -693,7 +693,7 @@ class UserTest < ActiveSupport::TestCase
       end
 
       should 'have active listing and draft listing if there are both draft and active listing' do
-        FactoryGirl.create(:listing, :draft => Time.zone.now, :location => @listing.location)
+        FactoryGirl.create(:transactable, :draft => Time.zone.now, :location => @listing.location)
         @user.expects(:update_metadata).with({
           has_draft_listings: true,
           has_any_active_listings: true
@@ -729,7 +729,7 @@ class UserTest < ActiveSupport::TestCase
     context 'populate_companies_metadata' do
 
       setup do
-        @listing = FactoryGirl.create(:listing)
+        @listing = FactoryGirl.create(:transactable)
         @user = @listing.creator
       end
 
@@ -786,7 +786,7 @@ class UserTest < ActiveSupport::TestCase
     @company = FactoryGirl.create(:company, :creator => @user)
     @company_industry = CompanyIndustry.where(:company_id => @company.id).first
     @location = FactoryGirl.create(:location, :company_id => @company.id)
-    @listing = FactoryGirl.create(:listing, :location => @location)
+    @listing = FactoryGirl.create(:transactable, :location => @location)
     @photo  = FactoryGirl.create(:photo, :listing => @listing, :creator => @photo)
     @reservation = FactoryGirl.create(:reservation, :user => @user, :listing => @listing)
     @reservation_period = @reservation.periods.first

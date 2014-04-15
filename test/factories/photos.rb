@@ -1,7 +1,7 @@
 include ActionDispatch::TestProcess
 FactoryGirl.define do
   factory :photo do
-    listing
+    association :listing, factory: :transactable
     image { fixture_file_upload(Rails.root.join('test', 'assets', 'foobear.jpeg'), 'image/jpeg') }
     association :creator, factory: :user
     caption "Caption"
@@ -11,6 +11,6 @@ FactoryGirl.define do
       image { fixture_file_upload(Dir.glob(Rails.root.join('db', 'seeds', 'demo', 'desksnearme', 'assets', 'listing_photos', '*')).sample, 'image/jpeg') }
       image_versions_generated_at Time.zone.now
     end
-  end 
+  end
 
 end

@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :reservation do
     association :user
-    association :listing
+    association :listing, factory: :transactable
     date { Time.zone.today }
     payment_status 'pending'
     quantity 1
@@ -22,7 +22,7 @@ FactoryGirl.define do
     end
 
     factory :reservation_in_san_francisco do
-      association(:listing, factory: :listing_in_san_francisco_address_components) 
+      association(:listing, factory: :listing_in_san_francisco_address_components)
     end
 
     factory :future_reservation do

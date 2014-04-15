@@ -23,7 +23,10 @@ module NavigationHelpers
     when /the white label settings page/
       edit_manage_white_label_path(model!('the user'))
 
-    when /the listings page/
+    when /the transactable's page/
+      listing_path(model!('the transactable'))
+
+    when /the transactables page/
       listings_path
 
     when /the dashboard/
@@ -39,12 +42,12 @@ module NavigationHelpers
       manage_locations_path
 
     when /the manage listing page/
-      listing = model!('the listing')
+      listing = model!('the transactable')
       edit_manage_location_listing_path(listing.location, listing)
 
     when /the admin instances page/
       admin_instances_path
- 
+
     when /^#{capture_model} page which belong to deleted location$/   # eg. deleted listing page
       obj = model($1)
       deleted = obj.location.destroy

@@ -98,7 +98,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
       raw.stubs(:profile_image_url).returns(nil)
       Twitter::REST::Client.any_instance.stubs(:user).once.returns(raw)
       Twitter::REST::Client.any_instance.stubs(:friend_ids).once.returns(['1', '2'])
-      Authentication.any_instance.stubs(:token_expires).returns(false)
+      Authentication.any_instance.stubs(:token_expired?).returns(false)
       @tracker.expects(:connected_social_provider).once.with do |user, custom_options|
         user == @user && custom_options == { provider: @provider }
       end

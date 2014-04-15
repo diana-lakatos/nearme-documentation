@@ -24,7 +24,7 @@ class RecurringMailerTest < ActiveSupport::TestCase
   end
 
   test "request_photos works ok" do
-    @listing = FactoryGirl.create(:listing)
+    @listing = FactoryGirl.create(:transactable)
     @user = @listing.administrator
     mail = RecurringMailer.request_photos(@listing)
     subject = "Give the final touch to your listing with some photos!"

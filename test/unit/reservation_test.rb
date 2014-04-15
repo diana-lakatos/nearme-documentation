@@ -21,23 +21,23 @@ class ReservationTest < ActiveSupport::TestCase
     end
 
     should 'find rejected reservations' do
-      FactoryGirl.create(:reservation, :state => 'rejected') 
+      FactoryGirl.create(:reservation, :state => 'rejected')
       assert_equal 1, Reservation.rejected.count
     end
 
     should 'find confirmed reservations' do
-      FactoryGirl.create(:reservation, :state => 'confirmed') 
+      FactoryGirl.create(:reservation, :state => 'confirmed')
       assert_equal 1, Reservation.confirmed.count
     end
 
     should 'find expired reservations' do
-      FactoryGirl.create(:reservation, :state => 'expired') 
+      FactoryGirl.create(:reservation, :state => 'expired')
       assert_equal 1, Reservation.expired.count
     end
 
     should 'find cancelled reservations' do
-      FactoryGirl.create(:reservation, :state => 'cancelled_by_guest') 
-      FactoryGirl.create(:reservation, :state => 'cancelled_by_host') 
+      FactoryGirl.create(:reservation, :state => 'cancelled_by_guest')
+      FactoryGirl.create(:reservation, :state => 'cancelled_by_host')
       assert_equal 2, Reservation.cancelled.count
     end
   end
@@ -215,7 +215,7 @@ class ReservationTest < ActiveSupport::TestCase
   context "with serialization" do
     should "work even if the total amount is nil" do
       reservation = Reservation.new
-      reservation.listing = FactoryGirl.create(:listing)
+      reservation.listing = FactoryGirl.create(:transactable)
       reservation.subtotal_amount_cents = nil
       reservation.service_fee_amount_guest_cents = nil
       reservation.service_fee_amount_host_cents = nil
@@ -239,7 +239,7 @@ class ReservationTest < ActiveSupport::TestCase
   context "with reservation pricing" do
     context "daily priced listing" do
       setup do
-        @listing = FactoryGirl.create(:listing, quantity: 10)
+        @listing = FactoryGirl.create(:transactable, quantity: 10)
         @user    = FactoryGirl.create(:user)
         @reservation = @listing.reservations.build(:user => @user)
       end
@@ -328,7 +328,7 @@ class ReservationTest < ActiveSupport::TestCase
 
     context "hourly priced listing" do
       setup do
-        @listing = FactoryGirl.create(:listing, quantity: 10, hourly_reservations: true, hourly_price_cents: 100)
+        @listing = FactoryGirl.create(:transactable, quantity: 10, hourly_reservations: true, hourly_price_cents: 100)
         @user = FactoryGirl.create(:user)
         @reservation = @listing.reservations.build(
           :user => @user
@@ -338,7 +338,7 @@ class ReservationTest < ActiveSupport::TestCase
       should "set total cost based on HourlyPriceCalculator" do
         @reservation.periods.build :date => Time.zone.today.advance(:weeks => 1).beginning_of_week, :start_minute => 9*60, :end_minute => 12*60
         assert_equal Reservation::HourlyPriceCalculator.new(@reservation).price.cents +
-          Reservation::ServiceFeeCalculator.new(@reservation).service_fee_guest.cents, 
+          Reservation::ServiceFeeCalculator.new(@reservation).service_fee_guest.cents,
           @reservation.total_amount_cents
       end
     end
@@ -375,7 +375,7 @@ class ReservationTest < ActiveSupport::TestCase
     setup do
       @user = FactoryGirl.create(:user)
 
-      @listing = FactoryGirl.create(:listing, quantity: 2)
+      @listing = FactoryGirl.create(:transactable, quantity: 2)
       @listing.availability_template_id = AvailabilityRule.templates.first.id
       @listing.save!
 
@@ -466,7 +466,7 @@ class ReservationTest < ActiveSupport::TestCase
 
   context 'foreign keys' do
     setup do
-      @listing = FactoryGirl.create(:listing)
+      @listing = FactoryGirl.create(:transactable)
       @reservation = FactoryGirl.create(:reservation, :listing => @listing)
     end
 
@@ -513,7 +513,7 @@ class ReservationTest < ActiveSupport::TestCase
         instance = FactoryGirl.create(:instance)
         @reservation.company.update_attribute(:instance_id, instance.id)
         PlatformContext.any_instance.stubs(:instance).returns(instance)
-        assert_equal instance.id, @reservation.reload.instance_id 
+        assert_equal instance.id, @reservation.reload.instance_id
       end
 
       should 'update listings_public' do

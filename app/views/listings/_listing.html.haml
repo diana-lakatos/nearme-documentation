@@ -1,6 +1,6 @@
 %article.listing{:'data-id' => listing.id, :'data-name' => listing.name, :'data-latitude' => listing.latitude, :'data-longitude' => listing.longitude}
   .row-fluid
-    = link_to listing do
+    = link_to listing_path(listing) do
       - if listing.has_photos?
         = image_tag listing.photos.first.image_url(:space_listing), :title => listing.name, :alt => listing.name
       - else
@@ -10,7 +10,7 @@
         = "#{money_without_cents_and_with_symbol(listing.daily_price)}/day"
   .row-fluid.listing-info
     %h2
-      = link_to "#{listing.name}", listing
+      = link_to "#{listing.name}", listing_path(listing)
     %address
       %span.ico-marker
       = listing.formatted_address || listing.address
@@ -18,13 +18,13 @@
 
   .listing-map-popover-content{:style => "display: none"}
     .popover-image-container
-      = link_to listing do
+      = link_to listing_path(listing) do
         - if listing.has_photos?
           = image_tag listing.photos.first.image_url(:medium), :title => listing.name, :alt => listing.name
         - else
           = image_tag space_listing_placeholder_path(:height => 114, :width => 144), :title => listing.name, :alt => listing.name
     .popover-info-container
-      %h3= link_to "#{listing.name}", listing
+      %h3= link_to "#{listing.name}", listing_path(listing)
       %address
         %span.ico-marker
         = listing.formatted_address || listing.address

@@ -12,13 +12,13 @@
 
     .span7
       %p.body
-        = link_to truncate(user_message.body, length: 60), polymorphic_path([thread_context.presence || user_message.thread_context_with_deleted, user_message]), title: user_message.body
+        = link_to truncate(user_message.body, length: 60), user_message.show_path, title: user_message.body
       %p.link-to-listing
         = user_messages_decorator.user_message_context_link(user_message)
 
 
     .span2.actions
       - if user_message.unread_for?(current_user)
-        = link_to "Read", polymorphic_path([thread_context.presence || user_message.thread_context_with_deleted, user_message]), class: 'btn btn-green'
+        = link_to "Read", user_message.show_path, class: 'btn btn-green'
       - elsif !user_message.archived_for?(current_user)
-        = link_to "Archive", polymorphic_path([thread_context.presence || user_message.thread_context_with_deleted, user_message, :archive]), class: "btn btn-gray", method: :put
+        = link_to "Archive", user_message.archive_path, class: "btn btn-gray", method: :put

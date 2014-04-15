@@ -63,7 +63,11 @@ class Authentication < ActiveRecord::Base
   end
 
   def expire_token!
-    self.update_attribute(:token_expired, true)
+    self.update_column(:token_expired, true)
+  end
+
+  def token_expired?
+    (self.token_expires && self.token_expires_at && self.token_expires_at.utc < Time.zone.now.utc) || self.token_expired
   end
 
   def update_info

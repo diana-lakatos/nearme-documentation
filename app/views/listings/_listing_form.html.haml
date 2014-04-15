@@ -115,5 +115,5 @@
 
 .hidden
   - Money::Currency.table.values.each do |c|
-    %span{:id => "currency_#{c[:iso_code]}"} 
+    %span{:id => "currency_#{c[:iso_code]}"}
       = c[:symbol]

@@ -29,7 +29,7 @@ Feature: A user can add a space
      Then I should see "Your draft has been saved!"
      And I fill in valid space details
      And I press "Submit"
-     Then I should see "Your Desk was listed!"  
+     Then I should see "Your Desk was listed!"
 
   Scenario: A draft listing does not show up in search
     Given I go to the home page
@@ -48,4 +48,4 @@ Feature: A user can add a space
      Then I go to the home page
      When I search for "USA"
      Then I should see "International"
-     
+

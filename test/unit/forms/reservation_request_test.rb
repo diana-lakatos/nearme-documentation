@@ -3,7 +3,7 @@ require 'test_helper'
 class ReservationRequestTest < ActiveSupport::TestCase
 
   setup do
-    @listing = FactoryGirl.create(:listing, :name => "blah")
+    @listing = FactoryGirl.create(:transactable, :name => "blah")
     @user = FactoryGirl.create(:user)
     @date = @listing.first_available_date
     @attributes = {

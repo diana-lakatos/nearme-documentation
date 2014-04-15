@@ -25,7 +25,7 @@ module UserHelper
     visit new_user_registration_path
     fill_in_user_sign_up_details(options)
   end
-  
+
   def fill_in_user_sign_up_details(options = {})
     options = options.reverse_merge(default_options)
     fill_in 'user_name', with: options[:name]
@@ -65,6 +65,7 @@ module UserHelper
   def stub_authentication_creation_callbacks
     Rails.application.config.stubs(:perform_social_jobs).returns(true)
 
+    Authentication.any_instance.stubs(:token_expired?).returns(false).at_least(0)
     stub_image_url("http://graph.facebook.com/dnm/picture?type=large")
     raw = {'id' => 'dnm',
             'username' => 'desksnearme',

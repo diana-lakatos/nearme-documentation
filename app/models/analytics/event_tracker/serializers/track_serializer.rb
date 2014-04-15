@@ -1,4 +1,4 @@
-# Extracts necessary attributes from objects passed to track_charge 
+# Extracts necessary attributes from objects passed to track_charge
 
 class Analytics::EventTracker::Serializers::TrackSerializer
 
@@ -10,7 +10,7 @@ class Analytics::EventTracker::Serializers::TrackSerializer
     @objects.compact.map { |o| serialize_object(o) }.inject(:merge) || {}
   end
 
-  private 
+  private
 
   def serialize_object(object)
     self.class.serialize_object(object)
@@ -29,7 +29,7 @@ class Analytics::EventTracker::Serializers::TrackSerializer
         location_postcode: object.postcode,
         location_url: Rails.application.routes.url_helpers.location_url(object)
       }
-    when Listing
+    when Transactable
       {
         listing_name: object.name,
         listing_quantity: object.quantity,
