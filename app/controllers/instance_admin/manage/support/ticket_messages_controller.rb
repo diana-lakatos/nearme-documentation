@@ -1,6 +1,8 @@
 class InstanceAdmin::Manage::Support::TicketMessagesController < InstanceAdmin::Manage::BaseController
   def create
-    message = Support::TicketMessage.new(ticket_params)
+    message = Support::TicketMessage.new(params[:support_ticket_message])
+    message.user = current_user
+    message.ticket = ticket
     if message.save
       SupportMailer.enqueue.request_replied(@ticket, message)
       flash[:success] = t('flash_messages.support.ticket_message.created')
@@ -31,12 +33,5 @@ class InstanceAdmin::Manage::Support::TicketMessagesController < InstanceAdmin::
 
   def close?
     params[:commit] == "Update and Resolve"
-  end
-
-  def ticket_params
-    params[:support_ticket_message].merge(
-      user: current_user,
-      ticket: ticket
-    )
   end
 end
