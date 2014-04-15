@@ -1,0 +1,6 @@
+en:
+  support:
+    filter_name:
+      open: 'Open'
+      resolved: 'Resolved'
+      all: 'All'

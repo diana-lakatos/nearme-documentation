@@ -115,6 +115,19 @@ a.btn {
     }
   }
 
+  &.btn-white {
+    border: 2px solid $light_gray !important;
+    background: $dnm_white;
+    color: black;
+    &:hover {
+      background: $pure-white;
+    }
+
+    &:active {
+      background: $pure-white;
+    }
+  }
+
   &.btn-gray-dark {
     background: $gray60;
     color: $gray120;

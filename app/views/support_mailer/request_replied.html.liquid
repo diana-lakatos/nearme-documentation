@@ -1,0 +1,20 @@
+## In replies all text above this line is added to the ticket ##
+
+<h2>Ticket Updated</h2>
+
+<p>{{ message.full_name }} has replied to your support request. They said:</p>
+
+<p>{{ message.message.html }}</p>
+
+{% if ticket.url %}
+<p>To review the status of the request and add additional comments, follow the link below:<br />
+<a href="{{ ticket.url }}">{{ ticket.url }}</a></p>
+{% endif %}
+
+{% if ticket.messages_count > 0 %}
+<h2>Ticket History</h2>
+
+{% for message in ticket.messages %}
+  [{{message.created_at}}] {{message.full_name}}: {{message.message_html}}
+{% endfor %}
+{% endif %}

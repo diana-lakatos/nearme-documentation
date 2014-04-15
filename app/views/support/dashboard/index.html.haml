@@ -1,0 +1,27 @@
+.row-fluid.support
+  .span8.offset2
+    %h1 Support
+    .row-fluid
+      .span8
+        .box
+          - @faqs.each do |faq|
+            .faq.closed
+              .question
+                = faq.question
+              .answer
+                = faq.answer
+      .span4
+        %h2
+          Tickets
+        -if current_user
+          .tickets
+            - @tickets.each do |ticket|
+              .ticket
+                .question
+                  =support_ticket_title(ticket)
+                =render 'support/tickets/time', ticket: ticket
+          = link_to 'View all tickets', support_tickets_path, :class => 'view-all'
+        = link_to 'Open a Support Ticket', new_support_ticket_path, :class => "btn btn-green btn-large open"
+
+- content_for :domready do
+  $(document).ready(function() {new SupportFaq($('.box'));});

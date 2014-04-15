@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   auto_set_platform_context
 
   extend FriendlyId
-  has_metadata :accessors => [:has_draft_listings, :has_any_active_listings, :companies_metadata, :instance_admins_metadata]
+  has_metadata :accessors => [:has_draft_listings, :has_any_active_listings, :companies_metadata, :instance_admins_metadata, :support_metadata]
   friendly_id :name, use: :slugged
 
   has_many :authentications, :dependent => :destroy
@@ -36,6 +36,7 @@ class User < ActiveRecord::Base
   has_many :mailer_unsubscriptions
   has_many :charges, foreign_key: 'user_id', dependent: :destroy
   has_many :authored_messages, :class_name => "UserMessage", :foreign_key => 'author_id', :inverse_of => :author
+  has_many :tickets, :class_name => 'Support::Ticket', order: 'updated_at DESC'
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain

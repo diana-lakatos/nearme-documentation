@@ -77,4 +77,11 @@
           = f.input "min_#{price}_price", label: "Minimum #{price} price", as: :string, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
           = f.input "max_#{price}_price", label: "Maximum #{price} price", as: :string, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
 
+  %fieldset
+    %legend Support
+    .row-fluid
+      .controls.controls-row
+        = f.input :support_email, label: "Support email", input_html: { class: 'input-block-level' }
+        = f.input :support_imap_hash, label: "IMAP YAML for Support email", as: :text, input_html: { class: 'input-block-level' }
+
   = f.button :submit, 'Save', class: 'btn btn-primary pull-right'

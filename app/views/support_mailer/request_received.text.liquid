@@ -1,0 +1,18 @@
+## In replies all text above this line is added to the ticket ##
+
+Request Received
+
+Your request has been received and will be reviewed by our support staff shortly. You said:
+
+{{ message.message_text }}
+
+{% if ticket.url %}To review the status of the request and add additional comments, follow the link below:
+{{ ticket.url }}{% endif %}
+
+{% if ticket.messages_count > 0 %}
+Ticket History
+
+{% for message in ticket.messages %}
+[{{message.created_at}}] {{message.full_name}}: {{message.message_text}}
+{% endfor %}
+{% endif %}

@@ -6,7 +6,19 @@ en:
   validation_messages:
     price_too_low: '%{price} is too low'
     price_too_high: '%{price} is too high'
+  support:
+    ticket:
+      open_text:
+        open: 'View and resolve'
+        resolved: 'View'
   flash_messages:
+    support:
+      ticket_message:
+        created: 'Ticket message has been created.'
+        closed: 'Ticket message has been closed.'
+        error: 'Ticket message has not been created.'
+      ticket:
+        created: 'Ticket has been created.'
     registrations:
       notification_preferences_updated_successfully: 'Notification preferences updated successfully.'
     blog_admin:

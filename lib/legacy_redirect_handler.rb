@@ -7,7 +7,6 @@ class LegacyRedirectHandler < Rack::Rewrite
       r301 '/about',                       '/pages/about'
       r301 '/legal',                       '/pages/legal'
       r301 %r{/apple-touch-icon(.*)?.png}, '/apple-touch-icon-precomposed.png'
-      r302 '/support',                     'https://desksnearme.desk.com'
     end
   end
 end
