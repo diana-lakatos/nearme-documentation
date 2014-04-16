@@ -7,8 +7,6 @@ class DataImporter::CsvToXmlConverterTest < ActiveSupport::TestCase
   ALL_TMP_FILE_PATH = '/tmp/data_all.xml'
 
   setup do
-    ListingType.create(:name => 'Office Space')
-    ListingType.create(:name => 'Meeting Room')
     LocationType.create(:name => 'Business')
     Industry.create(:name => 'Commercial Real Estate')
     [ "Administrative Assistant", "Catering", "Coffee/Tea", "Videoconferencing Facilities",

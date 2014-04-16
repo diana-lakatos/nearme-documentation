@@ -18,13 +18,13 @@ class User < ActiveRecord::Base
   has_many :companies, :through => :company_users, :order => "company_users.created_at ASC"
   has_many :created_companies, :class_name => "Company", :foreign_key => 'creator_id', :inverse_of => :creator
   has_many :administered_locations, :class_name => "Location", :foreign_key => 'administrator_id', :inverse_of => :administrator
-  has_many :administered_listings, :class_name => "Transactable", :through => :administered_locations, :source => :listings
+  has_many :administered_listings, :class_name => "Transactable", :through => :administered_locations, :source => :listings, :inverse_of => :administrator
   has_many :instance_admins, :foreign_key => 'user_id', :dependent => :destroy
-  has_many :locations, :through => :companies
+  has_many :locations, :through => :companies, :inverse_of => :creator
   has_many :reservations, :foreign_key => 'owner_id'
-  has_many :listings, :through => :locations, class_name: 'Transactable'
-  has_many :photos, :foreign_key => 'creator_id'
-  has_many :listing_reservations, :through => :listings, :source => :reservations
+  has_many :listings, :through => :locations, class_name: 'Transactable', :inverse_of => :creator
+  has_many :photos, :foreign_key => 'creator_id', :inverse_of => :creator
+  has_many :listing_reservations, :through => :listings, :source => :reservations, :inverse_of => :creator
   has_many :relationships, :class_name => "UserRelationship", :foreign_key => 'follower_id', :dependent => :destroy
   has_many :followed_users, :through => :relationships, :source => :followed
   has_many :reverse_relationships, :class_name => "UserRelationship", :foreign_key => 'followed_id', :dependent => :destroy

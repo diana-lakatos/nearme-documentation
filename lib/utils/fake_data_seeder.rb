@@ -26,10 +26,6 @@ module Utils
         @location_types ||= load_yaml("location_types.yml")
       end
 
-      def self.listing_types
-        @listing_types ||= load_yaml("listing_types.yml")
-      end
-
       def self.domains
         @domains ||= load_yaml("domains.yml")
       end
@@ -44,9 +40,9 @@ module Utils
 
       private
 
-        def self.load_yaml(collection)
-          YAML.load_file(Rails.root.join('db', 'seeds', collection))
-        end
+      def self.load_yaml(collection)
+        YAML.load_file(Rails.root.join('db', 'seeds', collection))
+      end
 
     end
 
@@ -77,8 +73,7 @@ module Utils
           load_amenities!
           load_industries!
           load_location_types!
-          load_listing_types!
-
+          load_transactable_types!
 
           # === COMPANIES / LOCATIONS / LISTINGS =================
 
@@ -130,7 +125,7 @@ module Utils
     def load_instance_admin_roles!
       @instance_admin_roles ||= do_task "Loading roles" do
         Data.instance_admin_roles.each_with_index.map do |(name), index|
-          FactoryGirl.create("instance_admin_role_#{name.downcase}")
+        FactoryGirl.create("instance_admin_role_#{name.downcase}")
         end
       end
     end
@@ -167,15 +162,6 @@ module Utils
     end
     alias_method :location_types, :load_location_types!
 
-    def load_listing_types!
-      @listing_types ||= do_task "Loading listing types" do
-        Data.listing_types.map do |name|
-          FactoryGirl.create(:listing_type, :name => name)
-        end
-      end
-    end
-    alias_method :listing_types, :load_listing_types!
-
     def load_instances!
       @instances ||= do_task "Loading instances" do
         Data.instances.map do |name|
@@ -196,8 +182,8 @@ module Utils
           users << user
 
           company = FactoryGirl.create(:company, :name => url, :email => user.email, :url => url,
-                                          :description => Faker::Lorem.paragraph.truncate(200),
-                                          :creator => user, :industries => user.industries)
+                                       :description => Faker::Lorem.paragraph.truncate(200),
+                                       :creator => user, :industries => user.industries)
 
           company.users << user
 
@@ -235,12 +221,16 @@ module Utils
     end
     alias_method :locations, :load_locations!
 
+    def load_transactable_types!
+      tp = TransactableType.find_or_create_by_name("Listing")
+      Utils::TransactableTypeAttributesCreator.new(tp).create_listing_attributes!
+    end
+
     def load_listings!
       @listings ||= do_task "Loading listings" do
         locations.map do |location|
-          listing_types.sample(rand(1..3)).map do |listing_type|
-            name = listing_type.name # TODO
-            FactoryGirl.create(:transactable, :listing_type => listing_type, :name => name, :location => location,
+          ["Shared Desks", "Meeting Room", "Private Office"].sample(rand(1..3)).map do |name|
+            FactoryGirl.create(:transactable, :listing_type => name, :name => "#{name} #{Faker::Company.name}".truncate(50, :separator => ''), :location => location,
                                :description => Faker::Lorem.paragraph.truncate(200), :photos_count_to_be_created => 0)
           end
         end.flatten

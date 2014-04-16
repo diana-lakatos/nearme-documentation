@@ -50,7 +50,7 @@
           #listings_map.inner
     .list{:'data-list' => true}
       .filters{:'data-search-filters-container' => true}
-        = render :partial => 'search/mixed/filter', :locals => { :header_name => "#{platform_context.bookable_noun} Types", :selected_values => @searcher.search.lgtypes_filters || [], :input_name => 'listing_types_ids[]', :options => @searcher.filterable_listing_types.map { |lt| [lt.name.downcase, lt.name] } }
+        = render :partial => 'search/mixed/filter', :locals => { :header_name => "#{platform_context.bookable_noun} Types", :selected_values => @searcher.search.lgtypes_filters || [], :input_name => 'listing_types_ids[]', :options => @searcher.filterable_listing_types.map { |lt| [lt, lt] } }
         = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Pricing', :selected_values => @searcher.search.lgpricing_filters || [], :input_name => 'listing_pricing[]', :options => @searcher.filterable_pricing }
         = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Location Type', :selected_values => @searcher.search.lntypes_filters || [], :input_name => 'location_types_ids[]', :options => @searcher.filterable_location_types.map { |lt| [lt.name.downcase, lt.name ] } }
 

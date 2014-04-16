@@ -3,7 +3,7 @@ require 'test_helper'
 class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
 
   MODELS_SCOPEABLE_ONLY_TO_INSTANCE = [:amenity_type, :instance_admin, :instance_billing_gateway,
-                                       :instance_client, :listing_type, :location_type, :user_message]
+                                       :instance_client, :location_type, :user_message]
   MODELS_SCOPEABLE_TO_WHITE_LABEL_COMPANY_AND_PARTNER = [:location, :transactable, :reservation, :reservation_charge, :payment_transfer]
   MODELS_WITH_LISTINGS_PUBLIC = [:location, :transactable, :reservation]
 
@@ -34,7 +34,7 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
             @other = FactoryGirl.create(model_symbol)
             @other.update_column(:instance_id, @other_instance.id)
             PlatformContext.current = PlatformContext.new(@instance)
-            assert_equal [@current], model_symbol.to_s.camelize.constantize.all
+            assert_equal [@current.id], model_symbol.to_s.camelize.constantize.pluck(:id)
           end
         end
 
@@ -50,7 +50,7 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
             @private.update_column(:instance_id, @instance.id)
             @private.update_column(:listings_public, false)
             PlatformContext.current = PlatformContext.new(@instance)
-            assert_equal [@public], model_symbol.to_s.camelize.constantize.all
+            assert_equal [@public.id], model_symbol.to_s.camelize.constantize.pluck(:id)
           end
         end
 
@@ -70,7 +70,7 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
               @private.update_column(:listings_public, false)
               PlatformContext.current = PlatformContext.new(@instance)
               PlatformContext.scope_to_instance
-              assert_equal [@public, @private].sort, model_symbol.to_s.camelize.constantize.all.sort
+              assert_equal [@public.id, @private.id].sort, model_symbol.to_s.camelize.constantize.pluck(:id).sort
             end
           end
 
@@ -97,7 +97,7 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
               @other_object.update_column(:instance_id, @other_instance.id)
               PlatformContext.current = PlatformContext.new(@current_company)
               PlatformContext.scope_to_instance
-              assert_equal [@company_object, @other_company_object].sort, model_symbol.to_s.camelize.constantize.all.sort
+              assert_equal [@company_object.id, @other_company_object.id].sort, model_symbol.to_s.camelize.constantize.pluck(:id).sort
             end
           end
         end
@@ -142,7 +142,7 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
             @other_object = FactoryGirl.create(model_symbol)
             @other_object.update_column(:instance_id, @other_instance.id)
             PlatformContext.current = PlatformContext.new(@current_company)
-            assert_equal [@company_object], model_symbol.to_s.camelize.constantize.all
+            assert_equal [@company_object.id], model_symbol.to_s.camelize.constantize.pluck(:id)
           end
         end
 
@@ -198,7 +198,7 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
             @other_object = FactoryGirl.create(model_symbol)
             @other_object.update_column(:instance_id, @other_instance.id)
             PlatformContext.current = PlatformContext.new(@partner)
-            assert_equal [@partner_object], model_symbol.to_s.camelize.constantize.all
+            assert_equal [@partner_object.id], model_symbol.to_s.camelize.constantize.pluck(:id)
           end
         end
 
@@ -268,7 +268,7 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
             @other_object = FactoryGirl.create(model_symbol)
             @other_object.update_column(:instance_id, @other_instance.id)
             PlatformContext.current = PlatformContext.new(@partner)
-            assert_equal [@other_company_object, @partner_object].sort, model_symbol.to_s.camelize.constantize.all.sort
+            assert_equal [@other_company_object.id, @partner_object.id].sort, model_symbol.to_s.camelize.constantize.pluck(:id).sort
           end
         end
       end

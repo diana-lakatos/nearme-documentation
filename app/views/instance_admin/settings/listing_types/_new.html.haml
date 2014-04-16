@@ -1,8 +1,0 @@
-= simple_form_for [:instance_admin, :settings, ListingType.new], :defaults => {:required => false} do |f|
-  %fieldset
-    %legend Add New Listing Type
-    .row-fluid
-      .controls.controls-row
-        .fields
-          = f.input :name, :label => false, input_html: { class: 'span6' }
-          = f.submit "Add", :disable_with => 'Saving ...', :class => 'btn btn-primary inline-form-control'

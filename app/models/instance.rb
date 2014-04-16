@@ -3,7 +3,7 @@ class Instance < ActiveRecord::Base
 
   has_metadata :accessors => [:support_metadata]
 
-  attr_accessible :name, :domains_attributes, :theme_attributes, :location_types_attributes, :listing_types_attributes,
+  attr_accessible :name, :domains_attributes, :theme_attributes, :location_types_attributes,
                   :service_fee_guest_percent, :service_fee_host_percent, :bookable_noun, :lessor, :lessee,
                   :listing_amenity_types_attributes, :location_amenity_types_attributes, :skip_company, :pricing_options,
                   :live_stripe_api_key, :live_stripe_public_key, :live_paypal_username, :live_paypal_password, :live_paypal_signature, :live_paypal_app_id,
@@ -33,7 +33,6 @@ class Instance < ActiveRecord::Base
   has_many :listing_amenity_types, :inverse_of => :instance
   has_many :location_amenity_types, :inverse_of => :instance
   has_many :listings, class_name: "Transactable", :inverse_of => :instance
-  has_many :listing_types, :inverse_of => :instance
   has_many :domains, :as => :target
   has_many :partners, :inverse_of => :instance
   has_many :instance_admins, :inverse_of => :instance
@@ -47,6 +46,7 @@ class Instance < ActiveRecord::Base
   has_many :user_messages, :dependent => :destroy, :inverse_of => :instance
   has_many :faqs, class_name: 'Support::Faq'
   has_many :tickets, class_name: 'Support::Ticket', order: 'created_at DESC'
+  has_many :transactable_types
 
   serialize :pricing_options, Hash
 
@@ -62,7 +62,6 @@ class Instance < ActiveRecord::Base
   accepts_nested_attributes_for :domains, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :theme
   accepts_nested_attributes_for :location_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
-  accepts_nested_attributes_for :listing_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :location_amenity_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :listing_amenity_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :translations, allow_destroy: true, reject_if: proc { |params| params[:value].blank? && params[:id].blank? }

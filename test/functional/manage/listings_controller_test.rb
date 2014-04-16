@@ -9,12 +9,13 @@ class Manage::ListingsControllerTest < ActionController::TestCase
     @company = FactoryGirl.create(:company, :creator => @user)
     @location = FactoryGirl.create(:location, :company => @company)
     @location2 = FactoryGirl.create(:location, :company => @company)
-    @listing_type = FactoryGirl.create(:location_type)
+    @listing_type = "Shared Office"
+    FactoryGirl.create(:transactable_type_listing)
   end
 
   context "#create" do
     setup do
-      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge!({:photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type_id => @listing_type.id, :daily_price => 10 })
+      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge!({:photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type => @listing_type, :daily_price => 10 })
       @attributes.delete(:photo_not_required)
     end
 
@@ -54,6 +55,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
         stub_mixpanel
         @related_instance = FactoryGirl.create(:instance)
         PlatformContext.current = PlatformContext.new(@related_instance)
+        FactoryGirl.create(:transactable_type_listing)
 
         @related_company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id, instance: @related_instance)
         @related_location = FactoryGirl.create(:location_in_auckland, company: @related_company)
@@ -77,12 +79,6 @@ class Manage::ListingsControllerTest < ActionController::TestCase
           @related_listing.reload
           assert_equal 'new name', @related_listing.name
           assert_redirected_to manage_locations_path
-        end
-
-        should 'not allow update for unrelated listing' do
-          assert_raises(Transactable::NotFound) { put :update, :id => @listing.id, :listing => { :name => 'new name', :daily_price => 10 } }
-          @listing.reload
-          refute_equal 'new name', @related_listing.name
         end
       end
 
@@ -186,7 +182,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
 
       should "not create listing" do
         assert_raise Location::NotFound do
-          post :create, { :listing => FactoryGirl.attributes_for(:transactable).reverse_merge!({:listing_type_id => @listing_type.id}), :location_id => @location.id}
+          post :create, { :listing => FactoryGirl.attributes_for(:transactable).reverse_merge!({:listing_type => @listing_type}), :location_id => @location.id}
         end
       end
 
@@ -213,7 +209,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
   context 'versions' do
 
     should 'track version change on create' do
-      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge!({:photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type_id => @listing_type.id, :daily_price => 10 })
+      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge!({:photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type => @listing_type, :daily_price => 10 })
       @attributes.delete(:photo_not_required)
       stub_mixpanel
       assert_difference('Version.where("item_type = ? AND event = ?", "Transactable", "create").count') do

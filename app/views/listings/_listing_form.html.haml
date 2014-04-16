@@ -1,13 +1,6 @@
 - only_inputs = [] if only_inputs.nil?
 - photo_input_name_prefix = "listing" if local_assigns[:photo_input_name_prefix].nil?
 
-- if f.object.free?
-  - enable_inputs_daily, enable_inputs_hourly, enable_inputs_free = false, false, true
-- elsif f.object.hourly_reservations
-  - enable_inputs_daily, enable_inputs_hourly, enable_inputs_free = false, true, false
-- else
-  - enable_inputs_daily, enable_inputs_hourly, enable_inputs_free = true, false, false
-
 - if only_inputs.empty? || only_inputs.include?(:enabled)
   .control-group
     = f.label :enabled, 'Enabled?', :class => 'control-label'
@@ -16,11 +9,9 @@
         = f.check_box :enabled
 
 = f.input :id, :as => :hidden if only_inputs.empty? || only_inputs.include?(:id)
-= f.input :name, :as => :limited_string, :limit => 50, :label => "#{platform_context.bookable_noun} name" if only_inputs.empty? || only_inputs.include?(:name)
-= f.input :description, :as => :limited_text, :limit => 250, :label => "#{platform_context.bookable_noun} description", :input_html => { :maxlength => 250} if only_inputs.empty? || only_inputs.include?(:description)
-= f.association :listing_type, :label => "#{platform_context.bookable_noun} type", :collection => platform_context.instance.listing_types, :input_html => { :class => 'selectpicker' } if only_inputs.empty? || only_inputs.include?(:listing_type)
-= f.input :quantity, :label => 'Quantity available', :placeholder => 2, :hint => "How many of this type of #{platform_context.bookable_noun} do you have available?", :input_html => { :class => "mini" } if only_inputs.empty? || only_inputs.include?(:quantity)
-= f.input :capacity, :placeholder => 1, :hint => "How many people does your #{platform_context.bookable_noun} accommodate?", :input_html => { :class => "mini" } if only_inputs.empty? || only_inputs.include?(:capacity)
+- listing.transactable_type_attributes.each do |attribute|
+  = draw_attribute_for_form(attribute, f) if only_inputs.empty? || only_inputs.include?(attribute.name.to_sym)
+
 - unless platform_context.instance.listing_amenity_types.count.zero?
   = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :label => "Amenities", :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select', :multiple => true } if only_inputs.empty? || only_inputs.include?(:amenities)
 
@@ -30,61 +21,11 @@
   = hidden_field_tag '', listing.location.currency, :id => 'currency-select'
 
 - if only_inputs.empty? || only_inputs.include?(:price)
-  %div{:class => "control-group #{"error" if f.object.errors.include?(:free).present?}"}
-    = f.label :daily_price, 'Price', :class => 'control-label flush-top' do
-      %abbr{:title => "required"} *
-      Price
-
-    .controls
-      %div.price-inputs-daily
-        %label.radio
-          - if platform_context.instance.pricing_options['daily'] || platform_context.instance.pricing_options['weekly'] || platform_context.instance.pricing_options['monthly']
-            = f.radio_button :price_type, "daily", :checked => enable_inputs_daily
-            Daily, weekly, or monthly
-
-        .price-input-options
-          .price-inputs-wrapper.left
-            = render 'manage/listings/price_field', :f => f, :price => "daily", :label => "day", :include_checkbox => true if platform_context.instance.pricing_options['daily']
-            = render 'manage/listings/price_field', :f => f, :price => "weekly", :label => "week", :include_checkbox => true if platform_context.instance.pricing_options['weekly']
-            = render 'manage/listings/price_field', :f => f, :price => "monthly", :label => "month", :include_checkbox => true if platform_context.instance.pricing_options['monthly']
-
-      - if platform_context.instance.pricing_options['hourly']
-        %div.price-inputs-hourly
-          %label.radio
-            = f.radio_button :price_type, "hourly", :checked => enable_inputs_hourly
-            Hourly
-
-          .price-input-options
-            .price-inputs-wrapper.left
-              = render 'manage/listings/price_field', :f => f, :price => "hourly", :label => "hour"
-
-      - if f.object.errors.include?(:hourly_reservations).present?
-        %p.error-block= f.object.errors[:hourly_reservations].first
-
-      - if platform_context.instance.pricing_options['free']
-        %div.price-inputs-free
-          %label.radio
-            = f.radio_button :price_type, "free", :checked => enable_inputs_free
-            Free
-
-      - if f.object.errors.include?(:price_type).present?
-        %p.error-block= f.object.errors[:price_type].first
-
-      - if f.object.errors.include?(:free).present?
-        %p.error-block
-          = 'must be free if all prices are zero'
+  = render partial: "custom_attributes/price", locals: { f: f }
 
 - if only_inputs.empty? || only_inputs.include?(:availability_rules)
   .control-group
     = render :partial => 'availability_rules/form', :locals => { :f => f }
-
-
-- if only_inputs.empty? || only_inputs.include?(:confirm_reservations)
-  %div{:class => "control-group #{"error" if f.object.errors.include?(:confirm_reservations).present?}"}
-    = f.label :confirm_reservations, "Confirm #{platform_context.lessee} bookings", :class => 'control-label'
-    .controls
-      .switch{'data-on-label' => "", 'data-off-label' => ""}
-        = f.check_box :confirm_reservations
 
 - if only_inputs.empty? || only_inputs.include?(:photos)
   .loading{:style => "display: none"}

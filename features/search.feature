@@ -17,6 +17,7 @@ Feature: A user can search for a listing
     And I do not see a search result for the Adelaide listing
 
   Scenario: Subscribing on notification about new listings if no listings found for valid location.
+    Given the transactable_type_listing exists
     When I search for located "New Zealand"
     Then I should see "No results found"
     And I should see "Subscribe to be notified of new listings in this area"
@@ -28,6 +29,7 @@ Feature: A user can search for a listing
     for registered user.
     Given the user exists
     And I log in as a user
+    And the transactable_type_listing exists
     When I search for located "New Zealand"
     Then I should see "No results found"
     And I fill form for subscribing on notification
