@@ -74,6 +74,8 @@ DesksnearMe::Application.routes.draw do
       resources :partners
     end
     resources :pages
+    get '/platform_home', to: 'platform_home#edit', as: 'platform_home'
+    post '/platform_home', to: 'platform_home#update', as: 'platform_home'
   end
 
   resources :marketplace_sessions, only: [:new, :create]

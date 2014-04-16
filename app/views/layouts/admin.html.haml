@@ -37,6 +37,8 @@
                 = link_to "Pages", admin_pages_url
               %li{:class => ("active" if request.url.include?(admin_instances_url))}
                 = link_to "Instances", admin_instances_url
+              %li{:class => ("active" if request.url.include?(admin_platform_home_url))}
+                = link_to "Platform Home", admin_platform_home_url
 
         .span9
           - flash.each do |type, message|
