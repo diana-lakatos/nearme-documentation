@@ -154,11 +154,7 @@ class Company < ActiveRecord::Base
         Billing::Gateway::Processor::Outgoing::Balanced.create_customer_with_bank_account!(self)
       rescue Balanced::Unauthorized => e
         errors.add(:bank_account_form, 'We could not validate your bank account details at this time. Please try again later.')
-        unless DesksnearMe::Application.config.silence_raygun_notification
-          Raygun.configuration.failsafe_logger = true
-          Raygun.track_exception(exception)
-          Raygun.configuration.failsafe_logger = false
-        end
+        ExceptionTracker.track_exception(e)
         false
       end
     end
