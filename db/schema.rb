@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140411154955) do
+ActiveRecord::Schema.define(:version => 20140418174136) do
 
 
   create_extension "hstore", :version => "1.2"
@@ -438,6 +438,7 @@ ActiveRecord::Schema.define(:version => 20140411154955) do
     t.text     "transactable_properties_defaults"
     t.text     "transactable_properties_validation_rules"
     t.string   "encrypted_db_connection_string"
+    t.string   "stripe_currency",                                                   :default => "USD"
   end
 
   add_index "instances", ["instance_type_id"], :name => "index_instances_on_instance_type_id"

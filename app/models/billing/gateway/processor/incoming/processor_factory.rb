@@ -25,12 +25,12 @@ class Billing::Gateway::Processor::Incoming::ProcessorFactory
   def self.stripe_supported?(instance, currency)
     instance.billing_gateway_credential('stripe_api_key').present? &&
       instance.billing_gateway_credential('stripe_public_key').present?  &&
-      ['USD'].include?(currency) 
+      instance.stripe_currency == currency
   end
 
   def self.balanced_supported?(instance, currency)
     instance.billing_gateway_credential('balanced_api_key').present? &&
-      ['USD'].include?(currency) 
+      ['USD'].include?(currency)
   end
 
   def self.paypal_supported?(instance, currency)

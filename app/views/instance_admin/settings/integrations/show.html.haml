@@ -10,6 +10,8 @@
     %legend Stripe
     .row-fluid
       .controls.controls-row
+        = f.input :stripe_currency, :as => :currency, include_blank: false, :label => "Stripe Currency", required: false, wrapper_html: { class: 'span6' }, :input_html => { :class => 'input-block-level' }
+      .controls.controls-row
         = f.input :live_stripe_api_key, label: 'Live Stripe API Key', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
         = f.input :test_stripe_api_key, label: 'Test Stripe API Key', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
     .row-fluid
