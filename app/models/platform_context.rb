@@ -30,7 +30,7 @@ class PlatformContext
 
   def self.current=(platform_context)
     Thread.current[:platform_context] = platform_context
-    ActiveRecord::Base.establish_connection(platform_context.instance.db_connection_string) if platform_context.instance.db_connection_string.present?
+    ActiveRecord::Base.establish_connection(platform_context.instance.db_connection_string) if platform_context.present? && platform_context.instance.db_connection_string.present?
   end
 
   def self.scope_to_instance
