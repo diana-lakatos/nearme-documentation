@@ -423,7 +423,7 @@ GEM
       activerecord (>= 3.1.12)
     rash (0.3.2)
       hashie (~> 1.2.0)
-    raygun4ruby (0.0.9)
+    raygun4ruby (1.0.0)
       httparty (~> 0.11)
       json
       rack
