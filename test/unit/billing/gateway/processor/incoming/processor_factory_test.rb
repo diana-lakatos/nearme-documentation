@@ -30,6 +30,12 @@ class Billing::Gateway::Processor::Incoming::ProcessorFactoryTest < ActiveSuppor
       should 'not support stripe if wrong currency' do
         refute Billing::Gateway::Processor::Incoming::ProcessorFactory.stripe_supported?(@instance, 'ABC')
       end
+
+      should 'support the currency that is specified in instance' do
+        @instance.stripe_currency = 'ABC'
+        assert Billing::Gateway::Processor::Incoming::ProcessorFactory.stripe_supported?(@instance, 'ABC')
+        refute Billing::Gateway::Processor::Incoming::ProcessorFactory.stripe_supported?(@instance, 'USD')
+      end
     end
   end
 
