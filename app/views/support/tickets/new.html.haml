@@ -1,0 +1,20 @@
+.row-fluid.support
+  .span8.offset2
+    %h1 Open a Support Ticket
+    .box
+      .form
+        = simple_form_for @ticket do |t|
+          - t.simple_fields_for :messages do |f|
+            .columns
+              .row-fluid
+                .span6
+                  =f.input :full_name, disabled: current_user.present?
+                .span6
+                  =f.input :email, disabled: current_user.present?
+              .row-fluid
+                =f.input :subject
+              .row-fluid
+                =f.input :message, as: :text
+            .row-fluid
+              .span4
+                =t.submit 'Create ticket', :class => 'btn btn-green'

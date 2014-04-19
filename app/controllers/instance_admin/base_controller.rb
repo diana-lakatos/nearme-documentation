@@ -35,7 +35,7 @@ class InstanceAdmin::BaseController < ApplicationController
       end
     end
   rescue InstanceAdminAuthorizer::UnassignedInstanceAdminRoleError => e
-    notify_raygun_about_exception(e)
+    ExceptionTracker.track_exception(e)
     flash[:warning] = t('flash_messages.authorizations.not_authorized')
     redirect_to root_path
   end

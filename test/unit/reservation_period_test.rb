@@ -2,7 +2,7 @@ require 'test_helper'
 
 class ReservationPeriodTest < ActiveSupport::TestCase
   def setup
-    @listing = FactoryGirl.create(:listing, quantity: 2)
+    @listing = FactoryGirl.create(:transactable, quantity: 2)
     @user = FactoryGirl.create(:user)
     @reservation = @listing.reservations.build(:user => @user)
     @next_monday = Time.zone.today.advance(:weeks => 1).beginning_of_week

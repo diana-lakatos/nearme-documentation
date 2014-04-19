@@ -7,12 +7,12 @@ class DashboardControllerTest < ActionController::TestCase
     sign_in @user
   end
 
-  context '#analytics' do 
+  context '#analytics' do
 
     context '#revenue' do
 
       setup do
-        @listing = FactoryGirl.create(:listing, :quantity => 1000)
+        @listing = FactoryGirl.create(:transactable, :quantity => 1000)
         @listing.location.company.update_attribute(:creator_id, @user.id)
         @listing.location.company.add_creator_to_company_users
       end
@@ -50,7 +50,7 @@ class DashboardControllerTest < ActionController::TestCase
 
         end
 
-        context 'date' do 
+        context 'date' do
 
           setup do
             @charge_created_6_days_ago = create_reservation_charge(:amount => 100, :created_at => Time.zone.now - 6.day)
@@ -76,7 +76,7 @@ class DashboardControllerTest < ActionController::TestCase
     context '#reservations' do
 
       setup do
-        @listing = FactoryGirl.create(:listing, :quantity => 1000)
+        @listing = FactoryGirl.create(:transactable, :quantity => 1000)
         @listing.location.company.update_attribute(:creator_id, @user.id)
         @listing.location.company.add_creator_to_company_users
       end
@@ -84,7 +84,7 @@ class DashboardControllerTest < ActionController::TestCase
       context 'assigned variables' do
 
         setup do
-          @reservation = FactoryGirl.create(:reservation, :currency => 'USD', :listing => @listing) 
+          @reservation = FactoryGirl.create(:reservation, :currency => 'USD', :listing => @listing)
         end
 
         should '@last_week_reservations includes user company reservations' do
@@ -100,7 +100,7 @@ class DashboardControllerTest < ActionController::TestCase
 
       end
 
-      context 'date' do 
+      context 'date' do
 
         setup do
           @reservation_created_6_days_ago = FactoryGirl.create(:reservation, :currency => 'USD', :listing => @listing, :created_at => Time.zone.now - 6.day)
@@ -125,13 +125,13 @@ class DashboardControllerTest < ActionController::TestCase
     context '#location_views' do
 
       setup do
-        @listing = FactoryGirl.create(:listing, :quantity => 1000)
+        @listing = FactoryGirl.create(:transactable, :quantity => 1000)
         @listing.location.company.update_attribute(:creator_id, @user.id)
         @listing.location.company.add_creator_to_company_users
       end
 
 
-      context 'date' do 
+      context 'date' do
 
         setup do
           create_location_visit
@@ -160,8 +160,8 @@ class DashboardControllerTest < ActionController::TestCase
     setup do
       @related_company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id)
       @related_location = FactoryGirl.create(:location_in_auckland, company: @related_company)
-      @related_listing = FactoryGirl.create(:listing, location: @related_location)
-      @unrelated_listing = FactoryGirl.create(:listing)
+      @related_listing = FactoryGirl.create(:transactable, location: @related_location)
+      @unrelated_listing = FactoryGirl.create(:transactable)
       @unrelated_listing.update_attribute(:instance_id, FactoryGirl.create(:instance).id)
     end
 

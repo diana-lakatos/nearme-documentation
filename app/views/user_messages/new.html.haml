@@ -5,7 +5,7 @@
         Send a message to
         = @user_message.recipient_name
 
-    = simple_form_for @user_message, url: polymorphic_path([@user_message.thread_context, @user_message]) do |f|
+    = simple_form_for @user_message, url: @user_message.create_path do |f|
       - if @user_message.errors.present?
         .errors
           = f.error :body

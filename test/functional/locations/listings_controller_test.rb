@@ -3,7 +3,7 @@ require 'test_helper'
 class Locations::ListingsControllerTest < ActionController::TestCase
 
   setup do
-    @listing = FactoryGirl.create(:listing)
+    @listing = FactoryGirl.create(:transactable)
     @location = @listing.location
     stub_mixpanel
   end

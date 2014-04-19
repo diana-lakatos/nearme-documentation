@@ -4,7 +4,7 @@ class MetadataTest < ActiveSupport::TestCase
 
 
   setup do
-    @dummy_class = Listing.new
+    @dummy_class = Transactable.new
   end
 
   should 'respond to metadata' do

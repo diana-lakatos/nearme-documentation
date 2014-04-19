@@ -7,8 +7,8 @@ class MailchimpTest < ActiveSupport::TestCase
   # all next one doesn't.
   #
   # If you see a long error like: "An HTTP request has been made that VCR does not know how to handle", it means that
-  # the test fails - you might want to debug why. I have done this like this: change the name of cassette, invoke 
-  # failing test [ warning: this will make a real http call for the first time] and compare the original cassette with 
+  # the test fails - you might want to debug why. I have done this like this: change the name of cassette, invoke
+  # failing test [ warning: this will make a real http call for the first time] and compare the original cassette with
   # the new one - this should give you a clue what's different
 
   context "users" do
@@ -31,7 +31,7 @@ class MailchimpTest < ActiveSupport::TestCase
       VCR.use_cassette('mailchimp_export_user') do
         @result = MAILCHIMP.export_users
       end
-      
+
       assert_equal({"add_count"=>4, "update_count"=>0, "error_count"=>0, "errors"=>[]}, @result)
       all_users.each do |u|
         u.reload
@@ -39,7 +39,7 @@ class MailchimpTest < ActiveSupport::TestCase
         assert u.mailchimp_synchronized?
       end
     end
-    
+
     context 'with Timecop' do
 
     teardown do
@@ -95,7 +95,7 @@ class MailchimpTest < ActiveSupport::TestCase
     end
 
     def create_user_with_listing_without_photo
-      @user_with_listing_without_photo = create_listing(create_location(create_company(FactoryGirl.create(:user, :email => 'krajek6+2@gmail.com', :name => 'Maciej Krajowski')))) 
+      @user_with_listing_without_photo = create_listing(create_location(create_company(FactoryGirl.create(:user, :email => 'krajek6+2@gmail.com', :name => 'Maciej Krajowski'))))
     end
 
     def create_user_with_two_listings
@@ -105,7 +105,7 @@ class MailchimpTest < ActiveSupport::TestCase
     def create_user_without_listing
       @user_without_listing = FactoryGirl.create(:user, :email => 'krajek6+3@gmail.com', :name => 'James Jones')
     end
-    
+
     def create_company(user)
       FactoryGirl.create(:company, :creator => user, :name => 'Company')
       user.reload
@@ -117,7 +117,7 @@ class MailchimpTest < ActiveSupport::TestCase
     end
 
     def create_listing(user)
-      FactoryGirl.create(:listing, :location => user.companies.first.locations.first, :photo_not_required => true, :photos_count_to_be_created => 0)
+      FactoryGirl.create(:transactable, :location => user.companies.first.locations.first, :photo_not_required => true, :photos_count_to_be_created => 0)
       user.reload
     end
 

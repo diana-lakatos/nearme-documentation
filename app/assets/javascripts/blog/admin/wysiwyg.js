@@ -9,6 +9,7 @@ require({
     'scribe-plugin-intelligent-unlink-command': '/assets/blog/admin/scribe_wysiwyg/scribe-plugin-intelligent-unlink-command/scribe-plugin-intelligent-unlink-command',
     'scribe-plugin-keyboard-shortcuts': '/assets/blog/admin/scribe_wysiwyg/scribe-plugin-keyboard-shortcuts/scribe-plugin-keyboard-shortcuts',
     'scribe-plugin-link-prompt-command': '/assets/blog/admin/scribe_wysiwyg/scribe-plugin-link-prompt-command/scribe-plugin-link-prompt-command',
+    'scribe-plugin-image-prompt-command': '/assets/blog/admin/scribe_wysiwyg/scribe-plugin-image-prompt-command/scribe-plugin-image-prompt-command',
     'scribe-plugin-sanitizer': '/assets/blog/admin/scribe_wysiwyg/scribe-plugin-sanitizer/scribe-plugin-sanitizer',
     'scribe-plugin-smart-lists': '/assets/blog/admin/scribe_wysiwyg/scribe-plugin-smart-lists/scribe-plugin-smart-lists',
     'scribe-plugin-toolbar': '/assets/blog/admin/scribe_wysiwyg/scribe-plugin-toolbar/scribe-plugin-toolbar'
@@ -22,6 +23,7 @@ require({
   'scribe-plugin-intelligent-unlink-command',
   'scribe-plugin-keyboard-shortcuts',
   'scribe-plugin-link-prompt-command',
+  'scribe-plugin-image-prompt-command',
   'scribe-plugin-sanitizer',
   'scribe-plugin-smart-lists',
   'scribe-plugin-toolbar'
@@ -34,6 +36,7 @@ require({
   scribePluginIntelligentUnlinkCommand,
   scribePluginKeyboardShortcuts,
   scribePluginLinkPromptCommand,
+  scribePluginImagePromptCommand,
   scribePluginSanitizer,
   scribePluginSmartLists,
   scribePluginToolbar
@@ -76,6 +79,7 @@ require({
     scribe.use(scribePluginHeadingCommand(2));
     scribe.use(scribePluginIntelligentUnlinkCommand());
     scribe.use(scribePluginLinkPromptCommand());
+    scribe.use(scribePluginImagePromptCommand());
     scribe.use(scribePluginToolbar(prevElementSibling(scribeAll[i])));
     scribe.use(scribePluginSmartLists());
     scribe.use(scribePluginCurlyQuotes());

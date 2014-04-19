@@ -63,7 +63,7 @@ module Bookings
 
   def extract_reservation_options(table)
     table.hashes.map do |data|
-      listing = model!(data['Listing'])
+      listing = model!(data['Transactable'])
       date = Chronic.parse(data['Date']).to_date
 
       qty = data['Quantity'].to_i

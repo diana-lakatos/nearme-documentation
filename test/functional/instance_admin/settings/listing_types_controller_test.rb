@@ -39,8 +39,8 @@ class InstanceAdmin::Settings::ListingTypesControllerTest < ActionController::Te
       @listing_type_1 = FactoryGirl.create(:listing_type, name: "Listing type 1")
       @listing_type_2 = FactoryGirl.create(:listing_type, name: "Listing type 2")
       @listing_type_3 = FactoryGirl.create(:listing_type, name: "Listing type 3")
-      @listing_2 = FactoryGirl.create(:listing, listing_type: @listing_type_2)
-      @listing_3 = FactoryGirl.create(:listing, listing_type: @listing_type_3)
+      @listing_2 = FactoryGirl.create(:transactable, listing_type: @listing_type_2)
+      @listing_3 = FactoryGirl.create(:transactable, listing_type: @listing_type_3)
     end
 
     should 'render the destroy modal' do

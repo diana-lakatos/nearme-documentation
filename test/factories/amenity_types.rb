@@ -4,6 +4,5 @@ FactoryGirl.define do
     sequence(:name) do |n|
       "Amenity Type #{n}"
     end
-
   end
 end

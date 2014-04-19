@@ -1,9 +1,9 @@
 require 'test_helper'
 
-class ListingTest < ActiveSupport::TestCase
+class TransactableTest < ActiveSupport::TestCase
 
   context 'desksnearme instance' do
-    subject { Listing.new }
+    subject { Transactable.new }
 
     should belong_to(:location)
     should belong_to(:listing_type)
@@ -12,11 +12,7 @@ class ListingTest < ActiveSupport::TestCase
     should validate_presence_of(:location)
     should validate_presence_of(:name)
     should validate_presence_of(:description)
-    should validate_presence_of(:quantity)
     should validate_presence_of(:listing_type_id)
-    should validate_numericality_of(:quantity)
-
-    should validate_numericality_of(:quantity).only_integer
     should allow_value(10).for(:quantity)
     should_not allow_value(-10).for(:quantity)
 
@@ -27,7 +23,14 @@ class ListingTest < ActiveSupport::TestCase
   end
 
   setup do
-    @listing = FactoryGirl.build(:listing)
+    @listing = FactoryGirl.build(:transactable)
+  end
+
+  context 'validation' do
+    should 'not be valid if quantity is 0' do
+      @listing.quantity = 0
+      refute @listing.valid?
+    end
   end
 
   context "#photo_not_required" do
@@ -159,7 +162,7 @@ class ListingTest < ActiveSupport::TestCase
   context 'instance observes default min/max pricing constraints' do
 
     setup do
-      @listing = FactoryGirl.build(:listing)
+      @listing = FactoryGirl.build(:transactable)
     end
 
     should 'be valid if hourly price within range' do
@@ -232,7 +235,7 @@ class ListingTest < ActiveSupport::TestCase
       @listing.save!
       tuesday = Time.zone.today.sunday + 2
       Timecop.freeze(tuesday.beginning_of_day)
-      # book all seats on wednesday 
+      # book all seats on wednesday
       @listing.reserve!(FactoryGirl.build(:user), [tuesday+1.day], 2)
       # leave one seat free on thursday
       @listing.reserve!(FactoryGirl.build(:user), [tuesday+2.day], 1)
@@ -261,7 +264,7 @@ class ListingTest < ActiveSupport::TestCase
 
     context 'populating photo hash' do
       setup do
-        @listing = FactoryGirl.create(:listing)
+        @listing = FactoryGirl.create(:transactable)
         @photo = @listing.photos.first
       end
 
@@ -306,7 +309,7 @@ class ListingTest < ActiveSupport::TestCase
 
     context 'populate_listing_type_name' do
       setup do
-        @listing = FactoryGirl.create(:listing)
+        @listing = FactoryGirl.create(:transactable)
       end
 
       should 'trigger populate_listing_type_name_metadata if listing_type_id changed' do
@@ -329,7 +332,7 @@ class ListingTest < ActiveSupport::TestCase
     context 'should_populate_creator_listings_metadata?' do
 
       setup do
-        @listing = FactoryGirl.create(:listing)
+        @listing = FactoryGirl.create(:transactable)
       end
 
       should 'return true if new listing is created' do
@@ -355,14 +358,14 @@ class ListingTest < ActiveSupport::TestCase
 
         should 'not trigger populate listings metadata on user if condition fails' do
           User.any_instance.expects(:populate_listings_metadata!).never
-          Listing.any_instance.expects(:should_populate_creator_listings_metadata?).returns(false)
-          FactoryGirl.create(:listing)
+          Transactable.any_instance.expects(:should_populate_creator_listings_metadata?).returns(false)
+          FactoryGirl.create(:transactable)
         end
 
         should 'trigger populate listings metadata on user if condition succeeds' do
           User.any_instance.expects(:populate_listings_metadata!).once
-          Listing.any_instance.expects(:should_populate_creator_listings_metadata?).returns(true)
-          FactoryGirl.create(:listing)
+          Transactable.any_instance.expects(:should_populate_creator_listings_metadata?).returns(true)
+          FactoryGirl.create(:transactable)
         end
 
       end
@@ -373,11 +376,11 @@ class ListingTest < ActiveSupport::TestCase
   context 'foreign keys' do
     setup do
       @location = FactoryGirl.create(:location)
-      @listing = FactoryGirl.create(:listing, :location => @location)
+      @listing = FactoryGirl.create(:transactable, :location => @location)
     end
 
     should 'assign correct key immediately' do
-      @listing = FactoryGirl.create(:listing)
+      @listing = FactoryGirl.create(:transactable)
       assert @listing.creator_id.present?
       assert @listing.instance_id.present?
       assert @listing.company_id.present?
@@ -419,7 +422,7 @@ class ListingTest < ActiveSupport::TestCase
         instance = FactoryGirl.create(:instance)
         @location.company.update_attribute(:instance_id, instance.id)
         PlatformContext.any_instance.stubs(:instance).returns(instance)
-        assert_equal instance.id, @location.reload.instance_id 
+        assert_equal instance.id, @location.reload.instance_id
       end
 
     should 'update listings_public' do

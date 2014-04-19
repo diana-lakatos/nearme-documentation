@@ -1,8 +1,8 @@
 class UserMessageMailer < InstanceMailer
-  layout 'mailer' 
+  layout 'mailer'
 
   def email_message_from_guest(user_message)
-    @user_message = user_message
+    @user_message = user_message.decorate
     @user = @user_message.recipient
 
     mail(to: @user.email,
@@ -10,7 +10,7 @@ class UserMessageMailer < InstanceMailer
   end
 
   def email_message_from_host(user_message)
-    @user_message = user_message
+    @user_message = user_message.decorate
     @user = @user_message.recipient
 
     mail(to: @user.email,

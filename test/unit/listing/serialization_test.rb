@@ -43,7 +43,7 @@ class Listing::SerializationTest < ActiveSupport::TestCase
 
   context 'nil rating' do
     setup do
-      @listing = FactoryGirl.create(:listing)
+      @listing = FactoryGirl.create(:transactable)
       @serializer = ListingSerializer.new(@listing)
       @json = @serializer.as_json[:listing]
     end

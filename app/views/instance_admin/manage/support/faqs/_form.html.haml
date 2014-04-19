@@ -1,0 +1,5 @@
+.support
+  =simple_form_for [:instance_admin, :manage, @faq] do |f|
+    =f.input :question, :input_html => { :rows => 2 }
+    =f.input :answer, as: :text, :input_html => { :cols => 5, :rows => 10 }
+    =f.submit 'Save'

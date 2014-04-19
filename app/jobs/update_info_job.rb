@@ -8,6 +8,8 @@ class UpdateInfoJob < Job
   def perform
     return if not DesksnearMe::Application.config.perform_social_jobs
     Authentication::InfoUpdater.new(@authentication).update
+  rescue Authentication::InvalidToken
+    @authentication.expire_token! if @authentication.token_expires?
   end
 
 end

@@ -1,8 +1,8 @@
 module Utils
   class InstanceViewsSeeder
 
-    def go!
-      Dir["app/views/**/*"].each do |file_path|
+    def go!(path="**/*")
+      Dir["app/views/#{path}"].each do |file_path|
         # we don't want to include mailer templates, we handle them separately
         next if file_path.include?('_mailer/') && file_path.include?('.liquid')
         next if Pathname.new(file_path).directory?
@@ -26,7 +26,7 @@ module Utils
       pure_name = name_components.shift
       name_components.each do |ext|
         if Mime::SET.symbols.map(&:to_s).include?(ext)
-          attributes[:format] = ext 
+          attributes[:format] = ext
         elsif ActionView::Template::Handlers.extensions.map(&:to_s).include?(ext)
           attributes[:handler] = ext
         elsif I18n.available_locales.map(&:to_s).include?(ext)

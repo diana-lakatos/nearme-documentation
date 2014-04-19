@@ -4,6 +4,8 @@ source 'http://rubygems.org'
 
 gem 'rails', '3.2.16'
 gem 'pg'
+gem 'activerecord-postgres-hstore'
+gem 'hstore-attributes', github: 'Slashek/hstore-attributes'
 
 gem 'redis'
 gem 'redis-rails'
@@ -161,3 +163,5 @@ group :test do
   gem 'ruby-prof'
   gem 'test_after_commit'
 end
+
+gem 'mailman'

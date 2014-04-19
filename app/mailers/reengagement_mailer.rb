@@ -3,7 +3,7 @@ class ReengagementMailer < InstanceMailer
 
   def no_bookings(user)
     @user = user
-    @listing = Listing.first
+    @listing = Transactable.first
 
     if should_be_sent?
       mail to: @user.email

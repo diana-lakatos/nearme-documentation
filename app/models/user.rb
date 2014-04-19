@@ -1,15 +1,15 @@
 class User < ActiveRecord::Base
-  has_paper_trail :ignore => [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at, 
-                              :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token, 
+  has_paper_trail :ignore => [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
+                              :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
                               :unlock_token, :locked_at, :google_analytics_id, :browser, :browser_version, :platform,
-                              :bookings_count, :guest_rating_average, :guest_rating_count, :host_rating_average, 
-                              :host_rating_count, :avatar_versions_generated_at, :last_geolocated_location_longitude, 
+                              :bookings_count, :guest_rating_average, :guest_rating_count, :host_rating_average,
+                              :host_rating_count, :avatar_versions_generated_at, :last_geolocated_location_longitude,
                               :last_geolocated_location_latitude, :instance_unread_messages_threads_count, :sso_log_out]
   acts_as_paranoid
   auto_set_platform_context
 
   extend FriendlyId
-  has_metadata :accessors => [:has_draft_listings, :has_any_active_listings, :companies_metadata, :instance_admins_metadata]
+  has_metadata :accessors => [:has_draft_listings, :has_any_active_listings, :companies_metadata, :instance_admins_metadata, :support_metadata]
   friendly_id :name, use: :slugged
 
   has_many :authentications, :dependent => :destroy
@@ -18,17 +18,17 @@ class User < ActiveRecord::Base
   has_many :companies, :through => :company_users, :order => "company_users.created_at ASC"
   has_many :created_companies, :class_name => "Company", :foreign_key => 'creator_id', :inverse_of => :creator
   has_many :administered_locations, :class_name => "Location", :foreign_key => 'administrator_id', :inverse_of => :administrator
-  has_many :administered_listings, :class_name => "Listing", :through => :administered_locations, :source => :listings 
-  has_many :instance_admins, :foreign_key => 'user_id', :dependent => :destroy 
+  has_many :administered_listings, :class_name => "Transactable", :through => :administered_locations, :source => :listings
+  has_many :instance_admins, :foreign_key => 'user_id', :dependent => :destroy
   has_many :locations, :through => :companies
   has_many :reservations, :foreign_key => 'owner_id'
-  has_many :listings, :through => :locations
+  has_many :listings, :through => :locations, class_name: 'Transactable'
   has_many :photos, :foreign_key => 'creator_id'
   has_many :listing_reservations, :through => :listings, :source => :reservations
   has_many :relationships, :class_name => "UserRelationship", :foreign_key => 'follower_id', :dependent => :destroy
   has_many :followed_users, :through => :relationships, :source => :followed
   has_many :reverse_relationships, :class_name => "UserRelationship", :foreign_key => 'followed_id', :dependent => :destroy
-  has_many :followers, :through => :reverse_relationships, :source => :follower 
+  has_many :followers, :through => :reverse_relationships, :source => :follower
   has_many :host_ratings, class_name: 'HostRating', foreign_key: 'subject_id'
   has_many :guest_ratings, class_name: 'GuestRating', foreign_key: 'subject_id'
   has_many :user_industries, :dependent => :destroy
@@ -36,6 +36,7 @@ class User < ActiveRecord::Base
   has_many :mailer_unsubscriptions
   has_many :charges, foreign_key: 'user_id', dependent: :destroy
   has_many :authored_messages, :class_name => "UserMessage", :foreign_key => 'author_id', :inverse_of => :author
+  has_many :tickets, :class_name => 'Support::Ticket', order: 'updated_at DESC'
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
@@ -49,7 +50,7 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :companies
 
   scope :patron_of, lambda { |listing|
-    joins(:reservations).where(:reservations => { :listing_id => listing.id }).uniq
+    joins(:reservations).where(:reservations => { :transactable_id => listing.id }).uniq
   }
 
   scope :needs_mailchimp_update, -> {
@@ -61,7 +62,7 @@ class User < ActiveRecord::Base
     users_ids.any? ? where('users.id NOT IN (?)', users_ids) : scoped
   }
 
-  scope :ordered_by_email, order('users.email ASC') 
+  scope :ordered_by_email, order('users.email ASC')
 
   scope :visited_listing, ->(listing) {
     joins(:reservations).merge(Reservation.confirmed.past.for_listing(listing)).uniq
@@ -91,6 +92,8 @@ class User < ActiveRecord::Base
   mount_uploader :avatar, AvatarUploader, :use_inkfilepicker => true
   skip_callback :commit, :after, :remove_avatar!
 
+  BIOGRAPHY_MAX_LENGTH = 2000
+
   validates_presence_of :name
 
   # FIXME: This is an unideal coupling of 'required parameters' for specific forms
@@ -105,7 +108,7 @@ class User < ActiveRecord::Base
   validates :company_name, length: {maximum: 50}
   validates :job_title, length: {maximum: 50}
   validates :skills_and_interests, length: {maximum: 150}
-  validates :biography, length: {maximum: 250}
+  validates :biography, length: {maximum: BIOGRAPHY_MAX_LENGTH}
 
   devise :database_authenticatable, :registerable, :recoverable,
          :rememberable, :trackable, :user_validatable, :token_authenticatable, :temporary_token_authenticatable
@@ -113,7 +116,7 @@ class User < ActiveRecord::Base
   attr_accessor :phone_required, :country_name_required, :skip_password
 
   attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :avatar_versions_generated_at, :avatar_transformation_data,
-    :biography, :industry_ids, :country_name, :mobile_number, :facebook_url, :twitter_url, :linkedin_url, :instagram_url, 
+    :biography, :industry_ids, :country_name, :mobile_number, :facebook_url, :twitter_url, :linkedin_url, :instagram_url,
     :current_location, :company_name, :skills_and_interests, :last_geolocated_location_longitude, :last_geolocated_location_latitude,
     :domain_id, :time_zone, :companies_attributes, :sms_notifications_enabled, :sms_preferences
 
@@ -248,7 +251,7 @@ class User < ActiveRecord::Base
       self.follow!(user, auth)
     end
   end
-  alias_method :add_friends, :add_friend 
+  alias_method :add_friends, :add_friend
 
   def friends
     self.followed_users.without(self)
@@ -404,12 +407,12 @@ class User < ActiveRecord::Base
       locations_in_near = Location.near([last_geolocated_location_latitude, last_geolocated_location_longitude], radius_in_km, units: :km, order: :distance)
     end
 
-    listing_ids_of_cancelled_reservations = self.reservations.cancelled_or_expired_or_rejected.pluck(:listing_id) if without_listings_from_cancelled_reservations
+    listing_ids_of_cancelled_reservations = self.reservations.cancelled_or_expired_or_rejected.pluck(:transactable_id) if without_listings_from_cancelled_reservations
 
     listings = []
     locations_in_near.includes(:listings).each do |location|
       if without_listings_from_cancelled_reservations and !listing_ids_of_cancelled_reservations.empty?
-        listings += location.listings.searchable.where('listings.id NOT IN (?)', listing_ids_of_cancelled_reservations).limit((listings.size - results_size).abs)
+        listings += location.listings.searchable.where('transactables.id NOT IN (?)', listing_ids_of_cancelled_reservations).limit((listings.size - results_size).abs)
       else
         listings += location.listings.searchable.limit((listings.size - results_size).abs)
       end
@@ -460,7 +463,7 @@ class User < ActiveRecord::Base
     end
 
   end
-  
+
   # Returns a temporary token to be used as the login token parameter
   # in URLs to automatically log the user in.
   def temporary_token(expires_at = 48.hours.from_now)

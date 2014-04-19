@@ -42,7 +42,7 @@ Then /^I receive a response with (\d+) status code$/ do |status_code|
   last_response.status.should == status_code.to_i
 end
 
-Then /^the response does (not )?include the listing in (.*)$/ do |negative, city|
+Then /^the response does (not )?include the (transactable|listing) in (.*)$/ do |negative, klass, city|
   includes_result = results_listings.any? do |listing|
       listing[:company_name].include?(city)
   end

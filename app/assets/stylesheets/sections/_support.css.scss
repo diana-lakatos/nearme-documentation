@@ -1,4 +1,149 @@
-.support-tab {
-  position: fixed;
-  top: 45%;
+.support {
+  hr {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+}
+
+.support {
+  .message {
+    margin-top: 15px;
+    .profile {
+      max-width: 180px;
+    }
+  }
+}
+
+.support.detail {
+  .header {
+    margin: -15px -15px 30px -15px;
+    padding: 15px;
+    background-color: $gray160;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+
+  .form {
+    margin-bottom: 30px;
+  }
+
+  .name {
+    color: $theme_black;
+  }
+
+  .time abbr{
+    color: $theme_gray;
+  }
+
+  .text {
+    color: $theme_black;
+    p {
+      color: $theme_black;
+    }
+  }
+}
+
+.support .list.tickets {
+  .text {
+    color: $theme_black;
+  }
+  .ticket {
+    padding-top: 0px;
+    padding-bottom: 5px
+  }
+  .box {
+    padding: 20px;
+  }
+
+  .link {
+    a {
+      display: inline-block;
+    }
+    display: inline-block;
+  }
+  .time {
+    display: inline-block;
+  }
+}
+
+.support .form {
+  color: $theme_black;
+
+  .columns {
+    .row-fluid {
+      margin-top: 10px;
+    }
+  }
+}
+
+.support {
+
+  .faq {
+    padding-bottom: 20px;
+    &.opened .question:before {
+      content:"\25BC";
+    }
+
+    &.closed .question:before {
+      content:"\25BA";
+    }
+
+    &.closed .answer {
+      display: none;
+    }
+
+    .question {
+      cursor: pointer;
+
+      color: $theme_black;
+    }
+
+    .answer {
+      padding-top: 10px;
+    }
+  }
+
+  .tickets {
+    @include adjust-font-size-to(18px);
+    color: $theme_gray;
+
+    .ticket {
+      padding-top: 15px;
+      .question {
+        color: $theme_black;
+        padding-bottom: 8px;
+      }
+
+      .time {
+        abbr {
+          color: $theme_gray;
+        }
+      }
+
+      .link {
+        a {
+          display: block;
+          color: $theme_gray;
+          text-decoration: underline !important;
+
+          &:hover {
+            text-decoration: none !important;
+          }
+        }
+      }
+
+    }
+  }
+
+  .view-all {
+    display: block;
+    padding-top: 15px;
+    padding-bottom: 25px;
+    color: $theme_black;
+    text-decoration: underline !important;
+  }
+
+  .btn.btn-green {
+    margin-top: 20px;
+  }
 }

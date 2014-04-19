@@ -4,8 +4,8 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
 
   MODELS_SCOPEABLE_ONLY_TO_INSTANCE = [:amenity_type, :instance_admin, :instance_billing_gateway,
                                        :instance_client, :listing_type, :location_type, :user_message]
-  MODELS_SCOPEABLE_TO_WHITE_LABEL_COMPANY_AND_PARTNER = [:location, :listing, :reservation, :reservation_charge, :payment_transfer]
-  MODELS_WITH_LISTINGS_PUBLIC = [:location, :listing, :reservation]
+  MODELS_SCOPEABLE_TO_WHITE_LABEL_COMPANY_AND_PARTNER = [:location, :transactable, :reservation, :reservation_charge, :payment_transfer]
+  MODELS_WITH_LISTINGS_PUBLIC = [:location, :transactable, :reservation]
 
   setup do
     @platform_context = PlatformContext.new
@@ -38,7 +38,7 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
           end
         end
 
-        # if we enter desksnear.me instance we don't want to see records from privatecompany.desksnear.me 
+        # if we enter desksnear.me instance we don't want to see records from privatecompany.desksnear.me
         should 'ignore entities that belong to company with private listings' do
           (MODELS_WITH_LISTINGS_PUBLIC).each do |model_symbol|
             PlatformContext.current = PlatformContext.new
@@ -57,7 +57,7 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
 
         context 'instance admin' do
 
-          # if we for example enter desksnear.me/instance_admin we actually want to see records even from privatecompany.desksnear.me 
+          # if we for example enter desksnear.me/instance_admin we actually want to see records even from privatecompany.desksnear.me
           should 'not scope entities that belong to company with private listings if scope forced to instance' do
             (MODELS_WITH_LISTINGS_PUBLIC).each do |model_symbol|
               PlatformContext.current = PlatformContext.new

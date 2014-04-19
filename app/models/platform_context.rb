@@ -4,15 +4,15 @@
 # is accessible via class method current(). It is thread-safe, as long as we make sure the context is cleared
 # between requests. For jobs invoked in background, we pass platform_context_detail [ class and id ], which allows us
 # to retreive the context. We also have to make sure the context is set for each job [ nil is valid, so if we don't need context
-# in certain job, we have to set it nil! ]. In some parts of the app, we have to overwrite default platform context. For example for 
+# in certain job, we have to set it nil! ]. In some parts of the app, we have to overwrite default platform context. For example for
 # admin, we don't care on which domain we are - we are admins and we should have access to everything. We can achieve this by
 # manually set PlatformContext.current to nil via current= class method [ PlatformContext.current = nil ].
 #
 # PlatformContext is mainly used to display the right theme and text in UI, emails, and to ensure proper scoping [ i.e. if we have
-# two instances, desksnear.me and boatsnear.you, we don't want to display any boats on desksnear.me, and we don't want to display 
+# two instances, desksnear.me and boatsnear.you, we don't want to display any boats on desksnear.me, and we don't want to display
 # and desks at boatsnear.you.
 #
-# To ensure proper scoping, there are two helper modules, which are added to any ActiveRecord classes during initializations. 
+# To ensure proper scoping, there are two helper modules, which are added to any ActiveRecord classes during initializations.
 # These are PlatformContext::ForeignKeysAssigner and PlatformContext::DefaultScope. The first one ensures that db columns with foreign
 # keys to platform_context models [ like instance, partner, company ] are properly set. The second one ensures we retreive from db
 # only records that belong to current platform context. See these classes at app/models/platform_context/ for more information.
@@ -30,6 +30,7 @@ class PlatformContext
 
   def self.current=(platform_context)
     Thread.current[:platform_context] = platform_context
+    ActiveRecord::Base.establish_connection(platform_context.instance.db_connection_string) if platform_context.present? && platform_context.instance.db_connection_string.present?
   end
 
   def self.scope_to_instance

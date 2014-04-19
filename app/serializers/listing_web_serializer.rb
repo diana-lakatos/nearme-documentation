@@ -37,7 +37,7 @@ class ListingWebSerializer < ApplicationSerializer
     object.availability_full_week.map do |d|
       {
           day: d[:day],
-          id: (d[:rule].target_type == 'Listing' ? d[:rule].id : nil),
+          id: (d[:rule].target_type == 'Transactable' ? d[:rule].id : nil),
           day_name: d[:rule].day_name,
           open_time: d[:rule].open_time,
           close_time: d[:rule].close_time

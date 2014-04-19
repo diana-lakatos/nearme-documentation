@@ -10,7 +10,7 @@ module ListingsHelpers
     try_to_create_listing(location, name) do
       yield if block_given?
     end
-    wait_until { @listing = Listing.find_by_name(name) }
+    wait_until { @listing = Transactable.find_by_name(name) }
     store_model('listing', 'user-created listing', @listing)
   end
 
@@ -29,7 +29,7 @@ module ListingsHelpers
   end
 
   def listing
-    @listing = model!("listing") if(!@listing)
+    @listing = model!("transactable") if(!@listing)
     @listing
   end
 
@@ -73,7 +73,7 @@ module ListingsHelpers
   end
 
   def latest_listing
-    Listing.last
+    Transactable.last
   end
 
   def fill_listing_form

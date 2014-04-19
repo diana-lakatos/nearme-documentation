@@ -27,6 +27,7 @@ FactoryGirl.define do
       permission_settings true
       permission_theme true
       permission_manage true
+      permission_support true
     end
 
     factory :instance_admin_role_blog do

@@ -2,7 +2,7 @@ namespace :simplify do
 
   desc "Ensure there are only 3 location types. All existing location types should be mapped."
   task :location_types => :environment do
-    new_location_type_names =["Business", "Co-working", "Public"] 
+    new_location_type_names =["Business", "Co-working", "Public"]
     new_location_type_names.each do |name|
       LocationType.create(:name => name) unless LocationType.find_by_name(name)
     end
@@ -23,7 +23,7 @@ namespace :simplify do
   task :listing_types => :environment do
     new_office_space_ids = ListingType.where(['name IN (?)', ["Event Space", "Room"]]).pluck(:id)
     new_office = ListingType.where(:name => 'Office Space').first
-    Listing.update_all({:listing_type_id => new_office.id}, ['listing_type_id IN (?)', new_office_space_ids]) if new_office && !new_office_space_ids.empty?
+    Transactableupdate_all({:listing_type_id => new_office.id}, ['listing_type_id IN (?)', new_office_space_ids]) if new_office && !new_office_space_ids.empty?
     ListingType.where(['name IN (?)', ["Event Space", "Room"]]).all.each do |listing_type|
       listing_type.destroy
     end

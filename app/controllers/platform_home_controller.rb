@@ -1,4 +1,6 @@
 class PlatformHomeController < ActionController::Base
+  prepend_view_path InstanceViewResolver.instance
+
   protect_from_forgery
   layout 'platform_home'
 

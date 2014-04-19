@@ -32,7 +32,7 @@ class ReservationsControllerTest < ActionController::TestCase
   context 'export' do
 
     setup do
-      @listing = FactoryGirl.create(:listing, :name => 'ICS Listing')
+      @listing = FactoryGirl.create(:transactable, :name => 'ICS Listing')
       @reservation = FactoryGirl.build(:reservation_with_credit_card, :listing => @listing)
       @reservation.periods = []
       Timecop.freeze(Time.zone.local(2013, 6, 28, 10, 5, 0))
@@ -104,7 +104,7 @@ class ReservationsControllerTest < ActionController::TestCase
       sign_in @user
       @company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id)
       @location = FactoryGirl.create(:location_in_auckland)
-      @listing = FactoryGirl.create(:listing, location: @location)
+      @listing = FactoryGirl.create(:transactable, location: @location)
       @company.locations << @location
 
     end

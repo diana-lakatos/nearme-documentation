@@ -3,7 +3,7 @@ Given /^(Location|Listing) with my details should be created$/ do |model|
     location = Location.last
     assert_location_data(location)
   else
-    listing = Listing.last
+    listing = Transactable.last
     assert_listing_data(listing)
   end
 end
@@ -13,7 +13,7 @@ Given /^#{capture_model} should be updated$/ do |model|
     location = model!('location')
     assert_location_data(location)
   else
-    listing = model!('listing')
+    listing = model!('transactable')
     assert_listing_data(listing, true)
   end
 end

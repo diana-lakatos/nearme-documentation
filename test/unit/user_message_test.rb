@@ -5,7 +5,7 @@ class UserMessageTest < ActiveSupport::TestCase
   context 'archived_for' do
 
     setup do
-      @listing = FactoryGirl.create(:listing)
+      @listing = FactoryGirl.create(:transactable)
       @listing_administrator = @listing.administrator
       @user = FactoryGirl.create(:user)
 
@@ -28,7 +28,7 @@ class UserMessageTest < ActiveSupport::TestCase
   context 'mark as read' do
 
     setup do
-      @listing = FactoryGirl.create(:listing)
+      @listing = FactoryGirl.create(:transactable)
       @listing_administrator = @listing.administrator
       @user = FactoryGirl.create(:user)
 
@@ -56,7 +56,7 @@ class UserMessageTest < ActiveSupport::TestCase
   context 'author_has_access_to_message_context' do
 
     should 'return true if reservation is a thread_context and author is company user' do
-      @listing = FactoryGirl.create(:listing)
+      @listing = FactoryGirl.create(:transactable)
       @reservation = FactoryGirl.create(:reservation, listing: @listing)
       @user = FactoryGirl.create(:user)
       CompanyUser.create(company_id: @reservation.company.id, user_id: @user.id)

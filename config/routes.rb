@@ -39,6 +39,13 @@ DesksnearMe::Application.routes.draw do
   match '/422', :to => 'errors#server_error'
   match '/500', :to => 'errors#server_error'
 
+  namespace :support do
+    root :to => 'dashboard#index'
+    resources :tickets, only: [:index, :new, :create, :show] do
+      resources :ticket_messages, only: [:create]
+    end
+  end
+
   namespace :admin do
     match '/', :to => "dashboard#show"
     resources :users do
@@ -67,6 +74,8 @@ DesksnearMe::Application.routes.draw do
       resources :partners
     end
     resources :pages
+    get '/platform_home', to: 'platform_home#edit', as: 'platform_home'
+    post '/platform_home', to: 'platform_home#update', as: 'platform_home'
   end
 
   resources :marketplace_sessions, only: [:new, :create]
@@ -112,6 +121,14 @@ DesksnearMe::Application.routes.draw do
 
     namespace :manage do
       get '/', :to => 'base#index'
+      get 'support' => 'support#index', as: 'support_root'
+      namespace :support do
+        resources :faqs, :except => [:show]
+        resources :tickets, :only => [:show, :update] do
+          resources :ticket_messages, :only => [:create]
+        end
+      end
+
       resources :inventories, :only => [:index] do
         post :login_as, on: :member
         post :restore_session, on: :collection
@@ -390,6 +407,7 @@ DesksnearMe::Application.routes.draw do
     mount UserMessageMailerPreview => 'mail_view/user_messages'
     mount ReengagementMailerPreview => 'mail_view/reengagement'
     mount RecurringMailerPreview => 'mail_view/recurring'
+    mount SupportMailerPreview => 'mail_view/support'
   end
 
 end

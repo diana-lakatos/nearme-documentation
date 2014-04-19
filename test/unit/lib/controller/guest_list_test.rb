@@ -8,7 +8,7 @@ class GuestListTest < ActiveSupport::TestCase
       @user = create(:user)
       @company = create(:company, creator: @user)
       @location = create(:location, company: @company)
-      @listings = create(:listing, quantity: 10, location: @location)
+      @listings = create(:transactable, quantity: 10, location: @location)
       @unconfirmed_reservation =  create(:reservation, listing: @listings, state: :unconfirmed)
       @confirmed_reservation =  create(:reservation, listing: @listings, state: :confirmed)
 

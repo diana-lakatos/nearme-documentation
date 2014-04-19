@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :listing do
+  factory :transactable do
     sequence(:name) do |n|
       "Listing #{n}"
     end
@@ -10,6 +10,7 @@ FactoryGirl.define do
     confirm_reservations true
     daily_price_cents 5000
     hourly_reservations false
+    quantity 1
 
     photo_not_required true
     ignore do
@@ -21,7 +22,6 @@ FactoryGirl.define do
         listing.photos = create_list(:photo, evaluator.photos_count_to_be_created,
                                      listing: nil,
                                      creator: listing.location.creator)
-        listing.photos_count = evaluator.photos_count_to_be_created
       end
     end
 

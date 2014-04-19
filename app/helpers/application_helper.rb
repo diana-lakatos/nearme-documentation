@@ -6,6 +6,10 @@ module ApplicationHelper
   include FileuploadHelper
   include SharingHelper
 
+  def timeago(time)
+    content_tag(:abbr, time, title: time.to_time.iso8601, class: :timeago)
+  end
+
   def platform_context
     @platform_context_view ||= PlatformContext.current.decorate
   end

@@ -54,6 +54,11 @@ class ApplicationController < ActionController::Base
     PlatformContext.scope_to_instance
   end
 
+  def authenticate_scope!
+    super
+    set_cache_buster
+  end
+
   def authorizer
     @authorizer ||= InstanceAdminAuthorizer.new(current_user)
   end
@@ -109,6 +114,13 @@ class ApplicationController < ActionController::Base
   def apply_persisted_mixpanel_attributes
     cookies.signed.permanent[:mixpanel_anonymous_id] = mixpanel.anonymous_identity
     cookies.signed.permanent[:mixpanel_session_properties] = ActiveSupport::JSON.encode(mixpanel.session_properties)
+  end
+
+  # Used in controller actions that require authentication
+  def set_cache_buster
+    response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
   end
 
   def first_time_visited?
@@ -358,13 +370,6 @@ class ApplicationController < ActionController::Base
     rescue => e
       Rails.logger.debug "Error when preparing Raygun custom_params: #{e}"
     end
-  end
-
-  def notify_raygun_about_exception(exception)
-    return if DesksnearMe::Application.config.silence_raygun_notification
-    Raygun.configuration.failsafe_logger = true
-    Raygun.track_exception(exception)
-    Raygun.configuration.failsafe_logger = false
   end
 
   def details_for_lookup

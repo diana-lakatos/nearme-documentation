@@ -22,7 +22,7 @@ class Company < ActiveRecord::Base
   has_many :company_users, dependent: :destroy
   has_many :users, :through => :company_users
   has_many :locations, dependent: :destroy, inverse_of: :company
-  has_many :listings
+  has_many :listings, class_name: 'Transactable'
   has_many :reservations
   has_many :reservation_charges
   has_many :payment_transfers, :dependent => :destroy
@@ -64,7 +64,7 @@ class Company < ActiveRecord::Base
 
   def add_creator_to_company_users
     unless users.include?(creator)
-      users << creator 
+      users << creator
     end
   end
 
@@ -85,7 +85,7 @@ class Company < ActiveRecord::Base
         self.created_payment_transfers << payment_transfer if payment_transfer.possible_automated_payout_not_supported?
       end
     end
-    # we want to notify company owner (once no matter how many payment transfers have been generated!) 
+    # we want to notify company owner (once no matter how many payment transfers have been generated!)
     # that it is possible to make automated payout but he needs to enter credentials via edit company settings
     if mailing_address.blank? && self.created_payment_transfers.any?
       CompanyMailer.enqueue.notify_host_of_no_payout_option(self)
@@ -103,8 +103,8 @@ class Company < ActiveRecord::Base
 
   def balanced_bank_account_details
     {
-      :account_number => bank_account_number, 
-      :bank_code => bank_routing_number, 
+      :account_number => bank_account_number,
+      :bank_code => bank_routing_number,
       :name => bank_owner_name,
       :type => 'checking'
     }
@@ -154,11 +154,7 @@ class Company < ActiveRecord::Base
         Billing::Gateway::Processor::Outgoing::Balanced.create_customer_with_bank_account!(self)
       rescue Balanced::Unauthorized => e
         errors.add(:bank_account_form, 'We could not validate your bank account details at this time. Please try again later.')
-        unless DesksnearMe::Application.config.silence_raygun_notification
-          Raygun.configuration.failsafe_logger = true
-          Raygun.track_exception(exception)
-          Raygun.configuration.failsafe_logger = false
-        end
+        ExceptionTracker.track_exception(e)
         false
       end
     end
