@@ -24,8 +24,8 @@
     = render 'layouts/favicon'
 
     = stylesheet_link_tag platform_context.compiled_stylesheet_url || 'application'
-    - if platform_context.theme && !platform_context.theme.homepage_css.blank?
-      %style= platform_context.theme.homepage_css.html_safe
+    = render 'layouts/homepage_css' if home_page?
+
 
     /[if lt IE 9]
       = stylesheet_link_tag 'browser_specific/ie8'

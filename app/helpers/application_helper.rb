@@ -190,4 +190,7 @@ module ApplicationHelper
     str.to_s.gsub(/\r\n|\r|\n/, "<br />").html_safe
   end
 
+  def home_page?
+    current_page?(controller: 'home', action: 'index')
+  end
 end
