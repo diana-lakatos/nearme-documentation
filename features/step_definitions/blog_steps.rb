@@ -16,7 +16,7 @@ Then(/^I can manage blog posts$/) do
   visit '/instance_admin/manage_blog/posts'
   click_link 'New post'
   fill_in 'Title', with: 'Great title!'
-  find(:xpath, "//input[@id='blog_post_content']").set "Post body"
+  fill_in 'Content', with: 'Content'
   click_button 'Create Blog post'
   page.should have_content('New blog post added.')
   @blog_instance.blog_posts.last.title.should == 'Great title!'

@@ -1,11 +1,2 @@
 = simple_form_for [:instance_admin, :manage, @blog_post], :html => { :multipart => true } do |f|
   = render 'blog/admin/blog_posts/blog_form', f: f
-
-- content_for :script do
-  :javascript
-    $(function() {
-      new BlogPostsForm($('.simple_form'));
-    });
-
-
-%script{"data-main" => "/assets/blog/admin/wysiwyg.js", src: "/assets/blog/admin/scribe_wysiwyg/requirejs/require.js"}

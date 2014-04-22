@@ -165,3 +165,9 @@ group :test do
 end
 
 gem 'mailman'
+
+
+
+# WYSWYG Editor
+gem 'ckeditor'
+gem 'orm_adapter', '~> 0.5.0' # https://github.com/galetahub/ckeditor/issues/375

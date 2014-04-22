@@ -1,5 +1,7 @@
 DesksnearMe::Application.routes.draw do
 
+  mount Ckeditor::Engine => '/ckeditor'
+
   constraints host: 'near-me.com' do
     root :to => 'platform_home#index'
     get '/features', :to => 'platform_home#features'

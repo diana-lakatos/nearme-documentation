@@ -5,47 +5,12 @@
 .row-fluid
   .controls.controls-row
     .span12
-      = f.label :content
-      .toolbar
-        %button{"data-command-name" => "bold"} Bold
-        %button{"data-command-name" => "italic"} Italic
-        %button{"data-command-name" => "strikeThrough"} Strike Through
-        %button{"data-command-name" => "removeFormat"} Remove Formatting
-        %button{"data-command-name" => "linkPrompt"} Link
-        %button{"data-command-name" => "unlink"} Unlink
-        %button{"data-command-name" => "imagePrompt"} Image
-        %button{"data-command-name" => "insertOrderedList"} Ordered List
-        %button{"data-command-name" => "insertUnorderedList"} Unordered List
-        %button{"data-command-name" => "indent"} Indent
-        %button{"data-command-name" => "outdent"} Outdent
-        %button{"data-command-name" => "blockquote"} Blockquote
-        %button{"data-command-name" => "h2"} H2
-        %button{"data-command-name" => "undo"} Undo
-        %button{"data-command-name" => "redo"} Redo
-      .scribe.input-block-level.uneditable-input
-      = f.input :content, as: :hidden
+      = f.input :content, :as => :ckeditor, :input_html => { :ckeditor => { :toolbar => 'simple' } }
 
 .row-fluid
   .controls.controls-row
     .span12
-      = f.label :excerpt
-      .toolbar
-        %button{"data-command-name" => "bold"} Bold
-        %button{"data-command-name" => "italic"} Italic
-        %button{"data-command-name" => "strikeThrough"} Strike Through
-        %button{"data-command-name" => "removeFormat"} Remove Formatting
-        %button{"data-command-name" => "linkPrompt"} Link
-        %button{"data-command-name" => "unlink"} Unlink
-        %button{"data-command-name" => "insertOrderedList"} Ordered List
-        %button{"data-command-name" => "insertUnorderedList"} Unordered List
-        %button{"data-command-name" => "indent"} Indent
-        %button{"data-command-name" => "outdent"} Outdent
-        %button{"data-command-name" => "blockquote"} Blockquote
-        %button{"data-command-name" => "h2"} H2
-        %button{"data-command-name" => "undo"} Undo
-        %button{"data-command-name" => "redo"} Redo
-      .scribe.input-block-level.uneditable-input.small
-      = f.input :excerpt, as: :hidden
+      = f.input :excerpt, :as => :ckeditor, :input_html => { :ckeditor => { :toolbar => 'simple' } }
 
 .row-fluid
   .controls.controls-row

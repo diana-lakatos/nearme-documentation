@@ -378,4 +378,21 @@ class ApplicationController < ActionController::Base
       :instance_id => PlatformContext.current.try(:instance).try(:id)
     }
   end
+
+  def ckeditor_pictures_scope(options = {})
+    options[:assetable_id] = platform_context.instance.id
+    options[:assetable_type] = "Instance"
+    ckeditor_filebrowser_scope(options)
+  end
+
+  def ckeditor_attachment_files_scope(options = {})
+    options[:assetable_id] = platform_context.instance.id
+    options[:assetable_type] = "Instance"
+    ckeditor_filebrowser_scope(options)
+  end
+
+  def ckeditor_before_create_asset(asset)
+    asset.assetable = platform_context.instance
+    return true
+  end
 end

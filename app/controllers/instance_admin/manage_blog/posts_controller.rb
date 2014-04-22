@@ -1,4 +1,5 @@
 class InstanceAdmin::ManageBlog::PostsController < InstanceAdmin::ManageBlog::BaseController
+  before_filter :load_instance
 
   def index
     @blog_posts = @blog_instance.blog_posts.by_date
@@ -38,6 +39,12 @@ class InstanceAdmin::ManageBlog::PostsController < InstanceAdmin::ManageBlog::Ba
     @blog_post.destroy
     flash[:success] = t('flash_messages.blog_admin.blog_posts.blog_post_deleted')
     redirect_to instance_admin_manage_blog_posts_path
+  end
+
+  private
+
+  def load_instance
+    @instance = platform_context.instance
   end
 
 end

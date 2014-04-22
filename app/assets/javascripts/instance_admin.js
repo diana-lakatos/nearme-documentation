@@ -16,3 +16,4 @@
 //= require ./vendor/urlify
 //= require ./blog/admin/blog_posts_form
 //= require lib/timeago.jquery
+//= require ckeditor/init
