@@ -22,6 +22,8 @@ class Reservation < ActiveRecord::Base
     :unknown => 'unknown'
   }
 
+  attr_encrypted :authorization_token, :payment_gateway_class, :key => DesksnearMe::Application.config.secret_token
+
   belongs_to :instance
   belongs_to :listing, class_name: 'Transactable', foreign_key: 'transactable_id'
   belongs_to :owner, :class_name => "User"

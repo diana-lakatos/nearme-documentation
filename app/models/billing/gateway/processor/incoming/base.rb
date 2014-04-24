@@ -22,7 +22,9 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
         payment_gateway_class: self.class
       }
     else
-      raise Billing::Gateway::AuthorizationFailedError.new, response.message
+      return {
+        error: response.message
+      }
     end
   end
 
@@ -43,9 +45,9 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
 
       response.success? ? charge_successful(response.params) : charge_failed(response.params)
       return @charge
-
-    rescue
-      raise Billing::Gateway::PaymentAttemptError.new, response.message
+      
+    rescue => e
+      raise Billing::Gateway::PaymentAttemptError, e
     end
   end
 
@@ -56,7 +58,7 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
       reference: reference
     )
 
-    raise Billing::Gateway::RefundIdentificationNotImplementedError.new if !defined?(refund_identification)
+    raise Billing::Gateway::RefundNotSupportedError, "Refund isn't supported or is not implemented. Please refund this user directly on your gateway account." if !defined?(refund_identification)
 
     begin
       response = if defined?(custom_refund_options)
@@ -68,12 +70,22 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
       response.success? ? refund_successful(response.params) : refund_failed(response.params)
       return @refund
     
-    rescue
-      raise Billing::Gateway::PaymentRefundError.new, response.message
+    rescue => e
+      raise Billing::Gateway::PaymentRefundError, e
     end
   end
 
+  def self.supports_currency?(currency)
+    return true if defined? self.support_any_currency!
+    self.supported_currencies.include?(currency)
+  end
+
   protected
+
+  def authorize_callbacks(authorization_token, reservation)
+    reservation.authorization_token = authorization_token
+    reservation.payment_gateway_class = self.class
+  end
 
   # Callback invoked by processor when charge was successful
   def charge_successful(response)
@@ -96,7 +108,6 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
   end
 end
 
-class Billing::Gateway::AuthorizationFailedError < StandardError; end
 class Billing::Gateway::PaymentAttemptError < StandardError; end
 class Billing::Gateway::PaymentRefundError < StandardError; end
-class Billing::Gateway::RefundIdentificationNotImplementedError < StandardError; end
+class Billing::Gateway::RefundNotSupportedError < StandardError; end

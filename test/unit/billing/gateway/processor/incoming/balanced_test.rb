@@ -11,66 +11,15 @@ class Billing::Gateway::Processor::Incoming::BalancedTest < ActiveSupport::TestC
     VCR.use_cassette('payment_gateways_balanced_processor') do
       @balanced_processor = Billing::Gateway::Processor::Incoming::Balanced.new(@user, @instance, 'USD')
     end
-    @reservation = FactoryGirl.create(:reservation_with_credit_card)
   end
 
-  should "#authorize" do
-    VCR.use_cassette('payment_gateways_balanced_authorize') do
-      response = authorize!
-      assert response.success?
-      assert response.authorization.present?
-      assert_equal response.authorization, @reservation.authorization_token
-    end
+  should "#setup_api_on_initialize should return a ActiveMerchant BalancedGateway object" do
+    assert_equal @balanced_processor.active_merchant_class, ActiveMerchant::Billing::BalancedGateway
   end
 
-  should "#charge" do
-    VCR.use_cassette('payment_gateways_balanced_charge') do
-      authorize!
-      charge = capture!
-
-      assert charge.response.is_a?(Hash)
-      assert_equal charge.response["id"], @reservation.authorization_token
-      assert_equal charge.amount, @reservation.total_amount_cents
-    end
+  should "have a refund identification based on its uri key" do
+    charge_response = { "id" => "123", "uri" => "uri" }
+    assert_equal @balanced_processor.refund_identification(charge_response), "uri"
   end
 
-  should "#refund" do
-    VCR.use_cassette('payment_gateways_balanced_refund') do
-      authorize!
-      charge = capture!
-      refund = @balanced_processor.refund(@reservation.total_amount_cents, charge, charge.response)
-
-      assert refund.response.is_a?(Hash)      
-      assert_equal charge.response["id"], refund.response["id"]
-      assert refund.response["refunded"]
-      assert_equal refund.amount, charge.amount
-    end
-  end
-
-  protected
-
-  def credit_card
-    ActiveMerchant::Billing::CreditCard.new(
-      first_name: @user.first_name,
-      last_name: @user.last_name,
-      month: '5',
-      year: '2020',
-      number: '4242424242424242',
-      verification_value: '411'
-    )
-  end
-
-  def authorize!
-    @balanced_processor.authorize(credit_card, @reservation)
-  end
-
-  def capture!
-    reservation_charge = @reservation.reservation_charges.create!(
-      subtotal_amount: @reservation.subtotal_amount,
-      service_fee_amount_guest: @reservation.service_fee_amount_guest,
-      service_fee_amount_host: @reservation.service_fee_amount_host
-    )
-
-    @balanced_processor.charge(@reservation, reservation_charge.total_amount_cents, reservation_charge)
-  end
 end

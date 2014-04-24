@@ -37,7 +37,6 @@ FactoryGirl.define do
       password_protected true
       marketplace_password "123456"
     end
-
   end
 
 end

@@ -11,9 +11,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140515013554) do
+ActiveRecord::Schema.define(:version => 20140522022339) do
 
 
+  create_extension "btree_gin", :version => "1.0"
+  create_extension "btree_gist", :version => "1.0"
   create_extension "hstore", :version => "1.2"
 
   create_table "amenities", :force => true do |t|
@@ -52,8 +54,8 @@ ActiveRecord::Schema.define(:version => 20140515013554) do
     t.integer  "user_id"
     t.string   "provider"
     t.string   "uid"
-    t.datetime "created_at",                                 :null => false
-    t.datetime "updated_at",                                 :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "deleted_at"
     t.string   "secret"
     t.string   "token"
@@ -198,6 +200,14 @@ ActiveRecord::Schema.define(:version => 20140515013554) do
   add_index "company_users", ["company_id"], :name => "index_company_users_on_company_id"
   add_index "company_users", ["user_id"], :name => "index_company_users_on_user_id"
 
+  create_table "country_instance_payment_gateways", :force => true do |t|
+    t.string   "country_alpha2_code"
+    t.integer  "instance_payment_gateway_id"
+    t.integer  "instance_id"
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
+  end
+
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
     t.integer  "attempts",   :default => 0
@@ -224,6 +234,8 @@ ActiveRecord::Schema.define(:version => 20140515013554) do
     t.boolean  "secured",     :default => false
   end
 
+  add_index "domains", ["deleted_at"], :name => "index_domains_on_deleted_at"
+  add_index "domains", ["name"], :name => "index_domains_on_name", :unique => true, :where => "(deleted_at IS NULL)"
   add_index "domains", ["target_id", "target_type"], :name => "index_domains_on_target_id_and_target_type"
 
   create_table "email_templates", :force => true do |t|
@@ -337,8 +349,8 @@ ActiveRecord::Schema.define(:version => 20140515013554) do
     t.boolean  "permission_analytics", :default => true
     t.datetime "created_at",                              :null => false
     t.datetime "updated_at",                              :null => false
-    t.boolean  "permission_blog",      :default => false
     t.boolean  "permission_manage",    :default => false
+    t.boolean  "permission_blog",      :default => false
     t.boolean  "permission_support",   :default => false
   end
 
@@ -457,7 +469,6 @@ ActiveRecord::Schema.define(:version => 20140515013554) do
     t.string   "encrypted_test_balanced_api_key"
     t.string   "encrypted_olark_api_key"
     t.boolean  "olark_enabled",                                                     :default => false
-    t.text     "metadata"
     t.string   "encrypted_facebook_consumer_key"
     t.string   "encrypted_facebook_consumer_secret"
     t.string   "encrypted_linkedin_consumer_key"
@@ -467,6 +478,7 @@ ActiveRecord::Schema.define(:version => 20140515013554) do
     t.string   "encrypted_instagram_consumer_key"
     t.string   "encrypted_instagram_consumer_secret"
     t.integer  "instance_type_id"
+    t.text     "metadata"
     t.text     "support_imap_hash"
     t.string   "support_email"
     t.string   "encrypted_db_connection_string"
@@ -629,8 +641,9 @@ ActiveRecord::Schema.define(:version => 20140515013554) do
     t.string   "name"
     t.string   "method_name"
     t.text     "settings"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.string   "active_merchant_class"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
   end
 
   create_table "payment_transfers", :force => true do |t|
@@ -666,8 +679,8 @@ ActiveRecord::Schema.define(:version => 20140515013554) do
   end
 
   create_table "photos", :force => true do |t|
-    t.datetime "created_at",                  :null => false
-    t.datetime "updated_at",                  :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "transactable_id"
     t.string   "image"
     t.string   "caption"
@@ -754,9 +767,9 @@ ActiveRecord::Schema.define(:version => 20140515013554) do
     t.datetime "failed_at"
     t.datetime "created_at",                                    :null => false
     t.datetime "updated_at",                                    :null => false
-    t.integer  "payment_transfer_id"
     t.string   "currency"
     t.datetime "deleted_at"
+    t.integer  "payment_transfer_id"
     t.integer  "service_fee_amount_host_cents",  :default => 0, :null => false
     t.datetime "refunded_at"
     t.integer  "instance_id"
@@ -802,19 +815,19 @@ ActiveRecord::Schema.define(:version => 20140515013554) do
     t.string   "confirmation_email"
     t.integer  "subtotal_amount_cents"
     t.string   "currency"
-    t.datetime "created_at",                                                     :null => false
-    t.datetime "updated_at",                                                     :null => false
+    t.datetime "created_at",                                                :null => false
+    t.datetime "updated_at",                                                :null => false
     t.datetime "deleted_at"
     t.text     "comment"
     t.boolean  "create_charge"
-    t.string   "payment_method",                          :default => "manual",  :null => false
-    t.string   "payment_status",                          :default => "unknown", :null => false
-    t.integer  "quantity",                                :default => 1,         :null => false
+    t.string   "payment_method",                     :default => "manual",  :null => false
+    t.string   "payment_status",                     :default => "unknown", :null => false
+    t.integer  "quantity",                           :default => 1,         :null => false
     t.integer  "service_fee_amount_guest_cents"
     t.string   "rejection_reason"
     t.datetime "request_guest_rating_email_sent_at"
     t.datetime "request_host_rating_email_sent_at"
-    t.integer  "service_fee_amount_host_cents",           :default => 0,         :null => false
+    t.integer  "service_fee_amount_host_cents",      :default => 0,         :null => false
     t.integer  "platform_context_detail_id"
     t.string   "platform_context_detail_type"
     t.integer  "instance_id"
@@ -1109,27 +1122,28 @@ ActiveRecord::Schema.define(:version => 20140515013554) do
   add_index "user_relationships", ["follower_id"], :name => "index_user_relationships_on_follower_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                  :default => "",                                                                                  :null => false
-    t.string   "encrypted_password",                     :default => "",                                                                                  :null => false
+    t.string   "email",                                                 :default => "",                                                                                  :null => false
+    t.string   "encrypted_password",                     :limit => 128, :default => "",                                                                                  :null => false
+    t.string   "password_salt",                                         :default => "",                                                                                  :null => false
     t.string   "reset_password_token"
-    t.datetime "reset_password_sent_at"
     t.string   "remember_token"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                          :default => 0
+    t.integer  "sign_in_count",                                         :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                                                                                                                              :null => false
-    t.datetime "updated_at",                                                                                                                              :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "name"
     t.boolean  "admin"
-    t.integer  "bookings_count",                         :default => 0,                                                                                   :null => false
+    t.integer  "bookings_count",                                        :default => 0,                                                                                   :null => false
     t.datetime "confirmation_sent_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"
     t.datetime "locked_at"
-    t.integer  "failed_attempts",                        :default => 0
+    t.datetime "reset_password_sent_at"
+    t.integer  "failed_attempts",                                       :default => 0
     t.string   "authentication_token"
     t.string   "avatar"
     t.string   "confirmation_token"
@@ -1145,15 +1159,15 @@ ActiveRecord::Schema.define(:version => 20140515013554) do
     t.text     "referer"
     t.string   "source"
     t.string   "campaign"
-    t.float    "guest_rating_average"
-    t.integer  "guest_rating_count"
-    t.float    "host_rating_average"
-    t.integer  "host_rating_count"
     t.datetime "verified_at"
     t.string   "google_analytics_id"
     t.string   "browser"
     t.string   "browser_version"
     t.string   "platform"
+    t.float    "guest_rating_average"
+    t.integer  "guest_rating_count"
+    t.float    "host_rating_average"
+    t.integer  "host_rating_count"
     t.text     "avatar_transformation_data"
     t.string   "avatar_original_url"
     t.datetime "avatar_versions_generated_at"
@@ -1168,13 +1182,13 @@ ActiveRecord::Schema.define(:version => 20140515013554) do
     t.integer  "partner_id"
     t.integer  "instance_id"
     t.integer  "domain_id"
-    t.string   "time_zone",                              :default => "Pacific Time (US & Canada)"
+    t.string   "time_zone",                                             :default => "Pacific Time (US & Canada)"
+    t.boolean  "sms_notifications_enabled",                             :default => true
+    t.string   "sms_preferences",                                       :default => "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
+    t.text     "instance_unread_messages_threads_count",                :default => "--- {}\n"
     t.text     "metadata"
-    t.boolean  "sms_notifications_enabled",              :default => true
-    t.string   "sms_preferences",                        :default => "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
-    t.text     "instance_unread_messages_threads_count", :default => "--- {}\n"
     t.string   "payment_token"
-    t.boolean  "sso_log_out",                            :default => false
+    t.boolean  "sso_log_out",                                           :default => false
   end
 
   add_index "users", ["deleted_at"], :name => "index_users_on_deleted_at"

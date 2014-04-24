@@ -110,10 +110,15 @@ class ReservationCharge < ActiveRecord::Base
   private
 
   def billing_gateway
-    @billing_gateway ||= reservation.billing_authorization.payment_gateway_class.to_s.constantize.new(reservation.owner, instance, currency)
+    @billing_gateway ||= if reservation.billing_authorization.payment_gateway_class.present?
+       reservation.billing_authorization.payment_gateway_class.to_s.constantize.new(reservation.owner, instance, currency)
+     else
+        Billing::Gateway::Incoming.new(reservation.owner, instance, currency)
+     end
   end
 
   def assign_currency
     self.currency ||= reservation.currency
   end
+
 end

@@ -113,6 +113,7 @@ class ReservationDecoratorTest < ActionView::TestCase
       setup do
         @reservation.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
         Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:charge)
+        @reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe")
         @reservation.save!
         @reservation.confirm
       end

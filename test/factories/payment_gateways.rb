@@ -2,35 +2,36 @@ FactoryGirl.define do
   factory :payment_gateway do
     name "PaymentGateway"
     settings { {api_key: "present"} }
+    active_merchant_class "ActiveMerchant::Billing::BogusGateway"
 
     factory :balanced_payment_gateway do
       name "Balanced"
-      settings { {api_key: "present"} }
+      settings { { login: "" } }
+      active_merchant_class "ActiveMerchant::Billing::BalancedGateway"
     end
 
     factory :paypal_payment_gateway do
-      name "PayPal"
+      name "Paypal"
       settings {
         {
-          email: '',
-          username: '',
-          password: '',
-          client_id: '',
-          client_secret: '',
-          signature: '',
-          app_id: ''
+          email: "",
+          login: "",
+          password: "",
+          signature: "",
+          app_id: ""
         }
       }
+      active_merchant_class "ActiveMerchant::Billing::PaypalGateway"
     end
 
     factory :stripe_payment_gateway do
       name "Stripe"
       settings {
         {
-          public_key: '',
-          api_key: ''
+          login: ""
         }
       }
+      active_merchant_class "ActiveMerchant::Billing::StripeGateway"
     end
   end  
 end

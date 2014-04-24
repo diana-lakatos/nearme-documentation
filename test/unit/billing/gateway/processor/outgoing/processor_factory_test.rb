@@ -42,14 +42,14 @@ class Billing::Gateway::Processor::Outgoing::ProcessorFactoryTest < ActiveSuppor
       end
 
       should 'not support balanced if has not specified api' do
-        @instance.instance_payment_gateways.set_settings_for(:balanced, {api_key: ""})
+        @instance.instance_payment_gateways.set_settings_for(:balanced, {login: ""})
         refute Billing::Gateway::Processor::Outgoing::ProcessorFactory.balanced_supported?(@instance, 'USD')
       end
 
       context 'currency' do
 
         should 'support balanced if has specified api but wrong currency' do
-          @instance.instance_payment_gateways.set_settings_for(:balanced, {api_key: "present"})
+          @instance.instance_payment_gateways.set_settings_for(:balanced, {login: "present"})
           refute Billing::Gateway::Processor::Outgoing::ProcessorFactory.balanced_supported?(@instance, 'ABC')
         end
 
@@ -98,7 +98,7 @@ class Billing::Gateway::Processor::Outgoing::ProcessorFactoryTest < ActiveSuppor
       end
 
       should 'not support paypal without username' do
-        @instance.instance_payment_gateways.set_settings_for(:paypal, {username: ""})
+        @instance.instance_payment_gateways.set_settings_for(:paypal, {login: ""})
         refute Billing::Gateway::Processor::Outgoing::ProcessorFactory.paypal_supported?(@instance, 'USD')
       end
 

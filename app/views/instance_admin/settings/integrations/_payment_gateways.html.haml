@@ -1,29 +1,19 @@
-%hr
 %legend Payment Gateways
-.row-fluid
-  .controls.controls-row
-    = select_tag :payment_gateway, options_from_collection_for_select(@payment_gateways, :id, :name), class: "payment-gateway-select"
-    %hr
+#payment-gateways
+  .row-fluid
+    .controls.controls-row
+      .span4
+        %label Country to configure for:
+        = form_for("", url: countries_instance_admin_settings_integrations_path, remote: true) do
+          = select_tag :country, options_from_collection_for_select(@countries, :alpha2, :name), { prompt: "-- Select Country --", class: "country-select" }
+      .payment-gateways-form
+  .row-fluid
+    %a{"data-target" => "#instanceAdminModal", "data-toggle" => "modal", "href" => "#{country_instance_payment_gateways_instance_admin_settings_integrations_path}"} Review current settings for all countries
+  .row-fluid
+    .instance-payment-gateway-form
 
-    = f.simple_fields_for :instance_payment_gateways, @instance.instance_payment_gateways.find_or_build do |f|
-      %div{:class => "payment-gateway-option payment-gateway-#{f.object.payment_gateway_id} hidden"}
-        %h3= "Settings for: #{f.object.name}"
+= render 'instance_admin/shared/modal', heading: "Payment Gateways per Country"
 
-        = f.input :payment_gateway_id, as: :hidden, input_html: { value: f.object.payment_gateway_id }
-        .row-fluid
-          .span6.control-group
-            %h5 Live Settings
-            = f.fields_for :live_settings do |live|
-              - f.object.live_settings.each do |k, v|
-                - if k.to_sym == :currency
-                  = live.input k.to_sym, as: :currency, prompt: currency_name(v), input_html: { class: 'input-block-level' }
-                - else
-                  = live.input k.to_sym, as: :string, input_html: { value: v, class: 'input-block-level' }
-          .span6.control-group
-            %h5 Test Settings
-            = f.fields_for :test_settings do |test|
-              - f.object.test_settings.each do |k, v|
-                - if k.to_sym == :currency
-                  = test.input k.to_sym, as: :currency, prompt: currency_name(v), input_html: { class: 'input-block-level', value: "USD" }
-                - else
-                  = test.input k.to_sym, as: :string, input_html: { value: v, class: 'input-block-level' }
+- content_for :domready do
+  new InstanceAdmin.PaymentGatewaySelect($(".country-select"));
+  new InstanceAdmin.SettingsController($('#instanceAdminModal'))

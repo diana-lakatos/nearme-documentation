@@ -6,20 +6,18 @@ FactoryGirl.define do
     live_settings { {api_key: "present"} }
 
     factory :balanced_instance_payment_gateway do
-      payment_gateway_id { PaymentGateway.balanced.id }
-      test_settings { {api_key: "ak-test-eyoGATiAg6YE5thvhSiWIi7NE0zg0l0U"} }
-      live_settings { {api_key: "ak-test-eyoGATiAg6YE5thvhSiWIi7NE0zg0l0U"} }
+      payment_gateway_id { PaymentGateway.where(method_name: "balanced").first.id }
+      test_settings { {login: "ak-test-eyoGATiAg6YE5thvhSiWIi7NE0zg0l0U"} }
+      live_settings { {login: "ak-test-eyoGATiAg6YE5thvhSiWIi7NE0zg0l0U"} }
     end
 
     factory :paypal_instance_payment_gateway do
-      payment_gateway_id { PaymentGateway.paypal.id }
+      payment_gateway_id { PaymentGateway.where(method_name: "paypal").first.id }
       test_settings {
         {
           email: 'sender_test@example.com',
-          username: 'john_test',
+          login: 'john_test',
           password: 'pass_test',
-          client_id: '123_test',
-          client_secret: 'secret_test',
           signature: 'sig_test',
           app_id: 'app-123_test'
         }
@@ -27,10 +25,8 @@ FactoryGirl.define do
       live_settings {
         {
           email: 'sender_live@example.com',
-          username: 'john_live',
+          login: 'john_live',
           password: 'pass_live',
-          client_id: '123_live',
-          client_secret: 'secret_live',
           signature: 'sig_live',
           app_id: 'app-123_live'
         }
@@ -38,21 +34,9 @@ FactoryGirl.define do
     end
 
     factory :stripe_instance_payment_gateway do
-      payment_gateway_id { PaymentGateway.stripe.id }
-      test_settings {
-        {
-          public_key: 'pk_test_epSwdfDLmuIxAyUGx1LvoEki',
-          api_key: 'sk_test_r0wxkPFASg9e45UIakAhgpru',
-          currency: 'USD'
-        }
-      }
-      live_settings {
-        {
-          public_key: 'pk_test_epSwdfDLmuIxAyUGx1LvoEki',
-          api_key: 'sk_test_r0wxkPFASg9e45UIakAhgpru',
-          currency: 'USD'
-        }
-      }
+      payment_gateway_id { PaymentGateway.where(method_name: "stripe").first.id }
+      test_settings { { login: 'sk_test_r0wxkPFASg9e45UIakAhgpru' } }
+      live_settings { { login: 'sk_test_r0wxkPFASg9e45UIakAhgpru' } }
     end
   end
 end

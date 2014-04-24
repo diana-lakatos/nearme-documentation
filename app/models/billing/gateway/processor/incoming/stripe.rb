@@ -1,10 +1,18 @@
-class Billing::Gateway::Processor::Incoming::Stripe < Billing::Gateway::Processor::Incoming::Base  
+class Billing::Gateway::Processor::Incoming::Stripe < Billing::Gateway::Processor::Incoming::Base
   def setup_api_on_initialize
-    key = @instance.instance_payment_gateways.get_settings_for(:stripe, :api_key)
-    @gateway = ActiveMerchant::Billing::StripeGateway.new(:login => key)
+    settings = @instance.instance_payment_gateways.get_settings_for(:stripe)
+    @gateway = active_merchant_class.new(settings)
+  end
+
+  def active_merchant_class
+    ActiveMerchant::Billing::StripeGateway
   end
 
   def refund_identification(charge_response)
     charge_response["id"]
+  end
+
+  def self.support_any_currency!
+    true
   end
 end

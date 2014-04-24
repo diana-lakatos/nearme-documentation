@@ -2,18 +2,41 @@ class InstancePaymentGateway < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  attr_accessible :payment_gateway_id, :live_settings, :test_settings
+  attr_accessible :payment_gateway_id, :live_settings, :test_settings, :country
+  attr_accessor :country
+
   serialize :test_settings, Hash
   serialize :live_settings, Hash
 
   attr_encrypted :test_settings, :live_settings, :key => DesksnearMe::Application.config.secret_token, marshal: true
   
-  validate :payment_gateway_id, presence: true
+  validate :payment_gateway_id, :test_settings, :live_settings, presence: true
 
+  has_many :country_instance_payment_gateways
   belongs_to :instance
   belongs_to :payment_gateway
 
   delegate :name, to: :payment_gateway
+  delegate :supported_countries, to: :payment_gateway
+
+  after_initialize :default_values
+  after_save :set_country_config
+
+  def set_country_config
+    if country.present?
+      country_instance_payment_gateway = self.instance.country_instance_payment_gateways.where(country_alpha2_code: country).first_or_initialize
+      country_instance_payment_gateway.instance_payment_gateway_id = self.id
+      country_instance_payment_gateway.save!
+    end
+  end
+
+  def default_values
+    [:test_settings, :live_settings].each do | method |
+      if self.send(method).nil?
+        self.send("#{method}=", payment_gateway.settings) if payment_gateway.present?
+      end
+    end
+  end
 
   def self.get_settings_for(method_name, key=nil, mode=nil)
     payment_gateway = PaymentGateway.find_by_method_name(method_name)
@@ -45,20 +68,6 @@ class InstancePaymentGateway < ActiveRecord::Base
     end
   end
 
-  def self.find_or_build
-    instance_payment_gateways = []
-    PaymentGateway.all.each do | payment_gateway |
-      instance_payment_gateway = self.where(payment_gateway_id: payment_gateway.id).first_or_initialize
-      if instance_payment_gateway.id.nil?
-        instance_payment_gateway.live_settings = payment_gateway.settings
-        instance_payment_gateway.test_settings = payment_gateway.settings
-        instance_payment_gateway.payment_gateway_id = payment_gateway.id
-        instance_payment_gateways << instance_payment_gateway
-      end
-    end
-    return instance_payment_gateways
-  end
-
   def self.set_settings_for(method_name, settings, mode=nil)
     payment_gateway = PaymentGateway.find_by_method_name(method_name)
     instance_payment_gateway = self.where(payment_gateway_id: payment_gateway.id).first
@@ -75,6 +84,10 @@ class InstancePaymentGateway < ActiveRecord::Base
     
     settings = instance_payment_gateway.send(:"#{mode.to_s}_settings").merge(settings)
     instance_payment_gateway.update_attribute(:"#{mode.to_s}_settings", settings)
+  end
+
+  def self.sort_by_country_support
+    all.sort { |a,b| a.supported_countries.count <=> b.supported_countries.count }
   end
 
 end

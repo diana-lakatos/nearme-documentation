@@ -1,30 +1,22 @@
+= render "payment_gateways"
+
+%hr
 = simple_nested_form_for @instance, :url => instance_admin_settings_integrations_path, :html => { :multipart => true } do |f|
   %fieldset
+    %legend Test Mode
+    .row-fluid
+      .controls.controls-row
+        = f.input :test_mode, required: false, as: :boolean, label: false, inline_label: ("Use test payment credentials (Marketplace must be password protected in #{link_to 'Settings > Configuration', instance_admin_settings_configuration_path, :target => "_blank"})").html_safe, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+        = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
+
+    %hr
     %legend Authentication
     - %w(Twitter Facebook LinkedIn Instagram).each do |provider|
       .row-fluid
         .controls.controls-row
           = f.input :"#{provider.downcase}_consumer_key", label: "#{provider} Consumer Key", required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
           = f.input :"#{provider.downcase}_consumer_secret", label: "#{provider} Consumer Secret", required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-
-    = render "payment_gateways", f: f
-    
     %hr
-    .row-fluid
-      .controls.controls-row
-        = f.fields_for :instance_billing_gateways, wrapper: false do |f_bg|
-          = f_bg.input :currency, as: :hidden
-          %label= "Payment gateway for #{f_bg.object.currency} transactions"
-          = f_bg.collection_radio_buttons :billing_gateway, [['paypal', 'PayPal'], ['stripe', 'Stripe'], ['balanced', 'Balanced']], :first, :last, item_wrapper_class: "billing-gateway"
-    %hr
-
-    %legend Test Mode
-    .row-fluid
-      .controls.controls-row
-        = f.input :test_mode, required: false, as: :boolean, label: false, inline_label: ("Use test payment credentials (Marketplace must be password protected in #{link_to 'Settings > Configuration', instance_admin_settings_configuration_path, :target => "_blank"})").html_safe, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-
-    %hr
-
     %legend Olark
     .row-fluid
       .controls.controls-row
@@ -34,7 +26,3 @@
         = f.input :olark_enabled, required: false, as: :boolean, label: false, inline_label: "Enable Olark support chat.", wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
 
     = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
-
-
-- content_for :domready do
-  new InstanceAdmin.PaymentGatewayController($('.simple_form'));

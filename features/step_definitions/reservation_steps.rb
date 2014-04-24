@@ -159,9 +159,9 @@ end
 
 When /^I provide reservation credit card details$/ do
   mock_billing_gateway
-  fill_in 'reservation_request_card_number', :with => "4111111111111111"
-  fill_in 'reservation_request_card_expires', :with => '1218'
-  fill_in 'reservation_request_card_code', :with => '123'
+  fill_in 'reservation_request_card_number', :with => "4242424242424242"
+  fill_in 'reservation_request_card_expires', :with => '12/2020'
+  fill_in 'reservation_request_card_code', :with => '411'
   @credit_card_reservation = true
 end
 

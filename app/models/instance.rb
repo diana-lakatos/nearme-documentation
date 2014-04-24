@@ -15,7 +15,7 @@ class Instance < ActiveRecord::Base
                   :password_protected, :test_mode, :olark_api_key, :olark_enabled, :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key,
                   :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret, :instagram_consumer_key, :instagram_consumer_secret,
                   :support_imap_hash, :support_email, :paypal_email, :db_connection_string, :stripe_currency, :user_info_in_onboarding_flow, :default_search_view,
-                  :user_based_marketplace_views
+                  :user_based_marketplace_views, :instance_payment_gateways_attributes
 
   attr_encrypted :live_paypal_username, :live_paypal_password, :live_paypal_signature, :live_paypal_app_id, :live_stripe_api_key, :live_paypal_client_id,
                  :live_paypal_client_secret, :live_balanced_api_key, :marketplace_password, :test_stripe_api_key, :test_paypal_username, :test_paypal_password,
@@ -63,6 +63,7 @@ class Instance < ActiveRecord::Base
   has_many :tickets, class_name: 'Support::Ticket', order: 'created_at DESC'
   has_many :transactable_types
   has_many :instance_payment_gateways, :inverse_of => :instance
+  has_many :country_instance_payment_gateways, :inverse_of => :instance
   serialize :pricing_options, Hash
 
   validates_presence_of :name
@@ -136,20 +137,13 @@ class Instance < ActiveRecord::Base
     password == marketplace_password
   end
 
-  def incoming_paypal_api_config
-    @incoming_paypal_api_config ||= {
-      :mode => (self.test_mode? || !Rails.env.production?) ? 'sandbox' : 'live',
-      :client_id => instance_payment_gateways.get_settings_for(:paypal, :client_id),
-      :client_secret => instance_payment_gateways.get_settings_for(:paypal, :client_secret),
-    }
-  end
-
   def paypal_api_config
+    settings = instance_payment_gateways.get_settings_for(:paypal)
     @paypal_api_config ||= {
       :app_id    => (self.test_mode? || !Rails.env.production?) ? 'APP-80W284485P519543T' : instance_payment_gateways.get_settings_for(:paypal, :app_id),
-      :username  => instance_payment_gateways.get_settings_for(:paypal, :username),
-      :password  => instance_payment_gateways.get_settings_for(:paypal, :password),
-      :signature => instance_payment_gateways.get_settings_for(:paypal, :signature),
+      :username  => settings[:username],
+      :password  => settings[:password],
+      :signature => settings[:signature]
     }
   end
 

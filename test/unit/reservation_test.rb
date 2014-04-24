@@ -183,6 +183,7 @@ class ReservationTest < ActiveSupport::TestCase
         @reservation.subtotal_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
         @reservation.service_fee_amount_guest_cents = 10_00
         @reservation.service_fee_amount_host_cents = 10_00
+        @reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe")
         @reservation.save!
         @reservation.confirm
       end
@@ -203,6 +204,7 @@ class ReservationTest < ActiveSupport::TestCase
       @reservation.subtotal_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
       @reservation.service_fee_amount_guest_cents = 10_00
       @reservation.service_fee_amount_host_cents = 10_00
+      @reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe")
       @reservation.save!
     end
 

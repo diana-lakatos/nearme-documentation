@@ -23,7 +23,7 @@ class Billing::Gateway::Processor::Outgoing::ProcessorFactory
   end
 
   def self.balanced_supported?(instance, currency)
-    instance.instance_payment_gateways.get_settings_for(:balanced, :api_key).present? && ['USD'].include?(currency) 
+    instance.instance_payment_gateways.get_settings_for(:balanced, :login).present? && ['USD'].include?(currency) 
   end
   
   def self.supported_payout_via_ach?(instance)
@@ -32,7 +32,7 @@ class Billing::Gateway::Processor::Outgoing::ProcessorFactory
 
   def self.paypal_supported?(instance, currency)
     settings = instance.instance_payment_gateways.get_settings_for(:paypal)
-    settings[:username].present? &&
+    settings[:login].present? &&
     settings[:password].present? &&
     settings[:signature].present? &&
     settings[:app_id].present? &&
