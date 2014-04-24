@@ -72,6 +72,7 @@ DesksnearMe::Application.routes.draw do
 
     resources :instances do
       resources :partners
+      resources :instance_views
     end
     resources :pages
     get '/platform_home', to: 'platform_home#edit', as: 'platform_home'
