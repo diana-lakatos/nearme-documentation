@@ -12,6 +12,7 @@ module ReservationTestSupport
   # Prepares some charged reservations for a listing
   def prepare_charged_reservations_for_listing(listing, count = 1)
     Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:charge).returns(true)
+    listing.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
 
     date = Time.zone.now.advance(:weeks => 1).beginning_of_week.to_date
     reservations = []

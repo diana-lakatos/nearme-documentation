@@ -4,6 +4,9 @@ class Billing::Gateway::OutgoingTest < ActiveSupport::TestCase
 
   setup do
     @company = FactoryGirl.create(:company)
+    @company.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
+    @company.instance.instance_payment_gateways << FactoryGirl.create(:paypal_instance_payment_gateway)
+    @company.instance.instance_payment_gateways << FactoryGirl.create(:balanced_instance_payment_gateway)
   end
 
   context 'initialize' do

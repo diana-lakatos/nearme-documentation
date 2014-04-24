@@ -8,6 +8,7 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
     sign_in @user
     stub_mixpanel
     stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
+    @reservation.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
     Billing::Gateway::Incoming.any_instance.stubs(:charge)
   end
 
@@ -66,6 +67,7 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
 
   should "refund booking on cancel" do
     @reservation = FactoryGirl.create(:charge).reference.reservation
+    @reservation.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
     @reservation.stubs(:attempt_payment_capture).returns(true)
     @reservation.confirm!
     @reservation.update_column(:payment_status, Reservation::PAYMENT_STATUSES[:paid])

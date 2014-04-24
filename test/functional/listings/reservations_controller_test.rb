@@ -8,6 +8,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
     sign_in @user
     stub_mixpanel
     stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
+    @listing.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
     stub_billing_gateway
   end
 

@@ -53,6 +53,8 @@ class Reservation < ActiveRecord::Base
     inverse_of: :reservation,
     dependent: :destroy
 
+  has_one :billing_authorization
+
   validates :transactable_id, :presence => true
   # the if statement for periods is needed to make .recover work - otherwise reservation would be considered not valid even though it is
   validates :periods, :length => { :minimum => 1 }, :if => lambda { self.deleted_at_changed? && self.periods.with_deleted.count.zero? }

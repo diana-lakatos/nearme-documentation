@@ -262,9 +262,10 @@ module Utils
       dnm_instance = Instance.default_instance
 
       if dnm_instance
-        dnm_instance.stripe_api_key = 'sk_test_lpr4WQXQdncpXjjX6IJx01W7'
-        dnm_instance.stripe_public_key = 'pk_test_iCGA8nFZdILrI1UtuMOZD2aq'
-
+        @stripe = PaymentGateway.where(name: "Stripe").first_or_create(settings: {api_key: "", public_key: ""})
+        settings = { api_key: 'sk_test_lpr4WQXQdncpXjjX6IJx01W7', public_key: 'pk_test_iCGA8nFZdILrI1UtuMOZD2aq' }
+        InstancePaymentGateway.create(instance_id: dnm_instance.id, payment_gateway_id: @stripe.id, live_settings: settings, test_settings: settings)
+        
         dnm_instance.facebook_consumer_key = '432038396866156'
         dnm_instance.facebook_consumer_secret = '71af86082de1c38a3523a4c8f44aca2d'
 

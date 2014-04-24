@@ -54,6 +54,17 @@ GEM
       sprockets (~> 2.2.1)
     active_model_serializers (0.6.0)
       activemodel (>= 3.0)
+    active_utils (2.0.2)
+      activesupport (>= 2.3.11)
+      i18n
+    activemerchant (1.43.1)
+      active_utils (~> 2.0, >= 2.0.1)
+      activesupport (>= 2.3.14, < 5.0.0)
+      builder (>= 2.1.2, < 4.0.0)
+      i18n (~> 0.5)
+      json (~> 1.7)
+      money (< 7.0.0)
+      nokogiri (~> 1.4)
     activemodel (3.2.16)
       activesupport (= 3.2.16)
       builder (~> 3.0.0)
@@ -582,6 +593,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers
+  activemerchant
   activerecord-postgres-hstore
   addressable
   amatch

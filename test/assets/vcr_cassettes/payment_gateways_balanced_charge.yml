@@ -1,0 +1,58 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://ak-test-eyoGATiAg6YE5thvhSiWIi7NE0zg0l0U:@api.balancedpayments.com/v1/marketplaces/TEST-MP2QM26rjbrhVmk594eBpl2J/accounts
+    body:
+      encoding: US-ASCII
+      string: amount=5500&email_address=user_3%40example.com
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded
+      User-Agent:
+      - Balanced/v1 ActiveMerchantBindings/1.43.1
+      X-Balanced-User-Agent:
+      - ! '{"bindings_version":"1.43.1","lang":"ruby","lang_version":"1.9.3 p484 (2013-11-22)","lib_version":"1.0.0","platform":"x86_64-darwin13.1.0","publisher":"active_merchant"}'
+      Accept:
+      - ! '*/*'
+  response:
+    status:
+      code: 403
+      message: FORBIDDEN
+    headers:
+      Content-Type:
+      - application/json
+      Date:
+      - Wed, 14 May 2014 02:18:25 GMT
+      Server:
+      - ngx_openresty/1.2.6.3
+      X-Balanced-Guru:
+      - OHM078f6c10db0e11e39beb02a1fe52a36c
+      X-Balanced-Host:
+      - bapi-integration-prod-8u30f7-10-3-5-201
+      X-Balanced-Marketplace:
+      - TEST-MP4aGOksszaps6swj096Hui9
+      X-Balanced-Merchant:
+      - TEST-MR4a6pPDFSDkUck6RtUcIL0Z
+      X-Balanced-Revision:
+      - '1.0'
+      X-Balanced-Software-Build:
+      - 1.2.19
+      X-Midlr-Version:
+      - '2'
+      X-Newrelic-App-Data:
+      - PxQFWFNXCQYTVVhWAwQDVUYdFhE1AwE2QgNWEVlbQFtcCxYxSBVbDQoZVA4IF0pcXAgEEBhdUgEFUk9sAwUADUUMTBEWW0ZXUhFcQx1BA05EBhlRVVIPAghdV1sEBQJWXQMBBE5GV1QcQhoGWg5VCwMHAVUHVFdXVFQBQ0pDXlJcFwQ/
+      Content-Length:
+      - '325'
+      Connection:
+      - keep-alive
+    body:
+      encoding: US-ASCII
+      string: ! "{\n  \"status\": \"Forbidden\",\n  \"category_code\": \"not-authorized\",\n
+        \ \"category_type\": \"permission\",\n  \"_uris\": {},\n  \"description\":
+        \"You cannot access marketplace TEST-MP2QM26rjbrhVmk594eBpl2J Your request
+        id is OHM078f6c10db0e11e39beb02a1fe52a36c.\",\n  \"request_id\": \"OHM078f6c10db0e11e39beb02a1fe52a36c\",\n
+        \ \"status_code\": 403\n}"
+    http_version: 
+  recorded_at: Wed, 14 May 2014 02:18:25 GMT
+recorded_with: VCR 2.4.0

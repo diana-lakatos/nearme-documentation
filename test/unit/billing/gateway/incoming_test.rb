@@ -31,12 +31,14 @@ class Billing::Gateway::IncomingTest < ActiveSupport::TestCase
     end
 
     should 'know when stripe is returned by factory' do
+      @instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
       Billing::Gateway::Processor::Incoming::ProcessorFactory.stubs(:stripe_supported?).returns(true)
       @gateway = Billing::Gateway::Incoming.new(@user, @instance, 'USD')
       assert_equal "Stripe", @gateway.processor.class.to_s.demodulize
     end
 
     should 'know when balanced is returned by factory' do
+      @instance.instance_payment_gateways << FactoryGirl.create(:balanced_instance_payment_gateway)
       Billing::Gateway::Processor::Incoming::ProcessorFactory.stubs(:stripe_supported?).returns(false)
       Billing::Gateway::Processor::Incoming::ProcessorFactory.stubs(:balanced_supported?).returns(true)
       @gateway = Billing::Gateway::Incoming.new(@user, @instance, 'USD')
@@ -44,6 +46,7 @@ class Billing::Gateway::IncomingTest < ActiveSupport::TestCase
     end
 
     should 'know when paypal is returned by factory' do
+      @instance.instance_payment_gateways << FactoryGirl.create(:paypal_instance_payment_gateway)
       Billing::Gateway::Processor::Incoming::ProcessorFactory.stubs(:stripe_supported?).returns(false)
       Billing::Gateway::Processor::Incoming::ProcessorFactory.stubs(:balanced_supported?).returns(false)
       Billing::Gateway::Processor::Incoming::ProcessorFactory.stubs(:paypal_supported?).returns(true)

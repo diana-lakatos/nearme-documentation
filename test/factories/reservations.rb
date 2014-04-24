@@ -19,6 +19,8 @@ FactoryGirl.define do
 
     factory :reservation_with_credit_card do
       payment_method 'credit_card'
+      payment_gateway_class 'Billing::Gateway::Processor::Incoming::Stripe'
+      authorization_token 'token'
     end
 
     factory :reservation_in_san_francisco do

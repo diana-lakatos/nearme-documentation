@@ -12,6 +12,7 @@ class Billing::Gateway::Processor::Incoming::ProcessorFactory
     else
       nil
     end
+    
   end
 
   def self.billing_gateway_for(instance, currency)
@@ -23,24 +24,17 @@ class Billing::Gateway::Processor::Incoming::ProcessorFactory
   end
 
   def self.stripe_supported?(instance, currency)
-    instance.billing_gateway_credential('stripe_api_key').present? &&
-      instance.billing_gateway_credential('stripe_public_key').present?  &&
-      instance.stripe_currency == currency
+    settings = instance.instance_payment_gateways.get_settings_for(:stripe)
+    settings.present? && settings[:api_key].present? && settings[:public_key].present? && settings[:currency] == currency
   end
 
   def self.balanced_supported?(instance, currency)
-    instance.billing_gateway_credential('balanced_api_key').present? &&
-      ['USD'].include?(currency)
+    settings = instance.instance_payment_gateways.get_settings_for(:balanced)
+    settings.present? && settings[:api_key].present? && ['USD'].include?(currency)
   end
 
   def self.paypal_supported?(instance, currency)
-    instance.billing_gateway_credential('paypal_client_id').present? &&
-      instance.billing_gateway_credential('paypal_client_secret').present? &&
-      ['USD', 'GBP', 'EUR', 'JPY', 'CAD'].include?(currency)
+    settings = instance.instance_payment_gateways.get_settings_for(:paypal)
+    settings.present? && settings[:client_id].present? && settings[:client_secret].present? && ['USD', 'GBP', 'EUR', 'JPY', 'CAD'].include?(currency)
   end
-
-  private
-
-
-
 end

@@ -19,7 +19,7 @@ class Billing::Gateway::Processor::Outgoing::Paypal < Billing::Gateway::Processo
           :email => @receiver.paypal_email 
         }] 
       },
-      :senderEmail => @sender.paypal_email
+      :senderEmail => @sender.instance_payment_gateways.get_settings_for(:paypal, :email)
     })
     @pay_response = @api.pay(@pay) 
     if @pay_response.success?

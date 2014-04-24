@@ -119,6 +119,8 @@ gem 'timecop'
 gem 'newrelic_rpm'
 gem 'unicorn-worker-killer'
 
+gem 'activemerchant'
+
 group :profiling do
   gem 'rack-mini-profiler'
   gem 'bullet'

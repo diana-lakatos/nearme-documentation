@@ -200,10 +200,14 @@ module Utils
 
     def load_integration_keys!
       dnm_instance = Instance.default_instance
+      @stripe = PaymentGateway.where(name: "Stripe").first_or_create(settings: {api_key: "", public_key: "", currency: ""})
+      @balanced = PaymentGateway.where(name: "Balanced").first_or_create(settings: {api_key: ""})
+      @paypal = PaymentGateway.where(name: "PayPal").first_or_create(settings: { email: "", username: "", password: "", signature: "", app_id: "", client_id: "", client_secret: "" })
+
 
       if dnm_instance
-        dnm_instance.stripe_api_key = 'sk_test_lpr4WQXQdncpXjjX6IJx01W7'
-        dnm_instance.stripe_public_key = 'pk_test_iCGA8nFZdILrI1UtuMOZD2aq'
+        settings = { api_key: 'sk_test_lpr4WQXQdncpXjjX6IJx01W7', public_key: 'pk_test_iCGA8nFZdILrI1UtuMOZD2aq' }
+        InstancePaymentGateway.create(instance_id: dnm_instance.id, payment_gateway_id: @stripe.id, live_settings: settings, test_settings: settings)
 
         dnm_instance.facebook_consumer_key = '491810927536381'
         dnm_instance.facebook_consumer_secret = 'cce1576ac9f3c4d6998f2c9345360afe'

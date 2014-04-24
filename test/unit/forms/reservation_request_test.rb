@@ -12,6 +12,7 @@ class ReservationRequestTest < ActiveSupport::TestCase
       :card_expires => 1.year.from_now.strftime("%m/%y"),
       :card_code => '111'
     }
+    @listing.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
     stub_billing_gateway
     @reservation_request = ReservationRequest.new(@listing, @user, PlatformContext.new, @attributes)
   end

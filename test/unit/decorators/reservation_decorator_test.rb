@@ -111,6 +111,7 @@ class ReservationDecoratorTest < ActionView::TestCase
 
     context 'that was confirmed ( = paid)' do
       setup do
+        @reservation.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
         Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:charge)
         @reservation.save!
         @reservation.confirm

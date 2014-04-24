@@ -178,6 +178,8 @@ class ReservationTest < ActiveSupport::TestCase
       setup do
         Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:charge)
         @reservation = FactoryGirl.build(:reservation_with_credit_card)
+        @reservation.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
+
         @reservation.subtotal_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
         @reservation.service_fee_amount_guest_cents = 10_00
         @reservation.service_fee_amount_host_cents = 10_00
@@ -205,6 +207,7 @@ class ReservationTest < ActiveSupport::TestCase
     end
 
     should "attempt to charge user card if paying by credit card" do
+      @reservation.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
       Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:charge)
       @reservation.confirm
       assert @reservation.reload.paid?

@@ -8,13 +8,16 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     @instance.update_attribute(:service_fee_host_percent, 10)
     @instance.update_attribute(:service_fee_guest_percent, 15)
     @listing = FactoryGirl.create(:transactable, :daily_price => 25.00)
-    @instance.update_attribute(:paypal_email, 'sender@example.com')
+
+    @instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
+    @instance.instance_payment_gateways << FactoryGirl.create(:paypal_instance_payment_gateway)
     @listing.company.update_attribute(:paypal_email, 'receiver@example.com')
     create_logged_in_user
   end
 
   should 'ensure that comission after payout is correct' do
     post_via_redirect "/listings/#{@listing.id}/reservations", booking_params
+
     @reservation = Reservation.last
     @reservation.confirm!
 

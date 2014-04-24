@@ -21,6 +21,11 @@ Before do
   store_model("theme", nil, instance.theme)
   Thread.current[:platform_context] = PlatformContext.new
   FactoryGirl.create(:instance)
+  FactoryGirl.create(:paypal_payment_gateway)
+  FactoryGirl.create(:stripe_payment_gateway)
+  FactoryGirl.create(:balanced_payment_gateway)
+  instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
+  instance.instance_payment_gateways << FactoryGirl.create(:paypal_instance_payment_gateway)
   Utils::EnLocalesSeeder.new.go!
 end
 

@@ -89,6 +89,9 @@ class ReservationRequest < Form
       User.transaction do
         user.save!
         reservation.save!
+        if !reservation.listing.free? && @billing_gateway.try(:possible?)
+          reservation.create_billing_authorization(token: @token, payment_gateway_class: @gateway_class)
+        end
       end
     rescue ActiveRecord::RecordInvalid => error
       add_errors(error.record.errors.full_messages)
@@ -101,15 +104,20 @@ class ReservationRequest < Form
 
       begin
         self.card_expires = card_expires.to_s.strip
-        credit_card = Billing::CreditCard.new(
-          number:       card_number.to_s,
-          expiry_month: card_expires.to_s[0,2],
-          expiry_year:  card_expires.to_s[-4,4],
-          cvc:          card_code.to_s
+
+        credit_card = ActiveMerchant::Billing::CreditCard.new(
+          first_name: user.first_name,
+          last_name: user.last_name,
+          number: card_number.to_s,
+          month: card_expires.to_s[0,2],
+          year: card_expires.to_s[-4,4],
+          verification_value: card_code.to_s
         )
 
         if credit_card.valid?
-          @billing_gateway.store_credit_card(credit_card)
+          response = @billing_gateway.authorize(@reservation.total_amount_cents, credit_card)
+          @token = response[:token]
+          @gateway_class = response[:payment_gateway_class]
         else
           add_error("Those credit card details don't look valid", :cc)
         end
