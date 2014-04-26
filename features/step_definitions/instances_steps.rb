@@ -20,7 +20,7 @@ When(/^I browse instance$/) do
 end
 
 When(/^I edit instance$/) do
-  all(:css, '.table tr .btn').first.click
+  all(:css, '.table tr .btn', text: 'Edit').first.click
 end
 
 Then(/^I should see created instance show page$/) do

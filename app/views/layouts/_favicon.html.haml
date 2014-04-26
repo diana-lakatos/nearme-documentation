@@ -1,4 +1,4 @@
 - if @blog_instance.try(:is_near_me?)
   %link{href: "/assets/platform_home/favicon.ico", rel: "shortcut icon"}/
 - else
-  %link{:href => platform_context.favicon_image.url || '/favicon.ico', :rel => "shortcut icon"}/
+  %link{:href => platform_context.favicon_image.url || '/assets/platform_home/favicon.ico', :rel => "shortcut icon"}/

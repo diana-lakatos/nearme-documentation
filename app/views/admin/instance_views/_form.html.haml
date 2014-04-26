@@ -1,0 +1,9 @@
+= simple_form_for [:admin, @instance, @instance_view] do |f|
+  = f.input :path
+  = f.input :body
+  = f.input :locale
+  = f.input :format
+  = f.input :handler
+  = f.input :partial
+  .form-actions
+    = f.button :submit

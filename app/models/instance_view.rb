@@ -13,7 +13,7 @@ class InstanceView < ActiveRecord::Base
   validates_inclusion_of :locale, in: I18n.available_locales.map(&:to_s)
   validates_inclusion_of :handler, in: ActionView::Template::Handlers.extensions.map(&:to_s)
   validates_inclusion_of :format, in: Mime::SET.symbols.map(&:to_s)
-  
+
   before_validation do
     self.locale ||= 'en'
   end

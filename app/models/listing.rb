@@ -49,7 +49,7 @@ class Listing < ActiveRecord::Base
   scope :searchable, active.visible
   scope :filtered_by_listing_types_ids,  lambda { |listing_types_ids| where('listings.listing_type_id IN (?)', listing_types_ids) if listing_types_ids }
   scope :filtered_by_price_types,  lambda { |price_types| where(price_types.map{|pt| "(listings.#{pt}_price_cents IS NOT NULL)"}.join(' OR  ')) if price_types }
-  
+
   # == Callbacks
   before_save :set_activated_at
 
@@ -72,7 +72,7 @@ class Listing < ActiveRecord::Base
 
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
-  delegate :currency, :formatted_address, :local_geocoding, 
+  delegate :currency, :formatted_address, :local_geocoding,
     :latitude, :longitude, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
   delegate :service_fee_guest_percent, :service_fee_host_percent, to: :location, allow_nil: true
   delegate :name, to: :creator, prefix: true
@@ -189,7 +189,7 @@ class Listing < ActiveRecord::Base
     else
       PRICE_TYPES[2] #Daily
     end
-      
+
   end
 
   def lowest_price_with_type(available_price_types = [])
@@ -222,7 +222,7 @@ class Listing < ActiveRecord::Base
   end
 
   def has_photos?
-    photos_count > 0
+    self.photos_metadata.try(:count).to_i > 0
   end
 
   def to_param
