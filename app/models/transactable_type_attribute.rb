@@ -11,7 +11,8 @@ class TransactableTypeAttribute < ActiveRecord::Base
   validates_presence_of :name, :html_tag
   validates_uniqueness_of :name, :scope => [:transactable_type_id]
 
-  belongs_to :transactable_type, :inverse_of => :transactables
+  belongs_to :transactable_type, :inverse_of => :transactable_type_attributes
+  belongs_to :instance
 
   serialize :valid_values, Array
   serialize :validation_rules, JSON

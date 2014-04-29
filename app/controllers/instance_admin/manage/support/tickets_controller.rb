@@ -13,6 +13,8 @@ class InstanceAdmin::Manage::Support::TicketsController < InstanceAdmin::Manage:
     head 204
   end
 
+  private
+
   def find_ticket
     @ticket = Support::Ticket.find(params[:id])
   end

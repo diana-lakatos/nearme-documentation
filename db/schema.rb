@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140422122258) do
+ActiveRecord::Schema.define(:version => 20140422204343) do
 
 
   create_extension "hstore", :version => "1.2"
@@ -451,7 +451,7 @@ ActiveRecord::Schema.define(:version => 20140422122258) do
     t.text     "support_imap_hash"
     t.string   "support_email"
     t.string   "encrypted_db_connection_string"
-    t.string   "stripe_currency",                                                        :default => "USD"
+    t.string   "stripe_currency",                                                   :default => "USD"
   end
 
   add_index "instances", ["instance_type_id"], :name => "index_instances_on_instance_type_id"

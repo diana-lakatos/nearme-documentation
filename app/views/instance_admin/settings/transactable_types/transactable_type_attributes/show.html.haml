@@ -1,0 +1,28 @@
+.support
+  .row-fluid
+    .controls.controls-row
+      .left
+        %legend= "Request ##{@ticket.id}"
+      .right
+        %legend= "#{@ticket.state}"
+        %legend
+          =select_tag("user[assigned_to_id]", options_for_select(@admins.map{|a| [a.name, a.id]}, @ticket.assigned_to.try(:id)), prompt: 'UNASSIGNED')
+        %legend.status
+
+  %br
+
+  %h2= @message.subject
+
+  - if @ticket.open?
+    .form
+      = simple_form_for(@message, url: instance_admin_manage_support_ticket_ticket_messages_path(@ticket)) do |f|
+        = f.input :message, as: :text, class: 'textarea', :input_html => { :rows => 10 }
+        .right
+          = f.submit 'Update'
+          = f.submit 'Update and Resolve'
+
+  = render partial: 'ticket_message', collection: @ticket.messages, spacer_template: 'spacer'
+
+- content_for :domready do
+  $('abbr.timeago').timeago();
+  new SupportAssigner($('#user_assigned_to_id'));
