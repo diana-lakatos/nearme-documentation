@@ -144,5 +144,6 @@ module DesksnearMe
 
     config.secure_app = true
     config.root_secured = true
+
   end
 end
