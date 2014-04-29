@@ -121,6 +121,9 @@ GEM
       sass-rails (>= 3.2)
     chronic (0.8.0)
     chunky_png (1.2.6)
+    ckeditor (4.0.8)
+      mime-types
+      orm_adapter
     codeclimate-test-reporter (0.0.8)
       simplecov (>= 0.7.1, < 1.0.0)
     coffee-rails (3.2.2)
@@ -359,7 +362,7 @@ GEM
     omniauth-twitter (1.0.1)
       multi_json (~> 1.3)
       omniauth-oauth (~> 1.0)
-    orm_adapter (0.4.0)
+    orm_adapter (0.5.0)
     paper_trail (2.7.2)
       activerecord (~> 3.0)
       railties (~> 3.0)
@@ -581,6 +584,7 @@ DEPENDENCIES
   chameleon
   chosen-rails
   chronic
+  ckeditor
   codeclimate-test-reporter
   coffee-rails
   compass-rails
@@ -634,6 +638,7 @@ DEPENDENCIES
   omniauth-instagram
   omniauth-linkedin
   omniauth-twitter
+  orm_adapter (~> 0.5.0)
   paper_trail
   paranoia (~> 1.3.3)
   paypal-sdk-adaptivepayments
