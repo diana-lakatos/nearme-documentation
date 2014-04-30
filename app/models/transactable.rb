@@ -53,6 +53,14 @@ class Transactable < ActiveRecord::Base
 
 
 
+  def initialize(*args)
+    if args[0]
+      @attributes_to_be_applied = args[0].select { |k, v| ![:id, :transactable_type_id, :transactable_type].include?(k.to_sym) }.with_indifferent_access
+      args[0] = args[0].select { |k, v| [:id, :transactable_type_id, :transactable_type].include?(k.to_sym) }.with_indifferent_access
+    end
+    super(*args)
+  end
+
   # == Helpers
   include Listing::Search
   include AvailabilityRule::TargetHelper
@@ -83,6 +91,7 @@ class Transactable < ActiveRecord::Base
     raise "Can't initialize transactable without TransactableType" if self.transactable_type.nil? && self.transactable_type_id.nil?
     set_custom_attributes
     set_defaults if self.new_record?
+    self.attributes = @attributes_to_be_applied if @attributes_to_be_applied.present?
   end
 
   def set_custom_attributes

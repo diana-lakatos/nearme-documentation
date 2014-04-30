@@ -222,7 +222,9 @@ class SpaceWizardControllerTest < ActionController::TestCase
            "location_type_id"=>"1",
            "listings_attributes"=>
           {"0"=>
-           {"name"=>"Desk",
+           {
+            "transactable_type_id" => TransactableType.first.id,
+            "name"=>"Desk",
             "description"=>"We have a group of several shared desks available.",
             "hourly_reservations" => false,
             "listing_type"=>"Shared Desks",

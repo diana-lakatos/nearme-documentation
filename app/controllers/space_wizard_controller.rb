@@ -33,21 +33,9 @@ class SpaceWizardController < ApplicationController
     @user.phone_required = true
     params[:user][:companies_attributes]["0"][:name] = current_user.name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
-    transactable_params = begin
-      if !params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:id]
-        params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes].delete("0")
-      end
-    rescue
-      # incomplete parameter hash, not to worry
-      nil
-    end
     @user.attributes = params[:user]
-    @user.companies.first.try(:locations).try(:first).try {|l| l.name_required = true}
+    @user.companies.first.try(:locations).try(:first).try {|l| l.name_required = true} if TransactableType.first.name == "Listing"
     @user.companies.first.creator_id = current_user.id
-    if transactable_params
-      listing = @user.companies.first.locations.first.listings.build({:transactable_type => TransactableType.first}) if @user.companies.first.try(:locations).try(:first)
-      listing.attributes = transactable_params if listing
-    end
     if params[:save_as_draft]
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
       @user.save(:validate => false)
