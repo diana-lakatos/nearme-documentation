@@ -88,7 +88,6 @@ class Transactable < ActiveRecord::Base
   after_initialize :apply_transactable_type_settings
 
   def apply_transactable_type_settings
-    raise "Can't initialize transactable without TransactableType" if self.transactable_type.nil? && self.transactable_type_id.nil?
     set_custom_attributes
     set_defaults if self.new_record?
     self.attributes = @attributes_to_be_applied if @attributes_to_be_applied.present?
@@ -109,9 +108,20 @@ class Transactable < ActiveRecord::Base
     end
   end
 
+  def hourly_reservations?
+    nil
+  end
+
+  def free?
+    nil
+  end
+
   PRICE_TYPES.each do |price|
     # Flag each price type as a Money attribute.
     # @see rails-money
+    define_method("#{price}_price_cents") do
+      nil
+    end
     monetize "#{price}_price_cents", :allow_nil => true
 
     # Mark price fields as attr-accessible
@@ -201,15 +211,15 @@ class Transactable < ActiveRecord::Base
   def price_type=(price_type)
     case price_type.to_sym
     when PRICE_TYPES[2] #Daily
-      self.free = false
-      self.hourly_reservations = false
+      self.free = false if self.respond_to?(:free=)
+      self.hourly_reservations = false if self.respond_to?(:hourly_reservations=)
     when PRICE_TYPES[0] #Hourly
-      self.free = false
+      self.free = false if self.respond_to?(:free=)
       self.hourly_reservations = true
     when :free
       self.null_price!
       self.free = true
-      self.hourly_reservations = false
+      self.hourly_reservations = false if self.respond_to?(:hourly_reservations=)
     else
       errors.add(:price_type, 'no pricing type set')
     end
@@ -236,7 +246,7 @@ class Transactable < ActiveRecord::Base
 
   def null_price!
     PRICE_TYPES.map { |price|
-      self.send "#{price}_price_cents=", nil
+      self.send(:"#{price}_price_cents=", nil) if self.respond_to?(:"#{price}_price_cents=")
     }
   end
 

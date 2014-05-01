@@ -1,4 +1,5 @@
 class Manage::ListingsController < Manage::BaseController
+  before_filter :find_transactable_type
   before_filter :find_listing, :except => [:index, :new, :create]
   before_filter :find_location
   before_filter :disable_unchecked_prices, :only => :update
@@ -8,14 +9,12 @@ class Manage::ListingsController < Manage::BaseController
   end
 
   def new
-    @listing = @location.listings.build(:transactable_type_id => TransactableType.first.id)
-    @listing.daily_price_cents = 50_00
+    @listing = @location.listings.build(:transactable_type => @transactable_type)
     @listing.availability_template_id = AvailabilityRule.default_template.id
   end
 
   def create
-    @listing = @location.listings.build({:transactable_type => TransactableType.first})
-    @listing.attributes = params[:listing]
+    @listing = @location.listings.build(params[:listing])
     if @listing.save
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: platform_context.decorate.bookable_noun)
       event_tracker.created_a_listing(@listing, { via: 'dashboard' })
@@ -39,7 +38,7 @@ class Manage::ListingsController < Manage::BaseController
   def update
     respond_to do |format|
       format.html {
-        if @listing.update_attributes params[:listing]
+        if @listing.update_attributes(params[:listing])
           flash[:success] = t('flash_messages.manage.listings.listing_updated')
           redirect_to manage_locations_path
         else
@@ -112,5 +111,9 @@ class Manage::ListingsController < Manage::BaseController
         @listing.send("#{price}_price=", nil)
       end
     end
+  end
+
+  def find_transactable_type
+    @transactable_type = TransactableType.first
   end
 end

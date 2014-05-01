@@ -4,7 +4,8 @@ class TransactableTypeAttributeValidator < ActiveModel::Validator
       if tta.validation_rules.present? && !tta.validation_rules.empty?
         tta.validation_rules.each do |validation_rule_type, validation_rule_options|
           validation_rule_options ||= {}
-          options = ({ attributes: tta.name }.merge(validation_rule_options)).symbolize_keys
+          name = validation_rule_options.fetch("redirect", tta.name)
+          options = ({ attributes: name }.merge(validation_rule_options)).symbolize_keys
 
           klass = case validation_rule_type.to_sym
                   when :presence

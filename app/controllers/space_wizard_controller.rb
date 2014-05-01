@@ -1,6 +1,7 @@
 class SpaceWizardController < ApplicationController
 
   before_filter :redirect_to_dashboard_if_user_has_listings, :only => [:new, :list]
+  before_filter :find_transactable_type
   before_filter :find_user, :except => [:new]
   before_filter :find_company, :except => [:new, :submit_listing]
   before_filter :find_location, :except => [:new, :submit_listing]
@@ -22,7 +23,7 @@ class SpaceWizardController < ApplicationController
     @company ||= @user.companies.build
     @location ||= @company.locations.build
     @location.name_required = true
-    @listing ||= @location.listings.build({:transactable_type_id => TransactableType.first.id})
+    @listing ||= @location.listings.build({:transactable_type_id => @transactable_type.id})
     @photos = @user.first_listing ? @user.first_listing.photos : nil
     @user.phone_required = true
     event_tracker.viewed_list_your_bookable
@@ -142,6 +143,10 @@ class SpaceWizardController < ApplicationController
     rescue
       # no need to do anything
     end
+  end
+
+  def find_transactable_type
+    @transactable_type = TransactableType.first
   end
 
 end

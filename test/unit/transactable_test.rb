@@ -128,33 +128,30 @@ class TransactableTest < ActiveSupport::TestCase
 
     context 'instance observes min/max pricing constraints specified by instance admin' do
 
-      setup do
-        PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance_with_price_constraints))
-        FactoryGirl.create(:transactable_type_listing)
-      end
-
       should 'be valid if hourly price within specified range' do
-        listing = FactoryGirl.create(:listing_from_instance_with_price_constraints)
+        listing = FactoryGirl.create(:listing_from_transactable_type_with_price_constraints)
+        listing.hourly_price_cents = 9999
+        assert listing.valid?
+        listing.hourly_price = 99
         assert listing.valid?
       end
 
       should 'be invalid if hourly price outside specified range' do
-        listing = FactoryGirl.create(:thousand_dollar_listing_from_instance_with_price_constraints)
-        listing.hourly_price = 100000
+        listing = FactoryGirl.create(:listing_from_transactable_type_with_price_constraints)
+        listing.hourly_price_cents = 100001
         refute listing.valid?
-      end
-
-      should 'be valid if hourly price higher than minimum price and no maximum price is present' do
-        listing = FactoryGirl.create(:listing_from_instance_with_price_constraints)
-        listing.instance.max_hourly_price = nil
+        listing.hourly_price = 100
         assert listing.valid?
       end
 
-      should 'be valid if hourly price lower than maximum price and no minimum price is present' do
-        listing = FactoryGirl.create(:listing_from_instance_with_price_constraints)
-        listing.instance.min_hourly_price = nil
+      should 'not be valid if hourly price is too low' do
+        listing = FactoryGirl.create(:listing_from_transactable_type_with_price_constraints)
+        listing.hourly_price_cents = 1
+        refute listing.valid?
+        listing.hourly_price = 11
         assert listing.valid?
       end
+
     end
   end
 

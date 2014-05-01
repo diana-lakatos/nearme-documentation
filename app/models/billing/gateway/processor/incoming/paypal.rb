@@ -48,7 +48,7 @@ class Billing::Gateway::Processor::Incoming::Paypal < Billing::Gateway::Processo
     @credit_card = PayPal::SDK::REST::CreditCard.new(
       credit_card.to_paypal_params.merge({
         :payer_id => user.id,
-        :first_name => user.first_name, 
+        :first_name => user.first_name,
         :last_name => user.last_name
       })
     )
@@ -56,14 +56,15 @@ class Billing::Gateway::Processor::Incoming::Paypal < Billing::Gateway::Processo
     # Make API call & get response status
     # ###Save
     # Creates the credit card as a resource
-    # in the PayPal vault. 
+    # in the PayPal vault.
     if @credit_card.create
       instance_client.paypal_id = @credit_card.id
       instance_client.save!
-    else 
+    else
       handle_error(@credit_card.error)
     end
-
+  rescue PayPal::SDK::Core::Exceptions::UnauthorizedAccess
+    handle_error({})
   end
 
   def handle_error(error_hash)

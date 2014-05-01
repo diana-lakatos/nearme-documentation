@@ -25,7 +25,7 @@
               = '-'
             %span.period   PER HOUR
         - else
-          - if platform_context.instance.pricing_options['daily']
+          - if listing.transactable_type.pricing_options['daily']
             %span.label
               - unless listing.daily_price.to_f.zero?
                 = "#{money_without_cents_and_with_symbol(listing.daily_price)}"
@@ -33,7 +33,7 @@
                 = '-'
               %span.period   PER DAY
 
-          - if platform_context.instance.pricing_options['weekly']
+          - if listing.transactable_type.pricing_options['weekly']
             %span.label
               - unless listing.weekly_price.to_f.zero?
                 = "#{money_without_cents_and_with_symbol(listing.weekly_price)}"
@@ -41,7 +41,7 @@
                 = '-'
               %span.period   PER WEEK
 
-          - if platform_context.instance.pricing_options['monthly']
+          - if listing.transactable_type.pricing_options['monthly']
             %span.label
               - unless listing.monthly_price.to_f.zero?
                 = "#{money_without_cents_and_with_symbol(listing.monthly_price)}"

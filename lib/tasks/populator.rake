@@ -179,6 +179,8 @@ namespace :populate do
     Instance.find_each do |instance|
       PlatformContext.current = PlatformContext.new(instance)
       tp = TransactableType.find_or_create_by_name("Listing")
+      tp.attributes = FactoryGirl.attributes_for(:transactable_type_listing)
+      tp.save!
       Utils::TransactableTypeAttributesCreator.new(tp).create_listing_attributes!
       Transactable.update_all(:transactable_type_id => tp.id)
       Transactable.find_each do |t|

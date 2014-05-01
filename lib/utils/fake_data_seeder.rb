@@ -223,6 +223,8 @@ module Utils
 
     def load_transactable_types!
       tp = TransactableType.find_or_create_by_name("Listing")
+      tp.attributes = FactoryGirl.attributes_for(:transactable_type_listing)
+      tp.save!
       Utils::TransactableTypeAttributesCreator.new(tp).create_listing_attributes!
     end
 

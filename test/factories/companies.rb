@@ -48,11 +48,6 @@ FactoryGirl.define do
       white_label_enabled true
     end
 
-    factory :company_from_instance_with_price_constraints do
-      after(:build) do |company|
-        company.instance_id = FactoryGirl.create(:instance_with_price_constraints).id
-      end
-    end
   end
 end
 

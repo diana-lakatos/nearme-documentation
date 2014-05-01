@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140422204343) do
+ActiveRecord::Schema.define(:version => 20140430171210) do
 
 
   create_extension "hstore", :version => "1.2"
@@ -978,6 +978,7 @@ ActiveRecord::Schema.define(:version => 20140422204343) do
     t.text     "wrapper_html_options"
     t.text     "hint"
     t.string   "placeholder"
+    t.boolean  "internal",             :default => false
   end
 
   add_index "transactable_type_attributes", ["instance_id", "transactable_type_id"], :name => "index_tta_on_instance_id_and_transactable_type_id"
@@ -986,6 +987,8 @@ ActiveRecord::Schema.define(:version => 20140422204343) do
     t.string   "name"
     t.integer  "instance_id"
     t.datetime "deleted_at"
+    t.text     "pricing_options"
+    t.text     "pricing_validation"
   end
 
   add_index "transactable_types", ["instance_id"], :name => "index_transactable_types_on_instance_id"
