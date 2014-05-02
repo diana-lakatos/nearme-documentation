@@ -84,7 +84,7 @@ module Utils
                             {
                               html_tag: "select",
                               prompt: "",
-                              valid_values: ["Shared Desks", "Meeting Room", "Private Office"],
+                              valid_values: ["Shared Desks", "Meeting Room", "Private Office", "Salon Booth"],
                               input_html_options: { :class => 'selectpicker' },
                               label: "Desk type"
                             }

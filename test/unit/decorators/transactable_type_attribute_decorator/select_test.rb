@@ -8,7 +8,7 @@ class TransactableTypeAttributeDecorator::SelectTest < ActionView::TestCase
       expected_hash = {
         as: :select,
         collection: ["These", "Are", "Valid"],
-        prompt: "Please pick"
+        input_html: { prompt: "Please pick" }
       }
       assert_equal expected_hash, TransactableTypeAttributeDecorator::Select.new(stub("valid_values" => ["These", "Are", "Valid"], :prompt => 'Please pick')).options
     end
