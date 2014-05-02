@@ -80,6 +80,9 @@ gem 'ey_config'
 gem 'unicorn'
 gem 'chameleon'
 
+gem 'ckeditor'
+gem 'orm_adapter', '~> 0.5.0' # needed for ckeditor, see https://github.com/galetahub/ckeditor/issues/375
+
 gem 'useragent'
 gem 'mixpanel'
 gem 'mixpanel_client'
@@ -126,6 +129,7 @@ end
 
 group :assets do
   gem 'uglifier', "~>2.1.0"
+  gem 'turbo-sprockets-rails3'
 end
 
 
@@ -165,9 +169,3 @@ group :test do
 end
 
 gem 'mailman'
-
-
-
-# WYSWYG Editor
-gem 'ckeditor'
-gem 'orm_adapter', '~> 0.5.0' # https://github.com/galetahub/ckeditor/issues/375
