@@ -518,6 +518,9 @@ GEM
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
+    turbo-sprockets-rails3 (0.3.11)
+      railties (> 3.2.8, < 4.0.0)
+      sprockets (>= 2.2.0)
     turn (0.9.6)
       ansi
     twilio-ruby (3.9.0)
@@ -671,6 +674,7 @@ DEPENDENCIES
   test_after_commit
   thin
   timecop
+  turbo-sprockets-rails3
   turn
   twilio-ruby
   twitter (~> 5.2)
