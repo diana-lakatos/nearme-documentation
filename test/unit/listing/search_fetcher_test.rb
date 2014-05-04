@@ -10,9 +10,9 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
     @public_location = FactoryGirl.create(:location, :location_type => @public_location_type, :latitude => 5, :longitude => 5)
     @private_location = FactoryGirl.create(:location, :location_type => @private_location_type, :latitude => 10, :longitude => 10)
 
-    @public_listing_type = FactoryGirl.create(:listing_type, :name => 'public')
-    @private_listing_type = FactoryGirl.create(:listing_type, :name => 'private')
-    @office_listing_type = FactoryGirl.create(:listing_type, :name => 'office')
+    @public_listing_type = 'Shared Desks'
+    @private_listing_type = 'Meeting Room'
+    @office_listing_type = 'Private Office'
 
     @public_listing = FactoryGirl.create(:transactable, :listing_type => @public_listing_type, :location => @public_location)
     @public_office_listing = FactoryGirl.create(:transactable, :listing_type => @office_listing_type, :location => @public_location)
@@ -26,6 +26,7 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
 
     should 'find locations near midpoint within given radius' do
       @filters = { :midpoint => [5, 6], :radius => 300 }
+
       assert_equal [@public_listing, @public_office_listing].sort, Listing::SearchFetcher.new(@filters).listings.sort
     end
 
@@ -57,17 +58,17 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
     context '#desk type' do
 
       should 'find listings that have specified desk' do
-        @filters.merge!({ :listing_types_ids => [@public_listing_type.id, @private_listing_type.id] })
+        @filters.merge!({ :listing_types_ids => [@public_listing_type, @private_listing_type] })
         assert_equal [@public_listing, @private_listing].sort, Listing::SearchFetcher.new(@filters).listings.sort
       end
 
       should 'return empty array if none listing is satisfying conditions' do
-        @filters.merge!({ :listing_types_ids => [FactoryGirl.create(:listing_type).id] })
+        @filters.merge!({ :listing_types_ids => ["Shared Something"] })
         assert_equal [], Listing::SearchFetcher.new(@filters).listings
       end
 
       should 'find listings that belong to certain location type and listing type' do
-        @filters.merge!({:location_types_ids => [@public_location_type.id], :listing_types_ids => [@office_listing_type.id] })
+        @filters.merge!({:location_types_ids => [@public_location_type.id], :listing_types_ids => [@office_listing_type] })
         assert_equal [@public_office_listing], Listing::SearchFetcher.new(@filters).listings
       end
 

@@ -3,7 +3,7 @@ class AvailabilityRule < ActiveRecord::Base
   attr_accessible :day, :close_hour, :close_minute, :open_hour, :open_minute, :open_time, :close_time
 
   # === Associations
-  belongs_to :target, :polymorphic => true
+  belongs_to :target, :polymorphic => true, inverse_of: :availability_rules
 
   # === Validations
   validates :day, :inclusion => 0..6
@@ -15,7 +15,7 @@ class AvailabilityRule < ActiveRecord::Base
     total_opening_time = record.floor_total_opening_time_in_hours
     if total_opening_time < 0
       record.errors["day_#{value}"] << "The opening hour must occur before the closing hour."
-    elsif total_opening_time < 1 
+    elsif total_opening_time < 1
       record.errors["day_#{value}"] << "must be opened for at least 1 hour"
     end
   end

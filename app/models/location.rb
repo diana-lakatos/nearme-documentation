@@ -7,7 +7,7 @@ class Location < ActiveRecord::Base
   has_metadata :accessors => [:photos_metadata]
   notify_associations_about_column_update([:reservations, :listings], :administrator_id)
   notify_associations_about_column_update([:reservation_charges, :reservations, :listings], :company_id)
-  inherits_columns_from_association([:creator_id], :company)
+  inherits_columns_from_association([:creator_id, :listings_public], :company)
 
   include Impressionable
   attr_accessible :address, :address2, :amenity_ids, :company_id, :description, :email,

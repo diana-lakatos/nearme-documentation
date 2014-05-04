@@ -4,37 +4,29 @@ class Transactable < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
   class NotFound < ActiveRecord::RecordNotFound; end
-  has_metadata :accessors => [:listing_type_name, :photos_metadata]
-  inherits_columns_from_association([:company_id, :administrator_id, :creator_id], :location)
+  has_metadata :accessors => [:photos_metadata]
+  inherits_columns_from_association([:company_id, :administrator_id, :creator_id, :listings_public], :location)
 
-  has_many :reservations, dependent: :destroy
-
-  has_many :photos, dependent: :destroy do
+  has_many :reservations, dependent: :destroy, :inverse_of => :listing
+  has_many :photos, dependent: :destroy, :inverse_of => :listing do
     def thumb
       (first || build).thumb
     end
   end
-
-  has_many :inquiries
-
-  has_many :availability_rules,
-    :order => 'day ASC',
-    :as => :target,
-    :dependent => :destroy
-
-  has_many :user_messages, as: :thread_context
-
-  belongs_to :company
+  has_many :inquiries, :inverse_of => :listing
+  has_many :availability_rules, :order => 'day ASC', :as => :target, :dependent => :destroy, inverse_of: :target
+  has_many :user_messages, as: :thread_context, inverse_of: :thread_context
+  belongs_to :transactable_type, :inverse_of => :transactables
+  belongs_to :company, :inverse_of => :listings
   belongs_to :location, inverse_of: :listings
-  belongs_to :listing_type
-  belongs_to :instance
-  belongs_to :creator, class_name: "User"
-  belongs_to :administrator, class_name: "User"
+  belongs_to :instance, inverse_of: :listings
+  belongs_to :creator, class_name: "User", :inverse_of => :listings
+  belongs_to :administrator, class_name: "User", :inverse_of => :administered_listings
 
-  has_many :amenity_holders, as: :holder, dependent: :destroy
-  has_many :amenities, through: :amenity_holders
+  has_many :amenity_holders, as: :holder, dependent: :destroy, inverse_of: :holder
+  has_many :amenities, through: :amenity_holders, inverse_of: :listings
 
-  has_many :reviews, :through => :reservations
+  has_many :reviews, :through => :reservations, inverse_of: :listings
 
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
   accepts_nested_attributes_for :photos, :allow_destroy => true
@@ -47,24 +39,27 @@ class Transactable < ActiveRecord::Base
   scope :latest,   order("transactables.created_at DESC")
   scope :visible,  where(:enabled => true)
   scope :searchable, active.visible
-  scope :filtered_by_listing_types_ids,  lambda { |listing_types_ids| where('transactables.listing_type_id IN (?)', listing_types_ids) if listing_types_ids }
+  scope :filtered_by_listing_types_ids,  lambda { |listing_types_ids| where("(transactables.properties->'listing_type') IN (?)", listing_types_ids) if listing_types_ids }
   scope :filtered_by_price_types,  lambda { |price_types| where(price_types.map{|pt| "(properties->'#{pt}_price_cents') IS NOT NULL"}.join(' OR  ')) if price_types }
 
   # == Callbacks
-  after_initialize :set_defaults
   before_validation :set_activated_at
 
   # == Validations
-  validates :name, length: { maximum: 50 }
-  validates_presence_of :location, :name, :quantity, :listing_type_id
-  validates_presence_of :description
-  validates_numericality_of :quantity, greater_than: 0, only_integer: true
-  validates_length_of :description, :maximum => 250
+  validates_presence_of :location, :transactable_type
   validates_with PriceValidator
-  validates :hourly_reservations, :inclusion => { :in => [true, false], :message => "must be selected" }, :allow_nil => false
+  validates_with TransactableTypeAttributeValidator
   validates :photos, :length => { :minimum => 1 }, :unless => :photo_not_required
 
 
+
+  def initialize(*args)
+    if args[0]
+      @attributes_to_be_applied = args[0].select { |k, v| ![:id, :transactable_type_id, :transactable_type].include?(k.to_sym) }.with_indifferent_access
+      args[0] = args[0].select { |k, v| [:id, :transactable_type_id, :transactable_type].include?(k.to_sym) }.with_indifferent_access
+    end
+    super(*args)
+  end
 
   # == Helpers
   include Listing::Search
@@ -73,11 +68,6 @@ class Transactable < ActiveRecord::Base
   PRICE_TYPES = [:hourly, :weekly, :daily, :monthly]
 
   serialize :properties, ActiveRecord::Coders::Hstore
-  hstore :properties, :accessors => {
-    quantity: :integer, availability_rules_text: :text, confirm_reservations: :boolean, delta: :boolean, daily_price_cents: :integer,
-    weekly_price_cents: :integer, monthly_price_cents: :integer, hourly_reservations: :boolean, hourly_price_cents: :integer,
-    minimum_booking_minutes: :integer, external_id: :string, free: :boolean, last_request_photos_sent_at: :datetime,
-    rank: :integer, capacity: :integer }
 
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
@@ -87,12 +77,37 @@ class Transactable < ActiveRecord::Base
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
 
-  attr_accessible :confirm_reservations, :location_id, :quantity, :name, :description,
-    :availability_template_id, :availability_rules_attributes, :defer_availability_rules,
-    :free, :photos_attributes, :listing_type_id, :hourly_reservations, :price_type, :draft, :enabled,
-    :last_request_photos_sent_at, :activated_at, :amenity_ids, :rank, :capacity
+  attr_accessible :location_id, :availability_template_id,
+    :availability_rules_attributes, :defer_availability_rules, :free,
+    :photos_attributes, :hourly_reservations, :price_type, :draft, :enabled,
+    :last_request_photos_sent_at, :activated_at, :amenity_ids, :rank, :transactable_type_id,
+    :transactable_type
 
   attr_accessor :distance_from_search_query, :photo_not_required
+
+  after_initialize :apply_transactable_type_settings
+
+  def apply_transactable_type_settings
+    raise "Can't initialize transactable without TransactableType" if self.transactable_type.nil? && self.transactable_type_id.nil?
+    set_custom_attributes
+    set_defaults if self.new_record?
+    self.attributes = @attributes_to_be_applied if @attributes_to_be_applied.present?
+  end
+
+  def set_custom_attributes
+    transactable_type_attributes.each do |attr|
+      access_code = "(v=read_custom_property('#{attr.name}', '#{attr.attribute_type}'))"
+      class_eval <<-RUBY, __FILE__, __LINE__ + 1
+            def #{attr.name}; #{access_code};end
+            def #{attr.name}= value; write_custom_property('#{attr.name}', value);#{(attr.name == "name" || attr.name == "description") ? "self.send(:write_attribute, :#{attr.name}, value);" : ""} end
+      RUBY
+      if attr.attribute_type.to_sym == :boolean
+        class_eval <<-RUBY, __FILE__, __LINE__ + 1
+          def #{attr.name}?; #{attr.name}; end
+        RUBY
+      end
+    end
+  end
 
   PRICE_TYPES.each do |price|
     # Flag each price type as a Money attribute.
@@ -113,6 +128,11 @@ class Transactable < ActiveRecord::Base
     end
   end
 
+  def transactable_type_attributes
+    @transactable_type_attributes ||= transactable_type.transactable_type_attributes
+  end
+
+
   # Trigger clearing of all existing availability rules on save
   def defer_availability_rules=(clear)
     if clear.to_i == 1
@@ -121,14 +141,10 @@ class Transactable < ActiveRecord::Base
   end
 
   def set_defaults
-    return if self.persisted?
-    self.quantity ||= 1
-    self.confirm_reservations = true if self.confirm_reservations.nil?
-    self.delta = true if self.delta.nil?
-    self.free = false if self.free.nil?
     self.enabled = true if self.enabled.nil?
-    self.rank ||= 0
-    self.listings_public = true if self.listings_public.nil?
+    transactable_type_attributes.each do |transactable_attribute_type|
+      set_default_attr(transactable_attribute_type.name, transactable_attribute_type.default_value, transactable_attribute_type.attribute_type) unless transactable_attribute_type.default_value.nil?
+    end
   end
 
   # Are we deferring availability rules to the Location?
@@ -244,7 +260,9 @@ class Transactable < ActiveRecord::Base
   end
 
   def to_param
-    "#{id}-#{name.parameterize}"
+    "#{id}-#{properties["name"].parameterize}"
+  rescue
+    id
   end
 
   def reserve!(reserving_user, dates, quantity)
@@ -292,12 +310,12 @@ class Transactable < ActiveRecord::Base
       1
     else
       multiple = if weekly_price_cents.to_i > 0
-        1
-      elsif monthly_price_cents.to_i > 0
-        4
-      else
-        1
-      end
+                   1
+                 elsif monthly_price_cents.to_i > 0
+                   4
+                 else
+                   1
+                 end
 
       booking_days_per_week*multiple
     end
@@ -359,10 +377,56 @@ class Transactable < ActiveRecord::Base
   end
 
   private
+
   def set_activated_at
     if enabled_changed?
       self.activated_at = (enabled ? Time.current : nil)
     end
+  end
+
+  def read_custom_property(key, type)
+    new_value = self.properties || {}
+    custom_property_type_cast(new_value.fetch(key.to_s, nil), type)
+  end
+
+  def set_default_attr(key, value, type)
+    return nil if type.to_sym == :boolean && !self.send(key).nil?
+    self.send("#{key}=", value)
+  end
+
+  def write_custom_property(key, value)
+    new_value = self.properties || {}
+    new_value.store(key.to_s, value)
+    self.properties = new_value
+    properties_will_change!
+  end
+
+  def custom_property_type_cast(var, type)
+    klass = ActiveRecord::ConnectionAdapters::Column
+
+    return nil if var.nil?
+    case type.to_sym
+    when :string, :text        then var
+    when :integer              then var.to_i rescue var ? 1 : 0
+    when :float                then var.to_f
+    when :decimal              then klass.value_to_decimal(var)
+    when :datetime, :timestamp then klass.string_to_time(var)
+    when :time                 then klass.string_to_dummy_time(var)
+    when :date                 then klass.string_to_date(var)
+    when :binary               then klass.binary_to_string(var)
+    when :boolean              then klass.value_to_boolean(var)
+    else var
+    end
+  end
+
+  def mass_assignment_authorizer(role = :default)
+    super + public_transactable_type_attributes
+  end
+
+  def public_transactable_type_attributes
+    transactable_type_attributes.map { |attr| attr.public? ? attr.name.to_sym : nil }.compact
+  rescue
+    []
   end
 end
 

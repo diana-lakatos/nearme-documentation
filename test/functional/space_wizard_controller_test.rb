@@ -7,15 +7,15 @@ class SpaceWizardControllerTest < ActionController::TestCase
     @user = FactoryGirl.create(:user)
     @industry = FactoryGirl.create(:industry)
     sign_in @user
-    FactoryGirl.create(:listing_type)
     FactoryGirl.create(:location_type)
     @partner = FactoryGirl.create(:partner)
     stub_mixpanel
+    FactoryGirl.create(:transactable_type_listing)
   end
 
   context 'scopes current partner for new company' do
     should 'match partner_id' do
-      PlatformContext.any_instance.stubs(:partner).returns(@partner)
+      PlatformContext.current = PlatformContext.new(@partner)
       assert_difference 'Transactable.count' do
         post :submit_listing, get_params
       end
@@ -188,7 +188,8 @@ class SpaceWizardControllerTest < ActionController::TestCase
   context 'with skip_company' do
     should 'create listing when location skip_company is set to true' do
       @instance_with_skip_company = FactoryGirl.create(:instance, skip_company: true)
-      PlatformContext.any_instance.stubs(:instance).returns(@instance_with_skip_company)
+      PlatformContext.current = PlatformContext.new(@instance_with_skip_company)
+      FactoryGirl.create(:transactable_type_listing)
 
       params_without_company_name = get_params
       params_without_company_name['user']['companies_attributes']['0'].delete('name')
@@ -221,10 +222,12 @@ class SpaceWizardControllerTest < ActionController::TestCase
            "location_type_id"=>"1",
            "listings_attributes"=>
           {"0"=>
-           {"name"=>"Desk",
+           {
+            "transactable_type_id" => TransactableType.first.id,
+            "name"=>"Desk",
             "description"=>"We have a group of several shared desks available.",
             "hourly_reservations" => false,
-            "listing_type_id"=>"1",
+            "listing_type"=>"Shared Desks",
             "quantity"=>"1",
             "daily_price"=>daily_price,
             "weekly_price"=>weekly_price,

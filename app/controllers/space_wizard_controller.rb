@@ -22,7 +22,7 @@ class SpaceWizardController < ApplicationController
     @company ||= @user.companies.build
     @location ||= @company.locations.build
     @location.name_required = true
-    @listing ||= @location.listings.build
+    @listing ||= @location.listings.build({:transactable_type_id => TransactableType.first.id})
     @photos = @user.first_listing ? @user.first_listing.photos : nil
     @user.phone_required = true
     event_tracker.viewed_list_your_bookable
@@ -32,10 +32,9 @@ class SpaceWizardController < ApplicationController
   def submit_listing
     @user.phone_required = true
     params[:user][:companies_attributes]["0"][:name] = current_user.name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
-
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     @user.attributes = params[:user]
-    @user.companies.first.try(:locations).try(:first).try {|l| l.name_required = true}
+    @user.companies.first.try(:locations).try(:first).try {|l| l.name_required = true} if TransactableType.first.name == "Listing"
     @user.companies.first.creator_id = current_user.id
     if params[:save_as_draft]
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
@@ -51,6 +50,7 @@ class SpaceWizardController < ApplicationController
       flash[:success] = t('flash_messages.space_wizard.space_listed', bookable_noun: platform_context.decorate.bookable_noun)
       redirect_to manage_locations_path
     else
+      @listing = @user.first_listing
       @photos = @user.first_listing ? @user.first_listing.photos : nil
       flash.now[:error] = t('flash_messages.space_wizard.complete_fields')
       render :list
@@ -110,6 +110,10 @@ class SpaceWizardController < ApplicationController
   def track_new_company_event
     @company = @user.companies.first
     event_tracker.created_a_company(@company) unless platform_context.instance.skip_company?
+  end
+
+  def set_transactable_type_id
+    params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:transactable_type_id] = TransactableType.first.id
   end
 
   def set_listing_draft_timestamp(timestamp)

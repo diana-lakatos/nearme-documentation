@@ -42,6 +42,8 @@ class InstanceAdmin::Manage::Support::FaqsController < InstanceAdmin::Manage::Ba
     @faq = Support::Faq.new
   end
 
+  private
+
   def permitting_controller_class
     'support'
   end

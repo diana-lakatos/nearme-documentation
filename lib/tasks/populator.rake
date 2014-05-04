@@ -173,6 +173,27 @@ namespace :populate do
     ActiveRecord::Base.connection.reset_pk_sequence!(:transactables)
   end
 
+  desc "Populate transactable types"
+  task :transactable_types => :environment do
+    TransactableType.destroy_all
+    Instance.find_each do |instance|
+      PlatformContext.current = PlatformContext.new(instance)
+      tp = TransactableType.find_or_create_by_name("Listing")
+      Utils::TransactableTypeAttributesCreator.new(tp).create_listing_attributes!
+      Transactable.update_all(:transactable_type_id => tp.id)
+      Transactable.find_each do |t|
+        begin
+          t.listing_type = ListingType.find(t.listing_type_id).name
+        rescue
+          puts "Unable to find ListingType with id #{t.listing_type_id}"
+        end
+        t.name = t.read_attribute(:name)
+        t.description = t.read_attribute(:description)
+        t.save(validate: false)
+      end
+    end
+  end
+
   desc "Populate transactable"
   task :millions_transactables => :environment do
     head_sql = "INSERT INTO transactables (activated_at, administrator_id, company_id, created_at, creator_id, deleted_at, description, draft, enabled, instance_id, instance_type_id, listing_type_id, listings_public, location_id, metadata, name, partner_id, properties, updated_at) VALUES "

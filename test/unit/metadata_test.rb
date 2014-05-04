@@ -4,7 +4,7 @@ class MetadataTest < ActiveSupport::TestCase
 
 
   setup do
-    @dummy_class = Transactable.new
+    @dummy_class = User.new
   end
 
   should 'respond to metadata' do

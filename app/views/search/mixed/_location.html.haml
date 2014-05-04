@@ -2,9 +2,9 @@
   .location-counter= current_page_offset + location_counter + 1
   - cache "search-locations-#{location.searched_locations.map(&:id).join('-')}-#{search.lgpricing_filters.join('-')}-#{([location] + location.searched_locations).max_by(&:updated_at).try(:updated_at).try(:utc).try(:to_s, :number)}" do
     - listing_types_data = location.searched_locations.inject({}) do |listing_types_data, listing|
-      - listing_types_data["#{listing.listing_type_id}"] ||= { :name => listing.listing_type_name.try(:pluralize), :count => 0, :listings => [] }
-      - listing_types_data["#{listing.listing_type_id}"][:count] += 1
-      - listing_types_data["#{listing.listing_type_id}"][:listings] << listing
+      - listing_types_data["#{listing.listing_type}"] ||= { :name => listing.listing_type.try(:pluralize), :count => 0, :listings => [] }
+      - listing_types_data["#{listing.listing_type}"][:count] += 1
+      - listing_types_data["#{listing.listing_type}"][:listings] << listing
       - listing_types_data
     .row-fluid.header
       .span5.location-photos-container
@@ -37,15 +37,15 @@
           .location-price
             = location_price_information(location, search.lgpricing_filters)
           %ul.nav.nav-tabs
-            - listing_types_data.each_with_index do |(listing_type_id, listing_type_data), i|
+            - listing_types_data.each_with_index do |(listing_type, listing_type_data), i|
               %li{class: i.zero? ? 'active' : ''}
-                %a{"data-toggle" => "tab", href: "#listing-types-#{location.id}-#{listing_type_id}"}
+                %a{"data-toggle" => "tab", href: "#listing-types-#{location.id}-#{listing_type}"}
                   = listing_type_data[:name]
                   (#{listing_type_data[:count]})
 
     .tabbable
       .tab-content
-        - listing_types_data.each_with_index do |(listing_type_id, listing_type_data), i|
-          .tab-pane{id: "listing-types-#{location.id}-#{listing_type_id}", class: i.zero? ? 'active' : '' }
+        - listing_types_data.each_with_index do |(listing_type, listing_type_data), i|
+          .tab-pane{id: "listing-types-#{location.id}-#{listing_type}", class: i.zero? ? 'active' : '' }
             .title
               = render partial: 'search/mixed/listing', collection: listing_type_data[:listings], locals: { location: location, search: search  }

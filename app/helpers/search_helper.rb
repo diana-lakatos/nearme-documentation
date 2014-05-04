@@ -54,7 +54,7 @@ module SearchHelper
 
   def meta_title_for_search(platform_context, search)
     location_types_names = search.lntypes.blank? ? [] : search.lntypes.pluck(:name)
-    listing_types_names = search.lgtypes.blank? ? [] : search.lgtypes.pluck(:name)
+    listing_types_names = search.lgtypes.blank? ? [] : search.lgtypes
 
     title = (location_types_names.empty? && listing_types_names.empty?) ? platform_context.bookable_noun.pluralize : ''
 

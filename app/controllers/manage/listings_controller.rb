@@ -8,15 +8,14 @@ class Manage::ListingsController < Manage::BaseController
   end
 
   def new
-    @listing = @location.listings.build(
-      :daily_price_cents => 50_00,
-      :availability_template_id => AvailabilityRule.default_template.id
-    )
+    @listing = @location.listings.build(:transactable_type_id => TransactableType.first.id)
+    @listing.daily_price_cents = 50_00
+    @listing.availability_template_id = AvailabilityRule.default_template.id
   end
 
   def create
-    @listing = @location.listings.build(params[:listing])
-
+    @listing = @location.listings.build({:transactable_type => TransactableType.first})
+    @listing.attributes = params[:listing]
     if @listing.save
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: platform_context.decorate.bookable_noun)
       event_tracker.created_a_listing(@listing, { via: 'dashboard' })

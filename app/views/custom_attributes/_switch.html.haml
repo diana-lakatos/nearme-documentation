@@ -1,0 +1,5 @@
+%div{:class => "control-group #{"error" if f.object.errors.include?(:"#{attribute.name}").present?}"}
+  = f.label :"#{attribute.name}", attribute.label, :class => 'control-label'
+  .controls
+    .switch{'data-on-label' => "", 'data-off-label' => ""}
+      = f.check_box :"#{attribute.name}"

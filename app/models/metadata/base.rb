@@ -20,7 +20,7 @@
 #
 #   end
 #
-#   Then define observer class that was specified via key 
+#   Then define observer class that was specified via key
 #
 #   class Metadata::SaladMetadata
 #     extend ActiveSupport::Concern
@@ -31,8 +31,8 @@
 #       update_metadata({apples_names: apples.pluck(:name)})
 #     end
 #   end
-#   
-#   You should now update apples_names whenever apple is added to salad, removed fro it or changed_name. The suggested way is to use Metadata::Base again. 
+#
+#   You should now update apples_names whenever apple is added to salad, removed fro it or changed_name. The suggested way is to use Metadata::Base again.
 #
 #   class Apple < ActiveRecord::Base
 #     belongs_to :salad
@@ -50,18 +50,18 @@
 #
 #      def should_populate_calories?
 #        # we want to trigger on create, destroy and updating name
-#        %(id deleted_at name).any? do |attr| 
+#        %(id deleted_at name).any? do |attr|
 #          # metadata_relevant_attribute_changed? is method defined by Metadata::Base
-#          metadata_relevant_attribute_changed?(attr) 
+#          metadata_relevant_attribute_changed?(attr)
 #        end
 #      end
 #   end
 #
-#   That's it. Now in views you can use 
+#   That's it. Now in views you can use
 #
 #   @salad.apples_names # => [ name1, name2, name3 .. ]
-#   
-#   If you haven't specified accessor, you can still access it via 
+#
+#   If you haven't specified accessor, you can still access it via
 #
 #   @salad.metadata["apples_names"] # => [ name1, name2, name3 .. ]
 #
@@ -85,7 +85,7 @@ module Metadata::Base
     end
 
     def self.has_metadata(options = {})
-      options.reverse_merge!({ 
+      options.reverse_merge!({
         column_name: "metadata",
         without_db_column: false,
         accessors: []

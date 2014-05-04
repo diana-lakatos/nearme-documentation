@@ -21,11 +21,11 @@ class InstanceAdmin::Manage::Support::TicketMessagesController < InstanceAdmin::
     redirect_to instance_admin_manage_support_ticket_path(ticket)
   end
 
+  private
+
   def permitting_controller_class
     'support'
   end
-
-  private
 
   def ticket
     @ticket ||= Support::Ticket.find(params[:ticket_id])

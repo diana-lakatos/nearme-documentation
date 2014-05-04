@@ -20,7 +20,8 @@ class V1::ListingsController < V1::BaseController
   end
 
   def create
-    @listing = Transactable.new(params[:listing])
+    @listing = Transactable.new(:transactable_type_id => TransactableType.first.id)
+    @listing.attributes = params[:listing]
     if @listing.save
       render :json => {:success => true, :id => @listing.id}
     else

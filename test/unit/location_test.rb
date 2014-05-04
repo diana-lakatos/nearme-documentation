@@ -68,8 +68,7 @@ class LocationTest < ActiveSupport::TestCase
       context "and there is a listing with a description" do
         should "return the first listings description" do
           location = Location.new
-          listing = Transactable.new(description: "listing description")
-          location.listings << listing
+          location.listings << FactoryGirl.build(:transactable, description: "listing description", location: location)
           assert_equal "listing description", location.description
         end
       end

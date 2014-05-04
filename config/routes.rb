@@ -73,8 +73,14 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :instances do
+      resources :transactable_types do
+      end
       resources :partners
       resources :instance_views
+    end
+    resources :transactable_types, :only => [] do
+      resources :transactable_type_attributes do
+      end
     end
     resources :pages
     get '/platform_home', to: 'platform_home#edit', as: 'platform_home'

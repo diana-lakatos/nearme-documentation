@@ -17,7 +17,8 @@ class RecurringMailerRequestPhotosJobTest < ActiveSupport::TestCase
   context 'will touch last_request_photos timestamp' do
     should 'for invalid listing' do
       stub_mixpanel
-      @transactable.update_column(:description, nil)
+      @transactable.description = nil
+      @transactable.save(validate: false)
       refute @transactable.valid?
       RecurringMailerRequestPhotosJob.perform
       refute_equal @transactable.last_request_photos_sent_at, @transactable.reload.last_request_photos_sent_at

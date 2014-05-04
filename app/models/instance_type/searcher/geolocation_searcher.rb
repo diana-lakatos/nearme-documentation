@@ -49,7 +49,7 @@ module InstanceType::Searcher::GeolocationSearcher
 
   def set_options_for_filters
     @filterable_location_types = LocationType.all
-    @filterable_listing_types = ListingType.all
+    @filterable_listing_types = TransactableType.first.transactable_type_attributes.where(:name => 'listing_type').first.valid_values
     @filterable_pricing = PlatformContext.current.instance.pricing_options_hash
   end
 

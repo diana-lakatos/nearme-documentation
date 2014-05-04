@@ -22,8 +22,6 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
     context '#instances' do
       setup do
         Photo.any_instance.stubs(:remote_image_url=)
-        ListingType.create(:name => 'Office Space')
-        ListingType.create(:name => 'Meeting Room')
         LocationType.create(:name => 'Business')
         Industry.create(:name => 'Commercial Real Estate')
         [ "Administrative Assistant", "Catering", "Coffee/Tea", "Videoconferencing Facilities",
@@ -201,7 +199,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
                 end
 
                 should 'have the right listing type' do
-                  assert_equal 'Meeting Room', @listing.listing_type.name
+                  assert_equal 'Meeting Room', @listing.listing_type
                 end
 
                 context '#photos' do
@@ -279,7 +277,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
                 end
 
                 should 'have the right listing type' do
-                  assert_equal 'Office Space', @listing.listing_type.name
+                  assert_equal 'Office Space', @listing.listing_type
                 end
 
               end
