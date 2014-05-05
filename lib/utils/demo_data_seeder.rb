@@ -20,10 +20,6 @@ module Utils
         @location_types ||= load_yaml("location_types.yml")
       end
 
-      def self.listing_types
-        @listing_types ||= load_demo_yaml("listing_types.yml")
-      end
-
       def self.domains
         @domains ||= load_demo_yaml("domains.yml")
       end
@@ -34,13 +30,13 @@ module Utils
 
       protected
 
-        def self.load_demo_yaml(collection)
-          raise NotImplementedError
-        end
+      def self.load_demo_yaml(collection)
+        raise NotImplementedError
+      end
 
-        def self.load_yaml(collection)
-          YAML.load_file(Rails.root.join('db', 'seeds', collection))
-        end
+      def self.load_yaml(collection)
+        YAML.load_file(Rails.root.join('db', 'seeds', collection))
+      end
     end
 
     def go!
@@ -90,15 +86,6 @@ module Utils
     end
     alias_method :location_types, :load_location_types!
 
-    def load_listing_types!
-      @listing_types ||= do_task "Loading listing types" do
-        Data.listing_types.map do |name|
-          FactoryGirl.create(:listing_type, :name => name)
-        end
-      end
-    end
-    alias_method :listing_types, :load_listing_types!
-
     def load_instances!
       @instances ||= do_task "Loading instances" do
         Data.instances.map do |name|
@@ -122,8 +109,8 @@ module Utils
 
           if index <= 3
             company = FactoryGirl.create(:company_with_paypal_email, :name => url, :email => user.email, :url => url,
-                                            :description => Faker::Lorem.paragraph.truncate(200),
-                                            :creator => user, :industries => user.industries)
+                                         :description => Faker::Lorem.paragraph.truncate(200),
+                                         :creator => user, :industries => user.industries)
             company.users << user unless company.users.include?(user)
             companies << company
           elsif index <= 5
@@ -156,12 +143,17 @@ module Utils
     end
     alias_method :locations, :load_locations!
 
+    def load_transactable_types!
+      tp = TransactableType.find_or_create_by_name("Listing")
+      Utils::TransactableTypeAttributesCreator.new(tp).create_listing_attributes!
+    end
+
     def load_listings!
       @listings ||= do_task "Loading listings" do
         @locations.map do |location|
-          listing_types.sample(rand(1..3)).map do |listing_type|
-            name = "#{listing_type.name} #{Faker::Company.name}"
-            FactoryGirl.create(:demo_listing, :listing_type => listing_type, :name => name, :location => location,
+          ["Shared Desks", "Meeting Room", "Private Office"].sample(rand(1..3)).map do |listing_type_name|
+            name = "#{listing_type_name} #{Faker::Company.name}"
+            FactoryGirl.create(:demo_listing, :listing_type => listing_type_name, :name => name, :location => location,
                                :description => Faker::Lorem.paragraph.truncate(200), :photos_count_to_be_created => 0)
           end
         end.flatten
@@ -204,7 +196,7 @@ module Utils
         user_message.set_message_context_from_request_params(listing_id: listing.id)
         user_message.save!
       end
-    end 
+    end
 
     def load_integration_keys!
       dnm_instance = Instance.default_instance
@@ -264,6 +256,6 @@ module Utils
       rescue
       end
     end
-    
+
   end
 end

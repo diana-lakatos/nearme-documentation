@@ -80,7 +80,7 @@ module ListingsHelpers
     attach_file_via_uploader
     fill_in "listing_name", with: "My Name"
     fill_in "listing_description", with: "Proin adipiscing nunc vehicula lacus varius dignissim."
-    select "ListingType2", from: "listing_listing_type_id"
+    select "Meeting Room", from: "listing_listing_type"
     fill_in "listing_quantity", with: "5"
 
     choose "Daily, weekly, or monthly"
@@ -99,7 +99,7 @@ module ListingsHelpers
   def assert_listing_data(listing, update = false)
     assert_equal 'My Name', listing.name
     assert_equal 'Proin adipiscing nunc vehicula lacus varius dignissim.', listing.description
-    assert_equal 'ListingType2', listing.listing_type.name
+    assert_equal 'Meeting Room', listing.listing_type
     assert_equal 5, listing.quantity
     assert_equal 1000, listing.daily_price_cents
     assert_equal 6000, listing.weekly_price_cents

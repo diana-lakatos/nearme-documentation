@@ -7,8 +7,9 @@ Feature: A user can reset their password
     Given a user exists
 
   Scenario: User requests password reset using modal
-    And I performed search for "Auckland"
-    When I begin to reset the password for that user
+    Given the transactable_type_listing exists
+    When I performed search for "Auckland"
+     And I begin to reset the password for that user
     Then I should be redirected to the previous search page
     And a password reset email should be sent to that user
 

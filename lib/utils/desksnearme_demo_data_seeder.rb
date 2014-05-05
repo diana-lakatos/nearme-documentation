@@ -25,7 +25,7 @@ module Utils
           load_amenities!
           load_industries!
           load_location_types!
-          load_listing_types!
+          load_transactable_types!
 
           # === COMPANIES / LOCATIONS / LISTINGS =================
 
@@ -74,7 +74,7 @@ module Utils
         end
 
         # info@desksnear.me as a guest
-        creator = company.creator 
+        creator = company.creator
         [1.week.ago.to_date, 1.day.from_now.to_date].each do |initial_date|
           date = initial_date
           2.times do |index|

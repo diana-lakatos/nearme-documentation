@@ -3,18 +3,20 @@ FactoryGirl.define do
     sequence(:name) do |n|
       "Listing #{n}"
     end
-
     description "Aliquid eos ab quia officiis sequi."
     location
-    association :listing_type
-    confirm_reservations true
-    daily_price_cents 5000
-    hourly_reservations false
-    quantity 1
-
+    listing_type "Shared Desks"
     photo_not_required true
+    daily_price_cents 5000
+    quantity ||= 1
+    confirm_reservations true
+
     ignore do
       photos_count_to_be_created 1
+    end
+
+    initialize_with do
+      new(transactable_type: (TransactableType.first.presence || FactoryGirl.create(:transactable_type_listing)))
     end
 
     after(:build) do |listing, evaluator|

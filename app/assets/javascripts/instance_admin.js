@@ -17,3 +17,4 @@
 //= require ./blog/admin/blog_posts_form
 //= require lib/timeago.jquery
 //= require ckeditor/init
+var CKEDITOR_BASEPATH = '/assets/ckeditor/';

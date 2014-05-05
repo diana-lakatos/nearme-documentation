@@ -11,7 +11,7 @@
     .booking-price-info
       %span= price_information(listing)
       %span.pull-right
-        = listing.listing_type_name
+        = listing.listing_type
     .booking-body
       .booking-price
         - if listing.free?
@@ -79,7 +79,7 @@
 
       .clearfix
       .quantity
-        %span.resource{:'data-singular' => listing.listing_type_name, :'data-plural' => listing.listing_type_name.try(:pluralize)}= listing.listing_type_name
+        %span.resource{:'data-singular' => listing.listing_type, :'data-plural' => listing.listing_type.try(:pluralize)}= listing.listing_type
         = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
       .price
         Total

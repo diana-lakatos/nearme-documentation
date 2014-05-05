@@ -3,23 +3,21 @@ require 'test_helper'
 class TransactableTest < ActiveSupport::TestCase
 
   context 'desksnearme instance' do
-    subject { Transactable.new }
+    subject { FactoryGirl.build(:transactable) }
 
     should belong_to(:location)
-    should belong_to(:listing_type)
     should have_many(:reservations)
 
     should validate_presence_of(:location)
     should validate_presence_of(:name)
+    should validate_presence_of(:listing_type)
     should validate_presence_of(:description)
-    should validate_presence_of(:listing_type_id)
+    should validate_presence_of(:quantity)
     should allow_value(10).for(:quantity)
     should_not allow_value(-10).for(:quantity)
 
     should ensure_length_of(:description).is_at_most(250)
     should ensure_length_of(:name).is_at_most(50)
-
-    should_not allow_value([]).for(:photos)
   end
 
   setup do
@@ -132,6 +130,7 @@ class TransactableTest < ActiveSupport::TestCase
 
       setup do
         PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance_with_price_constraints))
+        FactoryGirl.create(:transactable_type_listing)
       end
 
       should 'be valid if hourly price within specified range' do
@@ -307,28 +306,6 @@ class TransactableTest < ActiveSupport::TestCase
 
     end
 
-    context 'populate_listing_type_name' do
-      setup do
-        @listing = FactoryGirl.create(:transactable)
-      end
-
-      should 'trigger populate_listing_type_name_metadata if listing_type_id changed' do
-        @listing.expects(:populate_listing_type_name_metadata!).once
-        @listing.update_attribute(:listing_type_id, FactoryGirl.create(:listing_type))
-      end
-
-      should 'not trigger populate_listing_type_name_metadata if name changed' do
-        @listing.expects(:populate_listing_type_name_metadata!).never
-        @listing.update_attribute(:name, 'New name')
-      end
-
-      should 'store the right listing_type_name' do
-        @listing.update_attribute(:listing_type_id, FactoryGirl.create(:listing_type, :name => 'cool listing type').id)
-        @listing.expects(:update_metadata).with({:listing_type_name => 'cool listing type' })
-        @listing.populate_listing_type_name_metadata!
-      end
-
-    end
     context 'should_populate_creator_listings_metadata?' do
 
       setup do
@@ -336,12 +313,12 @@ class TransactableTest < ActiveSupport::TestCase
       end
 
       should 'return true if new listing is created' do
-        assert @listing.should_populate_creator_listings_metadata?
+        assert @listing.creator.has_any_active_listings
       end
 
       should 'return true if listing is destroyed' do
         @listing.destroy
-        assert @listing.should_populate_creator_listings_metadata?
+        refute @listing.creator.has_any_active_listings
       end
 
       should 'return true if draft changed' do

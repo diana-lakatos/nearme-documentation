@@ -396,16 +396,16 @@ ActiveRecord::Schema.define(:version => 20140422204343) do
 
   create_table "instances", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                                                                                 :null => false
-    t.datetime "updated_at",                                                                                 :null => false
-    t.string   "bookable_noun",                                                          :default => "Desk"
-    t.decimal  "service_fee_guest_percent",                :precision => 5, :scale => 2, :default => 0.0
+    t.datetime "created_at",                                                                            :null => false
+    t.datetime "updated_at",                                                                            :null => false
+    t.string   "bookable_noun",                                                     :default => "Desk"
+    t.decimal  "service_fee_guest_percent",           :precision => 5, :scale => 2, :default => 0.0
     t.string   "lessor"
     t.string   "lessee"
-    t.boolean  "skip_company",                                                           :default => false
+    t.boolean  "skip_company",                                                      :default => false
     t.text     "pricing_options"
-    t.boolean  "default_instance",                                                       :default => false
-    t.decimal  "service_fee_host_percent",                 :precision => 5, :scale => 2, :default => 0.0
+    t.boolean  "default_instance",                                                  :default => false
+    t.decimal  "service_fee_host_percent",            :precision => 5, :scale => 2, :default => 0.0
     t.string   "live_stripe_public_key"
     t.string   "paypal_email"
     t.string   "encrypted_live_paypal_username"
@@ -425,8 +425,8 @@ ActiveRecord::Schema.define(:version => 20140422204343) do
     t.integer  "max_weekly_price_cents"
     t.integer  "min_monthly_price_cents"
     t.integer  "max_monthly_price_cents"
-    t.boolean  "password_protected",                                                     :default => false
-    t.boolean  "test_mode",                                                              :default => false
+    t.boolean  "password_protected",                                                :default => false
+    t.boolean  "test_mode",                                                         :default => false
     t.string   "encrypted_test_paypal_username"
     t.string   "encrypted_test_paypal_password"
     t.string   "encrypted_test_paypal_signature"
@@ -437,7 +437,7 @@ ActiveRecord::Schema.define(:version => 20140422204343) do
     t.string   "test_stripe_public_key"
     t.string   "encrypted_test_balanced_api_key"
     t.string   "encrypted_olark_api_key"
-    t.boolean  "olark_enabled",                                                          :default => false
+    t.boolean  "olark_enabled",                                                     :default => false
     t.string   "encrypted_facebook_consumer_key"
     t.string   "encrypted_facebook_consumer_secret"
     t.string   "encrypted_linkedin_consumer_key"
@@ -450,11 +450,8 @@ ActiveRecord::Schema.define(:version => 20140422204343) do
     t.text     "metadata"
     t.text     "support_imap_hash"
     t.string   "support_email"
-    t.text     "transactable_properties_types"
-    t.text     "transactable_properties_defaults"
-    t.text     "transactable_properties_validation_rules"
     t.string   "encrypted_db_connection_string"
-    t.string   "stripe_currency",                                                        :default => "USD"
+    t.string   "stripe_currency",                                                   :default => "USD"
   end
 
   add_index "instances", ["instance_type_id"], :name => "index_instances_on_instance_type_id"
@@ -964,6 +961,35 @@ ActiveRecord::Schema.define(:version => 20140422204343) do
 
   add_index "themes", ["owner_id", "owner_type"], :name => "index_themes_on_owner_id_and_owner_type"
 
+  create_table "transactable_type_attributes", :force => true do |t|
+    t.string   "name"
+    t.integer  "instance_id"
+    t.integer  "transactable_type_id"
+    t.string   "attribute_type"
+    t.string   "html_tag"
+    t.string   "prompt"
+    t.string   "default_value"
+    t.boolean  "public",               :default => true
+    t.text     "validation_rules"
+    t.text     "valid_values"
+    t.datetime "deleted_at"
+    t.string   "label"
+    t.text     "input_html_options"
+    t.text     "wrapper_html_options"
+    t.text     "hint"
+    t.string   "placeholder"
+  end
+
+  add_index "transactable_type_attributes", ["instance_id", "transactable_type_id"], :name => "index_tta_on_instance_id_and_transactable_type_id"
+
+  create_table "transactable_types", :force => true do |t|
+    t.string   "name"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+  end
+
+  add_index "transactable_types", ["instance_id"], :name => "index_transactable_types_on_instance_id"
+
   create_table "transactables", :force => true do |t|
     t.string   "name"
     t.integer  "instance_type_id"
@@ -982,11 +1008,15 @@ ActiveRecord::Schema.define(:version => 20140422204343) do
     t.boolean  "listings_public"
     t.boolean  "enabled"
     t.text     "metadata"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
+    t.integer  "transactable_type_id"
+    t.integer  "parent_transactable_id"
   end
 
+  add_index "transactables", ["parent_transactable_id"], :name => "index_transactables_on_parent_transactable_id"
   add_index "transactables", ["properties"], :name => "transactables_gin_properties", :using => "gin"
+  add_index "transactables", ["transactable_type_id"], :name => "index_transactables_on_transactable_type_id"
 
   create_table "translations", :force => true do |t|
     t.string   "locale"

@@ -53,7 +53,8 @@ class Manage::LocationsControllerTest < ActionController::TestCase
       setup do
         stub_mixpanel
         @related_instance = FactoryGirl.create(:instance)
-        PlatformContext.any_instance.stubs(:instance).returns(@related_instance)
+        PlatformContext.current = PlatformContext.new(@related_instance)
+        FactoryGirl.create(:transactable_type_listing)
 
         @related_company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id, instance: @related_instance)
         @related_location = FactoryGirl.create(:location_in_auckland, company: @related_company)

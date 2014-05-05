@@ -10,8 +10,11 @@ class RegistrationsController < Devise::RegistrationsController
 
   # We extend the create action to clear out any stored Provider auth data used during
   # registration.
-  before_filter :find_supported_providers, :only => [:social_accounts, :update]
   before_filter :set_return_to, :only => [:new, :create]
+
+  before_filter :authenticate_scope!, only: [:edit, :update, :destroy, :avatar, :edit_avatar, :update_avatar, :destroy_avatar, :set_password,
+                                             :update_password, :edit_notification_preferences, :update_notification_preferences, :social_accounts]
+  before_filter :find_supported_providers, :only => [:social_accounts, :update]
   after_filter :render_or_redirect_after_create, :only => [:create]
   before_filter :redirect_to_edit_profile_if_password_set, :only => [:set_password]
 
@@ -32,11 +35,11 @@ class RegistrationsController < Devise::RegistrationsController
                                              campaign: cookies.signed[:campaign]})
         update_analytics_google_id(@user)
         analytics_apply_user(@user)
-        event_tracker.signed_up(@user, { 
-          referrer_id: platform_context.platform_context_detail.id, 
-          referrer_type: platform_context.platform_context_detail.class.to_s, 
-          signed_up_via: signed_up_via, 
-          provider: Auth::Omni.new(session[:omniauth]).provider 
+        event_tracker.signed_up(@user, {
+          referrer_id: platform_context.platform_context_detail.id,
+          referrer_type: platform_context.platform_context_detail.class.to_s,
+          signed_up_via: signed_up_via,
+          provider: Auth::Omni.new(session[:omniauth]).provider
         })
         PostActionMailer.enqueue_later(30.minutes).sign_up_welcome(@user)
         ReengagementNoBookingsJob.perform_later(72.hours.from_now, @user)
@@ -91,7 +94,7 @@ class RegistrationsController < Devise::RegistrationsController
     @user = current_user
     @user.avatar_original_url = params[:avatar]
     if @user.save
-      render :text => { :url => @user.avatar_url(:medium), 
+      render :text => { :url => @user.avatar_url(:medium),
                         :resize_url =>  edit_avatar_path,
                         :thumbnail_dimensions => @user.avatar.thumbnail_dimensions[:medium],
                         :destroy_url => destroy_avatar_path }.to_json, :content_type => 'text/plain'
@@ -120,7 +123,7 @@ class RegistrationsController < Devise::RegistrationsController
     @user = current_user
     @user.remove_avatar!
     @user.save!
-    render :text => {}, :status => 200, :content_type => 'text/plain' 
+    render :text => {}, :status => 200, :content_type => 'text/plain'
   end
 
   def set_password
@@ -132,7 +135,7 @@ class RegistrationsController < Devise::RegistrationsController
     @user = current_user
     @user.password = params[:user][:password]
     @user.skip_password = false
-    if @user.save 
+    if @user.save
       flash[:success] = t('flash_messages.registrations.password_set')
       redirect_to edit_user_registration_path(:token => @user.authentication_token)
     else
@@ -164,11 +167,11 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def store_geolocated_location
-    if user_signed_in? && params[:longitude] && params[:latitude] 
+    if user_signed_in? && params[:longitude] && params[:latitude]
       @user = current_user
       @user.last_geolocated_location_longitude = params[:longitude]
       @user.last_geolocated_location_latitude = params[:latitude]
-      @user.save
+      @user.save if @user.changes.present?
     end
     render :nothing => true
   end
@@ -230,7 +233,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def set_return_to
     session[:user_return_to] = params[:return_to] if params[:return_to].present?
-  end 
+  end
 
   private
 
@@ -242,10 +245,10 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
-  # if ajax call has been made from modal and user has been created, we need to tell 
+  # if ajax call has been made from modal and user has been created, we need to tell
   # Modal that instead of rendering content in modal, it needs to redirect to new page
   def render_or_redirect_after_create
-    if request.xhr? 
+    if request.xhr?
       if @user.persisted?
         render_redirect_url_as_json
       end

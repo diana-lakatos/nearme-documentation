@@ -78,11 +78,11 @@ class Listing::Search::Params::Web < Listing::Search::Params
 
   def lgtypes
     return [] if @lgtype.nil?
-    @lgtypes ||= ListingType.where('lower(name) = any(array[?])', @lgtype.to_s.split(','))
+    @lgtypes ||= @lgtype.to_s.split(',')
   end
 
   def lgtypes_filters
-    lgtypes.map{ |lgtype| lgtype.name.downcase }
+    lgtypes
   end
 
   def listing_types_ids

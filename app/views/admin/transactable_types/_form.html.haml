@@ -1,0 +1,5 @@
+= simple_form_for [:admin, resource.instance, resource], :html => { :multipart => true} do |f|
+  = f.input :name
+
+  .form-actions
+    = f.button :submit

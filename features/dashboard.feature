@@ -10,8 +10,6 @@ Feature: As a user of the site
       And a company exists with creator: the user
       And a location_type exists with name: "Business"
       And a location_type exists with name: "Co-working"
-      And a listing_type exists with name: "ListingType1"
-      And a listing_type exists with name: "ListingType2"
       And a amenity_type exists with name: "AmenityType1"
       And a amenity exists with amenity_type: the amenity_type, name: "Amenity1"
       And a amenity exists with amenity_type: the amenity_type, name: "Amenity2"
@@ -40,6 +38,7 @@ Feature: As a user of the site
 
   Scenario: A user can add new listing
     Given the location exists with company: the company
+      And the transactable_type_listing exists
       And I am on the manage locations page
      When I follow "Add Desk"
       And I fill listing form with valid details
@@ -63,7 +62,7 @@ Feature: As a user of the site
 
   Scenario: A user can disable existing price in listing
     Given a location exists with company: the company
-      And a transactable exists with location: the location, daily_price_cents: 1000, photos_count_to_be_created: 1
+    And a transactable exists with location: the location, daily_price_cents: 1000, photos_count_to_be_created: 1
       And I am on the manage locations page
      When I click edit listing icon
       And I disable daily pricing

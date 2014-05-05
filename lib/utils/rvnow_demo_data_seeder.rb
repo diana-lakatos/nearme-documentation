@@ -37,7 +37,6 @@ module Utils
             instance.instance_admin_roles.each{|o| o.destroy!}
 
             instance.location_types.each{|o| o.destroy!}
-            instance.listing_types.each{|o| o.destroy!}
 
             instance.companies.each do |company|
               company.company_users.each{|cu| cu.destroy!}
@@ -102,7 +101,7 @@ module Utils
           load_amenities!
           load_industries!
           load_location_types!
-          load_listing_types!
+          load_transactable_types!
 
           # === COMPANIES / LOCATIONS / LISTINGS =================
 
@@ -145,15 +144,6 @@ module Utils
       end
     end
     alias_method :location_types, :load_location_types!
-
-    def load_listing_types!
-      @listing_types ||= do_task "Loading listing types" do
-        Data.listing_types.map do |name|
-          FactoryGirl.create(:listing_type, name: name, instance: instance)
-        end
-      end
-    end
-    alias_method :listing_types, :load_listing_types!
 
     def load_users_and_companies!
       @users_and_companies ||= do_task "Loading users and companies" do
@@ -269,7 +259,7 @@ module Utils
           listing = Transactable.new({
             location_id: location.id,
             name: row['listing_title'],
-            listing_type_id: listing_types.first{|lt| lt.name == row['listing_type']}.id,
+            listing_type: "Shared Desks",
             quantity: 1,
             description: row['listing_description'],
             daily_price_cents: row['daily_price'].blank? ? nil : row['daily_price'].to_i * 100,
