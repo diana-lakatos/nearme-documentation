@@ -37,3 +37,5 @@
         %td= attr.wrapper_html_options
         %td= attr.hint
         %td= link_to 'Edit', edit_admin_transactable_type_transactable_type_attribute_path(resource, attr), class: 'btn'
+
+= render :partial => 'admin/transactable_type_attributes/index', :locals => { :transactable_type => resource }
