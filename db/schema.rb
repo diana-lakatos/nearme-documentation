@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140422204343) do
+ActiveRecord::Schema.define(:version => 20140508044800) do
 
 
   create_extension "hstore", :version => "1.2"
@@ -452,6 +452,8 @@ ActiveRecord::Schema.define(:version => 20140422204343) do
     t.string   "support_email"
     t.string   "encrypted_db_connection_string"
     t.string   "stripe_currency",                                                   :default => "USD"
+    t.boolean  "user_info_in_onboarding_flow",                                      :default => false
+    t.string   "default_search_view"
   end
 
   add_index "instances", ["instance_type_id"], :name => "index_instances_on_instance_type_id"

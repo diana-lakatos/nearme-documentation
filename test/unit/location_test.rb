@@ -12,7 +12,6 @@ class LocationTest < ActiveSupport::TestCase
   should have_many(:listings)
 
   should validate_presence_of(:company)
-  should validate_presence_of(:description)
   should validate_presence_of(:address)
   should validate_presence_of(:latitude)
   should validate_presence_of(:longitude)
@@ -22,8 +21,6 @@ class LocationTest < ActiveSupport::TestCase
 
   should_not allow_value('xxx').for(:currency)
   should allow_value('USD').for(:currency)
-
-  should ensure_length_of(:description).is_at_most(250)
 
   should "be valid even if its listing is not valid" do
     @location = FactoryGirl.create(:location)

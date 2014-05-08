@@ -11,13 +11,14 @@ class Manage::LocationsController < Manage::BaseController
 
   def new
     @location = @company.locations.build
-    @location.administrator_id = current_user.id if current_user.is_location_administrator? 
+    @location.administrator_id = current_user.id if current_user.is_location_administrator?
+    @location.name_and_description_required = true if TransactableType.first.name == "Listing"
     AvailabilityRule.default_template.apply(@location)
   end
 
   def create
     @location = @company.locations.build(params[:location])
-
+    @location.name_and_description_required = true if TransactableType.first.name == "Listing"
     if @location.save
       flash[:success] = t('flash_messages.manage.locations.space_added', bookable_noun: platform_context.decorate.bookable_noun)
       event_tracker.created_a_location(@location , { via: 'dashboard' })
@@ -67,6 +68,7 @@ class Manage::LocationsController < Manage::BaseController
   def find_location
     begin
       @location = locations_scope.find(params[:id])
+      @location.name_and_description_required = true if TransactableType.first.name == "Listing"
     rescue ActiveRecord::RecordNotFound
       raise Location::NotFound
     end
