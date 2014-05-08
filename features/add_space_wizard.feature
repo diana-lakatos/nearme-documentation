@@ -5,7 +5,8 @@ Feature: A user can add a space
   I want to be able to step through an 'Add Space' wizard
   Background:
     Given a location_type exists with name: "Business"
-    Given a transactable_type_listing exists
+    Given a location_type exists with name: "Public Space"
+    Given a transactable_type_listing exists with name: "Listing"
     And a industry exists with name: "Industry"
 
   Scenario: An unregistered user starts by signing up

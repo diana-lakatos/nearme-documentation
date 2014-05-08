@@ -7,6 +7,7 @@ class Manage::LocationsControllerTest < ActionController::TestCase
     sign_in @user
     @company = FactoryGirl.create(:company, :creator => @user)
     @location_type = FactoryGirl.create(:location_type)
+    @transactable_type = FactoryGirl.create(:transactable_type, name: 'Listing')
   end
 
   should "get index" do

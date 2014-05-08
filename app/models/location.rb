@@ -17,7 +17,7 @@ class Location < ActiveRecord::Base
     :city, :state, :country, :street, :address_components, :location_type_id, :photos,
     :administrator_id, :name
   attr_accessor :local_geocoding # set this to true in js
-  attr_accessor :name_required
+  attr_accessor :name_and_description_required
   attr_accessor :searched_locations, :search_rank
 
   liquid_methods :name
@@ -55,12 +55,12 @@ class Location < ActiveRecord::Base
   has_many :reviews, :through => :listings
 
   validates_presence_of :company, :address, :latitude, :longitude, :location_type_id, :currency
-  validates_presence_of :description
-  validates_presence_of :name, :if => :name_required
+  validates_presence_of :description, :if => :name_and_description_required
+  validates_presence_of :name, :if => :name_and_description_required
   validates :email, email: true, allow_nil: true
   validates :currency, currency: true, allow_nil: false
-  validates_length_of :description, :maximum => 250
-  validates_length_of :name, :maximum => 50, :if => :name_required
+  validates_length_of :description, :maximum => 250, :if => :name_and_description_required
+  validates_length_of :name, :maximum => 50, :if => :name_and_description_required
 
   before_validation :fetch_coordinates
   before_validation :parse_address_components
