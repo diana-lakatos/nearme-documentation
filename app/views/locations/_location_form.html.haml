@@ -1,11 +1,11 @@
 - only_inputs = [] if only_inputs.nil?
 
-= f.input :name, :as => :limited_string, :limit => 50, :label => 'Location name', :hint => "A unique title that describes the location of the #{platform_context.bookable_noun}.", :required => f.object.name_required if only_inputs.empty? || only_inputs.include?(:name)
+- if f.object.name_and_description_required
+  = f.input :name, :as => :limited_string, :limit => 50, :label => 'Location name', :hint => "A unique title that describes the location of the #{platform_context.bookable_noun}.", :required => true if only_inputs.empty? || only_inputs.include?(:name)
+
 - if only_inputs.empty? || only_inputs.include?(:address)
   %div{:class => "control-group #{"error" if f.object.errors.include?(:address) || f.object.errors.include?(:latitude)}"}
-    = f.label :address, :class => "control-label" do
-      %abbr{:title => "required"} *
-      Location address
+    = f.label :address, :class => "control-label", :required => true
     .controls
       = f.text_field :address, :'data-behavior' => 'address-autocomplete', :placeholder => "", :id => 'location_address'
       - if f.object.errors.include?(:address) || f.object.errors.include?(:latitude)
@@ -15,7 +15,6 @@
           - else
             does not exists
 
-
       .map{:style => "display: none", :'data-marker' => image_path("components/map-pin.png")}
         .map-container{:style => "height: 240px; width: 100%;"}
 
@@ -24,8 +23,8 @@
       = f.hidden_field :longitude, :id => 'location_longitude'
       = f.hidden_field :formatted_address, :id => 'location_formatted_address'
       = f.hidden_field :street
-      = f.hidden_field :suburb 
-      = f.hidden_field :city 
+      = f.hidden_field :suburb
+      = f.hidden_field :city
       = f.hidden_field :state
       = f.hidden_field :country
       = f.hidden_field :postcode
@@ -37,8 +36,12 @@
           - # must be disabled, otherwise update action could overwrite existing information with empty strings!!!
           = f.input :address_components, :input_html => { :id => 'address_component_input' }, :disabled => true
 
-= f.input :description, :as => :limited_text, :limit => 250, :label => 'Location description', :required => !f.object.listings.first.try(:description).try(:present?), :input_html => { :maxlength => 250, :rows => 2 } if only_inputs.empty? || only_inputs.include?(:description)
-= f.association :location_type, :label => "Location type", :collection => platform_context.instance.location_types if only_inputs.empty? || only_inputs.include?(:location_type)
+- if f.object.name_and_description_required
+  = f.input :description, :as => :limited_text, :limit => 250, :label => 'Location description', :required => !f.object.listings.first.try(:description).try(:present?), :input_html => { :maxlength => 250, :rows => 2 } if only_inputs.empty? || only_inputs.include?(:description)
+- if platform_context.instance.location_types.count > 1
+  = f.association :location_type, :label => "Location type", :collection => platform_context.instance.location_types if only_inputs.empty? || only_inputs.include?(:location_type)
+- else
+  = f.hidden_field :location_type_id, value: platform_context.instance.location_types.first.id
 = f.input :email, :label => 'Booking email', :placeholder => 'Your booking email' if only_inputs.empty? || only_inputs.include?(:email)
 = f.association :administrator, :label => 'Administrator', :collection => f.object.company_users.includes(:user).order('users.name').map(&:user), :label_method => 'name', :value_method => 'id', :input_html => { :'data-placeholder' => 'Choose a user', :class => 'custom-select' }, :include_blank => 'Default' if only_inputs.empty? || only_inputs.include?(:administrator)
 = f.input :special_notes, :label => "#{platform_context.lessee.capitalize} instructions", :placeholder => "For example, how your #{platform_context.lessee.pluralize} should check in, your Wi-Fi password, whether you have pets, or other special information relevant to your #{platform_context.lessee}'s stay" if only_inputs.empty? || only_inputs.include?(:special_notes)
