@@ -9,27 +9,34 @@
     .row-fluid.header
       .span5.location-photos-container
         .location-photos
-          .carousel{id: "location-gallery-#{location.id}", :'data-interva' => "false"}
-            .carousel-inner
-              - if location.photos_metadata.try(:any?)
-                - location.photos_metadata.each_with_index do |photo_metadata, index|
-                  .item{:class => ("active" if index == 0)}
-                    = link_to location_path(location) do
-                      = image_tag photo_metadata[:space_listing], :alt => location.name
+          - if platform_context.instance.user_based_marketplace_views?
+            = link_to location_path(location) do
+              - if location.administrator.avatar?
+                = image_tag location.administrator.avatar.url(:big)
               - else
-                .item{:class => "active"}
-                  = link_to location_path(location) do
-                    = image_tag space_listing_placeholder_path(:height => 254, :width => 410), :title => location.name, :alt => location.name
-            - if location.photos_metadata.try(:count).to_i > 1
-              .carousel-nav
-                = link_to "", "#location-gallery-#{location.id}", :class => "carousel-control left ico-chevron-left", 'data-slide' => 'prev'
-                = link_to "", "#location-gallery-#{location.id}", :class => "carousel-control right ico-chevron-right", 'data-slide' => 'next'
+                = image_tag space_listing_placeholder_path(:height => 254, :width => 410)
+          - else
+            .carousel{id: "location-gallery-#{location.id}", :'data-interva' => "false"}
+              .carousel-inner
+                - if location.photos_metadata.try(:any?)
+                  - location.photos_metadata.each_with_index do |photo_metadata, index|
+                    .item{:class => ("active" if index == 0)}
+                      = link_to location_path(location) do
+                        = image_tag photo_metadata[:space_listing], :alt => location.name
+                - else
+                  .item{:class => "active"}
+                    = link_to location_path(location) do
+                      = image_tag space_listing_placeholder_path(:height => 254, :width => 410), :title => location.name, :alt => location.name
+              - if location.photos_metadata.try(:count).to_i > 1
+                .carousel-nav
+                  = link_to "", "#location-gallery-#{location.id}", :class => "carousel-control left ico-chevron-left", 'data-slide' => 'prev'
+                  = link_to "", "#location-gallery-#{location.id}", :class => "carousel-control right ico-chevron-right", 'data-slide' => 'next'
       .span7.location-data
         %h2= link_to location.name, location_path(location)
         - if display_search_result_subheader_for?(location)
           .subheader
             with
-            = location.company.name
+            = platform_context.instance.user_based_marketplace_views? ? location.administrator.name : location.company.name
             @
             = location.street
 

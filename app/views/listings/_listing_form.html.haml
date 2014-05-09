@@ -11,6 +11,7 @@
 
 = f.input :id, :as => :hidden if only_inputs.empty? || only_inputs.include?(:id)
 - listing.transactable_type_attributes.each do |attribute|
+  - next if platform_context.instance.user_based_marketplace_views? && ( attribute.name == 'quantity' || attribute.name == 'capacity' )
   = draw_attribute_for_form(attribute, f) if only_inputs.empty? || only_inputs.include?(attribute.name.to_sym)
 
 - unless platform_context.instance.listing_amenity_types.count.zero?
