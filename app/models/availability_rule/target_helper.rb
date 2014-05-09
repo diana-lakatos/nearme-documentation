@@ -6,7 +6,7 @@ module AvailabilityRule::TargetHelper
   end
 
   def availability_full_week
-    availability.full_week(monday_firt = true)
+    availability.full_week(monday_first = true)
   end
 
   # Assigns and applies a given AvailabilityRule::Template
@@ -15,7 +15,7 @@ module AvailabilityRule::TargetHelper
   def availability_template_id=(id)
     return if id.blank? || id == 'custom'
 
-    if template = AvailabilityRule.templates.find { |t| t.id == id }
+    if template = AvailabilityTemplate.where(:id => id.to_i).first
       template.apply(self)
     else
       raise ArgumentError, "Can't find AvailabilityRule::Template with id '#{id}'"
@@ -25,7 +25,7 @@ module AvailabilityRule::TargetHelper
   # Determine whether the target availability matches one of the predefined templates and return its id
   def availability_template_id
     availability = AvailabilityRule::Summary.new(availability_rules) # Don't defer at all
-    template = AvailabilityRule.templates.detect { |template| availability.matches_template?(template) }
+    template = TransactableType.first.availability_templates.detect { |template| availability.matches_template?(template) }
     template.id if template
   end
 end

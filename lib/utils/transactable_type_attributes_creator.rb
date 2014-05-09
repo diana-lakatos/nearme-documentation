@@ -12,10 +12,8 @@ module Utils
         listing_type: :string,
         quantity: :integer,
         capacity: :integer,
-        availability_rules_text: :string,
         delta: :boolean,
         minimum_booking_minutes: :integer,
-        confirm_reservations: :boolean,
         rank: :integer,
         last_request_photos_sent_at: :datetime,
       }.each do |attr_name, attr_type|
@@ -23,31 +21,21 @@ module Utils
         default = case attr_name
                   when :quantity
                     1
-                  when :confirm_reservations, :delta, :listings_public
+                  when :delta, :listings_public
                     true
-                  when :free, :hourly_reservations
-                    false
                   when :rank
                     0
                   else
                     nil
                   end
         public_flag =  case  attr_name
-                       when :listing_type, :quantity, :capacity, :confirm_reservations, :name, :description
+                       when :listing_type, :quantity, :capacity, :name, :description
                          true
                        else
                          false
                        end
-        html_tag = case attr_name
-                   when :confirm_reservations
-                     :switch
-                   else
-                     :input
-                   end
 
         validation_rules = case attr_name
-                           when :hourly_reservations
-                             { :inclusion => { :in => [true, false], :message => "must be selected" , :allow_nil => false } }
                            when :quantity
                              { :presence => {}, :numericality => { greater_than: 0, only_integer: true } }
                            when :description
@@ -96,7 +84,7 @@ module Utils
         tta.attributes = {
           name: attr_name,
           attribute_type: attr_type.to_s,
-          html_tag: html_tag,
+          html_tag: :input,
           public: public_flag,
           default_value: default,
           validation_rules: validation_rules,

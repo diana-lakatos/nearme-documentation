@@ -2,15 +2,17 @@ FactoryGirl.define do
   factory :transactable_type do
 
     sequence(:name) { |n| "Transactable Type #{n}" }
+    pricing_options { { "free"=>"1", "hourly"=>"1", "daily"=>"1", "weekly"=>"1", "monthly"=>"1" } }
+    availability_options { { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => true } } }
 
     factory :transactable_type_listing do
       sequence(:name) do |n|
         "Listing #{n}"
       end
-      pricing_options { { "free"=>"1", "hourly"=>"1", "daily"=>"1", "weekly"=>"1", "monthly"=>"1" } }
 
       after(:build) do |transactable_type|
         TransactableType.transaction do
+          transactable_type.availability_templates << FactoryGirl.build(:availability_template, :transactable_type => transactable_type)
           Utils::TransactableTypeAttributesCreator.new(transactable_type).create_listing_attributes!
         end
       end

@@ -11,9 +11,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140430171210) do
+ActiveRecord::Schema.define(:version => 20140502122830) do
 
 
+  create_extension "btree_gin", :version => "1.0"
+  create_extension "btree_gist", :version => "1.0"
   create_extension "hstore", :version => "1.2"
 
   create_table "amenities", :force => true do |t|
@@ -83,6 +85,18 @@ ActiveRecord::Schema.define(:version => 20140430171210) do
   end
 
   add_index "availability_rules", ["target_type", "target_id"], :name => "index_availability_rules_on_target_type_and_target_id"
+
+  create_table "availability_templates", :force => true do |t|
+    t.integer  "transactable_type_id"
+    t.integer  "instance_id"
+    t.string   "name"
+    t.string   "description"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+    t.datetime "deleted_at"
+  end
+
+  add_index "availability_templates", ["instance_id", "transactable_type_id"], :name => "availability_templates_on_instance_id_and_tt_id"
 
   create_table "blog_instances", :force => true do |t|
     t.string   "name"
@@ -403,8 +417,8 @@ ActiveRecord::Schema.define(:version => 20140430171210) do
     t.string   "lessor"
     t.string   "lessee"
     t.boolean  "skip_company",                                                      :default => false
-    t.text     "pricing_options"
     t.boolean  "default_instance",                                                  :default => false
+    t.text     "pricing_options"
     t.decimal  "service_fee_host_percent",            :precision => 5, :scale => 2, :default => 0.0
     t.string   "live_stripe_public_key"
     t.string   "paypal_email"
@@ -813,16 +827,6 @@ ActiveRecord::Schema.define(:version => 20140430171210) do
 
   add_index "search_notifications", ["user_id"], :name => "index_search_notifications_on_user_id"
 
-  create_table "sessions", :force => true do |t|
-    t.string   "session_id", :null => false
-    t.text     "data"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
-  add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
-
   create_table "support_faqs", :force => true do |t|
     t.integer  "instance_id"
     t.text     "question",      :null => false
@@ -831,12 +835,13 @@ ActiveRecord::Schema.define(:version => 20140430171210) do
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
     t.integer  "deleted_by_id"
+    t.datetime "deleted_at"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
-    t.datetime "deleted_at",    :null => false
   end
 
   add_index "support_faqs", ["created_by_id"], :name => "index_support_faqs_on_created_by_id"
+  add_index "support_faqs", ["deleted_at"], :name => "index_support_faqs_on_deleted_at"
   add_index "support_faqs", ["deleted_by_id"], :name => "index_support_faqs_on_deleted_by_id"
   add_index "support_faqs", ["instance_id"], :name => "index_support_faqs_on_instance_id"
   add_index "support_faqs", ["updated_by_id"], :name => "index_support_faqs_on_updated_by_id"
@@ -989,12 +994,12 @@ ActiveRecord::Schema.define(:version => 20140430171210) do
     t.datetime "deleted_at"
     t.text     "pricing_options"
     t.text     "pricing_validation"
+    t.text     "availability_options"
   end
 
   add_index "transactable_types", ["instance_id"], :name => "index_transactable_types_on_instance_id"
 
   create_table "transactables", :force => true do |t|
-    t.string   "name"
     t.integer  "instance_type_id"
     t.integer  "instance_id"
     t.integer  "partner_id"
@@ -1003,7 +1008,6 @@ ActiveRecord::Schema.define(:version => 20140430171210) do
     t.integer  "location_id"
     t.integer  "listing_type_id"
     t.integer  "administrator_id"
-    t.text     "description"
     t.hstore   "properties"
     t.datetime "deleted_at"
     t.datetime "draft"

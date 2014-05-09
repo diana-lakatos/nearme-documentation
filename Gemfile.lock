@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/Slashek/hstore-attributes.git
-  revision: 3ed3d0db4f78c7559e3222442135349d44111f22
+  revision: 23f829bc18b16e885032f76c99c15b8e0feebc56
   specs:
     hstore-attributes (0.0.4)
       activerecord (>= 3.1)

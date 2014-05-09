@@ -6,20 +6,27 @@ class TransactableType < ActiveRecord::Base
 
   MAX_PRICE = 2147483647
 
-  attr_accessible :name, :pricing_options, :pricing_validation
+  attr_accessible :name, :pricing_options, :pricing_validation, :availability_options
+
   has_many :transactables, inverse_of: :transactable_type
   has_many :transactable_type_attributes, inverse_of: :transactable_type
+  has_many :availability_templates, inverse_of: :transactable_type, :dependent => :destroy
 
   belongs_to :instance
 
   serialize :pricing_options, Hash
   serialize :pricing_validation, Hash
+  serialize :availability_options, Hash
 
   after_save :setup_price_attributes, :if => lambda { |transactable_type| transactable_type.pricing_options_changed? || transactable_type.pricing_validation_changed? }
-  after_destroy :setup_price_attributes
+  after_save :setup_availability_attributes, :if => lambda { |transactable_type| transactable_type.availability_options_changed? && transactable_type.availability_options.present? }
 
   validate :pricing_validation_is_correct
+  validate :availability_options_are_correct
 
+  def defer_availability_rules?
+    availability_options && availability_options["defer_availability_rules"]
+  end
   def pricing_options
     super.select { |k,v| v == "1" }
   end
@@ -38,10 +45,18 @@ class TransactableType < ActiveRecord::Base
     end
   end
 
+  def availability_options_are_correct
+    errors.add("availability_options[confirm_reservations][public]", "must be set") if availability_options["confirm_reservations"]["public"].nil?
+    errors.add("availability_options[confirm_reservations][default_value]", "must be set") if availability_options["confirm_reservations"]["default_value"].nil?
+  rescue
+    errors.add("availability_options[confirm_reservations][public]", "must be set")
+    errors.add("availability_options[confirm_reservations][default_value]", "must be set")
+  end
+
   def setup_price_attributes
     { "free" => "free", "hourly" => "hourly_reservations" }.each do |field, attribute|
       if pricing_options.keys.include?(field)
-        transactable_type_attributes.create(name: attribute, attribute_type: :boolean, public: false, internal: true) unless transactable_type_attributes.where(:name => attribute).first.present?
+        transactable_type_attributes.create(name: attribute, attribute_type: :boolean, public: false, default_value: false, internal: true, validation_rules: self.class.mandatory_boolean_validation_rules) unless transactable_type_attributes.where(:name => attribute).first.present?
       else
         transactable_type_attributes.where(:name => attribute).first.try(:destroy)
       end
@@ -67,5 +82,16 @@ class TransactableType < ActiveRecord::Base
     end
     { :numericality => { redirect: "#{price}_price", allow_nil: true, greater_than_or_equal_to: @greater_than, less_than_or_equal_to: @less_than } }
   end
+
+  def setup_availability_attributes
+    tta = transactable_type_attributes.where(:name => :confirm_reservations).first.presence || transactable_type_attributes.build(name: :confirm_reservations)
+    tta.attributes = { attribute_type: "boolean", html_tag: "switch", default_value: availability_options["confirm_reservations"]["default_value"], public: availability_options["confirm_reservations"]["public"], validation_rules: self.class.mandatory_boolean_validation_rules }
+    tta.save!
+  end
+
+  def self.mandatory_boolean_validation_rules
+    { "inclusion" => { "in" => [true, false], "allow_nil" => false } }
+  end
+
 end
 

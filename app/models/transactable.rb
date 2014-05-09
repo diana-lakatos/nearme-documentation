@@ -94,17 +94,10 @@ class Transactable < ActiveRecord::Base
   end
 
   def set_custom_attributes
-    transactable_type_attributes.each do |attr|
-      access_code = "(v=read_custom_property('#{attr.name}', '#{attr.attribute_type}'))"
-      class_eval <<-RUBY, __FILE__, __LINE__ + 1
-            def #{attr.name}; #{access_code};end
-            def #{attr.name}= value; write_custom_property('#{attr.name}', value);#{(attr.name == "name" || attr.name == "description") ? "self.send(:write_attribute, :#{attr.name}, value);" : ""} end
-      RUBY
-      if attr.attribute_type.to_sym == :boolean
-        class_eval <<-RUBY, __FILE__, __LINE__ + 1
-          def #{attr.name}?; #{attr.name}; end
-        RUBY
-      end
+    metaclass = class << self; self; end
+    hstore_attributes = transactable_type_attributes_names_types_hash
+    metaclass.class_eval do
+      hstore :properties, :accessors => hstore_attributes
     end
   end
 
@@ -153,7 +146,7 @@ class Transactable < ActiveRecord::Base
   def set_defaults
     self.enabled = true if self.enabled.nil?
     transactable_type_attributes.each do |transactable_attribute_type|
-      set_default_attr(transactable_attribute_type.name, transactable_attribute_type.default_value, transactable_attribute_type.attribute_type) unless transactable_attribute_type.default_value.nil?
+      send(:"#{transactable_attribute_type.name}=", transactable_attribute_type.default_value) if send(transactable_attribute_type.name).nil? && !transactable_attribute_type.default_value.nil?
     end
   end
 
@@ -394,41 +387,6 @@ class Transactable < ActiveRecord::Base
     end
   end
 
-  def read_custom_property(key, type)
-    new_value = self.properties || {}
-    custom_property_type_cast(new_value.fetch(key.to_s, nil), type)
-  end
-
-  def set_default_attr(key, value, type)
-    return nil if type.to_sym == :boolean && !self.send(key).nil?
-    self.send("#{key}=", value)
-  end
-
-  def write_custom_property(key, value)
-    new_value = self.properties || {}
-    new_value.store(key.to_s, value)
-    self.properties = new_value
-    properties_will_change!
-  end
-
-  def custom_property_type_cast(var, type)
-    klass = ActiveRecord::ConnectionAdapters::Column
-
-    return nil if var.nil?
-    case type.to_sym
-    when :string, :text        then var
-    when :integer              then var.to_i rescue var ? 1 : 0
-    when :float                then var.to_f
-    when :decimal              then klass.value_to_decimal(var)
-    when :datetime, :timestamp then klass.string_to_time(var)
-    when :time                 then klass.string_to_dummy_time(var)
-    when :date                 then klass.string_to_date(var)
-    when :binary               then klass.binary_to_string(var)
-    when :boolean              then klass.value_to_boolean(var)
-    else var
-    end
-  end
-
   def mass_assignment_authorizer(role = :default)
     super + public_transactable_type_attributes
   end
@@ -437,6 +395,13 @@ class Transactable < ActiveRecord::Base
     transactable_type_attributes.map { |attr| attr.public? ? attr.name.to_sym : nil }.compact
   rescue
     []
+  end
+
+  def transactable_type_attributes_names_types_hash
+    self.transactable_type_attributes.inject({}) do |hstore_attrs, attr|
+      hstore_attrs[attr.name.to_sym] = attr.attribute_type.to_sym
+      hstore_attrs
+    end
   end
 end
 

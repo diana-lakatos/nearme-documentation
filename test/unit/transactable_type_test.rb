@@ -34,12 +34,6 @@ class TransactableTypeTest < ActiveSupport::TestCase
       @transactable_type.update_attribute(:pricing_validation, { "daily" => { "min" => "10" } })
     end
 
-    should 'be triggered on destroy' do
-      @transactable_type = FactoryGirl.create(:transactable_type_listing)
-      TransactableType.any_instance.expects(:setup_price_attributes)
-      @transactable_type.destroy
-    end
-
   end
 
   context 'pricing_validation_is_correct' do
@@ -86,8 +80,7 @@ class TransactableTypeTest < ActiveSupport::TestCase
 
     should 'populate free boolean attribute if pricing_options include it' do
       transactable_type = FactoryGirl.create(:transactable_type, :pricing_options => { "free" => "1" })
-      assert_equal 1, transactable_type.transactable_type_attributes.count
-      tta = transactable_type.transactable_type_attributes.first
+      tta = transactable_type.transactable_type_attributes.find { |attr| attr.name == "free" }
       assert_equal "free", tta.name
       assert_equal "boolean", tta.attribute_type
       assert_equal true, tta.internal
@@ -98,7 +91,6 @@ class TransactableTypeTest < ActiveSupport::TestCase
 
     should 'populate hourly_reservations boolean attribute if pricing_options include it' do
       transactable_type = FactoryGirl.create(:transactable_type, :pricing_options => { "hourly" => "1" })
-      assert_equal 2, transactable_type.transactable_type_attributes.count
       tta = transactable_type.transactable_type_attributes.find { |attr| attr.name == "hourly_reservations" }
       assert_not_nil tta
       assert_equal "boolean", tta.attribute_type
@@ -110,7 +102,6 @@ class TransactableTypeTest < ActiveSupport::TestCase
 
     should 'populate cents fields' do
       transactable_type = FactoryGirl.create(:transactable_type, :pricing_options => { "hourly" => "1", "daily" => "1", "weekly" => "1", "monthly" => "1" })
-      assert_equal 5, transactable_type.transactable_type_attributes.count
       %w(hourly daily weekly monthly).each do |price_field|
         tta = transactable_type.transactable_type_attributes.find { |attr| attr.name == "#{price_field}_price_cents" }
         assert_not_nil tta
@@ -159,5 +150,51 @@ class TransactableTypeTest < ActiveSupport::TestCase
       assert_equal @expected_hash, transactable_type.build_validation_rule_for("daily")
     end
 
+  end
+
+  context 'availability rules settings' do
+
+    should "create new transcactable type attribute for confirm reservations with public true and default value true" do
+      transactable_type = FactoryGirl.create(:transactable_type)
+      tta = transactable_type.transactable_type_attributes.find { |attr| attr.name == "confirm_reservations" }
+      assert_not_nil tta
+      assert_equal "t", tta.default_value
+      assert_equal "boolean", tta.attribute_type
+      assert_equal "switch", tta.html_tag
+      assert_equal(TransactableType.mandatory_boolean_validation_rules, tta.validation_rules)
+      assert tta.public
+    end
+
+    should "create new transcactable type attribute for confirm reservations with public false and default value false" do
+      transactable_type = FactoryGirl.create(:transactable_type, availability_options: { "confirm_reservations" => { "default_value" => false, "public" => false } })
+      tta = transactable_type.transactable_type_attributes.find { |attr| attr.name == "confirm_reservations" }
+      assert_not_nil tta
+      assert_equal "f", tta.default_value
+      refute tta.public
+    end
+
+    context 'validation' do
+
+      should 'be valid if all is set' do
+        assert FactoryGirl.build(:transactable_type, availability_options: { "confirm_reservations" => { "default_value" => false, "public" => false } }).valid?
+      end
+
+      should 'not be valid if default value is not set' do
+        refute FactoryGirl.build(:transactable_type, availability_options: { "confirm_reservations" => { "default_value" => nil, "public" => false } }).valid?
+      end
+
+      should 'not be valid if public is not set' do
+        refute FactoryGirl.build(:transactable_type, availability_options: { "confirm_reservations" => { "default_value" => true, "public" => nil } }).valid?
+      end
+
+      should 'not be valid if options are not set at all' do
+        refute FactoryGirl.build(:transactable_type, availability_options: nil).valid?
+      end
+
+      should 'not be valid if options do not contain confirm reservations' do
+        refute FactoryGirl.build(:transactable_type, availability_options: { "confirm_reservations" => nil}).valid?
+      end
+
+    end
   end
 end
