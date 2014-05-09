@@ -7,6 +7,9 @@
         = image_tag space_listing_placeholder_path( :width => 410, :height => 254 ), :title => listing.name, :alt => listing.name
   .listing-name-description{class: listing.capacity.blank? ? 'span5 without-capacity' : 'span3'}
     %span.bold= "#{listing.name}" + ( (listing.quantity && listing.quantity > 1) ? " (#{listing.quantity})" : "" )
+    - if listing.respond_to? :custom_type
+      %br
+      %span= listing.custom_type
     %p= truncate_with_ellipsis listing.description, 150
   - if not listing.capacity.blank?
     .span2.padding-top.listing-capacity
