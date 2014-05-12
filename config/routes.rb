@@ -22,11 +22,7 @@ DesksnearMe::Application.routes.draw do
     get '/brand', :to => 'platform_home#brand'
     get '/press-media', :to => 'platform_home#press_media'
     get '/careers', :to => 'platform_home#careers'
-    get '/careers/designer', :to => 'platform_home#designer'
-    get '/careers/developer', :to => 'platform_home#developer'
-    get '/careers/business-development', :to => 'platform_home#business_development'
-    get '/careers/operations-manager', :to => 'platform_home#operations_manager'
-    get '/careers/sales-representative', :to => 'platform_home#sales_representative'
+    get '/faq-page', :to => 'platform_home#faq_page'
     get '/unsubscribe/:unsubscribe_key', :to => 'platform_home#unsubscribe', :as => 'platform_email_unsubscribe'
     get '/resubscribe/:resubscribe_key', :to => 'platform_home#resubscribe', :as => 'platform_email_resubscribe'
 
