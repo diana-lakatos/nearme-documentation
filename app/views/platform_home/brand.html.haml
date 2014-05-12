@@ -1,24 +1,73 @@
-.main
-  .main-top
-    %h2 Brand
+- content_for :intro do
+  %h1 BRAND
 
-  .shell
-    = render 'platform_home/shared/main_sidebar'
-
+-content_for :inner_page do
+  .col-md-9
     .content
-      .article
-        %h2 Brand
-        .logos
-          %ul
-            %li
-              = image_tag "/assets/platform_home/logo-white.png", alt: 'White Logo'
-              %p
-                %a{download: "", href: "/assets/platform_home/logo-white.eps"} Download (.eps)
-            %li
-              = image_tag "/assets/platform_home/logo-dark.png", alt: 'Dark Logo'
-              %p
-                %a{download: "", href: "/assets/platform_home/logo-dark.eps"} Download (.eps)
-            %li
-              = image_tag "/assets/platform_home/logo-blue.png", alt: 'Blue Logo'
-              %p
-                %a{download: "", href: "/assets/platform_home/logo-blue.eps"} Download (.eps)
+      .section
+        .section-head
+          %h3.section-title LOGO DOWNLOADS
+
+        .section-body
+          .brands
+            .row
+              .col-md-6
+                .brand-logo.brand-logo-light
+                  .brand-logo-image
+                    %img{alt: "", src: "/assets/platform_home/logo-01-light.png"}/
+
+                  %p
+                    %a{href: "#"} Download
+
+              .col-md-6
+                .brand-logo.brand-logo-dark
+                  .brand-logo-image
+                    %img{alt: "", src: "/assets/platform_home/logo-01-dark.png"}/
+
+                  %p
+                    %a{href: "#"} Download
+
+            .row
+              .col-md-6
+                .brand-logo.brand-logo-light
+                  .brand-logo-image
+                    %img{alt: "", src: "/assets/platform_home/logo-02-light.png"}/
+
+                  %p
+                    %a{href: "#"} Download
+
+              .col-md-6
+                .brand-logo.brand-logo-dark
+                  .brand-logo-image
+                    %img{alt: "", src: "/assets/platform_home/logo-02-dark.png"}/
+
+                  %p
+                    %a{href: "#"} Download
+
+            .row
+              .col-md-6
+                .brand-logo.brand-logo-light
+                  .brand-logo-image
+                    %img{alt: "", src: "/assets/platform_home/logo-03-light.png"}/
+
+                  %p
+                    %a{href: "#"} Download
+
+              .col-md-6
+                .brand-logo.brand-logo-dark
+                  .brand-logo-image
+                    %img{alt: "", src: "/assets/platform_home/logo-03-dark.png"}/
+
+                  %p
+                    %a{href: "#"} Download
+
+            .row
+              .col-md-6
+                .brand-logo.brand-logo-factsheet
+                  .brand-logo-image
+                    %img.fact-sheet{alt: "", src: "/assets/platform_home/fact-sheet.png"}/
+
+                  %p
+                    %a{href: "#"} Download
+
+= render template: "platform_home/layout/main_layout"
