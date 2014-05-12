@@ -12,7 +12,7 @@ DesksnearMe::Application.routes.draw do
     get '/features-analytics', :to => 'platform_home#features_analytics'
     get '/features-security', :to => 'platform_home#features_security'
     get '/features-integration', :to => 'platform_home#features_integration'
-    get '/features-customer-support', :to => 'platform_home#features_customer_support'
+    get '/features-support', :to => 'platform_home#features_support'
 
     get '/contact', :to => 'platform_home#contact'
     post '/contact-submit', :to => 'platform_home#contact_submit'
