@@ -174,7 +174,7 @@ textarea.form-control { height:180px; }
 .tab-pane .feature h4 { text-transform: uppercase; font-size:19px; color: #404040; }
 
 .slider-small { text-align:center; max-width: 777px; margin: 0 auto; position: relative; }
-.slider-clip { background:#222; -moz-border-radius-topleft: 10px; -webkit-border-top-left-radius: 10px;  border-top-left-radius: 10px; -moz-border-radius-topright: 10px; -webkit-border-top-right-radius: 10px; border-top-right-radius: 10px; padding:30px 20px 0 20px; display: inline-block; width: 577px; }
+.slider-clip { background:#222; -moz-border-radius-topleft: 10px; -webkit-border-top-left-radius: 10px;  border-top-left-radius: 10px; -moz-border-radius-topright: 10px; -webkit-border-top-right-radius: 10px; border-top-right-radius: 10px; padding:30px 20px 0 20px; display: inline-block; vertical-align: bottom; width: 577px; }
 
 .slides .slide { float:left; }
 .slides .slide img { display:block; width: 100%}

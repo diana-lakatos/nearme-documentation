@@ -63,7 +63,7 @@
 			$('.top-slider').show();
 			$('.top-slider .slides').carouFredSel({
 				responsive: true,
-				auto: 5000,
+				auto: 4000,
 				height: 'variable',
 				item: {
 					width: '100%',
