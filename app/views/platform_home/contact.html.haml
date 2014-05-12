@@ -1,49 +1,22 @@
-.main-top
-  %h2
-    We're here to help you build
-    %br/
-    a better marketplace
+- content_for :intro do
+  %h1 CONTACT
 
-.shell
-  .contacts
-    .cols
-      .col
-        .text
-          %h2 Phone
-          %p Give us a call at 888-998-3375 (DESK)
+-content_for :inner_page do
+  .col-md-9
+    .content
+      .section
+        .section-head
+          %h3.section-title GIVE US A CALL
 
-      .col
-        .form-contact
-          = simple_form_for @platform_contact, remote: true, url: '/contact-submit' do |f|
-            .form-head
-              %h2 Email
+        .section-body
+          %p We would be happy to hear from you. We are available at 888.998.3375 Monday through Friday 8 a.m to 6 p.m PDT
 
-            .form-body
-              .error-block
-              .form-row
-                %label.form-label{for: "full-name"} First & Last Name
-                .form-controls
-                  %input#full-name.field{name: "platform_contact[name]", type: "text"}/
+      .section
+        .section-head
+          %h3.section-title LEAVE A MESSAGE
 
-              .form-row
-                %label.form-label{for: "email-contact"} Email
-                .form-controls
-                  %input#email-contact.field{name: "platform_contact[email]", type: "text"}/
+        .section-body
+          %p Feel free to contact us with any questions, potential partnerships, or just a hello.
+          = render partial: 'platform_home/shared/contact_form', locals: { platform_contact: @platform_contact }
 
-              .form-row
-                %label.form-label{for: "subject"} Subject
-                .form-controls
-                  %input#subject.field{name: "platform_contact[subject]", type: "text"}/
-
-              .form-row
-                %label.form-label{for: "comments-contact"} Comments
-                .form-controls
-                  %textarea#comments-contact.field.field-textarea{cols: "30", name: "platform_contact[comments]", rows: "10"}
-
-              .form-row
-                .checkbox
-                  %input#check2{name: "platform_contact[subscribed]", type: "checkbox", checked: "checked"}/
-                  %label{for: "subscribed-contact"} Send me updates by email.
-
-            .form-foot
-              %input.btn-submit.btn-blue{type: "submit", value: "Send"}/
+= render template: "platform_home/layout/main_layout"
