@@ -18,25 +18,11 @@
     = javascript_include_tag 'platform_home.js'
     = render 'platform_home/shared/analytics'
 
-
   %body
     .wrapper
-      .header
-        .container-fluid
-          %a.brand{href: "/"} Near Me
-          .menu-btn
-            %span.glyphicon.glyphicon-align-justify
-          .navbar{role: "navigation"}
-            %ul.nav.nav-pills
-              %li
-                %a{href: "/features-setup"} FEATURES
-              %li
-                %a{href: "/contact"} CONTACT
-              %li.active
-                %a{href: "/#demo"} REQUEST A DEMO
-
+      = render 'platform_home/layout/header'
       = render 'platform_home/shared/render_flash'
       = yield
 
-      = render 'platform_home/footer'
+      = render 'platform_home/layout/footer'
     = render 'platform_home/shared/initializers'

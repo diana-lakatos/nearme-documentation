@@ -4,7 +4,16 @@ DesksnearMe::Application.routes.draw do
 
   constraints host: 'near-me.com' do
     root :to => 'platform_home#index'
-    get '/features', :to => 'platform_home#features'
+    get '/features-setup', :to => 'platform_home#features_setup'
+    get '/features-design', :to => 'platform_home#features_design'
+    get '/features-manage', :to => 'platform_home#features_manage'
+    get '/features-marketing', :to => 'platform_home#features_marketing'
+    get '/features-payments', :to => 'platform_home#features_payments'
+    get '/features-analytics', :to => 'platform_home#features_analytics'
+    get '/features-security', :to => 'platform_home#features_security'
+    get '/features-integration', :to => 'platform_home#features_integration'
+    get '/features-customer-support', :to => 'platform_home#features_customer_support'
+
     get '/contact', :to => 'platform_home#contact'
     post '/contact-submit', :to => 'platform_home#contact_submit'
     get '/request-a-demo', :to => 'platform_home#demo_request'
