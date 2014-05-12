@@ -1,0 +1,22 @@
+.main
+  .container
+    .row
+      .col-md-3
+        .sidebar
+          %ul.widgets
+            %li.widget.widget-nav
+              %ul
+                %li
+                  = nav_link 'About Us', "/about"
+                %li
+                  = nav_link 'Contact', "/contact"
+                %li
+                  = nav_link 'Blog', "/blog"
+                %li
+                  = nav_link 'Careers', "/careers"
+                %li
+                  = nav_link 'Press & Media', "/press-media"
+                %li
+                  = nav_link 'Brand', "/brand"
+
+      = yield :inner_page
