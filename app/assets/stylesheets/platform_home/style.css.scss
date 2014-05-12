@@ -28,6 +28,18 @@ h3 { letter-spacing: 2px; }
 
 /*.container { width: 1114px; }*/
 
+form{
+  .error-block {
+    @include border-radius(5px);
+    border: 2px solid #eed3d7;
+    color: #b94a48;
+    background-color: #f2dede;
+    padding: 8px;
+    margin-bottom: 20px;
+    display: none;
+  }
+}
+
 /* ===========================
   HEADER
 ===========================*/

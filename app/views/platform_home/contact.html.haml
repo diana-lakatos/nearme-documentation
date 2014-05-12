@@ -1,5 +1,5 @@
 - content_for :intro do
-  %h1 BRAND
+  %h1 CONTACT
 
 -content_for :inner_page do
   .col-md-9
@@ -17,23 +17,6 @@
 
         .section-body
           %p Feel free to contact us with any questions, potential partnerships, or just a hello.
-          .form-contact
-            %form{role: "form"}
-              .form-group
-                %input#field-name.form-control{placeholder: "First & Last Name", title: "First & Last Name", type: "text", value: "First & Last Name"}/
-              .form-group
-                %input#field-company.form-control{placeholder: "Company", title: "Company", type: "text", value: "Company"}/
-              .form-group
-                %input#field-email.form-control{placeholder: "Email", title: "Email", type: "text", value: "Email"}/
-              .form-group
-                %select#field-marketplace.select.selectpicker{name: "field-marketplace"}
-                  %option{value: ""} Marketplace Type
-                  %option{value: "Option2"} Option2
-                  %option{value: "Option3"} Option3
-                  %option{value: "Option4"} Option4
-              .form-group
-                %textarea#field-message.form-control{placeholder: "Comments", rows: "3", title: "Comments"} Comments
-              .form-actions
-                %button.btn{type: "submit"} SEND
+          = render partial: 'platform_home/shared/contact_form', locals: { platform_contact: @platform_contact }
 
 = render template: "platform_home/layout/main_layout"

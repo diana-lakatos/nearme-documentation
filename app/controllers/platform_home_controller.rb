@@ -9,6 +9,7 @@ class PlatformHomeController < ActionController::Base
       flash[:error] = 'This domain has not been configured.'
       redirect_to '/'
     end
+    @platform_contact = PlatformContact.new
   end
 
   def contact
@@ -32,25 +33,10 @@ class PlatformHomeController < ActionController::Base
     end
   end
 
-  def demo_request
-    @platform_demo_request = PlatformDemoRequest.new
-  end
-
   def demo_requests
     @platform_demo_requests = PlatformDemoRequest.order(:id)
     respond_to do |format|
       format.csv { send_data @platform_demo_requests.to_csv }
-    end
-  end
-
-  def demo_request_submit
-    @platform_demo_request = PlatformDemoRequest.new(params[:platform_demo_request])
-    @platform_demo_request.company = @platform_demo_request.name unless @platform_demo_request.company.present?
-    if @platform_demo_request.save
-      PlatformMailer.enqueue.demo_request(@platform_demo_request)
-      render :demo_request_submit, layout: false
-    else
-      render text: @platform_demo_request.errors.full_messages.to_sentence, layout: false, :status => :unprocessable_entity
     end
   end
 

@@ -42,7 +42,7 @@
 }
 
 .bootstrap-select:not([class*="span"]):not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
-    width: 100%; 
+    width: 100%;
 }
 .bootstrap-select:not([class*="span"]):not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) .btn { border:1px solid #ccc;}
 
@@ -75,29 +75,29 @@
 }
 
 .form-group.error .bootstrap-select.btn-group .btn .filter-option {
-    
+
 }
 .selectpicker { text-align:left; }
 .btn.dropdown-toggle.selectpicker.btn-default { color: #a5a5a5; }
 
-.form-group.error .btn.dropdown-toggle.selectpicker.btn-default { color: #a5a5a5; 
-    background: #fff url(images/field-error.png) no-repeat right 10px; 
+.form-group.error .btn.dropdown-toggle.selectpicker.btn-default { color: #a5a5a5;
+    background: #fff url(platform_home/field-error.png) no-repeat right 10px;
     border-color: #df4c38;
 }
 
 .form-group.success .btn.dropdown-toggle.selectpicker.btn-default
 {
-    background: #fff url(images/field-success.png) no-repeat right 10px;
-    border-color: #167bb9;    
+    background: #fff url(platform_home/field-success.png) no-repeat right 10px;
+    border-color: #167bb9;
 }
 .bootstrap-select.btn-group .btn .filter-option {
     display: inline-block;
     color: #a6a6a6;
-    font-size:19px; 
-    font-family:'avenir_next_rgmedium', arial, sans-serif; 
+    font-size:19px;
+    font-family:'avenir_next_rgmedium', arial, sans-serif;
     overflow: hidden;
-    height:31px; 
-    line-height:31px; 
+    height:31px;
+    line-height:31px;
     width: 100%;
     float: left;
     text-align: left;
@@ -110,9 +110,9 @@
     margin-top: -2px;
     vertical-align: middle;
 
-    border-top:8px solid #ccc; 
-    border-left: 5px solid transparent; 
-    border-right: 5px solid transparent; 
+    border-top:8px solid #ccc;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
 }
 
 .form-group.error .bootstrap-select.btn-group .btn .caret,

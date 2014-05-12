@@ -16,8 +16,6 @@ DesksnearMe::Application.routes.draw do
 
     get '/contact', :to => 'platform_home#contact'
     post '/contact-submit', :to => 'platform_home#contact_submit'
-    get '/request-a-demo', :to => 'platform_home#demo_request'
-    post '/demo-request-submit', :to => 'platform_home#demo_request_submit'
     get '/about', :to => 'platform_home#about'
     get '/brand', :to => 'platform_home#brand'
     get '/press-media', :to => 'platform_home#press_media'

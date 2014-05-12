@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140509041539) do
+ActiveRecord::Schema.define(:version => 20140512043036) do
 
 
   create_extension "hstore", :version => "1.2"
@@ -672,6 +672,8 @@ ActiveRecord::Schema.define(:version => 20140509041539) do
     t.boolean  "subscribed", :default => false
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
+    t.string   "company"
+    t.string   "marketplace_type"
   end
 
   create_table "platform_demo_requests", :force => true do |t|
