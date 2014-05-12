@@ -13,7 +13,6 @@
 			}
 		});
 
-
 		if ($('.selectpicker').length ) {
 			$('.selectpicker').selectpicker();
 		};
@@ -61,6 +60,7 @@
 		});
 
 		function sliders () {
+			$('.top-slider').show();
 			$('.top-slider .slides').carouFredSel({
 				responsive: true,
 				auto: 5000,

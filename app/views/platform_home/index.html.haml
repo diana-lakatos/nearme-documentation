@@ -37,13 +37,13 @@
   #section-tabs.section.section-tabs
     .container
       %ul#myTab.nav.nav-tabs
-        %li
-          %a{"data-toggle" => "tab", href: "#home"} For Entrepreneurs
         %li.active
+          %a{"data-toggle" => "tab", href: "#home"} For Entrepreneurs
+        %li
           %a{"data-toggle" => "tab", href: "#profile"} For Brands
 
       #myTabContent.tab-content
-        #home.tab-pane
+        #home.tab-pane.active
           %h3 LAUNCH YOUR BUSINESS.
           .row
             .col-md-4
@@ -64,20 +64,20 @@
                 %h4 ALL-IN-ONE
                 %p Everything you need to run your marketplace.
 
-        #profile.tab-pane.active
+        #profile.tab-pane
           %h3 HAS YOUR BRAND JOINED THE SHARING ECONOMY?
           .row
             .col-md-4
               .feature
                 %i.ico.ico-avatar
                 %h4 Increase Customer  Loyalty
-                %p Retain your customers
+                %p Retain your customers.
 
             .col-md-4
               .feature
                 %i.ico.ico-heart
                 %h4 Grow Traffic
-                %p Drive new valuable customers
+                %p Drive new valuable customers.
 
             .col-md-4
               .feature
