@@ -7,6 +7,8 @@ gem 'pg'
 gem 'activerecord-postgres-hstore'
 gem 'hstore-attributes', github: 'Slashek/hstore-attributes'
 
+gem 'pry-debugger'
+
 gem 'redis'
 gem 'redis-rails'
 gem 'raygun4ruby'

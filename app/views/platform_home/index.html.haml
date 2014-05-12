@@ -1,169 +1,122 @@
-.shell
-  .sections
-    .section
+.top-slider
+  %ul.slides
+    %li.slide-item
+      =image_tag "platform_home/homepage-hero-backgrounds-1.png", class: 'slide-image slide-image-desktop'
+      =image_tag "platform_home/homepage-hero-backgrounds-2.png", class: 'slide-image slide-image-mobile'
+
+    %li.slide-item
+      =image_tag "platform_home/homepage-hero-backgrounds-3.png", class: 'slide-image slide-image-desktop'
+      =image_tag "platform_home/homepage-hero-backgrounds-4.png", class: 'slide-image slide-image-mobile'
+
+    %li.slide-item
+      =image_tag "platform_home/homepage-hero-backgrounds-5.png", class: 'slide-image slide-image-desktop'
+      =image_tag "platform_home/homepage-hero-backgrounds-6.png", class: 'slide-image slide-image-mobile'
+
+    %li.slide-item
+      =image_tag "platform_home/homepage-hero-backgrounds-7.png", class: 'slide-image slide-image-desktop'
+      =image_tag "platform_home/homepage-hero-backgrounds-8.png", class: 'slide-image slide-image-mobile'
+
+    %li.slide-item
+      =image_tag "platform_home/homepage-hero-backgrounds-9.png", class: 'slide-image slide-image-desktop'
+      =image_tag "platform_home/homepage-hero-backgrounds-10.png", class: 'slide-image slide-image-mobile'
+
+  .slider-caption
+    .slide-content
+      .slide-caption
+        %h2 CREATE YOUR OWN MARKETPLACE
+        %p Near Me is a complete solution for creating your own branded marketplace. No coding required.
+        .slide-content-buttons
+          %a.btn.btn-primary{href: "/#demo"} request demo
+
+  .slide-foot
+    %a.link-more{href: "#"}
+      Learn More
+      %i.ico.ico-arrow-down
+
+.main.main-secondary
+  #section-tabs.section.section-tabs
+    .container
+      %ul#myTab.nav.nav-tabs
+        %li
+          %a{"data-toggle" => "tab", href: "#home"} For Entrepreneurs
+        %li.active
+          %a{"data-toggle" => "tab", href: "#profile"} For Brands
+
+      #myTabContent.tab-content
+        #home.tab-pane
+          %h3 LAUNCH YOUR BUSINESS.
+          .row
+            .col-md-4
+              .feature
+                %i.ico.ico-time
+                %h4 SAVE TIME
+                %p We're your CTO. You can grow your business.
+
+            .col-md-4
+              .feature
+                %i.ico.ico-cost
+                %h4 REDUCE COSTS
+                %p Your marketplace built in just days.
+
+            .col-md-4
+              .feature
+                %i.ico.ico-key
+                %h4 ALL-IN-ONE
+                %p Everything you need to run your marketplace.
+
+        #profile.tab-pane.active
+          %h3 HAS YOUR BRAND JOINED THE SHARING ECONOMY?
+          .row
+            .col-md-4
+              .feature
+                %i.ico.ico-avatar
+                %h4 Increase Customer  Loyalty
+                %p Retain your customers
+
+            .col-md-4
+              .feature
+                %i.ico.ico-heart
+                %h4 Grow Traffic
+                %p Drive new valuable customers
+
+            .col-md-4
+              .feature
+                %i.ico.ico-buble
+                %h4 Build Community
+                %p Peers build a trusted brand getting what they want from each other.
+
+  .section.section-secondary
+    .container
+      %h2 HAVE AN IDEA? WE CAN POWER IT
+
+      %p Monitor everything from your Near Me control panel. Easily manage your inventory, customers, partners, and get full control over analytics and payments.
+      .slider-small
+        .slider-paging
+
+        .slider-clip
+          %ul.slides
+            %li.slide
+              =image_tag "platform_home/slide-01.png"
+
+            %li.slide
+              =image_tag "platform_home/slide-02.png"
+
+            %li.slide
+              =image_tag "platform_home/slide-03.png"
+
+            %li.slide
+              =image_tag "platform_home/slide-04.png"
+
+        .slider-actions
+          %a.prev{href: "#"}
+          %a.next{href: "#"}
+
+  #demo.section.section-form
+    =image_tag  "platform_home/section-form-bg.jpg", class: 'bg'
+    .section-inner
       .section-head
-        %h2 Create your own peer-to-peer marketplace
-        %p For Brands and Entrepreneurs. No coding required.
-        .btns
-          %a.btn.btn-blue{href: "/request-a-demo"} Request a demo
+        %h2 GET INTO THE BUSINESS OF SHARING
+        %p We’ll power your marketplace with all of the features, tools, and support you need to grow your sharing economy business and lead the collaborative consumption movement.
 
-      .laptop
-        .laptop-text
-          %p
-            I want to create a website
-            %br/
-            where people can:
-          .laptop-input
-            %ul.scroll-list
-              %li share RVs
-              %li rent classic cars
-              %li swap camera lenses
-              %li exchange power tools
-              %li borrow boats
-              %li trade designer handbags
-              %li sell musical instruments
-              %li borrow camping gear
-
-.dark-shell-container
-  .shell
-    .sections
-      .section
-        .section-head
-          %h2
-            Build with the
-            %strong features you need
-          %p Your marketplace is equipped with all the tools you need for success
-
-        .feature-columns
-          .feature-column-icons
-            %ul
-              %li
-                %i.icon-case
-                %span Admin Dashboard
-              %li
-                %i.icon-charts
-                %span Analytics
-              %li
-                %i.icon-cards
-                %span Payments
-              %li
-                %i.icon-phone
-                %span Customized Support
-
-          .feature-column-text
-            .column
-              %h3 Admin Dashboard
-              %p Monitor everything from your Near Me control panel. You can easily manage your inventory, customers, partners and get full control over analytics and payments.
-            .column
-              %h3 Analytics
-              %p Our built-in analytics dashboard will provide you with an accurate traffic analysis and audience behavior. Track your marketplace performance and make the best choices for your business.
-            .column
-              %h3 Payments
-              %p Instantly accept payments from your users, set the fees that suit your business and track all the transactions made on your marketplace.
-            .column
-              %h3 Customized Support
-              %p Near Me is committed to offer all the support you need to make a successful marketplace. Our team will be available to assist your request in a timely manner.
-            .clearfix
-
-.shell
-  .sections
-    .section
-      .section-head
-        %h2
-          Have an idea?
-          %strong We can power it
-        %p Anything from  desks to camping gear. You name it, you got it.
-
-      .tabs
-        .tabs-nav
-          %ul
-            %li
-              %a{href: "#tab1"}
-                %i.icon-camera
-                %span Camera Gear
-            %li
-              %a{href: "#tab2"}
-                %i.icon-desk
-                %span Desks
-            %li
-              %a{href: "#tab3"}
-                %i.icon-boat
-                %span Boats
-            %li
-              %a{href: "#tab4"}
-                %i.icon-tools
-                %span Tools
-            %li
-              %a{href: "#tab5"}
-                %i.icon-guitar
-                %span Instruments
-
-        .tabs-body
-          #tab1.tab
-            .tab-text.alignleft
-              .tab-text-inner
-                %h3 Camera gear
-                %p Lend and Borrow High-end Photography Gear - Rent gear that you need for a photoshoot or want to try before you buy.
-                .btns
-                  %a.btn.btn-blue{href: "/request-a-demo"} Request a demo
-
-            .tab-image.alignright
-              = image_tag "/assets/platform_home/gallery-camera-gear.png"
-
-          #tab2.tab
-            .tab-text.alignleft
-              .tab-text-inner
-                %h3 Desks
-                %p With over 6000 listings in 65 countries, get deskspace whenever and wherever you need it.
-                .btns
-                  %a.btn.btn-blue{href: "/request-a-demo"} Request a demo
-
-            .tab-image.alignright
-              = image_tag "/assets/platform_home/gallery-desks.png"
-
-          #tab3.tab
-            .tab-text.alignleft
-              .tab-text-inner
-                %h3 Boats
-                %p Find a Boat to Sail - Rent boats from people near you. Get renting and start sailing.
-                .btns
-                  %a.btn.btn-blue{href: "/request-a-demo"} Request a demo
-
-            .tab-image.alignright
-              = image_tag "/assets/platform_home/gallery-boats.png"
-
-          #tab4.tab
-            .tab-text.alignleft
-              .tab-text-inner
-                %h3 Tools
-                %p Get the tools you need. When you need em. - Search thousands of tools near you to get the job done.
-                .btns
-                  %a.btn.btn-blue{href: "/request-a-demo"} Request a demo
-
-            .tab-image.alignright
-              = image_tag "/assets/platform_home/gallery-tools.png"
-
-          #tab5.tab
-            .tab-text.alignleft
-              .tab-text-inner
-                %h3 Instruments
-                %p Share the Gift of Music - Rent instruments from other musicians and list your own for others to borrow.
-                .btns
-                  %a.btn.btn-blue{href: "/request-a-demo"} Request a demo
-
-            .tab-image.alignright
-              = image_tag "/assets/platform_home/gallery-instruments.png"
-
-.dark-shell-container
-  .shell
-    .sections
-      .section
-        .section-head
-          %p
-            Get into the business of sharing - We’ll power your marketplace with all of the features, tools, and support you need to grow your sharing economy business and join the collaborative consumption movement.
-
-.callout
-  .shell
-    %h2 Your marketplace is waiting
-    .btns
-      %a.btn.btn-white{href: "/request-a-demo"} Request a demo
+      .form-contact
+        = render partial: 'platform_home/shared/contact_form', locals: { platform_contact: @platform_contact }
