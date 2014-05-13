@@ -19,7 +19,7 @@ module SalesforceLead
                              "00NG000000DduGh" => subscribed? ? '1' : '',
                              "lead_source" => "Web"})
 
-      response = http.request(request)
+      response = http.request(request) if Rails.env.production?
     rescue => exception
       Raygun.track_exception(exception)
     end

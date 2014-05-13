@@ -25,6 +25,7 @@ class PlatformHomeController < ActionController::Base
 
   def contact_submit
     @platform_contact = PlatformContact.new(params[:platform_contact])
+    @platform_contact.referer = request.referer
     if @platform_contact.save
       PlatformMailer.enqueue.contact_request(@platform_contact)
       render :contact_submit, layout: false
