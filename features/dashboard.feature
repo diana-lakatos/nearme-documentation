@@ -17,6 +17,7 @@ Feature: As a user of the site
 
   Scenario: A user can add new location
     Given I am on the manage locations page
+      And the transactable_type_location exists
      When I follow "New Location"
       And I fill location form with valid details
       And I submit the form
@@ -25,6 +26,7 @@ Feature: As a user of the site
 
   Scenario: A user can edit existing location
     Given the location exists with company: the company
+      And the transactable_type_location exists
       And I am on the manage locations page
      When I click edit location icon
       And I provide new location data

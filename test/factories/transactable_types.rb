@@ -22,5 +22,11 @@ FactoryGirl.define do
       end
 
     end
+
+    factory :transactable_type_location do
+      after(:build) do |transactable_type|
+        transactable_type.availability_templates << FactoryGirl.build(:availability_template, :transactable_type => transactable_type)
+      end
+    end
   end
 end

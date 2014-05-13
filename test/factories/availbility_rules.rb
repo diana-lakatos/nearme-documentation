@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :availability_rule do
-    association :target, factory: :availablity_template
+    association :target, factory: :availability_template
     day 1
     open_hour 9
     open_minute 0

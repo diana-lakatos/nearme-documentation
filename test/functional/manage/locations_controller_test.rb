@@ -119,6 +119,7 @@ class Manage::LocationsControllerTest < ActionController::TestCase
     end
 
     should "should use default template if custom availability rules were not checked" do
+      FactoryGirl.create(:transactable_type_location)
       put :update, :id => @location.id, :location => {
         :availability_template_id=>"custom",
         :availability_rules_attributes=>availability_rules_params
@@ -128,6 +129,7 @@ class Manage::LocationsControllerTest < ActionController::TestCase
     end
 
     should "require availability rule to be opened for at least 1 hour" do
+      FactoryGirl.create(:transactable_type_location)
       put :update, :id => @location.id, :location => {
         :availability_template_id=>"custom",
         :availability_rules_attributes=> {
