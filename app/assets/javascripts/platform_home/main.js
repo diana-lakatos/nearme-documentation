@@ -13,7 +13,6 @@
 			}
 		});
 
-
 		if ($('.selectpicker').length ) {
 			$('.selectpicker').selectpicker();
 		};
@@ -61,9 +60,10 @@
 		});
 
 		function sliders () {
+			$('.top-slider').show();
 			$('.top-slider .slides').carouFredSel({
 				responsive: true,
-				auto: 5000,
+				auto: 4000,
 				height: 'variable',
 				item: {
 					width: '100%',
@@ -102,112 +102,111 @@
 			$('.navbar').fadeToggle()
 		})
 
-		// 	var name	 	= ($('#field-name')),
-		// 		email	 	= ($('#field-email')),
-		// 		company	 	= ($('#field-company')),
-		// 		message  	= ($('#field-message')),
-		// 		marketplace = ($('#field-marketplace'));
+		var name	 	= ($('#field-name')),
+			email	 	= ($('#field-email')),
+			company	 	= ($('#field-company')),
+			message  	= ($('#field-message')),
+			marketplace = ($('#field-marketplace'));
 
-		// $('.form-contact form #field-name').on('focusout',function() {
-		// 	if( name.val().length == 0 || name.val() == name.attr('title')) {
-		// 		name.parent('.form-group').addClass('error')
-		// 		return false;
-		// 	} else {
-		// 		name.parent('.form-group').addClass('success')
-		// 	}
-		// })
+		$('.form-contact form #field-name').on('focusout',function() {
+			if( name.val().length == 0 || name.val() == name.attr('title')) {
+				name.parent('.form-group').addClass('error').removeClass('success')
+			} else {
+				name.parent('.form-group').addClass('success').removeClass('error')
+			}
+		})
 
-		// $('.form-contact form #field-company').on('focusout',function() {
-		// 	if( company.val().length == 0 || company.val() == company.attr('title')) {
-		// 		company.parent('.form-group').addClass('error')
-		// 		return false;
-		// 	} else {
-		// 		company.parent('.form-group').addClass('success')
-		// 	}
-		// })
+		$('.form-contact form #field-company').on('focusout',function() {
+			if( company.val().length == 0 || company.val() == company.attr('title')) {
+				company.parent('.form-group').addClass('error').removeClass('success')
+				return false;
+			} else {
+				company.parent('.form-group').addClass('success').removeClass('error')
+			}
+		})
 
-		// $('.form-contact form #field-email').on('focusout',function() {
-		// 	if(!mailValidation(email.val()) || email.val() == email.attr('title')) {
-		// 	  email.parent('.form-group').addClass('error')
-		// 	  return false;
-		// 	}  else {
-		// 		email.parent('.form-group').addClass('success');
-		// 		return false;
-		// 	}
-		// })
+		$('.form-contact form #field-email').on('focusout',function() {
+			if(!mailValidation(email.val()) || email.val() == email.attr('title')) {
+			  email.parent('.form-group').addClass('error').removeClass('success')
+			  return false;
+			}  else {
+				email.parent('.form-group').addClass('success').removeClass('error')
+				return false;
+			}
+		})
 
-		// $('.form-contact form #field-marketplace').on('change',function() {
-		// 	if ( marketplace.find(":selected").val() === "" ) {
-		// 		marketplace.parent('.form-group').removeClass('success')
-		// 		marketplace.parent('.form-group').addClass('error')
-		// 		return false;
-		// 	} else {
-		// 		marketplace.parent('.form-group').addClass('success')
-		// 	}
-		// })
+		$('.form-contact form #field-marketplace').on('change',function() {
+			if ( marketplace.find(":selected").val() === "" ) {
+				marketplace.parent('.form-group').addClass('error').removeClass('success')
+				return false;
+			} else {
+				marketplace.parent('.form-group').addClass('success').removeClass('error')
+			}
+		})
 
-		// $('.form-contact form #field-message').on('focusout',function() {
-		// 	if( message.val().length == 0 || message.val() == message.attr('title')) {
-		// 		message.parent('.form-group').addClass('error')
-		// 		return false;
-		// 	} else {
-		// 		message.parent('.form-group').addClass('success')
-		// 	}
-		// })
+		$('.form-contact form #field-message').on('focusout',function() {
+			if( message.val().length == 0 || message.val() == message.attr('title')) {
+				message.parent('.form-group').addClass('error').removeClass('success')
+				return false;
+			} else {
+				message.parent('.form-group').addClass('success').removeClass('error')
+			}
+		})
 
-		// $(document).on('submit','.form-contact form',function() {
-		// 	var name	 = ($('#field-name')),
-		// 		email	 = ($('#field-email')),
-		// 		company	 = ($('#field-company')),
-		// 		message  = ($('#field-message')),
-		// 		marketplace = ($('#field-marketplace'));
+		function validateForm() {
+			var name	 = ($('#field-name')),
+				email	 = ($('#field-email')),
+				company	 = ($('#field-company')),
+				message  = ($('#field-message')),
+				marketplace = ($('#field-marketplace')),
+				valid = true;
 
-		// 	$(this).find('input').removeClass('error');
+			$(this).find('input').removeClass('error');
 
-		// 	if( name.val().length == 0 || name.val() == name.attr('title')) {
-		// 		name.parent('.form-group').addClass('error')
-		// 		return false;
-		// 	} else {
-		// 		name.parent('.form-group').addClass('success')
-		// 	}
+			if( name.val().length == 0 || name.val() == name.attr('title')) {
+				name.parent('.form-group').addClass('error').removeClass('success')
+				valid = false;
+			} else {
+				name.parent('.form-group').addClass('success').removeClass('error')
+			}
 
-		// 	if( company.val().length == 0 || company.val() == company.attr('title')) {
-		// 		company.parent('.form-group').addClass('error')
-		// 		return false;
-		// 	} else {
-		// 		company.parent('.form-group').addClass('success')
-		// 	}
+			if( company.val().length == 0 || company.val() == company.attr('title')) {
+				company.parent('.form-group').addClass('error').removeClass('success')
+				valid = false;
+			} else {
+				company.parent('.form-group').addClass('success').removeClass('error')
+			}
 
-		// 	if( marketplace.val().length == 0) {
-		// 		marketplace.parent('.form-group').addClass('error')
-		// 		return false;
-		// 	} else {
-		// 		marketplace.parent('.form-group').addClass('success')
-		// 	}
+			if( marketplace.val().length == 0) {
+				marketplace.parent('.form-group').addClass('error').removeClass('success')
+				valid = false;
+			} else {
+				marketplace.parent('.form-group').addClass('success').removeClass('error')
+			}
 
-		// 	if(!mailValidation(email.val()) || email.val() == email.attr('title')) {
-		// 	  email.parent('.form-group').addClass('error')
-		// 	  return false;
-		// 	}  else {
-		// 		email.parent('.form-group').addClass('success');
+			if( message.val().length == 0 || message.val() == message.attr('title')) {
+				message.parent('.form-group').addClass('error').removeClass('success')
+				valid = false;
+			} else {
+				message.parent('.form-group').addClass('success').removeClass('error')
+			}
 
-		// 	    var target = $('.success-message-content'),
-		// 	    	$target = $(target);
+			if(!mailValidation(email.val()) || email.val() == email.attr('title')) {
+			  email.parent('.form-group').addClass('error').removeClass('success')
+			  valid = false;
+			}  else {
+				 email.parent('.form-group').addClass('success').removeClass('error')
+			}
 
-		// 	    $('html, body').stop().animate({
-		// 	        'scrollTop': $target.offset().top - 200
-		// 	    }, 10);
-		// 		return false;
-		// 	}
+			return valid;
+		}
 
-		// })
-
-		// function mailValidation(email) {
-		// 	var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-		// 	if(emailReg.test(email) && email.length != 0) {
-		// 		return true;
-		// 	}
-		// }
+		function mailValidation(email) {
+			var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+			if(emailReg.test(email) && email.length != 0) {
+				return true;
+			}
+		}
 
 		$('.success-message').on('click', function () {
 			$('.success-message').hide();
@@ -216,22 +215,23 @@
 		//Forms
 		$('#new_platform_contact')
 			.bind('ajax:beforeSend', function(event, xhr, status) {
-				$(this).find('input[type="submit"]').prop('disabled', true);
+				if(validateForm()) {
+					$(this).find('button[type="submit"]').text('Submitting...').prop('disabled', true);
+				} else {
+					alert('Please fix form errors to submit!');
+					return false;
+				}
 			})
 			.bind('ajax:success', function(event, xhr, status) {
-				$(this).css("visibility", "hidden");
+				$(this).find('.error-block').hide();
+				$(this).find('button[type="submit"]').text('Submitted!').prop('disabled', true);
 				$('.success-message ').show()
-			    var target = $('.success-message-content'),
-			    	$target = $(target);
-			    $('html, body').stop().animate({
-			        'scrollTop': $target.offset().top - 200
-			    }, 10);
-				ga('send', 'event', 'Form', this.id, 'Submitted')
+			    $('html, body').stop().animate({ 'scrollTop': $('.success-message-content').offset().top - 200 }, 500);
+				ga('send', 'event', 'Form', document.URL, 'Submitted')
 			}).bind('ajax:error', function(event, xhr, status) {
 				$(this).find('.error-block').text(xhr.responseText).css("display", "block");
-				// $('html, body').animate({ scrollTop: $(this).offset().top }, 500);
-				$(this).find('input[type="submit"]').prop('disabled', false);
-			  ga('send', 'event', 'Form', this.id, 'Failed')
+				$(this).find('button[type="submit"]').text('SEND').prop('disabled', false);
+			  ga('send', 'event', 'Form', document.URL, 'Failed')
 			});
 
 	});
