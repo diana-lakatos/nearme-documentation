@@ -213,7 +213,7 @@ class RegistrationsControllerTest < ActionController::TestCase
         @user.save!
         delete :destroy_avatar, { :crop => { :w => 1, :h => 2, :x => 10, :y => 20 }, :rotate => 90 }
         @user = assigns(:user)
-        assert_nil @user.avatar_transformation_data
+        assert @user.avatar_transformation_data.empty?
         assert_nil @user.avatar_versions_generated_at
         assert_nil @user.avatar_original_url
         assert !@user.avatar.any_url_exists?
@@ -226,7 +226,7 @@ class RegistrationsControllerTest < ActionController::TestCase
   context 'versions' do
 
     should 'track version change on create' do
-      assert_difference('Version.where("item_type = ? AND event = ?", "User", "create").count') do
+      assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "User", "create").count') do
         with_versioning do
           post :create, user: user_attributes
         end
@@ -236,7 +236,7 @@ class RegistrationsControllerTest < ActionController::TestCase
 
     should 'track version change on update' do
       sign_in @user
-      assert_difference('Version.where("item_type = ? AND event = ?", "User", "update").count') do
+      assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "User", "update").count') do
         with_versioning do
           put :update, :id => @user, user: { :name => 'Updated Name' }
         end

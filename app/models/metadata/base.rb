@@ -96,7 +96,7 @@ module Metadata::Base
 
       unless options[:without_db_column]
 
-        class_eval <<-EOV
+        class_eval <<-EOV,  __FILE__, __LINE__
 
           store :#{metadata_column}
 
@@ -110,7 +110,7 @@ module Metadata::Base
 
             tmp_#{metadata_column} = #{metadata_column}
             update_column(:#{metadata_column}, self.#{metadata_column}.to_yaml)
-            self.touch
+            self.touch unless new_record?
             self.#{metadata_column} = tmp_#{metadata_column}
           end
         EOV

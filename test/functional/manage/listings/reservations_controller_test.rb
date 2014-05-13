@@ -72,7 +72,7 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
     sign_in @reservation.listing.creator
     User.any_instance.stubs(:accepts_sms_with_type?)
     YAML.expects(:load).returns(stub(:id => 'abc'))
-    Stripe::Charge.expects(:retrieve).returns(stub(:refund => stub(:to_yaml => {})))
+    Stripe::Charge.expects(:retrieve).returns(stub(:refund => {}))
     assert_difference 'Refund.count' do
       post :host_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
     end
@@ -94,7 +94,7 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
 
     should 'store new version after confirm' do
       # 2 because attempt charge is triggered, which if successful generates second version
-      assert_difference('Version.where("item_type = ? AND event = ?", "Reservation", "update").count', 2) do
+      assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count', 2) do
         with_versioning do
           post :confirm, { listing_id: @reservation.listing.id, id: @reservation.id }
         end
@@ -102,7 +102,7 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
     end
 
     should 'store new version after reject' do
-      assert_difference('Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
+      assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
         with_versioning do
           put :reject, { listing_id: @reservation.listing.id, id: @reservation.id, reservation: { rejection_reason: 'Dont like him' } }
         end
@@ -111,7 +111,7 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
 
     should 'store new version after cancel' do
       @reservation.confirm
-      assert_difference('Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
+      assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
         with_versioning do
           post :host_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
         end

@@ -51,7 +51,7 @@ class Instance < ActiveRecord::Base
 
   validates_presence_of :name
   validates_presence_of :marketplace_password, :if => :password_protected
-  validates_presence_of :password_protected, :if => :test_mode, :message => I18n.t("activerecord.errors.models.instance.test_mode_needs_password")
+  validates_presence_of :password_protected, :if => :test_mode# TODO , :message => I18n.t("activerecord.errors.models.instance.test_mode_needs_password")
   validates_length_of :olark_api_key, :minimum => 16, :maximum => 16, :allow_blank => true
   validates_presence_of :olark_api_key, :if => :olark_enabled
 

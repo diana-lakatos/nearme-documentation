@@ -19,9 +19,9 @@ class ChartItemDecorator < Draper::Decorator
   def formatted_date
     time = case object
     when Impression
-      Time.strptime(object.impression_date, '%Y-%m-%d')
+      Time.strptime(object.impression_date.to_s, '%Y-%m-%d')
     when Transactable
-      Time.strptime(object.listing_date, '%Y-%m-%d')
+      Time.strptime(object.listing_date.to_s, '%Y-%m-%d')
     else
       object.created_at
     end

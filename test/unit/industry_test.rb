@@ -11,7 +11,7 @@ class IndustryTest < ActiveSupport::TestCase
       Industry.destroy_all
       3.times do |i|
         @industry_with_listings = FactoryGirl.create(:industry, :name => "with listing #{i}")
-        set_up_company_with_various_listings
+        set_up_company_with_various_listings(@industry_with_listings)
       end
       @industry_without_listing = FactoryGirl.create(:industry, :name => 'without listing')
       CompanyIndustry.create(:industry_id => @industry_with_listings.id, :company_id => @company.id)
@@ -51,10 +51,8 @@ class IndustryTest < ActiveSupport::TestCase
 
   private
 
-  def set_up_company_with_various_listings
-    @company = FactoryGirl.build(:company)
-    @company.industries = [@industry_with_listings]
-    @company.save!
+  def set_up_company_with_various_listings(industry)
+    @company = FactoryGirl.create(:company, industries: [industry])
     @location = FactoryGirl.create(:location, :company => @company)
     3.times do
       FactoryGirl.create(:transactable, :location => @location)

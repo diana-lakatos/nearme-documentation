@@ -60,7 +60,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
         ReservationMailer.expects(:notify_host_with_confirmation).returns(stub(deliver: true)).once
         ReservationMailer.expects(:notify_guest_with_confirmation).returns(stub(deliver: true)).once
 
-        ActiveSupport::TaggedLogging.any_instance.expects(:error).never
+        Rails.logger.expects(:error).never
         User.any_instance.expects(:notify_about_wrong_phone_number).once
         SmsNotifier::Message.any_instance.stubs(:send_twilio_message).raises(Twilio::REST::RequestError, "The 'To' number +16665554444 is not a valid phone number")
         assert_nothing_raised do 
@@ -76,7 +76,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
 
         @controller.class.any_instance.expects(:handle_invalid_mobile_number).never
         SmsNotifier::Message.any_instance.stubs(:send_twilio_message).raises(Twilio::REST::RequestError, "Some other error")
-        ActiveSupport::TaggedLogging.any_instance.expects(:error).once
+        Rails.logger.expects(:error).once
         assert_nothing_raised do 
           post :create, booking_params_for(@listing)
         end
@@ -91,7 +91,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
   context 'versions' do
 
     should 'store new version after creating reservation' do
-      assert_difference('Version.where("item_type = ? AND event = ?", "Reservation", "create").count') do
+      assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "create").count') do
         with_versioning do
           post :create, booking_params_for(@listing)
         end

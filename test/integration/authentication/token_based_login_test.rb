@@ -102,7 +102,7 @@ class Authentication::TokenBasedLoginTest < ActionDispatch::IntegrationTest
 
     should 'be redirected back after login when token is wrong' do
       get_via_redirect edit_manage_location_path(:id => @location.id, :token => 'this one is certainly wrong one')
-      post 'users/sign_in', {'user[email]' => @user.email, 'user[password]' => @user.password}, session
+      post 'users/sign_in', {'user[email]' => @user.email, 'user[password]' => @user.password}
       assert_redirected_to edit_manage_location_path(:id => @location.id)
     end
   end

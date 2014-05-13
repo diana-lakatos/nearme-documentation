@@ -31,7 +31,7 @@ class SessionsControllerTest < ActionController::TestCase
   context 'versions' do
 
     should 'not track new version after each login' do
-      assert_no_difference('Version.where("item_type = ?", "User").count') do
+      assert_no_difference('PaperTrail::Version.where("item_type = ?", "User").count') do
         with_versioning do
           post :create, user: { email: @user.email, password: @user.password }
         end
@@ -40,7 +40,7 @@ class SessionsControllerTest < ActionController::TestCase
 
     should 'not track new version after each logout' do
       sign_in @user
-      assert_no_difference('Version.where("item_type = ?", "User").count') do
+      assert_no_difference('PaperTrail::Version.where("item_type = ?", "User").count') do
         with_versioning do
           delete :destroy
         end

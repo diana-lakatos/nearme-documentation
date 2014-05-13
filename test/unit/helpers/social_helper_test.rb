@@ -31,7 +31,7 @@ class SocialHelperTest < ActionView::TestCase
 
   test "#share_to_clipboard" do
     result = share_to_clipboard(@url)
-    expected = %{<a href="#@url" class="ico-link" data-clipboard-text="#@url"></a>}
+    expected = %{<a class="ico-link" data-clipboard-text="#@url" href="#@url"></a>}
     assert_equal expected, result
   end
 end

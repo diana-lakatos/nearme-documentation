@@ -19,7 +19,7 @@ class Domain < ActiveRecord::Base
     end
   end
 
-  scope :secured, -> {where(secured: true)}
+  scope :secured, -> { where(secured: true) }
 
   delegate :white_label_enabled?, :to => :target
 

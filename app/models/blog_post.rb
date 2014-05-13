@@ -4,7 +4,7 @@ class BlogPost < ActiveRecord::Base
   belongs_to :user # user who created this post
 
   extend FriendlyId
-  friendly_id :title, use: [:slugged, :history]
+  friendly_id :title, use: [:slugged, :history, :finders]
 
   before_validation :sanitize_content
   validates_presence_of :blog_instance, :user, :title, :content
@@ -48,4 +48,7 @@ class BlogPost < ActiveRecord::Base
     self.content = nil if self.content.to_s.gsub(/<\/?[^>]*>/, "").empty?
   end
 
+  def should_generate_new_friendly_id?
+    true
+  end
 end

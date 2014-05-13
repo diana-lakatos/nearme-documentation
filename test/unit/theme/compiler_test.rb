@@ -1,6 +1,9 @@
 require 'test_helper'
 
-class Theme::CompilerTest < ActiveSupport::TestCase
+# don't use Theme::CompilerTest for this class and dont's ask me why
+# if anyone will resolve this in the future, ping me please
+# Josef Šimánek <josef.simanek@gmail.com>, 7.5.2014
+class CompilerTest < ActiveSupport::TestCase
   def setup
     @instance = FactoryGirl.create(:instance)
     @theme = Theme.new.skipping_compilation do |theme|
@@ -37,7 +40,7 @@ class Theme::CompilerTest < ActiveSupport::TestCase
       css = compiler.send(:render_stylesheet)
 
       @images.each do |image|
-        regexp = "url(/assets/#{image})"
+        regexp = "url(/images/#{image})"
         assert_match /#{Regexp.escape(regexp)}/, css
       end
     end

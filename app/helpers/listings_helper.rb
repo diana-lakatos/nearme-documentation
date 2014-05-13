@@ -80,7 +80,7 @@ module ListingsHelper
       "#{user.name} is the host"
     end
 
-    host_friends = current_user.friends.know_host_of(listing).collect do |user|
+    host_friends = current_user.friends_know_host_of(listing).collect do |user|
       "#{user.name} knows the host"
     end
 

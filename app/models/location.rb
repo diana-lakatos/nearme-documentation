@@ -67,12 +67,11 @@ class Location < ActiveRecord::Base
   before_save :assign_default_availability_rules
 
   extend FriendlyId
-  friendly_id :urlify, use: [:slugged, :history]
+  friendly_id :urlify, use: [:slugged, :history, :finders]
 
   scope :filtered_by_location_types_ids,  lambda { |location_types_ids| where('locations.location_type_id IN (?)', location_types_ids) }
   scope :filtered_by_industries_ids,  lambda { |industry_ids| joins(:company => :company_industries).where('company_industries.industry_id IN (?)', industry_ids) }
-  scope :none, where(:id => nil)
-  scope :with_searchable_listings, where(%{ (select count(*) from "listings" where location_id = locations.id and listings.draft IS NULL and enabled = 't' and listings.deleted_at is null) > 0 })
+  scope :with_searchable_listings, -> { where(%{ (select count(*) from "listings" where location_id = locations.id and listings.draft IS NULL and enabled = 't' and listings.deleted_at is null) > 0 }) }
 
   # Useful for storing the full geo info for an address, like time zone
   serialize :info, Hash
@@ -193,6 +192,10 @@ class Location < ActiveRecord::Base
   end
 
   private
+
+  def should_generate_new_friendly_id?
+    true
+  end
 
   def fetch_coordinates
     # If we aren't locally geocoding (cukes and people with JS off)

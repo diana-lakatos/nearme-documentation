@@ -14,9 +14,7 @@
 ActiveRecord::Schema.define(:version => 20140513012900) do
 
 
-  create_extension "btree_gin", :version => "1.0"
-  create_extension "btree_gist", :version => "1.0"
-  create_extension "hstore", :version => "1.2"
+  execute 'CREATE EXTENSION IF NOT EXISTS hstore'
 
   create_table "amenities", :force => true do |t|
     t.string   "name"

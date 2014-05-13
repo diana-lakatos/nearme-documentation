@@ -6,6 +6,8 @@ class AvatarUploader < BaseUploader
   include CarrierWave::InkFilePicker
   include CarrierWave::TransformableImage
 
+  after :remove, :clean_model
+
   process :auto_orient
 
   def auto_orient
@@ -48,5 +50,9 @@ class AvatarUploader < BaseUploader
     current_version = (version_name && self.dimensions[version_name]) ? version_name : :big
     Placeholder.new(height: self.dimensions[current_version][:height],
                     width:  self.dimensions[current_version][:width]).path
+  end
+
+  def clean_model
+    model.update_attribute(:avatar_transformation_data, nil)
   end
 end

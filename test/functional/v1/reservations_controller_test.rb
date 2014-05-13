@@ -5,7 +5,7 @@ class V1::ReservationsControllerTest < ActionController::TestCase
   setup do
     @user = FactoryGirl.create(:user)
     @user.ensure_authentication_token!
-    @request.env['Authorization'] = @user.authentication_token
+    @request.headers['Authorization'] = @user.authentication_token
   end
 
   test "index should get resevations" do

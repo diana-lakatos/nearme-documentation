@@ -2,12 +2,7 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 
-# If you have a Gemfile, require the gems listed there, including any gems
-# you've limited to :test, :development, or :production.
-groups = {
-  assets:    %w(development test),
-}
-
+groups = {}
 groups[:coverage]  =  [Rails.env.to_s] if ENV['COVERAGE']
 groups[:profiling] =  [Rails.env.to_s] if ENV['PERF']
 
@@ -107,8 +102,10 @@ module DesksnearMe
 
     config.exceptions_app = self.routes
 
+    config.active_record.whitelist_attributes = false
+
     # custom rewrites specified in lib/legacy_redirect_handler.rb
-    config.middleware.insert_before(Rack::Lock, "LegacyRedirectHandler")
+    config.middleware.insert_before(ActionDispatch::Static, "LegacyRedirectHandler")
     # setting platform_context in app/models/platform_context/rack_setter.rb
     config.middleware.use "PlatformContext::RackSetter"
     config.mixpanel = (YAML.load_file(Rails.root.join("config", "mixpanel.yml"))[Rails.env] || {}).with_indifferent_access

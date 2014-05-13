@@ -1,7 +1,7 @@
 module SessionsHelper
 
   def login(user)
-    auth = user.authentications.find_or_initialize_by_provider_and_token('twitter')
+    auth = user.authentications.where(provider: 'twitter').first_or_initialize
     if auth.new_record?
       auth.uid = FactoryGirl.attributes_for(:authentication)[:uid]
       auth.token = FactoryGirl.attributes_for(:authentication)[:token]
