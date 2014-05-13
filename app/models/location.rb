@@ -49,7 +49,7 @@ class Location < ActiveRecord::Base
   has_many :reservation_charges, :through => :reservations
   has_many :photos, :through => :listings
 
-  has_many :availability_rules, :order => 'day ASC', :as => :target
+  has_many :availability_rules, -> { order 'day ASC' }, :as => :target
 
   has_many :impressions, :as => :impressionable, :dependent => :destroy
   has_many :reviews, :through => :listings
