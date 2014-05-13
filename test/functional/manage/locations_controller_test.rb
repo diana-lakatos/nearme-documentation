@@ -7,7 +7,7 @@ class Manage::LocationsControllerTest < ActionController::TestCase
     sign_in @user
     @company = FactoryGirl.create(:company, :creator => @user)
     @location_type = FactoryGirl.create(:location_type)
-    @transactable_type = FactoryGirl.create(:transactable_type, name: 'Listing')
+    FactoryGirl.create(:transactable_type_location, name: "Listing")
   end
 
   should "get index" do
@@ -55,7 +55,6 @@ class Manage::LocationsControllerTest < ActionController::TestCase
         @related_instance = FactoryGirl.create(:instance)
         PlatformContext.current = PlatformContext.new(@related_instance)
         FactoryGirl.create(:transactable_type_listing)
-
         @related_company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id, instance: @related_instance)
         @related_location = FactoryGirl.create(:location_in_auckland, company: @related_company)
         @related_listing = FactoryGirl.create(:transactable, location: @related_location)
@@ -119,7 +118,6 @@ class Manage::LocationsControllerTest < ActionController::TestCase
     end
 
     should "should use default template if custom availability rules were not checked" do
-      FactoryGirl.create(:transactable_type_location)
       put :update, :id => @location.id, :location => {
         :availability_template_id=>"custom",
         :availability_rules_attributes=>availability_rules_params
@@ -129,7 +127,6 @@ class Manage::LocationsControllerTest < ActionController::TestCase
     end
 
     should "require availability rule to be opened for at least 1 hour" do
-      FactoryGirl.create(:transactable_type_location)
       put :update, :id => @location.id, :location => {
         :availability_template_id=>"custom",
         :availability_rules_attributes=> {

@@ -7,6 +7,8 @@ class Transactable < ActiveRecord::Base
   has_metadata :accessors => [:photos_metadata]
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id, :listings_public], :location)
 
+  include TransactableType::CustomAttributesCaster
+
   has_many :reservations, dependent: :destroy, :inverse_of => :listing
   has_many :photos, dependent: :destroy, :inverse_of => :listing do
     def thumb
@@ -14,7 +16,7 @@ class Transactable < ActiveRecord::Base
     end
   end
   has_many :inquiries, :inverse_of => :listing
-  has_many :availability_rules, :order => 'day ASC', :as => :target, :dependent => :destroy, inverse_of: :target
+  has_many :availability_rules, -> { order 'day ASC' }, :as => :target, :dependent => :destroy, inverse_of: :target
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   belongs_to :transactable_type, :inverse_of => :transactables
   belongs_to :company, :inverse_of => :listings
@@ -67,8 +69,6 @@ class Transactable < ActiveRecord::Base
 
   PRICE_TYPES = [:hourly, :weekly, :daily, :monthly]
 
-  store_accessor :properties
-
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
   delegate :currency, :formatted_address, :local_geocoding,
@@ -91,14 +91,6 @@ class Transactable < ActiveRecord::Base
     set_custom_attributes
     set_defaults if self.new_record?
     self.attributes = @attributes_to_be_applied if @attributes_to_be_applied.present?
-  end
-
-  def set_custom_attributes
-    metaclass = class << self; self; end
-    hstore_attributes = transactable_type_attributes_names_types_hash
-    metaclass.class_eval do
-      hstore :properties, :accessors => hstore_attributes
-    end
   end
 
   def hourly_reservations?
@@ -133,6 +125,10 @@ class Transactable < ActiveRecord::Base
 
   def transactable_type_attributes
     @transactable_type_attributes ||= transactable_type.transactable_type_attributes
+  end
+
+  def transactable_type_attributes_names
+    @transactable_type_attributes_names ||= transactable_type.transactable_type_attributes.pluck(:name)
   end
 
 
@@ -398,7 +394,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def transactable_type_attributes_names_types_hash
-    self.transactable_type_attributes.inject({}) do |hstore_attrs, attr|
+    @transactable_type_attributes_names_types_hash ||= self.transactable_type_attributes.inject({}) do |hstore_attrs, attr|
       hstore_attrs[attr.name.to_sym] = attr.attribute_type.to_sym
       hstore_attrs
     end

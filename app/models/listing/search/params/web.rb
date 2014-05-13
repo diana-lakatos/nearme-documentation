@@ -73,7 +73,7 @@ class Listing::Search::Params::Web < Listing::Search::Params
   end
 
   def location_types_ids
-    @location_types_ids.presence || (lntypes.empty? ? nil : lntypes.pluck(:id))
+    @location_types_ids.presence || (lntypes.empty? ? nil : lntypes)
   end
 
   def lgtypes
@@ -86,7 +86,7 @@ class Listing::Search::Params::Web < Listing::Search::Params
   end
 
   def listing_types_ids
-    @listing_types_ids.presence || (lgtypes.empty? ? nil : lgtypes.pluck(:id))
+    @listing_types_ids.presence || (lgtypes.empty? ? nil : lgtypes)
   end
 
   def lgpricing_filters
