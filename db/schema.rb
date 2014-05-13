@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140502122830) do
+ActiveRecord::Schema.define(:version => 20140513012900) do
 
 
   create_extension "btree_gin", :version => "1.0"
@@ -466,6 +466,9 @@ ActiveRecord::Schema.define(:version => 20140502122830) do
     t.string   "support_email"
     t.string   "encrypted_db_connection_string"
     t.string   "stripe_currency",                                                   :default => "USD"
+    t.boolean  "user_info_in_onboarding_flow",                                      :default => false
+    t.string   "default_search_view"
+    t.boolean  "user_based_marketplace_views",                                      :default => false
   end
 
   add_index "instances", ["instance_type_id"], :name => "index_instances_on_instance_type_id"
@@ -683,6 +686,9 @@ ActiveRecord::Schema.define(:version => 20140502122830) do
     t.boolean  "subscribed", :default => false
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
+    t.string   "company"
+    t.string   "marketplace_type"
+    t.string   "referer"
   end
 
   create_table "platform_demo_requests", :force => true do |t|

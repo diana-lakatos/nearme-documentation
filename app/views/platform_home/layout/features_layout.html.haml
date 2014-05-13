@@ -1,0 +1,26 @@
+- content_for :intro do
+  %h1 FEATURES
+
+.main
+  .container
+    .row
+      .col-md-3
+        .sidebar
+          %ul.widgets
+            %li.widget.widget-nav
+              %ul
+                = nav_link 'Setup', "/features-setup"
+                = nav_link 'Design', "/features-design"
+                = nav_link 'Manage', "/features-manage"
+                = nav_link 'Marketing', "/features-marketing"
+                = nav_link 'Payments', "/features-payments"
+                = nav_link 'Analytics', "/features-analytics"
+                = nav_link 'Hosting & Security', "/features-security"
+                = nav_link 'Integrations', "/features-integration"
+                = nav_link 'Customer Support', "/features-support"
+
+      = yield :feature
+
+.callout
+  %h3 CREATE YOUR MARKETPLACE NOW
+  %a.btn.btn-primary{href: "/#demo"} REQUEST A DEMO

@@ -1,0 +1,28 @@
+-content_for :feature do
+  .col-md-9
+    .content
+      .section
+        .section-image
+          =image_tag "platform_home/feature-image-08.png"
+
+        .section-body
+          .article
+            %h3 Integrate with leading business applications
+            %p Near Me integrates with Stripe, Balanced, and PayPal to manage your payments and Olark to provide live chat customer support. No coding needed.
+
+          .article
+            %h3 Social media
+            %p Near Me also includes social media integration. Your users can connect through their social accounts on Linkedin, Twitter, Facebook and Instagram to provide social trust and follow their friend’s activities on your marketplace. They can also authenticate through Facebook, Twitter or Linkedin.
+
+          .article
+            %h3 Live chat CRM
+            %p This CRM integration will help you (your sales team) to deliver an excellent online customer experience. With Olark live chat you can gather relevant information during live chat sessions and build a good relationship with your clients.
+
+          .article
+            %h3 Constantly evolving
+            %p
+              We’re constantly developing new features to make sure you are equipped with the best tools to grow your business. Visit our
+              %a{href: "https://near-me.com/blog"} blog
+              our latest news.
+
+= render template: "platform_home/layout/features_layout"

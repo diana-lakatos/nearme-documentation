@@ -1,0 +1,20 @@
+.form-contact
+  = simple_form_for platform_contact, remote: true, url: '/contact-submit' do |f|
+    .error-block
+    .form-group
+      %input#field-name.form-control{placeholder: "First & Last Name", title: "First & Last Name", type: "text", name: "platform_contact[name]"}/
+    .form-group
+      %input#field-company.form-control{placeholder: "Company", title: "Company", type: "text", name: "platform_contact[company]"}/
+    .form-group
+      %input#field-email.form-control{placeholder: "Email", title: "Email", type: "text", name: "platform_contact[email]"}/
+    .form-group
+      %select#field-marketplace.select.selectpicker{name: "platform_contact[marketplace_type]"}
+        %option{value: ""} Marketplace Type
+        %option{value: "LocationBased"} Location-based (Airbnb for ...)
+        %option{value: "BuySellRent"} Buy/Sell/Rent (Peer-to-peer goods)
+        %option{value: "Services"} Services (Peer-to-peer services)
+        %option{value: "Other"} Other
+    .form-group
+      %textarea#field-message.form-control{placeholder: "Comments", rows: "3", title: "Comments", name: "platform_contact[comments]"}
+    .form-actions
+      %button.btn{type: "submit"} SEND

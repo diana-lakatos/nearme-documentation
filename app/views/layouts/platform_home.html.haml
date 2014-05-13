@@ -2,37 +2,29 @@
 %html{dir: "ltr", lang: "en-US", xmlns: "http://www.w3.org/1999/xhtml"}
   %head
     %title Near Me
-    %meta{content: "width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1", name: "viewport"}/
+
     %meta{content: "text/html; charset=US-ASCII", "http-equiv" => "Content-type"}/
+    %meta{content: "width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1", name: "viewport"}/
+
     %meta{:property => "og:site_name", :content => 'Near Me' }/
     %meta{:property => "og:url", :content => 'http://near-me.com' }/
     %meta{:property => "og:description", :content => 'Near Me is a complete solution for setting up and managing your own marketplace. No coding required.' }/
     %meta{:property => "og:image", :content => 'http://near-me.com/assets/platform_home/og-image.png' }/
+
     %link{href: "/assets/platform_home/favicon.ico", rel: "shortcut icon"}/
+
     = csrf_meta_tag
     = stylesheet_link_tag 'platform_home'
     = javascript_include_tag 'platform_home.js'
     = render 'platform_home/shared/analytics'
 
   %body
-    .container
-      .header
-        .shell
-          %h1.logo
-            %a{href: "/"} Near Me powering marketplaces
+    .wrapper
+      = render 'platform_home/layout/header'
+      = render 'platform_home/shared/render_flash'
+      = render 'platform_home/layout/intro' if content_for? :intro
 
-          .nav-utilities
-            %ul
-              %li
-                %a{href: "/features"} features
-              %li
-                %a{href: "/contact"} contact
-              %li
-                %a.btn.btn-blue.btn-blue-small{href: "/request-a-demo"} Request a demo
+      = yield
 
-      .main
-        = render 'platform_home/shared/render_flash'
-        = yield
-
-      = render 'platform_home/footer'
+      = render 'platform_home/layout/footer'
     = render 'platform_home/shared/initializers'

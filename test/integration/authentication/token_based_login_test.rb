@@ -85,6 +85,7 @@ class Authentication::TokenBasedLoginTest < ActionDispatch::IntegrationTest
       post_via_redirect 'users/sign_in', 'user[email]' => @user.email, 'user[password]' => @user.password
       @company = FactoryGirl.create(:company, :creator => @user)
       @location = FactoryGirl.create(:location_in_auckland, :company => @company)
+      @transactable_type = FactoryGirl.create(:transactable_type, name: 'Listing')
     end
 
     should 'be relogged if he uses token' do

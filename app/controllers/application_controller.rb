@@ -325,8 +325,10 @@ class ApplicationController < ActionController::Base
 
   def redirect_if_marketplace_password_protected
     if platform_context.instance.password_protected? && !session["authenticated_in_marketplace_#{platform_context.instance.id}".to_sym]
-      session[:marketplace_return_to] = request.path if request.get? && !request.xhr?
-      redirect_to new_marketplace_session_path
+      if current_user.nil? || !InstanceAdminAuthorizer.new(current_user).instance_admin?
+        session[:marketplace_return_to] = request.path if request.get? && !request.xhr?
+        redirect_to new_marketplace_session_path
+      end
     end
   end
 

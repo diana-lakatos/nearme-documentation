@@ -52,3 +52,4 @@ en:
     labels:
       user:
         sms_notifications_enabled: 'Enable Text Message Notifications'
+        biography: 'About me'

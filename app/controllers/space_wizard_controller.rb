@@ -22,7 +22,7 @@ class SpaceWizardController < ApplicationController
   def list
     @company ||= @user.companies.build
     @location ||= @company.locations.build
-    @location.name_required = true
+    @location.name_and_description_required = true if TransactableType.first.name == "Listing"
     @listing ||= @location.listings.build({:transactable_type_id => @transactable_type.id})
     @photos = @user.first_listing ? @user.first_listing.photos : nil
     @user.phone_required = true
@@ -35,7 +35,7 @@ class SpaceWizardController < ApplicationController
     params[:user][:companies_attributes]["0"][:name] = current_user.name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     @user.attributes = params[:user]
-    @user.companies.first.try(:locations).try(:first).try {|l| l.name_required = true} if TransactableType.first.name == "Listing"
+    @user.companies.first.try(:locations).try(:first).try {|l| l.name_and_description_required = true} if TransactableType.first.name == "Listing"
     @user.companies.first.creator_id = current_user.id
     if params[:save_as_draft]
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
