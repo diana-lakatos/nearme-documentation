@@ -25,15 +25,17 @@ module PlatformContext::ForeignKeysAssigner
           #{"validates_presence_of :instance_id" if !options[:allow_nil].try(:include?, :instance_id) && self.column_names.include?('instance_id')}
 
           before_validation do
-            return if self.persisted?
-            return if PlatformContext.current.nil?
-            #{"self.instance_id = PlatformContext.current.instance.id" if self.column_names.include?('instance_id') && !options[:allow_nil].try(:include?, :instance_id)}
-            #{"self.domain_id = PlatformContext.current.domain.try(:id)" if self.column_names.include?('domain_id')}
-            #{"self.partner_id = PlatformContext.current.partner.try(:id)" if self.column_names.include?('partner_id')}
-            #{"if PlatformContext.current.white_label_company" if self.column_names.include?('company_id') || self.column_names.include?('listings_public')}
-              #{"self.company_id = PlatformContext.current.white_label_company.id\n" if self.column_names.include?('company_id')}
-              #{"self.listings_public = PlatformContext.current.white_label_company.listings_public\n" if self.column_names.include?('listings_public')}
-            #{"end" if self.column_names.include?('company_id') || self.column_names.include?('listings_public')}
+            if !self.persisted? && !PlatformContext.current.nil?
+              #{"self.instance_id = PlatformContext.current.instance.id" if self.column_names.include?('instance_id') && !options[:allow_nil].try(:include?, :instance_id)}
+              #{"self.domain_id = PlatformContext.current.domain.try(:id)" if self.column_names.include?('domain_id')}
+              #{"self.partner_id = PlatformContext.current.partner.try(:id)" if self.column_names.include?('partner_id')}
+              #{"if PlatformContext.current.white_label_company" if self.column_names.include?('company_id') || self.column_names.include?('listings_public')}
+                #{"self.company_id = PlatformContext.current.white_label_company.id\n" if self.column_names.include?('company_id')}
+                #{"self.listings_public = PlatformContext.current.white_label_company.listings_public\n" if self.column_names.include?('listings_public')}
+              #{"end" if self.column_names.include?('company_id') || self.column_names.include?('listings_public')}
+            else
+              true
+            end
           end
         RUBY
       end
