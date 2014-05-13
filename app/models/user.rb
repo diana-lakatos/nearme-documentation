@@ -37,7 +37,7 @@ class User < ActiveRecord::Base
   has_many :mailer_unsubscriptions
   has_many :charges, foreign_key: 'user_id', dependent: :destroy
   has_many :authored_messages, :class_name => "UserMessage", :foreign_key => 'author_id', :inverse_of => :author
-  has_many :tickets, :class_name => 'Support::Ticket', order: 'updated_at DESC'
+  has_many :tickets, -> { order 'updated_at DESC' }, :class_name => 'Support::Ticket'
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain

@@ -46,7 +46,7 @@ class Instance < ActiveRecord::Base
   has_one :blog_instance, :as => :owner
   has_many :user_messages, :dependent => :destroy, :inverse_of => :instance
   has_many :faqs, class_name: 'Support::Faq'
-  has_many :tickets, class_name: 'Support::Ticket', order: 'created_at DESC'
+  has_many :tickets, -> { order 'created_at DESC' }, class_name: 'Support::Ticket'
   has_many :transactable_types
 
   validates_presence_of :name
@@ -63,7 +63,7 @@ class Instance < ActiveRecord::Base
   accepts_nested_attributes_for :translations, allow_destroy: true, reject_if: proc { |params| params[:value].blank? && params[:id].blank? }
   accepts_nested_attributes_for :instance_billing_gateways, allow_destroy: true, reject_if: proc { |params| params[:billing_gateway].blank? }
 
-  scope :with_support_imap, where('support_imap_hash IS NOT NULL')
+  scope :with_support_imap, -> { where 'support_imap_hash IS NOT NULL' }
 
   API_KEYS = %w(paypal_username paypal_password paypal_signature paypal_app_id paypal_client_id paypal_client_secret stripe_api_key stripe_public_key balanced_api_key)
 
