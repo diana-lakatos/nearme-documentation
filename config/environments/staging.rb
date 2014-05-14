@@ -25,7 +25,6 @@ DesksnearMe::Application.configure do
   config.assets.compress = true
   config.assets.js_compressor = :uglifier
 
-  config.action_controller.asset_host = "//staging-uswest2.desksnear.me"
   Rails.application.routes.default_url_options[:host] = 'staging-uswest2.desksnear.me'
   config.test_email = "notifications-staging@desksnear.me"
 

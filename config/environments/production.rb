@@ -38,8 +38,6 @@ DesksnearMe::Application.configure do
     config.storage              = :fog
   end
 
-  config.action_controller.asset_host = "//desksnear.me"
-
   # Production specific app keys/secrets for social properties.
   config.linkedin_key = "2qyp4vpjl8uh"
   config.linkedin_secret = "PQfyGFyutsoPwcOY"
