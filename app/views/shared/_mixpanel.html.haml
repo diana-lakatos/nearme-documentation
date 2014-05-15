@@ -8,7 +8,6 @@
   mixpanel.identify("#{self.mixpanel.distinct_id}");
   mixpanel.register(#{raw self.mixpanel.session_properties.to_json});
 
-
 - if platform_context.instance.olark_enabled?
   :javascript
     var find_correct_ip = function(details){
@@ -23,3 +22,4 @@
       #{"find_correct_ip(details);" if session[:current_ip].nil? && !Rails.env.test?}
       #{"set_ip_in_mixpanel(details);" if current_user}
     })
+

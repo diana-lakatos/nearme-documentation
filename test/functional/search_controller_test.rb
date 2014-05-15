@@ -104,7 +104,7 @@ class SearchControllerTest < ActionController::TestCase
 
       context 'with listing type filter' do
         should 'filter only filtered locations' do
-          filtered_listing_type = "Shared Desks"
+          filtered_listing_type = "Desk"
           another_listing_type = "Meeting Room"
           filtered_auckland = FactoryGirl.create(:listing_in_auckland, listing_type: filtered_listing_type).location
           another_auckland = FactoryGirl.create(:listing_in_auckland, listing_type: another_listing_type).location
@@ -229,7 +229,7 @@ class SearchControllerTest < ActionController::TestCase
     end
 
     should 'log filters in mixpanel along with other arguments for mixed result type' do
-      @listing_type = "Shared Desks"
+      @listing_type = "Desk"
       @location_type = FactoryGirl.create(:location_type)
       expected_custom_options = {
         search_query: 'adelaide',

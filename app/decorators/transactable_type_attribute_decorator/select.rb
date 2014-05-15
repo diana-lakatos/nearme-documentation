@@ -2,9 +2,8 @@ class TransactableTypeAttributeDecorator::Select < TransactableTypeAttributeDeco
 
   def options
     {
-      as: :select,
-      collection: @attribute_decorator.valid_values,
-      input_html: { prompt: @attribute_decorator.prompt }
+      collection: @attribute_decorator.valid_values_translated,
+      prompt: I18n.translate("simple_form.prompts.transactable." + @attribute_decorator.name)
     }
   end
 

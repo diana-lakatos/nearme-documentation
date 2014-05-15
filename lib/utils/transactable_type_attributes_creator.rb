@@ -48,35 +48,15 @@ module Utils
                              {}
                            end
         rest_attributes = case attr_name
-                          when :quantity
+                          when :quantity, :capacity
                             {
-                              label:  'Quantity available',
-                              input_html_options: { :class => "mini" },
-                              hint: "How many of this type of #{PlatformContext.current.instance.bookable_noun} do you have available?",
-                              placeholder: 2
-                            }
-                          when :capacity
-                            {
-                              input_html_options: { :class => "mini" },
-                              hint: "How many people does your #{PlatformContext.current.instance.bookable_noun} accommodate?",
-                              placeholder: 1,
                               input_html_options: { :class => "mini" }
                             }
                           when :listing_type
                             {
                               html_tag: "select",
-                              prompt: "",
-                              valid_values: ["Shared Desks", "Meeting Room", "Private Office", "Salon Booth"],
-                              input_html_options: { :class => 'selectpicker' },
-                              label: "Desk type"
-                            }
-                          when :name
-                            {
-                              label: "#{PlatformContext.current.instance.bookable_noun} name"
-                            }
-                          when :description
-                            {
-                              label: "#{PlatformContext.current.instance.bookable_noun} description"
+                              valid_values: ["Desk", "Meeting Room", "Office Space", "Salon Booth"],
+                              input_html_options: { :class => 'selectpicker' }
                             }
                           else
                             {}

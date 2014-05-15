@@ -21,18 +21,18 @@ module AvailabilityRulesHelper
         custom_checked = false
       end
 
-      choices << ['', "Use Location availability", defer_options]
+      choices << ['', t('simple_form.labels.availability_template.use_parent_availability'), defer_options]
     end
 
     # Add choices for each of the pre-defined templates
     TransactableType.first.availability_templates.each do |template|
-      choices << [template.id, template.full_name, { :id => "availability_template_id_#{template.id}" }]
+      choices << [template.id, t('simple_form.labels.availability_template.full_name.' + template.name.underscore.tr(' ', '_')), { :id => "availability_template_id_#{template.id}" }]
     end
 
     # Add choice for the 'Custom' rule creation
     custom_options = { :id => "availability_rules_custom", :'data-custom-rules' => true }
     custom_options[:checked] = custom_checked if custom_checked
-    choices << ['custom', "Custom", custom_options]
+    choices << ['custom', t('simple_form.labels.availability_template.custom'), custom_options]
 
     # Return our set of choices
     choices

@@ -6,12 +6,10 @@ class TransactableTypeAttributeDecoratorTest < ActionView::TestCase
 
     should 'be correct' do
       expected_default_options = {
-        label: "Label",
-        hint: "This is hint",
-        input_html: { "hello" => "world" },
-        required: false
+        :input_html=>{ :hello=>"world" },
+        :required=>false
       }
-      assert_equal expected_default_options, decorated_attribute({ label: "Label", hint: "This is hint", input_html_options: { "hello" => "world" }}).default_options
+      assert_equal expected_default_options, decorated_attribute({ input_html_options: { :hello => "world" }}).default_options
     end
 
     should 'know when attribute is required' do

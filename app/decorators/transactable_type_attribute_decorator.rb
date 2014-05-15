@@ -36,11 +36,15 @@ class TransactableTypeAttributeDecorator < Draper::Decorator
 
   def default_options
     @default_options ||= {
-      label: label,
-      hint: hint.presence,
       input_html: input_html_options,
       required: required?
     }
+  end
+
+  def valid_values_translated
+    valid_values.map do |valid_value|
+      [I18n.translate('simple_form.valid_values.transactable.' + self.name + '.' + valid_value.underscore.tr(' ', '_')), valid_value]
+    end
   end
 
   private

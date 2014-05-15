@@ -1,0 +1,28 @@
+en:
+  activerecord:
+    attributes:
+      listing_type:
+        name: "Listing type"
+      location_type:
+        name: "Location type"
+    errors:
+      models:
+        instance:
+          attributes:
+            pricing_options:
+              must_be_selected: "At least one of the pricing options must be selected."
+          test_mode_needs_password: 'is needed for test mode.'
+        location_type:
+          attributes:
+            name:
+              taken: "already exists."
+        user:
+          attributes:
+            email:
+              taken: "That email address is associated with an existing account."
+  errors:
+    messages:
+      free: "must be free if no prices are provided"
+      free_if_zero: "must be free if all prices are zero"
+      wrong_content_type: "is the wrong content type"
+
