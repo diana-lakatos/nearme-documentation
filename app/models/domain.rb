@@ -8,9 +8,11 @@ class Domain < ActiveRecord::Base
   before_validation lambda { self.name = self.name.try(:strip) }
 
   validates_presence_of :name
-  validates_uniqueness_of :name
+  validates_uniqueness_of :name, :scope => :deleted_at
   validates_length_of :name, :maximum => 50
   validates :name, domain_name: true
+
+  before_destroy :prevent_destroy_if_only_child
 
   validates_presence_of :target_type
   validates_each :name do |record, attr, value|
@@ -33,6 +35,13 @@ class Domain < ActiveRecord::Base
 
   def partner?
     "Partner" == target_type
+  end
+
+  private
+
+  def prevent_destroy_if_only_child
+    errors.add(:name, "You won't be able to access admin if you delete your only domain") if instance? && target.domains.count == 1
+    errors.blank?
   end
 
 end

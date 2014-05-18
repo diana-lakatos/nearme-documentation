@@ -40,6 +40,28 @@ class DomainTest < ActiveSupport::TestCase
       assert @desksnearme_domain.invalid?
       assert @desksnearme_domain.errors[:name].join.include?("This domain is not available")
     end
+
+    context 'name uniqueness' do
+      should 'be able to re-add deleted name' do
+        domain = FactoryGirl.create(:domain, :name => 'name.com')
+        FactoryGirl.create(:domain, target: domain.target)
+        assert domain.destroy
+        assert_nothing_raised do
+          FactoryGirl.create(:domain, :name => 'name.com')
+        end
+      end
+
+      should 'not create duplicated active domain' do
+        domain = FactoryGirl.create(:domain, :name => 'name.com', deleted_at: Time.zone.now)
+        FactoryGirl.create(:domain, :name => 'name.com')
+        assert_raise ActiveRecord::RecordNotUnique do
+          domain.restore!
+        end
+        assert_raise ActiveRecord::RecordInvalid do
+          FactoryGirl.create(:domain, :name => 'name.com')
+        end
+      end
+    end
   end
 
 end
