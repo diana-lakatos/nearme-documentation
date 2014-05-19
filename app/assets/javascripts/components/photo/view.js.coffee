@@ -38,7 +38,8 @@ class @Photo.View
     @singlePhotoHtml()
     @photo.append($('<span>').addClass('photo-position badge badge-inverse').text(position))
     input = $("<input type='text'>").attr('name', @inputTemplate.attr('name')).attr('placeholder', @inputTemplate.attr('placeholder'))
-    name_prefix = input.attr('name') + '[' + @data.id + ']'
+    listing_name_prefix = input.attr('name')
+    name_prefix = listing_name_prefix + '[photos_attributes][' + @data.id + ']'
     input.attr('name', name_prefix + '[caption]')
     @photo.append(input)
     hidden = $('<input type="hidden">')
@@ -46,6 +47,8 @@ class @Photo.View
     @photo.attr('id', "photo-#{@data.id}")
     @photo.append(hidden_position)
     hidden_id = hidden.clone().attr('name', "#{name_prefix}[id]").val(@data.id)
+    @photo.append(hidden_id)
+    hidden_id = hidden.clone().attr('name', "#{listing_name_prefix}[photo_ids][]").val(@data.id)
     @photo.append(hidden_id)
     hidden_listing_id = hidden.clone().attr('name', "#{name_prefix}[transactable_id]").val(@data.listing_id)
     @photo.append(hidden_listing_id)

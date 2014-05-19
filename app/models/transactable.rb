@@ -81,7 +81,7 @@ class Transactable < ActiveRecord::Base
     :availability_rules_attributes, :defer_availability_rules, :free,
     :photos_attributes, :hourly_reservations, :price_type, :draft, :enabled,
     :last_request_photos_sent_at, :activated_at, :amenity_ids, :rank, :transactable_type_id,
-    :transactable_type
+    :transactable_type, :photo_ids
 
   attr_accessor :distance_from_search_query, :photo_not_required
 
