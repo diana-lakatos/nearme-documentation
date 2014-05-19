@@ -37,10 +37,14 @@ class Domain < ActiveRecord::Base
     "Partner" == target_type
   end
 
+  def near_me_domain?
+    name =~ /^(.*)\.near-me\.com$/
+  end
+
   private
 
   def prevent_destroy_if_only_child
-    errors.add(:name, "You won't be able to access admin if you delete your only domain") if instance? && target.domains.count == 1
+    errors.add(:name, "You won't be able to access admin if you delete your only domain") if near_me_domain?
     errors.blank?
   end
 

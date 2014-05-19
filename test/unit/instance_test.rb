@@ -58,22 +58,4 @@ class InstanceTest < ActiveSupport::TestCase
     end
   end
 
-  context 'domain validation' do
-    should 'not allow to remove the only domain' do
-      instance = FactoryGirl.create(:instance)
-      domain = FactoryGirl.build(:domain, target: instance)
-      instance.domains = [domain]
-      instance.save!
-      refute domain.destroy
-    end
-
-    should 'allow to remove domain of other exists' do
-      instance = FactoryGirl.create(:instance)
-      domain = FactoryGirl.build(:domain, target: instance)
-      instance.domains = [domain, FactoryGirl.build(:domain, target: instance)]
-      instance.save!
-      assert domain.destroy
-    end
-  end
-
 end
