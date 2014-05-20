@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140513012900) do
+ActiveRecord::Schema.define(:version => 20140518122537) do
 
 
   create_extension "hstore", :version => "1.2"
@@ -214,6 +214,8 @@ ActiveRecord::Schema.define(:version => 20140513012900) do
     t.boolean  "secured",     :default => false
   end
 
+  add_index "domains", ["deleted_at"], :name => "index_domains_on_deleted_at"
+  add_index "domains", ["name"], :name => "index_domains_on_name", :unique => true, :where => "(deleted_at IS NULL)"
   add_index "domains", ["target_id", "target_type"], :name => "index_domains_on_target_id_and_target_type"
 
   create_table "email_templates", :force => true do |t|

@@ -46,7 +46,17 @@ if %w(app_master app solo).include?(node[:instance_role])
       action :create
       owner node[:owner_name]
       mode 0644
-      backup false
+      variables({
+        :instance_role => node[:instance_role]
+      })
+    end
+
+    # Add a server block for ssl secured https://near-me.com
+    template "/etc/nginx/servers/reggalo.ssl.conf" do
+      source "reggalo.ssl.conf.erb"
+      action :create
+      owner node[:owner_name]
+      mode 0644
       variables({
         :instance_role => node[:instance_role]
       })
@@ -65,7 +75,7 @@ CORS
         custom_gzip_serving = <<GZIP
   location ^~ /assets/ {
     # Only use gzip_static if you have .gz compressed assets *precompiled*
-    gzip_static on; 
+    gzip_static on;
     expires max;
     add_header Cache-Control public;
   }
