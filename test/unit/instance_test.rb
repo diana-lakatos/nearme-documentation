@@ -44,7 +44,7 @@ class InstanceTest < ActiveSupport::TestCase
 
     should 'return instance custom credentials for Stripe if not set in application config' do
       assert_equal @instance.stripe_api_key, @instance.billing_gateway_credential('stripe_api_key')
-      assert_equal @instance.stripe_public_key, @instance.billing_gateway_credential('stripe_public_key') 
+      assert_equal @instance.stripe_public_key, @instance.billing_gateway_credential('stripe_public_key')
     end
 
     should 'return credentials for Stripe set in application config' do
@@ -54,7 +54,8 @@ class InstanceTest < ActiveSupport::TestCase
       assert_equal 'api-key', @instance.billing_gateway_credential('stripe_api_key')
       assert_equal 'public-key', @instance.billing_gateway_credential('stripe_public_key')
       assert_not_equal @instance.stripe_api_key, @instance.billing_gateway_credential('stripe_api_key')
-      assert_not_equal @instance.stripe_public_key, @instance.billing_gateway_credential('stripe_public_key') 
+      assert_not_equal @instance.stripe_public_key, @instance.billing_gateway_credential('stripe_public_key')
     end
   end
+
 end
