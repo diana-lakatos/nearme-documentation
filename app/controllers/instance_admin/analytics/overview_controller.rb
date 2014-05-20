@@ -1,7 +1,7 @@
 class InstanceAdmin::Analytics::OverviewController < InstanceAdmin::Analytics::BaseController
 
   def show
-    @last_month_listings = Transactable.select('COUNT(transactables.*) AS listings_count, DATE(transactables.created_at) AS listing_date, transactable_type_id').where('DATE(transactables.created_at) >= ?', Date.current - 30.days).order('listing_date ASC').group('transactable_type_id, listing_date')
+    @last_month_listings = Transactable.select('COUNT(transactables.*) AS listings_count, DATE(transactables.created_at) AS listing_date, transactable_type_id').where('transactable_type_id = ? AND DATE(transactables.created_at) >= ?', TransactableType.first.id, Date.current - 30.days).order('listing_date ASC').group('transactable_type_id, listing_date')
     @listings_chart = ChartDecorator.decorate(@last_month_listings, :last_30_days, { :labels_max_count => 31 })
 
     @last_month_revenue = ReservationCharge.paid.last_x_days(30).
