@@ -40,6 +40,8 @@ DesksnearMe::Application.configure do
     config.storage              = :fog
   end
 
+  config.action_controller.asset_host = "//staging-uswest2.desksnear.me"
+
   # Staging specific keys/secrets for social properties.
   config.linkedin_key = "26pmsiwpsh8a"
   config.linkedin_secret = "M2TZrt7sF7QlIeUZ"
