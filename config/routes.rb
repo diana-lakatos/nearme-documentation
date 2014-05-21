@@ -273,6 +273,7 @@ DesksnearMe::Application.routes.draw do
   resources :listings, :users, :reservations do
     resources :user_messages, except: [:index] do
       patch :archive
+      put :archive
     end
   end
 
@@ -306,6 +307,7 @@ DesksnearMe::Application.routes.draw do
           post :confirm
           get :confirm
           patch :reject
+          put :reject
           get :rejection_form
           post :host_cancel
         end
