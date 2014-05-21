@@ -14,6 +14,7 @@ Before do
   GmapsFake.stub_requests
   stub_request(:get, /.*api\.mixpanel\.com.*/)
   stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
+  stub_request(:get, 'https://www.filepicker.io/api/file/-nBq2onTSemLBxlcBWn1').to_return(:status => 200,:body => File.read(Rails.root.join("test", "assets", "foobear.jpeg")), :headers => {'Content-Type' => 'image/jpeg'})
   instance = FactoryGirl.create(:default_instance)
   instance.domains = [FactoryGirl.create(:domain)]
   instance.save!
