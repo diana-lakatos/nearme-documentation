@@ -221,11 +221,11 @@ DesksnearMe::Application.routes.draw do
   devise_scope :user do
     post "users/avatar", :to => "registrations#avatar", :as => "avatar"
     get "users/edit_avatar", :to => "registrations#edit_avatar", :as => "edit_avatar"
-    put "users/update_avatar", :to => "registrations#update_avatar", :as => "update_avatar"
+    match "users/update_avatar", :to => "registrations#update_avatar", :as => "update_avatar", via: [:patch, :put]
     get "users/set_password", :to => "registrations#set_password", :as => "set_password"
-    put "users/update_password", :to => "registrations#update_password", :as => "update_password"
+    match "users/update_password", :to => "registrations#update_password", :as => "update_password", via: [:patch, :put]
     get "users/edit_notification_preferences", :to => "registrations#edit_notification_preferences", :as => "edit_notification_preferences"
-    put "users/update_notification_preferences", :to => "registrations#update_notification_preferences", :as => "update_notification_preferences"
+    match "users/update_notification_preferences", :to => "registrations#update_notification_preferences", :as => "update_notification_preferences", via: [:patch, :put]
     post "users/store_google_analytics_id", :to => "registrations#store_google_analytics_id", :as => "store_google_analytics"
     post "users/store_geolocated_location", :to => "registrations#store_geolocated_location", :as => "store_geolocated_location"
     get "users/social_accounts", :to => "registrations#social_accounts", :as => "social_accounts"
@@ -235,7 +235,7 @@ DesksnearMe::Application.routes.draw do
     get "users/:id", :to => "registrations#show", :as => "profile"
     get "users/unsubscribe/:signature", :to => "registrations#unsubscribe", :as => "unsubscribe"
 
-    put "users/store_correct_ip", :to => "sessions#store_correct_ip", :as => "store_correct_ip"
+    match "users/store_correct_ip", :to => "sessions#store_correct_ip", :as => "store_correct_ip", via: [:patch, :put]
 
     get "/instance_admin/sessions/new", :to => "instance_admin/sessions#new", :as => 'instance_admin_login'
     post "/instance_admin/sessions", :to => "instance_admin/sessions#create"
@@ -329,7 +329,7 @@ DesksnearMe::Application.routes.draw do
     get '/new' => 'space_wizard#new', :as => "new_space_wizard"
     get "/list" => "space_wizard#list", :as => "space_wizard_list"
     post "/list" => "space_wizard#submit_listing"
-    put "/list" => "space_wizard#submit_listing"
+    match "/list" => "space_wizard#submit_listing", via: [:put, :patch]
     match "/photo" => "space_wizard#submit_photo", :as => "space_wizard_photo", via: [:post, :put]
     delete "/photo/:id" => "space_wizard#destroy_photo", :as => "destroy_space_wizard_photo"
   end
@@ -344,7 +344,7 @@ DesksnearMe::Application.routes.draw do
     resource :registration, only: [:create]
 
     get  'profile',  :to => 'profile#show'
-    put  'profile',  :to => 'profile#update'
+    match 'profile',  :to => 'profile#update', via: [:put, :patch]
     post 'profile/avatar/:filename', :to => 'profile#upload_avatar'
     delete 'profile/avatar', :to => 'profile#destroy_avatar'
 
