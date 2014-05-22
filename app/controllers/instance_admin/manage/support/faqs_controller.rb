@@ -1,13 +1,13 @@
 class InstanceAdmin::Manage::Support::FaqsController < InstanceAdmin::Manage::BaseController
   inherit_resources
-  defaults :resource_class => Support::Faq
+  defaults :resource_class => ::Support::Faq
 
   def index
-    @faqs = Support::Faq.scoped.rank(:position)
+    @faqs = ::Support::Faq.scoped.rank(:position)
   end
 
   def create
-    @faq = Support::Faq.new(params[:support_faq])
+    @faq = ::Support::Faq.new(params[:support_faq])
     @faq.created_by_id = current_user.id
     create! do |format|
       format.html do
@@ -20,7 +20,7 @@ class InstanceAdmin::Manage::Support::FaqsController < InstanceAdmin::Manage::Ba
   end
 
   def update
-    @faq = Support::Faq.find(params[:id])
+    @faq = ::Support::Faq.find(params[:id])
     @faq.update_attribute(:updated_by_id, current_user.id)
     update! do |format|
       format.html do
@@ -33,13 +33,13 @@ class InstanceAdmin::Manage::Support::FaqsController < InstanceAdmin::Manage::Ba
   end
 
   def destroy
-    @faq = Support::Faq.find(params[:id])
+    @faq = ::Support::Faq.find(params[:id])
     @faq.update_attribute(:deleted_by_id, current_user.id)
     destroy!
   end
 
   def new
-    @faq = Support::Faq.new
+    @faq = ::Support::Faq.new
   end
 
   private
