@@ -68,7 +68,7 @@ DesksnearMe::Application.configure do
   config.balanced_api_key = "ak-prod-1YZGzrMTbG9Q4XeITwLML1za00VRsV4PS"
 
   # Protect this environment with a simple Basic authentication dialog
-  config.middleware.insert_before(Rack::Lock, "Rack::Auth::Basic") do |username, password|
+  config.middleware.insert_before(Rack::Sendfile, "Rack::Auth::Basic") do |username, password|
     username == 'desksnearme' && password == 'sharethem'
   end
   config.redis_settings = YAML.load_file(Rails.root.join("config", "redis.yml"))["staging"]
