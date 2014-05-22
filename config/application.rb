@@ -105,7 +105,7 @@ module DesksnearMe
     config.active_record.whitelist_attributes = false
 
     # custom rewrites specified in lib/legacy_redirect_handler.rb
-    config.middleware.insert_before(ActionDispatch::Static, "LegacyRedirectHandler")
+    config.middleware.insert_before(Rack::Sendfile, "LegacyRedirectHandler")
     # setting platform_context in app/models/platform_context/rack_setter.rb
     config.middleware.use "PlatformContext::RackSetter"
     config.mixpanel = (YAML.load_file(Rails.root.join("config", "mixpanel.yml"))[Rails.env] || {}).with_indifferent_access
