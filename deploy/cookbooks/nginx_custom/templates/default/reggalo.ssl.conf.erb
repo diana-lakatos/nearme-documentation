@@ -59,16 +59,16 @@ server {
 
   location = /system/maintenance.html { }
 
-  # custom CORS policy for webfonts in Firefox
-  location ~* .(eot|ttf|woff)$ {
-    add_header Access-Control-Allow-Origin *;
-  }
-
   location ^~ /assets/ {
     # Only use gzip_static if you have .gz compressed assets *precompiled*
     gzip_static on;
     expires max;
     add_header Cache-Control public;
+
+    # custom CORS policy for webfonts in Firefox
+    location ~* .(eot|ttf|woff)$ {
+      add_header Access-Control-Allow-Origin *;
+    }
   }
 
   # set Expire header on assets: see http://developer.yahoo.com/performance/rules.html#expires
