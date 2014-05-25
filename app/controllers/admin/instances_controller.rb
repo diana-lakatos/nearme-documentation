@@ -31,6 +31,10 @@ class Admin::InstancesController < Admin::ResourceController
     blog_instance.owner = @instance
     blog_instance.save!
 
+    # Create a default transactable type with associated attributes
+    t = @instance.transactable_types.create(name: 'Listing')
+    Utils::TransactableTypeAttributesCreator.new(t).create_listing_attributes!
+
     redirect_to admin_instance_path(@instance), notice: 'Instance was successfully created.'
   end
 end
