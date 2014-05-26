@@ -14,12 +14,12 @@ module SalesforceLead
                              "email" => email,
                              "company" => attributes['company'],
                              "phone" => attributes['phone'],
-                             "00NG000000Ddp2r" => attributes['marketplace_type'],
+                             "00NG000000DfhsK" => attributes['marketplace_type'],
                              "00NG000000Ddp2w" => comments,
                              "00NG000000DduGh" => subscribed? ? '1' : '',
                              "lead_source" => "Web"})
 
-      response = http.request(request)
+      response = http.request(request) if Rails.env.production?
     rescue => exception
       Raygun.track_exception(exception)
     end

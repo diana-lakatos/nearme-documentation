@@ -24,4 +24,5 @@ class InstanceTest < ActiveSupport::TestCase
       assert_equal @instance_payment_gateway.test_settings, @instance.instance_payment_gateways.get_settings_for(:stripe, nil, :test)
     end
   end
+
 end

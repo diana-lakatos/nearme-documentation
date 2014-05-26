@@ -7,8 +7,11 @@ class InstanceAdmin::Settings::IntegrationsController < InstanceAdmin::Settings:
   end
 
   def countries
-    @payment_gateways = PaymentGateway.supported_at(params[:country])
-    @country = Country.find_by_alpha2(params[:country])
+    if params[:country].present?
+      @payment_gateways = PaymentGateway.supported_at(params[:country])
+      @country = Country.find_by_alpha2(params[:country])
+    end
+
 
     respond_to do | format |
       format.js

@@ -8,7 +8,7 @@ class @Photo.Uploader
     @processingPhotos = 0
     @formIsSubmitting = false
     @init()
-  
+
   init: ->
     @initializeFileUploader()
     @bindEvents()
@@ -36,7 +36,7 @@ class @Photo.Uploader
 
   triggerMixpanelPhotoNotProcessedBeforeSubmitEvent: () ->
     $.post '/event_tracker', event: "photo_not_processed_before_submit"
-  
+
   triggerMixpanelUserClosedBrowserPhotoNotProcessedBeforeSubmitEvent: () ->
     $.post '/event_tracker', event: "user_closed_browser_photo_not_processed_before_submit"
 
@@ -56,7 +56,7 @@ class @Photo.Uploader
       else
         filepicker.pick options, (inkBlob) =>
           @createPhoto(inkBlob)
-        
+
   createPhotos: (inkBlobs) ->
     for inkBlob in inkBlobs
       @createPhoto(inkBlob)
@@ -77,7 +77,7 @@ class @Photo.Uploader
   getParamsForCreatePhotoRequest: (inkBlob) ->
     params = {}
     params["#{@fileInput.attr('name')}"] = inkBlob.url
-    # need to add data-name-prefix to fileinput, because this won't work for avatar 
+    # need to add data-name-prefix to fileinput, because this won't work for avatar
     if $('#listing_id')
       params["#{$('#listing_id').attr('name')}"] = $('#listing_id').val()
     # If photos are being added to an existing draft space, we need the draft

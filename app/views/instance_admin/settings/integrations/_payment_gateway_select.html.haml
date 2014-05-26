@@ -1,11 +1,12 @@
-.span4
-  %label Select a Payment Gateway
-  = form_for("", url: payment_gateways_instance_admin_settings_integrations_path, remote: true) do
-    = select_tag :payment_gateway, options_from_collection_for_select(@payment_gateways, :id, :name), { prompt: "-- Select Gateway --", class: "payment-gateway-select" }
-    = hidden_field_tag :country, country.alpha2
+- if country.present?
+  .span4
+    %label Select a Payment Gateway
+    = form_for("", url: payment_gateways_instance_admin_settings_integrations_path, remote: true) do
+      = select_tag :payment_gateway, options_from_collection_for_select(@payment_gateways, :id, :name), { prompt: "-- Select Gateway --", class: "payment-gateway-select" }
+      = hidden_field_tag :country, country.alpha2
 
-:javascript
-  $(".payment-gateway-select").on("change", function(){
-    $(this).submit()
-  })
-  
+  :javascript
+    $(".payment-gateway-select").on("change", function(){
+      $(this).submit()
+    })
+    
