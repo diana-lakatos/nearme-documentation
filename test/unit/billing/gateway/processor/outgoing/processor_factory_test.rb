@@ -7,7 +7,7 @@ class Billing::Gateway::Processor::Outgoing::ProcessorFactoryTest < ActiveSuppor
 
       setup do
         @company = FactoryGirl.create(:company)
-        @company.instance.update_attribute(:balanced_api_key, 'present')
+        @company.instance.instance_payment_gateways << FactoryGirl.create(:balanced_instance_payment_gateway)
       end
 
       should 'support balanced if instance_client with the right instance exists and has balanced_user_id' do
@@ -34,22 +34,22 @@ class Billing::Gateway::Processor::Outgoing::ProcessorFactoryTest < ActiveSuppor
 
       setup do
         @instance = Instance.default_instance
+        @instance.instance_payment_gateways << FactoryGirl.create(:balanced_instance_payment_gateway)
       end
 
       should 'support balanced if has specified api' do
-        @instance.balanced_api_key = '123'
         assert Billing::Gateway::Processor::Outgoing::ProcessorFactory.balanced_supported?(@instance, 'USD')
       end
 
       should 'not support balanced if has not specified api' do
-        @instance.balanced_api_key = ''
+        @instance.instance_payment_gateways.set_settings_for(:balanced, {login: ""})
         refute Billing::Gateway::Processor::Outgoing::ProcessorFactory.balanced_supported?(@instance, 'USD')
       end
 
       context 'currency' do
 
         should 'support balanced if has specified api but wrong currency' do
-          @instance.balanced_api_key = '123'
+          @instance.instance_payment_gateways.set_settings_for(:balanced, {login: "present"})
           refute Billing::Gateway::Processor::Outgoing::ProcessorFactory.balanced_supported?(@instance, 'ABC')
         end
 
@@ -67,12 +67,12 @@ class Billing::Gateway::Processor::Outgoing::ProcessorFactoryTest < ActiveSuppor
       end
 
       should 'support paypal if has paypal email' do
-        @company.paypal_email = 'abc'
+        @company.paypal_email = "example@example.com"
         assert Billing::Gateway::Processor::Outgoing::ProcessorFactory.receiver_supports_paypal?(@company)
       end
 
       should 'not support paypal if paypal email empty' do
-        @company.paypal_email = '    '
+        @company.paypal_email = " "
         refute Billing::Gateway::Processor::Outgoing::ProcessorFactory.receiver_supports_paypal?(@company)
       end
 
@@ -86,12 +86,7 @@ class Billing::Gateway::Processor::Outgoing::ProcessorFactoryTest < ActiveSuppor
     context 'paypal_supported?' do
       setup do
         @instance = Instance.default_instance
-        @instance.paypal_username = 'a'
-        @instance.paypal_password = 'b'
-        @instance.paypal_signature =  'c'
-        @instance.paypal_client_id = 'd'
-        @instance.paypal_client_secret = 'e'
-        @instance.paypal_app_id = 'f'
+        @instance.instance_payment_gateways << FactoryGirl.create(:paypal_instance_payment_gateway)
       end
 
       should 'support paypal if has all necessary details' do
@@ -103,32 +98,22 @@ class Billing::Gateway::Processor::Outgoing::ProcessorFactoryTest < ActiveSuppor
       end
 
       should 'not support paypal without username' do
-        @instance.paypal_username = ''
+        @instance.instance_payment_gateways.set_settings_for(:paypal, {login: ""})
         refute Billing::Gateway::Processor::Outgoing::ProcessorFactory.paypal_supported?(@instance, 'USD')
       end
 
       should 'not support paypal without password' do
-        @instance.paypal_password = ''
+        @instance.instance_payment_gateways.set_settings_for(:paypal, {password: ""})
         refute Billing::Gateway::Processor::Outgoing::ProcessorFactory.paypal_supported?(@instance, 'USD')
       end
 
       should 'not support paypal without signature' do
-        @instance.paypal_signature = ''
+        @instance.instance_payment_gateways.set_settings_for(:paypal, {signature: ""})
         refute Billing::Gateway::Processor::Outgoing::ProcessorFactory.paypal_supported?(@instance, 'USD')
       end
 
-      should 'not support paypal without client_id' do
-        @instance.paypal_client_id = ''
-        assert Billing::Gateway::Processor::Outgoing::ProcessorFactory.paypal_supported?(@instance, 'USD')
-      end
-
-      should 'support paypal without client_secret' do
-        @instance.paypal_client_secret = ''
-        assert Billing::Gateway::Processor::Outgoing::ProcessorFactory.paypal_supported?(@instance, 'USD')
-      end
-
       should 'not support paypal without app_id' do
-        @instance.paypal_app_id = ''
+        @instance.instance_payment_gateways.set_settings_for(:paypal, {app_id: ""})
         refute Billing::Gateway::Processor::Outgoing::ProcessorFactory.paypal_supported?(@instance, 'USD')
       end
 

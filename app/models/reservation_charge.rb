@@ -71,29 +71,25 @@ class ReservationCharge < ActiveRecord::Base
     return if paid?
 
     # Generates a ChargeAttempt with this record as the reference.
-    billing_gateway.charge(
-      amount_cents: total_amount_cents,
-      reference: self
-    )
-
+    billing_gateway.charge(total_amount_cents, self, reservation.billing_authorization.token)
     touch(:paid_at)
-    ReservationChargeTrackerJob.perform_later(reservation.date.end_of_day, reservation.id) 
-  rescue Billing::CreditCardError
-    # Needs to be retried at a later time...
-    touch(:failed_at)
+
+    begin
+      ReservationChargeTrackerJob.perform_later(reservation.date.end_of_day, reservation.id) 
+    rescue
+      # Needs to be retried at a later time...
+      touch(:failed_at)
+    end
   end
 
   def refund
     return if !paid?
     return if refunded?
+
     successful_charge = charge_attempts.successful.first
     return if successful_charge.nil?
 
-    refund = billing_gateway.refund(
-      amount_cents: total_amount_cents,
-      reference: self,
-      charge_response: successful_charge.response
-    )
+    refund = billing_gateway.refund(total_amount_cents, self, successful_charge.response)
 
     if refund.success?
       touch(:refunded_at)
@@ -114,10 +110,15 @@ class ReservationCharge < ActiveRecord::Base
   private
 
   def billing_gateway
-    @billing_gateway ||= Billing::Gateway::Incoming.new(reservation.owner, instance, currency)
+    @billing_gateway ||= if reservation.billing_authorization.payment_gateway_class.present?
+       reservation.billing_authorization.payment_gateway_class.to_s.constantize.new(reservation.owner, instance, currency)
+     else
+        Billing::Gateway::Incoming.new(reservation.owner, instance, currency)
+     end
   end
 
   def assign_currency
     self.currency ||= reservation.currency
   end
+
 end

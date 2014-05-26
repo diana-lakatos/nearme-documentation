@@ -103,7 +103,15 @@ DesksnearMe::Application.routes.draw do
     namespace :settings do
       get '/', :to => 'base#index'
       resource :configuration, :only => [:show, :update], :controller => 'configuration'
-      resource :integrations, :only => [:show, :update], :controller => 'integrations'
+      resource :integrations, :only => [:show, :update], :controller => 'integrations' do
+        collection do
+          post :countries
+          post :payment_gateways
+          post :country_instance_payment_gateway
+          get :country_instance_payment_gateways
+          match :create_or_update_instance_payment_gateway, via: [:post, :put, :patch]
+        end
+      end
       resource :locations, :only => [:show, :update], :controller => 'locations'
       resources :location_types, only: [:index, :create, :destroy_modal, :destroy] do
         get 'destroy_modal', on: :member

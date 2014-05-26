@@ -77,52 +77,65 @@ class ReservationRequest < Form
 
   private
 
-    def validate_phone_and_country
-      add_error("Please complete the contact details", :contact_info) unless user_has_mobile_phone_and_country?
-    end
+  def validate_phone_and_country
+    add_error("Please complete the contact details", :contact_info) unless user_has_mobile_phone_and_country?
+  end
 
-    def user_has_mobile_phone_and_country?
-      user && user.country_name.present? && user.mobile_number.present?
-    end
+  def user_has_mobile_phone_and_country?
+    user && user.country_name.present? && user.mobile_number.present?
+  end
 
-    def save_reservation
-      User.transaction do
-        user.save!
-        reservation.save!
+  def save_reservation
+    User.transaction do
+      user.save!
+      reservation.save!
+      if !reservation.listing.free? && @payment_method == Reservation::PAYMENT_METHODS[:credit_card]
+        reservation.create_billing_authorization(token: @token, payment_gateway_class: @gateway_class)
       end
-    rescue ActiveRecord::RecordInvalid => error
-      add_errors(error.record.errors.full_messages)
-      false
+      true
     end
+  rescue ActiveRecord::RecordInvalid => error
+    add_errors(error.record.errors.full_messages)
+    false
+  end
 
-    def setup_credit_card_customer
-      clear_errors(:cc)
-      return true unless using_credit_card?
+  def setup_credit_card_customer
+    clear_errors(:cc)
+    return true unless using_credit_card?
 
-      begin
-        self.card_expires = card_expires.to_s.strip
-        credit_card = Billing::CreditCard.new(
-          number:       card_number.to_s,
-          expiry_month: card_expires.to_s[0,2],
-          expiry_year:  card_expires.to_s[-4,4],
-          cvc:          card_code.to_s
-        )
+    # Prevent invalid cards based on user first_name and last_name.
+    # This is a temporary solution. We should add first_name and last_name fields to reservation_request form.
+    user.name = "#{user.name} #{user.name}" if !user.last_name.present?
 
-        if credit_card.valid?
-          @billing_gateway.store_credit_card(credit_card)
+    begin
+      self.card_expires = card_expires.to_s.strip
+
+      credit_card = ActiveMerchant::Billing::CreditCard.new(
+        first_name: user.first_name,
+        last_name: user.last_name,
+        number: card_number.to_s,
+        month: card_expires.to_s[0,2],
+        year: card_expires.to_s[-4,4],
+        verification_value: card_code.to_s
+      )
+
+      if credit_card.valid?
+        response = @billing_gateway.authorize(@reservation.total_amount_cents, credit_card)
+        if response[:error].present?
+          add_error(response[:error], :cc)
         else
-          add_error("Those credit card details don't look valid", :cc)
+          @token = response[:token]
+          @gateway_class = response[:payment_gateway_class]
         end
-      rescue Billing::CreditCardError => e
-        field = e.param ? e.param : :cc
-        add_error(e.message, field)
-      rescue Billing::Error => e
-        add_error(e.message, :cc)
+      else
+        add_error("Those credit card details don't look valid", :cc)
       end
+    rescue Billing::Error => e
+      add_error(e.message, :cc)
     end
+  end
 
-    def using_credit_card?
-      reservation.credit_card_payment?
-    end
-
+  def using_credit_card?
+    reservation.credit_card_payment?
+  end
 end

@@ -5,52 +5,87 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
     @client = @user = user
     @instance = instance
     @currency = currency
+    ActiveMerchant::Billing::Base.mode = :test if @instance.test_mode?
     setup_api_on_initialize
   end
 
-  # Make a charge against the user
-  #
-  # charge_details - Hash of details describing the charge
-  #                  :amount_cents - The amount in cents to charge
-  #                  :reference - A reference record to assign to the charge
-  #
-  # Returns the Charge attempt record.
-  # Test the status of the charge with the Charge#success? predicate
-  def charge(charge_details)
-    amount_cents, reference = charge_details[:amount_cents], charge_details[:reference]
+  def authorize(amount, credit_card)
+    response = if defined?(custom_authorize_options)
+      @gateway.authorize(amount, credit_card, custom_authorize_options)
+    else
+      @gateway.authorize(amount, credit_card)
+    end
+
+    if response.success?
+      return {
+        token: response.authorization,
+        payment_gateway_class: self.class
+      }
+    else
+      return {
+        error: response.message
+      }
+    end
+  end
+
+  def charge(amount, reference, token)
     @charge = Charge.create(
-      amount: amount_cents,
+      amount: amount,
+      reference: reference,
       currency: @currency,
-      user_id: user.id,
-      reference: reference
+      user_id: @user.id,
     )
-    # Use concrete processor to perform real-life charge attempt. Processor will trigger charge_failed or charge_successful callbacks.
-    process_charge(@charge.amount)
-    @charge
+
+    begin
+      response = if defined? (custom_capture_options)
+        @gateway.capture(amount, token, custom_capture_options)
+      else
+        @gateway.capture(amount, token)
+      end
+
+      response.success? ? charge_successful(response.params) : charge_failed(response.params)
+      return @charge
+      
+    rescue => e
+      raise Billing::Gateway::PaymentAttemptError, e
+    end
   end
 
-  def refund(refund_details)
-    amount_cents, reference, charge_response = refund_details[:amount_cents], refund_details[:reference], refund_details[:charge_response]
+  def refund(amount, reference, charge_response)
     @refund = Refund.create(
-      amount: amount_cents,
+      amount: amount,
       currency: @currency,
       reference: reference
     )
-    process_refund(amount_cents, charge_response)
-    @refund
+
+    raise Billing::Gateway::RefundNotSupportedError, "Refund isn't supported or is not implemented. Please refund this user directly on your gateway account." if !defined?(refund_identification)
+
+    begin
+      response = if defined?(custom_refund_options)
+        @gateway.refund(amount, refund_identification(charge_response), custom_refund_options)
+      else
+        @gateway.refund(amount, refund_identification(charge_response))
+      end
+
+      response.success? ? refund_successful(response.params) : refund_failed(response.params)
+      return @refund
+    
+    rescue => e
+      raise Billing::Gateway::PaymentRefundError, e
+    end
   end
 
-  # Contains implementation for storing credit card by third party
-  def store_credit_card(credit_card)
-    raise NotImplementedError
-  end
-
-  # Contains implementation for processing credit card by third party
-  def process_charge
-    raise NotImplementedError
+  def self.supports_currency?(currency)
+    return true if defined? self.support_any_currency!
+    self.supported_currencies.include?(currency)
   end
 
   protected
+
+  def authorize_callbacks(authorization_token, reservation)
+    reservation.authorization_token = authorization_token
+    reservation.payment_gateway_class = self.class
+  end
 
   # Callback invoked by processor when charge was successful
   def charge_successful(response)
@@ -71,10 +106,8 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
   def refund_failed(response)
     @refund.refund_failed(response)
   end
-
-  private
-
-  def new(*args)
-  end
-
 end
+
+class Billing::Gateway::PaymentAttemptError < StandardError; end
+class Billing::Gateway::PaymentRefundError < StandardError; end
+class Billing::Gateway::RefundNotSupportedError < StandardError; end
