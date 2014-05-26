@@ -42,4 +42,9 @@ module InstanceAdmin::InstanceAdminHelper
   def pretty_path(path)
     path.gsub('/',' > ').titleize
   end
+
+  def currency_name(iso_code)
+    currency = Money::Currency.find(iso_code)
+    currency.nil? ? nil : "#{iso_code} - #{currency.name}"
+  end
 end

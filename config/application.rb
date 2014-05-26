@@ -58,12 +58,10 @@ module DesksnearMe
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [
-      :password, :bank_routing_number, :bank_account_number, :response, :live_paypal_username, :live_paypal_password, :live_paypal_signature,
-      :live_paypal_app_id, :live_stripe_api_key, :live_paypal_client_id, :live_paypal_client_secret, :live_balanced_api_key, :marketplace_password,
-      :test_stripe_api_key, :test_paypal_username, :test_paypal_password, :test_paypal_signature, :test_paypal_app_id, :test_paypal_client_id,
-      :test_paypal_client_secret, :test_balanced_api_key, :olark_api_key, :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key,
+      :password, :bank_routing_number, :bank_account_number, :response, 
+      :marketplace_password, :olark_api_key, :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key,
       :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret, :instagram_consumer_key, :instagram_consumer_secret,
-      :stripe_id, :paypal_id, :balanced_user_id, :balanced_credit_card_id
+      :stripe_id, :paypal_id, :balanced_user_id, :balanced_credit_card_id, :live_settings, :test_settings
     ]
 
     config.generators do |g|

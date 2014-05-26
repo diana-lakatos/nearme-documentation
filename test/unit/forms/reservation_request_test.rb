@@ -1,18 +1,30 @@
 require 'test_helper'
+require 'vcr_setup'
 
 class ReservationRequestTest < ActiveSupport::TestCase
 
   setup do
     @listing = FactoryGirl.create(:transactable, :name => "blah")
-    @user = FactoryGirl.create(:user)
+    @user = FactoryGirl.create(:user, name: "Firstname Lastname")
     @date = @listing.first_available_date
     @attributes = {
       :dates => [@date.to_s(:db)],
-      :card_number => 4111111111111111,
-      :card_expires => 1.year.from_now.strftime("%m/%y"),
-      :card_code => '111'
+      :card_number => 4242424242424242,
+      :card_expires => "05/2020",
+      :card_code => "411"
     }
-    stub_billing_gateway
+    ipg = FactoryGirl.create(:stripe_instance_payment_gateway)
+
+    @listing.instance.instance_payment_gateways << ipg
+
+    country_ipg = FactoryGirl.create(
+      :country_instance_payment_gateway, 
+      country_alpha2_code: "US", 
+      instance_payment_gateway_id: ipg.id
+    )
+
+    @listing.instance.country_instance_payment_gateways << country_ipg
+    
     @reservation_request = ReservationRequest.new(@listing, @user, PlatformContext.new, @attributes)
   end
 
@@ -49,7 +61,9 @@ class ReservationRequestTest < ActiveSupport::TestCase
   context "validations" do
     context "valid arguments" do
       should "be valid" do
-        assert @reservation_request.valid?
+        VCR.use_cassette('reservation_request_processing') do
+          assert @reservation_request.valid?
+        end
       end
     end
 
@@ -83,7 +97,9 @@ class ReservationRequestTest < ActiveSupport::TestCase
     context "valid" do
       context "no problems with saving reservation" do
         should "return true" do
-          assert @reservation_request.process, @reservation_request.reservation.errors.inspect
+          VCR.use_cassette('reservation_request_processing') do
+            assert @reservation_request.process, @reservation_request.reservation.errors.inspect
+          end
         end
       end
 
@@ -92,7 +108,9 @@ class ReservationRequestTest < ActiveSupport::TestCase
           @reservation_request.stubs(:save_reservation).returns(false)
         end
         should "return false" do
-          assert !@reservation_request.process
+          VCR.use_cassette('reservation_request_processing') do
+            assert !@reservation_request.process
+          end
         end
       end
     end

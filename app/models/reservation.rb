@@ -22,6 +22,8 @@ class Reservation < ActiveRecord::Base
     :unknown => 'unknown'
   }
 
+  attr_encrypted :authorization_token, :payment_gateway_class, :key => DesksnearMe::Application.config.secret_token
+
   belongs_to :instance
   belongs_to :listing, class_name: 'Transactable', foreign_key: 'transactable_id'
   belongs_to :owner, :class_name => "User"
@@ -52,6 +54,8 @@ class Reservation < ActiveRecord::Base
   has_many :reservation_charges,
     inverse_of: :reservation,
     dependent: :destroy
+
+  has_one :billing_authorization
 
   validates :transactable_id, :presence => true
   # the if statement for periods is needed to make .recover work - otherwise reservation would be considered not valid even though it is

@@ -67,7 +67,6 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
     end
 
     should "generate separate transfers for separate currencies" do
-      Billing::Gateway::Processor::Incoming::ProcessorFactory.stubs(:stripe_supported?).returns(true).at_least(1)
       location = FactoryGirl.create(:location,
         :company => @company_1,
         :currency => 'NZD'

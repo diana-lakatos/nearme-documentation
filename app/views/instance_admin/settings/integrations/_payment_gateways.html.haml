@@ -1,0 +1,19 @@
+%legend Payment Gateways
+#payment-gateways
+  .row-fluid
+    .controls.controls-row
+      .span4
+        %label Country to configure for:
+        = form_for("", url: countries_instance_admin_settings_integrations_path, remote: true) do
+          = select_tag :country, options_from_collection_for_select(@countries, :alpha2, :name), { prompt: "-- Select Country --", class: "country-select" }
+      .payment-gateways-form
+  .row-fluid
+    %a{"data-target" => "#instanceAdminModal", "data-toggle" => "modal", "href" => "#{country_instance_payment_gateways_instance_admin_settings_integrations_path}"} Review current settings for all countries
+  .row-fluid
+    .instance-payment-gateway-form
+
+= render 'instance_admin/shared/modal', heading: "Payment Gateways per Country"
+
+- content_for :domready do
+  new InstanceAdmin.PaymentGatewaySelect($(".country-select"));
+  new InstanceAdmin.SettingsController($('#instanceAdminModal'))

@@ -1,0 +1,19 @@
+%hr
+%h4= "Current settings for: #{instance_payment_gateway.name}"
+= simple_form_for instance_payment_gateway, url: create_or_update_instance_payment_gateway_instance_admin_settings_integrations_path, html: { novalidate: false } do |f|
+  = f.input :payment_gateway_id, as: :hidden, input_html: { value: f.object.payment_gateway_id }
+  .row-fluid
+    .span6.control-group
+      %h5 Live Settings (used when test mode is off)
+      = f.fields_for :live_settings do |live|
+        - f.object.live_settings.each do |k, v|
+          = live.input k.to_sym, as: :string, input_html: { value: v, class: 'input-block-level', required: true }
+    .span6.control-group
+      %h5 Test Settings (used when test mode is on)
+      = f.fields_for :test_settings do |test|
+        - f.object.test_settings.each do |k, v|
+          = test.input k.to_sym, as: :string, input_html: { value: v, class: 'input-block-level', required: true }
+  = f.input :country, as: :hidden, input_html: { value: country.alpha2 }
+
+  .pull-right
+    = f.button :submit, "Use #{instance_payment_gateway.name} for #{country.name}", class: 'btn btn-primary'

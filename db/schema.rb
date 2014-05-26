@@ -11,9 +11,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140518122537) do
+ActiveRecord::Schema.define(:version => 20140522022339) do
 
 
+  create_extension "btree_gin", :version => "1.0"
+  create_extension "btree_gist", :version => "1.0"
   create_extension "hstore", :version => "1.2"
 
   create_table "amenities", :force => true do |t|
@@ -84,6 +86,15 @@ ActiveRecord::Schema.define(:version => 20140518122537) do
 
   add_index "availability_rules", ["target_type", "target_id"], :name => "index_availability_rules_on_target_type_and_target_id"
 
+  create_table "billing_authorizations", :force => true do |t|
+    t.integer  "instance_id"
+    t.integer  "reservation_id"
+    t.string   "encrypted_token"
+    t.string   "encrypted_payment_gateway_class"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
+  end
+
   create_table "blog_instances", :force => true do |t|
     t.string   "name"
     t.string   "header"
@@ -126,6 +137,7 @@ ActiveRecord::Schema.define(:version => 20140518122537) do
     t.string   "currency"
     t.text     "encrypted_response"
     t.datetime "deleted_at"
+    t.integer  "instance_id"
   end
 
   add_index "charges", ["reference_id", "reference_type"], :name => "index_charges_on_reference_id_and_reference_type"
@@ -187,6 +199,14 @@ ActiveRecord::Schema.define(:version => 20140518122537) do
 
   add_index "company_users", ["company_id"], :name => "index_company_users_on_company_id"
   add_index "company_users", ["user_id"], :name => "index_company_users_on_user_id"
+
+  create_table "country_instance_payment_gateways", :force => true do |t|
+    t.string   "country_alpha2_code"
+    t.integer  "instance_payment_gateway_id"
+    t.integer  "instance_id"
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
+  end
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -374,6 +394,15 @@ ActiveRecord::Schema.define(:version => 20140518122537) do
     t.datetime "updated_at",                        :null => false
   end
 
+  create_table "instance_payment_gateways", :force => true do |t|
+    t.integer  "instance_id"
+    t.integer  "payment_gateway_id"
+    t.text     "encrypted_live_settings"
+    t.text     "encrypted_test_settings"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
+  end
+
   create_table "instance_types", :force => true do |t|
     t.string   "name"
     t.datetime "created_at",   :null => false
@@ -405,8 +434,8 @@ ActiveRecord::Schema.define(:version => 20140518122537) do
     t.string   "lessor"
     t.string   "lessee"
     t.boolean  "skip_company",                                                      :default => false
-    t.text     "pricing_options"
     t.boolean  "default_instance",                                                  :default => false
+    t.text     "pricing_options"
     t.decimal  "service_fee_host_percent",            :precision => 5, :scale => 2, :default => 0.0
     t.string   "live_stripe_public_key"
     t.string   "paypal_email"
@@ -608,6 +637,15 @@ ActiveRecord::Schema.define(:version => 20140518122537) do
     t.string   "search_scope_option", :default => "no_scoping"
   end
 
+  create_table "payment_gateways", :force => true do |t|
+    t.string   "name"
+    t.string   "method_name"
+    t.text     "settings"
+    t.string   "active_merchant_class"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
+  end
+
   create_table "payment_transfers", :force => true do |t|
     t.integer  "company_id"
     t.datetime "transferred_at"
@@ -671,9 +709,9 @@ ActiveRecord::Schema.define(:version => 20140518122537) do
     t.string   "email"
     t.string   "subject"
     t.text     "comments"
-    t.boolean  "subscribed", :default => false
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+    t.boolean  "subscribed",       :default => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
     t.string   "company"
     t.string   "marketplace_type"
     t.string   "referer"
@@ -718,6 +756,7 @@ ActiveRecord::Schema.define(:version => 20140518122537) do
     t.datetime "deleted_at"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
+    t.integer  "instance_id"
   end
 
   create_table "reservation_charges", :force => true do |t|
@@ -796,7 +835,8 @@ ActiveRecord::Schema.define(:version => 20140518122537) do
     t.integer  "administrator_id"
     t.integer  "company_id"
     t.integer  "partner_id"
-    t.boolean  "listings_public",                    :default => true
+    t.boolean  "listings_public",                         :default => true
+    t.string   "encrypted_active_merchant_gateway_class"
   end
 
   add_index "reservations", ["administrator_id"], :name => "index_reservations_on_administrator_id"
@@ -821,16 +861,6 @@ ActiveRecord::Schema.define(:version => 20140518122537) do
 
   add_index "search_notifications", ["user_id"], :name => "index_search_notifications_on_user_id"
 
-  create_table "sessions", :force => true do |t|
-    t.string   "session_id", :null => false
-    t.text     "data"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
-  add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
-
   create_table "support_faqs", :force => true do |t|
     t.integer  "instance_id"
     t.text     "question",      :null => false
@@ -839,12 +869,13 @@ ActiveRecord::Schema.define(:version => 20140518122537) do
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
     t.integer  "deleted_by_id"
+    t.datetime "deleted_at"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
-    t.datetime "deleted_at",    :null => false
   end
 
   add_index "support_faqs", ["created_by_id"], :name => "index_support_faqs_on_created_by_id"
+  add_index "support_faqs", ["deleted_at"], :name => "index_support_faqs_on_deleted_at"
   add_index "support_faqs", ["deleted_by_id"], :name => "index_support_faqs_on_deleted_by_id"
   add_index "support_faqs", ["instance_id"], :name => "index_support_faqs_on_instance_id"
   add_index "support_faqs", ["updated_by_id"], :name => "index_support_faqs_on_updated_by_id"

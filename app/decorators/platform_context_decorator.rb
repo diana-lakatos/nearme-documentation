@@ -72,7 +72,7 @@ class PlatformContextDecorator
   end
     
   def stripe_public_key
-    @platform_context.instance.billing_gateway_credential('stripe_public_key')
+    @platform_context.instance.instance_payment_gateways.get_settings_for(:stripe, :public_key)
   end
 
   def supported_payout_via_ach?

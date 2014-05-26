@@ -13,6 +13,13 @@ class Country
     @calling_code = attrs[:calling_code]
   end
 
+  def alpha2
+    country = IsoCountryCodes.search_by_name(@name).first
+    country.alpha2
+  rescue
+    nil
+  end
+
   class << self
     def countries
       @countries ||= load_countries
@@ -20,6 +27,11 @@ class Country
 
     def find(name)
       countries[name]
+    end
+
+    def find_by_alpha2(alpha2)
+      country = IsoCountryCodes.find(alpha2)
+      countries[country.name]
     end
 
     def all
@@ -38,6 +50,11 @@ class Country
       }
 
       Hash[pairs]
+    end
+
+    def with_payment_gateway_support
+      countries_array = PaymentGateway.countries.map{ |alpha2_code| Country.new(name: IsoCountryCodes.find(alpha2_code).name) || next }
+      countries_array.sort { |a,b| a.name <=> b.name }
     end
   end
 

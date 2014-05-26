@@ -1,6 +1,8 @@
 class Charge < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
+  auto_set_platform_context
+  scoped_to_platform_context
 
   belongs_to :user
   belongs_to :reference, :polymorphic => true
@@ -8,18 +10,19 @@ class Charge < ActiveRecord::Base
   scope :successful, where(:success => true)
 
   monetize :amount, :as => :price
+  serialize :response, Hash
 
-  attr_encrypted :response, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
+  attr_encrypted :response, :key => DesksnearMe::Application.config.secret_token, marshal: true
 
-  def charge_successful(gateway_object)
+  def charge_successful(response)
     self.success = true
-    self.response = gateway_object.to_yaml
+    self.response = response
     save!
   end
 
-  def charge_failed(exception)
+  def charge_failed(response)
     self.success = false
-    self.response = exception.to_yaml
+    self.response = response
     save!
   end
 

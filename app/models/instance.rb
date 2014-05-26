@@ -15,7 +15,7 @@ class Instance < ActiveRecord::Base
                   :password_protected, :test_mode, :olark_api_key, :olark_enabled, :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key,
                   :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret, :instagram_consumer_key, :instagram_consumer_secret,
                   :support_imap_hash, :support_email, :paypal_email, :db_connection_string, :stripe_currency, :user_info_in_onboarding_flow, :default_search_view,
-                  :user_based_marketplace_views
+                  :user_based_marketplace_views, :instance_payment_gateways_attributes
 
   attr_encrypted :live_paypal_username, :live_paypal_password, :live_paypal_signature, :live_paypal_app_id, :live_stripe_api_key, :live_paypal_client_id,
                  :live_paypal_client_secret, :live_balanced_api_key, :marketplace_password, :test_stripe_api_key, :test_paypal_username, :test_paypal_password,
@@ -23,6 +23,20 @@ class Instance < ActiveRecord::Base
                  :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key, :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret,
                  :instagram_consumer_key, :instagram_consumer_secret, :db_connection_string,
                  :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
+
+  API_KEYS = %w(paypal_username paypal_password paypal_signature paypal_app_id paypal_client_id paypal_client_secret stripe_api_key stripe_public_key balanced_api_key)
+
+  API_KEYS.each do |meth|
+    define_method(meth) do
+      self.test_mode? ? self.send('test_' + meth) : self.send('live_' + meth)
+    end
+  end
+
+  API_KEYS.each do |meth|
+    define_method(meth + '=') do |arg|
+      self.send('live_' + meth + '=', arg)
+    end
+  end
 
   belongs_to :instance_type
   has_one :theme, :as => :owner, dependent: :destroy
@@ -48,7 +62,8 @@ class Instance < ActiveRecord::Base
   has_many :faqs, class_name: 'Support::Faq'
   has_many :tickets, class_name: 'Support::Ticket', order: 'created_at DESC'
   has_many :transactable_types
-
+  has_many :instance_payment_gateways, :inverse_of => :instance
+  has_many :country_instance_payment_gateways, :inverse_of => :instance
   serialize :pricing_options, Hash
 
   validates_presence_of :name
@@ -67,22 +82,9 @@ class Instance < ActiveRecord::Base
   accepts_nested_attributes_for :listing_amenity_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :translations, allow_destroy: true, reject_if: proc { |params| params[:value].blank? && params[:id].blank? }
   accepts_nested_attributes_for :instance_billing_gateways, allow_destroy: true, reject_if: proc { |params| params[:billing_gateway].blank? }
+  accepts_nested_attributes_for :instance_payment_gateways, allow_destroy: true
 
   scope :with_support_imap, where('support_imap_hash IS NOT NULL')
-
-  API_KEYS = %w(paypal_username paypal_password paypal_signature paypal_app_id paypal_client_id paypal_client_secret stripe_api_key stripe_public_key balanced_api_key)
-
-  API_KEYS.each do |meth|
-    define_method(meth) do
-      self.test_mode? ? self.send('test_' + meth) : self.send('live_' + meth)
-    end
-  end
-
-  API_KEYS.each do |meth|
-    define_method(meth + '=') do |arg|
-      self.send('live_' + meth + '=', arg)
-    end
-  end
 
   def authentication_supported?(provider)
     self.send(:"#{provider.downcase}_consumer_key").present? && self.send(:"#{provider.downcase}_consumer_secret").present?
@@ -127,24 +129,6 @@ class Instance < ActiveRecord::Base
     super.presence || "guest"
   end
 
-  def incoming_paypal_api_config
-    @incoming_paypal_api_config ||= {
-      :mode => (self.test_mode? || !Rails.env.production?) ? 'sandbox' : 'live',
-      :client_id => billing_gateway_credential('paypal_client_id'),
-      :client_secret => billing_gateway_credential('paypal_client_secret')
-    }
-  end
-
-  def paypal_api_config
-    @paypal_api_config ||= {
-      :mode => (self.test_mode? || !Rails.env.production?) ? 'sandbox' : 'live',
-      :app_id    => (self.test_mode? || !Rails.env.production?) ? 'APP-80W284485P519543T' : billing_gateway_credential('paypal_app_id'),
-      :username  => billing_gateway_credential('paypal_username'),
-      :password  => billing_gateway_credential('paypal_password'),
-      :signature => billing_gateway_credential('paypal_signature')
-    }
-  end
-
   def to_liquid
     InstanceDrop.new(self)
   end
@@ -153,8 +137,18 @@ class Instance < ActiveRecord::Base
     password == marketplace_password
   end
 
-  def billing_gateway_credential(credential)
-    DesksnearMe::Application.config.send(credential).presence || send(credential).presence
+  def paypal_api_config
+    settings = instance_payment_gateways.get_settings_for(:paypal)
+    @paypal_api_config ||= {
+      :app_id    => (self.test_mode? || !Rails.env.production?) ? 'APP-80W284485P519543T' : instance_payment_gateways.get_settings_for(:paypal, :app_id),
+      :username  => settings[:username],
+      :password  => settings[:password],
+      :signature => settings[:signature]
+    }
+  end
+
+  def payment_gateway_mode
+    test_mode? ? "test" : "live"
   end
 
   private

@@ -1,0 +1,12 @@
+%table.table
+  %tr
+    %th Country Name
+    %th Payment Gateway
+  - @country_instance_payment_gateways.each do |c|
+    %tr
+      %td= c.country.name
+      %td= c.name
+%hr
+
+.pull-right
+  %button.btn.btn-primary{"aria-hidden" => "true", "data-dismiss" => "modal"} Close

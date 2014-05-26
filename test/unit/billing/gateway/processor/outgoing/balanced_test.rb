@@ -3,10 +3,16 @@ require 'test_helper'
 class Billing::Gateway::Processor::Outgoing::BalancedTest < ActiveSupport::TestCase
   setup do
     @instance = Instance.default_instance
-    @instance.update_attribute(:balanced_api_key, 'test_key')
+
+    @instance.instance_payment_gateways << FactoryGirl.create(:balanced_instance_payment_gateway)
+    @instance.instance_payment_gateways.set_settings_for(:balanced, {api_key: 'test_key'})
+
     @company = FactoryGirl.create(:company)
     @company.update_attribute(:paypal_email, 'receiver@example.com')
-    @company.instance.update_attribute(:paypal_email, 'sender@example.com')
+
+    @instance.instance_payment_gateways << FactoryGirl.create(:paypal_instance_payment_gateway)
+    @company.instance.instance_payment_gateways.set_settings_for(:paypal, {email: 'sender@example.com'})
+
     @balanced_processor = Billing::Gateway::Processor::Outgoing::Balanced.new(@company, 'USD')
     merchant = mock()
     marketplace = mock()

@@ -260,11 +260,13 @@ module Utils
 
     def load_integration_keys!
       dnm_instance = Instance.default_instance
-
+      create_payment_gateways
+      @stripe = PaymentGateway.where(name: "Stripe").first
+      
       if dnm_instance
-        dnm_instance.stripe_api_key = 'sk_test_lpr4WQXQdncpXjjX6IJx01W7'
-        dnm_instance.stripe_public_key = 'pk_test_iCGA8nFZdILrI1UtuMOZD2aq'
-
+        settings = { login: 'sk_test_lpr4WQXQdncpXjjX6IJx01W7' }
+        InstancePaymentGateway.create(instance_id: dnm_instance.id, payment_gateway_id: @stripe.id, live_settings: settings, test_settings: settings)
+        
         dnm_instance.facebook_consumer_key = '432038396866156'
         dnm_instance.facebook_consumer_secret = '71af86082de1c38a3523a4c8f44aca2d'
 
@@ -279,6 +281,70 @@ module Utils
 
         dnm_instance.save!
       end
+    end
+
+    def create_payment_gateways
+      # create default payment_gateways
+      stripe_settings = { login: "" }
+      balanced_settings = { login: "" }
+      paypal_settings = { email: "", login: "", password: "", signature: "", app_id: "" }
+      swipe_settings = { login: "", api_key: "" }
+      sagepay_settings = { login: "", password: "" }
+      worldpay_settings = { login: "" }
+      paystation_settings = { paystation_id: "", gateway_id: "" }
+      authorize_net_settings = { login: "", password: "" }
+      ogone_settings = { login: "", user: "", password: "" }
+      spreedly_settings = { login: "", password: "", gateway_token: "" }
+
+      payment_gateways = [
+        { 
+          name: "Stripe",
+          settings: stripe_settings,
+          active_merchant_class: "ActiveMerchant::Billing::StripeGateway"
+        },
+        {
+          name: "Balanced",
+          settings: balanced_settings,
+          active_merchant_class: "ActiveMerchant::Billing::BalancedGateway"
+        },
+        {
+          name: "PayPal",
+          settings: paypal_settings,
+          active_merchant_class: "ActiveMerchant::Billing::PaypalGateway"
+        },
+        {
+          name: "SagePay",
+          settings: sagepay_settings,
+          active_merchant_class: "ActiveMerchant::Billing::SagePayGateway"
+        },
+        {
+          name: "Worldpay",
+          settings: worldpay_settings,
+          active_merchant_class: "ActiveMerchant::Billing::WorldpayGateway"
+        },
+        {
+          name: "Paystation",
+          settings: paystation_settings,
+          active_merchant_class: "ActiveMerchant::Billing::PaystationGateway"
+        },
+        {
+          name: "AuthorizeNet",
+          settings: authorize_net_settings,
+          active_merchant_class: "ActiveMerchant::Billing::AuthorizeNetGateway"
+        },
+        {
+          name: "Ogone",
+          settings: ogone_settings,
+          active_merchant_class: "ActiveMerchant::Billing::OgoneGateway"
+        },
+        {
+          name: "Spreedly",
+          settings: spreedly_settings,
+          active_merchant_class: "ActiveMerchant::Billing::SpreedlyCoreGateway"
+        },
+      ]
+
+      PaymentGateway.create(payment_gateways)
     end
 
     def create_reservation(listing, date, attribs = {})
