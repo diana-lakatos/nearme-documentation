@@ -329,7 +329,6 @@ GEM
     net-ssh (2.6.3)
     newrelic_rpm (3.5.6.55)
     nokogiri (1.5.11)
-    non-stupid-digest-assets (1.0.4)
     oauth (0.4.7)
     oauth2 (0.8.0)
       faraday (~> 0.8)
@@ -618,7 +617,6 @@ DEPENDENCIES
   nested_form
   newrelic_rpm
   nokogiri
-  non-stupid-digest-assets
   omniauth
   omniauth-facebook!
   omniauth-instagram

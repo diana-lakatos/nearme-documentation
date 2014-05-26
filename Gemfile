@@ -45,8 +45,6 @@ gem 'ri_cal'
 gem 'ffaker'
 gem 'draper'
 
-gem "non-stupid-digest-assets"
-
 gem 'i18n-active_record',
     git: 'git://github.com/svenfuchs/i18n-active_record.git',
     require: 'i18n/active_record'
