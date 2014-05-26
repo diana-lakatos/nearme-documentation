@@ -12,7 +12,7 @@ class InstancePaymentGateway < ActiveRecord::Base
   
   validate :payment_gateway_id, :test_settings, :live_settings, presence: true
 
-  has_many :country_instance_payment_gateways
+  has_many :country_instance_payment_gateways, dependent: :destroy
   belongs_to :instance
   belongs_to :payment_gateway
 

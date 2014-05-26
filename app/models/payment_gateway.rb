@@ -4,7 +4,7 @@ class PaymentGateway < ActiveRecord::Base
 
   before_save :set_method_name
 
-  has_many :instance_payment_gateways
+  has_many :instance_payment_gateways, dependent: :destroy
 
   def set_method_name
     self.method_name = name.downcase.gsub(" ", "_")
