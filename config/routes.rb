@@ -21,6 +21,7 @@ DesksnearMe::Application.routes.draw do
     get '/press-media', :to => 'platform_home#press_media'
     get '/careers', :to => 'platform_home#careers'
     get '/faq-page', :to => 'platform_home#faq_page'
+    get '/privacy-policy', :to => 'platform_home#privacy_policy'
     get '/unsubscribe/:unsubscribe_key', :to => 'platform_home#unsubscribe', :as => 'platform_email_unsubscribe'
     get '/resubscribe/:resubscribe_key', :to => 'platform_home#resubscribe', :as => 'platform_email_resubscribe'
 
@@ -103,7 +104,15 @@ DesksnearMe::Application.routes.draw do
     namespace :settings do
       get '/', :to => 'base#index'
       resource :configuration, :only => [:show, :update], :controller => 'configuration'
-      resource :integrations, :only => [:show, :update], :controller => 'integrations'
+      resource :integrations, :only => [:show, :update], :controller => 'integrations' do
+        collection do
+          post :countries
+          post :payment_gateways
+          post :country_instance_payment_gateway
+          get :country_instance_payment_gateways
+          match :create_or_update_instance_payment_gateway, via: [:post, :put, :patch]
+        end
+      end
       resource :locations, :only => [:show, :update], :controller => 'locations'
       resources :location_types, only: [:index, :create, :destroy_modal, :destroy] do
         get 'destroy_modal', on: :member

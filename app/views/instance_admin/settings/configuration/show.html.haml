@@ -47,8 +47,9 @@
           .controls.controls-row
             .fields
               = f.input :name, label: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-              = f.link_to_remove do
-                .fa.fa-trash-o.fa-2x.inline-form-icon
+              - unless f.object.near_me_domain?
+                = f.link_to_remove confirm: (f.object.name.present? ? "Are you sure you want to delete #{f.object.name}?" : false) do
+                  .fa.fa-trash-o.fa-2x.inline-form-icon
 
     %br
     .row-fluid

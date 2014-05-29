@@ -2,7 +2,7 @@
 class Billing::Gateway::Incoming
 
 
-  delegate :charge, :refund, :store_credit_card, :to => :processor
+  delegate :charge, :refund, :authorize, :to => :processor
   attr_reader :processor
 
   def initialize(user, instance, currency)

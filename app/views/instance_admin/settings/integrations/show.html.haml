@@ -1,80 +1,22 @@
+= render "payment_gateways"
+
+%hr
 = simple_nested_form_for @instance, :url => instance_admin_settings_integrations_path, :html => { :multipart => true } do |f|
   %fieldset
+    %legend Test Mode
+    .row-fluid
+      .controls.controls-row
+        = f.input :test_mode, required: false, as: :boolean, label: false, inline_label: ("Use test payment credentials (Marketplace must be password protected in #{link_to 'Settings > Configuration', instance_admin_settings_configuration_path, :target => "_blank"})").html_safe, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+        = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
+
+    %hr
     %legend Authentication
     - %w(Twitter Facebook LinkedIn Instagram).each do |provider|
       .row-fluid
         .controls.controls-row
           = f.input :"#{provider.downcase}_consumer_key", label: "#{provider} Consumer Key", required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
           = f.input :"#{provider.downcase}_consumer_secret", label: "#{provider} Consumer Secret", required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-
-    %legend Stripe
-    .row-fluid
-      .controls.controls-row
-        = f.input :stripe_currency, :as => :currency, include_blank: false, :label => "Stripe Currency", required: false, wrapper_html: { class: 'span6' }, :input_html => { :class => 'input-block-level' }
-      .controls.controls-row
-        = f.input :live_stripe_api_key, label: 'Live Stripe API Key', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-        = f.input :test_stripe_api_key, label: 'Test Stripe API Key', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-    .row-fluid
-      .controls.controls-row
-        = f.input :live_stripe_public_key, label: 'Live Stripe Public Key', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-        = f.input :test_stripe_public_key, label: 'Test Stripe Public Key', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-
     %hr
-    %legend Paypal
-    .row-fluid
-      .controls.controls-row
-        = f.input :paypal_email, label: 'Paypal Email', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }
-      .controls.controls-row
-        = f.input :live_paypal_username, label: 'Live Paypal Username', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }
-        = f.input :test_paypal_username, label: 'Test Paypal Username', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }
-    .row-fluid
-      .controls.controls-row
-        = f.input :live_paypal_password, label: 'Live Paypal Password', required: false, wrapper_html: { class: 'span6' }, :input_html => { :type => 'text', :value => f.object.live_paypal_password, :autocomplete => "off", class: 'input-block-level' }
-        = f.input :test_paypal_password, label: 'Test Paypal Password', required: false, wrapper_html: { class: 'span6' }, :input_html => { :type => 'text', :value => f.object.live_paypal_password, :autocomplete => "off", class: 'input-block-level' }
-    .row-fluid
-      .controls.controls-row
-        = f.input :live_paypal_signature, label: 'Live Paypal Signature', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }
-        = f.input :test_paypal_signature, label: 'Test Paypal Signature', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }
-    .row-fluid
-      .controls.controls-row
-        = f.input :live_paypal_app_id, label: 'Live Paypal APP ID', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }
-        = f.input :test_paypal_app_id, label: 'Test Paypal APP ID', :disabled => true, required: false, wrapper_html: { class: 'span6' }, :input_html => { class: 'input-block-level', :value => 'APP-80W284485P519543T' }
-    .row-fluid
-      .controls.controls-row
-        = f.input :live_paypal_client_id, label: 'Live Paypal Client ID', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }
-        = f.input :test_paypal_client_id, label: 'Test Paypal Client ID', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }
-    .row-fluid
-      .controls.controls-row
-        = f.input :live_paypal_client_secret, label: 'Live Paypal Client Secret', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }
-        = f.input :test_paypal_client_secret, label: 'Test Paypal Client Secret', required: false, wrapper_html: { class: 'span6' }, :input_html => { :autocomplete => "off", class: 'input-block-level' }
-
-    %hr
-
-    %legend Balanced
-    .row-fluid
-      .controls.controls-row
-        = f.input :live_balanced_api_key, label: 'Live Balaced API Key', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-        = f.input :test_balanced_api_key, label: 'Test Balaced API Key', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-
-    %hr
-
-    %legend Payment Gateway
-    .row-fluid
-      .controls.controls-row
-        = f.fields_for :instance_billing_gateways, wrapper: false do |f_bg|
-          = f_bg.input :currency, as: :hidden
-          %label= "Payment gateway for #{f_bg.object.currency} transactions"
-          = f_bg.collection_radio_buttons :billing_gateway, [['paypal', 'PayPal'], ['stripe', 'Stripe'], ['balanced', 'Balanced']], :first, :last, item_wrapper_class: "billing-gateway"
-
-    %hr
-
-    %legend Test Mode
-    .row-fluid
-      .controls.controls-row
-        = f.input :test_mode, required: false, as: :boolean, label: false, inline_label: ("Use test payment credentials (Marketplace must be password protected in #{link_to 'Settings > Configuration', instance_admin_settings_configuration_path, :target => "_blank"})").html_safe, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-
-    %hr
-
     %legend Olark
     .row-fluid
       .controls.controls-row

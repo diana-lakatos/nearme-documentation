@@ -52,7 +52,7 @@ class V1::ListingsController < V1::BaseController
   end
 
   def show
-    render :json => Transactable.active.find(params[:id])
+    render :json => Transactable.active.find(params[:id]), root: 'listing'
   end
 
   def search

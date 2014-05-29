@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140513012900) do
+ActiveRecord::Schema.define(version: 20140522022339) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -99,6 +99,15 @@ ActiveRecord::Schema.define(version: 20140513012900) do
 
   add_index "availability_templates", ["instance_id", "transactable_type_id"], name: "availability_templates_on_instance_id_and_tt_id", using: :btree
 
+  create_table "billing_authorizations", force: true do |t|
+    t.integer  "instance_id"
+    t.integer  "reservation_id"
+    t.string   "encrypted_token"
+    t.string   "encrypted_payment_gateway_class"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "blog_instances", force: true do |t|
     t.string   "name"
     t.string   "header"
@@ -141,6 +150,7 @@ ActiveRecord::Schema.define(version: 20140513012900) do
     t.string   "currency"
     t.text     "encrypted_response"
     t.datetime "deleted_at"
+    t.integer  "instance_id"
   end
 
   add_index "charges", ["reference_id", "reference_type"], name: "index_charges_on_reference_id_and_reference_type", using: :btree
@@ -203,6 +213,14 @@ ActiveRecord::Schema.define(version: 20140513012900) do
   add_index "company_users", ["company_id"], name: "index_company_users_on_company_id", using: :btree
   add_index "company_users", ["user_id"], name: "index_company_users_on_user_id", using: :btree
 
+  create_table "country_instance_payment_gateways", force: true do |t|
+    t.string   "country_alpha2_code"
+    t.integer  "instance_payment_gateway_id"
+    t.integer  "instance_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0
     t.integer  "attempts",   default: 0
@@ -229,6 +247,8 @@ ActiveRecord::Schema.define(version: 20140513012900) do
     t.boolean  "secured",     default: false
   end
 
+  add_index "domains", ["deleted_at"], name: "index_domains_on_deleted_at", using: :btree
+  add_index "domains", ["name"], name: "index_domains_on_name", unique: true, where: "(deleted_at IS NULL)", using: :btree
   add_index "domains", ["target_id", "target_type"], name: "index_domains_on_target_id_and_target_type", using: :btree
 
   create_table "email_templates", force: true do |t|
@@ -385,6 +405,15 @@ ActiveRecord::Schema.define(version: 20140513012900) do
     t.datetime "deleted_at"
     t.datetime "created_at",                        null: false
     t.datetime "updated_at",                        null: false
+  end
+
+  create_table "instance_payment_gateways", force: true do |t|
+    t.integer  "instance_id"
+    t.integer  "payment_gateway_id"
+    t.text     "encrypted_live_settings"
+    t.text     "encrypted_test_settings"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "instance_types", force: true do |t|
@@ -621,6 +650,15 @@ ActiveRecord::Schema.define(version: 20140513012900) do
     t.string   "search_scope_option", default: "no_scoping"
   end
 
+  create_table "payment_gateways", force: true do |t|
+    t.string   "name"
+    t.string   "method_name"
+    t.text     "settings"
+    t.string   "active_merchant_class"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "payment_transfers", force: true do |t|
     t.integer  "company_id"
     t.datetime "transferred_at"
@@ -731,6 +769,7 @@ ActiveRecord::Schema.define(version: 20140513012900) do
     t.datetime "deleted_at"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+    t.integer  "instance_id"
   end
 
   create_table "reservation_charges", force: true do |t|
@@ -833,6 +872,13 @@ ActiveRecord::Schema.define(version: 20140513012900) do
   end
 
   add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
+
+  create_table "sessions", force: true do |t|
+    t.string   "session_id", null: false
+    t.text     "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "support_faqs", force: true do |t|
     t.integer  "instance_id"

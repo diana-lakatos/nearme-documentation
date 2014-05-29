@@ -59,23 +59,30 @@ server {
 
   location = /system/maintenance.html { }
 
-  # custom CORS policy for webfonts in Firefox
-  location ~* .(eot|ttf|woff)$ {
-    add_header Access-Control-Allow-Origin *;
+  location ^~ /assets/ {
+    # Only use gzip_static if you have .gz compressed assets *precompiled*
+    gzip_static on;
+    expires max;
+    add_header Cache-Control public;
+
+    # custom CORS policy for webfonts in Firefox
+    location ~* .(eot|ttf|woff)$ {
+      add_header Access-Control-Allow-Origin *;
+    }
   }
 
   # set Expire header on assets: see http://developer.yahoo.com/performance/rules.html#expires
   location ~ ^/(images|assets|javascripts|stylesheets)/ {
-  try_files  $uri $uri/index.html /last_assets/$uri /last_assets/$uri.html @app_desksnearmessl;
-  expires 10y;
+    try_files  $uri $uri/index.html /last_assets/$uri /last_assets/$uri.html @app_desksnearmessl;
+    expires 10y;
   }
 
   location / {
-  if (-f $document_root/system/maintenance.html) { return 503; }
+    if (-f $document_root/system/maintenance.html) { return 503; }
     # auth is disabled for this server
     # auth_basic            "Restricted";
     # auth_basic_user_file  /etc/nginx/servers/desksnearme.users;
-  try_files  $uri $uri/index.html $uri.html @app_desksnearmessl;
+    try_files  $uri $uri/index.html $uri.html @app_desksnearmessl;
   }
 
   location = /500.html {

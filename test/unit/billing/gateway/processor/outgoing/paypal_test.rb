@@ -6,7 +6,8 @@ class Billing::Gateway::Processor::Outgoing::PaypalTest < ActiveSupport::TestCas
     @instance = Instance.default_instance
     @company = FactoryGirl.create(:company)
     @company.update_attribute(:paypal_email, 'receiver@example.com')
-    @company.instance.update_attribute(:paypal_email, 'sender@example.com')
+
+    @company.instance.instance_payment_gateways << FactoryGirl.create(:paypal_instance_payment_gateway, live_settings: {email: "sender@example.com"}, test_settings: {email: "sender@example.com"})
   end
 
   should "create a Payout record with reference, amount, currency, and success on success" do

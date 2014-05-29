@@ -178,7 +178,8 @@ namespace :populate do
     TransactableType.destroy_all
     Instance.find_each do |instance|
       PlatformContext.current = PlatformContext.new(instance)
-      tp = FactoryGirl.create(:transactable_type_listing, :name => 'Listing')
+      PlatformContext.scope_to_instance
+      tp = TransactableType.find_or_create_by_name("Listing")
       Utils::TransactableTypeAttributesCreator.new(tp).create_listing_attributes!
       Transactable.update_all(:transactable_type_id => tp.id)
       Transactable.find_each do |t|
