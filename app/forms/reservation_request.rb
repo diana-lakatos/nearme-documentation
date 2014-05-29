@@ -88,11 +88,10 @@ class ReservationRequest < Form
   def save_reservation
     User.transaction do
       user.save!
-      reservation.save!
       if !reservation.listing.free? && @payment_method == Reservation::PAYMENT_METHODS[:credit_card]
-        reservation.create_billing_authorization(token: @token, payment_gateway_class: @gateway_class)
+        reservation.build_billing_authorization(token: @token, payment_gateway_class: @gateway_class)
       end
-      true
+      reservation.save!
     end
   rescue ActiveRecord::RecordInvalid => error
     add_errors(error.record.errors.full_messages)
