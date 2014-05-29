@@ -13,7 +13,6 @@
 
 ActiveRecord::Schema.define(:version => 20140530013613) do
 
-
   create_extension "hstore", :version => "1.2"
 
   create_table "amenities", :force => true do |t|
@@ -271,8 +270,11 @@ ActiveRecord::Schema.define(:version => 20140530013613) do
     t.integer  "sluggable_id",                 :null => false
     t.string   "sluggable_type", :limit => 40
     t.datetime "created_at"
+    t.string   "scope"
   end
 
+  add_index "friendly_id_slugs", ["slug", "sluggable_type", "scope"], :name => "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", :unique => true
+  add_index "friendly_id_slugs", ["slug", "sluggable_type"], :name => "index_friendly_id_slugs_on_slug_and_sluggable_type"
   add_index "friendly_id_slugs", ["sluggable_id"], :name => "index_friendly_id_slugs_on_sluggable_id"
   add_index "friendly_id_slugs", ["sluggable_type"], :name => "index_friendly_id_slugs_on_sluggable_type"
 
