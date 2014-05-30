@@ -9,7 +9,7 @@ class ReservationChargeTrackerJobTest < ActiveSupport::TestCase
     @listing.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
 
     @reservation = FactoryGirl.create(:reservation_with_credit_card, :listing => @listing)
-    @reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe")
+    @reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
   end
 
   should 'perform tracking of confirmed reservation' do

@@ -23,7 +23,8 @@ class ReservationRequest < Form
 
     if @listing
       @reservation = listing.reservations.build
-      @billing_gateway = Billing::Gateway::Incoming.new(@user, platform_context.instance, @reservation.currency) if @user
+      @instance = platform_context.instance
+      @billing_gateway = Billing::Gateway::Incoming.new(@user, @instance, @reservation.currency) if @user
       @reservation.payment_method = payment_method
       @reservation.user = user
       @reservation = @reservation.decorate
@@ -89,7 +90,12 @@ class ReservationRequest < Form
     User.transaction do
       user.save!
       if !reservation.listing.free? && @payment_method == Reservation::PAYMENT_METHODS[:credit_card]
-        reservation.build_billing_authorization(token: @token, payment_gateway_class: @gateway_class)
+        mode = @instance.test_mode? ? "test" : "live"
+        reservation.build_billing_authorization(
+          token: @token, 
+          payment_gateway_class: @gateway_class,
+          payment_gateway_mode: mode
+        )
       end
       reservation.save!
     end

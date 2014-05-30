@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140522022339) do
+ActiveRecord::Schema.define(:version => 20140530013613) do
 
 
   create_extension "hstore", :version => "1.2"
@@ -91,6 +91,7 @@ ActiveRecord::Schema.define(:version => 20140522022339) do
     t.string   "encrypted_payment_gateway_class"
     t.datetime "created_at",                      :null => false
     t.datetime "updated_at",                      :null => false
+    t.string   "payment_gateway_mode"
   end
 
   create_table "blog_instances", :force => true do |t|

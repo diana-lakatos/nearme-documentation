@@ -37,6 +37,7 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
     )
 
     begin
+      set_active_merchant_mode(reference)
       response = if defined? (custom_capture_options)
         @gateway.capture(amount, token, custom_capture_options)
       else
@@ -61,6 +62,7 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
     raise Billing::Gateway::RefundNotSupportedError, "Refund isn't supported or is not implemented. Please refund this user directly on your gateway account." if !defined?(refund_identification)
 
     begin
+      set_active_merchant_mode(reference)
       response = if defined?(custom_refund_options)
         @gateway.refund(amount, refund_identification(charge_response), custom_refund_options)
       else
@@ -106,6 +108,21 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
   def refund_failed(response)
     @refund.refund_failed(response)
   end
+
+  def set_active_merchant_mode(reference)
+    if reference.is_a?(Reservation)
+      billing_authorization = reference.reservation.billing_authorization
+      if billing_authorization.present? && billing_authorization.payment_gateway_mode.present?
+        mode = billing_authorization.payment_gateway_mode.to_sym
+      else
+        mode = :test
+      end
+      ActiveMerchant::Billing::Base.mode = mode
+    else
+      ActiveMerchant::Billing::Base.mode = :test if @instance.test_mode?
+    end
+  end
+  
 end
 
 class Billing::Gateway::PaymentAttemptError < StandardError; end
