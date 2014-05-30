@@ -8,9 +8,8 @@ class Billing::Gateway::Processor::Incoming::BalancedTest < ActiveSupport::TestC
     @user = FactoryGirl.create(:user)
     @instance.instance_payment_gateways << FactoryGirl.create(:balanced_instance_payment_gateway)
     ActiveMerchant::Billing::Base.mode = :test
-    VCR.use_cassette('payment_gateways_balanced_processor') do
-      @balanced_processor = Billing::Gateway::Processor::Incoming::Balanced.new(@user, @instance, 'USD')
-    end
+    Billing::Gateway::Processor::Incoming::Balanced.any_instance.stubs(:setup_api_on_initialize)
+    @balanced_processor = Billing::Gateway::Processor::Incoming::Balanced.new(@user, @instance, 'USD')
   end
 
   should "#setup_api_on_initialize should return a ActiveMerchant BalancedGateway object" do
