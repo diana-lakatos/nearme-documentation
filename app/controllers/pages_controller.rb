@@ -4,7 +4,7 @@ class PagesController < ApplicationController
 
   def show
     @page = begin
-              platform_context.theme.pages.find_by_slug!(params[:path]) 
+              platform_context.theme.pages.find(params[:path])
             rescue ActiveRecord::RecordNotFound
               raise Page::NotFound
             end

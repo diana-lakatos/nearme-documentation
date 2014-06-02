@@ -8,7 +8,6 @@ class PageTest < ActiveSupport::TestCase
   end
 
   context '#homepage_content' do
-
     setup do
       @page = Page.new(:content => example_markdown_content, :theme => @instance.theme, :path => 'Sample Page')
     end
@@ -41,11 +40,26 @@ class PageTest < ActiveSupport::TestCase
         assert @page.save
       end
     end
+  end
 
+  context 'scope domains' do
+    should 'create unique slugs per theme' do
+      page_one = FactoryGirl.create(:page, :theme => @instance.theme, path: 'faq')
+      page_two = FactoryGirl.create(:page, :theme => @instance.theme, path: 'faq')
+      assert page_one.slug == 'faq'
+      assert page_two.slug == 'faq--2'
+    end
+
+    should 'allow the same slug in two different themes' do
+      @instance_two = FactoryGirl.create(:instance)
+      page_one = FactoryGirl.create(:page, :theme => @instance.theme, path: 'company')
+      page_two = FactoryGirl.create(:page, :theme => @instance_two.theme, path: 'company')
+      assert page_one.slug == 'company'
+      assert page_two.slug == 'company'
+    end
   end
 
   context '#redirect_url_in_known_domain' do
-
     should 'return true for relative url' do
       page = FactoryGirl.create(:page, redirect_url: '/test')
       assert page.redirect_url_in_known_domain?
@@ -62,9 +76,7 @@ class PageTest < ActiveSupport::TestCase
       page = FactoryGirl.create(:page, redirect_url: "https://xyz.com/test")
       refute page.redirect_url_in_known_domain?
     end
-
   end
-
 
   private
 
