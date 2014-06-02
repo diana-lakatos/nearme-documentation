@@ -21,6 +21,7 @@ DesksnearMe::Application.routes.draw do
     get '/press-media', :to => 'platform_home#press_media'
     get '/careers', :to => 'platform_home#careers'
     get '/faq-page', :to => 'platform_home#faq_page'
+    get '/privacy-policy', :to => 'platform_home#privacy_policy'
     get '/unsubscribe/:unsubscribe_key', :to => 'platform_home#unsubscribe', :as => 'platform_email_unsubscribe'
     get '/resubscribe/:resubscribe_key', :to => 'platform_home#resubscribe', :as => 'platform_email_resubscribe'
 

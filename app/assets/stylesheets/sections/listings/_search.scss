@@ -400,6 +400,24 @@ header#listing_search {
     } 
   }
 
+  &.with-toggle {
+    .span12 .search-container {
+      padding-left: 199px;
+
+      .search-loop-icon {
+        left: 210px;
+      }
+
+      @media (max-width: 480px) {
+        padding-left: 108px;
+
+        .search-loop-icon {
+          left: 114px;
+        }
+      }
+    }
+  }
+
   nav.search-view {
     height: 49px;
     margin-top: 5px;
