@@ -6,7 +6,7 @@ class Page < ActiveRecord::Base
   ranks :position, with_same: :theme_id
 
   extend FriendlyId
-  friendly_id :path, use: :slugged
+  friendly_id :path, use: :scoped, scope: :theme
 
   mount_uploader :hero_image, HeroImageUploader
   skip_callback :commit, :after, :remove_hero_image!
@@ -30,7 +30,7 @@ class Page < ActiveRecord::Base
     (is_http_https && Domain.pluck(:name).any?{|d| self.redirect_url.include?(d)}) || !is_http_https
   end
 
-  private 
+  private
 
   def convert_to_html
     self.html_content = RDiscount.new(self.content).to_html

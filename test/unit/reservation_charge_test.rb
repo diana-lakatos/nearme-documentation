@@ -15,7 +15,7 @@ class ReservationChargeTest < ActiveSupport::TestCase
       end
 
       should 'track charge in mixpanel after successful creation' do
-        @reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe")
+        @reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
         Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:charge)
         @expectation.once
         @reservation.reservation_charges.create!(
@@ -32,7 +32,7 @@ class ReservationChargeTest < ActiveSupport::TestCase
       @charge = FactoryGirl.create(:charge, :response => 'charge_response')
       @reservation_charge = @charge.reference
       @reservation_charge.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
-      @reservation_charge.reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe")
+      @reservation_charge.reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
     end
 
     should 'find the right charge if there were failing attempts' do
@@ -82,7 +82,7 @@ class ReservationChargeTest < ActiveSupport::TestCase
     setup do
       @reservation_charge = FactoryGirl.build(:reservation_charge_unpaid)
       @reservation_charge.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
-      @reservation_charge.reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe")
+      @reservation_charge.reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
     end
 
     should 'trigger capture on save' do

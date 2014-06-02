@@ -1,4 +1,4 @@
-%header#listing_search.container-fluid.mixed
+%header#listing_search.container-fluid.mixed{class: platform_context.instance.default_search_view.present? ? 'with-toggle' : ''}
   .header-inner
     %form.search_results{:action => search_path(v: 'mixed'), :method => "get"}
       = hidden_field_tag :lntype, @searcher.search.lntype
@@ -6,6 +6,12 @@
       = hidden_field_tag :lgpricing, @searcher.search.lgpricing
       .row-fluid
         .span12
+          - if platform_context.instance.default_search_view.present?
+            .list-map-toggle
+              %a.map{ href: search_path(params.merge(v: 'mixed')), class: result_view == 'mixed' ? 'active' : nil, title: 'Map' }
+                Map
+              %a.list{ href: search_path(params.merge(v: 'list')), class: result_view == 'list' ? 'active' : nil, title: 'List' }
+                List
           .search-container
             %input#search{:name => "loc", :placeholder => "enter location", :type => "text", :value => @searcher.query, :class => "query", :autocomplete => "off"}
             .search-loop-icon

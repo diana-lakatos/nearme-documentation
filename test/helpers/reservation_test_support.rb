@@ -37,7 +37,8 @@ module ReservationTestSupport
       billing_gateway = Billing::Gateway::Incoming.new(reservation.owner, listing.instance, reservation.currency)
       VCR.use_cassette("reservation_support_authorize_#{i}") do
         response = billing_gateway.authorize(reservation.total_amount_cents, credit_card)
-        reservation.create_billing_authorization(token: response[:token], payment_gateway_class: response[:payment_gateway_class])
+        mode = reservation.instance.test_mode? ? "test" : "live"
+        reservation.create_billing_authorization(token: response[:token], payment_gateway_class: response[:payment_gateway_class], payment_gateway_mode: mode)
         reservation.save
         reservations << reservation
       end
