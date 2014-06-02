@@ -300,7 +300,7 @@ class Search.SearchController extends Search.Controller
     $('.list-map-toggle a', @form).each ->
       for k, param of params
         if param["name"] == 'v'
-          param["value"] = (if $(this).hasClass('map') then 'map' else 'list')
+          param["value"] = (if $(this).hasClass('map') then 'mixed' else 'list')
       _url = "#{url}?#{$.param(params)}&ignore_search_event=1"
       $(this).attr('href', _url)
 
