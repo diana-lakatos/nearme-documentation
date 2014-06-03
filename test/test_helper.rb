@@ -113,9 +113,24 @@ ActiveSupport::TestCase.class_eval do
     stub(deliver: true)
   end
 
-  def stub_billing_gateway
-    # Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:charge).returns(true)
-    # Billing::Gateway::Incoming.any_instance.stubs(:authorize).returns({token: "123", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test"})
+  def stub_billing_gateway(instance)
+    instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
+    ipg = FactoryGirl.create(:stripe_instance_payment_gateway)
+    instance.instance_payment_gateways << ipg
+    
+    country_ipg = FactoryGirl.create(
+      :country_instance_payment_gateway, 
+      country_alpha2_code: "US", 
+      instance_payment_gateway_id: ipg.id
+    )
+
+    instance.country_instance_payment_gateways << country_ipg
+  end
+
+  def stub_active_merchant_interaction
+    Billing::Gateway::Processor::Incoming::Stripe.stubs(:setup_api_on_initialize).returns(ActiveMerchant::Billing::BogusGateway.new)
+    Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:authorize).returns({token: "54533", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe"})
+    Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:charge).returns(true)
   end
 
   def setup_payment_gateways

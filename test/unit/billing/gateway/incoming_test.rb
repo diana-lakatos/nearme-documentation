@@ -15,16 +15,7 @@ class Billing::Gateway::IncomingTest < ActiveSupport::TestCase
     end
 
     should 'know when processor is available' do
-      ipg = FactoryGirl.create(:stripe_instance_payment_gateway)
-      @instance.instance_payment_gateways << ipg
-      
-      country_ipg = FactoryGirl.create(
-        :country_instance_payment_gateway, 
-        country_alpha2_code: "US", 
-        instance_payment_gateway_id: ipg.id
-      )
-
-      @instance.country_instance_payment_gateways << country_ipg
+      stub_billing_gateway(@instance)
 
       @gateway = Billing::Gateway::Incoming.new(@user, @instance, 'USD')
       

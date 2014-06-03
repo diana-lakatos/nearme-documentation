@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'vcr_setup'
 
 class Listings::ReservationsControllerTest < ActionController::TestCase
 
@@ -11,16 +10,8 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
     stub_mixpanel
     stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
 
-    ipg = FactoryGirl.create(:stripe_instance_payment_gateway)
-    @listing.instance.instance_payment_gateways << ipg
-    
-    country_ipg = FactoryGirl.create(
-      :country_instance_payment_gateway, 
-      country_alpha2_code: "US", 
-      instance_payment_gateway_id: ipg.id
-    )
-
-    @listing.instance.country_instance_payment_gateways << country_ipg
+    stub_billing_gateway(@listing.instance)
+    stub_active_merchant_interaction
 
     ActiveMerchant::Billing::Base.mode = :test
   end
@@ -47,11 +38,11 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
     @tracker.expects(:updated_profile_information).with do |user|
       user == assigns(:reservation_request).reservation.host
     end
-    VCR.use_cassette("functionals/booking_params") do
-      assert_difference 'Reservation.count' do
-        post :create, booking_params_for(@listing)
-      end
+    
+    assert_difference 'Reservation.count' do
+      post :create, booking_params_for(@listing)
     end
+
     assert_response :redirect
   end
 
@@ -62,9 +53,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
         ReservationExpiryJob.expects(:perform_later).with do |time, id|
           time == 24.hours.from_now
         end
-        VCR.use_cassette("functionals/booking_params_2") do
-          post :create, booking_params_for(@listing)
-        end
+        post :create, booking_params_for(@listing)
       end
     end
 
@@ -82,9 +71,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
         User.any_instance.expects(:notify_about_wrong_phone_number).once
         SmsNotifier::Message.any_instance.stubs(:send_twilio_message).raises(Twilio::REST::RequestError, "The 'To' number +16665554444 is not a valid phone number")
         assert_nothing_raised do 
-          VCR.use_cassette("functionals/booking_params_3") do
-            post :create, booking_params_for(@listing)
-          end
+          post :create, booking_params_for(@listing)
         end
         assert @response.body.include?('redirect')
         assert_redirected_to booking_successful_reservation_path(Reservation.last)
@@ -98,9 +85,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
         SmsNotifier::Message.any_instance.stubs(:send_twilio_message).raises(Twilio::REST::RequestError, "Some other error")
         Rails.logger.expects(:error).once
         assert_nothing_raised do 
-          VCR.use_cassette("functionals/booking_params_4") do
-            post :create, booking_params_for(@listing)
-          end
+          post :create, booking_params_for(@listing)
         end
         assert @response.body.include?('redirect')
         assert_redirected_to booking_successful_reservation_path(Reservation.last)
@@ -115,9 +100,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
     should 'store new version after creating reservation' do
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "create").count') do
         with_versioning do
-          VCR.use_cassette("functionals/booking_params_5") do
-            post :create, booking_params_for(@listing)
-          end
+          post :create, booking_params_for(@listing)
         end
       end
     end
