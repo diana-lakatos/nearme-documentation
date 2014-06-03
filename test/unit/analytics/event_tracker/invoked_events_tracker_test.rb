@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Analytics::EventTracker::InvokedEventsTrackerTest < ActiveSupport::TestCase
+class InvokedEventsTrackerTest < ActiveSupport::TestCase
 
   context '#event tracker' do
 
