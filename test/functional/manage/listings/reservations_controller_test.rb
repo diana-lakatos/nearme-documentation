@@ -71,21 +71,20 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
 
   should "refund booking on cancel" do
     ActiveMerchant::Billing::Base.mode = :test
-    # @reservation.confirm
     response = gateway.authorize(@reservation.total_amount_cents, credit_card)
-
     @reservation.confirm
     
     sign_in @reservation.listing.creator
     User.any_instance.stubs(:accepts_sms_with_type?)
+
+    setup_refund_for_reservation(@reservation)
+
     assert_difference 'Refund.count' do
-      Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:refund).returns(FactoryGirl.create(:refund))
       post :host_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
-      @reservation.payment_status = "refunded"
     end
 
     assert_redirected_to manage_guests_dashboard_path
-    assert_equal 'refunded', @reservation.payment_status
+    assert_equal 'refunded', @reservation.reload.payment_status
   end
 
   context 'PUT #reject' do
@@ -139,6 +138,14 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
 
   def gateway
     Billing::Gateway::Processor::Incoming::ProcessorFactory.create(@user, @user.instance, "USD")
+  end
+
+  def setup_refund_for_reservation(reservation)
+    reservation.reservation_charges.last.charge_attempts.successful.create(amount: reservation.total_amount_cents)
+    Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:refund_identification)
+      .returns({id: "123"}.to_json)
+    ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:refund)
+      .returns(ActiveMerchant::Billing::BogusGateway.new.refund(reservation.total_amount_cents, "123"))
   end
 end
 

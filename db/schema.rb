@@ -15,8 +15,6 @@ ActiveRecord::Schema.define(version: 20140530013613) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "btree_gin"
-  enable_extension "btree_gist"
   enable_extension "hstore"
 
   create_table "amenities", force: true do |t|
@@ -55,8 +53,8 @@ ActiveRecord::Schema.define(version: 20140530013613) do
     t.integer  "user_id"
     t.string   "provider"
     t.string   "uid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.datetime "deleted_at"
     t.string   "secret"
     t.string   "token"
@@ -92,8 +90,8 @@ ActiveRecord::Schema.define(version: 20140530013613) do
     t.integer  "instance_id"
     t.string   "name"
     t.string   "description"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "deleted_at"
   end
 
@@ -104,8 +102,8 @@ ActiveRecord::Schema.define(version: 20140530013613) do
     t.integer  "reservation_id"
     t.string   "encrypted_token"
     t.string   "encrypted_payment_gateway_class"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
     t.string   "payment_gateway_mode"
   end
 
@@ -218,8 +216,8 @@ ActiveRecord::Schema.define(version: 20140530013613) do
     t.string   "country_alpha2_code"
     t.integer  "instance_payment_gateway_id"
     t.integer  "instance_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   create_table "delayed_jobs", force: true do |t|
@@ -366,8 +364,8 @@ ActiveRecord::Schema.define(version: 20140530013613) do
     t.boolean  "permission_analytics", default: true
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
-    t.boolean  "permission_manage",    default: false
     t.boolean  "permission_blog",      default: false
+    t.boolean  "permission_manage",    default: false
     t.boolean  "permission_support",   default: false
   end
 
@@ -416,8 +414,8 @@ ActiveRecord::Schema.define(version: 20140530013613) do
     t.integer  "payment_gateway_id"
     t.text     "encrypted_live_settings"
     t.text     "encrypted_test_settings"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
 
   create_table "instance_types", force: true do |t|
@@ -486,6 +484,7 @@ ActiveRecord::Schema.define(version: 20140530013613) do
     t.string   "encrypted_test_balanced_api_key"
     t.string   "encrypted_olark_api_key"
     t.boolean  "olark_enabled",                                               default: false
+    t.text     "metadata"
     t.string   "encrypted_facebook_consumer_key"
     t.string   "encrypted_facebook_consumer_secret"
     t.string   "encrypted_linkedin_consumer_key"
@@ -495,14 +494,13 @@ ActiveRecord::Schema.define(version: 20140530013613) do
     t.string   "encrypted_instagram_consumer_key"
     t.string   "encrypted_instagram_consumer_secret"
     t.integer  "instance_type_id"
-    t.text     "metadata"
     t.text     "support_imap_hash"
     t.string   "support_email"
     t.string   "encrypted_db_connection_string"
     t.string   "stripe_currency",                                             default: "USD"
-    t.boolean  "user_based_marketplace_views",                                default: false
     t.boolean  "user_info_in_onboarding_flow",                                default: false
     t.string   "default_search_view"
+    t.boolean  "user_based_marketplace_views",                                default: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -659,8 +657,8 @@ ActiveRecord::Schema.define(version: 20140530013613) do
     t.string   "method_name"
     t.text     "settings"
     t.string   "active_merchant_class"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
   end
 
   create_table "payment_transfers", force: true do |t|
@@ -696,8 +694,8 @@ ActiveRecord::Schema.define(version: 20140530013613) do
   end
 
   create_table "photos", force: true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.integer  "transactable_id"
     t.string   "image"
     t.string   "caption"
@@ -784,9 +782,9 @@ ActiveRecord::Schema.define(version: 20140530013613) do
     t.datetime "failed_at"
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
+    t.integer  "payment_transfer_id"
     t.string   "currency"
     t.datetime "deleted_at"
-    t.integer  "payment_transfer_id"
     t.integer  "service_fee_amount_host_cents",  default: 0, null: false
     t.datetime "refunded_at"
     t.integer  "instance_id"
@@ -876,13 +874,6 @@ ActiveRecord::Schema.define(version: 20140530013613) do
   end
 
   add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
-
-  create_table "sessions", force: true do |t|
-    t.string   "session_id", null: false
-    t.text     "data"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
 
   create_table "support_faqs", force: true do |t|
     t.integer  "instance_id"
@@ -1147,28 +1138,27 @@ ActiveRecord::Schema.define(version: 20140530013613) do
   add_index "user_relationships", ["follower_id"], name: "index_user_relationships_on_follower_id", using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "email",                                              default: "",                                                                                  null: false
-    t.string   "encrypted_password",                     limit: 128, default: "",                                                                                  null: false
-    t.string   "password_salt",                                      default: "",                                                                                  null: false
+    t.string   "email",                                  default: "",                                                                                  null: false
+    t.string   "encrypted_password",                     default: "",                                                                                  null: false
     t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
     t.string   "remember_token"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                                      default: 0
+    t.integer  "sign_in_count",                          default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                                                                                           null: false
+    t.datetime "updated_at",                                                                                                                           null: false
     t.string   "name"
     t.boolean  "admin"
-    t.integer  "bookings_count",                                     default: 0,                                                                                   null: false
+    t.integer  "bookings_count",                         default: 0,                                                                                   null: false
     t.datetime "confirmation_sent_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"
     t.datetime "locked_at"
-    t.datetime "reset_password_sent_at"
-    t.integer  "failed_attempts",                                    default: 0
+    t.integer  "failed_attempts",                        default: 0
     t.string   "authentication_token"
     t.string   "avatar"
     t.string   "confirmation_token"
@@ -1184,15 +1174,15 @@ ActiveRecord::Schema.define(version: 20140530013613) do
     t.text     "referer"
     t.string   "source"
     t.string   "campaign"
+    t.float    "guest_rating_average"
+    t.integer  "guest_rating_count"
+    t.float    "host_rating_average"
+    t.integer  "host_rating_count"
     t.datetime "verified_at"
     t.string   "google_analytics_id"
     t.string   "browser"
     t.string   "browser_version"
     t.string   "platform"
-    t.float    "guest_rating_average"
-    t.integer  "guest_rating_count"
-    t.float    "host_rating_average"
-    t.integer  "host_rating_count"
     t.text     "avatar_transformation_data"
     t.string   "avatar_original_url"
     t.datetime "avatar_versions_generated_at"
@@ -1207,13 +1197,13 @@ ActiveRecord::Schema.define(version: 20140530013613) do
     t.integer  "partner_id"
     t.integer  "instance_id"
     t.integer  "domain_id"
-    t.string   "time_zone",                                          default: "Pacific Time (US & Canada)"
-    t.boolean  "sms_notifications_enabled",                          default: true
-    t.string   "sms_preferences",                                    default: "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
-    t.text     "instance_unread_messages_threads_count",             default: "--- {}\n"
+    t.string   "time_zone",                              default: "Pacific Time (US & Canada)"
     t.text     "metadata"
+    t.boolean  "sms_notifications_enabled",              default: true
+    t.string   "sms_preferences",                        default: "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
+    t.text     "instance_unread_messages_threads_count", default: "--- {}\n"
     t.string   "payment_token"
-    t.boolean  "sso_log_out",                                        default: false
+    t.boolean  "sso_log_out",                            default: false
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

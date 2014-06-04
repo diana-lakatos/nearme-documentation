@@ -18,7 +18,7 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
 
     response = @billing_gateway.authorize(@reservation.total_amount_cents, credit_card)
     @reservation.create_billing_authorization(token: response[:token], payment_gateway_class: response[:payment_gateway_class])
-    @reservation.save
+    @reservation.save!
 
     @listing.company.update_attribute(:paypal_email, 'receiver@example.com')
     create_logged_in_user

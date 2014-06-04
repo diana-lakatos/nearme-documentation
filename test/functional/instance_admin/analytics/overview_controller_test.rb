@@ -16,7 +16,10 @@ class InstanceAdmin::Analytics::OverviewControllerTest < ActionController::TestC
       @old_transactable = FactoryGirl.create(:transactable).update_column(:created_at, 31.days.ago)
       get :show
       assert_response :success
-      assert_equal([{"listings_count"=>"1", "listing_date"=>"#{Time.zone.now.to_date}", "transactable_type_id"=>TransactableType.first.id}], assigns(:last_month_listings).map(&:attributes))
+      assert_equal(
+        [{"listings_count"=>1, "listing_date"=>Date.today, "transactable_type_id"=>TransactableType.first.id, "id"=> nil}].to_json,
+        assigns(:last_month_listings).map(&:attributes).to_json
+      )
     end
   end
 
