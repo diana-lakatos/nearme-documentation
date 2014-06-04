@@ -48,6 +48,8 @@ class @Photo.View
     @photo.append(hidden_position)
     hidden_id = hidden.clone().attr('name', "#{name_prefix}[id]").val(@data.id)
     @photo.append(hidden_id)
+    hidden_id = hidden.clone().attr('name', "#{listing_name_prefix}[photo_ids][]").val(@data.id)
+    @photo.append(hidden_id)
     hidden_listing_id = hidden.clone().attr('name', "#{name_prefix}[transactable_id]").val(@data.transactable_id)
     @photo.append(hidden_listing_id)
 
