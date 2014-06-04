@@ -54,10 +54,6 @@ class User < ActiveRecord::Base
     joins(:reservations).where(:reservations => { :transactable_id => listing.id }).uniq
   }
 
-  scope :needs_mailchimp_update, -> {
-      where("mailchimp_synchronized_at IS NULL OR mailchimp_synchronized_at < updated_at")
-  }
-
   scope :without, lambda { |users|
     users_ids = users.respond_to?(:pluck) ? users.pluck(:id) : Array.wrap(users).collect(&:id)
     users_ids.any? ? where('users.id NOT IN (?)', users_ids) : scoped
@@ -325,18 +321,6 @@ class User < ActiveRecord::Base
 
   def has_listing_without_price?
     listings.any?(&:free?)
-  end
-
-  def mailchimp_synchronized!
-    touch(:mailchimp_synchronized_at)
-  end
-
-  def mailchimp_synchronized?
-    mailchimp_synchronized_at.present? && mailchimp_synchronized_at >= updated_at
-  end
-
-  def mailchimp_exported?
-    mailchimp_synchronized_at.present?
   end
 
   def log_out!

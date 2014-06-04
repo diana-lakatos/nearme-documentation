@@ -27,19 +27,15 @@ class Manage::LocationsControllerTest < ActionController::TestCase
         user == @user
       end
       assert_difference('@user.locations.count') do
-        post :create, { :location => FactoryGirl.attributes_for(:location_in_auckland).reverse_merge!({:location_type_id => @location_type.id})}
+        post :create, { :location => FactoryGirl.attributes_for(:location_in_auckland).merge(location_address_attributes: FactoryGirl.attributes_for(:address_in_auckland)).reverse_merge!({:location_type_id => @location_type.id})}
       end
       assert_redirected_to manage_locations_path
     end
 
     should "have correct slug" do
       stub_mixpanel
-      post :create, { :location => FactoryGirl.attributes_for(:location_in_auckland).reverse_merge!({:location_type_id => @location_type.id})}
-
-      location = Location.last
-      location.address_components = auckland_address_components
-      location.save
-      assert_equal "#{location.company.name.parameterize}-auckland", location.slug
+      post :create, { :location => FactoryGirl.attributes_for(:location_in_auckland).merge(location_address_attributes: FactoryGirl.attributes_for(:address_in_auckland)).reverse_merge!({:location_type_id => @location_type.id})}
+      assert_equal assigns(:location).slug, "#{assigns(:location).company.name.parameterize}-auckland"
     end
   end
 
@@ -162,7 +158,7 @@ class Manage::LocationsControllerTest < ActionController::TestCase
       should "not create location" do
         stub_mixpanel
         assert_no_difference('@user.locations.count') do
-          post :create, { :location => FactoryGirl.attributes_for(:location_in_auckland).reverse_merge!({:location_type_id => @location_type.id})}
+          post :create, { :location => FactoryGirl.attributes_for(:location_in_auckland).merge(location_address_attributes: FactoryGirl.attributes_for(:address_in_auckland)).reverse_merge!({:location_type_id => @location_type.id})}
         end
       end
 
@@ -192,7 +188,7 @@ class Manage::LocationsControllerTest < ActionController::TestCase
       stub_mixpanel
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Location", "create").count') do
         with_versioning do
-          post :create, { :location => FactoryGirl.attributes_for(:location_in_auckland).reverse_merge!({:location_type_id => @location_type.id})}
+          post :create, { :location => FactoryGirl.attributes_for(:location_in_auckland).merge(location_address_attributes: FactoryGirl.attributes_for(:address_in_auckland)).reverse_merge!({:location_type_id => @location_type.id})}
         end
       end
 

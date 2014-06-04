@@ -1,15 +1,15 @@
 %li.location
   .name
-    - if location.persisted? 
+    - if location.persisted?
       - if in_new_listing?
         New #{platform_context.bookable_noun}
         = "at #{location.street}" if location.street.present?
       - else
-        = location.street 
-    - else 
+        = location.street
+    - else
       New location
   - if !in_new_listing? && !in_new_or_edit?
-    .links 
+    .links
       = link_to location_path(location), :class => 'btn btn-gray-darker' do
         %span.icon.ico-eye
         %span.text

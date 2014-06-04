@@ -21,9 +21,8 @@ class Listing::Search::Geocoder
   end
 
   def self.address_components(geocoded)
-    address_components = geocoded.data['address_components']
-    wrapped_address_components = Location::AddressComponentsPopulator.wrapped_address_components(geocoded)
-    Location::GoogleGeolocationDataParser.new(wrapped_address_components)
+    wrapped_address_components = Address::AddressComponentsPopulator.wrapped_address_components(geocoded)
+    Address::GoogleGeolocationDataParser.new(wrapped_address_components)
   end
 
 end

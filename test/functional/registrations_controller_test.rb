@@ -93,22 +93,6 @@ class RegistrationsControllerTest < ActionController::TestCase
       assert @user.verified_at
     end
 
-    context 'with Timecop' do
-
-      teardown do
-        Timecop.return
-      end
-
-      should "mark user as not synchronized after verification" do
-        @user.mailchimp_synchronized!
-        Timecop.travel(Time.zone.now+10.seconds)
-        get :verify, :id => @user.id, :token => @user.email_verification_token
-        @user.reload
-        assert !@user.mailchimp_synchronized?
-      end
-
-    end
-
     should "redirect verified user with listing to dashboard" do
       @company = FactoryGirl.create(:company, :creator => @user)
       @location = FactoryGirl.create(:location, :company => @company)

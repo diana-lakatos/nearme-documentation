@@ -12,11 +12,6 @@ class LocationTest < ActiveSupport::TestCase
   should have_many(:listings)
 
   should validate_presence_of(:company)
-  # TODO why failing?
-  # should validate_presence_of(:description)
-  should validate_presence_of(:address)
-  should validate_presence_of(:latitude)
-  should validate_presence_of(:longitude)
   should validate_presence_of(:location_type_id)
   should_not allow_value('not_an_email').for(:email)
   should allow_value('an_email@domain.com').for(:email)
@@ -37,21 +32,17 @@ class LocationTest < ActiveSupport::TestCase
 
     setup do
       @location = FactoryGirl.create(:location_in_san_francisco)
-      @location.company.name = 'This is company name'
+      @location.company.update_attribute(:name, 'This is company name')
     end
+
     should "use combination of company name and street if available" do
-      @location.street = 'Street'
-      @location.company.save!
-      @location.company.reload
-      assert_equal "This is company name @ Street", @location.name
+      @location.location_address.street = 'My Street'
+      assert_equal "This is company name @ My Street", @location.name
     end
 
     should "use combination of company name and part of address if available" do
-      @location.street = nil
-      @location.address = 'Street, City, Country'
-      @location.company.save!
-      @location.company.reload
-      assert_equal "This is company name @ Street", @location.name
+      @location.location_address.attributes = { street: nil, address: 'Your Street, City, Country' }
+      assert_equal "This is company name @ Your Street", @location.name
     end
 
   end
@@ -105,98 +96,22 @@ class LocationTest < ActiveSupport::TestCase
     end
 
     should 'store slug in the database' do
-      @location = FactoryGirl.create(:location_san_francisco_address_components, :company => @company)
+      @location = FactoryGirl.build(:location_in_san_francisco, :company => @company)
+      @location.stubs(:formatted_address).returns('San Francisco, CA, California, USA')
+      @location.stubs(:city).returns('San Francisco')
+      @location.save!
       assert_equal "desks-near-me-san-francisco", @location.slug
     end
 
     should 'ignore city name if company name already oncludes it ' do
       @company.update_attribute(:name, 'Paradise of San Francisco')
-      @location = FactoryGirl.build(:location_in_san_francisco, :company => @company, :formatted_address => 'San Francisco, CA, California, USA', :city => 'San Francisco')
+      @location = FactoryGirl.build(:location_in_san_francisco, :company => @company)
+      @location.stubs(:formatted_address).returns('San Francisco, CA, California, USA')
+      @location.stubs(:city).returns('San Francisco')
       @location.save!
-      @location.reload
       assert_equal "paradise-of-san-francisco", @location.slug
     end
 
-    should 'update slug along with formatted_address ' do
-      @location = FactoryGirl.create(:location_in_san_francisco, :company => @company, :formatted_address => 'Ursynowska, warsaw, Poland')
-      @location.formatted_address = 'San Francisco, CA, California, USA'
-      @location.city = 'San Francisco'
-      @location.save!
-      assert_equal "desks-near-me-san-francisco", @location.slug
-    end
-
-    should 'ignore trailing spaces ' do
-      @company.update_attribute(:name, '    Desks Near Me     ')
-      @location = FactoryGirl.create(:location_in_san_francisco, :company => @company, :formatted_address => 'San Francisco, CA, California, USA', :city => 'San Francisco')
-      @location.update_column(:city, '      Francisco San    ')
-      @location.save!
-      assert_equal "desks-near-me-francisco-san", @location.slug
-    end
-
-  end
-
-  context "geolocate ourselves" do
-
-    setup do
-      @location = FactoryGirl.create(:location_in_san_francisco)
-    end
-
-    should "not be valid if cannot geolocate" do
-      stub_request(:get, "http://maps.googleapis.com/maps/api/geocode/json?address=this%20does%20not%20exists%20at%20all&language=en&sensor=false").to_return(:status => 200, :body => "{}", :headers => {})
-      @location.address = "this does not exists at all"
-      @location.save
-      assert @location.errors.include?(:latitude)
-    end
-
-  end
-
-
-  context "creating address components" do
-
-    setup do
-      @location = FactoryGirl.create(:location_ursynowska_address_components)
-    end
-
-    context 'creates address components for new record' do
-
-      should "store address components" do
-        assert_equal(8, @location.address_components.count)
-      end
-
-      should "be able to get city, suburb, state, country and postal code" do
-        assert_equal 'Ursynowska', @location.street
-        assert_equal 'Warsaw', @location.city
-        assert_equal 'Mokotow', @location.suburb
-        assert_equal 'Masovian Voivodeship', @location.state
-        assert_equal 'Poland', @location.country
-        assert_equal '02-690', @location.postcode
-      end
-
-      should "ignore missing fields and store the one present" do
-        @location = FactoryGirl.create(:location_warsaw_address_components)
-        assert_equal 'Warsaw', @location.city
-        assert_equal nil, @location.suburb
-      end
-
-    end
-
-    should "handle trash" do
-      @location.address_components = { 0 => { "does" => "not", "exist" => ", but", "should" => "work"} }
-      @location.save!
-      @location.reload
-      assert_equal nil, @location.city
-    end
-
-    should "should update all address components fields based on address_components" do
-      @location.attributes = FactoryGirl.attributes_for(:location_san_francisco_address_components)
-      assert_not_equal "San Francisco", @location.city
-      @location.parse_address_components
-      assert_equal "San Francisco", @location.city
-      assert_equal "California", @location.state
-      assert_equal "United States", @location.country
-      assert_equal nil, @location.suburb
-      assert_equal "San Francisco", @location.street # this is first part of address
-    end
   end
 
   context 'metadata' do
