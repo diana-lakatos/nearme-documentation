@@ -267,10 +267,6 @@ GEM
       hashie (>= 0.4.0)
       multi_json (~> 1.0, >= 1.0.3)
     iso_country_codes (0.4.2)
-    jcrop-rails (1.0.3)
-      railties (~> 3.0)
-      thor (~> 0.14)
-    journey (1.0.4)
     jquery-rails (2.1.4)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
@@ -345,6 +341,7 @@ GEM
     net-ssh (2.6.3)
     newrelic_rpm (3.5.6.55)
     nokogiri (1.5.11)
+    non-stupid-digest-assets (1.0.4)
     oauth (0.4.7)
     oauth2 (0.8.0)
       faraday (~> 0.8)
@@ -635,6 +632,7 @@ DEPENDENCIES
   nested_form
   newrelic_rpm
   nokogiri
+  non-stupid-digest-assets
   omniauth
   omniauth-facebook!
   omniauth-instagram

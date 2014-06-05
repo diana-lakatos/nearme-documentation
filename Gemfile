@@ -66,7 +66,7 @@ gem 'paypal-sdk-rest'
 gem 'paypal-sdk-adaptivepayments'
 gem 'balanced'
 gem 'friendly_id', '~> 5.0'
-
+gem "non-stupid-digest-assets"
 gem 'sass-rails', '~> 4.0.0'
 gem 'bootstrap-sass', '~> 2.3.1.0'
 gem 'chronic', '~> 0.9.1'
