@@ -19,7 +19,7 @@ if %w(app_master app solo).include?(node[:instance_role])
       :key   => 'd37590e50f88575698b56c3aab713e5bd491afb8')
   end
 
-  remote_file "/etc/monit.d/nrsysmond.monitrc" do
+  cookbook_file "/etc/monit.d/nrsysmond.monitrc" do
     owner "root"
     group "root"
     mode 0644

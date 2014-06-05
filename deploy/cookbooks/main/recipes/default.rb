@@ -1,15 +1,9 @@
-require_recipe "delayed_job"
-
-require_recipe "logrotate"
-
-require_recipe "newrelic_server_monitoring"
-
-require_recipe "nginx_custom"
-
-require_recipe "redis"
-require_recipe "redis-yml"
-
-require_recipe "resque"
+include_recipe "delayed_job"
+include_recipe "logrotate"
+include_recipe "newrelic_server_monitoring"
+include_recipe "nginx_custom"
+include_recipe "redis"
+include_recipe "redis-yml"
 
 #enable Extension modules for a given Postgresql database
 if ['solo','db_master', 'db_slave'].include?(node[:instance_role])
