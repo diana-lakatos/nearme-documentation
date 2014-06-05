@@ -2,6 +2,7 @@ include_recipe "delayed_job"
 include_recipe "logrotate"
 include_recipe "newrelic_server_monitoring"
 include_recipe "nginx_custom"
+include_recipe "unicorn_custom"
 include_recipe "redis"
 include_recipe "redis-yml"
 
