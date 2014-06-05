@@ -39,3 +39,7 @@ environments:
     migrate: true
     migration_command: rake db:migrate
     precompile_assets: true
+  nm_production:
+    migrate: true
+    migration_command: rake db:migrate
+    precompile_assets: true
