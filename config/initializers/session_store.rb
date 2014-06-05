@@ -5,7 +5,7 @@
 # Use the database for sessions instead of the cookie-based default,
 # which shouldn't be used to store highly confidential information
 # (create the session table with "rake db:sessions:create")
-if DesksnearMe::Application.config.cache_store == :redis_store
+if DesksnearMe::Application.config.cache_store[0] == :redis_store
   redis_store_hash = {
     servers: { 
       host: DesksnearMe::Application.config.redis_settings["host"], 
