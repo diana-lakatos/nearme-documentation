@@ -41,7 +41,7 @@ class SessionsController < Devise::SessionsController
   private
 
   def sso_logout
-    current_user.log_out!
+    current_user.log_out! if current_user
   end
 
   def set_return_to
