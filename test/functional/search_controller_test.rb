@@ -95,7 +95,7 @@ class SearchControllerTest < ActionController::TestCase
           filtered_auckland = FactoryGirl.create(:location_in_auckland, location_type: filtered_location_type)
           another_auckland = FactoryGirl.create(:location_in_auckland, location_type: another_location_type)
 
-          get :index, { :loc => 'Auckland', :lntype => filtered_location_type.name.downcase }
+          get :index, { :loc => 'Auckland', :lntype => filtered_location_type.name.downcase, :v => 'mixed' }
 
           assert_location_in_result(filtered_auckland)
           refute_location_in_result(another_auckland)

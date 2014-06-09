@@ -5,11 +5,6 @@ module StubHelper
     @tracker = Analytics::EventTracker.any_instance
   end
 
-  def stub_billing_gateway
-    Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:charge).returns(true)
-    Billing::Gateway::Incoming.any_instance.stubs(:store_credit_card).returns(true)
-  end
-
   def stub_image_url(image_url)
     stub_request(:get, image_url).to_return(:status => 200, :body => Rails.root.join("test", "assets", "foobear.jpeg"), :headers => {'Content-Type' => 'image/jpeg'})
   end

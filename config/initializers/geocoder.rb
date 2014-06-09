@@ -1,1 +1,4 @@
-Geocoder::Configuration.lookup = :google
+Geocoder.configure(
+  :lookup => :google,
+  :units => :km
+)

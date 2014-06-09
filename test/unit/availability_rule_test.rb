@@ -78,6 +78,7 @@ class AvailabilityRuleTest < ActiveSupport::TestCase
 
   context "templates" do
     setup do
+      FactoryGirl.create(:transactable_type_location)
       @object = Location.new
     end
 
@@ -87,7 +88,7 @@ class AvailabilityRuleTest < ActiveSupport::TestCase
         @object.availability_rules << rule
         assert @object.availability.open_on?(:day => 6, :hour => 22)
 
-        @object.availability_template_id = 'M-F9-5'
+        @object.availability_template_id = AvailabilityTemplate.first.id
         assert rule.marked_for_destruction?
         assert !@object.availability.open_on?(:day => 6, :hour => 22)
       end
@@ -95,7 +96,7 @@ class AvailabilityRuleTest < ActiveSupport::TestCase
 
     context "M-F9-5" do
       setup do
-        @object.availability_template_id = 'M-F9-5'
+        @object.availability_template_id = AvailabilityTemplate.first.id
       end
 
       should "have correct availability" do
@@ -107,7 +108,7 @@ class AvailabilityRuleTest < ActiveSupport::TestCase
         end
         assert !@object.availability.open_on?(:day => 6, :hour => 9)
         assert !@object.availability.open_on?(:day => 0, :hour => 9)
-        assert_equal 'M-F9-5', @object.availability_template_id
+        assert_equal AvailabilityTemplate.first.id, @object.availability_template_id
       end
     end
 

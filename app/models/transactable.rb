@@ -7,6 +7,8 @@ class Transactable < ActiveRecord::Base
   has_metadata :accessors => [:photos_metadata]
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id, :listings_public], :location)
 
+  include TransactableType::CustomAttributesCaster
+
   has_many :reservations, dependent: :destroy, :inverse_of => :listing
   has_many :photos, dependent: :destroy, :inverse_of => :listing do
     def thumb
@@ -14,7 +16,7 @@ class Transactable < ActiveRecord::Base
     end
   end
   has_many :inquiries, :inverse_of => :listing
-  has_many :availability_rules, :order => 'day ASC', :as => :target, :dependent => :destroy, inverse_of: :target
+  has_many :availability_rules, -> { order 'day ASC' }, :as => :target, :dependent => :destroy, inverse_of: :target
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   belongs_to :transactable_type, :inverse_of => :transactables
   belongs_to :company, :inverse_of => :listings
@@ -32,15 +34,15 @@ class Transactable < ActiveRecord::Base
   accepts_nested_attributes_for :photos, :allow_destroy => true
 
   # == Scopes
-  scope :featured, where(%{ (select count(*) from "photos" where transactable_id = "listings".id) > 0  }).
-    includes(:photos).order(%{ random() }).limit(5)
-  scope :draft,    where('transactables.draft IS NOT NULL')
-  scope :active,   where('transactables.draft IS NULL')
-  scope :latest,   order("transactables.created_at DESC")
-  scope :visible,  where(:enabled => true)
-  scope :searchable, active.visible
-  scope :filtered_by_listing_types_ids,  lambda { |listing_types_ids| where("(transactables.properties->'listing_type') IN (?)", listing_types_ids) if listing_types_ids }
-  scope :filtered_by_price_types,  lambda { |price_types| where(price_types.map{|pt| "(properties->'#{pt}_price_cents') IS NOT NULL"}.join(' OR  ')) if price_types }
+  scope :featured, -> {where(%{ (select count(*) from "photos" where transactable_id = "listings".id) > 0  }).
+    includes(:photos).order(%{ random() }).limit(5) }
+  scope :draft,    -> { where('transactables.draft IS NOT NULL') }
+  scope :active,   -> { where('transactables.draft IS NULL') }
+  scope :latest,   -> { order("transactables.created_at DESC") }
+  scope :visible,  -> { where(:enabled => true) }
+  scope :searchable, -> { active.visible }
+  scope :filtered_by_listing_types_ids,  -> listing_types_ids { where("(transactables.properties->'listing_type') IN (?)", listing_types_ids) if listing_types_ids }
+  scope :filtered_by_price_types,  -> price_types { where(price_types.map{|pt| "(properties->'#{pt}_price_cents') IS NOT NULL"}.join(' OR  ')) if price_types }
 
   # == Callbacks
   before_validation :set_activated_at
@@ -67,8 +69,6 @@ class Transactable < ActiveRecord::Base
 
   PRICE_TYPES = [:hourly, :weekly, :daily, :monthly]
 
-  serialize :properties, ActiveRecord::Coders::Hstore
-
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
   delegate :currency, :formatted_address, :local_geocoding,
@@ -81,37 +81,32 @@ class Transactable < ActiveRecord::Base
     :availability_rules_attributes, :defer_availability_rules, :free,
     :photos_attributes, :hourly_reservations, :price_type, :draft, :enabled,
     :last_request_photos_sent_at, :activated_at, :amenity_ids, :rank, :transactable_type_id,
-    :transactable_type
+    :transactable_type, :photo_ids
 
   attr_accessor :distance_from_search_query, :photo_not_required
 
   after_initialize :apply_transactable_type_settings
 
   def apply_transactable_type_settings
-    raise "Can't initialize transactable without TransactableType" if self.transactable_type.nil? && self.transactable_type_id.nil?
     set_custom_attributes
     set_defaults if self.new_record?
     self.attributes = @attributes_to_be_applied if @attributes_to_be_applied.present?
   end
 
-  def set_custom_attributes
-    transactable_type_attributes.each do |attr|
-      access_code = "(v=read_custom_property('#{attr.name}', '#{attr.attribute_type}'))"
-      class_eval <<-RUBY, __FILE__, __LINE__ + 1
-            def #{attr.name}; #{access_code};end
-            def #{attr.name}= value; write_custom_property('#{attr.name}', value);#{(attr.name == "name" || attr.name == "description") ? "self.send(:write_attribute, :#{attr.name}, value);" : ""} end
-      RUBY
-      if attr.attribute_type.to_sym == :boolean
-        class_eval <<-RUBY, __FILE__, __LINE__ + 1
-          def #{attr.name}?; #{attr.name}; end
-        RUBY
-      end
-    end
+  def hourly_reservations?
+    nil
+  end
+
+  def free?
+    nil
   end
 
   PRICE_TYPES.each do |price|
     # Flag each price type as a Money attribute.
     # @see rails-money
+    define_method("#{price}_price_cents") do
+      nil
+    end
     monetize "#{price}_price_cents", :allow_nil => true
 
     # Mark price fields as attr-accessible
@@ -132,6 +127,10 @@ class Transactable < ActiveRecord::Base
     @transactable_type_attributes ||= transactable_type.transactable_type_attributes
   end
 
+  def transactable_type_attributes_names
+    @transactable_type_attributes_names ||= transactable_type.transactable_type_attributes.pluck(:name)
+  end
+
 
   # Trigger clearing of all existing availability rules on save
   def defer_availability_rules=(clear)
@@ -143,7 +142,7 @@ class Transactable < ActiveRecord::Base
   def set_defaults
     self.enabled = true if self.enabled.nil?
     transactable_type_attributes.each do |transactable_attribute_type|
-      set_default_attr(transactable_attribute_type.name, transactable_attribute_type.default_value, transactable_attribute_type.attribute_type) unless transactable_attribute_type.default_value.nil?
+      send(:"#{transactable_attribute_type.name}=", transactable_attribute_type.default_value) if send(transactable_attribute_type.name).nil? && !transactable_attribute_type.default_value.nil?
     end
   end
 
@@ -201,15 +200,15 @@ class Transactable < ActiveRecord::Base
   def price_type=(price_type)
     case price_type.to_sym
     when PRICE_TYPES[2] #Daily
-      self.free = false
-      self.hourly_reservations = false
+      self.free = false if self.respond_to?(:free=)
+      self.hourly_reservations = false if self.respond_to?(:hourly_reservations=)
     when PRICE_TYPES[0] #Hourly
-      self.free = false
+      self.free = false if self.respond_to?(:free=)
       self.hourly_reservations = true
     when :free
       self.null_price!
       self.free = true
-      self.hourly_reservations = false
+      self.hourly_reservations = false if self.respond_to?(:hourly_reservations=)
     else
       errors.add(:price_type, 'no pricing type set')
     end
@@ -236,7 +235,7 @@ class Transactable < ActiveRecord::Base
 
   def null_price!
     PRICE_TYPES.map { |price|
-      self.send "#{price}_price_cents=", nil
+      self.send(:"#{price}_price_cents=", nil) if self.respond_to?(:"#{price}_price_cents=")
     }
   end
 
@@ -384,41 +383,6 @@ class Transactable < ActiveRecord::Base
     end
   end
 
-  def read_custom_property(key, type)
-    new_value = self.properties || {}
-    custom_property_type_cast(new_value.fetch(key.to_s, nil), type)
-  end
-
-  def set_default_attr(key, value, type)
-    return nil if type.to_sym == :boolean && !self.send(key).nil?
-    self.send("#{key}=", value)
-  end
-
-  def write_custom_property(key, value)
-    new_value = self.properties || {}
-    new_value.store(key.to_s, value)
-    self.properties = new_value
-    properties_will_change!
-  end
-
-  def custom_property_type_cast(var, type)
-    klass = ActiveRecord::ConnectionAdapters::Column
-
-    return nil if var.nil?
-    case type.to_sym
-    when :string, :text        then var
-    when :integer              then var.to_i rescue var ? 1 : 0
-    when :float                then var.to_f
-    when :decimal              then klass.value_to_decimal(var)
-    when :datetime, :timestamp then klass.string_to_time(var)
-    when :time                 then klass.string_to_dummy_time(var)
-    when :date                 then klass.string_to_date(var)
-    when :binary               then klass.binary_to_string(var)
-    when :boolean              then klass.value_to_boolean(var)
-    else var
-    end
-  end
-
   def mass_assignment_authorizer(role = :default)
     super + public_transactable_type_attributes
   end
@@ -427,6 +391,13 @@ class Transactable < ActiveRecord::Base
     transactable_type_attributes.map { |attr| attr.public? ? attr.name.to_sym : nil }.compact
   rescue
     []
+  end
+
+  def transactable_type_attributes_names_types_hash
+    @transactable_type_attributes_names_types_hash ||= self.transactable_type_attributes.inject({}) do |hstore_attrs, attr|
+      hstore_attrs[attr.name.to_sym] = attr.attribute_type.to_sym
+      hstore_attrs
+    end
   end
 end
 

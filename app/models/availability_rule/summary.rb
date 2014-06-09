@@ -30,7 +30,7 @@ class AvailabilityRule::Summary
 
   def matches_template?(template)
     each_day do |day, rule|
-      next if !rule && !template.days.include?(day)
+      next if !rule && !template.availability_rules.pluck(:day).include?(day)
       return false unless rule && template.includes_rule?(rule)
     end
     true

@@ -23,14 +23,9 @@ class AvailabilityRule < ActiveRecord::Base
   # === Callbacks
   before_validation :apply_default_minutes
 
-  # Predefined availability templates
-  TEMPLATES = [
-    Template.new(:id => 'M-F9-5', :name => "Working Week", :days => 1..5, :hours => 9..17, :description => "Mon - Fri, 9:00 AM - 5:00 PM")
-  ]
-
   # Return a list of predefined availability rule templates
   def self.templates
-    TEMPLATES
+    TransactableType.first.try(:availability_templates) || []
   end
 
   def self.default_template

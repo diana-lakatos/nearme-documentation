@@ -24,7 +24,7 @@ if %w(app_master app solo).include?(node[:instance_role])
     end
 
     # Manually add ssl certs and keys for nearme (EY only supports one key per env in the dashboard)
-    remote_file "/etc/nginx/ssl/nearme.crt" do
+    cookbook_file "/etc/nginx/ssl/nearme.crt" do
       source "nearme.crt"
       action :create
       owner node[:owner_name]
@@ -32,8 +32,25 @@ if %w(app_master app solo).include?(node[:instance_role])
       backup false
     end
 
-    remote_file "/etc/nginx/ssl/nearme.key" do
+    cookbook_file "/etc/nginx/ssl/nearme.key" do
       source "nearme.key"
+      action :create
+      owner node[:owner_name]
+      mode 0644
+      backup false
+    end
+
+    # Manually add ssl certs and keys for reggalo (EY only supports one key per env in the dashboard)
+    cookbook_file "/etc/nginx/ssl/reggalo.crt" do
+      source "reggalo.crt"
+      action :create
+      owner node[:owner_name]
+      mode 0644
+      backup false
+    end
+
+    cookbook_file "/etc/nginx/ssl/reggalo.key" do
+      source "reggalo.key"
       action :create
       owner node[:owner_name]
       mode 0644

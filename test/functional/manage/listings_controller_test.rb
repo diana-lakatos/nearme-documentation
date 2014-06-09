@@ -15,7 +15,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
 
   context "#create" do
     setup do
-      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge!({:photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type => @listing_type, :daily_price => 10 })
+      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge!({transactable_type_id: TransactableType.first.id, :photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type => @listing_type, :daily_price => 10 })
       @attributes.delete(:photo_not_required)
     end
 
@@ -209,10 +209,10 @@ class Manage::ListingsControllerTest < ActionController::TestCase
   context 'versions' do
 
     should 'track version change on create' do
-      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge!({:photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type => @listing_type, :daily_price => 10 })
+      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge!({transactable_type_id: TransactableType.first.id, :photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type => @listing_type, :daily_price => 10 })
       @attributes.delete(:photo_not_required)
       stub_mixpanel
-      assert_difference('Version.where("item_type = ? AND event = ?", "Transactable", "create").count') do
+      assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Transactable", "create").count') do
         with_versioning do
           post :create, { :listing => @attributes, :location_id => @location2.id }
         end
@@ -222,7 +222,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
 
     should 'track version change on update' do
       @listing = FactoryGirl.create(:transactable, :location => @location, :quantity => 2)
-      assert_difference('Version.where("item_type = ? AND event = ?", "Transactable", "update").count') do
+      assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Transactable", "update").count') do
         with_versioning do
           put :update, :id => @listing.id, :listing => { :name => 'new name', :daily_price => 10 }
         end
@@ -232,7 +232,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
     should 'track version change on destroy' do
       stub_mixpanel
       @listing = FactoryGirl.create(:transactable, :location => @location, :quantity => 2)
-      assert_difference('Version.where("item_type = ? AND event = ?", "Transactable", "destroy").count') do
+      assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Transactable", "destroy").count') do
         with_versioning do
           delete :destroy, :id => @listing.id
         end

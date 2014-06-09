@@ -12,7 +12,7 @@ class MetadataTest < ActiveSupport::TestCase
   end
 
   should 'trigger update_column with right arguments' do
-    @dummy_class.expects(:update_column).with(:metadata, {:a => 'b'}.to_yaml)
+    @dummy_class.expects(:update_column).with(:metadata, {:a => 'b'}.with_indifferent_access.to_yaml)
     @dummy_class.update_metadata({:a => 'b'})
   end
 

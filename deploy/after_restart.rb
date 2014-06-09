@@ -1,5 +1,6 @@
 # Must restart utilities that require the environment
 sudo "monit -g dj_#{config.app} restart all"
+warn "monit -g dj_#{config.app} restart all"
 
 # New Relic deployment notification
 on_app_master do

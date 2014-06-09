@@ -33,7 +33,7 @@ class V1::BaseController < ApplicationController
   # Return the current user
   def current_user
     if !auth_token.nil?
-      @current_user ||= User.find_by_authentication_token(auth_token)
+      @current_user ||= User.find_by(authentication_token: auth_token)
     end
   end
 

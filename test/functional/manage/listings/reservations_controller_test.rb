@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'vcr_setup'
 
 class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
 
@@ -10,17 +9,8 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
     sign_in @user
     stub_mixpanel
     stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
-  
-    ipg = FactoryGirl.create(:stripe_instance_payment_gateway)
-    @reservation.instance.instance_payment_gateways << ipg
-    
-    country_ipg = FactoryGirl.create(
-      :country_instance_payment_gateway, 
-      country_alpha2_code: "US", 
-      instance_payment_gateway_id: ipg.id
-    )
-
-    @reservation.instance.country_instance_payment_gateways << country_ipg
+    stub_billing_gateway(@reservation.instance)
+    stub_active_merchant_interaction
   end
 
   should "track and redirect a host to the Manage Guests page when they confirm a booking" do
@@ -38,9 +28,7 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
       user == assigns(:reservation).host
     end
 
-    VCR.use_cassette('confirm_stripe_reservation') do
-      post :confirm, { listing_id: @reservation.listing.id, id: @reservation.id }
-    end
+    post :confirm, { listing_id: @reservation.listing.id, id: @reservation.id }
 
     assert_redirected_to manage_guests_dashboard_path
   end
@@ -66,9 +54,7 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
     ReservationMailer.expects(:notify_guest_of_cancellation_by_host).returns(stub(deliver: true)).once
     ReservationSmsNotifier.expects(:notify_guest_with_state_change).returns(stub(deliver: true)).once
 
-    VCR.use_cassette('confirm_stripe_reservation') do
-      @reservation.confirm # Must be confirmed before can be cancelled
-    end
+    @reservation.confirm # Must be confirmed before can be cancelled
 
     @tracker.expects(:cancelled_a_booking).with do |reservation, custom_options|
       reservation == assigns(:reservation) && custom_options == { actor: 'host' }
@@ -85,23 +71,16 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
 
   should "refund booking on cancel" do
     ActiveMerchant::Billing::Base.mode = :test
-    # @reservation.confirm
-    VCR.use_cassette('reservation_authorize') do
-      response = gateway.authorize(@reservation.total_amount_cents, credit_card)
-      @reservation.create_billing_authorization(token: response[:token], payment_gateway_class: response[:payment_gateway_class])
-    end
-
-    VCR.use_cassette('reservation_capture') do
-      @reservation.confirm
-    end
+    response = gateway.authorize(@reservation.total_amount_cents, credit_card)
+    @reservation.confirm
     
     sign_in @reservation.listing.creator
     User.any_instance.stubs(:accepts_sms_with_type?)
 
+    setup_refund_for_reservation(@reservation)
+
     assert_difference 'Refund.count' do
-      VCR.use_cassette('reservation_refund') do
-        post :host_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
-      end
+      post :host_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
     end
 
     assert_redirected_to manage_guests_dashboard_path
@@ -121,18 +100,16 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
   context 'versions' do
 
     should 'store new version after confirm' do
-      VCR.use_cassette('confirm_stripe_reservation') do
-        # 2 because attempt charge is triggered, which if successful generates second version
-        assert_difference('Version.where("item_type = ? AND event = ?", "Reservation", "update").count', 2) do
-          with_versioning do
-            post :confirm, { listing_id: @reservation.listing.id, id: @reservation.id }
-          end
+      # 2 because attempt charge is triggered, which if successful generates second version
+      assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count', 2) do
+        with_versioning do
+          post :confirm, { listing_id: @reservation.listing.id, id: @reservation.id }
         end
       end
     end
 
     should 'store new version after reject' do
-      assert_difference('Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
+      assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
         with_versioning do
           put :reject, { listing_id: @reservation.listing.id, id: @reservation.id, reservation: { rejection_reason: 'Dont like him' } }
         end
@@ -140,12 +117,10 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
     end
 
     should 'store new version after cancel' do
-      VCR.use_cassette('confirm_stripe_reservation') do
-        @reservation.confirm
-        assert_difference('Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
-          with_versioning do
-            post :host_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
-          end
+      @reservation.confirm
+      assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
+        with_versioning do
+          post :host_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
         end
       end
     end   
@@ -163,6 +138,14 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
 
   def gateway
     Billing::Gateway::Processor::Incoming::ProcessorFactory.create(@user, @user.instance, "USD")
+  end
+
+  def setup_refund_for_reservation(reservation)
+    reservation.reservation_charges.last.charge_attempts.successful.create(amount: reservation.total_amount_cents)
+    Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:refund_identification)
+      .returns({id: "123"}.to_json)
+    ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:refund)
+      .returns(ActiveMerchant::Billing::BogusGateway.new.refund(reservation.total_amount_cents, "123"))
   end
 end
 

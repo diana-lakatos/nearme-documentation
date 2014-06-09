@@ -3,6 +3,13 @@
   .pull-right
     = link_to 'Edit', edit_admin_instance_transactable_type_path(resource.instance, resource), class: 'btn'
 
+%h4 Pricing
+%table.table
+  %tr
+    %td= resource.pricing_options
+  %tr
+    %td= resource.pricing_validation
+
 %h4 Attributes
 %table.table
   %tbody

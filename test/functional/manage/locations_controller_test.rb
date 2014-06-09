@@ -7,7 +7,7 @@ class Manage::LocationsControllerTest < ActionController::TestCase
     sign_in @user
     @company = FactoryGirl.create(:company, :creator => @user)
     @location_type = FactoryGirl.create(:location_type)
-    @transactable_type = FactoryGirl.create(:transactable_type, name: 'Listing')
+    FactoryGirl.create(:transactable_type_location, name: "Listing")
   end
 
   should "get index" do
@@ -39,8 +39,7 @@ class Manage::LocationsControllerTest < ActionController::TestCase
       location = Location.last
       location.address_components = auckland_address_components
       location.save
-
-      assert_equal location.slug, "#{location.company.name.parameterize}-auckland"
+      assert_equal "#{location.company.name.parameterize}-auckland", location.slug
     end
   end
 
@@ -56,7 +55,6 @@ class Manage::LocationsControllerTest < ActionController::TestCase
         @related_instance = FactoryGirl.create(:instance)
         PlatformContext.current = PlatformContext.new(@related_instance)
         FactoryGirl.create(:transactable_type_listing)
-
         @related_company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id, instance: @related_instance)
         @related_location = FactoryGirl.create(:location_in_auckland, company: @related_company)
         @related_listing = FactoryGirl.create(:transactable, location: @related_location)
@@ -192,7 +190,7 @@ class Manage::LocationsControllerTest < ActionController::TestCase
 
     should 'track version change on create' do
       stub_mixpanel
-      assert_difference('Version.where("item_type = ? AND event = ?", "Location", "create").count') do
+      assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Location", "create").count') do
         with_versioning do
           post :create, { :location => FactoryGirl.attributes_for(:location_in_auckland).reverse_merge!({:location_type_id => @location_type.id})}
         end
@@ -202,7 +200,7 @@ class Manage::LocationsControllerTest < ActionController::TestCase
 
     should 'track version change on update' do
       @location = FactoryGirl.create(:location_in_auckland, :company => @company)
-      assert_difference('Version.where("item_type = ? AND event = ?", "Location", "update").count') do
+      assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Location", "update").count') do
         with_versioning do
           put :update, :id => @location.id, :location => { :description => 'new description' }
         end
@@ -212,7 +210,7 @@ class Manage::LocationsControllerTest < ActionController::TestCase
     should 'track version change on destroy' do
       stub_mixpanel
       @location = FactoryGirl.create(:location_in_auckland, :company => @company)
-      assert_difference('Version.where("item_type = ? AND event = ?", "Location", "destroy").count') do
+      assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Location", "destroy").count') do
         with_versioning do
           delete :destroy, :id => @location.id
         end

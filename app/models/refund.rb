@@ -4,8 +4,8 @@ class Refund < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
+  scope :successful, -> { where(:success => true) }
   belongs_to :reference, :polymorphic => true
-  scope :successful, where(:success => true)
 
   monetize :amount
   serialize :response, Hash

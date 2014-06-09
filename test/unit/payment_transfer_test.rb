@@ -1,6 +1,5 @@
 require 'test_helper'
 require 'helpers/reservation_test_support'
-require 'vcr_setup'
 
 class PaymentTransferTest < ActiveSupport::TestCase
   include ReservationTestSupport
@@ -24,20 +23,18 @@ class PaymentTransferTest < ActiveSupport::TestCase
       @payment_transfer = @company.payment_transfers.build
     end
 
-    should "only allow charges of the same currency" do
-      VCR.use_cassette("payment_transfer_capture") do
-        rc = ReservationCharge.create!(
-          :reservation => @reservation_1,
-          :subtotal_amount => 10,
-          :service_fee_amount_guest => 1,
-          :service_fee_amount_host => 2,
-          :currency => 'NZD'
-        )
+    should "only allow charges of the same currency" do      
+      rc = ReservationCharge.create!(
+        :reservation => @reservation_1,
+        :subtotal_amount => 10,
+        :service_fee_amount_guest => 1,
+        :service_fee_amount_host => 2,
+        :currency => 'NZD'
+      )
 
-        @payment_transfer.reservation_charges = [@reservation_charges, rc].flatten
-        assert !@payment_transfer.save
-        assert @payment_transfer.errors[:currency].present?
-      end
+      @payment_transfer.reservation_charges = [@reservation_charges, rc].flatten
+      assert !@payment_transfer.save
+      assert @payment_transfer.errors[:currency].present?
     end
 
     should "assign instance id" do

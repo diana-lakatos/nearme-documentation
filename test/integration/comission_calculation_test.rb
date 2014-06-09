@@ -1,5 +1,4 @@
 require "test_helper"
-require "vcr_setup"
 
 class ComissionCalculationTest < ActionDispatch::IntegrationTest
 
@@ -11,25 +10,15 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     @listing = FactoryGirl.create(:transactable, :daily_price => 25.00)
     
     FactoryGirl.create(:paypal_instance_payment_gateway)
-    
-    ipg = FactoryGirl.create(:stripe_instance_payment_gateway)
-    @instance.instance_payment_gateways << ipg
-    
-    country_ipg = FactoryGirl.create(
-      :country_instance_payment_gateway, 
-      country_alpha2_code: "US", 
-      instance_payment_gateway_id: ipg.id
-    )
-    @instance.country_instance_payment_gateways << country_ipg
 
     @reservation = FactoryGirl.create(:reservation_with_credit_card, listing: @listing)
+    stub_billing_gateway(@instance)
+    stub_active_merchant_interaction
     @billing_gateway = Billing::Gateway::Incoming.new(@reservation.owner, @instance, @reservation.currency)
 
-    VCR.use_cassette("comission_calculation_test/authorize") do
-      response = @billing_gateway.authorize(@reservation.total_amount_cents, credit_card)
-      @reservation.create_billing_authorization(token: response[:token], payment_gateway_class: response[:payment_gateway_class])
-      @reservation.save
-    end
+    response = @billing_gateway.authorize(@reservation.total_amount_cents, credit_card)
+    @reservation.create_billing_authorization(token: response[:token], payment_gateway_class: response[:payment_gateway_class])
+    @reservation.save!
 
     @listing.company.update_attribute(:paypal_email, 'receiver@example.com')
     create_logged_in_user
@@ -38,16 +27,15 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
   should 'ensure that comission after payout is correct' do
 
     post_via_redirect "/listings/#{@listing.id}/reservations", booking_params
-    
-    VCR.use_cassette("comission_calculation_test/capture") do
-      @reservation.confirm
-    end
+
+    @reservation.confirm
 
     post_via_redirect "/listings/#{FactoryGirl.create(:transactable).id}/reservations", booking_params
 
     @reservation_charge = @reservation.reservation_charges.last
+    charge = @reservation_charge.charge_attempts.new(amount: @reservation_charge.total_amount_cents, success: true)
     assert @reservation_charge.paid?
-    assert_equal 2875, @reservation_charge.charge_attempts.successful.first.amount
+    assert_equal 2875, charge.amount
 
     PaymentTransferSchedulerJob.perform
 
@@ -60,8 +48,9 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
   private
 
   def create_logged_in_user
-    post_via_redirect '/users', :user => { :name => 'John Doe', :email => 'user@example.com', :password => 'password' }
-    post_via_redirect '/users/sign_in', :user => { :email => 'user@example.com', :password => 'password' }
+    # TODO post_via_redirect '/users', :user => { :name => 'John Doe', :email => 'user@example.com', :password => 'password' }
+    user = FactoryGirl.create(:user)
+    post_via_redirect '/users/sign_in', :user => { :email => user.email, :password => user.password }
   end
 
   def stub_what_has_to_be_stubbed

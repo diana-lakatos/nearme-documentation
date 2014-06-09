@@ -31,11 +31,15 @@ environments:
     migrate: true
     migration_command: rake db:migrate
     precompile_assets: true
-  dnme_staging2:
+  dnme_staging_ruby2:
     migrate: true
     migration_command: rake db:migrate
     precompile_assets: true
   dnme_demo:
+    migrate: true
+    migration_command: rake db:migrate
+    precompile_assets: true
+  nm_production:
     migrate: true
     migration_command: rake db:migrate
     precompile_assets: true

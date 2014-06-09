@@ -3,7 +3,6 @@ DesksnearMe::Application.routes.draw do
   mount Ckeditor::Engine => '/ckeditor'
 
   constraints host: 'near-me.com' do
-    root :to => 'platform_home#index'
     get '/features-setup', :to => 'platform_home#features_setup'
     get '/features-design', :to => 'platform_home#features_design'
     get '/features-manage', :to => 'platform_home#features_manage'
@@ -13,7 +12,8 @@ DesksnearMe::Application.routes.draw do
     get '/features-security', :to => 'platform_home#features_security'
     get '/features-integration', :to => 'platform_home#features_integration'
     get '/features-support', :to => 'platform_home#features_support'
-
+    get '/',  :to => 'platform_home#index'
+    get '/features', :to => 'platform_home#features'
     get '/contact', :to => 'platform_home#contact'
     post '/contact-submit', :to => 'platform_home#contact_submit'
     get '/about', :to => 'platform_home#about'
@@ -41,9 +41,9 @@ DesksnearMe::Application.routes.draw do
 
   root :to => "home#index"
 
-  match '/404', :to => 'errors#not_found'
-  match '/422', :to => 'errors#server_error'
-  match '/500', :to => 'errors#server_error'
+  get '/404', :to => 'errors#not_found'
+  get '/422', :to => 'errors#server_error'
+  get '/500', :to => 'errors#server_error'
 
   namespace :support do
     root :to => 'dashboard#index'
@@ -53,7 +53,7 @@ DesksnearMe::Application.routes.draw do
   end
 
   namespace :admin do
-    match '/', :to => "dashboard#show"
+    get '/', :to => "dashboard#show"
     resources :users do
       member do
         post :login_as
@@ -87,7 +87,7 @@ DesksnearMe::Application.routes.draw do
       end
     end
     resources :pages
-    get '/platform_home', to: 'platform_home#edit', as: 'platform_home'
+    get '/platform_home', to: 'platform_home#edit', as: 'edit_platform_home'
     post '/platform_home', to: 'platform_home#update', as: 'platform_home'
   end
 
@@ -132,9 +132,7 @@ DesksnearMe::Application.routes.draw do
         member do
           delete 'destroy_image/:image', :action => :destroy_image, :as => 'destroy_theme_image'
           get 'edit_image/:image', :action => :edit_image, :as => 'edit_theme_image'
-          put 'upload_image/:image', :action => :upload_image, :as => 'upload_theme_image'
-          post 'upload_image/:image', :action => :upload_image, :as => 'upload_theme_image'
-          put 'update_image/:image', :action => :update_image, :as => 'update_theme_image'
+          match 'upload_image/:image', :action => :upload_image, :as => 'upload_theme_image', via: [:post, :put]
         end
       end
       resources :pages
@@ -224,20 +222,20 @@ DesksnearMe::Application.routes.draw do
     resources :guest_ratings, :only => [:new, :create]
     resources :host_ratings, :only => [:new, :create]
   end
-  match '/reservations/:id/guest_rating' => 'dashboard#guest_rating', as: 'guest_rating'
-  match '/reservations/:id/host_rating' => 'reservations#host_rating', as: 'host_rating'
+  get '/reservations/:id/guest_rating' => 'dashboard#guest_rating', as: 'guest_rating'
+  get '/reservations/:id/host_rating' => 'reservations#host_rating', as: 'host_rating'
 
-  match '/auth/:provider/callback' => 'authentications#create'
-  match "/auth/failure", to: "authentications#failure"
+  match '/auth/:provider/callback' => 'authentications#create', via: [:get, :post]
+  get "/auth/failure", to: "authentications#failure"
   devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions', :passwords => 'passwords' }
   devise_scope :user do
     post "users/avatar", :to => "registrations#avatar", :as => "avatar"
     get "users/edit_avatar", :to => "registrations#edit_avatar", :as => "edit_avatar"
-    put "users/update_avatar", :to => "registrations#update_avatar", :as => "update_avatar"
+    match "users/update_avatar", :to => "registrations#update_avatar", :as => "update_avatar", via: [:patch, :put]
     get "users/set_password", :to => "registrations#set_password", :as => "set_password"
-    put "users/update_password", :to => "registrations#update_password", :as => "update_password"
+    match "users/update_password", :to => "registrations#update_password", :as => "update_password", via: [:patch, :put]
     get "users/edit_notification_preferences", :to => "registrations#edit_notification_preferences", :as => "edit_notification_preferences"
-    put "users/update_notification_preferences", :to => "registrations#update_notification_preferences", :as => "update_notification_preferences"
+    match "users/update_notification_preferences", :to => "registrations#update_notification_preferences", :as => "update_notification_preferences", via: [:patch, :put]
     post "users/store_google_analytics_id", :to => "registrations#store_google_analytics_id", :as => "store_google_analytics"
     post "users/store_geolocated_location", :to => "registrations#store_geolocated_location", :as => "store_geolocated_location"
     get "users/social_accounts", :to => "registrations#social_accounts", :as => "social_accounts"
@@ -247,9 +245,11 @@ DesksnearMe::Application.routes.draw do
     get "users/:id", :to => "registrations#show", :as => "profile"
     get "users/unsubscribe/:signature", :to => "registrations#unsubscribe", :as => "unsubscribe"
 
-    put "users/store_correct_ip", :to => "sessions#store_correct_ip", :as => "store_correct_ip"
+    match "users/store_correct_ip", :to => "sessions#store_correct_ip", :as => "store_correct_ip", via: [:patch, :put]
 
-    get "/instance_admin/sessions/new", :to => "instance_admin::sessions#new", :as => 'instance_admin_login'
+    get "/instance_admin/sessions/new", :to => "instance_admin/sessions#new", :as => 'instance_admin_login'
+    post "/instance_admin/sessions", :to => "instance_admin/sessions#create"
+    delete "/instance_admin/sessions", :to => "instance_admin/sessions#destroy"
   end
 
   resources :reservations, :except => [:update, :destroy, :show] do
@@ -282,6 +282,7 @@ DesksnearMe::Application.routes.draw do
 
   resources :listings, :users, :reservations do
     resources :user_messages, except: [:index] do
+      patch :archive
       put :archive
     end
   end
@@ -315,6 +316,7 @@ DesksnearMe::Application.routes.draw do
         member do
           post :confirm
           get :confirm
+          patch :reject
           put :reject
           get :rejection_form
           post :host_cancel
@@ -323,7 +325,7 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
-  match "/search", :to => "search#index", :as => :search
+  get "/search", :to => "search#index", :as => :search
 
   resources :search_notifications, only: [:create]
 
@@ -339,9 +341,8 @@ DesksnearMe::Application.routes.draw do
     get '/new' => 'space_wizard#new', :as => "new_space_wizard"
     get "/list" => "space_wizard#list", :as => "space_wizard_list"
     post "/list" => "space_wizard#submit_listing"
-    put "/list" => "space_wizard#submit_listing"
-    post "/photo" => "space_wizard#submit_photo", :as => "space_wizard_photo"
-    put "/photo" => "space_wizard#submit_photo", :as => "space_wizard_photo"
+    match "/list" => "space_wizard#submit_listing", via: [:put, :patch]
+    match "/photo" => "space_wizard#submit_photo", :as => "space_wizard_photo", via: [:post, :put]
     delete "/photo/:id" => "space_wizard#destroy_photo", :as => "destroy_space_wizard_photo"
   end
 
@@ -355,7 +356,7 @@ DesksnearMe::Application.routes.draw do
     resource :registration, only: [:create]
 
     get  'profile',  :to => 'profile#show'
-    put  'profile',  :to => 'profile#update'
+    match 'profile',  :to => 'profile#update', via: [:put, :patch]
     post 'profile/avatar/:filename', :to => 'profile#upload_avatar'
     delete 'profile/avatar', :to => 'profile#destroy_avatar'
 
@@ -409,14 +410,14 @@ DesksnearMe::Application.routes.draw do
     get 'organizations', to: 'organizations#index'
   end
 
-  match "/pages/:path", to: 'pages#show', as: :pages
-  match "/w-hotels-desks-near-me", to: 'locations#w_hotels', as: :w_hotels_location
-  match "/W-hotels-desks-near-me", to: 'locations#w_hotels'
-  match "/careers", to: 'pages#careers'
-  match "/rent-accounting-desks", to: 'locations#vertical_accounting'
-  match "/rent-legal-desks", to: 'locations#vertical_law'
-  match "/rent-hairdressing-booth-stations", to: redirect(subdomain: 'rent-salon-space', path: '/')
-  match "/rent-design-desks", to: 'locations#vertical_design'
+  get "/pages/:path", to: 'pages#show', as: :pages
+  get "/w-hotels-desks-near-me", to: 'locations#w_hotels', as: :w_hotels_location
+  get "/W-hotels-desks-near-me", to: 'locations#w_hotels'
+  get "/careers", to: 'pages#careers'
+  get "/rent-accounting-desks", to: 'locations#vertical_accounting'
+  get "/rent-legal-desks", to: 'locations#vertical_law'
+  get "/rent-hairdressing-booth-stations", to: redirect(subdomain: 'rent-salon-space', path: '/')
+  get "/rent-design-desks", to: 'locations#vertical_design'
 
   if defined? MailView
     mount CompanyMailerPreview => 'mail_view/companies'

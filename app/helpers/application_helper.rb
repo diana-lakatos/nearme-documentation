@@ -129,11 +129,11 @@ module ApplicationHelper
 
   def ico_for_flash(key)
     case key.to_s
-    when 'notice' 
+    when 'notice'
       "ico-check"
     when 'success'
       "ico-check"
-    when 'error' 
+    when 'error'
       "ico-warning"
     when 'warning'
       "ico-warning"
@@ -148,8 +148,8 @@ module ApplicationHelper
 
   def section_class(section_name = nil)
     [
-      section_name, 
-      controller_name, 
+      section_name,
+      controller_name,
       "#{controller_name}-#{params[:action]}"
     ].compact.join(' ')
   end
@@ -192,5 +192,7 @@ module ApplicationHelper
 
   def home_page?
     current_page?(controller: 'home', action: 'index')
+  rescue
+    false
   end
 end

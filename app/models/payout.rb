@@ -3,9 +3,9 @@ class Payout < ActiveRecord::Base
   has_paper_trail
   belongs_to :reference, :polymorphic => true
 
-  scope :successful, where(:success => true)
-  scope :pending, where(:pending => true)
-  scope :failed, where(:pending => false, :success => false)
+  scope :successful, -> { where(:success => true) }
+  scope :pending, -> { where(:pending => true) }
+  scope :failed, -> { where(:pending => false, :success => false) }
 
   monetize :amount
 

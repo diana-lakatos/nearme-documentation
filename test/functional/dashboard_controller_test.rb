@@ -139,7 +139,7 @@ class DashboardControllerTest < ActionController::TestCase
 
         should '@last_month_visits has one visit from today' do
           get :analytics, :analytics_mode => 'location_views'
-          assert_equal Date.current, Date.strptime(assigns(:last_month_visits).first.impression_date)
+          assert_equal Date.current, Date.strptime(assigns(:last_month_visits).first.impression_date.to_s)
           assert_equal 1, assigns(:visits).size
         end
 

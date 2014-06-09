@@ -1,7 +1,7 @@
 - only_inputs = [] if only_inputs.nil?
 - photo_input_name_prefix = "listing" if local_assigns[:photo_input_name_prefix].nil?
 
-= f.hidden_field :transactable_type_id, value: TransactableType.first.id
+= f.hidden_field :transactable_type_id, value: @transactable_type.id
 - if only_inputs.empty? || only_inputs.include?(:enabled)
   .control-group
     = f.label :enabled, 'Enabled?', :class => 'control-label'
@@ -44,7 +44,7 @@
     - # caches img so it is displayed even for the first photo. Without this, loader icon is not displayed for the first photo
     .hidden.thumbnail-processing
       .loading-icon
-    = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes]", nil, :placeholder => 'Enter Caption...', :id => 'photo-item-input-template', :disabled => true, 'data-number' => 0
+    = hidden_field_tag "#{photo_input_name_prefix}", nil, :placeholder => 'Enter Caption...', :id => 'photo-item-input-template', :disabled => true, 'data-number' => 0
     - unless @photos.nil?
       - @photos.each_with_index do |photo|
         = get_fileupload_photo_html(photo.image_url(:medium),
@@ -53,6 +53,7 @@
                                     :div,
                                     id: photo.id) do
           = text_field_tag "#{photo_input_name_prefix}[photos_attributes][#{photo.id}][caption]", photo.caption, :placeholder => 'Enter Caption...'
+          = hidden_field_tag "#{photo_input_name_prefix}[photo_ids][]", photo.id
           = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{photo.id}][id]", photo.id
           = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{photo.id}][position]", photo.position, class: 'photo-position-input'
 

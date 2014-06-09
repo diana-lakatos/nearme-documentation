@@ -7,7 +7,7 @@ class Charge < ActiveRecord::Base
   belongs_to :user
   belongs_to :reference, :polymorphic => true
 
-  scope :successful, where(:success => true)
+  scope :successful, -> { where(:success => true) }
 
   monetize :amount, :as => :price
   serialize :response, Hash

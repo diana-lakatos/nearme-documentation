@@ -93,7 +93,7 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
-    context 'know_host_of' do
+    context 'friends_know_host_of' do
       should 'find users knows host' do
         2.times { @me.add_friend(FactoryGirl.create(:user))}
         @friend = FactoryGirl.create(:user)
@@ -108,7 +108,7 @@ class UserTest < ActiveSupport::TestCase
         @friend.add_friend(host)
 
         @me.reload
-        assert_equal [@friend], @me.friends.know_host_of(@listing)
+        assert_equal [@friend], @me.friends_know_host_of(@listing)
       end
     end
 
@@ -702,13 +702,13 @@ class UserTest < ActiveSupport::TestCase
       end
 
       should 'have only draft listing if there is only draft listing, but should respond to update' do
-        @listing.update_attribute(:draft, Time.zone.now)
+        @listing.update_column(:draft, Time.zone.now)
         @user.expects(:update_metadata).with({
           has_draft_listings: true,
           has_any_active_listings: false
         })
         @user.populate_listings_metadata!
-        @listing.update_attribute(:draft, nil)
+        @listing.update_column(:draft, nil)
         @user.expects(:update_metadata).with({
           has_draft_listings: false,
           has_any_active_listings: true

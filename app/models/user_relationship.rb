@@ -1,5 +1,5 @@
 class UserRelationship < ActiveRecord::Base
-  acts_as_paranoid
+  # acts_as_paranoid
 
   # User being followed
   attr_accessible :followed_id, :authentication_id

@@ -1,19 +1,19 @@
-ruby '1.9.3'
+ruby '2.0.0'
 
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.16'
+gem 'rails', '~> 4.0.0'
 gem 'pg'
-gem 'activerecord-postgres-hstore'
-gem 'hstore-attributes', github: 'Slashek/hstore-attributes'
+
+gem 'sprockets', '~> 2.11.0'
 
 gem 'redis'
-gem 'redis-rails'
+gem 'redis-rails', '~> 4.0.0'
 gem 'raygun4ruby'
 gem "liquid"
 gem 'active_model_serializers'
 gem 'carrierwave'
-gem 'devise', "~> 2.2"
+gem 'devise', "~> 3.0.0"
 
 gem 'omniauth'
 gem 'omniauth-twitter'
@@ -35,9 +35,8 @@ gem 'haml'
 gem 'le'
 gem 'mini_magick'
 gem 'money-rails'
-gem 'pg_power'
-gem 'paranoia', '~> 1.3.3'
-gem 'simple_form'
+gem 'paranoia', '~> 2.0.0'
+gem 'simple_form', '~> 3.0.2'
 gem 'nested_form'
 gem 'nokogiri'
 gem 'hpricot'
@@ -48,37 +47,35 @@ gem 'draper'
 
 gem 'i18n-active_record',
     git: 'git://github.com/svenfuchs/i18n-active_record.git',
-    branch: 'rails-3.2',
     require: 'i18n/active_record'
 
-gem 'paper_trail'
+gem 'paper_trail', '~> 3.0.0'
 
 gem 'rack-rewrite', :require => 'rack/rewrite'
 
 gem 'state_machine'
 gem 'will_paginate'
 gem "compass-rails"
-# when we upgrade compass, we should change it into animate - actually they plan to add this to compass by default
-gem 'animation'
+gem 'animate'
 gem "coffee-rails"
-gem 'delayed_job_active_record'
+gem 'delayed_job_active_record', '~> 4.0.0'
 gem "rdiscount"
 gem 'attr_encrypted'
 gem 'stripe'
 gem 'paypal-sdk-rest'
 gem 'paypal-sdk-adaptivepayments'
 gem 'balanced'
-gem 'friendly_id'
-
-gem 'sass-rails'
+gem 'friendly_id', '~> 5.0'
+gem "non-stupid-digest-assets"
+gem 'sass-rails', '~> 4.0.0'
 gem 'bootstrap-sass', '~> 2.3.1.0'
-gem 'chronic'
-gem 'jcrop-rails'
+gem 'chronic', '~> 0.9.1'
+gem 'jcrop-rails', github: 'bukalapak/jcrop-rails'
 
 gem 'ey_config'
 
 gem 'unicorn'
-gem 'chameleon'
+gem 'chameleon', '~> 0.2.4'
 
 gem 'ckeditor'
 gem 'orm_adapter', '~> 0.5.0' # needed for ckeditor, see https://github.com/galetahub/ckeditor/issues/375
@@ -100,7 +97,7 @@ gem 'jquery-rails'
 gem 'chosen-rails'
 gem 'spectrum-rails'
 
-gem 'inherited_resources'
+gem 'inherited_resources', '~> 1.4.1'
 gem "historyjs-rails"
 
 gem 'ranked-model'
@@ -132,12 +129,11 @@ end
 
 group :assets do
   gem 'uglifier', "~>2.1.0"
-  gem 'turbo-sprockets-rails3'
 end
 
-
 group :development, :test, :staging do
-  gem 'factory_girl_rails', '>=3.0.0'
+  gem 'factory_girl_rails', '~> 4.4.0'
+  gem 'byebug', require: 'byebug'
 end
 
 group :development, :staging do
@@ -147,7 +143,6 @@ end
 group :development do
   gem 'quiet_assets'
   gem 'thin'
-  gem 'debugger'
 end
 
 group :test do
@@ -155,7 +150,7 @@ group :test do
   gem 'capybara', '~>2'
   gem 'capybara-webkit'
   gem 'capybara-screenshot'
-  gem 'cucumber-rails', :require => false
+  gem 'cucumber-rails', '~> 1.4.0', :require => false
   gem 'cucumber', '~> 1.2.5'
   gem 'database_cleaner'
   gem 'email_spec'
@@ -172,3 +167,6 @@ group :test do
 end
 
 gem 'mailman'
+
+# TODO remove ASAP
+gem 'protected_attributes'

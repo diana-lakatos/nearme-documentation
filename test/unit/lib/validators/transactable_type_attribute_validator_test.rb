@@ -6,7 +6,6 @@ class TransactableTypeAttributeValidatorTest < ActiveSupport::TestCase
     record = stub(:transactable_type_attributes => [stub(:validation_rules => { :presence => {} }, :name => 'name', valid_values: nil)])
     ActiveModel::Validations::PresenceValidator.expects(:new).returns(stub(:validate))
     TransactableTypeAttributeValidator.new({:attributes => {}}).validate(record)
-
   end
 
   should 'know how to validate inclusion' do

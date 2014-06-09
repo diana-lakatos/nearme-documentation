@@ -7,8 +7,8 @@ class PostActionMailerTest < ActiveSupport::TestCase
   setup do
     stub_mixpanel
     @user = FactoryGirl.create(:user)
-    @instance = FactoryGirl.create(:instance)
     @platform_context = PlatformContext.current
+    @instance = @platform_context.instance
     InstanceAdmin.create(:user_id => @user.id).update_attribute(:instance_id, @instance.id)
     PlatformContext.any_instance.stubs(:domain).returns(FactoryGirl.create(:domain, :name => 'custom.domain.com'))
   end

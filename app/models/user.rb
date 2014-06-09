@@ -4,18 +4,19 @@ class User < ActiveRecord::Base
                               :unlock_token, :locked_at, :google_analytics_id, :browser, :browser_version, :platform,
                               :bookings_count, :guest_rating_average, :guest_rating_count, :host_rating_average,
                               :host_rating_count, :avatar_versions_generated_at, :last_geolocated_location_longitude,
-                              :last_geolocated_location_latitude, :instance_unread_messages_threads_count, :sso_log_out]
+                              :last_geolocated_location_latitude, :instance_unread_messages_threads_count, :sso_log_out,
+                              :avatar_transformation_data]
   acts_as_paranoid
   auto_set_platform_context
 
   extend FriendlyId
   has_metadata :accessors => [:has_draft_listings, :has_any_active_listings, :companies_metadata, :instance_admins_metadata, :support_metadata]
-  friendly_id :name, use: :slugged
+  friendly_id :name, use: [:slugged, :finders]
 
   has_many :authentications, :dependent => :destroy
   has_many :instance_clients, :as => :client, :dependent => :destroy
-  has_many :company_users, dependent: :destroy
-  has_many :companies, :through => :company_users, :order => "company_users.created_at ASC"
+  has_many :company_users, -> { order(created_at: :asc) }, dependent: :destroy
+  has_many :companies, :through => :company_users
   has_many :created_companies, :class_name => "Company", :foreign_key => 'creator_id', :inverse_of => :creator
   has_many :administered_locations, :class_name => "Location", :foreign_key => 'administrator_id', :inverse_of => :administrator
   has_many :administered_listings, :class_name => "Transactable", :through => :administered_locations, :source => :listings, :inverse_of => :administrator
@@ -36,7 +37,7 @@ class User < ActiveRecord::Base
   has_many :mailer_unsubscriptions
   has_many :charges, foreign_key: 'user_id', dependent: :destroy
   has_many :authored_messages, :class_name => "UserMessage", :foreign_key => 'author_id', :inverse_of => :author
-  has_many :tickets, :class_name => 'Support::Ticket', order: 'updated_at DESC'
+  has_many :tickets, -> { order 'updated_at DESC' }, :class_name => 'Support::Ticket'
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
@@ -62,18 +63,18 @@ class User < ActiveRecord::Base
     users_ids.any? ? where('users.id NOT IN (?)', users_ids) : scoped
   }
 
-  scope :ordered_by_email, order('users.email ASC')
+  scope :ordered_by_email, -> { order('users.email ASC') }
 
   scope :visited_listing, ->(listing) {
     joins(:reservations).merge(Reservation.confirmed.past.for_listing(listing)).uniq
   }
 
   scope :hosts_of_listing, ->(listing) {
-    where(:id => listing.administrator.id).uniq
+    where(:id => listing.try(:administrator_id)).uniq
   }
 
   scope :know_host_of, ->(listing) {
-    joins(:followers).where(:user_relationships => {:follower_id => listing.administrator.id}).uniq
+    joins(:followers).where(:user_relationships => {:follower_id => listing.administrator_id}).references(:user_relationships).uniq
   }
 
   scope :mutual_friends_of, ->(user) {
@@ -122,6 +123,7 @@ class User < ActiveRecord::Base
 
   serialize :sms_preferences, Hash
   serialize :instance_unread_messages_threads_count, Hash
+  serialize :avatar_transformation_data, Hash
 
   delegate :to_s, :to => :name
 
@@ -255,6 +257,11 @@ class User < ActiveRecord::Base
 
   def friends
     self.followed_users.without(self)
+  end
+
+  def friends_know_host_of(listing)
+    # TODO Rails 4 - merge
+    self.friends && User.know_host_of(listing)
   end
 
   def social_connections
@@ -402,9 +409,9 @@ class User < ActiveRecord::Base
     locations_in_near = nil
     # we want allow greenwhich and friends, but probably 0 latitude and 0 longitude is not valid location :)
     if last_geolocated_location_latitude.nil? || last_geolocated_location_longitude.nil? || (last_geolocated_location_latitude.to_f.zero? && last_geolocated_location_longitude.to_f.zero?)
-      locations_in_near = Location.near(current_location, radius_in_km, units: :km, order: :distance)
+      locations_in_near = Location.near(current_location, radius_in_km, units: :km) # TODO, order: :distance)
     else
-      locations_in_near = Location.near([last_geolocated_location_latitude, last_geolocated_location_longitude], radius_in_km, units: :km, order: :distance)
+      locations_in_near = Location.near([last_geolocated_location_latitude, last_geolocated_location_longitude], radius_in_km, units: :km) # TODO , order: :distance)
     end
 
     listing_ids_of_cancelled_reservations = self.reservations.cancelled_or_expired_or_rejected.pluck(:transactable_id) if without_listings_from_cancelled_reservations
@@ -418,7 +425,7 @@ class User < ActiveRecord::Base
       end
       return listings if listings.size >= results_size
     end if locations_in_near
-    listings
+    listings.uniq
   end
 
   def can_manage_listing?(listing)

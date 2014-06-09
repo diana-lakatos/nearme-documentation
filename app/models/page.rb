@@ -6,7 +6,7 @@ class Page < ActiveRecord::Base
   ranks :position, with_same: :theme_id
 
   extend FriendlyId
-  friendly_id :path, use: :scoped, scope: :theme
+  friendly_id :path, use: [:slugged, :finders, :scoped], scope: :theme
 
   mount_uploader :hero_image, HeroImageUploader
   skip_callback :commit, :after, :remove_hero_image!
@@ -38,4 +38,7 @@ class Page < ActiveRecord::Base
     self.html_content = rel_no_follow_adder.modify(self.html_content)
   end
 
+  def should_generate_new_friendly_id?
+    true
+  end
 end

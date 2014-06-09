@@ -7,6 +7,7 @@ class InstanceAdmin::SessionsController < SessionsController
 
   def new
     redirect_to instance_admin_path if user_signed_in?
+    super
   end
 
 end

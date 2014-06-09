@@ -3,6 +3,7 @@ require "test_helper"
 class Location::SerializationTest < ActiveSupport::TestCase
   context "a location with no listing should have all the default attributes" do
     setup do
+      FactoryGirl.create(:transactable_type_location)
       @location = FactoryGirl.create(:location_in_san_francisco)
       serialize
     end
