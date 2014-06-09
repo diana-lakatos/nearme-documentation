@@ -15,7 +15,6 @@ module DesksnearMe
     # -- all .rb files in that directory are automatically loaded.
 
     # Custom directories with classes and modules you want to be autoloadable.
-    config.autoload_paths += %W(#{config.root}/inputs #{config.root}/forms #{config.root}/drops)
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
     config.autoload_paths -= Dir["#{config.root}/lib/previewers/"] unless defined? MailView
 
@@ -53,7 +52,7 @@ module DesksnearMe
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [
-      :password, :bank_routing_number, :bank_account_number, :response, 
+      :password, :bank_routing_number, :bank_account_number, :response,
       :marketplace_password, :olark_api_key, :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key,
       :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret, :instagram_consumer_key, :instagram_consumer_secret,
       :stripe_id, :paypal_id, :balanced_user_id, :balanced_credit_card_id, :live_settings, :test_settings
