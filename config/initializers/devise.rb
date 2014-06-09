@@ -20,6 +20,7 @@ Devise.setup do |config|
   config.http_authenticatable_on_xhr = false
 
   config.password_length = 6..128
+  config.mailer = "DeviseMailer"
 
   config.warden do |manager|
     manager.failure_app = CustomFailure
