@@ -1,21 +1,6 @@
 require 'vcr_setup'
 require 'test_helper'
 
-class CarrierWave::Mount::Mounter
-  def store!
-  end
-
-  def store
-  end
-
-  def download!
-  end
-
-  def download
-  end
-end
-
-
 class DataImporter::XmlFileTest < ActiveSupport::TestCase
 
   describe 'skip those tests for now' do

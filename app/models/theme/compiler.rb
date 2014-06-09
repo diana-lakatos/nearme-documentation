@@ -57,7 +57,7 @@ class Theme::Compiler
     )
 
     # Prepare the SCSS template to be compiled
-    template = Sass::Rails::ScssTemplate.new { |tilt|
+    template = Sprockets::ScssTemplate.new { |tilt|
       # This is a hack to get Tilt providing the right path details to
       # the Sprockets loader.
       #

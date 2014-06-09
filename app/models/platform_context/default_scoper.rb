@@ -68,7 +68,7 @@ module PlatformContext::DefaultScoper
           default_scope lambda { self.platform_context_default_scope }
 
           def self.platform_context_default_scope
-            scope = self.scoped
+            scope = self.all
             return scope if PlatformContext.current.nil?
             #{scope_builder.return_instance_scope_if_forced}
             # check if current platform context is white label company, and if so scope to it. If record should not be scoped to company

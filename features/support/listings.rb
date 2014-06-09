@@ -83,7 +83,7 @@ module ListingsHelpers
     select "Meeting Room", from: "listing_listing_type"
     fill_in "listing_quantity", with: "5"
 
-    choose "Daily, weekly, or monthly"
+    choose "Daily, Weekly or Monthly"
 
     check "enable_daily"
     fill_in "listing_daily_price", with: "10"

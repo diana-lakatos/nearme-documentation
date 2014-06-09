@@ -11,7 +11,7 @@ class RecurringMailerRequestPhotosJobTest < ActiveSupport::TestCase
   should 'not be sent to user who unsubscribed previously' do
     @transactable.administrator.unsubscribe('recurring_mailer/request_photos')
     RecurringMailerRequestPhotosJob.perform
-    assert_equal @transactable.last_request_photos_sent_at, @transactable.reload.last_request_photos_sent_at
+    assert_equal @transactable.last_request_photos_sent_at.to_i, @transactable.reload.last_request_photos_sent_at.to_i
   end
 
   context 'will touch last_request_photos timestamp' do

@@ -183,7 +183,7 @@
         float: right;
         margin: 5px 0 0 1px;
         padding: 2px 3px;
-        font-size: %80;
+        font-size: 80%;
         letter-spacing: -1px;
       }  
     }
@@ -198,6 +198,13 @@
     text-align: center;
     padding-top: 20px;
     width: auto;
+    span.label {
+      float: right;
+      margin: 5px 0 0 1px;
+      padding: 2px 3px;
+      font-size: 80%;
+      letter-spacing: -1px;
+    }  
   }
 
   .popover-error {

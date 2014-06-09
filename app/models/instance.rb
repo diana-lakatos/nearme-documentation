@@ -5,7 +5,7 @@ class Instance < ActiveRecord::Base
 
   attr_accessible :name, :domains_attributes, :theme_attributes, :location_types_attributes,
                   :service_fee_guest_percent, :service_fee_host_percent, :bookable_noun, :lessor, :lessee,
-                  :listing_amenity_types_attributes, :location_amenity_types_attributes, :skip_company, :pricing_options,
+                  :listing_amenity_types_attributes, :location_amenity_types_attributes, :skip_company,
                   :live_stripe_api_key, :live_stripe_public_key, :live_paypal_username, :live_paypal_password, :live_paypal_signature, :live_paypal_app_id,
                   :live_paypal_client_id, :live_paypal_client_secret, :live_balanced_api_key, :instance_billing_gateways_attributes, :marketplace_password,
                   :translations_attributes, :test_stripe_api_key, :test_stripe_public_key, :test_paypal_username, :test_paypal_password,
@@ -60,20 +60,17 @@ class Instance < ActiveRecord::Base
   has_one :blog_instance, :as => :owner
   has_many :user_messages, :dependent => :destroy, :inverse_of => :instance
   has_many :faqs, class_name: 'Support::Faq'
-  has_many :tickets, class_name: 'Support::Ticket', order: 'created_at DESC'
+  has_many :tickets, -> { order 'created_at DESC' }, class_name: 'Support::Ticket'
   has_many :transactable_types
   has_many :instance_payment_gateways, :inverse_of => :instance
   has_many :country_instance_payment_gateways, :inverse_of => :instance
   serialize :pricing_options, Hash
 
   validates_presence_of :name
-  validates :pricing_options, presence: { message: :must_be_selected }
   validates_presence_of :marketplace_password, :if => :password_protected
-  validates_presence_of :password_protected, :if => :test_mode, :message => I18n.t("activerecord.errors.models.instance.test_mode_needs_password")
+  validates_presence_of :password_protected, :if => :test_mode# TODO , :message => I18n.t("activerecord.errors.models.instance.test_mode_needs_password")
   validates_length_of :olark_api_key, :minimum => 16, :maximum => 16, :allow_blank => true
   validates_presence_of :olark_api_key, :if => :olark_enabled
-
-  after_initialize :set_all_pricing_options
 
   accepts_nested_attributes_for :domains, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :theme
@@ -84,7 +81,7 @@ class Instance < ActiveRecord::Base
   accepts_nested_attributes_for :instance_billing_gateways, allow_destroy: true, reject_if: proc { |params| params[:billing_gateway].blank? }
   accepts_nested_attributes_for :instance_payment_gateways, allow_destroy: true
 
-  scope :with_support_imap, where('support_imap_hash IS NOT NULL')
+  scope :with_support_imap, -> { where 'support_imap_hash IS NOT NULL' }
 
   def authentication_supported?(provider)
     self.send(:"#{provider.downcase}_consumer_key").present? && self.send(:"#{provider.downcase}_consumer_secret").present?
@@ -102,11 +99,6 @@ class Instance < ActiveRecord::Base
       # Mark price fields as attr-accessible
       attr_accessible "#{edge}_#{price}_price_cents", "#{edge}_#{price}_price"
     end
-  end
-
-  def pricing_options_hash
-    instance_pricing_options = pricing_options.select { |k,v| v == "1" }
-    instance_pricing_options.map { |k,v| [k.downcase, k.capitalize] }
   end
 
   def is_desksnearme?
@@ -149,13 +141,6 @@ class Instance < ActiveRecord::Base
 
   def payment_gateway_mode
     test_mode? ? "test" : "live"
-  end
-
-  private
-
-  def set_all_pricing_options
-    return if (!new_record? || !self.pricing_options.empty?)
-    self.pricing_options = Hash[Instance::PRICING_OPTIONS.map{|po| [po, '1']}]
   end
 
 end

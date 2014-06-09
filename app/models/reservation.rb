@@ -353,6 +353,24 @@ class Reservation < ActiveRecord::Base
     "Reservation of #{listing.try(:name)}, user: #{owner.try(:name)}, #{dates_description}"
   end
 
+  def attempt_payment_refund(counter = 0)
+    return if !(credit_card_payment? && paid?)
+    reservation_charge = reservation_charges.paid.first
+    if reservation_charge.nil?
+      BackgroundIssueLogger.log_issue("[reservation refund] Unexpected state", "support@desksnear.me", "Reservation id: #{self.id}. It's marked as paid via credit card but reservation_charge has not been created.")
+    else
+      counter = counter + 1
+      if reservation_charge.refund
+        self.update_attribute(:payment_status, PAYMENT_STATUSES[:refunded])
+      elsif counter < 3
+        ReservationRefundJob.perform_later(Time.zone.now + (counter * 6).hours, self.id, counter)
+      else
+        BackgroundIssueLogger.log_issue("[reservation refund] Refund 3 times failed", "support@desksnear.me", "Reservation id: #{self.id}. We did not manage to automatically refund payment")
+      end
+    end
+    true
+  end
+
   private
 
     def service_fee_calculator
@@ -426,24 +444,6 @@ class Reservation < ActiveRecord::Base
         PAYMENT_STATUSES[:failed]
       end
       save!
-    end
-
-    def attempt_payment_refund(counter = 0)
-      return if !(credit_card_payment? && paid?)
-      reservation_charge = reservation_charges.paid.first
-      if reservation_charge.nil?
-        BackgroundIssueLogger.log_issue("[reservation refund] Unexpected state", "support@desksnear.me", "Reservation id: #{self.id}. It's marked as paid via credit card but reservation_charge has not been created.")
-      else
-        counter = counter + 1
-        if reservation_charge.refund
-          self.update_attribute(:payment_status, PAYMENT_STATUSES[:refunded])
-        elsif counter < 3
-          ReservationRefundJob.perform_later(Time.zone.now + (counter * 6).hours, self.id, counter)
-        else
-          BackgroundIssueLogger.log_issue("[reservation refund] Refund 3 times failed", "support@desksnear.me", "Reservation id: #{self.id}. We did not manage to automatically refund payment")
-        end
-      end
-      true
     end
 
     def schedule_refund(transition, counter = 0, run_at = Time.zone.now)

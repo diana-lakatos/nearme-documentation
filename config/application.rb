@@ -2,12 +2,7 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 
-# If you have a Gemfile, require the gems listed there, including any gems
-# you've limited to :test, :development, or :production.
-groups = {
-  assets:    %w(development test),
-}
-
+groups = {}
 groups[:coverage]  =  [Rails.env.to_s] if ENV['COVERAGE']
 groups[:profiling] =  [Rails.env.to_s] if ENV['PERF']
 
@@ -21,7 +16,7 @@ module DesksnearMe
 
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += %W(#{config.root}/inputs #{config.root}/forms #{config.root}/drops)
-    config.autoload_paths += Dir["#{config.root}/lib", "#{config.root}/lib/**/"]
+    config.autoload_paths += Dir["#{config.root}/lib/**/"]
     config.autoload_paths -= Dir["#{config.root}/lib/previewers/"] unless defined? MailView
 
     # Only load the plugins named here, in the order given (default is alphabetical).
@@ -103,8 +98,10 @@ module DesksnearMe
 
     config.exceptions_app = self.routes
 
+    config.active_record.whitelist_attributes = false
+
     # custom rewrites specified in lib/legacy_redirect_handler.rb
-    config.middleware.insert_before(Rack::Lock, "LegacyRedirectHandler")
+    config.middleware.insert_before(Rack::Sendfile, "LegacyRedirectHandler")
     # setting platform_context in app/models/platform_context/rack_setter.rb
     config.middleware.use "PlatformContext::RackSetter"
     config.mixpanel = (YAML.load_file(Rails.root.join("config", "mixpanel.yml"))[Rails.env] || {}).with_indifferent_access

@@ -1,15 +1,11 @@
-require 'rubygems'
 ENV["RAILS_ENV"] ||= "test"
 
-require 'rails/application'
-
 require File.expand_path('../../config/environment', __FILE__)
-
 require 'rails/test_help'
 require 'turn'
 require 'mocha/setup'
-require 'mocha/integration/test_unit'
-require 'webmock/test_unit'
+require 'mocha/mini_test'
+require 'webmock/minitest'
 
 require Rails.root.join('test', 'helpers', 'stub_helper.rb')
 
@@ -21,10 +17,12 @@ CarrierWave.configure do |config|
   config.enable_processing = false
 end
 
-class ActiveSupport::TestCase
-  # Add more helper methods to be used by all tests here...
+ActiveSupport::TestCase.class_eval do
+  ActiveRecord::Migration.check_pending!
+
   include FactoryGirl::Syntax::Methods
   include StubHelper
+
   setup :setup_platform_context
   setup :setup_payment_gateways
 
@@ -91,7 +89,7 @@ class ActiveSupport::TestCase
 
   def authenticate!
     @user = FactoryGirl.create(:authenticated_user)
-    request.env['Authorization'] = @user.authentication_token
+    request.headers['Authorization'] = @user.authentication_token
   end
 
   def assert_log_triggered(*args)
@@ -115,9 +113,24 @@ class ActiveSupport::TestCase
     stub(deliver: true)
   end
 
-  def stub_billing_gateway
-    # Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:charge).returns(true)
-    # Billing::Gateway::Incoming.any_instance.stubs(:authorize).returns({token: "123", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test"})
+  def stub_billing_gateway(instance)
+    instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
+    ipg = FactoryGirl.create(:stripe_instance_payment_gateway)
+    instance.instance_payment_gateways << ipg
+    
+    country_ipg = FactoryGirl.create(
+      :country_instance_payment_gateway, 
+      country_alpha2_code: "US", 
+      instance_payment_gateway_id: ipg.id
+    )
+
+    instance.country_instance_payment_gateways << country_ipg
+  end
+
+  def stub_active_merchant_interaction
+    Billing::Gateway::Processor::Incoming::Stripe.stubs(:setup_api_on_initialize).returns(ActiveMerchant::Billing::BogusGateway.new)
+    Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:authorize).returns({token: "54533", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe"})
+    Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:charge).returns(true)
   end
 
   def setup_payment_gateways
@@ -130,14 +143,18 @@ class ActiveSupport::TestCase
 
 end
 
-class ActionController::TestCase
+ActionDispatch::IntegrationTest.class_eval do
+  include Rails.application.routes.url_helpers
+end
 
+ActionController::TestCase.class_eval do
+  include Rails.application.routes.url_helpers
   include Devise::TestHelpers
-  setup :setup_platform_context
 
-  def setup_platform_context
-    FactoryGirl.create(:default_instance)
-    PlatformContext.current = PlatformContext.new
+  setup :return_default_host
+
+  def return_default_host
+    request.host =  "example.com"
   end
 
   def self.logged_in(factory = :admin, &block)
@@ -165,6 +182,5 @@ class ActionController::TestCase
   end
 end
 
-FactoryGirl.reload
 DatabaseCleaner.clean
 Utils::EnLocalesSeeder.new.go!

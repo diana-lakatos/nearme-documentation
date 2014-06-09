@@ -3,15 +3,14 @@ DesksnearMe::Application.configure do
   Rails.application.routes.default_url_options[:host] = "example.com"
   config.action_controller.allow_forgery_protection    = false
   config.action_controller.perform_caching = false
-  config.action_dispatch.show_exceptions = true
+  config.action_dispatch.show_exceptions = false
   config.action_mailer.delivery_method = :test
   config.active_record.mass_assignment_sanitizer = :strict
-  config.active_support.deprecation = :stderr
+  config.active_support.deprecation = :log
   config.cache_classes = true
   config.consider_all_requests_local       = true
   config.serve_static_assets = true
   config.static_cache_control = "public, max-age=3600"
-  config.whiny_nils = true
 
   config.perform_social_jobs = false
   config.after_initialize do
@@ -23,4 +22,6 @@ DesksnearMe::Application.configure do
 
   config.secure_app = false
   config.root_secured = false
+
+  config.eager_load = false
 end

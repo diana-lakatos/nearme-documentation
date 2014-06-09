@@ -24,6 +24,9 @@ Devise.setup do |config|
   config.warden do |manager|
     manager.failure_app = CustomFailure
   end
+
+  config.clean_up_csrf_token_on_authentication = false
+
   # Setup our custom expiring URL token authentication strategy
   require 'temporary_token_authenticatable'
   require 'payment_token_authenticatable'

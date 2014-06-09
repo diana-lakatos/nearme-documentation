@@ -12,8 +12,8 @@ class Industry < ActiveRecord::Base
   has_many :locations, :through => :companies
   has_many :listings, :through => :locations, class_name: 'Transactable'
 
-  scope :with_listings, joins(:listings).merge(Transactable.searchable).group('industries.id HAVING count(transactables.id) > 0')
-  scope :ordered, order('name asc')
+  scope :with_listings, -> { joins(:listings).merge(Transactable.searchable).group('industries.id HAVING count(transactables.id) > 0') }
+  scope :ordered, -> { order('name asc') }
 
 
 end

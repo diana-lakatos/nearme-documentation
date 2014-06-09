@@ -6,7 +6,7 @@ FactoryGirl.define do
     latitude "-33.856944"
     longitude "151.215278"
     currency "USD"
-    availability_template_id "M-F9-5"
+    availability_template_id { (AvailabilityTemplate.first || FactoryGirl.create(:availability_template)).id }
     association(:location_type, factory: :location_type)
     company
 
@@ -167,8 +167,5 @@ FactoryGirl.define do
       }}
     end
 
-    factory :location_from_instance_with_price_constraints do
-      association(:company, factory: :company_from_instance_with_price_constraints)
-    end
   end
 end

@@ -1,4 +1,6 @@
 DesksnearMe::Application.configure do
+  config.eager_load = true
+
   config.cache_classes = true
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
@@ -25,7 +27,7 @@ DesksnearMe::Application.configure do
   config.assets.compress = true
   config.assets.js_compressor = :uglifier
 
-  Rails.application.routes.default_url_options[:host] = 'staging-uswest2.desksnear.me'
+  Rails.application.routes.default_url_options[:host] = 'staging-ruby2.desksnear.me'
   config.test_email = "notifications-staging@desksnear.me"
 
   # Clould services credentials
@@ -40,7 +42,7 @@ DesksnearMe::Application.configure do
     config.storage              = :fog
   end
 
-  config.action_controller.asset_host = "//staging-uswest2.desksnear.me"
+  config.action_controller.asset_host = "//staging-ruby2.desksnear.me"
 
   # Staging specific keys/secrets for social properties.
   config.linkedin_key = "26pmsiwpsh8a"
@@ -69,7 +71,7 @@ DesksnearMe::Application.configure do
   config.balanced_api_key = "ak-prod-1YZGzrMTbG9Q4XeITwLML1za00VRsV4PS"
 
   # Protect this environment with a simple Basic authentication dialog
-  config.middleware.insert_before(Rack::Lock, "Rack::Auth::Basic") do |username, password|
+  config.middleware.insert_before(Rack::Sendfile, "Rack::Auth::Basic") do |username, password|
     username == 'desksnearme' && password == 'sharethem'
   end
   config.redis_settings = YAML.load_file(Rails.root.join("config", "redis.yml"))["staging"]

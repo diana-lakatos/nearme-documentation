@@ -2,7 +2,7 @@ DesksnearMe::Application.configure do
   config.use_only_ssl = false
   config.cache_classes = false
 
-  config.whiny_nils = true
+  config.eager_load = false
 
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false

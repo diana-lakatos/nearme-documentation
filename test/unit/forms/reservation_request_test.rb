@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'vcr_setup'
 
 class ReservationRequestTest < ActiveSupport::TestCase
 
@@ -13,17 +12,8 @@ class ReservationRequestTest < ActiveSupport::TestCase
       :card_expires => "05/2020",
       :card_code => "411"
     }
-    ipg = FactoryGirl.create(:stripe_instance_payment_gateway)
-
-    @listing.instance.instance_payment_gateways << ipg
-
-    country_ipg = FactoryGirl.create(
-      :country_instance_payment_gateway, 
-      country_alpha2_code: "US", 
-      instance_payment_gateway_id: ipg.id
-    )
-
-    @listing.instance.country_instance_payment_gateways << country_ipg
+    stub_billing_gateway(@listing.instance)
+    stub_active_merchant_interaction
     
     @reservation_request = ReservationRequest.new(@listing, @user, PlatformContext.new, @attributes)
   end
@@ -61,9 +51,7 @@ class ReservationRequestTest < ActiveSupport::TestCase
   context "validations" do
     context "valid arguments" do
       should "be valid" do
-        VCR.use_cassette('reservation_request_processing') do
-          assert @reservation_request.valid?
-        end
+        assert @reservation_request.valid?
       end
     end
 
@@ -97,9 +85,7 @@ class ReservationRequestTest < ActiveSupport::TestCase
     context "valid" do
       context "no problems with saving reservation" do
         should "return true" do
-          VCR.use_cassette('reservation_request_processing') do
-            assert @reservation_request.process, @reservation_request.reservation.errors.inspect
-          end
+          assert @reservation_request.process, @reservation_request.reservation.errors.inspect
         end
       end
 
@@ -108,9 +94,7 @@ class ReservationRequestTest < ActiveSupport::TestCase
           @reservation_request.stubs(:save_reservation).returns(false)
         end
         should "return false" do
-          VCR.use_cassette('reservation_request_processing') do
-            assert !@reservation_request.process
-          end
+          assert !@reservation_request.process
         end
       end
     end

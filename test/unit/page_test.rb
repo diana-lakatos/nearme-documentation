@@ -47,7 +47,7 @@ class PageTest < ActiveSupport::TestCase
       page_one = FactoryGirl.create(:page, :theme => @instance.theme, path: 'faq')
       page_two = FactoryGirl.create(:page, :theme => @instance.theme, path: 'faq')
       assert page_one.slug == 'faq'
-      assert page_two.slug == 'faq--2'
+      assert page_two.slug != 'faq'
     end
 
     should 'allow the same slug in two different themes' do

@@ -6,7 +6,7 @@ class Billing::Gateway::Processor::Incoming::PaypalTest < ActiveSupport::TestCas
     @instance = FactoryGirl.create(:instance_test_mode)
     @user = FactoryGirl.create(:user)
     @instance.instance_payment_gateways << FactoryGirl.create(:paypal_instance_payment_gateway)
-    ActiveMerchant::Billing::Base.mode = :test
+    Billing::Gateway::Processor::Incoming::Paypal.any_instance.stubs(:setup_api_on_initialize)
     @paypal_processor = Billing::Gateway::Processor::Incoming::Paypal.new(@user, @instance, 'USD')
   end
 

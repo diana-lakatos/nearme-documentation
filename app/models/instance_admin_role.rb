@@ -18,7 +18,7 @@ class InstanceAdminRole < ActiveRecord::Base
 
   after_destroy :assign_default_role_to_instance_admins
 
-  default_scope :order => "name ASC"
+  default_scope -> { order("name ASC") }
 
   def self.administrator_role
     self.find_by_name_and_instance_id('Administrator', nil)
