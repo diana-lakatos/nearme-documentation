@@ -17,21 +17,28 @@ class @AddressField
 
     @input.focus =>
       @picked_result = false
-    
+
     @input.blur =>
       geocoder = new Search.Geocoder()
       setTimeout( =>
-        if !@picked_result && $('.pac-container').find('.pac-item').length > 0 && @input.val() != ''
-          geocoder = new Search.Geocoder()
-          first_item = $('.pac-container').find('.pac-item').eq(0)
-          query = "#{first_item.find('.pac-item-query').eq(0).text()}, #{first_item.find('> span').eq(-1).text()}"
-          deferred = geocoder.geocodeAddress(query)
-          deferred.done (resultset) =>
-            result = Search.Geocoder.wrapResult resultset.getBestResult().result
-            @input.val(query)
-            @pickSuggestion(result)
+        if !@picked_result
+          if $('.pac-container').find('.pac-item').length > 0 && @input.val() != ''
+            geocoder = new Search.Geocoder()
+            first_item = $('.pac-container').find('.pac-item').eq(0)
+            query = "#{first_item.find('.pac-item-query').eq(0).text()}, #{first_item.find('> span').eq(-1).text()}"
+            deferred = geocoder.geocodeAddress(query)
+            deferred.done (resultset) =>
+                  result = Search.Geocoder.wrapResult resultset.getBestResult().result
+                  @input.val(query)
+                  @pickSuggestion(result)
+          else
+            @setLatLng(null, null)
+            @form.find("#location_formatted_address").val(null)
+            @form.find("#location_local_geocoding").val("1")
+            @input.parent().find('.address_components_input').remove()
+            @_onLocate(null, null) if @_onLocate
       , 200)
-          
+
 
   onLocate: (callback) ->
     @_onLocate = callback
