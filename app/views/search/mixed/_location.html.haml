@@ -46,13 +46,13 @@
           %ul.nav.nav-tabs
             - listing_types_data.each_with_index do |(listing_type, listing_type_data), i|
               %li{class: i.zero? ? 'active' : ''}
-                %a{"data-toggle" => "tab", href: "#listing-types-#{location.id}-#{listing_type}"}
+                %a{"data-toggle" => "tab", href: "#listing-types-#{location.id}-#{listing_type.try(:underscore).try(:tr, ' ', '-')}"}
                   = listing_type_data[:name]
                   (#{listing_type_data[:count]})
 
     .tabbable
       .tab-content
         - listing_types_data.each_with_index do |(listing_type, listing_type_data), i|
-          .tab-pane{id: "listing-types-#{location.id}-#{listing_type}", class: i.zero? ? 'active' : '' }
+          .tab-pane{id: "listing-types-#{location.id}-#{listing_type.try(:underscore).try(:tr, ' ', '-')}", class: i.zero? ? 'active' : '' }
             .title
               = render partial: 'search/mixed/listing', collection: listing_type_data[:listings], locals: { location: location, search: search  }
