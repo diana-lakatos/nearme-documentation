@@ -1,4 +1,4 @@
-class Locations::SocialShareController < ApplicationController 
+class Locations::SocialShareController < ApplicationController
   before_filter :find_location
 
   def new

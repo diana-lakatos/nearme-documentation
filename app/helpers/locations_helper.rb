@@ -33,7 +33,4 @@ module LocationsHelper
     end
   end
 
-  def location_to_title(location)
-    [location.company.name, location.suburb, location.city, location.country == "United States" ? location.state_code : location.country].reject(&:blank?).join(' - ')
-  end
 end

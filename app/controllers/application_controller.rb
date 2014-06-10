@@ -169,7 +169,7 @@ class ApplicationController < ActionController::Base
   def require_ssl
     if secure? && platform_context.secured? and not request.ssl?
       if request.get? # we can't redirect non-get reqests
-        redirect_to url_for(protocol: 'https')
+        redirect_to url_for(protocol: 'https'), status: :moved_permanently
       else
         redirect_to root_url(protocol: 'https')
       end
