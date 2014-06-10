@@ -40,7 +40,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       assert_select "h1", @user.name
       assert_select ".info h2", "Manager at DesksNearMe"
       assert_select ".info h4", "Prague"
-      assert_select ".info h4", "Skills & Interests"
+      assert_select ".info h4", "Skills &amp; Interests"
       assert_select ".info .icon .ico-mail", 1
 
       assert_select ".info .icon .ico-facebook-full", 0

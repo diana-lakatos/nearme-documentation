@@ -1,4 +1,4 @@
-- if @user.job_title_and_company_name.blank? && @user.current_location_and_industry && @user.biography.blank? && @user.skills_and_interests.blank?
+- if @user.job_title_and_company_name.blank? && @user.current_location_and_industry.blank? && @user.biography.blank? && @user.skills_and_interests.blank?
   = content_for :meta do
     %meta{name: "robots", content:"noindex"}
 .row-fluid
@@ -18,8 +18,8 @@
           - if @user.social_url('instagram')
             =render 'social_connection', icon: 'ico-instagram', provider: 'instagram', count: false, link: @user.social_url('instagram'), rel: nil
           =render 'social_connection', icon: 'ico-mail', provider: 'mail', count: false, link: new_user_user_message_path(user_id: @user.slug), rel: 'modal'
-      - unless @user.job_title_and_company_name.blank? && @user.current_location_and_industry && @user.biography.blank? && @user.skills_and_interests.blank?
-        .info{class: 'span8'}
+      - if @user.job_title_and_company_name.present? || @user.current_location_and_industry.present? || @user.biography.present? || @user.skills_and_interests.present?
+        .info.span8
           %h2= @user.job_title_and_company_name
           %h4= @user.current_location_and_industry
           %p= @user.biography
