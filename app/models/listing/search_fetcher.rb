@@ -10,21 +10,20 @@ class Listing::SearchFetcher
   end
 
   def listings
-    @listings = filtered_listings
+    @listings = filtered_listings.includes(:location).merge(filtered_locations)
   end
 
   def locations
-    @locations = filtered_locations
+    @locations = filtered_locations.includes(:listings).merge(filtered_listings)
   end
 
   private
 
   def filtered_locations
-    @locations_scope = Location.includes(:listings)
-    @locations_scope = @locations_scope.near(@midpoint, @radius, :order => "#{Address.order_by_distance_sql(@midpoint[0], @midpoint[1])} ASC") if @midpoint && @radius
+    @locations_scope = Location.scoped
+    @locations_scope = @locations_scope.includes(:location_address).near(@midpoint, @radius, :order => "#{Address.order_by_distance_sql(@midpoint[0], @midpoint[1])} ASC") if @midpoint && @radius
     @locations_scope = @locations_scope.filtered_by_location_types_ids(@filters[:location_types_ids]) if @filters[:location_types_ids]
     @locations_scope = @locations_scope.filtered_by_industries_ids(@filters[:industries_ids]) if @filters[:industries_ids]
-    @locations_scope = @locations_scope.merge(filtered_listings)
     @locations_scope
   end
 

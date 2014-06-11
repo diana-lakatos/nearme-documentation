@@ -42,6 +42,7 @@ class Location < ActiveRecord::Base
 
   has_many :reservations, :through => :listings
   has_many :reservation_charges, :through => :reservations
+  has_many :company_industries, through: :company
   has_many :photos, :through => :listings
   has_one :location_address, class_name: 'Address', as: :object
 
@@ -64,9 +65,9 @@ class Location < ActiveRecord::Base
   friendly_id :urlify, use: [:slugged, :history, :finders]
 
   scope :filtered_by_location_types_ids,  lambda { |location_types_ids| where(location_type_id: location_types_ids) }
-  scope :filtered_by_industries_ids,  lambda { |industry_ids| joins(:company => :company_industries).where('company_industries.industry_id IN (?)', industry_ids) }
+  scope :filtered_by_industries_ids,  lambda { |industry_ids| joins(:company_industries).where('company_industries.industry_id IN (?)', industry_ids) }
   scope :none, -> { where :id => nil }
-  scope :near, lambda { |*args| includes(:location_address).merge(Address.near(*args).select('locations.*')) }
+  scope :near, lambda { |*args| scoped.merge(Address.near(*args).select('locations.*')) }
   scope :with_searchable_listings, -> { where(%{ (select count(*) from "transactables" where location_id = locations.id and transactables.draft IS NULL and enabled = 't' and transactables.deleted_at is null) > 0 }) }
 
   # Useful for storing the full geo info for an address, like time zone
