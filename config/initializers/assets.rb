@@ -1,1 +1,1 @@
-NonStupidDigestAssets.whitelist = [/.*\.js/, /.*\.css/, /.*\.jpg/, /.*\.png/, /.*\.svg/]
+NonStupidDigestAssets.whitelist = [/.*\.js/, /.*\.css/, /.*\.jpg/, /.*\.png/, /.*\.svg'/]
