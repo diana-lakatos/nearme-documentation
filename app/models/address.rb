@@ -17,6 +17,9 @@ class Address < ActiveRecord::Base
   validates_presence_of :address, :latitude, :longitude
   before_validation :fetch_coordinates
   before_validation :parse_address_components
+  def self.order_by_distance_sql(latitude, longitude)
+    distance_sql(latitude, longitude, order: "distance")
+  end
 
   def distance_from(other_latitude, other_longitude)
     Geocoder::Calculations.distance_between([ latitude,       longitude ],

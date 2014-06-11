@@ -33,7 +33,7 @@ class Location < ActiveRecord::Base
   delegate :company_users, :url, :service_fee_guest_percent, :service_fee_host_percent, to: :company, allow_nil: true
   delegate :phone, :to => :creator, :allow_nil => true
   delegate :address, :address2, :formatted_address, :postcode, :suburb, :city, :state, :country, :street, :address_components,
-   :latitude, :local_geocoding, :longitude, to: :location_address, allow_nil: true
+   :latitude, :local_geocoding, :longitude, :state_code, to: :location_address, allow_nil: true
 
   has_many :listings,
     dependent:  :destroy,
@@ -65,8 +65,8 @@ class Location < ActiveRecord::Base
 
   scope :filtered_by_location_types_ids,  lambda { |location_types_ids| where(location_type_id: location_types_ids) }
   scope :filtered_by_industries_ids,  lambda { |industry_ids| joins(:company => :company_industries).where('company_industries.industry_id IN (?)', industry_ids) }
-  scope :none, where(:id => nil)
-  scope :near, lambda { |*args| joins(:location_address).merge(Address.near(*args).select('locations.*')) }
+  scope :none, -> { where :id => nil }
+  scope :near, lambda { |*args| includes(:location_address).merge(Address.near(*args).select('locations.*')) }
   scope :with_searchable_listings, -> { where(%{ (select count(*) from "transactables" where location_id = locations.id and transactables.draft IS NULL and enabled = 't' and transactables.deleted_at is null) > 0 }) }
 
   # Useful for storing the full geo info for an address, like time zone

@@ -8,9 +8,7 @@ module InstanceType::Searcher
 
   def paginate_results(page, per_page)
     page ||= 1
-    @results = WillPaginate::Collection.create(page, per_page, result_count) do |pager|
-      pager.replace(results[pager.offset, pager.per_page].to_a)
-    end
+    @results = @results.paginate(page: page, per_page: per_page)
   end
 
 end
