@@ -359,6 +359,8 @@ class ApplicationController < ActionController::Base
       @country = Geocoder.search(current_ip).first.try(:country)
     end
     @country ||= 'United States'
+  rescue
+    @country ||= 'United States'
   end
 
   def set_raygun_custom_data
