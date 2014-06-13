@@ -17,16 +17,16 @@ class AddSettingsToTransactableType < ActiveRecord::Migration
 
     Instance.all.each do |instance|
       tp = instance.transactable_types.first
+      pricing_validation = {}
       instance.pricing_options.each do |k, v|
-        pricing_validation = nil
         if v.to_i == 1
-          pricing_validation = {}
-          pricing_validation[:min] = instance.send("min_#{k}_price_cents") if instance.respond_to?("min_#{k}_price_cents")
-          pricing_validation[:max] = instance.send("max_#{k}_price_cents") if instance.respond_to?("max_#{k}_price_cents")
+          pricing_validation[k.to_s] = {} if instance.respond_to?("min_#{k}_price_cents")
+          pricing_validation[k.to_s]["min"] = instance.send("min_#{k}_price_cents") if instance.respond_to?("min_#{k}_price_cents")
+          pricing_validation[k.to_s]["max"] = instance.send("max_#{k}_price_cents") if instance.respond_to?("max_#{k}_price_cents")
         end
-        tp.update_attribute(:pricing_options, instance.pricing_options)
-        tp.update_attribute(:pricing_validation, pricing_validation)
       end
+      tp.update_attribute(:pricing_options, instance.pricing_options)
+      tp.update_attribute(:pricing_validation, pricing_validation) if tp
     end
   end
 

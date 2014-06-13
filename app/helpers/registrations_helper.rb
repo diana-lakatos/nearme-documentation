@@ -1,16 +1,4 @@
 module RegistrationsHelper
-  # Return the id of the wizard currently being used for registration.
-  #
-  # Registration steps are handled by the Registrations controller to keep the authentication/registration logic
-  # isolated. We can render the registration form in a wizard layout.
-  def registration_wizard
-    case params[:wizard]
-    when 'space'
-      'space'
-    else
-      nil
-    end
-  end
 
   def build_link_for(provider, class_for_links)
     if (authentication = Authentication.find_by_provider_and_user_id(provider.downcase, current_user.id))

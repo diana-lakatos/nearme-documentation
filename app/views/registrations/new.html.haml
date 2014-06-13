@@ -2,20 +2,15 @@
 - title "Sign up to #{platform_context.name}"
 
 #signup
-  - if registration_wizard
-    = render :layout => "#{registration_wizard}_wizard/wizard_layout", :locals => { :step => 0 } do
-      = render 'registrations/signup_form'
+  .row-fluid
+    .span8.offset2
+      .box
+        %header
+          %h2
+            Sign up to
+            = platform_context.name
 
-  - else
-    .row-fluid
-      .span8.offset2
-        .box
-          %header
-            %h2
-              Sign up to
-              = platform_context.name
-
-          = render 'registrations/signup_form'
+        = render 'registrations/signup_form'
 
 - if request.xhr?
   :javascript

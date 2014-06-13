@@ -8,7 +8,7 @@ class Search.HomeController extends Search.Controller
         @submit_form = true
         false
 
-    # when submiting the form without clicking on autocomplete, we need to check if the field's value has been changed to update lat/lon and address components. 
+    # when submitting the form without clicking on autocomplete, we need to check if the field's value has been changed to update lat/lon and address components. 
     # otherwise, no matter what we type in, we will always get results for geolocated address
     form.submit (e) =>
       e.preventDefault()

@@ -6,7 +6,7 @@ class RecurringMailerAnalyticsJob < Job
       PlatformContext.current = PlatformContext.new(company)
       company.users.uniq.each do |user|
         next if user.unsubscribed?('recurring_mailer/analytics')
-        unless user.administered_locations_pageviews_7_day_total.zero?
+        unless user.administered_locations_pageviews_30_day_total.zero?
           RecurringMailer.enqueue.analytics(company, user)
         end
       end
