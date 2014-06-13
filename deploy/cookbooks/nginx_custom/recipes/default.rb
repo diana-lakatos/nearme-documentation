@@ -82,21 +82,20 @@ if %w(app_master app solo).include?(node[:instance_role])
     ruby_block "use custom CORS for webfonts" do
       block do
         banner = "# set Expire header on assets: see http://developer.yahoo.com/performance/rules.html#expires"
-        custom_cors = <<CORS
-  # custom CORS policy for webfonts in Firefox
-  location ~* \.(eot|ttf|woff)$ {
-    add_header Access-Control-Allow-Origin *;
-  }
-CORS
 
-        custom_gzip_serving = <<GZIP
+        custom_assets_config = <<ASSETS
   location ^~ /assets/ {
     # Only use gzip_static if you have .gz compressed assets *precompiled*
     gzip_static on;
     expires max;
     add_header Cache-Control public;
+
+    # custom CORS policy for webfonts in Firefox
+    location ~* \.(eot|ttf|woff)$ {
+      add_header Access-Control-Allow-Origin *;
+    }
   }
-GZIP
+ASSETS
         files = [
           "/etc/nginx/servers/#{app_name}.ssl.conf",
           "/etc/nginx/servers/#{app_name}.conf"
@@ -106,7 +105,7 @@ GZIP
           chef_file = Chef::Util::FileEdit.new(file)
           chef_file.search_file_replace_line(
             banner,
-            "#{custom_cors}\n  #{custom_gzip_serving}\n  #{banner}"
+            "#{custom_assets_config}\n  #{banner}"
           )
           chef_file.write_file unless File.readlines(file).grep(/CORS/).any?
         end
