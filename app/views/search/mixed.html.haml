@@ -60,9 +60,6 @@
           %h3#search_results_count
             = @searcher.result_count
             results
-        .sort-by
-          %span sort by
-          = select_tag :sort, options_for_select([['relevance', 'relevance'], ['price', 'price']])
         .per-page
           %span per page
           = select_tag :per_page, options_for_select(['20', '50', '100'].map{|v| [v, v]})
