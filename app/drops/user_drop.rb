@@ -1,7 +1,7 @@
 class UserDrop < BaseDrop
 
   attr_reader :user
-  delegate :name, :first_name, :email, :full_mobile_number, :administered_locations_pageviews_7_day_total, to: :user
+  delegate :name, :first_name, :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, to: :user
 
   def initialize(user)
     @user = user
