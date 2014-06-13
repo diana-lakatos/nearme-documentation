@@ -12,7 +12,7 @@ class Address < ActiveRecord::Base
   geocoded_by :address
 
   belongs_to :instance
-  belongs_to :object, polymorphic: true
+  belongs_to :entity, polymorphic: true
 
   validates_presence_of :address, :latitude, :longitude
   before_validation :fetch_coordinates

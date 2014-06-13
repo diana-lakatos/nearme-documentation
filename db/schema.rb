@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140603113606) do
+ActiveRecord::Schema.define(version: 20140613082807) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,14 +31,14 @@ ActiveRecord::Schema.define(version: 20140603113606) do
     t.text     "address_components"
     t.float    "latitude"
     t.float    "longitude"
-    t.integer  "object_id"
-    t.string   "object_type"
+    t.integer  "entity_id"
+    t.string   "entity_type"
     t.datetime "deleted_at"
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
   end
 
-  add_index "addresses", ["object_id", "object_type"], :name => "index_addresses_on_object_id_and_object_type"
+  add_index "addresses", ["entity_id", "entity_type"], name: "index_addresses_on_entity_id_and_entity_type", using: :btree
 
   create_table "amenities", :force => true do |t|
     t.string   "name"

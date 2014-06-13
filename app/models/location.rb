@@ -44,7 +44,7 @@ class Location < ActiveRecord::Base
   has_many :reservation_charges, :through => :reservations
   has_many :company_industries, through: :company
   has_many :photos, :through => :listings
-  has_one :location_address, class_name: 'Address', as: :object
+  has_one :location_address, class_name: 'Address', as: :entity
 
   has_many :availability_rules, -> { order 'day ASC' }, :as => :target
 
