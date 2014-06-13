@@ -130,8 +130,8 @@ class SpaceWizardController < ApplicationController
       params[:user][:country_name]
     elsif @user.country_name.present?
       @user.country_name
-    elsif request.location
-      request.location.country
+    else
+      request.location.country rescue nil
     end
   end
 
