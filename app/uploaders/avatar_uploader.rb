@@ -26,7 +26,7 @@ class AvatarUploader < BaseUploader
 
   ASPECT_RATIO = 1
 
-  def store_dir
+  def legacy_store_dir
     "media/#{model.class.to_s.underscore}/#{model.id}/#{mounted_as}"
   end
 
