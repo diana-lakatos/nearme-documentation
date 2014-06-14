@@ -29,7 +29,7 @@ class Admin::InstancesController < Admin::ResourceController
     Utils::TransactableTypeAttributesCreator.new(tp).create_listing_attributes!
     at = tp.availability_templates.build(name: "Working Week", description: "Mon - Fri, 9:00 AM - 5:00 PM")
     (1..5).each do |i|
-      at.availability_rules << AvailabilityRule.new(target: availability_template, day: i, open_hour: 9, open_minute: 0,close_hour: 17, close_minute: 0)
+      at.availability_rules.build(day: i, open_hour: 9, open_minute: 0,close_hour: 17, close_minute: 0)
     end
     at.save!
     InstanceAdmin.create(user_id: @user.id)
