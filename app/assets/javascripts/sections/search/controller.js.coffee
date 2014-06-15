@@ -33,6 +33,10 @@ class Search.Controller
 
   initializeQueryField: ->
     @queryField = @form.find('input.query')
+    query_value = DNM.util.Url.getParameterByName('loc')
+    if @queryField.val() == '' && !query_value
+      _.defer(=>@geolocateMe())
+
 
     @queryField.bind 'change', =>
       @fieldChanged('query', @queryField.val())
