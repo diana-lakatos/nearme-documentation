@@ -189,6 +189,20 @@ class DashboardControllerTest < ActionController::TestCase
       assert_select ".reservation-details", 0
     end
 
+    should 'show tweet links if no reservation' do
+      get :manage_guests
+      assert_response :success
+      assert_select ".sharelocation", 1
+      assert_select ".sharelocation li", 5
+    end
+
+    should 'not show tweet links if there is reservation' do
+      FactoryGirl.create(:reservation, owner: @user, listing: @related_listing)
+      get :manage_guests
+      assert_response :success
+      assert_select ".sharelocation", 0
+    end
+
   end
 
   private

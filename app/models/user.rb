@@ -54,10 +54,6 @@ class User < ActiveRecord::Base
     joins(:reservations).where(:reservations => { :transactable_id => listing.id }).uniq
   }
 
-  scope :needs_mailchimp_update, -> {
-      where("mailchimp_synchronized_at IS NULL OR mailchimp_synchronized_at < updated_at")
-  }
-
   scope :without, lambda { |users|
     users_ids = users.respond_to?(:pluck) ? users.pluck(:id) : Array.wrap(users).collect(&:id)
     users_ids.any? ? where('users.id NOT IN (?)', users_ids) : scoped
@@ -327,18 +323,6 @@ class User < ActiveRecord::Base
     listings.any?(&:free?)
   end
 
-  def mailchimp_synchronized!
-    touch(:mailchimp_synchronized_at)
-  end
-
-  def mailchimp_synchronized?
-    mailchimp_synchronized_at.present? && mailchimp_synchronized_at >= updated_at
-  end
-
-  def mailchimp_exported?
-    mailchimp_synchronized_at.present?
-  end
-
   def log_out!
     self.update_attribute(:sso_log_out, true)
   end
@@ -409,9 +393,9 @@ class User < ActiveRecord::Base
     locations_in_near = nil
     # we want allow greenwhich and friends, but probably 0 latitude and 0 longitude is not valid location :)
     if last_geolocated_location_latitude.nil? || last_geolocated_location_longitude.nil? || (last_geolocated_location_latitude.to_f.zero? && last_geolocated_location_longitude.to_f.zero?)
-      locations_in_near = Location.near(current_location, radius_in_km, units: :km) # TODO, order: :distance)
+      locations_in_near = Location.includes(:location_address).near(current_location, radius_in_km, units: :km) # TODO, order: :distance)
     else
-      locations_in_near = Location.near([last_geolocated_location_latitude, last_geolocated_location_longitude], radius_in_km, units: :km) # TODO , order: :distance)
+      locations_in_near = Location.includes(:location_address).near([last_geolocated_location_latitude, last_geolocated_location_longitude], radius_in_km, units: :km) # TODO , order: :distance)
     end
 
     listing_ids_of_cancelled_reservations = self.reservations.cancelled_or_expired_or_rejected.pluck(:transactable_id) if without_listings_from_cancelled_reservations

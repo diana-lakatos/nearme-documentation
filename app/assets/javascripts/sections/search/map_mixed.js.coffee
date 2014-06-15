@@ -4,7 +4,7 @@ class Search.MapMixed extends Search.Map
 
   GOOGLE_MAP_OPTIONS =
     zoom: 8,
-    minZoom: 4,
+    minZoom: 2,
     maxZoom: 18,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     disableDefaultUI: true,

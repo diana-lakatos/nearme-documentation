@@ -214,27 +214,30 @@ class SpaceWizardControllerTest < ActionController::TestCase
          {"0"=>
           {"description"=>"Our historic 11-story Southern Pacific Building, also known as \"The Landmark\", was completed in 1916. We are in the 172 m Spear Tower.",
            "name" => 'Location',
-           "address"=>"usa",
-           "local_geocoding"=>"10",
-           "latitude"=>"5",
-           "longitude"=>"8",
-           "formatted_address"=>"formatted usa",
            "location_type_id"=>"1",
-           "listings_attributes"=>
+           "location_address_attributes" =>
+          {
+            "address"=>"usa",
+            "local_geocoding"=>"10",
+            "latitude"=>"5",
+            "longitude"=>"8",
+            "formatted_address"=>"formatted usa",
+          },
+          "listings_attributes"=>
           {"0"=>
            {
-            "transactable_type_id" => TransactableType.first.id,
-            "name"=>"Desk",
-            "description"=>"We have a group of several shared desks available.",
-            "hourly_reservations" => false,
-            "listing_type"=>"Shared Desks",
-            "quantity"=>"1",
-            "daily_price"=>daily_price,
-            "weekly_price"=>weekly_price,
-            "monthly_price"=> monthly_price,
-            "free"=>free,
-            "confirm_reservations"=>"0",
-            "photos_attributes" => [FactoryGirl.attributes_for(:photo)]}
+             "transactable_type_id" => TransactableType.first.id,
+             "name"=>"Desk",
+             "description"=>"We have a group of several shared desks available.",
+             "hourly_reservations" => false,
+             "listing_type"=>"Shared Desks",
+             "quantity"=>"1",
+             "daily_price"=>daily_price,
+             "weekly_price"=>weekly_price,
+             "monthly_price"=> monthly_price,
+             "free"=>free,
+             "confirm_reservations"=>"0",
+             "photos_attributes" => [FactoryGirl.attributes_for(:photo)]}
           },
           "currency"=>"USD"}
          }

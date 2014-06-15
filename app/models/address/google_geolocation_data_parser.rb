@@ -1,4 +1,4 @@
-class Location::GoogleGeolocationDataParser
+class Address::GoogleGeolocationDataParser
 
   attr :address_components, :result_hash
 
@@ -33,10 +33,10 @@ class Location::GoogleGeolocationDataParser
     end || Component.new({ "long_name" => "", "short_name" => "", "types" => ""})
 
     if type == "locality" and component.missing?
-      component = find_component_for("administrative_area_level_3") 
+      component = find_component_for("administrative_area_level_3")
     end
     if type == "sublocality" and component.missing?
-      component = find_component_for("neighborhood") 
+      component = find_component_for("neighborhood")
     end
     component
   rescue

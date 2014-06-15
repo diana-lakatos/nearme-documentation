@@ -40,7 +40,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       assert_select "h1", @user.name
       assert_select ".info h2", "Manager at DesksNearMe"
       assert_select ".info h4", "Prague"
-      assert_select ".info h4", "Skills & Interests"
+      assert_select ".info h4", "Skills &amp; Interests"
       assert_select ".info .icon .ico-mail", 1
 
       assert_select ".info .icon .ico-facebook-full", 0
@@ -91,22 +91,6 @@ class RegistrationsControllerTest < ActionController::TestCase
       @user.reload
       @controller.current_user.id == @user.id
       assert @user.verified_at
-    end
-
-    context 'with Timecop' do
-
-      teardown do
-        Timecop.return
-      end
-
-      should "mark user as not synchronized after verification" do
-        @user.mailchimp_synchronized!
-        Timecop.travel(Time.zone.now+10.seconds)
-        get :verify, :id => @user.id, :token => @user.email_verification_token
-        @user.reload
-        assert !@user.mailchimp_synchronized?
-      end
-
     end
 
     should "redirect verified user with listing to dashboard" do

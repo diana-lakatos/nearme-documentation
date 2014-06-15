@@ -7,8 +7,8 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
     @public_location_type = FactoryGirl.create(:location_type, :name => 'public')
     @private_location_type = FactoryGirl.create(:location_type, :name => 'private')
 
-    @public_location = FactoryGirl.create(:location, :location_type => @public_location_type, :latitude => 5, :longitude => 5)
-    @private_location = FactoryGirl.create(:location, :location_type => @private_location_type, :latitude => 10, :longitude => 10)
+    @public_location = FactoryGirl.create(:location, :location_type => @public_location_type, location_address: FactoryGirl.build(:address, latitude: 5, longitude: 5 ))
+    @private_location = FactoryGirl.create(:location, :location_type => @private_location_type, location_address: FactoryGirl.build(:address, latitude: 10, longitude: 10 ))
 
     @public_listing_type = 'Shared Desks'
     @private_listing_type = 'Meeting Room'
@@ -88,8 +88,8 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
         @economics_food_company.industries = [@economics_industry, @food_industry]
         @economics_food_company.save!
 
-        @location1 = FactoryGirl.create(:location, :company => @internet_food_company, :latitude => 5, :longitude => 5)
-        @location2 = FactoryGirl.create(:location, :company => @economics_food_company, :latitude => 5, :longitude => 5)
+        @location1 = FactoryGirl.create(:location, :company => @internet_food_company, location_address: FactoryGirl.build(:address, :latitude => 5, :longitude => 5))
+        @location2 = FactoryGirl.create(:location, :company => @economics_food_company, location_address: FactoryGirl.build(:address, :latitude => 5, :longitude => 5))
         @filters = { :midpoint => [7, 7], :radius => 1000 }
 
         @listing1 = FactoryGirl.create(:transactable, :location => @location1)

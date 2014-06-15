@@ -1,5 +1,6 @@
 - legacy false
-- title location_to_title(@location)
+- title render 'locations/title', location: @location
+- canonical_url location_path(@location)
 
 - content_for :meta_description do
   = "Read reviews #{@location.reviews.count unless @location.reviews.count.zero?} and book at #{@location.company.try(:name)}. #{@location.description.try(:truncate, 28)}"

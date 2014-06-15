@@ -101,7 +101,7 @@ namespace :populate do
       locations.each do |location|
         current_geocoding += 1
         raise 'Limit reached' if current_geocoding > limit
-        Location::AddressComponentsPopulator.new(location, show_inspections: true).perform
+        Address::AddressComponentsPopulator.new(location, show_inspections: true).perform
       end
       puts "Done."
     rescue

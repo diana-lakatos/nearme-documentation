@@ -19,6 +19,10 @@ module ApplicationHelper
     @show_title = show_title
   end
 
+  def canonical_url(url)
+    content_for(:canonical_url) { url }
+  end
+
   def meta_title(name)
     content_for(:meta_title) { h(name.to_s) }
   end

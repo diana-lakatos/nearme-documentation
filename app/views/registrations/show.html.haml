@@ -1,6 +1,9 @@
-.row-fluid  
+- if @user.job_title_and_company_name.blank? && @user.current_location_and_industry.blank? && @user.biography.blank? && @user.skills_and_interests.blank?
+  = content_for :meta do
+    %meta{name: "robots", content:"noindex"}
+.row-fluid
   .span8.offset2
-    %h1 
+    %h1
       %span.ico-user.padding
         = @user.name
     .box.clearfix
@@ -15,10 +18,12 @@
           - if @user.social_url('instagram')
             =render 'social_connection', icon: 'ico-instagram', provider: 'instagram', count: false, link: @user.social_url('instagram'), rel: nil
           =render 'social_connection', icon: 'ico-mail', provider: 'mail', count: false, link: new_user_user_message_path(user_id: @user.slug), rel: 'modal'
-      .info{class: 'span8'}
-        %h2= @user.job_title_and_company_name
-        %h4= @user.current_location_and_industry
-        %p= @user.biography
-        - if @user.skills_and_interests.present?
-          %h4 Skills & Interests
-          %p= @user.skills_and_interests
+      - if @user.job_title_and_company_name.present? || @user.current_location_and_industry.present? || @user.biography.present? || @user.skills_and_interests.present?
+        .info.span8
+          %h2= @user.job_title_and_company_name
+          %h4= @user.current_location_and_industry
+          %p= @user.biography
+          - if @user.skills_and_interests.present?
+            %h4 Skills &amp; Interests
+            %p= @user.skills_and_interests
+

@@ -6,7 +6,7 @@ class TransactableType < ActiveRecord::Base
 
   MAX_PRICE = 2147483647
 
-  attr_accessible :name, :pricing_options, :pricing_validation, :availability_options
+  attr_accessible :name, :pricing_options, :pricing_validation, :availability_options, :availability_templates_attributes
 
   has_many :transactables, inverse_of: :transactable_type
   has_many :transactable_type_attributes, inverse_of: :transactable_type
@@ -21,8 +21,11 @@ class TransactableType < ActiveRecord::Base
   after_save :setup_price_attributes, :if => lambda { |transactable_type| transactable_type.pricing_options_changed? || transactable_type.pricing_validation_changed? }
   after_save :setup_availability_attributes, :if => lambda { |transactable_type| transactable_type.availability_options_changed? && transactable_type.availability_options.present? }
 
+  validates_presence_of :name
   validate :pricing_validation_is_correct
   validate :availability_options_are_correct
+
+  accepts_nested_attributes_for :availability_templates
 
   def defer_availability_rules?
     availability_options && availability_options["defer_availability_rules"]
