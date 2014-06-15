@@ -65,4 +65,8 @@ class LocationDrop < BaseDrop
   def linkedin_social_share_url
     routes.new_location_social_share_path(@location, provider: 'linkedin', track_email_event: true)
   end
+
+  def default_title
+    [location.company.name, location.suburb, location.city, location.country == "United States" ? location.state_code : location.country].reject(&:blank?).join(' - ')
+  end
 end

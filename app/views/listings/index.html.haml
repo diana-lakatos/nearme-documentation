@@ -1,3 +1,6 @@
+= content_for :meta do
+  %meta{name: "robots", content:"noindex"}
+
 .clearfix
   %h2 #{platform_context.bookable_noun.pluralize}
   %p Ordered by most recently created. Hover over a day to see how many #{platform_context.bookable_noun.pluralize} are available.

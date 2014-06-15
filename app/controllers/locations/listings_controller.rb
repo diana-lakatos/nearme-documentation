@@ -2,7 +2,7 @@ class Locations::ListingsController < ApplicationController
   before_filter :find_listing, :only => [:show]
 
   def show
-    redirect_to location_path(@location, @listing)
+    redirect_to location_path(@location, @listing), :status => :moved_permanently
   end
 
   protected
