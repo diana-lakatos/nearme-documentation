@@ -15,7 +15,7 @@ class Instance < ActiveRecord::Base
                   :password_protected, :test_mode, :olark_api_key, :olark_enabled, :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key,
                   :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret, :instagram_consumer_key, :instagram_consumer_secret,
                   :support_imap_hash, :support_email, :paypal_email, :db_connection_string, :stripe_currency, :user_info_in_onboarding_flow, :default_search_view,
-                  :user_based_marketplace_views, :instance_payment_gateways_attributes
+                  :user_based_marketplace_views, :instance_payment_gateways_attributes, :transactable_types_attributes
 
   attr_encrypted :live_paypal_username, :live_paypal_password, :live_paypal_signature, :live_paypal_app_id, :live_stripe_api_key, :live_paypal_client_id,
                  :live_paypal_client_secret, :live_balanced_api_key, :marketplace_password, :test_stripe_api_key, :test_paypal_username, :test_paypal_password,
@@ -80,6 +80,7 @@ class Instance < ActiveRecord::Base
   accepts_nested_attributes_for :translations, allow_destroy: true, reject_if: proc { |params| params[:value].blank? && params[:id].blank? }
   accepts_nested_attributes_for :instance_billing_gateways, allow_destroy: true, reject_if: proc { |params| params[:billing_gateway].blank? }
   accepts_nested_attributes_for :instance_payment_gateways, allow_destroy: true
+  accepts_nested_attributes_for :transactable_types
 
   scope :with_support_imap, -> { where 'support_imap_hash IS NOT NULL' }
 

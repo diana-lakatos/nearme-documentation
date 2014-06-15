@@ -157,7 +157,7 @@ class Theme < ActiveRecord::Base
         current_attributes.delete(attribute)
       end
     end
-    current_attributes.each do |k, v| 
+    current_attributes.each do |k, v|
       cloned_theme.send("#{k}=", v)
     end
     cloned_theme
@@ -191,27 +191,27 @@ class Theme < ActiveRecord::Base
   end
 
   def logo_image_dimensions
-    { :width => 240, :height => 60} 
+    { :width => 240, :height => 60}
   end
 
   def logo_retina_image_dimensions
-    { :width => 240, :height => 60} 
+    { :width => 240, :height => 60}
   end
 
   def favicon_image_dimensions
-    { :width => 32, :height => 32} 
+    { :width => 32, :height => 32}
   end
 
-  def icon_image_dimensions 
-    { :width => 60, :height => 60} 
+  def icon_image_dimensions
+    { :width => 60, :height => 60}
   end
 
   def icon_retina_image_dimensions
-    { :width => 60, :height => 60} 
+    { :width => 60, :height => 60}
   end
 
   def hero_image_dimensions
-    { :width => 250, :height => 202} 
+    { :width => 250, :height => 202}
   end
 
   private
