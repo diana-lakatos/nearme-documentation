@@ -56,13 +56,11 @@ class Search.SearchController extends Search.Controller
       @searchField.blur()
 
     @map.on 'viewportChanged', =>
-      return if @processingResults && !@force_viewport_change
+      # NB: The viewport can change during 'query based' result loading, when the map fits
+      #     the bounds of the search results. We don't want to trigger a bounding box based
+      #     lookup during a controlled viewport change such as this.
+      return if @processingResults
       return unless @redoSearchMapControl.isEnabled()
-      @force_viewport_change = false
-      $('#search_results_count').text('Loading...')
-      $('.search-pagination').find('.page-entries-info').html('')
-      $('.search-pagination').find('.pagination').html('')
-      $('#results').find('article.location').remove()
 
       @triggerSearchWithBoundsAfterDelay()
 

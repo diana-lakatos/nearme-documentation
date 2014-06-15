@@ -1,4 +1,4 @@
-class Location::AddressComponentsPopulator
+class Address::AddressComponentsPopulator
 
   LIMIT = 500
 

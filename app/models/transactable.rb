@@ -27,8 +27,10 @@ class Transactable < ActiveRecord::Base
 
   has_many :amenity_holders, as: :holder, dependent: :destroy, inverse_of: :holder
   has_many :amenities, through: :amenity_holders, inverse_of: :listings
+  has_one :location_address, through: :location
 
   has_many :reviews, :through => :reservations, inverse_of: :listings
+  has_many :company_industries, through: :location
 
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
   accepts_nested_attributes_for :photos, :allow_destroy => true

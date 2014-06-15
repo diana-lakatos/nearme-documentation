@@ -11,13 +11,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140530013613) do
+ActiveRecord::Schema.define(version: 20140613082807) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
 
-  create_table "amenities", force: true do |t|
+  create_table "addresses", :force => true do |t|
+    t.integer  "instance_id"
+    t.string   "address"
+    t.string   "address2"
+    t.string   "formatted_address"
+    t.string   "street"
+    t.string   "suburb"
+    t.string   "city"
+    t.string   "country"
+    t.string   "state"
+    t.string   "postcode",           :limit => 10
+    t.text     "address_components"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.integer  "entity_id"
+    t.string   "entity_type"
+    t.datetime "deleted_at"
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
+  end
+
+  add_index "addresses", ["entity_id", "entity_type"], name: "index_addresses_on_entity_id_and_entity_type", using: :btree
+
+  create_table "amenities", :force => true do |t|
     t.string   "name"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
@@ -599,6 +622,7 @@ ActiveRecord::Schema.define(version: 20140530013613) do
     t.integer  "creator_id"
     t.boolean  "listings_public",    default: true
     t.integer  "partner_id"
+    t.integer  "address_id"
   end
 
   add_index "locations", ["administrator_id"], name: "index_locations_on_administrator_id", using: :btree
@@ -1174,15 +1198,15 @@ ActiveRecord::Schema.define(version: 20140530013613) do
     t.text     "referer"
     t.string   "source"
     t.string   "campaign"
-    t.float    "guest_rating_average"
-    t.integer  "guest_rating_count"
-    t.float    "host_rating_average"
-    t.integer  "host_rating_count"
     t.datetime "verified_at"
     t.string   "google_analytics_id"
     t.string   "browser"
     t.string   "browser_version"
     t.string   "platform"
+    t.float    "guest_rating_average"
+    t.integer  "guest_rating_count"
+    t.float    "host_rating_average"
+    t.integer  "host_rating_count"
     t.text     "avatar_transformation_data"
     t.string   "avatar_original_url"
     t.datetime "avatar_versions_generated_at"

@@ -9,7 +9,12 @@ class V1::LocationsController <  V1::BaseController
   end
 
   def create
-    @location = Location.create(params[:location])
+    lat = params[:location].try(:delete, :latitude)
+    long = params[:location].try(:delete, :longitude)
+    address = params[:location].try(:delete, :address)
+    location_address = Address.new({latitude: lat, longitude: long, address: address})
+    @location = Location.new(params[:location])
+    @location.location_address = location_address
     @location.company_id = current_user.default_company.id
     if @location.save
       render :json => {:success => true, :id => @location.id}

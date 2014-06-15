@@ -449,83 +449,6 @@ class UserTest < ActiveSupport::TestCase
   end
 
 
-  context "mailchimp" do
-
-    should "not be exported without synchronize timestamp" do
-      @user = FactoryGirl.create(:user)
-      assert !@user.mailchimp_exported?
-    end
-
-    should "not exported with synchronize timestamp" do
-      @user = FactoryGirl.create(:user)
-      @user.mailchimp_synchronized_at = Time.zone.now
-      assert @user.mailchimp_exported?
-    end
-
-    context "synchronize" do
-
-      setup do
-        @user = FactoryGirl.create(:user)
-        @user.mailchimp_synchronized!
-      end
-
-      teardown do
-        Timecop.return
-      end
-
-      context "user CRUD" do
-
-        should "be synchronized if no change happened since last synchronize" do
-          assert @user.mailchimp_synchronized?
-        end
-
-        should "not be synchronized if change to user happened since last synchronize" do
-          Timecop.travel(Time.zone.now+10.seconds)
-          @user.name = 'John Smith'
-          @user.save!
-          assert !@user.mailchimp_synchronized?
-        end
-
-        should "be synchronized if multiple changes happens to user but none after last synchronize" do
-          Timecop.travel(Time.zone.now+10.seconds)
-          @user.name = 'John Smith'
-          @user.save!
-          Timecop.travel(Time.zone.now+10.seconds)
-          @user.mailchimp_synchronized!
-          assert @user.mailchimp_synchronized?
-        end
-      end
-    end
-
-    context "has listing without price" do
-
-      setup do
-        @user = FactoryGirl.create(:user, :name => 'John Smith')
-        @company = FactoryGirl.create(:company, :creator => @user)
-        @location = FactoryGirl.create(:location, :company => @company)
-        @location2 = FactoryGirl.create(:location, :company => @company)
-        FactoryGirl.create(:transactable, :location => @location, :daily_price_cents => 10)
-        FactoryGirl.create(:transactable, :location => @location, :daily_price_cents => 20)
-      end
-
-      should "has listing without price return false if all listings have price" do
-        assert !@user.reload.has_listing_without_price?
-      end
-
-      should "be false if location has only one listing without prices" do
-        FactoryGirl.create(:transactable, :location => @location2, :daily_price_cents => nil, :weekly_price_cents => nil, :monthly_price_cents => nil, :free => true)
-        assert @user.reload.has_listing_without_price?
-      end
-
-      should "be false if location has many listing, and at least one is without price" do
-        FactoryGirl.create(:transactable, :location => @location, :daily_price_cents => nil, :weekly_price_cents => nil, :monthly_price_cents => nil, :free => true)
-        assert @user.reload.has_listing_without_price?
-      end
-
-    end
-
-  end
-
   context 'no orphaned childs' do
 
     context 'user is the only owner of company' do
@@ -596,14 +519,14 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should 'return empty array if no platform_context set' do
-      assert_equal @user.listings_in_near, []
+      assert_equal [], @user.listings_in_near
     end
 
     should 'return listings from current platform_context instance' do
       # user was last geolocated in Auckland
       @user.last_geolocated_location_latitude = -36.858675
       @user.last_geolocated_location_longitude = 174.777303
-      @user.save
+      @user.save!
 
       listing_current_instance = FactoryGirl.create(:listing_in_auckland)
 
@@ -617,7 +540,7 @@ class UserTest < ActiveSupport::TestCase
       # user was last geolocated in Auckland
       @user.last_geolocated_location_latitude = -36.858675
       @user.last_geolocated_location_longitude = 174.777303
-      @user.save
+      @user.save!
       listing_first = FactoryGirl.create(:listing_in_auckland)
       listing_second = FactoryGirl.create(:listing_in_auckland)
       reservation = FactoryGirl.create(:reservation, listing: listing_first, user: @user)
