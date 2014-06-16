@@ -55,4 +55,8 @@ class AvatarUploader < BaseUploader
   def clean_model
     model.update_attribute(:avatar_transformation_data, nil)
   end
+
+  def instance_id
+    instance_id_nil
+  end
 end

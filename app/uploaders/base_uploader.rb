@@ -45,6 +45,14 @@ class BaseUploader < CarrierWave::Uploader::Base
   end
 
   def instance_prefix
-    platform_context.present? ? platform_context.instance.id : 'universal'
+    "instances/#{instance_id}"
+  end
+
+  def instance_id
+    (platform_context.present? ? platform_context.instance.id : instance_id_nil)
+  end
+
+  def instance_id_nil
+    'universal'
   end
 end
