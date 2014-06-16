@@ -1,6 +1,6 @@
 DesksnearMe::Application.configure do
   config.eager_load = true
-  
+
   config.cache_classes = true
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
@@ -35,8 +35,8 @@ DesksnearMe::Application.configure do
       :aws_access_key_id          => 'AKIAI5EVP6HB47OZZXXA',
       :aws_secret_access_key      => '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'
     }
-    config.fog_directory        = 'desksnearme.production'
-    config.asset_host           = 'https://s3.amazonaws.com/desksnearme.production'
+    config.fog_directory        = 'nearme.production'
+    config.asset_host           = 'https://s3.amazonaws.com/nearme.production'
     config.storage              = :fog
   end
 

@@ -5,7 +5,7 @@ namespace :s3 do
     puts "Start..."
     AWS.config(access_key_id: 'AKIAI5EVP6HB47OZZXXA', secret_access_key: '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', region: 'us-west-1')
     s3 = AWS::S3.new
-    @from_bucket = 'desksnearme.staging-prod-copy'
+    @from_bucket = 'desksnearme.production'
     @to_bucket = 'nearme.production'
     {
       "BlogPost" => [:header, :author_avatar],
@@ -31,7 +31,7 @@ namespace :s3 do
           PlatformContext.current = PlatformContext.new(object.instance)
         end
         uploaders.each do |uploader|
-          puts "#{object.id} s3.buckets[#{@from_bucket}].objects[#{object.send(uploader).legacy_store_dir}].copy_to(#{object.send(uploader).store_dir}, bucket_name: #{@to_bucket})"
+          s3.buckets[@from_bucket].objects[object.send(uploader).legacy_store_dir].copy_to(object.send(uploader).store_dir, bucket_name: @to_bucket)
         end
       end
     end
