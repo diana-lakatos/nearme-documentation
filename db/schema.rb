@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 20140702135751) do
   enable_extension "btree_gist"
   enable_extension "hstore"
 
-  create_table "addresses", :force => true do |t|
+  create_table "addresses", force: true do |t|
     t.integer  "instance_id"
     t.string   "address"
     t.string   "address2"
@@ -29,20 +29,29 @@ ActiveRecord::Schema.define(version: 20140702135751) do
     t.string   "city"
     t.string   "country"
     t.string   "state"
-    t.string   "postcode",           :limit => 10
+    t.string   "postcode",           limit: 10
     t.text     "address_components"
     t.float    "latitude"
     t.float    "longitude"
     t.integer  "entity_id"
     t.string   "entity_type"
     t.datetime "deleted_at"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "addresses", ["entity_id", "entity_type"], name: "index_addresses_on_entity_id_and_entity_type", using: :btree
 
-  create_table "amenities", :force => true do |t|
+  create_table "amazon_move_logs", force: true do |t|
+    t.integer  "entity_id"
+    t.string   "entity_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "amazon_move_logs", ["entity_id", "entity_type"], name: "index_amazon_move_logs_on_entity_id_and_entity_type", using: :btree
+
+  create_table "amenities", force: true do |t|
     t.string   "name"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
@@ -238,6 +247,24 @@ ActiveRecord::Schema.define(version: 20140702135751) do
 
   add_index "company_users", ["company_id"], name: "index_company_users_on_company_id", using: :btree
   add_index "company_users", ["user_id"], name: "index_company_users_on_user_id", using: :btree
+
+  create_table "confidential_files", force: true do |t|
+    t.string   "caption"
+    t.integer  "instance_id"
+    t.integer  "uploader_id"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.string   "file"
+    t.text     "comment"
+    t.string   "state"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "confidential_files", ["instance_id"], name: "index_confidential_files_on_instance_id", using: :btree
+  add_index "confidential_files", ["owner_id", "owner_type"], name: "index_confidential_files_on_owner_id_and_owner_type", using: :btree
+  add_index "confidential_files", ["uploader_id"], name: "index_confidential_files_on_uploader_id", using: :btree
 
   create_table "country_instance_payment_gateways", force: true do |t|
     t.string   "country_alpha2_code"
@@ -530,6 +557,7 @@ ActiveRecord::Schema.define(version: 20140702135751) do
     t.boolean  "user_based_marketplace_views",                                default: false
     t.string   "searcher_type"
     t.datetime "master_lock"
+    t.boolean  "onboarding_verification_required",                            default: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -587,13 +615,6 @@ ActiveRecord::Schema.define(version: 20140702135751) do
   add_index "listings", ["location_id"], name: "index_listings_on_location_id", using: :btree
   add_index "listings", ["partner_id"], name: "index_listings_on_partner_id", using: :btree
 
-  create_table "location_amenities", force: true do |t|
-    t.integer  "amenity_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "location_id"
-  end
-
   create_table "location_types", force: true do |t|
     t.string   "name"
     t.datetime "created_at",  null: false
@@ -638,6 +659,7 @@ ActiveRecord::Schema.define(version: 20140702135751) do
     t.integer  "address_id"
   end
 
+  add_index "locations", ["address_id"], name: "index_locations_on_address_id", using: :btree
   add_index "locations", ["administrator_id"], name: "index_locations_on_administrator_id", using: :btree
   add_index "locations", ["company_id"], name: "index_locations_on_company_id", using: :btree
   add_index "locations", ["creator_id"], name: "index_locations_on_creator_id", using: :btree
@@ -672,8 +694,8 @@ ActiveRecord::Schema.define(version: 20140702135751) do
     t.integer  "instance_id"
   end
 
-  add_index "pages", ["theme_id"], name: "index_pages_on_theme_id", using: :btree
   add_index "pages", ["instance_id"], name: "index_pages_on_instance_id", using: :btree
+  add_index "pages", ["theme_id"], name: "index_pages_on_theme_id", using: :btree
 
   create_table "partner_inquiries", force: true do |t|
     t.string   "name"
@@ -753,9 +775,11 @@ ActiveRecord::Schema.define(version: 20140702135751) do
     t.datetime "image_versions_generated_at"
     t.integer  "image_original_height"
     t.integer  "image_original_width"
+    t.integer  "instance_id"
   end
 
   add_index "photos", ["creator_id"], name: "index_photos_on_creator_id", using: :btree
+  add_index "photos", ["instance_id"], name: "index_photos_on_instance_id", using: :btree
   add_index "photos", ["transactable_id"], name: "index_photos_on_listing_id", using: :btree
 
   create_table "platform_contacts", force: true do |t|
@@ -914,22 +938,12 @@ ActiveRecord::Schema.define(version: 20140702135751) do
 
   add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
 
-  create_table "search_queries", force: true do |t|
-    t.string   "query"
-    t.text     "agent"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "sessions", force: true do |t|
     t.string   "session_id", null: false
     t.text     "data"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
-
-  add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", using: :btree
-  add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
   create_table "support_faqs", force: true do |t|
     t.integer  "instance_id"

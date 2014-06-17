@@ -35,8 +35,8 @@ DesksnearMe::Application.configure do
       :aws_access_key_id          => 'AKIAI5EVP6HB47OZZXXA',
       :aws_secret_access_key      => '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'
     }
-    config.fog_directory        = 'nearme.production'
-    config.asset_host           = 'https://s3.amazonaws.com/nearme.production'
+    config.fog_directory        = 'near-me.production'
+    config.asset_host           = 'https://s3.amazonaws.com/near-me.production'
     config.storage              = :fog
   end
 

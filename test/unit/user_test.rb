@@ -143,10 +143,78 @@ class UserTest < ActiveSupport::TestCase
       context "when country name required" do
         should "be invalid" do
           user = FactoryGirl.build(:user_without_country_name, :country_name_required => true)
-          assert_equal user.valid?, false
+          refute user.valid?
         end
       end
 
+    end
+
+    context 'confidential files' do
+
+      setup do
+        @user = FactoryGirl.build(:user)
+        @user.confidential_files = []
+      end
+
+      context 'instance does not require verification' do
+        should 'be valid without confidential files' do
+          assert @user.valid?
+        end
+
+        should 'be trusted even without confidential files' do
+          assert @user.is_trusted?
+        end
+
+      end
+
+      context 'instance does require verification' do
+
+        setup do
+          PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance_require_verification))
+          @confidential_file = FactoryGirl.build(:confidential_file)
+        end
+
+        should 'not be trusted without confidential files' do
+          refute @user.is_trusted?
+        end
+
+        should 'not be trusted with confidential file that is uploaded' do
+          @user.confidential_files << @confidential_file
+          @user.save!
+          refute @user.is_trusted?
+        end
+
+        should 'not be trusted with confidential file that is pending' do
+          @confidential_file.review
+          @user.confidential_files << @confidential_file
+          @user.save!
+          refute @user.is_trusted?
+        end
+
+        should 'not be trusted with confidential file that is rejected' do
+          @confidential_file.review
+          @confidential_file.reject
+          @user.confidential_files << @confidential_file
+          @user.save!
+          refute @user.is_trusted?
+        end
+
+        should 'not be trusted with confidential file that is questioned' do
+          @confidential_file.review
+          @confidential_file.question
+          @user.confidential_files << @confidential_file
+          @user.save!
+          refute @user.is_trusted?
+        end
+
+        should 'be trusted with confidential file that is accepted' do
+          @confidential_file.review
+          @confidential_file.accept
+          @user.confidential_files << @confidential_file
+          @user.save!
+          assert @user.is_trusted?
+        end
+      end
     end
   end
 

@@ -18,6 +18,7 @@ class Transactable < ActiveRecord::Base
   has_many :inquiries, :inverse_of => :listing
   has_many :availability_rules, -> { order 'day ASC' }, :as => :target, :dependent => :destroy, inverse_of: :target
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
+  has_many :confidential_files, as: :owner
   belongs_to :transactable_type, :inverse_of => :transactables
   belongs_to :company, :inverse_of => :listings
   belongs_to :location, inverse_of: :listings
@@ -48,6 +49,7 @@ class Transactable < ActiveRecord::Base
 
   # == Callbacks
   before_validation :set_activated_at
+  before_validation :set_enabled
 
   # == Validations
   validates_presence_of :location, :transactable_type
@@ -142,7 +144,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def set_defaults
-    self.enabled = true if self.enabled.nil?
+    self.enabled = is_trusted? if self.enabled.nil?
     transactable_type_attributes.each do |transactable_attribute_type|
       send(:"#{transactable_attribute_type.name}=", transactable_attribute_type.default_value) if send(transactable_attribute_type.name).nil? && !transactable_attribute_type.default_value.nil?
     end
@@ -377,12 +379,32 @@ class Transactable < ActiveRecord::Base
     self.save(validate: false)
   end
 
+  def is_trusted?
+    if PlatformContext.current.instance.onboarding_verification_required
+      self.confidential_files.accepted.count > 0 || self.location.try(:is_trusted?)
+    else
+      true
+    end
+  end
+
+  def confidential_file_acceptance_cancelled!
+    update_attribute(:enabled, false) unless is_trusted?
+  end
+
+  def confidential_file_accepted!
+    update_attribute(:enabled, true) if is_trusted?
+  end
+
   private
 
   def set_activated_at
     if enabled_changed?
       self.activated_at = (enabled ? Time.current : nil)
     end
+  end
+
+  def set_enabled
+    self.enabled = is_trusted? if self.enabled
   end
 
   def mass_assignment_authorizer(role = :default)

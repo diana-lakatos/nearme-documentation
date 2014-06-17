@@ -3,10 +3,17 @@ namespace :s3 do
   desc "Move files from old path to the new path"
   task :move => :environment do
     puts "Start..."
-    AWS.config(access_key_id: 'AKIAI5EVP6HB47OZZXXA', secret_access_key: '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', region: 'us-west-1')
-    s3 = AWS::S3.new
     @from_bucket = 'desksnearme.production'
-    @to_bucket = 'nearme.production'
+
+    @to_bucket = if Rails.env.staging?
+                   puts "Staging env"
+                   'near-me.staging'
+                 elsif Rails.env.production?
+                   puts "Production env"
+                   'near-me.production'
+                 else
+                   'near-me.staging'
+                 end
     {
       "BlogPost" => [:header, :author_avatar],
       "ThemeFont" => [
@@ -24,14 +31,29 @@ namespace :s3 do
     }.each do |klass_string, uploaders|
       PlatformContext.current = nil
       puts "=== #{klass_string} ==="
-      objects = klass_string.constantize.unscoped.order('id ASC').find_each do |object|
-        if "User" == klass_string || (Photo === object && object.listing.nil?) || (Theme === object && object.owner.nil?) || object.instance.nil?
+      klass_string.constantize.unscoped.order('id ASC').find_each do |object|
+        if object.instance.nil?
+          puts "#{object.class}(id=#{object.id}) skipped - lack of instance"
+          next
+        elsif "User" == klass_string
           PlatformContext.current = nil
         else
           PlatformContext.current = PlatformContext.new(object.instance)
         end
+        puts "#{klass_string} id=#{object.id}"
         uploaders.each do |uploader|
-          s3.buckets[@from_bucket].objects[object.send(uploader).legacy_store_dir].copy_to(object.send(uploader).store_dir, bucket_name: @to_bucket)
+          legacy_store_dir = object.send(uploader).legacy_store_dir
+          legacy_store_dir += "/" unless legacy_store_dir.last == '/'
+          store_dir = object.send(uploader).store_dir
+          store_dir = store_dir[0..(store_dir.length-2)] if store_dir.last == '/'
+          cmd = "s3cmd cp -r s3://#{@from_bucket}/#{legacy_store_dir} s3://#{@to_bucket}/#{object.send(uploader).store_dir} 2>&1"
+          if @to_bucket
+            result = `#{cmd}`
+            puts result if result.present?
+            AmazonMoveLog.create(entity: object) if result.include?("copied to s3://")
+          else
+            puts cmd
+          end
         end
       end
     end
