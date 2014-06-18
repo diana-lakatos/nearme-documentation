@@ -62,7 +62,7 @@ class Manage::LocationsController < Manage::BaseController
   private
 
   def redirect_if_draft_listing
-    redirect_to new_space_wizard_url if current_user.listings.draft.any?
+    redirect_to new_space_wizard_url if current_user.has_draft_listings
   end
 
   def find_location

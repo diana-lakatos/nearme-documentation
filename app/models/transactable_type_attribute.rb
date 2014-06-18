@@ -10,7 +10,7 @@ class TransactableTypeAttribute < ActiveRecord::Base
     :internal
 
   validates_presence_of :name, :attribute_type
-  validates_uniqueness_of :name, :scope => [:transactable_type_id]
+  validates_uniqueness_of :name, :scope => [:transactable_type_id, :deleted_at]
 
   belongs_to :transactable_type, :inverse_of => :transactable_type_attributes
   belongs_to :instance
