@@ -62,7 +62,7 @@ class InstancePaymentGateway < ActiveRecord::Base
     when Array
       settings.delete_if { |k| !key.include?(k) }
     when NilClass
-      settings
+      settings.symbolize_keys
     else
       return String.new
     end
