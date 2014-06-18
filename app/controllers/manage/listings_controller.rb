@@ -108,7 +108,7 @@ class Manage::ListingsController < Manage::BaseController
   def disable_unchecked_prices
     Transactable::PRICE_TYPES.each do |price|
       if params[:listing]["#{price}_price"].blank?
-        @listing.send("#{price}_price=", nil)
+        @listing.send("#{price}_price=", nil) if @listing.respond_to?("#{price}_price=")
       end
     end
   end
