@@ -2,7 +2,6 @@ class InstanceAdmin::Analytics::SalesController < InstanceAdmin::Analytics::Base
 
   def show
     sql = 'SELECT reservations.*, '\
-    'transactables.description AS transactable_description, '\
     'transactables.properties AS transactable_properties '\
     'FROM reservations '\
     'JOIN transactables '\
