@@ -27,21 +27,22 @@ class PlatformHomeController < ActionController::Base
     @platform_contact = PlatformContact.new
   end
 
-  def contacts
-    @platform_contacts = PlatformContact.order(:id)
-    respond_to do |format|
-      format.csv { send_data @platform_contacts.to_csv }
-    end
-  end
-
   def contact_submit
     @platform_contact = PlatformContact.new(params[:platform_contact])
     @platform_contact.referer = request.referer
     if @platform_contact.save
       PlatformMailer.enqueue.contact_request(@platform_contact)
+      PlatformMailer.enqueue.email_notification(@platform_contact.email)
       render :contact_submit, layout: false
     else
       render text: @platform_contact.errors.full_messages.to_sentence, layout: false, :status => :unprocessable_entity
+    end
+  end
+
+  def contacts
+    @platform_contacts = PlatformContact.order(:id)
+    respond_to do |format|
+      format.csv { send_data @platform_contacts.to_csv }
     end
   end
 
