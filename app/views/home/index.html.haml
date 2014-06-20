@@ -17,7 +17,5 @@
     #{platform_context.homepage_content}
 
 - content_for :domready do
-  new Search.HomeController($('#listing_search'))
   new Home.BackgroundController($('#hero'))
   new Home.Controller($('body'))
-
