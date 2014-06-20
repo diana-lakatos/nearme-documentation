@@ -51,6 +51,10 @@ class PlatformContextDecorator
     @platform_context.theme.contact_email_with_fallback
   end
 
+  def search_field_placeholder
+    instance.searcher_type == 'fulltext' ? "Search by keyword" : "Search by city or address"
+  end
+
   def footer_cache_key
     "footer_#{platform_context_detail_key}_#{normalized_footer_cache_timestamp}"
   end
