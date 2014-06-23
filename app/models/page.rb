@@ -1,4 +1,6 @@
 class Page < ActiveRecord::Base
+  auto_set_platform_context
+  scoped_to_platform_context
   acts_as_paranoid
   class NotFound < ActiveRecord::RecordNotFound; end
 
@@ -12,6 +14,7 @@ class Page < ActiveRecord::Base
   skip_callback :commit, :after, :remove_hero_image!
 
   belongs_to :theme
+  delegate :instance, to: :theme
 
   default_scope -> { rank(:position) }
 
