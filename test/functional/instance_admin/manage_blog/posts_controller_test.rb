@@ -27,7 +27,10 @@ class InstanceAdmin::ManageBlog::PostsControllerTest < ActionController::TestCas
       assert_difference 'BlogPost.count', 1 do
         post :create, "blog_post"=>{
                         "title"=>"Blog post",
-                        "content"=>"lorem ipsum"
+                        "content"=>"lorem ipsum",
+                        "published_at(1i)"=>"2014",
+                        "published_at(2i)"=>"6",
+                        "published_at(3i)"=>"24"
                       }
       end
       assert_equal 'Blog post', assigns(:blog_post).title

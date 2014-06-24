@@ -4,10 +4,10 @@ class BlogPost < ActiveRecord::Base
   belongs_to :user # user who created this post
 
   extend FriendlyId
-  friendly_id :title, use: [:slugged, :history, :finders]
+  friendly_id :slug_candidates, use: [:slugged, :history, :finders]
 
   before_validation :sanitize_content
-  validates_presence_of :blog_instance, :user, :title, :content
+  validates_presence_of :blog_instance, :user, :title, :content, :published_at
 
   mount_uploader :header, HeroImageUploader
   mount_uploader :author_avatar, SimpleAvatarUploader
@@ -41,6 +41,12 @@ class BlogPost < ActiveRecord::Base
     slug.blank?
   end
 
+  def slug_candidates
+    [
+      :title,
+      [:title, published_at.strftime("%b %d %Y")]
+    ]
+  end
 
   private
 
