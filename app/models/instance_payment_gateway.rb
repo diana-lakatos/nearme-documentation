@@ -9,7 +9,7 @@ class InstancePaymentGateway < ActiveRecord::Base
   serialize :live_settings, Hash
 
   attr_encrypted :test_settings, :live_settings, :key => DesksnearMe::Application.config.secret_token, marshal: true
-  
+
   validate :payment_gateway_id, :test_settings, :live_settings, presence: true
 
   has_many :country_instance_payment_gateways, dependent: :destroy
@@ -50,7 +50,7 @@ class InstancePaymentGateway < ActiveRecord::Base
       settings = instance_payment_gateway.send(:"#{mode}_settings")
     end
 
-    settings_for_key(settings, key)
+    settings_for_key(settings.with_indifferent_access, key)
   end
 
   def self.settings_for_key(settings, key)
@@ -74,14 +74,14 @@ class InstancePaymentGateway < ActiveRecord::Base
 
     if instance_payment_gateway.nil?
       instance_payment_gateway = create(
-        payment_gateway_id: payment_gateway.id, 
-        live_settings: payment_gateway.settings, 
+        payment_gateway_id: payment_gateway.id,
+        live_settings: payment_gateway.settings,
         test_settings: payment_gateway.settings
       )
     end
 
     mode = instance_payment_gateway.instance.payment_gateway_mode if mode.nil?
-    
+
     settings = instance_payment_gateway.send(:"#{mode.to_s}_settings").merge(settings)
     instance_payment_gateway.update_attribute(:"#{mode.to_s}_settings", settings)
   end
