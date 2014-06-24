@@ -8,7 +8,7 @@ class Page < ActiveRecord::Base
   ranks :position, with_same: :theme_id
 
   extend FriendlyId
-  friendly_id :path, use: [:slugged, :finders, :scoped], scope: :theme
+  friendly_id :slug_candidates, use: [:slugged, :finders, :scoped], scope: :theme
 
   mount_uploader :hero_image, HeroImageUploader
   skip_callback :commit, :after, :remove_hero_image!
@@ -43,5 +43,12 @@ class Page < ActiveRecord::Base
 
   def should_generate_new_friendly_id?
     true
+  end
+
+  def slug_candidates
+    [
+      :path,
+      [:path, DateTime.now.strftime("%b %d %Y")]
+    ]
   end
 end
