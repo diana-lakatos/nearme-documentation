@@ -62,7 +62,7 @@ class Location < ActiveRecord::Base
   before_save :assign_default_availability_rules
 
   extend FriendlyId
-  friendly_id :urlify, use: [:slugged, :history, :finders]
+  friendly_id :slug_candidates, use: [:slugged, :history, :finders]
 
   scope :filtered_by_location_types_ids,  lambda { |location_types_ids| where(location_type_id: location_types_ids) }
   scope :filtered_by_industries_ids,  lambda { |industry_ids| joins(:company_industries).where('company_industries.industry_id IN (?)', industry_ids) }
@@ -143,12 +143,20 @@ class Location < ActiveRecord::Base
     true
   end
 
-  def urlify
+  def company_and_city
     # given company name is My Company and city is San Francisco, generated "my+company-san+francisco"
     if company.try(:name).present? && city.present? && company.name.strip.downcase.include?(city.strip.downcase)
       company.name
     else
       "#{company.try(:name).try(:strip)} #{city}".strip
     end
+  end
+
+  def slug_candidates
+    [
+      :company_and_city,
+      [:company_and_city, :street],
+      [:company_and_city, :formatted_address]
+    ]
   end
 end

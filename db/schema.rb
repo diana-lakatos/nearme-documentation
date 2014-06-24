@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140620051110) do
+ActiveRecord::Schema.define(version: 20140623204829) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -657,9 +657,11 @@ ActiveRecord::Schema.define(version: 20140620051110) do
     t.datetime "deleted_at"
     t.string   "redirect_url"
     t.boolean  "open_in_new_window", default: true
+    t.integer  "instance_id"
   end
 
   add_index "pages", ["theme_id"], name: "index_pages_on_theme_id", using: :btree
+  add_index "pages", ["instance_id"], name: "index_pages_on_instance_id", using: :btree
 
   create_table "partner_inquiries", force: true do |t|
     t.string   "name"
