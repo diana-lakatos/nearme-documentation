@@ -29,7 +29,6 @@ class LocationTest < ActiveSupport::TestCase
   end
 
   context "#name" do
-
     setup do
       @location = FactoryGirl.create(:location_in_san_francisco)
       @location.company.update_attribute(:name, 'This is company name')
@@ -55,6 +54,7 @@ class LocationTest < ActiveSupport::TestCase
           assert_equal "", location.description
         end
       end
+
       context "and there is a listing with a description" do
         should "return the first listings description" do
           location = Location.new
@@ -64,6 +64,7 @@ class LocationTest < ActiveSupport::TestCase
       end
     end
   end
+
   context "availability" do
     should "return an Availability::Summary for the Location's availability rules" do
       location = Location.new
@@ -90,7 +91,7 @@ class LocationTest < ActiveSupport::TestCase
 
   end
 
-  context "friendly url" do
+  context "url slugging" do
     setup do
       @company = FactoryGirl.create(:company, :name => 'Desks Near Me')
     end
@@ -103,7 +104,7 @@ class LocationTest < ActiveSupport::TestCase
       assert_equal "desks-near-me-san-francisco", @location.slug
     end
 
-    should 'ignore city name if company name already oncludes it ' do
+    should 'ignore city name if company name already includes it ' do
       @company.update_attribute(:name, 'Paradise of San Francisco')
       @location = FactoryGirl.build(:location_in_san_francisco, :company => @company)
       @location.stubs(:formatted_address).returns('San Francisco, CA, California, USA')
@@ -112,10 +113,29 @@ class LocationTest < ActiveSupport::TestCase
       assert_equal "paradise-of-san-francisco", @location.slug
     end
 
+    should 'keep the same slug on save if company_and_city did not change' do
+      @location = FactoryGirl.build(:location_in_san_francisco, :company => @company)
+      @location.stubs(:formatted_address).returns('San Francisco, CA, California, USA')
+      @location.stubs(:city).returns('San Francisco')
+      @location.save!
+      original_slug = @location.slug
+      @location.save!
+      assert @location.slug == original_slug
+    end
+
+    should 'generate a new slug on save if the company_and_city  changed' do
+      @location = FactoryGirl.build(:location_in_san_francisco, :company => @company)
+      @location.stubs(:formatted_address).returns('San Francisco, CA, California, USA')
+      @location.stubs(:city).returns('San Francisco')
+      @location.save!
+      assert_equal "desks-near-me-san-francisco", @location.slug
+      @location.stubs(:city).returns('Los Angeles')
+      @location.save!
+      assert_equal "desks-near-me-los-angeles", @location.slug
+    end
   end
 
   context 'metadata' do
-
     context 'populating hash' do
       setup do
         @location = FactoryGirl.create(:transactable).location
@@ -157,9 +177,7 @@ class LocationTest < ActiveSupport::TestCase
           @location.populate_photos_metadata!
         end
       end
-
     end
-
   end
 
   context 'foreign keys' do
@@ -207,8 +225,6 @@ class LocationTest < ActiveSupport::TestCase
         @location.company.update_attribute(:listings_public, false)
         refute @location.reload.listings_public
       end
-
     end
   end
-
 end

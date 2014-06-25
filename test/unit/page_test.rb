@@ -42,7 +42,7 @@ class PageTest < ActiveSupport::TestCase
     end
   end
 
-  context 'scope domains' do
+  context 'url slugging' do
     should 'create unique slugs per theme' do
       page_one = FactoryGirl.create(:page, :theme => @instance.theme, path: 'faq')
       page_two = FactoryGirl.create(:page, :theme => @instance.theme, path: 'faq')
@@ -56,6 +56,22 @@ class PageTest < ActiveSupport::TestCase
       page_two = FactoryGirl.create(:page, :theme => @instance_two.theme, path: 'company')
       assert page_one.slug == 'company'
       assert page_two.slug == 'company'
+    end
+
+    should 'keep the same slug on save if the path attribute did not change' do
+      page = FactoryGirl.create(:page, theme: @instance.theme)
+      original_slug = page.slug
+      page.save!
+      assert page.slug == original_slug
+    end
+
+    should 'generate a new slug on save if the path attribute changed' do
+      page = FactoryGirl.create(:page, theme: @instance.theme)
+      original_slug = page.slug
+      page.path = 'New Page Path'
+      page.save!
+      assert page.slug != original_slug
+      assert page.slug == 'new-page-path'
     end
   end
 

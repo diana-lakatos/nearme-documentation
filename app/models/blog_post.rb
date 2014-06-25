@@ -37,17 +37,6 @@ class BlogPost < ActiveRecord::Base
     title.parameterize != slug
   end
 
-  def should_generate_new_friendly_id?
-    slug.blank?
-  end
-
-  def slug_candidates
-    [
-      :title,
-      [:title, published_at.strftime("%b %d %Y")]
-    ]
-  end
-
   private
 
   def sanitize_content
@@ -55,6 +44,13 @@ class BlogPost < ActiveRecord::Base
   end
 
   def should_generate_new_friendly_id?
-    true
+    slug.blank? || title_changed?
+  end
+
+  def slug_candidates
+    [
+      :title,
+      [:title, published_at.strftime("%b %d %Y")]
+    ]
   end
 end
