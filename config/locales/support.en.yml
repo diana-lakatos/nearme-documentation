@@ -4,6 +4,7 @@ en:
       all: 'All'
       open: 'Open'
       resolved: 'Resolved'
-    open_text:
-      open: 'View and resolve'
-      resolved: 'View'
+    ticket:
+      open_text:
+        open: 'View and resolve'
+        resolved: 'View'

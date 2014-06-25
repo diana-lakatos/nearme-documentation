@@ -6,7 +6,7 @@ class TransactableTypeAttributeDecoratorTest < ActionView::TestCase
 
     should 'be correct' do
       expected_default_options = {
-        :input_html=>{ :hello=>"world" },
+        :input_html=>{ "hello" => "world" },
         :required=>false
       }
       assert_equal expected_default_options, decorated_attribute({ input_html_options: { :hello => "world" }}).default_options

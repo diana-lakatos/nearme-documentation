@@ -41,12 +41,6 @@ class TransactableTypeAttributeDecorator < Draper::Decorator
     }
   end
 
-  def valid_values_translated
-    valid_values.map do |valid_value|
-      [I18n.translate('simple_form.valid_values.transactable.' + self.name + '.' + valid_value.underscore.tr(' ', '_')), valid_value]
-    end
-  end
-
   private
 
   def required?

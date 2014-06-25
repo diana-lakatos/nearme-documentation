@@ -32,18 +32,10 @@ en:
         logo_image: 'Logo (240 x 60px)'
         logo_retina_image: 'Logo Retina (480 x 120px)'
       listings:
-        name: 'Desk name'
-        description: 'Desk description'
-        quantity: 'Quantity available'
-        listing_type: 'Desk type'
         price: 'Price'
         photos: 'Photos'
         upload_photos: 'Browse'
       listing:
-        name: 'Desk name'
-        description: 'Desk description'
-        quantity: 'Quantity available'
-        listing_type: 'Desk type'
         price: 'Price'
         photos: 'Photos'
         upload_photos: 'Browse'
@@ -107,12 +99,6 @@ en:
         url: 'www.mycompany.com'
         email: 'yourname@example.com'
         description: 'Give a brief description of your company'
-      listings:
-        quantity: 2
-        capacity: 1
-      listing:
-        quantity: 2
-        capacity: 1
       location:
         email: 'Your booking email'
         special_notes: "For example, how your %{lessees} should check in, your Wi-Fi password, whether you have pets, or other special information relevant to your %{lessee}'s stay"
@@ -122,30 +108,14 @@ en:
         industries: 'Select one or more'
       company:
         industries: 'Select one or more'
-      transactables:
-        listing_type: ''
-      transactable:
-        listing_type: ''
       location:
         administrator: 'Default'
-
-    valid_values:
-      transactable:
-        listing_type:
-         desk: 'Desk'
-         meeting_room: 'Meeting Room'
-         office_space: 'Office Space'
-         salon_booth: 'Salon Booth'
-
     hints:
       location:
         name: 'A unique title that describes the location of the %{bookable_noun}.'
       company:
         mailing_address: 'Checks for revenue accrued by your %{bookable_noun} will be sent to this address. Find out more about payments in the Support Center.'
         paypal_email: 'If you specify a PayPal email, we will make a PayPal transfer instead of sending checks.'
-      listing:
-        quantity: 'How many of this type of Desk do you have available?'
-        capacity: 'How many people does your Desk accommodate?'
 
     required:
       mark: '*'

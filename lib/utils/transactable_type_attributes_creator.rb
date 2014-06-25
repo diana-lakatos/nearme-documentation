@@ -18,6 +18,7 @@ module Utils
         last_request_photos_sent_at: :datetime,
       }.each do |attr_name, attr_type|
         tta = TransactableTypeAttribute.where(transactable_type_id: @transactable_type.id, name: attr_name).first.presence || @transactable_type.transactable_type_attributes.build
+
         default = case attr_name
                   when :quantity
                     1
@@ -48,15 +49,36 @@ module Utils
                              {}
                            end
         rest_attributes = case attr_name
-                          when :quantity, :capacity
+                          when :quantity
                             {
+                              label:  'Quantity available',
+                              input_html_options: { :class => "mini" },
+                              hint: "How many of this type of #{PlatformContext.current.instance.bookable_noun} do you have available?",
+                              placeholder: 2
+
+                            }
+                          when :capacity
+                            {
+                              hint: "How many people does your #{PlatformContext.current.instance.bookable_noun} accommodate?",
+                              placeholder: 1,
                               input_html_options: { :class => "mini" }
                             }
+
                           when :listing_type
                             {
                               html_tag: "select",
+                              prompt: "",
                               valid_values: ["Desk", "Meeting Room", "Office Space", "Salon Booth"],
-                              input_html_options: { :class => 'selectpicker' }
+                              input_html_options: { :class => 'selectpicker' },
+                              label: "Desk type"
+                            }
+                          when :name
+                            {
+                              label: "#{PlatformContext.current.instance.bookable_noun} name"
+                            }
+                          when :description
+                            {
+                              label: "#{PlatformContext.current.instance.bookable_noun} description"
                             }
                           else
                             {}
@@ -77,5 +99,7 @@ module Utils
 
     def create_buy_sell_attributes!
     end
+
   end
+
 end

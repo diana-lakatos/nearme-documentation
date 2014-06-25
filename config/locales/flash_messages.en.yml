@@ -32,6 +32,10 @@ en:
           deleted: 'Email template has been deleted.'
           invalid: 'Not a valid email template.'
           updated: 'Email template has been updated.'
+        transactable_type_attributes:
+          created: 'New attribute created.'
+          updated: 'Attribute updated.'
+          deleted: 'Attribute deleted.'
       settings:
         listing_type_added: 'New listing type added.'
         listing_type_deleted: 'Listing type deleted.'

@@ -7,6 +7,10 @@ en:
         name: "Location type"
     errors:
       models:
+        recurring_booking:
+          one_valid_reservation: 'Please choose different dates, these which were chosen are not available anymore.'
+    errors:
+      models:
         instance:
           attributes:
             pricing_options:
@@ -20,6 +24,9 @@ en:
           attributes:
             email:
               taken: "That email address is associated with an existing account."
+        transactable:
+          attributes:
+            free: "must be free if no prices are provided"
   errors:
     messages:
       free: "must be free if no prices are provided"
