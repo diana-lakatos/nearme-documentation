@@ -27,7 +27,7 @@ DesksnearMe::Application.configure do
   config.assets.compress = true
   config.assets.js_compressor = :uglifier
 
-  Rails.application.routes.default_url_options[:host] = 'staging-ruby2.desksnear.me'
+  Rails.application.routes.default_url_options[:host] = 'staging.desksnear.me'
   config.test_email = "notifications-staging@desksnear.me"
 
   # Clould services credentials
@@ -42,7 +42,7 @@ DesksnearMe::Application.configure do
     config.storage              = :fog
   end
 
-  config.action_controller.asset_host = "//staging-ruby2.desksnear.me"
+  config.action_controller.asset_host = "//staging.desksnear.me"
 
   # Staging specific keys/secrets for social properties.
   config.linkedin_key = "26pmsiwpsh8a"
