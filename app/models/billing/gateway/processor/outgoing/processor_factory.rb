@@ -23,9 +23,9 @@ class Billing::Gateway::Processor::Outgoing::ProcessorFactory
   end
 
   def self.balanced_supported?(instance, currency)
-    instance.instance_payment_gateways.get_settings_for(:balanced, :login).present? && ['USD'].include?(currency) 
+    instance.instance_payment_gateways.get_settings_for(:balanced, :login).present? && ['USD'].include?(currency)
   end
-  
+
   def self.supported_payout_via_ach?(instance)
     self.balanced_supported?(instance, 'USD')
   end

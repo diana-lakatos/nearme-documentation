@@ -114,10 +114,6 @@ class Company < ActiveRecord::Base
     bank_account_number.to_s[-4, 4]
   end
 
-  def current_instance_client(instance)
-    self.instance_clients.where(:instance_id => instance.id).first
-  end
-
   def to_liquid
     CompanyDrop.new(self)
   end

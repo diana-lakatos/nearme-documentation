@@ -1,11 +1,11 @@
 class Billing::Gateway::Processor::Outgoing::Balanced < Billing::Gateway::Processor::Outgoing::Base
 
   def setup_api_on_initialize
-    Balanced.configure(@instance.instance_payment_gateways.get_settings_for(:balanced, :api_key))
+    Balanced.configure(@instance.instance_payment_gateways.get_settings_for(:balanced, :login))
   end
 
   def self.create_customer_with_bank_account!(client)
-    Balanced.configure(client.instance.instance_payment_gateways.get_settings_for(:balanced, :api_key))
+    Balanced.configure(client.instance.instance_payment_gateways.get_settings_for(:balanced, :login))
     _instance_client = self.instance_client(client, client.instance)
     balanced_customer = nil
     _instance_client.bank_account_last_four_digits = client.last_four_digits_of_bank_account
