@@ -30,14 +30,14 @@ class Search.SearchController extends Search.Controller
 
     @closeFilterIfClickedOutside()
 
-    @filters.on 'click', (event) ->
+    @filters.on 'click', (event) =>
       # allow to hide already opened element
-      if $(this).parent().find('ul').is(':visible')
-        _this.hideFilters()
+      if $(event.currentTarget).parent().find('ul').is(':visible')
+        @hideFilters()
       else
-        _this.hideFilters()
-        $(this).parent().find('ul').toggle()
-        $(this).parent().toggleClass('active')
+        @hideFilters()
+        $(event.target).closest('.search-filter').find('ul').toggle()
+        $(event.target).closest('.search-filter').toggleClass('active')
       false
 
     @filters_container.on 'click', 'input[type=checkbox]', =>
