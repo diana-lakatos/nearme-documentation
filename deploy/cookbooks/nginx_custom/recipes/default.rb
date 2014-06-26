@@ -23,60 +23,36 @@ if %w(app_master app solo).include?(node[:instance_role])
       backup false
     end
 
-    # Manually add ssl certs and keys for nearme (EY only supports one key per env in the dashboard)
-    cookbook_file "/etc/nginx/ssl/nearme.crt" do
-      source "nearme.crt"
-      action :create
-      owner node[:owner_name]
-      mode 0644
-      backup false
-    end
+    # Add crt, key, and server block for these domains
+    {'nearme' => 'near-me.com', 'reggalo' => 'reggalo.com'}.each do |name, domain|
 
-    cookbook_file "/etc/nginx/ssl/nearme.key" do
-      source "nearme.key"
-      action :create
-      owner node[:owner_name]
-      mode 0644
-      backup false
-    end
+      cookbook_file "/etc/nginx/ssl/#{name}.crt" do
+        source "#{name}.crt"
+        action :create
+        owner node[:owner_name]
+        mode 0644
+        backup false
+      end
 
-    # Manually add ssl certs and keys for reggalo (EY only supports one key per env in the dashboard)
-    cookbook_file "/etc/nginx/ssl/reggalo.crt" do
-      source "reggalo.crt"
-      action :create
-      owner node[:owner_name]
-      mode 0644
-      backup false
-    end
+      cookbook_file "/etc/nginx/ssl/#{name}.key" do
+        source "#{name}.key"
+        action :create
+        owner node[:owner_name]
+        mode 0644
+        backup false
+      end
 
-    cookbook_file "/etc/nginx/ssl/reggalo.key" do
-      source "reggalo.key"
-      action :create
-      owner node[:owner_name]
-      mode 0644
-      backup false
-    end
-
-    # Add a server block for ssl secured https://near-me.com
-    template "/etc/nginx/servers/nearme.ssl.conf" do
-      source "nearme.ssl.conf.erb"
-      action :create
-      owner node[:owner_name]
-      mode 0644
-      variables({
-        :instance_role => node[:instance_role]
-      })
-    end
-
-    # Add a server block for ssl secured https://near-me.com
-    template "/etc/nginx/servers/reggalo.ssl.conf" do
-      source "reggalo.ssl.conf.erb"
-      action :create
-      owner node[:owner_name]
-      mode 0644
-      variables({
-        :instance_role => node[:instance_role]
-      })
+      template "/etc/nginx/servers/#{name}.ssl.conf" do
+        source "ssl_server.ssl.conf.erb"
+        action :create
+        owner node[:owner_name]
+        mode 0644
+        variables({
+          instance_role: node[:instance_role],
+          name: name,
+          domain: domain
+        })
+      end
     end
 
     ruby_block "use custom CORS for webfonts" do
