@@ -42,7 +42,7 @@ class Page < ActiveRecord::Base
   end
 
   def should_generate_new_friendly_id?
-    true
+    slug.blank? || path_changed?
   end
 
   def slug_candidates
