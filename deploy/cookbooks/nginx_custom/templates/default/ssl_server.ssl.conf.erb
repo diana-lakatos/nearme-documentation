@@ -20,7 +20,7 @@ server {
   # It is good practice to include wildcard subdomains so that Nginx will not
   # require a restart when new services are added for an application.
   #
-  server_name .reggalo.com;
+  server_name <%= ".#{@domain}" %>;
 
   #
   # SSL certificates
@@ -32,8 +32,8 @@ server {
   # This precludes automatic/automated web server restarts on boot or otherwise.
   #
   ssl on;
-  ssl_certificate /data/nginx/ssl/reggalo.crt;
-  ssl_certificate_key /data/nginx/ssl/reggalo.key;
+  ssl_certificate <%= "/data/nginx/ssl/#{@name}.crt" %>;
+  ssl_certificate_key <%= "/data/nginx/ssl/#{@name}.key" %>;
   ssl_protocols SSLv3 TLSv1;
   ssl_ciphers ECDHE-RSA-AES256-SHA384:AES256-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM;
   ssl_prefer_server_ciphers on;
@@ -43,9 +43,10 @@ server {
   #
   root /data/desksnearme/current/public;
 
-  access_log /var/log/engineyard/nginx/reggalo.access.ssl.log main;
+  access_log <%= "/var/log/engineyard/nginx/#{@name}.access.ssl.log" %> main;
 
-  error_log /var/log/engineyard/nginx/reggalo.error.log notice;
+  error_log <%= "/var/log/engineyard/nginx/#{@name}.error.log" %> notice;
+
   # error_log /dev/null notice;
 
   include /etc/nginx/common/servers.conf;
