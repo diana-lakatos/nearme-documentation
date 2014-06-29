@@ -1,6 +1,6 @@
 = simple_form_for [:admin, @instance, @instance_view] do |f|
   = f.input :path
-  = f.input :body
+  = f.input :body, input_html: { class: 'input-block-level', rows: '35' }
   = f.input :locale
   = f.input :format
   = f.input :handler

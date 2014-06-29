@@ -1,4 +1,4 @@
-class Billing::Gateway::Processor::Incoming::Balanced < Billing::Gateway::Processor::Incoming::Base  
+class Billing::Gateway::Processor::Incoming::Balanced < Billing::Gateway::Processor::Incoming::Base
   def setup_api_on_initialize
     settings = @instance.instance_payment_gateways.get_settings_for(:balanced)
     @gateway = active_merchant_class.new(settings)

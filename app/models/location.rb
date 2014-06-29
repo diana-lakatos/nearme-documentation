@@ -62,7 +62,7 @@ class Location < ActiveRecord::Base
   before_save :assign_default_availability_rules
 
   extend FriendlyId
-  friendly_id :slug_candidates, use: [:slugged, :history, :finders]
+  friendly_id :slug_candidates, use: [:slugged, :history, :finders, :scoped], scope: :instance
 
   scope :filtered_by_location_types_ids,  lambda { |location_types_ids| where(location_type_id: location_types_ids) }
   scope :filtered_by_industries_ids,  lambda { |industry_ids| joins(:company_industries).where('company_industries.industry_id IN (?)', industry_ids) }
@@ -139,10 +139,6 @@ class Location < ActiveRecord::Base
 
   private
 
-  def should_generate_new_friendly_id?
-    true
-  end
-
   def company_and_city
     # given company name is My Company and city is San Francisco, generated "my+company-san+francisco"
     if company.try(:name).present? && city.present? && company.name.strip.downcase.include?(city.strip.downcase)
@@ -150,6 +146,10 @@ class Location < ActiveRecord::Base
     else
       "#{company.try(:name).try(:strip)} #{city}".strip
     end
+  end
+
+  def should_generate_new_friendly_id?
+    slug.blank? || !slug.starts_with?(company_and_city) || street_changed? || formatted_address_changed?
   end
 
   def slug_candidates

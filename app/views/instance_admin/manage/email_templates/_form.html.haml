@@ -20,12 +20,12 @@
       #plain-text-email.tab-pane.active
         .row-fluid
           .controls.controls-row
-            = f.input :text_body, label: false, wrapper_html: { class: 'span12' }, input_html: { class: 'input-block-level' }
+            = f.input :text_body, label: false, wrapper_html: { class: 'span12' }, input_html: { class: 'input-block-level', rows: "30" }
 
       #html-email.tab-pane
         .row-fluid
           .controls.controls-row
-            = f.input :html_body, label: false, wrapper_html: { class: 'span12' }, input_html: { class: 'input-block-level' }
+            = f.input :html_body, label: false, wrapper_html: { class: 'span12' }, input_html: { class: 'input-block-level', rows: "30" }
 
     = f.input :path, as: :hidden
     = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
