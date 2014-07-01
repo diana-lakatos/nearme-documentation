@@ -4,6 +4,7 @@ namespace :s3 do
   task :move => :environment do
     puts "Start..."
     @from_bucket = 'desksnearme.production'
+    @last_invoked_at = Time.zone.local(2014,7,8,0,0)
 
     @to_bucket = if Rails.env.staging?
                    puts "Staging env"
@@ -12,6 +13,7 @@ namespace :s3 do
                    puts "Production env"
                    'near-me.production'
                  else
+                   puts "development? - doing for production env"
                    'near-me.production'
                  end
     {
@@ -31,7 +33,7 @@ namespace :s3 do
     }.each do |klass_string, uploaders|
       PlatformContext.current = nil
       puts "=== #{klass_string} ==="
-      klass_string.constantize.unscoped.order('id ASC').find_each do |object|
+      klass_string.constantize.unscoped.where('updated_at > ?', @last_invoked_at).order('id ASC').find_each do |object|
         if object.instance.nil?
           puts "#{object.class}(id=#{object.id}) skipped - lack of instance"
           next
@@ -40,7 +42,7 @@ namespace :s3 do
         else
           PlatformContext.current = PlatformContext.new(object.instance)
         end
-        puts "#{klass_string} id=#{object.id}"
+        puts "#{klass_string} id=#{object.id} (#{object.updated_at})"
         uploaders.each do |uploader|
           legacy_store_dir = object.send(uploader).legacy_store_dir
           legacy_store_dir += "/" unless legacy_store_dir.last == '/'
