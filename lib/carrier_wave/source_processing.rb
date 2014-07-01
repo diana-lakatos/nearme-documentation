@@ -27,7 +27,7 @@ module CarrierWave
       def generate_versions
         # return if there is no persisted AR object (e.g. photo was deleted before crop job ran)
         return unless @model.persisted?
-        
+
         if versions_generated? || !source_url
           # external url has not changed, meaning we can just recreate verions
           @model.send(@field).recreate_versions!
@@ -43,7 +43,7 @@ module CarrierWave
         begin
           @model.save!(:valdiate => false)
           @model.generate_versions_callback if @model.respond_to?(:generate_versions_callback)
-        rescue ::ActiveRecord::RecordNotFound => e
+        rescue ::ActiveRecord::RecordNotFound
           @model.class.with_deleted.find @model.id # check for paranoid deletetion, throw if not found
         end
       end
@@ -84,6 +84,9 @@ module CarrierWave
       end
 
       class_eval <<-RUBY, __FILE__, __LINE__+1
+
+        serialize :#{column}_transformation_data, Hash
+
         def #{column}_did_change?
           changes = previous_changes.keys || []
           changes.include?("#{column}_original_url") ||
@@ -96,7 +99,7 @@ module CarrierWave
 
         alias_method :original_#{column}_url, :#{column}_url
         def #{column}_url(*args)
-          #{column}.current_url(*args)  
+          #{column}.current_url(*args)
         end
       RUBY
     end

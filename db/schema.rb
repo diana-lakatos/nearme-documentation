@@ -42,15 +42,6 @@ ActiveRecord::Schema.define(version: 20140702135751) do
 
   add_index "addresses", ["entity_id", "entity_type"], name: "index_addresses_on_entity_id_and_entity_type", using: :btree
 
-  create_table "amazon_move_logs", force: true do |t|
-    t.integer  "entity_id"
-    t.string   "entity_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "amazon_move_logs", ["entity_id", "entity_type"], name: "index_amazon_move_logs_on_entity_id_and_entity_type", using: :btree
-
   create_table "amenities", force: true do |t|
     t.string   "name"
     t.datetime "created_at",      null: false

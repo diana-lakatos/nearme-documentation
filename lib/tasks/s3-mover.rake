@@ -12,7 +12,7 @@ namespace :s3 do
                    puts "Production env"
                    'near-me.production'
                  else
-                   'near-me.staging'
+                   'near-me.production'
                  end
     {
       "BlogPost" => [:header, :author_avatar],
@@ -49,8 +49,8 @@ namespace :s3 do
           cmd = "s3cmd cp -r s3://#{@from_bucket}/#{legacy_store_dir} s3://#{@to_bucket}/#{object.send(uploader).store_dir} 2>&1"
           if @to_bucket
             result = `#{cmd}`
+            puts "#{klass_string} id=#{object.id} has not been copied!" if result.blank?
             puts result if result.present?
-            AmazonMoveLog.create(entity: object) if result.include?("copied to s3://")
           else
             puts cmd
           end
