@@ -69,9 +69,13 @@ form{
 .glyphicon { font-family:'glyphicons-halflings-regular', arial, serif; }
 .header .menu-btn {float:right; font-size:32px; display:none; }
 
-.intro { text-align:center; background:#3e3e3e; color: #fff; text-transform: uppercase; padding: 85px 0; }
+.intro { text-align:center; background:#3e3e3e; color: #fff; text-transform: uppercase; padding: 115px 0; }
 .intro { background-size: cover !important; background-position: center top !important; }
 .intro h1 { font-size:33px; margin: 0; padding: 0; font-family:'brandon_bldmedium', arial, serif; font-weight: normal;}
+.intro.about { background: asset-url('platform_home/banner-about.jpg'); }
+.intro.features { background: asset-url('platform_home/banner-features.jpg'); }
+.intro.contact { background: asset-url('platform_home/banner-contact.jpg'); }
+.intro.careers { background: asset-url('platform_home/banner-careers.jpg'); }
 
 .main { padding:70px 0 0 0; background:#ebebeb;  }
 .content { padding-top:10px; padding-left:38px;  }
@@ -211,7 +215,7 @@ textarea.form-control { height:180px; }
 .slide-item .slide-image { position: relative; z-index: 1; width: 100%; display:block;  }
 .slide-image.slide-image-mobile { display:none; }
 
-.slide-content { position: absolute; top: 50%; width: 100%; margin-top:-195px; }
+.slide-content { position: absolute; top: 50%; width: 100%; margin-top:-125px; }
 .slide-content h2 { font-size:52px; line-height:1.6; letter-spacing: 4px; margin-bottom: 0; }
 .slide-content h2 br { display:none; }
 
