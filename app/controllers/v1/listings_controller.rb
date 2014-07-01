@@ -21,7 +21,7 @@ class V1::ListingsController < V1::BaseController
 
   def create
     @listing = Transactable.new(:transactable_type_id => TransactableType.first.id)
-    @listing.attributes = params[:listing]
+    @listing.assign_attributes(params[:listing])
     if @listing.save
       render :json => {:success => true, :id => @listing.id}
     else
@@ -34,7 +34,7 @@ class V1::ListingsController < V1::BaseController
     if params[:listing][:photos_attributes] == nil
       params[:listing].delete :photos_attributes
     end
-    @listing.attributes = params[:listing]
+    @listing.assign_attributes(params[:listing])
 
     if @listing.save
       render :json => @listing, :root => false, :serializer => ListingWebSerializer

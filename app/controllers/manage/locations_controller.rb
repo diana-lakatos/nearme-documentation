@@ -37,7 +37,7 @@ class Manage::LocationsController < Manage::BaseController
   end
 
   def update
-    @location.attributes = params[:location]
+    @location.assign_attributes(params[:location])
 
     if @location.save
       flash[:success] = t('flash_messages.manage.locations.space_updated', bookable_noun: platform_context.decorate.bookable_noun)

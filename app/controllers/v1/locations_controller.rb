@@ -24,7 +24,7 @@ class V1::LocationsController <  V1::BaseController
   end
 
   def update
-    @location.attributes = params[:location]
+    @location.assign_attributes(params[:location])
     if @location.save
        render :json => @location, :root => false
     else
