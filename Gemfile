@@ -167,6 +167,3 @@ group :test do
 end
 
 gem 'mailman'
-
-# TODO remove ASAP
-gem 'protected_attributes'
