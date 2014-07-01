@@ -1,5 +1,5 @@
 class SearchNotification < ActiveRecord::Base
-  attr_accessible :email, :latitude, :longitude, :query
+  # attr_accessible :email, :latitude, :longitude, :query
 
   belongs_to :user
 

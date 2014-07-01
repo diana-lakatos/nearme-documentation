@@ -1,7 +1,7 @@
 class BlogInstance < ActiveRecord::Base
 
-  attr_accessible :enabled, :name, :header, :facebook_app_id,
-                  :header_text, :header_motto, :header_logo, :header_icon
+  # attr_accessible :enabled, :name, :header, :facebook_app_id,
+  #                 :header_text, :header_motto, :header_logo, :header_icon
 
   mount_uploader :header, HeroImageUploader
   mount_uploader :header_logo, HeroImageUploader

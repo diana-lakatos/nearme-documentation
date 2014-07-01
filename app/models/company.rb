@@ -9,10 +9,10 @@ class Company < ActiveRecord::Base
   notify_associations_about_column_update([:payment_transfers, :reservation_charges, :reservations, :listings, :locations], [:instance_id, :partner_id])
   notify_associations_about_column_update([:reservations, :listings, :locations], [:creator_id, :listings_public])
 
-  attr_accessible :description, :url, :email, :name,
-    :mailing_address, :paypal_email, :industry_ids, :locations_attributes,
-    :domain_attributes, :theme_attributes, :white_label_enabled,
-    :listings_public, :bank_account_number, :bank_routing_number, :bank_owner_name
+  # attr_accessible :description, :url, :email, :name,
+  #   :mailing_address, :paypal_email, :industry_ids, :locations_attributes,
+  #   :domain_attributes, :theme_attributes, :white_label_enabled,
+  #   :listings_public, :bank_account_number, :bank_routing_number, :bank_owner_name
 
   attr_accessor :created_payment_transfers, :bank_account_number, :bank_routing_number, :bank_owner_name
 

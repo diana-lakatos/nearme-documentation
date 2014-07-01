@@ -2,7 +2,7 @@ require 'email_resolver'
 
 class EmailTemplate < ActiveRecord::Base
   belongs_to :theme
-  attr_accessible :handler, :html_body, :text_body, :path, :partial, :subject, :to, :from, :bcc, :reply_to, :subject
+  # attr_accessible :handler, :html_body, :text_body, :path, :partial, :subject, :to, :from, :bcc, :reply_to, :subject
 
   CUSTOMIZABLE_EMAILS = %w(post_action_mailer/sign_up_welcome
                            post_action_mailer/sign_up_verify

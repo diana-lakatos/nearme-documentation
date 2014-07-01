@@ -5,7 +5,7 @@ class InstanceAdmin < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  attr_accessible :user_id, :instance_admin_role_id, :instance_owner
+  # attr_accessible :user_id, :instance_admin_role_id, :instance_owner
 
   belongs_to :instance
   belongs_to :user, :foreign_key => 'user_id'

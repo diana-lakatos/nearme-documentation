@@ -6,7 +6,7 @@ class TransactableType < ActiveRecord::Base
 
   MAX_PRICE = 2147483647
 
-  attr_accessible :name, :pricing_options, :pricing_validation, :availability_options, :availability_templates_attributes
+  # attr_accessible :name, :pricing_options, :pricing_validation, :availability_options, :availability_templates_attributes
 
   has_many :transactables, inverse_of: :transactable_type
   has_many :transactable_type_attributes, inverse_of: :transactable_type

@@ -3,9 +3,9 @@ class Authentication < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
 
-  attr_accessible :user_id, :provider, :uid, :info, :token, :secret,
-    :token_expires_at, :token_expires, :token_expired, :profile_url,
-    :total_social_connections
+  # attr_accessible :user_id, :provider, :uid, :info, :token, :secret,
+  #   :token_expires_at, :token_expires, :token_expired, :profile_url,
+  #   :total_social_connections
 
   belongs_to :user
   belongs_to :instance

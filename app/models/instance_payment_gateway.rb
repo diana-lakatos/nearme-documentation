@@ -2,7 +2,7 @@ class InstancePaymentGateway < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  attr_accessible :payment_gateway_id, :live_settings, :test_settings, :country
+  # attr_accessible :payment_gateway_id, :live_settings, :test_settings, :country
   attr_accessor :country
 
   serialize :test_settings, Hash
