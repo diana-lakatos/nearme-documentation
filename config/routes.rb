@@ -154,6 +154,8 @@ DesksnearMe::Application.routes.draw do
         post :restore_session, on: :collection
       end
 
+      resources :transactable_type_attributes
+
       resources :transfers do
         member do
           post :transferred
