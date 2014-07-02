@@ -1,5 +1,6 @@
 class InstanceAdmin::Manage::TransfersController < InstanceAdmin::Manage::BaseController
 
+  skip_before_filter :check_if_locked
   defaults :resource_class => PaymentTransfer, :collection_name => 'transfers', :instance_name => 'transfer'
 
   def index

@@ -3,15 +3,20 @@ class InstanceAdmin::BaseController < ApplicationController
 
   before_filter :auth_user!
   before_filter :authorize_user!
+  before_filter :check_if_locked, only: [:new, :create, :edit, :update, :destroy]
   before_filter :force_scope_to_instance
   skip_before_filter :redirect_if_marketplace_password_protected
 
   def index
-    first_permission_have_access_to = @authorizer.first_permission_have_access_to
-    redirect_to url_for([:instance_admin, first_permission_have_access_to])
+    redirect_to url_for([:instance_admin, @authorizer.first_permission_have_access_to])
   end
 
   private
+
+  def check_if_locked
+    flash[:notice] = 'You have been redirected because instance is locked, no changes are permitted. All changes have been discarded. You can turn off Master Lock here.'
+    redirect_to url_for([:instance_admin, :settings, :configuration]) if PlatformContext.current.instance.locked?
+  end
 
   def auth_user!
     unless user_signed_in?

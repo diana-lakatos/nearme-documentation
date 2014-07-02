@@ -1,4 +1,5 @@
 class InstanceAdmin::Manage::Support::TicketsController < InstanceAdmin::Manage::BaseController
+  skip_before_filter :check_if_locked
   before_filter :find_ticket
 
   def show
