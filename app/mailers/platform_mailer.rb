@@ -4,7 +4,7 @@ class PlatformMailer < ActionMailer::Base
   NOTIFICATIONS_EMAIL = 'sales@near-me.com'
 
   def email_notification(email)
-    mail from: 'michelle@near-me.com',
+    mail from: 'micheller@near-me.com',
          to: email,
          subject: "Hello from NearMe!"
   end
