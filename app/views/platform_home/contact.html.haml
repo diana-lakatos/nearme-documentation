@@ -1,22 +1,21 @@
 .intro.contact
   %h1 CONTACT
 
--content_for :inner_page do
-  .col-md-9
-    .content
-      .section
-        .section-head
-          %h3.section-title GIVE US A CALL
+- content_for :inner_page do
+  .content.col-md-9
+    .section
+      .section-head
+        %h3.section-title GIVE US A CALL
 
-        .section-body
-          %p We would be happy to hear from you. We are available at 888.998.3375 Monday through Friday 8 a.m to 6 p.m PDT
+      .section-body
+        %p We would be happy to hear from you. We are available at 888.998.3375 Monday through Friday 8 a.m to 6 p.m PDT
 
-      .section
-        .section-head
-          %h3.section-title LEAVE A MESSAGE
+    .section
+      .section-head
+        %h3.section-title LEAVE A MESSAGE
 
-        .section-body
-          %p Feel free to contact us with any questions, potential partnerships, or just a hello.
-          = render partial: 'platform_home/shared/contact_form', locals: { platform_contact: @platform_contact }
+      .section-body
+        %p Feel free to contact us with any questions, potential partnerships, or just a hello.
+        = render partial: 'platform_home/shared/contact_form', locals: { platform_contact: @platform_contact }
 
 = render template: "platform_home/layout/main_layout"

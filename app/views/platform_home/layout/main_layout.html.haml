@@ -1,16 +1,16 @@
 .main
   .container
     .row
-      .col-md-3
-        .sidebar
-          %ul.widgets
-            %li.widget.widget-nav
-              %ul
-                = nav_link 'About Us', "/about"
-                = nav_link 'Contact', "/contact"
-                = nav_link 'Blog', "/blog"
-                = nav_link 'Careers', "/careers"
-                = nav_link 'Press & Media', "/press-media"
-                = nav_link 'Brand', "/brand"
+      .sidebar.col-md-3
+        %ul.widgets
+          %li.widget.widget-nav
+            %ul
+              = nav_link 'About Us', "/about"
+              = nav_link 'Contact', "/contact"
+              = nav_link 'Blog', "/blog"
+              = nav_link 'Careers', "/careers"
+              = nav_link 'Press & Media', "/press-media"
+              = nav_link 'Brand', "/brand"
 
+      .left-bg
       = yield :inner_page

@@ -1,73 +1,72 @@
 .intro
   %h1 BRAND
 
--content_for :inner_page do
-  .col-md-9
-    .content
-      .section
-        .section-head
-          %h3.section-title LOGO DOWNLOADS
+- content_for :inner_page do
+  .content.col-md-9
+    .section
+      .section-head
+        %h3.section-title LOGO DOWNLOADS
 
-        .section-body
-          .brands
-            .row
-              .col-md-6
-                .brand-logo.brand-logo-light
-                  .brand-logo-image
-                    =image_tag "platform_home/logo-01-light.png"
+      .section-body
+        .brands
+          .row
+            .col-md-6
+              .brand-logo.brand-logo-light
+                .brand-logo-image
+                  =image_tag "platform_home/logo-01-light.png"
 
-                  %p
-                    %a{download: "", href: "/assets/platform_home/blue_no_text.zip"} Download
+                %p
+                  %a{download: "", href: "/assets/platform_home/blue_no_text.zip"} Download
 
-              .col-md-6
-                .brand-logo.brand-logo-dark
-                  .brand-logo-image
-                    =image_tag "platform_home/logo-01-dark.png"
+            .col-md-6
+              .brand-logo.brand-logo-dark
+                .brand-logo-image
+                  =image_tag "platform_home/logo-01-dark.png"
 
-                  %p
-                    %a{download: "", href: "/assets/platform_home/white_no_text.zip"} Download
+                %p
+                  %a{download: "", href: "/assets/platform_home/white_no_text.zip"} Download
 
-            .row
-              .col-md-6
-                .brand-logo.brand-logo-light
-                  .brand-logo-image
-                    =image_tag "platform_home/logo-02-light.png"
+          .row
+            .col-md-6
+              .brand-logo.brand-logo-light
+                .brand-logo-image
+                  =image_tag "platform_home/logo-02-light.png"
 
-                  %p
-                    %a{download: "", href: "/assets/platform_home/blue_bottom_text.zip"} Download
+                %p
+                  %a{download: "", href: "/assets/platform_home/blue_bottom_text.zip"} Download
 
-              .col-md-6
-                .brand-logo.brand-logo-dark
-                  .brand-logo-image
-                    =image_tag "platform_home/logo-02-dark.png"
+            .col-md-6
+              .brand-logo.brand-logo-dark
+                .brand-logo-image
+                  =image_tag "platform_home/logo-02-dark.png"
 
-                  %p
-                    %a{download: "", href: "/assets/platform_home/white_bottom_text.zip"} Download
+                %p
+                  %a{download: "", href: "/assets/platform_home/white_bottom_text.zip"} Download
 
-            .row
-              .col-md-6
-                .brand-logo.brand-logo-light
-                  .brand-logo-image
-                    =image_tag "platform_home/logo-03-light.png"
+          .row
+            .col-md-6
+              .brand-logo.brand-logo-light
+                .brand-logo-image
+                  =image_tag "platform_home/logo-03-light.png"
 
-                  %p
-                    %a{download: "", href: "/assets/platform_home/blue_side_text.zip"} Download
+                %p
+                  %a{download: "", href: "/assets/platform_home/blue_side_text.zip"} Download
 
-              .col-md-6
-                .brand-logo.brand-logo-dark
-                  .brand-logo-image
-                    =image_tag "platform_home/logo-03-dark.png"
+            .col-md-6
+              .brand-logo.brand-logo-dark
+                .brand-logo-image
+                  =image_tag "platform_home/logo-03-dark.png"
 
-                  %p
-                    %a{download: "", href: "/assets/platform_home/white_side_text.zip"} Download
+                %p
+                  %a{download: "", href: "/assets/platform_home/white_side_text.zip"} Download
 
-            .row
-              .col-md-6
-                .brand-logo.brand-logo-factsheet
-                  .brand-logo-image
-                    =image_tag "platform_home/fact-sheet.png", class: "fact-sheet"
+          .row
+            .col-md-6
+              .brand-logo.brand-logo-factsheet
+                .brand-logo-image
+                  =image_tag "platform_home/fact-sheet.png", class: "fact-sheet"
 
-                  %p
-                    %a{download: "", href: "/assets/platform_home/nearme_fact_sheet.png"} Download
+                %p
+                  %a{download: "", href: "/assets/platform_home/nearme_fact_sheet.png"} Download
 
 = render template: "platform_home/layout/main_layout"
