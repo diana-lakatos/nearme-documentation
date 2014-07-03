@@ -14,8 +14,10 @@ class Admin::BaseController < ApplicationController
   end
 
   def check_if_locked
-    flash[:notice] = 'You have been redirected because instance is locked, no changes are permitted. All changes have been discarded. You can turn off Master Lock here.'
-    redirect_to edit_admin_instance_path(PlatformContext.current.instance) if PlatformContext.current.instance.locked?
+    if PlatformContext.current.instance.locked?
+      flash[:notice] = 'You have been redirected because instance is locked, no changes are permitted. All changes have been discarded. You can turn off Master Lock here.'
+      redirect_to edit_admin_instance_path(PlatformContext.current.instance)
+    end
   end
 
   def set_platform_context

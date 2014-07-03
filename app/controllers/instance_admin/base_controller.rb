@@ -14,8 +14,10 @@ class InstanceAdmin::BaseController < ApplicationController
   private
 
   def check_if_locked
-    flash[:notice] = 'You have been redirected because instance is locked, no changes are permitted. All changes have been discarded. You can turn off Master Lock here.'
-    redirect_to url_for([:instance_admin, :settings, :configuration]) if PlatformContext.current.instance.locked?
+    if PlatformContext.current.instance.locked?
+      flash[:notice] = 'You have been redirected because instance is locked, no changes are permitted. All changes have been discarded. You can turn off Master Lock here.'
+      redirect_to url_for([:instance_admin, :settings, :configuration])
+    end
   end
 
   def auth_user!

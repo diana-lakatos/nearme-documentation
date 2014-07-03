@@ -15,11 +15,9 @@ ActiveRecord::Schema.define(version: 20140702135751) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "btree_gin"
-  enable_extension "btree_gist"
   enable_extension "hstore"
 
-  create_table "addresses", force: true do |t|
+  create_table "addresses", :force => true do |t|
     t.integer  "instance_id"
     t.string   "address"
     t.string   "address2"
@@ -29,20 +27,20 @@ ActiveRecord::Schema.define(version: 20140702135751) do
     t.string   "city"
     t.string   "country"
     t.string   "state"
-    t.string   "postcode",           limit: 10
+    t.string   "postcode",           :limit => 10
     t.text     "address_components"
     t.float    "latitude"
     t.float    "longitude"
     t.integer  "entity_id"
     t.string   "entity_type"
     t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
   end
 
   add_index "addresses", ["entity_id", "entity_type"], name: "index_addresses_on_entity_id_and_entity_type", using: :btree
 
-  create_table "amenities", force: true do |t|
+  create_table "amenities", :force => true do |t|
     t.string   "name"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
@@ -78,8 +76,8 @@ ActiveRecord::Schema.define(version: 20140702135751) do
     t.integer  "user_id"
     t.string   "provider"
     t.string   "uid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.datetime "deleted_at"
     t.string   "secret"
     t.string   "token"
@@ -389,8 +387,8 @@ ActiveRecord::Schema.define(version: 20140702135751) do
     t.boolean  "permission_analytics", default: true
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
-    t.boolean  "permission_manage",    default: false
     t.boolean  "permission_blog",      default: false
+    t.boolean  "permission_manage",    default: false
     t.boolean  "permission_support",   default: false
   end
 
@@ -509,6 +507,7 @@ ActiveRecord::Schema.define(version: 20140702135751) do
     t.string   "encrypted_test_balanced_api_key"
     t.string   "encrypted_olark_api_key"
     t.boolean  "olark_enabled",                                               default: false
+    t.text     "metadata"
     t.string   "encrypted_facebook_consumer_key"
     t.string   "encrypted_facebook_consumer_secret"
     t.string   "encrypted_linkedin_consumer_key"
@@ -518,7 +517,6 @@ ActiveRecord::Schema.define(version: 20140702135751) do
     t.string   "encrypted_instagram_consumer_key"
     t.string   "encrypted_instagram_consumer_secret"
     t.integer  "instance_type_id"
-    t.text     "metadata"
     t.text     "support_imap_hash"
     t.string   "support_email"
     t.string   "encrypted_db_connection_string"
@@ -569,6 +567,7 @@ ActiveRecord::Schema.define(version: 20140702135751) do
     t.integer  "capacity"
     t.integer  "photos_count",                default: 0
     t.text     "metadata"
+    t.integer  "instance_id"
     t.integer  "creator_id"
     t.integer  "administrator_id"
     t.integer  "company_id"
@@ -628,7 +627,6 @@ ActiveRecord::Schema.define(version: 20140702135751) do
     t.integer  "address_id"
   end
 
-  add_index "locations", ["address_id"], name: "index_locations_on_address_id", using: :btree
   add_index "locations", ["administrator_id"], name: "index_locations_on_administrator_id", using: :btree
   add_index "locations", ["company_id"], name: "index_locations_on_company_id", using: :btree
   add_index "locations", ["creator_id"], name: "index_locations_on_creator_id", using: :btree
@@ -663,8 +661,8 @@ ActiveRecord::Schema.define(version: 20140702135751) do
     t.integer  "instance_id"
   end
 
-  add_index "pages", ["instance_id"], name: "index_pages_on_instance_id", using: :btree
   add_index "pages", ["theme_id"], name: "index_pages_on_theme_id", using: :btree
+  add_index "pages", ["instance_id"], name: "index_pages_on_instance_id", using: :btree
 
   create_table "partner_inquiries", force: true do |t|
     t.string   "name"
@@ -724,8 +722,8 @@ ActiveRecord::Schema.define(version: 20140702135751) do
   end
 
   create_table "photos", force: true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.integer  "transactable_id"
     t.string   "image"
     t.string   "caption"
@@ -744,7 +742,6 @@ ActiveRecord::Schema.define(version: 20140702135751) do
     t.datetime "image_versions_generated_at"
     t.integer  "image_original_height"
     t.integer  "image_original_width"
-    t.integer  "instance_id"
   end
 
   add_index "photos", ["creator_id"], name: "index_photos_on_creator_id", using: :btree
@@ -813,9 +810,9 @@ ActiveRecord::Schema.define(version: 20140702135751) do
     t.datetime "failed_at"
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
+    t.integer  "payment_transfer_id"
     t.string   "currency"
     t.datetime "deleted_at"
-    t.integer  "payment_transfer_id"
     t.integer  "service_fee_amount_host_cents",  default: 0, null: false
     t.datetime "refunded_at"
     t.integer  "instance_id"
@@ -1169,28 +1166,27 @@ ActiveRecord::Schema.define(version: 20140702135751) do
   add_index "user_relationships", ["follower_id"], name: "index_user_relationships_on_follower_id", using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "email",                                              default: "",                                                                                  null: false
-    t.string   "encrypted_password",                     limit: 128, default: "",                                                                                  null: false
-    t.string   "password_salt",                                      default: "",                                                                                  null: false
+    t.string   "email",                                  default: "",                                                                                  null: false
+    t.string   "encrypted_password",                     default: "",                                                                                  null: false
     t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
     t.string   "remember_token"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                                      default: 0
+    t.integer  "sign_in_count",                          default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                                                                                           null: false
+    t.datetime "updated_at",                                                                                                                           null: false
     t.string   "name"
     t.boolean  "admin"
-    t.integer  "bookings_count",                                     default: 0,                                                                                   null: false
+    t.integer  "bookings_count",                         default: 0,                                                                                   null: false
     t.datetime "confirmation_sent_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"
     t.datetime "locked_at"
-    t.datetime "reset_password_sent_at"
-    t.integer  "failed_attempts",                                    default: 0
+    t.integer  "failed_attempts",                        default: 0
     t.string   "authentication_token"
     t.string   "avatar"
     t.string   "confirmation_token"
@@ -1229,13 +1225,13 @@ ActiveRecord::Schema.define(version: 20140702135751) do
     t.integer  "partner_id"
     t.integer  "instance_id"
     t.integer  "domain_id"
-    t.string   "time_zone",                                          default: "Pacific Time (US & Canada)"
-    t.boolean  "sms_notifications_enabled",                          default: true
-    t.string   "sms_preferences",                                    default: "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
-    t.text     "instance_unread_messages_threads_count",             default: "--- {}\n"
+    t.string   "time_zone",                              default: "Pacific Time (US & Canada)"
     t.text     "metadata"
+    t.boolean  "sms_notifications_enabled",              default: true
+    t.string   "sms_preferences",                        default: "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
+    t.text     "instance_unread_messages_threads_count", default: "--- {}\n"
     t.string   "payment_token"
-    t.boolean  "sso_log_out",                                        default: false
+    t.boolean  "sso_log_out",                            default: false
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
