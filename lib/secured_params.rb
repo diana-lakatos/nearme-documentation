@@ -211,7 +211,9 @@ class SecuredParams
       :color_white,
       :homepage_css,
       :homepage_content,
-      :call_to_action
+      :call_to_action,
+      :white_label_enabled,
+      :support_url
     ]
   end
 
@@ -274,6 +276,7 @@ class SecuredParams
       :listings_public,
       locations_attributes: nested(self.location),
       domain_attributes: nested(self.domain),
+      theme_attributes: self.theme,
       industry_ids: []
     ]
   end
@@ -284,7 +287,8 @@ class SecuredParams
       :target,
       :target_id,
       :target_type,
-      :secured
+      :secured,
+      :white_label_enabled
     ]
   end
 

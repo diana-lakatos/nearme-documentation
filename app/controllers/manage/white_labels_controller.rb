@@ -19,5 +19,4 @@ class Manage::WhiteLabelsController < Manage::BaseController
   def company_params
     params.require(:company).permit(secured_params.company)
   end
-
 end
