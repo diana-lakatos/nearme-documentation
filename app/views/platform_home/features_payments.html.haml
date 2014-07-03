@@ -1,14 +1,13 @@
 -content_for :feature do
-  .col-md-9
-    .content
-      .section
-        .section-image
-          =image_tag "platform_home/feature-image-01.png"
+  .content.col-md-9
+    .section
+      .section-image
+        =image_tag "platform_home/feature-image-01.png"
 
-        .section-body
-          .article
-            %h3 Payment flexibility
-            %p Transact in a variety of currencies. Through Stripe, PayPal, and Balanced, your marketplace can transact in USD, CAD, EUR, GBP, AUD, and YEN; with more coming soon! Near Me can provide the foundation for your global marketplace.
-            %p Instantly set transaction fees for either side of your marketplace, allowing you the freedom to choose how you make money off of transactions.
+      .section-body
+        .article
+          %h3 Payment flexibility
+          %p Transact in a variety of currencies. Through Stripe, PayPal, and Balanced, your marketplace can transact in USD, CAD, EUR, GBP, AUD, and YEN; with more coming soon! Near Me can provide the foundation for your global marketplace.
+          %p Instantly set transaction fees for either side of your marketplace, allowing you the freedom to choose how you make money off of transactions.
 
 = render template: "platform_home/layout/features_layout"

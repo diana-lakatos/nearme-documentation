@@ -4,178 +4,177 @@
 .main
   .container
     .row
-      .col-md-3
-        .sidebar
-          %ul.widgets
-            %li.widget.widget-nav
-              %ul.expand-nav
-                %li.active
-                  %a{href: "#"} Platform Setup
-                %li
-                  %a{href: "#"} Pricing
-                %li
-                  %a{href: "#"} Import/Export Data
-                %li
-                  %a{href: "#"} Server Info
-                %li
-                  %a{href: "#"} Payments
-                %li
-                  %a{href: "#"} Data Analysis
-                %li
-                  %a{href: "#"} Reputation Engine
-                %li
-                  %a{href: "#"} Community
-                %li
-                  %a{href: "#"} Customer Support
-                %li
-                  %a{href: "#"} Insurance
+      .sidebar.col-md-3
+        %ul.widgets
+          %li.widget.widget-nav
+            %ul.expand-nav
+              %li.active
+                %a{href: "#"} Platform Setup
+              %li
+                %a{href: "#"} Pricing
+              %li
+                %a{href: "#"} Import/Export Data
+              %li
+                %a{href: "#"} Server Info
+              %li
+                %a{href: "#"} Payments
+              %li
+                %a{href: "#"} Data Analysis
+              %li
+                %a{href: "#"} Reputation Engine
+              %li
+                %a{href: "#"} Community
+              %li
+                %a{href: "#"} Customer Support
+              %li
+                %a{href: "#"} Insurance
 
-      .col-md-9
-        .content
-          %ul.expandables
-            %li.expandable
-              .section
-                .section-head
-                  %h3.section-title PLATFORM SETUP & MANAGEMENT
+      .left-bg
+      .content.col-md-9
+        %ul.expandables
+          %li.expandable
+            .section
+              .section-head
+                %h3.section-title PLATFORM SETUP & MANAGEMENT
 
-                .section-body
-                  %h4 Q: WHEN WILL THE NEAR ME PLATFORM  BE AVAILABLE TO THE PUBLIC?
-                  %p
-                    A: The platform is in private beta, currently accepting clients.
-                    To learn about your needs, we will first have a discovery call to determine what your most pressing pain points are and how we can help you. We will also ask for a high level overview with details of what you must have in your MVP (minimum viable product).
-                  %h4 Q: WHAT SKILLS DO I NEED TO SETUP MY MARKETPLACE?
-                  %p A: You simply need to know the business model that you are looking to build and apply customization to your Marketplace based on those needs. No engineering skills are required, however, you do have the ability to customize the design of your Marketplace.
-                  %h4 Q: HOW MUCH DOES IT COST?
-                  %p
-                    While we are in private beta, clients benefit from beta pricing. Since there is a large variability and customizations for different Marketplaces, prices will vary based on complexity and customization.
-                    We provide all of the on-going server hosting (using Amazon Web Services) and constant feature releases and bug fixes as part of the monthly subscription fee. We do NOT take any commissions from your marketplace transactions.
-                  %h4 Q: ROUGHLY HOW MUCH TIME AND EFFORT IS REQUIRED TO DEPLOY A NEW MARKETPLACE?
-                  %p A: The average setup time for a Marketplace is 7-10 days. While the average setup time is 7 days, if your Marketplace has several custom requests, it can take up to a few months due to the complexity.
-                  %p Once we have your Marketplace spec we will then provide you with a proposal that includes price as well as a timeframe to build your Marketplace. Upon completion of your Marketplace, we will hand off the tools for you to continue to manage and monitor.
-                  %h4 Q: HOW MANY PEOPLE/STAFF DO I NEED TO MANAGE MY MARKETPLACE ON  MY END
-                  %p
-                    A:  You can create and manage your Marketplace as a single person or with many users. It can easily be managed by one person or many depending on the size of your business that you want to grow.
-                    You can create roles and assign permissions to these roles, which you then assign users to.
-                  %h4 Q:  HOW CUSTOMIZABLE IS THE UI? CAN I MAKE EDITS TO MY MARKETPLACE?
-                  %p A: You are able to create ad hoc web pages with custom copy and visuals that will be wrapped in the design template or theme that you choose for your Marketplace. Your Marketplace is fully responsive your users can access it on any device.
-                  %p We’re working towards opening up the entire Content Management System behind the Near Me platform. Until then, there is a level of customisation options, which we work together on to implement.
-                  %h4 Q: CAN MY HOSTS/SELLERS MAKE EDITS?
-                  %p
-                    A: Your hosts/sellers will be responsible for their own listings and they can edit those from their own personal dashboard. However, they won’t be able to make edits to the platform. You, as the platform administrator, will be the only one to have access to the Marketplace admin dashboard where you can make edits to your Marketplace. If you wish, you can also grant access to the instance admin to other people within your organization.
-                    There is also an option to allow Partners within your marketplace to also have a white label (branded) version of their listings - similar concept to a Franchisee model.
-                  %h4 Q: CAN I KEEP  MY CUSTOM DOMAIN?
-                  %p
-                    A: Yes you can! You’re able to point any number of A-Records and CNames to the Near Me service.
-                    MX records will need to be pointed to your own eMail server - we recommend Google’s white-label email service.
-                  %h4 Q: I HAVE AN IDEA FOR A SERVICE-BASED MARKETPLACE, DOES YOUR PLATFORM SUPPORT THIS? WHAT KINDS OF THINGS CAN BE RENTED ON A NEAR ME MARKETPLACE?
-                  %p A: The types of Marketplaces and customizations we support are growing everyday. If your Marketplace idea doesn’t fall in the categories below, please give us a call to see what we can do.
-                  %p
-                    %a{href: "#"} Buy/Sell
-                    Marketplaces where customers are buying from each other. For ex: Phones, jewelry, camera gear, clothing, tools,
-                  %p
-                    %a{href: "#"} Rent/Share
-                    Marketplaces connecting users and enabling sharing or rental transactions between them. For ex: Event space, desks, boats, RVs
-                  %p
-                    %a{href: "#"} Services
-                    Marketplaces matching buyers and sellers of services provided. For ex: Development, consulting, graphic design, babysitter, housecleaning, hair stylist, tailor, legal, accountants
+              .section-body
+                %h4 Q: WHEN WILL THE NEAR ME PLATFORM  BE AVAILABLE TO THE PUBLIC?
+                %p
+                  A: The platform is in private beta, currently accepting clients.
+                  To learn about your needs, we will first have a discovery call to determine what your most pressing pain points are and how we can help you. We will also ask for a high level overview with details of what you must have in your MVP (minimum viable product).
+                %h4 Q: WHAT SKILLS DO I NEED TO SETUP MY MARKETPLACE?
+                %p A: You simply need to know the business model that you are looking to build and apply customization to your Marketplace based on those needs. No engineering skills are required, however, you do have the ability to customize the design of your Marketplace.
+                %h4 Q: HOW MUCH DOES IT COST?
+                %p
+                  While we are in private beta, clients benefit from beta pricing. Since there is a large variability and customizations for different Marketplaces, prices will vary based on complexity and customization.
+                  We provide all of the on-going server hosting (using Amazon Web Services) and constant feature releases and bug fixes as part of the monthly subscription fee. We do NOT take any commissions from your marketplace transactions.
+                %h4 Q: ROUGHLY HOW MUCH TIME AND EFFORT IS REQUIRED TO DEPLOY A NEW MARKETPLACE?
+                %p A: The average setup time for a Marketplace is 7-10 days. While the average setup time is 7 days, if your Marketplace has several custom requests, it can take up to a few months due to the complexity.
+                %p Once we have your Marketplace spec we will then provide you with a proposal that includes price as well as a timeframe to build your Marketplace. Upon completion of your Marketplace, we will hand off the tools for you to continue to manage and monitor.
+                %h4 Q: HOW MANY PEOPLE/STAFF DO I NEED TO MANAGE MY MARKETPLACE ON  MY END
+                %p
+                  A:  You can create and manage your Marketplace as a single person or with many users. It can easily be managed by one person or many depending on the size of your business that you want to grow.
+                  You can create roles and assign permissions to these roles, which you then assign users to.
+                %h4 Q:  HOW CUSTOMIZABLE IS THE UI? CAN I MAKE EDITS TO MY MARKETPLACE?
+                %p A: You are able to create ad hoc web pages with custom copy and visuals that will be wrapped in the design template or theme that you choose for your Marketplace. Your Marketplace is fully responsive your users can access it on any device.
+                %p We’re working towards opening up the entire Content Management System behind the Near Me platform. Until then, there is a level of customisation options, which we work together on to implement.
+                %h4 Q: CAN MY HOSTS/SELLERS MAKE EDITS?
+                %p
+                  A: Your hosts/sellers will be responsible for their own listings and they can edit those from their own personal dashboard. However, they won’t be able to make edits to the platform. You, as the platform administrator, will be the only one to have access to the Marketplace admin dashboard where you can make edits to your Marketplace. If you wish, you can also grant access to the instance admin to other people within your organization.
+                  There is also an option to allow Partners within your marketplace to also have a white label (branded) version of their listings - similar concept to a Franchisee model.
+                %h4 Q: CAN I KEEP  MY CUSTOM DOMAIN?
+                %p
+                  A: Yes you can! You’re able to point any number of A-Records and CNames to the Near Me service.
+                  MX records will need to be pointed to your own eMail server - we recommend Google’s white-label email service.
+                %h4 Q: I HAVE AN IDEA FOR A SERVICE-BASED MARKETPLACE, DOES YOUR PLATFORM SUPPORT THIS? WHAT KINDS OF THINGS CAN BE RENTED ON A NEAR ME MARKETPLACE?
+                %p A: The types of Marketplaces and customizations we support are growing everyday. If your Marketplace idea doesn’t fall in the categories below, please give us a call to see what we can do.
+                %p
+                  Buy/Sell
+                  Marketplaces where customers are buying from each other. For ex: Phones, jewelry, camera gear, clothing, tools,
+                %p
+                  Rent/Share
+                  Marketplaces connecting users and enabling sharing or rental transactions between them. For ex: Event space, desks, boats, RVs
+                %p
+                  Services
+                  Marketplaces matching buyers and sellers of services provided. For ex: Development, consulting, graphic design, babysitter, housecleaning, hair stylist, tailor, legal, accountants
 
-            %li.expandable
-              .section
-                .section-head
-                  %h3.section-title PRICING
+          %li.expandable
+            .section
+              .section-head
+                %h3.section-title PRICING
 
-                .section-body
-                  %h4 Q: WHAT WILL BE YOUR PRICING MODEL ONCE YOU ARE OUT OF BETA?
-                  %p A:  An initial setup fee to create your Marketplace is charged - let us know your requirements and we can provide you after learning about your idea. We’re “hands on” getting to know what your Minimum Viable Product requirements are, so we can ensure an accurate setup charge.
-                  %p After ‘going live’, a monthly subscription fee is charged, based on number of listings, bandwidth and storage requirements.
-                  %p We do NOT take a commission on your transactions - the money you make in your Marketplace is yours. You are the “Merchant of Record”, not us.  Fees are usually charged by payment gateway providers which you will determine directly with them.
-                  %h4 Q: WHAT IS THE ANTICIPATED PRICING MODEL FOR USING THE PLATFORM?
-                  %p A: While we are still finalizing our pricing model, there will continue to be a setup cost as well as a monthly cost.  The monthly cost will be based on volume of your Marketplace as well as admin seats.
+              .section-body
+                %h4 Q: WHAT WILL BE YOUR PRICING MODEL ONCE YOU ARE OUT OF BETA?
+                %p A:  An initial setup fee to create your Marketplace is charged - let us know your requirements and we can provide you after learning about your idea. We’re “hands on” getting to know what your Minimum Viable Product requirements are, so we can ensure an accurate setup charge.
+                %p After ‘going live’, a monthly subscription fee is charged, based on number of listings, bandwidth and storage requirements.
+                %p We do NOT take a commission on your transactions - the money you make in your Marketplace is yours. You are the “Merchant of Record”, not us.  Fees are usually charged by payment gateway providers which you will determine directly with them.
+                %h4 Q: WHAT IS THE ANTICIPATED PRICING MODEL FOR USING THE PLATFORM?
+                %p A: While we are still finalizing our pricing model, there will continue to be a setup cost as well as a monthly cost.  The monthly cost will be based on volume of your Marketplace as well as admin seats.
 
-            %li.expandable
-              .section
-                .section-head
-                  %h3.section-title IMPORT/EXPORT DATA
+          %li.expandable
+            .section
+              .section-head
+                %h3.section-title IMPORT/EXPORT DATA
 
-                .section-body
-                  %h4 Q: WHAT HAPPENS WITH OUR DATA IF WE DECIDE TO MOVE AWAY FROM THE NEAR ME PLATFORM?
-                  %p A: You can export your data, inventory and front-end html. However, you will not have access to the technology, API or anything related to the technology.
+              .section-body
+                %h4 Q: WHAT HAPPENS WITH OUR DATA IF WE DECIDE TO MOVE AWAY FROM THE NEAR ME PLATFORM?
+                %p A: You can export your data, inventory and front-end html. However, you will not have access to the technology, API or anything related to the technology.
 
-            %li.expandable
-              .section
-                .section-head
-                  %h3.section-title SERVER INFO
+          %li.expandable
+            .section
+              .section-head
+                %h3.section-title SERVER INFO
 
-                .section-body
-                  %h4 Q: I ALREADY HAVE INVENTORY, CAN I IMPORT THOSE LISTINGS INTO MY NEAR ME MARKETPLACE?
-                  %p A: Yes, you can! Our team will provide a pro-forma spreadsheet template. We will take that and import for you - in the future this will be a simple wizard driven option along with an API end-point for export / import.
+              .section-body
+                %h4 Q: I ALREADY HAVE INVENTORY, CAN I IMPORT THOSE LISTINGS INTO MY NEAR ME MARKETPLACE?
+                %p A: Yes, you can! Our team will provide a pro-forma spreadsheet template. We will take that and import for you - in the future this will be a simple wizard driven option along with an API end-point for export / import.
 
-            %li.expandable
-              .section
-                .section-head
-                  %h3.section-title PAYMENTS
+          %li.expandable
+            .section
+              .section-head
+                %h3.section-title PAYMENTS
 
-                .section-body
-                  %h4 Q: CAN YOU DESCRIBE THE PAYMENT SERVICE AVAILABLE WITH THE PLATFORM FOR BUYERS AND SELLERS TO TRANSACT?
-                  %p
-                    A: You can connect your Marketplace to Stripe, PayPal, and Balanced. Your Marketplace can transact in USD, CAD, EUR, GBP, AUD, and YEN; with more coming soon!
-                    Instantly set transaction fees for either side of your Marketplace, allowing you the freedom to choose how you make money from your transactions.
+              .section-body
+                %h4 Q: CAN YOU DESCRIBE THE PAYMENT SERVICE AVAILABLE WITH THE PLATFORM FOR BUYERS AND SELLERS TO TRANSACT?
+                %p
+                  A: You can connect your Marketplace to Stripe, PayPal, and Balanced. Your Marketplace can transact in USD, CAD, EUR, GBP, AUD, and YEN; with more coming soon!
+                  Instantly set transaction fees for either side of your Marketplace, allowing you the freedom to choose how you make money from your transactions.
 
-            %li.expandable
-              .section
-                .section-head
-                  %h3.section-title DATA ANALYSIS
+          %li.expandable
+            .section
+              .section-head
+                %h3.section-title DATA ANALYSIS
 
-                .section-body
-                  %h4 Q: WHAT DATA AND ANALYTICS WILL I HAVE ACCESS TO FOR MY MARKETPLACE?
-                  %p A: Currently, we have standard transactional based reporting on all events within your Marketplace. However, we’re capturing data for a more intelligent “machine learning” approach. As we build up a large dataset for your Marketplace, Predictive Analytics will become a feature for Marketplace owners to opt into.
+              .section-body
+                %h4 Q: WHAT DATA AND ANALYTICS WILL I HAVE ACCESS TO FOR MY MARKETPLACE?
+                %p A: Currently, we have standard transactional based reporting on all events within your Marketplace. However, we’re capturing data for a more intelligent “machine learning” approach. As we build up a large dataset for your Marketplace, Predictive Analytics will become a feature for Marketplace owners to opt into.
 
-            %li.expandable
-              .section
-                .section-head
-                  %h3.section-title REPUTATION ENGINE
+          %li.expandable
+            .section
+              .section-head
+                %h3.section-title REPUTATION ENGINE
 
-                .section-body
-                  %h4 Q: IS THERE A REPUTATION SYSTEM BUILT INTO THE PLATFORM?
-                  %p A: We have Ratings and Comments services to allow both sides of your Marketplace to rate their experience.  This along with social media connections for each user of your service, will provide a way to determine reputation and trust.
+              .section-body
+                %h4 Q: IS THERE A REPUTATION SYSTEM BUILT INTO THE PLATFORM?
+                %p A: We have Ratings and Comments services to allow both sides of your Marketplace to rate their experience.  This along with social media connections for each user of your service, will provide a way to determine reputation and trust.
 
-            %li.expandable
-              .section
-                .section-head
-                  %h3.section-title MARKETPLACE COMMUNITY
+          %li.expandable
+            .section
+              .section-head
+                %h3.section-title MARKETPLACE COMMUNITY
 
-                .section-body
-                  %h4 Q:IS THERE A JOINT MARKETING OF MARKETPLACES, OR DOES EACH MARKETPLACE ONLY MARKET ON THEIR OWN?
-                  %p A: Most Marketplaces are very focused on their own marketing, however, some Marketplaces are synergistic. For example, if you are creating a Marketplace that allows for peer-to-peer RV (recreational vehicle) rentals, you might like to create a joint marketing campaign with a camping equipment renting marketplace.
+              .section-body
+                %h4 Q:IS THERE A JOINT MARKETING OF MARKETPLACES, OR DOES EACH MARKETPLACE ONLY MARKET ON THEIR OWN?
+                %p A: Most Marketplaces are very focused on their own marketing, however, some Marketplaces are synergistic. For example, if you are creating a Marketplace that allows for peer-to-peer RV (recreational vehicle) rentals, you might like to create a joint marketing campaign with a camping equipment renting marketplace.
 
-            %li.expandable
-              .section
-                .section-head
-                  %h3.section-title CUSTOMER SUPPORT
+          %li.expandable
+            .section
+              .section-head
+                %h3.section-title CUSTOMER SUPPORT
 
-                .section-body
-                  %h4 Q: WHAT KIND OF SUPPORT WILL BE AVAILABLE TO ME WHILE I BUILD AND MAINTAIN MY MARKETPLACE?
-                  %p
-                    A: We provide real human account management. Our team will help you to launch your Marketplace and will give you the support you need along the way. Our customer care team will assist you over the phone, live chat, email, Twitter and Facebook. You can also check out our
-                    %a{href: "/blog"} Blog
-                    for the latest news.
-                  %h4 Q: CAN NEAR ME ASSIST ME IN MARKETING STRATEGIES FOR MY MARKETPLACE?
-                  %p A: Each one of our Marketplace clients are unique and individual businesses.  How you market and choose to operate your business from a marketing perspective is up to you, however if you would like an introduction to do business with other clients on our platform we will happily discuss this with you. Near Me will also market your Marketplace through press.
+              .section-body
+                %h4 Q: WHAT KIND OF SUPPORT WILL BE AVAILABLE TO ME WHILE I BUILD AND MAINTAIN MY MARKETPLACE?
+                %p
+                  A: We provide real human account management. Our team will help you to launch your Marketplace and will give you the support you need along the way. Our customer care team will assist you over the phone, live chat, email, Twitter and Facebook. You can also check out our
+                  %a{href: "/blog"} Blog
+                  for the latest news.
+                %h4 Q: CAN NEAR ME ASSIST ME IN MARKETING STRATEGIES FOR MY MARKETPLACE?
+                %p A: Each one of our Marketplace clients are unique and individual businesses.  How you market and choose to operate your business from a marketing perspective is up to you, however if you would like an introduction to do business with other clients on our platform we will happily discuss this with you. Near Me will also market your Marketplace through press.
 
-            %li.expandable
-              .section
-                .section-head
-                  %h3.section-title INSURANCE
+          %li.expandable
+            .section
+              .section-head
+                %h3.section-title INSURANCE
 
-                .section-body
-                  %h4 Q: DO I NEED TO BUY A SPECIAL TYPE OF INSURANCE FOR MY MARKETPLACE?
-                  %p A: Often, a clear set of “Terms of Use” stating the need for the buyer/seller, lessor/lessee, sharer/giver to have their own insurance in place helps your marketplace be the “match-maker” between two people who’ve agreed to the terms of the transaction. Depending on the type of service and where you’re providing it, insurance may be a wise choice. Some marketplace owners choose to ‘self insure’, meaning they will provide a level of compensation if a transaction doesn’t work out too well.
-                  %p Also, think about legislation requirements within your jurisdiction/geographic location. Does your service adhere to these? Are there any specific laws that you need to make your marketplace participants aware of? Laws and insurance companies are running to catch up to the new way that individuals share and rent things.
-                  %h4 Q: HOW DOES NEAR ME HELP SOLVE THE PROBLEM OF INSURANCE?
-                  %p A: Whole communities are now accessing common goods and services that would previously have been bought, owned and insured by a single individual or family. We’re talking to a number of global insurance underwriters who realize that prorating insurance premiums on shared items is the future: insuring community ‘inventory’ that is accessible by all and insured for all trusted parties.
-                  %p We’re also learning about ways that existing insurance policies already cover shared use. As we power different types of marketplace all over the world, insurers are seeing value in providing a competitive option via Near-Me.com. (Watch our blog for updates on our progress to get a better deal for you)
-                  %h4 Q: WHAT TYPE OF THINGS AM I RESPONSIBLE FOR?
-                  %p A: Trust underpins any successful marketplace and providing excellence in customer support and service is the foundation to trust. Providing a mediation for dispute and allowing legitimate ratings and comments on all transactions between both sides of the marketplace goes a long way in mitigating many insurance related problems due to fraud.
-                  %p You want to remove any marketplace user who can’t be trusted. In general, less than 2% of transactions will have a dispute or problem inside your marketplace. Dealing with these with good customer service will lead to great user experience and further recommendations that your marketplace is legit.
-                  %h4 Q: WHAT IS THE USER/GUEST/RENTER RESPONSIBLE FOR?
-                  %p A: When a transaction takes place, all parties are agreeing to the terms set in your marketplace “terms of use” along with any notes described by the supplier of the goods/service. Knowing that their trust profile will be directly affected by a bad experience, the user/guest/renter is usually careful to maintain a positive reputation.
+              .section-body
+                %h4 Q: DO I NEED TO BUY A SPECIAL TYPE OF INSURANCE FOR MY MARKETPLACE?
+                %p A: Often, a clear set of “Terms of Use” stating the need for the buyer/seller, lessor/lessee, sharer/giver to have their own insurance in place helps your marketplace be the “match-maker” between two people who’ve agreed to the terms of the transaction. Depending on the type of service and where you’re providing it, insurance may be a wise choice. Some marketplace owners choose to ‘self insure’, meaning they will provide a level of compensation if a transaction doesn’t work out too well.
+                %p Also, think about legislation requirements within your jurisdiction/geographic location. Does your service adhere to these? Are there any specific laws that you need to make your marketplace participants aware of? Laws and insurance companies are running to catch up to the new way that individuals share and rent things.
+                %h4 Q: HOW DOES NEAR ME HELP SOLVE THE PROBLEM OF INSURANCE?
+                %p A: Whole communities are now accessing common goods and services that would previously have been bought, owned and insured by a single individual or family. We’re talking to a number of global insurance underwriters who realize that prorating insurance premiums on shared items is the future: insuring community ‘inventory’ that is accessible by all and insured for all trusted parties.
+                %p We’re also learning about ways that existing insurance policies already cover shared use. As we power different types of marketplace all over the world, insurers are seeing value in providing a competitive option via Near-Me.com. (Watch our blog for updates on our progress to get a better deal for you)
+                %h4 Q: WHAT TYPE OF THINGS AM I RESPONSIBLE FOR?
+                %p A: Trust underpins any successful marketplace and providing excellence in customer support and service is the foundation to trust. Providing a mediation for dispute and allowing legitimate ratings and comments on all transactions between both sides of the marketplace goes a long way in mitigating many insurance related problems due to fraud.
+                %p You want to remove any marketplace user who can’t be trusted. In general, less than 2% of transactions will have a dispute or problem inside your marketplace. Dealing with these with good customer service will lead to great user experience and further recommendations that your marketplace is legit.
+                %h4 Q: WHAT IS THE USER/GUEST/RENTER RESPONSIBLE FOR?
+                %p A: When a transaction takes place, all parties are agreeing to the terms set in your marketplace “terms of use” along with any notes described by the supplier of the goods/service. Knowing that their trust profile will be directly affected by a bad experience, the user/guest/renter is usually careful to maintain a positive reputation.
