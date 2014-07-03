@@ -9,7 +9,7 @@ class Blog::Admin::BlogPostsController < Blog::Admin::ApplicationController
   end
 
   def create
-    @blog_post = @blog_instance.blog_posts.build(params[:blog_post])
+    @blog_post = @blog_instance.blog_posts.build(post_params)
     @blog_post.user = current_user
     if @blog_post.save
       flash[:success] = t('flash_messages.blog_admin.blog_posts.blog_post_added')
@@ -25,7 +25,7 @@ class Blog::Admin::BlogPostsController < Blog::Admin::ApplicationController
 
   def update
     @blog_post = @blog_instance.blog_posts.find(params[:id])
-    if @blog_post.update_attributes(params[:blog_post])
+    if @blog_post.update_attributes(post_params)
       flash[:success] = t('flash_messages.blog_admin.blog_posts.blog_post_updated')
       redirect_to blog_admin_blog_posts_path
     else
@@ -40,4 +40,7 @@ class Blog::Admin::BlogPostsController < Blog::Admin::ApplicationController
     redirect_to blog_admin_blog_posts_path
   end
 
+  def post_params
+    params.require(:blog_post).permit(secured_params.blog_post)
+  end
 end

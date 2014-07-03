@@ -13,7 +13,7 @@ class V1::LocationsController <  V1::BaseController
     long = params[:location].try(:delete, :longitude)
     address = params[:location].try(:delete, :address)
     location_address = Address.new({latitude: lat, longitude: long, address: address})
-    @location = Location.new(params[:location])
+    @location = Location.new(location_params)
     @location.location_address = location_address
     @location.company_id = current_user.default_company.id
     if @location.save
@@ -24,7 +24,7 @@ class V1::LocationsController <  V1::BaseController
   end
 
   def update
-    @location.assign_attributes(params[:location])
+    @location.assign_attributes(location_params)
     if @location.save
        render :json => @location, :root => false
     else
@@ -44,6 +44,17 @@ class V1::LocationsController <  V1::BaseController
   private
     def find_location
       @location = current_user.locations.find(params[:id])
+    end
+
+    def location_params
+      params.require(:location).permit(
+        :address,
+        :description,
+        :location_type_id,
+        :email,
+        :latitude,
+        :longitude
+      )
     end
 
 end

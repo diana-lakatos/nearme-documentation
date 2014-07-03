@@ -14,7 +14,7 @@ class Manage::ListingsController < Manage::BaseController
   end
 
   def create
-    @listing = @location.listings.build(params[:listing])
+    @listing = @location.listings.build(listing_params)
     if @listing.save
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: platform_context.decorate.bookable_noun)
       event_tracker.created_a_listing(@listing, { via: 'dashboard' })
@@ -38,7 +38,7 @@ class Manage::ListingsController < Manage::BaseController
   def update
     respond_to do |format|
       format.html {
-        if @listing.update_attributes(params[:listing])
+        if @listing.update_attributes(listing_params)
           flash[:success] = t('flash_messages.manage.listings.listing_updated')
           redirect_to manage_locations_path
         else
@@ -47,7 +47,7 @@ class Manage::ListingsController < Manage::BaseController
         end
       }
       format.json {
-        if @listing.update_attributes(params[:listing])
+        if @listing.update_attributes(listing_params)
           render :json => { :success => true }
         else
           render :json => { :errors => @listing.errors.full_messages }, :status => 422
@@ -115,5 +115,9 @@ class Manage::ListingsController < Manage::BaseController
 
   def find_transactable_type
     @transactable_type = TransactableType.first
+  end
+
+  def listing_params
+    params.require(:listing).permit(secured_params.listing)
   end
 end

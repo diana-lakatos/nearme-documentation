@@ -20,7 +20,7 @@ class UserMessagesController < ApplicationController
   end
 
   def create
-    @user_message = current_user.authored_messages.new(params[:user_message]).decorate
+    @user_message = current_user.authored_messages.new(message_params).decorate
     @user_message.set_message_context_from_request_params(params)
     if @user_message.save
       @user_message.send_notification
@@ -66,5 +66,9 @@ class UserMessagesController < ApplicationController
     return if user_signed_in?
     session[:user_return_to] = request.referrer
     redirect_to new_user_session_path
+  end
+
+  def message_params
+    params.require(:user_message).permit(secured_params.user_message)
   end
 end

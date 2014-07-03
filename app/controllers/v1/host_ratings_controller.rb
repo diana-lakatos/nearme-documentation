@@ -4,7 +4,7 @@ class V1::HostRatingsController <  V1::BaseController
   before_filter :find_reservation
 
   def create
-    @rating = HostRating.new(params[:host_rating])
+    @rating = HostRating.new(rating_params)
     @rating.reservation = @reservation
     @rating.subject = @reservation.listing.location.creator
     @rating.author = current_user
@@ -21,4 +21,7 @@ class V1::HostRatingsController <  V1::BaseController
     @reservation = current_user.reservations.find(params[:reservation_id])
   end
 
+  def rating_params
+    params.require(:host_rating).permit(secured_params.rating)
+  end
 end

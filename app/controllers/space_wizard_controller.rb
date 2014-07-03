@@ -34,7 +34,7 @@ class SpaceWizardController < ApplicationController
     @user.phone_required = true
     params[:user][:companies_attributes]["0"][:name] = current_user.name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
-    @user.assign_attributes(params[:user])
+    @user.assign_attributes(wizard_params)
     @user.companies.first.try(:locations).try(:first).try {|l| l.name_and_description_required = true} if TransactableType.first.name == "Listing"
     @user.companies.first.creator_id = current_user.id
     if params[:save_as_draft]
@@ -147,6 +147,10 @@ class SpaceWizardController < ApplicationController
 
   def find_transactable_type
     @transactable_type = TransactableType.first
+  end
+
+  def wizard_params
+    params.require(:user).permit(secured_params.user)
   end
 
 end

@@ -21,7 +21,7 @@ class V1::ListingsController < V1::BaseController
 
   def create
     @listing = Transactable.new(:transactable_type_id => TransactableType.first.id)
-    @listing.assign_attributes(params[:listing])
+    @listing.assign_attributes(listing_params)
     if @listing.save
       render :json => {:success => true, :id => @listing.id}
     else
@@ -34,7 +34,7 @@ class V1::ListingsController < V1::BaseController
     if params[:listing][:photos_attributes] == nil
       params[:listing].delete :photos_attributes
     end
-    @listing.assign_attributes(params[:listing])
+    @listing.assign_attributes(listing_params)
 
     if @listing.save
       render :json => @listing, :root => false, :serializer => ListingWebSerializer
@@ -251,5 +251,9 @@ class V1::ListingsController < V1::BaseController
       params[:listing][:daily_price] = params[:listing][:daily_price].to_f if params[:listing][:daily_price]
       params[:listing][:weekly_price] = params[:listing][:weekly_price].to_f if params[:listing][:weekly_price]
       params[:listing][:monthly_price] = params[:listing][:monthly_price].to_f if params[:listing][:monthly_price]
+    end
+
+    def listing_params
+      params.require(:listing).permit(secured_params.listing)
     end
 end

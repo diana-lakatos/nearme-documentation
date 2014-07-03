@@ -17,7 +17,7 @@ class Manage::LocationsController < Manage::BaseController
   end
 
   def create
-    @location = @company.locations.build(params[:location])
+    @location = @company.locations.build(location_params)
     @location.name_and_description_required = true if TransactableType.first.name == "Listing"
     if @location.save
       flash[:success] = t('flash_messages.manage.locations.space_added', bookable_noun: platform_context.decorate.bookable_noun)
@@ -37,7 +37,7 @@ class Manage::LocationsController < Manage::BaseController
   end
 
   def update
-    @location.assign_attributes(params[:location])
+    @location.assign_attributes(location_params)
 
     if @location.save
       flash[:success] = t('flash_messages.manage.locations.space_updated', bookable_noun: platform_context.decorate.bookable_noun)
@@ -83,6 +83,10 @@ class Manage::LocationsController < Manage::BaseController
       flash[:warning] = t('flash_messages.dashboard.add_your_company')
       redirect_to new_space_wizard_url
     end
+  end
+
+  def location_params
+    params.require(:location).permit(secured_params.location)
   end
 
 end

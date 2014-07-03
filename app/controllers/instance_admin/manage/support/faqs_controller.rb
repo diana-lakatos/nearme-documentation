@@ -7,7 +7,7 @@ class InstanceAdmin::Manage::Support::FaqsController < InstanceAdmin::Manage::Ba
   end
 
   def create
-    @faq = ::Support::Faq.new(params[:support_faq])
+    @faq = ::Support::Faq.new(faq_params)
     @faq.created_by_id = current_user.id
     create! do |format|
       format.html do
@@ -46,5 +46,9 @@ class InstanceAdmin::Manage::Support::FaqsController < InstanceAdmin::Manage::Ba
 
   def permitting_controller_class
     'support'
+  end
+
+  def faq_params
+    params.require(:support_faq).permit(secured_params.support_faq)
   end
 end
