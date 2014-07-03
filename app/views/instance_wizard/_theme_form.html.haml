@@ -1,0 +1,16 @@
+%fieldset
+  %h4 Title &amp; Description
+  = f.input :tagline, input_html: { class: 'form-control' }
+  = f.input :meta_title, input_html: { class: 'form-control' }
+  = f.input :description, :label => 'Meta description', input_html: { class: 'form-control' }
+  %br
+
+  %h4 Contact &amp; Support
+  = f.input :phone_number, input_html: { class: 'form-control' }
+  .control-group.tel.optional{class: f.object.errors[:contact_email].empty? ? '' : 'error'}
+    %label.tel.optional.control-label{for: "theme_phone_number"}
+      %abbr{:title => "required"} *
+      Contact email
+    .controls
+      = f.input_field :contact_email, pattern: '.*', class: 'form-control', value: contact_email
+      = f.error :contact_email

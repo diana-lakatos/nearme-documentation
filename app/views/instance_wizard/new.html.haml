@@ -1,0 +1,9 @@
+.intro
+  %h1 NEW MARKETPLACE
+
+.main
+  .container
+    .row
+      .content.col-sm-6.col-sm-offset-3{style: "min-height: 320px;"}
+        .section
+          = render :partial => 'form', :locals => { instance: @instance, user: @user }

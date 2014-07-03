@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140702135751) do
+ActiveRecord::Schema.define(version: 20140703182820) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -453,6 +453,16 @@ ActiveRecord::Schema.define(version: 20140702135751) do
     t.datetime "created_at",                        null: false
     t.datetime "updated_at",                        null: false
   end
+
+  create_table "instance_creators", force: true do |t|
+    t.string   "email"
+    t.boolean  "created_instance"
+    t.integer  "instance_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "instance_creators", ["email"], name: "index_instance_creators_on_email", using: :btree
 
   create_table "instance_payment_gateways", force: true do |t|
     t.integer  "instance_id"

@@ -1,0 +1,32 @@
+= simple_form_for instance, :url => '/marketplace/create', :html => { :multipart => true } do |f|
+  = hidden_field_tag "instance_creator[email]", @instance_creator.email
+
+  - if user.new_record?
+    %legend Marketplace Owner
+    = simple_fields_for user do |f_u|
+      = f_u.input :name, input_html: { class: 'form-control' }
+    %br
+
+  %legend Marketplace
+  = f.input :name, input_html: { class: 'form-control' }
+  = f.input :bookable_noun, label: "Item name", placeholder: "i.e. Desk", input_html: { class: 'form-control' }
+  = f.input :lessor, label: "Seller name", placeholder: "i.e. Host", input_html: { class: 'form-control' }
+  = f.input :lessee, label: "Buyer name", placeholder: "i.e. Guest", input_html: { class: 'form-control' }
+  %br
+  %br
+
+  %legend Domain
+  - instance.domains.build unless instance.domains.any?
+  = f.fields_for :domains do |f_d|
+    = f_d.input :name, placeholder: 'my-market.near-me.com', input_html: { class: 'form-control' }
+    = f_d.input :secured, input_html: { checked: true }
+  %br
+  %br
+
+  %legend Custom Theme
+  = f.fields_for :theme, (instance.theme.presence || instance.build_theme) do |ff|
+    = render :partial => 'theme_form', :locals => { f: ff, contact_email: @instance_creator.email}
+
+  %br
+  .form-actions
+    = f.button :submit

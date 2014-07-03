@@ -1,0 +1,26 @@
+%h1= resource_class.name.underscore.humanize.pluralize
+
+.row-fluid
+  %h4 Search
+  .pull-left
+    = render 'search_form'
+
+.row-fluid
+  %h4 Add instance creator
+  .pull-left
+    = render 'form', locals: {resource: @instance_creator}
+
+%table.table.table-striped
+  %thead
+    %tr
+      %th Email
+      %th Created Instance?
+      %th Instance
+      %th Edit
+      %th Delete
+
+  %tbody
+    - collection.each do |resource|
+      = render 'index_row', :resource => resource
+
+= will_paginate collection
