@@ -433,6 +433,7 @@ DesksnearMe::Application.routes.draw do
     mount ReengagementMailerPreview => 'mail_view/reengagement'
     mount RecurringMailerPreview => 'mail_view/recurring'
     mount SupportMailerPreview => 'mail_view/support'
+    mount PlatformMailerPreview => 'mail_view/platform'
   end
 
 end
