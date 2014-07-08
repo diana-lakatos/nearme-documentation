@@ -55,6 +55,7 @@ class Admin::InstancesController < Admin::ResourceController
 
   def user_params
     params.require(:user).permit(secured_params.user)
+  end
 
   def lock
     @instance = Instance.find(params[:id])
