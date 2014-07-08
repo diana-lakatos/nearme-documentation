@@ -27,7 +27,7 @@
       width: 100%;
       font:'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif !important; 
       background-color: #fff !important; 
-      color: #646464 !important; 
+      color: #ffffff !important; 
       height: 100%; 
       -webkit-font-smoothing:antialiased;  
       -webkit-text-size-adjust:none;
@@ -39,6 +39,7 @@
 
     ul {
       padding-left: 30px;
+      list-style-type: none;
     }
 
     li {
@@ -114,7 +115,8 @@
       max-width:600px !important; 
       margin:0 auto!important; 
       clear:both !important; 
-      padding:5px;
+      border: solid 8px;
+      border-color: #ECECEC;
     }
 
     img.logo {
@@ -128,8 +130,8 @@
     }
 
     .content-logo table tr td {
-      background-color: #F1F4DD; 
-      padding: 0px;
+      text-align: center;
+      padding: 140px 0px;
     }
 
 
@@ -141,10 +143,10 @@
     }
 
     .body-content {
-      background-color: #F1F4DD; 
+      background-color: #ffffff; 
       padding: 30px;
       padding-bottom: 10px;
-      color: #646464 !important;
+      color: #6A6A6A !important;
       font-family:'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif !important; 
       line-height:160%; 
       font-size: 14px;
@@ -164,6 +166,10 @@
     }
 
     .body-content p {
+      padding-bottom: 20px;
+    }
+
+    .body-content ul {
       padding-bottom: 20px;
     }
 
@@ -289,10 +295,10 @@
           <td class="container" bgcolor="#FFFFFF">
 
             <div class="content-logo">
-            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" background="http://near-me.com/assets/platform_home/banner-about.jpg">
               <tr>
-                <td>
-                  <img class="logo" src="http://near-me.com/assets/platform_home/logo.png" id="headerImage">
+                <td background="<%=image_url("platform_home/email/email-header.jpg")%>" bgcolor="#8b8284" valign="top" style="background: no-repeat url(<%=image_url("platform_home/email/email-header.jpg")%>); background-color: #8b8284; background-position: center !important;">
+                  <!-- <img class="logo" src="http://near-me.com/assets/platform_home/logo.png" id="headerImage"> -->
                 </td>
               </tr>
             </table>
@@ -315,7 +321,6 @@
                         <br />
                         <i>You're receiving this email because you signed up for notification emails via near-me.com.</i>
                         <br />
-                        <a href="<%= @unsubscribe_url %>">Unsubscribe</a>
                       </td>
                     </tr>
                   </table>
