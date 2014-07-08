@@ -8,7 +8,7 @@ class Support::TicketsController < Support::BaseController
   end
 
   def create
-    @ticket = Support::Ticket.new(params[:support_ticket])
+    @ticket = Support::Ticket.new(ticket_params)
     @ticket.assign_user(current_user) if current_user
     @message = @ticket.messages.first
     if @ticket.valid?
@@ -33,5 +33,11 @@ class Support::TicketsController < Support::BaseController
   def show
     @ticket = current_user.tickets.find(params[:id])
     @message = Support::TicketMessage.new
+  end
+
+  private
+
+  def ticket_params
+    params.require(:support_ticket).permit(secured_params.support_ticket)
   end
 end

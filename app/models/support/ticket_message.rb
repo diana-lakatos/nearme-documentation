@@ -5,7 +5,7 @@ class Support::TicketMessage < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  attr_accessible :full_name, :email, :subject, :message
+  # attr_accessible :full_name, :email, :subject, :message
 
   belongs_to :user
   belongs_to :ticket, class_name: 'Support::Ticket', touch: true

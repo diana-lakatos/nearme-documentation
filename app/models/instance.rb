@@ -3,19 +3,19 @@ class Instance < ActiveRecord::Base
 
   has_metadata :accessors => [:support_metadata]
 
-  attr_accessible :name, :domains_attributes, :theme_attributes, :location_types_attributes,
-                  :service_fee_guest_percent, :service_fee_host_percent, :bookable_noun, :lessor, :lessee,
-                  :listing_amenity_types_attributes, :location_amenity_types_attributes, :skip_company,
-                  :live_stripe_api_key, :live_stripe_public_key, :live_paypal_username, :live_paypal_password, :live_paypal_signature, :live_paypal_app_id,
-                  :live_paypal_client_id, :live_paypal_client_secret, :live_balanced_api_key, :instance_billing_gateways_attributes, :marketplace_password,
-                  :translations_attributes, :test_stripe_api_key, :test_stripe_public_key, :test_paypal_username, :test_paypal_password,
-                  :test_paypal_signature, :test_paypal_app_id, :test_paypal_client_id, :test_paypal_client_secret, :test_balanced_api_key,
-                  :password_protected, :test_mode, :olark_api_key, :olark_enabled, :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key,
-                  :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret, :instagram_consumer_key, :instagram_consumer_secret,
-                  :password_protected, :test_mode, :olark_api_key, :olark_enabled, :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key,
-                  :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret, :instagram_consumer_key, :instagram_consumer_secret,
-                  :support_imap_hash, :support_email, :paypal_email, :db_connection_string, :stripe_currency, :user_info_in_onboarding_flow, :default_search_view,
-                  :user_based_marketplace_views, :instance_payment_gateways_attributes, :transactable_types_attributes, :searcher_type, :mark_as_locked
+  # attr_accessible :name, :domains_attributes, :theme_attributes, :location_types_attributes,
+  #                 :service_fee_guest_percent, :service_fee_host_percent, :bookable_noun, :lessor, :lessee,
+  #                 :listing_amenity_types_attributes, :location_amenity_types_attributes, :skip_company,
+  #                 :live_stripe_api_key, :live_stripe_public_key, :live_paypal_username, :live_paypal_password, :live_paypal_signature, :live_paypal_app_id,
+  #                 :live_paypal_client_id, :live_paypal_client_secret, :live_balanced_api_key, :instance_billing_gateways_attributes, :marketplace_password,
+  #                 :translations_attributes, :test_stripe_api_key, :test_stripe_public_key, :test_paypal_username, :test_paypal_password,
+  #                 :test_paypal_signature, :test_paypal_app_id, :test_paypal_client_id, :test_paypal_client_secret, :test_balanced_api_key,
+  #                 :password_protected, :test_mode, :olark_api_key, :olark_enabled, :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key,
+  #                 :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret, :instagram_consumer_key, :instagram_consumer_secret,
+  #                 :password_protected, :test_mode, :olark_api_key, :olark_enabled, :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key,
+  #                 :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret, :instagram_consumer_key, :instagram_consumer_secret,
+  #                 :support_imap_hash, :support_email, :paypal_email, :db_connection_string, :stripe_currency, :user_info_in_onboarding_flow, :default_search_view,
+  #                 :user_based_marketplace_views, :instance_payment_gateways_attributes, :transactable_types_attributes, :searcher_type, :mark_as_locked
 
   attr_encrypted :live_paypal_username, :live_paypal_password, :live_paypal_signature, :live_paypal_app_id, :live_stripe_api_key, :live_paypal_client_id,
                  :live_paypal_client_secret, :live_balanced_api_key, :marketplace_password, :test_stripe_api_key, :test_paypal_username, :test_paypal_password,
@@ -102,7 +102,7 @@ class Instance < ActiveRecord::Base
       monetize "#{edge}_#{price}_price_cents", :allow_nil => true
 
       # Mark price fields as attr-accessible
-      attr_accessible "#{edge}_#{price}_price_cents", "#{edge}_#{price}_price"
+      # attr_accessible "#{edge}_#{price}_price_cents", "#{edge}_#{price}_price"
     end
   end
 

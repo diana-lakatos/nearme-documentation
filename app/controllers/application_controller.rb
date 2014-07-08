@@ -27,6 +27,10 @@ class ApplicationController < ActionController::Base
     super.try(:decorate)
   end
 
+  def secured_params
+    @secured_params ||= SecuredParams.new
+  end
+
   protected
 
   # Returns the layout to use for the current request.

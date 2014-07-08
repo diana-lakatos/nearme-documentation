@@ -79,11 +79,11 @@ class Transactable < ActiveRecord::Base
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
 
-  attr_accessible :location_id, :availability_template_id,
-    :availability_rules_attributes, :defer_availability_rules, :free,
-    :photos_attributes, :hourly_reservations, :price_type, :draft, :enabled,
-    :last_request_photos_sent_at, :activated_at, :amenity_ids, :rank, :transactable_type_id,
-    :transactable_type, :photo_ids
+  # attr_accessible :location_id, :availability_template_id,
+  #   :availability_rules_attributes, :defer_availability_rules, :free,
+  #   :photos_attributes, :hourly_reservations, :price_type, :draft, :enabled,
+  #   :last_request_photos_sent_at, :activated_at, :amenity_ids, :rank, :transactable_type_id,
+  #   :transactable_type, :photo_ids
 
   attr_accessor :distance_from_search_query, :photo_not_required
 
@@ -92,7 +92,7 @@ class Transactable < ActiveRecord::Base
   def apply_transactable_type_settings
     set_custom_attributes
     set_defaults if self.new_record?
-    self.attributes = @attributes_to_be_applied if @attributes_to_be_applied.present?
+    self.assign_attributes(@attributes_to_be_applied) if @attributes_to_be_applied.present?
   end
 
   def hourly_reservations?
@@ -112,7 +112,7 @@ class Transactable < ActiveRecord::Base
     monetize "#{price}_price_cents", :allow_nil => true
 
     # Mark price fields as attr-accessible
-    attr_accessible "#{price}_price_cents", "#{price}_price"
+    # attr_accessible "#{price}_price_cents", "#{price}_price"
   end
 
   # Defer to the parent Location for availability rules unless this Listing has specific

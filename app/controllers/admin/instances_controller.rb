@@ -8,8 +8,8 @@ class Admin::InstancesController < Admin::ResourceController
   end
 
   def create
-    @instance = Instance.new(params[:instance])
-    @user = User.new(params[:user])
+    @instance = Instance.new(instance_params)
+    @user = User.new(user_params)
     user_password = @user.generate_random_password!
 
     begin
@@ -46,6 +46,15 @@ class Admin::InstancesController < Admin::ResourceController
 
     redirect_to admin_instance_path(@instance), notice: 'Instance was successfully created.'
   end
+
+  private
+
+  def instance_params
+    params.require(:instance).permit(secured_params.instance)
+  end
+
+  def user_params
+    params.require(:user).permit(secured_params.user)
 
   def lock
     @instance = Instance.find(params[:id])

@@ -7,7 +7,7 @@ class AvailabilityTemplate < ActiveRecord::Base
   belongs_to :transactable_type, :inverse_of => :availability_templates
   belongs_to :instance
 
-  attr_accessible :transactable_type, :name, :description, :availability_rules, :availability_rules_attributes
+  # attr_accessible :transactable_type, :name, :description, :availability_rules, :availability_rules_attributes
 
   accepts_nested_attributes_for :availability_rules
 

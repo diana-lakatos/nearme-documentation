@@ -9,7 +9,7 @@ class Photo < ActiveRecord::Base
 
   belongs_to :listing, class_name: "Transactable", foreign_key: 'transactable_id'
   belongs_to :creator, class_name: "User"
-  attr_accessible :creator_id, :transactable_id, :caption, :image, :image_versions_generated_at, :image_transformation_data, :position
+  # attr_accessible :creator_id, :transactable_id, :caption, :image, :image_versions_generated_at, :image_transformation_data, :position
 
   default_scope -> { rank(:position) }
 

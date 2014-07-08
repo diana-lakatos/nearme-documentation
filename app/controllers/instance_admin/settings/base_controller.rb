@@ -18,7 +18,7 @@ class InstanceAdmin::Settings::BaseController < InstanceAdmin::BaseController
 
   def update
     if params[:instance].present?
-      if @instance.update_attributes(params[:instance])
+      if @instance.update_attributes(instance_params)
         flash.now[:success] = t('flash_messages.instance_admin.settings.settings_updated')
         find_or_build_billing_gateway_for_usd
         render :show
@@ -45,5 +45,9 @@ class InstanceAdmin::Settings::BaseController < InstanceAdmin::BaseController
 
   def find_instance_translations
     @translations = @instance.translations
+  end
+
+  def instance_params
+    params.require(:instance).permit(secured_params.instance)
   end
 end

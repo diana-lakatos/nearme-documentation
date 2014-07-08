@@ -112,10 +112,10 @@ class User < ActiveRecord::Base
 
   attr_accessor :phone_required, :country_name_required, :skip_password
 
-  attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :avatar_versions_generated_at, :avatar_transformation_data,
-    :biography, :industry_ids, :country_name, :mobile_number, :facebook_url, :twitter_url, :linkedin_url, :instagram_url,
-    :current_location, :company_name, :skills_and_interests, :last_geolocated_location_longitude, :last_geolocated_location_latitude,
-    :domain_id, :time_zone, :companies_attributes, :sms_notifications_enabled, :sms_preferences
+  # attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :avatar_versions_generated_at, :avatar_transformation_data,
+  #   :biography, :industry_ids, :country_name, :mobile_number, :facebook_url, :twitter_url, :linkedin_url, :instagram_url,
+  #   :current_location, :company_name, :skills_and_interests, :last_geolocated_location_longitude, :last_geolocated_location_latitude,
+  #   :domain_id, :time_zone, :companies_attributes, :sms_notifications_enabled, :sms_preferences
 
   serialize :sms_preferences, Hash
   serialize :instance_unread_messages_threads_count, Hash
