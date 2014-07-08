@@ -9,6 +9,8 @@ require 'webmock/minitest'
 
 require Rails.root.join('test', 'helpers', 'stub_helper.rb')
 
+require 'spree/testing_support/factories'
+
 Turn.config.format = :dot
 
 # Disable carrierwave processing in tests
@@ -180,7 +182,12 @@ ActionController::TestCase.class_eval do
       PaperTrail.enabled = was_enabled
     end
   end
+
+  def spree
+    Spree::Core::Engine.routes.url_helpers
+  end
 end
 
 DatabaseCleaner.clean
 Utils::EnLocalesSeeder.new.go!
+ActionMailer::Base.delivery_method = :test # Spree overrides this so we want to get back to test

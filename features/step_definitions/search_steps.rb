@@ -3,7 +3,7 @@ When /^I search for "([^"]*)"$/ do |text|
 end
 
 When /^I search for located "([^"]*)"$/ do |text|
-  SearchController.any_instance.stubs(:params).returns({:lat => 1, :lng => 1, :loc => text})
+  SearchController.any_instance.stubs(:params).returns(ActionController::Parameters.new({:lat => 1, :lng => 1, :loc => text}))
   search_for(text)
 end
 

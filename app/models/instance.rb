@@ -165,6 +165,14 @@ class Instance < ActiveRecord::Base
     }
   end
 
+  def buyable?
+    @buyable ||= self.transactable_types.any?(&:buy_sell?)
+  end
+
+  def marketplace_type
+    TransactableType::AVAILABLE_TYPES[buyable? ? 1 : 0]
+  end
+
   def payment_gateway_mode
     test_mode? ? "test" : "live"
   end

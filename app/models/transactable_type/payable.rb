@@ -2,7 +2,6 @@ module TransactableType::Payable
   extend ActiveSupport::Concern
   included do
     scope :filtered_by_price_types,  lambda { |price_types| where(price_types.map{|pt| "(properties->'#{pt}_price_cents') IS NOT NULL"}.join(' OR  ')) if price_types }
-    attr_accessible :price_type
 
     # Number of minimum consecutive booking days required for this listing
     def minimum_booking_days

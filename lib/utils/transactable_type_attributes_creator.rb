@@ -94,5 +94,8 @@ module Utils
         tta.save!
       end
     end
+
+    def create_buy_sell_attributes!
+    end
   end
 end

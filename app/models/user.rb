@@ -43,6 +43,7 @@ class User < ActiveRecord::Base
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
+  has_many :orders, foreign_key: :user_id, class_name: 'Spree::Order'
 
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
