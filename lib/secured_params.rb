@@ -354,6 +354,14 @@ class SecuredParams
     ]
   end
 
+  def confidential_file
+    [
+      :caption,
+      :file,
+      :state
+    ]
+  end
+
   def photo
     [
       :image,
@@ -376,7 +384,7 @@ class SecuredParams
     :phone_required, :country_name_required, :skip_password,
     :country_name, :phone, :mobile_phone,
     :companies_attributes => nested(self.company),
-    :confidential_files_attributes => nested(self.confidential_files)
+    :confidential_files_attributes => nested(self.confidential_file)
   ]
   end
 

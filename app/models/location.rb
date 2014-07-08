@@ -140,7 +140,7 @@ class Location < ActiveRecord::Base
 
   def is_trusted?
     if PlatformContext.current.instance.onboarding_verification_required
-      self.confidential_files.accepted.count > 0 || self.creator.is_trusted?
+      self.confidential_files.accepted.count > 0 || self.creator.try(:is_trusted?)
     else
       true
     end

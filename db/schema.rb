@@ -546,9 +546,9 @@ ActiveRecord::Schema.define(version: 20140702135751) do
     t.boolean  "user_info_in_onboarding_flow",                                default: false
     t.string   "default_search_view"
     t.boolean  "user_based_marketplace_views",                                default: false
+    t.boolean  "onboarding_verification_required",                            default: false
     t.string   "searcher_type"
     t.datetime "master_lock"
-    t.boolean  "onboarding_verification_required",                            default: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -928,13 +928,6 @@ ActiveRecord::Schema.define(version: 20140702135751) do
   end
 
   add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
-
-  create_table "sessions", force: true do |t|
-    t.string   "session_id", null: false
-    t.text     "data"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
 
   create_table "support_faqs", force: true do |t|
     t.integer  "instance_id"

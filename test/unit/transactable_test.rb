@@ -37,6 +37,8 @@ class TransactableTest < ActiveSupport::TestCase
       @transactable = FactoryGirl.create(:transactable)
       @transactable.confidential_files = []
       @confidential_file = FactoryGirl.build(:confidential_file)
+      @confidential_file.owner = @transactable
+      @confidential_file.save!
     end
 
     context 'instance does not require verification' do
@@ -63,11 +65,9 @@ class TransactableTest < ActiveSupport::TestCase
       end
 
       should 'be trusted with confidential file that is accepted' do
-        @confidential_file.review
-        @confidential_file.accept
-        @transactable.confidential_files << @confidential_file
-        @transactable.save!
-        assert @transactable.is_trusted?
+        @confidential_file.review!
+        @confidential_file.accept!
+        assert @transactable.reload.is_trusted?
       end
 
       context 'enabled' do

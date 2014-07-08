@@ -7,7 +7,6 @@ class ConfidentialFile < ActiveRecord::Base
   belongs_to :instance
   belongs_to :uploader, class_name: 'User'
   belongs_to :owner, polymorphic: true
-  attr_accessible :caption, :file, :state
 
   scope :accepted, lambda { with_state(:accepted) }
   scope :uploaded, lambda { with_state(:uploaded) }
@@ -18,6 +17,12 @@ class ConfidentialFile < ActiveRecord::Base
   mount_uploader :file, PrivateFileUploader
   validates_presence_of :file
   skip_callback :commit, :after, :remove_file!
+
+  before_create :set_defaults
+
+  def set_defaults
+    self.state = 'uploaded'
+  end
 
   state_machine :state, :initial => :uploaded do
     after_transition :accepted => :pending, :do => :notify_owner_of_cancelling_acceptance

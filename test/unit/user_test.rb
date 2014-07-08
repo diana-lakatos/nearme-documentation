@@ -185,33 +185,33 @@ class UserTest < ActiveSupport::TestCase
         end
 
         should 'not be trusted with confidential file that is pending' do
-          @confidential_file.review
           @user.confidential_files << @confidential_file
           @user.save!
+          @confidential_file.review!
           refute @user.is_trusted?
         end
 
         should 'not be trusted with confidential file that is rejected' do
-          @confidential_file.review
-          @confidential_file.reject
           @user.confidential_files << @confidential_file
           @user.save!
+          @confidential_file.review!
+          @confidential_file.reject!
           refute @user.is_trusted?
         end
 
         should 'not be trusted with confidential file that is questioned' do
-          @confidential_file.review
-          @confidential_file.question
           @user.confidential_files << @confidential_file
           @user.save!
+          @confidential_file.review!
+          @confidential_file.question!
           refute @user.is_trusted?
         end
 
         should 'be trusted with confidential file that is accepted' do
-          @confidential_file.review
-          @confidential_file.accept
           @user.confidential_files << @confidential_file
           @user.save!
+          @confidential_file.review
+          @confidential_file.accept
           assert @user.is_trusted?
         end
       end
