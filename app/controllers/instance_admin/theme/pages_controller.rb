@@ -6,7 +6,7 @@ class InstanceAdmin::Theme::PagesController < InstanceAdmin::Theme::BaseControll
   before_filter :set_redirect_form
 
   def create
-    @page = Page.new(params[:page])
+    @page = Page.new(page_params)
     @page.theme_id = PlatformContext.current.theme.id
     create! do |format|
       format.html do
@@ -38,5 +38,9 @@ class InstanceAdmin::Theme::PagesController < InstanceAdmin::Theme::BaseControll
 
   def set_redirect_form
     @redirect_form = params[:redirect].present?
+  end
+
+  def page_params
+    params.require(:page).permit(secured_params.page)
   end
 end

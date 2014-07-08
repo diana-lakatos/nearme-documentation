@@ -3,8 +3,8 @@ class Address < ActiveRecord::Base
   acts_as_paranoid
   scoped_to_platform_context
 
-  attr_accessible :address, :address2, :latitude, :local_geocoding, :longitude, :suburb,
-    :formatted_address, :postcode, :city, :state, :country, :street, :address_components
+  # attr_accessible :address, :address2, :latitude, :local_geocoding, :longitude, :suburb,
+  #   :formatted_address, :postcode, :city, :state, :country, :street, :address_components
 
   attr_accessor :local_geocoding # set this to true in js
 

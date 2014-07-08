@@ -399,6 +399,7 @@ module Utils
                                              content: Faker::Lorem.paragraph,
                                              author_name: Faker::Name.name,
                                              author_biography: Faker::Lorem.paragraph,
+                                             published_at: i.weeks.ago,
                                              created_at: i.weeks.ago,
                                              user: User.last)
           end

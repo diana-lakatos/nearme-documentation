@@ -32,4 +32,10 @@ class Support::TicketMessagesController < Support::BaseController
   def close?
     params[:commit] == "Close Ticket"
   end
+
+  def message_params
+    params.require(:support_ticket_message).permit(
+      :message
+    )
+  end
 end

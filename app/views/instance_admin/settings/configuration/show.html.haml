@@ -1,3 +1,10 @@
+= simple_form_for @instance, :url => lock_instance_admin_settings_configuration_path, method: :post, :html => { :multipart => true, :class => "form-horizontal" } do |f|
+  .row-fluid
+    .controls.controls-row
+      .span6
+        = f.input :mark_as_locked, as: :boolean, :label => "Master Lock", input_html: { class: 'input-block-level', checked: f.object.locked? }
+      = f.button :submit, 'Update Lock', class: 'btn btn-primary'
+
 = simple_nested_form_for @instance, :url => instance_admin_settings_configuration_path, :html => { :multipart => true } do |f|
   %fieldset
     %legend Basic Configuration

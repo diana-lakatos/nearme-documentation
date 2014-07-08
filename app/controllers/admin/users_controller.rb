@@ -34,5 +34,8 @@ class Admin::UsersController < Admin::ResourceController
     %w(name email)
   end
 
+  def user_params
+    params.require(:user).permit(secured_params.user)
+  end
 end
 

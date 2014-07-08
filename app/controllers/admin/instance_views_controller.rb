@@ -18,7 +18,7 @@ class Admin::InstanceViewsController < Admin::BaseController
   end
 
   def create
-    @instance_view = InstanceView.new(params[:instance_view])
+    @instance_view = InstanceView.new(instance_view_params)
     @instance_view.instance = @instance
     if @instance_view.save
       flash[:success] = 'InstanceView created.'
@@ -30,7 +30,7 @@ class Admin::InstanceViewsController < Admin::BaseController
   end
 
   def update
-    if @instance_view.update_attributes(params[:instance_view])
+    if @instance_view.update_attributes(instance_view_params)
       flash[:success] = 'InstanceView was successfully updated.'
       redirect_to action: "index"
     else
@@ -53,5 +53,9 @@ class Admin::InstanceViewsController < Admin::BaseController
 
   def set_instance_view
     @instance_view = InstanceView.find(params[:id])
+  end
+
+  def instance_view_params
+    params.require(:instance_view).permit(secured_params.instance_view)
   end
 end

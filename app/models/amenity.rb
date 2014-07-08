@@ -1,5 +1,5 @@
 class Amenity < ActiveRecord::Base
-  attr_accessible :name, :amenity_type_id
+  # attr_accessible :name, :amenity_type_id
 
   belongs_to :amenity_type
   has_many :amenity_holders, dependent: :destroy

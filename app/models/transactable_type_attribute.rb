@@ -4,10 +4,10 @@ class TransactableTypeAttribute < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  attr_accessible :name, :transactable_type_id, :attribute_type, :html_tag,
-    :prompt, :default_value, :public, :validation_rules, :valid_values, :label,
-    :placeholder, :hint, :input_html_options, :wrapper_html_options, :deleted_at,
-    :internal
+  # attr_accessible :name, :transactable_type_id, :attribute_type, :html_tag,
+  #   :prompt, :default_value, :public, :validation_rules, :valid_values, :label,
+  #   :placeholder, :hint, :input_html_options, :wrapper_html_options, :deleted_at,
+  #   :internal
 
   scope :listable, -> { all }
 

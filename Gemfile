@@ -97,7 +97,7 @@ gem 'jquery-rails'
 gem 'chosen-rails'
 gem 'spectrum-rails'
 
-gem 'inherited_resources', '~> 1.4.1'
+gem 'inherited_resources', '~> 1.5.0'
 gem "historyjs-rails"
 
 gem 'ranked-model'
@@ -167,6 +167,3 @@ group :test do
 end
 
 gem 'mailman'
-
-# TODO remove ASAP
-gem 'protected_attributes'

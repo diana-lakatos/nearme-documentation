@@ -1,11 +1,13 @@
 class InstanceAdmin::Manage::Users::InstanceAdminRolesController < InstanceAdmin::Manage::BaseController
 
+  skip_before_filter :check_if_locked
+
   def index
     redirect_to instance_admin_manage_users_path
   end
 
   def create
-    @instance_admin_role = InstanceAdminRole.new(params[:instance_admin_role])
+    @instance_admin_role = InstanceAdminRole.new(role_params)
     @instance_admin_role.instance_id = PlatformContext.current.instance.id
     if @instance_admin_role.save
 
@@ -19,7 +21,7 @@ class InstanceAdmin::Manage::Users::InstanceAdminRolesController < InstanceAdmin
   def update
     @instance_admin_role = InstanceAdminRole.find(params[:id])
     if @instance_admin_role.instance_id.present?
-      @instance_admin_role.update_attributes(params[:instance_admin_role]) if only_updates_permission?
+      @instance_admin_role.update_attributes(role_params) if only_updates_permission?
     end
     render :nothing => true
   end
@@ -41,5 +43,9 @@ class InstanceAdmin::Manage::Users::InstanceAdminRolesController < InstanceAdmin
 
   def permitting_controller_class
     'manage'
+  end
+
+  def role_params
+    params.require(:instance_admin_role).permit(secured_params.instance_admin_role)
   end
 end

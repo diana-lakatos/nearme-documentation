@@ -15,4 +15,8 @@ class InstanceAdmin::Theme::BaseController < InstanceAdmin::ResourceController
   def find_theme
     @theme = platform_context.theme
   end
+
+  def theme_params
+    params.require(:theme).permit(secured_params.theme)
+  end
 end

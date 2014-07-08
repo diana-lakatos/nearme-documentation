@@ -33,8 +33,8 @@ class Reservation < ActiveRecord::Base
   belongs_to :platform_context_detail, :polymorphic => true
   has_many :user_messages, as: :thread_context
 
-  attr_accessible :cancelable, :confirmation_email, :date, :transactable_id,
-    :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method, :rejection_reason
+  # attr_accessible :cancelable, :confirmation_email, :date, :transactable_id,
+  #   :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method, :rejection_reason
 
   has_many :reviews,
     :class_name => 'GuestRating',

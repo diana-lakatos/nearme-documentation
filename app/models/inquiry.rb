@@ -8,7 +8,7 @@ class Inquiry < ActiveRecord::Base
   belongs_to :inquiring_user, class_name: "User"
   delegate :name, to: :inquiring_user, :prefix => true
 
-  attr_accessible :message
+  # attr_accessible :message
 
   def to_liquid
     InquiryDrop.new(self)

@@ -6,8 +6,8 @@ class InstanceAdminRole < ActiveRecord::Base
 
   PERMISSIONS = %w(Analytics Settings Theme Manage Blog Support)
 
-  attr_accessible :permission_analytics, :permission_settings, :permission_theme, :permission_transfers, :permission_inventories,
-    :permission_partners, :permission_users, :permission_pages, :permission_manage, :permission_blog, :permission_support, :name
+  # attr_accessible :permission_analytics, :permission_settings, :permission_theme, :permission_transfers, :permission_inventories,
+  #   :permission_partners, :permission_users, :permission_pages, :permission_manage, :permission_blog, :permission_support, :name
 
 
   has_many :instance_admins

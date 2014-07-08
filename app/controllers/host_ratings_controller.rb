@@ -8,7 +8,7 @@ class HostRatingsController < ApplicationController
   end
 
   def create
-    @rating = HostRating.new(params[:host_rating])
+    @rating = HostRating.new(rating_params)
     @rating.reservation = @reservation
     @rating.subject = @reservation.creator
     @rating.author = current_user
@@ -25,6 +25,10 @@ class HostRatingsController < ApplicationController
   private
   def find_reservation
     @reservation = current_user.reservations.find(params[:reservation_id])
+  end
+
+  def rating_params
+    params.require(:host_rating).permit(secured_params.rating)
   end
 
 end

@@ -5,7 +5,7 @@ class ReservationPeriod < ActiveRecord::Base
   validates :date, :presence => true
   validate :validate_start_end_times
 
-  attr_accessible :date, :start_minute, :end_minute
+  # attr_accessible :date, :start_minute, :end_minute
 
   delegate :listing, :to => :reservation
 

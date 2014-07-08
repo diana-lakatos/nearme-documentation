@@ -9,7 +9,7 @@ class Listing::Search::Params::Web < Listing::Search::Params
     @lntype = @options[:lntype].blank? ? nil : @options[:lntype]
     @lgtype = @options[:lgtype].blank? ? nil : @options[:lgtype]
     @lgpricing = @options[:lgpricing]
-    @sort = @options.fetch(:sort, 'relevance').inquiry
+    @sort = (@options[:sort].presence || 'relevance').inquiry
   end
 
   def bounding_box

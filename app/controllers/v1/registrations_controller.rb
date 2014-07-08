@@ -6,9 +6,9 @@ class V1::RegistrationsController < V1::BaseController
   def create
 
     # This is insecure!?
-    @user = User.new json_params
+    @user = User.new(user_params)
 
-    @user.password = json_params["password"]
+    @user.password = user_params["password"]
 
     if @user.save
       analytics_apply_user(@user)
@@ -25,9 +25,15 @@ class V1::RegistrationsController < V1::BaseController
   #
   private
 
+
+  # Return user attributes we can update
+  def user_params
+    json_params.slice("name", "email", "password")
+  end
+
   #
   # Result for when registration has failed
-  #
+  private
   def registration_failed_hash(user)
 
     # Result hash

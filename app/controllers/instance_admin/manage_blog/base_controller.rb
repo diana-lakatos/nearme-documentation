@@ -2,6 +2,7 @@ class InstanceAdmin::ManageBlog::BaseController < InstanceAdmin::ResourceControl
   CONTROLLERS = { 'posts' => { default_action: 'index' },
                   'settings'   => { default_action: 'edit' }}
 
+  skip_before_filter :check_if_locked
   before_filter :find_blog_instance
 
   def index

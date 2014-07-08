@@ -1,12 +1,14 @@
 class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseController
 
+  skip_before_filter :check_if_locked
+
   def index
     @user = User.new
     @instance_admin = InstanceAdmin.new
   end
 
   def create
-    @user = User.new(params[:user])
+    @user = User.new(user_params)
     @user.skip_password = true
     if @user.save
       InstanceAdmin.create(:user_id => @user.id)
@@ -18,4 +20,9 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
     end
   end
 
+  private
+
+  def user_params
+    params.require(:user).permit(secured_params.user)
+  end
 end

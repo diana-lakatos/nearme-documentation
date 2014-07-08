@@ -18,14 +18,16 @@ class BaseUploader < CarrierWave::Uploader::Base
       [model["#{mounted_as}_original_width"], model["#{mounted_as}_original_height"]]
     else
       img = image
-      [img[:width], img[:height]]
+      img.nil? ? [] : [img[:width], img[:height]]
     end
   end
 
   def image
+    img_path = self.respond_to?(:current_url) ? current_url(:original) : self.url
     # we don't want to assign this to variable, becuase there are issues with serialization in versions_regeneration_job
-   img_path = self.respond_to?(:current_url) ? current_url(:original) : self.url
-   MiniMagick::Image.open(img_path[0] == '/' ? Rails.root.join('public', img_path[1..-1]) : img_path)
+    MiniMagick::Image.open(img_path[0] == '/' ? Rails.root.join('public', img_path[1..-1]) : img_path)
+  rescue
+    nil
   end
 
   # Override the directory where uploaded files will be stored.

@@ -11,7 +11,7 @@ class Support::Faq < ActiveRecord::Base
 
   ranks :position, with_same: :instance_id
 
-  attr_accessible :question, :answer
+  # attr_accessible :question, :answer
 
   belongs_to :instance
 

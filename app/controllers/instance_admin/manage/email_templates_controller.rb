@@ -16,7 +16,7 @@ class InstanceAdmin::Manage::EmailTemplatesController < InstanceAdmin::Manage::B
   end
 
   def create
-    @email_template = EmailTemplate.new(params[:email_template])
+    @email_template = EmailTemplate.new(template_params)
     @email_template.theme = platform_context.theme
     if @email_template.save
       flash[:success] = t 'flash_messages.instance_admin.manage.email_templates.created'
@@ -30,7 +30,7 @@ class InstanceAdmin::Manage::EmailTemplatesController < InstanceAdmin::Manage::B
   def update
     @email_template = platform_context.theme.email_templates.find(params[:id])
 
-    if @email_template.update_attributes(params[:email_template])
+    if @email_template.update_attributes(template_params)
       flash[:success] = t 'flash_messages.instance_admin.manage.email_templates.updated'
       redirect_to action: :index
     else
@@ -45,5 +45,11 @@ class InstanceAdmin::Manage::EmailTemplatesController < InstanceAdmin::Manage::B
 
     flash[:success] = t 'flash_messages.instance_admin.manage.email_templates.deleted'
     redirect_to action: :index
+  end
+
+  private
+
+  def template_params
+    params.require(:email_template).permit(secured_params.email_template)
   end
 end

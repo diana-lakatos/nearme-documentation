@@ -1,7 +1,7 @@
 class InstanceView < ActiveRecord::Base
   belongs_to :instance_type
   belongs_to :instance
-  attr_accessible :body, :path, :format, :handler, :locale, :partial
+  # attr_accessible :body, :path, :format, :handler, :locale, :partial
   scope :for_instance_id, ->(instance_id) {
     where('instance_id IS NULL OR instance_id = ?', instance_id)
   }

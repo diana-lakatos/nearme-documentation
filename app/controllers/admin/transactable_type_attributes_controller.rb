@@ -4,7 +4,7 @@ class Admin::TransactableTypeAttributesController < Admin::ResourceController
   before_filter :eval_parameters, :only => [:create, :update]
 
   def create
-    resource = TransactableTypeAttribute.new(params[:transactable_type_attribute])
+    resource = TransactableTypeAttribute.new(transactable_type_attribute_params)
     resource.transactable_type_id = params[:transactable_type_id]
     resource.instance_id = TransactableType.find(params[:transactable_type_id]).instance_id
     if resource.save
@@ -25,5 +25,9 @@ class Admin::TransactableTypeAttributesController < Admin::ResourceController
         params[:transactable_type_attribute][serialized_param] = eval(params[:transactable_type_attribute][serialized_param]) if params[:transactable_type_attribute][serialized_param].present?
       end
     end
+  end
+
+  def transactable_type_attribute_params
+    params.require(:transactable_type_attribute).permit(secured_params.transactable_type_attribute)
   end
 end

@@ -2,7 +2,7 @@ class Industry < ActiveRecord::Base
 
   has_metadata :without_db_column => true
 
-  attr_accessible :name, :company_ids, :user_ids
+  # attr_accessible :name, :company_ids, :user_ids
 
   validates_presence_of :name
   validates :name, :uniqueness => true

@@ -3,7 +3,7 @@ class CompanyIndustry < ActiveRecord::Base
 
   has_metadata :without_db_column => true
 
-  attr_accessible :company_id, :industry_id
+  # attr_accessible :company_id, :industry_id
 
   belongs_to :company
   belongs_to :industry
