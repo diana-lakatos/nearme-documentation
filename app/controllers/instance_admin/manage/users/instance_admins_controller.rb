@@ -1,5 +1,7 @@
 class InstanceAdmin::Manage::Users::InstanceAdminsController < InstanceAdmin::Manage::BaseController
 
+  skip_before_filter :check_if_locked
+
   def index
     redirect_to instance_admin_manage_users_path
   end

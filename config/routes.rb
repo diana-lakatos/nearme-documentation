@@ -77,6 +77,9 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :instances do
+      member do
+        post :lock
+      end
       resources :transactable_types do
       end
       resources :partners
@@ -104,7 +107,11 @@ DesksnearMe::Application.routes.draw do
 
     namespace :settings do
       get '/', :to => 'base#index'
-      resource :configuration, :only => [:show, :update], :controller => 'configuration'
+      resource :configuration, :only => [:show, :update], :controller => 'configuration' do
+        collection do
+          post :lock
+        end
+      end
       resource :integrations, :only => [:show, :update], :controller => 'integrations' do
         collection do
           post :countries
