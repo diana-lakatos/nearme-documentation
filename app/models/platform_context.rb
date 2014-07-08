@@ -157,7 +157,7 @@ class PlatformContext
   def to_h
     { request_host: @request_host }.merge(
       Hash[instance_variables.
-           reject{|iv| iv.to_s == '@request_host'}.
+           reject{|iv| iv.to_s == '@request_host' || iv.to_s == '@decorator'}.
            map{|iv| iv.to_s.gsub('@', '')}.
            map{|iv| ["#{iv}_id", send(iv).try(:id)]}]
     )

@@ -9,6 +9,8 @@ class TransactableTypeAttribute < ActiveRecord::Base
   #   :placeholder, :hint, :input_html_options, :wrapper_html_options, :deleted_at,
   #   :internal
 
+  scope :listable, -> { all }
+
   validates_presence_of :name, :attribute_type
   validates_uniqueness_of :name, :scope => [:transactable_type_id, :deleted_at]
 

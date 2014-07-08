@@ -1,4 +1,5 @@
 class InstanceAdmin::Manage::Support::TicketMessagesController < InstanceAdmin::Manage::BaseController
+  skip_before_filter :check_if_locked
   def create
     message = Support::TicketMessage.new(params[:support_ticket_message])
     message.user = current_user

@@ -1,5 +1,6 @@
 class Admin::InstancesController < Admin::ResourceController
   before_filter lambda { PlatformContext.current = PlatformContext.new(Instance.find(params[:id])) }, :only => [:edit, :update, :destroy, :show]
+  skip_before_filter :check_if_locked, only: [:lock, :edit]
 
   def new
     @user = User.new
@@ -54,5 +55,15 @@ class Admin::InstancesController < Admin::ResourceController
 
   def user_params
     params.require(:user).permit(secured_params.user)
+
+  def lock
+    @instance = Instance.find(params[:id])
+    if @instance.update_attributes(params[:instance])
+      flash[:success] = t('flash_messages.instance_admin.settings.settings_updated')
+      redirect_to action: :edit
+    else
+      flash[:error] = @instance.errors.full_messages.to_sentence
+      redirect_to action: :edit
+    end
   end
 end

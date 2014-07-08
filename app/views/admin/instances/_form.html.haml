@@ -1,3 +1,10 @@
+= simple_form_for resource, :url => lock_admin_instance_path(resource), method: :post, :html => { :multipart => true, :class => "form-horizontal" } do |f|
+  .row-fluid
+    .controls.controls-row
+      .span6
+        = f.input :mark_as_locked, as: :boolean, :label => "Master Lock", input_html: { class: 'input-block-level', checked: f.object.locked? }
+      = f.button :submit, 'Update Lock', class: 'btn btn-primary'
+
 = simple_form_for [:admin, resource], :html => { :multipart => true } do |f|
   = f.input :name
   = f.input :bookable_noun

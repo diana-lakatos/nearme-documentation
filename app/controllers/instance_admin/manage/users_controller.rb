@@ -1,5 +1,7 @@
 class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseController
 
+  skip_before_filter :check_if_locked
+
   def index
     @user = User.new
     @instance_admin = InstanceAdmin.new
