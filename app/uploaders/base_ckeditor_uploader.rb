@@ -3,7 +3,7 @@ class BaseCkeditorUploader < BaseUploader
   include Ckeditor::Backend::CarrierWave
 
   def store_dir
-    "#{instance_prefix}/uploads/ckeditor/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+    "#{instance_prefix}/uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
 
   def legacy_store_dir
