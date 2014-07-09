@@ -18,6 +18,7 @@ FactoryGirl.define do
     linkedin_consumer_secret 'li2'
     instagram_consumer_key 'i1'
     instagram_consumer_secret 'i2'
+    onboarding_verification_required false
 
     after(:create) do |instance|
       instance.theme = FactoryGirl.create(:theme, :skip_compilation => true) unless instance.theme
@@ -36,6 +37,10 @@ FactoryGirl.define do
       test_mode true
       password_protected true
       marketplace_password "123456"
+    end
+
+    factory :instance_require_verification do
+      onboarding_verification_required true
     end
   end
 

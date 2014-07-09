@@ -26,7 +26,7 @@ class AvatarUploader < BaseUploader
 
   ASPECT_RATIO = 1
 
-  def store_dir
+  def legacy_store_dir
     "media/#{model.class.to_s.underscore}/#{model.id}/#{mounted_as}"
   end
 
@@ -54,5 +54,9 @@ class AvatarUploader < BaseUploader
 
   def clean_model
     model.update_attribute(:avatar_transformation_data, nil)
+  end
+
+  def instance_id
+    instance_id_nil
   end
 end

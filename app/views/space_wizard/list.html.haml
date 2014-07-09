@@ -24,6 +24,16 @@
                   destroy_avatar_path,
                   edit_avatar_path,
                   :div)
+      - if platform_context.instance.onboarding_verification_required
+        %h2
+          Verify yourself
+
+        = f.error :confidential_files
+        = f.simple_fields_for :confidential_files, @user.confidential_files.first || @user.confidential_files.build do |cf_form|
+          = cf_form.input :caption
+          = cf_form.input :file, as: :file
+          = cf_form.hidden_field :file_cache
+
 
       = f.simple_fields_for :companies, @company do |companies_form|
         - if platform_context.instance.skip_company?

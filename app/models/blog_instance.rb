@@ -14,4 +14,8 @@ class BlogInstance < ActiveRecord::Base
     self.owner_type == 'near-me'
   end
 
+  def instance
+    Instance === owner ? owner : nil
+  end
+
 end

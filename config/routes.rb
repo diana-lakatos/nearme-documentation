@@ -156,6 +156,8 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
+      resources :confidential_files, :only => [:index, :edit, :update]
+
       resources :inventories, :only => [:index] do
         post :login_as, on: :member
         post :restore_session, on: :collection

@@ -24,6 +24,7 @@ class Location < ActiveRecord::Base
 
   has_many :amenity_holders, as: :holder, dependent: :destroy
   has_many :amenities, through: :amenity_holders
+  has_many :confidential_files, as: :owner
 
   belongs_to :company, inverse_of: :locations
   belongs_to :location_type
@@ -135,6 +136,14 @@ class Location < ActiveRecord::Base
 
   def lowest_price(available_price_types = [])
     (searched_locations || listings.searchable).map{|l| l.lowest_price_with_type(available_price_types)}.compact.sort{|a, b| a[0].to_f <=> b[0].to_f}.first
+  end
+
+  def is_trusted?
+    if PlatformContext.current.instance.onboarding_verification_required
+      self.confidential_files.accepted.count > 0 || self.creator.try(:is_trusted?)
+    else
+      true
+    end
   end
 
   private

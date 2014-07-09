@@ -1,9 +1,10 @@
-= simple_form_for resource, :url => lock_admin_instance_path(resource), method: :post, :html => { :multipart => true, :class => "form-horizontal" } do |f|
-  .row-fluid
-    .controls.controls-row
-      .span6
-        = f.input :mark_as_locked, as: :boolean, :label => "Master Lock", input_html: { class: 'input-block-level', checked: f.object.locked? }
-      = f.button :submit, 'Update Lock', class: 'btn btn-primary'
+- if resource.persisted?
+  = simple_form_for resource, :url => lock_admin_instance_path(resource), method: :post, :html => { :multipart => true, :class => "form-horizontal" } do |f|
+    .row-fluid
+      .controls.controls-row
+        .span6
+          = f.input :mark_as_locked, as: :boolean, :label => "Master Lock", input_html: { class: 'input-block-level', checked: f.object.locked? }
+        = f.button :submit, 'Update Lock', class: 'btn btn-primary'
 
 = simple_form_for [:admin, resource], :html => { :multipart => true } do |f|
   = f.input :name
@@ -13,6 +14,7 @@
   = f.input :user_info_in_onboarding_flow
   = f.input :default_search_view
   = f.input :user_based_marketplace_views
+  = f.input :onboarding_verification_required
   = f.input :searcher_type
 
   %h4 Domains

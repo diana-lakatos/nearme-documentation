@@ -100,6 +100,31 @@ class SpaceWizardControllerTest < ActionController::TestCase
 
   end
 
+  context 'verification file' do
+    context 'instance requires verification' do
+
+      setup do
+        PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance_require_verification))
+        FactoryGirl.create(:location_type)
+        FactoryGirl.create(:transactable_type)
+      end
+
+      should 'show form to upload verification file for user'  do
+        get :list
+        assert_select '#user_confidential_files_attributes_0_file', 1
+      end
+    end
+
+    context 'instance does not require verification' do
+
+      should 'not show form to upload verification file'  do
+        get :list
+        assert_select '#user_confidential_files_file', false
+      end
+    end
+
+  end
+
   context 'track' do
     setup do
       @tracker = Analytics::EventTracker.any_instance

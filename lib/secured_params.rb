@@ -92,7 +92,7 @@ class SecuredParams
       :paypal_email, :db_connection_string,
       :stripe_currency, :user_info_in_onboarding_flow,
       :default_search_view, :user_based_marketplace_views,
-      :searcher_type,
+      :searcher_type, :onboarding_verification_required,
       :transactable_types_attributes => nested(self.transactable_type),
       :listing_amenity_types_attributes => nested(self.amenity_type),
       :location_amenity_types_attributes => nested(self.amenity_type),
@@ -316,7 +316,7 @@ class SecuredParams
   end
 
   def listing
-    Transactable::PRICE_TYPES.collect{|t| "#{t}_price_cents".to_sym} + 
+    Transactable::PRICE_TYPES.collect{|t| "#{t}_price_cents".to_sym} +
     [
       :listing_type, :description, :name,
       :url, :currenty, :formatted_address, :local_geocoding,
@@ -354,6 +354,15 @@ class SecuredParams
     ]
   end
 
+  def confidential_file
+    [
+      :caption,
+      :file,
+      :file_cache,
+      :state
+    ]
+  end
+
   def photo
     [
       :image,
@@ -375,7 +384,8 @@ class SecuredParams
     :sms_notifications_enabled, :sms_preferences, :domain_id, :time_zone,
     :phone_required, :country_name_required, :skip_password,
     :country_name, :phone, :mobile_phone,
-    :companies_attributes => nested(self.company)
+    :companies_attributes => nested(self.company),
+    :confidential_files_attributes => nested(self.confidential_file)
   ]
   end
 
