@@ -2,6 +2,7 @@
 class Theme::Compiler
   def initialize(theme)
     @theme = theme
+    PlatformContext.current ||= PlatformContext.new(@theme.instance)
   end
 
   # Generates the new stylesheet assets and updates the theme data accordingly.
