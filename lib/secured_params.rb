@@ -358,6 +358,7 @@ class SecuredParams
     [
       :caption,
       :file,
+      :file_cache,
       :state
     ]
   end

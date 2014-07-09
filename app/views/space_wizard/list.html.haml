@@ -32,6 +32,7 @@
         = f.simple_fields_for :confidential_files, @user.confidential_files.first || @user.confidential_files.build do |cf_form|
           = cf_form.input :caption
           = cf_form.input :file, as: :file
+          = cf_form.hidden_field :file_cache
 
 
       = f.simple_fields_for :companies, @company do |companies_form|
