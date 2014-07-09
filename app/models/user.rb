@@ -38,6 +38,8 @@ class User < ActiveRecord::Base
   has_many :charges, foreign_key: 'user_id', dependent: :destroy
   has_many :authored_messages, :class_name => "UserMessage", :foreign_key => 'author_id', :inverse_of => :author
   has_many :tickets, -> { order 'updated_at DESC' }, :class_name => 'Support::Ticket'
+  has_many :uploaded_confidential_files, foreign_key: 'uploader_id', dependent: :destroy, class_name: 'ConfidentialFile'
+  has_many :confidential_files, as: :owner
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
@@ -49,6 +51,7 @@ class User < ActiveRecord::Base
   before_restore :recover_companies
 
   accepts_nested_attributes_for :companies
+  accepts_nested_attributes_for :confidential_files
 
   scope :patron_of, lambda { |listing|
     joins(:reservations).where(:reservations => { :transactable_id => listing.id }).uniq
@@ -110,7 +113,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable,
          :rememberable, :trackable, :user_validatable, :token_authenticatable, :temporary_token_authenticatable
 
-  attr_accessor :phone_required, :country_name_required, :skip_password
+  attr_accessor :phone_required, :country_name_required, :skip_password, :verify_identity
 
   # attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :avatar_versions_generated_at, :avatar_transformation_data,
   #   :biography, :industry_ids, :country_name, :mobile_number, :facebook_url, :twitter_url, :linkedin_url, :instagram_url,
@@ -481,6 +484,18 @@ class User < ActiveRecord::Base
     authentications.where(provider: provider).
       where('profile_url IS NOT NULL').
       order('created_at asc').last.try(:profile_url)
+  end
+
+  def is_trusted?
+    PlatformContext.current.instance.onboarding_verification_required ? (self.confidential_files.accepted.count > 0) : true
+  end
+
+  def confidential_file_acceptance_cancelled!
+    listings.find_each(&:confidential_file_acceptance_cancelled!)
+  end
+
+  def confidential_file_accepted!
+    listings.find_each(&:confidential_file_accepted!)
   end
 
 end

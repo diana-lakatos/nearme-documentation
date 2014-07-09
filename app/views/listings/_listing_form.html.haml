@@ -7,7 +7,7 @@
     = f.label :enabled, 'Enabled?', :class => 'control-label'
     .controls
       .switch{'data-on-label' => "", 'data-off-label' => "", 'data-ajax-updateable' => f.object.persisted?}
-        = f.check_box :enabled
+        = f.check_box :enabled, disabled: !f.object.is_trusted?
 
 = f.input :id, :as => :hidden if only_inputs.empty? || only_inputs.include?(:id)
 - listing.transactable_type_attributes.each do |attribute|

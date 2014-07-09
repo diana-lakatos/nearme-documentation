@@ -16,6 +16,10 @@ class PhotoUploader < BaseImageUploader
   ASPECT_RATIO = 16.0/10.0
 
   def store_dir
+    "#{instance_prefix}/uploads/images/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+  end
+
+  def legacy_store_dir
     "uploads/photos/#{model.id}/"
   end
 

@@ -31,6 +31,64 @@ class TransactableTest < ActiveSupport::TestCase
     end
   end
 
+  context 'is trusted' do
+
+    setup do
+      @transactable = FactoryGirl.create(:transactable)
+      @transactable.confidential_files = []
+      @confidential_file = FactoryGirl.build(:confidential_file)
+      @confidential_file.owner = @transactable
+      @confidential_file.save!
+    end
+
+    context 'instance does not require verification' do
+
+      should 'be trusted even without confidential files' do
+        assert @transactable.is_trusted?
+      end
+
+    end
+
+    context 'instance does require verification' do
+
+      setup do
+        PlatformContext.current.instance.update_attribute(:onboarding_verification_required, true)
+      end
+
+      should 'not be trusted without confidential file' do
+        refute @transactable.is_trusted?
+      end
+
+      should 'be trusted without confidential file if user is trusted' do
+        User.any_instance.stubs(:is_trusted?).returns(true)
+        assert @transactable.is_trusted?
+      end
+
+      should 'be trusted with confidential file that is accepted' do
+        @confidential_file.review!
+        @confidential_file.accept!
+        assert @transactable.reload.is_trusted?
+      end
+
+      context 'enabled' do
+        setup do
+          User.any_instance.stubs(:confidential_files).returns([@confidential_file])
+        end
+
+        should 'be enabled if is trusted' do
+          Transactable.any_instance.stubs(:is_trusted?).returns(true)
+          assert FactoryGirl.build(:transactable).enabled?
+        end
+
+        should 'not be enabled if is not trusted' do
+          Transactable.any_instance.stubs(:is_trusted?).returns(false)
+          refute FactoryGirl.build(:transactable).enabled?
+        end
+
+      end
+    end
+  end
+
   context "#photo_not_required" do
     should 'not require photo' do
 
@@ -399,11 +457,11 @@ class TransactableTest < ActiveSupport::TestCase
         assert_equal instance.id, @location.reload.instance_id
       end
 
-    should 'update listings_public' do
-      assert @listing.listings_public
-      @listing.company.update_attribute(:listings_public, false)
-      refute @listing.reload.listings_public
-    end
+      should 'update listings_public' do
+        assert @listing.listings_public
+        @listing.company.update_attribute(:listings_public, false)
+        refute @listing.reload.listings_public
+      end
 
     end
   end

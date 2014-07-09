@@ -15,6 +15,8 @@ gem 'active_model_serializers'
 gem 'carrierwave'
 gem 'devise', "~> 3.0.0"
 
+gem 'aws-sdk'
+
 gem 'omniauth'
 gem 'omniauth-twitter'
 gem 'omniauth-facebook', github: 'mkdynamic/omniauth-facebook'

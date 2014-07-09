@@ -11,5 +11,10 @@ class ThemeStylesheetUploader < BaseUploader
         'Content-Type' => 'text/css'
       }
   end
+
+  def store_dir
+    "#{instance_prefix}/uploads/css/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+  end
+
 end
 

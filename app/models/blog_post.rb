@@ -3,6 +3,7 @@ class BlogPost < ActiveRecord::Base
   belongs_to :blog_instance
   belongs_to :user # user who created this post
 
+  delegate :instance, to: :blog_instance
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :history, :finders]
 

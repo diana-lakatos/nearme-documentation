@@ -3,6 +3,7 @@
 .bundle
 db/*.sqlite3
 capybara-*
+public/instances
 public/uploads
 public/media
 public/association

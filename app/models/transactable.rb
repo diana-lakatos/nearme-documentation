@@ -18,7 +18,8 @@ class Transactable < ActiveRecord::Base
   has_many :inquiries, :inverse_of => :listing
   has_many :availability_rules, -> { order 'day ASC' }, :as => :target, :dependent => :destroy, inverse_of: :target
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
-  belongs_to :transactable_type, :inverse_of => :transactables
+  has_many :confidential_files, as: :owner
+  belongs_to :transactable_type, inverse_of: :transactables
   belongs_to :company, :inverse_of => :listings
   belongs_to :location, inverse_of: :listings
   belongs_to :instance, inverse_of: :listings
@@ -37,7 +38,7 @@ class Transactable < ActiveRecord::Base
 
   # == Scopes
   scope :featured, -> {where(%{ (select count(*) from "photos" where transactable_id = "listings".id) > 0  }).
-    includes(:photos).order(%{ random() }).limit(5) }
+                       includes(:photos).order(%{ random() }).limit(5) }
   scope :draft,    -> { where('transactables.draft IS NOT NULL') }
   scope :active,   -> { where('transactables.draft IS NULL') }
   scope :latest,   -> { order("transactables.created_at DESC") }
@@ -48,6 +49,7 @@ class Transactable < ActiveRecord::Base
 
   # == Callbacks
   before_validation :set_activated_at
+  before_validation :set_enabled
 
   # == Validations
   validates_presence_of :location, :transactable_type
@@ -78,6 +80,8 @@ class Transactable < ActiveRecord::Base
   delegate :service_fee_guest_percent, :service_fee_host_percent, to: :location, allow_nil: true
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
+  delegate :transactable_type_attributes, :transactable_type_attributes_names, :public_transactable_type_attributes,
+    :transactable_type_attributes_names_types_hash, to: :transactable_type
 
   # attr_accessible :location_id, :availability_template_id,
   #   :availability_rules_attributes, :defer_availability_rules, :free,
@@ -125,14 +129,6 @@ class Transactable < ActiveRecord::Base
     end
   end
 
-  def transactable_type_attributes
-    @transactable_type_attributes ||= transactable_type.transactable_type_attributes
-  end
-
-  def transactable_type_attributes_names
-    @transactable_type_attributes_names ||= transactable_type.transactable_type_attributes.pluck(:name)
-  end
-
 
   # Trigger clearing of all existing availability rules on save
   def defer_availability_rules=(clear)
@@ -142,7 +138,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def set_defaults
-    self.enabled = true if self.enabled.nil?
+    self.enabled = is_trusted? if self.enabled.nil?
     transactable_type_attributes.each do |transactable_attribute_type|
       send(:"#{transactable_attribute_type.name}=", transactable_attribute_type.default_value) if send(transactable_attribute_type.name).nil? && !transactable_attribute_type.default_value.nil?
     end
@@ -377,6 +373,22 @@ class Transactable < ActiveRecord::Base
     self.save(validate: false)
   end
 
+  def is_trusted?
+    if PlatformContext.current.instance.onboarding_verification_required
+      self.confidential_files.accepted.count > 0 || self.location.try(:is_trusted?)
+    else
+      true
+    end
+  end
+
+  def confidential_file_acceptance_cancelled!
+    update_attribute(:enabled, false) unless is_trusted?
+  end
+
+  def confidential_file_accepted!
+    update_attribute(:enabled, true) if is_trusted?
+  end
+
   private
 
   def set_activated_at
@@ -385,21 +397,15 @@ class Transactable < ActiveRecord::Base
     end
   end
 
+  def set_enabled
+    self.enabled = is_trusted? if self.enabled
+  end
+
   def mass_assignment_authorizer(role = :default)
     super + public_transactable_type_attributes
-  end
-
-  def public_transactable_type_attributes
-    transactable_type_attributes.map { |attr| attr.public? ? attr.name.to_sym : nil }.compact
   rescue
-    []
+    super
   end
 
-  def transactable_type_attributes_names_types_hash
-    @transactable_type_attributes_names_types_hash ||= self.transactable_type_attributes.inject({}) do |hstore_attrs, attr|
-      hstore_attrs[attr.name.to_sym] = attr.attribute_type.to_sym
-      hstore_attrs
-    end
-  end
 end
 

@@ -3,6 +3,7 @@ class ThemeFont < ActiveRecord::Base
   FONT_EXTENSIONS = %w(eot ttf svg woff)
 
   belongs_to :theme
+  delegate :instance, to: :theme
 
   after_save :recompile_theme, :if => :theme_font_changed?
 
@@ -23,7 +24,7 @@ class ThemeFont < ActiveRecord::Base
     ThemeFont::FONT_EXTENSIONS.map do |font_extension|
       validates_presence_of "#{font_type}_#{font_extension}"
     end
-  end 
+  end
 
 
   def theme_font_changed?
