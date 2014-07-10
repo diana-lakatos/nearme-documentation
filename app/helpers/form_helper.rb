@@ -12,7 +12,7 @@ module FormHelper
     when :switch
       render partial: "custom_attributes/switch", locals: { attribute: attribute.decorate, f: form }
     else
-      raise NotImplementedError.new("Drawing html for #{attribute.to_json} is not implemented.")
+      nil
     end
   end
 

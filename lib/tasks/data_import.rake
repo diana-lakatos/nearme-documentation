@@ -15,4 +15,15 @@ namespace :import do
     execution_time_in_seconds = Time.now - start
     printf("**took %.1f seconds\n", execution_time_in_seconds)
   end
+
+  desc "import data from rvwithme file"
+  task :csv_rv => :environment do
+    start = Time.now
+    @converter = DataImporter::CsvToXmlConverter.new(DataImporter::CsvFile.new(Rails.root.join('test', 'assets', 'data_importer', 'rvwithme_data1.csv')), '/tmp/data_all.xml')
+    @converter.convert
+    @xml_file = DataImporter::XmlFile.new('/tmp/data_all.xml')
+    @xml_file.parse
+    execution_time_in_seconds = Time.now - start
+    printf("**took %.1f seconds\n", execution_time_in_seconds)
+  end
 end

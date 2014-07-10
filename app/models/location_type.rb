@@ -10,4 +10,7 @@ class LocationType < ActiveRecord::Base
   has_many :locations
   has_many :listings, :through => :locations, class_name: "Transactable"
 
+  def to_s
+    name
+  end
 end

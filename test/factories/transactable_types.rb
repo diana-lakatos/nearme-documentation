@@ -28,5 +28,12 @@ FactoryGirl.define do
         transactable_type.availability_templates << FactoryGirl.build(:availability_template, :transactable_type => transactable_type)
       end
     end
+
+    factory :transactable_type_csv_template do
+      after(:build) do |transactable_type|
+        transactable_type.availability_templates << FactoryGirl.build(:availability_template, :transactable_type => transactable_type)
+        transactable_type.transactable_type_attributes = [FactoryGirl.build(:transactable_type_attribute, transactable_type: transactable_type, name: 'my_attribute', attribute_type: 'string')]
+      end
+    end
   end
 end

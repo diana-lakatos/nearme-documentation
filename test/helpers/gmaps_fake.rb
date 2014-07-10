@@ -19,10 +19,11 @@ module GmapsFake
         when /usa/i then "usa"
         when /australia/i then "australia"
         when /auckland/i then "auckland"
-        when /new zealand/i then "new_zealand"
         when /bung/i then return { :status => 404 }
         when /desks near me/i then return { :status => 404 }
         when /cave of awesome/i then return { :status => 404 }
+        when /ursynowska/i then "ursynowska"
+        when /pulawska/i then "pulawska"
         else raise StandardError, "Define a place for #{address} (#{request.uri})"
       end
       { :body => File.read(File.join(Rails.root, "features", "fixtures", "gmaps", "#{file}.json")) }

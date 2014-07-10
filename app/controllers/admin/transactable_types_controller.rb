@@ -1,5 +1,4 @@
 class Admin::TransactableTypesController < Admin::ResourceController
-  belongs_to :instance
 
   def destroy
     TransactableType.find(params[:id]).destroy

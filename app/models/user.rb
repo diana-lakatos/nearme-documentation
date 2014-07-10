@@ -499,4 +499,12 @@ class User < ActiveRecord::Base
     listings.find_each(&:confidential_file_accepted!)
   end
 
+  def self.xml_attributes
+    self.csv_fields.keys
+  end
+
+  def self.csv_fields
+    {email: 'User Email', name: 'User Name'}
+  end
+
 end

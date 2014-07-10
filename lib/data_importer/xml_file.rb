@@ -1,22 +1,18 @@
 class DataImporter::XmlFile < DataImporter::File
 
-  def initialize(path)
+  def initialize(path, transactable_type = nil)
     super(path)
-  end
-
-  def default_industries
-    @default_industries ||= [Industry.find_by_name('Commercial Real Estate')]
-  end
-
-  def default_location_type
-    @default_location_type ||= LocationType.find_by_name('Business')
+    @instance = PlatformContext.current.instance
+    @transactable_type = transactable_type || @instance.transactable_types.first
+    @users_to_get_invitation_email = {}
+    @location_types = {}
   end
 
   def listing_type_for_name(listing_name)
     if listing_name.downcase.include?('office')
-      @listing_type_for_office ||= ListingType.find_by_name('Office Space')
-    else 
-      @listing_type_for_meeting_room ||= ListingType.find_by_name('Meeting Room')
+      'Private Office'
+    else
+      'Meeting Room'
     end
   end
 
@@ -26,21 +22,22 @@ class DataImporter::XmlFile < DataImporter::File
     parse_instance do
       parse_companies do
         parse_locations do
+          parse_address
           parse_availabilities
           parse_amenities
           parse_listings do
             parse_availabilities
+            parse_photos
           end
         end
-        download_photos_from_dropbox
       end
     end
+    send_invitation_emails
   end
 
   def parse_instance
     @node.xpath('companies').each do |instance_node|
-      tenant_name = instance_node['tenant']
-      @instance = Instance.find_by_name(tenant_name) || Instance.create(:name => tenant_name)
+      @send_invitations = instance_node['send_invitation'] == 'true' ? true : false
       @node = instance_node
       yield
     end
@@ -51,19 +48,29 @@ class DataImporter::XmlFile < DataImporter::File
       external_id = company_node['id']
       email = company_node.xpath('email').text.downcase
       name = company_node.xpath('name').text
-      @user = @instance.users.find_by_email(email) || @instance.users.create do |u|
-        password =  SecureRandom.hex
-        store_credentials(email, password)
-        u.email = email
-        u.password = password
-        u.name = name
-        u.country_name = 'United States'
-      end
-      @company = @user.companies.find_by_external_id(external_id) || @user.companies.create do |c|
+      @company = Company.find_by_external_id(external_id) || Company.create do |c|
         assign_attributes(c, company_node)
         c.external_id = external_id
-        c.industries = default_industries
-        c.instance = @instance
+      end
+      company_node.xpath('users//user').each do |user_node|
+        email = user_node.xpath('email').text.downcase
+        name = user_node.xpath('name').text
+        @user = @instance.users.find_by_email(email)
+        if @user.nil?
+          @user = @company.users.create do |u|
+            password =  SecureRandom.hex(8)
+            store_credentials(email, password)
+            u.email = email
+            u.password = password
+            u.name = name
+            u.country_name = 'United States'
+            u.instance_id = PlatformContext.current.instance.id
+            @users_to_get_invitation_email[email] = password if @send_invitations
+          end
+        end
+        @company.creator_id = @user.id if @company.creator.nil?
+        @company.users << @user unless @company.users.include?(@user)
+        @company.save!
       end
       @node = company_node
       yield
@@ -72,12 +79,10 @@ class DataImporter::XmlFile < DataImporter::File
 
   def parse_locations
     @node.xpath('locations/location').each do |location_node|
-      @user.update_attribute(:phone, location_node.xpath('phone').text) if @user.phone.blank?
-      @location = @company.locations.find_by_address(location_node.xpath('address').text) || @company.locations.build do |l|
-        l.location_type = default_location_type
-      end
+      @address = @company.locations.joins(:location_address).where('addresses.address = ? AND addresses.entity_type = ?', location_node.xpath('location_address/address').text, 'Location').select('addresses.entity_id').first
+      @location = @address.present? ? Location.find(@address.entity_id) : @company.locations.build
       assign_attributes(@location, location_node)
-      @location.formatted_address = @location.address
+      @location.location_type = find_location_type(location_node.xpath('location_type').text)
       @node = location_node
       @object = @location
       yield
@@ -85,24 +90,26 @@ class DataImporter::XmlFile < DataImporter::File
     end
   end
 
+  def parse_address
+    @node.xpath('location_address').each do |address_node|
+      @address = @location.location_address || @location.build_location_address
+      assign_attributes(@address, address_node)
+      @address.formatted_address = [@address.address, @address.suburb, @address.city, @address.postcode].compact.join(', ')
+      @address.save!
+    end
+  end
+
   def parse_listings
     @node.xpath('listings/listing').each do |listing_node|
       external_id = listing_node['id']
-      @listing = @location.listings.find_by_external_id(external_id) || @location.listings.build do |l|
-        l.external_id = external_id
-      end
+      @listing = @location.listings.find_by_external_id(external_id) || @location.listings.build(transactable_type: @transactable_type)
+      @listing.external_id = external_id
       assign_attributes(@listing, listing_node)
-      @listing.listing_type = listing_type_for_name(@listing.name)
-      @listing.confirm_reservations = true
-      @listing.hourly_reservations = true
       @node = listing_node
       @object = @listing
       @listing.photo_not_required = true
       yield
-      if @location.persisted?
-        @listing.save!
-        @listing.photos.each { |p| p.save! }
-      end
+      @listing.save!
     end
   end
 
@@ -113,56 +120,56 @@ class DataImporter::XmlFile < DataImporter::File
     end
   end
 
-  def parse_amenities
-    @object.amenities.destroy_all
-    @node.xpath('amenities/amenity').each do |amenity_node| 
-      @object.amenities << Amenity.find_by_name(amenity_node.xpath('name').text) 
+  def parse_photos
+    @node.xpath('photos/photo').each do |photo_node|
+
+      if !@listing.photos.map(&:image_original_url).include?(photo_node.xpath('image_original_url').text)
+        @photo = @listing.photos.build(image_original_url: photo_node.xpath('image_original_url').text)
+      end
     end
   end
 
-  def download_photos_from_dropbox
-    # get all images for given company that are in dropbox, find photo that best matches object.name and download it
-    files_with_info = DROPBOX.get_files_for_path(File.join("PBCenter", @company.external_id)).inject({}) do |files, file|
-      if file.mime_type.try(:include?, 'image')
-        file_name = File.basename(file.path)
-        files[file_name] = {:remote_image_url => file.direct_url.url, :content_type => file.mime_type}
-      end
-      files
-    end
-    if !files_with_info.empty?
-      listings = @company.locations.map { |l| l.listings }.flatten.reject { |listing| listing.photos.count > 0 }
-      listing_name_file_name_pairs = StringMatcher.new(listings.map(&:name), files_with_info.keys).create_pairs
-      listings.each do |listing|
-        if listing_name_file_name_pairs[listing.name]
-          listing_name_file_name_pairs.delete(listing.name).each do |matching_photo_name|
-            listing.photos.create do |p|
-              direct_url = files_with_info[matching_photo_name]
-              p.remote_image_url = direct_url[:remote_image_url]
-            end
-          end
-        end
-      end
+  def parse_amenities
+    @object.amenities.destroy_all
+    @node.xpath('amenities/amenity').each do |amenity_node|
+      @object.amenities << Amenity.find_by_name(amenity_node.xpath('name').text)
     end
   end
 
   private
 
   def assign_attributes(object, node)
-    object.attributes = object.class.xml_attributes.inject({}) do |attributes, attribute| 
-      attributes[attribute] = node.xpath(attribute.to_s).text
+    object.attributes = object.class.xml_attributes.inject({}) do |attributes, attribute|
+      attributes[attribute] = node.xpath(attribute.to_s).text unless :location_type == attribute.to_sym || node.xpath(attribute.to_s).text.blank?
       attributes
     end
   end
 
   def clear_credentials_storage
 
-    open('/tmp/passwords.txt', 'w') { } 
+    open('/tmp/passwords.txt', 'w') { }
   end
 
   def store_credentials(login, password)
     open('/tmp/passwords.txt', 'a') { |f|
       f.puts "#{login}:#{password}"
     }
+  end
+
+  def send_invitation_emails
+    @users_to_get_invitation_email.each do |email, password|
+      PostActionMailer.enqueue.user_created_invitation(User.find_by_email(email), password)
+    end
+  end
+
+  def find_location_type(name)
+    if name.blank?
+      @location_type_first ||= LocationType.first
+    else
+      @location_types[name] ||= LocationType.where(name: name).first
+      raise "Unknown LocationType #{name}, valid names: #{LocationType.pluck(:name)}" if @location_types[name].nil?
+      @location_types[name]
+    end
   end
 
 end

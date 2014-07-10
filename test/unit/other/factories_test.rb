@@ -11,7 +11,7 @@ class FactoriesTest < ActiveSupport::TestCase
     context "Factory: #{factory.name}" do
       should "return valid resource" do
         resource = FactoryGirl.build(factory.name)
-        assert resource.valid?, "Resource (#{factory.name}) invalid because of: #{resource.errors.full_messages.join(", ")}"
+        assert resource.valid?, "Resource (#{factory.name}) invalid because of: #{resource.errors.full_messages.join(", ")}" if resource.respond_to?(:valid)
       end
     end
   end

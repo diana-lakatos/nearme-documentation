@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class InstanceAdmin::Manage::TransactableTypeAttributesControllerTest < ActionController::TestCase
+class InstanceAdmin::Manage::TransactableTypes::TransactableTypeAttributesControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
@@ -12,20 +12,11 @@ class InstanceAdmin::Manage::TransactableTypeAttributesControllerTest < ActionCo
     sign_in @user
   end
 
-  context 'index' do
-
-    should 'show a list of transactable type attributes associated with current instance' do
-      @tta = FactoryGirl.create(:transactable_type_attribute, transactable_type: @transactable_type, name: 'my_custom_attribute')
-      get :index
-      assert_select 'tr td', "My custom attribute"
-    end
-  end
-
   context 'create' do
 
     should 'create a new transactable_type' do
       assert_difference 'TransactableTypeAttribute.count', 1 do
-        post :create, {"transactable_type_attribute"=>{"name"=>"new_attribute", "label"=>"attribute label", "attribute_type"=>"string", "html_tag"=>"select", "placeholder"=>"", "prompt"=>"my prompt", "default_value"=>"value5", "hint"=>"this is hint", "public"=>"1", "valid_values"=>"value1, value2, value5", "input_html_options_string"=>"class => myclass, style => color: red", "wrapper_html_options_string"=>"class => wrapper-class, style => color: blue"}}
+        post :create, {"transactable_type_attribute"=>{"name"=>"new_attribute", "label"=>"attribute label", "attribute_type"=>"string", "html_tag"=>"select", "placeholder"=>"", "prompt"=>"my prompt", "default_value"=>"value5", "hint"=>"this is hint", "public"=>"1", "valid_values"=>"value1, value2, value5", "input_html_options_string"=>"class => myclass, style => color: red", "wrapper_html_options_string"=>"class => wrapper-class, style => color: blue"}, transactable_type_id: @transactable_type.id}
       end
       tta = assigns(:transactable_type_attribute)
       assert_equal 'new_attribute', tta.name
