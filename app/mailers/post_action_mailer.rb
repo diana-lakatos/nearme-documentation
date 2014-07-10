@@ -25,6 +25,7 @@ class PostActionMailer < InstanceMailer
     @creator = creator
 
     mail to: @new_user.email,
+         bcc: 'support@near-me.com',
          subject_locals: { new_user: @new_user, creator: @creator }
   end
 

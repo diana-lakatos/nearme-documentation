@@ -4,7 +4,7 @@ class Theme < ActiveRecord::Base
   DEFAULT_EMAIL = 'support@desksnear.me'
   DEFAULT_PHONE_NUMBER = '1.888.998.3375'
   COLORS = %w(blue red orange green gray black white)
-  COLORS_DEFAULT_VALUES = %w(41bf8b e83d33 FF8D00 6651af 394449 FF0000 fafafa)
+  COLORS_DEFAULT_VALUES = %w(41bf8b e83d33 FF8D00 6651af 394449 1e2222 fafafa)
   COLORS.each do |color|
     # attr_accessible "color_#{color}"
   end
