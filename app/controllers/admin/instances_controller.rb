@@ -33,16 +33,15 @@ class Admin::InstancesController < Admin::ResourceController
       at.availability_rules.build(day: i, open_hour: 9, open_minute: 0,close_hour: 17, close_minute: 0)
     end
     at.save!
+
+    @instance.location_types.create!(name: 'General')
+
     InstanceAdmin.create(user_id: @user.id)
     PostActionMailer.enqueue.instance_created(@instance, @user, user_password)
 
     blog_instance = BlogInstance.new(name: @instance.name + ' Blog')
     blog_instance.owner = @instance
     blog_instance.save!
-
-    # Create a default transactable type with associated attributes
-    t = @instance.transactable_types.create(name: 'Listing')
-    Utils::TransactableTypeAttributesCreator.new(t).create_listing_attributes!
 
     redirect_to admin_instance_path(@instance), notice: 'Instance was successfully created.'
   end

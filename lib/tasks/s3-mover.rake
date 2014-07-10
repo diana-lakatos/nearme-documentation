@@ -35,8 +35,13 @@ namespace :s3 do
       puts "=== #{klass_string} ==="
       klass_string.constantize.unscoped.where('updated_at > ?', @last_invoked_at).order('id ASC').find_each do |object|
         if object.instance.nil?
-          puts "#{object.class}(id=#{object.id}) skipped - lack of instance"
-          next
+          if "BlogPost" == klass_string
+            puts "No instance for BlogPost, assuming DesksNearMe"
+            PlatformContext.current = PlatformContext.new(Instance.default_instance)
+          else
+            puts "#{object.class}(id=#{object.id}) skipped - lack of instance"
+            next
+          end
         elsif "User" == klass_string
           PlatformContext.current = nil
         else
