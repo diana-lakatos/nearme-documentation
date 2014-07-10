@@ -25,6 +25,10 @@ class Domain < ActiveRecord::Base
 
   delegate :white_label_enabled?, :to => :target
 
+  def url
+    secured? ? "https://" + name : "http://" + name
+  end
+
   def white_label_company?
     "Company" == target_type
   end

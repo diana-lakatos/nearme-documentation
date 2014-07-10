@@ -25,6 +25,11 @@ DesksnearMe::Application.routes.draw do
     get '/unsubscribe/:unsubscribe_key', :to => 'platform_home#unsubscribe', :as => 'platform_email_unsubscribe'
     get '/resubscribe/:resubscribe_key', :to => 'platform_home#resubscribe', :as => 'platform_email_resubscribe'
 
+    get '/marketplace', to: 'instance_wizard#index'
+    get '/marketplace/new', to: 'instance_wizard#new'
+    post '/marketplace/new', to: 'instance_wizard#new'
+    post '/marketplace/create', to: 'instance_wizard#create'
+
     namespace :blog do
       namespace :admin do
         get '/', :to => redirect("/blog/admin/blog_posts")
@@ -75,6 +80,8 @@ DesksnearMe::Application.routes.draw do
         post :generate
       end
     end
+
+    resources :instance_creators
 
     resources :instances do
       member do
