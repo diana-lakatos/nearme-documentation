@@ -64,7 +64,7 @@ class InstanceWizardController < ActionController::Base
 
     PostActionMailer.enqueue.instance_created(@instance, @user, (user_password || '[using existing account password]'))
 
-    redirect_to @instance.domains.first.url, notice: 'Welcome to your new marketplace!'
+    redirect_to @instance.domains.first.url
   end
 
   private
