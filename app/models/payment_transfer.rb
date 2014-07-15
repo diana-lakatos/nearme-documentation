@@ -108,7 +108,7 @@ class PaymentTransfer < ActiveRecord::Base
       self.service_fee_amount_host_cents = order_line_items.sum(
         :service_fee_amount_host_cents
       )
-      self.amount_cents = (order_line_items.sum(:price)*100).to_i - self.service_fee_amount_host_cents
+      self.amount_cents = order_line_items.sum(:price).to_money(Spree::Config[:currency]).cents - self.service_fee_amount_host_cents
       self.service_fee_amount_guest_cents = reservation_charges.sum(
         :service_fee_amount_guest_cents
       )

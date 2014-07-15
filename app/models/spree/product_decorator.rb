@@ -1,7 +1,6 @@
 Spree::Product.class_eval do
   include TransactableType::CustomAttributesCaster
-
-  scoped_to_platform_context
+  include Spree::Scoper
 
   has_many :line_items, through: :variants
   has_many :orders, through: :line_items

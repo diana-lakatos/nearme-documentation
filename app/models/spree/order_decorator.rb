@@ -1,5 +1,5 @@
 Spree::Order.class_eval do
-  scoped_to_platform_context
+  include Spree::Scoper
 
   belongs_to :company
   belongs_to :instance

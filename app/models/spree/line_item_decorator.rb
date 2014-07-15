@@ -1,6 +1,5 @@
 Spree::LineItem.class_eval do
-  auto_set_platform_context
-  scoped_to_platform_context
+  include Spree::Scoper
   inherits_columns_from_association([:company_id], :order) if ActiveRecord::Base.connection.table_exists?(self.table_name)
 
   scope :needs_payment_transfer, -> {

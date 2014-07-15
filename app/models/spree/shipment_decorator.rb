@@ -1,3 +1,3 @@
 Spree::Shipment.class_eval do
-  scoped_to_platform_context
+  include Spree::Scoper
 end

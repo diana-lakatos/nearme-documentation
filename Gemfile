@@ -66,7 +66,7 @@ gem 'attr_encrypted'
 gem 'stripe'
 gem 'paypal-sdk-rest'
 gem 'paypal-sdk-adaptivepayments'
-gem 'balanced', '0.7.4'
+gem 'balanced'
 gem 'friendly_id', '~> 5.0.4'
 gem "non-stupid-digest-assets"
 gem 'sass-rails', '~> 4.0.0'
@@ -104,7 +104,6 @@ gem "historyjs-rails"
 
 gem 'ranked-model'
 
-gem 'desk', github: 'zencoder/desk', ref: '94eaa714d727c1e27b5cd43cfe8d44b6f7ff64ab'
 gem 'filepicker-rails', '0.1'
 
 gem 'premailer-rails'
