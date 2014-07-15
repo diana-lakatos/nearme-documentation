@@ -310,29 +310,23 @@ class SecuredParams
       :availability_template_id,
       :availability_rules_attributes => nested(self.availability_rule),
       :location_address_attributes => nested(self.location_address),
-      :listings_attributes => nested(self.listing),
+      :listings_attributes => nested(self.transactable),
       :amenity_ids => []
     ] + self.location_address
   end
 
-  def listing
+  def transactable
     Transactable::PRICE_TYPES.collect{|t| "#{t}_price_cents".to_sym} +
     [
       :listing_type, :description, :name,
-      :url, :currenty, :formatted_address, :local_geocoding,
-      :quantity,
-      :latitude, :longitude, :distance_from, :address, :postcode,
-      :service_fee_guest_percent, :service_fee_host_percent,
-      :location_id, :availability_template_id,
-      :defer_availability_rules, :free,
-      :hourly_reservations, :price_type, :draft, :enabled,
-      :last_request_photos_sent_at, :activated_at, :rank,
-      :transactable_type_id, :transactable_type,
+      :distance_from, :location_id, :availability_template_id,
+      :defer_availability_rules, :price_type, :draft, :enabled,
+      :rank, :transactable_type_id, :transactable_type,
       :photos_attributes => nested(self.photo),
       :photo_ids => [],
       :amenity_ids => [],
       :availability_rules_attributes => nested(self.availability_rule)
-    ] + Transactable::PRICE_TYPES.collect{|t| "#{t}_price".to_sym}
+    ] + Transactable::PRICE_TYPES.collect{|t| "#{t}_price".to_sym} + PlatformContext.current.instance.transactable_types.first.public_transactable_type_attributes
   end
 
   def availability_rule
