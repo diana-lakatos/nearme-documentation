@@ -330,7 +330,7 @@ class SecuredParams
       :transactable_type_id, :transactable_type,
       :photos_attributes => nested(self.photo),
       :photo_ids => [],
-      :amenities_attributes => nested(self.amenity),
+      :amenity_ids => [],
       :availability_rules_attributes => nested(self.availability_rule)
     ] + Transactable::PRICE_TYPES.collect{|t| "#{t}_price".to_sym}
   end
