@@ -278,10 +278,10 @@ Then /^The second booking should be highlighted$/ do
   page.should have_css(".reservation-details", :count => 2)
 end
 
-Then /^I should be offered with sharing options$/ do
+Then /^I should be offered calendar and manage options$/ do
   work_in_modal do
     page.should have_content('Add to Calendar')
-    page.should have_content('Manage Booking')
+    page.should have_content('Manage')
   end
 end
 
