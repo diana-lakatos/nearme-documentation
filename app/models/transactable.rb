@@ -57,7 +57,14 @@ class Transactable < ActiveRecord::Base
   validates_with TransactableTypeAttributeValidator
   validates :photos, :length => { :minimum => 1 }, :unless => :photo_not_required
 
-
+  # used to avoid initializing the same data over and over again if we know it won't change, for example
+  # for Transactable.all we will just re-use array that sits in memory. Defining as class level instance variable,
+  # just in case to avoid potential issues with inheritance
+  @transactable_type_attributes_as_array = {}
+  @transactable_type_attributes_cache_update_at = {}
+  class << self
+    attr_accessor :transactable_type_attributes_as_array, :transactable_type_attributes_cache_update_at
+  end
 
   def initialize(*args)
     if args[0]
@@ -80,8 +87,7 @@ class Transactable < ActiveRecord::Base
   delegate :service_fee_guest_percent, :service_fee_host_percent, to: :location, allow_nil: true
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
-  delegate :transactable_type_attributes, :transactable_type_attributes_names, :public_transactable_type_attributes,
-    :transactable_type_attributes_names_types_hash, to: :transactable_type
+  delegate :transactable_type_attributes, to: :transactable_type
 
   # attr_accessible :location_id, :availability_template_id,
   #   :availability_rules_attributes, :defer_availability_rules, :free,
@@ -139,8 +145,8 @@ class Transactable < ActiveRecord::Base
 
   def set_defaults
     self.enabled = is_trusted? if self.enabled.nil?
-    transactable_type_attributes.each do |transactable_attribute_type|
-      send(:"#{transactable_attribute_type.name}=", transactable_attribute_type.default_value) if send(transactable_attribute_type.name).nil? && !transactable_attribute_type.default_value.nil?
+    transactable_type_attributes_names_default_values_hash.each do |key, value|
+      send(:"#{key}=", value) if send(key).nil?
     end
   end
 
@@ -387,6 +393,46 @@ class Transactable < ActiveRecord::Base
 
   def confidential_file_accepted!
     update_attribute(:enabled, true) if is_trusted?
+  end
+
+  # invoked when transactable type attribute changes
+  def self.clear_transactable_type_attributes_cache
+    if self.transactable_type_attributes_cache_update_at[TransactableType.pluck(:id).first]
+      transactable_type_ids = TransactableTypeAttribute.with_changed_attributes(self.transactable_type_attributes_cache_update_at[TransactableType.pluck(:id).first]).uniq.pluck(:transactable_type_id)
+      transactable_type_ids.each do |transactable_type_id|
+        self.transactable_type_attributes_as_array[transactable_type_id] = nil
+      end
+    end
+  end
+
+  def transactable_type_attributes_as_array
+    if !self.class.transactable_type_attributes_as_array[transactable_type_id]
+      self.class.transactable_type_attributes_cache_update_at[transactable_type_id] = Time.now.utc
+      self.class.transactable_type_attributes_as_array[transactable_type_id] = TransactableTypeAttribute.find_as_array(transactable_type_id)
+    end
+    self.class.transactable_type_attributes_as_array[transactable_type_id]
+  end
+
+  def transactable_type_id
+    read_attribute(:transactable_type_id) || transactable_type.id
+  end
+
+  def transactable_type_attributes_names_default_values_hash
+    @transactable_type_attributes_names_default_values_hash ||= transactable_type_attributes_as_array.inject({}) do |hstore_attrs, attr_array|
+      hstore_attrs[attr_array[0].to_sym] = attr_array[2]
+      hstore_attrs
+    end
+  end
+
+  def transactable_type_attributes_names_types_hash
+    @transactable_type_attributes_names_types_hash ||= transactable_type_attributes_as_array.inject({}) do |hstore_attrs, attr_array|
+      hstore_attrs[attr_array[0].to_sym] = attr_array[1].to_sym
+      hstore_attrs
+    end
+  end
+
+  def public_transactable_type_attributes_names
+    @public_transactable_type_attributes_names ||= transactable_type_attributes_as_array.map { |attr_array| attr_array[3] ? attr_array[0].to_sym : nil }
   end
 
   private
