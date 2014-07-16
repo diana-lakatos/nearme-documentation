@@ -326,7 +326,7 @@ class SecuredParams
       :photo_ids => [],
       :amenity_ids => [],
       :availability_rules_attributes => nested(self.availability_rule)
-    ] + Transactable::PRICE_TYPES.collect{|t| "#{t}_price".to_sym} + PlatformContext.current.instance.transactable_types.first.public_transactable_type_attributes
+    ] + Transactable::PRICE_TYPES.collect{|t| "#{t}_price".to_sym} + (PlatformContext.current.instance.transactable_types.first.try(:public_transactable_type_attributes) || [])
   end
 
   def availability_rule
