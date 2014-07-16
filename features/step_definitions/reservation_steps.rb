@@ -167,7 +167,7 @@ end
 
 When /^I click to confirm the booking$/ do
   click_button "Request Booking"
-  page.should have_content('Your booking was Successful!')
+  page.should have_content('Your purchase was Successful!')
 end
 
 Then(/^I should see the booking confirmation screen for:$/) do |table|
@@ -278,11 +278,10 @@ Then /^The second booking should be highlighted$/ do
   page.should have_css(".reservation-details", :count => 2)
 end
 
-Then /^I should be offered with sharing options$/ do
+Then /^I should be offered calendar and manage options$/ do
   work_in_modal do
-    page.should have_content('Share your travel plans')
     page.should have_content('Add to Calendar')
-    page.should have_content('Manage Booking')
+    page.should have_content('Manage')
   end
 end
 

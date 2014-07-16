@@ -24,7 +24,7 @@ if %w(app_master app solo).include?(node[:instance_role])
     end
 
     # Add crt, key, and server block for these domains
-    {'nearme' => 'near-me.com', 'reggalo' => 'reggalo.com'}.each do |name, domain|
+    {'nearme' => 'near-me.com', 'reggalo' => 'reggalo.com', 'rvwithme' => 'rvwithme.com'}.each do |name, domain|
 
       cookbook_file "/etc/nginx/ssl/#{name}.crt" do
         source "#{name}.crt"

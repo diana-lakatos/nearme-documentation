@@ -45,8 +45,6 @@ class SmsNotifier < AbstractController::Base
     :from => nil # Set the default from number
   }
 
-  default_url_options[:host] = "desksnear.me"
-
   class << self
     def method_missing(notification_name, *args)
       new(notification_name, *args).message

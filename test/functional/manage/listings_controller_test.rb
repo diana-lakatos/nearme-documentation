@@ -10,12 +10,18 @@ class Manage::ListingsControllerTest < ActionController::TestCase
     @location = FactoryGirl.create(:location, :company => @company)
     @location2 = FactoryGirl.create(:location, :company => @company)
     @listing_type = "Shared Office"
+    @amenity_type = FactoryGirl.create(:amenity_type)
+    @amenity = FactoryGirl.create(:amenity, amenity_type: @amenity_type)
     FactoryGirl.create(:transactable_type_listing)
   end
 
   context "#create" do
     setup do
-      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge!({transactable_type_id: TransactableType.first.id, :photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type => @listing_type, :daily_price => 10 })
+      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge!({ transactable_type_id: TransactableType.first.id,
+                                                                               photos_attributes: [FactoryGirl.attributes_for(:photo)],
+                                                                               listing_type: @listing_type,
+                                                                               daily_price: 10,
+                                                                               amenity_ids: [@amenity.id] })
       @attributes.delete(:photo_not_required)
     end
 
@@ -31,6 +37,8 @@ class Manage::ListingsControllerTest < ActionController::TestCase
         :listing => @attributes,
         :location_id => @location2.id
       }
+
+      assert_equal assigns(:listing).amenities.count, 1
     end
 
     should "create listing" do
