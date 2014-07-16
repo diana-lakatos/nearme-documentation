@@ -118,6 +118,6 @@ class Manage::ListingsController < Manage::BaseController
   end
 
   def listing_params
-    params.require(:listing).permit(secured_params.listing)
+    params.require(:listing).permit(secured_params.transactable)
   end
 end

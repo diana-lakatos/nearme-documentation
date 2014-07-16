@@ -254,6 +254,6 @@ class V1::ListingsController < V1::BaseController
     end
 
     def listing_params
-      params.require(:listing).permit(secured_params.listing)
+      params.require(:listing).permit(secured_params.transactable)
     end
 end

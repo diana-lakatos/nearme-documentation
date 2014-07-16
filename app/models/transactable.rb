@@ -401,11 +401,5 @@ class Transactable < ActiveRecord::Base
     self.enabled = is_trusted? if self.enabled
   end
 
-  def mass_assignment_authorizer(role = :default)
-    super + public_transactable_type_attributes
-  rescue
-    super
-  end
-
 end
 

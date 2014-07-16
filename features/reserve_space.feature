@@ -44,7 +44,7 @@ Feature: A user can book at a space
        When I book space for:
         | Transactable     | Date   | Quantity |
         | the transactable | Monday | 1        |
-       When I follow "Manage Booking"
+       When I follow "Manage"
        Then I should be redirected to bookings page
        Then I should see "credit card will be charged when your reservation is confirmed"
        And the user should have a billing profile
@@ -56,7 +56,7 @@ Feature: A user can book at a space
        When I book space for:
         | Transactable     | Date   | Quantity |
         | the transactable | Monday | 1        |
-       When I follow "Manage Booking"
+       When I follow "Manage"
        Then I should be redirected to bookings page
        Then I should see "credit card will be charged when your reservation is confirmed"
        And the user should have a billing profile
@@ -133,7 +133,7 @@ Feature: A user can book at a space
           | Transactable     | Date         | Quantity  |
           | the transactable | next week Monday  | 1         |
           | the transactable | next week Tuesday | 1         |
-     Then I should be offered with sharing options
+     Then I should be offered calendar and manage options
 
   Scenario: Last bookings is highlighted
     Given I am logged in as the user
@@ -144,8 +144,8 @@ Feature: A user can book at a space
      When I book space for:
           | Transactable     | Date         | Quantity  |
           | the transactable | next Wednesday  | 1      |
-     Then I should be offered with sharing options
-     When I follow "Manage Booking"
+     Then I should be offered calendar and manage options
+     When I follow "Manage"
      Then I should be redirected to bookings page
      Then The second booking should be highlighted
 

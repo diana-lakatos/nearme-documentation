@@ -1,1 +1,1 @@
-You have received a booking request on <%= @reservation.instance.name %>. Please confirm or decline from your dashboard: <%= shorten_url(main_app.manage_guests_dashboard_url) %>
+You have received a booking request on <%= @reservation.instance.name %>. Please confirm or decline from your dashboard: <%= shorten_url(platform_context.build_url_for_path(main_app.manage_guests_dashboard_path)) %>
