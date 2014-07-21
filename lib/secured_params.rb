@@ -137,14 +137,14 @@ class SecuredParams
   end
 
   def instance_payment_gateway
-   [
-     :payment_gateway_id,
-     :live_settings,
-     :test_settings,
-     :country,
-     :name,
-     :supported_countries
-   ]
+    [
+      :payment_gateway_id,
+      :live_settings,
+      :test_settings,
+      :country,
+      :name,
+      :supported_countries
+    ]
   end
 
   def translation
@@ -317,16 +317,17 @@ class SecuredParams
 
   def transactable
     Transactable::PRICE_TYPES.collect{|t| "#{t}_price_cents".to_sym} +
-    [
-      :listing_type, :description, :name,
-      :distance_from, :location_id, :availability_template_id,
-      :defer_availability_rules, :price_type, :draft, :enabled,
-      :rank, :transactable_type_id, :transactable_type,
-      :photos_attributes => nested(self.photo),
-      :photo_ids => [],
-      :amenity_ids => [],
-      :availability_rules_attributes => nested(self.availability_rule)
-    ] + Transactable::PRICE_TYPES.collect{|t| "#{t}_price".to_sym} + PlatformContext.current.instance.transactable_types.first.public_transactable_type_attributes
+      [
+        :location_id, :availability_template_id,
+        :defer_availability_rules, :free,
+        :hourly_reservations, :price_type, :draft, :enabled,
+        :last_request_photos_sent_at, :activated_at, :rank,
+        :transactable_type_id, :transactable_type,
+        :photos_attributes => nested(self.photo),
+        :photo_ids => [],
+        :amenity_ids => [],
+        :availability_rules_attributes => nested(self.availability_rule)
+    ] + Transactable::PRICE_TYPES.collect{|t| "#{t}_price".to_sym} + (PlatformContext.current.try(:instance).try(:transactable_types).try(:first).try(:public_transactable_type_attributes) || [])
   end
 
   def availability_rule
@@ -368,19 +369,19 @@ class SecuredParams
   end
 
   def user
-  [
-    :name, :email, :phone, :job_title, :password, :avatar,
-    :avatar_versions_generated_at, :avatar_transformation_data,
-    :biography, :industry_ids, :country_name, :mobile_number,
-    :facebook_url, :twitter_url, :linkedin_url, :instagram_url,
-    :current_location, :company_name, :skills_and_interests,
-    :last_geolocated_location_longitude, :last_geolocated_location_latitude,
-    :sms_notifications_enabled, :sms_preferences, :domain_id, :time_zone,
-    :phone_required, :country_name_required, :skip_password,
-    :country_name, :phone, :mobile_phone,
-    :companies_attributes => nested(self.company),
-    :confidential_files_attributes => nested(self.confidential_file)
-  ]
+    [
+      :name, :email, :phone, :job_title, :password, :avatar,
+      :avatar_versions_generated_at, :avatar_transformation_data,
+      :biography, :industry_ids, :country_name, :mobile_number,
+      :facebook_url, :twitter_url, :linkedin_url, :instagram_url,
+      :current_location, :company_name, :skills_and_interests,
+      :last_geolocated_location_longitude, :last_geolocated_location_latitude,
+      :sms_notifications_enabled, :sms_preferences, :domain_id, :time_zone,
+      :phone_required, :country_name_required, :skip_password,
+      :country_name, :phone, :mobile_phone,
+      :companies_attributes => nested(self.company),
+      :confidential_files_attributes => nested(self.confidential_file)
+    ]
   end
 
 
