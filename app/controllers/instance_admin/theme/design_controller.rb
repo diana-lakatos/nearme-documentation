@@ -19,11 +19,13 @@ class InstanceAdmin::Theme::DesignController < InstanceAdmin::Theme::BaseControl
   def upload_image
     @theme.send("#{params[:image]}_original_url=", params[:url])
     if @theme.save
-      render :text => { :url => @theme.send("#{params[:image]}_url"), 
-                        :id => params[:image],
-                        :resize_url =>  edit_theme_image_instance_admin_theme_design_path(params[:image]),
-                        :thumbnail_dimensions => {},
-                        :destroy_url => destroy_theme_image_instance_admin_theme_design_path(params[:image]) }.to_json, :content_type => 'text/plain'
+      render :text => {
+        :url => @theme.send("#{params[:image]}_url"),
+        :id => params[:image],
+        :resize_url =>  edit_theme_image_instance_admin_theme_design_path(params[:image]),
+        :thumbnail_dimensions => {},
+        :destroy_url => destroy_theme_image_instance_admin_theme_design_path(params[:image])
+      }.to_json, :content_type => 'text/plain'
     else
       render :text => [{:error => @theme.errors.full_messages}].to_json,:content_type => 'text/plain', :status => 422
     end
@@ -31,9 +33,9 @@ class InstanceAdmin::Theme::DesignController < InstanceAdmin::Theme::BaseControl
 
   def edit_image
     if request.xhr?
-      render partial: 'instance_admin/theme/design/resize_form', 
-        :locals => { :form_url => update_theme_image_instance_admin_theme_design_path, 
-                     :object => @image, 
+      render partial: 'instance_admin/theme/design/resize_form',
+        :locals => { :form_url => update_theme_image_instance_admin_theme_design_path(params[:image]),
+                     :object => @image,
                      :object_url => @theme.send("#{params[:image]}_url", :original) }
     end
   end
@@ -43,9 +45,9 @@ class InstanceAdmin::Theme::DesignController < InstanceAdmin::Theme::BaseControl
     if @theme.save
       render partial: 'instance_admin/theme/design/resize_succeeded'
     else
-      render partial: 'instance_admin/theme/design/resize_form', 
-        :locals => { :form_url => update_theme_image_instance_admin_theme_design_path, 
-                     :object => @image, 
+      render partial: 'instance_admin/theme/design/resize_form',
+        :locals => { :form_url => update_theme_image_instance_admin_theme_design_path,
+                     :object => @image,
                      :object_url => @theme.send("#{params[:image]}_url", :original) }
     end
   end

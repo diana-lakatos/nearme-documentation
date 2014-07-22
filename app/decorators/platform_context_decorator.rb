@@ -34,7 +34,7 @@ class PlatformContextDecorator
   end
 
   def build_url_for_path(path)
-    raise "Argument should not contain protocol" unless path[0] == '/'
+    raise "Expected relative path, got #{path}" unless path[0] == '/'
     "http://#{host}#{path}"
   end
 

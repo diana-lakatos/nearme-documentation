@@ -34,10 +34,11 @@ class UserMessageDecorator < Draper::Decorator
   end
 
   def show_path(options = {})
-    if Transactable === self.thread_context
-      listing_user_message_path(self.thread_context, self.object, options)
+    thread_context_with_deleted = self.thread_context_type.constantize.respond_to?(:with_deleted) ? self.thread_context_type.constantize.with_deleted.find(self.thread_context_id) : self.thread_context
+    if Transactable === thread_context_with_deleted
+      listing_user_message_path(thread_context_with_deleted, self.object, options)
     else
-      polymorphic_path([self.thread_context, self.object], options)
+      polymorphic_path([thread_context_with_deleted, self.object], options)
     end
   end
 

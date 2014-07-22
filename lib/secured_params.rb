@@ -42,7 +42,7 @@ class SecuredParams
 
   def blog_instance
     [
-      :enable,
+      :enabled,
       :name,
       :header,
       :facebook_app_id,
