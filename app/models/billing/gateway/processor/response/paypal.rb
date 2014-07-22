@@ -1,7 +1,7 @@
 class Billing::Gateway::Processor::Response::Paypal < Billing::Gateway::Processor::Response::Base
 
   def initialize(response)
-    @response = YAML.load(self.response.gsub('Proc {}', ''))
+    @response = YAML.load(response.gsub('Proc {}', ''))
   end
 
   def failure_message
