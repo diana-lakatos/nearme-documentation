@@ -5,7 +5,7 @@ module FormHelper
   end
 
   def draw_attribute_for_form(attribute, form)
-    return nil unless attribute.public
+    return nil unless attribute.public && attribute.html_tag.present?
     case attribute.html_tag.to_sym
     when :input, :select
       render partial: "custom_attributes/input", locals: { attribute: attribute.decorate, f: form }

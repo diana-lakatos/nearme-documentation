@@ -556,9 +556,9 @@ ActiveRecord::Schema.define(version: 20140703182820) do
     t.boolean  "user_info_in_onboarding_flow",                                default: false
     t.string   "default_search_view"
     t.boolean  "user_based_marketplace_views",                                default: false
-    t.boolean  "onboarding_verification_required",                            default: false
     t.string   "searcher_type"
     t.datetime "master_lock"
+    t.boolean  "onboarding_verification_required",                            default: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
