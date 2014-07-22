@@ -16,7 +16,9 @@ class PlatformContext::RackSetter
     ::PlatformContext.current = ::PlatformContext.new(request.host)
     if ::PlatformContext.current.valid_domain?
       Rails.logger.info "platform_context: #{::PlatformContext.current.to_h}"
-      I18n.backend.backends.first.instance_id = ::PlatformContext.current.instance.id
+      if I18n.backend.respond_to?(:backends)
+        I18n.backend.backends.first.instance_id = ::PlatformContext.current.instance.id
+      end
       @app.call(env)
     else
       [302, {"Location" => 'http://near-me.com/?domain_not_valid=true'}, self]
