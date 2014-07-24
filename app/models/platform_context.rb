@@ -30,12 +30,7 @@ class PlatformContext
 
   def self.current=(platform_context)
     Thread.current[:platform_context] = platform_context
-    after_setting_current_callback(platform_context) if platform_context.present?
-  end
-
-  def self.after_setting_current_callback(platform_context)
-    ActiveRecord::Base.establish_connection(platform_context.instance.db_connection_string) && platform_context.instance.db_connection_string.present?
-    Transactable.clear_transactable_type_attributes_cache
+    ActiveRecord::Base.establish_connection(platform_context.instance.db_connection_string) if platform_context.present? && platform_context.instance.db_connection_string.present?
   end
 
   def self.scope_to_instance

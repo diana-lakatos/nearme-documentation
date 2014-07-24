@@ -1,7 +1,15 @@
 FactoryGirl.define do
   factory :transactable do
-
+    sequence(:name) do |n|
+      "Listing #{n}"
+    end
+    description "Aliquid eos ab quia officiis sequi."
     location
+    listing_type "Shared Desks"
+    photo_not_required true
+    daily_price_cents 5000
+    quantity ||= 1
+    confirm_reservations true
 
     ignore do
       photos_count_to_be_created 1
@@ -12,17 +20,6 @@ FactoryGirl.define do
     end
 
     after(:build) do |listing, evaluator|
-      {
-        "listing_type" => "Shared Desks",
-        "photo_not_required" => true,
-        "quantity" => "1",
-        "confirm_reservations" => true,
-        "daily_price_cents" => "5000",
-        "description" => "Aliquid eos ab quia officiis sequi.",
-        "name" => "Listing #{Random.rand(1000)}"
-      }.each do |key, value|
-        listing.properties[key] ||= value
-      end
       if listing.photos.empty?
         listing.photos = create_list(:photo, evaluator.photos_count_to_be_created,
                                      listing: nil,
@@ -39,28 +36,26 @@ FactoryGirl.define do
     end
 
     factory :free_listing do
-      after(:build) do |listing|
-        listing.properties["daily_price_cents"] = "0"
-        listing.properties["free"] = true
+      after(:create) do |listing|
+        listing.daily_price_cents = 0
+        listing.free = true
       end
     end
 
     factory :hundred_dollar_listing do
-      after(:build) do |listing|
-        listing.properties["daily_price_cents"] = 100_00
+      after(:create) do |listing|
+        listing.daily_price_cents = 100_00
       end
     end
 
     factory :listing_with_10_dollars_per_hour do
-      after(:build) do |listing|
-        listing.properties["hourly_price_cents"] = "1000"
-        listing.properties["hourly_reservations"] = true
-      end
+      hourly_price_cents 1000
+      hourly_reservations true
     end
 
     factory :call_listing do
-      after(:build) do |listing|
-        listing.properties["daily_price_cents"] = nil
+      after(:create) do |listing|
+        listing.daily_price_cents = nil
       end
     end
 
@@ -69,23 +64,24 @@ FactoryGirl.define do
     end
 
     factory :listing_in_auckland do
-      after(:build) do |listing|
-        listing.properties["name"] = "Listing in Auckland #{Random.rand(1000)}"
+      sequence(:name) do |n|
+        "Listing in Auckland #{n}"
       end
 
       association(:location, factory: :location_in_auckland)
     end
 
     factory :listing_in_adelaide do
-      after(:build) do |listing|
-        listing.properties["name"] = "Listing in Adeilaide #{Random.rand(1000)}"
+      sequence(:name) do |n|
+        "Listing in Adeilaide #{n}"
       end
+
       association(:location, factory: :location_in_adelaide)
     end
 
     factory :listing_in_cleveland do
-      after(:build) do |listing|
-        listing.properties["name"] = "Listing in Cleveland #{Random.rand(1000)}"
+      sequence(:name) do |n|
+        "Listing in Cleveland #{n}"
       end
 
       association(:location, factory: :location_in_cleveland)
@@ -100,32 +96,32 @@ FactoryGirl.define do
     end
 
     factory :listing_in_san_francisco do
-      after(:build) do |listing|
-        listing.properties["name"] = "Listing in San Francisco #{Random.rand(1000)}"
+      sequence(:name) do |n|
+        "Listing in San Francisco #{n}"
       end
+
       association(:location, factory: :location_in_san_francisco)
     end
 
 
     factory :listing_in_san_francisco_address_components do
-      after(:build) do |listing|
-        listing.properties["name"] = "Listing in San Francisco #{Random.rand(1000)}"
+      sequence(:name) do |n|
+        "Listing in San Francisco #{n}"
       end
+
       association(:location, factory: :location_san_francisco_address_components)
     end
 
     factory :listing_in_wellington do
-      after(:build) do |listing|
-        listing.properties["name"] = "Listing in Wellington #{Random.rand(1000)}"
+      sequence(:name) do |n|
+        "Listing in Wellington #{n}"
       end
 
       association(:location, factory: :location_in_wellington)
     end
 
     factory :demo_listing do
-      after(:build) do |listing|
-        listing.properties["daily_price_cents"] =  5000 + (100 * rand(50)).to_i
-      end
+      daily_price_cents { 5000 + (100 * rand(50)).to_i }
 
       after(:create) do |listing, evaluator|
         listing.photos = FactoryGirl.create_list(:demo_photo, 2, creator: listing.location.creator )

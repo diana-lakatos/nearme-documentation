@@ -96,5 +96,19 @@ class TransactableType < ActiveRecord::Base
     { "inclusion" => { "in" => [true, false], "allow_nil" => false } }
   end
 
+  def transactable_type_attributes_names
+    @transactable_type_attributes_names ||= transactable_type.transactable_type_attributes.pluck(:name)
+  end
+
+  def public_transactable_type_attributes
+    @public_tta ||= transactable_type_attributes.map { |attr| attr.public? ? attr.name.to_sym : nil }.compact
+  end
+
+  def transactable_type_attributes_names_types_hash
+    @transactable_type_attributes_names_types_hash ||= self.transactable_type_attributes.inject({}) do |hstore_attrs, attr|
+      hstore_attrs[attr.name.to_sym] = attr.attribute_type.to_sym
+      hstore_attrs
+    end
+  end
 end
 

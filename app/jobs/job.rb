@@ -46,9 +46,6 @@ class Job
                                                       PlatformContext.new(@platform_context_detail_class.find(@platform_context_detail_id))
                                                     end
                                                   end
-    TransactableType.pluck(:id).each do |id|
-      Transactable.clear_transactable_type_attributes_cache(id)
-    end
   end
 
   def after_initialize(*args)
