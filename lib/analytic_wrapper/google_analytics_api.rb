@@ -46,7 +46,7 @@ class AnalyticWrapper::GoogleAnalyticsApi
   end
 
   def tracking_code
-    PlatformContext.current.domain.nil? ? DesksnearMe::Application.config.google_analytics[:tracking_code] : PlatformContext.current.domain.google_analytics_tracking_code.presence
+    PlatformContext.current.domain.try(:google_analytics_tracking_code).presence || DesksnearMe::Application.config.google_analytics[:tracking_code]
   end
 
   def version
