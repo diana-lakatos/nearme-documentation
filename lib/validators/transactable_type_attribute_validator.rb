@@ -1,10 +1,13 @@
 class TransactableTypeAttributeValidator < ActiveModel::Validator
   def validate(record)
-    record.transactable_type_attributes.each do |tta|
-      if tta.validation_rules.present? && !tta.validation_rules.empty?
-        tta.validation_rules.each do |validation_rule_type, validation_rule_options|
+    TransactableTypeAttribute.where(transactable_type_id: record.transactable_type_id).pluck([:name, :validation_rules, :valid_values]).each do |array|
+      name = array[0]
+      validation_rules = array[1]
+      valid_values = array[2]
+      if validation_rules.present? && !validation_rules.empty?
+        validation_rules.each do |validation_rule_type, validation_rule_options|
           validation_rule_options ||= {}
-          name = validation_rule_options.fetch("redirect", tta.name)
+          name = validation_rule_options.fetch("redirect", name)
           options = ({ attributes: name }.merge(validation_rule_options)).symbolize_keys
 
           klass = case validation_rule_type.to_sym
@@ -22,8 +25,8 @@ class TransactableTypeAttributeValidator < ActiveModel::Validator
           klass.new(options).validate(record)
         end
       end
-      if tta.valid_values.present?
-        options = { attributes: tta.name, in: tta.valid_values  }
+      if valid_values.present?
+        options = { attributes: name, in: valid_values  }
         ActiveModel::Validations::InclusionValidator.new(options).validate(record)
       end
     end

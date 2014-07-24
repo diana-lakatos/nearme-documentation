@@ -1097,6 +1097,8 @@ ActiveRecord::Schema.define(version: 20140721054603) do
     t.text     "hint"
     t.string   "placeholder"
     t.boolean  "internal",             default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "transactable_type_attributes", ["instance_id", "transactable_type_id"], name: "index_tta_on_instance_id_and_transactable_type_id", using: :btree

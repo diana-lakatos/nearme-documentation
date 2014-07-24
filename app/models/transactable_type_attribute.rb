@@ -10,6 +10,7 @@ class TransactableTypeAttribute < ActiveRecord::Base
   #   :internal
 
   scope :listable, -> { all }
+  scope :with_changed_attributes, -> updated_at { where('updated_at > ?', updated_at) }
 
   validates_presence_of :name, :attribute_type
   validates_uniqueness_of :name, :scope => [:transactable_type_id, :deleted_at]
@@ -21,6 +22,11 @@ class TransactableTypeAttribute < ActiveRecord::Base
   serialize :validation_rules, JSON
   store :input_html_options
   store :wrapper_html_options
+
+
+  def self.find_as_array(transactable_type_id, attributes = [:name, :attribute_type, :default_value, :public])
+    TransactableTypeAttribute.where(transactable_type_id: transactable_type_id).pluck(attributes)
+  end
 
 end
 
