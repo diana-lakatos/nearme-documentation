@@ -1,11 +1,6 @@
 class InstanceAdmin::Settings::IntegrationsController < InstanceAdmin::Settings::BaseController
   before_filter :find_payment_gateways
 
-  def find_payment_gateways
-    @payment_gateways = PaymentGateway.all
-    @countries = Country.with_payment_gateway_support
-  end
-
   def countries
     if params[:country].present?
       @payment_gateways = PaymentGateway.supported_at(params[:country])
@@ -57,4 +52,10 @@ class InstanceAdmin::Settings::IntegrationsController < InstanceAdmin::Settings:
   def instance_payment_gateway(attributes=nil)
     @instance.instance_payment_gateways.where(payment_gateway_id: @payment_gateway.id).first || @payment_gateway.instance_payment_gateways.build
   end
+
+  def find_payment_gateways
+    @payment_gateways = PaymentGateway.all
+    @countries = Country.with_payment_gateway_support
+  end
+
 end
