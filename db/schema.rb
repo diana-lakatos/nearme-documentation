@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140703182820) do
+ActiveRecord::Schema.define(version: 20140721054603) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -289,6 +289,7 @@ ActiveRecord::Schema.define(version: 20140703182820) do
     t.string   "target_type"
     t.datetime "deleted_at"
     t.boolean  "secured",     default: false
+    t.string   "google_analytics_tracking_code"
   end
 
   add_index "domains", ["deleted_at"], name: "index_domains_on_deleted_at", using: :btree
