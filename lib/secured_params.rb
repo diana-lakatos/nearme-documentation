@@ -160,6 +160,7 @@ class SecuredParams
     [
       :path,
       :content,
+      :css_content,
       :hero_image,
       :slug,
       :position,
