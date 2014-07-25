@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140721054603) do
+ActiveRecord::Schema.define(version: 20140725101916) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -283,12 +283,12 @@ ActiveRecord::Schema.define(version: 20140721054603) do
 
   create_table "domains", force: true do |t|
     t.string   "name"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
     t.integer  "target_id"
     t.string   "target_type"
     t.datetime "deleted_at"
-    t.boolean  "secured",     default: false
+    t.boolean  "secured",                        default: false
     t.string   "google_analytics_tracking_code"
   end
 
@@ -694,6 +694,7 @@ ActiveRecord::Schema.define(version: 20140721054603) do
     t.string   "redirect_url"
     t.boolean  "open_in_new_window", default: true
     t.integer  "instance_id"
+    t.text     "css_content"
   end
 
   add_index "pages", ["instance_id"], name: "index_pages_on_instance_id", using: :btree
