@@ -1,5 +1,8 @@
 = content_for :hero do
   = image_tag(@page.hero_image.url) if @page.hero_image.present?
+%style
+  = @page.css_content
+
 
 .row-fluid
   .span8.offset2

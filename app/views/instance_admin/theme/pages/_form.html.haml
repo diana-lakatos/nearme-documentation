@@ -8,6 +8,10 @@
       .controls.controls-row
         = f.input :content, wrapper_html: { class: 'span12' }, input_html: { class: 'input-block-level', rows: "30" }
 
+    .row-fluid
+      .controls.controls-row
+        = f.input :css_content, label: 'Homepage CSS', wrapper_html: { class: 'span12' }, input_html: { class: 'input-block-level', rows: "30" }
+
     = f.input :hero_image
     = link_to(resource.hero_image.filename, resource.hero_image.url) if resource.hero_image.present?
 
