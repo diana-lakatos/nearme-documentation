@@ -1,7 +1,8 @@
 require 'test_helper'
 
 class User::PaymentTokenVerifierTest < ActiveSupport::TestCase
-  def setup
+
+  setup do
     @user = FactoryGirl.create(:user)
     @params = {"a" => "b"}
     @result = [@user, @params]

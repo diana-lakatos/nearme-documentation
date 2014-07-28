@@ -7,6 +7,8 @@ class TransactableType < ActiveRecord::Base
   MAX_PRICE = 2147483647
   AVAILABLE_TYPES = ['Listing', 'Buy/Sell']
 
+  attr_accessor :enable_cancellation_policy
+
   # attr_accessible :name, :pricing_options, :pricing_validation, :availability_options, :availability_templates_attributes
 
   has_many :transactables, inverse_of: :transactable_type
@@ -20,14 +22,25 @@ class TransactableType < ActiveRecord::Base
   serialize :pricing_validation, Hash
   serialize :availability_options, Hash
 
+  before_save :normalize_cancellation_policy_enabled
   after_save :setup_price_attributes, :if => lambda { |transactable_type| transactable_type.pricing_options_changed? || transactable_type.pricing_validation_changed? }
   after_save :setup_availability_attributes, :if => lambda { |transactable_type| transactable_type.availability_options_changed? && transactable_type.availability_options.present? }
 
   validates_presence_of :name
   validate :pricing_validation_is_correct
   validate :availability_options_are_correct
+  validates_presence_of :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_percentage, if: lambda { |transactable_type| transactable_type.enable_cancellation_policy }
+  validates_inclusion_of :cancellation_policy_penalty_percentage, in: 0..100, allow_nil: true, message: 'must be between 0 and 100', if: lambda { |transactable_type| transactable_type.enable_cancellation_policy }
 
   accepts_nested_attributes_for :availability_templates
+
+  def normalize_cancellation_policy_enabled
+    if self.enable_cancellation_policy == "1"
+      self.cancellation_policy_enabled ||= Time.zone.now
+    else
+      self.cancellation_policy_enabled = nil
+    end
+  end
 
   def defer_availability_rules?
     availability_options && availability_options["defer_availability_rules"]

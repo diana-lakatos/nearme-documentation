@@ -6,7 +6,7 @@ class DomainTest < ActiveSupport::TestCase
   should validate_presence_of(:name)
   should validate_presence_of(:target_type)
 
-  def setup
+  setup do
     @desks_near_me_domain = FactoryGirl.create(:domain, :name => 'desksnearme.com', :target => FactoryGirl.create(:instance))
     @company = FactoryGirl.create(:company)
     @example_domain = FactoryGirl.create(:domain, :name => 'company.example.com', :target => @company, :target_type => 'Company')

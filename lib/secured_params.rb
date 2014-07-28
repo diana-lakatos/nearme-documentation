@@ -162,6 +162,10 @@ class SecuredParams
       :pricing_validation,
       :availability_options,
       :favourable_pricing_rate,
+      :cancellation_policy_enabled,
+      :cancellation_policy_penalty_percentage,
+      :cancellation_policy_hours_for_cancellation,
+      :enable_cancellation_policy,
       :availability_templates_attributes => nested(self.availability_template)
     ]
   end

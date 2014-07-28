@@ -108,8 +108,8 @@ class Reservation < ActiveRecord::Base
   monetize :successful_payment_amount_cents
 
   state_machine :state, :initial => :unconfirmed do
-    after_transition :unconfirmed => :confirmed, :do => :attempt_payment_capture
-    after_transition :confirmed => [:cancelled_by_guest, :cancelled_by_host], :do => :schedule_refund
+    after_transition :unconfirmed => :confirmed, :do => [:attempt_payment_capture, :set_confirmed_at]
+    after_transition :confirmed => [:cancelled_by_guest, :cancelled_by_host], :do => [:schedule_refund, :set_cancelled_at]
 
     event :confirm do
       transition :unconfirmed => :confirmed
@@ -200,6 +200,14 @@ class Reservation < ActiveRecord::Base
   delegate :administrator=, to: :location
   delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :listing, allow_nil: true
 
+  def set_confirmed_at
+    touch(:confirmed_at)
+  end
+
+  def set_cancelled_at
+    touch(:cancelled_at)
+  end
+
   def user=(value)
     self.owner = value
     self.confirmation_email = value.try(:email)
@@ -225,12 +233,16 @@ class Reservation < ActiveRecord::Base
     case
     when confirmed?, unconfirmed?
       # A reservation can be canceled if not already canceled and all of the dates are in the future
-      !started?
+      cancellation_policy.cancelable?
     else
       false
     end
   end
   alias_method :cancelable, :cancelable?
+
+  def cancellation_policy
+    @cancellation_policy ||= Reservation::CancellationPolicy.new(self)
+  end
 
   def owner_including_deleted
     User.unscoped { owner }
@@ -239,11 +251,6 @@ class Reservation < ActiveRecord::Base
   def reject(reason = nil)
     self.rejection_reason = reason if reason
     fire_state_event :reject
-  end
-
-  # Returns whether any of the reserved dates have started
-  def started?
-    periods.any? { |p| p.date <= Time.zone.today }
   end
 
   def archived?
@@ -434,7 +441,9 @@ class Reservation < ActiveRecord::Base
       charge = reservation_charges.create!(
         subtotal_amount: subtotal_amount,
         service_fee_amount_guest: service_fee_amount_guest,
-        service_fee_amount_host: service_fee_amount_host
+        service_fee_amount_host: service_fee_amount_host,
+        cancellation_policy_hours_for_cancellation: cancellation_policy_hours_for_cancellation,
+        cancellation_policy_penalty_percentage: cancellation_policy_penalty_percentage
       )
 
       self.payment_status = if charge.paid?

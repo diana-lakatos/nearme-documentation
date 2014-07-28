@@ -144,6 +144,7 @@ DesksnearMe::Application.routes.draw do
         get 'destroy_modal', on: :member
       end
       resource :translations, :only => [:show, :update], :controller => 'translations'
+      resource :cancellation_policy, :only => [:show, :update], :controller => 'cancellation_policy'
     end
 
     namespace :theme do

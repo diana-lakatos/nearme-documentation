@@ -3,7 +3,7 @@ require 'email_resolver'
 
 class EmailResolverTest < ActiveSupport::TestCase
 
-  def setup
+  setup do
     @resolver = EmailResolver.instance
     @details  = {:formats => [:html], :locale => [:en], :handlers => [:erb, :liquid], :platform_context => [PlatformContext.new] }
     @theme = Instance.default_instance.theme

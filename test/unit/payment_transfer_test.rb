@@ -4,7 +4,7 @@ require 'helpers/reservation_test_support'
 class PaymentTransferTest < ActiveSupport::TestCase
   include ReservationTestSupport
 
-  def setup
+  setup do
     stub_mixpanel
     @company = prepare_company_with_charged_reservations(:reservation_count => 2)
 
@@ -23,7 +23,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
       @payment_transfer = @company.payment_transfers.build
     end
 
-    should "only allow charges of the same currency" do      
+    should "only allow charges of the same currency" do
       rc = ReservationCharge.create!(
         :reservation => @reservation_1,
         :subtotal_amount => 10,
@@ -177,7 +177,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
         instance = FactoryGirl.create(:instance)
         @company.update_attribute(:instance_id, instance.id)
         PlatformContext.any_instance.stubs(:instance).returns(instance)
-        assert_equal instance.id, @company.reload.instance_id 
+        assert_equal instance.id, @company.reload.instance_id
       end
     end
   end

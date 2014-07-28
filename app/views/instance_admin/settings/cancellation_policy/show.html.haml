@@ -1,0 +1,14 @@
+= simple_form_for @transactable_type, :url => instance_admin_settings_cancellation_policy_path, :html => { :multipart => true } do |f|
+  %fieldset
+    %legend Cancellation Policy
+    .row-fluid
+      .controls.controls-row
+        = f.input :enable_cancellation_policy, required: false, as: :boolean, label: false, inline_label: "Should cancellation policy be enabled?", wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level', checked: f.object.enable_cancellation_policy.nil? ? f.object.cancellation_policy_enabled.present? : f.object.enable_cancellation_policy=="1" }
+    .row-fluid
+      .controls.controls-row
+        = f.input :cancellation_policy_hours_for_cancellation, label: 'Number of hours before booking to cancel', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+        = f.input :cancellation_policy_penalty_percentage, label: 'Penalty fee (0 for full refund, 100 for no refund at all)', wrapper_html: {class: 'input-prepend span6'} do
+          %span.add-on %
+          = f.input_field :cancellation_policy_penalty_percentage, type: 'tel', class: 'input-block-level'
+
+  = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
