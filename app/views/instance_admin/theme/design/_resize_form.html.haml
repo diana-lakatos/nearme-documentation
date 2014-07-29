@@ -2,7 +2,7 @@
   %h2== Crop And Rotate
 .row-fluid
   .span10.offset1
-    = form_tag form_url, :method => :put, :id => 'crop-form', 'data-id' => object.model.id do 
+    = form_tag form_url, :method => :put, :id => 'crop-form', 'data-id' => object.model.id do
       %a.badge.rotate-photo.photo-action{href: '#'}
         %i.icon-repeat.icon-white
       = image_tag object_url, 'data-image' => true,

@@ -16,6 +16,12 @@
         .controls.controls-row
           = f.input :"#{provider.downcase}_consumer_key", label: "#{provider} Consumer Key", required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
           = f.input :"#{provider.downcase}_consumer_secret", label: "#{provider} Consumer Secret", required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
+    %hr
+    %legend Google Analytics Tracking Codes
+    = f.simple_fields_for :domains do |domains_form|
+      = domains_form.input :google_analytics_tracking_code, label: domains_form.object.name, placeholder: "UA-10000000-1"
+
     %hr
     %legend Olark
     .row-fluid

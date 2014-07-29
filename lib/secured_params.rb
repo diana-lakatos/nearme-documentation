@@ -42,7 +42,7 @@ class SecuredParams
 
   def blog_instance
     [
-      :enable,
+      :enabled,
       :name,
       :header,
       :facebook_app_id,
@@ -160,6 +160,7 @@ class SecuredParams
     [
       :path,
       :content,
+      :css_content,
       :hero_image,
       :slug,
       :position,
@@ -288,7 +289,8 @@ class SecuredParams
       :target_id,
       :target_type,
       :secured,
-      :white_label_enabled
+      :white_label_enabled,
+      :google_analytics_tracking_code
     ]
   end
 
