@@ -30,11 +30,12 @@ class PlatformHomeController < ActionController::Base
   def contact_submit
     @platform_contact = PlatformContact.new(params[:platform_contact])
     @platform_contact.referer = request.referer
-    if @platform_contact.save
+    if verified_request? && @platform_contact.save
       PlatformMailer.enqueue.contact_request(@platform_contact)
       PlatformMailer.enqueue.email_notification(@platform_contact.email)
       render :contact_submit, layout: false
     else
+      @platform_contact.errors.add(:CSRF_token, 'is invalid') if !verified_request?
       render text: @platform_contact.errors.full_messages.to_sentence, layout: false, :status => :unprocessable_entity
     end
   end
