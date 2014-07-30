@@ -2,17 +2,17 @@
   - unless no_listing_buttons? || !platform_context.white_label_company_user?(current_user)
     - if !user_signed_in?
       %li
-        = link_to new_user_registration_url(:return_to => new_space_wizard_url), :rel => 'modal.sign-up-modal', :class => "nav-link btn btn-blue btn-medium" do
+        = link_to main_app.new_user_registration_path(:return_to => main_app.new_space_wizard_path), :rel => 'modal.sign-up-modal', :class => "nav-link btn btn-blue btn-medium" do
           %span.text List Your #{platform_context.bookable_noun}
           %span.icon.ico-plus
     - elsif current_user && current_user.has_draft_listings
       %li
-        = link_to new_space_wizard_url, :class => "nav-link btn btn-blue btn-medium" do
+        = link_to main_app.new_space_wizard_path, :class => "nav-link btn btn-blue btn-medium" do
           %span.text Complete Your Listing
           %span.icon.ico-plus
     - elsif current_user && !current_user.has_any_active_listings
       %li
-        = link_to new_space_wizard_url, :class => "nav-link btn btn-blue btn-medium" do
+        = link_to main_app.new_space_wizard_path, :class => "nav-link btn btn-blue btn-medium" do
           %span.text List Your #{platform_context.bookable_noun}
           %span.icon.ico-plus
 
@@ -28,26 +28,26 @@
       %ul.dropdown-menu
         - if current_user.instance_admins_metadata && current_user.instance_admins_metadata["#{platform_context.instance.id}"].present?
           %li
-            = link_to url_for([:instance_admin, current_user.instance_admins_metadata["#{platform_context.instance.id}"]]), class: 'nav-link dropdown-toggle' do
+            = link_to main_app.send("instance_admin_#{current_user.instance_admins_metadata["#{platform_context.instance.id}"]}_path"), class: 'nav-link dropdown-toggle' do
               %span Instance Admin
 
         - if platform_context.white_label_company_user?(current_user) && current_user.has_any_active_listings
           %li
-            = link_to manage_locations_path, class: 'nav-link dropdown-toggle' do
+            = link_to main_app.manage_locations_path, class: 'nav-link dropdown-toggle' do
               %span Manage #{platform_context.bookable_noun.pluralize}
         %li
-          = link_to bookings_dashboard_path, class: 'nav-link dropdown-toggle' do
+          = link_to main_app.bookings_dashboard_path, class: 'nav-link dropdown-toggle' do
             %span My Bookings
         %li
-          = link_to edit_user_registration_path, class: 'nav-link dropdown-toggle' do
+          = link_to main_app.edit_user_registration_path, class: 'nav-link dropdown-toggle' do
             %span Account
         %li
-          = link_to destroy_user_session_path, :method => :delete, class: 'nav-link dropdown-toggle', :data => {:user => current_user.first_name } do
+          = link_to main_app.destroy_user_session_path, :method => :delete, class: 'nav-link dropdown-toggle', :data => {:user => current_user.first_name } do
             %span Log Out
 
     %li.divider-vertical
     %li
-      = link_to user_messages_path, class: 'nav-link' do
+      = link_to main_app.user_messages_path, class: 'nav-link' do
         %span.text Messages
         %span.icon.ico-mail
         - if current_user.unread_user_message_threads_count_for(platform_context.instance) > 0

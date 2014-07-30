@@ -40,5 +40,5 @@ Then(/^Images from instance theme should be copied to partner's theme$/) do
 end
 
 Then(/^Partner should not have its own theme$/) do
-  assert !Partner.last.has_theme?
+  assert !Partner.last.has_theme?, "Partner should not have its own theme"
 end

@@ -9,6 +9,7 @@ public/media
 public/association
 public/user
 public/assets
+public/capybara.html
 db/sphinx
 config/*.sphinx.conf
 config/redis.yml

@@ -33,6 +33,10 @@ class UserDecorator < Draper::Decorator
     link_to user_message.thread_context.name, profile_path(user_message.thread_context.slug)
   end
 
+  def has_spree_role?(role)
+    true
+  end
+
   private
 
   def user_messages_decorator_for(instance)

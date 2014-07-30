@@ -10,7 +10,7 @@ gem 'sprockets', '~> 2.11.0'
 gem 'redis'
 gem 'redis-rails', '~> 4.0.0'
 gem 'raygun4ruby'
-gem "liquid"
+gem 'liquid'
 gem 'active_model_serializers'
 gem 'carrierwave'
 gem 'devise', "~> 3.0.0"
@@ -36,26 +36,26 @@ gem 'sass'
 gem 'haml'
 gem 'le'
 gem 'mini_magick'
-gem 'money-rails'
+gem 'money-rails', '0.8.1'
 gem 'paranoia', '~> 2.0.0'
 gem 'simple_form', '~> 3.0.2'
 gem 'nested_form'
-gem 'nokogiri'
+gem 'nokogiri', '~> 1.6.0'
 gem 'hpricot'
 gem 'amatch'
 gem 'ri_cal'
-gem 'ffaker'
+gem 'ffaker', '~> 1.16'
 gem 'draper'
 
 gem 'i18n-active_record',
     git: 'git://github.com/svenfuchs/i18n-active_record.git',
     require: 'i18n/active_record'
 
-gem 'paper_trail', '~> 3.0.0'
+gem 'paper_trail', '3.0.0'
 
 gem 'rack-rewrite', :require => 'rack/rewrite'
 
-gem 'state_machine'
+gem 'state_machine', '~> 1.2.0'
 gem 'will_paginate'
 gem "compass-rails"
 gem 'animate'
@@ -67,7 +67,7 @@ gem 'stripe'
 gem 'paypal-sdk-rest'
 gem 'paypal-sdk-adaptivepayments'
 gem 'balanced'
-gem 'friendly_id', '~> 5.0'
+gem 'friendly_id', '~> 5.0.4'
 gem "non-stupid-digest-assets"
 gem 'sass-rails', '~> 4.0.0'
 gem 'bootstrap-sass', '~> 2.3.1.0'
@@ -83,7 +83,7 @@ gem 'ckeditor'
 gem 'orm_adapter', '~> 0.5.0' # needed for ckeditor, see https://github.com/galetahub/ckeditor/issues/375
 
 gem 'useragent'
-gem 'mixpanel'
+gem 'mixpanel', '4.0.2'
 gem 'mixpanel_client'
 gem 'voight_kampff'
 
@@ -95,7 +95,7 @@ gem 'dropbox-api'
 gem 'twilio-ruby'
 gem 'googl'
 
-gem 'jquery-rails'
+gem 'jquery-rails', '~> 3.1'
 gem 'chosen-rails'
 gem 'spectrum-rails'
 
@@ -104,20 +104,22 @@ gem "historyjs-rails"
 
 gem 'ranked-model'
 
-gem 'desk', github: 'zencoder/desk'
-gem 'filepicker-rails'
+gem 'filepicker-rails', '0.1'
 
 gem 'premailer-rails'
 
 gem 'addressable'
 
-gem 'timecop'
+gem 'timecop', '0.3.5'
 
 gem 'newrelic_rpm'
 gem 'unicorn-worker-killer'
 
 gem 'activemerchant'
 gem 'iso_country_codes'
+
+gem 'spree', github: 'spree/spree', branch: '2-2-stable'
+#gem 'spree_auth_devise', github: 'spree/spree_auth_devise', branch: '2-2-stable'
 
 group :profiling do
   gem 'rack-mini-profiler'
@@ -148,9 +150,11 @@ group :development do
 end
 
 group :test do
+  gem 'rspec', '2.14.1'
   gem 'codeclimate-test-reporter', :require => false
-  gem 'capybara', '~>2'
-  gem 'capybara-webkit'
+  gem 'capybara', '2.2.1'
+  gem 'launchy'
+  gem 'capybara-webkit', '1.0.0'
   gem 'capybara-screenshot'
   gem 'cucumber-rails', '~> 1.4.0', :require => false
   gem 'cucumber', '~> 1.2.5'
@@ -161,7 +165,7 @@ group :test do
   gem 'mocha', :require => false
   gem 'pickle'
   gem 'turn'
-  gem 'webmock'
+  gem 'webmock', '1.17.4'
   gem 'shoulda'
   gem 'vcr'
   gem 'ruby-prof'

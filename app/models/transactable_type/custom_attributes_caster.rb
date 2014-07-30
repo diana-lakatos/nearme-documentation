@@ -3,11 +3,11 @@ module TransactableType::CustomAttributesCaster
 
   included do
 
-    def set_custom_attributes
+    def set_custom_attributes(store_accessor_name = :properties)
       metaclass = class << self; self; end
       hstore_attributes = transactable_type_attributes_names_types_hash
       metaclass.class_eval do
-        store_accessor :properties, hstore_attributes.keys
+        store_accessor store_accessor_name, hstore_attributes.keys
       end
       transactable_type_attributes_names_types_hash.each do |key, type|
         next unless type == :boolean

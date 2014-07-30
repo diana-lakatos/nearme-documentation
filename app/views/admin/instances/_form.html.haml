@@ -16,6 +16,8 @@
   = f.input :user_based_marketplace_views
   = f.input :onboarding_verification_required
   = f.input :searcher_type
+  = label_tag :marketplace_type, 'Marketplace Type'
+  = select_tag :marketplace_type, options_for_select(TransactableType::AVAILABLE_TYPES.map{|at| [at, at]}, params[:marketplace_type] || resource.marketplace_type), disabled: !resource.new_record?
 
   %h4 Domains
   - resource.domains.build unless resource.domains.any?

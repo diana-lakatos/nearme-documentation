@@ -34,7 +34,6 @@ class SmsNotifier < AbstractController::Base
   include AbstractController::Helpers
   include AbstractController::Translation
   include AbstractController::AssetPaths
-  include Rails.application.routes.url_helpers
 
   helper :application, :sms_notifier
   layout false

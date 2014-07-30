@@ -1,5 +1,9 @@
 DesksnearMe::Application.routes.draw do
 
+  scope module: 'spree' do
+    mount Spree::Core::Engine, at: '/instance_buy_sell_admin'
+  end
+
   mount Ckeditor::Engine => '/ckeditor'
 
   constraints host: 'near-me.com' do

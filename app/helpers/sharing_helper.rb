@@ -1,5 +1,4 @@
 module SharingHelper
-  include Rails.application.routes.url_helpers
 
   def tweet_location_url(location_link)
     tweet = "Check out our #{platform_context.instance.bookable_noun}"

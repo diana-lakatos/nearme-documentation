@@ -31,6 +31,10 @@ class ApplicationController < ActionController::Base
     @secured_params ||= SecuredParams.new
   end
 
+  def spree_current_user
+    current_user
+  end
+
   protected
 
   # Returns the layout to use for the current request.
@@ -331,7 +335,7 @@ class ApplicationController < ActionController::Base
     if platform_context.instance.password_protected? && !session["authenticated_in_marketplace_#{platform_context.instance.id}".to_sym]
       if current_user.nil? || !InstanceAdminAuthorizer.new(current_user).instance_admin?
         session[:marketplace_return_to] = request.path if request.get? && !request.xhr?
-        redirect_to new_marketplace_session_path
+        redirect_to main_app.new_marketplace_session_path
       end
     end
   end

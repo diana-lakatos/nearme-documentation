@@ -1,4 +1,4 @@
-module InstanceAdmin::InstanceAdminHelper
+module InstanceAdminHelper
 
   def support_link_to_filter(active_filter, filter)
     link = filter == 'open' ? '' : filter

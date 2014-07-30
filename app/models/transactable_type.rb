@@ -5,6 +5,7 @@ class TransactableType < ActiveRecord::Base
   scoped_to_platform_context
 
   MAX_PRICE = 2147483647
+  AVAILABLE_TYPES = ['Listing', 'Buy/Sell']
 
   # attr_accessible :name, :pricing_options, :pricing_validation, :availability_options, :availability_templates_attributes
 
@@ -30,6 +31,7 @@ class TransactableType < ActiveRecord::Base
   def defer_availability_rules?
     availability_options && availability_options["defer_availability_rules"]
   end
+
   def pricing_options
     super.select { |k,v| v == "1" }
   end
@@ -109,6 +111,10 @@ class TransactableType < ActiveRecord::Base
       hstore_attrs[attr.name.to_sym] = attr.attribute_type.to_sym
       hstore_attrs
     end
+  end
+
+  def buy_sell?
+    name == 'Buy/Sell'
   end
 end
 
