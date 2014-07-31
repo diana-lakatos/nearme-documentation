@@ -1,6 +1,6 @@
 class Support::TicketMessagesController < Support::BaseController
   def create
-    message = Support::TicketMessage.new(params[:support_ticket_message])
+    message = Support::TicketMessage.new(message_params)
     message.user = current_user
     message.ticket = ticket
     if message.valid?
@@ -34,8 +34,6 @@ class Support::TicketMessagesController < Support::BaseController
   end
 
   def message_params
-    params.require(:support_ticket_message).permit(
-      :message
-    )
+    params.fetch(:support_ticket_message, {}).permit(:message)
   end
 end

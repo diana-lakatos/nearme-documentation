@@ -1,7 +1,7 @@
 class InstanceAdmin::Settings::LocationTypesController < InstanceAdmin::Settings::BaseController
 
   def create
-    @location_type = LocationType.new(params[:location_type])
+    @location_type = LocationType.new(location_type_params)
     if @location_type.save
       flash[:success] = t('flash_messages.instance_admin.settings.location_type_added')
       redirect_to instance_admin_settings_locations_path
@@ -33,5 +33,11 @@ class InstanceAdmin::Settings::LocationTypesController < InstanceAdmin::Settings
     @location_type.destroy
     flash[:success] = t('flash_messages.instance_admin.settings.location_type_deleted')
     redirect_to instance_admin_settings_locations_path
+  end
+
+  private
+
+  def location_type_params
+    params.require(:location_type).permit(secured_params.location_type)
   end
 end

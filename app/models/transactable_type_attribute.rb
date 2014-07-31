@@ -22,5 +22,30 @@ class TransactableTypeAttribute < ActiveRecord::Base
   store :input_html_options
   store :wrapper_html_options
 
+  attr_accessor :input_html_options_string, :wrapper_html_options_string
+
+  before_save :normalize_html_options
+
+  def normalize_html_options
+    self.input_html_options = normalize_input_html_options if input_html_options_string.present?
+    self.wrapper_html_options = normalize_wrapper_html_options if wrapper_html_options_string.present?
+  end
+
+  def normalize_input_html_options
+    transform_hash_string_to_hash(input_html_options_string)
+  end
+
+  def normalize_wrapper_html_options
+    transform_hash_string_to_hash(wrapper_html_options_string)
+  end
+
+  def transform_hash_string_to_hash(hash_string)
+    hash_string.split(',').inject({}) do |hash, key_value_string|
+      key_value_arr = key_value_string.split('=>')
+      hash[key_value_arr[0].strip] = key_value_arr[1].strip
+      hash
+    end
+  end
+
 end
 

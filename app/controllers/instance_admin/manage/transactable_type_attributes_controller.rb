@@ -1,6 +1,6 @@
 class InstanceAdmin::Manage::TransactableTypeAttributesController < InstanceAdmin::Manage::BaseController
   before_filter :find_transactable_type
-  before_filter :normalize_complex_params, only: [:create, :update]
+  before_filter :normalize_valid_values, only: [:create, :update]
 
   def index
     @transactable_type_attributes = @transactable_type.transactable_type_attributes.listable
@@ -18,7 +18,7 @@ class InstanceAdmin::Manage::TransactableTypeAttributesController < InstanceAdmi
   end
 
   def create
-    @transactable_type_attribute = @transactable_type.transactable_type_attributes.build(params[:transactable_type_attribute])
+    @transactable_type_attribute = @transactable_type.transactable_type_attributes.build(transactable_type_attributes_params)
     if @transactable_type_attribute.save
       flash[:success] = t 'flash_messages.instance_admin.manage.transactable_type_attributes.created'
       redirect_to action: :index
@@ -30,7 +30,7 @@ class InstanceAdmin::Manage::TransactableTypeAttributesController < InstanceAdmi
 
   def update
     @transactable_type_attribute = @transactable_type.transactable_type_attributes.listable.find(params[:id])
-    if @transactable_type_attribute.update_attributes(params[:transactable_type_attribute])
+    if @transactable_type_attribute.update_attributes(transactable_type_attributes_params)
       flash[:success] = t 'flash_messages.instance_admin.manage.transactable_type_attributes.updated'
       redirect_to action: :index
     else
@@ -52,30 +52,11 @@ class InstanceAdmin::Manage::TransactableTypeAttributesController < InstanceAdmi
     @transactable_type = PlatformContext.current.instance.transactable_types.first
   end
 
-  def normalize_complex_params
-    if params[:transactable_type_attribute]
-      params[:transactable_type_attribute][:valid_values] = normalize_valid_values
-      params[:transactable_type_attribute][:input_html_options] = normalize_input_html_options
-      params[:transactable_type_attribute][:wrapper_html_options] = normalize_wrapper_html_options
-    end
-  end
   def normalize_valid_values
-    params[:transactable_type_attribute][:valid_values].split(',').map(&:strip)
+      params[:transactable_type_attribute][:valid_values] = params[:transactable_type_attribute][:valid_values].split(',').map(&:strip) if params[:transactable_type_attribute]
   end
 
-  def normalize_input_html_options
-    transform_hash_string_to_hash(params[:transactable_type_attribute][:input_html_options])
-  end
-
-  def normalize_wrapper_html_options
-    transform_hash_string_to_hash(params[:transactable_type_attribute][:wrapper_html_options])
-  end
-
-  def transform_hash_string_to_hash(hash_string)
-    hash_string.split(',').inject({}) do |hash, key_value_string|
-      key_value_arr = key_value_string.split('=>')
-      hash[key_value_arr[0].strip] = key_value_arr[1].strip
-      hash
-    end
+  def transactable_type_attributes_params
+    params.require(:transactable_type_attribute).permit(secured_params.transactable_type_attribute)
   end
 end

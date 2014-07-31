@@ -25,7 +25,7 @@ class InstanceAdmin::Manage::TransactableTypeAttributesControllerTest < ActionCo
 
     should 'create a new transactable_type' do
       assert_difference 'TransactableTypeAttribute.count', 1 do
-        post :create, {"transactable_type_attribute"=>{"name"=>"new_attribute", "label"=>"attribute label", "attribute_type"=>"string", "html_tag"=>"select", "placeholder"=>"", "prompt"=>"my prompt", "default_value"=>"value5", "hint"=>"this is hint", "public"=>"1", "valid_values"=>"value1, value2, value5", "input_html_options"=>"class => myclass, style => color: red", "wrapper_html_options"=>"class => wrapper-class, style => color: blue"}}
+        post :create, {"transactable_type_attribute"=>{"name"=>"new_attribute", "label"=>"attribute label", "attribute_type"=>"string", "html_tag"=>"select", "placeholder"=>"", "prompt"=>"my prompt", "default_value"=>"value5", "hint"=>"this is hint", "public"=>"1", "valid_values"=>"value1, value2, value5", "input_html_options_string"=>"class => myclass, style => color: red", "wrapper_html_options_string"=>"class => wrapper-class, style => color: blue"}}
       end
       tta = assigns(:transactable_type_attribute)
       assert_equal 'new_attribute', tta.name
