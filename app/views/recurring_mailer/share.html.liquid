@@ -1,9 +1,9 @@
 <h2>Spread the word, {{ user.first_name }}!</h2>
 
-<p>Your listing '<a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a>' at {{ listing.street }} hasn't been booked in {{ listing.last_booked_days }} days.</p>
+<p>Your listing '<a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a>' hasn't been booked in {{ listing.last_booked_days }} days.</p>
 
-<p>Listings shared online are getting rented faster than ones that aren't! Share your listing on Facebook, Twitter, and LinkedIn, and start seeing {{ platform_context.lessees }} book your {{ platform_context.bookable_noun }}.</p>
+<p>Listings shared online are getting booked faster than ones that aren't! Share your listing on Facebook, Twitter, and LinkedIn, and start seeing {{ platform_context.lessees }} book your {{ platform_context.bookable_noun }}.</p>
 
 {% include 'reservation_mailer/social_links.html' %}
 
-<p>Need help? Send an email to <a href="mailto:happydesk@desksnear.me">happydesk@desksnear.me</a> or call us on {{ platform_context.phone_number }}.</p>
+<p>Need help? Send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a> or call us on {{ platform_context.phone_number }}.</p>

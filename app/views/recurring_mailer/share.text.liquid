@@ -1,9 +1,9 @@
 Spread the word, {{ user.first_name }}!
 
-Your listing '{{ listing.name }}' at {{ listing.street }} hasn't been booked in {{ listing.last_booked_days }} days.
+Your listing '{{ listing.name }}' hasn't been booked in {{ listing.last_booked_days }} days.
 
 Listings shared online are getting rented faster than ones that aren't! Share your listing on Facebook, Twitter, and LinkedIn, and start seeing {{ platform_context.lessees }} book your {{ platform_context.bookable_noun }}.
 
 {% include 'reservation_mailer/social_links.text' %}
 
-Need help? Send an email to happydesk@desksnear.me or call us on {{ platform_context.phone_number }}.
+Need help? Send an email to {{ platform_context.support_email }} or call us on {{ platform_context.phone_number }}.

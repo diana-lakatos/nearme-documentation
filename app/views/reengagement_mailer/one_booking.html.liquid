@@ -1,6 +1,6 @@
 <h2>Hey, {{ user.first_name }}!</h2>
 
-<p>We hope you enjoyed your booking for '<a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a>' at {{ listing.street }} on {{ reservation.start_date }}.</p>
+<p>We hope you enjoyed your booking for '<a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a>' on {{ reservation.start_date }}.</p>
 
 <p>We thought you might be interested in some other {{ platform_context.bookable_noun_plural }} in your area. Come back to {{ platform_context.name }} and find a cool {{ platform_context.bookable_noun }}!</p>
 

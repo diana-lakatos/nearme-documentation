@@ -1,9 +1,9 @@
 How was it, {{ reservation.owner.first_name }}?
 
-We can't wait to hear about your experience at '{{ listing.name }}', {{ listing.street }}.
+We can't wait to hear about your experience with '{{ listing.name }}'.
 
 Your opinion is very important and it will help other {{ platform_context.lessees }} to find great {{ platform_context.bookable_noun_plural }}. Take a moment and give us your feedback!
 
 Write a Review: {{ platform_context.host | append:reservation.host_rating_reservation_url_with_tracking | append:signature_for_tracking }}
 
-If you'd prefer to talk to us directly, please send an email to happydesk@desksnear.me or call us on {{ platform_context.phone_number }} - we love to talk with our {{ platform_context.lessees }}.
+If you'd prefer to talk to us directly, please send an email to {{ platform_context.support_email }} or call us on {{ platform_context.phone_number }} - we love to talk with our {{ platform_context.lessees }}.

@@ -1,6 +1,6 @@
 <h2>Welcome, {{ user.first_name }}!</h2>
 
-<p>Your instance, {{ instance.name }}, has been created. Your login details are –</p>
+<p>Your marketplace, {{ instance.name }}, has been created. Your login details are –</p>
 
 <p>
 Email: {{ user.email }}
@@ -8,4 +8,4 @@ Email: {{ user.email }}
 Password: {{ user_password }}
 </p>
 
-<a class="btn" href="{{ platform_context.host | append:instance.instance_admin_url }}">Log in to instance admin</a>
+<a class="btn" href="{{ platform_context.host | append:instance.instance_admin_url }}">Log in to marketplace admin</a>

@@ -1,6 +1,6 @@
 Good news, {{ user.first_name }}!
 
-Your listing, '{{ listing.name }}' at {{ listing.street }}, was just booked!
+Your listing, '{{ listing.name }}', was just booked!
 
 Who: {{ reservation.owner.first_name }}
 
@@ -21,4 +21,4 @@ Confirm Booking {{ platform_context.host | append:reservation.reservation_confir
 
 Not ready for {{ platform_context.lessees }}? You can manage your bookings here: {{ platform_context.host | append:listing.manage_guests_dashboard_url }}
 
-If you need help, send an email to happydesk@desksnear.me or contact us at {{ platform_context.phone_number }}.
+If you need help, send an email to {{ platform_context.support_email }} or contact us at {{ platform_context.phone_number }}.
