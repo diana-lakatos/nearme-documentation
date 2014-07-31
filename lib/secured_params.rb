@@ -1,10 +1,23 @@
 class SecuredParams
   def transactable_type_attribute
     [
-      :name, :transactable_type_id, :attribute_type, :html_tag,
-      :prompt, :default_value, :public, :validation_rules, :valid_values,
-      :label, :placeholder, :hint, :input_html_options, :wrapper_html_options,
-      :deleted_at, :internal
+      :name,
+      :transactable_type_id,
+      :attribute_type,
+      :html_tag,
+      :prompt,
+      :default_value,
+      :public,
+      :label,
+      :placeholder,
+      :hint,
+      :deleted_at,
+      :internal,
+      :input_html_options,
+      :wrapper_html_options,
+      :input_html_options_string,
+      :wrapper_html_options_string,
+      valid_values: []
     ]
   end
 
@@ -374,15 +387,16 @@ class SecuredParams
     [
       :name, :email, :phone, :job_title, :password, :avatar,
       :avatar_versions_generated_at, :avatar_transformation_data,
-      :biography, :industry_ids, :country_name, :mobile_number,
+      :biography, :country_name, :mobile_number,
       :facebook_url, :twitter_url, :linkedin_url, :instagram_url,
       :current_location, :company_name, :skills_and_interests,
       :last_geolocated_location_longitude, :last_geolocated_location_latitude,
-      :sms_notifications_enabled, :sms_preferences, :domain_id, :time_zone,
+      :sms_notifications_enabled, :domain_id, :time_zone,
       :phone_required, :country_name_required, :skip_password,
       :country_name, :phone, :mobile_phone,
-      :companies_attributes => nested(self.company),
-      :confidential_files_attributes => nested(self.confidential_file)
+      industry_ids: [],
+      companies_attributes: nested(self.company),
+      confidential_files_attributes: nested(self.confidential_file)
     ]
   end
 

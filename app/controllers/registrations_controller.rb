@@ -76,7 +76,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def update
     resource.country_name_required = true
-    if resource.update_with_password(params[resource_name])
+    if resource.update_with_password(user_params)
       set_flash_message :success, :updated
       sign_in(resource, :bypass => true)
       event_tracker.updated_profile_information(@user)
@@ -209,7 +209,7 @@ class RegistrationsController < Devise::RegistrationsController
   def update_notification_preferences
     @user = current_user
     params[:user][:sms_preferences] ||= {}
-    if @user.update_with_password(params[:user])
+    if @user.update_with_password(user_params)
       flash[:success] = t('flash_messages.registrations.notification_preferences_updated_successfully')
       redirect_to :action => 'edit_notification_preferences'
     else
@@ -268,6 +268,12 @@ class RegistrationsController < Devise::RegistrationsController
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) {|u| u.permit(:name, :email, :password, :password_confirmation)}
+  end
+
+  def user_params
+    params.require(:user).permit(secured_params.user).tap do |whitelisted|
+      whitelisted[:sms_preferences] = params[:user][:sms_preferences]
+    end
   end
 end
 

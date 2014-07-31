@@ -7,7 +7,7 @@ class Manage::UsersController < Manage::BaseController
   end
 
   def new
-    @user = @company.users.build(params[:user])
+    @user = @company.users.build(user_params)
 
     render partial: 'user_form'
   end
@@ -51,5 +51,9 @@ class Manage::UsersController < Manage::BaseController
       flash[:warning] = t('flash_messages.dashboard.add_your_company')
       redirect_to new_space_wizard_url
     end
+  end
+
+  def user_params
+    params.require(:user).permit(secured_params.user)
   end
 end
