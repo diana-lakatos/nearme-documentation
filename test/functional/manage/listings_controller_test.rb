@@ -9,7 +9,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
     @company = FactoryGirl.create(:company, :creator => @user)
     @location = FactoryGirl.create(:location, :company => @company)
     @location2 = FactoryGirl.create(:location, :company => @company)
-    @listing_type = "Shared Office"
+    @listing_type = "Shared Desks"
     @amenity_type = FactoryGirl.create(:amenity_type)
     @amenity = FactoryGirl.create(:amenity, amenity_type: @amenity_type)
     FactoryGirl.create(:transactable_type_listing)
@@ -20,6 +20,8 @@ class Manage::ListingsControllerTest < ActionController::TestCase
       @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge!({ transactable_type_id: TransactableType.first.id,
                                                                                photos_attributes: [FactoryGirl.attributes_for(:photo)],
                                                                                listing_type: @listing_type,
+                                                                               description: "Aliquid eos ab quia officiis sequi.",
+                                                                               name: "Listing #{Random.rand(1000)}",
                                                                                daily_price: 10,
                                                                                amenity_ids: [@amenity.id] })
       @attributes.delete(:photo_not_required)
@@ -217,7 +219,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
   context 'versions' do
 
     should 'track version change on create' do
-      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge!({transactable_type_id: TransactableType.first.id, :photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type => @listing_type, :daily_price => 10 })
+      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge({transactable_type_id: TransactableType.first.id, :photos_attributes => [FactoryGirl.attributes_for(:photo)], :listing_type => @listing_type, :daily_price => 10, description: "Aliquid eos ab quia officiis sequi.", name: "Listing #{Random.rand(1000)}" })
       @attributes.delete(:photo_not_required)
       stub_mixpanel
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Transactable", "create").count') do

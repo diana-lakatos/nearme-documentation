@@ -15,6 +15,7 @@ class TransactableTypeAttribute < ActiveRecord::Base
   scope :listable, -> { all }
   scope :not_internal, -> { where.not(internal: true) }
   scope :public, -> { where(public: true) }
+  scope :with_changed_attributes, -> updated_at { where('updated_at > ?', updated_at) }
 
   validates_presence_of :name, :attribute_type
   validates_uniqueness_of :name, :scope => [:transactable_type_id, :deleted_at]
@@ -56,6 +57,14 @@ class TransactableTypeAttribute < ActiveRecord::Base
       hash[key_value_arr[0].strip] = key_value_arr[1].strip
       hash
     end
+  end
+
+  FIND_AS_ARRAY_NAME_INDEX = 0
+  FIND_AS_ARRAY_ATTRIBUTE_TYPE_INDEX = 1
+  FIND_AS_ARRAY_DEFAULT_VALUE_INDEX = 2
+  FIND_AS_ARRAY_PUBLIC_INDEX = 3
+  def self.find_as_array(transactable_type_id, attributes = [:name, :attribute_type, :default_value, :public])
+    TransactableTypeAttribute.where(transactable_type_id: transactable_type_id).pluck(attributes)
   end
 
 end

@@ -212,6 +212,10 @@ When /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved f
   }, "Unable to find a reservation for #{listing.name} on #{date}"
 end
 
+When /^#{capture_model} is free$/ do |transactable|
+  model!(transactable).update_attribute(:free, true)
+end
+
 Then /^I should see the following reservations in order:$/ do |table|
   found    = all(".dates").map { |b| b.text.gsub(/\n\s*/,' ').gsub("<br>",' ').strip }
   expected = table.raw.flatten

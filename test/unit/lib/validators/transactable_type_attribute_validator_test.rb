@@ -3,34 +3,34 @@ require 'test_helper'
 class TransactableTypeAttributeValidatorTest < ActiveSupport::TestCase
 
   should 'know how to validate presence' do
-    record = stub(:transactable_type_attributes => [stub(:validation_rules => { :presence => {} }, :name => 'name', valid_values: nil)])
+    TransactableTypeAttributeValidator.any_instance.stubs(:transactable_type_attributes).returns([['name', { :presence => {} }, nil]])
     ActiveModel::Validations::PresenceValidator.expects(:new).returns(stub(:validate))
-    TransactableTypeAttributeValidator.new({:attributes => {}}).validate(record)
+    TransactableTypeAttributeValidator.new({:attributes => {}}).validate(stub(transactable_type_id: 1))
   end
 
   should 'know how to validate inclusion' do
-    record = stub(:transactable_type_attributes => [ stub(:validation_rules => { :inclusion => { :in => ["a", "b"]} }, :name => 'name', valid_values: nil)])
+    TransactableTypeAttributeValidator.any_instance.stubs(:transactable_type_attributes).returns([['name', { :inclusion => { :in => ["a", "b"]} }, nil]])
     ActiveModel::Validations::InclusionValidator.expects(:new).returns(stub(:validate))
-    TransactableTypeAttributeValidator.new({:attributes => {}}).validate(record)
+    TransactableTypeAttributeValidator.new({:attributes => {}}).validate(stub(transactable_type_id: 1))
   end
 
   should 'know how to validate numericality' do
-    record = stub(:transactable_type_attributes => [stub(:validation_rules => { :numericality => {} }, :name => 'name', valid_values: nil)])
+    TransactableTypeAttributeValidator.any_instance.stubs(:transactable_type_attributes).returns([['name', { :numericality => {} }, nil]])
     ActiveModel::Validations::NumericalityValidator.expects(:new).returns(stub(:validate))
-    TransactableTypeAttributeValidator.new({:attributes => {}}).validate(record)
+    TransactableTypeAttributeValidator.new({:attributes => {}}).validate(stub(transactable_type_id: 1))
 
   end
 
   should 'know how to validate length' do
-    record = stub(:transactable_type_attributes => [stub(:validation_rules => { :length => { "maximum" => 250 } }, :name => 'name', valid_values: nil)])
+    TransactableTypeAttributeValidator.any_instance.stubs(:transactable_type_attributes).returns([['name', { :length => { "maximum" => 250 } }, nil]])
     ActiveModel::Validations::LengthValidator.expects(:new).returns(stub(:validate))
-    TransactableTypeAttributeValidator.new({:attributes => {}}).validate(record)
+    TransactableTypeAttributeValidator.new({:attributes => {}}).validate(stub(transactable_type_id: 1))
   end
 
   should 'automatically add validation for valid values' do
-    record = stub(:transactable_type_attributes => [ stub(:validation_rules => nil, :name => 'name', valid_values: ["A", "B"])])
+    TransactableTypeAttributeValidator.any_instance.stubs(:transactable_type_attributes).returns([['name', nil, ["A", "B"]]])
     ActiveModel::Validations::InclusionValidator.expects(:new).with({ attributes: "name", in: ["A", "B"] }).returns(stub(:validate))
-    TransactableTypeAttributeValidator.new({:attributes => {}}).validate(record)
+    TransactableTypeAttributeValidator.new({:attributes => {}}).validate(stub(transactable_type_id: 1))
   end
 
 

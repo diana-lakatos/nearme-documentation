@@ -364,19 +364,19 @@ class SecuredParams
     ] + self.location_address
   end
 
-  def transactable
+  def transactable(transactable_type = nil)
     Transactable::PRICE_TYPES.collect{|t| "#{t}_price_cents".to_sym} +
-      [
-        :location_id, :availability_template_id,
-        :defer_availability_rules, :free,
-        :hourly_reservations, :price_type, :draft, :enabled,
-        :last_request_photos_sent_at, :activated_at, :rank,
-        :transactable_type_id, :transactable_type,
-        :photos_attributes => nested(self.photo),
-        :photo_ids => [],
-        :amenity_ids => [],
-        :availability_rules_attributes => nested(self.availability_rule)
-    ] + Transactable::PRICE_TYPES.collect{|t| "#{t}_price".to_sym} + (PlatformContext.current.try(:instance).try(:transactable_types).try(:first).try(:public_transactable_type_attributes) || [])
+    [
+      :location_id, :availability_template_id,
+      :defer_availability_rules, :free,
+      :hourly_reservations, :price_type, :draft, :enabled,
+      :last_request_photos_sent_at, :activated_at, :rank,
+      :transactable_type_id, :transactable_type,
+      :photos_attributes => nested(self.photo),
+      :photo_ids => [],
+      :amenity_ids => [],
+      :availability_rules_attributes => nested(self.availability_rule)
+    ] + Transactable::PRICE_TYPES.collect{|t| "#{t}_price".to_sym} + (Transactable.get_transactable_type_attributes_as_array((transactable_type.presence || PlatformContext.current.instance.transactable_types.first).id).map { |arr| arr[TransactableTypeAttribute::FIND_AS_ARRAY_PUBLIC_INDEX] ? arr[TransactableTypeAttribute::FIND_AS_ARRAY_NAME_INDEX] : nil }.compact)
   end
 
   def availability_rule
