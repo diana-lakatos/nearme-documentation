@@ -155,24 +155,25 @@ DesksnearMe::Application.routes.draw do
         end
       end
       resources :pages
-      resource :homepage, :only => [:show, :update], :controller => 'homepage'
+      resource :homepage, only: [:show, :update], controller: 'homepage'
     end
 
     namespace :manage do
       get '/', :to => 'base#index'
       get 'support' => 'support#index', as: 'support_root'
       namespace :support do
-        resources :faqs, :except => [:show]
-        resources :tickets, :only => [:show, :update] do
-          resources :ticket_messages, :only => [:create]
+        resources :faqs, except: [:show]
+        resources :tickets, only: [:show, :update] do
+          resources :ticket_messages, only: [:create]
         end
       end
 
-      resources :confidential_files, :only => [:index, :edit, :update]
+      resources :confidential_files, only: [:index, :edit, :update]
 
-      resources :inventories, :only => [:index] do
+      resources :inventories, only: [:index] do
         post :login_as, on: :member
         post :restore_session, on: :collection
+        resources :user_bans, only: [:create, :index, :destroy], controller: 'inventories/user_bans'
       end
 
       resources :transactable_type_attributes

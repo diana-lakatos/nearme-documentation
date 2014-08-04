@@ -6,7 +6,10 @@
       Name
     %th
       Email
+    %th
+    %th
   - collection.each do |resource|
+    - next if resource.banned?
     = render 'index_row', :resource => resource
 
 = will_paginate collection
