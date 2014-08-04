@@ -9,7 +9,7 @@ class Transactable < ActiveRecord::Base
 
   include TransactableType::CustomAttributesCaster
 
-  has_many :reservations, dependent: :destroy, :inverse_of => :listing
+  has_many :reservations, :inverse_of => :listing
   has_many :photos, dependent: :destroy, :inverse_of => :listing do
     def thumb
       (first || build).thumb
@@ -35,6 +35,8 @@ class Transactable < ActiveRecord::Base
 
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
   accepts_nested_attributes_for :photos, :allow_destroy => true
+
+  before_destroy :decline_reservations
 
   # == Scopes
   scope :featured, -> {where(%{ (select count(*) from "photos" where transactable_id = "listings".id) > 0  }).
@@ -413,5 +415,10 @@ class Transactable < ActiveRecord::Base
     self.enabled = is_trusted? if self.enabled
   end
 
+  def decline_reservations
+    reservations.unconfirmed.each do |r|
+      r.reject!
+    end
+  end
 end
 

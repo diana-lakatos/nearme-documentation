@@ -1,4 +1,4 @@
-- only_inputs = [] if only_inputs.nil?
+- only_inputs ||= []
 - photo_input_name_prefix = "listing" if local_assigns[:photo_input_name_prefix].nil?
 
 = f.hidden_field :transactable_type_id, value: @transactable_type.id

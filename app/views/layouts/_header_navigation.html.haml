@@ -26,9 +26,9 @@
         %span.ico-chevron-down
       .clearfix
       %ul.dropdown-menu
-        - if current_user.instance_admins_metadata && current_user.instance_admins_metadata["#{platform_context.instance.id}"].present?
+        - if current_user.instance_admins_metadata
           %li
-            = link_to main_app.send("instance_admin_#{current_user.instance_admins_metadata["#{platform_context.instance.id}"]}_path"), class: 'nav-link dropdown-toggle' do
+            = link_to main_app.send("instance_admin_#{current_user.instance_admins_metadata}_path"), class: 'nav-link dropdown-toggle' do
               %span Instance Admin
 
         - if platform_context.white_label_company_user?(current_user) && current_user.has_any_active_listings

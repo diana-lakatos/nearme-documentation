@@ -167,6 +167,10 @@ class Reservation < ActiveRecord::Base
     with_state(:cancelled_by_guest, :cancelled_by_host)
   }
 
+  scope :unconfirmed, lambda {
+    with_state(:unconfirmed)
+  }
+
   scope :confirmed, lambda {
     with_state(:confirmed)
   }

@@ -78,6 +78,7 @@ class SpaceWizardController < ApplicationController
 
   def find_user
     @user = current_user
+    @country = current_user.country_name
     redirect_to new_space_wizard_url unless @user
   end
 

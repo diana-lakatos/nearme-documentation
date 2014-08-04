@@ -228,7 +228,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
         assert_no_difference 'Company.count' do
           @xml_file.parse
         end
-        assert_equal "Validation error for User user2@example.com: Name can't be blank. Ignoring all children.\nCompany 1 has no valid user, skipping", @xml_file.get_parse_result.strip
+        assert_equal "Validation error for User user2@example.com: Name can't be blank and First name can't be blank. Ignoring all children.\nCompany 1 has no valid user, skipping", @xml_file.get_parse_result.strip
       end
 
       should 'log location address errors' do
