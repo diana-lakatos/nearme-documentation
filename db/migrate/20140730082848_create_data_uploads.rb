@@ -4,6 +4,9 @@ class CreateDataUploads < ActiveRecord::Migration
       t.string :csv_file
       t.string :xml_file
       t.text :options
+      t.text :parsing_result_log
+      t.text :encountered_error
+      t.text :parse_summary
       t.datetime :imported_at
       t.integer :instance_id
       t.integer :uploader_id

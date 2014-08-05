@@ -190,12 +190,61 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
       should 'send emails only once to users if settting is on' do
         stub_mixpanel
         @xml_file = FactoryGirl.create(:xml_template_file_send_invitations)
-          assert_difference('ActionMailer::Base.deliveries.count', 2) do
+        assert_difference('ActionMailer::Base.deliveries.count', 2) do
           @xml_file.parse
         end
       end
 
     end
+
+    context 'summary tracker' do
+
+      should 'get correct summaries' do
+        @xml_file = FactoryGirl.create(:xml_template_file)
+        @xml_file.parse
+        assert_equal({:new=>{"company"=>2, "user"=>2, "location"=>3, "address"=>3, "transactable"=>4, "photo"=>4}, :updated=>{}}, @xml_file.get_summary)
+        @xml_file = FactoryGirl.create(:xml_template_file)
+        @xml_file.parse
+        assert_equal({:new=>{}, :updated=>{"company"=>2, "user"=>2, "location"=>3, "address"=>3, "transactable"=>4}}, @xml_file.get_summary)
+      end
+    end
+
+    context 'logger' do
+
+      should 'not log anything if all entities are valid' do
+        @xml_file = FactoryGirl.create(:xml_template_file)
+        @xml_file.parse
+        assert_equal '', @xml_file.get_parse_result
+      end
+
+      should 'log company errors' do
+        @xml_file = FactoryGirl.create(:xml_template_file_invalid_company)
+        @xml_file.parse
+        assert_equal "Validation error for Company 1: Name can't be blank. Ignoring all children.", @xml_file.get_parse_result.strip
+      end
+
+      should 'log that there are no valid users for company' do
+        @xml_file = FactoryGirl.create(:xml_template_file_no_valid_users)
+        assert_no_difference 'Company.count' do
+          @xml_file.parse
+        end
+        assert_equal "Validation error for User user2@example.com: Name can't be blank. Ignoring all children.\nCompany 1 has no valid user, skipping", @xml_file.get_parse_result.strip
+      end
+
+      should 'log location address errors' do
+        @xml_file = FactoryGirl.create(:xml_template_file_invalid_location_address)
+        @xml_file.parse
+        assert_equal "Validation error for Address : Address can't be blank, Latitude can't be blank, and Longitude can't be blank. Ignoring all children.", @xml_file.get_parse_result.strip
+      end
+
+      should 'log transactable errors' do
+        @xml_file = FactoryGirl.create(:xml_template_file_invalid_transactable)
+        @xml_file.parse
+        assert_equal "Validation error for Transactable 1: Free must be free if no prices are provided and My attribute can't be blank. Ignoring all children.", @xml_file.get_parse_result.strip
+      end
+
+    end
+
   end
 
   def get_absolute_file_path(name)

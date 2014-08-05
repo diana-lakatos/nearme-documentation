@@ -7,6 +7,7 @@ class DataUpload < ActiveRecord::Base
   belongs_to :instance
   belongs_to :transactable_type
   belongs_to :uploader, class_name: 'User'
+  serialize :parse_summary, Hash
 
   mount_uploader :csv_file, DataImportFileUploader
   mount_uploader :xml_file, DataImportFileUploader

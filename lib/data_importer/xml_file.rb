@@ -1,11 +1,25 @@
 class DataImporter::XmlFile < DataImporter::File
 
-  def initialize(path, transactable_type = nil)
+  def initialize(path, transactable_type = nil, logger = nil, tracker = nil)
     super(path)
     @instance = PlatformContext.current.instance
     @transactable_type = transactable_type || @instance.transactable_types.first
-    @users_to_get_invitation_email = {}
+    @users_emails = []
+    @new_users_emails = {}
     @location_types = {}
+    @logger = logger || DataImporter::Logger.new
+    @tracker = tracker || DataImporter::SummaryTracker.new
+  end
+
+  def get_parse_result
+    @logger.to_s
+  end
+
+  def get_summary
+    {
+     new: @tracker.new_entities,
+     updated: @tracker.updated_entities
+    }
   end
 
   def listing_type_for_name(listing_name)
@@ -32,7 +46,7 @@ class DataImporter::XmlFile < DataImporter::File
         end
       end
     end
-    send_invitation_emails
+    send_invitation_emails if @send_invitations
   end
 
   def parse_instance
@@ -48,32 +62,54 @@ class DataImporter::XmlFile < DataImporter::File
       external_id = company_node['id']
       email = company_node.xpath('email').text.downcase
       name = company_node.xpath('name').text
-      @company = Company.find_by_external_id(external_id) || Company.create do |c|
-        assign_attributes(c, company_node)
-        c.external_id = external_id
+      @company = Company.find_by_external_id(external_id)
+      if !@company
+        @company = Company.new do |c|
+          assign_attributes(c, company_node)
+          c.external_id = external_id
+        end
       end
-      company_node.xpath('users//user').each do |user_node|
-        email = user_node.xpath('email').text.downcase
-        name = user_node.xpath('name').text
-        @user = @instance.users.find_by_email(email)
-        if @user.nil?
-          @user = @company.users.create do |u|
-            password =  SecureRandom.hex(8)
-            store_credentials(email, password)
-            u.email = email
-            u.password = password
-            u.name = name
-            u.country_name = 'United States'
-            u.instance_id = PlatformContext.current.instance.id
-            @users_to_get_invitation_email[email] = password if @send_invitations
+      @tracker.increment(@company)
+      if @company.save
+        company_node.xpath('users//user').each do |user_node|
+          email = user_node.xpath('email').text.downcase
+          name = user_node.xpath('name').text
+          @user = @instance.users.find_by_email(email)
+          if @user.nil?
+            @user = @company.users.build do |u|
+              password =  SecureRandom.hex(8)
+              store_credentials(email, password)
+              u.email = email
+              u.password = password
+              u.name = name
+              u.country_name = 'United States'
+              u.instance_id = PlatformContext.current.instance.id
+              @new_users_emails[email] = password
+            end
+          end
+          @tracker.increment(@user) unless @users_emails.include?(@user.email)
+          @users_emails << email
+          if @user.save
+            @company.creator_id = @user.id if @company.creator.nil?
+            @company.users << @user unless @company.users.include?(@user)
+            @company.save!
+          else
+            @tracker.decrement(@user) unless @user.persisted? && @users_emails.include?(@user.email)
+            @new_users_emails.delete(email)
+            @logger.log_validation_error(@user, @user.email)
           end
         end
-        @company.creator_id = @user.id if @company.creator.nil?
-        @company.users << @user unless @company.users.include?(@user)
-        @company.save!
+        if @company.creator.present?
+          @node = company_node
+          yield
+        else
+          @logger.log("Company #{@company.external_id} has no valid user, skipping")
+          @company.destroy
+        end
+      else
+        @tracker.decrement(@company)
+        @logger.log_validation_error(@company, @company.external_id)
       end
-      @node = company_node
-      yield
     end
   end
 
@@ -85,8 +121,13 @@ class DataImporter::XmlFile < DataImporter::File
       @location.location_type = find_location_type(location_node.xpath('location_type').text)
       @node = location_node
       @object = @location
-      yield
-      @location.save!
+      if @location.valid?
+        @tracker.increment(@location)
+        yield
+        @location.save
+      else
+        @logger.log_validation_error(@location, @location.address)
+      end
     end
   end
 
@@ -95,7 +136,11 @@ class DataImporter::XmlFile < DataImporter::File
       @address = @location.location_address || @location.build_location_address
       assign_attributes(@address, address_node)
       @address.formatted_address = [@address.address, @address.suburb, @address.city, @address.postcode].compact.join(', ')
-      @address.save!
+      @tracker.increment(@address)
+      if !@address.save
+        @tracker.decrement(@address)
+        @logger.log_validation_error(@address, @address.address)
+      end
     end
   end
 
@@ -108,8 +153,13 @@ class DataImporter::XmlFile < DataImporter::File
       @node = listing_node
       @object = @listing
       @listing.photo_not_required = true
-      yield
-      @listing.save!
+      if @listing.valid?
+        @tracker.increment(@listing)
+        yield
+        @listing.save!
+      else
+        @logger.log_validation_error(@listing, @listing.external_id)
+      end
     end
   end
 
@@ -122,9 +172,9 @@ class DataImporter::XmlFile < DataImporter::File
 
   def parse_photos
     @node.xpath('photos/photo').each do |photo_node|
-
       if !@listing.photos.map(&:image_original_url).include?(photo_node.xpath('image_original_url').text)
         @photo = @listing.photos.build(image_original_url: photo_node.xpath('image_original_url').text)
+        @tracker.increment(@photo)
       end
     end
   end
@@ -157,7 +207,7 @@ class DataImporter::XmlFile < DataImporter::File
   end
 
   def send_invitation_emails
-    @users_to_get_invitation_email.each do |email, password|
+    @new_users_emails.each do |email, password|
       PostActionMailer.enqueue.user_created_invitation(User.find_by_email(email), password)
     end
   end

@@ -396,5 +396,196 @@ FactoryGirl.define do
     end
   end
 
+  factory :xml_template_file_invalid_company, class: DataImporter::XmlFile  do
+    skip_create
+
+    initialize_with do
+      begin
+        @transactable_type = FactoryGirl.create(:transactable_type_csv_template)
+        path = "#{Dir.tmpdir}/template_xml_time_#{Time.now.to_i}.xml"
+        FileUtils.touch(path)
+        File.open(path, 'w') do |f|
+          f.write <<-XML
+<?xml version="1.0"?>
+<companies send_invitation="false">
+  <company id="1">
+  </company>
+</companies>
+          XML
+        end
+        new(path)
+      end
+    end
+  end
+
+  factory :xml_template_file_no_valid_users, class: DataImporter::XmlFile  do
+    skip_create
+
+    initialize_with do
+      begin
+        @transactable_type = FactoryGirl.create(:transactable_type_csv_template)
+        path = "#{Dir.tmpdir}/template_xml_time_#{Time.now.to_i}.xml"
+        FileUtils.touch(path)
+        File.open(path, 'w') do |f|
+          f.write <<-XML
+<?xml version="1.0"?>
+<companies send_invitation="false">
+  <company id="1">
+    <name><![CDATA[My Company's]]></name>
+    <url><![CDATA[www.mycompany.example.com]]></url>
+    <email><![CDATA[company@example.com]]></email>
+    <external_id><![CDATA[1]]></external_id>
+    <users>
+      <user>
+        <email><![CDATA[user2@example.com]]></email>
+      </user>
+    </users>
+  </company>
+</companies>
+          XML
+        end
+        new(path)
+      end
+    end
+  end
+
+  factory :xml_template_file_invalid_location, class: DataImporter::XmlFile  do
+    skip_create
+
+    initialize_with do
+      begin
+        @transactable_type = FactoryGirl.create(:transactable_type_csv_template)
+        path = "#{Dir.tmpdir}/template_xml_time_#{Time.now.to_i}.xml"
+        FileUtils.touch(path)
+        File.open(path, 'w') do |f|
+          f.write <<-XML
+<?xml version="1.0"?>
+<companies send_invitation="false">
+  <company id="1">
+    <name><![CDATA[My Company's]]></name>
+    <url><![CDATA[www.mycompany.example.com]]></url>
+    <email><![CDATA[company@example.com]]></email>
+    <external_id><![CDATA[1]]></external_id>
+    <users>
+      <user>
+        <email><![CDATA[user2@example.com]]></email>
+        <name>User</name>
+      </user>
+    </users>
+    <location>
+      <location_address>
+      </location_address>
+     </location>
+  </company>
+</companies>
+          XML
+        end
+        new(path)
+      end
+    end
+  end
+
+  factory :xml_template_file_invalid_location_address, class: DataImporter::XmlFile  do
+    skip_create
+
+    initialize_with do
+      begin
+        @transactable_type = FactoryGirl.create(:transactable_type_csv_template)
+        path = "#{Dir.tmpdir}/template_xml_time_#{Time.now.to_i}.xml"
+        FileUtils.touch(path)
+        File.open(path, 'w') do |f|
+          f.write <<-XML
+<?xml version="1.0"?>
+<companies send_invitation="false">
+  <company id="1">
+    <name><![CDATA[My Company's]]></name>
+    <url><![CDATA[www.mycompany.example.com]]></url>
+    <email><![CDATA[company@example.com]]></email>
+    <external_id><![CDATA[1]]></external_id>
+    <users>
+      <user>
+        <email><![CDATA[user2@example.com]]></email>
+        <name>User</name>
+      </user>
+    </users>
+    <locations>
+      <location>
+        <email><![CDATA[location@example.com]]></email>
+        <location_type><![CDATA[My Type]]></location_type>
+        <description></description>
+        <special_notes><![CDATA[Be careful, cool place!]]></special_notes>
+        <location_address>
+        </location_address>
+      </location>
+    </locations>
+  </company>
+</companies>
+          XML
+        end
+        new(path)
+      end
+    end
+  end
+
+  factory :xml_template_file_invalid_transactable, class: DataImporter::XmlFile  do
+    skip_create
+
+    initialize_with do
+      begin
+        @transactable_type = FactoryGirl.create(:transactable_type_csv_template)
+        path = "#{Dir.tmpdir}/template_xml_time_#{Time.now.to_i}.xml"
+        FileUtils.touch(path)
+        File.open(path, 'w') do |f|
+          f.write <<-XML
+<?xml version="1.0"?>
+<companies send_invitation="false">
+  <company id="1">
+    <name><![CDATA[My Company's]]></name>
+    <url><![CDATA[www.mycompany.example.com]]></url>
+    <email><![CDATA[company@example.com]]></email>
+    <external_id><![CDATA[1]]></external_id>
+    <users>
+      <user>
+        <email><![CDATA[user2@example.com]]></email>
+        <name>User</name>
+      </user>
+    </users>
+    <locations>
+      <location>
+        <email><![CDATA[location@example.com]]></email>
+        <location_type><![CDATA[My Type]]></location_type>
+        <description></description>
+        <special_notes><![CDATA[Be careful, cool place!]]></special_notes>
+        <location_address>
+          <address><![CDATA[Pulawska 34/2B]]></address>
+          <city><![CDATA[Warsaw]]></city>
+          <street><![CDATA[Ursynowska]]></street>
+          <state><![CDATA[Mazowieckie]]></state>
+          <postcode><![CDATA[02-605]]></postcode>
+        </location_address>
+        <listings>
+          <listing id="1">
+            <photos>
+              <photo>
+                <image_original_url><![CDATA[http://www.example.com/image.jpg]]></image_original_url>
+              </photo>
+              <photo>
+                <image_original_url><![CDATA[http://www.example.com/photo.jpg]]></image_original_url>
+              </photo>
+            </photos>
+            <availability_rules/>
+          </listing>
+        </listings>
+      </location>
+    </locations>
+  </company>
+</companies>
+          XML
+        end
+        new(path)
+      end
+    end
+  end
+
 end
 
