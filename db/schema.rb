@@ -812,6 +812,9 @@ ActiveRecord::Schema.define(version: 20140730082848) do
     t.string   "company"
     t.string   "marketplace_type"
     t.string   "referer"
+    t.string   "lead_source"
+    t.string   "location"
+    t.string   "previous_research"
   end
 
   create_table "platform_demo_requests", force: true do |t|

@@ -1,13 +1,15 @@
 class Listing::Search::Params::Web < Listing::Search::Params
   attr :location_string
-  attr_reader :listing_types_ids, :location_types_ids, :industries_ids, :lntype, :lgtype, :lgpricing, :lntypes, :sort
+  attr_reader :listing_types_ids, :location_types_ids, :attribute_values, :industries_ids, :lntype, :lgtype, :lgpricing, :lntypes, :lgattribute, :sort
 
   def initialize(options)
     super
     @location_types_ids = @options[:location_types_ids]
     @listing_types_ids = @options[:listing_types_ids]
+    @attribute_values = @options[:attribute_values]
     @lntype = @options[:lntype].blank? ? nil : @options[:lntype]
     @lgtype = @options[:lgtype].blank? ? nil : @options[:lgtype]
+    @lgattribute = @options[:lgattribute].blank? ? nil : @options[:lgattribute]
     @lgpricing = @options[:lgpricing]
     @sort = (@options[:sort].presence || 'relevance').inquiry
   end
@@ -83,6 +85,19 @@ class Listing::Search::Params::Web < Listing::Search::Params
 
   def lgtypes_filters
     lgtypes
+  end
+
+  def lgattributes
+    return [] if @lgattribute.nil?
+    @lgattributes ||= @lgattribute.to_s.split(',')
+  end
+
+  def attribute_values
+    @attribute_values.presence || (lgattributes.empty? ? nil : lgattributes)
+  end
+
+  def attribute_values_filters
+    @lgattribute.presence ? @lgattribute.to_s.split(',') : nil
   end
 
   def listing_types_ids

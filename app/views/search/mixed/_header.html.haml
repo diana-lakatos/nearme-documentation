@@ -4,6 +4,7 @@
       = hidden_field_tag :lntype, @searcher.search.lntype
       = hidden_field_tag :lgtype, @searcher.search.lgtype
       = hidden_field_tag :lgpricing, @searcher.search.lgpricing
+      = hidden_field_tag :lgattribute, @searcher.search.lgattribute
       .row-fluid
         .span12
           - if platform_context.instance.default_search_view.present?

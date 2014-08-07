@@ -1,7 +1,7 @@
 class @Clipboard
   @initialize: (scope = $('body')) ->
     ZeroClipboard.setDefaults(
-      moviePath: '<%= asset_path('vendor/ZeroClipboard.swf') %>'
+      moviePath: '<%= asset_url('vendor/ZeroClipboard.swf') %>'
       hoverClass: 'hover'
     )
     clip = new ZeroClipboard($('[data-clipboard-text]'))

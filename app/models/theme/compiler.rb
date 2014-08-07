@@ -53,6 +53,10 @@ class Theme::Compiler
     # compiling our standard stylesheets with overridden variables specific
     # to the theme.
     environment = Rails.application.assets
+
+    # skip digests (mainly for fonts)
+    environment.context_class.digest_assets = false
+
     context = Rails.application.assets.context_class.new(
       environment, css_template_path.to_s, Pathname.new(css_template_path)
     )

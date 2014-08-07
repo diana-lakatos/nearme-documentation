@@ -25,8 +25,7 @@ DesksnearMe::Application.configure do
   config.active_support.deprecation = :notify
 
   config.assets.compile = false
-  config.assets.compress = true
-  config.assets.js_compressor = :uglifier
+  config.assets.manifest = "#{Rails.root}/config/manifest.json"
 
   # Clould services credentials
   CarrierWave.configure do |config|
@@ -40,7 +39,8 @@ DesksnearMe::Application.configure do
     config.storage              = :fog
   end
 
-  config.action_controller.asset_host = "//desksnear.me"
+  config.action_controller.asset_host = "//near-me-assets.s3.amazonaws.com"
+  config.action_mailer.asset_host = "http://near-me-assets.s3.amazonaws.com"
 
   # Production specific app keys/secrets for social properties.
   config.linkedin_key = "2qyp4vpjl8uh"

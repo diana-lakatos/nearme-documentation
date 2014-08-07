@@ -4,9 +4,11 @@ DesksnearMe::Application.routes.draw do
     mount Spree::Core::Engine, at: '/instance_buy_sell_admin'
   end
 
+  get 'ping', to: 'ping#index'
+
   mount Ckeditor::Engine => '/ckeditor'
 
-  constraints host: 'near-me.com' do
+  constraints host: ['near-me.com', 'www.near-me.com'] do
     get '/features-setup', :to => 'platform_home#features_setup'
     get '/features-design', :to => 'platform_home#features_design'
     get '/features-manage', :to => 'platform_home#features_manage'

@@ -9,7 +9,7 @@ end
 
 Given(/^I open a support ticket$/) do
   visit support_root_path
-  click_link 'Open a Support Ticket'
+  click_link 'Open a Ticket'
   fill_in "Subject", with: "My first support ticket"
   fill_in "Message", with: "Yet another ticket message"
   click_button "Create ticket"
@@ -17,7 +17,7 @@ end
 
 Given(/^I open a guest support ticket$/) do
   visit support_root_path
-  click_link 'Open a Support Ticket'
+  click_link 'Open a Ticket'
   fill_in "Full name", with: "Jimmy Banana"
   fill_in "Email", with: "jimmy@banana.eu"
   fill_in "Subject", with: "My first support ticket"
