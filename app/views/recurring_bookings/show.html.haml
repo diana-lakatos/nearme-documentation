@@ -1,0 +1,32 @@
+- title "Bookings (#{@reservations.count})"
+
+%section#reservations
+  .row-fluid
+    .span8.offset2
+      %h1
+        %span.ico-bookings.padding My Bookings
+      .box
+        %header
+          .button-links
+            %ul
+              %li
+                = recurring_booking_reservations_navigation_link(@recurring_booking, 'upcoming')
+              %li
+                = recurring_booking_reservations_navigation_link(@recurring_booking, 'archived')
+
+        %h2
+          = @recurring_booking.schedule
+        %h3#recurring-booking-summary
+          %a.dates{href: '#', data: { :dates => @recurring_booking.dates_to_array(@reservations) } }
+            - if @recurring_booking.start_minute && @recurring_booking.end_minute
+              = @recurring_booking.hourly_summary(true)
+            - else
+              = @recurring_booking.short_dates
+          - content_for :domready do
+            new Reservation.UserReservationController($("#recurring-booking-summary"))
+
+
+        = render partial: 'reservations/index', locals: { only_reservations: true }
+
+= render 'reservations/modals'
+

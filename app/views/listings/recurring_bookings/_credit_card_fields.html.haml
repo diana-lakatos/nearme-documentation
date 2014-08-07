@@ -1,0 +1,45 @@
+.credit-card-fields
+  - if @recurring_booking_request.errors[:cc].present?
+    .flash.error
+      %ul
+        - @recurring_booking_request.errors[:cc].each do |e|
+          %li= e
+
+  .padding-bottom.submit-secure-payment
+    .row-fluid
+      .span5.text
+        .ico-lock Submit a secure payment.
+      .span7.credit-card-images
+        = image_tag 'credit-cards.png', alt: "Visa, Mastercard, American Express, Discover"
+      .clearfix
+
+  .padding-bottom.credit-card
+    .span6.card-info{class: "#{"error" if f.object.errors.include?(:number).present?}"}
+      = f.label :card_number, "Card number", class: 'control-label'
+      .controls.card-number.input-icon-holder-right
+        = f.input_field :card_number, required: true, placeholder: '1234 5678 9123 4567', class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: "off"
+        %span.ico-credit-card
+      - if f.object.errors[:number].present?
+        %p.error-block
+          = f.object.errors[:number].first
+
+    .span3.card-info.expiry.column.left{class: "#{"error" if f.object.errors.include?(:exp_month).present? or f.object.errors.include?(:exp_year).present?}"}
+      = f.label :card_expires, "Expiration date", class: 'control-label'
+      .controls.card-expires
+        = f.input_field :card_expires, input_html: {size: 6}, placeholder: 'MM/YYYY', required: true, class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: "off"
+      - if f.object.errors[:exp_month].present?
+        %p.error-block
+          = f.object.errors[:exp_month].first
+      - if f.object.errors[:exp_year].present?
+        %p.error-block
+          = f.object.errors[:exp_year].first
+
+    .span3.card-info.security.column.right{class: "#{"error" if f.object.errors.include?(:cvc).present?}"}
+      = f.label :card_code, "Security code", class: 'control-label'
+      .controls.card-code
+        = f.input_field :card_code, input_html: {size: 3}, placeholder: 'CCV', required: true, class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: "off"
+      - if f.object.errors[:cvc].present?
+        %p.error-block
+          = f.object.errors[:cvc].first
+
+  .clearfix

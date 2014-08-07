@@ -135,15 +135,16 @@ class ReservationTest < ActiveSupport::TestCase
         cancellation_policy_hours_for_cancellation: 48,
         cancellation_policy_penalty_percentage: 50})
       ReservationCharge.any_instance.expects(:capture).once
+      Reservation.any_instance.stubs(:billing_authorization).returns(stub()).at_least(0)
     end
 
     should 'create reservation charge with cancellation policy if enabled ignoring updated values' do
-      @reservation = FactoryGirl.create(:reservation_with_credit_card, :state => 'unconfirmed', cancellation_policy_hours_for_cancellation: 24, cancellation_policy_penalty_percentage: 60)
+      @reservation = FactoryGirl.create(:reservation_with_credit_card, :state => 'unconfirmed', cancellation_policy_hours_for_cancellation: 47, cancellation_policy_penalty_percentage: 60)
       assert_difference 'ReservationCharge.count' do
         @reservation.confirm!
       end
       @reservation_charge = @reservation.reservation_charges.last
-      assert_equal 24, @reservation_charge.cancellation_policy_hours_for_cancellation
+      assert_equal 47, @reservation_charge.cancellation_policy_hours_for_cancellation
       assert_equal 60, @reservation_charge.cancellation_policy_penalty_percentage
     end
 
@@ -600,4 +601,37 @@ class ReservationTest < ActiveSupport::TestCase
     end
 
   end
+
+  context 'attempt payment capture' do
+
+    setup do
+      @reservation = FactoryGirl.create(:reservation)
+    end
+
+    should 'not attempt to capture payment' do
+      @reservation.stubs(:billing_authorization).returns(nil).at_least(0)
+      @reservation.stubs(:recurring_booking_id).returns(1).at_least(0)
+      @reservation.expects(:attempt_payment_capture).never
+      @reservation.expects(:schedule_payment_capture).once
+      @reservation.confirm!
+    end
+
+    should 'do not schedule payment capture if has no billing authorization but also do not belong to recurring booking ' do
+      @reservation.stubs(:billing_authorization).returns(nil).at_least(0)
+      @reservation.stubs(:recurring_booking_id).returns(nil).at_least(0)
+      @reservation.expects(:schedule_payment_capture).never
+      @reservation.confirm!
+    end
+
+    should 'attempt if have billing authorization' do
+      @reservation.stubs(:billing_authorization).returns(stub()).at_least(0)
+      @reservation.stubs(:recurring_booking_id).returns(nil).at_least(0)
+      @reservation.expects(:attempt_payment_capture).once
+      @reservation.expects(:schedule_payment_capture).never
+      @reservation.confirm!
+    end
+
+  end
+
 end
+

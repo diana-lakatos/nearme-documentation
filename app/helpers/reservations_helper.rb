@@ -12,6 +12,10 @@ module ReservationsHelper
     (link_to(content_tag(:span, action.titleize), self.send("#{action}_reservations_path"), :class => "upcoming-reservations btn btn-medium btn-gray#{action==params[:action] ? " active" : "-darker"}")).html_safe
   end
 
+  def recurring_booking_reservations_navigation_link(recurring_booking, action)
+    (link_to(content_tag(:span, action.titleize), self.send("#{action}_recurring_booking_path", recurring_booking), :class => "upcoming-reservations btn btn-medium btn-gray#{action==params[:action] ? " active" : "-darker"}")).html_safe
+  end
+
   def upcoming_reservation_count
     @upcoming_reservation_count ||= current_user.reservations.not_archived.count
   end

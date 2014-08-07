@@ -39,13 +39,13 @@ class ReservationCharge < ActiveRecord::Base
 
   scope :total_by_currency, -> {
     paid.group('reservation_charges.currency').
-      select('
+    select('
         reservation_charges.currency,
         SUM(
           reservation_charges.subtotal_amount_cents
           + reservation_charges.service_fee_amount_guest_cents
         )
-      ')
+           ')
   }
 
   # === Callbacks
@@ -77,15 +77,32 @@ class ReservationCharge < ActiveRecord::Base
     return if paid?
 
     # Generates a ChargeAttempt with this record as the reference.
-    billing_gateway.charge(total_amount_cents, self, reservation.billing_authorization.token)
-    touch(:paid_at)
+
+    if reservation.billing_authorization.nil?
+
+      response = billing_gateway.authorize(reservation.total_amount_cents, reservation.credit_card.token, { customer: reservation.credit_card.instance_client.customer_id })
+      if response[:error].present?
+        raise Billing::Gateway::PaymentAttemptError, "Failed authorization of credit card token of InstanceClient(id=#{reservation.owner.instance_clients.first.try(:id)}) - #{response[:error]}"
+      else
+        reservation.create_billing_authorization(
+          token: response[:token],
+          payment_gateway_class: billing_gateway.class.name,
+          payment_gateway_mode: PlatformContext.current.instance.test_mode? ? "test" : "live"
+        )
+      end
+    end
 
     begin
+      billing_gateway.charge(total_amount_cents, self, reservation.billing_authorization.token)
+      touch(:paid_at)
+
       ReservationChargeTrackerJob.perform_later(reservation.date.end_of_day, reservation.id)
-    rescue
+    rescue => e
       # Needs to be retried at a later time...
       touch(:failed_at)
+      update_column(:recurring_booking_error, e)
     end
+
   end
 
   def refund
@@ -125,11 +142,11 @@ class ReservationCharge < ActiveRecord::Base
   private
 
   def billing_gateway
-    @billing_gateway ||= if reservation.billing_authorization.payment_gateway_class.present?
-       reservation.billing_authorization.payment_gateway_class.to_s.constantize.new(reservation.owner, instance, currency)
-     else
-        Billing::Gateway::Incoming.new(reservation.owner, instance, currency)
-     end
+    @billing_gateway ||= if reservation.billing_authorization.try(:payment_gateway_class).present?
+                           reservation.billing_authorization.payment_gateway_class.to_s.constantize.new(reservation.owner, instance, currency)
+                         else
+                           Billing::Gateway::Incoming.new(reservation.owner, instance, currency)
+                         end
   end
 
   def assign_currency

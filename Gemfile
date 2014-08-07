@@ -48,6 +48,9 @@ gem 'ri_cal'
 gem 'ffaker', '~> 1.16'
 gem 'draper'
 
+gem 'ice_cube'
+gem 'recurring_select'
+
 gem 'i18n-active_record',
     git: 'git://github.com/svenfuchs/i18n-active_record.git',
     require: 'i18n/active_record'

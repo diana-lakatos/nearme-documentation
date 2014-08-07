@@ -63,7 +63,9 @@ class Bookings.Controller
     startElement = @container.find(".calendar-wrapper.date-start")
     endElement = @container.find(".calendar-wrapper.date-end")
 
-    if @listing.isReservedHourly()
+    if @listing.isRecurringBooking()
+      @setupRecurringBookingDatepicker(startElement, endElement)
+    else if @listing.isReservedHourly()
       @datepicker = new window.Datepicker(
         trigger: startElement,
 
@@ -98,14 +100,20 @@ class Bookings.Controller
   # Sets up the time picker view controller which handles the user selecting the
   # start/end times for the reservation.
   initializeTimePicker: ->
+    options = {
+      openMinute: @listing.data.earliest_open_minute,
+      closeMinute: @listing.data.latest_close_minute
+    }
+
+    if @listingData.initial_bookings && @listingData.initial_bookings.start_minute && @listingData.initial_bookings.end_minute
+      options.startMinute = @listingData.initial_bookings.start_minute
+      options.endMinute = @listingData.initial_bookings.end_minute
     @timePicker = new Bookings.TimePicker(
       @listing,
       @container.find('.time-picker'),
-      {
-        openMinute: @listing.data.earliest_open_minute,
-        closeMinute: @listing.data.latest_close_minute
-      }
+      options
     )
+
 
     @timePicker.on 'change', =>
       @updateTimesFromTimePicker()
@@ -119,7 +127,10 @@ class Bookings.Controller
       @listing.setDefaultQuantity(@listingData.initial_bookings.quantity)
 
       # Map bookings to JS dates
-      (DNM.util.Date.idToDate(date) for date in @listingData.initial_bookings.dates)
+      if @listing.isRecurringBooking()
+        [DNM.util.Date.idToDate(@listingData.initial_bookings.start_on), DNM.util.Date.idToDate(@listingData.initial_bookings.end_on)]
+      else
+        (DNM.util.Date.idToDate(date) for date in @listingData.initial_bookings.dates)
     else
       [@listing.firstAvailableDate]
 
@@ -166,12 +177,26 @@ class Bookings.Controller
   updateSummary: ->
     @totalElement.text((@listing.bookingSubtotal()/100).toFixed(2))
 
+  setupRecurringBookingDatepicker: (startElement, endElement) ->
+    @datepicker = new Bookings.RecurringDatepicker(
+      listing: @listing
+      startElement: startElement
+      endElement: endElement
+    )
+    @datepicker.on 'startOnChanged', (date) =>
+      @listing.setStartOn(date)
+
+    @datepicker.on 'endOnChanged', (date) =>
+      @listing.setEndOn(date)
+
   reviewBooking: ->
     return unless @listing.isBooked()
     @disableBookButton()
 
     @bookForm.find('[name="reservation_request[quantity]"]').val(@listing.reservationOptions().quantity)
     @bookForm.find('[name="reservation_request[dates]"]').val(@listing.reservationOptions().dates)
+    @bookForm.find('[name="reservation_request[start_on]"]').val(@listing.reservationOptions().start_on)
+    @bookForm.find('[name="reservation_request[end_on]"]').val(@listing.reservationOptions().end_on)
     if @listing.isReservedHourly()
       @bookForm.find('[name="reservation_request[start_minute]"]').val(@listing.reservationOptions().start_minute)
       @bookForm.find('[name="reservation_request[end_minute]"]').val(@listing.reservationOptions().end_minute)

@@ -6,15 +6,18 @@
           = reservation.my_booking_status_info
       .span12.reservation-information
         %div{:class => reservation.archived? ? 'span6' : 'span5'}
-          = link_to reservation.listing.name, location_path(reservation.listing.location, reservation.listing)
-          %br
-          %span.address= link_to reservation.listing.location.address, "http://maps.apple.com/?q=#{reservation.listing.location.address}", target: '_blank'
+          - if reservation.listing.present?
+            = link_to reservation.listing.try(:name), location_path(reservation.listing.location, reservation.listing)
+            %br
+            %span.address= link_to reservation.listing.location.address, "http://maps.apple.com/?q=#{reservation.listing.location.address}", target: '_blank'
+          - else
+            [listing deleted]
         .span2
           = reservation.total_price
           %br
-          %span= reservation.state.capitalize
+          %span= reservation.state.capitalize.humanize
         %div{:class => reservation.archived? ? 'span3' : 'span2'}
-          - if reservation.listing.hourly_reservations?
+          - if reservation.periods.first.read_attribute(:start_minute).present?
             - reservation_period = reservation.periods.first.decorate
             %a.dates{href: '#', 'data-reservation-hours' => reservation_period.hourly_summary(true)}
               = reservation.short_dates
@@ -23,7 +26,7 @@
               = reservation.short_dates
           .clearfix
           %span
-            - unless reservation.unconfirmed?
+            - if reservation.confirmed?
               = link_to export_reservation_path(reservation, :format => :ics) do
                 %span.ical Add to iCal
                 %span.ico-download.ical

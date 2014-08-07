@@ -36,14 +36,16 @@ class ReservationsController < ApplicationController
 
   def upcoming
     @reservation  = reservation if params[:id]
-    @reservations = reservations.not_archived.to_a.sort_by(&:date)
+    @reservations = reservations.no_recurring.not_archived.to_a.sort_by(&:date)
+    @recurring_bookings = recurring_bookings.not_archived.order(:start_on, :end_on)
 
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
     render :index
   end
 
   def archived
-    @reservations = reservations.archived.to_a.sort_by(&:date)
+    @reservations = reservations.no_recurring.archived.to_a.sort_by(&:date)
+    @recurring_bookings = recurring_bookings.archived.order(:start_on, :end_on)
     render :index
   end
 
@@ -68,15 +70,25 @@ class ReservationsController < ApplicationController
     upcoming
   end
 
+  def recurring_booking_successful
+    @recurring_booking = current_user.recurring_bookings.find(params[:id])
+    params[:id] = nil
+    upcoming
+  end
+
   protected
 
   def reservations
     @reservations ||= current_user.reservations
   end
 
+  def recurring_bookings
+    @recurring_bookings ||= current_user.recurring_bookings
+  end
+
   def reservation
     begin
-      @reservation ||= reservations.find(params[:id])
+      @reservation ||= current_user.reservations.find(params[:id])
     rescue ActiveRecord::RecordNotFound
       raise Reservation::NotFound
     end

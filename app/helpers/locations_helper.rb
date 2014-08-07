@@ -12,9 +12,7 @@ module LocationsHelper
 
   def location_listings_json(location = @location)
     listings = @listings.presence || location.listings
-    listings.map { |listing|
-      listing_booking_data(listing)
-    }.to_json
+    listings.map { |listing| listing_booking_data(listing) }.to_json
   end
 
   def location_contact_phone(location)
@@ -27,9 +25,7 @@ module LocationsHelper
 
   def location_contact_email(location)
     if location.email.present?
-      content_tag(:p,
-        content_tag(:span, location.email, class: 'ico-mail padding')
-      )
+      content_tag(:p, content_tag(:span, location.email, class: 'ico-mail padding'))
     end
   end
 

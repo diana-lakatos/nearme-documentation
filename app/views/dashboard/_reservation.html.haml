@@ -12,7 +12,7 @@
           - else
             = "#{reservation.owner_including_deleted} (Deleted)"
           %br
-          %span.address= link_to reservation.listing.name, location_path(reservation.listing.location, reservation.listing) 
+          %span.address= link_to reservation.listing.name, location_path(reservation.listing.location, reservation.listing)
         .span2
           = reservation.total_price
           %br
@@ -33,4 +33,4 @@
         - unless reservation.archived?
           .span2{:class => reservation.manage_guests_action_column_class}
             .actions
-              = render :partial => "owner_actions", :locals => {:reservation => reservation}
+              = render :partial => "dashboard/owner_actions", :locals => {:reservation => reservation}

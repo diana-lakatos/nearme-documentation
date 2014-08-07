@@ -1,0 +1,16 @@
+- only_reservations ||= false
+.reservation-list
+  - if @guest_list.reservations.empty? && !only_reservations && @guest_list.recurring_bookings.empty?
+    .no-reservations
+      = no_reservations_info_for_state(@guest_list.state)
+  - else
+    -if  !only_reservations
+      %ul
+        - @guest_list.recurring_bookings.each do |recurring_booking|
+          %li
+            = render 'dashboard/recurring_booking', recurring_booking: recurring_booking
+
+    %ul
+      - @guest_list.reservations.each do |reservation|
+        %li
+          = render 'dashboard/reservation', reservation: reservation
