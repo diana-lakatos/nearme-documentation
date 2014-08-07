@@ -20,6 +20,8 @@ class PlatformContext::RackSetter
         I18n.backend.backends.first.instance_id = ::PlatformContext.current.instance.id
       end
       @app.call(env)
+    elsif request.path_info == '/ping'
+      @app.call(env)
     else
       [302, {"Location" => 'http://near-me.com/?domain_not_valid=true'}, self]
     end

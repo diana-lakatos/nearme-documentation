@@ -42,7 +42,6 @@
 //= require_tree ./sections
 //
 //= require ./vendor/bootstrap-modal-fullscreen
-
 window.DNM = {
   UI: {},
   initialize : function() {

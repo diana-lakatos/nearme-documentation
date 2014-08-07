@@ -28,7 +28,7 @@
   }
 
   .name {
-    color: $theme_black;
+    color: $black;
   }
 
   .time abbr{
@@ -36,16 +36,16 @@
   }
 
   .text {
-    color: $theme_black;
+    color: $black;
     p {
-      color: $theme_black;
+      color: $black;
     }
   }
 }
 
 .support .list.tickets {
   .text {
-    color: $theme_black;
+    color: $black;
   }
   .ticket {
     padding-top: 0px;
@@ -67,7 +67,7 @@
 }
 
 .support .form {
-  color: $theme_black;
+  color: $black;
 
   .columns {
     .row-fluid {
@@ -95,7 +95,7 @@
     .question {
       cursor: pointer;
 
-      color: $theme_black;
+      color: $black;
     }
 
     .answer {
@@ -110,7 +110,7 @@
     .ticket {
       padding-top: 15px;
       .question {
-        color: $theme_black;
+        color: $black;
         padding-bottom: 8px;
       }
 
@@ -139,7 +139,7 @@
     display: block;
     padding-top: 15px;
     padding-bottom: 25px;
-    color: $theme_black;
+    color: $black;
     text-decoration: underline !important;
   }
 

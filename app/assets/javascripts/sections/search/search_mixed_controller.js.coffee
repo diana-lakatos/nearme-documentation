@@ -153,6 +153,7 @@ class Search.SearchMixedController extends Search.SearchController
       lntype: _.toArray(@container.find('input[name="location_types_ids[]"]:checked').map(-> $(this).val())).join(',')
       lgtype: _.toArray(@container.find('input[name="listing_types_ids[]"]:checked').map(-> $(this).val())).join(',')
       lgpricing: _.toArray(@container.find('input[name="listing_pricing[]"]:checked').map(-> $(this).val())).join(',')
+      lgattribute: _.toArray(@container.find('input[name="attribute_values[]"]:checked').map(-> $(this).val())).join(',')
       sort: @container.find('#sort').val()
       per_page: @container.find('#per_page').val()
       loc: @form.find("input#search").val().replace(', United States', '')
@@ -229,7 +230,7 @@ class Search.SearchMixedController extends Search.SearchController
     params = @getSearchParams()
     filtered_params = []
     for k, param of params
-      if $.inArray(param["name"], ['lgtype', 'lntype', 'loc', 'lgpricing']) > -1
+      if $.inArray(param["name"], ['lgtype', 'lntype', 'loc', 'lgpricing', 'lgattribute']) > -1
         filtered_params.push {name: param["name"], value: param["value"]}
     if @sortValue != 'relevance'
       filtered_params.push {name: 'sort', value: @sortValue}

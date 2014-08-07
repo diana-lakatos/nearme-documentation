@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140730082848) do
+ActiveRecord::Schema.define(version: 20140728221905) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -264,22 +264,6 @@ ActiveRecord::Schema.define(version: 20140730082848) do
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
   end
-
-  create_table "data_uploads", force: true do |t|
-    t.string   "csv_file"
-    t.string   "xml_file"
-    t.text     "options"
-    t.datetime "imported_at"
-    t.integer  "instance_id"
-    t.integer  "uploader_id"
-    t.integer  "transactable_type_id"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "data_uploads", ["instance_id"], name: "index_data_uploads_on_instance_id", using: :btree
-  add_index "data_uploads", ["transactable_type_id"], name: "index_data_uploads_on_transactable_type_id", using: :btree
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0
@@ -806,12 +790,15 @@ ActiveRecord::Schema.define(version: 20140730082848) do
     t.string   "email"
     t.string   "subject"
     t.text     "comments"
-    t.boolean  "subscribed",       default: false
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.boolean  "subscribed",        default: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.string   "company"
     t.string   "marketplace_type"
     t.string   "referer"
+    t.string   "lead_source"
+    t.string   "location"
+    t.string   "previous_research"
   end
 
   create_table "platform_demo_requests", force: true do |t|
@@ -862,18 +849,16 @@ ActiveRecord::Schema.define(version: 20140730082848) do
     t.integer  "service_fee_amount_guest_cents"
     t.datetime "paid_at"
     t.datetime "failed_at"
-    t.datetime "created_at",                                             null: false
-    t.datetime "updated_at",                                             null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
     t.string   "currency"
     t.datetime "deleted_at"
     t.integer  "payment_transfer_id"
-    t.integer  "service_fee_amount_host_cents",              default: 0, null: false
+    t.integer  "service_fee_amount_host_cents",  default: 0, null: false
     t.datetime "refunded_at"
     t.integer  "instance_id"
     t.integer  "company_id"
     t.integer  "partner_id"
-    t.integer  "cancellation_policy_hours_for_cancellation", default: 0
-    t.integer  "cancellation_policy_penalty_percentage",     default: 0
   end
 
   add_index "reservation_charges", ["company_id"], name: "index_reservation_charges_on_company_id", using: :btree
@@ -914,19 +899,19 @@ ActiveRecord::Schema.define(version: 20140730082848) do
     t.string   "confirmation_email"
     t.integer  "subtotal_amount_cents"
     t.string   "currency"
-    t.datetime "created_at",                                                     null: false
-    t.datetime "updated_at",                                                     null: false
+    t.datetime "created_at",                                             null: false
+    t.datetime "updated_at",                                             null: false
     t.datetime "deleted_at"
     t.text     "comment"
     t.boolean  "create_charge"
-    t.string   "payment_method",                             default: "manual",  null: false
-    t.string   "payment_status",                             default: "unknown", null: false
-    t.integer  "quantity",                                   default: 1,         null: false
+    t.string   "payment_method",                     default: "manual",  null: false
+    t.string   "payment_status",                     default: "unknown", null: false
+    t.integer  "quantity",                           default: 1,         null: false
     t.integer  "service_fee_amount_guest_cents"
     t.string   "rejection_reason"
     t.datetime "request_guest_rating_email_sent_at"
     t.datetime "request_host_rating_email_sent_at"
-    t.integer  "service_fee_amount_host_cents",              default: 0,         null: false
+    t.integer  "service_fee_amount_host_cents",      default: 0,         null: false
     t.integer  "platform_context_detail_id"
     t.string   "platform_context_detail_type"
     t.integer  "instance_id"
@@ -934,11 +919,7 @@ ActiveRecord::Schema.define(version: 20140730082848) do
     t.integer  "administrator_id"
     t.integer  "company_id"
     t.integer  "partner_id"
-    t.boolean  "listings_public",                            default: true
-    t.datetime "confirmed_at"
-    t.datetime "cancelled_at"
-    t.integer  "cancellation_policy_hours_for_cancellation", default: 0
-    t.integer  "cancellation_policy_penalty_percentage",     default: 0
+    t.boolean  "listings_public",                    default: true
   end
 
   add_index "reservations", ["administrator_id"], name: "index_reservations_on_administrator_id", using: :btree
@@ -2122,9 +2103,6 @@ ActiveRecord::Schema.define(version: 20140730082848) do
     t.text     "pricing_options"
     t.text     "pricing_validation"
     t.text     "availability_options"
-    t.datetime "cancellation_policy_enabled"
-    t.integer  "cancellation_policy_hours_for_cancellation", default: 0
-    t.integer  "cancellation_policy_penalty_percentage",     default: 0
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -2149,10 +2127,8 @@ ActiveRecord::Schema.define(version: 20140730082848) do
     t.datetime "updated_at",             null: false
     t.integer  "transactable_type_id"
     t.integer  "parent_transactable_id"
-    t.string   "external_id"
   end
 
-  add_index "transactables", ["external_id"], name: "index_transactables_on_external_id", using: :btree
   add_index "transactables", ["parent_transactable_id"], name: "index_transactables_on_parent_transactable_id", using: :btree
   add_index "transactables", ["properties"], name: "transactables_gin_properties", using: :gin
   add_index "transactables", ["transactable_type_id"], name: "index_transactables_on_transactable_type_id", using: :btree
