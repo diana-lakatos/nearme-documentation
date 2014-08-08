@@ -31,7 +31,7 @@ class CompilerTest < ActiveSupport::TestCase
     setup do
       @images = %w(hero_image icon_image icon_retina_image logo_image logo_retina_image)
       @images.each do |image|
-        Theme.any_instance.stubs(image.to_sym).returns(stub(:url => image, :remove_previously_stored_files_after_update => true, :original_dimensions => [100, 100]))
+        Theme.any_instance.stubs(image.to_sym).returns(stub(:url => Rails.root.join('test', 'assets', image), :remove_previously_stored_files_after_update => true, :original_dimensions => [100, 100]))
       end
     end
 
@@ -40,8 +40,8 @@ class CompilerTest < ActiveSupport::TestCase
       css = compiler.send(:render_stylesheet)
 
       @images.each do |image|
-        regexp = "url(/images/#{image})"
-        assert_match /#{Regexp.escape(regexp)}/, css
+        regexp = "url(#{Rails.root.join('test', 'assets', image)})"
+        assert_match(/#{Regexp.escape(regexp)}/, css)
       end
     end
   end
@@ -69,11 +69,11 @@ class CompilerTest < ActiveSupport::TestCase
       @logos = %w(logo_image logo_retina_image)
       @icons = %w(icon_image icon_retina_image)
       @icons.each_with_index do |image, index|
-        Theme.any_instance.stubs(image.to_sym).returns(stub(:url => image, :remove_previously_stored_files_after_update => true, :original_dimensions => [120 * (index + 1), 45 * (index + 1)])) # height is 33% bigger
+        Theme.any_instance.stubs(image.to_sym).returns(stub(:url => Rails.root.join('test', 'assets', image), :remove_previously_stored_files_after_update => true, :original_dimensions => [120 * (index + 1), 45 * (index + 1)])) # height is 33% bigger
       end
 
       @logos.each_with_index do |image, index|
-        Theme.any_instance.stubs(image.to_sym).returns(stub(:url => image, :remove_previously_stored_files_after_update => true, :original_dimensions => [300 * (index + 1), 42 * (index + 1)])) # height is 40% bigger
+        Theme.any_instance.stubs(image.to_sym).returns(stub(:url => Rails.root.join('test', 'assets', image), :remove_previously_stored_files_after_update => true, :original_dimensions => [300 * (index + 1), 42 * (index + 1)])) # height is 40% bigger
       end
     end
 
