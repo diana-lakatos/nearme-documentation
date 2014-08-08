@@ -11,7 +11,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140804111342) do
+ActiveRecord::Schema.define(version: 20140730082848) do
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "btree_gin"
@@ -578,7 +579,6 @@ ActiveRecord::Schema.define(version: 20140804111342) do
     t.string   "searcher_type"
     t.datetime "master_lock"
     t.boolean  "onboarding_verification_required",                            default: false
-    t.text     "user_required_fields"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -2111,8 +2111,6 @@ ActiveRecord::Schema.define(version: 20140804111342) do
     t.text     "hint"
     t.string   "placeholder"
     t.boolean  "internal",             default: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   add_index "transactable_type_attributes", ["instance_id", "transactable_type_id"], name: "index_tta_on_instance_id_and_transactable_type_id", using: :btree
@@ -2148,8 +2146,10 @@ ActiveRecord::Schema.define(version: 20140804111342) do
     t.datetime "updated_at",             null: false
     t.integer  "transactable_type_id"
     t.integer  "parent_transactable_id"
+    t.string   "external_id"
   end
 
+  add_index "transactables", ["external_id"], name: "index_transactables_on_external_id", using: :btree
   add_index "transactables", ["parent_transactable_id"], name: "index_transactables_on_parent_transactable_id", using: :btree
   add_index "transactables", ["properties"], name: "transactables_gin_properties", using: :gin
   add_index "transactables", ["transactable_type_id"], name: "index_transactables_on_transactable_type_id", using: :btree
@@ -2176,15 +2176,6 @@ ActiveRecord::Schema.define(version: 20140804111342) do
   end
 
   add_index "unit_prices", ["transactable_id"], name: "index_unit_prices_on_listing_id", using: :btree
-
-  create_table "user_bans", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "instance_id"
-    t.integer  "creator_id"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "user_industries", force: true do |t|
     t.integer  "industry_id"
@@ -2296,16 +2287,6 @@ ActiveRecord::Schema.define(version: 20140804111342) do
     t.string   "payment_token"
     t.boolean  "sso_log_out",                                        default: false
     t.string   "spree_api_key"
-    t.string   "first_name"
-    t.string   "middle_name"
-    t.string   "last_name"
-    t.string   "gender"
-    t.string   "drivers_licence_number"
-    t.string   "gov_number"
-    t.string   "twitter_url"
-    t.string   "linkedin_url"
-    t.string   "facebook_url"
-    t.string   "google_plus_url"
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
