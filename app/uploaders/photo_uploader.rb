@@ -51,8 +51,6 @@ class PhotoUploader < BaseImageUploader
     process :resize_to_fill => [dimensions[:golden][:width], dimensions[:golden][:height]]
   end
 
-  # include NewrelicCarrierwaveTracker
-
   protected
 
   def secure_token
