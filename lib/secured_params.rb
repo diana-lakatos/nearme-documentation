@@ -21,6 +21,14 @@ class SecuredParams
     ]
   end
 
+  def data_upload
+    [
+      :csv_file,
+      options: nested([:send_invitational_email])
+    ]
+
+  end
+
   def instance_admin_role
     [
       :permission_analytics,
@@ -35,6 +43,15 @@ class SecuredParams
       :permission_blog,
       :permission_support,
       :name
+    ]
+  end
+
+  def search_notification
+    [
+      :email,
+      :latitude,
+      :longitude,
+      :query
     ]
   end
 

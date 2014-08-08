@@ -131,7 +131,7 @@ class Location < ActiveRecord::Base
   end
 
   def self.xml_attributes
-    [:address, :address2, :formatted_address, :city, :street, :state, :postcode, :email, :phone, :description, :special_notes, :currency]
+    self.csv_fields.keys
   end
 
   def lowest_price(available_price_types = [])
@@ -144,6 +144,10 @@ class Location < ActiveRecord::Base
     else
       true
     end
+  end
+
+  def self.csv_fields
+    { email: 'Location Email', location_type: 'Location Type', description: 'Location Description', special_notes: 'Location Special Notes' }
   end
 
   private

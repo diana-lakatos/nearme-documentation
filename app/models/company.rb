@@ -71,7 +71,7 @@ class Company < ActiveRecord::Base
   end
 
   def self.xml_attributes
-    [:name, :description, :email]
+    self.csv_fields.keys
   end
 
   # Schedules a new payment transfer for current outstanding payments for each
@@ -183,5 +183,10 @@ class Company < ActiveRecord::Base
     errors.add(:bank_account_form, 'Invalidating previous bank account failed. Please try again later.')
     false
   end
+
+  def self.csv_fields
+    { name: 'Company Name', url: 'Company Website', email: 'Company Email', external_id: 'Company External Id' }
+  end
+
 
 end

@@ -1,4 +1,5 @@
-class InstanceAdmin::Manage::TransactableTypeAttributesController < InstanceAdmin::Manage::BaseController
+class InstanceAdmin::Manage::TransactableTypes::TransactableTypeAttributesController < InstanceAdmin::Manage::BaseController
+
   before_filter :find_transactable_type
   before_filter :normalize_valid_values, only: [:create, :update]
 
@@ -9,7 +10,7 @@ class InstanceAdmin::Manage::TransactableTypeAttributesController < InstanceAdmi
   def new
     unless @transactable_type_attribute = @transactable_type.transactable_type_attributes.build
       flash[:error] = t 'flash_messages.instance_admin.manage.transactable_type_attributes.invalid'
-      redirect_to action: :index
+      redirect_to instance_admin_manage_transactable_type_path(@transactable_type)
     end
   end
 
@@ -21,7 +22,7 @@ class InstanceAdmin::Manage::TransactableTypeAttributesController < InstanceAdmi
     @transactable_type_attribute = @transactable_type.transactable_type_attributes.build(transactable_type_attributes_params)
     if @transactable_type_attribute.save
       flash[:success] = t 'flash_messages.instance_admin.manage.transactable_type_attributes.created'
-      redirect_to action: :index
+      redirect_to instance_admin_manage_transactable_type_path(@transactable_type)
     else
       flash[:error] = @transactable_type_attribute.errors.full_messages.to_sentence
       render action: :new
@@ -32,7 +33,7 @@ class InstanceAdmin::Manage::TransactableTypeAttributesController < InstanceAdmi
     @transactable_type_attribute = @transactable_type.transactable_type_attributes.listable.find(params[:id])
     if @transactable_type_attribute.update_attributes(transactable_type_attributes_params)
       flash[:success] = t 'flash_messages.instance_admin.manage.transactable_type_attributes.updated'
-      redirect_to action: :index
+      redirect_to instance_admin_manage_transactable_type_path(@transactable_type)
     else
       flash[:error] = @transactable_type_attribute.errors.full_messages.to_sentence
       render :edit
@@ -43,13 +44,13 @@ class InstanceAdmin::Manage::TransactableTypeAttributesController < InstanceAdmi
     @transactable_type_attribute = @transactable_type.transactable_type_attributes.listable.find(params[:id])
     @transactable_type_attribute.destroy
     flash[:success] = t 'flash_messages.instance_admin.manage.transactable_type_attributes.deleted'
-    redirect_to action: :index
+    redirect_to instance_admin_manage_transactable_type_path(@transactable_type)
   end
 
   private
 
   def find_transactable_type
-    @transactable_type = PlatformContext.current.instance.transactable_types.first
+    @transactable_type = TransactableType.find(params[:transactable_type_id])
   end
 
   def normalize_valid_values
@@ -58,5 +59,9 @@ class InstanceAdmin::Manage::TransactableTypeAttributesController < InstanceAdmi
 
   def transactable_type_attributes_params
     params.require(:transactable_type_attribute).permit(secured_params.transactable_type_attribute)
+  end
+
+  def permitting_controller_class
+    'manage'
   end
 end

@@ -1,0 +1,6 @@
+{
+  "status": "OK",
+  "results": [ {"address_components":[{"long_name":"800","short_name":"800","types":["subpremise"]},{"long_name":"1","short_name":"1","types":["street_number"]},{"long_name":"World Trade Center","short_name":"World Trade Center","types":["route"]},{"long_name":"West Gateway","short_name":"West Gateway","types":["neighborhood","political"]},{"long_name":"Long Beach","short_name":"Long Beach","types":["locality","political"]},{"long_name":"Los Angeles County","short_name":"Los Angeles County","types":["administrative_area_level_2","political"]},{"long_name":"California","short_name":"CA","types":["administrative_area_level_1","political"]},{"long_name":"United States","short_name":"US","types":["country","political"]},{"long_name":"90831","short_name":"90831","types":["postal_code"]}],"formatted_address":"1 World Trade Center #800, Long Beach, CA 90831, USA","geometry":{"location":{"lat":33.7679183,"lng":-118.199717},"location_type":"ROOFTOP","viewport":{"northeast":{"lat":33.76926728029149,"lng":-118.1983680197085},"southwest":{"lat":33.7665693197085,"lng":-118.2010659802915}}},"partial_match":true,"types":["subpremise"]} ]
+}
+
+

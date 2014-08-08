@@ -6,7 +6,7 @@ class Address::AddressComponentsPopulator
 
   def initialize(location = nil, options = {})
     @location = location
-    @show_inspections = options[:show_inspections] || false
+    @show_inspections = options.fetch(:show_inspections,false)
   end
 
   def perform

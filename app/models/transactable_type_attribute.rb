@@ -10,6 +10,8 @@ class TransactableTypeAttribute < ActiveRecord::Base
   #   :internal
 
   scope :listable, -> { all }
+  scope :not_internal, -> { where.not(internal: true) }
+  scope :public, -> { where(public: true) }
 
   validates_presence_of :name, :attribute_type
   validates_uniqueness_of :name, :scope => [:transactable_type_id, :deleted_at]
@@ -24,7 +26,12 @@ class TransactableTypeAttribute < ActiveRecord::Base
 
   attr_accessor :input_html_options_string, :wrapper_html_options_string
 
+  before_save :normalize_name
   before_save :normalize_html_options
+
+  def normalize_name
+    self.name = self.name.to_s.tr(' ', '_').underscore.downcase
+  end
 
   def normalize_html_options
     self.input_html_options = normalize_input_html_options if input_html_options_string.present?

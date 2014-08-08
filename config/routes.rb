@@ -170,6 +170,18 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
+      resources :transactable_types, :only => [:index, :edit, :update, :show] do
+        resources :transactable_type_attributes, controller: 'transactable_types/transactable_type_attributes'
+        resources :data_uploads, :only => [:new, :create, :index, :edit, :update, :show], controller: 'transactable_types/data_uploads' do
+          collection do
+            get :download_csv_template
+          end
+          member do
+            post :schedule_import
+          end
+        end
+      end
+
       resources :confidential_files, :only => [:index, :edit, :update]
 
       resources :inventories, :only => [:index] do
@@ -177,7 +189,7 @@ DesksnearMe::Application.routes.draw do
         post :restore_session, on: :collection
       end
 
-      resources :transactable_type_attributes
+
 
       resources :transfers do
         member do

@@ -26,4 +26,12 @@ class Photo < ActiveRecord::Base
   # Don't delete the photo from s3
   skip_callback :commit, :after, :remove_image!
 
+  def self.xml_attributes
+    self.csv_fields.keys
+  end
+
+  def self.csv_fields
+    { :image_original_url => 'Photo URL' }
+  end
+
 end

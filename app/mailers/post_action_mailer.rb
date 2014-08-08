@@ -61,6 +61,14 @@ class PostActionMailer < InstanceMailer
          subject_locals: { user: @user }
   end
 
+  def user_created_invitation(user, user_password)
+    @user = user
+    @user_password = user_password
+
+    mail to: @user.email,
+         subject_locals: { user: @user }
+  end
+
   def mail_type
     DNM::MAIL_TYPES::TRANSACTIONAL
   end

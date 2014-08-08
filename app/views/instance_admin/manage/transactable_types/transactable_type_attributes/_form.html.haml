@@ -1,4 +1,4 @@
-= simple_form_for [:instance_admin, :manage, resource], :html => { :multipart => true} do |f|
+= simple_form_for [:instance_admin, :manage, @transactable_type, resource], :html => { :multipart => true} do |f|
   = f.input :name
   = f.input :label
   = f.input :attribute_type, :as => :select, :collection => %w(string integer float decimal datetime time date binary boolean), :prompt => "Choose..."
