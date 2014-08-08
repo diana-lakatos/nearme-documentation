@@ -11,6 +11,18 @@ class TransactableTypeAttributeDecorator < Draper::Decorator
                             TransactableTypeAttributeDecorator::Select.new(self)
                           when :switch
                             TransactableTypeAttributeDecorator::Switch.new(self)
+                          when :textarea
+                            TransactableTypeAttributeDecorator::TextArea.new(self)
+                          when :date
+                            TransactableTypeAttributeDecorator::DateAttr.new(self)
+                          when :date_time
+                            TransactableTypeAttributeDecorator::DateTimeAttr.new(self)
+                          when :time
+                            TransactableTypeAttributeDecorator::TimeAttr.new(self)
+                          when :radio_buttons
+                            TransactableTypeAttributeDecorator::RadioButton.new(self)
+                          when :check_box
+                            TransactableTypeAttributeDecorator::CheckBox.new(self)
                           else
                             raise NotImplementedError.new("Not implemented options for #{html_tag}")
                           end
