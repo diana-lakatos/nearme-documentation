@@ -32,7 +32,6 @@ class DataImporter::XmlFile < DataImporter::File
 
   def parse
     @node = Nokogiri::XML(open(@path))
-    clear_credentials_storage
     parse_instance do
       parse_companies do
         parse_locations do
@@ -78,7 +77,6 @@ class DataImporter::XmlFile < DataImporter::File
           if @user.nil?
             @user = @company.users.build do |u|
               password =  SecureRandom.hex(8)
-              store_credentials(email, password)
               u.email = email
               u.password = password
               u.name = name
@@ -193,17 +191,6 @@ class DataImporter::XmlFile < DataImporter::File
       attributes[attribute] = node.xpath(attribute.to_s).text unless :location_type == attribute.to_sym || node.xpath(attribute.to_s).text.blank?
       attributes
     end
-  end
-
-  def clear_credentials_storage
-
-    open('/tmp/passwords.txt', 'w') { }
-  end
-
-  def store_credentials(login, password)
-    open('/tmp/passwords.txt', 'a') { |f|
-      f.puts "#{login}:#{password}"
-    }
   end
 
   def send_invitation_emails
