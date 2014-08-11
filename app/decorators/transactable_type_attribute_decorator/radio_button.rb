@@ -1,4 +1,4 @@
-class TransactableTypeAttributeDecorator::RadioButto < TransactableTypeAttributeDecorator::Basen
+class TransactableTypeAttributeDecorator::RadioButto < TransactableTypeAttributeDecorator::Base
 
   def options
     {
