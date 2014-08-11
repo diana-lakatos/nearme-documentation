@@ -197,18 +197,18 @@ textarea.form-control { height:180px; }
 .slides .slide { float:left; }
 .slides .slide img { display:block; width: 100%}
 
-.slider-actions a { background: url(/assets/platform_home/slider-actions.png) no-repeat 0 0 !important; width: 44px; height:44px; top:50%; margin-top:-22px;  position: absolute; top:50%; }
+.slider-actions a { background: url(/assets/platform_home/slider-actions.png) no-repeat 0 -49px !important; width: 44px; height:44px; top:50%; margin-top:-22px;  position: absolute; top:50%; }
 .slider-actions a.prev { background-position:0 0; left:0; }
-.slider-actions a.next { background-position:right 0 !important; right:0; }
+.slider-actions a.next { background-position:right -49px !important; right:0; }
 
 .slider-paging { position: relative; bottom: auto; left: auto; z-index: 15; width: auto; margin: 0; padding: 0; text-align: center; padding: 20px 0; }
-.slider-paging a { width: 16px; height:16px;  margin: 0; border:2px solid #fff; font-size: 0; line-height: 0; text-indent: -4000px;  display: inline-block; border-radius: 16px; -moz-border-radius: 16px; -webkit-border-radius: 16px; -o-border-radius: 16px; margin-left:5px; }
+.slider-paging a { width: 16px; height:16px;  margin: 0; border:2px solid #5c5c5c; font-size: 0; line-height: 0; text-indent: -4000px;  display: inline-block; border-radius: 16px; -moz-border-radius: 16px; -webkit-border-radius: 16px; -o-border-radius: 16px; margin-left:5px; }
 
-.slider-paging a.selected { width: 16px; height:16px; background:#fff;  }
+.slider-paging a.selected { width: 16px; height:16px; background:#5c5c5c;  }
 
 .section-form .form-contact { max-width: 415px; margin: 0 auto; }
 .section-form p { width: 980px; margin: 0 auto;}
-.section-secondary { padding:90px 0 0 0; }
+.section-secondary { background: #fff; padding:90px 0 0 0; }
 .section-secondary h2 { text-align:center;  color: #404040; font-size: 33px; line-height:44px; text-transform: uppercase; margin: 0; padding: 0 0 30px 0; }
 .section-secondary p { text-align:center; }
 
@@ -254,6 +254,8 @@ ul.expandables { margin-bottom: 0px; min-height: 330px; }
 
 .section-image { padding-bottom:20px; }
 
+.banner {font-size: 28px; padding: 40px; text-align: center;}
+.banner img {margin: 25px;}
 
 @media (-webkit-device-pixel-ratio: 2){
     .header .brand { background: url(/assets/platform_home/Logo-2x.png) no-repeat 0 0; -webkit-background-size: 190px 35px; background-size: 190px 35px; }
@@ -360,6 +362,7 @@ ul.expandables { margin-bottom: 0px; min-height: 330px; }
 @media (max-width: 440px) {
     .nav.nav-tabs li {width: 49%;}
     .nav.nav-tabs li a { font-size:10px;  }
+    .banner img {display: block; margin: 40px auto;}
 
 }
 
