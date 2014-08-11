@@ -1,0 +1,6 @@
+%div{:class => "control-group #{"error" if f.object.errors.include?(:"#{attribute.name}").present?}"}
+  = f.label :"#{attribute.name}", attribute.label, :class => 'control-label', style: 'margin-top: 0px'
+  .controls
+    %label.checkbox{for: attribute.name}
+      = check_box_tag attribute.name, "1", f.object.send(attribute.name)
+
