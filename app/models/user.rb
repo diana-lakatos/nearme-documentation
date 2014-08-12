@@ -511,6 +511,7 @@ class User < ActiveRecord::Base
 
   def banned?
     user_bans.count > 0
+  end
 
   def self.xml_attributes
     self.csv_fields.keys
