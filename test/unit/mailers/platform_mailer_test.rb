@@ -8,18 +8,10 @@ class PlatformMailerTest < ActiveSupport::TestCase
 
     assert mail.body.include?(platform_contact.name)
     assert mail.body.include?(platform_contact.email)
-    assert mail.body.include?(platform_contact.subject)
+    assert mail.body.include?(platform_contact.company)
     assert mail.body.include?(platform_contact.comments)
-  end
-
-  test "demo request mailer works" do
-    platform_demo_request = FactoryGirl.create(:platform_demo_request)
-    mail = PlatformMailer.demo_request(platform_demo_request)
-
-    assert mail.body.include?(platform_demo_request.name)
-    assert mail.body.include?(platform_demo_request.email)
-    assert mail.body.include?(platform_demo_request.company)
-    assert mail.body.include?(platform_demo_request.phone)
-    assert mail.body.include?(platform_demo_request.comments)
+    assert mail.body.include?(platform_contact.location)
+    assert mail.body.include?(platform_contact.previous_research)
+    assert mail.body.include?(platform_contact.lead_source)
   end
 end
