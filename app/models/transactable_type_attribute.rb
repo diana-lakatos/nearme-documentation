@@ -5,7 +5,7 @@ class TransactableTypeAttribute < ActiveRecord::Base
   scoped_to_platform_context
 
   ATTRIBUTE_TYPES = %w(array string integer float decimal datetime time date binary boolean)
-  HTML_TAGS = %w(input select switch textarea check_box radio_buttons )
+  HTML_TAGS = %w(input select switch textarea check_box radio_buttons)
 
   # attr_accessible :name, :transactable_type_id, :attribute_type, :html_tag,
   #   :prompt, :default_value, :public, :validation_rules, :valid_values, :label,
