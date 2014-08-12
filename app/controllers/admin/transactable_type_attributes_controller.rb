@@ -1,6 +1,6 @@
 class Admin::TransactableTypeAttributesController < Admin::ResourceController
-  belongs_to :transactable_type
 
+  before_filter :find_transactable_type
   before_filter :eval_parameters, :only => [:create, :update]
 
   def create
@@ -12,6 +12,16 @@ class Admin::TransactableTypeAttributesController < Admin::ResourceController
     else
       render action: :new
     end
+  end
+
+  def update
+    resource = TransactableTypeAttribute.find(params[:id])
+    if resource.update_attributes(params[:transactable_type_attribute])
+      redirect_to admin_transactable_type_transactable_type_attribute_path(resource.transactable_type , resource)
+    else
+      render action: :edit
+    end
+
   end
 
   def destroy
@@ -29,5 +39,11 @@ class Admin::TransactableTypeAttributesController < Admin::ResourceController
 
   def transactable_type_attribute_params
     params.require(:transactable_type_attribute).permit(secured_params.transactable_type_attribute)
+  end
+
+  private
+
+  def find_transactable_type
+    @transactable_type = TransactableType.find(params[:transactable_type_id])
   end
 end

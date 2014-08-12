@@ -43,6 +43,7 @@ class User < ActiveRecord::Base
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
+  has_many :orders, foreign_key: :user_id, class_name: 'Spree::Order'
 
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
@@ -496,6 +497,14 @@ class User < ActiveRecord::Base
 
   def confidential_file_accepted!
     listings.find_each(&:confidential_file_accepted!)
+  end
+
+  def self.xml_attributes
+    self.csv_fields.keys
+  end
+
+  def self.csv_fields
+    {email: 'User Email', name: 'User Name'}
   end
 
 end

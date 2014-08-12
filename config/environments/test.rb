@@ -11,9 +11,12 @@ DesksnearMe::Application.configure do
   config.serve_static_assets = true
   config.static_cache_control = "public, max-age=3600"
 
+  config.assets.compress = true
+  config.assets.js_compressor = :uglifier
+
   config.perform_social_jobs = false
   config.after_initialize do
-      PaperTrail.enabled = false
+    PaperTrail.enabled = false
   end
   config.encrypt_sensitive_db_columns = false
   config.silence_raygun_notification = true

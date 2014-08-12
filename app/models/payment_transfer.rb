@@ -9,6 +9,7 @@ class PaymentTransfer < ActiveRecord::Base
   belongs_to :partner
 
   has_many :reservation_charges, :dependent => :nullify
+  has_many :order_line_items, class_name: 'Spree::LineItem', :dependent => :nullify
 
   has_many :payout_attempts,
     :class_name => 'Payout',
@@ -91,14 +92,28 @@ class PaymentTransfer < ActiveRecord::Base
   private
 
   def assign_amounts_and_currency
-    self.currency = reservation_charges.first.try(:currency)
-    self.service_fee_amount_host_cents = reservation_charges.sum(
-      :service_fee_amount_host_cents
-    )
-    self.amount_cents = reservation_charges.sum(:subtotal_amount_cents) - self.service_fee_amount_host_cents
-    self.service_fee_amount_guest_cents = reservation_charges.sum(
-      :service_fee_amount_guest_cents
-    )
+    if reservation_charges.any?
+      self.currency = reservation_charges.first.try(:currency)
+      self.service_fee_amount_host_cents = reservation_charges.sum(
+        :service_fee_amount_host_cents
+      )
+      self.amount_cents = reservation_charges.sum(:subtotal_amount_cents) - self.service_fee_amount_host_cents
+      self.service_fee_amount_guest_cents = reservation_charges.sum(
+        :service_fee_amount_guest_cents
+      )
+    end
+
+    if order_line_items.any?
+      self.currency = Spree::Config[:currency]
+      self.service_fee_amount_host_cents = order_line_items.sum(
+        :service_fee_amount_host_cents
+      )
+      self.amount_cents = order_line_items.sum(:price).to_money(Spree::Config[:currency]).cents - self.service_fee_amount_host_cents
+      self.service_fee_amount_guest_cents = reservation_charges.sum(
+        :service_fee_amount_guest_cents
+      )
+    end
+
     self.save!
   end
 

@@ -1,4 +1,3 @@
-
 class DataImporter::CsvToXmlConverter
 
   def initialize(csv_file, output_path)
@@ -8,31 +7,41 @@ class DataImporter::CsvToXmlConverter
     @last_location = nil
   end
 
-  def add_object(klass, builder, &block)
-    klass_symbol = klass.name.underscore.to_sym
-    klass_symbol = :listing if klass_symbol == :transactable
-    insert_to_xml(klass_symbol, klass.xml_attributes, @hash[klass_symbol], builder, &block)
+  def add_object(klass, builder, options = {}, &block)
+    klass_symbol = options.fetch(:klass_symbol, klass.name.underscore.to_sym)
+    attributes_names = klass.xml_attributes
+    attributes_values = @hash[klass_symbol]
+
+    if options.fetch(:new_node, true)
+      insert_with_new_node(options.fetch(:node_name, klass_symbol), attributes_names, attributes_values, builder, &block)
+    else
+      insert_to_xml(attributes_names, attributes_values, builder, &block)
+    end
   end
 
-  def insert_to_xml(node_name, attributes, attributes_data, builder, &block)
+  def insert_with_new_node(node_name, attributes, attributes_data, builder, &block)
     builder.send(node_name, (attributes_data[:external_id] ? {:id => attributes_data[:external_id]} : {} )) do |o|
-      attributes.each do |attribute|
-        o.send(attribute) { |field| field.cdata(attributes_data[attribute]) }
-      end
+      insert_to_xml(attributes, attributes_data, o)
       yield if block_given?
+    end
+  end
+
+  def insert_to_xml(attributes, attributes_data, builder)
+    attributes.each do |attribute|
+      builder.send(attribute) { |field| field.cdata(attributes_data[attribute].strip) } if attributes_data[attribute].try(:strip).present?
     end
   end
 
   def add_availabilities(builder, scope)
     @hash[scope][:availability_rule_attributes].each do |availability_attributes|
-      insert_to_xml(:availability_rule, AvailabilityRule.xml_attributes, availability_attributes, builder)
+      insert_with_new_node(:availability_rule, AvailabilityRule.xml_attributes, availability_attributes, builder)
     end if @hash[scope][:availability_rule_attributes]
   end
 
   def add_amenities(builder, scope)
     @hash[scope][:amenities].each do |amenity|
       unless amenity_already_added?(amenity)
-        insert_to_xml(:amenity, [:name], {:name => amenity}, builder)
+        insert_with_new_node(:amenity, [:name], {:name => amenity}, builder)
       end
     end if @hash[scope][:amenities]
   end
@@ -47,14 +56,17 @@ class DataImporter::CsvToXmlConverter
   end
 
   def build_xml
-    @xml.companies(:tenant => @csv_file.tenant_name) {
+    @xml.companies(:send_invitation => @csv_file.send_invitation) {
       while @csv_file.next_row
         @hash = @csv_file.row_as_hash
         build_company do
+          build_user
           build_location do
+            build_address if new_location?
             build_availabilities if new_location?
             build_amenities
             build_listing do
+              build_photos
               build_availabilities
             end
             store_last_location
@@ -68,7 +80,9 @@ class DataImporter::CsvToXmlConverter
     # if company external id is different than the previous one, it means we need to create new company
     if new_company?
       add_object(Company, @xml) do
-        # we want to insert locations inside this company, we need builder for this
+        @xml.users do |users|
+          @user_builder = Nokogiri::XML::Builder.new({}, users.parent)
+        end
         @xml.locations do |locations|
           @location_builder = Nokogiri::XML::Builder.new({}, locations.parent)
         end
@@ -77,18 +91,27 @@ class DataImporter::CsvToXmlConverter
     yield
   end
 
+  def build_user
+    add_object(User, @user_builder) if new_user?
+  end
+
   def build_location
     # if address for location is different than the previous one, it means we need to create new location
     @scope = :location
     if new_location?
       add_object(Location, @location_builder) do
         # we want to insert listings inside this location, we need builder for this
+        @address_builder = add_node(@location_builder, 'location_address')
         @listing_builder = add_node(@location_builder, 'listings')
         @availability_builder = add_node(@location_builder, 'availability_rules')
         @amenity_builder = add_node(@location_builder, 'amenities')
       end
     end
     yield
+  end
+
+  def build_address
+    add_object(Address, @address_builder, { new_node: false })
   end
 
   def add_node(builder, name)
@@ -103,7 +126,8 @@ class DataImporter::CsvToXmlConverter
   end
 
   def new_location?
-    if @last_location != @hash[:location][:address]
+    if @last_location != @hash[:address][:address]
+      @last_listing = nil
       clear_amenities
       true
     else
@@ -112,7 +136,7 @@ class DataImporter::CsvToXmlConverter
   end
 
   def store_last_location
-      @last_location = @hash[:location][:address]
+    @last_location = @hash[:address][:address]
   end
 
   def clear_amenities
@@ -133,6 +157,26 @@ class DataImporter::CsvToXmlConverter
     if @last_company != @csv_file.send(:company_attributes)[:external_id]
       @last_company = @hash[:company][:external_id]
       @last_location = nil
+      @last_listing = nil
+      @last_user = nil
+      true
+    else
+      false
+    end
+  end
+
+  def new_listing?
+    if @last_listing != @hash[:listing][:external_id]
+      @last_listing = @hash[:listing][:external_id]
+      true
+    else
+      false
+    end
+  end
+
+  def new_user?
+    if @last_user != @hash[:user][:email]
+      @last_user = @hash[:user][:email]
       true
     else
       false
@@ -145,12 +189,21 @@ class DataImporter::CsvToXmlConverter
 
   def build_listing
     @scope = :listing
-    add_object(Transactable, @listing_builder) do
-      @listing_builder.availability_rules do |availabilities|
-        @availability_builder = Nokogiri::XML::Builder.new({}, availabilities.parent)
+    if new_listing?
+      add_object(Transactable, @listing_builder, { klass_symbol: :listing }) do
+        @listing_builder.photos do |photos|
+          @photo_builder = Nokogiri::XML::Builder.new({}, photos.parent)
+        end
+        @listing_builder.availability_rules do |availabilities|
+          @availability_builder = Nokogiri::XML::Builder.new({}, availabilities.parent)
+        end
       end
     end
     yield
+  end
+
+  def build_photos
+    add_object(Photo, @photo_builder) if @hash[:photo].any? { |k, v| v.present? }
   end
 
 end

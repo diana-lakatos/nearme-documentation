@@ -24,10 +24,9 @@ DesksnearMe::Application.configure do
   Rails.application.routes.default_url_options[:protocol] = 'https'
 
   config.assets.compile = false
-  config.assets.compress = true
-  config.assets.js_compressor = :uglifier
+  config.assets.manifest = "#{Rails.root}/config/manifest.json"
 
-  Rails.application.routes.default_url_options[:host] = 'staging.desksnear.me'
+  Rails.application.routes.default_url_options[:host] = 'staging.near-me.com'
   config.test_email = "notifications-staging@desksnear.me"
 
   # Clould services credentials
@@ -35,14 +34,16 @@ DesksnearMe::Application.configure do
     config.fog_credentials = {
       :provider                   => 'AWS',
       :aws_access_key_id          => 'AKIAI5EVP6HB47OZZXXA',
-      :aws_secret_access_key      => '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'
+      :aws_secret_access_key      => 'k5l31//l3RvZ34cR7cqJh6Nl4OttthW6+3G6WWkZ',
+      :path_style                 => true
     }
     config.fog_directory        = 'near-me.staging'
     config.asset_host           = 'https://s3.amazonaws.com/near-me.staging'
     config.storage              = :fog
   end
 
-  config.action_controller.asset_host = "//staging.desksnear.me"
+  config.action_controller.asset_host = "//near-me-assets-staging.s3.amazonaws.com"
+  config.action_mailer.asset_host = "http://near-me-assets-staging.s3.amazonaws.com"
 
   # Staging specific keys/secrets for social properties.
   config.linkedin_key = "26pmsiwpsh8a"
@@ -71,13 +72,15 @@ DesksnearMe::Application.configure do
   config.balanced_api_key = "ak-prod-1YZGzrMTbG9Q4XeITwLML1za00VRsV4PS"
 
   # Protect this environment with a simple Basic authentication dialog
-  config.middleware.insert_before(Rack::Sendfile, "Rack::Auth::Basic") do |username, password|
-    username == 'desksnearme' && password == 'sharethem'
-  end
+  # config.middleware.insert_before(Rack::Sendfile, "Rack::Auth::Basic") do |username, password|
+  #   username == 'desksnearme' && password == 'sharethem'
+  # end
   config.redis_settings = YAML.load_file(Rails.root.join("config", "redis.yml"))["staging"]
   config.cache_store = :redis_store, {
     :host => config.redis_settings["host"],
     :port => config.redis_settings["port"].to_i,
     :namespace => "cache"
   }
+  config.root_secured = false
+  config.secure_app = false
 end

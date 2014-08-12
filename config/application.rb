@@ -18,6 +18,23 @@ module DesksnearMe
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
     config.autoload_paths -= Dir["#{config.root}/lib/previewers/"] unless defined? MailView
 
+    config.to_prepare do
+      # Load application's view overrides
+      Dir.glob(File.join(File.dirname(__FILE__), "../app/overrides/*.rb")) do |c|
+        Rails.configuration.cache_classes ? require(c) : load(c)
+      end
+
+      # Load Spree model's decorators
+      Dir.glob(File.join(File.dirname(__FILE__), "../app/models/spree/**/*_decorator*.rb")) do |c|
+        Rails.configuration.cache_classes ? require(c) : load(c)
+      end
+
+      # Load Spree controllers's decorators
+      Dir.glob(File.join(File.dirname(__FILE__), "../app/controllers/spree/**/*_decorator*.rb")) do |c|
+        Rails.configuration.cache_classes ? require(c) : load(c)
+      end
+    end
+
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
@@ -25,6 +42,8 @@ module DesksnearMe
     config.assets.paths           << %(#{Rails.root}/app/assets/fonts)
     config.assets.paths           << %(#{Rails.root}/app/assets/swfs)
     config.assets.paths           << %(#{Rails.root}/app/assets/videos)
+
+    config.assets.precompile +=  ['*.js']
 
     config.assets.precompile += [
       "vendor/jquery.backgroundSize.min.js","vendor/respond.proxy.js", "vendor/respond.min.js",

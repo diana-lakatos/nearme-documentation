@@ -5,12 +5,14 @@ class TransactableType < ActiveRecord::Base
   scoped_to_platform_context
 
   MAX_PRICE = 2147483647
+  AVAILABLE_TYPES = ['Listing', 'Buy/Sell']
 
   # attr_accessible :name, :pricing_options, :pricing_validation, :availability_options, :availability_templates_attributes
 
   has_many :transactables, inverse_of: :transactable_type
   has_many :transactable_type_attributes, inverse_of: :transactable_type
   has_many :availability_templates, inverse_of: :transactable_type, :dependent => :destroy
+  has_many :data_uploads, inverse_of: :transactable_type
 
   belongs_to :instance
 
@@ -30,6 +32,7 @@ class TransactableType < ActiveRecord::Base
   def defer_availability_rules?
     availability_options && availability_options["defer_availability_rules"]
   end
+
   def pricing_options
     super.select { |k,v| v == "1" }
   end
@@ -68,7 +71,7 @@ class TransactableType < ActiveRecord::Base
       price_field = "#{price}_price_cents"
       if pricing_options.keys.include?(price)
         tta = transactable_type_attributes.where(:name => price_field).first.presence || transactable_type_attributes.build(name: price_field)
-        tta.attributes = {attribute_type: :integer, public: false, internal: true, validation_rules: build_validation_rule_for(price) }
+        tta.attributes = {attribute_type: :integer, public: true, internal: true, validation_rules: build_validation_rule_for(price) }
         tta.save!
       else
         transactable_type_attributes.where(:name => price_field).first.try(:destroy)
@@ -109,6 +112,10 @@ class TransactableType < ActiveRecord::Base
       hstore_attrs[attr.name.to_sym] = attr.attribute_type.to_sym
       hstore_attrs
     end
+  end
+
+  def buy_sell?
+    name == 'Buy/Sell'
   end
 end
 

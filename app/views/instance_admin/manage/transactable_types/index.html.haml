@@ -1,0 +1,12 @@
+.row-fluid
+  .controls.controls-row
+    %legend.span3 Manage Transactable Types
+
+%br
+
+%table.table
+  %tbody
+    - @transactable_types.each do |resource|
+      %tr
+        %td= link_to resource.name.humanize, instance_admin_manage_transactable_type_path(resource)
+        %td= link_to 'Edit', edit_instance_admin_manage_transactable_type_path(resource), class: 'btn'

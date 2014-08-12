@@ -84,7 +84,7 @@ module Utils
         tta.attributes = {
           name: attr_name,
           attribute_type: attr_type.to_s,
-          html_tag: :input,
+          html_tag: 'input',
           public: public_flag,
           default_value: default,
           validation_rules: validation_rules,
@@ -93,6 +93,9 @@ module Utils
         }.merge(rest_attributes)
         tta.save!
       end
+    end
+
+    def create_buy_sell_attributes!
     end
   end
 end

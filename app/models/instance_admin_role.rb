@@ -9,7 +9,6 @@ class InstanceAdminRole < ActiveRecord::Base
   # attr_accessible :permission_analytics, :permission_settings, :permission_theme, :permission_transfers, :permission_inventories,
   #   :permission_partners, :permission_users, :permission_pages, :permission_manage, :permission_blog, :permission_support, :name
 
-
   has_many :instance_admins
   belongs_to :instance
 

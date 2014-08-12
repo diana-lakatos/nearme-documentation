@@ -30,6 +30,7 @@ class Company < ActiveRecord::Base
   has_many :industries, :through => :company_industries
   has_one :domain, :as => :target, :dependent => :destroy
   has_one :theme, :as => :owner, :dependent => :destroy
+  has_many :order_line_items, class_name: 'Spree::LineItem'
 
   has_many :locations_impressions, :source => :impressions, :through => :locations
   has_many :instance_clients, :as => :client, :dependent => :destroy
@@ -53,10 +54,11 @@ class Company < ActiveRecord::Base
   #
   # NB: Will probably need to optimize this at some point
   scope :needs_payment_transfer, -> {
-    joins(:reservation_charges).merge(
-      ReservationCharge.needs_payment_transfer
-    ).uniq
+    for_reservations = joins(:reservation_charges).merge(ReservationCharge.needs_payment_transfer).uniq
+    for_orders = joins(:order_line_items).merge(Spree::LineItem.needs_payment_transfer).uniq
+    from("(#{for_reservations.to_sql} UNION #{for_orders.to_sql}) AS companies")
   }
+
   accepts_nested_attributes_for :domain, :reject_if => proc { |params| params.delete(:white_label_enabled).to_f.zero? }
   accepts_nested_attributes_for :theme, reject_if: proc { |params| params.delete(:white_label_enabled).to_f.zero? }
   accepts_nested_attributes_for :locations
@@ -69,7 +71,7 @@ class Company < ActiveRecord::Base
   end
 
   def self.xml_attributes
-    [:name, :description, :email]
+    self.csv_fields.keys
   end
 
   # Schedules a new payment transfer for current outstanding payments for each
@@ -78,9 +80,18 @@ class Company < ActiveRecord::Base
     self.created_payment_transfers = []
     transaction do
       charges_without_payment_transfer = reservation_charges.needs_payment_transfer
-      charges_without_payment_transfer.group_by(&:currency).each do |currency, charges|
+      if charges_without_payment_transfer.any?
+        charges_without_payment_transfer.group_by(&:currency).each do |currency, charges|
+          payment_transfer = payment_transfers.create!(
+            reservation_charges: charges
+          )
+          self.created_payment_transfers << payment_transfer if payment_transfer.possible_automated_payout_not_supported?
+        end
+      end
+
+      if order_line_items.needs_payment_transfer.any?
         payment_transfer = payment_transfers.create!(
-          reservation_charges: charges
+          order_line_items: order_line_items.needs_payment_transfer
         )
         self.created_payment_transfers << payment_transfer if payment_transfer.possible_automated_payout_not_supported?
       end
@@ -172,5 +183,10 @@ class Company < ActiveRecord::Base
     errors.add(:bank_account_form, 'Invalidating previous bank account failed. Please try again later.')
     false
   end
+
+  def self.csv_fields
+    { name: 'Company Name', url: 'Company Website', email: 'Company Email', external_id: 'Company External Id' }
+  end
+
 
 end

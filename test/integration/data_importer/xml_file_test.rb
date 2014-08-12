@@ -1,196 +1,127 @@
-require 'vcr_setup'
 require 'test_helper'
+require 'helpers/gmaps_fake'
 
 class DataImporter::XmlFileTest < ActiveSupport::TestCase
 
-  describe 'skip those tests for now' do
-    context '#instances' do
+  context 'template' do
+    setup do
+      GmapsFake.stub_requests
+      stub_image_url("http://www.example.com/image.jpg")
+      stub_image_url("http://www.example.com/photo.jpg")
+      @instance = FactoryGirl.create(:instance)
+      PlatformContext.current = PlatformContext.new(@instance)
+      @location_type = FactoryGirl.create(:location_type, name: 'My Type')
+    end
+
+    context 'data prsitance' do
       setup do
-        Photo.any_instance.stubs(:remote_image_url=)
-        LocationType.create(:name => 'Business')
-        Industry.create(:name => 'Commercial Real Estate')
-        [ "Administrative Assistant", "Catering", "Coffee/Tea", "Videoconferencing Facilities",
-          "Copier", "Fax", "Projector", "Telephone", "Printer", "Scanner", "Television", "Yard Area",
-          "Parking", "Lounge Area", "Internet Access", "Wi-Fi", "Whiteboard", ].each { |name| Amenity.create(:name => name) }
-        @xml_file = DataImporter::XmlFile.new(get_absolute_file_path('data.xml'))
-
-        VCR.use_cassette('data_import') do
-          @xml_file.parse
-        end
+        @xml_file = FactoryGirl.create(:xml_template_file)
+        @xml_file.parse
       end
 
-      should 'not create duplicates when parsed again' do
-        expected_count = get_counts_of_all_relevant_objects
-        VCR.use_cassette('data_import') do
-          @xml_file.parse
-        end
+
+      should 'counts should not change after second parse' do
+        expected_counts = get_counts_of_all_relevant_objects
+        @xml_file.parse
         get_counts_of_all_relevant_objects.each do |k, v|
-          assert_equal expected_count[k], v, "#{k.to_s} count changed after second parsing (duplicated?)"
+          assert_equal expected_counts[k], v, "#{k.to_s} count changed after second parsing (duplicated?)"
         end
-      end
-
-      should 'create instance with right name' do
-        assert_equal 'PBCenter', Instance.last.name
-      end
-
-      should 'should create only one instance' do
-        assert_equal 1, Instance.find_all_by_name('PBCenter').count
       end
 
       context '#users' do
 
-        setup do
-          @instance = Instance.find_by_name('PBCenter')
-        end
-
         should 'create the right number of users' do
-          assert_equal 3, @instance.users.count
-        end
-
-        should 'should have companies assigned' do
-          @instance.users.each do |u|
-            assert_equal u.email.downcase, u.companies.first.email.downcase, "Something is wrong with email of company #{u.companies.first.external_id}"
-          end
-        end
-
-        should 'should have right details' do
-          assert_equal ['United States'], @instance.users.pluck(:country_name).uniq
-          assert_equal "213-943-1300", User.find_by_email("355manager@pbcenters.com").phone
-          assert_equal "310-496-4490", User.find_by_email("sm1manager@pbcenters.com").phone
-          assert_equal "562-983-8000", User.find_by_email("wtcmanager@pbcenters.com").phone
+          assert_equal 2, @instance.users.count
         end
 
         should 'should have the right amount of companies' do
-          @instance.users.each do |u|
-            assert_equal 1, u.companies.count, "User #{u.email} has multiple companies: #{u.companies.pluck(:external_id)}"
-          end
-
+          assert_equal ["1"], User.find_by_email('user1@example.com').companies.pluck(:external_id).sort
+          assert_equal ["1", "2"], User.find_by_email('user2@example.com').companies.pluck(:external_id).sort
         end
 
         context '#companies' do
 
           should 'create the right amount of companies' do
-            assert_equal 3, @instance.companies.count
+            assert_equal 2, @instance.companies.count
           end
 
-          should '355 should have the right details' do
-            @company = @instance.companies.find_by_external_id('355')
-            assert_equal 'WELLS FARGO CENTER - KPMG BUILDING', @company.name
-            assert_equal 'Center is located between 3rd and 4th street and between Hope St and Grand Ave. Entrance for parking structure of the Building is on Hope Ave.', @company.description
+          should '1 should have the right details' do
+            @company = @instance.companies.find_by_external_id('1')
+            assert_equal "My Company's", @company.name
+            assert_equal 'http://www.mycompany.example.com', @company.url
+            assert_equal 'company@example.com', @company.email
           end
 
-          should 'SM1 should have the right details' do
-            @company = @instance.companies.find_by_external_id('SM1')
-            assert_equal 'BROADWAY PLAZA', @company.name
-            assert_equal '', @company.description
+          should '2 should have the right details' do
+            @company = @instance.companies.find_by_external_id('2')
+            assert_equal "My second Company's", @company.name
           end
 
-          should 'WTC should have the right details' do
-            @company = @instance.companies.find_by_external_id('WTC')
-            assert_equal 'WORLD TRADE CENTER', @company.name
-            assert_equal '', @company.description
-          end
-
-          context '#industries' do
-
-            should 'assign right industries' do
-              assert_equal ['Commercial Real Estate'], @instance.companies.last.industries.pluck(:name)
-            end
-          end
 
           context '#locations' do
 
             should 'create right amount of locations for first company' do
-              assert_equal 2, @instance.companies.find_by_external_id('355').locations.count
+              assert_equal 2, @instance.companies.find_by_external_id('1').locations.count
             end
 
             should 'create right amount of locations for second company' do
-              assert_equal 1, @instance.companies.find_by_external_id('SM1').locations.count
-            end
-
-            should 'create right amount of locations for third company' do
-              assert_equal 1, @instance.companies.find_by_external_id('WTC').locations.count
+              assert_equal 1, @instance.companies.find_by_external_id('2').locations.count
             end
 
             should 'not aggregate locations with the same address that belong to different companies' do
-              assert_equal 2, @instance.locations.where('address like ?', "%520 Broadway%").count
+              assert_equal 2, @instance.locations.joins(:location_address).where('addresses.address like ?', "%Pulawska%").count
             end
 
-            should 'aggregate locations with the same address within the same company' do
-              assert_equal 1, @instance.locations.where('address like ?', "%One World Trade Center%").count
-            end
-
-            context 'location at Grand Ave' do
+            context 'location at Ursynowska' do
 
               setup do
-                @location = @instance.locations.where('address like ?', "%355 S. Grand Ave%").first
+                @location = @instance.locations.joins(:location_address).where('addresses.address like ?', "%Ursynowska%").first
               end
 
-              should 'create the right details for location at 355 S. Grand Ave' do
-                assert_equal '355 S. Grand Ave, Suite 2450, Los Angeles, CA, 90071', @location.address
-                assert_equal 'Suite 2450', @location.address2
-                assert_equal 'Los Angeles', @location.city
-                assert_equal 'CA', @location.state
-                assert_equal '90071', @location.postcode
-                assert_equal "Please provide us with a list of all names of guests who will be attending. We must provide this list to Security. All guests must check in with security and provide Photo ID.\nParking Rates: $4 per 10 minutes, $40.00 Maximum per day Valet Parking", @location.special_notes
-                assert_equal '355manager@pbcenters.com', @location.email
-                assert_equal '213-943-1300', @location.phone
-                assert_equal 'Center is located between 3rd and 4th street and between Hope St and Grand Ave. Entrance for parking structure of the Building is on Hope Ave.', @location.description
-              end
-
-              should 'correctly aggregate amenities from all listings that belong to S. Grand Ave' do
-                assert_equal ["Administrative Assistant", "Coffee/Tea", "Copier",
-                              "Fax", "Telephone", "Printer", "Scanner", "Television",
-                              "Yard Area", "Internet Access", "Wi-Fi", "Whiteboard"], @location.amenities.pluck(:name)
-              end
-
-              should 'have availability rules for right days' do
-                assert_equal [1,2,3,4,5], @location.availability_rules.pluck(:day).sort
-              end
-
-              should 'be open at the right time' do
-                @location.availability_rules.each do |ar|
-                  assert_equal 8, ar.open_hour
-                  assert_equal 30, ar.open_minute
-                  assert_equal 17, ar.close_hour
-                  assert_equal 0, ar.close_minute
-                end
+              should 'create the right details for location at Ursynowska' do
+                assert_equal 'Ursynowska 1, 02-605 Warsaw, Poland', @location.address
+                assert_equal nil, @location.address2
+                assert_equal 'Warsaw', @location.city
+                assert_equal 'Masovian Voivodeship', @location.state
+                assert_equal '02-605', @location.postcode
+                assert_equal "Be careful, cool place!", @location.special_notes
+                assert_equal 'location@example.com', @location.email
+                assert_equal 'This is my cool location', @location.description
               end
 
               context '#listing' do
-                setup do
-                  @listing = @location.listings.first
+
+                should 'create the right amount of listing 1' do
+                  assert_equal 2, @location.listings.count
                 end
 
-                should 'create the right amount of listings' do
-                  assert_equal 1, @location.listings.count
+                should 'have the right details (listing1)' do
+                  @listing = @location.listings.find_by_external_id('1')
+                  assert_equal true, @listing.confirm_reservations
+                  assert_equal 4, @listing.hourly_price_cents
+                  assert_equal 10, @listing.daily_price_cents
+                  assert_equal 15, @listing.weekly_price_cents
+                  assert_equal 30, @listing.monthly_price_cents
+                  assert_equal true, @listing.enabled
+                  assert_equal 'my attrs! 1', @listing.my_attribute
                 end
 
-                should 'have right opening hours that differ from location' do
-                  @listing.availability_rules.each do |ar|
-                    assert_equal 8, ar.open_hour
-                    assert_equal 30, ar.open_minute
-                    assert_equal 17, ar.close_hour
-                    assert_equal 0, ar.close_minute
-                  end
-                end
-
-                should 'have the right details' do
-                  assert_equal 'Large Conference Room', @listing.name
-                  assert_equal 'Large Conference Room, seats 12, Beautiful City Views', @listing.description
-                  assert_equal 12, @listing.quantity
-                  assert_equal 7500, @listing.hourly_price_cents
-                  assert_equal 52500, @listing.daily_price_cents
-                end
-
-                should 'have the right listing type' do
-                  assert_equal 'Meeting Room', @listing.listing_type
+                should 'have the right details (listing2)' do
+                  @listing = @location.listings.find_by_external_id('2')
+                  assert_equal true, @listing.confirm_reservations
+                  assert_equal 4, @listing.hourly_price_cents
+                  assert_equal 10, @listing.daily_price_cents
+                  assert_equal 15, @listing.weekly_price_cents
+                  assert_equal 30, @listing.monthly_price_cents
+                  assert_equal true, @listing.enabled
+                  assert_equal 'my attrs! 2', @listing.my_attribute
                 end
 
                 context '#photos' do
 
-                  should 'have the right photos' do
-                    #assert_equal 1, @listing.photos.count
+                  should 'have correct original url' do
+                    assert_equal ['http://www.example.com/image.jpg', 'http://www.example.com/photo.jpg'], @location.listings.find_by_external_id('1').photos.pluck(:image_original_url).sort
+                    assert_equal ['http://www.example.com/photo.jpg'], @location.listings.find_by_external_id('2').photos.pluck(:image_original_url).sort
                   end
 
                 end
@@ -199,103 +130,121 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
 
             end
 
-            context 'location at WTC' do
+            context 'location at Pulawska' do
+
               setup do
-                @location = @instance.locations.where('address like ?', "%World Trade Center%").first
+                @location = @instance.locations.joins(:location_address).where('addresses.address like ?', "%Pulawska%").first
               end
 
-              should 'create the right details for location at WTC' do
-                assert_equal 'One World Trade Center, Suite 800, Long Beach, CA, 90802', @location.address
-                assert_equal 'Suite 800', @location.address2
-                assert_equal 'Long Beach', @location.city
-                assert_equal 'CA', @location.state
-                assert_equal '90802', @location.postcode
-                assert_equal '$1.80/15 MIN $7.20/HR $18.00/ALL DAY (2HRS 30MIN+)', @location.special_notes
-                assert_equal 'wtcmanager@pbcenters.com', @location.email.downcase
-                assert_equal '562-983-8000', @location.phone
-                assert_equal '', @location.description
-              end
-
-              should 'correctly aggregate amenities from all listings that belong to WTC' do
-                assert_equal ["Administrative Assistant", "Catering", "Coffee/Tea","Copier",
-                              "Fax","Internet Access" , "Lounge Area", "Printer","Projector", "Scanner","Telephone",
-                              "Videoconferencing Facilities", "Whiteboard", "Wi-Fi", "Yard Area"], @location.amenities.pluck(:name).sort
-              end
-
-              should 'have availability rules for right days' do
-                assert_equal [1,2,3,4,5], @location.availability_rules.pluck(:day).sort
-              end
-
-              should 'be open at the right time' do
-                @location.availability_rules.each do |ar|
-                  assert_equal 8, ar.open_hour
-                  assert_equal 30, ar.open_minute
-                  assert_equal 17, ar.close_hour
-                  assert_equal 0, ar.close_minute
-                end
+              should 'create the right details for location at Pulawska' do
+                assert_equal 'Puławska 34, Warsaw, Poland', @location.address
+                assert_equal nil, @location.address2
+                assert_equal 'Warsaw', @location.city
+                assert_equal 'Masovian Voivodeship', @location.state
+                assert_nil @location.postcode
+                assert_equal "Be careful, cool2 place!", @location.special_notes
+                assert_equal 'location2@example.com', @location.email
+                assert_equal 'This is my cool2 location', @location.description
               end
 
               context '#listing' do
-                setup do
-                  @listing = @location.listings.first
+
+                should 'create the right amount of listings for location at Pulawska' do
+                  assert_equal 1, @location.listings.count
                 end
 
-                should 'create the right amount of listings' do
-                  assert_equal 3, @location.listings.count
+                should 'have the right details (listing3)' do
+                  @listing = @location.listings.find_by_external_id('3')
+                  assert_equal true, @listing.confirm_reservations
+                  assert_equal 4, @listing.hourly_price_cents
+                  assert_equal 10, @listing.daily_price_cents
+                  assert_equal 15, @listing.weekly_price_cents
+                  assert_equal 30, @listing.monthly_price_cents
+                  assert_equal true, @listing.enabled
+                  assert_equal 'my attrs! 3', @listing.my_attribute
                 end
 
-                should 'have right opening hours that differ from location' do
-                  @listing.availability_rules.each do |ar|
-                    assert_equal 9, ar.open_hour
-                    assert_equal 00, ar.open_minute
-                    assert_equal 17, ar.close_hour
-                    assert_equal 0, ar.close_minute
+                context '#' do
+
+                  should 'have correct original url (photo belonging to listing 3)' do
+                    assert_equal ['http://www.example.com/photo.jpg'], @location.listings.find_by_external_id('3').photos.pluck(:image_original_url).sort
                   end
                 end
 
-                should 'have the right details' do
-                  assert_equal 'Day Office #858', @listing.name
-                  assert_equal '', @listing.description
-                  assert_equal 3, @listing.quantity
-                  assert_equal 4000, @listing.hourly_price_cents
-                  assert_equal 28000, @listing.daily_price_cents
-                end
-
-                should 'have the right listing type' do
-                  assert_equal 'Office Space', @listing.listing_type
-                end
-
               end
-
-            end
-
-            context '#location_types' do
-
-              should 'assign the right location type' do
-                assert_equal ['Business'], @instance.locations.map { |location| location.location_type.name }.uniq
-              end
-
-            end
-
-          end
-
-          context '#location availability_rules' do
-
-            should 'create the right number of availability rules' do
-              assert_equal @instance.locations.count*5, @instance.locations.inject(0) { |sum, location| sum += location.availability_rules.count}
-            end
-
-          end
-
-          context '#listing availability_rules' do
-
-            should 'create the right amount of availability rules' do
-              assert_equal @instance.listings.count*5, @instance.listings.inject(0) { |sum, listing| sum += listing.availability_rules.count}
             end
           end
         end
       end
     end
+
+    context 'sending invitational emails' do
+
+      should 'do not send emails if setting is off' do
+        assert_no_difference 'ActionMailer::Base.deliveries.count' do
+          @xml_file = FactoryGirl.create(:xml_template_file)
+          @xml_file.parse
+        end
+      end
+
+      should 'send emails only once to users if settting is on' do
+        stub_mixpanel
+        @xml_file = FactoryGirl.create(:xml_template_file_send_invitations)
+        assert_difference('ActionMailer::Base.deliveries.count', 2) do
+          @xml_file.parse
+        end
+      end
+
+    end
+
+    context 'summary tracker' do
+
+      should 'get correct summaries' do
+        @xml_file = FactoryGirl.create(:xml_template_file)
+        @xml_file.parse
+        assert_equal({:new=>{"company"=>2, "user"=>2, "location"=>3, "address"=>3, "transactable"=>4, "photo"=>4}, :updated=>{}}, @xml_file.get_summary)
+        @xml_file = FactoryGirl.create(:xml_template_file)
+        @xml_file.parse
+        assert_equal({:new=>{}, :updated=>{"company"=>2, "user"=>2, "location"=>3, "address"=>3, "transactable"=>4}}, @xml_file.get_summary)
+      end
+    end
+
+    context 'logger' do
+
+      should 'not log anything if all entities are valid' do
+        @xml_file = FactoryGirl.create(:xml_template_file)
+        @xml_file.parse
+        assert_equal '', @xml_file.get_parse_result
+      end
+
+      should 'log company errors' do
+        @xml_file = FactoryGirl.create(:xml_template_file_invalid_company)
+        @xml_file.parse
+        assert_equal "Validation error for Company 1: Name can't be blank. Ignoring all children.", @xml_file.get_parse_result.strip
+      end
+
+      should 'log that there are no valid users for company' do
+        @xml_file = FactoryGirl.create(:xml_template_file_no_valid_users)
+        assert_no_difference 'Company.count' do
+          @xml_file.parse
+        end
+        assert_equal "Validation error for User user2@example.com: Name can't be blank. Ignoring all children.\nCompany 1 has no valid user, skipping", @xml_file.get_parse_result.strip
+      end
+
+      should 'log location address errors' do
+        @xml_file = FactoryGirl.create(:xml_template_file_invalid_location_address)
+        @xml_file.parse
+        assert_equal "Validation error for Address : Address can't be blank, Latitude can't be blank, and Longitude can't be blank. Ignoring all children.", @xml_file.get_parse_result.strip
+      end
+
+      should 'log transactable errors' do
+        @xml_file = FactoryGirl.create(:xml_template_file_invalid_transactable)
+        @xml_file.parse
+        assert_equal "Validation error for Transactable 1: Free must be free if no prices are provided and My attribute can't be blank. Ignoring all children.", @xml_file.get_parse_result.strip
+      end
+
+    end
+
   end
 
   def get_absolute_file_path(name)
@@ -308,10 +257,12 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
       :company => Company.count,
       :company_industries => CompanyIndustry.count,
       :location => Location.count,
-      :location_availability_rules => AvailabilityRule.where(:target_type => 'Location').count,
-      :listing_availability_rules => AvailabilityRule.where(:target_type => 'Transactable').count,
-      :location_amenities => LocationAmenity.count,
-      :listing => Transactable.count
+      :address => Address.count,
+      :location_availability_rules => AvailabilityRule.where(target_type: 'Location').count,
+      :listing_availability_rules => AvailabilityRule.where(target_type: 'Transactable').count,
+      :location_amenities => AmenityHolder.where(holder_type: 'Location').count,
+      :listing => Transactable.count,
+      :photo => Photo.count
     }
   end
 end

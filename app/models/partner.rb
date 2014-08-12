@@ -30,8 +30,10 @@ class Partner < ActiveRecord::Base
   end
 
   def build_theme_from_instance
-    self.theme = instance.theme.build_clone
-    self.theme
+    if instance.present?
+      self.theme = instance.theme.build_clone
+      self.theme
+    end
   end
 
   def white_label_enabled?

@@ -46,6 +46,8 @@ class Transactable < ActiveRecord::Base
   scope :searchable, -> { active.visible }
   scope :filtered_by_listing_types_ids,  -> listing_types_ids { where("(transactables.properties->'listing_type') IN (?)", listing_types_ids) if listing_types_ids }
   scope :filtered_by_price_types,  -> price_types { where(price_types.map{|pt| "(properties->'#{pt}_price_cents') IS NOT NULL"}.join(' OR  ')) if price_types }
+  scope :filtered_by_attribute_values,  -> attribute_values { where("(transactables.properties->'filterable_attribute') IN (?)", attribute_values) if attribute_values }
+  scope :where_attribute_has_value, -> (attr, value) { where("properties @> '#{attr}=>#{value}'")}
 
   # == Callbacks
   before_validation :set_activated_at
@@ -347,7 +349,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def self.xml_attributes
-    [:name, :description, :quantity, :hourly_price_cents, :daily_price_cents, :weekly_price_cents, :monthly_price_cents]
+    self.csv_fields(PlatformContext.current.instance.transactable_types.first).keys.sort
   end
 
   def name_with_address
@@ -387,6 +389,16 @@ class Transactable < ActiveRecord::Base
 
   def confidential_file_accepted!
     update_attribute(:enabled, true) if is_trusted?
+  end
+
+
+  def self.csv_fields(transactable_type)
+    { external_id: 'External Id', enabled: 'Enabled' }.reverse_merge(
+      transactable_type.transactable_type_attributes.public.pluck(:name, :label).inject({}) do |hash, arr|
+        hash[arr[0].to_sym] = arr[1].presence || arr[0].humanize
+        hash
+      end
+    )
   end
 
   private

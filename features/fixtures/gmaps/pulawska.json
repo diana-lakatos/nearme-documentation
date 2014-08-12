@@ -1,0 +1,5 @@
+{
+  "status": "OK",
+  "results": [ {"address_components":[{"long_name":"34","short_name":"34","types":["street_number"]},{"long_name":"Puławska","short_name":"Puławska","types":["route"]},{"long_name":"Mokotów","short_name":"Mokotów","types":["sublocality_level_1","sublocality","political"]},{"long_name":"Warsaw","short_name":"Warsaw","types":["locality","political"]},{"long_name":"Warszawa","short_name":"Warszawa","types":["administrative_area_level_2","political"]},{"long_name":"Masovian Voivodeship","short_name":"Masovian Voivodeship","types":["administrative_area_level_1","political"]},{"long_name":"Poland","short_name":"PL","types":["country","political"]}],"formatted_address":"Puławska 34, Warsaw, Poland","geometry":{"location":{"lat":52.2045994,"lng":21.02255},"location_type":"ROOFTOP","viewport":{"northeast":{"lat":52.2059483802915,"lng":21.0238989802915},"southwest":{"lat":52.2032504197085,"lng":21.0212010197085}}},"types":["street_address"]} ]
+}
+

@@ -1,6 +1,6 @@
 module InstanceType::Searcher::FullTextSearcher
   include InstanceType::Searcher
-  attr_reader :filterable_location_types, :filterable_listing_types, :filterable_pricing, :search
+  attr_reader :filterable_location_types, :filterable_listing_types, :filterable_pricing, :filterable_attribute, :search
 
   def to_event_params
     { search_query: query, result_count: result_count }.merge(filters)
@@ -28,6 +28,7 @@ module InstanceType::Searcher::FullTextSearcher
           :query => search.query,
           :location_types_ids => search.location_types_ids,
           :listing_types_ids => search.listing_types_ids,
+          :attribute_values => search.attribute_values,
           :listing_pricing => search.lgpricing.blank? ? [] : search.lgpricing_filters,
           :sort => search.sort
         })
@@ -51,6 +52,7 @@ module InstanceType::Searcher::FullTextSearcher
     @filterable_location_types = LocationType.all
     @filterable_listing_types = TransactableType.first.transactable_type_attributes.where(:name => 'listing_type').try(:first).try(:valid_values)
     @filterable_pricing = TransactableType.first.pricing_options.keys.map { |k| [k.downcase, k.capitalize] }
+    @filterable_attribute = TransactableType.first.transactable_type_attributes.where(:name => 'filterable_attribute').try(:first).try(:valid_values)
   end
 
   def search_notification

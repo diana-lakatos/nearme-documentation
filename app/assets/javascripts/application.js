@@ -42,7 +42,6 @@
 //= require_tree ./sections
 //
 //= require ./vendor/bootstrap-modal-fullscreen
-
 window.DNM = {
   UI: {},
   initialize : function() {
@@ -126,10 +125,10 @@ window.DNM = {
 
   fixInputIconBackgroundTransparency: function() {
     if ($.browser.msie  && parseInt($.browser.version, 10) === 8) {
-      $('.input-icon-holder input').live("focus", function() {
+      $(document).on('focus', '.input-icon-holder input', function() {
         $(this).parents('.input-icon-holder').eq(0).find('span').eq(0).css('background', '#f0f0f0');
       })
-      $('.input-icon-holder input').live("blur", function() {
+      $(document).on('blur', '.input-icon-holder input', function() {
         $(this).parents('.input-icon-holder').eq(0).find('span').eq(0).css('background', '#e6e6e6');
       });
     }

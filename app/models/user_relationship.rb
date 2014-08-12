@@ -7,6 +7,7 @@ class UserRelationship < ActiveRecord::Base
 
   # User who is interested in the above user
   # attr_accessible :follower_id
+
   validates :follower_id, presence: true
 
   belongs_to :follower, class_name: "User"

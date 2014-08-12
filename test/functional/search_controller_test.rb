@@ -116,6 +116,21 @@ class SearchControllerTest < ActionController::TestCase
         end
       end
 
+      context 'with attribute value filter' do
+        should 'filter only filtered locations' do
+          listing = FactoryGirl.create(:listing_in_cleveland)
+          listing.properties[:filterable_attribute] = 'Lefthanded'
+          listing.save
+          filtered_auckland = listing.location
+          another_auckland = FactoryGirl.create(:listing_in_cleveland).location
+
+          get :index, { :loc => 'Cleveland', :lgattribute => 'Lefthanded', :v => 'mixed' }
+
+          assert_location_in_mixed_result(filtered_auckland)
+          refute_location_in_mixed_result(another_auckland)
+        end
+      end
+
       context 'without filter' do
         context 'show only valid locations' do
           setup do
@@ -204,12 +219,13 @@ class SearchControllerTest < ActionController::TestCase
         result_count: 0,
         listing_type_filter: [@listing_type],
         location_type_filter: [@location_type.name],
-        industry_filter: [@industry.name]
+        industry_filter: [@industry.name],
+        attribute_filter: ['Lefthanded']
       }
       @tracker.expects(:conducted_a_search).with do |search, custom_options|
         expected_custom_options == custom_options
       end
-      get :index, { :loc => 'adelaide', :listing_types_ids => [@listing_type], :location_types_ids => [@location_type.id], :industries_ids => [@industry.id], :v => 'list' }
+      get :index, { :loc => 'adelaide', :attribute_values => ['Lefthanded'], :listing_types_ids => [@listing_type], :location_types_ids => [@location_type.id], :industries_ids => [@industry.id], :v => 'list' }
     end
 
     should 'log filters in mixpanel along with other arguments for mixed result type' do
@@ -221,12 +237,13 @@ class SearchControllerTest < ActionController::TestCase
         result_count: 0,
         listing_type_filter: [@listing_type],
         location_type_filter: [@location_type.name],
-        listing_pricing_filter: ['daily']
+        listing_pricing_filter: ['daily'],
+        attribute_filter: ['Lefthanded']
       }
       @tracker.expects(:conducted_a_search).with do |search, custom_options|
         expected_custom_options == custom_options
       end
-      get :index, { :loc => 'adelaide', :lgtype => @listing_type, :lntype => @location_type.name.downcase, :lgpricing => 'daily', :v => 'mixed' }
+      get :index, { :loc => 'adelaide', :lgtype => @listing_type, :lntype => @location_type.name.downcase, :lgpricing => 'daily', :lgattribute => 'Lefthanded', :v => 'mixed' }
     end
 
     should 'track search if ignore_search flag is set to 0' do

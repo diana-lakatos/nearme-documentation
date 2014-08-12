@@ -1,0 +1,4 @@
+= simple_form_for [:instance_admin, :manage, resource], :html => { :multipart => true} do |f|
+  = f.input :name
+
+  = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
