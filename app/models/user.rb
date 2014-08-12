@@ -40,6 +40,7 @@ class User < ActiveRecord::Base
   has_many :tickets, -> { order 'updated_at DESC' }, :class_name => 'Support::Ticket'
   has_many :uploaded_confidential_files, foreign_key: 'uploader_id', dependent: :destroy, class_name: 'ConfidentialFile'
   has_many :confidential_files, as: :owner
+  has_many :user_bans
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
@@ -48,7 +49,7 @@ class User < ActiveRecord::Base
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
 
-  after_destroy :cleanup
+  after_destroy :perform_cleanup
   before_restore :recover_companies
 
   accepts_nested_attributes_for :companies
@@ -119,6 +120,7 @@ class User < ActiveRecord::Base
   # attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :avatar_versions_generated_at, :avatar_transformation_data,
   #   :biography, :industry_ids, :country_name, :mobile_number, :facebook_url, :twitter_url, :linkedin_url, :instagram_url,
   #   :current_location, :company_name, :skills_and_interests, :last_geolocated_location_longitude, :last_geolocated_location_latitude,
+  #
   #   :domain_id, :time_zone, :companies_attributes, :sms_notifications_enabled, :sms_preferences
 
   serialize :sms_preferences, Hash
@@ -434,13 +436,17 @@ class User < ActiveRecord::Base
     mailer_unsubscriptions.where(mailer: mailer_name).any?
   end
 
-  def cleanup
+  def perform_cleanup
+    # we invoke cleanup from user_ban as well. in afrer_destroy this user is not included, but in user_ban it is included
+    cleanup(0)
+  end
+
+  def cleanup(company_users_number = 1)
     self.created_companies.each do |company|
-      if company.company_users.count.zero?
+      if company.company_users.count == company_users_number
         company.destroy
-      # this might not be needed, but just in case...
-      elsif company.creator == self
-        company.creator = company.company_users.first.user
+      else
+        company.creator = company.company_users.find { |cu| cu.user_id != self.id }.user
         company.save!
       end
     end
@@ -498,6 +504,13 @@ class User < ActiveRecord::Base
   def confidential_file_accepted!
     listings.find_each(&:confidential_file_accepted!)
   end
+
+  def active_for_authentication?
+    super && !banned?
+  end
+
+  def banned?
+    user_bans.count > 0
 
   def self.xml_attributes
     self.csv_fields.keys

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140730082848) do
+ActiveRecord::Schema.define(version: 20140804081000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2111,6 +2111,8 @@ ActiveRecord::Schema.define(version: 20140730082848) do
     t.text     "hint"
     t.string   "placeholder"
     t.boolean  "internal",             default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "transactable_type_attributes", ["instance_id", "transactable_type_id"], name: "index_tta_on_instance_id_and_transactable_type_id", using: :btree
@@ -2176,6 +2178,15 @@ ActiveRecord::Schema.define(version: 20140730082848) do
   end
 
   add_index "unit_prices", ["transactable_id"], name: "index_unit_prices_on_listing_id", using: :btree
+
+  create_table "user_bans", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "instance_id"
+    t.integer  "creator_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "user_industries", force: true do |t|
     t.integer  "industry_id"
