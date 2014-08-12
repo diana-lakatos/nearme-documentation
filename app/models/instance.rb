@@ -66,6 +66,7 @@ class Instance < ActiveRecord::Base
   has_many :transactable_types
   has_many :instance_payment_gateways, :inverse_of => :instance
   has_many :country_instance_payment_gateways, :inverse_of => :instance
+  has_many :users, :inverse_of => :instance
   serialize :pricing_options, Hash
 
   validates_presence_of :name

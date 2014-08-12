@@ -109,11 +109,13 @@
 			$('.navbar').fadeToggle()
 		})
 
-		var name	 	= ($('#field-name')),
-			email	 	= ($('#field-email')),
-			company	 	= ($('#field-company')),
-			message  	= ($('#field-message')),
-			marketplace = ($('#field-marketplace'));
+		var name              = ($('#field-name')),
+		    company           = ($('#field-company')),
+		    email             = ($('#field-email')),
+		    lead_source       = ($('#field-lead-source')),
+		    location          = ($('#field-location')),
+		    previous_research = ($('#field-previous-research')),
+		    description       = ($('#field-description'));
 
 		$('.form-contact form #field-name').on('focusout',function() {
 			if( name.val().length == 0 || name.val() == name.attr('title')) {
@@ -142,31 +144,51 @@
 			}
 		})
 
-		$('.form-contact form #field-marketplace').on('change',function() {
-			if ( marketplace.find(":selected").val() === "" ) {
-				marketplace.parent('.form-group').addClass('error').removeClass('success')
+		$('.form-contact form #field-lead-source').on('change',function() {
+			if ( lead_source.find(":selected").val() === "" ) {
+				lead_source.parent('.form-group').addClass('error').removeClass('success')
 				return false;
 			} else {
-				marketplace.parent('.form-group').addClass('success').removeClass('error')
+				lead_source.parent('.form-group').addClass('success').removeClass('error')
 			}
 		})
 
-		$('.form-contact form #field-message').on('focusout',function() {
-			if( message.val().length == 0 || message.val() == message.attr('title')) {
-				message.parent('.form-group').addClass('error').removeClass('success')
+		$('.form-contact form #field-location').on('focusout',function() {
+			if( location.val().length == 0 || location.val() == location.attr('title')) {
+				location.parent('.form-group').addClass('error').removeClass('success')
 				return false;
 			} else {
-				message.parent('.form-group').addClass('success').removeClass('error')
+				location.parent('.form-group').addClass('success').removeClass('error')
+			}
+		})
+
+		$('.form-contact form #field-previous-research').on('change',function() {
+			if ( previous_research.find(":selected").val() === "" ) {
+				previous_research.parent('.form-group').addClass('error').removeClass('success')
+				return false;
+			} else {
+				previous_research.parent('.form-group').addClass('success').removeClass('error')
+			}
+		})
+
+		$('.form-contact form #field-description').on('focusout',function() {
+			if( description.val().length == 0 || description.val() == description.attr('title')) {
+				description.parent('.form-group').addClass('error').removeClass('success')
+				return false;
+			} else {
+				description.parent('.form-group').addClass('success').removeClass('error')
 			}
 		})
 
 		function validateForm() {
-			var name	 = ($('#field-name')),
-				email	 = ($('#field-email')),
-				company	 = ($('#field-company')),
-				message  = ($('#field-message')),
-				marketplace = ($('#field-marketplace')),
-				valid = true;
+			var name              = ($('#field-name')),
+			    company           = ($('#field-company')),
+			    email             = ($('#field-email')),
+			    lead_source       = ($('#field-lead-source')),
+			    location          = ($('#field-location')),
+			    previous_research = ($('#field-previous-research')),
+			    description       = ($('#field-description')),
+			    valid             = true;
 
 			$(this).find('input').removeClass('error');
 
@@ -184,25 +206,39 @@
 				company.parent('.form-group').addClass('success').removeClass('error')
 			}
 
-			if( marketplace.val().length == 0) {
-				marketplace.parent('.form-group').addClass('error').removeClass('success')
-				valid = false;
-			} else {
-				marketplace.parent('.form-group').addClass('success').removeClass('error')
-			}
-
-			if( message.val().length == 0 || message.val() == message.attr('title')) {
-				message.parent('.form-group').addClass('error').removeClass('success')
-				valid = false;
-			} else {
-				message.parent('.form-group').addClass('success').removeClass('error')
-			}
-
 			if(!mailValidation(email.val()) || email.val() == email.attr('title')) {
 			  email.parent('.form-group').addClass('error').removeClass('success')
 			  valid = false;
 			}  else {
 				 email.parent('.form-group').addClass('success').removeClass('error')
+			}
+
+			if( lead_source.val().length == 0) {
+				lead_source.parent('.form-group').addClass('error').removeClass('success')
+				valid = false;
+			} else {
+				lead_source.parent('.form-group').addClass('success').removeClass('error')
+			}
+
+			if( location.val().length == 0 || location.val() == location.attr('title')) {
+				location.parent('.form-group').addClass('error').removeClass('success')
+				valid = false;
+			} else {
+				location.parent('.form-group').addClass('success').removeClass('error')
+			}
+
+			if( previous_research.val().length == 0) {
+				previous_research.parent('.form-group').addClass('error').removeClass('success')
+				valid = false;
+			} else {
+				previous_research.parent('.form-group').addClass('success').removeClass('error')
+			}
+
+			if( description.val().length == 0 || description.val() == description.attr('title')) {
+				description.parent('.form-group').addClass('error').removeClass('success')
+				valid = false;
+			} else {
+				description.parent('.form-group').addClass('success').removeClass('error')
 			}
 
 			return valid;
@@ -235,7 +271,8 @@
 				$('.success-message ').show()
 			    $('html, body').stop().animate({ 'scrollTop': $('.success-message-content').offset().top - 200 }, 500);
 				ga('send', 'event', 'Form', document.URL, 'Submitted')
-			}).bind('ajax:error', function(event, xhr, status) {
+			})
+			.bind('ajax:error', function(event, xhr, status) {
 				$(this).find('.error-block').text(xhr.responseText).css("display", "block");
 				$(this).find('button[type="submit"]').text('SEND').prop('disabled', false);
 			  ga('send', 'event', 'Form', document.URL, 'Failed')

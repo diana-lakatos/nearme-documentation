@@ -1,0 +1,27 @@
+.row-fluid
+  .controls.controls-row
+    %legend.span3 Data import for #{resource.csv_file_identifier}
+
+- if resource.xml_file.blank?
+  %p Your data is being processed. Please refresh the page after few minutes.
+- else
+  %p
+    - if resource.imported_at.nil?
+      Your data has been processed, however nothing has been imported yet! U can #{link_to "preview xml", resource.xml_file.url, target: :blank} that will be imported. To actually import data click the button below.
+
+      = simple_form_for resource, url: schedule_import_instance_admin_manage_transactable_type_data_upload_path(@transactable_type, resource), method: :post do |f|
+        = f.button :submit, 'Schedule Data Import', class: 'btn btn-primary'
+    - elsif resource.parsing_result_log.blank?
+      Parsing has been scheduled, job is waiting in the queue.
+    - elsif resource.encountered_error.blank?
+      %h2 Data has been imported.
+      %p New entities: #{resource.parse_summary[:new].map { |k, v| "#{k.humanize}: #{v}"}.sort.join(', ')}
+      %p Updated entities: #{resource.parse_summary[:updated].map { |k, v| "#{k.humanize}: #{v}"}.sort.join(', ')}
+      - if resource.parsing_result_log
+        %p Errors encountered:
+        %textarea{disabled: 'disabled', style: "width: 98%", rows: 10}= resource.parsing_result_log
+      - else
+        No validation errors encountered.
+    - else
+      Data has not been imported due to error during processing. Please verify that #{link_to "preview xml", resource.xml_file.url, target: :blank} is correct.
+

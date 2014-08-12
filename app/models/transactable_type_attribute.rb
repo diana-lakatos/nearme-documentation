@@ -4,15 +4,21 @@ class TransactableTypeAttribute < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
+  ATTRIBUTE_TYPES = %w(array string integer float decimal datetime time date binary boolean)
+  HTML_TAGS = %w(input select switch textarea check_box radio_buttons)
+
   # attr_accessible :name, :transactable_type_id, :attribute_type, :html_tag,
   #   :prompt, :default_value, :public, :validation_rules, :valid_values, :label,
   #   :placeholder, :hint, :input_html_options, :wrapper_html_options, :deleted_at,
   #   :internal
 
   scope :listable, -> { all }
+  scope :not_internal, -> { where.not(internal: true) }
+  scope :public, -> { where(public: true) }
 
   validates_presence_of :name, :attribute_type
   validates_uniqueness_of :name, :scope => [:transactable_type_id, :deleted_at]
+  validates_inclusion_of :html_tag, in: HTML_TAGS, allow_blank: true
 
   belongs_to :transactable_type, :inverse_of => :transactable_type_attributes
   belongs_to :instance
@@ -24,7 +30,12 @@ class TransactableTypeAttribute < ActiveRecord::Base
 
   attr_accessor :input_html_options_string, :wrapper_html_options_string
 
+  before_save :normalize_name
   before_save :normalize_html_options
+
+  def normalize_name
+    self.name = self.name.to_s.tr(' ', '_').underscore.downcase
+  end
 
   def normalize_html_options
     self.input_html_options = normalize_input_html_options if input_html_options_string.present?

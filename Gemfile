@@ -6,6 +6,7 @@ gem 'rails', '~> 4.0.0'
 gem 'pg'
 
 gem 'sprockets', '~> 2.11.0'
+gem 'sprockets-rails', '~> 2.1'
 
 gem 'redis'
 gem 'redis-rails', '~> 4.0.0'
@@ -61,6 +62,7 @@ gem "compass-rails"
 gem 'animate'
 gem "coffee-rails"
 gem 'delayed_job_active_record', '~> 4.0.0'
+gem 'daemons'
 gem "rdiscount"
 gem 'attr_encrypted'
 gem 'stripe'
@@ -69,6 +71,7 @@ gem 'paypal-sdk-adaptivepayments'
 gem 'balanced'
 gem 'friendly_id', '~> 5.0.4'
 gem "non-stupid-digest-assets"
+gem 'asset_sync'
 gem 'sass-rails', '~> 4.0.0'
 gem 'bootstrap-sass', '~> 2.3.1.0'
 gem 'chronic', '~> 0.9.1'

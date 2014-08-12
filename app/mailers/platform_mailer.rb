@@ -16,12 +16,4 @@ class PlatformMailer < ActionMailer::Base
          subject: "New NearMe contact form sumbission.",
          layout: false
   end
-
-  def demo_request(platform_demo_request)
-    @platform_demo_request = platform_demo_request
-    mail from: 'notifications@near-me.com',
-         to: NOTIFICATIONS_EMAIL,
-         subject: "New NearMe demo request form submission.",
-         layout: false
-  end
 end

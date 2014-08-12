@@ -75,11 +75,17 @@ class Address < ActiveRecord::Base
     self.address
   end
 
-  private
+  def self.xml_attributes
+    [:address, :address2, :formatted_address, :city, :street, :state, :postcode]
+  end
+
+  def self.csv_fields
+    { address: 'Address', city: 'City', street: 'Street', suburb: 'Suburb', state: 'State', postcode: 'Postcode' }
+  end
 
   def fetch_coordinates
     # If we aren't locally geocoding (cukes and people with JS off)
-    if (address_changed? && !(latitude_changed? || longitude_changed?))
+    if should_fetch_coordinates?
       populator = Address::AddressComponentsPopulator.new(self)
       geocoded = populator.geocode
       if geocoded
@@ -94,6 +100,11 @@ class Address < ActiveRecord::Base
       end
     end
   end
+
+  def should_fetch_coordinates?
+    (address_changed? && !(latitude_changed? || longitude_changed?))
+  end
+
 
 end
 

@@ -106,8 +106,8 @@ class TransactableTypeTest < ActiveSupport::TestCase
         tta = transactable_type.transactable_type_attributes.find { |attr| attr.name == "#{price_field}_price_cents" }
         assert_not_nil tta
         assert_equal "integer", tta.attribute_type
-        assert_equal true, tta.internal
-        assert_equal false, tta.public
+        assert tta.internal
+        assert tta.public
         transactable_type.update_attribute(:pricing_options, {})
         tta.reload.destroyed?
       end

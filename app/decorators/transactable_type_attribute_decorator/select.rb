@@ -1,8 +1,4 @@
-class TransactableTypeAttributeDecorator::Select
-
-  def initialize(attribute_decorator)
-    @attribute_decorator = attribute_decorator
-  end
+class TransactableTypeAttributeDecorator::Select < TransactableTypeAttributeDecorator::Base
 
   def options
     {

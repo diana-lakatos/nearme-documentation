@@ -1,8 +1,4 @@
-class TransactableTypeAttributeDecorator::Input
-
-  def initialize(attribute_decorator)
-    @attribute_decorator = attribute_decorator
-  end
+class TransactableTypeAttributeDecorator::Input < TransactableTypeAttributeDecorator::Base
 
   def options
     default_options.deep_merge(custom_as)

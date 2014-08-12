@@ -269,6 +269,9 @@ ActiveRecord::Schema.define(version: 20140804081000) do
     t.string   "csv_file"
     t.string   "xml_file"
     t.text     "options"
+    t.text     "parsing_result_log"
+    t.text     "encountered_error"
+    t.text     "parse_summary"
     t.datetime "imported_at"
     t.integer  "instance_id"
     t.integer  "uploader_id"
@@ -806,12 +809,15 @@ ActiveRecord::Schema.define(version: 20140804081000) do
     t.string   "email"
     t.string   "subject"
     t.text     "comments"
-    t.boolean  "subscribed",       default: false
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.boolean  "subscribed",        default: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.string   "company"
     t.string   "marketplace_type"
     t.string   "referer"
+    t.string   "lead_source"
+    t.string   "location"
+    t.string   "previous_research"
   end
 
   create_table "platform_demo_requests", force: true do |t|

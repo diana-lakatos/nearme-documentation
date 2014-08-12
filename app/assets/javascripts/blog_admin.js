@@ -5,4 +5,5 @@
 //= require components/switch
 //= require ./vendor/urlify
 //= require ./blog/admin/blog_posts_form
+//= require ckeditor/basepath
 //= require ckeditor/init

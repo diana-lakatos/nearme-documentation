@@ -9,15 +9,18 @@ module SalesforceLead
       request = Net::HTTP::Post.new(uri.request_uri)
 
       request.set_form_data({"oid" => "00DG0000000CGnm",
-                             "first_name" => name.split(' ').first,
-                             "last_name" => name.split(' ').from(1).join(' '),
-                             "email" => email,
-                             "company" => attributes['company'],
-                             "phone" => attributes['phone'],
+                             "first_name"      => name.split(' ').first,
+                             "last_name"       => name.split(' ').from(1).join(' '),
+                             "email"           => attributes['email'],
+                             "company"         => attributes['company'],
+                             "phone"           => attributes['phone'],
                              "00NG000000DfhsK" => attributes['marketplace_type'],
-                             "00NG000000Ddp2w" => comments,
+                             "00NG000000Dg86K" => attributes['lead_source'],
+                             "00NG000000DgV2W" => attributes['location'],
+                             "00NG000000De3U8" => attributes['previous_research'],
+                             "00NG000000Ddp2w" => attributes['comments'],
                              "00NG000000DduGh" => subscribed? ? '1' : '',
-                             "lead_source" => "Web"})
+                             "lead_source"     => "Web"})
 
       response = http.request(request) if Rails.env.production?
     rescue => exception

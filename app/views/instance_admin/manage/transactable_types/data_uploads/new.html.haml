@@ -1,0 +1,15 @@
+= link_to 'Download CSV Template', download_csv_template_instance_admin_manage_transactable_type_data_uploads_path(@transactable_type), class: 'pull-right btn btn-primary'
+%br
+%br
+= simple_form_for [:instance_admin, :manage, @transactable_type, resource], :html => { :multipart => true} do |f|
+  .row-fluid
+    .controls.controls-row
+      = f.input :csv_file, as: :file, label: 'CSV File', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
+  = f.simple_fields_for :options, OpenStruct.new(resource.options) do |option|
+    .row-fluid
+      .controls.controls-row
+        = option.input :send_invitational_email, required: false, as: :boolean, label: false, inline_label: "Send invitational email", wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+
+  = f.button :submit, 'Upload', class: 'btn btn-primary'
+

@@ -26,6 +26,8 @@ class Admin::BaseController < ApplicationController
       PlatformContext.scope_to_instance
     elsif Admin::InstancesController === self && params[:id].present?
       PlatformContext.current = PlatformContext.new(Instance.find(params[:id]))
+    elsif params[:transactable_type_id]
+      PlatformContext.current = PlatformContext.new(TransactableType.unscoped.find(params[:transactable_type_id]).instance)
     else
       PlatformContext.clear_current
     end

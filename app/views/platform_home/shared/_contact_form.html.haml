@@ -1,20 +1,40 @@
 .form-contact
   = simple_form_for platform_contact, remote: true, url: '/contact-submit' do |f|
     .error-block
+
     .form-group
       %input#field-name.form-control{placeholder: "First & Last Name", title: "First & Last Name", type: "text", name: "platform_contact[name]"}/
+
     .form-group
-      %input#field-company.form-control{placeholder: "Company", title: "Company", type: "text", name: "platform_contact[company]"}/
+      %input#field-company.form-control{placeholder: "Company name or working title", title: "Company name or working title", type: "text", name: "platform_contact[company]"}/
+
     .form-group
       %input#field-email.form-control{placeholder: "Email", title: "Email", type: "text", name: "platform_contact[email]"}/
+
     .form-group
-      %select#field-marketplace.select.selectpicker{name: "platform_contact[marketplace_type]"}
-        %option{value: ""} Marketplace Type
-        %option{value: "LocationBased"} Location-based (Airbnb for ...)
-        %option{value: "BuySellRent"} Buy/Sell/Rent (Peer-to-peer goods)
-        %option{value: "Services"} Services (Peer-to-peer services)
+      %select#field-lead-source.select.selectpicker{name: "platform_contact[lead_source]"}
+        %option{value: ""} How did you hear about Near Me?
+        %option{value: "Google / Search"} Google / Search
+        %option{value: "Article / Blog Post"} Article / Blog Post
+        %option{value: "Social Media"} Social Media
+        %option{value: "Event / Seminar / Tradeshow"} Event / Seminar / Tradeshow
+        %option{value: "Word of Mouth"} Word of Mouth
+        %option{value: "Referral"} Referral
         %option{value: "Other"} Other
+
     .form-group
-      %textarea#field-message.form-control{placeholder: "Comments", rows: "3", title: "Comments", name: "platform_contact[comments]"}
+      %input#field-location.form-control{placeholder: "Where are you located?", title: "Where are you located?", type: "text", name: "platform_contact[location]"}/
+
+    .form-group
+      %select#field-previous-research.select.selectpicker{name: "platform_contact[previous_research]"}
+        %option{value: ""} Have you researched technology solutions?
+        %option{value: "None"} None
+        %option{value: "Researched other Technology Platforms"} Researched other Technology Platforms
+        %option{value: "Researched Custom Development"} Researched Custom Development
+        %option{value: "Previously done Custom Development."} Previously done Custom Development.
+
+    .form-group
+      %textarea#field-description.form-control{placeholder: "Brief description of what you want to build.", rows: "3", title: "Brief description of what you want to build.", name: "platform_contact[comments]"}
+
     .form-actions
       %button.btn{type: "submit"} SEND

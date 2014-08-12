@@ -4,6 +4,8 @@ DesksnearMe::Application.routes.draw do
     mount Spree::Core::Engine, at: '/instance_buy_sell_admin'
   end
 
+  get 'ping', to: 'ping#index'
+
   mount Ckeditor::Engine => '/ckeditor'
 
   constraints host: 'near-me.com' do
@@ -170,13 +172,23 @@ DesksnearMe::Application.routes.draw do
 
       resources :confidential_files, only: [:index, :edit, :update]
 
+      resources :transactable_types, :only => [:index, :edit, :update, :show] do
+        resources :transactable_type_attributes, controller: 'transactable_types/transactable_type_attributes'
+        resources :data_uploads, :only => [:new, :create, :index, :edit, :update, :show], controller: 'transactable_types/data_uploads' do
+          collection do
+            get :download_csv_template
+          end
+          member do
+            post :schedule_import
+          end
+        end
+      end
+
       resources :inventories, only: [:index] do
         post :login_as, on: :member
         post :restore_session, on: :collection
         resources :user_bans, only: [:create, :index, :destroy], controller: 'inventories/user_bans'
       end
-
-      resources :transactable_type_attributes
 
       resources :transfers do
         member do
