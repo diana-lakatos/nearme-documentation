@@ -219,7 +219,6 @@ namespace :populate do
       else
         Instance.find_each do |i|
           PlatformContext.current = PlatformContext.new(i)
-          puts i.name
           user.populate_companies_metadata!
           user.populate_instance_admins_metadata!
           user.populate_listings_metadata!

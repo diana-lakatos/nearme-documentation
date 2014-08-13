@@ -584,6 +584,26 @@ class UserTest < ActiveSupport::TestCase
 
     end
 
+    context 'reservations' do
+
+      setup do
+        @user = FactoryGirl.create(:user)
+      end
+
+      should 'cancel any pending unconfirmed reservations' do
+        @reservation = FactoryGirl.create(:reservation, owner: @user)
+        @user.destroy
+        assert @reservation.reload.cancelled_by_guest?
+      end
+
+      should 'cancel any pending reservations' do
+        @reservation = FactoryGirl.create(:reservation, owner: @user, state: 'confirmed')
+        @user.destroy
+        refute @reservation.reload.cancelled_by_guest?
+        assert @reservation.confirmed?
+      end
+    end
+
     context 'company has multiple administrators' do
 
       setup do

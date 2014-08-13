@@ -474,6 +474,9 @@ class User < ActiveRecord::Base
     self.administered_locations.each do |location|
       location.update_attribute(:administrator_id, nil) if location.administrator_id == self.id
     end
+    self.reservations.unconfirmed.find_each do |r|
+      r.user_cancel!
+    end
   end
 
   def recover_companies
@@ -551,19 +554,19 @@ class User < ActiveRecord::Base
   end
 
   def has_draft_listings
-    metadata[PlatformContext.current.instance.id.to_s]["has_draft_listings"]
+    get_instance_metadata("has_draft_listings")
   end
 
   def has_any_active_listings
-    metadata[PlatformContext.current.instance.id.to_s]["has_any_active_listings"]
+    get_instance_metadata("has_any_active_listings")
   end
 
   def companies_metadata
-    metadata[PlatformContext.current.instance.id.to_s]["companies_metadata"]
+    get_instance_metadata("companies_metadata")
   end
 
   def instance_admins_metadata
-    metadata[PlatformContext.current.instance.id.to_s]["instance_admins_metadata"]
+    get_instance_metadata("instance_admins_metadata")
   end
 
 end

@@ -129,6 +129,11 @@ module Metadata::Base
             self.touch unless new_record?
             self.#{metadata_column} = tmp_#{metadata_column}
           end
+
+          def get_instance_#{metadata_column}(attr)
+            return nil if #{metadata_column}.nil? || #{metadata_column}[PlatformContext.current.instance.id.to_s].nil?
+            #{metadata_column}[PlatformContext.current.instance.id.to_s][attr]
+          end
         EOV
 
       end
