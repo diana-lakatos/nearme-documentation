@@ -45,6 +45,7 @@
       .actions
         = f.submit 'Sign up', :disable_with => "Signing up..."
 
-- content_for :domready do
-  $(function() { new SignupForm($('#signup')) });
+- if request.xhr?
+  :javascript
+    $(function() { new SignupForm($('#signup')) });
 

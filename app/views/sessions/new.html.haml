@@ -14,7 +14,7 @@
           = render 'shared/render_flash'
 
         = render 'authentications/services'
-  
+
         = simple_form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
           .email-holder.input-icon-holder
             = f.input :email, :label => false, :placeholder => "Email", :input_html => { :tabindex => '1' }
@@ -29,11 +29,9 @@
           .actions
             = f.submit "Log In", :tabindex => '3'
 
-        .text-center.already-a-user= link_to('New User?', new_user_registration_path(:return_to => params[:return_to]), :rel => "modal.sign-up-modal")      
-  
+        .text-center.already-a-user= link_to('New User?', new_user_registration_path(:return_to => params[:return_to]), :rel => "modal.sign-up-modal")
+
 - if request.xhr?
   :javascript
     Modal.setClass('sign-up-modal')
-
-- content_for :domready do
-  $(function() { new SigninForm($('#signup')) });
+    $(function() { new SigninForm($('#signup')) });
