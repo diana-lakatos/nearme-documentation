@@ -16,7 +16,7 @@
                   =image_tag "platform_home/logo-01-light.png"
 
                 %p
-                  %a{download: "", href: "/assets/platform_home/blue_no_text.zip"} Download
+                  = link_to "Download", asset_url('platform_home/blue_no_text.zip'), download: ""
 
             .col-md-6
               .brand-logo.brand-logo-dark
@@ -24,7 +24,7 @@
                   =image_tag "platform_home/logo-01-dark.png"
 
                 %p
-                  %a{download: "", href: "/assets/platform_home/white_no_text.zip"} Download
+                  = link_to "Download", asset_url('platform_home/white_no_text.zip'), download: ""
 
           .row
             .col-md-6
@@ -33,7 +33,7 @@
                   =image_tag "platform_home/logo-02-light.png"
 
                 %p
-                  %a{download: "", href: "/assets/platform_home/blue_bottom_text.zip"} Download
+                  = link_to "Download", asset_url('platform_home/blue_bottom_text.zip'), download: ""
 
             .col-md-6
               .brand-logo.brand-logo-dark
@@ -41,7 +41,7 @@
                   =image_tag "platform_home/logo-02-dark.png"
 
                 %p
-                  %a{download: "", href: "/assets/platform_home/white_bottom_text.zip"} Download
+                  = link_to "Download", asset_url('platform_home/white_bottom_text.zip'), download: ""
 
           .row
             .col-md-6
@@ -50,7 +50,7 @@
                   =image_tag "platform_home/logo-03-light.png"
 
                 %p
-                  %a{download: "", href: "/assets/platform_home/blue_side_text.zip"} Download
+                  = link_to "Download", asset_url('platform_home/blue_side_text.zip'), download: ""
 
             .col-md-6
               .brand-logo.brand-logo-dark
@@ -58,7 +58,7 @@
                   =image_tag "platform_home/logo-03-dark.png"
 
                 %p
-                  %a{download: "", href: "/assets/platform_home/white_side_text.zip"} Download
+                  = link_to "Download", asset_url('platform_home/white_side_text.zip'), download: ""
 
           .row
             .col-md-6
@@ -67,6 +67,6 @@
                   =image_tag "platform_home/fact-sheet.png", class: "fact-sheet"
 
                 %p
-                  %a{download: "", href: "/assets/platform_home/nearme_fact_sheet.png"} Download
+                  = link_to "Download", asset_url('platform_home/nearme_fact_sheet.png'), download: ""
 
 = render template: "platform_home/layout/main_layout"
