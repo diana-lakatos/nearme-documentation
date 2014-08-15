@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   auto_set_platform_context
 
   extend FriendlyId
-  has_metadata :accessors => [:has_draft_listings, :has_any_active_listings, :companies_metadata, :instance_admins_metadata, :support_metadata]
+  has_metadata :accessors => [:support_metadata]
   friendly_id :name, use: [:slugged, :finders]
 
   has_many :authentications, :dependent => :destroy
@@ -48,9 +48,12 @@ class User < ActiveRecord::Base
 
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
+  before_validation :normalize_gender
 
   after_destroy :perform_cleanup
   before_restore :recover_companies
+
+  store :required_fields
 
   accepts_nested_attributes_for :companies
   accepts_nested_attributes_for :confidential_files
@@ -97,6 +100,7 @@ class User < ActiveRecord::Base
   BIOGRAPHY_MAX_LENGTH = 2000
 
   validates_presence_of :name
+  validates_presence_of :first_name
 
   # FIXME: This is an unideal coupling of 'required parameters' for specific forms
   #        to the general validations on the User model.
@@ -112,8 +116,19 @@ class User < ActiveRecord::Base
   validates :skills_and_interests, length: {maximum: 150}
   validates :biography, length: {maximum: BIOGRAPHY_MAX_LENGTH}
 
+  attr_accessor :skip_custom_validation
+
+  validate do |user|
+    if user.persisted? && PlatformContext.current.instance.user_info_in_onboarding_flow? && !self.skip_custom_validation
+      PlatformContext.current.instance.user_required_fields.each do |field|
+        field_to_check = field == 'avatar' ? 'avatar_original_url' : field
+        user.errors.add(field, I18n.t('errors.messages.blank')) unless self.send(field_to_check).present?
+      end
+    end
+  end
+
   devise :database_authenticatable, :registerable, :recoverable,
-         :rememberable, :trackable, :user_validatable, :token_authenticatable, :temporary_token_authenticatable
+    :rememberable, :trackable, :user_validatable, :token_authenticatable, :temporary_token_authenticatable
 
   attr_accessor :phone_required, :country_name_required, :skip_password, :verify_identity
 
@@ -174,12 +189,26 @@ class User < ActiveRecord::Base
     reservations.confirmed
   end
 
-  def name
-    self[:name].to_s.split.collect{|w| w[0] = w[0].capitalize; w}.join(' ')
+  def name(avoid_stack_too_deep = nil)
+    avoid_stack_too_deep = false if avoid_stack_too_deep.nil?
+    name_from_components(avoid_stack_too_deep).presence || self.read_attribute(:name).to_s.split.collect{|w| w[0] = w[0].capitalize; w}.join(' ')
+  end
+
+  def name_from_components(avoid_stack_too_deep)
+    return '' if avoid_stack_too_deep
+    [first_name, middle_name, last_name].select { |s| s.present? }.join(' ')
   end
 
   def first_name
-    name.split[0...-1].join(' ').presence || name
+    (self.read_attribute(:first_name)) || (name(true).split[0...1].join(' '))
+  end
+
+  def middle_name
+    (self.read_attribute(:middle_name)) || (name(true).split.length > 2 ? name(true).split[1] : '')
+  end
+
+  def last_name
+    (self.read_attribute(:last_name)) || (name(true).split.length > 1 ? name(true).split.last : '')
   end
 
   # Whether to validate the presence of a password
@@ -280,14 +309,6 @@ class User < ActiveRecord::Base
 
   def full_email
     "#{name} <#{email}>"
-  end
-
-  def first_name
-    name.split(' ', 2)[0]
-  end
-
-  def last_name
-    name.split(' ', 2)[1]
   end
 
   def country
@@ -453,6 +474,9 @@ class User < ActiveRecord::Base
     self.administered_locations.each do |location|
       location.update_attribute(:administrator_id, nil) if location.administrator_id == self.id
     end
+    self.reservations.unconfirmed.find_each do |r|
+      r.user_cancel!
+    end
   end
 
   def recover_companies
@@ -519,6 +543,30 @@ class User < ActiveRecord::Base
 
   def self.csv_fields
     {email: 'User Email', name: 'User Name'}
+  end
+
+  def normalize_gender
+    return if self.gender.nil?
+    self.gender.downcase!
+    unless ['male', 'female', 'unknown'].include?(gender)
+      self.gender = nil
+    end
+  end
+
+  def has_draft_listings
+    get_instance_metadata("has_draft_listings")
+  end
+
+  def has_any_active_listings
+    get_instance_metadata("has_any_active_listings")
+  end
+
+  def companies_metadata
+    get_instance_metadata("companies_metadata")
+  end
+
+  def instance_admins_metadata
+    get_instance_metadata("instance_admins_metadata")
   end
 
 end

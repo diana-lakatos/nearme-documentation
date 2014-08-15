@@ -1,5 +1,6 @@
 class Admin::InstancesController < Admin::ResourceController
   before_filter lambda { PlatformContext.current = PlatformContext.new(Instance.find(params[:id])) }, :only => [:edit, :update, :destroy, :show]
+  before_filter :normalize_required_fields, only: [:create, :update]
   skip_before_filter :check_if_locked, only: [:lock, :edit]
 
   def new
@@ -70,4 +71,9 @@ class Admin::InstancesController < Admin::ResourceController
       redirect_to action: :edit
     end
   end
+
+  def normalize_required_fields
+    params[:instance][:user_required_fields] = params[:instance][:user_required_fields].split(',').map(&:strip).reject(&:blank?)
+  end
+
 end

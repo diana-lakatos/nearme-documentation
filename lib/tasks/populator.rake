@@ -211,4 +211,21 @@ namespace :populate do
     end
   end
 
+  desc 'Populate user metadata based on PlatformContext'
+  task :user_metadata => :environment do
+    User.find_each do |user|
+      if user.metadata.empty?
+        puts "skipping #{user.id}"
+      else
+        Instance.find_each do |i|
+          PlatformContext.current = PlatformContext.new(i)
+          user.populate_companies_metadata!
+          user.populate_instance_admins_metadata!
+          user.populate_listings_metadata!
+        end
+        puts "finished user: #{user.id}"
+      end
+    end
+  end
+
 end

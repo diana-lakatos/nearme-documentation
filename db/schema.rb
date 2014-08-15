@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140804081000) do
+ActiveRecord::Schema.define(version: 20140804111342) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -579,6 +579,7 @@ ActiveRecord::Schema.define(version: 20140804081000) do
     t.string   "searcher_type"
     t.datetime "master_lock"
     t.boolean  "onboarding_verification_required",                            default: false
+    t.text     "user_required_fields"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -2298,6 +2299,16 @@ ActiveRecord::Schema.define(version: 20140804081000) do
     t.string   "payment_token"
     t.boolean  "sso_log_out",                                        default: false
     t.string   "spree_api_key"
+    t.string   "first_name"
+    t.string   "middle_name"
+    t.string   "last_name"
+    t.string   "gender"
+    t.string   "drivers_licence_number"
+    t.string   "gov_number"
+    t.string   "twitter_url"
+    t.string   "linkedin_url"
+    t.string   "facebook_url"
+    t.string   "google_plus_url"
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
