@@ -48,6 +48,7 @@ class @Space.Controller
     @container.on 'click', '[data-booking-trigger]', (event) =>
       event.preventDefault()
       $(event.target).closest('[data-toggleable-booking-module]').toggleClass('collapsed')
+      $(event.target).closest('.booking-module').find('select').trigger('render')
 
   loadFullGalleryPhotos: ->
     @fullScreenGalleryContainer.find(".loading").show()

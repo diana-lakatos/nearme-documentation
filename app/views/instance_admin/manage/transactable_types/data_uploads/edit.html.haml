@@ -11,6 +11,8 @@
 
       = simple_form_for resource, url: schedule_import_instance_admin_manage_transactable_type_data_upload_path(@transactable_type, resource), method: :post do |f|
         = f.button :submit, 'Schedule Data Import', class: 'btn btn-primary'
+    - elsif resource.parsing_result_log.blank?
+      Parsing has been scheduled, job is waiting in the queue.
     - elsif resource.encountered_error.blank?
       %h2 Data has been imported.
       %p New entities: #{resource.parse_summary[:new].map { |k, v| "#{k.humanize}: #{v}"}.sort.join(', ')}

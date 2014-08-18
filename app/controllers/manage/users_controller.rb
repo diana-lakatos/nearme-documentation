@@ -7,7 +7,7 @@ class Manage::UsersController < Manage::BaseController
   end
 
   def new
-    @user = @company.users.build(user_params)
+    @user = @company.users.build
 
     render partial: 'user_form'
   end

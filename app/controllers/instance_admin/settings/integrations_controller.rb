@@ -36,7 +36,7 @@ class InstanceAdmin::Settings::IntegrationsController < InstanceAdmin::Settings:
       @instance_payment_gateway.assign_attributes(instance_payment_gateway_params)
       @instance_payment_gateway.save!
     else
-      @instance_payment_gateway.update_attributes(params[:instance_payment_gateway])
+      @instance_payment_gateway.update_attributes(instance_payment_gateway_params)
     end
 
     flash[:success] = "Successfully updated payment gateway settings."
