@@ -11,14 +11,9 @@ class MetadataTest < ActiveSupport::TestCase
     assert @dummy_class.respond_to?(:metadata)
   end
 
-  should 'trigger update_column with right arguments for update_metadata' do
+  should 'trigger update_column with right arguments' do
     @dummy_class.expects(:update_column).with(:metadata, {:a => 'b'}.with_indifferent_access.to_yaml)
     @dummy_class.update_metadata({:a => 'b'})
-  end
-
-  should 'trigger update_column with right arguments for update_instance_metadata' do
-    @dummy_class.expects(:update_column).with(:metadata, { PlatformContext.current.instance.id.to_s => {:a => 'b'} }.with_indifferent_access.to_yaml)
-    @dummy_class.update_instance_metadata({:a => 'b'})
   end
 
   should 'not overwrite existing keys' do

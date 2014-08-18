@@ -15,8 +15,15 @@
         %h2 Tell us a little about yourself
         %br
         .box
-          = render :partial => 'registrations/attributes', :locals => { f: f, only_inputs: platform_context.instance.user_required_fields, :country => @country }
-
+          = f.input :name
+          = f.input :biography
+          .single-photo
+            = file_upload_input_with_label('Profile Photo', "avatar", avatar_path, current_user.avatar.thumbnail_dimensions[:medium], "Upload Photo", {"no-multiple" => true}) do
+              - if current_user.avatar.any_url_exists?
+                = fileupload_photo(current_user.avatar_url(:medium),
+                  destroy_avatar_path,
+                  edit_avatar_path,
+                  :div)
       - if platform_context.instance.onboarding_verification_required
         %h2
           Verify yourself

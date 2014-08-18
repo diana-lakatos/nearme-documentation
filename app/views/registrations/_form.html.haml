@@ -1,7 +1,26 @@
 = simple_form_for resource, :as => resource_name, :url => url, :html => { class: "form-horizontal form-expandable" } do |f|
+  = f.input :name, label: "Full name"
+  = f.input :email, label: "Email"
+  = f.input :time_zone
+  = render :partial => 'registrations/phone_fields', :locals => { :f => f, :country => country }
+  = f.input :current_location, label: "Current location", as: :string
+  = f.input :company_name, label: "Company name", as: :string
+  = f.association :industries, :blank => false, :input_html => { :class => 'custom-select' }
+  = f.input :job_title, label: "Job title", as: :string
+  = f.input :skills_and_interests, label: "Skills and interests"
+  = f.input :biography, label: "Biography"
+  = f.input :password, :label => (resource.persisted? ? "Change password" : "Password" )
+  .single-photo
+    = file_upload_input_with_label('Profile Photo', "avatar", avatar_path, current_user.avatar.thumbnail_dimensions[:medium], "Upload Photo", {"no-multiple" => true}) do
+      - if resource.avatar.any_url_exists?
+        = fileupload_photo(resource.avatar_url(:medium), 
+          destroy_avatar_path, 
+          edit_avatar_path,
+          :div)
 
-  = render :partial => 'registrations/attributes', :locals => { f: f, only_inputs: [], country: @country }
 
   .actions
     = f.submit (resource.persisted?) ? "Save" : "Sign Up"
 
+- content_for :domready do
+  $(function(){ new PhoneNumbers.FieldsForm() });

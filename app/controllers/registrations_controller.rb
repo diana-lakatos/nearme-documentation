@@ -94,7 +94,6 @@ class RegistrationsController < Devise::RegistrationsController
   def avatar
     @user = current_user
     @user.avatar_original_url = params[:avatar]
-    @user.skip_custom_validation = true
     if @user.save
       render :text => { :url => @user.avatar_url(:medium),
                         :resize_url =>  edit_avatar_path,
@@ -114,7 +113,6 @@ class RegistrationsController < Devise::RegistrationsController
   def update_avatar
     @user = current_user
     @user.avatar_transformation_data = { :crop => params[:crop], :rotate => params[:rotate] }
-    @user.skip_custom_validation = true
     if @user.save
       render partial: 'manage/photos/resize_succeeded'
     else
@@ -124,7 +122,6 @@ class RegistrationsController < Devise::RegistrationsController
 
   def destroy_avatar
     @user = current_user
-    @user.skip_custom_validation = true
     @user.remove_avatar!
     @user.save!
     render :text => {}, :status => 200, :content_type => 'text/plain'

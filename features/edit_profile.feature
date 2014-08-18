@@ -12,7 +12,7 @@ Feature: A user can edit their settings
 
   Scenario: A user can successfully edit his settings
     Given I go to the account settings page
-    And I fill in "First name" with "Keith"
+    And I fill in "Full name" with "Keith"
     And I fill in "Job title" with "My job"
     And I fill in "Biography" with "This is my biography"
     And I fill in "Email" with "new@email.com"
@@ -29,7 +29,7 @@ Feature: A user can edit their settings
 
   Scenario: A user should not be allowed to provide invalid settings
     Given I go to the account settings page
-    And I fill in "First name" with ""
+    And I fill in "Full name" with ""
     And I fill in "Email" with ""
     When I press "Save"
     Then I should see "can't be blank"

@@ -123,15 +123,14 @@ class SecuredParams
       :stripe_currency, :user_info_in_onboarding_flow,
       :default_search_view, :user_based_marketplace_views,
       :searcher_type, :onboarding_verification_required,
-      user_required_fields: [],
-      transactable_types_attributes: nested(self.transactable_type),
-      listing_amenity_types_attributes: nested(self.amenity_type),
-      location_amenity_types_attributes: nested(self.amenity_type),
-      location_types_attributes: nested(self.location_type),
-      instance_payment_gateways_attributes: nested(self.instance_payment_gateway),
-      translations_attributes: nested(self.translation),
-      domains_attributes: nested(self.domain),
-      theme_attributes: self.theme,
+      :transactable_types_attributes => nested(self.transactable_type),
+      :listing_amenity_types_attributes => nested(self.amenity_type),
+      :location_amenity_types_attributes => nested(self.amenity_type),
+      :location_types_attributes => nested(self.location_type),
+      :instance_payment_gateways_attributes => nested(self.instance_payment_gateway),
+      :translations_attributes => nested(self.translation),
+      :domains_attributes => nested(self.domain),
+      :theme_attributes => self.theme,
     ]
   end
 
@@ -412,9 +411,6 @@ class SecuredParams
       :sms_notifications_enabled, :domain_id, :time_zone,
       :phone_required, :country_name_required, :skip_password,
       :country_name, :phone, :mobile_phone,
-      :first_name, :middle_name, :last_name, :gender,
-      :drivers_licence_number, :gov_number, :twitter_url,
-      :linkedin_url, :facebook_url, :google_plus_url,
       industry_ids: [],
       companies_attributes: nested(self.company),
       confidential_files_attributes: nested(self.confidential_file)

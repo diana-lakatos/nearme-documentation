@@ -19,8 +19,6 @@
         - if f.object.send("remote_#{image_attr}_url")
           <br />Or copy from instance's theme:<br />
           = f.text_field "remote_#{image_attr}_url"
-        = f.hidden_field "#{image_attr}_cache"
-
 
   %p
     = f.button :submit, 'Save', class: 'btn btn-success'
