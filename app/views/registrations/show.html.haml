@@ -22,7 +22,7 @@
         .info.span8
           %h2= @user.job_title_and_company_name
           %h4= @user.current_location_and_industry
-          %p= @user.biography
+          %p= mask_phone_and_email_if_necessary(@user.biography)
           - if @user.skills_and_interests.present?
             %h4 Skills &amp; Interests
             %p= @user.skills_and_interests

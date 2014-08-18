@@ -579,6 +579,8 @@ ActiveRecord::Schema.define(version: 20140819073001) do
     t.string   "searcher_type"
     t.datetime "master_lock"
     t.boolean  "onboarding_verification_required",                            default: false
+    t.text     "user_required_fields"
+    t.boolean  "apply_text_filters",                                          default: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -849,6 +851,42 @@ ActiveRecord::Schema.define(version: 20140819073001) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "recurring_bookings", force: true do |t|
+    t.integer  "transactable_id"
+    t.integer  "owner_id"
+    t.integer  "creator_id"
+    t.integer  "administrator_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.integer  "instance_id"
+    t.boolean  "listings_public"
+    t.datetime "deleted_at"
+    t.datetime "start_on"
+    t.datetime "end_on"
+    t.integer  "quantity"
+    t.integer  "start_minute"
+    t.integer  "end_minute"
+    t.text     "schedule_params"
+    t.string   "state"
+    t.string   "currency"
+    t.string   "payment_method",                 default: "manual", null: false
+    t.integer  "platform_context_detail_id"
+    t.string   "platform_context_detail_type"
+    t.integer  "service_fee_amount_guest_cents", default: 0,        null: false
+    t.integer  "service_fee_amount_host_cents",  default: 0,        null: false
+    t.integer  "subtotal_amount_cents"
+    t.string   "rejection_reason"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "recurring_bookings", ["administrator_id"], name: "index_recurring_bookings_on_administrator_id", using: :btree
+  add_index "recurring_bookings", ["company_id"], name: "index_recurring_bookings_on_company_id", using: :btree
+  add_index "recurring_bookings", ["creator_id"], name: "index_recurring_bookings_on_creator_id", using: :btree
+  add_index "recurring_bookings", ["instance_id"], name: "index_recurring_bookings_on_instance_id", using: :btree
+  add_index "recurring_bookings", ["owner_id"], name: "index_recurring_bookings_on_owner_id", using: :btree
+  add_index "recurring_bookings", ["transactable_id"], name: "index_recurring_bookings_on_transactable_id", using: :btree
+
   create_table "refunds", force: true do |t|
     t.integer  "reference_id"
     t.string   "reference_type"
@@ -939,6 +977,7 @@ ActiveRecord::Schema.define(version: 20140819073001) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.boolean  "listings_public",                    default: true
+    t.integer  "recurring_booking_id"
   end
 
   add_index "reservations", ["administrator_id"], name: "index_reservations_on_administrator_id", using: :btree
@@ -948,6 +987,7 @@ ActiveRecord::Schema.define(version: 20140819073001) do
   add_index "reservations", ["owner_id"], name: "index_reservations_on_owner_id", using: :btree
   add_index "reservations", ["partner_id"], name: "index_reservations_on_partner_id", using: :btree
   add_index "reservations", ["platform_context_detail_id"], name: "index_reservations_on_platform_context_detail_id", using: :btree
+  add_index "reservations", ["recurring_booking_id"], name: "index_reservations_on_recurring_booking_id", using: :btree
   add_index "reservations", ["transactable_id"], name: "index_reservations_on_listing_id", using: :btree
 
   create_table "search_notifications", force: true do |t|
@@ -2002,6 +2042,18 @@ ActiveRecord::Schema.define(version: 20140819073001) do
   add_index "support_tickets", ["instance_id"], name: "index_support_tickets_on_instance_id", using: :btree
   add_index "support_tickets", ["user_id"], name: "index_support_tickets_on_user_id", using: :btree
 
+  create_table "text_filters", force: true do |t|
+    t.string   "name"
+    t.string   "regexp"
+    t.string   "replacement_text"
+    t.integer  "flags"
+    t.integer  "instance_id"
+    t.integer  "creator_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "theme_fonts", force: true do |t|
     t.integer  "theme_id"
     t.string   "regular_eot"
@@ -2111,8 +2163,6 @@ ActiveRecord::Schema.define(version: 20140819073001) do
     t.text     "hint"
     t.string   "placeholder"
     t.boolean  "internal",             default: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   add_index "transactable_type_attributes", ["instance_id", "transactable_type_id"], name: "index_tta_on_instance_id_and_transactable_type_id", using: :btree

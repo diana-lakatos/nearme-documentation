@@ -45,4 +45,30 @@ class ApplicationHelperTest < ActionView::TestCase
 
   end
 
+  context '#mask_phone_and_email_if_necessary' do
+    should 'return text if current instance does not want to hide' do
+      assert_equal 'this is dev@near-me.com my email', mask_phone_and_email_if_necessary('this is dev@near-me.com my email')
+    end
+
+    context 'instance does want to hide emails and phones' do
+
+      setup do
+        PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance, apply_text_filters: true))
+        FactoryGirl.create(:text_filter_email)
+        FactoryGirl.create(:text_filter_10phone)
+        FactoryGirl.create(:text_filter_7phone)
+      end
+
+      should 'replace phones and emails' do
+        assert_equal 'try my [EMAIL FILTERED] call me [10PHONE FILTERED] or other [EMAIL FILTERED] emails also call [7PHONE FILTERED]', mask_phone_and_email_if_necessary('try my aBc@ExaMplE.cOm call me 555.555.5555 or other dev@near-me.com emails also call 8456950')
+      end
+
+      should 'do not replace random numbers' do
+        assert_equal "it's 100% safe, only 299 usd", mask_phone_and_email_if_necessary("it's 100% safe, only 299 usd")
+      end
+
+    end
+
+  end
+
 end
