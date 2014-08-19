@@ -142,6 +142,17 @@ class TransactableTest < ActiveSupport::TestCase
       @listing.stubs(:booking_days_per_week).returns(3)
       assert_equal({ 1 => 100, 3 => 400, 12 => 1200 }, @listing.prices_by_days)
     end
+
+    context 'manual settings in transactable type' do
+      setup do
+        @listing.transactable_type.update_attribute(:days_for_monthly_rate, 35)
+      end
+
+      should 'enforce settings from db' do
+        assert_equal({ 1 => 100, 5 => 400, 35 => 1200 }, @listing.prices_by_days)
+      end
+
+    end
   end
 
   context "free flag and prices" do

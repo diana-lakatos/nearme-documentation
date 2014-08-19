@@ -83,7 +83,7 @@ class Transactable < ActiveRecord::Base
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
   delegate :transactable_type_attributes, :transactable_type_attributes_names, :public_transactable_type_attributes,
-    :transactable_type_attributes_names_types_hash, to: :transactable_type
+    :transactable_type_attributes_names_types_hash, :favourable_pricing_rate, to: :transactable_type
 
   # attr_accessible :location_id, :availability_template_id,
   #   :availability_rules_attributes, :defer_availability_rules, :free,
@@ -307,21 +307,21 @@ class Transactable < ActiveRecord::Base
   def minimum_booking_days
     if free? || hourly_reservations? || daily_price_cents.to_i > 0 || (daily_price_cents.to_i + weekly_price_cents.to_i + monthly_price_cents.to_i).zero?
       1
+    elsif weekly_price_cents.to_i > 0
+      booking_days_per_week
+    elsif monthly_price_cents.to_i > 0
+      booking_days_per_month
     else
-      multiple = if weekly_price_cents.to_i > 0
-                   1
-                 elsif monthly_price_cents.to_i > 0
-                   4
-                 else
-                   1
-                 end
-
-      booking_days_per_week*multiple
+      1
     end
   end
 
   def booking_days_per_week
-    availability.days_open.length
+    @booking_days_per_week ||= availability.days_open.length
+  end
+
+  def booking_days_per_month
+    @booking_days_per_month ||= transactable_type.days_for_monthly_rate.zero? ? booking_days_per_week * 4  : transactable_type.days_for_monthly_rate
   end
 
   # Returns a hash of booking block sizes to prices for that block size.
@@ -329,9 +329,8 @@ class Transactable < ActiveRecord::Base
     if free?
       { 1 => 0.to_money }
     else
-      block_size = booking_days_per_week
       Hash[
-        [[1, daily_price], [block_size, weekly_price], [4*block_size, monthly_price]]
+        [[1, daily_price], [booking_days_per_week, weekly_price], [booking_days_per_month, monthly_price]]
       ].reject { |size, price| !price || price.zero? }
     end
   end

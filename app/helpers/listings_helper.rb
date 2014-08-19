@@ -27,6 +27,7 @@ module ListingsHelper
       :earliest_open_minute => listing.availability.earliest_open_minute,
       :latest_close_minute => listing.availability.latest_close_minute,
       :minimum_booking_days => listing.minimum_booking_days,
+      :favourable_pricing_rate => listing.favourable_pricing_rate,
       :quantity => listing.quantity,
       :availability => availability.as_json,
       :minimum_date => availability.start_date,

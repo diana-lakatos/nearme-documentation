@@ -42,6 +42,7 @@ FactoryGirl.define do
     factory :instance_require_verification do
       onboarding_verification_required true
     end
+
   end
 
 end

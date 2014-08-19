@@ -21,6 +21,7 @@ class @Bookings.Listing
     @minimumBookingDays = @data.minimum_booking_days
     @minimumDate = DNM.util.Date.idToDate(@data.minimum_date)
     @maximumDate = DNM.util.Date.idToDate(@data.maximum_date)
+    @favourablePricingRate = @data.favourable_pricing_rate
     @pricesByDays = @data.prices_by_days
     @hourlyPrice = @data.hourly_price_cents
 
@@ -29,6 +30,9 @@ class @Bookings.Listing
 
   getQuantity: ->
     @defaultQuantity
+
+  hasFavourablePricingRate: ->
+    @favourablePricingRate
 
   isReservedHourly: ->
     @data.hourly_reservations

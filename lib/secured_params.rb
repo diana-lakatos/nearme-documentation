@@ -149,6 +149,7 @@ class SecuredParams
       :pricing_options,
       :pricing_validation,
       :availability_options,
+      :favourable_pricing_rate,
       :availability_templates_attributes => nested(self.availability_template)
     ]
   end

@@ -23,7 +23,16 @@ class @Bookings.PriceCalculator
       largestBlock
 
     price = prices[block_size]
-    Math.round((days/block_size) * price)
+    if @listing.hasFavourablePricingRate()
+      Math.round((days/block_size) * price)
+    else
+      priced_days = Math.floor(days/block_size)
+      left_days = days - priced_days*block_size
+      calculated_price = Math.round(priced_days * price)
+      if left_days == 0
+        calculated_price
+      else
+        calculated_price + @priceForDays(left_days)
 
   contiguousBlocks: ->
     dates = _.sortBy @listing.bookedDates(), (date) -> date.getTime()
