@@ -35,6 +35,10 @@ class ApplicationController < ActionController::Base
     current_user
   end
 
+  def platform_context
+    @platform_context = PlatformContext.current
+  end
+
   protected
 
   # Returns the layout to use for the current request.
@@ -47,10 +51,6 @@ class ApplicationController < ActionController::Base
     else
       "application"
     end
-  end
-
-  def platform_context
-    @platform_context = PlatformContext.current
   end
 
   # This method invalidates default PlatformContext and ensures that our scope is Instance [ disregarding listings_public for relevant models ].
