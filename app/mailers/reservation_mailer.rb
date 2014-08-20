@@ -30,18 +30,21 @@ class ReservationMailer < InstanceMailer
   def notify_host_of_cancellation_by_guest(reservation)
     setup_defaults(reservation)
     @user = @reservation.administrator
+    set_bcc_email
     generate_mail("#{reservation.owner.first_name.pluralize} cancelled a booking for '#{reservation.listing.name}' at #{reservation.location.street}")
   end
 
   def notify_host_of_cancellation_by_host(reservation)
     setup_defaults(reservation)
     @user = @reservation.administrator
+    set_bcc_email
     generate_mail("You just declined a booking")
   end
 
   def notify_host_of_confirmation(reservation)
     setup_defaults(reservation)
     @user = @reservation.administrator
+    set_bcc_email
     generate_mail('Thanks for confirming!')
   end
 
@@ -53,18 +56,21 @@ class ReservationMailer < InstanceMailer
   def notify_host_of_expiration(reservation)
     setup_defaults(reservation)
     @user = @reservation.administrator
+    set_bcc_email
     generate_mail('A booking at one of your listings has expired')
   end
 
   def notify_host_of_rejection(reservation)
     setup_defaults(reservation)
     @user = @reservation.administrator
+    set_bcc_email
     generate_mail("Can we help, #{@user.first_name}?")
   end
 
   def notify_host_with_confirmation(reservation)
     setup_defaults(reservation)
     @user = @reservation.administrator
+    set_bcc_email
     @url  = manage_guests_dashboard_url(:token => @user.try(:temporary_token))
     generate_mail("#{reservation.owner.first_name} just booked your #{instance_bookable_noun}!")
   end
@@ -72,6 +78,7 @@ class ReservationMailer < InstanceMailer
   def notify_host_without_confirmation(reservation)
     setup_defaults(reservation)
     @user = @reservation.administrator
+    set_bcc_email
     @url  = manage_guests_dashboard_url(:token => @user.try(:temporary_token))
     @reserver = @reservation.owner.name
     generate_mail("#{reservation.owner.first_name} just booked your #{instance_bookable_noun}!")
@@ -96,7 +103,15 @@ class ReservationMailer < InstanceMailer
   end
 
   def generate_mail(subject)
+    @bcc = Array.wrap(@bcc) - [Theme::DEFAULT_EMAIL] if @bcc && (Rails.env.development? || Rails.env.staging?)
+
     mail to: @user.email,
+         bcc: @bcc,
          subject_locals: { reservation: @reservation, listing: @listing, user: @user, host: @host }
   end
+
+  def set_bcc_email
+    @bcc = @listing.location.email if @listing.location.email != @reservation.administrator.try(:email)
+  end
+
 end
