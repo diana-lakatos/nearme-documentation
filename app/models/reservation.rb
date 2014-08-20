@@ -198,8 +198,7 @@ class Reservation < ActiveRecord::Base
 
   delegate :location, to: :listing
   delegate :administrator=, to: :location
-  delegate :service_fee_guest_percent, to: :listing, allow_nil: true
-  delegate :service_fee_host_percent, to: :listing, allow_nil: true
+  delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :listing, allow_nil: true
 
   def user=(value)
     self.owner = value

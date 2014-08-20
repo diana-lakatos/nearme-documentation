@@ -48,7 +48,18 @@ class Reservation::DailyPriceCalculator
 
       # Our pricing logic per block is the block price
       # plus a pro-rated cost for each additional day used
-      (((days/block_size.to_f) * price.cents).round / 100.0).to_money
+      if @reservation.favourable_pricing_rate
+        (((days/block_size.to_f) * price.cents).round / 100.0).to_money
+      else
+        priced_days = days/block_size
+        left_days = days - priced_days*block_size
+        calculated_price = ((priced_days * price.cents).round / 100.0).to_money
+        if left_days.zero?
+          calculated_price
+        else
+          calculated_price + price_for_days(left_days)
+        end
+      end
     end
   end
 
