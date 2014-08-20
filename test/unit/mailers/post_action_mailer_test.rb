@@ -115,7 +115,7 @@ class PostActionMailerTest < ActiveSupport::TestCase
     assert_equal [@user.email], mail.to
     assert mail.html_part.body.include?("Password: password")
     assert mail.html_part.body.include?("Email: #{@user.email}")
-    assert mail.html_part.body.include?("Your instance, #{@instance.name}")
+    assert mail.html_part.body.include?("Your marketplace, #{@instance.name}")
     assert_contains 'href="http://custom.domain.com/', mail.html_part.body
     assert_not_contains 'href="http://example.com', mail.html_part.body
     assert_not_contains 'href="/', mail.html_part.body
