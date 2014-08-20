@@ -1,6 +1,6 @@
 <h2>Change of plans, {{ user.first_name }}!</h2>
 
-<p>The booking for '<a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a>' at {{ listing.street }} has been cancelled by the {{platform_context.lessor}}.</p>
+<p>The booking for '<a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a>'has been cancelled by the {{platform_context.lessor}}.</p>
 
 <p>No worries! Here you have some alternatives similar to the {{ platform_context.bookable_noun_plural }} you were looking for:</p>
 
@@ -8,4 +8,4 @@
 
 <a class="btn" href="{{ platform_context.host | append:listing.search_url_with_tracking | append:signature_for_tracking  }}">Search More {{ platform_context.bookable_noun_plural }}</a>
 
-<p>We're always happy to help! Just send an email to <a href="mailto:happydesk@desksnear.me">happydesk@desksnear.me</a> or call us on {{ platform_context.phone_number }}.</p>
+<p>We're always happy to help! Just send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a> or call us on {{ platform_context.phone_number }}.</p>
