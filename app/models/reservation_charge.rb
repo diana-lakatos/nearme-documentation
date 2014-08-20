@@ -75,7 +75,7 @@ class ReservationCharge < ActiveRecord::Base
     touch(:paid_at)
 
     begin
-      ReservationChargeTrackerJob.perform_later(reservation.date.end_of_day, reservation.id) 
+      ReservationChargeTrackerJob.perform_later(reservation.date.end_of_day, reservation.id)
     rescue
       # Needs to be retried at a later time...
       touch(:failed_at)

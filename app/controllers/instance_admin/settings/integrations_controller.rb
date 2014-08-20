@@ -46,7 +46,10 @@ class InstanceAdmin::Settings::IntegrationsController < InstanceAdmin::Settings:
   private
 
   def instance_payment_gateway_params
-    params.require(:instance_payment_gateway).permit(secured_params.instance_payment_gateway)
+    params.require(:instance_payment_gateway).permit(secured_params.instance_payment_gateway).tap do |whitelisted|
+      whitelisted[:live_settings] = params[:instance_payment_gateway][:live_settings]
+      whitelisted[:test_settings] = params[:instance_payment_gateway][:test_settings]
+    end
   end
 
   def instance_payment_gateway(attributes=nil)
