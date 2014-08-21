@@ -66,7 +66,8 @@ class Instance < ActiveRecord::Base
   has_many :transactable_types
   has_many :instance_payment_gateways, :inverse_of => :instance
   has_many :country_instance_payment_gateways, :inverse_of => :instance
-  has_many :users, :inverse_of => :instance
+  has_many :users, inverse_of: :instance
+  has_many :text_filters, inverse_of: :instance
   serialize :pricing_options, Hash
 
   validates_presence_of :name
@@ -84,6 +85,7 @@ class Instance < ActiveRecord::Base
   accepts_nested_attributes_for :instance_billing_gateways, allow_destroy: true, reject_if: proc { |params| params[:billing_gateway].blank? }
   accepts_nested_attributes_for :instance_payment_gateways, allow_destroy: true
   accepts_nested_attributes_for :transactable_types
+  accepts_nested_attributes_for :text_filters, allow_destroy: true
 
   scope :with_support_imap, -> { where 'support_imap_hash IS NOT NULL' }
 

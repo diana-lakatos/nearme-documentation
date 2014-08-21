@@ -16,7 +16,8 @@
           = f.input_field :service_fee_guest_percent, type: 'tel', class: 'input-block-level'
     .row-fluid
       .controls.controls-row
-        = f.input :skip_company, :label => false, :inline_label => "Don't require company", wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+        .span6
+          = f.input :skip_company, :label => false, :inline_label => "Don't require company", input_html: { class: 'input-block-level' }
         = f.input :service_fee_host_percent, label: 'Host Service Fee', wrapper_html: {class: 'input-prepend span6'} do
           %span.add-on %
           = f.input_field :service_fee_host_percent, type: 'tel', class: 'input-block-level'
@@ -66,6 +67,30 @@
             + Add Domain Name
 
   %hr
+
+  %fieldset
+    %legend Text Filters
+    = f.input :apply_text_filters, :label => false, :inline_label => "Apply text filters", input_html: { class: 'input-block-level' }
+    #text-filters
+      = f.fields_for :text_filters, wrapper: false do |f|
+        .row-fluid
+          .controls.controls-row
+            .fields
+              = f.input :name, label: false, placeholder: 'Name', wrapper_html: { class: 'span3' }, input_html: { class: 'input-block-level' }
+              = f.input :regexp, label: false, placeholder: 'Regexp', wrapper_html: { class: 'span3' }, input_html: { class: 'input-block-level' }
+              = f.input :replacement_text, placeholder: 'Replecament Text', label: false, wrapper_html: { class: 'span3' }, input_html: { class: 'input-block-level' }
+              = f.link_to_remove confirm: (f.object.try(:name).present? ? "Are you sure you want to delete #{f.object.name}?" : false) do
+                .fa.fa-trash-o.fa-2x.inline-form-icon
+
+    %br
+    .row-fluid
+      .controls.controls-row
+        = f.link_to_add :text_filters, :data => { :target => "#text-filters" } do
+          %button.btn.btn-form-field.span6
+            + Add Text Filter
+
+  %hr
+
 
   %fieldset
     %legend Support

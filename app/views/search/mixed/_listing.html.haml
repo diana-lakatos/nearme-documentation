@@ -10,7 +10,7 @@
     - if listing.respond_to? :custom_type
       %br
       %span= listing.custom_type
-    %p= truncate_with_ellipsis listing.description, 150
+    %p= truncate_with_ellipsis mask_phone_and_email_if_necessary(listing.description), 150
   - if not listing.capacity.blank?
     .span2.padding-top.listing-capacity
       %span.bold= listing.capacity

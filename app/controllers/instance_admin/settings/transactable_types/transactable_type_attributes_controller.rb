@@ -1,4 +1,4 @@
-class InstanceAdmin::Settings::TransactableTypes::TransactableTypeAttributesController < InstanceAdmin::Manage::BaseController
+class InstanceAdmin::Settings::TransactableTypes::TransactableTypeAttributesController < InstanceAdmin::Settings::BaseController
   inherit_resources
   belongs_to :project
 
