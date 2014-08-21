@@ -52,6 +52,14 @@ en:
       user_message: 'I receive a message from another person.'
       reservation_state_changed: 'A reservation I have requested is accepted or declined.'
       new_reservation: 'I receive a reservation request.'
+  reservations:
+
+    charge_after_confirmation: "Your card will not be charged until the booking is confirmed."
+    manually_confirm: "This %{lessor} manually confirms all bookings. "
+    cancellation_time: "You have up to %{time} hours before the booking takes place to cancel."
+    no_cancellation_time: "You can cancel before the first day."
+    cancellation_fee: "The penalty fee for cancelling is %{fee}%. Service fee is not refunded."
+    no_cancellation_fee: "You will get full refund except of service fee."
   simple_form:
     labels:
       user:

@@ -2,7 +2,7 @@ require 'test_helper'
 
 class RelNoFollowAdderTest < ActiveSupport::TestCase
 
-  def setup
+  setup do
     @rel_no_follow_adder = RelNoFollowAdder.new({:skip_domains => ['allowed.domain.com']})
   end
 
@@ -46,7 +46,7 @@ class RelNoFollowAdderTest < ActiveSupport::TestCase
     end
   end
 
-  private 
+  private
 
   def link_before_modification
     '<a href="http://www.domain.com" rel="something">With no follow</a>'

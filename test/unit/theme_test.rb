@@ -1,7 +1,8 @@
 require 'test_helper'
 
 class ThemeTest < ActiveSupport::TestCase
-  def setup
+
+  setup do
     @instance = FactoryGirl.create(:instance)
   end
 

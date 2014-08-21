@@ -4,7 +4,7 @@ class PartnerTest < ActiveSupport::TestCase
 
   should validate_presence_of(:name)
 
-  def setup
+  setup do
     @partner = FactoryGirl.create(:partner)
   end
 

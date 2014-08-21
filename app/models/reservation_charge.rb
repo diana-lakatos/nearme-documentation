@@ -11,6 +11,8 @@ class ReservationCharge < ActiveRecord::Base
     :class_name => 'Charge',
     :as => :reference,
     :dependent => :destroy
+  has_many :refunds,
+    :as => :reference
 
   belongs_to :instance
   belongs_to :company
@@ -32,7 +34,7 @@ class ReservationCharge < ActiveRecord::Base
   }
 
   scope :needs_payment_transfer, -> {
-    paid.where(payment_transfer_id: nil).where(refunded_at: nil)
+    paid.where(payment_transfer_id: nil)
   }
 
   scope :total_by_currency, -> {
@@ -62,6 +64,10 @@ class ReservationCharge < ActiveRecord::Base
     subtotal_amount_cents + service_fee_amount_guest_cents
   end
 
+  def subtotal_amount_cents_after_refund
+    subtotal_amount_cents - refunds.successful.sum(&:amount)
+  end
+
   def amount
     total_amount
   end
@@ -85,17 +91,26 @@ class ReservationCharge < ActiveRecord::Base
   def refund
     return if !paid?
     return if refunded?
+    return if amount_to_be_refunded <= 0
 
     successful_charge = charge_attempts.successful.first
     return if successful_charge.nil?
 
-    refund = billing_gateway.refund(total_amount_cents, self, successful_charge.response)
+    refund = billing_gateway.refund(amount_to_be_refunded, self, successful_charge.response)
 
     if refund.success?
       touch(:refunded_at)
       true
     else
       false
+    end
+  end
+
+  def amount_to_be_refunded
+    if reservation.cancelled_by_guest?
+      (subtotal_amount_cents * (1 - self.cancellation_policy_penalty_percentage.to_f/100.0)).to_i
+    else
+      total_amount_cents
     end
   end
 

@@ -1,7 +1,8 @@
 require 'test_helper'
 
 class Reservation::HourlyPriceCalculatorTest < ActiveSupport::TestCase
-  def setup
+
+  setup do
     @reservation = Reservation.new
     @listing = stub(:hourly_price => 100.to_money)
     @reservation.stubs(:listing).returns(@listing)

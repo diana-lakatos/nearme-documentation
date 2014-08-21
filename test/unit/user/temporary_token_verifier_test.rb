@@ -1,7 +1,8 @@
 require 'test_helper'
 
 class User::TemporaryTokenVerifierTest < ActiveSupport::TestCase
-  def setup
+
+  setup do
     @user = FactoryGirl.create(:user)
     @verifier = User::TemporaryTokenVerifier.new(@user)
   end

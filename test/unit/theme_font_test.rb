@@ -1,7 +1,8 @@
 require 'test_helper'
 
 class ThemeFontTest < ActiveSupport::TestCase
-  def setup
+
+  setup do
     @theme_font = FactoryGirl.create(:theme_font)
   end
 

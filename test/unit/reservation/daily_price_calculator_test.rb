@@ -1,7 +1,8 @@
 require 'test_helper'
 
 class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
-  def setup
+
+  setup do
     @reservation = Reservation.new
 
     @listing = stub()

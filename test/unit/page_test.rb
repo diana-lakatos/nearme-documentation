@@ -2,7 +2,7 @@ require 'test_helper'
 
 class PageTest < ActiveSupport::TestCase
 
-  def setup
+  setup do
     @instance = FactoryGirl.create(:instance)
     Domain.create(:name => 'allowed-domain.com', :target => @instance)
   end

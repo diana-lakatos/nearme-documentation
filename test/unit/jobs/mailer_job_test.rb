@@ -2,7 +2,7 @@ require 'test_helper'
 
 class MailerJobTest < ActiveSupport::TestCase
 
-  def setup
+  setup do
     @mailer_class = mock()
     @mail = mock()
   end

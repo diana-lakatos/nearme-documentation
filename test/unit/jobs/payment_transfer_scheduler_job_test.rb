@@ -4,7 +4,7 @@ require 'helpers/reservation_test_support'
 class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
   include ReservationTestSupport
 
-  def setup
+  setup do
     stub_mixpanel
     PaymentTransfer.any_instance.stubs(:possible_automated_payout_not_supported?).returns(false).at_least(0)
     Billing::Gateway::Outgoing.any_instance.stubs(:payout).returns(stub(:success => true)).at_least(0)
@@ -41,14 +41,23 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
           @company_2.payment_transfers[0].reservation_charges.sum(&:subtotal_amount_cents)
       end
 
-      should "not include refunded reservation charges" do
+      should "include refunded reservation charges" do
         rc = @company_1.reservation_charges.first
         rc.touch(:refunded_at)
         assert rc.refunded?
-
         PaymentTransferSchedulerJob.perform
+        assert @company_1.payment_transfers[0].reservation_charges.include?(rc)
+      end
 
-        assert_equal (@company_1.reservation_charges - [rc]).sort, @company_1.payment_transfers[0].reservation_charges.sort
+      should 'calculate payment transfer amount correctly for refunded charges' do
+        rc = @company_1.reservation_charges.first
+        rc.update_attributes(
+          cancellation_policy_penalty_percentage: 0.4,
+          refunded_at: Time.zone.now
+        )
+        FactoryGirl.create(:refund, reference: rc, amount: 3000)
+        PaymentTransferSchedulerJob.perform
+        assert_equal 6000, @company_1.payment_transfers.first.amount.cents
       end
 
       should "only include successfully paid reservation charges" do
@@ -72,14 +81,14 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
 
       should "generate separate transfers for separate currencies" do
         location = FactoryGirl.create(:location,
-          :company => @company_1,
-          :currency => 'NZD'
-        )
+                                      :company => @company_1,
+                                      :currency => 'NZD'
+                                     )
 
         listing = FactoryGirl.create(:transactable,
-          :daily_price => 50,
-          :location => location
-        )
+                                     :daily_price => 50,
+                                     :location => location
+                                    )
 
         nzd_reservations = prepare_charged_reservations_for_listing(listing, 2)
         PaymentTransferSchedulerJob.perform
@@ -111,7 +120,7 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
       end
 
       should "only include line_items from completed orders (paid)" do
-        not_completed_order = FactoryGirl.create(:order_with_line_items)
+        FactoryGirl.create(:order_with_line_items)
 
         PaymentTransferSchedulerJob.perform
 

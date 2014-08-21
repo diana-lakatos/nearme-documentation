@@ -4,7 +4,8 @@ require 'test_helper'
 # if anyone will resolve this in the future, ping me please
 # Josef Šimánek <josef.simanek@gmail.com>, 7.5.2014
 class CompilerTest < ActiveSupport::TestCase
-  def setup
+
+  setup do
     @instance = FactoryGirl.create(:instance)
     @theme = Theme.new.skipping_compilation do |theme|
       theme.owner = @instance
