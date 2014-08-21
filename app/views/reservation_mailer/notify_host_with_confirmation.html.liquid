@@ -1,7 +1,7 @@
 <h2>Good news, {{ user.first_name }}!</h2>
 
 <p>
-Your listing, '<a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a>' at {{ listing.street }}, was just booked!
+Your listing, '<a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a>', was just booked!
 </p>
 
 <div class="booking-details">
@@ -44,4 +44,4 @@ Your listing, '<a href="{{ platform_context.host | append:listing.listing_url }}
 
 <p>Not ready for {{ platform_context.lessees }}? You can manage your bookings <a href="{{ platform_context.host | append:listing.manage_guests_dashboard_url }}">here</a>.</p>
 
-<p>If you need help, send an email to <a href="mailto:happydesk@desksnear.me">happydesk@desksnear.me</a> or contact us at {{ platform_context.phone_number }}.</p>
+<p>If you need help, send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a> or contact us at {{ platform_context.phone_number }}.</p>

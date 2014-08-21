@@ -1,4 +1,4 @@
-<p>Your booking for '{{ listing.name }}' at <a href="{{ listing.location.url }}">{{ listing.location.name}}</a> has been cancelled by the {{ platform_context.lessor }}.</p>
+<p>Your booking for '{{ listing.name }}' has been cancelled by the {{ platform_context.lessor }}.</p>
 
 <div class="booking-details">
 
@@ -88,4 +88,4 @@
 
 <p>This booking was previously confirmed, but the plans have changed - I'm sure it's nothing personal.</p>
 
-<p>Don't worry - <a href="{{ platform_context.host | append:listing.search_url }}">find other locations near you</a>!</p>
+<p>Don't worry - <a href="{{ platform_context.host | append:listing.search_url }}">find others near you</a>!</p>

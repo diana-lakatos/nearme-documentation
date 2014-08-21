@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140804081000) do
+ActiveRecord::Schema.define(version: 20140819073001) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2124,6 +2124,8 @@ ActiveRecord::Schema.define(version: 20140804081000) do
     t.text     "pricing_options"
     t.text     "pricing_validation"
     t.text     "availability_options"
+    t.boolean  "favourable_pricing_rate", default: true
+    t.integer  "days_for_monthly_rate",   default: 0
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

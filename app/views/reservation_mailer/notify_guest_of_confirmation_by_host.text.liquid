@@ -1,9 +1,8 @@
-Your booking for '{{ listing.name }}' at {{ listing.location.name:}} ({{ listing.location.url }})</a>  has been cancelled by the {{ platform_context.lessor }}.
+Your booking for '{{ listing.name }}'</a>  has been cancelled by the {{ platform_context.lessor }}.
 
 BOOKING DETAILS --------
 
-Listing: '{{listing.name}}' at {{listing.location.name}} ({{listing.location.url}}).
-{% if listing.location.special_notes? %}
+Listing: '{{listing.name}}'.
 {{ platform_context.lessee | capitalize }} instructions: {{ listing.location.special_notes }}
 {% endif %}
 Quantity: {{reservation.quantity}}
@@ -40,4 +39,4 @@ This reservation is currently pending confirmation, and will be charged when con
 
 This booking was previously confirmed, but the plans have changed - I'm sure it's nothing personal.
 
-Don't worry - find other locations near you ({{ platform_context.host | append:listing.search_url }})!.
+Don't worry - find others near you ({{ platform_context.host | append:listing.search_url }})!.

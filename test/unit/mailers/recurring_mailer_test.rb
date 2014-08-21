@@ -32,7 +32,7 @@ class RecurringMailerTest < ActiveSupport::TestCase
     assert_equal subject, mail.subject
     assert mail.html_part.body.include?(@user.first_name)
     assert_equal [@user.email], mail.to
-    assert mail.html_part.body.include?("Listings with photos have 10x chances of getting rented.")
+    assert mail.html_part.body.include?("Listings with photos have 10x chances of getting booked.")
     assert mail.html_part.body.include?(@listing.name)
     assert_contains 'href="http://custom.domain.com/', mail.html_part.body
     assert_not_contains 'href="http://example.com', mail.html_part.body

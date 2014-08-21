@@ -10,12 +10,9 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
   end
 
   def authorize(amount, credit_card)
-    response = if defined?(custom_authorize_options)
-      @gateway.authorize(amount, credit_card, custom_authorize_options)
-    else
-      @gateway.authorize(amount, credit_card)
-    end
-
+    options = defined?(custom_authorize_options) ? custom_authorize_options : {}
+    options[:currency] = @currency
+    response = @gateway.authorize(amount, credit_card, options.with_indifferent_access)
     if response.success?
       return {
         token: response.authorization,
@@ -38,15 +35,12 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
 
     begin
       set_active_merchant_mode(reference)
-      response = if defined? (custom_capture_options)
-        @gateway.capture(amount, token, custom_capture_options)
-      else
-        @gateway.capture(amount, token)
-      end
+      options = defined?(custom_capture_options) ? custom_capture_options : {}
+      options[:currency] = @currency
+      response = @gateway.capture(amount, token, options.with_indifferent_access)
 
       response.success? ? charge_successful(response.params) : charge_failed(response.params)
-      return @charge
-      
+      @charge
     rescue => e
       raise Billing::Gateway::PaymentAttemptError, e
     end
@@ -63,15 +57,11 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
 
     begin
       set_active_merchant_mode(reference)
-      response = if defined?(custom_refund_options)
-        @gateway.refund(amount, refund_identification(charge_response), custom_refund_options)
-      else
-        @gateway.refund(amount, refund_identification(charge_response))
-      end
-
+      options = defined?(custom_refund_options) ? custom_refund_options : {}
+      options[:currency] = @currency
+      response = @gateway.refund(amount, refund_identification(charge_response), options.with_indifferent_access)
       response.success? ? refund_successful(response.params) : refund_failed(response.params)
-      return @refund
-    
+      @refund
     rescue => e
       raise Billing::Gateway::PaymentRefundError, e
     end
@@ -122,7 +112,7 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
       ActiveMerchant::Billing::Base.mode = :test if @instance.test_mode?
     end
   end
-  
+
 end
 
 class Billing::Gateway::PaymentAttemptError < StandardError; end

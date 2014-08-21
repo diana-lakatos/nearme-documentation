@@ -1,9 +1,9 @@
 Welcome, {{ user.first_name }}!
 
-Your instance, {{ instance.name }}, has been created. Your login details are –
+Your marketplace, {{ instance.name }}, has been created. Your login details are –
 
 Email: {{ user.email }}
 Password: {{ user_password }}
 
-Log in to instance admin: {{ platform_context.host | append:instance.instance_admin_url }} 
+Log in to marketplace admin: {{ platform_context.host | append:instance.instance_admin_url }} 
 

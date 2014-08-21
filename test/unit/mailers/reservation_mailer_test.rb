@@ -24,7 +24,6 @@ class ReservationMailerTest < ActiveSupport::TestCase
     assert_contains @reservation.listing.name, mail.html_part.body
     assert_equal [@reservation.owner.email], mail.to
     assert_equal subject, mail.subject
-    assert_equal ["support@desksnear.me"], mail.bcc
   end
 
   test "#notify_guest_of_cancellation_by_guest" do
@@ -34,7 +33,6 @@ class ReservationMailerTest < ActiveSupport::TestCase
     assert_contains @reservation.owner.first_name, mail.html_part.body
     assert_equal [@reservation.owner.email], mail.to
     assert_equal subject, mail.subject
-    assert_equal ["support@desksnear.me"], mail.bcc
   end
 
   test "#notify_guest_of_confirmation" do
@@ -44,7 +42,6 @@ class ReservationMailerTest < ActiveSupport::TestCase
     assert_contains @expected_dates, mail.html_part.body
 
     assert_equal [@reservation.owner.email], mail.to
-    assert_equal ["support@desksnear.me"], mail.bcc
   end
 
   test "#notify_guest_of_expiration" do
@@ -54,7 +51,6 @@ class ReservationMailerTest < ActiveSupport::TestCase
     assert_contains @reservation.listing.name, mail.html_part.body
 
     assert_equal [@reservation.owner.email], mail.to
-    assert_equal ["support@desksnear.me"], mail.bcc
   end
 
   context "#notify_guest_of_rejection" do
@@ -68,7 +64,6 @@ class ReservationMailerTest < ActiveSupport::TestCase
 
       assert_equal [@reservation.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] Can we help, #{@reservation.owner.first_name}?", mail.subject
-      assert_equal ["support@desksnear.me"], mail.bcc
     end
 
     should 'not include reason when it is not present' do
@@ -81,7 +76,6 @@ class ReservationMailerTest < ActiveSupport::TestCase
 
       assert_equal [@reservation.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] Can we help, #{@reservation.owner.first_name}?", mail.subject
-      assert_equal ["support@desksnear.me"], mail.bcc
     end
 
     should 'include nearme listings when it is present' do
@@ -116,7 +110,6 @@ class ReservationMailerTest < ActiveSupport::TestCase
 
     assert_contains @reservation.listing.name, mail.html_part.body
     assert_equal [@reservation.owner.email], mail.to
-    assert_equal ["support@desksnear.me"], mail.bcc
   end
 
   test "#notify_host_of_cancellation_by_guest" do
@@ -183,7 +176,6 @@ class ReservationMailerTest < ActiveSupport::TestCase
     assert_contains @reservation.listing.name, mail.html_part.body
     assert_equal [@reservation.owner.email], mail.to
     assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name}, your booking is tomorrow!", mail.subject
-    assert_equal ["support@desksnear.me"], mail.bcc
   end
 
   test "send to contact person if exists" do

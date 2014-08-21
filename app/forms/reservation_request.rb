@@ -24,6 +24,7 @@ class ReservationRequest < Form
     if @listing
       @reservation = listing.reservations.build
       @instance = platform_context.instance
+      @reservation.currency = @listing.currency
       @billing_gateway = Billing::Gateway::Incoming.new(@user, @instance, @reservation.currency) if @user
       @reservation.payment_method = payment_method
       @reservation.user = user
@@ -36,7 +37,7 @@ class ReservationRequest < Form
       @user.phone_required = true
       @user.phone = @user.mobile_number
     end
-    
+
     if @listing
       if @listing.hourly_reservations?
         @start_minute = start_minute.try(:to_i)
@@ -92,7 +93,7 @@ class ReservationRequest < Form
       if !reservation.listing.free? && @payment_method == Reservation::PAYMENT_METHODS[:credit_card]
         mode = @instance.test_mode? ? "test" : "live"
         reservation.build_billing_authorization(
-          token: @token, 
+          token: @token,
           payment_gateway_class: @gateway_class,
           payment_gateway_mode: mode
         )
