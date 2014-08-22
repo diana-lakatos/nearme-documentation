@@ -23,7 +23,7 @@ class AddOptionToHidePhoneAndEmailToInstances < ActiveRecord::Migration
 
     @instance = Instance.find(20)
     @instance.text_filters.create(name: 'Email', regexp: '[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}', flags: Regexp::IGNORECASE, replacement_text: '[FILTERED]')
-    @instance.text_filters.create(name: 'Ten digits phone', regexp: '\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})', replacement_text: '[FILTERED]')
+    @instance.text_filters.create(name: 'Ten digits phone', regexp: '(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})', replacement_text: '[FILTERED]')
     @instance.text_filters.create(name: 'Seven digits phone', regexp: '(?:\(?([0-9]{3})\)?[-. ]?)?([0-9]{3})[-. ]?([0-9]{4})', replacement_text: '[FILTERED]')
     @instance.text_filters.create(name: 'Phone with leading 1', regexp: '(?:\+?1[-. ]?)?\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})', replacement_text: '[FILTERED]')
   end
