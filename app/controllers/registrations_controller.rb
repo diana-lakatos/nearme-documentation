@@ -272,7 +272,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def user_params
     params.require(:user).permit(secured_params.user).tap do |whitelisted|
-      whitelisted[:sms_preferences] = params[:user][:sms_preferences]
+      whitelisted[:sms_preferences] = params[:user][:sms_preferences] if params[:user][:sms_preferences]
     end
   end
 end
