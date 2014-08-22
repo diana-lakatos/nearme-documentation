@@ -263,6 +263,13 @@ class RegistrationsControllerTest < ActionController::TestCase
       refute @user.sms_notifications_enabled
       assert_equal @user.sms_preferences, {"new_reservation" => '1'}
     end
+
+    should 'not overwrite sms preferences on profile update' do
+      sign_in @user
+      assert_equal @user.sms_preferences, {"user_message"=>"1", "reservation_state_changed"=>"1", "new_reservation"=>"1"}
+      put :update, :id => @user, user: { name: 'Dave' }
+      assert_equal @user.reload.sms_preferences, {"user_message"=>"1", "reservation_state_changed"=>"1", "new_reservation"=>"1"}
+    end
   end
 
   private
