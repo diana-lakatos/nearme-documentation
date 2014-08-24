@@ -19,4 +19,6 @@ class Billing::Gateway::Processor::Incoming::Balanced < Billing::Gateway::Proces
   def self.supported_currencies
     ["USD"]
   end
+
 end
+

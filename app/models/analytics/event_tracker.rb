@@ -41,6 +41,7 @@ class Analytics::EventTracker
   include ListingEvents
   include LocationEvents
   include ReservationEvents
+  include RecurringBookingEvents
   include SpaceWizardEvents
   include UserEvents
   include MailerEvents

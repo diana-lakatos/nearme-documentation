@@ -20,6 +20,7 @@
 //= require ./vendor/jquery.ias
 //= require ./vendor/ZeroClipboard
 //= require ./vendor/markerclusterer
+//= require recurring_select
 //= require history_jquery
 //= require ./vendor/underscore
 //= require chosen-jquery
@@ -88,7 +89,7 @@ window.DNM = {
   },
 
   initializeCustomSelects: function(container){
-    container.find('select').not('.time-wrapper select, .custom-select').customSelect();
+    container.find('select').not('.time-wrapper select, .custom-select, .recurring_select').customSelect();
     container.find('.customSelect').append('<i class="custom-select-dropdown-icon ico-chevron-down"></i>').closest('.controls').css({'position': 'relative'});
     container.find('.customSelect').siblings('select').css({'margin': '0px', 'z-index': 1 });
 

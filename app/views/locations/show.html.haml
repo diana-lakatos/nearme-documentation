@@ -49,7 +49,10 @@
         .one-third.column.left
           .toggleable-booking-modules
             - @listings.each_with_index do |listing, index|
-              = render 'locations/listings/booking', listing: listing, collapsed: index > 0, location_pretty_availability: location_pretty_availability
+              - if listing.transactable_type.recurring_booking
+                = render 'locations/listings/recurring_booking', listing: listing, collapsed: index > 0, location_pretty_availability: location_pretty_availability
+              -else
+                = render 'locations/listings/booking', listing: listing, collapsed: index > 0, location_pretty_availability: location_pretty_availability
               .padding-row
 
           -if @location.administrator

@@ -7,7 +7,8 @@ class Reservation::CancellationPolicyTest < ActiveSupport::TestCase
     setup do
       @reservation = stub(
         cancellation_policy_hours_for_cancellation: 24,
-        periods: [stub(date: Date.tomorrow)]
+        date: Date.tomorrow,
+        first_period: stub(start_minute: 540)
       )
       @cancellation_policy = Reservation::CancellationPolicy.new(@reservation)
     end

@@ -1,0 +1,30 @@
+- title "#{platform_context.lessee.capitalize.pluralize} (#{@guest_list.reservations.size + @guest_list.recurring_bookings.size})"
+
+= show_manage_navigation(:guests)
+
+#guests
+  %section#reservations
+    .row-fluid
+      .span8.offset2
+        .box
+          - if @guest_list.reservations_scope.empty? && !only_reservations && @guest_list.recurring_bookings_scope.empty?
+            = render 'dashboard/manage_guests/promote_locations', locations: @locations
+          - else
+            %header
+              = render 'dashboard/recurring_booking_guest_filter', recurring_booking: @recurring_booking
+            %h2
+              = @recurring_booking.schedule
+            %h3#recurring-booking-summary
+              %a.dates{href: '#', data: { :dates => @recurring_booking.dates_to_array(@guest_list.reservations) } }
+                - if @recurring_booking.start_minute && @recurring_booking.end_minute
+                  = @recurring_booking.hourly_summary(true)
+                - else
+                  = @recurring_booking.short_dates
+            = render 'dashboard/manage_guests', only_reservations: true
+
+
+- content_for :domready do
+  new Dashboard.GuestsController($('#guests'))
+  new Reservation.UserReservationController($("#recurring-booking-summary"))
+
+= render 'ratings/rating_modal'

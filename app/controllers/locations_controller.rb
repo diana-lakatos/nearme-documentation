@@ -35,9 +35,15 @@ class LocationsController < ApplicationController
   # Assigns the initial bookings to send to the JS controller from stored reservation request prior
   # to initiating a user session. See Locations::ReservationsController for more details
   def restore_initial_bookings_from_stored_reservation
-    @initial_bookings = if params[:restore_reservations] && session[:stored_reservation_location_id] == @location.id
-      session[:stored_reservation_bookings]
-    end || {}
+    if params[:restore_reservations]
+      if session[:stored_reservation_location_id] == @location.id
+        @initial_bookings = session[:stored_reservation_bookings]
+      elsif session[:stored_recurring_booking_location_id] == @location.id
+        @initial_bookings = session[:stored_recurring_booking_bookings]
+      end
+    else
+      @initial_bookings = {}
+    end
   end
 
   def find_location

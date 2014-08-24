@@ -62,9 +62,9 @@
     @include border-radius($border-radius-default);
     position: relative;
     padding: ($padding-default + 7);
-    background: $gray60;    
+    background: $gray60;
     color: $gray210;
-    font: normal 32px/36px $font-regular, sans-serif; 
+    font: normal 32px/36px $font-regular, sans-serif;
 
     @media (max-width: $booking-module-breakpoint-size) {
       padding: ($padding-default - 3);
@@ -72,14 +72,14 @@
     }
 
     @media (max-width: $iphone-portrait - 1) {
-      font: normal 22px/28px $font-regular, sans-serif; 
+      font: normal 22px/28px $font-regular, sans-serif;
     }
 
     .booking-header {
 
       padding-bottom: 15px;
       margin-bottom: 15px;
-      border-bottom: 1px solid $gray80; 
+      border-bottom: 1px solid $gray80;
 
       a {
         color: $gray210;
@@ -103,14 +103,14 @@
     .booking-price {
       overflow: hidden;
       padding-bottom: 15px;
-      border-bottom: 1px solid $gray80; 
+      border-bottom: 1px solid $gray80;
     }
 
     .booking-description, .booking-opening-hours {
       margin: 15px 0px 0px;
       font-size: 0.50em;
 
-      h3, 
+      h3,
       span {
         color: $gray160 !important;
       }
@@ -137,7 +137,7 @@
 
       @media (max-width: $booking-module-breakpoint-size) {
         font-size: 100%;
-      } 
+      }
 
       &.unavailable {
         @include opacity(.1);
@@ -162,7 +162,7 @@
         // Only one price field, center it.
         margin-left: 33%;
       }
-      
+
       &.label-free-price {
         // Center 'Free' text
         width: 100%;
@@ -190,7 +190,7 @@
         @include opacity(0.75);
       }
     }
-    
+
     .calendar-wrapper {
       @include border-radius($border-radius-default);
       display: block;
@@ -204,7 +204,7 @@
       padding-left: 10px;
       white-space: nowrap;
 
-      &.date-end, 
+      &.date-end,
       &.time-picker {
         float: right;
         margin-right:0;
@@ -233,7 +233,7 @@
         }
       }
 
-      @media (max-width: $iphone-portrait - 1) { 
+      @media (max-width: $iphone-portrait - 1) {
         padding-left: 0px !important;
       }
 
@@ -244,10 +244,10 @@
 
       .calendar {
         position: relative;
-        display: inline-block; 
+        display: inline-block;
         margin-top: 8px;
 
-        .dates, 
+        .dates,
         input {
           display: inline-block;
           width: 30px;
@@ -264,7 +264,7 @@
           }
         }
 
-        @media (max-width: $iphone-portrait - 1) { 
+        @media (max-width: $iphone-portrait - 1) {
           display: block;
 
           .ico-calender-end, .ico-calender-start {
@@ -291,7 +291,7 @@
             text-align: center;
           }
         }
-      }    
+      }
     }
 
     .quantity {
@@ -326,12 +326,16 @@
 
     .price {
       margin: 15px 0px;
-      @include background-clip(border-box);       
+      @include background-clip(border-box);
       text-align: left;
 
       span {
         float: right;
       }
+    }
+
+    .recurring_select {
+      width: 100%;
     }
 
   }

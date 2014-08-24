@@ -9,9 +9,8 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
     setup_api_on_initialize
   end
 
-  def authorize(amount, credit_card)
-    options = defined?(custom_authorize_options) ? custom_authorize_options : {}
-    options[:currency] = @currency
+  def authorize(amount, credit_card, options = {})
+    options = options.merge(custom_authorize_options).merge({currency: @currency})
     response = @gateway.authorize(amount, credit_card, options.with_indifferent_access)
     if response.success?
       return {
@@ -35,8 +34,7 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
 
     begin
       set_active_merchant_mode(reference)
-      options = defined?(custom_capture_options) ? custom_capture_options : {}
-      options[:currency] = @currency
+      options = custom_capture_options.merge(currency: @currency)
       response = @gateway.capture(amount, token, options.with_indifferent_access)
 
       response.success? ? charge_successful(response.params) : charge_failed(response.params)
@@ -57,8 +55,7 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
 
     begin
       set_active_merchant_mode(reference)
-      options = defined?(custom_refund_options) ? custom_refund_options : {}
-      options[:currency] = @currency
+      options = custom_refund_options.merge(currency: @currency)
       response = @gateway.refund(amount, refund_identification(charge_response), options.with_indifferent_access)
       response.success? ? refund_successful(response.params) : refund_failed(response.params)
       @refund
@@ -67,9 +64,27 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
     end
   end
 
+  def store_credit_card(client, credit_card)
+    return nil unless support_recurring_payment?
+    @instance_client = client.instance_clients.where(gateway_class: self.class.name).first || client.instance_clients.build
+    @instance_client.gateway_class ||= self.class.name
+    options = { email: client.email, default_card: true, customer: @instance_client.customer_id }
+    response = @gateway.store(credit_card, options)
+    @instance_client.response ||= response.to_yaml
+    @credit_card = @instance_client.credit_cards.build
+    @credit_card.gateway_class ||= self.class.name
+    @credit_card.response = response.to_yaml
+    @instance_client.save!
+    @credit_card.id
+  end
+
   def self.supports_currency?(currency)
     return true if defined? self.support_any_currency!
     self.supported_currencies.include?(currency)
+  end
+
+  def support_recurring_payment?
+    false
   end
 
   protected
@@ -111,6 +126,18 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
     else
       ActiveMerchant::Billing::Base.mode = :test if @instance.test_mode?
     end
+  end
+
+  def custom_authorize_options
+    {}
+  end
+
+  def custom_capture_options
+    {}
+  end
+
+  def custom_refund_options
+    {}
   end
 
 end

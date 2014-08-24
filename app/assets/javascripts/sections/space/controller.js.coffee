@@ -7,7 +7,7 @@ class @Space.Controller
     @googleMapElementWrapper = @mapContainer.find('.map-container')
     @siblingListingsCarousel = @container.find('#listing-siblings-container')
     @fullScreenGallery = @container.find('#photos-container-enlarged')
-    @fullScreenGalleryTrigger = @container.find('button[data-gallery-enlarge]') 
+    @fullScreenGalleryTrigger = @container.find('button[data-gallery-enlarge]')
     @fullScreenGalleryContainer = @container.find('#fullscreen-gallery')
 
     @setupCollapse()

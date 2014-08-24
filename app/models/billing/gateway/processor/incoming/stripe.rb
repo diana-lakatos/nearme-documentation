@@ -12,7 +12,16 @@ class Billing::Gateway::Processor::Incoming::Stripe < Billing::Gateway::Processo
     charge_response["id"]
   end
 
+  def credit_card_token_column
+    'stripe_id'
+  end
+
   def self.support_any_currency!
     true
   end
+
+  def support_recurring_payment?
+    true
+  end
+
 end

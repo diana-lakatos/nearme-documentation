@@ -24,6 +24,7 @@ class @Bookings.Listing
     @favourablePricingRate = @data.favourable_pricing_rate
     @pricesByDays = @data.prices_by_days
     @hourlyPrice = @data.hourly_price_cents
+    @recurringBooking = @data.recurring_booking
 
   setDefaultQuantity: (qty) ->
     @defaultQuantity = qty if qty >= 0
@@ -36,6 +37,9 @@ class @Bookings.Listing
 
   isReservedHourly: ->
     @data.hourly_reservations
+
+  isRecurringBooking: ->
+    @recurringBooking
 
   isReservedDaily: ->
     !@isReservedHourly()
@@ -57,7 +61,10 @@ class @Bookings.Listing
     @availability.openFor(date)
 
   isBooked: ->
-    hasDate = @bookedDates().length > 0
+    hasDate = if @isRecurringBooking()
+      @startOn and @endOn
+    else
+      @bookedDates().length > 0
     hasTime = if @isReservedHourly()
       @minutesBooked() > 0
     else
@@ -91,6 +98,12 @@ class @Bookings.Listing
     @startMinute = start
     @endMinute = end
 
+  setStartOn: (start) ->
+    @startOn = start
+
+  setEndOn: (end) ->
+    @endOn = end
+
   minutesBooked: ->
     return 0 unless @startMinute? and @endMinute?
     @endMinute - @startMinute
@@ -114,6 +127,9 @@ class @Bookings.Listing
     if @isReservedHourly()
       options.start_minute = @startMinute
       options.end_minute   = @endMinute
+    if @isRecurringBooking()
+      options.start_on = @startOn
+      options.end_on   = @endOn
 
     options
 

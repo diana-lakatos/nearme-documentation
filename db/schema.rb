@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140819073001) do
+ActiveRecord::Schema.define(version: 20140822095659) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -265,6 +265,20 @@ ActiveRecord::Schema.define(version: 20140819073001) do
     t.datetime "updated_at",                  null: false
   end
 
+  create_table "credit_cards", force: true do |t|
+    t.integer  "instance_client_id"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.string   "gateway_class"
+    t.text     "encrypted_response"
+    t.boolean  "default_card"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "credit_cards", ["instance_client_id"], name: "index_credit_cards_on_instance_client_id", using: :btree
+  add_index "credit_cards", ["instance_id"], name: "index_credit_cards_on_instance_id", using: :btree
+
   create_table "data_uploads", force: true do |t|
     t.string   "csv_file"
     t.string   "xml_file"
@@ -464,14 +478,13 @@ ActiveRecord::Schema.define(version: 20140819073001) do
     t.integer  "client_id"
     t.string   "client_type"
     t.integer  "instance_id"
-    t.string   "encrypted_stripe_id"
-    t.string   "encrypted_paypal_id"
     t.string   "encrypted_balanced_user_id"
-    t.string   "encrypted_balanced_credit_card_id"
     t.string   "bank_account_last_four_digits"
     t.datetime "deleted_at"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.string   "gateway_class"
+    t.text     "encrypted_response"
   end
 
   create_table "instance_creators", force: true do |t|
@@ -851,6 +864,44 @@ ActiveRecord::Schema.define(version: 20140819073001) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "recurring_bookings", force: true do |t|
+    t.integer  "transactable_id"
+    t.integer  "owner_id"
+    t.integer  "creator_id"
+    t.integer  "administrator_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.integer  "instance_id"
+    t.boolean  "listings_public"
+    t.datetime "deleted_at"
+    t.datetime "start_on"
+    t.datetime "end_on"
+    t.integer  "quantity"
+    t.integer  "start_minute"
+    t.integer  "end_minute"
+    t.text     "schedule_params"
+    t.string   "state"
+    t.string   "currency"
+    t.string   "payment_method",                     default: "manual", null: false
+    t.integer  "platform_context_detail_id"
+    t.string   "platform_context_detail_type"
+    t.integer  "service_fee_amount_guest_cents",     default: 0,        null: false
+    t.integer  "service_fee_amount_host_cents",      default: 0,        null: false
+    t.integer  "subtotal_amount_cents"
+    t.string   "rejection_reason"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "credit_card_id"
+    t.integer  "hours_before_reservation_to_charge", default: 24
+  end
+
+  add_index "recurring_bookings", ["administrator_id"], name: "index_recurring_bookings_on_administrator_id", using: :btree
+  add_index "recurring_bookings", ["company_id"], name: "index_recurring_bookings_on_company_id", using: :btree
+  add_index "recurring_bookings", ["creator_id"], name: "index_recurring_bookings_on_creator_id", using: :btree
+  add_index "recurring_bookings", ["instance_id"], name: "index_recurring_bookings_on_instance_id", using: :btree
+  add_index "recurring_bookings", ["owner_id"], name: "index_recurring_bookings_on_owner_id", using: :btree
+  add_index "recurring_bookings", ["transactable_id"], name: "index_recurring_bookings_on_transactable_id", using: :btree
+
   create_table "refunds", force: true do |t|
     t.integer  "reference_id"
     t.string   "reference_type"
@@ -882,6 +933,7 @@ ActiveRecord::Schema.define(version: 20140819073001) do
     t.integer  "partner_id"
     t.integer  "cancellation_policy_hours_for_cancellation", default: 0
     t.integer  "cancellation_policy_penalty_percentage",     default: 0
+    t.text     "recurring_booking_error"
   end
 
   add_index "reservation_charges", ["company_id"], name: "index_reservation_charges_on_company_id", using: :btree
@@ -943,10 +995,12 @@ ActiveRecord::Schema.define(version: 20140819073001) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.boolean  "listings_public",                            default: true
+    t.integer  "recurring_booking_id"
     t.datetime "confirmed_at"
     t.datetime "cancelled_at"
     t.integer  "cancellation_policy_hours_for_cancellation", default: 0
     t.integer  "cancellation_policy_penalty_percentage",     default: 0
+    t.integer  "credit_card_id"
   end
 
   add_index "reservations", ["administrator_id"], name: "index_reservations_on_administrator_id", using: :btree
@@ -956,6 +1010,7 @@ ActiveRecord::Schema.define(version: 20140819073001) do
   add_index "reservations", ["owner_id"], name: "index_reservations_on_owner_id", using: :btree
   add_index "reservations", ["partner_id"], name: "index_reservations_on_partner_id", using: :btree
   add_index "reservations", ["platform_context_detail_id"], name: "index_reservations_on_platform_context_detail_id", using: :btree
+  add_index "reservations", ["recurring_booking_id"], name: "index_reservations_on_recurring_booking_id", using: :btree
   add_index "reservations", ["transactable_id"], name: "index_reservations_on_listing_id", using: :btree
 
   create_table "search_notifications", force: true do |t|
@@ -2142,8 +2197,9 @@ ActiveRecord::Schema.define(version: 20140819073001) do
     t.text     "pricing_options"
     t.text     "pricing_validation"
     t.text     "availability_options"
-    t.boolean  "favourable_pricing_rate", default: true
-    t.integer  "days_for_monthly_rate",   default: 0
+    t.boolean  "recurring_booking",                          default: false, null: false
+    t.boolean  "favourable_pricing_rate",                    default: true
+    t.integer  "days_for_monthly_rate",                      default: 0
     t.datetime "cancellation_policy_enabled"
     t.integer  "cancellation_policy_hours_for_cancellation", default: 0
     t.integer  "cancellation_policy_penalty_percentage",     default: 0
@@ -2321,6 +2377,16 @@ ActiveRecord::Schema.define(version: 20140819073001) do
     t.string   "payment_token"
     t.boolean  "sso_log_out",                                        default: false
     t.string   "spree_api_key"
+    t.string   "first_name"
+    t.string   "middle_name"
+    t.string   "last_name"
+    t.string   "gender"
+    t.string   "drivers_licence_number"
+    t.string   "gov_number"
+    t.string   "twitter_url"
+    t.string   "linkedin_url"
+    t.string   "facebook_url"
+    t.string   "google_plus_url"
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

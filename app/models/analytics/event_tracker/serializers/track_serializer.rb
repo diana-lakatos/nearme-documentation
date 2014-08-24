@@ -39,6 +39,17 @@ class Analytics::EventTracker::Serializers::TrackSerializer
         listing_monthly_price: object.monthly_price.try(:dollars),
         listing_url: Rails.application.routes.url_helpers.listing_url(object)
       }
+    when RecurringBooking
+      {
+        booking_desks: object.quantity,
+        location_address: object.location.address,
+        location_currency: object.location.currency,
+        location_suburb: object.location.suburb,
+        location_city: object.location.city,
+        location_state: object.location.state,
+        location_country: object.location.country,
+        location_postcode: object.location.postcode
+      }
     when Reservation
       {
         booking_desks: object.quantity,

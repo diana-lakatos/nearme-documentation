@@ -6,15 +6,15 @@
     = f.simple_fields_for :pricing_options, OpenStruct.new(resource.pricing_options) do |pricing_option|
       = pricing_option.input price, as: :boolean, checked_value: "1", unchecked_value: "0"
 
+  - resource.pricing_validation ||= {}
   - Instance::PRICING_OPTIONS.each do |price|
     - next if price == 'free'
+    - resource.pricing_validation[price] ||= { "min" => nil, "max" => nil }
     .row-fluid
       = f.simple_fields_for :pricing_validation, resource.pricing_validation do |pricing_validation|
-        - resource.pricing_validation ||= {}
-        - resource.pricing_validation[price] ||= { :min => nil, :max => nil }
         = pricing_validation.simple_fields_for price, OpenStruct.new(resource.pricing_validation[price]) do |price_type|
-          = price_type.input :min, label: "Minimum #{price} price", as: :string, required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-          = price_type.input :max, label: "Maximum #{price} price", as: :string, required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+          = price_type.input "min", label: "Minimum #{price} price", as: :string, required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+          = price_type.input "max", label: "Maximum #{price} price", as: :string, required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
   %div{style: 'display: none'}
     %legend Availability Templates
     = f.simple_fields_for :availability_templates, resource.availability_templates.first || resource.availability_templates.build do |f_at|

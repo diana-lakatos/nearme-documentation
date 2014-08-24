@@ -10,6 +10,7 @@ class Transactable < ActiveRecord::Base
   include TransactableType::CustomAttributesCaster
 
   has_many :reservations, dependent: :destroy, :inverse_of => :listing
+  has_many :recurring_bookings, dependent: :destroy, :inverse_of => :listing
   has_many :photos, dependent: :destroy, :inverse_of => :listing do
     def thumb
       (first || build).thumb

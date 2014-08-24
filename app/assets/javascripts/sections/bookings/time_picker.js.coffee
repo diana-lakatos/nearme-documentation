@@ -10,6 +10,8 @@ class @Bookings.TimePicker
 
     @openMinute = if options.openMinute? then options.openMinute else 9*60
     @closeMinute = options.closeMinute or 18*60
+    @initialStartMinute = options.startMinute if options.startMinute?
+    @initialEndMinute = options.endMinute if options.endMinute?
 
     @view = new View(positionTarget: @container)
     @view.appendTo($('body'))
@@ -19,9 +21,16 @@ class @Bookings.TimePicker
     @endTime = @view.endTime
     @loading = @view.loading
 
+
     # Populate the time selects based on the open hours
     @populateTimeOptions()
     @bindEvents()
+    if @initialStartMinute
+      @startTime.val("#{@initialStartMinute}")
+      @startTime.trigger('change')
+    if @initialEndMinute
+      @endTime.val("#{@initialEndMinute}")
+      @endTime.trigger('change')
 
   bindEvents: ->
     @container.on 'click', (event) =>
@@ -75,7 +84,7 @@ class @Bookings.TimePicker
     # End time is all but the first start time
     steps = _.difference(options, [options[0]])
     # Add the selected attribute to the nth element in the array
-    steps[DEFAULT_STEPS-1] = $('<div>').append($(steps[DEFAULT_STEPS-1]).attr('selected', 'selected')).html();
+    steps[DEFAULT_STEPS-1] = $('<div>').append($(steps[DEFAULT_STEPS-1]).attr('selected', 'selected')).html()
     @endTime.html(steps.join("\n"))
 
     @view.startTimeDidChange()
@@ -150,7 +159,7 @@ class @Bookings.TimePicker
 
     # If we don't have a valid end time now, assign a default based on the next
     # available end time.
-    if !@endMinute() 
+    if !@endMinute()
       usable = @endTime.find("option:not(:disabled)")[0]
       @endTime.val(usable.value).trigger 'change' if usable
 

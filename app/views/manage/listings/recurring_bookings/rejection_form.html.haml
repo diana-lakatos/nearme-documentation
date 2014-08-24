@@ -1,0 +1,21 @@
+- title "Reject"
+
+.row-fluid
+  #signup.decline
+    .span8.offset2
+      .box
+        %br
+        %h2 Are you sure you want to decline?
+        = simple_form_for(@recurring_booking, :url => reject_manage_listing_recurring_booking_path(@listing, @recurring_booking)) do |f|
+          .input-icon-holder
+            = f.input :rejection_reason, :placeholder => "Optionally, provide a reason.", :label => false, :tabindex => '1'
+          %br
+          .actions
+            = f.submit "Decline", id: 'submit-decline'
+
+- if request.xhr?
+  :javascript
+    Modal.setClass('sign-up-modal')
+
+- content_for :domready do
+  $(function() { new ModalForm($('#signup'), $('from.edit_recurring_booking')) });

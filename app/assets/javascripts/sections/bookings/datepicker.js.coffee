@@ -42,7 +42,7 @@ class @Bookings.Datepicker
       # For now, we only provide the add/remove pick mode for listings allowing
       # individual day selection.
       @setDatepickerToPickMode()
-      
+
       # If the user selects the same start/end date, let's close the datepicker
       # and assume they were only trying to select one day.
       if @listing.minimumBookingDays > 1 or @endDatepicker.getDates().length <= 1
@@ -83,7 +83,7 @@ class @Bookings.Datepicker
     @startDatepicker.setDates(dates.slice(0,1))
     @endDatepicker.setDates(dates)
     @endDatepicker.getModel().ensureDatesMeetConstraint()
-    
+
     # If we're specifying more than just a start date, we need
     # to set the mode to Pick.
     if dates.length > 1

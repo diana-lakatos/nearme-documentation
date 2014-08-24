@@ -65,3 +65,8 @@ en:
       user:
         sms_notifications_enabled: 'Enable Text Message Notifications'
         biography: 'About me'
+  activerecord:
+    errors:
+      models:
+        recurring_booking:
+          one_valid_reservation: 'Please choose different dates, these which were chosen are not available anymore.'
