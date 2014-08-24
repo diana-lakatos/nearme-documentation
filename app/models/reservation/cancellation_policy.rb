@@ -4,7 +4,8 @@ class Reservation::CancellationPolicy
   end
 
   def cancelable?
-    ((@reservation.date + @reservation.first_period.start_minute.minutes).utc > (Time.zone.now + @reservation.cancellation_policy_hours_for_cancellation.hours).utc)
+
+    ((Time.use_zone(Time.zone) { Time.zone.local_to_utc(@reservation.date + @reservation.first_period.start_minute.minutes) }.localtime).utc > (Time.zone.now + @reservation.cancellation_policy_hours_for_cancellation.hours).utc)
   end
 
 end
