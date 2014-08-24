@@ -1,0 +1,14 @@
+.button-links
+  %ul
+    %li
+      %a.btn.btn-medium.upcoming-reservations{href: manage_recurring_booking_path(recurring_booking, state: 'unconfirmed'),
+      class: guest_filter_class(@guest_list, 'unconfirmed')}
+        %span Unconfirmed
+    %li
+      %a.btn.btn-medium.upcoming-reservations{href: manage_recurring_booking_path(recurring_booking, state: 'confirmed'),
+       class: guest_filter_class(@guest_list, 'confirmed')}
+        %span Confirmed
+    %li
+      %a.btn.btn-medium.upcoming-reservations{href: manage_recurring_booking_path(recurring_booking, state: 'archived'),
+       class: guest_filter_class(@guest_list, 'archived')}
+        %span Archived

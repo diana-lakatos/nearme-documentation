@@ -3,7 +3,9 @@ class InstanceAdmin::Settings::BaseController < InstanceAdmin::BaseController
                   'locations'     => { default_action: 'show' },
                   'listings'      => { default_action: 'show' },
                   'translations'  => { default_action: 'show' },
-                  'integrations'  => { default_action: 'show' }}
+                  'integrations'  => { default_action: 'show' },
+                  'cancellation_policy'  => { default_action: 'show' },
+  }
 
   before_filter :find_instance
   before_filter :find_instance_translations

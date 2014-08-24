@@ -2,7 +2,7 @@ require 'test_helper'
 
 class Reservation::ServiceFeeCalculatorTest < ActiveSupport::TestCase
 
-  def setup
+  setup do
     @reservation = Reservation.new
     @reservation.stubs(:subtotal_amount_cents).returns(120_00)
 

@@ -4,7 +4,7 @@
   .booking-module
     .booking-header
       %a.toggleable-booking-trigger{:href => location_path(listing.location, listing), :'data-booking-trigger' => true}
-        %span.booking-listing-name= listing.name
+        %span.booking-listing-name= mask_phone_and_email_if_necessary(listing.name)
         %span.pull-right
           %i.ico-chevron-down
           %i.ico-chevron-right
@@ -52,7 +52,7 @@
       .clearfix
       .booking-description
         %h3 Description
-        %span= listing.description
+        %span= mask_phone_and_email_if_necessary(listing.description)
       - listing_availability = pretty_availability_sentence(listing.availability)
       - if listing_availability != location_pretty_availability
         .booking-opening-hours
@@ -92,6 +92,8 @@
           = hidden_field_tag :listing_id, @listing.id
           = f.hidden_field :quantity
           = f.hidden_field :dates
+          = f.hidden_field :start_on
+          = f.hidden_field :end_on
           = f.hidden_field :start_minute
           = f.hidden_field :end_minute
 

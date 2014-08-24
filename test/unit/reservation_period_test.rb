@@ -1,7 +1,8 @@
 require 'test_helper'
 
 class ReservationPeriodTest < ActiveSupport::TestCase
-  def setup
+
+  setup do
     @listing = FactoryGirl.create(:transactable, quantity: 2)
     @user = FactoryGirl.create(:user)
     @reservation = @listing.reservations.build(:user => @user)

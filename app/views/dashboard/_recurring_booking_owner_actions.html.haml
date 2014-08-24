@@ -1,0 +1,12 @@
+- if recurring_booking.can_host_cancel?
+  = form_for recurring_booking, method: :post, url: host_cancel_manage_listing_recurring_booking_path(recurring_booking.listing, recurring_booking) do |f|
+    = f.submit "Cancel", :confirm => "Do you really want to cancel recurring booking?", :class => "btn btn-small btn-gray reservation-action"
+
+- if recurring_booking.can_confirm?
+  = form_for recurring_booking, method: :post, url: confirm_manage_listing_recurring_booking_path(recurring_booking.listing, recurring_booking) do |f|
+    = f.submit "Confirm", :confirm => "Do you want to confirm recurring booking?", :class => "btn btn-small btn-green reservation-action"
+
+- if recurring_booking.can_reject?
+  = link_to 'Decline', rejection_form_manage_listing_recurring_booking_path(recurring_booking.listing, recurring_booking),
+              rel: 'modal.sign-up-modal',
+              :class => "btn btn-gray btn-small reservation-action"

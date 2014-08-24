@@ -1,17 +1,17 @@
 .row-fluid
   .span4
     %h2 Our Space
-    %p= truncate_with_ellipsis @location.description, 250    
+    %p= truncate_with_ellipsis mask_phone_and_email_if_necessary(@location.description), 250
     - if @amenities
-      %h2 Amenities  
+      %h2 Amenities
       %ul
         - @location.amenities.each do |amenity|
-          %li= amenity     
+          %li= amenity
 
   .span4
     %h2 About Us
     %p
-    %p= truncate_with_ellipsis @location.company.description, 250
+    %p= truncate_with_ellipsis mask_phone_and_email_if_necessary(@location.company.description), 250
 
     - if @amenities
       %h2 Amenities

@@ -10,14 +10,11 @@ class ReservationChargeTest < ActiveSupport::TestCase
     end
 
     context 'mixpanel' do
-      setup do
-        @expectation = ReservationChargeTrackerJob.expects(:perform_later).with(@reservation.date.end_of_day, @reservation.id)
-      end
 
       should 'track charge in mixpanel after successful creation' do
         @reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
         Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:charge)
-        @expectation.once
+        ReservationChargeTrackerJob.expects(:perform_later).with(@reservation.date.end_of_day, @reservation.id).once
         @reservation.reservation_charges.create!(
           subtotal_amount: 105.24,
           service_fee_amount_guest: 23.18
@@ -75,6 +72,51 @@ class ReservationChargeTest < ActiveSupport::TestCase
       Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).once.returns(Refund.new(:success => true))
       @reservation_charge.refund
     end
+
+    context 'cancelation policy penalty' do
+
+      setup do
+        @reservation_charge.update_attribute(:cancellation_policy_penalty_percentage, 60)
+      end
+
+      should 'return have subtotal amount after refund equal to subtotal amount if no refund has been made' do
+        assert_equal 10000, @reservation_charge.subtotal_amount_cents_after_refund
+      end
+
+      should 'calculate proper number for amount_to_be_refunded if cancelled by guest' do
+        @reservation_charge.reservation.update_column(:state, 'cancelled_by_guest')
+        assert_equal 10000, @reservation_charge.subtotal_amount_cents
+        assert_equal 4000, @reservation_charge.amount_to_be_refunded
+      end
+
+      should 'calculate proper number for amount_to_be_refunded if cancelled by host' do
+        @reservation_charge.reservation.update_column(:state, 'cancelled_by_host')
+        assert_equal 10000, @reservation_charge.subtotal_amount_cents
+        assert_equal 11000, @reservation_charge.amount_to_be_refunded
+      end
+
+      should 'trigger refund method with proper amount when guest cancels ' do
+        @reservation_charge.reservation.update_column(:state, 'cancelled_by_guest')
+        Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).once.with do |amount, reference, response|
+          amount == 4000
+        end.returns(Refund.new(:success => true))
+        @reservation_charge.refund
+      end
+
+      should 'trigger refund method with proper amount when host cancels ' do
+        @reservation_charge.reservation.update_column(:state, 'cancelled_by_host')
+        Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).once.with do |amount, reference, response|
+          amount == 11000
+        end.returns(Refund.new(:success => true))
+        @reservation_charge.refund
+      end
+
+      should 'calculate proper subtotal amount cents after refund once refund has been issued' do
+        @refund = FactoryGirl.create(:refund, reference: @reservation_charge, amount: 3000)
+        assert_equal @reservation_charge.subtotal_amount_cents - 3000, @reservation_charge.subtotal_amount_cents_after_refund
+      end
+
+    end
   end
 
   context 'charge on save' do
@@ -119,7 +161,7 @@ class ReservationChargeTest < ActiveSupport::TestCase
         instance = FactoryGirl.create(:instance)
         @reservation_charge.reservation.company.update_attribute(:instance_id, instance.id)
         PlatformContext.any_instance.stubs(:instance).returns(instance)
-        assert_equal instance.id, @reservation_charge.reload.instance_id 
+        assert_equal instance.id, @reservation_charge.reload.instance_id
       end
 
       should 'assign correct partner_id' do

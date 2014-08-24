@@ -16,13 +16,38 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
     ActiveMerchant::Billing::Base.mode = :test
   end
 
-
   should "track booking review open" do
     @tracker.expects(:reviewed_a_booking).with do |reservation|
       reservation == assigns(:reservation_request).reservation.decorate
     end
     post :review, booking_params_for(@listing)
     assert_response 200
+  end
+
+  context 'cancellation policy' do
+
+    setup do
+      TransactableType.update_all({
+        cancellation_policy_enabled: Time.zone.now,
+        cancellation_policy_hours_for_cancellation: 24,
+        cancellation_policy_penalty_percentage: 60}
+      )
+    end
+
+    should 'store cancellation policy details if enabled' do
+      post :create, booking_params_for(@listing)
+      reservation = assigns(:reservation_request).reservation
+      assert_equal 24, reservation.cancellation_policy_hours_for_cancellation
+      assert_equal 60, reservation.cancellation_policy_penalty_percentage
+    end
+
+    should 'not store cancellation policy details if disabled' do
+      TransactableType.update_all(cancellation_policy_enabled: nil)
+      post :create, booking_params_for(@listing)
+      reservation = assigns(:reservation_request).reservation
+      assert_equal 0, reservation.cancellation_policy_hours_for_cancellation
+      assert_equal 0, reservation.cancellation_policy_penalty_percentage
+    end
   end
 
   should "track booking request" do
@@ -38,7 +63,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
     @tracker.expects(:updated_profile_information).with do |user|
       user == assigns(:reservation_request).reservation.host
     end
-    
+
     assert_difference 'Reservation.count' do
       post :create, booking_params_for(@listing)
     end
@@ -70,7 +95,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
         Rails.logger.expects(:error).never
         User.any_instance.expects(:notify_about_wrong_phone_number).once
         SmsNotifier::Message.any_instance.stubs(:send_twilio_message).raises(Twilio::REST::RequestError, "The 'To' number +16665554444 is not a valid phone number")
-        assert_nothing_raised do 
+        assert_nothing_raised do
           post :create, booking_params_for(@listing)
         end
         assert @response.body.include?('redirect')
@@ -84,7 +109,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
         @controller.class.any_instance.expects(:handle_invalid_mobile_number).never
         SmsNotifier::Message.any_instance.stubs(:send_twilio_message).raises(Twilio::REST::RequestError, "Some other error")
         Rails.logger.expects(:error).once
-        assert_nothing_raised do 
+        assert_nothing_raised do
           post :create, booking_params_for(@listing)
         end
         assert @response.body.include?('redirect')

@@ -123,14 +123,17 @@ class SecuredParams
       :stripe_currency, :user_info_in_onboarding_flow,
       :default_search_view, :user_based_marketplace_views,
       :searcher_type, :onboarding_verification_required,
-      :transactable_types_attributes => nested(self.transactable_type),
-      :listing_amenity_types_attributes => nested(self.amenity_type),
-      :location_amenity_types_attributes => nested(self.amenity_type),
-      :location_types_attributes => nested(self.location_type),
-      :instance_payment_gateways_attributes => nested(self.instance_payment_gateway),
-      :translations_attributes => nested(self.translation),
-      :domains_attributes => nested(self.domain),
-      :theme_attributes => self.theme,
+      :apply_text_filters,
+      user_required_fields: [],
+      transactable_types_attributes: nested(self.transactable_type),
+      listing_amenity_types_attributes: nested(self.amenity_type),
+      location_amenity_types_attributes: nested(self.amenity_type),
+      location_types_attributes: nested(self.location_type),
+      instance_payment_gateways_attributes: nested(self.instance_payment_gateway),
+      translations_attributes: nested(self.translation),
+      domains_attributes: nested(self.domain),
+      text_filters_attributes: nested(self.text_filter),
+      theme_attributes: self.theme,
     ]
   end
 
@@ -143,6 +146,15 @@ class SecuredParams
     ]
   end
 
+  def text_filter
+    [
+      :name,
+      :regexp,
+      :flags,
+      :replacement_text
+    ]
+  end
+
   def transactable_type
     [
       :name,
@@ -150,6 +162,10 @@ class SecuredParams
       :pricing_validation,
       :availability_options,
       :favourable_pricing_rate,
+      :cancellation_policy_enabled,
+      :cancellation_policy_penalty_percentage,
+      :cancellation_policy_hours_for_cancellation,
+      :enable_cancellation_policy,
       :availability_templates_attributes => nested(self.availability_template)
     ]
   end

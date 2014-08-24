@@ -30,7 +30,9 @@ class Reservation < ActiveRecord::Base
   belongs_to :creator, class_name: "User"
   belongs_to :administrator, class_name: "User"
   belongs_to :company
+  belongs_to :recurring_booking
   belongs_to :platform_context_detail, :polymorphic => true
+  belongs_to :credit_card
   has_many :user_messages, as: :thread_context
 
   # attr_accessible :cancelable, :confirmation_email, :date, :transactable_id,
@@ -107,20 +109,22 @@ class Reservation < ActiveRecord::Base
   monetize :service_fee_amount_host_cents
   monetize :successful_payment_amount_cents
 
-  state_machine :state, :initial => :unconfirmed do
-    after_transition :unconfirmed => :confirmed, :do => :attempt_payment_capture
-    after_transition :confirmed => [:cancelled_by_guest, :cancelled_by_host], :do => :schedule_refund
+  state_machine :state, initial: :unconfirmed do
+    after_transition unconfirmed: :confirmed, do: :attempt_payment_capture, if: lambda { |r| r.billing_authorization.present? }
+    after_transition unconfirmed: :confirmed, do: :schedule_payment_capture, if: lambda { |r| r.recurring_booking_id.present? && r.billing_authorization.nil? }
+    after_transition unconfirmed: :confirmed, do: :set_confirmed_at
+    after_transition confirmed: [:cancelled_by_guest, :cancelled_by_host], do: [:schedule_refund, :set_cancelled_at]
 
     event :confirm do
-      transition :unconfirmed => :confirmed
+      transition unconfirmed: :confirmed
     end
 
     event :reject do
-      transition :unconfirmed => :rejected
+      transition unconfirmed: :rejected
     end
 
     event :host_cancel do
-      transition :confirmed => :cancelled_by_host
+      transition confirmed: :cancelled_by_host
     end
 
     event :user_cancel do
@@ -128,7 +132,7 @@ class Reservation < ActiveRecord::Base
     end
 
     event :expire do
-      transition :unconfirmed => :expired
+      transition unconfirmed: :expired
     end
   end
 
@@ -138,6 +142,8 @@ class Reservation < ActiveRecord::Base
       where(:state => [:confirmed, :unconfirmed]).
       uniq
   }
+
+  scope :no_recurring, lambda { where(recurring_booking_id: nil) }
 
   scope :upcoming, lambda {
     joins(:periods).
@@ -167,8 +173,15 @@ class Reservation < ActiveRecord::Base
     with_state(:cancelled_by_guest, :cancelled_by_host)
   }
 
+  scope :confirmed_or_unconfirmed, lambda {
+    with_state(:confirmed, :unconfirmed)
+  }
   scope :confirmed, lambda {
     with_state(:confirmed)
+  }
+
+  scope :unconfirmed, lambda {
+    with_state(:unconfirmed)
   }
 
   scope :rejected, lambda {
@@ -200,6 +213,14 @@ class Reservation < ActiveRecord::Base
   delegate :administrator=, to: :location
   delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :listing, allow_nil: true
 
+  def set_confirmed_at
+    touch(:confirmed_at)
+  end
+
+  def set_cancelled_at
+    touch(:cancelled_at)
+  end
+
   def user=(value)
     self.owner = value
     self.confirmation_email = value.try(:email)
@@ -213,8 +234,11 @@ class Reservation < ActiveRecord::Base
     periods.build :date => value
   end
 
+  def first_period
+    @first_period ||= periods.sort_by(&:date).first
+  end
   def date
-    periods.sort_by(&:date).first.date
+    first_period.date
   end
 
   def last_date
@@ -225,12 +249,16 @@ class Reservation < ActiveRecord::Base
     case
     when confirmed?, unconfirmed?
       # A reservation can be canceled if not already canceled and all of the dates are in the future
-      !started?
+      cancellation_policy.cancelable?
     else
       false
     end
   end
   alias_method :cancelable, :cancelable?
+
+  def cancellation_policy
+    @cancellation_policy ||= Reservation::CancellationPolicy.new(self)
+  end
 
   def owner_including_deleted
     User.unscoped { owner }
@@ -239,11 +267,6 @@ class Reservation < ActiveRecord::Base
   def reject(reason = nil)
     self.rejection_reason = reason if reason
     fire_state_event :reject
-  end
-
-  # Returns whether any of the reserved dates have started
-  def started?
-    periods.any? { |p| p.date <= Time.zone.today }
   end
 
   def archived?
@@ -370,6 +393,33 @@ class Reservation < ActiveRecord::Base
     true
   end
 
+  def attempt_payment_capture
+    return if manual_payment? || free? || paid?
+    return if !confirmed?
+
+    # Generates a ReservationCharge, which is a record of the charge incurred
+    # by the user for the reservation (or a part of it), including the
+    # gross amount and service fee components.
+    #
+    # NB: A future story is to separate out extended reservation payments
+    #     across multiple payment dates, in which case a Reservation would
+    #     have more than one ReservationCharge.
+    charge = reservation_charges.create!(
+      subtotal_amount: subtotal_amount,
+      service_fee_amount_guest: service_fee_amount_guest,
+      service_fee_amount_host: service_fee_amount_host,
+      cancellation_policy_hours_for_cancellation: cancellation_policy_hours_for_cancellation,
+      cancellation_policy_penalty_percentage: cancellation_policy_penalty_percentage
+    )
+
+    self.payment_status = if charge.paid?
+      PAYMENT_STATUSES[:paid]
+    else
+      PAYMENT_STATUSES[:failed]
+    end
+    save!
+  end
+
   private
 
     def service_fee_calculator
@@ -421,32 +471,12 @@ class Reservation < ActiveRecord::Base
       Delayed::Job.enqueue Delayed::PerformableMethod.new(self, :should_expire!, nil), run_at: expiry_time
     end
 
-    def attempt_payment_capture
-      return if manual_payment? || free? || paid?
-
-      # Generates a ReservationCharge, which is a record of the charge incurred
-      # by the user for the reservation (or a part of it), including the
-      # gross amount and service fee components.
-      #
-      # NB: A future story is to separate out extended reservation payments
-      #     across multiple payment dates, in which case a Reservation would
-      #     have more than one ReservationCharge.
-      charge = reservation_charges.create!(
-        subtotal_amount: subtotal_amount,
-        service_fee_amount_guest: service_fee_amount_guest,
-        service_fee_amount_host: service_fee_amount_host
-      )
-
-      self.payment_status = if charge.paid?
-        PAYMENT_STATUSES[:paid]
-      else
-        PAYMENT_STATUSES[:failed]
-      end
-      save!
-    end
-
     def schedule_refund(transition, counter = 0, run_at = Time.zone.now)
       ReservationRefundJob.perform_later(run_at, self.id, counter)
+    end
+
+    def schedule_payment_capture
+      ReservationPaymentCaptureJob.perform_later(date + first_period.start_minute.minutes - recurring_booking.hours_before_reservation_to_charge.hours, self.id)
     end
 
     def validate_all_dates_available
@@ -463,3 +493,4 @@ class Reservation < ActiveRecord::Base
     end
 
 end
+

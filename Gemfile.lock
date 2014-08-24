@@ -337,6 +337,7 @@ GEM
       multi_xml (>= 0.5.2)
     httpclient (2.4.0)
     i18n (0.6.9)
+    ice_cube (0.12.1)
     inflecto (0.0.2)
     inherited_resources (1.5.0)
       has_scope (~> 0.6.0.rc)
@@ -529,6 +530,12 @@ GEM
     rb-kqueue (0.2.3)
       ffi (>= 0.5.0)
     rdiscount (2.1.7.1)
+    recurring_select (1.2.1)
+      coffee-rails (>= 3.1)
+      ice_cube (>= 0.11)
+      jquery-rails (>= 3.0)
+      rails (>= 3.2)
+      sass-rails (>= 3.1)
     redis (3.1.0)
     redis-actionpack (4.0.0)
       actionpack (~> 4)
@@ -722,6 +729,7 @@ DEPENDENCIES
   historyjs-rails
   hpricot
   i18n-active_record!
+  ice_cube
   inherited_resources (~> 1.5.0)
   instagram
   iso_country_codes
@@ -766,6 +774,7 @@ DEPENDENCIES
   ranked-model
   raygun4ruby
   rdiscount
+  recurring_select
   redis
   redis-rails (~> 4.0.0)
   rest-client

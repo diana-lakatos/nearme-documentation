@@ -144,6 +144,7 @@ DesksnearMe::Application.routes.draw do
         get 'destroy_modal', on: :member
       end
       resource :translations, :only => [:show, :update], :controller => 'translations'
+      resource :cancellation_policy, :only => [:show, :update], :controller => 'cancellation_policy'
     end
 
     namespace :theme do
@@ -242,6 +243,15 @@ DesksnearMe::Application.routes.draw do
   end
 
   resources :listings, :only => [:index, :show] do
+    resources :recurring_bookings, :only => [:create, :update], :controller => "listings/recurring_bookings" do
+      collection do
+        post :review
+        post :store_recurring_booking_request
+      end
+      member do
+        get :booking_successful
+      end
+    end
     resources :reservations, :only => [:create, :update], :controller => "listings/reservations" do
       collection do
         post :review
@@ -254,13 +264,6 @@ DesksnearMe::Application.routes.draw do
     end
 
   end
-
-  resources :reservations, :only => [] do
-    resources :guest_ratings, :only => [:new, :create]
-    resources :host_ratings, :only => [:new, :create]
-  end
-  get '/reservations/:id/guest_rating' => 'dashboard#guest_rating', as: 'guest_rating'
-  get '/reservations/:id/host_rating' => 'reservations#host_rating', as: 'host_rating'
 
   match '/auth/:provider/callback' => 'authentications#create', via: [:get, :post]
   get "/auth/failure", to: "authentications#failure"
@@ -294,8 +297,23 @@ DesksnearMe::Application.routes.draw do
       post :user_cancel
       get :export
       get :booking_successful
+      get :recurring_booking_successful
     end
     collection do
+      get :upcoming
+      get :archived
+    end
+    resources :guest_ratings, :only => [:new, :create]
+    resources :host_ratings, :only => [:new, :create]
+  end
+  get '/reservations/:id/guest_rating' => 'dashboard#guest_rating', as: 'guest_rating'
+  get '/reservations/:id/host_rating' => 'reservations#host_rating', as: 'host_rating'
+
+  resources :recurring_bookings, :except => [:destroy] do
+    member do
+      post :user_cancel
+      get :export
+      get :booking_successful
       get :upcoming
       get :archived
     end
@@ -348,8 +366,22 @@ DesksnearMe::Application.routes.draw do
 
     resources :photos, :only => [:create, :destroy, :edit, :update]
 
+
+    resources :recurring_bookings, only: [:show]
+
     resources :listings do
       resources :reservations, :controller => 'listings/reservations' do
+        member do
+          post :confirm
+          get :confirm
+          patch :reject
+          put :reject
+          get :rejection_form
+          post :host_cancel
+        end
+      end
+
+      resources :recurring_bookings, :controller => 'listings/recurring_bookings' do
         member do
           post :confirm
           get :confirm

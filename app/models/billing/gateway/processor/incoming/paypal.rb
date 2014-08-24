@@ -24,4 +24,6 @@ class Billing::Gateway::Processor::Incoming::Paypal < Billing::Gateway::Processo
   def self.supported_currencies
     ["USD", "GBP", "EUR", "JPY", "CAD"]
   end
+
 end
+

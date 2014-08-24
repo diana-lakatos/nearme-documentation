@@ -42,6 +42,31 @@ class ReservationTest < ActiveSupport::TestCase
     end
   end
 
+  context 'timestamps' do
+
+    should 'have both timestamps nil initially' do
+      @reservation = FactoryGirl.create(:reservation, :state => 'unconfirmed')
+      assert_nil @reservation.confirmed_at
+      assert_nil @reservation.cancelled_at
+    end
+    should 'have correct confirmed_at' do
+      @reservation = FactoryGirl.create(:reservation, :state => 'unconfirmed')
+      Timecop.freeze(Time.zone.now) do
+        @reservation.confirm!
+        assert_equal Time.zone.now, @reservation.confirmed_at
+        assert_nil @reservation.cancelled_at
+      end
+    end
+
+    should 'have correct cancelled_at when cancelled by guest' do
+      @reservation = FactoryGirl.create(:reservation, :state => 'confirmed')
+      Timecop.freeze(Time.zone.now) do
+        @reservation.user_cancel!
+        assert_equal Time.zone.now, @reservation.cancelled_at
+      end
+    end
+  end
+
   context 'cancelable' do
 
     setup do
@@ -52,40 +77,86 @@ class ReservationTest < ActiveSupport::TestCase
       @reservation.save!
     end
 
-    should 'be cancelable if all periods are for future' do
-      assert @reservation.cancelable
+    context 'cancellation policy returns true' do
+
+      should 'be cancelable if all periods are for future' do
+        assert @reservation.cancelable
+      end
+
+      should 'be cancelable if all periods are for future and confirmed' do
+        @reservation.confirm!
+        assert @reservation.cancelable
+      end
+
+      should 'not be cancelable if at least one period is for past' do
+        @reservation.add_period((Time.zone.today+2.day))
+        @reservation.add_period((Time.zone.today-2.day))
+        @reservation.save!
+        refute @reservation.cancelable
+      end
+
+      should 'not be cancelable if at least one period is for past no matter order' do
+        @reservation.add_period((Time.zone.today-2.day))
+        @reservation.add_period((Time.zone.today+2.day))
+        @reservation.save!
+        refute @reservation.cancelable
+      end
+
+      should 'not be cancelable if user canceled' do
+        @reservation.user_cancel!
+        refute @reservation.cancelable
+      end
+
+      should 'not be cancelable if owner rejected' do
+        @reservation.reject!
+        refute @reservation.cancelable
+      end
+
+      should 'not be cancelable if expired' do
+        @reservation.expire!
+        refute @reservation.cancelable
+      end
+
+      should 'not be cancelable if owner canceled' do
+        @reservation.confirm!
+        @reservation.host_cancel!
+        refute @reservation.cancelable
+      end
+
     end
 
-    should 'be cancelable if all periods are for future and confirmed' do
-      @reservation.confirm!
-      assert @reservation.cancelable
+  end
+
+  context 'attempt_payment_capture' do
+
+    setup do
+      TransactableType.update_all({
+        cancellation_policy_enabled: Time.zone.now,
+        cancellation_policy_hours_for_cancellation: 48,
+        cancellation_policy_penalty_percentage: 50})
+      ReservationCharge.any_instance.expects(:capture).once
+      Reservation.any_instance.stubs(:billing_authorization).returns(stub()).at_least(0)
     end
 
-    should 'not be cancelable if at least one period is for past' do
-      @reservation.add_period((Time.zone.today+2.day))
-      @reservation.add_period((Time.zone.today-2.day))
-      assert !@reservation.cancelable
+    should 'create reservation charge with cancellation policy if enabled ignoring updated values' do
+      @reservation = FactoryGirl.create(:reservation_with_credit_card, :state => 'unconfirmed', cancellation_policy_hours_for_cancellation: 47, cancellation_policy_penalty_percentage: 60)
+      assert_difference 'ReservationCharge.count' do
+        @reservation.confirm!
+      end
+      @reservation_charge = @reservation.reservation_charges.last
+      assert_equal 47, @reservation_charge.cancellation_policy_hours_for_cancellation
+      assert_equal 60, @reservation_charge.cancellation_policy_penalty_percentage
     end
 
-    should 'not be cancelable if user canceled' do
-      @reservation.user_cancel!
-      assert !@reservation.cancelable
-    end
-
-    should 'not be cancelable if owner rejected' do
-      @reservation.reject!
-      assert !@reservation.cancelable
-    end
-
-    should 'not be cancelable if expired' do
-      @reservation.expire!
-      assert !@reservation.cancelable
-    end
-
-    should 'not be cancelable if owner canceled' do
-      @reservation.confirm!
-      @reservation.host_cancel!
-      assert !@reservation.cancelable
+    should 'create reservation charge without cancellation policy if disabled, despite adding it later' do
+      @reservation = FactoryGirl.create(:reservation_with_credit_card, :state => 'unconfirmed')
+      TransactableType.update_all(cancellation_policy_enabled: nil)
+      assert_difference 'ReservationCharge.count' do
+        @reservation.confirm!
+      end
+      @reservation_charge = @reservation.reservation_charges.last
+      assert_equal 0, @reservation_charge.cancellation_policy_hours_for_cancellation
+      assert_equal 0, @reservation_charge.cancellation_policy_penalty_percentage
     end
 
   end
@@ -224,6 +295,7 @@ class ReservationTest < ActiveSupport::TestCase
       reservation.subtotal_amount_cents = nil
       reservation.service_fee_amount_guest_cents = nil
       reservation.service_fee_amount_host_cents = nil
+      Reservation::CancellationPolicy.any_instance.stubs(:cancelable?).returns(true)
 
       expected = { :reservation =>
                    {
@@ -364,7 +436,7 @@ class ReservationTest < ActiveSupport::TestCase
       reservation = FactoryGirl.build(:reservation)
       reservation.payment_status = Reservation::PAYMENT_STATUSES[:paid]
       reservation.save!
-      assert !reservation.pending?
+      refute reservation.pending?
     end
 
     should "set default payment status to paid for free reservations" do
@@ -397,18 +469,18 @@ class ReservationTest < ActiveSupport::TestCase
         assert @reservation.valid?
 
         @reservation.quantity = 3
-        assert !@reservation.valid?
+        refute @reservation.valid?
       end
 
       should "validate date available" do
         assert @listing.open_on?(@monday)
-        assert !@listing.open_on?(@sunday)
+        refute @listing.open_on?(@sunday)
 
         @reservation.add_period(@monday)
         assert @reservation.valid?
 
         @reservation.add_period(@sunday)
-        assert !@reservation.valid?
+        refute @reservation.valid?
       end
 
       should "validate against other reservations" do
@@ -417,7 +489,7 @@ class ReservationTest < ActiveSupport::TestCase
         reservation.save!
 
         @reservation.add_period(@monday)
-        assert !@reservation.valid?
+        refute @reservation.valid?
       end
     end
 
@@ -435,7 +507,7 @@ class ReservationTest < ActiveSupport::TestCase
           @reservation.add_period(@monday + i)
         end
 
-        assert !@reservation.valid?
+        refute @reservation.valid?
 
         @reservation.add_period(@monday+4)
         assert @reservation.valid?
@@ -451,7 +523,7 @@ class ReservationTest < ActiveSupport::TestCase
           @reservation.add_period(@monday + i + 14)
         end
 
-        assert !@reservation.valid?
+        refute @reservation.valid?
 
         @reservation.add_period(@monday+ 4 + 14)
         assert @reservation.valid?
@@ -529,4 +601,37 @@ class ReservationTest < ActiveSupport::TestCase
     end
 
   end
+
+  context 'attempt payment capture' do
+
+    setup do
+      @reservation = FactoryGirl.create(:reservation)
+    end
+
+    should 'not attempt to capture payment' do
+      @reservation.stubs(:billing_authorization).returns(nil).at_least(0)
+      @reservation.stubs(:recurring_booking_id).returns(1).at_least(0)
+      @reservation.expects(:attempt_payment_capture).never
+      @reservation.expects(:schedule_payment_capture).once
+      @reservation.confirm!
+    end
+
+    should 'do not schedule payment capture if has no billing authorization but also do not belong to recurring booking ' do
+      @reservation.stubs(:billing_authorization).returns(nil).at_least(0)
+      @reservation.stubs(:recurring_booking_id).returns(nil).at_least(0)
+      @reservation.expects(:schedule_payment_capture).never
+      @reservation.confirm!
+    end
+
+    should 'attempt if have billing authorization' do
+      @reservation.stubs(:billing_authorization).returns(stub()).at_least(0)
+      @reservation.stubs(:recurring_booking_id).returns(nil).at_least(0)
+      @reservation.expects(:attempt_payment_capture).once
+      @reservation.expects(:schedule_payment_capture).never
+      @reservation.confirm!
+    end
+
+  end
+
 end
+

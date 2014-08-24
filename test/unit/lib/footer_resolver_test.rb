@@ -3,7 +3,7 @@ require 'footer_resolver'
 
 class FooterResolverTest < ActiveSupport::TestCase
 
-  def setup
+  setup do
     @resolver = FooterResolver.instance
     @details  = {:formats => [:html], :locale => [:en], :handlers => [:erb, :liquid], :platform_context => PlatformContext.new }
   end

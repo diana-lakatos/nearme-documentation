@@ -101,7 +101,7 @@ class Job
   end
 
   def self.jobs_to_be_not_invoked_immediately
-    ["ReservationExpiryJob"]
+    ["ReservationExpiryJob", "RecurringBookingExpiryJob"]
   end
 
 end

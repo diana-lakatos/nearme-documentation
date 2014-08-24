@@ -1,14 +1,15 @@
 require 'test_helper'
 
 class Reservation::ContiguousBlockFinderTest < ActiveSupport::TestCase
-  def setup
+
+  setup do
     @reservation = Reservation.new
 
     @listing = stub()
     @listing.stubs(:open_on?).returns(true)
     @listing.stubs(:availability_for).returns(10)
     @reservation.stubs(:listing).returns(@listing)
-    
+
     @contiguous_block_finder = Reservation::ContiguousBlockFinder.new(@reservation)
   end
 
@@ -45,7 +46,7 @@ class Reservation::ContiguousBlockFinderTest < ActiveSupport::TestCase
       setup do
         @reservation.quantity = 2
 
-        # We set up a set of dates with gaps that are deemed "contiguous" by our 
+        # We set up a set of dates with gaps that are deemed "contiguous" by our
         # custom definition.
         @dates = [Time.zone.today, Time.zone.today + 2.days, Time.zone.today + 4.days, Time.zone.today + 5.days, Time.zone.today + 8.days]
         @dates.each do |date|
@@ -65,7 +66,7 @@ class Reservation::ContiguousBlockFinderTest < ActiveSupport::TestCase
         end
 
         @listing.stubs(:open_on?).with(Time.zone.today + 5.days).returns(false)
-     
+
         seed_reservation_dates(@dates)
       end
 

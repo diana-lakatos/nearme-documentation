@@ -1,4 +1,4 @@
-- title "Bookings (#{@reservations.count})"
+- title "Bookings (#{@reservations.count + @recurring_bookings.count})"
 
 %section#reservations
   .row-fluid
@@ -14,29 +14,7 @@
               %li
                 = reservation_navigation_link('archived')
 
-        - if @reservations.empty?
-          %p.no-data= t('reservations.no_bookings_html', type: params[:action], bookable_noun: platform_context.bookable_noun)
-        - else
-          - if @reservation
-            %h2.reservation-emphasis
-              Your booking was requested successfully!
-            .reservation-list.just-booked
-              %ul
-                %li
-                  = render @reservation.decorate
-            - unless (@reservations - [@reservation]).empty?
-              %h2.other-reservation-separator
-                #{pluralize((@reservations - [@reservation]).count, ' other booking')}
+        = render 'index'
 
-          .reservation-list
-            %ul
-              - (@reservations - [@reservation]).each_with_index do |reservation, index|
-                %li
-                  = render reservation.decorate
+= render 'modals'
 
-= render 'ratings/rating_modal'
-= render 'listings/reservations/booking_successful_modal'
-
-- if params[:reservation_id].present?
-  - content_for :domready do
-    new Reservation.ListController($('section#reservations'), #{params[:reservation_id]});

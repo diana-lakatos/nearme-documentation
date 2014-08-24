@@ -32,10 +32,9 @@ module ListingsHelper
       :availability => availability.as_json,
       :minimum_date => availability.start_date,
       :maximum_date => availability.end_date,
-      :prices_by_days => Hash[
-        listing.prices_by_days.map { |k, v| [k, v.cents] }
-      ],
-      :initial_bookings => @initial_bookings ? @initial_bookings[listing.id] : {}
+      :prices_by_days => Hash[ listing.prices_by_days.map { |k, v| [k, v.cents] } ],
+      :initial_bookings => @initial_bookings ? @initial_bookings[listing.id] : {},
+      recurring_booking: listing.transactable_type.recurring_booking
     }
   end
 

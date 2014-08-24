@@ -97,6 +97,10 @@ class ReservationRequest < Form
           payment_gateway_class: @gateway_class,
           payment_gateway_mode: mode
         )
+        if reservation.listing.transactable_type.cancellation_policy_enabled.present?
+          reservation.cancellation_policy_hours_for_cancellation = reservation.listing.transactable_type.cancellation_policy_hours_for_cancellation
+          reservation.cancellation_policy_penalty_percentage = reservation.listing.transactable_type.cancellation_policy_penalty_percentage
+        end
       end
       reservation.save!
     end

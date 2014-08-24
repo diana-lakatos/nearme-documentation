@@ -2,10 +2,6 @@ require 'test_helper'
 
 class BlogPostTest < ActiveSupport::TestCase
 
-  def setup
-    # @blog_post = FactoryGirl.create(:blog)
-  end
-
   context 'url slugging' do
     should 'keep the same slug on save if the title attribute did not change' do
       blog_post = FactoryGirl.create(:blog_post)
