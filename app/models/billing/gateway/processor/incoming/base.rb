@@ -66,6 +66,7 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
 
   def store_credit_card(client, credit_card)
     return nil unless support_recurring_payment?
+
     @instance_client = client.instance_clients.where(gateway_class: self.class.name).first || client.instance_clients.build
     @instance_client.gateway_class ||= self.class.name
     options = { email: client.email, default_card: true, customer: @instance_client.customer_id }

@@ -47,7 +47,7 @@ Feature: A user can book at a space
        When I follow "Manage"
        Then I should be redirected to bookings page
        Then I should see "credit card will be charged when your reservation is confirmed"
-       And the user should have a billing profile
+       And reservation should have billing authorization token
 
   Scenario: Booking and paying by credit card via Paypal
      Given I am logged in as the user
@@ -59,7 +59,7 @@ Feature: A user can book at a space
        When I follow "Manage"
        Then I should be redirected to bookings page
        Then I should see "credit card will be charged when your reservation is confirmed"
-       And the user should have a billing profile
+       And reservation should have billing authorization token
 
   Scenario: As an anonymous user I should be asked to sign up before booking
     When I select to book and review space for:
