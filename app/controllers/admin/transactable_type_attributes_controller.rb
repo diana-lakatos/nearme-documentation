@@ -16,7 +16,7 @@ class Admin::TransactableTypeAttributesController < Admin::ResourceController
 
   def update
     resource = TransactableTypeAttribute.find(params[:id])
-    if resource.update_attributes(params[:transactable_type_attribute])
+    if resource.update_attributes(transactable_type_attribute_params)
       redirect_to admin_transactable_type_transactable_type_attribute_path(resource.transactable_type , resource)
     else
       render action: :edit
@@ -38,7 +38,12 @@ class Admin::TransactableTypeAttributesController < Admin::ResourceController
   end
 
   def transactable_type_attribute_params
-    params.require(:transactable_type_attribute).permit(secured_params.transactable_type_attribute)
+    params.require(:transactable_type_attribute).permit(secured_params.transactable_type_attribute).tap do |whitelisted|
+      whitelisted[:validation_rules] = params[:transactable_type_attribute][:validation_rules]
+      whitelisted[:valid_values] = params[:transactable_type_attribute][:valid_values]
+      whitelisted[:wrapper_html_options] = params[:transactable_type_attribute][:wrapper_html_options]
+      whitelisted[:input_html_options] = params[:transactable_type_attribute][:input_html_options]
+    end
   end
 
   private
