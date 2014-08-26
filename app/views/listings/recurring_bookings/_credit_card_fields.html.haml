@@ -17,7 +17,7 @@
     .span6.card-info{class: "#{"error" if f.object.errors.include?(:number).present?}"}
       = f.label :card_number, "Card number", class: 'control-label'
       .controls.card-number.input-icon-holder-right
-        = f.input_field :card_number, required: true, placeholder: '1234 5678 9123 4567', class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: "off"
+        = f.input_field :card_number, required: true, placeholder: 'aaaa aaaa aaaa aaaa', class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: "off"
         %span.ico-credit-card
       - if f.object.errors[:number].present?
         %p.error-block
