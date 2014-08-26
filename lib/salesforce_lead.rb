@@ -15,9 +15,9 @@ module SalesforceLead
                              "company"         => attributes['company'],
                              "phone"           => attributes['phone'],
                              "00NG000000DfhsK" => attributes['marketplace_type'],
-                             "00NG000000Dg86K" => attributes['lead_source'],
+                             "lead_source"     => attributes['lead_source'],
                              "00NG000000DgV2W" => attributes['location'],
-                             "00NG000000De3U8" => attributes['previous_research'],
+                             "00NG000000DgV2l" => attributes['previous_research'],
                              "00NG000000Ddp2w" => attributes['comments'],
                              "00NG000000DduGh" => subscribed? ? '1' : '',
                              "lead_source"     => "Web"})
