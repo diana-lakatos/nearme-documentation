@@ -447,7 +447,18 @@ class Transactable < ActiveRecord::Base
   end
 
   def self.public_transactable_type_attributes_names(tt_id)
-    self.get_transactable_type_attributes_as_array(tt_id).map { |attr_array| attr_array[3] ? attr_array[0].to_sym : nil }
+    return [] if tt_id.nil?
+    self.get_transactable_type_attributes_as_array(tt_id).map do |attr_array|
+      if attr_array[TransactableTypeAttribute::PUBLIC]
+        if attr_array[TransactableTypeAttribute::ATTRIBUTE_TYPE].to_sym == :array
+          { attr_array[TransactableTypeAttribute::NAME].to_sym => [] }
+        else
+          attr_array[TransactableTypeAttribute::NAME].to_sym
+        end
+      else
+        nil
+      end
+    end
   end
 
   private

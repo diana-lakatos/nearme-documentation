@@ -5,7 +5,7 @@ class TransactableTypeAttribute < ActiveRecord::Base
   scoped_to_platform_context
 
   ATTRIBUTE_TYPES = %w(array string integer float decimal datetime time date binary boolean)
-  HTML_TAGS = %w(input select switch textarea check_box radio_buttons)
+  HTML_TAGS = %w(input select switch textarea check_box radio_buttons check_box_list)
 
   # attr_accessible :name, :transactable_type_id, :attribute_type, :html_tag,
   #   :prompt, :default_value, :public, :validation_rules, :valid_values, :label,
@@ -59,10 +59,11 @@ class TransactableTypeAttribute < ActiveRecord::Base
     end
   end
 
-  FIND_AS_ARRAY_NAME_INDEX = 0
-  FIND_AS_ARRAY_ATTRIBUTE_TYPE_INDEX = 1
-  FIND_AS_ARRAY_DEFAULT_VALUE_INDEX = 2
-  FIND_AS_ARRAY_PUBLIC_INDEX = 3
+  NAME = 0
+  ATTRIBUTE_TYPE = 1
+  VALUE = 2
+  PUBLIC = 3
+
   def self.find_as_array(transactable_type_id, attributes = [:name, :attribute_type, :default_value, :public])
     TransactableTypeAttribute.where(transactable_type_id: transactable_type_id).pluck(attributes)
   end

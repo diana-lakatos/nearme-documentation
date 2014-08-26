@@ -23,6 +23,8 @@ class TransactableTypeAttributeDecorator < Draper::Decorator
                             TransactableTypeAttributeDecorator::RadioButton.new(self)
                           when :check_box
                             TransactableTypeAttributeDecorator::CheckBox.new(self)
+                          when :check_box_list
+                            TransactableTypeAttributeDecorator::CheckBoxList.new(self)
                           else
                             raise NotImplementedError.new("Not implemented options for #{html_tag}")
                           end

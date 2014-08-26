@@ -10,10 +10,23 @@ module TransactableType::CustomAttributesCaster
         store_accessor store_accessor_name, hstore_attributes.keys
       end
       transactable_type_attributes_names_types_hash.each do |key, type|
-        next unless type == :boolean
-        metaclass.class_eval do
-          define_method("#{key}?") do
-            send(key)
+        case type
+        when :boolean
+          metaclass.class_eval do
+            define_method("#{key}?") do
+              send(key)
+            end
+          end
+        when :array
+          metaclass.class_eval do
+            define_method("#{key}=") do |val|
+              case val
+              when Array
+                super(val.join(','))
+              else
+                super(val)
+              end
+            end
           end
         end
       end
@@ -31,6 +44,7 @@ module TransactableType::CustomAttributesCaster
     def custom_property_type_cast(value, type)
       klass = ActiveRecord::ConnectionAdapters::Column
 
+      return [] if value.nil? && type == :array
       return nil if value.nil?
       case type.to_sym
       when :string, :text        then value
@@ -42,6 +56,7 @@ module TransactableType::CustomAttributesCaster
       when :date                 then klass.string_to_date(value)
       when :binary               then klass.binary_to_string(value)
       when :boolean              then klass.value_to_boolean(value)
+      when :array                then value.split(',').map(&:strip)
       else value
       end
     end
