@@ -29,18 +29,6 @@ class Listing::SerializationTest < ActiveSupport::TestCase
     end
   end
 
-  context "a 'Call' daily listing" do
-    setup do
-      @listing = FactoryGirl.create(:call_listing)
-      @serializer = ListingSerializer.new(@listing)
-      @json = @serializer.as_json[:listing]
-    end
-
-    should "be labeled as 'Call'" do
-      assert_equal "Call", @json[:price][:label]
-    end
-  end
-
   context 'nil rating' do
     setup do
       @listing = FactoryGirl.create(:transactable)

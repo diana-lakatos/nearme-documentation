@@ -29,6 +29,7 @@ class Manage::UsersControllerTest < ActionController::TestCase
 
     context "with user that not exists" do
       should "not create company user" do
+        FactoryGirl.create(:transactable_type)
         assert_no_difference('@company.users.count') do
           post :create, { :user => { :email => "not_existed_user@example.com" } }
         end
@@ -40,14 +41,15 @@ class Manage::UsersControllerTest < ActionController::TestCase
   context "with company user" do
     setup do
       @user = FactoryGirl.create(:user)
-    end 
+    end
 
     context "user already assigned to company" do
       setup do
         @company.users << @user
-      end 
+      end
 
       should "not create company user" do
+        FactoryGirl.create(:transactable_type)
         assert_no_difference('@company.users.count') do
           post :create, { :user => { :email => @user.email } }
         end
@@ -68,7 +70,7 @@ class Manage::UsersControllerTest < ActionController::TestCase
         end
         assert_equal "You can't delete self.", flash[:warning]
         assert_redirected_to manage_users_path
-      end 
+      end
 
       should "can't destroy invalid user" do
         assert_no_difference('@company.users.count') do
@@ -76,7 +78,7 @@ class Manage::UsersControllerTest < ActionController::TestCase
         end
         assert_equal "You can't delete user which is not in your company.", flash[:warning]
         assert_redirected_to manage_users_path
-      end 
+      end
     end
   end
 end
