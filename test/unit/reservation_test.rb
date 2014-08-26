@@ -65,6 +65,24 @@ class ReservationTest < ActiveSupport::TestCase
         assert_equal Time.zone.now, @reservation.cancelled_at
       end
     end
+
+  end
+
+  context 'parent transactable deleted' do
+
+    should 'unconfirm reservation become rejected' do
+      @reservation = FactoryGirl.create(:reservation, :state => 'unconfirmed')
+      @reservation.listing.destroy
+      assert @reservation.reload.rejected?
+    end
+
+    should 'confirm reservation stay at it is' do
+      @reservation = FactoryGirl.create(:reservation, :state => 'confirmed')
+      @reservation.listing.destroy
+      refute @reservation.reload.rejected?
+      assert @reservation.confirmed?
+    end
+
   end
 
   context 'cancelable' do

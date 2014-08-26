@@ -133,7 +133,7 @@ class SecuredParams
       translations_attributes: nested(self.translation),
       domains_attributes: nested(self.domain),
       text_filters_attributes: nested(self.text_filter),
-      theme_attributes: self.theme,
+      theme_attributes: self.theme
     ]
   end
 
@@ -428,6 +428,9 @@ class SecuredParams
       :sms_notifications_enabled, :domain_id, :time_zone,
       :phone_required, :country_name_required, :skip_password,
       :country_name, :phone, :mobile_phone,
+      :first_name, :middle_name, :last_name, :gender,
+      :drivers_licence_number, :gov_number, :twitter_url,
+      :linkedin_url, :facebook_url, :google_plus_url,
       industry_ids: [],
       companies_attributes: nested(self.company),
       confidential_files_attributes: nested(self.confidential_file)

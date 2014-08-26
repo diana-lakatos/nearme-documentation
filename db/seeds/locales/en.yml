@@ -7,6 +7,10 @@ en:
     messages:
       wrong_content_type: "is the wrong content type"
       free: "must be free if no prices are provided"
+    models:
+      transactable:
+        attributes:
+          free: "must be free if no prices are provided"
   activerecord:
     attributes:
       location_type:
