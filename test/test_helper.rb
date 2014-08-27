@@ -133,7 +133,16 @@ ActiveSupport::TestCase.class_eval do
     Billing::Gateway::Processor::Incoming::Stripe.stubs(:setup_api_on_initialize).returns(ActiveMerchant::Billing::BogusGateway.new)
     Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:authorize).returns({token: "54533", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe"})
     Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:charge).returns(true)
-    Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:store_credit_card).returns(1).at_least(0)
+    stub = OpenStruct.new(params: {
+      "object" => 'customer',
+      "id" => 'customer_1',
+      "cards" => {
+        "data" => [
+          { "id" => "card_1" }
+        ]
+      }
+    })
+    ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:store).returns(stub).at_least(0)
   end
 
   def setup_payment_gateways

@@ -8,6 +8,7 @@ class InstanceAdmin::Manage::UsersControllerTest < ActionController::TestCase
     sign_in @user
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
     InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
+    FactoryGirl.create(:transactable_type_listing)
   end
 
   context 'index' do

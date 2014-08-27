@@ -29,15 +29,25 @@ Before do
   ActiveMerchant::Billing::Base.mode = :test
   Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:authorize).returns({token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe"})
   Billing::Gateway::Processor::Incoming::Paypal.any_instance.stubs(:authorize).returns({token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Paypal"})
-  
+  stub = OpenStruct.new(params: {
+    "object" => 'customer',
+    "id" => 'customer_1',
+    "cards" => {
+      "data" => [
+        { "id" => "card_1" }
+      ]
+    }
+  })
+  ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:store).returns(stub).at_least(0)
+
   ipg = FactoryGirl.create(:stripe_instance_payment_gateway)
   instance.instance_payment_gateways << FactoryGirl.create(:paypal_instance_payment_gateway)
 
   instance.instance_payment_gateways << ipg
-  
+
   country_ipg = FactoryGirl.create(
-    :country_instance_payment_gateway, 
-    country_alpha2_code: "US", 
+    :country_instance_payment_gateway,
+    country_alpha2_code: "US",
     instance_payment_gateway_id: ipg.id
   )
   instance.country_instance_payment_gateways << country_ipg

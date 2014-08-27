@@ -8,6 +8,7 @@ class InstanceClient < ActiveRecord::Base
   belongs_to :client, :polymorphic => true
   belongs_to :instance
   has_many :credit_cards
+  before_save :clear_decorator, if: lambda { |ic| ic.encrypted_response_changed? }
 
   validates_presence_of :client_id, :client_type, :unless => lambda { |ic| ic.client.present? }
 
@@ -16,10 +17,11 @@ class InstanceClient < ActiveRecord::Base
   end
 
   def decorator
-    return nil if gateway_class.blank?
     @decorator ||= case gateway_class
                    when "Billing::Gateway::Processor::Incoming::Stripe"
                      InstanceClient::StripeDecorator.new(self)
+                   when nil
+                     nil
                    else
                      raise NotImplementedError.new("Unknown gateway class: #{gateway_class}")
                    end
@@ -29,4 +31,11 @@ class InstanceClient < ActiveRecord::Base
     decorator.try(:customer_id)
   end
 
+  private
+
+  def clear_decorator
+    @decorator = nil
+  end
+
 end
+

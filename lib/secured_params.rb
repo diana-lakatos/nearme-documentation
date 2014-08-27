@@ -364,8 +364,8 @@ class SecuredParams
     ] + self.location_address
   end
 
-  def transactable
-    Transactable::PRICE_TYPES.collect{|t| "#{t}_price_cents".to_sym} +
+  def transactable(transactable_type = nil)
+    Transactable::PRICE_TYPES.collect{|t| "#{t}_price".to_sym} +
       [
         :location_id, :availability_template_id,
         :defer_availability_rules, :free,
@@ -376,7 +376,8 @@ class SecuredParams
         :photo_ids => [],
         :amenity_ids => [],
         :availability_rules_attributes => nested(self.availability_rule)
-    ] + Transactable::PRICE_TYPES.collect{|t| "#{t}_price".to_sym} + (PlatformContext.current.try(:instance).try(:transactable_types).try(:first).try(:public_transactable_type_attributes) || [])
+    ] +
+    Transactable.public_transactable_type_attributes_names((transactable_type.presence || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
   end
 
   def availability_rule

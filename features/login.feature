@@ -36,7 +36,7 @@ Feature: A user can login
      Then there should be no LinkedIn account
 
   Scenario: A not authenticated user can login via LinkedIn even if email do not match
-    Given a user: "john" exists with email: "linkedin@example.com" 
+    Given a user: "john" exists with email: "linkedin@example.com"
     Given a user: "maciek" exists with email: "maciek@example.com"
     Given the authentication_linkedin exists with user: user "maciek"
       And the LinkedIn OAuth request with email is successful
@@ -64,6 +64,7 @@ Feature: A user can login
 
   Scenario: User signed up with social provider can set up his password
     Given I signed up with LinkedIn without password
+      And a transactable_type_listing exists with name: "Listing"
      When I type in my password in edit page
      Then I should have password
 
@@ -89,6 +90,7 @@ Feature: A user can login
 
   Scenario: A user is redirected to the page accessed prior to login page after successful logging in
     Given a user exists with email: "valid@example.com", password: "password", name: "I am user"
+      And a transactable_type_listing exists with name: "Listing"
       And a listing in Auckland exists
       And I performed search for "Auckland"
      When I navigate away via Log In link and sign in
@@ -96,6 +98,7 @@ Feature: A user can login
 
   Scenario: A user is not redirected to the page accessed prior to login page after failure in logging in
     Given a user exists with email: "valid@example.com", password: "password", name: "I am user"
+      And a transactable_type_listing exists with name: "Listing"
       And a listing in Auckland exists
       And I performed search for "Auckland"
      When I sign in with invalid credentials
@@ -107,7 +110,7 @@ Feature: A user can login
      Then I am correctly signed in
       And I should see an indication I've just signed in
 
-  Scenario: A newly signed up user should get verification email 
+  Scenario: A newly signed up user should get verification email
      When I manually sign up with valid credentials
      Then I should get verification email
 

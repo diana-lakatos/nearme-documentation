@@ -9,6 +9,7 @@ Feature: A user can edit their settings
     And a industry exists with name: "Computer Science"
     And a industry exists with name: "IT"
     And a industry exists with name: "Telecommunication"
+    And a transactable_type_listing exists with name: "Listing"
 
   Scenario: A user can successfully edit his settings
     Given I go to the account settings page
