@@ -52,6 +52,7 @@ en:
       user_message: 'I receive a message from another person.'
       reservation_state_changed: 'A reservation I have requested is accepted or declined.'
       new_reservation: 'I receive a reservation request.'
+    accept_terms_of_service: 'confirm that you accept the <a href="/pages/legal" target="_blank">Terms of Service and Privacy Policy</a>'
   reservations:
 
     charge_after_confirmation: "Your card will not be charged until the booking is confirmed."

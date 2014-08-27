@@ -118,10 +118,12 @@ class User < ActiveRecord::Base
   validates :skills_and_interests, length: {maximum: 150}
   validates :biography, length: {maximum: BIOGRAPHY_MAX_LENGTH}
 
-  attr_accessor :skip_custom_validation
+  attr_accessor :custom_validation
+  attr_accessor :accept_terms_of_service
+  validates_acceptance_of :accept_terms_of_service, on: :create, allow_nil: false, if: lambda { |u| PlatformContext.current.instance.try(:force_accepting_tos) && u.custom_validation }
 
   validate do |user|
-    if user.persisted? && PlatformContext.current.instance.user_info_in_onboarding_flow? && !self.skip_custom_validation
+    if user.persisted? && PlatformContext.current.instance.user_info_in_onboarding_flow? && self.custom_validation
       PlatformContext.current.instance.user_required_fields.each do |field|
         field_to_check = field == 'avatar' ? 'avatar_original_url' : field
         user.errors.add(field, I18n.t('errors.messages.blank')) unless self.send(field_to_check).present?
