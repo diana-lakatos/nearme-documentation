@@ -410,8 +410,9 @@ class Transactable < ActiveRecord::Base
 
   # invoked when transactable type attribute changes
   def self.clear_transactable_type_attributes_cache
-    if self.transactable_type_attributes_cache_update_at[TransactableType.pluck(:id).first]
-      transactable_type_ids = TransactableTypeAttribute.with_changed_attributes(self.transactable_type_attributes_cache_update_at[TransactableType.pluck(:id).first]).uniq.pluck(:transactable_type_id)
+    id = TransactableType.pluck(:id).first
+    if self.transactable_type_attributes_cache_update_at[id]
+      transactable_type_ids = TransactableTypeAttribute.with_changed_attributes(self.transactable_type_attributes_cache_update_at[id]).uniq.pluck(:transactable_type_id)
       transactable_type_ids.each do |transactable_type_id|
         self.transactable_type_attributes_as_array[transactable_type_id] = nil
       end
