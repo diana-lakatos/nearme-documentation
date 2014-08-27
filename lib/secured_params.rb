@@ -123,7 +123,7 @@ class SecuredParams
       :stripe_currency, :user_info_in_onboarding_flow,
       :default_search_view, :user_based_marketplace_views,
       :searcher_type, :onboarding_verification_required,
-      :apply_text_filters,
+      :apply_text_filters, :force_accepting_tos,
       user_required_fields: [],
       transactable_types_attributes: nested(self.transactable_type),
       listing_amenity_types_attributes: nested(self.amenity_type),

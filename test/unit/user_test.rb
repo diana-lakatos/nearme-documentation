@@ -226,11 +226,13 @@ class UserTest < ActiveSupport::TestCase
 
       should 'be valid without gender if has not been peristed yet' do
         @user = FactoryGirl.build(:user, gender: nil)
+        @user.custom_validation = true
         assert @user.valid?
       end
 
       should 'be valid without gender if user_info_in_onboarding_flow is set to false' do
         @user = FactoryGirl.create(:user, gender: nil)
+        @user.custom_validation = true
         refute @user.valid?
         @instance.update_attribute(:user_info_in_onboarding_flow, false)
         assert @user.valid?
@@ -240,6 +242,7 @@ class UserTest < ActiveSupport::TestCase
 
         setup do
           @user = FactoryGirl.create(:user, gender: nil)
+          @user.custom_validation = true
         end
 
         should 'not be valid without gender' do
@@ -247,11 +250,11 @@ class UserTest < ActiveSupport::TestCase
         end
 
         should 'be valid even without gender if custom validation disabled' do
-          @user.skip_custom_validation = true
+          @user.custom_validation = nil
           assert @user.valid?
         end
 
-        should 'be valid without gender' do
+        should 'be valid with gender' do
           @user.gender = 'male'
           assert @user.valid?
         end

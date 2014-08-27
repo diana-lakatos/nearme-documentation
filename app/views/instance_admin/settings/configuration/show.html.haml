@@ -18,6 +18,7 @@
       .controls.controls-row
         .span6
           = f.input :skip_company, :label => false, :inline_label => "Don't require company", input_html: { class: 'input-block-level' }
+          = f.input :force_accepting_tos, :label => false, :inline_label => "Force accepting ToS on sign up", input_html: { class: 'input-block-level' }
         = f.input :service_fee_host_percent, label: 'Host Service Fee', wrapper_html: {class: 'input-prepend span6'} do
           %span.add-on %
           = f.input_field :service_fee_host_percent, type: 'tel', class: 'input-block-level'
