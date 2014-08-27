@@ -5,7 +5,7 @@ class TransactableTypeAttribute < ActiveRecord::Base
   scoped_to_platform_context
 
   ATTRIBUTE_TYPES = %w(array string integer float decimal datetime time date binary boolean)
-  HTML_TAGS = %w(input select switch textarea check_box radio_buttons)
+  HTML_TAGS = %w(input select switch textarea check_box radio_buttons check_box_list)
 
   # attr_accessible :name, :transactable_type_id, :attribute_type, :html_tag,
   #   :prompt, :default_value, :public, :validation_rules, :valid_values, :label,
@@ -15,6 +15,7 @@ class TransactableTypeAttribute < ActiveRecord::Base
   scope :listable, -> { all }
   scope :not_internal, -> { where.not(internal: true) }
   scope :public, -> { where(public: true) }
+  scope :with_changed_attributes, -> updated_at { where('updated_at > ?', updated_at) }
 
   validates_presence_of :name, :attribute_type
   validates_uniqueness_of :name, :scope => [:transactable_type_id, :deleted_at]
@@ -56,6 +57,15 @@ class TransactableTypeAttribute < ActiveRecord::Base
       hash[key_value_arr[0].strip] = key_value_arr[1].strip
       hash
     end
+  end
+
+  NAME = 0
+  ATTRIBUTE_TYPE = 1
+  VALUE = 2
+  PUBLIC = 3
+
+  def self.find_as_array(transactable_type_id, attributes = [:name, :attribute_type, :default_value, :public])
+    TransactableTypeAttribute.where(transactable_type_id: transactable_type_id).pluck(attributes)
   end
 
 end

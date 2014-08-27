@@ -88,6 +88,7 @@ module Metadata::Base
       options.reverse_merge!({
         column_name: "metadata",
         without_db_column: false,
+        scope_to_instance: false,
         accessors: []
       })
 
@@ -112,6 +113,26 @@ module Metadata::Base
             update_column(:#{metadata_column}, self.#{metadata_column}.to_yaml)
             self.touch unless new_record?
             self.#{metadata_column} = tmp_#{metadata_column}
+          end
+
+          def update_instance_#{metadata_column}(*args)
+            args.each do |arg|
+              raise Metadata::Base::InvalidArgumentError.new("#{metadata_column} must be Hash") unless arg.kind_of?(Hash)
+              self.#{metadata_column}[PlatformContext.current.instance.id.to_s] ||= {}
+              arg.each do |key, value|
+                self.#{metadata_column}[PlatformContext.current.instance.id.to_s][key] = value
+              end
+            end
+
+            tmp_#{metadata_column} = #{metadata_column}
+            update_column(:#{metadata_column}, self.#{metadata_column}.to_yaml)
+            self.touch unless new_record?
+            self.#{metadata_column} = tmp_#{metadata_column}
+          end
+
+          def get_instance_#{metadata_column}(attr)
+            return nil if #{metadata_column}.nil? || #{metadata_column}[PlatformContext.current.instance.id.to_s].nil?
+            #{metadata_column}[PlatformContext.current.instance.id.to_s][attr]
           end
         EOV
 

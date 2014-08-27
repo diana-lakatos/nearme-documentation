@@ -82,6 +82,7 @@ class PlatformHomeController < ActionController::Base
   private
 
   def platform_contact_params
-    params.require(:platform_contact).permit([:name, :email, :subject, :comments, :subscribed, :company, :marketplace_type])
+    params.require(:platform_contact).permit([:name, :email, :subject, :comments,
+      :subscribed, :company, :marketplace_type, :location, :previous_research, :lead_source])
   end
 end

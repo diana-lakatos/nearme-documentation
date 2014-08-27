@@ -216,6 +216,55 @@ class UserTest < ActiveSupport::TestCase
         end
       end
     end
+
+    context 'when special requirements per instance' do
+      setup do
+        @instance = FactoryGirl.create(:instance, user_info_in_onboarding_flow: true)
+        @instance.user_required_fields = [:gender]
+        PlatformContext.current = PlatformContext.new(@instance)
+      end
+
+      should 'be valid without gender if has not been peristed yet' do
+        @user = FactoryGirl.build(:user, gender: nil)
+        assert @user.valid?
+      end
+
+      should 'be valid without gender if user_info_in_onboarding_flow is set to false' do
+        @user = FactoryGirl.create(:user, gender: nil)
+        refute @user.valid?
+        @instance.update_attribute(:user_info_in_onboarding_flow, false)
+        assert @user.valid?
+      end
+
+      context 'user has been persisted' do
+
+        setup do
+          @user = FactoryGirl.create(:user, gender: nil)
+        end
+
+        should 'not be valid without gender' do
+          refute @user.valid?
+        end
+
+        should 'be valid even without gender if custom validation disabled' do
+          @user.skip_custom_validation = true
+          assert @user.valid?
+        end
+
+        should 'be valid without gender' do
+          @user.gender = 'male'
+          assert @user.valid?
+        end
+
+        should 'do not allow to enter weird thing to gender' do
+          @user.gender = 'elf'
+          refute @user.save
+          assert_nil @user.gender
+        end
+
+      end
+
+    end
   end
 
   context 'name' do
@@ -535,6 +584,26 @@ class UserTest < ActiveSupport::TestCase
 
     end
 
+    context 'reservations' do
+
+      setup do
+        @user = FactoryGirl.create(:user)
+      end
+
+      should 'cancel any pending unconfirmed reservations' do
+        @reservation = FactoryGirl.create(:reservation, owner: @user)
+        @user.destroy
+        assert @reservation.reload.cancelled_by_guest?
+      end
+
+      should 'cancel any pending reservations' do
+        @reservation = FactoryGirl.create(:reservation, owner: @user, state: 'confirmed')
+        @user.destroy
+        refute @reservation.reload.cancelled_by_guest?
+        assert @reservation.confirmed?
+      end
+    end
+
     context 'company has multiple administrators' do
 
       setup do
@@ -676,7 +745,7 @@ class UserTest < ActiveSupport::TestCase
       end
 
       should 'have active listing and no draft listing if has only one active listing metadata' do
-        @user.expects(:update_metadata).with({
+        @user.expects(:update_instance_metadata).with({
           has_draft_listings: false,
           has_any_active_listings: true
         })
@@ -685,7 +754,7 @@ class UserTest < ActiveSupport::TestCase
 
       should 'have active listing and draft listing if there are both draft and active listing' do
         FactoryGirl.create(:transactable, :draft => Time.zone.now, :location => @listing.location)
-        @user.expects(:update_metadata).with({
+        @user.expects(:update_instance_metadata).with({
           has_draft_listings: true,
           has_any_active_listings: true
         })
@@ -694,13 +763,13 @@ class UserTest < ActiveSupport::TestCase
 
       should 'have only draft listing if there is only draft listing, but should respond to update' do
         @listing.update_column(:draft, Time.zone.now)
-        @user.expects(:update_metadata).with({
+        @user.expects(:update_instance_metadata).with({
           has_draft_listings: true,
           has_any_active_listings: false
         })
         @user.populate_listings_metadata!
         @listing.update_column(:draft, nil)
-        @user.expects(:update_metadata).with({
+        @user.expects(:update_instance_metadata).with({
           has_draft_listings: false,
           has_any_active_listings: true
         })
@@ -709,7 +778,7 @@ class UserTest < ActiveSupport::TestCase
 
       should 'have no draft and no active listings if there is no listing at all' do
         @listing.destroy
-        @user.expects(:update_metadata).with({
+        @user.expects(:update_instance_metadata).with({
           has_draft_listings: false,
           has_any_active_listings: false
         })
@@ -727,14 +796,14 @@ class UserTest < ActiveSupport::TestCase
       should 'have no active listing if company is assigned to someone else and have active listing if assigned back' do
         @company = @listing.company
         @listing.company.company_users.first.destroy
-        @user.expects(:update_metadata).with({
+        @user.expects(:update_instance_metadata).with({
           companies_metadata: [],
           has_draft_listings: false,
           has_any_active_listings: false
         })
         @user.reload.populate_companies_metadata!
         @listing.company.company_users.create(:user_id => @user.id)
-        @user.expects(:update_metadata).with({
+        @user.expects(:update_instance_metadata).with({
           companies_metadata: [@company.id],
           has_draft_listings: false,
           has_any_active_listings: true
@@ -756,11 +825,8 @@ class UserTest < ActiveSupport::TestCase
         @random_instance_admin = FactoryGirl.create(:instance_admin)
         PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
         @other_instance_admin = FactoryGirl.create(:instance_admin, user: @user)
-        @user.expects(:update_metadata).with({
-          :instance_admins_metadata => {
-            "#{@instance_admin.instance_id}" => 'analytics',
-            "#{@other_instance_admin.instance_id}" => 'analytics'
-          }
+        @user.expects(:update_instance_metadata).with({
+          :instance_admins_metadata => 'analytics'
         })
         @user.populate_instance_admins_metadata!
       end
@@ -785,8 +851,7 @@ class UserTest < ActiveSupport::TestCase
     @charge = FactoryGirl.create(:charge, :reference => @reservation_charge)
     @payment_transfer = FactoryGirl.create(:payment_transfer, :company_id => @company.id)
     @objects = [@user, @user_industry, @authentication, @company, @company_industry,
-                @location, @listing, @photo, @reservation, @reservation_period,
-                @payment_transfer, @reservation_charge, @charge]
+                @location, @listing, @photo ]
   end
 
 end

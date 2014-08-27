@@ -25,6 +25,7 @@ class Instance < ActiveRecord::Base
                  :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   attr_accessor :mark_as_locked
+  serialize :user_required_fields, Array
 
   API_KEYS = %w(paypal_username paypal_password paypal_signature paypal_app_id paypal_client_id paypal_client_secret stripe_api_key stripe_public_key balanced_api_key)
 

@@ -211,4 +211,48 @@ namespace :populate do
     end
   end
 
+  desc 'Populate user metadata based on PlatformContext'
+  task :user_metadata => :environment do
+    puts "populating instance admins first..."
+    InstanceAdmin.find_each do |ia|
+      if ia.user.nil? || ia.instance.nil?
+        puts "skipping ia #{ia.id} - no user or instance"
+        next
+      end
+      puts "populating #{ia.user.email} for #{ia.instance.name}"
+      PlatformContext.current = PlatformContext.new(ia.instance)
+      ia.user.populate_instance_admins_metadata!
+      PlatformContext.current = nil
+    end
+    User.find_each do |user|
+      if user.metadata.empty?
+        puts "skipping #{user.id}"
+      else
+        Instance.find_each do |i|
+          PlatformContext.current = PlatformContext.new(i)
+          user.populate_companies_metadata!
+          user.populate_instance_admins_metadata!
+          user.populate_listings_metadata!
+        end
+        PlatformContext.current = nil
+        puts "finished user: #{user.id}"
+      end
+    end
+    puts "Ok, now only deleted users..."
+    User.only_deleted.find_each do |user|
+      if user.metadata.empty?
+        puts "skipping #{user.id}"
+      else
+        Instance.find_each do |i|
+          PlatformContext.current = PlatformContext.new(i)
+          user.populate_companies_metadata!
+          user.populate_instance_admins_metadata!
+          user.populate_listings_metadata!
+        end
+        PlatformContext.current = nil
+        puts "finished user: #{user.id}"
+      end
+    end
+  end
+
 end

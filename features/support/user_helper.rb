@@ -77,10 +77,10 @@ module UserHelper
   end
 
 private
+
   def default_options
     {:email => "valid@example.com", :password => 'password', :name => 'Name'}
   end
-
 
 end
 

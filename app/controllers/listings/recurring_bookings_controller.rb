@@ -9,6 +9,7 @@ class Listings::RecurringBookingsController < ApplicationController
   before_filter :require_login_for_recurring_booking, :only => [:review, :create]
   before_filter :find_current_country, only: [:review, :create]
   after_filter  :clear_origin_domain, only: [:create]
+  before_filter :set_section_name, only: [:review, :create]
 
   def review
     event_tracker.reviewed_a_recurring_booking(@recurring_booking_request.recurring_booking)
@@ -164,5 +165,9 @@ class Listings::RecurringBookingsController < ApplicationController
       flash[:error] = @recurring_booking_request.recurring_booking.errors[:reservations][0]
       redirect_to location_path(@listing.location)
     end
+  end
+
+  def set_section_name
+    @section_name = 'reservations reservations-review'
   end
 end

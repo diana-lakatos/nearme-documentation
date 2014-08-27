@@ -9,7 +9,7 @@ class Transactable < ActiveRecord::Base
 
   include TransactableType::CustomAttributesCaster
 
-  has_many :reservations, dependent: :destroy, :inverse_of => :listing
+  has_many :reservations, :inverse_of => :listing
   has_many :recurring_bookings, dependent: :destroy, :inverse_of => :listing
   has_many :photos, dependent: :destroy, :inverse_of => :listing do
     def thumb
@@ -37,6 +37,8 @@ class Transactable < ActiveRecord::Base
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
   accepts_nested_attributes_for :photos, :allow_destroy => true
 
+  before_destroy :decline_reservations
+
   # == Scopes
   scope :featured, -> {where(%{ (select count(*) from "photos" where transactable_id = "listings".id) > 0  }).
                        includes(:photos).order(%{ random() }).limit(5) }
@@ -60,7 +62,14 @@ class Transactable < ActiveRecord::Base
   validates_with TransactableTypeAttributeValidator
   validates :photos, :length => { :minimum => 1 }, :unless => :photo_not_required
 
-
+  # used to avoid initializing the same data over and over again if we know it won't change, for example
+  # for Transactable.all we will just re-use array that sits in memory. Defining as class level instance variable,
+  # just in case to avoid potential issues with inheritance
+  @transactable_type_attributes_as_array = {}
+  @transactable_type_attributes_cache_update_at = {}
+  class << self
+    attr_accessor :transactable_type_attributes_as_array, :transactable_type_attributes_cache_update_at
+  end
 
   def initialize(*args)
     if args[0]
@@ -83,8 +92,7 @@ class Transactable < ActiveRecord::Base
   delegate :service_fee_guest_percent, :service_fee_host_percent, to: :location, allow_nil: true
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
-  delegate :transactable_type_attributes, :transactable_type_attributes_names, :public_transactable_type_attributes,
-    :transactable_type_attributes_names_types_hash, :favourable_pricing_rate, to: :transactable_type
+  delegate :transactable_type_attributes, :favourable_pricing_rate, to: :transactable_type
 
   # attr_accessible :location_id, :availability_template_id,
   #   :availability_rules_attributes, :defer_availability_rules, :free,
@@ -142,8 +150,8 @@ class Transactable < ActiveRecord::Base
 
   def set_defaults
     self.enabled = is_trusted? if self.enabled.nil?
-    transactable_type_attributes.each do |transactable_attribute_type|
-      send(:"#{transactable_attribute_type.name}=", transactable_attribute_type.default_value) if send(transactable_attribute_type.name).nil? && !transactable_attribute_type.default_value.nil?
+    transactable_type_attributes_names_default_values_hash.each do |key, value|
+      send(:"#{key}=", value) if send(key).nil?
     end
   end
 
@@ -391,7 +399,6 @@ class Transactable < ActiveRecord::Base
     update_attribute(:enabled, true) if is_trusted?
   end
 
-
   def self.csv_fields(transactable_type)
     { external_id: 'External Id', enabled: 'Enabled' }.reverse_merge(
       transactable_type.transactable_type_attributes.public.pluck(:name, :label).inject({}) do |hash, arr|
@@ -399,6 +406,61 @@ class Transactable < ActiveRecord::Base
         hash
       end
     )
+  end
+
+  # invoked when transactable type attribute changes
+  def self.clear_transactable_type_attributes_cache
+    if self.transactable_type_attributes_cache_update_at[TransactableType.pluck(:id).first]
+      transactable_type_ids = TransactableTypeAttribute.with_changed_attributes(self.transactable_type_attributes_cache_update_at[TransactableType.pluck(:id).first]).uniq.pluck(:transactable_type_id)
+      transactable_type_ids.each do |transactable_type_id|
+        self.transactable_type_attributes_as_array[transactable_type_id] = nil
+      end
+    end
+  end
+
+  def self.get_transactable_type_attributes_as_array(tt_id)
+    if !self.transactable_type_attributes_as_array[tt_id]
+      self.transactable_type_attributes_cache_update_at[tt_id] = Time.now.utc
+      self.transactable_type_attributes_as_array[tt_id] = TransactableTypeAttribute.find_as_array(tt_id)
+    end
+    self.transactable_type_attributes_as_array[tt_id]
+  end
+
+  def transactable_type_attributes_as_array
+    self.class.get_transactable_type_attributes_as_array(transactable_type_id)
+  end
+
+  def transactable_type_id
+    read_attribute(:transactable_type_id) || transactable_type.id
+  end
+
+  def transactable_type_attributes_names_default_values_hash
+    @transactable_type_attributes_names_default_values_hash ||= transactable_type_attributes_as_array.inject({}) do |hstore_attrs, attr_array|
+      hstore_attrs[attr_array[0].to_sym] = attr_array[2]
+      hstore_attrs
+    end
+  end
+
+  def transactable_type_attributes_names_types_hash
+    @transactable_type_attributes_names_types_hash ||= transactable_type_attributes_as_array.inject({}) do |hstore_attrs, attr_array|
+      hstore_attrs[attr_array[0].to_sym] = attr_array[1].to_sym
+      hstore_attrs
+    end
+  end
+
+  def self.public_transactable_type_attributes_names(tt_id)
+    return [] if tt_id.nil?
+    self.get_transactable_type_attributes_as_array(tt_id).map do |attr_array|
+      if attr_array[TransactableTypeAttribute::PUBLIC]
+        if attr_array[TransactableTypeAttribute::ATTRIBUTE_TYPE].to_sym == :array
+          { attr_array[TransactableTypeAttribute::NAME].to_sym => [] }
+        else
+          attr_array[TransactableTypeAttribute::NAME].to_sym
+        end
+      else
+        nil
+      end
+    end
   end
 
   private
@@ -413,5 +475,10 @@ class Transactable < ActiveRecord::Base
     self.enabled = is_trusted? if self.enabled
   end
 
+  def decline_reservations
+    reservations.unconfirmed.each do |r|
+      r.reject!
+    end
+  end
 end
 

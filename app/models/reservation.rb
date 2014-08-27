@@ -176,6 +176,7 @@ class Reservation < ActiveRecord::Base
   scope :confirmed_or_unconfirmed, lambda {
     with_state(:confirmed, :unconfirmed)
   }
+
   scope :confirmed, lambda {
     with_state(:confirmed)
   }

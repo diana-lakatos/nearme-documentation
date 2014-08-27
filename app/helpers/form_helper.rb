@@ -11,6 +11,8 @@ module FormHelper
       render partial: "custom_attributes/input", locals: { attribute: attribute.decorate, f: form }
     when :check_box
       render partial: "custom_attributes/check_box", locals: { attribute: attribute.decorate, f: form }
+    when :check_box_list
+      render partial: "custom_attributes/check_box_list", locals: { attribute: attribute.decorate, f: form }
     when :switch
       render partial: "custom_attributes/switch", locals: { attribute: attribute.decorate, f: form }
     else

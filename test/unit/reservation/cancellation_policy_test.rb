@@ -18,7 +18,7 @@ class Reservation::CancellationPolicyTest < ActiveSupport::TestCase
     end
 
     should 'not be cancellable when 24 hours left to reservation' do
-      Timecop.travel(Time.zone.now) { refute @cancellation_policy.cancelable? }
+      Timecop.travel((Time.use_zone(Time.zone) { Time.zone.local_to_utc(@reservation.date + @reservation.first_period.start_minute.minutes) }.localtime) - 24.hours) { refute @cancellation_policy.cancelable? }
     end
 
   end

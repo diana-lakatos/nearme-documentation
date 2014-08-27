@@ -135,19 +135,19 @@ Then /^the user should have a reservation:$/ do |table|
   end
 end
 
-Then /^the reservation subtotal should show \$?([0-9\.]+)$/ do |cost|
+Then /^the reservation subtotal should show \$?([0-9\.,]+)$/ do |cost|
   within '.order-summary .subtotal-amount' do
     assert page.body.should have_content(cost)
   end
 end
 
-Then /^the reservation service fee should show \$?([0-9\.]+)$/ do |cost|
+Then /^the reservation service fee should show \$?([0-9\.,]+)$/ do |cost|
   within '.reservations-review .service-fee-amount' do
     assert page.body.should have_content(cost)
   end
 end
 
-Then /^the reservation total should show \$?([0-9\.]+)$/ do |cost|
+Then /^the reservation total should show \$?([0-9\.,]+)$/ do |cost|
   within '.reservations-review .total-amount' do
     assert page.body.should have_content(cost)
   end
@@ -200,7 +200,7 @@ When(/^I log in to continue booking$/) do
   step 'I log in as the user'
 end
 
-When /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved for '(.+)'$/ do |user, qty, listing, date|
+Then /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved for '(.+)'$/ do |user, qty, listing, date|
   user = model!(user)
   qty = qty ? qty.to_i : 1
 
@@ -210,6 +210,10 @@ When /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved f
   assert listing.reservations.any? { |reservation|
     reservation.owner == user && reservation.quantity == qty && reservation.booked_on?(date)
   }, "Unable to find a reservation for #{listing.name} on #{date}"
+end
+
+When /^#{capture_model} is free$/ do |transactable|
+  model!(transactable).update_attribute(:free, true)
 end
 
 Then /^I should see the following reservations in order:$/ do |table|

@@ -5,6 +5,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
 
 
   setup do
+    FactoryGirl.create(:transactable_type_listing)
     @listing = FactoryGirl.create(:transactable)
   end
 
@@ -26,7 +27,6 @@ class V1::ListingsControllerTest < ActionController::TestCase
       },
       format: 'json'
     }
-    Rails.logger.info("LOCATION:#{Location.find(location.id).to_json}")
     assert_response :success
   end
 

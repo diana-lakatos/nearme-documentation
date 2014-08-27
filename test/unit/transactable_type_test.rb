@@ -86,7 +86,10 @@ class TransactableTypeTest < ActiveSupport::TestCase
       assert_equal true, tta.internal
       assert_equal false, tta.public
       transactable_type.update_attribute(:pricing_options, {})
-      tta.reload.destroyed?
+      assert_nil transactable_type.reload.transactable_type_attributes.find { |attr| attr.name == "free" }
+      transactable_type.update_attribute(:pricing_options, { "free" => "1" })
+      assert tta.reload.destroyed?
+      assert_not_nil transactable_type.reload.transactable_type_attributes.find { |attr| attr.name == "free" }
     end
 
     should 'populate hourly_reservations boolean attribute if pricing_options include it' do

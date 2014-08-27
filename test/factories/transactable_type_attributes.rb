@@ -6,5 +6,10 @@ FactoryGirl.define do
     factory :transactable_type_attribute_required do
       validation_rules { { presence: {} } }
     end
+
+    factory :transactable_type_attribute_array do
+      name "array"
+      attribute_type "array"
+    end
   end
 end

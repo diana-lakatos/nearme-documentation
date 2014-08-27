@@ -133,7 +133,7 @@ class SecuredParams
       translations_attributes: nested(self.translation),
       domains_attributes: nested(self.domain),
       text_filters_attributes: nested(self.text_filter),
-      theme_attributes: self.theme,
+      theme_attributes: self.theme
     ]
   end
 
@@ -364,8 +364,8 @@ class SecuredParams
     ] + self.location_address
   end
 
-  def transactable
-    Transactable::PRICE_TYPES.collect{|t| "#{t}_price_cents".to_sym} +
+  def transactable(transactable_type = nil)
+    Transactable::PRICE_TYPES.collect{|t| "#{t}_price".to_sym} +
       [
         :location_id, :availability_template_id,
         :defer_availability_rules, :free,
@@ -376,7 +376,8 @@ class SecuredParams
         :photo_ids => [],
         :amenity_ids => [],
         :availability_rules_attributes => nested(self.availability_rule)
-    ] + Transactable::PRICE_TYPES.collect{|t| "#{t}_price".to_sym} + (PlatformContext.current.try(:instance).try(:transactable_types).try(:first).try(:public_transactable_type_attributes) || [])
+    ] +
+    Transactable.public_transactable_type_attributes_names((transactable_type.presence || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
   end
 
   def availability_rule
@@ -428,6 +429,9 @@ class SecuredParams
       :sms_notifications_enabled, :domain_id, :time_zone,
       :phone_required, :country_name_required, :skip_password,
       :country_name, :phone, :mobile_phone,
+      :first_name, :middle_name, :last_name, :gender,
+      :drivers_licence_number, :gov_number, :twitter_url,
+      :linkedin_url, :facebook_url, :google_plus_url,
       industry_ids: [],
       companies_attributes: nested(self.company),
       confidential_files_attributes: nested(self.confidential_file)

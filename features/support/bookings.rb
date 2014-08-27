@@ -103,18 +103,17 @@ module Bookings
       if data['Start']
         start_hour, start_min = data['Start'].split(':').map(&:to_i)
         start_minute = start_hour * 60 + start_min
-        start_at = Time.new(date.year, date.month, date.day, start_hour, start_min)
+        start_at = Time.new(start_on.year, start_on.month, start_on.day, start_hour, start_min)
       end
 
       if data['End']
         end_hour, end_min = data['End'].split(':').map(&:to_i)
         end_minute = end_hour * 60 + end_min
-        end_at = Time.new(date.year, date.month, date.day, end_hour, end_min)
+        end_at = Time.new(start_on.year, start_on.month, start_on.day, end_hour, end_min)
       end
 
       { listing: listing, start_on: start_on, end_on: end_on, quantity: qty,
-        start_minute: start_minute, end_minute: end_minute,
-        start_at: start_at, end_at: end_at }
+        start_minute: start_minute, end_minute: end_minute, start_at: start_at, end_at: end_at }
     end
   end
 end

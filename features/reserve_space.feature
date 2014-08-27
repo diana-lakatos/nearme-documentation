@@ -34,8 +34,7 @@ Feature: A user can book at a space
 
   Scenario: Free booking should show 'Free' in place of rates and $0.00 for the total
     Given I am logged in as the user
-    And a location exists with company: that company, currency: "USD"
-    And a transactable exists with location: that location, quantity: 10, daily_price_cents: nil, free: true
+    And the transactable is free
     When I go to the location's page
     Then I should see a free booking module
 
@@ -47,7 +46,7 @@ Feature: A user can book at a space
        When I follow "Manage"
        Then I should be redirected to bookings page
        Then I should see "credit card will be charged when your reservation is confirmed"
-       And the user should have a billing profile
+       And reservation should have billing authorization token
 
   Scenario: Booking and paying by credit card via Paypal
      Given I am logged in as the user
@@ -59,7 +58,7 @@ Feature: A user can book at a space
        When I follow "Manage"
        Then I should be redirected to bookings page
        Then I should see "credit card will be charged when your reservation is confirmed"
-       And the user should have a billing profile
+       And reservation should have billing authorization token
 
   Scenario: As an anonymous user I should be asked to sign up before booking
     When I select to book and review space for:
