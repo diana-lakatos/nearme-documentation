@@ -261,7 +261,16 @@ class SecuredParams
       :homepage_content,
       :call_to_action,
       :white_label_enabled,
-      :support_url
+      :support_url,
+      theme_font_attributes: nested(self.theme_font),
+    ]
+  end
+
+  def theme_font
+    [
+      :bold_eot, :bold_svg, :bold_ttf, :bold_woff,
+      :medium_eot, :medium_svg, :medium_ttf, :medium_woff,
+      :regular_eot, :regular_svg, :regular_ttf, :regular_woff
     ]
   end
 
