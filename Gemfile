@@ -87,6 +87,7 @@ gem 'chameleon', '~> 0.2.4'
 
 gem 'ckeditor'
 gem 'orm_adapter', '~> 0.5.0' # needed for ckeditor, see https://github.com/galetahub/ckeditor/issues/375
+gem 'sanitize'
 
 gem 'useragent'
 gem 'mixpanel', '4.0.2'

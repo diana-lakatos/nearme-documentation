@@ -1,6 +1,6 @@
 - url ||= request.original_url
 %meta{:property=>"og:title", :content => object.name }
-%meta{:property=>"og:description", :content => object.description }
+%meta{:property=>"og:description", :content => sanitize(object.description) }
 %meta{:property=>"og:type", :content => "place" }
 %meta{:property=>"place:location:latitude", :content => object.latitude }
 %meta{:property=>"place:location:longitude", :content => object.longitude }
@@ -8,4 +8,4 @@
 %meta{:property=>"og:site_name", :content => platform_context.name }
 %meta{:property=>"og:url", :content => url }
 - if object.photos_metadata.try(:count).to_i > 0
-  %meta{:property=>"og:image", :content => object.photos_metadata.first['large'] } 
+  %meta{:property=>"og:image", :content => object.photos_metadata.first['large'] }

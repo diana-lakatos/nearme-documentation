@@ -200,6 +200,14 @@ module ApplicationHelper
     else
       text
     end
+  end
 
+  def custom_sanitze(html)
+    if PlatformContext.current.instance.custom_sanitize_config.present?
+      @custom_sanitizer ||= CustomSanitizer.new(PlatformContext.current.instance.custom_sanitize_config)
+      @custom_sanitizer.sanitize(html).html_safe
+    else
+      html
+    end
   end
 end
