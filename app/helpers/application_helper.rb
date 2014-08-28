@@ -44,14 +44,6 @@ module ApplicationHelper
     content_for?(:meta_title) ? content_for(:meta_title) : platform_context.meta_title
   end
 
-  def legacy(is_legacy = true)
-    @is_legacy = is_legacy
-  end
-
-  def legacy?
-    !defined?(@is_legacy) || @is_legacy
-  end
-
   def show_title?
     @show_title
   end
