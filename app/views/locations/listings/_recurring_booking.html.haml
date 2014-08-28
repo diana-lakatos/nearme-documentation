@@ -55,7 +55,7 @@
             .clearfix
             .booking-description
               %h3 Description
-              %span= mask_phone_and_email_if_necessary(listing.description)
+              %span= custom_sanitze mask_phone_and_email_if_necessary(listing.description)
             - listing_availability = pretty_availability_sentence(listing.availability)
             - if listing_availability != location_pretty_availability
               .booking-opening-hours

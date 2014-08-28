@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140827211224) do
+ActiveRecord::Schema.define(version: 20140828104857) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -595,6 +595,7 @@ ActiveRecord::Schema.define(version: 20140827211224) do
     t.text     "user_required_fields"
     t.boolean  "apply_text_filters",                                          default: false
     t.boolean  "force_accepting_tos"
+    t.text     "custom_sanitize_config"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
