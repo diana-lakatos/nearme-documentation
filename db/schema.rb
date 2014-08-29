@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140822095659) do
+ActiveRecord::Schema.define(version: 20140828104857) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -594,6 +594,8 @@ ActiveRecord::Schema.define(version: 20140822095659) do
     t.boolean  "onboarding_verification_required",                            default: false
     t.text     "user_required_fields"
     t.boolean  "apply_text_filters",                                          default: false
+    t.boolean  "force_accepting_tos"
+    t.text     "custom_sanitize_config"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -606,50 +608,6 @@ ActiveRecord::Schema.define(version: 20140822095659) do
   end
 
   add_index "listing_types", ["instance_id"], name: "index_listing_types_on_instance_id", using: :btree
-
-  create_table "listings", force: true do |t|
-    t.integer  "location_id"
-    t.string   "name"
-    t.text     "description"
-    t.integer  "quantity",                    default: 1
-    t.text     "availability_rules_text"
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
-    t.datetime "deleted_at"
-    t.boolean  "confirm_reservations",        default: true,  null: false
-    t.boolean  "delta",                       default: true,  null: false
-    t.integer  "listing_type_id"
-    t.integer  "daily_price_cents"
-    t.integer  "weekly_price_cents"
-    t.integer  "monthly_price_cents"
-    t.boolean  "hourly_reservations"
-    t.integer  "hourly_price_cents"
-    t.integer  "minimum_booking_minutes"
-    t.string   "external_id"
-    t.boolean  "free",                        default: false
-    t.datetime "draft"
-    t.boolean  "enabled",                     default: true
-    t.datetime "last_request_photos_sent_at"
-    t.datetime "activated_at"
-    t.integer  "rank",                        default: 0
-    t.integer  "capacity"
-    t.integer  "photos_count",                default: 0
-    t.text     "metadata"
-    t.integer  "instance_id"
-    t.integer  "creator_id"
-    t.integer  "administrator_id"
-    t.integer  "company_id"
-    t.integer  "partner_id"
-    t.boolean  "listings_public",             default: true
-  end
-
-  add_index "listings", ["administrator_id"], name: "index_listings_on_administrator_id", using: :btree
-  add_index "listings", ["company_id"], name: "index_listings_on_company_id", using: :btree
-  add_index "listings", ["creator_id"], name: "index_listings_on_creator_id", using: :btree
-  add_index "listings", ["instance_id"], name: "index_listings_on_instance_id", using: :btree
-  add_index "listings", ["listing_type_id"], name: "index_listings_on_listing_type_id", using: :btree
-  add_index "listings", ["location_id"], name: "index_listings_on_location_id", using: :btree
-  add_index "listings", ["partner_id"], name: "index_listings_on_partner_id", using: :btree
 
   create_table "location_types", force: true do |t|
     t.string   "name"

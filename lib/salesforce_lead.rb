@@ -19,8 +19,7 @@ module SalesforceLead
                              "00NG000000DgV2W" => attributes['location'],
                              "00NG000000DgV2l" => attributes['previous_research'],
                              "00NG000000Ddp2w" => attributes['comments'],
-                             "00NG000000DduGh" => subscribed? ? '1' : '',
-                             "lead_source"     => "Web"})
+                             "00NG000000DduGh" => subscribed? ? '1' : ''})
 
       response = http.request(request) if Rails.env.production?
     rescue => exception

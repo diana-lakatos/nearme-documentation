@@ -139,7 +139,7 @@
 
   .controls {
 
-    span.customSelect { 
+    span.customSelect {
 
       @include form-field;
       padding-right: 40px;
@@ -171,7 +171,7 @@
     }
 
 
-    .open-time, 
+    .open-time,
     .close-time {
 
       span.customSelect{
@@ -179,7 +179,7 @@
       }
     }
   }
-      
+
 }
 
 .custom-select-dropdown-icon {

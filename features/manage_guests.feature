@@ -19,4 +19,4 @@ Feature: As a user of the site
   Scenario: A user will see information about no reservation
     Given a reservation exists with listing: the transactable, state: "confirmed"
     Given I am on the manage guests dashboard page
-    Then I should see "You have no unconfirmed reservations. Have a nice day!"
+    Then I should see "You have no unconfirmed reservations."

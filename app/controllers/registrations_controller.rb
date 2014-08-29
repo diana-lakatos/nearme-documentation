@@ -26,6 +26,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def create
+    params[:user][:custom_validation] = true
     begin
       super
 
@@ -76,6 +77,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def update
     resource.country_name_required = true
+    resource.custom_validation = true
     if resource.update_with_password(user_params)
       set_flash_message :success, :updated
       sign_in(resource, :bypass => true)
@@ -94,7 +96,6 @@ class RegistrationsController < Devise::RegistrationsController
   def avatar
     @user = current_user
     @user.avatar_original_url = params[:avatar]
-    @user.skip_custom_validation = true
     if @user.save
       render :text => { :url => @user.avatar_url(:medium),
                         :resize_url =>  edit_avatar_path,
@@ -114,7 +115,6 @@ class RegistrationsController < Devise::RegistrationsController
   def update_avatar
     @user = current_user
     @user.avatar_transformation_data = { :crop => params[:crop], :rotate => params[:rotate] }
-    @user.skip_custom_validation = true
     if @user.save
       render partial: 'manage/photos/resize_succeeded'
     else
@@ -124,7 +124,6 @@ class RegistrationsController < Devise::RegistrationsController
 
   def destroy_avatar
     @user = current_user
-    @user.skip_custom_validation = true
     @user.remove_avatar!
     @user.save!
     render :text => {}, :status => 200, :content_type => 'text/plain'
@@ -270,7 +269,7 @@ class RegistrationsController < Devise::RegistrationsController
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up) {|u| u.permit(:name, :email, :password, :password_confirmation)}
+    devise_parameter_sanitizer.for(:sign_up) {|u| u.permit(:name, :email, :accept_terms_of_service, :password, :password_confirmation, :custom_validation)}
   end
 
   def user_params

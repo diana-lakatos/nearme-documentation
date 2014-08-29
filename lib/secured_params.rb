@@ -123,7 +123,7 @@ class SecuredParams
       :stripe_currency, :user_info_in_onboarding_flow,
       :default_search_view, :user_based_marketplace_views,
       :searcher_type, :onboarding_verification_required,
-      :apply_text_filters,
+      :apply_text_filters, :force_accepting_tos,
       user_required_fields: [],
       transactable_types_attributes: nested(self.transactable_type),
       listing_amenity_types_attributes: nested(self.amenity_type),
@@ -261,7 +261,16 @@ class SecuredParams
       :homepage_content,
       :call_to_action,
       :white_label_enabled,
-      :support_url
+      :support_url,
+      theme_font_attributes: nested(self.theme_font),
+    ]
+  end
+
+  def theme_font
+    [
+      :bold_eot, :bold_svg, :bold_ttf, :bold_woff,
+      :medium_eot, :medium_svg, :medium_ttf, :medium_woff,
+      :regular_eot, :regular_svg, :regular_ttf, :regular_woff
     ]
   end
 

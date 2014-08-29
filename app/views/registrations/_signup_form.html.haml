@@ -17,8 +17,16 @@
       = f.input :password, :label => false, placeholder: "Password", :input_html => { :tabindex => '3' }
       %span.ico-lock
 
-    %p.notice.text-center.legal By signing up, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", pages_path('legal'), :target => '_blank'}.
+      - if platform_context.instance.force_accepting_tos
 
+        %p.notice.legal.control-group{class: "#{"error" if f.object.errors.include?(:accept_terms_of_service)}"}
+          %label.checkbox.controls{for: "user_accept_terms_of_service"}
+            = check_box_tag "user[accept_terms_of_service]", "1", f.object.send(:accept_terms_of_service).present?, { class: 'input-block-level', tabindex: '4' }
+            = t('registrations.accept_terms_of_service').html_safe
+          - if f.object.errors.include?(:accept_terms_of_service)
+            %p.error-block= f.object.errors[:accept_terms_of_service].first
+      - else
+        %p.notice.text-center.legal By signing up, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", pages_path('legal'), :target => '_blank'}.
     .actions
       = f.submit 'Sign up', :class => 'desksnearme submit', data: {:disable_with => "Signing up..."}, :tabindex => '4'
 
@@ -47,5 +55,8 @@
 
 - if request.xhr?
   :javascript
-    $(function() { new SignupForm($('#signup')) });
+    $(function() {
+      new SignupForm($('#signup'));
+      CustomInputs.initialize();
+    });
 

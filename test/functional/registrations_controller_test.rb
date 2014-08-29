@@ -21,6 +21,26 @@ class RegistrationsControllerTest < ActionController::TestCase
 
     end
 
+    context 'force accepting ToS' do
+      setup do
+        PlatformContext.current.instance.update_attribute(:force_accepting_tos, true)
+      end
+
+      should 'not sign up without accepting terms if required' do
+        assert_no_difference('User.count') do
+          post :create, user: user_attributes
+        end
+        assert_select '.legal .error-block', 'must be accepted'
+      end
+
+      should 'sign up after accepting ToS' do
+        assert_difference('User.count') do
+          post :create, user: user_attributes.merge({accept_terms_of_service: "1"})
+        end
+      end
+
+    end
+
     should 'successfully update' do
       sign_in @user
       @industry = FactoryGirl.create(:industry)

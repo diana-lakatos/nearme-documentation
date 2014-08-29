@@ -1,4 +1,3 @@
-- legacy false
 - title render 'locations/title', location: @location
 - canonical_url location_path(@location)
 
@@ -28,7 +27,7 @@
                 - if current_user.try(:admin) && @location.administrator.present?
                   = link_to login_as_admin_user_path(@location.administrator, :return_to => edit_manage_location_path(@location)), :method => :post, :confirm => "This will log you out and re-log you in as location administrator." do
                     %span.ico-edit
-              %p= mask_phone_and_email_if_necessary(@location.description)
+              %p= custom_sanitze mask_phone_and_email_if_necessary(@location.description)
 
               .amenities-block
                 .amenities-header

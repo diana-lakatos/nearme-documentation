@@ -44,14 +44,6 @@ module ApplicationHelper
     content_for?(:meta_title) ? content_for(:meta_title) : platform_context.meta_title
   end
 
-  def legacy(is_legacy = true)
-    @is_legacy = is_legacy
-  end
-
-  def legacy?
-    !defined?(@is_legacy) || @is_legacy
-  end
-
   def show_title?
     @show_title
   end
@@ -208,6 +200,14 @@ module ApplicationHelper
     else
       text
     end
+  end
 
+  def custom_sanitze(html)
+    if PlatformContext.current.instance.custom_sanitize_config.present?
+      @custom_sanitizer ||= CustomSanitizer.new(PlatformContext.current.instance.custom_sanitize_config)
+      @custom_sanitizer.sanitize(html).html_safe
+    else
+      html
+    end
   end
 end
