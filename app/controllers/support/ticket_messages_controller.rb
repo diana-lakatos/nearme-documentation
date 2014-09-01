@@ -5,8 +5,13 @@ class Support::TicketMessagesController < Support::BaseController
     message.ticket = ticket
     if message.valid?
       message.save!
-      SupportMailer.enqueue.request_updated(@ticket, message)
-      SupportMailer.enqueue.support_updated(@ticket, message)
+      if Transactable === ticket.target
+        SupportMailer.enqueue.rfq_request_updated(@ticket, message)
+        SupportMailer.enqueue.rfq_support_updated(@ticket, message)
+      else
+        SupportMailer.enqueue.request_updated(@ticket, message)
+        SupportMailer.enqueue.support_updated(@ticket, message)
+      end
       flash[:success] = t('flash_messages.support.ticket_message.created')
     else
       flash[:error] = t('flash_messages.support.ticket_message.error') unless close?

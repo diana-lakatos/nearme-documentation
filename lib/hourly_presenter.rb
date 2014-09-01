@@ -1,0 +1,66 @@
+class HourlyPresenter
+  include ActionView::Helpers::TextHelper
+  attr_accessor :date, :start_minute, :end_minute
+
+  def initialize(date, start_minute, end_minute)
+    @date = date
+    @start_minute = start_minute
+    @end_minute = end_minute
+  end
+
+  def hourly_summary_no_html(show_date = false)
+    start_time = start_minute_of_day_to_time.strftime("%l:%M").strip
+    end_time = end_minute_of_day_to_time.strftime("%l:%M%P").strip
+    start_time_suffix = start_minute_of_day_to_time.strftime("%P").strip
+    end_time_suffix = end_minute_of_day_to_time.strftime("%P").strip
+
+    start_time += start_time_suffix unless start_time_suffix == end_time_suffix
+
+    if show_date
+      formatted_date = date.strftime("%B %-e")
+      ('%s %s-%s (%0.2f %s)' % [formatted_date, start_time, end_time, hours, 'hour'.pluralize(hours.to_i)]).html_safe
+    else
+      ('%s-%s<br />(%0.2f %s)' % [start_time, end_time, hours, 'hour'.pluralize(hours.to_i)]).html_safe
+    end
+  end
+
+  def hourly_summary(show_date = false)
+    start_time = start_minute_of_day_to_time.strftime("%l:%M").strip
+    end_time = end_minute_of_day_to_time.strftime("%l:%M%P").strip
+    start_time_suffix = start_minute_of_day_to_time.strftime("%P").strip
+    end_time_suffix = end_minute_of_day_to_time.strftime("%P").strip
+
+    start_time += start_time_suffix unless start_time_suffix == end_time_suffix
+
+    if show_date
+      formatted_date = date.strftime("%B %-e")
+      ('%s %s&ndash;%s (%0.2f %s)' % [formatted_date, start_time, end_time, hours, 'hour'.pluralize(hours.to_i)]).html_safe
+    else
+      ('%s&ndash;%s<br />(%0.2f %s)' % [start_time, end_time, hours, 'hour'.pluralize(hours.to_i)]).html_safe
+    end
+  end
+
+  def minute_of_day_to_time(minute)
+    hour = minute / 60
+    min  = minute % 60
+    Time.zone.local(Time.zone.today.year, Time.zone.today.month, Time.zone.today.day, hour, min)
+  end
+
+  def start_minute_of_day_to_time
+    minute_of_day_to_time(start_minute)
+  end
+
+  def end_minute_of_day_to_time
+    minute_of_day_to_time(end_minute)
+  end
+
+  def hours
+    if start_minute && end_minute
+      (end_minute - start_minute) / 60.0
+    else
+      0
+    end
+  end
+
+end
+

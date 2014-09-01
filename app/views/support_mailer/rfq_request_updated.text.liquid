@@ -1,0 +1,13 @@
+{% include 'support_mailer/new_message_separator.text' %}
+
+Request For Quote Updated
+
+Thanks for updating your request for quote. You said:
+
+{{ message.message_text }}
+
+We will be in touch with you shortly.
+
+{% include 'support_mailer/rfq_review.text' %}
+
+{% include 'support_mailer/rfq_message_history.text' %}

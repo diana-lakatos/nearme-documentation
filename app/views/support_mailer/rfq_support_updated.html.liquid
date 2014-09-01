@@ -1,0 +1,9 @@
+<h2>Request For Quote Updated</h2>
+
+<p>{{message.full_name}} has updated request for quote #{{ticket.id}}. They said:</p>
+
+<p>{{ message.message_html }}</p>
+
+{% include 'support_mailer/rfq_host_review.html' %}
+
+{% include 'support_mailer/rfq_message_history.html' %}

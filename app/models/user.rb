@@ -40,6 +40,8 @@ class User < ActiveRecord::Base
   has_many :charges, foreign_key: 'user_id', dependent: :destroy
   has_many :authored_messages, :class_name => "UserMessage", :foreign_key => 'author_id', :inverse_of => :author
   has_many :tickets, -> { order 'updated_at DESC' }, :class_name => 'Support::Ticket'
+  has_many :assigned_tickets, -> { order 'updated_at DESC' }, foreign_key: 'assigned_to_id', :class_name => 'Support::Ticket'
+  has_many :assigned_transactable_tickets, -> { where(target_type: 'Transactable').order('updated_at DESC') }, foreign_key: 'assigned_to_id', :class_name => 'Support::Ticket'
   has_many :uploaded_confidential_files, foreign_key: 'uploader_id', dependent: :destroy, class_name: 'ConfidentialFile'
   has_many :confidential_files, as: :owner
   has_many :user_bans

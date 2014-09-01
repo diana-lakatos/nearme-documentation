@@ -19,6 +19,13 @@ ActiveRecord::Schema.define(version: 20140905105055) do
   enable_extension "btree_gist"
   enable_extension "hstore"
 
+  create_table "action_types", force: true do |t|
+    t.string   "name"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "addresses", force: true do |t|
     t.integer  "instance_id"
     t.string   "address"
@@ -2011,9 +2018,12 @@ ActiveRecord::Schema.define(version: 20140905105055) do
     t.text     "message",     null: false
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "target_id"
+    t.string   "target_type"
   end
 
   add_index "support_ticket_messages", ["instance_id"], name: "index_support_ticket_messages_on_instance_id", using: :btree
+  add_index "support_ticket_messages", ["target_id", "target_type"], name: "index_support_ticket_messages_on_target_id_and_target_type", using: :btree
   add_index "support_ticket_messages", ["ticket_id"], name: "index_support_ticket_messages_on_ticket_id", using: :btree
   add_index "support_ticket_messages", ["user_id"], name: "index_support_ticket_messages_on_user_id", using: :btree
 
@@ -2024,10 +2034,13 @@ ActiveRecord::Schema.define(version: 20140905105055) do
     t.string   "state",          null: false
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
+    t.integer  "target_id"
+    t.string   "target_type"
   end
 
   add_index "support_tickets", ["assigned_to_id"], name: "index_support_tickets_on_assigned_to_id", using: :btree
   add_index "support_tickets", ["instance_id"], name: "index_support_tickets_on_instance_id", using: :btree
+  add_index "support_tickets", ["target_id", "target_type"], name: "index_support_tickets_on_target_id_and_target_type", using: :btree
   add_index "support_tickets", ["user_id"], name: "index_support_tickets_on_user_id", using: :btree
 
   create_table "text_filters", force: true do |t|
@@ -2132,6 +2145,15 @@ ActiveRecord::Schema.define(version: 20140905105055) do
   end
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree
+
+  create_table "transactable_type_actions", force: true do |t|
+    t.integer  "action_type_id"
+    t.integer  "transactable_type_id"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "transactable_type_attributes", force: true do |t|
     t.string   "name"

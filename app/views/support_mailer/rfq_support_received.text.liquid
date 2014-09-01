@@ -1,0 +1,9 @@
+New Request For Quote
+
+{{ message.full_name }} has submitted a request for quote. They said:
+
+{{ message.message_text }}
+
+{% include 'support_mailer/rfq_host_review.text' %}
+
+{% include 'support_mailer/rfq_message_history.text' %}

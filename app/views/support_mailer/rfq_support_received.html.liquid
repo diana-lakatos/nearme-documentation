@@ -1,0 +1,9 @@
+<h2>New Request For Quote</h2>
+
+<p>{{ message.full_name }} has submitted a request for quote. They said:</p>
+
+<p>{{ message.message_html }}</p>
+
+{% include 'support_mailer/rfq_host_review.html' %}
+
+{% include 'support_mailer/rfq_message_history.html' %}

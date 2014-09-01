@@ -1,0 +1,11 @@
+{% include 'support_mailer/new_message_separator.html' %}
+
+<h2>Request For Quote Updated</h2>
+
+<p>{{ message.full_name }} has replied to your request for quote. They said:</p>
+
+<p>{{ message.message_html }}</p>
+
+{% include 'support_mailer/rfq_review.html' %}
+
+{% include 'support_mailer/rfq_message_history.html' %}

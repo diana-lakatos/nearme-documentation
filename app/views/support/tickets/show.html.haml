@@ -1,6 +1,11 @@
+- @ticket = @ticket.decorate
 .row-fluid.support.detail
   .span8.offset2
-    %h1 Request ##{@ticket.id}
+    %h1
+      - if @ticket.target.present?
+        Request For Quote - #{link_to "#{@ticket.target.name}", @ticket.show_target_path if @ticket.target.present?}
+      - else
+        Request ##{@ticket.id}
     .box
       .header.clearfix
         .left

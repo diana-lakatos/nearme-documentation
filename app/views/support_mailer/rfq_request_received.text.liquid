@@ -1,0 +1,11 @@
+{% include 'support_mailer/new_message_separator.text' %}
+
+Request For Quote Received
+
+Your request for quote has been received and will be reviewed by {{ platform_context.lessor }} shortly. You said:
+
+{{ message.message_text }}
+
+{% include 'support_mailer/rfq_review.text' %}
+
+{% include 'support_mailer/rfq_message_history.text' %}

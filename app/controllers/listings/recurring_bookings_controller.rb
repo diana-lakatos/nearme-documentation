@@ -1,5 +1,6 @@
 class Listings::RecurringBookingsController < ApplicationController
 
+
   before_filter :find_listing
   before_filter :build_recurring_booking_request, only: [:review, :create, :store_recurring_booking_request]
   before_filter :redirect_if_invalid, only: [:review]
@@ -86,6 +87,7 @@ class Listings::RecurringBookingsController < ApplicationController
   # Store the recurring_booking request in the session so that it can be restored when returning to the listings controller.
   def store_recurring_booking_request
     session[:stored_recurring_booking_location_id] = @listing.location.id
+    session[:stored_recurring_booking_trigger] = params[:commit]
 
     # Marshals the booking request parameters into a better structured hash format for transmission and
     # future assignment to the Bookings JS controller.
@@ -99,7 +101,7 @@ class Listings::RecurringBookingsController < ApplicationController
         :start_on => @recurring_booking_request.recurring_booking.start_on.to_date,
         :end_on => @recurring_booking_request.recurring_booking.end_on.to_date,
         :start_minute => @recurring_booking_request.recurring_booking.start_minute,
-        :end_minute => @recurring_booking_request.recurring_booking.end_minute,
+        :end_minute => @recurring_booking_request.recurring_booking.end_minute
       }
     }
     head 200 if params[:action] == 'store_recurring_booking_request'

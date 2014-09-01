@@ -1,0 +1,33 @@
+- title "Request for Quote"
+- @ticket = @ticket.decorate
+
+= show_manage_navigation(:rfq)
+
+.row-fluid.support.detail
+  .span8.offset2
+    %h1
+      - if @ticket.target.present?
+        Request For Quote - #{link_to "#{@ticket.target.name}", @ticket.show_target_path if @ticket.target.present?}
+      - else
+        Request ##{@ticket.id}
+    .box
+      .header.clearfix
+        .left
+          %h2
+            =@ticket.subject
+        .right
+          %h2
+            =@ticket.state.titleize
+      .form
+        -if @ticket.open?
+          =simple_form_for @message, url: manage_support_ticket_ticket_messages_path(@ticket, @message) do |f|
+            = f.input :message, as: :text, label: false
+            .row-fluid
+              .span6
+                = f.submit 'Update', class: 'btn btn-green'
+              .span6
+                = f.submit 'Update and Resolve', class: 'btn btn-green'
+      = render partial: 'ticket_message', collection: @ticket.messages, spacer_template: 'spacer'
+
+- content_for :domready do
+  $('abbr.timeago').timeago();

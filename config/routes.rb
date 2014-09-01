@@ -254,6 +254,9 @@ DesksnearMe::Application.routes.draw do
         get :booking_successful
       end
     end
+
+    resources :tickets, only: [:new, :create], :controller => 'listings/support/tickets'
+
     resources :reservations, :only => [:create, :update], :controller => "listings/reservations" do
       collection do
         post :review
@@ -392,6 +395,12 @@ DesksnearMe::Application.routes.draw do
           get :rejection_form
           post :host_cancel
         end
+      end
+    end
+
+    namespace :support do
+      resources :tickets, only: [:show, :index] do
+        resources :ticket_messages, only: [:create]
       end
     end
   end
