@@ -36,8 +36,7 @@ module NearMe
     def check_clean_tree
       status = `git status -s`.strip
       if not status.empty?
-        puts "Clean your working tree first. Commit or stash your changes."
-        exit 4
+        puts "Warning: tree is not clean."
       end
     end
 
