@@ -30,6 +30,14 @@ DESC
     end
 
     desc "sync_assets", "synchronize assets with S3 bucket"
+    long_desc <<DESC
+    sync NearMe application assets to S3
+    for example:
+
+    nearme sync_assets -r my-branch -b near-me-assets-staging-2
+
+    will compile assets and sync it to S3 bucket
+DESC
     method_option "branch", required: true, type: :string,
       aliases: :r, desc: "git branch to synch"
     method_option "bucket", required: false, type: :string,
