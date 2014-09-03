@@ -4,14 +4,20 @@ AssetSync.configure do |config|
   config.aws_secret_access_key = 'OaiCTdWztn4QAfP6Pw2xiF78KBsHtBUyKELXDjxU'
   # To use AWS reduced redundancy storage.
   # config.aws_reduced_redundancy = true
-  case ENV['BRANCH_NAME']
-  when 'production'
-    config.fog_directory = 'near-me-assets'
+  if ENV['FOG_DIR']
+    config.fog_directory = ENV['FOG_DIR']
   else
-    config.fog_directory = 'near-me-assets-staging'
+    case ENV['BRANCH_NAME']
+    when 'production'
+      config.fog_directory = 'near-me-assets'
+    when 'staging'
+      config.fog_directory = 'near-me-assets-staging'
+    when 'staging-2'
+      config.fog_directory = 'near-me-assets-staging-2'
+    end
   end
 
-  config.enabled = ENV['COMPILE_ASSETS'].eql?('true')
+  config.enabled = true
 
   config.log_silently = false
   config.run_on_precompile = false
