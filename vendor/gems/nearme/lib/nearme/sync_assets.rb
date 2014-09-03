@@ -20,7 +20,7 @@ module NearMe
 
     def start!
       check_branch
-      # check_clean_tree
+      check_clean_tree
       puts "Compiling..."
       if not Kernel.system('bundle exec rake assets:precompile')
         puts "precompile failed :("
