@@ -28,5 +28,16 @@ DESC
       result = NearMe::Deploy.new(options).start!
       puts "RESULT: #{result.data}"
     end
+
+    desc "sync_assets", "synchronize assets with S3 bucket"
+    method_option "branch", required: true, type: :string,
+      aliases: :r, desc: "git branch to synch"
+    method_option "bucket", required: false, type: :string,
+      aliases: :b, desc: "S3 bucket name"
+    def sync_assets
+      puts "Assets sync..."
+      result = NearMe::SyncAssets.new(options).start!
+      puts "Assets sync done."
+    end
   end
 end
