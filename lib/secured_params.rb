@@ -368,10 +368,11 @@ class SecuredParams
       :location_type_id, :photos,
       :administrator_id, :name, :location_address,
       :availability_template_id,
-      :availability_rules_attributes => nested(self.availability_rule),
-      :location_address_attributes => nested(self.location_address),
-      :listings_attributes => nested(self.transactable),
-      :amenity_ids => []
+      availability_rules_attributes: nested(self.availability_rule),
+      location_address_attributes: nested(self.location_address),
+      listings_attributes: nested(self.transactable),
+      amenity_ids: [],
+      waiver_agreement_template_ids: []
     ] + self.location_address
   end
 
@@ -383,9 +384,10 @@ class SecuredParams
         :hourly_reservations, :price_type, :draft, :enabled,
         :last_request_photos_sent_at, :activated_at, :rank,
         :transactable_type_id, :transactable_type,
-        :photos_attributes => nested(self.photo),
-        :photo_ids => [],
-        :amenity_ids => [],
+        photos_attributes: nested(self.photo),
+        photo_ids: [],
+        amenity_ids: [],
+        waiver_agreement_template_ids: [],
         :availability_rules_attributes => nested(self.availability_rule)
     ] +
     Transactable.public_transactable_type_attributes_names((transactable_type.presence || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
@@ -447,6 +449,17 @@ class SecuredParams
       companies_attributes: nested(self.company),
       confidential_files_attributes: nested(self.confidential_file)
     ]
+  end
+
+  def waiver_agreement_template
+    [
+      :content,
+      :name
+    ]
+  end
+
+  def waiver_agreement
+    []
   end
 
 

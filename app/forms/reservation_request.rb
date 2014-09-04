@@ -2,6 +2,7 @@ class ReservationRequest < Form
 
   attr_accessor :dates, :start_minute, :end_minute
   attr_accessor :card_number, :card_expires, :card_code
+  attr_accessor :waiver_agreement_templates
   attr_reader   :reservation, :listing, :location, :user
 
   def_delegators :@reservation, :quantity, :quantity=
@@ -16,9 +17,11 @@ class ReservationRequest < Form
   validates :user,        :presence => true
 
   validate :validate_phone_and_country
+  validate :waiver_agreements_accepted
 
   def initialize(listing, user, platform_context, attributes = {})
     @listing = listing
+    @waiver_agreement_templates = []
     @user = user
 
     if @listing
@@ -147,5 +150,13 @@ class ReservationRequest < Form
 
   def using_credit_card?
     reservation.credit_card_payment?
+  end
+
+  def waiver_agreements_accepted
+    return if @reservation.nil?
+    @reservation.assigned_waiver_agreement_templates.each do |wat|
+      wat_id = wat.id
+      self.send(:add_error, I18n.t('errors.messages.accepted'), "waiver_agreement_template_#{wat_id}") unless @waiver_agreement_templates.include?("#{wat_id}")
+    end
   end
 end

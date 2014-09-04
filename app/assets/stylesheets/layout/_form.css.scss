@@ -19,14 +19,14 @@ input[type=radio] {
   padding-right: 4px;
 }
 
-input[type='checkbox'], 
+input[type='checkbox'],
 input[type='radio'] {
   width: auto;
 }
 
-input[type=submit], 
-input[type=text], 
-input[type=email], 
+input[type=submit],
+input[type=text],
+input[type=email],
 input[type=password],
 input[type=url],
 input[type=tel] {
@@ -43,7 +43,7 @@ label.radio {
 }
 
 #space_wizard {
-  
+
   .periodicity {
     margin-right: 10px;
   }
@@ -54,14 +54,14 @@ label.radio {
 }
 
 form {
-  
-  div.input, 
+
+  div.input,
   div.field {
     margin-bottom: 20px;
   }
 
-  div.input.check_boxes, 
-  div.field.check_boxes, 
+  div.input.check_boxes,
+  div.field.check_boxes,
   div.input.boolean,
   div.input.radio_buttons {
     overflow: hidden;
@@ -81,14 +81,30 @@ form {
     }
   }
 
+  .control-group.check_boxes {
+    overflow: hidden;
+
+    .controls {
+      overflow: hidden;
+
+      label.checkbox {
+        padding-right: 10px;
+
+        &:last {
+          padding-right: 0px;
+        }
+      }
+    }
+  }
+
   div.radio_buttons {
     overflow: hidden;
     margin-bottom: 8px;
   }
 
-  .hint, 
-  .help-block, 
-  .preamble, 
+  .hint,
+  .help-block,
+  .preamble,
   .error-block {
     display: block;
     margin-bottom: 0;
@@ -98,8 +114,8 @@ form {
     color: $red;
   }
 
-  .hint, 
-  .help-block, 
+  .hint,
+  .help-block,
   .error-block {
     padding-left: 20px;
 
@@ -119,14 +135,14 @@ form {
     color: #1e2222;
   }
 
-  .hint, 
+  .hint,
   .help-block {
     background: image-url("components/form/hint.png") left top no-repeat;
     margin-top: 8px;
   }
 
   .card-info.error, .row-fluid.error, .control-group.error {
-    
+
 
     // ul is for chosen
     .controls {
@@ -144,7 +160,7 @@ form {
 
     a[rel=tooltip] {
       color: $theme_black;
-      
+
       &:hover {
         color: $theme_gray;
       }
@@ -164,7 +180,7 @@ form {
   }
 
 
-  fieldset, 
+  fieldset,
   .fieldset {
 
     // Prevent additional padding at bottom of fieldset
@@ -173,12 +189,12 @@ form {
     }
   }
 
-  input[type="text"], 
-  input[type="password"], 
-  input[type="email"], 
-  input[type="tel"], 
-  input[type="url"], 
-  input[type="number"], 
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="number"],
   textarea {
     @include form-field;
 
@@ -203,7 +219,7 @@ form {
   }
 
   textarea {
-    
+
 
     // 4 lines
 
@@ -224,16 +240,16 @@ form {
     }
   }
 
-  fieldset, 
+  fieldset,
   .fieldset {
     position: relative;
     margin-bottom: 20px;
-    @include box-sizing(border-box);    
+    @include box-sizing(border-box);
     padding: 14px;
     border: 1px solid #c6c6c6;
     @include border-radius($border-radius-default);
 
-    > legend, 
+    > legend,
     > .legend {
       @extend h2;
       border-radius: $border-radius-default $border-radius-default 0 0;
@@ -288,6 +304,10 @@ form {
     border: none;
     font-size: 18px;
   }
+
+  h2.with-margin {
+    padding-bottom: 15px;
+  }
 }
 
 
@@ -310,7 +330,7 @@ form {
 //   </form>
 
 .form-horizontal {
-  
+
   .control-group {
     clear: both;
     margin-bottom: 10px;
@@ -364,7 +384,7 @@ form {
         margin-top: 1px;
         width: 110px;
       }
-      
+
       &.flush-top,
       &.boolean.optional {
         margin: 0 0 20px;
@@ -373,12 +393,16 @@ form {
           margin: 7px 0 0;
         }
       }
+
+      &.check_boxes {
+        margin-top: 0px;
+      }
     }
 
     .controls {
       margin-left: 200px;
 
-      input, 
+      input,
       textarea {
         font-size: 18px;
         font-weight: normal;
@@ -390,14 +414,14 @@ form {
 
 // Width overrides for restricted width forms
 
-.two-thirds.column form.form-horizontal, 
+.two-thirds.column form.form-horizontal,
 .eleven.columns form.form-horizontal {
-  
-  input[type="text"], 
-  input[type="password"], 
-  input[type="email"], 
-  input[type="url"], 
-  input[type="tel"], 
+
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="url"],
+  input[type="tel"],
   textarea {
     width: 367px;
   }
@@ -409,10 +433,10 @@ form {
   }
 
   .controls {
-    
+
     &.two-up input {
       width: 169px;
-      
+
       &:first-child {
         margin-right: 4px;
       }
@@ -427,14 +451,14 @@ form {
 
   // Fieldsets require even further smaller width fields
 
-  .fieldset, 
+  .fieldset,
   fieldset {
-    
-    input[type="text"], 
-    input[type="password"], 
-    input[type="email"], 
-    input[type="url"], 
-    input[type="tel"], 
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="url"],
+    input[type="tel"],
     textarea {
       width: 328px;
     }
@@ -442,17 +466,17 @@ form {
 }
 
 @media screen and (max-width:959px) {
-  
-  .two-thirds.column form.form-horizontal input[type="text"], 
-  .two-thirds.column form.form-horizontal input[type="password"], 
-  .two-thirds.column form.form-horizontal input[type="email"], 
-  .two-thirds.column form.form-horizontal input[type="url"], 
-  .two-thirds.column form.form-horizontal input[type="tel"], 
-  .two-thirds.column form.form-horizontal textarea, 
-  .two-thirds.column form.form-horizontal .controls.two-up input, 
-  form .hint, 
-  form .help-block, 
-  .two-thirds.column form.form-horizontal .fieldset input[type="text"], 
+
+  .two-thirds.column form.form-horizontal input[type="text"],
+  .two-thirds.column form.form-horizontal input[type="password"],
+  .two-thirds.column form.form-horizontal input[type="email"],
+  .two-thirds.column form.form-horizontal input[type="url"],
+  .two-thirds.column form.form-horizontal input[type="tel"],
+  .two-thirds.column form.form-horizontal textarea,
+  .two-thirds.column form.form-horizontal .controls.two-up input,
+  form .hint,
+  form .help-block,
+  .two-thirds.column form.form-horizontal .fieldset input[type="text"],
   .two-thirds.column form.form-horizontal .fieldset textarea  {
 
     @include box-sizing(border-box);
@@ -478,7 +502,7 @@ form {
     clear: both;
   }
 
-  .two-thirds.column form.form-horizontal .actions, 
+  .two-thirds.column form.form-horizontal .actions,
   .form-horizontal .control-group.indent {
     margin-left:0;
   }
@@ -493,8 +517,8 @@ form {
 @media screen and (max-width: $iphone-landscape) {
 
   select.currency {
-    width: 100%; 
-  }  
+    width: 100%;
+  }
 }
 
 .input-icon-holder {
@@ -505,7 +529,7 @@ form {
     padding-left: 32px !important;
 
     &:focus {
-      
+
       + span {
         color: $icon-hover !important;
       }
@@ -528,7 +552,7 @@ form {
     padding-right: 32px !important;
 
     &:focus {
-      
+
       + span {
         color: $icon-hover !important;
       }
@@ -543,13 +567,13 @@ form {
   }
 }
 
-.mobile-fixed-position-fix { 
-  .navbar, #space_wizard .actions { 
-    position: absolute !important; 
+.mobile-fixed-position-fix {
+  .navbar, #space_wizard .actions {
+    position: absolute !important;
   }
 
   .navbar {
     top: 0;
   }
 }
-  
+

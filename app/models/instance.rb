@@ -70,6 +70,7 @@ class Instance < ActiveRecord::Base
   has_many :country_instance_payment_gateways, :inverse_of => :instance
   has_many :users, inverse_of: :instance
   has_many :text_filters, inverse_of: :instance
+  has_many :waiver_agreement_templates, as: :target
   serialize :pricing_options, Hash
 
   validates_presence_of :name

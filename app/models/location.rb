@@ -25,6 +25,8 @@ class Location < ActiveRecord::Base
   has_many :amenity_holders, as: :holder, dependent: :destroy
   has_many :amenities, through: :amenity_holders
   has_many :confidential_files, as: :owner
+  has_many :assigned_waiver_agreement_templates, as: :target
+  has_many :waiver_agreement_templates, through: :assigned_waiver_agreement_templates
 
   belongs_to :company, inverse_of: :locations
   belongs_to :location_type
@@ -78,6 +80,7 @@ class Location < ActiveRecord::Base
   include AvailabilityRule::TargetHelper
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
   accepts_nested_attributes_for :listings, :location_address
+  accepts_nested_attributes_for :waiver_agreement_templates, :allow_destroy => true
 
   def name_and_description_required
     TransactableType.first.try(:name) == "Listing"
