@@ -7,14 +7,19 @@
             = index+1
       .carousel-inner
         - location.photos_metadata.each_with_index do |photo_metadata, index|
+          - if Location === location
+            - listing_name = photo_metadata[:listing_name]
+          -else
+            - listing_name ||= location.name
+
           .item{:class => ("active" if index == 0), :'data-modalize' => true}
             - if fullscreen
-              %img{:alt => photo_metadata[:listing_name], :'data-src' => photo_metadata[photo_size.to_sym]}
+              %img{:alt => listing_name, :'data-src' => photo_metadata[photo_size.to_sym]}
             - else
-              = image_tag photo_metadata[photo_size.to_sym], :alt => photo_metadata[:listing_name]
+              = image_tag photo_metadata[photo_size.to_sym], :alt => listing_name
             .info
               .caption
-                = "#{photo_metadata[:caption]} ##{photo_metadata[:listing_name]}".strip
+                = "#{photo_metadata[:caption]} ##{listing_name}".strip
       = yield
 
     - else

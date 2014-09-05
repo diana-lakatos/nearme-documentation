@@ -4,6 +4,7 @@ class Transactable < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
   class NotFound < ActiveRecord::RecordNotFound; end
+  include Impressionable
   has_metadata :accessors => [:photos_metadata]
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id, :listings_public], :location)
 
@@ -20,6 +21,7 @@ class Transactable < ActiveRecord::Base
   has_many :availability_rules, -> { order 'day ASC' }, :as => :target, :dependent => :destroy, inverse_of: :target
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   has_many :confidential_files, as: :owner
+  has_many :impressions, :as => :impressionable, :dependent => :destroy
   belongs_to :transactable_type, inverse_of: :transactables
   belongs_to :company, :inverse_of => :listings
   belongs_to :location, inverse_of: :listings
@@ -31,7 +33,7 @@ class Transactable < ActiveRecord::Base
   has_many :amenities, through: :amenity_holders, inverse_of: :listings
   has_one :location_address, through: :location
 
-  has_many :reviews, :through => :reservations, inverse_of: :listings
+  has_many :reviews, :through => :reservations
   has_many :company_industries, through: :location
 
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
