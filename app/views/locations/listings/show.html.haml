@@ -1,0 +1,85 @@
+- title render 'locations/title', location: @location
+- canonical_url location_path(@location)
+
+- content_for :meta_description do
+  = "Read reviews #{@listing.reviews.count unless @listing.reviews.count.zero?} and book at #{@location.company.try(:name)}. #{mask_phone_and_email_if_necessary(@listing.description).try(:truncate, 28)}"
+
+- content_for :hero do
+  %article#space
+    .container-fluid
+      .row-fluid.padding-row
+        .span12.nested
+          %h1= mask_phone_and_email_if_necessary(@listing.name)
+
+      .container-row
+        .two-thirds.column.left
+          = render 'locations/location_photos', location: @listing
+
+          .padding-row
+
+          %article.location.listing
+            - if platform_context.instance.user_based_marketplace_views?
+              %h2= @location.administrator.name
+              %p= @location.administrator.biography
+            - else
+              %h2
+                The listing
+                - if current_user.try(:admin) && @location.administrator.present?
+                  = link_to login_as_admin_user_path(@location.administrator, :return_to => edit_manage_listing_path(@listing)), :method => :post, :confirm => "This will log you out and re-log you in as location administrator." do
+                    %span.ico-edit
+              %p= custom_sanitze mask_phone_and_email_if_necessary(@listing.description)
+
+              .amenities-block
+                .amenities-header
+                  %h3 Hours
+                  %a{href: '#industries'}
+                    %h3 Hours
+                    %span.ico-chevron-right
+                .amenities-container
+                  .row-fluid.amenities-row
+                    .span3
+                      - location_pretty_availability = pretty_availability_sentence(@listing.availability)
+                      = location_pretty_availability
+
+              = render 'locations/amenities', amenities_owner: @location
+
+              = render 'locations/company', location: @location
+
+        .one-third.column.left
+          .toggleable-booking-modules
+            - if @listing.transactable_type.recurring_booking
+              = render 'locations/listings/recurring_booking', listing: @listing, collapsed: false, location_pretty_availability: location_pretty_availability
+            -else
+              = render 'locations/listings/booking', listing: @listing, collapsed: false, location_pretty_availability: location_pretty_availability
+            .padding-row
+
+          -if @location.administrator
+            = render 'locations/administrator', administrator: @location.administrator
+
+          = render 'locations/google_map', location: @location
+
+          .padding-row
+          = render 'locations/social_buttons', location: @location, url: location_listing_url(@location, @listing)
+
+.clearfix.padding-row
+
+- content_for :script do
+  :javascript
+    // Initialize the ui controller
+    $(function() {
+      new Space.Controller(
+        $('article#space'),
+        {
+          bookings: {
+            listings: #{raw location_listings_json},
+
+            // Have we returned from setting up a session. If there are bookings, the JS controller
+            // will trigger showing the booking confirmation modal.
+            returnedFromSession: #{@initial_bookings.present? ? 'true' : 'false'}
+          }
+        });
+      });
+
+- content_for :domready do
+  - if @listing && params[:action] == 'ask_a_question'
+    Modal.load('#{new_listing_listing_message_path(@listing)}')
