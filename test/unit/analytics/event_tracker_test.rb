@@ -74,6 +74,11 @@ class EventTrackerTest < ActiveSupport::TestCase
       expect_event 'Deleted a Listing', listing_properties
       @tracker.deleted_a_listing(@listing)
     end
+
+    should 'track listing view' do
+      expect_event 'Viewed a Listing', listing_properties
+      @tracker.viewed_a_listing(@listing)
+    end
   end
 
   context 'Locations' do

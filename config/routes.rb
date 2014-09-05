@@ -20,6 +20,7 @@ DesksnearMe::Application.routes.draw do
     get '/features-support', :to => 'platform_home#features_support'
     get '/',  :to => 'platform_home#index'
     get '/features', :to => 'platform_home#features'
+    get '/gallery', :to => 'platform_home#gallery'
     get '/contact', :to => 'platform_home#contact'
     post '/contact-submit', :to => 'platform_home#contact_submit'
     get '/about', :to => 'platform_home#about'

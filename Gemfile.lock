@@ -75,6 +75,13 @@ GIT
     i18n-active_record (0.0.2)
       i18n (>= 0.5.0)
 
+PATH
+  remote: vendor/gems/nearme
+  specs:
+    nearme (0.0.1)
+      aws-sdk
+      thor (~> 0.19.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -282,6 +289,9 @@ GEM
       faraday (>= 0.7.4, < 0.10)
     ffaker (1.24.0)
     ffi (1.9.3)
+    figaro (0.7.0)
+      bundler (~> 1.0)
+      rails (>= 3, < 5)
     filepicker-rails (0.1)
       multi_json (~> 1.6)
       railties (>= 3.1.0, < 5.0)
@@ -428,7 +438,7 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (2.9.1)
     newrelic_rpm (3.9.0.229)
-    nokogiri (1.6.2.1)
+    nokogiri (1.6.3.1)
       mini_portile (= 0.6.0)
     nokogumbo (1.1.9)
       nokogiri
@@ -666,7 +676,7 @@ GEM
       unicorn (~> 4)
     uniform_notifier (1.6.2)
     useragent (0.10.0)
-    uuidtools (2.1.4)
+    uuidtools (2.1.5)
     vcr (2.9.2)
     versioncake (1.2.0)
       actionpack (>= 3.2)
@@ -726,6 +736,7 @@ DEPENDENCIES
   ey_config
   factory_girl_rails (~> 4.4.0)
   ffaker (~> 1.16)
+  figaro
   filepicker-rails (= 0.1)
   fog
   friendly_id (~> 5.0.4)
@@ -757,6 +768,7 @@ DEPENDENCIES
   mocha
   money-rails (= 0.8.1)
   nearest_time_zone
+  nearme!
   nested_form
   newrelic_rpm
   nokogiri (~> 1.6.0)

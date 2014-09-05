@@ -166,6 +166,7 @@ class SecuredParams
       :cancellation_policy_penalty_percentage,
       :cancellation_policy_hours_for_cancellation,
       :enable_cancellation_policy,
+      :show_page_enabled,
       :availability_templates_attributes => nested(self.availability_template)
     ]
   end

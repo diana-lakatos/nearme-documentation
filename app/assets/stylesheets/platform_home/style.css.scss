@@ -283,6 +283,7 @@ ul.expandables { margin-bottom: 0px; min-height: 330px; }
 
 @media (max-width: 990px) {
     .section-form p { width: auto; }
+    .section.gallery { text-align: center; }
 
     .footer { text-align:center; padding: 56px 0; }
     .footer-logo { display: inline-block; }
@@ -345,6 +346,7 @@ ul.expandables { margin-bottom: 0px; min-height: 330px; }
 @media (max-width: 780px) {
 }
 @media (max-width: 650px) {
+    .section.gallery { text-align: left; }
     .slide-content h2 { font-size:40px;  }
     .main.main-secondary { padding-top:30px; }
     .section-image img { display:block; width: 100%; }

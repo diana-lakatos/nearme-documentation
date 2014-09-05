@@ -1,0 +1,44 @@
+.intro
+  %h1 GALLERY
+
+- content_for :inner_page do
+  .content.col-md-12
+    .section.gallery
+      .article
+        .row
+          .col-sm-12.col-md-6
+            .section-image
+              %a{href:"https://rvwithme.com", target:"_blank"}
+                =image_tag "platform_home/featured-marketplace-01.jpg"
+            .section-body
+              %h3 RVWITHME
+              %p RVwithME connects RV travelers looking for a place to stay with RV Park owners and private landowners offering to host fellow RVers. RVwithME gives you the tools you need to start hosting RVs, find great places and hosts to book a stay with and a meeting point with like-minded RVers.
+          .col-sm-12.col-md-6
+            .section-image
+              %a{href:"https://reggalo.com", target:"_blank"}
+                =image_tag "platform_home/featured-marketplace-02.jpg"
+            %h3 REGGALO
+            %p Reggalo's mission is to support social impact by building tools that connect everyday heroes. Reggalo is an online marketplace where people can find, book and volunteer services that support nonprofits.
+      .article
+        .row
+          .col-sm-12.col-md-6
+            .section-image
+              %a{href:"https://clubsanywhere.com", target:"_blank"}
+                =image_tag "platform_home/featured-marketplace-03.jpg"
+            %h3 CLUBS ANYWHERE
+            %p The Clubs Anywhere marketplace has three major objectives: Make it convenient and affordable for golf travelers to find, rent, and use high quality clubs wherever they go, provide a way for prospective and experienced golfers to "try before they buy" a new set of clubs, and give golf equipment and service providers a way to expand their reach, increase their revenues, and develop customer loyalty.
+          .col-sm-12.col-md-6
+            .section-image
+              %a{href:"https://desksnear.me", target:"_blank"}
+                =image_tag "platform_home/featured-marketplace-04.jpg"
+            %h3 DESKS NEAR ME
+            %p Desks Near Me is a convenient solution for individuals looking to list or rent office space from anywhere in the world.
+      .article
+        .row
+          .col-sm-12.col-md-6
+            .section-image
+              =image_tag "platform_home/featured-marketplace-05.jpg"
+            %h3 NEW MARKETPLACES ON THE WAY
+            %p Keep an eye out for more exciting marketplaces.
+
+= render template: "platform_home/layout/gallery_layout"

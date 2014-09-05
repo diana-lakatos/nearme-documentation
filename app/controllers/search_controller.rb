@@ -23,7 +23,7 @@ class SearchController < ApplicationController
 
   def result_view
     @result_view = params[:v].presence || platform_context.instance.default_search_view
-    @result_view.in?( %w( list map mixed ) ) ? @result_view : 'mixed'
+    @result_view.in?( %w( list map mixed listing_mixed ) ) ? @result_view : 'mixed'
   end
 
   def should_log_conducted_search?

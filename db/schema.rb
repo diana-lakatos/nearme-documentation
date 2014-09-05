@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140828104857) do
+ActiveRecord::Schema.define(version: 20140905105055) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2163,6 +2163,7 @@ ActiveRecord::Schema.define(version: 20140828104857) do
     t.datetime "cancellation_policy_enabled"
     t.integer  "cancellation_policy_hours_for_cancellation", default: 0
     t.integer  "cancellation_policy_penalty_percentage",     default: 0
+    t.boolean  "show_page_enabled",                          default: false
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

@@ -42,8 +42,8 @@ DesksnearMe::Application.configure do
     config.storage              = :fog
   end
 
-  config.action_controller.asset_host = "//near-me-assets-staging.s3.amazonaws.com"
-  config.action_mailer.asset_host = "http://near-me-assets-staging.s3.amazonaws.com"
+  config.action_controller.asset_host = ENV['ASSETS_BUCKET'] || "//near-me-assets-staging.s3.amazonaws.com"
+  config.action_mailer.asset_host     = ENV['ASSETS_BUCKET'] || "//near-me-assets-staging.s3.amazonaws.com"
 
   # Staging specific keys/secrets for social properties.
   config.linkedin_key = "26pmsiwpsh8a"
