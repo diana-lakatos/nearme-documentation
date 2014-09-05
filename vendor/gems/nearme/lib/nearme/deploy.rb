@@ -1,3 +1,5 @@
+require 'pp'
+
 module NearMe
   class Deploy
     attr_accessor :stack_id, :stack_name, :deploy_branch, :migrate, :comment
@@ -55,7 +57,7 @@ module NearMe
     end
 
     def start!
-      opsworks_client.create_deployment(
+      response = opsworks_client.create_deployment(
         stack_id: stack_id,
         app_id: stack_app_id,
         command: {
@@ -64,9 +66,24 @@ module NearMe
             'migrate' => [@migrate.to_s]
           }
         },
-        comment: "#@comment (deployed by NearMe tools at #{Time.now})",
+        comment: "#@comment (deployed by NearMe tool at #{Time.now})",
         custom_json: {"deploy" => {stack_app[:shortname] => {"scm" => {"revision" => @deploy_branch}}}}.to_json
       )
+    end
+
+    def watch!(deployment_id)
+      while deploy_running?(deployment_id)
+        print "."
+        sleep 20
+      end
+      print "\n"
+      result = opsworks_client.describe_commands(deployment_id: deployment_id)
+      pp result.data[:commands][0]
+    end
+
+    def deploy_running?(deployment_id)
+      result = opsworks_client.describe_commands(deployment_id: deployment_id)
+      !result.data[:commands][0].has_key?(:completed_at)
     end
   end
 end

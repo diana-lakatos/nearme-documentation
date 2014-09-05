@@ -1,20 +1,20 @@
 module NearMe
   class SyncAssets
-    attr_accessor :branch, :bucket
+    attr_accessor :branch, :bucket, :stack
     def initialize(options = {})
       @branch = options[:branch]
-      @bucket = options[:bucket] || branch_mapping[current_branch]
+      @bucket = options[:bucket] || stack_mapping[options[:stack]]
       if @bucket.to_s.empty?
         puts "Invalid bucket. Can't find mapping. Provide it manually."
         exit 5
       end
     end
 
-    def branch_mapping
+    def stack_mapping
       {
-        'production' => 'near-me-assets',
-        'staging' => 'near-me-assets-staging',
-        'staging-2' => 'near-me-assets-staging-2'
+        'nm-production' => 'near-me-assets',
+        'nm-staging' => 'near-me-assets-staging',
+        'nm-staging-2' => 'near-me-assets-staging-2'
       }
     end
 
