@@ -15,6 +15,25 @@ class Manage::ListingsControllerTest < ActionController::TestCase
     FactoryGirl.create(:transactable_type_listing)
   end
 
+  context '#new' do
+
+    should 'not display Waiver Agreement if none available' do
+      get :new, location_id: @location.id
+      assert_select 'Waiver Agreement Templates', false
+    end
+
+    should 'display available Waiver Agreement check boxes' do
+      @waiver_agreement_template1 = FactoryGirl.create(:waiver_agreement_template, target: @company)
+      @waiver_agreement_template2 = FactoryGirl.create(:waiver_agreement_template, target: @company)
+      @waiver_agreement_template3 = FactoryGirl.create(:waiver_agreement_template, target: @company)
+      get :new, location_id: @location.id
+      assert_select 'label.checkbox', @waiver_agreement_template1.name
+      assert_select 'label.checkbox', @waiver_agreement_template1.name
+      assert_select 'label.checkbox', @waiver_agreement_template1.name
+      assert_select 'h2', 'Waiver Agreement Templates'
+    end
+  end
+
   context "#create" do
     setup do
       @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge!({ transactable_type_id: TransactableType.first.id,

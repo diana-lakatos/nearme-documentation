@@ -29,8 +29,15 @@ class InstanceAdmin::Manage::WaiverAgreementTemplatesControllerTest < ActionCont
       assert_equal 'My Name', wat.name
     end
 
-    should 'not create new waiver agreement template if one already exists' do
+    should 'create new waiver agreement template if one already exists in other instance' do
       FactoryGirl.create(:waiver_agreement_template)
+      assert_difference 'WaiverAgreementTemplate.count' do
+        post :create, waiver_agreement_template: { content: 'This is content', name: 'My Name' }
+      end
+    end
+
+    should 'not create new waiver agreement template if one already exists' do
+      FactoryGirl.create(:waiver_agreement_template, target: @instance)
       assert_no_difference 'WaiverAgreementTemplate.count' do
         post :create, waiver_agreement_template: { content: 'This is content', name: 'My Name' }
       end

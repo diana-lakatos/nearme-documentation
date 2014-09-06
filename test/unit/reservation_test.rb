@@ -651,5 +651,55 @@ class ReservationTest < ActiveSupport::TestCase
 
   end
 
+  context 'waiver agreement' do
+
+    setup do
+      @reservation = FactoryGirl.build(:reservation)
+    end
+
+    should 'copy instance waiver agreement template details if available' do
+      @waiver_agreement_template_instance = FactoryGirl.create(:waiver_agreement_template)
+      assert_difference 'WaiverAgreement.count' do
+        @reservation.save!
+      end
+      waiver_agreement = @reservation.waiver_agreements.first
+      assert_equal @waiver_agreement_template_instance.content, waiver_agreement.content
+      assert_equal @waiver_agreement_template_instance.name, waiver_agreement.name
+      assert_equal @reservation.host.name, waiver_agreement.vendor_name
+      assert_equal @reservation.owner.name, waiver_agreement.guest_name
+    end
+
+    should 'copy instance waiver agreement template details if available, ignoring not assigned company template' do
+      @waiver_agreement_template_instance = FactoryGirl.create(:waiver_agreement_template)
+      @waiver_agreement_template_company = FactoryGirl.create(:waiver_agreement_template, target: @reservation.company)
+      assert_difference 'WaiverAgreement.count' do
+        @reservation.save!
+      end
+      assert_equal @waiver_agreement_template_instance.name, @reservation.waiver_agreements.first.name
+    end
+
+    should 'copy location waiver agreement template details if available, ignoring instance' do
+      @waiver_agreement_template_instance = FactoryGirl.create(:waiver_agreement_template)
+      @waiver_agreement_template_company = FactoryGirl.create(:waiver_agreement_template, target: @reservation.company)
+      @reservation.location.waiver_agreement_templates << @waiver_agreement_template_company
+      assert_difference 'WaiverAgreement.count' do
+        @reservation.save!
+      end
+      assert_equal @waiver_agreement_template_company.name, @reservation.waiver_agreements.first.name
+    end
+
+    should 'copy listings waiver agreement templates details, ignoring location' do
+      @waiver_agreement_template_instance = FactoryGirl.create(:waiver_agreement_template)
+      @waiver_agreement_template_company = FactoryGirl.create(:waiver_agreement_template, target: @reservation.company)
+      @waiver_agreement_template_company2 = FactoryGirl.create(:waiver_agreement_template, target: @reservation.company)
+      @reservation.listing.waiver_agreement_templates << @waiver_agreement_template_company
+      @reservation.listing.waiver_agreement_templates << @waiver_agreement_template_company2
+      assert_difference 'WaiverAgreement.count', 2 do
+        @reservation.save!
+      end
+      assert_equal [@waiver_agreement_template_company.name, @waiver_agreement_template_company2.name], @reservation.waiver_agreements.pluck(:name)
+    end
+
+  end
 end
 
