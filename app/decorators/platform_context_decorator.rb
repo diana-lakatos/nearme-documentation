@@ -5,9 +5,11 @@ class PlatformContextDecorator
 
   delegate :tagline, :support_url, :blog_url, :twitter_url, :twitter_handle, :facebook_url, :gplus_url, :address,
     :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :meta_title, :pages, :logo_image,
-    :favicon_image, :homepage_content, :call_to_action, :to => :theme
+    :favicon_image, :homepage_content, :call_to_action, :is_company_theme?, :to => :theme
 
   delegate :bookable_noun, :lessor, :lessee, :name, :is_desksnearme?, :to => :instance
+
+  liquid_methods :lessors
 
   def initialize(platform_context)
     @platform_context = platform_context
@@ -53,6 +55,10 @@ class PlatformContextDecorator
 
   def search_field_placeholder
     instance.searcher_type == 'fulltext' ? "Search by keyword" : "Search by city or address"
+  end
+
+  def searcher_type
+    instance.searcher_type
   end
 
   def footer_cache_key
