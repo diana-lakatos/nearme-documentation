@@ -161,6 +161,7 @@ DesksnearMe::Application.routes.draw do
       end
       resources :pages
       resource :homepage, only: [:show, :update], controller: 'homepage'
+      resource :homepage_template, only: [:show, :create, :update], controller: 'homepage_template'
     end
 
     namespace :manage do

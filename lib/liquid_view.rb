@@ -2,13 +2,13 @@
 # and use liquid as an template system for .liquid files
 #
 # Example
-# 
+#
 #   ActionView::Base::register_template_handler :liquid, LiquidView
 class LiquidView
   PROTECTED_ASSIGNS = %w( template_root response _session template_class action_name request_origin session template
                           _response url _request _cookies variables_added _flash params _headers request cookies
                           ignore_missing_templates flash _params logger before_filter_chain_aborted headers )
-  PROTECTED_INSTANCE_VARIABLES = %w( @_request @controller @_first_render @_memoized__pick_template @view_paths 
+  PROTECTED_INSTANCE_VARIABLES = %w( @_request @controller @_first_render @_memoized__pick_template @view_paths
                                      @helpers @assigns_added @template @_render_stack @template_format @assigns )
 
   def self.call(template)
@@ -23,6 +23,8 @@ class LiquidView
     @view.controller.headers["Content-Type"] ||= 'text/html; charset=utf-8'
 
     assigns = @view.assigns.reject{ |k,v| PROTECTED_ASSIGNS.include?(k) }
+
+    assigns['platform_context'] = PlatformContext.current.decorate
 
     if content_for_layout = @view.instance_variable_get("@content_for_layout")
       assigns['content_for_layout'] = content_for_layout
