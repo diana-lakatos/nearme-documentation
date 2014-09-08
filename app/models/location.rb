@@ -79,6 +79,10 @@ class Location < ActiveRecord::Base
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
   accepts_nested_attributes_for :listings, :location_address
 
+  def name_and_description_required
+    TransactableType.first.try(:name) == "Listing"
+  end
+
   def assign_default_availability_rules
     if availability_rules.reject(&:marked_for_destruction?).empty?
       AvailabilityRule.default_template.apply(self)

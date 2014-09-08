@@ -15,7 +15,7 @@ FactoryGirl.define do
 
     after(:build) do |listing, evaluator|
       {
-        "listing_type" => "Shared Desks",
+        "listing_type" => "Desk",
         "quantity" => "1",
         "confirm_reservations" => true,
         "daily_price_cents" => "5000",

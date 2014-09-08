@@ -36,8 +36,6 @@ class TransactableTypeAttributeDecorator < Draper::Decorator
 
   def default_options
     @default_options ||= {
-      label: label,
-      hint: hint.presence,
       input_html: input_html_options,
       required: required?
     }

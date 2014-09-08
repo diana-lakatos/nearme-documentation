@@ -4,13 +4,13 @@
 = f.hidden_field :transactable_type_id, value: @transactable_type.id
 - if only_inputs.empty? || only_inputs.include?(:enabled)
   .control-group
-    = f.label :enabled, 'Enabled?', :class => 'control-label'
+    = f.label :enabled, t('simple_form.switch.enabled'), :class => 'control-label'
     .controls
       .switch{'data-on-label' => "", 'data-off-label' => "", 'data-ajax-updateable' => f.object.persisted?}
         = f.check_box :enabled, disabled: !f.object.is_trusted?
 
 = f.input :id, :as => :hidden if only_inputs.empty? || only_inputs.include?(:id)
-- listing.transactable_type_attributes.each do |attribute|
+- @transactable_type.transactable_type_attributes.each do |attribute|
   - next if platform_context.instance.user_based_marketplace_views? && ( attribute.name == 'quantity' || attribute.name == 'capacity' )
   = draw_attribute_for_form(attribute, f) if only_inputs.empty? || only_inputs.include?(attribute.name.to_sym)
 

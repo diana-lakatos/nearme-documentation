@@ -3,9 +3,6 @@ class SpaceWizardController < ApplicationController
   before_filter :redirect_to_dashboard_if_user_has_listings, :only => [:new, :list]
   before_filter :find_transactable_type
   before_filter :find_user, :except => [:new]
-  before_filter :find_company, :except => [:new, :submit_listing]
-  before_filter :find_location, :except => [:new, :submit_listing]
-  before_filter :find_listing, :except => [:new, :submit_listing]
   before_filter :find_user_country, :only => [:list, :submit_listing]
   before_filter :sanitize_price_parameters, :only => [:submit_listing]
 
@@ -20,10 +17,7 @@ class SpaceWizardController < ApplicationController
   end
 
   def list
-    @company ||= @user.companies.build
-    @location ||= @company.locations.build
-    @location.name_and_description_required = true if TransactableType.first.name == "Listing"
-    @listing ||= @location.listings.build({:transactable_type_id => @transactable_type.id})
+    @company ||= @user.companies.build.locations.build.listings.build({:transactable_type_id => @transactable_type.id})
     @photos = @user.first_listing ? @user.first_listing.photos : nil
     @user.phone_required = true
     event_tracker.viewed_list_your_bookable
@@ -52,7 +46,6 @@ class SpaceWizardController < ApplicationController
       flash[:success] = t('flash_messages.space_wizard.space_listed', bookable_noun: platform_context.decorate.bookable_noun)
       redirect_to manage_locations_path
     else
-      @listing = @user.first_listing
       @photos = @user.first_listing ? @user.first_listing.photos : nil
       flash.now[:error] = t('flash_messages.space_wizard.complete_fields')
       render :list
@@ -148,7 +141,7 @@ class SpaceWizardController < ApplicationController
   end
 
   def find_transactable_type
-    @transactable_type = TransactableType.first
+    @transactable_type = TransactableType.includes(:transactable_type_attributes).first
   end
 
   def wizard_params

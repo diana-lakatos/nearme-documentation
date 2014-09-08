@@ -1,0 +1,72 @@
+en:
+  activerecord:
+    attributes:
+      listing_type:
+        name: "Listing type"
+      location_type:
+        name: "Location type"
+  connections:
+    facebook:
+      count:
+        one: "1 friend"
+        other: "%{count} friends"
+    linkedin:
+      count:
+        one: "1 connection"
+        other: "%{count} connections"
+    twitter:
+      count:
+        one: "1 follower"
+        other: "%{count} followers"
+  day:
+    one: "1 day"
+    other: "%{count} days"
+  desk:
+    reservation_rejected_body: "%{user} declined reservation with reason: %{reason}"
+    reservation_rejected_title: "[internal] User has declined reservation"
+  manage:
+    companies:
+      theme_image_deleted: "That image has been deleted."
+      theme_image_not_deleted: "We couldn't delete that image."
+    listings:
+      photos:
+        waiting_for_photo_processing: "Waiting for photo processing to finish"
+  registrations:
+    sms_preferences:
+      new_reservation: 'I receive a reservation request.'
+      reservation_state_changed: 'A reservation I have requested is accepted or declined.'
+      user_message: 'I receive a message from another person.'
+    social_accounts:
+      connecting_social_accounts_info: "Connecting your social accounts will display the number of friends, connections, and followers that you have on your profile.<br />You will also be able to see your friends' and connections' activity on %{marketplace_name}."
+      no_social_providers: "Unfortunately %{marketplace_name} does not support any social providers at the moment."
+    accept_terms_of_service: 'confirm that you accept the <a href="/pages/legal" target="_blank">Terms of Service and Privacy Policy</a>'
+  reservations:
+    charge_after_confirmation: "Your card will not be charged until the booking is confirmed."
+    manually_confirm: "This %{lessor} manually confirms all bookings. "
+    cancellation_time: "You have up to %{time} hours before the booking takes place to cancel."
+    no_cancellation_time: "You can cancel before the first day."
+    cancellation_fee: "The penalty fee for cancelling is %{fee}%. Service fee is not refunded."
+    no_cancellation_fee: "You will get full refund except of service fee."
+    no_bookings_html: "You don't have any %{type} bookings. <a href='/search'>Find a %{bookable_noun} near you!</a>"
+    payment_in_person: "You will make payment in person."
+  search:
+    list:
+      additional_social_connections:
+        one: 'Plus one more connection'
+        other: 'Plus %{count} more connections'
+      address_could_not_be_found: "The address you entered couldn't be found, please try another search query."
+  search_notifications:
+    form:
+      subscribe: "Subscribe to be notified of new listings in this area."
+  time:
+    formats:
+      day_and_month: "%^b %-d"
+      only_date: "%B %d, %-Y"
+  user_messages:
+    inbox:
+      one: "Inbox (1)"
+      other: "Inbox (%{count})"
+      zero: Inbox
+  validation_messages:
+    price_too_high: '%{price} is too high'
+    price_too_low: '%{price} is too low'

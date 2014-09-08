@@ -31,6 +31,7 @@ ActiveSupport::TestCase.class_eval do
   def setup_platform_context
     FactoryGirl.create(:default_instance)
     PlatformContext.current = PlatformContext.new
+    TransactableTypeAttribute::TranslationCreator.any_instance.stubs(:should_create_translations?).returns(false).at_least(0)
   end
 
   def with_versioning
