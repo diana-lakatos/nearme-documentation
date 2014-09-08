@@ -18,6 +18,9 @@ class SpaceWizardController < ApplicationController
 
   def list
     @company ||= @user.companies.build.locations.build.listings.build({:transactable_type_id => @transactable_type.id})
+    build_objects
+    build_approval_requests
+
     @photos = @user.first_listing ? @user.first_listing.photos : nil
     @user.phone_required = true
     event_tracker.viewed_list_your_bookable
@@ -29,10 +32,12 @@ class SpaceWizardController < ApplicationController
     params[:user][:companies_attributes]["0"][:name] = current_user.name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     @user.assign_attributes(wizard_params)
-    @user.confidential_files.first.try(:'uploader_id=', current_user.id)
     @user.companies.first.try(:locations).try(:first).try {|l| l.name_and_description_required = true} if TransactableType.first.name == "Listing"
     @user.companies.first.creator_id = current_user.id
+    build_objects
+    build_approval_requests
     if params[:save_as_draft]
+      remove_approval_requests
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
       @user.save(:validate => false)
       track_saved_draft_event
@@ -88,7 +93,15 @@ class SpaceWizardController < ApplicationController
   end
 
   def redirect_to_dashboard_if_user_has_listings
-    redirect_to manage_locations_path if current_user && current_user.listings.count > 0 && !current_user.has_draft_listings
+    if current_user && current_user.companies.count > 0 && !current_user.has_draft_listings
+      if current_user.locations.count.zero?
+        redirect_to new_manage_location_path
+      elsif current_user.locations.count == 1 && current_user.listings.count.zero?
+        redirect_to new_manage_location_listing_path(current_user.locations.first)
+      else
+        redirect_to manage_locations_path
+      end
+    end
   end
 
   def track_saved_draft_event
@@ -115,6 +128,7 @@ class SpaceWizardController < ApplicationController
   def set_listing_draft_timestamp(timestamp)
     begin
       params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:draft] = timestamp
+      params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:enabled] = true
     rescue
       nil
     end
@@ -122,12 +136,12 @@ class SpaceWizardController < ApplicationController
 
   def find_user_country
     @country = if params[:user] && params[:user][:country_name]
-      params[:user][:country_name]
-    elsif @user.country_name.present?
-      @user.country_name
-    else
-      request.location.country rescue nil
-    end
+                 params[:user][:country_name]
+               elsif @user.country_name.present?
+                 @user.country_name
+               else
+                 request.location.country rescue nil
+               end
   end
 
   def sanitize_price_parameters
@@ -148,4 +162,25 @@ class SpaceWizardController < ApplicationController
     params.require(:user).permit(secured_params.user)
   end
 
+  def build_objects
+    @user.companies.build if @user.companies.first.nil?
+    @user.companies.first.locations.build if @user.companies.first.locations.first.nil?
+    @user.companies.first.locations.first.listings.build({:transactable_type_id => @transactable_type.id}) if @user.companies.first.locations.first.listings.first.nil?
+  end
+
+  def build_approval_requests
+    build_approval_request_for_object(@user)
+    build_approval_request_for_object(@user.companies.first)
+    build_approval_request_for_object(@user.companies.first.locations.first)
+    build_approval_request_for_object(@user.companies.first.locations.first.listings.first)
+  end
+
+  def remove_approval_requests
+    @user.approval_requests = []
+    @user.companies.first.approval_requests = []
+    @user.companies.first.locations.first.approval_requests = []
+    @user.companies.first.locations.first.listings.first.approval_requests = []
+  end
+
 end
+

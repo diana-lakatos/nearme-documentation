@@ -177,7 +177,10 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
-      resources :confidential_files, only: [:index, :edit, :update]
+      resources :approval_requests, only: [:index, :edit, :update]
+      resources :approval_request_templates do
+        resources :approval_request_attachment_templates, controller: 'approval_request_templates/approval_request_attachment_templates'
+      end
 
       resources :transactable_types, :only => [:index, :edit, :update, :show] do
         resources :transactable_type_attributes, controller: 'transactable_types/transactable_type_attributes'

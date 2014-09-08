@@ -1,0 +1,40 @@
+.white-box
+  %legend
+    VENDOR APPROVAL
+    %span.pull-right
+      = link_to 'Settings', instance_admin_manage_approval_request_templates_path
+
+  .vendor-approval-filters
+    .row-fluid
+      - %w(pending rejected questioned approved).each do |state|
+        .span2
+          = link_to "#{state.capitalize} (#{ApprovalRequest.send(state).count})", instance_admin_manage_approval_requests_path(:show => state), class: " #{'active' if state == params[:show]}"
+
+.vendor-approval-table
+  .row-fluid.vendor-approval-header
+    .span3
+      Object Name
+    .span2
+      Object Type
+    .span3
+      Notes
+    .span2
+      Created At
+    .span1
+
+  .vendor-approval-data
+    - @approval_requests.each do |resource|
+      .row-fluid
+        .span3
+          = resource.owner.name.try(:truncate, 25)
+        .span2
+          = resource.owner.class.name
+        .span3
+          = resource.notes.try(:truncate, 25)
+        .span2
+          =l resource.created_at, format: :short
+        .span1.text-right
+          = link_to 'manage', edit_instance_admin_manage_approval_request_path(resource)
+
+  = will_paginate @approval_requests
+

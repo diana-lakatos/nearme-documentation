@@ -11,10 +11,12 @@ class Manage::ListingsController < Manage::BaseController
   def new
     @listing = @location.listings.build(:transactable_type => @transactable_type)
     @listing.availability_template_id = AvailabilityRule.default_template.id
+    build_approval_request_for_object(@listing) unless @listing.is_trusted?
   end
 
   def create
     @listing = @location.listings.build(listing_params)
+    build_approval_request_for_object(@listing) unless @listing.is_trusted?
     if @listing.save
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: platform_context.decorate.bookable_noun)
       event_tracker.created_a_listing(@listing, { via: 'dashboard' })
@@ -32,13 +34,16 @@ class Manage::ListingsController < Manage::BaseController
 
   def edit
     @photos = @listing.photos
+    build_approval_request_for_object(@listing) unless @listing.is_trusted?
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 
   def update
+    @listing.assign_attributes(listing_params)
+    build_approval_request_for_object(@listing) unless @listing.is_trusted?
     respond_to do |format|
       format.html {
-        if @listing.update_attributes(listing_params)
+        if @listing.save
           flash[:success] = t('flash_messages.manage.listings.listing_updated')
           redirect_to manage_locations_path
         else
@@ -47,7 +52,7 @@ class Manage::ListingsController < Manage::BaseController
         end
       }
       format.json {
-        if @listing.update_attributes(listing_params)
+        if @listing.save
           render :json => { :success => true }
         else
           render :json => { :errors => @listing.errors.full_messages }, :status => 422

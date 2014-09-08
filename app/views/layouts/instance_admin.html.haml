@@ -14,7 +14,7 @@
       = javascript_include_tag '//html5shim.googlecode.com/svn/trunk/html5.js'
 
   %body{class: !user_signed_in? ? 'login' : ''}
-    .container
+    .container{class: section_class(@section_name)}
       - if user_signed_in?
         = render 'instance_admin/layout/header'
         = render 'instance_admin/shared/render_flash'

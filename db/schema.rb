@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140909085001) do
+ActiveRecord::Schema.define(version: 20140916214505) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,8 +90,63 @@ ActiveRecord::Schema.define(version: 20140909085001) do
     t.datetime "updated_at"
   end
 
+  create_table "approval_request_attachment_templates", force: true do |t|
+    t.integer  "instance_id"
+    t.integer  "approval_request_template_id"
+    t.boolean  "required",                     default: false
+    t.string   "label"
+    t.text     "hint"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   add_index "assigned_waiver_agreement_templates", ["target_id", "target_type"], name: "awat_target_id_and_target_type", using: :btree
   add_index "assigned_waiver_agreement_templates", ["waiver_agreement_template_id"], name: "awat_wat_id", using: :btree
+
+  create_table "approval_request_attachments", force: true do |t|
+    t.string   "caption"
+    t.integer  "instance_id"
+    t.integer  "uploader_id"
+    t.string   "file"
+    t.text     "comment"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "approval_request_id"
+    t.integer  "approval_request_attachment_template_id"
+    t.boolean  "required",                                default: false
+    t.string   "label"
+    t.text     "hint"
+  end
+
+  add_index "approval_request_attachments", ["instance_id"], name: "index_approval_request_attachments_on_instance_id", using: :btree
+  add_index "approval_request_attachments", ["uploader_id"], name: "index_approval_request_attachments_on_uploader_id", using: :btree
+
+  create_table "approval_request_templates", force: true do |t|
+    t.integer  "instance_id"
+    t.string   "owner_type"
+    t.boolean  "required_written_verification", default: false
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "approval_requests", force: true do |t|
+    t.string   "state"
+    t.string   "message"
+    t.string   "notes"
+    t.integer  "instance_id"
+    t.integer  "approval_request_template_id"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.boolean  "required_written_verification"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "approval_requests", ["owner_id", "owner_type"], name: "index_approval_requests_on_owner_id_and_owner_type", using: :btree
 
   create_table "authentications", force: true do |t|
     t.integer  "user_id"
@@ -257,24 +312,6 @@ ActiveRecord::Schema.define(version: 20140909085001) do
 
   add_index "company_users", ["company_id"], name: "index_company_users_on_company_id", using: :btree
   add_index "company_users", ["user_id"], name: "index_company_users_on_user_id", using: :btree
-
-  create_table "confidential_files", force: true do |t|
-    t.string   "caption"
-    t.integer  "instance_id"
-    t.integer  "uploader_id"
-    t.integer  "owner_id"
-    t.string   "owner_type"
-    t.string   "file"
-    t.text     "comment"
-    t.string   "state"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "confidential_files", ["instance_id"], name: "index_confidential_files_on_instance_id", using: :btree
-  add_index "confidential_files", ["owner_id", "owner_type"], name: "index_confidential_files_on_owner_id_and_owner_type", using: :btree
-  add_index "confidential_files", ["uploader_id"], name: "index_confidential_files_on_uploader_id", using: :btree
 
   create_table "country_instance_payment_gateways", force: true do |t|
     t.string   "country_alpha2_code"
@@ -610,11 +647,10 @@ ActiveRecord::Schema.define(version: 20140909085001) do
     t.boolean  "user_based_marketplace_views",                                default: false
     t.string   "searcher_type"
     t.datetime "master_lock"
-    t.text     "user_required_fields"
     t.boolean  "apply_text_filters",                                          default: false
+    t.text     "user_required_fields"
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
-    t.boolean  "onboarding_verification_required",                            default: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -972,11 +1008,11 @@ ActiveRecord::Schema.define(version: 20140909085001) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.boolean  "listings_public",                            default: true
-    t.integer  "recurring_booking_id"
     t.datetime "confirmed_at"
     t.datetime "cancelled_at"
     t.integer  "cancellation_policy_hours_for_cancellation", default: 0
     t.integer  "cancellation_policy_penalty_percentage",     default: 0
+    t.integer  "recurring_booking_id"
     t.integer  "credit_card_id"
   end
 
@@ -1016,13 +1052,6 @@ ActiveRecord::Schema.define(version: 20140909085001) do
     t.string   "company"
     t.integer  "state_id"
     t.integer  "country_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "search_queries", force: true do |t|
-    t.string   "query"
-    t.text     "agent"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -2030,12 +2059,9 @@ ActiveRecord::Schema.define(version: 20140909085001) do
     t.text     "message",     null: false
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
-    t.integer  "target_id"
-    t.string   "target_type"
   end
 
   add_index "support_ticket_messages", ["instance_id"], name: "index_support_ticket_messages_on_instance_id", using: :btree
-  add_index "support_ticket_messages", ["target_id", "target_type"], name: "index_support_ticket_messages_on_target_id_and_target_type", using: :btree
   add_index "support_ticket_messages", ["ticket_id"], name: "index_support_ticket_messages_on_ticket_id", using: :btree
   add_index "support_ticket_messages", ["user_id"], name: "index_support_ticket_messages_on_user_id", using: :btree
 
@@ -2199,12 +2225,12 @@ ActiveRecord::Schema.define(version: 20140909085001) do
     t.text     "pricing_options"
     t.text     "pricing_validation"
     t.text     "availability_options"
-    t.boolean  "recurring_booking",                          default: false, null: false
     t.boolean  "favourable_pricing_rate",                    default: true
     t.integer  "days_for_monthly_rate",                      default: 0
     t.datetime "cancellation_policy_enabled"
     t.integer  "cancellation_policy_hours_for_cancellation", default: 0
     t.integer  "cancellation_policy_penalty_percentage",     default: 0
+    t.boolean  "recurring_booking",                          default: false, null: false
     t.boolean  "show_page_enabled",                          default: false
   end
 

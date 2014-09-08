@@ -42,8 +42,7 @@ class User < ActiveRecord::Base
   has_many :tickets, -> { order 'updated_at DESC' }, :class_name => 'Support::Ticket'
   has_many :assigned_tickets, -> { order 'updated_at DESC' }, foreign_key: 'assigned_to_id', :class_name => 'Support::Ticket'
   has_many :assigned_transactable_tickets, -> { where(target_type: 'Transactable').order('updated_at DESC') }, foreign_key: 'assigned_to_id', :class_name => 'Support::Ticket'
-  has_many :uploaded_confidential_files, foreign_key: 'uploader_id', dependent: :destroy, class_name: 'ConfidentialFile'
-  has_many :confidential_files, as: :owner
+  has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :user_bans
   belongs_to :partner
   belongs_to :instance
@@ -60,7 +59,7 @@ class User < ActiveRecord::Base
   store :required_fields
 
   accepts_nested_attributes_for :companies
-  accepts_nested_attributes_for :confidential_files
+  accepts_nested_attributes_for :approval_requests
 
   scope :patron_of, lambda { |listing|
     joins(:reservations).where(:reservations => { :transactable_id => listing.id }).uniq
@@ -445,8 +444,16 @@ class User < ActiveRecord::Base
     listings.uniq
   end
 
+  def can_manage_location?(location)
+    location.company && location.company.company_users.where(user_id: self.id).any?
+  end
+
   def can_manage_listing?(listing)
     listing.company && listing.company.company_users.where(user_id: self.id).any?
+  end
+
+  def instance_admin?
+    @is_instance_admin ||= InstanceAdminAuthorizer.new(self).instance_admin?
   end
 
   def administered_locations_pageviews_30_day_total
@@ -523,16 +530,20 @@ class User < ActiveRecord::Base
       order('created_at asc').last.try(:profile_url)
   end
 
+  def approval_request_templates
+    @approval_request_templates ||= PlatformContext.current.instance.approval_request_templates.for("User")
+  end
+
   def is_trusted?
-    PlatformContext.current.instance.onboarding_verification_required ? (self.confidential_files.accepted.count > 0) : true
+    approval_request_templates.any? ? (self.approval_requests.approved.count > 0) : true
   end
 
-  def confidential_file_acceptance_cancelled!
-    listings.find_each(&:confidential_file_acceptance_cancelled!)
+  def approval_request_acceptance_cancelled!
+    listings.find_each(&:approval_request_acceptance_cancelled!)
   end
 
-  def confidential_file_accepted!
-    listings.find_each(&:confidential_file_accepted!)
+  def approval_request_approved!
+    listings.find_each(&:approval_request_approved!)
   end
 
   def active_for_authentication?

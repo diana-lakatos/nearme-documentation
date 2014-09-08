@@ -1,0 +1,38 @@
+.white-box
+  %legend
+    #{link_to 'VENDOR APPROVAL', instance_admin_manage_approval_requests_path}  &gt; MANAGE
+
+.vendor-approval-table
+  - if @approval_request.message.present?
+    %h3 Written Verfication
+    %div= @approval_request.message
+  - if @approval_request.approval_request_attachments.any?
+    %h3 Attachments
+    .row-fluid.vendor-approval-header
+      .span1 #
+      .span4 Label
+      .span4 File
+      .span3 Uploaded by
+    - @approval_request.approval_request_attachments.each_with_index do |ara, index|
+      .row-fluid.vendor-approval-data
+        .span1= index + 1
+        .span3= ara.label
+        .span4= link_to ara.read_attribute(:file), ara.file.url, target: :blank
+        .span3= link_to ara.uploader.try(:name), user_path(ara.uploader)
+    %h3= TransactableType.first.name.humanize.pluralize
+    .row-fluid.vendor-approval-header
+      .span1 #
+      .span11 Name
+    - if Transactable === @approval_request.owner
+      = render partial: 'listing_link', locals: { listing: @approval_request.owner, index: 0 }
+    -else
+      - @approval_request.owner.listings.each_with_index do |listing, index|
+        = render partial: 'listing_link', locals: { listing: listing, index: index }
+.vendor-approval-table
+  = simple_form_for [:instance_admin, :manage, @approval_request] do |f|
+
+    %fieldset
+      = f.input :notes
+      = f.collection_select :state_event, @approval_request.state_transitions, :event, :human_to_name, :include_blank => @approval_request.human_state_name
+      = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
+

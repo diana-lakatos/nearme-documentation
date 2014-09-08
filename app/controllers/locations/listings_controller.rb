@@ -30,17 +30,17 @@ class Locations::ListingsController < ApplicationController
     if @listing.deleted? || @listing.draft?
       flash[:warning] = t('flash_messages.listings.listing_inactive', address: @listing.address)
       redirect_to location_path(@listing.location)
-    elsif @listing.disabled? && current_user_cannot_manage_listing?
-      flash[:warning] = t('flash_messages.listings.listing_disabled')
-      redirect_to location_path(@listing.location)
+    elsif @listing.disabled?
+      if current_user_can_manage_listing?
+        flash.now[:warning] = t('flash_messages.listings.listing_disabled_but_admin')
+      else
+        flash[:warning] = t('flash_messages.listings.listing_disabled')
+        redirect_to location_path(@listing.location)
+      end
     end
   end
 
-  def current_user_cannot_manage_listing?
-    !current_user_can_manage_listing?
-  end
-
   def current_user_can_manage_listing?
-    user_signed_in? && current_user.can_manage_listing?(@listing)
+    user_signed_in? && (current_user.can_manage_listing?(@listing) || current_user.instance_admin?)
   end
 end
