@@ -2,6 +2,8 @@
   %legend Homepage
   .row-fluid
     .controls.controls-row
-      = f.input :homepage_css, label: 'Homepage CSS', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level', rows: "30" }
-      = f.input :homepage_content, label: 'Homepage HTML', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level', rows: "30" }
+      = f.input :homepage_content, label: 'Homepage HTML', wrapper_html: { class: 'span12' }, input_html: { class: 'input-block-level', :"data-editor" => 'liquid', rows: "30" }
+  .row-fluid
+    .controls.controls-row
+      = f.input :homepage_css, label: 'Homepage CSS', wrapper_html: { class: 'span12' }, input_html: { class: 'input-block-level', :"data-editor" => 'liquid', rows: "30" }
   = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
