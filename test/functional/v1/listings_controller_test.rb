@@ -20,7 +20,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
         location_id: location.id,
         name: 'My listing',
         description: 'nice listing',
-        listing_type: "Shared Desks",
+        listing_type: "Desk",
         hourly_reservations: true,
         hourly_price_cents: 1000,
         quantity: 10

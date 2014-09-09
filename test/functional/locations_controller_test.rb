@@ -15,7 +15,6 @@ class LocationsControllerTest < ActionController::TestCase
       assert_difference 'Impression.count' do
         get :show, id: @location.id
       end
-      assert_equal Instance.default_instance.id, Impression.last.instance_id
     end
 
     context 'without listing' do
@@ -43,9 +42,16 @@ class LocationsControllerTest < ActionController::TestCase
         get :show, id: @location.id, listing_id: @listing
       end
 
-      should 'render show action' do
+      should 'render show action if show page disabled' do
         get :show, id: @location.id, listing_id: @listing
         assert_response :success
+      end
+
+      should 'redirect to individual listing page if enabled' do
+        @listing.transactable_type.update_attribute(:show_page_enabled, true)
+        get :show, id: @location.id, listing_id: @listing
+        assert_response :redirect
+        assert_redirected_to location_listing_path(@location, @listing)
       end
 
       should 'show warning if listing is inactive but there is at least one active listing' do

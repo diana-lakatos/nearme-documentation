@@ -180,3 +180,7 @@ group :test do
 end
 
 gem 'mailman'
+
+gem 'nearme', path: 'vendor/gems/nearme'
+
+gem 'figaro'

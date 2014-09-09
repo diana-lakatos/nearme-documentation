@@ -10,9 +10,9 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
     @public_location = FactoryGirl.create(:location, :location_type => @public_location_type, location_address: FactoryGirl.build(:address, latitude: 5, longitude: 5 ))
     @private_location = FactoryGirl.create(:location, :location_type => @private_location_type, location_address: FactoryGirl.build(:address, latitude: 10, longitude: 10 ))
 
-    @public_listing_type = 'Shared Desks'
+    @public_listing_type = 'Desk'
     @private_listing_type = 'Meeting Room'
-    @office_listing_type = 'Private Office'
+    @office_listing_type = 'Office Space'
 
     @public_listing = FactoryGirl.create(:transactable, :listing_type => @public_listing_type, :location => @public_location)
     @public_office_listing = FactoryGirl.create(:transactable, :listing_type => @office_listing_type, :location => @public_location)

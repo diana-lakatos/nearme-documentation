@@ -1,0 +1,122 @@
+en:
+  form:
+    or: 'or'
+    characters_left:
+      few: "%{count} characters left"
+      one: "1 character left"
+      zero: "0 characters left"
+  simple_form:
+    "yes": 'Yes'
+    "no": 'No'
+    switch:
+      enabled: 'Enabled?'
+
+    companies:
+      current_bank_account: "Current Bank Account: xxxxxx%{last_four_digits}."
+    error_notification:
+      default_message: "Some errors were found, please take a look:"
+    labels:
+      availability_template:
+        custom: 'Custom'
+        use_parent_availability: 'Use Location availability'
+        full_name:
+          working_week: 'Working Week (Mon - Fri, 9:00 AM - 5:00 PM)'
+      availability_rule:
+        open: 'Open'
+
+      theme:
+        favicon_image: 'Favicon (16 x 16px or 32 x 32px)'
+        hero_image: 'Hero image'
+        icon_image: 'Icon (60 x 60px)'
+        icon_retina_image: 'Icon Retina (120 x 120px)'
+        logo_image: 'Logo (240 x 60px)'
+        logo_retina_image: 'Logo Retina (480 x 120px)'
+      listings:
+        price: 'Price'
+        photos: 'Photos'
+        upload_photos: 'Browse'
+      listing:
+        price: 'Price'
+        photos: 'Photos'
+        upload_photos: 'Browse'
+      locations:
+        name: 'Location name'
+        description: 'Location description'
+        location_type: 'Location type'
+        currency: 'Currency'
+      location:
+        name: 'Location name'
+        description: 'Location description'
+        location_type: 'Location type'
+        email: 'Booking email'
+        administrator: 'Administrator'
+        special_notes: '%{lessee} instructions'
+        currency: 'Currency'
+      companies:
+        name: 'Company name'
+        industries: 'Industries'
+        description: 'Description'
+        mailing_address: 'Mailing address'
+        url: 'Website'
+        email: 'Company email'
+        paypal_email: 'PayPal email'
+        bank_owner_name: "Account's Owner Name"
+        bank_routing_number: 'Routing Number'
+        bank_account_number: 'Account Number'
+      company:
+        name: 'Company name'
+        industries: 'Industries'
+        description: 'Description'
+        mailing_address: 'Mailing address'
+        url: 'Website'
+        email: 'Company email'
+        paypal_email: 'PayPal email'
+        bank_owner_name: "Account's Owner Name"
+        bank_routing_number: 'Routing Number'
+        bank_account_number: 'Account Number'
+      transactable:
+        price_daily: 'Daily'
+        price_weekly: 'Weekly'
+        price_monthly: 'Monthly'
+        price_hourly: 'Hourly'
+        price_free: 'Free'
+        price:
+          daily: 'day'
+          weekly: 'week'
+          monthly: 'month'
+          hourly: 'hour'
+      user:
+        biography: 'About me'
+        sms_notifications_enabled: 'Enable Text Message Notifications'
+    placeholders:
+      companies:
+        name: 'Enter your business name'
+        url: 'www.mycompany.com'
+        email: 'yourname@example.com'
+        description: 'Give a brief description of your company'
+      company:
+        name: 'Enter your business name'
+        url: 'www.mycompany.com'
+        email: 'yourname@example.com'
+        description: 'Give a brief description of your company'
+      location:
+        email: 'Your booking email'
+        special_notes: "For example, how your %{lessees} should check in, your Wi-Fi password, whether you have pets, or other special information relevant to your %{lessee}'s stay"
+
+    prompts:
+      companies:
+        industries: 'Select one or more'
+      company:
+        industries: 'Select one or more'
+      location:
+        administrator: 'Default'
+    hints:
+      location:
+        name: 'A unique title that describes the location of the %{bookable_noun}.'
+      company:
+        mailing_address: 'Checks for revenue accrued by your %{bookable_noun} will be sent to this address. Find out more about payments in the Support Center.'
+        paypal_email: 'If you specify a PayPal email, we will make a PayPal transfer instead of sending checks.'
+
+    required:
+      mark: '*'
+      text: 'required'

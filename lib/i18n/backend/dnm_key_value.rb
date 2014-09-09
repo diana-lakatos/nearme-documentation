@@ -41,7 +41,7 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
 
   def update_store(_instance_key)
     @store[_instance_key] = @cache.fetch "locales.#{_instance_key}" do
-      # setting timestamp to nil here is to protect from case when cache_updated_at is set, 
+      # setting timestamp to nil here is to protect from case when cache_updated_at is set,
       # but there is no actual data. In that case, we want to populate all transactions
       touch_cache_timestamp_for(_instance_key, nil)
       populate(instance_id)
@@ -58,7 +58,7 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
       cache_changed = true
       store_translation(translation)
     end
-    if cache_changed 
+    if cache_changed
       @cache.write "locales.#{_instance_key}", @store[_instance_key]  if get_cache_timestamp_for(_instance_key)
       touch_cache_timestamp_for(_instance_key, write_cached_at_for(_instance_key))
     end
@@ -112,7 +112,7 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
     value.is_a?(Hash) ? value.deep_symbolize_keys : value
   end
 
-  # transforms key in format "a.b.c.d" and value "x" to hash 
+  # transforms key in format "a.b.c.d" and value "x" to hash
   # { :a => { :b => { :c => { :d => "x" } } } }
   def convert_dot_to_hash(string, value = nil, hash = {})
     arr = string.split(".")

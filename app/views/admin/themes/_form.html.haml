@@ -70,6 +70,7 @@
             = tf_f.file_field "#{font_type}_#{file_extension}"
             - if tf_f.object.persisted? && tf_f.object.send("#{font_type}_#{file_extension}")
               = File.basename(tf_f.object.send("#{font_type}_#{file_extension}_url"))
+              = f.hidden_field "#{font_type}_#{file_extension}_cache"
 
   %p
     = f.button :submit, 'Save', class: 'btn btn-success'

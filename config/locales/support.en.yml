@@ -1,6 +1,10 @@
 en:
   support:
     filter_name:
+      all: 'All'
       open: 'Open'
       resolved: 'Resolved'
-      all: 'All'
+    ticket:
+      open_text:
+        open: 'View and resolve'
+        resolved: 'View'

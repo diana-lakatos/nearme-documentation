@@ -20,6 +20,7 @@ DesksnearMe::Application.routes.draw do
     get '/features-support', :to => 'platform_home#features_support'
     get '/',  :to => 'platform_home#index'
     get '/features', :to => 'platform_home#features'
+    get '/gallery', :to => 'platform_home#gallery'
     get '/contact', :to => 'platform_home#contact'
     post '/contact-submit', :to => 'platform_home#contact_submit'
     get '/about', :to => 'platform_home#about'
@@ -160,6 +161,7 @@ DesksnearMe::Application.routes.draw do
       end
       resources :pages
       resource :homepage, only: [:show, :update], controller: 'homepage'
+      resource :homepage_template, only: [:show, :create, :update], controller: 'homepage_template'
     end
 
     namespace :manage do

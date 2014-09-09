@@ -345,7 +345,7 @@ class User < ActiveRecord::Base
   end
 
   def first_listing
-    if companies.first and companies.first.locations.first
+    if companies.first && companies.first.locations.first
       companies.first.locations.first.listings.first
     end
   end

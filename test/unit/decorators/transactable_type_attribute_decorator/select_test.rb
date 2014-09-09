@@ -6,11 +6,9 @@ class TransactableTypeAttributeDecorator::SelectTest < ActionView::TestCase
 
     should 'return correct options' do
       expected_hash = {
-        as: :select,
-        collection: ["These", "Are", "Valid"],
-        input_html: { prompt: "Please pick" }
+        :collection => ["These", "Are", "Valid"],
       }
-      assert_equal expected_hash, TransactableTypeAttributeDecorator::Select.new(stub("valid_values" => ["These", "Are", "Valid"], :prompt => 'Please pick')).options
+      assert_equal expected_hash, TransactableTypeAttributeDecorator::Select.new(stub("valid_values" => ["These", "Are", "Valid"], "valid_values_translated" => ["These", "Are", "Valid"], name: 'name')).options
     end
   end
 

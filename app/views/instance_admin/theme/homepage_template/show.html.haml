@@ -1,0 +1,9 @@
+= simple_form_for @homepage_template, url: '/instance_admin/theme/homepage_template' do |f|
+  %legend Homepage
+  = f.input :path, :as => :hidden
+  = f.input :body, label: 'HTML body', required: false, input_html: { class: 'input-block-level', :"data-editor" => 'liquid', rows: '30' }
+  = f.input :locale, :as => :hidden
+  = f.input :format, :as => :hidden
+  = f.input :handler, :as => :hidden
+  = f.input :partial, :as => :hidden
+  = f.button :submit, 'Save', class: 'btn btn-primary pull-right'

@@ -5,7 +5,7 @@ class Manage::LocationsController < Manage::BaseController
   before_filter :find_location, :except => [:index, :new, :create]
 
   def index
-    @locations = locations_scope.all
+    @locations = locations_scope
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 

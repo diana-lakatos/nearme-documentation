@@ -1,0 +1,78 @@
+- no_footer!
+
+= render 'search/meta_tags'
+
+- content_for :mixed_locations do
+  - if @searcher.results.any?
+    .locations
+      .hidden-locations
+        = render partial: 'search/map/location_marker', collection: @searcher.results, as: :location
+        %input{type: 'hidden', id: 'result_count', value: @searcher.result_count}
+        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, @searcher.search)}
+      = render 'search/mixed/pagination', locations: @searcher.results, result_count: @searcher.result_count
+      = render partial: 'search/mixed/individual_listing', collection: @searcher.results, locals: {search: @searcher.search}, as: :listing
+      = render 'search/mixed/pagination', locations: @searcher.results, result_count: @searcher.result_count
+  - elsif !@searcher.located
+    .locations
+      .hidden-locations
+        %input{type: 'hidden', id: 'result_count', value: @searcher.result_count}
+        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, @searcher.search)}
+      %div.no_results
+        = render 'shared/loading_spinner'
+        .text-center
+          %br/
+          %br/
+          %h1.tk-adelle.fat No results found
+          %p= t '.address_could_not_be_found'
+  - else
+    .locations
+      .hidden-locations
+        %input{type: 'hidden', id: 'result_count', value: @searcher.result_count}
+        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, @searcher.search)}
+      %div.no_results
+        = render 'shared/loading_spinner'
+        .text-center
+          %br/
+          %br/
+          %h1.tk-adelle.fat No results found, but!
+          #search-notification
+            = render 'search_notifications/form', search_notification: @searcher.search_notification
+
+- content_for :hero do
+  = render 'search/mixed/header'
+
+  %section#results.mixed
+    = render 'shared/loading_spinner'
+    .map
+      %section#map.google-map-wrapper
+        .google-map
+          #listings_map.inner
+    .list{:'data-list' => true}
+      .filters{:'data-search-filters-container' => true}
+        = render :partial => 'search/mixed/filter', :locals => { :header_name => "#{platform_context.bookable_noun} Types", :selected_values => @searcher.search.lgtypes_filters || [], :input_name => 'listing_types_ids[]', :options => @searcher.filterable_listing_types.map { |lt| [lt, lt] } }
+
+        - if @searcher.filterable_attribute
+          = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Type', :selected_values => @searcher.search.attribute_values_filters || [], :input_name => 'attribute_values[]', :options => @searcher.filterable_attribute.map { |fa| [fa, fa]} }
+
+        = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Pricing', :selected_values => @searcher.search.lgpricing_filters || [], :input_name => 'listing_pricing[]', :options => @searcher.filterable_pricing }
+
+        - if platform_context.instance.location_types.count > 1
+          = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Location Type', :selected_values => @searcher.search.lntypes_filters || [], :input_name => 'location_types_ids[]', :options => @searcher.filterable_location_types.map { |lt| [lt.name.downcase, lt.name ] } }
+
+      .sort
+        .results-count
+          %h3#search_results_count
+            = @searcher.result_count
+            results
+        .per-page
+          %span per page
+          = select_tag :per_page, options_for_select(['20', '50', '100'].map{|v| [v, v]})
+
+      - if not request.xhr?
+        = yield :mixed_locations
+
+- if request.xhr?
+  = yield :mixed_locations
+
+- content_for :domready do
+  new Search.SearchMixedController($('#listing_search form'), $('section#results'));

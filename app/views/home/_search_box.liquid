@@ -1,0 +1,42 @@
+<div class="span10 offset1" id="search_row">
+  <div class="row-fluid">
+    <h1>
+      {{ platform_context.tagline }}
+    </h1>
+  </div>
+  <div class="black-box row-fluid">
+    <form action="/search" class="home_search" id="listing_search" method="get">
+      <div class="input-wrapper">
+        <div class="geolocation no-bookings">
+          <span class="ico-crosshairs"></span>
+        </div>
+        <input class="query" id="search" name="loc" placeholder="{{ platform_context.search_field_placeholder }}" type="text"></input>
+      </div>
+      <div class="button-wrapper">
+        <a class="btn btn-green btn-large" data-disable-with="Searching..." rel="submit">
+          <span class="ico-search"></span>
+          Search
+        </a>
+        <div id="suggest_location" style="display: none"></div>
+      </div>
+    </form>
+    <input id="lat" name="lat" type="hidden" value>
+    <input id="lng" name="lng" type="hidden" value>
+    <input id="nx" name="nx" type="hidden" value>
+    <input id="ny" name="ny" type="hidden" value>
+    <input id="sx" name="sx" type="hidden" value>
+    <input id="sy" name="sy" type="hidden" value>
+    <input id="country" name="country" type="hidden" value>
+    <input id="state" name="state" type="hidden" value>
+    <input id="city" name="city" type="hidden" value>
+    <input id="suburb" name="suburb" type="hidden" value>
+    <input id="street" name="street" type="hidden" value>
+    <input id="postcode" name="postcode" type="hidden" value>
+  </div>
+</div>
+
+{% if platform_context.searcher_type != 'fulltext' %}
+  {% content_for domready %}
+    new Search.HomeController($('#listing_search'))
+  {% endcontent_for %}
+{% endif %}

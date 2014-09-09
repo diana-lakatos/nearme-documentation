@@ -9,7 +9,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
     @company = FactoryGirl.create(:company, :creator => @user)
     @location = FactoryGirl.create(:location, :company => @company)
     @location2 = FactoryGirl.create(:location, :company => @company)
-    @listing_type = "Shared Desks"
+    @listing_type = "Desk"
     @amenity_type = FactoryGirl.create(:amenity_type)
     @amenity = FactoryGirl.create(:amenity, amenity_type: @amenity_type)
     FactoryGirl.create(:transactable_type_listing)
