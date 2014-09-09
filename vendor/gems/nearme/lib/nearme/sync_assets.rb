@@ -1,9 +1,10 @@
 module NearMe
   class SyncAssets
-    attr_accessor :branch, :bucket, :stack
+    attr_accessor :branch, :bucket, :stack, :prefix
     def initialize(options = {})
       @branch = options[:branch]
-      @bucket = options[:bucket] || stack_mapping[options[:stack]]
+      @bucket = options[:bucket] || stack_mapping[options[:stack]] || 'near-me-assets-staging'
+      @prefix = options[:prefix] || prefix_mapping[options[:stack]]
       if @bucket.to_s.empty?
         puts "Invalid bucket. Can't find mapping. Provide it manually."
         exit 5
@@ -13,8 +14,14 @@ module NearMe
     def stack_mapping
       {
         'nm-production' => 'near-me-assets',
-        'nm-staging' => 'near-me-assets-staging',
-        'nm-staging-2' => 'near-me-assets-staging-2'
+      }
+    end
+
+    def prefix_mapping
+      {
+        'nm-production' => '/assets',
+        'nm-staging' => '/staging/assets',
+        'nm-staging-2' => '/staging/assets-2',
       }
     end
 
@@ -27,7 +34,7 @@ module NearMe
         exit 6
       end
       puts "Sync..."
-      if not Kernel.system("FOG_DIR=#{@bucket} bundle exec rake assets:sync")
+      if not Kernel.system("ASSETS_PREFIX=#{@prefix} FOG_DIR=#{@bucket} bundle exec rake assets:sync")
         puts "sync failed :("
         exit 7
       end

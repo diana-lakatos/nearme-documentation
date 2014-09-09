@@ -96,6 +96,8 @@ module DesksnearMe
     # Access the DB or load models when precompiling assets
     config.assets.initialize_on_precompile = true
 
+    config.assets.prefix = ENV['ASSETS_PREFIX'].presence || config.assets.prefix
+
     # Enable the asset pipeline
     config.assets.enabled = true
     config.assets.digest = true
