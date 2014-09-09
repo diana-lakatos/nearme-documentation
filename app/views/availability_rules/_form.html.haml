@@ -2,7 +2,7 @@
   %label.control-label.flush-top Availability
 
   - if f.object.respond_to?(:defer_availability_rules)
-    = f.check_box :defer_availability_rules, :style => "display: none" 
+    = f.check_box :defer_availability_rules, :style => "display: none"
 
   - availability_choices(f.object).each do |template_id, label_text, options|
     .controls
@@ -26,8 +26,8 @@
             = af.check_box :_destroy, :class => "closed checkbox", :checked => !active, :style => "display: none"
             %label.checkbox
               = check_box_tag "open", "1", active, :class => "open-checkbox"
-              = "Open"
-      - if f.object.errors.any? { |e| e.to_s == "availability_rules.day_#{day}" } 
+              = t('simple_form.labels.availability_rule.open')
+      - if f.object.errors.any? { |e| e.to_s == "availability_rules.day_#{day}" }
         .error-block
           = f.object.errors["availability_rules.day_#{day}".to_sym][0]
 

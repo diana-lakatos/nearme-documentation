@@ -19,3 +19,4 @@
 //= require ckeditor/basepath
 //= require ckeditor/init
 //= require lib/timeago.jquery
+//= require components/ace_editor_textarea_binding

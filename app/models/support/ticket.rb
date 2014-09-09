@@ -9,7 +9,7 @@ class Support::Ticket < ActiveRecord::Base
   belongs_to :user
   belongs_to :assigned_to, class_name: 'User'
   belongs_to :instance
-  has_many :messages, class_name: 'Support::TicketMessage', order: 'created_at DESC', dependent: :destroy
+  has_many :messages, -> { order 'created_at DESC' }, class_name: 'Support::TicketMessage', dependent: :destroy
   scope :metadata, -> {select('state, COUNT(*) as count').group(:state)}
   scope :user_metadata, -> {select('instance_id, COUNT(*) as count').group(:instance_id)}
 
@@ -70,7 +70,7 @@ class Support::Ticket < ActiveRecord::Base
   def can_reply?(email)
     valid_emails = [
       first_message.try(:email),
-      admin_emails 
+      admin_emails
     ].flatten.compact
     valid_emails.include?(email)
   end

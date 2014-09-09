@@ -11,6 +11,8 @@ When /^I select to recurre book( and review)? space for:$/ do |and_review, table
   ensure_datepicker_open('.date-end')
   select_datepicker_date(bookings.first[:end_on])
   select bookings.first[:quantity].to_s, :from => "quantity"
+  recurring_booking_rule = '{"validations":{"day":[1]},"rule_type":"IceCube::WeeklyRule","interval":1,"week_start":0}'
+  page.execute_script "$('select#reservation_request_schedule_params').find('option').eq(0).val('#{recurring_booking_rule}').parent('select').trigger('change')"
   if bookings.first[:start_minute]
     # Hourly bookgs
 

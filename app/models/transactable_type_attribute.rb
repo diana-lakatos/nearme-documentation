@@ -33,6 +33,7 @@ class TransactableTypeAttribute < ActiveRecord::Base
 
   before_save :normalize_name
   before_save :normalize_html_options
+  after_save :create_translations
 
   def normalize_name
     self.name = self.name.to_s.tr(' ', '_').underscore.downcase
@@ -66,6 +67,38 @@ class TransactableTypeAttribute < ActiveRecord::Base
 
   def self.find_as_array(transactable_type_id, attributes = [:name, :attribute_type, :default_value, :public])
     TransactableTypeAttribute.where(transactable_type_id: transactable_type_id).pluck(attributes)
+  end
+
+  def valid_values_translated
+    valid_values.map do |valid_value|
+      [I18n.translate(valid_value_translation_key(valid_value)), valid_value]
+    end
+  end
+
+  def valid_value_translation_key(valid_value)
+    "simple_form.valid_values.#{translation_key_suffix}.#{underscore(valid_value)}"
+  end
+
+  def prompt_translation_key
+    "simple_form.prompts.#{translation_key_suffix}"
+  end
+
+  def translation_key_suffix
+    underscore(self.transactable_type.name) + '.' + name
+  end
+
+  def translation_key_pluralized_suffix
+    underscore(self.transactable_type.name.pluralize) + '.' + name
+  end
+
+  def create_translations
+    TransactableTypeAttribute::TranslationCreator.new(self).create_translations!
+  end
+
+  private
+
+  def underscore(string)
+    string.underscore.tr(' ', '_')
   end
 
 end

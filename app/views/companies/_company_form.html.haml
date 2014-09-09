@@ -1,20 +1,20 @@
 - only_inputs = [] if only_inputs.nil?
-= f.input :name, :as => :limited_string, :limit => 50, :label => "Company name", :placeholder => "Enter your business name" if (only_inputs.empty? || only_inputs.include?(:name))
-= f.association :industries, :label =>  "Industries", :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select' }, :required => true if (platform_context.is_desksnearme? && (only_inputs.empty? || only_inputs.include?(:industries)))
-= f.input :url, :label => "Website", :placeholder => "www.mycompany.com" if (only_inputs.empty? || only_inputs.include?(:url))
-= f.input :email, :label => "Company email", :placeholder => "yourname@example.com" if (only_inputs.empty? || only_inputs.include?(:email))
-= f.input :description, :as => :limited_text, :limit => 250, :label => "Description", :placeholder => "Give a brief description of your company", :input_html => { :maxlength => 250} if (only_inputs.empty? || only_inputs.include?(:description))
-= f.input :mailing_address, :label => tooltip("Checks for revenue accrued by your #{platform_context.bookable_noun.pluralize} will be sent to this address. Find out more about payments in the Support Center.", "Mailing address") if (only_inputs.empty? || only_inputs.include?(:mailing_address))
+= f.input :name, :as => :limited_string, :limit => 50  if (only_inputs.empty? || only_inputs.include?(:name))
+= f.association :industries, :blank => false, :input_html => { 'data-placeholder' => t('simple_form.prompts.company.industries'), :class => 'custom-select' }, :required => true if (platform_context.is_desksnearme? && (only_inputs.empty? || only_inputs.include?(:industries)))
+= f.input :url if (only_inputs.empty? || only_inputs.include?(:url))
+= f.input :email if (only_inputs.empty? || only_inputs.include?(:email))
+= f.input :description, :as => :limited_text, :limit => 250, :input_html => { :maxlength => 250} if (only_inputs.empty? || only_inputs.include?(:description))
+= f.input :mailing_address, :label => tooltip(t("simple_form.hints.company.mailing_address", bookable_noun: platform_context.bookable_noun.pluralize), t('simple_form.labels.company.mailing_address')), hint: false if (only_inputs.empty? || only_inputs.include?(:mailing_address))
 
 - if (only_inputs.empty? || only_inputs.include?(:paypal))
   %h2 Payouts via Paypal
-  = f.input :paypal_email, :label => tooltip("If you specify a PayPal email, we will make a PayPal transfer instead of sending checks.", "PayPal email")
+  = f.input :paypal_email, :label => tooltip(t("simple_form.hints.company.paypal_email"), t('simple_form.labels.company.paypal_email')), hint: false
 
 - if (only_inputs.empty? || only_inputs.include?(:ach))
   - if platform_context.supported_payout_via_ach?
     %h2 Payouts via ACH (US only)
     - if f.object.instance_clients.first.try(:encrypted_balanced_user_id)
-      %div Current Bank Account: xxxxxx#{f.object.instance_clients.first.bank_account_last_four_digits}.
+      %div= t("simple_form.company.current_bank_account", last_four_digits: f.object.instance_clients.first.bank_account_last_four_digits)
       %div Update:
     - if f.object.errors[:bank_account_form].present?
       .bank_account_fields
@@ -24,6 +24,6 @@
               %li= e
             %li Unfortunately we could not process the credentials you have entered.
 
-    = f.input :bank_owner_name, :label => "Account's Owner Name"
-    = f.input :bank_routing_number, :label => 'Routing Number'
-    = f.input :bank_account_number, :label => 'Account Number'
+    = f.input :bank_owner_name
+    = f.input :bank_routing_number
+    = f.input :bank_account_number

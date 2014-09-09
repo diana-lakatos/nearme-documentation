@@ -1,7 +1,7 @@
 - only_inputs = [] if only_inputs.nil?
 
 - if f.object.name_and_description_required
-  = f.input :name, :as => :limited_string, :limit => 50, :label => 'Location name', :hint => "A unique title that describes the location of the #{platform_context.bookable_noun}.", :required => true if only_inputs.empty? || only_inputs.include?(:name)
+  = f.input :name, :as => :limited_string, :limit => 50, :hint => t('simple_form.hints.location.name', bookable_noun: platform_context.bookable_noun), :required => true if only_inputs.empty? || only_inputs.include?(:name)
 
 - if only_inputs.empty? || only_inputs.include?(:address)
   = f.simple_fields_for :location_address, f.object.location_address.presence || f.object.build_location_address do |address_form|
@@ -38,15 +38,15 @@
             = address_form.input :address_components, :input_html => { :id => 'address_component_input' }, :disabled => true
 
 - if f.object.name_and_description_required
-  = f.input :description, :as => :limited_text, :limit => 250, :label => 'Location description', :required => !f.object.listings.first.try(:description).try(:present?), :input_html => { :maxlength => 250, :rows => 2 } if only_inputs.empty? || only_inputs.include?(:description)
+  = f.input :description, :as => :limited_text, :limit => 250, :required => !f.object.listings.first.try(:description).try(:present?), :input_html => { :maxlength => 250, :rows => 2 } if only_inputs.empty? || only_inputs.include?(:description)
 - if platform_context.instance.location_types.count > 1
-  = f.association :location_type, :label => "Location type", :collection => platform_context.instance.location_types if only_inputs.empty? || only_inputs.include?(:location_type)
+  = f.association :location_type, :collection => platform_context.instance.location_types if only_inputs.empty? || only_inputs.include?(:location_type)
 - else
   = f.hidden_field :location_type_id, value: platform_context.instance.location_types.first.id
-= f.input :email, :label => 'Booking email', :placeholder => 'Your booking email' if only_inputs.empty? || only_inputs.include?(:email)
-= f.association :administrator, :label => 'Administrator', :collection => f.object.company_users.includes(:user).order('users.name').map(&:user), :label_method => 'name', :value_method => 'id', :input_html => { :'data-placeholder' => 'Choose a user', :class => 'custom-select' }, :include_blank => 'Default' if only_inputs.empty? || only_inputs.include?(:administrator)
-= f.input :special_notes, :label => "#{platform_context.lessee.capitalize} instructions", :placeholder => "For example, how your #{platform_context.lessee.pluralize} should check in, your Wi-Fi password, whether you have pets, or other special information relevant to your #{platform_context.lessee}'s stay" if only_inputs.empty? || only_inputs.include?(:special_notes)
-= f.input :currency, :as => :currency, :label => "Currency", :default => 'USD', :input_html => { :class => 'custom-select', :id => 'currency-select' } if only_inputs.empty? || only_inputs.include?(:currency)
+= f.input :email if only_inputs.empty? || only_inputs.include?(:email)
+= f.association :administrator, :collection => f.object.company_users.includes(:user).order('users.name').map(&:user), :label_method => 'name', :value_method => 'id', :input_html => { :class => 'custom-select' }, :include_blank => t('simple_form.prompts.location.administrator') if only_inputs.empty? || only_inputs.include?(:administrator)
+= f.input :special_notes, :label => t('simple_form.labels.location.special_notes', lessee: platform_context.lessee.capitalize), :placeholder => t('simple_form.placeholders.location.special_notes', lessee: platform_context.lessee, lessees: platform_context.lessee.pluralize) if only_inputs.empty? || only_inputs.include?(:special_notes)
+= f.input :currency, :as => :currency, :default => 'USD', :input_html => { :class => 'custom-select', :id => 'currency-select' } if only_inputs.empty? || only_inputs.include?(:currency)
 - if only_inputs.empty? || only_inputs.include?(:availability_rules)
   .control-group
     = render :partial => 'availability_rules/form', :locals => { :f => f }

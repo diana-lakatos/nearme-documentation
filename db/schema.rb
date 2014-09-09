@@ -1001,6 +1001,13 @@ ActiveRecord::Schema.define(version: 20140905105055) do
     t.datetime "updated_at"
   end
 
+  create_table "search_queries", force: true do |t|
+    t.string   "query"
+    t.text     "agent"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   add_index "spree_addresses", ["firstname"], name: "index_addresses_on_firstname", using: :btree
   add_index "spree_addresses", ["lastname"], name: "index_addresses_on_lastname", using: :btree
 
