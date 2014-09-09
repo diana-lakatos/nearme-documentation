@@ -21,8 +21,12 @@ class TransactableTypeAttribute::TranslationCreator
 
   def build_key_value_translations
     case @tta.html_tag.try(:to_sym)
-    when :input
+    when :input, :textarea
       input_translations!
+    when :switch, :check_box
+      switch_or_check_box!
+    when :radio_buttons, :check_box_list
+      radio_buttons_or_checkbox_list!
     when :select
       select_translations!
     end
@@ -36,6 +40,17 @@ class TransactableTypeAttribute::TranslationCreator
     translations_for_label!
     translations_for_hints!
     translations_for_placeholder!
+  end
+
+  def switch_or_check_box!
+    translations_for_label!
+    translations_for_hints!
+  end
+
+  def radio_buttons_or_checkbox_list!
+    translations_for_label!
+    translations_for_hints!
+    translations_for_valid_values!
   end
 
   def select_translations!

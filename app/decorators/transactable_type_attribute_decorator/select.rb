@@ -2,7 +2,7 @@ class TransactableTypeAttributeDecorator::Select < TransactableTypeAttributeDeco
 
   def options
     {
-      collection: @attribute_decorator.valid_values_translated,
+      collection: @attribute_decorator.valid_values_translated
     }
   end
 
