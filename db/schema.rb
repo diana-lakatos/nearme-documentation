@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140905105055) do
+ActiveRecord::Schema.define(version: 20140909085001) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -598,11 +598,11 @@ ActiveRecord::Schema.define(version: 20140905105055) do
     t.boolean  "user_based_marketplace_views",                                default: false
     t.string   "searcher_type"
     t.datetime "master_lock"
-    t.boolean  "onboarding_verification_required",                            default: false
     t.text     "user_required_fields"
     t.boolean  "apply_text_filters",                                          default: false
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
+    t.boolean  "onboarding_verification_required",                            default: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -2031,11 +2031,12 @@ ActiveRecord::Schema.define(version: 20140905105055) do
     t.integer  "instance_id"
     t.integer  "user_id"
     t.integer  "assigned_to_id"
-    t.string   "state",          null: false
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.string   "state",               null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.integer  "target_id"
     t.string   "target_type"
+    t.text     "reservation_details"
   end
 
   add_index "support_tickets", ["assigned_to_id"], name: "index_support_tickets_on_assigned_to_id", using: :btree

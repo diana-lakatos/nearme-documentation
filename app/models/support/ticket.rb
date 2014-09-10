@@ -14,6 +14,8 @@ class Support::Ticket < ActiveRecord::Base
   scope :metadata, -> {select('support_tickets.state, COUNT(*) as count').group(:state)}
   scope :user_metadata, -> {select('support_tickets.instance_id, COUNT(*) as count').group(:instance_id)}
 
+  serialize :reservation_details, Hash
+
   state_machine :state, initial: :open do
     event :resolve do
       transition :open => :resolved
@@ -105,5 +107,13 @@ class Support::Ticket < ActiveRecord::Base
 
   def to_liquid
     Support::TicketDrop.new(self)
+  end
+
+  def reservation_dates
+    if @reservation_dates.nil?
+      @reservation_dates = self.reservation_details['dates'].try(:split, ',') || []
+      @reservation_dates.map!(&:to_date)
+    end
+    @reservation_dates
   end
 end

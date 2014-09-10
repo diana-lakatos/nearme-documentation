@@ -19,6 +19,24 @@ class Support::TicketMessageDrop < BaseDrop
     message.full_name
   end
 
+  def dates
+    @date_presenter = DatePresenter.new(@message.ticket.reservation_dates)
+    if !@message.ticket.reservation_details['start_minute'].present? && !@message.ticket.reservation_details['end_minute'].present?
+      @date_presenter.selected_dates_summary(wrapper: :div)
+    else
+      ''
+    end
+  end
+
+  def dates_no_html
+    @date_presenter = DatePresenter.new(@message.ticket.reservation_dates)
+    if !@message.ticket.reservation_details['start_minute'].present? && !@message.ticket.reservation_details['end_minute'].present?
+      @date_presenter.selected_dates_summary_no_html
+    else
+      ''
+    end
+  end
+
   def message_html
     simple_format(message.message)
   end

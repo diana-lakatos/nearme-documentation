@@ -118,6 +118,10 @@ en:
     support:
       ticket:
         created: 'Ticket has been created.'
+      rfq_ticket:
+        created: 'Your request has been sent. Seller will be in touch shortly.'
+      offer_ticket:
+        created: 'Offer has been sent. Seller will be in touch shortly.'
       ticket_message:
         closed: 'Ticket message has been closed.'
         created: 'Ticket message has been created.'

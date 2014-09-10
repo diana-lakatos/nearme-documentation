@@ -15,12 +15,38 @@
 }
 
 .support.detail {
+
+  h1 {
+    a {
+      color: $theme_blue;
+    }
+  }
+
+  .rfq-header {
+    color: $gray160;
+    margin-bottom: 10px;
+  }
+
+  .rfq-header-data {
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid $gray204;
+
+    .status.open {
+      color: $dnm_green;
+    }
+  }
+
   .header {
     margin: -15px -15px 30px -15px;
     padding: 15px;
     background-color: $gray160;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
+  }
+
+  #more-reservations {
+    display: none;
   }
 
   .form {
@@ -32,13 +58,13 @@
   }
 
   .time abbr{
-    color: $theme_gray;
+    color: $gray160;
   }
 
   .text {
-    color: $black;
+    color: $gray160;
     p {
-      color: $black;
+      color: $gray160;
     }
   }
 }

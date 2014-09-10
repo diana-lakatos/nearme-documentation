@@ -24,7 +24,8 @@ class HourlyPresenter
     end
   end
 
-  def hourly_summary(show_date = false)
+  def hourly_summary(show_date = false, options = {})
+    options[:separator] ||= ' '
     start_time = start_minute_of_day_to_time.strftime("%l:%M").strip
     end_time = end_minute_of_day_to_time.strftime("%l:%M%P").strip
     start_time_suffix = start_minute_of_day_to_time.strftime("%P").strip
@@ -34,7 +35,7 @@ class HourlyPresenter
 
     if show_date
       formatted_date = date.strftime("%B %-e")
-      ('%s %s&ndash;%s (%0.2f %s)' % [formatted_date, start_time, end_time, hours, 'hour'.pluralize(hours.to_i)]).html_safe
+      ('%s%s%s&ndash;%s%s(%0.2f %s)' % [formatted_date, options[:separator], start_time, end_time, options[:separator], hours, 'hour'.pluralize(hours.to_i)]).html_safe
     else
       ('%s&ndash;%s<br />(%0.2f %s)' % [start_time, end_time, hours, 'hour'.pluralize(hours.to_i)]).html_safe
     end

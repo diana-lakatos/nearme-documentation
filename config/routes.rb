@@ -1,3 +1,6 @@
+require Rails.root.join('app', 'controllers', 'sessions_controller.rb')
+require Rails.root.join('app', 'controllers', 'registrations_controller.rb')
+
 DesksnearMe::Application.routes.draw do
 
   scope module: 'spree' do

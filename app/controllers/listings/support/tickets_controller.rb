@@ -12,18 +12,23 @@ class Listings::Support::TicketsController < ApplicationController
   end
 
   def create
+    details = params.delete(:details)
     @ticket = ::Support::Ticket.new(ticket_params)
     @ticket.assign_user(current_user) if current_user
     @ticket.target = @listing
     @ticket.assign_to(@listing.administrator)
+    @ticket.reservation_details = details
     @message = @ticket.messages.first
     @message.subject = subject
-    @message.message = message(@message.message)
     if @ticket.valid?
       @ticket.save!
       SupportMailer.enqueue.rfq_request_received(@ticket, @message)
       SupportMailer.enqueue.rfq_support_received(@ticket, @message)
-      flash[:success] = t('flash_messages.support.ticket.created')
+      if @listing.free?
+        flash[:success] = t('flash_messages.support.rfq_ticket.created')
+      else
+        flash[:success] = t('flash_messages.support.offer_ticket.created')
+      end
       redirect_to support_ticket_path(@ticket)
     else
       render :new
@@ -51,20 +56,13 @@ class Listings::Support::TicketsController < ApplicationController
   end
 
   def subject
-    sub = "RFQ - #{@listing.id} - #{@details[:quantity]} x "
-    if @hourly_presenter.present?
-      sub += @hourly_presenter.hourly_summary_no_html(true)
+    if @listing.free?
+      sub = "Quote Request: #{@listing.name} - "
     else
-      sub += @date_presenter.days_in_words
+      sub = "Offer: #{@listing.name} - "
     end
+    sub += "#{@ticket.reservation_details['quantity']} x #{@hourly_presenter.present? ? "#{@hourly_presenter.hours} #{'hour'.pluralize(@hourly_presenter.hours.to_i)}" : @date_presenter.days_in_words}"
     sub
-  end
-
-  def message(original_message)
-    if !@hourly_presenter.present?
-      original_message +=  "\r\n\r\n" + @date_presenter.selected_dates_summary_no_html
-    end
-    original_message
   end
 
   def ticket_params

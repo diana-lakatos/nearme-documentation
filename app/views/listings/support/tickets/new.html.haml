@@ -1,22 +1,13 @@
 .row-fluid.support
   .span8.offset2
-    %h1 Request for Quote
+    %h1= (@listing.free? ? t('reservations.rfq') : t('reservations.make_offer'))
+
     %h2= @listing.name
     .box
       %h3
-        = @date_presenter.days_in_words
-
-      - if @hourly_presenter.present?
-        %p
-          = @hourly_presenter.hourly_summary(true)
-      - else
-        .selected-dates-summary
-          %hr.thin
-          = @date_presenter.selected_dates_summary(separator: "<hr class='thin' />")
-        %hr.thin
+        = "#{params[:reservation_request][:quantity]} x #{@hourly_presenter.present? ? "#{@hourly_presenter.hours} #{'hour'.pluralize(@hourly_presenter.hours.to_i)}" : @date_presenter.days_in_words}"
 
       .form
-        %p
         = simple_form_for @ticket, url: listing_tickets_path(@listing), method: :post do |t|
           - params[:reservation_request].each do |k, v|
             = hidden_field_tag "details[#{k}]", v
@@ -24,7 +15,7 @@
           = t.simple_fields_for :messages do |f|
             .columns
               .row-fluid
-                =f.input :message, as: :text
+                =f.input :message, as: :text, label: t('reservations.rfq_message')
             .row-fluid
-              =t.submit 'Request Quote', :class => 'btn btn-green', style: 'margin-top: 0px'
+              =t.submit (@listing.free? ? t('reservations.rfq') : t('reservations.make_offer')), :class => 'btn btn-green', style: 'margin-top: 0px'
 

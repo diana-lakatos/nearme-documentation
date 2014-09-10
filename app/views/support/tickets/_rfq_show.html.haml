@@ -1,11 +1,7 @@
-- title "Request for Quote"
 - @ticket = @ticket.decorate
 - @date_presenter = DatePresenter.new(@ticket.reservation_dates)
 - if @ticket.reservation_details['start_minute'].present? && @ticket.reservation_details['end_minute'].present?
   - @hourly_presenter = HourlyPresenter.new(@ticket.reservation_dates.first, @ticket.reservation_details['start_minute'].to_i, @ticket.reservation_details['end_minute'].to_i)
-
-= show_manage_navigation(:rfq)
-
 
 .row-fluid.support.detail.rfq
   .span8.offset2

@@ -76,7 +76,7 @@ class SupportMailer < InstanceMailer
   end
 
   def rfq_subject(request, subject)
-    "[RFQ #{request.id}] #{request.target.name} - #{subject}"
+    subject
   end
 end
 

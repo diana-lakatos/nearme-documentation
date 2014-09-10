@@ -4,6 +4,11 @@
 
 <p>{{ message.message_html }}</p>
 
+{% if message.dates != "" %}
+  <p>Chosen dates:</p>
+  <p>{{ message.dates }}</p>
+{% endif %}
+
 {% include 'support_mailer/rfq_host_review.html' %}
 
 {% include 'support_mailer/rfq_message_history.html' %}
