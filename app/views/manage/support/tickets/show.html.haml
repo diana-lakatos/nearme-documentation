@@ -51,6 +51,7 @@
                 #more-reservations
                   - @ticket.reservation_dates[3..@ticket.reservation_dates.size-1].each do |date|
                     %div= @date_presenter.period_to_string(date)
+                    %a#toggle-less-reservations{href: ''} See less
         .quantity{class: span_class2}
           = @ticket.reservation_details['quantity']
         .status{class: "#{span_class3} #{@ticket.state}"}
@@ -61,10 +62,10 @@
 
       -if @ticket.open?
         .row-fluid
-          .profile.span2
+          .profile.span1
             .row-fluid
               = image_tag current_user.avatar.url(:medium)
-          .form.span10
+          .form.span11
             = simple_form_for @message, url: support_ticket_ticket_messages_path(@ticket, @message) do |f|
               = f.input :message, as: :text, label: false, placeholder: 'Please, enter message'
               .row-fluid
@@ -75,5 +76,12 @@
   :javascript
     $('#toggle-more-reservations').click(function(e){
       e.preventDefault()
-      $('#more-reservations').toggle();
+      $('#more-reservations').hide();
+      $('#toggle-more-reservations').hide()
+    });
+
+    $('#toggle-less-reservations').click(function(e){
+      e.preventDefault()
+      $('#more-reservations').show();
+      $('#toggle-more-reservations').show()
     });

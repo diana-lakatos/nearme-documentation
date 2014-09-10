@@ -1,10 +1,10 @@
 .row-fluid.message
-  .span2.profile
+  .span1.profile
     .row-fluid
     - if ticket_message.user
       = image_tag ticket_message.user.avatar.url(:medium)
 
-  .span10.text
+  .span11.text
     .name.pull-left
       = ticket_message.full_name
     .time.text-right.pull-right
