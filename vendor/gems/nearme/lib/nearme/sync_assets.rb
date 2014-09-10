@@ -21,7 +21,7 @@ module NearMe
       {
         'nm-production' => '/assets',
         'nm-staging' => '/staging/assets',
-        'nm-staging-2' => '/staging/assets-2',
+        'nm-staging-2' => '/staging-2/assets',
       }
     end
 
@@ -29,7 +29,7 @@ module NearMe
       check_branch
       check_clean_tree
       puts "Compiling..."
-      if not Kernel.system('bundle exec rake assets:precompile')
+      if not Kernel.system("ASSETS_PREFIX=#{@prefix} bundle exec rake assets:precompile")
         puts "precompile failed :("
         exit 6
       end

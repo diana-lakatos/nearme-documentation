@@ -10,6 +10,7 @@ public/association
 public/user
 public/assets
 public/capybara.html
+public/staging*
 db/sphinx
 config/*.sphinx.conf
 config/redis.yml
