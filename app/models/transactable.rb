@@ -10,24 +10,25 @@ class Transactable < ActiveRecord::Base
 
   include TransactableType::CustomAttributesCaster
 
-  has_many :reservations, :inverse_of => :listing
-  has_many :recurring_bookings, dependent: :destroy, :inverse_of => :listing
-  has_many :photos, dependent: :destroy, :inverse_of => :listing do
+  has_many :reservations, inverse_of: :listing
+  has_many :recurring_bookings, dependent: :destroy, inverse_of: :listing
+  has_many :photos, dependent: :destroy, inverse_of: :listing do
     def thumb
       (first || build).thumb
     end
   end
-  has_many :inquiries, :inverse_of => :listing
-  has_many :availability_rules, -> { order 'day ASC' }, :as => :target, :dependent => :destroy, inverse_of: :target
+  has_many :inquiries, inverse_of: :listing
+  has_many :availability_rules, -> { order 'day ASC' }, as: :target, dependent: :destroy, inverse_of: :target
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   has_many :confidential_files, as: :owner
   has_many :impressions, :as => :impressionable, :dependent => :destroy
+  has_many :transactable_tickets, as: :target, class_name: 'Suppport::Ticket'
   belongs_to :transactable_type, inverse_of: :transactables
-  belongs_to :company, :inverse_of => :listings
+  belongs_to :company, inverse_of: :listings
   belongs_to :location, inverse_of: :listings
   belongs_to :instance, inverse_of: :listings
-  belongs_to :creator, class_name: "User", :inverse_of => :listings
-  belongs_to :administrator, class_name: "User", :inverse_of => :administered_listings
+  belongs_to :creator, class_name: "User", inverse_of: :listings
+  belongs_to :administrator, class_name: "User", inverse_of: :administered_listings
 
   has_many :amenity_holders, as: :holder, dependent: :destroy, inverse_of: :holder
   has_many :amenities, through: :amenity_holders, inverse_of: :listings
@@ -36,8 +37,8 @@ class Transactable < ActiveRecord::Base
   has_many :reviews, :through => :reservations
   has_many :company_industries, through: :location
 
-  accepts_nested_attributes_for :availability_rules, :allow_destroy => true
-  accepts_nested_attributes_for :photos, :allow_destroy => true
+  accepts_nested_attributes_for :availability_rules, allow_destroy: true
+  accepts_nested_attributes_for :photos, allow_destroy: true
 
   before_destroy :decline_reservations
 
@@ -94,7 +95,7 @@ class Transactable < ActiveRecord::Base
   delegate :service_fee_guest_percent, :service_fee_host_percent, to: :location, allow_nil: true
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
-  delegate :transactable_type_attributes, :favourable_pricing_rate, to: :transactable_type
+  delegate :transactable_type_attributes, :favourable_pricing_rate, :has_action?, to: :transactable_type
 
   # attr_accessible :location_id, :availability_template_id,
   #   :availability_rules_attributes, :defer_availability_rules, :free,

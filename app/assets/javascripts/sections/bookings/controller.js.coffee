@@ -20,8 +20,11 @@ class Bookings.Controller
     @assignInitialDates()
     @updateQuantityField()
 
-    if @listingData.initial_bookings and @options.showReviewBookingImmediately
-      @reviewBooking()
+    if @listingData.initial_bookings and @options.submitFormImmediately
+      if @options.submitFormImmediately == 'RFQ'
+        @rfqBooking()
+      else
+        @reviewBooking()
 
   # We need to set up delayed methods per each instance, not the prototype.
   # Otherwise, it will debounce for any instance calling the method.
@@ -39,6 +42,7 @@ class Bookings.Controller
     @totalElement = @container.find('.total')
     @daysElement = @container.find('.total-days')
     @bookButton = @container.find('[data-behavior=reviewBooking]')
+    @rfqButton = @container.find('[data-behavior=RFQ]')
     @bookForm = @bookButton.closest('form')
     @registrationUrl = @bookButton.data('registration-url')
     @securedDomain = @bookButton.data('secured')
@@ -46,9 +50,19 @@ class Bookings.Controller
     @userSignedIn = @bookButton.data('user-signed-in')
 
   bindEvents: ->
+    @bookButton.on 'click', (event) =>
+      @formTrigger = @bookButton
+
+    @rfqButton.on 'click', (event) =>
+      @formTrigger = @rfqButton
+
     @bookForm.on 'submit', (event) =>
       event.preventDefault()
-      @reviewBooking()
+      if @formTrigger == @bookButton
+        @reviewBooking()
+      else
+        @rfqBooking()
+
 
     @quantityField.on 'change', (event) =>
       @quantityWasChanged()
@@ -156,6 +170,9 @@ class Bookings.Controller
   disableBookButton: ->
     @bookButton.addClass('click-disabled').find('span.text').text('Booking...')
 
+  disableRFQButton: ->
+    @rfqButton.addClass('click-disabled').find('span.text').text('Requesting...')
+
   quantityWasChanged: ->
     @listing.setDefaultQuantity(parseInt(@quantityField.val(), 10))
     @updateQuantityField()
@@ -192,7 +209,23 @@ class Bookings.Controller
   reviewBooking: ->
     return unless @listing.isBooked()
     @disableBookButton()
+    @setFormFields()
 
+    if @userSignedIn
+       @bookForm.unbind('submit').submit()
+    else
+      @storeFormFields()
+
+  rfqBooking: ->
+    return unless @listing.isBooked()
+    @setFormFields()
+
+    if @userSignedIn
+      Modal.load({ type: @rfqButton.data('modal-method'), url: @rfqButton.data('modal-url'), data: @bookForm.serialize()})
+    else
+      @storeFormFields()
+
+  setFormFields: ->
     @bookForm.find('[name="reservation_request[quantity]"]').val(@listing.reservationOptions().quantity)
     @bookForm.find('[name="reservation_request[dates]"]').val(@listing.reservationOptions().dates)
     @bookForm.find('[name="reservation_request[start_on]"]').val(@listing.reservationOptions().start_on)
@@ -201,11 +234,10 @@ class Bookings.Controller
       @bookForm.find('[name="reservation_request[start_minute]"]').val(@listing.reservationOptions().start_minute)
       @bookForm.find('[name="reservation_request[end_minute]"]').val(@listing.reservationOptions().end_minute)
 
-    if @userSignedIn
-       @bookForm.unbind('submit').submit()
-    else
-      $.post @storeReservationRequestUrl, @bookForm.serialize(), (data) =>
-        if @securedDomain
-          Modal.load(@registrationUrl)
-        else
-          window.location.replace(@registrationUrl)
+  storeFormFields: ->
+    $.post @storeReservationRequestUrl, @bookForm.serialize() + "&commit=#{@formTrigger.data('behavior')}", (data) =>
+      if @securedDomain
+        Modal.load(@registrationUrl)
+      else
+        window.location.replace(@registrationUrl)
+

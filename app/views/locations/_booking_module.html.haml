@@ -82,14 +82,14 @@
       .quantity
         %span.resource{:'data-singular' => listing.listing_type, :'data-plural' => listing.listing_type.try(:pluralize)}= listing.listing_type
         = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
-      .price
+      .price{class: "#{'hidden' if listing.free?}"}
         Total
         %span #{currency_content_tag(@location.currency, 0.00, :span, { :rel => false })}
 
       .book
         - registration_url = new_user_registration_path(return_to: location_url(@listing.location, @listing, restore_reservations: true))
         - store_reservation_request_url = store_reservation_request_listing_reservations_path(@listing)
-        = form_for :reservation_request, :url => review_listing_reservations_path(listing) do |f|
+        = form_for :reservation_request, :url => review_listing_reservations_path(listing), html: { id: "reservation_request_form_#{listing.id}" } do |f|
           = hidden_field_tag :listing_id, @listing.id
           = f.hidden_field :quantity
           = f.hidden_field :dates
@@ -98,7 +98,26 @@
           = f.hidden_field :start_minute
           = f.hidden_field :end_minute
 
-          = f.submit 'Book', :id =>"book-#{listing.id}", :class => "btn btn-green btn-large", :rel => "tooltip", :'data-original-title' => "Please select days first", :'data-behavior' => 'reviewBooking', :'data-listing-id' => listing.id, :'data-registration-url' => registration_url, :'data-store-reservation-request-url' => store_reservation_request_url, :'data-user-signed-in' => user_signed_in?, :'data-secured' => (not secure_links?)
+          - book_hash = {id:"book-#{listing.id}", class: "btn btn-green btn-large ", rel: "tooltip", :'data-original-title' => "Please select days first", :'data-behavior' => 'reviewBooking', :'data-listing-id' => listing.id, :'data-registration-url' => registration_url, :'data-store-reservation-request-url' => store_reservation_request_url, :'data-user-signed-in' => user_signed_in?, :'data-secured' => (not secure_links?), :'data-force-modal' => false}
+
+          -if listing.has_action?('Request For Quote')
+            - book_hash[:class] += (listing.free? ? 'hidden' : 'span6')
+            - rfq_class = (listing.free? ? 'btn btn-green btn-large' :  'btn btn-gray-light btn-large span6' )
+            - rfq_label = (listing.free? ?  t('reservations.rfq') : t('reservations.offer'))
+
+            - if listing.free?
+              .rfq-explanation
+                %span= t('reservations.rfq_explanation')
+            .row-fluid
+              = f.submit rfq_label, id:"rfq-#{listing.id}", class: rfq_class, :'data-behavior' => 'RFQ', :'data-modal-method' => 'GET', :'data-modal-url' => new_listing_ticket_path(listing), :'data-force-modal' => true, :'data-behavior' => 'RFQ'
+              - if listing.free?
+                .hidden
+                  = f.submit t('reservations.book'), book_hash
+              - else
+                = f.submit t('reservations.book'), book_hash
+          -else
+            = f.submit t('reservations.book'), book_hash
+
 
     .clearfix
 

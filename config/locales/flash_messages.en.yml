@@ -118,10 +118,22 @@ en:
     support:
       ticket:
         created: 'Ticket has been created.'
+      rfq_ticket:
+        created: 'Your request has been sent. Seller will be in touch shortly.'
+      offer_ticket:
+        created: 'Offer has been sent. Seller will be in touch shortly.'
       ticket_message:
-        closed: 'Ticket message has been closed.'
+        closed: 'Ticket has been resolved.'
         created: 'Ticket message has been created.'
         error: 'Ticket message has not been created.'
+      rfq_ticket_message:
+        closed: 'Request has been resolved.'
+        created: 'Request message has been created.'
+        error: 'Rquest message has not been created.'
+      offer_ticket_message:
+        closed: 'Offer has been resolved.'
+        created: 'Offer message has been created.'
+        error: 'Offer message has not been created.'
     user_messages:
       message_archived: "Your message was archived!"
       message_sent: "Your message was sent!"

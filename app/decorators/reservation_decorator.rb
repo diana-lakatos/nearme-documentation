@@ -6,28 +6,10 @@ class ReservationDecorator < Draper::Decorator
 
   delegate_all
 
+  delegate :days_in_words, :selected_dates_summary, :dates_in_groups, :period_to_string, to: :date_presenter
+
   def days
     periods.size
-  end
-
-  def days_in_words
-    I18n.t('day', count: days).titleize
-  end
-
-  def selected_dates_summary(options = {})
-    wrapper = options[:wrapper].presence || :p
-    separator = options[:separator].presence || :br
-    separator = separator.is_a?(Symbol) ? h.tag(separator) : separator
-
-    items = dates_in_groups.map do |block|
-      content = if block.size == 1
-               period_to_string(block.first)
-             else
-               period_to_string(block.first) + " &ndash; " + period_to_string(block.last)
-             end
-      h.content_tag(wrapper, content.html_safe)
-    end
-    items.join(separator).html_safe
   end
 
   def hourly_summary_for_first_period(show_date = true)
@@ -84,7 +66,7 @@ class ReservationDecorator < Draper::Decorator
       'ico-check'
     elsif unconfirmed?
       'ico-pending'
-    elsif cancelled? || rejected? 
+    elsif cancelled? || rejected?
        'ico-close'
     elsif expired?
       'ico-time'
@@ -186,21 +168,8 @@ class ReservationDecorator < Draper::Decorator
     end
   end
 
-  # [[20 Nov 2012, 21 Nov 2012, 22 Nov 2012], [5 Dec 2012], [7 Dec 2012, 8 Dec 2012]]
-  def dates_in_groups
-    periods.map(&:date).sort.inject([]) { |groups, datetime|
-      date = datetime.to_date
-      if groups.last && ((groups.last.last+1.day) == date)
-        groups.last << date
-      else
-        groups << [date]
-      end
-      groups
-    }
-  end
-
-  def period_to_string(date)
-    date.strftime('%A, %B %-e')
+  def date_presenter
+    @date_presenter ||= DatePresenter.new(periods.map(&:date))
   end
 
 end

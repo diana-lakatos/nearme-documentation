@@ -10,6 +10,7 @@ class Support::TicketsController < Support::BaseController
   def create
     @ticket = Support::Ticket.new(ticket_params)
     @ticket.assign_user(current_user) if current_user
+    @ticket.target = PlatformContext.current.platform_context_detail
     @message = @ticket.messages.first
     if @ticket.valid?
       @ticket.save!

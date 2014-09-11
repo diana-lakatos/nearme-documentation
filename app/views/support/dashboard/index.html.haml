@@ -16,10 +16,14 @@
         -if current_user
           .tickets
             - @tickets.each do |ticket|
+              - ticket = ticket.decorate
               .ticket
                 .question
-                  =support_ticket_title(ticket)
+                  = support_ticket_title(ticket)
+                - if ticket.target.present?
+                  = link_to "RFQ - #{ticket.target.name}", ticket.show_target_path if ticket.target.present?
                 =render 'support/tickets/time', ticket: ticket
+
           = link_to 'View all tickets', support_tickets_path, :class => 'view-all'
         = link_to 'Open a Ticket', new_support_ticket_path, :class => "btn btn-green btn-large open"
 
