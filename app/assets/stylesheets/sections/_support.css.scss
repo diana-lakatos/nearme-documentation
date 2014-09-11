@@ -136,7 +136,7 @@
 
 .support .list.tickets {
   .text {
-    color: $black;
+    color: $dnm_black;
   }
   .ticket {
     padding-top: 0px;
@@ -158,7 +158,7 @@
 }
 
 .support .form {
-  color: $black;
+  color: $dnm_black;
 
   .columns {
     .row-fluid {
@@ -186,7 +186,7 @@
     .question {
       cursor: pointer;
 
-      color: $black;
+      color: $dnm_black;
     }
 
     .answer {
@@ -201,7 +201,7 @@
     .ticket {
       padding-top: 15px;
       .question {
-        color: $black;
+        color: $dnm_black;
         padding-bottom: 8px;
       }
 
@@ -230,7 +230,7 @@
     display: block;
     padding-top: 15px;
     padding-bottom: 25px;
-    color: $black;
+    color: $dnm_black;
     text-decoration: underline !important;
   }
 
