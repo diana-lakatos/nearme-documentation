@@ -6,7 +6,7 @@
 
   .span11.text
     .name.pull-left
-      = ticket_message.full_name
+      = ticket_message.user.try(:name)
     .time.text-right.pull-right
       %abbr.timeago{:title => "#{ticket_message.created_at.to_time.iso8601}"}
         =ticket_message.created_at
