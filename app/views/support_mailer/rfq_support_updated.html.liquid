@@ -1,6 +1,6 @@
-<h2>Request For Quote Updated</h2>
+<h2>{{ ticket.rfq | capitalize }} Updated</h2>
 
-<p>{{message.full_name}} has updated request for quote #{{ticket.id}}. They said:</p>
+<p>{{message.full_name}} has updated {{ ticket.rfq }} #{{ticket.id}}. They said:</p>
 
 <p>{{ message.message_html }}</p>
 

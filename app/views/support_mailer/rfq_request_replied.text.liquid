@@ -1,8 +1,8 @@
 {% include 'support_mailer/new_message_separator.text' %}
 
-Request For Quote Updated
+{{ ticket.rfq | capitalize }} Updated
 
-{{ message.full_name }} has replied to your support request. They said:
+{{ message.full_name }} has replied to your {{ ticket.rfq }}. They said:
 
 {{ message.message_text }}
 

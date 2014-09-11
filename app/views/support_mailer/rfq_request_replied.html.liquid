@@ -1,8 +1,8 @@
 {% include 'support_mailer/new_message_separator.html' %}
 
-<h2>Request For Quote Updated</h2>
+<h2>{{ ticket.rfq | capitalize }} Updated</h2>
 
-<p>{{ message.full_name }} has replied to your request for quote. They said:</p>
+<p>{{ message.full_name }} has replied to your {{ ticket.rfq }}. They said:</p>
 
 <p>{{ message.message_html }}</p>
 

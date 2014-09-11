@@ -17,6 +17,14 @@ class Support::TicketDrop < BaseDrop
     routes.support_ticket_url(ticket)
   end
 
+  def rfq
+    if ticket.target.free?
+      'request'
+    else
+      'offer'
+    end
+  end
+
   def messages_count
     messages.count
   end

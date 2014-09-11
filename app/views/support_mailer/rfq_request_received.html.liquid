@@ -1,8 +1,8 @@
 {% include 'support_mailer/new_message_separator.html' %}
 
-<h2>Request For Quote Received</h2>
+<h2>{{ ticket.rfq | capitalize }} Received</h2>
 
-<p>Your request for quote has been received and will be reviewed by {{ platform_context.lessor }} shortly. You said:</p>
+<p>Your {{ ticket.rfq }} has been received and will be reviewed by {{ platform_context.lessor }} shortly. You said:</p>
 
 <p>{{ message.message_html }}</p>
 

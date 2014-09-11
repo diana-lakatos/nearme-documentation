@@ -1,8 +1,8 @@
 {% include 'support_mailer/new_message_separator.text' %}
 
-Request For Quote Updated
+{{ ticket.rfq | capitalize }} Updated
 
-Thanks for updating your request for quote. You said:
+Thanks for updating your {{ ticket.rfq }}. You said:
 
 {{ message.message_text }}
 

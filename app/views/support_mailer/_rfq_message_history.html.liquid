@@ -1,5 +1,5 @@
 {% if ticket.messages_count > 0 %}
-<h2>Request For Quote History</h2>
+<h2>{{ ticket.rfq | capitalize }} History</h2>
 
 {% for message in ticket.messages %}
   [{{message.created_at}}] {{message.full_name}}: {{message.message_html}}
