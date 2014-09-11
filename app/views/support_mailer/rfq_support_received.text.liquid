@@ -4,10 +4,6 @@ New Request For Quote
 
 {{ message.message_text }}
 
-{% if message.dates != "" %}Chosen dates:
-{{ message.dates_no_html }}
-{% endif %}
-
 {% include 'support_mailer/rfq_host_review.text' %}
 
 {% include 'support_mailer/rfq_message_history.text' %}

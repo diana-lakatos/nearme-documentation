@@ -30,7 +30,9 @@ class Listings::Support::TicketsController < ApplicationController
         flash[:success] = t('flash_messages.support.offer_ticket.created')
       end
       redirect_to support_ticket_path(@ticket)
+      render_redirect_url_as_json if request.xhr?
     else
+      params[:reservation_request] = details
       render :new
     end
   end
@@ -61,7 +63,7 @@ class Listings::Support::TicketsController < ApplicationController
     else
       sub = "Offer: #{@listing.name} - "
     end
-    sub += "#{@ticket.reservation_details['quantity']} x #{@hourly_presenter.present? ? "#{@hourly_presenter.hours} #{'hour'.pluralize(@hourly_presenter.hours.to_i)}" : @date_presenter.days_in_words}"
+    sub += "#{@ticket.reservation_details['quantity']}"# x #{@hourly_presenter.present? ? "#{@hourly_presenter.hours} #{'hour'.pluralize(@hourly_presenter.hours.to_i)}" : @date_presenter.days_in_words}"
     sub
   end
 
