@@ -9,9 +9,12 @@ class Support::Ticket < ActiveRecord::Base
   belongs_to :user
   belongs_to :assigned_to, class_name: 'User'
   belongs_to :instance
-  has_many :messages, -> { order 'created_at DESC' }, class_name: 'Support::TicketMessage', dependent: :destroy
-  scope :metadata, -> {select('state, COUNT(*) as count').group(:state)}
-  scope :user_metadata, -> {select('instance_id, COUNT(*) as count').group(:instance_id)}
+  belongs_to :target, polymorphic: true
+  has_many :messages, -> {order 'created_at DESC'}, class_name: 'Support::TicketMessage', dependent: :destroy
+  scope :metadata, -> {select('support_tickets.state, COUNT(*) as count').group(:state)}
+  scope :user_metadata, -> {select('support_tickets.instance_id, COUNT(*) as count').group(:instance_id)}
+
+  serialize :reservation_details, Hash
 
   state_machine :state, initial: :open do
     event :resolve do
@@ -19,7 +22,7 @@ class Support::Ticket < ActiveRecord::Base
     end
   end
 
-  scope :for_filter, ->(filter) { filter == 'all' ? scoped : where('state = ?', filter)}
+  scope :for_filter, ->(filter) { filter == 'all' ? scoped : where('support_tickets.state = ?', filter)}
 
   accepts_nested_attributes_for :messages
 
@@ -37,7 +40,6 @@ class Support::Ticket < ActiveRecord::Base
 
   def receive(message, params)
     from = message.from[0]
-    to = message.to[0]
 
     if message.multipart?
       part = message.parts[0]
@@ -75,8 +77,12 @@ class Support::Ticket < ActiveRecord::Base
     valid_emails.include?(email)
   end
 
-  def assign_to!(user)
+  def assign_to(user)
     self.assigned_to = user
+  end
+
+  def assign_to!(user)
+    assign_to(user)
     self.save!
   end
 
@@ -101,5 +107,13 @@ class Support::Ticket < ActiveRecord::Base
 
   def to_liquid
     Support::TicketDrop.new(self)
+  end
+
+  def reservation_dates
+    if @reservation_dates.nil?
+      @reservation_dates = self.reservation_details['dates'].try(:split, ',') || []
+      @reservation_dates.map!(&:to_date)
+    end
+    @reservation_dates
   end
 end

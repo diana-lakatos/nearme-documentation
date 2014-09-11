@@ -1,4 +1,4 @@
-.btn, 
+.btn,
 a.btn {
   display: inline-block;
   @include box-sizing(border-box);
@@ -58,7 +58,7 @@ a.btn {
 
   &.btn-blue {
     background: $blue;
-    
+
     &:hover {
       background: lighten($theme_blue, 10%);
     }
@@ -70,7 +70,7 @@ a.btn {
 
   &.btn-green {
     background: $theme_green;
-    
+
     &:hover {
       background: lighten($theme_green, 10%);
     }
@@ -93,7 +93,7 @@ a.btn {
 
   &.btn-orange {
     background: $orange;
-    
+
     &:hover {
       background: lighten($orange, 10%);
     }
@@ -132,9 +132,9 @@ a.btn {
     background: $gray60;
     color: $gray120;
     border: 1px solid $gray120 !important;
-    
+
     span {
-      color: $gray120; 
+      color: $gray120;
     }
 
     &:hover {
@@ -150,9 +150,9 @@ a.btn {
     background: $gray210;
     color: $gray80;
     border: 1px solid $light-gray !important;
-    
+
     span {
-      color: $gray80; 
+      color: $gray80;
     }
 
     &:hover {
@@ -164,11 +164,29 @@ a.btn {
     }
   }
 
-  &.twitter, 
-  &.facebook, 
+  &.btn-gray-light {
+    background: $gray120;
+    color: $pure-white;
+    border: 1px solid $gray120 !important;
+
+    span {
+      color: $pure-white;
+    }
+
+    &:hover {
+      background: lighten($gray120, 10%);
+    }
+
+    &:active {
+      background: darken($gray120, 10%);
+    }
+  }
+
+  &.twitter,
+  &.facebook,
   &.linkedin,
   &.instagram {
-    
+
     &.connected {
       background: $red;
 

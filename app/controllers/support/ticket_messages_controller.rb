@@ -5,11 +5,32 @@ class Support::TicketMessagesController < Support::BaseController
     message.ticket = ticket
     if message.valid?
       message.save!
-      SupportMailer.enqueue.request_updated(@ticket, message)
-      SupportMailer.enqueue.support_updated(@ticket, message)
-      flash[:success] = t('flash_messages.support.ticket_message.created')
+      if Transactable === ticket.target
+        SupportMailer.enqueue.rfq_request_updated(@ticket, message)
+        SupportMailer.enqueue.rfq_support_updated(@ticket, message)
+        if ticket.target.free?
+          flash[:success] = t('flash_messages.support.rfq_ticket_message.created')
+        else
+          flash[:success] = t('flash_messages.support.offer_ticket_message.created')
+        end
+      else
+        SupportMailer.enqueue.request_updated(@ticket, message)
+        SupportMailer.enqueue.support_updated(@ticket, message)
+        flash[:success] = t('flash_messages.support.ticket_message.created')
+      end
     else
-      flash[:error] = t('flash_messages.support.ticket_message.error') unless close?
+      unless close?
+        if Transactable === ticket.target
+          if ticket.target.free?
+            flash[:success] = t('flash_messages.support.rfq_ticket_message.created')
+          else
+            flash[:success] = t('flash_messages.support.offer_ticket_message.error')
+          end
+        else
+          flash[:error] = t('flash_messages.support.ticket_message.error')
+        end
+      end
+
     end
 
     if close?

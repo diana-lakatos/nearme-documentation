@@ -1,0 +1,13 @@
+{% include 'support_mailer/new_message_separator.html' %}
+
+<h2>{{ ticket.rfq | capitalize }} Updated</h2>
+
+<p>Thanks for updating your {{ ticket.rfq }}. You said:</p>
+
+<p>{{ message.message_html }}</p>
+
+<p>We will be in touch with you shortly.</p>
+
+{% include 'support_mailer/rfq_review.html' %}
+
+{% include 'support_mailer/rfq_message_history.html' %}

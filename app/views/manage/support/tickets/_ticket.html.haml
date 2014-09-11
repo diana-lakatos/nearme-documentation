@@ -1,0 +1,10 @@
+%li.listing
+  .span4
+    = link_to support_ticket_title(ticket), manage_support_ticket_path(ticket)
+  .span3.time
+    = timeago(ticket.created_at)
+  .span3.user
+    = support_author(ticket.first_message)
+  .span2.state.text-right
+    = ticket.state.titleize
+  .clearfix

@@ -1,6 +1,9 @@
+- ticket = ticket.decorate
 .ticket
   .text
     =support_ticket_title(ticket, 250)
   .row-fluid
+    - if ticket.target.present?
+      = link_to "RFQ - #{ticket.target.name}", ticket.show_target_path if ticket.target.present?
     =render 'support/tickets/time', ticket: ticket
     %hr

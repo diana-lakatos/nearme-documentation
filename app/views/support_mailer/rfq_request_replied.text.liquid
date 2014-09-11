@@ -1,0 +1,11 @@
+{% include 'support_mailer/new_message_separator.text' %}
+
+{{ ticket.rfq | capitalize }} Updated
+
+{{ message.full_name }} has replied to your {{ ticket.rfq }}. They said:
+
+{{ message.message_text }}
+
+{% include 'support_mailer/rfq_review.text' %}
+
+{% include 'support_mailer/rfq_message_history.text' %}

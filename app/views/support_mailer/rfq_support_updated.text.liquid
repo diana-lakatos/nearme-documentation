@@ -1,0 +1,12 @@
+Request For Quote Updated
+
+{{message.full_name}} has updated request for quote #{{ticket.id}}. They said:
+
+{{ message.message_text }}
+
+To review the status of the request and add additional comments, follow the link below:
+{{ ticket.admin_url }}
+
+{% include 'support_mailer/rfq_host_review.text' %}
+
+{% include 'support_mailer/rfq_message_history.text' %}

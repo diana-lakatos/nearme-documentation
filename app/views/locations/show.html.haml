@@ -76,7 +76,7 @@
 
             // Have we returned from setting up a session. If there are bookings, the JS controller
             // will trigger showing the booking confirmation modal.
-            returnedFromSession: #{@initial_bookings.present? ? 'true' : 'false'}
+            returnedFromSession: #{@initial_bookings.present? ? ("'" + @form_trigger + "'") : 'false'}
           }
         });
       });

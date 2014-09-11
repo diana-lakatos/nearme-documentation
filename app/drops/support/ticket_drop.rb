@@ -17,12 +17,27 @@ class Support::TicketDrop < BaseDrop
     routes.support_ticket_url(ticket)
   end
 
+  def rfq
+    if ticket.target.free?
+      'request'
+    else
+      'offer'
+    end
+  end
+
   def messages_count
     messages.count
   end
 
   def admin_url
-    routes.instance_admin_manage_support_ticket_url(ticket)
+    case ticket.target
+    when Transactable
+      routes.manage_support_ticket_url(ticket)
+    when Instance
+      routes.instance_admin_manage_support_ticket_url(ticket)
+    else
+      raise NotImplementedError.new("Unknown ticket target: #{ticket.target.class}")
+    end
   end
 
   def id
