@@ -4,3 +4,6 @@
   = f.input :show_page_enabled, as: :boolean
 
   = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
+
+  = f.association :action_types, collection: ActionType.pluck(:name, :id), as: :check_boxes, label: "Actions"
+

@@ -10,7 +10,5 @@ Then /^I should see a free booking module$/ do
   within '.booking-module .label' do
     assert page.has_content?('Free')
   end
-  within '.booking-module .price .total' do
-    assert page.has_content?('0.00')
-  end
+  page.should_not have_css('.booking-module .price .total')
 end

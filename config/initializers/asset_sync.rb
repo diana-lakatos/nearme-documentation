@@ -10,10 +10,8 @@ AssetSync.configure do |config|
     case ENV['BRANCH_NAME']
     when 'production'
       config.fog_directory = 'near-me-assets'
-    when 'staging'
+    else
       config.fog_directory = 'near-me-assets-staging'
-    when 'staging-2'
-      config.fog_directory = 'near-me-assets-staging-2'
     end
   end
 

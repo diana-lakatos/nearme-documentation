@@ -11,13 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140905105055) do
+ActiveRecord::Schema.define(version: 20140909085001) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "btree_gin"
   enable_extension "btree_gist"
   enable_extension "hstore"
+
+  create_table "action_types", force: true do |t|
+    t.string   "name"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "addresses", force: true do |t|
     t.integer  "instance_id"
@@ -591,11 +598,11 @@ ActiveRecord::Schema.define(version: 20140905105055) do
     t.boolean  "user_based_marketplace_views",                                default: false
     t.string   "searcher_type"
     t.datetime "master_lock"
-    t.boolean  "onboarding_verification_required",                            default: false
     t.text     "user_required_fields"
     t.boolean  "apply_text_filters",                                          default: false
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
+    t.boolean  "onboarding_verification_required",                            default: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -2011,9 +2018,12 @@ ActiveRecord::Schema.define(version: 20140905105055) do
     t.text     "message",     null: false
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "target_id"
+    t.string   "target_type"
   end
 
   add_index "support_ticket_messages", ["instance_id"], name: "index_support_ticket_messages_on_instance_id", using: :btree
+  add_index "support_ticket_messages", ["target_id", "target_type"], name: "index_support_ticket_messages_on_target_id_and_target_type", using: :btree
   add_index "support_ticket_messages", ["ticket_id"], name: "index_support_ticket_messages_on_ticket_id", using: :btree
   add_index "support_ticket_messages", ["user_id"], name: "index_support_ticket_messages_on_user_id", using: :btree
 
@@ -2021,13 +2031,17 @@ ActiveRecord::Schema.define(version: 20140905105055) do
     t.integer  "instance_id"
     t.integer  "user_id"
     t.integer  "assigned_to_id"
-    t.string   "state",          null: false
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.string   "state",               null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.integer  "target_id"
+    t.string   "target_type"
+    t.text     "reservation_details"
   end
 
   add_index "support_tickets", ["assigned_to_id"], name: "index_support_tickets_on_assigned_to_id", using: :btree
   add_index "support_tickets", ["instance_id"], name: "index_support_tickets_on_instance_id", using: :btree
+  add_index "support_tickets", ["target_id", "target_type"], name: "index_support_tickets_on_target_id_and_target_type", using: :btree
   add_index "support_tickets", ["user_id"], name: "index_support_tickets_on_user_id", using: :btree
 
   create_table "text_filters", force: true do |t|
@@ -2132,6 +2146,15 @@ ActiveRecord::Schema.define(version: 20140905105055) do
   end
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree
+
+  create_table "transactable_type_actions", force: true do |t|
+    t.integer  "action_type_id"
+    t.integer  "transactable_type_id"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "transactable_type_attributes", force: true do |t|
     t.string   "name"

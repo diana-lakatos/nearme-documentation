@@ -5,23 +5,26 @@
         %ul.nav
           %li
             = link_to manage_locations_path, :class => (active_tab == :locations) ? 'active' : '' do
-              %span Locations 
+              %span Locations
           %li
             = link_to manage_guests_dashboard_path, :class => (active_tab == :guests) ? 'active' : '' do
               %span= platform_context.lessee.capitalize.pluralize
+          %li
+            = link_to manage_support_tickets_path, :class => (active_tab == :rfq) ? 'active' : '' do
+              %span RFQ
           %li
             = link_to analytics_dashboard_path, :class => (active_tab == :analytics) ? 'active' : '' do
               %span Analytics
           %li
             = link_to transfers_dashboard_path, :class => (active_tab == :transfers) ? 'active' : '' do
-              %span Transfers      
+              %span Transfers
           - if current_user.companies.any? && current_user.companies.first.id.present?
             %li
               = link_to edit_manage_company_path(current_user.companies.first), :class => (active_tab == :company) ? 'active' : '' do
                 %span Company
             %li
               = link_to manage_users_path, :class => (active_tab == :users) ? 'active' : '' do
-                %span Users 
+                %span Users
             %li
               = link_to edit_manage_white_label_path(current_user.companies.first), :class => (active_tab == :white_label) ? 'active' : '' do
                 %span White-label

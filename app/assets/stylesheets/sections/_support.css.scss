@@ -14,13 +14,104 @@
   }
 }
 
+.rfq {
+  textarea {
+    font-size: 18px;
+  }
+
+  .time .timeago {
+    font-size: 15px;
+  }
+
+
+
+  .message,
+  .message-form{
+
+    @media (max-width: $ipad-width) {
+      .span1 {
+        float: left;
+        width: 12%;
+      }
+
+      .span11 {
+        float: left;
+        margin-left: 2%;
+        width: 86%;
+      }
+
+      input[type='submit'] {
+        margin-top: 0px;
+
+        &.resolve {
+          margin-top: 5px;
+        }
+      }
+    }
+
+    form {
+      margin-top: 0px;
+    }
+
+  }
+}
+
 .support.detail {
+
+  h1 {
+    a {
+      color: $theme_blue;
+    }
+  }
+
+  .rfq-header {
+
+    padding-bottom: 15px;
+    border-bottom: 1px solid $gray204;
+    margin-bottom: 25px;
+
+    .header-wrapper {
+      @media (max-width: $ipad-width) {
+        margin-top: 10px;
+
+        &:first-child {
+          margin-top: 0px;
+        }
+      }
+    }
+
+    .rfq-header-label {
+      color: $gray160;
+      margin-bottom: 10px;
+    }
+
+    .rfq-header-data {
+
+      .status.open {
+        color: $dnm_green;
+      }
+    }
+
+    .status-wrapper,
+    .status-wrapper.status {
+      text-align: right;
+
+      @media (max-width: 768px) {
+        text-align: left;
+      }
+    }
+  }
+
   .header {
     margin: -15px -15px 30px -15px;
     padding: 15px;
     background-color: $gray160;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
+  }
+
+  #more-reservations {
+    display: none;
   }
 
   .form {
@@ -32,13 +123,13 @@
   }
 
   .time abbr{
-    color: $theme_gray;
+    color: $gray160;
   }
 
   .text {
-    color: $black;
+    color: $gray160;
     p {
-      color: $black;
+      color: $gray160;
     }
   }
 }
