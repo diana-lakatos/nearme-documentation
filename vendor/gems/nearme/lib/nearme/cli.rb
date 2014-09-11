@@ -19,6 +19,8 @@ DESC
       aliases: :r, desc: "git branch to deploy"
     method_option "stack", required: true, type: :string,
       aliases: :e, desc: "AWS OpsWorks stack name"
+    method_option "environment", required: false, type: :string,
+      aliases: :env, desc: "Rails environtment"
     method_option "migrate", required: false, type: :boolean,
       default: true, desc: "Trigger migration"
     method_option "assets", required: false, type: :boolean,
