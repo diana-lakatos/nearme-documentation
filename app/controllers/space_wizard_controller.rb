@@ -1,6 +1,5 @@
 class SpaceWizardController < ApplicationController
 
-  before_filter :authenticate_user!
   before_filter :redirect_to_dashboard_if_user_has_listings, :only => [:new, :list]
   before_filter :find_transactable_type
   before_filter :find_user, :except => [:new]
