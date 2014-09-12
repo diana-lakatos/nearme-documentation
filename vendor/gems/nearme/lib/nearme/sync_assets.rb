@@ -2,9 +2,10 @@ module NearMe
   class SyncAssets
     attr_accessor :branch, :bucket, :stack, :prefix
     def initialize(options = {})
-      @branch = options[:branch]
-      @bucket = options[:bucket] || stack_mapping[options[:stack]] || 'near-me-assets-staging'
-      @prefix = options[:prefix] || prefix_mapping[options[:stack]]
+      @branch      = options[:branch]
+      @environment = options[:environment] || 'production'
+      @bucket      = options[:bucket] || stack_mapping[options[:stack]] || 'near-me-assets-staging'
+      @prefix      = options[:prefix] || prefix_mapping[options[:stack]]
       if @bucket.to_s.empty?
         puts "Invalid bucket. Can't find mapping. Provide it manually."
         exit 5
@@ -29,7 +30,7 @@ module NearMe
       check_branch
       check_clean_tree
       puts "Compiling..."
-      if not Kernel.system("ASSETS_PREFIX=#{@prefix} bundle exec rake assets:precompile")
+      if not Kernel.system("ASSETS_PREFIX=#{@prefix} RAILS_ENV=#{@environment} bundle exec rake assets:precompile")
         puts "precompile failed :("
         exit 6
       end
