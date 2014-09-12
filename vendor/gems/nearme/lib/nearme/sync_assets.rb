@@ -4,7 +4,7 @@ module NearMe
     def initialize(options = {})
       @branch = options[:branch]
       @bucket = options[:bucket] || stack_mapping[options[:stack]] || 'near-me-assets-staging'
-      @prefix = options[:prefix] || prefix_mapping[options[:stack]]
+      @prefix = options[:prefix] || prefix_mapping[options[:stack]] || "/#{options[:stack].gsub('nm-', '')}/assets"
       if @bucket.to_s.empty?
         puts "Invalid bucket. Can't find mapping. Provide it manually."
         exit 5
@@ -20,8 +20,6 @@ module NearMe
     def prefix_mapping
       {
         'nm-production' => '/assets',
-        'nm-staging' => '/staging/assets',
-        'nm-staging-2' => '/staging-2/assets',
       }
     end
 
