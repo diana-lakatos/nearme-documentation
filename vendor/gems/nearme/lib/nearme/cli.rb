@@ -64,6 +64,8 @@ DESC
       aliases: :b, desc: "S3 bucket name"
     method_option "stack", required: true, type: :string,
       aliases: :e, desc: "AWS OpsWorks stack name"
+    method_option "environment", required: false, type: :string,
+      aliases: :env, desc: "Rails environtment"
     def sync_assets
       puts "Assets sync..."
       result = NearMe::SyncAssets.new(options).start!
