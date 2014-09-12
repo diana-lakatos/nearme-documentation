@@ -6,7 +6,6 @@ class TransactableTypeAttributeDecorator::TextArea < TransactableTypeAttributeDe
 
   def options
     {
-      placeholder: @attribute_decorator.placeholder,
       as: :text
     }
   end

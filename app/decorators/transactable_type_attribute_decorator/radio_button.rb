@@ -3,7 +3,7 @@ class TransactableTypeAttributeDecorator::RadioButto < TransactableTypeAttribute
   def options
     {
       as: :radio_buttons,
-      collection: @attribute_decorator.valid_values,
+      collection: @attribute_decorator.valid_values_translated
     }
   end
 

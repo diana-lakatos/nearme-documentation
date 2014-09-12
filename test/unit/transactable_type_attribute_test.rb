@@ -39,45 +39,25 @@ class TransactableTypeAttributeTest < ActiveSupport::TestCase
   end
 
   context 'translations' do
+
+    setup do
+      TransactableTypeAttribute::TranslationCreator.any_instance.stubs(:should_create_translations?).returns(true)
+    end
+
     context 'input' do
       setup do
-        TransactableTypeAttribute::TranslationCreator.any_instance.stubs(:should_create_translations?).returns(true)
         @tta = FactoryGirl.create(:transactable_type_attribute_input,
                                   transactable_type: TransactableType.new(name: 'My TransactableType'),
                                   name: 'My Attribute')
       end
 
       should 'create translations for label' do
-        plural_translation = Translation.where(key: 'simple_form.labels.listings.my_attribute').first
-        singular_translation = Translation.where(key: 'simple_form.labels.listing.my_attribute').first
-        assert singular_translation.present?
-        assert_equal 'My Label', singular_translation.value
-        assert plural_translation.present?
-        assert_equal 'My Label', plural_translation.value
+        label_translations_exist('My Label')
+        placeholder_translations_exist('My Placeholder')
+        hint_translations_exist('this is my hint')
+        prompt_translation_exists(nil)
+        valid_valus_translations_exist(nil)
       end
-
-      should 'create translations for placeholders' do
-        plural_translation = Translation.where(key: 'simple_form.placeholders.listings.my_attribute').first
-        singular_translation = Translation.where(key: 'simple_form.placeholders.listing.my_attribute').first
-        assert singular_translation.present?
-        assert_equal 'My Placeholder', singular_translation.value
-        assert plural_translation.present?
-        assert_equal 'My Placeholder', plural_translation.value
-      end
-
-      should 'create translations for hints' do
-        plural_translation = Translation.where(key: 'simple_form.hints.listings.my_attribute').first
-        singular_translation = Translation.where(key: 'simple_form.hints.listing.my_attribute').first
-        assert singular_translation.present?
-        assert_equal 'this is my hint', singular_translation.value
-        assert plural_translation.present?
-        assert_equal 'this is my hint', plural_translation.value
-      end
-
-      should 'not create translations for prompt' do
-        assert_nil Translation.where(key: 'simple_form.prompts.my_transactable_type.my_attribute').first
-      end
-
 
       should 'update translations on tta update' do
         assert_no_difference 'Translation.count' do
@@ -85,12 +65,11 @@ class TransactableTypeAttributeTest < ActiveSupport::TestCase
           @tta.placeholder = 'New Placeholder'
           @tta.hint = 'New Hint'
           @tta.save!
-          assert_equal 'New Label', Translation.where(key: 'simple_form.labels.listing.my_attribute').first.value
-          assert_equal 'New Label', Translation.where(key: 'simple_form.labels.listings.my_attribute').first.value
-          assert_equal 'New Placeholder', Translation.where(key: 'simple_form.placeholders.listing.my_attribute').first.value
-          assert_equal 'New Placeholder', Translation.where(key: 'simple_form.placeholders.listings.my_attribute').first.value
-          assert_equal 'New Hint', Translation.where(key: 'simple_form.hints.listing.my_attribute').first.value
-          assert_equal 'New Hint', Translation.where(key: 'simple_form.hints.listings.my_attribute').first.value
+          label_translations_exist('New Label')
+          placeholder_translations_exist('New Placeholder')
+          hint_translations_exist('New Hint')
+          prompt_translation_exists(nil)
+          valid_valus_translations_exist(nil)
         end
       end
 
@@ -99,66 +78,40 @@ class TransactableTypeAttributeTest < ActiveSupport::TestCase
           @tta.hint = ''
           @tta.save!
         end
-        assert_nil Translation.where(key: 'simple_form.hints.listing.my_attribute').first
-        assert_nil Translation.where(key: 'simple_form.hints.listings.my_attribute').first
+        hint_translations_exist(nil)
       end
     end
 
     context 'select' do
       setup do
-        TransactableTypeAttribute::TranslationCreator.any_instance.stubs(:should_create_translations?).returns(true)
         @tta = FactoryGirl.create(:transactable_type_attribute_select,
                                   transactable_type: TransactableType.new(name: 'My TransactableType'),
                                   name: 'My Attribute')
       end
 
-      should 'create translations for label' do
-        plural_translation = Translation.where(key: 'simple_form.labels.listings.my_attribute').first
-        singular_translation = Translation.where(key: 'simple_form.labels.listing.my_attribute').first
-        assert singular_translation.present?
-        assert_equal 'My Label', singular_translation.value
-        assert plural_translation.present?
-        assert_equal 'My Label', plural_translation.value
+      should 'create translations for select' do
+        label_translations_exist('My Label')
+        placeholder_translations_exist(nil)
+        hint_translations_exist('this is my hint')
+        prompt_translation_exists('My Prompt')
+        valid_valus_translations_exist({'value_one' => 'Value One', 'value_two' => 'Value Two'})
       end
 
-      should 'not create translations for placeholders' do
-        assert_nil Translation.where(key: 'simple_form.placeholders.listings.my_attribute').first
-        assert_nil Translation.where(key: 'simple_form.placeholders.listing.my_attribute').first
-      end
-
-      should 'create translations for hints' do
-        plural_translation = Translation.where(key: 'simple_form.hints.listings.my_attribute').first
-        singular_translation = Translation.where(key: 'simple_form.hints.listing.my_attribute').first
-        assert singular_translation.present?
-        assert_equal 'this is my hint', singular_translation.value
-        assert plural_translation.present?
-        assert_equal 'this is my hint', plural_translation.value
-      end
-
-      should 'create translations for prompt' do
-        assert_equal 'My Prompt', Translation.where(key: 'simple_form.prompts.my_transactable_type.my_attribute').first.value
-      end
-
-      should 'create translations for valid values' do
-        assert_equal 'Value One', Translation.where(key: 'simple_form.valid_values.my_transactable_type.my_attribute.value_one').first.value
-        assert_equal 'Value Two', Translation.where(key: 'simple_form.valid_values.my_transactable_type.my_attribute.value_two').first.value
-      end
-
-      should 'update translations on tta update' do
+      should 'update translations for select on tta update' do
         assert_no_difference 'Translation.count' do
           @tta.label = 'New Label'
           @tta.prompt = 'New Prompt'
           @tta.save!
-          assert_equal 'New Label', Translation.where(key: 'simple_form.labels.listing.my_attribute').first.value
-          assert_equal 'New Label', Translation.where(key: 'simple_form.labels.listings.my_attribute').first.value
-          assert_equal 'New Prompt', Translation.where(key: 'simple_form.prompts.my_transactable_type.my_attribute').first.value
+          label_translations_exist('New Label')
+          placeholder_translations_exist(nil)
+          hint_translations_exist('this is my hint')
+          prompt_translation_exists('New Prompt')
         end
         assert_difference 'Translation.count', 2 do
           @tta.valid_values = ['New One', 'New Two']
           @tta.save!
-          assert_equal 'New One', Translation.where(key: 'simple_form.valid_values.my_transactable_type.my_attribute.new_one').first.value
-          assert_equal 'New Two', Translation.where(key: 'simple_form.valid_values.my_transactable_type.my_attribute.new_two').first.value
         end
+        valid_valus_translations_exist({'new_one' => 'New One', 'new_two' => 'New Two'})
       end
 
       should 'destroy hints translation if blank' do
@@ -166,11 +119,152 @@ class TransactableTypeAttributeTest < ActiveSupport::TestCase
           @tta.hint = ''
           @tta.save!
         end
-        assert_nil Translation.where(key: 'simple_form.hints.listing.my_attribute').first
-        assert_nil Translation.where(key: 'simple_form.hints.listings.my_attribute').first
+        hint_translations_exist(nil)
       end
     end
 
+    should 'create translations for textarea' do
+      @tta = FactoryGirl.create(:transactable_type_attribute_textarea,
+                                transactable_type: TransactableType.new(name: 'My TransactableType'),
+                                name: 'My Attribute')
+      label_translations_exist('My Label')
+      placeholder_translations_exist('My Placeholder')
+      hint_translations_exist('this is my hint')
+      prompt_translation_exists(nil)
+      valid_valus_translations_exist(nil)
+    end
+
+    should 'create translations for check box' do
+      @tta = FactoryGirl.create(:transactable_type_attribute_check_box,
+                                transactable_type: TransactableType.new(name: 'My TransactableType'),
+                                name: 'My Attribute')
+      label_translations_exist('My Label')
+      placeholder_translations_exist(nil)
+      hint_translations_exist('this is my hint')
+      prompt_translation_exists(nil)
+      valid_valus_translations_exist(nil)
+    end
+
+    should 'create translations for check_box_list' do
+      @tta = FactoryGirl.create(:transactable_type_attribute_check_box_list,
+                                transactable_type: TransactableType.new(name: 'My TransactableType'),
+                                name: 'My Attribute')
+      label_translations_exist('My Label')
+      placeholder_translations_exist(nil)
+      hint_translations_exist('this is my hint')
+      prompt_translation_exists(nil)
+      valid_valus_translations_exist({'value_one' => 'Value One', 'value_two' => 'Value Two'})
+    end
+
+    should 'create translations for radio_buttons' do
+      @tta = FactoryGirl.create(:transactable_type_attribute_radio_buttons,
+                                transactable_type: TransactableType.new(name: 'My TransactableType'),
+                                name: 'My Attribute')
+      label_translations_exist('My Label')
+      placeholder_translations_exist(nil)
+      hint_translations_exist('this is my hint')
+      prompt_translation_exists(nil)
+      valid_valus_translations_exist({'value_one' => 'Value One', 'value_two' => 'Value Two'})
+    end
+
   end
+
+  private
+
+  def label_translations_exist(label)
+    label_singular_translation_exist(label)
+    label_plural_translation_exist(label)
+  end
+
+  def label_singular_translation_exist(label)
+    singular_translation = Translation.where(key: 'simple_form.labels.listing.my_attribute').first
+    if label.present?
+      assert singular_translation.present?
+      assert_equal label, singular_translation.value
+    else
+      refute singular_translation.present?
+    end
+  end
+
+  def label_plural_translation_exist(label)
+    plural_translation = Translation.where(key: 'simple_form.labels.listings.my_attribute').first
+    if label.present?
+      assert plural_translation.present?
+      assert_equal label, plural_translation.value
+    else
+      refute plural_translation.present?
+    end
+  end
+
+  def placeholder_translations_exist(placeholder)
+    placeholder_singular_translation_exist(placeholder)
+    placeholder_plural_translation_exist(placeholder)
+  end
+
+  def placeholder_singular_translation_exist(placeholder)
+    singular_translation = Translation.where(key: 'simple_form.placeholders.listing.my_attribute').first
+    if placeholder.present?
+      assert singular_translation.present?
+      assert_equal placeholder, singular_translation.value
+    else
+      refute singular_translation.present?
+    end
+  end
+
+  def placeholder_plural_translation_exist(placeholder)
+    plural_translation = Translation.where(key: 'simple_form.placeholders.listings.my_attribute').first
+    if placeholder.present?
+      assert plural_translation.present?
+      assert_equal placeholder, plural_translation.value
+    else
+      refute plural_translation.present?
+    end
+  end
+
+  def hint_translations_exist(hint)
+    hint_singular_translation_exist(hint)
+    hint_plural_translation_exist(hint)
+  end
+
+  def hint_singular_translation_exist(hint)
+    singular_translation = Translation.where(key: 'simple_form.hints.listing.my_attribute').first
+    if hint.present?
+      assert singular_translation.present?
+      assert_equal hint, singular_translation.value
+    else
+      refute singular_translation.present?
+    end
+  end
+
+  def hint_plural_translation_exist(hint)
+    plural_translation = Translation.where(key: 'simple_form.hints.listings.my_attribute').first
+    if hint.present?
+      assert plural_translation.present?
+      assert_equal hint, plural_translation.value
+    else
+      refute plural_translation.present?
+    end
+  end
+
+  def prompt_translation_exists(prompt)
+    translation = Translation.where(key: 'simple_form.prompts.my_transactable_type.my_attribute').first
+    if prompt.present?
+      assert_equal prompt, translation.value
+    else
+      refute translation.present?
+    end
+  end
+
+  def valid_valus_translations_exist(valid_values)
+    valid_values ||= {}
+    if valid_values.empty?
+      assert_equal 0, Translation.where('key LIKE ?', "simple_form.valid_values.my_transactable_type.my_attribute.%").count
+    else
+      valid_values.each do |key, value|
+        assert_equal value, Translation.where(key: "simple_form.valid_values.my_transactable_type.my_attribute.#{key}").first.value
+      end
+    end
+  end
+
 end
 
