@@ -15,6 +15,8 @@ class TransactableType < ActiveRecord::Base
   has_many :transactable_type_attributes, inverse_of: :transactable_type
   has_many :availability_templates, inverse_of: :transactable_type, :dependent => :destroy
   has_many :data_uploads, inverse_of: :transactable_type
+  has_many :transactable_type_actions
+  has_many :action_types, through: :transactable_type_actions
 
   belongs_to :instance
 
@@ -114,6 +116,11 @@ class TransactableType < ActiveRecord::Base
 
   def buy_sell?
     name == 'Buy/Sell'
+  end
+
+  def has_action?(name)
+    @action_type_names ||= action_types.pluck(:name)
+    @action_type_names.include?(name)
   end
 end
 

@@ -95,7 +95,7 @@ class @Space.Controller
     for listingData in @options.bookings.listings
       listingController = new Bookings.Controller(@container.find("div[data-listing-id=#{listingData.id}]"),
         listingData,
-        showReviewBookingImmediately: @options.bookings.returnedFromSession
+        submitFormImmediately: @options.bookings.returnedFromSession
       )
 
   setupMap: ->

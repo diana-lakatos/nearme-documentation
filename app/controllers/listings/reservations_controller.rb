@@ -95,6 +95,8 @@ class Listings::ReservationsController < ApplicationController
   # Store the reservation request in the session so that it can be restored when returning to the listings controller.
   def store_reservation_request
     session[:stored_reservation_location_id] = @listing.location.id
+    session[:stored_reservation_trigger] ||= {}
+    session[:stored_reservation_trigger]["#{@listing.location.id}"] = params[:commit]
 
     # Marshals the booking request parameters into a better structured hash format for transmission and
     # future assignment to the Bookings JS controller.

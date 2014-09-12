@@ -1,0 +1,7 @@
+{% if ticket.messages_count > 0 %}
+{{ ticket.rfq | capitalize}} History
+
+{% for message in ticket.messages %}
+[{{message.created_at}}] {{message.full_name}}: {{message.message_text}}
+{% endfor %}
+{% endif %}

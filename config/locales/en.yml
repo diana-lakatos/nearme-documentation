@@ -49,6 +49,12 @@ en:
     no_cancellation_fee: "You will get full refund except of service fee."
     no_bookings_html: "You don't have any %{type} bookings. <a href='/search'>Find a %{bookable_noun} near you!</a>"
     payment_in_person: "You will make payment in person."
+    rfq: 'Request Quote'
+    offer: 'Make Offer'
+    make_offer: 'Make an Offer'
+    book: 'Book'
+    rfq_message: 'Please, enter a message for the seller'
+    rfq_explanation: 'Click on the button below to request a quote for this product'
   search:
     list:
       additional_social_connections:

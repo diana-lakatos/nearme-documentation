@@ -1,0 +1,11 @@
+{% include 'support_mailer/new_message_separator.html' %}
+
+<h2>{{ ticket.rfq | capitalize }} Received</h2>
+
+<p>Your {{ ticket.rfq }} has been received and will be reviewed by {{ platform_context.lessor }} shortly. You said:</p>
+
+<p>{{ message.message_html }}</p>
+
+{% include 'support_mailer/rfq_review.html' %}
+
+{% include 'support_mailer/rfq_message_history.html' %}
