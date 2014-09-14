@@ -3,7 +3,7 @@
     - if !user_signed_in?
       %li
         = link_to main_app.new_user_registration_path(:return_to => main_app.new_space_wizard_path), :rel => 'modal.sign-up-modal', :class => "nav-link btn btn-blue btn-medium" do
-          %span.text List Your #{platform_context.bookable_noun}
+          %span.text= t('ui.header.list_your_thing', thing: platform_context.bookable_noun)
           %span.icon.ico-plus
     - elsif current_user && current_user.has_draft_listings
       %li
@@ -13,7 +13,7 @@
     - elsif current_user && !current_user.has_any_active_listings
       %li
         = link_to main_app.new_space_wizard_path, :class => "nav-link btn btn-blue btn-medium" do
-          %span.text List Your #{platform_context.bookable_noun}
+          %span.text= t('ui.header.list_your_thing', thing: platform_context.bookable_noun)
           %span.icon.ico-plus
 
   - if user_signed_in?
