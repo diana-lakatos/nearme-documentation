@@ -1,0 +1,6 @@
+en:
+  ui:
+    header:
+      list_your_thing: "List Your %{thing}"
+    photo_uploader:
+      caption: "Enter caption..."
