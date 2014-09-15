@@ -231,7 +231,7 @@ module Utils
     def load_listings!
       @listings ||= do_task "Loading listings" do
         locations.map do |location|
-          ["Shared Desks", "Meeting Room", "Private Office"].sample(rand(1..3)).map do |name|
+          ["Desk", "Meeting Room", "Office Space", "Salon Booth"].sample(rand(1..4)).map do |name|
             FactoryGirl.create(:transactable, :listing_type => name, :name => "#{name} #{Faker::Company.name}".truncate(50, :separator => ''), :location => location,
                                :description => Faker::Lorem.paragraph.truncate(200), :photos_count_to_be_created => 0)
           end
