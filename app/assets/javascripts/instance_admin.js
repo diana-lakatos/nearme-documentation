@@ -20,3 +20,6 @@
 //= require ckeditor/init
 //= require lib/timeago.jquery
 //= require components/ace_editor_textarea_binding
+//= require sections/support
+//= require sections/support/attachment_form
+//= require sections/support/ticket_message_controller

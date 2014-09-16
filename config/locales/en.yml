@@ -50,6 +50,7 @@ en:
     no_bookings_html: "You don't have any %{type} bookings. <a href='/search'>Find a %{bookable_noun} near you!</a>"
     payment_in_person: "You will make payment in person."
     rfq: 'Request Quote'
+    rfq_long: 'Request for Quote'
     offer: 'Make Offer'
     make_offer: 'Make an Offer'
     book: 'Book'

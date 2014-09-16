@@ -143,6 +143,9 @@ en:
         closed: 'Offer has been resolved.'
         created: 'Offer message has been created.'
         error: 'Offer message has not been created.'
+      ticket_message_attachment:
+        created: 'Attachment has been uploaded.'
+
     user_messages:
       message_archived: "Your message was archived!"
       message_sent: "Your message was sent!"

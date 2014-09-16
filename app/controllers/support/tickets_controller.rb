@@ -5,6 +5,9 @@ class Support::TicketsController < Support::BaseController
     @ticket = Support::Ticket.new
     @ticket.messages.build
     @ticket.assign_user(current_user) if current_user
+    if current_user
+      @attachments = Support::TicketMessageAttachment.where(uploader_id: current_user.id, ticket_id: nil, ticket_message_id: nil).all
+    end
   end
 
   def create
@@ -33,7 +36,7 @@ class Support::TicketsController < Support::BaseController
 
   def show
     @ticket = current_user.tickets.find(params[:id])
-    @message = Support::TicketMessage.new
+    @message = Support::TicketMessage.new(attachments: @ticket.attachments.where(ticket_message_id: nil, uploader_id: current_user.id))
   end
 
   private

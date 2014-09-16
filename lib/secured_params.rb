@@ -289,12 +289,26 @@ class SecuredParams
     ]
   end
 
+  def support_ticket_message_attachment
+    [
+      :file, :tag, :file_cache
+    ]
+  end
+
+  def guest_support_message
+    [
+      :message,
+      attachment_ids: []
+    ]
+  end
+
   def support_message
     [
       :message,
       :subject,
       :full_name,
-      :email
+      :email,
+      attachment_ids: [],
     ]
   end
 
