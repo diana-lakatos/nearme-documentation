@@ -7,6 +7,8 @@ class WaiverAgreementTemplate < ActiveRecord::Base
   belongs_to :target, :polymorphic => true
   belongs_to :instance
 
+  has_many :assigned_waiver_agreement_templates, dependent: :destroy
+
   validates_presence_of :name, :content
 
 end
