@@ -23,6 +23,8 @@ class Transactable < ActiveRecord::Base
   has_many :confidential_files, as: :owner
   has_many :impressions, :as => :impressionable, :dependent => :destroy
   has_many :transactable_tickets, as: :target, class_name: 'Suppport::Ticket'
+  has_many :assigned_waiver_agreement_templates, as: :target
+  has_many :waiver_agreement_templates, through: :assigned_waiver_agreement_templates
   belongs_to :transactable_type, inverse_of: :transactables
   belongs_to :company, inverse_of: :listings
   belongs_to :location, inverse_of: :listings
@@ -39,6 +41,7 @@ class Transactable < ActiveRecord::Base
 
   accepts_nested_attributes_for :availability_rules, allow_destroy: true
   accepts_nested_attributes_for :photos, allow_destroy: true
+  accepts_nested_attributes_for :waiver_agreement_templates, allow_destroy: true
 
   before_destroy :decline_reservations
 

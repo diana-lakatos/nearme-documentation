@@ -28,6 +28,7 @@ class Company < ActiveRecord::Base
   has_many :payment_transfers, :dependent => :destroy
   has_many :company_industries, :dependent => :destroy
   has_many :industries, :through => :company_industries
+  has_many :waiver_agreement_templates, as: :target
   has_one :domain, :as => :target, :dependent => :destroy
   has_one :theme, :as => :owner, :dependent => :destroy
   has_many :order_line_items, class_name: 'Spree::LineItem'

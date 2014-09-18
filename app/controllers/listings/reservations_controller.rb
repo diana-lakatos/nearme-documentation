@@ -131,20 +131,23 @@ class Listings::ReservationsController < ApplicationController
 
   def build_reservation_request
     attributes = params[:reservation_request] || {}
+    attributes[:waiver_agreement_templates] ||= {}
+    attributes[:waiver_agreement_templates] = attributes[:waiver_agreement_templates].select { |k, v| v == "1" }.keys
     @reservation_request = ReservationRequest.new(
       @listing,
       current_user,
       platform_context,
       {
-        :quantity       => attributes[:quantity],
-        :dates          => attributes[:dates],
-        :start_minute   => attributes[:start_minute],
-        :end_minute     => attributes[:end_minute],
-        :card_expires   => attributes[:card_expires],
-        :card_code      => attributes[:card_code],
-        :card_number    => attributes[:card_number],
-        :country_name   => attributes[:country_name],
-        :mobile_number  => attributes[:mobile_number]
+        quantity: attributes[:quantity],
+        dates: attributes[:dates],
+        start_minute: attributes[:start_minute],
+        end_minute: attributes[:end_minute],
+        card_expires: attributes[:card_expires],
+        card_code: attributes[:card_code],
+        card_number: attributes[:card_number],
+        country_name: attributes[:country_name],
+        mobile_number: attributes[:mobile_number],
+        waiver_agreement_templates: attributes[:waiver_agreement_templates]
       }
     )
   end

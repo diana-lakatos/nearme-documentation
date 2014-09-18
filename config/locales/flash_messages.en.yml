@@ -36,6 +36,11 @@ en:
           created: 'New attribute created.'
           updated: 'Attribute updated.'
           deleted: 'Attribute deleted.'
+        waiver_agreement_templates:
+          created: 'Waiver agreement template has been created.'
+          already_created: 'Waiver agreement template has been already created.'
+          deleted: 'Waiver agreement template has been deleted.'
+          updated: 'Waiver agreement template has been updated.'
       settings:
         listing_type_added: 'New listing type added.'
         listing_type_deleted: 'Listing type deleted.'
@@ -76,6 +81,10 @@ en:
         reservation_confirmed: "You have confirmed the reservation!"
         reservation_not_confirmed: "Your reservation could not be confirmed."
         reservation_rejected: "You have rejected the reservation. Maybe next time!"
+      waiver_agreement_templates:
+        created: 'Waiver agreement template has been created.'
+        deleted: 'Waiver agreement template has been deleted.'
+        updated: 'Waiver agreement template has been updated.'
       users:
         user_added: "You've added %{name} to %{company_name}"
         user_cannot_be_invited: "This user couldn't be invited as they are already associated with a company."

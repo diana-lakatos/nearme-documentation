@@ -1,0 +1,9 @@
+= simple_form_for [:manage, @waiver_agreement_template], :html => { class: "form-horizontal form-expandable" } do |f|
+  = f.input :name
+  = f.input :content
+  - if @waiver_agreement_template.persisted?
+    = link_to manage_waiver_agreement_template_path(@waiver_agreement_template), :method => :delete, :confirm => 'Are you sure?', :class => "delete delete-listing" do
+      %span.ico-trash.padding
+        Delete this Waiver Agreement Template
+  .actions
+    = f.submit "Save"

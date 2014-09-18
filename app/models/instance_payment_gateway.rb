@@ -40,6 +40,7 @@ class InstancePaymentGateway < ActiveRecord::Base
 
   def self.get_settings_for(method_name, key=nil, mode=nil)
     payment_gateway = PaymentGateway.find_by_method_name(method_name)
+    return nil if payment_gateway.nil?
     instance_payment_gateway = self.where(payment_gateway_id: payment_gateway.id).first
 
     return self.settings_for_key(payment_gateway.settings, key) if instance_payment_gateway.nil?

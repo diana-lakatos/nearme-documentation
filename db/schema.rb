@@ -81,6 +81,18 @@ ActiveRecord::Schema.define(version: 20140909085001) do
 
   add_index "amenity_types", ["instance_id"], name: "index_amenity_types_on_instance_id", using: :btree
 
+  create_table "assigned_waiver_agreement_templates", force: true do |t|
+    t.integer  "target_id"
+    t.string   "target_type"
+    t.integer  "waiver_agreement_template_id"
+    t.integer  "instance_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "assigned_waiver_agreement_templates", ["target_id", "target_type"], name: "awat_target_id_and_target_type", using: :btree
+  add_index "assigned_waiver_agreement_templates", ["waiver_agreement_template_id"], name: "awat_wat_id", using: :btree
+
   create_table "authentications", force: true do |t|
     t.integer  "user_id"
     t.string   "provider"
@@ -2398,5 +2410,35 @@ ActiveRecord::Schema.define(version: 20140909085001) do
   end
 
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
+
+  create_table "waiver_agreement_templates", force: true do |t|
+    t.string   "name"
+    t.text     "content"
+    t.integer  "target_id"
+    t.string   "target_type"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "waiver_agreement_templates", ["target_id", "target_type"], name: "index_waiver_agreement_templates_on_target_id_and_target_type", using: :btree
+
+  create_table "waiver_agreements", force: true do |t|
+    t.string   "vendor_name"
+    t.string   "guest_name"
+    t.string   "name"
+    t.text     "content"
+    t.integer  "target_id"
+    t.string   "target_type"
+    t.integer  "waiver_agreement_template_id"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "waiver_agreements", ["target_id", "target_type"], name: "index_waiver_agreements_on_target_id_and_target_type", using: :btree
+  add_index "waiver_agreements", ["waiver_agreement_template_id"], name: "index_waiver_agreements_on_waiver_agreement_template_id", using: :btree
 
 end

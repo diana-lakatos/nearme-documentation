@@ -56,6 +56,9 @@
           = hidden_field_tag "#{photo_input_name_prefix}[photo_ids][]", photo.id
           = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{photo.id}][id]", photo.id
           = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{photo.id}][position]", photo.position, class: 'photo-position-input'
+- if (only_inputs.empty? || only_inputs.include?(:assigned_waiver_agreement_templates)) && f.object.location.company.waiver_agreement_templates.count > 0
+  %h2.with-margin Waiver Agreement Templates
+  = f.association :waiver_agreement_templates, collection: f.object.location.company.waiver_agreement_templates.order(:name).pluck(:name, :id), as: :check_boxes
 
 .hidden
   - Money::Currency.table.values.each do |c|

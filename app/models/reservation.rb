@@ -7,6 +7,7 @@ class Reservation < ActiveRecord::Base
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id], :listing)
 
   before_create :store_platform_context_detail
+  after_create :create_waiver_agreements
 
   PAYMENT_METHODS = {
     :credit_card => 'credit_card',
@@ -34,6 +35,7 @@ class Reservation < ActiveRecord::Base
   belongs_to :platform_context_detail, :polymorphic => true
   belongs_to :credit_card
   has_many :user_messages, as: :thread_context
+  has_many :waiver_agreements, as: :target
 
   # attr_accessible :cancelable, :confirmation_email, :date, :transactable_id,
   #   :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method, :rejection_reason
@@ -421,6 +423,16 @@ class Reservation < ActiveRecord::Base
     save!
   end
 
+  def assigned_waiver_agreement_templates
+    if listing.try(:assigned_waiver_agreement_templates).try(:any?)
+      listing.assigned_waiver_agreement_templates.includes(:waiver_agreement_template).map(&:waiver_agreement_template)
+    elsif listing.try(:location).try(:assigned_waiver_agreement_templates).try(:any?)
+      listing.location.assigned_waiver_agreement_templates.includes(:waiver_agreement_template).map(&:waiver_agreement_template)
+    else PlatformContext.current.instance.waiver_agreement_templates.any?
+      PlatformContext.current.instance.waiver_agreement_templates
+    end
+  end
+
   private
 
     def service_fee_calculator
@@ -492,6 +504,13 @@ class Reservation < ActiveRecord::Base
         errors.add(:base, "Booking selection does not meet requirements. A minimum of #{listing.minimum_booking_days} consecutive bookable days are required.")
       end
     end
+
+    def create_waiver_agreements
+      assigned_waiver_agreement_templates.each do |t|
+        waiver_agreements.create(waiver_agreement_template: t, vendor_name: host.name, guest_name: owner.name)
+      end
+    end
+
 
 end
 

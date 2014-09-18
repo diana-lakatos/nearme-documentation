@@ -26,5 +26,8 @@
               = link_to manage_users_path, :class => (active_tab == :users) ? 'active' : '' do
                 %span Users
             %li
+              = link_to manage_waiver_agreement_templates_path, :class => (active_tab == :waiver_agreement_template) ? 'active' : '' do
+                %span Waiver Agreements
+            %li
               = link_to edit_manage_white_label_path(current_user.companies.first), :class => (active_tab == :white_label) ? 'active' : '' do
                 %span White-label

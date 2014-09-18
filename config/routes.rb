@@ -217,6 +217,7 @@ DesksnearMe::Application.routes.draw do
       end
 
       resources :email_templates, :only => [:index, :new, :create, :edit, :update, :destroy]
+      resources :waiver_agreement_templates, :only => [:index, :create, :update, :destroy]
     end
 
     namespace :manage_blog do
@@ -224,6 +225,8 @@ DesksnearMe::Application.routes.draw do
       resources :posts
       resource :settings, only: [:edit, :update]
     end
+
+
   end
 
   resources :blog_posts, path: 'blog', only: [:index, :show], controller: 'blog/blog_posts'
@@ -406,6 +409,8 @@ DesksnearMe::Application.routes.draw do
         resources :ticket_messages, only: [:create]
       end
     end
+
+    resources :waiver_agreement_templates, only: [:index, :edit, :new, :update, :create, :destroy]
   end
 
   get "/search", :to => "search#index", :as => :search
@@ -430,6 +435,7 @@ DesksnearMe::Application.routes.draw do
   end
 
   resources :partner_inquiries, :only => [:index, :create], :controller => 'partner_inquiries', :path => 'partner'
+  resources :waiver_agreement_templates, only: [:show]
 
   namespace :v1, :defaults => { :format => 'json' } do
 
@@ -456,7 +462,7 @@ DesksnearMe::Application.routes.draw do
 
     resources :photos
 
-    resources :listings, :only => [:show,:create, :update, :destroy] do
+    resources :listings, only: [:show,:create, :update, :destroy] do
       member do
         post 'reservation'
         post 'availability'

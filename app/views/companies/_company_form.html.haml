@@ -7,12 +7,12 @@
 = f.input :mailing_address, :label => tooltip(t("simple_form.hints.company.mailing_address", bookable_noun: platform_context.bookable_noun.pluralize), t('simple_form.labels.company.mailing_address')), hint: false if (only_inputs.empty? || only_inputs.include?(:mailing_address))
 
 - if (only_inputs.empty? || only_inputs.include?(:paypal))
-  %h2 Payouts via Paypal
+  %h2.with-margin Payouts via Paypal
   = f.input :paypal_email, :label => tooltip(t("simple_form.hints.company.paypal_email"), t('simple_form.labels.company.paypal_email')), hint: false
 
 - if (only_inputs.empty? || only_inputs.include?(:ach))
   - if platform_context.supported_payout_via_ach?
-    %h2 Payouts via ACH (US only)
+    %h2.with-margin Payouts via ACH (US only)
     - if f.object.instance_clients.first.try(:encrypted_balanced_user_id)
       %div= t("simple_form.company.current_bank_account", last_four_digits: f.object.instance_clients.first.bank_account_last_four_digits)
       %div Update:
