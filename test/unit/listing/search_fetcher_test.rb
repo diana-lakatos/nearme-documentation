@@ -19,6 +19,8 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
     @private_listing = FactoryGirl.create(:transactable, :listing_type => @private_listing_type, :location => @private_location)
     @private_office_listing = FactoryGirl.create(:transactable, :listing_type => @office_listing_type, :location => @private_location)
 
+    @free_listing = FactoryGirl.create(:free_listing)
+
     @filters = { :midpoint => [7, 7], :radius => 1000 }
   end
 
@@ -32,12 +34,12 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
 
     should 'return all locations if midpoint is missing' do
       @filters = { :midpoint => nil, :radius => 2 }
-      assert_equal [@public_listing, @public_office_listing, @private_listing, @private_office_listing], Listing::SearchFetcher.new(@filters).listings.sort
+      assert_equal [@public_listing, @public_office_listing, @private_listing, @private_office_listing, @free_listing], Listing::SearchFetcher.new(@filters).listings.sort
     end
 
     should 'return all locations if radius is missing' do
       @filters = { :midpoint => [1, 3], :radius => nil }
-      assert_equal [@public_listing, @public_office_listing, @private_listing, @private_office_listing], Listing::SearchFetcher.new(@filters).listings.sort
+      assert_equal [@public_listing, @public_office_listing, @private_listing, @private_office_listing, @free_listing], Listing::SearchFetcher.new(@filters).listings.sort
     end
   end
 
@@ -55,7 +57,7 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
       end
     end
 
-    context '#desk type' do
+    context 'desk type' do
 
       should 'find listings that have specified desk' do
         @filters.merge!({ :listing_types_ids => [@public_listing_type, @private_listing_type] })
@@ -70,6 +72,20 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
       should 'find listings that belong to certain location type and listing type' do
         @filters.merge!({:location_types_ids => [@public_location_type.id], :listing_types_ids => [@office_listing_type] })
         assert_equal [@public_office_listing], Listing::SearchFetcher.new(@filters).listings
+      end
+
+    end
+
+    context 'price type' do
+
+      should 'find listings that are free' do
+        @filters.merge!({ :midpoint => nil, :listing_pricing => ['free'] })
+        assert_equal [@free_listing], Listing::SearchFetcher.new(@filters).listings
+      end
+
+      should 'find listings that are daily' do
+        @filters.merge!({ :midpoint => nil, :listing_pricing => ['daily'] })
+        assert_equal [@public_listing, @public_office_listing, @private_listing, @private_office_listing], Listing::SearchFetcher.new(@filters).listings
       end
 
     end
