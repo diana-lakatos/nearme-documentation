@@ -8,7 +8,7 @@ en:
     errors:
       models:
         recurring_booking:
-          one_valid_reservation: 'Please choose different dates, these which were chosen are not available anymore.'
+          one_valid_reservation: 'The selected dates are not available, please choose different dates.'
     errors:
       models:
         instance:
