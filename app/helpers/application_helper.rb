@@ -138,6 +138,10 @@ module ApplicationHelper
     end
   end
 
+  def array_to_unordered_list(arr = [])
+    arr.map{|s| "<li>#{s}</li>"}.join.tap{|s| "<ul>#{s}</ul>"}
+  end
+
   def show_manage_navigation(active_tab = :locations)
     content_for :manage_navbar, render(:partial => 'shared/manage_navigation', :locals => {:active_tab => active_tab})
   end
