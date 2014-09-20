@@ -162,6 +162,33 @@ class SecuredParams
     ]
   end
 
+  def user_blog
+    [
+        :enabled,
+        :name,
+        :header_image,
+        :header_text,
+        :header_motto,
+        :header_logo,
+        :header_icon,
+        :facebook_app_id
+    ]
+  end
+
+  def user_blog_post
+    [
+        :title,
+        :published_at,
+        :slug,
+        :hero_image,
+        :content,
+        :excerpt,
+        :author_name,
+        :author_biography,
+        :logo
+    ]
+  end
+
   def instance
     [
       :name,

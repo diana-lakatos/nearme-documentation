@@ -678,6 +678,7 @@ ActiveRecord::Schema.define(version: 20141103195404) do
     t.boolean  "user_based_marketplace_views",                                default: false
     t.string   "searcher_type"
     t.datetime "master_lock"
+    t.boolean  "onboarding_verification_required",                            default: false
     t.boolean  "apply_text_filters",                                          default: false
     t.text     "user_required_fields"
     t.boolean  "force_accepting_tos"
@@ -2347,6 +2348,35 @@ ActiveRecord::Schema.define(version: 20141103195404) do
     t.integer  "instance_id"
     t.integer  "creator_id"
     t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_blog_posts", force: true do |t|
+    t.integer  "user_id"
+    t.string   "title"
+    t.string   "slug"
+    t.string   "hero_image"
+    t.text     "content"
+    t.text     "excerpt"
+    t.date     "published_at"
+    t.string   "author_name"
+    t.text     "author_biography"
+    t.string   "logo"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_blogs", force: true do |t|
+    t.integer  "user_id"
+    t.boolean  "enabled",         default: false
+    t.string   "name"
+    t.string   "header_image"
+    t.string   "header_text"
+    t.string   "header_motto"
+    t.string   "header_logo"
+    t.string   "header_icon"
+    t.string   "facebook_app_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -1,0 +1,16 @@
+-# This is not ideal, but I didn't want to change the main application layout for dynamically loaded JS (based on
+-# a controller)
+= javascript_include_tag 'ckeditor/basepath'
+= javascript_include_tag 'ckeditor/init'
+
+= render layout: 'registrations/layout/account', locals: { active_tab: :user_blog } do
+  .row-fluid
+    .span8.offset2
+      .box
+        %ul.nav.nav-tabs
+          %li{class: (blog_nav != :settings) ? 'active' : ''}
+            = link_to 'POSTS', user_blog_path
+          %li{class: (blog_nav == :settings) ? 'active' : ''}
+            = link_to 'SETTINGS', user_blog_settings_path
+
+        = yield

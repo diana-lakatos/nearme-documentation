@@ -1,0 +1,17 @@
+= simple_form_for @user_blog, url: user_blog_settings_path, html: { multipart: true } do |f|
+  = f.input :enabled, inline_label: true, label: false
+  = f.input :name
+
+  = f.input :header_image
+  = @user_blog.image_preview(:header_image)
+
+  = f.input :header_text
+  = f.input :header_motto
+  = f.input :header_logo
+  = @user_blog.image_preview(:header_logo)
+
+  = f.input :header_icon
+  = @user_blog.image_preview(:header_icon)
+
+  = f.input :facebook_app_id
+  = f.submit 'SAVE'

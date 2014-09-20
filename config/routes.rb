@@ -26,7 +26,7 @@ DesksnearMe::Application.routes.draw do
     get '/features-security', :to => 'platform_home#features_security'
     get '/features-integration', :to => 'platform_home#features_integration'
     get '/features-support', :to => 'platform_home#features_support'
-    get '/',  :to => 'platform_home#index'
+    get '/', :to => 'platform_home#index'
     get '/features', :to => 'platform_home#features'
     get '/clients', :to => 'platform_home#clients'
     get '/contact', :to => 'platform_home#contact'
@@ -321,6 +321,14 @@ DesksnearMe::Application.routes.draw do
   get "/auth/failure", to: "authentications#failure"
   devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions', :passwords => 'passwords' }
   devise_scope :user do
+
+    scope :users do
+      get 'blog', to: 'user_blog/user_blog#index', as: 'user_blog'
+      get 'blog/settings', to: 'user_blog/user_blog#settings', as: 'user_blog_settings'
+      patch 'blog/settings', to: 'user_blog/user_blog#update_settings', as: 'user_blog_update_settings'
+      resources :user_blog_posts, path: 'blog', controller: 'user_blog/user_blog_posts'
+    end
+
     post "users/avatar", :to => "registrations#avatar", :as => "avatar"
     get "users/edit_avatar", :to => "registrations#edit_avatar", :as => "edit_avatar"
     match "users/update_avatar", :to => "registrations#update_avatar", :as => "update_avatar", via: [:patch, :put]
@@ -503,12 +511,12 @@ DesksnearMe::Application.routes.draw do
 
     resource :registration, only: [:create]
 
-    get  'profile',  :to => 'profile#show'
-    match 'profile',  :to => 'profile#update', via: [:put, :patch]
+    get 'profile', :to => 'profile#show'
+    match 'profile', :to => 'profile#update', via: [:put, :patch]
     post 'profile/avatar/:filename', :to => 'profile#upload_avatar'
     delete 'profile/avatar', :to => 'profile#destroy_avatar'
 
-    get  'iplookup',  :to => 'iplookup#index'
+    get 'iplookup', :to => 'iplookup#index'
 
     resources :guest_ratings, :only => [:create]
     resources :host_ratings, :only => [:create]
@@ -527,8 +535,8 @@ DesksnearMe::Application.routes.draw do
         post 'availability'
         post 'inquiry'
         post 'share'
-        get  'patrons'
-        get  'connections'
+        get 'patrons'
+        get 'connections'
       end
       collection do
         post 'search'
@@ -547,11 +555,11 @@ DesksnearMe::Application.routes.draw do
     resource :social, only: [:show], controller: 'social' do
       # Hmm, can this be better?
       resource :facebook, only: [:show, :update, :destroy],
-        controller: 'social_provider', provider: 'facebook'
-      resource :twitter,  only: [:show, :update, :destroy],
-        controller: 'social_provider', provider: 'twitter'
+               controller: 'social_provider', provider: 'facebook'
+      resource :twitter, only: [:show, :update, :destroy],
+               controller: 'social_provider', provider: 'twitter'
       resource :linkedin, only: [:show, :update, :destroy],
-        controller: 'social_provider', provider: 'linkedin'
+               controller: 'social_provider', provider: 'linkedin'
     end
 
     get 'amenities', to: 'amenities#index'

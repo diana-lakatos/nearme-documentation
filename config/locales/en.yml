@@ -71,6 +71,9 @@ en:
     formats:
       day_and_month: "%^b %-d"
       only_date: "%B %d, %-Y"
+  date:
+    formats:
+      short: '%B %d, %-Y'
   user_messages:
     inbox:
       one: "Inbox (1)"

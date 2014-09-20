@@ -37,6 +37,8 @@ en:
       taxonomy_updated: 'Taxonomy updated.'
       taxonomy_deleted: 'Taxonomy deleted.'
       taxon_updated: 'Taxon updated.'
+    user_blog:
+      settings_saved: 'Blog settings was saved.'
     dashboard:
       add_your_company: "Please add your company first"
       no_bookings: "You haven't made any bookings yet!"

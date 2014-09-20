@@ -13,5 +13,8 @@
             %li
               = link_to edit_notification_preferences_path, :class => (active_tab == :notification_preferences) ? 'active' : '' do
                 %span Notification Preferences
+            %li
+              = link_to user_blog_path, class: (active_tab == :user_blog) ? 'active' : '' do
+                %span Blog
 
 = yield
