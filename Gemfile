@@ -1,4 +1,4 @@
-ruby '2.0.0'
+ruby '2.1.2'
 
 source 'http://rubygems.org'
 
@@ -73,7 +73,7 @@ gem 'paypal-sdk-rest'
 gem 'paypal-sdk-adaptivepayments'
 gem 'balanced'
 gem 'friendly_id', '~> 5.0.4'
-gem "non-stupid-digest-assets"
+gem "non-#{}stupid-digest-assets"
 gem 'asset_sync'
 gem 'sass-rails', '~> 4.0.0'
 gem 'bootstrap-sass', '~> 2.3.1.0'
@@ -158,6 +158,8 @@ end
 group :development do
   gem 'quiet_assets'
   gem 'thin'
+  gem 'better_errors'
+  gem 'binding_of_caller'
 end
 
 group :test do
