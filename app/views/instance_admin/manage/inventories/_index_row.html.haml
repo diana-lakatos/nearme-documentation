@@ -2,8 +2,8 @@
   %td= resource.name
   %td= resource.email
   %td
-    = link_to "Login As", login_as_instance_admin_manage_inventory_path(resource), :class => "btn btn-primary", :method => :post, :confirm => "This will log you out and re-log you in as this user"
+    = link_to "Login As", login_as_instance_admin_manage_inventory_path(resource), :method => :post, :confirm => "This will log you out and re-log you in as this user"
   %td
-    = link_to "Delete", instance_admin_manage_inventory_user_bans_path(resource), :class => "btn btn-danger", :method => :post, :confirm => "You will prohibit this user from logging in to your marketplace, do you want to continue?"
+    = link_to "Delete", instance_admin_manage_inventory_user_bans_path(resource), :method => :post, :confirm => "You will prohibit this user from logging in to your marketplace, do you want to continue?"
 
 

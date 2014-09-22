@@ -10,7 +10,7 @@
       Your data has been processed, however nothing has been imported yet! U can #{link_to "preview xml", resource.xml_file.url, target: :blank} that will be imported. To actually import data click the button below.
 
       = simple_form_for resource, url: schedule_import_instance_admin_manage_transactable_type_data_upload_path(@transactable_type, resource), method: :post do |f|
-        = f.button :submit, 'Schedule Data Import', class: 'btn btn-primary'
+        = f.button :submit, 'Schedule Data Import', class: 'btn btn-green'
     - elsif resource.parsing_result_log.blank?
       Parsing has been scheduled, job is waiting in the queue.
     - elsif resource.encountered_error.blank?

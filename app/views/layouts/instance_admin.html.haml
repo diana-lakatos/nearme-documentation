@@ -4,31 +4,36 @@
     %title
       #{platform_context.name} - Marketplace Admin
     %meta{:'http-equiv' => "Content-type", :content=> "text/html;charset=UTF-8"}
+
     = csrf_meta_tag
     = render 'layouts/favicon'
     = stylesheet_link_tag 'instance_admin'
-    %link{ rel: "stylesheet", type: "text/css", href: "//cloud.typography.com/6219072/637722/css/fonts.css" }/
-    %link{ href: "//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css", rel: "stylesheet" }/
     %script{:src => "//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"}
     /[if lt IE 9]
       = javascript_include_tag '//html5shim.googlecode.com/svn/trunk/html5.js'
+    %link{:href => "//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css", :rel => "stylesheet"}/
+    /[if IE 8] <style>#help-bar {display: none;}</style>
+    /[if IE 9] <style>#help-bar {display: none;}</style>
 
-  %body{class: !user_signed_in? ? 'login' : ''}
-    .container
-      - if user_signed_in?
+  %body{ class: !user_signed_in? ? 'login' : ''}
+    - if user_signed_in?
+      %header
         = render 'instance_admin/layout/header'
-        = render 'instance_admin/shared/render_flash'
-        = render 'instance_admin/layout/tab_navigation'
 
-        .tab-container
-          .container-fluid
-            .tab-content
-              .tab-pane.fade.active.in
-                = yield
+      %nav
+        = render 'instance_admin/layout/nav'
 
-      - else
-        = render 'instance_admin/shared/render_flash'
-        = yield
+      %main
+        #main-container.container-fluid
+          = render 'instance_admin/shared/render_flash'
+          = yield
+
+      / %aside
+      /   = render 'instance_admin/layout/help_bar'
+
+    - else
+      = render 'instance_admin/shared/render_flash'
+      = yield
 
     = javascript_include_tag :instance_admin
     = yield :script

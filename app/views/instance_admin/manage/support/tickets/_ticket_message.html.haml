@@ -1,13 +1,12 @@
-.row-fluid
-  .span4.profile
-    .row-fluid
+.row
+  .input-container.col-xs-4
+    .row
     - if ticket_message.user
       = image_tag ticket_message.user.avatar.url(:medium)
-    .row-fluid.name
+    .row.name
       = ticket_message.full_name
-    .row-fluid.time
+    .row.time
       %abbr.timeago{:title => "#{ticket_message.created_at.to_time.iso8601}"}
         =ticket_message.created_at
-
-  .span8.text
+  .input-container.col-xs-8
     =simple_format(ticket_message.message)

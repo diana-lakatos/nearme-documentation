@@ -1,9 +1,18 @@
 = simple_form_for [:instance_admin, :manage, resource], :html => { :multipart => true} do |f|
-  = f.input :name
-  = f.input :favourable_pricing_rate#, hint: 'In case of multiple pricing schemas, like daily/weekly/monthly, if favourable pricing rate is checked, we will use only one price. If it is unchecked, we will use more favourable pricing only for periods that satisfies condition. For example, if weekly pricing is for 7 days, and someone books 8, with favourable pricing we will calculate it as 8/7 * weekly rate. If favourable pricing is not checked, we will calculate it as 1 * weekly rate + 1 * daily rate'
-  = f.input :show_page_enabled, as: :boolean
+  .content-container.dropshadow
+    .row
+      .input-container.col-xs-12
+        = f.input :name, input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-6
+        = f.input :favourable_pricing_rate#, hint: 'In case of multiple pricing schemas, like daily/weekly/monthly, if favourable pricing rate is checked, we will use only one price. If it is unchecked, we will use more favourable pricing only for periods that satisfies condition. For example, if weekly pricing is for 7 days, and someone books 8, with favourable pricing we will calculate it as 8/7 * weekly rate. If favourable pricing is not checked, we will calculate it as 1 * weekly rate + 1 * daily rate'
+      .input-container.col-xs-6
+        = f.input :show_page_enabled, as: :boolean
 
-  = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
+  .content-container.dropshadow
+    .row
+      .input-container.col-xs-12
+        = f.association :action_types, collection: ActionType.pluck(:name, :id), as: :check_boxes, label: "Actions", input_html: { class: 'form-control' }
 
-  = f.association :action_types, collection: ActionType.pluck(:name, :id), as: :check_boxes, label: "Actions"
-
+  .content-container
+    = f.button :submit, 'Save', class: 'btn btn-green pull-right'

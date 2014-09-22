@@ -1,10 +1,9 @@
 = simple_form_for [:instance_admin, :manage, :users, @instance_admin_role ||= InstanceAdminRole.new] do |f|
-  %fieldset
-    %legend Create New Role
-
-    .row-fluid
-      .controls.control-group.controls-row
-        = f.input :name, :label => 'Name', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-    .row-fluid
-      .controls.control-group.controls-row.span6
-        = f.submit "Create", :class => 'btn btn-primary pull-right'
+  %h4 Create New Role
+  .content-container
+    .row.dropshadow
+      .input-container.col-xs-12
+        = f.input :name, :label => 'Name', placeholder: 'Admin', required: false, input_html: { class: 'form-control' }
+  .content-container
+    = f.submit "Create", :class => 'btn btn-green pull-right'
+  %br

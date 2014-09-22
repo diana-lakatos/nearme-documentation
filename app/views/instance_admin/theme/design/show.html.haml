@@ -1,35 +1,35 @@
 = simple_form_for @theme, :url => instance_admin_theme_design_path, :html => { id: 'theme_form', :multipart => true } do |f|
-  %fieldset
-    %legend Colors
+  %h4 Colors
+  .content-container.dropshadow
     - Theme::COLORS.each_slice(2).each_with_index do |color, index|
-      .row-fluid
-        .controls.controls-row
-          = f.input "color_#{color[0]}", :label => color[0].humanize, wrapper_html: {class: 'span6'} do
+      .row
+        .input-container{ class: "#{color[1] ? 'col-xs-6' : 'col-xs-12'}" }
+          = f.input "color_#{color[0]}", :label => color[0].humanize do
             = f.text_field "color_#{color[0]}", {:type => :color, :value => f.object.hex_color(color[0]).presence || hexify(Theme::COLORS_DEFAULT_VALUES[index*2]), 'data-default' => hexify(Theme::COLORS_DEFAULT_VALUES[index*2]), 'data-color' => color[0]}
             = link_to "default", '', 'data-reset' => color[0]
 
-          - if color[1]
-            = f.input "color_#{color[1]}", :label => color[1].humanize, wrapper_html: {class: 'span6'} do
+        - if color[1]
+          .input-container.col-xs-6
+            = f.input "color_#{color[1]}", :label => color[1].humanize do
               = f.text_field "color_#{color[1]}", {:type => :color, :value => f.object.hex_color(color[1]).presence || hexify(Theme::COLORS_DEFAULT_VALUES[index*2+1]), 'data-default' => hexify(Theme::COLORS_DEFAULT_VALUES[index*2+1]), 'data-color' => color[1]}
               = link_to "default", '', 'data-reset' => color[1]
 
-    %hr
-
-    %legend Visuals
+  %h4 Visuals
+  .content-container.dropshadow
     - i = 0
     - %w(logo_image logo_retina_image favicon_image icon_image icon_retina_image hero_image).each_slice(2) do |image_attrs|
       - i += 1
-      .row-fluid
-        .controls.controls-row
+      .row
+        .input-container.col-xs-12
           - max_height = image_attrs.map { |image_attr| f.object.send(image_attr).any_url_exists? ? f.object.send("#{image_attr}_dimensions")[:height]+30 : 0 }.max
           - image_attrs.each do |image_attr|
-            .control-group.span6{:class => image_attr}
+            .control-group.col-xs-6{:class => image_attr}
               = f.label image_attr
               .controls
                 .single-photo
                   = file_upload_input("url", upload_theme_image_instance_admin_theme_design_path(image_attr), f.object.send("#{image_attr}_dimensions"), "Upload #{image_attr}", {"no-multiple" => true, :height => max_height, :row => i}) do
                     - if f.object.send(image_attr).any_url_exists?
-                      = fileupload_photo(f.object.send("#{image_attr}_url"), 
+                      = fileupload_photo(f.object.send("#{image_attr}_url"),
                         destroy_theme_image_instance_admin_theme_design_path(image_attr),
                         edit_theme_image_instance_admin_theme_design_path(image_attr),
                         :div)
@@ -37,18 +37,15 @@
                   <br />Or copy from instance's theme:<br />
                   = f.text_field "remote_#{image_attr}_url"
 
-    %hr
+  = render "font_fields", f: f
 
-    = render "themes/font_fields", f: f
-
-    %hr
-
-    %legend Call to action
-    .row-fluid
-      .controls.controls-row
-        = f.input :call_to_action, label: 'CTA Button Text', :placeholder => 'Find out more', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-
-    = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
+  %h4 Call to action
+  .content-container.dropshadow
+    .row
+      .input-container.col-xs-12
+        = f.input :call_to_action, label: 'CTA Button Text', :placeholder => 'Find out more', wrapper_html: { class: 'span6' }, input_html: { class: 'form-control' }
+  .content-container
+    = f.button :submit, 'Save', class: 'btn btn-green pull-right'
 
 - content_for :script do
   = render :partial => "shared/inkfilepicker"
