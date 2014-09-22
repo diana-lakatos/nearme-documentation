@@ -3,6 +3,22 @@ class Domain < ActiveRecord::Base
   acts_as_paranoid
   # attr_accessible :name, :target, :target_id, :target_type, :secured
 
+  attr_accessor :certificate_body, :private_key, :certificate_chain
+
+  state_machine :state, initial: :unsecured do
+    event :prepare_elb do
+      transition :unsecured => :preparing
+    end
+
+    event :elb_created do
+      transition :preparing => :elb_secured
+    end
+
+    event :error do
+      transition :preparing => :error
+    end
+  end
+
   belongs_to :target, :polymorphic => true
 
   before_validation lambda { self.name = self.name.try(:strip) }
@@ -11,8 +27,12 @@ class Domain < ActiveRecord::Base
   validates_uniqueness_of :name, :scope => :deleted_at
   validates_length_of :name, :maximum => 150
   validates :name, domain_name: true
+  validates_presence_of :certificate_body, if: :prepared_for_elb?
+  validates_presence_of :private_key, if: :prepared_for_elb?
 
   before_destroy :prevent_destroy_if_only_child
+  before_destroy :delete_elb, if: :elb_secured?
+  after_save :create_elb, if: :prepared_for_elb?
 
   validates_presence_of :target_type
   validates_each :name do |record, attr, value|
@@ -24,6 +44,32 @@ class Domain < ActiveRecord::Base
   scope :secured, -> { where(secured: true) }
 
   delegate :white_label_enabled?, :to => :target
+
+  def prepared_for_elb?
+    # marked as secured but in unsecured state
+    self.secured? and self.unsecured?
+  end
+
+  def delete_elb
+    DeleteElbJob.perform(self.to_dns_name)
+  end
+
+  def create_elb
+    self.prepare_elb!
+    CreateElbJob.perform(self, self.certificate_body, self.private_key, self.certificate_chain)
+  end
+
+  def to_dns_name
+    name.gsub('.', '-')
+  end
+
+  def deletable?
+    not self.preparing?
+  end
+
+  def editable?
+    (not self.secured? || self.error?)
+  end
 
   def url
     secured? ? "https://" + name : "http://" + name

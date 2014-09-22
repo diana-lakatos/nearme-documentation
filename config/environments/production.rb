@@ -62,4 +62,9 @@ DesksnearMe::Application.configure do
     :port => config.redis_settings["port"].to_i,
     :namespace => "cache"
   }
+
+  # for ELB management
+  AWS.config(access_key_id: 'AKIAJYA2ZJ5BQTU5QBMA',
+             secret_access_key: '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',
+             region: 'us-west-1')
 end

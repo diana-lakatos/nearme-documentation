@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140925155435) do
+ActiveRecord::Schema.define(version: 20141001132824) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -342,6 +342,11 @@ ActiveRecord::Schema.define(version: 20140925155435) do
     t.datetime "deleted_at"
     t.boolean  "secured",                        default: false
     t.string   "google_analytics_tracking_code"
+    t.string   "state"
+    t.string   "load_balancer_name"
+    t.string   "server_certificate_name"
+    t.string   "error_message"
+    t.string   "dns_name"
   end
 
   add_index "domains", ["deleted_at"], name: "index_domains_on_deleted_at", using: :btree

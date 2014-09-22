@@ -79,7 +79,7 @@ class Instance < ActiveRecord::Base
   validates_length_of :olark_api_key, :minimum => 16, :maximum => 16, :allow_blank => true
   validates_presence_of :olark_api_key, :if => :olark_enabled
 
-  accepts_nested_attributes_for :domains, allow_destroy: true, reject_if: proc { |params| params[:name].blank? && params[:google_analytics_tracking_code].blank? }
+  accepts_nested_attributes_for :domains, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :theme
   accepts_nested_attributes_for :location_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :location_amenity_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
