@@ -41,7 +41,7 @@ FactoryGirl.define do
 
     factory :free_listing do
       after(:build) do |listing|
-        listing.properties["daily_price_cents"] = "0"
+        listing.properties.delete("daily_price_cents")
         listing.properties["free"] = true
       end
     end
