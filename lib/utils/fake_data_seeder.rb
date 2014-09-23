@@ -413,21 +413,25 @@ module Utils
 
     def load_user_blog_posts!
       do_task 'Loading user blog posts' do
-        User.all.each do |user|
 
+        User.all.each do |user|
           user_blog = user.blog
           user_blog.enabled = true
-          user_blog.name = "#{user.name}'s blog'"
-          user_blog.header_text = Faker::Lorem.words(rand(3)).join(' ').titleize
-          user_blog.header_motto = Faker::Lorem.words(rand(8)).join(' ').titleize
+          user_blog.name = "#{user.name}'s blog"
+          user_blog.header_text = Faker::Lorem.words(3).join(' ').titleize
+          user_blog.header_motto = Faker::Lorem.words(8).join(' ').titleize
           user_blog.save!
 
           5.times do
             created_at = rand(10).weeks.ago
-            user.blog_posts.create!(title: Faker::Lorem.words(rand(5) + 1).join(' ').titleize,
-                                    content: Faker::Lorem.paragraph(5), excerpt: Faker::Lorem.paragraph(1),
-                                    author_name: user.name, author_biography: user.biography,
-                                    created_at: created_at, published_at: created_at + rand(4).days)
+            blog_post = { title: Faker::Lorem.words(rand(5) + 1).join(' ').titleize,
+                          content: Faker::Lorem.paragraphs(3).join('<br/><br/>').titleize,
+                          excerpt: Faker::Lorem.paragraph(1) }
+
+            user.blog_posts.create!(title: blog_post[:title], content: blog_post[:content],
+                                    excerpt: blog_post[:excerpt], author_name: user.name,
+                                    author_biography: user.biography, created_at: created_at,
+                                    published_at: created_at + rand(4).days)
           end
         end
       end
