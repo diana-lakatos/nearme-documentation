@@ -47,7 +47,7 @@ class SpaceWizardController < ApplicationController
       redirect_to manage_locations_path
     else
       @photos = @user.first_listing ? @user.first_listing.photos : nil
-      flash.now[:error] = t('flash_messages.space_wizard.complete_fields')
+      flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(@user.errors.full_messages)
       render :list
     end
   end
