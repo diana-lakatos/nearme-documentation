@@ -1,0 +1,12 @@
+%legend Fonts
+= f.fields_for :theme_font do |tf_f|
+  - ThemeFont::FONT_TYPES.each do |font_type|
+    - ThemeFont::FONT_EXTENSIONS.each_slice(2).each do |file_extensions|
+      .row-fluid
+        .controls.controls-row
+          - file_extensions.each do |file_extension|
+            .control-group.span6
+              = f.label "#{font_type}_#{file_extension}", label: "#{font_type.camelize} font (#{file_extension})"
+              = tf_f.file_field "#{font_type}_#{file_extension}"
+              - if tf_f.object.persisted? && tf_f.object.send("#{font_type}_#{file_extension}")
+                = File.basename(tf_f.object.send("#{font_type}_#{file_extension}_url"))
