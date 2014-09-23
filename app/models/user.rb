@@ -572,6 +572,7 @@ class User < ActiveRecord::Base
   end
 
   def instance_admins_metadata
+    return 'analytics' if admin?
     get_instance_metadata("instance_admins_metadata")
   end
 
