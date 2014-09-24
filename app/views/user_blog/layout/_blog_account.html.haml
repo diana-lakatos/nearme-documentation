@@ -1,7 +1,8 @@
 -# This is not ideal, but I didn't want to change the main application layout for dynamically loaded JS (based on
 -# a controller)
-= javascript_include_tag 'ckeditor/basepath'
-= javascript_include_tag 'ckeditor/init'
+- unless Rails.env.test? # <-- Ugly hack. CKEditor makes functional tests hang. Could be related to: https://github.com/galetahub/ckeditor/issues/397
+  = javascript_include_tag 'ckeditor/basepath'
+  = javascript_include_tag 'ckeditor/init'
 
 = render layout: 'registrations/layout/account', locals: { active_tab: :user_blog } do
   .row-fluid

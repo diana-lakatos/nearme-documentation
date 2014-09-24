@@ -5,6 +5,6 @@ class UserBlog::BaseController < ApplicationController
   private
 
   def user_blog_enabled?
-    redirect_to '/404' unless platform_context.instance.user_blogs_enabled?
+    redirect_to('/404', status: :not_found) unless platform_context.instance.user_blogs_enabled?
   end
 end
