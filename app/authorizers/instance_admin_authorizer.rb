@@ -3,7 +3,6 @@ class InstanceAdminAuthorizer < Authorizer
   class UnassignedInstanceAdminRoleError < StandardError; end
 
   def authorized?(controller)
-    return true if @user.admin?
     raise InstanceAdminAuthorizer::UnassignedInstanceAdminRoleError.new("Instance admin (id=#{instance_admin.id}) has not been assigned any role") if instance_admin_role.nil?
     if controller == "InstanceAdmin"
       controller = first_permission_have_access_to
