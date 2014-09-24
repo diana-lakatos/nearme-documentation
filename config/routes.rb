@@ -323,10 +323,10 @@ DesksnearMe::Application.routes.draw do
   devise_scope :user do
 
     scope :users do
-      get 'blog', to: 'user_blog/user_blog#index', as: 'user_blog'
-      get 'blog/settings', to: 'user_blog/user_blog#settings', as: 'user_blog_settings'
-      patch 'blog/settings', to: 'user_blog/user_blog#update_settings', as: 'user_blog_update_settings'
-      resources :user_blog_posts, path: 'blog', controller: 'user_blog/user_blog_posts'
+      get 'blog', to: 'user_blog/blog#index', as: 'user_blog'
+      get 'blog/settings', to: 'user_blog/blog#settings', as: 'user_blog_settings'
+      patch 'blog/settings', to: 'user_blog/blog#update_settings', as: 'user_blog_update_settings'
+      resources :user_blog_posts, path: 'blog', controller: 'user_blog/blog_posts'
     end
 
     post "users/avatar", :to => "registrations#avatar", :as => "avatar"

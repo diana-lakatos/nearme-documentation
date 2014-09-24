@@ -1,6 +1,4 @@
-class UserBlog::UserBlogController < ApplicationController
-
-  before_filter :authenticate_user!
+class UserBlog::BlogController < UserBlog::BaseController
 
   def index
     @user_blog_posts = UserBlogPostDecorator.decorate_collection(current_user.blog_posts.by_date)

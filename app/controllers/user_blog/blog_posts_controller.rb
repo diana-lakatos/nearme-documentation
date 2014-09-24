@@ -1,6 +1,4 @@
-class UserBlog::UserBlogPostsController < ApplicationController
-
-  before_filter :authenticate_user!
+class UserBlog::BlogPostsController < UserBlog::BaseController
 
   def new
     @user_blog_post = current_user.blog_posts.new.decorate
