@@ -683,6 +683,7 @@ ActiveRecord::Schema.define(version: 20141103195404) do
     t.text     "user_required_fields"
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
+    t.boolean  "user_blogs_enabled",                                          default: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
