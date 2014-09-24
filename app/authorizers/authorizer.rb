@@ -5,7 +5,7 @@ class Authorizer
   end
 
   def instance_admin?
-    instance_admin.present?
+    instance_admin.present? || @user.admin?
   end
 
   private
@@ -15,7 +15,7 @@ class Authorizer
   end
 
   def instance_owner?
-    instance_admin.try(:instance_owner?)
+    instance_admin.try(:instance_owner?) || @user.admin?
   end
 
   def instance_admin_role
