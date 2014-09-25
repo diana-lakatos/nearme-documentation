@@ -63,6 +63,7 @@ class Location < ActiveRecord::Base
   validates_length_of :name, :maximum => 50, :if => :name_and_description_required
 
   before_save :assign_default_availability_rules
+  after_save :set_external_id
 
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :history, :finders, :scoped], scope: :instance
@@ -167,7 +168,7 @@ class Location < ActiveRecord::Base
   end
 
   def self.csv_fields
-    { email: 'Location Email', location_type: 'Location Type', description: 'Location Description', special_notes: 'Location Special Notes' }
+    { email: 'Location Email', external_id: 'Location External Id', location_type: 'Location Type', description: 'Location Description', special_notes: 'Location Special Notes' }
   end
 
   private
@@ -192,4 +193,9 @@ class Location < ActiveRecord::Base
       [:company_and_city, :formatted_address]
     ]
   end
+
+  def set_external_id
+    self.update_column(:external_id, "manual-#{id}") if self.external_id.blank?
+  end
+
 end

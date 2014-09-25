@@ -4,10 +4,11 @@ class DataImporter::CsvFile::TemplateCsvFile < DataImporter::CsvFile
 
   def initialize(path, transactable_type, options = {})
     @transactable_type = transactable_type
-    @options = options.symbolize_keys.reverse_merge(send_invitational_email: false)
+    @options = options.symbolize_keys.reverse_merge(send_invitational_email: false, sync_mode: false)
     super(path)
     @header_metadata = parse_header(@csv_handle.shift)
     @warnings = { header: [] }
+    @csv_attributes = {}
   end
 
   def parse_header(header)
@@ -20,6 +21,7 @@ class DataImporter::CsvFile::TemplateCsvFile < DataImporter::CsvFile
       transactable: Transactable.csv_fields(@transactable_type),
       photo: Photo.csv_fields
     }
+    # maps attributes of models to index in csv - like user name is in column 0, user email in column 1 etc
     @mapping_hash = fields_hash.inject({}) do |mapping_hash, model|
       mapping_hash[model[0]] = {}
       model[1].each do |attribute, label|
@@ -30,34 +32,34 @@ class DataImporter::CsvFile::TemplateCsvFile < DataImporter::CsvFile
   end
 
   def user_attributes
-    build_attributes_hash(User)
+    build_attributes_hash(User, :user)
   end
 
   def company_attributes
-    build_attributes_hash(Company)
+    build_attributes_hash(Company, :company)
   end
 
   def location_attributes
-    build_attributes_hash(Location)
+    build_attributes_hash(Location, :location)
   end
 
   def address_attributes
-    build_attributes_hash(Address)
+    build_attributes_hash(Address, :address)
   end
 
   def listing_attributes
-    build_attributes_hash(Transactable)
+    build_attributes_hash(Transactable, :transactable)
   end
 
   def photo_attributes
-    build_attributes_hash(Photo)
+    build_attributes_hash(Photo, :photo)
   end
 
-  def build_attributes_hash(klass)
-    csv_fields = "Transactable" == klass.to_s ? klass.csv_fields(@transactable_type) : klass.csv_fields
-    csv_fields.keys.inject({}) do |hash, attribute|
-      if @mapping_hash[klass.name.underscore.to_sym][attribute.to_sym].present?
-        hash[attribute.to_sym] = @current_row[@mapping_hash[klass.name.underscore.to_sym][attribute.to_sym]]
+  def build_attributes_hash(klass, sym)
+    @csv_attributes[sym] ||= (sym == :transactable ? (klass.csv_fields(@transactable_type)) : klass.csv_fields).keys
+    @csv_attributes[sym].inject({}) do |hash, attribute|
+      if @mapping_hash[sym][attribute.to_sym].present?
+        hash[attribute.to_sym] = @current_row[@mapping_hash[sym][attribute.to_sym]]
       end
       hash
     end

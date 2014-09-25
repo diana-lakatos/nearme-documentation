@@ -65,7 +65,7 @@ Feature: As a user of the site
 
   Scenario: A user can disable existing price in listing
     Given a location exists with company: the company
-    And a transactable exists with location: the location, daily_price_cents: 1000, photos_count_to_be_created: 1
+    And a transactable exists with location: the location, daily_price_cents: 1000, photos_count: 1
       And I am on the manage locations page
      When I click edit listing icon
       And I disable daily pricing
@@ -76,7 +76,7 @@ Feature: As a user of the site
 
   Scenario: A user can enable new pricing in listing
     Given a location exists with company: the company
-      And a transactable exists with location: the location, daily_price_cents: 1000, photos_count_to_be_created: 1
+      And a transactable exists with location: the location, daily_price_cents: 1000, photos_count: 1
       And I am on the manage locations page
      When I click edit listing icon
       And I enable weekly pricing
@@ -86,7 +86,7 @@ Feature: As a user of the site
 
   Scenario: A user can set availability rules on a transactable
     Given a location exists with company: the company
-    And   a transactable exists with location: the location, photos_count_to_be_created: 1
+    And   a transactable exists with location: the location, photos_count: 1
     And   I am on the manage locations page
     When I click edit listing icon
     And  I select custom availability:

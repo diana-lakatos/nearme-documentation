@@ -3,8 +3,10 @@ class DataImporter::SummaryTracker
   attr_accessor :new_entities, :updated_entities
 
   def initialize
-    @new_entities = {}
-    @updated_entities = {}
+    @time_start = Time.zone.now.to_f
+    @new_entities = { 'user' => 0, 'company'=>  0, 'location' => 0, 'transactable' => 0, 'photo' => 0 }
+    @updated_entities = { 'user' => 0, 'company' => 0, 'location' => 0, 'transactable' => 0, 'photo' => 0 }
+    @deleted_entities = {}
   end
 
   def increment(entity)
@@ -18,8 +20,12 @@ class DataImporter::SummaryTracker
     proper_hash[key] -= 1
   end
 
-  def to_s
-    "New entities: #{@new_entites.inspect}\nUpdated entities: #{@updated_entities.inspect}"
+  def deleted(entity, count)
+    @deleted_entities[key] = count
+  end
+
+  def deleted_decrement(str_key, count)
+    @deleted_entities[str_key] -= 1
   end
 
   private

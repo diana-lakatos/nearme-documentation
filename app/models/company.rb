@@ -22,7 +22,8 @@ class Company < ActiveRecord::Base
   has_many :company_users, dependent: :destroy
   has_many :users, :through => :company_users
   has_many :locations, dependent: :destroy, inverse_of: :company
-  has_many :listings, class_name: 'Transactable'
+  has_many :listings, class_name: 'Transactable', inverse_of: :company
+  has_many :photos, through: :listings
   has_many :reservations
   has_many :reservation_charges
   has_many :payment_transfers, :dependent => :destroy
@@ -36,6 +37,7 @@ class Company < ActiveRecord::Base
 
   has_many :locations_impressions, :source => :impressions, :through => :locations
   has_many :instance_clients, :as => :client, :dependent => :destroy
+  has_many :data_uploads, as: :target
 
   before_validation :add_default_url_scheme
 
@@ -213,7 +215,6 @@ class Company < ActiveRecord::Base
 
   def rfq_count
     Support::Ticket.for_filter('open').where('target_type = ? AND target_id IN (?)', 'Transactable', listings.pluck(:id)).count
-
   end
 
 end

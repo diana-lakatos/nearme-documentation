@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
                               :bookings_count, :guest_rating_average, :guest_rating_count, :host_rating_average,
                               :host_rating_count, :avatar_versions_generated_at, :last_geolocated_location_longitude,
                               :last_geolocated_location_latitude, :instance_unread_messages_threads_count, :sso_log_out,
-                              :avatar_transformation_data]
+                              :avatar_transformation_data, :metadata]
   acts_as_paranoid
   auto_set_platform_context
 
@@ -126,7 +126,7 @@ class User < ActiveRecord::Base
 
   attr_accessor :custom_validation
   attr_accessor :accept_terms_of_service
-  validates_acceptance_of :accept_terms_of_service, on: :create, allow_nil: false, if: lambda { |u| PlatformContext.current.instance.try(:force_accepting_tos) && u.custom_validation }
+  validates_acceptance_of :accept_terms_of_service, on: :create, allow_nil: false, if: lambda { |u| PlatformContext.current.try(:instance).try(:force_accepting_tos) && u.custom_validation }
 
   validate do |user|
     if user.persisted? && PlatformContext.current.instance.user_info_in_onboarding_flow? && self.custom_validation

@@ -76,7 +76,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
   context "with listing" do
 
     setup do
-      @listing = FactoryGirl.create(:transactable, :location => @location, :photos_count_to_be_created => 1, :quantity => 2)
+      @listing = FactoryGirl.create(:transactable, :location => @location, :photos_count => 1, :quantity => 2)
     end
 
     context 'CRUD' do
@@ -88,7 +88,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
 
         @related_company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id, instance: @related_instance)
         @related_location = FactoryGirl.create(:location_in_auckland, company: @related_company)
-        @related_listing = FactoryGirl.create(:transactable, location: @related_location)
+        @related_listing = FactoryGirl.create(:transactable, location: @related_location, photos_count: 1)
       end
 
       context "#edit" do
@@ -250,7 +250,7 @@ class Manage::ListingsControllerTest < ActionController::TestCase
     end
 
     should 'track version change on update' do
-      @listing = FactoryGirl.create(:transactable, :location => @location, :quantity => 2)
+      @listing = FactoryGirl.create(:transactable, :location => @location, :quantity => 2, photos_count: 1)
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Transactable", "update").count') do
         with_versioning do
           put :update, :id => @listing.id, :listing => { :name => 'new name', :daily_price => 10 }

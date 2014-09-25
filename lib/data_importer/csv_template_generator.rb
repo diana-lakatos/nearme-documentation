@@ -8,9 +8,13 @@ class DataImporter::CsvTemplateGenerator < DataImporter::File
 
   def generate_template(with_sample_row = false)
     CSV.generate do |csv|
-      csv << required_fields
+      get_content(csv)
       csv << sample_row if with_sample_row
     end
+  end
+
+  def get_content(csv)
+    csv << required_fields
   end
 
   def self.value_for_attribute(attr, index)
@@ -27,6 +31,8 @@ class DataImporter::CsvTemplateGenerator < DataImporter::File
       true
     when :my_attribute
       "my attrs! #{index}"
+    when :name
+      "my name! #{index}"
     when :confirm_reservations
       true
     when :external_id

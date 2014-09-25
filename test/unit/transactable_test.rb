@@ -328,7 +328,7 @@ class TransactableTest < ActiveSupport::TestCase
 
     context 'populating photo hash' do
       setup do
-        @listing = FactoryGirl.create(:transactable)
+        @listing = FactoryGirl.create(:transactable, photos_count: 1)
         @photo = @listing.photos.first
       end
 
@@ -474,5 +474,10 @@ class TransactableTest < ActiveSupport::TestCase
       end
 
     end
+  end
+
+  should 'populate external id' do
+    @transactable = FactoryGirl.create(:transactable)
+    assert_not_nil @transactable.reload.external_id
   end
 end

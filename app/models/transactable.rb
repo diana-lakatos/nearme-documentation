@@ -11,7 +11,7 @@ class Transactable < ActiveRecord::Base
   has_custom_attributes target_type: 'TransactableType', target_id: :transactable_type_id
 
   has_many :reservations, inverse_of: :listing
-  has_many :recurring_bookings, dependent: :destroy, inverse_of: :listing
+  has_many :recurring_bookings, inverse_of: :listing
   has_many :photos, dependent: :destroy, inverse_of: :listing do
     def thumb
       (first || build).thumb
@@ -68,6 +68,8 @@ class Transactable < ActiveRecord::Base
   validates_presence_of :location, :transactable_type
   validates_with PriceValidator
   validates :photos, :length => { :minimum => 1 }, :unless => :photo_not_required
+
+  after_save :set_external_id
 
   # == Helpers
   include Listing::Search
@@ -335,8 +337,8 @@ class Transactable < ActiveRecord::Base
     TransactableDrop.new(self)
   end
 
-  def self.xml_attributes
-    self.csv_fields(PlatformContext.current.instance.transactable_types.first).keys.sort
+  def self.xml_attributes(transactable_type = nil)
+    self.csv_fields(transactable_type || PlatformContext.current.instance.transactable_types.first).keys.sort
   end
 
   def name_with_address
@@ -393,6 +395,10 @@ class Transactable < ActiveRecord::Base
 
   def transactable_type_id
     read_attribute(:transactable_type_id) || transactable_type.try(:id)
+  end
+
+  def set_external_id
+    self.update_column(:external_id, "manual-#{id}") if self.external_id.blank?
   end
 
   private

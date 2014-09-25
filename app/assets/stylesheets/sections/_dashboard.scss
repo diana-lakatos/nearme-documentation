@@ -349,6 +349,21 @@ section.dashboard {
     }
   }
 
+  .action-buttons {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid $light_gray;
+
+    .btn-white {
+      border-width: 1px !important;
+      margin-right: 10px;
+
+      &:last-child {
+        margin-right: 0px;
+      }
+    }
+  }
+
 }
 
 h1.manage-locations-home-link {
