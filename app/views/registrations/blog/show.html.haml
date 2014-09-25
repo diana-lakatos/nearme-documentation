@@ -1,0 +1,21 @@
+.row-fluid.registrations-show
+  .span8.offset2
+    %h1
+      %span.ico-blog.padding
+        = @user.name + "'s blog"
+    .box.clearfix
+      .span4.avatar
+        - if @user.avatar.file.present?
+          .part
+            = image_tag @user.avatar.url(:big)
+        .social.info.part
+          =render_social_connection(@user, @user.social_connections_for('facebook'))
+          =render_social_connection(@user, @user.social_connections_for('linkedin'))
+          =render_social_connection(@user, @user.social_connections_for('twitter'))
+          - if @user.social_url('instagram')
+            =render '/registrations/social_connection', icon: 'ico-instagram', provider: 'instagram', count: false, link: @user.social_url('instagram'), rel: nil
+          =render '/registrations/social_connection', icon: 'ico-mail', provider: 'mail', count: false, link: new_user_user_message_path(user_id: @user.slug), rel: 'modal'
+      .info.span8
+        %h2= @blog_post.title
+        %span= l @blog_post.published_at
+        %div= @blog_post.content.html_safe

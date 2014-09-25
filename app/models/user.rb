@@ -583,6 +583,18 @@ class User < ActiveRecord::Base
     end
   end
 
+  def published_blogs
+    blog_posts.published
+  end
+
+  def recent_blogs
+    blog_posts.recent
+  end
+
+  def has_published_blogs?
+    blog_posts.published.any?
+  end
+
   def has_draft_listings
     get_instance_metadata("has_draft_listings")
   end

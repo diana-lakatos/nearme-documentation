@@ -343,6 +343,8 @@ DesksnearMe::Application.routes.draw do
     get "users/verify/:id/:token", :to => "registrations#verify", :as => "verify_user"
     delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
     get "users/:id", :to => "registrations#show", :as => "profile"
+    get "users/:user_id/blog", :to => "registrations/blog#index", :as => "user_blog_posts_list"
+    get "users/:user_id/blog/:id", :to => "registrations/blog#show", :as => "user_blog_post_show"
     get "users/unsubscribe/:signature", :to => "registrations#unsubscribe", :as => "unsubscribe"
 
     match "users/store_correct_ip", :to => "sessions#store_correct_ip", :as => "store_correct_ip", via: [:patch, :put]

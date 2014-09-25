@@ -26,4 +26,8 @@
           - if @user.skills_and_interests.present?
             %h4 Skills &amp; Interests
             %p= @user.skills_and_interests
-
+          - if @user.has_published_blogs?
+            %h2
+              Recent blog posts
+              =link_to '(blog)', user_blog_posts_list_path(user_id: @user.id)
+            = render partial: '/user_blog/blog_posts/excerpt', collection: @user.recent_blogs, as: :blog_post

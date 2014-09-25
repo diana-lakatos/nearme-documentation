@@ -10,7 +10,8 @@ class UserBlogPost < ActiveRecord::Base
   validates :title, :published_at, :user, :content, presence: true
 
   scope :by_date, -> { order('created_at desc') }
-  scope :published, -> { where('published_at < ? OR published_at IS NULL', Time.zone.now) }
+  scope :published, -> { by_date.where('published_at < ? OR published_at IS NULL', Time.zone.now) }
+  scope :recent, -> { published.first(2) }
 
   private
 

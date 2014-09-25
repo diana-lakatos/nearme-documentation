@@ -1,0 +1,5 @@
+%h3
+  = link_to blog_post.title, user_blog_post_show_path(user_id: @user, id: blog_post)
+%h5= l blog_post.published_at
+%p= blog_post.excerpt
+= link_to 'Read more...', user_blog_post_show_path(user_id: @user, id: blog_post)
