@@ -270,6 +270,7 @@ DesksnearMe::Application.routes.draw do
       end
       member do
         get :booking_successful
+        get :remote_payment
       end
       get :hourly_availability_schedule, :on => :collection
     end
@@ -308,6 +309,7 @@ DesksnearMe::Application.routes.draw do
       post :user_cancel
       get :export
       get :booking_successful
+      get :remote_payment
       get :recurring_booking_successful
     end
     collection do
@@ -316,6 +318,7 @@ DesksnearMe::Application.routes.draw do
     end
     resources :guest_ratings, :only => [:new, :create]
     resources :host_ratings, :only => [:new, :create]
+    resources :payment_notifications, :controller => "reservations/payment_notifications"
   end
   get '/reservations/:id/guest_rating' => 'dashboard#guest_rating', as: 'guest_rating'
   get '/reservations/:id/host_rating' => 'reservations#host_rating', as: 'host_rating'

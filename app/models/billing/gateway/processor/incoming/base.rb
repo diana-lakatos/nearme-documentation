@@ -88,6 +88,10 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
     false
   end
 
+  def remote?
+    return false
+  end
+
   protected
 
   def authorize_callbacks(authorization_token, reservation)

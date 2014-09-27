@@ -6,7 +6,7 @@ class ReservationRequest < Form
   attr_reader   :reservation, :listing, :location, :user
 
   def_delegators :@reservation, :quantity, :quantity=
-  def_delegators :@reservation, :credit_card_payment?, :manual_payment?
+  def_delegators :@reservation, :credit_card_payment?, :manual_payment?, :remote_payment?
   def_delegators :@listing,     :confirm_reservations?, :hourly_reservations?, :location
   def_delegators :@user,        :mobile_number, :mobile_number=, :country_name, :country_name=, :country
 
@@ -23,7 +23,6 @@ class ReservationRequest < Form
     @listing = listing
     @waiver_agreement_templates = []
     @user = user
-
     if @listing
       @reservation = listing.reservations.build
       @instance = platform_context.instance
@@ -73,6 +72,8 @@ class ReservationRequest < Form
   def payment_method
     @payment_method = if @reservation.listing.free?
                         Reservation::PAYMENT_METHODS[:free]
+                      elsif @billing_gateway.try(:possible?) && @billing_gateway.try(:remote?)
+                        Reservation::PAYMENT_METHODS[:remote]
                       elsif @billing_gateway.try(:possible?)
                         Reservation::PAYMENT_METHODS[:credit_card]
                       else

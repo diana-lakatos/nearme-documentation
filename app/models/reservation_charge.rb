@@ -78,7 +78,7 @@ class ReservationCharge < ActiveRecord::Base
 
     # Generates a ChargeAttempt with this record as the reference.
 
-    if reservation.billing_authorization.nil?
+    if reservation.billing_authorization.nil? && !reservation.remote_payment?
 
       response = billing_gateway.authorize(reservation.total_amount_cents, reservation.credit_card.token, { customer: reservation.credit_card.instance_client.customer_id })
       if response[:error].present?
@@ -93,7 +93,7 @@ class ReservationCharge < ActiveRecord::Base
     end
 
     begin
-      billing_gateway.charge(total_amount_cents, self, reservation.billing_authorization.token)
+      billing_gateway.charge(total_amount_cents, self, reservation.billing_authorization.try(:token))
       touch(:paid_at)
 
       ReservationChargeTrackerJob.perform_later(reservation.date.end_of_day, reservation.id)
