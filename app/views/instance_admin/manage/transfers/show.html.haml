@@ -1,4 +1,4 @@
-%legend Payment Transfer - #{resource.company_including_deleted.name}
+%h4 Payment Transfer - #{resource.company_including_deleted.name}
 
 - if resource.transferred?
   %p
@@ -18,10 +18,8 @@
     %button.btn.btn_default{disabled: true}
       Payout
 
-%hr
-
 .payout-attemps
-  %legend Payout attemps
+  %h4 Payout attemps
 
   - resource.payout_attempts.each do |payout_attempt|
     .payout_attempt
@@ -35,7 +33,7 @@
 %hr
 
 .payment-advice
-  %legend Payment Advice
+  %h4 Payment Advice
 
   %div
     %strong Amount due:

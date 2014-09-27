@@ -1,17 +1,21 @@
-%legend Pages
+%h4 Pages
 
-= link_to 'Add page', new_instance_admin_theme_page_path, class: 'btn btn-primary pull-right'
-= link_to 'Add redirect', new_instance_admin_theme_page_path(redirect: true), class: 'btn btn-primary pull-right'
+.content-container.dropshadow
+  .row
+    .table-container.col-xs-12
+      %table#pages.table.sortable
+        %thead
+          %tr
+            %th Name
+            %th Path
+            %th
+        %tbody
+          - platform_context.theme.pages.each_with_index do |page|
+            = render 'index_row', page: page
 
-%table#pages.table.sortable
-  %thead
-    %tr
-      %th Name
-      %th Path
-      %th
-  %tbody
-    - platform_context.theme.pages.each_with_index do |page|
-      = render 'index_row', page: page
+.content-container
+  = link_to 'Add page', new_instance_admin_theme_page_path, class: 'btn btn-green pull-right'
+  = link_to 'Add redirect', new_instance_admin_theme_page_path(redirect: true), class: 'btn btn-green pull-right'
 
 - content_for :domready do
   $(function() { new InstanceAdmin.PagesController($('table#pages')); });

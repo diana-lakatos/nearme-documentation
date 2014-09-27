@@ -1,26 +1,26 @@
-.support
-  .row-fluid
-    .controls.controls-row
-      .left
-        %legend= "#{@filter_name} tickets"
-      .right
-        %legend.filter
-          = support_link_to_filter(@filter, 'open')
-          = support_link_to_filter(@filter, 'resolved')
-          = support_link_to_filter(@filter, 'all')
+%h4= "#{@filter_name} tickets"
+.sub-header-nav
+  %ul
+    %li
+      = support_link_to_filter(@filter, 'open')
+    %li
+      = support_link_to_filter(@filter, 'resolved')
+    %li
+      = support_link_to_filter(@filter, 'all')
 
-%br
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table.table-hover
+        %thead
+          %tr
+            %th Ticket
+            %th Updated
+            %th Created
+            %th State
 
-%table.table
-  %thead
-    %tr
-      %th Ticket
-      %th Updated
-      %th Created
-      %th State
-
-  %tbody
-    = render partial: 'ticket', collection: @tickets
+        %tbody
+          = render partial: 'ticket', collection: @tickets
 
 = will_paginate @tickets
 

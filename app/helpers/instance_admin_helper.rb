@@ -2,7 +2,7 @@ module InstanceAdminHelper
 
   def support_link_to_filter(active_filter, filter)
     link = filter == 'open' ? '' : filter
-    link_to_unless(active_filter == filter, filter.titleize, url_for(:filter => link))
+    link_to filter.titleize, url_for(:filter => link), class: "#{active_filter == filter ? 'active' : ''}"
   end
 
   def support_ticket_title(ticket, length = 60)

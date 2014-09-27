@@ -1,11 +1,10 @@
-.row-fluid
-  .controls.controls-row
-    %legend.span3 Manage Partners
-    = link_to 'Add Partner', new_instance_admin_manage_partner_path, class: 'pull-right btn btn-primary'
-
-%br
-
-%table.table
-  %tbody
-    - platform_context.instance.partners.each do |partner|
-      = render 'index_row', partner: partner
+%h4 Manage Partners
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table
+        %tbody
+          - platform_context.instance.partners.each do |partner|
+            = render 'index_row', partner: partner
+.content-container
+  = link_to 'Add Partner', new_instance_admin_manage_partner_path, class: 'pull-right btn btn-green'

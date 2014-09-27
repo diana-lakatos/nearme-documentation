@@ -1,9 +1,12 @@
 = simple_form_for @theme, :url => instance_admin_theme_design_path, :html => { :multipart => true } do |f|
-  %legend Homepage
-  .row-fluid
-    .controls.controls-row
-      = f.input :homepage_content, label: 'Homepage HTML', wrapper_html: { class: 'span12' }, input_html: { class: 'input-block-level', :"data-editor" => 'liquid', rows: "30" }
-  .row-fluid
-    .controls.controls-row
-      = f.input :homepage_css, label: 'Homepage CSS', wrapper_html: { class: 'span12' }, input_html: { class: 'input-block-level', :"data-editor" => 'liquid', rows: "30" }
-  = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
+  %h4 Homepage
+  .content-container
+    .row
+      .input-container.col-xs-12
+        = f.input :homepage_content, label: 'Homepage HTML', input_html: { class: 'form-control', :"data-editor" => 'liquid', rows: "30" }
+    .row.dropshadow
+      .input-container.col-xs-12
+        = f.input :homepage_css, label: 'Homepage CSS', input_html: { class: 'form-control', :"data-editor" => 'liquid', rows: "30" }
+  .content-container
+    .row
+      = f.button :submit, 'Save', class: 'btn btn-green pull-right'

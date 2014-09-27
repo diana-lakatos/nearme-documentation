@@ -1,8 +1,9 @@
 = simple_form_for [:instance_admin, :settings, LocationType.new], :defaults => {:required => false} do |f|
-  %fieldset
-    %legend Add New Location Type
-    .row-fluid
-      .controls.controls-row
-        .fields
-          = f.input :name, :label => false, input_html: { class: 'span6' }
-          = f.submit "Add", :disable_with => 'Saving ...', :class => 'btn btn-primary inline-form-control'
+  %h4 Add New Location Type
+  .content-container
+    .row.dropshadow
+      .input-container.col-xs-12
+        = f.input :name, label: 'Location Type Name', placeholder: 'Location type name'
+  .content-container
+    .row
+      = f.submit "Add", :disable_with => 'Saving ...', :class => 'btn btn-grey pull-right'

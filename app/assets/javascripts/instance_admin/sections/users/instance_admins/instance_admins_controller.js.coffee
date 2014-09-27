@@ -3,11 +3,10 @@ class @Users.InstanceAdmins.Controller
   constructor: (@container, @options = {}) ->
     @roleSelects = @container.find('select[data-role-select]')
     @bindEvents()
-    @loading_gif = @roleSelects.siblings('[data-loading]').eq(0)
 
   bindEvents: ->
-
     @roleSelects.on 'change',  (event) =>
+      @loading_gif = $(event.target).siblings('[data-loading]').eq(0)
       @loading_gif.show()
       $.ajax(
         type: 'PUT',
@@ -15,5 +14,4 @@ class @Users.InstanceAdmins.Controller
         data: { instance_admin_role_id: $(event.target).val() },
         success: =>
           @loading_gif.hide()
-
       )
