@@ -1,0 +1,7 @@
+= simple_form_for [:instance_admin, :buy_sell, @shipping_category] do |f|
+  .content-container
+    .row.dropshadow
+      .input-container.col-xs-12
+        = f.input :name, placeholder: 'What is the name of the shipping category?', required: true, input_html: { class: 'form-control'}
+
+  = f.button :submit, class: "btn btn-green pull-right"

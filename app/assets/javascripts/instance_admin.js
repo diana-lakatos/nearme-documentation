@@ -3,6 +3,7 @@
 //= require ./vendor/jquery-ui-1.9.2.custom.min
 //= require ./vendor/jQueryRotate
 //= require ./instance_admin/bootstrap
+//= require ./instance_admin/bootstrap-select
 //= require ./vendor/modernizr
 //= require ./vendor/Chart
 //= require components/chart_wrapper
@@ -19,6 +20,7 @@
 //= require ckeditor/basepath
 //= require ckeditor/init
 //= require lib/timeago.jquery
+//= require ./instance_admin/jquery.jstree
 //= require components/ace_editor_textarea_binding
 //= require sections/support
 //= require sections/support/attachment_form

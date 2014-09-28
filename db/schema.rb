@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140925155435) do
+ActiveRecord::Schema.define(version: 20140928123243) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -465,6 +465,7 @@ ActiveRecord::Schema.define(version: 20140925155435) do
     t.boolean  "permission_manage",    default: false
     t.boolean  "permission_blog",      default: false
     t.boolean  "permission_support",   default: false
+    t.boolean  "permission_buysell",   default: false
   end
 
   add_index "instance_admin_roles", ["instance_id"], name: "index_instance_admin_roles_on_instance_id", using: :btree
@@ -1061,6 +1062,12 @@ ActiveRecord::Schema.define(version: 20140925155435) do
     t.string   "type",                    limit: 75
     t.datetime "attachment_updated_at"
     t.text     "alt"
+    t.string   "image"
+    t.string   "image_original_url"
+    t.datetime "image_versions_generated_at"
+    t.text     "image_transformation_data"
+    t.integer  "image_original_height"
+    t.integer  "image_original_width"
   end
 
   add_index "spree_assets", ["viewable_id"], name: "index_assets_on_viewable_id", using: :btree
@@ -1433,6 +1440,8 @@ ActiveRecord::Schema.define(version: 20140925155435) do
     t.hstore   "status"
     t.boolean  "products_public",      default: true
     t.boolean  "approved",             default: true
+    t.text     "cross_sell_skus",      default: [],                array: true
+    t.integer  "administrator_id"
   end
 
   add_index "spree_products", ["available_on"], name: "index_spree_products_on_available_on", using: :btree
@@ -1882,9 +1891,12 @@ ActiveRecord::Schema.define(version: 20140925155435) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.integer  "user_id"
+    t.boolean  "in_top_nav",        default: false
+    t.integer  "top_nav_position"
   end
 
   add_index "spree_taxons", ["company_id"], name: "index_spree_taxons_on_company_id", using: :btree
+  add_index "spree_taxons", ["in_top_nav"], name: "index_spree_taxons_on_in_top_nav", using: :btree
   add_index "spree_taxons", ["instance_id"], name: "index_spree_taxons_on_instance_id", using: :btree
   add_index "spree_taxons", ["parent_id"], name: "index_taxons_on_parent_id", using: :btree
   add_index "spree_taxons", ["partner_id"], name: "index_spree_taxons_on_partner_id", using: :btree

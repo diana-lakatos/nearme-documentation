@@ -62,3 +62,15 @@
             %li
               %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/manage_blog/" + controller_name), action: settings[:default_action]}", :class => ("active" if controller.controller_name == (settings[:controller] || controller_name).split('/').last)}
                 %span= "#{controller_name.titleize}"
+
+
+    - if platform_context.instance.buyable? && @authorizer.authorized?('BuySell')
+      %li#buy_sell
+        %a{"data-parent" => "#buy_sell", "data-toggle" => "collapse", :href => "#buy-sell-sub"}
+          %i.fa.fa-shopping-cart
+          %span Buy/Sell
+        %ul#buy-sell-sub.sub-nav.collapse{:class => ("in" if controller.class.to_s.split("::").first(2).join("::") == "InstanceAdmin::BuySell")}
+          - InstanceAdmin::BaseController::BUY_SELL_CONTROLLERS.each do |controller_name, settings|
+            %li
+              %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/buy_sell/" + controller_name), action: settings[:default_action]}", :class => ("active" if controller.controller_name == (settings[:controller] || controller_name).split('/').last)}
+                %span= "#{controller_name.titleize}"

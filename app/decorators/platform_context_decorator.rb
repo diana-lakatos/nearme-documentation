@@ -1,7 +1,7 @@
 class PlatformContextDecorator
 
   delegate :white_label_company, :instance, :theme, :partner, :domain, :white_label_company_user?,
-    :platform_context_detail, :secured_constraint, :to => :platform_context
+    :platform_context_detail, :secured_constraint, :latest_products, :to => :platform_context
 
   delegate :tagline, :support_url, :blog_url, :twitter_url, :twitter_handle, :facebook_url, :gplus_url, :address,
     :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :meta_title, :pages, :logo_image,

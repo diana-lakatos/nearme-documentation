@@ -7,6 +7,10 @@ DesksnearMe::Application.routes.draw do
     mount Spree::Core::Engine, at: '/instance_buy_sell_admin'
   end
 
+  scope module: 'buy_sell' do
+    resources :products, only: [:show]
+  end
+
   get 'ping', to: 'ping#index'
 
   mount Ckeditor::Engine => '/ckeditor'
@@ -229,7 +233,16 @@ DesksnearMe::Application.routes.draw do
       resource :settings, only: [:edit, :update]
     end
 
-
+    namespace :buy_sell do
+      get '/', :to => 'base#index'
+      resource :configuration, only: [:show, :update], controller: 'configuration'
+      resources :tax_categories
+      resources :tax_rates
+      resources :zones
+      resources :taxonomies
+      resources :shipping_categories
+      resources :shipping_methods
+    end
   end
 
   resources :blog_posts, path: 'blog', only: [:index, :show], controller: 'blog/blog_posts'
@@ -352,7 +365,7 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
-  resources :listings, :users, :reservations do
+  resources :listings, :users, :reservations, :products do
     resources :user_messages, except: [:index] do
       patch :archive
       put :archive

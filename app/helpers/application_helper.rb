@@ -156,7 +156,7 @@ module ApplicationHelper
 
   def dnm_page_class
     [
-      content_for?(:manage_navbar) ? 'with-sub-navbar' : nil,
+      content_for?(:manage_navbar) || content_for?(:top_sub_navigation) ? 'with-sub-navbar' : nil,
       no_navbar? ? 'no-navbar' : nil
     ].compact.join(' ')
   end

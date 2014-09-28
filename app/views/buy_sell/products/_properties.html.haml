@@ -1,0 +1,14 @@
+%table.product-properties
+  %tbody
+    - product.grouped_taxons.each_pair do |taxon_root, taxons|
+      %tr
+        %td.product-property
+          = succeed ':' do
+            = taxon_root
+        %td= taxons.join(', ')
+    - product_properties.each do |product_property|
+      %tr
+        %td.product-property
+          = succeed ':' do
+            = product_property.property.presentation
+        %td= product_property.value

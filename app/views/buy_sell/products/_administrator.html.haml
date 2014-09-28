@@ -1,0 +1,12 @@
+%h4 About the seller
+.administrator
+  = image_tag administrator.avatar.url(:big)
+  .info
+    %span.name= administrator.name
+    %span.title= administrator.job_title
+  .buttons
+    = link_to profile_path(administrator), class: 'btn btn-medium view' do
+      %span.text View profile
+    = link_to new_product_user_message_path(@product), class: "btn btn-blue btn-medium ask", rel: "modal" do
+      %span.text Contact
+  .clearfix

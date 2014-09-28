@@ -122,7 +122,7 @@ class UserMessage < ActiveRecord::Base
   # check if author of this message can join conversation in message_context
   def author_has_access_to_message_context?
     case thread_context
-    when Transactable, User
+    when Transactable, User, Spree::Product
       true
     when Reservation
       author == thread_context.owner ||

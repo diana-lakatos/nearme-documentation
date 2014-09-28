@@ -1,0 +1,2 @@
+module BuySell::ProductsHelper
+end

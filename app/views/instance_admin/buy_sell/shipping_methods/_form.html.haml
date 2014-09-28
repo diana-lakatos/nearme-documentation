@@ -1,0 +1,26 @@
+= simple_form_for [:instance_admin, :buy_sell, @shipping_method] do |f|
+  .content-container
+    .row
+      .input-container.col-xs-12
+        = f.input :name, placeholder: 'What is the name of the shipping method?', required: true, input_html: { class: 'form-control'}
+
+    .row
+      .input-container.col-xs-12
+        = simple_fields_for @shipping_method.calculator do |fc|
+          = fc.input :preferred_amount, label: 'Price', input_html: { class: 'form-control'}
+
+    .row
+      .input-container.col-xs-12
+        = f.association :tax_category, collection: Spree::TaxCategory.order(:name).pluck(:name, :id), input_html: { class: 'form-control' }
+
+    .row
+      .input-container.col-xs-12
+        = label_tag 'Shipping categories'
+        = f.association :shipping_categories, collection: Spree::ShippingCategory.order(:name).pluck(:name, :id), as: :check_boxes, label: false, item_wrapper_class: 'checkboxes-inline'
+
+    .row.dropshadow
+      .input-container.col-xs-12
+        = label_tag 'Zones'
+        = f.association :zones, collection: Spree::Zone.order(:name).pluck(:name, :id), as: :check_boxes, label: false, item_wrapper_class: 'checkboxes-inline'
+
+  = f.button :submit, class: "btn btn-green pull-right"

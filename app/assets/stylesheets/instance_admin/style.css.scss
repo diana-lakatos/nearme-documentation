@@ -365,6 +365,13 @@ form {
     font-weight: 500;
     display: block;
     text-transform: uppercase;
+
+    &.checkboxes-inline {
+      input[type="checkbox"] {
+        position: static !important;
+        margin-right: 10px;
+      }
+    }
   }
 
   input {
@@ -983,4 +990,14 @@ body.login {
 .modal-body-wrapper {
   position: fixed;
   width: 100%;
+}
+
+.btn.dropdown-toggle.selectpicker {
+  border: 0 !important;
+}
+
+.bootstrap-select.btn-group .btn .filter-option {
+  font-size: 12px;
+  line-height: 20px;
+  height: 20px;
 }

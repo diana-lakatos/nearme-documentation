@@ -1,0 +1,22 @@
+= simple_form_for [:instance_admin, :buy_sell, @tax_rate] do |f|
+  .content-container
+    .row
+      .input-container.col-xs-12
+        = f.input :name, placeholder: 'What is the name of the tax rate?', required: true, input_html: { class: 'form-control'}
+    .row
+      .input-container.col-xs-12
+        = f.input :amount, placeholder: 'Tax rates are a decimal amount to aid in calculations, (i.e. if the tax rate is 5% then enter 0.05)', input_html: { class: 'form-control'}
+    .row
+      .input-container.col-xs-12
+        = f.label :zone, Spree.t(:zone)
+        = f.collection_select(:zone_id, @available_zones, :id, :name, {}, {class: 'form-control'})
+    .row
+      .input-container.col-xs-12
+        = f.label :tax_category_id, Spree.t(:tax_category)
+        = f.collection_select(:tax_category_id, @available_categories,:id, :name, {}, {class: 'form-control'})
+    .row.dropshadow
+      .input-container.col-xs-12
+        = f.label :included_in_price
+        = f.check_box :included_in_price
+
+  = f.button :submit, class: "btn btn-green pull-right"

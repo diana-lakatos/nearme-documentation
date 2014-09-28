@@ -1,0 +1,24 @@
+#taxonomy_form
+  = simple_form_for [:instance_admin, :buy_sell, @taxonomy] do |f|
+    .content-container
+      .row
+        .input-container.col-xs-12
+          = f.input :name, placeholder: 'What is the name of the taxonomy?', required: true, input_html: { class: 'form-control'}
+
+      - unless @taxonomy.new_record?
+        .row
+          .input-container.col-xs-12
+            #ajax_error{style: 'display: none;'}
+            %p Right click a child in the tree to access the menu for adding, deleting or sorting a child.
+            #taxonomy_tree
+
+      .row.dropshadow
+
+    = f.button :submit, class: "btn btn-green pull-right"
+
+- unless @taxonomy.new_record?
+  - content_for :domready do
+    var taxonomy_taxons_path = "#{spree.api_taxonomy_taxons_path(@taxonomy)}";
+    var admin_taxonomy_taxons_path = "#{spree.admin_taxonomy_taxons_path(@taxonomy)}";
+    var jstree_theme_path = "#{stylesheet_path("instance_admin/jstree_themes/apple/style.css")}";
+    new InstanceAdmin.BuySellController($('#taxonomy_form'), #{@taxonomy.id});

@@ -1,0 +1,22 @@
+.row
+  .col-xs-12
+    %h4 Tax rates
+    = link_to 'New tax rate', new_instance_admin_buy_sell_tax_rate_path, class: 'pull-right btn btn-green'
+
+%br
+
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table.sortable
+        %thead
+          %tr
+            %th Zone
+            %th Name
+            %th Category
+            %th Amount
+            %th Included in price
+            %th
+        %tbody
+          - @tax_rates.each do |tax_rate|
+            = render 'index_row', tax_rate: tax_rate

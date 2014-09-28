@@ -1,0 +1,10 @@
+= content_for :top_sub_navigation do
+  .row-fluid
+    .span12.manage-nav.buy-sell-top-navigation
+      .navbar
+        .navbar-inner.nav-links
+          %ul.nav
+            - Spree::Taxon.for_top_navigation.each do |taxon|
+              %li
+                = link_to edit_user_registration_path do
+                  %span= taxon.name

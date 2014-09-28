@@ -1,0 +1,64 @@
+= render 'shared/modules/buy_sell_top_navigation'
+
+- title render 'buy_sell/products/title', product: @product
+- canonical_url product_path(@product)
+
+- content_for :meta_description do
+  = @product.meta_description
+
+- content_for :hero do
+  %article#product
+    .container-fluid
+
+      .container-row
+        .two-thirds.column.left
+          = render 'buy_sell/products/product_photos', product: @product
+
+        .one-third.column.left
+          %h1= mask_phone_and_email_if_necessary(@product.name)
+          .description
+            = truncate(custom_sanitze(mask_phone_and_email_if_necessary(@product.description)), length: 500, separator: ' ')
+          .price= @product.humanized_price
+          = link_to '#', class: "btn btn-blue btn-large add_to_cart" do
+            %span Add to cart
+
+      .clearfix.padding-row
+
+      #products-tabs.container-row
+        %ul.nav.nav-tabs{role: 'tablist'}
+          %li.active
+            %a{href: "#description", role: "tab", :'data-toggle' => "tab"} Description
+          %li
+            %a{href: "#properties", role: "tab", :'data-toggle' => "tab"} Properties
+          %li
+            %a{href: "#share", role: "tab", :'data-toggle' => "tab"} Share
+
+        .tab-content
+          #description.tab-pane.active
+            .description
+              = custom_sanitze(mask_phone_and_email_if_necessary(@product.description))
+          #properties.tab-pane
+            = render 'buy_sell/products/properties', product: @product, product_properties: @product_properties
+          #share.tab-pane
+            = render 'buy_sell/products/social_buttons', product: @product
+
+
+      .container-row
+        .row-fluid.padding-row
+          .span7.product-might-like
+            .white-box
+              = render 'buy_sell/products/cross_sell_products', product: @product
+
+          .span5
+            .white-box
+              = render 'buy_sell/products/administrator', administrator: @product.administrator
+
+.clearfix.padding-row
+
+- content_for :script do
+  :javascript
+    // Initialize the ui controller
+    $(function() {
+      new Product.Controller($('article#product'));
+    });
+            

@@ -1,0 +1,21 @@
+<div class="span9 offset2">
+  <div class="row-fluid">
+    <div class="products-container">
+    {% for product in platform_context.latest_products %}
+        <article class="product"> 
+          <div class="photo-container">
+            <div class="photo">
+              <img alt="{{ product.name }}" src="{{ product.photo_url }}" title="{{ product.name }}">
+            </div>
+          </div>
+          <div class="heading">
+            <a href="{{ product.product_url }}">
+              {{ product.name }}
+              <span>{{ product.price }}</span>
+            </a>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</div>
