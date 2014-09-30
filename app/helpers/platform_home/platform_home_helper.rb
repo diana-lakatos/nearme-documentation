@@ -1,5 +1,9 @@
 module PlatformHome::PlatformHomeHelper
 
+  def title(page_title)
+    content_for(:title) { page_title }
+  end
+
   def host
     "#{request.scheme}://#{request.host}"
   end
