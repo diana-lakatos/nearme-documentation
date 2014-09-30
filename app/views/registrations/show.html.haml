@@ -30,4 +30,4 @@
             %h2
               Recent blog posts
               =link_to '(blog)', user_blog_posts_list_path(user_id: @user.id)
-            = render partial: '/user_blog/blog_posts/excerpt', collection: @user.recent_blogs, as: :blog_post
+            = render partial: '/user_blog/blog_posts/excerpt', collection: UserBlogPostDecorator.decorate_collection(@user.recent_blogs), as: :blog_post
