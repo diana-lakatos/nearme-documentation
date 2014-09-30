@@ -3,6 +3,10 @@ class UserBlogDecorator < Draper::Decorator
 
   delegate_all
 
+  def self.collection_decorator_class
+    PaginatingDecorator
+  end
+
   def image_preview(attribute_name)
     image_attribute = object.try(attribute_name.to_sym)
     if image_attribute && image_attribute.present?

@@ -13,6 +13,8 @@ class UserBlogPost < ActiveRecord::Base
   scope :published, -> { by_date.where('published_at < ? OR published_at IS NULL', Time.zone.now) }
   scope :recent, -> { published.first(2) }
 
+  self.per_page = 5
+
   private
 
   def should_generate_new_friendly_id?

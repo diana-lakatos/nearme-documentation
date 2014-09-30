@@ -1,7 +1,7 @@
 class UserBlog::BlogPostsController < UserBlog::BaseController
 
   def new
-    @user_blog_post = current_user.blog_posts.new.decorate
+    @user_blog_post = current_user.blog_posts.new
     @user_blog_post.author_name = current_user.name
     @user_blog_post.author_biography = current_user.biography
   end
@@ -12,13 +12,13 @@ class UserBlog::BlogPostsController < UserBlog::BaseController
       flash[:success] = t('flash_messages.blog_admin.blog_posts.blog_post_added')
       redirect_to user_blog_path
     else
-      @user_blog_post = @user_blog_post.decorate
+      @user_blog_post = @user_blog_post
       render :new
     end
   end
 
   def edit
-    @user_blog_post = current_user.blog_posts.find(params[:id]).decorate
+    @user_blog_post = current_user.blog_posts.find(params[:id])
   end
 
   def update
@@ -27,7 +27,7 @@ class UserBlog::BlogPostsController < UserBlog::BaseController
       flash[:success] = t('flash_messages.blog_admin.blog_posts.blog_post_updated')
       redirect_to user_blog_path
     else
-      @user_blog_post = @user_blog_post.decorate
+      @user_blog_post = @user_blog_post
       render :edit
     end
   end

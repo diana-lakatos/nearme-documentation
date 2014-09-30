@@ -3,12 +3,17 @@ class Registrations::BlogController < ApplicationController
 
   def index
     @user = blog_user
-    @blog_posts = blog_user.published_blogs
+    @blog_posts = UserBlogPostDecorator.decorate_collection(blog_user.published_blogs.paginate(page: params[:page]))
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   def show
     @user = blog_user
-    @blog_post = blog_user.published_blogs.find(params[:id])
+    @blog_post = blog_user.published_blogs.find(params[:id]).decorate
   end
 
   private

@@ -1,7 +1,8 @@
 class UserBlog::BlogController < UserBlog::BaseController
 
   def index
-    @user_blog_posts = UserBlogPostDecorator.decorate_collection(current_user.blog_posts.by_date)
+    @user_blog_posts = UserBlogPostDecorator.decorate_collection(current_user.blog_posts.by_date
+                                                                 .paginate(page: params[:page], per_page: 10))
   end
 
   def settings

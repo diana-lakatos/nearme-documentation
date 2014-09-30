@@ -15,7 +15,7 @@
                 %span Notification Preferences
             - if platform_context.instance.user_blogs_enabled?
               %li
-                = link_to user_blog_path, class: (active_tab == :user_blog) ? 'active' : '' do
+                = link_to user_blog_settings_path, class: (active_tab == :user_blog) ? 'active' : '' do
                   %span Blog
 
 = yield
