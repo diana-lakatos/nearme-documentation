@@ -1,4 +1,4 @@
-ruby '2.1.2'
+ruby '2.0.0'
 
 source 'http://rubygems.org'
 
@@ -158,8 +158,6 @@ end
 group :development do
   gem 'quiet_assets'
   gem 'thin'
-  gem 'better_errors'
-  gem 'binding_of_caller'
 end
 
 group :test do
