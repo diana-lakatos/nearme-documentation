@@ -11,5 +11,5 @@
           - @transactable_type_attributes.each do |resource|
             %tr
               %td= resource.name.humanize
-              %td= link_to 'Edit', edit_instance_admin_manage_transactable_type_attribute_path(resource), class: 'btn'
+              %td= link_to 'Edit', edit_instance_admin_manage_transactable_type_attribute_path(resource)
               %td= link_to "Delete", [:instance_admin, :manage, resource], :method => :delete, :confirm => "Are you sure you want to delete this attribute?", :class => "btn btn-danger"
