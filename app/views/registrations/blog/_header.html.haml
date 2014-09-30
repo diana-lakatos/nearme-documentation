@@ -4,6 +4,3 @@
       = link_to user_blog_posts_list_path do
         %span.ico-blog.padding
         = @user.blog.name
-
-    .pull-right
-      = @user.blog.header_text unless @user.blog.header_text.empty?

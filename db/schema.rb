@@ -2370,14 +2370,10 @@ ActiveRecord::Schema.define(version: 20141103195404) do
 
   create_table "user_blogs", force: true do |t|
     t.integer  "user_id"
-    t.boolean  "enabled",         default: false
+    t.boolean  "enabled",     default: false
     t.string   "name"
-    t.string   "header_image"
-    t.string   "header_text"
-    t.string   "header_motto"
     t.string   "header_logo"
     t.string   "header_icon"
-    t.string   "facebook_app_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -418,8 +418,6 @@ module Utils
           user_blog = user.blog
           user_blog.enabled = true
           user_blog.name = "#{user.name}'s blog"
-          user_blog.header_text = Faker::Lorem.words(3).join(' ').titleize
-          user_blog.header_motto = Faker::Lorem.words(8).join(' ').titleize
           user_blog.save!
 
           5.times do
