@@ -85,7 +85,7 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
 
       should 'find listings that are daily' do
         @filters.merge!({ :midpoint => nil, :listing_pricing => ['daily'] })
-        assert_equal [@public_listing, @public_office_listing, @private_listing, @private_office_listing], Listing::SearchFetcher.new(@filters).listings
+        assert_equal [@public_listing, @public_office_listing, @private_listing, @private_office_listing].sort, Listing::SearchFetcher.new(@filters).listings.sort
       end
 
     end
