@@ -46,7 +46,8 @@ class Job
                                                       PlatformContext.new(@platform_context_detail_class.find(@platform_context_detail_id))
                                                     end
                                                   end
-    Transactable.clear_transactable_type_attributes_cache
+    Transactable.clear_custom_attributes_cache
+    UserInstanceProfile.clear_custom_attributes_cache
   end
 
   def after_initialize(*args)

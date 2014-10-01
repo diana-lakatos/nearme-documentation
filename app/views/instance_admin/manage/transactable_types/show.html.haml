@@ -1,7 +1,7 @@
 %h4= resource.name
 .content-container
   .row
-    = link_to 'Add Attr', new_instance_admin_manage_transactable_type_transactable_type_attribute_path(resource), class: 'pull-right btn btn-green'
+    = link_to 'Add Attr', new_instance_admin_manage_transactable_type_custom_attribute_path(resource), class: 'pull-right btn btn-green'
     = link_to 'Data Upload', instance_admin_manage_transactable_type_data_uploads_path(resource), class: 'pull-right btn btn-green'
 
 .content-container
@@ -9,8 +9,8 @@
     .table-container.col-xs-12.dropshadow
       %table.table
         %tbody
-          - resource.transactable_type_attributes.each do |tta|
+          - resource.custom_attributes.each do |tta|
             %tr
               %td= tta.name.humanize
-              %td= link_to 'Edit', edit_instance_admin_manage_transactable_type_transactable_type_attribute_path(@transactable_type, tta), class: 'pull-right'
+              %td= link_to 'Edit', edit_instance_admin_manage_transactable_type_custom_attribute_path(@transactable_type, tta), class: 'pull-right'
               %td= link_to "Delete", [:instance_admin, :manage, resource, tta], :method => :delete, :confirm => "Are you sure you want to delete this attribute?", :class => "pull-right"

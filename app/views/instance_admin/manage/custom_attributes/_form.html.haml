@@ -1,0 +1,59 @@
+= simple_form_for [:instance_admin, :manage, @target, resource], :html => { :multipart => true} do |f|
+  .content-container
+    .row
+      .input-container.col-xs-6
+        = f.input :name, required: false, input_html: { class: 'form-control' }
+      .input-container.col-xs-6
+        = f.input :label, input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-6
+        = f.input :attribute_type, required: false, :as => :select, :collection => CustomAttributes::CustomAttribute::ATTRIBUTE_TYPES.map { |t| [t.humanize, t] }, :prompt => "Choose...", input_html: { class: 'form-control' }
+      .input-container.col-xs-6
+        = f.input :html_tag, :as => :select, :collection => CustomAttributes::CustomAttribute::HTML_TAGS.map { |t| [t.humanize, t] }, :prompt => "Choose...", input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-6
+        = f.input :placeholder, input_html: { class: 'form-control' }
+      .input-container.col-xs-6
+        = f.input :prompt, input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-6
+        = f.input :default_value, input_html: { class: 'form-control' }
+      .input-container.col-xs-6
+        = f.input :public, input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-6
+        = f.input :hint, input_html: { class: 'form-control' }
+      .input-container.col-xs-6
+        = f.input :valid_values, label: 'Valid values (separate with coma)', wrapper_html_options: { class: 'for-select-tag' }, input_html: { value: f.object.valid_values.join(', ') }
+    .row.dropshadow
+      .input-container.col-xs-6
+        = f.input :input_html_options_string, label: 'Input Html Options(key1 => value1, key2 => value2)', input_html: { value: f.object.input_html_options.map { |k, v| "#{k} => #{v}"}.join(', ') }, input_html: { class: 'form-control' }
+      .input-container.col-xs-6
+        = f.input :wrapper_html_options_string, label: 'Wrapper Html Options(key1 => value1, key2 => value2)', input_html: { value: f.object.wrapper_html_options.map { |k, v| "#{k} => #{v}"}.join(', ') }, input_html: { class: 'form-control' }
+
+  .row
+    .col-xs-6
+      %h4 Input Html Options
+      = f.simple_fields_for :input_html_options, OpenStruct.new(resource.input_html_options) do |input_html_opptions_form|
+        %div{'data-new-input-fields' => true}
+          - f.object.input_html_options.each do |key, value|
+            = input_html_opptions_form.input key, required: false, label: key, input_html: { value: value }
+        .row-fluid
+          .controls.controls-row
+            .fields
+              = input_html_opptions_form.input 'new-input-html-option-name', as: :fake, :label => false, placeholder: 'Add input html option', input_html: { class: 'span6', "data-new-input" => 'input' }
+              = link_to "Add new html option", '', :class => 'btn btn-green inline-form-control', "data-new-input" => 'button', "data-new-input-name" => input_html_opptions_form.object_name
+    .col-xs-6
+      %h4 Wrapper Html Options
+      = f.simple_fields_for :wrapper_html_options, OpenStruct.new(resource.wrapper_html_options) do |wrapper_html_options_form|
+        %div{'data-new-input-fields' => true}
+          - f.object.wrapper_html_options.keys.each do |key|
+            = wrapper_html_options_form.input key, required: false, input_html: {value: resource.wrapper_html_options[key]}, label: key
+        .row-fluid
+          .controls.controls-row
+            .fields
+              = wrapper_html_options_form.input 'new-input-html-option-name', as: :fake, :label => false, placeholder: 'Add input html option', input_html: { class: 'span6', "data-new-input" => 'input' }
+              = link_to "Add new html option", '', :class => 'btn btn-green inline-form-control', "data-new-input" => 'button', "data-new-input-name" => wrapper_html_options_form.object_name
+
+  %br
+  = f.button :submit, 'Save', class: 'btn btn-green pull-right'

@@ -5,10 +5,10 @@ class Transactable < ActiveRecord::Base
   scoped_to_platform_context
   class NotFound < ActiveRecord::RecordNotFound; end
   include Impressionable
-  has_metadata :accessors => [:photos_metadata]
+  has_metadata accessors: [:photos_metadata]
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id, :listings_public], :location)
 
-  include TransactableType::CustomAttributesCaster
+  has_custom_attributes target_type: 'TransactableType', target_id: :transactable_type_id
 
   has_many :reservations, inverse_of: :listing
   has_many :recurring_bookings, dependent: :destroy, inverse_of: :listing
@@ -67,25 +67,7 @@ class Transactable < ActiveRecord::Base
   # == Validations
   validates_presence_of :location, :transactable_type
   validates_with PriceValidator
-  validates_with TransactableTypeAttributeValidator
   validates :photos, :length => { :minimum => 1 }, :unless => :photo_not_required
-
-  # used to avoid initializing the same data over and over again if we know it won't change, for example
-  # for Transactable.all we will just re-use array that sits in memory. Defining as class level instance variable,
-  # just in case to avoid potential issues with inheritance
-  @transactable_type_attributes_as_array = {}
-  @transactable_type_attributes_cache_update_at = {}
-  class << self
-    attr_accessor :transactable_type_attributes_as_array, :transactable_type_attributes_cache_update_at
-  end
-
-  def initialize(*args)
-    if args[0]
-      @attributes_to_be_applied = args[0].select { |k, v| ![:id, :transactable_type_id, :transactable_type].include?(k.to_sym) }.with_indifferent_access
-      args[0] = args[0].select { |k, v| [:id, :transactable_type_id, :transactable_type].include?(k.to_sym) }.with_indifferent_access
-    end
-    super(*args)
-  end
 
   # == Helpers
   include Listing::Search
@@ -100,7 +82,7 @@ class Transactable < ActiveRecord::Base
   delegate :service_fee_guest_percent, :service_fee_host_percent, to: :location, allow_nil: true
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
-  delegate :transactable_type_attributes, :favourable_pricing_rate, :has_action?, to: :transactable_type
+  delegate :favourable_pricing_rate, :has_action?, to: :transactable_type
 
   # attr_accessible :location_id, :availability_template_id,
   #   :availability_rules_attributes, :defer_availability_rules, :free,
@@ -109,14 +91,6 @@ class Transactable < ActiveRecord::Base
   #   :transactable_type, :photo_ids
 
   attr_accessor :distance_from_search_query, :photo_not_required
-
-  after_initialize :apply_transactable_type_settings
-
-  def apply_transactable_type_settings
-    set_custom_attributes
-    set_defaults if self.new_record?
-    self.assign_attributes(@attributes_to_be_applied) if @attributes_to_be_applied.present?
-  end
 
   def hourly_reservations?
     nil
@@ -156,11 +130,8 @@ class Transactable < ActiveRecord::Base
     end
   end
 
-  def set_defaults
+  def set_custom_defaults
     self.enabled = is_trusted? if self.enabled.nil?
-    transactable_type_attributes_names_default_values_hash.each do |key, value|
-      send(:"#{key}=", value) if send(key).nil?
-    end
   end
 
   # Are we deferring availability rules to the Location?
@@ -413,67 +384,15 @@ class Transactable < ActiveRecord::Base
 
   def self.csv_fields(transactable_type)
     { external_id: 'External Id', enabled: 'Enabled' }.reverse_merge(
-      transactable_type.transactable_type_attributes.public.pluck(:name, :label).inject({}) do |hash, arr|
+      transactable_type.custom_attributes.public.pluck(:name, :label).inject({}) do |hash, arr|
         hash[arr[0].to_sym] = arr[1].presence || arr[0].humanize
         hash
       end
     )
   end
 
-  # invoked when transactable type attribute changes
-  def self.clear_transactable_type_attributes_cache
-    id = TransactableType.pluck(:id).first
-    if self.transactable_type_attributes_cache_update_at[id]
-      transactable_type_ids = TransactableTypeAttribute.with_changed_attributes(self.transactable_type_attributes_cache_update_at[id]).uniq.pluck(:transactable_type_id)
-      transactable_type_ids.each do |transactable_type_id|
-        self.transactable_type_attributes_as_array[transactable_type_id] = nil
-      end
-    end
-  end
-
-  def self.get_transactable_type_attributes_as_array(tt_id)
-    if !self.transactable_type_attributes_as_array[tt_id]
-      self.transactable_type_attributes_cache_update_at[tt_id] = Time.now.utc
-      self.transactable_type_attributes_as_array[tt_id] = TransactableTypeAttribute.find_as_array(tt_id)
-    end
-    self.transactable_type_attributes_as_array[tt_id]
-  end
-
-  def transactable_type_attributes_as_array
-    self.class.get_transactable_type_attributes_as_array(transactable_type_id)
-  end
-
   def transactable_type_id
-    read_attribute(:transactable_type_id) || transactable_type.id
-  end
-
-  def transactable_type_attributes_names_default_values_hash
-    @transactable_type_attributes_names_default_values_hash ||= transactable_type_attributes_as_array.inject({}) do |hstore_attrs, attr_array|
-      hstore_attrs[attr_array[0].to_sym] = attr_array[2]
-      hstore_attrs
-    end
-  end
-
-  def transactable_type_attributes_names_types_hash
-    @transactable_type_attributes_names_types_hash ||= transactable_type_attributes_as_array.inject({}) do |hstore_attrs, attr_array|
-      hstore_attrs[attr_array[0].to_sym] = attr_array[1].to_sym
-      hstore_attrs
-    end
-  end
-
-  def self.public_transactable_type_attributes_names(tt_id)
-    return [] if tt_id.nil?
-    self.get_transactable_type_attributes_as_array(tt_id).map do |attr_array|
-      if attr_array[TransactableTypeAttribute::PUBLIC]
-        if attr_array[TransactableTypeAttribute::ATTRIBUTE_TYPE].to_sym == :array
-          { attr_array[TransactableTypeAttribute::NAME].to_sym => [] }
-        else
-          attr_array[TransactableTypeAttribute::NAME].to_sym
-        end
-      else
-        nil
-      end
-    end
+    read_attribute(:transactable_type_id) || transactable_type.try(:id)
   end
 
   private

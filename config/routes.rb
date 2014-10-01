@@ -1,11 +1,10 @@
-require Rails.root.join('app', 'controllers', 'sessions_controller.rb')
-require Rails.root.join('app', 'controllers', 'registrations_controller.rb')
-
 DesksnearMe::Application.routes.draw do
 
   scope module: 'spree' do
     mount Spree::Core::Engine, at: '/instance_buy_sell_admin'
   end
+
+  mount CustomAttributes::Engine, at: '/custom_attributes'
 
   get 'ping', to: 'ping#index'
 
@@ -107,7 +106,7 @@ DesksnearMe::Application.routes.draw do
       resources :instance_views
     end
     resources :transactable_types, :only => [] do
-      resources :transactable_type_attributes do
+      resources :custom_attributes do
       end
     end
     resources :pages
@@ -185,8 +184,17 @@ DesksnearMe::Application.routes.draw do
         resources :approval_request_attachment_templates, controller: 'approval_request_templates/approval_request_attachment_templates'
       end
 
+      resources :custom_attributes, only: [:index]
+
+      resources :instance_profile_types, :only => [:index, :destroy] do
+        collection do
+          post :enable
+        end
+        resources :custom_attributes, controller: 'instance_profile_types/custom_attributes'
+      end
+
       resources :transactable_types, :only => [:index, :edit, :update, :show] do
-        resources :transactable_type_attributes, controller: 'transactable_types/transactable_type_attributes'
+        resources :custom_attributes, controller: 'transactable_types/custom_attributes'
         resources :data_uploads, :only => [:new, :create, :index, :edit, :update, :show], controller: 'transactable_types/data_uploads' do
           collection do
             get :download_csv_template

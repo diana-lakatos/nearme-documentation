@@ -76,6 +76,13 @@ GIT
       i18n (>= 0.5.0)
 
 PATH
+  remote: vendor/gems/custom_attributes
+  specs:
+    custom_attributes (0.0.1)
+      pg
+      rails (~> 4.0.0)
+
+PATH
   remote: vendor/gems/nearme
   specs:
     nearme (0.0.1)
@@ -730,6 +737,7 @@ DEPENDENCIES
   compass-rails
   cucumber (~> 1.2.5)
   cucumber-rails (~> 1.4.0)
+  custom_attributes!
   daemons
   database_cleaner
   delayed_job_active_record (~> 4.0.0)

@@ -13,7 +13,7 @@ FactoryGirl.define do
       after(:build) do |transactable_type|
         TransactableType.transaction do
           transactable_type.availability_templates << FactoryGirl.build(:availability_template, :transactable_type => transactable_type)
-          Utils::TransactableTypeAttributesCreator.new(transactable_type).create_listing_attributes!
+          CustomAttributes::CustomAttribute::Creator.new(transactable_type).create_listing_attributes!
         end
       end
 
@@ -32,7 +32,7 @@ FactoryGirl.define do
     factory :transactable_type_csv_template do
       after(:build) do |transactable_type|
         transactable_type.availability_templates << FactoryGirl.build(:availability_template, :transactable_type => transactable_type)
-        transactable_type.transactable_type_attributes = [FactoryGirl.build(:transactable_type_attribute_required, transactable_type: transactable_type, name: 'my_attribute', attribute_type: 'string')]
+        transactable_type.custom_attributes = [FactoryGirl.build(:custom_attribute_required, target: transactable_type, name: 'my_attribute', attribute_type: 'string')]
       end
     end
   end
