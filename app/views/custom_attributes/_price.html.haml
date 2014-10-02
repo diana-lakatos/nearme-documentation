@@ -30,7 +30,7 @@
 
           .price-input-options
             .price-inputs-wrapper.left
-              = render 'manage/listings/price_field', :f => f, :price => :hourly, :label => "simple_form.labels.transactable.price.hourly"
+              = render 'manage/listings/price_field', :f => f, :price => :hourly, :label => t("simple_form.labels.transactable.price.hourly")
 
       - if f.object.errors.include?(:hourly_reservations).present?
         %p.error-block= f.object.errors[:hourly_reservations].first
