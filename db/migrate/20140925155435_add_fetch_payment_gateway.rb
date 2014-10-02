@@ -1,5 +1,6 @@
 class AddFetchPaymentGateway < ActiveRecord::Migration
   class PaymentGateway < ActiveRecord::Base
+    serialize :settings, Hash
   end
 
   def up
