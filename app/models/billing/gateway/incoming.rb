@@ -1,8 +1,8 @@
 # Encapsulate all billing  gateway related logic associated with a user
 class Billing::Gateway::Incoming
 
+  delegate :charge, :refund, :authorize, :store_credit_card, :process_notification, :remote?, to: :processor
 
-  delegate :charge, :refund, :authorize, :store_credit_card, to: :processor
   attr_reader :processor
 
   def initialize(user, instance, currency)
@@ -12,5 +12,4 @@ class Billing::Gateway::Incoming
   def possible?
     processor.present?
   end
-
 end

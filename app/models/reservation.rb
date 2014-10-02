@@ -12,6 +12,7 @@ class Reservation < ActiveRecord::Base
   PAYMENT_METHODS = {
     :credit_card => 'credit_card',
     :manual      => 'manual',
+    :remote      => 'remote',
     :free        => 'free'
   }
 
@@ -24,6 +25,7 @@ class Reservation < ActiveRecord::Base
   }
 
   attr_encrypted :authorization_token, :payment_gateway_class, :key => DesksnearMe::Application.config.secret_token
+  attr_accessor :payment_response_params
 
   belongs_to :instance
   belongs_to :listing, class_name: 'Transactable', foreign_key: 'transactable_id'
@@ -339,6 +341,10 @@ class Reservation < ActiveRecord::Base
     payment_method == Reservation::PAYMENT_METHODS[:manual]
   end
 
+  def remote_payment?
+    payment_method == Reservation::PAYMENT_METHODS[:remote]
+  end
+
   def currency
     super.presence || listing.try(:currency)
   end
@@ -397,9 +403,18 @@ class Reservation < ActiveRecord::Base
   end
 
   def attempt_payment_capture
-    return if manual_payment? || free? || paid?
+    return if manual_payment? || remote_payment? || free? || paid?
     return if !confirmed?
 
+    generate_reservation_charge
+  end
+
+  def charge
+    return if paid?
+    generate_reservation_charge
+  end
+
+  def generate_reservation_charge
     # Generates a ReservationCharge, which is a record of the charge incurred
     # by the user for the reservation (or a part of it), including the
     # gross amount and service fee components.

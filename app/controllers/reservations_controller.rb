@@ -70,6 +70,10 @@ class ReservationsController < ApplicationController
     upcoming
   end
 
+  def remote_payment
+    upcoming
+  end
+
   def recurring_booking_successful
     @recurring_booking = current_user.recurring_bookings.find(params[:id])
     params[:id] = nil
