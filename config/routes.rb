@@ -524,6 +524,7 @@ DesksnearMe::Application.routes.draw do
     mount RecurringMailerPreview => 'mail_view/recurring'
     mount SupportMailerPreview => 'mail_view/support'
     mount PlatformMailerPreview => 'mail_view/platform'
+    mount DeviseMailerPreview => 'mail_view/devise'
   end
 
 end
