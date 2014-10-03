@@ -101,7 +101,7 @@ class SecuredParams
       :name,
       :service_fee_guest_percent, :service_fee_host_percent,
       :bookable_noun, :lessor, :lessee,
-      :skip_company,
+      :skip_company, :mark_as_locked,
       :live_stripe_api_key, :live_stripe_public_key,
       :live_paypal_username, :live_paypal_password,
       :live_paypal_signature, :live_paypal_app_id,

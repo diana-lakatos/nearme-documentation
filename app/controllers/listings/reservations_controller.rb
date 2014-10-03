@@ -3,7 +3,7 @@ class Listings::ReservationsController < ApplicationController
   before_filter :secure_payment_with_token, :only => [:review]
   before_filter :load_payment_with_token, :only => [:review]
   before_filter :find_listing
-  before_filter :find_reservation, only: [:booking_successful]
+  before_filter :find_reservation, only: [:booking_successful, :remote_payment]
   before_filter :build_reservation_request, :only => [:review, :create, :store_reservation_request]
   before_filter :require_login_for_reservation, :only => [:review, :create]
   before_filter :find_current_country, :only => [:review, :create]
@@ -69,6 +69,7 @@ class Listings::ReservationsController < ApplicationController
       card_message = @reservation.credit_card_payment? ? t('flash_messages.reservations.credit_card_will_be_charged') : ''
       flash[:notice] = t('flash_messages.reservations.reservation_made', message: card_message)
 
+      redirect_to remote_payment_reservation_path(@reservation) and return if @reservation.remote_payment?
       if origin_domain?
         redirect_to booking_successful_reservation_url(@reservation, protocol: 'http', host: origin_domain)
       else
@@ -81,6 +82,12 @@ class Listings::ReservationsController < ApplicationController
 
   # Renders booking successful modal
   def booking_successful
+  end
+
+  # Renders remote payment form
+  def remote_payment
+    @billing_gateway = Billing::Gateway::Incoming.new(current_user, @reservation.instance, @reservation.currency)
+    @billing_gateway.processor.set_payment_data(@reservation, request)
   end
 
   def hourly_availability_schedule

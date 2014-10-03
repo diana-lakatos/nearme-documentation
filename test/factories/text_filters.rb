@@ -1,6 +1,7 @@
 FactoryGirl.define do
   factory :text_filter do
     sequence(:name) { |n| "Text Filter #{n}" }
+    regexp 'regexp'
     replacement_text '[FILTERED]'
 
     factory :text_filter_email do

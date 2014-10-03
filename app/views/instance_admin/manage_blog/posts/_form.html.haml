@@ -1,2 +1,35 @@
 = simple_form_for [:instance_admin, :manage, @blog_post], :html => { :multipart => true } do |f|
-  = render 'blog/admin/blog_posts/blog_form', f: f
+  .content-container
+    .row
+      .input-container.col-xs-12
+        = f.input :title, :placeholder => 'What is the title of the post?', required: false, :input_html => { class: 'form-control', :data => { :slug_changed => @blog_post.slug_changed?, :slug_source => true }}
+    .row
+      .input-container.col-xs-12
+        = f.input :content, required: false, :as => :ckeditor, :input_html => { :ckeditor => { :toolbar => 'simple' } }
+    .row
+      .input-container.col-xs-12
+        = f.input :excerpt, :as => :ckeditor, :input_html => { :ckeditor => { :toolbar => 'simple' } }
+    .row
+      .input-container.col-xs-12
+        = f.input :published_at, required: false, as: :date, include_blank: true, :input_html => { class: 'form-control'}
+    .row
+      .input-container.col-xs-12
+        = f.input :slug, :data => {:slug => true}, placeholder: 'Enter an optional slug', :input_html => { class: 'form-control'}
+    .row.dropshadow
+      .input-container.col-xs-12
+        = f.input :header
+        = link_to(@blog_post.header.filename, @blog_post.header.url) if @blog_post.header.present?
+
+  %h4 Author
+  .content-container
+    .row
+      .input-container.col-xs-6
+        = f.input :author_name, placeholder: 'Enter the name of the author', :input_html => { class: 'form-control'}
+      .input-container.col-xs-6
+        = f.input :author_avatar, :input_html => { class: 'form-control'}
+        = link_to(@blog_post.author_avatar.filename, @blog_post.author_avatar.url) if @blog_post.author_avatar.present?
+    .row.dropshadow
+      .input-container.col-xs-12
+        = f.input :author_biography, placeholder: 'Enter a bio for the author', :input_html => { class: 'form-control'}
+
+  = f.button :submit, class: "btn btn-green pull-right"

@@ -7,5 +7,14 @@ class TextFilter < ActiveRecord::Base
   belongs_to :creator, class_name: 'User'
   belongs_to :instance, inverse_of: :text_filters
 
+  validates_presence_of :name, :regexp
+  validate :regexp_valid
+
+  def regexp_valid
+    Regexp.new(regexp)
+  rescue => e
+    errors.add(:regexp, e.to_s)
+  end
+
 end
 

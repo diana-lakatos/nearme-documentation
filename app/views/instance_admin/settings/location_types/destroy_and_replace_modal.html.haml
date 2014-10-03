@@ -1,10 +1,15 @@
-%p= "This location type is currently associated with #{@location_type.locations.count} locations. Please select a replacement location type."
+.modal-header
+  %button.close{"data-dismiss" => "modal", :type => "button"}
+    %span{"aria-hidden" => "true"} ×
+    %span.sr-only Close
+  %h4#myModalLabel.modal-title Delete and Replace
+.modal-body
+  %p= "This location type is currently associated with #{@location_type.locations.count} locations. Please select a replacement location type."
 
-= simple_form_for @location_type, :url => instance_admin_settings_location_type_path(@location_type), :method => :delete do |f|
-  = select_tag(:replacement_type_id, options_for_select(@replacement_types.map{|r| [r.name, r.id]}))
+  = simple_form_for @location_type, :url => instance_admin_settings_location_type_path(@location_type), :method => :delete do |f|
+    = select_tag(:replacement_type_id, options_for_select(@replacement_types.map{|r| [r.name, r.id]}))
+    = f.button :submit, 'Replace and delete', class: 'btn btn-danger pull-right'
 
-  %hr
-
+.modal-footer
   .pull-right
-    %button.btn.btn-primary{"aria-hidden" => "true", "data-dismiss" => "modal"} Close
-    = f.button :submit, 'Replace and delete', class: 'btn btn-danger'
+    %button.btn.btn-grey{"data-dismiss" => "modal", :type => "button"} Close

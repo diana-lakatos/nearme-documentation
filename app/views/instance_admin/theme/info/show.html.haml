@@ -1,59 +1,53 @@
 = simple_form_for @theme, :url => instance_admin_theme_info_path, :html => { :multipart => true } do |f|
-  %fieldset
-    %legend Title &amp; Description
-    .row-fluid
-      .controls.controls-row
-        = f.input :name, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-        = f.input :site_name, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-    .row-fluid
-      .controls.controls-row
-        = f.input :meta_title, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-        = f.input :description, :label => 'Meta description', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-    .row-fluid
-      .controls.controls-row
-        = f.input :tagline, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+  %h4 Title &amp; Description
+  .content-container
+    .row
+      .input-container.col-xs-6
+        = f.input :name, input_html: { class: 'form-control' }
+      .input-container.col-xs-6
+        = f.input :site_name, input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-6
+        = f.input :meta_title, input_html: { class: 'form-control' }
+      .input-container.col-xs-6
+        = f.input :description, :label => 'Meta description', input_html: { class: 'form-control' }
+    .row.dropshadow
+      .input-container.col-xs-12
+        = f.input :tagline, input_html: { class: 'form-control' }
 
-    %hr
-
-    %legend Contact Info
-    .row-fluid
-      .controls.controls-row
-        = f.input :phone_number, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-        = f.input :address, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-    .row-fluid
-      .controls.controls-row
-        .control-group.span6.tel.optional{class: f.object.errors[:contact_email].empty? ? '' : 'error'}
+  %h4 Contact Info
+  .content-container
+    .row
+      .input-container.col-xs-6
+        = f.input :phone_number, input_html: { class: 'form-control' }
+      .input-container.col-xs-6
+        = f.input :address, input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-6
+        .tel.optional{class: f.object.errors[:contact_email].empty? ? '' : 'error'}
           %label.tel.optional.control-label{for: "theme_phone_number"} Contact email
           .controls
-            = f.input_field :contact_email, pattern: '.*', class: 'input-block-level'
+            = f.input_field :contact_email, pattern: '.*', class: 'form-control'
             = f.error :contact_email
-        = f.input :support_email, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-    .row-fluid
-      .controls.controls-row
-        = f.input :support_url, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+      .input-container.col-xs-6
+        = f.input :support_email, input_html: { class: 'form-control' }
+    .row.dropshadow
+      .input-container.col-xs-12
+        = f.input :support_url, input_html: { class: 'form-control' }
 
-    %hr
+  %h4 Social Properties
+  .content-container
+    .row
+      .input-container.col-xs-6
+        = f.input :blog_url, label: 'Blog', input_html: { class: 'form-control' }
+      .input-container.col-xs-6
+        = f.input :facebook_url, label: 'Facebook URL', input_html: { class: 'form-control' }
+    .row.dropshadow
+      .input-container.col-xs-6
+        = f.input :twitter_url, label: 'Twitter URL', input_html: { class: 'form-control' }
+      .input-container.col-xs-6
+        = f.input :gplus_url, label: 'Gplus URL', input_html: { class: 'form-control' }
 
-    %legend Social Properties
-    .row-fluid
-      .controls.controls-row
-        = f.input :blog_url, label: false, wrapper_html: { class: 'input-prepend input-block span6' } do
-          %span.add-on.fa.fa-comment
-          = f.input_field :blog_url, class: 'input-block-level'
-    .row-fluid
-      .controls.controls-row
-        = f.input :facebook_url, label: false, wrapper_html: { class: 'input-prepend input-block span6' } do
-          %span.add-on.fa.fa-facebook
-          = f.input_field :facebook_url, class: 'input-block-level'
-    .row-fluid
-      .controls.controls-row
-        = f.input :twitter_url, label: false, wrapper_html: { class: 'input-prepend input-block span6' } do
-          %span.add-on.fa.fa-twitter
-          = f.input_field :twitter_url, class: 'input-block-level'
-    .row-fluid
-      .controls.controls-row
-        = f.input :gplus_url, label: false, wrapper_html: { class: 'input-prepend input-block span6' } do
-          %span.add-on.fa.fa-google-plus
-          = f.input_field :gplus_url, class: 'input-block-level'
-
-    = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
+  .content-container
+    .row
+      = f.button :submit, 'Save', class: 'btn btn-green pull-right'

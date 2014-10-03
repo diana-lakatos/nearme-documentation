@@ -2,7 +2,7 @@
 //= require jquery_ujs
 //= require ./vendor/jquery-ui-1.9.2.custom.min
 //= require ./vendor/jQueryRotate
-//= require bootstrap
+//= require ./instance_admin/bootstrap
 //= require ./vendor/modernizr
 //= require ./vendor/Chart
 //= require components/chart_wrapper
@@ -23,3 +23,4 @@
 //= require sections/support
 //= require sections/support/attachment_form
 //= require sections/support/ticket_message_controller
+//= require ./instance_admin/script

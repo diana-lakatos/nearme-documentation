@@ -1,103 +1,97 @@
-= simple_form_for @instance, :url => lock_instance_admin_settings_configuration_path, method: :post, :html => { :multipart => true, :class => "form-horizontal" } do |f|
-  .row-fluid
-    .controls.controls-row
-      .span6
-        = f.input :mark_as_locked, as: :boolean, :label => "Master Lock", input_html: { class: 'input-block-level', checked: f.object.locked? }
-      = f.button :submit, 'Update Lock', class: 'btn btn-primary'
+= simple_form_for @instance, :url => lock_instance_admin_settings_configuration_path, method: :post, :html => { :multipart => true } do |f|
+  %h4 Master lock
+  .content-container
+    .row.dropshadow
+      .input-container.col-xs-12
+        = f.input :mark_as_locked, as: :boolean, label: "Lock admin settings", input_html: { checked: f.object.locked? }
+  .content-container
+    .row
+      = f.button :submit, 'Update Lock', class: 'btn btn-grey pull-right'
 
 = simple_nested_form_for @instance, :url => instance_admin_settings_configuration_path, :html => { :multipart => true } do |f|
-  %fieldset
-    %legend Basic Configuration
-    .row-fluid
-      .controls.controls-row
-        = f.input :name, label: 'Marketplace Name', required: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-        = f.input :service_fee_guest_percent, label: 'Guest Service Fee', wrapper_html: {class: 'input-prepend span6'} do
-          %span.add-on %
-          = f.input_field :service_fee_guest_percent, type: 'tel', class: 'input-block-level'
-    .row-fluid
-      .controls.controls-row
-        .span6
-          = f.input :skip_company, :label => false, :inline_label => "Don't require company", input_html: { class: 'input-block-level' }
-          = f.input :force_accepting_tos, :label => false, :inline_label => "Force accepting ToS on sign up", input_html: { class: 'input-block-level' }
-        = f.input :service_fee_host_percent, label: 'Host Service Fee', wrapper_html: {class: 'input-prepend span6'} do
-          %span.add-on %
-          = f.input_field :service_fee_host_percent, type: 'tel', class: 'input-block-level'
+  %h4 Basic Configuration
+  .content-container
+    .row
+      .input-container.col-xs-12
+        = f.input :name, label: 'Marketplace Name', input_html: { class: 'form-control' }, required: false, placeholder: 'Your marketplace name'
+    .row
+      .input-container.col-xs-6
+        = f.input :skip_company, label: "Don't require company"
+      .input-container.col-xs-6
+        = f.input :service_fee_guest_percent, label: 'Guest Service Fee Percent' do
+          = f.input_field :service_fee_guest_percent, type: 'tel', class: 'form-control'
+    .row.dropshadow
+      .input-container.col-xs-6
+        = f.input :force_accepting_tos, label: "Force accepting ToS on sign up"
+      .input-container.col-xs-6
+        = f.input :service_fee_host_percent, label: 'Host Service Fee Percent' do
+          = f.input_field :service_fee_host_percent, type: 'tel', class: 'form-control'
 
-  %hr
+  %h4 Marketplace Password
+  .content-container
+    .row.dropshadow
+      .input-container.col-xs-6
+        = f.input :marketplace_password, label: "Password", placeholder: 'Password', as: :string, input_html: { class: 'form-control' }
+      .input-container.col-xs-6
+        = f.input :password_protected, as: :boolean, label: "Require password to access marketplace"
 
-  %fieldset
-    %legend Marketplace Password
-    .row-fluid
-      .controls.controls-row
-        = f.input :marketplace_password, placeholder: 'Password', as: :string, label: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-    .row-fluid
-      .controls.controls-row
-        = f.input :password_protected, required: false, as: :boolean, label: false, inline_label: "Require password to access marketplace (e.g. testing or private marketplaces)", wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+  %h4 Terminology
+  .content-container
+    .row
+      .input-container.col-xs-12
+        = f.input :bookable_noun, label: 'Bookable Noun (e.g. Desk)', input_html: { class: 'form-control' }
+    .row.dropshadow
+      .input-container.col-xs-6
+        = f.input :lessor, label: 'Lessor (e.g. host)', input_html: { class: 'form-control' }
+      .input-container.col-xs-6
+        = f.input :lessee, label: 'Lessee (e.g. guest)', input_html: { class: 'form-control' }
 
-  %hr
-
-  %fieldset
-    %legend Terminology
-    .row-fluid
-      .controls.controls-row
-        = f.input :lessor, label: 'Lessor (e.g. host)', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-        = f.input :lessee, label: 'Lessee (e.g. guest)', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-    .row-fluid
-      .controls.controls-row
-        = f.input :bookable_noun, label: 'Bookable Noun (e.g. Desk)', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
-
-  %hr
-
-  %fieldset
-    %legend Domain Names
+  %h4 Domain Names
+  .content-container.dropshadow
     #domains
       = f.fields_for :domains, wrapper: false do |f|
-        .row-fluid
-          .controls.controls-row
-            .fields
-              = f.input :name, label: false, wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+        .fields
+          .row
+            .input-container.col-xs-12
+              = f.input :name, required: false, label: "Domain", placeholder: "example.com", input_html: { class: 'form-control' }
               - unless f.object.near_me_domain?
                 = f.link_to_remove confirm: (f.object.name.present? ? "Are you sure you want to delete #{f.object.name}?" : false) do
-                  .fa.fa-trash-o.fa-2x.inline-form-icon
+                  .fa.fa-trash-o.fa-2x.inline-form-icon.pull-right
+  .row
+    .col-xs-12
+      = f.link_to_add :domains, :data => { :target => "#domains" } do
+        .btn.btn-grey.pull-right
+          + Add Domain Name
 
-    %br
-    .row-fluid
-      .controls.controls-row
-        = f.link_to_add :domains, :data => { :target => "#domains" } do
-          %button.btn.btn-form-field.span6
-            + Add Domain Name
 
-  %hr
-
-  %fieldset
-    %legend Text Filters
-    = f.input :apply_text_filters, :label => false, :inline_label => "Apply text filters", input_html: { class: 'input-block-level' }
+  %h4 Text Filters
+  .content-container.dropshadow
+    .row
+      .input-container.col-xs-12
+        = f.input :apply_text_filters, label: "Apply text filters"
     #text-filters
       = f.fields_for :text_filters, wrapper: false do |f|
-        .row-fluid
-          .controls.controls-row
-            .fields
-              = f.input :name, label: false, placeholder: 'Name', wrapper_html: { class: 'span3' }, input_html: { class: 'input-block-level' }
-              = f.input :regexp, label: false, placeholder: 'Regexp', wrapper_html: { class: 'span3' }, input_html: { class: 'input-block-level' }
-              = f.input :replacement_text, placeholder: 'Replecament Text', label: false, wrapper_html: { class: 'span3' }, input_html: { class: 'input-block-level' }
+        .fields
+          .row
+            .input-container.col-xs-12
+              = f.input :name, label: false, placeholder: 'Name', input_html: { class: 'form-control' }
+              = f.input :regexp, label: false, placeholder: 'Regexp', input_html: { class: 'form-control' }
+              = f.input :replacement_text, placeholder: 'Replacement Text', label: false, input_html: { class: 'form-control' }
               = f.link_to_remove confirm: (f.object.try(:name).present? ? "Are you sure you want to delete #{f.object.name}?" : false) do
-                .fa.fa-trash-o.fa-2x.inline-form-icon
+                .fa.fa-trash-o.fa-2x.inline-form-icon.pull-right
 
-    %br
-    .row-fluid
-      .controls.controls-row
-        = f.link_to_add :text_filters, :data => { :target => "#text-filters" } do
-          %button.btn.btn-form-field.span6
-            + Add Text Filter
+  .row
+    .col-xs-12
+      = f.link_to_add :text_filters, :data => { :target => "#text-filters" } do
+        .btn.btn-grey.pull-right
+          + Add Text Filter
 
-  %hr
+  %h4 Support
+  .content-container
+    .row.dropshadow
+      .input-container.col-xs-12
+        = f.input :support_email, label: "Support email", placeholder: 'example@gmail.com', input_html: { class: 'form-control' }
+      .input-container.col-xs-12
+        = f.input :support_imap_hash, label: "IMAP YAML for Support email", as: :text, input_html: { class: 'field-textarea', rows: "15" }
 
-
-  %fieldset
-    %legend Support
-    .row-fluid
-      .controls.controls-row
-        = f.input :support_email, label: "Support email", input_html: { class: 'input-block-level' }
-        = f.input :support_imap_hash, label: "IMAP YAML for Support email", as: :text, input_html: { class: 'input-block-level' }
-
-  = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
+  = f.button :submit, 'Save', class: 'btn btn-green pull-right'

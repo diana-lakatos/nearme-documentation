@@ -1,23 +1,28 @@
-%legend Manage Confidential Files
+%h4 Manage Confidential Files
 
-.confidential-file-filters
-- %w(uploaded pending rejected questioned accepted).each do |state|
-  = link_to "#{state.capitalize} (#{ConfidentialFile.send(state).count})", instance_admin_manage_confidential_files_path(:show => state), class: "btn #{'active' if state == params[:show]}"
+.sub-header-nav
+  %ul
+    - %w(uploaded pending rejected questioned accepted).each do |state|
+      %li
+        = link_to "#{state.capitalize} (#{ConfidentialFile.send(state).count})", instance_admin_manage_confidential_files_path(:show => state), class: "#{'active' if state == params[:show]}"
 
-%table.table
-  %tr
-    %th File name
-    %th Caption
-    %th Comment
-    %th Created at
-    %th
-  - @confidential_files.each do |resource|
-    %tr
-      %td= link_to resource.read_attribute(:file), resource.file.url, target: :blank
-      %td= resource.caption
-      %td= resource.comment
-      %td=l resource.created_at, format: :long
-      %td= link_to 'edit', edit_instance_admin_manage_confidential_file_path(resource)
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table
+        %tr
+          %th File name
+          %th Caption
+          %th Comment
+          %th Created at
+          %th
+        - @confidential_files.each do |resource|
+          %tr
+            %td= link_to resource.read_attribute(:file), resource.file.url, target: :blank
+            %td= resource.caption
+            %td= resource.comment
+            %td=l resource.created_at, format: :long
+            %td= link_to 'edit', edit_instance_admin_manage_confidential_file_path(resource)
 
 = will_paginate @confidential_files
 

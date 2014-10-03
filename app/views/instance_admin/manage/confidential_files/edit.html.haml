@@ -6,6 +6,6 @@
     = f.input :caption, :placeholder => 'Subject'
     = f.input :comment
     = f.collection_select :state_event, @confidential_file.state_transitions, :event, :human_to_name, :include_blank => @confidential_file.human_state_name
-    = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
-    = link_to 'Cancel', instance_admin_manage_confidential_files_url , class: 'btn pull-right'
+    = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+    = link_to 'Cancel', instance_admin_manage_confidential_files_url , class: 'pull-right'
 

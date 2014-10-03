@@ -54,7 +54,8 @@ class Transactable < ActiveRecord::Base
   scope :visible,  -> { where(:enabled => true) }
   scope :searchable, -> { active.visible }
   scope :filtered_by_listing_types_ids,  -> listing_types_ids { where("(transactables.properties->'listing_type') IN (?)", listing_types_ids) if listing_types_ids }
-  scope :filtered_by_price_types,  -> price_types { where(price_types.map{|pt| "(properties->'#{pt}_price_cents') IS NOT NULL"}.join(' OR  ')) if price_types }
+  scope :filtered_by_price_types,  -> price_types { where([(price_types - ['free']).map{|pt| "(properties->'#{pt}_price_cents') IS NOT NULL"}.join(' OR '),
+                                                           ("properties @> 'free=>true'" if price_types.include?('free'))].reject(&:blank?).join(' OR ')) }
   scope :filtered_by_attribute_values,  -> attribute_values { where("(transactables.properties->'filterable_attribute') IN (?)", attribute_values) if attribute_values }
   scope :where_attribute_has_value, -> (attr, value) { where("properties @> '#{attr}=>#{value}'")}
 

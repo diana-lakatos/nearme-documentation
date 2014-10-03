@@ -1,15 +1,17 @@
-%legend FAQ
+%h4 FAQ
 
-= link_to 'Add Question', new_instance_admin_manage_support_faq_path, class: 'btn btn-primary pull-right'
-%br
-
-%table#faqs.table.sortable
-  %thead
-    %tr
-      %th Name
-      %th
-  %tbody
-    = render partial: 'faq', collection: @faqs
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table#faqs.table.sortable
+        %thead
+          %tr
+            %th Name
+            %th
+        %tbody
+          = render partial: 'faq', collection: @faqs
+.content-container
+  = link_to 'Add Question', new_instance_admin_manage_support_faq_path, class: 'btn btn-green pull-right'
 
 - content_for :domready do
   $(function() { new InstanceAdmin.FaqsController($('table#faqs')); });

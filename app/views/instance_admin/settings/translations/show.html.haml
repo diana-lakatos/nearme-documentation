@@ -1,19 +1,20 @@
 = simple_nested_form_for @instance, :url => instance_admin_settings_translations_path, :html => { :multipart => true } do |f|
-  %fieldset
-    %legend Translations
-
+  %h4 Translations
+  .content-container.dropshadow
     - Translation.defaults_for(:en).order('key ASC').each_with_index do |translation, index|
-      .row-fluid
-        .controls.controls-row
+      .row
+        .input-container.col-xs-12
           %label{for: "instance_translations_#{index}"}= translation.key
           %input{type: 'hidden', name: "instance[translations_attributes][#{index}][key]", value: translation.key}
           %input{type: 'hidden', name: "instance[translations_attributes][#{index}][instance_id]", value: @instance.id}
           %input{type: 'hidden', name: "instance[translations_attributes][#{index}][locale]", value: translation.locale}
           - if instance_translation = @translations.detect{|t| t.key == translation.key}
-            %input.span12{id: "instance_translations_#{index}", type: 'text', name: "instance[translations_attributes][#{index}][value]", value: instance_translation.value, placeholder: translation.value}
+            %input.form-control{id: "instance_translations_#{index}", type: 'text', name: "instance[translations_attributes][#{index}][value]", value: instance_translation.value, placeholder: translation.value}
             %input{type: 'hidden', name: "instance[translations_attributes][#{index}][_destroy]", value: 'false'}
             %input{type: 'hidden', name: "instance[translations_attributes][#{index}][id]", value: instance_translation.id}
           - else
-            %input.span12{id: "instance_translations_#{index}", type: 'text', name: "instance[translations_attributes][#{index}][value]", value: '', placeholder: translation.value}
+            %input.form-control{id: "instance_translations_#{index}", type: 'text', name: "instance[translations_attributes][#{index}][value]", value: '', placeholder: translation.value}
 
-    = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
+  .content-container
+    .row
+      = f.button :submit, 'Save', class: 'btn btn-green pull-right'

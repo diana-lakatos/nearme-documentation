@@ -1,11 +1,11 @@
 = simple_nested_form_for @instance, :url => instance_admin_settings_locations_path, :html => { :multipart => true } do |f|
-  %fieldset
-    %legend Location Types
+  %h4 Location Types
+  .content-container.dropshadow
     #location-types
       = f.fields_for :location_types, wrapper: false do |f|
-        .row-fluid
-          .controls.controls-row
-            .fields
+        .fields
+          .row
+            .input-container.col-xs-12
               = f.input :name, label: false, input_html: { class: 'span6' }
               %a{"data-target" => "#instanceAdminModal", "data-toggle" => "modal", "href" => "#{destroy_modal_instance_admin_settings_location_type_path(f.object)}"}
-                .fa.fa-trash-o.fa-2x.inline-form-icon
+                .fa.fa-trash-o.fa-2x.inline-form-icon.pull-right
