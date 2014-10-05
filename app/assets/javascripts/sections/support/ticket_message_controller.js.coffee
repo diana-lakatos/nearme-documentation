@@ -10,11 +10,11 @@ class @Support.TicketMessageController
 
   bindEvents: ->
 
-    @attachmentList.find('a[data-delete]').on 'click', (e) =>
+    @attachmentList.on 'click', (e) =>
       e.preventDefault()
       a = $(e.target).closest('a')
 
-      if confirm(a.data('delete'))
+      if a.data('delete') && confirm(a.data('delete'))
         $.ajax
           type: 'POST'
           url: a.attr('href')
