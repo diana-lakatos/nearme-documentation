@@ -1,46 +1,35 @@
 %h4
   #{type.camelize}
-  Amenities
-
-.amenity-type{id: "#{type}-amenity-types"}
+  Amenity Types
+%table.table.table-condensed{id: "#{type}-amenity-types"}
   = f.fields_for "#{type}_amenity_types".to_sym, wrapper: false  do |f_at|
-    .content-container
-      .fields.dropshadow
-        .row
-          .input-container.col-xs-12
-            = f_at.input :name, label: 'Amenity type name', required: false, placeholder: 'Amenity type name', input_html: { class: 'form-control' }
-            .pull-right
-              - if f_at.object.send(type.pluralize).count == 0
-                = f_at.link_to_remove do
-                  .fa.fa-trash-o.fa-2x.inline-form-icon
-
-        .clearfix
-        .amenities{id: "#{type}-amenities-#{f_at.object.id}", width: '100%'}
-          = f_at.fields_for :amenities, wrapper: false do |fa|
-            .fields
-              .row
-                .input-container.col-xs-12
-                  = fa.input :name, label: false, placeholder: 'Amenity name', input_html: { class: 'form-control' }
-                  .pull-right
+    %tr.fields
+      %td
+        .content-container
+          .row.dropshadow
+            .input-container.col-xs-12
+              %h4
+                #{type.camelize}
+                Amenity Type
+              = f_at.input :name, label: false, placeholder: 'Enter location amenity type', input_html: { class: 'form-control' }
+              .pull-right
+                - if f_at.object.send(type.pluralize).count == 0
+                  = f_at.link_to_remove "Delete"
+        .content-container
+          .row.dropshadow
+            .input-container.col-xs-12
+              %h4 Amenities
+              %table.table.amenities{id: "#{type}-amenities-#{f_at.object.id}", width: '100%'}
+                = f_at.fields_for :amenities, wrapper: false do |fa|
+                  %tr.fields
+                    %td
+                      = fa.input :name, label: false, placeholder: 'Enter location amenity', input_html: { class: 'form-control' }
                     - if fa.object.send(type.pluralize).count == 0
-                      = fa.link_to_remove do
-                        .fa.fa-trash-o.fa-2x.inline-form-icon
+                      %td.pull-right= fa.link_to_remove "Delete"
                     - else
-                      = "(in use by #{fa.object.send(type.pluralize).count} locations)"
-    .content-container
-      .row
-        = f_at.link_to_add :amenities, :model_object => Amenity.new, :data => { :target => "##{type}-amenities-#{f_at.object.id}" } do
-          .btn.btn-grey.pull-right
-            + Add Amenity
-    %br
-
-.row
-  .col-xs-12
-    = f.link_to_add "#{type}_amenity_types".to_sym, :model_object => "#{type}_amenity_type".classify.constantize.build_with_amenity, :data => { :target => "##{type}-amenity-types" } do
-      .btn.btn-grey.pull-right
-        ="+ Add #{type} amenity type"
-
-.row
-  %br
-  .col-xs-12
-    = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+                      %td.pull-right= "(in use by #{fa.object.send(type.pluralize).count} locations)"
+              %p.pull-right= f_at.link_to_add "Add amenity", :amenities, :model_object => Amenity.new, :data => { :target => "##{type}-amenities-#{f_at.object.id}" }
+%p.pull-right
+  = f.button :submit, 'Save', class: 'btn btn-green'
+%p.pull-right
+  = f.link_to_add "Add #{type} amenity type", "#{type}_amenity_types".to_sym, :model_object => "#{type}_amenity_type".classify.constantize.build_with_amenity, :data => { :target => "##{type}-amenity-types" }, class: 'btn btn-grey'
