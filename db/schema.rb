@@ -262,18 +262,18 @@ ActiveRecord::Schema.define(version: 20140925155435) do
     t.string   "caption"
     t.integer  "instance_id"
     t.integer  "uploader_id"
-    t.integer  "owner_id"
-    t.string   "owner_type"
     t.string   "file"
     t.text     "comment"
-    t.string   "state"
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "hint"
+    t.string   "state"
+    t.integer  "owner_id"
+    t.string   "owner_type"
   end
 
   add_index "confidential_files", ["instance_id"], name: "index_confidential_files_on_instance_id", using: :btree
-  add_index "confidential_files", ["owner_id", "owner_type"], name: "index_confidential_files_on_owner_id_and_owner_type", using: :btree
   add_index "confidential_files", ["uploader_id"], name: "index_confidential_files_on_uploader_id", using: :btree
 
   create_table "country_instance_payment_gateways", force: true do |t|
@@ -610,11 +610,11 @@ ActiveRecord::Schema.define(version: 20140925155435) do
     t.boolean  "user_based_marketplace_views",                                default: false
     t.string   "searcher_type"
     t.datetime "master_lock"
-    t.text     "user_required_fields"
     t.boolean  "apply_text_filters",                                          default: false
+    t.text     "user_required_fields"
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
-    t.boolean  "onboarding_verification_required",                            default: false
+    t.boolean  "onboarding_verification_required"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -972,11 +972,11 @@ ActiveRecord::Schema.define(version: 20140925155435) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.boolean  "listings_public",                            default: true
-    t.integer  "recurring_booking_id"
     t.datetime "confirmed_at"
     t.datetime "cancelled_at"
     t.integer  "cancellation_policy_hours_for_cancellation", default: 0
     t.integer  "cancellation_policy_penalty_percentage",     default: 0
+    t.integer  "recurring_booking_id"
     t.integer  "credit_card_id"
   end
 
@@ -2020,6 +2020,25 @@ ActiveRecord::Schema.define(version: 20140925155435) do
   add_index "support_faqs", ["instance_id"], name: "index_support_faqs_on_instance_id", using: :btree
   add_index "support_faqs", ["updated_by_id"], name: "index_support_faqs_on_updated_by_id", using: :btree
 
+  create_table "support_ticket_message_attachments", force: true do |t|
+    t.text     "description"
+    t.string   "tag"
+    t.integer  "instance_id"
+    t.integer  "uploader_id"
+    t.integer  "receiver_id"
+    t.integer  "ticket_message_id"
+    t.integer  "ticket_id"
+    t.integer  "target_id"
+    t.string   "target_type"
+    t.string   "file"
+    t.string   "file_type"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "support_ticket_message_attachments", ["target_id", "target_type"], name: "stma_target_polymorphic", using: :btree
+
   create_table "support_ticket_messages", force: true do |t|
     t.integer  "instance_id"
     t.integer  "user_id"
@@ -2030,12 +2049,9 @@ ActiveRecord::Schema.define(version: 20140925155435) do
     t.text     "message",     null: false
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
-    t.integer  "target_id"
-    t.string   "target_type"
   end
 
   add_index "support_ticket_messages", ["instance_id"], name: "index_support_ticket_messages_on_instance_id", using: :btree
-  add_index "support_ticket_messages", ["target_id", "target_type"], name: "index_support_ticket_messages_on_target_id_and_target_type", using: :btree
   add_index "support_ticket_messages", ["ticket_id"], name: "index_support_ticket_messages_on_ticket_id", using: :btree
   add_index "support_ticket_messages", ["user_id"], name: "index_support_ticket_messages_on_user_id", using: :btree
 
@@ -2199,12 +2215,12 @@ ActiveRecord::Schema.define(version: 20140925155435) do
     t.text     "pricing_options"
     t.text     "pricing_validation"
     t.text     "availability_options"
-    t.boolean  "recurring_booking",                          default: false, null: false
     t.boolean  "favourable_pricing_rate",                    default: true
     t.integer  "days_for_monthly_rate",                      default: 0
     t.datetime "cancellation_policy_enabled"
     t.integer  "cancellation_policy_hours_for_cancellation", default: 0
     t.integer  "cancellation_policy_penalty_percentage",     default: 0
+    t.boolean  "recurring_booking",                          default: false, null: false
     t.boolean  "show_page_enabled",                          default: false
   end
 

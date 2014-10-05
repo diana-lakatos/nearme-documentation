@@ -189,5 +189,10 @@ class Company < ActiveRecord::Base
     { name: 'Company Name', url: 'Company Website', email: 'Company Email', external_id: 'Company External Id' }
   end
 
+  def rfq_count
+    Support::Ticket.for_filter('open').where('target_type = ? AND target_id IN (?)', 'Transactable', listings.pluck(:id)).count
+
+  end
 
 end
+

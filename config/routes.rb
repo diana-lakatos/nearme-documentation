@@ -65,7 +65,10 @@ DesksnearMe::Application.routes.draw do
     root :to => 'dashboard#index'
     resources :tickets, only: [:index, :new, :create, :show] do
       resources :ticket_messages, only: [:create]
+      resources :ticket_message_attachments, only: [:new, :create, :edit, :update, :destroy], controller: 'tickets/ticket_message_attachments'
     end
+    resources :ticket_message_attachments, only: [:new, :create, :edit, :update, :destroy]
+
   end
 
   namespace :admin do

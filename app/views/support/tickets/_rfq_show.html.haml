@@ -63,16 +63,7 @@
       = render partial: 'support/ticket_messages/ticket_message', collection: @ticket.messages, spacer_template: 'support/ticket_messages/spacer'
 
       -if @ticket.open?
-        .row-fluid.message-form
-          .profile.span1
-            .row-fluid
-              = image_tag current_user.avatar.url(:medium)
-          .form.span11
-            = simple_form_for @message, url: support_ticket_ticket_messages_path(@ticket, @message) do |f|
-              = f.input :message, as: :text, label: false, placeholder: 'Please, enter message'
-              .row-fluid
-                .span3.offset9
-                  = f.submit 'Send', class: 'btn btn-green'
+        = render partial: 'support/ticket_messages/form', locals: { ticket: @ticket, message: @message, with_close: false, form_url: support_ticket_ticket_messages_path(@ticket) }
 
 = content_for :script do
   :javascript

@@ -2,7 +2,7 @@
   .span8.offset2
     %h1 Open a Support Ticket
     .box
-      .form
+      .form.message-form
         = simple_form_for @ticket do |t|
           - t.simple_fields_for :messages do |f|
             .columns
@@ -15,6 +15,17 @@
                 =f.input :subject
               .row-fluid
                 =f.input :message, as: :text
+                .attachments{:'data-attachment-list' => true }
+                  = render partial: 'support/ticket_message_attachments/attachment', collection: @attachments, as: :ticket_message_attachment, locals: { form_name: f.object_name }
             .row-fluid
+              - if current_user
+                .span4.offset4
+                  = render partial: 'support/ticket_message_attachments/form', locals: { f: f }
               .span4
                 =t.submit 'Create ticket', :class => 'btn btn-green'
+        = simple_form_for @ticket.attachments.build, url: support_ticket_message_attachments_path, html: { class: 'hidden', :'data-attachment-form'=> true } do |f|
+          = f.input :file, as: :file, input_html: { data: { file: true } }
+
+- content_for :script do
+  :javascript
+    new Support.TicketMessageController($('.message-form').eq(0))

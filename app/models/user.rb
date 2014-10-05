@@ -62,6 +62,8 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :companies
   accepts_nested_attributes_for :confidential_files
 
+  has_many :ticket_message_attachments, foreign_key: 'uploader_id', class_name: 'Support::TicketMessageAttachment'
+
   scope :patron_of, lambda { |listing|
     joins(:reservations).where(:reservations => { :transactable_id => listing.id }).uniq
   }

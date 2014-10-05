@@ -4,7 +4,7 @@ class InstanceAdmin::Manage::Support::TicketsController < InstanceAdmin::Manage:
 
   def show
     @first_message = @ticket.first_message
-    @message = Support::TicketMessage.new
+    @message = Support::TicketMessage.new(attachments: @ticket.attachments.where(ticket_message_id: nil, uploader_id: current_user.id))
     @admins = InstanceAdmin.scoped.includes(:user).collect(&:user)
   end
 
@@ -17,7 +17,7 @@ class InstanceAdmin::Manage::Support::TicketsController < InstanceAdmin::Manage:
   private
 
   def find_ticket
-    @ticket = Support::Ticket.find(params[:id])
+    @ticket = ::Support::Ticket.find(params[:id])
   end
 
   def permitting_controller_class

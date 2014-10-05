@@ -10,3 +10,5 @@
         =ticket_message.created_at
   .input-container.col-xs-8
     =simple_format(ticket_message.message)
+    .attachments.clearfix
+      = render partial: 'support/ticket_message_attachments/attachment', collection: ticket_message.attachments, as: :ticket_message_attachment

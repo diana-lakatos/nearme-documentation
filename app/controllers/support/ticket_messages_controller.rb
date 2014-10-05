@@ -22,9 +22,9 @@ class Support::TicketMessagesController < Support::BaseController
       unless close?
         if Transactable === ticket.target
           if ticket.target.free?
-            flash[:success] = t('flash_messages.support.rfq_ticket_message.created')
+            flash[:error] = t('flash_messages.support.rfq_ticket_message.error')
           else
-            flash[:success] = t('flash_messages.support.offer_ticket_message.error')
+            flash[:error] = t('flash_messages.support.offer_ticket_message.error')
           end
         else
           flash[:error] = t('flash_messages.support.ticket_message.error')
@@ -55,6 +55,6 @@ class Support::TicketMessagesController < Support::BaseController
   end
 
   def message_params
-    params.fetch(:support_ticket_message, {}).permit(:message)
+    params.fetch(:support_ticket_message, {}).permit(secured_params.guest_support_message)
   end
 end

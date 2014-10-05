@@ -96,19 +96,19 @@ section.dashboard {
       list-style: none;
       overflow: hidden;
     }
-    
+
     &.sharelocation {
       display: block;
       margin: 0 0 20px 0;
       overflow: auto;
-      
+
       li {
         display: inline-block;
         float: left;
         margin: 0 1% 10px 0;
       }
     }
-    
+
   }
 
   form {
@@ -204,7 +204,7 @@ section.dashboard {
           position: relative;
           top: -3px;
         }
-      } 
+      }
 
       a {
         overflow: auto;
@@ -252,7 +252,7 @@ section.dashboard {
     li.listing{
       font-size: 20px;
       @include border-radius($border-radius-default);
-      border: 1px solid $light-gray; 
+      border: 1px solid $light-gray;
       margin-top: 10px;
       height: 38px;
 
@@ -361,5 +361,9 @@ h1.manage-locations-home-link {
     font-size: 1.1em;
     margin: 20px 0px;
   }
+}
+
+ul.location-and-listings .filter span {
+    padding: 0px 10px;
 }
 
