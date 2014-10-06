@@ -10,7 +10,7 @@
   .span8.offset2
     %h1
       - if @ticket.target.free?
-        ="#{t('reservations.rfq')} ##{@ticket.id}: "
+        ="#{t('reservations.rfq_long')} ##{@ticket.id}: "
       - else
         ="#{t('reservations.offer')} ##{@ticket.id}: "
       = link_to @ticket.target.name, @ticket.show_target_path
@@ -65,19 +65,8 @@
       %h3.messages Messages
       = render partial: 'support/ticket_messages/ticket_message', collection: @ticket.messages, spacer_template: 'support/ticket_messages/spacer'
 
-      -if @ticket.open?
-        .row-fluid.message-form
-          .profile.span1
-            .row-fluid
-              = image_tag current_user.avatar.url(:medium)
-          .form.span11
-            = simple_form_for @message, url: manage_support_ticket_ticket_messages_path(@ticket, @message) do |f|
-              = f.input :message, as: :text, label: false, placeholder: 'Please, enter message'
-              .row-fluid
-                .span3.offset6
-                  = f.submit 'Send', class: 'btn btn-green'
-                .span3
-                  = f.submit 'Send and Resolve', class: 'btn btn-green resolve'
+      - if @ticket.open?
+        = render partial: 'support/ticket_messages/form', locals: { ticket: @ticket, message: @message, with_close: true, form_url: manage_support_ticket_ticket_messages_path(@ticket, @message) }
 
 = content_for :script do
   :javascript
@@ -92,3 +81,4 @@
       $('#more-reservations').show();
       $('#toggle-more-reservations').show()
     });
+    new Support.TicketMessageController($('.message-form').eq(0))

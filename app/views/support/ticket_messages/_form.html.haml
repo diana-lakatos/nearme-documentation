@@ -1,0 +1,26 @@
+- submit_label ||= 'Send'
+- submit_and_resolve_label ||= 'Send and Resolve'
+- message_label ||= false
+- with_close ||= false
+.row-fluid.message-form
+  .profile.span1
+    .row-fluid
+      = image_tag current_user.avatar.url(:medium)
+  .form.span11
+    = simple_form_for message, url: form_url do |f|
+      = f.input :message, as: :text, label: message_label, placeholder: 'Please, enter message'
+      .attachments{:'data-attachment-list' => true }
+        = render partial: 'support/ticket_message_attachments/attachment', collection: message.attachments, as: :ticket_message_attachment
+      .row-fluid
+        - offset = with_close ? 'offset3' : 'offset6'
+        .span3{class: offset}
+          = render partial: 'support/ticket_message_attachments/form', locals: { f: f }
+        .span3
+          = f.submit submit_label, class: 'btn btn-green'
+        - if with_close
+          .span3
+            = f.submit 'Send and Resolve', class: 'btn btn-green resolve'
+
+    = simple_form_for ticket.attachments.build, url: support_ticket_ticket_message_attachments_path(ticket), html: { class: 'hidden', :'data-attachment-form'=> true } do |f|
+      = f.input :file, as: :file, input_html: { data: { file: true } }
+

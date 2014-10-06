@@ -211,5 +211,9 @@ class Company < ActiveRecord::Base
     listings.find_each(&:approval_request_approved!)
   end
 
+  def rfq_count
+    Support::Ticket.for_filter('open').where('target_type = ? AND target_id IN (?)', 'Transactable', listings.pluck(:id)).count
+
+  end
 
 end

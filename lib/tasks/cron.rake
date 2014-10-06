@@ -1,5 +1,13 @@
 # This task handles all our periodic jobs, which is triggered by crond
 namespace :cron do
+
+  desc "Run sheduled jobs every 10 minutes"
+  task :every_10_m => [:environment] do
+    run_job "Scrape support emails" do
+      ReceiveMailsSpawnerJob.perform
+    end
+  end
+
   desc "Run hourly scheduled jobs"
   task :hourly => [:environment] do
     run_job "Send Rating reminders" do

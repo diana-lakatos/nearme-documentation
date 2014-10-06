@@ -14,48 +14,6 @@
   }
 }
 
-.rfq {
-  textarea {
-    font-size: 18px;
-  }
-
-  .time .timeago {
-    font-size: 15px;
-  }
-
-
-
-  .message,
-  .message-form{
-
-    @media (max-width: $ipad-width) {
-      .span1 {
-        float: left;
-        width: 12%;
-      }
-
-      .span11 {
-        float: left;
-        margin-left: 2%;
-        width: 86%;
-      }
-
-      input[type='submit'] {
-        margin-top: 0px;
-
-        &.resolve {
-          margin-top: 5px;
-        }
-      }
-    }
-
-    form {
-      margin-top: 0px;
-    }
-
-  }
-}
-
 .support.detail {
 
   h1 {
@@ -236,5 +194,79 @@
 
   .btn.btn-green {
     margin-top: 20px;
+  }
+
+  .upload-attachment {
+    @include border-radius($border-radius-default);
+    padding: 0 20px;
+    margin-top: 20px;
+    font-size: 18px;
+    height: 50px;
+    width: 100%;
+    line-height: 50px;
+    text-align: center;
+
+  }
+
+  .attachments {
+    font-size: 16px;
+
+    .attachment {
+      .tag {
+        color: $gray204;
+        margin-left: 10px;
+      }
+
+      .destroy {
+        margin-left: 8px;
+      }
+
+      .edit a,
+      .destroy a {
+        font-size: 17px;
+        color: $gray120;
+      }
+
+    }
+  }
+
+  textarea {
+    font-size: 18px;
+  }
+
+  .time .timeago {
+    font-size: 15px;
+  }
+
+
+
+  .message,
+  .message-form{
+
+    @media (max-width: $ipad-width) {
+      .span1 {
+        float: left;
+        width: 12%;
+      }
+
+      .span11 {
+        float: left;
+        margin-left: 2%;
+        width: 86%;
+      }
+
+      input[type='submit'] {
+        margin-top: 0px;
+
+        &.resolve {
+          margin-top: 5px;
+        }
+      }
+    }
+
+    form {
+      margin-top: 0px;
+    }
+
   }
 }

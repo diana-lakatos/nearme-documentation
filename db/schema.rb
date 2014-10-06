@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140916214505) do
+ActiveRecord::Schema.define(version: 20140925155435) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -651,6 +651,7 @@ ActiveRecord::Schema.define(version: 20140916214505) do
     t.text     "user_required_fields"
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
+    t.boolean  "onboarding_verification_required"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1038,6 +1039,13 @@ ActiveRecord::Schema.define(version: 20140916214505) do
   end
 
   add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
+
+  create_table "search_queries", force: true do |t|
+    t.string   "query"
+    t.text     "agent"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "spree_addresses", force: true do |t|
     t.string   "firstname"
@@ -2048,6 +2056,25 @@ ActiveRecord::Schema.define(version: 20140916214505) do
   add_index "support_faqs", ["deleted_by_id"], name: "index_support_faqs_on_deleted_by_id", using: :btree
   add_index "support_faqs", ["instance_id"], name: "index_support_faqs_on_instance_id", using: :btree
   add_index "support_faqs", ["updated_by_id"], name: "index_support_faqs_on_updated_by_id", using: :btree
+
+  create_table "support_ticket_message_attachments", force: true do |t|
+    t.text     "description"
+    t.string   "tag"
+    t.integer  "instance_id"
+    t.integer  "uploader_id"
+    t.integer  "receiver_id"
+    t.integer  "ticket_message_id"
+    t.integer  "ticket_id"
+    t.integer  "target_id"
+    t.string   "target_type"
+    t.string   "file"
+    t.string   "file_type"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "support_ticket_message_attachments", ["target_id", "target_type"], name: "stma_target_polymorphic", using: :btree
 
   create_table "support_ticket_messages", force: true do |t|
     t.integer  "instance_id"

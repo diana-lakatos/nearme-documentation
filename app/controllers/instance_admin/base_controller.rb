@@ -8,6 +8,45 @@ class InstanceAdmin::BaseController < ApplicationController
   before_filter :redirect_to_spree_if_instance_is_buyable!
   skip_before_filter :redirect_if_marketplace_password_protected
 
+  ANALYTICS_CONTROLLERS = {
+    'overview' => { default_action: 'show' }
+  }
+
+  MANAGE_CONTROLLERS = {
+    'approval_requests' => { controller: '/instance_admin/manage/approval_requests', default_action: 'index' },
+    'inventories' => { controller: '/instance_admin/manage/inventories', default_action: 'index' },
+    'transfers'   => { controller: '/instance_admin/manage/transfers', default_action: 'index' },
+    'partners'    => { controller: '/instance_admin/manage/partners', default_action: 'index' },
+    'users'       => { controller: '/instance_admin/manage/users', default_action: 'index' },
+    'emails' => { controller: '/instance_admin/manage/email_templates', default_action: 'index' },
+    'waiver_agreements' => { controller: '/instance_admin/manage/waiver_agreement_templates', default_action: 'index' },
+    'transactable_types' => { controller: '/instance_admin/manage/transactable_types', default_action: 'index' },
+    'support' => { controller: '/instance_admin/manage/support', default_action: 'index' },
+    'faq' => { controller: '/instance_admin/manage/support/faqs', default_action: 'index' }
+  }
+
+  MANAGE_BLOG_CONTROLLERS = {
+    'posts' => { default_action: 'index' },
+    'settings'   => { default_action: 'edit' }
+  }
+
+  SETTINGS_CONTROLLERS = {
+    'configuration' => { default_action: 'show' },
+    'locations'     => { default_action: 'show' },
+    'listings'      => { default_action: 'show' },
+    'translations'  => { default_action: 'show' },
+    'integrations'  => { default_action: 'show' },
+    'cancellation_policy'  => { default_action: 'show' },
+  }
+
+  THEME_CONTROLLERS = {
+    'info'     => { default_action: 'show' },
+    'design'   => { default_action: 'show' },
+    'homepage' => { controller: '/instance_admin/theme/homepage_template', default_action: 'show' },
+    'homepage content' => { controller: '/instance_admin/theme/homepage', default_action: 'show' },
+    'pages'    => { default_action: 'index' }
+  }
+
   def index
     redirect_to url_for([:instance_admin, @authorizer.first_permission_have_access_to])
   end

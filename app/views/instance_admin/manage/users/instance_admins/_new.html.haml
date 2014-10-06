@@ -1,11 +1,10 @@
 = simple_form_for [:instance_admin, :manage, :users, InstanceAdmin.new] do |f|
-  %fieldset
-    %legend Add User to Instance
-
-    .row-fluid
-      .controls.control-group.controls-row
+  %h4 Add User to Instance
+  .content-container
+    .row.dropshadow
+      .input-container.col-xs-12
         %label Email
-        = text_field_tag :email, nil, class: 'input-block-level span6'
-    .row-fluid
-      .controls.control-group.controls-row.span6
-        = f.submit "Add", :class => 'btn btn-primary pull-right'
+        = text_field_tag :email, nil, class: 'form-control', placeholder: 'example@gmail.com'
+  .content-container
+    = f.submit "Add", :class => 'btn btn-green pull-right'
+  %br

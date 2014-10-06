@@ -1,12 +1,15 @@
-%legend Manage Waiver Agreement Template
+%h4 Manage Waiver Agreement Template
 
 = simple_form_for [:instance_admin, :manage, @waiver_agreement_template], :html => { :multipart => true } do |f|
-  .row-fluid
-    .controls.controls-row
-      = f.input :name, wrapper_html: { class: 'span12' }, input_html: { class: 'input-block-level' }
-  .row-fluid
-    .controls.controls-row
-      = f.input :content, wrapper_html: { class: 'span12' }, input_html: { class: 'input-block-level', rows: "30" }
-  = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
-  - if @waiver_agreement_template.persisted?
-    = link_to 'Destroy', instance_admin_manage_waiver_agreement_template_path(@waiver_agreement_template), method: :delete, confirm: 'Are you sure?', class: 'btn btn-red pull-left'
+  .content-container
+    .row
+      .input-container.col-xs-12
+        = f.input :name, input_html: { class: 'form-control' }
+    .row.dropshadow
+      .input-container.col-xs-12
+        = f.input :content, input_html: { class: 'form-control', rows: "30" }
+
+  .content-contiainer
+    = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+    - if @waiver_agreement_template.persisted?
+      = link_to 'Delete', instance_admin_manage_waiver_agreement_template_path(@waiver_agreement_template), method: :delete, confirm: 'Are you sure?'

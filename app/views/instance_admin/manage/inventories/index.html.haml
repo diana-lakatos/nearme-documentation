@@ -1,15 +1,18 @@
-%legend Manage Inventories
+%h4 Manage Inventories
 
-%table.table
-  %tr
-    %th
-      Name
-    %th
-      Email
-    %th
-    %th
-  - collection.each do |resource|
-    - next if resource.banned?
-    = render 'index_row', :resource => resource
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table
+        %tr
+          %th
+            Name
+          %th
+            Email
+          %th
+          %th
+        - collection.each do |resource|
+          - next if resource.banned?
+          = render 'index_row', :resource => resource
 
 = will_paginate collection

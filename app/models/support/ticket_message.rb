@@ -11,6 +11,8 @@ class Support::TicketMessage < ActiveRecord::Base
   belongs_to :ticket, class_name: 'Support::Ticket', touch: true
   belongs_to :instance
 
+  has_many :attachments, -> {order 'created_at DESC'}, class_name: 'Support::TicketMessageAttachment', dependent: :destroy
+
   validates :full_name, presence: true
   validates :email, presence: true
   validates :subject, presence: true
@@ -20,6 +22,8 @@ class Support::TicketMessage < ActiveRecord::Base
   before_validation :populate_data
 
   after_create :assign_ticket
+
+  accepts_nested_attributes_for :attachments, allow_destroy: true
 
   def populate_data
     origin = self.ticket

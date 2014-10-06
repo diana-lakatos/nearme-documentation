@@ -6,8 +6,9 @@ class BlogAdminAuthorizerTest < ActiveSupport::TestCase
     @user = FactoryGirl.create(:user)
     @authorizer = BlogAdminAuthorizer.new(@user)
     @default_role = FactoryGirl.create(:instance_admin_role_default)
-    @instance_admin = FactoryGirl.create(:instance_admin, user_id: @user.id, instance_admin_role_id: @default_role.id)
+    @instance_admin = FactoryGirl.create(:instance_admin, user_id: @user.id)
     @instance_admin.update_attribute(:instance_owner, false)
+    @instance_admin.update_attribute(:instance_admin_role_id, @default_role.id)
   end
 
   context 'authorized?' do

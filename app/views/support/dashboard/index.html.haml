@@ -20,8 +20,8 @@
               .ticket
                 .question
                   = support_ticket_title(ticket)
-                - if ticket.target.present?
-                  = link_to "RFQ - #{ticket.target.name}", ticket.show_target_path if ticket.target.present?
+                - if Transactable === ticket.target
+                  = link_to "RFQ - #{ticket.target.name}", ticket.show_target_path
                 =render 'support/tickets/time', ticket: ticket
 
           = link_to 'View all tickets', support_tickets_path, :class => 'view-all'

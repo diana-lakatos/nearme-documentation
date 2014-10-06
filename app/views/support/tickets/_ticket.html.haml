@@ -3,7 +3,8 @@
   .text
     =support_ticket_title(ticket, 250)
   .row-fluid
-    - if ticket.target.present?
-      = link_to "RFQ - #{ticket.target.name}", ticket.show_target_path if ticket.target.present?
+    - if Transactable === ticket.target
+      = link_to "RFQ - #{ticket.target.name}", ticket.show_target_path
+
     =render 'support/tickets/time', ticket: ticket
     %hr

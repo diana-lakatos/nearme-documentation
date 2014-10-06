@@ -1,19 +1,20 @@
 = simple_form_for [:instance_admin, :theme, resource], :html => { :multipart => true } do |f|
-  %fieldset
-    .row-fluid
-      .controls.controls-row
-        = f.input :path, :placeholder => 'Page title', wrapper_html: { class: 'span6' }, input_html: { class: 'input-block-level' }
+  .content-container
+    .row
+      .input-container.col-xs-12
+        = f.input :path, :placeholder => 'Page title', input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-12
+        = f.input :content, input_html: { class: 'form-control', rows: "20" }
+    .row
+      .input-container.col-xs-12
+        = f.input :css_content, label: 'Page CSS', input_html: { class: 'form-control', rows: "20" }
+    .row.dropshadow
+      .input-container.col-xs-12
+        = f.input :hero_image
+        = link_to(resource.hero_image.filename, resource.hero_image.url) if resource.hero_image.present?
 
-    .row-fluid
-      .controls.controls-row
-        = f.input :content, wrapper_html: { class: 'span12' }, input_html: { class: 'input-block-level', rows: "30" }
-
-    .row-fluid
-      .controls.controls-row
-        = f.input :css_content, label: 'Page CSS', wrapper_html: { class: 'span12' }, input_html: { class: 'input-block-level', rows: "30" }
-
-    = f.input :hero_image
-    = link_to(resource.hero_image.filename, resource.hero_image.url) if resource.hero_image.present?
-
-    = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
-    = link_to 'Cancel', instance_admin_theme_pages_url , class: 'btn pull-right'
+  .content-container
+    .row
+      = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+      = link_to 'Cancel', instance_admin_theme_pages_url , class: 'btn pull-right'

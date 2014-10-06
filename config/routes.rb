@@ -23,7 +23,7 @@ DesksnearMe::Application.routes.draw do
     get '/features-support', :to => 'platform_home#features_support'
     get '/',  :to => 'platform_home#index'
     get '/features', :to => 'platform_home#features'
-    get '/gallery', :to => 'platform_home#gallery'
+    get '/clients', :to => 'platform_home#clients'
     get '/contact', :to => 'platform_home#contact'
     post '/contact-submit', :to => 'platform_home#contact_submit'
     get '/about', :to => 'platform_home#about'
@@ -65,7 +65,10 @@ DesksnearMe::Application.routes.draw do
     root :to => 'dashboard#index'
     resources :tickets, only: [:index, :new, :create, :show] do
       resources :ticket_messages, only: [:create]
+      resources :ticket_message_attachments, only: [:new, :create, :edit, :update, :destroy], controller: 'tickets/ticket_message_attachments'
     end
+    resources :ticket_message_attachments, only: [:new, :create, :edit, :update, :destroy]
+
   end
 
   namespace :admin do
@@ -273,6 +276,7 @@ DesksnearMe::Application.routes.draw do
       end
       member do
         get :booking_successful
+        get :remote_payment
       end
       get :hourly_availability_schedule, :on => :collection
     end
@@ -311,6 +315,7 @@ DesksnearMe::Application.routes.draw do
       post :user_cancel
       get :export
       get :booking_successful
+      get :remote_payment
       get :recurring_booking_successful
     end
     collection do
@@ -319,6 +324,7 @@ DesksnearMe::Application.routes.draw do
     end
     resources :guest_ratings, :only => [:new, :create]
     resources :host_ratings, :only => [:new, :create]
+    resources :payment_notifications, :controller => "reservations/payment_notifications"
   end
   get '/reservations/:id/guest_rating' => 'dashboard#guest_rating', as: 'guest_rating'
   get '/reservations/:id/host_rating' => 'reservations#host_rating', as: 'host_rating'
@@ -524,6 +530,7 @@ DesksnearMe::Application.routes.draw do
     mount RecurringMailerPreview => 'mail_view/recurring'
     mount SupportMailerPreview => 'mail_view/support'
     mount PlatformMailerPreview => 'mail_view/platform'
+    mount DeviseMailerPreview => 'mail_view/devise'
   end
 
 end

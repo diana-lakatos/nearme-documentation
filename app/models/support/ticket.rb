@@ -11,6 +11,7 @@ class Support::Ticket < ActiveRecord::Base
   belongs_to :instance
   belongs_to :target, polymorphic: true
   has_many :messages, -> {order 'created_at DESC'}, class_name: 'Support::TicketMessage', dependent: :destroy
+  has_many :attachments, class_name: 'Support::TicketMessageAttachment'
   scope :metadata, -> {select('support_tickets.state, COUNT(*) as count').group(:state)}
   scope :user_metadata, -> {select('support_tickets.instance_id, COUNT(*) as count').group(:instance_id)}
 

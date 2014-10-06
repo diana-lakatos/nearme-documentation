@@ -9,7 +9,7 @@ class Manage::Support::TicketsController < Manage::BaseController
 
   def show
     @first_message = @ticket.first_message
-    @message = Support::TicketMessage.new
+    @message = Support::TicketMessage.new(attachments: @ticket.attachments.where(ticket_message_id: nil, uploader_id: current_user.id))
   end
 
   def filter

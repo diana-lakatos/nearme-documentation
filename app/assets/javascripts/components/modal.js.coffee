@@ -26,7 +26,8 @@ class @Modal
       e.preventDefault()
       target = $(e.currentTarget)
       modalClass = matches[1] if matches = target.attr("rel").match(/modal\.([^\s]+)/)
-      @load(target.attr("href"), modalClass)
+      ajaxOptions = { url: target.attr("href"), data: target.data() }
+      @load(ajaxOptions, modalClass)
       false
 
     $(document).on 'ajaxSend', '.modal-content form', =>
@@ -56,6 +57,10 @@ class @Modal
   @setClass: (klass) ->
     @instance().setClass(klass)
 
+  @close: ->
+    @instance().hide()
+
+
   # ===
 
   constructor: (@options) ->
@@ -79,7 +84,7 @@ class @Modal
 
   setClass : (klass) ->
     @container.removeClass(@customClass) if @customClass
-    
+
     @customClass = klass
     @container.addClass(klass) if klass
 
@@ -147,7 +152,7 @@ class @Modal
     @showLoading()
 
     request = $.ajax(ajaxOptions)
-    
+
     request.success (data) =>
       if data.redirect
         document.location = data.redirect

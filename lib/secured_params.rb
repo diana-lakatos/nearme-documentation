@@ -101,7 +101,7 @@ class SecuredParams
       :name,
       :service_fee_guest_percent, :service_fee_host_percent,
       :bookable_noun, :lessor, :lessee,
-      :skip_company,
+      :skip_company, :mark_as_locked,
       :live_stripe_api_key, :live_stripe_public_key,
       :live_paypal_username, :live_paypal_password,
       :live_paypal_signature, :live_paypal_app_id,
@@ -289,12 +289,26 @@ class SecuredParams
     ]
   end
 
+  def support_ticket_message_attachment
+    [
+      :file, :tag, :file_cache
+    ]
+  end
+
+  def guest_support_message
+    [
+      :message,
+      attachment_ids: []
+    ]
+  end
+
   def support_message
     [
       :message,
       :subject,
       :full_name,
-      :email
+      :email,
+      attachment_ids: [],
     ]
   end
 

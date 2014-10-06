@@ -14,4 +14,46 @@
   .form {
     margin-bottom: 50px;
   }
+
+  .attachments {
+    margin-top: 15px;
+    margin-bottom: 15px;
+
+    .attachment {
+      float: left;
+      .tag {
+        color: $gray204;
+        margin-left: 10px;
+      }
+
+      .destroy {
+        margin-left: 8px;
+      }
+
+      .edit a,
+      .destroy a {
+        color: $gray120;
+      }
+
+    }
+  }
+
+  .message-form {
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+
+  .row-fluid {
+    width: 100%;
+    *zoom: 1;
+  }
+
+}
+
+.modal-container.tickets {
+  .control-group.radio_buttons {
+    .controls {
+      margin-left: 20px;
+    }
+  }
 }

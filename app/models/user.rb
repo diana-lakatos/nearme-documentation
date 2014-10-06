@@ -61,6 +61,8 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :companies
   accepts_nested_attributes_for :approval_requests
 
+  has_many :ticket_message_attachments, foreign_key: 'uploader_id', class_name: 'Support::TicketMessageAttachment'
+
   scope :patron_of, lambda { |listing|
     joins(:reservations).where(:reservations => { :transactable_id => listing.id }).uniq
   }
@@ -583,6 +585,7 @@ class User < ActiveRecord::Base
   end
 
   def instance_admins_metadata
+    return 'analytics' if admin?
     get_instance_metadata("instance_admins_metadata")
   end
 

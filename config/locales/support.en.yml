@@ -8,3 +8,8 @@ en:
       open_text:
         open: 'View and resolve'
         resolved: 'View'
+    attachment:
+      uploading: 'Uploading... please wait.'
+      error: 'Something went wrong. Please try again. If the error will persist, please submit support ticket.'
+      destroy_error: 'Something went wrong. Maybe this attachment has been already deleted? Please wait a second and see if everything is fine. Otherwise, please try to refresh the page.'
+      add: 'Add Attachment'
