@@ -6,6 +6,7 @@ FactoryGirl.define do
     excerpt { Faker::Lorem.paragraph(2) }
     published_at { DateTime.now }
     user
+    author_name { Faker::Name.name }
 
     factory :unpublished_user_blog_post do
       published_at { 1.week.from_now }

@@ -1,13 +1,50 @@
-.row-fluid.registrations-show
-  .span8.offset2
-    = render partial: 'header'
+= render 'header'
 
-    .box.clearfix
-      .span8.info
-        %h2= @blog_post.title
-        %span
-          = @blog_post.author_and_date
+.blog-container
 
-        %div= @blog_post.content.html_safe
+  - blog_title @blog_post.title
 
-      = render partial: 'sidebar'
+  .blog-post-detail
+
+    .hero-image
+      - if @blog_post.hero_image.present?
+        = image_tag @blog_post.hero_image.url
+
+    %h1= @blog_post.title
+
+    = render 'social_buttons', blog_post: @blog_post
+
+    .content
+      #{@blog_post.content.to_s.html_safe}
+
+    .row-fluid.info
+      .span5.date
+        Published #{@blog_post.published_at}
+
+      .span7.social.clearfix
+        = render 'social_buttons', blog_post: @blog_post
+
+    .row-fluid.author
+      - avatar = @blog_post.user.avatar
+      - if @blog_post.user.avatar.present? && @blog_post.author_name.strip.downcase == @blog_post.user.name.strip.downcase
+        .span2.avatar
+          = link_to user_path(@blog_post.user) do
+            .avatar-container{style: "background-image: url(#{avatar.url(:medium)});"}
+
+      .biography{class: "span#{avatar.file.present? ? 10 : 12}"}
+        %h3
+          = link_to @blog_post.author_name, user_path(@blog_post.user)
+        %p
+          = @blog_post.author_biography
+
+    .container-fluid
+      .links.row-fluid
+        - if @blog_post.previous_blog_post.present?
+          .span6
+            = link_to 'PREV POST', user_blog_post_show_path(user_id: @user, id: @blog_post.previous_blog_post),
+              class: 'previous-blog-post'
+
+        - if @blog_post.next_blog_post.present?
+          .span6
+            = link_to 'NEXT POST', user_blog_post_show_path(user_id: @user, id: @blog_post.next_blog_post),
+              class: 'next-blog-post'

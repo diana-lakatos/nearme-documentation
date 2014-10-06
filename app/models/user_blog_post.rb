@@ -9,11 +9,21 @@ class UserBlogPost < ActiveRecord::Base
 
   validates :title, :published_at, :user, :content, presence: true
 
-  scope :by_date, -> { order('created_at desc') }
+  scope :by_date, -> { order('published_at desc') }
   scope :published, -> { by_date.where('published_at < ? OR published_at IS NULL', Time.zone.now) }
   scope :recent, -> { published.first(2) }
 
   self.per_page = 5
+
+  def previous_blog_post
+    @previous_blog_post ||= user.blog_posts.published.order('published_at DESC').where('published_at < ?',
+                                                                                                published_at).first
+  end
+
+  def next_blog_post
+    @next_blog_post ||= user.blog_posts.published.order('published_at DESC').where('published_at > ?',
+                                                                                            published_at).last
+  end
 
   private
 

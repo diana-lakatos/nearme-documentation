@@ -28,6 +28,7 @@
 //= require jcrop
 //= require spectrum
 //= require ./vendor/jquery.inview
+//= require user_blog/pagination
 //
 //
 //= require_self

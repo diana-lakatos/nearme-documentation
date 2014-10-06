@@ -1,6 +1,15 @@
-.row-fluid
-  .span12
-    %h1
-      = link_to user_blog_posts_list_path do
-        %span.ico-blog.padding
-        = @user.blog.name
+- content_for :body_class, 'user-blog'
+
+.header
+  .header-text-and-logo
+    .v-wrap
+      .v-box
+        = link_to user_blog_posts_list_path(@user) do
+          %span.header-text{class: @user.blog.header_logo.present? ? 'visible-phone' : ''}
+            = @user.blog.name
+
+          - if @user.blog.header_logo.present?
+            = image_tag @user.blog.header_logo.url, class: 'blog-logo'
+
+
+

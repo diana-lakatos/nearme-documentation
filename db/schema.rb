@@ -2360,7 +2360,7 @@ ActiveRecord::Schema.define(version: 20141103195404) do
     t.string   "hero_image"
     t.text     "content"
     t.text     "excerpt"
-    t.date     "published_at"
+    t.datetime "published_at"
     t.string   "author_name"
     t.text     "author_biography"
     t.string   "logo"

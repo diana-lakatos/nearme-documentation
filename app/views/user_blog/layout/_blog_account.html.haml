@@ -1,7 +1,6 @@
 - unless Rails.env.test? # <-- Ugly hack. CKEditor makes functional tests hang. Could be related to: https://github.com/galetahub/ckeditor/issues/397
-  - content_for :user_blog_js do
-    = javascript_include_tag 'ckeditor/basepath'
-    = javascript_include_tag 'ckeditor/init'
+  = javascript_include_tag 'ckeditor/basepath'
+  = javascript_include_tag 'ckeditor/init'
 
 = render layout: 'registrations/layout/account', locals: { active_tab: :user_blog } do
   .row-fluid

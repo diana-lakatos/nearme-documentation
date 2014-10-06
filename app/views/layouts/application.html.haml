@@ -43,7 +43,7 @@
       = javascript_include_tag "//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"
       = javascript_include_tag :chrome_frame
 
-  %body{class: "#{'buy-sell' if platform_context.instance.buyable?}"}
+  %body{class: "#{yield(:body_class)} #{'buy-sell' if platform_context.instance.buyable?}"}
     .dnm-page-body{:class => "#{'main-page' if current_page?(root_url)}" }
       = render 'shared/render_flash'
       .content-wrapper
@@ -70,4 +70,3 @@
     = javascript_include_tag :application
     = render 'layouts/initializers'
     = render 'layouts/scripts'
-    = yield :user_blog_js
