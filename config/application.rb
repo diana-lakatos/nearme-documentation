@@ -160,6 +160,7 @@ module DesksnearMe
 
     config.secure_app = true
     config.root_secured = true
+    config.run_jobs_in_background = true
 
   end
 end
