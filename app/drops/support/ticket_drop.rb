@@ -14,7 +14,7 @@ class Support::TicketDrop < BaseDrop
   end
 
   def url
-    routes.support_ticket_url(ticket)
+    routes.support_ticket_path(ticket)
   end
 
   def rfq
@@ -32,9 +32,9 @@ class Support::TicketDrop < BaseDrop
   def admin_url
     case ticket.target
     when Transactable
-      routes.manage_support_ticket_url(ticket)
+      routes.manage_support_ticket_path(ticket)
     when Instance
-      routes.instance_admin_manage_support_ticket_url(ticket)
+      routes.instance_admin_manage_support_ticket_path(ticket)
     else
       raise NotImplementedError.new("Unknown ticket target: #{ticket.target.class}")
     end

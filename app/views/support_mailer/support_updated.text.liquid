@@ -5,7 +5,7 @@ Ticket Updated
 {{ message.message_text }}
 
 To review the status of the request and add additional comments, follow the link below:
-{{ ticket.admin_url }}
+{{ platform_context.host | append:ticket.admin_url }}
 
 {% if ticket.messages_count > 0 %}
 Ticket History
