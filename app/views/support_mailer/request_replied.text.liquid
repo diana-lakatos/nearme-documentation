@@ -8,7 +8,7 @@ Ticket Updated
 
 {% if ticket.url %}
 To review the status of the request and add additional comments, follow the link below:
-{{ ticket.url }}
+{{ platform_context.host | append:ticket.url }}
 {% endif %}
 
 {% if ticket.messages_count > 0 %}
