@@ -71,8 +71,11 @@ class SpaceWizardController < ApplicationController
 
   def find_user
     @user = current_user
-    @country = current_user.country_name
-    redirect_to new_space_wizard_url unless @user
+    if @user
+      @country = current_user.country_name
+    else
+      redirect_to new_space_wizard_url unless @user
+    end
   end
 
   def find_company
