@@ -1,7 +1,7 @@
 %h4 Manage Attributes
 .content-container
   .row
-    = link_to 'Add Attribute', new_polymorphic_url([:instance_admin, :manage, @target, CustomAttributes::CustomAttribute.new]), class: 'pull-right btn btn-primary'
+    = link_to 'Add Attribute', new_polymorphic_url([:instance_admin, :manage, @target, CustomAttributes::CustomAttribute.new]), class: 'pull-right btn btn-green'
 
 .content-container
   .row
@@ -11,5 +11,6 @@
           - @custom_attributes.each do |resource|
             %tr
               %td= resource.name.humanize
-              %td= link_to 'Edit', edit_polymorphic_url([:instance_admin, :manage, @target, resource])
-              %td= link_to "Delete", polymorphic_url([:instance_admin, :manage, @target, resource]), :method => :delete, :confirm => "Are you sure you want to delete this attribute?", :class => "btn btn-danger"
+              %td= link_to 'Edit', edit_polymorphic_url([:instance_admin, :manage, @target, resource]), class: 'pull-right'
+              %td= link_to "Delete", polymorphic_url([:instance_admin, :manage, @target, resource]), :method => :delete, :confirm => "Are you sure you want to delete this attribute?", :class => "pull-right"
+

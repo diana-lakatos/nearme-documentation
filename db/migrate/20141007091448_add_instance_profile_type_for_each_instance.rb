@@ -8,11 +8,15 @@ class AddInstanceProfileTypeForEachInstance < ActiveRecord::Migration
     has_many :instance_profile_types
   end
 
-  def change
+  def up
     Instance.find_each do |i|
       if i.instance_profile_types.count.zero?
         InstanceProfileType.create(name: 'Instance Profile Type', instance_id: i.id)
       end
     end
   end
+
+  def down
+  end
+
 end
