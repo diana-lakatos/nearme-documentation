@@ -16,17 +16,8 @@
         %br
         .box
           = render :partial => 'registrations/attributes', :locals => { f: f, only_inputs: platform_context.instance.user_required_fields, :country => @country }
-
-      - if platform_context.instance.onboarding_verification_required
-        %h2
-          Verify yourself
-
-        = f.error :confidential_files
-        = f.simple_fields_for :confidential_files, @user.confidential_files.first || @user.confidential_files.build do |cf_form|
-          = cf_form.input :caption
-          = cf_form.input :file, as: :file
-          = cf_form.hidden_field :file_cache
-
+      - else
+        = render :partial => 'approval_requests/form', :locals => { f: f }
 
       = f.simple_fields_for :companies, @user.companies.first do |companies_form|
         - if platform_context.instance.skip_company?
@@ -44,12 +35,12 @@
             located?
           %br
           .box
-            = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => companies_form.object, :only_inputs => [ :name, :description, :address, :location_type, :phone ] }
+            = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => locations_form.object, :only_inputs => [ :name, :description, :address, :location_type, :phone ] }
 
           = locations_form.simple_fields_for :listings, @user.companies.first.locations.first.listings.first do |listings_form|
 
             - content_for :currency do
-              = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => listings_form.object.location, :only_inputs => [ :currency ] }
+              = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => locations_form.object, :only_inputs => [ :currency ] }
             %h2
               Please tell us about the
               #{platform_context.bookable_noun}

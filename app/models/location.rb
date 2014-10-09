@@ -24,9 +24,9 @@ class Location < ActiveRecord::Base
 
   has_many :amenity_holders, as: :holder, dependent: :destroy
   has_many :amenities, through: :amenity_holders
-  has_many :confidential_files, as: :owner
   has_many :assigned_waiver_agreement_templates, as: :target
   has_many :waiver_agreement_templates, through: :assigned_waiver_agreement_templates
+  has_many :approval_requests, as: :owner, dependent: :destroy
 
   belongs_to :company, inverse_of: :locations
   belongs_to :location_type
@@ -81,6 +81,7 @@ class Location < ActiveRecord::Base
   accepts_nested_attributes_for :availability_rules, :allow_destroy => true
   accepts_nested_attributes_for :listings, :location_address
   accepts_nested_attributes_for :waiver_agreement_templates, :allow_destroy => true
+  accepts_nested_attributes_for :approval_requests
 
   def name_and_description_required
     TransactableType.first.try(:name) == "Listing"
@@ -145,11 +146,23 @@ class Location < ActiveRecord::Base
     (searched_locations || listings.searchable).map{|l| l.lowest_price_with_type(available_price_types)}.compact.sort{|a, b| a[0].to_f <=> b[0].to_f}.first
   end
 
+  def approval_request_templates
+    @approval_request_templates ||= PlatformContext.current.instance.approval_request_templates.for("Location")
+  end
+
+  def approval_request_acceptance_cancelled!
+    listings.find_each(&:approval_request_acceptance_cancelled!)
+  end
+
+  def approval_request_approved!
+    listings.find_each(&:approval_request_approved!)
+  end
+
   def is_trusted?
-    if PlatformContext.current.instance.onboarding_verification_required
-      self.confidential_files.accepted.count > 0 || self.creator.try(:is_trusted?)
+    if approval_request_templates.count > 0
+      self.approval_requests.approved.count > 0
     else
-      true
+      self.company.try(:is_trusted?)
     end
   end
 

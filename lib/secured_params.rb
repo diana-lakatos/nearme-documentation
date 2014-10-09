@@ -349,6 +349,7 @@ class SecuredParams
       :listings_public,
       locations_attributes: nested(self.location),
       domain_attributes: nested(self.domain),
+      approval_requests_attributes: nested(self.approval_request),
       theme_attributes: self.theme,
       industry_ids: []
     ]
@@ -385,6 +386,7 @@ class SecuredParams
       availability_rules_attributes: nested(self.availability_rule),
       location_address_attributes: nested(self.location_address),
       listings_attributes: nested(self.transactable),
+      approval_requests_attributes: nested(self.approval_request),
       amenity_ids: [],
       waiver_agreement_template_ids: []
     ] + self.location_address
@@ -399,10 +401,11 @@ class SecuredParams
         :last_request_photos_sent_at, :activated_at, :rank,
         :transactable_type_id, :transactable_type,
         photos_attributes: nested(self.photo),
+        approval_requests_attributes: nested(self.approval_request),
+        availability_rules_attributes: nested(self.availability_rule),
         photo_ids: [],
         amenity_ids: [],
         waiver_agreement_template_ids: [],
-        :availability_rules_attributes => nested(self.availability_rule)
     ] +
     Transactable.public_transactable_type_attributes_names((transactable_type.presence || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
   end
@@ -426,12 +429,38 @@ class SecuredParams
     ]
   end
 
-  def confidential_file
+  def admin_approval_request
     [
+      :state, :notes, :state_event
+    ]
+  end
+
+  def approval_request
+    [
+      :message, :approval_request_template_id,
+      approval_request_attachments_attributes: nested(self.approval_request_attachment)
+    ]
+  end
+
+  def approval_request_template
+    [
+      :owner_type, :required_written_verification,
+      approval_request_attachment_templates_attributes: nested(self.approval_request_attachment_template)
+    ]
+  end
+
+  def approval_request_attachment_template
+    [
+      :label, :hint, :required
+    ]
+  end
+
+  def approval_request_attachment
+    [
+      :approval_request_attachment_template_id,
       :caption,
       :file,
       :file_cache,
-      :state
     ]
   end
 
@@ -461,7 +490,7 @@ class SecuredParams
       :linkedin_url, :facebook_url, :google_plus_url,
       industry_ids: [],
       companies_attributes: nested(self.company),
-      confidential_files_attributes: nested(self.confidential_file)
+      approval_requests_attributes: nested(self.approval_request)
     ]
   end
 

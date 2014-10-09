@@ -149,19 +149,19 @@ class UserTest < ActiveSupport::TestCase
 
     end
 
-    context 'confidential files' do
+    context 'approval_requests' do
 
       setup do
         @user = FactoryGirl.build(:user)
-        @user.confidential_files = []
+        @user.approval_requests = []
       end
 
       context 'instance does not require verification' do
-        should 'be valid without confidential files' do
+        should 'be valid without approval_requests' do
           assert @user.valid?
         end
 
-        should 'be trusted even without confidential files' do
+        should 'be trusted even without approval_requests' do
           assert @user.is_trusted?
         end
 
@@ -170,48 +170,38 @@ class UserTest < ActiveSupport::TestCase
       context 'instance does require verification' do
 
         setup do
-          PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance_require_verification))
-          @confidential_file = FactoryGirl.build(:confidential_file)
+          FactoryGirl.create(:approval_request_template)
+          @approval_request = FactoryGirl.build(:approval_request)
         end
 
-        should 'not be trusted without confidential files' do
+        should 'not be trusted without approval_requests' do
           refute @user.is_trusted?
         end
 
-        should 'not be trusted with confidential file that is uploaded' do
-          @user.confidential_files << @confidential_file
+        should 'not be trusted with approval_request that is uploaded' do
+          @user.approval_requests << @approval_request
           @user.save!
           refute @user.is_trusted?
         end
 
-        should 'not be trusted with confidential file that is pending' do
-          @user.confidential_files << @confidential_file
+        should 'not be trusted with approval_request that is rejected' do
+          @user.approval_requests << @approval_request
           @user.save!
-          @confidential_file.review!
+          @approval_request.reject!
           refute @user.is_trusted?
         end
 
-        should 'not be trusted with confidential file that is rejected' do
-          @user.confidential_files << @confidential_file
+        should 'not be trusted with approval_request that is questioned' do
+          @user.approval_requests << @approval_request
           @user.save!
-          @confidential_file.review!
-          @confidential_file.reject!
+          @approval_request.question!
           refute @user.is_trusted?
         end
 
-        should 'not be trusted with confidential file that is questioned' do
-          @user.confidential_files << @confidential_file
+        should 'be trusted with approval_request that is accepted' do
+          @user.approval_requests << @approval_request
           @user.save!
-          @confidential_file.review!
-          @confidential_file.question!
-          refute @user.is_trusted?
-        end
-
-        should 'be trusted with confidential file that is accepted' do
-          @user.confidential_files << @confidential_file
-          @user.save!
-          @confidential_file.review
-          @confidential_file.accept
+          @approval_request.accept
           assert @user.is_trusted?
         end
       end

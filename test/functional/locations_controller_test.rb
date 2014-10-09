@@ -82,11 +82,11 @@ class LocationsControllerTest < ActionController::TestCase
           assert flash[:warning].include?('This listing has been temporarily disabled by the owner'), "Expected #{flash[:warning]} to include 'This listing is inactive'"
         end
 
-        should 'not show warning and not redirect if user can manage listing' do
+        should 'show warning but not redirect if user can manage listing' do
           sign_in @location.creator
           get :show, id: @location.id, listing_id: @listing
           assert_response :success
-          assert_nil flash[:warning]
+          assert_not_nil flash[:warning]
         end
       end
 

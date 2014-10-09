@@ -18,7 +18,6 @@ FactoryGirl.define do
     linkedin_consumer_secret 'li2'
     instagram_consumer_key 'i1'
     instagram_consumer_secret 'i2'
-    onboarding_verification_required false
 
     after(:create) do |instance|
       instance.theme = FactoryGirl.create(:theme, :skip_compilation => true) unless instance.theme
@@ -40,7 +39,10 @@ FactoryGirl.define do
     end
 
     factory :instance_require_verification do
-      onboarding_verification_required true
+      after(:build) do |instance|
+        approval_request_template = FactoryGirl.build(:approval_request_template, owner_type: 'User')
+        instance.approval_request_templates = [approval_request_template]
+      end
     end
 
   end

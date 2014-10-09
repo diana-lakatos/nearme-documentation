@@ -71,6 +71,7 @@ class Instance < ActiveRecord::Base
   has_many :users, inverse_of: :instance
   has_many :text_filters, inverse_of: :instance
   has_many :waiver_agreement_templates, as: :target
+  has_many :approval_request_templates
   serialize :pricing_options, Hash
 
   validates_presence_of :name

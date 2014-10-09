@@ -104,22 +104,21 @@ class SpaceWizardControllerTest < ActionController::TestCase
     context 'instance requires verification' do
 
       setup do
-        PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance_require_verification))
-        FactoryGirl.create(:location_type)
-        FactoryGirl.create(:transactable_type)
+        FactoryGirl.create(:approval_request_template, required_written_verification: true)
+
       end
 
-      should 'show form to upload verification file for user'  do
+      should 'show form to write message'  do
         get :list
-        assert_select '#user_confidential_files_attributes_0_file', 1
+        assert_select '#user_approval_requests_attributes_0_message', 1
       end
     end
 
     context 'instance does not require verification' do
 
-      should 'not show form to upload verification file'  do
+      should 'not show form to write message'  do
         get :list
-        assert_select '#user_confidential_files_file', false
+        assert_select '#user_approval_requests_attributes_0_message', false
       end
     end
 
@@ -194,6 +193,28 @@ class SpaceWizardControllerTest < ActionController::TestCase
   context 'GET new' do
     should 'redirect to manage location page if has listings' do
       create_listing
+      get :new
+      assert_redirected_to manage_locations_path
+    end
+
+    should 'redirect to new location if no listings' do
+      create_listing
+      @location.destroy
+      get :new
+      assert_redirected_to new_manage_location_path
+    end
+
+    should 'redirect to new listing if no listings but with one location' do
+      create_listing
+      @listing.destroy
+      get :new
+      assert_redirected_to new_manage_location_listing_path(@location)
+    end
+
+    should 'redirect to dashboard if no listings but more than one location' do
+      create_listing
+      @listing.destroy
+      FactoryGirl.create(:location, :company => @company)
       get :new
       assert_redirected_to manage_locations_path
     end
@@ -277,7 +298,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
   def create_listing
     @company = FactoryGirl.create(:company, :creator => @user)
     @location = FactoryGirl.create(:location, :company => @company)
-    FactoryGirl.create(:transactable, :location => @location)
+    @listing = FactoryGirl.create(:transactable, :location => @location)
   end
 
 end
