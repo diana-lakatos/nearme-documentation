@@ -1,33 +1,30 @@
-.white-box
-  %legend
-    #{link_to 'VENDOR APPROVAL', instance_admin_manage_approval_requests_path}  &gt; #{link_to 'SETTINGS', instance_admin_manage_approval_request_templates_path} &gt; #{@approval_request_template.owner_type}
+%h4
+  #{link_to 'VENDOR APPROVAL', instance_admin_manage_approval_requests_path}  &gt; #{link_to 'SETTINGS', instance_admin_manage_approval_request_templates_path} &gt; #{@approval_request_template.owner_type}
 
-.vendor-approval-table
-  = simple_nested_form_for [:instance_admin, :manage, @approval_request_template] do |f|
 
-    %fieldset
+= simple_nested_form_for [:instance_admin, :manage, @approval_request_template] do |f|
+  .content-container.dropshadow
+    .row
       = f.input :owner_type, as: :hidden
-      = f.input :required_written_verification, :label => false, :inline_label => "Require written verification", input_html: { class: 'input-block-level' }
-
+      .input-container.col-xs-12
+        = f.input :required_written_verification, :label => "Require written verification", input_html: { class: 'form-control' }
+    .row
       #arat
         = f.fields_for :approval_request_attachment_templates, wrapper: false do |arat_form|
-          .row-fluid
-            .controls.controls-row
-              .fields
-                = arat_form.input :label, label: false, placeholder: 'Label', wrapper_html: { class: 'span5' }, input_html: { class: 'input-block-level' }
-                = arat_form.input :hint, as: :string, label: false, placeholder: 'Hint', wrapper_html: { class: 'span5' }, input_html: { class: 'input-block-level' }
-                = arat_form.link_to_remove confirm: (arat_form.object.label.present? ? "Are you sure you want to delete #{arat_form.object.label}?" : false) do
+          .fields
+            .input-container.col-xs-12
+              .col-xs-5
+                = arat_form.input :label, label: false, placeholder: 'Label', input_html: { class: 'form-control' }
+                = arat_form.input :hint, as: :string, label: false, placeholder: 'Hint', input_html: { class: 'form-control' }
+              .col-xs-5
+                = arat_form.input :required, :label => "Required Attachment", input_html: { class: 'form-control' }
+              .col-xs-2
+                = arat_form.link_to_remove confirm: (arat_form.object.label.present? ? "Are you sure you want to delete #{arat_form.object.label}?" : false), class: 'pull-right' do
                   .fa.fa-trash-o.fa-2x.inline-form-icon
-                .clearfix{style: 'clear: both;'}
-                  = arat_form.input :required, :label => false, :inline_label => "Required Attachment", input_html: { class: 'input-block-level' }
 
-      %br
-      .row-fluid
-        .controls.controls-row
-          = f.link_to_add :approval_request_attachment_templates, :data => { :target => "#arat" } do
-            %button.btn.btn-form-field.span6
-              + Add Attachment Requirement
+    .row
+      .input-container.col-xs-12
+        = f.link_to_add "Add Attachment Requirement", :approval_request_attachment_templates, :data => { :target => "#arat" }
 
-      = f.button :submit, 'Save', class: 'btn btn-primary pull-right'
-      = link_to 'Cancel', instance_admin_manage_approval_request_templates_path , class: 'btn pull-right'
-
+  = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+  = link_to 'Cancel', instance_admin_manage_approval_request_templates_path , class: 'btn btn-grey pull-right'

@@ -861,84 +861,12 @@ body.login {
   }
 }
 
-.white-box {
-  @extend .box;
-  background-color: white;
-}
+/************/
+/*** Misc ***/
+/************/
 
-/***********************/
-/*** Vendor Approval ***/
-/***********************/
-
-.approval_requests-index {
-  .white-box {
-    padding-bottom: 0px;
-  }
-}
-
-.vendor-approval {
-
-  .white-box {
-    margin: 0px;
-  }
-
-  .tab-container {
-    padding: 20px 0px;
-    margin: 0px;
-    background-color: #EBEBEB;
-  }
-
-  legend {
-    span a {
-      text-transform: none;
-      font-size: 15px;
-    }
-  }
-
-  .btn-form-field {
-    background-color: #F5F2F4;
-  }
-
-  .fields {
-    overflow: hidden;
-  }
-
-  .vendor-approval-filters {
-
-    margin-top: 40px;
-
-    a {
-      float: left;
-      color: #5D5D5D;
-      padding-bottom: 15px;
-
-      &.active,
-      &:hover {
-        text-decoration: none;
-        border-bottom: 2px solid #254DBB;
-      }
-
-    }
-
-  }
-
-  .vendor-approval-table {
-
-    background-color: #EBEBEB;
-    padding: 40px 15px 20px 15px;
-
-    .vendor-approval-header {
-      font-weight: bold;
-    }
-
-    .vendor-approval-data {
-      color: #656565;
-    }
-
-  }
-
-
-
+.box {
+  margin: 20px;
 }
 
 /***********************/
