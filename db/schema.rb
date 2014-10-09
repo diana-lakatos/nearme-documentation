@@ -81,15 +81,6 @@ ActiveRecord::Schema.define(version: 20141010193304) do
 
   add_index "amenity_types", ["instance_id"], name: "index_amenity_types_on_instance_id", using: :btree
 
-  create_table "assigned_waiver_agreement_templates", force: true do |t|
-    t.integer  "target_id"
-    t.string   "target_type"
-    t.integer  "waiver_agreement_template_id"
-    t.integer  "instance_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "approval_request_attachment_templates", force: true do |t|
     t.integer  "instance_id"
     t.integer  "approval_request_template_id"
@@ -100,9 +91,6 @@ ActiveRecord::Schema.define(version: 20141010193304) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "assigned_waiver_agreement_templates", ["target_id", "target_type"], name: "awat_target_id_and_target_type", using: :btree
-  add_index "assigned_waiver_agreement_templates", ["waiver_agreement_template_id"], name: "awat_wat_id", using: :btree
 
   create_table "approval_request_attachments", force: true do |t|
     t.string   "caption"
@@ -147,6 +135,18 @@ ActiveRecord::Schema.define(version: 20141010193304) do
   end
 
   add_index "approval_requests", ["owner_id", "owner_type"], name: "index_approval_requests_on_owner_id_and_owner_type", using: :btree
+
+  create_table "assigned_waiver_agreement_templates", force: true do |t|
+    t.integer  "target_id"
+    t.string   "target_type"
+    t.integer  "waiver_agreement_template_id"
+    t.integer  "instance_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "assigned_waiver_agreement_templates", ["target_id", "target_type"], name: "awat_target_id_and_target_type", using: :btree
+  add_index "assigned_waiver_agreement_templates", ["waiver_agreement_template_id"], name: "awat_wat_id", using: :btree
 
   create_table "authentications", force: true do |t|
     t.integer  "user_id"
@@ -391,8 +391,8 @@ ActiveRecord::Schema.define(version: 20141010193304) do
     t.datetime "failed_at"
     t.string   "locked_by"
     t.string   "queue"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
@@ -680,11 +680,10 @@ ActiveRecord::Schema.define(version: 20141010193304) do
     t.boolean  "user_based_marketplace_views",                                default: false
     t.string   "searcher_type"
     t.datetime "master_lock"
-    t.boolean  "apply_text_filters",                                          default: false
     t.text     "user_required_fields"
+    t.boolean  "apply_text_filters",                                          default: false
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
-    t.boolean  "onboarding_verification_required"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1043,11 +1042,11 @@ ActiveRecord::Schema.define(version: 20141010193304) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.boolean  "listings_public",                            default: true
+    t.integer  "recurring_booking_id"
     t.datetime "confirmed_at"
     t.datetime "cancelled_at"
     t.integer  "cancellation_policy_hours_for_cancellation", default: 0
     t.integer  "cancellation_policy_penalty_percentage",     default: 0
-    t.integer  "recurring_booking_id"
     t.integer  "credit_card_id"
   end
 
@@ -2120,9 +2119,12 @@ ActiveRecord::Schema.define(version: 20141010193304) do
     t.text     "message",     null: false
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "target_id"
+    t.string   "target_type"
   end
 
   add_index "support_ticket_messages", ["instance_id"], name: "index_support_ticket_messages_on_instance_id", using: :btree
+  add_index "support_ticket_messages", ["target_id", "target_type"], name: "index_support_ticket_messages_on_target_id_and_target_type", using: :btree
   add_index "support_ticket_messages", ["ticket_id"], name: "index_support_ticket_messages_on_ticket_id", using: :btree
   add_index "support_ticket_messages", ["user_id"], name: "index_support_ticket_messages_on_user_id", using: :btree
 
@@ -2262,12 +2264,12 @@ ActiveRecord::Schema.define(version: 20141010193304) do
     t.text     "pricing_options"
     t.text     "pricing_validation"
     t.text     "availability_options"
+    t.boolean  "recurring_booking",                          default: false, null: false
     t.boolean  "favourable_pricing_rate",                    default: true
     t.integer  "days_for_monthly_rate",                      default: 0
     t.datetime "cancellation_policy_enabled"
     t.integer  "cancellation_policy_hours_for_cancellation", default: 0
     t.integer  "cancellation_policy_penalty_percentage",     default: 0
-    t.boolean  "recurring_booking",                          default: false, null: false
     t.boolean  "show_page_enabled",                          default: false
   end
 

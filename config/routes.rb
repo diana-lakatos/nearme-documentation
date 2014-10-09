@@ -284,6 +284,7 @@ DesksnearMe::Application.routes.draw do
       end
       member do
         get :booking_successful
+        get :booking_failed
         get :remote_payment
       end
       get :hourly_availability_schedule, :on => :collection
@@ -323,6 +324,7 @@ DesksnearMe::Application.routes.draw do
       post :user_cancel
       get :export
       get :booking_successful
+      get :booking_failed
       get :remote_payment
       get :recurring_booking_successful
     end
@@ -406,6 +408,7 @@ DesksnearMe::Application.routes.draw do
           put :reject
           get :rejection_form
           post :host_cancel
+          get :request_payment
         end
       end
 

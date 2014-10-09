@@ -10,3 +10,6 @@
   = link_to 'Decline', rejection_form_manage_listing_reservation_path(reservation.listing, reservation),
               rel: 'modal.sign-up-modal',
               :class => "btn btn-gray btn-small reservation-action"
+
+- if !reservation.paid? && reservation.remote_payment?
+  = link_to 'Request payment', request_payment_manage_listing_reservation_path(reservation.listing, reservation), :class => "btn btn-orange btn-small reservation-action request-payment", :confirm => "Do you want to send payment request email for this guest?"

@@ -6,10 +6,12 @@ class Reservations::PaymentNotificationsController < ApplicationController
     @reservation = Reservation.find(params[:reservation_id])
     if params.has_key?("payment_provider_verifier")
       redirect_to booking_successful_reservation_path(@reservation)
-    else
+    elsif params.has_key?("verifier")
       @reservation.payment_response_params = params
       @reservation.charge
       render nothing: true
+    else
+      redirect_to booking_failed_reservation_path(@reservation)
     end
   end
 end

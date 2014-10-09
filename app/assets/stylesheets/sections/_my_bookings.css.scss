@@ -85,6 +85,13 @@ section#reservations {
             .reservation-action {
               padding: 0px;
               text-align: center;
+
+              &.request-payment {
+                line-height: 13px;
+                color: white;
+                padding: 2px;
+                font-size: 12px;
+              }
             }
 
             input, a {
