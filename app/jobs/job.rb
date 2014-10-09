@@ -62,7 +62,7 @@ class Job
 
   def self.perform_later(when_perform, *args)
     if run_in_background?
-      Delayed::Job.enqueue build_new(*args), :run_at => get_performing_time(when_perform)
+      Delayed::Job.enqueue build_new(*args), :run_at => get_performing_time(when_perform), priority: get_priority
     else
       # invoking get_perfming_time is unnecessary, but we want to catch errors in this method in test environment
       get_performing_time(when_perform)
@@ -71,7 +71,7 @@ class Job
   end
 
   def self.perform_async(*args)
-    Delayed::Job.enqueue build_new(*args)
+    Delayed::Job.enqueue build_new(*args), priority: get_priority
   end
 
   def self.build_new(*args)
@@ -103,6 +103,9 @@ class Job
     ["ReservationExpiryJob", "RecurringBookingExpiryJob"]
   end
 
+  def self.get_priority
+    self.respond_to?(:priority) ? self.priority : 20
+  end
 end
 
 
