@@ -18,11 +18,11 @@ class Instance < ActiveRecord::Base
   #                 :user_based_marketplace_views, :instance_payment_gateways_attributes, :transactable_types_attributes, :searcher_type, :mark_as_locked
 
   attr_encrypted :live_paypal_username, :live_paypal_password, :live_paypal_signature, :live_paypal_app_id, :live_stripe_api_key, :live_paypal_client_id,
-                 :live_paypal_client_secret, :live_balanced_api_key, :marketplace_password, :test_stripe_api_key, :test_paypal_username, :test_paypal_password,
-                 :test_paypal_signature, :test_paypal_app_id, :test_paypal_client_id, :test_paypal_client_secret, :test_balanced_api_key, :olark_api_key,
-                 :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key, :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret,
-                 :instagram_consumer_key, :instagram_consumer_secret, :db_connection_string,
-                 :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
+    :live_paypal_client_secret, :live_balanced_api_key, :marketplace_password, :test_stripe_api_key, :test_paypal_username, :test_paypal_password,
+    :test_paypal_signature, :test_paypal_app_id, :test_paypal_client_id, :test_paypal_client_secret, :test_balanced_api_key, :olark_api_key,
+    :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key, :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret,
+    :instagram_consumer_key, :instagram_consumer_secret, :db_connection_string,
+    :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   attr_accessor :mark_as_locked
   serialize :user_required_fields, Array
@@ -181,6 +181,13 @@ class Instance < ActiveRecord::Base
 
   def payment_gateway_mode
     test_mode? ? "test" : "live"
+  end
+
+  def onboarding_verification_required
+    false
+  end
+
+  def onboarding_verification_required=(arg)
   end
 
 end
