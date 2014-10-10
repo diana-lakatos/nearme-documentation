@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141009082126) do
+ActiveRecord::Schema.define(version: 20141010193304) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -888,8 +888,8 @@ ActiveRecord::Schema.define(version: 20141009082126) do
     t.integer  "instance_id"
     t.boolean  "listings_public"
     t.datetime "deleted_at"
-    t.datetime "start_on"
-    t.datetime "end_on"
+    t.date     "start_on"
+    t.date     "end_on"
     t.integer  "quantity"
     t.integer  "start_minute"
     t.integer  "end_minute"
@@ -907,6 +907,7 @@ ActiveRecord::Schema.define(version: 20141009082126) do
     t.datetime "updated_at"
     t.integer  "credit_card_id"
     t.integer  "hours_before_reservation_to_charge", default: 24
+    t.integer  "occurrences"
   end
 
   add_index "recurring_bookings", ["administrator_id"], name: "index_recurring_bookings_on_administrator_id", using: :btree
