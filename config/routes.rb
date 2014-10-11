@@ -68,7 +68,7 @@ DesksnearMe::Application.routes.draw do
       resources :ticket_message_attachments, only: [:new, :create, :edit, :update, :destroy], controller: 'tickets/ticket_message_attachments'
     end
     resources :ticket_message_attachments, only: [:new, :create, :edit, :update, :destroy]
-
+    resources :requests_for_quotes, only: [:index]
   end
 
   namespace :admin do

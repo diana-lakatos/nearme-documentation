@@ -42,6 +42,7 @@ class User < ActiveRecord::Base
   has_many :tickets, -> { order 'updated_at DESC' }, :class_name => 'Support::Ticket'
   has_many :assigned_tickets, -> { order 'updated_at DESC' }, foreign_key: 'assigned_to_id', :class_name => 'Support::Ticket'
   has_many :assigned_transactable_tickets, -> { where(target_type: 'Transactable').order('updated_at DESC') }, foreign_key: 'assigned_to_id', :class_name => 'Support::Ticket'
+  has_many :requests_for_quotes, -> { where(target_type: 'Transactable').order('updated_at DESC') }, :class_name => 'Support::Ticket'
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :user_bans
   belongs_to :partner
