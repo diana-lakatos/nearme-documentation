@@ -19,7 +19,7 @@
                 %span
                   = support_link_to_filter(@filter, 'all')
       %ul.location-and-listings
-        = render partial: 'ticket', collection: @tickets
+        = render partial: 'manage/support/tickets/ticket', collection: @tickets
       = will_paginate @tickets
 
 - content_for :script do
