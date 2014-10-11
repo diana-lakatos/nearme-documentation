@@ -1,0 +1,12 @@
+%li.listing
+  .span2
+    RFQ ##{ticket.id}
+  .span4
+    = link_to support_ticket_title(ticket), support_ticket_path(ticket)
+  .span2.time
+    = timeago(ticket.created_at)
+  .span3.user
+    = support_author(ticket.first_message)
+  .span1.state.text-right
+    = ticket.state.titleize
+  .clearfix
