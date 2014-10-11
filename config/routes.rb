@@ -411,6 +411,8 @@ DesksnearMe::Application.routes.draw do
           post :host_cancel
         end
       end
+
+      resource :booking_module, only: [:update], :controller => 'listings/booking_module'
     end
 
     namespace :support do
