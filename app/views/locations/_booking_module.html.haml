@@ -79,18 +79,40 @@
             %span.calendar-text End
 
       .clearfix
+      - if listing.transactable_type.recurring_booking
+        .recurring-booking
+          = simple_form_for :reservation_request, :url => review_listing_recurring_bookings_path(listing), data: { :'recurring-booking-form' => true, :'registration-url' => current_user ? nil : new_user_registration_path(return_to: location_listing_url(listing.location, listing)), hourly: listing.hourly_reservations? } do |f|
+            = f.hidden_field :quantity, class: 'quantity'
+            = f.hidden_field :occurrences, class: 'occurrences'
+            = f.hidden_field :start_on, class: 'start_on'
+            = f.hidden_field :end_on, class: 'end_on'
+            = f.hidden_field :start_minute, class: 'start_minute'
+            = f.hidden_field :end_minute, class: 'end_minute'
+            .controls
+              %label.radio
+                Weekly on #{Time.zone.now.strftime('%A')}
+                = f.radio_button 'recurring_radio_button', :weekly, data: { :'recurring-weekly' => true } do
+                  = radio_button_tag 'recurring_radio_button', :weekly
+              .or
+                = t('form.or')
+              %label.radio
+                Custom
+                = f.radio_button 'recurring_radio_button', :custom, data: { :'recurring-custom'  => true} do
+                  = radio_button_tag 'recurring_radio_button', :custom
+            = f.select_recurring :schedule_params, [ IceCube::Rule.weekly.day(Time.zone.now.wday), IceCube::Rule.monthly.day_of_month([]).day_of_week(Time.zone.now.wday => [1]) ], allow_blank: false
       .quantity
         %span.resource{:'data-singular' => listing.listing_type, :'data-plural' => listing.listing_type.try(:pluralize)}= listing.listing_type
         = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
+
       .price{class: "#{'hidden' if listing.free?}"}
         Total
-        %span #{currency_content_tag(@location.currency, 0.00, :span, { :rel => false })}
+        %span #{currency_content_tag(listing.location.currency, 0.00, :span, { :rel => false })}
 
       .book
-        - registration_url = new_user_registration_path(return_to: location_url(@listing.location, @listing, restore_reservations: true))
-        - store_reservation_request_url = store_reservation_request_listing_reservations_path(@listing)
+        - registration_url = new_user_registration_path(return_to: location_url(listing.location, listing, restore_reservations: true))
+        - store_reservation_request_url = store_reservation_request_listing_reservations_path(listing)
         = form_for :reservation_request, :url => review_listing_reservations_path(listing), html: { id: "reservation_request_form_#{listing.id}" } do |f|
-          = hidden_field_tag :listing_id, @listing.id
+          = hidden_field_tag :listing_id, listing.id
           = f.hidden_field :quantity
           = f.hidden_field :dates
           = f.hidden_field :start_on

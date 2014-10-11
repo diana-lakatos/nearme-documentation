@@ -82,6 +82,16 @@ PATH
       aws-sdk
       thor (~> 0.19.0)
 
+PATH
+  remote: vendor/gems/recurring_select
+  specs:
+    recurring_select (1.2.1)
+      coffee-rails (>= 3.1)
+      ice_cube (>= 0.11)
+      jquery-rails (>= 3.0)
+      rails (>= 3.2)
+      sass-rails (>= 3.1)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -543,12 +553,6 @@ GEM
     rb-kqueue (0.2.3)
       ffi (>= 0.5.0)
     rdiscount (2.1.7.1)
-    recurring_select (1.2.1)
-      coffee-rails (>= 3.1)
-      ice_cube (>= 0.11)
-      jquery-rails (>= 3.0)
-      rails (>= 3.2)
-      sass-rails (>= 3.1)
     redis (3.1.0)
     redis-actionpack (4.0.0)
       actionpack (~> 4)
@@ -793,7 +797,7 @@ DEPENDENCIES
   ranked-model
   raygun4ruby
   rdiscount
-  recurring_select
+  recurring_select!
   redis
   redis-rails (~> 4.0.0)
   rest-client

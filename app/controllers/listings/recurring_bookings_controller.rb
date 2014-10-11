@@ -136,6 +136,7 @@ class Listings::RecurringBookingsController < ApplicationController
         schedule_params: attributes[:schedule_params],
         start_minute: attributes[:start_minute],
         end_minute: attributes[:end_minute],
+        occurrences: attributes[:occurrences],
         start_on: attributes[:start_on].to_date,
         end_on: attributes[:end_on].to_date,
         card_expires: attributes[:card_expires],

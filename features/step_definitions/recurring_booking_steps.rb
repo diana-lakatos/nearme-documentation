@@ -6,35 +6,42 @@ When /^I select to recurre book( and review)? space for:$/ do |and_review, table
   bookings = extract_recurring_booking_options(table)
   next if bookings.empty?
 
-  ensure_datepicker_open('.date-start')
-  select_datepicker_date(bookings.first[:start_on])
-  ensure_datepicker_open('.date-end')
-  select_datepicker_date(bookings.first[:end_on])
-  select bookings.first[:quantity].to_s, :from => "quantity"
   recurring_booking_rule = '{"validations":{"day":[1]},"rule_type":"IceCube::WeeklyRule","interval":1,"week_start":0}'
-  page.execute_script "$('select#reservation_request_schedule_params').find('option').eq(0).val('#{recurring_booking_rule}').parent('select').trigger('change')"
-  if bookings.first[:start_minute]
-    # Hourly bookgs
-
-    page.find('.time-picker').click
+  page.execute_script <<-JS
+    $('form[data-recurring-booking-form] .quantity').val('#{bookings.first[:quantity]}');
+    $('form[data-recurring-booking-form] .start_on').val('#{bookings.first[:start_on]}');
+    $('form[data-recurring-booking-form] .end_on').val('#{bookings.first[:end_on]}');
+    $('form[data-recurring-booking-form] .start_minute').val('#{bookings.first[:start_minute]}');
+    $('form[data-recurring-booking-form] .end_minute').val('#{bookings.first[:end_minute]}');
+    $('form[data-recurring-booking-form] select#reservation_request_schedule_params').find('option').eq(0).val('#{recurring_booking_rule}').parent('select').trigger('change');
+  JS
+  begin
+    # no exception -> user is logged in.. hackish :)
+    page.find('form[data-registration-url=null]')
+    step "I click to review the recurring booking" if and_review
+  rescue
+    # exception, user is not logged in, let's open user signup modal
     page.execute_script <<-JS
-      $('.time-start select').val("#{bookings.first[:start_minute]}").trigger('change');
-      $('.time-end select').val("#{bookings.first[:end_minute]}").trigger('change');
+      $("form[data-recurring-booking-form] [data-recurring-weekly]").prop("checked", true);
+      $("form[data-recurring-booking-form] [data-recurring-weekly]").change()
     JS
   end
-  step "I click to review the booking" if and_review
+end
+
+When /^I click to review the recurring bookings?$/ do
+  page.execute_script("$('form[data-recurring-booking-form]').submit()")
 end
 
 When /^I recurre book space for:$/ do |table|
   step "I select to recurre book space for:", table
-  step "I click to review the booking"
+  step "I click to review the recurring booking"
   step "I provide reservation credit card details"
   step "I click to confirm the booking"
 end
 
 When /^I recurre book space as new user for:$/ do |table|
   step "I select to recurre book space for:", table
-  step "I click to review the booking"
+  step "I click to review the recurring  booking"
   step 'I sign up as a user in the modal'
   store_model("user", "user", User.last)
   #select "New Zealand", :from => 'reservation_request_country_name'

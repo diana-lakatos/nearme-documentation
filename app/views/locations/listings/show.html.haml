@@ -47,10 +47,7 @@
 
         .one-third.column.left
           .toggleable-booking-modules
-            - if @listing.transactable_type.recurring_booking
-              = render 'locations/listings/recurring_booking', listing: @listing, collapsed: false, location_pretty_availability: location_pretty_availability
-            -else
-              = render 'locations/listings/booking', listing: @listing, collapsed: false, location_pretty_availability: location_pretty_availability
+            = render 'locations/listings/booking', listing: @listing, collapsed: false, location_pretty_availability: location_pretty_availability
             .padding-row
 
           -if @location.administrator

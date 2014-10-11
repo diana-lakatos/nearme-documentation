@@ -1,7 +1,7 @@
 class RecurringBookingRequest < Form
 
   attr_accessor :start_minute, :end_minute, :start_on, :end_on, :schedule_params, :quantity
-  attr_accessor :card_number, :card_expires, :card_code
+  attr_accessor :card_number, :card_expires, :card_code, :occurrences
   attr_reader   :recurring_booking, :listing, :location, :user
 
   def_delegators :@recurring_booking, :credit_card_payment?, :manual_payment?
@@ -25,28 +25,31 @@ class RecurringBookingRequest < Form
     if @listing
       @recurring_booking = @listing.recurring_bookings.build
       @recurring_booking.owner = user
-      @recurring_booking.start_minute = start_minute
-      @recurring_booking.end_minute = end_minute
-      @recurring_booking.start_on = start_on
+      @recurring_booking.start_minute = start_minute.to_i if @recurring_booking.listing.hourly_reservations?
+      @recurring_booking.end_minute = end_minute.to_i if @recurring_booking.listing.hourly_reservations?
+      @recurring_booking.start_on = start_on || Date.current
       @recurring_booking.end_on = end_on
-      # needed ! otherwise we will convert for example D-M-Y 22:00 UTC to D-M-Y 22:00 +2 in javascript and we will get different date!
-      @recurring_booking.start_on = Time.use_zone(Time.zone) { Time.zone.local_to_utc(@recurring_booking.start_on) }.localtime
-      @recurring_booking.end_on = Time.use_zone(Time.zone) { Time.zone.local_to_utc(@recurring_booking.end_on) }.localtime
-      @recurring_booking.quantity = quantity
+      @recurring_booking.occurrences = occurrences.to_i - 1 <= 0 ? 49 : [occurrences.to_i - 1, 49].min
+      @recurring_booking.quantity = [1, quantity.to_i].max
       @recurring_booking.schedule_params = schedule_params
       @recurring_booking.currency = @listing.currency
       @billing_gateway = Billing::Gateway::Incoming.new(@user, @instance, @recurring_booking.currency) if @user
       @recurring_booking.payment_method = payment_method
-      @recurring_booking.schedule.occurrences(@recurring_booking.end_on)[0..49].each do |date|
+      @count = 0
+      @recurring_booking.schedule.occurrences(@recurring_booking.end_on || Time.zone.now + 20.years)[0..@recurring_booking.occurrences].each do |date|
         @reservation = @recurring_booking.reservations.build
         @reservation.listing = @listing
         @reservation.currency = @listing.currency
-        @reservation.add_period(date, start_minute, end_minute)
+        @reservation.add_period(date, @recurring_booking.start_minute, @recurring_booking.end_minute)
         @reservation.payment_method = @recurring_booking.payment_method
-        @reservation.quantity = quantity
+        @reservation.quantity = @recurring_booking.quantity
         @reservation.user = user
         @reservation = @reservation.decorate
+        @last_date = date
+        @count += 1
       end
+      @recurring_booking.end_on ||= @last_date
+      @recurring_booking.occurrences ||= @count
       @recurring_booking.service_fee_amount_guest_cents = @reservation.try(:service_fee_amount_guest_cents)
       @recurring_booking.service_fee_amount_host_cents = @reservation.try(:service_fee_amount_host_cents)
       @recurring_booking.subtotal_amount_cents = @reservation.try(:subtotal_amount_cents)
@@ -69,7 +72,7 @@ class RecurringBookingRequest < Form
   end
 
   def reservation_periods
-    @recurring_booking.schedule.occurances(@recurring_booking.end_on)[0..49]
+    @recurring_booking.schedule.occurrences(@recurring_booking.end_on)[0..49]
   end
 
   def payment_method
