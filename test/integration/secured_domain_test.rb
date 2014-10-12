@@ -3,6 +3,7 @@ require "test_helper"
 class SecuredDomainTest < ActionDispatch::IntegrationTest
   setup do
     Rails.application.config.stubs(:secure_app).returns(true)
+    CreateElbJob.stubs(:perform)
   end
 
   context 'root request' do
