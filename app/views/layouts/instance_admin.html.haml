@@ -24,7 +24,7 @@
         = render 'instance_admin/layout/nav'
 
       %main
-        #main-container.container-fluid
+        #main-container.container-fluid{class: section_class(@section_name)}
           = render 'instance_admin/shared/render_flash'
           = yield
 

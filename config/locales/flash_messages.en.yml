@@ -27,6 +27,12 @@ en:
       submitted_successfully: "Thanks, your rating was submitted successfully!"
     instance_admin:
       manage:
+        approval_request_templates:
+          created: 'Approval request template has been created.'
+          deleted: 'Approval request template has been deleted.'
+          updated: 'Approval request template has been updated.'
+        approval_requests:
+          updated: 'Approval request has been updated.'
         email_templates:
           created: 'Email template has been created.'
           deleted: 'Email template has been deleted.'
@@ -61,10 +67,12 @@ en:
           role_deleted: "That role has been deleted"
     listings:
       listing_disabled: "This listing has been temporarily disabled by the owner. Displaying other listings in this location."
+      listing_disabled_but_admin: "This listing has been temporarily disabled by the owner. Other users will not be able to browse it."
       listing_inactive: "This listing is inactive. Displaying other listings in this location."
     locations:
       listing_removed: "This listing has been removed. Displaying other listings near %{address}."
       no_listings: "There aren't any listings at that location. Check out some other %{bookable_noun_plural}!"
+      browsing_no_listings: "There aren't any active listings at that location. Other users will be redirected to search page."
     manage:
       companies:
         company_updated: "Great, your company's details have been updated."

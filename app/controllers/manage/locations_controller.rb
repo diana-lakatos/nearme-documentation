@@ -13,12 +13,14 @@ class Manage::LocationsController < Manage::BaseController
     @location = @company.locations.build
     @location.administrator_id = current_user.id if current_user.is_location_administrator?
     @location.name_and_description_required = true if TransactableType.first.name == "Listing"
+    build_approval_request_for_object(@location) unless @location.is_trusted?
     AvailabilityRule.default_template.apply(@location)
   end
 
   def create
     @location = @company.locations.build(location_params)
     @location.name_and_description_required = true if TransactableType.first.name == "Listing"
+    build_approval_request_for_object(@location) unless @location.is_trusted?
     if @location.save
       flash[:success] = t('flash_messages.manage.locations.space_added', bookable_noun: platform_context.decorate.bookable_noun)
       event_tracker.created_a_location(@location , { via: 'dashboard' })
@@ -34,11 +36,12 @@ class Manage::LocationsController < Manage::BaseController
   end
 
   def edit
+    build_approval_request_for_object(@location) unless @location.is_trusted?
   end
 
   def update
     @location.assign_attributes(location_params)
-
+    build_approval_request_for_object(@location) unless @location.is_trusted?
     if @location.save
       flash[:success] = t('flash_messages.manage.locations.space_updated', bookable_noun: platform_context.decorate.bookable_noun)
       redirect_to manage_locations_path

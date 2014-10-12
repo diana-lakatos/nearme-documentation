@@ -68,7 +68,7 @@ DesksnearMe::Application.routes.draw do
       resources :ticket_message_attachments, only: [:new, :create, :edit, :update, :destroy], controller: 'tickets/ticket_message_attachments'
     end
     resources :ticket_message_attachments, only: [:new, :create, :edit, :update, :destroy]
-
+    resources :requests_for_quotes, only: [:index]
   end
 
   namespace :admin do
@@ -181,7 +181,10 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
-      resources :confidential_files, only: [:index, :edit, :update]
+      resources :approval_requests, only: [:index, :edit, :update]
+      resources :approval_request_templates do
+        resources :approval_request_attachment_templates, controller: 'approval_request_templates/approval_request_attachment_templates'
+      end
 
       resources :transactable_types, :only => [:index, :edit, :update, :show] do
         resources :transactable_type_attributes, controller: 'transactable_types/transactable_type_attributes'
@@ -409,6 +412,8 @@ DesksnearMe::Application.routes.draw do
           post :host_cancel
         end
       end
+
+      resource :booking_module, only: [:update], :controller => 'listings/booking_module'
     end
 
     namespace :support do

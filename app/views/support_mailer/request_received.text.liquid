@@ -7,7 +7,7 @@ Your request has been received and will be reviewed by our support staff shortly
 {{ message.message_text }}
 
 {% if ticket.url %}To review the status of the request and add additional comments, follow the link below:
-{{ ticket.url }}{% endif %}
+{{ platform_context.host | append:ticket.url }}{% endif %}
 
 {% if ticket.messages_count > 0 %}
 Ticket History

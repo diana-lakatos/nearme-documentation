@@ -1,0 +1,47 @@
+%h4
+  #{link_to 'VENDOR APPROVAL', instance_admin_manage_approval_requests_path}  &gt; MANAGE
+
+= simple_form_for [:instance_admin, :manage, @approval_request] do |f|
+  .content-container.dropshadow
+    .row
+      .table-container.col-xs-12
+        - if @approval_request.message.present?
+          %h3 Written Verfication
+          %div= @approval_request.message
+        - if @approval_request.approval_request_attachments.any?
+          %h3 Attachments
+        %table.table.table-hover
+          %thead
+            %tr
+              %th #
+              %th Label
+              %th File
+              %th Uploaded by
+          %tbody
+            - @approval_request.approval_request_attachments.each_with_index do |ara, index|
+              %tr
+                %td= index + 1
+                %td= ara.label
+                %td= link_to ara.read_attribute(:file), ara.file.url, target: :blank
+                %td= link_to ara.uploader.try(:name), user_path(ara.uploader)
+
+    .row
+      .table-container.col-xs-12
+        %h3= TransactableType.first.name.humanize.pluralize
+        %table.table.table-hover
+          %thead
+            %tr
+              %th #
+              %th Name
+          %tbody
+            - if Transactable === @approval_request.owner
+              = render partial: 'listing_link', locals: { listing: @approval_request.owner, index: 0 }
+            -else
+              - @approval_request.owner.listings.each_with_index do |listing, index|
+                = render partial: 'listing_link', locals: { listing: listing, index: index }
+
+    .row
+      .input-container.col-xs-12
+        = f.input :notes
+        = f.collection_select :state_event, @approval_request.state_transitions, :event, :human_to_name, :include_blank => @approval_request.human_state_name
+  = f.button :submit, 'Save', class: 'btn btn-green pull-right'

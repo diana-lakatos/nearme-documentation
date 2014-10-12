@@ -1,0 +1,153 @@
+@import "utilities.scss";
+
+/* -------- resets ---------------*/
+
+.rs_dialog_holder {
+  a {color:black;}
+}
+
+/*------- defaults ------------ */
+.rs_dialog_holder { color:#222; font-size:12px;}
+
+/*------- specifics ------------ */
+
+select {
+  option.bold {font-weight:bold; color:red;}
+}
+
+.rs_dialog_holder { overflow: auto; position:fixed; left:0px; right:0px; top:0px; bottom:0px; padding-left:50%; background-color:rgba(0,0,0,0.9); z-index:8000;
+  .rs_dialog { background-color:#F4F4F4; display:inline-block; min-width:400px; margin-left:-250px; overflow: auto; position:relative;
+    .rs_dialog_content { padding:20px;
+      h1 { font-size:18px; padding:0px; margin:0 0 15px 0;
+        a {float:right; display:inline-block; height:16px; width:16px; background-image:url(<%=asset_path "recurring_select/cancel.png"%>); background-position:center; background-repeat:no-repeat;}
+      }
+
+      p { padding:0px 0; margin:0;
+        label {margin-right:10px;}
+      }
+
+      .freq_option_section { display:none;
+        .rs_interval {width:30px; text-align:center;}
+
+        .day_holder { padding: 10px; background-color: #E7E7E7; float: left;
+          a {display:block; padding:0px 9px; font-size:14px; border-style:solid; border-color:#ccc; border-width:1px 1px 1px 0px; float:left; text-decoration:none; font-weight:bold; @include inset_shadows(0px, 1px, 2px, rgba(0,0,0,0.1)); background-color:#fff;;
+            &:first-child { border-width:1px 1px 1px 1px; }
+            &.selected {background-color:#3F8DE1; color:#fff; @include inset_shadows(1px, 1px, 2px, rgba(0,0,0,0.2)); }
+            &:hover { cursor:pointer; background-color:#dde;}
+          }
+        }
+
+        .rs_calendar_day, .rs_calendar_week { background: #E7E7E7; padding: 20px; margin-top: 15px; margin-bottom: 25px; width:155px;
+          a {display:inline-block; text-align:center; width:15px; padding:5px 3px; font-size:12px; border-style:solid; border-color:#ccc; border-width:1px 1px 1px 1px; margin:-1px 0 0 -1px; line-height:10px; background-color:#fff; font-weight:bold;
+            &.selected {background-color:#3F8DE1; color:#fff; @include inset_shadows(0px, 1px, 2px, rgba(0,0,0,0.2)); text-shadow:0 1px 1px #333;}
+            &:hover { cursor:pointer; background-color:#dde;}
+          }
+          span {
+            color: #B4B4B4; font-size: 14px;
+          }
+          a.end_of_month { width: 81px; }
+        }
+        .rs_calendar_week {
+          width: 191px;
+          span {
+            display: inline-block;
+            width: 30px;
+          }
+        }
+
+        .monthly_rule_type {
+          span {
+            margin-right: 15px;
+          }
+        }
+      }
+
+
+      .rs_summary { padding:0px; margin-top:15px; border-top:1px solid #ccc; padding-top: 15px;
+        &.fetching {color:#999;
+          span {background-image:url(<%=asset_path "recurring_select/throbber_13x13.gif" %>); background-position:center; background-repeat:no-repeat; display:inline-block; height:13px; width:13px; margin-top:-4px; padding-right:5px;}
+        }
+        label {font-weight:normal;}
+      }
+
+      .buttons { padding:10px 0px 5px 0px; min-width:170px; text-align:center;
+        input { width: 90px; font-size: 16px; }
+        .btn-gray-light {margin-right: 10px;}
+      }
+    }
+
+    &.animated {
+      .controls {position:absolute; bottom:10px; left:10px;}
+      .rs_summary, .freq_option_section {display:none;}
+    }
+
+  }
+}
+
+.rs_dialog_holder {
+
+  h1 {
+    font-weight: bold;
+  }
+
+  select {
+    margin: 0px;
+  }
+
+  .form-horizontal {
+    font-size: 16px;
+
+    .control-group {
+
+      .control-label {
+        margin-top: 0px;
+        width: 100px;
+
+        &.repeat-on {
+          margin-top: 11px;
+        }
+      }
+
+      .controls {
+        margin-left: 120px;
+
+        input {
+          font-size: 14px;
+          height: 18px;
+          line-height: 19px;
+        }
+
+        .start-datepicker,
+        .end-datepicker {
+          padding-left: 5px;
+        }
+
+        input[type=radio] {
+          float: left;
+          margin-top: 6px;
+          margin-right: 12px;
+        }
+
+        .occurrences-input,
+        .to-separator {
+          display: inline-block;
+          margin-left: 12px;
+          margin-right: 12px;
+        }
+
+        @media screen and (max-width:959px) {
+          clear: none;
+        }
+
+      }
+    }
+
+    .rs_summary {
+      .control-label { font-weight: bold; }
+    }
+  }
+
+  .alternate-text { color: #777777; font-size: 14px; }
+
+}
+

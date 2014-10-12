@@ -38,4 +38,5 @@ DesksnearMe::Application.configure do
 
   config.root_secured = false
   config.secure_app = false
+  config.run_jobs_in_background = false
 end

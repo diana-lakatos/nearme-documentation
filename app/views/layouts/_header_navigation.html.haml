@@ -38,6 +38,10 @@
         %li
           = link_to main_app.bookings_dashboard_path, class: 'nav-link dropdown-toggle' do
             %span My Bookings
+        - if !current_user.requests_for_quotes.empty?
+          %li
+            = link_to main_app.support_requests_for_quotes_path, class: 'nav-link dropdown-toggle' do
+              %span My RFQs
         %li
           = link_to main_app.edit_user_registration_path, class: 'nav-link dropdown-toggle' do
             %span Account

@@ -58,7 +58,12 @@ class LocationsController < ApplicationController
   end
 
   def redirect_if_no_active_listings
-    @listings = @location.listings.searchable
+    @listings = @location.listings
+    if current_user_can_manage_location?
+      flash.now[:warning] = t('flash_messages.locations.browsing_no_listings') if @listings.searchable.empty?
+    else
+      @listings = @listings.searchable
+    end
     if @listings.empty?
       # If location doesn't have any listings, redirects to search page with notice
       flash[:warning] = t('flash_messages.locations.no_listings', bookable_noun_plural: platform_context.decorate.bookable_noun.pluralize)
@@ -71,18 +76,22 @@ class LocationsController < ApplicationController
     if @listing.deleted? || @listing.draft?
       flash[:warning] = t('flash_messages.listings.listing_inactive', address: @listing.address)
       redirect_to location_path(@listing.location)
-    elsif @listing.disabled? && current_user_cannot_manage_listing?
-      flash[:warning] = t('flash_messages.listings.listing_disabled')
-      redirect_to location_path(@listing.location)
+    elsif @listing.disabled?
+      if current_user_can_manage_listing?
+        flash.now[:warning] = t('flash_messages.listings.listing_disabled_but_admin')
+      else
+        flash[:warning] = t('flash_messages.listings.listing_disabled')
+        redirect_to location_path(@listing.location)
+      end
     end
   end
 
-  def current_user_cannot_manage_listing?
-    !current_user_can_manage_listing?
+  def current_user_can_manage_location?
+    user_signed_in? && (current_user.can_manage_location?(@location) || current_user.instance_admin?)
   end
 
   def current_user_can_manage_listing?
-    user_signed_in? && current_user.can_manage_listing?(@listing)
+    user_signed_in? && (current_user.can_manage_listing?(@listing) || current_user.instance_admin?)
   end
 
   def redirect_to_invidivual_page_if_enabled

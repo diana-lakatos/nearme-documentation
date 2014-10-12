@@ -20,7 +20,7 @@ class Transactable < ActiveRecord::Base
   has_many :inquiries, inverse_of: :listing
   has_many :availability_rules, -> { order 'day ASC' }, as: :target, dependent: :destroy, inverse_of: :target
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
-  has_many :confidential_files, as: :owner
+  has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :impressions, :as => :impressionable, :dependent => :destroy
   has_many :transactable_tickets, as: :target, class_name: 'Suppport::Ticket'
   has_many :assigned_waiver_agreement_templates, as: :target
@@ -42,6 +42,7 @@ class Transactable < ActiveRecord::Base
   accepts_nested_attributes_for :availability_rules, allow_destroy: true
   accepts_nested_attributes_for :photos, allow_destroy: true
   accepts_nested_attributes_for :waiver_agreement_templates, allow_destroy: true
+  accepts_nested_attributes_for :approval_requests
 
   before_destroy :decline_reservations
 
@@ -390,19 +391,23 @@ class Transactable < ActiveRecord::Base
     self.save(validate: false)
   end
 
+  def approval_request_templates
+    @approval_request_templates ||= PlatformContext.current.instance.approval_request_templates.for("Transactable")
+  end
+
   def is_trusted?
-    if PlatformContext.current.instance.onboarding_verification_required
-      self.confidential_files.accepted.count > 0 || self.location.try(:is_trusted?)
+    if approval_request_templates.count > 0
+      self.approval_requests.approved.count > 0
     else
-      true
+      location.nil? ? true : self.location.try(:is_trusted?)
     end
   end
 
-  def confidential_file_acceptance_cancelled!
+  def approval_request_acceptance_cancelled!
     update_attribute(:enabled, false) unless is_trusted?
   end
 
-  def confidential_file_accepted!
+  def approval_request_approved!
     update_attribute(:enabled, true) if is_trusted?
   end
 

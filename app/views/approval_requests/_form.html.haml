@@ -1,0 +1,11 @@
+- object ||= f.object
+- if !object.is_trusted? && object.approval_requests.first
+  = f.simple_fields_for :approval_requests, object.approval_requests.first do |approval_request_form|
+    - if approval_request_form.object.required_written_verification
+      = approval_request_form.input :message, required: true
+    = approval_request_form.input :approval_request_template_id, as: :hidden
+    - approval_request_form.object.approval_request_attachments.each do |art|
+      = approval_request_form.simple_fields_for :approval_request_attachments, art do |approval_request_attachment_form|
+        = approval_request_attachment_form.input :file, as: :file, label: approval_request_attachment_form.object.label, hint: approval_request_attachment_form.object.hint.presence, required: approval_request_attachment_form.object.required?
+        = approval_request_attachment_form.hidden_field :file_cache
+        = approval_request_attachment_form.input :approval_request_attachment_template_id, as: :hidden

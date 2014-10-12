@@ -1,0 +1,36 @@
+%h4
+  VENDOR APPROVAL
+  %span.pull-right
+    = link_to 'Settings', instance_admin_manage_approval_request_templates_path
+
+.sub-header-nav
+  %ul
+    - %w(pending rejected questioned approved).each do |state|
+      %li
+        = link_to "#{state.capitalize} (#{ApprovalRequest.send(state).count})", instance_admin_manage_approval_requests_path(:show => state), class: " #{'active' if state == params[:show]}"
+
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table.table-hover
+        %thead
+          %tr
+            %th Object Name
+            %th Object Type
+            %th Notes
+            %th Created At
+
+        %tbody
+          - @approval_requests.each do |resource|
+            %tr
+              %td
+                = resource.owner.name.try(:truncate, 25)
+              %td
+                = resource.owner.class.name
+              %td
+                = resource.notes.try(:truncate, 25)
+              %td
+                =l resource.created_at, format: :short
+              %td
+                = link_to 'Manage', edit_instance_admin_manage_approval_request_path(resource)
+        = will_paginate @approval_requests

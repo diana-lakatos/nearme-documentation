@@ -2,11 +2,14 @@ class Manage::CompaniesController < Manage::BaseController
 
   def edit
     @company = current_user.companies.find(params[:id])
+    build_approval_request_for_object(@company) unless @company.is_trusted?
   end
 
   def update
     @company = current_user.companies.find(params[:id])
-    if @company.update_attributes(company_params)
+    @company.assign_attributes(company_params)
+    build_approval_request_for_object(@company) unless @company.is_trusted?
+    if @company.save
       flash[:success] = t('flash_messages.manage.companies.company_updated')
       redirect_to edit_manage_company_path(@company.id)
     else

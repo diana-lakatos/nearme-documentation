@@ -29,6 +29,7 @@ class Company < ActiveRecord::Base
   has_many :company_industries, :dependent => :destroy
   has_many :industries, :through => :company_industries
   has_many :waiver_agreement_templates, as: :target
+  has_many :approval_requests, as: :owner, dependent: :destroy
   has_one :domain, :as => :target, :dependent => :destroy
   has_one :theme, :as => :owner, :dependent => :destroy
   has_many :order_line_items, class_name: 'Spree::LineItem'
@@ -63,6 +64,7 @@ class Company < ActiveRecord::Base
   accepts_nested_attributes_for :domain, :reject_if => proc { |params| params.delete(:white_label_enabled).to_f.zero? }
   accepts_nested_attributes_for :theme, reject_if: proc { |params| params.delete(:white_label_enabled).to_f.zero? }
   accepts_nested_attributes_for :locations
+  accepts_nested_attributes_for :approval_requests
 
 
   def add_creator_to_company_users
@@ -189,10 +191,29 @@ class Company < ActiveRecord::Base
     { name: 'Company Name', url: 'Company Website', email: 'Company Email', external_id: 'Company External Id' }
   end
 
+  def approval_request_templates
+    @approval_request_templates ||= PlatformContext.current.instance.approval_request_templates.for("Company")
+  end
+
+  def is_trusted?
+    if approval_request_templates.count > 0
+      self.approval_requests.approved.count > 0
+    else
+      self.creator.try(:is_trusted?)
+    end
+  end
+
+  def approval_request_acceptance_cancelled!
+    listings.find_each(&:approval_request_acceptance_cancelled!)
+  end
+
+  def approval_request_approved!
+    listings.find_each(&:approval_request_approved!)
+  end
+
   def rfq_count
     Support::Ticket.for_filter('open').where('target_type = ? AND target_id IN (?)', 'Transactable', listings.pluck(:id)).count
 
   end
 
 end
-

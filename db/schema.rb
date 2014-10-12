@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141001132824) do
+ActiveRecord::Schema.define(version: 20141010193304) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,8 +90,63 @@ ActiveRecord::Schema.define(version: 20141001132824) do
     t.datetime "updated_at"
   end
 
+  create_table "approval_request_attachment_templates", force: true do |t|
+    t.integer  "instance_id"
+    t.integer  "approval_request_template_id"
+    t.boolean  "required",                     default: false
+    t.string   "label"
+    t.text     "hint"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   add_index "assigned_waiver_agreement_templates", ["target_id", "target_type"], name: "awat_target_id_and_target_type", using: :btree
   add_index "assigned_waiver_agreement_templates", ["waiver_agreement_template_id"], name: "awat_wat_id", using: :btree
+
+  create_table "approval_request_attachments", force: true do |t|
+    t.string   "caption"
+    t.integer  "instance_id"
+    t.integer  "uploader_id"
+    t.string   "file"
+    t.text     "comment"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "approval_request_id"
+    t.integer  "approval_request_attachment_template_id"
+    t.boolean  "required",                                default: false
+    t.string   "label"
+    t.text     "hint"
+  end
+
+  add_index "approval_request_attachments", ["instance_id"], name: "index_approval_request_attachments_on_instance_id", using: :btree
+  add_index "approval_request_attachments", ["uploader_id"], name: "index_approval_request_attachments_on_uploader_id", using: :btree
+
+  create_table "approval_request_templates", force: true do |t|
+    t.integer  "instance_id"
+    t.string   "owner_type"
+    t.boolean  "required_written_verification", default: false
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "approval_requests", force: true do |t|
+    t.string   "state"
+    t.string   "message"
+    t.string   "notes"
+    t.integer  "instance_id"
+    t.integer  "approval_request_template_id"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.boolean  "required_written_verification"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "approval_requests", ["owner_id", "owner_type"], name: "index_approval_requests_on_owner_id_and_owner_type", using: :btree
 
   create_table "authentications", force: true do |t|
     t.integer  "user_id"
@@ -258,24 +313,6 @@ ActiveRecord::Schema.define(version: 20141001132824) do
   add_index "company_users", ["company_id"], name: "index_company_users_on_company_id", using: :btree
   add_index "company_users", ["user_id"], name: "index_company_users_on_user_id", using: :btree
 
-  create_table "confidential_files", force: true do |t|
-    t.string   "caption"
-    t.integer  "instance_id"
-    t.integer  "uploader_id"
-    t.string   "file"
-    t.text     "comment"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.text     "hint"
-    t.string   "state"
-    t.integer  "owner_id"
-    t.string   "owner_type"
-  end
-
-  add_index "confidential_files", ["instance_id"], name: "index_confidential_files_on_instance_id", using: :btree
-  add_index "confidential_files", ["uploader_id"], name: "index_confidential_files_on_uploader_id", using: :btree
-
   create_table "country_instance_payment_gateways", force: true do |t|
     t.string   "country_alpha2_code"
     t.integer  "instance_payment_gateway_id"
@@ -318,7 +355,7 @@ ActiveRecord::Schema.define(version: 20141001132824) do
   add_index "data_uploads", ["transactable_type_id"], name: "index_data_uploads_on_transactable_type_id", using: :btree
 
   create_table "delayed_jobs", force: true do |t|
-    t.integer  "priority",   default: 0
+    t.integer  "priority",   default: 20
     t.integer  "attempts",   default: 0
     t.text     "handler"
     t.text     "last_error"
@@ -856,8 +893,8 @@ ActiveRecord::Schema.define(version: 20141001132824) do
     t.integer  "instance_id"
     t.boolean  "listings_public"
     t.datetime "deleted_at"
-    t.datetime "start_on"
-    t.datetime "end_on"
+    t.date     "start_on"
+    t.date     "end_on"
     t.integer  "quantity"
     t.integer  "start_minute"
     t.integer  "end_minute"
@@ -875,6 +912,7 @@ ActiveRecord::Schema.define(version: 20141001132824) do
     t.datetime "updated_at"
     t.integer  "credit_card_id"
     t.integer  "hours_before_reservation_to_charge", default: 24
+    t.integer  "occurrences"
   end
 
   add_index "recurring_bookings", ["administrator_id"], name: "index_recurring_bookings_on_administrator_id", using: :btree
