@@ -35,15 +35,15 @@ class TransactableTest < ActiveSupport::TestCase
 
     setup do
       @transactable = FactoryGirl.create(:transactable)
-      @transactable.confidential_files = []
-      @confidential_file = FactoryGirl.build(:confidential_file)
-      @confidential_file.owner = @transactable
-      @confidential_file.save!
+      @transactable.approval_requests = []
+      @approval_request = FactoryGirl.build(:approval_request)
+      @approval_request.owner = @transactable
+      @approval_request.save!
     end
 
     context 'instance does not require verification' do
 
-      should 'be trusted even without confidential files' do
+      should 'be trusted even without approved approval requests' do
         assert @transactable.is_trusted?
       end
 
@@ -52,27 +52,26 @@ class TransactableTest < ActiveSupport::TestCase
     context 'instance does require verification' do
 
       setup do
-        PlatformContext.current.instance.update_attribute(:onboarding_verification_required, true)
+        FactoryGirl.create(:approval_request_template, owner_type: 'Transactable')
       end
 
-      should 'not be trusted without confidential file' do
+      should 'not be trusted without approved approval request' do
         refute @transactable.is_trusted?
       end
 
-      should 'be trusted without confidential file if user is trusted' do
+      should 'be not trusted without approval request despite user is trusted' do
         User.any_instance.stubs(:is_trusted?).returns(true)
-        assert @transactable.is_trusted?
+        refute @transactable.is_trusted?
       end
 
-      should 'be trusted with confidential file that is accepted' do
-        @confidential_file.review!
-        @confidential_file.accept!
+      should 'be trusted with approval request that is accepted' do
+        @approval_request.accept!
         assert @transactable.reload.is_trusted?
       end
 
       context 'enabled' do
         setup do
-          User.any_instance.stubs(:confidential_files).returns([@confidential_file])
+          User.any_instance.stubs(:approval_requests).returns([@approval_request])
         end
 
         should 'be enabled if is trusted' do

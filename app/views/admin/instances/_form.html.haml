@@ -15,7 +15,6 @@
   = f.input :user_required_fields, input_html: { value: f.object.user_required_fields.join(', ') }
   = f.input :default_search_view
   = f.input :user_based_marketplace_views
-  = f.input :onboarding_verification_required
   = f.input :searcher_type
   = label_tag :marketplace_type, 'Marketplace Type'
   = select_tag :marketplace_type, options_for_select(TransactableType::AVAILABLE_TYPES.map{|at| [at, at]}, params[:marketplace_type] || resource.marketplace_type), disabled: !resource.new_record?

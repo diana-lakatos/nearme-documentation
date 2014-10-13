@@ -2,7 +2,7 @@
 #
 # This encapsulates logic behind sending email, whether to do it immediately, or in background. In the second case,
 # it communicates with Mailer class to determine when the email should be sent [ i.e. after 1 hour, 10 days etc ]
-# 
+#
 # Arguments:
 #
 # arg1 - mailer class
@@ -27,7 +27,7 @@
 #
 #   MailerJob.perform_later(5.hours.from_now, ReservationMailer, :notify_host_with_confirmation, @reservation)
 #
-#   the first argument must be either ActiveSupport::TimeWithZone or Fixnum (number of seconds, for example 5.hours). 
+#   the first argument must be either ActiveSupport::TimeWithZone or Fixnum (number of seconds, for example 5.hours).
 #   Please note that using Time.now instead of Time.zone.now will raise error
 
 class MailerJob < Job
@@ -40,6 +40,10 @@ class MailerJob < Job
   def perform
     raise "Unknown PlatformContext" if PlatformContext.current.nil?
     @mailer_class.send(@mailer_method, *@args).deliver
+  end
+
+  def self.priority
+    0
   end
 
 end

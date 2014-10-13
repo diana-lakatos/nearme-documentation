@@ -8,7 +8,7 @@
 
 {% if ticket.url %}
 <p>To review the status of the request and add additional comments, follow the link below:<br />
-<a href="{{ ticket.url }}">{{ ticket.url }}</a></p>
+<a href="{{ platform_context.host | append:ticket.url }}">{{ platform_context.host | append:ticket.url }}</a></p>
 {% endif %}
 
 {% if ticket.messages_count > 0 %}

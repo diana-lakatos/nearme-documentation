@@ -15,7 +15,6 @@ class @Bookings.RecurringDatepicker
   #           startElement - The start range trigger element
   #           endElement - The end range trigger element
   constructor: (options = {}) ->
-    @listing = options.listing
     @startElement = options.startElement
     @endElement = options.endElement
 
@@ -31,15 +30,12 @@ class @Bookings.RecurringDatepicker
       @endOnChanged(dates[0])
 
   startOnChanged: (date) ->
-    @startElement.find('.calendar-text').text(@formatDateForLabel(date))
+    @startElement.val(@formatDateForLabel(date))
     @trigger 'startOnChanged', date
-
-    if @startDatepicker.getView().isVisible()
-      @startDatepicker.hide()
-      @endDatepicker.show()
+    @startDatepicker.hide()
 
   endOnChanged: (date) ->
-    @endElement.find('.calendar-text').text(@formatDateForLabel(date))
+    @endElement.val(@formatDateForLabel(date))
     @trigger 'endOnChanged', date
 
     if @endDatepicker.getView().isVisible()
@@ -49,37 +45,23 @@ class @Bookings.RecurringDatepicker
   initializeStartDatepicker: ->
     @startDatepicker = new window.Datepicker(
       trigger: @startElement,
-
       # Custom view to handle bookings availability display
-      view: new Bookings.Datepicker.AvailabilityView(@listing,
-        trigger: @startElement,
-        text: @TEXT_START
-      ),
-
+      view: new window.Datepicker.View( trigger: @startElement, text: @TEXT_START),
       # Limit to a single date selected at a time
-      model: new window.Datepicker.Model.Single(
-        allowDeselection: false
-      )
+      model: new window.Datepicker.Model.Single( allowDeselection: false)
     )
 
   initializeEndDatepicker: ->
     @endDatepicker = new window.Datepicker(
       trigger: @endElement
-
       # Custom view to handle bookings availability display
-      view: new Bookings.Datepicker.AvailabilityView(@listing,
-        trigger: @endElement,
-        text: @TEXT_END_RANGE
-      ),
-
+      view: new window.Datepicker.View( trigger: @endElement, text: @TEXT_END_RANGE),
       # Limit to a single date selected at a time
-      model: new window.Datepicker.Model.Single(
-        allowDeselection: false
-      )
+      model: new window.Datepicker.Model.Single( allowDeselection: false)
     )
 
   formatDateForLabel: (date) ->
-    "#{DNM.util.Date.monthName(date, 3)} #{date.getDate()}"
+    [date.getFullYear(), (date.getMonth() + 1), date.getDate()].join("-")
 
   setDates: (dates) ->
     @startDatepicker.setDates(dates.slice(0,1))

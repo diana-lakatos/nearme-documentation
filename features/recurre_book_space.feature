@@ -58,26 +58,6 @@ Feature: A user can recurre book at a space
       | the transactable | Monday     | 14 days from now Friday | 1        |
     Then I should be asked to sign up before making a booking
 
-  Scenario: As an anonymous user I should return to my booking state after logging in
-    When I go to the location's page
-    When I select to recurre book and review space for:
-      | Transactable     | Start On   | End On                  | Quantity |
-      | the transactable | Monday     | 14 days from now Friday | 2        |
-    And I log in to continue booking
-    Then I should see the recurring booking confirmation screen for:
-      | Transactable     | Start On   | End On                  | Quantity |
-      | the transactable | Monday     | 14 days from now Friday | 2        |
-
-  Scenario: As an anonymous user I should return to my booking state after signing up
-    When I go to the location's page
-    When I select to recurre book and review space for:
-      | Transactable     | Start On   | End On                  | Quantity |
-      | the transactable | Monday     | 14 days from now Friday | 2        |
-    And I sign up as a user in the modal
-    Then I should see the recurring booking confirmation screen for:
-      | Transactable     | Start On   | End On                  | Quantity |
-      | the transactable | Monday     | 14 days from now Friday | 2        |
-
   Scenario: Hourly reserved listing can be booked
     Given the transactable is reserved hourly
     And   the transactable has an hourly price of 100.00

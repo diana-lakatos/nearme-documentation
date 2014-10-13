@@ -12,7 +12,7 @@ class InstanceAdmin::BaseController < ApplicationController
   }
 
   MANAGE_CONTROLLERS = {
-    'confidential_files' => { controller: '/instance_admin/manage/confidential_files', default_action: 'index' },
+    'approval_requests' => { controller: '/instance_admin/manage/approval_requests', default_action: 'index' },
     'inventories' => { controller: '/instance_admin/manage/inventories', default_action: 'index' },
     'transfers'   => { controller: '/instance_admin/manage/transfers', default_action: 'index' },
     'partners'    => { controller: '/instance_admin/manage/partners', default_action: 'index' },

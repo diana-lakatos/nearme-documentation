@@ -61,10 +61,7 @@ class @Bookings.Listing
     @availability.openFor(date)
 
   isBooked: ->
-    hasDate = if @isRecurringBooking()
-      @startOn and @endOn
-    else
-      @bookedDates().length > 0
+    hasDate = @bookedDates().length > 0
     hasTime = if @isReservedHourly()
       @minutesBooked() > 0
     else

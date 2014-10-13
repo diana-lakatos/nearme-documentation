@@ -100,6 +100,13 @@
       }
     }
 
+    form {
+      textarea {
+        height: inherit;
+        resize: none;
+      }
+    }
+
     .booking-price {
       overflow: hidden;
       padding-bottom: 15px;
@@ -302,6 +309,21 @@
             text-align: center;
           }
         }
+      }
+    }
+
+    .recurring-booking {
+      margin-bottom: 30px;
+      font-size: 17px;
+
+      .or {
+        font-size: 15px;
+      }
+
+      .recurring_select {
+        position: absolute;
+        top: -99999px;
+        left: -999999px;
       }
     }
 

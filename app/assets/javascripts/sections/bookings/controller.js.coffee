@@ -26,6 +26,10 @@ class Bookings.Controller
       else
         @reviewBooking()
 
+    if @listing.isRecurringBooking()
+      new Bookings.RecurringBookingController(@container.find('form[data-recurring-booking-form]'))
+
+
   # We need to set up delayed methods per each instance, not the prototype.
   # Otherwise, it will debounce for any instance calling the method.
   setupDelayedMethods: ->
@@ -77,9 +81,7 @@ class Bookings.Controller
     startElement = @container.find(".calendar-wrapper.date-start")
     endElement = @container.find(".calendar-wrapper.date-end")
 
-    if @listing.isRecurringBooking()
-      @setupRecurringBookingDatepicker(startElement, endElement)
-    else if @listing.isReservedHourly()
+    if @listing.isReservedHourly()
       @datepicker = new window.Datepicker(
         trigger: startElement,
 
@@ -141,10 +143,7 @@ class Bookings.Controller
       @listing.setDefaultQuantity(@listingData.initial_bookings.quantity)
 
       # Map bookings to JS dates
-      if @listing.isRecurringBooking()
-        [DNM.util.Date.idToDate(@listingData.initial_bookings.start_on), DNM.util.Date.idToDate(@listingData.initial_bookings.end_on)]
-      else
-        (DNM.util.Date.idToDate(date) for date in @listingData.initial_bookings.dates)
+      (DNM.util.Date.idToDate(date) for date in @listingData.initial_bookings.dates)
     else
       [@listing.firstAvailableDate]
 
@@ -193,18 +192,6 @@ class Bookings.Controller
 
   updateSummary: ->
     @totalElement.text((@listing.bookingSubtotal()/100).toFixed(2))
-
-  setupRecurringBookingDatepicker: (startElement, endElement) ->
-    @datepicker = new Bookings.RecurringDatepicker(
-      listing: @listing
-      startElement: startElement
-      endElement: endElement
-    )
-    @datepicker.on 'startOnChanged', (date) =>
-      @listing.setStartOn(date)
-
-    @datepicker.on 'endOnChanged', (date) =>
-      @listing.setEndOn(date)
 
   reviewBooking: ->
     return unless @listing.isBooked()

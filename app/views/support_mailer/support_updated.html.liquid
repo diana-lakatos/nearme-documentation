@@ -5,7 +5,7 @@
 <p>{{ message.message_html }}</p>
 
 <p>To review the status of the request and add additional comments, follow the link below:<br />
-<a href="{{ ticket.admin_url }}">{{ ticket.admin_url }}</a></p>
+<a href="{{ platform_context.host | append:ticket.admin_url }}">{{ platform_context.host | append:ticket.admin_url }}</a></p>
 
 {% if ticket.messages_count > 0 %}
 <h2>Ticket History</h2>

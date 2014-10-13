@@ -1,0 +1,31 @@
+%h4
+  #{link_to 'VENDOR APPROVAL', instance_admin_manage_approval_requests_path}  &gt; SETTINGS
+
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table.table-hover
+        %thead
+          %tr
+            %th For
+            %th Created At
+            %th
+            %th
+
+        %tbody
+          - @approval_request_templates.sort_by{ |at| at.persisted? ? -1 : 1 }.each do |resource|
+            %tr
+              %td
+                - if resource.persisted?
+                  = resource.owner_type
+                - else
+                  = link_to "Add for #{resource.owner_type}", new_instance_admin_manage_approval_request_template_path(owner_type: resource.owner_type)
+              %td
+                - if resource.persisted?
+                  =l resource.updated_at, format: :long
+              %td
+                - if resource.persisted?
+                  = link_to 'Edit', edit_instance_admin_manage_approval_request_template_path(resource)
+              %td
+                - if resource.persisted?
+                  = link_to 'Destroy', instance_admin_manage_approval_request_template_path(resource), method: :delete, confirm: 'Are you sure?'

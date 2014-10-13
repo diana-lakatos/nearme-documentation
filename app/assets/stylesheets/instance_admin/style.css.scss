@@ -474,6 +474,10 @@ form {
 
 }
 
+.hidden {
+  display:none;
+}
+
 .selectpicker:hover {
   background: #fff;
 }
@@ -864,7 +868,17 @@ body.login {
   }
 }
 
-//888888888
+/************/
+/*** Misc ***/
+/************/
+
+.box {
+  margin: 20px;
+}
+
+/***********************/
+/*** Modal ***/
+/***********************/
 
 .modal-overlay {
   position: fixed;

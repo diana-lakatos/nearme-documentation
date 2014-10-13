@@ -1,3 +1,4 @@
+= render :partial => 'approval_requests/form', :locals => { f: f, object: current_user }
 - only_inputs ||= []
 - only_inputs.map!(&:to_sym)
 = f.input :name if only_inputs.include?(:name)
