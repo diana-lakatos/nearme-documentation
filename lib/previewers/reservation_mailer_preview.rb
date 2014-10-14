@@ -16,6 +16,10 @@ class ReservationMailerPreview < MailView
     ::ReservationMailer.notify_guest_of_expiration(reservation)
   end
 
+  def notify_guest_of_payment_request
+    ::ReservationMailer.notify_guest_of_payment_request(reservation)
+  end
+
   def notify_guest_of_rejection
     ::ReservationMailer.notify_guest_of_rejection(reservation)
   end

@@ -39,12 +39,12 @@ class Billing::Gateway::Processor::Incoming::Fetch < Billing::Gateway::Processor
     response.body == 'VERIFIED'
   end
 
-  def set_payment_data(reservation, request)
+  def set_payment_data(reservation)
     @payment_data = {
       account_id: @settings[:account_id],
       amount: reservation.total_amount_dollars,
-      return_url: "http://#{request.host_with_port}/reservations/#{reservation.id}/payment_notifications",
-      notification_url: "http://#{request.host_with_port}/reservations/#{reservation.id}/payment_notifications",
+      return_url: "http://#{PlatformContext.current.decorate.host}/reservations/#{reservation.id}/payment_notifications",
+      notification_url: "http://#{PlatformContext.current.decorate.host}/reservations/#{reservation.id}/payment_notifications",
       payment_method: 'standard'
     }
 
@@ -52,7 +52,7 @@ class Billing::Gateway::Processor::Incoming::Fetch < Billing::Gateway::Processor
 
     @payment_data.merge!({
       cmd: "_xclick",
-      item_name: reservation.listing.name.gsub(/\s/, '%20'),
+      item_name: ERB::Util.url_encode(reservation.listing.name).truncate(40),
       store_card: "0"
     })
   end
@@ -78,7 +78,6 @@ class Billing::Gateway::Processor::Incoming::Fetch < Billing::Gateway::Processor
       raise Billing::Gateway::PaymentAttemptError, mns_params["response_text"]
     end
   end
-
 
   private
 

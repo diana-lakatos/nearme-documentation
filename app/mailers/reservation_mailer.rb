@@ -60,6 +60,11 @@ class ReservationMailer < InstanceMailer
     generate_mail('A booking at one of your listings has expired')
   end
 
+  def notify_guest_of_payment_request(reservation)
+    setup_defaults(reservation)
+    generate_mail("Your booking for '#{reservation.listing.name}' at #{reservation.location.street} requires payment")
+  end
+
   def notify_host_of_rejection(reservation)
     setup_defaults(reservation)
     @user = @reservation.administrator

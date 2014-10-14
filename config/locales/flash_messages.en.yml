@@ -89,6 +89,7 @@ en:
         reservation_confirmed: "You have confirmed the reservation!"
         reservation_not_confirmed: "Your reservation could not be confirmed."
         reservation_rejected: "You have rejected the reservation. Maybe next time!"
+        payment_requested: "Your request has been sent"
       waiver_agreement_templates:
         created: 'Waiver agreement template has been created.'
         deleted: 'Waiver agreement template has been deleted.'

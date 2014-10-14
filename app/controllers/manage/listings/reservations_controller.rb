@@ -41,6 +41,12 @@ class Manage::Listings::ReservationsController < ApplicationController
     render_redirect_url_as_json if request.xhr?
   end
 
+  def request_payment
+    ReservationMailer.enqueue.notify_guest_of_payment_request(@reservation)
+    flash[:success] = t('flash_messages.manage.reservations.payment_requested')
+    redirect_to manage_guests_dashboard_url
+  end
+
   def host_cancel
     if @reservation.host_cancel
       ReservationMailer.enqueue.notify_guest_of_cancellation_by_host(@reservation)

@@ -38,5 +38,11 @@ FactoryGirl.define do
       test_settings { { login: 'sk_test_r0wxkPFASg9e45UIakAhgpru' } }
       live_settings { { login: 'sk_test_r0wxkPFASg9e45UIakAhgpru' } }
     end
+
+    factory :fetch_instance_payment_gateway do
+      payment_gateway_id { FactoryGirl.create(:fetch_payment_gateway).id }
+      test_settings { { account_id: '123456789', secret_key: '987654321' } }
+      live_settings { { account_id: '123456789', secret_key: '987654321' } }
+    end
   end
 end
