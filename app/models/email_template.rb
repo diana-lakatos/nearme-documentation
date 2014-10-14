@@ -10,6 +10,7 @@ class EmailTemplate < ActiveRecord::Base
                            post_action_mailer/list
                            post_action_mailer/list_draft
                            post_action_mailer/unsubscription
+                           post_action_mailer/user_created_invitation
                            inquiry_mailer/inquiring_user_notification
                            inquiry_mailer/listing_creator_notification
                            listing_mailer/share
