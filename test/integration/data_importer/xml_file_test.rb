@@ -240,7 +240,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
       should 'log transactable errors' do
         @xml_file = FactoryGirl.create(:xml_template_file_invalid_transactable)
         @xml_file.parse
-        assert_equal "Validation error for Transactable 1: Free must be free if no prices are provided and My attribute can't be blank. Ignoring all children.", @xml_file.get_parse_result.strip
+        assert_equal "Validation error for Transactable 1: My attribute can't be blank and Free must be free if no prices are provided. Ignoring all children.", @xml_file.get_parse_result.strip
       end
 
     end

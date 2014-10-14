@@ -80,21 +80,21 @@ class TransactableTypeTest < ActiveSupport::TestCase
 
     should 'populate free boolean attribute if pricing_options include it' do
       transactable_type = FactoryGirl.create(:transactable_type, :pricing_options => { "free" => "1" })
-      tta = transactable_type.transactable_type_attributes.find { |attr| attr.name == "free" }
+      tta = transactable_type.custom_attributes.find { |attr| attr.name == "free" }
       assert_equal "free", tta.name
       assert_equal "boolean", tta.attribute_type
       assert_equal true, tta.internal
       assert_equal false, tta.public
       transactable_type.update_attribute(:pricing_options, {})
-      assert_nil transactable_type.reload.transactable_type_attributes.find { |attr| attr.name == "free" }
+      assert_nil transactable_type.reload.custom_attributes.find { |attr| attr.name == "free" }
       transactable_type.update_attribute(:pricing_options, { "free" => "1" })
       assert tta.reload.destroyed?
-      assert_not_nil transactable_type.reload.transactable_type_attributes.find { |attr| attr.name == "free" }
+      assert_not_nil transactable_type.reload.custom_attributes.find { |attr| attr.name == "free" }
     end
 
     should 'populate hourly_reservations boolean attribute if pricing_options include it' do
       transactable_type = FactoryGirl.create(:transactable_type, :pricing_options => { "hourly" => "1" })
-      tta = transactable_type.transactable_type_attributes.find { |attr| attr.name == "hourly_reservations" }
+      tta = transactable_type.custom_attributes.find { |attr| attr.name == "hourly_reservations" }
       assert_not_nil tta
       assert_equal "boolean", tta.attribute_type
       assert_equal true, tta.internal
@@ -106,7 +106,7 @@ class TransactableTypeTest < ActiveSupport::TestCase
     should 'populate cents fields' do
       transactable_type = FactoryGirl.create(:transactable_type, :pricing_options => { "hourly" => "1", "daily" => "1", "weekly" => "1", "monthly" => "1" })
       %w(hourly daily weekly monthly).each do |price_field|
-        tta = transactable_type.transactable_type_attributes.find { |attr| attr.name == "#{price_field}_price_cents" }
+        tta = transactable_type.custom_attributes.find { |attr| attr.name == "#{price_field}_price_cents" }
         assert_not_nil tta
         assert_equal "integer", tta.attribute_type
         assert tta.internal
@@ -159,7 +159,7 @@ class TransactableTypeTest < ActiveSupport::TestCase
 
     should "create new transcactable type attribute for confirm reservations with public true and default value true" do
       transactable_type = FactoryGirl.create(:transactable_type)
-      tta = transactable_type.transactable_type_attributes.find { |attr| attr.name == "confirm_reservations" }
+      tta = transactable_type.custom_attributes.find { |attr| attr.name == "confirm_reservations" }
       assert_not_nil tta
       assert_equal "t", tta.default_value
       assert_equal "boolean", tta.attribute_type
@@ -170,7 +170,7 @@ class TransactableTypeTest < ActiveSupport::TestCase
 
     should "create new transcactable type attribute for confirm reservations with public false and default value false" do
       transactable_type = FactoryGirl.create(:transactable_type, availability_options: { "confirm_reservations" => { "default_value" => false, "public" => false } })
-      tta = transactable_type.transactable_type_attributes.find { |attr| attr.name == "confirm_reservations" }
+      tta = transactable_type.custom_attributes.find { |attr| attr.name == "confirm_reservations" }
       assert_not_nil tta
       assert_equal "f", tta.default_value
       refute tta.public

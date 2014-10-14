@@ -335,6 +335,33 @@ ActiveRecord::Schema.define(version: 20141010193304) do
   add_index "credit_cards", ["instance_client_id"], name: "index_credit_cards_on_instance_client_id", using: :btree
   add_index "credit_cards", ["instance_id"], name: "index_credit_cards_on_instance_id", using: :btree
 
+  create_table "custom_attributes", force: true do |t|
+    t.string   "name"
+    t.integer  "instance_id"
+    t.integer  "transactable_type_id"
+    t.string   "attribute_type"
+    t.string   "html_tag"
+    t.string   "prompt"
+    t.string   "default_value"
+    t.boolean  "public",               default: true
+    t.text     "validation_rules"
+    t.text     "valid_values"
+    t.datetime "deleted_at"
+    t.string   "label"
+    t.text     "input_html_options"
+    t.text     "wrapper_html_options"
+    t.text     "hint"
+    t.string   "placeholder"
+    t.boolean  "internal",             default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "target_id"
+    t.string   "target_type"
+  end
+
+  add_index "custom_attributes", ["instance_id", "transactable_type_id"], name: "index_tta_on_instance_id_and_transactable_type_id", using: :btree
+  add_index "custom_attributes", ["target_id", "target_type"], name: "index_custom_attributes_on_target_id_and_target_type", using: :btree
+
   create_table "data_uploads", force: true do |t|
     t.string   "csv_file"
     t.string   "xml_file"
@@ -560,6 +587,12 @@ ActiveRecord::Schema.define(version: 20141010193304) do
     t.text     "encrypted_test_settings"
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
+  end
+
+  create_table "instance_profile_types", force: true do |t|
+    t.string   "name"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
   end
 
   create_table "instance_types", force: true do |t|
@@ -2222,30 +2255,6 @@ ActiveRecord::Schema.define(version: 20141010193304) do
     t.datetime "updated_at"
   end
 
-  create_table "transactable_type_attributes", force: true do |t|
-    t.string   "name"
-    t.integer  "instance_id"
-    t.integer  "transactable_type_id"
-    t.string   "attribute_type"
-    t.string   "html_tag"
-    t.string   "prompt"
-    t.string   "default_value"
-    t.boolean  "public",               default: true
-    t.text     "validation_rules"
-    t.text     "valid_values"
-    t.datetime "deleted_at"
-    t.string   "label"
-    t.text     "input_html_options"
-    t.text     "wrapper_html_options"
-    t.text     "hint"
-    t.string   "placeholder"
-    t.boolean  "internal",             default: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "transactable_type_attributes", ["instance_id", "transactable_type_id"], name: "index_tta_on_instance_id_and_transactable_type_id", using: :btree
-
   create_table "transactable_types", force: true do |t|
     t.string   "name"
     t.integer  "instance_id"
@@ -2331,6 +2340,15 @@ ActiveRecord::Schema.define(version: 20141010193304) do
   end
 
   add_index "user_industries", ["industry_id", "user_id"], name: "index_user_industries_on_industry_id_and_user_id", using: :btree
+
+  create_table "user_instance_profiles", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "instance_id"
+    t.integer  "instance_profile_type_id"
+    t.text     "metadata"
+    t.hstore   "properties"
+    t.datetime "deleted_at"
+  end
 
   create_table "user_messages", force: true do |t|
     t.integer  "thread_owner_id"

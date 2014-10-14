@@ -147,7 +147,7 @@ module Utils
       tp = TransactableType.find_or_create_by_name("Listing")
       tp.attributes = FactoryGirl.attributes_for(:transactable_type_listing)
       tp.save!
-      Utils::TransactableTypeAttributesCreator.new(tp).create_listing_attributes!
+      CustomAttributes::CustomAttribute::Creator.new(tp).create_listing_attributes!
     end
 
     def load_listings!
@@ -225,7 +225,7 @@ module Utils
       end
     end
 
-    def create_payment_gateways      
+    def create_payment_gateways
       # create default payment_gateways
       stripe_settings = { login: "" }
       balanced_settings = { login: "" }
@@ -239,7 +239,7 @@ module Utils
       spreedly_settings = { login: "", password: "", gateway_token: "" }
 
       payment_gateways = [
-        { 
+        {
           name: "Stripe",
           settings: stripe_settings,
           active_merchant_class: "ActiveMerchant::Billing::StripeGateway"

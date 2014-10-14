@@ -28,7 +28,7 @@
       %th Wrapper html options
       %th Hint
       %th
-    - resource.transactable_type_attributes.each do |attr|
+    - resource.custom_attributes.each do |attr|
       %tr
         %td= attr.name
         %td= attr.label
@@ -43,6 +43,6 @@
         %td= attr.input_html_options
         %td= attr.wrapper_html_options
         %td= attr.hint
-        %td= link_to 'Edit', edit_admin_transactable_type_transactable_type_attribute_path(resource, attr), class: 'btn'
+        %td= link_to 'Edit', edit_admin_transactable_type_custom_attribute_path(resource, attr), class: 'btn'
 
-= render :partial => 'admin/transactable_type_attributes/index', :locals => { :transactable_type => resource }
+= render :partial => 'admin/custom_attributes/index', :locals => { :transactable_type => resource }

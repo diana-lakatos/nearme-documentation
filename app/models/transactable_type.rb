@@ -4,6 +4,8 @@ class TransactableType < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
+  acts_as_custom_attributes_set
+
   MAX_PRICE = 2147483647
   AVAILABLE_TYPES = ['Listing', 'Buy/Sell']
 
@@ -12,7 +14,6 @@ class TransactableType < ActiveRecord::Base
   # attr_accessible :name, :pricing_options, :pricing_validation, :availability_options, :availability_templates_attributes
 
   has_many :transactables, inverse_of: :transactable_type
-  has_many :transactable_type_attributes, inverse_of: :transactable_type
   has_many :availability_templates, inverse_of: :transactable_type, :dependent => :destroy
   has_many :data_uploads, inverse_of: :transactable_type
   has_many :transactable_type_actions
@@ -77,19 +78,19 @@ class TransactableType < ActiveRecord::Base
   def setup_price_attributes
     { "free" => "free", "hourly" => "hourly_reservations" }.each do |field, attribute|
       if pricing_options.keys.include?(field)
-        transactable_type_attributes.create(name: attribute, attribute_type: :boolean, public: false, default_value: false, internal: true, validation_rules: self.class.mandatory_boolean_validation_rules) unless transactable_type_attributes.where(:name => attribute).first.present?
+        custom_attributes.create(name: attribute, attribute_type: :boolean, public: false, default_value: false, internal: true, validation_rules: self.class.mandatory_boolean_validation_rules) unless custom_attributes.where(:name => attribute).first.present?
       else
-        transactable_type_attributes.where(:name => attribute).first.try(:destroy)
+        custom_attributes.where(:name => attribute).first.try(:destroy)
       end
     end
     %w(daily weekly monthly hourly).each do |price|
       price_field = "#{price}_price_cents"
       if pricing_options.keys.include?(price)
-        tta = transactable_type_attributes.where(:name => price_field).first.presence || transactable_type_attributes.build(name: price_field)
+        tta = custom_attributes.where(:name => price_field).first.presence || custom_attributes.build(name: price_field)
         tta.attributes = {attribute_type: :integer, public: true, internal: true, validation_rules: build_validation_rule_for(price) }
         tta.save!
       else
-        transactable_type_attributes.where(:name => price_field).first.try(:destroy)
+        custom_attributes.where(:name => price_field).first.try(:destroy)
       end
     end
   end
@@ -105,7 +106,7 @@ class TransactableType < ActiveRecord::Base
   end
 
   def setup_availability_attributes
-    tta = transactable_type_attributes.where(:name => :confirm_reservations).first.presence || transactable_type_attributes.build(name: :confirm_reservations)
+    tta = custom_attributes.where(:name => :confirm_reservations).first.presence || custom_attributes.build(name: :confirm_reservations)
     tta.attributes = { attribute_type: "boolean", html_tag: "switch", default_value: availability_options["confirm_reservations"]["default_value"], public: availability_options["confirm_reservations"]["public"], validation_rules: self.class.mandatory_boolean_validation_rules }
     tta.save!
   end

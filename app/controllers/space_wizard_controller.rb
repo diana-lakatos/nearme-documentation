@@ -158,7 +158,7 @@ class SpaceWizardController < ApplicationController
   end
 
   def find_transactable_type
-    @transactable_type = TransactableType.includes(:transactable_type_attributes).first
+    @transactable_type = TransactableType.includes(:custom_attributes).first
   end
 
   def wizard_params

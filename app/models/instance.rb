@@ -72,6 +72,8 @@ class Instance < ActiveRecord::Base
   has_many :text_filters, inverse_of: :instance
   has_many :waiver_agreement_templates, as: :target
   has_many :approval_request_templates
+  has_many :instance_profile_types
+  has_one :instance_profile_type, -> { where(instance_id: PlatformContext.current.try(:instance).try(:id)) }
   serialize :pricing_options, Hash
 
   validates_presence_of :name
@@ -191,3 +193,4 @@ class Instance < ActiveRecord::Base
   end
 
 end
+
