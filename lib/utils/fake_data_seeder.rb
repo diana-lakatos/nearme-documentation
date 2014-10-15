@@ -225,7 +225,7 @@ module Utils
       tp = TransactableType.find_or_create_by_name("Listing")
       tp.attributes = FactoryGirl.attributes_for(:transactable_type_listing)
       tp.save!
-      Utils::TransactableTypeAttributesCreator.new(tp).create_listing_attributes!
+      CustomAttributes::CustomAttribute::Creator.new(tp).create_listing_attributes!
     end
 
     def load_listings!
@@ -264,11 +264,11 @@ module Utils
       dnm_instance = Instance.default_instance
       create_payment_gateways
       @stripe = PaymentGateway.where(name: "Stripe").first
-      
+
       if dnm_instance
         settings = { login: 'sk_test_lpr4WQXQdncpXjjX6IJx01W7' }
         InstancePaymentGateway.create(instance_id: dnm_instance.id, payment_gateway_id: @stripe.id, live_settings: settings, test_settings: settings)
-        
+
         dnm_instance.facebook_consumer_key = '432038396866156'
         dnm_instance.facebook_consumer_secret = '71af86082de1c38a3523a4c8f44aca2d'
 
@@ -299,7 +299,7 @@ module Utils
       spreedly_settings = { login: "", password: "", gateway_token: "" }
 
       payment_gateways = [
-        { 
+        {
           name: "Stripe",
           settings: stripe_settings,
           active_merchant_class: "ActiveMerchant::Billing::StripeGateway"

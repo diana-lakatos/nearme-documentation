@@ -3,7 +3,7 @@ class Listings::ReservationsController < ApplicationController
   before_filter :secure_payment_with_token, :only => [:review]
   before_filter :load_payment_with_token, :only => [:review]
   before_filter :find_listing
-  before_filter :find_reservation, only: [:booking_successful, :remote_payment]
+  before_filter :find_reservation, only: [:booking_successful, :remote_payment, :booking_failed]
   before_filter :build_reservation_request, :only => [:review, :create, :store_reservation_request]
   before_filter :require_login_for_reservation, :only => [:review, :create]
   before_filter :find_current_country, :only => [:review, :create]
@@ -84,10 +84,14 @@ class Listings::ReservationsController < ApplicationController
   def booking_successful
   end
 
+  # Renders booking failed modal
+  def booking_failed
+  end
+
   # Renders remote payment form
   def remote_payment
     @billing_gateway = Billing::Gateway::Incoming.new(current_user, @reservation.instance, @reservation.currency)
-    @billing_gateway.processor.set_payment_data(@reservation, request)
+    @billing_gateway.processor.set_payment_data(@reservation)
   end
 
   def hourly_availability_schedule

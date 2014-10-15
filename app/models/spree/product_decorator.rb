@@ -1,5 +1,4 @@
 Spree::Product.class_eval do
-  include TransactableType::CustomAttributesCaster
   include Spree::Scoper
   include Impressionable
 

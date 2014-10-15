@@ -1,0 +1,27 @@
+common: &common
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  username: <my_user>
+  password:
+  min_messages: warning
+  host: localhost
+
+development:
+  <<: *common
+  database: custom_attributes_development
+
+profiling:
+  <<: *common
+  database: custom_attributes_development
+
+test: &test
+  <<: *common
+  database: custom_attributes_tests
+
+production:
+  <<: *common
+  database: custom_attributes_production
+
+cucumber:
+  <<: *test

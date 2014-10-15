@@ -32,6 +32,8 @@ en:
       photos:
         waiting_for_photo_processing: "Waiting for photo processing to finish"
   registrations:
+    tell_us: 'Tell us a little about yourself'
+    custom_attributes: 'Custom Attributes'
     sms_preferences:
       new_reservation: 'I receive a reservation request.'
       reservation_state_changed: 'A reservation I have requested is accepted or declined.'

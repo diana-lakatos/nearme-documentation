@@ -49,6 +49,10 @@ class ReservationDrop < BaseDrop
     routes.export_reservation_path(@reservation, format: :ics, token: @reservation.owner.try(:temporary_token))
   end
 
+  def remote_payment_url
+    routes.remote_payment_reservation_path(@reservation, token: @reservation.owner.try(:temporary_token))
+  end
+
   def created_at
     @reservation.created_at.strftime("%A,%e %B")
   end

@@ -1,5 +1,5 @@
 class SecuredParams
-  def transactable_type_attribute
+  def custom_attribute
     [
       :name,
       :transactable_type_id,
@@ -477,7 +477,7 @@ class SecuredParams
         amenity_ids: [],
         waiver_agreement_template_ids: [],
     ] +
-    Transactable.public_transactable_type_attributes_names((transactable_type.presence || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
+    Transactable.public_custom_attributes_names((transactable_type.presence || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
   end
 
   def availability_rule
@@ -560,8 +560,13 @@ class SecuredParams
       :linkedin_url, :facebook_url, :google_plus_url,
       industry_ids: [],
       companies_attributes: nested(self.company),
-      approval_requests_attributes: nested(self.approval_request)
+      approval_requests_attributes: nested(self.approval_request),
+      user_instance_profiles_attributes: nested(self.user_instance_profiles)
     ]
+  end
+
+  def user_instance_profiles
+    UserInstanceProfile.public_custom_attributes_names(InstanceProfileType.first.try(:id))
   end
 
   def waiver_agreement_template

@@ -70,8 +70,16 @@ class ReservationsController < ApplicationController
     upcoming
   end
 
-  def remote_payment
+  def booking_failed
     upcoming
+  end
+
+  def remote_payment
+    if reservation.paid?
+      redirect_to booking_successful_reservation_path(reservation)
+    else
+      upcoming
+    end
   end
 
   def recurring_booking_successful

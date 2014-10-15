@@ -19,6 +19,7 @@ class InstanceAdmin::BaseController < ApplicationController
     'users'       => { controller: '/instance_admin/manage/users', default_action: 'index' },
     'emails' => { controller: '/instance_admin/manage/email_templates', default_action: 'index' },
     'waiver_agreements' => { controller: '/instance_admin/manage/waiver_agreement_templates', default_action: 'index' },
+    'custom_attributes' => { controller: '/instance_admin/manage/instance_profile_types', default_action: 'index' },
     'transactable_types' => { controller: '/instance_admin/manage/transactable_types', default_action: 'index' },
     'support' => { controller: '/instance_admin/manage/support', default_action: 'index' },
     'faq' => { controller: '/instance_admin/manage/support/faqs', default_action: 'index' }

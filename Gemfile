@@ -182,5 +182,6 @@ end
 gem 'mailman'
 
 gem 'nearme', path: 'vendor/gems/nearme'
+gem 'custom_attributes', path: 'vendor/gems/custom_attributes'
 
 gem 'figaro'

@@ -35,7 +35,8 @@ class PlatformContext
 
   def self.after_setting_current_callback(platform_context)
     ActiveRecord::Base.establish_connection(platform_context.instance.db_connection_string) if platform_context.instance.db_connection_string.present?
-    Transactable.clear_transactable_type_attributes_cache
+    Transactable.clear_custom_attributes_cache
+    UserInstanceProfile.clear_custom_attributes_cache
   end
 
   def self.scope_to_instance

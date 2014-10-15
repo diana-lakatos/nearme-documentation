@@ -1,0 +1,4 @@
+- if f.object.user_instance_profiles.first.instance_profile_type.present?
+  = f.simple_fields_for :user_instance_profiles, f.object.user_instance_profiles.first do |profile_form|
+    - profile_form.object.instance_profile_type.custom_attributes.each do |attribute|
+      = draw_attribute_for_form(attribute, profile_form)

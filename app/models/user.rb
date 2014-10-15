@@ -45,6 +45,7 @@ class User < ActiveRecord::Base
   has_many :requests_for_quotes, -> { where(target_type: 'Transactable').order('updated_at DESC') }, :class_name => 'Support::Ticket'
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :user_bans
+  has_many :user_instance_profiles
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
@@ -61,6 +62,7 @@ class User < ActiveRecord::Base
 
   accepts_nested_attributes_for :companies
   accepts_nested_attributes_for :approval_requests
+  accepts_nested_attributes_for :user_instance_profiles
 
   has_many :ticket_message_attachments, foreign_key: 'uploader_id', class_name: 'Support::TicketMessageAttachment'
 
@@ -588,6 +590,14 @@ class User < ActiveRecord::Base
   def instance_admins_metadata
     return 'analytics' if admin?
     get_instance_metadata("instance_admins_metadata")
+  end
+
+  def profile
+    @cached_profiles ||= {}
+    if @cached_profiles[PlatformContext.current.try(:instance).try(:id)].nil?
+      @cached_profiles[PlatformContext.current.try(:instance).try(:id)] = user_instance_profiles.first
+    end
+    @cached_profiles[PlatformContext.current.try(:instance).try(:id)]
   end
 
 end

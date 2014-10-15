@@ -50,9 +50,9 @@ module InstanceType::Searcher::GeolocationSearcher
 
   def set_options_for_filters
     @filterable_location_types = LocationType.all
-    @filterable_listing_types = TransactableType.first.transactable_type_attributes.where(:name => 'listing_type').try(:first).try(:valid_values)
+    @filterable_listing_types = TransactableType.first.custom_attributes.where(:name => 'listing_type').try(:first).try(:valid_values)
     @filterable_pricing = TransactableType.first.pricing_options.keys.map { |k| [k.downcase, k.capitalize] }
-    @filterable_attribute = TransactableType.first.transactable_type_attributes.where(:name => 'filterable_attribute').try(:first).try(:valid_values)
+    @filterable_attribute = TransactableType.first.custom_attributes.where(:name => 'filterable_attribute').try(:first).try(:valid_values)
   end
 
   def search_notification

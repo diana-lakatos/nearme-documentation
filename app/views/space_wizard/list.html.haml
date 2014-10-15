@@ -12,10 +12,15 @@
     = simple_form_for @user, :url => space_wizard_list_url, :validate => false, :html => { :class => "form-horizontal new_company", :multipart => true, :id => 'list-space-flow-form' }, method: :post do |f|
 
       - if platform_context.instance.user_info_in_onboarding_flow?
-        %h2 Tell us a little about yourself
+        %h2= t('registrations.tell_us')
         %br
         .box
           = render :partial => 'registrations/attributes', :locals => { f: f, only_inputs: platform_context.instance.user_required_fields, :country => @country }
+          = render partial: 'registrations/custom_attributes', locals: { f: f }
+      - elsif f.object.user_instance_profiles.first.instance_profile_type.present?
+        %h2= t('registrations.tell_us')
+        = render partial: 'registrations/custom_attributes', locals: { f: f }
+        = render :partial => 'approval_requests/form', :locals => { f: f }
       - else
         = render :partial => 'approval_requests/form', :locals => { f: f }
 
@@ -36,6 +41,7 @@
           %br
           .box
             = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => locations_form.object, :only_inputs => [ :name, :description, :address, :location_type, :phone ] }
+
 
           = locations_form.simple_fields_for :listings, @user.companies.first.locations.first.listings.first do |listings_form|
 

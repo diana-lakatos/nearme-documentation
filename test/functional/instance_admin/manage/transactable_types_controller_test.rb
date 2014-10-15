@@ -15,7 +15,7 @@ class InstanceAdmin::Manage::TransactableTypesControllerTest < ActionController:
   context 'show' do
 
     should 'show a list of transactable type attributes associated with current instance' do
-      @tta = FactoryGirl.create(:transactable_type_attribute, transactable_type: @transactable_type, name: 'my_custom_attribute')
+      @tta = FactoryGirl.create(:custom_attribute, target: @transactable_type, name: 'my_custom_attribute')
       get :show, id: @transactable_type.id
       assert_select 'tr td', "My custom attribute"
     end

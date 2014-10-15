@@ -11,7 +11,7 @@
         = f.check_box :enabled, disabled: !f.object.is_trusted?
 
 = f.input :id, :as => :hidden if only_inputs.empty? || only_inputs.include?(:id)
-- @transactable_type.transactable_type_attributes.each do |attribute|
+- @transactable_type.custom_attributes.each do |attribute|
   - next if platform_context.instance.user_based_marketplace_views? && ( attribute.name == 'quantity' || attribute.name == 'capacity' )
   = draw_attribute_for_form(attribute, f) if only_inputs.empty? || only_inputs.include?(attribute.name.to_sym)
 

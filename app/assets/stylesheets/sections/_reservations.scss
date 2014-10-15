@@ -154,68 +154,69 @@ section.reservations {
   }
 }
 
-.modal-content .reservations-booking_successful {
+.modal-content {
+  .reservations-booking_successful, .reservations-booking_failed {
+    .icons {
+      padding: $padding-default;
+      
+      h3 {
+        margin: $padding-default 0;
+        text-align: center;
+      }
 
-  .icons {
-    padding: $padding-default;
-    
-    h3 {
-      margin: $padding-default 0;
-      text-align: center;
-    }
+      ul {
+        width: 100%;
+        margin: 2 * $padding-default auto;
+        padding: 0;
+        text-align: center;
 
-    ul {
-      width: 100%;
-      margin: 2 * $padding-default auto;
-      padding: 0;
-      text-align: center;
+        li {
+          display: inline;
+          margin: 0;
+          padding: 0 $padding-default;
 
-      li {
-        display: inline;
-        margin: 0;
-        padding: 0 $padding-default;
+          a {
+            font-size: 34px;
+            color: $gray80;
 
-        a {
-          font-size: 34px;
-          color: $gray80;
+            &.ico-facebook-full:hover {
+              color: $facebook-blue;
+            }
 
-          &.ico-facebook-full:hover {
-            color: $facebook-blue;
-          }
+            &.ico-twitter:hover {
+              color: $twitter-blue;
+            }
 
-          &.ico-twitter:hover {
-            color: $twitter-blue;
-          }
-
-          &.ico-linkedin:hover {
-            color: $linkedin-blue;
+            &.ico-linkedin:hover {
+              color: $linkedin-blue;
+            }
           }
         }
       }
     }
-  }
 
-  .buttons {
-    a {
-      width: 48%;
-      text-align: center;
-      cursor: pointer;
+    .buttons {
+      a {
+        width: 48%;
+        text-align: center;
+        cursor: pointer;
 
-      &.btn-white {
-        border: 1px solid $gray220 !important;
-        color: $theme_gray;
-      }
-
-      &.btn-green {
-        margin-left: 3%;
-      }
-
-      @media (max-width: $booking-module-breakpoint) {
-        width: 100%;
+        &.btn-white {
+          border: 1px solid $gray220 !important;
+          color: $theme_gray;
+        }
 
         &.btn-green {
-          margin-left: 0;
-          margin-top: 3%;
+          margin-left: 3%;
+        }
+
+        @media (max-width: $booking-module-breakpoint) {
+          width: 100%;
+
+          &.btn-green {
+            margin-left: 0;
+            margin-top: 3%;
+          }
         }
       }
     }

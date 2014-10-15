@@ -827,6 +827,26 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context 'profiles' do
+
+    setup do
+      @user = FactoryGirl.create(:user)
+      @instance = FactoryGirl.create(:instance)
+    end
+
+    should 'get the right profile based on instance' do
+      @profile_one = FactoryGirl.create(:user_instance_profile, user: @user)
+      @profile_two = FactoryGirl.create(:user_instance_profile, user: @user)
+      @profile_two.update_column(:instance_id, @instance.id)
+      assert_equal @user.profile, @profile_one
+      PlatformContext.current = PlatformContext.new(@instance)
+      assert_equal @user.profile, @profile_two
+      PlatformContext.current = PlatformContext.new
+      assert_equal @user.profile, @profile_one
+    end
+
+  end
+
   private
 
   def setup_user_with_all_objects

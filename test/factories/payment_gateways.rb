@@ -33,5 +33,17 @@ FactoryGirl.define do
       }
       active_merchant_class "ActiveMerchant::Billing::StripeGateway"
     end
-  end  
+
+    factory :fetch_payment_gateway do
+      name "Fetch"
+      method_name 'fetch'
+      settings {
+        {
+          account_id: "",
+          secret_key: ""
+        }
+      }
+      active_merchant_class "Billing::Gateway::Processor::Incoming::Fetch"
+    end
+  end
 end

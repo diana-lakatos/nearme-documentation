@@ -38,7 +38,7 @@ class DashboardController < ApplicationController
       prepare_data_for_analytics_bookings
     when 'location_views'
       prepare_data_for_analytics_location_views
-    end 
+    end
   end
 
   def transfers
