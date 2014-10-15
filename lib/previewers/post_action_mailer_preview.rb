@@ -29,6 +29,10 @@ class PostActionMailerPreview < MailView
     ::PostActionMailer.instance_created(instance_admin.instance, instance_admin.user, 'password')
   end
 
+  def user_created_invitation
+    ::PostActionMailer.user_created_invitation(User.last, 'password')
+  end
+
   private
 
   def user_with_listing
