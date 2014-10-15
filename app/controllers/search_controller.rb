@@ -4,7 +4,9 @@ class SearchController < ApplicationController
   helper_method :searcher, :result_view, :current_page_offset, :per_page, :first_result_page?
 
   def index
-    if platform_context.instance.searcher_type == 'fulltext'
+    if platform_context.instance.buyable?
+      @searcher = InstanceType::Searcher::FullTextSearcher::Product.new(params)
+    elsif platform_context.instance.searcher_type == 'fulltext'
       @searcher = InstanceType::Searcher::FullTextSearcher::Listing.new(params)
     elsif result_view == 'mixed'
       @searcher = InstanceType::Searcher::GeolocationSearcher::Location.new(params)
@@ -23,7 +25,7 @@ class SearchController < ApplicationController
 
   def result_view
     @result_view = params[:v].presence || platform_context.instance.default_search_view
-    @result_view.in?( %w( list map mixed listing_mixed ) ) ? @result_view : 'mixed'
+    @result_view.in?( %w( list map mixed listing_mixed products ) ) ? @result_view : 'mixed'
   end
 
   def should_log_conducted_search?
