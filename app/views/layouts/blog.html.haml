@@ -19,7 +19,10 @@
     .container-fluid.header-container
       .navbar.navbar-inverse.navbar-fixed-top
         .navbar-inner.nav-links
-          = link_to platform_context.name, root_url, :id => "logo"
+          - if @blog_instance.is_near_me?
+            = link_to 'Near Me', root_url, :id => "nm-blog-logo"
+          - else
+            = link_to platform_context.name, root_url, :id => "logo"
           %span.blog-header Blog
     .header
       = render 'layouts/blog_header_text_logo', blog_instance: @blog_instance
