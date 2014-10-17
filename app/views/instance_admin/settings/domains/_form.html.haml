@@ -12,4 +12,5 @@
         = f.input :private_key, as: :text, required: false, label: "Private key", placeholder: "-----BEGIN RSA PRIVATE KEY-----", input_html: { class: 'form-control' }
       .input-container.col-xs-12
         = f.input :certificate_chain, as: :text, required: false, label: "Certificate chain (optional for HTTPS)", placeholder: "-----BEGIN CERTIFICATE-----", input_html: { class: 'form-control' }
-  = f.button :submit, class: "btn btn-green pull-right"
+  = f.button :submit, 'Save', class: "btn btn-green pull-right"
+  = link_to 'Cancel', instance_admin_settings_domains_url , class: 'btn pull-right'
