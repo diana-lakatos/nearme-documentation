@@ -1,0 +1,13 @@
+%li.listing
+  .span3
+    = option_type.name
+  .span4
+    = option_type.presentation
+  .span2
+    .links.right
+      = link_to manage_buy_sell_option_type_path(option_type), :method => :delete, :confirm => 'Are you sure?', :class => "delete", style: 'padding-top: 0px;' do
+        %span.ico-trash
+      = link_to edit_manage_buy_sell_option_type_path(option_type), :class => "edit", style: 'padding-top: 0px;' do
+        %span.icon.ico-edit
+        %span.text
+  .clearfix

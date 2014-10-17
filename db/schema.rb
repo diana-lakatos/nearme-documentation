@@ -101,11 +101,11 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "hint"
     t.integer  "approval_request_id"
     t.integer  "approval_request_attachment_template_id"
     t.boolean  "required",                                default: false
     t.string   "label"
+    t.text     "hint"
   end
 
   add_index "approval_request_attachments", ["instance_id"], name: "index_approval_request_attachments_on_instance_id", using: :btree
@@ -628,7 +628,6 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "lessor"
     t.string   "lessee"
     t.boolean  "skip_company",                                                default: false
-    t.boolean  "default_instance",                                            default: false
     t.text     "pricing_options"
     t.decimal  "service_fee_host_percent",            precision: 5, scale: 2, default: 0.0
     t.string   "live_stripe_public_key"
@@ -682,10 +681,11 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.boolean  "user_based_marketplace_views",                                default: false
     t.string   "searcher_type"
     t.datetime "master_lock"
-    t.boolean  "apply_text_filters",                                          default: false
     t.text     "user_required_fields"
+    t.boolean  "apply_text_filters",                                          default: false
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
+    t.boolean  "default_instance"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1049,11 +1049,11 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.boolean  "listings_public",                            default: true
+    t.integer  "recurring_booking_id"
     t.datetime "confirmed_at"
     t.datetime "cancelled_at"
     t.integer  "cancellation_policy_hours_for_cancellation", default: 0
     t.integer  "cancellation_policy_penalty_percentage",     default: 0
-    t.integer  "recurring_booking_id"
     t.integer  "credit_card_id"
   end
 
@@ -1079,6 +1079,13 @@ ActiveRecord::Schema.define(version: 20141125090820) do
   end
 
   add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
+
+  create_table "search_queries", force: true do |t|
+    t.string   "query"
+    t.text     "agent"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "spree_addresses", force: true do |t|
     t.string   "firstname"
@@ -1128,7 +1135,7 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.integer  "position"
     t.string   "attachment_content_type"
     t.string   "attachment_file_name"
-    t.string   "type",                    limit: 75
+    t.string   "type",                        limit: 75
     t.datetime "attachment_updated_at"
     t.text     "alt"
     t.string   "image"
@@ -1485,9 +1492,17 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "position",    default: 0
+    t.integer  "instance_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.integer  "user_id"
   end
 
+  add_index "spree_product_properties", ["company_id"], name: "index_spree_product_properties_on_company_id", using: :btree
+  add_index "spree_product_properties", ["instance_id"], name: "index_spree_product_properties_on_instance_id", using: :btree
+  add_index "spree_product_properties", ["partner_id"], name: "index_spree_product_properties_on_partner_id", using: :btree
   add_index "spree_product_properties", ["product_id"], name: "index_product_properties_on_product_id", using: :btree
+  add_index "spree_product_properties", ["user_id"], name: "index_spree_product_properties_on_user_id", using: :btree
 
   create_table "spree_products", force: true do |t|
     t.string   "name",                 default: "",   null: false
@@ -1940,7 +1955,7 @@ ActiveRecord::Schema.define(version: 20141125090820) do
   create_table "spree_taxons", force: true do |t|
     t.integer  "parent_id"
     t.integer  "position",          default: 0
-    t.string   "name",                          null: false
+    t.string   "name",                              null: false
     t.string   "permalink"
     t.integer  "taxonomy_id"
     t.integer  "lft"
@@ -2130,9 +2145,12 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.text     "message",     null: false
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "target_id"
+    t.string   "target_type"
   end
 
   add_index "support_ticket_messages", ["instance_id"], name: "index_support_ticket_messages_on_instance_id", using: :btree
+  add_index "support_ticket_messages", ["target_id", "target_type"], name: "index_support_ticket_messages_on_target_id_and_target_type", using: :btree
   add_index "support_ticket_messages", ["ticket_id"], name: "index_support_ticket_messages_on_ticket_id", using: :btree
   add_index "support_ticket_messages", ["user_id"], name: "index_support_ticket_messages_on_user_id", using: :btree
 
@@ -2256,17 +2274,6 @@ ActiveRecord::Schema.define(version: 20141125090820) do
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree
 
-  create_table "transactable_actions", force: true do |t|
-    t.integer  "action_type_id"
-    t.integer  "transactable_id"
-    t.integer  "instance_id"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "transactable_actions", ["action_type_id", "transactable_id"], name: "transactable_actions_at_t_unique", unique: true, where: "(deleted_at IS NULL)", using: :btree
-
   create_table "transactable_type_actions", force: true do |t|
     t.integer  "action_type_id"
     t.integer  "transactable_type_id"
@@ -2283,12 +2290,12 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.text     "pricing_options"
     t.text     "pricing_validation"
     t.text     "availability_options"
+    t.boolean  "recurring_booking",                          default: false, null: false
     t.boolean  "favourable_pricing_rate",                    default: true
     t.integer  "days_for_monthly_rate",                      default: 0
     t.datetime "cancellation_policy_enabled"
     t.integer  "cancellation_policy_hours_for_cancellation", default: 0
     t.integer  "cancellation_policy_penalty_percentage",     default: 0
-    t.boolean  "recurring_booking",                          default: false, null: false
     t.boolean  "show_page_enabled",                          default: false
     t.text     "custom_csv_fields"
   end

@@ -100,6 +100,48 @@ en:
       no_listings: "There aren't any listings at that location. Check out some other %{bookable_noun_plural}!"
       browsing_no_listings: "There aren't any active listings at that location. Other users will be redirected to search page."
     manage:
+      variant:
+        created: 'Product variant has been created.'
+        deleted: 'Product variant has been deleted.'
+        updated: 'Product variant has been updated.'
+        error_create: 'Product variant has not been created.'
+        error_update: 'Product variant image has not been updated.'
+      product:
+        created: 'Product has been created.'
+        deleted: 'Product has been deleted.'
+        updated: 'Product has been updated.'
+        error_create: 'Product has not been created.'
+        error_update: 'Product image has not been updated.'
+      product_image:
+        created: 'Product image has been created.'
+        deleted: 'Product image has been deleted.'
+        updated: 'Product image has been updated.'
+        error_create: 'Product image has not been created.'
+        error_update: 'Product image has not been updated.'
+      property:
+        created: 'Property has been created.'
+        deleted: 'Property has been deleted.'
+        updated: 'Property has been updated.'
+        error_create: 'Property has not been created.'
+        error_update: 'Property has not been updated.'
+      product_property:
+        created: 'Product property has been created.'
+        deleted: 'Product property has been deleted.'
+        updated: 'Product property has been updated.'
+        error_create: 'Product property has not been created.'
+        error_update: 'Product property has not been updated.'
+      prototype:
+        created: 'Prototype has been created.'
+        deleted: 'Prototype has been deleted.'
+        updated: 'Prototype has been updated.'
+        error_create: 'Prototype has not been created.'
+        error_update: 'Prototype has not been updated.'
+      option_type:
+        created: 'Option type has been created.'
+        deleted: 'Option type has been deleted.'
+        updated: 'Option type has been updated.'
+        error_create: 'Option type has not been created.'
+        error_update: 'Option type has not been updated.'
       companies:
         company_updated: "Great, your company's details have been updated."
         white_label_updated: "Great, white-label details have been updated."

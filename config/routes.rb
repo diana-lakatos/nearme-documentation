@@ -9,6 +9,7 @@ DesksnearMe::Application.routes.draw do
 
   scope module: 'buy_sell_market' do
     resources :products, only: [:show]
+    resources :orders, only: [:show, :index]
   end
 
   get '/t/*taxon', to: 'search#index', as: :buy_sell_taxon
@@ -401,31 +402,22 @@ DesksnearMe::Application.routes.draw do
   end
 
   namespace :manage do
+    namespace :buy_sell do
+      resources :products, except: [:show] do
+        resources :images, :controller => 'products/images'
+        resources :variants, :controller => 'products/variants'
+        resources :product_properties, :controller => 'products/product_properties'
+        resource :stock, :controller => 'products/stock'
+      end
+
+      resources :option_types
+      resources :properties
+      resources :prototypes
+      resources :taxonomies
+      resources :taxons
+    end
 
     resources :companies, :only => [:edit, :update, :show]
-
-    resources :white_labels, :only => [:edit, :update, :show]
-
-    resources :users, :except => [:edit, :update]
-    resources :themes, :only => [] do
-      member do
-        delete :destroy_image
-      end
-    end
-
-    resources :locations do
-      resources :listings do
-        member do
-          get :enable
-          get :disable
-        end
-      end
-    end
-
-    resources :photos, :only => [:create, :destroy, :edit, :update]
-
-
-    resources :recurring_bookings, only: [:show]
 
     resources :listings do
       resources :reservations, :controller => 'listings/reservations' do
@@ -454,13 +446,29 @@ DesksnearMe::Application.routes.draw do
       resource :booking_module, only: [:update], :controller => 'listings/booking_module'
     end
 
+    resources :locations do
+      resources :listings do
+        member do
+          get :enable
+          get :disable
+        end
+      end
+    end
+
+    resources :photos, :only => [:create, :destroy, :edit, :update]
+    resources :recurring_bookings, only: [:show]
+
     namespace :support do
       resources :tickets, only: [:show, :index] do
         resources :ticket_messages, only: [:create]
       end
     end
 
-    resources :waiver_agreement_templates, only: [:index, :edit, :new, :update, :create, :destroy]
+    resources :themes, :only => [] do
+      member do
+        delete :destroy_image
+      end
+    end
 
     resources :transactable_types, :only => [] do
       resources :data_uploads, controller: 'transactable_types/data_uploads' do
@@ -474,7 +482,12 @@ DesksnearMe::Application.routes.draw do
         end
       end
     end
-  end
+
+    resources :users, :except => [:edit, :update]
+    resources :waiver_agreement_templates, only: [:index, :edit, :new, :update, :create, :destroy]
+    resources :white_labels, :only => [:edit, :update, :show]
+
+  end # /manage
 
   get "/search", :to => "search#index", :as => :search
 

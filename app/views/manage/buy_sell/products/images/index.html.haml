@@ -1,0 +1,39 @@
+- title t("manage.buy_sell.products.images.title")
+
+= show_manage_navigation(:products)
+
+.row-fluid
+  .span8.offset2
+    .box
+      %header
+        %ul.location-and-listings
+          %li.location
+            .name.left
+              =t("manage.buy_sell.products.images.manage")
+
+      = render 'manage/buy_sell/products/menu'
+
+      %ul.location-and-listings
+        %li.listing
+          .right
+            = link_to 'New Product Image', new_manage_buy_sell_product_image_path(@product), class: 'btn btn-medium btn-green'
+
+      - unless @product.images.any? || @product.variant_images.any?
+        %ul.location-and-listings
+          =t("manage.buy_sell.products.images.no_entries")
+      -else
+        %ul.location-and-listings
+          %li.listing.action-buttons
+            .span3
+            - if @product.has_variants?
+              .span4
+                =t("spree_image.variant")
+            .span2
+              =t("spree_image.alt")
+            .span2.state.text-right
+
+            .clearfix
+
+          = render partial: 'image', collection: @images
+
+      = will_paginate @images

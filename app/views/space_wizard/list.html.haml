@@ -33,32 +33,42 @@
           .box
             = render :partial => 'companies/company_form', :locals => { :f => companies_form, :company => companies_form.object, :only_inputs => [ :name, :industries ] }
 
-        = companies_form.simple_fields_for :locations, @user.companies.first.locations.first do |locations_form|
+        -if buyable?
           %h2
-            Where is your
+            Please tell us about the
             #{platform_context.bookable_noun}
-            located?
+            you're listing
           %br
           .box
-            = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => locations_form.object, :only_inputs => [ :name, :description, :address, :location_type, :phone ] }
-
-
-          = locations_form.simple_fields_for :listings, @user.companies.first.locations.first.listings.first do |listings_form|
-
-            - content_for :currency do
-              = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => locations_form.object, :only_inputs => [ :currency ] }
+            = companies_form.simple_fields_for :products, @user.companies.first.products.first do |product_form|
+              = render 'buy_sell/products/form', :f => product_form
+        - else
+          = companies_form.simple_fields_for :locations, @user.companies.first.locations.first do |locations_form|
             %h2
-              Please tell us about the
+              Where is your
               #{platform_context.bookable_noun}
-              you're listing
+              located?
             %br
             .box
-              = render 'listings/listing_form',
-                       :f => listings_form,
-                       :listing => listings_form.object,
-                       :photo_input_name_prefix => "[user][companies_attributes][0][locations_attributes][0][listings_attributes][0]",
-                       :only_inputs => [ :name, :description, :listing_type, :custom_type, :quantity, :price, :photos ],
-                       photos: @photos
+              = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => locations_form.object, :only_inputs => [ :name, :description, :address, :location_type, :phone ] }
+
+            = locations_form.simple_fields_for :listings, @user.companies.first.locations.first.listings.first do |listings_form|
+
+              - content_for :currency do
+                = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => locations_form.object, :only_inputs => [ :currency ] }
+              %h2
+                Please tell us about the
+                #{platform_context.bookable_noun}
+                you're listing
+              %br
+              .box
+                = render 'listings/listing_form',
+                         :f => listings_form,
+                         :listing => listings_form.object,
+                         :photo_input_name_prefix => "[user][companies_attributes][0][locations_attributes][0][listings_attributes][0]",
+                         :only_inputs => [ :name, :description, :listing_type, :custom_type, :quantity, :price, :photos ],
+                         photos: @photos
+
 
       .user-fields
         %h2 And finally, your contact information

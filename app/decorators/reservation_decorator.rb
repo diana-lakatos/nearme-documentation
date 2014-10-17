@@ -116,25 +116,11 @@ class ReservationDecorator < Draper::Decorator
   end
 
   def my_booking_status_info
-    if state == 'unconfirmed'
-      tooltip_text = "Pending confirmation from host. Booking will expire in #{time_to_expiry(expiry_time)}."
-      link_text = "<span class='tooltip-spacer'>i</span>".html_safe
-
-      tooltip(tooltip_text, link_text, {class: status_icon}, nil)
-    else
-      "<i class='#{status_icon}'></i>".html_safe
-    end
+    status_info("Pending confirmation from host. Booking will expire in #{time_to_expiry(expiry_time)}.")
   end
 
   def manage_booking_status_info
-    if state == 'unconfirmed'
-      tooltip_text = "You must confirm this booking within #{time_to_expiry(expiry_time)} or it will expire."
-      link_text = "<span class='tooltip-spacer'>i</span>".html_safe
-
-      tooltip(tooltip_text, link_text, {class: status_icon}, nil)
-    else
-      "<i class='#{status_icon}'></i>".html_safe
-    end
+    status_info("You must confirm this booking within #{time_to_expiry(expiry_time)} or it will expire.")
   end
 
   def user_message_recipient
@@ -151,6 +137,14 @@ class ReservationDecorator < Draper::Decorator
   end
 
   private
+
+  def status_info(text)
+    if state == 'unconfirmed'
+      tooltip(text, "<span class='tooltip-spacer'>i</span>".html_safe, {class: status_icon}, nil)
+    else
+      "<i class='#{status_icon}'></i>".html_safe
+    end
+  end
 
   def time_to_expiry(time_of_event)
     current_time = Time.zone.now

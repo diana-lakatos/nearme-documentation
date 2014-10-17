@@ -1,0 +1,31 @@
+- title "Option Types"
+
+= show_manage_navigation(:products, :option_types)
+
+.row-fluid
+  .span8.offset2
+    .box
+      %header
+        %ul.location-and-listings
+          %li.location
+            .name.left
+              Manage Option Types
+      %ul.location-and-listings
+        %li.listing.action-buttons
+          .right
+            = link_to 'New Option Type', new_manage_buy_sell_option_type_path, class: 'btn btn-medium btn-white'
+        /     = link_to 'Download Current Data', download_current_data_csv_manage_transactable_type_data_uploads_path(@transactable_type), class: 'btn btn-medium btn-white'
+        /     = link_to 'Download CSV Template', download_csv_template_manage_transactable_type_data_uploads_path(@transactable_type), class: 'btn btn-medium btn-white'
+        /   .clearfix
+        %li.listing
+          .span3
+            = t('option_type.name')
+          .span4
+            = t('option_type.prsentation')
+          .span2.state.text-right
+
+
+          .clearfix
+        = render partial: 'option_type', collection: @option_types
+      = will_paginate @option_types
+

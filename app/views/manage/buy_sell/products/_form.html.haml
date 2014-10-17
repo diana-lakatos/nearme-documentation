@@ -1,0 +1,71 @@
+%div
+  .control-group
+    = f.label :name
+    .controls
+      = f.text_field :name
+  .control-group
+    = f.label :slug
+    .controls
+      = f.text_field :slug
+  .control-group
+    = f.label :description
+    .controls
+      = f.text_area :description, {:rows => "#{unless @product.has_variants? then '20' else '13' end}", :class => 'fullwidth'}
+  .control-group
+    = f.label :price
+    .controls
+      = f.text_field :price, :value => number_to_currency(@product.price, :unit => '')
+  .control-group
+    = f.label :cost_price
+    .controls
+      = f.text_field :cost_price, :value => number_to_currency(@product.cost_price, :unit => '')
+  .control-group
+    = f.label :cost_currency
+    .controls
+      = f.text_field :cost_currency
+  .control-group
+    = f.label :available_on
+    .controls
+      = f.text_field :available_on, :value => @product.available_on, :class => 'datepicker'
+  - unless @product.has_variants?
+    .control-group
+      = f.label :sku
+      .controls
+        = f.text_field :sku
+    .control-group
+      = f.label :weight
+      .controls
+        = f.text_field :weight
+    .control-group
+      = f.label :height
+      .controls
+        = f.text_field :height
+    .control-group
+      = f.label :width
+      .controls
+        = f.text_field :width
+    .control-group
+      = f.label :depth
+      .controls
+        = f.text_field :depth
+  .control-group
+    = f.label :shipping_category_id
+    .controls
+      = f.collection_select(:shipping_category_id, @shipping_categories, :id, :name, { :include_blank => t('match_choices.none') })
+  .control-group
+    = f.label :tax_category_id
+    .controls
+      = f.collection_select(:tax_category_id, @tax_categories, :id, :name, { :include_blank => t('match_choices.none') })
+  .control-group
+    = f.association :taxons, :blank => false, collection: @taxons, :input_html => { 'data-placeholder' => t('simple_form.prompts.company.industries'), :class => 'custom-select' }
+  .control-group
+    = f.association :option_types, :blank => false, collection: @option_types, :input_html => { 'data-placeholder' => t('simple_form.prompts.company.industries'), :class => 'custom-select' }
+  .control-group
+    = f.label :meta_keywords
+    .controls
+      = f.text_field :meta_keywords
+  .control-group
+    = f.label :meta_description
+    .controls
+      = f.text_field :meta_description
+  .clear

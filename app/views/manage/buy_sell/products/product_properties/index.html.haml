@@ -1,0 +1,28 @@
+- title "Product Properties"
+
+= show_manage_navigation(:products, :products)
+
+.row-fluid
+  .span8.offset2
+    .box
+      %ul.location-and-listings
+        %li.location
+          .name.left
+            Manage Product Properties
+      = render 'manage/buy_sell/products/menu'
+
+      %ul.location-and-listings
+        %li.listing.action-buttons
+          .right
+            = link_to 'New Product Property', new_manage_buy_sell_product_product_property_path, class: 'btn btn-medium btn-green'
+        %li.listing
+          .span3
+            = t('property.name')
+          .span4
+            = t('property.value')
+          .span2.state.text-right
+
+          .clearfix
+        = render partial: 'product_property', collection: @product_properties
+      = will_paginate @product_properties
+

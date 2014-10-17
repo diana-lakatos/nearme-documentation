@@ -1,0 +1,14 @@
+%li.listing
+  .span3
+    = product_property.property_name
+  .span4
+    = product_property.value
+
+  .span2
+    .links.right
+      = link_to manage_buy_sell_product_product_property_path(@product, product_property), :method => :delete, :confirm => 'Are you sure?', :class => "delete", style: 'padding-top: 0px;' do
+        %span.ico-trash
+      = link_to edit_manage_buy_sell_product_product_property_path(@product, product_property), :class => "edit", style: 'padding-top: 0px;' do
+        %span.icon.ico-edit
+        %span.text
+  .clearfix

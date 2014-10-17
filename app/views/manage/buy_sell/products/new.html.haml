@@ -1,0 +1,18 @@
+- title t("manage.buy_sell.products.new_title")
+
+= show_manage_navigation(:products)
+
+.row-fluid
+  .span8.offset2
+    .box
+      %ul.location-and-listings
+        %li.location
+          .name.left
+            =t("manage.buy_sell.products.new_header")
+
+      = simple_form_for [:manage, :buy_sell, @product], :html => {multipart: true, class: "form-horizontal form-expandable" } do |f|
+
+        = render 'buy_sell/products/form', f: f
+
+        .actions
+          = f.submit "Save"

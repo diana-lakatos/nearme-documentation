@@ -1,0 +1,29 @@
+- title "Products"
+
+= show_manage_navigation(:products)
+
+.row-fluid
+  .span8.offset2
+    .box
+      %header
+        %ul.location-and-listings
+          %li.location
+            .name.left
+              Manage Products
+      %ul.location-and-listings
+        %li.listing.action-buttons
+          .right
+            = link_to 'New Product', new_manage_buy_sell_product_path, class: 'btn btn-medium btn-green'
+        %li.listing
+          .span4
+            = t('product.name')
+          .span3
+            = t('product.sku')
+          .span3
+            = t('product.price')
+          .span2.state.text-right
+
+          .clearfix
+        = render partial: 'product', collection: @products
+      = will_paginate @products
+

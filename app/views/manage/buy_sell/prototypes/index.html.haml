@@ -1,0 +1,33 @@
+- title "Prototypes"
+
+= show_manage_navigation(:products, :prototypes)
+
+.row-fluid
+  .span8.offset2
+    .box
+      %header
+        %ul.location-and-listings
+          %li.location
+            .name.left
+              Manage Prototypes
+      %ul.location-and-listings
+        %li.listing.action-buttons
+          .right
+            = link_to 'New Prototype', new_manage_buy_sell_prototype_path, class: 'btn btn-medium btn-white'
+        /     = link_to 'Download Current Data', download_current_data_csv_manage_transactable_type_data_uploads_path(@transactable_type), class: 'btn btn-medium btn-white'
+        /     = link_to 'Download CSV Template', download_csv_template_manage_transactable_type_data_uploads_path(@transactable_type), class: 'btn btn-medium btn-white'
+        /   .clearfix
+        %li.listing
+          .span3
+            = t('prototype.name')
+          .span3
+            = t('prototype.properties')
+          .span3
+            = t('prototype.option_types')
+          .span2.state.text-right
+
+
+          .clearfix
+        = render partial: 'prototype', collection: @prototypes
+      = will_paginate @prototypes
+
