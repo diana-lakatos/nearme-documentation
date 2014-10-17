@@ -26,12 +26,29 @@ class InstanceAdmin::Settings::DomainsControllerTest < ActionController::TestCas
       refute assigns[:domain].persisted?
     end
 
+    context 'create' do
+      should 'secured' do
+        dns_name = 'test-dns-name.com'
+        balancer = stub(:dns_name => dns_name, :create! => nil)
+        NearMe::Balancer.expects(:new).returns(balancer)
+        assert_difference("Domain.count") {
+          post :create, domain: {"name" => 'example.com', "secured" => true, "certificate_body" => 'body', "private_key" => 'key' }
+          assert_equal flash[:success], I18n.t('flash_messages.instance_admin.settings.domain_preparing')
+          assert_response :redirect
+          assert_redirected_to instance_admin_settings_domains_path
+        }
+      end
+
+      should 'unsecured' do
+        assert_difference("Domain.count") {
+          post :create, domain: {"name" => 'example.com'}
+          assert_equal flash[:success], I18n.t('flash_messages.instance_admin.settings.domain_created')
+          assert_response :redirect
+          assert_redirected_to instance_admin_settings_domains_path
+        }
+      end
+    end
     should 'create' do
-      assert_difference("Domain.count") {
-        post :create, domain: {"name" => 'example.com'}
-        assert_response :redirect
-        assert_redirected_to instance_admin_settings_domains_path
-      }
     end
 
     should 'update' do

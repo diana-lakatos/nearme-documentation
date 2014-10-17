@@ -12,7 +12,11 @@ class InstanceAdmin::Settings::DomainsController < InstanceAdmin::Settings::Base
   def create
     @domain = domains.build(domain_params)
     if @domain.save
-      flash[:success] = t('flash_messages.instance_admin.settings.domain_created')
+      if @domain.secured?
+        flash[:success] = t('flash_messages.instance_admin.settings.domain_preparing')
+      else
+        flash[:success] = t('flash_messages.instance_admin.settings.domain_created')
+      end
       redirect_to instance_admin_settings_domains_path
     else
       flash[:error] = @domain.errors.full_messages.to_sentence

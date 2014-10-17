@@ -57,6 +57,7 @@ en:
         settings_updated: 'Settings updated.'
         domain_deleted: 'Domain deleted.'
         domain_created: 'Domain created.'
+        domain_preparing: 'Preparing new domain.'
         domain_updated: 'Domain updated.'
         domain_not_deleted: "Can't delete this domain."
       theme:
