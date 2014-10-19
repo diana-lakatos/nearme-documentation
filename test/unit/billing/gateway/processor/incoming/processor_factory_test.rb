@@ -3,7 +3,7 @@ require 'test_helper'
 class Billing::Gateway::Processor::Incoming::ProcessorFactoryTest < ActiveSupport::TestCase
 
   setup do
-    @instance = Instance.default_instance
+    @instance = Instance.first
     @user = FactoryGirl.create(:user)
   end
 
@@ -16,8 +16,8 @@ class Billing::Gateway::Processor::Incoming::ProcessorFactoryTest < ActiveSuppor
       @instance.instance_payment_gateways << [stripe, paypal]
 
       us = FactoryGirl.create(
-       :country_instance_payment_gateway, 
-       country_alpha2_code: "US", 
+       :country_instance_payment_gateway,
+       country_alpha2_code: "US",
        instance_payment_gateway_id: paypal.id
       )
 
@@ -30,12 +30,12 @@ class Billing::Gateway::Processor::Incoming::ProcessorFactoryTest < ActiveSuppor
 
     should "return nil if there isn't a available gateway for that country" do
       paypal = FactoryGirl.create(:paypal_instance_payment_gateway)
-      
+
       @instance.instance_payment_gateways << paypal
 
       ca = FactoryGirl.create(
-       :country_instance_payment_gateway, 
-       country_alpha2_code: "CA", 
+       :country_instance_payment_gateway,
+       country_alpha2_code: "CA",
        instance_payment_gateway_id: paypal.id
       )
 

@@ -143,16 +143,16 @@ class PlatformContextTest < ActiveSupport::TestCase
 
     should 'default instance if domain is unknown' do
       rq = PlatformContext.new('something.weird.example.com')
-      assert_equal Instance.default_instance, rq.instance
-      assert_equal Instance.default_instance, rq.platform_context_detail
-      assert_equal Instance.default_instance.theme, rq.theme
+      assert_equal Instance.first, rq.instance
+      assert_equal Instance.first, rq.platform_context_detail
+      assert_equal Instance.first.theme, rq.theme
     end
 
     should 'default instance if domain is desksnear.me' do
       rq = PlatformContext.new('desksnear.me')
-      assert_equal Instance.default_instance, rq.instance
-      assert_equal Instance.default_instance, rq.platform_context_detail
-      assert_equal Instance.default_instance.theme, rq.theme
+      assert_equal Instance.first, rq.instance
+      assert_equal Instance.first, rq.platform_context_detail
+      assert_equal Instance.first.theme, rq.theme
     end
 
     should 'instance linked to domain that matches request.host' do
@@ -180,9 +180,9 @@ class PlatformContextTest < ActiveSupport::TestCase
       should 'default instance if company linked to domain that matches request.host has white label disabled' do
         @example_company.update_attribute(:white_label_enabled, false)
         rq = PlatformContext.new(@host)
-        assert_equal Instance.default_instance, rq.instance
-        assert_equal Instance.default_instance.theme, rq.theme
-        assert_equal Instance.default_instance, rq.platform_context_detail
+        assert_equal Instance.first, rq.instance
+        assert_equal Instance.first.theme, rq.theme
+        assert_equal Instance.first, rq.platform_context_detail
       end
 
       should 'company linked to domain that matches request.host without white label enabled but with partner' do

@@ -3,7 +3,7 @@ require 'test_helper'
 class Billing::Gateway::Processor::Outgoing::PaypalTest < ActiveSupport::TestCase
 
   setup do
-    @instance = Instance.default_instance
+    @instance = Instance.first
     @company = FactoryGirl.create(:company)
     @company.update_attribute(:paypal_email, 'receiver@example.com')
 
@@ -60,8 +60,8 @@ class Billing::Gateway::Processor::Outgoing::PaypalTest < ActiveSupport::TestCas
       :receiverList => {
         :receiver => [{
           :amount => '12.34',
-          :email => 'receiver@example.com' 
-        }] 
+          :email => 'receiver@example.com'
+        }]
       },
       :senderEmail => 'sender@example.com'
     })

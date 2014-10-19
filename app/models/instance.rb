@@ -75,6 +75,7 @@ class Instance < ActiveRecord::Base
   has_many :instance_profile_types
   has_one :instance_profile_type, -> { where(instance_id: PlatformContext.current.try(:instance).try(:id)) }
   has_many :data_uploads, as: :target
+  has_many :industries
   serialize :pricing_options, Hash
 
   validates_presence_of :name
@@ -137,16 +138,8 @@ class Instance < ActiveRecord::Base
     self.master_lock = nil
   end
 
-  def is_desksnearme?
-    self.default_instance?
-  end
-
   def white_label_enabled?
     true
-  end
-
-  def self.default_instance
-    self.find_by_default_instance(true)
   end
 
   def lessor
@@ -192,5 +185,9 @@ class Instance < ActiveRecord::Base
   end
 
   def onboarding_verification_required=(arg)
+  end
+
+  def has_industries?
+    industries.count
   end
 end

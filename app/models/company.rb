@@ -44,7 +44,7 @@ class Company < ActiveRecord::Base
   before_save :create_bank_account_in_balanced!, :if => lambda { |c| c.bank_account_number.present? || c.bank_routing_number.present? || c.bank_owner_name.present? }
 
   validates_presence_of :name
-  validates_presence_of :industries, :if => proc { |c| c.instance.present? && c.instance.is_desksnearme? && !c.instance.skip_company? }
+  validates_presence_of :industries, :if => proc { |c| c.instance.present? && c.instance.has_industries? && !c.instance.skip_company? }
   validates_length_of :description, :maximum => 250
   validates_length_of :name, :maximum => 50
   validates :email, email: true, allow_blank: true

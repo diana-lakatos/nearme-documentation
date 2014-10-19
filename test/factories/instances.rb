@@ -2,8 +2,7 @@ FactoryGirl.define do
 
   factory :instance do
     instance_type_id { (InstanceType.first || FactoryGirl.create(:instance_type)).id }
-    sequence(:name) {|n| Instance.default_instance ? "desks near me #{n}" : 'DesksNearMe'}
-    default_instance false
+    sequence(:name) {|n| Instance.first ? "desks near me #{n}" : 'DesksNearMe'}
     bookable_noun 'Desk'
     lessor 'host'
     lessee 'guest'
@@ -21,10 +20,6 @@ FactoryGirl.define do
 
     after(:create) do |instance|
       instance.theme = FactoryGirl.create(:theme, :skip_compilation => true) unless instance.theme
-    end
-
-    factory :default_instance do
-      default_instance true
     end
 
     factory :instance_with_price_constraints do

@@ -7,7 +7,7 @@ class PlatformContextDecorator
     :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :meta_title, :pages, :logo_image,
     :favicon_image, :icon_image, :icon_retina_image, :homepage_content, :call_to_action, :is_company_theme?, :to => :theme
 
-  delegate :bookable_noun, :lessor, :lessee, :name, :is_desksnearme?, :buyable?, :to => :instance
+  delegate :bookable_noun, :lessor, :lessee, :name, :buyable?, :to => :instance
 
   liquid_methods :lessors
 
@@ -32,7 +32,7 @@ class PlatformContextDecorator
   end
 
   def host
-    domain.try(:name) || Rails.application.routes.default_url_options[:host]
+    domain.name
   end
 
   def build_url_for_path(path)
@@ -41,12 +41,8 @@ class PlatformContextDecorator
   end
 
   def support_email_for(error_code)
-    if self.is_desksnearme? || !self.support_email.present?
-      "support+#{error_code}@desksnear.me"
-    else
-      support_email_splited = self.support_email.split('@')
-      support_email_splited.join("+#{error_code}@")
-    end
+    support_email_splited = self.support_email.split('@')
+    support_email_splited.join("+#{error_code}@")
   end
 
   def contact_email

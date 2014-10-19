@@ -21,7 +21,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
         #assert_redirected_to admin_page_path(page)
         #assert_equal attributes_for_page['path'], page.path
         #assert_equal attributes_for_page['content'], page.content
-        #assert_equal Instance.default_instance.theme.id, page.theme_id
+        #assert_equal Instance.first.theme.id, page.theme_id
       end
 
     end
@@ -45,7 +45,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
         assert_redirected_to admin_page_path(@page)
         assert_equal @attributes_for_page['path'], @page.path
         assert_equal @attributes_for_page['content'], @page.content
-        assert_equal Instance.default_instance.theme.id, @page.theme_id
+        assert_equal Instance.first.theme.id, @page.theme_id
       end
 
       should "destroy page" do

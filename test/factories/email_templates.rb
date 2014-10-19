@@ -6,6 +6,6 @@ FactoryGirl.define do
     text_body "text body"
     path "post_action_mailer/sign_up_welcome"
     partial false
-    theme { Instance.default_instance.theme }
+    theme { Instance.first.theme }
   end
 end

@@ -65,8 +65,6 @@ class PlatformContext
       initialize_with_company(object)
     when Instance
       initialize_with_instance(object)
-    when nil
-      initialize_with_instance(Instance.default_instance)
     else
       raise "Can't initialize PlatformContext with object of class #{object.class}"
     end
@@ -103,8 +101,6 @@ class PlatformContext
       elsif @domain.partner?
         initialize_with_partner(@domain.target)
       end
-    else
-      initialize_with_instance(Instance.default_instance)
     end
     self
   end
@@ -142,9 +138,7 @@ class PlatformContext
     @instance_type = @instance.instance_type
     @platform_context_detail = @instance
     @theme = @instance.theme
-    # the reason why we don't want default instance to have domain is that currently it has assigned only one domain as a hack - api.desksnear.me and
-    # our urls in mailers will be wrong
-    @domain ||= @instance.domains.try(:first) unless @instance.is_desksnearme?
+    @domain ||= @instance.domains.order('use_as_default desc').try(:first)
     self
   end
 

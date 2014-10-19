@@ -3,12 +3,12 @@ require 'test_helper'
 class Billing::Gateway::IncomingTest < ActiveSupport::TestCase
 
   setup do
-    @instance = Instance.default_instance
+    @instance = Instance.first
     @user = FactoryGirl.create(:user)
   end
 
   context 'initialize' do
-    
+
     should 'ask processor factory for right processor' do
       Billing::Gateway::Processor::Incoming::ProcessorFactory.expects(:create).with(@user, @instance, 'USD')
       @gateway = Billing::Gateway::Incoming.new(@user, @instance, 'USD')
@@ -18,7 +18,7 @@ class Billing::Gateway::IncomingTest < ActiveSupport::TestCase
       stub_billing_gateway(@instance)
 
       @gateway = Billing::Gateway::Incoming.new(@user, @instance, 'USD')
-      
+
       assert_not_nil @gateway.processor
       assert @gateway.possible?
       assert_equal Billing::Gateway::Processor::Incoming::Stripe, @gateway.processor.class

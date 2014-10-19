@@ -13,7 +13,7 @@ class RegistrationsControllerTest < ActionController::TestCase
 
     should 'successfully sign up and track' do
       @tracker.expects(:signed_up).with do |user, custom_options|
-        user == assigns(:user) && custom_options == { referrer_id: Instance.default_instance.id, referrer_type: 'Instance', signed_up_via: 'other', provider: 'native' }
+        user == assigns(:user) && custom_options == { referrer_id: Instance.first.id, referrer_type: 'Instance', signed_up_via: 'other', provider: 'native' }
       end
       assert_difference('User.count') do
         post :create, user: user_attributes

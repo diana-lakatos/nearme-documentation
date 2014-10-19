@@ -419,6 +419,7 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "dns_name"
     t.string   "redirect_to"
     t.integer  "redirect_code"
+    t.boolean  "use_as_default",                 default: false
   end
 
   add_index "domains", ["deleted_at"], name: "index_domains_on_deleted_at", using: :btree
@@ -628,7 +629,6 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "lessor"
     t.string   "lessee"
     t.boolean  "skip_company",                                                default: false
-    t.boolean  "default_instance",                                            default: false
     t.text     "pricing_options"
     t.decimal  "service_fee_host_percent",            precision: 5, scale: 2, default: 0.0
     t.string   "live_stripe_public_key"
@@ -687,6 +687,7 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
     t.string   "payment_transfers_frequency",                                   default: "fortnightly"
+    t.boolean  "default_instance"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree

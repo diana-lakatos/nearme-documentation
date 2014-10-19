@@ -4,7 +4,7 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
 
   setup do
     stub_what_has_to_be_stubbed
-    @instance = Instance.default_instance
+    @instance = Instance.first
     @instance.update_attribute(:service_fee_host_percent, 10)
     @instance.update_attribute(:service_fee_guest_percent, 15)
     @instance.update_attribute(:payment_transfers_frequency, 'daily')

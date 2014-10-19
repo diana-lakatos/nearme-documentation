@@ -9,14 +9,6 @@ class Theme < ActiveRecord::Base
     # attr_accessible "color_#{color}"
   end
 
-  # attr_accessible :name, :icon_image, :icon_retina_image, :favicon_image,
-  #   :logo_image, :logo_retina_image, :hero_image, :skip_compilation,
-  #   :owner, :owner_id, :owner_type, :site_name, :description, :tagline, :address, :support_email,
-  #   :contact_email, :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url,
-  #   :meta_title, :remote_logo_image_url, :remote_logo_retina_image_url, :remote_icon_image_url,
-  #   :remote_hero_image_url, :remote_icon_retina_image_url, :gplus_url, :homepage_content, :call_to_action,
-  #   :homepage_css, :theme_font_attributes
-
   # TODO: We may want the ability to have multiple themes, and draft states,
   #       etc.
   belongs_to :owner, :polymorphic => true
@@ -36,7 +28,9 @@ class Theme < ActiveRecord::Base
   }
 
   validates :contact_email, email_rfc_822: true, allow_nil: false
+  validates :support_email, email_rfc_822: true, allow_nil: false
   validates :contact_email, presence: true
+  validates :support_email, presence: true
   validates_length_of :description, :maximum => 250
 
   extend CarrierWave::SourceProcessing
@@ -114,10 +108,6 @@ class Theme < ActiveRecord::Base
       self.skip_compilation = before
     end
     self
-  end
-
-  def is_desksnearme?
-    self.id == 1
   end
 
   def instance

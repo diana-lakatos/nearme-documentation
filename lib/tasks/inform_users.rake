@@ -2,7 +2,7 @@ namespace :inform_users do
   desc "Send internal message to all users regarding update to Terms of Use"
   task :changes_in_terms_of_use => :environment do
     body = terms_of_use_message
-    dnm_instance = Instance.default_instance
+    dnm_instance = Instance.first
     dnm_instance.service_fee_host_percent = 10
     dnm_instance.save!
     platform_context = PlatformContext.new

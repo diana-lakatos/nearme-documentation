@@ -1,7 +1,7 @@
 = render :partial => 'approval_requests/form', :locals => { f: f }
 - only_inputs = [] if only_inputs.nil?
 = f.input :name, :as => :limited_string, :limit => 50  if (only_inputs.empty? || only_inputs.include?(:name))
-= f.association :industries, :blank => false, :input_html => { 'data-placeholder' => t('simple_form.prompts.company.industries'), :class => 'custom-select' }, :required => true if (platform_context.is_desksnearme? && (only_inputs.empty? || only_inputs.include?(:industries)))
+= f.association :industries, :blank => false, :input_html => { 'data-placeholder' => t('simple_form.prompts.company.industries'), :class => 'custom-select' }, :required => true if (platform_context.instance.has_industries? && (only_inputs.empty? || only_inputs.include?(:industries)))
 = f.input :url if (only_inputs.empty? || only_inputs.include?(:url))
 = f.input :email if (only_inputs.empty? || only_inputs.include?(:email))
 = f.input :description, :as => :limited_text, :limit => 250, :input_html => { :maxlength => 250} if (only_inputs.empty? || only_inputs.include?(:description))

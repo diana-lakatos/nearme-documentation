@@ -88,7 +88,6 @@ module SearchHelper
     if not search.is_united_states?
       description << ", #{search.country}"
     end
-    description << ' Read reviews and book co-working space, executive suites, office space for rent, and meeting rooms.' if platform_context.is_desksnearme?
     description
   end
 
