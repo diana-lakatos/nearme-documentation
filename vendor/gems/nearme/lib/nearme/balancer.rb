@@ -1,0 +1,113 @@
+require 'aws'
+
+module NearMe
+  class Balancer
+    attr_accessor :certificate_body, :name, :private_key, :certificate_chain,
+      :stack_id, :errors, :dns_name, :template_name
+
+    def initialize(options = {})
+      self.certificate_body = options[:certificate_body]
+      self.name = options[:name]
+      self.private_key = options[:private_key]
+      self.certificate_chain = options[:certificate_chain]
+      self.stack_id = options[:stack_id]
+      self.errors = []
+      self.template_name = options[:template_name] || "production"
+    end
+
+    def create!
+      self.errors = []
+      begin
+        certificate = create_certificate
+        sleep 5
+        balancer = create_balancer(certificate.arn)
+        self.dns_name = balancer.dns_name
+        # configure health check
+        elb.configure_health_check(load_balancer_name: self.name,
+                                   health_check: health_check_params)
+        # attach instances
+        register = elb.register_instances_with_load_balancer(load_balancer_name: self.name, instances: instances)
+      rescue Exception => e
+        delete!
+        raise e
+      end
+    end
+
+    def delete!
+      begin
+        iam.client.delete_server_certificate(server_certificate_name: self.name)
+      rescue AWS::ELB::Errors::CertificateNotFound
+      rescue AWS::IAM::Errors::NoSuchEntity
+      end
+
+      elb.delete_load_balancer(load_balancer_name: self.name)
+    end
+
+
+
+    def health_check_params
+      template_balancer[:health_check]
+    end
+
+    def instances
+      template_balancer[:instances]
+    end
+
+    def iam
+      @iam ||= AWS::IAM.new
+    end
+
+    def certificates
+      @certificates ||= iam.server_certificates
+    end
+
+    def elb
+      @elb = AWS::ELB.new.client
+    end
+
+    def http_listener
+      template_balancer[:listener_descriptions].find{|l| l[:listener][:protocol] == "HTTP"}[:listener]
+    end
+
+    def https_listener(certificate_arn)
+      template_balancer[:listener_descriptions].find{|l| l[:listener][:protocol] == "HTTPS"}[:listener].merge(ssl_certificate_id: certificate_arn)
+    end
+
+    def availability_zones
+      template_balancer[:availability_zones]
+    end
+
+    def security_groups
+      template_balancer[:security_groups]
+    end
+
+    def create_balancer(certificate_arn)
+
+      load_balancer = elb.create_load_balancer(load_balancer_name: self.name,
+                                                :availability_zones => availability_zones,
+                                                :security_groups => security_groups,
+                                                :listeners => [http_listener, https_listener(certificate_arn)])
+    end
+
+    def create_certificate
+      begin
+        params = {
+          name: self.name,
+          certificate_body: self.certificate_body,
+          certificate_chain: self.certificate_chain,
+          private_key: self.private_key
+        }.select{|k,v| !v.to_s.empty?}
+
+        certificates.create(params)
+      rescue AWS::Core::OptionGrammar::FormatError => e
+        self.errors << e.message
+      rescue AWS::IAM::Errors::MalformedCertificate => e
+        self.errors << e.message
+      end
+    end
+
+    def template_balancer
+      @template_balancer ||= elb.describe_load_balancers(load_balancer_names: [self.template_name]).data[:load_balancer_descriptions][0]
+    end
+  end
+end

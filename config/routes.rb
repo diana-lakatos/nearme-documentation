@@ -127,6 +127,7 @@ DesksnearMe::Application.routes.draw do
 
     namespace :settings do
       get '/', :to => 'base#index'
+      resources :domains, except: :show
       resource :configuration, :only => [:show, :update], :controller => 'configuration' do
         collection do
           post :lock
