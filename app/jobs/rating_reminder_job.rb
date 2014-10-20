@@ -17,12 +17,12 @@ class RatingReminderJob < Job
       PlatformContext.current = PlatformContext.new(reservation.platform_context_detail)
 
       if reservation.request_guest_rating_email_sent_at.blank?
-        RatingMailer.request_rating_of_guest_from_host(reservation).deliver
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestRatingRequested, reservation.id)
         reservation.update_column(:request_guest_rating_email_sent_at, Time.zone.now)
       end
 
       if reservation.request_host_rating_email_sent_at.blank?
-        RatingMailer.request_rating_of_host_from_guest(reservation).deliver
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::HostRatingRequested, reservation.id)
         reservation.update_column(:request_host_rating_email_sent_at, Time.zone.now)
       end
     end

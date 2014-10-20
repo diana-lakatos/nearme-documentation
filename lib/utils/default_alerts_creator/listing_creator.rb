@@ -1,0 +1,28 @@
+class Utils::DefaultAlertsCreator::ListingCreator < Utils::DefaultAlertsCreator::WorkflowCreator
+
+  def create_all!
+    create_listing_created_email!
+    create_draft_listing_created_email!
+    share_with_user_email!
+  end
+
+  def create_listing_created_email!
+    create_alert!({associated_class: WorkflowStep::ListingWorkflow::Created, name: 'listing_created_email', path: 'post_action_mailer/list', subject: '[{{platform_context.name}}] {{user.first_name}}, your new listing looks amazing!', alert_type: 'email', recipient_type: 'lister'})
+  end
+
+  def create_draft_listing_created_email!
+    create_alert!({associated_class: WorkflowStep::ListingWorkflow::DraftCreated, name: 'draft_listing_created_email', path: 'post_action_mailer/list_draft', subject: "[{{platform_context.name}}] {{user.first_name}}, you're almost ready for your first guests!", alert_type: 'email', recipient_type: 'lister', delay: 60})
+  end
+
+  def share_with_user_email!
+    create_alert!({associated_class: WorkflowStep::ListingWorkflow::Shared, name: 'share with user email', path: 'listing_mailer/share', subject: "{{sharer.name}} has shared a {{platform_context.bookable_noun}} with you on {{platform_context.name}}", alert_type: 'email', recipient_type: 'enquirer'})
+  end
+
+  protected
+
+  def workflow_type
+    'listing'
+  end
+
+end
+

@@ -3,13 +3,13 @@ class Admin::InstanceViewsController < Admin::BaseController
   before_filter :set_instance_view, :only => [:edit, :update, :destroy]
 
   def index
-    @instance_views = InstanceView.where('instance_id = ?',
-                                         params[:instance_id])
+    @instance_views = InstanceView.custom_views.where('instance_id = ?', params[:instance_id])
   end
 
   def new
     @instance_view = InstanceView.new({locale: 'en',
                                        handler: 'haml',
+                                       view_type: InstanceView::VIEW_VIEW,
                                        format: 'html',
                                        partial: false })
   end
@@ -20,6 +20,7 @@ class Admin::InstanceViewsController < Admin::BaseController
   def create
     @instance_view = InstanceView.new(instance_view_params)
     @instance_view.instance = @instance
+    @instance_view.view_type = InstanceView::VIEW_VIEW
     if @instance_view.save
       flash[:success] = 'InstanceView created.'
       redirect_to action: "index"

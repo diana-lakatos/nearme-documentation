@@ -236,7 +236,7 @@ class DataImporter::XmlFile < DataImporter::File
 
   def send_invitation_emails
     @new_users_emails.each do |email, password|
-      PostActionMailer.enqueue.user_created_invitation(User.find_by_email(email), password)
+      WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::CreatedViaBulkUploader, User.find_by_email(email).id, password)
     end
   end
 

@@ -1,45 +1,46 @@
 class InstanceMailer < ActionMailer::Base
-  prepend_view_path EmailResolver.instance
+  prepend_view_path InstanceViewResolver.instance
   extend Job::SyntaxEnhancer
   include ActionView::Helpers::TextHelper
   helper :listings, :reservations
 
   self.job_class = MailerJob
-  attr_accessor :platform_context, :email_method
+  attr_accessor :platform_context
 
   def mail(options = {})
     @platform_context = PlatformContext.current.decorate
-    default_mailer = @platform_context.theme.default_mailer
     lookup_context.class.register_detail(:platform_context) { nil }
     template = options.delete(:template_name) || view_context.action_name
-    mailer = options.delete(:mailer) || find_mailer(template: template) || default_mailer
+    layout_path = options.delete(:layout_path)
     to = options[:to]
-    bcc = options.delete(:bcc) || mailer.bcc || default_mailer.bcc
-    from = options.delete(:from) || mailer.from || default_mailer.from
-    subject_locals = options.delete(:subject_locals) || {}
-    subject_locals = subject_locals.merge(platform_context: @platform_context)
-    subject  = mailer.liquid_subject(subject_locals) || liquid_subject(subject_locals) || options.delete(:subject)
-    reply_to = options.delete(:reply_to) || mailer.reply_to
+    bcc = options.delete(:bcc)
+    cc = options.delete(:cc)
+    from = options.delete(:from)
+    subject  = options.delete(:subject)
+    reply_to = options.delete(:reply_to)
     @user  = User.with_deleted.find_by_email(to.kind_of?(Array) ? to.first : to)
-    self.email_method = StackTraceParser.new(caller[0])
-    self.email_method = StackTraceParser.new(caller[1]) if ['generate_mail', 'request_rating'].include?(self.email_method.method_name)
-    custom_tracking_options  = (options.delete(:custom_tracking_options) || {}).reverse_merge({template: template, campaign: self.email_method.humanized_method_name})
+    @email_method = template
+    custom_tracking_options  = (options.delete(:custom_tracking_options) || {}).reverse_merge({template: template, campaign: @email_method.split('/')[0].humanize})
 
     @mail_type = mail_type
     @mailer_signature = generate_signature
-    @unsubscribe_link = unsubscribe_url(signature: @mailer_signature, token: @user.temporary_token) if non_transactional?
+    @unsubscribe_link = unsubscribe_url(signature: @mailer_signature, token: @user.try(:temporary_token)) if non_transactional?
     @signature_for_tracking = "&email_signature=#{@mailer_signature}"
 
     track_sending_email(custom_tracking_options)
     self.class.layout _layout, platform_context: @platform_context
 
+    render_options = { platform_context: @platform_context }
+    render_options.merge!({layout: layout_path}) if layout_path.present?
+
     mixed = super(options.merge!(
-      :subject => subject,
-      :bcc     => bcc,
-      :from    => from,
+      subject: subject,
+      bcc: bcc,
+      cc: cc,
+      from: from,
       :reply_to=> reply_to)) do |format|
-        format.html { render(template, platform_context: @platform_context) + get_tracking_code(custom_tracking_options).html_safe }
-        format.text { render template, platform_context: @platform_context }
+        format.html { render(template, render_options) + get_tracking_code(custom_tracking_options).html_safe }
+        format.text { render template, render_options }
       end
 
       mixed.add_part(
@@ -51,15 +52,6 @@ class InstanceMailer < ActionMailer::Base
 
       mixed.content_type 'multipart/mixed'
       mixed.header['content-type'].parameters[:boundary] = mixed.body.boundary
-  end
-
-  def liquid_subject(interpolations = {})
-    mailer_scope = self.class.mailer_name.tr('/', '.')
-    subject = I18n.t(:subject, scope: [mailer_scope, action_name], default: '')
-    if subject.present?
-      template = Liquid::Template.parse(subject)
-      template.render(interpolations.stringify_keys!)
-    end
   end
 
   def mail_type
@@ -76,22 +68,11 @@ class InstanceMailer < ActionMailer::Base
 
   private
 
-  def instance_prefix(text)
-    text.prepend "[#{instance_name}] "
-    text
-  end
-
-  def find_mailer(options = {})
-    default_options = { template: view_context.action_name }
-    options = default_options.merge!(options)
-
-    details = {platform_context: [PlatformContext.current], handlers: [:liquid], formats: [:html, :text]}
-    template_name = options[:template]
-    template_prefix = view_context.lookup_context.prefixes.first
-
-    template = EmailResolver.instance.find_mailers(template_name, template_prefix, false, details).first
-
-    return template
+  def details_for_lookup
+    {
+      :instance_type_id => PlatformContext.current.try(:instance_type).try(:id),
+      :instance_id => PlatformContext.current.try(:instance).try(:id)
+    }
   end
 
   def get_tracking_code(custom_tracking_options)
@@ -114,18 +95,7 @@ class InstanceMailer < ActionMailer::Base
 
   def generate_signature
     verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
-    verifier.generate("#{self.class.name.underscore}/#{self.email_method.method_name.underscore}")
+    verifier.generate(@email_method)
   end
 
-  def instance_name
-    PlatformContext.current.instance.name
-  end
-
-  def theme_contact_email
-    PlatformContext.current.theme.contact_email
-  end
-
-  def instance_bookable_noun
-    PlatformContext.current.instance.bookable_noun
-  end
 end

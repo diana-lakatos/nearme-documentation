@@ -62,14 +62,35 @@ en:
           deleted: 'Email template has been deleted.'
           invalid: 'Not a valid email template.'
           updated: 'Email template has been updated.'
+        email_layout_templates:
+          created: 'Email layout template has been created.'
+          deleted: 'Email layout template has been deleted.'
+          invalid: 'Not a valid email layout template.'
+          updated: 'Email layout template has been updated.'
         transactable_types:
           created: 'Transactable Type created.'
           updated: 'Transactable Type updated.'
           deleted: 'Transactable Type deleted.'
+        sms_templates:
+          created: 'Sms template has been created.'
+          deleted: 'Sms template has been deleted.'
+          cannot_be_deleted: 'Sms template cannot be deleted because it is used in at least one workflow alert.'
+          invalid: 'Not a valid sms template.'
+          updated: 'Sms template has been updated.'
         custom_attributes:
           created: 'New attribute created.'
           updated: 'Attribute updated.'
           deleted: 'Attribute deleted.'
+        workflows:
+          updated: 'Workflow has been updated.'
+        workflow_steps:
+          created: 'Workflow step has been created.'
+          deleted: 'Workflow step has been deleted.'
+          updated: 'Workflow step has been updated.'
+        workflow_alerts:
+          created: 'Workflow alert has been created.'
+          deleted: 'Workflow alert has been deleted.'
+          updated: 'Workflow alert has been updated.'
         waiver_agreement_templates:
           created: 'Waiver agreement template has been created.'
           already_created: 'Waiver agreement template has been already created.'

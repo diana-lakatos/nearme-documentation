@@ -617,6 +617,7 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.boolean  "partial",          default: false
     t.datetime "created_at",                       null: false
     t.datetime "updated_at",                       null: false
+    t.string   "view_type"
   end
 
   add_index "instance_views", ["instance_type_id", "instance_id", "path", "locale", "format", "handler"], name: "instance_path_with_format_and_handler", using: :btree
@@ -692,6 +693,12 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.text     "hidden_dashboard_menu_items"
     t.string   "encrypted_shippo_username"
     t.string   "encrypted_shippo_password"
+    t.string   "twilio_from_number"
+    t.string   "test_twilio_from_number"
+    t.string   "encrypted_test_twilio_consumer_key"
+    t.string   "encrypted_test_twilio_consumer_secret"
+    t.string   "encrypted_twilio_consumer_key"
+    t.string   "encrypted_twilio_consumer_secret"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -2567,5 +2574,46 @@ ActiveRecord::Schema.define(version: 20150127093339) do
 
   add_index "waiver_agreements", ["target_id", "target_type"], name: "index_waiver_agreements_on_target_id_and_target_type", using: :btree
   add_index "waiver_agreements", ["waiver_agreement_template_id"], name: "index_waiver_agreements_on_waiver_agreement_template_id", using: :btree
+
+  create_table "workflow_alerts", force: true do |t|
+    t.string   "name"
+    t.string   "alert_type"
+    t.string   "recipient_type"
+    t.string   "template_path"
+    t.integer  "workflow_step_id"
+    t.integer  "instance_id"
+    t.text     "options"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "delay",            default: 0
+    t.text     "subject"
+    t.string   "layout_path"
+    t.text     "custom_options"
+    t.string   "from"
+    t.string   "reply_to"
+    t.string   "cc"
+    t.string   "bcc"
+  end
+
+  create_table "workflow_steps", force: true do |t|
+    t.string   "name"
+    t.string   "associated_class"
+    t.integer  "instance_id"
+    t.integer  "workflow_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "workflows", force: true do |t|
+    t.string   "name"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "events_metadata"
+    t.string   "workflow_type"
+  end
 
 end

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class FakeDataSeederTest < ActiveSupport::TestCase
+class Utils::FakeDataSeederTest < ActiveSupport::TestCase
 
   setup do
     @seeder = Utils::FakeDataSeeder.new

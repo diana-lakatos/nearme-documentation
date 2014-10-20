@@ -7,7 +7,7 @@ class RecurringMailerAnalyticsJob < Job
       company.users.uniq.each do |user|
         next if user.unsubscribed?('recurring_mailer/analytics')
         unless user.administered_locations_pageviews_30_day_total.zero?
-          RecurringMailer.enqueue.analytics(company, user)
+          WorkflowStepJob.perform(WorkflowStep::RecurringWorkflow::Analytics, company.id, user.id)
         end
       end
     end

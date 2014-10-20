@@ -17,8 +17,7 @@ class Support::TicketsController < Support::BaseController
     @message = @ticket.messages.first
     if @ticket.valid?
       @ticket.save!
-      SupportMailer.enqueue.request_received(@ticket, @message)
-      SupportMailer.enqueue.support_received(@ticket, @message)
+      WorkflowStepJob.perform(WorkflowStep::SupportWorkflow::Created, @message.id)
       flash[:success] = t('flash_messages.support.ticket.created')
       if current_user
         redirect_to support_ticket_path(@ticket)

@@ -15,7 +15,7 @@ class RecurringMailerShareJob < Job
       listing_last_booked_days = listing.last_booked_days
       if listing_last_booked_days.to_i > 0 && (listing_last_booked_days % 21).zero?
         @sent_to_users << listing.administrator.id
-        RecurringMailer.enqueue.share(listing)
+        WorkflowStepJob.perform(WorkflowStep::RecurringWorkflow::Share, listing.id)
       end
     end
   end

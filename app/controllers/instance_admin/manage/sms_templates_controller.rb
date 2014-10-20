@@ -1,0 +1,64 @@
+class InstanceAdmin::Manage::SmsTemplatesController < InstanceAdmin::Manage::BaseController
+
+  def index
+    @sms_templates = platform_context.instance.instance_views.custom_smses
+  end
+
+  def new
+    @sms_template = platform_context.instance.instance_views.build
+  end
+
+  def edit
+    @sms_template = platform_context.instance.instance_views.custom_smses.find(params[:id])
+  end
+
+  def create
+    @sms_template = platform_context.instance.instance_views.build(template_params)
+    @sms_template.format = 'text'
+    @sms_template.handler = 'liquid'
+    @sms_template.view_type = 'sms'
+    @sms_template.partial = false
+    if @sms_template.save
+      flash[:success] = t 'flash_messages.instance_admin.manage.sms_templates.created'
+      redirect_to action: :index
+    else
+      flash[:error] = @sms_template.errors.full_messages.to_sentence
+      render action: :new
+    end
+  end
+
+  def update
+    @sms_template = platform_context.instance.instance_views.custom_smses.find(params[:id])
+    # do not allow to change path if it is in use
+    if WorkflowAlert.for_sms_path(@sms_template.path).count > 0
+      params[:sms_template][:path] = @sms_template.path
+    end
+
+    if @sms_template.update_attributes(template_params)
+      flash[:success] = t 'flash_messages.instance_admin.manage.sms_templates.updated'
+      redirect_to action: :index
+    else
+      flash[:error] = @sms_template.errors.full_messages.to_sentence
+      render :edit
+    end
+  end
+
+  def destroy
+    @sms_template = platform_context.instance.instance_views.custom_smses.find(params[:id])
+    if WorkflowAlert.for_sms_path(@sms_template.path).count.zero?
+      @sms_template.destroy
+      flash[:success] = t 'flash_messages.instance_admin.manage.sms_templates.deleted'
+    else
+      flash[:error] = t 'flash_messages.instance_admin.manage.sms_templates.cannot_be_deleted'
+    end
+    redirect_to action: :index
+  end
+
+  private
+
+  def template_params
+    params.require(:sms_template).permit(secured_params.sms_template)
+  end
+
+end
+

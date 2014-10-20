@@ -22,8 +22,7 @@ class Listings::Support::TicketsController < ApplicationController
     @message.subject = subject
     if @ticket.valid?
       @ticket.save!
-      SupportMailer.enqueue.rfq_request_received(@ticket, @message)
-      SupportMailer.enqueue.rfq_support_received(@ticket, @message)
+      WorkflowStepJob.perform(WorkflowStep::RfqWorkflow::Created, @message.id)
       if @listing.free?
         flash[:success] = t('flash_messages.support.rfq_ticket.created')
       else

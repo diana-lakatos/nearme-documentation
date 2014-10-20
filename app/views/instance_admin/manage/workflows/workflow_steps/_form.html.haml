@@ -1,0 +1,9 @@
+= simple_form_for [:instance_admin, :manage, @workflow, resource], :html => { :multipart => true, id: 'workflow_form'} do |f|
+  .content-container
+    .row
+      .input-container.col-xs-6
+        = f.input :name, required: true, input_html: { class: 'form-control' }
+
+  %br
+  = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+

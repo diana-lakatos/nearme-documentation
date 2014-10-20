@@ -558,6 +558,7 @@ class UserTest < ActiveSupport::TestCase
       stub_mixpanel
       FactoryGirl.create(:instance)
       @user = FactoryGirl.create(:user)
+      Utils::DefaultAlertsCreator::SignUpCreator.new.create_notify_of_wrong_phone_number_email!
     end
 
     should 'notify user about invalid phone via email' do
@@ -571,14 +572,14 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should 'not spam user' do
-      UserMailer.expects(:notify_about_wrong_phone_number).returns(mailer_stub).once
-      5.times do
-        @user.notify_about_wrong_phone_number
+      assert_difference 'ActionMailer::Base.deliveries.size', 1 do
+        5.times do
+          @user.notify_about_wrong_phone_number
+        end
       end
     end
 
     should 'update timestamp of notification' do
-      UserMailer.expects(:notify_about_wrong_phone_number).returns(mailer_stub).once
       Timecop.freeze(Time.zone.now)
       @user.notify_about_wrong_phone_number
       assert_equal Time.zone.now.to_a, @user.notified_about_mobile_number_issue_at.to_a

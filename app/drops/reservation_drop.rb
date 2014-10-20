@@ -2,8 +2,8 @@ class ReservationDrop < BaseDrop
   include ReservationsHelper
 
   attr_reader :reservation
-  delegate :quantity, :subtotal_price, :service_fee_guest, :total_price, :pending?,
-  :credit_cart_payment?, :paid, :rejection_reason, :owner, to: :reservation
+  delegate :quantity, :subtotal_price, :service_fee_guest, :total_price, :pending?, :listing, :state_to_string,
+  :credit_cart_payment?, :location, :paid, :rejection_reason, :owner, to: :reservation
 
   def initialize(reservation)
     @reservation = reservation.decorate
@@ -27,6 +27,14 @@ class ReservationDrop < BaseDrop
 
   def search_url
     routes.search_path(q: location_query_string(@reservation.listing.location))
+  end
+
+  def bookings_dashboard_url
+    routes.bookings_dashboard_path(:reservation_id => @reservation, :token => @reservation.owner.temporary_token)
+  end
+
+  def manage_guests_dashboard_url
+    routes.manage_guests_dashboard_path
   end
 
   def guest_rating_reservation_url
