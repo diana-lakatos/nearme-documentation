@@ -12,7 +12,7 @@ class InstanceViewResolver < DbViewResolver
       :partial => partial || false
     }
 
-    ::InstanceView.for_instance_type_id(details[:instance_type_id]).for_instance_id(details[:instance_id]).where(conditions).order('instance_type_id, instance_id').map do |record|
+    ::InstanceView.for_instance_id(details[:instance_id]).where(conditions).map do |record|
       initialize_template(record, record.format)
     end
   end
