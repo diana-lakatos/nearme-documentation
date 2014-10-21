@@ -46,14 +46,6 @@ DesksnearMe::Application.routes.draw do
     post '/marketplace/new', to: 'instance_wizard#new'
     post '/marketplace/create', to: 'instance_wizard#create'
 
-    namespace :blog do
-      namespace :admin do
-        get '/', :to => redirect("/blog/admin/blog_posts")
-        resources :blog_posts
-        resource :blog_instance, only: [:edit, :update]
-      end
-    end
-
     constraints protocol: 'https://' do # Read the commit message for rationale
       get '/demo-requests/DsNvigiE6I9ZGwtsFGrcIw', :to => 'platform_home#demo_requests'
       get '/contacts/tgKQstjun1AgHWJ1kgevNg', :to => 'platform_home#contacts'
@@ -77,6 +69,12 @@ DesksnearMe::Application.routes.draw do
   end
 
   namespace :admin do
+    namespace :blog do
+      get '/', :to => redirect("/admin/blog/blog_posts")
+      resources :blog_posts
+      resource :blog_instance, only: [:edit, :update]
+    end
+
     get '/', :to => "dashboard#show"
     resources :users do
       member do
