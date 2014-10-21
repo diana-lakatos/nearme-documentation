@@ -42,3 +42,4 @@
     = yield :script
 
     = render 'layouts/google_analytics'
+    = render 'platform_home/shared/adroll' if @blog_instance.is_near_me? && Rails.env.production?
