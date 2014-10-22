@@ -18,11 +18,14 @@ class ApplicationController < ActionController::Base
   before_filter :first_time_visited?
   before_filter :store_referal_info
   before_filter :platform_context
+  before_filter :clear_instance_view_cache_if_needed
   before_filter :register_platform_context_as_lookup_context_detail
   before_filter :set_locales_backend
   before_filter :redirect_if_marketplace_password_protected
   before_filter :set_raygun_custom_data
   before_filter :filter_out_token
+
+  @@instance_view_cache_key = {}
 
   def current_user
     super.try(:decorate)
@@ -452,5 +455,18 @@ class ApplicationController < ActionController::Base
       end
     end
     object
+  end
+
+  def clear_instance_view_cache_if_needed
+    return true unless platform_context.try(:instance).present?
+    @@instance_view_cache_key[platform_context.instance.id] ||= get_instance_view_cache_key
+    if @@instance_view_cache_key[platform_context.instance.id] != get_instance_view_cache_key
+      @@instance_view_cache_key[platform_context.instance.id] = get_instance_view_cache_key
+      InstanceViewResolver.instance.clear_cache
+    end
+  end
+
+  def get_instance_view_cache_key
+    @instance_view_cache_key ||= InstanceView.where(instance_id: platform_context.instance.id).group(:instance_id).pluck('count(*), max(updated_at)').join('-')
   end
 end

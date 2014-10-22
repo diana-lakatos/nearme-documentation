@@ -27,19 +27,6 @@ class InstanceViewResolverTest < ActiveSupport::TestCase
     assert_equal "public/index", template.virtual_path
   end
 
-  should 'invalidate cache after updating template' do
-    cache_key = Object.new
-    @instance_view = FactoryGirl.build(:instance_view)
-    @instance_view.instance_id = @instance.id
-    @instance_view.instance_type_id = @instance_type.id
-    @instance_view.save!
-    template = @resolver.find_all("index", "public", false, @details, cache_key).first
-    assert_equal "%h1\n\tHello", template.source
-    @instance_view.update_attribute(:body, "updated!")
-    template = @resolver.find_all("index", "public", false, @details, cache_key).first
-    assert_equal "updated!", template.source
-  end
-
   should 'find a default template if exact does not exist' do
     @instance_view = FactoryGirl.create(:instance_view)
     template = @resolver.find_all("index", "public", false, @details).first
