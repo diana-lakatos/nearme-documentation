@@ -171,6 +171,8 @@ GEM
       bcrypt (>= 3.1.3)
     bootstrap-sass (2.3.1.3)
       sass (~> 3.2)
+    braintree (2.36.0)
+      builder (>= 2.0.0)
     buftok (0.2.0)
     builder (3.1.4)
     bullet (4.11.3)
@@ -739,6 +741,7 @@ DEPENDENCIES
   aws-sdk
   balanced
   bootstrap-sass (~> 2.3.1.0)
+  braintree
   bullet
   byebug
   capybara (= 2.2.1)

@@ -6,7 +6,8 @@ class Billing::Gateway::Processor::Incoming::ProcessorFactory
     end
     if @gateway_name
       processor = "Billing::Gateway::Processor::Incoming::#{@gateway_name}".constantize
-      processor.new(user, instance, currency) if processor.supports_currency?(currency)
+      processor_instance = processor.new(user, instance, currency)
+      processor_instance.supports_currency?(currency) ? processor_instance : nil
     else
       nil
     end

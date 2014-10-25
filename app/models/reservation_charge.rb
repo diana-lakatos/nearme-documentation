@@ -107,8 +107,7 @@ class ReservationCharge < ActiveRecord::Base
     # Generates a ChargeAttempt with this record as the reference.
 
     if reservation.billing_authorization.nil? && !reservation.remote_payment?
-
-      response = billing_gateway.authorize(reservation.total_amount_cents, reservation.credit_card.token, { customer: reservation.credit_card.instance_client.customer_id })
+      response = billing_gateway.authorize(reservation.total_amount_cents, reservation.credit_card.token, { customer: reservation.credit_card.instance_client.customer_id, order_id: reservation.id })
       if response[:error].present?
         raise Billing::Gateway::PaymentAttemptError, "Failed authorization of credit card token of InstanceClient(id=#{reservation.owner.instance_clients.first.try(:id)}) - #{response[:error]}"
       else
@@ -141,7 +140,7 @@ class ReservationCharge < ActiveRecord::Base
     successful_charge = charge_attempts.successful.first
     return if successful_charge.nil?
 
-    refund = billing_gateway.refund(amount_to_be_refunded, self, successful_charge.response)
+    refund = billing_gateway.refund(amount_to_be_refunded, self, successful_charge)
 
     if refund.success?
       touch(:refunded_at)
@@ -173,7 +172,7 @@ class ReservationCharge < ActiveRecord::Base
     @billing_gateway ||= if reservation.billing_authorization.try(:payment_gateway_class).present?
                            reservation.billing_authorization.payment_gateway_class.to_s.constantize.new(reservation.owner, instance, currency)
                          else
-                           Billing::Gateway::Incoming.new(reservation.owner, instance, currency, Country.find(reservation.listing.company.country))
+                           Billing::Gateway::Incoming.new(reservation.owner, instance, currency, reservation.company.iso_country_code)
                          end
   end
 
