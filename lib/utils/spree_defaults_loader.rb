@@ -35,7 +35,6 @@ module Utils
     end
 
     def load_instance_serach_defaults
-      @instance.searcher_type = 'fulltext'
       @instance.default_search_view = 'products'
       @instance.save
     end

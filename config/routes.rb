@@ -8,6 +8,8 @@ DesksnearMe::Application.routes.draw do
     resources :products, only: [:show]
   end
 
+  get '/t/*taxon', to: 'search#index', as: :buy_sell_taxon
+
   mount CustomAttributes::Engine, at: '/custom_attributes'
 
   get 'ping', to: 'ping#index'

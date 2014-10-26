@@ -5,7 +5,7 @@ class SearchController < ApplicationController
 
   def index
     if platform_context.instance.buyable?
-      @searcher = InstanceType::Searcher::FullTextSearcher::Product.new(params)
+      @searcher = InstanceType::Searcher::ProductsSearcher.new(params)
     elsif platform_context.instance.searcher_type == 'fulltext'
       @searcher = InstanceType::Searcher::FullTextSearcher::Listing.new(params)
     elsif result_view == 'mixed'

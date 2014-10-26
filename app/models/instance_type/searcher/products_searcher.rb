@@ -24,7 +24,7 @@ class InstanceType::Searcher::ProductsSearcher
   end
 
   def search
-    @search ||= ::Listing::Search::Params::Web.new(@params)
+    @search ||= Spree::Product::Search::Params::Web.new(@params)
   end
 
   def fetcher
@@ -32,6 +32,7 @@ class InstanceType::Searcher::ProductsSearcher
       begin
         @search_params = @params.merge({
           query: search.query,
+          taxon: search.taxon,
           attribute_values: search.attribute_values_filters,
           sort: search.sort
         })
