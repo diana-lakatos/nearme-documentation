@@ -433,7 +433,10 @@ class SecuredParams
       :target_type,
       :secured,
       :white_label_enabled,
-      :google_analytics_tracking_code
+      :google_analytics_tracking_code,
+      :certificate_body,
+      :private_key,
+      :certificate_chain
     ]
   end
 

@@ -10,6 +10,7 @@ class InstanceView < ActiveRecord::Base
   }
 
   validates_presence_of :body
+  validates_presence_of :path
   validates_inclusion_of :locale, in: I18n.available_locales.map(&:to_s)
   validates_inclusion_of :handler, in: ActionView::Template::Handlers.extensions.map(&:to_s)
   validates_inclusion_of :format, in: Mime::SET.symbols.map(&:to_s)
@@ -18,10 +19,5 @@ class InstanceView < ActiveRecord::Base
     self.locale ||= 'en'
   end
 
-  after_save :clear_cache
-
-  def clear_cache
-    InstanceViewResolver.instance.clear_cache
-  end
-
 end
+

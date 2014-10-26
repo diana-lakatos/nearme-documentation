@@ -1,8 +1,7 @@
 require "nearme/version"
 require "nearme/deploy"
 require "nearme/sync_assets"
-require "aws"
+require "nearme/balancer"
 
 module NearMe
-  # Your code goes here...
 end

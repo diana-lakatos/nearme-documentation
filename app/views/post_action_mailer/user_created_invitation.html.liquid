@@ -1,7 +1,8 @@
-<h2>Welcome, {{ user.first_name }}!</h2>
+<h2>Hi {{ user.first_name }}!</h2>
 
-<p>We have created an account for you at <a class="btn" href="{{ platform_context.host }}">{{ platform_context.host }}</a>
- }}. Your login details are –</p>
+<p>We'd like to invite you to participate in our {{ platform_context.name }} marketplace at <a href="{{ platform_context.host }}">{{ platform_context.host }}.</a> We created an account for you to join us and start participating today.</p>
+
+<p>Your login details are –</p>
 
 <p>
 Email: {{ user.email }}
@@ -9,7 +10,6 @@ Email: {{ user.email }}
 Password: {{ user_password }}
 </p>
 
-This is one time email.
+<p>Your feedback means a lot to us, so please let us know if you have any questions or concerns.</p>
 
-Best regards
-
+<p>– {{ platform_context.name }} Team</p>

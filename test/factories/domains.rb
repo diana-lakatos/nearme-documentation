@@ -6,6 +6,8 @@ FactoryGirl.define do
 
     factory :secured_domain do
       secured true
+      private_key "ahoj"
+      certificate_body "ahoj"
     end
 
     factory :unsecured_domain do

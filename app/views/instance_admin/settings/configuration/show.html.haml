@@ -46,24 +46,6 @@
       .input-container.col-xs-6
         = f.input :lessee, label: 'Lessee (e.g. guest)', input_html: { class: 'form-control' }
 
-  %h4 Domain Names
-  .content-container.dropshadow
-    #domains
-      = f.fields_for :domains, wrapper: false do |f|
-        .fields
-          .row
-            .input-container.col-xs-12
-              = f.input :name, required: false, label: "Domain", placeholder: "example.com", input_html: { class: 'form-control' }
-              - unless f.object.near_me_domain?
-                = f.link_to_remove confirm: (f.object.name.present? ? "Are you sure you want to delete #{f.object.name}?" : false) do
-                  .fa.fa-trash-o.fa-2x.inline-form-icon.pull-right
-  .row
-    .col-xs-12
-      = f.link_to_add :domains, :data => { :target => "#domains" } do
-        .btn.btn-grey.pull-right
-          + Add Domain Name
-
-
   %h4 Text Filters
   .content-container.dropshadow
     .row

@@ -32,6 +32,7 @@ class InstanceAdmin::BaseController < ApplicationController
 
   SETTINGS_CONTROLLERS = {
     'configuration' => { default_action: 'show' },
+    'domains'       => { default_action: 'index' },
     'locations'     => { default_action: 'show' },
     'listings'      => { default_action: 'show' },
     'translations'  => { default_action: 'show' },

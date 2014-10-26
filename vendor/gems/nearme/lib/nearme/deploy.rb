@@ -1,4 +1,5 @@
 require 'pp'
+require 'aws'
 
 module NearMe
   class Deploy

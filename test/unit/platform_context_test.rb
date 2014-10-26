@@ -39,7 +39,7 @@ class PlatformContextTest < ActiveSupport::TestCase
     end
 
     should 'recognize secured domain' do
-      @desks_near_me_domain.update_attribute(:secured, true)
+      @desks_near_me_domain.update_column(:secured, true)
       rq = PlatformContext.new('www.desksnearme.com')
       assert rq.secured?
     end
