@@ -37,6 +37,19 @@ FactoryGirl.define do
       association :location_address, factory: :address_ursynowska_address_components
     end
 
+    factory :location_rydygiera do
+      email 'example@empty.com'
+      description 'desc'
+      association :location_address, factory: :address_rydygiera
+    end
+
+    factory :location_czestochowa do
+      description 'desc2'
+      email 'maciej.krajowski@gmail.com'
+
+      association :location_address, factory: :address_czestochowa
+    end
+
     factory :location_warsaw_address_components do
       association :location_address, factory: :address_warsaw_address_components
     end

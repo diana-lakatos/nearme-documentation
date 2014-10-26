@@ -7,12 +7,12 @@ module CustomAttributes
         included do
           self.table_name = 'custom_attributes'
 
-          NAME = 0
-          ATTRIBUTE_TYPE = 1
-          VALUE = 2
-          PUBLIC = 3
-          VALIDATION_RULES = 4
-          VALID_VALUES = 5
+          NAME = 0 unless defined?(NAME)
+          ATTRIBUTE_TYPE = 1 unless defined?(ATTRIBUTE_TYPE)
+          VALUE = 2 unless defined?(VALUE)
+          PUBLIC = 3 unless defined?(PUBLIC)
+          VALIDATION_RULES = 4 unless defined?(VALIDATION_RULES)
+          VALID_VALUES = 5 unless defined?(VALID_VALUES)
           ATTRIBUTE_TYPES = %w(array string integer float decimal datetime time date binary boolean)
           HTML_TAGS = %w(input select switch textarea check_box radio_buttons check_box_list)
 

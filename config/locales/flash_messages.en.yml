@@ -95,6 +95,11 @@ en:
         reservation_not_confirmed: "Your reservation could not be confirmed."
         reservation_rejected: "You have rejected the reservation. Maybe next time!"
         payment_requested: "Your request has been sent"
+      data_upload:
+        created: 'Data Upload has been created.'
+        scheduled: 'Data has been scheduled to be imported.'
+        deleted: 'Data Upload has been deleted.'
+        not_scheduled: 'This data has been already imported.'
       waiver_agreement_templates:
         created: 'Waiver agreement template has been created.'
         deleted: 'Waiver agreement template has been deleted.'

@@ -3,8 +3,7 @@ require 'rails/performance_test_help'
 
 class TransactableTest < ActionDispatch::PerformanceTest
   # Refer to the documentation for all available options
-   self.profile_options = { :runs => 5, :metrics => [:process_time, :memory],
-                            :output => 'tmp/benchmark', :formats => [:call_tree] }
+   self.profile_options = { :formats => [:call_tree] }
 
   setup do
     @instance = FactoryGirl.create(:instance)

@@ -133,6 +133,10 @@ group :profiling do
   gem 'bullet'
 end
 
+group :profiling, :test do
+  gem 'ruby-prof'
+end
+
 group :coverage do
   gem 'simplecov', require: 'simplecov'
   gem 'simplecov-rcov-text', require: 'simplecov-rcov-text'
@@ -175,8 +179,8 @@ group :test do
   gem 'webmock', '1.17.4'
   gem 'shoulda'
   gem 'vcr'
-  gem 'ruby-prof'
   gem 'test_after_commit'
+  gem 'rails-perftest'
 end
 
 gem 'mailman'

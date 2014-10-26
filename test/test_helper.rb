@@ -19,6 +19,16 @@ CarrierWave.configure do |config|
   config.enable_processing = false
 end
 
+module Rack
+  module Test
+    class UploadedFile
+      def tempfile
+        @tempfile
+      end
+    end
+  end
+end
+
 ActiveSupport::TestCase.class_eval do
   ActiveRecord::Migration.check_pending!
 

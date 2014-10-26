@@ -3,21 +3,17 @@ class InstanceAdmin::Manage::TransactableTypes::DataUploadsController < Instance
   before_filter :find_transactable_type
 
   def index
-    @data_uploads = @transactable_type.data_uploads.all
+    @data_uploads = PlatformContext.current.instance.data_uploads.for_transactable_type(@transactable_type).all
   end
 
   def create
-    @data_upload = @transactable_type.data_uploads.build(data_upload_params)
+    @data_upload = PlatformContext.current.instance.data_uploads.build(data_upload_params)
+    @data_upload.transactable_type = @transactable_type
     @data_upload.options["send_invitational_email"] = @data_upload.options["send_invitational_email"] == "1" ? "true" : "false"
-    if params[:data_upload][:csv_file]
-      csv_file = DataImporter::CsvFile::TemplateCsvFile.new(params[:data_upload][:csv_file].tempfile.path, @transactable_type, @data_upload.options)
-      xml_path = "#{Dir.tmpdir}/#{@transactable_type.id}-#{Time.zone.now.to_i}.xml"
-      DataImporter::CsvToXmlConverter.new(csv_file, xml_path).convert
-
-      @data_upload.xml_file = File.open(xml_path)
-      @data_upload.uploader_id = current_user.id
-    end
+    @data_upload.uploader_id = current_user.id
     if @data_upload.save
+
+      DataUploadConvertJob.perform(@data_upload.id)
       flash[:success] = t 'flash_messages.instance_admin.manage.data_upload.created'
       redirect_to edit_instance_admin_manage_transactable_type_data_upload_path(@transactable_type, @data_upload)
     else
@@ -27,15 +23,15 @@ class InstanceAdmin::Manage::TransactableTypes::DataUploadsController < Instance
   end
 
   def edit
-    @data_upload = @transactable_type.data_uploads.find(params[:id])
+    @data_upload = PlatformContext.current.instance.data_uploads.for_transactable_type(@transactable_type).find(params[:id])
   end
 
   def update
-    @data_upload = @transactable_type.data_uploads.find(params[:id])
+    @data_upload = PlatformContext.current.instance.data_uploads.for_transactable_type(@transactable_type).find(params[:id])
   end
 
   def schedule_import
-    @data_upload = @transactable_type.data_uploads.find(params[:id])
+    @data_upload = PlatformContext.current.instance.data_uploads.for_transactable_type(@transactable_type).find(params[:id])
     if @data_upload.imported_at.nil?
       DataUploadImportJob.perform(@data_upload.id)
       @data_upload.touch(:imported_at)

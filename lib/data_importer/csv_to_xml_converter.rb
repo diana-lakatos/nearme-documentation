@@ -5,11 +5,13 @@ class DataImporter::CsvToXmlConverter
     @output_path = output_path
     @last_company = nil
     @last_location = nil
+    @xml_attributes = {}
   end
 
   def add_object(klass, builder, options = {}, &block)
     klass_symbol = options.fetch(:klass_symbol, klass.name.underscore.to_sym)
-    attributes_names = klass.xml_attributes
+    @xml_attributes[klass_symbol] ||= klass.xml_attributes
+    attributes_names = @xml_attributes[klass_symbol]
     attributes_values = @hash[klass_symbol]
 
     if options.fetch(:new_node, true)
@@ -56,7 +58,7 @@ class DataImporter::CsvToXmlConverter
   end
 
   def build_xml
-    @xml.companies(:send_invitation => @csv_file.send_invitation) {
+    @xml.companies(send_invitation: @csv_file.send_invitation, sync_mode: @csv_file.sync_mode) {
       while @csv_file.next_row
         @hash = @csv_file.row_as_hash
         build_company do
@@ -98,7 +100,7 @@ class DataImporter::CsvToXmlConverter
   def build_location
     # if address for location is different than the previous one, it means we need to create new location
     @scope = :location
-    if new_location?
+    if new_location? && @hash[:location][:external_id].present?
       add_object(Location, @location_builder) do
         # we want to insert listings inside this location, we need builder for this
         @address_builder = add_node(@location_builder, 'location_address')
@@ -107,7 +109,7 @@ class DataImporter::CsvToXmlConverter
         @amenity_builder = add_node(@location_builder, 'amenities')
       end
     end
-    yield
+    yield if @hash[:location][:external_id].present?
   end
 
   def build_address
@@ -126,7 +128,7 @@ class DataImporter::CsvToXmlConverter
   end
 
   def new_location?
-    if @last_location != @hash[:address][:address]
+    if @last_location != @hash[:location][:external_id]
       @last_listing = nil
       clear_amenities
       true
@@ -136,7 +138,7 @@ class DataImporter::CsvToXmlConverter
   end
 
   def store_last_location
-    @last_location = @hash[:address][:address]
+    @last_location = @hash[:location][:external_id]
   end
 
   def clear_amenities
@@ -154,7 +156,7 @@ class DataImporter::CsvToXmlConverter
   end
 
   def new_company?
-    if @last_company != @csv_file.send(:company_attributes)[:external_id]
+    if @last_company != @hash[:company][:external_id]
       @last_company = @hash[:company][:external_id]
       @last_location = nil
       @last_listing = nil
@@ -189,7 +191,7 @@ class DataImporter::CsvToXmlConverter
 
   def build_listing
     @scope = :listing
-    if new_listing?
+    if new_listing? && @hash[:listing][:external_id].present?
       add_object(Transactable, @listing_builder, { klass_symbol: :listing }) do
         @listing_builder.photos do |photos|
           @photo_builder = Nokogiri::XML::Builder.new({}, photos.parent)
@@ -199,7 +201,7 @@ class DataImporter::CsvToXmlConverter
         end
       end
     end
-    yield
+    yield if @hash[:listing][:external_id].present?
   end
 
   def build_photos

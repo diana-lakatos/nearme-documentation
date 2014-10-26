@@ -6,7 +6,11 @@ class DataImporter::CsvFile < DataImporter::File
 
   def initialize(path)
     super(path)
-    @csv_handle = CSV.open(@path, "r")
+    if @path.to_s =~ /^http/
+      @csv_handle = CSV.new(open(@path))
+    else
+      @csv_handle = CSV.open(@path, "r")
+    end
   end
 
   def next_row
@@ -54,6 +58,10 @@ class DataImporter::CsvFile < DataImporter::File
 
   def send_invitation
     @options.fetch(:send_invitational_email)
+  end
+
+  def sync_mode
+    @options.fetch(:sync_mode)
   end
 
 end

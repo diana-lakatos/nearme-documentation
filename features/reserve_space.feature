@@ -7,7 +7,7 @@ Feature: A user can book at a space
   Background:
     Given a company exists
       And a location exists with company: that company, currency: "USD"
-      And a transactable exists with location: that location, quantity: 10
+      And a transactable exists with location: that location, quantity: 10, photos_count: 1
       And a user exists
 
   Scenario: Booking for a non-'automatically confirm' listing should show relevant details

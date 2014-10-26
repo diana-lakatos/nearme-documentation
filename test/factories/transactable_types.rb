@@ -32,7 +32,22 @@ FactoryGirl.define do
     factory :transactable_type_csv_template do
       after(:build) do |transactable_type|
         transactable_type.availability_templates << FactoryGirl.build(:availability_template, :transactable_type => transactable_type)
-        transactable_type.custom_attributes = [FactoryGirl.build(:custom_attribute_required, target: transactable_type, name: 'my_attribute', attribute_type: 'string')]
+        transactable_type.custom_attributes = [
+          FactoryGirl.build(:custom_attribute_required, target: transactable_type, name: 'my_attribute', attribute_type: 'string'),
+          FactoryGirl.build(:custom_attribute, target: transactable_type, name: 'name', label: 'my name label', attribute_type: 'string')
+        ]
+      end
+    end
+
+    factory :transactable_type_current_data do
+      pricing_options { { "daily"=>"1", "weekly"=>"1", "monthly"=>"1" } }
+      availability_options { { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => false } } }
+      after(:build) do |transactable_type|
+        transactable_type.availability_templates << FactoryGirl.build(:availability_template, :transactable_type => transactable_type)
+        transactable_type.custom_attributes = [
+          FactoryGirl.build(:custom_attribute_required, target: transactable_type, name: 'my_attribute', label: 'My Attribute', attribute_type: 'string'),
+          FactoryGirl.build(:custom_attribute, target: transactable_type, name: 'name', label: 'Name', attribute_type: 'string')
+        ]
       end
     end
   end

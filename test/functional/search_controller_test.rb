@@ -118,7 +118,7 @@ class SearchControllerTest < ActionController::TestCase
 
       context 'with attribute value filter' do
         should 'filter only filtered locations' do
-          listing = FactoryGirl.create(:listing_in_cleveland)
+          listing = FactoryGirl.create(:listing_in_cleveland, photos_count: 1)
           listing.properties[:filterable_attribute] = 'Lefthanded'
           listing.save
           filtered_auckland = listing.location

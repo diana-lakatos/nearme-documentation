@@ -74,6 +74,7 @@ class Instance < ActiveRecord::Base
   has_many :approval_request_templates
   has_many :instance_profile_types
   has_one :instance_profile_type, -> { where(instance_id: PlatformContext.current.try(:instance).try(:id)) }
+  has_many :data_uploads, as: :target
   serialize :pricing_options, Hash
 
   validates_presence_of :name

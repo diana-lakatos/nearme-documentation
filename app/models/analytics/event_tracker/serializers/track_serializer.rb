@@ -31,12 +31,12 @@ class Analytics::EventTracker::Serializers::TrackSerializer
       }
     when Transactable
       {
-        listing_name: object.name,
-        listing_quantity: object.quantity,
-        listing_confirm: object.confirm_reservations,
-        listing_daily_price: object.daily_price.try(:dollars),
-        listing_weekly_price: object.weekly_price.try(:dollars),
-        listing_monthly_price: object.monthly_price.try(:dollars),
+        listing_name: safe_get(object, 'name'),
+        listing_quantity: safe_get(object, 'quantity'),
+        listing_confirm: safe_get(object, 'confirm_reservations'),
+        listing_daily_price: safe_get(object, 'daily_price').try(:dollars),
+        listing_weekly_price: safe_get(object, 'weekly_price').try(:dollars),
+        listing_monthly_price: safe_get(object, 'monthly_price').try(:dollars),
         listing_url: Rails.application.routes.url_helpers.listing_url(object)
       }
     when RecurringBooking
@@ -111,6 +111,10 @@ class Analytics::EventTracker::Serializers::TrackSerializer
     else
       raise "Can't serialize #{object}."
     end
+  end
+
+  def self.safe_get(object, property)
+    object.respond_to?(property) ? object.send(property) : nil
   end
 
 end
