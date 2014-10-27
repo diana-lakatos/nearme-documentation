@@ -123,6 +123,7 @@ DesksnearMe::Application.routes.draw do
       get '/', :to => 'base#index'
       resource :overview, :only => [:show], :controller => 'overview'
       resource :sales, :only => [:show]
+      resource :profiles, :only => [:show]
     end
 
     namespace :settings do
