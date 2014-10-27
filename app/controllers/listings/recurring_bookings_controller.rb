@@ -2,12 +2,12 @@ class Listings::RecurringBookingsController < ApplicationController
 
 
   before_filter :find_listing
+  before_filter :require_login_for_recurring_booking, :only => [:review, :create]
   before_filter :build_recurring_booking_request, only: [:review, :create, :store_recurring_booking_request]
   before_filter :redirect_if_invalid, only: [:review]
   before_filter :secure_payment_with_token, only: [:review]
   before_filter :load_payment_with_token, only: [:review]
   before_filter :find_recurring_booking, only: [:booking_successful]
-  before_filter :require_login_for_recurring_booking, :only => [:review, :create]
   before_filter :find_current_country, only: [:review, :create]
   after_filter  :clear_origin_domain, only: [:create]
   before_filter :set_section_name, only: [:review, :create]
