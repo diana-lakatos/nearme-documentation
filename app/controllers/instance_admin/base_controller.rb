@@ -27,6 +27,7 @@ class InstanceAdmin::BaseController < ApplicationController
 
   MANAGE_BLOG_CONTROLLERS = {
     'posts' => { default_action: 'index' },
+    'user_posts' => { controller: '/instance_admin/manage_blog/user_posts', default_action: 'index' },
     'settings'   => { default_action: 'edit' }
   }
 

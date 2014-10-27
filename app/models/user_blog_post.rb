@@ -1,4 +1,7 @@
 class UserBlogPost < ActiveRecord::Base
+  auto_set_platform_context
+  scoped_to_platform_context
+
   belongs_to :user
 
   extend FriendlyId
@@ -12,8 +15,14 @@ class UserBlogPost < ActiveRecord::Base
   scope :by_date, -> { order('published_at desc') }
   scope :published, -> { by_date.where('published_at < ? OR published_at IS NULL', Time.zone.now) }
   scope :recent, -> { published.first(2) }
+  scope :highlighted, -> { where(highlighted: true) }
+  scope :not_highlighted, -> { where(highlighted: false) }
 
   self.per_page = 5
+
+  def author_avatar
+    user.avatar
+  end
 
   def previous_blog_post
     @previous_blog_post ||= user.blog_posts.published.order('published_at DESC').where('published_at < ?',

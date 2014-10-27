@@ -27,4 +27,7 @@ class UserBlogPostDecorator < UserBlogDecorator
     l object.published_at.presence, format: :day_and_month
   end
 
+  def blog_post_excerpt
+    strip_tags(excerpt.to_s).present? ? excerpt : truncate(strip_tags(content), length: 200, escape: false)
+  end
 end

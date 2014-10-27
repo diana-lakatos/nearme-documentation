@@ -189,6 +189,10 @@ class SecuredParams
     ]
   end
 
+  def admin_user_blog_post
+    user_blog_post + [:highlighted]
+  end
+
   def instance
     [
       :name,

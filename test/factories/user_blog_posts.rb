@@ -8,6 +8,10 @@ FactoryGirl.define do
     user
     author_name { Faker::Name.name }
 
+    factory :highlighted_user_blog_post do
+      highlighted true
+    end
+
     factory :unpublished_user_blog_post do
       published_at { 1.week.from_now }
     end

@@ -555,6 +555,37 @@ ActiveRecord::Schema.define(version: 20141103195404) do
 
   add_index "instance_billing_gateways", ["instance_id"], name: "index_instance_billing_gateways_on_instance_id", using: :btree
 
+  create_table "instance_blog_instances", force: true do |t|
+    t.string   "name"
+    t.string   "header"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.string   "facebook_app_id"
+    t.boolean  "enabled",         default: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.string   "header_logo"
+    t.string   "header_icon"
+    t.string   "header_text"
+    t.string   "header_motto"
+  end
+
+  create_table "instance_blog_posts", force: true do |t|
+    t.string   "title"
+    t.text     "content"
+    t.string   "header"
+    t.string   "author_name"
+    t.text     "author_biography"
+    t.string   "author_avatar"
+    t.integer  "blog_instance_id"
+    t.integer  "user_id"
+    t.string   "slug"
+    t.datetime "published_at"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.text     "excerpt"
+  end
+
   create_table "instance_clients", force: true do |t|
     t.integer  "client_id"
     t.string   "client_type"
@@ -2366,6 +2397,8 @@ ActiveRecord::Schema.define(version: 20141103195404) do
     t.string   "logo"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "highlighted",      default: false
+    t.integer  "instance_id"
   end
 
   create_table "user_blogs", force: true do |t|
@@ -2376,6 +2409,7 @@ ActiveRecord::Schema.define(version: 20141103195404) do
     t.string   "header_icon"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "instance_id"
   end
 
   create_table "user_industries", force: true do |t|

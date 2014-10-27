@@ -245,6 +245,7 @@ DesksnearMe::Application.routes.draw do
     namespace :manage_blog do
       get '/', :to => 'base#index'
       resources :posts
+      resources :user_posts
       resource :settings, only: [:edit, :update]
     end
 
