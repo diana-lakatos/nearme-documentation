@@ -7,7 +7,7 @@ class PlatformContextDecorator
     :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :meta_title, :pages, :logo_image,
     :favicon_image, :homepage_content, :call_to_action, :is_company_theme?, :to => :theme
 
-  delegate :bookable_noun, :lessor, :lessee, :name, :is_desksnearme?, :to => :instance
+  delegate :bookable_noun, :lessor, :lessee, :name, :is_desksnearme?, :buyable?, :to => :instance
 
   liquid_methods :lessors
 
@@ -54,7 +54,12 @@ class PlatformContextDecorator
   end
 
   def search_field_placeholder
-    instance.searcher_type == 'fulltext' ? "Search by keyword" : "Search by city or address"
+    case instance.buyable?
+    when false
+      instance.searcher_type == 'fulltext' ? "Search by keyword" : "Search by city or address"
+    when true
+      'Search'
+    end
   end
 
   def searcher_type

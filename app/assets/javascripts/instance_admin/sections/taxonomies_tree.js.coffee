@@ -69,6 +69,7 @@ class @InstanceAdmin.TaxonomiesTree
 
 
   @taxonTreeMenu: (obj, context) ->
+    edit_url = instance_admin_taxonomy_taxons_path + '/?taxon_id=' + obj.prop("id")
     create:
       label: "<i class='fa fa-plus'></i> Add",
       action: (obj) -> context.create(obj)
@@ -78,3 +79,7 @@ class @InstanceAdmin.TaxonomiesTree
     remove:
       label: "<i class='fa fa-trash-o'></i> Remove",
       action: (obj) -> context.remove(obj)
+    edit:
+      separator_before: true,
+      label: "<i class='fa fa-edit'></i> Edit",
+      action: (obj) -> window.location = edit_url

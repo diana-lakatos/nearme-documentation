@@ -333,6 +333,102 @@ body.buy-sell {
     }
   }
 
+  section.search {
+    .container-row {
+      width: 100%;
+
+      .one-third.column {
+        @include box-sizing(border-box);
+        margin: 0;
+        width: 27.3333%;
+
+        &.padding {
+          padding: 0 20px;
+        }
+
+        @media (max-width: $ipad-width) {
+          display: none;
+        }
+      }
+
+      .two-thirds.column {
+        @include box-sizing(border-box);
+        margin: 0;
+        width: 71.6666%;
+
+        @media (max-width: $ipad-width) {
+          width: 100%;
+          clear: both;
+        }
+      }
+
+      .rounded-box {
+        @include border-radius($border-radius-default);
+        background-color: #fafafa;
+        padding: 10px 20px;
+        border: 1px solid $gray220;
+      }
+    }
+
+    header#listing_search {
+      &.products {
+        position: static;
+        float: right;
+        background: transparent;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-right: 0;
+
+        .search-container {
+          width: 400px;
+
+          @media (max-width: $iphone-landscape) {
+            padding-right: 0;
+            width: 330px;
+          }
+        }
+
+        .search-icon {
+          position: static;
+          float: right;
+          margin-top: 7px;
+          margin-left: 10px;
+        }
+      }
+    }
+  } 
+
+  nav#taxonomies {
+    .taxonomy {
+      margin-bottom: 25px;
+    }
+
+    .taxonomy-root {
+      text-transform: uppercase;
+      border-bottom: 1px;
+      margin-bottom: 5px;
+      font-size: 0.9em;
+      font-weight: bold;
+    }
+
+    .taxons-list {
+      padding-left: 10px;
+
+      li {
+        a {
+          font-size: 0.9em;
+          color: $gray120;
+          display: block;
+          padding: 0 10px;
+
+          &:hover, &.current {
+            background-color: $gray240;
+          }
+        }
+      }
+    }
+  }
+
   #fullscreen-gallery {
     background: rgba(0, 0, 0, 1);
 
@@ -582,6 +678,15 @@ body.buy-sell {
       padding: 20px 30px;
       border: 1px solid $gray220;
       @include border-radius(0 5px 5px 5px);
+    }
+  }
+
+  /*** Home Page Search ***/
+  #listing_search {
+    .input-wrapper {
+      input {
+        padding-left: 10px;
+      }
     }
   }
 }

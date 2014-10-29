@@ -1,7 +1,7 @@
 DesksnearMe::Application.routes.draw do
 
   scope module: 'spree' do
-    mount Spree::Core::Engine, at: '/instance_buy_sell_admin'
+    mount Spree::Core::Engine, at: '/instance_buy_sell'
   end
 
   scope module: 'buy_sell' do
@@ -253,7 +253,13 @@ DesksnearMe::Application.routes.draw do
       resources :tax_categories
       resources :tax_rates
       resources :zones
-      resources :taxonomies
+      resources :taxonomies do
+        member do
+          get :jstree
+          get :edit_taxon
+          patch :update_taxon
+        end
+      end
       resources :shipping_categories
       resources :shipping_methods
     end

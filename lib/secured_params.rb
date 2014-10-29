@@ -104,6 +104,14 @@ class SecuredParams
     ]
   end
 
+  def taxon
+    [
+      :name,
+      :in_top_nav,
+      :top_nav_position
+    ]
+  end
+
   def search_notification
     [
       :email,

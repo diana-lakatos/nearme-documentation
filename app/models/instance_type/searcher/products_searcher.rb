@@ -23,6 +23,10 @@ class InstanceType::Searcher::ProductsSearcher
     @query ||= search.query
   end
 
+  def taxon
+    @taxon ||= Spree::Taxon.find_by!(permalink: search.taxon) unless search.taxon.blank?
+  end
+
   def search
     @search ||= Spree::Product::Search::Params::Web.new(@params)
   end
@@ -49,14 +53,9 @@ class InstanceType::Searcher::ProductsSearcher
     @filterable_attribute = TransactableType.first.custom_attributes.where(name: 'filterable_attribute').try(:first).try(:valid_values)
   end
 
-  def search_notification
-    @search_notification ||= SearchNotification.new(query: @params[:loc])
-  end
-
   def search_query_values
     {
-      loc: @params[:loc],
-      industries_ids: @params[:industries_ids],
+      loc: @params[:loc]
     }.merge(filters)
   end
 
