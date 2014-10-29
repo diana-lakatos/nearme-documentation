@@ -4,7 +4,7 @@ class RecurringMailerRequestPhotosJobTest < ActiveSupport::TestCase
   setup do
     @transactable = FactoryGirl.create(:transactable,
                        :last_request_photos_sent_at => 28.days.ago,
-                       :photos_count_to_be_created => 0, enabled: true)
+                       enabled: true)
     @transactable.update_column(:activated_at, 28.days.ago)
   end
 

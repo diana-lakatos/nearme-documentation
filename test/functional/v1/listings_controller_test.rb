@@ -241,12 +241,12 @@ class V1::ListingsControllerTest < ActionController::TestCase
   def get_authenticated_location
     authenticate!
     company = FactoryGirl.create(:company, :name => 'company_XYZ', :creator_id => @user.id)
-    location = FactoryGirl.create(:location, :company_id => company.id)
+    FactoryGirl.create(:location, :company_id => company.id)
   end
 
   def get_authenticated_listing
     location = get_authenticated_location
-    listing = FactoryGirl.create(:transactable, :location_id => location.id, :photos_count_to_be_created => 1)
+    FactoryGirl.create(:transactable, :location_id => location.id, :photos_count => 1)
   end
 
   def valid_search_params

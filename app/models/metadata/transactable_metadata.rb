@@ -4,9 +4,9 @@ module Metadata
 
     included do
 
-      after_commit :location_populate_photos_metadata!, :if => lambda { |l| l.should_populate_location_photos_metadata? }
-      after_commit :creator_populate_listings_metadata!, :if => lambda { |l| l.should_populate_creator_listings_metadata? }
-      after_commit :populate_listing_type_name_metadata!, :if => lambda { |l| l.metadata_relevant_attribute_changed?("listing_type_id") }
+      attr_accessor :skip_metadata
+      after_commit :location_populate_photos_metadata!, :if => lambda { |l| !l.skip_metadata && l.should_populate_location_photos_metadata? }
+      after_commit :creator_populate_listings_metadata!, :if => lambda { |l| !l.skip_metadata && l.should_populate_creator_listings_metadata? }
       delegate :populate_photos_metadata!, to: :location, :prefix => true
       delegate :populate_listings_metadata!, to: :creator, :prefix => true
 

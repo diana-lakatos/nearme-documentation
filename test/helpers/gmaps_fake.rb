@@ -24,6 +24,8 @@ module GmapsFake
         when /cave of awesome/i then return { :status => 404 }
         when /ursynowska/i then "ursynowska"
         when /pulawska/i then "pulawska"
+        when /czestochowa/i then "czestochowa"
+        when /rydygiera/i then "rydygiera"
         else raise StandardError, "Define a place for #{address} (#{request.uri})"
       end
       { :body => File.read(File.join(Rails.root, "features", "fixtures", "gmaps", "#{file}.json")) }

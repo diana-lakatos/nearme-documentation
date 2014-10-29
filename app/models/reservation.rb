@@ -350,7 +350,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def free?
-    total_amount <= 0
+    total_amount.to_f <= 0
   end
 
   def has_service_fee?

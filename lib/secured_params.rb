@@ -24,7 +24,7 @@ class SecuredParams
   def data_upload
     [
       :csv_file,
-      options: nested([:send_invitational_email])
+      options: nested([:send_invitational_email, :sync_mode])
     ]
 
   end

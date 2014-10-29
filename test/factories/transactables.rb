@@ -1,11 +1,9 @@
 FactoryGirl.define do
   factory :transactable do
-
-    location
-
     ignore do
-      photos_count_to_be_created 1
+      photos_count 0
     end
+    location
 
     photo_not_required true
 
@@ -24,8 +22,8 @@ FactoryGirl.define do
       }.each do |key, value|
         listing.properties[key] ||= value if listing.properties[key].nil?
       end
-      if listing.photos.empty?
-        listing.photos = create_list(:photo, evaluator.photos_count_to_be_created,
+      if listing.photos.empty? && evaluator.photos_count > 0
+        listing.photos = create_list(:photo, evaluator.photos_count,
                                      listing: nil,
                                      creator: listing.location.creator)
       end

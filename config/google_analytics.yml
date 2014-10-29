@@ -4,6 +4,10 @@ production:
 staging:
   tracking_code: UA-19145250-2
   website: staging-uswest2.desksnear.me
+profiling:
+  tracking_code: UA-19145250-3
+  # edit /etc/hosts ? : )
+  website: development-desksnearme.com
 development:
   tracking_code: UA-19145250-3
   # edit /etc/hosts ? : )

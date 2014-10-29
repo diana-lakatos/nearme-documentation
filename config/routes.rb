@@ -129,6 +129,7 @@ DesksnearMe::Application.routes.draw do
       get '/', :to => 'base#index'
       resource :overview, :only => [:show], :controller => 'overview'
       resource :sales, :only => [:show]
+      resource :profiles, :only => [:show]
     end
 
     namespace :settings do
@@ -202,7 +203,7 @@ DesksnearMe::Application.routes.draw do
 
       resources :transactable_types, :only => [:index, :edit, :update, :show] do
         resources :custom_attributes, controller: 'transactable_types/custom_attributes'
-        resources :data_uploads, :only => [:new, :create, :index, :edit, :update, :show], controller: 'transactable_types/data_uploads' do
+        resources :data_uploads, controller: 'transactable_types/data_uploads' do
           collection do
             get :download_csv_template
           end
@@ -455,6 +456,18 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :waiver_agreement_templates, only: [:index, :edit, :new, :update, :create, :destroy]
+
+    resources :transactable_types, :only => [] do
+      resources :data_uploads, controller: 'transactable_types/data_uploads' do
+        collection do
+          get :download_csv_template
+          get :download_current_data_csv
+        end
+        member do
+          post :schedule_import
+        end
+      end
+    end
   end
 
   get "/search", :to => "search#index", :as => :search

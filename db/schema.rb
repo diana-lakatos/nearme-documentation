@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141010193304) do
+ActiveRecord::Schema.define(version: 20141021143715) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,7 +47,7 @@ ActiveRecord::Schema.define(version: 20141010193304) do
     t.datetime "updated_at"
   end
 
-  add_index "addresses", ["entity_id", "entity_type"], name: "index_addresses_on_entity_id_and_entity_type", using: :btree
+  add_index "addresses", ["entity_id", "entity_type", "address"], name: "index_addresses_on_entity_id_and_entity_type_and_address", unique: true, using: :btree
 
   create_table "amenities", force: true do |t|
     t.string   "name"
@@ -101,11 +101,11 @@ ActiveRecord::Schema.define(version: 20141010193304) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "hint"
     t.integer  "approval_request_id"
     t.integer  "approval_request_attachment_template_id"
     t.boolean  "required",                                default: false
     t.string   "label"
-    t.text     "hint"
   end
 
   add_index "approval_request_attachments", ["instance_id"], name: "index_approval_request_attachments_on_instance_id", using: :btree
@@ -291,6 +291,7 @@ ActiveRecord::Schema.define(version: 20141010193304) do
   end
 
   add_index "companies", ["creator_id"], name: "index_companies_on_creator_id", using: :btree
+  add_index "companies", ["external_id", "instance_id"], name: "companies_external_id_uni_idx", unique: true, where: "((external_id IS NOT NULL) AND (deleted_at IS NULL))", using: :btree
   add_index "companies", ["instance_id", "listings_public"], name: "index_companies_on_instance_id_and_listings_public", using: :btree
   add_index "companies", ["partner_id"], name: "index_companies_on_partner_id", using: :btree
 
@@ -376,9 +377,12 @@ ActiveRecord::Schema.define(version: 20141010193304) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "target_id"
+    t.string   "target_type"
   end
 
   add_index "data_uploads", ["instance_id"], name: "index_data_uploads_on_instance_id", using: :btree
+  add_index "data_uploads", ["target_id", "target_type"], name: "index_data_uploads_on_target_id_and_target_type", using: :btree
   add_index "data_uploads", ["transactable_type_id"], name: "index_data_uploads_on_transactable_type_id", using: :btree
 
   create_table "delayed_jobs", force: true do |t|
@@ -686,8 +690,8 @@ ActiveRecord::Schema.define(version: 20141010193304) do
     t.boolean  "user_based_marketplace_views",                                default: false
     t.string   "searcher_type"
     t.datetime "master_lock"
-    t.text     "user_required_fields"
     t.boolean  "apply_text_filters",                                          default: false
+    t.text     "user_required_fields"
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
   end
@@ -720,8 +724,8 @@ ActiveRecord::Schema.define(version: 20141010193304) do
     t.float    "latitude"
     t.float    "longitude"
     t.text     "info"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
     t.datetime "deleted_at"
     t.string   "formatted_address"
     t.string   "currency"
@@ -742,15 +746,18 @@ ActiveRecord::Schema.define(version: 20141010193304) do
     t.text     "metadata"
     t.integer  "instance_id"
     t.integer  "creator_id"
-    t.boolean  "listings_public",    default: true
+    t.boolean  "listings_public",                default: true
     t.integer  "partner_id"
     t.integer  "address_id"
+    t.boolean  "mark_to_be_bulk_update_deleted", default: false
+    t.string   "external_id"
   end
 
   add_index "locations", ["address_id"], name: "index_locations_on_address_id", using: :btree
   add_index "locations", ["administrator_id"], name: "index_locations_on_administrator_id", using: :btree
   add_index "locations", ["company_id"], name: "index_locations_on_company_id", using: :btree
   add_index "locations", ["creator_id"], name: "index_locations_on_creator_id", using: :btree
+  add_index "locations", ["external_id", "company_id"], name: "index_locations_on_external_id_and_company_id", unique: true, using: :btree
   add_index "locations", ["instance_id"], name: "index_locations_on_instance_id", using: :btree
   add_index "locations", ["location_type_id"], name: "index_locations_on_location_type_id", using: :btree
   add_index "locations", ["partner_id"], name: "index_locations_on_partner_id", using: :btree
@@ -865,6 +872,7 @@ ActiveRecord::Schema.define(version: 20141010193304) do
     t.integer  "image_original_height"
     t.integer  "image_original_width"
     t.integer  "instance_id"
+    t.boolean  "mark_to_be_bulk_update_deleted", default: false
   end
 
   add_index "photos", ["creator_id"], name: "index_photos_on_creator_id", using: :btree
@@ -1048,11 +1056,11 @@ ActiveRecord::Schema.define(version: 20141010193304) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.boolean  "listings_public",                            default: true
-    t.integer  "recurring_booking_id"
     t.datetime "confirmed_at"
     t.datetime "cancelled_at"
     t.integer  "cancellation_policy_hours_for_cancellation", default: 0
     t.integer  "cancellation_policy_penalty_percentage",     default: 0
+    t.integer  "recurring_booking_id"
     t.integer  "credit_card_id"
   end
 
@@ -1078,13 +1086,6 @@ ActiveRecord::Schema.define(version: 20141010193304) do
   end
 
   add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
-
-  create_table "search_queries", force: true do |t|
-    t.string   "query"
-    t.text     "agent"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "spree_addresses", force: true do |t|
     t.string   "firstname"
@@ -2136,12 +2137,9 @@ ActiveRecord::Schema.define(version: 20141010193304) do
     t.text     "message",     null: false
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
-    t.integer  "target_id"
-    t.string   "target_type"
   end
 
   add_index "support_ticket_messages", ["instance_id"], name: "index_support_ticket_messages_on_instance_id", using: :btree
-  add_index "support_ticket_messages", ["target_id", "target_type"], name: "index_support_ticket_messages_on_target_id_and_target_type", using: :btree
   add_index "support_ticket_messages", ["ticket_id"], name: "index_support_ticket_messages_on_ticket_id", using: :btree
   add_index "support_ticket_messages", ["user_id"], name: "index_support_ticket_messages_on_user_id", using: :btree
 
@@ -2265,6 +2263,17 @@ ActiveRecord::Schema.define(version: 20141010193304) do
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree
 
+  create_table "transactable_actions", force: true do |t|
+    t.integer  "action_type_id"
+    t.integer  "transactable_id"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "transactable_actions", ["action_type_id", "transactable_id"], name: "transactable_actions_at_t_unique", unique: true, where: "(deleted_at IS NULL)", using: :btree
+
   create_table "transactable_type_actions", force: true do |t|
     t.integer  "action_type_id"
     t.integer  "transactable_type_id"
@@ -2281,12 +2290,12 @@ ActiveRecord::Schema.define(version: 20141010193304) do
     t.text     "pricing_options"
     t.text     "pricing_validation"
     t.text     "availability_options"
-    t.boolean  "recurring_booking",                          default: false, null: false
     t.boolean  "favourable_pricing_rate",                    default: true
     t.integer  "days_for_monthly_rate",                      default: 0
     t.datetime "cancellation_policy_enabled"
     t.integer  "cancellation_policy_hours_for_cancellation", default: 0
     t.integer  "cancellation_policy_penalty_percentage",     default: 0
+    t.boolean  "recurring_booking",                          default: false, null: false
     t.boolean  "show_page_enabled",                          default: false
   end
 
@@ -2308,14 +2317,15 @@ ActiveRecord::Schema.define(version: 20141010193304) do
     t.boolean  "listings_public"
     t.boolean  "enabled"
     t.text     "metadata"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
     t.integer  "transactable_type_id"
     t.integer  "parent_transactable_id"
     t.string   "external_id"
+    t.boolean  "mark_to_be_bulk_update_deleted", default: false
   end
 
-  add_index "transactables", ["external_id"], name: "index_transactables_on_external_id", using: :btree
+  add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
   add_index "transactables", ["parent_transactable_id"], name: "index_transactables_on_parent_transactable_id", using: :btree
   add_index "transactables", ["properties"], name: "transactables_gin_properties", using: :gin
   add_index "transactables", ["transactable_type_id"], name: "index_transactables_on_transactable_type_id", using: :btree

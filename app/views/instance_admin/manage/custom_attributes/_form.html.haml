@@ -9,7 +9,7 @@
       .input-container.col-xs-6
         = f.input :attribute_type, required: false, :as => :select, :collection => CustomAttributes::CustomAttribute::ATTRIBUTE_TYPES.map { |t| [t.humanize, t] }, :prompt => "Choose...", input_html: { class: 'form-control' }
       .input-container.col-xs-6
-        = f.input :html_tag, :as => :select, :collection => CustomAttributes::CustomAttribute::HTML_TAGS.map { |t| [t.humanize, t] }, :prompt => "Choose...", input_html: { class: 'form-control' }
+        = f.input :html_tag, as: :select, collection: CustomAttributes::CustomAttribute::HTML_TAGS.map { |t| [t.humanize, t] }, include_blank: true, prompt: "Choose...", input_html: { class: 'form-control' }
     .row
       .input-container.col-xs-6
         = f.input :placeholder, input_html: { class: 'form-control' }

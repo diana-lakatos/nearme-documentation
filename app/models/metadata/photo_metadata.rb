@@ -6,7 +6,8 @@ module Metadata
 
       delegate :populate_photos_metadata!, :to => :listing, :prefix => true
 
-      after_commit :listing_populate_photos_metadata!, :if => lambda { |p| p.should_populate_metadata? }
+      attr_accessor :skip_metadata
+      after_commit :listing_populate_photos_metadata!, :if => lambda { |p| !p.skip_metadata && p.should_populate_metadata? }
 
       def should_populate_metadata?
         deleted? || (listing.present? && relevant_attribute_changed?)
@@ -22,7 +23,7 @@ module Metadata
         {
           space_listing: image_url(:space_listing),
           golden:  image_url(:golden) ,
-          large: image_url(:large),
+          large: image_url(:large)
         }
       end
 

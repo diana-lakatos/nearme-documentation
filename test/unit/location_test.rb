@@ -138,7 +138,7 @@ class LocationTest < ActiveSupport::TestCase
   context 'metadata' do
     context 'populating hash' do
       setup do
-        @location = FactoryGirl.create(:transactable).location
+        @location = FactoryGirl.create(:transactable, photos_count: 1).location
         @photo = @location.photos.first
       end
 
@@ -226,5 +226,10 @@ class LocationTest < ActiveSupport::TestCase
         refute @location.reload.listings_public
       end
     end
+  end
+
+  should 'populate external id' do
+    @location = FactoryGirl.create(:location)
+    assert_not_nil @location.reload.external_id
   end
 end

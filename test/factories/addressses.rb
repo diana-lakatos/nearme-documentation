@@ -35,6 +35,22 @@ FactoryGirl.define do
       longitude "174.7763361"
     end
 
+    factory :address_czestochowa do
+      formatted_address "Aleja Niepodległości 40, Czestochowa, Poland"
+      address "Aleja Niepodległości 40, Czestochowa, Poland"
+      street "Aleja Niepodległości 40"
+      latitude "-36.858675"
+      longitude "174.777303"
+    end
+
+    factory :address_rydygiera do
+      formatted_address "Ludwika Rydygiera 8, 01-793 Warsaw, Poland"
+      address "Ludwika Rydygiera 8, 01-793 Warsaw, Poland"
+      street "Ludwika Rydygiera 8"
+      latitude "-36.858675"
+      longitude "174.777303"
+    end
+
     factory :address_ursynowska_address_components do
       formatted_address "Ursynowska, Warsaw, Poland"
       address_components do

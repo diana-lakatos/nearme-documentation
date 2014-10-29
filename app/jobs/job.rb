@@ -31,7 +31,7 @@
 class Job
 
   def initialize(platform_context_detail_class, platform_context_detail_id, *args)
-    @platform_context_detail_class = platform_context_detail_class
+    @platform_context_detail_class = platform_context_detail_class.try(:constantize)
     @platform_context_detail_id = platform_context_detail_id
     after_initialize(*args)
   end
@@ -77,7 +77,7 @@ class Job
 
   def self.build_new(*args)
     Rails.logger.warn "#{self.name} has no PlatformContext" if PlatformContext.current.blank?
-    new(PlatformContext.current.try(:platform_context_detail).try(:class), PlatformContext.current.try(:platform_context_detail).try(:id), *args)
+    new(PlatformContext.current.try(:platform_context_detail).try(:class).try(:name), PlatformContext.current.try(:platform_context_detail).try(:id), *args)
   end
 
   def self.run_in_background?

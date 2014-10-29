@@ -23,6 +23,10 @@ class PlatformContextDrop < BaseDrop
     "http://#{platform_context_decorator.host}"
   end
 
+  def asset_host
+    Rails.application.config.action_controller.asset_host || host
+  end
+
   def color_black
     theme_color('black')
   end
