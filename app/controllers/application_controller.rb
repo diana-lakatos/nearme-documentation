@@ -472,6 +472,7 @@ class ApplicationController < ActionController::Base
   end
 
   def ensure_proper_spree_route
-    redirect_to main_app.root_path if request.path.include?('/instance_buy_sell')
+    # TODO: uncomment
+    #redirect_to main_app.root_path if request.path.include?('/instance_buy_sell')
   end
 end

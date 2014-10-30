@@ -4,6 +4,9 @@ class Search.ProductsSearchController extends Search.Controller
     @loader = new Search.ScreenLockLoader => @container.find('.loading')
     @resultsContainer ||= => @container.find('#results')
     @bindEvents()
+    @performEndlessScrolling = @form.data('endless-scrolling')
+    @initializeEndlessScrolling()
+    @reinitializeEndlessScrolling = false
 
   bindEvents: ->
     @form.bind 'submit', (event) =>
@@ -35,23 +38,23 @@ class Search.ProductsSearchController extends Search.Controller
 
 
   initializeEndlessScrolling: ->
-    $('#results').scrollTop(0)
-    jQuery.ias({
-      container : '#results',
-      item: '.listing',
-      pagination: '.pagination',
-      next: '.next_page',
-      triggerPageThreshold: 99,
-      history: false,
-      thresholdMargin: -90,
-      loader: '<div class="row-fluid span12"><h1><img src="' + $('img[alt=Spinner]').eq(0).attr('src') + '"><span>Loading More Results</span></h1></div>',
-      onRenderComplete: (items) =>
-        @initializeConnectionsTooltip()
-        # when there are no more resuls, add special div element which tells us, that we need to reinitialize ias - it disables itself on the last page...
-        if !$('#results .pagination .next_page').attr('href')
-          $('#results').append('<div id="reinitialize"></div>')
-          reinitialize = $('#reinitialize')
-    })
+    if @performEndlessScrolling
+      $('#results').scrollTop(0)
+      jQuery.ias({
+        container : '#results',
+        item: '.product',
+        pagination: '.pagination',
+        next: '.next_page',
+        triggerPageThreshold: 99,
+        history: false,
+        thresholdMargin: -90,
+        loader: '<div class="row-fluid span12"><h1><img src="' + $('img[alt=Spinner]').eq(0).attr('src') + '"><span>Loading More Results</span></h1></div>',
+        onRenderComplete: (items) =>
+          # when there are no more resuls, add special div element which tells us, that we need to reinitialize ias - it disables itself on the last page...
+          if !$('#results .pagination .next_page').attr('href')
+            $('#results').append('<div id="reinitialize"></div>')
+            reinitialize = $('#reinitialize')
+      })
 
 
   showResults: (html) ->

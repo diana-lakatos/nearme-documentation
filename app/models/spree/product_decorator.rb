@@ -7,6 +7,7 @@ Spree::Product.class_eval do
 
   belongs_to :instance
   belongs_to :user
+  belongs_to :company
   belongs_to :administrator, class_name: 'User'
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
 
@@ -39,5 +40,9 @@ Spree::Product.class_eval do
 
   def administrator
     super.presence || user
+  end
+
+  def has_photos?
+    images.count > 0
   end
 end
