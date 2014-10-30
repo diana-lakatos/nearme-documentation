@@ -3,7 +3,7 @@ require 'aws'
 module NearMe
   class Balancer
     attr_accessor :certificate_body, :name, :private_key, :certificate_chain,
-      :stack_id, :errors, :dns_name, :template_name
+      :stack_id, :dns_name, :template_name
 
     def initialize(options = {})
       self.certificate_body = options[:certificate_body]
@@ -11,12 +11,10 @@ module NearMe
       self.private_key = options[:private_key]
       self.certificate_chain = options[:certificate_chain]
       self.stack_id = options[:stack_id]
-      self.errors = []
       self.template_name = options[:template_name] || "production"
     end
 
     def create!
-      self.errors = []
       begin
         certificate = create_certificate
         sleep 5
@@ -90,20 +88,14 @@ module NearMe
     end
 
     def create_certificate
-      begin
-        params = {
-          name: self.name,
-          certificate_body: self.certificate_body,
-          certificate_chain: self.certificate_chain,
-          private_key: self.private_key
-        }.select{|k,v| !v.to_s.empty?}
+      params = {
+        name: self.name,
+        certificate_body: self.certificate_body,
+        certificate_chain: self.certificate_chain,
+        private_key: self.private_key
+      }.select{|k,v| !v.to_s.empty?}
 
-        certificates.create(params)
-      rescue AWS::Core::OptionGrammar::FormatError => e
-        self.errors << e.message
-      rescue AWS::IAM::Errors::MalformedCertificate => e
-        self.errors << e.message
-      end
+      certificates.create(params)
     end
 
     def template_balancer
