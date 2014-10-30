@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141021143715) do
+ActiveRecord::Schema.define(version: 20141030101634) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2365,6 +2365,8 @@ ActiveRecord::Schema.define(version: 20141021143715) do
     t.text     "metadata"
     t.hstore   "properties"
     t.datetime "deleted_at"
+    t.integer  "reservations_count",       default: 0
+    t.integer  "transactables_count",      default: 0
   end
 
   create_table "user_messages", force: true do |t|
@@ -2416,7 +2418,6 @@ ActiveRecord::Schema.define(version: 20141021143715) do
     t.datetime "updated_at"
     t.string   "name"
     t.boolean  "admin"
-    t.integer  "bookings_count",                                     default: 0,                                                                                   null: false
     t.datetime "confirmation_sent_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"
