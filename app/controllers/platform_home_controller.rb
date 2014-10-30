@@ -14,7 +14,7 @@ class PlatformHomeController < ActionController::Base
   end
 
   def require_ssl?
-    Rails.application.config.secure_app && !request.ssl? && !Rails.env.development?
+    Rails.application.config.secure_app && !request.ssl?
   end
 
   def contact

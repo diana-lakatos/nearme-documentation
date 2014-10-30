@@ -191,7 +191,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_ssl?
-    secure? && platform_context.secured? && !request.ssl? && !Rails.env.development?
+    secure? && platform_context.secured? && !request.ssl?
   end
 
   def stored_url_for(resource_or_scope)
