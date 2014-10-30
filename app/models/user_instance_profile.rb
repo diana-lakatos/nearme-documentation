@@ -8,8 +8,8 @@ class UserInstanceProfile < ActiveRecord::Base
   belongs_to :instance_profile_type
   belongs_to :user
 
-  has_many :reservations, -> (o) { where instance_id: o.instance_id }, through: :user
-  has_many :transactables, -> (o) { where 'transactables.instance_id' => o.instance_id }, through: :user, source: 'listings'
+  has_many :reservations, through: :user
+  has_many :transactables, through: :user, source: 'listings'
 
   has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
 
