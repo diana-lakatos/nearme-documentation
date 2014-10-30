@@ -3,7 +3,7 @@ class RegistrationsController < Devise::RegistrationsController
   before_action :configure_permitted_parameters, only: :create
   skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:update_password, :set_password]
   skip_before_filter :filter_out_token, :only => [:verify, :unsubscribe]
-  before_filter :force_ssl, :only => [:new]
+  before_filter :nm_force_ssl, only: [:new]
 
   # NB: Devise calls User.new_with_session when building the new User resource.
   # We use this to apply any Provider based authentications to the user record.

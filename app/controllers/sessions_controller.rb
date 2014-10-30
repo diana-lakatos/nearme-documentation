@@ -6,7 +6,7 @@ class SessionsController < Devise::SessionsController
   skip_before_filter :require_no_authentication, only: [:show] , if: lambda { |c| request.xhr? }
   skip_before_filter :redirect_if_marketplace_password_protected, only: [:store_correct_ip]
   after_filter :render_or_redirect_after_create, only: [:create]
-  before_filter :force_ssl, only: [:new]
+  before_filter :nm_force_ssl, only: [:new]
   layout :resolve_layout
 
   def require_no_authentication
