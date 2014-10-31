@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::Base
-  prepend_view_path FooterResolver.instance
   prepend_view_path InstanceViewResolver.instance
 
   force_ssl if: :require_ssl?
