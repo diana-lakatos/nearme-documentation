@@ -6,8 +6,9 @@
 - content_for :products_results do
   - if @searcher.results.any?
     %section#results.products
+      = render 'search/products/pagination', products: @searcher.results, result_count: @searcher.result_count
+      .clearfix
       = render partial: 'search/products/product', collection: @searcher.results
-      = will_paginate @searcher.results
       = render 'shared/loading_spinner'
   - else
     %section#results.no_results
@@ -50,6 +51,18 @@
                 %h6.taxonomy-root= taxonomy.name
                 = display_taxonomies(taxonomy.root, @searcher.taxon)
         .two-thirds.column.right
+          - if @searcher.filterable_attribute
+            .filters{:'data-search-filters-container' => true}
+              = render partial: 'search/mixed/filter', locals: { header_name: 'Type', selected_values: @searcher.search.attribute_values_filters || [], input_name: 'attribute_values[]', options: @searcher.filterable_attribute.map { |fa| [fa, fa]} }
+          .sort.with-left-margin
+            .results-count
+              %h3#search_results_count
+                = @searcher.result_count
+                results
+            .per-page
+              %span per page
+              = select_tag :per_page, options_for_select(['20', '50', '100'].map{|v| [v, v]})
+
           = yield :products_results
         .clearfix.padding-row
 

@@ -23,8 +23,12 @@ class Spree::ProductDecorator < Draper::Decorator
   def cross_sell_products(exclude_product_ids=[], number_of_products=6)
     products_scope = Spree::Product.searchable.limit(number_of_products)
     products_scope = products_scope.where('spree_products.id NOT IN (?)', exclude_product_ids) unless exclude_product_ids.empty?
-    if object.cross_sell_skus.empty? || Spree::Config[:random_products_for_cross_sell]
-      products_scope.order('random()')
+    if object.cross_sell_skus.empty?
+      if Spree::Config[:random_products_for_cross_sell]
+        products_scope.order('random()')
+      else
+        []
+      end
     else
       products_scope.ransack(variants_including_master_sku_in: object.cross_sell_skus).result
     end

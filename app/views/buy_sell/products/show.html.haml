@@ -45,13 +45,9 @@
 
       .container-row
         .row-fluid.padding-row
-          .span7.product-might-like
-            .white-box
-              = render 'buy_sell/products/cross_sell_products', product: @product
+          = render 'buy_sell/products/cross_sell_products', product: @product
 
-          .span5
-            .white-box
-              = render 'buy_sell/products/administrator', administrator: @product.administrator
+          = render 'buy_sell/products/administrator', administrator: @product.administrator
 
 .clearfix.padding-row
 

@@ -3,12 +3,19 @@ class Search.ProductsSearchController extends Search.Controller
     @redirectIfNecessary()
     @loader = new Search.ScreenLockLoader => @container.find('.loading')
     @resultsContainer ||= => @container.find('#results')
+    @perPageField = @container.find('select#per_page')
     @bindEvents()
     @performEndlessScrolling = @form.data('endless-scrolling')
     @initializeEndlessScrolling()
     @reinitializeEndlessScrolling = false
+    @perPageValue = @perPageField.find(':selected').val()
 
   bindEvents: ->
+    $(document).on 'change', @perPageField, (e) =>
+      if @perPageValue != @perPageField.find(':selected').val()
+        @perPageValue = @perPageField.find(':selected').val()
+        @triggerSearchFromQuery()
+
     @form.bind 'submit', (event) =>
       event.preventDefault()
       @triggerSearchFromQuery()
@@ -21,6 +28,13 @@ class Search.ProductsSearchController extends Search.Controller
     if @searchButton.length > 0
       @searchButton.bind 'click', =>
         @form.submit()
+
+    $(document).on 'click', '.pagination a', (e) =>
+      e.preventDefault()
+      link = $(e.target)
+      page_regexp = /page=(\d+)/gm
+      @loader.show()
+      @triggerSearchFromQuery(page_regexp.exec(link.attr('href'))[1])
 
 
   # for browsers without native html 5 support for history [ mainly IE lte 9 ] the url looks like:
@@ -59,7 +73,8 @@ class Search.ProductsSearchController extends Search.Controller
 
   showResults: (html) ->
     @resultsContainer().replaceWith(html)
-    $('.pagination').hide()
+    if @performEndlessScrolling
+      $('.pagination').hide()
 
   updateResultsCount: ->
     count = @resultsContainer().find('.listing:not(.hidden)').length
@@ -79,10 +94,13 @@ class Search.ProductsSearchController extends Search.Controller
 
   # Trigger the search from manipulating the query.
   # Note that the behaviour semantics are different to manually moving the map.
-  triggerSearchFromQuery: ->
+  triggerSearchFromQuery: (page = false) ->
     # we want to log any new search query
     @assignFormParams(
       ignore_search_event: 0
+      per_page: @container.find('select#per_page').val()
+      loc: @form.find("input#search").val()
+      page: page || 1
     )
     @loader.showWithoutLocker()
      # Infinite-Ajax-Scroller [ ias ] which we use disables itself when there are no more results
@@ -116,29 +134,31 @@ class Search.ProductsSearchController extends Search.Controller
       data : @form.serialize()
     )
 
-  triggerListingsRequest: (listings) =>
-    listing_ids = (listing.id() for listing in listings).toString()
-    $.ajax(
-      url  : '/search/show/' + listing_ids + '?v=map'
-      type : 'GET'
-    )
-
 
   updateUrlForSearchQuery: ->
     url = document.location.href.replace(/\?.*$/, "")
     params = @getSearchParams()
+    filtered_params = []
+    for k, param of params
+      if $.inArray(param["name"], ['loc', 'lgattribute', 'page', 'per_page', 'taxon']) > -1
+        filtered_params.push {name: param["name"], value: param["value"]}
+
     # we need to decodeURIComponent, otherwise accents will not be handled correctly. Remove decodeURICompoent if we switch back
     # to window.history.replaceState, but it's *absolutely mandatory* in this case. Removing it now will lead to infiite redirection in IE lte 9
-    url = decodeURIComponent("?#{$.param(params)}")
-    History.replaceState(params, "Search Results", url)
+    url = decodeURIComponent("?#{$.param(filtered_params)}")
+    History.replaceState(params, @container.find('input[name=meta_title]').val(), url)
+
 
   updateLinksForSearchQuery: ->
     url = document.location.href.replace(/\?.*$/, "")
     params = @getSearchParams()
 
-    $('.list-map-toggle a', @form).each ->
-      for k, param of params
-        if param["name"] == 'v'
-          param["value"] = (if $(this).hasClass('map') then 'mixed' else 'list')
-      _url = "#{url}?#{$.param(params)}&ignore_search_event=1"
-      $(this).attr('href', _url)
+
+  getSearchParams: ->
+    form_params = @form.serializeArray()
+    form_params = @replaceWithData(form_params)
+    # don't polute url if this is unnecessary - ignore empty values and page
+    params = []
+    for k, param of form_params
+      params.push(param)
+    params
