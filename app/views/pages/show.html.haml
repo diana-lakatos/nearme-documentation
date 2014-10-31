@@ -6,4 +6,4 @@
 
 .row-fluid
   .span8.offset2
-    = raw @page.html_content
+    = raw Liquid::Template.parse(@page.html_content).render
