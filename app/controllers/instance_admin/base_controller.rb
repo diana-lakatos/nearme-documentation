@@ -43,6 +43,7 @@ class InstanceAdmin::BaseController < ApplicationController
   THEME_CONTROLLERS = {
     'info'     => { default_action: 'show' },
     'design'   => { default_action: 'show' },
+    'footer'   => { default_action: 'show' },
     'homepage' => { controller: '/instance_admin/theme/homepage_template', default_action: 'show' },
     'homepage content' => { controller: '/instance_admin/theme/homepage', default_action: 'show' },
     'pages'    => { default_action: 'index' }

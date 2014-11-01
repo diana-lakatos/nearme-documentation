@@ -1,0 +1,14 @@
+= simple_form_for @template, url: '/instance_admin/theme/footer' do |f|
+  %h4 Footer
+  .content-container
+    .row.dropshadow
+      .input-container.col-xs-12
+        = f.input :path, :as => :hidden
+        = f.input :body, label: 'HTML body', required: false, input_html: { class: 'form-control', :"data-editor" => 'liquid', rows: '30' }
+        = f.input :locale, :as => :hidden
+        = f.input :format, :as => :hidden
+        = f.input :handler, :as => :hidden
+        = f.input :partial, :as => :hidden
+  .content-container
+    .row
+      = f.button :submit, 'Save', class: 'btn btn-green pull-right'

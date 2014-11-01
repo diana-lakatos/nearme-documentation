@@ -1,5 +1,5 @@
 class PlatformHomeController < ActionController::Base
-  before_filter :require_ssl
+  force_ssl if: :require_ssl?
   prepend_view_path InstanceViewResolver.instance
 
   protect_from_forgery
@@ -13,14 +13,8 @@ class PlatformHomeController < ActionController::Base
     @platform_contact = PlatformContact.new
   end
 
-  def require_ssl
-    if Rails.application.config.secure_app && !request.ssl?
-      if request.get? # we can't redirect non-get reqests
-        redirect_to url_for(protocol: 'https'), status: :moved_permanently
-      else
-        redirect_to root_url(protocol: 'https')
-      end
-    end
+  def require_ssl?
+    Rails.application.config.secure_app && !request.ssl?
   end
 
   def contact

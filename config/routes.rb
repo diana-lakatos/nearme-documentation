@@ -173,6 +173,7 @@ DesksnearMe::Application.routes.draw do
         end
       end
       resources :pages
+      resource :footer, only: [:show, :create, :update], controller: 'footer'
       resource :homepage, only: [:show, :update], controller: 'homepage'
       resource :homepage_template, only: [:show, :create, :update], controller: 'homepage_template'
     end
