@@ -200,7 +200,7 @@ p {
   position: fixed;
   right: -316px;
   width: 346px;
-  z-index: 0; 
+  z-index: 0;
 }
 
 .help-bar-content {
@@ -743,6 +743,7 @@ body.login {
 
     button {
       margin-top: 25px;
+      margin-left: 0;
     }
   }
 }
@@ -953,7 +954,7 @@ body.login {
     }
   }
 
-  hr, 
+  hr,
   .hr {
     border-bottom: 0;
     margin-left: -$padding-default;
