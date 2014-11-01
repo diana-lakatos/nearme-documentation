@@ -233,7 +233,7 @@ module Utils
         locations.map do |location|
           ["Desk", "Meeting Room", "Office Space", "Salon Booth"].sample(rand(1..4)).map do |name|
             FactoryGirl.create(:transactable, :listing_type => name, :name => "#{name} #{Faker::Company.name}".truncate(50, :separator => ''), :location => location,
-                               :description => Faker::Lorem.paragraph.truncate(200), :photos_count_to_be_created => 0)
+                               :description => Faker::Lorem.paragraph.truncate(200), :photos_count => 0)
           end
         end.flatten
       end
