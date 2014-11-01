@@ -4,7 +4,7 @@ class Spree::Product::Search::Params::Web < Spree::Product::Search::Params
   def initialize(options)
     super
     @attribute_values = @options[:attribute_values]
-    @sort = (@options[:sort].presence || 'relevance').inquiry
+    @sort = (@options[:sort].presence || 'name').inquiry
     @taxon = @options[:taxon]
   end
 

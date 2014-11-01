@@ -23,8 +23,9 @@ Spree::Product.class_eval do
 
   validates :slug, uniqueness: { scope: [:instance_id, :company_id, :partner_id, :user_id] }
 
-  # TODO: in Phase 2
-  #after_initialize :apply_transactable_type_settings
+  # TODO: uncomment in Phase 3 during implementation of creating products
+  # belongs_to :transactable_type, inverse_of: :transactables
+  # has_custom_attributes target_type: 'TransactableType', target_id: :transactable_type_id
 
   store_accessor :status, [:current_status]
 
