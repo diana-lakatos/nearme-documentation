@@ -45,6 +45,25 @@ class Domain < ActiveRecord::Base
 
   delegate :white_label_enabled?, :to => :target
 
+  def self.where_hostname(hostname)
+    domain = where(name: hostname).first
+
+    # Domain was not found, lets figure out the correct name
+    unless domain
+      parsed_url = Domainatrix.parse(hostname)
+
+      without_subdomains = parsed_url.domain_with_public_suffix # a.b.example.com => example.com
+      domain = where(name: without_subdomains).first
+
+      unless domain
+        www_hostname = "www.#{without_subdomains}"
+        domain = where(name: www_hostname).first
+      end
+    end
+
+    domain
+  end
+
   def prepared_for_elb?
     # marked as secured but in unsecured state
     self.secured? and self.unsecured?
