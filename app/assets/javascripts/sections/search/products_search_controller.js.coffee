@@ -9,6 +9,7 @@ class Search.ProductsSearchController extends Search.Controller
     @initializeEndlessScrolling()
     @reinitializeEndlessScrolling = false
     @perPageValue = @perPageField.find(':selected').val()
+    @submitFormWithoutAjax = false
 
   bindEvents: ->
     $(document).on 'change', @perPageField, (e) =>
@@ -17,8 +18,9 @@ class Search.ProductsSearchController extends Search.Controller
         @triggerSearchFromQuery()
 
     @form.bind 'submit', (event) =>
-      event.preventDefault()
-      @triggerSearchFromQuery()
+      if @submitFormWithoutAjax == false
+        event.preventDefault()
+        @triggerSearchFromQuery()
 
     @searchField = @form.find('#search')
     @searchField.on 'focus', => $(@form).addClass('query-active')
@@ -35,6 +37,14 @@ class Search.ProductsSearchController extends Search.Controller
       page_regexp = /page=(\d+)/gm
       @loader.show()
       @triggerSearchFromQuery(page_regexp.exec(link.attr('href'))[1])
+
+    $(document).on 'click', 'a.clear-filters', (e) =>
+      e.preventDefault()
+      @submitFormWithoutAjax = true
+      @assignFormParams(
+        taxon: ''
+      )
+      @form.submit()
 
 
   # for browsers without native html 5 support for history [ mainly IE lte 9 ] the url looks like:

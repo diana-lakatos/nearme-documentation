@@ -1,4 +1,4 @@
-class BuySell::ProductsController < ApplicationController
+class BuySellMarket::ProductsController < ApplicationController
 
   def show
     begin

@@ -1,6 +1,6 @@
 = render 'shared/modules/buy_sell_top_navigation'
 
-- title render 'buy_sell/products/title', product: @product
+- title render 'buy_sell_market/products/title', product: @product
 - canonical_url product_path(@product)
 
 - content_for :meta_description do
@@ -12,7 +12,7 @@
 
       .container-row
         .two-thirds.column.left
-          = render 'buy_sell/products/product_photos', product: @product
+          = render 'buy_sell_market/products/product_photos', product: @product
 
         .one-third.column.left.padding
           %h1= mask_phone_and_email_if_necessary(@product.name)
@@ -38,16 +38,16 @@
             .description
               = custom_sanitze(mask_phone_and_email_if_necessary(@product.description))
           #properties.tab-pane
-            = render 'buy_sell/products/properties', product: @product, product_properties: @product_properties
+            = render 'buy_sell_market/products/properties', product: @product, product_properties: @product_properties
           #share.tab-pane
-            = render 'buy_sell/products/social_buttons', product: @product
+            = render 'buy_sell_market/products/social_buttons', product: @product
 
 
       .container-row
         .row-fluid.padding-row
-          = render 'buy_sell/products/cross_sell_products', product: @product
+          = render 'buy_sell_market/products/cross_sell_products', product: @product
 
-          = render 'buy_sell/products/administrator', administrator: @product.administrator
+          = render 'buy_sell_market/products/administrator', administrator: @product.administrator
 
 .clearfix.padding-row
 

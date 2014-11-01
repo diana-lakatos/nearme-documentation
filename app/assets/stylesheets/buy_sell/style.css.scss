@@ -560,6 +560,11 @@ body.buy-sell {
         }
       }
     }
+
+    a.clear-filters {
+      color: $gray120;
+      font-size: 0.75em;
+    }
   }
 
   #fullscreen-gallery {

@@ -4,7 +4,7 @@ DesksnearMe::Application.routes.draw do
     mount Spree::Core::Engine, at: '/instance_buy_sell'
   end
 
-  scope module: 'buy_sell' do
+  scope module: 'buy_sell_market' do
     resources :products, only: [:show]
   end
 

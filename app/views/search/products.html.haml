@@ -45,11 +45,7 @@
 
 
         .one-third.column.left.rounded-box
-          %nav#taxonomies.sidebar-item
-            - Spree::Taxonomy.order('position ASC').each do |taxonomy|
-              .taxonomy
-                %h6.taxonomy-root= taxonomy.name
-                = display_taxonomies(taxonomy.root, @searcher.taxon)
+          = render 'search/products/taxonomies', taxon: @searcher.taxon
         .two-thirds.column.right
           - if @searcher.filterable_attribute
             .filters{:'data-search-filters-container' => true}
