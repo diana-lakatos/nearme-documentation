@@ -9,7 +9,8 @@ Spree::Product.class_eval do
   belongs_to :user
   belongs_to :company
   belongs_to :administrator, class_name: 'User'
-  has_many :user_messages, as: :thread_context, inverse_of: :thread_context
+  has_many   :user_messages, as: :thread_context, inverse_of: :thread_context
+  has_many   :impressions, as: :impressionable, dependent: :destroy
 
   scope :approved, -> { where(approved: true) }
   scope :currently_available, -> { where("(#{Spree::Product.quoted_table_name}.available_on <= ? OR #{Spree::Product.quoted_table_name}.available_on IS NULL)", Time.zone.now) }

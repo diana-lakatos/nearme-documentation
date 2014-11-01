@@ -16,7 +16,7 @@ class DataImporter::Host::CsvCurrentDataGenerator < DataImporter::File
   end
 
   def get_data(csv)
-    @company.locations.each do |location|
+    @company.locations.order('external_id ASC').each do |location|
       data = []
       location_fields.each do |field|
         data << location.send(field)
