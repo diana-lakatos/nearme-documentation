@@ -11,6 +11,17 @@ module SearchHelpers
     end
   end
 
+  def search_for_product(query, options={})
+    fill_in "loc", with: query
+
+    if page.current_path =~ /search/
+      page.execute_script("$('#listing_search form').submit()")
+      wait_until_results_are_returned
+    else
+      page.execute_script("$('#listing_search').unbind('submit').submit()")
+    end
+  end
+
   def select_address_form_autocomplete
     page.execute_script("$('#search').trigger('keypress')")
     return unless page.has_css?('.pac-container', visible: true)

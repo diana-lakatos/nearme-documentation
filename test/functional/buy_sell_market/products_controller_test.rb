@@ -23,4 +23,3 @@ class BuySellMarket::ProductsControllerTest < ActionController::TestCase
   end
 
 end
-

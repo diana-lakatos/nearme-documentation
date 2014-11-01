@@ -38,3 +38,8 @@ end
 Then(/^I should have blog instance created$/) do
   BlogInstance.last.name.should == 'Test instance Blog'
 end
+
+And(/^current instance is buyable$/) do
+  instance = PlatformContext.current.instance
+  instance.update_attribute(:default_search_view, 'products')
+end

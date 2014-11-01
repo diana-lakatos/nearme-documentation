@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :base_product, class: Spree::Product do
     sequence(:name) { |n| "Product ##{n} - #{Kernel.rand(9999)}" }
-    description { generate(:random_description) }
+    description { Faker::Lorem.paragraph(5) }
     price 19.99
     cost_price 17.00
     sku 'ABC'
