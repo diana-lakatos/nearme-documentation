@@ -5,7 +5,7 @@ class PlatformContextDecorator
 
   delegate :tagline, :support_url, :blog_url, :twitter_url, :twitter_handle, :facebook_url, :gplus_url, :address,
     :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :meta_title, :pages, :logo_image,
-    :favicon_image, :homepage_content, :call_to_action, :is_company_theme?, :to => :theme
+    :favicon_image, :icon_image, :icon_retina_image, :homepage_content, :call_to_action, :is_company_theme?, :to => :theme
 
   delegate :bookable_noun, :lessor, :lessee, :name, :is_desksnearme?, :to => :instance
 
