@@ -2,9 +2,6 @@
 class Search.HomeController extends Search.Controller
   constructor: (form, @container) ->
     super(form)
-    @queryField.keypress (e) =>
-      if e.which == 13
-        @submit_form = true
 
     # when submitting the form without clicking on autocomplete, we need to check if the field's value has been changed to update lat/lon and address components.
     # otherwise, no matter what we type in, we will always get results for geolocated address
