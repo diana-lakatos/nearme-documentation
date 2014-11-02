@@ -46,7 +46,7 @@ class Domain < ActiveRecord::Base
   delegate :white_label_enabled?, :to => :target
 
   def self.where_hostname(hostname)
-    domain = where(name: hostname).first
+    domain = find_by(name: hostname)
 
     # Domain was not found, lets figure out the correct name
     unless domain
@@ -54,11 +54,11 @@ class Domain < ActiveRecord::Base
 
       # a.b.example.com => example.com, a.b.c.near-me.co.uk => near-me.co.uk
       without_subdomains = parsed_url.domain_with_public_suffix
-      domain = where(name: without_subdomains).first
+      domain = find_by(name: without_subdomains)
 
       unless domain
         www_hostname = "www.#{without_subdomains}"
-        domain = where(name: www_hostname).first
+        domain = find_by(name: www_hostname)
       end
     end
 
