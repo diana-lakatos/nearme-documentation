@@ -33,6 +33,27 @@ class PlatformContextTest < ActiveSupport::TestCase
       assert_equal @desks_near_me_domain, rq.domain
     end
 
+    should 'recognize domain from non-existent subdomains' do
+      rq = PlatformContext.new('www.nonsense.desksnearme.com')
+      assert_equal @desks_near_me_domain, rq.domain
+    end
+
+    should 'be able to bypass non-existent www subdomain' do
+      example_www_domain = FactoryGirl.create(:domain, name: 'www.example.co.uk', target: FactoryGirl.create(:instance))
+      rq = PlatformContext.new('example.co.uk')
+      assert_equal example_www_domain, rq.domain
+    end
+
+    should 'return valid redirect url' do
+      rq = PlatformContext.new('blog.desksnearme.com')
+      assert_equal @desks_near_me_domain.url, rq.redirect_url
+    end
+
+    should 'return near-me url for non-existent domain' do
+      rq = PlatformContext.new('fake.domain.net')
+      assert_equal 'http://near-me.com/?domain_not_valid=true', rq.redirect_url
+    end
+
     should 'be able to bypass www in host name' do
       rq = PlatformContext.new('www.desksnearme.com')
       assert_equal @desks_near_me_domain, rq.domain

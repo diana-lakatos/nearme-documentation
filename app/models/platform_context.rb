@@ -161,11 +161,12 @@ class PlatformContext
   end
 
   def valid_hostname?
-    if @domain
-      @domain.name == @request_host
-    else
-      true
-    end
+    return true if @domain.blank?
+    @domain.name == @request_host
+  end
+
+  def redirect_url
+    @domain.blank? ? 'http://near-me.com/?domain_not_valid=true' : @domain.url
   end
 
   def to_h

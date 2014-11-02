@@ -52,7 +52,8 @@ class Domain < ActiveRecord::Base
     unless domain
       parsed_url = Domainatrix.parse(hostname)
 
-      without_subdomains = parsed_url.domain_with_public_suffix # a.b.example.com => example.com
+      # a.b.example.com => example.com, a.b.c.near-me.co.uk => near-me.co.uk
+      without_subdomains = parsed_url.domain_with_public_suffix
       domain = where(name: without_subdomains).first
 
       unless domain
