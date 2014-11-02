@@ -7,8 +7,12 @@ class Spree::Product::SearchFetcher
 
   def products
     @products = filtered_products.order(@filters[:sort])
-    @products = @products.in_taxon(taxon) if taxon.present?
-    @products = @products.like_any([:name, :description], @filters[:query].split) unless @filters[:query].blank?
+    if !@filters[:taxon].blank? || !@filters[:query].blank?
+      @products = @products.in_taxon(taxon) if taxon.present?
+      @products = @products.like_any([:name, :description], @filters[:query].split) unless @filters[:query].blank?
+    else
+      @products = @products.where('1=0')
+    end
     @products
   end
 
