@@ -36,6 +36,7 @@ class Reservation < ActiveRecord::Base
   belongs_to :recurring_booking
   belongs_to :platform_context_detail, :polymorphic => true
   belongs_to :credit_card
+  belongs_to :user_instance_profile, foreign_key: 'owner_id', primary_key: 'user_id', counter_cache: true
   has_many :user_messages, as: :thread_context
   has_many :waiver_agreements, as: :target
 

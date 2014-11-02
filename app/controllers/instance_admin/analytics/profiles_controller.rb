@@ -1,18 +1,14 @@
 class InstanceAdmin::Analytics::ProfilesController < InstanceAdmin::Analytics::BaseController
 
   def show
-    sql = 'SELECT users.id, users.email, users.name, users.bookings_count, users.phone, country_name, mobile_number, current_location, user_instance_profiles.properties as user_properties '\
-    'FROM user_instance_profiles '\
-    'JOIN users '\
-    'ON user_instance_profiles.user_id = users.id '\
-    "WHERE user_instance_profiles.instance_id = #{platform_context.instance.id} "\
-
-    records_array = ActiveRecord::Base.connection.execute(sql)
+    profiles = UserInstanceProfile.joins(:user).pluck('users.id, users.email, users.name,
+      user_instance_profiles.reservations_count, user_instance_profiles.transactables_count, users.mobile_number,
+      users.current_location, user_instance_profiles.properties')
 
     csv = CSV.generate do |csv|
-      csv << records_array.fields
-      records_array.each do |record|
-        csv << record.values
+      csv.add_row %w(id email name bookings_count listings_count phone country_name mobile_number current_location user_properties)
+      profiles.each do |profile|
+        csv.add_row profile
       end
     end
 

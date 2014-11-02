@@ -1,8 +1,8 @@
 class ApplicationController < ActionController::Base
-  prepend_view_path FooterResolver.instance
   prepend_view_path InstanceViewResolver.instance
 
-  before_filter :require_ssl
+  force_ssl if: :require_ssl?
+
   before_filter :log_out_if_token_exists
   before_filter :log_out_if_sso_logout
   before_filter :redirect_to_set_password_unless_unnecessary
@@ -179,7 +179,7 @@ class ApplicationController < ActionController::Base
   end
   helper_method :secure_links?
 
-  def force_ssl
+  def nm_force_ssl
     if secure? && !request.ssl?
       redirect_to url_for(platform_context.secured_constraint.merge(:return_to => params[:return_to]))
     end
@@ -189,14 +189,8 @@ class ApplicationController < ActionController::Base
     Rails.application.config.secure_app
   end
 
-  def require_ssl
-    if secure? && platform_context.secured? and not request.ssl?
-      if request.get? # we can't redirect non-get reqests
-        redirect_to url_for(protocol: 'https'), status: :moved_permanently
-      else
-        redirect_to root_url(protocol: 'https')
-      end
-    end
+  def require_ssl?
+    secure? && platform_context.secured? && !request.ssl?
   end
 
   def stored_url_for(resource_or_scope)

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141021143715) do
+ActiveRecord::Schema.define(version: 20141031043330) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -437,18 +437,6 @@ ActiveRecord::Schema.define(version: 20141021143715) do
   end
 
   add_index "email_templates", ["theme_id"], name: "index_email_templates_on_theme_id", using: :btree
-
-  create_table "footer_templates", force: true do |t|
-    t.text     "body"
-    t.string   "path"
-    t.boolean  "partial"
-    t.integer  "theme_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "footer_templates", ["path", "partial", "theme_id"], name: "index_footer_templates_on_path_and_partial_and_theme_id", using: :btree
-  add_index "footer_templates", ["theme_id"], name: "index_footer_templates_on_theme_id", using: :btree
 
   create_table "friendly_id_slugs", force: true do |t|
     t.string   "slug",                      null: false
@@ -2365,6 +2353,8 @@ ActiveRecord::Schema.define(version: 20141021143715) do
     t.text     "metadata"
     t.hstore   "properties"
     t.datetime "deleted_at"
+    t.integer  "reservations_count",       default: 0
+    t.integer  "transactables_count",      default: 0
   end
 
   create_table "user_messages", force: true do |t|
@@ -2416,7 +2406,6 @@ ActiveRecord::Schema.define(version: 20141021143715) do
     t.datetime "updated_at"
     t.string   "name"
     t.boolean  "admin"
-    t.integer  "bookings_count",                                     default: 0,                                                                                   null: false
     t.datetime "confirmation_sent_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"
