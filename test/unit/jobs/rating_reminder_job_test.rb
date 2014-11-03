@@ -36,6 +36,23 @@ class RatingReminderJobTest < ActiveSupport::TestCase
     end
   end
 
+  context "With a different platform context" do
+
+    setup do
+      @reservation = FactoryGirl.create(:past_reservation)
+      PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance, :name => 'Example Instance'))
+      @reservation = FactoryGirl.create(:past_reservation)
+    end
+
+    should 'send raiting reminders from both instances' do
+      stub_local_time_to_return_hour(Location.any_instance, 12)
+      assert_difference('ActionMailer::Base.deliveries.size', 4) do
+        RatingReminderJob.perform(Date.current.to_s)
+      end
+    end
+
+  end
+
   context "With a future reservation" do
 
     setup do
