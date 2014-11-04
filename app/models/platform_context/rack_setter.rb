@@ -14,7 +14,7 @@ class PlatformContext::RackSetter
     ::PlatformContext.clear_current
     request = ActionDispatch::Request.new(env)
     ::PlatformContext.current = ::PlatformContext.new(request.host)
-    if ::PlatformContext.current.valid_domain?
+    if ::PlatformContext.current.valid_domain? && ::PlatformContext.current.valid_hostname?
       Rails.logger.info "platform_context: #{::PlatformContext.current.to_h}"
       if I18n.backend.respond_to?(:backends)
         I18n.backend.backends.first.instance_id = ::PlatformContext.current.instance.id
@@ -23,7 +23,7 @@ class PlatformContext::RackSetter
     elsif request.path_info == '/ping'
       @app.call(env)
     else
-      [302, {"Location" => 'http://near-me.com/?domain_not_valid=true'}, self]
+      [302, { 'Location' => ::PlatformContext.current.redirect_url }, self]
     end
   end
 

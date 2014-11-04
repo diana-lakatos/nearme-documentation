@@ -86,7 +86,7 @@ class PlatformContext
   end
 
   def initialize_with_request_host(request_host)
-    @request_host = remove_port_from_hostname(request_host.try(:gsub, /^www\./, ""))
+    @request_host = remove_port_from_hostname(request_host)
     initialize_with_domain(fetch_domain)
   end
 
@@ -160,6 +160,15 @@ class PlatformContext
     @domain || is_root_domain?
   end
 
+  def valid_hostname?
+    return true if @domain.blank?
+    @domain.name == @request_host
+  end
+
+  def redirect_url
+    @domain.blank? ? 'http://near-me.com/?domain_not_valid=true' : @domain.url
+  end
+
   def to_h
     { request_host: @request_host }.merge(
       Hash[instance_variables.
@@ -172,7 +181,7 @@ class PlatformContext
   private
 
   def fetch_domain
-    Domain.where(:name => @request_host).first
+    Domain.where_hostname(@request_host)
   end
 
   def is_root_domain?
