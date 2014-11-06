@@ -7,6 +7,9 @@
         %tbody
           - @transactable_types.each do |resource|
             %tr
-              %td= link_to resource.name.humanize, instance_admin_manage_transactable_type_path(resource)
+              %td= resource.name.humanize
+              %td
+                = link_to 'Data Upload', instance_admin_manage_transactable_type_data_uploads_path(resource), class: 'pull-right btn btn-green'
+                = link_to 'Custom Attributes', instance_admin_manage_transactable_type_custom_attributes_path(resource), class: 'pull-right btn btn-green'
               %td= link_to 'Edit', edit_instance_admin_manage_transactable_type_path(resource), class: 'pull-right'
 

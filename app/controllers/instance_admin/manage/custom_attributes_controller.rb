@@ -4,7 +4,7 @@ class InstanceAdmin::Manage::CustomAttributesController < InstanceAdmin::Manage:
   before_filter :normalize_valid_values, only: [:create, :update]
 
   def index
-    @custom_attributes = @target.custom_attributes.listable
+    @custom_attributes = @target.custom_attributes
   end
 
   def new
@@ -30,8 +30,8 @@ class InstanceAdmin::Manage::CustomAttributesController < InstanceAdmin::Manage:
   end
 
   def update
-    @custom_attribute = @target.custom_attributes.listable.find(params[:id])
-    if @custom_attribute.update_attributes(custom_attributes_params)
+    @custom_attribute = @target.custom_attributes.find(params[:id])
+    if @custom_attribute.update_attributes(custom_attributes_params(@custom_attribute.required_internally?))
       flash[:success] = t 'flash_messages.instance_admin.manage.custom_attributes.updated'
       redirect_to redirection_path
     else
@@ -41,7 +41,7 @@ class InstanceAdmin::Manage::CustomAttributesController < InstanceAdmin::Manage:
   end
 
   def destroy
-    @custom_attribute = @target.custom_attributes.listable.find(params[:id])
+    @custom_attribute = @target.custom_attributes.not_internal.find(params[:id])
     @custom_attribute.destroy
     flash[:success] = t 'flash_messages.instance_admin.manage.custom_attributes.deleted'
     redirect_to redirection_path
@@ -61,8 +61,17 @@ class InstanceAdmin::Manage::CustomAttributesController < InstanceAdmin::Manage:
       params[:custom_attribute][:valid_values] = params[:custom_attribute][:valid_values].split(',').map(&:strip) if params[:custom_attribute] && params[:custom_attribute][:valid_values]
   end
 
-  def custom_attributes_params
-    params.require(:custom_attribute).permit(secured_params.custom_attribute).tap do |whitelisted|
+  def custom_attributes_params(required_internally = false)
+
+    pemitted_params = case required_internally
+                      when true
+                        secured_params.custom_attribute_internal
+                      when false
+                        secured_params.custom_attribute
+                      else
+                        raise NotImplementedError
+                      end
+    params.require(:custom_attribute).permit(pemitted_params).tap do |whitelisted|
       whitelisted[:wrapper_html_options] = params[:custom_attribute][:wrapper_html_options] if params[:custom_attribute] && params[:custom_attribute][:wrapper_html_options]
     end
   end
