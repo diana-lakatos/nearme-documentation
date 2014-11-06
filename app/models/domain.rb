@@ -3,6 +3,8 @@ class Domain < ActiveRecord::Base
   acts_as_paranoid
   # attr_accessible :name, :target, :target_id, :target_type, :secured
 
+  REDIRECT_CODES = [301, 302]
+
   attr_accessor :certificate_body, :private_key, :certificate_chain
 
   state_machine :state, initial: :unsecured do
@@ -40,6 +42,9 @@ class Domain < ActiveRecord::Base
       record.errors[:name] << "This domain is not available."
     end
   end
+
+  validates :redirect_code, inclusion: { in: REDIRECT_CODES }, allow_blank: true
+  validates :redirect_to, presence: true, if: :redirect_code?
 
   scope :secured, -> { where(secured: true) }
 
@@ -89,6 +94,10 @@ class Domain < ActiveRecord::Base
 
   def near_me_domain?
     name =~ /^(.*)\.near-me\.com$/
+  end
+
+  def redirect?
+    redirect_code.present? && redirect_to.present?
   end
 
   private
