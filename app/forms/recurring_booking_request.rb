@@ -17,10 +17,10 @@ class RecurringBookingRequest < Form
   validate :validate_phone_and_country
 
   def initialize(listing, user, platform_context, attributes = {})
-    store_attributes(attributes)
-    @listing = listing
     @user = user
+    @listing = listing
     @instance = platform_context.instance
+    store_attributes(attributes)
 
     if @listing
       @recurring_booking = @listing.recurring_bookings.build
