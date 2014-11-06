@@ -260,6 +260,7 @@
 			.bind('ajax:beforeSend', function(event, xhr, status) {
 				if(validateForm()) {
 					$(this).find('button[type="submit"]').text('Submitting...').prop('disabled', true);
+					try{__adroll.record_user({"adroll_segments":"demo"});}catch(e){}
 				} else {
 					alert('Please fix form errors to submit!');
 					return false;
