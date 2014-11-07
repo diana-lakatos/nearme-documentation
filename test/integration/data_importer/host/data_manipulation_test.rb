@@ -137,7 +137,6 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
   def setup_current_data
     @user = FactoryGirl.create(:user)
     @company = FactoryGirl.create(:company, creator: @user)
-    @location_empty = FactoryGirl.create(:location_czestochowa, company: @company, location_type: @location_type, external_id: 1)
     @location_not_empty = FactoryGirl.create(:location_rydygiera, company: @company, location_type: @location_type, external_id: 2)
     @listing_one = FactoryGirl.create(:transactable, location: @location_not_empty, name: 'my name', my_attribute: 'attribute', daily_price: 89, external_id: 4353)
     stub_image_url('http://www.example.com/image1.jpg')
@@ -146,6 +145,7 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     @photo_one = FactoryGirl.create(:photo, listing: @listing_one, image_original_url: 'http://www.example.com/image1.jpg')
     @photo_two = FactoryGirl.create(:photo, listing: @listing_one, image_original_url: 'http://www.example.com/image2.jpg')
     @listing_two = FactoryGirl.create(:transactable, location: @location_not_empty, name: 'my name2', my_attribute: 'attribute', daily_price: 89, external_id: 4354)
+    @location_empty = FactoryGirl.create(:location_czestochowa, company: @company, location_type: @location_type, external_id: 1)
   end
 
   def setup_data_for_other_user

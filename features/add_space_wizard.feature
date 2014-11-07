@@ -9,15 +9,6 @@ Feature: A user can add a space
     Given a transactable_type_listing exists with name: "Listing"
     And a industry exists with name: "Industry"
 
-  Scenario: An unregistered user starts by signing up
-    Given I go to the home page
-     And I follow "List Your" bookable noun
-     And I sign up as a user in the modal
-     Then I should see "List Your First" bookable noun
-     When I fill in valid space details
-     And I press "Submit"
-     Then I should see "Your Desk was listed!"
-
   Scenario: An unregistered user starts a draft, comes back to it, and saves it
     Given I go to the home page
      And I follow "List Your" bookable noun
@@ -29,6 +20,15 @@ Feature: A user can add a space
      And I press "Save as draft"
      Then I should see "Your draft has been saved!"
      And I fill in valid space details
+     And I press "Submit"
+     Then I should see "Your Desk was listed!"
+
+  Scenario: An unregistered user starts by signing up
+    Given I go to the home page
+     And I follow "List Your" bookable noun
+     And I sign up as a user in the modal
+     Then I should see "List Your First" bookable noun
+     When I fill in valid space details
      And I press "Submit"
      Then I should see "Your Desk was listed!"
 
