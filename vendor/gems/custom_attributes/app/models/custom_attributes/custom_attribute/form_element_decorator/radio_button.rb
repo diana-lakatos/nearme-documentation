@@ -1,5 +1,5 @@
 module CustomAttributes
-  class CustomAttribute::FormElementDecorator::RadioButto < CustomAttribute::FormElementDecorator::Base
+  class CustomAttribute::FormElementDecorator::RadioButton < CustomAttribute::FormElementDecorator::Base
 
     def options
       {
