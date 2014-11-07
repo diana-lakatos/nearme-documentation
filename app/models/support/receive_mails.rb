@@ -1,5 +1,6 @@
 class Support::ReceiveMails
   def start!
+    return if PlatformContext.current.instance.support_imap_hash.blank?
     Mailman::Application.run(config) do
       subject("[Support Ticket #%ticket_id%]", Support::TicketMessage)
       default do
