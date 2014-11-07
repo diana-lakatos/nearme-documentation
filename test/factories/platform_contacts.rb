@@ -1,10 +1,11 @@
 FactoryGirl.define do
   factory :platform_contact do
     name Faker::Name.name
-    company "Test Co."
+    company Faker::Company.name
     email Faker::Internet.email
     phone Faker::PhoneNumber.phone_number
-    comments "I would like to build a marketplace."
+    location Faker::Address.city
+    comments Faker::Lorem.sentence
     subscribed true
   end
 end

@@ -113,6 +113,7 @@
 		    company           = ($('#field-company')),
 		    email             = ($('#field-email')),
 		    phone             = ($('#field-phone')),
+		    location          = ($('#field-location')),
 		    description       = ($('#field-description'));
 
 		$('.form-contact form #field-name').on('focusout',function() {
@@ -151,6 +152,15 @@
 			}
 		})
 
+		$('.form-contact form #field-location').on('focusout',function() {
+			if( location.val().length == 0 || location.val() == location.attr('title')) {
+				location.parent('.form-group').addClass('error').removeClass('success')
+				return false;
+			} else {
+				location.parent('.form-group').addClass('success').removeClass('error')
+			}
+		})
+
 		$('.form-contact form #field-description').on('focusout',function() {
 			if( description.val().length == 0 || description.val() == description.attr('title')) {
 				description.parent('.form-group').addClass('error').removeClass('success')
@@ -165,6 +175,7 @@
 			    company           = ($('#field-company')),
 			    email             = ($('#field-email')),
 			    phone             = ($('#field-phone')),
+			    location          = ($('#field-location')),
 			    description       = ($('#field-description')),
 			    valid             = true;
 
@@ -196,6 +207,13 @@
 				valid = false;
 			} else {
 				phone.parent('.form-group').addClass('success').removeClass('error')
+			}
+
+			if( location.val().length == 0 || location.val() == location.attr('title')) {
+				location.parent('.form-group').addClass('error').removeClass('success')
+				valid = false;
+			} else {
+				location.parent('.form-group').addClass('success').removeClass('error')
 			}
 
 			if( description.val().length == 0 || description.val() == description.attr('title')) {

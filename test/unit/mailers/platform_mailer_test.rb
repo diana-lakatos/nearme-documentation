@@ -10,6 +10,7 @@ class PlatformMailerTest < ActiveSupport::TestCase
     assert mail.body.include?(platform_contact.company)
     assert mail.body.include?(platform_contact.email)
     assert mail.body.include?(platform_contact.phone)
+    assert mail.body.include?(platform_contact.location)
     assert mail.body.include?(platform_contact.comments)
   end
 end
