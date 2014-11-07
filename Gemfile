@@ -36,7 +36,7 @@ gem 'nearest_time_zone'
 gem 'sass'
 gem 'haml'
 gem 'le'
-gem 'mini_magick'
+gem 'mini_magick', "~> 4.0.0.rc"
 gem 'money-rails', '0.8.1'
 gem 'paranoia', '~> 2.0.0'
 gem 'simple_form', '~> 3.0.2'
