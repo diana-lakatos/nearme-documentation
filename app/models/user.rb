@@ -107,8 +107,11 @@ class User < ActiveRecord::Base
 
   BIOGRAPHY_MAX_LENGTH = 2000
 
-  validates_presence_of :name
-  validates_presence_of :first_name
+  MAX_NAME_LENGHT = 30
+
+  validates :name, presence: true
+  validate :validate_name_parts_lengths
+  validates :first_name, :middle_name, :last_name, length: { maximum: MAX_NAME_LENGHT }
 
   # FIXME: This is an unideal coupling of 'required parameters' for specific forms
   #        to the general validations on the User model.
@@ -600,4 +603,24 @@ class User < ActiveRecord::Base
     @cached_profiles[PlatformContext.current.try(:instance).try(:id)]
   end
 
+  private
+
+  def validate_name_parts_lengths
+    first_name = name(true).split[0...1].join(' ')
+    if first_name.length > MAX_NAME_LENGHT
+      errors.add(:name, :first_name_too_long, count: User::MAX_NAME_LENGHT)
+      return
+    end
+
+    middle_name = name(true).split.length > 2 ? name(true).split[1] : ''
+    if middle_name.length > MAX_NAME_LENGHT
+      errors.add(:name, :middle_name_too_long, count: User::MAX_NAME_LENGHT)
+      return
+    end
+
+    last_name = name(true).split.length > 1 ? name(true).split.last : ''
+    if last_name.length > MAX_NAME_LENGHT
+      errors.add(:name, :last_name_too_long, count: User::MAX_NAME_LENGHT)
+    end
+  end
 end

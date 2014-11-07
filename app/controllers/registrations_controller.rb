@@ -53,6 +53,7 @@ class RegistrationsController < Devise::RegistrationsController
       session[:omniauth] = nil unless @user.new_record?
       flash[:redirected_from_sign_up] = true
       @resource = resource
+      puts @resource.errors.inspect
     rescue ActiveRecord::RecordNotUnique
       # we are trying to handle situation when user makes double request (button hit or page refresh)
       # request are handled by two server processes so AR validation goes fine, but DB throws exception
