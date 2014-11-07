@@ -11,10 +11,27 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     GmapsFake.stub_requests
   end
 
+  should 'should not raise exception for blank file' do
+    setup_current_data
+    setup_data_for_other_user
+    setup_xml_file(Rails.root.join('test', 'assets', 'data_importer', 'current_data_blank.csv'), true)
+    assert_no_difference 'Company.count' do
+      assert_no_difference 'Location.count' do
+        assert_no_difference 'Address.count' do
+          assert_no_difference 'Transactable.count' do
+            assert_no_difference 'Photo.count' do
+              @xml_file.parse
+            end
+          end
+        end
+      end
+    end
+  end
+
   should 'should not skip empty location and include multiple photos' do
     setup_current_data
     setup_data_for_other_user
-    # assert_equal (File.open(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), "r") { |io| io.read}), DataImporter::Host::CsvCurrentDataGenerator.new(@user, @transactable_type).generate_csv
+    assert_equal (File.open(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), "r") { |io| io.read}), DataImporter::Host::CsvCurrentDataGenerator.new(@user, @transactable_type).generate_csv
   end
 
   should 'should not remove anything after uploading current_data csv' do
