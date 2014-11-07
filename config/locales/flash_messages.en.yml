@@ -100,6 +100,7 @@ en:
         scheduled: 'Data has been scheduled to be imported.'
         deleted: 'Data Upload has been deleted.'
         not_scheduled: 'This data has been already imported.'
+        too_many_rows: 'Max amount of rows in CSV is %{max}'
       waiver_agreement_templates:
         created: 'Waiver agreement template has been created.'
         deleted: 'Waiver agreement template has been deleted.'
