@@ -107,11 +107,11 @@ class User < ActiveRecord::Base
 
   BIOGRAPHY_MAX_LENGTH = 2000
 
-  MAX_NAME_LENGHT = 30
+  MAX_NAME_LENGTH = 30
 
   validates :name, presence: true
   validate :validate_name_parts_lengths
-  validates :first_name, :middle_name, :last_name, length: { maximum: MAX_NAME_LENGHT }
+  validates :first_name, :middle_name, :last_name, length: { maximum: MAX_NAME_LENGTH }
 
   # FIXME: This is an unideal coupling of 'required parameters' for specific forms
   #        to the general validations on the User model.
@@ -607,20 +607,20 @@ class User < ActiveRecord::Base
 
   def validate_name_parts_lengths
     first_name = name(true).split[0...1].join(' ')
-    if first_name.length > MAX_NAME_LENGHT
-      errors.add(:name, :first_name_too_long, count: User::MAX_NAME_LENGHT)
+    if first_name.length > MAX_NAME_LENGTH
+      errors.add(:name, :first_name_too_long, count: User::MAX_NAME_LENGTH)
       return
     end
 
     middle_name = name(true).split.length > 2 ? name(true).split[1] : ''
-    if middle_name.length > MAX_NAME_LENGHT
-      errors.add(:name, :middle_name_too_long, count: User::MAX_NAME_LENGHT)
+    if middle_name.length > MAX_NAME_LENGTH
+      errors.add(:name, :middle_name_too_long, count: User::MAX_NAME_LENGTH)
       return
     end
 
     last_name = name(true).split.length > 1 ? name(true).split.last : ''
-    if last_name.length > MAX_NAME_LENGHT
-      errors.add(:name, :last_name_too_long, count: User::MAX_NAME_LENGHT)
+    if last_name.length > MAX_NAME_LENGTH
+      errors.add(:name, :last_name_too_long, count: User::MAX_NAME_LENGTH)
     end
   end
 end
