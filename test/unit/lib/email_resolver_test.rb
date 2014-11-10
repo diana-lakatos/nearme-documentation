@@ -4,9 +4,10 @@ require 'email_resolver'
 class EmailResolverTest < ActiveSupport::TestCase
 
   setup do
+    @instance = Instance.first
     @resolver = EmailResolver.instance
-    @details  = {:formats => [:html], :locale => [:en], :handlers => [:erb, :liquid], :platform_context => [PlatformContext.new] }
-    @theme = Instance.first.theme
+    @details  = {:formats => [:html], :locale => [:en], :handlers => [:erb, :liquid], :platform_context => [PlatformContext.new(@instance)] }
+    @theme = @instance.theme
   end
 
   test "doesn't resolve a view for undefined path" do

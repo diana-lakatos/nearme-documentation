@@ -4,6 +4,7 @@ class SearchControllerTest < ActionController::TestCase
   setup do
     stub_request(:get, /.*maps\.googleapis\.com.*/)
     stub_mixpanel
+    PlatformContext.current = PlatformContext.new(Instance.first)
   end
 
   def assert_nothing_found

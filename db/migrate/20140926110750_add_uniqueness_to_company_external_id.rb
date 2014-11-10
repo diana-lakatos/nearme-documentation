@@ -15,7 +15,7 @@ class AddUniquenessToCompanyExternalId < ActiveRecord::Migration
       SET external_id = id
       WHERE external_id IS NULL;
 
-      DROP INDEX index_companies_on_instance_id_and_external_id ;
+      DROP INDEX IF EXISTS index_companies_on_instance_id_and_external_id ;
     SQL
 
     add_index :transactables, [:external_id, :location_id], unique: true

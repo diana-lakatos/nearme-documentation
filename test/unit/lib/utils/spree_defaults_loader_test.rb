@@ -3,14 +3,11 @@ require 'test_helper'
 class SpreeDefaultsLoaderTest < ActiveSupport::TestCase
 
   setup do
-    @instance = FactoryGirl.create(:instance)
-    @domain = FactoryGirl.create(:domain, name: 'example.com', target: @instance)
-    @loader = Utils::SpreeDefaultsLoader.new(@instance)
+    @loader = Utils::SpreeDefaultsLoader.new(Instance.first)
   end
 
   context '#load!' do
     setup do
-      PlatformContext.current = PlatformContext.new(@instance)
       @loader.load!
     end
 

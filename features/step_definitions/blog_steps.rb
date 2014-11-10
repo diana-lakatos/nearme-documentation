@@ -1,5 +1,5 @@
 Given /a blog instance exists for this instance/ do
-  @instance = Instance.default_instance
+  @instance = Instance.first
   @blog_instance = FactoryGirl.create(:blog_instance, owner: @instance)
 end
 

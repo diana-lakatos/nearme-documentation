@@ -116,9 +116,9 @@ class Theme < ActiveRecord::Base
       when "Instance"
         owner
       when "Company"
-        Company.with_deleted.where(id: object_id).first.try(:instance)
+        owner.try(:instance) || Company.with_deleted.where(id: object_id).first.try(:instance)
       when "Partner"
-        Partner.where(id: object_id).first.try(:instance)
+        owner.try(:instance)
       else
         raise "Unknown owner #{owner_type}"
       end

@@ -4,16 +4,14 @@ class PlatformContextTest < ActiveSupport::TestCase
   context 'root_secured? and secured? for root domain' do
     should 'be true when root is secured' do
       PlatformContext.stubs(:root_secured => true)
-      ctx = PlatformContext.new
-      ctx.stubs(:is_root_domain? => true)
+      ctx = PlatformContext.new(Instance.first)
       assert ctx.root_secured?
       assert ctx.secured?
     end
 
     should 'be false when root is not secured' do
       PlatformContext.stubs(:root_secured => false)
-      ctx = PlatformContext.new
-      ctx.stubs(:is_root_domain? => true)
+      ctx = PlatformContext.new(Instance.first)
       refute ctx.root_secured?
       refute ctx.secured?
     end
@@ -141,15 +139,16 @@ class PlatformContextTest < ActiveSupport::TestCase
       @example_company = @example_company_domain.target
     end
 
-    should 'default instance if domain is unknown' do
+    should 'no instance if domain is unknown' do
       rq = PlatformContext.new('something.weird.example.com')
-      assert_equal Instance.first, rq.instance
-      assert_equal Instance.first, rq.platform_context_detail
-      assert_equal Instance.first.theme, rq.theme
+      assert_equal nil, rq.instance
+      assert_equal nil, rq.theme
+      assert_equal nil, rq.platform_context_detail
     end
 
-    should 'default instance if domain is desksnear.me' do
-      rq = PlatformContext.new('desksnear.me')
+    should 'First instance if domain is desksnearme.com' do
+      FactoryGirl.create(:domain, :name => 'desksnearme.com', :target => Instance.first)
+      rq = PlatformContext.new('desksnearme.com')
       assert_equal Instance.first, rq.instance
       assert_equal Instance.first, rq.platform_context_detail
       assert_equal Instance.first.theme, rq.theme
@@ -177,12 +176,12 @@ class PlatformContextTest < ActiveSupport::TestCase
         assert_equal @example_company, rq.platform_context_detail
       end
 
-      should 'default instance if company linked to domain that matches request.host has white label disabled' do
+      should 'nil instance if company linked to domain that matches request.host has white label disabled' do
         @example_company.update_attribute(:white_label_enabled, false)
         rq = PlatformContext.new(@host)
-        assert_equal Instance.first, rq.instance
-        assert_equal Instance.first.theme, rq.theme
-        assert_equal Instance.first, rq.platform_context_detail
+        assert_equal nil, rq.instance
+        assert_equal nil, rq.theme
+        assert_equal nil, rq.platform_context_detail
       end
 
       should 'company linked to domain that matches request.host without white label enabled but with partner' do
@@ -216,7 +215,7 @@ class PlatformContextTest < ActiveSupport::TestCase
   context 'white_label_company_user?' do
 
     setup do
-      @platform_context = PlatformContext.new
+      @platform_context = PlatformContext.new(Instance.first)
       @company = FactoryGirl.create(:white_label_company)
       @user = @company.creator
       @another_user = FactoryGirl.create(:user)

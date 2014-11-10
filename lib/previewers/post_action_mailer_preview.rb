@@ -25,7 +25,7 @@ class PostActionMailerPreview < MailView
   end
 
   def instance_created
-    instance_admin = (InstanceAdmin.joins({:user => :listings}).first || InstanceAdmin.create(:instance_id => PlatformContxt.current.instance.id, :user_id => Transactablefirst.creator.id))
+    instance_admin = (InstanceAdmin.joins({:user => :listings}).first || InstanceAdmin.create(:instance_id => PlatformContext.current.instance.id, :user_id => Transactablefirst.creator.id))
     ::PostActionMailer.instance_created(instance_admin.instance, instance_admin.user, 'password')
   end
 

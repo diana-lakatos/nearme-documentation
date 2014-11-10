@@ -62,5 +62,10 @@ FactoryGirl.define do
       association :location_address, factory: :address_vaughan_address_components
     end
 
+    factory :location_with_white_label_company do
+      association :location_address, factory: :address_ursynowska_address_components
+      association(:company, factory: :white_label_company)
+    end
+
   end
 end

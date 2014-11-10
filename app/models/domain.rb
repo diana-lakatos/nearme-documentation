@@ -31,10 +31,13 @@ class Domain < ActiveRecord::Base
   validates :name, domain_name: true
   validates_presence_of :certificate_body, if: :prepared_for_elb?
   validates_presence_of :private_key, if: :prepared_for_elb?
+  validate :validate_default_domain_presence
 
   before_destroy :prevent_destroy_if_only_child
   before_destroy :delete_elb, if: :elb_secured?
   after_save :create_elb, if: :prepared_for_elb?
+
+  after_save :mark_as_default
 
   validates_presence_of :target_type
   validates_each :name do |record, attr, value|
@@ -47,6 +50,7 @@ class Domain < ActiveRecord::Base
   validates :redirect_to, presence: true, if: :redirect_code?
 
   scope :secured, -> { where(secured: true) }
+  scope :default, -> { where(use_as_default: true) }
 
   delegate :white_label_enabled?, :to => :target
 
@@ -85,7 +89,7 @@ class Domain < ActiveRecord::Base
   end
 
   def deletable?
-    not self.preparing?
+    not(preparing? || use_as_default)
   end
 
   def editable?
@@ -117,6 +121,18 @@ class Domain < ActiveRecord::Base
   end
 
   private
+
+  def mark_as_default
+    if use_as_default && target_type.try(:include?, "Instance")
+      target.domains.default.where.not(id: self.id).update_all(use_as_default: false)
+    end
+  end
+
+  def validate_default_domain_presence
+    if !use_as_default && target_type.try(:include?, "Instance") && target.domains.default.where.not(id: self.id).count.zero?
+      errors.add :use_as_default, "At least one domain needs to be default one"
+    end
+  end
 
   def prevent_destroy_if_only_child
     errors.add(:name, "You won't be able to access admin if you delete your only domain") if near_me_domain?

@@ -15,8 +15,6 @@ ActiveRecord::Schema.define(version: 20141125090820) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "btree_gin"
-  enable_extension "btree_gist"
   enable_extension "hstore"
 
   create_table "action_types", force: true do |t|
@@ -51,8 +49,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
 
   create_table "amenities", force: true do |t|
     t.string   "name"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "amenity_type_id"
   end
 
@@ -62,8 +60,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.integer  "amenity_id"
     t.integer  "holder_id"
     t.string   "holder_type"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "deleted_at"
   end
 
@@ -73,8 +71,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
   create_table "amenity_types", force: true do |t|
     t.string   "name"
     t.integer  "position"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "instance_id"
     t.string   "type"
   end
@@ -101,11 +99,11 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "hint"
     t.integer  "approval_request_id"
     t.integer  "approval_request_attachment_template_id"
     t.boolean  "required",                                default: false
     t.string   "label"
+    t.text     "hint"
   end
 
   add_index "approval_request_attachments", ["instance_id"], name: "index_approval_request_attachments_on_instance_id", using: :btree
@@ -152,8 +150,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.integer  "user_id"
     t.string   "provider"
     t.string   "uid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.datetime "deleted_at"
     t.string   "secret"
     t.string   "token"
@@ -177,8 +175,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.integer  "open_minute"
     t.integer  "close_hour"
     t.integer  "close_minute"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "deleted_at"
   end
 
@@ -201,8 +199,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.integer  "reservation_id"
     t.string   "encrypted_token"
     t.string   "encrypted_payment_gateway_class"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "payment_gateway_mode"
   end
 
@@ -213,8 +211,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "owner_type"
     t.string   "facebook_app_id"
     t.boolean  "enabled",         default: false
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "header_logo"
     t.string   "header_icon"
     t.string   "header_text"
@@ -232,8 +230,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.integer  "user_id"
     t.string   "slug"
     t.datetime "published_at"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.text     "excerpt"
   end
 
@@ -241,8 +239,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.integer  "reference_id"
     t.boolean  "success"
     t.integer  "amount"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "user_id"
     t.string   "reference_type"
     t.string   "currency"
@@ -262,8 +260,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "type",              limit: 30
     t.integer  "width"
     t.integer  "height"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "instance_id"
   end
 
@@ -276,8 +274,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "name"
     t.string   "email"
     t.text     "description"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "deleted_at"
     t.string   "url"
     t.string   "paypal_email"
@@ -306,8 +304,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
   create_table "company_users", force: true do |t|
     t.integer  "company_id"
     t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "deleted_at"
   end
 
@@ -318,8 +316,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "country_alpha2_code"
     t.integer  "instance_payment_gateway_id"
     t.integer  "instance_id"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "credit_cards", force: true do |t|
@@ -397,16 +395,16 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.datetime "failed_at"
     t.string   "locked_by"
     t.string   "queue"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
   create_table "domains", force: true do |t|
     t.string   "name"
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "target_id"
     t.string   "target_type"
     t.datetime "deleted_at"
@@ -417,9 +415,9 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "server_certificate_name"
     t.string   "error_message"
     t.string   "dns_name"
+    t.boolean  "use_as_default",                 default: false
     t.string   "redirect_to"
     t.integer  "redirect_code"
-    t.boolean  "use_as_default",                 default: false
   end
 
   add_index "domains", ["deleted_at"], name: "index_domains_on_deleted_at", using: :btree
@@ -436,8 +434,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "reply_to"
     t.string   "subject"
     t.boolean  "partial",    default: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "theme_id"
   end
 
@@ -462,8 +460,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.integer  "reservation_id"
     t.integer  "value"
     t.text     "comment"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "deleted_at"
   end
 
@@ -477,8 +475,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.integer  "reservation_id"
     t.integer  "value"
     t.text     "comment"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "deleted_at"
   end
 
@@ -490,8 +488,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.integer  "impressionable_id"
     t.string   "impressionable_type"
     t.string   "ip_address"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "deleted_at"
     t.integer  "company_id"
     t.integer  "partner_id"
@@ -505,20 +503,21 @@ ActiveRecord::Schema.define(version: 20141125090820) do
 
   create_table "industries", force: true do |t|
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "instance_id"
   end
 
   create_table "inquiries", force: true do |t|
     t.integer  "transactable_id"
     t.integer  "inquiring_user_id"
     t.text     "message"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "inquiries", ["inquiring_user_id"], name: "index_inquiries_on_inquiring_user_id", using: :btree
-  add_index "inquiries", ["transactable_id"], name: "index_inquiries_on_listing_id", using: :btree
+  add_index "inquiries", ["transactable_id"], name: "index_inquiries_on_transactable_id", using: :btree
 
   create_table "instance_admin_roles", force: true do |t|
     t.string   "name"
@@ -526,10 +525,10 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.boolean  "permission_settings",  default: false
     t.boolean  "permission_theme",     default: false
     t.boolean  "permission_analytics", default: true
-    t.datetime "created_at",                           null: false
-    t.datetime "updated_at",                           null: false
-    t.boolean  "permission_manage",    default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "permission_blog",      default: false
+    t.boolean  "permission_manage",    default: false
     t.boolean  "permission_support",   default: false
     t.boolean  "permission_buysell",   default: false
   end
@@ -541,8 +540,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.integer  "instance_id"
     t.integer  "instance_admin_role_id"
     t.boolean  "instance_owner",         default: false
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "deleted_at"
   end
 
@@ -554,8 +553,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.integer  "instance_id"
     t.string   "billing_gateway"
     t.string   "currency",        default: "USD"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "instance_billing_gateways", ["instance_id"], name: "index_instance_billing_gateways_on_instance_id", using: :btree
@@ -567,11 +566,13 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "encrypted_balanced_user_id"
     t.string   "bank_account_last_four_digits"
     t.datetime "deleted_at"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "gateway_class"
     t.text     "encrypted_response"
   end
+
+  add_index "instance_clients", ["instance_id"], name: "index_instance_clients_on_instance_id", using: :btree
 
   create_table "instance_creators", force: true do |t|
     t.string   "email"
@@ -588,8 +589,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.integer  "payment_gateway_id"
     t.text     "encrypted_live_settings"
     t.text     "encrypted_test_settings"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "instance_profile_types", force: true do |t|
@@ -600,8 +601,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
 
   create_table "instance_types", force: true do |t|
     t.string   "name"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "product_type"
   end
 
@@ -614,16 +615,16 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "format"
     t.string   "handler"
     t.boolean  "partial",          default: false
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "instance_views", ["instance_type_id", "instance_id", "path", "locale", "format", "handler"], name: "instance_path_with_format_and_handler", using: :btree
 
   create_table "instances", force: true do |t|
     t.string   "name"
-    t.datetime "created_at",                                                                   null: false
-    t.datetime "updated_at",                                                                   null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "bookable_noun",                                               default: "Desk"
     t.decimal  "service_fee_guest_percent",           precision: 5, scale: 2, default: 0.0
     t.string   "lessor"
@@ -663,6 +664,7 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "encrypted_test_balanced_api_key"
     t.string   "encrypted_olark_api_key"
     t.boolean  "olark_enabled",                                               default: false
+    t.text     "metadata"
     t.string   "encrypted_facebook_consumer_key"
     t.string   "encrypted_facebook_consumer_secret"
     t.string   "encrypted_linkedin_consumer_key"
@@ -672,7 +674,6 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "encrypted_instagram_consumer_key"
     t.string   "encrypted_instagram_consumer_secret"
     t.integer  "instance_type_id"
-    t.text     "metadata"
     t.text     "support_imap_hash"
     t.string   "support_email"
     t.string   "encrypted_db_connection_string"
@@ -682,20 +683,19 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.boolean  "user_based_marketplace_views",                                default: false
     t.string   "searcher_type"
     t.datetime "master_lock"
-    t.boolean  "apply_text_filters",                                          default: false
     t.text     "user_required_fields"
+    t.boolean  "apply_text_filters",                                          default: false
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
-    t.string   "payment_transfers_frequency",                                   default: "fortnightly"
-    t.boolean  "default_instance"
+    t.string   "payment_transfers_frequency",                                 default: "fortnightly"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
 
   create_table "listing_types", force: true do |t|
     t.string   "name"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "instance_id"
   end
 
@@ -703,8 +703,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
 
   create_table "location_types", force: true do |t|
     t.string   "name"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "instance_id"
   end
 
@@ -718,8 +718,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.float    "latitude"
     t.float    "longitude"
     t.text     "info"
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "deleted_at"
     t.string   "formatted_address"
     t.string   "currency"
@@ -743,8 +743,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.boolean  "listings_public",                default: true
     t.integer  "partner_id"
     t.integer  "address_id"
-    t.boolean  "mark_to_be_bulk_update_deleted", default: false
     t.string   "external_id"
+    t.boolean  "mark_to_be_bulk_update_deleted", default: false
   end
 
   add_index "locations", ["address_id"], name: "index_locations_on_address_id", using: :btree
@@ -760,8 +760,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
   create_table "mailer_unsubscriptions", force: true do |t|
     t.integer  "user_id"
     t.string   "mailer"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "mailer_unsubscriptions", ["user_id", "mailer"], name: "index_mailer_unsubscriptions_on_user_id_and_mailer", unique: true, using: :btree
@@ -771,8 +771,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "path",                              null: false
     t.text     "content"
     t.string   "hero_image"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "theme_id"
     t.string   "slug"
     t.integer  "position"
@@ -791,15 +791,15 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "name"
     t.string   "company_name"
     t.string   "email"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "partners", force: true do |t|
     t.string   "name"
     t.integer  "instance_id"
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "search_scope_option", default: "no_scoping"
   end
 
@@ -808,8 +808,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "method_name"
     t.text     "settings"
     t.string   "active_merchant_class"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "payment_transfers", force: true do |t|
@@ -818,8 +818,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "currency"
     t.integer  "amount_cents",                   default: 0, null: false
     t.integer  "service_fee_amount_guest_cents", default: 0, null: false
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "service_fee_amount_host_cents",  default: 0, null: false
     t.datetime "deleted_at"
     t.integer  "instance_id"
@@ -837,16 +837,16 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.text     "response"
     t.integer  "amount"
     t.string   "currency"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.text     "encrypted_response"
     t.datetime "deleted_at"
     t.boolean  "pending",            default: false
   end
 
   create_table "photos", force: true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
     t.integer  "transactable_id"
     t.string   "image"
     t.string   "caption"
@@ -871,7 +871,7 @@ ActiveRecord::Schema.define(version: 20141125090820) do
 
   add_index "photos", ["creator_id"], name: "index_photos_on_creator_id", using: :btree
   add_index "photos", ["instance_id"], name: "index_photos_on_instance_id", using: :btree
-  add_index "photos", ["transactable_id"], name: "index_photos_on_listing_id", using: :btree
+  add_index "photos", ["transactable_id"], name: "index_photos_on_transactable_id", using: :btree
 
   create_table "platform_contacts", force: true do |t|
     t.string   "name"
@@ -879,8 +879,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "subject"
     t.text     "comments"
     t.boolean  "subscribed",        default: false
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "company"
     t.string   "marketplace_type"
     t.string   "referer"
@@ -897,16 +897,16 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "phone"
     t.text     "comments"
     t.boolean  "subscribed", default: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "platform_emails", force: true do |t|
     t.string   "email"
     t.datetime "notified_at"
     t.datetime "unsubscribed_at"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "platform_inquiries", force: true do |t|
@@ -915,8 +915,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "email"
     t.string   "industry"
     t.text     "message"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "recurring_bookings", force: true do |t|
@@ -966,8 +966,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.integer  "amount"
     t.string   "currency"
     t.datetime "deleted_at"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "instance_id"
   end
 
@@ -977,11 +977,11 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.integer  "service_fee_amount_guest_cents"
     t.datetime "paid_at"
     t.datetime "failed_at"
-    t.datetime "created_at",                                             null: false
-    t.datetime "updated_at",                                             null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "payment_transfer_id"
     t.string   "currency"
     t.datetime "deleted_at"
-    t.integer  "payment_transfer_id"
     t.integer  "service_fee_amount_host_cents",              default: 0, null: false
     t.datetime "refunded_at"
     t.integer  "instance_id"
@@ -1067,7 +1067,7 @@ ActiveRecord::Schema.define(version: 20141125090820) do
   add_index "reservations", ["partner_id"], name: "index_reservations_on_partner_id", using: :btree
   add_index "reservations", ["platform_context_detail_id"], name: "index_reservations_on_platform_context_detail_id", using: :btree
   add_index "reservations", ["recurring_booking_id"], name: "index_reservations_on_recurring_booking_id", using: :btree
-  add_index "reservations", ["transactable_id"], name: "index_reservations_on_listing_id", using: :btree
+  add_index "reservations", ["transactable_id"], name: "index_reservations_on_transactable_id", using: :btree
 
   create_table "search_notifications", force: true do |t|
     t.string   "email"
@@ -1076,8 +1076,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.float    "latitude"
     t.float    "longitude"
     t.boolean  "notified",   default: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
@@ -1130,7 +1130,7 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.integer  "position"
     t.string   "attachment_content_type"
     t.string   "attachment_file_name"
-    t.string   "type",                    limit: 75
+    t.string   "type",                        limit: 75
     t.datetime "attachment_updated_at"
     t.text     "alt"
     t.string   "image"
@@ -1942,7 +1942,7 @@ ActiveRecord::Schema.define(version: 20141125090820) do
   create_table "spree_taxons", force: true do |t|
     t.integer  "parent_id"
     t.integer  "position",          default: 0
-    t.string   "name",                          null: false
+    t.string   "name",                              null: false
     t.string   "permalink"
     t.integer  "taxonomy_id"
     t.integer  "lft"
@@ -2093,8 +2093,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.integer  "updated_by_id"
     t.integer  "deleted_by_id"
     t.datetime "deleted_at"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "support_faqs", ["created_by_id"], name: "index_support_faqs_on_created_by_id", using: :btree
@@ -2130,8 +2130,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "email",       null: false
     t.string   "subject",     null: false
     t.text     "message",     null: false
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "support_ticket_messages", ["instance_id"], name: "index_support_ticket_messages_on_instance_id", using: :btree
@@ -2143,8 +2143,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.integer  "user_id"
     t.integer  "assigned_to_id"
     t.string   "state",               null: false
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "target_id"
     t.string   "target_type"
     t.text     "reservation_details"
@@ -2181,8 +2181,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "bold_svg"
     t.string   "bold_ttf"
     t.string   "bold_woff"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "theme_fonts", ["theme_id"], name: "index_theme_fonts_on_theme_id", using: :btree
@@ -2202,8 +2202,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.string   "color_gray"
     t.string   "color_black"
     t.string   "color_white"
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "owner_id"
     t.string   "owner_type"
     t.string   "site_name"
@@ -2258,17 +2258,6 @@ ActiveRecord::Schema.define(version: 20141125090820) do
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree
 
-  create_table "transactable_actions", force: true do |t|
-    t.integer  "action_type_id"
-    t.integer  "transactable_id"
-    t.integer  "instance_id"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "transactable_actions", ["action_type_id", "transactable_id"], name: "transactable_actions_at_t_unique", unique: true, where: "(deleted_at IS NULL)", using: :btree
-
   create_table "transactable_type_actions", force: true do |t|
     t.integer  "action_type_id"
     t.integer  "transactable_type_id"
@@ -2285,12 +2274,12 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.text     "pricing_options"
     t.text     "pricing_validation"
     t.text     "availability_options"
-    t.boolean  "favourable_pricing_rate",                    default: true
-    t.integer  "days_for_monthly_rate",                      default: 0
     t.datetime "cancellation_policy_enabled"
     t.integer  "cancellation_policy_hours_for_cancellation", default: 0
     t.integer  "cancellation_policy_penalty_percentage",     default: 0
     t.boolean  "recurring_booking",                          default: false, null: false
+    t.boolean  "favourable_pricing_rate",                    default: true
+    t.integer  "days_for_monthly_rate",                      default: 0
     t.boolean  "show_page_enabled",                          default: false
     t.text     "custom_csv_fields"
   end
@@ -2313,8 +2302,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.boolean  "listings_public"
     t.boolean  "enabled"
     t.text     "metadata"
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "transactable_type_id"
     t.integer  "parent_transactable_id"
     t.string   "external_id"
@@ -2333,8 +2322,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.text     "interpolations"
     t.boolean  "is_proc",        default: false
     t.integer  "instance_id"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "translations", ["instance_id", "updated_at"], name: "index_translations_on_instance_id_and_updated_at", using: :btree
@@ -2343,11 +2332,11 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.integer  "transactable_id"
     t.integer  "price_cents"
     t.integer  "period"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
-  add_index "unit_prices", ["transactable_id"], name: "index_unit_prices_on_listing_id", using: :btree
+  add_index "unit_prices", ["transactable_id"], name: "index_unit_prices_on_transactable_id", using: :btree
 
   create_table "user_bans", force: true do |t|
     t.integer  "user_id"
@@ -2386,8 +2375,8 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.text     "body"
     t.boolean  "archived_for_owner",     default: false
     t.boolean  "archived_for_recipient", default: false
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "read_for_owner",         default: false
     t.boolean  "read_for_recipient",     default: false
     t.datetime "deleted_at"
@@ -2411,27 +2400,26 @@ ActiveRecord::Schema.define(version: 20141125090820) do
   add_index "user_relationships", ["follower_id"], name: "index_user_relationships_on_follower_id", using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "email",                                              default: "",                                                                                  null: false
-    t.string   "encrypted_password",                     limit: 128, default: "",                                                                                  null: false
-    t.string   "password_salt",                                      default: "",                                                                                  null: false
+    t.string   "email",                                  default: "",                                                                                  null: false
+    t.string   "encrypted_password",                     default: "",                                                                                  null: false
     t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
     t.string   "remember_token"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                                      default: 0
+    t.integer  "sign_in_count",                          default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                                                                                           null: false
+    t.datetime "updated_at",                                                                                                                           null: false
     t.string   "name"
     t.boolean  "admin"
     t.datetime "confirmation_sent_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"
     t.datetime "locked_at"
-    t.datetime "reset_password_sent_at"
-    t.integer  "failed_attempts",                                    default: 0
+    t.integer  "failed_attempts",                        default: 0
     t.string   "authentication_token"
     t.string   "avatar"
     t.string   "confirmation_token"
@@ -2447,15 +2435,15 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.text     "referer"
     t.string   "source"
     t.string   "campaign"
+    t.float    "guest_rating_average"
+    t.integer  "guest_rating_count"
+    t.float    "host_rating_average"
+    t.integer  "host_rating_count"
     t.datetime "verified_at"
     t.string   "google_analytics_id"
     t.string   "browser"
     t.string   "browser_version"
     t.string   "platform"
-    t.float    "guest_rating_average"
-    t.integer  "guest_rating_count"
-    t.float    "host_rating_average"
-    t.integer  "host_rating_count"
     t.text     "avatar_transformation_data"
     t.string   "avatar_original_url"
     t.datetime "avatar_versions_generated_at"
@@ -2470,13 +2458,13 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.integer  "partner_id"
     t.integer  "instance_id"
     t.integer  "domain_id"
-    t.string   "time_zone",                                          default: "Pacific Time (US & Canada)"
-    t.boolean  "sms_notifications_enabled",                          default: true
-    t.string   "sms_preferences",                                    default: "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
-    t.text     "instance_unread_messages_threads_count",             default: "--- {}\n"
+    t.string   "time_zone",                              default: "Pacific Time (US & Canada)"
     t.text     "metadata"
+    t.boolean  "sms_notifications_enabled",              default: true
+    t.string   "sms_preferences",                        default: "---\nuser_message: true\nreservation_state_changed: true\nnew_reservation: true\n"
+    t.text     "instance_unread_messages_threads_count", default: "--- {}\n"
     t.string   "payment_token"
-    t.boolean  "sso_log_out",                                        default: false
+    t.boolean  "sso_log_out",                            default: false
     t.string   "spree_api_key"
     t.string   "first_name"
     t.string   "middle_name"

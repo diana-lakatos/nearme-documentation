@@ -13,8 +13,9 @@ class PlatformContext::RackSetter
   def call(env)
     ::PlatformContext.clear_current
     request = ActionDispatch::Request.new(env)
-    ::PlatformContext.current = ::PlatformContext.new(request.host)
-    if ::PlatformContext.current.valid_domain? && !::PlatformContext.current.should_redirect?
+    platform_context = ::PlatformContext.new(request.host)
+    if !platform_context.should_redirect?
+      ::PlatformContext.current = platform_context
       Rails.logger.info "platform_context: #{::PlatformContext.current.to_h}"
       if I18n.backend.respond_to?(:backends)
         I18n.backend.backends.first.instance_id = ::PlatformContext.current.instance.id
@@ -23,7 +24,7 @@ class PlatformContext::RackSetter
     elsif request.path_info == '/ping'
       @app.call(env)
     else
-      [PlatformContext.current.redirect_code, { 'Location' => ::PlatformContext.current.redirect_url }, self]
+      [platform_context.redirect_code, { 'Location' => platform_context.redirect_url }, self]
     end
   end
 

@@ -130,11 +130,13 @@ class CarrierWave::InkFilePickerTest < ActiveSupport::TestCase
   context '#photo' do
 
     should 'respond to image_original_url ' do
+      stub_image_url('http://www.example.com/image.jpg')
       @photo = FactoryGirl.create(:photo, :image_original_url => 'http://www.example.com/image.jpg')
       assert @photo.image.url(:medium), @photo.image_url(:medium)
     end
 
     should 'be able to display thumbnail immediately' do
+      stub_image_url('http://www.example.com/image.jpg')
       @photo = FactoryGirl.create(:photo, :image_original_url => 'http://www.example.com/image.jpg', :image => nil)
       assert_equal @photo.image_original_url + "/convert?fit=crop&h=89&w=144", @photo.image_url(:medium)
 

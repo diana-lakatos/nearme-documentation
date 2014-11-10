@@ -1,4 +1,6 @@
 class SaveTransactableTypeAttributes < ActiveRecord::Migration
+  class TransactableTypeAttribute < ActiveRecord::Base
+  end
 
   def self.up
     TransactableTypeAttribute.find_each do |tta|

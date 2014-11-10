@@ -55,6 +55,7 @@ end
 
 When /^I update company white label settings$/ do
   fill_in "company_theme_attributes_contact_email", with: "test@domain.lvh.me"
+  fill_in "company_theme_attributes_support_email", with: "test@domain.lvh.me"
   fill_in "company_domain_attributes_name", with: "domain.lvh.me"
   within(:css, 'form[id=edit_company] div[data-white-label-settings-container]') do
     find(:css, 'input[type=submit]').click

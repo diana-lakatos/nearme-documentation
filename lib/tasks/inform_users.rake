@@ -5,7 +5,7 @@ namespace :inform_users do
     dnm_instance = Instance.first
     dnm_instance.service_fee_host_percent = 10
     dnm_instance.save!
-    platform_context = PlatformContext.new
+    platform_context = PlatformContext.new(dnm_instance)
 
     author = get_author(dnm_instance)
 

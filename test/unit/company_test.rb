@@ -29,7 +29,7 @@ class CompanyTest < ActiveSupport::TestCase
     setup do
       @company = FactoryGirl.create(:company)
       @company.theme = FactoryGirl.create(:theme)
-      @company.domain = FactoryGirl.create(:domain)
+      FactoryGirl.create(:domain, {target: @company})
       @company.save!
     end
     should 'know when white label settings are enabled' do

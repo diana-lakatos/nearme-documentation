@@ -22,6 +22,12 @@ FactoryGirl.define do
       instance.theme = FactoryGirl.create(:theme, :skip_compilation => true) unless instance.theme
     end
 
+    after(:create) do |instance|
+      unless Domain.find_by_name('example.com').present?
+        instance.domains = [FactoryGirl.create(:test_domain, target: instance)]
+      end
+    end
+
     factory :instance_with_price_constraints do
       min_hourly_price 10
       max_hourly_price 100

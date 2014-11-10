@@ -10,6 +10,7 @@ class CompilerTest < ActiveSupport::TestCase
     @theme = Theme.new.skipping_compilation do |theme|
       theme.owner = @instance
       theme.contact_email = 'support@desksnear.me'
+      theme.support_email = 'support@desksnear.me'
       theme.save!
     end
   end

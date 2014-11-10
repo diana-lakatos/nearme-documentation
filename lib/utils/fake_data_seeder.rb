@@ -66,7 +66,7 @@ module Utils
           # === INSTANCES ========================================
 
           load_instances!
-          PlatformContext.current = PlatformContext.new
+          PlatformContext.current = PlatformContext.new(Instance.first)
           # === BASIC STUFF ======================================
 
           load_instance_admin_roles!

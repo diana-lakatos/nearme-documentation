@@ -40,7 +40,7 @@ ActiveSupport::TestCase.class_eval do
     TestDataSeeder.seed!
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.start
-    PlatformContext.current = PlatformContext.new
+    PlatformContext.current = PlatformContext.new(Instance.first)
   end
 
   def with_versioning
@@ -207,8 +207,8 @@ class TestDataSeeder
   def self.seed!
     if !@@data_seeded
       @@data_seeded = true
-      FactoryGirl.create(:default_instance)
-      PlatformContext.current = PlatformContext.new
+      instance = FactoryGirl.create(:instance)
+      PlatformContext.current = PlatformContext.new(instance)
       FactoryGirl.create(:balanced_payment_gateway)
       FactoryGirl.create(:paypal_payment_gateway)
       FactoryGirl.create(:stripe_payment_gateway)

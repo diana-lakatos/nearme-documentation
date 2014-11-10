@@ -79,7 +79,7 @@ class PlatformContext
   end
 
   def secured?
-    (is_root_domain? and root_secured?) || @domain.try(:secured?)
+    (root_secured?) || @domain.try(:secured?)
   end
 
   def root_secured?
@@ -92,8 +92,8 @@ class PlatformContext
   end
 
   def initialize_with_domain(domain)
-    @domain = domain
-    if @domain && @domain.white_label_enabled?
+    if domain.present? && domain.white_label_enabled? && domain.target.present?
+      @domain = domain
       if @domain.white_label_company?
         initialize_with_company(@domain.target)
       elsif @domain.instance?
@@ -138,7 +138,7 @@ class PlatformContext
     @instance_type = @instance.instance_type
     @platform_context_detail = @instance
     @theme = @instance.theme
-    @domain ||= @instance.domains.order('use_as_default desc').try(:first)
+    @domain ||= @instance.default_domain
     self
   end
 
@@ -152,14 +152,8 @@ class PlatformContext
     @decorator ||= PlatformContextDecorator.new(self)
   end
 
-  # Check if domain is configured
-  def valid_domain?
-    @domain || is_root_domain?
-  end
-
   def should_redirect?
-    return true unless valid_domain?
-    return false unless @domain
+    return true unless @domain
     return true if @domain.redirect?
     @domain.name != @request_host
   end
@@ -196,12 +190,6 @@ class PlatformContext
 
   def fetch_domain
     Domain.where_hostname(@request_host)
-  end
-
-  def is_root_domain?
-    root_domains = [Regexp.escape(remove_port_from_hostname(Rails.application.routes.default_url_options[:host])), '0\.0\.0\.0', 'near-me.com', 'api\.desksnear\.me', '127\.0\.0\.1']
-    root_domains += ['test\.host', '127\.0\.0\.1', 'example\.org', 'www.example\.com'] if Rails.env.test?
-    @request_host =~ Regexp.new("^(#{root_domains.join('|')})$", true)
   end
 
   def remove_port_from_hostname(hostname)

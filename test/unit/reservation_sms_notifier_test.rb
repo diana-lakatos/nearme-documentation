@@ -2,12 +2,13 @@ require 'test_helper'
 class ReservationSmsNotifierTest < ActiveSupport::TestCase
   setup do
     Googl.stubs(:shorten).returns(stub(:short_url => "http://goo.gl/abf324"))
-    @listing = FactoryGirl.create(:transactable)
+    @listing = FactoryGirl.create(:transactable, location: FactoryGirl.create(:location_with_white_label_company))
     @listing_owner = @listing.creator
     @listing_owner.mobile_number = "124456789"
     @listing_owner.save!
     @reservation = FactoryGirl.create(:reservation, :listing => @listing)
-    PlatformContext.current = PlatformContext.new(@reservation.company)
+    @domain = FactoryGirl.create(:domain, target: @reservation.company)
+    PlatformContext.current = PlatformContext.new(@reservation.reload.company)
   end
 
   context '#notify_host_with_confirmation' do

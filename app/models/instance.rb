@@ -188,6 +188,10 @@ class Instance < ActiveRecord::Base
   end
 
   def has_industries?
-    industries.count
+    industries.any?
+  end
+
+  def default_domain
+    domains.order('use_as_default desc').try(:first)
   end
 end
