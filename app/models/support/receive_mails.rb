@@ -11,7 +11,7 @@ class Support::ReceiveMails
 
   def config
     Mailman::Configuration.new.tap do |c|
-      c.imap = YAML.parse(PlatformContext.current.instance.support_imap_hash)
+      c.imap = YAML.load(PlatformContext.current.instance.support_imap_hash).symbolize_keys
       c.poll_interval = 0
     end
   end
