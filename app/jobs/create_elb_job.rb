@@ -15,10 +15,10 @@ class CreateElbJob < Job
       b.create!
       @domain.elb_created!
       @domain.update_column(:dns_name, b.dns_name)
-    rescue
-      @domain.update_column(:error_message, b.errors.join("\n"))
+    rescue Exception => e
+      @domain.update_column(:error_message, e.message)
       @domain.error!
-      raise $!
+      raise e
     end
   end
 end

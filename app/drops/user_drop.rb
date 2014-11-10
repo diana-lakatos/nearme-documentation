@@ -102,4 +102,8 @@ class UserDrop < BaseDrop
   def listings_in_near
     @user.listings_in_near(3, 100, true)
   end
+
+  def properties
+    @user.profile.try(:properties) || {}
+  end
 end

@@ -11,6 +11,23 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     GmapsFake.stub_requests
   end
 
+  should 'should not raise exception for blank file' do
+    setup_current_data
+    setup_data_for_other_user
+    setup_xml_file(Rails.root.join('test', 'assets', 'data_importer', 'current_data_blank.csv'), true)
+    assert_no_difference 'Company.count' do
+      assert_no_difference 'Location.count' do
+        assert_no_difference 'Address.count' do
+          assert_no_difference 'Transactable.count' do
+            assert_no_difference 'Photo.count' do
+              @xml_file.parse
+            end
+          end
+        end
+      end
+    end
+  end
+
   should 'should not skip empty location and include multiple photos' do
     setup_current_data
     setup_data_for_other_user
@@ -137,7 +154,6 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
   def setup_current_data
     @user = FactoryGirl.create(:user)
     @company = FactoryGirl.create(:company, creator: @user)
-    @location_empty = FactoryGirl.create(:location_czestochowa, company: @company, location_type: @location_type, external_id: 1)
     @location_not_empty = FactoryGirl.create(:location_rydygiera, company: @company, location_type: @location_type, external_id: 2)
     @listing_one = FactoryGirl.create(:transactable, location: @location_not_empty, name: 'my name', my_attribute: 'attribute', daily_price: 89, external_id: 4353)
     stub_image_url('http://www.example.com/image1.jpg')
@@ -146,6 +162,7 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     @photo_one = FactoryGirl.create(:photo, listing: @listing_one, image_original_url: 'http://www.example.com/image1.jpg')
     @photo_two = FactoryGirl.create(:photo, listing: @listing_one, image_original_url: 'http://www.example.com/image2.jpg')
     @listing_two = FactoryGirl.create(:transactable, location: @location_not_empty, name: 'my name2', my_attribute: 'attribute', daily_price: 89, external_id: 4354)
+    @location_empty = FactoryGirl.create(:location_czestochowa, company: @company, location_type: @location_type, external_id: 1)
   end
 
   def setup_data_for_other_user

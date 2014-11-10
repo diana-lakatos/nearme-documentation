@@ -10,6 +10,7 @@ class DataImporter::Host::CsvFile::TemplateCsvFile < DataImporter::CsvFile::Temp
   end
 
   def parse_header(header)
+    return {} if header.nil?
     header.map!(&:downcase)
     fields_hash = {
       location: Location.csv_fields,

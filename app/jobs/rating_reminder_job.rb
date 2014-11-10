@@ -6,6 +6,7 @@ class RatingReminderJob < Job
   end
 
   def perform
+    PlatformContext.clear_current
     reservations = Reservation.joins(:periods).confirmed.where('reservation_periods.date = ?', @date)
     reservations = reservations.where("request_guest_rating_email_sent_at IS NULL OR request_host_rating_email_sent_at IS NULL")
     reservations = reservations.select do |reservation|

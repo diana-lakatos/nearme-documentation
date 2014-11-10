@@ -93,7 +93,7 @@ class Instance < ActiveRecord::Base
   accepts_nested_attributes_for :transactable_types
   accepts_nested_attributes_for :text_filters, allow_destroy: true
 
-  scope :with_support_imap, -> { where 'support_imap_hash IS NOT NULL' }
+  scope :with_support_imap, -> { where 'support_imap_hash IS NOT NULL AND support_imap_hash not like ?', '' }
 
   before_update :check_lock
 

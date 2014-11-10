@@ -112,9 +112,8 @@
 		var name              = ($('#field-name')),
 		    company           = ($('#field-company')),
 		    email             = ($('#field-email')),
-		    lead_source       = ($('#field-lead-source')),
+		    phone             = ($('#field-phone')),
 		    location          = ($('#field-location')),
-		    previous_research = ($('#field-previous-research')),
 		    description       = ($('#field-description'));
 
 		$('.form-contact form #field-name').on('focusout',function() {
@@ -144,12 +143,12 @@
 			}
 		})
 
-		$('.form-contact form #field-lead-source').on('change',function() {
-			if ( lead_source.find(":selected").val() === "" ) {
-				lead_source.parent('.form-group').addClass('error').removeClass('success')
+		$('.form-contact form #field-phone').on('focusout',function() {
+			if( phone.val().length == 0 || phone.val() == phone.attr('title')) {
+				phone.parent('.form-group').addClass('error').removeClass('success')
 				return false;
 			} else {
-				lead_source.parent('.form-group').addClass('success').removeClass('error')
+				phone.parent('.form-group').addClass('success').removeClass('error')
 			}
 		})
 
@@ -159,15 +158,6 @@
 				return false;
 			} else {
 				location.parent('.form-group').addClass('success').removeClass('error')
-			}
-		})
-
-		$('.form-contact form #field-previous-research').on('change',function() {
-			if ( previous_research.find(":selected").val() === "" ) {
-				previous_research.parent('.form-group').addClass('error').removeClass('success')
-				return false;
-			} else {
-				previous_research.parent('.form-group').addClass('success').removeClass('error')
 			}
 		})
 
@@ -184,9 +174,8 @@
 			var name              = ($('#field-name')),
 			    company           = ($('#field-company')),
 			    email             = ($('#field-email')),
-			    lead_source       = ($('#field-lead-source')),
+			    phone             = ($('#field-phone')),
 			    location          = ($('#field-location')),
-			    previous_research = ($('#field-previous-research')),
 			    description       = ($('#field-description')),
 			    valid             = true;
 
@@ -213,11 +202,11 @@
 				 email.parent('.form-group').addClass('success').removeClass('error')
 			}
 
-			if( lead_source.val().length == 0) {
-				lead_source.parent('.form-group').addClass('error').removeClass('success')
+			if( phone.val().length == 0 || phone.val() == phone.attr('title')) {
+				phone.parent('.form-group').addClass('error').removeClass('success')
 				valid = false;
 			} else {
-				lead_source.parent('.form-group').addClass('success').removeClass('error')
+				phone.parent('.form-group').addClass('success').removeClass('error')
 			}
 
 			if( location.val().length == 0 || location.val() == location.attr('title')) {
@@ -225,13 +214,6 @@
 				valid = false;
 			} else {
 				location.parent('.form-group').addClass('success').removeClass('error')
-			}
-
-			if( previous_research.val().length == 0) {
-				previous_research.parent('.form-group').addClass('error').removeClass('success')
-				valid = false;
-			} else {
-				previous_research.parent('.form-group').addClass('success').removeClass('error')
 			}
 
 			if( description.val().length == 0 || description.val() == description.attr('title')) {
@@ -260,6 +242,7 @@
 			.bind('ajax:beforeSend', function(event, xhr, status) {
 				if(validateForm()) {
 					$(this).find('button[type="submit"]').text('Submitting...').prop('disabled', true);
+					try{__adroll.record_user({"adroll_segments":"demo"});}catch(e){}
 				} else {
 					alert('Please fix form errors to submit!');
 					return false;

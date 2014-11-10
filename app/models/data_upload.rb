@@ -12,7 +12,7 @@ class DataUpload < ActiveRecord::Base
 
   mount_uploader :csv_file, DataImportFileUploader
   mount_uploader :xml_file, DataImportFileUploader
-  validates :csv_file, :presence => true, :file_size => { :maximum => 0.3.megabytes.to_i }
+  validates :csv_file, :presence => true, :file_size => { :maximum => 10.megabytes.to_i }
 
   store :options, accessors: [ :send_invitational_email, :sync_mode ], coder: Hash
   scope :for_transactable_type, -> (transactable_type) { where(transactable_type: transactable_type) }

@@ -32,14 +32,9 @@ class CustomAttributeTest < ActiveSupport::TestCase
     should 'return empty array if nil' do
       @sample_model.array = nil
       assert_equal [], @sample_model.array
-
     end
-  end
-
-  context 'cache' do
 
   end
-
 
 end
 

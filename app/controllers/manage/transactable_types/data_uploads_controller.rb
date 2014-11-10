@@ -9,16 +9,23 @@ class Manage::TransactableTypes::DataUploadsController < Manage::BaseController
 
   def create
     @data_upload = @company.data_uploads.build(data_upload_params)
-    @data_upload.transactable_type = @transactable_type
-    @data_upload.send_invitational_email = @data_upload.send_invitational_email == "1" ? "true" : "false"
-    @data_upload.sync_mode = @data_upload.sync_mode == "1" ? "true" : "false"
-    @data_upload.uploader_id = current_user.id
-    if @data_upload.save
-      DataUploadHostConvertJob.perform(@data_upload.id)
-      flash[:success] = t 'flash_messages.manage.data_upload.created'
-      redirect_to edit_manage_transactable_type_data_upload_path(@transactable_type, @data_upload)
+    lines_count = 0
+    File.foreach(@data_upload.csv_file.path) { |line| lines_count += 1 }
+    if lines_count < 5000
+      @data_upload.transactable_type = @transactable_type
+      @data_upload.send_invitational_email = @data_upload.send_invitational_email == "1" ? "true" : "false"
+      @data_upload.sync_mode = @data_upload.sync_mode == "1" ? "true" : "false"
+      @data_upload.uploader_id = current_user.id
+      if @data_upload.save
+        DataUploadHostConvertJob.perform(@data_upload.id)
+        flash[:success] = t 'flash_messages.manage.data_upload.created'
+        redirect_to edit_manage_transactable_type_data_upload_path(@transactable_type, @data_upload)
+      else
+        flash[:error] = @data_upload.errors.full_messages.to_sentence
+        render action: :new
+      end
     else
-      flash[:error] = @data_upload.errors.full_messages.to_sentence
+      flash[:error] = t 'flash_messages.manage.data_upload.too_many_rows', max: 5000
       render action: :new
     end
   end
