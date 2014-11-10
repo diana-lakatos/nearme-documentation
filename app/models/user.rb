@@ -110,7 +110,7 @@ class User < ActiveRecord::Base
   MAX_NAME_LENGTH = 30
 
   validates :name, presence: true
-  validate :validate_name_lenght_from_fullname
+  validate :validate_name_length_from_fullname
   validates :first_name, :middle_name, :last_name, length: { maximum: MAX_NAME_LENGTH }
 
   # FIXME: This is an unideal coupling of 'required parameters' for specific forms
@@ -618,7 +618,7 @@ class User < ActiveRecord::Base
   end
 
   # This validation is necessary due to the inconsistency of the name inputs in the app
-  def validate_name_lenght_from_fullname
+  def validate_name_length_from_fullname
     if get_first_name_from_name.length > MAX_NAME_LENGTH
       errors.add(:name, :first_name_too_long, count: User::MAX_NAME_LENGTH)
       return
