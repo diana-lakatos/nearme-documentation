@@ -6,9 +6,7 @@ class InstanceAdmin::BuySell::ShippingMethodsController < InstanceAdmin::BuySell
 
   def new
     @shipping_method = shipping_method_scope.new
-    calculator = Spree::Calculator::Shipping::FlatRate.new
-    calculator.preferred_amount = 0
-    @shipping_method.calculator = calculator
+    @shipping_method.calculator = Spree::Calculator::Shipping::FlatRate.new(preferred_amount: 0)
   end
 
   def create
