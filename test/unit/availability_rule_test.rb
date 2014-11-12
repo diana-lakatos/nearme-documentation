@@ -78,7 +78,6 @@ class AvailabilityRuleTest < ActiveSupport::TestCase
 
   context "templates" do
     setup do
-      FactoryGirl.create(:transactable_type_location)
       @object = Location.new
     end
 

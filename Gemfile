@@ -169,7 +169,7 @@ group :test do
   gem 'capybara-screenshot'
   gem 'cucumber-rails', '~> 1.4.0', :require => false
   gem 'cucumber', '~> 1.2.5'
-  gem 'database_cleaner'
+  gem 'database_cleaner', github: 'DatabaseCleaner/database_cleaner'
   gem 'email_spec'
   gem 'json_spec'
   gem 'minitest'

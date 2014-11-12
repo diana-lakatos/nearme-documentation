@@ -5,7 +5,6 @@ class V1::LocationsControllerTest < ActionController::TestCase
   setup do
     authenticate!
     company = FactoryGirl.create(:company, :name => 'company_XYZ', :creator_id => @user.id)
-    FactoryGirl.create(:transactable_type_location)
     @location = FactoryGirl.create(:location, :company_id => company.id)
   end
 
@@ -40,4 +39,4 @@ class V1::LocationsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
- end
+end

@@ -2,6 +2,9 @@ require 'test_helper'
 
 class DataImporter::CsvToXmlConverterTest < ActiveSupport::TestCase
 
+  setup do
+    TransactableType.destroy_all
+  end
   context 'mpo' do
     context '#convert' do
 
