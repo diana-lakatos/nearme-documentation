@@ -67,9 +67,9 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def edit
-    @country = current_user.country_name
-    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
-    build_approval_request_for_object(current_user) unless current_user.is_trusted?
+    @country = resource.country_name
+    event_tracker.track_event_within_email(resource, request) if params[:track_email_event]
+    build_approval_request_for_object(resource) unless resource.is_trusted?
     super
   end
 
@@ -78,6 +78,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def update
+    @user = User.find(resource.id)
     resource.country_name_required = true
     resource.custom_validation = true
     resource.assign_attributes(user_params)
@@ -89,7 +90,7 @@ class RegistrationsController < Devise::RegistrationsController
       redirect_to :action => 'edit'
     else
       current_user.approval_requests = resource.approval_requests
-      @country = current_user.country_name
+      @country = resource.country_name
       render :edit
     end
   end
