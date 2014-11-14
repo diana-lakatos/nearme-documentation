@@ -25,6 +25,7 @@ class LiquidView
     assigns = @view.assigns.reject{ |k,v| PROTECTED_ASSIGNS.include?(k) }
 
     assigns['platform_context'] = PlatformContext.current.decorate
+    assigns['current_year'] = Time.now.year
 
     if content_for_layout = @view.instance_variable_get("@content_for_layout")
       assigns['content_for_layout'] = content_for_layout
