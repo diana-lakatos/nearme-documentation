@@ -58,14 +58,10 @@ class Billing::Gateway::Processor::Incoming::Fetch < Billing::Gateway::Processor
   end
 
   def return_url(reservation)
-    protocol = require_ssl? ? "https://" : "http://"
+    protocol = PlatformContext.current.require_ssl? ? "https://" : "http://"
     host = PlatformContext.current.decorate.host
     path = "/reservations/#{reservation.id}/payment_notifications"
     return protocol + host + path
-  end
-
-  def require_ssl?
-    Rails.application.config.secure_app && PlatformContext.current.secured?
   end
 
   def charge(amount, reference, token)

@@ -81,6 +81,10 @@ class PlatformContext
     (is_root_domain? and root_secured?) || @domain.try(:secured?)
   end
 
+  def require_ssl?
+    Rails.application.config.secure_app && secured?
+  end
+
   def root_secured?
     self.class.root_secured
   end
