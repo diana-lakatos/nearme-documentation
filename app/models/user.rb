@@ -109,7 +109,7 @@ class User < ActiveRecord::Base
 
   MAX_NAME_LENGTH = 30
 
-  validates :name, presence: true
+  validates :name, :first_name, presence: true
   validate :validate_name_length_from_fullname
   validates :first_name, :middle_name, :last_name, length: { maximum: MAX_NAME_LENGTH }
 
