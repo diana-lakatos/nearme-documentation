@@ -11,6 +11,32 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     GmapsFake.stub_requests
   end
 
+  context 'current data' do
+
+    should 'should not skip empty location and include multiple photos' do
+      setup_current_data
+      setup_data_for_other_user
+      assert_equal (File.open(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), "r") { |io| io.read}), DataImporter::Host::CsvCurrentDataGenerator.new(@user, @transactable_type).generate_csv
+    end
+
+    should 'generate proper current data for custom fields' do
+      @transactable_type.update_attribute(:custom_csv_fields, [
+        {'transactable' => 'my_attribute'},
+        {'location' => 'email'},
+        {'address' => 'city'},
+        {'location' => 'external_id'},
+        {'address' => 'street'} ,
+        {'photo' => 'image_original_url'},
+        {'transactable' => 'external_id'},
+        {'location' => 'description'}
+      ])
+      setup_current_data
+      setup_data_for_other_user
+      assert_equal (File.open(Rails.root.join('test', 'assets', 'data_importer', 'current_data_custom_fields.csv'), "r") { |io| io.read}), DataImporter::Host::CsvCurrentDataGenerator.new(@user, @transactable_type).generate_csv
+    end
+
+  end
+
   should 'should not raise exception for blank file' do
     setup_current_data
     setup_data_for_other_user
@@ -26,12 +52,6 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
         end
       end
     end
-  end
-
-  should 'should not skip empty location and include multiple photos' do
-    setup_current_data
-    setup_data_for_other_user
-    assert_equal (File.open(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), "r") { |io| io.read}), DataImporter::Host::CsvCurrentDataGenerator.new(@user, @transactable_type).generate_csv
   end
 
   should 'should not remove anything after uploading current_data csv' do
@@ -61,7 +81,6 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     assert_equal 1, Location.with_deleted.count
     assert_equal 0, Transactable.with_deleted.count
     assert_equal 0, Photo.count
-
   end
 
   should 'should be able to restore location instead of creating new one' do
@@ -154,7 +173,7 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
   def setup_current_data
     @user = FactoryGirl.create(:user)
     @company = FactoryGirl.create(:company, creator: @user)
-    @location_not_empty = FactoryGirl.create(:location_rydygiera, company: @company, location_type: @location_type, external_id: 2)
+    @location_not_empty = FactoryGirl.create(:location_rydygiera, name: 'Rydygiera', company: @company, location_type: @location_type, external_id: 2)
     @listing_one = FactoryGirl.create(:transactable, location: @location_not_empty, name: 'my name', my_attribute: 'attribute', daily_price: 89, external_id: 4353)
     stub_image_url('http://www.example.com/image1.jpg')
     stub_image_url('http://www.example.com/image2.jpg')
@@ -162,7 +181,7 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     @photo_one = FactoryGirl.create(:photo, listing: @listing_one, image_original_url: 'http://www.example.com/image1.jpg')
     @photo_two = FactoryGirl.create(:photo, listing: @listing_one, image_original_url: 'http://www.example.com/image2.jpg')
     @listing_two = FactoryGirl.create(:transactable, location: @location_not_empty, name: 'my name2', my_attribute: 'attribute', daily_price: 89, external_id: 4354)
-    @location_empty = FactoryGirl.create(:location_czestochowa, company: @company, location_type: @location_type, external_id: 1)
+    @location_empty = FactoryGirl.create(:location_czestochowa, name: 'Czestochowa', company: @company, location_type: @location_type, external_id: 1)
   end
 
   def setup_data_for_other_user

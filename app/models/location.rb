@@ -168,7 +168,7 @@ class Location < ActiveRecord::Base
   end
 
   def self.csv_fields
-    { email: 'Location Email', external_id: 'Location External Id', location_type: 'Location Type', description: 'Location Description', special_notes: 'Location Special Notes' }
+    { name: 'Location Name', email: 'Location Email', external_id: 'Location External Id', location_type: 'Location Type', description: 'Location Description', special_notes: 'Location Special Notes' }
   end
 
   private

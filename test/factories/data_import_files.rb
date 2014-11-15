@@ -11,41 +11,41 @@ FactoryGirl.define do
         File.open(path, 'w') do |f|
           f.write(DataImporter::CsvTemplateGenerator.new(@transactable_type).generate_template)
           f.write(([ 'user1@example.com', 'Example User1',
-                     "My Company's", 'www.mycompany.example.com', 'company@example.com', "1",
+                     "My Company's", 'www.mycompany.example.com', 'company@example.com', "1", "location name",
                      'location@example.com', '1', 'My Type', 'This is my cool location', '"Be careful, cool place!"',
                      'Ursynowska 1/2B', 'Warsaw', 'Ursynowska', 'Mokotów', 'Mazowieckie', '02-605'
           ] + Transactable.csv_fields(@transactable_type).inject([]) { |arr, k| arr << DataImporter::CsvTemplateGenerator.value_for_attribute(k[0], 1);arr } +
           ["http://www.example.com/image.jpg"]).join(',') + "\n")
           f.write((['user1@example.com', 'Example User1',
-                    "My Company's", 'www.mycompany.example.com', 'company@example.com', "1",
+                    "My Company's", 'www.mycompany.example.com', 'company@example.com', "1", "location name",
                     'location@example.com', '1', 'My Type', 'This is my cool location', '"Be careful, cool place!"',
                     'Ursynowska 1/2B', 'Warsaw', 'Ursynowska', 'Mokotów', 'Mazowieckie', '02-605'
           ] + Transactable.csv_fields(@transactable_type).inject([]) { |arr, k| arr << DataImporter::CsvTemplateGenerator.value_for_attribute(k[0], 1);arr } +
           ["http://www.example.com/photo.jpg"]).join(',') + "\n")
           f.write(([
             'user1@example.com', 'Example User1',
-            "My Company's", 'www.mycompany.example.com', 'company@example.com', "1",
+            "My Company's", 'www.mycompany.example.com', 'company@example.com', "1", "location name",
             'location@example.com', '1', 'My Type','This is my cool location', '"Be careful, cool place!"',
             'Ursynowska 1/2B', 'Warsaw', 'Ursynowska', 'Mokotów', 'Mazowieckie', '02-605'
           ] + Transactable.csv_fields(@transactable_type).inject([]) { |arr, k| arr << DataImporter::CsvTemplateGenerator.value_for_attribute(k[0], 2);arr } +
           ["http://www.example.com/photo.jpg"]).join(',')+ "\n")
           f.write(([
             'user1@example.com', 'Example User1',
-            "My Company's", 'www.mycompany.example.com', 'company@example.com', "1",
+            "My Company's", 'www.mycompany.example.com', 'company@example.com', "1", "location name",
             'location2@example.com', '2', 'My Type', 'This is my cool2 location', '"Be careful, cool2 place!"',
             'Pulawska 34/2B', 'Warsaw', 'Ursynowska', 'Mokotów', 'Mazowieckie', '02-605'
           ] + Transactable.csv_fields(@transactable_type).inject([]) { |arr, k| arr << DataImporter::CsvTemplateGenerator.value_for_attribute(k[0], 3);arr } +
           ["http://www.example.com/photo.jpg"]).join(',') + "\n")
           f.write(([
             'user2@example.com', 'Example User2',
-            "My Company's", 'www.mycompany.example.com', 'company@example.com', "1",
+            "My Company's", 'www.mycompany.example.com', 'company@example.com', "1", "location name",
             'location2@example.com', '2', 'My Type', 'This is my cool2 location', '"Be careful, cool2 place!"',
             'Pulawska 34/2B', 'Warsaw', 'Ursynowska', 'Mokotów', 'Mazowieckie', '02-605'
           ] + Transactable.csv_fields(@transactable_type).inject([]) { |arr, k| arr << DataImporter::CsvTemplateGenerator.value_for_attribute(k[0], 3);arr } +
           ["http://www.example.com/photo.jpg"]).join(',') + "\n")
           f.write(([
             'user2@example.com', 'Example User2',
-            "My second Company's", 'www.mycompany.example.com', 'company@example.com', "2",
+            "My second Company's", 'www.mycompany.example.com', 'company@example.com', "2", "location name",
             'location3@example.com', '2', 'My Type', 'This is my cool3 location', '"Be careful, cool3 place!"',
             'Pulawska 34/2B', 'Warsaw', 'Ursynowska', 'Mokotów', 'Mazowieckie', '02-605'
           ] + Transactable.csv_fields(@transactable_type).inject([]) { |arr, k| arr << DataImporter::CsvTemplateGenerator.value_for_attribute(k[0], 4);arr }
@@ -74,41 +74,41 @@ FactoryGirl.define do
         File.open(path, 'w') do |f|
           f.write(DataImporter::CsvTemplateGenerator.new(@transactable_type).generate_template)
           f.write(([ 'user1@example.com', 'Example User1',
-                     "My Company's", 'www.mycompany.example.com', 'company@example.com', "1",
+                     "My Company's", 'www.mycompany.example.com', 'company@example.com', "1", "location name",
                      'location@example.com', '1', 'My Type', 'This is my cool location', '"Be careful, cool place!"',
                      'Ursynowska 1/2B', 'Warsaw', 'Ursynowska', 'Mokotów', 'Mazowieckie', '02-605'
           ] + Transactable.csv_fields(@transactable_type).inject([]) { |arr, k| arr << DataImporter::CsvTemplateGenerator.value_for_attribute(k[0], 1);arr } +
           ["http://www.example.com/image.jpg"]).join(',') + "\n")
           f.write((['user1@example.com', 'Example User1',
-                    "My Company's", 'www.mycompany.example.com', 'company@example.com', "1",
+                    "My Company's", 'www.mycompany.example.com', 'company@example.com', "1", "location name",
                     'location@example.com', '1', 'My Type', 'This is my cool location', '"Be careful, cool place!"',
                     'Ursynowska 1/2B', 'Warsaw', 'Ursynowska', 'Mokotów', 'Mazowieckie', '02-605'
           ] + Transactable.csv_fields(@transactable_type).inject([]) { |arr, k| arr << DataImporter::CsvTemplateGenerator.value_for_attribute(k[0], 1);arr } +
           ["http://www.example.com/photo.jpg"]).join(',') + "\n")
           f.write(([
             'user1@example.com', 'Example User1',
-            "My Company's", 'www.mycompany.example.com', 'company@example.com', "1",
+            "My Company's", 'www.mycompany.example.com', 'company@example.com', "1", "location name",
             'location@example.com', '1', 'My Type','This is my cool location', '"Be careful, cool place!"',
             'Ursynowska 1/2B', 'Warsaw', 'Ursynowska', 'Mokotów', 'Mazowieckie', '02-605'
           ] + Transactable.csv_fields(@transactable_type).inject([]) { |arr, k| arr << DataImporter::CsvTemplateGenerator.value_for_attribute(k[0], 2);arr } +
           ["http://www.example.com/photo.jpg"]).join(',')+ "\n")
           f.write(([
             'user1@example.com', 'Example User1',
-            "My Company's", 'www.mycompany.example.com', 'company@example.com', "1",
+            "My Company's", 'www.mycompany.example.com', 'company@example.com', "1", "location name",
             'location2@example.com', '2', 'My Type', 'This is my cool2 location', '"Be careful, cool2 place!"',
             'Pulawska 34/2B', 'Warsaw', 'Ursynowska', 'Mokotów', 'Mazowieckie', '02-605'
           ] + Transactable.csv_fields(@transactable_type).inject([]) { |arr, k| arr << DataImporter::CsvTemplateGenerator.value_for_attribute(k[0], 3);arr } +
           ["http://www.example.com/photo.jpg"]).join(',') + "\n")
           f.write(([
             'user2@example.com', 'Example User2',
-            "My Company's", 'www.mycompany.example.com', 'company@example.com', "1",
+            "My Company's", 'www.mycompany.example.com', 'company@example.com', "1", "location name",
             'location2@example.com', '2', 'My Type', 'This is my cool2 location', '"Be careful, cool2 place!"',
             'Pulawska 34/2B', 'Warsaw', 'Ursynowska', 'Mokotów', 'Mazowieckie', '02-605'
           ] + Transactable.csv_fields(@transactable_type).inject([]) { |arr, k| arr << DataImporter::CsvTemplateGenerator.value_for_attribute(k[0], 3);arr } +
           ["http://www.example.com/photo.jpg"]).join(',') + "\n")
           f.write(([
             'user2@example.com', 'Example User2',
-            "My second Company's", 'www.mycompany.example.com', 'company@example.com', "2",
+            "My second Company's", 'www.mycompany.example.com', 'company@example.com', "2", "location name",
             'location3@example.com', '2', 'My Type', 'This is my cool3 location', '"Be careful, cool3 place!"',
             'Pulawska 34/2B', 'Warsaw', 'Ursynowska', 'Mokotów', 'Mazowieckie', '02-605'
           ] + Transactable.csv_fields(@transactable_type).inject([]) { |arr, k| arr << DataImporter::CsvTemplateGenerator.value_for_attribute(k[0], 4);arr }
@@ -150,6 +150,7 @@ FactoryGirl.define do
     </users>
     <locations>
       <location id="1">
+        <name><![CDATA[location name]]></name>
         <email><![CDATA[location@example.com]]></email>
         <external_id><![CDATA[1]]></external_id>
         <location_type><![CDATA[My Type]]></location_type>
@@ -205,6 +206,7 @@ FactoryGirl.define do
         <amenities/>
       </location>
       <location id="2">
+        <name><![CDATA[location name]]></name>
         <email><![CDATA[location2@example.com]]></email>
         <external_id><![CDATA[2]]></external_id>
         <location_type><![CDATA[My Type]]></location_type>
@@ -257,6 +259,7 @@ FactoryGirl.define do
     </users>
     <locations>
       <location id="2">
+        <name><![CDATA[location name]]></name>
         <email><![CDATA[location3@example.com]]></email>
         <external_id><![CDATA[2]]></external_id>
         <location_type><![CDATA[My Type]]></location_type>
@@ -320,6 +323,7 @@ FactoryGirl.define do
     </users>
     <locations>
       <location id="1">
+        <name><![CDATA[location name]]></name>
         <email><![CDATA[location@example.com]]></email>
         <external_id><![CDATA[1]]></external_id>
         <location_type><![CDATA[My Type]]></location_type>
@@ -372,6 +376,7 @@ FactoryGirl.define do
     </users>
     <locations>
       <location id="1">
+        <name><![CDATA[location name]]></name>
         <email><![CDATA[location@example.com]]></email>
         <external_id><![CDATA[1]]></external_id>
         <location_type><![CDATA[My Type]]></location_type>
@@ -427,6 +432,7 @@ FactoryGirl.define do
         <amenities/>
       </location>
       <location id="2">
+        <name><![CDATA[location name]]></name>
         <email><![CDATA[location2@example.com]]></email>
         <external_id><![CDATA[2]]></external_id>
         <location_type><![CDATA[My Type]]></location_type>
@@ -516,6 +522,7 @@ FactoryGirl.define do
     </users>
     <locations>
       <location id="1">
+        <name><![CDATA[location name]]></name>
         <email><![CDATA[location@example.com]]></email>
         <external_id><![CDATA[1]]></external_id>
         <location_type><![CDATA[My Type]]></location_type>
@@ -571,6 +578,7 @@ FactoryGirl.define do
         <amenities/>
       </location>
       <location id="2">
+        <name><![CDATA[location name]]></name>
         <email><![CDATA[location2@example.com]]></email>
         <external_id><![CDATA[2]]></external_id>
         <location_type><![CDATA[My Type]]></location_type>
@@ -623,6 +631,7 @@ FactoryGirl.define do
     </users>
     <locations>
       <location id="2">
+        <name><![CDATA[location name]]></name>
         <email><![CDATA[location3@example.com]]></email>
         <external_id><![CDATA[2]]></external_id>
         <location_type><![CDATA[My Type]]></location_type>
@@ -692,6 +701,7 @@ FactoryGirl.define do
     </users>
     <locations>
       <location id="1">
+        <name><![CDATA[location name]]></name>
         <email><![CDATA[location@example.com]]></email>
         <external_id><![CDATA[1]]></external_id>
         <location_type><![CDATA[My Type]]></location_type>
@@ -713,6 +723,7 @@ FactoryGirl.define do
         <amenities/>
       </location>
       <location id="2">
+        <name><![CDATA[location name]]></name>
         <email><![CDATA[location2@example.com]]></email>
         <external_id><![CDATA[2]]></external_id>
         <location_type><![CDATA[My Type]]></location_type>
@@ -765,6 +776,7 @@ FactoryGirl.define do
     </users>
     <locations>
       <location id="2">
+        <name><![CDATA[location name]]></name>
         <email><![CDATA[location3@example.com]]></email>
         <external_id><![CDATA[2]]></external_id>
         <location_type><![CDATA[My Type]]></location_type>
@@ -834,6 +846,7 @@ FactoryGirl.define do
     </users>
     <locations>
       <location id="1">
+        <name><![CDATA[location name]]></name>
         <email><![CDATA[location@example.com]]></email>
         <external_id><![CDATA[1]]></external_id>
         <location_type><![CDATA[My Type]]></location_type>
@@ -889,6 +902,7 @@ FactoryGirl.define do
         <amenities/>
       </location>
       <location id="2">
+        <name><![CDATA[location name]]></name>
         <email><![CDATA[location2@example.com]]></email>
         <external_id><![CDATA[2]]></external_id>
         <location_type><![CDATA[My Type]]></location_type>
@@ -941,6 +955,7 @@ FactoryGirl.define do
     </users>
     <locations>
       <location id="2">
+        <name><![CDATA[location name]]></name>
         <email><![CDATA[location3@example.com]]></email>
         <external_id><![CDATA[2]]></external_id>
         <location_type><![CDATA[My Type]]></location_type>
@@ -1095,6 +1110,7 @@ FactoryGirl.define do
     </users>
     <locations>
       <location id="1">
+        <name><![CDATA[location name]]></name>
         <email><![CDATA[location@example.com]]></email>
         <external_id><![CDATA[1]]></external_id>
         <location_type><![CDATA[My Type]]></location_type>
@@ -1138,6 +1154,7 @@ FactoryGirl.define do
     </users>
     <locations>
       <location id="1">
+        <name><![CDATA[location name]]></name>
         <email><![CDATA[location@example.com]]></email>
         <external_id><![CDATA[1]]></external_id>
         <location_type><![CDATA[My Type]]></location_type>

@@ -6,73 +6,54 @@ class DataImporter::Host::CsvCurrentDataGenerator < DataImporter::File
     @transactable_type = transactable_type
     @user = user
     @company = @user.companies.first
+    @csv_fields_builder = DataImporter::Host::CsvFieldsBuilder.new(transactable_type)
   end
 
   def generate_csv
     CSV.generate do |csv|
-      DataImporter::Host::CsvTemplateGenerator.new(@transactable_type).get_content(csv)
+      csv << @csv_fields_builder.get_all_labels
       get_data(csv)
     end
   end
 
   def get_data(csv)
     @company.locations.order('instance_id, external_id').each do |location|
-      data = []
-      location_fields.each do |field|
-        data << location.send(field)
-      end
-      address_fields.each do |field|
-        data << location.send(field)
-      end
       if location.listings.any?
         location.listings.each do |listing|
-          listing_data = data + transactable_fields.inject([]) do |arr, field|
-            arr << listing.send(field)
-          end
           if listing.photos.any?
             listing.photos.each do |photo|
-              csv << listing_data + photo_fields.inject([]) do |arr, field|
-                arr << photo.send(field)
-              end
+              csv << get_data_row(location, location.location_address, listing, photo)
             end
           else
-            csv << listing_data + Array.new(photo_fields.count, nil)
+            csv << get_data_row(location, location.location_address, listing)
           end
         end
       else
-        csv << data + Array.new(transactable_fields.count + photo_fields.count, nil)
+        csv << get_data_row(location, location.location_address)
       end
     end
   end
 
   private
 
-  def required_fields
-    user_fields.values + company_fields.values + location_fields.values + address_fields.values + transactable_fields.values + photo_fields.values
-  end
-
-  def user_fields
-    User.xml_attributes
-  end
-
-  def company_fields
-    Company.xml_attributes
-  end
-
-  def location_fields
-    Location.xml_attributes
-  end
-
-  def address_fields
-    Address.csv_fields.keys
-  end
-
-  def transactable_fields
-    Transactable.xml_attributes(@transactable_type)
-  end
-
-  def photo_fields
-    Photo.xml_attributes
+  def get_data_row(location = nil, address = nil, transactable = nil, photo = nil)
+    @csv_fields_builder.object_field_pairs.inject([]) do |data_row, object_field_pair|
+      if @csv_fields_builder.valid_object_field_pair?(object_field_pair)
+        object = object_field_pair.keys.first
+        field = object_field_pair[object]
+        data_row << case object
+        when 'location'
+          location
+        when 'address'
+          address
+        when 'transactable'
+          transactable
+        when 'photo'
+          photo
+        end.try(:send, field)
+      end
+      data_row
+    end
   end
 
 end

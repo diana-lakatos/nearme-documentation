@@ -30,6 +30,15 @@ class CsvTemplateGeneratorTest < ActiveSupport::TestCase
       refute result_csv.include?('User Email'), "User email included in: #{result_csv}"
       refute result_csv.include?('Company Name'), "Company Name included in: #{result_csv}"
       assert result_csv.include?('Location Email'), "Location Email not included in: #{result_csv}"
+      assert result_csv.include?('My Public Attribute'), "Public non internal attribute not included in: #{result_csv}"
+      assert result_csv.include?('Public internal attribute'), "Public internal attribute not included in: #{result_csv}"
+      refute result_csv.include?('My Private Internal Attribute'), "Private internal attribute included in: #{result_csv}"
+    end
+
+    should 'allow to include custom fields in template' do
+      @transactable_type.update_attribute(:custom_csv_fields, [ {'transactable' => 'public_internal_attribute'}, {'location' => 'email'} ])
+      result_csv = DataImporter::Host::CsvTemplateGenerator.new(@transactable_type).generate_template
+      assert_equal "Public internal attribute,Location Email\n", result_csv
     end
   end
 
