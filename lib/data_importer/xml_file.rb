@@ -22,14 +22,6 @@ class DataImporter::XmlFile < DataImporter::File
     }
   end
 
-  def listing_type_for_name(listing_name)
-    if listing_name.downcase.include?('office')
-      'Private Office'
-    else
-      'Meeting Room'
-    end
-  end
-
   def parse
     @node = Nokogiri::XML(open(@path))
     parse_instance do
