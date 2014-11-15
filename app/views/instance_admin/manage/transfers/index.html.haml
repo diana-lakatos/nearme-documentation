@@ -1,9 +1,10 @@
 %h4= resource_class.name.underscore.humanize.pluralize
 
 %p
-  Transfers are generated automatically at the start of every month for
-  outstanding charges we've recieved on behalf of hosts. The next month's batch will be generated at about:
-  %strong= l Time.zone.now.advance(:months => 1).beginning_of_month, format: :long
+  Transfers are generated automatically depending on your setting in 'Settings > Configuration' for
+  outstanding charges we've recieved on behalf of hosts. The next batch will be generated at about:
+  %strong
+    = next_payment_transfers_date
 
 = render 'list_table'
 

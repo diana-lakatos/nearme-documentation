@@ -81,6 +81,7 @@ class Instance < ActiveRecord::Base
   validates_presence_of :marketplace_password, :if => :password_protected
   validates_presence_of :password_protected, :if => :test_mode, message: I18n.t("activerecord.errors.models.instance.test_mode_needs_password")
   validates_presence_of :olark_api_key, :if => :olark_enabled
+  validates :payment_transfers_frequency, presence: true, inclusion: { in: PaymentTransfer::FREQUENCIES }
 
   accepts_nested_attributes_for :domains, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :theme
@@ -193,5 +194,25 @@ class Instance < ActiveRecord::Base
   def onboarding_verification_required=(arg)
   end
 
-end
+  def next_payment_transfers_date(date=Time.zone.now)
+    case payment_transfers_frequency
+    when 'daily'
+      date.tomorrow
+    when 'semiweekly'
+      date.wday >= 1 && date.wday < 4 ? date.beginning_of_week + 3.days : date.next_week
+    when 'weekly'
+      date.next_week
+    when 'fortnightly'
+      date.day >= 1 && date.day < 15 ? date.beginning_of_month + 2.weeks : date.next_month.beginning_of_month
+    when 'monthly'
+      date.next_month.beginning_of_month
+    else
+      raise NotImplementedError
+    end
+  end
 
+  def generate_payment_transfers_today?
+    today = Time.zone.today
+    next_payment_transfers_date(today - 1.day) == today
+  end
+end
