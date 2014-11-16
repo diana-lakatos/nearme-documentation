@@ -89,7 +89,7 @@ class PlatformContext
   end
 
   def initialize_with_request_host(request_host)
-    @request_host = remove_port_from_hostname(request_host.try(:gsub, /^www\./, ""))
+    @request_host = remove_port_from_hostname(request_host)
     initialize_with_domain(fetch_domain)
   end
 
@@ -201,7 +201,7 @@ class PlatformContext
   private
 
   def fetch_domain
-    Domain.where(:name => @request_host).first
+    Domain.where_hostname(@request_host)
   end
 
   def is_root_domain?
