@@ -16,6 +16,27 @@ en:
         blog_post_added: 'New blog post added.'
         blog_post_deleted: 'Blog post deleted.'
         blog_post_updated: 'Blog post updated.'
+    buy_sell:
+      configuration_saved_successful: 'Configuration saved successfully.'
+      tax_category_added: 'Tax category added.'
+      tax_category_updated: 'Tax category updated.'
+      tax_category_deleted: 'Tax category deleted.'
+      tax_rate_added: 'Tax rate added.'
+      tax_rate_updated: 'Tax rate updated.'
+      tax_rate_deleted: 'Tax rate deleted.'
+      shipping_category_added: 'Shipping category added.'
+      shipping_category_updated: 'Shipping category updated.'
+      shipping_category_deleted: 'Shipping category deleted.'
+      shipping_method_added: 'Shipping method added.'
+      shipping_method_updated: 'Shipping method updated.'
+      shipping_method_deleted: 'Shipping method deleted.'
+      zone_added: 'Zone added.'
+      zone_updated: 'Zone updated.'
+      zone_deleted: 'Zone deleted.'
+      taxonomy_added: 'Taxonomy added.'
+      taxonomy_updated: 'Taxonomy updated.'
+      taxonomy_deleted: 'Taxonomy deleted.'
+      taxon_updated: 'Taxon updated.'
     dashboard:
       add_your_company: "Please add your company first"
       no_bookings: "You haven't made any bookings yet!"

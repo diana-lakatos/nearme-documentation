@@ -1,0 +1,20 @@
+.row
+  .col-xs-12
+    %h4 Zones
+    = link_to 'New zone', new_instance_admin_buy_sell_zone_path, class: 'pull-right btn btn-green'
+
+%br
+
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table.sortable
+        %thead
+          %tr
+            %th Name
+            %th Description
+            %th Default tax zone
+            %th
+        %tbody
+          - @zones.each do |zone|
+            = render 'index_row', zone: zone

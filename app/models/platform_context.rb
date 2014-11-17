@@ -169,6 +169,14 @@ class PlatformContext
     )
   end
 
+  def latest_products(number = 6)
+    products = Spree::Product.searchable.order('created_at desc').limit(number).all
+    while products.size < number && !products.size.zero?
+      products += products
+    end
+    products.first(number)
+  end
+
   private
 
   def fetch_domain

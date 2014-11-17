@@ -1,0 +1,70 @@
+= render 'shared/modules/buy_sell_top_navigation'
+
+- title @searcher.query
+- meta_description @searcher.query
+
+- content_for :products_results do
+  - if @searcher.results.any?
+    %section#results.products
+      = render 'search/products/pagination', products: @searcher.results, result_count: @searcher.result_count
+      .clearfix
+      = render partial: 'search/products/product', collection: @searcher.results
+      = render 'shared/loading_spinner'
+  - else
+    %section#results.no_results
+      = render 'shared/loading_spinner'
+      .text-center
+        %br/
+        %br/
+        %h1.tk-adelle.fat No results found!
+
+
+- content_for :hero do
+  %article#product
+    .container-fluid
+      .container-row
+        .clearfix
+          %header#listing_search.container-fluid.mixed.products
+            .header-inner
+              %form.search_results{action: search_path(v: 'products'), method: "get", 'data-endless-scrolling' => "#{Spree::Config[:infinite_scroll]}"}
+                .row-fluid
+                  .span12
+                    .search-container
+                      %input#search{name: "loc", placeholder: "Search", type: "text", value: @searcher.query, class: "query", autocomplete: "off"}
+                      .search-loop-icon
+                        %span.ico-search
+                    .search-icon.btn.btn-green
+                      %span.ico-search
+
+                = hidden_field_tag :sort, @searcher.search.sort
+                = hidden_field_tag :v, 'products'
+                = hidden_field_tag :ignore_search_event, 0
+                = hidden_field_tag :page, 1
+                = hidden_field_tag :per_page, per_page
+                = hidden_field_tag :taxon, @searcher.taxon.try(:permalink)
+
+
+        .one-third.column.left.rounded-box
+          = render 'search/products/taxonomies', taxon: @searcher.taxon
+        .two-thirds.column.right
+          - if @searcher.filterable_attribute
+            .filters{:'data-search-filters-container' => true}
+              = render partial: 'search/mixed/filter', locals: { header_name: 'Type', selected_values: @searcher.search.attribute_values_filters || [], input_name: 'attribute_values[]', options: @searcher.filterable_attribute.map { |fa| [fa, fa]} }
+          .sort.with-left-margin
+            .results-count
+              %h3#search_results_count
+                = @searcher.result_count
+                results
+            .per-page
+              %span per page
+              = select_tag :per_page, options_for_select(['20', '50', '100'].map{|v| [v, v]})
+
+          = yield :products_results
+        .clearfix.padding-row
+
+
+- if request.xhr?
+  = yield :products_results
+
+- content_for :domready do
+  new Search.ProductsSearchController($('#listing_search form'), $("section#content.search"));

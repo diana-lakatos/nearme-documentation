@@ -96,4 +96,17 @@ module SearchHelper
     location.name != "#{location.company.name} @ #{location.street}"
   end
 
+  def display_taxonomies(root_taxon, current_taxon=nil)
+    return '' if root_taxon.children.empty?
+    content_tag :ul, class: 'taxons-list' do
+      root_taxon.children.map do |taxon|
+        css_class = (current_taxon && current_taxon == taxon) ? 'current' : nil
+        content_tag :li do
+         link_to(taxon.name, buy_sell_taxon_path(taxon), class: css_class) +
+         display_taxonomies(taxon, current_taxon)
+        end
+      end.join("\n").html_safe
+    end
+  end
+
 end

@@ -3,9 +3,10 @@
     %h1= platform_context.tagline
   .black-box.row-fluid
     %form#listing_search.home_search{:action => search_path, :method => "get"}
-      .input-wrapper
-        .geolocation.no-bookings
-          %span.ico-crosshairs
+      - if !platform_context.instance.buyable?
+        .input-wrapper
+          .geolocation.no-bookings
+            %span.ico-crosshairs
         %input#search{:name => "loc", :placeholder => platform_context.search_field_placeholder, :type => "text", :value => "", :class => "query"}
       .button-wrapper
         %a.btn.btn-green.btn-large{ "data-disable-with" => "Searching...", :rel => "submit", :href => "" }
@@ -13,9 +14,10 @@
           Search
         #suggest_location{:style => "display: none"}
 
-    - search_geofields.each do |geofield|
-      = hidden_field_tag geofield, ''
+    - if !platform_context.instance.buyable?
+      - search_geofields.each do |geofield|
+        = hidden_field_tag geofield, ''
 
-- if platform_context.instance.searcher_type != 'fulltext'
+- if platform_context.instance.searcher_type != 'fulltext' && !platform_context.instance.buyable?
   - content_for :domready do
     new Search.HomeController($('#listing_search'))

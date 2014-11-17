@@ -164,4 +164,19 @@ class PlatformContextTest < ActiveSupport::TestCase
     end
 
   end
+
+  context '.latest_products' do
+
+    setup do
+      @platform_context = PlatformContext.new
+      @instance = @platform_context.instance
+      2.times {
+        FactoryGirl.create(:product, instance: @instance)
+      }
+    end
+
+    should 'return given number of latest products' do
+      assert_equal @platform_context.latest_products(6).count, 6
+    end
+  end
 end

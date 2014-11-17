@@ -5,7 +5,6 @@ class InstanceAdmin::BaseController < ApplicationController
   before_filter :authorize_user!
   before_filter :check_if_locked, only: [:new, :create, :edit, :update, :destroy]
   before_filter :force_scope_to_instance
-  before_filter :redirect_to_spree_if_instance_is_buyable!
   skip_before_filter :redirect_if_marketplace_password_protected
 
   ANALYTICS_CONTROLLERS = {
@@ -48,6 +47,16 @@ class InstanceAdmin::BaseController < ApplicationController
     'homepage' => { controller: '/instance_admin/theme/homepage_template', default_action: 'show' },
     'homepage content' => { controller: '/instance_admin/theme/homepage', default_action: 'show' },
     'pages'    => { default_action: 'index' }
+  }
+
+  BUY_SELL_CONTROLLERS = {
+    'configuration' => { default_action: 'show' },
+    'tax_categories' => { default_action: 'index' },
+    'tax_rates' => { default_action: 'index' },
+    'zones' => { default_action: 'index' },
+    'taxonomies' => { default_action: 'index' },
+    'shipping_categories' => { default_action: 'index' },
+    'shipping_methods' => { default_action: 'index' },
   }
 
   def index
@@ -99,10 +108,4 @@ class InstanceAdmin::BaseController < ApplicationController
   end
   helper_method :instance_admin_roles
 
-  # Temporary solution, will be removed when we will remove Spree admin
-  def redirect_to_spree_if_instance_is_buyable!
-    if platform_context.instance.buyable?
-      redirect_to spree.admin_path
-    end
-  end
 end

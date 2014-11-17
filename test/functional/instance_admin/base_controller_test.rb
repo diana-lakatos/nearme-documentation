@@ -43,17 +43,4 @@ class InstanceAdmin::BaseControllerTest < ActionController::TestCase
 
   end
 
-  context 'buyable instance' do
-    setup do
-      InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
-      InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
-      Instance.any_instance.stubs(:buyable?).returns(true)
-    end
-
-    should 'redirect to Spree admin' do
-      get :index
-      assert_redirected_to spree.admin_path
-    end
-  end
-
 end

@@ -1,8 +1,14 @@
 DesksnearMe::Application.routes.draw do
 
   scope module: 'spree' do
-    mount Spree::Core::Engine, at: '/instance_buy_sell_admin'
+    mount Spree::Core::Engine, at: '/instance_buy_sell'
   end
+
+  scope module: 'buy_sell_market' do
+    resources :products, only: [:show]
+  end
+
+  get '/t/*taxon', to: 'search#index', as: :buy_sell_taxon
 
   mount CustomAttributes::Engine, at: '/custom_attributes'
 
@@ -244,7 +250,22 @@ DesksnearMe::Application.routes.draw do
       resource :settings, only: [:edit, :update]
     end
 
-
+    namespace :buy_sell do
+      get '/', :to => 'base#index'
+      resource :configuration, only: [:show, :update], controller: 'configuration'
+      resources :tax_categories
+      resources :tax_rates
+      resources :zones
+      resources :taxonomies do
+        member do
+          get :jstree
+          get :edit_taxon
+          patch :update_taxon
+        end
+      end
+      resources :shipping_categories
+      resources :shipping_methods
+    end
   end
 
   resources :blog_posts, path: 'blog', only: [:index, :show], controller: 'blog/blog_posts'
@@ -369,7 +390,7 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
-  resources :listings, :users, :reservations do
+  resources :listings, :users, :reservations, :products do
     resources :user_messages, except: [:index] do
       patch :archive
       put :archive

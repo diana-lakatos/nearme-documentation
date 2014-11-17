@@ -1,0 +1,14 @@
+= simple_form_for [:instance_admin, :buy_sell, @tax_category] do |f|
+  .content-container
+    .row
+      .input-container.col-xs-12
+        = f.input :name, placeholder: 'What is the name of the tax category?', required: true, input_html: { class: 'form-control'}
+    .row
+      .input-container.col-xs-12
+        = f.input :description, placeholder: 'Enter description', input_html: { class: 'form-control'}
+    .row.dropshadow
+      .input-container.col-xs-12
+        = f.label :is_default
+        = f.check_box :is_default
+
+  = f.button :submit, class: "btn btn-green pull-right"

@@ -35,3 +35,20 @@ Feature: A user can search for a listing
     And I fill form for subscribing on notification
     Then I should see a notification for my subscription
     And search notification created with "New Zealand" for user
+
+  Scenario: Displaying no results found when searching for nonexisting product.
+    Given the user exists
+    And I log in as a user
+    And the transactable_type_buy_sell exists
+    And current instance is buyable
+    When I search for product "TV"
+    Then I should see "No results found"
+
+  Scenario: Displaying search results for a product.
+    Given the user exists
+    And I log in as a user
+    And the transactable_type_buy_sell exists
+    And current instance is buyable
+    And product exists with name: "Awesome product"
+    When I search for product "product"
+    Then I see a search results for the product

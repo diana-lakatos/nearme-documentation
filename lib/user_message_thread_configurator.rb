@@ -1,6 +1,6 @@
 class UserMessageThreadConfigurator
 
-  AVAILABLE_CONTEXTS = [Transactable, User, Reservation]
+  AVAILABLE_CONTEXTS = [Transactable, User, Reservation, Spree::Product]
 
   def initialize(user_message, request_params)
     @user_message = user_message
@@ -22,7 +22,9 @@ class UserMessageThreadConfigurator
       context_id_key = context_class.to_s.foreign_key.to_sym
       context_id_key = :listing_id if context_id_key == :transactable_id
       if @request_params[context_id_key].present?
-        @message_context = context_class.with_deleted.find(@request_params[context_id_key]).decorate
+        @message_context = context_class.with_deleted
+        @message_context = @message_context.friendly if @message_context.respond_to?(:friendly)
+        @message_context = @message_context.find(@request_params[context_id_key]).decorate
       end
     end
 

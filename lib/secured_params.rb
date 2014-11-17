@@ -42,7 +42,73 @@ class SecuredParams
       :permission_manage,
       :permission_blog,
       :permission_support,
+      :permission_buysell,
       :name
+    ]
+  end
+
+  def shipping_category
+    [
+      :name
+    ]
+  end
+
+  def shipping_method
+    [
+      :name,
+      :tax_category_id,
+      shipping_category_ids: [],
+      zone_ids: []
+    ]
+  end
+
+  def calculator
+    [
+      :preferred_amount
+    ]
+  end
+
+  def tax_category
+    [
+      :name,
+      :description,
+      :is_default
+    ]
+  end
+
+  def tax_rate
+    [
+      :name,
+      :amount,
+      :included_in_price,
+      :zone_id,
+      :tax_category_id,
+      :calculator_type
+    ]
+  end
+
+  def zone
+    [
+      :name,
+      :description,
+      :default_tax,
+      :kind,
+      state_ids: [],
+      country_ids: []
+    ]
+  end
+
+  def taxonomy
+    [
+      :name
+    ]
+  end
+
+  def taxon
+    [
+      :name,
+      :in_top_nav,
+      :top_nav_position
     ]
   end
 
@@ -193,6 +259,18 @@ class SecuredParams
       :country,
       :name,
       :supported_countries
+    ]
+  end
+
+  def instance_admin_buy_sell_configuration
+    [
+      :currency,
+      :currency_symbol_position,
+      :currency_decimal_mark,
+      :currency_thousands_separator,
+      :shipment_inc_vat,
+      :infinite_scroll,
+      :random_products_for_cross_sell
     ]
   end
 

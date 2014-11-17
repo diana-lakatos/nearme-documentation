@@ -15,6 +15,7 @@ module Utils
         load_tax_categories_and_rates
         load_stock_location
         load_shipping_methods
+        load_instance_serach_defaults
       end
     end
 
@@ -31,6 +32,11 @@ module Utils
       Spree::Config.currency = 'USD'
       Spree::Config.shipment_inc_vat = true
       Spree::Config.override_actionmailer_config = false
+    end
+
+    def load_instance_serach_defaults
+      @instance.default_search_view = 'products'
+      @instance.save
     end
 
     def load_roles

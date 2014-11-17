@@ -1,0 +1,35 @@
+#zone_form
+  = simple_form_for [:instance_admin, :buy_sell, @zone] do |f|
+    .content-container
+      .row
+        .input-container.col-xs-12
+          = f.input :name, placeholder: 'What is the name of the zone?', required: true, input_html: { class: 'form-control'}
+      .row
+        .input-container.col-xs-12
+          = f.input :description, placeholder: 'Enter description', input_html: { class: 'form-control'}
+      .row
+        .input-container.col-xs-12
+          = f.label :default_tax
+          = f.check_box :default_tax
+      .row
+        .input-container.col-xs-12
+          .radio-inline
+            = f.radio_button('kind', 'country', { id: 'country_based', class: 'zone_kind' })
+            = label_tag :country_based, 'Country based'
+            = f.radio_button('kind', 'state', { id: 'state_based', class: 'zone_kind' })
+            = label_tag :state_based, 'State based'
+
+        #state_based_container.zone-members-container.input-container.col-xs-12{class: @zone.kind == 'state' ? '' : 'hide'}
+          = label_tag 'States'
+          = f.input :state_ids, collection: Spree::State.order(:name).pluck(:name, :id), as: :select, label: false, input_html: { class: 'selectpicker', "data-live-search" => "true", multiple: true }
+
+        #country_based_container.zone-members-container.input-container.col-xs-12{class: @zone.kind == 'country' ? '' : 'hide'}
+          = label_tag 'Countries'
+          = f.input :country_ids, collection: Spree::Country.order(:name).pluck(:name, :id), as: :select, label: false, input_html: { class: 'selectpicker', "data-live-search" => "true", multiple: true }
+
+      .row.dropshadow
+
+    = f.button :submit, class: "btn btn-green pull-right"
+
+- content_for :domready do
+  new InstanceAdmin.BuySellController($('#zone_form'));

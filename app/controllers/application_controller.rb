@@ -24,6 +24,7 @@ class ApplicationController < ActionController::Base
   before_filter :redirect_if_marketplace_password_protected
   before_filter :set_raygun_custom_data
   before_filter :filter_out_token
+  before_filter :ensure_proper_spree_route
 
   @@instance_view_cache_key = {}
 
@@ -462,5 +463,10 @@ class ApplicationController < ActionController::Base
 
   def get_instance_view_cache_key
     @instance_view_cache_key ||= InstanceView.where(instance_id: platform_context.instance.id).group(:instance_id).pluck('count(*), max(updated_at)').join('-')
+  end
+
+  def ensure_proper_spree_route
+    # TODO: uncomment
+    #redirect_to main_app.root_path if request.path.include?('/instance_buy_sell')
   end
 end

@@ -97,6 +97,10 @@ class Analytics::EventTracker::Serializers::TrackSerializer
         search_country: object.country,
         search_postcode: object.postcode
       }
+    when Spree::Product::Search::Params::Web
+      {
+        search_product: object.query
+      }
     when Company
       {
         company_name: object.name,

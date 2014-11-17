@@ -1,0 +1,7 @@
+%nav#taxonomies.sidebar-item
+  - Spree::Taxonomy.order('position ASC').each do |taxonomy|
+    .taxonomy
+      %h6.taxonomy-root= taxonomy.name
+      = display_taxonomies(taxonomy.root, taxon)
+  - if taxon.present?
+    %a.right.clear-filters{href: '#', 'data-remove-taxons' => 'true'} Clear filters
