@@ -17,5 +17,13 @@ class DataUpload < ActiveRecord::Base
   store :options, accessors: [ :send_invitational_email, :sync_mode ], coder: Hash
   scope :for_transactable_type, -> (transactable_type) { where(transactable_type: transactable_type) }
 
+  def sync_mode
+    ActiveRecord::ConnectionAdapters::Column.value_to_boolean(super)
+  end
+
+  def send_invitational_email
+    ActiveRecord::ConnectionAdapters::Column.value_to_boolean(super)
+  end
+
 end
 

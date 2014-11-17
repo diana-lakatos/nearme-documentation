@@ -1,25 +1,16 @@
 class DataImporter::XmlFile < DataImporter::File
 
-  def initialize(path, transactable_type = nil, logger = nil, tracker = nil)
+  attr_accessor :trackers
+
+  def initialize(path, transactable_type, options = {})
     super(path)
-    @instance = PlatformContext.current.instance
-    @transactable_type = transactable_type || @instance.transactable_types.first
+    @transactable_type = transactable_type
     @users_emails = []
     @new_users_emails = {}
     @location_types = {}
-    @logger = logger || DataImporter::Logger.new
-    @tracker = tracker || DataImporter::SummaryTracker.new
-  end
-
-  def get_parse_result
-    @logger.to_s
-  end
-
-  def get_summary
-    {
-      new: @tracker.new_entities,
-      updated: @tracker.updated_entities
-    }
+    @synchronizer = options.fetch(:synchronizer, DataImporter::NullSynchronizer.new)
+    @send_invitations = options.fetch(:send_invitational_email, false)
+    @trackers = options.fetch(:trackers, [])
   end
 
   def parse
@@ -42,8 +33,6 @@ class DataImporter::XmlFile < DataImporter::File
 
   def parse_instance
     @node.xpath('companies').each do |instance_node|
-      @send_invitations = instance_node['send_invitation'] == 'true' ? true : false
-      @sync_mode = instance_node['sync_mode'] == 'true' ? true : false
       @node = instance_node
       yield
     end
@@ -58,29 +47,27 @@ class DataImporter::XmlFile < DataImporter::File
           assign_attributes(c, company_node)
           c.external_id = external_id
         end
-      elsif @sync_mode
-        @company.locations.update_all(mark_to_be_bulk_update_deleted: true)
-        @company.listings.update_all(mark_to_be_bulk_update_deleted: true)
-        @company.photos.update_all(mark_to_be_bulk_update_deleted: true)
       end
-      @tracker.increment(@company)
+      @synchronizer.company = @company
+      @synchronizer.mark_all_object_to_delete!
+      trigger_event('object_created', @company)
       if !@company.changed? || @company.save
         parse_users(company_node)
         if @company.creator.present?
           @node = company_node
           yield
-          if @sync_mode
-            @tracker.deleted('location', @company.locations.where(mark_to_be_bulk_update_deleted: true).destroy_all.count)
-            @tracker.deleted('listing', @company.listings.where(mark_to_be_bulk_update_deleted: true).destroy_all.count)
-            @tracker.deleted('photo', @company.photos.where(mark_to_be_bulk_update_deleted: true).destroy_all.count)
-          end
+
+          trigger_event('parsing_finished', {
+            'location' => @synchronizer.delete_active_record_relation!(@company.locations),
+            'listing' => @synchronizer.delete_active_record_relation!(@company.listings),
+            'photo' => @synchronizer.delete_active_record_relation!(@company.photos)
+          })
         else
-          @logger.log("Company #{@company.external_id} has no valid user, skipping")
+          trigger_event('custom_validation_error', "Company #{@company.external_id} has no valid user, skipping")
           @company.destroy
         end
       else
-        @tracker.decrement(@company)
-        @logger.log_validation_error(@company, @company.external_id)
+        trigger_event('object_not_saved', @company, @company.external_id)
       end
     end
   end
@@ -101,16 +88,16 @@ class DataImporter::XmlFile < DataImporter::File
           @new_users_emails[email] = password
         end
       end
-      @tracker.increment(@user) unless @users_emails.include?(@user.email)
-      @users_emails << email
-      if !@user.changed? || @user.save
+      if @user.valid?
+        trigger_event('object_valid', @user) unless @users_emails.include?(email)
+        @users_emails << email
+        @user.save!
         @company.creator_id = @user.id if @company.creator.nil?
         @company.users << @user unless @company.users.include?(@user)
         @company.save!
       else
-        @tracker.decrement(@user) unless @user.persisted? && @users_emails.include?(@user.email)
+        trigger_event('object_not_valid', @user, @user.email)
         @new_users_emails.delete(email)
-        @logger.log_validation_error(@user, @user.email)
       end
     end
   end
@@ -121,7 +108,7 @@ class DataImporter::XmlFile < DataImporter::File
       external_id = location_node['id']
       @location = Location.with_deleted.where(company: @company, external_id: external_id, instance_id: PlatformContext.current.instance.id).first || @company.locations.build
       assign_attributes(@location, location_node)
-      @location.mark_to_be_bulk_update_deleted = false
+      @location = @synchronizer.unmark_object(@location)
       @location.location_type = find_location_type(location_node.xpath('location_type').text)
       @node = location_node
       @object = @location
@@ -132,23 +119,22 @@ class DataImporter::XmlFile < DataImporter::File
         Impression.with_deleted.where(impressionable: @location).update_all(deleted_at: nil)
       end
       if @location.valid?
-        @tracker.increment(@location)
+        trigger_event('object_valid', @location)
         yield
         @address.save if @address.changed? && !@location.changed? && @location.valid? && !@location.new_record?
         if @location.changed?
           if @location.save
             @location.populate_photos_metadata! if @photo_updated
           else
-            @tracker.decrement(@location)
-            @logger.log_validation_error(@location, @location.external_id)
-            @location.update_column(:mark_to_be_bulk_update_deleted, false) if @sync_mode && @location.persisted?
+            trigger_event('object_not_saved', @location, @location.external_id)
+            @synchronizer.unmark_object!(@location)
           end
         else
-          @location.update_column(:mark_to_be_bulk_update_deleted, false) if @sync_mode
+          @synchronizer.unmark_object!(@location)
         end
       else
-        @location.update_column(:mark_to_be_bulk_update_deleted, false) if @sync_mode && @location.persisted?
-        @logger.log_validation_error(@location, @location.address)
+        @synchronizer.unmark_object!(@location)
+        trigger_event('object_not_valid', @location, @location.external_id)
       end
     end
   end
@@ -170,7 +156,7 @@ class DataImporter::XmlFile < DataImporter::File
       @node = listing_node
       @object = @listing
       @listing.photo_not_required = true
-      @listing.mark_to_be_bulk_update_deleted = false
+      @listing = @synchronizer.unmark_object(@listing)
       if @listing.deleted?
         @listing.update_column(:deleted_at, nil)
         AvailabilityRule.with_deleted.where(target: @listing).update_all(deleted_at: nil)
@@ -179,14 +165,14 @@ class DataImporter::XmlFile < DataImporter::File
         Impression.with_deleted.where(impressionable: @listing).update_all(deleted_at: nil)
       end
       if @listing.valid?
-        @tracker.increment(@listing)
+        trigger_event('object_valid', @listing)
         yield
         @listing.skip_metadata = true
         @listing.save! if @listing.changed? || (@listing_photo_updated && @listing.new_record?)
         @listing.populate_photos_metadata! if @listing_photo_updated
       else
-        @listing.update_column(:mark_to_be_bulk_update_deleted, false) if @sync_mode && @listing.persisted?
-        @logger.log_validation_error(@listing, @listing.external_id)
+        trigger_event('object_not_valid', @listing, @listing.external_id)
+        @synchronizer.unmark_object!(@listing)
       end
     end
   end
@@ -203,7 +189,7 @@ class DataImporter::XmlFile < DataImporter::File
   end
 
   def parse_photos
-    if @sync_mode # no need to store this in memory if no sync mode
+    if @synchronizer.performing_real_operations? # no need to store this in memory if no sync mode
       @photos_hash = @listing.photos.inject({}) do |hash, p|
         hash[p.image_original_url] = p
         hash
@@ -211,7 +197,7 @@ class DataImporter::XmlFile < DataImporter::File
     end
     @node.xpath('photos/photo').each do |photo_node|
       if @listing.photos.map(&:image_original_url).include?(photo_node.xpath('image_original_url').text)
-        @photos_hash[photo_node.xpath('image_original_url').text].update_column(:mark_to_be_bulk_update_deleted, false) if @sync_mode
+        @synchronizer.unmark_object!(@photos_hash[photo_node.xpath('image_original_url').text]) if @photos_hash.present?
       else
         @photo_updated = true
         @listing_photo_updated = true
@@ -220,7 +206,7 @@ class DataImporter::XmlFile < DataImporter::File
         else
           @photo = @listing.photos.build(image_original_url: photo_node.xpath('image_original_url').text, skip_metadata: true)
         end
-        @tracker.increment(@photo)
+        trigger_event('object_created', @photo)
       end
     end
   end
@@ -233,6 +219,10 @@ class DataImporter::XmlFile < DataImporter::File
   end
 
   private
+
+  def trigger_event(event_name, *args)
+    @trackers.each { |t| t.send(event_name, *args) }
+  end
 
   def assign_attributes(object, node)
     object.attributes = object.class.xml_attributes.inject({}) do |attributes, attribute|
@@ -251,9 +241,10 @@ class DataImporter::XmlFile < DataImporter::File
     if name.blank?
       @location_type_first ||= LocationType.first
     else
-      @location_types[name] ||= LocationType.where(name: name).first
-      raise "Unknown LocationType #{name}, valid names: #{LocationType.pluck(:name)}" if @location_types[name].nil?
-      @location_types[name]
+      lower_name = name.mb_chars.downcase
+      @location_types[lower_name] ||= LocationType.where('lower(name) like ?', lower_name).first
+      raise "Unknown LocationType #{name}, valid names: #{LocationType.pluck(:name)}" if @location_types[lower_name].nil?
+      @location_types[lower_name]
     end
   end
 

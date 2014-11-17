@@ -40,13 +40,13 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
   should 'should not raise exception for blank file' do
     setup_current_data
     setup_data_for_other_user
-    setup_xml_file(Rails.root.join('test', 'assets', 'data_importer', 'current_data_blank.csv'), true)
+    setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data_blank.csv'), true)
     assert_no_difference 'Company.count' do
       assert_no_difference 'Location.count' do
         assert_no_difference 'Address.count' do
           assert_no_difference 'Transactable.count' do
             assert_no_difference 'Photo.count' do
-              @xml_file.parse
+              DataUploadImportJob.perform(@data_upload.id)
             end
           end
         end
@@ -57,13 +57,13 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
   should 'should not remove anything after uploading current_data csv' do
     setup_current_data
     setup_data_for_other_user
-    setup_xml_file(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), true)
+    setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), true)
     assert_no_difference 'Company.count' do
       assert_no_difference 'Location.count' do
         assert_no_difference 'Address.count' do
           assert_no_difference 'Transactable.count' do
             assert_no_difference 'Photo.count' do
-              @xml_file.parse
+              DataUploadImportJob.perform(@data_upload.id)
             end
           end
         end
@@ -75,8 +75,8 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     @user = FactoryGirl.create(:user)
     @company = FactoryGirl.create(:company, creator: @user)
     assert_nothing_raised do
-      setup_xml_file(Rails.root.join('test', 'assets', 'data_importer', 'current_data_without_external_ids.csv'), true)
-      @xml_file.parse
+      setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data_without_external_ids.csv'), true)
+      DataUploadImportJob.perform(@data_upload.id)
     end
     assert_equal 1, Location.with_deleted.count
     assert_equal 0, Transactable.with_deleted.count
@@ -90,8 +90,8 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     @listing_to_not_be_reverted.destroy
     assert_no_difference 'Location.count' do
       @location_empty.destroy
-      setup_xml_file(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), true)
-      @xml_file.parse
+      setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), true)
+      DataUploadImportJob.perform(@data_upload.id)
     end
     refute @location_empty.reload.deleted?
     assert @listing_to_not_be_reverted.reload.deleted?
@@ -104,8 +104,8 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     @photo_to_not_be_reverted.destroy
     assert_no_difference 'Transactable.count' do
       @listing_one.destroy
-      setup_xml_file(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), true)
-      @xml_file.parse
+      setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), true)
+      DataUploadImportJob.perform(@data_upload.id)
     end
     refute @listing_one.reload.deleted?
     assert @photo_to_not_be_reverted.reload.deleted?
@@ -114,8 +114,8 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
   should 'should just insert new things and update existing ones, without deleting old ones if sync mode disabled' do
     setup_current_data
     setup_data_for_other_user
-    setup_xml_file(Rails.root.join('test', 'assets', 'data_importer', 'current_data_modified.csv'))
-    @xml_file.parse
+    setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data_modified.csv'))
+    DataUploadImportJob.perform(@data_upload.id)
     refute @photo_one.reload.deleted?
     assert_equal 3, @listing_one.reload.photos.count
     assert_equal ['http://www.example.com/image1.jpg', 'http://www.example.com/image2.jpg', 'http://www.example.com/image3.jpg'], @listing_one.photos.map(&:image_original_url).sort
@@ -139,8 +139,8 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
   should 'should do planned changes after submitting different csv in sync mode' do
     setup_current_data
     setup_data_for_other_user
-    setup_xml_file(Rails.root.join('test', 'assets', 'data_importer', 'current_data_modified.csv'), true)
-    @xml_file.parse
+    setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data_modified.csv'), true)
+    DataUploadImportJob.perform(@data_upload.id)
     assert @photo_one.reload.deleted?
     refute @photo_two.reload.deleted?
     assert_equal 2, @listing_one.reload.photos.count
@@ -194,12 +194,9 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     @other_listing_two = FactoryGirl.create(:transactable, location: @other_location_not_empty, name: 'the other', my_attribute: 'attribute', daily_price: 10, external_id: "no-touch")
   end
 
-  def setup_xml_file(csv_path, sync_mode = false)
+  def setup_data_upload(csv_path, sync_mode = false)
     @data_upload = FactoryGirl.create(:data_upload, sync_mode: sync_mode, transactable_type: @transactable_type, csv_file: File.open(csv_path), target: @company, uploader: @user)
-    xml_path = "#{Dir.tmpdir}/#{@data_upload.transactable_type_id}-#{Time.zone.now.to_i}.xml"
-    csv_file = DataImporter::Host::CsvFile::TemplateCsvFile.new(@data_upload)
-    DataImporter::CsvToXmlConverter.new(csv_file, xml_path).convert
-    @xml_file = DataImporter::XmlFile.new(xml_path, @transactable_type)
+    DataUploadHostConvertJob.perform(@data_upload.id)
   end
 
 end
