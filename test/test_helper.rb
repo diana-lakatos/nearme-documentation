@@ -35,12 +35,13 @@ ActiveSupport::TestCase.class_eval do
   include FactoryGirl::Syntax::Methods
   include StubHelper
 
-  setup do
-    DatabaseCleaner.clean # needed :/
-    TestDataSeeder.seed!
-    DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.start
+  setup :setup_platform_context
+  setup :setup_payment_gateways
+
+  def setup_platform_context
+    FactoryGirl.create(:default_instance)
     PlatformContext.current = PlatformContext.new
+    CustomAttributes::CustomAttribute::TranslationCreator.any_instance.stubs(:should_create_translations?).returns(false).at_least(0)
   end
 
   def with_versioning
@@ -155,6 +156,18 @@ ActiveSupport::TestCase.class_eval do
     ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:store).returns(stub).at_least(0)
   end
 
+  def setup_payment_gateways
+    FactoryGirl.create(:balanced_payment_gateway)
+    FactoryGirl.create(:paypal_payment_gateway)
+    FactoryGirl.create(:stripe_payment_gateway)
+  end
+
+  DatabaseCleaner.strategy = :truncation
+
+end
+
+ActionDispatch::IntegrationTest.class_eval do
+  include Rails.application.routes.url_helpers
 end
 
 ActionController::TestCase.class_eval do
@@ -196,25 +209,6 @@ ActionController::TestCase.class_eval do
   end
 end
 
+DatabaseCleaner.clean
+Utils::EnLocalesSeeder.new.go!
 ActionMailer::Base.delivery_method = :test # Spree overrides this so we want to get back to test
-DatabaseCleaner.clean_with :truncation
-DatabaseCleaner.strategy = :transaction
-
-class TestDataSeeder
-
-  @@data_seeded = false
-
-  def self.seed!
-    if !@@data_seeded
-      @@data_seeded = true
-      FactoryGirl.create(:default_instance)
-      PlatformContext.current = PlatformContext.new
-      FactoryGirl.create(:balanced_payment_gateway)
-      FactoryGirl.create(:paypal_payment_gateway)
-      FactoryGirl.create(:stripe_payment_gateway)
-      FactoryGirl.create(:transactable_type_listing)
-      Utils::EnLocalesSeeder.new.go!
-    end
-  end
-end
-
