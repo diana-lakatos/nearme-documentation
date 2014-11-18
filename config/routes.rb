@@ -1,3 +1,6 @@
+# super hackish way to fix add_space_wizard:12 feature
+require Rails.root.join('app', 'controllers', 'registrations_controller.rb') if Rails.env.test?
+
 DesksnearMe::Application.routes.draw do
 
   scope module: 'spree' do
