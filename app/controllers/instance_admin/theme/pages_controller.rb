@@ -1,8 +1,9 @@
 class InstanceAdmin::Theme::PagesController < InstanceAdmin::Theme::BaseController
-  before_filter :set_redirect_form
 
   def index
   end
+
+  before_filter :set_redirect_form
 
   def create
     @page = Page.new(page_params)
@@ -42,6 +43,4 @@ class InstanceAdmin::Theme::PagesController < InstanceAdmin::Theme::BaseControll
   def page_params
     params.require(:page).permit(secured_params.page)
   end
-
 end
-
