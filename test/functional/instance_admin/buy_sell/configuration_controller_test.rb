@@ -6,6 +6,7 @@ class InstanceAdmin::BuySell::ConfigurationControllerTest < ActionController::Te
     stub_mixpanel
     @user = FactoryGirl.create(:user)
     sign_in @user
+    PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
     InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
     FactoryGirl.create(:transactable_type_buy_sell)
@@ -32,7 +33,7 @@ class InstanceAdmin::BuySell::ConfigurationControllerTest < ActionController::Te
                      "shipment_inc_vat"=>"true",
                      "infinite_scroll"=>"false",
                      "random_products_for_cross_sell"=>"true" }
-      put :update, update_hash 
+      put :update, update_hash
       update_hash.each_pair do |k, v|
         assert_equal Spree::Config[k].to_s, v
       end
