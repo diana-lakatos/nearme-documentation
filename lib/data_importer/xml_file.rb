@@ -15,6 +15,7 @@ class DataImporter::XmlFile < DataImporter::File
 
   def parse
     @node = Nokogiri::XML(open(@path))
+    @time_started = Time.zone.now
     parse_instance do
       parse_companies do
         parse_locations do
@@ -197,6 +198,7 @@ class DataImporter::XmlFile < DataImporter::File
     end
     @node.xpath('photos/photo').each do |photo_node|
       if @listing.photos.map(&:image_original_url).include?(photo_node.xpath('image_original_url').text)
+        trigger_event('object_not_created', 'photo')
         @synchronizer.unmark_object!(@photos_hash[photo_node.xpath('image_original_url').text]) if @photos_hash.present?
       else
         @photo_updated = true

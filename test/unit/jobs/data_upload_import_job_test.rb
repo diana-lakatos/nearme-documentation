@@ -10,7 +10,11 @@ class DataUploadImportJobTest < ActiveSupport::TestCase
                    :parsing_result_log= => 'hello',
                    :parse_summary= => { new: { company: 1 }, updated: { company: 2 } },
                    :save! => true,
-                   sync_mode: false
+                   :queued? => true,
+                   :import! => true,
+                   fail: true,
+                   sync_mode: false,
+                   touch: true
                   )
       DataUpload.stubs(:find).returns(@stub)
 
@@ -18,12 +22,14 @@ class DataUploadImportJobTest < ActiveSupport::TestCase
       DataImporter::NullSynchronizer.expects(:new).returns(@synchronizer)
       @validation_errors_tracker = stub(to_s: 'hello')
       DataImporter::Tracker::ValidationErrors.expects(:new).returns(@validation_errors_tracker)
-      @summary_tracker = stub(new_entities: {company: 1}, updated_entities: {company: 2})
+      @summary_tracker = stub(new_entities: {company: 1}, updated_entities: {company: 2}, deleted_entities: {company: 3})
       DataImporter::Tracker::Summary.expects(:new).returns(@summary_tracker)
       @progress_tracker = stub()
       DataImporter::Tracker::Progress.expects(:new).returns(@progress_tracker)
       @trackers = [@validation_errors_tracker, @summary_tracker, @progress_tracker]
       @xml_file_stub = stub()
+      @counter_stub = stub(all_objects_count: 100)
+      DataImporter::XmlEntityCounter.stubs(:new).returns(@counter_stub)
       DataImporter::XmlFile.expects(:new).with('/some/path', @transactable_type, {synchronizer: @synchronizer, trackers: @trackers }).returns(@xml_file_stub)
     end
 

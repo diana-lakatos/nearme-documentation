@@ -6,20 +6,27 @@ class DataUploadImportJob < Job
 
   def perform
     @data_upload = DataUpload.find(@data_upload_id)
-    @synchronizer = @data_upload.sync_mode ? DataImporter::Synchronizer.new : DataImporter::NullSynchronizer.new
-    @validation_errors_tracker = DataImporter::Tracker::ValidationErrors.new
-    @summary_tracker = DataImporter::Tracker::Summary.new
-    @progress_tracker = DataImporter::Tracker::Progress.new(@data_upload)
-    @trackers = [@validation_errors_tracker, @summary_tracker, @progress_tracker]
-    @xml_file = DataImporter::XmlFile.new(@data_upload.xml_file.proper_file_path, @data_upload.transactable_type, {synchronizer: @synchronizer, trackers: @trackers })
-    begin
-      @xml_file.parse
-    rescue
-      @data_upload.encountered_error = "#{$!.inspect}\n\n#{$@}"
-    ensure
-      @data_upload.parsing_result_log = @validation_errors_tracker.to_s
-      @data_upload.parse_summary = { new: @summary_tracker.new_entities, updated: @summary_tracker.updated_entities }
-      @data_upload.save!
+    if @data_upload.queued?
+      @data_upload.import!
+      @synchronizer = @data_upload.sync_mode ? DataImporter::Synchronizer.new : DataImporter::NullSynchronizer.new
+      @validation_errors_tracker = DataImporter::Tracker::ValidationErrors.new
+      @summary_tracker = DataImporter::Tracker::Summary.new
+      xml_path = @data_upload.xml_file.proper_file_path
+      @progress_tracker = DataImporter::Tracker::Progress.new(@data_upload, DataImporter::XmlEntityCounter.new(xml_path).all_objects_count)
+      @trackers = [@validation_errors_tracker, @summary_tracker, @progress_tracker]
+      @xml_file = DataImporter::XmlFile.new(xml_path, @data_upload.transactable_type, {synchronizer: @synchronizer, trackers: @trackers })
+      begin
+        @xml_file.parse
+        @validation_errors_tracker.to_s.blank? ? @data_upload.finish : @data_upload.finish_with_validation_errors
+      rescue
+        @data_upload.encountered_error = "#{$!.inspect}\n\n#{$@[0..5]}"
+        @data_upload.fail
+      ensure
+        @data_upload.parsing_result_log = @validation_errors_tracker.to_s
+        @data_upload.parse_summary = { new: @summary_tracker.new_entities, updated: @summary_tracker.updated_entities, deleted:  @summary_tracker.deleted_entities}
+        @data_upload.save!
+        @data_upload.touch(:imported_at)
+      end
     end
   end
 

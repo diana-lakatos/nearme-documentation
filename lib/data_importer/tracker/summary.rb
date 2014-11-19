@@ -1,5 +1,7 @@
 class DataImporter::Tracker::Summary < DataImporter::Tracker
-  attr_accessor :new_entities, :updated_entities
+
+  attr_reader :new_entities, :updated_entities, :deleted_entities
+
   def initialize
     @time_start = Time.zone.now.to_f
     @new_entities = { 'user' => 0, 'company'=>  0, 'location' => 0, 'transactable' => 0, 'photo' => 0 }

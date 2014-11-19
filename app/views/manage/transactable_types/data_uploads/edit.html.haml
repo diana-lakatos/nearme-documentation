@@ -7,35 +7,6 @@
     %h1= t('data_upload.manage.edit.header', csv_identifier: @data_upload.csv_file_identifier)
 
     .box
-      - if @data_upload.xml_file.blank?
-        %p
-        %p= t('data_upload.manage.edit.processing')
-      - else
-        - if @data_upload.imported_at.nil?
-          %p
-          %p= t('data_upload.manage.edit.importing', preview_link: link_to("preview xml", @data_upload.xml_file.url, target: :blank)).html_safe
-          = simple_form_for @data_upload, url: schedule_import_manage_transactable_type_data_upload_path(@transactable_type, @data_upload), method: :post do |f|
-            = f.button :submit, t('data_upload.manage.edit.schedule_import'), class: 'btn btn-primary'
-        - elsif @data_upload.parse_summary.empty?
-          %p
-          %p= t('data_upload.manage.edit.parsing')
-        - elsif @data_upload.encountered_error.blank?
-          %h2= t('data_upload.manage.edit.imported_header')
-          %p
-          %p
-            = t('data_upload.manage.edit.new_entities')
-            = @data_upload.parse_summary[:new].map { |k, v| "#{k.to_s.humanize}: #{v}"}.join(', ')
-          %p
-            = t('data_upload.manage.edit.updated_entities')
-            = @data_upload.parse_summary[:updated].map { |k, v| "#{k.to_s.humanize}: #{v}"}.join(', ')
-          - if @data_upload.parsing_result_log.present?
-            %p= t('data_upload.manage.edit.errors_encountered')
-            %textarea{disabled: 'disabled', style: "width: 98%", rows: 10}= @data_upload.parsing_result_log
-          - else
-            = t('data_upload.manage.edit.no_errors')
-        - else
-          %p
-          %p
-            = t('data_upload.manage.edit.errors', preview_link: link_to("preview xml", @data_upload.xml_file.url, target: :blank)).html_safe
-
+      %p
+      = render partial: "manage/transactable_types/data_uploads/edit_#{@data_upload.state}"
 

@@ -7,6 +7,12 @@ class Manage::TransactableTypes::DataUploadsController < Manage::BaseController
     @data_uploads = @company.data_uploads.for_transactable_type(@transactable_type).order('created_at DESC').paginate(page: params[:page], per_page: 20)
   end
 
+  def show
+    if request.xhr?
+      render partial: 'manage/transactable_types/data_uploads/data_upload', :locals => { data_upload: @company.data_uploads.for_transactable_type(@transactable_type).find(params[:id]) }
+    end
+  end
+
   def create
     @data_upload = @company.data_uploads.build(data_upload_params)
     lines_count = 0
@@ -45,15 +51,14 @@ class Manage::TransactableTypes::DataUploadsController < Manage::BaseController
     redirect_to manage_transactable_type_data_uploads_path
   end
 
-  def progress
-    @data_upload = @company.data_uploads.for_transactable_type(@transactable_type).find(params[:id])
-
+  def status
+    render json: @company.data_uploads.for_transactable_type(@transactable_type).where(id: params[:ids]).pluck(:id, :state, :progress_percentage).to_json
   end
 
   def schedule_import
     @data_upload = @company.data_uploads.for_transactable_type(@transactable_type).find(params[:id])
-    if @data_upload.imported_at.nil?
-      @data_upload.touch(:imported_at)
+    if @data_upload.waiting?
+      @data_upload.queue!
       DataUploadImportJob.perform(@data_upload.id)
       flash[:success] = t('flash_messages.manage.data_upload.scheduled')
     else

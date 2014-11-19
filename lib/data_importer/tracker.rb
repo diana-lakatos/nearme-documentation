@@ -6,6 +6,9 @@ class DataImporter::Tracker
   def object_created(*args)
   end
 
+  def object_not_created(*args)
+  end
+
   def parsing_finished(*args)
   end
 

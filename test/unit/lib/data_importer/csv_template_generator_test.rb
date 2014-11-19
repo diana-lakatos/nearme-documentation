@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class CsvTemplateGeneratorTest < ActiveSupport::TestCase
+class DataImporter::CsvTemplateGeneratorTest < ActiveSupport::TestCase
 
   def setup
     @instance = FactoryGirl.create(:instance)

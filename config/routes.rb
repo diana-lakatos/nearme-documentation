@@ -465,6 +465,7 @@ DesksnearMe::Application.routes.draw do
     resources :transactable_types, :only => [] do
       resources :data_uploads, controller: 'transactable_types/data_uploads' do
         collection do
+          get :status
           get :download_csv_template
           get :download_current_data_csv
         end

@@ -10,14 +10,14 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
     @instance = FactoryGirl.create(:instance)
     PlatformContext.current = PlatformContext.new(@instance)
     @location_type = FactoryGirl.create(:location_type, name: 'My Type')
-    @xml_file = FactoryGirl.create(:xml_template_file)
-    @xml_file.parse
   end
 
 
   context 'with extra listing' do
 
     setup do
+      @xml_file = FactoryGirl.create(:xml_template_file)
+      @xml_file.parse
       @company = @instance.companies.find_by_external_id('1')
       @transactable_to_be_deleted = FactoryGirl.create(:transactable, my_attribute: 'name', location: @company.locations.first)
     end
@@ -40,6 +40,8 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
   end
 
   should 'do not remove invalid listing' do
+    @xml_file = FactoryGirl.create(:xml_template_file)
+    @xml_file.parse
 
     assert_difference 'Transactable.count', -1 do
       @xml_file = FactoryGirl.create(:xml_template_file_sync_mode_invalid_transactable)

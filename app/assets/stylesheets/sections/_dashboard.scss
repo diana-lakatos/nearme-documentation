@@ -382,3 +382,41 @@ ul.location-and-listings .filter span {
     padding: 0px 10px;
 }
 
+#data-uploads {
+  .data-upload {
+
+    .span2 {
+      font-size: 0.90em;
+    }
+
+    .state {
+
+      .importing-text {
+        font-style: italic;
+        margin-right: 10px;
+        color: #0d90d1;
+      }
+
+      .progress {
+        height: 10px;
+        margin: 10px 0px 0px 0px;
+        padding: 0px;
+      }
+
+
+      &.waiting {
+        color: $dnm_orange;
+        font-style: italic;
+
+        a {
+          color: $dnm_orange;
+          font-style: italic;
+        }
+
+        .text {
+          padding-right: 5px;
+        }
+      }
+    }
+  }
+}
