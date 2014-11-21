@@ -29,7 +29,6 @@ class Manage::UsersControllerTest < ActionController::TestCase
 
     context "with user that not exists" do
       should "not create company user" do
-        FactoryGirl.create(:transactable_type)
         assert_no_difference('@company.users.count') do
           post :create, { :user => { :email => "not_existed_user@example.com" } }
         end
@@ -49,7 +48,6 @@ class Manage::UsersControllerTest < ActionController::TestCase
       end
 
       should "not create company user" do
-        FactoryGirl.create(:transactable_type)
         assert_no_difference('@company.users.count') do
           post :create, { :user => { :email => @user.email } }
         end
