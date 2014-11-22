@@ -80,8 +80,6 @@ gem 'bootstrap-sass', '~> 2.3.1.0'
 gem 'chronic', '~> 0.9.1'
 gem 'jcrop-rails', github: 'bukalapak/jcrop-rails'
 
-gem 'ey_config'
-
 gem 'unicorn'
 gem 'chameleon', '~> 0.2.4'
 
