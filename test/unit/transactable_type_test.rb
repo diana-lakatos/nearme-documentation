@@ -17,19 +17,21 @@ class TransactableTypeTest < ActiveSupport::TestCase
 
   context "setup_price_attributes" do
 
+    setup do
+      @transactable_type = TransactableType.first
+    end
+
     should 'be triggered on create' do
       TransactableType.any_instance.expects(:setup_price_attributes)
-      FactoryGirl.create(:transactable_type_listing)
+      FactoryGirl.create(:transactable_type)
     end
 
     should 'be triggered when updating pricing option' do
-      @transactable_type = FactoryGirl.create(:transactable_type_listing)
       TransactableType.any_instance.expects(:setup_price_attributes)
       @transactable_type.update_attribute(:pricing_options, { "daily" => "1", "monthly" => "1" })
     end
 
     should 'be triggered when updating pricing validation' do
-      @transactable_type = FactoryGirl.create(:transactable_type_listing)
       TransactableType.any_instance.expects(:setup_price_attributes)
       @transactable_type.update_attribute(:pricing_validation, { "daily" => { "min" => "10" } })
     end
@@ -37,13 +39,17 @@ class TransactableTypeTest < ActiveSupport::TestCase
   end
 
   context 'pricing_validation_is_correct' do
+    setup do
+      @transactable_type = TransactableType.first
+    end
     should 'be valid if max is greater than min' do
-      transactable_type = FactoryGirl.build(:transactable_type, :pricing_validation => { "daily" => { "min" => "1", "max" => "9" } })
-      assert transactable_type.valid?, "expected valid, but errors were found: #{transactable_type.errors.to_json}"
+      @transactable_type.pricing_validation = { "daily" => { "min" => "1", "max" => "9" } }
+      assert @transactable_type.valid?, "expected valid, but errors were found: #{@transactable_type.errors.to_json}"
     end
 
     should 'not be valid if min is lower than 0' do
-      refute FactoryGirl.build(:transactable_type, :pricing_validation => { "daily" => { "min" => "-1" } }).valid?
+      @transactable_type.pricing_validation = { "daily" => { "min" => "-1" } }
+      refute @transactable_type.valid?
     end
 
     should 'be valid if min is 0' do

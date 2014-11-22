@@ -14,7 +14,7 @@ class Page < ActiveRecord::Base
   skip_callback :commit, :after, :remove_hero_image!
 
   belongs_to :theme
-  delegate :instance, to: :theme
+  belongs_to :instance
 
   default_scope -> { rank(:position) }
 
