@@ -81,7 +81,6 @@ gem 'chronic', '~> 0.9.1'
 gem 'jcrop-rails', github: 'bukalapak/jcrop-rails'
 
 gem 'unicorn'
-gem 'chameleon', '~> 0.2.4'
 
 gem 'ckeditor'
 gem 'orm_adapter', '~> 0.5.0' # needed for ckeditor, see https://github.com/galetahub/ckeditor/issues/375

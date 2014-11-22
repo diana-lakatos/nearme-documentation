@@ -198,7 +198,6 @@ GEM
       activesupport (>= 3.2.0)
       json (>= 1.7)
       mime-types (>= 1.16)
-    chameleon (0.2.4)
     chosen-rails (1.1.0)
       coffee-rails (>= 3.2)
       compass-rails (>= 1.1.2)
@@ -732,7 +731,6 @@ DEPENDENCIES
   capybara-screenshot
   capybara-webkit (= 1.0.0)
   carrierwave
-  chameleon (~> 0.2.4)
   chosen-rails
   chronic (~> 0.9.1)
   ckeditor
