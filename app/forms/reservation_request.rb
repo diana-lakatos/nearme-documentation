@@ -123,8 +123,8 @@ class ReservationRequest < Form
       self.card_expires = card_expires.to_s.strip
 
       credit_card = ActiveMerchant::Billing::CreditCard.new(
-        first_name: card_holder_first_name,
-        last_name: card_holder_last_name,
+        first_name: card_holder_first_name.to_s,
+        last_name: card_holder_last_name.to_s,
         number: card_number.to_s,
         month: card_expires.to_s[0,2],
         year: card_expires.to_s[-4,4],

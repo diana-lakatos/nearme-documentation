@@ -142,6 +142,8 @@ class Listings::RecurringBookingsController < ApplicationController
         card_expires: attributes[:card_expires],
         card_code: attributes[:card_code],
         card_number: attributes[:card_number],
+        card_holder_first_name: attributes[:card_holder_first_name],
+        card_holder_last_name: attributes[:card_holder_last_name],
         country_name: attributes[:country_name],
         mobile_number: attributes[:mobile_number]
       }
