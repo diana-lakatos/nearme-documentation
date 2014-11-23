@@ -3,6 +3,8 @@ class Domain < ActiveRecord::Base
   acts_as_paranoid
   # attr_accessible :name, :target, :target_id, :target_type, :secured
 
+  REDIRECT_CODES = [301, 302]
+
   attr_accessor :certificate_body, :private_key, :certificate_chain
 
   state_machine :state, initial: :unsecured do
@@ -41,9 +43,28 @@ class Domain < ActiveRecord::Base
     end
   end
 
+  validates :redirect_code, inclusion: { in: REDIRECT_CODES }, allow_blank: true
+  validates :redirect_to, presence: true, if: :redirect_code?
+
   scope :secured, -> { where(secured: true) }
 
   delegate :white_label_enabled?, :to => :target
+
+  def self.where_hostname(hostname)
+    domain = find_by(name: hostname)
+    # Domain was not found, lets figure out the correct name
+    unless domain
+      parsed_url = Domainatrix.parse(hostname)
+      # a.b.example.com => example.com, a.b.c.near-me.co.uk => near-me.co.uk
+      without_subdomains = parsed_url.domain_with_public_suffix
+      domain = find_by(name: without_subdomains)
+      unless domain
+        www_hostname = "www.#{without_subdomains}"
+        domain = find_by(name: www_hostname)
+      end
+    end
+    domain
+  end
 
   def prepared_for_elb?
     # marked as secured but in unsecured state
@@ -89,6 +110,10 @@ class Domain < ActiveRecord::Base
 
   def near_me_domain?
     name =~ /^(.*)\.near-me\.com$/
+  end
+
+  def redirect?
+    redirect_code.present? && redirect_to.present?
   end
 
   private

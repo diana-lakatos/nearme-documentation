@@ -12,5 +12,10 @@
         = f.input :private_key, as: :text, required: false, label: "Private key", placeholder: "-----BEGIN RSA PRIVATE KEY-----", input_html: { class: 'form-control' }
       .input-container.col-xs-12
         = f.input :certificate_chain, as: :text, required: false, label: "Certificate chain (optional for HTTPS)", placeholder: "-----BEGIN CERTIFICATE-----", input_html: { class: 'form-control' }
+      .input-container.col-xs-5
+        = f.input :redirect_code, collection: redirect_codes, include_blank: 'None', label: 'Redirection', input_html: { class: 'form-control' }
+      .input-container.col-xs-7
+        = f.input :redirect_to, required: false, label: 'Redirect to', placeholder: 'http://another.domain.com', input_html: { class: 'form-control' }
+
   = f.button :submit, 'Save', class: "btn btn-green pull-right"
   = link_to 'Cancel', instance_admin_settings_domains_url , class: 'btn pull-right'

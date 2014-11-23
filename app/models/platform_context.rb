@@ -18,6 +18,9 @@
 # only records that belong to current platform context. See these classes at app/models/platform_context/ for more information.
 
 class PlatformContext
+  DEFAULT_REDIRECT_CODE = 302
+  NEAR_ME_REDIRECT_URL = 'http://near-me.com/?domain_not_valid=true'
+
   attr_reader :domain, :platform_context_detail, :instance_type, :instance, :theme, :domain,
     :white_label_company, :partner, :request_host, :blog_instance
 
@@ -86,7 +89,7 @@ class PlatformContext
   end
 
   def initialize_with_request_host(request_host)
-    @request_host = remove_port_from_hostname(request_host.try(:gsub, /^www\./, ""))
+    @request_host = remove_port_from_hostname(request_host)
     initialize_with_domain(fetch_domain)
   end
 
@@ -160,6 +163,24 @@ class PlatformContext
     @domain || is_root_domain?
   end
 
+  def should_redirect?
+    return true unless valid_domain?
+    return false unless @domain
+    return true if @domain.redirect?
+    @domain.name != @request_host
+  end
+
+  def redirect_url
+    return NEAR_ME_REDIRECT_URL unless @domain
+    @domain.redirect? ? @domain.redirect_to : @domain.url
+  end
+
+  def redirect_code
+    return DEFAULT_REDIRECT_CODE unless @domain
+    return DEFAULT_REDIRECT_CODE if @domain.redirect_code.blank?
+    @domain.redirect_code
+  end
+
   def to_h
     { request_host: @request_host }.merge(
       Hash[instance_variables.
@@ -180,12 +201,12 @@ class PlatformContext
   private
 
   def fetch_domain
-    Domain.where(:name => @request_host).first
+    Domain.where_hostname(@request_host)
   end
 
   def is_root_domain?
     root_domains = [Regexp.escape(remove_port_from_hostname(Rails.application.routes.default_url_options[:host])), '0\.0\.0\.0', 'near-me.com', 'api\.desksnear\.me', '127\.0\.0\.1']
-    root_domains += ['test\.host', '127\.0\.0\.1', 'example\.org'] if Rails.env.test?
+    root_domains += ['test\.host', '127\.0\.0\.1', 'example\.org', 'www.example\.com'] if Rails.env.test?
     @request_host =~ Regexp.new("^(#{root_domains.join('|')})$", true)
   end
 

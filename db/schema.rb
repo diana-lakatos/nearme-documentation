@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141105150330) do
+ActiveRecord::Schema.define(version: 20141108165648) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -415,6 +415,8 @@ ActiveRecord::Schema.define(version: 20141105150330) do
     t.string   "server_certificate_name"
     t.string   "error_message"
     t.string   "dns_name"
+    t.string   "redirect_to"
+    t.integer  "redirect_code"
   end
 
   add_index "domains", ["deleted_at"], name: "index_domains_on_deleted_at", using: :btree

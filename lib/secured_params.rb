@@ -445,7 +445,9 @@ class SecuredParams
       :google_analytics_tracking_code,
       :certificate_body,
       :private_key,
-      :certificate_chain
+      :certificate_chain,
+      :redirect_to,
+      :redirect_code
     ]
   end
 
