@@ -1,6 +1,6 @@
-class DataImporter::SummaryTracker
+class DataImporter::Tracker::Summary < DataImporter::Tracker
 
-  attr_accessor :new_entities, :updated_entities
+  attr_reader :new_entities, :updated_entities, :deleted_entities
 
   def initialize
     @time_start = Time.zone.now.to_f
@@ -8,6 +8,25 @@ class DataImporter::SummaryTracker
     @updated_entities = { 'user' => 0, 'company' => 0, 'location' => 0, 'transactable' => 0, 'photo' => 0 }
     @deleted_entities = {}
   end
+
+  def object_created(object, *args)
+    increment(object)
+  end
+
+  def parsing_finished(hash, *args)
+    hash.each { |entity, count| deleted(entity, count) }
+  end
+
+  def object_not_saved(object, *args)
+    decrement(object)
+  end
+
+  def object_valid(object, *args)
+    increment(object)
+  end
+
+  protected
+
 
   def increment(entity)
     @entity = entity
@@ -38,6 +57,5 @@ class DataImporter::SummaryTracker
   def key
     @entity.class.name.underscore.tr(' ','_')
   end
-
 
 end

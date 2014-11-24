@@ -9,10 +9,9 @@ class InstanceAdmin::Manage::TransactableTypes::DataUploadsController < Instance
   def create
     @data_upload = PlatformContext.current.instance.data_uploads.build(data_upload_params)
     @data_upload.transactable_type = @transactable_type
-    @data_upload.options["send_invitational_email"] = @data_upload.options["send_invitational_email"] == "1" ? "true" : "false"
     @data_upload.uploader_id = current_user.id
+    @data_upload.sync_mode = "0"
     if @data_upload.save
-
       DataUploadConvertJob.perform(@data_upload.id)
       flash[:success] = t 'flash_messages.instance_admin.manage.data_upload.created'
       redirect_to edit_instance_admin_manage_transactable_type_data_upload_path(@transactable_type, @data_upload)

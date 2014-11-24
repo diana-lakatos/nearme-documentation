@@ -87,12 +87,6 @@ class Transactable < ActiveRecord::Base
   delegate :to_s, to: :name
   delegate :favourable_pricing_rate, :has_action?, to: :transactable_type
 
-  # attr_accessible :location_id, :availability_template_id,
-  #   :availability_rules_attributes, :defer_availability_rules, :free,
-  #   :photos_attributes, :hourly_reservations, :price_type, :draft, :enabled,
-  #   :last_request_photos_sent_at, :activated_at, :amenity_ids, :rank, :transactable_type_id,
-  #   :transactable_type, :photo_ids
-
   attr_accessor :distance_from_search_query, :photo_not_required
 
   def hourly_reservations?

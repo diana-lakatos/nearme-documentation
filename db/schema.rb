@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141108165648) do
+ActiveRecord::Schema.define(version: 20141119164053) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -379,6 +379,8 @@ ActiveRecord::Schema.define(version: 20141108165648) do
     t.datetime "updated_at"
     t.integer  "target_id"
     t.string   "target_type"
+    t.integer  "progress_percentage"
+    t.string   "state"
   end
 
   add_index "data_uploads", ["instance_id"], name: "index_data_uploads_on_instance_id", using: :btree
@@ -2288,6 +2290,7 @@ ActiveRecord::Schema.define(version: 20141108165648) do
     t.integer  "cancellation_policy_penalty_percentage",     default: 0
     t.boolean  "recurring_booking",                          default: false, null: false
     t.boolean  "show_page_enabled",                          default: false
+    t.text     "custom_csv_fields"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

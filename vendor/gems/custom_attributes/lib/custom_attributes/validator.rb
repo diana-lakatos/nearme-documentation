@@ -29,8 +29,9 @@ module CustomAttributes
           end
         end
         if valid_values.present? && type.to_sym != :array
-          options = { attributes: name, in: valid_values  }
-          ActiveModel::Validations::InclusionValidator.new(options).validate(record)
+          unless valid_values.map { |s| s.mb_chars.downcase }.include?(record.properties[name].try(:mb_chars).try(:downcase))
+            record.errors.add(name, :inclusion, value: record.properties[name])
+          end
         end
       end
     end

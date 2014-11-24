@@ -24,6 +24,7 @@ class TransactableType < ActiveRecord::Base
   serialize :pricing_options, Hash
   serialize :pricing_validation, Hash
   serialize :availability_options, Hash
+  serialize :custom_csv_fields, Array
 
   before_save :normalize_cancellation_policy_enabled
   after_save :setup_price_attributes, :if => lambda { |transactable_type| transactable_type.pricing_options_changed? || transactable_type.pricing_validation_changed? }
