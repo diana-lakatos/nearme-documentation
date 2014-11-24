@@ -7,8 +7,8 @@ class Authentication::BaseProvider
     self.secret = attributes[:secret]
   end
 
-  def self.setup_proc 
-    lambda do |env| 
+  def self.setup_proc
+    lambda do |env|
       env['omniauth.strategy'].options[:consumer_key] = PlatformContext.current.instance.send(:"#{provider}_consumer_key").try(:strip)
       env['omniauth.strategy'].options[:consumer_secret] = PlatformContext.current.instance.send(:"#{provider}_consumer_secret").try(:strip)
       env['omniauth.strategy'].options[:client_id] = PlatformContext.current.instance.send(:"#{provider}_consumer_key").try(:strip)

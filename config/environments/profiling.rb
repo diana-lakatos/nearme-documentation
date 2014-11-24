@@ -18,8 +18,6 @@ DesksnearMe::Application.configure do
   config.perform_google_analytics_requests = false
   config.perform_social_jobs = false
 
-  config.twitter_key = "IZeQXx4YyCdTQ9St3tmyw"
-  config.twitter_secret = "ZlxMPIhNPBn4QbOSHqkN1p7hKghGZTOtR1fDsPSX8"
   config.encrypt_sensitive_db_columns = true
   config.silence_raygun_notification = true
   config.assets.enforce_precompile = true

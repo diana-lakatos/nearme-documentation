@@ -45,19 +45,6 @@ DesksnearMe::Application.configure do
   config.action_controller.asset_host = "//near-me-assets-staging.s3.amazonaws.com"
   config.action_mailer.asset_host     = "//near-me-assets-staging.s3.amazonaws.com"
 
-  # Staging specific keys/secrets for social properties.
-  config.linkedin_key = "26pmsiwpsh8a"
-  config.linkedin_secret = "M2TZrt7sF7QlIeUZ"
-
-  config.facebook_key = ENV['FB_KEY'] || "491810927536381"
-  config.facebook_secret = ENV['FB_SECRET'] || "cce1576ac9f3c4d6998f2c9345360afe"
-
-  config.twitter_key = "8M9qYWg2v2hjTotXg9cWw"
-  config.twitter_secret = "qnP1hPJ1kb2AaN7XTTfN3K4VT3SRN48UWe3vMNtVfEg"
-
-  config.instagram_key = "f9aee2b90cc5493bb60f777fee06af52"
-  config.instagram_secret = "8b20585b0edd47e7b5ed090616c24d0b"
-
   config.paypal_email = "admin-facilitator@desksnear.me"
   config.paypal_username = "admin-facilitator_api1.desksnear.me"
   config.paypal_password = "1389316325"
@@ -65,11 +52,6 @@ DesksnearMe::Application.configure do
   config.paypal_client_id = "AecizhC4a7ZiGUA25DjOzYwDQSy_gVc7hOcf8zc40P27gZwwlqWTU6zU9Crs"
   config.paypal_client_secret = "EKsS3BBF49ckwHJGhGwvj4p8QNfBbhWEqk9PdJI9tqo6SQkLGf9KBiMMOiGh"
   config.paypal_app_id = "APP-80W284485P519543T"
-
-  config.stripe_api_key = "sk_test_lpr4WQXQdncpXjjX6IJx01W7"
-  config.stripe_public_key = "pk_test_iCGA8nFZdILrI1UtuMOZD2aq"
-
-  config.balanced_api_key = "ak-prod-1YZGzrMTbG9Q4XeITwLML1za00VRsV4PS"
 
   # Protect this environment with a simple Basic authentication dialog
   # config.middleware.insert_before(Rack::Sendfile, "Rack::Auth::Basic") do |username, password|

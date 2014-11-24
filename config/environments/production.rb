@@ -43,18 +43,6 @@ DesksnearMe::Application.configure do
   config.action_controller.asset_host = "//near-me-assets.s3.amazonaws.com"
   config.action_mailer.asset_host = "http://near-me-assets.s3.amazonaws.com"
 
-  # Production specific app keys/secrets for social properties.
-  config.linkedin_key = "2qyp4vpjl8uh"
-  config.linkedin_secret = "PQfyGFyutsoPwcOY"
-
-  config.facebook_key = "301871243226028"
-  config.facebook_secret = "ac8bb27ccebedccc7535d0df73e60640"
-
-  config.twitter_key = "687jaGPQNpLHlK0An6zy7g"
-  config.twitter_secret = "b6WZm6oyfh1bou4Nn7ntybL2g5pK9zEaabUqMVeRU"
-
-  config.instagram_key = "5aa60d9c54ba49f086cec9693ba442c5"
-  config.instagram_secret = "70d8ada7eea04223ad04d40ddd30c642"
   config.paypal_mode = 'live'
   config.redis_settings = YAML.load_file(Rails.root.join("config", "redis.yml"))["production"]
   config.cache_store = :redis_store, {
