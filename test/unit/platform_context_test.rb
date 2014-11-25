@@ -33,6 +33,17 @@ class PlatformContextTest < ActiveSupport::TestCase
       assert_equal @desks_near_me_domain, rq.domain
     end
 
+    should 'recognize domain from non-existent subdomains' do
+      rq = PlatformContext.new('www.nonsense.desksnearme.com')
+      assert_equal @desks_near_me_domain, rq.domain
+    end
+
+    should 'be able to bypass non-existent www subdomain' do
+      example_www_domain = FactoryGirl.create(:domain, name: 'www.example.co.uk', target: FactoryGirl.create(:instance))
+      rq = PlatformContext.new('example.co.uk')
+      assert_equal example_www_domain, rq.domain
+    end
+
     should 'be able to bypass www in host name' do
       rq = PlatformContext.new('www.desksnearme.com')
       assert_equal @desks_near_me_domain, rq.domain
@@ -48,6 +59,72 @@ class PlatformContextTest < ActiveSupport::TestCase
       @desks_near_me_domain.update_attribute(:secured, false)
       rq = PlatformContext.new('www.desksnearme.com')
       refute rq.secured?
+    end
+  end
+
+  context 'redirect' do
+    setup do
+      @desks_near_me_domain = FactoryGirl.create(:domain, :name => 'desksnearme.com', :target => FactoryGirl.create(:instance))
+    end
+
+    should 'not redirect if there is no redirection enabled' do
+      rq = PlatformContext.new('desksnearme.com')
+      refute rq.should_redirect?
+    end
+
+    should 'redirect if domain does not exist' do
+      rq = PlatformContext.new('blog.desksnear.me')
+      assert rq.should_redirect?
+    end
+
+    should 'redirect if redirection is enabled on domain' do
+      @desks_near_me_domain.update_attributes redirect_to: 'http://near-me.com', redirect_code: 302
+      rq = PlatformContext.new('desksnearme.com')
+      assert rq.should_redirect?
+    end
+  end
+
+  context 'redirect_url' do
+    setup do
+      @desks_near_me_domain = FactoryGirl.create(:domain, :name => 'desksnearme.com', :target => FactoryGirl.create(:instance))
+    end
+
+    should 'return domain url if subdomain does not exist' do
+      rq = PlatformContext.new('blog.desksnearme.com')
+      assert_equal @desks_near_me_domain.url, rq.redirect_url
+    end
+
+    should 'return valid url if redirection is enabled' do
+      @desks_near_me_domain.update_attributes redirect_to: 'http://another-web.com', redirect_code: 302
+      rq = PlatformContext.new('desksnearme.com')
+      assert_equal 'http://another-web.com', rq.redirect_url
+    end
+
+    should 'return near-me url if domain does not exist' do
+      rq = PlatformContext.new('fake.domain.net')
+      assert_equal PlatformContext::NEAR_ME_REDIRECT_URL, rq.redirect_url
+    end
+  end
+
+  context 'redirect_code' do
+    setup do
+      @desks_near_me_domain = FactoryGirl.create(:domain, :name => 'desksnearme.com', :target => FactoryGirl.create(:instance))
+    end
+
+    should 'return default code if domain does not exist' do
+      rq = PlatformContext.new('fake.domain.net')
+      assert_equal PlatformContext::DEFAULT_REDIRECT_CODE, rq.redirect_code
+    end
+
+    should 'return stored redirect code if available' do
+      @desks_near_me_domain.update_attributes redirect_to: 'http://another-web.com', redirect_code: 301
+      rq = PlatformContext.new('desksnearme.com')
+      assert_equal 301, rq.redirect_code
+    end
+
+    should 'return default code if domain does not redirect' do
+      rq = PlatformContext.new('desksnearme.com')
+      assert_equal PlatformContext::DEFAULT_REDIRECT_CODE, rq.redirect_code
     end
   end
 

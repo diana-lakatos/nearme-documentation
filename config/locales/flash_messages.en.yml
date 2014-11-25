@@ -59,6 +59,10 @@ en:
           deleted: 'Email template has been deleted.'
           invalid: 'Not a valid email template.'
           updated: 'Email template has been updated.'
+        transactable_types:
+          created: 'Transactable Type created.'
+          updated: 'Transactable Type updated.'
+          deleted: 'Transactable Type deleted.'
         custom_attributes:
           created: 'New attribute created.'
           updated: 'Attribute updated.'
@@ -120,7 +124,7 @@ en:
         created: 'Data Upload has been created.'
         scheduled: 'Data has been scheduled to be imported.'
         deleted: 'Data Upload has been deleted.'
-        not_scheduled: 'This data has been already imported.'
+        not_scheduled: 'The task has not been queued. Either data has been already imported or task is already in queue.'
         too_many_rows: 'Max amount of rows in CSV is %{max}'
       waiver_agreement_templates:
         created: 'Waiver agreement template has been created.'

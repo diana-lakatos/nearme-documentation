@@ -47,4 +47,19 @@ module InstanceAdminHelper
     currency = Money::Currency.find(iso_code)
     currency.nil? ? nil : "#{iso_code} - #{currency.name}"
   end
+
+  def redirect_codes
+    Domain::REDIRECT_CODES.map do |code|
+      label = case code
+                when 301
+                  'Moved permanently (301)'
+                when 302
+                  'Temporary (302)'
+                else
+                  code
+              end
+
+      [label, code]
+    end
+  end
 end

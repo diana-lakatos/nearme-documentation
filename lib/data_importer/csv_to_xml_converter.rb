@@ -58,7 +58,7 @@ class DataImporter::CsvToXmlConverter
   end
 
   def build_xml
-    @xml.companies(send_invitation: @csv_file.send_invitation, sync_mode: @csv_file.sync_mode) {
+    @xml.companies {
       while @csv_file.next_row
         @hash = @csv_file.row_as_hash
         build_company do

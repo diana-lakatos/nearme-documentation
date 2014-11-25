@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<companies>
+  <company id="user-name@example.com">
+    <name><![CDATA[UserName]]></name>
+    <external_id><![CDATA[user-name@example.com]]></external_id>
+    <users>
+      <user>
+        <email><![CDATA[user-name@example.com]]></email>
+        <name><![CDATA[UserName]]></name>
+      </user>
+    </users>
+    <locations>
+      <location id="1">
+        <name><![CDATA[location name]]></name>
+        <email><![CDATA[location@example.com]]></email>
+        <external_id><![CDATA[1]]></external_id>
+        <location_type><![CDATA[My Type]]></location_type>
+        <description><![CDATA[This is my cool location]]></description>
+        <special_notes><![CDATA[Be careful, cool place!]]></special_notes>
+        <location_address>
+          <address><![CDATA[Ursynowska 1/2B]]></address>
+          <city><![CDATA[Warsaw]]></city>
+          <street><![CDATA[Ursynowska]]></street>
+          <state><![CDATA[Mazowieckie]]></state>
+          <postcode><![CDATA[02-605]]></postcode>
+        </location_address>
+        <listings>
+          <listing id="1">
+          </listing>
+        </listings>
+        <availability_rules/>
+        <amenities/>
+      </location>
+    </locations>
+  </company>
+</companies>

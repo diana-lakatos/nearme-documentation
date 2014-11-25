@@ -85,5 +85,12 @@ class DomainTest < ActiveSupport::TestCase
     end
   end
 
-end
+  context 'redirect' do
+    should 'be able to recognize redirection' do
+      refute @desks_near_me_domain.redirect?
 
+      @desks_near_me_domain.update_attributes redirect_to: 'http://another-web.com', redirect_code: 302
+      assert @desks_near_me_domain.redirect?
+    end
+  end
+end

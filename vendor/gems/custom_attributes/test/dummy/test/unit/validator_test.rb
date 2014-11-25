@@ -23,11 +23,6 @@ class ValidatorTest < ActiveSupport::TestCase
     CustomAttributes::Validator.new({:attributes => {}}).validate(record(['name', 'integer', { :length => { "maximum" => 250 } }, nil]))
   end
 
-  should 'automatically add validation for valid values' do
-    ActiveModel::Validations::InclusionValidator.expects(:new).with({ attributes: "name", in: ["A", "B"] }).returns(stub(:validate))
-    CustomAttributes::Validator.new({:attributes => {}}).validate(record(['name', 'integer', nil, ["A", "B"]]))
-  end
-
   private
 
   def record(array)

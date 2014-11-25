@@ -1,9 +1,12 @@
 class SecuredParams
   def custom_attribute
+    [ :name,
+      :attribute_type
+    ] + self.custom_attribute_internal
+  end
+
+  def custom_attribute_internal
     [
-      :name,
-      :transactable_type_id,
-      :attribute_type,
       :html_tag,
       :prompt,
       :default_value,
@@ -11,8 +14,6 @@ class SecuredParams
       :label,
       :placeholder,
       :hint,
-      :deleted_at,
-      :internal,
       :input_html_options,
       :wrapper_html_options,
       :input_html_options_string,
@@ -444,7 +445,9 @@ class SecuredParams
       :google_analytics_tracking_code,
       :certificate_body,
       :private_key,
-      :certificate_chain
+      :certificate_chain,
+      :redirect_to,
+      :redirect_code
     ]
   end
 

@@ -128,6 +128,8 @@ gem 'iso_country_codes'
 gem 'spree', github: 'spree/spree', branch: '2-2-stable'
 #gem 'spree_auth_devise', github: 'spree/spree_auth_devise', branch: '2-2-stable'
 
+gem 'domainatrix'
+
 group :profiling do
   gem 'rack-mini-profiler'
   gem 'bullet'
@@ -158,6 +160,9 @@ end
 group :development do
   gem 'quiet_assets'
   gem 'thin'
+  gem 'pry-rails'
+  gem 'awesome_print'
+  gem 'spring'
 end
 
 group :test do

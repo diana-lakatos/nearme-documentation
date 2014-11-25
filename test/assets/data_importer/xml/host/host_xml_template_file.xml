@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<companies>
+  <company id="user-name@example.com">
+    <name><![CDATA[UserName]]></name>
+    <external_id><![CDATA[user-name@example.com]]></external_id>
+    <users>
+      <user>
+        <email><![CDATA[user-name@example.com]]></email>
+        <name><![CDATA[UserName]]></name>
+      </user>
+    </users>
+    <locations>
+      <location id="1">
+        <name><![CDATA[location name]]></name>
+        <email><![CDATA[location@example.com]]></email>
+        <external_id><![CDATA[1]]></external_id>
+        <location_type><![CDATA[My Type]]></location_type>
+        <description><![CDATA[This is my cool location]]></description>
+        <special_notes><![CDATA[Be careful, cool place!]]></special_notes>
+        <location_address>
+          <address><![CDATA[Ursynowska 1/2B]]></address>
+          <city><![CDATA[Warsaw]]></city>
+          <street><![CDATA[Ursynowska]]></street>
+          <state><![CDATA[Mazowieckie]]></state>
+          <postcode><![CDATA[02-605]]></postcode>
+        </location_address>
+        <listings>
+          <listing id="1">
+            <confirm_reservations><![CDATA[true]]></confirm_reservations>
+            <daily_price_cents><![CDATA[10]]></daily_price_cents>
+            <enabled><![CDATA[true]]></enabled>
+            <external_id><![CDATA[1]]></external_id>
+            <hourly_price_cents><![CDATA[4]]></hourly_price_cents>
+            <monthly_price_cents><![CDATA[30]]></monthly_price_cents>
+            <my_attribute><![CDATA[my attrs! 1]]></my_attribute>
+            <name><![CDATA[my name! 1]]></name>
+            <weekly_price_cents><![CDATA[15]]></weekly_price_cents>
+            <photos>
+              <photo>
+                <image_original_url><![CDATA[http://www.example.com/image.jpg]]></image_original_url>
+              </photo>
+              <photo>
+                <image_original_url><![CDATA[http://www.example.com/photo.jpg]]></image_original_url>
+              </photo>
+            </photos>
+            <availability_rules/>
+          </listing>
+          <listing id="2">
+            <confirm_reservations><![CDATA[true]]></confirm_reservations>
+            <daily_price_cents><![CDATA[10]]></daily_price_cents>
+            <enabled><![CDATA[true]]></enabled>
+            <external_id><![CDATA[2]]></external_id>
+            <hourly_price_cents><![CDATA[4]]></hourly_price_cents>
+            <monthly_price_cents><![CDATA[30]]></monthly_price_cents>
+            <my_attribute><![CDATA[my attrs! 2]]></my_attribute>
+            <name><![CDATA[my name! 2]]></name>
+            <weekly_price_cents><![CDATA[15]]></weekly_price_cents>
+            <photos>
+              <photo>
+                <image_original_url><![CDATA[http://www.example.com/photo.jpg]]></image_original_url>
+              </photo>
+            </photos>
+            <availability_rules/>
+          </listing>
+        </listings>
+        <availability_rules/>
+        <amenities/>
+      </location>
+      <location id="2">
+        <name><![CDATA[location name]]></name>
+        <email><![CDATA[location2@example.com]]></email>
+        <external_id><![CDATA[2]]></external_id>
+        <location_type><![CDATA[My Type]]></location_type>
+        <description><![CDATA[This is my cool2 location]]></description>
+        <special_notes><![CDATA[Be careful, cool2 place!]]></special_notes>
+        <location_address>
+          <address><![CDATA[Pulawska 34/2B]]></address>
+          <city><![CDATA[Warsaw]]></city>
+          <street><![CDATA[Ursynowska]]></street>
+          <state><![CDATA[Mazowieckie]]></state>
+          <postcode><![CDATA[02-605]]></postcode>
+        </location_address>
+        <listings>
+          <listing id="3">
+            <confirm_reservations><![CDATA[true]]></confirm_reservations>
+            <daily_price_cents><![CDATA[10]]></daily_price_cents>
+            <enabled><![CDATA[true]]></enabled>
+            <external_id><![CDATA[3]]></external_id>
+            <hourly_price_cents><![CDATA[4]]></hourly_price_cents>
+            <monthly_price_cents><![CDATA[30]]></monthly_price_cents>
+            <my_attribute><![CDATA[my attrs! 3]]></my_attribute>
+            <name><![CDATA[my name! 3]]></name>
+            <weekly_price_cents><![CDATA[15]]></weekly_price_cents>
+            <photos>
+              <photo>
+                <image_original_url><![CDATA[http://www.example.com/photo.jpg]]></image_original_url>
+              </photo>
+              <photo>
+                <image_original_url><![CDATA[http://www.example.com/photo.jpg]]></image_original_url>
+              </photo>
+            </photos>
+            <availability_rules/>
+          </listing>
+          <listing id="4">
+            <confirm_reservations><![CDATA[true]]></confirm_reservations>
+            <daily_price_cents><![CDATA[10]]></daily_price_cents>
+            <enabled><![CDATA[true]]></enabled>
+            <external_id><![CDATA[4]]></external_id>
+            <hourly_price_cents><![CDATA[4]]></hourly_price_cents>
+            <monthly_price_cents><![CDATA[30]]></monthly_price_cents>
+            <my_attribute><![CDATA[my attrs! 4]]></my_attribute>
+            <name><![CDATA[my name! 4]]></name>
+            <weekly_price_cents><![CDATA[15]]></weekly_price_cents>
+            <photos/>
+            <availability_rules/>
+          </listing>
+        </listings>
+        <availability_rules/>
+        <amenities/>
+      </location>
+    </locations>
+  </company>
+</companies>
