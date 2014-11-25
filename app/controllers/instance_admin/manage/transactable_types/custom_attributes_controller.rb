@@ -3,7 +3,7 @@ class InstanceAdmin::Manage::TransactableTypes::CustomAttributesController < Ins
   protected
 
   def redirection_path
-    instance_admin_manage_transactable_type_path(@target)
+    instance_admin_manage_transactable_type_custom_attributes_path(@target)
   end
 
   def find_target
