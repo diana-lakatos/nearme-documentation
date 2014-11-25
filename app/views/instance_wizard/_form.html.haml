@@ -9,23 +9,29 @@
 
   %legend Marketplace
   = f.input :name, input_html: { class: 'form-control' }
-  = f.input :bookable_noun, label: "Item name", placeholder: "i.e. Desk", input_html: { class: 'form-control' }
+  = f.input :bookable_noun, label: "Item or Service name", placeholder: "i.e. Desk", input_html: { class: 'form-control' }
   = f.input :lessor, label: "Seller name", placeholder: "i.e. Host", input_html: { class: 'form-control' }
   = f.input :lessee, label: "Buyer name", placeholder: "i.e. Guest", input_html: { class: 'form-control' }
-  %br
+  = f.input :marketplace_type, collection: TransactableType::AVAILABLE_TYPES, as: :radio_buttons, :input_html => { :name => 'marketplace_type' }, :checked => params[:marketplace_type] || TransactableType::AVAILABLE_TYPES.first
   %br
 
   %legend Domain
   - instance.domains.build unless instance.domains.any?
   = f.fields_for :domains do |f_d|
     = f_d.input :name, placeholder: 'my-market.near-me.com', input_html: { class: 'form-control' }
-    = f_d.input :secured, input_html: { checked: true }
   %br
   %br
 
-  %legend Custom Theme
-  = f.fields_for :theme, (instance.theme.presence || instance.build_theme) do |ff|
-    = render :partial => 'theme_form', :locals => { f: ff, contact_email: @instance_creator.email}
+  %legend Support
+  = f.fields_for :theme, (instance.theme.presence || instance.build_theme) do |f_t|
+    %fieldset
+      .control-group.tel.optional{class: f_t.object.errors[:contact_email].empty? ? '' : 'error'}
+        %label.tel.optional.control-label{for: "theme_phone_number"}
+          %abbr{:title => "required"} *
+          Contact email
+        .controls
+          = f_t.input_field :contact_email, pattern: '.*', class: 'form-control', value: @instance_creator.email
+          = f_t.error :contact_email
 
   %br
   .form-actions
