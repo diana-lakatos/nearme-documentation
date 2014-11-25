@@ -686,7 +686,7 @@ ActiveRecord::Schema.define(version: 20141125090820) do
     t.text     "user_required_fields"
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
-    t.string   "payment_transfers_frequency",                                   default: "monthly"
+    t.string   "payment_transfers_frequency",                                   default: "fortnightly"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
