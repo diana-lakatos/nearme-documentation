@@ -36,7 +36,7 @@
   .content-container.dropshadow
     .row
       .input-container.col-xs-12
-        = f.association :action_types, collection: ActionType.pluck(:name, :id), as: :check_boxes, label: "Actions", input_html: { class: 'form-control' }
+        = f.association :action_types, collection: ActionType.pluck(:name, :id), as: :check_boxes, label: "Actions"
 
   .content-container
     = f.button :submit, 'Save', class: 'btn btn-green pull-right'

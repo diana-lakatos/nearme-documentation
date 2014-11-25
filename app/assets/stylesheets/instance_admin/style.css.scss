@@ -390,6 +390,11 @@ form {
     margin-left: 0px;
   }
 
+  .check_boxes input[type="checkbox"] {
+    position: relative;
+    margin-right: 5px;
+  }
+
   input:focus {
     box-shadow: none;
   }
