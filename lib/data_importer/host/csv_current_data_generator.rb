@@ -19,7 +19,7 @@ class DataImporter::Host::CsvCurrentDataGenerator < DataImporter::File
   def get_data(csv)
     @company.locations.order('instance_id, external_id').each do |location|
       if location.listings.any?
-        location.listings.each do |listing|
+        location.listings.order('instance_id, external_id').each do |listing|
           if listing.photos.any?
             listing.photos.each do |photo|
               csv << get_data_row(location, location.location_address, listing, photo)

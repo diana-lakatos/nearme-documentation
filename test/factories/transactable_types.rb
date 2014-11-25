@@ -48,6 +48,8 @@ FactoryGirl.define do
     factory :transactable_type_current_data do
       pricing_options { { "daily"=>"1", "weekly"=>"1", "monthly"=>"1" } }
       availability_options { { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => false } } }
+      custom_csv_fields { [{'location' => 'name'}, {'location' => 'email'}, {'location' => 'external_id'}, {'location' => 'location_type'}, {'location' => 'description'}, { 'location' => 'special_notes'}, { 'address' => 'address'}, {'address' => 'city'}, { 'address' => 'street' }, { 'address' => 'suburb' }, { 'address' => 'state' }, { 'address' => 'postcode' }, { 'transactable' => 'monthly_price_cents' }, { 'transactable' => 'weekly_price_cents' }, { 'transactable' => 'daily_price_cents' }, { 'transactable' => 'name' }, { 'transactable' => 'my_attribute' }, { 'transactable' => 'external_id' }, { 'transactable' => 'enabled' }, { 'photo' => 'image_original_url' }] }
+
       after(:build) do |transactable_type|
         transactable_type.availability_templates << FactoryGirl.build(:availability_template, :transactable_type => transactable_type)
         transactable_type.custom_attributes = [
