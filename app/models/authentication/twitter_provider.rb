@@ -1,6 +1,6 @@
 class Authentication::TwitterProvider < Authentication::BaseProvider
 
-  SETUP_PROC = lambda do |env| 
+  SETUP_PROC = lambda do |env|
     env['omniauth.strategy'].options[:consumer_key] = PlatformContext.current.instance.twitter_consumer_key
     env['omniauth.strategy'].options[:consumer_secret] = PlatformContext.current.instance.twitter_consumer_secret
   end

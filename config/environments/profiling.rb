@@ -13,14 +13,11 @@ DesksnearMe::Application.configure do
   config.action_dispatch.best_standards_support = :builtin
   config.assets.digest = false
   config.exceptions_app = nil
-  config.filepicker_rails.api_key = "AFWbvclyPQ4WjIIrem35wz"
   # Don't perform mixpanel and google analytics requests for development
   config.perform_mixpanel_requests = false
   config.perform_google_analytics_requests = false
   config.perform_social_jobs = false
 
-  config.twitter_key = "IZeQXx4YyCdTQ9St3tmyw"
-  config.twitter_secret = "ZlxMPIhNPBn4QbOSHqkN1p7hKghGZTOtR1fDsPSX8"
   config.encrypt_sensitive_db_columns = true
   config.silence_raygun_notification = true
   config.assets.enforce_precompile = true
