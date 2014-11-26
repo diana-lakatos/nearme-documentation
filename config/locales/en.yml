@@ -109,5 +109,5 @@ en:
         updated_entities:  'Updated entities:'
         errors_encountered: 'Errors encountered:'
         no_errors: 'No validation errors encountered.'
-        errors: 'Data has not been imported due to error during processing. Please verify that %{preview_link} is correct.'
+        errors: 'Data has not been imported due to error during processing.'
         header:  'Data import for %{csv_identifier}'
