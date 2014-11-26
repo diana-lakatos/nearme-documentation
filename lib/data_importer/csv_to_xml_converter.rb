@@ -30,7 +30,11 @@ class DataImporter::CsvToXmlConverter
 
   def insert_to_xml(attributes, attributes_data, builder)
     attributes.each do |attribute|
-      builder.send(attribute) { |field| field.cdata(attributes_data[attribute].strip) } if attributes_data[attribute].try(:strip).present?
+      if attribute.to_s == 'test'
+        builder.test { |field| field.cdata(attributes_data[attribute].strip) } if attributes_data[attribute].try(:strip).present?
+      else
+        builder.send(attribute) { |field| field.cdata(attributes_data[attribute].strip) } if attributes_data[attribute].try(:strip).present?
+      end
     end
   end
 
