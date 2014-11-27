@@ -90,8 +90,7 @@ class RegistrationsController < Devise::RegistrationsController
       event_tracker.updated_profile_information(@user)
       redirect_to :action => 'edit'
     else
-      current_user.approval_requests = resource.approval_requests
-      @country = current_user.country_name
+      @country = resource.country_name
       render :edit
     end
   end

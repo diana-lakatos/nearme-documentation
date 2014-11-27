@@ -621,12 +621,10 @@ class User < ActiveRecord::Base
   def validate_name_length_from_fullname
     if get_first_name_from_name.length > MAX_NAME_LENGTH
       errors.add(:name, :first_name_too_long, count: User::MAX_NAME_LENGTH)
-      return
     end
 
     if get_middle_name_from_name.length > MAX_NAME_LENGTH
       errors.add(:name, :middle_name_too_long, count: User::MAX_NAME_LENGTH)
-      return
     end
 
     if get_last_name_from_name.length > MAX_NAME_LENGTH
