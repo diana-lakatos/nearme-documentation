@@ -7,6 +7,9 @@
             %li
               = link_to manage_buy_sell_products_path, :class => (active_tab == :products) ? 'active' : '' do
                 %span Products
+            %li
+              = link_to manage_buy_sell_shipping_methods_path, :class => (active_tab == :configuration) ? 'active' : '' do
+                %span Configuration
           - else
             %li
               = link_to manage_locations_path, :class => (active_tab == :locations) ? 'active' : '' do
@@ -43,27 +46,45 @@
               = link_to edit_manage_white_label_path(current_user.companies.first), :class => (active_tab == :white_label) ? 'active' : '' do
                 %span White-label
 
-- if buyable? && active_tab == :products
-  .row-fluid
-    .span8.offset2.manage-nav
-      .navbar
-        .navbar-inner.nav-links
-          %ul.nav
-            %li
-              = link_to manage_buy_sell_products_path, :class => (sub_active_tab == :products) ? 'active' : '' do
-                %span Manage Products
-            %li
-              = link_to manage_buy_sell_option_types_path, :class => (sub_active_tab == :option_types) ? 'active' : '' do
-                %span Option Types
-            %li
-              = link_to manage_buy_sell_properties_path, :class => (sub_active_tab == :properties) ? 'active' : '' do
-                %span Properties
-            %li
-              = link_to manage_buy_sell_prototypes_path, :class => (sub_active_tab == :prototypes) ? 'active' : '' do
-                %span Prototypes
-            %li
-              = link_to manage_buy_sell_taxonomies_path, :class => (sub_active_tab == :taxonomies) ? 'active' : '' do
-                %span Taxonomies
-            %li
-              = link_to manage_buy_sell_taxons_path, :class => (sub_active_tab == :taxons) ? 'active' : '' do
-                %span Taxons
+- if buyable?
+  - if active_tab == :products
+    .row-fluid
+      .span8.offset2.manage-nav
+        .navbar
+          .navbar-inner.nav-links
+            %ul.nav
+              %li
+                = link_to manage_buy_sell_products_path, :class => (sub_active_tab == :products) ? 'active' : '' do
+                  %span Manage Products
+              %li
+                = link_to manage_buy_sell_option_types_path, :class => (sub_active_tab == :option_types) ? 'active' : '' do
+                  %span Option Types
+              %li
+                = link_to manage_buy_sell_properties_path, :class => (sub_active_tab == :properties) ? 'active' : '' do
+                  %span Properties
+              %li
+                = link_to manage_buy_sell_prototypes_path, :class => (sub_active_tab == :prototypes) ? 'active' : '' do
+                  %span Prototypes
+
+  - if active_tab == :configuration
+    .row-fluid
+      .span8.offset2.manage-nav
+        .navbar
+          .navbar-inner.nav-links
+            %ul.nav
+              %li
+                = link_to manage_buy_sell_shipping_categories_path, :class => (sub_active_tab == :shipping_categories) ? 'active' : '' do
+                  %span Shipping Categories
+              %li
+                = link_to manage_buy_sell_shipping_methods_path, :class => (sub_active_tab == :shipping_methods) ? 'active' : '' do
+                  %span Shipping Methods
+              %li
+                = link_to manage_buy_sell_stock_locations_path, :class => (sub_active_tab == :stock_locations) ? 'active' : '' do
+                  %span Stock Location
+
+              %li
+                = link_to manage_buy_sell_taxonomies_path, :class => (sub_active_tab == :taxonomies) ? 'active' : '' do
+                  %span Taxonomies
+              / %li
+              /   = link_to manage_buy_sell_taxons_path, :class => (sub_active_tab == :taxons) ? 'active' : '' do
+              /     %span Taxons

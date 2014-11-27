@@ -7,9 +7,12 @@ DesksnearMe::Application.routes.draw do
     mount Spree::Core::Engine, at: '/instance_buy_sell'
   end
 
+  scope module: 'buy_sell' do
+    resources :orders, only: [:show, :index]
+  end
+
   scope module: 'buy_sell_market' do
     resources :products, only: [:show]
-    resources :orders, only: [:show, :index]
   end
 
   get '/t/*taxon', to: 'search#index', as: :buy_sell_taxon
@@ -407,12 +410,16 @@ DesksnearMe::Application.routes.draw do
         resources :images, :controller => 'products/images'
         resources :variants, :controller => 'products/variants'
         resources :product_properties, :controller => 'products/product_properties'
+        resources :stock_items, :controller => 'products/stock_items'
         resource :stock, :controller => 'products/stock'
       end
 
       resources :option_types
       resources :properties
       resources :prototypes
+      resources :shipping_categories
+      resources :shipping_methods
+      resources :stock_locations
       resources :taxonomies
       resources :taxons
     end

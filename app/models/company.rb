@@ -32,7 +32,9 @@ class Company < ActiveRecord::Base
   has_many :taxonomies, class_name: 'Spree::Taxonomy'
   has_many :tax_categories, class_name: 'Spree::TaxCategory'
   has_many :shipping_categories, class_name: 'Spree::ShippingCategory'
+  has_many :shipping_methods, class_name: 'Spree::ShippingMethod'
   has_many :taxons, class_name: 'Spree::Taxon'
+  has_many :stock_locations, class_name: 'Spree::StockLocation'
   has_many :reservations
   has_many :reservation_charges
   has_many :payment_transfers, :dependent => :destroy

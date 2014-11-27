@@ -270,6 +270,49 @@ class SecuredParams
     ]
   end
 
+  def spree_shipping_category
+    [
+      :name
+    ]
+  end
+
+  def spree_shipping_method
+    [
+      :name,
+      :admin_name,
+      :display_on,
+      :deleted_at,
+      :tracking_url,
+      :tax_category_id,
+      shipping_category_ids: [],
+      zone_ids: []
+    ]
+  end
+
+  def spree_stock_location
+    [
+      :name,
+      :admin_name,
+      :address1,
+      :address2,
+      :city,
+      :state_id,
+      :state_name,
+      :country_id,
+      :zipcode,
+      :phone,
+      :active,
+      :backorderable_default,
+      :propagate_all_variants
+    ]
+  end
+
+  def spree_stock_movement
+    [
+      :quantity
+    ]
+  end
+
   def availability_template
     [
       :transactable_type,

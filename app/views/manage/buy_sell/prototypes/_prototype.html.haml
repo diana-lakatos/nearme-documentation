@@ -1,4 +1,4 @@
-%li.listing
+%li.listing.action-buttons
   .span3
     = prototype.name
   .span3
@@ -9,7 +9,8 @@
     .links.right
       = link_to manage_buy_sell_prototype_path(prototype), :method => :delete, :confirm => 'Are you sure?', :class => "delete", style: 'padding-top: 0px;' do
         %span.ico-trash
-      = link_to edit_manage_buy_sell_prototype_path(prototype), :class => "edit", style: 'padding-top: 0px;' do
+        %span.text Delete
+      = link_to edit_manage_buy_sell_prototype_path(prototype), :class => "delete", style: 'padding: 0 0 0 10px;' do
         %span.icon.ico-edit
-        %span.text
+        %span.text Edit
   .clearfix

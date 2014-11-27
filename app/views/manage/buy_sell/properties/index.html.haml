@@ -11,18 +11,15 @@
             .name.left
               Manage Properties
       %ul.location-and-listings
-        %li.listing.action-buttons
-          .right
-            = link_to 'New Property', new_manage_buy_sell_property_path, class: 'btn btn-medium btn-white'
-        /     = link_to 'Download Current Data', download_current_data_csv_manage_transactable_type_data_uploads_path(@transactable_type), class: 'btn btn-medium btn-white'
-        /     = link_to 'Download CSV Template', download_csv_template_manage_transactable_type_data_uploads_path(@transactable_type), class: 'btn btn-medium btn-white'
-        /   .clearfix
         %li.listing
-          .span3
+          .right
+            = link_to 'New Property', new_manage_buy_sell_property_path, class: 'btn btn-medium btn-green'
+        %li.listing.action-buttons
+          .span4
             = t('property.name')
           .span4
             = t('property.prsentation')
-          .span2.state.text-right
+          .span3.state.text-right
 
 
           .clearfix

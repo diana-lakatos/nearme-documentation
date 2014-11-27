@@ -142,6 +142,12 @@ en:
         updated: 'Option type has been updated.'
         error_create: 'Option type has not been created.'
         error_update: 'Option type has not been updated.'
+      stock_location:
+        created: 'Stock location has been created.'
+        deleted: 'Stock location has been deleted.'
+        updated: 'Stock location has been updated.'
+        error_create: 'Stock location has not been created.'
+        error_update: 'Stock location has not been updated.'
       companies:
         company_updated: "Great, your company's details have been updated."
         white_label_updated: "Great, white-label details have been updated."

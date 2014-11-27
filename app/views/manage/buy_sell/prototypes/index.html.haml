@@ -11,13 +11,10 @@
             .name.left
               Manage Prototypes
       %ul.location-and-listings
-        %li.listing.action-buttons
-          .right
-            = link_to 'New Prototype', new_manage_buy_sell_prototype_path, class: 'btn btn-medium btn-white'
-        /     = link_to 'Download Current Data', download_current_data_csv_manage_transactable_type_data_uploads_path(@transactable_type), class: 'btn btn-medium btn-white'
-        /     = link_to 'Download CSV Template', download_csv_template_manage_transactable_type_data_uploads_path(@transactable_type), class: 'btn btn-medium btn-white'
-        /   .clearfix
         %li.listing
+          .right
+            = link_to 'New Prototype', new_manage_buy_sell_prototype_path, class: 'btn btn-medium btn-green'
+        %li.listing.action-buttons
           .span3
             = t('prototype.name')
           .span3
@@ -25,7 +22,6 @@
           .span3
             = t('prototype.option_types')
           .span2.state.text-right
-
 
           .clearfix
         = render partial: 'prototype', collection: @prototypes

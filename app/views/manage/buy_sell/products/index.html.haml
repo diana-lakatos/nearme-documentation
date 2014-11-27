@@ -11,10 +11,10 @@
             .name.left
               Manage Products
       %ul.location-and-listings
-        %li.listing.action-buttons
+        %li.listing
           .right
             = link_to 'New Product', new_manage_buy_sell_product_path, class: 'btn btn-medium btn-green'
-        %li.listing
+        %li.listing.action-buttons
           .span4
             = t('product.name')
           .span3

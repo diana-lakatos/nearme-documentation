@@ -37,6 +37,9 @@
               %span Manage #{platform_context.bookable_noun.pluralize}
         - if platform_context.instance.buyable?
           %li
+            = link_to main_app.manage_buy_sell_products_path, class: 'nav-link dropdown-toggle' do
+              %span Manage #{platform_context.bookable_noun.pluralize}
+          %li
             = link_to main_app.orders_path, class: 'nav-link dropdown-toggle' do
               %span My Orders
         - else

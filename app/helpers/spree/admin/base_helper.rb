@@ -9,6 +9,21 @@ module Spree
         end
         link_to(name, '#', class: "add_fields", data: {id: id, fields: fields.gsub("\n", "")})
       end
+
+      def available_countries
+        checkout_zone = Zone.find_by(name: Spree::Config[:checkout_zone])
+
+        if checkout_zone && checkout_zone.kind == 'country'
+          countries = checkout_zone.country_list
+        else
+          countries = Country.all
+        end
+
+        countries.collect do |country|
+          country.name = Spree.t(country.iso, scope: 'country_names', default: country.name)
+          country
+        end.sort { |a, b| a.name.parameterize <=> b.name.parameterize }
+      end
     end
   end
 end
