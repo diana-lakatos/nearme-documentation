@@ -9,8 +9,6 @@ en:
       models:
         recurring_booking:
           one_valid_reservation: 'The selected dates are not available, please choose different dates.'
-    errors:
-      models:
         instance:
           attributes:
             pricing_options:
@@ -24,6 +22,10 @@ en:
           attributes:
             email:
               taken: "That email address is associated with an existing account."
+            name:
+              first_name_too_long: "first name is too long (maximum is %{count} characters)"
+              middle_name_too_long: "middle name is too long (maximum is %{count} characters)"
+              last_name_too_long: "last name is too long (maximum is %{count} characters)"
         transactable:
           attributes:
             free: "must be free if no prices are provided"

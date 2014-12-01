@@ -78,6 +78,8 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def update
+    # next line is there to prevent unwanted UI changes [i.e. the name in the navbar] (it's a bug in devise, resource === current_user)
+    @user = User.find(resource.id) # maybe a little bit hackish way, but 'dup' or 'clone' doesn't work
     resource.country_name_required = true
     resource.custom_validation = true
     resource.assign_attributes(user_params)
@@ -88,8 +90,7 @@ class RegistrationsController < Devise::RegistrationsController
       event_tracker.updated_profile_information(@user)
       redirect_to :action => 'edit'
     else
-      current_user.approval_requests = resource.approval_requests
-      @country = current_user.country_name
+      @country = resource.country_name
       render :edit
     end
   end
