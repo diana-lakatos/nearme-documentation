@@ -6,7 +6,7 @@
 
         %h4 TODO: Waiting for Maciek to integrate for Spree::PaymentMethod
 
-        = f.fileds
+        = f.input :total, readonly: true # Just test
 
       .span4
         = render partial: 'checkout_order_summary', locals: { order: @order }
