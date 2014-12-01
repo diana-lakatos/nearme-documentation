@@ -15,6 +15,7 @@ class Manage::BuySell::ProductsController < Manage::BuySell::BaseController
     if @product.save
       redirect_to location_after_save, notice: t('flash_messages.manage.product.created')
     else
+      flash.now[:error] = t('flash_messages.product.complete_fields') + view_context.array_to_unordered_list(@product.errors.full_messages)
       render :new
     end
   end

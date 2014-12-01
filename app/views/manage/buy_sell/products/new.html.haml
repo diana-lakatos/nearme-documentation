@@ -12,7 +12,7 @@
 
       = simple_form_for [:manage, :buy_sell, @product], :html => {multipart: true, class: "form-horizontal form-expandable" } do |f|
 
-        = render 'buy_sell/products/form', f: f
+        = render 'new_form', f: f, first_product: false
 
         .actions
           = f.submit "Save"

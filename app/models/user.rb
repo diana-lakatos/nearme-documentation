@@ -132,6 +132,9 @@ class User < ActiveRecord::Base
 
   attr_accessor :custom_validation
   attr_accessor :accept_terms_of_service
+  attr_accessor :verify_associated
+
+  validates_associated :companies, :if => :verify_associated
   validates_acceptance_of :accept_terms_of_service, on: :create, allow_nil: false, if: lambda { |u| PlatformContext.current.try(:instance).try(:force_accepting_tos) && u.custom_validation }
 
   validate do |user|
@@ -580,6 +583,22 @@ class User < ActiveRecord::Base
     unless ['male', 'female', 'unknown'].include?(gender)
       self.gender = nil
     end
+  end
+
+  def registration_in_progress?
+    has_draft_listings || has_draft_products
+  end
+
+  def registration_completed?
+    has_any_active_listings || has_any_active_products
+  end
+
+  def has_draft_products
+    companies.any? && companies.first.products.any? && !companies.first.products.first.valid?
+  end
+
+  def has_any_active_products
+    companies.any? && companies.first.products.any? && companies.first.products.first.valid?
   end
 
   def has_draft_listings

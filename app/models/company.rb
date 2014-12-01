@@ -14,7 +14,7 @@ class Company < ActiveRecord::Base
   #   :domain_attributes, :theme_attributes, :white_label_enabled,
   #   :listings_public, :bank_account_number, :bank_routing_number, :bank_owner_name
 
-  attr_accessor :created_payment_transfers, :bank_account_number, :bank_routing_number, :bank_owner_name
+  attr_accessor :created_payment_transfers, :bank_account_number, :bank_routing_number, :bank_owner_name, :verify_associated
 
   belongs_to :creator, class_name: "User", inverse_of: :created_companies
   belongs_to :instance
@@ -24,17 +24,17 @@ class Company < ActiveRecord::Base
   has_many :locations, dependent: :destroy, inverse_of: :company
   has_many :listings, class_name: 'Transactable', inverse_of: :company
   has_many :photos, through: :listings
-  has_many :products, class_name: 'Spree::Product'
-  has_many :properties, class_name: 'Spree::Property'
-  has_many :prototypes, class_name: 'Spree::Prototype'
-  has_many :option_types, class_name: 'Spree::OptionType'
+  has_many :products, class_name: 'Spree::Product', dependent: :destroy
+  has_many :properties, class_name: 'Spree::Property', dependent: :destroy
+  has_many :prototypes, class_name: 'Spree::Prototype', dependent: :destroy
+  has_many :option_types, class_name: 'Spree::OptionType', dependent: :destroy
   has_many :order_line_items, class_name: 'Spree::LineItem'
-  has_many :taxonomies, class_name: 'Spree::Taxonomy'
-  has_many :tax_categories, class_name: 'Spree::TaxCategory'
-  has_many :shipping_categories, class_name: 'Spree::ShippingCategory'
-  has_many :shipping_methods, class_name: 'Spree::ShippingMethod'
-  has_many :taxons, class_name: 'Spree::Taxon'
-  has_many :stock_locations, class_name: 'Spree::StockLocation'
+  has_many :taxonomies, class_name: 'Spree::Taxonomy', dependent: :destroy
+  has_many :tax_categories, class_name: 'Spree::TaxCategory', dependent: :destroy
+  has_many :shipping_categories, class_name: 'Spree::ShippingCategory', dependent: :destroy
+  has_many :shipping_methods, class_name: 'Spree::ShippingMethod', dependent: :destroy
+  has_many :taxons, class_name: 'Spree::Taxon', dependent: :destroy
+  has_many :stock_locations, class_name: 'Spree::StockLocation', dependent: :destroy
   has_many :reservations
   has_many :reservation_charges
   has_many :payment_transfers, :dependent => :destroy
@@ -77,8 +77,11 @@ class Company < ActiveRecord::Base
   accepts_nested_attributes_for :theme, reject_if: proc { |params| params.delete(:white_label_enabled).to_f.zero? }
   accepts_nested_attributes_for :locations
   accepts_nested_attributes_for :approval_requests
-  accepts_nested_attributes_for :products
+  accepts_nested_attributes_for :products, :shipping_methods, :shipping_categories
 
+  validates_associated :shipping_methods, :if => :verify_associated
+  validates_associated :shipping_categories, :if => :verify_associated
+  validates_associated :products, :if => :verify_associated
 
   def add_creator_to_company_users
     unless users.include?(creator)

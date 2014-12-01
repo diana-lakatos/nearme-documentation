@@ -5,12 +5,12 @@
         = link_to_registration({return_to: main_app.new_space_wizard_path}, platform_context.secured_constraint, secure_links?, rel: 'modal.sign-up-modal', class: 'nav-link btn btn-blue btn-medium') do
           %span.text= t('ui.header.list_your_thing', thing: platform_context.bookable_noun)
           %span.icon.ico-plus
-    - elsif current_user && current_user.has_draft_listings
+    - elsif current_user && current_user.registration_in_progress?
       %li
         = link_to main_app.new_space_wizard_path, :class => "nav-link btn btn-blue btn-medium" do
-          %span.text Complete Your Listing
+          %span.text= t('ui.header.complete_your_thing', thing: platform_context.bookable_noun)
           %span.icon.ico-plus
-    - elsif current_user && !current_user.has_any_active_listings
+    - elsif current_user && !current_user.registration_completed?
       %li
         = link_to main_app.new_space_wizard_path, :class => "nav-link btn btn-blue btn-medium" do
           %span.text= t('ui.header.list_your_thing', thing: platform_context.bookable_noun)
@@ -43,12 +43,13 @@
             = link_to main_app.manage_locations_path, class: 'nav-link dropdown-toggle' do
               %span Manage #{platform_context.bookable_noun.pluralize}
         - if platform_context.instance.buyable?
-          %li
-            = link_to main_app.manage_buy_sell_products_path, class: 'nav-link dropdown-toggle' do
-              %span Manage #{platform_context.bookable_noun.pluralize}
-          %li
-            = link_to main_app.orders_path, class: 'nav-link dropdown-toggle' do
-              %span My Orders
+          - if current_user.registration_completed?
+            %li
+              = link_to main_app.manage_buy_sell_products_path, class: 'nav-link dropdown-toggle' do
+                %span Manage #{platform_context.bookable_noun.pluralize}
+            %li
+              = link_to main_app.orders_path, class: 'nav-link dropdown-toggle' do
+                %span My Orders
         - else
           %li
             = link_to main_app.bookings_dashboard_path, class: 'nav-link dropdown-toggle' do

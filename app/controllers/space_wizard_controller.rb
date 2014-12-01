@@ -17,7 +17,7 @@ class SpaceWizardController < ApplicationController
 
   def list
     build_objects
-    set_buy_sell_variables
+    build_approval_requests
     @photos = @user.first_listing ? @user.first_listing.photos : nil
     @user.phone_required = true
     event_tracker.viewed_list_your_bookable
@@ -29,10 +29,11 @@ class SpaceWizardController < ApplicationController
     params[:user][:companies_attributes]["0"][:name] = current_user.name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     @user.assign_attributes(wizard_params)
-    @company = @user.companies.first
-    @company.try(:locations).try(:first).try {|l| l.name_and_description_required = true} if TransactableType.first.name == "Listing"
-    @company.creator_id = current_user.id
+    @user.companies.first.try(:locations).try(:first).try {|l| l.name_and_description_required = true} unless buyable?
+    @user.companies.first.creator_id = current_user.id
+    @user.verify_associated = @user.companies.first.verify_associated = !@user.companies.first.new_record?
     build_objects
+    build_approval_requests
     if params[:save_as_draft]
       remove_approval_requests
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
@@ -52,7 +53,6 @@ class SpaceWizardController < ApplicationController
         redirect_to manage_locations_path
       end
     else
-      set_buy_sell_variables
       @photos = @user.first_listing ? @user.first_listing.photos : nil
       flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(@user.errors.full_messages)
       render :list
@@ -78,7 +78,7 @@ class SpaceWizardController < ApplicationController
 
   def set_common_variables
     redirect_to(new_space_wizard_url) && return unless current_user.present?
-    
+
     @user = current_user
     @company = @user.companies.first
     @country = if params[:user] && params[:user][:country_name]
@@ -90,23 +90,22 @@ class SpaceWizardController < ApplicationController
                end
   end
 
-  def set_buy_sell_variables
-    @shipping_categories = @company.shipping_categories.order(:name)
-    @prototypes = @company.prototypes.order(:name)
-  end
-
   def build_objects
-    @company ||= @user.companies.build 
+    @user.companies.build if @user.companies.first.nil?
     if buyable?
-      @company.products.build if @company.products.first.nil?
-      @company.products.first.build_shipping_category if @company.products.first.shipping_category.nil?
-      build_approval_request_for_object(@user)
-      build_approval_request_for_object(@user.companies.first)
+      @user.companies.first.products.build if @user.companies.first.products.first.nil?
+      @user.companies.first.shipping_categories.build if @user.companies.first.shipping_categories.first.nil?
+      @user.companies.first.shipping_methods.build if @user.companies.first.shipping_methods.first.nil?
+      if @user.companies.first.shipping_methods.first.shipping_categories.blank?
+        @user.companies.first.shipping_methods.first.shipping_categories = [@user.companies.first.shipping_categories.first]
+      end
+      if @user.companies.first.shipping_methods.first.calculator.nil?
+        @user.companies.first.shipping_methods.first.calculator = Spree::Calculator::Shipping::FlatRate.new(preferred_amount: 0)
+      end
+      @user.companies.first.products.first.shipping_category = @user.companies.first.shipping_categories.first
     else
-      @company.locations.build if @company.locations.first.nil?
-      @company.locations.first.listings.build({:transactable_type_id => @transactable_type.id}) if @company.locations.first.listings.first.nil?
-      build_approval_request_for_object(@user.companies.first.locations.first)
-      build_approval_request_for_object(@user.companies.first.locations.first.listings.first)
+      @user.companies.first.locations.build if @user.companies.first.locations.first.nil?
+      @user.companies.first.locations.first.listings.build({:transactable_type_id => @transactable_type.id}) if @user.companies.first.locations.first.listings.first.nil?
     end
   end
 
@@ -169,6 +168,15 @@ class SpaceWizardController < ApplicationController
 
   def wizard_params
     params.require(:user).permit(secured_params.user)
+  end
+
+  def build_approval_requests
+    build_approval_request_for_object(@user)
+    build_approval_request_for_object(@user.companies.first)
+    unless buyable?
+      build_approval_request_for_object(@user.companies.first.locations.first)
+      build_approval_request_for_object(@user.companies.first.locations.first.listings.first)
+    end
   end
 
   def remove_approval_requests

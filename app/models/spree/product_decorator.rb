@@ -2,6 +2,8 @@ Spree::Product.class_eval do
   include Spree::Scoper
   include Impressionable
 
+  attr_accessor :validate_exisiting
+
   has_many :line_items, through: :variants
   has_many :orders, through: :line_items
 
@@ -25,7 +27,7 @@ Spree::Product.class_eval do
 
   validates :slug, uniqueness: { scope: [:instance_id, :company_id, :partner_id, :user_id] }
 
-  # validate :shipping_category_presence
+  validate :shipping_category_presence
 
   # TODO: uncomment in Phase 3 during implementation of creating products
   # belongs_to :transactable_type, inverse_of: :transactables
@@ -56,6 +58,6 @@ Spree::Product.class_eval do
   private
 
   def shipping_category_presence
-    self.shipping_category.valid? ? true :  errors.add(:shipping_category_id, "shipping category can't be blank")
+    self.shipping_category.present? ? true :  errors.add(:shipping_category_id, "shipping category can't be blank")
   end
 end

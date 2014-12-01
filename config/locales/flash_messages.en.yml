@@ -213,6 +213,8 @@ en:
     search_notifications:
       you_will_be_notified: "You will be notified when a %{bookable_noun} is added at this location."
       you_will_not_be_notified: "We could not add you to the notifcation list because your email \"%{email}\" %{errors}"
+    product:
+      complete_fields: "Please complete all fields!"
     space_wizard:
       complete_fields: "Please complete all fields! Alternatively, you can Save a Draft for later."
       draft_saved: "Your draft has been saved!"

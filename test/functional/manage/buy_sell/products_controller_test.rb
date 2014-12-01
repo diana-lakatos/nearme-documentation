@@ -3,8 +3,10 @@ require 'test_helper'
 class Manage::BuySell::ProductsControllerTest < ActionController::TestCase
 
   setup do
-    @product = FactoryGirl.create(:product)
     @company = FactoryGirl.create(:company)
+    @product = FactoryGirl.create(:product)
+    @product.company = @company
+    @product.save
     @user = @company.creator
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
     InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
