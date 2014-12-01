@@ -13,6 +13,19 @@ DesksnearMe::Application.routes.draw do
 
   scope module: 'buy_sell_market' do
     resources :products, only: [:show]
+
+    resources :orders, only: [:show, :index] do
+      resources :checkout
+    end
+
+    namespace :cart do
+      get '/', action: 'index', as: 'index'
+      delete 'empty'
+      patch 'update'
+      get 'add/:product_id', action: 'add', as: 'add_product' # For redirection after login
+      delete 'remove/:item_id', action: 'remove', as: 'remove_product'
+      get 'next/:order_id', action: 'next', as: 'next'
+    end
   end
 
   get '/t/*taxon', to: 'search#index', as: :buy_sell_taxon

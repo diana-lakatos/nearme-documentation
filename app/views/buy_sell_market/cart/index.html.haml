@@ -1,0 +1,32 @@
+.container-fluid
+  %h1
+    Shopping cart
+    - unless @cart.empty?
+      .pull-right
+        = link_to 'Empty cart', cart_empty_path, method: :delete, class: 'btn btn-red btn-empty'
+
+  - if @cart.empty?
+    .row-fluid
+      .span3.offset5
+        %h1 I am so empty :(
+
+    .row-fluid
+      .span3.offset5
+        = link_to 'Browse products', root_path(anchor: 'products'), class: 'btn btn-blue btn-large'
+
+  - else
+    - if @cart.different_companies?
+      %h3 Maybe some text explaining why we have to checkout multiple times (for every company separately)
+
+    = form_tag cart_update_path, method: :patch do
+      .row-fluid
+        .span12
+          - @cart.orders.each do |order|
+            = render partial: 'company_order', locals: { order: order }
+            %br
+
+      .row
+        .span2.offset8
+
+      %hr
+      = render partial: 'cart_actions'

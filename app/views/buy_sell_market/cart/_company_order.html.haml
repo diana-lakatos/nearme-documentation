@@ -1,0 +1,18 @@
+%table.table-simple.cart-table
+  %thead
+    %tr
+      %th Order from #{order.company_name}
+      %th Price
+      %th Quantity
+      %th Total
+      %th Actions
+
+  %tbody
+    - order.line_items.each do |item|
+      = render partial: 'cart_item', locals: {item: item}
+
+    %tr
+      %td{colspan: 2} Total for order
+      %td
+      %td= order.display_total
+      %td= link_to 'Checkout', order_checkout_path(order, 'address'), class: 'btn btn-green'

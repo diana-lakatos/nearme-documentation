@@ -1,0 +1,11 @@
+.container-fluid
+  = simple_form_for @order, url: wizard_path do |f|
+    .row-fluid
+      .span8
+        %h1 TODO Delivery
+
+
+      .span4
+        = render partial: 'checkout_order_summary', locals: { order: @order }
+
+    = render partial: 'checkout_buttons', locals: { form: f }

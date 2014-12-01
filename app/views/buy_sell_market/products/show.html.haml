@@ -19,7 +19,7 @@
           .description
             = truncate(custom_sanitze(mask_phone_and_email_if_necessary(@product.description)), length: 500, separator: ' ')
           .price= @product.humanized_price
-          = link_to '#', class: "btn btn-blue btn-large add_to_cart" do
+          = link_to cart_add_product_path(@product), class: 'btn btn-blue btn-large add_to_cart' do
             %span Add to cart
 
       .clearfix.padding-row
@@ -57,4 +57,4 @@
     $(function() {
       new Product.Controller($('article#product'));
     });
-            
+

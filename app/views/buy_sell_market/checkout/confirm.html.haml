@@ -1,0 +1,9 @@
+.container-fluid
+  .row-fluid
+    .span8
+      %h1 Confirmation
+
+    .span4
+      = render partial: 'checkout_order_summary', locals: { order: @order }
+
+  = render partial: 'checkout_buttons'

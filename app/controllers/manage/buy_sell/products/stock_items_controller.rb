@@ -10,7 +10,7 @@ class Manage::BuySell::Products::StockItemsController < Manage::BuySell::BaseCon
   end
 
   def create
-    variant = @product.variants.find(params[:variant_id])
+    variant = @product.variants_including_master.find(params[:variant_id])
     stock_location = @company.stock_locations.find(params[:stock_location_id])
     stock_movement = stock_location.stock_movements.build(stock_movement_params)
     stock_movement.stock_item = stock_location.set_up_stock_item(variant)

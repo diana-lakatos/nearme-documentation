@@ -56,7 +56,7 @@ module Utils
 
     def load_zones
       eu_vat = Spree::Zone.create!(name: "EU_VAT", description: "Countries that make up the EU VAT zone.")
-      north_america = Spree::Zone.create!(name: "North America", description: "USA + Canada")
+      north_america = Spree::Zone.create!(name: "North America", description: "USA + Canada", default_tax: true)
 
       ["Poland", "Finland", "Portugal", "Romania", "Germany", "France",
         "Slovakia", "Hungary", "Slovenia", "Ireland", "Austria", "Spain",
