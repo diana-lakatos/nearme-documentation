@@ -2,11 +2,12 @@ class BuySellMarket::CheckoutController < ApplicationController
   include Wicked::Wizard
   include Spree::Core::ControllerHelpers::StrongParameters
 
-  # TODO Check for skipping steps by entering address
-  steps :address, :delivery, :payment, :confirm, :complete
+  CHECKOUT_STEPS = [:address, :delivery, :payment, :confirm, :complete]
+  steps *CHECKOUT_STEPS
 
   before_filter :set_order
   before_filter :check_step
+  before_filter :set_state, only: [:show]
 
   def show
     case step
@@ -52,7 +53,17 @@ class BuySellMarket::CheckoutController < ApplicationController
   end
 
   def check_step
-    # TODO
+    return true if step == :address
+
+    if CHECKOUT_STEPS.index(step) > CHECKOUT_STEPS.index(order_state)
+      @order.restart_checkout_flow
+      flash[:error] = 'You are not allowed here'
+      redirect_to cart_index_path
+    end
+  end
+
+  def set_state
+    @order.update_columns(state: step.to_s, updated_at: Time.zone.now)
   end
 
   def set_order

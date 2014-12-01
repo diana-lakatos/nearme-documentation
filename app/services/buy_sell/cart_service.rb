@@ -8,7 +8,6 @@ class BuySell::CartService
   def add_product(product, quantity=1)
     setup_order(product)
     Spree::OrderPopulator.new(@order, @order.currency).populate(product.master.id, quantity)
-    @order.restart_checkout_flow
   end
 
   def remove_item(item_id)
