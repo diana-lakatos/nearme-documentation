@@ -1,0 +1,30 @@
+- title "Variants"
+
+= show_manage_navigation(:products, :products)
+
+.row-fluid
+  .span8.offset2
+    .box
+      %header
+        %ul.location-and-listings
+          %li.location
+            .name.left
+              Manage Products Variants
+            .right
+              = link_to 'New Product Variant', new_manage_buy_sell_product_variant_path(@product), class: 'btn btn-medium btn-white'
+      = render 'manage/buy_sell/products/menu'
+
+      %ul.location-and-listings
+        %li.listing
+          .span3
+            = t('variant.option_types')
+          .span4
+            = t('variant.cost_price')
+          .span3
+            = t('variant.price')
+          .span2.state.text-right
+
+          .clearfix
+        = render partial: 'variant', collection: @variants
+      = will_paginate @variants
+

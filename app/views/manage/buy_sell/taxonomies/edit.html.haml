@@ -1,0 +1,13 @@
+- title "Edit Taxonomy"
+
+= show_manage_navigation(:configuration, :taxonomies)
+
+.row-fluid
+  .span8.offset2
+    .box
+      %ul.location-and-listings
+        %li.location
+          .name.left
+            =t("manage.buy_sell.prototypes.edit_header")
+
+      = render "form"

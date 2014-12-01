@@ -2,8 +2,7 @@ class SpaceWizardController < ApplicationController
 
   before_filter :redirect_to_dashboard_if_user_has_listings, :only => [:new, :list]
   before_filter :find_transactable_type
-  before_filter :find_user, :except => [:new]
-  before_filter :find_user_country, :only => [:list, :submit_listing]
+  before_filter :set_common_variables, :only => [:list, :submit_listing]
   before_filter :sanitize_price_parameters, :only => [:submit_listing]
 
   def new
@@ -17,10 +16,8 @@ class SpaceWizardController < ApplicationController
   end
 
   def list
-    @company ||= @user.companies.build.locations.build.listings.build({:transactable_type_id => @transactable_type.id})
     build_objects
-    build_approval_requests
-
+    set_buy_sell_variables
     @photos = @user.first_listing ? @user.first_listing.photos : nil
     @user.phone_required = true
     event_tracker.viewed_list_your_bookable
@@ -32,10 +29,10 @@ class SpaceWizardController < ApplicationController
     params[:user][:companies_attributes]["0"][:name] = current_user.name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     @user.assign_attributes(wizard_params)
-    @user.companies.first.try(:locations).try(:first).try {|l| l.name_and_description_required = true} if TransactableType.first.name == "Listing"
-    @user.companies.first.creator_id = current_user.id
+    @company = @user.companies.first
+    @company.try(:locations).try(:first).try {|l| l.name_and_description_required = true} if TransactableType.first.name == "Listing"
+    @company.creator_id = current_user.id
     build_objects
-    build_approval_requests
     if params[:save_as_draft]
       remove_approval_requests
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
@@ -48,9 +45,14 @@ class SpaceWizardController < ApplicationController
       track_new_space_event
       track_new_company_event
       PostActionMailer.enqueue.list(@user)
-      flash[:success] = t('flash_messages.space_wizard.space_listed', bookable_noun: platform_context.decorate.bookable_noun)
-      redirect_to manage_locations_path
+      if buyable?
+        redirect_to manage_buy_sell_products_path
+      else
+        flash[:success] = t('flash_messages.space_wizard.space_listed', bookable_noun: platform_context.decorate.bookable_noun)
+        redirect_to manage_locations_path
+      end
     else
+      set_buy_sell_variables
       @photos = @user.first_listing ? @user.first_listing.photos : nil
       flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(@user.errors.full_messages)
       render :list
@@ -74,28 +76,42 @@ class SpaceWizardController < ApplicationController
     return true if @company.listings.include?(photo.listing)     # if the photo content is a listing and belongs to company
   end
 
-  def find_user
+  def set_common_variables
+    redirect_to(new_space_wizard_url) && return unless current_user.present?
+    
     @user = current_user
-    if @user
-      @country = current_user.country_name
+    @company = @user.companies.first
+    @country = if params[:user] && params[:user][:country_name]
+                 params[:user][:country_name]
+               elsif @user.country_name.present?
+                 @user.country_name
+               else
+                 request.location.country rescue nil
+               end
+  end
+
+  def set_buy_sell_variables
+    @shipping_categories = @company.shipping_categories.order(:name)
+    @prototypes = @company.prototypes.order(:name)
+  end
+
+  def build_objects
+    @company ||= @user.companies.build 
+    if buyable?
+      @company.products.build if @company.products.first.nil?
+      @company.products.first.build_shipping_category if @company.products.first.shipping_category.nil?
+      build_approval_request_for_object(@user)
+      build_approval_request_for_object(@user.companies.first)
     else
-      redirect_to new_space_wizard_url unless @user
+      @company.locations.build if @company.locations.first.nil?
+      @company.locations.first.listings.build({:transactable_type_id => @transactable_type.id}) if @company.locations.first.listings.first.nil?
+      build_approval_request_for_object(@user.companies.first.locations.first)
+      build_approval_request_for_object(@user.companies.first.locations.first.listings.first)
     end
   end
 
-  def find_company
-    @company = current_user.companies.first if current_user.companies.any?
-  end
-
-  def find_location
-    @location = @company.locations.first if @company && @company.locations.any?
-  end
-
-  def find_listing
-    @listing = @location.listings.first if @location && @location.listings.any?
-  end
-
   def redirect_to_dashboard_if_user_has_listings
+    return if buyable?
     if current_user && current_user.companies.count > 0 && !current_user.has_draft_listings
       if current_user.locations.count.zero?
         redirect_to new_manage_location_path
@@ -137,16 +153,6 @@ class SpaceWizardController < ApplicationController
     end
   end
 
-  def find_user_country
-    @country = if params[:user] && params[:user][:country_name]
-                 params[:user][:country_name]
-               elsif @user.country_name.present?
-                 @user.country_name
-               else
-                 request.location.country rescue nil
-               end
-  end
-
   def sanitize_price_parameters
     begin
       params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"].select { |k, v| k.include?('_price') }.each do |k, v|
@@ -165,24 +171,13 @@ class SpaceWizardController < ApplicationController
     params.require(:user).permit(secured_params.user)
   end
 
-  def build_objects
-    @user.companies.build if @user.companies.first.nil?
-    @user.companies.first.locations.build if @user.companies.first.locations.first.nil?
-    @user.companies.first.locations.first.listings.build({:transactable_type_id => @transactable_type.id}) if @user.companies.first.locations.first.listings.first.nil?
-  end
-
-  def build_approval_requests
-    build_approval_request_for_object(@user)
-    build_approval_request_for_object(@user.companies.first)
-    build_approval_request_for_object(@user.companies.first.locations.first)
-    build_approval_request_for_object(@user.companies.first.locations.first.listings.first)
-  end
-
   def remove_approval_requests
     @user.approval_requests = []
     @user.companies.first.approval_requests = []
-    @user.companies.first.locations.first.approval_requests = []
-    @user.companies.first.locations.first.listings.first.approval_requests = []
+    unless buyable?
+      @user.companies.first.locations.first.approval_requests = []
+      @user.companies.first.locations.first.listings.first.approval_requests = []
+    end
   end
 
 end

@@ -143,8 +143,8 @@ module ApplicationHelper
     arr.map{|s| "<li>#{s}</li>"}.join.tap{|s| "<ul>#{s}</ul>"}
   end
 
-  def show_manage_navigation(active_tab = :locations)
-    content_for :manage_navbar, render(:partial => 'shared/manage_navigation', :locals => {:active_tab => active_tab})
+  def show_manage_navigation(active_tab = :locations, sub_active_tab = :products)
+    content_for :manage_navbar, render(partial: 'shared/manage_navigation', :locals => {active_tab: active_tab, sub_active_tab: sub_active_tab})
   end
 
   def section_class(section_name = nil)

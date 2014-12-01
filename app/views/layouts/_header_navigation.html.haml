@@ -18,6 +18,13 @@
 
   - if user_signed_in?
 
+    - if platform_context.instance.buyable?
+      %li.divider-vertical
+      %li
+        = link_to cart_index_path, class: 'nav-link' do
+          %span.text CART: #{BuySell::CartDecorator.new(current_user).navigation}
+          %span.icon.ico-cart
+
     %li.divider-vertical
     %li.dropdown
       %a.nav-link.dropdown-toggle.user-dropdown{"data-toggle" => "dropdown", href: "#"}
@@ -35,9 +42,17 @@
           %li
             = link_to main_app.manage_locations_path, class: 'nav-link dropdown-toggle' do
               %span Manage #{platform_context.bookable_noun.pluralize}
-        %li
-          = link_to main_app.bookings_dashboard_path, class: 'nav-link dropdown-toggle' do
-            %span My Bookings
+        - if platform_context.instance.buyable?
+          %li
+            = link_to main_app.manage_buy_sell_products_path, class: 'nav-link dropdown-toggle' do
+              %span Manage #{platform_context.bookable_noun.pluralize}
+          %li
+            = link_to main_app.orders_path, class: 'nav-link dropdown-toggle' do
+              %span My Orders
+        - else
+          %li
+            = link_to main_app.bookings_dashboard_path, class: 'nav-link dropdown-toggle' do
+              %span My Bookings
         - if !current_user.requests_for_quotes.empty?
           %li
             = link_to main_app.support_requests_for_quotes_path, class: 'nav-link dropdown-toggle' do

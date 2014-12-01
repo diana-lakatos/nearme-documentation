@@ -1,0 +1,7 @@
+.container-fluid
+  .row-fluid
+    .span12
+      %h1 The order #{@order.number} has been placed
+
+      = link_to 'List of my orders', orders_path, class: 'btn btn-blue btn-large'
+      = link_to 'Browse products', root_path(anchor: 'products'), class: 'btn btn-blue btn-large'

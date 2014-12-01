@@ -24,6 +24,17 @@ class Company < ActiveRecord::Base
   has_many :locations, dependent: :destroy, inverse_of: :company
   has_many :listings, class_name: 'Transactable', inverse_of: :company
   has_many :photos, through: :listings
+  has_many :products, class_name: 'Spree::Product'
+  has_many :properties, class_name: 'Spree::Property'
+  has_many :prototypes, class_name: 'Spree::Prototype'
+  has_many :option_types, class_name: 'Spree::OptionType'
+  has_many :order_line_items, class_name: 'Spree::LineItem'
+  has_many :taxonomies, class_name: 'Spree::Taxonomy'
+  has_many :tax_categories, class_name: 'Spree::TaxCategory'
+  has_many :shipping_categories, class_name: 'Spree::ShippingCategory'
+  has_many :shipping_methods, class_name: 'Spree::ShippingMethod'
+  has_many :taxons, class_name: 'Spree::Taxon'
+  has_many :stock_locations, class_name: 'Spree::StockLocation'
   has_many :reservations
   has_many :reservation_charges
   has_many :payment_transfers, :dependent => :destroy
@@ -33,7 +44,6 @@ class Company < ActiveRecord::Base
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_one :domain, :as => :target, :dependent => :destroy
   has_one :theme, :as => :owner, :dependent => :destroy
-  has_many :order_line_items, class_name: 'Spree::LineItem'
 
   has_many :locations_impressions, :source => :impressions, :through => :locations
   has_many :instance_clients, :as => :client, :dependent => :destroy
@@ -67,6 +77,7 @@ class Company < ActiveRecord::Base
   accepts_nested_attributes_for :theme, reject_if: proc { |params| params.delete(:white_label_enabled).to_f.zero? }
   accepts_nested_attributes_for :locations
   accepts_nested_attributes_for :approval_requests
+  accepts_nested_attributes_for :products
 
 
   def add_creator_to_company_users

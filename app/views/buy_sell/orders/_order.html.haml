@@ -1,0 +1,15 @@
+.row-fluid
+  .span12.reservation-details{id: dom_id(order)}
+    .span12.reservation-text-information
+      .reservation-status
+        .icon-container
+          = order.my_order_status_info
+      .span12.reservation-information
+        .span2
+          =order.number
+        .span2
+          = order.created_at.to_date
+        .span2
+          = order.payment_state
+        .span6
+          = order.display_total.to_html

@@ -88,6 +88,11 @@ class ApplicationController < ActionController::Base
   end
   helper_method :authorizer
 
+  def buyable?
+    @buyable ||= platform_context.instance.buyable?
+  end
+  helper_method :buyable?
+
   # Provides an EventTracker instance for the current request.
   #
   # Use this for triggering predefined events from actions via

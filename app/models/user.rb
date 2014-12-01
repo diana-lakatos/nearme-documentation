@@ -49,7 +49,10 @@ class User < ActiveRecord::Base
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
+
   has_many :orders, foreign_key: :user_id, class_name: 'Spree::Order'
+  belongs_to :billing_address, class_name: 'Spree::Address'
+  belongs_to :shipping_address, class_name: 'Spree::Address'
 
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
@@ -67,13 +70,13 @@ class User < ActiveRecord::Base
   has_many :ticket_message_attachments, foreign_key: 'uploader_id', class_name: 'Support::TicketMessageAttachment'
 
   scope :patron_of, lambda { |listing|
-    joins(:reservations).where(:reservations => { :transactable_id => listing.id }).uniq
-  }
+                    joins(:reservations).where(:reservations => { :transactable_id => listing.id }).uniq
+                  }
 
   scope :without, lambda { |users|
-    users_ids = users.respond_to?(:pluck) ? users.pluck(:id) : Array.wrap(users).collect(&:id)
-    users_ids.any? ? where('users.id NOT IN (?)', users_ids) : scoped
-  }
+                  users_ids = users.respond_to?(:pluck) ? users.pluck(:id) : Array.wrap(users).collect(&:id)
+                  users_ids.any? ? where('users.id NOT IN (?)', users_ids) : scoped
+                }
 
   scope :ordered_by_email, -> { order('users.email ASC') }
 
@@ -86,11 +89,11 @@ class User < ActiveRecord::Base
   }
 
   scope :know_host_of, ->(listing) {
-    joins(:followers).where(:user_relationships => {:follower_id => listing.administrator_id}).references(:user_relationships).uniq
+    joins(:followers).where(:user_relationships => { :follower_id => listing.administrator_id }).references(:user_relationships).uniq
   }
 
   scope :mutual_friends_of, ->(user) {
-    joins(:followers).where(:user_relationships => {:follower_id => user.friends.pluck(:id)}).without(user).with_mutual_friendship_source
+    joins(:followers).where(:user_relationships => { :follower_id => user.friends.pluck(:id) }).without(user).with_mutual_friendship_source
   }
 
   scope :with_mutual_friendship_source, -> {
@@ -121,11 +124,11 @@ class User < ActiveRecord::Base
   validates_presence_of :phone, :if => :phone_required
   validates_presence_of :country_name, :if => lambda { phone_required || country_name_required }
 
-  validates :current_location, length: {maximum: 50}
-  validates :company_name, length: {maximum: 50}
-  validates :job_title, length: {maximum: 50}
-  validates :skills_and_interests, length: {maximum: 150}
-  validates :biography, length: {maximum: BIOGRAPHY_MAX_LENGTH}
+  validates :current_location, length: { maximum: 50 }
+  validates :company_name, length: { maximum: 50 }
+  validates :job_title, length: { maximum: 50 }
+  validates :skills_and_interests, length: { maximum: 150 }
+  validates :biography, length: { maximum: BIOGRAPHY_MAX_LENGTH }
 
   attr_accessor :custom_validation
   attr_accessor :accept_terms_of_service
@@ -141,7 +144,7 @@ class User < ActiveRecord::Base
   end
 
   devise :database_authenticatable, :registerable, :recoverable,
-    :rememberable, :trackable, :user_validatable, :token_authenticatable, :temporary_token_authenticatable
+         :rememberable, :trackable, :user_validatable, :token_authenticatable, :temporary_token_authenticatable
 
   attr_accessor :phone_required, :country_name_required, :skip_password, :verify_identity
 
@@ -204,7 +207,7 @@ class User < ActiveRecord::Base
 
   def name(avoid_stack_too_deep = nil)
     avoid_stack_too_deep = false if avoid_stack_too_deep.nil?
-    name_from_components(avoid_stack_too_deep).presence || self.read_attribute(:name).to_s.split.collect{|w| w[0] = w[0].capitalize; w}.join(' ')
+    name_from_components(avoid_stack_too_deep).presence || self.read_attribute(:name).to_s.split.collect { |w| w[0] = w[0].capitalize; w }.join(' ')
   end
 
   def name_from_components(avoid_stack_too_deep)
@@ -297,6 +300,7 @@ class User < ActiveRecord::Base
       self.follow!(user, auth)
     end
   end
+
   alias_method :add_friends, :add_friend
 
   def friends
@@ -373,7 +377,7 @@ class User < ActiveRecord::Base
 
   def email_verification_token
     Digest::SHA1.hexdigest(
-      "--dnm-token-#{self.id}-#{self.created_at}"
+        "--dnm-token-#{self.id}-#{self.created_at}"
     )
   end
 
@@ -410,9 +414,9 @@ class User < ActiveRecord::Base
 
   def to_balanced_params
     {
-      name: name,
-      email: email,
-      phone: phone
+        name: name,
+        email: email,
+        phone: phone
     }
   end
 
@@ -501,7 +505,7 @@ class User < ActiveRecord::Base
   end
 
   def recover_companies
-    self.created_companies.only_deleted.where('deleted_at >= ? AND deleted_at <= ?',  self.deleted_at, self.deleted_at + 30.seconds).each do |company|
+    self.created_companies.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', self.deleted_at, self.deleted_at + 30.seconds).each do |company|
       begin
         company.restore(:recursive => true)
       rescue
@@ -534,8 +538,8 @@ class User < ActiveRecord::Base
 
   def social_url(provider)
     authentications.where(provider: provider).
-      where('profile_url IS NOT NULL').
-      order('created_at asc').last.try(:profile_url)
+        where('profile_url IS NOT NULL').
+        order('created_at asc').last.try(:profile_url)
   end
 
   def approval_request_templates
@@ -567,7 +571,7 @@ class User < ActiveRecord::Base
   end
 
   def self.csv_fields
-    {email: 'User Email', name: 'User Name'}
+    { email: 'User Email', name: 'User Name' }
   end
 
   def normalize_gender
@@ -601,6 +605,14 @@ class User < ActiveRecord::Base
       @cached_profiles[PlatformContext.current.try(:instance).try(:id)] = user_instance_profiles.first
     end
     @cached_profiles[PlatformContext.current.try(:instance).try(:id)]
+  end
+
+  def cart_orders
+    orders.where(state: ['cart', 'address', 'delivery', 'payment'])
+  end
+
+  def cart
+    BuySell::CartService.new(self)
   end
 
   private

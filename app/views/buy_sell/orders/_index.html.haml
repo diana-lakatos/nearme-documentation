@@ -1,0 +1,8 @@
+- if @orders.empty?
+  %p.no-data= t('orders.no_orders_html', type: params[:state] || 'new', bookable_noun: platform_context.bookable_noun)
+- else
+  .reservation-list
+    %ul
+      - @orders.each_with_index do |order, index|
+        %li
+          = render partial: 'order', object: order.decorate

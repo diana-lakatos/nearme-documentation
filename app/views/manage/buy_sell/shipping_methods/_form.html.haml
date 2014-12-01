@@ -1,0 +1,26 @@
+%div
+  .control-group
+    = f.label :name
+    .controls
+      = f.text_field :name
+  .control-group
+    = f.label :admin_name, "Internal Name", class: 'control-label'
+    .controls
+      = f.text_field :admin_name
+  .control-group
+    = f.label :display_on
+    .controls
+      = select(:shipping_method, :display_on, Spree::ShippingMethod::DISPLAY.collect { |display| [Spree.t(display), display == :both ? nil : display.to_s] })
+  .control-group
+    = f.label :tracking_url
+    .controls
+      = f.text_field :tracking_url, :placeholder => Spree.t(:tracking_url_placeholder)
+  .control-group
+    = simple_fields_for @shipping_method.calculator do |fc|
+      = fc.input :preferred_amount, label: 'Price', input_html: { class: 'form-control'}
+  .control-group
+    = f.association :tax_category, collection: Spree::TaxCategory.order(:name).pluck(:name, :id)
+  .control-group
+    = f.association :shipping_categories, collection: @company.shipping_categories.order(:name).pluck(:name, :id), as: :check_boxes
+  .control-group
+    = f.association :zones, collection: Spree::Zone.order(:name).pluck(:name, :id), as: :check_boxes

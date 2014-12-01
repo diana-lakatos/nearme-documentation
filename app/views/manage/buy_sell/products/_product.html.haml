@@ -1,0 +1,17 @@
+%li.listing.action-buttons
+  .span4
+    = product.name
+  .span3
+    = product.sku
+  .span3
+    = product.price
+  .span2
+    .links
+      = link_to manage_buy_sell_product_path(product), :method => :delete, :confirm => 'Are you sure?', :class => "delete", style: 'padding-top: 0px;' do
+        %span.ico-trash
+        %span.text Delete
+    .links
+      = link_to edit_manage_buy_sell_product_path(product), :class => "delete", style: 'padding: 0px 0 0 10px;' do
+        %span.icon.ico-edit
+        %span.text Edit
+  .clearfix

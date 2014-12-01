@@ -204,6 +204,115 @@ class SecuredParams
     ]
   end
 
+  def spree_image
+    [
+      :attachment,
+      :viewable_id,
+      :alt,
+      :image,
+      :product_id
+    ]
+  end
+
+  def spree_option_type
+    [
+      :name,
+      :presentation,
+      :position,
+      option_values_attributes: nested(self.spree_option_value),
+
+    ]
+  end
+
+  def spree_option_value
+    [
+      :name,
+      :presentation,
+      :position
+    ]
+  end
+
+  def spree_property
+    [
+      :name,
+      :presentation,
+      :position
+    ]
+  end
+
+  def spree_product_property
+    [
+      :id,
+      :property_name,
+      :value,
+      :company_id
+    ]
+  end
+
+  def spree_variant
+    [
+      :sku,
+      :price,
+      :cost_price,
+      :weight,
+      :height,
+      :depth,
+      :tax_category_id,
+      option_value_ids: []
+    ]
+  end
+
+  def spree_prototype
+    [
+      :name,
+      property_ids: [],
+      option_type_ids: []
+    ]
+  end
+
+  def spree_shipping_category
+    [
+      :name
+    ]
+  end
+
+  def spree_shipping_method
+    [
+      :name,
+      :admin_name,
+      :display_on,
+      :deleted_at,
+      :tracking_url,
+      :tax_category_id,
+      shipping_category_ids: [],
+      zone_ids: []
+    ]
+  end
+
+  def spree_stock_location
+    [
+      :name,
+      :admin_name,
+      :address1,
+      :address2,
+      :city,
+      :state_id,
+      :state_name,
+      :country_id,
+      :zipcode,
+      :phone,
+      :active,
+      :backorderable_default,
+      :propagate_all_variants
+    ]
+  end
+
+  def spree_stock_movement
+    [
+      :quantity
+    ]
+  end
+
   def availability_template
     [
       :transactable_type,
@@ -313,6 +422,36 @@ class SecuredParams
       :search_scope_option,
       :domain_attributes => nested(self.domain),
       :theme_attributes => self.theme
+    ]
+  end
+
+  def spree_product
+    [
+      :name,
+      :sku,
+      :slug,
+      :description,
+      :price,
+      :cost_price,
+      :cost_currency,
+      :available_on,
+      :weight,
+      :height,
+      :width,
+      :depth,
+      :shipping_category_id,
+      :tax_category_id,
+      :meta_keywords,
+      :meta_description,
+      :shipping_category_attributes => nested(self.spree_shipping_category),
+      option_type_ids: [],
+      taxon_ids: []
+    ]
+  end
+
+  def spree_shipping_category
+    [
+      :name
     ]
   end
 
@@ -430,7 +569,8 @@ class SecuredParams
       domain_attributes: nested(self.domain),
       approval_requests_attributes: nested(self.approval_request),
       theme_attributes: self.theme,
-      industry_ids: []
+      industry_ids: [],
+      products_attributes: nested(self.spree_product)
     ]
   end
 

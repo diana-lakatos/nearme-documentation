@@ -5,7 +5,7 @@ class Spree::ProductDecorator < Draper::Decorator
   delegate_all
 
   def humanized_price
-    humanized_money_with_symbol(object.price.to_money(Spree::Config.currency))    
+    humanized_money_with_symbol(object.price.to_money(Spree::Config.currency))
   end
 
   def grouped_taxons

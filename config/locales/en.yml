@@ -31,6 +31,28 @@ en:
     listings:
       photos:
         waiting_for_photo_processing: "Waiting for photo processing to finish"
+    buy_sell:
+      option_types:
+        new_title: "New Option Type"
+        edit_header: "Edit Option Type"
+        new_header: "New Option Type"
+      products:
+        new_title: "New Product"
+        edit_header: "Edit Product"
+        new_header: "New Product"
+        product_properties:
+          new_title: "New Product Property"
+          edit_header: "Edit Product Property"
+          new_header: "New Product Property"
+        images:
+          new_header: "New Product Image"
+          no_entries: "No images found"
+          manage: "Manage Product: Images"
+          title: "Product Images"
+          new_title: "New Product Image"
+
+  orders:
+      no_orders_html: "You don't have any %{type} orders. <a href='/search'>Find a %{bookable_noun} near you!</a>"
   registrations:
     tell_us: 'Tell us a little about yourself'
     custom_attributes: 'Custom Attributes'

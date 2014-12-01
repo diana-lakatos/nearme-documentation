@@ -1,0 +1,19 @@
+- title t("manage.buy_sell.products.images.new_title")
+
+= show_manage_navigation(:products)
+
+.row-fluid
+  .span8.offset2
+    .box
+      %ul.location-and-listings
+        %li.location
+          .name.left
+            =t("manage.buy_sell.products.images.new_header")
+
+      = render 'manage/buy_sell/products/menu'
+
+      = simple_form_for [:manage, :buy_sell, @product, @image], :html => {multipart: true, class: "form-horizontal form-expandable" } do |f|
+        = render 'form', f: f
+
+        .actions
+          = f.submit "Save"
