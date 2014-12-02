@@ -6,6 +6,10 @@
   width: initial !important;
 }
 
+.box-company {
+  background-color: #d2d2d2;
+}
+
 .cart-table {
   table-layout: fixed;
 
@@ -16,4 +20,8 @@
   .btn-qty-update {
     width: inherit;
   }
+}
+
+.centered {
+  text-align: center;
 }

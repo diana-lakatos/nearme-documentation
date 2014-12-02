@@ -1,42 +1,41 @@
-.box
-  = simple_form_for @order, url: wizard_path do |f|
-    .row-fluid
-      .span4
-        %h1 Billing Address
+= simple_form_for @order, url: wizard_path do |f|
+  .row-fluid
+    .span4.box
+      %h1= t('buy_sell_market.checkout.labels.billing_address')
 
-        = f.input :save_billing_address, as: :boolean, inline_label: 'Save billing address to user profile', label: false # TODO
+      = f.input :save_billing_address, as: :boolean, inline_label: 'Save billing address to user profile', label: false # TODO
 
-        = f.simple_fields_for :bill_address do |b|
-          = b.input :firstname
-          = b.input :lastname
-          = b.input :address1
-          = b.input :address2
-          = b.input :city
-          = b.input :zipcode, required: true
-          = b.association :country, collection: Spree::Country.all
-          = b.association :state, collection: Spree::State.all
-          = b.input :phone, required: true
+      = f.simple_fields_for :bill_address do |b|
+        = b.input :firstname
+        = b.input :lastname
+        = b.input :address1
+        = b.input :address2
+        = b.input :city
+        = b.input :zipcode, required: true
+        = b.association :country, collection: Spree::Country.all
+        = b.association :state, collection: Spree::State.all
+        = b.input :phone, required: true
 
-      .span4
-        %h1 Shipping address
-        = f.input :use_billing, as: :boolean, inline_label: 'Use billing address for shipping', label: false
+    .span4.box
+      %h1= t('buy_sell_market.checkout.labels.shipping_address')
+      = f.input :use_billing, as: :boolean, inline_label: 'Use billing address for shipping', label: false
 
-        #shipping-address{style: @order.use_billing.to_i == 1 ? 'display: none': ''}
-          = f.simple_fields_for :ship_address do |s|
-            = s.input :firstname
-            = s.input :lastname
-            = s.input :address1
-            = s.input :address2
-            = s.input :city
-            = s.input :zipcode, required: true
-            = s.association :country, collection: Spree::Country.all
-            = s.association :state, collection: Spree::State.all # TODO: Dynamic
-            = s.input :phone, required: true
+      #shipping-address{style: @order.use_billing.to_i == 1 ? 'display: none': ''}
+        = f.simple_fields_for :ship_address do |s|
+          = s.input :firstname
+          = s.input :lastname
+          = s.input :address1
+          = s.input :address2
+          = s.input :city
+          = s.input :zipcode, required: true
+          = s.association :country, collection: Spree::Country.all
+          = s.association :state, collection: Spree::State.all # TODO: Dynamic
+          = s.input :phone, required: true
 
-      .span4
-        = render partial: 'checkout_order_summary', locals: { order: @order }
+    .span4.box
+      = render partial: 'checkout_order_summary', locals: { order: @order }
 
-    = render partial: 'checkout_buttons', locals: { form: f }
+  = render partial: 'checkout_buttons', locals: { form: f }
 
 
 -# TODO Refactor to asset pipeline

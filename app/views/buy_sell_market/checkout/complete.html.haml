@@ -1,7 +1,9 @@
-.box
-  .row-fluid
-    .span12
-      %h1 The order #{@order.number} has been placed
+.row-fluid
+  .span12.box
+    %h1 The order #{@order.number} has been placed
 
-      = link_to 'List of my orders', orders_path, class: 'btn btn-blue btn-large'
-      = link_to 'Browse products', root_path(anchor: 'products'), class: 'btn btn-blue btn-large'
+.row-fluid
+  .span12.box.centered
+    = link_to t('buy_sell_market.cart.buttons.orders'), orders_path, class: 'btn btn-blue btn-large'
+    = link_to t('buy_sell_market.cart.buttons.browse_products'), root_path(anchor: 'products'),
+                class: 'btn btn-blue btn-large'

@@ -1,32 +1,29 @@
-.box
-  %h1
-    Shopping cart
-    - unless @cart.empty?
-      .pull-right
-        = link_to 'Empty cart', cart_empty_path, method: :delete, class: 'btn btn-red btn-empty btn-medium'
+.row-fluid
+  .span12.box
+    %h1
+      = t('buy_sell_market.cart.labels.index')
+      - unless @cart.empty?
+        .pull-right
+          = link_to t('buy_sell_market.cart.buttons.empty_cart'), cart_empty_path, method: :delete,
+                      class: 'btn btn-red btn-empty btn-medium'
 
-  - if @cart.empty?
+    - if @cart.empty?
+      = render partial: 'empty'
+    - else
+      - if @cart.different_companies?
+        %h3= t('buy_sell_market.cart.labels.multiple_orders')
+
+
+- unless @cart.empty?
+  = form_tag cart_update_path, method: :patch do
     .row-fluid
-      .span3.offset5
-        %h1 I am so empty :(
-
-    .row-fluid
-      .span3.offset5
-        = link_to 'Browse products', root_path(anchor: 'products'), class: 'btn btn-blue btn-large'
-
-  - else
-    - if @cart.different_companies?
-      %h3 Maybe some text explaining why we have to checkout multiple times (for every company separately)
-
-    = form_tag cart_update_path, method: :patch do
-      .row-fluid
-        .span12
-          - @cart.orders.each do |order|
+      .span12
+        - @cart.orders.each do |order|
+          .box
             = render partial: 'company_order', locals: { order: order }
-            %br
 
-      .row
-        .span2.offset8
-
-      %hr
-      = render partial: 'cart_actions'
+  .box
+    .row-fluid
+      .span12.centered
+        = link_to t('buy_sell_market.cart.buttons.continue'), root_path(anchor: 'products'),
+                    class: 'btn btn-blue btn-large'

@@ -1,12 +1,13 @@
-%br
+.box
+  .row-fluid
+    .span12
+      - if step == :address
+        = link_to t('buy_sell_market.checkout.buttons.back_to_cart'), cart_index_path,
+                    class: 'btn btn-blue btn-large'
+      - else
+        = link_to t('buy_sell_market.checkout.buttons.previous_step'), previous_wizard_path,
+                    class: 'btn btn-blue btn-large'
 
-.row-fluid
-  .span12
-    - if step == :address
-      = link_to 'Back to cart', cart_index_path, class: 'btn btn-blue btn-large'
-    - else
-      = link_to 'Back', previous_wizard_path, class: 'btn btn-blue btn-large'
 
-
-    - if defined? form
-      = form.submit 'Next step', class: 'btn-submit' # TODO Styling
+      - if defined? form
+        = form.submit t('buy_sell_market.checkout.buttons.next_step'), class: 'btn-submit'

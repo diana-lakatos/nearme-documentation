@@ -7,7 +7,8 @@
   %td= item.single_money
   %td
     = item.quantity
-    = submit_tag 'Update', class: 'btn btn-blue btn-qty-update btn-medium'
+    = submit_tag t('buy_sell_market.cart.buttons.update_qty'), class: 'btn btn-blue btn-qty-update btn-medium'
 
   %td= item.display_total
-  %td= link_to 'Remove', cart_remove_product_path(item.id), method: :delete, class: 'btn btn-red btn-medium'
+  %td= link_to t('buy_sell_market.cart.buttons.remove_item'), cart_remove_product_path(item.id), method: :delete,
+                class: 'btn btn-red btn-medium'

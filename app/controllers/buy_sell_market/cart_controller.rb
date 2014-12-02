@@ -10,22 +10,22 @@ class BuySellMarket::CartController < ApplicationController
 
   def add
     @cart_service.add_product(@product)
-    redirect_to cart_index_path, notice: 'Product added successfully' # TODO I18n
+    redirect_to cart_index_path, notice: t('buy_sell_market.cart.notices.add')
   end
 
   def remove
     @cart_service.remove_item(params[:item_id])
-    redirect_to cart_index_path
+    redirect_to cart_index_path, notice: t('buy_sell_market.cart.notices.remove')
   end
 
   def empty
     @cart_service.empty!
-    redirect_to cart_index_path
+    redirect_to cart_index_path, notice: t('buy_sell_market.cart.notices.empty')
   end
 
   def update
     @cart_service.update_qty_on_items(params[:quantity])
-    redirect_to cart_index_path, notice: 'Cart successfully updated' # TODO I18n
+    redirect_to cart_index_path, notice: t('buy_sell_market.cart.notices.add')
   end
 
   private

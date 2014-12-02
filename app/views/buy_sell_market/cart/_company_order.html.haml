@@ -15,4 +15,4 @@
       %td{colspan: 2} Total for order
       %td
       %td= order.display_total
-      %td= link_to 'Checkout', order_checkout_path(order, 'address'), class: 'btn btn-green btn-large'
+      %td= link_to t('buy_sell_market.cart.buttons.checkout'), order_checkout_path(order, 'address'), class: 'btn btn-green btn-large'

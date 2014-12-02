@@ -51,6 +51,44 @@ en:
           title: "Product Images"
           new_title: "New Product Image"
 
+  buy_sell_market:
+    checkout:
+      labels:
+        billing_address: 'Billing address'
+        shipping_address: 'Shipping address'
+        order_summary: 'Order summary'
+        payment: 'Payment'
+        delivery: 'Shipping'
+
+      buttons:
+        next_step: 'Next step'
+        previous_step: 'Previous step'
+        back_to_cart: 'Back to cart'
+
+      errors:
+        skip: 'You cannot skip checkout steps'
+
+    cart:
+      labels:
+        index: 'Shopping cart'
+        empty_cart: 'I am so empty :('
+        multiple_orders: 'Maybe some text explaining why we have to checkout multiple times (for every company separately)'
+
+      buttons:
+        browse_products: 'Browse products'
+        update_qty: 'Update'
+        remove_item: 'Remove'
+        empty_cart: 'Empty cart'
+        checkout: 'Checkout'
+        continue: 'Continue shopping'
+        orders: 'My orders'
+
+      notices:
+        add: 'buy_sell_market.cart.notices.add'
+        update: 'buy_sell_market.cart.notices.update'
+        empty: 'buy_sell_market.cart.notices.empty'
+        remove: 'buy_sell_market.cart.notices.remove'
+
   orders:
       no_orders_html: "You don't have any %{type} orders. <a href='/search'>Find a %{bookable_noun} near you!</a>"
   registrations:

@@ -1,11 +1,10 @@
-.box
-  = simple_form_for @order, url: wizard_path do |f|
-    .row-fluid
-      .span8
-        %h1 TODO Delivery
+= simple_form_for @order, url: wizard_path do |f|
+  .row-fluid
+    .span8.box
+      %h1= t('buy_sell_market.checkout.labels.delivery')
 
 
-      .span4
-        = render partial: 'checkout_order_summary', locals: { order: @order }
+    .span4.box
+      = render partial: 'checkout_order_summary', locals: { order: @order }
 
-    = render partial: 'checkout_buttons', locals: { form: f }
+  = render partial: 'checkout_buttons', locals: { form: f }
