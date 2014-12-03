@@ -8,6 +8,9 @@
               = link_to manage_buy_sell_products_path, :class => (active_tab == :products) ? 'active' : '' do
                 %span Products
             %li
+              = link_to manage_buy_sell_orders_path, :class => (active_tab == :orders) ? 'active' : '' do
+                %span Orders
+            %li
               = link_to manage_buy_sell_shipping_methods_path, :class => (active_tab == :configuration) ? 'active' : '' do
                 %span Configuration
           - else

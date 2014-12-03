@@ -1,0 +1,27 @@
+- title "Orders"
+
+= show_manage_navigation(:orders)
+
+.row-fluid
+  .span10.offset1
+    .box
+      %header
+        %ul.location-and-listings
+          %li.location
+            .name.left
+              Manage Orders
+      %ul.location-and-listings
+        %li.listing.action-buttons
+          .span2= t('order.complated_at')
+          .span2= t('order.number')
+          .span1= t('order.payment_state')
+          .span1= t('order.shippment_state')
+          .span2= t('order.email')
+          .span1= t('order.total')
+          .span1= t('order.state')
+          .span2.state.text-right
+
+          .clearfix
+        = render partial: 'order', collection: @orders
+      = will_paginate @orders
+

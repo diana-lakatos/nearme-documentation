@@ -100,6 +100,25 @@ en:
       no_listings: "There aren't any listings at that location. Check out some other %{bookable_noun_plural}!"
       browsing_no_listings: "There aren't any active listings at that location. Other users will be redirected to search page."
     manage:
+      order:
+        deleted: 'Order has been deleted.'
+        updated: 'Order has been updated.'
+        canceled: 'Order has been canceled.'
+        resumed: 'Order has been resumed.'
+        approved: 'Order has been approved.'
+        error_update: 'Order image has not been updated.'
+      shipping_category:
+        created: 'Shipping category has been created.'
+        deleted: 'Shipping category has been deleted.'
+        updated: 'Shipping category has been updated.'
+        error_create: 'Shipping category has not been created.'
+        error_update: 'Shipping category image has not been updated.'
+      shipping_method:
+        created: 'Shipping method has been created.'
+        deleted: 'Shipping method has been deleted.'
+        updated: 'Shipping method has been updated.'
+        error_create: 'Shipping method has not been created.'
+        error_update: 'Shipping method image has not been updated.'
       variant:
         created: 'Product variant has been created.'
         deleted: 'Product variant has been deleted.'
@@ -148,6 +167,10 @@ en:
         updated: 'Stock location has been updated.'
         error_create: 'Stock location has not been created.'
         error_update: 'Stock location has not been updated.'
+      stock_movement:
+        created: 'Stock movement has been created.'
+        deleted: 'Stock movement has been deleted.'
+        error_create: 'Stock movement has not been created.'
       companies:
         company_updated: "Great, your company's details have been updated."
         white_label_updated: "Great, white-label details have been updated."
@@ -213,6 +236,8 @@ en:
     search_notifications:
       you_will_be_notified: "You will be notified when a %{bookable_noun} is added at this location."
       you_will_not_be_notified: "We could not add you to the notifcation list because your email \"%{email}\" %{errors}"
+    product:
+      complete_fields: "Please complete all fields!"
     space_wizard:
       complete_fields: "Please complete all fields! Alternatively, you can Save a Draft for later."
       draft_saved: "Your draft has been saved!"

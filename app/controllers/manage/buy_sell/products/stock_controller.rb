@@ -2,8 +2,7 @@ class Manage::BuySell::Products::StockController < Manage::BuySell::BaseControll
   before_filter :find_product
 
   def show
-    @variants = @product.variants
-    @variants = [@product.master] if @variants.empty?
+    @variants = @product.variants_including_master
     @stock_locations = @company.stock_locations
   end
 

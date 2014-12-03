@@ -35,13 +35,22 @@
 
         -if buyable?
           %h2
-            Please tell us about the
-            #{platform_context.bookable_noun}
-            you're listing
+            Please add shipping details first
           %br
           .box
-            = companies_form.simple_fields_for :products, @user.companies.first.products.first do |product_form|
-              = render 'buy_sell/products/form', :f => product_form
+            = companies_form.simple_fields_for :shipping_categories, companies_form.object.shipping_categories.first do |shipping_category|
+              = render 'manage/buy_sell/shipping_categories/form', :f => shipping_category
+          .box
+            = companies_form.simple_fields_for :shipping_methods, companies_form.object.shipping_methods.first do |shipping_method|
+              = render 'manage/buy_sell/shipping_methods/form', :f => shipping_method, :first_method => true
+          %h2
+            Please tell us about the
+            #{platform_context.bookable_noun}
+            you're adding
+          %br
+          .box
+            = companies_form.simple_fields_for :products, companies_form.object.products.first do |product_form|
+              = render 'manage/buy_sell/products/new_form', :f => product_form, :first_product => true
         - else
           = companies_form.simple_fields_for :locations, @user.companies.first.locations.first do |locations_form|
             %h2

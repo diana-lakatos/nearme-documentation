@@ -25,6 +25,26 @@
     }
   }
 
+  table.summary {
+    tbody tr td, tfoot tr td {
+      vertical-align: middle;
+      padding: 5px 10px;
+    }
+
+    tfoot td, tbody td.total, thead th.total {
+      text-align: right;
+    }
+    tfoot tr, tbody tr {
+      border-bottom: 1px solid $line-gray;
+    }
+  }
+
+  .text-label {
+    font-weight: bolder;
+    width: 200px;
+    display: inline-block;
+    float: left;
+  }
 
   .summary-line {
     padding: $padding-default 0;

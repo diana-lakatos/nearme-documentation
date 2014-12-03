@@ -428,6 +428,13 @@ DesksnearMe::Application.routes.draw do
       end
 
       resources :option_types
+      resources :orders do
+        member do
+          get :approve
+          get :cancel
+          get :resume
+        end
+      end
       resources :properties
       resources :prototypes
       resources :shipping_categories

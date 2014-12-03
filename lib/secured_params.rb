@@ -435,6 +435,7 @@ class SecuredParams
       :cost_price,
       :cost_currency,
       :available_on,
+      :user_id,
       :weight,
       :height,
       :width,
@@ -570,7 +571,9 @@ class SecuredParams
       approval_requests_attributes: nested(self.approval_request),
       theme_attributes: self.theme,
       industry_ids: [],
-      products_attributes: nested(self.spree_product)
+      products_attributes: nested(self.spree_product),
+      shipping_categories_attributes: nested(self.spree_shipping_category),
+      shipping_methods_attributes: nested(self.spree_shipping_method)
     ]
   end
 

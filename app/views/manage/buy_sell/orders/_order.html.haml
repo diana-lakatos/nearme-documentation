@@ -1,0 +1,25 @@
+%li.listing.action-buttons
+  .span2
+    = order.completed_at.to_date
+  .span2
+    = order.number
+  .span1
+    = order.payment_state
+  .span1
+    = order.shipment_state
+  .span2
+    = mail_to order.email
+  .span1
+    = order.display_total.to_html
+  .span1
+    = order.state
+  .span2
+    .links.right
+      = link_to manage_buy_sell_order_path(order), :method => :delete, :confirm => 'Are you sure?', :class => "delete", style: 'padding-top: 0px;' do
+        %span.ico-trash
+        %span.text Delete
+
+      = link_to edit_manage_buy_sell_order_path(order), :class => "delete", style: 'padding: 0 0 0 10px;' do
+        %span.icon.ico-edit
+        %span.text Edit
+  .clearfix
