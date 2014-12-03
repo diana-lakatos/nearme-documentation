@@ -9,13 +9,33 @@ class BuySellMarket::CartController < ApplicationController
   end
 
   def add
-    @cart_service.add_product(@product)
-    redirect_to cart_index_path, notice: t('buy_sell_market.cart.notices.add')
+    if @cart_service.add_product(@product)
+      flash[:notice] = t('buy_sell_market.cart.notices.add')
+    else
+      flash[:error] = cart_errors
+    end
+
+    redirect_to cart_index_path
+  end
+
+  def update
+    if @cart_service.update_qty_on_items(params[:quantity])
+      flash[:notice] = t('buy_sell_market.cart.notices.update')
+    else
+      flash[:error] = cart_errors
+    end
+
+    redirect_to cart_index_path
   end
 
   def remove
-    @cart_service.remove_item(params[:item_id])
-    redirect_to cart_index_path, notice: t('buy_sell_market.cart.notices.remove')
+    if @cart_service.remove_item(params[:item_id])
+      flash[:notice] = t('buy_sell_market.cart.notices.remove')
+    else
+      flash[:error] = cart_errors
+    end
+
+    redirect_to cart_index_path
   end
 
   def empty
@@ -23,12 +43,11 @@ class BuySellMarket::CartController < ApplicationController
     redirect_to cart_index_path, notice: t('buy_sell_market.cart.notices.empty')
   end
 
-  def update
-    @cart_service.update_qty_on_items(params[:quantity])
-    redirect_to cart_index_path, notice: t('buy_sell_market.cart.notices.add')
-  end
-
   private
+
+  def cart_errors
+    @cart_service.errors.join('\n')
+  end
 
   def set_service
     @cart_service = current_user.cart

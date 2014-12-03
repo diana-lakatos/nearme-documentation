@@ -89,6 +89,9 @@ en:
         empty: 'buy_sell_market.cart.notices.empty'
         remove: 'buy_sell_market.cart.notices.remove'
 
+      errors:
+        qty: 'buy_sell_market.cart.errors.qty'
+
   orders:
       no_orders_html: "You don't have any %{type} orders. <a href='/search'>Find a %{bookable_noun} near you!</a>"
   registrations:
