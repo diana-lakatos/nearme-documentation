@@ -28,8 +28,8 @@
         = link_to t('buy_sell_market.cart.buttons.continue'), root_path(anchor: 'products'),
                     class: 'btn btn-blue btn-large'
 
+-# TODO Refactor to asset pipeline
 = javascript_include_tag 'jquery'
-
 :javascript
   $('select[name^=quantity]').on('change', function() {
     $('#cart').submit();

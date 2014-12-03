@@ -192,3 +192,4 @@ gem 'custom_attributes', path: 'vendor/gems/custom_attributes'
 
 gem 'figaro'
 gem 'wicked' # For easy multi-steps wizards. # TODO Remove after approval of other developers
+gem 'carmen'

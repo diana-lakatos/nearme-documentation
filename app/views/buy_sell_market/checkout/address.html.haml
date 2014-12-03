@@ -3,7 +3,7 @@
     .span4.box
       %h1= t('buy_sell_market.checkout.labels.billing_address')
 
-      = f.input :save_billing_address, as: :boolean, inline_label: 'Save billing address to user profile', label: false # TODO
+      = f.input :save_billing_address, as: :boolean, inline_label: t('buy_sell_market.checkout.labels.save_billing_address'), label: false
 
       = f.simple_fields_for :bill_address do |b|
         = b.input :firstname
@@ -11,14 +11,14 @@
         = b.input :address1
         = b.input :address2
         = b.input :city
-        = b.input :zipcode, required: true
-        = b.association :country, collection: Spree::Country.all
-        = b.association :state, collection: Spree::State.all
-        = b.input :phone, required: true
+        = b.input :zipcode
+        = b.association :country, collection: @countries
+        = b.association :state, collection: @billing_states
+        = b.input :phone
 
     .span4.box
       %h1= t('buy_sell_market.checkout.labels.shipping_address')
-      = f.input :use_billing, as: :boolean, inline_label: 'Use billing address for shipping', label: false
+      = f.input :use_billing, as: :boolean, inline_label: t('buy_sell_market.checkout.labels.billing_address_shipping'), label: false
 
       #shipping-address{style: @order.use_billing.to_i == 1 ? 'display: none': ''}
         = f.simple_fields_for :ship_address do |s|
@@ -27,16 +27,15 @@
           = s.input :address1
           = s.input :address2
           = s.input :city
-          = s.input :zipcode, required: true
-          = s.association :country, collection: Spree::Country.all
-          = s.association :state, collection: Spree::State.all # TODO: Dynamic
-          = s.input :phone, required: true
+          = s.input :zipcode
+          = s.association :country, collection: @countries
+          = s.association :state, collection: @shipping_states
+          = s.input :phone
 
     .span4.box
       = render partial: 'checkout_order_summary', locals: { order: @order }
 
   = render partial: 'checkout_buttons', locals: { form: f }
-
 
 -# TODO Refactor to asset pipeline
 = javascript_include_tag 'jquery'
@@ -48,5 +47,20 @@
       $('#shipping-address').hide();
     } else {
       $('#shipping-address').show();
+      $('#order_ship_address_attributes_country_id').trigger('render');
     }
+  });
+
+  function load_states_for_country(country_id, bill_address) {
+    $.get('get_states.js', { country_id: country_id, bill_address: bill_address });
+  }
+
+  $('#order_bill_address_attributes_country_id').on('change', function() {
+    var country_id = $('#order_bill_address_attributes_country_id').val();
+    load_states_for_country(country_id, 1);
+  });
+
+  $('#order_ship_address_attributes_country_id').on('change', function() {
+    var country_id = $('#order_ship_address_attributes_country_id').val();
+    load_states_for_country(country_id, 0);
   });

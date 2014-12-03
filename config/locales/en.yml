@@ -59,6 +59,8 @@ en:
         order_summary: 'Order summary'
         payment: 'Payment'
         delivery: 'Shipping'
+        billing_address_shipping: 'Use billing address for shipping'
+        save_billing_address: 'Save billing address to user profile'
 
       buttons:
         next_step: 'Next step'

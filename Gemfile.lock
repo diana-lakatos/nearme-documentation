@@ -194,6 +194,8 @@ GEM
     capybara-webkit (1.0.0)
       capybara (~> 2.0, >= 2.0.2)
       json
+    carmen (1.0.1)
+      unicode_utils (~> 1.4.0)
     carrierwave (0.10.0)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
@@ -695,6 +697,7 @@ GEM
     uglifier (2.1.2)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
+    unicode_utils (1.4.0)
     unicorn (4.8.3)
       kgio (~> 2.6)
       rack
@@ -746,6 +749,7 @@ DEPENDENCIES
   capybara (= 2.2.1)
   capybara-screenshot
   capybara-webkit (= 1.0.0)
+  carmen
   carrierwave
   chosen-rails
   chronic (~> 0.9.1)
