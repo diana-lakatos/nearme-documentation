@@ -6,7 +6,7 @@ class Company < ActiveRecord::Base
   URL_REGEXP = URI::regexp(%w(http https))
   has_metadata :accessors => [:industries_metadata]
 
-  notify_associations_about_column_update([:payment_transfers, :reservation_charges, :reservations, :listings, :locations], [:instance_id, :partner_id])
+  notify_associations_about_column_update([:payment_transfers, :payments, :reservations, :listings, :locations], [:instance_id, :partner_id])
   notify_associations_about_column_update([:reservations, :listings, :locations], [:creator_id, :listings_public])
 
   # attr_accessible :description, :url, :email, :name,
@@ -38,7 +38,9 @@ class Company < ActiveRecord::Base
   has_many :stock_locations, class_name: 'Spree::StockLocation', dependent: :destroy
 
   has_many :reservations
-  has_many :reservation_charges
+  has_many :reservation_charges, through: :reservations
+  has_many :orders
+  has_many :payments
   has_many :payment_transfers, :dependent => :destroy
   has_many :company_industries, :dependent => :destroy
   has_many :industries, :through => :company_industries
@@ -70,9 +72,7 @@ class Company < ActiveRecord::Base
   #
   # NB: Will probably need to optimize this at some point
   scope :needs_payment_transfer, -> {
-    for_reservations = joins(:reservation_charges).merge(ReservationCharge.needs_payment_transfer).uniq
-    for_orders = joins(:order_line_items).merge(Spree::LineItem.needs_payment_transfer).uniq
-    from("(#{for_reservations.to_sql} UNION #{for_orders.to_sql}) AS companies")
+    joins(:payments).merge(Payment.needs_payment_transfer)
   }
 
   accepts_nested_attributes_for :domain, :reject_if => proc { |params| params.delete(:white_label_enabled).to_f.zero? }
@@ -100,19 +100,10 @@ class Company < ActiveRecord::Base
   def schedule_payment_transfer
     self.created_payment_transfers = []
     transaction do
-      charges_without_payment_transfer = reservation_charges.needs_payment_transfer
-      if charges_without_payment_transfer.any?
-        charges_without_payment_transfer.group_by(&:currency).each do |currency, charges|
-          payment_transfer = payment_transfers.create!(
-            reservation_charges: charges
-          )
-          self.created_payment_transfers << payment_transfer if payment_transfer.possible_automated_payout_not_supported?
-        end
-      end
-
-      if order_line_items.needs_payment_transfer.any?
+      charges_without_payment_transfer = payments.needs_payment_transfer
+      charges_without_payment_transfer.group_by(&:currency).each do |currency, charges|
         payment_transfer = payment_transfers.create!(
-          order_line_items: order_line_items.needs_payment_transfer
+          payments: charges
         )
         self.created_payment_transfers << payment_transfer if payment_transfer.possible_automated_payout_not_supported?
       end

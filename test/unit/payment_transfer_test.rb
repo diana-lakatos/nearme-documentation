@@ -24,8 +24,8 @@ class PaymentTransferTest < ActiveSupport::TestCase
     end
 
     should "only allow charges of the same currency" do
-      rc = ReservationCharge.create!(
-        :reservation => @reservation_1,
+      rc = Payment.create!(
+        :reference => @reservation_1,
         :subtotal_amount => 10,
         :service_fee_amount_guest => 1,
         :service_fee_amount_host => 2,

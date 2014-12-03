@@ -1,14 +1,50 @@
-= simple_form_for @order, url: wizard_path do |f|
-  .row-fluid
-    .span8.box
-      %h1= t('buy_sell_market.checkout.labels.payment')
+.box
+  = simple_form_for @order, url: wizard_path do |f|
+    .row-fluid
+      .span8
 
-      %h4 TODO: Waiting for Maciek to integrate for Spree::PaymentMethod
+        %h2 Order Summary
 
-      - # Just test
-      = f.input :total, readonly: true
-      = f.input :shipment_total, readonly: true
-      = f.input :additional_tax_total, readonly: true
+        .order-summary
+          .summary-line
+            .summary-line-label Products total
+            .summary-line-value.subtotal-amount=humanized_money_with_cents_and_symbol @order.monetize(@order.item_total)
+            .clearfix
+
+          - if @order.service_fee_buyer_percent > 0
+            .summary-line
+              .summary-line-label Service fee
+              .summary-line-value.service-fee-amount=humanized_money_with_cents_and_symbol @order.service_fee_amount_guest
+              .clearfix
+
+          .summary-line
+            .summary-line-label Shipment total
+            .summary-line-value.total-amount=humanized_money_with_cents_and_symbol @order.monetize(@order.shipment_total)
+            .clearfix
+
+          - if @order.additional_tax_total > 0
+            .summary-line
+              .summary-line-label Additional Tax Total
+              .summary-line-value.total-amount=humanized_money_with_cents_and_symbol @order.monetize(@order.additional_tax_total)
+              .clearfix
+
+          - if @order.adjustment_total > 0
+            .summary-line
+              .summary-line-label Adjustment
+              .summary-line-value.total-amount=humanized_money_with_cents_and_symbol @order.monetize(@order.adjustment_total)
+              .clearfix
+
+          .summary-line
+            .summary-line-label Total
+            .summary-line-value.total-amount
+              %em
+                =humanized_money_with_cents_and_symbol @order.total_amount_to_charge
+            .clearfix
+
+        - if @order.billing_authorization.nil?
+          = render 'payments/credit_card_fields', :f => f
+        - else
+          Credit Card has been already authorized. Please proceed.
 
     .span4.box
       = render partial: 'checkout_order_summary', locals: { order: @order }

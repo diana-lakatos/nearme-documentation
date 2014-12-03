@@ -68,7 +68,7 @@
 
           %h2 Payment
 
-          = render 'credit_card_fields', :f => f
+          = render 'payments/credit_card_fields', :f => f
 
           - if @recurring_booking_request.confirm_reservations?
             %p.confirm-reservations= "This #{platform_context.lessor} manually confirms all bookings. Your card will not be charged until the booking is confirmed."

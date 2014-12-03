@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ReservationChargeTest < ActiveSupport::TestCase
+class PaymentTest < ActiveSupport::TestCase
 
   context 'capture' do
     setup do
