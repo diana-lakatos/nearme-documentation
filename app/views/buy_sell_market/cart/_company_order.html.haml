@@ -1,18 +1,21 @@
-%table.table-simple.cart-table
-  %thead
-    %tr
-      %th Order from #{order.company_name}
-      %th Price
-      %th Quantity
-      %th Total
-      %th Actions
+.row-fluid.header-row
+  .span4
+    Order from #{order.company_name}
+  .span2
+    Price
+  .span2
+    Quantity
+  .span2
+    Total
+  .span2
+    Actions
 
-  %tbody
-    - order.line_items.each do |item|
-      = render partial: 'cart_item', locals: {item: item}
+- order.line_items.each do |item|
+  = render partial: 'cart_item', locals: {item: item}
 
-    %tr
-      %td{colspan: 2} Total for order
-      %td
-      %td= order.display_total
-      %td= link_to 'Checkout', order_checkout_path(order, 'address'), class: 'btn btn-green btn-large'
+.row-fluid.cart-row.no-hover
+  .span7
+    Total for order
+    = order.display_total
+  .span2.offset3
+    = link_to t('buy_sell_market.cart.buttons.checkout'), order_checkout_path(order, 'address'), class: 'btn btn-green btn-large'

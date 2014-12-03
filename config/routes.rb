@@ -15,7 +15,11 @@ DesksnearMe::Application.routes.draw do
     resources :products, only: [:show]
 
     resources :orders, only: [:show, :index] do
-      resources :checkout
+      resources :checkout do
+        collection do
+          get 'get_states'
+        end
+      end
     end
 
     namespace :cart do

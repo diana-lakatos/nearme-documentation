@@ -1,13 +1,20 @@
 class BuySell::CartService
 
+  attr_reader :errors
+
   def initialize(user)
     @user = user
+    @errors = []
   end
 
-  # TODO: Check stock on QTY
   def add_product(product, quantity=1)
     setup_order(product)
-    Spree::OrderPopulator.new(@order, @order.currency).populate(product.master.id, quantity)
+    populator = Spree::OrderPopulator.new(@order, @order.currency)
+
+    unless populator.populate(product.master.id, quantity)
+      @errors << populator.errors.full_messages.join('\n')
+      return false
+    end
   end
 
   def remove_item(item_id)
@@ -29,10 +36,13 @@ class BuySell::CartService
         next
       end
 
-      # TODO: Check stock on QTY
-
-      line_item.update_attribute :quantity, item[1]
-      update_order(line_item.order)
+      if line_item.product.master.can_supply?(item[1])
+        line_item.update_attribute :quantity, item[1]
+        update_order(line_item.order)
+      else
+        @errors << I18n.t('buy_sell_market.cart.errors.qty')
+        return false
+      end
     end
   end
 

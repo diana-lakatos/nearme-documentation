@@ -627,7 +627,7 @@ class User < ActiveRecord::Base
   end
 
   def cart_orders
-    orders.where(state: ['cart', 'address', 'delivery', 'payment'])
+    orders.where(state: ['cart', 'address', 'delivery', 'payment']).order('created_at ASC')
   end
 
   def cart
