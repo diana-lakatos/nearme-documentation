@@ -41,9 +41,9 @@ DESC
       deploy = NearMe::Deploy.new(options)
       result = deploy.start!
       deployment_id = result.data[:deployment_id]
-      puts "Deployed started with ID: #{deployment_id}"
+      puts "Deploy started with ID: #{deployment_id}"
       if options[:watch]
-        puts "Waiting unless deploy is done."
+        puts "Waiting until deploy is done."
         deploy.watch!(deployment_id)
       end
     end
@@ -70,6 +70,48 @@ DESC
       puts "Assets sync..."
       result = NearMe::SyncAssets.new(options).start!
       puts "Assets sync done."
+    end
+
+    desc "capture", "capture db dump to S3"
+    long_desc <<DESC
+    dump stack database to S3
+    for example:
+
+    nearme capture -e nm-production
+
+    will dump the qa-1 stack db and store it in S3
+DESC
+    method_option "stack", required: true, type: :string,
+      aliases: :e, default: 'nm-production', desc: "AWS OpsWorks stack name"
+    method_option "host", required: false, type: :string,
+      aliases: :h, desc: "AWS OpsWorks host name"
+    method_option "environment", required: false, type: :string,
+      aliases: :env, desc: "Rails environtment"
+    def capture
+      puts "Capturing db to S3..."
+      result = NearMe::Backup.new(options).capture!
+      puts "Capture done."
+    end
+
+    desc "restore", "restore db from S3"
+    long_desc <<DESC
+    restore stack database from S3
+    for example:
+
+    nearme restore -e nm-qa-1
+
+    will restore the qa-1 stack db from the captured dump in S3
+DESC
+    method_option "stack", required: true, type: :string,
+      aliases: :e, desc: "AWS OpsWorks stack name"
+    method_option "host", required: false, type: :string,
+      aliases: :h, desc: "AWS OpsWorks host name"
+    method_option "environment", required: false, type: :string,
+      aliases: :env, desc: "Rails environtment"
+    def restore
+      puts "Restoring db from S3..."
+      result = NearMe::Backup.new(options).restore!
+      puts "Restore done."
     end
   end
 end
