@@ -2,23 +2,16 @@ class Manage::BuySell::Products::StockItemsController < Manage::BuySell::BaseCon
   before_filter :find_product
   before_filter :determine_backorderable, only: :update
 
-  def update
-    stock_item.save
-    respond_to do |format|
-      format.js { head :ok }
-    end
-  end
-
   def create
     variant = @product.variants_including_master.find(params[:variant_id])
-    stock_location = @company.stock_locations.find(params[:stock_location_id])
-    stock_movement = stock_location.stock_movements.build(stock_movement_params)
-    stock_movement.stock_item = stock_location.set_up_stock_item(variant)
+    stock_location = @company.stock_locations.find(params[:stock_location_id]) if params[:stock_location_id]
+    stock_movement = stock_location.stock_movements.build(stock_movement_params) if stock_location
+    stock_movement.stock_item = stock_location.set_up_stock_item(variant) if stock_movement
 
-    if stock_movement.save
+    if stock_movement && stock_movement.save
       flash[:success] = t('flash_messages.manage.stock_movement.created')
     else
-      flash[:error] = t('flash_messages.manage.stock_movement.create_error')
+      flash[:error] = t('flash_messages.manage.stock_movement.error_create')
     end
 
     redirect_to :back

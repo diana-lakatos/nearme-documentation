@@ -11,6 +11,6 @@
     .control-group
       = label_tag 'variant_id', nil, class: "control-label"
       .controls
-        = select_tag 'variant_id', options_from_collection_for_select(@variants, :id, :sku_and_options_text)
+        = select_tag 'variant_id', options_from_collection_for_select(@variants, :id, :name)
     .actions
       =f.submit "Add"

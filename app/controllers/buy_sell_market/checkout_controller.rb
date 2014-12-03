@@ -67,7 +67,7 @@ class BuySellMarket::CheckoutController < ApplicationController
   end
 
   def set_order
-    @order ||= current_user.cart_orders.find_by(number: params[:order_id]).decorate
+    @order ||= current_user.cart_orders.find_by(number: params[:order_id]).try(:decorate)
   end
 
   def spree_errors

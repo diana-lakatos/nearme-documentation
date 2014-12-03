@@ -4,7 +4,11 @@ class BuySell::OrdersController < ApplicationController
   before_filter :authenticate_user!
 
   def index
-    @orders = current_user.orders
-    @orders = params[:state] == 'complete' ? @orders.complete : @orders.incomplete
+    @orders = current_user.orders.complete
+    # @orders = params[:state] == 'complete' ? @orders.complete : @orders.incomplete
+  end
+
+  def show
+    @order = current_user.orders.find_by_number(params[:id])
   end
 end
