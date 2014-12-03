@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141201084126) do
+ActiveRecord::Schema.define(version: 20141203165548) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -204,7 +204,10 @@ ActiveRecord::Schema.define(version: 20141201084126) do
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
     t.string   "payment_gateway_mode"
+    t.string   "reference_type"
+    t.integer  "reference_id"
   end
+  add_index "billing_authorizations", ["reference_id", "reference_type"], name: "index_billing_authorizations_on_reference_id_and_reference_type", using: :btree
 
   create_table "blog_instances", force: true do |t|
     t.string   "name"
@@ -837,6 +840,36 @@ ActiveRecord::Schema.define(version: 20141201084126) do
   add_index "payment_transfers", ["instance_id"], name: "index_payment_transfers_on_instance_id", using: :btree
   add_index "payment_transfers", ["partner_id"], name: "index_payment_transfers_on_partner_id", using: :btree
 
+  create_table "payments", force: true do |t|
+    t.integer  "reservation_id"
+    t.integer  "subtotal_amount_cents"
+    t.integer  "service_fee_amount_guest_cents"
+    t.datetime "paid_at"
+    t.datetime "failed_at"
+    t.datetime "created_at",                                             null: false
+    t.datetime "updated_at",                                             null: false
+    t.string   "currency"
+    t.datetime "deleted_at"
+    t.integer  "payment_transfer_id"
+    t.integer  "service_fee_amount_host_cents",              default: 0, null: false
+    t.datetime "refunded_at"
+    t.integer  "instance_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.integer  "cancellation_policy_hours_for_cancellation", default: 0
+    t.integer  "cancellation_policy_penalty_percentage",     default: 0
+    t.text     "recurring_booking_error"
+    t.string   "reference_type"
+    t.integer  "reference_id"
+  end
+
+  add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree
+  add_index "payments", ["instance_id"], name: "index_payments_on_instance_id", using: :btree
+  add_index "payments", ["partner_id"], name: "index_payments_on_partner_id", using: :btree
+  add_index "payments", ["payment_transfer_id"], name: "index_payments_on_payment_transfer_id", using: :btree
+  add_index "payments", ["reference_id", "reference_type"], name: "index_payments_on_reference_id_and_reference_type", using: :btree
+  add_index "payments", ["reservation_id"], name: "index_payments_on_reservation_id", using: :btree
+
   create_table "payouts", force: true do |t|
     t.integer  "reference_id"
     t.string   "reference_type"
@@ -977,33 +1010,6 @@ ActiveRecord::Schema.define(version: 20141201084126) do
     t.datetime "updated_at",         null: false
     t.integer  "instance_id"
   end
-
-  create_table "reservation_charges", force: true do |t|
-    t.integer  "reservation_id"
-    t.integer  "subtotal_amount_cents"
-    t.integer  "service_fee_amount_guest_cents"
-    t.datetime "paid_at"
-    t.datetime "failed_at"
-    t.datetime "created_at",                                             null: false
-    t.datetime "updated_at",                                             null: false
-    t.string   "currency"
-    t.datetime "deleted_at"
-    t.integer  "payment_transfer_id"
-    t.integer  "service_fee_amount_host_cents",              default: 0, null: false
-    t.datetime "refunded_at"
-    t.integer  "instance_id"
-    t.integer  "company_id"
-    t.integer  "partner_id"
-    t.integer  "cancellation_policy_hours_for_cancellation", default: 0
-    t.integer  "cancellation_policy_penalty_percentage",     default: 0
-    t.text     "recurring_booking_error"
-  end
-
-  add_index "reservation_charges", ["company_id"], name: "index_reservation_charges_on_company_id", using: :btree
-  add_index "reservation_charges", ["instance_id"], name: "index_reservation_charges_on_instance_id", using: :btree
-  add_index "reservation_charges", ["partner_id"], name: "index_reservation_charges_on_partner_id", using: :btree
-  add_index "reservation_charges", ["payment_transfer_id"], name: "index_reservation_charges_on_payment_transfer_id", using: :btree
-  add_index "reservation_charges", ["reservation_id"], name: "index_reservation_charges_on_reservation_id", using: :btree
 
   create_table "reservation_periods", force: true do |t|
     t.integer  "reservation_id"
@@ -1385,6 +1391,8 @@ ActiveRecord::Schema.define(version: 20141201084126) do
     t.integer  "instance_id"
     t.integer  "company_id"
     t.integer  "partner_id"
+    t.integer  "service_fee_buyer_percent",                                      default: 0
+    t.integer  "service_fee_seller_percent",                                     default: 0
   end
 
   add_index "spree_orders", ["company_id"], name: "index_spree_orders_on_company_id", using: :btree

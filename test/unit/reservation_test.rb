@@ -152,13 +152,13 @@ class ReservationTest < ActiveSupport::TestCase
         cancellation_policy_enabled: Time.zone.now,
         cancellation_policy_hours_for_cancellation: 48,
         cancellation_policy_penalty_percentage: 50})
-      ReservationCharge.any_instance.expects(:capture).once
+      Payment.any_instance.expects(:capture).once
       Reservation.any_instance.stubs(:billing_authorization).returns(stub()).at_least(0)
     end
 
     should 'create reservation charge with cancellation policy if enabled ignoring updated values' do
       @reservation = FactoryGirl.create(:reservation_with_credit_card, :state => 'unconfirmed', cancellation_policy_hours_for_cancellation: 47, cancellation_policy_penalty_percentage: 60)
-      assert_difference 'ReservationCharge.count' do
+      assert_difference 'Payment.count' do
         @reservation.confirm!
       end
       @reservation_charge = @reservation.reservation_charges.last
@@ -169,7 +169,7 @@ class ReservationTest < ActiveSupport::TestCase
     should 'create reservation charge without cancellation policy if disabled, despite adding it later' do
       @reservation = FactoryGirl.create(:reservation_with_credit_card, :state => 'unconfirmed')
       TransactableType.update_all(cancellation_policy_enabled: nil)
-      assert_difference 'ReservationCharge.count' do
+      assert_difference 'Payment.count' do
         @reservation.confirm!
       end
       @reservation_charge = @reservation.reservation_charges.last
@@ -219,14 +219,14 @@ class ReservationTest < ActiveSupport::TestCase
 
     should 'change payment status to refunded if successfully refunded' do
       @reservation.update_column(:payment_method, 'credit_card')
-      ReservationCharge.any_instance.expects(:refund).returns(true)
+      Payment.any_instance.expects(:refund).returns(true)
       @reservation.send(:attempt_payment_refund)
       assert_equal Reservation::PAYMENT_STATUSES[:refunded], @reservation.reload.payment_status
     end
 
     should 'schedule next refund attempt on fail' do
       @reservation.update_column(:payment_method, 'credit_card')
-      ReservationCharge.any_instance.expects(:refund).returns(false)
+      Payment.any_instance.expects(:refund).returns(false)
       Timecop.freeze(Time.zone.now) do
         ReservationRefundJob.expects(:perform_later).with do |time, id, counter|
           time.to_i == (Time.zone.now + 12.hours).to_i && id == @reservation.id && counter == 2
@@ -238,7 +238,7 @@ class ReservationTest < ActiveSupport::TestCase
 
     should 'stop schedluing next refund attempt after 3 attempts' do
       @reservation.update_column(:payment_method, 'credit_card')
-      ReservationCharge.any_instance.expects(:refund).returns(false)
+      Payment.any_instance.expects(:refund).returns(false)
       ReservationRefundJob.expects(:perform_later).never
       BackgroundIssueLogger.expects(:log_issue)
       @reservation.send(:attempt_payment_refund, 2)
@@ -247,14 +247,14 @@ class ReservationTest < ActiveSupport::TestCase
 
     should 'abort attempt to refund if payment was manual' do
       @reservation.update_column(:payment_method, 'manual')
-      ReservationCharge.any_instance.expects(:refund).never
+      Payment.any_instance.expects(:refund).never
       @reservation.send(:attempt_payment_refund)
       assert_equal Reservation::PAYMENT_STATUSES[:paid], @reservation.reload.payment_status
     end
 
     should 'abort attempt to refund if payment was free' do
       @reservation.update_column(:payment_method, 'free')
-      ReservationCharge.any_instance.expects(:refund).never
+      Payment.any_instance.expects(:refund).never
       @reservation.host_cancel!
       assert_equal Reservation::PAYMENT_STATUSES[:paid], @reservation.reload.payment_status
     end
