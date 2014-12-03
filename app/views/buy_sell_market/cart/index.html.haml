@@ -15,7 +15,7 @@
 
 
 - unless @cart.empty?
-  = form_tag cart_update_path, method: :patch do
+  = form_tag cart_update_path, method: :patch, id: 'cart' do
     .row-fluid
       .span12
         - @cart.orders.each do |order|
@@ -27,3 +27,10 @@
       .span12.centered
         = link_to t('buy_sell_market.cart.buttons.continue'), root_path(anchor: 'products'),
                     class: 'btn btn-blue btn-large'
+
+= javascript_include_tag 'jquery'
+
+:javascript
+  $('select[name^=quantity]').on('change', function() {
+    $('#cart').submit();
+  });

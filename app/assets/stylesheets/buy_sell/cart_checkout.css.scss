@@ -10,15 +10,42 @@
   background-color: #d2d2d2;
 }
 
-.cart-table {
-  table-layout: fixed;
+.header-row {
+  font-weight: bold;
+}
+
+.cart-row {
+  border-top: 1px solid $gray220;
+
+  padding: $padding-small 0;
 
   .input-mini {
     width: 75px;
+    padding: inherit;
+  }
+
+  .quantity {
+    max-width: 80px
+  }
+
+  .custom-select-dropdown-icon {
+    top: inherit;
   }
 
   .btn-qty-update {
-    width: inherit;
+    width: initial;
+  }
+
+  &:hover {
+    background: $light-gray;
+  }
+
+  &.no-hover:hover {
+    background: inherit;
+  }
+
+  div[class^='span'] {
+    vertical-align: middle;
   }
 }
 
