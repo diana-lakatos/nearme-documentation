@@ -22,7 +22,7 @@
       %li.divider-vertical
       %li
         = link_to cart_index_path, class: 'nav-link' do
-          %span.text CART: #{BuySell::CartDecorator.new(current_user).navigation}
+          %span.text CART: #{CartDecorator.new(current_user).navigation}
           %span.icon.ico-cart
 
     %li.divider-vertical

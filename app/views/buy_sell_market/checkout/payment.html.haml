@@ -11,6 +11,18 @@
             .summary-line-value.subtotal-amount=humanized_money_with_cents_and_symbol @order.monetize(@order.item_total)
             .clearfix
 
+          - if @order.additional_tax_total > 0
+            .summary-line
+              .summary-line-label Additional Tax
+              .summary-line-value.total-amount=humanized_money_with_cents_and_symbol @order.monetize(@order.additional_tax_total)
+              .clearfix
+
+          - if (@order.adjustment_total - @order.additional_tax_total)> 0
+            .summary-line
+              .summary-line-label Adjustment
+              .summary-line-value.total-amount=humanized_money_with_cents_and_symbol @order.monetize((@order.adjustment_total - @order.additional_tax_total))
+              .clearfix
+
           - if @order.service_fee_buyer_percent > 0
             .summary-line
               .summary-line-label Service fee
@@ -21,18 +33,6 @@
             .summary-line-label Shipment total
             .summary-line-value.total-amount=humanized_money_with_cents_and_symbol @order.monetize(@order.shipment_total)
             .clearfix
-
-          - if @order.additional_tax_total > 0
-            .summary-line
-              .summary-line-label Additional Tax Total
-              .summary-line-value.total-amount=humanized_money_with_cents_and_symbol @order.monetize(@order.additional_tax_total)
-              .clearfix
-
-          - if @order.adjustment_total > 0
-            .summary-line
-              .summary-line-label Adjustment
-              .summary-line-value.total-amount=humanized_money_with_cents_and_symbol @order.monetize(@order.adjustment_total)
-              .clearfix
 
           .summary-line
             .summary-line-label Total
@@ -49,4 +49,4 @@
     .span4.box
       = render partial: 'checkout_order_summary', locals: { order: @order }
 
-  = render partial: 'checkout_buttons', locals: { form: f }
+    = render partial: 'checkout_buttons', locals: { form: f }

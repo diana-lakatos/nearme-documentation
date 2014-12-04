@@ -208,7 +208,7 @@ class DashboardControllerTest < ActionController::TestCase
   private
 
   def create_reservation_charge(options = {})
-    options.reverse_merge!({:reservation => FactoryGirl.create(:reservation, :currency => 'USD', :listing => @listing)})
+    options.reverse_merge!({reference: FactoryGirl.create(:reservation, currency: 'USD', listing: @listing)})
     if amount = options.delete(:amount)
       options[:subtotal_amount] = amount
     end

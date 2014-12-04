@@ -32,20 +32,20 @@ class PaymentTransferTest < ActiveSupport::TestCase
         :currency => 'NZD'
       )
 
-      @payment_transfer.reservation_charges = [@reservation_charges, rc].flatten
+      @payment_transfer.payments = [@reservation_charges, rc].flatten
       assert !@payment_transfer.save
       assert @payment_transfer.errors[:currency].present?
     end
 
     should "assign instance id" do
-      @payment_transfer.reservation_charges = @reservation_charges
+      @payment_transfer.payments = @reservation_charges
       @payment_transfer.save!
       @payment_transfer.reload
       assert_equal @payment_transfer.company.instance_id, @payment_transfer.instance_id
     end
 
     should "assign currency attribute" do
-      @payment_transfer.reservation_charges = @reservation_charges
+      @payment_transfer.payments = @reservation_charges
       @payment_transfer.save!
       @payment_transfer.reload
 
@@ -53,7 +53,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
     end
 
     should "calculate amounts" do
-      @payment_transfer.reservation_charges = @reservation_charges
+      @payment_transfer.payments = @reservation_charges
       @payment_transfer.save!
 
       assert_equal @reservation_charges.map(&:subtotal_amount).sum - @reservation_charges.map(&:service_fee_amount_host).sum,
@@ -92,7 +92,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
       Billing::Gateway::Processor::Outgoing::ProcessorFactory.stubs(:paypal_supported?).returns(true).once
       Billing::Gateway::Processor::Outgoing::ProcessorFactory.stubs(:receiver_supports_paypal?).returns(true).once
       @payment_transfer = @company.payment_transfers.build
-      @payment_transfer.reservation_charges = @reservation_charges
+      @payment_transfer.payments = @reservation_charges
     end
 
     should 'be not paid if attempt to payout failed' do
@@ -112,7 +112,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
 
     setup do
       @payment_transfer = @company.payment_transfers.build
-      @payment_transfer.reservation_charges = @reservation_charges
+      @payment_transfer.payments = @reservation_charges
     end
 
     should "return true if possible processor exists but company has not provided settings" do

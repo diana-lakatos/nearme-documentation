@@ -5,7 +5,7 @@ class BuySellMarket::CartController < ApplicationController
   before_filter :set_product, only: [:add]
 
   def index
-    @cart = BuySell::CartDecorator.new(current_user)
+    @cart = CartDecorator.new(current_user)
   end
 
   def add

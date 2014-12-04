@@ -182,7 +182,7 @@ class ReservationTest < ActiveSupport::TestCase
   context 'attempt_payment_refund' do
     setup do
       @charge = FactoryGirl.create(:charge)
-      @reservation = @charge.reference.reservation
+      @reservation = @charge.reference.reference
       @reservation.stubs(:attempt_payment_capture).returns(true)
       @reservation.confirm!
       @reservation.update_column(:payment_status, Reservation::PAYMENT_STATUSES[:paid])
@@ -359,12 +359,11 @@ class ReservationTest < ActiveSupport::TestCase
 
         reservation.save!
 
+        service_fee_calculator = Payment::ServiceFeeCalculator.new(Money.new(reservation.subtotal_amount_cents, reservation.currency), reservation.service_fee_guest_percent, reservation.service_fee_host_percent)
         assert_equal Reservation::DailyPriceCalculator.new(reservation).price.cents, reservation.subtotal_amount_cents
-        assert_equal Reservation::ServiceFeeCalculator.new(reservation).service_fee_guest.cents, reservation.service_fee_amount_guest_cents
-        assert_equal Reservation::ServiceFeeCalculator.new(reservation).service_fee_host.cents, reservation.service_fee_amount_host_cents
-        assert_equal Reservation::DailyPriceCalculator.new(reservation).price.cents +
-          Reservation::ServiceFeeCalculator.new(reservation).service_fee_guest.cents,
-          reservation.total_amount_cents
+        assert_equal service_fee_calculator.service_fee_guest.cents, reservation.service_fee_amount_guest_cents
+        assert_equal service_fee_calculator.service_fee_host.cents, reservation.service_fee_amount_host_cents
+        assert_equal Reservation::DailyPriceCalculator.new(reservation).price.cents + service_fee_calculator.service_fee_guest.cents, reservation.total_amount_cents
 
       end
 
@@ -433,7 +432,8 @@ class ReservationTest < ActiveSupport::TestCase
       should "set total cost based on HourlyPriceCalculator" do
         @reservation.periods.build :date => Time.zone.today.advance(:weeks => 1).beginning_of_week, :start_minute => 9*60, :end_minute => 12*60
         assert_equal Reservation::HourlyPriceCalculator.new(@reservation).price.cents +
-          Reservation::ServiceFeeCalculator.new(@reservation).service_fee_guest.cents,
+          Payment::ServiceFeeCalculator.new(Money.new(@reservation.subtotal_amount_cents, @reservation.currency), @reservation.service_fee_guest_percent, @reservation.service_fee_host_percent)
+.service_fee_guest.cents,
           @reservation.total_amount_cents
       end
     end
@@ -458,8 +458,8 @@ class ReservationTest < ActiveSupport::TestCase
     end
 
     should "set default payment status to paid for free reservations" do
+      Reservation::DailyPriceCalculator.any_instance.stubs(:price).returns(0.to_money).at_least(1)
       reservation = FactoryGirl.build(:reservation)
-      Reservation::DailyPriceCalculator.any_instance.stubs(:price).returns(0.to_money)
       reservation.save!
       assert reservation.free?
       assert reservation.paid?

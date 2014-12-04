@@ -54,7 +54,7 @@ class ChartDecoratorTest < ActionView::TestCase
   def build_reservation_charge(reservation, days_ago, subtotal, service_fee_guest)
     FactoryGirl.build(:reservation_charge,
                       created_at: days_ago.days.ago,
-                      reservation: reservation,
+                      reference: reservation,
                       subtotal_amount_cents: subtotal,
                       service_fee_amount_guest_cents: service_fee_guest,
                       paid_at: days_ago.days.ago,

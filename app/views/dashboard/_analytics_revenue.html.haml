@@ -20,7 +20,7 @@
         - @reservation_charges.each do |reservation_charge|
           %tr
             %td= currency_content_tag(reservation_charge.currency, reservation_charge.total_amount, :span, { :rel => false }).html_safe
-            %td= reservation_charge.reservation.listing.location.name
+            %td= reservation_charge.reference.listing.location.name
             %td= reservation_charge.created_at.strftime('%Y-%m-%d')
 
         - @all_time_totals.each do |total|

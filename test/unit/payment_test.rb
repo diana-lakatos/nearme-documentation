@@ -29,7 +29,7 @@ class PaymentTest < ActiveSupport::TestCase
       @charge = FactoryGirl.create(:charge, :response => 'charge_response')
       @reservation_charge = @charge.reference
       @reservation_charge.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
-      @reservation_charge.reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
+      @reservation_charge.reference.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
     end
 
     should 'find the right charge if there were failing attempts' do
@@ -84,19 +84,19 @@ class PaymentTest < ActiveSupport::TestCase
       end
 
       should 'calculate proper number for amount_to_be_refunded if cancelled by guest' do
-        @reservation_charge.reservation.update_column(:state, 'cancelled_by_guest')
+        @reservation_charge.reference.update_column(:state, 'cancelled_by_guest')
         assert_equal 10000, @reservation_charge.subtotal_amount_cents
         assert_equal 4000, @reservation_charge.amount_to_be_refunded
       end
 
       should 'calculate proper number for amount_to_be_refunded if cancelled by host' do
-        @reservation_charge.reservation.update_column(:state, 'cancelled_by_host')
+        @reservation_charge.reference.update_column(:state, 'cancelled_by_host')
         assert_equal 10000, @reservation_charge.subtotal_amount_cents
         assert_equal 11000, @reservation_charge.amount_to_be_refunded
       end
 
       should 'trigger refund method with proper amount when guest cancels ' do
-        @reservation_charge.reservation.update_column(:state, 'cancelled_by_guest')
+        @reservation_charge.reference.update_column(:state, 'cancelled_by_guest')
         Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).once.with do |amount, reference, response|
           amount == 4000
         end.returns(Refund.new(:success => true))
@@ -104,7 +104,7 @@ class PaymentTest < ActiveSupport::TestCase
       end
 
       should 'trigger refund method with proper amount when host cancels ' do
-        @reservation_charge.reservation.update_column(:state, 'cancelled_by_host')
+        @reservation_charge.reference.update_column(:state, 'cancelled_by_host')
         Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).once.with do |amount, reference, response|
           amount == 11000
         end.returns(Refund.new(:success => true))
@@ -124,7 +124,7 @@ class PaymentTest < ActiveSupport::TestCase
     setup do
       @reservation_charge = FactoryGirl.build(:reservation_charge_unpaid)
       @reservation_charge.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
-      @reservation_charge.reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
+      @reservation_charge.reference.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
     end
 
     should 'trigger capture on save' do
@@ -147,19 +147,19 @@ class PaymentTest < ActiveSupport::TestCase
 
     should 'assign correct key immediately' do
       assert @reservation_charge.company_id.present?
-      assert_equal @reservation_charge.company_id, @reservation_charge.reservation.company_id
+      assert_equal @reservation_charge.company_id, @reservation_charge.reference.company_id
     end
 
     context 'update company' do
 
       should 'assign correct company_id' do
-        @reservation_charge.reservation.location.update_attribute(:company_id, @reservation_charge.reservation.location.company_id + 1)
-        assert_equal @reservation_charge.reservation.location.company_id, @reservation_charge.reload.company_id
+        @reservation_charge.reference.location.update_attribute(:company_id, @reservation_charge.reference.location.company_id + 1)
+        assert_equal @reservation_charge.reference.location.company_id, @reservation_charge.reload.company_id
       end
 
       should 'assign correct instance_id' do
         instance = FactoryGirl.create(:instance)
-        @reservation_charge.reservation.company.update_attribute(:instance_id, instance.id)
+        @reservation_charge.reference.company.update_attribute(:instance_id, instance.id)
         PlatformContext.any_instance.stubs(:instance).returns(instance)
         assert_equal instance.id, @reservation_charge.reload.instance_id
       end
