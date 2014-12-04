@@ -1,6 +1,6 @@
 = simple_form_for @order, url: wizard_path do |f|
   .row-fluid
-    .span4.box
+    .span6.box
       %h1= t('buy_sell_market.checkout.labels.billing_address')
 
       = f.input :save_billing_address, as: :boolean, inline_label: t('buy_sell_market.checkout.labels.save_billing_address'), label: false
@@ -16,7 +16,7 @@
         = b.association :state, collection: @billing_states
         = b.input :phone
 
-    .span4.box
+    .span6.box
       %h1= t('buy_sell_market.checkout.labels.shipping_address')
       = f.input :use_billing, as: :boolean, inline_label: t('buy_sell_market.checkout.labels.billing_address_shipping'), label: false
 
@@ -32,8 +32,8 @@
           = s.association :state, collection: @shipping_states
           = s.input :phone
 
-    .span4.box
-      = render partial: 'checkout_order_summary', locals: { order: @order }
+    -#.span4.box
+    -#  = render partial: 'checkout_order_summary', locals: { order: @order }
 
   = render partial: 'checkout_buttons', locals: { form: f }
 

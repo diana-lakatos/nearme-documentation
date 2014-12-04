@@ -17,12 +17,21 @@ class BuySellMarket::CheckoutController < ApplicationController
       @order.restart_checkout_flow
       @order.use_billing = 1
       set_countries_states
+    when :delivery
+      packages = @order.shipments.map { |s| s.to_package }
+      @differentiator = Spree::Stock::Differentiator.new(@order, packages)
+    when :complete
+      flash[:notice] = t('buy_sell_market.checkout.notices.order_placed')
+      @charge_info = @order.near_me_payments.paid.first.charge_attempts.successful.first
     end
 
     render_wizard
   end
 
   def update
+    if step == :address
+      set_countries_states
+    end
 
     if @order.payment?
       @billing_gateway = Billing::Gateway::Incoming.new(current_user, PlatformContext.current.instance, @order.currency)
@@ -64,14 +73,13 @@ class BuySellMarket::CheckoutController < ApplicationController
       end
     elsif @order.update_from_params(params, permitted_checkout_attributes)
 
-      if step == :address
-        save_user_addresses if params[:order][:save_billing_address]
-        set_countries_states
-      end
-
       unless @order.next
         flash[:error] = spree_errors
         render_step order_state and return
+      end
+
+      if step == :address
+        save_user_addresses if params[:order][:save_billing_address]
       end
 
       if @order.completed?
@@ -125,7 +133,11 @@ class BuySellMarket::CheckoutController < ApplicationController
   end
 
   def set_order
-    @order ||= current_user.cart_orders.find_by(number: params[:order_id]).try(:decorate)
+    @order ||= if step == :complete
+                 current_user.orders.find_by(number: params[:order_id])
+               else
+                 current_user.cart_orders.find_by(number: params[:order_id]).try(:decorate)
+               end
   end
 
   def spree_errors

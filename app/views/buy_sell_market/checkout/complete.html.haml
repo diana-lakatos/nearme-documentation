@@ -1,6 +1,81 @@
-.row-fluid
-  .span12.box
-    %h1 The order #{@order.number} has been placed
+.box
+  .row-fluid
+    .span12
+      %h2 Order #{@order.number}
+
+.box
+  .row-fluid
+    .span3
+      %h3 Billing Address
+      = render partial: 'address', locals: { address: @order.bill_address }
+
+    .span3
+      %h3 Shipping Address
+      = render partial: 'address', locals: { address: @order.ship_address }
+
+    .span3
+      %h3 Shipments
+
+    .span3
+      %h3 Payment Information
+      - if @charge_info.response['card']
+        .row-fluid
+          .span12
+            Ending in #{@charge_info.response['card']['last4']}
+          .row-fluid
+            .span12
+              #{@charge_info.response['card']['name']}
+      - else
+        .row-fluid
+          .span12
+            N/A
+.box
+  .row-fluid
+    .span6 ITEM
+    .span2 PRICE
+    .span2 QTY
+    .span2 TOTAL
+
+  - @order.line_items.decorate.each do |item|
+    .row-fluid
+      .summary-line
+        .span2= item.image
+        .span4
+          %strong= item.name
+          .row-fluid
+            .span12
+              = item.description
+
+        .span2= item.price
+        .span2= item.quantity
+        .span2= item.total
+
+  .summary-line
+    .row-fluid
+      .span3.offset9
+        SUBTOTAL:
+        .pull-right
+          #{humanized_money_with_cents_and_symbol @order.monetize(@order.item_total)}
+    .row-fluid
+      .span3.offset9
+        Shipping:
+        .pull-right
+          #{humanized_money_with_cents_and_symbol @order.monetize(@order.shipment_total)}
+    .row-fluid
+      .span3.offset9
+        Tax:
+        .pull-right
+          #{humanized_money_with_cents_and_symbol @order.monetize(@order.additional_tax_total)}
+    .row-fluid
+      .span3.offset9
+        Service fee:
+        .pull-right
+          #{humanized_money_with_cents_and_symbol @order.service_fee_amount_guest}
+    .row-fluid
+      .span3.offset9
+        ORDER TOTAL:
+        .pull-right
+          #{humanized_money_with_cents_and_symbol @order.total_amount_to_charge}
 
 .row-fluid
   .span12.box.centered

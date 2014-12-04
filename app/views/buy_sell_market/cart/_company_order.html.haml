@@ -1,11 +1,11 @@
 .row-fluid.header-row
-  .span4
+  .span6
     Order from #{order.company_name}
   .span2
     Price
-  .span2
+  .span1
     Quantity
-  .span2
+  .span1
     Total
   .span2
     Actions
@@ -15,7 +15,7 @@
 
 .row-fluid.cart-row.no-hover
   .span7
-    Total for order
+    Total for order (incl. tax):
     = order.display_total
   .span2.offset3
     = link_to t('buy_sell_market.cart.buttons.checkout'), order_checkout_path(order, 'address'), class: 'btn btn-green btn-large'

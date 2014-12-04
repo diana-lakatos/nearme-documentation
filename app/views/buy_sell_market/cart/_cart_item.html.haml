@@ -1,18 +1,21 @@
 .row-fluid.cart-row
+  .span2
+    = item.image
   .span4
-    = item.name
-    %br
-    %small= item.description
+    %strong= item.name
+    .row-fluid
+      .span12
+        = item.description
 
   .span2
-    = item.single_money
+    = item.price
 
-  .span2
+  .span1
     .controls.quantity
-      = item.quantity
+      = item.quantity_form
 
-  .span2
-    = item.display_total
+  .span1
+    = item.total
 
   .span2
     = link_to t('buy_sell_market.cart.buttons.remove_item'), cart_remove_product_path(item.id), method: :delete,

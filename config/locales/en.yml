@@ -70,6 +70,9 @@ en:
       errors:
         skip: 'You cannot skip checkout steps'
 
+      notices:
+        order_placed: 'Your order has been placed. Thank you!'
+
     cart:
       labels:
         index: 'Shopping cart'
