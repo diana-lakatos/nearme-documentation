@@ -62,4 +62,8 @@ module InstanceAdminHelper
       [label, code]
     end
   end
+
+  def next_payment_transfers_date
+    l(PaymentTransfers::SchedulerMethods.new(platform_context.instance).next_payment_transfers_date.beginning_of_day, format: :long)
+  end
 end

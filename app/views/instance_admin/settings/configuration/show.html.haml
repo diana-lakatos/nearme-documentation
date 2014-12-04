@@ -35,6 +35,12 @@
       .input-container.col-xs-6
         = f.input :password_protected, as: :boolean, label: "Require password to access marketplace"
 
+  %h4 Payment Transfers
+  .content-container
+    .row.dropshadow
+      .input-container.col-xs-6
+        = f.input :payment_transfers_frequency, collection: PaymentTransfer::FREQUENCIES.collect { |f| [t(".#{f}"), f] }, input_html: { class: 'form-control' }, prompt: true
+
   %h4 Terminology
   .content-container
     .row

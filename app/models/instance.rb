@@ -81,6 +81,7 @@ class Instance < ActiveRecord::Base
   validates_presence_of :marketplace_password, :if => :password_protected
   validates_presence_of :password_protected, :if => :test_mode, message: I18n.t("activerecord.errors.models.instance.test_mode_needs_password")
   validates_presence_of :olark_api_key, :if => :olark_enabled
+  validates :payment_transfers_frequency, presence: true, inclusion: { in: PaymentTransfer::FREQUENCIES }
 
   accepts_nested_attributes_for :domains, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :theme
@@ -192,6 +193,4 @@ class Instance < ActiveRecord::Base
 
   def onboarding_verification_required=(arg)
   end
-
 end
-
