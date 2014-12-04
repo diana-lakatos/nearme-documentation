@@ -1,4 +1,4 @@
-class BuySell::CartDecorator
+class CartDecorator
   include MoneyRails::ActionViewExtension
 
   def initialize(user)

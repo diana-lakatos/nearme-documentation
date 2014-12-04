@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141203165548) do
+ActiveRecord::Schema.define(version: 20141204091142) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -207,6 +207,7 @@ ActiveRecord::Schema.define(version: 20141203165548) do
     t.string   "reference_type"
     t.integer  "reference_id"
   end
+
   add_index "billing_authorizations", ["reference_id", "reference_type"], name: "index_billing_authorizations_on_reference_id_and_reference_type", using: :btree
 
   create_table "blog_instances", force: true do |t|
@@ -618,6 +619,7 @@ ActiveRecord::Schema.define(version: 20141203165548) do
     t.boolean  "partial",          default: false
     t.datetime "created_at",                       null: false
     t.datetime "updated_at",                       null: false
+    t.string   "view_type"
   end
 
   add_index "instance_views", ["instance_type_id", "instance_id", "path", "locale", "format", "handler"], name: "instance_path_with_format_and_handler", using: :btree
@@ -1349,16 +1351,16 @@ ActiveRecord::Schema.define(version: 20141203165548) do
   add_index "spree_option_values_variants", ["variant_id"], name: "index_spree_option_values_variants_on_variant_id", using: :btree
 
   create_table "spree_orders", force: true do |t|
-    t.string   "number",                 limit: 32
-    t.decimal  "item_total",                        precision: 10, scale: 2, default: 0.0,     null: false
-    t.decimal  "total",                             precision: 10, scale: 2, default: 0.0,     null: false
+    t.string   "number",                     limit: 32
+    t.decimal  "item_total",                            precision: 10, scale: 2, default: 0.0,     null: false
+    t.decimal  "total",                                 precision: 10, scale: 2, default: 0.0,     null: false
     t.string   "state"
-    t.decimal  "adjustment_total",                  precision: 10, scale: 2, default: 0.0,     null: false
+    t.decimal  "adjustment_total",                      precision: 10, scale: 2, default: 0.0,     null: false
     t.integer  "user_id"
     t.datetime "completed_at"
     t.integer  "bill_address_id"
     t.integer  "ship_address_id"
-    t.decimal  "payment_total",                     precision: 10, scale: 2, default: 0.0
+    t.decimal  "payment_total",                         precision: 10, scale: 2, default: 0.0
     t.integer  "shipping_method_id"
     t.string   "shipment_state"
     t.string   "payment_state"
@@ -1369,21 +1371,21 @@ ActiveRecord::Schema.define(version: 20141203165548) do
     t.string   "currency"
     t.string   "last_ip_address"
     t.integer  "created_by_id"
-    t.decimal  "shipment_total",                    precision: 10, scale: 2, default: 0.0,     null: false
-    t.decimal  "additional_tax_total",              precision: 10, scale: 2, default: 0.0
-    t.decimal  "promo_total",                       precision: 10, scale: 2, default: 0.0
-    t.string   "channel",                                                    default: "spree"
-    t.decimal  "included_tax_total",                precision: 10, scale: 2, default: 0.0,     null: false
-    t.integer  "item_count",                                                 default: 0
+    t.decimal  "shipment_total",                        precision: 10, scale: 2, default: 0.0,     null: false
+    t.decimal  "additional_tax_total",                  precision: 10, scale: 2, default: 0.0
+    t.decimal  "promo_total",                           precision: 10, scale: 2, default: 0.0
+    t.string   "channel",                                                        default: "spree"
+    t.decimal  "included_tax_total",                    precision: 10, scale: 2, default: 0.0,     null: false
+    t.integer  "item_count",                                                     default: 0
     t.integer  "approver_id"
     t.datetime "approved_at"
-    t.boolean  "confirmation_delivered",                                     default: false
-    t.boolean  "considered_risky",                                           default: false
+    t.boolean  "confirmation_delivered",                                         default: false
+    t.boolean  "considered_risky",                                               default: false
     t.integer  "instance_id"
     t.integer  "company_id"
     t.integer  "partner_id"
-    t.integer  "service_fee_buyer_percent",                                      default: 0
-    t.integer  "service_fee_seller_percent",                                     default: 0
+    t.decimal  "service_fee_buyer_percent",             precision: 5,  scale: 2, default: 0.0
+    t.decimal  "service_fee_seller_percent",            precision: 5,  scale: 2, default: 0.0
   end
 
   add_index "spree_orders", ["company_id"], name: "index_spree_orders_on_company_id", using: :btree

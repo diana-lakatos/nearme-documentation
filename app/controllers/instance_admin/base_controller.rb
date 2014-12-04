@@ -51,6 +51,7 @@ class InstanceAdmin::BaseController < ApplicationController
 
   BUY_SELL_CONTROLLERS = {
     'configuration' => { default_action: 'show' },
+    'commissions' => { default_action: 'show' },
     'tax_categories' => { default_action: 'index' },
     'tax_rates' => { default_action: 'index' },
     'zones' => { default_action: 'index' },

@@ -183,7 +183,7 @@ class Instance < ActiveRecord::Base
   end
 
   def payment_gateway_mode
-    (test_mode? || (!Rails.env.staging? && !Rails.env.production?)) ? "test" : "live"
+    test_mode? ? "test" : "live"
   end
 
   def onboarding_verification_required
