@@ -10,13 +10,16 @@
           .name.left
             %h3= "Order ##{@order.number}"
           .right
-            = link_to 'Approve', approve_manage_buy_sell_order_path(@order), class: 'btn btn-medium btn-blue', confirm: "Are you sure you want to approve this order?"
-            -if @order.canceled?
+            - unless @order.approved?
+              = link_to 'Approve', approve_manage_buy_sell_order_path(@order), class: 'btn btn-medium btn-blue', confirm: "Are you sure you want to approve this order?"
+            - if @order.canceled?
               = link_to 'Resume', resume_manage_buy_sell_order_path(@order), class: 'btn btn-medium btn-green', confirm: "Are you sure you want to resume this order?"
-            -else
+            - else
               = link_to 'Cancel', cancel_manage_buy_sell_order_path(@order), class: 'btn btn-medium btn-red', confirm: "Are you sure you want to cancel this order?"
 
 
+      = render 'payments'
+      = render 'shipments'
       = render 'information'
 
       = simple_form_for [:manage, :buy_sell, @order], :html => {multipart: true, class: "form-horizontal form-expandable" } do |f|

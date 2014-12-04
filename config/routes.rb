@@ -439,6 +439,18 @@ DesksnearMe::Application.routes.draw do
           get :cancel
           get :resume
         end
+
+        resources :payments do
+          member do
+            get :capture
+          end
+        end
+
+        resources :shipments do
+          member do
+            get :ship
+          end
+        end
       end
       resources :properties
       resources :prototypes
