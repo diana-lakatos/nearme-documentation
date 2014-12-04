@@ -1,3 +1,4 @@
+- resource ||= current_user
 = render :partial => 'approval_requests/form', :locals => { f: f, object: resource }
 - only_inputs ||= []
 - only_inputs.map!(&:to_sym)
@@ -11,7 +12,7 @@
       - profile_form.object.instance_profile_type.custom_attributes.each do |attribute|
         = draw_attribute_for_form(attribute, profile_form) if only_inputs.empty? || only_inputs.include?(attribute.name.to_sym)
 
-= f.input :gender, collection: [['Male', 'male'], ['Female', 'female'], ['Unknown', 'unknown']], include_blank: :true if only_inputs.empty? || only_inputs.include?(:gender)
+= f.input :gender, collection: [['Male', 'male'], ['Female', 'female'], ['Unspecified', 'unspecified']], include_blank: :true if only_inputs.empty? || only_inputs.include?(:gender)
 = f.input :email, label: "Email" if only_inputs.empty? || only_inputs.include?(:email)
 = f.input :time_zone if only_inputs.empty? || only_inputs.include?(:time_zone)
 = render :partial => 'registrations/phone_fields', :locals => { :f => f, :country => country } if only_inputs.empty? || only_inputs.include?(:phone)

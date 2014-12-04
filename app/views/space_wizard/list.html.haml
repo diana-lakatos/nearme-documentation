@@ -15,7 +15,7 @@
         %h2= t('registrations.tell_us')
         %br
         .box
-          = render :partial => 'registrations/attributes', :locals => { f: f, only_inputs: platform_context.instance.user_required_fields, :country => @country }
+          = render :partial => 'registrations/attributes', :locals => { f: f, only_inputs: platform_context.instance.user_required_fields, country: @country }
           = render partial: 'registrations/custom_attributes', locals: { f: f }
       - elsif f.object.user_instance_profiles.first.instance_profile_type.present? && f.object.user_instance_profiles.first.instance_profile_type.custom_attributes.count > 0
         %h2= t('registrations.tell_us')

@@ -247,6 +247,18 @@ class SpaceWizardControllerTest < ActionController::TestCase
     end
   end
 
+  context 'with instance.user_info_in_onboarding_flow = true' do
+    should 'render the space wizard with the user info in the form' do
+      @instance_with_user_onboarding = FactoryGirl.create(:instance, user_info_in_onboarding_flow: true)
+      PlatformContext.current = PlatformContext.new(@instance_with_user_onboarding)
+      FactoryGirl.create(:transactable_type_listing)
+      FactoryGirl.create(:location_type)
+
+      get :list
+      assert_select ".user_first_name"
+    end
+  end
+
   private
 
   def get_params(daily_price = nil, weekly_price = nil, monthly_price = nil, free = "1")
