@@ -18,6 +18,7 @@ en:
         blog_post_updated: 'Blog post updated.'
     buy_sell:
       configuration_saved_successful: 'Configuration saved successfully.'
+      commissions_saved_successful: 'Commissions saved successfully.'
       tax_category_added: 'Tax category added.'
       tax_category_updated: 'Tax category updated.'
       tax_category_deleted: 'Tax category deleted.'

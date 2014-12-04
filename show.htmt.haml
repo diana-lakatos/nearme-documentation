@@ -1,0 +1,12 @@
+= simple_form_for @instance, :url => instance_admin_buy_sell_commission_path, method: :put, :html => { :multipart => true } do |f|
+  %h4 Commissions
+  .content-container
+    .row.dropshadow
+      .input-container.col-xs-6
+        = f.input :service_fee_guest_percent, label: 'Service fee paid by BUYER'
+      .input-container.col-xs-6
+        = f.input :service_fee_host_percent, label: 'Service fee paid by SELLER'
+
+
+
+  = submit_tag 'Save', class: 'btn btn-green pull-right'

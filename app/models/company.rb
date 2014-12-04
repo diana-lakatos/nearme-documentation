@@ -39,7 +39,6 @@ class Company < ActiveRecord::Base
 
   has_many :reservations
   has_many :reservation_charges, through: :reservations
-  has_many :orders
   has_many :payments
   has_many :payment_transfers, :dependent => :destroy
   has_many :company_industries, :dependent => :destroy

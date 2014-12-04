@@ -277,6 +277,7 @@ DesksnearMe::Application.routes.draw do
     namespace :buy_sell do
       get '/', :to => 'base#index'
       resource :configuration, only: [:show, :update], controller: 'configuration'
+      resource :commissions, :only => [:show, :update], :controller => 'commissions'
       resources :tax_categories
       resources :tax_rates
       resources :zones

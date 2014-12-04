@@ -6,7 +6,7 @@ FactoryGirl.define do
     service_fee_amount_guest_cents { 10_00 }
 
     factory :reservation_charge do
-      association(:reservation, :factory => :reservation_with_credit_card)
+      association(:reference, :factory => :reservation_with_credit_card)
 
       factory :reservation_charge_unpaid do
         paid_at nil
