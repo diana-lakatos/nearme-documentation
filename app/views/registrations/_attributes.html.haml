@@ -1,3 +1,4 @@
+- resource ||= current_user
 = render :partial => 'approval_requests/form', :locals => { f: f, object: resource }
 - only_inputs ||= []
 - only_inputs.map!(&:to_sym)
