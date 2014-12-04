@@ -4,9 +4,9 @@ class Manage::BuySell::PaymentsController < Manage::BuySell::BaseController
     @payment = @order.payments.find(params[:id])
 
     charge = @order.near_me_payments.create!(
-        subtotal_amount: @order.total_amount_without_fee,
-        service_fee_amount_guest: @order.service_fee_amount_guest,
-        service_fee_amount_host: @order.service_fee_amount_host
+      subtotal_amount: @order.total_amount_without_fee,
+      service_fee_amount_guest: @order.service_fee_amount_guest,
+      service_fee_amount_host: @order.service_fee_amount_host
     )
     if charge.paid?
       @payment.complete!

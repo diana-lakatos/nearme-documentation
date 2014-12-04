@@ -457,7 +457,8 @@ DesksnearMe::Application.routes.draw do
       resources :shipping_categories
       resources :shipping_methods
       resources :stock_locations
-      resources :taxonomies
+      # Switched of, waiting for new spec
+      # resources :taxonomies
       resources :taxons
     end
 

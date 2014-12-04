@@ -27,7 +27,7 @@ module Utils
       Spree::Config.default_meta_description = @instance.theme.description
       Spree::Config.default_meta_keywords = @instance.theme.tagline
       Spree::Config.default_seo_title = @instance.theme.meta_title
-      Spree::Config.display_currency = true
+      Spree::Config.display_currency = false
       Spree::Config.allow_ssl_in_staging = false
       Spree::Config.currency = 'USD'
       Spree::Config.shipment_inc_vat = true

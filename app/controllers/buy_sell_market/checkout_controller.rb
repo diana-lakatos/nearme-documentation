@@ -12,6 +12,13 @@ class BuySellMarket::CheckoutController < ApplicationController
   before_filter :set_state, only: [:show]
 
   def show
+    # Temporary solution for blocking checkout process if we do not support any PaymentGateway
+    # we should decide what TODO with users from not supported countries
+    if Billing::Gateway::Incoming.new(current_user, PlatformContext.current.instance, @order.currency).processor.nil?
+      flash[:error] = "Payment is not supported for this country"
+      redirect_to cart_index_path and return
+    end
+
     case step
     when :address
       @order.restart_checkout_flow

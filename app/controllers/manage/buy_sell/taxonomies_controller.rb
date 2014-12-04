@@ -58,7 +58,7 @@ class Manage::BuySell::TaxonomiesController < Manage::BuySell::BaseController
   private
 
   def taxonomy_scope
-    @company.taxonomies
+    Spree::Taxonomy.all
   end
 
   def taxonomy_params

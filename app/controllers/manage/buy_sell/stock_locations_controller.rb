@@ -1,5 +1,6 @@
 class Manage::BuySell::StockLocationsController < Manage::BuySell::BaseController
   before_filter :find_stock_location, only: [:edit, :update, :destroy]
+  before_filter :setup_countries, except: [:index, :destroy]
 
   def index
     @stock_locations = @company.stock_locations.paginate(page: params[:page], per_page: 20)
@@ -45,6 +46,10 @@ class Manage::BuySell::StockLocationsController < Manage::BuySell::BaseControlle
 
   def find_stock_location
     @stock_location = @company.stock_locations.find(params[:id])
+  end
+
+  def setup_countries
+    @countries = Spree::Country.order('name')
   end
 
   def stock_location_params

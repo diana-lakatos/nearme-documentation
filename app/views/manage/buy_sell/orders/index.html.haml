@@ -12,13 +12,14 @@
               Manage Orders
       %ul.location-and-listings
         %li.listing.action-buttons
-          .span2= t('order.complated_at')
-          .span2= t('order.number')
+          .span2= t('order.completed')
+          .span2= t('order.order_number')
+          .span1= t('order.state')
           .span1= t('order.payment_state')
           .span1= t('order.shippment_state')
-          .span2= t('order.email')
+          .span2= t('order.buyer_email')
           .span1= t('order.total')
-          .span1= t('order.state')
+
           .span2.state.text-right
 
           .clearfix
