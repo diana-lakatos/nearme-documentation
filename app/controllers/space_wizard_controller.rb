@@ -31,7 +31,7 @@ class SpaceWizardController < ApplicationController
     @user.assign_attributes(wizard_params)
     @user.companies.first.try(:locations).try(:first).try {|l| l.name_and_description_required = true} unless buyable?
     @user.companies.first.creator_id = current_user.id
-    @user.verify_associated = @user.companies.first.verify_associated = !@user.companies.first.new_record?
+    @user.verify_associated = @user.companies.first.verify_associated = !@user.companies.first.new_record? if buyable?
     build_objects
     build_approval_requests
     if params[:save_as_draft]

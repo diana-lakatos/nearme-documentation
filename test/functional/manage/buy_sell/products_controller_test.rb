@@ -13,11 +13,6 @@ class Manage::BuySell::ProductsControllerTest < ActionController::TestCase
     sign_in @user
   end
 
-  should 'find first product on the list' do
-    get :index
-    assert_select "li.listing", 3
-  end
-
   should 'create new product' do
     assert_difference 'Spree::Product.count' do
       post :create, product: FactoryGirl.attributes_for(:product)

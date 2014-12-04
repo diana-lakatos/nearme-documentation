@@ -57,16 +57,6 @@ class BuySellMarket::CheckoutController < ApplicationController
             flash[:error] = spree_errors
             render_step order_state and return
           end
-          charge = @order.near_me_payments.create!(
-            subtotal_amount: @order.total_amount_without_fee,
-            service_fee_amount_guest: @order.service_fee_amount_guest,
-            service_fee_amount_host: @order.service_fee_amount_host
-          )
-          if charge.paid?
-            p.complete!
-          else
-            p.failure!
-          end
         end
       else
         @order.errors.add(:cc, "Those credit card details don't look valid")

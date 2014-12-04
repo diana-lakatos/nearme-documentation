@@ -23,17 +23,12 @@
         %h3 Payment information:
         .summary-line
           - @order.payments.valid.each do |payment|
-            - source = payment.source
-            - if source.is_a?(Spree::CreditCard)
-              - if source.last_digits
-                %div
-                  .text-label Ending in
-                  .text= source.last_digits
-              %div
-                .text-label Full Name
-                .text= source.name
-            - else
-              = content_tag(:span, payment.payment_method.name)
+            %div
+              .text-label Payment method
+              .text Credit Card
+            %div
+              .text-label Amount
+              .text= number_to_currency_symbol(payment.order.currency, payment.amount)
 
         %h3 Ordered items:
         .summary-line
