@@ -56,13 +56,15 @@ class BuySell::CartService
     if @user.cart_orders.count == 0
       create_order(product.company_id)
     else
-      @order = @user.cart_orders.find_by(company_id: product.company_id) # There must be separate order for each company
+      @order = @user.cart_orders.find_by(company_id: product.company_id)
       create_order(product.company_id) unless @order
     end
   end
 
   def create_order(company_id)
-    @order = @user.orders.create!(company_id: company_id)
+    @order = @user.orders.create!(company_id: company_id,
+                                  service_fee_buyer_percent: PlatformContext.current.instance.service_fee_guest_percent,
+                                  service_fee_seller_percent: PlatformContext.current.instance.service_fee_host_percent)
   end
 
   def update_order(order)

@@ -13,7 +13,7 @@ class Spree::OrderDecorator < Draper::Decorator
   end
 
   def company_name
-    link_to object.company.name, '#'
+    content_tag :strong, object.company.name
   end
 
   def bill_address

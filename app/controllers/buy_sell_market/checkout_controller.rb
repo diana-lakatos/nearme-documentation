@@ -15,14 +15,28 @@ class BuySellMarket::CheckoutController < ApplicationController
     case step
     when :address
       @order.restart_checkout_flow
-      @order.use_billing = 1
+      @order.use_billing = 0
       set_countries_states
+    when :delivery
+      packages = @order.shipments.map { |s| s.to_package }
+      @differentiator = Spree::Stock::Differentiator.new(@order, packages)
+    when :complete
+      flash[:notice] = t('buy_sell_market.checkout.notices.order_placed')
+
+      begin
+        @charge_info = @order.near_me_payments.paid.first.charge_attempts.successful.first
+      rescue
+        @charge_info = nil
+      end
     end
 
     render_wizard
   end
 
   def update
+    if step == :address
+      set_countries_states
+    end
 
     if @order.payment?
       @billing_gateway = Billing::Gateway::Incoming.new(current_user, PlatformContext.current.instance, @order.currency)
@@ -30,12 +44,12 @@ class BuySellMarket::CheckoutController < ApplicationController
       @order.card_number = params[:order][:card_number].try(:to_s).try(:strip)
       @order.card_code = params[:order][:card_code].try(:to_s).try(:strip)
       credit_card = ActiveMerchant::Billing::CreditCard.new(
-        first_name: params[:first_name].presence || current_user.first_name,
-        last_name: params[:last_name].presence || current_user.last_name,
-        number: @order.card_number,
-        month: @order.card_expires.to_s[0, 2],
-        year: @order.card_expires.to_s[-4, 4],
-        verification_value: @order.card_code
+          first_name: params[:first_name].presence || current_user.first_name,
+          last_name: params[:last_name].presence || current_user.last_name,
+          number: @order.card_number,
+          month: @order.card_expires.to_s[0, 2],
+          year: @order.card_expires.to_s[-4, 4],
+          verification_value: @order.card_code
       )
       if credit_card.valid?
         response = @billing_gateway.authorize(@order.total_amount_to_charge, credit_card)
@@ -47,9 +61,9 @@ class BuySellMarket::CheckoutController < ApplicationController
           render_step order_state and return
         else
           @order.create_billing_authorization(
-            token: response[:token],
-            payment_gateway_class: response[:payment_gateway_class],
-            payment_gateway_mode: PlatformContext.current.instance.test_mode? ? "test" : "live"
+              token: response[:token],
+              payment_gateway_class: response[:payment_gateway_class],
+              payment_gateway_mode: PlatformContext.current.instance.test_mode? ? "test" : "live"
           )
           p = @order.payments.build(amount: @order.total_amount_to_charge, company_id: @order.company_id)
           p.pend!
@@ -125,7 +139,11 @@ class BuySellMarket::CheckoutController < ApplicationController
   end
 
   def set_order
-    @order ||= current_user.cart_orders.find_by(number: params[:order_id]).try(:decorate)
+    @order ||= if step == :complete
+                 current_user.orders.find_by(number: params[:order_id])
+               else
+                 current_user.cart_orders.find_by(number: params[:order_id]).try(:decorate)
+               end
   end
 
   def spree_errors
