@@ -1,6 +1,6 @@
 = simple_form_for @order, url: wizard_path do |f|
   .row-fluid
-    .span12.box
+    .span9.box
 
       %h2 Order Summary
 
@@ -45,5 +45,9 @@
         = render 'payments/credit_card_fields', :f => f
       - else
         Credit Card has been already authorized. Please proceed.
+
+    .span3.box
+      %h2 Shipments
+      = render partial: 'shipments', locals: { order: @order }
 
   = render partial: 'checkout_buttons', locals: { form: f }

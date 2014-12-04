@@ -60,10 +60,11 @@ en:
         payment: 'Payment'
         delivery: 'Shipping'
         billing_address_shipping: 'Use billing address for shipping'
-        save_billing_address: 'Save billing address to user profile'
+        save_billing_address: 'Save billing and shipping address to user profile'
 
       buttons:
         next_step: 'Next step'
+        next_step_payment: 'Make payment'
         previous_step: 'Previous step'
         back_to_cart: 'Back to cart'
 

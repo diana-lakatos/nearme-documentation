@@ -15,10 +15,11 @@
 
     .span3
       %h3 Shipments
+      = render partial: 'shipments', locals: { order: @order }
 
     .span3
       %h3 Payment Information
-      - if @charge_info.response['card']
+      - if @charge_info && @charge_info.response['card']
         .row-fluid
           .span12
             Ending in #{@charge_info.response['card']['last4']}

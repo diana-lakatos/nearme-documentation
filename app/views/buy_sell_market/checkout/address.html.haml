@@ -13,7 +13,7 @@
         = b.input :city
         = b.input :zipcode
         = b.association :country, collection: @countries
-        = b.association :state, collection: @billing_states
+        = b.association :state, collection: @billing_states, include_blank: false
         = b.input :phone
 
     .span6.box
@@ -29,11 +29,8 @@
           = s.input :city
           = s.input :zipcode
           = s.association :country, collection: @countries
-          = s.association :state, collection: @shipping_states
+          = s.association :state, collection: @shipping_states, include_blank: false
           = s.input :phone
-
-    -#.span4.box
-    -#  = render partial: 'checkout_order_summary', locals: { order: @order }
 
   = render partial: 'checkout_buttons', locals: { form: f }
 
@@ -47,7 +44,6 @@
       $('#shipping-address').hide();
     } else {
       $('#shipping-address').show();
-      $('#order_ship_address_attributes_country_id').trigger('render');
     }
   });
 

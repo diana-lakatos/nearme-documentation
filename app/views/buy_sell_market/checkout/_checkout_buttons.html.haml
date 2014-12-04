@@ -10,4 +10,9 @@
 
 
       - if defined? form
-        = form.submit t('buy_sell_market.checkout.buttons.next_step'), class: 'btn-submit'
+        - case step
+        - when :payment
+          = form.submit t('buy_sell_market.checkout.buttons.next_step_payment'), class: 'btn-submit'
+        - else
+          = form.submit t('buy_sell_market.checkout.buttons.next_step'), class: 'btn-submit'
+

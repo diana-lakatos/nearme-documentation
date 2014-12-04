@@ -1,0 +1,5 @@
+- order.shipments.each do |shipment|
+  From
+  %strong= shipment.stock_location.name
+  via
+  %strong=shipment.selected_shipping_rate.name
