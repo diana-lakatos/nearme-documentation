@@ -39,7 +39,7 @@
     .controls
       = f.text_field :zipcode
   .control-group
-    = f.association :country, collection: available_countries
+    = f.association :country, collection: @countries
 
     / - if f.object.country
     /   = f.label :state_id, Spree.t(:state)

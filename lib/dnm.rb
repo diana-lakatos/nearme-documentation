@@ -113,5 +113,4 @@ module DNM
 
   module Manage
   end
-
 end

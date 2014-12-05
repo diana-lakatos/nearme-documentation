@@ -45,7 +45,7 @@ class Manage::BuySell::ProductsController < Manage::BuySell::BaseController
   def load_data
     @option_types = @company.option_types.order(:name)
     @prototypes = @company.prototypes.order(:name)
-    @taxons = @company.taxons.order(:name)
+    @taxons = Spree::Taxonomy.order(:name)
     @tax_categories = @company.tax_categories.order(:name)
     @shipping_categories = @company.shipping_categories.order(:name)
   end

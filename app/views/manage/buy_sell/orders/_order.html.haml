@@ -1,18 +1,18 @@
 %li.listing.action-buttons
   .span2
-    = order.completed_at.to_date
+    = distance_of_time_in_words_or_date(order.completed_at)
   .span2
-    = order.number
+    = link_to(order.number, edit_manage_buy_sell_order_path(order))
   .span1
-    = order.payment_state
+    = t("manage.order.order_state.#{order.state.downcase}")
   .span1
-    = order.shipment_state
+    = t("manage.order.payment_states.#{order.payment_state}")
+  .span1
+    = t("manage.order.shipment_states.#{order.shipment_state}") if order.shipment_state 
   .span2
     = mail_to order.email
   .span1
     = order.display_total.to_html
-  .span1
-    = order.state
   .span2
     .links.right
       = link_to manage_buy_sell_order_path(order), :method => :delete, :confirm => 'Are you sure?', :class => "delete", style: 'padding-top: 0px;' do

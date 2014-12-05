@@ -18,7 +18,7 @@
 
   - if user_signed_in?
 
-    - if buyable?
+    - if buyable? && current_user.cart_orders.any?
       %li.divider-vertical
       %li
         = link_to cart_index_path, class: 'nav-link' do

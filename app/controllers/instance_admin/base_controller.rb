@@ -56,8 +56,8 @@ class InstanceAdmin::BaseController < ApplicationController
     'tax_rates' => { default_action: 'index' },
     'zones' => { default_action: 'index' },
     'taxonomies' => { default_action: 'index' },
-    'shipping_categories' => { default_action: 'index' },
-    'shipping_methods' => { default_action: 'index' },
+    # 'shipping_categories' => { default_action: 'index' },
+    # 'shipping_methods' => { default_action: 'index' },
   }
 
   def index
