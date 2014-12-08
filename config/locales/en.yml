@@ -74,6 +74,46 @@ en:
       notices:
         order_placed: 'Your order has been placed. Thank you!'
 
+      shipment_mailer:
+        resend: Resend
+
+        shipped_email:
+          subject: Shipment Notification
+          dear_customer: 'Dear Customer,'
+          instructions: 'Your order has been shipped'
+          shipment_summary: 'Shipment Summary'
+          track_information: 'Tracking Information: %{tracking}'
+          track_link: 'Tracking Link: %{url}'
+          thanks: 'Thank you for your business.'
+
+      order_mailer:
+        resend: Resend
+        subtotal: 'Subtotal: %{subtotal}'
+        total: 'Order Total: %{total}'
+        service_fee: 'Service fee: %{fee}'
+
+        confirm_email:
+          subject: 'Order Confirmation'
+          dear_customer: 'Dear Customer,'
+          instructions: 'Please review and retain the following order information for your records.'
+          order_summary: 'Order Summary'
+          thanks: 'Thank you for your business.'
+          promotion: 'Promotion'
+          shipping: 'Shipping'
+          tax: 'Tax'
+
+        cancel_email:
+          subject: 'Cancellation of Order'
+          dear_customer: 'Dear Customer,'
+          instructions: 'Your order has been CANCELED.  Please retain this cancellation information for your records.'
+          order_summary_canceled: 'Order Summary [CANCELED]'
+
+        notify_seller_email:
+          subject: 'New order'
+          dear_seller: 'Dear Seller,'
+          instructions: 'New order has been placed. Please visit "Manage > %{bookable_noun}" for details.'
+          order_summary: 'Order Summary'
+
     cart:
       labels:
         index: 'Shopping cart'
@@ -90,13 +130,13 @@ en:
         orders: 'My orders'
 
       notices:
-        add: 'buy_sell_market.cart.notices.add'
-        update: 'buy_sell_market.cart.notices.update'
-        empty: 'buy_sell_market.cart.notices.empty'
-        remove: 'buy_sell_market.cart.notices.remove'
+        add: 'Item has been successfully added to shopping cart'
+        update: 'Shopping cart has been updated'
+        empty: 'All items have been successfully removed'
+        remove: 'Item has been successfully removed from shopping cart'
 
       errors:
-        qty: 'buy_sell_market.cart.errors.qty'
+        qty: 'Selected quantity is not available.'
 
   orders:
       no_orders_html: "You don't have any %{type} orders. <a href='/search'>Find a %{bookable_noun} near you!</a>"
