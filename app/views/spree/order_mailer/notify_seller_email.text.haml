@@ -1,6 +1,6 @@
 = t('buy_sell_market.checkout.order_mailer.notify_seller_email.dear_seller')
 \
-= t('buy_sell_market.checkout.order_mailer.notify_seller_email.instructions')
+= t('buy_sell_market.checkout.order_mailer.notify_seller_email.instructions', bookable_noun: @order.instance.bookable_noun.pluralize)
 \
 ============================================================
 = t('buy_sell_market.checkout.order_mailer.notify_seller_email.order_summary')
@@ -32,4 +32,3 @@
 ============================================================
 = t('buy_sell_market.checkout.order_mailer.total', total: Spree::Money.new(@order.total_amount_to_charge, currency: @order.currency))
 \
-= t('buy_sell_market.checkout.order_mailer.confirm_email.thanks')
