@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141208143431) do
+ActiveRecord::Schema.define(version: 20141215131717) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -633,7 +633,6 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.string   "lessor"
     t.string   "lessee"
     t.boolean  "skip_company",                                                default: false
-    t.boolean  "default_instance",                                            default: false
     t.text     "pricing_options"
     t.decimal  "service_fee_host_percent",            precision: 5, scale: 2, default: 0.0
     t.string   "live_stripe_public_key"
@@ -687,11 +686,12 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.boolean  "user_based_marketplace_views",                                default: false
     t.string   "searcher_type"
     t.datetime "master_lock"
-    t.boolean  "apply_text_filters",                                          default: false
     t.text     "user_required_fields"
+    t.boolean  "apply_text_filters",                                          default: false
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
     t.string   "payment_transfers_frequency",                                 default: "fortnightly"
+    t.boolean  "default_instance"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -747,8 +747,8 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.boolean  "listings_public",                default: true
     t.integer  "partner_id"
     t.integer  "address_id"
-    t.string   "external_id"
     t.boolean  "mark_to_be_bulk_update_deleted", default: false
+    t.string   "external_id"
   end
 
   add_index "locations", ["address_id"], name: "index_locations_on_address_id", using: :btree
@@ -1058,11 +1058,11 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.boolean  "listings_public",                            default: true
+    t.integer  "recurring_booking_id"
     t.datetime "confirmed_at"
     t.datetime "cancelled_at"
     t.integer  "cancellation_policy_hours_for_cancellation", default: 0
     t.integer  "cancellation_policy_penalty_percentage",     default: 0
-    t.integer  "recurring_booking_id"
     t.integer  "credit_card_id"
   end
 
@@ -1088,6 +1088,13 @@ ActiveRecord::Schema.define(version: 20141208143431) do
   end
 
   add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
+
+  create_table "search_queries", force: true do |t|
+    t.string   "query"
+    t.text     "agent"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "spree_addresses", force: true do |t|
     t.string   "firstname"
@@ -1768,6 +1775,7 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.integer  "user_id"
+    t.string   "processing_time"
   end
 
   add_index "spree_shipping_methods", ["company_id"], name: "index_spree_shipping_methods_on_company_id", using: :btree
@@ -1835,10 +1843,18 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.datetime "updated_at"
     t.boolean  "backorderable",     default: false
     t.datetime "deleted_at"
+    t.integer  "instance_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.integer  "user_id"
   end
 
+  add_index "spree_stock_items", ["company_id"], name: "index_spree_stock_items_on_company_id", using: :btree
+  add_index "spree_stock_items", ["instance_id"], name: "index_spree_stock_items_on_instance_id", using: :btree
+  add_index "spree_stock_items", ["partner_id"], name: "index_spree_stock_items_on_partner_id", using: :btree
   add_index "spree_stock_items", ["stock_location_id", "variant_id"], name: "stock_item_by_loc_and_var_id", using: :btree
   add_index "spree_stock_items", ["stock_location_id"], name: "index_spree_stock_items_on_stock_location_id", using: :btree
+  add_index "spree_stock_items", ["user_id"], name: "index_spree_stock_items_on_user_id", using: :btree
 
   create_table "spree_stock_locations", force: true do |t|
     t.string   "name"
@@ -2149,9 +2165,12 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.text     "message",     null: false
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "target_id"
+    t.string   "target_type"
   end
 
   add_index "support_ticket_messages", ["instance_id"], name: "index_support_ticket_messages_on_instance_id", using: :btree
+  add_index "support_ticket_messages", ["target_id", "target_type"], name: "index_support_ticket_messages_on_target_id_and_target_type", using: :btree
   add_index "support_ticket_messages", ["ticket_id"], name: "index_support_ticket_messages_on_ticket_id", using: :btree
   add_index "support_ticket_messages", ["user_id"], name: "index_support_ticket_messages_on_user_id", using: :btree
 
@@ -2291,12 +2310,12 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.text     "pricing_options"
     t.text     "pricing_validation"
     t.text     "availability_options"
+    t.boolean  "recurring_booking",                          default: false, null: false
     t.boolean  "favourable_pricing_rate",                    default: true
     t.integer  "days_for_monthly_rate",                      default: 0
     t.datetime "cancellation_policy_enabled"
     t.integer  "cancellation_policy_hours_for_cancellation", default: 0
     t.integer  "cancellation_policy_penalty_percentage",     default: 0
-    t.boolean  "recurring_booking",                          default: false, null: false
     t.boolean  "show_page_enabled",                          default: false
     t.text     "custom_csv_fields"
   end

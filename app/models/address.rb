@@ -125,7 +125,7 @@ class Address < ActiveRecord::Base
       # do not allow to save when cannot geolocate
       self.address = nil
     end
-    geocded
+    geocoded
   end
 
   def should_fetch_coordinates?

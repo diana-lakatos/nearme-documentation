@@ -32,6 +32,7 @@ module Utils
       Spree::Config.currency = 'USD'
       Spree::Config.shipment_inc_vat = true
       Spree::Config.override_actionmailer_config = false
+
       # Spree::Config.address_requires_state = false
     end
 

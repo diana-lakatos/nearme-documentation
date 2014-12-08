@@ -6,6 +6,7 @@
 //= require ./vendor/jquery.ui.touch-punch
 //= require ./vendor/customSelect.jquery
 //= require bootstrap
+//= require select2
 //= require ./instance_admin/jquery.jstree
 //= require ./vendor/modernizr
 //= require ./vendor/jquery.cookie
