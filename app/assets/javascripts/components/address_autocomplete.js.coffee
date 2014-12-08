@@ -5,9 +5,9 @@
 class @AddressField
 
   constructor: (@input) ->
-    @form = @input.closest('form')
+    @inputWrapper = @input.closest('[data-address-field]')
     @autocomplete = new google.maps.places.Autocomplete(@input[0], {})
-    @addressComponentParser = new AddressComponentParser(@form)
+    @addressComponentParser = new AddressComponentParser(@inputWrapper)
 
     google.maps.event.addListener @autocomplete, 'place_changed', =>
       place = Search.Geocoder.wrapResult @autocomplete.getPlace()
@@ -33,12 +33,25 @@ class @AddressField
                   @pickSuggestion(result)
           else
             @setLatLng(null, null)
-            @form.find("#location_formatted_address").val(null)
-            @form.find("#location_local_geocoding").val("1")
+            @inputWrapper.find("[data-formatted-address]").val(null)
+            @inputWrapper.find("[data-local-geocoding]").val("1")
             @input.parent().find('.address_components_input').remove()
             @_onLocate(null, null) if @_onLocate
       , 200)
 
+  markerMoved: (lat, lng) =>
+    setTimeout( =>
+      geocoder = new Search.Geocoder()
+      deferred = geocoder.reverseGeocodeLatLng(lat, lng)
+      deferred.done (resultset) =>
+            result = Search.Geocoder.wrapResult resultset.getBestResult().result
+            @input.val(result.formattedAddress())
+            @pickSuggestion(result)
+    , 200)
+
+  bump: ->
+    if @inputWrapper.find("[data-latitude]").val() && @inputWrapper.find("[data-longitude]").val()
+      @setLatLngWithCallback(@inputWrapper.find("[data-latitude]").val(), @inputWrapper.find("[data-longitude]").val())
 
   onLocate: (callback) ->
     @_onLocate = callback
@@ -46,22 +59,26 @@ class @AddressField
   pickSuggestion: (place) ->
     @picked_result = true
     @setLatLng(place.lat(), place.lng())
-    @form.find("#location_formatted_address").val(place.formattedAddress())
-    @form.find("#location_local_geocoding").val("1")
+    @inputWrapper.find("[data-formatted-address]").val(place.formattedAddress())
+    @inputWrapper.find("[data-local-geocoding]").val("1")
     @addressComponentParser.buildAddressComponentsInputs(place)
 
     @_onLocate(place.lat(), place.lng()) if @_onLocate
 
   # Used by map controllers to update the lat-lng by moving map marker.
   setLatLng: (lat, lng) ->
-    @form.find("#location_latitude").val(lat)
-    @form.find("#location_longitude").val(lng)
+    @inputWrapper.find("[data-latitude]").val(lat)
+    @inputWrapper.find("[data-longitude]").val(lng)
+
+  setLatLngWithCallback: (lat, lng) ->
+    @setLatLng(lat, lng)
+    @_onLocate(lat, lng) if @_onLocate
 
 class @AddressComponentParser
 
-  constructor: (@form) ->
-    @input_name_prefix = @form.find('#address_component_input').attr('name')
-    @addressComponentWrapper = @form.find('#address-component-wrapper')
+  constructor: (@inputWrapper) ->
+    @input_name_prefix = @inputWrapper.find('input[data-address-components-input]').attr('name')
+    @addressComponentWrapper = @inputWrapper.find('.address-component-wrapper')
 
   buildAddressComponentsInputs: (place) =>
     @clearAddressComponentInputs()
@@ -78,5 +95,5 @@ class @AddressComponentParser
     @addressComponentWrapper.append(input)
 
   clearAddressComponentInputs: =>
-    @form.find('.address_components_input').each ->
+    @inputWrapper.find('.address_components_input').each ->
       $(this).remove()

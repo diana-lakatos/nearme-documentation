@@ -33,7 +33,7 @@ class RecurringBookingRequest < Form
       @recurring_booking.quantity = [1, quantity.to_i].max
       @recurring_booking.schedule_params = schedule_params
       @recurring_booking.currency = @listing.currency
-      @billing_gateway = Billing::Gateway::Incoming.new(@user, @instance, @recurring_booking.currency) if @user
+      @billing_gateway = Billing::Gateway::Incoming.new(@user, @instance, @recurring_booking.currency, @listing.company.iso_country_code) if @user
       @recurring_booking.payment_method = payment_method
       @count = 0
       @recurring_booking.schedule.occurrences(@recurring_booking.end_on || Time.zone.now + 20.years)[0..@recurring_booking.occurrences].each do |date|

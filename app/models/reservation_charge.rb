@@ -145,7 +145,7 @@ class ReservationCharge < ActiveRecord::Base
     @billing_gateway ||= if reservation.billing_authorization.try(:payment_gateway_class).present?
                            reservation.billing_authorization.payment_gateway_class.to_s.constantize.new(reservation.owner, instance, currency)
                          else
-                           Billing::Gateway::Incoming.new(reservation.owner, instance, currency)
+                           Billing::Gateway::Incoming.new(reservation.owner, instance, currency, Country.find(reservation.listing.company.country))
                          end
   end
 

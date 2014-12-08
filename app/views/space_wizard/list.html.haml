@@ -31,7 +31,7 @@
           %h2 Tell us a little about your company
           %br
           .box
-            = render :partial => 'companies/company_form', :locals => { :f => companies_form, :company => companies_form.object, :only_inputs => [ :name, :industries ] }
+            = render :partial => 'companies/company_form', :locals => { :f => companies_form, :company => companies_form.object, :only_inputs => [ :name, :address, :industries ] }
 
         = companies_form.simple_fields_for :locations, @user.companies.first.locations.first do |locations_form|
           %h2

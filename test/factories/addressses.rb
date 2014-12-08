@@ -3,6 +3,12 @@ FactoryGirl.define do
     address "42 Wallaby Way"
     latitude "-33.856944"
     longitude "151.215278"
+    address_components{{
+       "0"=> {
+        "long_name"=>"United States",
+        "short_name"=>"US",
+        "types"=>["country","political"]},
+    }}
 
     factory :address_in_auckland do
       city "Auckland"

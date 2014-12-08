@@ -430,6 +430,7 @@ class SecuredParams
       locations_attributes: nested(self.location),
       domain_attributes: nested(self.domain),
       approval_requests_attributes: nested(self.approval_request),
+      company_address_attributes: nested(self.address),
       theme_attributes: self.theme,
       industry_ids: []
     ]
@@ -452,11 +453,12 @@ class SecuredParams
     ]
   end
 
-  def location_address
+  def address
     [
       :address, :address2, :formatted_address, :postcode,
-      :suburb, :city, :state, :country, :street, :address_components,
-      :latitude, :local_geocoding, :longitude, :state_code
+      :suburb, :city, :state, :country, :street,
+      :latitude, :local_geocoding, :longitude, :state_code,
+      address_components: [:long_name , :short_name, :types]
     ]
   end
 
@@ -469,12 +471,12 @@ class SecuredParams
       :administrator_id, :name, :location_address,
       :availability_template_id,
       availability_rules_attributes: nested(self.availability_rule),
-      location_address_attributes: nested(self.location_address),
+      location_address_attributes: nested(self.address),
       listings_attributes: nested(self.transactable),
       approval_requests_attributes: nested(self.approval_request),
       amenity_ids: [],
       waiver_agreement_template_ids: []
-    ] + self.location_address
+    ] + self.address
   end
 
   def transactable(transactable_type = nil)
