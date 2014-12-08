@@ -111,7 +111,7 @@ en:
         notify_seller_email:
           subject: 'New order'
           dear_seller: 'Dear Seller,'
-          instructions: 'New order have been placed. Please visit "Manage > %{bookable_noun}" for details.'
+          instructions: 'New order has been placed. Please visit "Manage > %{bookable_noun}" for details.'
           order_summary: 'Order Summary'
 
     cart:
