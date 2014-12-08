@@ -108,6 +108,12 @@ en:
           instructions: 'Your order has been CANCELED.  Please retain this cancellation information for your records.'
           order_summary_canceled: 'Order Summary [CANCELED]'
 
+        notify_seller_email:
+          subject: 'New order'
+          dear_seller: 'Dear Seller,'
+          instructions: 'New order have been placed. Please visit administration for details.'
+          order_summary: 'Order Summary'
+
     cart:
       labels:
         index: 'Shopping cart'

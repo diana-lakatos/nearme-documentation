@@ -11,6 +11,16 @@ Spree::Order.class_eval do
   has_one :billing_authorization, as: :reference
   has_many :near_me_payments, as: :reference, class_name: '::Payment'
 
+  alias_method :old_finalize!, :finalize!
+  def finalize!
+    old_finalize!
+    deliver_notify_seller_email
+  end
+
+  def deliver_notify_seller_email
+    Spree::OrderMailer.notify_seller_email(self.id).deliver
+  end
+
   def total_amount_to_charge
     monetize(self.total) + service_fee_amount_guest
   end
