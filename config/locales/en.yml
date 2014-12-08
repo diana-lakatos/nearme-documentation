@@ -74,6 +74,18 @@ en:
       notices:
         order_placed: 'Your order has been placed. Thank you!'
 
+      shipment_mailer:
+        resend: Resend
+
+        shipped_email:
+          subject: Shipment Notification
+          dear_customer: 'Dear Customer,'
+          instructions: 'Your order has been shipped'
+          shipment_summary: 'Shipment Summary'
+          track_information: 'Tracking Information: %{tracking}'
+          track_link: 'Tracking Link: %{url}'
+          thanks: 'Thank you for your business.'
+
       order_mailer:
         resend: Resend
         subtotal: 'Subtotal: %{subtotal}'
