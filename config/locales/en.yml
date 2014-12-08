@@ -112,13 +112,13 @@ en:
         orders: 'My orders'
 
       notices:
-        add: 'buy_sell_market.cart.notices.add'
-        update: 'buy_sell_market.cart.notices.update'
-        empty: 'buy_sell_market.cart.notices.empty'
-        remove: 'buy_sell_market.cart.notices.remove'
+        add: 'Item has been successfully added to shopping cart'
+        update: 'Shopping cart has been updated'
+        empty: 'All items have been successfully removed'
+        remove: 'Item has been successfully removed from shopping cart'
 
       errors:
-        qty: 'buy_sell_market.cart.errors.qty'
+        qty: 'Selected quantity is not available.'
 
   orders:
       no_orders_html: "You don't have any %{type} orders. <a href='/search'>Find a %{bookable_noun} near you!</a>"
