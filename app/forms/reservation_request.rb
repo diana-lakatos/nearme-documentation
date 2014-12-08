@@ -1,7 +1,7 @@
 class ReservationRequest < Form
 
   attr_accessor :dates, :start_minute, :end_minute
-  attr_accessor :card_number, :card_expires, :card_code
+  attr_accessor :card_number, :card_expires, :card_code, :card_holder_first_name, :card_holder_last_name
   attr_accessor :waiver_agreement_templates
   attr_reader   :reservation, :listing, :location, :user
 
@@ -38,6 +38,8 @@ class ReservationRequest < Form
     if @user
       @user.phone_required = true
       @user.phone = @user.mobile_number
+      @card_holder_first_name ||= @user.first_name
+      @card_holder_last_name ||= @user.last_name
     end
 
     if @listing
@@ -117,16 +119,12 @@ class ReservationRequest < Form
     clear_errors(:cc)
     return true unless using_credit_card?
 
-    # Prevent invalid cards based on user first_name and last_name.
-    # This is a temporary solution. We should add first_name and last_name fields to reservation_request form.
-    user.name = "#{user.name} #{user.name}" if !user.last_name.present?
-
     begin
       self.card_expires = card_expires.to_s.strip
 
       credit_card = ActiveMerchant::Billing::CreditCard.new(
-        first_name: user.first_name,
-        last_name: user.last_name,
+        first_name: card_holder_first_name.to_s,
+        last_name: card_holder_last_name.to_s,
         number: card_number.to_s,
         month: card_expires.to_s[0,2],
         year: card_expires.to_s[-4,4],

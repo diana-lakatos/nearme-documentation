@@ -153,6 +153,8 @@ class Listings::ReservationsController < ApplicationController
         dates: attributes[:dates],
         start_minute: attributes[:start_minute],
         end_minute: attributes[:end_minute],
+        card_holder_first_name: attributes[:card_holder_first_name],
+        card_holder_last_name: attributes[:card_holder_last_name],
         card_expires: attributes[:card_expires],
         card_code: attributes[:card_code],
         card_number: attributes[:card_number],
