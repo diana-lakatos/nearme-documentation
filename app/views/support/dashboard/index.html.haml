@@ -21,7 +21,7 @@
                 .question
                   = support_ticket_title(ticket)
                 - if Transactable === ticket.target
-                  = link_to "RFQ - #{ticket.target.name}", ticket.show_target_path
+                  = link_to "#{t('reservations.rfq_short')} - #{ticket.target.name}", ticket.show_target_path
                 =render 'support/tickets/time', ticket: ticket
 
           = link_to 'View all tickets', support_tickets_path, :class => 'view-all'

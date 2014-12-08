@@ -4,7 +4,7 @@
     =support_ticket_title(ticket, 250)
   .row-fluid
     - if Transactable === ticket.target
-      = link_to "RFQ - #{ticket.target.name}", ticket.show_target_path
+      = link_to "#{t('reservations.rfq_short')} - #{ticket.target.name}", ticket.show_target_path
 
     =render 'support/tickets/time', ticket: ticket
     %hr
