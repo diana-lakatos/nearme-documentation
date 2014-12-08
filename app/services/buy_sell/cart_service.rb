@@ -62,7 +62,7 @@ class BuySell::CartService
   end
 
   def create_order(company_id)
-    @order = @user.orders.create!(company_id: company_id,
+    @order = @user.orders.create!(company_id: company_id, email: @user.email,
                                   service_fee_buyer_percent: PlatformContext.current.instance.service_fee_guest_percent,
                                   service_fee_seller_percent: PlatformContext.current.instance.service_fee_host_percent)
   end

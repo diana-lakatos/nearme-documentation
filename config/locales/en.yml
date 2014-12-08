@@ -74,6 +74,28 @@ en:
       notices:
         order_placed: 'Your order has been placed. Thank you!'
 
+      order_mailer:
+        resend: Resend
+        subtotal: 'Subtotal: %{subtotal}'
+        total: 'Order Total: %{total}'
+        service_fee: 'Service fee: %{fee}'
+
+        confirm_email:
+          subject: 'Order Confirmation'
+          dear_customer: 'Dear Customer,'
+          instructions: 'Please review and retain the following order information for your records.'
+          order_summary: 'Order Summary'
+          thanks: 'Thank you for your business.'
+          promotion: 'Promotion'
+          shipping: 'Shipping'
+          tax: 'Tax'
+
+        cancel_email:
+          subject: 'Cancellation of Order'
+          dear_customer: 'Dear Customer,'
+          instructions: 'Your order has been CANCELED.  Please retain this cancellation information for your records.'
+          order_summary_canceled: 'Order Summary [CANCELED]'
+
     cart:
       labels:
         index: 'Shopping cart'
