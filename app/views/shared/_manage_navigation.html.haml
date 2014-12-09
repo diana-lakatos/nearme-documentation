@@ -13,7 +13,7 @@
           -if TransactableType.first.try(:has_action?, 'Request For Quote')
             %li
               = link_to manage_support_tickets_path, :class => (active_tab == :rfq) ? 'active' : '' do
-                %span RFQ (#{current_user.companies.first.rfq_count})
+                %span= "#{t('reservations.rfq_short')} (#{current_user.companies.first.rfq_count})"
           %li
             = link_to analytics_dashboard_path, :class => (active_tab == :analytics) ? 'active' : '' do
               %span Analytics
