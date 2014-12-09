@@ -39,7 +39,7 @@
   </div>
 </div>
 
-{% if (platform_context.searcher_type != 'fulltext') and (platform_context.buyable? == false) %}
+{% if (platform_context.searcher_type != 'fulltext') && (platform_context.buyable? == false) %}
   {% content_for domready %}
     new Search.HomeController($('#listing_search'))
   {% endcontent_for %}
