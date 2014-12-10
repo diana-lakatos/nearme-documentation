@@ -75,6 +75,7 @@ en:
 
       errors:
         skip: 'You cannot skip checkout steps'
+        qty: 'Some of the items in your cart are out of stock or the selected QTY is not available anymore: %{items}'
 
       notices:
         order_placed: 'Your order has been placed. Thank you!'

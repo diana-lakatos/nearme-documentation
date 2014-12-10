@@ -15,7 +15,7 @@ class BuySell::SaveUserAddressesService
     ship_address.attributes = address_attributes(shipping_address)
     ship_address.save!
 
-    @user.update_attributes billing_address_id: bill_address.id, shipping_address_id: ship_address.id
+    @user.update_attributes billing_address_id: bill_address.id, shipping_address_id: ship_address.id, phone: bill_address.phone
   end
 
   private

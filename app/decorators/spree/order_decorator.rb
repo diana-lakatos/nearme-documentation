@@ -43,7 +43,10 @@ class Spree::OrderDecorator < Draper::Decorator
 
     address.firstname = current_user.first_name
     address.lastname = current_user.last_name
-    address.phone = "+#{current_user.country.calling_code}#{current_user.phone}"
+    address.phone = "#{current_user.phone}"
+    if current_user.country && !address.phone.include?('+')
+      address.phone = "+#{current_user.country.calling_code} #{address.phone}"
+    end
 
     if address_info
       address.address1 = address_info.address1
