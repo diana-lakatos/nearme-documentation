@@ -12,6 +12,7 @@ class BuySell::CartService
     populator = Spree::OrderPopulator.new(@order, @order.currency)
 
     unless populator.populate(product.master.id, quantity)
+      update_order(@order)
       @errors << populator.errors.full_messages.join('\n')
       return false
     end
@@ -71,6 +72,6 @@ class BuySell::CartService
     order.update!
     order.updater.update_item_count
     order.restart_checkout_flow
-    order.destroy if order.line_items.count == 0
+    order.destroy if order.line_items.count < 1
   end
 end
