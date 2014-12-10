@@ -6,7 +6,7 @@ class Spree::LineItemDecorator < Draper::Decorator
 
   MAX_QTY_FOR_SELECT = 30
 
-  def name
+  def name_with_link
     link_to object.name, product_url(object.product)
   end
 
@@ -40,6 +40,7 @@ class Spree::LineItemDecorator < Draper::Decorator
 
   def max_qty
     max = object.product.master.total_on_hand
-    max > MAX_QTY_FOR_SELECT ? MAX_QTY_FOR_SELECT : max
+    max = max > MAX_QTY_FOR_SELECT ? MAX_QTY_FOR_SELECT : max
+    max < 1 ? object.quantity : max
   end
 end

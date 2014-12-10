@@ -10,6 +10,7 @@ class BuySellMarket::CheckoutController < ApplicationController
   before_filter :set_order
   before_filter :check_step, except: [:get_states]
   before_filter :set_state, only: [:show]
+  before_filter :check_qty_on_step, only: [:show, :update]
 
   def show
     # Temporary solution for blocking checkout process if we do not support any PaymentGateway
@@ -112,6 +113,16 @@ class BuySellMarket::CheckoutController < ApplicationController
   end
 
   private
+
+  def check_qty_on_step
+    return true if step == :complete
+
+    qty_check_serivce = BuySell::OrderQtyCheckService.new(@order)
+    unless qty_check_serivce.check
+      flash[:error] = t('buy_sell_market.checkout.errors.qty', items: qty_check_serivce.items_out_of_stock)
+      redirect_to cart_index_path
+    end
+  end
 
   def save_user_addresses
     BuySell::SaveUserAddressesService.new(current_user).save_addresses(@order.bill_address, @order.ship_address)
