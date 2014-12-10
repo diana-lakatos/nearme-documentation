@@ -52,6 +52,11 @@ en:
           new_title: "New Product Image"
 
   buy_sell_market:
+    products:
+      buttons:
+        add_to_cart: 'Add to cart'
+        out_of_stock: 'Out of stock'
+
     checkout:
       labels:
         billing_address: 'Billing address'
