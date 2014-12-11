@@ -22,18 +22,18 @@ module ReservationTestSupport
         :date => date + i
       )
 
-      billing_gateway = Billing::Gateway::Incoming.new(reservation.owner, listing.instance, reservation.currency)
+      billing_gateway = Billing::Gateway::Incoming.new(reservation.owner, listing.instance, reservation.currency, 'US')
       response = billing_gateway.authorize(reservation.total_amount_cents, credit_card)
       reservation.create_billing_authorization(token: response[:token], payment_gateway_class: response[:payment_gateway_class], payment_gateway_mode: :test)
       reservation.save
       reservations << reservation
     end
-  
+
     reservations.each(&:confirm)
   end
 
   def credit_card
-    credit_card = ActiveMerchant::Billing::CreditCard.new(
+    ActiveMerchant::Billing::CreditCard.new(
       first_name: "Name",
       last_name: "Last Name",
       number: "4242424242424241",

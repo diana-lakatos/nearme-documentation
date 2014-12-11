@@ -5,8 +5,8 @@ class Billing::Gateway::Incoming
 
   attr_reader :processor
 
-  def initialize(user, instance, currency)
-    @processor = Billing::Gateway::Processor::Incoming::ProcessorFactory.create(user, instance, currency)
+  def initialize(user, instance, currency, country)
+    @processor = Billing::Gateway::Processor::Incoming::ProcessorFactory.create(user, instance, currency, country)
   end
 
   def possible?

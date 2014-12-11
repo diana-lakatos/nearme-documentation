@@ -15,7 +15,7 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     @reservation = FactoryGirl.create(:reservation_with_credit_card, listing: @listing)
     stub_billing_gateway(@instance)
     stub_active_merchant_interaction
-    @billing_gateway = Billing::Gateway::Incoming.new(@reservation.owner, @instance, @reservation.currency)
+    @billing_gateway = Billing::Gateway::Incoming.new(@reservation.owner, @instance, @reservation.currency, 'US')
 
     response = @billing_gateway.authorize(@reservation.total_amount_cents, credit_card)
     @reservation.create_billing_authorization(token: response[:token], payment_gateway_class: response[:payment_gateway_class])

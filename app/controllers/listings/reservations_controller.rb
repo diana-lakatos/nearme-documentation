@@ -90,7 +90,7 @@ class Listings::ReservationsController < ApplicationController
 
   # Renders remote payment form
   def remote_payment
-    @billing_gateway = Billing::Gateway::Incoming.new(current_user, @reservation.instance, @reservation.currency)
+    @billing_gateway = Billing::Gateway::Incoming.new(current_user, @reservation.instance, @reservation.currency, @reservation.listing.company.iso_country_code)
     @billing_gateway.processor.set_payment_data(@reservation)
   end
 

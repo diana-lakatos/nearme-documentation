@@ -26,7 +26,11 @@ class Country
     end
 
     def find(name)
-      countries[name]
+      if name.present?
+        countries[name]
+      else
+        nil
+      end
     end
 
     def find_by_alpha2(alpha2)

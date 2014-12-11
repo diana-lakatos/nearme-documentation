@@ -13,7 +13,7 @@ module LocationHelper
   end
 
   def fill_location_form
-    fill_in "location_address", with: "Auckland"
+    fill_in "Address", with: "Auckland"
     fill_in "location_description", with: "Proin adipiscing nunc vehicula lacus varius dignissim."
     select "Co-working", from: "location_location_type_id"
     fill_in "location_email", with: "location@example.com"
