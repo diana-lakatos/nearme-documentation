@@ -11,15 +11,9 @@ class BuySellMarket::CheckoutController < ApplicationController
   before_filter :check_step, except: [:get_states]
   before_filter :set_state, only: [:show]
   before_filter :check_qty_on_step, only: [:show, :update]
+  before_filter :check_billing_gateway, only: [:show, :update]
 
   def show
-    # Temporary solution for blocking checkout process if we do not support any PaymentGateway
-    # we should decide what TODO with users from not supported countries
-    if Billing::Gateway::Incoming.new(current_user, PlatformContext.current.instance, @order.currency, @order.company.iso_country_code).processor.nil?
-      flash[:error] = "Payment is not supported for this country"
-      redirect_to cart_index_path and return
-    end
-
     case step
     when :address
       @order.restart_checkout_flow
@@ -46,8 +40,8 @@ class BuySellMarket::CheckoutController < ApplicationController
       set_countries_states
     end
 
+    params[:order] ||= {}
     if @order.payment?
-      @billing_gateway = Billing::Gateway::Incoming.new(current_user, PlatformContext.current.instance, @order.currency, @order.company.iso_country_code)
       @order.card_expires = params[:order][:card_expires].try(:to_s).try(:strip)
       @order.card_number = params[:order][:card_number].try(:to_s).try(:strip)
       @order.card_code = params[:order][:card_code].try(:to_s).try(:strip)
@@ -76,7 +70,8 @@ class BuySellMarket::CheckoutController < ApplicationController
               payment_gateway_mode: PlatformContext.current.instance.test_mode? ? "test" : "live"
           )
           p = @order.payments.build(amount: @order.total_amount_to_charge, company_id: @order.company_id)
-          p.pend!
+          p.pend
+          p.save!
           unless @order.next
             flash[:error] = spree_errors
             render_step order_state and return
@@ -172,5 +167,13 @@ class BuySellMarket::CheckoutController < ApplicationController
 
   def order_state
     @order.state.to_sym
+  end
+
+  def check_billing_gateway
+    @billing_gateway = Billing::Gateway::Incoming.new(current_user, PlatformContext.current.instance, @order.currency, @order.company.iso_country_code)
+    if @billing_gateway.processor.nil?
+      flash[:error] = t('flash_messages.buy_sell.no_payment_gateway')
+      redirect_to cart_index_path
+    end
   end
 end

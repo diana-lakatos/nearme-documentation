@@ -22,7 +22,7 @@
     %meta{:content => "chrome=IE7", "http-equiv" => "X-UA-Compatible"}/
 
     = render 'social/social_meta_tags'
-    
+
     = yield(:meta)
     = csrf_meta_tag
     - if !platform_context.stripe_public_key.blank?
