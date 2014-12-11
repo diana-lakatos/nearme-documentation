@@ -1045,11 +1045,29 @@ section.search section#results.mixed {
             display: inline;
             padding-right: 15px;
           }
+
+          li.filter-option {
+            float: left;
+
+            label.checkbox.small-checkbox {
+              float: left;
+              margin-bottom: 0px;
+              span.filter-label-text {
+                float: left;
+                cursor: default;
+              }
+            }
+          }
         }
       }
 
-      @media (max-width: 2 * $iphone-portrait) {
+      @media (max-width: $iphone-portrait - 1) {
         display: none;
+      }
+
+
+      @media (max-width: 2 * $iphone-portrait) {
+        margin-right: 10px;
       }
     }
 
