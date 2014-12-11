@@ -8,6 +8,7 @@ class @CompanyForm
     @bindEvents()
     @defSynchronizeCheckboxes()
     @setDisabled()
+    new Dashboard.AddressController(@form)
 
   bindEvents: ->
     @whiteLabelSettingsEnabler.on 'change', =>
@@ -20,11 +21,11 @@ class @CompanyForm
       false
 
 
-      
+
   setDisabled: (checkbox) ->
     @whiteLabelSettingsContainer.find('input[type=text], input[type=tel], input[type=email], input[type=url], input[type=color], input[type=file]').prop('disabled', !@whiteLabelSettingsEnabler.is(':checked'))
 
   defSynchronizeCheckboxes: ->
     @whiteLabelCheckboxes.prop('checked', @whiteLabelSettingsEnabler.is(':checked'))
 
-    
+

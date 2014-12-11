@@ -51,9 +51,11 @@ class BuySellMarket::CheckoutController < ApplicationController
       @order.card_expires = params[:order][:card_expires].try(:to_s).try(:strip)
       @order.card_number = params[:order][:card_number].try(:to_s).try(:strip)
       @order.card_code = params[:order][:card_code].try(:to_s).try(:strip)
+      @order.card_holder_first_name = params[:order][:card_holder_first_name].try(:to_s).try(:strip)
+      @order.card_holder_last_name = params[:order][:card_holder_last_name].try(:to_s).try(:strip)
       credit_card = ActiveMerchant::Billing::CreditCard.new(
-          first_name: params[:first_name].presence || current_user.first_name,
-          last_name: params[:last_name].presence || current_user.last_name,
+          first_name: @order.card_holder_first_name,
+          last_name: @order.card_holder_last_name,
           number: @order.card_number,
           month: @order.card_expires.to_s[0, 2],
           year: @order.card_expires.to_s[-4, 4],

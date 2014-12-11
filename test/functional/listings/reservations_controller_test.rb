@@ -30,13 +30,13 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       TransactableType.update_all({
         cancellation_policy_enabled: Time.zone.now,
         cancellation_policy_hours_for_cancellation: 24,
-        cancellation_policy_penalty_percentage: 60}
-      )
+        cancellation_policy_penalty_percentage: 60
+      })
     end
 
     should 'store cancellation policy details if enabled' do
       post :create, booking_params_for(@listing)
-      reservation = assigns(:reservation_request).reservation
+      reservation = assigns(:reservation_request).reservation.reload
       assert_equal 24, reservation.cancellation_policy_hours_for_cancellation
       assert_equal 60, reservation.cancellation_policy_penalty_percentage
     end
@@ -44,7 +44,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
     should 'not store cancellation policy details if disabled' do
       TransactableType.update_all(cancellation_policy_enabled: nil)
       post :create, booking_params_for(@listing)
-      reservation = assigns(:reservation_request).reservation
+      reservation = assigns(:reservation_request).reservation.reload
       assert_equal 0, reservation.cancellation_policy_hours_for_cancellation
       assert_equal 0, reservation.cancellation_policy_penalty_percentage
     end

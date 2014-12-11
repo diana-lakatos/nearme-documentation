@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141204091142) do
+ActiveRecord::Schema.define(version: 20141208143431) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 20141204091142) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "iso_country_code",   limit: 2
   end
 
   add_index "addresses", ["entity_id", "entity_type", "address"], name: "index_addresses_on_entity_id_and_entity_type_and_address", unique: true, using: :btree
@@ -692,13 +693,6 @@ ActiveRecord::Schema.define(version: 20141204091142) do
     t.text     "user_required_fields"
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
-    t.boolean  "user_blogs_enabled",                                            default: false
-    t.string   "twilio_from_number"
-    t.string   "test_twilio_from_number"
-    t.string   "encrypted_test_twilio_consumer_key"
-    t.string   "encrypted_test_twilio_consumer_secret"
-    t.string   "encrypted_twilio_consumer_key"
-    t.string   "encrypted_twilio_consumer_secret"
     t.string   "payment_transfers_frequency"
   end
 

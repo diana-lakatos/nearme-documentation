@@ -24,6 +24,16 @@ class Address::AddressComponentsPopulator
     @result
   end
 
+  def reverse_geocode
+    @result = Geocoder.search("#{@location.read_attribute(:latitude)},#{@location.read_attribute(:longitude)}").first
+    if @result
+      output "Geocoded and fetched address_components for #{location_info}"
+    else
+      output "Couldn't geocode and get address_components for #{location_info}"
+    end
+    @result
+  end
+
   def populate
     return if @location.formatted_address.blank? || @location.address_components.present?
     if result

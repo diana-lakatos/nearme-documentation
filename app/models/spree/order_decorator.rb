@@ -5,7 +5,7 @@ Spree::Order.class_eval do
   belongs_to :instance
   belongs_to :partner
 
-  attr_accessor :card_number, :card_code, :card_expires
+  attr_accessor :card_number, :card_code, :card_expires, :card_holder_first_name, :card_holder_last_name
   scope :completed, -> { where(state: 'complete') }
 
   has_one :billing_authorization, as: :reference

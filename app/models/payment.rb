@@ -147,7 +147,7 @@ class Payment < ActiveRecord::Base
     @billing_gateway ||= if reference.billing_authorization.try(:payment_gateway_class).present?
                            reference.billing_authorization.payment_gateway_class.to_s.constantize.new(reference.owner, instance, currency)
                          else
-                           Billing::Gateway::Incoming.new(reference.owner, instance, currency)
+                           Billing::Gateway::Incoming.new(reference.owner, instance, currency, reference.company.iso_country_code)
                          end
   end
 
