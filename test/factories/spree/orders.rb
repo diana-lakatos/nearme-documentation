@@ -22,13 +22,18 @@ FactoryGirl.define do
       end
 
       after(:create) do |order, evaluator|
-        create_list(:line_item, evaluator.line_items_count, order: order)
+        create_list(:line_item, evaluator.line_items_count, order: order, currency: order.currency)
         order.line_items.reload
 
         create(:shipment, order: order, address: FactoryGirl.create(:address_engine))
         order.shipments.reload
 
         order.update!
+      end
+
+      factory :order_waiting_for_payment do
+        state 'payment'
+
       end
 
       factory :completed_order_with_totals do
