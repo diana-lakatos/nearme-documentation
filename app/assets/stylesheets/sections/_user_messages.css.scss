@@ -15,11 +15,16 @@ section.user_messages {
 
     .span10, .span12 { 
       margin-left: 0;
+      width: 73%;
     }
 
     .span2 {
       margin-left: $padding-default;
-      width: 15%;
+      width: 20%;
+
+      input.btn {
+        padding: 0;
+      }
     }
   }
 
