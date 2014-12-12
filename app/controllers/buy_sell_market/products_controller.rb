@@ -1,5 +1,6 @@
 class BuySellMarket::ProductsController < ApplicationController
   before_filter :set_product, only: [:show]
+  before_filter :theme_name, only: [:show]
 
   def show
     begin
@@ -15,5 +16,9 @@ class BuySellMarket::ProductsController < ApplicationController
 
   def set_product
     @product = Spree::Product.searchable.friendly.find(params[:id])
+  end
+
+  def theme_name
+    @theme_name = 'buy-sell'
   end
 end

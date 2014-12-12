@@ -155,6 +155,15 @@ module ApplicationHelper
     ].compact.join(' ')
   end
 
+  def theme_class(theme_name = nil)
+    [
+      theme_name,
+      controller_name,
+      "#{controller_name}-#{params[:action]}",
+    ].compact.join(' ')
+  end
+
+
   def dnm_page_class
     [
       content_for?(:manage_navbar) || content_for?(:top_sub_navigation) ? 'with-sub-navbar' : nil,
