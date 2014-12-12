@@ -46,7 +46,7 @@
       = javascript_include_tag "//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"
       = javascript_include_tag :chrome_frame
 
-  %body{class: "#{'buy-sell' if platform_context.instance.buyable?}"}
+  %body{class: theme_class(@theme_name)}
     .dnm-page-body{:class => "#{'main-page' if current_page?(root_url)}" }
       = render 'shared/render_flash'
       .content-wrapper
