@@ -121,7 +121,7 @@ en:
         multiple_orders: 'Maybe some text explaining why we have to checkout multiple times (for every company separately)'
 
       buttons:
-        browse_products: 'Browse products'
+        browse_products: 'Browse %{bookable_noun}'
         update_qty: 'Update'
         remove_item: 'Remove'
         empty_cart: 'Empty cart'
@@ -139,7 +139,28 @@ en:
         qty: 'Selected quantity is not available.'
 
   orders:
-      no_orders_html: "You don't have any %{type} orders. <a href='/search'>Find a %{bookable_noun} near you!</a>"
+    index:
+      title: 'My orders'
+
+    states:
+      - Delivered
+
+    labels:
+      order_placed: 'ORDER PLACED'
+      total: 'TOTAL'
+      ship_to: 'SHIP TO'
+      order: 'ORDER'
+      sold_by: 'Sold by:'
+      est_delivery: 'Estimated delivery:'
+      no_orders: "You don't have any orders."
+
+    buttons:
+      track: 'Track package'
+      seller_feedback: 'Leave seller feedback'
+      buyer_feedback: 'Leave buyer feedback'
+      product_review: 'Write a product review'
+      order_details: 'View Order Details'
+
   registrations:
     tell_us: 'Tell us a little about yourself'
     custom_attributes: 'Custom Attributes'

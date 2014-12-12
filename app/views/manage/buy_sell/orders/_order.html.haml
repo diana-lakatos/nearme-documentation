@@ -8,7 +8,7 @@
   .span1
     = t("manage.order.payment_states.#{order.payment_state}")
   .span1
-    = t("manage.order.shipment_states.#{order.shipment_state}") if order.shipment_state 
+    = t("manage.order.shipment_states.#{order.shipment_state}") if order.shipment_state
   .span2
     = mail_to order.email
   .span1

@@ -1,15 +1,42 @@
+- if params[:controller].include?('manage')
+  - feedback_caption = t('orders.buttons.buyer_feedback')
+  - details_url = edit_manage_buy_sell_order_path(order)
+- else
+  - feedback_caption = t('orders.buttons.seller_feedback')
+  - details_url = order_path(order)
+
 .row-fluid
-  .span12.reservation-details{id: dom_id(order)}
-    .span12.reservation-text-information
-      .reservation-status
-        .icon-container
-          = order.my_order_status_info
-      .span12.reservation-information
-        .span2
-          =link_to order.number, order_path(order)
-        .span2
-          = order.created_at.to_date
-        .span2
-          = order.payment_state
-        .span6
-          = order.display_total.to_html
+  .span8.offset2
+    .box.clearfix
+      %header
+        %ul.order-info
+          %li
+            %p= t('orders.labels.order_placed').upcase
+            %p= order.display_completed_at
+          %li
+            %p= t('orders.labels.total').upcase
+            %p= order.display_total
+          %li
+            %p= t('orders.labels.ship_to').upcase
+            %p= order.display_shipping_address
+          %li.order-number
+            %p #{t('orders.labels.order').upcase} ##{order.number}
+            = link_to t('orders.buttons.order_details'), details_url
+      .order.clearfix
+        .order-details
+          %h1= order.status
+          %p #{t 'orders.labels.est_delivery'} Thursday, November 13th, 2014
+          = render partial: 'buy_sell/orders/line_item', locals: {line_item: order.line_items.first, order: order}
+
+        .order-actions
+          %input.btn.btn-green{type: 'submit', value: t('orders.buttons.track')}
+          %input.btn.btn-gray{type: 'submit', value: feedback_caption}
+          %input.btn.btn-gray{type: 'submit', value: t('orders.buttons.product_review')}
+
+      - order.line_items.each_with_index do |line_item, index|
+        - next if index == 0
+        .order.additional-order.clearfix
+          = render partial: 'buy_sell/orders/line_item', locals: {line_item: line_item, order: order}
+
+          .order-actions
+            %input.btn.btn-gray{type: 'submit', value: t('orders.buttons.product_review')}

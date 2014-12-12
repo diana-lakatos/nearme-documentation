@@ -1,17 +1,23 @@
-- title "Bookings (#{@orders.count})"
+- title t('orders.index.title')
 
-%section#reservations
+%section#orders
   .row-fluid
     .span8.offset2
       %h1
-        %span.ico-bookings.padding My Orders
-      .box
-        %header
-          .button-links
-            / %ul
-            /   %li
-            /     =orders_navigation_link('new')
-            /   %li
-            /     =orders_navigation_link('complete')
+        %span.ico-bookings.padding
+        = t 'orders.index.title'
 
-        = render 'index'
+  - if @orders.empty?
+    .row-fluid
+      .span8.offset2
+        .box.clearfix.centered
+          %p= t('orders.labels.no_orders')
+          %p= render partial: 'buy_sell_market/shared/browse_products_button'
+
+  = render partial: 'order', collection: @orders
+
+  .row-fluid
+    .span8.offset2
+      .box.centered
+        = will_paginate @orders
+
