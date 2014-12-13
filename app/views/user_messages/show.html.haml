@@ -13,9 +13,9 @@
               .span12.errors
                 = f.error :body
 
-            .span10
+            .span10.nested
               = f.text_area :body
-            .span2.clearfix
+            .span2.nested.clearfix
               = f.submit "Send", class: "btn btn-large btn-green"
       - else
         .listing-deleted
