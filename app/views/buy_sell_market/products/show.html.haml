@@ -1,65 +1,238 @@
-= render 'shared/modules/buy_sell_top_navigation'
+- hidden = [:favorite, :rating, :reviews, :user_reviews, :shipping]
+- hidden = [] # TODO: Remove
 
-- title render 'buy_sell_market/products/title', product: @product
-- canonical_url product_path(@product)
+%section.product-head
+  .container-fluid
+    .row-fluid
+      .span8
+        .product-img-large
+          = @product.first_image
+        .thumbnail-row
+          - @product.images.each_with_index do |image, index|
+            - next if index == 0
+            %a{href: '#'}
+              %img{alt: image.alt, src: image.image_url}
+      .span4
+        %h1= @product.name
+        %h1= @product.humanized_price
+        - if hidden.include?(:rating)
+          %br
+        - else
+          .rating.product-rating
+            %p Rating:
+            = render partial: 'stars', locals: { stars: 5, count: 8 }
 
-- content_for :meta_description do
-  = @product.meta_description
-
-- content_for :hero do
-  %article#product
-    .container-fluid
-
-      .container-row
-        .two-thirds.column.left
-          = render 'buy_sell_market/products/product_photos', product: @product
-
-        .one-third.column.left.padding
-          %h1= mask_phone_and_email_if_necessary(@product.name)
-          .description
-            = truncate(custom_sanitze(mask_phone_and_email_if_necessary(@product.description)), length: 500, separator: ' ')
-          .price= @product.humanized_price
-
+        = form_tag cart_add_product_path, method: :get, class: 'inline' do
+          = hidden_field_tag 'product_id', @product.id
+          = label_tag 'quantity', 'Quantity:'
+          = select_tag 'quantity', options_for_select((1..10)), class: ''
           - if @product.total_on_hand > 0
-            = link_to cart_add_product_path(@product), class: 'btn btn-blue btn-large add_to_cart' do
-              %span= t 'buy_sell_market.products.buttons.add_to_cart'
+            %button.cta.btn.blue.padding11
+              = t('buy_sell_market.products.buttons.add_to_cart')
           - else
-            %span{class: 'btn btn-white btn-large add_to_cart'}
-              %span= t 'buy_sell_market.products.buttons.out_of_stock'
+            .btn.disabled= t('buy_sell_market.products.buttons.out_of_stock')
 
-      .clearfix.padding-row
+        .social-wrapper
+          - unless hidden.include?(:favorite)
+            %a{:href => "#"}
+              .btn.gray
+                = image_tag 'themes/product_theme/heart-gray.png', class: 'social-icon'
+                Favorite
+          = render partial: 'social_buttons', locals: { product: @product }
 
-      #products-tabs.container-row
-        %ul.nav.nav-tabs{role: 'tablist'}
-          %li.active
-            %a{href: "#description", role: "tab", :'data-toggle' => "tab"} Description
+%section.product-details
+  .container-fluid
+    .tab-content-container
+      %ul.nav.nav-tabs.page-tabs{:role => "tablist"}
+        %li.active
+          %a{"data-toggle" => "tab", :href => "#product-details", :role => "tab"} Item Details
+        - unless hidden.include?(:reviews)
           %li
-            %a{href: "#properties", role: "tab", :'data-toggle' => "tab"} Properties
+            %a{"data-toggle" => "tab", :href => "#product-reviews", :role => "tab"} Reviews (8)
+        - unless hidden.include?(:shipping)
           %li
-            %a{href: "#share", role: "tab", :'data-toggle' => "tab"} Share
+            %a{"data-toggle" => "tab", :href => "#product-shipping", :role => "tab"} Shipping & Policies
+      .tab-content
+        %article#product-details.tab-pane.active
+          %p= @product.description
 
-        .tab-content
-          #description.tab-pane.active
-            .description
-              = custom_sanitze(mask_phone_and_email_if_necessary(@product.description))
-          #properties.tab-pane
-            = render 'buy_sell_market/products/properties', product: @product, product_properties: @product_properties
-          #share.tab-pane
-            = render 'buy_sell_market/products/social_buttons', product: @product
+        - unless hidden.include?(:reviews)
+          %article#product-reviews.tab-pane
+            .rating-averages
+              .row-fluid.reviews-summary
+                .span3
+                  %p Summary
+                .span9
+                  .rating
+                    = render partial: 'stars', locals: { stars: 5 }
+              .row-fluid
+                .span3
+                  %p Communication
+                .span3
+                  .rating
+                    = render partial: 'stars', locals: { stars: 5 }
+                .span3
+                  %p Quality
+                .span3
+                  .rating
+                    = render partial: 'stars', locals: { stars: 5 }
+              .row-fluid
+                .span3
+                  %p Shipping Speed
+                .span3
+                  .rating
+                    = render partial: 'stars', locals: { stars: 5 }
+                .span3
+                  %p Customer Attention
+                .span3
+                  .rating
+                    = render partial: 'stars', locals: { stars: 5 }
+            .review
+              .row-fluid
+                .span2
+                  = image_tag 'themes/product_theme/profile-pic.png'
+                  %p Angela
+                .span10
+                  .rating
+                    = render partial: 'stars', locals: { stars: 5 }
+                    %p.review-date November 2014
+                  %p Plants came in great shape and have transferred well so far. There was a nice assortment. I'll be ordering again for more special succulents!
+            .see-more
+              %a{:href => "#"} See more reviews
 
+        - unless hidden.include?(:shipping)
+          %article#product-shipping.tab-pane
+            .row-fluid
+              .span3
+                %h5 Shipping
+              .span9
+                %p Ready to Ship in 3-5 business days
+            .row-fluid
+              .span3
+                %h5 Shipping Costs
+              .span9
+                %table
+                  %tr
+                    %td USA
+                    %td.country-price $5.00
+                  %tr
+                    %td Canada
+                    %td.country-price $10.00
+                  %tr
+                    %td Everywhere else
+                    %td.country-price $12.00
+            .row-fluid
+              .span3
+                %h5 Shipping Details
+              .span9
+                %p Shipping occurs twice a weeks via USPS 2-3 day priority mail. The reason for twice a week shipping is, due to the plants watering schedule. Once the plant is ordered, we want to make sure that the roots are bare when shipped and dry dirt falls off much easier than wet dirt. Please open your package and unwrap as soon as they arrive. Succulent plants can lose their color and as with all living plants, they really prefer to get out of their boxes and into a good soil mixture. Any of the listings that state plants are shipped bare root means that they are out of the pot and have very little soil. While they can travel that way its best to get them replanted as soonz as they get to their new home.
+            .row-fluid
+              .span3
+                %h5 Refunds and Exchanges
+              .span9
+                %p All plants are of the highest quality. If you are dissatisfied in any way with your plants, please contact Succulentbabies within 24 hours of delivery. All plants are carefully wrapped prior to shipping to make sure they arrive in great shape. We have no control over your shipment once it has been shipped and are not responsible for lost or damaged items. When shipped in pots, which on occasion we will do, soil can get loose from the pot. Brush off the plant or gently blow to remove the loose soil from the plant and replace the soil around the plants root.
 
-      .container-row
-        .row-fluid.padding-row
-          = render 'buy_sell_market/products/cross_sell_products', product: @product
+    .vendor-profile
+      .vendor-pic.inline
+        = image_tag @product.administrator.avatar.url(:big)
+      .vendor-info.inline
+        %h2= @product.administrator.name
+        %p= @product.administrator_location
+      = link_to new_product_user_message_path(@product) do
+        .btn.blue Contact Host
+      .divider
 
-          = render 'buy_sell_market/products/administrator', administrator: @product.administrator
+      - unless hidden.include?(:user_reviews)
+        %h3 Reviews of #{@product.administrator.first_name}
+        .rating.vendor-rating
+          = render partial: 'stars', locals: { stars: 5, count: 26 }
 
-.clearfix.padding-row
+      %h4 Verifications
+      .verifications
+        .row-fluid
+          .span6
+            = image_tag 'themes/product_theme/check.png', class: 'check'
+            %p LinkedIn
+          .span6
+            = image_tag 'themes/product_theme/check.png', class: 'check'
+            %p Email Address
+        .row-fluid
+          .span6
+            = image_tag 'themes/product_theme/check.png', class: 'check'
+            %p Facebook
+          .span6
+            = image_tag 'themes/product_theme/check.png', class: 'check'
+            %p Phone Number
+        .row-fluid
+          .span6
+            = image_tag 'themes/product_theme/check.png', class: 'check'
+            %p Twitter
+          .span6
+            = image_tag 'themes/product_theme/check.png', class: 'check'
+            %p Reviews
 
-- content_for :script do
-  :javascript
-    // Initialize the ui controller
-    $(function() {
-      new Product.Controller($('article#product'));
-    });
-
+-#= render 'shared/modules/buy_sell_top_navigation'
+-#
+-#- title render 'buy_sell_market/products/title', product: @product
+-#- canonical_url product_path(@product)
+-#
+-#- content_for :meta_description do
+-#  = @product.meta_description
+-#
+-#- content_for :hero do
+-#  %article#product
+-#    .container-fluid
+-#
+-#      .container-row
+-#        .two-thirds.column.left
+-#          = render 'buy_sell_market/products/product_photos', product: @product
+-#
+-#        .one-third.column.left.padding
+-#          %h1= mask_phone_and_email_if_necessary(@product.name)
+-#          .description
+-#            = truncate(custom_sanitze(mask_phone_and_email_if_necessary(@product.description)), length: 500, separator: ' ')
+-#          .price= @product.humanized_price
+-#
+-#          - if @product.total_on_hand > 0
+-#            = link_to cart_add_product_path(@product), class: 'btn btn-blue btn-large add_to_cart' do
+-#              %span= t 'buy_sell_market.products.buttons.add_to_cart'
+-#          - else
+-#            %span{class: 'btn btn-white btn-large add_to_cart'}
+-#              %span= t 'buy_sell_market.products.buttons.out_of_stock'
+-#
+-#      .clearfix.padding-row
+-#
+-#      #products-tabs.container-row
+-#        %ul.nav.nav-tabs{role: 'tablist'}
+-#          %li.active
+-#            %a{href: "#description", role: "tab", :'data-toggle' => "tab"} Description
+-#          %li
+-#            %a{href: "#properties", role: "tab", :'data-toggle' => "tab"} Properties
+-#          %li
+-#            %a{href: "#share", role: "tab", :'data-toggle' => "tab"} Share
+-#
+-#        .tab-content
+-#          #description.tab-pane.active
+-#            .description
+-#              = custom_sanitze(mask_phone_and_email_if_necessary(@product.description))
+-#          #properties.tab-pane
+-#            = render 'buy_sell_market/products/properties', product: @product, product_properties: @product_properties
+-#          #share.tab-pane
+-#            = render 'buy_sell_market/products/social_buttons', product: @product
+-#
+-#
+-#      .container-row
+-#        .row-fluid.padding-row
+-#          = render 'buy_sell_market/products/cross_sell_products', product: @product
+-#
+-#          = render 'buy_sell_market/products/administrator', administrator: @product.administrator
+-#
+-#.clearfix.padding-row
+-#
+-#- content_for :script do
+-#  :javascript
+-#    // Initialize the ui controller
+-#    $(function() {
+-#      new Product.Controller($('article#product'));
+-#    });
+    -#

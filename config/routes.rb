@@ -26,7 +26,7 @@ DesksnearMe::Application.routes.draw do
       get '/', action: 'index', as: 'index'
       delete 'empty'
       patch 'update'
-      get 'add/:product_id', action: 'add', as: 'add_product' # For redirection after login
+      get 'add', action: 'add', as: 'add_product' # Get is for redirection after login
       delete 'remove/:item_id', action: 'remove', as: 'remove_product'
       get 'next/:order_id', action: 'next', as: 'next'
     end

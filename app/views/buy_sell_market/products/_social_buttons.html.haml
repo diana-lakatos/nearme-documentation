@@ -1,42 +1,24 @@
 - url ||= product_url(product)
+
 - content_for :meta do
   = render partial: 'shared/og_meta', locals: { object: product, url: url }
   - if product.images.count > 0
-    %meta{property:"og:image", content: product.images.first.image.url('large') }
-.social-buttons-wrapper
-  .facebook
-    .fb-like{:'data-href' => url, :'data-colorscheme' => "light", :'data-layout' => "button_count", :'data-action' => "like", :'data-show-faces' => "false", :'data-send' => "false"}
-    #fb-root
-    - content_for :script do
-      :javascript
-        (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=#{DesksnearMe::Application.config.facebook_key}";
-        fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
+    %meta{property: 'og:image', content: product.first_image_url }
 
-  .social-buttons
+- # Facebook
+= link_to "https://www.facebook.com/sharer/sharer.php?u=#{u url}", target: '_blank' do
+  = image_tag 'themes/product_theme/facebook.png', class: 'social-icon'
 
-    .twitter
-      = link_to "Tweet", "https://twitter.com/share", class: "twitter-share-button", :'data-text' => product.name, :'data-url' => url
-      %script
-        !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+- # Twitter
+= link_to 'https://twitter.com/share', 'data-text' => product.name, 'data-url' => url do
+  = image_tag 'themes/product_theme/twitter.png', class: 'social-icon'
+  :javascript
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
 
-    .linkedin
-      %script{src: "//platform.linkedin.com/in.js", type: "text/javascript", lang: 'en_US'}
-      %script{type: "IN/Share", :'data-counter' => "right", :'data-url' => url}
+-# Pinterest
+= link_to "//www.pinterest.com/pin/create/button/?url=#{u url}&media=#{product.first_image_url}&description=#{product.short_description}" do
+  = image_tag 'themes/product_theme/pintrest.png', class: 'social-icon'
 
-    .google-plus
-      .g-plusone{:'data-size' => "medium", :'data-href' => url}
-      :javascript
-        window.___gcfg = {
-          parsetags: 'onload'
-        };
-        (function() {
-          var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-          po.src = 'https://apis.google.com/js/plusone.js';
-          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-          })();
-  .clearfix
+-# Tumblr
+= link_to "http://www.tumblr.com/share/link?url=#{u url}&name=#{product.name}&description=#{product.short_description}" do
+  = image_tag 'themes/product_theme/tumblr.png', class: 'social-icon'
