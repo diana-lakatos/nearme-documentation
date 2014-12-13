@@ -1,3 +1,5 @@
+- hidden = [:review, :feedback] # TODO: Remove when implemented
+
 - if params[:controller].include?('manage')
   - feedback_caption = t('orders.buttons.buyer_feedback')
   - details_url = edit_manage_buy_sell_order_path(order)
@@ -30,8 +32,10 @@
 
         .order-actions
           %input.btn.btn-green{type: 'submit', value: t('orders.buttons.track')}
-          %input.btn.btn-gray{type: 'submit', value: feedback_caption}
-          %input.btn.btn-gray{type: 'submit', value: t('orders.buttons.product_review')}
+          - unless hidden.include?(:feedback)
+            %input.btn.btn-gray{type: 'submit', value: feedback_caption}
+          - unless hidden.include?(:review)
+            %input.btn.btn-gray{type: 'submit', value: t('orders.buttons.product_review')}
 
       - order.line_items.each_with_index do |line_item, index|
         - next if index == 0
@@ -39,4 +43,5 @@
           = render partial: 'buy_sell/orders/line_item', locals: {line_item: line_item, order: order}
 
           .order-actions
-            %input.btn.btn-gray{type: 'submit', value: t('orders.buttons.product_review')}
+            - unless hidden.include?(:review)
+              %input.btn.btn-gray{type: 'submit', value: t('orders.buttons.product_review')}

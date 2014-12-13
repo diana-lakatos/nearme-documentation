@@ -56,6 +56,29 @@ en:
       buttons:
         add_to_cart: 'Add to cart'
         out_of_stock: 'Out of stock'
+        favorite: 'Favorite'
+        contact_host: 'Contact Host'
+
+      labels:
+        rating: 'Rating:'
+        qty: 'Quantity:'
+        verifications: 'Verifications'
+        reviews_of: 'Reviews of'
+        item_details: 'Item details'
+        reviews: 'Reviews'
+        shippigng_policies: 'Shipping & Policies'
+        more_reviews: 'See more reviews'
+        summary: 'Summary'
+        communication: 'Communication'
+        shipping_speed: 'Shipping speed'
+        quality: 'Quality'
+        customer_attention: 'Customer Attention'
+        shipping_costs: 'Shipping Costs'
+        shipping: 'Shipping'
+        shipping_details: 'Shipping Details'
+        refunds_and_exchanges: 'Refunds and Exchanges'
+        phone_number: 'Phone Number'
+        email_address: 'Email Address'
 
     checkout:
       labels:

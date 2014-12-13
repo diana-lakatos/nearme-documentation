@@ -11,7 +11,11 @@ class Spree::LineItemDecorator < Draper::Decorator
   end
 
   def description
-    object.description
+    object.description ? object.description : ''
+  end
+
+  def short_description(chars=90)
+    object.description.to_s.truncate chars, separator: ' '
   end
 
   def quantity_form

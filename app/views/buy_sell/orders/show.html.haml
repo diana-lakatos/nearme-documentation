@@ -56,7 +56,7 @@
                     = link_to image_tag(item.variant.images.first.image.url(:medium)), item.variant.product
                 %td{"data-hook" => "order_item_description"}
                   %h4= item.variant.product.name
-                  = item.variant.product.description.truncate(30)
+                  = item.variant.product.decorate.short_description(30)
                   = "(" + item.variant.options_text + ")" unless item.variant.option_values.empty?
                 %td.price{"data-hook" => "order_item_price"}
                   %span= item.single_money.to_html

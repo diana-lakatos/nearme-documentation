@@ -52,13 +52,13 @@ class Spree::ProductDecorator < Draper::Decorator
 
   def first_image
     if object.images.empty?
-      image_tag 'placeholders/895x554.gif'
+      image_tag 'placeholders/895x554.gif', id: 'product-first-image'
     else
-      image_tag object.images.first.image_url, alt: object.images.first.alt
+      image_tag object.images.first.image_url, alt: object.images.first.alt, id: 'product-first-image'
     end
   end
 
   def short_description(chars=90)
-    object.description.to_s.truncate chars, sepatator: ' '
+    object.description.to_s.truncate chars, separator: ' '
   end
 end

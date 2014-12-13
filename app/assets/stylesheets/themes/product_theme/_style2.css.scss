@@ -218,7 +218,7 @@ body.product-theme {
 
   .vendor-info {
     vertical-align: top;
-    padding: 25px 15px;
+    padding: 25px 10px;
   }
 
   .vendor-info p {
@@ -235,12 +235,17 @@ body.product-theme {
     margin: 15px 0;
   }
 
+  .verifications img {
+    padding-right: 10px;
+    vertical-align: text-top;
+  }
+
   .verifications p {
     display: inline-block;
-    padding-left: 10px;
     font-size: 16px;
     font-weight: 300;
-    margin: 0;
+    margin: 5px 5px;
+    width: 45%;
   }
 
   .vendor-profile .tn {
