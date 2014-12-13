@@ -4,7 +4,7 @@ class Manage::BuySell::OrdersController < Manage::BuySell::BaseController
   before_filter :find_order, only: [:edit, :update, :destroy, :cancel, :resume, :approve]
 
   def index
-    @orders = @company.orders.paginate(page: params[:page], per_page: 20)
+    @orders = @company.orders.complete.paginate(page: params[:page]).order('created_at DESC').decorate
   end
 
   def edit

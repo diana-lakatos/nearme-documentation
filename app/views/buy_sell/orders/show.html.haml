@@ -51,7 +51,7 @@
               %tr{"data-hook" => "order_details_line_item_row"}
                 %td{"data-hook" => "order_item_image"}
                   - if item.variant.images.length == 0
-                    = link_to small_image(item.variant.product), item.variant.product
+                    = item.decorate.image
                   - else
                     = link_to image_tag(item.variant.images.first.image.url(:medium)), item.variant.product
                 %td{"data-hook" => "order_item_description"}

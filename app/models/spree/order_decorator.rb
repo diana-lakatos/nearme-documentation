@@ -12,6 +12,9 @@ Spree::Order.class_eval do
   has_many :near_me_payments, as: :reference, class_name: '::Payment'
 
   alias_method :old_finalize!, :finalize!
+
+  self.per_page = 5
+
   def finalize!
     old_finalize!
     deliver_notify_seller_email

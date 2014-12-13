@@ -4,5 +4,4 @@
 
   .row-fluid
     .span12.centered
-      = link_to t('buy_sell_market.cart.buttons.browse_products'), root_path(anchor: 'products'),
-                  class: 'btn btn-blue btn-large'
+      = render partial: 'buy_sell_market/shared/browse_products_button'

@@ -4,8 +4,7 @@ class BuySell::OrdersController < ApplicationController
   before_filter :authenticate_user!
 
   def index
-    @orders = current_user.orders.complete
-    # @orders = params[:state] == 'complete' ? @orders.complete : @orders.incomplete
+    @orders = current_user.orders.complete.paginate(page: params[:page]).order('created_at DESC').decorate
   end
 
   def show

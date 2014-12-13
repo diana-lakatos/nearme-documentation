@@ -2,27 +2,17 @@
 
 = show_manage_navigation(:orders)
 
-.row-fluid
-  .span10.offset1
-    .box
-      %header
-        %ul.location-and-listings
-          %li.location
-            .name.left
-              Manage Orders
-      %ul.location-and-listings
-        %li.listing.action-buttons
-          .span2= t('order.completed')
-          .span2= t('order.order_number')
-          .span1= t('order.state')
-          .span1= t('order.payment_state')
-          .span1= t('order.shippment_state')
-          .span2= t('order.buyer_email')
-          .span1= t('order.total')
 
-          .span2.state.text-right
+%section#orders
+  .row-fluid
+    .span8.offset2
+      %h1
+        %span.ico-bookings.padding
+        = t 'orders.index.title'
 
-          .clearfix
-        = render partial: 'order', collection: @orders
-      = will_paginate @orders
+  = render partial: 'buy_sell/orders/order', collection: @orders
 
+  .row-fluid
+    .span8.offset2
+      .box.centered
+        = will_paginate @orders
