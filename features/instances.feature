@@ -4,15 +4,6 @@ Background:
   Given an instance exists
     And I log in as admin
 
-Scenario: Admin user creates new instance
-  Given I am on the admin instances page
-    And I follow "New Instance"
-   When I fill instance form with valid details
-    And I fill instance form with a valid user
-    And I press "Create Instance"
-   Then I should see created instance show page
-    And I should have blog instance created
-
 Scenario: Admin user edits instance
   Given I am on the admin instances page
    Then I should see instances list

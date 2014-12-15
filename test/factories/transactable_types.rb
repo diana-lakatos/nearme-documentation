@@ -13,7 +13,7 @@ FactoryGirl.define do
       after(:build) do |transactable_type|
         TransactableType.transaction do
           transactable_type.availability_templates << FactoryGirl.build(:availability_template, :transactable_type => transactable_type)
-          CustomAttributes::CustomAttribute::Creator.new(transactable_type).create_listing_attributes!
+          CustomAttributes::CustomAttribute::Creator.new(transactable_type, bookable_noun: "Desk", listing_types: ["Desk", "Meeting Room", "Office Space", "Salon Booth"]).create_listing_attributes!
         end
       end
 
