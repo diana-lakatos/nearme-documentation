@@ -7,6 +7,7 @@ module HttpLocalhost
     save_page Rails.root.join( 'public', 'capybara.html' )
     %x(launchy http://localhost:3000/capybara.html)
   end
+
 end
 
 World(HttpLocalhost)

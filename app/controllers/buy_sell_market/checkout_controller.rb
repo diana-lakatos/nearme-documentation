@@ -82,7 +82,6 @@ class BuySellMarket::CheckoutController < ApplicationController
         render_step order_state and return
       end
     elsif @order.update_from_params(params, permitted_checkout_attributes)
-
       if step == :address
         save_user_addresses if params[:order][:save_billing_address]
         set_countries_states
