@@ -12,17 +12,15 @@ class Manage::LocationsController < Manage::BaseController
   def new
     @location = @company.locations.build
     @location.administrator_id = current_user.id if current_user.is_location_administrator?
-    @location.name_and_description_required = true if TransactableType.first.name == "Listing"
     build_approval_request_for_object(@location) unless @location.is_trusted?
     AvailabilityRule.default_template.apply(@location)
   end
 
   def create
     @location = @company.locations.build(location_params)
-    @location.name_and_description_required = true if TransactableType.first.name == "Listing"
     build_approval_request_for_object(@location) unless @location.is_trusted?
     if @location.save
-      flash[:success] = t('flash_messages.manage.locations.space_added', bookable_noun: platform_context.decorate.bookable_noun)
+      flash[:success] = t('flash_messages.manage.locations.space_added')
       event_tracker.created_a_location(@location , { via: 'dashboard' })
       event_tracker.updated_profile_information(current_user)
       redirect_to manage_locations_path
@@ -43,7 +41,7 @@ class Manage::LocationsController < Manage::BaseController
     @location.assign_attributes(location_params)
     build_approval_request_for_object(@location) unless @location.is_trusted?
     if @location.save
-      flash[:success] = t('flash_messages.manage.locations.space_updated', bookable_noun: platform_context.decorate.bookable_noun)
+      flash[:success] = t('flash_messages.manage.locations.space_updated')
       redirect_to manage_locations_path
     else
       render :edit
@@ -71,7 +69,6 @@ class Manage::LocationsController < Manage::BaseController
   def find_location
     begin
       @location = locations_scope.find(params[:id])
-      @location.name_and_description_required = true if TransactableType.first.name == "Listing"
     rescue ActiveRecord::RecordNotFound
       raise Location::NotFound
     end

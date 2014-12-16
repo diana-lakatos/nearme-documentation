@@ -26,10 +26,11 @@ module InstanceType::Searcher::GeolocationSearcher
           :radius => search.radius,
           :available_dates => search.available_dates,
           :query => search.query,
-          :location_types_ids => search.location_types_ids,
-          :listing_types_ids => search.listing_types_ids,
-          :attribute_values => search.attribute_values_filters,
-          :listing_pricing => search.lgpricing.blank? ? [] : search.lgpricing_filters,
+          transactable_type_id: @transactable_type.id,
+          location_types_ids: search.location_types_ids,
+          listing_types_ids: search.listing_types_ids,
+          attribute_values: search.attribute_values_filters,
+          listing_pricing: search.lgpricing.blank? ? [] : search.lgpricing_filters,
           :sort => search.sort
         })
 
@@ -50,9 +51,9 @@ module InstanceType::Searcher::GeolocationSearcher
 
   def set_options_for_filters
     @filterable_location_types = LocationType.all
-    @filterable_listing_types = TransactableType.first.custom_attributes.where(:name => 'listing_type').try(:first).try(:valid_values)
-    @filterable_pricing = TransactableType.first.pricing_options.keys.map { |k| [k.downcase, k.capitalize] }
-    @filterable_attribute = TransactableType.first.custom_attributes.where(:name => 'filterable_attribute').try(:first).try(:valid_values)
+    @filterable_listing_types = @transactable_type.custom_attributes.where(:name => 'listing_type').try(:first).try(:valid_values)
+    @filterable_pricing = @transactable_type.pricing_options.keys.map { |k| [k.downcase, k.capitalize] }
+    @filterable_attribute = @transactable_type.custom_attributes.where(:name => 'filterable_attribute').try(:first).try(:valid_values)
   end
 
   def search_notification

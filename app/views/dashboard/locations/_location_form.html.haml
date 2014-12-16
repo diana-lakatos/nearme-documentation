@@ -2,7 +2,7 @@
 = render :partial => 'approval_requests/form', :locals => { f: f } unless only_inputs.include?(:currency)
 
 - if f.object.name_and_description_required
-  = f.input :name, :as => :limited_string, :limit => 50, :hint => t('simple_form.hints.location.name', bookable_noun: platform_context.bookable_noun) if only_inputs.empty? || only_inputs.include?(:name)
+  = f.input :name, :as => :limited_string, :limit => 50, :hint => t('simple_form.hints.location.name') if only_inputs.empty? || only_inputs.include?(:name)
 
 - if only_inputs.empty? || only_inputs.include?(:address)
   = f.simple_fields_for :location_address, (f.object.location_address.presence || f.object.build_location_address) do |address_form|

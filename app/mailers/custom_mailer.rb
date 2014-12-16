@@ -45,7 +45,8 @@ class CustomMailer < InstanceMailer
       cc: @workflow_alert.cc.try(:split, ','),
       bcc: @workflow_alert.bcc.try(:split, ','),
       subject: Liquid::Template.parse(@workflow_alert.subject).render(@step.data.merge('platform_context' => PlatformContext.current.decorate).stringify_keys),
-      layout_path: @workflow_alert.layout_path
+      layout_path: @workflow_alert.layout_path,
+      transactable_type_id: @step.transactable_type_id
     }
   end
 end

@@ -5,6 +5,7 @@
         - search_geofields.each do |geofield|
           = hidden_field_tag geofield, ''
         = hidden_field_tag :v, result_view
+        = hidden_field_tag :transactable_type_id, @transactable_type.id
         = hidden_field_tag :ignore_search_event, 0
         = hidden_field_tag :page, 1
         .row-fluid
@@ -23,6 +24,6 @@
             .search-filters{:'data-search-filters-container' => true, :class => platform_context.is_desksnearme? ? '' : 'two-filters'}
               - if platform_context.instance.location_types.count > 1
                 = render :partial => 'search/filter', :locals => { :header_name => 'Location Types', :selected_values => params[:location_types_ids] || [], :input_name => 'location_types_ids[]', :options => @searcher.filterable_location_types.map { |lt| [lt.id, lt.name ] } }
-              = render :partial => 'search/filter', :locals => { :header_name => "#{platform_context.bookable_noun} Types", :selected_values => params[:listing_types_ids] || [], :input_name => 'listing_types_ids[]', :options => @searcher.filterable_listing_types.map { |lt| [lt, lt] } }
+              = render :partial => 'search/filter', :locals => { :header_name => "#{@transactable_type.bookable_noun} Types", :selected_values => params[:listing_types_ids] || [], :input_name => 'listing_types_ids[]', :options => @searcher.filterable_listing_types.map { |lt| [lt, lt] } }
               - if @filterable_industries
                 = render :partial => 'search/filter', :locals => { :header_name => 'Industries', :selected_values => params[:industries_ids] || [], :input_name => 'industries_ids[]', :options => @searcher.filterable_industries.map { |i| [i.id, i.name] } }

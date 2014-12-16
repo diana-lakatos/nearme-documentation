@@ -2,17 +2,19 @@ require "will_paginate/array"
 class SearchController < ApplicationController
   before_filter :theme_name
 
+  before_filter :find_transactable_type
+
   helper_method :searcher, :result_view, :current_page_offset, :per_page, :first_result_page?
 
   def index
     if platform_context.instance.buyable?
       @searcher = InstanceType::Searcher::ProductsSearcher.new(params)
     elsif platform_context.instance.searcher_type == 'fulltext'
-      @searcher = InstanceType::Searcher::FullTextSearcher::Listing.new(params)
+      @searcher = InstanceType::Searcher::FullTextSearcher::Listing.new(@transactable_type, params)
     elsif result_view == 'mixed'
-      @searcher = InstanceType::Searcher::GeolocationSearcher::Location.new(params)
+      @searcher = InstanceType::Searcher::GeolocationSearcher::Location.new(@transactable_type, params)
     else
-      @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(params)
+      @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(@transactable_type, params)
     end
 
     @searcher.paginate_results(params[:page], per_page) unless result_view == 'map'
@@ -67,4 +69,11 @@ class SearchController < ApplicationController
   def theme_name
     @theme_name = 'buy-sell-theme' if buyable?
   end
+
+  def find_transactable_type
+    @transactable_type = params[:transactable_type_id].present? ? TransactableType.find(params[:transactable_type_id]) : TransactableType.first
+    params[:transactable_type_id] ||= @transactable_type.id
+  end
+
 end
+

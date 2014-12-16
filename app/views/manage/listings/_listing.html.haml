@@ -1,10 +1,10 @@
-= simple_form_for [:manage, location, listing], as: 'listing', url: (listing.persisted? ? manage_location_listing_path(location, listing) : manage_location_listings_path(location)), :html => { :class => "form-horizontal", :multipart => true, :id => 'listing-form' } do |f|
+= simple_form_for [:manage, location, listing], as: 'listing', url: (listing.persisted? ? manage_location_listing_path(location, listing) : manage_location_transactable_type_listings_path(location, @transactable_type)), :html => { :class => "form-horizontal", :multipart => true, :id => 'listing-form' } do |f|
 
-  = render :partial => 'listings/listing_form', :locals => { :f => f, :listing => listing, photos: photos}
+  = render partial: 'listings/listing_form', locals: { f: f, listing: listing, photos: photos}
 
   - if listing.persisted?
     = link_to manage_location_listing_path(location, listing), :method => :delete, data: { confirm: 'Are you sure?' }, :class => "delete delete-listing" do
       %span.ico-trash.padding
-        Delete this #{platform_context.bookable_noun}
+        Delete this #{listing.transactable_type.name}
 
   = f.submit "Save", :id => 'submit-input', data: { disable_with: 'Submitting...' }

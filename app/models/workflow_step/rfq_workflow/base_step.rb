@@ -20,4 +20,8 @@ class WorkflowStep::RfqWorkflow::BaseStep < WorkflowStep::BaseStep
     { message: @message, ticket: @message.ticket }
   end
 
+  def transactable_type_id
+    @message.try(:ticket).try(:target).try(:transactable_type_id)
+  end
+
 end

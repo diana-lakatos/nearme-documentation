@@ -20,4 +20,8 @@ class WorkflowStep::RecurringBookingWorkflow::BaseStep < WorkflowStep::BaseStep
     { recurring_booking: @recurring_booking, reservation: @recurring_booking.reservations.first, user: lister, host: enquirer, listing: @recurring_booking.listing }
   end
 
+  def transactable_type_id
+    @recurring_booking.listing.transactable_type_id
+  end
+
 end

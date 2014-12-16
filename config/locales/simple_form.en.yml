@@ -115,9 +115,9 @@ en:
         administrator: 'Default'
     hints:
       location:
-        name: 'A unique title that describes the location of the %{bookable_noun}.'
+        name: 'A unique title that describes the location.'
       company:
-        mailing_address: 'Checks for revenue accrued by your %{bookable_noun} will be sent to this address. Find out more about payments in the Support Center.'
+        mailing_address: 'Checks for revenue will be sent to this address. Find out more about payments in the Support Center.'
         paypal_email: 'If you specify a PayPal email, we will make a PayPal transfer instead of sending checks.'
 
     required:

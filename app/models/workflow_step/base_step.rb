@@ -25,6 +25,11 @@ class WorkflowStep::BaseStep
 
   def callback_to_adjust_data_after_check(rendered_view)
   end
+
+  def transactable_type_id
+    nil
+  end
+
   protected
 
   def alerts

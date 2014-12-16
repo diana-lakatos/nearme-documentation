@@ -210,8 +210,6 @@ class SecuredParams
   def instance
     [
       :name,
-      :service_fee_guest_percent, :service_fee_host_percent,
-      :bookable_noun, :lessor, :lessee,
       :skip_company, :mark_as_locked,
       :live_stripe_api_key, :live_stripe_public_key,
       :live_paypal_username, :live_paypal_password,
@@ -240,6 +238,8 @@ class SecuredParams
       :twilio_consumer_key, :twilio_consumer_secret,
       :test_twilio_consumer_key, :test_twilio_consumer_secret,
       :twilio_from_number, :test_twilio_from_number,
+      :service_fee_guest_percent, :service_fee_host_percent,
+      :bookable_noun,
       user_required_fields: [],
       transactable_types_attributes: nested(self.transactable_type),
       listing_amenity_types_attributes: nested(self.amenity_type),
@@ -404,6 +404,9 @@ class SecuredParams
       :cancellation_policy_hours_for_cancellation,
       :enable_cancellation_policy,
       :show_page_enabled,
+      :groupable_with_others,
+      :service_fee_guest_percent, :service_fee_host_percent,
+      :bookable_noun, :lessor, :lessee,
       :availability_templates_attributes => nested(self.availability_template),
       :action_type_ids => []
     ]
@@ -472,6 +475,7 @@ class SecuredParams
       :path,
       :format,
       :handler,
+      :transactable_type_id,
       :locale,
       :partial
     ]
@@ -666,10 +670,13 @@ class SecuredParams
     ]
   end
 
+  def form_component
+    [ :form_type, :name ]
+  end
+
   def location
     [
-      :company_id, :description, :email,
-      :info, :currency,
+      :description, :email, :info, :currency,
       :phone, :availability_template_id, :special_notes,
       :location_type_id, :photos,
       :administrator_id, :name, :location_address,
@@ -759,9 +766,7 @@ class SecuredParams
     [
       :image,
       :caption,
-      :image_versions_generated_at,
-      :position,
-      :transactable_id
+      :position
     ]
   end
 
@@ -772,9 +777,8 @@ class SecuredParams
       :biography, :country_name, :mobile_number,
       :facebook_url, :twitter_url, :linkedin_url, :instagram_url,
       :current_location, :company_name, :skills_and_interests,
-      :last_geolocated_location_longitude, :last_geolocated_location_latitude,
-      :sms_notifications_enabled, :domain_id, :time_zone,
-      :phone_required, :country_name_required, :skip_password,
+      :sms_notifications_enabled, :time_zone,
+      :country_name_required, :skip_password,
       :country_name, :phone, :mobile_phone,
       :first_name, :middle_name, :last_name, :gender,
       :drivers_licence_number, :gov_number, :twitter_url,

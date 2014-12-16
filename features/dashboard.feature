@@ -22,7 +22,7 @@ Feature: As a user of the site
      When I add a new location
       And I fill location form with valid details
       And I submit the location form
-      And I should see "Great, your new Desk has been added!"
+      And I should see "Great, your new location has been added!"
      Then Location with my details should be created
 
   Scenario: A user can edit existing location

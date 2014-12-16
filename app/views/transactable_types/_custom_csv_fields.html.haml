@@ -1,0 +1,24 @@
+%ol.draggablePanelList
+  - csv_fields_builder = TransactableType::CsvFieldsBuilder.new(f.object)
+
+  - all_fields = csv_fields_builder.object_field_pairs.clone
+  - csv_fields_builder.all_valid_object_field_pairs.each do |pair|
+    - all_fields << pair unless all_fields.include?({ pair.keys.first.to_s => pair.values.first.to_s})
+  - all_fields.each do |object_field_pair|
+    - object = object_field_pair.keys.first
+    - field = object_field_pair[object]
+    - if csv_fields_builder.get_label(object_field_pair).present?
+      %li.panel.panel-info
+        %div.panel-heading
+          = csv_fields_builder.get_label(object_field_pair)
+          - if field == 'external_id'
+            %span= check_box_tag "", field, true, disabled: true
+            %span.hidden= check_box_tag "#{f.object_name}[custom_csv_fields][]", "#{object}=>#{field}", true
+          - else
+            %span= check_box_tag "#{f.object_name}[custom_csv_fields][]", "#{object}=>#{field}", csv_fields_builder.object_field_pairs.include?(object_field_pair)
+
+= content_for :script do
+  :javascript
+    $(function() {
+      $("ol.draggablePanelList").sortable({ axis: "y", cursor: "move" });
+    });

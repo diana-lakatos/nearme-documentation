@@ -225,7 +225,12 @@ DesksnearMe::Application.routes.draw do
         resources :custom_attributes, controller: 'instance_profile_types/custom_attributes'
       end
 
-      resources :transactable_types, :only => [:index, :edit, :update, :show] do
+      resources :transactable_types do
+        resources :form_components, controller: 'transactable_types/form_components' do
+          member do
+            patch :update_rank
+          end
+        end
         resources :custom_attributes, controller: 'transactable_types/custom_attributes'
         resources :data_uploads, controller: 'transactable_types/data_uploads' do
           collection do
@@ -295,6 +300,13 @@ DesksnearMe::Application.routes.draw do
 
   resources :blog_posts, path: 'blog', only: [:index, :show], controller: 'blog/blog_posts'
 
+  resources :transactable_types, only: [] do
+    resources :locations, :only => [] do
+      member do
+        get "(:listing_id)", :to => "locations#show", :as => ''
+      end
+    end
+  end
   resources :locations, :only => [] do
     member do
       get "(:listing_id)", :to => "locations#show", :as => ''
@@ -419,7 +431,7 @@ DesksnearMe::Application.routes.draw do
     resources :transactable_types do
       resources :transactables
       resources :data_uploads, controller: 'transactable_types/data_uploads' do
-         collection do
+        collection do
           get :status
           get :download_csv_template
           get :download_current_data_csv
@@ -487,6 +499,11 @@ DesksnearMe::Application.routes.draw do
         get :rejection_form
         post :host_cancel
         get :request_payment
+      end
+    end
+
+    resources :transactable_types, only: [] do
+      resources :listings, only: [:new, :create] do
       end
     end
 
@@ -584,11 +601,18 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
+
+  resources :transactable_types do
+    get '/new', as: "new_space_wizard", controller: 'transactable_types/space_wizard', action: 'new'
+    get "/list", as: "space_wizard_list", controller: 'transactable_types/space_wizard', action: 'list'
+    post "/list", controller: 'transactable_types/space_wizard', action: 'submit_listing'
+    post "/submit_item", controller: 'transactable_types/space_wizard', action: 'submit_item'
+  end
+
   scope '/space' do
     get '/new' => 'space_wizard#new', :as => "new_space_wizard"
     get "/list" => "space_wizard#list", :as => "space_wizard_list"
     post "/list" => "space_wizard#submit_listing"
-    post "/submit_item" => "space_wizard#submit_item", :as => "space_wizard_submit_item"
     match "/list" => "space_wizard#submit_listing", via: [:put, :patch]
     match "/photo" => "space_wizard#submit_photo", :as => "space_wizard_photo", via: [:post, :put]
     delete "/photo/:id" => "space_wizard#destroy_photo", :as => "destroy_space_wizard_photo"

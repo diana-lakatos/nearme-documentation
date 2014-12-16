@@ -1,6 +1,7 @@
 %header#listing_search.container-fluid.mixed{class: platform_context.instance.default_search_view.present? ? 'with-toggle' : ''}
   .header-inner
     %form.search_results{:action => search_path(v: result_view), :method => "get"}
+      = hidden_field_tag :transactable_type_id, @transactable_type.id
       = hidden_field_tag :lntype, @searcher.search.lntype
       = hidden_field_tag :lgtype, @searcher.search.lgtype
       = hidden_field_tag :lgpricing, @searcher.search.lgpricing
