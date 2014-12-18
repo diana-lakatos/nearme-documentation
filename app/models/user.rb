@@ -390,6 +390,12 @@ class User < ActiveRecord::Base
     new_token
   end
 
+  def generate_spree_api_key
+    new_spree_api_key = SecureRandom.hex(32)
+    self.update_attribute(:spree_api_key, new_spree_api_key)
+    new_spree_api_key
+  end
+
   def verify_payment_token(token)
     return false if self.payment_token.nil?
     current_token = self.payment_token

@@ -36,6 +36,8 @@ class Company < ActiveRecord::Base
   has_many :shipping_methods, class_name: 'Spree::ShippingMethod', dependent: :destroy
   has_many :taxons, class_name: 'Spree::Taxon', dependent: :destroy
   has_many :stock_locations, class_name: 'Spree::StockLocation', dependent: :destroy
+  has_many :variants, class_name: 'Spree::Variant', dependent: :destroy
+  has_many :zones, class_name: 'Spree::Zone', dependent: :destroy
 
   has_many :reservations
   has_many :reservation_charges, through: :reservations
@@ -83,11 +85,12 @@ class Company < ActiveRecord::Base
   accepts_nested_attributes_for :locations
   accepts_nested_attributes_for :company_address
   accepts_nested_attributes_for :approval_requests
-  accepts_nested_attributes_for :products, :shipping_methods, :shipping_categories
+  accepts_nested_attributes_for :products, :shipping_methods, :shipping_categories, :stock_locations
 
   validates_associated :shipping_methods, :if => :verify_associated
   validates_associated :shipping_categories, :if => :verify_associated
   validates_associated :products, :if => :verify_associated
+  validates_associated :stock_locations, :if => :verify_associated
 
   def add_creator_to_company_users
     unless users.include?(creator)
