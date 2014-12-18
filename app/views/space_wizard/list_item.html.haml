@@ -1,92 +1,20 @@
 - render_content_outside_container!
-%header
-.page-wrapper
-  .page-banner
-    %h1 List a New Item
-  = simple_form_for @boarding_form, wrapper: :product, :url => space_wizard_submit_item_url, :html => { :multipart => true, class: 'no_inheritance' }, method: :post do |f|
-    %section#seller-info
-      .container-fluid
-        %h2.section-heading Seller Info
-        = f.input :store_name, :placeholder => "Jenny's Fruit Baskets", hint: "Pick a name that has significance or helps identify what's in your shop."
-        = f.fields_for :company_address_attributes, f.object.company_address do |a|
-          =render 'address', f: a
 
-        =# f.select :currency, :hint => "What currency will your marketplace be mainly transacting in?"
-        =# f.select :language
-    %section#new-item
-      .container-fluid
-        %h2.section-heading List New Item
+.page-banner
+  %h1 List a New Item
+= simple_form_for @boarding_form, wrapper: :product, :url => space_wizard_submit_item_url, :html => { :multipart => true, class: 'no_inheritance' }, method: :post do |f|
+  %section#seller-info
+    .container-fluid
+      %h2.section-heading Seller Info
+      = f.input :store_name, :placeholder => "Jenny's Fruit Baskets", hint: "Pick a name that has significance or helps identify what's in your shop."
+      = f.fields_for :company_address_attributes, f.object.company_address do |a|
+        =render 'address', f: a
+      =# f.select :currency, :hint => "What currency will your marketplace be mainly transacting in?"
+      =# f.select :language
 
-        = f.input :item_title, :placeholder => "Attractive title name here", hint: "Descriptive titles are best. Try to describe your item th eway a buyer would."
-        = f.input :item_description, as: :text, :placeholder => "This item is great and here is a story about it...", hint: "Try to answer the questions buyers will have about your product. Tell the item's story and explain why it's special."
-        = f.input :category, :placeholder => "Enter a category"
-        .row-fluid
-          .span3
-            %label Photos
-          .span9
-            .row-fluid
-              =f.fields_for :photos do |p|
-                - if p.object.new_record?
-                  .span4
-                    = p.label :attachment, class: "photo-box active" do
-                      .photo-select
-                        =image_tag("themes/product_theme/icon-cross.png")
-                        Add Photo
-                      = p.file_field :attachment, class: 'item_image'
-                - else
-                  .span4
-                    =image_tag(p.object.image.url(:medium))
+  = f.simple_fields_for f.object.product_form do |product_form|
+    = render 'forms/product_form', f: product_form
 
-        = f.input :price, :placeholder => "$0.00", value: '123123123'
-        = f.input :quantity, as: :integer, :placeholder => "1"
-
-    %section#shipping-info
-      .container-fluid
-        %h2.section-heading Shipping Info
-        =f.fields_for :shipping_methods do |s|
-          %fieldset
-            .row-fluid.shipping_method_block
-              .span3
-                %label{:for => ""} Shipping Profile
-              .span9.input-container
-                .remove_shipping_profile
-                  -if s.object.new_record?
-                    = s.check_box :hidden, class: "hidden shipping_hidden"
-                    = s.label :hidden, "Remove shipping profile"
-                  -else
-                    = s.check_box :removed, class: "hidden remove_shipping red"
-                    = s.label :removed, "Remove shipping profile"
-                .shipping-form
-                  .row-fluid
-                    = s.input :name, placeholder: "Enter a name for your profile", label: "New Profile Name"
-                  .row-fluid
-                    .span5
-                      = s.input :processing_time, placeholder: "Ready to ship in..."
-                    .span1
-                    .span6
-                      =s.fields_for :calculator do |fc|
-                        =fc.input :preferred_amount, label: 'Cost', input_html: { class: 'form-control'}
-
-                  .row-fluid
-                    =s.fields_for :zones do |z|
-                      =z.hidden_field :name
-                      .row-fluid
-                        Ships To
-                      .row-fluid
-                        .span5
-                          = z.input :kind, as: :select, include_blank: false, label: false,  collection: [["State based", "state_based"], ["Country based", "country"]], input_html: {class: 'zone_kind_select'}
-                        .span1
-                        .span5
-                          = z.text_field :country_ids, value: z.object.country_ids.join(","),  class: 'country_based_select select2 ', data: {api: 'countries'}
-                          = z.text_field :state_ids, value: z.object.state_ids.join(","), class: 'state_based_select select2 ', data: {api: 'states'}
-        %a.shipping-profile-top.add_shipping_profile
-          =image_tag("themes/product_theme/icon-cross.png")
-          %p Create New Shipping Profile
-    .submit-bar
-      = f.submit "Save for Later", class: "btn medium green", name: "boarding_form[draft]"
-      = f.submit "Continue and Preview Listing", class: "btn medium blue"
-
-- content_for :domready do
-  new TaxonAutocomplete($("#edit_boarding_form, #new_boarding_form", "#{@boarding_form.spree_api_key}"));
-  new Dashboard.AddressController($("#edit_boarding_form, #new_boarding_form"));
-  new BoardingForm($("#edit_boarding_form, #new_boarding_form"));
+  .submit-bar
+    = f.submit "Continue and Preview Listing", class: "btn medium blue"
+    = f.submit "Save for Later", class: "btn medium green", name: "boarding_form[draft]"

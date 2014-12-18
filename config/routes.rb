@@ -428,6 +428,7 @@ DesksnearMe::Application.routes.draw do
         collection do
           get :countries
           get :states
+          get :taxons
         end
       end
       resources :products, except: [:show] do

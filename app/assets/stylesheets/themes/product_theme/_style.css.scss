@@ -166,9 +166,9 @@ body.product-theme {
     }
   }
 
-  .remove_shipping_profile label {
+  .remove_shipping_profile label, label.delete_image {
     float: right;
-    color: red;
+    color: #e85c41;
   }
 
   ::-webkit-input-placeholder {

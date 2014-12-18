@@ -21,17 +21,17 @@ module FileuploadHelper
   end
 
   def built_in_upload_input_with_label(label, input, &block)
-    content_tag(:div, 
+    content_tag(:div,
       "<label class='text optional control-label'>#{label}</label>".html_safe +
-      content_tag(:div, built_in_upload_input(input, &block), :class => 'controls'), 
+      content_tag(:div, built_in_upload_input(input, &block), :class => 'controls'),
     :class => "control-group text optional")
   end
 
   def file_upload_input_with_label(label, name, url, thumbnail_sizes, text='Photos', options = {}, &block)
     label = required_field + label if options.delete(:required)
-    content_tag(:div, 
+    content_tag(:div,
       "<label class='text optional control-label' for='#{name}'>#{label}</label>".html_safe +
-      content_tag(:div, file_upload_input(name, url, thumbnail_sizes, text, options, &block), :class => 'controls'), 
+      content_tag(:div, file_upload_input(name, url, thumbnail_sizes, text, options, &block), :class => 'controls'),
     :class => "control-group text optional control-fileupload")
   end
 
@@ -57,7 +57,7 @@ module FileuploadHelper
       content,
     :class => 'photo-item', id: id)
   end
-  
+
 
   private
 

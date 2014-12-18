@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  helper FilepickerRails::Engine.helpers
+
   prepend_view_path InstanceViewResolver.instance
 
   force_ssl if: :require_ssl?

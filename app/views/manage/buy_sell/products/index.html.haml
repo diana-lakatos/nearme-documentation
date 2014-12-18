@@ -1,29 +1,30 @@
 - title "Products"
 
-= show_manage_navigation(:products)
+.span10.page-content
 
-.row-fluid
-  .span8.offset2
-    .box
-      %header
-        %ul.location-and-listings
-          %li.location
-            .name.left
-              Manage Products
-      %ul.location-and-listings
-        %li.listing
-          .right
-            = link_to 'New Product', new_manage_buy_sell_product_path, class: 'btn btn-medium btn-green'
-        %li.listing.action-buttons
-          .span4
-            = t('product.name')
-          .span3
-            = t('product.sku')
-          .span3
-            = t('product.price')
-          .span2.state.text-right
-
-          .clearfix
-        = render partial: 'product', collection: @products
-      = will_paginate @products
-
+  .dash-head.clearfix
+    %p MANAGE LISTINGS
+    %a.dash-head-btn{:href => ""}
+      .btn.blue Bulk Upload
+  .dash-body
+    .new-profile
+      =image_tag("themes/product_theme/icon-cross.png")
+      = link_to "New List Item", new_manage_buy_sell_product_path
+    .dash-sub-nav
+      %ul
+        %li.active
+          %a{:href => "#"} Transactible 1
+        %li
+          %a{:href => "#"} Transactible 2
+    .listings-header
+      .row-fluid
+        .span3
+          %p Picture
+        .span3
+          %p Name
+        .span3
+          %p Quantity
+        .span2
+          %p Price
+    = render partial: 'product', collection: @products
+    = will_paginate @products

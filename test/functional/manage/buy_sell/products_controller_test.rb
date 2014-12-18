@@ -8,7 +8,9 @@ class Manage::BuySell::ProductsControllerTest < ActionController::TestCase
     @product = FactoryGirl.create(:product)
     @product.company = @company
     @product.save
-
+    10.times { FactoryGirl.create(:taxons) }
+    @taxon_ids = Spree::Taxon.all.map(&:id)
+    @countries = Spree::Country.last(10)
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
     InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
     sign_in @user
@@ -16,12 +18,40 @@ class Manage::BuySell::ProductsControllerTest < ActionController::TestCase
 
   should 'create new product' do
     assert_difference 'Spree::Product.count' do
-      post :create, product: {name: "Test product", price: '10', shipping_category_id: FactoryGirl.create(:shipping_category).id}
+      post :create, product_form: product_form_attributes
     end
   end
 
   should 'edit product name' do
-    put :update, product: {name: 'Changed name'}, id: @product.slug
+    put :update, product_form: {name: 'Changed name'}, id: @product.slug
     assert assigns(:product).name, @product.reload.name
+  end
+
+
+  def product_form_attributes
+    {
+      name: "Test Product",
+      description: "Test description",
+      price: "100",
+      taxon_ids: @taxon_ids.join(","),
+      quantity: "10",
+      shipping_methods_attributes: {
+        "0" => {
+          name: "Test",
+          removed: "0",
+          processing_time: "1 day",
+          calculator_attributes: {
+            preferred_amount: "10.0"
+          },
+          zones_attributes: {
+            "0" => {
+              name: "Default - b38723c89b795233677b2795d77557af",
+              kind: "country",
+              country_ids: @countries.map(&:id).join(",")
+            }
+          }
+        }
+      }
+    }
   end
 end
