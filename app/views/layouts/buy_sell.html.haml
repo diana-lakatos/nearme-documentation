@@ -1,0 +1,10 @@
+- content_for :content do
+  .container.page-wrapper.row-fluid
+    = render 'manage/layout/left_navigation'
+
+    .span10.page-content
+      .dash-page
+        = render 'manage/layout/mobile_navigation'
+        = yield
+
+= render :file => 'layouts/application'

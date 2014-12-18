@@ -1,4 +1,6 @@
-.order-seller
-  .order-img= line_item.image
-  %a= line_item.name_with_link
-  %p #{t 'orders.labels.sold_by'} #{order.company_name}
+.span8
+  = item.image
+  .order-details
+    = item.name_with_link
+    = item.name_with_link
+    %p #{t 'orders.labels.sold_by'} #{item.order.decorate.company_name}

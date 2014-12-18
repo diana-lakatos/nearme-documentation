@@ -4,7 +4,7 @@ class Spree::LineItemDecorator < Draper::Decorator
 
   delegate_all
 
-  MAX_QTY_FOR_SELECT = 30
+  MAX_QTY_FOR_SELECT = 15
 
   def name_with_link(target='')
     link_to object.name, product_url(object.product), target: target
@@ -19,7 +19,7 @@ class Spree::LineItemDecorator < Draper::Decorator
   end
 
   def quantity_form
-    select_tag "quantity[#{object.id}]", options_for_select((1..max_qty), object.quantity), style: 'width: 100%'
+    select_tag "quantity[#{object.id}]", options_for_select((1..max_qty), object.quantity)
   end
 
   def price

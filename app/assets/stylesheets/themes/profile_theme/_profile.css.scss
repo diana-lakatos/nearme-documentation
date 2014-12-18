@@ -1,0 +1,170 @@
+body.profile-theme {
+  margin: 0;
+  background: #f2f2f2;
+
+  header {
+    height: 50px;
+    background: black;
+    padding-top: 10px;
+  }
+
+  header .container-fluid {
+    width: 60%;
+  }
+
+  /*===== GENERAL STYLES =====*/
+  p {
+    color: #555555;
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+  }
+
+  .inline {
+    display: inline-block;
+  }
+
+  .page-wrapper {
+    width: 60%;
+    padding: 60px 0;
+    margin: 0 auto;
+  }
+
+  .divider {
+    border-top: solid #CACBD3 1px;
+  }
+
+  /*===== BUTTONS AND INPUTS =====*/
+
+  .btn {
+    width: 100%;
+    padding: 7px 0;
+    border-radius: 0;
+    text-align: center;
+    font-size: 16px;
+    vertical-align: top;
+  }
+
+  .btn.blue {
+    background: #5dbded;
+    color: #fff;
+  }
+
+  /*===== VENDOR PROFILE =====*/
+
+  .vendor-profile {
+    padding: 30px 40px;
+    background: #fff;
+    border-bottom: solid #D5D5D5 2px;
+    width: 25%;
+    vertical-align: top;
+    float: left;
+  }
+
+  .vendor-info {
+    vertical-align: top;
+    padding: 25px 15px;
+  }
+
+  .vendor-info p {
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  .vendor-pic {
+    width: 100px;
+    display: inline-block;
+  }
+
+  .verifications .row-fluid {
+    margin: 15px 0;
+  }
+
+  .verifications p {
+    display: inline-block;
+    padding-left: 10px;
+    font-size: 12px;
+    font-weight: 300;
+    margin: 0;
+  }
+
+  .vendor-profile .tn {
+    margin: 15px 0 30px 0;
+  }
+
+  .vendor-rating {
+    margin: 15px 0 30px 0;
+  }
+
+  .vendor-rating a {
+    color: #5dbded;
+    font-size: 14px;
+    vertical-align: top;
+    padding-left: 5px;
+  }
+
+  /*===== VENDOR LISTINGS ===== */
+
+  .profile-listings {
+    float: right;
+    width: 60%;
+    background: #fff;
+    padding: 30px;
+    border-bottom: solid #D5D5D5 2px;
+  }
+
+  .profile-listings .row-fluid {
+    margin-bottom: 40px;
+  }
+
+  .item img {
+    width: 100%;
+  }
+
+  .item .details {
+    background: #fff;
+    margin-top: -8px;
+    padding: 5px 15px;
+  }
+
+  .item .details p {
+    font-size: 14px;
+  }
+
+  .details .name {
+    float: left;
+    color: #858585;
+    font-weight: 300;
+  }
+
+  .details .price {
+    float: right;
+    color: #5dc988;
+    font-weight: 300;
+  }
+
+  @media (max-width: 1555px) {
+    .page-wrapper {
+      width: 80%;
+    }
+  }
+
+  @media (max-width: 1166px) {
+    .page-wrapper {
+      width: 90%;
+    }
+
+    .vendor-profile {
+      float: none;
+      width: 60%;
+      margin: 0 auto;
+      padding: 30px;
+      margin-bottom: 20px;
+    }
+
+    .profile-listings {
+      width: 60%;
+      margin: 0 auto;
+      float: none;
+    }
+  }
+}

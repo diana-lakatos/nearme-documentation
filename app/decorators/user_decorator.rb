@@ -37,6 +37,10 @@ class UserDecorator < Draper::Decorator
     true
   end
 
+  def display_location
+    object.current_location ? object.country_name : object.current_location
+  end
+
   private
 
   def user_messages_decorator_for(instance)

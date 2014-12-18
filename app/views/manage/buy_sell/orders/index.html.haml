@@ -1,18 +1,20 @@
-- title "Orders"
+- title t('orders.index.title')
 
-= show_manage_navigation(:orders)
+.dash-head.clearfix
+  - # For later use
+-#%ul
+-#  %li.active
+-#    %a{:href => "#"} ORDERS
+-#  %li
+-#    %a{:href => "#"} OPEN ORDERS
+-#  %li
+-#    %a{:href => "#"} CANCELLED ORDERS
 
-
-%section#orders
-  .row-fluid
-    .span8.offset2
-      %h1
-        %span.ico-bookings.padding
-        = t 'orders.index.title'
-
+.dash-body
   = render partial: 'buy_sell/orders/order', collection: @orders
 
+- unless @orders.empty?
   .row-fluid
-    .span8.offset2
-      .box.centered
-        = will_paginate @orders
+    .span12
+      .pagination
+        = will_paginate @orders, renderer: BuySellMarket::WillPaginateLinkRenderer::LinkRenderer, class: ''

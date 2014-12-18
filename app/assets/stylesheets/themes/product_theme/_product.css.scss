@@ -148,17 +148,17 @@ body.product-theme {
 
   /*===== SOCIAL =====*/
 
-  .social-wrapper {
+  .product-social-wrapper {
     border: solid #f4f4f4 1px;
     padding: 20px;
     margin-top: 40px;
   }
 
-  .social-wrapper .btn.gray {
+  .product-social-wrapper .btn.gray {
     margin-bottom: 15px;
   }
 
-  .social-wrapper .social-icon {
+  .product-social-wrapper .social-icon {
     margin-right: 3px;
   }
 
@@ -305,7 +305,7 @@ body.product-theme {
       width: 95%;
     }
 
-    .social-wrapper {
+    .product-social-wrapper {
       text-align: center;
     }
   }

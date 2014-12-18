@@ -2,6 +2,8 @@ class Manage::BuySell::ProductsController < Manage::BuySell::BaseController
   before_filter :find_product, only: [:edit, :update, :destroy]
   before_filter :load_data, only: [:edit, :update, :new, :create]
 
+  layout 'buy_sell'
+
   def index
     @products = @company.products.paginate(page: params[:page], per_page: 20)
   end

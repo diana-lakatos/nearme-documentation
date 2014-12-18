@@ -2,7 +2,7 @@
   <div class="row-fluid" id="products">
     <div class="products-container">
     {% for product in platform_context.latest_products %}
-        <article class="product">
+        <article class="product" style='display: inline-block'>
           <div class="photo-container">
             <div class="photo">
                 <a href="{{ product.product_url }}">
@@ -10,6 +10,7 @@
                 </a>
             </div>
           </div>
+
           <div class="heading">
             <a href="{{ product.product_url }}">
               {{ product.name }}

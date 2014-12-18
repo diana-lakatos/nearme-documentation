@@ -1,0 +1,26 @@
+%li
+  = link_to 'Shop', root_path(anchor: 'products')
+%li{class: (params[:controller].include?('products')) ? 'active' : ''}
+  = link_to 'Listings', manage_buy_sell_products_path
+%li{class: (params[:controller].include?('manage/*/orders')) ? 'active' : ''}
+  = link_to 'Orders Received', manage_buy_sell_orders_path
+%li{class: (params[:controller].include?('orders')) ? 'active' : ''}
+  = link_to 'My Orders', orders_path
+-#%li
+-#  %a{:href => "#"} Reviews
+-#%li
+-#  %a{:href => "#"} Payout
+-#%li
+-#  %a{:href => "#"} Payment
+%li
+  %a{:href => "#"} Shipping Methods
+%li
+  %a{:href => "#"} Notifications
+%li
+  %a{:href => "#"} Analytics
+%li
+  %a{:href => "#"} Users
+%li
+  %a{:href => "#"} Waiver Agreements
+%li
+  %a{:href => "#"} White-Label

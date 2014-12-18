@@ -82,19 +82,47 @@ en:
 
     checkout:
       labels:
-        billing_address: 'Billing address'
-        shipping_address: 'Shipping address'
-        order_summary: 'Order summary'
+        checkout: 'Checkout'
+        1address: '1. Address'
+        2delivery: '2. Delivery'
+        3payment: '3. Payment'
         payment: 'Payment'
-        delivery: 'Shipping'
+        shipping_method: 'Shipping Method'
+        shipping_method2: 'SHIPPING METHOD'
+        billing_address: 'Billing Address'
+        shipping_address: 'Shipping Address'
+        order_summary: 'Order Summary'
+        order_details: 'ORDER DETAILS'
         billing_address_shipping: 'Use billing address for shipping'
         save_billing_address: 'Save billing and shipping address to user profile'
+        ending_in: 'Ending in'
+        na: 'N/A'
+
+        item: 'ITEM'
+        price: 'PRICE'
+        qty: 'QTY'
+        total: 'TOTAL'
+
+        service_fee: 'Service Fee'
+        tax: 'Tax'
+        total2: 'Total'
+        shipping: 'Shipping'
+        subtotal: 'Subtotal'
+
+      placeholders:
+        first_name: 'Enter your first name'
+        last_name: 'Enter your last name'
+        address1: 'Enter your street address'
+        address2: 'Enter your street address (continue)'
+        city: 'Enter your city'
+        zipcode: 'Enter Zip Code'
+        phone: 'Enter Phone Number'
 
       buttons:
-        next_step: 'Next step'
-        next_step_payment: 'Make payment'
-        previous_step: 'Previous step'
-        back_to_cart: 'Back to cart'
+        next_step: 'Next'
+        next_step_payment: 'Next'
+        previous_step: 'Go Back'
+        back_to_cart: 'Go Back'
 
       errors:
         skip: 'You cannot skip checkout steps'
@@ -116,7 +144,7 @@ en:
           thanks: 'Thank you for your business.'
 
       order_mailer:
-        resend: Resend
+        resend: RESEND
         subtotal: 'Subtotal: %{subtotal}'
         total: 'Order Total: %{total}'
         service_fee: 'Service fee: %{fee}'
@@ -126,7 +154,7 @@ en:
           dear_customer: 'Dear Customer,'
           instructions: 'Please review and retain the following order information for your records.'
           order_summary: 'Order Summary'
-          thanks: 'Thank you for your business.'
+          thanks: 'Thank you for your order.'
           promotion: 'Promotion'
           shipping: 'Shipping'
           tax: 'Tax'
@@ -140,7 +168,8 @@ en:
         notify_seller_email:
           subject: 'New order'
           dear_seller: 'Dear Seller,'
-          instructions: 'New order has been placed. Please visit "Manage > %{bookable_noun}" for details.'
+          instructions_1: 'New order has been placed.'
+          instructions_2: 'ACTION REQUIRED: Visit your Orders page to approve this order and capture payment.'
           order_summary: 'Order Summary'
 
     cart:
@@ -148,13 +177,16 @@ en:
         index: 'Shopping cart'
         empty_cart: 'I am so empty :('
         multiple_orders: 'Maybe some text explaining why we have to checkout multiple times (for every company separately)'
+        order_from: 'Order from'
+        x_items_in_cart: '%{nr} Items in Your Cart'
 
       buttons:
         browse_products: 'Browse %{bookable_noun}'
         update_qty: 'Update'
         remove_item: 'Remove'
         empty_cart: 'Empty cart'
-        checkout: 'Checkout'
+        clear_all: 'Clear All'
+        checkout: 'CHECKOUT'
         continue: 'Continue shopping'
         orders: 'My orders'
 
@@ -163,6 +195,7 @@ en:
         update: 'Shopping cart has been updated'
         empty: 'All items have been successfully removed'
         remove: 'Item has been successfully removed from shopping cart'
+        clear_all: 'All items from %{company_name} have been removed'
 
       errors:
         qty: 'Selected quantity is not available.'

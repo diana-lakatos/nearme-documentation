@@ -7,6 +7,7 @@ class BuySellMarket::CheckoutController < ApplicationController
   CHECKOUT_STEPS = [:address, :delivery, :payment, :complete]
   steps *CHECKOUT_STEPS
 
+  before_filter :set_theme
   before_filter :set_order
   before_filter :check_step, except: [:get_states]
   before_filter :set_state, only: [:show]
@@ -24,6 +25,8 @@ class BuySellMarket::CheckoutController < ApplicationController
       @differentiator = Spree::Stock::Differentiator.new(@order, packages)
     when :complete
       flash[:notice] = t('buy_sell_market.checkout.notices.order_placed')
+      redirect_to order_path(params[:order_id])
+      return
 
       begin
         @charge_info = @order.near_me_payments.paid.first.charge_attempts.successful.first
@@ -110,6 +113,11 @@ class BuySellMarket::CheckoutController < ApplicationController
   end
 
   private
+
+  def set_theme
+    @theme_name = 'checkout-theme'
+    @render_content_outside_container = true
+  end
 
   def check_qty_on_step
     return true if step == :complete

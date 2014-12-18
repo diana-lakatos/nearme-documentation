@@ -25,6 +25,7 @@ DesksnearMe::Application.routes.draw do
     namespace :cart do
       get '/', action: 'index', as: 'index'
       delete 'empty'
+      delete 'clear_all/:order_id', action: 'clear_all', as: 'clear_all'
       patch 'update'
       get 'add', action: 'add', as: 'add_product' # Get is for redirection after login
       delete 'remove/:item_id', action: 'remove', as: 'remove_product'
@@ -433,7 +434,7 @@ DesksnearMe::Application.routes.draw do
       end
 
       resources :option_types
-      resources :orders do
+      resources :orders, except: [:edit] do
         member do
           get :approve
           get :cancel

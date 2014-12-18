@@ -1,7 +1,8 @@
 .vendor-pic.inline
-  = image_tag product.administrator.avatar.url(:big)
+  = link_to user_path(product.administrator) do
+    = image_tag product.administrator.avatar.url(:big)
 .vendor-info.inline
-  %h2= product.administrator.name
+  %h2= link_to product.administrator.name, user_path(product.administrator)
   %p= product.administrator_location
 = link_to new_product_user_message_path(product) do
   .btn.blue= t 'buy_sell_market.products.buttons.contact_host'

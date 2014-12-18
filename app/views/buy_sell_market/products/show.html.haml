@@ -1,5 +1,5 @@
+- render_content_outside_container!
 - hidden = [:favorite, :rating, :reviews, :user_reviews, :shipping, :refunds] # TODO: Remove when implemented
-- hidden = []
 
 %section.product-head
   .container-fluid
@@ -26,7 +26,7 @@
           - else
             .btn.disabled= t('buy_sell_market.products.buttons.out_of_stock')
 
-        .social-wrapper
+        .product-social-wrapper
           - unless hidden.include?(:favorite)
             %a{href: '#'}
               .btn.gray
