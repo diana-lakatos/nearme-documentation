@@ -205,6 +205,41 @@ body.orders-theme {
     color: #858585;
   }
 
+  .order-tracking {
+    margin-bottom: 15px;
+  }
+
+  .order-tracking img {
+    width: 17px;
+    margin-right: 10px;
+  }
+
+  .order-tracking p {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .order-tracking .uncomfirmed {
+    color: #e85c41;
+  }
+
+  .order-tracking .comfirmed {
+    color: #5dc988s;
+  }
+
+  section.checkout-form {
+    background: #fff;
+    padding: 40px 0;
+    border-bottom: solid #d5d5d5 2px;
+    margin-bottom: 25px;
+  }
+
+  section.checkout-form h2 {
+    color: #5dbded;
+    font-weight: 300;
+    margin-bottom: 40px;
+  }
+
   .additional-item {
     border-top: solid #f2f2f2 1px;
     padding-top: 20px;

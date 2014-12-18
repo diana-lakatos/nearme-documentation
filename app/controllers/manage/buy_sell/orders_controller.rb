@@ -11,7 +11,7 @@ class Manage::BuySell::OrdersController < Manage::BuySell::BaseController
   end
 
   def show
-    @theme_name = 'checkout-theme'
+    @theme_name = 'orders-theme'
   end
 
   def edit

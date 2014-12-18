@@ -1,9 +1,11 @@
 - hidden = [:review, :feedback] # TODO: Remove when implemented
 
 - if params[:controller].include?('manage')
+  - manage = true
   - feedback_caption = t('orders.buttons.buyer_feedback')
   - details_url = manage_buy_sell_order_path(order)
 - else
+  - manage = false
   - feedback_caption = t('orders.buttons.seller_feedback')
   - details_url = order_path(order)
 
@@ -42,6 +44,17 @@
             - unless hidden.include?(:review)
               = link_to '#' do
                 %span.btn.gray= t 'orders.buttons.product_review'
+
+            - if manage
+              .order-tracking
+                = image_tag 'themes/orders_theme/x-red.png'
+                %p.uncomfirmed Order not accepted
+              .order-tracking
+                = image_tag 'themes/orders_theme/x-red.png'
+                %p.uncomfirmed Payment not accepted
+              .order-tracking
+                = image_tag 'themes/orders_theme/green-check.png'
+                %p.comfirmed Shipped
 
       - order.line_items.each_with_index do |item, index|
         - next if index == 0
