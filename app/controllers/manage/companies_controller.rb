@@ -1,6 +1,8 @@
 class Manage::CompaniesController < Manage::BaseController
 
   def edit
+    @theme_name = 'product-theme'
+
     @company = current_user.companies.find(params[:id])
     build_approval_request_for_object(@company) unless @company.is_trusted?
   end

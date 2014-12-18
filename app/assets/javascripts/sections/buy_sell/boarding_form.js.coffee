@@ -84,13 +84,3 @@ class @BoardingForm
       @form.find(".shipping_hidden:checked").eq(0).prop('checked', false).trigger("change")
       if @form.find(".shipping_hidden:checked").length == 0
         @form.find(".add_shipping_profile").hide()
-
-
-
-
-
-
-
-
-
-

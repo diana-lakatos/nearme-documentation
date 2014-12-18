@@ -1,7 +1,7 @@
 class @TaxonAutocomplete
   constructor: (@form, token) ->
-    if $("#boarding_form_category").length > 0
-      $("#boarding_form_category").select2
+    if $("#boarding_form_category, #product_form_category").length > 0
+      $("#boarding_form_category, #product_form_category").select2
         placeholder: "Enter a category"
         multiple: true
         initSelection: (element, callback) ->

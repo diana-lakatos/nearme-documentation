@@ -1,17 +1,13 @@
-%li.listing.action-buttons
-  .span4
-    = product.name
-  .span3
-    = product.sku
-  .span3
-    = product.price
-  .span2
-    .links
-      = link_to manage_buy_sell_product_path(product), :method => :delete, :confirm => 'Are you sure?', :class => "delete", style: 'padding-top: 0px;' do
-        %span.ico-trash
-        %span.text Delete
-    .links
-      = link_to edit_manage_buy_sell_product_path(product), :class => "delete", style: 'padding: 0px 0 0 10px;' do
-        %span.icon.ico-edit
-        %span.text Edit
-  .clearfix
+.listings
+  .row-fluid
+    .span3.listing-img
+      =image_tag(product.images.first.try{ |i| i.image.url(:medium) })
+    .span3.listing-attr
+      = link_to product.name, edit_manage_buy_sell_product_path(product)
+    .span3.listing-attr
+      %p= product.total_on_hand
+    .span2.listing-attr
+      %p= number_to_currency_symbol product.currency, product.price
+    .span1.listing-attr
+      = link_to "Edit", edit_manage_buy_sell_product_path(product)
+      = link_to "Delete", manage_buy_sell_product_path(product), :method => :delete, :confirm => 'Are you sure?', style: 'margin-top:0px;'

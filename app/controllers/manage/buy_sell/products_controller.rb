@@ -1,30 +1,35 @@
 class Manage::BuySell::ProductsController < Manage::BuySell::BaseController
   before_filter :find_product, only: [:edit, :update, :destroy]
-  before_filter :load_data, only: [:edit, :update, :new, :create]
 
   def index
     @products = @company.products.paginate(page: params[:page], per_page: 20)
   end
 
   def new
-    @product = @company.products.new()
+    @product = @company.products.build user: current_user
+    @product_form = ProductForm.new(@product)
+    @product_form.assign_all_attributes
   end
 
   def create
-    @product = @company.products.new(product_params)
-    if @product.save
+    @product = @company.products.build user: current_user
+    @product_form = ProductForm.new(@product)
+    if @product_form.submit(product_form_params)
       redirect_to location_after_save, notice: t('flash_messages.manage.product.created')
     else
-      flash.now[:error] = t('flash_messages.product.complete_fields') + view_context.array_to_unordered_list(@product.errors.full_messages)
+      flash.now[:error] = t('flash_messages.product.complete_fields')
       render :new
     end
   end
 
   def edit
+    @product_form = ProductForm.new(@product)
+    @product_form.assign_all_attributes
   end
 
   def update
-    if @product.update_attributes(product_params)
+    @product_form = ProductForm.new(@product)
+    if @product_form.submit(product_form_params)
       redirect_to location_after_save, notice: t('flash_messages.manage.product.updated')
     else
       render :edit
@@ -36,17 +41,7 @@ class Manage::BuySell::ProductsController < Manage::BuySell::BaseController
     redirect_to manage_buy_sell_products_url
   end
 
-  private
-
-  def product_params
-    params.require(:product).permit(secured_params.spree_product)
-  end
-
-  def load_data
-    @option_types = @company.option_types.order(:name)
-    @prototypes = @company.prototypes.order(:name)
-    @taxons = Spree::Taxonomy.order(:name)
-    @tax_categories = @company.tax_categories.order(:name)
-    @shipping_categories = @company.shipping_categories.order(:name)
+  def product_form_params
+    params.require(:product_form).permit(secured_params.product_form)
   end
 end
