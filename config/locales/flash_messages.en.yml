@@ -244,6 +244,7 @@ en:
       complete_fields: "Please complete all fields! Alternatively, you can Save a Draft for later."
       draft_saved: "Your draft has been saved!"
       space_listed: "Your %{bookable_noun} was listed! You can provide more details about your location and listing from this page."
+      item_listed: "Your %{bookable_noun} was listed! You can provide more details about your location and listing from this page."
     support:
       ticket:
         created: 'Ticket has been created.'

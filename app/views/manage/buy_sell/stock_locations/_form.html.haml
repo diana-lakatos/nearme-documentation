@@ -1,12 +1,9 @@
 %div
   .control-group
-    = f.label :name
-    .controls
-      = f.text_field :name
   .control-group
-    = f.label :admin_name
-    .controls
-      = f.text_field :admin_name
+    = f.input :name, placeholder: 'What is the name of the stock location?', required: true, input_html: { class: 'form-control'}, label: "Method name"
+  .control-group
+    = f.input :admin_name, placeholder: 'What is the internal name of the stock location?', input_html: { class: 'form-control'}, label: "Internal name"
 
   .control-group
     .control-group.check_boxes.optional
@@ -47,6 +44,6 @@
     /     = f.text_field :state_name, :style => "display: #{f.object.country.states.empty? ? 'block' : 'none' };", :disabled => !f.object.country.states.empty?, :class => 'fullwidth state_name'
     /     = f.collection_select :state_id, f.object.country.states.sort, :id, :name, {:include_blank => true}, {:class => 'select2 fullwidth', :style => "display: #{f.object.country.states.empty? ? 'none' : 'block' };", :disabled => f.object.country.states.empty?}
   .control-group
-    = f.label :phone, Spree.t(:phone)
+    = f.label :phone
     .controls
       = f.phone_field :phone

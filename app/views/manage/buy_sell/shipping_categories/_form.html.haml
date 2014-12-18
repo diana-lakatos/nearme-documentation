@@ -1,5 +1,3 @@
 %div
   .control-group
-    = f.label :name
-    .controls
-      = f.text_field :name
+    = f.input :name, placeholder: 'What is the name of the shipping category?', required: true, input_html: { class: 'form-control'}, label: "Category name"

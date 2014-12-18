@@ -4,6 +4,7 @@ class SpaceWizardController < ApplicationController
   before_filter :find_transactable_type
   before_filter :set_common_variables, :only => [:list, :submit_listing]
   before_filter :sanitize_price_parameters, :only => [:submit_listing]
+  before_filter :set_theme, :only => [:list, :submit_item]
 
   def new
     flash.keep(:warning)
@@ -16,12 +17,18 @@ class SpaceWizardController < ApplicationController
   end
 
   def list
-    build_objects
-    build_approval_requests
-    @photos = @user.first_listing ? @user.first_listing.photos : nil
-    @user.phone_required = true
-    event_tracker.viewed_list_your_bookable
-    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
+    if buyable?
+      @boarding_form = BoardingForm.new(current_user)
+      @boarding_form.assign_all_attributes
+      render :list_item
+    else
+      build_objects
+      build_approval_requests
+      @photos = @user.first_listing ? @user.first_listing.photos : nil
+      @user.phone_required = true
+      event_tracker.viewed_list_your_bookable
+      event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
+    end
   end
 
   def submit_listing
@@ -59,6 +66,18 @@ class SpaceWizardController < ApplicationController
     end
   end
 
+  def submit_item
+    redirect_to(new_space_wizard_url) && return unless current_user.present?
+
+    @boarding_form = BoardingForm.new(current_user)
+    if @boarding_form.submit(boarding_form_params)
+      redirect_to space_wizard_list_url, notice: t('flash_messages.space_wizard.item_listed', bookable_noun: platform_context.decorate.bookable_noun)
+    else
+      render :list_item
+    end
+
+  end
+
   def destroy_photo
     @photo = Photo.find(params[:id])
     if can_delete_photo?(@photo, current_user) && @photo.destroy
@@ -91,22 +110,9 @@ class SpaceWizardController < ApplicationController
   end
 
   def build_objects
-    @user.companies.build if @user.companies.first.nil?
-    if buyable?
-      @user.companies.first.products.build if @user.companies.first.products.first.nil?
-      @user.companies.first.shipping_categories.build if @user.companies.first.shipping_categories.first.nil?
-      @user.companies.first.shipping_methods.build if @user.companies.first.shipping_methods.first.nil?
-      if @user.companies.first.shipping_methods.first.shipping_categories.blank?
-        @user.companies.first.shipping_methods.first.shipping_categories = [@user.companies.first.shipping_categories.first]
-      end
-      if @user.companies.first.shipping_methods.first.calculator.nil?
-        @user.companies.first.shipping_methods.first.calculator = Spree::Calculator::Shipping::FlatRate.new(preferred_amount: 0)
-      end
-      @user.companies.first.products.first.shipping_category = @user.companies.first.shipping_categories.first
-    else
-      @user.companies.first.locations.build if @user.companies.first.locations.first.nil?
-      @user.companies.first.locations.first.listings.build({:transactable_type_id => @transactable_type.id}) if @user.companies.first.locations.first.listings.first.nil?
-    end
+    @user.companies.build if @user.companies.first.nil?    
+    @user.companies.first.locations.build if @user.companies.first.locations.first.nil?
+    @user.companies.first.locations.first.listings.build({:transactable_type_id => @transactable_type.id}) if @user.companies.first.locations.first.listings.first.nil?
   end
 
   def redirect_to_dashboard_if_user_has_listings
@@ -170,23 +176,26 @@ class SpaceWizardController < ApplicationController
     params.require(:user).permit(secured_params.user)
   end
 
+  def boarding_form_params
+    params.require(:boarding_form).permit(secured_params.boarding_form)
+  end
+
   def build_approval_requests
     build_approval_request_for_object(@user)
     build_approval_request_for_object(@user.companies.first)
-    unless buyable?
-      build_approval_request_for_object(@user.companies.first.locations.first)
-      build_approval_request_for_object(@user.companies.first.locations.first.listings.first)
-    end
+    build_approval_request_for_object(@user.companies.first.locations.first)
+    build_approval_request_for_object(@user.companies.first.locations.first.listings.first)
   end
 
   def remove_approval_requests
     @user.approval_requests = []
     @user.companies.first.approval_requests = []
-    unless buyable?
-      @user.companies.first.locations.first.approval_requests = []
-      @user.companies.first.locations.first.listings.first.approval_requests = []
-    end
+    @user.companies.first.locations.first.approval_requests = []
+    @user.companies.first.locations.first.listings.first.approval_requests = []
   end
 
+  def set_theme
+    @theme_name = 'product-theme'
+  end
 end
 

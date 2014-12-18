@@ -1,4 +1,21 @@
 class SecuredParams
+
+  def boarding_form
+    [
+      :draft,
+      :store_name,
+      :address,
+      :item_title,
+      :item_description,
+      :price,
+      :quantity,
+      :category,
+      company_address_attributes: nested(self.address),
+      photos_attributes: nested(self.spree_image),
+      shipping_methods_attributes: nested(self.spree_shipping_method)
+    ]
+  end
+
   def custom_attribute
     [ :name,
       :attribute_type
@@ -94,6 +111,8 @@ class SecuredParams
       :description,
       :default_tax,
       :kind,
+      :country_ids,
+      :state_ids,
       state_ids: [],
       country_ids: []
     ]
@@ -280,11 +299,16 @@ class SecuredParams
   def spree_shipping_method
     [
       :name,
+      :hidden,
+      :removed,
       :admin_name,
       :display_on,
       :deleted_at,
       :tracking_url,
       :tax_category_id,
+      :processing_time,
+      calculator_attributes: nested(self.calculator),
+      zones_attributes: nested(self.zone),
       shipping_category_ids: [],
       zone_ids: []
     ]
@@ -304,7 +328,17 @@ class SecuredParams
       :phone,
       :active,
       :backorderable_default,
-      :propagate_all_variants
+      :propagate_all_variants,
+      stock_items_attributes: nested(self.spree_stock_item)
+    ]
+  end
+
+  def spree_stock_item
+    [
+      :variant,
+      :backorderable,
+      stock_movements_attributes: nested(self.spree_stock_movement)
+
     ]
   end
 
@@ -575,7 +609,8 @@ class SecuredParams
       industry_ids: [],
       products_attributes: nested(self.spree_product),
       shipping_categories_attributes: nested(self.spree_shipping_category),
-      shipping_methods_attributes: nested(self.spree_shipping_method)
+      shipping_methods_attributes: nested(self.spree_shipping_method),
+      stock_locations_attributes: nested(self.spree_stock_location)
     ]
   end
 

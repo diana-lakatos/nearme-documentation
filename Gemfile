@@ -100,6 +100,7 @@ gem 'twilio-ruby'
 gem 'googl'
 
 gem 'jquery-rails', '~> 3.1'
+gem "select2-rails"
 gem 'chosen-rails'
 gem 'spectrum-rails'
 

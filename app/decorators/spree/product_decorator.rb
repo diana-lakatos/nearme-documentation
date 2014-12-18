@@ -61,4 +61,27 @@ class Spree::ProductDecorator < Draper::Decorator
   def short_description(chars=90)
     object.description.to_s.truncate chars, separator: ' '
   end
+
+  private
+
+  # Builds variants from a hash of option types & values
+  def build_variants_from_option_values_hash
+    ensure_option_types_exist_for_values_hash
+    values = option_values_hash.values
+    values = values.inject(values.shift) { |memo, value| memo.product(value).map(&:flatten) }
+
+    values.each do |ids|
+      variant = variants.create(
+        option_value_ids: ids,
+        price: master.price,
+        company_id: master.company_id
+      )
+    end
+    save
+  end
+
+  def ensure_master
+    return unless new_record?
+    self.master ||= Variant.new(company_id: self.company_id)
+  end
 end

@@ -425,6 +425,12 @@ DesksnearMe::Application.routes.draw do
 
   namespace :manage do
     namespace :buy_sell do
+      resources :api do
+        collection do
+          get :countries
+          get :states
+        end
+      end
       resources :products, except: [:show] do
         resources :images, :controller => 'products/images'
         resources :variants, :controller => 'products/variants'
@@ -551,6 +557,7 @@ DesksnearMe::Application.routes.draw do
     get '/new' => 'space_wizard#new', :as => "new_space_wizard"
     get "/list" => "space_wizard#list", :as => "space_wizard_list"
     post "/list" => "space_wizard#submit_listing"
+    post "/submit_item" => "space_wizard#submit_item", :as => "space_wizard_submit_item"
     match "/list" => "space_wizard#submit_listing", via: [:put, :patch]
     match "/photo" => "space_wizard#submit_photo", :as => "space_wizard_photo", via: [:post, :put]
     delete "/photo/:id" => "space_wizard#destroy_photo", :as => "destroy_space_wizard_photo"

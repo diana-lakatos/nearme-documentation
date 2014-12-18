@@ -53,7 +53,7 @@ label.radio {
   }
 }
 
-form {
+form:not(.no_inheritance) {
 
   div.input,
   div.field {
@@ -321,7 +321,6 @@ form {
     padding-bottom: 15px;
   }
 }
-
 
 // Form with horizontal label alignment
 //

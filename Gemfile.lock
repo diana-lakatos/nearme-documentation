@@ -839,6 +839,7 @@ DEPENDENCIES
   sanitize
   sass
   sass-rails (~> 4.0.0)
+  select2-rails
   shoulda
   simple_form (~> 3.0.2)
   simplecov
