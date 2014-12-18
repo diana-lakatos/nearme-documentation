@@ -147,6 +147,11 @@ module ApplicationHelper
     content_for :manage_navbar, render(partial: 'shared/manage_navigation', :locals => {active_tab: active_tab, sub_active_tab: sub_active_tab})
   end
 
+  def show_dashboard_navigation(active_tab = :locations, sub_active_tab = :products)
+    content_for :dashboard_navbar, render(partial: 'shared/dashboard_navigation', :locals => {active_tab: active_tab, sub_active_tab: sub_active_tab})
+  end
+
+
   def section_class(section_name = nil)
     [
       section_name,
