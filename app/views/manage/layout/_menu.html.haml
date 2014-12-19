@@ -1,8 +1,8 @@
-%li
+%li{class: (params[:controller].include?('companies')) ? 'active' : ''}
   = link_to 'Shop', root_path(anchor: 'products')
 %li{class: (params[:controller].include?('products')) ? 'active' : ''}
   = link_to 'Listings', manage_buy_sell_products_path
-%li{class: (params[:controller].include?('manage') && params[:controller].include?('manage')) ? 'active' : ''}
+%li{class: (params[:controller].include?('orders') && params[:controller].include?('manage')) ? 'active' : ''}
   = link_to 'Orders Received', manage_buy_sell_orders_path
 %li{class: (params[:controller].include?('orders') && !params[:controller].include?('manage')) ? 'active' : ''}
   = link_to 'My Orders', orders_path
@@ -16,11 +16,11 @@
   = link_to 'Shipping Methods', manage_buy_sell_shipping_methods_path
 %li
   %a{:href => "#"} Notifications
-%li
-  %a{:href => "#"} Analytics
-%li
+%li{class: (params[:controller].include?('analytics')) ? 'active' : ''}
+  = link_to 'Analytics', analytics_dashboard_path
+%li{class: (params[:controller].include?('users')) ? 'active' : ''}
   = link_to 'Users', manage_users_path
-%li
-  %a{:href => "#"} Waiver Agreements
-%li
-  %a{:href => "#"} White-Label
+%li{class: (params[:controller].include?('waiver_agreement_templates')) ? 'active' : ''}
+  = link_to 'Waiver Agreements', manage_waiver_agreement_templates_path
+%li{class: (params[:controller].include?('white_labels')) ? 'active' : ''}
+  = link_to 'White-Label', edit_manage_white_label_path(current_user.companies.first)

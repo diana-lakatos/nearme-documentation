@@ -1,18 +1,14 @@
 - title "Company"
-
-=# show_manage_navigation(:company)
 - render_content_outside_container!
-- show_dashboard_navigation
 
-.span10.page-content
-  .dash-page
-    .dash-head.clearfix
-      %a{:href => "#"} MANAGE STORE >
-    .dash-body
-      = simple_form_for [:manage, @company], wrapper: :product, :html => {multipart: true, class: "form-horizontal form-expandable", :id => 'edit_company' } do |f|
+.dash-page
+  .dash-head.clearfix
+    %a{:href => "#"} MANAGE STORE >
+  .dash-body
+    = simple_form_for [:manage, @company], wrapper: :product, :html => {multipart: true, class: "form-horizontal form-expandable", :id => 'edit_company' } do |f|
 
-        = render :partial => 'companies/company_form', :locals => { :f => f, :only_inputs => [ :name, :address, :industries ] }
-        = f.submit "Save"
+      = render :partial => 'companies/company_form', :locals => { :f => f, :only_inputs => [ :name, :address, :industries ] }
+      = f.submit "Save"
 
 - content_for :domready do
   $(function() { new CompanyForm($('#edit_company')) });

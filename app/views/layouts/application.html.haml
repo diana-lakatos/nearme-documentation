@@ -64,9 +64,8 @@
             - unless no_footer?
               - cache(platform_context.footer_cache_key) do
                 = render 'layouts/footer'
-            .container.page-wrapper.row-fluid
-              = yield :dashboard_navbar
-              = yield if render_content_outside_container?
+
+            = (yield(:content).empty? ? yield : yield(:content)) if render_content_outside_container?
         - unless no_footer?
           .footer-push{class: "footer_#{section_class(@section_name)}"}
 

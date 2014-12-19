@@ -1,32 +1,30 @@
 - title "Products"
 - render_content_outside_container!
-- show_dashboard_navigation
 
-.span10.page-content
 
-  .dash-head.clearfix
-    %p MANAGE LISTINGS
-    %a.dash-head-btn{:href => ""}
-      .btn.blue Bulk Upload
-  .dash-body
-    .new-profile
-      =image_tag("themes/product_theme/icon-cross.png")
-      = link_to "New List Item", new_manage_buy_sell_product_path
-    .dash-sub-nav
-      %ul
-        %li.active
-          %a{:href => "#"} Transactible 1
-        %li
-          %a{:href => "#"} Transactible 2
-    .listings-header
-      .row-fluid
-        .span3
-          %p Picture
-        .span3
-          %p Name
-        .span3
-          %p Quantity
-        .span2
-          %p Price
-    = render partial: 'product', collection: @products
-    = will_paginate @products
+.dash-head.clearfix
+  %p MANAGE LISTINGS
+  %a.dash-head-btn{:href => ""}
+    .btn.blue Bulk Upload
+.dash-body
+  .new-profile
+    =image_tag("themes/product_theme/icon-cross.png")
+    = link_to "New List Item", new_manage_buy_sell_product_path
+  .dash-sub-nav
+    %ul
+      %li.active
+        %a{:href => "#"} Transactible 1
+      %li
+        %a{:href => "#"} Transactible 2
+  .listings-header
+    .row-fluid
+      .span3
+        %p Picture
+      .span3
+        %p Name
+      .span3
+        %p Quantity
+      .span2
+        %p Price
+  = render partial: 'product', collection: @products
+  = will_paginate @products

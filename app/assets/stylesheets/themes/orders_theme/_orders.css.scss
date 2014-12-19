@@ -1,12 +1,14 @@
 body.orders-theme {
+  @import "themes/flash";
+
   margin: 0;
   background: #f2f2f2;
 
-  header {
-    height: 50px;
-    background: black;
-    padding-top: 10px;
-  }
+//  header {
+//    height: 50px;
+//    background: black;
+//    padding-top: 10px;
+//  }
 
   header .container-fluid {
     width: 60%;

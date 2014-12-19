@@ -1,5 +1,9 @@
 class Manage::WhiteLabelsController < Manage::BaseController
 
+  before_filter :set_theme
+
+  layout 'buy_sell'
+
   def edit
     @company = current_user.companies.find(params[:id])
   end
@@ -15,6 +19,10 @@ class Manage::WhiteLabelsController < Manage::BaseController
   end
 
   private
+
+  def set_theme
+    @theme_name = 'orders-theme'
+  end
 
   def company_params
     params.require(:company).permit(secured_params.company)

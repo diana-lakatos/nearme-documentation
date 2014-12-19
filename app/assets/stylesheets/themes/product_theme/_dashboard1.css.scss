@@ -1,4 +1,6 @@
 body.product-theme {
+  @import "themes/flash";
+
   margin: 0;
   background: #f2f2f2;
 
@@ -33,11 +35,11 @@ body.product-theme {
     display: inline-block;
   }
 
-  .page-wrapper {
-    width: 60%;
-    padding: 60px 0;
-    margin: 0 auto;
-  }
+//  .page-wrapper {
+//    width: 60%;
+//    padding: 60px 0;
+//    margin: 0 auto;
+//  }
 
   .customSelect {
     border: solid #D4D4D4 1px;
@@ -252,7 +254,7 @@ body.product-theme {
      color: #cccccc;
   }
 
-  :-ms-input-placeholder {  
+  :-ms-input-placeholder {
      color: #cccccc;
   }
 

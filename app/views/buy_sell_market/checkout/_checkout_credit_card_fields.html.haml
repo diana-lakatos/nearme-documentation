@@ -29,7 +29,7 @@
   .row-fluid
     .span3.card-info{class: "#{"error" if f.object.errors.include?(:number).present?}"}
       = f.label :card_number, "Card number", class: 'control-label'
-    .span9
+    .span9.input-icon-holder-right
       = f.input_field :card_number, required: true, placeholder: '●●●● ●●●● ●●●● ●●●●', class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: "off", 'data-card-number' => true
       %span.ico-credit-card
     - if f.object.errors[:number].present?
