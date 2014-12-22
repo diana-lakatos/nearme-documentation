@@ -6,6 +6,10 @@ FactoryGirl.define do
     alert_type 'email'
     template_path 'not/existing'
 
+    factory :workflow_alert_sms do
+      alert_type 'sms'
+    end
+
     factory :workflow_alert_lister do
       recipient_type 'lister'
     end

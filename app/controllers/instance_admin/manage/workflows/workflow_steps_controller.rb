@@ -2,10 +2,6 @@ class InstanceAdmin::Manage::Workflows::WorkflowStepsController < InstanceAdmin:
 
   before_action :find_workflow
 
-  def index
-    @workflows = @workflow.workflow_steps
-  end
-
   def update
     @workflow_step = @workflow.workflow_steps.find(params[:id])
     if @workflow_step.update_attributes(workflow_step_params)

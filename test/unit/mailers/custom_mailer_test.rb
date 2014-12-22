@@ -43,9 +43,9 @@ class CustomMailerTest < ActiveSupport::TestCase
   end
 
   should 'be able to send email to lister' do
-    WorkflowAlert.stubs(:find).returns(stub(layout_path: nil, from: 'maciek@example.com', reply_to: 'no-reply@example.com', cc: 'cc@example.com', bcc: 'bcc@example.com', template_path: @email_template.path, recipient_type: 'lister', subject: '[{{platform_context.name}}] This is {{ dummy_arg.name }} subject'))
+    WorkflowAlert.stubs(:find).returns(stub(default_hash.merge(from: 'maciek@example.com', reply_to: 'no-reply@example.com', cc: 'cc@example.com', bcc: 'bcc@example.com', recipient: 'my_email@example.com', subject: '[{{platform_context.name}}] This is {{ dummy_arg.name }} subject')))
     mail = CustomMailer.custom_mail(@step, 1)
-    assert_equal ['lister@example.com'], mail.to
+    assert_equal ['my_email@example.com'], mail.to
     assert_equal ['maciek@example.com'], mail.from
     assert_equal ['no-reply@example.com'], mail.reply_to
     assert_equal ['cc@example.com'], mail.cc
@@ -57,26 +57,102 @@ class CustomMailerTest < ActiveSupport::TestCase
     assert_not_contains 'This is header!', mail.text_part.body
   end
 
-  should 'be able to send email to enquirer' do
-    WorkflowAlert.stubs(:find).returns(stub(layout_path: nil, reply_to: nil, from: nil, cc: nil, bcc: nil, template_path: @email_template.path, subject: 'Subject', recipient_type: 'enquirer'))
+  should "be able to set multiple recipients" do
+    WorkflowAlert.stubs(:find).returns(stub(default_hash.merge(recipient: 'mail1@example.com, mail2@example.com')))
+    mail = CustomMailer.custom_mail(@step, 1)
+    assert_equal ['mail1@example.com', 'mail2@example.com'], mail.to
+  end
+
+  should "be able to set enquirer's email as recipient" do
+    WorkflowAlert.stubs(:find).returns(stub(default_hash.merge(recipient_type: 'enquirer')))
     mail = CustomMailer.custom_mail(@step, 1)
     assert_equal ['enquirer@example.com'], mail.to
   end
 
+  should "be able to set enquirer's email as reply-to" do
+    WorkflowAlert.stubs(:find).returns(stub(default_hash.merge(reply_to_type: 'enquirer')))
+    mail = CustomMailer.custom_mail(@step, 1)
+    assert_equal ['enquirer@example.com'], mail.reply_to
+  end
+
+  should "be able to set enquirer's email as from" do
+    WorkflowAlert.stubs(:find).returns(stub(default_hash.merge(from_type: 'enquirer')))
+    mail = CustomMailer.custom_mail(@step, 1)
+    assert_equal ['enquirer@example.com'], mail.from
+  end
+
+  should "be able to set lister's email as recipient" do
+    WorkflowAlert.stubs(:find).returns(stub(default_hash.merge(recipient_type: 'lister')))
+    mail = CustomMailer.custom_mail(@step, 1)
+    assert_equal ['lister@example.com'], mail.to
+  end
+
+  should "be able to set lister's email as reply-to" do
+    WorkflowAlert.stubs(:find).returns(stub(default_hash.merge(reply_to_type: 'lister')))
+    mail = CustomMailer.custom_mail(@step, 1)
+    assert_equal ['lister@example.com'], mail.reply_to
+  end
+
+  should "be able to set lister's email as from" do
+    WorkflowAlert.stubs(:find).returns(stub(default_hash.merge(from_type: 'lister')))
+    mail = CustomMailer.custom_mail(@step, 1)
+    assert_equal ['lister@example.com'], mail.from
+  end
+
   should 'be able to use layout' do
-    WorkflowAlert.stubs(:find).returns(stub(template_path: @email_template.path, reply_to: nil, from: nil, cc: nil, bcc: nil, recipient_type: 'lister', subject: 'Subject', layout_path: @layout_template.path))
+    WorkflowAlert.stubs(:find).returns(stub(default_hash.merge(layout_path: @layout_template.path)))
     mail = CustomMailer.custom_mail(@step, 1)
     assert_contains 'This is header Hello dummy name! This is footer', mail.html_part.body
     assert_not_contains 'This is header Hello dummy name! This is footer', mail.text_part.body
   end
 
   should 'be able to include attachments' do
-    WorkflowAlert.stubs(:find).returns(stub(layout_path: nil, reply_to: nil, from: nil, cc: nil, bcc: nil, template_path: @email_template.path, recipient_type: 'lister', subject: 'Subject'))
+    WorkflowAlert.stubs(:find).returns(stub(default_hash))
     @step.stubs(:mail_attachments).returns([{name: 'dummy_attachment', value: { content: File.read(Rails.root.join('test', 'assets', 'foobear.jpeg'))} }]).at_least_once
     mail = CustomMailer.custom_mail(@step, 1)
     assert_equal 1, mail.attachments.size
     assert_equal 'dummy_attachment', mail.attachments[0].filename
   end
 
+  should 'use logger instead of db by default for test' do
+    WorkflowAlert.stubs(:find).returns(stub(default_hash))
+    WorkflowAlertLogger.any_instance.expects(:db_log!).never
+    CustomMailer.custom_mail(@step , 1)
+  end
+
+  context 'logger' do
+
+    setup do
+      WorkflowAlertLogger.setup { |config| config.logger_type = :db }
+    end
+
+    should 'create correct log entry for sms' do
+      WorkflowAlert.stubs(:find).returns(stub(default_hash))
+      WorkflowAlertLogger.any_instance.expects(:db_log!)
+      CustomMailer.custom_mail(@step, 1)
+    end
+
+    teardown do
+      WorkflowAlertLogger.setup { |config| config.logger_type = :none }
+    end
+
+  end
+
+  protected
+
+  def default_hash
+    { layout_path: nil,
+      recipient: 'my_email@example.com',
+      recipient_type: nil,
+      from: nil,
+      from_type: nil,
+      reply_to: nil,
+      reply_to_type: nil,
+      cc: nil,
+      bcc: nil,
+      template_path: @email_template.path,
+      subject: 'Subject'
+    }
+  end
 end
 

@@ -10,6 +10,7 @@ class CustomMailer < InstanceMailer
     @step.mail_attachments(@workflow_alert).each do |attachment|
       attachments[attachment[:name].to_s] = attachment[:value]
     end
+    WorkflowAlertLogger.new(@workflow_alert).log!
     mail(options)
   end
 
@@ -19,25 +20,30 @@ class CustomMailer < InstanceMailer
 
   protected
 
-  def to
-    case @workflow_alert.recipient_type
+  def get_email_for_type_with_fallback(field)
+    case @workflow_alert.send("#{field}_type")
     when 'lister'
       @step.lister.email
     when 'enquirer'
       @step.enquirer.email
     when 'administrator'
       InstanceAdmin.joins(:user).pluck(:email)
+    else
+      @workflow_alert.send(field).try(:split, ',')
     end
+  end
+
+  def to
   end
 
   def options
     {
       template_name: @workflow_alert.template_path,
-      to: to,
-      from: @workflow_alert.from.try(:split, ','),
+      to: get_email_for_type_with_fallback('recipient'),
+      from: get_email_for_type_with_fallback('from'),
+      reply_to: get_email_for_type_with_fallback('reply_to'),
       cc: @workflow_alert.cc.try(:split, ','),
       bcc: @workflow_alert.bcc.try(:split, ','),
-      reply_to: @workflow_alert.reply_to.try(:split, ','),
       subject: Liquid::Template.parse(@workflow_alert.subject).render(@step.data.merge('platform_context' => PlatformContext.current.decorate).stringify_keys),
       layout_path: @workflow_alert.layout_path
     }

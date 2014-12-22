@@ -1,4 +1,4 @@
-class MoveRecordsFromEmailTemplateToInstanceViews < ActiveRecord::Migration
+class MoveRecordsFromEmailTemplatesToInstanceViews < ActiveRecord::Migration
   class EmailTemplate < ActiveRecord::Base
     belongs_to :theme
   end
@@ -52,8 +52,8 @@ class MoveRecordsFromEmailTemplateToInstanceViews < ActiveRecord::Migration
     InstanceView.where(view_type: nil).update_all(view_type: 'view')
     Instance.find_each do |i|
       PlatformContext.current = PlatformContext.new
-      Utils::DefaultAlertsCreator.new.create_all_workflows!
       puts "Creating workflow for instance: #{i.name}"
+      Utils::DefaultAlertsCreator.new.create_all_workflows!
     end
 
     Theme.find_each do |t|
@@ -63,7 +63,7 @@ class MoveRecordsFromEmailTemplateToInstanceViews < ActiveRecord::Migration
         iv = InstanceView.find_or_initialize_by(instance_id: t.instance_id, locale: 'en', view_type: 'email', partial: false, path: email_template.path, format: 'text', handler: 'liquid')
         iv.body = email_template.text_body
         iv.save!
-        iv = InstanceView.find_or_initialize_by(instance_id: t.instance_id, locale: 'en', view_type: 'email', partial: false, path: email_template.path, format: 'text', handler: 'liquid')
+        iv = InstanceView.find_or_initialize_by(instance_id: t.instance_id, locale: 'en', view_type: 'email', partial: false, path: email_template.path, format: 'html', handler: 'liquid')
         iv.body = email_template.html_body
         iv.save!
         if(workflow_alert = WorkflowAlert.where(instance_id: t.instance_id, template_path: email_template.path).first).present?
@@ -74,7 +74,7 @@ class MoveRecordsFromEmailTemplateToInstanceViews < ActiveRecord::Migration
           workflow_alert.bcc = email_template.bcc if email_template.bcc.present?
           workflow_alert.save!
         else
-          puts "Not found workflow alert"
+          puts "Skipping - workflow alert has not been not created yet"
         end
       end
     end
@@ -82,7 +82,5 @@ class MoveRecordsFromEmailTemplateToInstanceViews < ActiveRecord::Migration
   end
 
   def down
-
   end
 end
-
