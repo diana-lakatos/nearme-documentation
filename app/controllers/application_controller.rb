@@ -333,6 +333,13 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def sign_in_resource(resource)
+    sign_in(resource)
+    if resource.respond_to?('logged_out!')
+      resource.logged_out!
+    end
+  end
+
   def set_locales_backend
     I18N_DNM_BACKEND.set_instance_id(platform_context.instance.id) if defined? I18N_DNM_BACKEND
   end
