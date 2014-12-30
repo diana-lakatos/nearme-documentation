@@ -1,0 +1,12 @@
+- if params[:controller] != 'locations'
+  - s_name = defined?(site_name) ? site_name : platform_context.site_name
+  - c_url = defined?(original_url) ? original_url : request.original_url
+  - desc = defined?(description?) ? description : platform_context.description
+  - s_title = defined?(site_title) ? site_title : title_tag
+  - s_image_url = defined?(site_image_url) ? site_image_url : platform_context.theme.hero_image.url
+
+  - local_variables = { site_name: s_name, current_url: c_url, description: desc, site_title: s_title,  site_image_url: s_image_url }
+
+  = render partial: 'social/facebook', locals: local_variables
+  = render partial: 'social/gplus', locals: local_variables
+  = render partial: 'social/twitter', locals: local_variables

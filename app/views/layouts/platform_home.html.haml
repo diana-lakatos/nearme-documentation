@@ -6,10 +6,10 @@
     %meta{content: "text/html; charset=US-ASCII", "http-equiv" => "Content-type"}/
     %meta{content: "width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1", name: "viewport"}/
 
-    %meta{:property => "og:site_name", :content => 'Near Me' }/
-    %meta{:property => "og:url", :content => 'http://near-me.com' }/
-    %meta{:property => "og:description", :content => 'Near Me is a complete solution for setting up and managing your own marketplace. No coding required.' }/
-    %meta{:property => "og:image", :content => 'http://near-me.com/assets/platform_home/og-image.png' }/
+    = render partial: 'social/social_meta_tags', locals: {site_title: 'Create Your Own Marketplace | Near Me',
+      site_name: 'Near Me', current_url: 'http://near-me.com',
+      description: 'Near Me is a complete solution for setting up and managing your own marketplace. No coding required.',
+      site_image_url: 'http://near-me.com/assets/platform_home/homepage-hero-background-1.jpg'}
 
     %link{href: "/assets/platform_home/favicon.ico", rel: "shortcut icon"}/
 

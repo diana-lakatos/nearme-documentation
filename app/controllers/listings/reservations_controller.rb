@@ -22,7 +22,7 @@ class Listings::ReservationsController < ApplicationController
   end
 
   def load_payment_with_token
-    if secure? && request.ssl? and params["payment_token"]
+    if request.ssl? and params["payment_token"]
       user, reservation_params = User::PaymentTokenVerifier.find_token(params["payment_token"])
       sign_in user
       set_origin_domain(reservation_params['host'])
@@ -31,7 +31,7 @@ class Listings::ReservationsController < ApplicationController
   end
 
   def secure_payment_with_token
-    if secure? && !request.ssl?
+    if require_ssl?
       params[:reservation_request][:host] = request.host
       verifier = User::PaymentTokenVerifier.new(current_user, params[:reservation_request])
       @token = verifier.generate
@@ -90,7 +90,7 @@ class Listings::ReservationsController < ApplicationController
 
   # Renders remote payment form
   def remote_payment
-    @billing_gateway = Billing::Gateway::Incoming.new(current_user, @reservation.instance, @reservation.currency)
+    @billing_gateway = Billing::Gateway::Incoming.new(current_user, @reservation.instance, @reservation.currency, @reservation.listing.company.iso_country_code)
     @billing_gateway.processor.set_payment_data(@reservation)
   end
 
@@ -153,6 +153,8 @@ class Listings::ReservationsController < ApplicationController
         dates: attributes[:dates],
         start_minute: attributes[:start_minute],
         end_minute: attributes[:end_minute],
+        card_holder_first_name: attributes[:card_holder_first_name],
+        card_holder_last_name: attributes[:card_holder_last_name],
         card_expires: attributes[:card_expires],
         card_code: attributes[:card_code],
         card_number: attributes[:card_number],

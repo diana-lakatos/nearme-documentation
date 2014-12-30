@@ -7,14 +7,15 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     @instance = Instance.default_instance
     @instance.update_attribute(:service_fee_host_percent, 10)
     @instance.update_attribute(:service_fee_guest_percent, 15)
+    @instance.update_attribute(:payment_transfers_frequency, 'daily')
     @listing = FactoryGirl.create(:transactable, :daily_price => 25.00)
-    
+
     FactoryGirl.create(:paypal_instance_payment_gateway)
 
     @reservation = FactoryGirl.create(:reservation_with_credit_card, listing: @listing)
     stub_billing_gateway(@instance)
     stub_active_merchant_interaction
-    @billing_gateway = Billing::Gateway::Incoming.new(@reservation.owner, @instance, @reservation.currency)
+    @billing_gateway = Billing::Gateway::Incoming.new(@reservation.owner, @instance, @reservation.currency, 'US')
 
     response = @billing_gateway.authorize(@reservation.total_amount_cents, credit_card)
     @reservation.create_billing_authorization(token: response[:token], payment_gateway_class: response[:payment_gateway_class])

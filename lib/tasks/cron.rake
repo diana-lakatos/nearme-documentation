@@ -21,6 +21,10 @@ namespace :cron do
       RecurringMailerShareJob.perform
     end
 
+    run_job "Schedule Payment Transfers" do
+      PaymentTransferSchedulerJob.perform
+    end
+
     #run_job "Send Request photos mails" do
     #  RecurringMailerRequestPhotosJob.perform
     #end
@@ -37,10 +41,6 @@ namespace :cron do
   task :monthly => [:environment] do
     run_job "Send Analytics mails" do
       RecurringMailerAnalyticsJob.perform
-    end
-
-    run_job "Schedule Payment Transfers" do
-      PaymentTransferSchedulerJob.perform
     end
   end
 end

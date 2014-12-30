@@ -30,7 +30,11 @@ class DataImporter::CsvToXmlConverter
 
   def insert_to_xml(attributes, attributes_data, builder)
     attributes.each do |attribute|
-      builder.send(attribute) { |field| field.cdata(attributes_data[attribute].strip) } if attributes_data[attribute].try(:strip).present?
+      if attribute.to_s == 'test'
+        builder.test { |field| field.cdata(attributes_data[attribute].strip) } if attributes_data[attribute].try(:strip).present?
+      else
+        builder.send(attribute) { |field| field.cdata(attributes_data[attribute].strip) } if attributes_data[attribute].try(:strip).present?
+      end
     end
   end
 
@@ -58,7 +62,7 @@ class DataImporter::CsvToXmlConverter
   end
 
   def build_xml
-    @xml.companies(send_invitation: @csv_file.send_invitation, sync_mode: @csv_file.sync_mode) {
+    @xml.companies {
       while @csv_file.next_row
         @hash = @csv_file.row_as_hash
         build_company do

@@ -36,7 +36,7 @@ gem 'nearest_time_zone'
 gem 'sass'
 gem 'haml'
 gem 'le'
-gem 'mini_magick', "~> 4.0.0.rc"
+gem 'mini_magick', "~> 4.0.1"
 gem 'money-rails', '0.8.1'
 gem 'paranoia', '~> 2.0.0'
 gem 'simple_form', '~> 3.0.2'
@@ -80,10 +80,7 @@ gem 'bootstrap-sass', '~> 2.3.1.0'
 gem 'chronic', '~> 0.9.1'
 gem 'jcrop-rails', github: 'bukalapak/jcrop-rails'
 
-gem 'ey_config'
-
 gem 'unicorn'
-gem 'chameleon', '~> 0.2.4'
 
 gem 'ckeditor'
 gem 'orm_adapter', '~> 0.5.0' # needed for ckeditor, see https://github.com/galetahub/ckeditor/issues/375
@@ -128,6 +125,8 @@ gem 'iso_country_codes'
 gem 'spree', github: 'spree/spree', branch: '2-2-stable'
 #gem 'spree_auth_devise', github: 'spree/spree_auth_devise', branch: '2-2-stable'
 
+gem 'domainatrix'
+
 group :profiling do
   gem 'rack-mini-profiler'
   gem 'bullet'
@@ -158,6 +157,9 @@ end
 group :development do
   gem 'quiet_assets'
   gem 'thin'
+  gem 'pry-rails'
+  gem 'awesome_print'
+  gem 'spring'
 end
 
 group :test do

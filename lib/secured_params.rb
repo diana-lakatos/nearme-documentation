@@ -1,9 +1,12 @@
 class SecuredParams
   def custom_attribute
+    [ :name,
+      :attribute_type
+    ] + self.custom_attribute_internal
+  end
+
+  def custom_attribute_internal
     [
-      :name,
-      :transactable_type_id,
-      :attribute_type,
       :html_tag,
       :prompt,
       :default_value,
@@ -11,8 +14,6 @@ class SecuredParams
       :label,
       :placeholder,
       :hint,
-      :deleted_at,
-      :internal,
       :input_html_options,
       :wrapper_html_options,
       :input_html_options_string,
@@ -221,6 +222,7 @@ class SecuredParams
       :default_search_view, :user_based_marketplace_views,
       :searcher_type, :onboarding_verification_required,
       :apply_text_filters, :force_accepting_tos,
+      :payment_transfers_frequency,
       user_required_fields: [],
       transactable_types_attributes: nested(self.transactable_type),
       listing_amenity_types_attributes: nested(self.amenity_type),
@@ -459,6 +461,7 @@ class SecuredParams
       locations_attributes: nested(self.location),
       domain_attributes: nested(self.domain),
       approval_requests_attributes: nested(self.approval_request),
+      company_address_attributes: nested(self.address),
       theme_attributes: self.theme,
       industry_ids: []
     ]
@@ -475,15 +478,18 @@ class SecuredParams
       :google_analytics_tracking_code,
       :certificate_body,
       :private_key,
-      :certificate_chain
+      :certificate_chain,
+      :redirect_to,
+      :redirect_code
     ]
   end
 
-  def location_address
+  def address
     [
       :address, :address2, :formatted_address, :postcode,
-      :suburb, :city, :state, :country, :street, :address_components,
-      :latitude, :local_geocoding, :longitude, :state_code
+      :suburb, :city, :state, :country, :street,
+      :latitude, :local_geocoding, :longitude, :state_code,
+      address_components: [:long_name , :short_name, :types]
     ]
   end
 
@@ -496,12 +502,12 @@ class SecuredParams
       :administrator_id, :name, :location_address,
       :availability_template_id,
       availability_rules_attributes: nested(self.availability_rule),
-      location_address_attributes: nested(self.location_address),
+      location_address_attributes: nested(self.address),
       listings_attributes: nested(self.transactable),
       approval_requests_attributes: nested(self.approval_request),
       amenity_ids: [],
       waiver_agreement_template_ids: []
-    ] + self.location_address
+    ] + self.address
   end
 
   def transactable(transactable_type = nil)

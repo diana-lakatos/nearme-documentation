@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141103195404) do
+ActiveRecord::Schema.define(version: 20141208143431) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 20141103195404) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "iso_country_code",   limit: 2
   end
 
   add_index "addresses", ["entity_id", "entity_type", "address"], name: "index_addresses_on_entity_id_and_entity_type_and_address", unique: true, using: :btree
@@ -379,6 +380,8 @@ ActiveRecord::Schema.define(version: 20141103195404) do
     t.datetime "updated_at"
     t.integer  "target_id"
     t.string   "target_type"
+    t.integer  "progress_percentage"
+    t.string   "state"
   end
 
   add_index "data_uploads", ["instance_id"], name: "index_data_uploads_on_instance_id", using: :btree
@@ -415,6 +418,8 @@ ActiveRecord::Schema.define(version: 20141103195404) do
     t.string   "server_certificate_name"
     t.string   "error_message"
     t.string   "dns_name"
+    t.string   "redirect_to"
+    t.integer  "redirect_code"
   end
 
   add_index "domains", ["deleted_at"], name: "index_domains_on_deleted_at", using: :btree
@@ -715,6 +720,7 @@ ActiveRecord::Schema.define(version: 20141103195404) do
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
     t.boolean  "user_blogs_enabled",                                          default: false
+    t.string   "payment_transfers_frequency",                                   default: "fortnightly"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -2319,6 +2325,7 @@ ActiveRecord::Schema.define(version: 20141103195404) do
     t.integer  "cancellation_policy_penalty_percentage",     default: 0
     t.boolean  "recurring_booking",                          default: false, null: false
     t.boolean  "show_page_enabled",                          default: false
+    t.text     "custom_csv_fields"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

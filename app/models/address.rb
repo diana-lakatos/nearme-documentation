@@ -15,8 +15,9 @@ class Address < ActiveRecord::Base
   belongs_to :entity, polymorphic: true
 
   validates_presence_of :address, :latitude, :longitude
-  before_validation :fetch_coordinates
+  before_validation :update_address
   before_validation :parse_address_components
+
   def self.order_by_distance_sql(latitude, longitude)
     distance_sql(latitude, longitude, order: "distance")
   end
@@ -61,14 +62,19 @@ class Address < ActiveRecord::Base
 
   def parse_address_components
     if address_components_changed?
-      data_parser = Address::GoogleGeolocationDataParser.new(address_components)
-      self.city = data_parser.fetch_address_component("city")
-      self.suburb = data_parser.fetch_address_component("suburb")
-      self.street = data_parser.fetch_address_component("street")
-      self.country = data_parser.fetch_address_component("country")
-      self.state = data_parser.fetch_address_component("state")
-      self.postcode = data_parser.fetch_address_component("postcode")
+      parse_address_components!
     end
+  end
+
+  def parse_address_components!
+    data_parser = Address::GoogleGeolocationDataParser.new(address_components)
+    self.city = data_parser.fetch_address_component("city")
+    self.suburb = data_parser.fetch_address_component("suburb")
+    self.street = data_parser.fetch_address_component("street")
+    self.country = data_parser.fetch_address_component("country")
+    self.iso_country_code = data_parser.fetch_address_component("country", :short)
+    self.state = data_parser.fetch_address_component("state")
+    self.postcode = data_parser.fetch_address_component("postcode")
   end
 
   def to_s
@@ -83,28 +89,52 @@ class Address < ActiveRecord::Base
     { address: 'Address', city: 'City', street: 'Street', suburb: 'Suburb', state: 'State', postcode: 'Postcode' }
   end
 
-  def fetch_coordinates
-    # If we aren't locally geocoding (cukes and people with JS off)
+  def update_address
     if should_fetch_coordinates?
-      populator = Address::AddressComponentsPopulator.new(self)
-      geocoded = populator.geocode
-      if geocoded
-        self.latitude = geocoded.coordinates[0]
-        self.longitude = geocoded.coordinates[1]
-        self.formatted_address = geocoded.formatted_address
-        self.address_components = populator.wrapped_address_components
-      else
-        # do not allow to save when cannot geolocate
-        self.latitude = nil
-        self.longitude = nil
-      end
+      fetch_coordinates!
+    elsif should_fetch_address?
+      fetch_address!
     end
+    nil
+  end
+
+  def fetch_coordinates!
+    populator = Address::AddressComponentsPopulator.new(self)
+    geocoded = populator.geocode
+    if geocoded
+      self.latitude = geocoded.coordinates[0]
+      self.longitude = geocoded.coordinates[1]
+      self.formatted_address = geocoded.formatted_address
+      self.address_components = populator.wrapped_address_components
+    else
+      # do not allow to save when cannot geolocate
+      self.latitude = nil
+      self.longitude = nil
+    end
+    geocoded
+  end
+
+  def fetch_address!
+    populator = Address::AddressComponentsPopulator.new(self)
+    geocoded = populator.reverse_geocode
+    if geocoded
+      self.address = geocoded.formatted_address
+      self.formatted_address = geocoded.formatted_address
+      self.address_components = populator.wrapped_address_components
+    else
+      # do not allow to save when cannot geolocate
+      self.address = nil
+    end
+    geocoded
   end
 
   def should_fetch_coordinates?
     (address_changed? && !(latitude_changed? || longitude_changed?))
   end
 
+  def should_fetch_address?
+    (!address_changed? && (latitude_changed? || longitude_changed?))
+  end
 
 end
 

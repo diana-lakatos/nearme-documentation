@@ -111,8 +111,11 @@ class User < ActiveRecord::Base
 
   BIOGRAPHY_MAX_LENGTH = 2000
 
-  validates_presence_of :name
-  validates_presence_of :first_name
+  MAX_NAME_LENGTH = 30
+
+  validates :name, :first_name, presence: true
+  validate :validate_name_length_from_fullname
+  validates :first_name, :middle_name, :last_name, length: { maximum: MAX_NAME_LENGTH }
 
   # FIXME: This is an unideal coupling of 'required parameters' for specific forms
   #        to the general validations on the User model.
@@ -218,15 +221,15 @@ class User < ActiveRecord::Base
   end
 
   def first_name
-    (self.read_attribute(:first_name)) || (name(true).split[0...1].join(' '))
+    (self.read_attribute(:first_name)) || get_first_name_from_name
   end
 
   def middle_name
-    (self.read_attribute(:middle_name)) || (name(true).split.length > 2 ? name(true).split[1] : '')
+    (self.read_attribute(:middle_name)) || get_middle_name_from_name
   end
 
   def last_name
-    (self.read_attribute(:last_name)) || (name(true).split.length > 1 ? name(true).split.last : '')
+    (self.read_attribute(:last_name)) || get_last_name_from_name
   end
 
   # Whether to validate the presence of a password
@@ -620,4 +623,32 @@ class User < ActiveRecord::Base
     @cached_profiles[PlatformContext.current.try(:instance).try(:id)]
   end
 
+  private
+
+  def get_first_name_from_name
+    name(true).split[0...1].join(' ')
+  end
+
+  def get_middle_name_from_name
+    name(true).split.length > 2 ? name(true).split[1] : ''
+  end
+
+  def get_last_name_from_name
+    name(true).split.length > 1 ? name(true).split.last : ''
+  end
+
+  # This validation is necessary due to the inconsistency of the name inputs in the app
+  def validate_name_length_from_fullname
+    if get_first_name_from_name.length > MAX_NAME_LENGTH
+      errors.add(:name, :first_name_too_long, count: User::MAX_NAME_LENGTH)
+    end
+
+    if get_middle_name_from_name.length > MAX_NAME_LENGTH
+      errors.add(:name, :middle_name_too_long, count: User::MAX_NAME_LENGTH)
+    end
+
+    if get_last_name_from_name.length > MAX_NAME_LENGTH
+      errors.add(:name, :last_name_too_long, count: User::MAX_NAME_LENGTH)
+    end
+  end
 end

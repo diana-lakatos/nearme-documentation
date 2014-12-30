@@ -1,6 +1,6 @@
 %li.listing
   .span2
-    RFQ ##{ticket.id}
+    = "#{t('reservations.rfq_short')} ##{ticket.id}"
   .span4
     = link_to support_ticket_title(ticket), manage_support_ticket_path(ticket)
   .span2.time

@@ -1,4 +1,4 @@
-- title "Request for Quote"
+- title t('reservations.rfq_long')
 - @ticket = @ticket.decorate
 - @date_presenter = DatePresenter.new(@ticket.reservation_dates)
 - if @ticket.reservation_details['start_minute'].present? && @ticket.reservation_details['end_minute'].present?
@@ -10,7 +10,7 @@
   .span8.offset2
     %h1
       - if @ticket.target.free?
-        ="#{t('reservations.rfq_long')} ##{@ticket.id}: "
+        ="#{t('reservations.rfq_short')} ##{@ticket.id}: "
       - else
         ="#{t('reservations.offer')} ##{@ticket.id}: "
       = link_to @ticket.target.name, @ticket.show_target_path

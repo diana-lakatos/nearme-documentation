@@ -49,4 +49,3 @@ Feature: A user can add a space
      Then I go to the home page
      When I search for "USA"
      Then I should see "International"
-

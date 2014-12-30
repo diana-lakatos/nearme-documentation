@@ -10,11 +10,7 @@ class Location < ActiveRecord::Base
   inherits_columns_from_association([:creator_id, :listings_public], :company)
 
   include Impressionable
-  # attr_accessible :amenity_ids, :company_id, :description, :email,
-  #   :info, :currency, :availability_rules_attributes, :location_address_attributes,
-  #   :phone, :availability_template_id, :special_notes, :listings_attributes, :location_type_id, :photos,
-  #   :administrator_id, :name, :location_address
-  attr_accessor :local_geocoding # set this to true in js
+
   attr_accessor :name_and_description_required
   attr_accessor :searched_locations, :search_rank
 
@@ -36,7 +32,7 @@ class Location < ActiveRecord::Base
   delegate :company_users, :url, :service_fee_guest_percent, :service_fee_host_percent, to: :company, allow_nil: true
   delegate :phone, :to => :creator, :allow_nil => true
   delegate :address, :address2, :formatted_address, :postcode, :suburb, :city, :state, :country, :street, :address_components,
-   :latitude, :local_geocoding, :longitude, :state_code, to: :location_address, allow_nil: true
+   :latitude, :longitude, :state_code, :iso_country_code, to: :location_address, allow_nil: true
 
   has_many :listings,
     dependent:  :destroy,
@@ -168,7 +164,7 @@ class Location < ActiveRecord::Base
   end
 
   def self.csv_fields
-    { email: 'Location Email', external_id: 'Location External Id', location_type: 'Location Type', description: 'Location Description', special_notes: 'Location Special Notes' }
+    { name: 'Location Name', email: 'Location Email', external_id: 'Location External Id', location_type: 'Location Type', description: 'Location Description', special_notes: 'Location Special Notes' }
   end
 
   private

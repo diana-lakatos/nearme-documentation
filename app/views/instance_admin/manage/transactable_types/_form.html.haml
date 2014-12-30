@@ -1,4 +1,7 @@
 = simple_form_for [:instance_admin, :manage, resource], :html => { :multipart => true} do |f|
+  %br
+  %br
+  %h4 Basic Configuration
   .content-container.dropshadow
     .row
       .input-container.col-xs-12
@@ -9,10 +12,37 @@
       .input-container.col-xs-6
         = f.input :show_page_enabled, as: :boolean
 
+  %h4 Bulk Upload CSV Fields
+  %ol#draggablePanelList
+    - csv_fields_builder = DataImporter::Host::CsvFieldsBuilder.new(@transactable_type)
+
+    - all_fields = csv_fields_builder.object_field_pairs.clone
+    - csv_fields_builder.all_valid_object_field_pairs.each do |pair|
+      - all_fields << pair unless all_fields.include?({ pair.keys.first.to_s => pair.values.first.to_s})
+    - all_fields.each do |object_field_pair|
+      - object = object_field_pair.keys.first
+      - field = object_field_pair[object]
+      %li.panel.panel-info
+        %div.panel-heading
+          = csv_fields_builder.get_label(object_field_pair)
+          - if field == 'external_id'
+            %span= check_box_tag "", field, true, disabled: true
+            %span.hidden= check_box_tag "#{f.object_name}[custom_csv_fields][]", "#{object}=>#{field}", true
+          - else
+            %span= check_box_tag "#{f.object_name}[custom_csv_fields][]", "#{object}=>#{field}", csv_fields_builder.object_field_pairs.include?(object_field_pair)
+
+
+  %h4 Allowed Action Types
   .content-container.dropshadow
     .row
       .input-container.col-xs-12
-        = f.association :action_types, collection: ActionType.pluck(:name, :id), as: :check_boxes, label: "Actions", input_html: { class: 'form-control' }
+        = f.association :action_types, collection: ActionType.pluck(:name, :id), as: :check_boxes, label: "Actions"
 
   .content-container
     = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+
+= content_for :script do
+  :javascript
+    $(function() {
+      $("ol#draggablePanelList").sortable({ axis: "y", cursor: "move" });
+    });

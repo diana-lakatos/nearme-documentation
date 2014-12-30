@@ -11,39 +11,61 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     GmapsFake.stub_requests
   end
 
+  context 'current data' do
+
+    should 'not skip empty location and include multiple photos' do
+      setup_current_data
+      setup_data_for_other_user
+      assert_equal (File.open(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), "r") { |io| io.read}), DataImporter::Host::CsvCurrentDataGenerator.new(@user, @transactable_type).generate_csv
+    end
+
+    should 'generate proper current data for custom fields' do
+      @transactable_type.update_attribute(:custom_csv_fields, [
+        {'transactable' => 'my_attribute'},
+        {'location' => 'email'},
+        {'address' => 'city'},
+        {'location' => 'external_id'},
+        {'address' => 'street'} ,
+        {'photo' => 'image_original_url'},
+        {'transactable' => 'external_id'},
+        {'location' => 'description'}
+      ])
+      setup_current_data
+      setup_data_for_other_user
+      assert_equal (File.open(Rails.root.join('test', 'assets', 'data_importer', 'current_data_custom_fields.csv'), "r") { |io| io.read}), DataImporter::Host::CsvCurrentDataGenerator.new(@user, @transactable_type).generate_csv
+    end
+
+  end
+
   should 'should not raise exception for blank file' do
     setup_current_data
     setup_data_for_other_user
-    setup_xml_file(Rails.root.join('test', 'assets', 'data_importer', 'current_data_blank.csv'), true)
+    setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data_blank.csv'), true)
     assert_no_difference 'Company.count' do
       assert_no_difference 'Location.count' do
         assert_no_difference 'Address.count' do
           assert_no_difference 'Transactable.count' do
             assert_no_difference 'Photo.count' do
-              @xml_file.parse
+              DataUploadImportJob.perform(@data_upload.id)
+              assert @data_upload.reload.encountered_error.blank?, "Unexpected error: #{@data_upload.encountered_error}"
             end
           end
         end
       end
     end
-  end
-
-  should 'should not skip empty location and include multiple photos' do
-    setup_current_data
-    setup_data_for_other_user
-    assert_equal (File.open(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), "r") { |io| io.read}), DataImporter::Host::CsvCurrentDataGenerator.new(@user, @transactable_type).generate_csv
   end
 
   should 'should not remove anything after uploading current_data csv' do
     setup_current_data
     setup_data_for_other_user
-    setup_xml_file(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), true)
+    setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), true)
     assert_no_difference 'Company.count' do
       assert_no_difference 'Location.count' do
         assert_no_difference 'Address.count' do
           assert_no_difference 'Transactable.count' do
             assert_no_difference 'Photo.count' do
-              @xml_file.parse
+              DataUploadImportJob.perform(@data_upload.id)
+              assert @data_upload.reload.encountered_error.blank?, "Unexpected error: #{@data_upload.encountered_error}"
             end
           end
         end
@@ -51,17 +73,17 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     end
   end
 
-  should 'should be able to parse CSV withouut external ids' do
+  should 'should be able to parse CSV without external ids' do
     @user = FactoryGirl.create(:user)
     @company = FactoryGirl.create(:company, creator: @user)
     assert_nothing_raised do
-      setup_xml_file(Rails.root.join('test', 'assets', 'data_importer', 'current_data_without_external_ids.csv'), true)
-      @xml_file.parse
+      setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data_without_external_ids.csv'), true)
+      DataUploadImportJob.perform(@data_upload.id)
+      assert @data_upload.reload.encountered_error.blank?, "Unexpected error: #{@data_upload.encountered_error}"
     end
     assert_equal 1, Location.with_deleted.count
     assert_equal 0, Transactable.with_deleted.count
     assert_equal 0, Photo.count
-
   end
 
   should 'should be able to restore location instead of creating new one' do
@@ -71,8 +93,9 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     @listing_to_not_be_reverted.destroy
     assert_no_difference 'Location.count' do
       @location_empty.destroy
-      setup_xml_file(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), true)
-      @xml_file.parse
+      setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), true)
+      DataUploadImportJob.perform(@data_upload.id)
+      assert @data_upload.reload.encountered_error.blank?, "Unexpected error: #{@data_upload.encountered_error}"
     end
     refute @location_empty.reload.deleted?
     assert @listing_to_not_be_reverted.reload.deleted?
@@ -85,9 +108,10 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     @photo_to_not_be_reverted.destroy
     assert_no_difference 'Transactable.count' do
       @listing_one.destroy
-      setup_xml_file(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), true)
-      @xml_file.parse
+      setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), true)
+      DataUploadImportJob.perform(@data_upload.id)
     end
+    assert @data_upload.reload.encountered_error.blank?, "Unexpected error: #{@data_upload.encountered_error}"
     refute @listing_one.reload.deleted?
     assert @photo_to_not_be_reverted.reload.deleted?
   end
@@ -95,8 +119,9 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
   should 'should just insert new things and update existing ones, without deleting old ones if sync mode disabled' do
     setup_current_data
     setup_data_for_other_user
-    setup_xml_file(Rails.root.join('test', 'assets', 'data_importer', 'current_data_modified.csv'))
-    @xml_file.parse
+    setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data_modified.csv'))
+    DataUploadImportJob.perform(@data_upload.id)
+    assert @data_upload.reload.encountered_error.blank?, "Unexpected error: #{@data_upload.encountered_error}"
     refute @photo_one.reload.deleted?
     assert_equal 3, @listing_one.reload.photos.count
     assert_equal ['http://www.example.com/image1.jpg', 'http://www.example.com/image2.jpg', 'http://www.example.com/image3.jpg'], @listing_one.photos.map(&:image_original_url).sort
@@ -120,8 +145,9 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
   should 'should do planned changes after submitting different csv in sync mode' do
     setup_current_data
     setup_data_for_other_user
-    setup_xml_file(Rails.root.join('test', 'assets', 'data_importer', 'current_data_modified.csv'), true)
-    @xml_file.parse
+    setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data_modified.csv'), true)
+    DataUploadImportJob.perform(@data_upload.id)
+    assert @data_upload.reload.encountered_error.blank?, "Unexpected error: #{@data_upload.encountered_error}"
     assert @photo_one.reload.deleted?
     refute @photo_two.reload.deleted?
     assert_equal 2, @listing_one.reload.photos.count
@@ -154,7 +180,7 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
   def setup_current_data
     @user = FactoryGirl.create(:user)
     @company = FactoryGirl.create(:company, creator: @user)
-    @location_not_empty = FactoryGirl.create(:location_rydygiera, company: @company, location_type: @location_type, external_id: 2)
+    @location_not_empty = FactoryGirl.create(:location_rydygiera, name: 'Rydygiera', company: @company, location_type: @location_type, external_id: 2)
     @listing_one = FactoryGirl.create(:transactable, location: @location_not_empty, name: 'my name', my_attribute: 'attribute', daily_price: 89, external_id: 4353)
     stub_image_url('http://www.example.com/image1.jpg')
     stub_image_url('http://www.example.com/image2.jpg')
@@ -162,7 +188,7 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     @photo_one = FactoryGirl.create(:photo, listing: @listing_one, image_original_url: 'http://www.example.com/image1.jpg')
     @photo_two = FactoryGirl.create(:photo, listing: @listing_one, image_original_url: 'http://www.example.com/image2.jpg')
     @listing_two = FactoryGirl.create(:transactable, location: @location_not_empty, name: 'my name2', my_attribute: 'attribute', daily_price: 89, external_id: 4354)
-    @location_empty = FactoryGirl.create(:location_czestochowa, company: @company, location_type: @location_type, external_id: 1)
+    @location_empty = FactoryGirl.create(:location_czestochowa, name: 'Czestochowa', company: @company, location_type: @location_type, external_id: 1)
   end
 
   def setup_data_for_other_user
@@ -175,12 +201,10 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     @other_listing_two = FactoryGirl.create(:transactable, location: @other_location_not_empty, name: 'the other', my_attribute: 'attribute', daily_price: 10, external_id: "no-touch")
   end
 
-  def setup_xml_file(csv_path, sync_mode = false)
+  def setup_data_upload(csv_path, sync_mode = false)
     @data_upload = FactoryGirl.create(:data_upload, sync_mode: sync_mode, transactable_type: @transactable_type, csv_file: File.open(csv_path), target: @company, uploader: @user)
-    xml_path = "#{Dir.tmpdir}/#{@data_upload.transactable_type_id}-#{Time.zone.now.to_i}.xml"
-    csv_file = DataImporter::Host::CsvFile::TemplateCsvFile.new(@data_upload)
-    DataImporter::CsvToXmlConverter.new(csv_file, xml_path).convert
-    @xml_file = DataImporter::XmlFile.new(xml_path, @transactable_type)
+    DataUploadHostConvertJob.perform(@data_upload.id)
+    @data_upload.reload.queue!
   end
 
 end

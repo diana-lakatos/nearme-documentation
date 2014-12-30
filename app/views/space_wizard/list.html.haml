@@ -15,7 +15,7 @@
         %h2= t('registrations.tell_us')
         %br
         .box
-          = render :partial => 'registrations/attributes', :locals => { f: f, only_inputs: platform_context.instance.user_required_fields, :country => @country }
+          = render :partial => 'registrations/attributes', :locals => { f: f, only_inputs: platform_context.instance.user_required_fields, country: @country }
           = render partial: 'registrations/custom_attributes', locals: { f: f }
       - elsif f.object.user_instance_profiles.first.instance_profile_type.present? && f.object.user_instance_profiles.first.instance_profile_type.custom_attributes.count > 0
         %h2= t('registrations.tell_us')
@@ -31,7 +31,7 @@
           %h2 Tell us a little about your company
           %br
           .box
-            = render :partial => 'companies/company_form', :locals => { :f => companies_form, :company => companies_form.object, :only_inputs => [ :name, :industries ] }
+            = render :partial => 'companies/company_form', :locals => { :f => companies_form, :company => companies_form.object, :only_inputs => [ :name, :address, :industries ] }
 
         = companies_form.simple_fields_for :locations, @user.companies.first.locations.first do |locations_form|
           %h2

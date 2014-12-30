@@ -1,3 +1,6 @@
+# super hackish way to fix add_space_wizard:12 feature
+require Rails.root.join('app', 'controllers', 'registrations_controller.rb') if Rails.env.test?
+
 DesksnearMe::Application.routes.draw do
 
   scope module: 'spree' do
@@ -100,7 +103,7 @@ DesksnearMe::Application.routes.draw do
 
     resources :instance_creators
 
-    resources :instances do
+    resources :instances, :only => [:index, :show, :edit, :update] do
       member do
         post :lock
       end
@@ -471,6 +474,7 @@ DesksnearMe::Application.routes.draw do
     resources :transactable_types, :only => [] do
       resources :data_uploads, controller: 'transactable_types/data_uploads' do
         collection do
+          get :status
           get :download_csv_template
           get :download_current_data_csv
         end

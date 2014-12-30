@@ -12,13 +12,13 @@ class InstanceAdmin::Manage::TransactableTypesControllerTest < ActionController:
     sign_in @user
   end
 
-  context 'show' do
+  context 'update' do
 
-    should 'show a list of transactable type attributes associated with current instance' do
-      @tta = FactoryGirl.create(:custom_attribute, target: @transactable_type, name: 'my_custom_attribute')
-      get :show, id: @transactable_type.id
-      assert_select 'tr td', "My custom attribute"
+    should 'store correctly custom csv fields' do
+      put :update, id: @transactable_type.id, transactable_type: { custom_csv_fields: ['location=>email', 'address=>city' ] }
+      assert_equal [{'location' => 'email'}, {'address' => 'city'}], @transactable_type.reload.custom_csv_fields
     end
+
   end
 
 end

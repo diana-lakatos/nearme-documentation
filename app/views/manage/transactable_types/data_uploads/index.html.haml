@@ -8,9 +8,8 @@
       %header
         %ul.location-and-listings
           %li.location
-            .name.left
-              Manage Data Uploads for #{@transactable_type.name}
-      %ul.location-and-listings
+            Manage Data Uploads for #{@transactable_type.name}
+      %ul#data-uploads.location-and-listings
         %li.listing.action-buttons
           .right
             = link_to 'New Data Upload', new_manage_transactable_type_data_upload_path(@transactable_type), class: 'btn btn-medium btn-white'
@@ -22,12 +21,23 @@
             = t('data_upload.manage.csv_file')
           .span4
             = t('data_upload.manage.review_file')
-          .span1
+          .span2
             = t('data_upload.manage.import')
-          .span3.state.text-right
+          .span2.state
             = t('data_upload.manage.status')
+          .span1
 
           .clearfix
         = render partial: 'data_upload', collection: @data_uploads
       = will_paginate @data_uploads
+
+- content_for :script do
+  :javascript
+    $(function() {
+      new Dashboard.DataUploadController(
+        $('#data-uploads'),
+        '#{status_manage_transactable_type_data_uploads_path(@transactable_type)}',
+        #{@data_uploads.select(&:should_be_monitored?).inject({}) { |hash, du| hash[du.id] = { state: du.state,  url: manage_transactable_type_data_upload_path(@transactable_type, du) }; hash }.to_json }
+      )
+    });
 

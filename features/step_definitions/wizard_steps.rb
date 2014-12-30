@@ -3,8 +3,9 @@ When /^I fill in valid space details$/ do
   fill_in 'Company name', with: 'International Secret Intelligence Service'
   page.execute_script "$('select#user_companies_attributes_0_industry_ids option:first').prop('selected', true);"
   fill_in 'Location description', with: 'Our historic 11-story Southern Pacific Building, also known as "The Landmark", was completed in 1916. We are in the 172 m Spear Tower.'
-  fill_in 'location_address', with: 'usa'
+  fill_in 'user_companies_attributes_0_company_address_attributes_address', with: 'usa'
   fill_in 'Location name', with: 'name'
+  fill_in 'user_companies_attributes_0_locations_attributes_0_location_address_attributes_address', with: 'usa'
   page.execute_script "$('select#user_country_name option[value=\"New Zealand\"]').prop('selected', true).trigger('change');"
   fill_in 'Phone number', with: '844100999'
   select 'Business', from: 'Location type'

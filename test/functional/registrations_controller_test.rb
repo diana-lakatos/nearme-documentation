@@ -46,7 +46,6 @@ class RegistrationsControllerTest < ActionController::TestCase
       @industry = FactoryGirl.create(:industry)
       @industry2 = FactoryGirl.create(:industry)
       @tracker.expects(:updated_profile_information).once
-      FactoryGirl.create(:transactable_type)
       put :update, :id => @user, user: { :industry_ids => [@industry.id, @industry2.id] }
       @user.reload
       assert_equal [@industry.id, @industry2.id], @user.industries.collect(&:id)
@@ -241,7 +240,6 @@ class RegistrationsControllerTest < ActionController::TestCase
 
     should 'track version change on update' do
       sign_in @user
-      FactoryGirl.create(:transactable_type)
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "User", "update").count') do
         with_versioning do
           put :update, :id => @user, user: { :name => 'Updated Name' }
@@ -276,7 +274,6 @@ class RegistrationsControllerTest < ActionController::TestCase
       @user.sms_notifications_enabled = false
       @user.sms_preferences = Hash[%w(user_message reservation_state_changed new_reservation).map{|sp| [sp, '1']}]
       @user.save!
-      FactoryGirl.create(:transactable_type)
     end
 
     should 'save sms_notifications_enabled and sms_preferences' do

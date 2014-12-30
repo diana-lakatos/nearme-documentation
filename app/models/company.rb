@@ -38,6 +38,9 @@ class Company < ActiveRecord::Base
   has_many :locations_impressions, :source => :impressions, :through => :locations
   has_many :instance_clients, :as => :client, :dependent => :destroy
   has_many :data_uploads, as: :target
+  has_one :company_address, class_name: 'Address', as: :entity
+  delegate :address, :address2, :formatted_address, :postcode, :suburb, :city, :state, :country, :street, :address_components,
+   :latitude, :longitude, :state_code, :iso_country_code, to: :company_address, allow_nil: true
 
   before_validation :add_default_url_scheme
 
@@ -66,6 +69,7 @@ class Company < ActiveRecord::Base
   accepts_nested_attributes_for :domain, :reject_if => proc { |params| params.delete(:white_label_enabled).to_f.zero? }
   accepts_nested_attributes_for :theme, reject_if: proc { |params| params.delete(:white_label_enabled).to_f.zero? }
   accepts_nested_attributes_for :locations
+  accepts_nested_attributes_for :company_address
   accepts_nested_attributes_for :approval_requests
 
 

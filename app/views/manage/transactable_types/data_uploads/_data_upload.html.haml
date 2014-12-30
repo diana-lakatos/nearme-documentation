@@ -1,28 +1,24 @@
-%li.listing
+%li.data-upload.listing{id: dom_id(data_upload), 'data-data-upload-row' => data_upload.id}
   .span3
     = link_to data_upload.csv_file_identifier, edit_manage_transactable_type_data_upload_path(@transactable_type, data_upload)
   .span4
     = link_to data_upload.xml_file_identifier, data_upload.xml_file.try(:url), target: :blank if data_upload.xml_file.present?
   .span2
     = l(data_upload.imported_at, format: :short) if data_upload.imported_at
-  .span2.state.text-right
-    - if !data_upload.xml_file.present?
-      = t('data_upload.manage.processing_status')
-    - elsif data_upload.imported_at.nil?
-      = t('data_upload.manage.waiting_status')
-      = tooltip(t('data_upload.manage.waiting_status_tooltip'))
-    - elsif data_upload.parse_summary.empty?
-      = t('data_upload.manage.importing_status')
-    - elsif data_upload.encountered_error.blank?
-      - if data_upload.parsing_result_log.present?
-        = t('data_upload.manage.partial_success_status')
-      - else
-        = t('data_upload.manage.success_status')
-
+  .span2.state{'data-status-column' => true, class: data_upload.state}
+    - if data_upload.importing?
+      .left.importing-text
+        = t("data_upload.manage.#{data_upload.state}_status")
+      .progress
+        .bar{style: "width: #{data_upload.progress_percentage}%"}
     - else
-      = t('data_upload.manage.failed_status')
+      %span.text
+        = t("data_upload.manage.#{data_upload.state}_status", default: '')
+      %span.icon
+      = tooltip(t("data_upload.manage.#{data_upload.state}_status_tooltip")) if t("data_upload.manage.#{data_upload.state}_status_tooltip", default: '').present?
+
   .span1
-    = link_to manage_transactable_type_data_upload_path(@transactable_type, data_upload), :method => :delete, :confirm => 'Are you sure?', :class => "delete", style: 'padding-top: 0px;' do
+    = link_to manage_transactable_type_data_upload_path(@transactable_type, data_upload), method: :delete, confirm: 'Are you sure?', class: "delete", style: 'padding-top: 0px;' do
       %span.ico-trash
 
   .clearfix

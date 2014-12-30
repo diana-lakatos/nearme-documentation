@@ -11,6 +11,7 @@ public/user
 public/assets
 public/capybara.html
 public/staging*
+public/qa*
 db/sphinx
 config/*.sphinx.conf
 config/redis.yml
@@ -33,3 +34,4 @@ dump.rdb
 .ruby-gemset
 .envrc
 .vimrc
+work_files

@@ -5,6 +5,7 @@ FactoryGirl.define do
     description "Aliquid eos ab quia officiis sequi."
     creator
     url "http://google.com"
+    association :company_address, factory: :address_in_san_francisco
 
     after(:build) do |company|
       company.industries = [FactoryGirl.build(:industry)] if company.industries.empty?

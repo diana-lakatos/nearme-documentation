@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<companies>
+  <company id="1">
+    <name><![CDATA[My Company's]]></name>
+    <url><![CDATA[www.mycompany.example.com]]></url>
+    <email><![CDATA[company@example.com]]></email>
+    <external_id><![CDATA[1]]></external_id>
+    <users>
+      <user>
+        <email><![CDATA[user2@example.com]]></email>
+        <name>User</name>
+      </user>
+    </users>
+    <locations>
+      <location id="1">
+        <name><![CDATA[location name]]></name>
+        <email><![CDATA[location@example.com]]></email>
+        <external_id><![CDATA[1]]></external_id>
+        <location_type><![CDATA[My Type]]></location_type>
+        <description></description>
+        <special_notes><![CDATA[Be careful, cool place!]]></special_notes>
+        <location_address>
+        </location_address>
+      </location>
+    </locations>
+  </company>
+</companies>

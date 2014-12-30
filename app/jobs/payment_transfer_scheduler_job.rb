@@ -5,7 +5,9 @@ class PaymentTransferSchedulerJob < Job
   def perform
     Company.needs_payment_transfer.find_each do |company|
       PlatformContext.current = PlatformContext.new(company.instance)
-      company.schedule_payment_transfer
+      if PaymentTransfers::SchedulerMethods.new(company.instance).generate_payment_transfers_today?
+        company.schedule_payment_transfer
+      end
     end
   end
 end

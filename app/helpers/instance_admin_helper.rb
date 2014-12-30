@@ -47,4 +47,23 @@ module InstanceAdminHelper
     currency = Money::Currency.find(iso_code)
     currency.nil? ? nil : "#{iso_code} - #{currency.name}"
   end
+
+  def redirect_codes
+    Domain::REDIRECT_CODES.map do |code|
+      label = case code
+                when 301
+                  'Moved permanently (301)'
+                when 302
+                  'Temporary (302)'
+                else
+                  code
+              end
+
+      [label, code]
+    end
+  end
+
+  def next_payment_transfers_date
+    l(PaymentTransfers::SchedulerMethods.new(platform_context.instance).next_payment_transfers_date.beginning_of_day, format: :long)
+  end
 end

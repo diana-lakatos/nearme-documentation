@@ -44,7 +44,7 @@ en:
     accept_terms_of_service: 'confirm that you accept the <a href="/pages/legal" target="_blank">Terms of Service and Privacy Policy</a>'
   reservations:
     charge_after_confirmation: "Your card will not be charged until the booking is confirmed."
-    manually_confirm: "This %{lessor} manually confirms all bookings. "
+    manually_confirm: "This %{lessor} manually confirms all bookings."
     cancellation_time: "You have up to %{time} hours before the booking takes place to cancel."
     no_cancellation_time: "You can cancel before the first day."
     cancellation_fee: "The penalty fee for cancelling is %{fee}%. Service fee is not refunded."
@@ -52,7 +52,9 @@ en:
     no_bookings_html: "You don't have any %{type} bookings. <a href='/search'>Find a %{bookable_noun} near you!</a>"
     payment_in_person: "You will make payment in person."
     rfq: 'Request Quote'
+    rfq_short: 'RFQ'
     rfq_long: 'Request for Quote'
+    rfq_menu_text: 'My RFQs'
     offer: 'Make Offer'
     make_offer: 'Make an Offer'
     book: 'Book'
@@ -89,12 +91,13 @@ en:
       review_file: 'Review File'
       import: 'Import '
       status: 'Status'
+      queued_status: 'queued'
       processing_status: 'processing'
       waiting_status: 'waiting'
       waiting_status_tooltip: "We are waiting for your confirmation - click 'Schedule Data Import' in CSV file's details."
       importing_status: 'importing'
-      partial_success_status: 'partial success'
-      success_status: 'success'
+      partially_succeeded_status: 'partially succeeded'
+      succeeded_status: 'succeeded'
       failed_status: 'failed'
       new:
         header: 'New Data Upload %{transactable_type_name}'
@@ -102,14 +105,15 @@ en:
         sync_mode: 'Delete absent objects'
         external_id_hint: 'Matching between objects already in the system and in CSV is done based on External Id. Hence External Ids have to be unique in scope of parent. If you are not sure what current External Ids are, please download current data first. Please make sure that any new objects that are inserted via CSV have populated External Id, otherwise the end result might not be as intendent.'
       edit:
+        queued: 'Task has been queued.'
         processing: 'Your data is being processed. Please refresh the page after few minutes.'
-        importing: 'Your data has been processed, however nothing has been imported yet! U can %{preview_link} that will be imported. To actually import data click the button below.'
+        waiting: 'Your data has been processed, however nothing has been imported yet! U can %{preview_link} that will be imported. To actually import data click the button below.'
         schedule_import: 'Schedule Data Import'
-        parsing: 'Parsing has been scheduled, job is waiting in the queue.'
+        being_imported: 'Your data is being imported.'
         imported_header: 'Data has been imported.'
         new_entities:  'New entities:'
         updated_entities:  'Updated entities:'
         errors_encountered: 'Errors encountered:'
         no_errors: 'No validation errors encountered.'
-        errors: 'Data has not been imported due to error during processing. Please verify that %{preview_link} is correct.'
+        errors: 'Data has not been imported due to error during processing.'
         header:  'Data import for %{csv_identifier}'

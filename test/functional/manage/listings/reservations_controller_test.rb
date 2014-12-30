@@ -71,9 +71,9 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
 
   should "refund booking on cancel" do
     ActiveMerchant::Billing::Base.mode = :test
-    response = gateway.authorize(@reservation.total_amount_cents, credit_card)
+    gateway.authorize(@reservation.total_amount_cents, credit_card)
     @reservation.confirm
-    
+
     sign_in @reservation.listing.creator
     User.any_instance.stubs(:accepts_sms_with_type?)
 
@@ -123,7 +123,7 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
           post :host_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
         end
       end
-    end   
+    end
 
   end
 
@@ -137,7 +137,7 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
   end
 
   def gateway
-    Billing::Gateway::Processor::Incoming::ProcessorFactory.create(@user, @user.instance, "USD")
+    Billing::Gateway::Processor::Incoming::ProcessorFactory.create(@user, @user.instance, "USD", 'US')
   end
 
   def setup_refund_for_reservation(reservation)

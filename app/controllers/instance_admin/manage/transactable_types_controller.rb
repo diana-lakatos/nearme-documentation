@@ -18,7 +18,10 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
   private
 
   def transactable_type_params
-    params.require(:transactable_type).permit(secured_params.transactable_type)
+    params.require(:transactable_type).permit(secured_params.transactable_type).tap do |whitelisted|
+      whitelisted[:custom_csv_fields] = params[:transactable_type][:custom_csv_fields].map { |el| el = el.split('=>'); { el[0] => el[1] } } if params[:transactable_type][:custom_csv_fields]
+    end
+
   end
 
 end
