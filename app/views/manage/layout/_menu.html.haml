@@ -1,9 +1,9 @@
 %li{class: (params[:controller].include?('companies')) ? 'active' : ''}
   = link_to 'Shop', root_path(anchor: 'products')
 %li{class: (params[:controller].include?('products')) ? 'active' : ''}
-  = link_to 'Listings', manage_buy_sell_products_path
+  = link_to 'Listings', dashboard_products_path
 %li{class: (params[:controller].include?('orders') && params[:controller].include?('manage')) ? 'active' : ''}
-  = link_to 'Orders Received', manage_buy_sell_orders_path
+  = link_to 'Orders Received', dashboard_orders_path
 %li{class: (params[:controller].include?('orders') && !params[:controller].include?('manage')) ? 'active' : ''}
   = link_to 'My Orders', orders_path
 -#%li
@@ -12,8 +12,8 @@
 -#  %a{:href => "#"} Payout
 -#%li
 -#  %a{:href => "#"} Payment
-%li
-  = link_to 'Shipping Methods', manage_buy_sell_shipping_methods_path
+-#%li
+-# link_to 'Shipping Methods', dashboard_shipping_methods_path
 %li
   %a{:href => "#"} Notifications
 %li{class: (params[:controller].include?('analytics')) ? 'active' : ''}

@@ -423,6 +423,11 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
+  namespace :dashboard do
+    resources :products
+    resources :orders
+  end
+
   namespace :manage do
     namespace :buy_sell do
       resources :api do
