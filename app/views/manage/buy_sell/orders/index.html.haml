@@ -1,28 +1,20 @@
-- title "Orders"
+- title t('orders.index.title')
 
-= show_manage_navigation(:orders)
+.dash-head.clearfix
+  - # For later use
+-#%ul
+-#  %li.active
+-#    %a{:href => "#"} ORDERS
+-#  %li
+-#    %a{:href => "#"} OPEN ORDERS
+-#  %li
+-#    %a{:href => "#"} CANCELLED ORDERS
 
-.row-fluid
-  .span10.offset1
-    .box
-      %header
-        %ul.location-and-listings
-          %li.location
-            .name.left
-              Manage Orders
-      %ul.location-and-listings
-        %li.listing.action-buttons
-          .span2= t('order.completed')
-          .span2= t('order.order_number')
-          .span1= t('order.state')
-          .span1= t('order.payment_state')
-          .span1= t('order.shippment_state')
-          .span2= t('order.buyer_email')
-          .span1= t('order.total')
+.dash-body
+  = render partial: 'buy_sell/orders/order', collection: @orders
 
-          .span2.state.text-right
-
-          .clearfix
-        = render partial: 'order', collection: @orders
-      = will_paginate @orders
-
+- unless @orders.empty?
+  .row-fluid
+    .span12
+      .pagination
+        = will_paginate @orders, renderer: BuySellMarket::WillPaginateLinkRenderer::LinkRenderer, class: ''

@@ -1,38 +1,36 @@
-= simple_form_for @order, url: wizard_path do |f|
-  .row-fluid
-    .span6.box
-      %h1= t('buy_sell_market.checkout.labels.billing_address')
+.page-wrapper
+  = render 'header'
 
-      = f.input :save_billing_address, as: :boolean, inline_label: t('buy_sell_market.checkout.labels.save_billing_address'), label: false
+  = simple_form_for @order, url: wizard_path, html: { class: 'form-horizontal' } do |f|
+    %section.checkout-form
+      .container-fluid
+        %h2= t 'buy_sell_market.checkout.labels.billing_address'
+        = f.simple_fields_for :bill_address do |b|
+          = b.input :firstname, placeholder: t('buy_sell_market.checkout.placeholders.first_name')
+          = b.input :lastname, placeholder: t('buy_sell_market.checkout.placeholders.last_name')
+          = b.input :address1, placeholder: t('buy_sell_market.checkout.placeholders.address1')
+          = b.input :address2, placeholder: t('buy_sell_market.checkout.placeholders.address2')
+          = b.input :city, placeholder: t('buy_sell_market.checkout.placeholders.city')
+          = b.input :zipcode, placeholder: t('buy_sell_market.checkout.placeholders.zipcode')
+          = b.association :country, collection: @countries, input_html: { class: '' }
+          = b.association :state, collection: @billing_states, include_blank: false
+          = b.input :phone
 
-      = f.simple_fields_for :bill_address do |b|
-        = b.input :firstname
-        = b.input :lastname
-        = b.input :address1
-        = b.input :address2
-        = b.input :city
-        = b.input :zipcode
-        = b.association :country, collection: @countries
-        = b.association :state, collection: @billing_states, include_blank: false
-        = b.input :phone
-
-    .span6.box
-      %h1= t('buy_sell_market.checkout.labels.shipping_address')
-      = f.input :use_billing, as: :boolean, inline_label: t('buy_sell_market.checkout.labels.billing_address_shipping'), label: false
-
-      #shipping-address{style: @order.use_billing.to_i == 1 ? 'display: none': ''}
+    %section.checkout-form
+      .container-fluid
+        %h2= t 'buy_sell_market.checkout.labels.shipping_address'
         = f.simple_fields_for :ship_address do |s|
-          = s.input :firstname
-          = s.input :lastname
-          = s.input :address1
-          = s.input :address2
-          = s.input :city
-          = s.input :zipcode
+          = s.input :firstname, placeholder: t('buy_sell_market.checkout.placeholders.first_name')
+          = s.input :lastname, placeholder: t('buy_sell_market.checkout.placeholders.last_name')
+          = s.input :address1, placeholder: t('buy_sell_market.checkout.placeholders.address1')
+          = s.input :address2, placeholder: t('buy_sell_market.checkout.placeholders.address2')
+          = s.input :city, placeholder: t('buy_sell_market.checkout.placeholders.city')
+          = s.input :zipcode, placeholder: t('buy_sell_market.checkout.placeholders.zipcode')
           = s.association :country, collection: @countries
           = s.association :state, collection: @shipping_states, include_blank: false
           = s.input :phone
 
-  = render partial: 'checkout_buttons', locals: { form: f }
+    = render partial: 'checkout_buttons', locals: { form: f }
 
 -# TODO Refactor to asset pipeline
 = javascript_include_tag 'jquery'

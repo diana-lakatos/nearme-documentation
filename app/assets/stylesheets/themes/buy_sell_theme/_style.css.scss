@@ -1,5 +1,7 @@
 body.buy-sell {
 
+  @import "themes/flash";
+
   .products-container {
     float: left;
     margin-bottom: 25px;
@@ -95,7 +97,7 @@ body.buy-sell {
           color: $gray100;
         }
       }
-    } 
+    }
   }
 
   section.products {
@@ -129,7 +131,7 @@ body.buy-sell {
         @media (max-width: $booking-module-breakpoint) {
           width: 100%;
           clear: both;
-        }	
+        }
       }
 
       .description {
@@ -324,7 +326,7 @@ body.buy-sell {
         @media (max-width: $booking-module-breakpoint) {
           margin-left: 0px;
         }
-            
+
       }
     }
 
@@ -422,8 +424,8 @@ body.buy-sell {
         a:hover, em.current {
           color: $gray60;
           border-color: $gray120;
-        } 
-      } 
+        }
+      }
     }
 
     .sort {
@@ -529,7 +531,7 @@ body.buy-sell {
         }
       }
     }
-  } 
+  }
 
   nav#taxonomies {
     .taxonomy {
@@ -655,7 +657,7 @@ body.buy-sell {
 
     .carousel {
       margin-bottom: 0;
-      
+
       ol.carousel-indicators{
         position: static !important;
 
@@ -685,21 +687,21 @@ body.buy-sell {
 
       .carousel-inner {
         width: 100%;
-        max-width: $space-full-image-width; 
+        max-width: $space-full-image-width;
 
         .item {
           width: 100%;
           height: 100%;
 
           img {
-            @include border-radius($border-radius-default);          
+            @include border-radius($border-radius-default);
             height: auto;
           }
         }
       }
 
       &#photos-container {
-        max-width: $space-full-image-width; 
+        max-width: $space-full-image-width;
       }
 
       &#photos-container-enlarged {
@@ -762,7 +764,7 @@ body.buy-sell {
 
         &.close {
           position: fixed;
-          @include border-bottom-left-radius($border-radius-default);          
+          @include border-bottom-left-radius($border-radius-default);
         }
       }
 
@@ -777,7 +779,7 @@ body.buy-sell {
         font-size: 13px;
         @include background-image(linear-gradient(rgba(250,250,250,0), $black));
         @include border-radius($border-radius-bottom);
-        
+
 
         .caption {
           position: absolute;

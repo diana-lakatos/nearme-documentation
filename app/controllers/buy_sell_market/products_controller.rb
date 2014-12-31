@@ -19,6 +19,6 @@ class BuySellMarket::ProductsController < ApplicationController
   end
 
   def theme_name
-    @theme_name = 'buy-sell'
+    @theme_name = 'product-theme'
   end
 end

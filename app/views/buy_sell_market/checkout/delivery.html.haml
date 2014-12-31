@@ -1,59 +1,90 @@
-.row-fluid
-  .span12.box
-    %h2= t('buy_sell_market.checkout.labels.delivery')
+.page-wrapper
+  = render 'header'
 
-= simple_form_for @order, url: wizard_path do |f|
-  = f.fields_for :shipments do |ship_form|
-    .box
-      .row-fluid
-        .span12.centered
-          %h3
-            Package from
-            = ship_form.object.stock_location.name
+  = simple_form_for @order, url: wizard_path do |f|
+    %section.checkout-form
+      .container-fluid
+        %h2 Choose Your Shipping Method
+        = f.fields_for :shipments do |ship_form|
+          .shipping-details
+            .row-fluid
+              .span5.item-list
+                %p.heading= t 'buy_sell_market.checkout.labels.item'
+                - ship_form.object.manifest.each do |item|
+                  .row-fluid
+                    .span5= item.line_item.decorate.image('_blank')
+                    .span7
+                      %p= item.variant.name
+                      %p= item.line_item.decorate.price
+                      %p #{t('buy_sell_market.products.labels.qty')} #{item.quantity}
 
-      .row-fluid
-        .span8 ITEM
-        .span2 QTY
-        .span2 PRICE
+              .span7.shipping-options
+                %p.heading= t 'buy_sell_market.checkout.labels.shipping_method2'
+                - ship_form.object.shipping_rates.each do |rate|
+                  .row-fluid.radio-select
+                    = ship_form.radio_button :selected_shipping_rate_id, rate.id
+                    %p
+                      %span.shipping-price= rate.display_cost
+                      = rate.name
 
-      - ship_form.object.manifest.each do |item|
-        .row-fluid
-          .summary-line
-            .span2= item.line_item.decorate.image
-            .span6
-              = item.variant.name
-            .span2
-              = item.quantity
-            .span2
-              = item.line_item.decorate.price
+    = render partial: 'checkout_buttons', locals: { form: f }
 
-      %ul.field.radios.shipping-methods
-        = ship_form.input :selected_shipping_rate_id, collection: ship_form.object.shipping_rates.decorate,
-          label: Spree.t(:shipping_method), include_blank: false
+-#.row-fluid
+-#  .span12.box
+-#    %h2= t('buy_sell_market.checkout.labels.delivery')
 
-    - # TODO !
-    -#.shipment
-    -#  - if @differentiator.try(:missing?)
-    -#    .shipment.unshippable
-    -#      %h3.stock-location= Spree.t(:unshippable_items)
-    -#      %table.stock-contents
-    -#        %col{style: "width: 10%;"}
-    -#        %col{style: "width: 60%;"}
-    -#        %col{style: "width: 10%;"}
-    -#        %col{style: "width: 20%;"}
-    -#
-    -#        %thead
-    -#          %th
-    -#          %th{align: 'left'}= Spree.t(:item)
-    -#          %th= Spree.t(:qty)
-    -#          %th= Spree.t(:price)
-    -#
-    -#        %tbody
-    -#          - @differentiator.missing.each do |variant, quantity|
-    -#            %tr.stock-item
-    -#              %td.item-image= mini_image(variant)
-    -#              %td.item-name= variant.name
-    -#              %td.item-qty= quantity
-    -#              %td.item-price= display_price(variant)
+-#= simple_form_for @order, url: wizard_path do |f|
+-#  = f.fields_for :shipments do |ship_form|
+-#    .box
+-#      .row-fluid
+-#        .span12.centered
+-#          %h3
+-#            Package from
+-#            = ship_form.object.stock_location.name
+-#
+-#      .row-fluid
+-#        .span8 ITEM
+-#        .span2 QTY
+-#        .span2 PRICE
+-#
+-#      - ship_form.object.manifest.each do |item|
+-#        .row-fluid
+-#          .summary-line
+-#            .span2= item.line_item.decorate.image
+-#            .span6
+-#              = item.variant.name
+-#            .span2
+-#              = item.quantity
+-#            .span2
+-#              = item.line_item.decorate.price
+-#
+-#      %ul.field.radios.shipping-methods
+-#        = ship_form.input :selected_shipping_rate_id, collection: ship_form.object.shipping_rates.decorate,
+-#          label: Spree.t(:shipping_method), include_blank: false
 
-  = render partial: 'checkout_buttons', locals: { form: f }
+- # TODO !
+-#.shipment
+-#  - if @differentiator.try(:missing?)
+-#    .shipment.unshippable
+-#      %h3.stock-location= Spree.t(:unshippable_items)
+-#      %table.stock-contents
+-#        %col{style: "width: 10%;"}
+-#        %col{style: "width: 60%;"}
+-#        %col{style: "width: 10%;"}
+-#        %col{style: "width: 20%;"}
+-#
+-#        %thead
+-#          %th
+-#          %th{align: 'left'}= Spree.t(:item)
+-#          %th= Spree.t(:qty)
+-#          %th= Spree.t(:price)
+-#
+-#        %tbody
+-#          - @differentiator.missing.each do |variant, quantity|
+-#            %tr.stock-item
+-#              %td.item-image= mini_image(variant)
+-#              %td.item-name= variant.name
+-#              %td.item-qty= quantity
+-#              %td.item-price= display_price(variant)
+
+-#= render partial: 'checkout_buttons', locals: { form: f }

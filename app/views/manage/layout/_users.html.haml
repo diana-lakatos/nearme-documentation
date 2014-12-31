@@ -1,12 +1,12 @@
-= show_manage_navigation(:users)
+-#= show_manage_navigation(:users)
 
-.row-fluid
-  .span8.offset2
-    %div{:class => (params[:action] == 'index') ? '' : 'box'}
-      %ul.locations
-        = yield
+-#.row-fluid
+-#  .span8.offset2
+%div{:class => (params[:action] == 'index') ? '' : 'box'}
+  %ul.locations
+    = yield
 
-      
+
 
 - content_for :script do
   :javascript

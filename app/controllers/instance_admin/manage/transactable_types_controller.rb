@@ -1,5 +1,9 @@
 class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage::BaseController
 
+  layout 'buy_sell'
+
+  before_filter :set_theme
+
   def index
     @transactable_types = TransactableType.all
   end
@@ -16,6 +20,10 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
   end
 
   private
+
+  def set_theme
+    @theme_name = 'orders-theme'
+  end
 
   def transactable_type_params
     params.require(:transactable_type).permit(secured_params.transactable_type).tap do |whitelisted|

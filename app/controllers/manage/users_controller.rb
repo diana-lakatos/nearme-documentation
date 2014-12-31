@@ -2,13 +2,16 @@ class Manage::UsersController < Manage::BaseController
   before_filter :find_company
   before_filter :redirect_if_no_company
 
+  before_filter :set_theme
+
+  layout 'buy_sell'
+
   def index
     @users = @company.users.without(current_user).ordered_by_email
   end
 
   def new
     @user = @company.users.build
-
     render partial: 'user_form'
   end
 
@@ -41,6 +44,10 @@ class Manage::UsersController < Manage::BaseController
   end
 
   private
+
+  def set_theme
+    @theme_name = 'orders-theme'
+  end
 
   def find_company
     @company = current_user.companies.first

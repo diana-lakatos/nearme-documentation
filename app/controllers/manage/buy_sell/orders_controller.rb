@@ -1,10 +1,17 @@
 class Manage::BuySell::OrdersController < Manage::BuySell::BaseController
   include Spree::Core::ControllerHelpers::StrongParameters
 
-  before_filter :find_order, only: [:edit, :update, :destroy, :cancel, :resume, :approve]
+  before_filter :find_order, only: [:show, :edit, :update, :destroy, :cancel, :resume, :approve]
+
+  layout 'buy_sell'
 
   def index
-    @orders = @company.orders.paginate(page: params[:page], per_page: 20)
+    @orders = @company.orders.complete.paginate(page: params[:page]).order('created_at DESC').decorate
+    @theme_name = 'orders-theme'
+  end
+
+  def show
+    @theme_name = 'orders-theme'
   end
 
   def edit

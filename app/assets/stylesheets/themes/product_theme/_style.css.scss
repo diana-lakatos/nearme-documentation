@@ -1,4 +1,5 @@
 body.product-theme {
+  @import "themes/flash";
 
   margin: 0;
   padding: 0;
@@ -183,7 +184,7 @@ body.product-theme {
      color: #cccccc;
   }
 
-  :-ms-input-placeholder {  
+  :-ms-input-placeholder {
      color: #cccccc;
   }
 

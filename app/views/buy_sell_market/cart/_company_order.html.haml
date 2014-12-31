@@ -1,21 +1,22 @@
-.row-fluid.header-row
-  .span6
-    Order from #{order.company_name}
-  .span2
-    Price
-  .span1
-    Quantity
-  .span1
-    Total
-  .span2
-    Actions
+.cart-item-list
+  .list-head.clearfix
+    = link_to cart_clear_all_path(order.id), method: :delete, class: 'clear-all' do
+      %p= t 'buy_sell_market.cart.buttons.clear_all'
+      = image_tag 'themes/cart_theme/x.png'
 
-- order.line_items.each do |item|
-  = render partial: 'cart_item', locals: {item: item}
+    %p
+      = t('buy_sell_market.cart.labels.order_from')
+      = order.company_name
 
-.row-fluid.cart-row.no-hover
-  .span7
-    Total for order (incl. tax):
-    = order.display_total
-  .span2.offset3
-    = link_to t('buy_sell_market.cart.buttons.checkout'), order_checkout_path(order, 'address'), class: 'btn btn-green btn-large'
+  .list-body
+    - order.line_items.each_with_index do |item, index|
+      = render partial: 'cart_item', locals: { item: item, index: index }
+
+  .list-footer
+    %h3 #{t('orders.labels.total')} #{order.display_total}
+
+.checkout
+  = link_to order_checkout_path(order, 'address') do
+    .btn.blue
+      = image_tag 'themes/cart_theme/arrow-right.png'
+      = t('buy_sell_market.cart.buttons.checkout')
