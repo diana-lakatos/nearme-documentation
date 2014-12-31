@@ -834,13 +834,12 @@ class SecuredParams
       :linkedin_url, :facebook_url, :google_plus_url,
       industry_ids: [],
       companies_attributes: nested(self.company),
-      approval_requests_attributes: nested(self.approval_request),
-      user_instance_profiles_attributes: nested(self.user_instance_profiles)
-    ]
+      approval_requests_attributes: nested(self.approval_request)
+    ] + User.public_custom_attributes_names(InstanceProfileType.first.try(:id))
   end
 
   def user_instance_profiles
-    UserInstanceProfile.public_custom_attributes_names(InstanceProfileType.first.try(:id))
+
   end
 
   def workflow

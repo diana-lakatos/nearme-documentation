@@ -3,10 +3,10 @@ require 'test_helper'
 class InstanceAdmin::ManageBlog::PostsControllerTest < ActionController::TestCase
 
   setup do
-    @user = FactoryGirl.create(:user)
     @instance = FactoryGirl.create(:instance)
-    @blog_instance = FactoryGirl.create(:blog_instance, owner: @instance)
     PlatformContext.any_instance.stubs(:instance).returns(@instance)
+    @blog_instance = FactoryGirl.create(:blog_instance, owner: @instance)
+    @user = FactoryGirl.create(:user)
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
     InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
     sign_in @user

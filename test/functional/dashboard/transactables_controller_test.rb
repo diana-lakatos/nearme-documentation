@@ -79,6 +79,8 @@ class Dashboard::TransactablesControllerTest < ActionController::TestCase
         stub_mixpanel
         @related_instance = FactoryGirl.create(:instance)
         PlatformContext.current = PlatformContext.new(@related_instance)
+        @user = FactoryGirl.create(:user)
+        sign_in @user
         @transactable_type = FactoryGirl.create(:transactable_type_listing)
 
         @related_company = FactoryGirl.create(:company_in_auckland, creator_id: @user.id, instance: @related_instance)

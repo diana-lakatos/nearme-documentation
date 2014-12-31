@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
                               :avatar_transformation_data, :metadata]
   acts_as_paranoid
   auto_set_platform_context
+  scoped_to_platform_context allow_admin: :admin
 
   extend FriendlyId
   has_metadata :accessors => [:support_metadata]
@@ -44,9 +45,9 @@ class User < ActiveRecord::Base
   has_many :requests_for_quotes, -> { where(target_type: 'Transactable').order('updated_at DESC') }, :class_name => 'Support::Ticket'
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :user_bans
-  has_many :user_instance_profiles
   has_one :blog, class_name: 'UserBlog'
   has_many :blog_posts, class_name: 'UserBlogPost'
+  belongs_to :instance_profile_type
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
@@ -71,9 +72,10 @@ class User < ActiveRecord::Base
 
   accepts_nested_attributes_for :companies
   accepts_nested_attributes_for :approval_requests
-  accepts_nested_attributes_for :user_instance_profiles
 
   has_many :ticket_message_attachments, foreign_key: 'uploader_id', class_name: 'Support::TicketMessageAttachment'
+
+  has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
 
   scope :patron_of, lambda { |listing|
                     joins(:reservations).where(:reservations => { :transactable_id => listing.id }).uniq
@@ -161,12 +163,6 @@ class User < ActiveRecord::Base
          :rememberable, :trackable, :user_validatable, :token_authenticatable, :temporary_token_authenticatable
 
   attr_accessor :phone_required, :country_name_required, :skip_password, :verify_identity
-
-  # attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :avatar_versions_generated_at, :avatar_transformation_data,
-  #   :biography, :industry_ids, :country_name, :mobile_number, :facebook_url, :twitter_url, :linkedin_url, :instagram_url,
-  #   :current_location, :company_name, :skills_and_interests, :last_geolocated_location_longitude, :last_geolocated_location_latitude,
-  #
-  #   :domain_id, :time_zone, :companies_attributes, :sms_notifications_enabled, :sms_preferences
 
   serialize :sms_preferences, Hash
   serialize :instance_unread_messages_threads_count, Hash
@@ -516,7 +512,7 @@ class User < ActiveRecord::Base
       if company.company_users.count == company_users_number
         company.destroy
       else
-        company.creator = company.company_users.find { |cu| cu.user_id != self.id }.user
+        company.creator = company.company_users.find { |cu| cu.user_id != self.id }.try(:user)
         company.save!
       end
     end
@@ -587,7 +583,7 @@ class User < ActiveRecord::Base
   end
 
   def banned?
-    user_bans.count > 0
+    banned_at.present?
   end
 
   def self.xml_attributes
@@ -659,12 +655,13 @@ class User < ActiveRecord::Base
     get_instance_metadata("instance_admins_metadata")
   end
 
+  def instance_profile_type_id
+    read_attribute(:instance_profile_type_id) || instance_profile_type.try(:id)
+  end
+
+  # hack for compatibiltiy reason, to be removed soon
   def profile
-    @cached_profiles ||= {}
-    if @cached_profiles[PlatformContext.current.try(:instance).try(:id)].nil?
-      @cached_profiles[PlatformContext.current.try(:instance).try(:id)] = user_instance_profiles.first
-    end
-    @cached_profiles[PlatformContext.current.try(:instance).try(:id)]
+    properties
   end
 
   def cart_orders
@@ -741,4 +738,6 @@ class User < ActiveRecord::Base
       errors.add(:name, :last_name_too_long, count: User::MAX_NAME_LENGTH)
     end
   end
+
 end
+

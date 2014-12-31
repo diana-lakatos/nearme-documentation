@@ -4,9 +4,9 @@ class InstanceAdmin::BuySell::ConfigurationControllerTest < ActionController::Te
 
   setup do
     stub_mixpanel
+    PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
     @user = FactoryGirl.create(:user)
     sign_in @user
-    PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
     InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
     FactoryGirl.create(:transactable_type_buy_sell)

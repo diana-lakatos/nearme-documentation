@@ -29,8 +29,7 @@ class Transactable < ActiveRecord::Base
   belongs_to :company, inverse_of: :listings
   belongs_to :location, inverse_of: :listings
   belongs_to :instance, inverse_of: :listings
-  belongs_to :creator, class_name: "User", inverse_of: :listings
-  belongs_to :user_instance_profile, foreign_key: 'creator_id', primary_key: 'user_id', counter_cache: true
+  belongs_to :creator, class_name: "User", inverse_of: :listings, counter_cache: true
   belongs_to :administrator, class_name: "User", inverse_of: :administered_listings
 
   has_many :amenity_holders, as: :holder, dependent: :destroy, inverse_of: :holder

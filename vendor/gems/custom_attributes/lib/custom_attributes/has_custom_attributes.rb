@@ -38,9 +38,14 @@ module CustomAttributes
         class_eval <<-RUBY, __FILE__, __LINE__+1
 
           define_method(:apply_custom_attributes) do
-            set_custom_attributes(:#{@options[:store_accessor_name]}) unless @custom_attributes_set
+            set_custom_attributes(:#{@options[:store_accessor_name]})
             custom_attributes_set_default if self.new_record?
             self.assign_attributes(@custom_attributes_to_be_applied) if @custom_attributes_to_be_applied.present?
+          end
+
+          validate do
+            CustomAttributes::CustomValidator.new(:#{@options[:store_accessor_name]}).validate(self)
+            self.errors.add(:#{@options[:store_accessor_name]}, self.#{@options[:store_accessor_name]}.errors.full_messages.join(', ')) if self.#{@options[:store_accessor_name]}.errors.any?
           end
 
           def custom_attributes
@@ -57,6 +62,32 @@ module CustomAttributes
             super(*args)
           end
 
+          define_method(:#{@options[:store_accessor_name]}) do
+            if read_attribute(:#{@options[:store_accessor_name]}).blank?
+              hash = self.custom_attributes.inject({}.with_indifferent_access) do |h, cust_attr_array|
+                h[cust_attr_array[#{CustomAttribute::NAME}]] = cust_attr_array[#{CustomAttribute::VALUE}]
+                h
+              end
+              self.send(:#{@options[:store_accessor_name]}=, hash)
+            end
+            @custom_attributes_#{@options[:store_accessor_name]} ||= CustomAttributes::CollectionProxy.new(self, :#{@options[:store_accessor_name]})
+            self.send(:#{@options[:store_accessor_name]}=, read_attribute(:#{@options[:store_accessor_name]}).with_indifferent_access)
+            @custom_attributes_#{@options[:store_accessor_name]}.update_hash(read_attribute(:#{@options[:store_accessor_name]}))
+            @custom_attributes_#{@options[:store_accessor_name]}
+          end
+
+          define_method(:#{@options[:store_accessor_name]}=) do |value|
+            value = value.with_indifferent_access
+            if self.new_record?
+              hash = self.custom_attributes.inject({}.with_indifferent_access) do |h, cust_attr_array|
+                h[cust_attr_array[#{CustomAttribute::NAME}]] = cust_attr_array[#{CustomAttribute::VALUE}]
+                h
+              end
+              value.reverse_merge!(hash)
+            end
+            super(value)
+          end
+
           def self.clear_custom_attributes_cache
             CustomAttributes::CustomAttribute.clear_cache("#{@options[:target_type]}")
           end
@@ -64,11 +95,11 @@ module CustomAttributes
           def self.public_custom_attributes_names(target_id)
             return [] if target_id.nil?
             CustomAttributes::CustomAttribute.get_from_cache(target_id, "#{@options[:target_type]}").map do |attr_array|
-              if attr_array[CustomAttributes::CustomAttribute::PUBLIC]
-                if attr_array[CustomAttributes::CustomAttribute::ATTRIBUTE_TYPE].to_sym == :array
-                  { attr_array[CustomAttributes::CustomAttribute::NAME] => [] }
+              if attr_array[#{CustomAttributes::CustomAttribute::PUBLIC}]
+                if attr_array[#{CustomAttributes::CustomAttribute::ATTRIBUTE_TYPE}].to_sym == :array
+                  { attr_array[#{CustomAttributes::CustomAttribute::NAME}] => [] }
                 else
-                  attr_array[CustomAttributes::CustomAttribute::NAME]
+                  attr_array[#{CustomAttributes::CustomAttribute::NAME}]
                 end
               else
                 nil

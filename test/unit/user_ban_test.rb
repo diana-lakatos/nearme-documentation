@@ -22,6 +22,7 @@ class UserBanTest < ActiveSupport::TestCase
 
       should 'ignore things in other instances' do
         PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
+        @user = FactoryGirl.create(:user)
         @other_company = FactoryGirl.create(:company, creator: @user)
         @other_location = FactoryGirl.create(:location, company: @other_company)
         FactoryGirl.create(:user_ban, user: @user)

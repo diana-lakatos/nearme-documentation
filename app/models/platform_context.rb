@@ -39,7 +39,7 @@ class PlatformContext
   def self.after_setting_current_callback(platform_context)
     ActiveRecord::Base.establish_connection(platform_context.instance.db_connection_string) if platform_context.instance.db_connection_string.present?
     Transactable.clear_custom_attributes_cache
-    UserInstanceProfile.clear_custom_attributes_cache
+    User.clear_custom_attributes_cache
   end
 
   def self.scope_to_instance
@@ -85,10 +85,14 @@ class PlatformContext
   end
 
   def secured_constraint
-    if domain = fetch_secured_domain
-      {host: domain.name, protocol: 'https', only_path: false}
+    if secure_domain = fetch_secured_domain
+      {host: secure_domain.name, protocol: 'https', only_path: false}
     else
-      {host: Rails.application.routes.default_url_options[:host], protocol: 'https', only_path: false}
+      if PlatformContext.current.instance.id == Instance.first.id
+        {host: Rails.application.routes.default_url_options[:host], protocol: 'https', only_path: false}
+      else
+        raise NotImplementedError.new("Marketplace '#{instance.name}' has not configured secured domain")
+      end
     end
   end
 

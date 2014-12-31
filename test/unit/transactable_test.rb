@@ -199,9 +199,9 @@ class TransactableTest < ActiveSupport::TestCase
       should 'be valid if hourly price within specified range' do
         listing = FactoryGirl.create(:listing_from_transactable_type_with_price_constraints)
         listing.hourly_price_cents = 9999
-        assert listing.valid?
+        assert listing.valid?, listing.errors.full_messages.join(', ')
         listing.hourly_price = 99
-        assert listing.valid?
+        assert listing.valid?, listing.errors.full_messages.join(', ')
       end
 
       should 'be invalid if hourly price outside specified range' do
@@ -209,7 +209,7 @@ class TransactableTest < ActiveSupport::TestCase
         listing.hourly_price_cents = 100001
         refute listing.valid?
         listing.hourly_price = 100
-        assert listing.valid?
+        assert listing.valid?, listing.errors.full_messages.join(', ')
       end
 
       should 'not be valid if hourly price is too low' do
@@ -217,7 +217,7 @@ class TransactableTest < ActiveSupport::TestCase
         listing.hourly_price_cents = 1
         refute listing.valid?
         listing.hourly_price = 11
-        assert listing.valid?
+        assert listing.valid?, listing.errors.full_messages.join(', ')
       end
 
     end

@@ -7,32 +7,21 @@ class Listings::ReservationsController < ApplicationController
   before_filter :build_reservation_request, :only => [:review, :create, :store_reservation_request]
   before_filter :require_login_for_reservation, :only => [:review, :create]
   before_filter :find_current_country, :only => [:review, :create]
-  after_filter  :clear_origin_domain, :only => [:create]
 
   def review
     event_tracker.reviewed_a_booking(@reservation_request.reservation)
-  end
-
-  def platform_context
-    if not origin_domain?
-      PlatformContext.current = PlatformContext.new(origin_domain)
-    else
-      super
-    end
   end
 
   def load_payment_with_token
     if request.ssl? and params["payment_token"]
       user, reservation_params = User::PaymentTokenVerifier.find_token(params["payment_token"])
       sign_in user
-      set_origin_domain(reservation_params['host'])
       params[:reservation_request] = reservation_params.symbolize_keys!
     end
   end
 
   def secure_payment_with_token
     if require_ssl?
-      params[:reservation_request][:host] = request.host
       verifier = User::PaymentTokenVerifier.new(current_user, params[:reservation_request])
       @token = verifier.generate
       @url = url_for(platform_context.secured_constraint)
@@ -65,12 +54,8 @@ class Listings::ReservationsController < ApplicationController
       card_message = @reservation.credit_card_payment? ? t('flash_messages.reservations.credit_card_will_be_charged') : ''
       flash[:notice] = t('flash_messages.reservations.reservation_made', message: card_message)
 
-      redirect_to remote_payment_dashboard_user_reservation_path(@reservation) and return if @reservation.remote_payment?
-      if origin_domain?
-        redirect_to booking_successful_dashboard_user_reservation_url(@reservation, protocol: 'http', host: origin_domain)
-      else
-        redirect_to booking_successful_dashboard_user_reservation_path(@reservation)
-      end
+      redirect_to remote_payment_dashboard_user_reservation_path(@reservation, host: platform_context.decorate.host) and return if @reservation.remote_payment?
+      redirect_to booking_successful_dashboard_user_reservation_path(@reservation, host: platform_context.decorate.host)
     else
       render :review
     end
@@ -153,20 +138,5 @@ class Listings::ReservationsController < ApplicationController
       }
     )
   end
-
-  def origin_domain?
-    session[:origin_domain]
-  end
-
-  def clear_origin_domain
-    session.delete(:origin_domain) if origin_domain?
-  end
-
-  def origin_domain
-    session[:origin_domain] || request.host
-  end
-
-  def set_origin_domain(domain)
-    session[:origin_domain] = domain
-  end
 end
+

@@ -20,7 +20,7 @@ FactoryGirl.define do
         "description" => "Aliquid eos ab quia officiis sequi.",
         "name" => "Listing #{Random.rand(1000)}"
       }.each do |key, value|
-        listing.properties[key] ||= value if listing.properties[key].nil?
+        listing.properties[key] ||= value if listing.properties[key].nil? if listing.properties.respond_to?(key)
       end
       if listing.photos.empty? && evaluator.photos_count > 0
         listing.photos = create_list(:photo, evaluator.photos_count,
@@ -39,7 +39,7 @@ FactoryGirl.define do
 
     factory :free_listing do
       after(:build) do |listing|
-        listing.properties.delete("daily_price_cents")
+        listing.properties["daily_price_cents"] = nil
         listing.properties["free"] = true
       end
     end

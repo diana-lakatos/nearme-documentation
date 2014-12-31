@@ -17,6 +17,8 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
   context 'scopes current partner for new company' do
     should 'match partner_id' do
       PlatformContext.current = PlatformContext.new(@partner)
+      @user = FactoryGirl.create(:user)
+      sign_in @user
       assert_difference 'Transactable.count' do
         post :submit_listing, get_params
       end
@@ -243,6 +245,24 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
       assert_select "h2", 'Transactable Section'
       assert_select "h2", 'Contact Information'
       assert_select '#user_phone'
+    end
+  end
+
+  context 'with skip_company' do
+    should 'create listing when location skip_company is set to true' do
+      @instance_with_skip_company = FactoryGirl.create(:instance, skip_company: true)
+      PlatformContext.current = PlatformContext.new(@instance_with_skip_company)
+      @user = FactoryGirl.create(:user)
+      sign_in @user
+      @transactable_type = FactoryGirl.create(:transactable_type_listing)
+
+      params_without_company_name = get_params
+      params_without_company_name['user']['companies_attributes']['0'].delete('name')
+      params_without_company_name['user']['companies_attributes']['0'].delete('industry_ids')
+
+      assert_difference('Transactable.count', 1) do
+        post :submit_listing, params_without_company_name
+      end
     end
   end
 
