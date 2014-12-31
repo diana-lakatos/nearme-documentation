@@ -18,7 +18,7 @@ class InstanceAdmin::Manage::InventoriesController < InstanceAdmin::Manage::Base
       :redirect_back_to => request.referer
     }
 
-    sign_in(resource)
+    sign_in_resource(resource)
     redirect_to params[:return_to] || root_url
   end
 
@@ -28,7 +28,7 @@ class InstanceAdmin::Manage::InventoriesController < InstanceAdmin::Manage::Base
       admin_user = User.find(session[:instance_admin_as_user][:admin_user_id])
       redirect_url = session[:instance_admin_as_user][:redirect_back_to] || instance_admin_inventory_url(client_user)
       sign_out # clears session
-      sign_in(admin_user)
+      sign_in_resource(admin_user)
       redirect_to redirect_url
     end
   end

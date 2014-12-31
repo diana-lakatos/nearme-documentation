@@ -126,7 +126,7 @@ DesksnearMe::Application.routes.draw do
 
     resources :instance_creators
 
-    resources :instances do
+    resources :instances, :only => [:index, :show, :edit, :update] do
       member do
         post :lock
       end
