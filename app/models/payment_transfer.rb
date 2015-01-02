@@ -97,9 +97,12 @@ class PaymentTransfer < ActiveRecord::Base
   def assign_amounts_and_currency
     if reservation_charges.any?
       self.currency = reservation_charges.first.try(:currency)
-      self.service_fee_amount_host_cents = reservation_charges.sum(:service_fee_amount_host_cents)
+
+      self.service_fee_amount_host_cents = reservation_charges.inject(0) { |sum, rc| sum += rc.final_service_fee_amount_host_cents }
+
       self.amount_cents = reservation_charges.all.inject(0) { |sum, rc| sum += rc.subtotal_amount_cents_after_refund } - self.service_fee_amount_host_cents
-      self.service_fee_amount_guest_cents = reservation_charges.sum(:service_fee_amount_guest_cents)
+
+      self.service_fee_amount_guest_cents = reservation_charges.inject(0) { |sum, rc| sum += rc.final_service_fee_amount_guest_cents }
     end
 
     if order_line_items.any?
