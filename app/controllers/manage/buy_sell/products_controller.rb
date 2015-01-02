@@ -1,8 +1,6 @@
 class Manage::BuySell::ProductsController < Manage::BuySell::BaseController
   before_filter :find_product, only: [:edit, :update, :destroy]
 
-  layout 'buy_sell'
-
   def index
     @products = @company.products.paginate(page: params[:page], per_page: 20)
     @theme_name = 'product-theme'

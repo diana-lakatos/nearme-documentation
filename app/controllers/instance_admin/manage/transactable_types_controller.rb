@@ -1,7 +1,5 @@
 class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage::BaseController
 
-  layout 'buy_sell'
-
   before_filter :set_theme
 
   def index

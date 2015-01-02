@@ -2,8 +2,6 @@ class Manage::WhiteLabelsController < Manage::BaseController
 
   before_filter :set_theme
 
-  layout 'buy_sell'
-
   def edit
     @company = current_user.companies.find(params[:id])
   end

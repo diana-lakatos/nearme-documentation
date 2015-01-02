@@ -1,0 +1,8 @@
+= render_modal "New Waiver Agreement Template", { id: "modal-add-template", autoload: true } do
+  = simple_form_for [:dashboard, @waiver_agreement_template], remote: true do |f|
+    .errors
+    = f.input :name
+    = f.input :content, as: :text, input_html: {rows: 10}
+
+    = f.submit 'Save', id: 'submit-link', class: "btn blue pull-right"
+  = button_to 'Delete', dashboard_waiver_agreement_template_path(@waiver_agreement_template), :method => :delete, :confirm => "Are you sure?", class: "btn red pull-left" unless @waiver_agreement_template.new_record?

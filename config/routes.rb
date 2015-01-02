@@ -424,8 +424,15 @@ DesksnearMe::Application.routes.draw do
   end
 
   namespace :dashboard do
+    resources :companies, :only => [:edit, :update, :show]
+    resources :orders do
+      collection do
+        get :received
+      end
+    end
     resources :products
-    resources :orders
+    resources :users, :except => [:edit, :update]
+    resources :waiver_agreement_templates, only: [:index, :edit, :new, :update, :create, :destroy]
   end
 
   namespace :manage do
@@ -474,8 +481,6 @@ DesksnearMe::Application.routes.draw do
       # resources :taxonomies
       resources :taxons
     end
-
-    resources :companies, :only => [:edit, :update, :show]
 
     resources :listings do
       resources :reservations, :controller => 'listings/reservations' do
@@ -541,8 +546,6 @@ DesksnearMe::Application.routes.draw do
       end
     end
 
-    resources :users, :except => [:edit, :update]
-    resources :waiver_agreement_templates, only: [:index, :edit, :new, :update, :create, :destroy]
     resources :white_labels, :only => [:edit, :update, :show]
 
   end # /manage

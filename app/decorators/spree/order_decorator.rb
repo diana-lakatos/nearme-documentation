@@ -41,7 +41,7 @@ class Spree::OrderDecorator < Draper::Decorator
   end
 
   def display_shipping_address
-    "#{object.ship_address.address1} #{object.ship_address.city}, #{object.ship_address.state_text}, #{object.ship_address.country.iso}"
+    "#{object.ship_address.address1} #{object.ship_address.city}, #{object.ship_address.state_text}, #{object.ship_address.country.try(:iso)}"
   end
 
   private

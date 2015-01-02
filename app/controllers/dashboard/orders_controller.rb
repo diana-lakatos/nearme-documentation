@@ -1,17 +1,18 @@
-class Manage::BuySell::OrdersController < Manage::BuySell::BaseController
+class Dashboard::OrdersController < Dashboard::BaseController
   include Spree::Core::ControllerHelpers::StrongParameters
 
   before_filter :find_order, only: [:show, :edit, :update, :destroy, :cancel, :resume, :approve]
 
-  layout 'buy_sell'
-
   def index
+    @orders = current_user.orders.complete.paginate(page: params[:page]).order('created_at DESC').decorate
+  end
+
+  def received
     @orders = @company.orders.complete.paginate(page: params[:page]).order('created_at DESC').decorate
-    @theme_name = 'orders-theme'
+    render :index
   end
 
   def show
-    @theme_name = 'orders-theme'
   end
 
   def edit
@@ -53,7 +54,7 @@ class Manage::BuySell::OrdersController < Manage::BuySell::BaseController
   private
 
   def location_after_save
-    manage_buy_sell_orders_path
+    dashboard_orders_path
   end
 
   def find_order

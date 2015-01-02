@@ -1,6 +1,7 @@
 module ApplicationHelper
 
   include FormHelper
+  include BootstrapHelper
   include TooltipHelper
   include CurrencyHelper
   include FileuploadHelper
@@ -139,6 +140,17 @@ module ApplicationHelper
     end
   end
 
+  def flash_key_name(key)
+    case key.to_s
+    when 'deleted'
+      'warning'
+    when 'error'
+      'danger'
+    else
+      key
+    end
+  end
+
   def array_to_unordered_list(arr = [])
     arr.map{|s| "<li>#{s}</li>"}.join.tap{|s| "<ul>#{s}</ul>"}
   end
@@ -146,11 +158,6 @@ module ApplicationHelper
   def show_manage_navigation(active_tab = :locations, sub_active_tab = :products)
     content_for :manage_navbar, render(partial: 'shared/manage_navigation', :locals => {active_tab: active_tab, sub_active_tab: sub_active_tab})
   end
-
-  def show_dashboard_navigation(active_tab = :locations, sub_active_tab = :products)
-    content_for :dashboard_navbar, render(partial: 'shared/dashboard_navigation', :locals => {active_tab: active_tab, sub_active_tab: sub_active_tab})
-  end
-
 
   def section_class(section_name = nil)
     [

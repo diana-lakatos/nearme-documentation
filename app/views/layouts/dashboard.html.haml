@@ -48,20 +48,26 @@
       = javascript_include_tag "//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"
       = javascript_include_tag :chrome_frame
 
-  %body.dashboard
-    .container.page-wrapper.row-fluid
-      = render 'layouts/navbar'
-    .container.page-wrapper.row-fluid
-      = render 'manage/layout/left_navigation'
-      .span10.page-content
-        .dash-page
+  %body
+    - unless no_navbar?
+      .container
+        = render 'layouts/navbar'
+    - unless render_without_left_menu?
+      .container.page-wrapper.row
+        = render 'shared/bootstrap_flash_messages'
+        = render 'manage/layout/left_navigation'
+        .col-md-10.page-content
           = render 'manage/layout/mobile_navigation'
           = yield
+    - else
+      .container.page-wrapper.top.row
+        = render 'shared/bootstrap_flash_messages'
+        = yield
 
     - unless no_footer?
       .footer-push{class: "footer_#{section_class(@section_name)}"}
 
     = javascript_include_tag "//maps.googleapis.com/maps/api/js?libraries=places&sensor=false"
-    = javascript_include_tag :application
+    = javascript_include_tag :dashboard
     = render 'layouts/initializers'
     = render 'layouts/scripts'

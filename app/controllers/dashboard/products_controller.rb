@@ -39,7 +39,7 @@ class Dashboard::ProductsController < Dashboard::BaseController
 
   def destroy
     @product.destroy
-    redirect_to manage_buy_sell_products_url
+    redirect_to dashboard_products_url
   end
 
   private

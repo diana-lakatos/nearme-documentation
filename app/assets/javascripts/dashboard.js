@@ -5,8 +5,10 @@
 //= require ./vendor/jquery-ui-1.10.4.custom.min.js
 //= require ./vendor/jquery.ui.touch-punch
 //= require ./vendor/customSelect.jquery
-//= require bootstrap
+//= require ./instance_admin/bootstrap
+//= require ./instance_admin/bootstrap-select
 //= require ./instance_admin/jquery.jstree
+//= require select2
 //= require ./vendor/modernizr
 //= require ./vendor/jquery.cookie
 //= require ./vendor/jquery.popover-1.1.2
@@ -50,8 +52,9 @@ window.DNM = {
     this.initializeAjaxCSRF();
     this.initializeComponents();
     this.initializeModals();
+    this.initializeBootstrap();
     this.initializeTooltips();
-    this.initializeCustomSelects($('body'));
+    // this.initializeCustomSelects($('body'));
     this.initializeCustomInputs();
     this.initializeBrowsersSpecificCode();
     this.centerSearchBoxOnHomePage();
@@ -60,6 +63,10 @@ window.DNM = {
 
   initializeModals: function() {
     Modal.listen();
+  },
+
+  initializeBootstrap: function() {
+    $('.selectpicker').selectpicker();
   },
 
   initializeCustomInputs: function() {

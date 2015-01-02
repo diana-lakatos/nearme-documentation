@@ -3,8 +3,6 @@ class BuySell::OrdersController < ApplicationController
 
   before_filter :authenticate_user!
 
-  layout 'buy_sell'
-
   def index
     @orders = current_user.orders.complete.paginate(page: params[:page]).order('created_at DESC').decorate
     @theme_name = 'orders-theme'

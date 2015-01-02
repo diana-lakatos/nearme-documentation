@@ -104,6 +104,28 @@ SimpleForm.setup do |config|
     end
   end
 
+  config.wrappers :bs3, :error_class => 'error' do |b|
+    b.use :html5
+    b.use :placeholder
+    b.wrapper :tag => 'div', :class => 'row' do |input|
+      input.wrapper :tag => 'div', :class => 'col-md-3' do |label_container|
+        label_container.use :label
+      end
+      input.wrapper :tag => 'div', :class => 'col-md-9 input-container' do |append|
+        append.use :hint,  :wrap_with => { :tag => 'p' }
+        append.use :input
+      end
+      input.use :error, :wrap_with => { :tag => 'col-md-9', :class => 'help-inline' }
+    end
+  end
+
+  config.wrappers :bs3_simple do |b|
+    b.use :html5
+    b.use :placeholder
+    b.use :label
+    b.use :input
+    b.optional :error
+  end
 
   # Wrappers for forms and inputs using the Twitter Bootstrap toolkit.
   # Check the Bootstrap docs (http://twitter.github.com/bootstrap)

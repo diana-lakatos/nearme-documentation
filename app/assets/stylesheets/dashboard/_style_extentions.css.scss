@@ -1,0 +1,142 @@
+.navbar .nav-links li {
+  float: left;
+}
+
+form input[type="url"], form input[type="email"], form input[type="number"], .selectpicker , .select2-drop, .select2-container-multi .select2-choices {
+  background: #fff;
+  border: solid #D4D4D4 1px;
+  border-radius: 0;
+  width: 100%;
+  padding: 5px 10px;
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.photo-box.no-padding {
+  padding: 0;
+}
+
+/*===== PAGE HEADER =====*/
+
+.page-banner {
+  padding: 90px 0;
+  text-align: center;
+  background: #5dbded;
+}
+
+.page-banner h1 {
+  color: #fff;
+  font-size: 40px;
+  font-weight: 300;
+}
+
+.page-wrapper {
+  width: 1100px;
+  padding: 100px 0;
+  margin: 0 auto;
+
+  &.top {
+    padding-top: 60px;
+  }
+}
+
+ /*===== INDIVIDUAL SECTIONS =====*/
+
+.select2-container {
+  width:100%;
+}
+
+section {
+
+  background: #fff;
+  padding: 50px 0;
+  margin-bottom: 30px;
+  border-bottom: solid #d5d5d5 2px;
+
+  .container-fluid {
+    width: 68%;
+    margin: 0 auto;
+  }
+
+  .section-heading {
+    color: #5dbded;
+    font-weight: 300;
+    margin-bottom: 40px;
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .section-heading:hover {
+    color: #5dbded;
+  }
+}
+
+
+.map-container {
+  height: 225px;
+  margin-top: 30px;
+}
+
+.error {
+  input, textarea {
+    border: solid #ec8473 1px;
+  }
+  .error-block, .help-inline {
+    float: right;
+    color: #ec8473;
+    font-size: 17px;
+    padding-right: 15px;
+  }
+}
+
+.remove_shipping_profile label, label.delete_image {
+  float: right;
+  color: #e85c41;
+}
+
+.row {
+  &.no-padding-top {
+    padding-top: 0px;
+  }
+}
+
+section .listings-header .row {
+  margin: 0;
+}
+
+section .row {
+  margin: 30px 0;
+}
+
+.select2-container {
+  width:100%;
+}
+
+
+@media (max-width: 1000px) {
+  section {
+    padding: 20px 30px;
+  }
+
+ .input-container {
+    display: block;
+  }
+}
+
+@media (max-width: 650px) {
+  section .container-fluid {
+    width: 100%;
+  }
+
+  .page-banner {
+    padding: 20px 0;
+  }
+}
+
+
+@media (max-width: 400px) {
+  section {
+    padding: 20px 10px;
+  }
+}
+
