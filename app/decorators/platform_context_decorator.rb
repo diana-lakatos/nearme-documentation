@@ -75,7 +75,8 @@ class PlatformContextDecorator
   end
 
   def normalized_footer_cache_timestamp
-    normalize_timestamp([pages.maximum(:updated_at), theme.updated_at].compact.max)
+    instance_view_footer_timestamp = @platform_context.instance.instance_views.find_by(:path => 'layouts/theme_footer').try(:updated_at)
+    normalize_timestamp([pages.maximum(:updated_at), theme.updated_at, instance_view_footer_timestamp].compact.max)
   end
 
   def normalize_timestamp(timestamp)
