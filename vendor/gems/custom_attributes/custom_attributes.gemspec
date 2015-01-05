@@ -16,13 +16,13 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency 'rails', "~> 4.0.0"
+  s.add_dependency 'rails', '4.1.8'
   s.add_dependency "pg"
 
   s.add_development_dependency "minitest"
   s.add_development_dependency "mocha"
   s.add_development_dependency "shoulda"
-  s.add_development_dependency "turn"
+  s.add_development_dependency "minitest-reporters", '~> 1.0.8'
   s.add_development_dependency 'factory_girl_rails'
   s.add_development_dependency 'timecop'
 

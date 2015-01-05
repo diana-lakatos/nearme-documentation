@@ -15,11 +15,11 @@ class V1::BaseController < ApplicationController
   # Parse the request body from JSON
   def json_params
     begin
-      @json_params ||= ActiveSupport::JSON.decode(request.body)
+      @json_params ||= ActiveSupport::JSON.decode(request.body.try(:read))
     rescue MultiJson::LoadError
       raise DNM::InvalidJSON
     end
-    raise DNM::InvalidJSON if @json_params.nil?
+    raise DNM::InvalidJSON if @json_params.blank?
     @json_params
   end
 

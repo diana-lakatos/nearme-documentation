@@ -44,8 +44,8 @@ class Company < ActiveRecord::Base
   has_many :industries, :through => :company_industries
   has_many :waiver_agreement_templates, as: :target
   has_many :approval_requests, as: :owner, dependent: :destroy
-  has_one :domain, :as => :target, :dependent => :destroy
-  has_one :theme, :as => :owner, :dependent => :destroy
+  has_one :domain, :as => :target, foreign_key: 'target_id', :dependent => :destroy
+  has_one :theme, :as => :owner, foreign_key: 'owner_id', :dependent => :destroy
 
   has_many :locations_impressions, :source => :impressions, :through => :locations
   has_many :instance_clients, :as => :client, :dependent => :destroy

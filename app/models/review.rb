@@ -18,7 +18,7 @@ class Review < ActiveRecord::Base
   has_many :rating_answers, -> { order(:id) }, dependent: :destroy
 
   validates_presence_of :rating, :object, :user
-  validates :rating, inclusion: { in: RatingConstants::VALID_VALUES , message: I18n.t("activerecord.errors.models.review.rating.rating_is_required") }
+  validates :rating, inclusion: { in: RatingConstants::VALID_VALUES , message: :rating_is_required }
   validates_length_of :comment, :maximum => 255
   validates :object, inclusion: { in: RatingConstants::FEEDBACK_TYPES }
 

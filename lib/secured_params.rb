@@ -470,7 +470,6 @@ class SecuredParams
       :currency_symbol_position,
       :currency_decimal_mark,
       :currency_thousands_separator,
-      :shipment_inc_vat,
       :infinite_scroll,
       :random_products_for_cross_sell
     ]

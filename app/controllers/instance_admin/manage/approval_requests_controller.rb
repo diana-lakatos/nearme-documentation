@@ -26,7 +26,7 @@ class InstanceAdmin::Manage::ApprovalRequestsController < InstanceAdmin::Manage:
 
   def find_approval_request
     params[:show] ||= 'pending'
-    @approval_requests = ApprovalRequest.scoped
+    @approval_requests = ApprovalRequest.all
     @approval_requests = case params[:show]
     when "approved"
       @approval_requests.approved

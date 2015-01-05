@@ -14,16 +14,19 @@ class SpreeDefaultsLoaderTest < ActiveSupport::TestCase
       @loader.load!
     end
 
+    should 'find Spree::Store record' do
+      store = Spree::Store.find_by(name: 'Desks Near Me')
+      assert_not_nil store
+      assert_equal store.name, @instance.theme.site_name
+      assert_equal store.url, @instance.domains.first.name
+      assert_equal store.meta_keywords, @instance.theme.tagline
+      assert_equal store.seo_title, @instance.theme.meta_title
+    end
+
     should 'set preferences' do
-      assert_equal Spree::Config.site_name, 'Desks Near Me'
-      assert_equal Spree::Config.site_url, 'example.com'
-      assert_equal Spree::Config.default_meta_keywords, 'Find a space to work'
-      assert_equal Spree::Config.default_seo_title, 'Desks Near Me'
       assert_equal Spree::Config.display_currency, false
       assert_equal Spree::Config.allow_ssl_in_staging, false
       assert_equal Spree::Config.currency, 'USD'
-      assert_equal Spree::Config.shipment_inc_vat, true
-      assert_equal Spree::Config.override_actionmailer_config, false
     end
 
     should 'load countries' do

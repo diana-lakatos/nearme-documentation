@@ -9,7 +9,7 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
 
   after_save :create_translations
 
-  scope :not_internal, where(internal: false)
+  scope :not_internal, -> { where(internal: false) }
 
   def create_translations
     ::CustomAttributes::CustomAttribute::TranslationCreator.new(self).create_translations!

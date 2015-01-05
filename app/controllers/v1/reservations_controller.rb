@@ -25,7 +25,7 @@ class V1::ReservationsController < V1::BaseController
     # Drop reservations that have a date that is not in the past
     timestamp_now = Time.zone.now
 
-    @reservations.delete_if { |reservation|
+    @reservations.to_a.delete_if { |reservation|
 
       # Does this reservation have a date that's not in the past?
       in_the_past = true
@@ -55,7 +55,7 @@ class V1::ReservationsController < V1::BaseController
     # Drop reservations that have all dates in the past
     timestamp_now = Time.zone.now
 
-    @reservations.delete_if { |reservation|
+    @reservations.to_a.delete_if { |reservation|
 
       # Does this reservation have at least one date in the future?
       in_the_future = false

@@ -4,7 +4,7 @@ FactoryGirl.define do
     description { Faker::Lorem.paragraph(5) }
     price 19.99
     cost_price 17.00
-    sku 'ABC'
+    sequence(:sku) { |n| "ABC#{n}"}
     available_on { 1.year.ago }
     deleted_at nil
     shipping_category { |r| Spree::ShippingCategory.first || r.association(:shipping_category) }
@@ -15,6 +15,8 @@ FactoryGirl.define do
     before(:create) { create(:stock_location) if Spree::StockLocation.count == 0 }
 
     after(:create) do |p|
+      create_list(:variant, 1, product: p, is_master: true)
+      p.reload
       p.variants_including_master.each { |v| v.save! }
     end
 

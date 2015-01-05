@@ -2,7 +2,8 @@ ENV["RAILS_ENV"] ||= "test"
 
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
-require 'turn'
+require 'minitest/autorun'
+require 'minitest/reporters'
 require 'mocha/setup'
 require 'mocha/mini_test'
 require 'webmock/minitest'
@@ -11,7 +12,8 @@ require Rails.root.join('test', 'helpers', 'stub_helper.rb')
 
 require 'spree/testing_support/factories'
 
-Turn.config.format = :dot
+reporter_options = { color: true, slow_count: 5 }
+Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(reporter_options)]
 
 # Disable carrierwave processing in tests
 # It can be enabled on a per-test basis as needed.

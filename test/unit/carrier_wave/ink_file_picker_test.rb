@@ -2,11 +2,13 @@ require 'test_helper'
 
 class CarrierWave::InkFilePickerTest < ActiveSupport::TestCase
 
-  context '#avatar' do
+  setup do
+    stub_image_url('http://www.example.com/image.jpg')
+  end
 
+  context '#avatar' do
     setup do
       @user = FactoryGirl.create(:user)
-      stub_image_url('http://www.example.com/image.jpg')
     end
 
     context 'without carrierwave avatar' do

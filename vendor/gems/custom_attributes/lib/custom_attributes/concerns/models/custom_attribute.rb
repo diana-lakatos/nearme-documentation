@@ -18,7 +18,7 @@ module CustomAttributes
 
           scope :listable, -> { all }
           scope :not_internal, -> { where.not(internal: true) }
-          scope :public, -> { where(public: true) }
+          scope :shared, -> { where(public: true) }
           scope :with_changed_attributes, -> (target_id, target_type, updated_at) { where('target_id = ? AND target_type = ? AND updated_at > ?', target_id, target_type, updated_at) }
 
           validates_presence_of :name, :attribute_type

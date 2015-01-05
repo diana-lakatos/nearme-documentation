@@ -202,21 +202,18 @@ class LocationTest < ActiveSupport::TestCase
     end
 
     context 'update company' do
-      setup do
-        @company.update_attribute(:instance_id, @company.instance_id + 1)
-        @company.update_attribute(:creator_id, @company.creator_id + 1)
-        @company.update_attribute(:partner_id, FactoryGirl.create(:partner).id)
-      end
-
       should 'assign correct creator_id' do
+        @company.update_attribute(:creator_id, @company.creator_id + 1)
         assert_equal @company.creator_id, @location.reload.creator_id
       end
 
       should 'assign correct instance_id' do
+        @company.update_attribute(:instance_id, @company.instance_id + 1)
         assert_equal @company.instance_id, @location.reload.instance_id
       end
 
       should 'assign correct partner_id' do
+        @company.update_attribute(:partner_id, FactoryGirl.create(:partner).id)
         assert_equal @company.partner_id, @location.reload.partner_id
       end
 

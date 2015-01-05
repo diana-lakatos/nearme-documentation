@@ -65,8 +65,8 @@ class Location < ActiveRecord::Base
 
   scope :filtered_by_location_types_ids,  lambda { |location_types_ids| where(location_type_id: location_types_ids) }
   scope :filtered_by_industries_ids,  lambda { |industry_ids| joins(:company_industries).where('company_industries.industry_id IN (?)', industry_ids) }
-  scope :none, -> { where :id => nil }
-  scope :near, lambda { |*args| scoped.merge(Address.near(*args).select('locations.*')) }
+  scope :no_id, -> { where :id => nil }
+  scope :near, lambda { |*args| all.merge(Address.near(*args).select('locations.*')) }
   scope :with_searchable_listings, -> { where(%{ (select count(*) from "transactables" where location_id = locations.id and transactables.draft IS NULL and enabled = 't' and transactables.deleted_at is null) > 0 }) }
 
   # Useful for storing the full geo info for an address, like time zone

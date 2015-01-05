@@ -54,8 +54,10 @@ module Utils
     private
 
     def do_task(task_name = "")
-      ActiveRecord::Migration.say_with_time(task_name) do
-        yield
+      if Rails.env.test?
+        ActiveRecord::Migration.suppress_messages { yield }
+      else
+        ActiveRecord::Migration.say_with_time(task_name) { yield }
       end
     end
 
@@ -226,7 +228,7 @@ module Utils
     alias_method :locations, :load_locations!
 
     def load_transactable_types!
-      tp = TransactableType.find_or_create_by_name("Listing")
+      tp = TransactableType.where(name: 'Listing').first_or_create!
       tp.attributes = FactoryGirl.attributes_for(:transactable_type_listing)
       tp.save!
       CustomAttributes::CustomAttribute::Creator.new(tp).create_listing_attributes!

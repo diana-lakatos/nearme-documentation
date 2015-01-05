@@ -4,12 +4,12 @@
 .col-md-12.price-containter
   .col-md-1
     -if include_checkbox
-      %label.checkbox{:for => "enable_#{price}"}
+      %label.checkbox{for: "enable_#{price}"}
         = check_box_tag "enable_#{price}", "1", f.object.send("#{price}_price").present?, class: "enable_#{price}", :'data-behavior' => 'enable-price'
   .col-md-5
     .input-group
       %span.input-group-addon.currency_addon $
-      = f.number_field "#{price}_price", :as => :decimal, :label => false, :class => 'mini', :class => "price-input", :'data-type' => 'price-input'
+      = f.number_field "#{price}_price", as: :decimal, label: false, class: 'mini price-input', :'data-type' => 'price-input'
   .col-md-2
     %span.periodicity /#{label}
 

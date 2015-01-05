@@ -35,15 +35,16 @@ class PaymentTransfer < ActiveRecord::Base
 
   validate :validate_all_charges_in_currency
 
+  register_currency :usd
   # Amount is the amount we're transferring to the Host from payments we've
   # received for their listings.
   #
   # Note that this is the gross amount excluding the service fee that we charged
   # to the end user. The service fee is our cut of the revenue.
-  monetize :amount_cents
-  monetize :service_fee_amount_guest_cents
-  monetize :service_fee_amount_host_cents
-  monetize :gross_amount_cents
+  monetize :amount_cents, with_model_currency: :currency
+  monetize :service_fee_amount_guest_cents, with_model_currency: :currency
+  monetize :service_fee_amount_host_cents, with_model_currency: :currency
+  monetize :gross_amount_cents, with_model_currency: :currency
 
   # This is the gross amount of revenue received from the charges included in
   # this payout - including the service fees recieved.

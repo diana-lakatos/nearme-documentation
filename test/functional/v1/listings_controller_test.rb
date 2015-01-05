@@ -130,7 +130,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
   test "reservation should raise when json is missing" do
     assert_raise DNM::InvalidJSON do
       authenticate!
-      raw_post :reservation, {id: @listing.id}, ''
+      raw_post :reservation, {id: @listing.id}, ''.to_json
     end
   end
 

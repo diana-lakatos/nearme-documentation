@@ -71,11 +71,12 @@ class UserMessage < ActiveRecord::Base
 
   def archive_for!(user)
     column = archived_column_for(user)
-    UserMessage.update_all({column => true},
-                              { thread_owner_id: thread_owner_id,
-                                thread_recipient_id: thread_recipient_id,
-                                thread_context_id: thread_context_id,
-                                thread_context_type: thread_context_type})
+    UserMessage.where(
+        thread_owner_id: thread_owner_id,
+        thread_recipient_id: thread_recipient_id,
+        thread_context_id: thread_context_id,
+        thread_context_type: thread_context_type
+    ).update_all( column => true )
   end
 
   def to_liquid

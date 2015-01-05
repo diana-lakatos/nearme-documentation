@@ -8,7 +8,7 @@ class ReviewTest < ActiveSupport::TestCase
   should have_many(:rating_answers).dependent(:destroy)
 
   should ensure_length_of(:comment).is_at_most(255)
-  should ensure_inclusion_of(:rating).in_range(RatingConstants::VALID_VALUES).with_message('Rating is required')
+  should validate_inclusion_of(:rating).in_range(RatingConstants::VALID_VALUES).with_message('Rating is required')
 
   context "#scopes" do
     context '#with_object' do

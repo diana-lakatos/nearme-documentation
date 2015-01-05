@@ -9,7 +9,7 @@ class Charge < ActiveRecord::Base
 
   scope :successful, -> { where(:success => true) }
 
-  monetize :amount, :as => :price
+  monetize :amount, :as => :price, with_model_currency: :currency
   serialize :response, Hash
 
   attr_encrypted :response, :key => DesksnearMe::Application.config.secret_token, marshal: true

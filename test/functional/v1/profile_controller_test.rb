@@ -54,13 +54,13 @@ class V1::ProfileControllerTest < ActionController::TestCase
 
     json = JSON.parse(response.body)
     assert json
-    assert_blank json["avatar"]
+    assert json['avatar'].blank?, "Expected avatar to be blank but was: #{json['avatar']}"
 
     # NB: There are differing semantics for avatar presence for local filestystem
     #     storage and S3. Local files test the existence of the file, S3 storage doesn't.
     #     In both cases, the non-existence of an avatar can be validated by the underlying
     #     model field being blank.
-    assert_blank @user.reload[:avatar], "Expected avatar to be blank but was: #{@user[:avatar]}"
+    assert @user.reload[:avatar].blank?, "Expected avatar to be blank but was: #{@user[:avatar]}"
   end
 
   test "not raising error when removing not existing avatar" do
@@ -68,7 +68,7 @@ class V1::ProfileControllerTest < ActionController::TestCase
 
     json = JSON.parse(response.body)
     assert json
-    assert_blank json["avatar"]
+    assert json["avatar"].blank?, "Expected avatar to be blank but was: #{json['avatar']}"
   end
 
 end

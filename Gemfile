@@ -1,45 +1,46 @@
-ruby '2.0.0'
+ruby '2.2.0'
 
 source 'http://rubygems.org'
 
-gem 'rails', '~> 4.0.0'
+gem 'rails', '4.1.8'
 gem 'pg'
 
-gem 'sprockets', '~> 2.11.0'
+gem 'sprockets', '2.11.0'
 gem 'sprockets-rails', '~> 2.1'
 
 gem 'redis'
 gem 'redis-rails', '~> 4.0.0'
 gem 'raygun4ruby'
 gem 'liquid'
-gem 'active_model_serializers'
+gem 'active_model_serializers', '~> 0.8.1'
 gem 'carrierwave'
 gem 'devise', "~> 3.0.0"
 
-gem 'aws-sdk'
+gem 'aws-sdk', '1.27.0'
 
 gem 'omniauth'
 gem 'omniauth-twitter'
-gem 'omniauth-facebook', github: 'mkdynamic/omniauth-facebook'
+gem 'omniauth-facebook', github: 'mkdynamic/omniauth-facebook', tag: 'v2.0.0.pre1'
 gem 'omniauth-linkedin'
 gem 'omniauth-instagram'
 
 gem 'koala', '~> 1.7.0rc1' # facebook Graph API
-gem 'linkedin-oauth2'
-gem 'twitter', "~> 5.2"
-gem 'instagram'
+gem 'linkedin-oauth2', '~> 0.1.1'
+gem 'twitter', "~> 5.5.1"
+# Installing instagram from the master branch will fix ruby 2.2 circular dependency warning
+gem 'instagram', github: '0tofu/instagram-ruby-gem', branch: 'master'
 
 gem 'yui-compressor'
 gem 'fog'
 gem 'geocoder'
 gem 'nearest_time_zone'
-gem 'sass'
+gem 'sass', '~> 3.2.2'
 gem 'haml'
 gem 'le'
 gem 'mini_magick', "~> 4.0.1"
-gem 'money-rails', '0.8.1'
+gem 'money-rails', '1.2.0'
 gem 'paranoia', '~> 2.0.0'
-gem 'simple_form', '~> 3.0.2'
+gem 'simple_form', '~> 3.1.0'
 gem 'nested_form'
 gem 'nokogiri', '~> 1.6.0'
 gem 'hpricot'
@@ -63,7 +64,7 @@ gem 'rack-rewrite', :require => 'rack/rewrite'
 
 gem 'state_machine', '~> 1.2.0'
 gem 'will_paginate'
-gem "compass-rails"
+gem "compass-rails", '1.1.7'
 gem 'animate'
 gem "coffee-rails"
 gem 'delayed_job_active_record', '~> 4.0.0'
@@ -73,12 +74,13 @@ gem 'attr_encrypted'
 gem 'stripe'
 gem 'paypal-sdk-rest'
 gem 'paypal-sdk-adaptivepayments'
-gem 'balanced'
+gem 'balanced', '~> 0.8.1'
 gem 'braintree'
+gem 'faraday', '~> 0.8.6'
 gem 'friendly_id', '~> 5.0.4'
 gem "non-stupid-digest-assets"
 gem 'asset_sync'
-gem 'sass-rails', '~> 4.0.0'
+gem 'sass-rails', github: 'rails/sass-rails', branch: '4-0-stable'
 gem 'bootstrap-sass', '~> 2.3.1.0'
 gem "bootstrap-switch-rails"
 gem 'chronic', '~> 0.9.1'
@@ -105,7 +107,7 @@ gem 'googl'
 
 gem 'jquery-rails', '~> 3.1'
 gem "select2-rails"
-gem 'chosen-rails'
+gem 'chosen-rails', '~> 1.2.0'
 gem 'spectrum-rails'
 
 gem 'inherited_resources', '~> 1.5.0'
@@ -129,7 +131,7 @@ gem 'iso_country_codes'
 
 gem 'shippo'
 
-gem 'spree', github: 'spree/spree', branch: '2-2-stable'
+gem 'spree', github: 'spree/spree', branch: '2-3-stable'
 #gem 'spree_auth_devise', github: 'spree/spree_auth_devise', branch: '2-2-stable'
 
 gem 'domainatrix'
@@ -153,7 +155,7 @@ group :assets do
 end
 
 group :development, :test, :staging do
-  gem 'factory_girl_rails', '~> 4.4.0'
+  gem 'factory_girl_rails', '~> 4.5.0'
   gem 'byebug', require: 'byebug'
 end
 
@@ -177,21 +179,20 @@ group :test do
   gem 'capybara-webkit', '1.0.0'
   gem 'capybara-screenshot'
   gem 'cucumber-rails', '~> 1.4.0', :require => false
-  gem 'cucumber', '~> 1.2.5'
+  gem 'cucumber', '~> 1.3.0'
   gem 'database_cleaner'
   gem 'email_spec'
   gem 'json_spec'
   gem 'minitest'
   gem 'mocha', :require => false
-  gem 'pickle'
-  gem 'turn'
+  gem 'pickle', '~> 0.5.1'
+  gem 'minitest-reporters', '~> 1.0.10'
   gem 'webmock', '1.17.4'
   gem 'shoulda'
   gem 'vcr'
   gem 'test_after_commit'
   gem 'rails-perftest'
 end
-
 gem 'mailman'
 
 gem 'nearme', path: 'vendor/gems/nearme'

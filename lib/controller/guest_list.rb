@@ -9,7 +9,11 @@ module Controller
       if recurring_booking
         @reservations_scope = recurring_booking.reservations.includes(:listing => :location)
       else
-        @reservations_scope = @user.listing_reservations.includes(:listing => :location).no_recurring
+        # We need to add reorder to the reservations, since in rails 4.1 for strange reason to the query
+        # is added 'ORDER BY "company_user"."created"_at ASC' and when we call uniq to get distinct records from reservations
+        # we get postgresql error 'SELECT DISTINCT, ORDER BY expressions must appear in select list'
+        reservations = @user.listing_reservations.reorder("created_at ASC")
+        @reservations_scope = reservations.includes(:listing => :location).no_recurring
         @recurring_bookings_scope = @user.listing_recurring_bookings.includes(:listing => :location)
       end
     end

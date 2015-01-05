@@ -52,13 +52,13 @@ class Listings::ReservationsController < ApplicationController
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithAutoConfirmation, @reservation.id)
       end
 
-      pre_booking_sending_date = (@reservation.date - 1.day).to_time_in_current_zone + 17.hours # send day before at 5pm
+      pre_booking_sending_date = (@reservation.date - 1.day).in_time_zone + 17.hours # send day before at 5pm
       if pre_booking_sending_date < Time.current.beginning_of_day
         ReservationPreBookingJob.perform_later(pre_booking_sending_date, @reservation.id)
       end
 
       if current_user.reservations.count == 1
-        ReengagementOneBookingJob.perform_later(@reservation.last_date.to_time_in_current_zone + 7.days, @reservation.id)
+        ReengagementOneBookingJob.perform_later(@reservation.last_date.in_time_zone + 7.days, @reservation.id)
       end
 
       event_tracker.requested_a_booking(@reservation)

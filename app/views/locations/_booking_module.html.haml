@@ -132,7 +132,7 @@
               .rfq-explanation
                 %span= t('reservations.rfq_explanation')
             .row-fluid
-              = f.submit rfq_label, id:"rfq-#{listing.id}", class: rfq_class, :'data-behavior' => 'RFQ', :'data-modal-method' => 'GET', :'data-modal-url' => new_listing_ticket_path(listing), :'data-force-modal' => true, :'data-behavior' => 'RFQ'
+              = f.submit rfq_label, id:"rfq-#{listing.id}", class: rfq_class, :'data-behavior' => 'RFQ', :'data-modal-method' => 'GET', :'data-modal-url' => new_listing_ticket_path(listing), :'data-force-modal' => true
               - if listing.free?
                 .hidden
                   = f.submit t('reservations.book'), book_hash

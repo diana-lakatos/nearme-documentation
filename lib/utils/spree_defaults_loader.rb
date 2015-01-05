@@ -3,6 +3,7 @@ module Utils
 
     def initialize(instance)
       @instance = instance
+      @store = Spree::Store.find_by(instance_id: @instance.id)
     end
 
     def load!
@@ -22,18 +23,28 @@ module Utils
     private
 
     def set_preferences
-      Spree::Config.site_name = @instance.theme.site_name || @instance.name
-      Spree::Config.site_url = @instance.domains.first.name
-      Spree::Config.default_meta_description = @instance.theme.description
-      Spree::Config.default_meta_keywords = @instance.theme.tagline
-      Spree::Config.default_seo_title = @instance.theme.meta_title
-      Spree::Config.display_currency = false
-      Spree::Config.allow_ssl_in_staging = false
-      Spree::Config.currency = 'USD'
-      Spree::Config.shipment_inc_vat = true
-      Spree::Config.override_actionmailer_config = false
+      create_store unless @store.present?
 
+      Spree.config do |config|
+        config.display_currency = false
+        config.allow_ssl_in_staging = false
+        config.currency = 'USD'
+      end
       # Spree::Config.address_requires_state = false
+    end
+
+    def create_store
+      Spree::Store.create!(
+          instance_id: @instance.id,
+          name: @instance.theme.site_name || @instance.name,
+          url: @instance.domains.first.name,
+          meta_description: @instance.theme.description,
+          meta_keywords: @instance.theme.tagline,
+          seo_title: @instance.theme.meta_title,
+          mail_from_address: @instance.support_email || "support@#{@instance.domains.first.name}",
+          default_currency: 'USD',
+          code: 'spree'
+      )
     end
 
     def load_instance_serach_defaults
@@ -98,7 +109,7 @@ module Utils
     end
 
     def load_shipping_methods
-      shipping_category = Spree::ShippingCategory.find_or_create_by!(name: 'default')
+      shipping_category = Spree::ShippingCategory.where(name: 'default').first_or_create!
 
       calculator = Spree::Calculator::Shipping::FlatRate.create!
       shipping_method = {
