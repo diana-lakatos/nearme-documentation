@@ -147,6 +147,28 @@ class UserTest < ActiveSupport::TestCase
         end
       end
 
+      context "when wrong phone numbers provided" do
+        setup do
+          @user = FactoryGirl.build(:user)
+        end
+
+        should "be invalid with wrong phone" do
+          @user.phone = "3423jhjhg432"
+          refute @user.valid?
+        end
+
+        should "be invalid with wrong mobile number" do
+          @user.mobile_number = "3423jhjhg432"
+          refute @user.valid?
+        end
+
+        should "be valid with empty numbers" do
+          @user.mobile_number = nil
+          @user.phone = nil
+          assert @user.valid?
+        end
+      end
+
     end
 
     context 'approval_requests' do
