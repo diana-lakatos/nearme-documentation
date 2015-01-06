@@ -21,7 +21,6 @@ class Search.SearchController extends Search.Controller
     @initializeEndlessScrolling()
     @reinitializeEndlessScrolling = false
     @initializeConnectionsTooltip()
-    @initializeCarousel()
     setTimeout((=> @processingResults = false), 1000)
 
   bindEvents: ->
@@ -305,6 +304,3 @@ class Search.SearchController extends Search.Controller
 
   initializeConnectionsTooltip: ->
     @container.find('.connections:not(.initialized)').addClass('iinitialized').tooltip(html: true, placement: 'top')
-
-  initializeCarousel: ->
-    $('.carousel').carousel({ interval: 7000 })
