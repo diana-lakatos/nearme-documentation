@@ -167,6 +167,12 @@ class UserTest < ActiveSupport::TestCase
           @user.phone = nil
           assert @user.valid?
         end
+
+        should "be invalid with empty number and phone required" do
+          @user.phone_required = true
+          @user.phone = nil
+          refute @user.valid?
+        end
       end
 
     end
