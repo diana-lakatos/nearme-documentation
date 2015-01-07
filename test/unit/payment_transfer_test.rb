@@ -64,6 +64,65 @@ class PaymentTransferTest < ActiveSupport::TestCase
     end
   end
 
+  context "correct amounts with advanced cancellation/refund policy" do
+    setup do
+      listing = FactoryGirl.create(:transactable, { :daily_price => 10 })
+      prepare_charged_reservations_for_listing(listing, 2, {
+        :reservation_0 => {
+          :service_fee_amount_guest_cents => 150,
+          :service_fee_amount_host_cents => 100,
+          :cancellation_policy_penalty_percentage => 60
+        },
+        :reservation_1 => {
+          :service_fee_amount_guest_cents => 200,
+          :service_fee_amount_host_cents => 150,
+          :cancellation_policy_penalty_percentage => 50
+        }
+      })
+      @refunds_company = listing.company
+
+      @refunds_payment_transfer = @refunds_company.payment_transfers.build
+
+      @refunds_reservation_1 = @refunds_company.reservations.order(:id).first
+      @refunds_reservation_2 = @refunds_company.reservations.order(:id).second
+
+      @refunds_reservation_charges = [
+        @refunds_reservation_1.reservation_charges.to_a,
+        @refunds_reservation_2.reservation_charges.to_a
+      ].flatten
+    end
+
+    should "calculate correctly the total sum for transfers without refunds" do
+      @refunds_payment_transfer.reservation_charges = @refunds_reservation_charges
+      @refunds_payment_transfer.save!
+
+      assert_equal 1000 + 1000 - 100 - 150, @refunds_payment_transfer.amount_cents
+      assert_equal 150 + 200, @refunds_payment_transfer.service_fee_amount_guest_cents
+      assert_equal 100 + 150, @refunds_payment_transfer.service_fee_amount_host_cents
+    end
+
+    should "calculate correctly the total sum for transfers with refunds" do
+      #Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).returns(Refund.new(:success => true))
+
+      @refunds_reservation_charges[0].reservation.user_cancel!
+      @refunds_reservation_charges[1].reservation.host_cancel!
+      @refunds_reservation_charges[0].refund
+      @refunds_reservation_charges[1].refund
+
+      assert_equal 400, @refunds_reservation_charges[0].amount_to_be_refunded
+      assert_equal 1000 + 200, @refunds_reservation_charges[1].amount_to_be_refunded
+      Refund.create(:success => true, :amount => 400, :reference => @refunds_reservation_charges[0])
+      Refund.create(:success => true, :amount => 1000 + 200, :reference => @refunds_reservation_charges[1])
+
+      @refunds_payment_transfer.reservation_charges = @refunds_reservation_charges
+      @refunds_payment_transfer.save!
+
+      assert_equal 600 + 0, @refunds_payment_transfer.amount_cents
+      assert_equal 150 + 0, @refunds_payment_transfer.service_fee_amount_guest_cents
+      assert_equal 0, @refunds_payment_transfer.service_fee_amount_host_cents
+    end
+  end
+
   context "#gross_amount_cents" do
     should "be the sum of the charge subtotals and the service fees" do
       pt = PaymentTransfer.new

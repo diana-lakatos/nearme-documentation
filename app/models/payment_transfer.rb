@@ -95,9 +95,9 @@ class PaymentTransfer < ActiveRecord::Base
 
   def assign_amounts_and_currency
     self.currency = payments.first.try(:currency)
-    self.service_fee_amount_host_cents = payments.sum(:service_fee_amount_host_cents)
+    self.service_fee_amount_host_cents = payments.inject(0) { |sum, rc| sum += rc.final_service_fee_amount_host_cents }
     self.amount_cents = payments.all.inject(0) { |sum, rc| sum += rc.subtotal_amount_cents_after_refund } - self.service_fee_amount_host_cents
-    self.service_fee_amount_guest_cents = payments.sum(:service_fee_amount_guest_cents)
+    self.service_fee_amount_guest_cents = payments.inject(0) { |sum, rc| sum += rc.final_service_fee_amount_guest_cents }
     self.save!
   end
 

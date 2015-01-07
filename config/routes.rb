@@ -71,13 +71,7 @@ DesksnearMe::Application.routes.draw do
     post '/marketplace/new', to: 'instance_wizard#new'
     post '/marketplace/create', to: 'instance_wizard#create'
 
-    namespace :blog do
-      namespace :admin do
-        get '/', :to => redirect("/blog/admin/blog_posts")
-        resources :blog_posts
-        resource :blog_instance, only: [:edit, :update]
-      end
-    end
+    get '/blog', to: redirect("http://blog.near-me.com", status: 301)
 
     constraints protocol: 'https://' do # Read the commit message for rationale
       get '/demo-requests/DsNvigiE6I9ZGwtsFGrcIw', :to => 'platform_home#demo_requests'
