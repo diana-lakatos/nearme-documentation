@@ -1,15 +1,7 @@
 class Dashboard::HostReservationsController < Dashboard::BaseController
-  skip_before_filter :redirect_if_no_company
-  before_filter :find_listing, except: [:index]
   before_filter :find_reservation, except: [:index]
 
   def index
-    if current_user.companies.any?
-      @locations  = current_user.companies.first.locations
-    else
-      @locations = []
-    end
-
     @guest_list = Controller::GuestList.new(current_user).filter(params[:state])
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
@@ -72,12 +64,8 @@ class Dashboard::HostReservationsController < Dashboard::BaseController
 
   private
 
-  def find_listing
-    @listing = current_user.listings.find(params[:listing_id])
-  end
-
   def find_reservation
-    @reservation = @listing.reservations.find(params[:id])
+    @reservation = @company.reservations.find(params[:id])
   end
 
   def rejection_reason

@@ -30,11 +30,11 @@ class ReservationDrop < BaseDrop
   end
 
   def bookings_dashboard_url
-    routes.bookings_dashboard_path(:reservation_id => @reservation, :token => @reservation.owner.temporary_token)
+    routes.dashboard_user_reservations_path(:reservation_id => @reservation, :token => @reservation.owner.temporary_token)
   end
 
   def manage_guests_dashboard_url
-    routes.manage_guests_dashboard_path
+    routes.dashboard_host_reservations_path
   end
 
   def guest_rating_reservation_url
@@ -66,11 +66,11 @@ class ReservationDrop < BaseDrop
   end
 
   def reservation_confirm_url
-    routes.confirm_manage_listing_reservation_path(@reservation.listing, @reservation, :token => @reservation.listing.administrator.try(:temporary_token))
+    routes.confirm_dashboard_host_reservation_path(@reservation, token: @reservation.listing.administrator.try(:temporary_token))
   end
 
   def reservation_confirm_url_with_tracking
-    routes.confirm_manage_listing_reservation_path(@reservation.listing, @reservation, :token => @reservation.listing.administrator.try(:temporary_token), :track_email_event => true)
+    routes.confirm_dashboard_host_reservation_path(@reservation, token: @reservation.listing.administrator.try(:temporary_token), track_email_event: true)
   end
 
   def start_date

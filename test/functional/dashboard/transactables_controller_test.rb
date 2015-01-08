@@ -181,15 +181,12 @@ class Dashboard::TransactablesControllerTest < ActionController::TestCase
       end
 
       should 'notify guest about reservation expiration when listing is deleted' do
-        ReservationMailer.expects(:notify_guest_of_expiration).returns(stub(deliver: true)).twice
-        ReservationMailer.expects(:notify_host_of_expiration).returns(stub(deliver: true)).twice
+        WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::Expired, @reservation1.id)
+        WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::Expired, @reservation2.id)
         delete :destroy, id: @transactable.id, transactable_type_id: @transactable_type.id
       end
 
       should 'mark reservations as expired' do
-        ReservationMailer.stubs(:notify_guest_of_expiration).returns(stub(deliver: true))
-        ReservationMailer.stubs(:notify_host_of_expiration).returns(stub(deliver: true))
-
         delete :destroy, id: @transactable.id, transactable_type_id: @transactable_type.id
         assert_equal 'expired', @reservation1.reload.state
         assert_equal 'expired', @reservation2.reload.state

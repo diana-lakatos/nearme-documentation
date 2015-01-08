@@ -90,8 +90,11 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
 
     context 'sending sms fails' do
 
-      should 'raise invalid phone number exception if message indicates so' do
+      setup do
         Utils::DefaultAlertsCreator::ReservationCreator.new.notify_host_reservation_created_and_pending_confirmation_sms!
+      end
+
+      should 'raise invalid phone number exception if message indicates so' do
         Rails.logger.expects(:error).never
         User.any_instance.expects(:notify_about_wrong_phone_number).once
         SmsNotifier::Message.any_instance.stubs(:send_twilio_message).raises(Twilio::REST::RequestError, "The 'To' number +16665554444 is not a valid phone number")
@@ -103,14 +106,11 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       end
 
       should 'log twilio exceptions that have unknown message' do
-        Utils::DefaultAlertsCreator::ReservationCreator.new.notify_host_reservation_created_and_pending_confirmation_sms!
-        @controller.class.any_instance.expects(:handle_invalid_mobile_number).never
         SmsNotifier::Message.any_instance.stubs(:send_twilio_message).raises(Twilio::REST::RequestError, "Some other error")
+        User.any_instance.expects(:notify_about_wrong_phone_number).never
         assert_raise Twilio::REST::RequestError do
           post :create, booking_params_for(@listing)
         end
-        assert @response.body.include?('redirect')
-        assert_redirected_to booking_successful_dashboard_user_reservation_path(Reservation.last)
       end
 
     end

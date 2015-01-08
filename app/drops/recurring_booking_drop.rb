@@ -31,11 +31,11 @@ class RecurringBookingDrop < BaseDrop
   end
 
   def bookings_dashboard_url
-    routes.bookings_dashboard_path(:reservation_id => @reservation, :token => @reservation.owner.temporary_token)
+    routes.dashboard_user_reservations_path(:reservation_id => @reservation, :token => @reservation.owner.temporary_token)
   end
 
   def manage_guests_dashboard_url
-    routes.manage_guests_dashboard_path
+    routes.dashboard_host_reservations_path
   end
 
   def guest_rating_reservation_url

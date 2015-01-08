@@ -67,9 +67,7 @@ class Dashboard::HostReservationsControllerTest < ActionController::TestCase
     end
 
     should "track and redirect a host to the Manage Guests page when they confirm a booking" do
-      ReservationMailer.expects(:notify_guest_of_confirmation).returns(stub(deliver: true)).once
-      ReservationMailer.expects(:notify_host_of_confirmation).returns(stub(deliver: true)).once
-      ReservationSmsNotifier.expects(:notify_guest_with_state_change).returns(stub(deliver: true)).once
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::ManuallyConfirmed, @reservation.id)
 
       @tracker.expects(:confirmed_a_booking).with do |reservation|
         reservation == assigns(:reservation)
@@ -81,14 +79,13 @@ class Dashboard::HostReservationsControllerTest < ActionController::TestCase
         user == assigns(:reservation).host
       end
 
-      post :confirm, { listing_id: @reservation.listing.id, id: @reservation.id }
+      post :confirm, { id: @reservation.id }
 
       assert_redirected_to dashboard_host_reservations_path
     end
 
     should "track and redirect a host to the Manage Guests page when they reject a booking" do
-      ReservationMailer.expects(:notify_guest_of_rejection).returns(stub(deliver: true)).once
-      ReservationSmsNotifier.expects(:notify_guest_with_state_change).returns(stub(deliver: true)).once
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::Rejected, @reservation.id)
 
       @tracker.expects(:rejected_a_booking).with do |reservation|
         reservation == assigns(:reservation)
@@ -99,13 +96,12 @@ class Dashboard::HostReservationsControllerTest < ActionController::TestCase
       @tracker.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).host
       end
-      put :reject, { listing_id: @reservation.listing.id, id: @reservation.id }
+      put :reject, { id: @reservation.id }
       assert_redirected_to dashboard_host_reservations_path
     end
 
     should "track and redirect a host to the Manage Guests page when they cancel a booking" do
-      ReservationMailer.expects(:notify_guest_of_cancellation_by_host).returns(stub(deliver: true)).once
-      ReservationSmsNotifier.expects(:notify_guest_with_state_change).returns(stub(deliver: true)).once
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::HostCancelled, @reservation.id)
 
       @reservation.confirm # Must be confirmed before can be cancelled
 
@@ -118,7 +114,7 @@ class Dashboard::HostReservationsControllerTest < ActionController::TestCase
       @tracker.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).host
       end
-      post :host_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
+      post :host_cancel, { id: @reservation.id }
       assert_redirected_to dashboard_host_reservations_path
     end
 
@@ -133,7 +129,7 @@ class Dashboard::HostReservationsControllerTest < ActionController::TestCase
       setup_refund_for_reservation(@reservation)
 
       assert_difference 'Refund.count' do
-        post :host_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
+        post :host_cancel, { id: @reservation.id }
       end
 
       assert_redirected_to dashboard_host_reservations_path
@@ -142,10 +138,7 @@ class Dashboard::HostReservationsControllerTest < ActionController::TestCase
 
     context 'PUT #reject' do
       should 'set rejection reason' do
-        ReservationMailer.expects(:notify_guest_of_rejection).returns(stub(deliver: true)).once
-        ReservationIssueLogger.expects(:rejected_with_reason).with(@reservation, @user)
-        ReservationSmsNotifier.expects(:notify_guest_with_state_change).returns(stub(deliver: true)).once
-        put :reject, { listing_id: @reservation.listing.id, id: @reservation.id, reservation: { rejection_reason: 'Dont like him' } }
+        put :reject, { id: @reservation.id, reservation: { rejection_reason: 'Dont like him' } }
         assert_equal @reservation.reload.rejection_reason, 'Dont like him'
       end
     end
@@ -156,7 +149,7 @@ class Dashboard::HostReservationsControllerTest < ActionController::TestCase
         # 2 because attempt charge is triggered, which if successful generates second version
         assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count', 2) do
           with_versioning do
-            post :confirm, { listing_id: @reservation.listing.id, id: @reservation.id }
+            post :confirm, { id: @reservation.id }
           end
         end
       end
@@ -164,7 +157,7 @@ class Dashboard::HostReservationsControllerTest < ActionController::TestCase
       should 'store new version after reject' do
         assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
           with_versioning do
-            put :reject, { listing_id: @reservation.listing.id, id: @reservation.id, reservation: { rejection_reason: 'Dont like him' } }
+            put :reject, { id: @reservation.id, reservation: { rejection_reason: 'Dont like him' } }
           end
         end
       end
@@ -173,7 +166,7 @@ class Dashboard::HostReservationsControllerTest < ActionController::TestCase
         @reservation.confirm
         assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
           with_versioning do
-            post :host_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
+            post :host_cancel, { id: @reservation.id }
           end
         end
       end
