@@ -20,11 +20,18 @@ module FileuploadHelper
     }).to_s
   end
 
-  def built_in_upload_input_with_label(label, input, &block)
-    content_tag(:div,
-      "<label class='text optional control-label'>#{label}</label>".html_safe +
-      content_tag(:div, built_in_upload_input(input, &block), :class => 'controls'),
-    :class => "control-group text optional")
+  def built_in_upload_input_with_label(form, label, input,  &block)
+    content_tag(:div, class: "col-md-4") do
+      content_tag(:div, label, class: "photo-top-label") + photo_label(form, input) + content_tag(:div, built_in_upload_input(form.file_field(input), &block), :class => 'hidden')
+    end
+  end
+
+  def photo_label(form, input)
+    form.label input, class: 'photo-box active' do
+      content_tag :div, class: 'photo-select' do
+        image_tag("themes/product_theme/icon-cross.png") + "Add Photo"
+      end
+    end
   end
 
   def file_upload_input_with_label(label, name, url, thumbnail_sizes, text='Photos', options = {}, &block)

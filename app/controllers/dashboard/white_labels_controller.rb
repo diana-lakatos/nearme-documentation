@@ -7,7 +7,7 @@ class Dashboard::WhiteLabelsController < Dashboard::BaseController
   def update
     if @company.update_attributes(company_params)
       flash[:success] = t('flash_messages.manage.companies.white_label_updated')
-      redirect_to edit_manage_white_label_path(@company.id)
+      redirect_to edit_dashboard_white_label_path(@company.id)
     else
       render :edit
     end
