@@ -6,7 +6,7 @@ class BuySellMarket::CartController < ApplicationController
 
   def index
     @cart = CartDecorator.new(current_user)
-    @theme_name = 'cart-theme'
+    @theme_name = 'buy-sell-theme'
   end
 
   def add

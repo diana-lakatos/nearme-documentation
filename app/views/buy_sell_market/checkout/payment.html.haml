@@ -1,51 +1,52 @@
-.page-wrapper
-  = render 'header'
+.checkout-wizard
+  .page-wrapper
+    = render 'header'
 
-  = simple_form_for @order, url: wizard_path do |f|
-    %section.checkout-form
-      .container-fluid
-        %h2= t 'buy_sell_market.checkout.labels.order_summary'
-        %table.payment-summary
-          %thead
-            %th= t 'buy_sell_market.checkout.labels.item'
-            %th= t 'buy_sell_market.checkout.labels.price'
-            %th= t 'buy_sell_market.checkout.labels.qty'
-            %th= t 'buy_sell_market.checkout.labels.total'
+    = simple_form_for @order, url: wizard_path do |f|
+      %section.checkout-form
+        .container-fluid
+          %h2= t 'buy_sell_market.checkout.labels.order_summary'
+          %table.payment-summary
+            %thead
+              %th= t 'buy_sell_market.checkout.labels.item'
+              %th= t 'buy_sell_market.checkout.labels.price'
+              %th= t 'buy_sell_market.checkout.labels.qty'
+              %th= t 'buy_sell_market.checkout.labels.total'
 
-          %tbody
-            - @order.line_items.each do |item|
-              %tr
-                %td= item.name
-                %td= item.price
-                %td= item.quantity
-                %td= item.total
+            %tbody
+              - @order.line_items.each do |item|
+                %tr
+                  %td= item.name
+                  %td= item.price
+                  %td= item.quantity
+                  %td= item.total
 
-        .divider
+          .divider
 
-        %table.payment-totals{align: 'right'}
-          %tr
-            %td= t 'buy_sell_market.checkout.labels.subtotal'
-            %td= humanized_money_with_cents_and_symbol @order.monetize(@order.item_total)
-          %tr
-            %td= t 'buy_sell_market.checkout.labels.shipping'
-            %td= humanized_money_with_cents_and_symbol @order.monetize(@order.shipment_total)
-          %tr
-            %td= t 'buy_sell_market.checkout.labels.tax'
-            %td= humanized_money_with_cents_and_symbol @order.monetize(@order.additional_tax_total)
-          %tr
-            %td= t 'buy_sell_market.checkout.labels.service_fee'
-            %td= humanized_money_with_cents_and_symbol @order.service_fee_amount_guest
-          %tr
-            %td.total= t 'buy_sell_market.checkout.labels.total2'
-            %td.total= humanized_money_with_cents_and_symbol @order.total_amount_to_charge
+          %table.payment-totals{align: 'right'}
+            %tr
+              %td= t 'buy_sell_market.checkout.labels.subtotal'
+              %td= humanized_money_with_cents_and_symbol @order.monetize(@order.item_total)
+            %tr
+              %td= t 'buy_sell_market.checkout.labels.shipping'
+              %td= humanized_money_with_cents_and_symbol @order.monetize(@order.shipment_total)
+            %tr
+              %td= t 'buy_sell_market.checkout.labels.tax'
+              %td= humanized_money_with_cents_and_symbol @order.monetize(@order.additional_tax_total)
+            %tr
+              %td= t 'buy_sell_market.checkout.labels.service_fee'
+              %td= humanized_money_with_cents_and_symbol @order.service_fee_amount_guest
+            %tr
+              %td.total= t 'buy_sell_market.checkout.labels.total2'
+              %td.total= humanized_money_with_cents_and_symbol @order.total_amount_to_charge
 
-    %section.checkout-form#credit-card-select
-      .container-fluid
-        %h2 Payment Information
-        - if @order.billing_authorization.nil?
-          = render 'checkout_credit_card_fields', f: f
-        - else
-          Credit Card has been already authorized. Please proceed.
+      %section.checkout-form#credit-card-select
+        .container-fluid
+          %h2 Payment Information
+          - if @order.billing_authorization.nil?
+            = render 'checkout_credit_card_fields', f: f
+          - else
+            Credit Card has been already authorized. Please proceed.
 
-    = render partial: 'checkout_buttons', locals: { form: f }
+      = render partial: 'checkout_buttons', locals: { form: f }
 
