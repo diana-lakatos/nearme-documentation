@@ -120,3 +120,12 @@ en:
     required:
       mark: '*'
       text: 'required'
+  instance_admin:
+    settings:
+      configuration:
+        show:
+          monthly: Monthly
+          fortnightly: Every 2 weeks
+          semiweekly: Twice a week
+          weekly: Weekly
+          daily: Daily

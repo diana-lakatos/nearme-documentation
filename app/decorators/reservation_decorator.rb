@@ -128,7 +128,11 @@ class ReservationDecorator < Draper::Decorator
   end
 
   def user_message_summary(user_message)
-    link_to user_message.thread_context.name, location_path(user_message.thread_context.location, user_message.thread_context.listing)
+    if user_message.thread_context.present? && user_message.thread_context.listing.present? && user_message.thread_context.location
+      link_to user_message.thread_context.name, location_path(user_message.thread_context.location, user_message.thread_context.listing)
+    else
+      "[Deleted]"
+    end
   end
 
   def state_to_string

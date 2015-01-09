@@ -65,7 +65,35 @@ class Payment < ActiveRecord::Base
   end
 
   def subtotal_amount_cents_after_refund
-    subtotal_amount_cents - refunds.successful.sum(&:amount)
+    result = nil
+
+    if self.reservation.cancelled_by_host?
+      result = 0
+    else
+      result = subtotal_amount_cents - refunds.successful.sum(&:amount)
+    end
+
+    result
+  end
+
+  def final_service_fee_amount_host_cents
+    result = self.service_fee_amount_host_cents
+
+    if self.reservation.cancelled_by_host? || self.reservation.cancelled_by_guest?
+      result = 0
+    end
+
+    result
+  end
+
+  def final_service_fee_amount_guest_cents
+    result = self.service_fee_amount_guest_cents
+
+    if self.reservation.cancelled_by_host?
+      result = 0
+    end
+
+    result
   end
 
   def amount

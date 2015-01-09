@@ -52,6 +52,7 @@ class Support::Ticket < ActiveRecord::Base
     body = part.body.to_s.force_encoding(encoding).encode('UTF-8')
 
     self.instance = PlatformContext.current.instance
+    self.target = PlatformContext.current.instance
 
     if self.instance
       ticket_message = self.messages.new

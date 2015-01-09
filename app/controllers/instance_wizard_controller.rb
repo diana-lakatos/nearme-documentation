@@ -33,6 +33,7 @@ class InstanceWizardController < ActionController::Base
     begin
       Instance.transaction do
         @instance.save!
+        @instance.instance_profile_types.create(name: 'User Instance Profile')
         @user.instance = @instance
         @user.save!
       end
@@ -45,16 +46,21 @@ class InstanceWizardController < ActionController::Base
     @instance_creator.update_attribute(:created_instance, true)
 
     PlatformContext.current = PlatformContext.new(@instance)
-    tp = @instance.transactable_types.create(name: 'Listing', pricing_options: { "free"=>"1", "hourly"=>"1", "daily"=>"1", "weekly"=>"1", "monthly"=>"1" },
+    tp = @instance.transactable_types.create(name: params[:marketplace_type], pricing_options: { "free"=>"1", "hourly"=>"1", "daily"=>"1", "weekly"=>"1", "monthly"=>"1" },
                                              availability_options: { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => true } })
-    CustomAttributes::CustomAttribute::Creator.new(tp).create_listing_attributes!
-    at = tp.availability_templates.build(name: "Working Week", description: "Mon - Fri, 9:00 AM - 5:00 PM")
-    (1..5).each do |i|
-      at.availability_rules.build(day: i, open_hour: 9, open_minute: 0,close_hour: 17, close_minute: 0)
-    end
-    at.save!
 
-    @instance.location_types.create!(name: 'General')
+    if @instance.buyable?
+      CustomAttributes::CustomAttribute::Creator.new(tp).create_buy_sell_attributes!
+      Utils::SpreeDefaultsLoader.new(@instance).load!
+    else
+      CustomAttributes::CustomAttribute::Creator.new(tp, bookable_noun: @instance.bookable_noun).create_listing_attributes!
+      at = tp.availability_templates.build(name: "Working Week", description: "Mon - Fri, 9:00 AM - 5:00 PM")
+      (1..5).each do |i|
+        at.availability_rules.build(day: i, open_hour: 9, open_minute: 0,close_hour: 17, close_minute: 0)
+      end
+      at.save!
+      @instance.location_types.create!(name: 'General')
+    end
 
     InstanceAdmin.create(user_id: @user.id)
 

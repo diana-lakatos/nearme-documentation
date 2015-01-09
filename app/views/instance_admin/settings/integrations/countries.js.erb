@@ -1,1 +1,2 @@
-$(".payment-gateways-form").html("<%= escape_javascript(render :partial => 'payment_gateway_select', locals: { :payment_gateways => @payment_gateways, country: @country }) %>")
+$('.instance-payment-gateway-form').empty();
+$(".payment-gateways-form").html("<%= escape_javascript(render :partial => 'payment_gateway_select', locals: { :payment_gateways => @payment_gateways, country: @country }) %>");

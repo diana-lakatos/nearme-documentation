@@ -1,9 +1,10 @@
 module CustomAttributes
   class CustomAttribute::Creator
 
-    def initialize(target, bookable_noun = 'Desk')
+    def initialize(target, options={})
       @target = target
-      @bookable_noun = bookable_noun
+      @bookable_noun = options[:bookable_noun] || 'Item'
+      @listing_types = options[:listing_types] || ["Type 1", "Type 2"]
     end
 
     def create_listing_attributes!
@@ -76,7 +77,7 @@ module CustomAttributes
                             {
                               html_tag: "select",
                               prompt: "",
-                              valid_values: ["Desk", "Meeting Room", "Office Space", "Salon Booth"],
+                              valid_values: @listing_types,
                               input_html_options: { :class => 'selectpicker' },
                               label: "#{@bookable_noun} type"
                             }
