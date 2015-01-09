@@ -64,7 +64,7 @@ class PaymentTransfer < ActiveRecord::Base
     Company.with_deleted.find(company_id)
   end
 
-   # Attempt to payout through the billing gateway
+  # Attempt to payout through the billing gateway
   def payout
     return if !billing_gateway.possible?
     return if transferred?
