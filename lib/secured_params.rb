@@ -9,7 +9,7 @@ class SecuredParams
     ]
   end
 
- def product_form
+  def product_form
     [
       :draft,
       :name,
@@ -19,20 +19,6 @@ class SecuredParams
       :taxon_ids,
       company_address_attributes: nested(self.address),
       images_attributes: nested(self.spree_image),
-      shipping_methods_attributes: nested(self.spree_shipping_method)
-    ]
-  end
-
- def product_form
-    [
-      :draft,
-      :item_title,
-      :item_description,
-      :price,
-      :quantity,
-      :category,
-      company_address_attributes: nested(self.address),
-      photos_attributes: nested(self.spree_image),
       shipping_methods_attributes: nested(self.spree_shipping_method)
     ]
   end

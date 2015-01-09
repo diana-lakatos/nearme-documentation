@@ -1,0 +1,44 @@
+- title "White-label"
+.dash-page
+  .dash-head.clearfix
+    %p MANAGE USERS
+  .dash-body
+    = simple_form_for @company, :url => dashboard_white_label_path(@company), wrapper: :bs3, :html => {multipart: true, :id => 'edit_company' } do |f|
+      %p 
+        White label Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+        =f.input :white_label_enabled
+
+      .box{'data-white-label-settings-container' => true}
+
+        .control-group
+          = f.label :white_label_enabled, 'Enabled', :class => 'control-label'
+          .controls
+            .switch{'data-on-label' => "", 'data-off-label' => "", 'data-ajax-updateable' => true}
+              = f.check_box :white_label_enabled, 'data-white-label-enabler' => true
+
+        = f.simple_fields_for :domain, f.object.domain || Domain.new do |domain_form|
+          = domain_form.check_box :white_label_enabled, :checked => f.object.white_label_enabled, 'data-white-label-settings' => true, :class => 'hidden'
+          = domain_form.input :name, :as => :limited_string, :limit => 50, :label => "Your Domain", :placeholder => 'example.com', :required => true
+          = domain_form.input :google_analytics_tracking_code
+
+        = f.simple_fields_for :theme, (f.object.theme || Theme.new) do |theme_form|
+          = theme_form.check_box :white_label_enabled, :checked => f.object.white_label_enabled, 'data-white-label-settings' => true, :class => 'hidden'
+          = render :partial => 'themes/theme', :locals => { :f => theme_form }
+
+        .control-group
+          = f.label :listings_public, 'Listings public', :class => 'control-label'
+          .controls
+            .switch{'data-on-label' => "", 'data-off-label' => ""}
+              = f.check_box :listings_public
+
+        .actions
+          = f.submit "Save"
+
+- content_for :domready do
+  $(function() { new CompanyForm($('#edit_company')) });
