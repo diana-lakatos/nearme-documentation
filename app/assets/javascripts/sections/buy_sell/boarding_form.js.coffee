@@ -3,7 +3,7 @@ class @BoardingForm
     @setupZoneInputs()
     @setupZoneKind()
     @setupShippingMethods()
-    @obsrvePhotoAdd()
+    @setupImages()
 
   setupZoneInputs: =>
     for input in @form.find(".select2")
@@ -48,16 +48,15 @@ class @BoardingForm
       @form.find(".country_based_select").show().removeAttr('disabled');
       @form.find(".state_based_select").hide().attr('disabled','disabled');
 
-  obsrvePhotoAdd: ->
-    @form.find(".item_image").change ->
-      $(this).parent().css("background-color", "#DEFCE8")
-      $(this).parent().css("border-color", "#809900")
-      fullPath = $(this).val()
-      if fullPath
-        startIndex = ((if fullPath.indexOf("\\") >= 0 then fullPath.lastIndexOf("\\") else fullPath.lastIndexOf("/")))
-        filename = fullPath.substring(startIndex)
-        filename = filename.substring(1)  if filename.indexOf("\\") is 0 or filename.indexOf("/") is 0
-        $(this).parent().find(".photo-select").text(filename)
+  processImage: (event, container) ->
+    $(container).find('label').hide()
+    $(container).append("<img src='" + event.fpfile.url + "'>")
+    $(container).append('<label class="delete_image">Delete</label>')
+    @setupImages()
+
+  setupImages: ->
+    @form.find(".delete_image").click ->
+      $(this).parent().hide()
 
   setupShippingMethods: ->
     for shipping_hidden in @form.find(".shipping_hidden")
@@ -84,13 +83,3 @@ class @BoardingForm
       @form.find(".shipping_hidden:checked").eq(0).prop('checked', false).trigger("change")
       if @form.find(".shipping_hidden:checked").length == 0
         @form.find(".add_shipping_profile").hide()
-
-
-
-
-
-
-
-
-
-

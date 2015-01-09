@@ -63,6 +63,8 @@ en:
         bank_owner_name: "Account's Owner Name"
         bank_routing_number: 'Routing Number'
         bank_account_number: 'Account Number'
+      domain:
+        google_analytics_tracking_code: "GA Tracking Code"
       company:
         name: 'Company name'
         industries: 'Industries'

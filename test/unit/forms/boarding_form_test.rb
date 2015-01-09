@@ -35,29 +35,31 @@ class BoardingFormTest < ActiveSupport::TestCase
   def boarding_attributes
     {
       store_name: "Test Store",
-      item_title: "Test Product",
-      item_description: "Test description",
-      price: "100",
-      category: @taxon_ids.join(","),
-      quantity: "10",
       company_address_attributes: {
         address: "Poznań, Polska",
         latitude: "52.406374",
         longitude: "16.925168100000064",
       },
-      shipping_methods_attributes: {
-        "0" => {
-          name: "Test",
-          removed: "0",
-          processing_time: "1 day",
-          calculator_attributes: {
-            preferred_amount: "10.0"
-          },
-          zones_attributes: {
-            "0" => {
-              name: "Default - b38723c89b795233677b2795d77557af",
-              kind: "country",
-              country_ids: @countries.map(&:ids).join(",")
+      product_form: {
+        name: "Test Product",
+        description: "Test description",
+        price: "100",
+        taxon_ids: @taxon_ids.join(","),
+        quantity: "10",
+        shipping_methods_attributes: {
+          "0" => {
+            name: "Test",
+            removed: "0",
+            processing_time: "1 day",
+            calculator_attributes: {
+              preferred_amount: "10.0"
+            },
+            zones_attributes: {
+              "0" => {
+                name: "Default - b38723c89b795233677b2795d77557af",
+                kind: "country",
+                country_ids: @countries.map(&:id).join(",")
+              }
             }
           }
         }

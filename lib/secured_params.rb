@@ -4,14 +4,21 @@ class SecuredParams
     [
       :draft,
       :store_name,
-      :address,
-      :item_title,
-      :item_description,
+      company_address_attributes: nested(self.address),
+      product_form: nested(self.product_form)
+    ]
+  end
+
+  def product_form
+    [
+      :draft,
+      :name,
+      :description,
       :price,
       :quantity,
-      :category,
+      :taxon_ids,
       company_address_attributes: nested(self.address),
-      photos_attributes: nested(self.spree_image),
+      images_attributes: nested(self.spree_image),
       shipping_methods_attributes: nested(self.spree_shipping_method)
     ]
   end
@@ -226,6 +233,7 @@ class SecuredParams
 
   def spree_image
     [
+      :remote_image_url,
       :attachment,
       :viewable_id,
       :alt,

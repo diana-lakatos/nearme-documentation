@@ -1,0 +1,19 @@
+- title t('orders.index.title')
+
+.dash-head.clearfix
+  %ul
+    %li.active
+      %a{:href => "#"} ORDERS
+    %li
+      %a{:href => "#"} OPEN ORDERS
+    %li
+      %a{:href => "#"} CANCELLED ORDERS
+
+.dash-body
+  = render partial: 'order', collection: @orders
+
+- unless @orders.empty?
+  .row-fluid
+    .col-md-12
+      .pagination
+        = will_paginate @orders, renderer: BuySellMarket::WillPaginateLinkRenderer::LinkRenderer, class: ''

@@ -1,0 +1,37 @@
+
+
+= f.input :name, label: "Item Title", :placeholder => "Attractive title name here", hint: "Descriptive titles are best. Try to describe your item th eway a buyer would."
+= f.input :description, label: "Item description", as: :text, :placeholder => "This item is great and here is a story about it...", hint: "Try to answer the questions buyers will have about your product. Tell the item's story and explain why it's special."
+= f.input :taxon_ids, label: "Category", :placeholder => "Enter a category"
+.row
+  .col-md-3
+    %label Photos
+  .col-md-9
+    .row
+      =f.simple_fields_for :images do |p|
+        .col-md-4
+          - if p.object.new_record?
+            - if p.object.remote_image_url.present?
+              = image_tag(p.object.remote_image_url)
+              = p.hidden_field :remote_image_url, value: p.object.remote_image_url
+              = p.check_box '_destroy'
+            -else
+              = p.filepicker_field :remote_image_url, class: 'hidden', onchange: 'boarding_form.processImage(event, $(this).parent())'
+              = p.label :remote_image_url, class: "photo-box active", onclick: "$(this).prev().trigger('click')" do
+                .photo-select
+                  =image_tag("themes/product_theme/icon-cross.png")
+                  Add Photo
+          - else
+            .photo-box
+              = filepicker_image_tag(p.object.image.url(:medium))
+              = p.label '_destroy', "Delete", class: "delete_image"
+              = p.check_box '_destroy', class: "hidden"
+
+= f.input :price, :placeholder => "$0.00"
+= f.input :quantity, as: :integer, :placeholder => "1"
+
+
+- content_for :domready do
+  new TaxonAutocomplete($("#edit_product_form, #new_product_form, #edit_boarding_form, #new_boarding_form"));
+  new Dashboard.AddressController($("#edit_product_form, #new_product_form, #edit_boarding_form, #new_boarding_form"));
+  var boarding_form = new BoardingForm($("#edit_product_form, #new_product_form, #edit_boarding_form, #new_boarding_form"));

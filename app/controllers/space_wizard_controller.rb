@@ -20,7 +20,7 @@ class SpaceWizardController < ApplicationController
     if buyable?
       @boarding_form = BoardingForm.new(current_user)
       @boarding_form.assign_all_attributes
-      render :list_item
+      render :list_item, layout: "dashboard"
     else
       build_objects
       build_approval_requests
@@ -73,7 +73,7 @@ class SpaceWizardController < ApplicationController
     if @boarding_form.submit(boarding_form_params)
       redirect_to space_wizard_list_url, notice: t('flash_messages.space_wizard.item_listed', bookable_noun: platform_context.decorate.bookable_noun)
     else
-      render :list_item
+      render :list_item, layout: "dashboard"
     end
 
   end

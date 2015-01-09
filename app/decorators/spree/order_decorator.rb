@@ -6,10 +6,14 @@ class Spree::OrderDecorator < Draper::Decorator
 
   decorates_association :line_items
 
-  delegate :company_name
+  delegate :current_page, :per_page, :offset, :total_entries, :total_pages
 
   def my_order_status_info
-    status_info("Pending payment")
+    status_info('Pending payment')
+  end
+
+  def status
+    'Delivered'
   end
 
   def company_name
@@ -26,6 +30,18 @@ class Spree::OrderDecorator < Draper::Decorator
 
   def save_billing_address
 
+  end
+
+  def display_completed_at
+    object.completed_at ? l(object.completed_at, format: :only_date) : ''
+  end
+
+  def display_total
+    humanized_money_with_symbol(object.total.to_money(Spree::Config.currency))
+  end
+
+  def display_shipping_address
+    "#{object.ship_address.address1} #{object.ship_address.city}, #{object.ship_address.state_text}, #{object.ship_address.country.try(:iso)}"
   end
 
   private

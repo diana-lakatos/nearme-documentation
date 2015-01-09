@@ -6,10 +6,8 @@ Spree::Image.class_eval do
   # Don't delete the photo from s3
   skip_callback :commit, :after, :remove_image!
 
-  after_save do |i|
-    if i.reload.attachment.exists?
-      i.image = File.open(i.attachment.path(:original), 'rb')
-      i.save
-    end
+  _validators.reject!{ |key, _| [:attachment].include?(key) }
+  _validate_callbacks.reject! do |callback|
+    callback.raw_filter.attributes.delete :attachment if callback.raw_filter.is_a?(ActiveModel::Validations::PresenceValidator)
   end
 end

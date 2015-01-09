@@ -4,11 +4,13 @@ class BuySell::OrdersController < ApplicationController
   before_filter :authenticate_user!
 
   def index
-    @orders = current_user.orders.complete
-    # @orders = params[:state] == 'complete' ? @orders.complete : @orders.incomplete
+    @orders = current_user.orders.complete.paginate(page: params[:page]).order('created_at DESC').decorate
+    @theme_name = 'orders-theme'
   end
 
   def show
     @order = current_user.orders.find_by_number(params[:id])
+    @theme_name = 'checkout-theme'
+    render 'buy_sell_market/checkout/complete'
   end
 end

@@ -1,0 +1,17 @@
+.dash-page
+  .dash-head.clearfix
+    %p MANAGE USERS
+    = link_to new_dashboard_user_path, remote: true, class: "dash-head-btn" do
+      .btn.blue{:role => "button"} Add User
+  .dash-body
+    #users-list.table-responsive
+      %table.table
+        %thead
+          %tr
+            %th Name
+            %th Email
+            %th Actions
+        %tbody
+          = render @users
+
+

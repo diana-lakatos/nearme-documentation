@@ -1,0 +1,48 @@
+section#orders {
+  .box {background: #fff;}
+
+  .reviews-search {border: solid #E0E1E0 1px; background: #fff; padding: 0 10px; float: right;}
+  .reviews-search input {outline: 0px; -webkit-appearance: none;}
+  .reviews-search .ico-search {display: inline-block;}
+  #search {border: none;}
+
+  .page-tabs { margin-bottom: 40px; border-bottom: 3px solid #E0E1E0;}
+  .page-tabs li {display: inline-block; margin-right: 30px; overflow: initial !important; padding-bottom: 10px;}
+  .page-tabs li a {color: #6F6E6E; display: inline; padding-bottom: 13px;}
+  .page-tabs li.active a {color: #1C51A2; border-bottom: 3px solid #1C51A2;}
+
+  .select-label {display: inline-block; margin-right: 10px}
+  .select-container {border: solid #E0E1E0 1px; border-radius: 3px; font-size: 14px; padding: 0 10px; display:inline-block}
+
+  .order a {color: #1C51A2; cursor: pointer}
+
+  .order-info li {display: inline-block; margin-right: 35px;}
+  .order-info p {margin: 0;}
+  .order-info p:nth-child(1) {color: #000;}
+
+  .order-details, .order-actions {display: inline-block;}
+
+  .order-details {float: left;}
+  .order-details h1, .order-details p {margin: 0;}
+
+  .order-actions {float: right;}
+  .order-actions .btn {display: block; width: 100%; padding: 5px 40px; margin-bottom: 15px;}
+
+  .order-number a {color: #1C51A2;}
+
+  .order-seller {margin-top: 30px;}
+
+  .order-img {float: left; margin-right: 30px;}
+
+  .order.additional-order {border-top: solid #E0E1E0 1px;}
+  .order.additional-order .order-actions {padding-top: 40px}
+
+  input.btn.update {background: #FFD597;}
+  input.btn.btn-gray:hover {background: #F0F0F0}
+  input.btn {border-radius: 3px;}
+
+  @media (max-width: 400px) {
+    .reviews-search {margin-bottom: 20px;}
+    .page-tabs {clear: both}
+  }
+}

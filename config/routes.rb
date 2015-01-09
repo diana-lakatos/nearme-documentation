@@ -25,8 +25,9 @@ DesksnearMe::Application.routes.draw do
     namespace :cart do
       get '/', action: 'index', as: 'index'
       delete 'empty'
+      delete 'clear_all/:order_id', action: 'clear_all', as: 'clear_all'
       patch 'update'
-      get 'add/:product_id', action: 'add', as: 'add_product' # For redirection after login
+      get 'add', action: 'add', as: 'add_product' # Get is for redirection after login
       delete 'remove/:item_id', action: 'remove', as: 'remove_product'
       get 'next/:order_id', action: 'next', as: 'next'
     end
@@ -416,12 +417,26 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
+  namespace :dashboard do
+    resources :companies, :only => [:edit, :update, :show]
+    resources :orders do
+      collection do
+        get :received
+      end
+    end
+    resources :products
+    resources :users, :except => [:edit, :update]
+    resources :waiver_agreement_templates, only: [:index, :edit, :new, :update, :create, :destroy]
+    resources :white_labels, :only => [:edit, :update, :show]
+  end
+
   namespace :manage do
     namespace :buy_sell do
       resources :api do
         collection do
           get :countries
           get :states
+          get :taxons
         end
       end
       resources :products, except: [:show] do
@@ -433,7 +448,7 @@ DesksnearMe::Application.routes.draw do
       end
 
       resources :option_types
-      resources :orders do
+      resources :orders, except: [:edit] do
         member do
           get :approve
           get :cancel
@@ -461,8 +476,6 @@ DesksnearMe::Application.routes.draw do
       # resources :taxonomies
       resources :taxons
     end
-
-    resources :companies, :only => [:edit, :update, :show]
 
     resources :listings do
       resources :reservations, :controller => 'listings/reservations' do
@@ -527,10 +540,6 @@ DesksnearMe::Application.routes.draw do
         end
       end
     end
-
-    resources :users, :except => [:edit, :update]
-    resources :waiver_agreement_templates, only: [:index, :edit, :new, :update, :create, :destroy]
-    resources :white_labels, :only => [:edit, :update, :show]
 
   end # /manage
 

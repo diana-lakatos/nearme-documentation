@@ -109,7 +109,7 @@ gem "historyjs-rails"
 
 gem 'ranked-model'
 
-gem 'filepicker-rails', '0.1'
+gem 'filepicker-rails', '~> 1.2'
 
 gem 'premailer-rails'
 

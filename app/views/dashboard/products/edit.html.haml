@@ -1,0 +1,20 @@
+.dash-page
+  .dash-head.clearfix
+    %p MANAGE LISTINGS > EDIT ITEM
+    %a.dash-head-btn{:href => ""}
+      .btn.blue Bulk Upload
+  .dash-body
+    = simple_form_for @product_form, wrapper: :bs3, :url => dashboard_product_path(@product_form.product), :html => { :multipart => true,  method: :put } do |f|
+      = render 'forms/product_form', f: f
+
+      = f.simple_fields_for :shipping_methods do |shipping_method|
+        %fieldset
+          = render 'forms/shipping_form', f: shipping_method
+      .row.text-right
+        %a.shipping-profile-top.add_shipping_profile
+          =image_tag("themes/product_theme/icon-cross.png")
+          %span Create New Shipping Profile
+      .submit-bar
+        = link_to dashboard_products_path do
+          .btn.gray Cancel
+        = f.submit "Save item", class: "btn medium blue"

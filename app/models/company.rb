@@ -24,7 +24,7 @@ class Company < ActiveRecord::Base
   has_many :locations, dependent: :destroy, inverse_of: :company
   has_many :listings, class_name: 'Transactable', inverse_of: :company
   has_many :photos, through: :listings
-  has_many :products, class_name: 'Spree::Product', dependent: :destroy
+  has_many :products, class_name: 'Spree::Product', inverse_of: :company, dependent: :destroy
   has_many :properties, class_name: 'Spree::Property', dependent: :destroy
   has_many :prototypes, class_name: 'Spree::Prototype', dependent: :destroy
   has_many :option_types, class_name: 'Spree::OptionType', dependent: :destroy

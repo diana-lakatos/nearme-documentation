@@ -1,6 +1,7 @@
 module ApplicationHelper
 
   include FormHelper
+  include BootstrapHelper
   include TooltipHelper
   include CurrencyHelper
   include FileuploadHelper
@@ -136,6 +137,17 @@ module ApplicationHelper
       "ico-warning"
     when 'deleted'
       "ico-close"
+    end
+  end
+
+  def flash_key_name(key)
+    case key.to_s
+    when 'deleted'
+      'warning'
+    when 'error'
+      'danger'
+    else
+      key
     end
   end
 

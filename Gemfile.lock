@@ -314,9 +314,8 @@ GEM
     figaro (0.7.0)
       bundler (~> 1.0)
       rails (>= 3, < 5)
-    filepicker-rails (0.1)
-      multi_json (~> 1.6)
-      railties (>= 3.1.0, < 5.0)
+    filepicker-rails (1.2.0)
+      rails (>= 3.2)
     fog (1.23.0)
       fog-brightbox
       fog-core (~> 1.23)
@@ -771,7 +770,7 @@ DEPENDENCIES
   factory_girl_rails (~> 4.4.0)
   ffaker (~> 1.16)
   figaro
-  filepicker-rails (= 0.1)
+  filepicker-rails (~> 1.2)
   fog
   friendly_id (~> 5.0.4)
   geocoder

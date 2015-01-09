@@ -1,0 +1,53 @@
+.col-md-2.page-navigation
+  %nav
+    %ul
+      = content_tag :li, class: (params[:controller].include?('orders') && params[:action].include?('index')) ? 'active' : '' do
+        = link_to 'My Orders', dashboard_orders_path
+      %li
+        %a{:href => "#"} Messages
+    %ul
+      %li.nav-head
+        YOUR SHOP
+      = content_tag :li, class: (params[:controller].include?('companies')) ? 'active' : '' do
+        = link_to 'Shop Details', edit_dashboard_company_path(current_user.companies.first)
+      = content_tag :li, class: (params[:controller].include?('products')) ? 'active' : '' do
+        = link_to 'Listings', dashboard_products_path
+      %li
+        %a{:href => "#"} Payout
+      %li
+        %a{:href => "#"} Payment
+      - orders_rceived_active = params[:controller].include?('orders') && params[:action].include?('received')
+      = content_tag :li, class: orders_rceived_active ? 'active' : '' do
+        = link_to 'Orders Received', received_dashboard_orders_path
+      -if orders_rceived_active
+        %ul.page-sub-nav
+          %li
+            %a.active{:href => "#"} Boat
+          %li
+            %a{:href => "#"} Slip
+          %li
+            %a{:href => "#"} Captain
+      -#%li
+      -#  %a{:href => "#"} Shipping Methods
+    %ul
+      %li.nav-head
+        ADMIN
+      %li
+        %a{:href => "#"} Blog
+      %li
+        %a{:href => "#"} Analytics
+      = content_tag :li, class: (params[:controller].include?('users')) ? 'active' : '' do
+        = link_to 'Manage Admins', dashboard_users_path
+      = content_tag :li, class: (params[:controller].include?('waiver_agreement_templates')) ? 'active' : '' do
+        = link_to 'Waiver Agreements', dashboard_waiver_agreement_templates_path
+      = content_tag :li, class: (params[:controller].include?('white_label')) ? 'active' : '' do
+        = link_to 'White-Label', edit_dashboard_white_label_path(current_user.companies.first)
+    %ul
+      %li.nav-head
+        ACCOUNT
+      %li
+        %a{:href => "#"} Edit Profile
+      %li
+        %a{:href => "#"} Trust &amp; Verficiation
+      %li
+        %a{:href => "#"} Notification Preferences

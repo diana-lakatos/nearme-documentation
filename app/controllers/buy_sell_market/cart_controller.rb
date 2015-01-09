@@ -6,10 +6,11 @@ class BuySellMarket::CartController < ApplicationController
 
   def index
     @cart = CartDecorator.new(current_user)
+    @theme_name = 'buy-sell-theme'
   end
 
   def add
-    if @cart_service.add_product(@product)
+    if @cart_service.add_product(@product, params[:quantity])
       flash[:notice] = t('buy_sell_market.cart.notices.add')
     else
       flash[:error] = cart_errors
@@ -33,6 +34,16 @@ class BuySellMarket::CartController < ApplicationController
       flash[:notice] = t('buy_sell_market.cart.notices.remove')
     else
       flash[:error] = cart_errors
+    end
+
+    redirect_to cart_index_path
+  end
+
+  def clear_all
+    order = current_user.orders.find(params[:order_id])
+    if order
+      order.destroy
+      flash[:notice] = t('buy_sell_market.cart.notices.clear_all', company_name: order.company.name)
     end
 
     redirect_to cart_index_path
