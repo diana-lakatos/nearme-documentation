@@ -4,7 +4,7 @@ class Billing::Gateway::Processor::Incoming::AuthorizeNet < Billing::Gateway::Pr
     @gateway = ActiveMerchant::Billing::AuthorizeNetGateway.new(settings)
   end
 
-  def self.supported_currencies
+  def supported_currencies
     ["USD", "CAD"]
   end
 end

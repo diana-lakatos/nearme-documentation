@@ -17,11 +17,11 @@ class Billing::Gateway::Processor::Incoming::Paypal < Billing::Gateway::Processo
     { ip: ip_address }
   end
 
-  def refund_identification(charge_response)
-    charge_response["transaction_id"]
+  def refund_identification(charge)
+    charge.response.params["transaction_id"]
   end
 
-  def self.supported_currencies
+  def supported_currencies
     ["USD", "GBP", "EUR", "JPY", "CAD"]
   end
 

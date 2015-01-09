@@ -12,11 +12,11 @@ class Billing::Gateway::Processor::Incoming::Balanced < Billing::Gateway::Proces
     { email: @user.email }
   end
 
-  def refund_identification(charge_response)
-    charge_response["uri"]
+  def refund_identification(charge)
+    charge.response.params["uri"]
   end
 
-  def self.supported_currencies
+  def supported_currencies
     ["USD"]
   end
 end
