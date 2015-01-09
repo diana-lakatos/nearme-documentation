@@ -1,5 +1,5 @@
 .submit-secure-payment {
-  border-bottom: 1px solid #e6e6e6;
+  border-bottom: 1px solid $gray230;
   .text {
     line-height: 40px;
   }
@@ -21,20 +21,7 @@
 }
 
 .credit-card-fields {
-
-  .flash {
-    &.error {
-      p {
-        text-align:center;
-        color: $red;
-        font-size: 1.1em;
-      }
-
-      color: $red;
-      padding-bottom: 0.5em;
-    }
-  }
-  border: 1px solid #e6e6e6;
+  border: 1px solid $gray230;
   padding: $padding-default;
 
   input {

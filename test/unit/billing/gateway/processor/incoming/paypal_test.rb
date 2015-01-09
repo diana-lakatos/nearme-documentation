@@ -15,8 +15,9 @@ class Billing::Gateway::Processor::Incoming::PaypalTest < ActiveSupport::TestCas
   end
 
   should "have a refund identification based on its transaction_id key" do
-    charge_response = { "transaction_id" => "123" }
-    assert_equal @paypal_processor.refund_identification(charge_response), "123"
+    charge_response = ActiveMerchant::Billing::Response.new true, 'OK', { "transaction_id" => "123" }
+    charge = Charge.new(response: charge_response)
+    assert_equal @paypal_processor.refund_identification(charge), "123"
   end
 
 end

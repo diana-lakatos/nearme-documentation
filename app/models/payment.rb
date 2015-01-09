@@ -107,8 +107,7 @@ class Payment < ActiveRecord::Base
     # Generates a ChargeAttempt with this record as the reference.
 
     if reference.billing_authorization.nil? && !reference.remote_payment?
-
-      response = billing_gateway.authorize(reference.total_amount_cents, reference.credit_card.token, { customer: reference.credit_card.instance_client.customer_id })
+      response = billing_gateway.authorize(reference.total_amount_cents, reference.credit_card.token, { customer: reference.credit_card.instance_client.customer_id, order_id: reservation.id })
       if response[:error].present?
         raise Billing::Gateway::PaymentAttemptError, "Failed authorization of credit card token of InstanceClient(id=#{reference.owner.instance_clients.first.try(:id)}) - #{response[:error]}"
       else
@@ -143,7 +142,7 @@ class Payment < ActiveRecord::Base
     successful_charge = charge_attempts.successful.first
     return if successful_charge.nil?
 
-    refund = billing_gateway.refund(amount_to_be_refunded, self, successful_charge.response)
+    refund = billing_gateway.refund(amount_to_be_refunded, self, successful_charge)
 
     if refund.success?
       touch(:refunded_at)

@@ -237,7 +237,7 @@ section.reservations {
       }
 
       &.location-address {
-        color: #b8b8b8;
+        color: $gray100;
         margin-bottom: 25px;
       }
     }
@@ -255,7 +255,7 @@ section.reservations {
     }
 
     p {
-      color: #b8b8b8;
+      color: $gray100;
 
       &.error-block {
         color: $red;
@@ -263,9 +263,9 @@ section.reservations {
     }
 
     hr {
-      color: #e6e6e6;
-      background-color: #e6e6e6;
-      border-color: #e6e6e6;
+      color: $gray230;
+      background-color: $gray230;
+      border-color: $gray230;
     }
 
     .selected-dates-summary {
@@ -278,10 +278,77 @@ section.reservations {
     }
 
     .order-summary {
-      border-bottom: 1px solid #e6e6e6;
+      border-bottom: 1px solid $gray230;
 
       .summary-line {
-        border-color: #e6e6e6;
+        border-color: $gray230;
+      }
+    }
+
+    .tabs {
+      width: auto;
+      float: none;
+      list-style: none;
+      position: relative;
+      margin: 10px 0px 0 0px;
+      text-align: left;
+      li {
+        float: left;
+      }
+      input[type="radio"] {
+        display:none;
+      }
+      label.tab {
+        display: inline-block;
+        padding: 13px 21px !important;
+        border-radius: 2px 2px 0 0;
+        font-size: 20px;
+        font-weight: normal;
+        cursor: pointer;
+        position: relative;
+        top: 4px;
+        white-space: nowrap;
+        @include transition(all 0.2s ease-in-out);
+      }
+
+      .tab2 label {
+        position: absolute;
+        left: 130px;
+        top: 0px;
+      }
+
+      .tab-content{
+        z-index: 2;
+        display: none;
+        overflow: hidden;
+        width: 100%;
+        font-size: 17px;
+        line-height: 25px;
+
+        .confirm-reservations {
+          background-color: $dnm_white;
+          color: $gray100;
+          margin-bottom: 0px;
+          margin-top: 0px;
+          padding: 5px 0 15px 0;
+        }
+        #braintree-paypal-loggedin {
+          max-width: 100% !important;
+          border-bottom: 1px solid $gray230 !important;
+          border-top: 0px !important;
+        }
+      }
+
+      [id^="tab"]:checked + label {
+        top: 1px;
+        padding-top: 17px;
+        border: 1px solid $gray230;
+        border-bottom: 0px;
+        background-color: $dnm_white;
+      }
+
+      [id^="tab"]:checked ~ [id^="tab-content"] {
+        display: block;
       }
     }
 

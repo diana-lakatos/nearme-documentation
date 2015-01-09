@@ -237,6 +237,7 @@ en:
   reservations:
     charge_after_confirmation: "Your card will not be charged until the booking is confirmed."
     manually_confirm: "This %{lessor} manually confirms all bookings."
+    paypal_and_cc_charge_after_confirmation: "Your card or PayPal will not be charged until the booking is confirmed."
     cancellation_time: "You have up to %{time} hours before the booking takes place to cancel."
     no_cancellation_time: "You can cancel before the first day."
     cancellation_fee: "The penalty fee for cancelling is %{fee}%. Service fee is not refunded."

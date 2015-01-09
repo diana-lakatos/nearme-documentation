@@ -4,7 +4,7 @@ class Billing::Gateway::Processor::Incoming::SagePay < Billing::Gateway::Process
     @gateway = ActiveMerchant::Billing::SagePayGateway.new(settings)
   end
 
-  def refund_identification(charge_response)
-    
+  def refund_identification(charge)
+
   end
 end

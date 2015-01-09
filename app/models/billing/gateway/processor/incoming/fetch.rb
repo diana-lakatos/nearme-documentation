@@ -6,7 +6,7 @@ class Billing::Gateway::Processor::Incoming::Fetch < Billing::Gateway::Processor
     ['NZ']
   end
 
-  def self.supported_currencies
+  def supported_currencies
     ["NZD"]
   end
 

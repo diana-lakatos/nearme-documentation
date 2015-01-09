@@ -4,7 +4,7 @@ class Billing::Gateway::Processor::Incoming::Worldpay < Billing::Gateway::Proces
     @gateway = ActiveMerchant::Billing::WorldpayGateway.new(settings)
   end
 
-  def refund_identification(charge_response)
-    
+  def refund_identification(charge)
+
   end
 end

@@ -72,6 +72,7 @@ gem 'stripe'
 gem 'paypal-sdk-rest'
 gem 'paypal-sdk-adaptivepayments'
 gem 'balanced'
+gem 'braintree'
 gem 'friendly_id', '~> 5.0.4'
 gem "non-stupid-digest-assets"
 gem 'asset_sync'

@@ -12,6 +12,7 @@ class Reservation < ActiveRecord::Base
   PAYMENT_METHODS = {
     :credit_card => 'credit_card',
     :manual      => 'manual',
+    :nonce       => 'nonce',
     :remote      => 'remote',
     :free        => 'free'
   }
@@ -332,8 +333,16 @@ class Reservation < ActiveRecord::Base
     successful_payment_amount_cents - total_amount_cents
   end
 
+  def active_merchant_payment?
+    credit_card_payment? || nonce_payment?
+  end
+
   def credit_card_payment?
     payment_method == Reservation::PAYMENT_METHODS[:credit_card]
+  end
+
+  def nonce_payment?
+    payment_method == Reservation::PAYMENT_METHODS[:nonce]
   end
 
   def manual_payment?
@@ -384,7 +393,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def attempt_payment_refund(counter = 0)
-    return if !(credit_card_payment? && paid?)
+    return if !(active_merchant_payment? && paid?)
     reservation_charge = reservation_charges.paid.first
     if reservation_charge.nil?
       BackgroundIssueLogger.log_issue("[reservation refund] Unexpected state", "support@desksnear.me", "Reservation id: #{self.id}. It's marked as paid via credit card but reservation_charge has not been created.")
@@ -402,9 +411,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def attempt_payment_capture
-    return if manual_payment? || remote_payment? || free? || paid?
-    return if !confirmed?
-
+    return if !active_merchant_payment? || paid? || !confirmed?
     generate_reservation_charge
   end
 
@@ -473,7 +480,7 @@ class Reservation < ActiveRecord::Base
 
     def set_costs
       self.subtotal_amount_cents = price_calculator.price.try(:cents)
-      if credit_card_payment?
+      if active_merchant_payment?
         self.service_fee_amount_guest_cents = service_fee_calculator.service_fee_guest.try(:cents)
         self.service_fee_amount_host_cents = service_fee_calculator.service_fee_host.try(:cents)
       else
