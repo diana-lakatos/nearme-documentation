@@ -44,6 +44,10 @@ class Dashboard::ProductsController < Dashboard::BaseController
 
   private
 
+  def location_after_save
+    dashboard_products_path
+  end
+
   def find_product
     @product = @company.products.with_deleted.friendly.find(params[:product_id] || params[:id])
   end
