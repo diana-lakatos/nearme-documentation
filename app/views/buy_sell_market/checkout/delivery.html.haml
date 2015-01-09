@@ -1,33 +1,34 @@
-.page-wrapper
-  = render 'header'
+.checkout-wizard
+  .page-wrapper
+    = render 'header'
 
-  = simple_form_for @order, url: wizard_path do |f|
-    %section.checkout-form
-      .container-fluid
-        %h2 Choose Your Shipping Method
-        = f.fields_for :shipments do |ship_form|
-          .shipping-details
-            .row-fluid
-              .span5.item-list
-                %p.heading= t 'buy_sell_market.checkout.labels.item'
-                - ship_form.object.manifest.each do |item|
-                  .row-fluid
-                    .span5= item.line_item.decorate.image('_blank')
-                    .span7
-                      %p= item.variant.name
-                      %p= item.line_item.decorate.price
-                      %p #{t('buy_sell_market.products.labels.qty')} #{item.quantity}
+    = simple_form_for @order, url: wizard_path do |f|
+      %section.checkout-form
+        .container-fluid
+          %h2 Choose Your Shipping Method
+          = f.fields_for :shipments do |ship_form|
+            .shipping-details
+              .row-fluid
+                .span5.item-list
+                  %p.heading= t 'buy_sell_market.checkout.labels.item'
+                  - ship_form.object.manifest.each do |item|
+                    .row-fluid
+                      .span5= item.line_item.decorate.image('_blank')
+                      .span7
+                        %p= item.variant.name
+                        %p= item.line_item.decorate.price
+                        %p #{t('buy_sell_market.products.labels.qty')} #{item.quantity}
 
-              .span7.shipping-options
-                %p.heading= t 'buy_sell_market.checkout.labels.shipping_method2'
-                - ship_form.object.shipping_rates.each do |rate|
-                  .row-fluid.radio-select
-                    = ship_form.radio_button :selected_shipping_rate_id, rate.id
-                    %p
-                      %span.shipping-price= rate.display_cost
-                      = rate.name
+                .span7.shipping-options
+                  %p.heading= t 'buy_sell_market.checkout.labels.shipping_method2'
+                  - ship_form.object.shipping_rates.each do |rate|
+                    .row-fluid.radio-select
+                      = ship_form.radio_button :selected_shipping_rate_id, rate.id
+                      %p
+                        %span.shipping-price= rate.display_cost
+                        = rate.name
 
-    = render partial: 'checkout_buttons', locals: { form: f }
+      = render partial: 'checkout_buttons', locals: { form: f }
 
 -#.row-fluid
 -#  .span12.box

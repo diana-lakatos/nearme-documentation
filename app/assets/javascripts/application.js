@@ -91,7 +91,7 @@ window.DNM = {
 
   initializeCustomSelects: function(container){
     container.find('select').not('.time-wrapper select, .custom-select, .recurring_select').customSelect();
-    container.find('.customSelect').append('<i class="custom-select-dropdown-icon ico-chevron-down"></i>').closest('.controls').css({'position': 'relative'});
+    container.find('.customSelect').not('.checkout-select').append('<i class="custom-select-dropdown-icon ico-chevron-down"></i>').closest('.controls').css({'position': 'relative'});
     container.find('.customSelect').siblings('select').css({'margin': '0px', 'z-index': 1 });
 
     container.find('.custom-select').chosen()

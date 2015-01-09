@@ -87,7 +87,7 @@ class BuySellMarket::CheckoutController < ApplicationController
     elsif @order.update_from_params(params, permitted_checkout_attributes)
 
       if step == :address
-        save_user_addresses if params[:order][:save_billing_address]
+        save_user_addresses # if params[:order][:save_billing_address] <- No checkbox in new UI
         set_countries_states
       end
 
@@ -115,7 +115,7 @@ class BuySellMarket::CheckoutController < ApplicationController
   private
 
   def set_theme
-    @theme_name = 'checkout-theme'
+    @theme_name = 'buy-sell-theme'
     @render_content_outside_container = true
   end
 
