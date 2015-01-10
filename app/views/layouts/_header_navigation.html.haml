@@ -40,7 +40,7 @@
 
         - if platform_context.white_label_company_user?(current_user) && current_user.has_any_active_listings
           %li
-            = link_to main_app.manage_locations_path, class: 'nav-link dropdown-toggle' do
+            = link_to main_app.dashboard_transactable_type_transactables_path(TransactableType.first), class: 'nav-link dropdown-toggle' do
               %span Manage #{platform_context.bookable_noun.pluralize}
         - if buyable?
           - if current_user.registration_completed?
@@ -59,7 +59,7 @@
             = link_to main_app.support_requests_for_quotes_path, class: 'nav-link dropdown-toggle' do
               %span= "#{t('reservations.rfq_menu_text')}"
         %li
-          = link_to main_app.edit_user_registration_path, class: 'nav-link dropdown-toggle' do
+          = link_to '/dashboard/edit_profile', class: 'nav-link dropdown-toggle' do
             %span Account
         %li
           = link_to main_app.destroy_user_session_path, :method => :delete, class: 'nav-link dropdown-toggle', :data => {:user => current_user.first_name } do
@@ -67,7 +67,7 @@
 
     %li.divider-vertical
     %li
-      = link_to main_app.user_messages_path, class: 'nav-link' do
+      = link_to main_app.dashboard_user_messages_path, class: 'nav-link' do
         %span.text Messages
         %span.icon.ico-mail
         - if current_user.unread_user_message_threads_count_for(platform_context.instance) > 0

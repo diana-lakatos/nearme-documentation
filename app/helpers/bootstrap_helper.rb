@@ -3,7 +3,7 @@ module BootstrapHelper
     content = capture(&block)
     content_tag :div, id: options[:id], class: "modal fade in", role: "dialog", tabindex: '-1', :"aria-hidden" => "true", data: {show: options[:autoload]} do
       content_tag :div, class: "modal-dialog" do
-        content_tag :div, class: "modal-content" do
+        content_tag :div, class: options[:bs2] ? "modal-body" : "modal-content" do
           modal_header(header, options) + content_tag(:div, content, {class: "modal-body clearfix"})
         end
       end

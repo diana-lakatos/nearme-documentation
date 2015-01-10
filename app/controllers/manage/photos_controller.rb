@@ -59,6 +59,9 @@ class Manage::PhotosController < Manage::BaseController
     elsif params[:listing]
       photo_params = params[:listing]
       @listing = current_user.listings.find(params[:listing][:id]) if params[:listing][:id].present?
+    elsif params[:transactable]
+      photo_params = params[:transactable]
+      @listing = current_user.listings.find(params[:transactable][:id]) if params[:transactable][:id].present?
     end
     @image_url = photo_params[:photos_attributes]["0"][:image]
   end

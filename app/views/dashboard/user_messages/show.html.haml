@@ -1,0 +1,17 @@
+.dash-page
+  .dash-head.clearfix
+    %p Conversations with #{@user_messages.first.author_with_deleted.first_name}
+  .dash-body.thread
+    - @user_messages.each do |user_message|
+      = render 'user_message_for_show', user_message: user_message
+
+    .message.striped.clearfix
+      - if @displayed_user_message.available_for_reply?
+        = simple_form_for @user_message, url: @displayed_user_message.create_path(@user_message) do |f|
+          = f.hidden_field :replying_to_id
+          - if @user_message.errors.present?
+            = f.error :body
+          = f.text_area :body
+          = f.submit "Send", class: "btn blue pull-right"
+      - else
+        You can no longer send messages regarding this context, as it has been deleted.

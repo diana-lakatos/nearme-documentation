@@ -70,7 +70,7 @@ class RegistrationsController < Devise::RegistrationsController
     @country = current_user.country_name
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
     build_approval_request_for_object(current_user) unless current_user.is_trusted?
-    super
+    render :edit, layout: 'dashboard'
   end
 
   def show
@@ -89,7 +89,7 @@ class RegistrationsController < Devise::RegistrationsController
       set_flash_message :success, :updated
       sign_in(resource, :bypass => true)
       event_tracker.updated_profile_information(@user)
-      redirect_to :action => 'edit'
+      redirect_to '/dashboard/edit_profile'
     else
       @country = resource.country_name
       render :edit

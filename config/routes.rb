@@ -352,6 +352,7 @@ DesksnearMe::Application.routes.draw do
     delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
     get "users/:id", :to => "registrations#show", :as => "profile"
     get "users/unsubscribe/:signature", :to => "registrations#unsubscribe", :as => "unsubscribe"
+    get "dashboard/edit_profile", :to => "registrations#edit"
 
     match "users/store_correct_ip", :to => "sessions#store_correct_ip", :as => "store_correct_ip", via: [:patch, :put]
 
@@ -400,14 +401,8 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
-  resources :user_messages, only: [:index] do
-    collection do
-      get :archived
-    end
-  end
-
   resources :listings, :users, :reservations, :products do
-    resources :user_messages, except: [:index] do
+    resources :user_messages, controller: "dashboard/user_messages", except: [:index] do
       patch :archive
       put :archive
     end
@@ -415,6 +410,13 @@ DesksnearMe::Application.routes.draw do
 
   namespace :dashboard do
     resources :companies, :only => [:edit, :update, :show]
+    resources :locations
+    resources :user_messages, only: [:index, :show] do
+      collection do
+        get :archived
+      end
+    end
+
     resources :orders, only: [:index, :show]
     resources :orders_received, except: [:edit] do
       member do
@@ -436,6 +438,9 @@ DesksnearMe::Application.routes.draw do
       end
     end
     resources :products
+    resources :transactable_types do
+      resources :transactables
+    end
     resources :users, :except => [:edit, :update]
     resources :waiver_agreement_templates, only: [:index, :edit, :new, :update, :create, :destroy]
     resources :white_labels, :only => [:edit, :update, :show]

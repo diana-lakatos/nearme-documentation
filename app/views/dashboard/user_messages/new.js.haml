@@ -1,0 +1,3 @@
+$('#modal-add-message').remove()
+$("body").append('#{escape_javascript( render 'form')}');
+$('#modal-add-message').modal('show')

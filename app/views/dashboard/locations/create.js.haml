@@ -1,0 +1,6 @@
+
+$('#modal-add-location').modal('hide')
+$('#locations_list tbody').append('#{escape_javascript( render "location", object: @location )}');
+$('.container.page-wrapper').prepend('#{escape_javascript( render 'shared/bootstrap_flash_messages')}');
+
+- flash.discard

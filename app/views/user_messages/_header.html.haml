@@ -1,9 +1,0 @@
-%header
-  .button-links
-    %ul
-      %li
-        = messages.user_message_navigation_link :index, params[:action] do
-          %span= t('user_messages.inbox', count: current_user.unread_user_message_threads_count_for(platform_context.instance))
-      %li
-        = messages.user_message_navigation_link :archived, params[:action] do
-          %span Archived

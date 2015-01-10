@@ -46,6 +46,8 @@
 //= require_tree ./sections
 //
 //= require ./vendor/bootstrap-modal-fullscreen
+//= require bootstrap-switch
+
 window.DNM = {
   UI: {},
   initialize : function() {
@@ -54,7 +56,7 @@ window.DNM = {
     this.initializeModals();
     this.initializeBootstrap();
     this.initializeTooltips();
-    // this.initializeCustomSelects($('body'));
+    this.initializeCustomSelects($('body'));
     this.initializeCustomInputs();
     this.initializeBrowsersSpecificCode();
     this.centerSearchBoxOnHomePage();
@@ -67,6 +69,7 @@ window.DNM = {
 
   initializeBootstrap: function() {
     $('.selectpicker').selectpicker();
+    $('.switch input:visible')['bootstrapSwitch']();
   },
 
   initializeCustomInputs: function() {
@@ -97,7 +100,7 @@ window.DNM = {
   },
 
   initializeCustomSelects: function(container){
-    container.find('select').not('.time-wrapper select, .custom-select, .recurring_select').customSelect();
+    container.find('select').not('.time-wrapper select, .custom-select, .recurring_select, .selectpicker').customSelect();
     container.find('.customSelect').append('<i class="custom-select-dropdown-icon ico-chevron-down"></i>').closest('.controls').css({'position': 'relative'});
     container.find('.customSelect').siblings('select').css({'margin': '0px', 'z-index': 1 });
 

@@ -78,6 +78,7 @@ gem "non-stupid-digest-assets"
 gem 'asset_sync'
 gem 'sass-rails', '~> 4.0.0'
 gem 'bootstrap-sass', '~> 2.3.1.0'
+gem "bootstrap-switch-rails"
 gem 'chronic', '~> 0.9.1'
 gem 'jcrop-rails', github: 'bukalapak/jcrop-rails'
 
