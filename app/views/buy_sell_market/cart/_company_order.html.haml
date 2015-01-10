@@ -2,7 +2,7 @@
   .list-head.clearfix
     = link_to cart_clear_all_path(order.id), method: :delete, class: 'clear-all' do
       %p= t 'buy_sell_market.cart.buttons.clear_all'
-      = image_tag 'themes/cart_theme/x.png'
+      = image_tag 'themes/buy_sell/x.png'
 
     %p
       = t('buy_sell_market.cart.labels.order_from')
@@ -18,5 +18,5 @@
 .checkout
   = link_to order_checkout_path(order, 'address') do
     .btn.blue
-      = image_tag 'themes/cart_theme/arrow-right.png'
+      = image_tag 'themes/buy_sell/arrow-right.png'
       = t('buy_sell_market.cart.buttons.checkout')

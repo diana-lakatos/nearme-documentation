@@ -343,7 +343,7 @@ nav li.active a, .mobile-nav .nav li.active a {
 .search-row input.search {
   width: 250px;
   float: right;
-  background:#fff url(images/search.png) right no-repeat;
+  background:#fff image-url('themes/buy_sell/search.png') right no-repeat;
 }
 
 /*===== LISTINGS =====*/
@@ -407,7 +407,7 @@ form input[type="text"], form textarea {
    color: $color-placeholder;
 }
 
-:-ms-input-placeholder {  
+:-ms-input-placeholder {
    color: $color-placeholder;
 }
 

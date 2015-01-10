@@ -30,7 +30,7 @@
           - unless hidden.include?(:favorite)
             %a{href: '#'}
               .btn.gray
-                = image_tag 'themes/product_theme/heart-gray.png', class: 'social-icon'
+                = image_tag 'themes/buy_sell/heart-gray.png', class: 'social-icon'
                 = t 'buy_sell_market.products.buttons.favorite'
           = render partial: 'social_buttons', locals: { product: @product }
 
@@ -87,7 +87,7 @@
             .review
               .row-fluid
                 .span2
-                  = image_tag 'themes/product_theme/profile-pic.png'
+                  = image_tag 'themes/buy_sell/profile-pic.png'
                   %p Angela
                 .span10
                   .rating

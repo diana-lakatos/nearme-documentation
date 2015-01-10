@@ -19,7 +19,7 @@
               = p.filepicker_field :remote_image_url, class: 'hidden', onchange: 'boarding_form.processImage(event, $(this).parent())'
               = p.label :remote_image_url, class: "photo-box active", onclick: "$(this).prev().trigger('click')" do
                 .photo-select
-                  =image_tag("themes/product_theme/icon-cross.png")
+                  =image_tag("themes/buy_sell/icon-cross.png")
                   Add Photo
           - else
             .photo-box
