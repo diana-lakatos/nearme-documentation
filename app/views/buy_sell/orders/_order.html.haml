@@ -47,13 +47,13 @@
 
             - if manage
               .order-tracking
-                = image_tag 'themes/orders_theme/x-red.png'
+                = image_tag 'themes/buy_sell/x-red.png'
                 %p.uncomfirmed Order not accepted
               .order-tracking
-                = image_tag 'themes/orders_theme/x-red.png'
+                = image_tag 'themes/buy_sell/x-red.png'
                 %p.uncomfirmed Payment not accepted
               .order-tracking
-                = image_tag 'themes/orders_theme/green-check.png'
+                = image_tag 'themes/buy_sell/green-check.png'
                 %p.comfirmed Shipped
 
       - order.line_items.each_with_index do |item, index|
