@@ -15,18 +15,18 @@ module BuySellMarket::WillPaginateLinkRenderer
       if page
         tag(:li, link(text, page), class: classname)
       else
-        tag(:li, text, class: classname + ' disabled')
+        tag(:li, "<a>#{text}</a>", class: classname + ' disabled')
       end
     end
 
     def previous_page
       num = @collection.current_page > 1 && @collection.current_page - 1
-      previous_or_next_page(num, '', 'previous_page') # TODO Image
+      previous_or_next_page(num, "<img src='#{ActionController::Base.helpers.asset_path('themes/buy_sell/pagination-left.png')}'/>", 'previous_page')
     end
 
     def next_page
       num = @collection.current_page < total_pages && @collection.current_page + 1
-      previous_or_next_page(num, '', 'next_page') # TODO Image
+      previous_or_next_page(num, "<img src='#{ActionController::Base.helpers.asset_path('themes/buy_sell/pagination-right.png')}'/>", 'next_page')
     end
 
     def html_container(html)
