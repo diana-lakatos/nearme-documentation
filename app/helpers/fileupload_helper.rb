@@ -29,7 +29,7 @@ module FileuploadHelper
   def photo_label(form, input)
     form.label input, class: 'photo-box active' do
       content_tag :div, class: 'photo-select' do
-        image_tag("themes/product_theme/icon-cross.png") + "Add Photo"
+        image_tag("themes/buy_sell/icon-cross.png") + "Add Photo"
       end
     end
   end
