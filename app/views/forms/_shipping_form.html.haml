@@ -15,7 +15,7 @@
         = f.input :name, wrapper: :bs3_simple,  placeholder: "Enter a name for your profile", label: "New Profile Name", wrapper_html: {class: 'col-md-12 '}
       .row
         .col-md-6
-          = f.input :processing_time, wrapper: :bs3_simple, placeholder: "Ready to ship in..."
+          = f.input :processing_time, wrapper: :bs3_simple, placeholder: "Ready to ship in...", label: 'Processing time (in days)'
         .col-md-1
         .col-md-6
           =f.fields_for :calculator do |fc|

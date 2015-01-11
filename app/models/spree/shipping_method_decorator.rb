@@ -6,6 +6,9 @@ Spree::ShippingMethod.class_eval do
 
   accepts_nested_attributes_for :zones
 
+  validates :processing_time, presence: true
+  validates :processing_time, numericality: { greater_than_or_equal_to: 0 }
+
   def calculator_attributes=(attributes)
     self.calculator ||= Spree::Calculator::Shipping::FlatRate.new()
     self.calculator.preferred_amount = attributes[:preferred_amount]

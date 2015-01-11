@@ -3,7 +3,6 @@ class Dashboard::ProductsController < Dashboard::BaseController
 
   def index
     @products = @company.products.paginate(page: params[:page], per_page: 20)
-    @theme_name = 'product-theme'
   end
 
   def new

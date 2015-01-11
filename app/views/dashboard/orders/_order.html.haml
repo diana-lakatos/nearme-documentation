@@ -1,13 +1,13 @@
 - hidden = [:review, :feedback] # TODO: Remove when implemented
 
-- if params[:action].include?('received')
+- if params[:controller].include?('received')
   - manage = true
   - feedback_caption = t('orders.buttons.buyer_feedback')
-  - details_url = dashboard_order_path(order)
+  - details_url = dashboard_orders_received_path(order)
 - else
   - manage = false
   - feedback_caption = t('orders.buttons.seller_feedback')
-  - details_url = order_path(order)
+  - details_url = dashboard_order_path(order)
 
 .order
   .order-head
@@ -24,20 +24,26 @@
       .col-md-3
         %p #{t('orders.labels.order')} ##{order.number}
         = link_to t('orders.buttons.order_details'), details_url
+
   .order-body
     .order-status
-      %h3= order.status # TODO
-      %p #{t 'orders.labels.est_delivery'} Tuesday, November 11, 2014 # TODO
+      %h3= order.status
+      - if order.shipped?
+        %p
+          #{t 'orders.labels.est_delivery'} #{order.estimated_delivery}
     .row
       - item = order.line_items.first
 
       .row
         .order-item
-          = render 'line_item', item: item
+          = render 'dashboard/orders/line_item', item: item
 
           .col-md-4.order-actions
-            = link_to '#' do
-              %col-md-.btn.blue= t'orders.buttons.track' # TODO
+            -# Jaromir: Disabled due to the missing UI on product listing
+            -#- if order.shipped? && !order.shipments.first.tracking
+            -#  = link_to order.shipments.first.tracking, target: '_blank' do
+            -#    %col-md-.btn.blue= t'orders.buttons.track'
+
             - unless hidden.include?(:feedback)
               = link_to '#' do
                 %col-md-.btn.gray= feedback_caption
@@ -46,24 +52,41 @@
                 %col-md-.btn.gray= t 'orders.buttons.product_review'
 
             - if manage
-              .order-tracking
-                = image_tag 'themes/buy_sell/x-red.png'
-                %p.uncomfirmed Order not accepted
-              .order-tracking
-                = image_tag 'themes/buy_sell/x-red.png'
-                %p.uncomfirmed Payment not accepted
-              .order-tracking
-                = image_tag 'themes/buy_sell/green-check.png'
-                %p.comfirmed Shipped
+              - if order.approved?
+                .order-tracking
+                  = image_tag 'themes/buy_sell/green-check.png'
+                  %p.confirmed Order approved
+              - else
+                .order-tracking
+                  = image_tag 'themes/buy_sell/x-red.png'
+                  %p.unconfirmed Order not approved
+
+              - if order.pending_payments.empty?
+                .order-tracking
+                  = image_tag 'themes/buy_sell/green-check.png'
+                  %p.confirmed No payments pending
+              - else
+                .order-tracking
+                  = image_tag 'themes/buy_sell/x-red.png'
+                  %p.unconfirmed Payment not captured
+
+              - if order.shipped?
+                .order-tracking
+                  = image_tag 'themes/buy_sell/green-check.png'
+                  %p.confirmed Shipped
+              - else
+                .order-tracking
+                  = image_tag 'themes/buy_sell/x-red.png'
+                  %p.unconfirmed Not shipped
 
       - order.line_items.each_with_index do |item, index|
         - next if index == 0
         .row
           .additional-item
-            = render 'line_item', item: item
+            = render 'dashboard/orders/line_item', item: item
             .col-md-4
               - unless hidden.include?(:review)
                 = link_to '#' do
-                  %span.btn.gray= t 'orders.buttons.product_review' # TODO
+                  %span.btn.gray= t 'orders.buttons.product_review'
 
 

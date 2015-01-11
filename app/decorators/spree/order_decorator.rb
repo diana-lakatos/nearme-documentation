@@ -13,7 +13,43 @@ class Spree::OrderDecorator < Draper::Decorator
   end
 
   def status
-    'Delivered'
+    state = case object.state
+            when 'canceled'
+              'Canceled'
+            when 'confirm'
+              'Confirmed'
+            when 'complete'
+              'Completed'
+            when 'resumed'
+              'Completed'
+            else
+              'N/A'
+            end
+
+    if object.shipped?
+      state = 'Shipped'
+    end
+
+    state
+  end
+
+  def estimated_delivery
+    result = 'N/A'
+
+    object.shipments.each do |shipment|
+      next unless shipment.state == 'shipped'
+      next if shipment.shipping_method.processing_time.blank?
+
+      processing_time = shipment.shipping_method.processing_time.to_i
+      if processing_time > 0
+        result = I18n.l(shipment.shipped_at + processing_time.days, format: :only_date)
+        break
+      end
+    end
+
+    result
+  # rescue
+  #   'N/A'
   end
 
   def company_name

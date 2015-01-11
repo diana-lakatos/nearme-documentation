@@ -323,11 +323,11 @@ nav li.active a, .mobile-nav .nav li.active a {
   vertical-align: top;
 }
 
-.order-tracking .uncomfirmed {
+.order-tracking .unconfirmed {
   color: #e85c41;
 }
 
-.order-tracking .comfirmed {
+.order-tracking .confirmed {
   color: #5dc988s;
 }
 
@@ -495,6 +495,84 @@ td.delete a {
 
 table a {
   color: $color-blue;
+}
+
+/*===== TABLES ===== */
+table, table.payment-summary {
+  width: 100%;
+}
+
+table.payment-totals {
+  width: 55%;
+  float: right;
+}
+
+.payment-totals td {
+  text-align: right;
+}
+
+.payment-totals .total {
+  font-size: 18px;
+  font-weight: 400;
+  color: #3a3a3a;
+}
+
+.divider {
+  border: 1px solid #d5d5d5;
+  margin: 40px 0;
+}
+
+table.order-header td {
+  vertical-align: top;
+}
+
+.action-row {
+  text-align: right;
+  margin-bottom: 15px;
+}
+
+.action-row .btn {
+  margin-left: 15px;
+}
+
+/*===== PAGINATION =====*/
+
+.pagination {
+  text-align: center;
+  display: inherit;
+}
+
+.pagination ul {
+  box-shadow: none;
+  list-style: none;
+}
+
+.pagination li {
+  display: inline;
+}
+
+.pagination ul li a {
+  background: transparent;
+  border: none;
+  float: inherit;
+  font-size: 18px;
+  padding: 4px 12px;
+}
+
+.pagination img {
+  float: inherit;
+}
+
+.pagination a {
+  color: #5dbded;
+}
+
+.pagination .page-link {
+  padding-top: 10px;
+}
+
+.pagination .page-link.active {
+  color: #000;
 }
 
 /*===== MODALS =====*/
