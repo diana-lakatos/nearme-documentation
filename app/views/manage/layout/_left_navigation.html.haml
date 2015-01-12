@@ -12,8 +12,8 @@
         = link_to 'Shop Details', edit_dashboard_company_path(current_user.companies.first)
       = content_tag :li, class: (params[:controller].include?('products')) ? 'active' : '' do
         = link_to 'Listings', dashboard_products_path
-      %li
-        %a{:href => "#"} Payout
+      = content_tag :li, class: (params[:controller].include?('payouts')) ? 'active' : '' do
+        = link_to 'Payout', edit_dashboard_payouts_path
       %li
         %a{:href => "#"} Payment
       - orders_rceived_active = params[:controller] == ('dashboard/orders_received')
