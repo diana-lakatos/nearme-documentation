@@ -1,8 +1,1 @@
-%div{:class => "control-group #{"error" if f.object.errors.include?(:"#{attribute.name}").present?}"}
-  = f.label :"#{attribute.name}", t("simple_form.labels.#{attribute.label_key}", default: attribute.label), :class => 'control-label'
-  .controls
-    .switch{'data-on-label' => "", 'data-off-label' => ""}
-      = f.check_box :"#{attribute.name}"
-    - if (hint = I18n.translate(attribute.hint_key, default: '').presence || nil).present?
-      %p.help-block
-        = hint
+= f.input :"#{attribute.name}", as: :bootstrap_switch

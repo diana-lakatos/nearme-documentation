@@ -1,11 +1,10 @@
 - title "Edit Profile"
 
-= render :layout => 'registrations/layout/account', :locals => { :active_tab => :account } do
-  .row-fluid
-    .span8.offset2
-      .box
-        %p
-        = render :partial => "registrations/form", :locals => { :url => registration_path(resource_name), :country => @country }
+.dash-page
+  .dash-head.clearfix
+    %p EDIT PROFILE
+  .dash-body
+    = render :partial => "registrations/form", :locals => { :url => registration_path(resource_name), :country => @country }
 
 - content_for :domready do
   $(function() { new EditUserForm() });

@@ -1,0 +1,12 @@
+.locations.row{data: {:location_id => location.id}, class: location_counter > 3 ? 'hidden-location collapse' : '' }
+  .location-select.col-md-7.col-xs-7
+    - if defined?(form)
+      = form.radio_button :location_id, location.id
+    -else
+      = radio_button_tag "transactable[location_id]", location.id
+    %label{:for => ""}= location.name
+  .col-md-5.col-xs-5
+    %span.location-options
+      =link_to "Edit", edit_dashboard_location_path(location), remote: true
+      %span.blue |
+      =link_to "Remove", dashboard_location_path(location), remote: true, method: :delete, confirm: "Are you sure?"

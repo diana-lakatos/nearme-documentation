@@ -2,6 +2,8 @@
 @import "instance_admin/bootstrap";
 @import "instance_admin/bootstrap-theme";
 @import "instance_admin/bootstrap-select";
+@import "bootstrap3-switch";
+
 
 // Select2
 @import "select2";
@@ -15,6 +17,7 @@
 // // Naviagation
 @import "globals/*";
 @import "components/nav";
+
 
 // Dashboard
 @import "dashboard/*";

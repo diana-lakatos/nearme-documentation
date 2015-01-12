@@ -146,6 +146,8 @@ module ApplicationHelper
       'warning'
     when 'error'
       'danger'
+    when 'notice'
+      'info'
     else
       key
     end

@@ -45,6 +45,14 @@ SimpleForm.setup do |config|
     b.use :error, :wrap_with => { :tag => :span, :class => :error }
   end
 
+  config.wrappers :modal do |b|
+    b.use :html5
+    b.use :label
+    b.use :input
+    b.optional :error
+  end
+
+
   config.wrappers :simple do |b|
     b.use :html5
     b.use :placeholder

@@ -1,0 +1,57 @@
+= render :partial => 'approval_requests/form', :locals => { f: f }
+
+- photo_input_name_prefix = "transactable"
+
+= f.hidden_field :transactable_type_id, value: @transactable_type.id
+
+= f.input :enabled, as: :bootstrap_switch
+= f.input :id, :as => :hidden
+
+- @transactable_type.custom_attributes.each do |attribute|
+  - next if platform_context.instance.user_based_marketplace_views? && ( attribute.name == 'quantity' || attribute.name == 'capacity' )
+  = draw_attribute_for_form(attribute, f)
+
+- unless platform_context.instance.listing_amenity_types.count.zero?
+  = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :label => "Amenities", :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select', :multiple => true }
+
+= render partial: "custom_attributes/new_price", locals: { f: f }
+= render :partial => 'availability_rules_form', :locals => { :f => f }
+
+.row
+  .col-md-3
+    = f.label :photos
+  .col-md-9
+    .loading{:style => "display: none"}
+      = image_tag "spinner.gif"
+      %br/
+      .span= t('manage.listings.photos.waiting_for_photo_processing')
+    = file_upload_input_with_label('Photos',
+                                    "#{photo_input_name_prefix}[photos_attributes][0][image]",
+                                    manage_photos_path,
+                                    Photo.new.image.thumbnail_dimensions[:medium],
+                                    "Browse",
+                                    :required => true,
+                                    :error => f.object.errors.include?(:photos).present? ? "Please upload at least one photo." : nil) do
+      - # caches img so it is displayed even for the first photo. Without this, loader icon is not displayed for the first photo
+      .hidden.thumbnail-processing
+        .loading-icon
+      = hidden_field_tag "#{photo_input_name_prefix}", nil, :placeholder => t('ui.photo_uploader.caption'), :id => 'photo-item-input-template', :disabled => true, 'data-number' => 0
+      - unless @photos.nil?
+        - @photos.each_with_index do |photo|
+          .col-md-5
+            = get_fileupload_photo_html(photo.image_url(:medium),
+                                        destroy_space_wizard_photo_path(:id => photo.id),
+                                        edit_manage_photo_path(photo),
+                                        :div,
+                                        id: photo.id) do
+              = text_field_tag "#{photo_input_name_prefix}[photos_attributes][#{photo.id}][caption]", photo.caption, :placeholder => t('ui.photo_uploader.caption')
+              = hidden_field_tag "#{photo_input_name_prefix}[photo_ids][]", photo.id
+              = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{photo.id}][id]", photo.id
+              = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{photo.id}][position]", photo.position, class: 'photo-position-input'
+
+- if @company.waiver_agreement_templates.any?
+  = f.association :waiver_agreement_templates, collection: @company.waiver_agreement_templates.order(:name).pluck(:name, :id), as: :check_boxes
+
+
+- content_for :domready do
+  $(function() { new Dashboard.ListingController($('#listing-form')) });

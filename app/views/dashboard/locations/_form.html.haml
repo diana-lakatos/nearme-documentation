@@ -1,0 +1,7 @@
+= render_modal "Add New Location", { id: "modal-add-location" } do
+  = simple_form_for([:dashboard, @location], html: {id: 'location-form'}, wrapper: :modal, remote: true) do |f|
+    .errors
+    = render :partial => 'location_form', :locals => { :f => f, :location => @location }
+
+    .actions
+      = f.submit 'Save Location', id: 'submit-link', class: "btn blue pull-right"

@@ -36,6 +36,10 @@ a {
   color: $color-blue;
 }
 
+a:hover {
+  text-decoration: none;
+}
+
 p, h1, h2, h3, h4, h5, a, label, td {
   margin: 0;
 }
@@ -63,11 +67,24 @@ ul {
 .customSelect {
   border: solid #d4d4d4 1px;
   border-radius: 3px;
-    background:#fff asset-url('dashboard/arrow-down.png') right no-repeat;
+    background:#fff asset-url("dashboard/arrow-down.png") right no-repeat;
   width: 100%;
   padding: 5px 0 5px 5px;
   font-weight: 300;
   font-size: 14px;
+}
+
+.blue {
+  color: $color-blue;
+}
+
+.divider {
+  border: 1px solid #d5d5d5;
+  margin: 40px 0;
+}
+
+.yellow {
+  color: #fdcc51;
 }
 
 /*===== BUTTONS =====*/
@@ -84,9 +101,18 @@ ul {
   width: 100%;
 }
 
+.btn.half {
+  width: 45%;
+}
+
 .btn.gray {
   background: $color-light-gray;
   color: $color-dark-gray;
+}
+
+.btn.dark-gray {
+  background: $color-dark-gray;
+  color: #fff;
 }
 
 .btn.blue {
@@ -105,6 +131,7 @@ ul {
 
 .submit-bar .btn {
   width: 30%;
+  margin-left: 20px;
 }
 
 .dash-head-btn .btn{
@@ -195,7 +222,7 @@ nav li.active a, .mobile-nav .nav li.active a {
 }
 
 .dash-head a {
-  color: $color-dark-gray;
+  color: #000;
   padding-bottom: 10px;
   font-size: 16px;
 }
@@ -208,6 +235,12 @@ nav li.active a, .mobile-nav .nav li.active a {
 .dash-head {
   padding: 13px 40px;
   background: $color-light-gray;
+  
+  a.delete {
+    color: $color-red;
+    text-decoration: none;
+  }
+
 }
 
 .dash-head p {
@@ -218,6 +251,33 @@ nav li.active a, .mobile-nav .nav li.active a {
 .dash-body {
   background: #fff;
   padding: 20px 50px;
+}
+
+.dash-body-container {
+  width: 50%;
+  margin: 0 auto;
+  
+  img {
+    vertical-align: middle
+  }
+
+  p {
+    vertical-align: middle;
+    display: inline-block;
+    width: 80%;
+    margin-left: 20px;
+  }
+
+}
+
+.dash-page {
+  margin-bottom: 20px;
+}
+
+.bulk-upload {
+  float: right;
+  margin: 7px 15px 0 0;
+  color: $color-blue;
 }
 
 /*===== DASH SUB NAV =====*/
@@ -328,7 +388,38 @@ nav li.active a, .mobile-nav .nav li.active a {
 }
 
 .order-tracking .confirmed {
-  color: #5dc988s;
+  color: #5dc988;
+}
+
+.quantity {
+  vertical-align: top;
+  margin-right: 10px;
+}
+
+.action-row {
+  text-align: right;
+  margin-bottom: 15px;
+}
+
+.action-row .btn {
+  margin-left: 15px;
+}
+
+.orders-body {
+  padding: 20px 100px;
+}
+
+.orders-head {
+  background: #b6b6b6;
+  
+  p {
+    color: #fff;
+  }
+}
+
+/*===== BULK UPLOAD =====*/
+#modal-bulk-upload .modal-body p {
+  margin-bottom: 30px;
 }
 
 /*===== SEARCH ROW =====*/
@@ -343,7 +434,7 @@ nav li.active a, .mobile-nav .nav li.active a {
 .search-row input.search {
   width: 250px;
   float: right;
-  background:#fff image-url('themes/buy_sell/search.png') right no-repeat;
+  background:#fff asset-url("dashboard/search.png") right no-repeat;
 }
 
 /*===== LISTINGS =====*/
@@ -371,6 +462,114 @@ nav li.active a, .mobile-nav .nav li.active a {
   display: block;
   margin-top: 30px;
   font-size: 14px;
+}
+
+.edit-locations {
+
+  .locations.row {
+    margin: 0;
+  }
+
+  .show-more {
+    padding-left: 15px;
+    margin: 10px 0;
+  }
+
+}
+
+.add-new {
+  float: right;
+}
+
+/*===== MESSAGES =====*/
+.customSelect.messages {
+  width: 150px;
+}
+
+.dash-body.inbox {
+  padding: 0;
+
+  .row {
+    margin: 0;
+  }
+
+  span {
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 20px;
+  }
+
+  .message {
+    padding: 25px 50px;
+  }
+
+  .message-title {
+    font-size: 15px;
+    color: #000;
+  }
+
+  .message-action {
+    text-align: center;
+    padding-top: 20px;
+  }
+}
+
+.message.striped {
+  background: #f9f9f9;
+}
+
+.dash-body.thread {
+  padding: 0;
+
+  .row {
+    margin: 0;
+  }
+
+  .message {
+    padding: 25px 50px 40px 50px;
+  }
+
+  .content {
+    padding-left: 20px;
+  }
+
+  p span {
+    color: #aaa;
+  }
+
+  .btn {
+    padding: 8px 70px;
+    margin-top: 20px;
+  }
+
+}
+
+/*===== NOTIFICATIONS =====*/
+.notifications {
+
+  h5 {
+    margin-bottom: 10px;
+  }
+
+  .notification-preference {
+    margin-top: 20px;
+  }
+}
+
+/*===== TRUST AND VERIFICATION =====*/
+.verification {
+  h5 {
+    margin-bottom: 10px;
+  }
+
+  .btn {
+    margin-top: 15px;
+    width: 60%;
+  }
+
+  .col-md-7 {
+    text-align: center;
+  }
 }
 
 /*====== FORMS ===== */
@@ -424,6 +623,61 @@ form input[type="text"], form textarea {
   line-height: 30px;
 }
 
+.radio-label {
+  vertical-align: middle;
+  margin-left: 30px;
+}
+
+input[type=checkbox] {
+  margin-right: 10px;
+}
+
+/*===== BLOG =====*/
+input#enable-blog {
+  margin-right: 15px;
+}
+
+.upload {
+  display: inline-block;
+  width: 125px;
+  text-align: center;
+  padding: 5px 10px;
+  border: solid $color-light-gray 1px;
+  
+  input[type="file"] {
+    display: none;
+  }
+
+  label {
+    display: block;
+  }
+
+  span {
+    display: inline-block;
+    padding-top: 5px;
+    margin-left: 15px;
+  }
+
+}
+
+.upload:hover {
+  cursor: pointer;
+}
+
+#blog-settings .btn, #blog-post .btn {
+  margin-left: 20px;
+}
+
+#blog-publish-date {
+  width: 40%;
+  display: block;
+  background:#fff asset-url("dashboard/arrow-down.png") right no-repeat;
+}
+
+#blog-publish-date:hover {
+  cursor: pointer;
+}
+
 /*===== PHOTO UPLOAD =====*/
 
 .photo-upload .col-md-4 {
@@ -432,7 +686,7 @@ form input[type="text"], form textarea {
 
 .photo-box {
   padding: 50px 0;
-  border: dotted 1px solid #000;
+  border: dotted 1px #000;
   text-align: center;
   border: dashed 1px $color-light-gray;
   width: 100%;
@@ -469,32 +723,76 @@ form input[type="text"], form textarea {
 table {
   width: 100%;
   margin-top: 30px;
+
+  thead {
+    border-bottom: solid $color-light-gray 1px;
+  }
+
+  th {
+    padding-bottom: 20px;
+  }
+
+  tbody tr:nth-child(1) td {
+    padding-top: 20px;
+  }
+
+  th, td {
+    font-size: 16px;
+    font-weight: 300;
+    color: $color-dark-gray;
+  }
+
+  a {
+    color: $color-blue;
+    text-decoration: none;
+  }
+
+  td.delete a {
+    color: #e85c41;
+  }
+
 }
 
-thead {
-  border-bottom: solid $color-light-gray 1px;
+.table>tbody>tr>td {
+  border-top: none;
 }
 
-tbody tr:nth-child(1) td {
-  padding-top: 20px;
+table, table.payment-summary {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-th, td {
-  font-size: 16px;
-  font-weight: 300;
-  color: $color-dark-gray;
+table.payment-totals {
+  width: 55%;
 }
 
-th {
-  padding-bottom: 20px;
+.payment-totals td {
+  text-align: right;
 }
 
-td.delete a {
-  color: #e85c41;
+.payment-totals .total {
+  font-size: 18px;
+  font-weight: 400;
+  color: #3a3a3a;
 }
 
-table a {
-  color: $color-blue;
+.table.orders {
+
+  thead>tr>th {
+    border-bottom: none;
+  }
+
+  thead {
+    border-bottom: none;
+  }
+
+  td {
+    padding: 0 10px;
+  }
+
+  .status {
+    color: #fdcc51;
+  }
 }
 
 /*===== TABLES ===== */
@@ -578,7 +876,7 @@ table.order-header td {
 /*===== MODALS =====*/
 .modal {
   .modal-header {
-    background: $color-blue;
+    background: $color-light-gray;
   }
 
   .modal-title {
@@ -592,19 +890,108 @@ table.order-header td {
     opacity: 1;
   }
 
-  input, textarea {
+  label {
+    display: block;
+  }
+
+  input, textarea, .customSelect {
     margin: 15px 0;
   }
 
   input.email {
-    background: asset-url('dashboard/mail.png') left no-repeat;
+    background: asset-url("dashboard/mail.png") left no-repeat;
     padding-left: 40px;
   }
 
   .btn {
     width: 45%;
+    margin-top: 15px;
   }
 
+  .load-hide {
+    display: none;
+  }
+
+  #add-ach label {
+    width: 100%;
+  }
+
+  .custom-select {
+    width: 100% !important;
+    height: 30px;
+    margin-top: 18px;
+  }
+
+  img {
+    margin: 15px 0;
+  }
+
+  #select-payment .table>tbody>tr>td {
+    padding: 30px 8px;
+    border-top: 1px solid #ddd;
+  }
+}
+
+/*=====POPOVERS=====*/
+.popover-content {
+  padding: 14px 0;
+}
+
+.popover-list {
+  list-style-type: none;
+  
+  li {
+    padding: 5px 24px 5px 14px;
+    width: 100%;
+  }
+
+  li:hover {
+    background-color: #dff2fb;
+  }
+
+  a {
+    color: #000;
+    padding-left: 5px;
+    text-decoration: none;
+  }
+
+}
+
+/*===== DATEPICKER =====*/
+
+#ui-datepicker-div {
+  background: #fff;
+  box-shadow: 5px 6px 25px #727272;
+  width: initial;
+
+  tr:nth-child(1) td {
+    padding-top: 0;
+  }
+  
+  td a, td span, th span {
+    color: #000;
+    font-size: 12px;
+    text-align: center;
+    padding: 7px;
+    font-weight: 200;
+  }
+
+  .ui-datepicker-other-month span {
+    background: #f7f9f9;
+  }
+
+  .ui-icon {
+    width: 15px;
+    background-position: center center;
+  }
+
+  .ui-datepicker-next .ui-icon {
+    background-image: asset-url("dashboard/arrow-right.png");
+  }
+
+  .ui-datepicker-prev .ui-icon {
+    background-image: asset-url("dashboard/arrow-left.png");
+  }
 
 }
 
@@ -639,6 +1026,33 @@ table.order-header td {
   .mobile-nav {
     display: block;
   }
+
+  .dash-body.inbox .message {
+    padding: 25px 20px;
+  }
+
+  .dash-body.inbox .col-md-7 {
+    padding-top: 30px;
+  }
+
+  .dash-body.inbox .message-action {
+    text-align: left;
+  }
+
+  .edit-locations .col-md-6 {
+    padding: 0;
+    margin-top: 10px;
+  }
+
+  .add-new {
+    height: 25px;
+    float: none;
+  }
+
+  .add-new a {
+    float: right;
+  }
+
 }
 
 @media (max-width: 767px) {
@@ -707,6 +1121,23 @@ table.order-header td {
   .order-actions {
     padding: 0;
     margin-top: 20px;
+  }
+
+  .dash-body.inbox .message {
+    padding: 25px 20px;
+  }
+
+  .dash-body.inbox .col-md-7 {
+    padding-top: 30px;
+  }
+
+  .dash-body.inbox .message-action {
+    text-align: left;
+  }
+
+  .notifications label {
+    font-size: 10px;
+    vertical-align: middle;
   }
 
 }

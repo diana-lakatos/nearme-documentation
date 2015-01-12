@@ -44,18 +44,25 @@
 //= require_tree ./sections
 //
 //= require ./vendor/bootstrap-modal-fullscreen
+//= require bootstrap-switch
+
 window.DNM = {
   UI: {},
   initialize : function() {
     this.initializeAjaxCSRF();
     this.initializeComponents();
     this.initializeModals();
+    this.initializeBootstrapSwitch();
     this.initializeTooltips();
     this.initializeCustomSelects($('body'));
     this.initializeCustomInputs();
     this.initializeBrowsersSpecificCode();
     this.centerSearchBoxOnHomePage();
     this.setFooterPushHeight();
+  },
+
+  initializeBootstrapSwitch: function() {
+    $('.switch input:visible')['bootstrapSwitch']();
   },
 
   initializeModals: function() {
