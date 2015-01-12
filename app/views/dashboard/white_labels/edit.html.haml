@@ -18,7 +18,7 @@
           = domain_form.input :name, :as => :limited_string, :limit => 50, :label => "Your Domain", :placeholder => 'example.com', :required => true
           = domain_form.input :google_analytics_tracking_code
 
-        = f.simple_fields_for :theme, (f.object.theme || Theme.new) do |theme_form|
+        = f.simple_fields_for :theme, (f.object.theme || f.object.build_theme) do |theme_form|
           = theme_form.check_box :white_label_enabled, :checked => f.object.white_label_enabled, 'data-white-label-settings' => true, :class => 'hidden'
 
           = render :partial => 'themes/theme', :locals => { :f => theme_form }

@@ -21,7 +21,7 @@ class Photo < ActiveRecord::Base
   validates_length_of :caption, :maximum => 120, :allow_blank => true
 
   extend CarrierWave::SourceProcessing
-  mount_uploader :image, PhotoUploader, :use_inkfilepicker => true
+  mount_uploader :image, PhotoUploader, use_inkfilepicker: true
 
   # Don't delete the photo from s3
   skip_callback :commit, :after, :remove_image!

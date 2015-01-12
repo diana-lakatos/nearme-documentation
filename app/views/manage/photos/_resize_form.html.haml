@@ -1,15 +1,16 @@
 %header
   %h2== Crop And Rotate
-.row-fluid
-  .span10.offset1
+.row
+  .col-md-10.col-md-offset-1
     = form_tag form_url, :method => :put, :id => 'crop-form', 'data-id' => object.model.id do
       %a.badge.rotate-photo.photo-action{href: '#'}
-        %i.icon-repeat.icon-white
+        Rotate
       = image_tag object_url, 'data-image' => true,
         data: { rotate: object.transformation_rotate, crop: object.transformation_crop,
         original_dimensions: object.original_dimensions}
-      .actions
-        = submit_tag 'Process'
+
+      .submit-bar
+        = submit_tag "Process", class: "btn medium blue"
 
 :javascript
   $(function() { new Photo.Manipulator($('#crop-form'), { aspectRatio: #{object.class::ASPECT_RATIO} }) });

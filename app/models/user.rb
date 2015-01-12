@@ -26,6 +26,7 @@ class User < ActiveRecord::Base
   has_many :recurring_bookings, :foreign_key => 'owner_id'
   has_many :listings, :through => :locations, class_name: 'Transactable', :inverse_of => :creator
   has_many :photos, :foreign_key => 'creator_id', :inverse_of => :creator
+  has_many :products_images, :foreign_key => 'uploader_id', class_name: 'Spree::Image'
   has_many :listing_reservations, :through => :listings, :source => :reservations, :inverse_of => :creator
   has_many :listing_recurring_bookings, :through => :listings, :source => :recurring_bookings, :inverse_of => :creator
   has_many :relationships, :class_name => "UserRelationship", :foreign_key => 'follower_id', :dependent => :destroy
