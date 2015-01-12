@@ -1,9 +1,22 @@
-- render_content_outside_container!
-
 .dash-head.clearfix
   %p #{t('buy_sell_market.checkout.labels.order_details')} - #{@order.number}
 
 .dash-body
+  .action-row
+    - if !@order.approved? && !@order.canceled?
+      = link_to approve_dashboard_orders_received_path(@order), confirm: 'Are you sure you want to approve this order?' do
+        .btn.blue Approve Order
+
+    - if @order.allow_cancel? && @order.payment_state != 'paid'
+      = link_to cancel_dashboard_orders_received_path(@order), confirm: 'Are you sure you want to cancel this order?' do
+        .btn.red Cancel Order
+
+    - if @order.canceled?
+      = link_to resume_dashboard_orders_received_path(@order), confirm: 'Are you sure you want to resume this order?' do
+        .btn.blue Resume Order
+
+  .divider
+
   %table.order-header
     %thead
       %th= t 'buy_sell_market.checkout.labels.billing_address'
@@ -28,39 +41,72 @@
           - if @charge_info && @charge_info.response['card']
             #{t('buy_sell_market.checkout.labels.ending_in')} #{@charge_info.response['card']['last4']}
             #{@charge_info.response['card']['name']}
-          - else
-            = t 'buy_sell_market.checkout.labels.na'
+
+          - unless @order.canceled?
+            - @order.payments.valid.each do |payment|
+              - if payment.completed?
+                .btn.gray.disabled Payment captured
+              - else
+                = link_to capture_dashboard_orders_received_payment_path(@order.number, payment.id),
+                            confirm: 'Are you sure you want to capture payment for this order?' do
+                  .btn.blue Capture
+
 
       %tr
         %td= @order.bill_address.address1
         %td= @order.ship_address.address1
         %td
         %td
+
       %tr
         %td= @order.bill_address.address2
         %td= @order.ship_address.address2
         %td
         %td
+
       %tr
         %td= @order.bill_address.city
         %td= @order.ship_address.city
         %td
         %td
+
       %tr
         %td= @order.bill_address.country.name
         %td= @order.ship_address.country.name
         %td
         %td
+
       %tr
         %td= @order.bill_address.state.abbr
         %td= @order.ship_address.state.abbr
         %td
         %td
+
       %tr
         %td= @order.bill_address.zipcode
         %td= @order.ship_address.zipcode
         %td
         %td
+
+  .divider
+
+  %h2 Shipping
+  %table.payment-summary
+    %thead
+      %tr
+        %th NUMBER
+        %th STATE
+        %th STOCK LOCATION
+    %tbody
+      - @order.shipments.each do |shipment|
+        %tr
+          %td= shipment.number
+          %td= shipment.state
+          %td= shipment.stock_location.name
+          %td
+            - if shipment.ready?
+              = link_to ship_dashboard_orders_received_shipment_path(@order.number, shipment), confirm: 'Are you sure you want to ship this package?' do
+                .btn.blue Mark as Shipped
 
   .divider
 
@@ -73,7 +119,7 @@
       %th= t 'buy_sell_market.checkout.labels.total'
 
     %tbody
-      - @order.line_items.decorate.each do |item|
+      - @order.line_items.each do |item|
         %tr
           %td= item.name_with_link
           %td= item.price
@@ -82,7 +128,7 @@
 
   .divider
 
-  %table.payment-totals
+  %table.payment-totals{align: 'right'}
     %tr
       %td= t 'buy_sell_market.checkout.labels.subtotal'
       %td= humanized_money_with_cents_and_symbol @order.monetize(@order.item_total)

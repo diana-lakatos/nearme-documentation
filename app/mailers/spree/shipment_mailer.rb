@@ -10,7 +10,7 @@ module Spree
     private
 
     def from_address(shipment)
-      shipment.order.company.creator.email
+      shipment.order.company.users.first.email
     end
   end
 end

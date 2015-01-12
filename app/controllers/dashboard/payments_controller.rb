@@ -1,6 +1,6 @@
-class Manage::BuySell::PaymentsController < Manage::BuySell::BaseController
+class Dashboard::PaymentsController < Dashboard::BaseController
   def capture
-    @order = @company.orders.find_by_number(params[:order_id])
+    @order = @company.orders.find_by_number(params[:orders_received_id])
     @payment = @order.payments.find(params[:id])
 
     charge = @order.near_me_payments.create!(
@@ -8,12 +8,13 @@ class Manage::BuySell::PaymentsController < Manage::BuySell::BaseController
       service_fee_amount_guest: @order.service_fee_amount_guest,
       service_fee_amount_host: @order.service_fee_amount_host
     )
+
     if charge.paid?
-      @payment.complete!
+      @payment.complete! unless @payment.state == 'completed'
     else
       @payment.failure!
     end
 
-    redirect_to :back
+    redirect_to dashboard_orders_received_path(@order)
   end
 end

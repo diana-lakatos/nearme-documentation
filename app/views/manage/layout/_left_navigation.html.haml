@@ -1,7 +1,7 @@
 .col-md-2.page-navigation
   %nav
     %ul
-      = content_tag :li, class: (params[:controller].include?('orders') && params[:action].include?('index')) ? 'active' : '' do
+      = content_tag :li, class: (params[:controller] == 'dashboard/orders') ? 'active' : '' do
         = link_to 'My Orders', dashboard_orders_path
       %li
         %a{:href => "#"} Messages
@@ -16,24 +16,30 @@
         %a{:href => "#"} Payout
       %li
         %a{:href => "#"} Payment
-      - orders_rceived_active = params[:controller].include?('orders') && params[:action].include?('received')
+      - orders_rceived_active = params[:controller] == ('dashboard/orders_received')
       = content_tag :li, class: orders_rceived_active ? 'active' : '' do
-        = link_to 'Orders Received', received_dashboard_orders_path
-      -if orders_rceived_active
-        %ul.page-sub-nav
-          %li
-            %a.active{:href => "#"} Boat
-          %li
-            %a{:href => "#"} Slip
-          %li
-            %a{:href => "#"} Captain
+        = link_to 'Orders Received', dashboard_orders_received_index_path
+
+      -# Jaromir: Not used for now
+      -#-if orders_rceived_active
+        -#%ul.page-sub-nav
+        -#  %li
+        -#    %a.active{:href => "#"} Boat
+        -#  %li
+        -#    %a{:href => "#"} Slip
+        -#  %li
+        -#    %a{:href => "#"} Captain
+
       -#%li
       -#  %a{:href => "#"} Shipping Methods
     %ul
       %li.nav-head
         ADMIN
-      %li
-        %a{:href => "#"} Blog
+
+      -# Jaromir: Not used for now
+      -#%li
+      -#  %a{:href => "#"} Blog
+
       %li
         %a{:href => "#"} Analytics
       = content_tag :li, class: (params[:controller].include?('users')) ? 'active' : '' do

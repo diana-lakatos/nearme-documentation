@@ -1,16 +1,13 @@
 - title t('orders.index.title')
 
 .dash-head.clearfix
-  %ul
-    %li.active
-      %a{:href => "#"} ORDERS
-    %li
-      %a{:href => "#"} OPEN ORDERS
-    %li
-      %a{:href => "#"} CANCELLED ORDERS
+  - if params[:controller].include?('received')
+    %p ORDERS RECEIVED
+  - else
+    %p MY ORDERS
 
 .dash-body
-  = render partial: 'order', collection: @orders
+  = render partial: 'dashboard/orders/order', collection: @orders
 
 - unless @orders.empty?
   .row-fluid

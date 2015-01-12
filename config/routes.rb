@@ -7,10 +7,6 @@ DesksnearMe::Application.routes.draw do
     mount Spree::Core::Engine, at: '/instance_buy_sell'
   end
 
-  scope module: 'buy_sell' do
-    resources :orders, only: [:show, :index]
-  end
-
   scope module: 'buy_sell_market' do
     resources :products, only: [:show]
 
@@ -419,9 +415,24 @@ DesksnearMe::Application.routes.draw do
 
   namespace :dashboard do
     resources :companies, :only => [:edit, :update, :show]
-    resources :orders do
-      collection do
-        get :received
+    resources :orders, only: [:index, :show]
+    resources :orders_received, except: [:edit] do
+      member do
+        get :approve
+        get :cancel
+        get :resume
+      end
+
+      resources :payments do
+        member do
+          get :capture
+        end
+      end
+
+      resources :shipments do
+        member do
+          get :ship
+        end
       end
     end
     resources :products
@@ -448,25 +459,6 @@ DesksnearMe::Application.routes.draw do
       end
 
       resources :option_types
-      resources :orders, except: [:edit] do
-        member do
-          get :approve
-          get :cancel
-          get :resume
-        end
-
-        resources :payments do
-          member do
-            get :capture
-          end
-        end
-
-        resources :shipments do
-          member do
-            get :ship
-          end
-        end
-      end
       resources :properties
       resources :prototypes
       resources :shipping_categories

@@ -24,8 +24,8 @@ class BuySellMarket::CheckoutController < ApplicationController
       packages = @order.shipments.map { |s| s.to_package }
       @differentiator = Spree::Stock::Differentiator.new(@order, packages)
     when :complete
-      flash[:notice] = t('buy_sell_market.checkout.notices.order_placed')
-      redirect_to order_path(params[:order_id])
+      flash[:success] = t('buy_sell_market.checkout.notices.order_placed')
+      redirect_to dashboard_order_path(params[:order_id])
       return
 
       begin

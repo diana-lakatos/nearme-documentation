@@ -24,7 +24,7 @@ module Spree
     private
 
     def from_address(order)
-      order.company.creator.email
+      order.company.users.first.email
     end
   end
 end
