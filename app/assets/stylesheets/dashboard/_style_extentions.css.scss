@@ -123,6 +123,14 @@ section .row {
 }
 
 
+.modal .load-hide {
+  display: none;
+}
+
+.dash-head-btn .btn {
+  font-size: 14px;
+}
+
 @media (max-width: 1000px) {
   section {
     padding: 20px 30px;

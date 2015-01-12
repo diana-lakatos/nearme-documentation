@@ -439,6 +439,7 @@ DesksnearMe::Application.routes.draw do
     resources :users, :except => [:edit, :update]
     resources :waiver_agreement_templates, only: [:index, :edit, :new, :update, :create, :destroy]
     resources :white_labels, :only => [:edit, :update, :show]
+    resource :payouts, except: [:index, :show, :new, :create, :destroy]
   end
 
   namespace :manage do

@@ -9,11 +9,6 @@ class Company < ActiveRecord::Base
   notify_associations_about_column_update([:payment_transfers, :payments, :reservations, :listings, :locations], [:instance_id, :partner_id])
   notify_associations_about_column_update([:reservations, :listings, :locations], [:creator_id, :listings_public])
 
-  # attr_accessible :description, :url, :email, :name,
-  #   :mailing_address, :paypal_email, :industry_ids, :locations_attributes,
-  #   :domain_attributes, :theme_attributes, :white_label_enabled,
-  #   :listings_public, :bank_account_number, :bank_routing_number, :bank_owner_name
-
   attr_accessor :created_payment_transfers, :bank_account_number, :bank_routing_number, :bank_owner_name, :verify_associated
 
   belongs_to :creator, class_name: "User", inverse_of: :created_companies
@@ -92,6 +87,8 @@ class Company < ActiveRecord::Base
   validates_associated :products, :if => :verify_associated
   validates_associated :stock_locations, :if => :verify_associated
 
+  validates :paypal_email, email: true, allow_blank: true
+
   def add_creator_to_company_users
     unless users.include?(creator)
       users << creator
@@ -168,6 +165,7 @@ class Company < ActiveRecord::Base
     errors.add(:url, "must be a valid URL") unless valid
   end
 
+  # TODO: Exctract to another object
   def create_bank_account_in_balanced!
     [:bank_account_number, :bank_routing_number, :bank_owner_name].each do |mandatory_field|
       errors.add(mandatory_field, 'cannot be blank') if self.send(mandatory_field).blank?
