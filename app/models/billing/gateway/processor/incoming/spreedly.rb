@@ -4,7 +4,7 @@ class Billing::Gateway::Processor::Incoming::Spreedly < Billing::Gateway::Proces
     @gateway = ActiveMerchant::Billing::SpreedlyCoreGateway.new(settings)
   end
 
-  def self.support_any_currency!
+  def support_any_currency!
     true
   end
 end

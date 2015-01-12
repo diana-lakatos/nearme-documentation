@@ -16,7 +16,8 @@ class Billing::Gateway::Processor::Incoming::StripeTest < ActiveSupport::TestCas
   end
 
   should "have a refund identification based on its id key" do
-    charge_response = { "id" => "123", "message" => "message" }
-    assert_equal @stripe_processor.refund_identification(charge_response), "123"
+    charge_response = ActiveMerchant::Billing::Response.new true, 'OK', { "id" => "123", "message" => "message" }
+    charge = Charge.new(response: charge_response)
+    assert_equal @stripe_processor.refund_identification(charge), "123"
   end
 end

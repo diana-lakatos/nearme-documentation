@@ -23,6 +23,8 @@ class CreditCard < ActiveRecord::Base
     @decorator ||= case gateway_class
                    when "Billing::Gateway::Processor::Incoming::Stripe"
                      CreditCard::StripeDecorator.new(self)
+                   when "Billing::Gateway::Processor::Incoming::Braintree"
+                     CreditCard::BraintreeDecorator.new(self)
                    else
                      raise NotImplementedError.new("Unknown gateway class: #{gateway_class}")
                    end

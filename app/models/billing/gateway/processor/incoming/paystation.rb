@@ -4,7 +4,7 @@ class Billing::Gateway::Processor::Incoming::Paystation < Billing::Gateway::Proc
     @gateway = ActiveMerchant::Billing::PaystationGateway.new(settings)
   end
 
-  def self.supported_currencies
+  def supported_currencies
     ["NZD"]
   end
 end

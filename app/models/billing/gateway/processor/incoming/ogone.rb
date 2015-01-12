@@ -4,7 +4,7 @@ class Billing::Gateway::Processor::Incoming::Ogone < Billing::Gateway::Processor
     @gateway = ActiveMerchant::Billing::OgoneGateway.new(settings)
   end
 
-  def self.supported_currencies
+  def supported_currencies
     ["EUR"]
   end
 end
