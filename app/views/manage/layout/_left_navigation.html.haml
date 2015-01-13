@@ -44,8 +44,8 @@
         -#%li
         -#  %a{:href => "#"} Blog
 
-        %li
-          %a{:href => "#"} Analytics
+        = content_tag :li, class: (params[:controller].include?('analytics')) ? 'active' : '' do
+          = link_to 'Analytics', dashboard_analytics_path
         = content_tag :li, class: (params[:controller].include?('users')) ? 'active' : '' do
           = link_to 'Manage Admins', dashboard_users_path
         = content_tag :li, class: (params[:controller].include?('waiver_agreement_templates')) ? 'active' : '' do

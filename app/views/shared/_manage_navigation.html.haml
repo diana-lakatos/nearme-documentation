@@ -26,7 +26,7 @@
               = link_to manage_support_tickets_path, :class => (active_tab == :rfq) ? 'active' : '' do
                 %span= "#{t('reservations.rfq_short')} (#{current_user.companies.first.rfq_count})"
           %li
-            = link_to analytics_dashboard_path, :class => (active_tab == :analytics) ? 'active' : '' do
+            = link_to dashboard_analytics_path, :class => (active_tab == :analytics) ? 'active' : '' do
               %span Analytics
           %li
             = link_to transfers_dashboard_path, :class => (active_tab == :transfers) ? 'active' : '' do
