@@ -9,6 +9,7 @@ class Dashboard::ProductsController < Dashboard::BaseController
     @product = @company.products.build user: current_user
     @product_form = ProductForm.new(@product)
     @product_form.assign_all_attributes
+    @images = current_user.products_images.where(viewable_id: nil, viewable_type: nil)
   end
 
   def create
@@ -25,6 +26,7 @@ class Dashboard::ProductsController < Dashboard::BaseController
   def edit
     @product_form = ProductForm.new(@product)
     @product_form.assign_all_attributes
+    @images = @product_form.product.images
   end
 
   def update

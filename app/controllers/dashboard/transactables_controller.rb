@@ -12,6 +12,7 @@ class Dashboard::TransactablesController < Dashboard::BaseController
     @transactable = @transactable_type.transactables.build company: @company
     @transactable.availability_template_id = AvailabilityRule.default_template.id
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
+    @photos = current_user.photos.where(transactable_id: nil)
   end
 
   def create

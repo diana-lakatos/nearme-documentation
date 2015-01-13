@@ -3,7 +3,7 @@
   %a.dash-head-btn{:href => ""}
     .btn.blue Bulk Upload
 .dash-body
-  = simple_form_for @product_form, wrapper: :bs3, :url => manage_buy_sell_products_path(@product_form.product), :html => { multipart: true, method: :post, class: 'no_inheritance' } do |f|
+  = simple_form_for @product_form, wrapper: :bs3, :url => dashboard_products_path(@product_form.product), :html => { multipart: true, method: :post, class: 'no_inheritance' } do |f|
     = render 'forms/product_form', f: f
 
     = f.simple_fields_for :shipping_methods do |shipping_method|

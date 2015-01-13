@@ -37,18 +37,25 @@ class @Photo.View
   multiplePhotoHtml: (position) ->
     @singlePhotoHtml()
     @photo.append($('<span>').addClass('photo-position badge badge-inverse').text(position))
-    input = $("<input type='text'>").attr('name', @inputTemplate.attr('name')).attr('placeholder', @inputTemplate.attr('placeholder'))
+    input = $("<input type='text'>").attr('name', @inputTemplate.attr('name')).attr('placeholder', @inputTemplate.attr('placeholder')).data('association-name', @inputTemplate.data('association-name'))
     listing_name_prefix = input.attr('name')
-    name_prefix = listing_name_prefix + '[photos_attributes][' + @data.id + ']'
-    input.attr('name', name_prefix + '[caption]')
-    @photo.append(input)
+    if !input.data('association-name') || input.data('association-name').length == 0
+      association_name_singular = 'photo'
+    else
+      association_name_singular = input.data('association-name')
+    association_name_plural = association_name_singular + 's'
+
+    name_prefix = listing_name_prefix + "[#{association_name_plural}_attributes][" + @data.id + ']'
+    if !@inputTemplate.data('no-caption')
+      input.attr('name', name_prefix + '[caption]')
+      @photo.append(input)
     hidden = $('<input type="hidden">')
     hidden_position = hidden.clone().attr('name', "#{name_prefix}[position]").val(position).addClass('photo-position-input')
     @photo.attr('id', "photo-#{@data.id}")
     @photo.append(hidden_position)
     hidden_id = hidden.clone().attr('name', "#{name_prefix}[id]").val(@data.id)
     @photo.append(hidden_id)
-    hidden_id = hidden.clone().attr('name', "#{listing_name_prefix}[photo_ids][]").val(@data.id)
+    hidden_id = hidden.clone().attr('name', "#{listing_name_prefix}[#{association_name_singular}_ids][]").val(@data.id)
     @photo.append(hidden_id)
     hidden_listing_id = hidden.clone().attr('name', "#{name_prefix}[transactable_id]").val(@data.transactable_id)
     @photo.append(hidden_listing_id)
