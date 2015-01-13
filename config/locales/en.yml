@@ -233,6 +233,11 @@ en:
     social_accounts:
       connecting_social_accounts_info: "Connecting your social accounts will display the number of friends, connections, and followers that you have on your profile.<br />You will also be able to see your friends' and connections' activity on %{marketplace_name}."
       no_social_providers: "Unfortunately %{marketplace_name} does not support any social providers at the moment."
+      linkedin_info: "Link your trusted network of professionals by connecting with your LinkedIn account."
+      twitter_info: "Sign in with your Twitter account and connect with your followers."
+      facebook_info: "Log in with Facebook and connect with your friends around the world."
+      instagram_info: "Connect your Instagram account and link your visual content."
+
     accept_terms_of_service: 'confirm that you accept the <a href="/pages/legal" target="_blank">Terms of Service and Privacy Policy</a>'
   reservations:
     charge_after_confirmation: "Your card will not be charged until the booking is confirmed."

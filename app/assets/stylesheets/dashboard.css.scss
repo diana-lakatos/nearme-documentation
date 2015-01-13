@@ -1,23 +1,12 @@
-// Bootstrap3
 @import "instance_admin/bootstrap";
 @import "instance_admin/bootstrap-theme";
 @import "instance_admin/bootstrap-select";
 @import "bootstrap3-switch";
 
-
-// Select2
 @import "select2";
-
-// Compass
 @import "compass";
-// @import "compass/css3";
-// @import "compass/reset";
-// @import "compass/css3/transition";
 
-// // Naviagation
 @import "globals/*";
 @import "components/nav";
 
-
-// Dashboard
 @import "dashboard/*";

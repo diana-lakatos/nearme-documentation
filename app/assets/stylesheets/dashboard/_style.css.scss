@@ -995,6 +995,25 @@ table.order-header td {
 
 }
 
+/*===== SELECTPICKER =====*/
+.bootstrap-select.btn-group .btn .filter-option {
+  color: #555;
+  line-height: initial;
+  height: initial;
+  font-size: 14px;
+}
+
+.bootstrap-select.btn-group .btn .caret {
+  border-top: 11px solid #3a3a3a;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: none;
+  border-radius: 3px;
+  top: 40%;
+  right: 10px;
+}
+
+
 
 /*===== MEDIA QUERIES =====*/
 
@@ -1141,3 +1160,4 @@ table.order-header td {
   }
 
 }
+
