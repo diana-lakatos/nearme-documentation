@@ -1,21 +1,22 @@
 class Dashboard::TransactablesController < Dashboard::BaseController
   before_filter :find_transactable_type
-  before_filter :find_listing, :except => [:index, :new, :create]
+  before_filter :find_transactable, :except => [:index, :new, :create]
   before_filter :find_locations
   before_filter :disable_unchecked_prices, :only => :update
 
   def index
-    @transactables = @transactable_type.transactables.paginate(page: params[:page], per_page: 20)
+    @transactables = @transactable_type.transactables.where(company: @company).paginate(page: params[:page], per_page: 20)
   end
 
   def new
-    @transactable = @transactable_type.transactables.build
+    @transactable = @transactable_type.transactables.build company: @company
     @transactable.availability_template_id = AvailabilityRule.default_template.id
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
   end
 
   def create
     @transactable = @transactable_type.transactables.build(transactable_params)
+    @transactable.company = @company
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
     if @transactable.save
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: platform_context.decorate.bookable_noun)
@@ -106,9 +107,9 @@ class Dashboard::TransactablesController < Dashboard::BaseController
     @locations = @company.locations
   end
 
-  def find_listing
+  def find_transactable
     begin
-      @transactable = @transactable_type.transactables.find(params[:id])
+      @transactable = @transactable_type.transactables.where(company: @company).find(params[:id])
     rescue ActiveRecord::RecordNotFound
       raise Transactable::NotFound
     end
