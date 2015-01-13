@@ -394,7 +394,6 @@ DesksnearMe::Application.routes.draw do
   resource :dashboard, :only => [:show], :controller => 'dashboard' do
     member do
       get :bookings, :to => 'reservations#upcoming'
-      get :analytics
       get :listings
       get :manage_guests
       get :transfers
@@ -409,6 +408,7 @@ DesksnearMe::Application.routes.draw do
   end
 
   namespace :dashboard do
+    resource :analytics
     resources :companies, :only => [:edit, :update, :show]
     resources :locations
     resources :user_messages, only: [:index, :show] do
