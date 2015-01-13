@@ -1,6 +1,8 @@
-
-$('#modal-add-location').modal('hide')
-$('#locations_list tbody').append('#{escape_javascript( render "location", object: @location )}');
-$('.container.page-wrapper').prepend('#{escape_javascript( render 'shared/bootstrap_flash_messages')}');
+- unless @location.valid?
+  $('#modal-add-location form .errors').html('#{escape_javascript( render 'shared/bootstrap_flash_messages')}');
+- else
+  $('#modal-add-location').modal('hide')
+  $('#locations_list tbody').append('#{escape_javascript( render @location )}');
+  $('.container.page-wrapper').prepend('#{escape_javascript( render 'shared/bootstrap_flash_messages')}');
 
 - flash.discard

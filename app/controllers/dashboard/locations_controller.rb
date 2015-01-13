@@ -26,7 +26,7 @@ class Dashboard::LocationsController < Dashboard::BaseController
       event_tracker.created_a_location(@location , { via: 'dashboard' })
       event_tracker.updated_profile_information(current_user)
     else
-      render :new
+      flash[:error] = view_context.array_to_unordered_list(@location.errors.full_messages)
     end
   end
 
@@ -40,7 +40,7 @@ class Dashboard::LocationsController < Dashboard::BaseController
     if @location.save
       flash[:success] = t('flash_messages.dashboard.locations.updated', bookable_noun: platform_context.decorate.bookable_noun)
     else
-      render :edit
+      flash[:error] = view_context.array_to_unordered_list(@location.errors.full_messages)
     end
   end
 

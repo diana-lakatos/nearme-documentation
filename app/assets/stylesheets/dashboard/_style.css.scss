@@ -489,6 +489,10 @@ nav li.active a, .mobile-nav .nav li.active a {
 .dash-body.inbox {
   padding: 0;
 
+  .read {
+    background: #f9f9f9;
+  }
+
   .row {
     margin: 0;
   }
