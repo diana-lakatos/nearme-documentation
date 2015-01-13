@@ -80,6 +80,8 @@ class @Photo.Uploader
     # need to add data-name-prefix to fileinput, because this won't work for avatar
     if $('#listing_id')
       params["#{$('#listing_id').attr('name')}"] = $('#listing_id').val()
+    if $('#transactable_id')
+      params["#{$('#transactable_id').attr('name')}"] = $('#transactable_id').val()
     if $('#product_form_id')
       params["product_id"] = $('#product_form_id').val()
     # If photos are being added to an existing draft space, we need the draft

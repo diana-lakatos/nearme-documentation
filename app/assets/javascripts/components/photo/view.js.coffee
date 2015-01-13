@@ -39,7 +39,7 @@ class @Photo.View
     @photo.append($('<span>').addClass('photo-position badge badge-inverse').text(position))
     input = $("<input type='text'>").attr('name', @inputTemplate.attr('name')).attr('placeholder', @inputTemplate.attr('placeholder')).data('association-name', @inputTemplate.data('association-name'))
     listing_name_prefix = input.attr('name')
-    if input.data('association-name').length == 0
+    if !input.data('association-name') || input.data('association-name').length == 0
       association_name_singular = 'photo'
     else
       association_name_singular = input.data('association-name')

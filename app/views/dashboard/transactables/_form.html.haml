@@ -16,8 +16,6 @@
 
 = render :partial => 'approval_requests/form', :locals => { f: f }
 
-- photo_input_name_prefix = "transactable"
-
 = f.hidden_field :transactable_type_id, value: @transactable_type.id
 
 = f.input :enabled, as: :bootstrap_switch
@@ -41,29 +39,27 @@
       = image_tag "spinner.gif"
       %br/
       .span= t('manage.listings.photos.waiting_for_photo_processing')
-    = file_upload_input_with_label('Photos',
-                                    "#{photo_input_name_prefix}[photos_attributes][0][image]",
+    = new_file_upload_input("#{f.object_name}[photos_attributes][0][image]",
                                     manage_photos_path,
                                     Photo.new.image.thumbnail_dimensions[:medium],
-                                    "Browse",
+                                    "Add Photo",
                                     :required => true,
                                     :error => f.object.errors.include?(:photos).present? ? "Please upload at least one photo." : nil) do
       - # caches img so it is displayed even for the first photo. Without this, loader icon is not displayed for the first photo
       .hidden.thumbnail-processing
         .loading-icon
-      = hidden_field_tag "#{photo_input_name_prefix}", nil, :placeholder => t('ui.photo_uploader.caption'), :id => 'photo-item-input-template', :disabled => true, 'data-number' => 0
+      = hidden_field_tag "#{f.object_name}", nil, placeholder: t('ui.photo_uploader.caption'), id: 'photo-item-input-template', disabled: true, 'data-number' => 0, 'data-no-caption' => true
       - unless @photos.nil?
         - @photos.each_with_index do |photo|
-          .col-md-5
-            = get_fileupload_photo_html(photo.image_url(:medium),
-                                        destroy_space_wizard_photo_path(:id => photo.id),
-                                        edit_manage_photo_path(photo),
-                                        :div,
-                                        id: photo.id) do
-              = text_field_tag "#{photo_input_name_prefix}[photos_attributes][#{photo.id}][caption]", photo.caption, :placeholder => t('ui.photo_uploader.caption')
-              = hidden_field_tag "#{photo_input_name_prefix}[photo_ids][]", photo.id
-              = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{photo.id}][id]", photo.id
-              = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{photo.id}][position]", photo.position, class: 'photo-position-input'
+          = get_fileupload_photo_html(photo.image_url(:medium),
+                                      destroy_space_wizard_photo_path(:id => photo.id),
+                                      edit_manage_photo_path(photo),
+                                      :div,
+                                      id: photo.id) do
+            -# text_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][caption]", photo.caption, :placeholder => t('ui.photo_uploader.caption')
+            = hidden_field_tag "#{f.object_name}[photo_ids][]", photo.id
+            = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][id]", photo.id
+            = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][position]", photo.position, class: 'photo-position-input'
 
 - if @company.waiver_agreement_templates.any?
   = f.association :waiver_agreement_templates, collection: @company.waiver_agreement_templates.order(:name).pluck(:name, :id), as: :check_boxes
