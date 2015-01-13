@@ -25,7 +25,7 @@ class @PriceFields
 
     @enablingPriceCheckboxes.change (event) =>
       checkbox = $(event.target)
-      checkbox.parent().siblings('input[data-type*=price-input]').attr('readonly', !checkbox.is(':checked'))
+      checkbox.parents(".price-containter").find('input[data-type*=price-input]').attr('readonly', !checkbox.is(':checked'))
 
       # Free enabled if all prices are disabled
       @freeCheckbox.prop('checked', !@enablingPriceCheckboxes.is(':checked'))
@@ -35,7 +35,7 @@ class @PriceFields
       @enablingPriceCheckboxes.trigger('change')
 
     @priceFields.on 'click', (event) =>
-      checkbox = $(event.target).siblings('label').find('input[data-behavior*=enable-price]')
+      checkbox = $(event.target).parents(".price-containter").find('label').find('input[data-behavior*=enable-price]')
       checkbox.prop('checked', true)
       checkbox.trigger('change')
       # yeah well.. otherwise IE will think that input is readable, even though we have just changed this...
