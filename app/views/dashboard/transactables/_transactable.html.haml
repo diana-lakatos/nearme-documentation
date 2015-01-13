@@ -5,7 +5,7 @@
     .col-md-3.listing-attr
       = link_to transactable.name, edit_dashboard_transactable_type_transactable_path(@transactable_type, transactable)
     .col-md-3.listing-attr
-      %p=# transactable.total_on_hand
+      %p= transactable.location.try(&:name)
     .col-md-2.listing-attr
       %p= number_to_currency_symbol transactable.currency, 30
     .col-md-1.listing-attr
