@@ -212,6 +212,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def social_accounts
+    render layout: 'dashboard'
   end
 
   def edit_notification_preferences

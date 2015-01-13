@@ -346,13 +346,13 @@ DesksnearMe::Application.routes.draw do
     match "users/update_notification_preferences", :to => "registrations#update_notification_preferences", :as => "update_notification_preferences", via: [:patch, :put]
     post "users/store_google_analytics_id", :to => "registrations#store_google_analytics_id", :as => "store_google_analytics"
     post "users/store_geolocated_location", :to => "registrations#store_geolocated_location", :as => "store_geolocated_location"
-    get "users/social_accounts", :to => "registrations#social_accounts", :as => "social_accounts"
     get "users/", :to => "registrations#new"
     get "users/verify/:id/:token", :to => "registrations#verify", :as => "verify_user"
     delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
     get "users/:id", :to => "registrations#show", :as => "profile"
     get "users/unsubscribe/:signature", :to => "registrations#unsubscribe", :as => "unsubscribe"
-    get "dashboard/edit_profile", :to => "registrations#edit"
+    get "dashboard/edit_profile", :to => "registrations#edit", :as => "dashboard_profile"
+    get "dashboard/social_accounts", :to => "registrations#social_accounts", :as => "social_accounts"
 
     match "users/store_correct_ip", :to => "sessions#store_correct_ip", :as => "store_correct_ip", via: [:patch, :put]
 

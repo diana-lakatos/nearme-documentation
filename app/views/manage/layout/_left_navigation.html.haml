@@ -55,9 +55,10 @@
     %ul
       %li.nav-head
         ACCOUNT
-      = content_tag :li, class: (params[:controller].include?('registration')) ? 'active' : '' do
-        = link_to 'Edit Profile', '/dashboard/edit_profile'
-      %li
-        %a{:href => "#"} Trust &amp; Verification
-      %li
-        %a{:href => "#"} Notification Preferences
+      = content_tag :li, class: (params[:controller].include?('registration') && params[:action].include?('edit_profile')) ? 'active' : '' do
+        = link_to 'Edit Profile', dashboard_profile_path
+      = content_tag :li, class: (params[:controller].include?('registration') && params[:action].include?('social_accounts')) ? 'active' : '' do
+        = link_to 'Trust & Verification', '/dashboard/social_accounts'
+      - if false
+        %li
+          %a{:href => "#"} Notification Preferences
