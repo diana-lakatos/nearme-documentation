@@ -1,7 +1,7 @@
 .listings
   .row
     .col-md-3.listing-img
-      =image_tag(transactable.photos.first.try{ |i| i.image.url(:medium) })
+      =image_tag(transactable.photos.first.try(:image_url, :medium))
     .col-md-3.listing-attr
       = link_to transactable.name, edit_dashboard_transactable_type_transactable_path(@transactable_type, transactable)
     .col-md-3.listing-attr
