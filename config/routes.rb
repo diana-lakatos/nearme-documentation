@@ -440,7 +440,18 @@ DesksnearMe::Application.routes.draw do
     resources :products
     resources :transactable_types do
       resources :transactables
+      resources :data_uploads, controller: 'transactable_types/data_uploads' do
+         collection do
+          get :status
+          get :download_csv_template
+          get :download_current_data_csv
+        end
+        member do
+          post :schedule_import
+        end
+      end
     end
+
     resources :users, :except => [:edit, :update]
     resources :waiver_agreement_templates, only: [:index, :edit, :new, :update, :create, :destroy]
     resources :white_labels, :only => [:edit, :update, :show]
