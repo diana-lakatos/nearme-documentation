@@ -1,7 +1,7 @@
 class SpaceWizardController < ApplicationController
 
-  before_filter :redirect_to_dashboard_if_user_has_listings, :only => [:new, :list]
   before_filter :find_transactable_type
+  before_filter :redirect_to_dashboard_if_user_has_listings, :only => [:new, :list]
   before_filter :set_common_variables, :only => [:list, :submit_listing]
   before_filter :sanitize_price_parameters, :only => [:submit_listing]
   before_filter :set_theme, :only => [:list, :submit_item]
@@ -54,10 +54,10 @@ class SpaceWizardController < ApplicationController
       track_new_company_event
       PostActionMailer.enqueue.list(@user)
       if buyable?
-        redirect_to manage_buy_sell_products_path
+        redirect_to dashboard_products_path
       else
         flash[:success] = t('flash_messages.space_wizard.space_listed', bookable_noun: platform_context.decorate.bookable_noun)
-        redirect_to manage_locations_path
+        redirect_to dashboard_transactable_type_transactables_path(@transactable_type)
       end
     else
       @photos = @user.first_listing ? @user.first_listing.photos : nil
@@ -118,13 +118,7 @@ class SpaceWizardController < ApplicationController
   def redirect_to_dashboard_if_user_has_listings
     return if buyable?
     if current_user && current_user.companies.count > 0 && !current_user.has_draft_listings
-      if current_user.locations.count.zero?
-        redirect_to new_manage_location_path
-      elsif current_user.locations.count == 1 && current_user.listings.count.zero?
-        redirect_to new_manage_location_listing_path(current_user.locations.first)
-      else
-        redirect_to manage_locations_path
-      end
+      redirect_to dashboard_transactable_type_transactables_path(@transactable_type)
     end
   end
 
@@ -169,7 +163,7 @@ class SpaceWizardController < ApplicationController
   end
 
   def find_transactable_type
-    @transactable_type = TransactableType.includes(:custom_attributes).first
+    @transactable_type = TransactableType.includes(:custom_attributes).try(:first)
   end
 
   def wizard_params
