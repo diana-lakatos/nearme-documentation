@@ -36,7 +36,7 @@
         - unless reservation.archived?
           .span2
             .actions
-              = render :partial => "dashboard/user_actions",  :locals => {:reservation => reservation} if current_user == reservation.owner
+              = render :partial => "old_dashboard/user_actions",  :locals => {:reservation => reservation} if current_user == reservation.owner
 
 - content_for :domready do
   new Reservation.UserReservationController($("##{dom_id(reservation)}"))
