@@ -2,7 +2,6 @@ class ProductForm < Form
 
   # attr_accessor :name, :description, :price, :category
   # attr_accessor :quantity
-  attr_accessor :images
   attr_accessor :shipping_methods
   attr_accessor :draft
   attr_reader :product
@@ -14,7 +13,7 @@ class ProductForm < Form
   validates :quantity, numericality: { only_integer: true }, presence: true
   validate :validate_images, :validate_shipping_methods
 
-  def_delegators :@product, :price, :price=,  :name, :name=, :description, :description=
+  def_delegators :@product, :id, :price, :price=, :name, :name=, :description, :description=
   def_delegators :@stock_movement, :quantity=
 
   def quantity
@@ -27,6 +26,13 @@ class ProductForm < Form
 
   def taxon_ids=(taxon_ids)
     @product.taxon_ids = taxon_ids.split(",")
+  end
+
+  def image_ids=(image_ids)
+    existing_images = @product.images.map(&:id)
+    Spree::Image.where(id: (image_ids.reject { |id| existing_images.include?(id) })).each do |i|
+      @product.images << i
+    end
   end
 
   def validate_images
@@ -70,7 +76,7 @@ class ProductForm < Form
     @user.save!(validate: validate)
     @company.save!(validate: validate)
     @product.save!(validate: validate)
-    @product.images.each { |x| x.save!(validate: validate) }
+    @product.images.each { |i| i.save!(validate: false) }
     @product.classifications.each { |x| x.save!(validate: validate) }
     @stock_location.save!(validate: validate)
     @stock_item.save!(validate: validate)
@@ -87,19 +93,15 @@ class ProductForm < Form
     @company.shipping_methods << @shipping_methods
   end
 
-  def images_attributes=(attributes)
-    # This part is going to be changed when switch to image picker
-    attributes.each do |key, photo_attributes|
-      if photo_attributes[:_destroy] == "1"
-        @product.images.where(id: photo_attributes[:id]).first.try(:destroy)
-      else
-        @product.images.build(remote_image_url: photo_attributes[:remote_image_url]) if photo_attributes[:remote_image_url].present?
-      end
-    end
-  end
-
   def category=(taxon_ids)
     @product.taxon_ids = taxon_ids.split(",")
+  end
+
+  def images_attributes=(attributes)
+    attributes.each do |key, images_attributes|
+      image = @product.images.where(id: images_attributes["id"]).first
+      image.try(:update_attribute, :position, images_attributes["position"])
+    end
   end
 
   def shipping_methods_attributes=(attributes)
@@ -119,8 +121,6 @@ class ProductForm < Form
     @shipping_methods ||= @shipping_category.shipping_methods
     @category = @product.taxons.map(&:id).join(",")
     @price = @product.price
-    @images = @product.images.to_a
-    (3 - @product.images.size).times { @images << Spree::Image.new(remote_image_url: nil)}
   end
 
   def build_shipping_methods

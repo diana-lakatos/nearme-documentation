@@ -5,17 +5,7 @@ class Theme < ActiveRecord::Base
   DEFAULT_PHONE_NUMBER = '1.888.998.3375'
   COLORS = %w(blue red orange green gray black white)
   COLORS_DEFAULT_VALUES = %w(41bf8b e83d33 FF8D00 6651af 394449 1e2222 fafafa)
-  COLORS.each do |color|
-    # attr_accessible "color_#{color}"
-  end
 
-  # attr_accessible :name, :icon_image, :icon_retina_image, :favicon_image,
-  #   :logo_image, :logo_retina_image, :hero_image, :skip_compilation,
-  #   :owner, :owner_id, :owner_type, :site_name, :description, :tagline, :address, :support_email,
-  #   :contact_email, :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url,
-  #   :meta_title, :remote_logo_image_url, :remote_logo_retina_image_url, :remote_icon_image_url,
-  #   :remote_hero_image_url, :remote_icon_retina_image_url, :gplus_url, :homepage_content, :call_to_action,
-  #   :homepage_css, :theme_font_attributes
 
   # TODO: We may want the ability to have multiple themes, and draft states,
   #       etc.
@@ -126,9 +116,9 @@ class Theme < ActiveRecord::Base
       when "Instance"
         owner
       when "Company"
-        owner.try(:instance) || Company.with_deleted.where(id: object_id).first.try(:instance)
+        (owner || Company.with_deleted.where(id: object_id).first).instance
       when "Partner"
-        Partner.where(id: object_id).first.try(:instance)
+        owner.instance
       else
         raise "Unknown owner #{owner_type}"
       end

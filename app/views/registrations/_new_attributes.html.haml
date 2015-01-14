@@ -69,18 +69,19 @@
     .col-md-3
       = f.label :avatar, "Profile Photo"
     .col-md-9
-      .single-photo
-        = file_upload_input("avatar",
-          avatar_path,
-          resource.avatar.thumbnail_dimensions[:medium],
-          "Upload Photo",
-          "no-multiple" => true,
-          :error => f.object.errors.include?(:avatar).present? ? "Please upload avatar." : nil) do
-          - if current_user.avatar.any_url_exists?
-            = fileupload_photo(resource.avatar_url(:medium),
-              destroy_avatar_path,
-              edit_avatar_path,
-              :div)
+      .col-md-4
+        .single-photo
+          = new_file_upload_input("avatar",
+            avatar_path,
+            resource.avatar.thumbnail_dimensions[:medium],
+            "Upload Photo",
+            "no-multiple" => true,
+            :error => f.object.errors.include?(:avatar).present? ? "Please upload avatar." : nil) do
+            - if current_user.avatar.any_url_exists?
+              = fileupload_photo(resource.avatar_url(:medium),
+                destroy_avatar_path,
+                edit_avatar_path,
+                :div)
 - if only_inputs.empty? || only_inputs.include?(:phone)
   - content_for :domready do
     $(function(){ new PhoneNumbers.FieldsForm() });

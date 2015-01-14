@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141229143509) do
+ActiveRecord::Schema.define(version: 20150113133759) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1154,6 +1154,8 @@ ActiveRecord::Schema.define(version: 20141229143509) do
     t.integer  "image_original_height"
     t.integer  "image_original_width"
     t.string   "remote_image_url"
+    t.integer  "uploader_id"
+    t.integer  "instance_id"
   end
 
   add_index "spree_assets", ["viewable_id"], name: "index_assets_on_viewable_id", using: :btree
@@ -1776,7 +1778,7 @@ ActiveRecord::Schema.define(version: 20141229143509) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.integer  "user_id"
-    t.string   "processing_time"
+    t.integer  "processing_time"
   end
 
   add_index "spree_shipping_methods", ["company_id"], name: "index_spree_shipping_methods_on_company_id", using: :btree

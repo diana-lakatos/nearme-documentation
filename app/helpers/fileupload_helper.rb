@@ -13,6 +13,18 @@ module FileuploadHelper
     }).to_s
   end
 
+  def new_file_upload_input(name, url, thumbnail_sizes, text='Photos', options = {}, &block)
+    render(partial: 'shared/components/new_file_upload_input', locals: {
+      uploaded_content: get_uploaded_content(options, &block),
+      error_message: options.delete(:error),
+      thumbnail_sizes: thumbnail_sizes,
+      url: url,
+      name: name,
+      text: text,
+      options: options
+    }).to_s
+  end
+
   def built_in_upload_input(input, &block)
     render(partial: 'shared/components/built_in_upload_input', locals: {
       uploaded_content: get_uploaded_content({ "no-multiple" => true }, &block),

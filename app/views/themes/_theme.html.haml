@@ -16,30 +16,22 @@
   .col-md-3
     %label Photos
   .col-md-9
-    = built_in_upload_input_with_label(f, 'Logo (240 x 60px)', (f.file_field :logo_image)) do
-      - if f.object.persisted?
-        = built_in_fileupload_photo(f.object.logo_image_url, destroy_image_manage_theme_path(f.object, :name => 'logo_image'), [240, 60])
+    - %w(logo_image logo_retina_image favicon_image icon_image icon_retina_image hero_image).each_slice(2) do |image_attrs|
+      - image_attrs.each do |image_attr|
+        .col-md-4
+          .single-photo
+            = new_file_upload_input("url", upload_theme_image_dashboard_white_label_path(image: image_attr), f.object.send("#{image_attr}_dimensions"), "Add Photo", {:"top-label" => "#{image_attr.humanize} (#{f.object.send("#{image_attr}_dimensions")[:width]}x#{f.object.send("#{image_attr}_dimensions")[:height]})", "no-multiple" => true}) do
+              - if f.object.send(image_attr).any_url_exists?
+                = fileupload_photo(f.object.send("#{image_attr}_url"),
+                  destroy_theme_image_dashboard_white_label_path(image: image_attr),
+                  edit_theme_image_dashboard_white_label_path(image: image_attr),
+                  :div)
 
-    = built_in_upload_input_with_label(f, 'Logo (Retina) (480 x 120px)', (f.file_field :logo_retina_image)) do
-      - if f.object.persisted?
-        = built_in_fileupload_photo(f.object.logo_retina_image_url, destroy_image_manage_theme_path(f.object, :name => 'logo_retina_image'), [480, 120])
-
-    = built_in_upload_input_with_label(f, 'Icon (60 x 60px)', (f.file_field :icon_image)) do
-      - if f.object.persisted?
-        = built_in_fileupload_photo(f.object.icon_image_url, destroy_image_manage_theme_path(f.object, :name => 'icon_image'), [60, 60])
-
-    = built_in_upload_input_with_label(f, 'Icon (Retina) (120 x 120px)', (f.file_field :icon_retina_image)) do
-      - if f.object.persisted?
-        = built_in_fileupload_photo(f.object.icon_retina_image_url, destroy_image_manage_theme_path(f.object, :name => 'icon_retina_image'), [120, 120])
-
-    = built_in_upload_input_with_label(f, 'Hero Image', (f.file_field :hero_image)) do
-      - if f.object.persisted?
-        = built_in_fileupload_photo(f.object.hero_image_url, destroy_image_manage_theme_path(f.object, :name => 'hero_image'), [144, 89])
 .row
   .col-md-3
     %label Colors
   .col-md-9
     - Theme::COLORS.each_with_index do |color, index|
-      = f.input "color_#{color}", :label => color.humanize do 
+      = f.input "color_#{color}", :label => color.humanize do
         = f.text_field "color_#{color}",{ :type => :color, :value => f.object.hex_color(color).presence || hexify(Theme::COLORS_DEFAULT_VALUES[index]), 'data-default' => hexify(Theme::COLORS_DEFAULT_VALUES[index]), 'data-color' => color}
         = link_to "default", '', 'data-reset' => color

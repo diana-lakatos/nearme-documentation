@@ -6,8 +6,23 @@
 @import "select2";
 @import "compass";
 
+@import "jcrop";
+@import "vendor/overrides/jcrop";
+
 @import "globals/*";
 @import "components/nav";
+
+@import "components/modal";
+
+
+$font-stack: 'Open Sans', sans-serif, helvetica;
+$color-blue: #5dbded;
+$color-red: #e65d47;
+$color-dark-gray: #555;
+$color-light-gray: #dadada;
+$color-ultra-light-gray: #f2f2f2;
+$color-headings: #3a3a3a;
+$color-placeholder: #ccc;
 
 @import "dashboard/*";
 

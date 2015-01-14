@@ -438,6 +438,7 @@ DesksnearMe::Application.routes.draw do
       end
     end
     resources :products
+    resources :images
     resources :transactable_types do
       resources :transactables
       resources :data_uploads, controller: 'transactable_types/data_uploads' do
@@ -454,7 +455,14 @@ DesksnearMe::Application.routes.draw do
 
     resources :users, :except => [:edit, :update]
     resources :waiver_agreement_templates, only: [:index, :edit, :new, :update, :create, :destroy]
-    resources :white_labels, :only => [:edit, :update, :show]
+    resources :white_labels, :only => [:edit, :update, :show] do
+      member do
+        delete 'destroy_image/:image', :action => :destroy_image, :as => 'destroy_theme_image'
+        get 'edit_image/:image', :action => :edit_image, :as => 'edit_theme_image'
+        match 'update_image/:image', :action => :update_image, :as => 'update_theme_image', via: [:post, :put]
+        match 'upload_image/:image', :action => :upload_image, :as => 'upload_theme_image', via: [:post, :put]
+      end
+    end
     resource :payouts, except: [:index, :show, :new, :create, :destroy]
   end
 

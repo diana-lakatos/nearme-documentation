@@ -92,7 +92,7 @@ class RegistrationsController < Devise::RegistrationsController
       redirect_to '/dashboard/edit_profile'
     else
       @country = resource.country_name
-      render :edit
+      render :edit, layout: "dashboard"
     end
   end
 
