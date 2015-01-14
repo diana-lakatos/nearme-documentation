@@ -396,7 +396,6 @@ DesksnearMe::Application.routes.draw do
       get :bookings, :to => 'reservations#upcoming'
       get :listings
       get :manage_guests
-      get :transfers
     end
   end
 
@@ -439,6 +438,7 @@ DesksnearMe::Application.routes.draw do
     end
     resources :products
     resources :images
+    resource :transfers
     resources :transactable_types do
       resources :transactables
       resources :data_uploads, controller: 'transactable_types/data_uploads' do
