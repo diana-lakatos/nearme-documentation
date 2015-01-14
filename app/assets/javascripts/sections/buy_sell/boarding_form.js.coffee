@@ -59,6 +59,8 @@ class @BoardingForm
       $(this).parent().hide()
 
   setupShippingMethods: ->
+    @form.find(".remove_shipping_profile:not(:first)").removeClass('hidden');
+
     for shipping_hidden in @form.find(".shipping_hidden")
       if $(shipping_hidden).prop("checked")
         $(shipping_hidden).parents(".shipping_method_block").hide()

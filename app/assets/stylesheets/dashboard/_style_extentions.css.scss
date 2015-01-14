@@ -47,7 +47,7 @@
   float: left;
 }
 
-form input[type="password"], form input[type="url"], form input[type="email"], form input[type="number"], form input[type="tel"], .selectpicker , .select2-drop, .select2-container-multi .select2-choices {
+form input[type="price"], form input[type="password"], form input[type="url"], form input[type="email"], form input[type="number"], form input[type="tel"], .selectpicker , .select2-drop, .select2-container-multi .select2-choices {
   background: #fff;
   border: solid #D4D4D4 1px;
   border-radius: 0;
@@ -131,9 +131,13 @@ section {
   margin-top: 30px;
 }
 
-.remove_shipping_profile label, label.delete_image {
+.remove_shipping_profile label {
   float: right;
   color: #e85c41;
+}
+
+.remove_shipping_profile label:hover {
+  opacity: 0.5;
 }
 
 .row {

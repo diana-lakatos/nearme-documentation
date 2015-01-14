@@ -29,11 +29,6 @@
             = hidden_field_tag "#{f.object_name}[images_attributes][#{image.id}][id]", image.id
             = hidden_field_tag "#{f.object_name}[images_attributes][#{image.id}][position]", image.position, class: 'photo-position-input'
 
-= f.input :price, :placeholder => "$0.00"
+= f.input :price, as: :price, input_html: { currency: currency_symbol_from_code(Spree::Config[:currency] ) }
+
 = f.input :quantity, as: :integer, :placeholder => "1"
-
-
-- content_for :domready do
-  new TaxonAutocomplete($("#edit_product_form, #new_product_form, #edit_boarding_form, #new_boarding_form"));
-  new Dashboard.AddressController($("#edit_product_form, #new_product_form, #edit_boarding_form, #new_boarding_form"));
-  var boarding_form = new BoardingForm($("#edit_product_form, #new_product_form, #edit_boarding_form, #new_boarding_form"));
