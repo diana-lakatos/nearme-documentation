@@ -87,6 +87,10 @@ ul {
   color: #fdcc51;
 }
 
+.checkbox-icon-outer, i.custom-select-dropdown-icon.ico-chevron-down {
+  display: none;
+}
+
 /*===== BUTTONS =====*/
 
 .btn {
@@ -139,6 +143,10 @@ ul {
 }
 
 /*===== NAV =====*/
+.navbar-inverse ul.nav li a:hover {
+  background: none;
+}
+
 .page-navigation {
   padding: 0;
 }
@@ -488,6 +496,10 @@ nav li.active a, .mobile-nav .nav li.active a {
 
 .dash-body.inbox {
   padding: 0;
+
+  .read {
+    background: #f9f9f9 ;
+  }
 
   .row {
     margin: 0;
@@ -930,6 +942,16 @@ table.order-header td {
     padding: 30px 8px;
     border-top: 1px solid #ddd;
   }
+
+  .checkbox {
+    margin: 0;
+  }
+
+  input#open, input[type="checkbox"] {
+    position: initial;
+    margin: 0;
+  }
+
 }
 
 /*=====POPOVERS=====*/
@@ -1013,6 +1035,20 @@ table.order-header td {
   right: 10px;
 }
 
+/*===== FOOTER =====*/
+.footer-wrapper {
+
+  .container-fluid {
+    max-width: 1360px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  * {
+    font-family: $font-stack;
+  }
+
+}
 
 
 /*===== MEDIA QUERIES =====*/
