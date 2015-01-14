@@ -22,14 +22,15 @@
     - all_fields.each do |object_field_pair|
       - object = object_field_pair.keys.first
       - field = object_field_pair[object]
-      %li.panel.panel-info
-        %div.panel-heading
-          = csv_fields_builder.get_label(object_field_pair)
-          - if field == 'external_id'
-            %span= check_box_tag "", field, true, disabled: true
-            %span.hidden= check_box_tag "#{f.object_name}[custom_csv_fields][]", "#{object}=>#{field}", true
-          - else
-            %span= check_box_tag "#{f.object_name}[custom_csv_fields][]", "#{object}=>#{field}", csv_fields_builder.object_field_pairs.include?(object_field_pair)
+      - if csv_fields_builder.get_label(object_field_pair).present?
+        %li.panel.panel-info
+          %div.panel-heading
+            = csv_fields_builder.get_label(object_field_pair)
+            - if field == 'external_id'
+              %span= check_box_tag "", field, true, disabled: true
+              %span.hidden= check_box_tag "#{f.object_name}[custom_csv_fields][]", "#{object}=>#{field}", true
+            - else
+              %span= check_box_tag "#{f.object_name}[custom_csv_fields][]", "#{object}=>#{field}", csv_fields_builder.object_field_pairs.include?(object_field_pair)
 
 
   %h4 Allowed Action Types
