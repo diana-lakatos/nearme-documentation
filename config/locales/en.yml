@@ -204,9 +204,6 @@ en:
     index:
       title: 'My orders'
 
-    states:
-      - Delivered
-
     labels:
       order_placed: 'ORDER PLACED'
       total: 'TOTAL'

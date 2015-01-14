@@ -8,16 +8,19 @@ class ProductForm < Form
 
   # Validations:
 
-  validates :name, presence: true
-  validates :price, presence: true, numericality: true
+  validates :name, presence: true, length: {minimum: 3}
+  validates :price, presence: true, numericality: { greater_than: 0 }
   validates :quantity, numericality: { only_integer: true }, presence: true
   validate :validate_images, :validate_shipping_methods
 
-  def_delegators :@product, :id, :price, :price=, :name, :name=, :description, :description=
-  def_delegators :@stock_movement, :quantity=
+  def_delegators :@product, :id, :price, :price=, :name, :name=, :description, :id=, :description=
 
   def quantity
-    @stock_item.stock_movements.sum(:quantity)
+    @quantity ||= @stock_item.stock_movements.sum(:quantity)
+  end
+
+  def quantity=quantity
+    @stock_movement.quantity = @quantity = quantity
   end
 
   def taxon_ids
@@ -82,7 +85,6 @@ class ProductForm < Form
     @stock_item.save!(validate: validate)
     @shipping_category.save!(validate: validate)
     @shipping_methods.each do |shipping_method|
-      shipping_method.destroy if shipping_method.removed == '1'
       shipping_method.save!(validate: validate)
       shipping_method.zones.each do |zone|
         zone.company = @company
@@ -109,27 +111,32 @@ class ProductForm < Form
     attributes.each do |key, shipping_methods_attributes|
       next if shipping_methods_attributes["hidden"] == "1"
       shipping_method = @shipping_category.shipping_methods.where(id: shipping_methods_attributes["id"]).first
-      shipping_method ||= Spree::ShippingMethod.new()
-      shipping_method.assign_attributes(shipping_methods_attributes)
-      shipping_method.shipping_categories = [@shipping_category]
-      @shipping_methods << shipping_method
+      if shipping_methods_attributes["removed"] == "1"
+        shipping_method.try(:destroy)
+      else
+        shipping_method ||= Spree::ShippingMethod.new()
+        shipping_method.assign_attributes(shipping_methods_attributes)
+        shipping_method.shipping_categories = [@shipping_category]
+        @shipping_methods << shipping_method
+      end
     end
   end
 
   def assign_all_attributes
     build_shipping_methods
-    @shipping_methods ||= @shipping_category.shipping_methods
     @category = @product.taxons.map(&:id).join(",")
     @price = @product.price
   end
 
   def build_shipping_methods
+    @shipping_methods ||= @shipping_category.shipping_methods.to_a
     5.times do
-      hidden = @shipping_category.shipping_methods.blank? ? "0" : "1"
+      hidden = @shipping_methods.blank? && @shipping_category.shipping_methods.blank? ? "0" : "1"
       shipping_method ||= @shipping_category.shipping_methods.build
       shipping_method.hidden = hidden
       shipping_method.calculator ||= Spree::Calculator::Shipping::FlatRate.new(preferred_amount: 0)
       shipping_method.zones.build(kind: "country", name: "Default - #{SecureRandom.hex}")
+      @shipping_methods << shipping_method
     end
   end
 end
