@@ -19,7 +19,7 @@
         .col-md-1
         .col-md-6
           =f.fields_for :calculator do |fc|
-            =fc.input :preferred_amount, label: 'Cost', input_html: { class: 'form-control'}
+            =fc.input :preferred_amount, label: 'Shipping Cost', input_html: { class: 'form-control'}
 
       =f.fields_for :zones do |z|
         =z.hidden_field :name

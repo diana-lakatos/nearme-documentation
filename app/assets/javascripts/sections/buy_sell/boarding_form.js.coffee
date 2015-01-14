@@ -64,9 +64,7 @@ class @BoardingForm
         $(shipping_hidden).parents(".shipping_method_block").hide()
 
     @form.find(".shipping_hidden").change ->
-      console.log(shipping_hidden)
       if $(this).prop("checked")
-        console.log('checked')
         $(this).parents(".shipping_method_block").hide('slow')
       else
         $(this).parents(".shipping_method_block").show('slow')

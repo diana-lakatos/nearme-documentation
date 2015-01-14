@@ -6,14 +6,10 @@
     .btn.blue Bulk Upload
 .dash-body
   .new-profile
-    =image_tag("themes/buy_sell/icon-cross.png")
-    = link_to "New List Item", new_dashboard_product_path
-  .dash-sub-nav
-    %ul
-      %li.active
-        %a{:href => "#"} Transactible 1
-      %li
-        %a{:href => "#"} Transactible 2
+    = link_to new_dashboard_product_path do
+      = image_tag("themes/buy_sell/icon-cross.png")
+      New List Item
+  %br
   .listings-header
     .row
       .col-md-3

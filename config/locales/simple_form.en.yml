@@ -96,12 +96,12 @@ en:
         name: 'Enter your business name'
         url: 'www.mycompany.com'
         email: 'yourname@example.com'
-        description: 'Give a brief description of your company'
+        description: 'Give a brief description of your company.'
       company:
         name: 'Enter your business name'
         url: 'www.mycompany.com'
         email: 'yourname@example.com'
-        description: 'Give a brief description of your company'
+        description: 'Give a brief description of your company.'
       location:
         email: 'Your booking email'
         special_notes: "For example, how your %{lessees} should check in, your Wi-Fi password, whether you have pets, or other special information relevant to your %{lessee}'s stay"

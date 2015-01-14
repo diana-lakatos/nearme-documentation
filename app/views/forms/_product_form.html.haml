@@ -1,8 +1,8 @@
 
 
 = f.input :id, :as => :hidden if f.object.product.persisted?
-= f.input :name, label: "Item Title", :placeholder => "Attractive title name here", hint: "Descriptive titles are best. Try to describe your item th eway a buyer would."
-= f.input :description, label: "Item description", as: :text, :placeholder => "This item is great and here is a story about it...", hint: "Try to answer the questions buyers will have about your product. Tell the item's story and explain why it's special."
+= f.input :name, label: "Item Name", placeholder: "Name"
+= f.input :description, label: "Item description", as: :text, placeholder: "Description"
 = f.input :taxon_ids, label: "Category", :placeholder => "Enter a category"
 .row
   .col-md-3
