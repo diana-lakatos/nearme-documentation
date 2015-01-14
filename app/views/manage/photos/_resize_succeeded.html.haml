@@ -1,8 +1,7 @@
-%header
-  %h2== Image successfully cropped/rotated
-%p.text-center{:style => 'margin: 40px 0px;'}
-  Your changes will be applied within a few minutes.
-.actions.text-center
-  = link_to '#', :class => 'btn btn-large btn-green close-modal ' do
-    %span.ico-check.padding Continue
+= render_modal "Image successfully cropped/rotated", { id: "crop-form-success" } do
+  %p.text-center{:style => 'margin: 40px 0px;'}
+    Your changes will be applied within a few minutes.
+  .submit-bar
+    = link_to '#', class: 'btn medium blue', data: { dismiss: 'modal' }, 'aria-label'=>"Continue" do
+      Continue
 

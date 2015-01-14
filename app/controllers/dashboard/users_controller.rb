@@ -18,6 +18,10 @@ class Dashboard::UsersController < Dashboard::BaseController
       @company.users << @user
       flash[:success] = t('flash_messages.manage.users.user_added', name: @user.name, company_name: @company.name)
     end
+    respond_to do |format|
+      format.html { raise NotImplementedError }
+      format.js
+    end
   end
 
   def destroy

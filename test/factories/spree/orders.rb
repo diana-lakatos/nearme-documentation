@@ -33,7 +33,6 @@ FactoryGirl.define do
 
       factory :order_waiting_for_payment do
         state 'payment'
-
       end
 
       factory :completed_order_with_totals do

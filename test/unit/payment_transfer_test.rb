@@ -86,14 +86,14 @@ class PaymentTransferTest < ActiveSupport::TestCase
       @refunds_reservation_1 = @refunds_company.reservations.order(:id).first
       @refunds_reservation_2 = @refunds_company.reservations.order(:id).second
 
-      @refunds_reservation_charges = [
+      @refunds_payments = [
         @refunds_reservation_1.reservation_charges.to_a,
         @refunds_reservation_2.reservation_charges.to_a
       ].flatten
     end
 
     should "calculate correctly the total sum for transfers without refunds" do
-      @refunds_payment_transfer.reservation_charges = @refunds_reservation_charges
+      @refunds_payment_transfer.payments = @refunds_payments
       @refunds_payment_transfer.save!
 
       assert_equal 1000 + 1000 - 100 - 150, @refunds_payment_transfer.amount_cents
@@ -104,17 +104,17 @@ class PaymentTransferTest < ActiveSupport::TestCase
     should "calculate correctly the total sum for transfers with refunds" do
       #Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).returns(Refund.new(:success => true))
 
-      @refunds_reservation_charges[0].reservation.user_cancel!
-      @refunds_reservation_charges[1].reservation.host_cancel!
-      @refunds_reservation_charges[0].refund
-      @refunds_reservation_charges[1].refund
+      @refunds_payments[0].reference.user_cancel!
+      @refunds_payments[1].reference.host_cancel!
+      @refunds_payments[0].refund
+      @refunds_payments[1].refund
 
-      assert_equal 400, @refunds_reservation_charges[0].amount_to_be_refunded
-      assert_equal 1000 + 200, @refunds_reservation_charges[1].amount_to_be_refunded
-      Refund.create(:success => true, :amount => 400, :reference => @refunds_reservation_charges[0])
-      Refund.create(:success => true, :amount => 1000 + 200, :reference => @refunds_reservation_charges[1])
+      assert_equal 400, @refunds_payments[0].amount_to_be_refunded
+      assert_equal 1000 + 200, @refunds_payments[1].amount_to_be_refunded
+      Refund.create(:success => true, :amount => 400, :reference => @refunds_payments[0])
+      Refund.create(:success => true, :amount => 1000 + 200, :reference => @refunds_payments[1])
 
-      @refunds_payment_transfer.reservation_charges = @refunds_reservation_charges
+      @refunds_payment_transfer.payments = @refunds_payments
       @refunds_payment_transfer.save!
 
       assert_equal 600 + 0, @refunds_payment_transfer.amount_cents

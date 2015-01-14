@@ -29,7 +29,7 @@ class @Photo.View
 
   singlePhotoHtml: ->
     deleteLink = $('<a data-url="' + @data.destroy_url + '" class="badge delete-photo delete-photo-thumb photo-action">Delete</a>')
-    cropLink = $('<a href="' + @data.resize_url + '" rel="modal"  data-id="photo-' + @data.id + '" class="badge resize-photo photo-action">Rotate & Crop</a>')
+    cropLink = $('<a href="' + @data.resize_url + '" data-remote="true" data-id="photo-' + @data.id + '" class="badge resize-photo photo-action">Rotate & Crop</a>')
     @photo.html("<img src='#{@data.url}' width='#{@data.thumbnail_dimensions.width}' height='#{@data.thumbnail_dimensions.height}'>")
     @photo.append(deleteLink)
     @photo.append(cropLink)

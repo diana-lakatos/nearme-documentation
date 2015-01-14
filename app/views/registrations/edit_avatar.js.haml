@@ -1,0 +1,3 @@
+$('#crop-form-modal').remove();
+$("body").append('#{escape_javascript( render partial: 'manage/photos/resize_form', :locals => { :form_url => update_avatar_path, :object => current_user.avatar, :object_url => current_user.avatar_url(:original) })}');
+$('#crop-form-modal').modal('show')

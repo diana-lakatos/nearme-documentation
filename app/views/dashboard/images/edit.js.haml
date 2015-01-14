@@ -1,0 +1,3 @@
+$('#crop-form-modal').remove();
+$("body").append('#{escape_javascript( render :partial => "manage/photos/resize_form", :locals => { :form_url => dashboard_image_path(@image), :object => @image.image, :object_url => @image.image_url(:original) })}');
+$('#crop-form-modal').modal('show')

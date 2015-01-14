@@ -85,7 +85,7 @@ module FileuploadHelper
   end
 
   def resize_photo_link(resize_photo_path, id)
-    link_to('Rotate & Crop', resize_photo_path, { data: {id: id}, :rel => 'modal', :class => 'badge resize-photo photo-action'})
+    link_to('Rotate & Crop', resize_photo_path, { data: {id: id, remote: true}, :class => 'badge resize-photo photo-action'})
   end
 
   def get_uploaded_content(options, &block)

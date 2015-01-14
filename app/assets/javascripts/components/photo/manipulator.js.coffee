@@ -12,14 +12,14 @@ class @Photo.Manipulator
     @bindCropHandler()
     @form.on 'submit', (e) =>
       e.preventDefault()
-      Modal.load { type: "POST", url: @form.attr("action"), data: { _method: 'put', crop: @crop, rotate: @angle } }
+      $.post(@form.attr("action"), { _method: 'put', crop: @crop, rotate: @angle })
 
   bindCropHandler: =>
     @crop = null
     self = this
     @image.Jcrop
       onSelect: (c) =>
-        if c.h != 0 and c.w != 0
+        if c.h != 0 && c.w != 0
           @crop = c
         else
           @crop = null

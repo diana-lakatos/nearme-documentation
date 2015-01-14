@@ -24,18 +24,14 @@ class Manage::PhotosController < Manage::BaseController
 
   def edit
     @photo = current_user.photos.find(params[:id])
-    if request.xhr?
-      render partial: 'resize_form', :locals => { :form_url => manage_photo_path(@photo), :object => @photo.image, :object_url => @photo.image_url(:original) }
-    end
   end
 
   def update
     @photo = current_user.photos.find(params[:id])
     @photo.image_transformation_data = { :crop => params[:crop], :rotate => params[:rotate] }
     if @photo.save
-      render partial: 'manage/photos/resize_succeeded'
     else
-      render partial: 'resize_form', :locals => { :form_url => manage_photo_path(@photo), :object => @photo.image, :object_url => @photo.image_url(:original) }
+      render :edit
     end
   end
 
