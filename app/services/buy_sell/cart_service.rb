@@ -16,6 +16,8 @@ class BuySell::CartService
       @errors << populator.errors.full_messages.join('\n')
       return false
     end
+    
+    update_order(@order)
   end
 
   def remove_item(item_id)

@@ -16,15 +16,17 @@
             %p= t 'buy_sell_market.products.labels.rating'
             = render partial: 'stars', locals: { stars: 5, count: 8 }
 
-        = form_tag cart_add_product_path, method: :get, class: 'inline' do
-          = hidden_field_tag 'product_id', @product.id
-          = label_tag 'quantity', t('buy_sell_market.products.labels.qty')
-          = select_tag 'quantity', options_for_select((1..10)), class: ''
-          - if @product.total_on_hand > 0
-            %button.cta.btn.blue.padding11
-              = t('buy_sell_market.products.buttons.add_to_cart')
-          - else
-            .btn.disabled= t('buy_sell_market.products.buttons.out_of_stock')
+
+        - if @product.total_on_hand > 0
+          = form_tag cart_add_product_path, method: :get, class: 'inline' do
+            = hidden_field_tag 'product_id', @product.id
+            = label_tag 'quantity', t('buy_sell_market.products.labels.qty')
+            = select_tag 'quantity', options_for_select((1..10)), class: ''
+            - if @product.total_on_hand > 0
+              %button.cta.btn.blue.padding11
+                = t('buy_sell_market.products.buttons.add_to_cart')
+        - else
+          .btn.disabled= t('buy_sell_market.products.buttons.out_of_stock')
 
         .product-social-wrapper
           - unless hidden.include?(:favorite)
