@@ -28,21 +28,6 @@ class DashboardController < ApplicationController
     @listings = current_user.companies.first.listings.all
   end
 
-  def transfers
-    # All transferred PaymentTransfers paginated
-    @payment_transfers = @company.payment_transfers.transferred.order('transferred_at DESC')
-    @payment_transfers = @payment_transfers.paginate(page: params[:page], per_page: 20)
-
-    # PaymentTransfers specifically from the last 7 days
-    @last_week_payment_transfers = @company.
-                                    payment_transfers.
-                                    transferred.
-                                    last_x_days(6).
-                                    order('created_at ASC')
-
-    @chart = ChartDecorator.decorate(@last_week_payment_transfers)
-  end
-
   def guest_rating
     @reservation = current_user.listing_reservations.find(params[:id])
     existing_guest_rating = GuestRating.where(reservation_id: @reservation.id,
