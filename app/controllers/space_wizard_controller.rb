@@ -20,11 +20,12 @@ class SpaceWizardController < ApplicationController
     if buyable?
       @boarding_form = BoardingForm.new(current_user)
       @boarding_form.assign_all_attributes
+      @images = current_user.products_images.where(viewable_id: nil, viewable_type: nil)
       render :list_item, layout: "dashboard"
     else
       build_objects
       build_approval_requests
-      @photos = @user.first_listing ? @user.first_listing.photos : nil
+      @photos = @user.first_listing.try(:photos).try(:present?) ? @user.first_listing.photos : @user.photos.where(transactable_id: nil)
       @user.phone_required = true
       event_tracker.viewed_list_your_bookable
       event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
@@ -73,6 +74,7 @@ class SpaceWizardController < ApplicationController
     if @boarding_form.submit(boarding_form_params)
       redirect_to space_wizard_list_url, notice: t('flash_messages.space_wizard.item_listed', bookable_noun: platform_context.decorate.bookable_noun)
     else
+      @images = @boarding_form.product_form.product.images
       render :list_item, layout: "dashboard"
     end
 
@@ -110,7 +112,7 @@ class SpaceWizardController < ApplicationController
   end
 
   def build_objects
-    @user.companies.build if @user.companies.first.nil?    
+    @user.companies.build if @user.companies.first.nil?
     @user.companies.first.locations.build if @user.companies.first.locations.first.nil?
     @user.companies.first.locations.first.listings.build({:transactable_type_id => @transactable_type.id}) if @user.companies.first.locations.first.listings.first.nil?
   end
