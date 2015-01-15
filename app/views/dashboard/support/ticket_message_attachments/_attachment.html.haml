@@ -1,0 +1,16 @@
+- form_name ||= 'support_ticket_message'
+.attachment.row{id: dom_id(ticket_message_attachment)}
+  .col-md-6
+    = link_to ticket_message_attachment.read_attribute(:file), ticket_message_attachment.file.url, target: '_blank'
+  .col-md-5
+    = ticket_message_attachment.tag
+  - if ticket_message_attachment.ticket_message.nil?
+    .col-md-1
+      .destroy.pull-right
+        = link_to dashboard_support_ticket_ticket_message_attachment_path(params[:ticket_id], ticket_message_attachment), :'data-delete' => 'Are you sure?' do
+          %span.ico-trash
+      .edit.pull-right
+        = link_to edit_dashboard_support_ticket_ticket_message_attachment_path(params[:ticket_id],ticket_message_attachment), data: { form_name: form_name }, rel: 'bootstrap_modal' do
+          %span.icon.ico-edit
+  %input{name: "#{form_name}[attachment_ids][]", value: ticket_message_attachment.id, type: 'hidden' }
+

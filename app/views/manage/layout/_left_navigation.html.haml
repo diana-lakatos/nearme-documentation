@@ -46,6 +46,10 @@
           = link_to t('dashboard.nav.waiver_agreements'), dashboard_waiver_agreement_templates_path
         = content_tag :li, class: (params[:controller].include?('white_label')) ? 'active' : '' do
           = link_to t('dashboard.nav.white_label'), edit_dashboard_white_label_path(current_user.companies.first)
+        - if TransactableType.all.any? { |t| t.has_action?('Request For Quote') }
+          = content_tag :li, class: (params[:controller].include?('tickets')) ? 'active' : '' do
+            = link_to t('dashboard.nav.rfq'), dashboard_support_tickets_path
+
     %ul
       %li.nav-head
         = t('dashboard.nav.account')
