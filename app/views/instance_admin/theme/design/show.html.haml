@@ -29,7 +29,7 @@
                 .single-photo
                   = file_upload_input("url", upload_theme_image_instance_admin_theme_design_path(image_attr), f.object.send("#{image_attr}_dimensions"), "Upload #{image_attr}", {"no-multiple" => true, :height => max_height, :row => i}) do
                     - if f.object.send(image_attr).any_url_exists?
-                      = fileupload_photo(f.object.send("#{image_attr}_url"),
+                      = old_fileupload_photo(f.object.send("#{image_attr}_url"),
                         destroy_theme_image_instance_admin_theme_design_path(image_attr),
                         edit_theme_image_instance_admin_theme_design_path(image_attr),
                         :div)
