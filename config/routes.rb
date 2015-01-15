@@ -306,11 +306,13 @@ DesksnearMe::Application.routes.draw do
   end
 
   resources :listings, :only => [:index, :show] do
+
     resources :recurring_bookings, :only => [:create, :update], :controller => "listings/recurring_bookings" do
       collection do
         post :review
         post :store_recurring_booking_request
       end
+
       member do
         get :booking_successful
       end
@@ -318,16 +320,16 @@ DesksnearMe::Application.routes.draw do
 
     resources :tickets, only: [:new, :create], :controller => 'listings/support/tickets'
 
-    resources :reservations, :only => [:create, :update], :controller => "listings/reservations" do
+    resources :reservations, :only => [:create, :update], :controller => 'listings/reservations' do
       collection do
         post :review
         post :store_reservation_request
       end
+
       member do
-        get :booking_successful
-        get :booking_failed
-        get :remote_payment
+        get :remote_payment # TODO: Check
       end
+
       get :hourly_availability_schedule, :on => :collection
     end
 
@@ -361,29 +363,9 @@ DesksnearMe::Application.routes.draw do
     delete "/instance_admin/sessions", :to => "instance_admin/sessions#destroy"
   end
 
-  resources :reservations, :except => [:update, :destroy, :show] do
-    member do
-      post :user_cancel
-      get :export
-      get :booking_successful
-      get :booking_failed
-      get :remote_payment
-      get :recurring_booking_successful
-    end
-
-    collection do
-      get :upcoming
-      get :archived
-    end
-
-    resources :guest_ratings, :only => [:new, :create]
-    resources :host_ratings, :only => [:new, :create]
-    resources :payment_notifications, :controller => "reservations/payment_notifications"
-  end
-
-  # TODO: Delete after testing of new Dashboard
-  # get '/reservations/:id/guest_rating' => 'dashboard#guest_rating', as: 'guest_rating'
-  # get '/reservations/:id/host_rating' => 'reservations#host_rating', as: 'host_rating'
+  # TODO: Delete after new rating system implemented
+  get '/reservations/:id/guest_rating' => 'dashboard#guest_rating', as: 'guest_rating'
+  get '/reservations/:id/host_rating' => 'reservations#host_rating', as: 'host_rating'
 
   resources :recurring_bookings, :except => [:destroy] do
     member do
@@ -394,16 +376,6 @@ DesksnearMe::Application.routes.draw do
       get :archived
     end
   end
-
-  # TODO: Delete after testing of new Dashboard
-  # resource :dashboard, :only => [:show], :controller => 'dashboard' do
-  #   member do
-  #     # get :bookings, :to => 'reservations#upcoming'
-  #     # get :listings
-  #     # get :manage_guests
-  #     # get :transfers
-  #   end
-  # end
 
   resources :listings, :users, :reservations, :products do
     resources :user_messages, controller: "dashboard/user_messages", except: [:index] do
@@ -479,7 +451,6 @@ DesksnearMe::Application.routes.draw do
         get :booking_failed
         get :remote_payment
         get :recurring_booking_successful
-        get :host_rating
       end
 
       collection do
@@ -487,16 +458,15 @@ DesksnearMe::Application.routes.draw do
         get :archived
       end
 
-      resources :guest_ratings, :only => [:new, :create]
-      resources :host_ratings, :only => [:new, :create]
-      resources :payment_notifications, :controller => "reservations/payment_notifications"
+      # TODO: Delete after new rating system is implemented
+      resources :guest_ratings, only: [:new, :create]
+      resources :host_ratings, only: [:new, :create]
+      #
+
+      resources :payment_notifications, controller: 'reservations/payment_notifications' # TODO: Check
     end
 
-    resources :guests do
-      member do
-        get 'rating'
-      end
-    end
+    resources :guests
   end
 
   namespace :manage do

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ReservationsControllerTest < ActionController::TestCase
+class Dashboard::ReservationsControllerTest < ActionController::TestCase
 
   context '#event_tracker' do
 
@@ -24,7 +24,7 @@ class ReservationsControllerTest < ActionController::TestCase
       end
 
       post :user_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
-      assert_redirected_to bookings_dashboard_path
+      assert_redirected_to dashboard_reservations_path
     end
 
   end
@@ -44,7 +44,7 @@ class ReservationsControllerTest < ActionController::TestCase
     end
 
     should 'be exportable to .ics format' do
-      url = bookings_dashboard_url(id: @reservation.id, host: Rails.application.routes.default_url_options[:host])
+      url = dashboard_reservations_url(id: @reservation.id, host: Rails.application.routes.default_url_options[:host])
       get :export, :format => :ics, :listing_id => @reservation.listing.id, :id => @reservation.id
       assert_response :success
       assert_equal "text/calendar", response.content_type
@@ -114,7 +114,7 @@ class ReservationsControllerTest < ActionController::TestCase
         @instance = FactoryGirl.create(:instance)
         get :upcoming
         assert_response :success
-        assert_select ".box .no-data", "You don't have any upcoming bookings. Find a #{Instance.default_instance.bookable_noun} near you!"
+        assert_select "p.text-center", "You don't have any upcoming bookings. Find a #{Instance.default_instance.bookable_noun} near you!"
       end
 
       should 'if any upcoming bookings' do
@@ -122,7 +122,7 @@ class ReservationsControllerTest < ActionController::TestCase
 
         get :upcoming
         assert_response :success
-        assert_select ".reservation-details", 1
+        assert_select ".order", 1
       end
 
       should 'if any archived bookings' do
@@ -130,7 +130,7 @@ class ReservationsControllerTest < ActionController::TestCase
 
         get :archived
         assert_response :success
-        assert_select ".reservation-details", 1
+        assert_select ".order", 1
       end
 
     end

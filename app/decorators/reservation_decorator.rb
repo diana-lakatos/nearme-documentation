@@ -101,6 +101,13 @@ class ReservationDecorator < Draper::Decorator
     first == last ? first : "#{first} - #{last}"
   end
 
+  def long_dates
+    first = date.strftime('%-e %b, %Y')
+    last = last_date.strftime('%-e %b, %Y')
+
+    first == last ? first : "#{first} - #{last}"
+  end
+
   def format_reservation_periods
     periods.map do |period|
       period = period.decorate

@@ -80,14 +80,6 @@ class Listings::ReservationsController < ApplicationController
     end
   end
 
-  # Renders booking successful modal
-  def booking_successful
-  end
-
-  # Renders booking failed modal
-  def booking_failed
-  end
-
   # Renders remote payment form
   def remote_payment
     @billing_gateway = Billing::Gateway::Incoming.new(current_user, @reservation.instance, @reservation.currency, @reservation.listing.company.iso_country_code)
