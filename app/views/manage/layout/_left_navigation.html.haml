@@ -23,8 +23,8 @@
             = link_to 'Listings', dashboard_transactable_type_transactables_path(TransactableType.first)
         = content_tag :li, class: (params[:controller].include?('payouts')) ? 'active' : '' do
           = link_to 'Payout', edit_dashboard_payouts_path
-        %li
-          %a{:href => "#"} Payment
+        -#%li
+        -#  %a{:href => "#"} Payment
         - orders_rceived_active = params[:controller] == ('dashboard/orders_received')
         - if buyable?
           = content_tag :li, class: orders_rceived_active ? 'active' : '' do
@@ -35,6 +35,12 @@
       %ul
         %li.nav-head
           ADMIN
+        -# Jaromir: Not used for now
+        -#%li
+        -#  %a{:href => "#"} Blog
+
+        = content_tag :li, class: (params[:controller].include?('transfers')) ? 'active' : '' do
+          = link_to 'Payment Transfers', dashboard_transfers_path
         = content_tag :li, class: (params[:controller].include?('analytics')) ? 'active' : '' do
           = link_to 'Analytics', dashboard_analytics_path
         = content_tag :li, class: (params[:controller].include?('users')) ? 'active' : '' do
@@ -49,7 +55,7 @@
       = content_tag :li, class: (params[:controller].include?('registration') && params[:action].include?('edit_profile')) ? 'active' : '' do
         = link_to 'Edit Profile', dashboard_profile_path
       = content_tag :li, class: (params[:controller].include?('registration') && params[:action].include?('social_accounts')) ? 'active' : '' do
-        = link_to 'Trust & Verification', '/dashboard/social_accounts'
+        = link_to 'Trust & Verification', social_accounts_path
       - if false
         %li
           %a{:href => "#"} Notification Preferences

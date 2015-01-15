@@ -127,12 +127,12 @@ SimpleForm.setup do |config|
     end
   end
 
-  config.wrappers :bs3_simple do |b|
+  config.wrappers :bs3_simple, :error_class => 'error' do |b|
     b.use :html5
     b.use :placeholder
     b.use :label
     b.use :input
-    b.optional :error
+    b.use :error, :wrap_with => { :tag => 'col-md-9', :class => 'help-inline' }
   end
 
   # Wrappers for forms and inputs using the Twitter Bootstrap toolkit.

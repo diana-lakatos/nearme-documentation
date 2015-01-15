@@ -12,7 +12,7 @@
 @import "globals/*";
 @import "components/nav";
 
-//@import "components/modal";
+//@import "components/modal"; #TODO Disabled - breaks BS3 modals
 
 $font-stack: 'Open Sans', sans-serif, helvetica;
 $color-blue: #5dbded;
