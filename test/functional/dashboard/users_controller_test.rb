@@ -50,7 +50,7 @@ class Dashboard::UsersControllerTest < ActionController::TestCase
         assert_no_difference('@company.users.count') do
           post :create, { format: :js, user: { email: @user.email } }
         end
-        assert_equal "This user couldn't be invited as they are already associated with a company.", flash[:warning]
+        assert_equal "This user couldn't be invited as they are already associated with a company.", flash[:error]
       end
 
       should "destroy company user" do

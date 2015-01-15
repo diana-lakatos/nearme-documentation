@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DashboardControllerTest < ActionController::TestCase
+class Dashboard::AnalyticsControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
@@ -26,23 +26,23 @@ class DashboardControllerTest < ActionController::TestCase
           end
 
           should '@last_week_reservation_charges ignores charges that do not belong to signed in user' do
-            get :analytics
+            get :show
             assert_equal [@owner_charge], assigns(:last_week_reservation_charges)
           end
 
           should '@reservation_charges ignores charges that do not belong to signed in user' do
-            get :analytics
+            get :show
             assert_equal [@owner_charge], assigns(:reservation_charges)
           end
 
           should '@all_time_totals ' do
-            get :analytics
+            get :show
             assert_equal 1, assigns(:all_time_totals).length
           end
 
           should 'be scoped to current instance' do
             set_second_instance
-            get :analytics
+            get :show
             assert_equal [], assigns(:reservation_charges)
             assert_equal [], assigns(:last_week_reservation_charges)
             assert_equal [], assigns(:all_time_totals)
@@ -58,12 +58,12 @@ class DashboardControllerTest < ActionController::TestCase
           end
 
           should '@last_week_reservation_charges includes only charges not older than 6 days' do
-            get :analytics
+            get :show
             assert_equal [@charge_created_6_days_ago], assigns(:last_week_reservation_charges)
           end
 
           should '@reservation_charges includes all charges that belong to a user' do
-            get :analytics
+            get :show
             assert_equal [@charge_created_6_days_ago, @charge_created_7_days_ago], assigns(:reservation_charges)
           end
 
@@ -88,13 +88,13 @@ class DashboardControllerTest < ActionController::TestCase
         end
 
         should '@last_week_reservations includes user company reservations' do
-          get :analytics, :analytics_mode => 'bookings'
+          get :show, :analytics_mode => 'bookings'
           assert_equal [@reservation], assigns(:reservations)
         end
 
         should 'be scoped to current instance' do
           set_second_instance
-          get :analytics, :analytics_mode => 'bookings'
+          get :show, :analytics_mode => 'bookings'
           assert_equal [], assigns(:reservations)
         end
 
@@ -107,13 +107,13 @@ class DashboardControllerTest < ActionController::TestCase
         end
 
         should '@last_week_reservations includes only reservations not older than 6 days' do
-          get :analytics, :analytics_mode => 'bookings'
+          get :show, :analytics_mode => 'bookings'
           assert_equal [@reservation_created_6_days_ago], assigns(:last_week_reservations)
         end
 
         should '@last_week is scoped to current instance' do
           set_second_instance
-          get :analytics, :analytics_mode => 'bookings'
+          get :show, :analytics_mode => 'bookings'
           assert_equal [], assigns(:last_week_reservations)
         end
 
@@ -138,14 +138,14 @@ class DashboardControllerTest < ActionController::TestCase
         end
 
         should '@last_month_visits has one visit from today' do
-          get :analytics, :analytics_mode => 'location_views'
+          get :show, :analytics_mode => 'location_views'
           assert_equal Date.current, Date.strptime(assigns(:last_month_visits).first.impression_date.to_s)
           assert_equal 1, assigns(:visits).size
         end
 
         should '@last_month_visits has no visits from today in second instance' do
           set_second_instance
-          get :analytics, :analytics_mode => 'location_views'
+          get :show, :analytics_mode => 'location_views'
           assert_equal [], assigns(:last_month_visits)
           assert_equal [], assigns(:visits)
         end
@@ -156,54 +156,6 @@ class DashboardControllerTest < ActionController::TestCase
 
   end
 
-  context '#manage_guests' do
-    setup do
-      @related_company = FactoryGirl.create(:company_in_auckland, :creator_id => @user.id)
-      @related_location = FactoryGirl.create(:location_in_auckland, company: @related_company)
-      @related_listing = FactoryGirl.create(:transactable, location: @related_location)
-      @unrelated_listing = FactoryGirl.create(:transactable)
-      @unrelated_listing.update_attribute(:instance_id, FactoryGirl.create(:instance).id)
-    end
-
-    should 'show related guests' do
-      FactoryGirl.create(:reservation, owner: @user, listing: @related_listing)
-      get :manage_guests
-      assert_response :success
-      assert_select ".reservation-details", 1
-    end
-
-    should 'show related locations when no related guests' do
-      @reservation = FactoryGirl.create(:reservation, owner: @user, listing: @unrelated_listing)
-      @reservation.update_attribute(:instance_id, @unrelated_listing.instance_id)
-      get :manage_guests
-      assert_response :success
-      assert_select ".reservation-details", 0
-      assert_select "h2", @related_location.name
-    end
-
-    should 'not show unrelated guests' do
-      @reservation = FactoryGirl.create(:reservation, owner: @user, listing: @unrelated_listing)
-      @reservation.update_attribute(:instance_id, @unrelated_listing.instance_id)
-      get :manage_guests
-      assert_response :success
-      assert_select ".reservation-details", 0
-    end
-
-    should 'show tweet links if no reservation' do
-      get :manage_guests
-      assert_response :success
-      assert_select ".sharelocation", 1
-      assert_select ".sharelocation li", 5
-    end
-
-    should 'not show tweet links if there is reservation' do
-      FactoryGirl.create(:reservation, owner: @user, listing: @related_listing)
-      get :manage_guests
-      assert_response :success
-      assert_select ".sharelocation", 0
-    end
-
-  end
 
   private
 
@@ -227,6 +179,7 @@ class DashboardControllerTest < ActionController::TestCase
     company = FactoryGirl.create(:company, :creator => @user)
     company.update_attribute(:instance_id, second_instance.id)
     PlatformContext.current = PlatformContext.new(second_instance)
+    FactoryGirl.create(:transactable_type)
   end
 
 end
