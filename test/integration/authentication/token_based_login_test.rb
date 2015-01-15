@@ -78,31 +78,30 @@ class Authentication::TokenBasedLoginTest < ActionDispatch::IntegrationTest
     end
   end
 
-  context "manage/locations_controller integration" do
+  context "dashboard/listings_controller integration" do
     setup do
-      @user = FactoryGirl.create(:user)
-      post_via_redirect 'users/sign_in', 'user[email]' => @user.email, 'user[password]' => @user.password
-      @company = FactoryGirl.create(:company, :creator => @user)
-      @location = FactoryGirl.create(:location_in_auckland, :company => @company)
       @transactable_type = TransactableType.first
+      @transactable = FactoryGirl.create(:transactable, location: FactoryGirl.create(:location_in_auckland))
+      @user = @transactable.creator
+      post_via_redirect 'users/sign_in', 'user[email]' => @user.email, 'user[password]' => @user.password
     end
 
     should 'be relogged if he uses token' do
-      get_via_redirect edit_manage_location_path(:id => @location.id, :token => @location.creator.authentication_token)
+      get_via_redirect edit_dashboard_transactable_type_transactable_path(@transactable_type, @transactable, :token => @transactable.creator.authentication_token)
       assert_response :success
     end
 
     should 'be prompted login form if he uses wrong token' do
-      get edit_manage_location_path(:id => @location.id, :token => 'this one is certainly wrong one')
+      get edit_dashboard_transactable_type_transactable_path(@transactable_type, @transactable, :token => 'this one is certainly wrong one')
       follow_redirect!
       assert_response :redirect
-      assert_redirected_to new_user_session_path(:return_to => edit_manage_location_url(:id => @location.id))
+      assert_redirected_to new_user_session_path(return_to: edit_dashboard_transactable_type_transactable_url(@transactable_type, @transactable))
     end
 
     should 'be redirected back after login when token is wrong' do
-      get_via_redirect edit_manage_location_path(:id => @location.id, :token => 'this one is certainly wrong one')
+      get_via_redirect edit_dashboard_transactable_type_transactable_path(@transactable_type, @transactable, :token => 'this one is certainly wrong one')
       post 'users/sign_in', {'user[email]' => @user.email, 'user[password]' => @user.password}
-      assert_redirected_to edit_manage_location_path(:id => @location.id)
+      assert_redirected_to new_user_session_path(return_to: new_user_session_url)
     end
   end
 
