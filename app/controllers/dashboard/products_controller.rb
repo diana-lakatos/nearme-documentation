@@ -18,6 +18,7 @@ class Dashboard::ProductsController < Dashboard::BaseController
     if @product_form.submit(product_form_params)
       redirect_to location_after_save, notice: t('flash_messages.manage.product.created')
     else
+      @images = @product_form.product.images
       flash.now[:error] = t('flash_messages.product.complete_fields')
       render :new
     end
@@ -34,6 +35,7 @@ class Dashboard::ProductsController < Dashboard::BaseController
     if @product_form.submit(product_form_params)
       redirect_to location_after_save, notice: t('flash_messages.manage.product.updated')
     else
+      @images = @product_form.product.images
       render :edit
     end
   end
