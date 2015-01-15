@@ -200,6 +200,29 @@ en:
       errors:
         qty: 'Selected quantity is not available.'
 
+  dashboard:
+    nav:
+      my_orders: 'My Orders'
+      messages: 'Messages'
+      shop_details: 'Shop Details'
+      listings: 'Listings'
+      payout: 'Payout'
+      payment: 'Payment'
+      orders_received: 'Orders Received'
+      payment_transfers: 'Payment Transfers'
+      analytics: 'Analytics'
+      manage_admins: 'Manage Admins'
+      waiver_agreements: 'Waiver Agreements'
+      white_label: 'White-Label'
+      edit_profile: 'Edit Profile'
+      trust_verification: 'Trust & Verification'
+      notification_preferences: 'Notification Preferences'
+
+      your_shop: 'YOUR SHOP'
+      admin: 'ADMIN'
+      account: 'ACCOUNT'
+      menu: 'MENU'
+
   orders:
     index:
       title: 'My orders'
