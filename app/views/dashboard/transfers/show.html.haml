@@ -3,7 +3,7 @@
     %p Payment Transfers
   .dash-body
     - if @last_week_payment_transfers.empty?
-      %p.no_data No transfers have been made in the preceding 7 day period.
+      %p.no_data.text-center No transfers have been made in the preceding 7 day period.
     - else
       .chart
         .total.right
@@ -14,7 +14,7 @@
         %canvas#chart
 
     - unless @company.paypal_email.present? || @company.mailing_address.present?
-      %p.warning
+      %p.warning.text-center
         %i.ico-warning
         You haven't set a payment method yet.
         = link_to "Set one up now.", edit_dashboard_payouts_path

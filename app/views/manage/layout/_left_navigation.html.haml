@@ -3,59 +3,56 @@
     %ul
       - if buyable?
         = content_tag :li, class: (params[:controller] == 'dashboard/orders') ? 'active' : '' do
-          = link_to 'My Orders', dashboard_orders_path
+          = link_to t('dashboard.nav.my_orders'), dashboard_orders_path
       - else
         = content_tag :li, class: (params[:controller] == 'dashboard/reservations') ? 'active' : '' do
-          = link_to 'My Orders', dashboard_reservations_path
+          = link_to t('dashboard.nav.my_orders'), dashboard_reservations_path
 
       = content_tag :li, class: params[:controller].include?('user_messages') ? 'active' : '' do
-        = link_to 'Messages', dashboard_user_messages_path
+        = link_to t('dashboard.nav.messages'), dashboard_user_messages_path
+
     - if current_user.companies.any?
       %ul
         %li.nav-head
-          YOUR SHOP
+          = t('dashboard.nav.your_shop')
         = content_tag :li, class: (params[:controller].include?('companies')) ? 'active' : '' do
-          = link_to 'Shop Details', edit_dashboard_company_path(current_user.companies.first)
+          = link_to t('dashboard.nav.shop_details'), edit_dashboard_company_path(current_user.companies.first)
         = content_tag :li, class: ['dashboard/products', 'dashboard/transactables'].include?(params[:controller]) ? 'active' : '' do
           - if buyable?
-            = link_to 'Listings', dashboard_products_path
+            = link_to t('dashboard.nav.listings'), dashboard_products_path
           - else
-            = link_to 'Listings', dashboard_transactable_type_transactables_path(TransactableType.first)
+            = link_to t('dashboard.nav.listings'), dashboard_transactable_type_transactables_path(TransactableType.first)
         = content_tag :li, class: (params[:controller].include?('payouts')) ? 'active' : '' do
-          = link_to 'Payout', edit_dashboard_payouts_path
+          = link_to t('dashboard.nav.payout'), edit_dashboard_payouts_path
         -#%li
-        -#  %a{:href => "#"} Payment
+        -#  %a{:href => "#"}= t('dashboard.nav.payment')
         - orders_rceived_active = params[:controller] == ('dashboard/orders_received')
         - if buyable?
           = content_tag :li, class: orders_rceived_active ? 'active' : '' do
-            = link_to 'Orders Received', dashboard_orders_received_index_path
+            = link_to t('dashboard.nav.orders_received'), dashboard_orders_received_index_path
         - else
           = content_tag :li, class: (params[:controller] == 'dashboard/guests') ? 'active' : '' do
-            = link_to 'Orders Received', dashboard_guests_path
+            = link_to t('dashboard.nav.orders_received'), dashboard_guests_path
       %ul
         %li.nav-head
-          ADMIN
-        -# Jaromir: Not used for now
-        -#%li
-        -#  %a{:href => "#"} Blog
-
+          = t('dashboard.nav.admin')
         = content_tag :li, class: (params[:controller].include?('transfers')) ? 'active' : '' do
-          = link_to 'Payment Transfers', dashboard_transfers_path
+          = link_to t('dashboard.nav.payment_transfers'), dashboard_transfers_path
         = content_tag :li, class: (params[:controller].include?('analytics')) ? 'active' : '' do
-          = link_to 'Analytics', dashboard_analytics_path
+          = link_to t('dashboard.nav.analytics'), dashboard_analytics_path
         = content_tag :li, class: (params[:controller].include?('users')) ? 'active' : '' do
-          = link_to 'Manage Admins', dashboard_users_path
+          = link_to t('dashboard.nav.manage_admins'), dashboard_users_path
         = content_tag :li, class: (params[:controller].include?('waiver_agreement_templates')) ? 'active' : '' do
-          = link_to 'Waiver Agreements', dashboard_waiver_agreement_templates_path
+          = link_to t('dashboard.nav.waiver_agreements'), dashboard_waiver_agreement_templates_path
         = content_tag :li, class: (params[:controller].include?('white_label')) ? 'active' : '' do
-          = link_to 'White-Label', edit_dashboard_white_label_path(current_user.companies.first)
+          = link_to t('dashboard.nav.white_label'), edit_dashboard_white_label_path(current_user.companies.first)
     %ul
       %li.nav-head
-        ACCOUNT
-      = content_tag :li, class: (params[:controller].include?('registration') && params[:action].include?('edit_profile')) ? 'active' : '' do
-        = link_to 'Edit Profile', dashboard_profile_path
+        = t('dashboard.nav.account')
+      = content_tag :li, class: (params[:controller].include?('registration') && params[:action].include?('edit')) ? 'active' : '' do
+        = link_to t('dashboard.nav.edit_profile'), dashboard_profile_path
       = content_tag :li, class: (params[:controller].include?('registration') && params[:action].include?('social_accounts')) ? 'active' : '' do
-        = link_to 'Trust & Verification', social_accounts_path
+        = link_to t('dashboard.nav.trust_verification'), social_accounts_path
       - if false
         %li
-          %a{:href => "#"} Notification Preferences
+          %a{:href => "#"}= t('dashboard.nav.notification_preferences')
