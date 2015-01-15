@@ -1,9 +1,10 @@
 .listings
   .row
     .col-md-3.listing-img
-      =image_tag(product.images.first.try{ |i| i.image.url(:medium) })
+      = link_to product_path(product) do
+        = image_tag(product.images.first.try{ |i| i.image.url(:medium) })
     .col-md-3.listing-attr
-      = link_to product.name, edit_dashboard_product_path(product)
+      = link_to product.name, product_path(product)
     .col-md-3.listing-attr
       %p= product.total_on_hand
     .col-md-2.listing-attr
