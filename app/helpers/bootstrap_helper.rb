@@ -1,6 +1,6 @@
 module BootstrapHelper
   def render_modal(header, options={}, &block)
-    content = capture(&block)
+    content = block ?  capture(&block) : content_tag(:div)
     content_tag :div, id: options[:id], class: "modal fade in", role: "dialog", tabindex: '-1', :"aria-hidden" => "true", data: {show: options[:autoload]} do
       content_tag :div, class: "modal-dialog" do
         content_tag :div, class: options[:bs2] ? "modal-body" : "modal-content" do
