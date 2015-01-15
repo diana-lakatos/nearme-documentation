@@ -1,5 +1,4 @@
 class Dashboard::ReservationsController < Dashboard::BaseController
-  before_filter :authenticate_user!, :except => :new
 
   before_filter :only => [:user_cancel] do |controller|
     unless allowed_events.include?(controller.action_name)
@@ -49,6 +48,7 @@ class Dashboard::ReservationsController < Dashboard::BaseController
     render :index
   end
 
+  # TODO: Delete after new rating system implemented
   def host_rating
     existing_host_rating = HostRating.where(reservation_id: reservation.id,
                                             author_id: current_user.id)

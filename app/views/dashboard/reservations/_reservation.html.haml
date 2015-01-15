@@ -9,20 +9,21 @@
         %p Requested date
         %p
           - if reservation.periods.first.read_attribute(:start_minute).present?
-            -# TODO Jaromir: Temporarily disabled until we have BS3 DatePicker (and desing for that)
-            -#- reservation_period = reservation.periods.first.decorate
-            -#%a.dates{href: '#', 'data-reservation-hours' => reservation_period.hourly_summary(true)}
-            = reservation.short_dates
+            = reservation.long_dates
           - else
-            -# TODO Jaromir: ^^
-            -#%a.dates{href: '#', data: { :dates => reservation.dates_to_array } }
-            = reservation.short_dates
+            = reservation.long_dates
+
+      .col-md-4
+        %p Requested time
+        - if reservation.periods.first.read_attribute(:start_minute).present?
+          - reservation_period = reservation.periods.first.decorate
+          %p= reservation_period.hourly_summary(false).gsub('<br />', ' ').html_safe
+        - else
+          N/A
 
       .col-md-2
         %p Total
         %p= reservation.total_price
-
-      .col-md-4
 
   .order-body
     .order-status
@@ -57,8 +58,3 @@
 
             - if reservation.confirmed?
               = link_to 'Add to iCal', export_dashboard_reservation_path(reservation, format: :ics), class: 'btn gray full'
-
-
-              -# TODO Jaromir: Temporarily disabled until we have BS3 DatePicker (and desing for that)
-              -#- content_for :domready do
-              -#  new Reservation.UserReservationController($("##{dom_id(reservation)}"))

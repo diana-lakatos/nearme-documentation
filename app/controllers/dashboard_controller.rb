@@ -1,3 +1,4 @@
+# TODO This whole thing should not be used anymore under new dashboard
 class DashboardController < ApplicationController
   before_filter :authenticate_user!
   before_filter :force_scope_to_instance
@@ -12,17 +13,6 @@ class DashboardController < ApplicationController
     else
       redirect_to edit_user_registration_url
     end
-  end
-
-  # TODO Deprecated
-  def manage_guests
-    if current_user.companies.any?
-      @locations  = current_user.companies.first.locations
-    else
-      @locations = []
-    end
-    @guest_list = Controller::GuestList.new(current_user).filter(params[:state])
-    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 
   def listings
@@ -44,7 +34,7 @@ class DashboardController < ApplicationController
     @chart = ChartDecorator.decorate(@last_week_payment_transfers)
   end
 
-  # TODO Deprecated
+  # TODO: Delete after new rating system implemented
   def guest_rating
     @reservation = current_user.listing_reservations.find(params[:id])
     existing_guest_rating = GuestRating.where(reservation_id: @reservation.id,

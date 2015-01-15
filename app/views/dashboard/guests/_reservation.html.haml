@@ -2,40 +2,34 @@
   .order-head
     .row
       .col-md-3
-        %p Reservation placed
+        %p Order placed
         %p= l reservation.created_at, format: :only_date
 
       .col-md-3
         %p Requested date
         %p
           - if reservation.listing.hourly_reservations?
-            %a.dates{href: '#', 'data-reservation-hours' => reservation.hourly_summary_for_first_period(false)}
-              = reservation.short_dates
+            = reservation.long_dates
           - else
-            %a.dates{href: '#', data: { :dates => reservation.dates_to_array } }
-              = reservation.short_dates
+            = reservation.long_dates
+
+      .col-md-4
+        %p Requested time
+        %p
+          - if reservation.listing.hourly_reservations?
+            = reservation.hourly_summary_for_first_period(false).gsub('<br />', ' ').html_safe
+          - else
+            N/A
 
       .col-md-2
         %p Total
         %p= reservation.total_price
 
-      .col-md-4
+      -#.col-md-1
 
   .order-body
     .order-status
       %h3= reservation.state.humanize.capitalize
-
-      -#- case reservation.state
-      -#- when 'unconfirmed'
-      -#  %h3 Unconfirmed
-      -#  %p
-      -#    Pending confirmation from host. Booking will expire in <strong>#{reservation.time_to_expiry(reservation.expiry_time)}</strong>.
-      -#- when 'confirmed'
-      -#  %h3 Booking confirmed by host
-      -#- when 'cancelled_by_guest'
-      -#  %h3 Cancelled by guest
-      -#- when 'cancelled_by_host'
-      -#  %h3 Cancelled by host
 
     .row
       .order-item
@@ -44,51 +38,17 @@
             .inline
               - if reservation.owner.present?
                 = link_to reservation.owner, profile_path(reservation.owner.slug)
-                = link_to '', new_reservation_user_message_path(reservation), class: 'ico-mail', rel: 'modal'
+                -# TODO: User message modal is broken
+                -#= link_to '', new_reservation_user_message_path(reservation), rel: 'modal'
               - else
                 = "#{reservation.owner_including_deleted} (Deleted)"
               %br
               %span.address= link_to reservation.listing.name, location_path(reservation.listing.location, reservation.listing)
               %p QTY: #{reservation.quantity}
+              %p= pluralize(reservation.total_days, 'day')
 
         .col-md-4.order-actions
           = render 'owner_actions', reservation: reservation
 
-
-
--#.row-fluid
--#  .span12.reservation-details
--#    .span12.reservation-text-information
--#      .reservation-status
--#        .icon-container
--#          = reservation.manage_booking_status_info
--#      .span12.reservation-information
--#        %div{:class => reservation.archived? ? 'span6' : 'span5'}
--#          - if reservation.owner.present?
--#            = link_to reservation.owner, profile_path(reservation.owner.slug)
--#            = link_to '', new_reservation_user_message_path(reservation), class: 'ico-mail', rel: 'modal'
--#          - else
--#            = "#{reservation.owner_including_deleted} (Deleted)"
--#          %br
--#          %span.address= link_to reservation.listing.name, location_path(reservation.listing.location, reservation.listing)
--#        .span2
--#          = reservation.total_price
--#          %br
--#          %span= reservation.state.capitalize
--#        %div{:class => reservation.archived? ? 'span3' : 'span2'}
--#          - if reservation.listing.hourly_reservations?
--#            %a.dates{href: '#', 'data-reservation-hours' => reservation.hourly_summary_for_first_period(false)}
--#              = reservation.short_dates
--#          - else
--#            %a.dates{href: '#', data: { :dates => reservation.dates_to_array } }
--#              = reservation.short_dates
--#          .clearfix
--#          %span
--#            = pluralize(reservation.total_days, 'day')
--#        .span1
--#          = reservation.quantity
--#          %span.ico-user
--#        - unless reservation.archived?
--#          .span2{:class => reservation.manage_guests_action_column_class}
--#            .actions
--#              = render :partial => 'owner_actions', :locals => {:reservation => reservation}
+- if reservation.can_reject?
+  = render 'decline_modal', reservation: reservation

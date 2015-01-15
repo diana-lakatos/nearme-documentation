@@ -31,9 +31,3 @@
 
               - @guest_list.reservations.each do |reservation|
                 = render 'reservation', reservation: reservation
-
-- content_for :domready do
-  new Dashboard.GuestsController($('#guests'))
-
-= render 'ratings/rating_modal'
-
