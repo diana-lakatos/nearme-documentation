@@ -1,3 +1,4 @@
+-# TODO Deprecated
 .row-fluid
   .span12.reservation-details
     .span12.reservation-text-information
@@ -33,4 +34,4 @@
         - unless reservation.archived?
           .span2{:class => reservation.manage_guests_action_column_class}
             .actions
-              = render :partial => "dashboard/owner_actions", :locals => {:reservation => reservation}
+              = render :partial => "old_dashboard/owner_actions", :locals => {:reservation => reservation}

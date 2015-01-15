@@ -1,5 +1,6 @@
 class Dashboard::ImagesController < Dashboard::BaseController
 
+  skip_before_filter :redirect_if_no_company
   before_filter :find_product, only: [:create]
   before_filter :find_image, only: [:edit, :update, :destroy]
 
@@ -50,12 +51,18 @@ class Dashboard::ImagesController < Dashboard::BaseController
   private
 
   def find_product
-    @product = @company.products.with_deleted.find(params[:product_id]) if params[:product_id].present?
-    @image_url = params[:product_form][:images_attributes]["0"][:image]
+    @product = @company.products.with_deleted.find(params[:product_id]) if params[:product_id].present? if @company.present?
+    if params[:product_form]
+      @image_url = params[:product_form][:images_attributes]["0"][:image]
+    elsif params[:boarding_form]
+      @image_url = params[:boarding_form][:product_form][:images_attributes]["0"][:image]
+    else
+      raise NotImplementedError
+    end
   end
 
   def find_image
-    @image = @company.products_images.find_by_id(params[:id])
+    @image = @company.products_images.find_by_id(params[:id]) if @company.present?
     @image ||= current_user.products_images.find(params[:id])
   end
 

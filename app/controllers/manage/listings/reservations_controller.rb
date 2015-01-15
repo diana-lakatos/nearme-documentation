@@ -19,7 +19,7 @@ class Manage::Listings::ReservationsController < ApplicationController
         flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
       end
     end
-    redirect_to manage_guests_dashboard_url
+    redirect_to dashboard_guests_url
   end
 
   def rejection_form
@@ -37,14 +37,14 @@ class Manage::Listings::ReservationsController < ApplicationController
     else
       flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
     end
-    redirect_to manage_guests_dashboard_url
+    redirect_to dashboard_guests_url
     render_redirect_url_as_json if request.xhr?
   end
 
   def request_payment
     ReservationMailer.enqueue.notify_guest_of_payment_request(@reservation)
     flash[:success] = t('flash_messages.manage.reservations.payment_requested')
-    redirect_to manage_guests_dashboard_url
+    redirect_to dashboard_guests_url
   end
 
   def host_cancel
@@ -58,7 +58,7 @@ class Manage::Listings::ReservationsController < ApplicationController
     else
       flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
     end
-    redirect_to manage_guests_dashboard_url
+    redirect_to dashboard_guests_url
   end
 
   private

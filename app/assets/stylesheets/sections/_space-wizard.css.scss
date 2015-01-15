@@ -31,7 +31,7 @@ section.space_wizard {
     .help-block {
       color: $dark-gray;
     }
-  
+
     .actions {
       background: $dnm_black;
       position: fixed;
@@ -64,6 +64,10 @@ section.space_wizard {
 
     }
 
+    // hack to save a lot of time - due to compatibility issue we can't have both old version and new version of modal
+    .resize-photo {
+      display: none;
+    }
   }
 
   .input-disabled{

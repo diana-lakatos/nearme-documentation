@@ -26,7 +26,7 @@
         - unless recurring_booking.archived?
           .span2
             .actions
-              = render :partial => "dashboard/user_recurring_booking_actions",  :locals => {:recurring_booking => recurring_booking} if current_user == recurring_booking.owner
+              = render :partial => 'old_dashboard/user_recurring_booking_actions',  :locals => {:recurring_booking => recurring_booking} if current_user == recurring_booking.owner
 
 - content_for :domready do
   new Reservation.UserReservationController($("##{dom_id(recurring_booking)}"))

@@ -48,8 +48,6 @@ class Spree::OrderDecorator < Draper::Decorator
     end
 
     result
-  # rescue
-  #   'N/A'
   end
 
   def company_name

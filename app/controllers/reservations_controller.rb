@@ -1,3 +1,4 @@
+# TODO: Deprecated - delete after testing new dashboard
 class ReservationsController < ApplicationController
   before_filter :authenticate_user!, :except => :new
 
