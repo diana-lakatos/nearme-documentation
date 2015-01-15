@@ -213,6 +213,7 @@ en:
       analytics: 'Analytics'
       manage_admins: 'Manage Admins'
       waiver_agreements: 'Waiver Agreements'
+      rfq: 'Request for Quote'
       white_label: 'White-Label'
       edit_profile: 'Edit Profile'
       trust_verification: 'Trust & Verification'

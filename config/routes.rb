@@ -385,15 +385,10 @@ DesksnearMe::Application.routes.draw do
   end
 
   namespace :dashboard do
-    resource :analytics
+    resource  :analytics
     resources :companies, :only => [:edit, :update, :show]
+    resources :images
     resources :locations
-    resources :user_messages, only: [:index, :show] do
-      collection do
-        get :archived
-      end
-    end
-
     resources :orders, only: [:index, :show]
     resources :orders_received, except: [:edit] do
       member do
@@ -407,15 +402,22 @@ DesksnearMe::Application.routes.draw do
           get :capture
         end
       end
-
       resources :shipments do
         member do
           get :ship
         end
       end
     end
+
     resources :products
-    resources :images
+
+    namespace :support do
+      resources :tickets, only: [:show, :index] do
+        resources :ticket_messages, only: [:create]
+        resources :ticket_message_attachments, only: [:create, :edit, :update, :destroy]
+      end
+    end
+
     resource :transfers
     resources :transactable_types do
       resources :transactables
@@ -428,6 +430,12 @@ DesksnearMe::Application.routes.draw do
         member do
           post :schedule_import
         end
+      end
+    end
+
+    resources :user_messages, only: [:index, :show] do
+      collection do
+        get :archived
       end
     end
 
@@ -535,12 +543,6 @@ DesksnearMe::Application.routes.draw do
 
     resources :photos, :only => [:create, :destroy, :edit, :update]
     resources :recurring_bookings, only: [:show]
-
-    namespace :support do
-      resources :tickets, only: [:show, :index] do
-        resources :ticket_messages, only: [:create]
-      end
-    end
 
     resources :themes, :only => [] do
       member do

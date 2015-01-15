@@ -1,4 +1,4 @@
-class Manage::Support::TicketsController < Manage::BaseController
+class Dashboard::Support::TicketsController < Dashboard::BaseController
   before_filter :find_ticket, only: [:show, :update]
 
   def index

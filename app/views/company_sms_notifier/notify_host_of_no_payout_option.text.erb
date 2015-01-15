@@ -1,1 +1,1 @@
-Hi from <%= @platform_context.name %>! Your funds transfer is ready. Please add a PayPal account to receive your funds now. <%= shorten_url(@platform_context.build_url_for_path(main_app.edit_manage_company_path(@company, :anchor => 'company_paypal_email', :token => @user.temporary_token))) %>
+Hi from <%= @platform_context.name %>! Your funds transfer is ready. Please add a PayPal account to receive your funds now. <%= shorten_url(@platform_context.build_url_for_path(main_app.edit_dashboard_payouts_path(anchor: 'company_paypal_email', token: @user.temporary_token))) %>
