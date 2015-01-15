@@ -395,16 +395,15 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
-  resource :dashboard, :only => [:show], :controller => 'dashboard' do
-    member do
-      # TODO: Delete after testing of new Dashboard
-      # get :bookings, :to => 'reservations#upcoming'
-      get :listings
-      # TODO: Delete after testing of new Dashboard
-      # get :manage_guests
-      get :transfers
-    end
-  end
+  # TODO: Delete after testing of new Dashboard
+  # resource :dashboard, :only => [:show], :controller => 'dashboard' do
+  #   member do
+  #     # get :bookings, :to => 'reservations#upcoming'
+  #     # get :listings
+  #     # get :manage_guests
+  #     # get :transfers
+  #   end
+  # end
 
   resources :listings, :users, :reservations, :products do
     resources :user_messages, controller: "dashboard/user_messages", except: [:index] do
