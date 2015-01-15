@@ -370,16 +370,20 @@ DesksnearMe::Application.routes.draw do
       get :remote_payment
       get :recurring_booking_successful
     end
+
     collection do
       get :upcoming
       get :archived
     end
+
     resources :guest_ratings, :only => [:new, :create]
     resources :host_ratings, :only => [:new, :create]
     resources :payment_notifications, :controller => "reservations/payment_notifications"
   end
-  get '/reservations/:id/guest_rating' => 'dashboard#guest_rating', as: 'guest_rating'
-  get '/reservations/:id/host_rating' => 'reservations#host_rating', as: 'host_rating'
+
+  # TODO: Delete after testing of new Dashboard
+  # get '/reservations/:id/guest_rating' => 'dashboard#guest_rating', as: 'guest_rating'
+  # get '/reservations/:id/host_rating' => 'reservations#host_rating', as: 'host_rating'
 
   resources :recurring_bookings, :except => [:destroy] do
     member do
@@ -393,9 +397,12 @@ DesksnearMe::Application.routes.draw do
 
   resource :dashboard, :only => [:show], :controller => 'dashboard' do
     member do
-      get :bookings, :to => 'reservations#upcoming'
+      # TODO: Delete after testing of new Dashboard
+      # get :bookings, :to => 'reservations#upcoming'
       get :listings
-      get :manage_guests
+      # TODO: Delete after testing of new Dashboard
+      # get :manage_guests
+      get :transfers
     end
   end
 
@@ -464,6 +471,33 @@ DesksnearMe::Application.routes.draw do
       end
     end
     resource :payouts, except: [:index, :show, :new, :create, :destroy]
+
+    resources :reservations, :except => [:update, :destroy, :show] do
+      member do
+        post :user_cancel
+        get :export
+        get :booking_successful
+        get :booking_failed
+        get :remote_payment
+        get :recurring_booking_successful
+        get :host_rating
+      end
+
+      collection do
+        get :upcoming
+        get :archived
+      end
+
+      resources :guest_ratings, :only => [:new, :create]
+      resources :host_ratings, :only => [:new, :create]
+      resources :payment_notifications, :controller => "reservations/payment_notifications"
+    end
+
+    resources :guests do
+      member do
+        get 'rating'
+      end
+    end
   end
 
   namespace :manage do

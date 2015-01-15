@@ -1,0 +1,32 @@
+.promote-location.text-center
+  - if locations.present?
+    - locations.each do |location|
+      %h2 #{location.name}
+
+      %p You currently have no reservations. Promote your #{platform_context.bookable_noun.pluralize} by tweeting or sharing a direct link!
+
+      .text-center.sharelocation
+        %span
+          =link_to tweet_location_url(location_url(location)), :ref => "mg", :class => 'btn blue twitter submit', :onclick => 'return popitup(this.href)' do
+            %span.ico-twitter.padding="Twitter"
+        %span
+          =link_to "https://www.facebook.com/sharer/sharer.php?u=#{location_url(location)}", :ref => "mg", :class => 'btn blue facebook submit', :onclick => 'return popitup(this.href)' do
+            %span.ico-facebook.padding="Facebook"
+        %span
+          =link_to "http://www.linkedin.com/shareArticle?mini=true&url=#{location_url(location)}&title=#{location.name}&summary=#{location.description}&source=#{platform_context.instance.name}", :ref => "mg", :class => 'btn blue linkedin submit', :onclick => 'return popitup(this.href)' do
+            %span.ico-linkedin.padding="LinkedIn"
+        %span
+          = link_to location_url(location), :class => 'btn blue' do
+            %span.ico-link.padding= "#{location.name} Link"
+
+    - content_for :script do
+      :javascript
+        function popitup(url) {
+          newwindow=window.open(url,'name','height=440,width=600');
+          if (window.focus) {newwindow.focus()}
+          return false;
+        }
+
+  - else
+    %p You haven't added a #{platform_context.bookable_noun} yet!
+

@@ -1,0 +1,16 @@
+- if params[:action] == 'booking_failed'
+  .modal.fade.in#booking_failed{tabindex: '-1', role: 'dialog', 'aria-hidden' => 'false', style: 'display: block;'}
+    .modal-dialog
+      .modal-content
+        .modal-header
+          %button.close{type: 'button', 'data-dismiss' => 'modal', 'aria-label' => 'Close'}
+            %span{'aria-hidden' => 'true'} ×
+
+          %p.modal-title Your purchase failed!
+
+        .modal-body.clearfix.text-center
+          = link_to 'Manage', '#', class: 'btn blue', 'data-dismiss' => 'modal'
+          = link_to 'Try again', remote_payment_dashboard_reservation_path(@reservation), class: 'btn gray'
+
+  - content_for :domready do
+    $('#booking_failed').modal();

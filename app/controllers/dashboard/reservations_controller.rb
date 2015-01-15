@@ -1,5 +1,4 @@
-# TODO: Deprecated - delete after testing new dashboard
-class ReservationsController < ApplicationController
+class Dashboard::ReservationsController < Dashboard::BaseController
   before_filter :authenticate_user!, :except => :new
 
   before_filter :only => [:user_cancel] do |controller|
@@ -16,7 +15,7 @@ class ReservationsController < ApplicationController
       event_tracker.cancelled_a_booking(reservation, { actor: 'guest' })
       event_tracker.updated_profile_information(reservation.owner)
       event_tracker.updated_profile_information(reservation.host)
-      flash[:deleted] = t('flash_messages.reservations.reservation_cancelled')
+      flash[:success] = t('flash_messages.reservations.reservation_cancelled')
     else
       flash[:error] = t('flash_messages.reservations.reservation_not_confirmed')
     end
@@ -24,7 +23,7 @@ class ReservationsController < ApplicationController
   end
 
   def index
-    redirect_to upcoming_reservations_path
+    redirect_to upcoming_dashboard_reservations_path
   end
 
   def export
@@ -77,7 +76,7 @@ class ReservationsController < ApplicationController
 
   def remote_payment
     if reservation.paid?
-      redirect_to booking_successful_reservation_path(reservation)
+      redirect_to booking_successful_dashboard_reservation_path(reservation)
     else
       upcoming
     end
@@ -117,7 +116,7 @@ class ReservationsController < ApplicationController
 
   def redirection_path
     if @reservation.owner.id == current_user.id
-      bookings_dashboard_path
+      dashboard_reservations_path
     else
       manage_guests_dashboard_path
     end

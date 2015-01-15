@@ -1,8 +1,13 @@
 .col-md-2.page-navigation
   %nav
     %ul
-      = content_tag :li, class: (params[:controller] == 'dashboard/orders') ? 'active' : '' do
-        = link_to 'My Orders', dashboard_orders_path
+      - if buyable?
+        = content_tag :li, class: (params[:controller] == 'dashboard/orders') ? 'active' : '' do
+          = link_to 'My Orders', dashboard_orders_path
+      - else
+        = content_tag :li, class: (params[:controller] == 'dashboard/reservations') ? 'active' : '' do
+          = link_to 'My Orders', dashboard_reservations_path
+
       = content_tag :li, class: params[:controller].include?('user_messages') ? 'active' : '' do
         = link_to 'Messages', dashboard_user_messages_path
     - if current_user.companies.any?
@@ -21,25 +26,15 @@
         -#%li
         -#  %a{:href => "#"} Payment
         - orders_rceived_active = params[:controller] == ('dashboard/orders_received')
-        = content_tag :li, class: orders_rceived_active ? 'active' : '' do
-          = link_to 'Orders Received', dashboard_orders_received_index_path
-
-        -# Jaromir: Not used for now
-        -#-if orders_rceived_active
-          -#%ul.page-sub-nav
-          -#  %li
-          -#    %a.active{:href => "#"} Boat
-          -#  %li
-          -#    %a{:href => "#"} Slip
-          -#  %li
-          -#    %a{:href => "#"} Captain
-
-        -#%li
-        -#  %a{:href => "#"} Shipping Methods
+        - if buyable?
+          = content_tag :li, class: orders_rceived_active ? 'active' : '' do
+            = link_to 'Orders Received', dashboard_orders_received_index_path
+        - else
+          = content_tag :li, class: (params[:controller] == 'dashboard/guests') ? 'active' : '' do
+            = link_to 'Orders Received', dashboard_guests_path
       %ul
         %li.nav-head
           ADMIN
-
         -# Jaromir: Not used for now
         -#%li
         -#  %a{:href => "#"} Blog

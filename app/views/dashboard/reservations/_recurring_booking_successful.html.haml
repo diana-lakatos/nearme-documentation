@@ -1,0 +1,9 @@
+%h4.reservation-emphasis
+  Your recurring booking was requested successfully!
+
+.reservation-list.just-booked
+  = render @recurring_booking.decorate
+
+- unless (@recurring_bookings - [@recurring_booking]).empty?
+  %h4.other-reservation-separator
+    #{pluralize((@recurring_bookings - [@recurring_booking]).count, ' other recurring booking')}
