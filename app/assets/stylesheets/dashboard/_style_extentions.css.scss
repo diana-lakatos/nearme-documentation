@@ -6,6 +6,9 @@
   }
 }
 
+.modal .modal-header {
+  background: $color-blue;
+}
 
 .pac-container {
   z-index: 10000;
@@ -125,7 +128,6 @@ section {
   }
 }
 
-
 .map-container {
   height: 225px;
   margin-top: 30px;
@@ -176,6 +178,19 @@ section .row {
 .dash-head-btn .btn {
   font-size: 14px;
 }
+
+h4.reservation-emphasis {
+  margin-bottom: 25px;
+}
+
+h4.other-reservation-separator {
+  margin-bottom: 25px;
+}
+
+.sharelocation {
+  margin-top: 15px;
+}
+
 
 @media (max-width: 1000px) {
   section {

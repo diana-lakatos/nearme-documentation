@@ -32,4 +32,4 @@
         - unless recurring_booking.archived?
           .span2{:class => recurring_booking.manage_guests_action_column_class}
             .actions
-              = render :partial => "dashboard/recurring_booking_owner_actions", :locals => {:recurring_booking => recurring_booking}
+              = render :partial => 'old_dashboard/recurring_booking_owner_actions', :locals => {:recurring_booking => recurring_booking}

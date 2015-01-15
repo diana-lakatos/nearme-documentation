@@ -52,7 +52,7 @@
                 %span My Orders
         - else
           %li
-            = link_to main_app.bookings_dashboard_path, class: 'nav-link dropdown-toggle' do
+            = link_to main_app.dashboard_reservations_path, class: 'nav-link dropdown-toggle' do
               %span My Bookings
         - if !current_user.requests_for_quotes.empty?
           %li

@@ -14,6 +14,7 @@ class DashboardController < ApplicationController
     end
   end
 
+  # TODO Deprecated
   def manage_guests
     if current_user.companies.any?
       @locations  = current_user.companies.first.locations
@@ -43,6 +44,7 @@ class DashboardController < ApplicationController
     @chart = ChartDecorator.decorate(@last_week_payment_transfers)
   end
 
+  # TODO Deprecated
   def guest_rating
     @reservation = current_user.listing_reservations.find(params[:id])
     existing_guest_rating = GuestRating.where(reservation_id: @reservation.id,

@@ -98,7 +98,7 @@ class ReservationDecorator < Draper::Decorator
     first = date.strftime('%-e %b')
     last = last_date.strftime('%-e %b')
 
-    first == last ? first : "#{first}-#{last}"
+    first == last ? first : "#{first} - #{last}"
   end
 
   def format_reservation_periods
@@ -140,16 +140,6 @@ class ReservationDecorator < Draper::Decorator
     state.split('_').first
   end
 
-  private
-
-  def status_info(text)
-    if state == 'unconfirmed'
-      tooltip(text, "<span class='tooltip-spacer'>i</span>".html_safe, {class: status_icon}, nil)
-    else
-      "<i class='#{status_icon}'></i>".html_safe
-    end
-  end
-
   def time_to_expiry(time_of_event)
     current_time = Time.zone.now
     total_seconds = time_of_event - current_time
@@ -163,6 +153,16 @@ class ReservationDecorator < Draper::Decorator
       else
         '%d hours, %d minutes' % [hours, minutes]
       end
+    end
+  end
+
+  private
+
+  def status_info(text)
+    if state == 'unconfirmed'
+      tooltip(text, "<span class='tooltip-spacer'>i</span>".html_safe, {class: status_icon}, nil)
+    else
+      "<i class='#{status_icon}'></i>".html_safe
     end
   end
 

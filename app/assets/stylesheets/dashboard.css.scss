@@ -12,8 +12,7 @@
 @import "globals/*";
 @import "components/nav";
 
-@import "components/modal";
-
+//@import "components/modal";
 
 $font-stack: 'Open Sans', sans-serif, helvetica;
 $color-blue: #5dbded;
@@ -27,4 +26,4 @@ $color-placeholder: #ccc;
 @import "dashboard/*";
 
 @import "fonts";
-@import "layout/footer"
+@import "layout/footer";

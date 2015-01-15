@@ -275,7 +275,7 @@ end
 
 Then /^I should be redirected to bookings page$/ do
   page.should have_content('Your reservation has been made!')
-  assert_includes URI.parse(current_url).path, booking_successful_reservation_path(Reservation.last)
+  assert_includes URI.parse(current_url).path, booking_successful_dashboard_reservation_path(Reservation.last)
 end
 
 Then /^The second booking should be highlighted$/ do
