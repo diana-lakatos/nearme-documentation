@@ -53,10 +53,6 @@ class @ChartWrapper
 
   refreshChart: ->
     @setup()
-    @draw()
-
-  draw: ->
-    console.log 'overwrite needed'
 
   setup: ->
     @canvas.prop({

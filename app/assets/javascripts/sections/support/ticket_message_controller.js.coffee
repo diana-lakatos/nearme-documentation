@@ -7,10 +7,6 @@ class @Support.TicketMessageController
     @attachmentList = @container.find('[data-attachment-list]')
     @template = @attachmentList.find('[data-template]')
     @modal = $("#bootstrap-modal")
-
-    console.log(@modal)
-    console.log(@fileUpload)
-
     @bindEvents()
 
   bindEvents: ->
