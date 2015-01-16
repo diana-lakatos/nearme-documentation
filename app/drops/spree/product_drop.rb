@@ -16,6 +16,10 @@ class Spree::ProductDrop < BaseDrop
     urlify(routes.product_path(@product))
   end
 
+  def product_path
+    routes.product_path(@product)
+  end
+
   def photo_url
     if photo = @product.images.first
       photo.image.url(:space_listing)

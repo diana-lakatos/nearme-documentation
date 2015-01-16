@@ -5,14 +5,14 @@
         <article class="product" style='display: inline-block'>
           <div class="photo-container">
             <div class="photo">
-              <a href="{{ product.product_url }}">
+              <a href="{{ product.product_path }}">
                   <img alt="{{ product.name }}" src="{{ product.photo_url }}" title="{{ product.name }}">
               </a>
             </div>
           </div>
 
           <div class="heading">
-            <a href="{{ product.product_url }}">
+            <a href="{{ product.product_path }}">
               {{ product.name }}
               <span>{{ product.price }}</span>
             </a>
