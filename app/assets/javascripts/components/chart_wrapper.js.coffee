@@ -53,6 +53,13 @@ class @ChartWrapper
 
   refreshChart: ->
     @setup()
+    @draw()
+
+  draw: ->
+    # This method is intended to be overriden by classes that inherit from this class.
+    # As such, this log statement will not be called in production and should be left in
+    # so other developers know to override this function in their subclass.
+    console.log 'Please overwrite this function in your subclass.'
 
   setup: ->
     @canvas.prop({
