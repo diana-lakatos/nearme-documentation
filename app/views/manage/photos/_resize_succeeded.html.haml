@@ -1,9 +1,10 @@
-%header
-  %h2= t('manage.photos.resize_succeeded')
-%p.text-center{:style => 'margin: 40px 0px;'}
-  = t('manage.photos.changes_applied_soon')
+.modal-header
+  .modal-title= t('manage.photos.resize_succeeded')
+.modal-body
+  %p.text-center{:style => 'margin: 40px 0px;'}
+    = t('manage.photos.changes_applied_soon')
 
 .submit-bar
-  = link_to '#', class: 'btn medium blue', data: { dismiss: 'modal' }, 'aria-label'=>"Continue" do
+  = link_to '#', class: 'btn medium blue close-modal' do
     = t('manage.photos.continue')
 
