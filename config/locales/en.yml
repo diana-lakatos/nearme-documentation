@@ -28,6 +28,11 @@ en:
     companies:
       theme_image_deleted: "That image has been deleted."
       theme_image_not_deleted: "We couldn't delete that image."
+    photos:
+      resize_succeeded: 'Image successfully cropped/rotated'
+      changes_applied_soon: 'Your changes will be applied within a few minutes.'
+      continue: 'Continue'
+      crop_and_rotate: 'Crop And Rotate'
     listings:
       photos:
         waiting_for_photo_processing: "Waiting for photo processing to finish"

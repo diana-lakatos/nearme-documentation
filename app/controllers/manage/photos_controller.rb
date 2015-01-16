@@ -24,14 +24,18 @@ class Manage::PhotosController < Manage::BaseController
 
   def edit
     @photo = current_user.photos.find(params[:id])
+    if request.xhr?
+      render partial: 'resize_form', :locals => { :form_url => manage_photo_path(@photo), :object => @photo.image, :object_url => @photo.image_url(:original) }
+    end
   end
 
   def update
     @photo = current_user.photos.find(params[:id])
     @photo.image_transformation_data = { :crop => params[:crop], :rotate => params[:rotate] }
     if @photo.save
+      render partial: 'manage/photos/resize_succeeded'
     else
-      render :edit
+      render partial: 'resize_form', :locals => { :form_url => manage_photo_path(@photo), :object => @photo.image, :object_url => @photo.image_url(:original) }
     end
   end
 
@@ -51,7 +55,7 @@ class Manage::PhotosController < Manage::BaseController
     if params[:user]
       photo_params = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"]
       @listing = Transactable.find(photo_params[:id]) if photo_params[:id]
-    # we came from dashboard
+      # we came from dashboard
     elsif params[:listing]
       photo_params = params[:listing]
       @listing = current_user.listings.find(params[:listing][:id]) if params[:listing][:id].present?

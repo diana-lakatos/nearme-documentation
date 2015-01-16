@@ -87,7 +87,7 @@ class Dashboard::TransactablesController < Dashboard::BaseController
     event_tracker.updated_profile_information(current_user)
     event_tracker.deleted_a_listing(@transactable)
     flash[:deleted] = t('flash_messages.manage.listings.listing_deleted')
-    redirect_to manage_locations_path
+    redirect_to dashboard_transactable_type_transactables_path(@transactable_type)
   end
 
   private

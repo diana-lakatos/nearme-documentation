@@ -58,10 +58,6 @@ module FileuploadHelper
     get_fileupload_photo_html(photo_url, destroy_photo_path, resize_photo_path, html_tag)
   end
 
-  def old_fileupload_photo(photo_url, destroy_photo_path, resize_photo_path, html_tag = :li)
-    old_get_fileupload_photo_html(photo_url, destroy_photo_path, resize_photo_path, html_tag)
-  end
-
   def built_in_fileupload_photo(photo_url, destroy_photo_path, dimensions = [96, 96])
     if photo_url
       content_tag(:div, image_tag(photo_url, :width => dimensions[0], :height => dimensions[1]) + delete_photo_link(destroy_photo_path), :class => 'photo-item')
@@ -81,19 +77,6 @@ module FileuploadHelper
     :class => 'photo-item', id: id)
   end
 
-  def old_get_fileupload_photo_html(photo_url, destroy_photo_path, resize_photo_path, html_tag = :li, options = {}, &block)
-    id = options[:id] ? "photo-#{options[:id]}" : ''
-    index = options[:index] ? options[:index] + 1 : ''
-    content = capture(&block).html_safe if block_given?
-    content_tag(html_tag,
-      image_tag(photo_url) +
-      delete_photo_link(destroy_photo_path) +
-      old_resize_photo_link(resize_photo_path, id) +
-      content_tag(:span, index, :class=> 'badge badge-inverse photo-position') +
-      content,
-    :class => 'photo-item', id: id)
-  end
-
 
   private
 
@@ -102,10 +85,6 @@ module FileuploadHelper
   end
 
   def resize_photo_link(resize_photo_path, id)
-    link_to('Rotate & Crop', resize_photo_path, { data: {id: id, remote: true}, :class => 'badge resize-photo photo-action'})
-  end
-
-  def old_resize_photo_link(resize_photo_path, id)
     link_to('Rotate & Crop', resize_photo_path, { data: {id: id}, rel: 'modal', :class => 'badge resize-photo photo-action'})
   end
 

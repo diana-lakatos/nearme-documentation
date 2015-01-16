@@ -1,18 +1,12 @@
 require 'test_helper'
 
-class Manage::LocationsControllerTest < ActionController::TestCase
+class Dashboard::LocationsControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
     sign_in @user
     @company = FactoryGirl.create(:company, :creator => @user)
     @location_type = FactoryGirl.create(:location_type)
-  end
-
-  should "get index" do
-    get :index
-    assert_response :success
-    assert_not_nil assigns(:locations)
   end
 
   context "#create" do
@@ -26,22 +20,22 @@ class Manage::LocationsControllerTest < ActionController::TestCase
         user == @user
       end
       assert_difference('@user.locations.count') do
-        post :create, { :location => FactoryGirl.attributes_for(:location_in_auckland).merge(location_address_attributes: FactoryGirl.attributes_for(:address_in_auckland)).reverse_merge!({:location_type_id => @location_type.id})}
+        post :create, { format: :js, location: FactoryGirl.attributes_for(:location_in_auckland).merge(location_address_attributes: FactoryGirl.attributes_for(:address_in_auckland)).reverse_merge!({location_type_id: @location_type.id})}
       end
-      assert_redirected_to manage_locations_path
+
     end
 
     should "have correct slug" do
       stub_mixpanel
-      post :create, { :location => FactoryGirl.attributes_for(:location_in_auckland).merge(location_address_attributes: FactoryGirl.attributes_for(:address_in_auckland)).reverse_merge!({:location_type_id => @location_type.id})}
-      assert_equal assigns(:location).slug, "#{assigns(:location).company.name.parameterize}-auckland"
+      post :create, { format: :js, location: FactoryGirl.attributes_for(:location_in_auckland).merge(location_address_attributes: FactoryGirl.attributes_for(:address_in_auckland)).reverse_merge({location_type_id: @location_type.id})}
+      assert_equal "#{assigns(:location).company.name.parameterize}-auckland", assigns(:location).reload.slug
     end
   end
 
   context "with location" do
 
     setup do
-      @location = FactoryGirl.create(:location_in_auckland, :company => @company)
+      @location = FactoryGirl.create(:location_in_auckland, company: @company)
     end
 
     context 'CRUD' do
@@ -57,26 +51,25 @@ class Manage::LocationsControllerTest < ActionController::TestCase
 
       context '#edit' do
         should 'allow show edit form for related location' do
-          get :edit, :id => @related_location.id
+          get :edit, format: :js, id: @related_location.id
           assert_response :success
         end
 
         should 'not allow show edit form for unrelated location' do
-          assert_raises(Location::NotFound) { get :edit, :id => @location.id }
+          assert_raises(Location::NotFound) { get :edit, format: :js, id: @location.id }
         end
       end
 
       context '#update' do
         should 'allow update for related location' do
-          put :update, :id => @related_location.id, :location => { :description => 'new description' }
+          put :update, format: :js, id: @related_location.id, location: { description: 'new description' }
           @related_location.reload
           assert_equal 'new description', @related_location.description
-          assert_redirected_to manage_locations_path
         end
 
         should 'not allow update for unrelated location' do
           assert_raises(Location::NotFound) do
-            put :update, :id => @location.id, :location => { :description => 'new description' }
+            put :update, format: :js, id: @location.id, location: { description: 'new description' }
           end
         end
       end
@@ -92,39 +85,34 @@ class Manage::LocationsControllerTest < ActionController::TestCase
             end
           end
           assert_difference 'Location.count', -1 do
-            delete :destroy, :id => @related_location.id
+            delete :destroy, format: :js, id: @related_location.id
           end
-          assert_redirected_to manage_locations_path
         end
 
         should 'not allow destroy for unrelated location' do
           assert_no_difference('Location.count') do
-            assert_raises(Location::NotFound) { delete :destroy, :id => @location.id }
+            assert_raises(Location::NotFound) { delete :destroy, format: :js,  id: @location.id }
           end
         end
       end
     end
 
     should "update location" do
-      put :update, :id => @location.id, :location => { :description => 'new description' }
+      put :update, format: :js, id: @location.id, location: { description: 'new description' }
       @location.reload
       assert_equal 'new description', @location.description
-      assert_redirected_to manage_locations_path
     end
 
     should "should use default template if custom availability rules were not checked" do
-      put :update, :id => @location.id, :location => {
-        :availability_template_id=>"custom",
-        :availability_rules_attributes=>availability_rules_params
-      }
+      put :update, format: :js, id: @location.id, location: { availability_template_id: "custom", availability_rules_attributes: availability_rules_params }
       @location.reload
       assert_equal 5, @location.availability_rules.count
     end
 
     should "require availability rule to be opened for at least 1 hour" do
-      put :update, :id => @location.id, :location => {
-        :availability_template_id=>"custom",
-        :availability_rules_attributes=> {
+      put :update, format: :js, id: @location.id, location: {
+        availability_template_id: "custom",
+        availability_rules_attributes: {
           "0" => { "day" => "1", "open_hour" => '9', "close_hour" => '9' }
         }
 
@@ -140,10 +128,8 @@ class Manage::LocationsControllerTest < ActionController::TestCase
         user == @user
       end
       assert_difference('@user.locations.count', -1) do
-        delete :destroy, :id => @location.id
+        delete :destroy, format: :js, id: @location.id
       end
-
-      assert_redirected_to manage_locations_path
     end
 
     context "someone else tries to manage our location" do
@@ -157,25 +143,25 @@ class Manage::LocationsControllerTest < ActionController::TestCase
       should "not create location" do
         stub_mixpanel
         assert_no_difference('@user.locations.count') do
-          post :create, { :location => FactoryGirl.attributes_for(:location_in_auckland).merge(location_address_attributes: FactoryGirl.attributes_for(:address_in_auckland)).reverse_merge!({:location_type_id => @location_type.id})}
+          post :create, format: :js, location: FactoryGirl.attributes_for(:location_in_auckland).merge(location_address_attributes: FactoryGirl.attributes_for(:address_in_auckland)).reverse_merge!({location_type_id: @location_type.id})
         end
       end
 
       should 'handle lack of permission to edit properly' do
         assert_raise Location::NotFound do
-          get :edit, :id => @location.id
+          get :edit, format: :js, id: @location.id
         end
       end
 
       should "not update location" do
         assert_raise Location::NotFound do
-          put :update, :id => @location.id, :location => { :description => 'new description' }
+          put :update, format: :js, id: @location.id, location: { description: 'new description' }
         end
       end
 
       should "not destroy location" do
         assert_raise Location::NotFound do
-          delete :destroy, :id => @location.id
+          delete :destroy, format: :js, id: @location.id
         end
       end
     end
@@ -187,7 +173,7 @@ class Manage::LocationsControllerTest < ActionController::TestCase
       stub_mixpanel
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Location", "create").count') do
         with_versioning do
-          post :create, { :location => FactoryGirl.attributes_for(:location_in_auckland).merge(location_address_attributes: FactoryGirl.attributes_for(:address_in_auckland)).reverse_merge!({:location_type_id => @location_type.id})}
+          post :create, format: :js, location: FactoryGirl.attributes_for(:location_in_auckland).merge(location_address_attributes: FactoryGirl.attributes_for(:address_in_auckland)).reverse_merge!({location_type_id: @location_type.id})
         end
       end
 
@@ -197,17 +183,17 @@ class Manage::LocationsControllerTest < ActionController::TestCase
       @location = FactoryGirl.create(:location_in_auckland, :company => @company)
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Location", "update").count') do
         with_versioning do
-          put :update, :id => @location.id, :location => { :description => 'new description' }
+          put :update, format: :js, id: @location.id, location: { description: 'new description' }
         end
       end
     end
 
     should 'track version change on destroy' do
       stub_mixpanel
-      @location = FactoryGirl.create(:location_in_auckland, :company => @company)
+      @location = FactoryGirl.create(:location_in_auckland, company: @company)
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Location", "destroy").count') do
         with_versioning do
-          delete :destroy, :id => @location.id
+          delete :destroy, format: :js, id: @location.id
         end
       end
     end

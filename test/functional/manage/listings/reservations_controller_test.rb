@@ -30,7 +30,7 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
 
     post :confirm, { listing_id: @reservation.listing.id, id: @reservation.id }
 
-    assert_redirected_to manage_guests_dashboard_path
+    assert_redirected_to dashboard_guests_path
   end
 
   should "track and redirect a host to the Manage Guests page when they reject a booking" do
@@ -47,7 +47,7 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
       user == assigns(:reservation).host
     end
     put :reject, { listing_id: @reservation.listing.id, id: @reservation.id }
-    assert_redirected_to manage_guests_dashboard_path
+    assert_redirected_to dashboard_guests_path
   end
 
   should "track and redirect a host to the Manage Guests page when they cancel a booking" do
@@ -66,7 +66,7 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
       user == assigns(:reservation).host
     end
     post :host_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
-    assert_redirected_to manage_guests_dashboard_path
+    assert_redirected_to dashboard_guests_path
   end
 
   should "refund booking on cancel" do
@@ -83,7 +83,7 @@ class Manage::Listings::ReservationsControllerTest < ActionController::TestCase
       post :host_cancel, { listing_id: @reservation.listing.id, id: @reservation.id }
     end
 
-    assert_redirected_to manage_guests_dashboard_path
+    assert_redirected_to dashboard_guests_path
     assert_equal 'refunded', @reservation.reload.payment_status
   end
 

@@ -5,7 +5,6 @@ class @Photo.Manipulator
     @image = form.find('img[data-image]').eq(0)
     @aspectRatio = options['aspectRatio']
     @original_crop = @image.data('crop')
-    @old = options.old
     @bindEvents()
 
   bindEvents: ->
@@ -13,10 +12,7 @@ class @Photo.Manipulator
     @bindCropHandler()
     @form.on 'submit', (e) =>
       e.preventDefault()
-      if @old
-        Modal.load { type: "POST", url: @form.attr("action"), data: { _method: 'put', crop: @crop, rotate: @angle } }
-      else
-        $.post(@form.attr("action"), { _method: 'put', crop: @crop, rotate: @angle })
+      Modal.load { type: "POST", url: @form.attr("action"), data: { _method: 'put', crop: @crop, rotate: @angle } }
 
   bindCropHandler: =>
     @crop = null

@@ -253,7 +253,7 @@ class PlatformContextTest < ActiveSupport::TestCase
     end
 
     should 'return given number of latest products' do
-      assert_equal @platform_context.latest_products(6).count, 6
+      assert_equal 2, @platform_context.latest_products(6).count
     end
   end
 end

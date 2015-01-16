@@ -21,7 +21,7 @@
         - @searcher.results.decorate.in_groups_of(3) do |line|
           .row
             - line.each do |product|
-              .span4.result-item
+              .span4.result-item{'data-product-id' => product.try(:id)}
                 - if product
                   = link_to product_url(product), class: 'item' do
                     .item-img

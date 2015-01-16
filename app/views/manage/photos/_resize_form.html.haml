@@ -1,4 +1,7 @@
-= render_modal "Crop And Rotate", { id: "crop-form-modal" } do
+%header
+  %h2= t('manage.photos.crop_and_rotate')
+.row
+  .col-md-10.col-md-offset-1
   = form_tag form_url, :method => :put, :id => 'crop-form', 'data-id' => object.model.id do
     %a.badge.rotate-photo.photo-action{href: '#'}
       Rotate

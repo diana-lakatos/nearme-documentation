@@ -1,5 +1,7 @@
 class Dashboard::ReservationsController < Dashboard::BaseController
 
+  skip_before_filter :redirect_if_no_company
+
   before_filter :only => [:user_cancel] do |controller|
     unless allowed_events.include?(controller.action_name)
       flash[:error] = t('flash_messages.reservations.invalid_operation')
