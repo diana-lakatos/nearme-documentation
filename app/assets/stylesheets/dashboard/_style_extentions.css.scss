@@ -1,30 +1,26 @@
-.modal {
-  .availability-rules {
-    input, textarea, .customSelect {
-      margin: 0px 0;
-    }
-  }
-
-  .radio-container {
-    margin-left:20px;
-
-    input {
-      margin-top: 4px;
-    }
-  }
+.navbar-fixed-top,
+.navbar-inner {
+  border-width: 0 !important;
 }
 
-.modal .modal-header {
-  background: $color-blue;
+.navbar-fixed-top,
+.navbar-fixed-bottom {
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: $nav-z-index;
+  margin:0 !important;
+
+}
+
+.nav-tabs {
+  border: none;
 }
 
 .pac-container {
   z-index: 10000;
 }
 
-.modal .btn.selectpicker {
-  width: 100%;
-}
 
 .phone-number-country-code-field {
   position: relative;
@@ -183,7 +179,7 @@ section .row {
   }
 }
 
-.modal .load-hide {
+.modal-container .load-hide {
   display: none;
 }
 

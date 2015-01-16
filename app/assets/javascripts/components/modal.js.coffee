@@ -22,7 +22,7 @@ class @Modal
   # A custom class can be specified on the modal:
   #   <a href="modalurl" rel="modal.my-class">link</a>
   @listen : ->
-    $('body').delegate 'a[rel^="modal"]', 'click', (e) =>
+    $('body').delegate 'a[rel*="modal"]', 'click', (e) =>
       e.preventDefault()
       target = $(e.currentTarget)
       modalClass = matches[1] if matches = target.attr("rel").match(/modal\.([^\s]+)/)

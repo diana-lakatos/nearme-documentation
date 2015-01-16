@@ -6,6 +6,7 @@ class Dashboard::UsersController < Dashboard::BaseController
 
   def new
     @user = @company.users.build
+    render layout: false
   end
 
   def create
