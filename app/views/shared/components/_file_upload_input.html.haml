@@ -3,9 +3,8 @@
     = uploaded_content
   %label.action
     %span.btn.btn-blue.btn-medium.upload-photos.fileinput-button
-      %span.ico-upload-photos.padding
-        %span
-          = text
+      %span
+        = text
     %input.browse-file{"data-url" => url, "data-thumbnail-width" => thumbnail_sizes[:width], "data-thumbnail-height" => thumbnail_sizes[:height], :name => name, :type => "file"}/
     - if error_message
       %p.error-block= error_message
