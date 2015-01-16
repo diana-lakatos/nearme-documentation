@@ -3,5 +3,5 @@
   %td= link_to support_ticket_title(ticket), dashboard_support_ticket_path(ticket)
   %td= support_author(ticket.first_message)
   %td
-    %abbr.timeago timeago(ticket.created_at)
+    %abbr.timeago= timeago(ticket.created_at)
   %td= ticket.state.titleize
