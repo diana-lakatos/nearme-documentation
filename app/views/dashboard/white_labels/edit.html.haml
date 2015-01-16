@@ -4,11 +4,6 @@
     %p MANAGE USERS
   .dash-body
     = simple_form_for @company, :url => dashboard_white_label_path(@company), wrapper: :bs3, :html => {multipart: true, :id => 'edit_company' } do |f|
-      %p
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
 
       = f.input :white_label_enabled, :inline_label => "Enable", input_html: { data: { toggle: "collapse", target: "#whiteLabelFields", :"white-label-enabler" => true}}
 

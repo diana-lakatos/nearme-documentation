@@ -38,7 +38,7 @@ en:
       taxonomy_updated: 'Taxonomy updated.'
       taxonomy_deleted: 'Taxonomy deleted.'
       taxon_updated: 'Taxon updated.'
-      no_payment_gateway: 'We apologize, but company which sells selected products operates in not supported country.'
+      no_payment_gateway: 'The seller does not support payments for the selected country.'
     dashboard:
       add_your_company: "Please add your company first"
       no_bookings: "You haven't made any bookings yet!"
