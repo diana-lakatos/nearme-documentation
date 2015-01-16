@@ -65,7 +65,6 @@ window.DNM = {
 
   initializeModals: function() {
     Modal.listen();
-    BootstrapModal.listen();
   },
 
   initializeBootstrap: function() {

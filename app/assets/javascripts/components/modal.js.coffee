@@ -22,13 +22,20 @@ class @Modal
   # A custom class can be specified on the modal:
   #   <a href="modalurl" rel="modal.my-class">link</a>
   @listen : ->
-    $('body').delegate 'a[rel^="modal"]', 'click', (e) =>
+    $('body').delegate 'a[rel*="modal"]', 'click', (e) =>
       e.preventDefault()
       target = $(e.currentTarget)
       modalClass = matches[1] if matches = target.attr("rel").match(/modal\.([^\s]+)/)
       ajaxOptions = { url: target.attr("href"), data: target.data() }
       @load(ajaxOptions, modalClass)
       false
+
+    $('body').delegate 'form[data-modal]', 'submit', (e) =>
+      e.preventDefault()
+      form = $(e.currentTarget)
+      Modal.load({ type: "POST", url: form.attr("action"), data: form.serialize()})
+      false
+
 
     $(document).on 'ajaxSend', '.modal-content form', =>
       @showLoading()
