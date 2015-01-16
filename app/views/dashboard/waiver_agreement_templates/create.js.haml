@@ -1,9 +1,0 @@
-- unless @waiver_agreement_template.valid?
-  $('#modal-add-template form .errors').html('#{escape_javascript( render 'shared/bootstrap_flash_messages')}');
-- else
-  $('#modal-add-template').modal('hide')
-  $('#waiver-agreement-template-list tbody').append('#{escape_javascript( render @waiver_agreement_template )}');
-  $(".alert").remove()
-  $('.container.page-wrapper').prepend('#{escape_javascript( render 'shared/bootstrap_flash_messages')}');
-
-- flash.discard

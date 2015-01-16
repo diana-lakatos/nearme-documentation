@@ -3,7 +3,7 @@
 .dash-page
   .dash-head.clearfix
     %p Manage Waiver Agreements
-    = link_to new_dashboard_waiver_agreement_template_path, class: "dash-head-btn", remote: true do
+    = link_to new_dashboard_waiver_agreement_template_path, class: "dash-head-btn", rel: "modal" do
       .btn.blue{:role => "button"} Add Waiver Agreement
 
   .dash-body

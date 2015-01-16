@@ -6,22 +6,22 @@ class Dashboard::UsersController < Dashboard::BaseController
 
   def new
     @user = @company.users.build
-    render layout: false
+    render partial: 'form'
   end
 
   def create
     @user = User.where(:email => params[:user][:email]).first
     if !@user
       flash.now[:error] = t('flash_messages.manage.users.user_does_not_exists')
+      new
     elsif @user.companies.any?
       flash.now[:error] = t('flash_messages.manage.users.user_cannot_be_invited')
+      new
     else
       @company.users << @user
       flash[:success] = t('flash_messages.manage.users.user_added', name: @user.name, company_name: @company.name)
-    end
-    respond_to do |format|
-      format.html { raise NotImplementedError }
-      format.js
+      redirect_to dashboard_users_url
+      render_redirect_url_as_json if request.xhr?
     end
   end
 
