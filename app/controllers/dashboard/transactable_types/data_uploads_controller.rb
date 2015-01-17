@@ -8,8 +8,14 @@ class Dashboard::TransactableTypes::DataUploadsController < Dashboard::BaseContr
 
   def show
     if request.xhr?
-      render partial: 'manage/transactable_types/data_uploads/data_upload', :locals => { data_upload: @company.data_uploads.for_transactable_type(@transactable_type).find(params[:id]) }
+      render partial: 'dashboard/transactable_types/data_uploads/data_upload', :locals => { data_upload: @company.data_uploads.for_transactable_type(@transactable_type).find(params[:id]) }
     end
+  end
+
+  def new
+    @data_upload = @company.data_uploads.build
+    @data_upload.transactable_type = @transactable_type
+    render partial: "form"
   end
 
   def create
@@ -23,7 +29,7 @@ class Dashboard::TransactableTypes::DataUploadsController < Dashboard::BaseContr
       if @data_upload.save
         DataUploadHostConvertJob.perform(@data_upload.id)
         flash[:success] = t 'flash_messages.manage.data_upload.created'
-        redirect_to edit_manage_transactable_type_data_upload_path(@transactable_type, @data_upload)
+        redirect_to dashboard_transactable_type_transactables_path(@transactable_type)
       else
         flash[:error] = @data_upload.errors.full_messages.to_sentence
         render action: :new
@@ -34,21 +40,8 @@ class Dashboard::TransactableTypes::DataUploadsController < Dashboard::BaseContr
     end
   end
 
-  def new
-    @data_upload = @company.data_uploads.build
-    @data_upload.transactable_type = @transactable_type
-    render partial: "form"
-  end
-
   def edit
     @data_upload = @company.data_uploads.for_transactable_type(@transactable_type).find(params[:id])
-  end
-
-  def destroy
-    @data_upload = @company.data_uploads.for_transactable_type(@transactable_type).find(params[:id])
-    @data_upload.destroy
-    flash[:deleted] = t('flash_messages.manage.data_upload.deleted')
-    redirect_to manage_transactable_type_data_uploads_path
   end
 
   def status
@@ -64,7 +57,7 @@ class Dashboard::TransactableTypes::DataUploadsController < Dashboard::BaseContr
     else
       flash[:error] =t('flash_messages.manage.data_upload.not_scheduled')
     end
-    redirect_to manage_transactable_type_data_uploads_path(@transactable_type)
+    redirect_to dashboard_transactable_type_data_uploads_path(@transactable_type)
   end
 
   def download_csv_template
