@@ -56,7 +56,7 @@
               %span My Bookings
         - if !current_user.requests_for_quotes.empty?
           %li
-            = link_to main_app.support_requests_for_quotes_path, class: 'nav-link dropdown-toggle' do
+            = link_to main_app.dashboard_support_tickets_path, class: 'nav-link dropdown-toggle' do
               %span= "#{t('reservations.rfq_menu_text')}"
         %li
           = link_to '/dashboard/edit_profile', class: 'nav-link dropdown-toggle' do
