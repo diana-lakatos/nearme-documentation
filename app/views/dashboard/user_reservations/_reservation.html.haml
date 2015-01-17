@@ -49,12 +49,12 @@
 
         .col-md-4.order-actions
           - unless reservation.archived?
-            = form_for reservation, method: :post, url: user_cancel_dashboard_reservation_path(reservation) do |f|
+            = form_for reservation, method: :post, url: user_cancel_dashboard_user_reservation_path(reservation) do |f|
               = f.submit 'Cancel', confirm: 'Do you really want to cancel this reservation?', class: 'btn dark-gray full'
 
             -# TODO: Test
             - if reservation.remote_payment? && !reservation.paid? && !reservation.archived?
-              = link_to 'Pay now', remote_payment_dashboard_reservation_path(reservation), class: 'btn blue full'
+              = link_to 'Pay now', remote_payment_dashboard_user_reservation_path(reservation), class: 'btn blue full'
 
             - if reservation.confirmed?
-              = link_to 'Add to iCal', export_dashboard_reservation_path(reservation, format: :ics), class: 'btn gray full'
+              = link_to 'Add to iCal', export_dashboard_user_reservation_path(reservation, format: :ics), class: 'btn gray full'

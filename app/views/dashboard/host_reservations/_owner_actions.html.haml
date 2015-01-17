@@ -1,9 +1,9 @@
 - if reservation.can_host_cancel?
-  = form_for reservation, method: :post, url: host_cancel_manage_listing_reservation_path(reservation.listing, reservation) do |f|
+  = form_for reservation, method: :post, url: host_cancel_dashboard_host_reservation_path(reservation, listing_id: reservation.listing) do |f|
     = f.submit 'Cancel', confirm: 'Do you really want to cancel this reservation?', class: 'btn dark-gray full'
 
 - if reservation.can_confirm?
-  = form_for reservation, method: :post, url: confirm_manage_listing_reservation_path(reservation.listing, reservation) do |f|
+  = form_for reservation, method: :post, url: confirm_dashboard_host_reservation_path(reservation, listing_id: reservation.listing) do |f|
     = f.submit 'Confirm', confirm: 'Do you want to confirm this reservation?', class: 'btn blue full'
 
 - if reservation.can_reject?
@@ -11,6 +11,6 @@
     Decline
 
 - if !reservation.paid? && reservation.remote_payment?
-  = link_to 'Request payment', request_payment_manage_listing_reservation_path(reservation.listing, reservation),
+  = link_to 'Request payment', request_payment_dashboard_host_reservation_path(reservation, listing_id: reservation.listing),
     class: 'btn red full', confirm: 'Do you want to send payment request email for this guest?'
 

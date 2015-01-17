@@ -53,12 +53,12 @@ module DashboardHelper
     controller = params[:controller]
     action = params[:action]
 
-    return t('dashboard.nav.my_orders') if controller == 'dashboard/orders' || controller == 'dashboard/reservations'
+    return t('dashboard.nav.my_orders') if controller == 'dashboard/orders' || controller == 'dashboard/user_reservations'
     return t('dashboard.nav.messages') if controller.include? 'user_messages'
     return t('dashboard.nav.shop_details') if controller.include? 'companies'
     return t('dashboard.nav.listings') if %w(dashboard/products dashboard/transactables).include? controller
     return t('dashboard.nav.payout') if controller.include? 'payouts'
-    return t('dashboard.nav.orders_received') if controller == 'dashboard/orders_received' || controller == 'dashboard/guests'
+    return t('dashboard.nav.orders_received') if controller == 'dashboard/orders_received' || controller == 'dashboard/host_reservations'
     return t('dashboard.nav.payment_transfers') if controller.include? 'transfers'
     return t('dashboard.nav.analytics') if controller.include? 'analytics'
     return t('dashboard.nav.manage_admins') if controller.include? 'users'

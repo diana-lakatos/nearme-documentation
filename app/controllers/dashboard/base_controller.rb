@@ -5,7 +5,6 @@ class Dashboard::BaseController < ApplicationController
   before_filter :find_company
   before_filter :redirect_if_no_company
 
-
   private
 
   def find_company

@@ -451,7 +451,7 @@ DesksnearMe::Application.routes.draw do
     end
     resource :payouts, except: [:index, :show, :new, :create, :destroy]
 
-    resources :reservations, :except => [:update, :destroy, :show] do
+    resources :user_reservations, :except => [:update, :destroy, :show] do
       member do
         post :user_cancel
         get :export
@@ -474,8 +474,20 @@ DesksnearMe::Application.routes.draw do
       resources :payment_notifications, controller: 'reservations/payment_notifications' # TODO: Check
     end
 
-    resources :guests
+    resources :host_reservations do
+      member do
+        post :confirm
+        get :confirm
+        patch :reject
+        put :reject
+        get :rejection_form
+        post :host_cancel
+        get :request_payment
+      end
+    end
   end
+
+  get '/dashboard', controller: 'dashboard/dashboard', action: 'index'
 
   namespace :manage do
     namespace :buy_sell do
@@ -506,18 +518,6 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :listings do
-      resources :reservations, :controller => 'listings/reservations' do
-        member do
-          post :confirm
-          get :confirm
-          patch :reject
-          put :reject
-          get :rejection_form
-          post :host_cancel
-          get :request_payment
-        end
-      end
-
       resources :recurring_bookings, :controller => 'listings/recurring_bookings' do
         member do
           post :confirm

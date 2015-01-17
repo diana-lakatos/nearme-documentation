@@ -1,7 +1,18 @@
-class Manage::Listings::ReservationsController < ApplicationController
-  before_filter :authenticate_user!
-  before_filter :find_listing
-  before_filter :find_reservation
+class Dashboard::HostReservationsController < Dashboard::BaseController
+  skip_before_filter :redirect_if_no_company
+  before_filter :find_listing, except: [:index]
+  before_filter :find_reservation, except: [:index]
+
+  def index
+    if current_user.companies.any?
+      @locations  = current_user.companies.first.locations
+    else
+      @locations = []
+    end
+
+    @guest_list = Controller::GuestList.new(current_user).filter(params[:state])
+    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
+  end
 
   def confirm
     if @reservation.confirmed?
@@ -19,7 +30,8 @@ class Manage::Listings::ReservationsController < ApplicationController
         flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
       end
     end
-    redirect_to dashboard_guests_url
+
+    redirect_to dashboard_host_reservations_url
   end
 
   def rejection_form
@@ -37,14 +49,15 @@ class Manage::Listings::ReservationsController < ApplicationController
     else
       flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
     end
-    redirect_to dashboard_guests_url
+
+    redirect_to dashboard_host_reservations_url
     render_redirect_url_as_json if request.xhr?
   end
 
   def request_payment
     ReservationMailer.enqueue.notify_guest_of_payment_request(@reservation)
     flash[:success] = t('flash_messages.manage.reservations.payment_requested')
-    redirect_to dashboard_guests_url
+    redirect_to dashboard_host_reservations_url
   end
 
   def host_cancel
@@ -58,7 +71,8 @@ class Manage::Listings::ReservationsController < ApplicationController
     else
       flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
     end
-    redirect_to dashboard_guests_url
+
+    redirect_to dashboard_host_reservations_url
   end
 
   private
