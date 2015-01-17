@@ -6,11 +6,11 @@ class DataUploadImportJobTest < ActiveSupport::TestCase
 
     setup do
       @mock = mock()
-      BulkUploadMailer.expects(:enqueue).returns(@mock)
+      DataUploadMailer.expects(:enqueue).returns(@mock).at_least(0)
     end
 
     should 'send finish mail if succeeded' do
-      @stub = mock(queued?: false, succeeded?: true, id: 1)
+      @stub = mock(queued?: false, succeeded?: true)
       DataUpload.stubs(:find).returns(@stub)
       @mock.expects(:notify_uploader_of_finished_import).with(@stub).once
       @mock.expects(:notify_uploader_of_failed_import).with(@stub).never
@@ -18,7 +18,7 @@ class DataUploadImportJobTest < ActiveSupport::TestCase
     end
 
     should 'send finish mail if partially succeeded' do
-      @stub = mock(queued?: false, succeeded?: false, partially_succeeded?: true, id: 1)
+      @stub = mock(queued?: false, succeeded?: false, partially_succeeded?: true)
       DataUpload.stubs(:find).returns(@stub)
       @mock.expects(:notify_uploader_of_finished_import).with(@stub).once
       @mock.expects(:notify_uploader_of_failed_import).with(@stub).never
@@ -26,7 +26,7 @@ class DataUploadImportJobTest < ActiveSupport::TestCase
     end
 
     should 'send fail mail if failed' do
-      @stub = mock(queued?: false, succeeded?: false, partially_succeeded?: false, failed?: true, id: 1)
+      @stub = mock(queued?: false, succeeded?: false, partially_succeeded?: false, failed?: true)
       DataUpload.stubs(:find).returns(@stub)
       @mock.expects(:notify_uploader_of_finished_import).with(@stub).never
       @mock.expects(:notify_uploader_of_failed_import).with(@stub).once
@@ -81,6 +81,7 @@ class DataUploadImportJobTest < ActiveSupport::TestCase
       @stub.expects(:encountered_error=).with do |error_string|
         error_string.include?('*Custom exception*') && error_string.include?('app/jobs/data_upload_import_job.rb:')
       end
+      DataUploadMailer.any_instance.expects(:notify_uploader_of_finished_import).once
       DataUploadImportJob.perform(1)
     end
 

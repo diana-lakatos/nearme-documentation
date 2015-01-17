@@ -29,9 +29,9 @@ class DataUploadImportJob < Job
       end
     end
     if @data_upload.succeeded? || @data_upload.partially_succeeded?
-      BulkUploadMailer.enqueue.notify_uploader_of_finished_import(@data_upload)
+      DataUploadMailer.enqueue.notify_uploader_of_finished_import(@data_upload)
     elsif @data_upload.failed?
-      BulkUploadMailer.enqueue.notify_uploader_of_failed_import(@data_upload)
+      DataUploadMailer.enqueue.notify_uploader_of_failed_import(@data_upload)
     end
   end
 
