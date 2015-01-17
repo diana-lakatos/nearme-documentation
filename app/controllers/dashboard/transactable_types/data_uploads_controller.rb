@@ -85,8 +85,5 @@ class Dashboard::TransactableTypes::DataUploadsController < Dashboard::BaseContr
     params.require(:data_upload).permit(secured_params.data_upload)
   end
 
-  def find_company
-    @company = current_user.companies.first
-  end
 end
 
