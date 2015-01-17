@@ -1,7 +1,7 @@
 .modal-header
   .modal-title= "New Waiver Agreement Template"
 .modal-body
-  = simple_form_for [:dashboard, @waiver_agreement_template], wrapper: :bs3_simple, data: {modal: true} do |f|
+  = simple_form_for [:dashboard, @waiver_agreement_template], wrapper: :bs3_simple, data: {modal: true } do |f|
     .errors= render 'shared/bootstrap_flash_messages'
     = f.input :name
     = f.input :content, as: :text, input_html: {rows: 10}

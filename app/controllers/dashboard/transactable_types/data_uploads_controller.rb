@@ -37,6 +37,7 @@ class Dashboard::TransactableTypes::DataUploadsController < Dashboard::BaseContr
   def new
     @data_upload = @company.data_uploads.build
     @data_upload.transactable_type = @transactable_type
+    render partial: "form"
   end
 
   def edit

@@ -6,7 +6,7 @@
     %h2= @user.name
     %p= @user.display_location
 
-  = link_to new_user_user_message_path(user_id: @user.slug), remote: true do
+  = link_to new_user_user_message_path(user_id: @user.slug), rel: "modal" do
     .btn.blue= t 'buy_sell_market.products.buttons.contact_host'
 
   .divider

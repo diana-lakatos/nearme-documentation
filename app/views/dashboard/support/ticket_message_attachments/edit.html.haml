@@ -1,21 +1,23 @@
-= render 'shared/render_flash'
+.modal-header
+  .modal-title Attachment
+.modal-body
+  .errors
+    = render 'shared/bootstrap_flash_messages'
+  %p File name
+  %p= link_to @ticket_message_attachment.read_attribute(:file), @ticket_message_attachment.file.url, target: '_blank'
+  %p Tag
+  %div
+    - url = @ticket.present? ? dashboard_support_ticket_ticket_message_attachment_path(@ticket, @ticket_message_attachment) : dashboard_support_ticket_ticket_message_attachment_path(params[:ticket_id], @ticket_message_attachment)
+    = simple_form_for @ticket_message_attachment, url: url, wrapper: :modal, html: { id: 'attachment_form', method: :put } do |f|
+      .radio-container
+        = f.input :tag, label: false, as: :radio_buttons, collection: Support::TicketMessageAttachment::TAGS
+        %input{type: 'hidden', name: 'form_name', value: @form_name}
 
-%p File name
-%p= link_to @ticket_message_attachment.read_attribute(:file), @ticket_message_attachment.file.url, target: '_blank'
-%p Tag
-%div
-  - url = @ticket.present? ? dashboard_support_ticket_ticket_message_attachment_path(@ticket, @ticket_message_attachment) : dashboard_support_ticket_ticket_message_attachment_path(params[:ticket_id], @ticket_message_attachment)
-  = simple_form_for @ticket_message_attachment, url: url, wrapper: :modal, html: { id: 'attachment_form', method: :put } do |f|
-    .radio-container
-      = f.input :tag, label: false, as: :radio_buttons, collection: Support::TicketMessageAttachment::TAGS
-      %input{type: 'hidden', name: 'form_name', value: @form_name}
-
-    .span5.offset7
-      = f.submit 'Save', class: 'btn blue pull-right'
+      .btn-toolbar
+        = f.submit 'Save', class: 'btn blue pull-right'
 
 :javascript
   if (typeof CustomInputs !== 'undefined') {
     CustomInputs.initialize();
   }
   new Support.AttachmentForm($('#attachment_form'));
-
