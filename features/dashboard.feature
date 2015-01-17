@@ -15,11 +15,11 @@ Feature: As a user of the site
       And a amenity exists with amenity_type: the amenity_type, name: "Amenity1"
       And a amenity exists with amenity_type: the amenity_type, name: "Amenity2"
       And a amenity exists with amenity_type: the amenity_type, name: "Amenity3"
+      And the transactable_type_listing exists
 
   Scenario: A user can add new location
-    Given I am on the manage locations page
-      And the transactable_type_location exists
-     When I follow "New Location"
+    Given I am adding new transactable
+     When I click "Add New Location"
       And I fill location form with valid details
       And I submit the form
       And I should see "Great, your new Desk has been added!"
@@ -27,15 +27,13 @@ Feature: As a user of the site
 
   Scenario: A user can edit existing location
     Given the location exists with company: the company
-      And the transactable_type_location exists
-      And I am on the manage locations page
-     When I click edit location icon
+     And I am adding new transactable
+     When I click 'Edit'
       And I provide new location data
       And I submit the form
       And I should see "Great, your Desk has been updated!"
      Then the location should be updated
-     When I click edit location icon
-      And I click delete location link
+      And I click 'Remove'
       And I should see "You've deleted"
      Then the location should not exist
 
