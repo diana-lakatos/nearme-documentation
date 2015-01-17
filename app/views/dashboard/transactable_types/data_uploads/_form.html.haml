@@ -1,7 +1,7 @@
 .modal-header
   .modal-title= "Bulk Upload"
 .modal-body
-  = simple_form_for [:manage, @transactable_type, @data_upload], wrapper: :bs3, html: { multipart: true } do |f|
+  = simple_form_for [:dashboard, @transactable_type, @data_upload], wrapper: :bs3, html: { multipart: true } do |f|
     .dash-body
       .row
         = t('data_upload.manage.new.external_id_hint')
