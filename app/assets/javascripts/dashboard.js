@@ -53,7 +53,6 @@ window.DNM = {
   initialize : function() {
     this.initializeAjaxCSRF();
     this.initializeComponents();
-    this.initializeModals();
     this.initializeBootstrap();
     this.initializeTooltips();
     this.initializeCustomSelects($('body'));
@@ -61,11 +60,6 @@ window.DNM = {
     this.initializeBrowsersSpecificCode();
     this.centerSearchBoxOnHomePage();
     this.setFooterPushHeight();
-  },
-
-  initializeModals: function() {
-    Modal.listen();
-    BootstrapModal.listen();
   },
 
   initializeBootstrap: function() {

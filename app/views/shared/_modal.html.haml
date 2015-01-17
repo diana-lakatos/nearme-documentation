@@ -4,7 +4,6 @@
   .modal-content
   .modal-loading
 
-:javascript
-  $(function() {
-    Modal.listen();
-  });
+= content_for :domready do
+  $(function(){ Modal.listen(); });
+

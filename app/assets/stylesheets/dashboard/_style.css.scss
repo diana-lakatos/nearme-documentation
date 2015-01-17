@@ -14,6 +14,15 @@ header {
 }
 
 /*===== GENERAL STYLES =====*/
+p, h1, h2, h3, h4, h5, a, label, td {
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5 {
+  color: $color-headings;
+  font-weight: 600;
+}
+
 p {
   color: $color-dark-gray;
 }
@@ -22,22 +31,14 @@ h1 {
   font-size: 40px;
 }
 
-a {
+a, a:hover, a:focus {
   color: $color-blue;
+  text-decoration: none;
+  outline: 0;
 }
 
 a:hover {
-  text-decoration: none;
   cursor: pointer;
-}
-
-p, h1, h2, h3, h4, h5, a, label, td {
-  margin: 0;
-}
-
-h1, h2, h3, h4, h5 {
-  color: $color-headings;
-  font-weight: 600;
 }
 
 ul {
@@ -58,7 +59,7 @@ ul {
 .customSelect {
   border: solid #d4d4d4 1px;
   border-radius: 3px;
-    background:#fff asset-url("dashboard/arrow-down.png") right no-repeat;
+  background:#fff asset-url("dashboard/arrow-down.png") right no-repeat;
   width: 100%;
   padding: 5px 0 5px 5px;
   font-weight: 300;
@@ -69,17 +70,32 @@ ul {
   color: $color-blue;
 }
 
+.yellow {
+  color: #fdcc51;
+}
+
 .divider {
   border: 1px solid #d5d5d5;
   margin: 40px 0;
 }
 
-.yellow {
-  color: #fdcc51;
-}
-
 .checkbox-icon-outer, i.custom-select-dropdown-icon.ico-chevron-down {
   display: none;
+}
+
+abbr[title] {
+  border-bottom: none; 
+  color: $color-red;
+  margin-left: -7px;
+}
+
+.error {
+
+  .error-block, .help-inline {
+    font-family: $font-stack;
+    font-size: 14px !important;
+  }
+
 }
 
 /*===== BUTTONS =====*/
@@ -87,7 +103,7 @@ ul {
 .btn {
   border-radius: 0;
   text-align: center;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 14px;
   padding: 8px 20px;
 }
@@ -98,6 +114,10 @@ ul {
 
 .btn.half {
   width: 45%;
+}
+
+.btn:active {
+  box-shadow: none;
 }
 
 .btn.gray {
@@ -833,75 +853,6 @@ table.order-header td {
 
 .pagination .page-link.active {
   color: #000;
-}
-
-/*===== MODALS =====*/
-.modal {
-  .modal-header {
-    background: $color-light-gray;
-  }
-
-  .modal-title {
-    color: #fff;
-  }
-
-  .close {
-    color: #fff;
-    font-weight: 200;
-    text-shadow: none;
-    opacity: 1;
-  }
-
-  label {
-    display: block;
-  }
-
-  input, textarea, .customSelect {
-    margin: 15px 0;
-  }
-
-  input.email {
-    background: asset-url("dashboard/mail.png") left no-repeat;
-    padding-left: 40px;
-  }
-
-  .btn {
-    width: 45%;
-    margin-top: 15px;
-  }
-
-  .load-hide {
-    display: none;
-  }
-
-  #add-ach label {
-    width: 100%;
-  }
-
-  .custom-select {
-    width: 100% !important;
-    height: 30px;
-    margin-top: 18px;
-  }
-
-  img {
-    margin: 15px 0;
-  }
-
-  #select-payment .table>tbody>tr>td {
-    padding: 30px 8px;
-    border-top: 1px solid #ddd;
-  }
-
-  .checkbox {
-    margin: 0;
-  }
-
-  input#open, input[type="checkbox"] {
-    position: initial;
-    margin: 0;
-  }
-
 }
 
 /*=====POPOVERS=====*/

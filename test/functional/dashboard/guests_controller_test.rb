@@ -16,7 +16,7 @@ class Dashboard::GuestsControllerTest < ActionController::TestCase
     FactoryGirl.create(:reservation, owner: @user, listing: @related_listing)
     get :index
     assert_response :success
-    assert_select ".reservation-details", 1
+    assert_select ".order", 1
   end
 
   should 'show related locations when no related guests' do
@@ -24,7 +24,7 @@ class Dashboard::GuestsControllerTest < ActionController::TestCase
     @reservation.update_attribute(:instance_id, @unrelated_listing.instance_id)
     get :index
     assert_response :success
-    assert_select ".reservation-details", 0
+    assert_select ".order", 0
     assert_select "h2", @related_location.name
   end
 
@@ -33,14 +33,14 @@ class Dashboard::GuestsControllerTest < ActionController::TestCase
     @reservation.update_attribute(:instance_id, @unrelated_listing.instance_id)
     get :index
     assert_response :success
-    assert_select ".reservation-details", 0
+    assert_select ".order", 0
   end
 
   should 'show tweet links if no reservation' do
     get :index
     assert_response :success
     assert_select ".sharelocation", 1
-    assert_select ".sharelocation li", 5
+    assert_select ".sharelocation > span", 4
   end
 
   should 'not show tweet links if there is reservation' do

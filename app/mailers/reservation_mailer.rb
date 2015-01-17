@@ -84,7 +84,7 @@ class ReservationMailer < InstanceMailer
     setup_defaults(reservation)
     @user = @reservation.administrator
     set_bcc_email
-    @url  = manage_guests_dashboard_url(:token => @user.try(:temporary_token))
+    @url  = dashboard_host_reservations_url(:token => @user.try(:temporary_token))
     @reserver = @reservation.owner.name
     generate_mail("#{reservation.owner.first_name} just booked your #{instance_bookable_noun}!")
   end

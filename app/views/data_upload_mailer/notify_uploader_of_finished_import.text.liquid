@@ -1,0 +1,13 @@
+Data import has finished
+
+It started on {{ data_upload.import_started_at }} and finished on {{ data_upload.import_finished_at }}
+
+Report:
+New entities: {{ data_upload.new_parse_summary }}
+Updated entities: {{ data_upload.updated_parse_summary }}
+{% if data_upload.data_upload.deleted_parse_summary %}Deleted entities: {{ data_upload.deleted_parse_summary }}{% endif %}
+
+{% if data_upload.parsing_result_log %}Encountered validation errors log:
+{{ data_upload.parsing_result_log }}{% endif %}
+
+You can access dashboard {{ platform_context.host | append:data_upload.new_transactable_url }}

@@ -1,9 +1,10 @@
-= render_modal "Add New User to #{@company.name}", { id: "modal-add-user" } do
-  = simple_form_for([:dashboard, @user], remote: true) do |f|
+.modal-header
+  .modal-title= "Add New User to #{@company.name}"
+.modal-body
+  = simple_form_for([:dashboard, @user], data: { modal: true } ) do |f|
     .errors
+      = render 'shared/bootstrap_flash_messages'
     .email-holder.input-icon-holder
       = f.input :email, :placeholder => "Enter User's Email", :input_html => { :tabindex => '2' }
-      %span.ico-mail
-    %br
-    .actions
+    .btn-toolbar
       = f.submit 'Add User', id: 'submit-link', class: "btn blue pull-right"

@@ -28,13 +28,17 @@ class Dashboard::ImagesController < Dashboard::BaseController
   end
 
   def edit
+    if request.xhr?
+      render partial: "manage/photos/resize_form", locals: { form_url: dashboard_image_path(@image), object: @image.image, object_url: @image.image_url(:original) }
+    end
   end
 
   def update
-    @image.image_transformation_data = { :crop => params[:crop], :rotate => params[:rotate] }
+    @image.image_transformation_data = { crop: params[:crop], rotate: params[:rotate] }
     if @image.save
+      render partial: 'manage/photos/resize_succeeded'
     else
-      render :edit
+      render partial: "manage/photos/resize_form", locals: { form_url: dashboard_image_path(@image), object: @image.image, object_url: @image.image_url(:original) }
     end
   end
 

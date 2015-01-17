@@ -28,6 +28,11 @@ class DataUploadImportJob < Job
         @data_upload.touch(:imported_at)
       end
     end
+    if @data_upload.succeeded? || @data_upload.partially_succeeded?
+      DataUploadMailer.enqueue.notify_uploader_of_finished_import(@data_upload)
+    elsif @data_upload.failed?
+      DataUploadMailer.enqueue.notify_uploader_of_failed_import(@data_upload)
+    end
   end
 
 end

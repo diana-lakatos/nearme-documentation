@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Manage::TransactableTypes::DataUploadsControllerTest < ActionController::TestCase
+class Dashboard::TransactableTypes::DataUploadsControllerTest < ActionController::TestCase
 
   setup do
     @instance = FactoryGirl.create(:instance)
@@ -12,6 +12,7 @@ class Manage::TransactableTypes::DataUploadsControllerTest < ActionController::T
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
     InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
     sign_in @user
+    stub_mixpanel
   end
 
   context 'create' do

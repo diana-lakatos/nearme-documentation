@@ -1,6 +1,0 @@
-$('#crop-form-modal').remove();
-$("body").append('#{escape_javascript( render partial: 'manage/photos/resize_form', :locals => { :form_url => update_theme_image_dashboard_white_label_path(image: @image_param), :object => @image, :object_url => @theme.send("#{@image_param}_url", :original) })}');
-$('#crop-form-modal').modal('show')
-
-
-

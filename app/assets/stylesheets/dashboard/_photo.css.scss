@@ -83,6 +83,14 @@
   position: relative;
 
   img {
+    max-width: 100%;
+  }
+
+  .jcrop-holder {
+
+    img {
+      max-width: none;
+    }
   }
 }
 

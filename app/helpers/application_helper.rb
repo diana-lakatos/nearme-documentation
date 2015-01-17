@@ -1,7 +1,6 @@
 module ApplicationHelper
 
   include FormHelper
-  include BootstrapHelper
   include TooltipHelper
   include CurrencyHelper
   include FileuploadHelper

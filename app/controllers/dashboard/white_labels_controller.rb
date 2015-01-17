@@ -31,13 +31,17 @@ class Dashboard::WhiteLabelsController < Dashboard::BaseController
   end
 
   def edit_image
+    if request.xhr?
+      render partial: 'manage/photos/resize_form', locals: { form_url: update_theme_image_dashboard_white_label_path(image: @image_param), object: @image, object_url: @theme.send("#{@image_param}_url", :original) }
+    end
   end
 
   def update_image
     @theme.send("#{@image_param}_transformation_data=", { :crop => params[:crop], :rotate => params[:rotate] })
     if @theme.save
+      render partial: 'manage/photos/resize_succeeded'
     else
-      render :edit_image
+      render partial: 'manage/photos/resize_form', locals: { form_url: update_theme_image_dashboard_white_label_path(image: @image_param), object: @image, object_url: @theme.send("#{@image_param}_url", :original) }
     end
   end
 

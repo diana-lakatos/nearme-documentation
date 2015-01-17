@@ -51,7 +51,6 @@ window.DNM = {
   initialize : function() {
     this.initializeAjaxCSRF();
     this.initializeComponents();
-    this.initializeModals();
     this.initializeBootstrapSwitch();
     this.initializeTooltips();
     this.initializeCustomSelects($('body'));
@@ -63,10 +62,6 @@ window.DNM = {
 
   initializeBootstrapSwitch: function() {
     $('.switch input:visible')['bootstrapSwitch']();
-  },
-
-  initializeModals: function() {
-    Modal.listen();
   },
 
   initializeCustomInputs: function() {

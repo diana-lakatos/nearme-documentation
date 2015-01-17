@@ -1,13 +1,6 @@
 class Dashboard::LocationsController < Dashboard::BaseController
   before_filter :redirect_if_draft_listing
-  before_filter :find_company
-  before_filter :redirect_if_no_company
-  before_filter :find_location, :except => [:index, :new, :create]
-
-  def index
-    @locations = locations_scope
-    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
-  end
+  before_filter :find_location, except: [:new, :create]
 
   def new
     @location = @company.locations.build
@@ -15,6 +8,7 @@ class Dashboard::LocationsController < Dashboard::BaseController
     @location.name_and_description_required = true if TransactableType.first.name == "Listing"
     build_approval_request_for_object(@location) unless @location.is_trusted?
     AvailabilityRule.default_template.apply(@location)
+    render partial: "form"
   end
 
   def create
@@ -26,12 +20,13 @@ class Dashboard::LocationsController < Dashboard::BaseController
       event_tracker.created_a_location(@location , { via: 'dashboard' })
       event_tracker.updated_profile_information(current_user)
     else
-      flash[:error] = view_context.array_to_unordered_list(@location.errors.full_messages)
+      render partial: "form"
     end
   end
 
   def edit
     build_approval_request_for_object(@location) unless @location.is_trusted?
+    render partial: "form"
   end
 
   def update
@@ -40,7 +35,7 @@ class Dashboard::LocationsController < Dashboard::BaseController
     if @location.save
       flash[:success] = t('flash_messages.dashboard.locations.updated', bookable_noun: platform_context.decorate.bookable_noun)
     else
-      flash[:error] = view_context.array_to_unordered_list(@location.errors.full_messages)
+      render partial: "form"
     end
   end
 
@@ -62,17 +57,10 @@ class Dashboard::LocationsController < Dashboard::BaseController
   end
 
   def find_location
-    @location = @company.locations.find(params[:id])
-  end
-
-  def find_company
-    @company = current_user.companies.first
-  end
-
-  def redirect_if_no_company
-    unless @company
-      flash[:warning] = t('flash_messages.dashboard.add_your_company')
-      redirect_to new_space_wizard_url
+    begin
+      @location = @company.locations.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      raise Location::NotFound
     end
   end
 

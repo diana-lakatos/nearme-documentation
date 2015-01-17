@@ -11,8 +11,9 @@ class DataUploadConvertJob < Job
     xml_path = "#{Dir.tmpdir}/#{@data_upload.transactable_type_id}-#{Time.zone.now.to_i}.xml"
     DataImporter::CsvToXmlConverter.new(csv_file, xml_path).convert
     @data_upload.xml_file = File.open(xml_path)
-    @data_upload.wait
     @data_upload.save!
+    @data_upload.queue!
+    DataUploadImportJob.perform(@data_upload.id)
   end
 
 end

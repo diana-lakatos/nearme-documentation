@@ -1,8 +1,0 @@
-- if flash[:error].present?
-  $('#modal-add-user form .errors').html('#{escape_javascript( render 'shared/bootstrap_flash_messages')}');
-- else
-  $('#modal-add-user').modal('hide')
-  $('#users-list tbody').append('#{escape_javascript( render @user )}');
-  $('.container.page-wrapper').prepend('#{escape_javascript( render 'shared/bootstrap_flash_messages')}');
-
-- flash.discard

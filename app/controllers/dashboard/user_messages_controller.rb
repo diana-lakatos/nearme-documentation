@@ -17,6 +17,7 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
   def new
     @user_message = current_user.authored_messages.new.decorate
     @user_message.set_message_context_from_request_params(params)
+    render partial: "form"
   end
 
   def create
@@ -29,7 +30,7 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
       render_redirect_url_as_json if request.xhr?
     else
       if request.xhr?
-        render :template => 'user_messages/new'
+        render :partial => "form"
       else
         @displayed_user_message = @user_message
         @user_messages = UserMessage.for_thread(@user_message.thread_owner_with_deleted, @user_message.thread_recipient_with_deleted, @user_message.thread_context_with_deleted).by_created.decorate

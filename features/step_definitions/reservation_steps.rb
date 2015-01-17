@@ -169,7 +169,7 @@ end
 
 When /^I click to confirm the booking$/ do
   click_button "Request Booking"
-  page.should have_content('Your purchase was Successful!')
+  page.should have_content('Your reservation has been made')
 end
 
 Then(/^I should see the booking confirmation screen for:$/) do |table|

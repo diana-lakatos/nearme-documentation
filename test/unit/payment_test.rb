@@ -82,7 +82,7 @@ class PaymentTest < ActiveSupport::TestCase
       end
 
       should 'refund proper amount when guest cancels' do
-        @reservation_charge.reservation.update_column(:state, 'cancelled_by_guest')
+        @reservation_charge.reference.update_column(:state, 'cancelled_by_guest')
         Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).once.returns(Refund.new(:success => true))
         assert_equal 1000, @reservation_charge.subtotal_amount_cents
 
@@ -97,7 +97,7 @@ class PaymentTest < ActiveSupport::TestCase
       end
 
       should 'refund proper amount when host cancels' do
-        @reservation_charge.reservation.update_column(:state, 'cancelled_by_host')
+        @reservation_charge.reference.update_column(:state, 'cancelled_by_host')
         Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).once.returns(Refund.new(:success => true))
         assert_equal 1000, @reservation_charge.subtotal_amount_cents
 

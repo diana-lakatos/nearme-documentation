@@ -1,7 +1,10 @@
-= render_modal "Image successfully cropped/rotated", { id: "crop-form-success" } do
+.modal-header
+  .modal-title= t('manage.photos.resize_succeeded')
+.modal-body
   %p.text-center{:style => 'margin: 40px 0px;'}
-    Your changes will be applied within a few minutes.
-  .submit-bar
-    = link_to '#', class: 'btn medium blue', data: { dismiss: 'modal' }, 'aria-label'=>"Continue" do
-      Continue
+    = t('manage.photos.changes_applied_soon')
+
+  .btn-toolbar
+    = link_to '#', class: 'btn medium blue close-modal pull-right' do
+      = t('manage.photos.continue')
 

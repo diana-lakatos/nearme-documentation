@@ -28,6 +28,11 @@ en:
     companies:
       theme_image_deleted: "That image has been deleted."
       theme_image_not_deleted: "We couldn't delete that image."
+    photos:
+      resize_succeeded: 'Image successfully cropped/rotated'
+      changes_applied_soon: 'Your changes will be applied within a few minutes.'
+      continue: 'Continue'
+      crop_and_rotate: 'Crop And Rotate'
     listings:
       photos:
         waiting_for_photo_processing: "Waiting for photo processing to finish"
@@ -320,11 +325,9 @@ en:
         sync_mode: 'Delete absent objects'
         external_id_hint: 'Matching between objects already in the system and in CSV is done based on External Id. Hence External Ids have to be unique in scope of parent. If you are not sure what current External Ids are, please download current data first. Please make sure that any new objects that are inserted via CSV have populated External Id, otherwise the end result might not be as intendent.'
       edit:
-        queued: 'Task has been queued.'
-        processing: 'Your data is being processed. Please refresh the page after few minutes.'
-        waiting: 'Your data has been processed, however nothing has been imported yet! U can %{preview_link} that will be imported. To actually import data click the button below.'
-        schedule_import: 'Schedule Data Import'
-        being_imported: 'Your data is being imported.'
+        queued: "Import has been scheduled. You'll receive an email when it's done"
+        processing: "Import has been scheduled. You'll receive an email when it's done"
+        being_imported: "Import has begun. You'll receive an email when it's done"
         imported_header: 'Data has been imported.'
         new_entities:  'New entities:'
         updated_entities:  'Updated entities:'

@@ -1,6 +1,8 @@
-= render_modal "Send a message to #{@user_message.recipient_name}", { id: "modal-add-message", bs2: true } do
-  = simple_form_for @user_message, url: @user_message.create_path do |f|
+.modal-header
+  .modal-title= "Send a message to #{@user_message.recipient_name}"
+.modal-body
+  = simple_form_for @user_message, url: @user_message.create_path, data: { modal: true } do |f|
     .errors
     = f.input :body
-    .actions
+    .btn-toolbar
       = f.submit "Send", class: "btn blue pull-right"
