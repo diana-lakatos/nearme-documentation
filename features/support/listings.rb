@@ -78,22 +78,43 @@ module ListingsHelpers
 
   def fill_listing_form
     attach_file_via_uploader
-    fill_in "listing_name", with: "My Name"
-    fill_in "listing_description", with: "Proin adipiscing nunc vehicula lacus varius dignissim."
-    select "Meeting Room", from: "listing_listing_type"
-    fill_in "listing_quantity", with: "5"
+    if page.has_selector?('#listing_name')
+      fill_in "listing_name", with: "My Name"
+      fill_in "listing_description", with: "Proin adipiscing nunc vehicula lacus varius dignissim."
+      select "Meeting Room", from: "listing_listing_type"
+      fill_in "listing_quantity", with: "5"
 
-    choose "Daily, Weekly or Monthly"
+      choose "Daily, Weekly or Monthly"
 
-    check "enable_daily"
-    fill_in "listing_daily_price", with: "10"
+      check "enable_daily"
+      fill_in "listing_daily_price", with: "10"
 
-    check "enable_weekly"
-    fill_in "listing_weekly_price", with: "60"
+      check "enable_weekly"
+      fill_in "listing_weekly_price", with: "60"
 
-    check "enable_monthly"
-    fill_in "listing_monthly_price", with: "200"
-    page.find("#enable_weekly").set(true)
+      check "enable_monthly"
+      fill_in "listing_monthly_price", with: "200"
+      page.find("#enable_weekly").set(true)
+    else
+      page.first('#location-list .locations label').click
+      fill_in "transactable_name", with: "My Name"
+      fill_in "transactable_description", with: "Proin adipiscing nunc vehicula lacus varius dignissim."
+
+      page.execute_script "$('select#transactable_listing_type option[value=\"Meeting Room\"]').prop('selected', true).trigger('change');"
+      fill_in "transactable_quantity", with: "5"
+
+      choose "transactable_price_type_daily"
+
+      check "enable_daily"
+      fill_in "transactable_daily_price", with: "10"
+
+      check "enable_weekly"
+      fill_in "transactable_weekly_price", with: "60"
+
+      check "enable_monthly"
+      fill_in "transactable_monthly_price", with: "200"
+      page.find("#enable_weekly").set(true)
+    end
   end
 
   def assert_listing_data(listing, update = false)

@@ -29,7 +29,11 @@ end
 When /^I (disable|enable) (.*) pricing$/ do |action, period|
   page.find("#enable_#{period}").set(action == 'disable' ? false : true)
   if action=='enable'
-    page.find("#listing_#{period}_price").set(15.50)
+    if page.has_selector?("#listing_#{period}_price")
+      page.find("#listing_#{period}_price").set(15.50)
+    else
+      page.find("#transactable_#{period}_price").set(15.50)
+    end
   end
 
 end
@@ -40,6 +44,14 @@ When /^I provide new (location|listing) data$/ do |model|
   else
     fill_listing_form
   end
+end
+
+When /^I submit the location form$/ do
+  page.find('#location-form input[type=submit]').click
+end
+
+When /^I submit the transactable form$/ do
+  page.find('#listing-form input[type=submit]').click
 end
 
 When /^I submit the form$/ do
@@ -68,14 +80,22 @@ Then /^Listing (.*) pricing should be (disabled|enabled)$/ do |period, state|
   enable_period_checkbox = page.find("#enable_#{period}")
   if state=='enabled'
     assert enable_period_checkbox.checked?
-    assert_equal "15.50", page.find("#listing_#{period}_price").value
+    if page.has_selector?("#listing_#{period}_price")
+      assert_equal "15.50", page.find("#listing_#{period}_price").value
+    else
+      assert_equal "15.50", page.find("#transactable_#{period}_price").value
+    end
   else
     assert !enable_period_checkbox.checked?
   end
 end
 
 Then /^pricing should be free$/ do
-  page.find("#listing_price_type_free").checked?
+  if page.has_selector?("#listing_price_type_free")
+    page.find("#listing_price_type_free").checked?
+  else
+    page.find("#transactable_price_type_free").checked?
+  end
 end
 
 When /^I select custom availability:$/ do |table|
