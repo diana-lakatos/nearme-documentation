@@ -15,6 +15,7 @@ class Dashboard::LocationsController < Dashboard::BaseController
     @location.name_and_description_required = true if TransactableType.first.name == "Listing"
     build_approval_request_for_object(@location) unless @location.is_trusted?
     AvailabilityRule.default_template.apply(@location)
+    render partial: "form"
   end
 
   def create
@@ -26,12 +27,13 @@ class Dashboard::LocationsController < Dashboard::BaseController
       event_tracker.created_a_location(@location , { via: 'dashboard' })
       event_tracker.updated_profile_information(current_user)
     else
-      flash[:error] = view_context.array_to_unordered_list(@location.errors.full_messages)
+      render partial: "form"
     end
   end
 
   def edit
     build_approval_request_for_object(@location) unless @location.is_trusted?
+    render partial: "form"
   end
 
   def update
@@ -40,7 +42,7 @@ class Dashboard::LocationsController < Dashboard::BaseController
     if @location.save
       flash[:success] = t('flash_messages.dashboard.locations.updated', bookable_noun: platform_context.decorate.bookable_noun)
     else
-      flash[:error] = view_context.array_to_unordered_list(@location.errors.full_messages)
+      render partial: "form"
     end
   end
 

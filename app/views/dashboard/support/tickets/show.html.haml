@@ -4,8 +4,6 @@
 - if @ticket.reservation_details['start_minute'].present? && @ticket.reservation_details['end_minute'].present?
   - @hourly_presenter = HourlyPresenter.new(@ticket.reservation_dates.first, @ticket.reservation_details['start_minute'].to_i, @ticket.reservation_details['end_minute'].to_i)
 
-= render_modal "Attachment", { id: "bootstrap-modal" }
-
 .dash-page
   .dash-head.clearfix
     - if @ticket.target.free?

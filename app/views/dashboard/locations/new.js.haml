@@ -1,7 +1,0 @@
-$('#modal-add-location').remove()
-
-$("body").append('#{escape_javascript( render 'form')}');
-$('#modal-add-location').modal('show');
-
-DNM.initialize();
-new Dashboard.LocationController($('#location-form'));

@@ -1,9 +1,5 @@
-- unless @location.valid?
-  $('#modal-add-location form .errors').html('#{escape_javascript( render 'shared/bootstrap_flash_messages')}');
-- else
-  $('#modal-add-location').modal('hide')
-  $("#location-list .row[data-location-id=#{@location.id}]").replaceWith('#{escape_javascript( render @location )}');
-  $(".alert").remove()
-  $('.container.page-wrapper').prepend('#{escape_javascript( render 'shared/bootstrap_flash_messages')}');
-
+Modal.close()
+$("#location-list .row[data-location-id=#{@location.id}]").replaceWith('#{escape_javascript( render @location )}');
+$(".alert").remove()
+$('.container.page-wrapper').prepend('#{escape_javascript( render 'shared/bootstrap_flash_messages')}');
 - flash.discard

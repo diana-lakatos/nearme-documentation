@@ -1,7 +1,7 @@
 .dash-head.clearfix
   %p MANAGE LISTINGS > LIST NEW ITEM
-  %a.dash-head-btn{:href => ""}
-    .btn.blue Bulk Upload
+  / %a.dash-head-btn{:href => ""}
+  /   .btn.blue Bulk Upload
 .dash-body
   = simple_form_for ["dashboard", @transactable_type, @transactable], wrapper: :bs3, :html => { :multipart => true, id: 'listing-form' } do |f|
 
