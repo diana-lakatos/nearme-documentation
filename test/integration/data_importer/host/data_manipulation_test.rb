@@ -9,6 +9,7 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     @location_type = FactoryGirl.create(:location_type, name: 'My Type')
     @transactable_type = FactoryGirl.create(:transactable_type_current_data)
     GmapsFake.stub_requests
+    stub_mixpanel
   end
 
   context 'current data' do
