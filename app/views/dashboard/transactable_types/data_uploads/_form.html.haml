@@ -1,15 +1,14 @@
 .modal-header
   .modal-title= "Bulk Upload"
 .modal-body
+
+  = link_to 'Download Current Data', download_current_data_csv_dashboard_transactable_type_data_uploads_path(@transactable_type), class: 'btn medium'
+  = link_to 'Download Current Data', download_current_data_csv_dashboard_transactable_type_data_uploads_path(@transactable_type), class: 'btn medium'
   = simple_form_for [:dashboard, @transactable_type, @data_upload], wrapper: :bs3, html: { multipart: true } do |f|
     .dash-body
-      .row
-        = t('data_upload.manage.new.external_id_hint')
-      .row
-        = f.input :csv_file, as: :file, label: 'CSV File'
-      .row
-        = f.simple_fields_for :options, OpenStruct.new(@data_upload.options) do |option|
-          .row
-            = option.input :sync_mode, required: false, as: :boolean, label: t('data_upload.manage.new.sync_mode'), hint: t('data_upload.manage.new.sync_mode_hint')
+      = t('data_upload.manage.new.external_id_hint')
+      = f.input :csv_file, as: :file, label: 'CSV File'
+      = f.simple_fields_for :options, OpenStruct.new(@data_upload.options) do |option|
+        = option.input :sync_mode, required: false, as: :boolean, label: t('data_upload.manage.new.sync_mode'), hint: t('data_upload.manage.new.sync_mode_hint')
       .btn-toolbar
         = f.button :submit, 'Upload', class: 'btn btn-primary'
