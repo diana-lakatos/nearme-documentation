@@ -12,7 +12,7 @@ Given /^I ask a question about a transactable$/ do
 end
 
 Then /^I should see this question in my inbox marked as read$/ do
-  visit user_messages_path
+  visit dashboard_user_messages_path
   page.should_not have_css('.count')
   page.should_not have_content('Inbox (1)')
   page.should have_content('Messages')
@@ -20,8 +20,8 @@ Then /^I should see this question in my inbox marked as read$/ do
   page.should have_content model('user').first_name
   page.should have_content @listing.name
   page.should have_content 'Short one'
-  page.find('.listing-message').should_not have_content('Read')
-  page.find('.listing-message').should have_content('Archive')
+  page.find('.message').should_not have_content('Read')
+  page.find('.message').should have_content('Archive')
 end
 
 When /^I log in as this listings creator$/ do
@@ -30,14 +30,14 @@ When /^I log in as this listings creator$/ do
 end
 
 Then /^I should see this question in my inbox marked as unread$/ do
-  visit user_messages_path
+  visit dashboard_user_messages_path
   find('.count').should have_content('1')
   page.should have_content('Inbox (1)')
   page.should have_content model('user').first_name
   page.should have_content @listing.name
   page.should have_content 'Short one'
-  page.find('.listing-message').should have_content('Read')
-  page.find('.listing-message').should_not have_content('Archive')
+  page.find('.message').should have_content('Read')
+  page.find('.message').should_not have_content('Archive')
 end
 
 Then /^I should be able to read, answer and archive this question$/ do
@@ -82,7 +82,7 @@ Given /^I send a message to another user on his profile page$/ do
 end
 
 Then /^I should see this( reservation)? message in my inbox marked as read$/ do |reservation_message|
-  visit user_messages_path
+  visit dashboard_user_messages_path
   page.should_not have_css('.count')
   page.should_not have_content('Inbox (1)')
   page.should have_content('Messages')
@@ -95,8 +95,8 @@ Then /^I should see this( reservation)? message in my inbox marked as read$/ do 
     page.should have_content @another_user.name
   end
   page.should have_content 'Short one'
-  page.find('.listing-message').should_not have_content('Read')
-  page.find('.listing-message').should have_content('Archive')
+  page.find('.message').should_not have_content('Read')
+  page.find('.message').should have_content('Archive')
 end
 
 When /^I log in as this user$/ do
@@ -105,7 +105,7 @@ When /^I log in as this user$/ do
 end
 
 Then /^I should see this( reservation)? message in my inbox marked as unread$/ do |reservation_message|
-  visit user_messages_path
+  visit dashboard_user_messages_path
   find('.count').should have_content('1')
   page.should have_content('Inbox (1)')
   if reservation_message
@@ -116,8 +116,8 @@ Then /^I should see this( reservation)? message in my inbox marked as unread$/ d
     page.should have_content @another_user.name
   end
   page.should have_content 'Short one'
-  page.find('.listing-message').should have_content('Read')
-  page.find('.listing-message').should_not have_content('Archive')
+  page.find('.message').should have_content('Read')
+  page.find('.message').should_not have_content('Archive')
 end
 
 Given /^I am logged in as the reservation administrator$/ do

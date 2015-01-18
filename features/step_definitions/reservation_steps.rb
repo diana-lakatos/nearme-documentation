@@ -68,10 +68,10 @@ When /^the (visitor|owner) (confirm|decline|cancel)s the reservation$/ do |user,
 
   if user == "visitor"
     login User.find_by_name("Keith Contractor")
-    visit bookings_dashboard_path
+    visit reservations_dashboard_path
   else
     login User.find_by_name("Bo Jeanes")
-    visit manage_guests_dashboard_path
+    visit dashboard_guests_path
   end
   if action == 'cancel' and user == 'owner'
     within('#reservations header') { click_on 'Confirmed'}
@@ -86,12 +86,12 @@ end
 
 When /^the reservation expires/ do
   login User.find_by_name("Keith Contractor")
-  visit bookings_dashboard_path
+  visit reservations_dashboard_path
 
   reservation = User.find_by_name("Keith Contractor").reservations.first
   reservation.perform_expiry!
 
-  visit bookings_dashboard_path
+  visit reservations_dashboard_path
 end
 
 When /^I select to book( and review)? space for:$/ do |and_review, table|

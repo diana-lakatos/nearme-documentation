@@ -29,13 +29,7 @@ module NavigationHelpers
     when /the transactables page/
       listings_path
 
-    when /the dashboard/
-      dashboard_path
-
-    when /the bookings/
-      bookings_dashboard_path
-
-    when /the guests/
+    when /manage guests/
       dashboard_guests_path
 
     when /the manage listing page/

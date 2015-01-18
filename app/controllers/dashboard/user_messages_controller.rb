@@ -1,7 +1,9 @@
 class Dashboard::UserMessagesController < Dashboard::BaseController
 
   before_filter :redirect_to_login, only: [:new]
-  skip_before_filter :authenticate_user!, :find_company, :redirect_if_no_company
+  skip_before_filter :find_company, :redirect_if_no_company
+  skip_before_filter :authenticate_user!, only: [:new]
+
 
   helper_method :user_messages_decorator
 
@@ -26,7 +28,7 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
     if @user_message.save
       @user_message.send_notification
       flash[:notice] = t('flash_messages.user_messages.message_sent')
-      redirect_to dashboard_user_message_path(@user_message)
+      redirect_to dashboard_user_messages_path(@user_message)
       render_redirect_url_as_json if request.xhr?
     else
       if request.xhr?
