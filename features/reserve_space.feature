@@ -143,9 +143,7 @@ Feature: A user can book at a space
      When I book space for:
           | Transactable     | Date         | Quantity  |
           | the transactable | next Wednesday  | 1      |
-     Then show me the page
      Then I should be offered calendar and manage options
-     Then show me the page
      When I follow "Manage"
      Then I should be redirected to bookings page
      Then The second booking should be highlighted

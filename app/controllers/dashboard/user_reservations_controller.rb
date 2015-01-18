@@ -8,6 +8,7 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
       redirect_to redirection_path
     end
   end
+  before_filter :reservation, only: [:booking_successful_modal, :booking_failed_modal]
 
   def user_cancel
     if reservation.user_cancel
@@ -74,6 +75,12 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
 
   def booking_failed
     upcoming
+  end
+
+  def booking_successful_modal
+  end
+
+  def booking_failed_modal
   end
 
   def remote_payment

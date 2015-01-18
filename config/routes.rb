@@ -457,6 +457,8 @@ DesksnearMe::Application.routes.draw do
         get :export
         get :booking_successful
         get :booking_failed
+        get :booking_successful_modal
+        get :booking_failed_modal
         get :remote_payment
         get :recurring_booking_successful
       end
