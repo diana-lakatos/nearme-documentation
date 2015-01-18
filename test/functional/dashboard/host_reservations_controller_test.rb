@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Listings::ReservationsControllerTest < ActionController::TestCase
+class Dashboard::HostReservationsControllerTest < ActionController::TestCase
 
   setup do
     @listing = FactoryGirl.create(:listing_in_san_francisco)

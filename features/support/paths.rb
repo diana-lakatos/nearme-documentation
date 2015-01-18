@@ -30,10 +30,10 @@ module NavigationHelpers
       listings_path
 
     when /manage guests/
-      dashboard_guests_path
+      dashboard_host_reservations_path
 
     when /the bookings/
-      dashboard_reservations_path
+      dashboard_user_reservations_path
 
     when /the manage listing page/
       listing = model!('the transactable')
