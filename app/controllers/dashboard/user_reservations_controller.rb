@@ -1,4 +1,4 @@
-class Dashboard::ReservationsController < Dashboard::BaseController
+class Dashboard::UserReservationsController < Dashboard::BaseController
 
   skip_before_filter :redirect_if_no_company
 
@@ -24,7 +24,7 @@ class Dashboard::ReservationsController < Dashboard::BaseController
   end
 
   def index
-    redirect_to upcoming_dashboard_reservations_path
+    redirect_to upcoming_dashboard_user_reservations_path
   end
 
   def export
@@ -78,7 +78,7 @@ class Dashboard::ReservationsController < Dashboard::BaseController
 
   def remote_payment
     if reservation.paid?
-      redirect_to booking_successful_dashboard_reservation_path(reservation)
+      redirect_to booking_successful_dashboard_user_reservation_path(reservation)
     else
       upcoming
     end
@@ -118,9 +118,9 @@ class Dashboard::ReservationsController < Dashboard::BaseController
 
   def redirection_path
     if @reservation.owner.id == current_user.id
-      dashboard_reservations_path
+      dashboard_user_reservations_path
     else
-      manage_guests_dashboard_path
+      dashboard_host_reservations_path
     end
   end
 

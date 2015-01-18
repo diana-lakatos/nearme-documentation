@@ -7,8 +7,8 @@
       = content_tag :li, class: (params[:controller] == 'dashboard/orders') ? 'active' : '' do
         = link_to t('dashboard.nav.my_orders'), dashboard_orders_path
     - else
-      = content_tag :li, class: (params[:controller] == 'dashboard/reservations') ? 'active' : '' do
-        = link_to t('dashboard.nav.my_orders'), dashboard_reservations_path
+      = content_tag :li, class: (params[:controller] == 'dashboard/user_reservations') ? 'active' : '' do
+        = link_to t('dashboard.nav.my_orders'), dashboard_user_reservations_path
 
     = content_tag :li, class: params[:controller].include?('user_messages') ? 'active' : '' do
       = link_to t('dashboard.nav.messages'), dashboard_user_messages_path
@@ -30,8 +30,8 @@
         = content_tag :li, class: orders_rceived_active ? 'active' : '' do
           = link_to t('dashboard.nav.orders_received'), dashboard_orders_received_index_path
       - else
-        = content_tag :li, class: (params[:controller] == 'dashboard/guests') ? 'active' : '' do
-          = link_to t('dashboard.nav.orders_received'), dashboard_guests_path
+        = content_tag :li, class: (params[:controller] == 'dashboard/host_reservations') ? 'active' : '' do
+          = link_to t('dashboard.nav.orders_received'), dashboard_host_reservations_path
 
       = content_tag :li, class: (params[:controller].include?('transfers')) ? 'active' : '' do
         = link_to t('dashboard.nav.payment_transfers'), dashboard_transfers_path

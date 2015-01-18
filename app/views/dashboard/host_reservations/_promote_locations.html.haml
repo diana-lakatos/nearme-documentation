@@ -2,7 +2,6 @@
   - if locations.present?
     - locations.each do |location|
       %h2 #{location.name}
-
       %p You currently have no reservations. Promote your #{platform_context.bookable_noun.pluralize} by tweeting or sharing a direct link!
 
       .text-center.sharelocation
@@ -18,6 +17,8 @@
         %span
           = link_to location_url(location), :class => 'btn blue' do
             %span.ico-link.padding= "#{location.name} Link"
+
+      %br
 
     - content_for :script do
       :javascript

@@ -15,4 +15,4 @@
       = render recurring_booking.decorate
 
   - (@reservations - [@reservation]).each_with_index do |reservation, index|
-    = render partial: 'dashboard/reservations/reservation', locals: { reservation: reservation.decorate }
+    = render 'reservation', reservation: reservation.decorate

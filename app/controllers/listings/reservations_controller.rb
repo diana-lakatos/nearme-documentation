@@ -71,9 +71,9 @@ class Listings::ReservationsController < ApplicationController
 
       redirect_to remote_payment_reservation_path(@reservation) and return if @reservation.remote_payment?
       if origin_domain?
-        redirect_to booking_successful_dashboard_reservation_url(@reservation, protocol: 'http', host: origin_domain)
+        redirect_to booking_successful_dashboard_user_reservation_url(@reservation, protocol: 'http', host: origin_domain)
       else
-        redirect_to booking_successful_dashboard_reservation_path(@reservation)
+        redirect_to booking_successful_dashboard_user_reservation_path(@reservation)
       end
     else
       render :review

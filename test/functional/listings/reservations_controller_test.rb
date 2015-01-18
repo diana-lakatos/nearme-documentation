@@ -99,7 +99,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
           post :create, booking_params_for(@listing)
         end
         assert @response.body.include?('redirect')
-        assert_redirected_to booking_successful_dashboard_reservation_path(Reservation.last)
+        assert_redirected_to booking_successful_dashboard_user_reservation_path(Reservation.last)
       end
 
       should 'log twilio exceptions that have unknown message' do
@@ -113,7 +113,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
           post :create, booking_params_for(@listing)
         end
         assert @response.body.include?('redirect')
-        assert_redirected_to booking_successful_dashboard_reservation_path(Reservation.last)
+        assert_redirected_to booking_successful_dashboard_user_reservation_path(Reservation.last)
       end
 
     end
