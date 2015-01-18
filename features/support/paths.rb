@@ -32,6 +32,9 @@ module NavigationHelpers
     when /the transactables page/
       listings_path
 
+    when /the guests/
+      dashboard_host_reservations_path
+
     when /manage guests/
       dashboard_host_reservations_path
 
