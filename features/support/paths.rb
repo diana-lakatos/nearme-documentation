@@ -32,6 +32,9 @@ module NavigationHelpers
     when /manage guests/
       dashboard_guests_path
 
+    when /the bookings/
+      dashboard_reservations_path
+
     when /the manage listing page/
       listing = model!('the transactable')
       edit_dashboard_transactable_type_transactable_path(listing.transactable_type, listing)
