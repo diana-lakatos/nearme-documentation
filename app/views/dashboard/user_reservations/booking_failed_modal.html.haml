@@ -1,0 +1,6 @@
+.modal-header
+  .modal-title Your purchase failed!
+.modal-body
+  = link_to 'Manage', '#', class: 'btn blue close-modal'
+  = link_to 'Try again', remote_payment_dashboard_user_reservation_path(@reservation), class: 'btn gray'
+
