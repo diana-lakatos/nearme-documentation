@@ -49,5 +49,3 @@
         .col-md-4.order-actions
           = render 'owner_actions', reservation: reservation
 
-- if reservation.can_reject?
-  = render 'decline_modal', reservation: reservation

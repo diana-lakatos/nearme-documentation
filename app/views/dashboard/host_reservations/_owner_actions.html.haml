@@ -7,8 +7,7 @@
     = f.submit 'Confirm', confirm: 'Do you want to confirm this reservation?', class: 'btn blue full'
 
 - if reservation.can_reject?
-  %button.btn.dark-gray.full{type: 'button', 'data-toggle' => 'modal', 'data-target' => "#decline-reservation-#{reservation.id}"}
-    Decline
+  = link_to 'Decline', rejection_form_dashboard_host_reservation_path(reservation, listing_id:reservation.listing), class: 'btn dark-gray full', rel: 'modal'
 
 - if !reservation.paid? && reservation.remote_payment?
   = link_to 'Request payment', request_payment_dashboard_host_reservation_path(reservation, listing_id: reservation.listing),

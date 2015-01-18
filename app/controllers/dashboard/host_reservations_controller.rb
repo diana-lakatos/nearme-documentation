@@ -35,6 +35,7 @@ class Dashboard::HostReservationsController < Dashboard::BaseController
   end
 
   def rejection_form
+    render layout: false
   end
 
   def reject

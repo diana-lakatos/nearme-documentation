@@ -126,7 +126,7 @@ Given /^I am logged in as the reservation administrator$/ do
 end
 
 Given /^I send a message to reservation owner$/ do
-  click_link ('.order a.ico-mail')
+  page.execute_script("$('.order a.ico-mail').click()")
   work_in_modal do
     fill_in 'user_message_body', with: "Short one"
     click_button 'Send'
