@@ -126,7 +126,6 @@ Given /^I am logged in as the reservation administrator$/ do
 end
 
 Given /^I send a message to reservation owner$/ do
-  save_and_open_page
   click_link ('.order a.ico-mail')
   work_in_modal do
     fill_in 'user_message_body', with: "Short one"
