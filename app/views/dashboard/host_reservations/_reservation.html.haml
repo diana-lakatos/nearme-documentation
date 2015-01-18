@@ -7,7 +7,7 @@
 
       .col-md-3
         %p Requested date
-        %p
+        %p.dates
           - if reservation.listing.hourly_reservations?
             = reservation.long_dates
           - else
