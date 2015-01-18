@@ -154,7 +154,6 @@ ActiveSupport::TestCase.class_eval do
     })
     ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:store).returns(stub).at_least(0)
   end
-
 end
 
 ActionController::TestCase.class_eval do
@@ -213,6 +212,8 @@ class TestDataSeeder
       FactoryGirl.create(:paypal_payment_gateway)
       FactoryGirl.create(:stripe_payment_gateway)
       FactoryGirl.create(:transactable_type_listing)
+      FactoryGirl.create(:fetch_payment_gateway)
+      FactoryGirl.create(:braintree_payment_gateway)
       Utils::EnLocalesSeeder.new.go!
     end
   end

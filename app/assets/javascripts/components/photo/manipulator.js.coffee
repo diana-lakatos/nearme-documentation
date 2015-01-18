@@ -19,7 +19,7 @@ class @Photo.Manipulator
     self = this
     @image.Jcrop
       onSelect: (c) =>
-        if c.h != 0 and c.w != 0
+        if c.h != 0 && c.w != 0
           @crop = c
         else
           @crop = null

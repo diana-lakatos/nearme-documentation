@@ -73,6 +73,45 @@ class PaymentTest < ActiveSupport::TestCase
       @reservation_charge.refund
     end
 
+    context 'advanced cancellation policy penalty' do
+      setup do
+        @reservation_charge.update_attribute(:cancellation_policy_penalty_percentage, 60)
+        @reservation_charge.update_attribute(:subtotal_amount_cents, 1000)
+        @reservation_charge.update_attribute(:service_fee_amount_guest_cents, 100)
+        @reservation_charge.update_attribute(:service_fee_amount_host_cents, 150)
+      end
+
+      should 'refund proper amount when guest cancels' do
+        @reservation_charge.reference.update_column(:state, 'cancelled_by_guest')
+        Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).once.returns(Refund.new(:success => true))
+        assert_equal 1000, @reservation_charge.subtotal_amount_cents
+
+        assert_equal 400, @reservation_charge.amount_to_be_refunded
+        Refund.create(:success => true, :amount => 400, :reference => @reservation_charge)
+
+        @reservation_charge.refund
+        assert @reservation_charge.reload.refunded?
+        assert_equal 0, @reservation_charge.final_service_fee_amount_host_cents
+        assert_equal 100, @reservation_charge.final_service_fee_amount_guest_cents
+        assert_equal 600, @reservation_charge.subtotal_amount_cents_after_refund
+      end
+
+      should 'refund proper amount when host cancels' do
+        @reservation_charge.reference.update_column(:state, 'cancelled_by_host')
+        Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).once.returns(Refund.new(:success => true))
+        assert_equal 1000, @reservation_charge.subtotal_amount_cents
+
+        assert_equal 1100, @reservation_charge.amount_to_be_refunded
+        Refund.create(:success => true, :amount => 1100, :reference => @reservation_charge)
+
+        @reservation_charge.refund
+        assert @reservation_charge.reload.refunded?
+        assert_equal 0, @reservation_charge.final_service_fee_amount_host_cents
+        assert_equal 0, @reservation_charge.final_service_fee_amount_guest_cents
+        assert_equal 0, @reservation_charge.subtotal_amount_cents_after_refund
+      end
+    end
+
     context 'cancelation policy penalty' do
 
       setup do

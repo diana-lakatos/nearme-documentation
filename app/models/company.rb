@@ -9,11 +9,6 @@ class Company < ActiveRecord::Base
   notify_associations_about_column_update([:payment_transfers, :payments, :reservations, :listings, :locations], [:instance_id, :partner_id])
   notify_associations_about_column_update([:reservations, :listings, :locations], [:creator_id, :listings_public])
 
-  # attr_accessible :description, :url, :email, :name,
-  #   :mailing_address, :paypal_email, :industry_ids, :locations_attributes,
-  #   :domain_attributes, :theme_attributes, :white_label_enabled,
-  #   :listings_public, :bank_account_number, :bank_routing_number, :bank_owner_name
-
   attr_accessor :created_payment_transfers, :bank_account_number, :bank_routing_number, :bank_owner_name, :verify_associated
 
   belongs_to :creator, class_name: "User", inverse_of: :created_companies
@@ -24,7 +19,9 @@ class Company < ActiveRecord::Base
   has_many :locations, dependent: :destroy, inverse_of: :company
   has_many :listings, class_name: 'Transactable', inverse_of: :company
   has_many :photos, through: :listings
-  has_many :products, class_name: 'Spree::Product', dependent: :destroy
+  has_many :products, class_name: 'Spree::Product', inverse_of: :company, dependent: :destroy
+  has_many :products_images, through: :products, source: :variant_images
+
   has_many :properties, class_name: 'Spree::Property', dependent: :destroy
   has_many :prototypes, class_name: 'Spree::Prototype', dependent: :destroy
   has_many :option_types, class_name: 'Spree::OptionType', dependent: :destroy
@@ -36,6 +33,8 @@ class Company < ActiveRecord::Base
   has_many :shipping_methods, class_name: 'Spree::ShippingMethod', dependent: :destroy
   has_many :taxons, class_name: 'Spree::Taxon', dependent: :destroy
   has_many :stock_locations, class_name: 'Spree::StockLocation', dependent: :destroy
+  has_many :variants, class_name: 'Spree::Variant', dependent: :destroy
+  has_many :zones, class_name: 'Spree::Zone', dependent: :destroy
 
   has_many :reservations
   has_many :reservation_charges, through: :reservations
@@ -83,11 +82,14 @@ class Company < ActiveRecord::Base
   accepts_nested_attributes_for :locations
   accepts_nested_attributes_for :company_address
   accepts_nested_attributes_for :approval_requests
-  accepts_nested_attributes_for :products, :shipping_methods, :shipping_categories
+  accepts_nested_attributes_for :products, :shipping_methods, :shipping_categories, :stock_locations
 
   validates_associated :shipping_methods, :if => :verify_associated
   validates_associated :shipping_categories, :if => :verify_associated
   validates_associated :products, :if => :verify_associated
+  validates_associated :stock_locations, :if => :verify_associated
+
+  validates :paypal_email, email: true, allow_blank: true
 
   def add_creator_to_company_users
     unless users.include?(creator)
@@ -165,6 +167,7 @@ class Company < ActiveRecord::Base
     errors.add(:url, "must be a valid URL") unless valid
   end
 
+  # TODO: Exctract to another object
   def create_bank_account_in_balanced!
     [:bank_account_number, :bank_routing_number, :bank_owner_name].each do |mandatory_field|
       errors.add(mandatory_field, 'cannot be blank') if self.send(mandatory_field).blank?

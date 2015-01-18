@@ -1,0 +1,60 @@
+.order{id: dom_id(reservation)}
+  .order-head
+    .row
+      .col-md-3
+        %p Reservation placed
+        %p= l reservation.created_at, format: :only_date
+
+      .col-md-3
+        %p Requested date
+        %p
+          - if reservation.periods.first.read_attribute(:start_minute).present?
+            = reservation.long_dates
+          - else
+            = reservation.long_dates
+
+      .col-md-4
+        %p Requested time
+        - if reservation.periods.first.read_attribute(:start_minute).present?
+          - reservation_period = reservation.periods.first.decorate
+          %p= reservation_period.hourly_summary(false).gsub('<br />', ' ').html_safe
+        - else
+          N/A
+
+      .col-md-2
+        %p Total
+        %p= reservation.total_price
+
+  .order-body
+    .order-status
+      %h3= reservation.state.humanize.capitalize
+      - if reservation.state == 'unconfirmed'
+        %p
+          Pending confirmation from host. Booking will expire in <strong>#{reservation.time_to_expiry(reservation.expiry_time)}</strong>.
+
+    .row
+      .order-item
+        .col-md-8
+          .row
+            .inline
+              - if reservation.listing.present?
+                = link_to reservation.listing.try(:name), location_path(reservation.listing.location, reservation.listing)
+                %br
+                %span.address
+                  = link_to reservation.listing.location.address,
+                      "http://maps.apple.com/?q=#{reservation.listing.location.address}", target: '_blank'
+              - else
+                [listing deleted]
+              %p QTY: #{reservation.quantity}
+
+        .col-md-4.order-actions
+          - unless reservation.archived?
+            = form_for reservation, method: :post, url: user_cancel_dashboard_user_reservation_path(reservation) do |f|
+              = f.submit 'Cancel', confirm: 'Do you really want to cancel this reservation?', class: 'btn dark-gray full'
+
+            -# TODO: Test
+            - if reservation.remote_payment? && !reservation.paid? && !reservation.archived?
+              = link_to 'Pay now', remote_payment_dashboard_user_reservation_path(reservation), class: 'btn blue full'
+
+            - if reservation.confirmed?
+              = link_to 'Add to iCal', export_dashboard_user_reservation_path(reservation, format: :ics), class: 'btn gray full'

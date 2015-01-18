@@ -1,21 +1,32 @@
-.row-fluid.cart-row
-  .span2
+- first_item = index == 0
+.row-fluid{class: first_item ? 'list-item' : 'list-item additional-item'}
+  .span5.item
+    - if first_item
+      %p ITEM
     = item.image
-  .span4
-    %strong= item.name_with_link
-    .row-fluid
-      .span12
-        = item.description
+    .item-description
+      %p= item.name_with_link
+      %p= item.short_description
 
-  .span2
-    = item.price
+  .span2{class: first_item ? '' : 'price'}
+    - if first_item
+      %p PRICE
+    %p.value= item.price
 
-  .span1
-    .controls.quantity
+  .span2{class: first_item ? '' : 'quantity'}
+    - if first_item
+      %p QTY
+    %p.value
       = item.quantity_form
 
-  .span1
-    = item.total
+  .span2{class: first_item ? '' : 'total'}
+    - if first_item
+      %p TOTAL
+    %p.value= item.total
 
-  .span2
-    = link_to t('buy_sell_market.cart.buttons.remove_item'), cart_remove_product_path(item.id), method: :delete, class: 'btn btn-red btn-medium'
+  .span1
+    - if first_item
+      %p &nbsp;
+    .value
+      = link_to cart_remove_product_path(item.id), method: :delete do
+        = image_tag 'themes/buy_sell/x-red_cart.png'

@@ -68,10 +68,10 @@ When /^the (visitor|owner) (confirm|decline|cancel)s the reservation$/ do |user,
 
   if user == "visitor"
     login User.find_by_name("Keith Contractor")
-    visit bookings_dashboard_path
+    visit reservations_dashboard_path
   else
     login User.find_by_name("Bo Jeanes")
-    visit manage_guests_dashboard_path
+    visit dashboard_host_reservations_path
   end
   if action == 'cancel' and user == 'owner'
     within('#reservations header') { click_on 'Confirmed'}
@@ -86,12 +86,12 @@ end
 
 When /^the reservation expires/ do
   login User.find_by_name("Keith Contractor")
-  visit bookings_dashboard_path
+  visit reservations_dashboard_path
 
   reservation = User.find_by_name("Keith Contractor").reservations.first
   reservation.perform_expiry!
 
-  visit bookings_dashboard_path
+  visit reservations_dashboard_path
 end
 
 When /^I select to book( and review)? space for:$/ do |and_review, table|
@@ -169,7 +169,7 @@ end
 
 When /^I click to confirm the booking$/ do
   click_button "Request Booking"
-  page.should have_content('Your purchase was Successful!')
+  page.should have_content('Your reservation has been made')
 end
 
 Then(/^I should see the booking confirmation screen for:$/) do |table|
@@ -275,7 +275,7 @@ end
 
 Then /^I should be redirected to bookings page$/ do
   page.should have_content('Your reservation has been made!')
-  assert_includes URI.parse(current_url).path, booking_successful_reservation_path(Reservation.last)
+  assert_includes URI.parse(current_url).path, booking_successful_dashboard_user_reservation_path(Reservation.last)
 end
 
 Then /^The second booking should be highlighted$/ do

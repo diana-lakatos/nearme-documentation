@@ -45,6 +45,14 @@ SimpleForm.setup do |config|
     b.use :error, :wrap_with => { :tag => :span, :class => :error }
   end
 
+  config.wrappers :modal do |b|
+    b.use :html5
+    b.use :label
+    b.use :input
+    b.optional :error
+  end
+
+
   config.wrappers :simple do |b|
     b.use :html5
     b.use :placeholder
@@ -87,6 +95,44 @@ SimpleForm.setup do |config|
       input.use :hint,  :wrap_with => { :tag => 'span', :class => 'help-block' }
       input.use :error, :wrap_with => { :tag => 'span', :class => 'help-inline' }
     end
+  end
+
+  config.wrappers :product, :tag => 'div', :class => "control-group", :error_class => 'error' do |b|
+    b.use :html5
+    b.use :placeholder
+    b.wrapper :tag => 'div', :class => 'row-fluid' do |input|
+      input.wrapper :tag => 'div', :class => 'span3' do |label_container|
+        label_container.use :label
+      end
+      input.wrapper :tag => 'div', :class => 'span9 input-container' do |append|
+        append.use :hint,  :wrap_with => { :tag => 'p' }
+        append.use :input
+      end
+      input.use :error, :wrap_with => { :tag => 'span', :class => 'help-inline' }
+    end
+  end
+
+  config.wrappers :bs3, :error_class => 'error' do |b|
+    b.use :html5
+    b.use :placeholder
+    b.wrapper :tag => 'div', :class => 'row' do |input|
+      input.wrapper :tag => 'div', :class => 'col-md-3' do |label_container|
+        label_container.use :label
+      end
+      input.wrapper :tag => 'div', :class => 'col-md-9 input-container' do |append|
+        append.use :hint,  :wrap_with => { :tag => 'p' }
+        append.use :input
+      end
+      input.use :error, :wrap_with => { :tag => 'col-md-9', :class => 'help-inline' }
+    end
+  end
+
+  config.wrappers :bs3_simple, :error_class => 'error' do |b|
+    b.use :html5
+    b.use :placeholder
+    b.use :label
+    b.use :input
+    b.use :error, :wrap_with => { :tag => 'col-md-9', :class => 'help-inline' }
   end
 
   # Wrappers for forms and inputs using the Twitter Bootstrap toolkit.

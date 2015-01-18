@@ -11,14 +11,14 @@ Spree::Product.class_eval do
   belongs_to :user
   belongs_to :company
   belongs_to :administrator, class_name: 'User'
-  has_many   :user_messages, as: :thread_context, inverse_of: :thread_context
-  has_many   :impressions, as: :impressionable, dependent: :destroy
+  has_many :user_messages, as: :thread_context, inverse_of: :thread_context
+  has_many :impressions, as: :impressionable, dependent: :destroy
 
   scope :approved, -> { where(approved: true) }
   scope :currently_available, -> { where("(#{Spree::Product.quoted_table_name}.available_on <= ? OR #{Spree::Product.quoted_table_name}.available_on IS NULL)", Time.zone.now) }
   scope :searchable, -> { approved.currently_available }
 
-  _validators.reject!{ |key, _| [:slug, :shipping_category_id].include?(key) }
+  _validators.reject! { |key, _| [:slug, :shipping_category_id].include?(key) }
 
   _validate_callbacks.reject! do |callback|
     callback.raw_filter.attributes.delete :slug if callback.raw_filter.is_a?(ActiveModel::Validations::PresenceValidator)
@@ -51,6 +51,10 @@ Spree::Product.class_eval do
     super.presence || user
   end
 
+  def administrator_location
+    administrator.current_location ? administrator.country_name : administrator.current_location
+  end
+
   def has_photos?
     images.count > 0
   end
@@ -58,6 +62,6 @@ Spree::Product.class_eval do
   private
 
   def shipping_category_presence
-    self.shipping_category.present? ? true :  errors.add(:shipping_category_id, "shipping category can't be blank")
+    self.shipping_category.present? ? true : errors.add(:shipping_category_id, "shipping category can't be blank")
   end
 end

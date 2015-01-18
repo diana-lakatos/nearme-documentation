@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141208143431) do
+ActiveRecord::Schema.define(version: 20150115110658) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1146,6 +1146,9 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.text     "image_transformation_data"
     t.integer  "image_original_height"
     t.integer  "image_original_width"
+    t.string   "remote_image_url"
+    t.integer  "uploader_id"
+    t.integer  "instance_id"
   end
 
   add_index "spree_assets", ["viewable_id"], name: "index_assets_on_viewable_id", using: :btree
@@ -1768,6 +1771,7 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.integer  "user_id"
+    t.integer  "processing_time", default: 0
   end
 
   add_index "spree_shipping_methods", ["company_id"], name: "index_spree_shipping_methods_on_company_id", using: :btree
@@ -1835,10 +1839,18 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.datetime "updated_at"
     t.boolean  "backorderable",     default: false
     t.datetime "deleted_at"
+    t.integer  "instance_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.integer  "user_id"
   end
 
+  add_index "spree_stock_items", ["company_id"], name: "index_spree_stock_items_on_company_id", using: :btree
+  add_index "spree_stock_items", ["instance_id"], name: "index_spree_stock_items_on_instance_id", using: :btree
+  add_index "spree_stock_items", ["partner_id"], name: "index_spree_stock_items_on_partner_id", using: :btree
   add_index "spree_stock_items", ["stock_location_id", "variant_id"], name: "stock_item_by_loc_and_var_id", using: :btree
   add_index "spree_stock_items", ["stock_location_id"], name: "index_spree_stock_items_on_stock_location_id", using: :btree
+  add_index "spree_stock_items", ["user_id"], name: "index_spree_stock_items_on_user_id", using: :btree
 
   create_table "spree_stock_locations", force: true do |t|
     t.string   "name"
@@ -2271,6 +2283,7 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.datetime "hero_image_versions_generated_at"
     t.integer  "hero_image_original_width"
     t.integer  "hero_image_original_height"
+    t.string   "compiled_dashboard_stylesheet"
   end
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree

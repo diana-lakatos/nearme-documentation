@@ -1,0 +1,13 @@
+.dash-page
+  .dash-head.clearfix
+    %p MANAGE LISTINGS > EDIT ITEM
+    = link_to new_dashboard_transactable_type_data_upload_path(@transactable_type), class: "dash-head-btn", rel: 'modal' do
+      .btn.blue Bulk Upload
+  .dash-body
+    = simple_form_for @transactable, wrapper: :bs3, :url => dashboard_transactable_type_transactable_path(@transactable_type, @transactable), :html => { :multipart => true,  method: :put, id: 'listing-form' } do |f|
+      = render 'form', f: f
+
+      .submit-bar
+        = link_to dashboard_transactable_type_transactables_path(@transactable_type) do
+          .btn.gray Cancel
+        = f.submit "Save item", class: "btn medium blue"

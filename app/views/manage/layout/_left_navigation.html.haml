@@ -1,0 +1,62 @@
+.col-md-2.page-navigation
+  %nav
+    %ul
+      - if buyable?
+        = content_tag :li, class: (params[:controller] == 'dashboard/orders') ? 'active' : '' do
+          = link_to t('dashboard.nav.my_orders'), dashboard_orders_path
+      - else
+        = content_tag :li, class: (params[:controller] == 'dashboard/user_reservations') ? 'active' : '' do
+          = link_to t('dashboard.nav.my_orders'), dashboard_user_reservations_path
+
+      = content_tag :li, class: params[:controller].include?('user_messages') ? 'active' : '' do
+        = link_to t('dashboard.nav.messages'), dashboard_user_messages_path
+
+    - if current_user.companies.any?
+      %ul
+        %li.nav-head
+          = t('dashboard.nav.your_shop')
+        = content_tag :li, class: (params[:controller].include?('companies')) ? 'active' : '' do
+          = link_to t('dashboard.nav.shop_details'), edit_dashboard_company_path(current_user.companies.first)
+        = content_tag :li, class: ['dashboard/products', 'dashboard/transactables'].include?(params[:controller]) ? 'active' : '' do
+          - if buyable?
+            = link_to t('dashboard.nav.listings'), dashboard_products_path
+          - elsif TransactableType.first
+            = link_to t('dashboard.nav.listings'), dashboard_transactable_type_transactables_path(TransactableType.first)
+        = content_tag :li, class: (params[:controller].include?('payouts')) ? 'active' : '' do
+          = link_to t('dashboard.nav.payout'), edit_dashboard_payouts_path
+        -#%li
+        -#  %a{:href => "#"}= t('dashboard.nav.payment')
+        - orders_rceived_active = params[:controller] == ('dashboard/orders_received')
+        - if buyable?
+          = content_tag :li, class: orders_rceived_active ? 'active' : '' do
+            = link_to t('dashboard.nav.orders_received'), dashboard_orders_received_index_path
+        - else
+          = content_tag :li, class: (params[:controller] == 'dashboard/host_reservations') ? 'active' : '' do
+            = link_to t('dashboard.nav.orders_received'), dashboard_host_reservations_path
+      %ul
+        %li.nav-head
+          = t('dashboard.nav.admin')
+        = content_tag :li, class: (params[:controller].include?('transfers')) ? 'active' : '' do
+          = link_to t('dashboard.nav.payment_transfers'), dashboard_transfers_path
+        = content_tag :li, class: (params[:controller].include?('analytics')) ? 'active' : '' do
+          = link_to t('dashboard.nav.analytics'), dashboard_analytics_path
+        = content_tag :li, class: (params[:controller].include?('users')) ? 'active' : '' do
+          = link_to t('dashboard.nav.manage_admins'), dashboard_users_path
+        = content_tag :li, class: (params[:controller].include?('waiver_agreement_templates')) ? 'active' : '' do
+          = link_to t('dashboard.nav.waiver_agreements'), dashboard_waiver_agreement_templates_path
+        = content_tag :li, class: (params[:controller].include?('white_label')) ? 'active' : '' do
+          = link_to t('dashboard.nav.white_label'), edit_dashboard_white_label_path(current_user.companies.first)
+        - if TransactableType.all.any? { |t| t.has_action?('Request For Quote') }
+          = content_tag :li, class: (params[:controller].include?('tickets')) ? 'active' : '' do
+            = link_to t('dashboard.nav.rfq'), dashboard_support_tickets_path
+
+    %ul
+      %li.nav-head
+        = t('dashboard.nav.account')
+      = content_tag :li, class: (params[:controller].include?('registration') && params[:action].include?('edit')) ? 'active' : '' do
+        = link_to t('dashboard.nav.edit_profile'), dashboard_profile_path
+      = content_tag :li, class: (params[:controller].include?('registration') && params[:action].include?('social_accounts')) ? 'active' : '' do
+        = link_to t('dashboard.nav.trust_verification'), social_accounts_path
+      - if false
+        %li
+          %a{:href => "#"}= t('dashboard.nav.notification_preferences')

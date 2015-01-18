@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  helper FilepickerRails::Engine.helpers
+
   prepend_view_path InstanceViewResolver.instance
 
   force_ssl if: :require_ssl?
@@ -335,6 +337,13 @@ class ApplicationController < ActionController::Base
       current_user.logged_out!
       flash[:notice] = nil
       sign_out current_user
+    end
+  end
+
+  def sign_in_resource(resource)
+    sign_in(resource)
+    if resource.respond_to?('logged_out!')
+      resource.logged_out!
     end
   end
 

@@ -9,12 +9,16 @@ class CartDecorator
     @user.cart_orders.sum(:item_count)
   end
 
+  def line_items_count
+    @user.cart_orders.joins(:line_items).count
+  end
+
   def total
     @user.cart_orders.sum(:total)
   end
 
   def navigation
-    "(#{items_count}) #{total_display}"
+    "(#{line_items_count}) #{total_display}"
   end
 
   def total_display

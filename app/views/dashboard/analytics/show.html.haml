@@ -1,0 +1,12 @@
+- title "Analytics"
+
+.dash-page.analytics
+  .dash-head
+    .row
+      .col-md-3= select_tag :analytics_mode, options_for_select([['Revenue', 'revenue'], ['Orders', 'bookings'], ['Location Views', 'location_views']], @analytics_mode), class: 'analytics-mode'
+  .dash-body
+    = render :partial => "analytics_#{@analytics_mode}"
+
+- content_for :domready do
+  new Dashboard.AnalyticsController($('.analytics'))
+  new ChartWrapper.Line($('#chart'), #{@chart.values.to_json.html_safe}, #{@chart.labels.to_json.html_safe})

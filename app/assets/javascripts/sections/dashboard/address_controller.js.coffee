@@ -1,6 +1,7 @@
 class @Dashboard.AddressController
 
   constructor: (@container) ->
+
     for field in @container.find('[data-behavior=address-autocomplete]')
       @addressFieldController = new Dashboard.AddressFieldController($(field).closest('[data-address-field]'))
 
@@ -9,6 +10,7 @@ class @Dashboard.AddressFieldController
   constructor: (@container) ->
     @setupMap()
     @address = new AddressField(@container.find('[data-behavior=address-autocomplete]'))
+    @disableEnterFor(@container.find('[data-behavior=address-autocomplete]'))
 
     @address.onLocate (lat, lng) =>
       latlng = new google.maps.LatLng(lat, lng)
@@ -40,3 +42,9 @@ class @Dashboard.AddressFieldController
     google.maps.event.addListener @map.marker, 'dragend', =>
       position = @map.marker.getPosition()
       @address.markerMoved(position.lat(), position.lng())
+
+  disableEnterFor: (field) ->
+    $(field).keydown (event) ->
+      if event.keyCode is 13
+        event.preventDefault()
+        false

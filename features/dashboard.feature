@@ -15,85 +15,81 @@ Feature: As a user of the site
       And a amenity exists with amenity_type: the amenity_type, name: "Amenity1"
       And a amenity exists with amenity_type: the amenity_type, name: "Amenity2"
       And a amenity exists with amenity_type: the amenity_type, name: "Amenity3"
+      And the transactable_type_listing exists
 
   Scenario: A user can add new location
-    Given I am on the manage locations page
-      And the transactable_type_location exists
-     When I follow "New Location"
+    Given I am adding new transactable
+     When I add a new location
       And I fill location form with valid details
-      And I submit the form
+      And I submit the location form
       And I should see "Great, your new Desk has been added!"
      Then Location with my details should be created
 
   Scenario: A user can edit existing location
     Given the location exists with company: the company
-      And the transactable_type_location exists
-      And I am on the manage locations page
-     When I click edit location icon
+     And I am adding new transactable
+     When I edit first location
       And I provide new location data
-      And I submit the form
-      And I should see "Great, your Desk has been updated!"
+      And I submit the location form
+      And I should see "Great, your location has been updated!"
      Then the location should be updated
-     When I click edit location icon
-      And I click delete location link
+      And I remove first location
       And I should see "You've deleted"
      Then the location should not exist
 
   Scenario: A user can add new listing
     Given the location exists with company: the company
-      And the transactable_type_listing exists
-      And I am on the manage locations page
-     When I follow "Add Desk"
+     And I am browsing transactables
+     When I add a new transactable
       And I fill listing form with valid details
-      And I submit the form
+      And I submit the transactable form
       And I should see "Great, your new Desk has been added!"
      Then Listing with my details should be created
 
   Scenario: A user can edit existing listing
     Given the location exists with company: the company
       And the transactable exists with location: the location
-      And I am on the manage locations page
-     When I click edit listing icon
+      And I am browsing transactables
+     When I edit first transactable
       And I provide new listing data
-      And I submit the form
+      And I submit the transactable form
       And I should see "Great, your listing's details have been updated."
      Then the transactable should be updated
-     When I click edit listing icon
-      And I click delete bookable noun link
+     When I remove first transactable
       And I should see "That listing has been deleted."
      Then the transactable should not exist
 
   Scenario: A user can disable existing price in listing
     Given a location exists with company: the company
-    And a transactable exists with location: the location, daily_price_cents: 1000, photos_count: 1
-      And I am on the manage locations page
-     When I click edit listing icon
+      And a transactable exists with location: the location, daily_price_cents: 1000, photos_count: 1
+      And I am browsing transactables
+     When I edit first transactable
       And I disable daily pricing
-      And I choose "Free"
-      And I submit the form
-      And I click edit listing icon
+      And I choose "transactable_price_type_free"
+      And I submit the transactable form
+      And I edit first transactable
      Then pricing should be free
 
   Scenario: A user can enable new pricing in listing
     Given a location exists with company: the company
       And a transactable exists with location: the location, daily_price_cents: 1000, photos_count: 1
-      And I am on the manage locations page
-     When I click edit listing icon
+      And I am browsing transactables
+     When I edit first transactable
       And I enable weekly pricing
-      And I submit the form
-      And I click edit listing icon
+      And I submit the transactable form
+      And I edit first transactable
      Then Listing weekly pricing should be enabled
 
   Scenario: A user can set availability rules on a transactable
     Given a location exists with company: the company
     And   a transactable exists with location: the location, photos_count: 1
-    And   I am on the manage locations page
-    When I click edit listing icon
+    And I am browsing transactables
+    When I edit first transactable
     And  I select custom availability:
         | Day | Availabile | Open Time | Close Time |
         | 1   | Yes        | 9:00      | 17:00      |
         | 2   | Yes        | 9:00      | 17:00      |
-    And I submit the form
+    And I submit the transactable form
     And I should see "Great, your listing's details have been updated."
     Then the transactable should have availability:
         | Day | Availabile | Open Time | Close Time |

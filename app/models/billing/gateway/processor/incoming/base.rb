@@ -37,14 +37,14 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
       options = custom_capture_options.merge(currency: @currency)
       response = @gateway.capture(amount, token, options.with_indifferent_access)
 
-      response.success? ? charge_successful(response.params) : charge_failed(response.params)
+      response.success? ? charge_successful(response) : charge_failed(response)
       @charge
     rescue => e
       raise Billing::Gateway::PaymentAttemptError, e
     end
   end
 
-  def refund(amount, reference, charge_response)
+  def refund(amount, reference, charge)
     @refund = Refund.create(
       amount: amount,
       currency: @currency,
@@ -56,8 +56,8 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
     begin
       set_active_merchant_mode(reference)
       options = custom_refund_options.merge(currency: @currency)
-      response = @gateway.refund(amount, refund_identification(charge_response), options.with_indifferent_access)
-      response.success? ? refund_successful(response.params) : refund_failed(response.params)
+      response = @gateway.refund(amount, refund_identification(charge), options.with_indifferent_access)
+      response.success? ? refund_successful(response) : refund_failed(response)
       @refund
     rescue => e
       raise Billing::Gateway::PaymentRefundError, e
@@ -79,7 +79,7 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
     @credit_card.id
   end
 
-  def self.supports_currency?(currency)
+  def supports_currency?(currency)
     return true if defined? self.support_any_currency!
     self.supported_currencies.include?(currency)
   end
@@ -88,8 +88,18 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
     false
   end
 
+  # Set to true if payment gateway requires redirect to external page
   def remote?
     return false
+  end
+
+  # Set to true if payment gateway supports multiple payment channels like CC and PayPal
+  def nonce_payment?
+    return false
+  end
+
+  def client_token
+    nil
   end
 
   protected

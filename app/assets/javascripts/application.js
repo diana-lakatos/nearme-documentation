@@ -44,12 +44,14 @@
 //= require_tree ./sections
 //
 //= require ./vendor/bootstrap-modal-fullscreen
+//= require bootstrap-switch
+
 window.DNM = {
   UI: {},
   initialize : function() {
     this.initializeAjaxCSRF();
     this.initializeComponents();
-    this.initializeModals();
+    this.initializeBootstrapSwitch();
     this.initializeTooltips();
     this.initializeCustomSelects($('body'));
     this.initializeCustomInputs();
@@ -58,8 +60,8 @@ window.DNM = {
     this.setFooterPushHeight();
   },
 
-  initializeModals: function() {
-    Modal.listen();
+  initializeBootstrapSwitch: function() {
+    $('.switch input:visible')['bootstrapSwitch']();
   },
 
   initializeCustomInputs: function() {
@@ -91,7 +93,7 @@ window.DNM = {
 
   initializeCustomSelects: function(container){
     container.find('select').not('.time-wrapper select, .custom-select, .recurring_select').customSelect();
-    container.find('.customSelect').append('<i class="custom-select-dropdown-icon ico-chevron-down"></i>').closest('.controls').css({'position': 'relative'});
+    container.find('.customSelect').not('.checkout-select').append('<i class="custom-select-dropdown-icon ico-chevron-down"></i>').closest('.controls').css({'position': 'relative'});
     container.find('.customSelect').siblings('select').css({'margin': '0px', 'z-index': 1 });
 
     container.find('.custom-select').chosen()

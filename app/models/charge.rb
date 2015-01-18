@@ -25,5 +25,4 @@ class Charge < ActiveRecord::Base
     self.response = response
     save!
   end
-
 end

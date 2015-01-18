@@ -10,8 +10,8 @@ class Billing::Gateway::Processor::Incoming::BaseTest < ActiveSupport::TestCase
       @gateway = ActiveMerchant::Billing::BogusGateway.new
     end
 
-    def refund_identification(charge_response)
-      charge_response["id"]
+    def refund_identification(charge)
+      charge.response.params["id"]
     end
 
   end
@@ -50,14 +50,14 @@ class Billing::Gateway::Processor::Incoming::BaseTest < ActiveSupport::TestCase
       assert_equal 10_00, charge.amount
       assert_equal 'USD', charge.currency
       assert_equal @rc, charge.reference
-      assert_equal SUCCESS_RESPONSE, charge.response
+      assert_equal SUCCESS_RESPONSE, charge.response.params
       assert charge.success?
     end
 
     should 'fail' do
       @test_processor.charge(1000, @rc, "2")
       charge = Charge.last
-      assert_equal FAILURE_RESPONSE, charge.response
+      assert_equal FAILURE_RESPONSE, charge.response.params
       refute charge.success?
     end
   end
@@ -65,23 +65,30 @@ class Billing::Gateway::Processor::Incoming::BaseTest < ActiveSupport::TestCase
   context 'refund' do
     setup do
       @payment_transfer = FactoryGirl.create(:payment_transfer)
+      @charge = FactoryGirl.create(:charge)
       @test_processor = TestProcessor.new(FactoryGirl.create(:user), FactoryGirl.create(:instance), 'JPY')
     end
 
     should 'create refund object when succeeded' do
-      refund = @test_processor.refund(1000, @payment_transfer, { "id" => "3" })
+      charge_params = { "id" => "3" }
+      charge_response = ActiveMerchant::Billing::Response.new true, 'OK', charge_params
+      @charge.update_attribute(:response, charge_response)
+      refund = @test_processor.refund(1000, @payment_transfer, @charge)
       assert_equal 1000, refund.amount
       assert_equal 'JPY', refund.currency
-      assert_equal SUCCESS_RESPONSE, refund.response
+      assert_equal SUCCESS_RESPONSE, refund.response.params
       assert_equal @payment_transfer, refund.reference
       assert refund.success?
     end
 
     should 'create refund object when failed' do
-      refund = @test_processor.refund(1000, @payment_transfer, { "id" => "2" })
+      charge_params = { "id" => "2" }
+      charge_response = ActiveMerchant::Billing::Response.new true, 'OK', charge_params
+      @charge.update_attribute(:response, charge_response)
+      refund = @test_processor.refund(1000, @payment_transfer, @charge)
       assert_equal 1000, refund.amount
       assert_equal 'JPY', refund.currency
-      assert_equal FAILURE_RESPONSE, refund.response
+      assert_equal FAILURE_RESPONSE, refund.response.params
       refute refund.success?
     end
   end

@@ -7,7 +7,7 @@
 //= require ./vendor/modernizr
 //= require ./vendor/Chart
 //= require components/chart_wrapper
-//= require components/switch
+//= require bootstrap-switch
 //= require components/photo
 //= require components/modal
 //= require jcrop

@@ -20,6 +20,8 @@ class InstanceClient < ActiveRecord::Base
     @decorator ||= case gateway_class
                    when "Billing::Gateway::Processor::Incoming::Stripe"
                      InstanceClient::StripeDecorator.new(self)
+                   when "Billing::Gateway::Processor::Incoming::Braintree"
+                     InstanceClient::BraintreeDecorator.new(self)
                    when nil
                      nil
                    else

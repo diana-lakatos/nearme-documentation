@@ -65,7 +65,35 @@ class Payment < ActiveRecord::Base
   end
 
   def subtotal_amount_cents_after_refund
-    subtotal_amount_cents - refunds.successful.sum(&:amount)
+    result = nil
+
+    if self.reference.respond_to?(:cancelled_by_host?) && self.reference.cancelled_by_host?
+      result = 0
+    else
+      result = subtotal_amount_cents - refunds.successful.sum(&:amount)
+    end
+
+    result
+  end
+
+  def final_service_fee_amount_host_cents
+    result = self.service_fee_amount_host_cents
+
+    if (self.reference.respond_to?(:cancelled_by_host?) && self.reference.cancelled_by_host?) || (self.reference.respond_to?(:cancelled_by_guest?) && self.reference.cancelled_by_guest?)
+      result = 0
+    end
+
+    result
+  end
+
+  def final_service_fee_amount_guest_cents
+    result = self.service_fee_amount_guest_cents
+
+    if self.reference.respond_to?(:cancelled_by_host?) && self.reference.cancelled_by_host?
+      result = 0
+    end
+
+    result
   end
 
   def amount
@@ -79,8 +107,7 @@ class Payment < ActiveRecord::Base
     # Generates a ChargeAttempt with this record as the reference.
 
     if reference.billing_authorization.nil? && !reference.remote_payment?
-
-      response = billing_gateway.authorize(reference.total_amount_cents, reference.credit_card.token, { customer: reference.credit_card.instance_client.customer_id })
+      response = billing_gateway.authorize(reference.total_amount_cents, reference.credit_card.token, { customer: reference.credit_card.instance_client.customer_id, order_id: reference.id })
       if response[:error].present?
         raise Billing::Gateway::PaymentAttemptError, "Failed authorization of credit card token of InstanceClient(id=#{reference.owner.instance_clients.first.try(:id)}) - #{response[:error]}"
       else
@@ -115,7 +142,7 @@ class Payment < ActiveRecord::Base
     successful_charge = charge_attempts.successful.first
     return if successful_charge.nil?
 
-    refund = billing_gateway.refund(amount_to_be_refunded, self, successful_charge.response)
+    refund = billing_gateway.refund(amount_to_be_refunded, self, successful_charge)
 
     if refund.success?
       touch(:refunded_at)

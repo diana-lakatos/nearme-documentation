@@ -65,6 +65,6 @@ class SearchController < ApplicationController
   end
 
   def theme_name
-    @theme_name = 'buy-sell'
+    @theme_name = 'buy-sell-theme' if buyable?
   end
 end

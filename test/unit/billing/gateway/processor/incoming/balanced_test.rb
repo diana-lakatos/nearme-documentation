@@ -16,8 +16,10 @@ class Billing::Gateway::Processor::Incoming::BalancedTest < ActiveSupport::TestC
   end
 
   should "have a refund identification based on its uri key" do
-    charge_response = { "id" => "123", "uri" => "uri" }
-    assert_equal @balanced_processor.refund_identification(charge_response), "uri"
+    charge_params = { "id" => "123", "uri" => "uri" }
+    charge_response = ActiveMerchant::Billing::Response.new true, 'OK', charge_params
+    charge = Charge.new(response: charge_response)
+    assert_equal @balanced_processor.refund_identification(charge), "uri"
   end
 
 end

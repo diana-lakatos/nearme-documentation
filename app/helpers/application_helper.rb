@@ -139,6 +139,19 @@ module ApplicationHelper
     end
   end
 
+  def flash_key_name(key)
+    case key.to_s
+    when 'deleted'
+      'warning'
+    when 'error'
+      'danger'
+    when 'notice'
+      'info'
+    else
+      key
+    end
+  end
+
   def array_to_unordered_list(arr = [])
     arr.map{|s| "<li>#{s}</li>"}.join.tap{|s| "<ul>#{s}</ul>"}
   end
@@ -174,14 +187,19 @@ module ApplicationHelper
   def distance_of_time_in_words_or_date(datetime)
     today = Date.current
 
-    if datetime.to_date == today
-      datetime.strftime("%l:%M%P")
-    elsif datetime.to_date == today.yesterday
-      'Yesterday'
-    elsif datetime > (today - 7.days)
-      datetime.strftime("%A")
+    case datetime
+    when DateTime, ActiveSupport::TimeWithZone, Time
+      if datetime.to_date == today
+        datetime.strftime("%l:%M%P")
+      elsif datetime.to_date == today.yesterday
+        'Yesterday'
+      elsif datetime > (today - 7.days)
+        datetime.strftime("%A")
+      else
+        datetime.strftime("%Y-%m-%d")
+      end
     else
-      datetime.strftime("%Y-%m-%d")
+      ''
     end
   end
 

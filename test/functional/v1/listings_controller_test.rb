@@ -114,8 +114,8 @@ class V1::ListingsControllerTest < ActionController::TestCase
       periods = @reservation.periods
       reserved_dates = periods.map(&:date)
 
-      assert reserved_dates.include? Date.parse("2015-01-01")
-      assert reserved_dates.include? Date.parse("2015-01-02")
+      assert reserved_dates.include? Date.parse(30.days.from_now.monday.strftime("%Y-%m-%d"))
+      assert reserved_dates.include? Date.parse((30.days.from_now.monday+1.day).strftime("%Y-%m-%d"))
     end
   end
 
@@ -274,7 +274,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
     { "quantity" => 1,
       "email" => "foo@example.com",
       "assignees" => [{ "name" => "John Carter", "email" => "john@example.com" }],
-      "dates" => ["2015-01-01", "2015-01-02"] }
+      "dates" => [30.days.from_now.monday.strftime("%Y-%m-%d"), (30.days.from_now.monday+1.day).strftime("%Y-%m-%d")] }
   end
 
   def valid_additional_params

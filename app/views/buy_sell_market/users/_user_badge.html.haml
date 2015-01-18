@@ -1,0 +1,46 @@
+.vendor-profile
+  .vendor-pic.inline
+    = image_tag @user.avatar.url(:big)
+
+  .vendor-info.inline
+    %h2= @user.name
+    %p= @user.display_location
+
+  = link_to new_user_user_message_path(user_id: @user.slug), rel: "modal" do
+    .btn.blue= t 'buy_sell_market.products.buttons.contact_host'
+
+  .divider
+
+  %h4= t 'buy_sell_market.products.labels.verifications'
+  .verifications
+    .row-fluid
+      .span12
+        - if @user.email.present?
+          %p
+            = image_tag 'themes/buy_sell/check.png', class: 'check'
+            = t 'buy_sell_market.products.labels.email_address'
+
+        - if @user.phone.present?
+          %p
+            = image_tag 'themes/buy_sell/check.png', class: 'check'
+            = t 'buy_sell_market.products.labels.phone_number'
+
+        - if @user.decorate.social_connections_for('facebook')
+          %p
+            = image_tag 'themes/buy_sell/check.png', class: 'check'
+            Facebook
+
+        - if @user.decorate.social_connections_for('linkedin')
+          %p
+            = image_tag 'themes/buy_sell/check.png', class: 'check'
+            LinkedIn
+
+        - if @user.decorate.social_connections_for('twitter')
+          %p
+            = image_tag 'themes/buy_sell/check.png', class: 'check'
+            Twitter
+
+          - # TODO For later use
+          -#%p
+          -#  = image_tag 'themes/buy_sell/check.png', class: 'check'
+          -#  = t 'buy_sell_market.products.labels.reviews'

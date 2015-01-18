@@ -10,7 +10,7 @@ module NearMe
       @comment = options[:comment] || ""
       @migrate = options.fetch(:migrate, true)
 
-      if not stack_id.to_s.empty?
+      if not stack_id.nil?
         puts "Stack id: #{stack_id} (#{@stack_name})"
       else
         puts "Cannot find stack by name #{@stack_name}"
@@ -46,7 +46,7 @@ module NearMe
     end
 
     def stack_id
-      @stack_id ||= stack.fetch(:stack_id, {})
+      @stack_id ||= stack.fetch(:stack_id, nil)
     end
 
     def stack_app

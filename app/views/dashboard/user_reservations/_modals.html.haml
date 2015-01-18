@@ -1,0 +1,15 @@
+= render 'listings/reservations/remote_payment_modal' # TODO
+= render 'listings/recurring_bookings/booking_successful_modal' # TODO
+
+- if params[:reservation_id].present?
+  = content_for :domready do
+    new Reservation.ListController($('section#reservations'), #{params[:reservation_id]});
+
+- if params[:action] == 'booking_successful'
+  = content_for :domready do
+    Modal.load('#{booking_successful_modal_dashboard_user_reservation_path(@reservation, listing_id: @reservation.listing)}')
+
+- if params[:action] == 'booking_failed'
+  = content_for :domready do
+    Modal.load('#{booking_failed_modal_dashboard_user_reservation_path(@reservation, listing_id: @reservation.listing)}')
+

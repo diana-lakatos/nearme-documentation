@@ -18,7 +18,7 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
 
       should 'should display correct error message' do
         get :show, order_id: @order, id: 'address'
-        assert_contains 'operates in not supported country', flash[:error]
+        assert_contains 'The seller does not support payments for the selected country.', flash[:error]
       end
 
 

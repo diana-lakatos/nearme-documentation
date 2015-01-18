@@ -98,7 +98,14 @@ class ReservationDecorator < Draper::Decorator
     first = date.strftime('%-e %b')
     last = last_date.strftime('%-e %b')
 
-    first == last ? first : "#{first}-#{last}"
+    first == last ? first : "#{first} - #{last}"
+  end
+
+  def long_dates
+    first = date.strftime('%-e %b, %Y')
+    last = last_date.strftime('%-e %b, %Y')
+
+    first == last ? first : "#{first} - #{last}"
   end
 
   def format_reservation_periods
@@ -128,22 +135,16 @@ class ReservationDecorator < Draper::Decorator
   end
 
   def user_message_summary(user_message)
-    link_to user_message.thread_context.name, location_path(user_message.thread_context.location, user_message.thread_context.listing)
+    if user_message.thread_context.present? && user_message.thread_context.listing.present? && user_message.thread_context.location
+      link_to user_message.thread_context.name, location_path(user_message.thread_context.location, user_message.thread_context.listing)
+    else
+      "[Deleted]"
+    end
   end
 
   def state_to_string
     return 'declined' if rejected?
     state.split('_').first
-  end
-
-  private
-
-  def status_info(text)
-    if state == 'unconfirmed'
-      tooltip(text, "<span class='tooltip-spacer'>i</span>".html_safe, {class: status_icon}, nil)
-    else
-      "<i class='#{status_icon}'></i>".html_safe
-    end
   end
 
   def time_to_expiry(time_of_event)
@@ -159,6 +160,16 @@ class ReservationDecorator < Draper::Decorator
       else
         '%d hours, %d minutes' % [hours, minutes]
       end
+    end
+  end
+
+  private
+
+  def status_info(text)
+    if state == 'unconfirmed'
+      tooltip(text, "<span class='tooltip-spacer'>i</span>".html_safe, {class: status_icon}, nil)
+    else
+      "<i class='#{status_icon}'></i>".html_safe
     end
   end
 

@@ -1,36 +1,31 @@
-.row-fluid
-  .span12.box
-    %h2
-      = t('buy_sell_market.cart.labels.index')
-      - unless @cart.empty?
-        .pull-right
-          = link_to t('buy_sell_market.cart.buttons.empty_cart'), cart_empty_path, method: :delete,
-                      class: 'btn btn-red btn-empty btn-medium'
+- render_content_outside_container!
 
-    - if @cart.empty?
-      = render partial: 'empty'
-    - else
-      - if @cart.different_companies?
-        %h3= t('buy_sell_market.cart.labels.multiple_orders')
 
+- if @cart.empty?
+  .container-fluid
+    .text-center
+      %h3= t('buy_sell_market.cart.labels.x_items_in_cart', nr: @cart.line_items_count)
+      .span4.offset4
+        = render partial: 'buy_sell_market/shared/browse_products_button'
 
 - unless @cart.empty?
-  = form_tag cart_update_path, method: :patch, id: 'cart' do
-    .row-fluid
-      .span12
-        - @cart.orders.each do |order|
-          .box
+  .cart-view
+    .container-fluid
+      .cart-head
+        %h3= t('buy_sell_market.cart.labels.x_items_in_cart', nr: @cart.line_items_count)
+        .button-row
+          = link_to cart_empty_path, method: :delete do
+            .btn.gray= t 'buy_sell_market.cart.buttons.empty_cart'
+          = link_to root_path(anchor: 'products') do
+            .btn.green= t 'buy_sell_market.cart.buttons.continue'
+
+        = form_tag cart_update_path, method: :patch, id: 'cart' do
+          - @cart.orders.each do |order|
             = render partial: 'company_order', locals: { order: order }
 
-  .box
-    .row-fluid
-      .span12.centered
-        = link_to t('buy_sell_market.cart.buttons.continue'), root_path(anchor: 'products'),
-                    class: 'btn btn-blue btn-large'
-
--# TODO Refactor to asset pipeline
-= javascript_include_tag 'jquery'
-:javascript
-  $('select[name^=quantity]').on('change', function() {
-    $('#cart').submit();
-  });
+  -# TODO Refactor to asset pipeline
+  = javascript_include_tag 'jquery'
+  :javascript
+    $('select[name^=quantity]').on('change', function() {
+      $('#cart').submit();
+    });

@@ -1,36 +1,18 @@
-- if resource.persisted?
-  = simple_form_for resource, :url => lock_admin_instance_path(resource), method: :post, :html => { :multipart => true, :class => "form-horizontal" } do |f|
-    .row-fluid
-      .controls.controls-row
-        .span6
-          = f.input :mark_as_locked, as: :boolean, :label => "Master Lock", input_html: { class: 'input-block-level', checked: f.object.locked? }
-        = f.button :submit, 'Update Lock', class: 'btn btn-primary'
+%h4 Note:
+.span12
+  %p.span6 If you need to edit the instance on behalf of the client you should do it through the marketplace admin for that instance, not here. This form only contains features not yet accessable through the marketplace admin, or hidden features we have not exposed yet.
 
 = simple_form_for [:admin, resource], :html => { :multipart => true } do |f|
   = f.input :name
-  = f.input :bookable_noun
-  = f.input :lessor
-  = f.input :lessee
   = f.input :user_info_in_onboarding_flow
+  = f.input :user_based_marketplace_views
   = f.input :user_required_fields, input_html: { value: f.object.user_required_fields.join(', ') }
   = f.input :default_search_view
-  = f.input :user_based_marketplace_views
   = f.input :searcher_type
-  = label_tag :marketplace_type, 'Marketplace Type'
-  = select_tag :marketplace_type, options_for_select(TransactableType::AVAILABLE_TYPES.map{|at| [at, at]}, params[:marketplace_type] || resource.marketplace_type), disabled: !resource.new_record?
-
-  %h4 Domains
-  - resource.domains.build unless resource.domains.any?
-  = f.fields_for :domains do |f_d|
-    = render :partial => 'admin/domains/form', :locals => { :f => f_d }
 
   %p
     = f.button :submit, 'Save'
   %br
-
-  %h4 Custom Theme
-  = f.fields_for :theme, (resource.theme.presence || resource.build_theme) do |ff|
-    = render :partial => 'admin/themes/form', :locals => { :f => ff }
 
   - if defined?(@user)
     %h4 Instance Admin

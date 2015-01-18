@@ -6,10 +6,48 @@ class Spree::OrderDecorator < Draper::Decorator
 
   decorates_association :line_items
 
-  delegate :company_name
+  delegate :current_page, :per_page, :offset, :total_entries, :total_pages
 
   def my_order_status_info
-    status_info("Pending payment")
+    status_info('Pending payment')
+  end
+
+  def status
+    state = case object.state
+            when 'canceled'
+              'Canceled'
+            when 'confirm'
+              'Confirmed'
+            when 'complete'
+              'Completed'
+            when 'resumed'
+              'Completed'
+            else
+              'N/A'
+            end
+
+    if object.shipped?
+      state = 'Shipped'
+    end
+
+    state
+  end
+
+  def estimated_delivery
+    result = 'N/A'
+
+    object.shipments.each do |shipment|
+      next unless shipment.state == 'shipped'
+      next if shipment.shipping_method.processing_time.blank?
+
+      processing_time = shipment.shipping_method.processing_time.to_i
+      if processing_time > 0
+        result = I18n.l(shipment.shipped_at + processing_time.days, format: :only_date)
+        break
+      end
+    end
+
+    result
   end
 
   def company_name
@@ -26,6 +64,18 @@ class Spree::OrderDecorator < Draper::Decorator
 
   def save_billing_address
 
+  end
+
+  def display_completed_at
+    object.completed_at ? l(object.completed_at, format: :only_date) : ''
+  end
+
+  def display_total
+    humanized_money_with_symbol(object.total.to_money(Spree::Config.currency))
+  end
+
+  def display_shipping_address
+    "#{object.ship_address.address1} #{object.ship_address.city}, #{object.ship_address.state_text}, #{object.ship_address.country.try(:iso)}"
   end
 
   private

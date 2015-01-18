@@ -7,6 +7,7 @@ class BuySellMarket::CheckoutController < ApplicationController
   CHECKOUT_STEPS = [:address, :delivery, :payment, :complete]
   steps *CHECKOUT_STEPS
 
+  before_filter :set_theme
   before_filter :set_order
   before_filter :check_step, except: [:get_states]
   before_filter :set_state, only: [:show]
@@ -23,7 +24,9 @@ class BuySellMarket::CheckoutController < ApplicationController
       packages = @order.shipments.map { |s| s.to_package }
       @differentiator = Spree::Stock::Differentiator.new(@order, packages)
     when :complete
-      flash[:notice] = t('buy_sell_market.checkout.notices.order_placed')
+      flash[:success] = t('buy_sell_market.checkout.notices.order_placed')
+      redirect_to dashboard_order_path(params[:order_id])
+      return
 
       begin
         @charge_info = @order.near_me_payments.paid.first.charge_attempts.successful.first
@@ -83,7 +86,7 @@ class BuySellMarket::CheckoutController < ApplicationController
       end
     elsif @order.update_from_params(params, permitted_checkout_attributes)
       if step == :address
-        save_user_addresses if params[:order][:save_billing_address]
+        save_user_addresses # if params[:order][:save_billing_address] <- No checkbox in new UI
         set_countries_states
       end
 
@@ -109,6 +112,11 @@ class BuySellMarket::CheckoutController < ApplicationController
   end
 
   private
+
+  def set_theme
+    @theme_name = 'buy-sell-theme'
+    @render_content_outside_container = true
+  end
 
   def check_qty_on_step
     return true if step == :complete

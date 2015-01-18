@@ -8,15 +8,15 @@ class Billing::Gateway::Processor::Incoming::Stripe < Billing::Gateway::Processo
     ActiveMerchant::Billing::StripeGateway
   end
 
-  def refund_identification(charge_response)
-    charge_response["id"]
+  def refund_identification(charge)
+    charge.response.params["id"]
   end
 
   def credit_card_token_column
     'stripe_id'
   end
 
-  def self.support_any_currency!
+  def support_any_currency!
     true
   end
 
