@@ -21,7 +21,9 @@ class Dashboard::TransactableTypes::DataUploadsController < Dashboard::BaseContr
   def create
     @data_upload = @company.data_uploads.build(data_upload_params)
     lines_count = 0
-    File.foreach(@data_upload.csv_file.path) { |line| lines_count += 1 }
+    if @data_upload.csv_file.path && File.exists?(@data_upload.csv_file.path)
+      File.foreach(@data_upload.csv_file.path) { |line| lines_count += 1 }
+    end
     if lines_count < 5000
       @data_upload.transactable_type = @transactable_type
       @data_upload.send_invitational_email = "0"
@@ -29,15 +31,13 @@ class Dashboard::TransactableTypes::DataUploadsController < Dashboard::BaseContr
       if @data_upload.save
         DataUploadHostConvertJob.perform(@data_upload.id)
         flash[:success] = t 'flash_messages.manage.data_upload.created'
-        redirect_to dashboard_transactable_type_transactables_path(@transactable_type)
       else
         flash[:error] = @data_upload.errors.full_messages.to_sentence
-        render action: :new
       end
     else
       flash[:error] = t 'flash_messages.manage.data_upload.too_many_rows', max: 5000
-      render action: :new
     end
+    redirect_to dashboard_transactable_type_transactables_path(@transactable_type)
   end
 
   def edit
