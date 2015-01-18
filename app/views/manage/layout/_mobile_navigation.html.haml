@@ -19,7 +19,7 @@
       = content_tag :li, class: ['dashboard/products', 'dashboard/transactables'].include?(params[:controller]) ? 'active' : '' do
         - if buyable?
           = link_to t('dashboard.nav.listings'), dashboard_products_path
-        - else
+        - elsif TransactableType.count > 0
           = link_to t('dashboard.nav.listings'), dashboard_transactable_type_transactables_path(TransactableType.first)
       = content_tag :li, class: (params[:controller].include?('payouts')) ? 'active' : '' do
         = link_to t('dashboard.nav.payout'), edit_dashboard_payouts_path

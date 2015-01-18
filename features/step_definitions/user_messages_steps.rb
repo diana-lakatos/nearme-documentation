@@ -20,7 +20,6 @@ Then /^I should see this question in my inbox marked as read$/ do
   page.should have_content model('user').first_name
   page.should have_content @listing.name
   page.should have_content 'Short one'
-  page.find('.message').should_not have_content('Read')
   page.find('.message').should have_content('Archive')
 end
 
@@ -36,8 +35,7 @@ Then /^I should see this question in my inbox marked as unread$/ do
   page.should have_content model('user').first_name
   page.should have_content @listing.name
   page.should have_content 'Short one'
-  page.find('.message').should have_content('Read')
-  page.find('.message').should_not have_content('Archive')
+  page.find('.message').should have_content('Archive')
 end
 
 Then /^I should be able to read, answer and archive this question$/ do
@@ -47,15 +45,19 @@ Then /^I should be able to read, answer and archive this question$/ do
   fill_in 'user_message_body', with: 'This is answer'
   click_button('Send')
   page.should have_content('Your message was sent!')
-  page.should_not have_content 'Short one'
+  page.should have_content 'Short one'
   page.should have_content 'This is answer'
+  visit dashboard_user_messages_path
 
   click_link('Archive')
   page.should have_content('Your message was archived!')
   page.should_not have_content 'Short one'
   page.should_not have_content 'This is answer'
 
-  click_link('Archived')
+
+  within('select.messages') do
+    select 'Archived'
+  end
   page.should_not have_content 'Short one'
   page.should have_content 'This is answer'
 end
@@ -95,7 +97,6 @@ Then /^I should see this( reservation)? message in my inbox marked as read$/ do 
     page.should have_content @another_user.name
   end
   page.should have_content 'Short one'
-  page.find('.message').should_not have_content('Read')
   page.find('.message').should have_content('Archive')
 end
 
@@ -116,8 +117,7 @@ Then /^I should see this( reservation)? message in my inbox marked as unread$/ d
     page.should have_content @another_user.name
   end
   page.should have_content 'Short one'
-  page.find('.message').should have_content('Read')
-  page.find('.message').should_not have_content('Archive')
+  page.find('.message').should have_content('Archive')
 end
 
 Given /^I am logged in as the reservation administrator$/ do
@@ -126,7 +126,8 @@ Given /^I am logged in as the reservation administrator$/ do
 end
 
 Given /^I send a message to reservation owner$/ do
-  find("a.ico-mail").click
+  save_and_open_page
+  click_link ('.order a.ico-mail')
   work_in_modal do
     fill_in 'user_message_body', with: "Short one"
     click_button 'Send'

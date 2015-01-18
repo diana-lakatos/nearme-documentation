@@ -1,4 +1,4 @@
-- unless (['locations', 'products'].any? { |w| params[:controller].include?(w) })
+- unless (['locations', 'products'].any? { |w| params[:controller].try(:include?, w) })
   - s_name = defined?(site_name) ? site_name : platform_context.site_name
   - c_url = defined?(original_url) ? original_url : request.original_url
   - desc = defined?(description?) ? description : platform_context.description

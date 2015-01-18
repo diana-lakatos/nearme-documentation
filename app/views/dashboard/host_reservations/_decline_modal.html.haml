@@ -1,5 +1,6 @@
-= render_modal 'Decline reservation', id: "decline-reservation-#{reservation.id}", autoload: true do
-  %h2 Are you sure you want to decline?
+.modal-header
+  .modal-title= t('Are you sure you want to decline?')
+.modal-body
   = simple_form_for(reservation, :url => reject_dashboard_host_reservation_path(reservation, listing_id: reservation.listing)) do |f|
-    = f.input :rejection_reason, :placeholder => "Optionally, provide a reason.", :label => false, :tabindex => '1'
+    = f.input :rejection_reason, placeholder: "Optionally, provide a reason.", label: false, tabindex: '1'
     = f.submit 'Decline', class: 'btn red full'

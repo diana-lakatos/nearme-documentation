@@ -20,8 +20,11 @@ module NavigationHelpers
     when /the settings page/
       edit_dashboard_company_path(model!('the user').companies.first)
 
+    when /the payouts page/
+      edit_dashboard_payouts_path
+
     when /the white label settings page/
-      edit_dashboard_white_labels_path(model!('the user').companies.first)
+      edit_dashboard_white_label_path(model!('the user').companies.first)
 
     when /the transactable's page/
       listing_path(model!('the transactable'))

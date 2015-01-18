@@ -50,8 +50,8 @@ end
 Then /^I (do not )?see a search results for the ([^\$].*)$/ do |negative, product|
   product = model!(product)
   if negative
-    page.should have_no_selector('article[data-id="' + product.id.to_s + '"]')
+    page.should have_no_selector('.result-item[data-product-id="' + product.id.to_s + '"]')
   else
-    page.should have_selector('article[data-id="' + product.id.to_s + '"]')
+    page.should have_selector('.result-item[data-product-id="' + product.id.to_s + '"]')
   end
 end
