@@ -7,7 +7,7 @@
 .dash-body
   .new-profile
     =image_tag('themes/buy_sell/icon-cross.png')
-    = link_to "New List Item", new_dashboard_transactable_type_transactable_path(@transactable_type)
+    = link_to "List New Item", new_dashboard_transactable_type_transactable_path(@transactable_type)
   .dash-sub-nav
     %ul
       - TransactableType.all.each do |transactable_type|
