@@ -7,7 +7,7 @@
   %section.list#seller-info
     .container-fluid
       %h2.section-heading Seller Info
-      = f.input :store_name, :placeholder => "Jenny's Fruit Baskets", hint: "Pick a name that has significance or helps identify what's in your shop."
+      = f.input :store_name, :placeholder => "What do you want to call your store?"
       = f.fields_for :company_address_attributes, f.object.company_address do |a|
         =render 'address', f: a
       =# f.select :currency, :hint => "What currency will your marketplace be mainly transacting in?"

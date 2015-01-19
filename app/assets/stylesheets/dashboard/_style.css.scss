@@ -204,6 +204,10 @@ nav .nav-head {
   padding-left: 10px;
 }
 
+nav .nav-head:only-child {
+  display: none;
+}
+
 nav li a, .mobile-nav .nav li a {
   color: $color-dark-gray;
   font-size: 14px;
@@ -686,6 +690,10 @@ input[type=checkbox] {
 
 section.list .col-md-3 {
   padding: none;
+}
+
+textarea {
+  resize:vertical;
 }
 
 /*===== BLOG =====*/
