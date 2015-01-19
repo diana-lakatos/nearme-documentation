@@ -9,7 +9,10 @@
               %th Name
               %th Hide
           %tbody
-            - Dashboard::BaseController::DASHBOARD_CONTROLLERS.each do |controller|
+            - buysell_controllers = ['dashboard/orders', 'dashboard/products', 'dashboard/orders_received']
+            - services_controllers = ['dashboard/user_reservations', 'dashboard/transactables', 'dashboard/host_reservations']
+            - hidden_controllers = buyable? ? services_controllers : buysell_controllers
+            - (Dashboard::BaseController::DASHBOARD_CONTROLLERS - hidden_controllers).each do |controller|
               %tr
                 %td
                   = t("dashboard.nav.#{controller.split('/').last}")
