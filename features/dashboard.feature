@@ -28,14 +28,15 @@ Feature: As a user of the site
   Scenario: A user can edit existing location
     Given the location exists with company: the company
      And I am adding new transactable
+
      When I edit first location
       And I provide new location data
       And I submit the location form
-      And I should see "Great, your location has been updated!"
-     Then the location should be updated
+     Then I should see "Great, your location has been updated!"
+      And the location should be updated
       And I remove first location
       And I should see "You've deleted"
-     Then the location should not exist
+     Then the location should not be pickable
 
   Scenario: A user can add new listing
     Given the location exists with company: the company
@@ -45,6 +46,14 @@ Feature: As a user of the site
       And I submit the transactable form
       And I should see "Great, your new Desk has been added!"
      Then Listing with my details should be created
+
+  Scenario: A user can add locations and listings via bulk upload
+    Given TransactableType is for bulk upload
+      And I am browsing bulk upload transactables
+     When I upload csv file with locations and transactables
+     Then I should see "Import has been scheduled. You'll receive an email when it's done."
+      And I should receive data upload report email when finished
+      And New locations and transactables from csv should be added
 
   Scenario: A user can edit existing listing
     Given the location exists with company: the company

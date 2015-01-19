@@ -2,8 +2,12 @@ Given(/^I am browsing transactables$/) do
   visit dashboard_transactable_type_transactables_path(TransactableType.first)
 end
 
+Given(/^I am browsing bulk upload transactables$/) do
+  visit dashboard_transactable_type_transactables_path(TransactableType.last)
+end
+
 Given(/^I am adding new transactable$/) do
-  visit new_dashboard_transactable_type_transactable_path(TransactableType.first)
+  visit new_dashboard_transactable_type_transactable_path(TransactableType.last)
 end
 
 Given(/^I add a new transactable$/) do
@@ -16,6 +20,7 @@ end
 
 Given(/^I edit first location$/) do
   find(:css, '#location-list .location-options > a:first-child').click
+  page.should have_css('#location-form')
 end
 
 Given(/^I remove first location$/) do
