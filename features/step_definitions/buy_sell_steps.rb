@@ -8,6 +8,11 @@ Given /^Current marketplace is buy_sell$/ do
   @instance.update_attribute(:payment_transfers_frequency, 'daily')
 end
 
+Given /^Instance without payment gateway defined$/ do
+  @instance = PlatformContext.current.instance
+  @instance.instance_payment_gateways.destroy_all
+end
+
 Given /^A buy sell product exist in current marketplace$/ do
   @user = User.first
   @user.update_column(:country_name, 'United States')
@@ -19,8 +24,6 @@ Given /^A buy sell product exist in current marketplace$/ do
   @shipping_category.shipping_methods.each do |sm|
     sm.update_attributes(company_id: @product.company_id, name: 'Custom Shipping')
   end
-  @stock_item = @stock_location.stock_items.create(variant_id: @product.id)
-  @stock_item.update_attribute(:count_on_hand, 1)
   FactoryGirl.create(:base_product, name: 'Some weird stuff!')
 end
 
@@ -64,9 +67,11 @@ When /^I fill in shippment details$/ do
   select 'California', from: 'order_bill_address_attributes_state_id'
   fill_in 'order_bill_address_attributes_zipcode', with: '94102'
 
+  uncheck 'order_use_billing'
+  page.should have_css('#order_ship_address_attributes_firstname')
   fill_in 'order_ship_address_attributes_firstname', with: 'John'
   fill_in 'order_ship_address_attributes_lastname', with: 'Doe'
-  fill_in 'order_ship_address_attributes_address1', with: 'Wonderland 1'
+  fill_in 'order_ship_address_attributes_address1', with: 'Wonderland 2'
   fill_in 'order_ship_address_attributes_city', with: 'San Francisco'
   select 'United States', from: 'order_ship_address_attributes_country_id'
   page.should have_css('#order_ship_address_attributes_state_id option')
@@ -102,8 +107,6 @@ When /^I fill billing data$/ do
   fill_in 'order_card_expires', with: 1.years.from_now.strftime("%m/%Y")
   fill_in 'order_card_code', with: '111'
   click_button 'Next'
-  save_and_open_page
-  binding.pry
 end
 
 And /^I should see order placed confirmation$/ do
@@ -111,7 +114,8 @@ And /^I should see order placed confirmation$/ do
 end
 
 Then /^The product should not be included in my cart$/ do
-  assert page.body.should have_content(I18n.t('buy_sell_market.checkout.notices.order_placed'))
+  find('.checkout a').click
+  assert page.body.should have_content(I18n.t('flash_messages.buy_sell.no_payment_gateway'))
 end
 
 

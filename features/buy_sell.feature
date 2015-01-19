@@ -26,6 +26,7 @@ Feature: Buy Sell Marketplace
 
   Scenario: A user from not supported country should not be able to buy product
     Given A buy sell product exist in current marketplace
+    Given Instance without payment gateway defined
     When I search for buy sell "Product"
     Then I should see relevant buy sell products
     When I add buy sell product to cart
