@@ -152,7 +152,7 @@ class ReservationMailerTest < ActiveSupport::TestCase
     Time.freeze do
       mail = ReservationMailer.notify_host_with_confirmation(@reservation)
 
-      assert_contains manage_guests_dashboard_path(:token => @reservation.listing_creator.temporary_token), mail.html_part.body
+      assert_contains dashboard_host_reservations_path(:token => @reservation.listing_creator.temporary_token), mail.html_part.body
       assert_contains @reservation.listing.creator.name, mail.html_part.body
       assert_contains @expected_dates, mail.html_part.body
 

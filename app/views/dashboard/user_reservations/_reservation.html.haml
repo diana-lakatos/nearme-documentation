@@ -15,11 +15,12 @@
 
       .col-md-4
         %p Requested time
-        - if reservation.periods.first.read_attribute(:start_minute).present?
-          - reservation_period = reservation.periods.first.decorate
-          %p= reservation_period.hourly_summary(false).gsub('<br />', ' ').html_safe
-        - else
-          N/A
+        %p
+          - if reservation.periods.first.read_attribute(:start_minute).present?
+            - reservation_period = reservation.periods.first.decorate
+            = reservation_period.hourly_summary(false).gsub('<br />', ' ').html_safe
+          - else
+            N/A
 
       .col-md-2
         %p Total
@@ -52,7 +53,6 @@
             = form_for reservation, method: :post, url: user_cancel_dashboard_user_reservation_path(reservation) do |f|
               = f.submit 'Cancel', confirm: 'Do you really want to cancel this reservation?', class: 'btn dark-gray full'
 
-            -# TODO: Test
             - if reservation.remote_payment? && !reservation.paid? && !reservation.archived?
               = link_to 'Pay now', remote_payment_dashboard_user_reservation_path(reservation), class: 'btn blue full'
 

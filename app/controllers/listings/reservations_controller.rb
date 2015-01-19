@@ -69,7 +69,7 @@ class Listings::ReservationsController < ApplicationController
       card_message = @reservation.credit_card_payment? ? t('flash_messages.reservations.credit_card_will_be_charged') : ''
       flash[:notice] = t('flash_messages.reservations.reservation_made', message: card_message)
 
-      redirect_to remote_payment_reservation_path(@reservation) and return if @reservation.remote_payment?
+      redirect_to remote_payment_dashboard_user_reservation_path(@reservation) and return if @reservation.remote_payment?
       if origin_domain?
         redirect_to booking_successful_dashboard_user_reservation_url(@reservation, protocol: 'http', host: origin_domain)
       else

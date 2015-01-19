@@ -18,11 +18,11 @@ class TransactableDrop < BaseDrop
   end
 
   def manage_guests_dashboard_url
-    routes.manage_guests_dashboard_path(:token => @listing.administrator.try(:temporary_token))
+    routes.dashboard_host_reservations_path(:token => @listing.administrator.try(:temporary_token))
   end
 
   def manage_guests_dashboard_url_with_tracking
-    routes.manage_guests_dashboard_path(:token => @listing.administrator.try(:temporary_token), :track_email_event => true)
+    routes.dashboard_host_reservations_path(:token => @listing.administrator.try(:temporary_token), :track_email_event => true)
   end
 
   def search_url_with_tracking

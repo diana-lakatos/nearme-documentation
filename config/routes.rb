@@ -328,13 +328,15 @@ DesksnearMe::Application.routes.draw do
       end
 
       member do
-        get :remote_payment # TODO: Check
+        get :remote_payment
       end
 
       get :hourly_availability_schedule, :on => :collection
     end
 
   end
+
+
 
   match '/auth/:provider/callback' => 'authentications#create', via: [:get, :post]
   get "/auth/failure", to: "authentications#failure"
@@ -362,20 +364,6 @@ DesksnearMe::Application.routes.draw do
     get "/instance_admin/sessions/new", :to => "instance_admin/sessions#new", :as => 'instance_admin_login'
     post "/instance_admin/sessions", :to => "instance_admin/sessions#create"
     delete "/instance_admin/sessions", :to => "instance_admin/sessions#destroy"
-  end
-
-  # TODO: Delete after new rating system implemented
-  get '/reservations/:id/guest_rating' => 'dashboard#guest_rating', as: 'guest_rating'
-  get '/reservations/:id/host_rating' => 'reservations#host_rating', as: 'host_rating'
-
-  resources :recurring_bookings, :except => [:destroy] do
-    member do
-      post :user_cancel
-      get :export
-      get :booking_successful
-      get :upcoming
-      get :archived
-    end
   end
 
   resources :listings, :users, :reservations, :products do
@@ -459,8 +447,10 @@ DesksnearMe::Application.routes.draw do
         get :booking_successful
         get :booking_failed
         get :booking_successful_modal
+        get :recurring_booking_successful_modal
         get :booking_failed_modal
         get :remote_payment
+        get :remote_payment_modal
         get :recurring_booking_successful
       end
 
@@ -468,13 +458,16 @@ DesksnearMe::Application.routes.draw do
         get :upcoming
         get :archived
       end
+    end
 
-      # TODO: Delete after new rating system is implemented
-      resources :guest_ratings, only: [:new, :create]
-      resources :host_ratings, only: [:new, :create]
-      #
-
-      resources :payment_notifications, controller: 'reservations/payment_notifications' # TODO: Check
+    resources :user_recurring_bookings, :except => [:destroy] do
+      member do
+        post :user_cancel
+        get :export
+        get :booking_successful
+        get :upcoming
+        get :archived
+      end
     end
 
     resources :host_reservations do
@@ -488,6 +481,21 @@ DesksnearMe::Application.routes.draw do
         get :request_payment
       end
     end
+
+    resources :host_recurring_bookings do
+      member do
+        post :confirm
+        get :confirm
+        patch :reject
+        put :reject
+        get :rejection_form
+        post :host_cancel
+      end
+    end
+  end
+
+  resources :reservations do
+    resources :payment_notifications, controller: 'reservations/payment_notifications'
   end
 
   get '/dashboard', controller: 'dashboard/dashboard', action: 'index'
@@ -521,17 +529,6 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :listings do
-      resources :recurring_bookings, :controller => 'listings/recurring_bookings' do
-        member do
-          post :confirm
-          get :confirm
-          patch :reject
-          put :reject
-          get :rejection_form
-          post :host_cancel
-        end
-      end
-
       resource :booking_module, only: [:update], :controller => 'listings/booking_module'
     end
 
@@ -545,7 +542,6 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :photos, :only => [:create, :destroy, :edit, :update]
-    resources :recurring_bookings, only: [:show]
 
     resources :themes, :only => [] do
       member do

@@ -1,7 +1,19 @@
-class Manage::Listings::RecurringBookingsController < ApplicationController
-  before_filter :authenticate_user!
-  before_filter :find_listing
-  before_filter :find_recurring_booking
+class Dashboard::HostRecurringBookingsController < Dashboard::BaseController
+  skip_before_filter :redirect_if_no_company
+  before_filter :find_listing, except: [:show]
+  before_filter :find_recurring_booking, except: [:show]
+
+  # Originally in Manage::RecurringBookingsController
+  def show
+    if current_user.companies.any?
+      @locations  = current_user.companies.first.locations
+    else
+      @locations = []
+    end
+
+    @recurring_booking = current_user.listing_recurring_bookings.find(params[:id]).decorate
+    @guest_list = Controller::GuestList.new(current_user, @recurring_booking).filter(params[:state])
+  end
 
   def confirm
     if @recurring_booking.confirmed?
@@ -23,6 +35,7 @@ class Manage::Listings::RecurringBookingsController < ApplicationController
   end
 
   def rejection_form
+    render layout: false
   end
 
   def reject

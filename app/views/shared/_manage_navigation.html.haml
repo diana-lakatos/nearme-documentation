@@ -18,7 +18,7 @@
               = link_to manage_locations_path, :class => (active_tab == :locations) ? 'active' : '' do
                 %span Locations
             %li
-              = link_to manage_guests_dashboard_path, :class => (active_tab == :guests) ? 'active' : '' do
+              = link_to dashboard_host_reservations_path, :class => (active_tab == :guests) ? 'active' : '' do
                 %span= platform_context.lessee.capitalize.pluralize
 
           -if TransactableType.first.try(:has_action?, 'Request For Quote')

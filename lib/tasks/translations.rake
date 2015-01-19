@@ -22,6 +22,8 @@ namespace :translations do
       'dashboard.nav.edit' => 'Edit Profile',
       'dashboard.nav.social_accounts' => 'Trust & Verification',
       'dashboard.nav.notification_preferences' => 'Notification Preferences',
+      'dashboard.nav.user_recurring_bookings' => 'My Orders',
+      'dashboard.nav.host_recurring_bookings' => 'Orders Received',
       'dashboard.nav.your_shop' => 'YOUR SHOP',
       'dashboard.nav.admin' => 'ADMIN',
       'dashboard.nav.account' => 'ACCOUNT',
