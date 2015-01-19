@@ -11,12 +11,12 @@
       = content_tag :li, class: params[:controller].include?('user_messages') ? 'active' : '' do
         = link_to t('dashboard.nav.messages'), dashboard_user_messages_path
 
-    - if current_user.companies.any?
+    - if @company.present?
       %ul
         %li.nav-head
           = t('dashboard.nav.your_shop')
         = content_tag :li, class: (params[:controller].include?('companies')) ? 'active' : '' do
-          = link_to t('dashboard.nav.shop_details'), edit_dashboard_company_path(current_user.companies.first)
+          = link_to t('dashboard.nav.shop_details'), edit_dashboard_company_path(@company)
         = content_tag :li, class: ['dashboard/products', 'dashboard/transactables'].include?(params[:controller]) ? 'active' : '' do
           - if buyable?
             = link_to t('dashboard.nav.listings'), dashboard_products_path
@@ -45,7 +45,7 @@
         = content_tag :li, class: (params[:controller].include?('waiver_agreement_templates')) ? 'active' : '' do
           = link_to t('dashboard.nav.waiver_agreements'), dashboard_waiver_agreement_templates_path
         = content_tag :li, class: (params[:controller].include?('white_label')) ? 'active' : '' do
-          = link_to t('dashboard.nav.white_label'), edit_dashboard_white_label_path(current_user.companies.first)
+          = link_to t('dashboard.nav.white_label'), edit_dashboard_white_label_path(@company)
         - if TransactableType.all.any? { |t| t.has_action?('Request For Quote') }
           = content_tag :li, class: (params[:controller].include?('tickets')) ? 'active' : '' do
             = link_to t('dashboard.nav.rfq'), dashboard_support_tickets_path

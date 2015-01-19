@@ -31,15 +31,17 @@ end
 
 Then /^I should see relevant buy sell products$/ do
   assert page.body.should have_content(@product.name)
-  assert page.should have_css("article.product", count: 1)
+  assert page.should have_css("div.result-item", count: 3)
+  assert page.should have_css("div.result-item[data-product-id]", count: 1)
 end
 
 When /^I add buy sell product to cart$/ do
-  find(:css, 'article.product .photo a').click
+  find(:css, 'div.result-item a.item').click
   find(:css, '.add_to_cart').click
 end
 
 Then /^The product should be included in my cart$/ do
+  assert page.should have_css("div.item-description")
   @order = @user.orders.first
   assert @order.present?
   assert_equal 1, @order.line_items.count
@@ -49,24 +51,67 @@ Then /^The product should be included in my cart$/ do
 end
 
 When /^I begin Checkout process$/ do
-  click_link 'Checkout'
+  find('.checkout a').click
 end
 
 When /^I fill in shippment details$/ do
+  fill_in 'order_bill_address_attributes_firstname', with: 'John'
+  fill_in 'order_bill_address_attributes_lastname', with: 'Doe'
   fill_in 'order_bill_address_attributes_address1', with: 'Wonderland 1'
   fill_in 'order_bill_address_attributes_city', with: 'San Francisco'
   select 'United States', from: 'order_bill_address_attributes_country_id'
   page.should have_css('#order_bill_address_attributes_state_id option')
   select 'California', from: 'order_bill_address_attributes_state_id'
   fill_in 'order_bill_address_attributes_zipcode', with: '94102'
-  fill_in 'order_bill_address_attributes_lastname', with: 'Doe'
-  check 'order_use_billing'
-  sleep(1)
-  save_and_open_page
-  click_button 'Next step'
+
+  fill_in 'order_ship_address_attributes_firstname', with: 'John'
+  fill_in 'order_ship_address_attributes_lastname', with: 'Doe'
+  fill_in 'order_ship_address_attributes_address1', with: 'Wonderland 1'
+  fill_in 'order_ship_address_attributes_city', with: 'San Francisco'
+  select 'United States', from: 'order_ship_address_attributes_country_id'
+  page.should have_css('#order_ship_address_attributes_state_id option')
+  select 'California', from: 'order_ship_address_attributes_state_id'
+  fill_in 'order_ship_address_attributes_zipcode', with: '94102'
+
+  click_button 'Next'
 end
 
-When /^I choose shipping method$/ do
-  save_and_open_page
-  select 'Custom Shipping', from: 'order_shipments_attributes_0_selected_shipping_rate_id'
+And /^I choose shipping method$/ do
+  assert page.should have_css("div.shipping-options")
+  assert page.should have_css("div.radio-select", count: 1)
+  assert page.should have_css("div.radio-select input:checked", count: 1)
+
+  @shipping_category.shipping_methods.each do |sm|
+    assert page.body.should have_content(sm.name)
+  end
+
+  click_button 'Next'
 end
+
+Then /^I should see order summary page$/ do
+  assert page.body.should have_content("Order Summary")
+  @order = @user.orders.first
+  total = @order.item_total.to_f + @order.shipment_total.to_f + @order.additional_tax_total.to_f + @order.service_fee_amount_guest.to_f
+  assert_equal ("$%.2f" % total), page.all(:css, ".payment-totals .total").last.text
+end
+
+When /^I fill billing data$/ do
+  fill_in 'order_card_holder_first_name', with: 'John'
+  fill_in 'order_card_holder_last_name', with: 'Doe'
+  fill_in 'order_card_number', with: '4111111111111111'
+  fill_in 'order_card_expires', with: 1.years.from_now.strftime("%m/%Y")
+  fill_in 'order_card_code', with: '111'
+  click_button 'Next'
+  save_and_open_page
+  binding.pry
+end
+
+And /^I should see order placed confirmation$/ do
+  assert page.body.should have_content(I18n.t('buy_sell_market.checkout.notices.order_placed'))
+end
+
+Then /^The product should not be included in my cart$/ do
+  assert page.body.should have_content(I18n.t('buy_sell_market.checkout.notices.order_placed'))
+end
+
+
