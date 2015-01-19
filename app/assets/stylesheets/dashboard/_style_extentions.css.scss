@@ -137,13 +137,27 @@ section {
   margin-top: 30px;
 }
 
-.remove_shipping_profile label {
-  float: right;
-  color: #e85c41;
+.remove_shipping_profile {
+  overflow: hidden;
+
+  label {
+    float: right;
+    color: #e85c41;
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
 }
 
-.remove_shipping_profile label:hover {
-  opacity: 0.5;
+.shipping_method_block.row {
+  margin: 10px 0px 0px 0px;
+}
+
+.shipping-form {
+  > .no-padding-top {
+    margin-top: 0px;
+  }
 }
 
 .row {
@@ -227,3 +241,18 @@ h4.other-reservation-separator {
   }
 }
 
+/*===== MY ORDERS (RESERVATIONS) =====*/
+
+#reservations {
+
+  .promote-location {
+
+    h2 {
+      margin: 50px 0px 20px;
+
+      &:first-child {
+        margin-top: 0px;
+      }
+    }
+  }
+}
