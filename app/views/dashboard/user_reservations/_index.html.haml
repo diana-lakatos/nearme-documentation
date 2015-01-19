@@ -5,10 +5,10 @@
 - else
 
   - if @reservation
-    = render 'reservation_successful'
+    = render 'dashboard/user_reservations/reservation_successful'
 
   - if @recurring_booking && !only_reservations
-    = render 'recurring_booking_successful'
+    = render 'dashboard/user_reservations/recurring_booking_successful'
 
   - if !only_reservations
     - (@recurring_bookings - [@recurring_booking]).each_with_index do |recurring_booking, index|

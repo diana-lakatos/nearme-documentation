@@ -4,30 +4,3 @@
   = simple_form_for(@recurring_booking, url: reject_dashboard_host_recurring_booking_path(@recurring_booking, listing_id: @listing)) do |f|
     = f.input :rejection_reason, placeholder: 'Optionally, provide a reason.', label: false, tabindex: '1'
     = f.submit 'Decline', class: 'btn red full'
-
--#  = simple_form_for(@reservation, url: reject_dashboard_host_reservation_path(@reservation, listing_id: @reservation.listing)) do |f|
--#    = f.input :rejection_reason, placeholder: "Optionally, provide a reason.", label: false, tabindex: '1'
--#    = f.submit 'Decline', class: 'btn red full'
--#
--#
--#- title 'Reject'
--#
--#.row-fluid
--#  #signup.decline
--#    .span8.offset2
--#      .box
--#        %br
--#        %h2 Are you sure you want to decline?
--#        = simple_form_for(@recurring_booking, :url => reject_dashboard_host_recurring_booking_path(@recurring_booking, listing_id: @listing)) do |f|
--#          .input-icon-holder
--#            = f.input :rejection_reason, placeholder: 'Optionally, provide a reason.', label: false, tabindex: '1'
--#          %br
--#          .actions
--#            = f.submit 'Decline', id: 'submit-decline'
-
--#- if request.xhr?
--#  :javascript
--#    Modal.setClass('sign-up-modal')
--#
--#- content_for :domready do
--#  $(function() { new ModalForm($('#signup'), $('from.edit_recurring_booking')) });

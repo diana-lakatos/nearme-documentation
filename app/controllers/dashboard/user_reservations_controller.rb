@@ -79,6 +79,9 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
     upcoming
   end
 
+  def recurring_booking_successful_modal
+  end
+
   protected
 
   def reservations

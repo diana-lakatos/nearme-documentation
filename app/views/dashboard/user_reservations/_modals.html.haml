@@ -1,5 +1,4 @@
 = render 'listings/reservations/remote_payment_modal' # TODO
-= render 'listings/recurring_bookings/booking_successful_modal' # TODO
 
 - if params[:reservation_id].present?
   = content_for :domready do
@@ -13,6 +12,7 @@
   = content_for :domready do
     Modal.load('#{booking_failed_modal_dashboard_user_reservation_path(@reservation, listing_id: @reservation.listing)}')
 
-  - if params[:action] == 'recurring_booking_successful'
-    Modal.load('#{booking_successful_listing_recurring_booking_path(@recurring_booking.listing, @recurring_booking)}')
+- if params[:action] == 'recurring_booking_successful'
+  = content_for :domready do
+    Modal.load('#{recurring_booking_successful_modal_dashboard_user_reservation_path(@recurring_booking, listing_id: @recurring_booking.listing)}')
 
