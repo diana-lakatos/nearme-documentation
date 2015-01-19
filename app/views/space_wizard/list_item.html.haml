@@ -4,7 +4,7 @@
   %h1 List a New Item
 
 = simple_form_for @boarding_form, wrapper: :bs3, :url => space_wizard_submit_item_url, :html => { :multipart => true, id: "boarding_form" }, method: :post do |f|
-  %section#seller-info
+  %section.list#seller-info
     .container-fluid
       %h2.section-heading Seller Info
       = f.input :store_name, :placeholder => "Jenny's Fruit Baskets", hint: "Pick a name that has significance or helps identify what's in your shop."
@@ -13,12 +13,12 @@
       =# f.select :currency, :hint => "What currency will your marketplace be mainly transacting in?"
       =# f.select :language
   = f.simple_fields_for f.object.product_form do |product_form|
-    %section#new-item
+    %section.list#new-item
       .container-fluid
         %h2.section-heading List New Item
         = render 'forms/product_form', f: product_form
 
-    %section#shipping-info
+    %section.list#shipping-info
       .container-fluid
         %h2.section-heading Shipping Info
         = product_form.simple_fields_for :shipping_methods do |shipping_method|
