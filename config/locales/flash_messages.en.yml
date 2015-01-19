@@ -305,7 +305,7 @@ en:
         reservation_rejected: "You have rejected the reservation. Maybe next time!"
         payment_requested: "Your request has been sent"
       data_upload:
-        created: 'Data Upload has been created.'
+        created: "Import has been scheduled. You'll receive an email when it's done."
         scheduled: 'Data has been scheduled to be imported.'
         deleted: 'Data Upload has been deleted.'
         not_scheduled: 'The task has not been queued. Either data has been already imported or task is already in queue.'

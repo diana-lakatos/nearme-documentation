@@ -13,7 +13,7 @@ module LocationHelper
   end
 
   def fill_location_form
-    fill_in "Address", with: "Auckland"
+    fill_in "location_location_address_attributes_address", with: "Auckland"
     fill_in "location_description", with: "Proin adipiscing nunc vehicula lacus varius dignissim."
     page.execute_script "$('select#location_location_type_id option[value=\"#{LocationType.find_by_name('Co-working').id}\"]').prop('selected', true).trigger('change');"
     fill_in "location_email", with: "location@example.com"
