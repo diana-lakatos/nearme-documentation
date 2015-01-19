@@ -108,6 +108,10 @@ abbr[title] {
   padding: 8px 20px;
 }
 
+.btn:focus {
+  outline: none;
+}
+
 .btn.full {
   width: 100%;
 }
@@ -120,23 +124,47 @@ abbr[title] {
   box-shadow: none;
 }
 
-.btn.gray {
-  background: $color-light-gray;
-  color: $color-dark-gray;
-}
-
-.btn.dark-gray {
-  background: $color-dark-gray;
-  color: #fff;
-}
-
 .btn.blue {
   background: $color-blue;
   color: #fff;
 }
 
+.btn.blue:hover {
+  background: $color-light-blue;
+}
+
+.btn.blue:active {
+  background: $color-dark-blue;
+}
+
+.btn.gray {
+  background: $color-gray;
+  color: #fff;
+}
+
+.btn.gray:hover {
+  background: $color-light-gray;
+}
+
+.btn.gray:active {
+  background: $color-dark-gray;
+}
+
 .btn.red {
   background: $color-red;
+  color: #fff;
+}
+
+.btn.red:hover {
+  background: $color-light-red;
+}
+
+.btn.red:active {
+  background: $color-dark-red;
+}
+
+.btn.dark-gray {
+  background: $color-dark-gray;
   color: #fff;
 }
 
@@ -612,6 +640,7 @@ label {
 }
 
 form input[type="text"], form textarea {
+  -webkit-appearance: none;
   background: #fff;
   border: solid #D4D4D4 1px;
   border-radius: 0;
@@ -657,6 +686,10 @@ form input[type="text"], form textarea {
 
 input[type=checkbox] {
   margin-right: 10px;
+}
+
+section.list .col-md-3 {
+  padding: none;
 }
 
 /*===== BLOG =====*/
@@ -941,6 +974,10 @@ table.order-header td {
 }
 
 /*===== FOOTER =====*/
+.footer-push {
+  display: none;
+}
+
 .footer-wrapper {
 
   .container-fluid {
@@ -1013,6 +1050,18 @@ table.order-header td {
     float: right;
   }
 
+  .order-head p:nth-child(1) {
+    margin: 0;
+  }
+
+  .order-head [class*='col-'] {
+    margin-bottom: 20px;
+  }
+
+  .footer-push {
+    display: block;
+  }
+
 }
 
 @media (max-width: 767px) {
@@ -1043,7 +1092,19 @@ table.order-header td {
   }
 }
 
-@media (max-width: 450px) {
+@media (max-width: 400px) {
+  .navbar .nav-links li a.nav-link {
+    font-size: 16px;
+  }
+
+  .page-wrapper {
+    width: 95%;
+  }
+
+  .page-content {
+    padding: 0;
+  }
+
   .dash-head {
     padding: 10px;
   }
@@ -1101,4 +1162,3 @@ table.order-header td {
   }
 
 }
-
