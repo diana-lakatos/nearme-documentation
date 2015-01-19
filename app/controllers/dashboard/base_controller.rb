@@ -5,6 +5,26 @@ class Dashboard::BaseController < ApplicationController
   before_filter :find_company
   before_filter :redirect_if_no_company
 
+  DASHBOARD_CONTROLLERS = [
+    "dashboard/orders",
+    "dashboard/user_reservations",
+    "dashboard/user_messages",
+    "dashboard/companies",
+    "dashboard/products",
+    "dashboard/transactables",
+    "dashboard/payouts",
+    "dashboard/orders_received",
+    "dashboard/host_reservations",
+    "dashboard/transfers",
+    "dashboard/analytics",
+    "dashboard/users",
+    "dashboard/waiver_agreement_templates",
+    "dashboard/white_labels",
+    "dashboard/tickets",
+    "registrations/edit",
+    "registrations/social_accounts"
+  ]
+
   private
 
   def find_company

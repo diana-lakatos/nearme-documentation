@@ -7,7 +7,7 @@
 
       .col-md-3
         %p Requested date
-        %p
+        %p.dates
           - if reservation.periods.first.read_attribute(:start_minute).present?
             = reservation.long_dates
           - else

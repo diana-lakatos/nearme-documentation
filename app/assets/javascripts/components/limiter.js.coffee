@@ -4,6 +4,7 @@ class @Limiter
     @bindEvents()
 
   @bindEvents: ->
+    console.log 'hello'
     $('[data-counter-limit]').each (index, value) ->
       el = $(value)
       limit = parseInt(el.data('counter-limit'))

@@ -21,10 +21,6 @@ class Manage::BuySell::ApiController < Manage::BuySell::BaseController
     collection = collection.ransack(params[:q]).result.order('name ASC')
     collection = collection.where(id: params[:ids].split(",")) if params[:ids].present?
 
-    if params[:page] || params[:per_page]
-      collection = collection.paginate(page:params[:page], per_page: params[:per_page])
-    end
-
     render json: collection.order(:name).to_json(methods: methods)
   end
 end

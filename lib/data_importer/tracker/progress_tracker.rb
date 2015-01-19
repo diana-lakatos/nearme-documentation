@@ -1,4 +1,4 @@
-class DataImporter::Tracker::Progress < DataImporter::Tracker
+class DataImporter::Tracker::ProgressTracker < DataImporter::Tracker
   class Updater
     def initialize(data_upload)
       @data_upload = data_upload

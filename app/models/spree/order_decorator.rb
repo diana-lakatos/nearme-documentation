@@ -33,7 +33,7 @@ Spree::Order.class_eval do
   end
 
   def subtotal_amount_to_charge
-    monetize(self.total - self.shipment_total)
+    monetize(self.item_total)
   end
 
   def service_fee_amount_guest
