@@ -1,0 +1,22 @@
+- thread_context = user_message.thread_context
+- author = user_message.author_with_deleted
+
+.message{ class: user_message.css_class(current_user) }
+  .row
+    .col-md-1
+      .circular-image=image_tag(author.avatar.url(:thumb)) unless author.deleted?
+    .col-md-2
+      %span.inline
+        - if author.deleted?
+          %p= "#{author.first_name} (Deleted)"
+        - else
+          %p= link_to author.first_name, profile_path(author.slug)
+        %p= distance_of_time_in_words_or_date_in_time_zone(user_message.created_at, current_user.time_zone)
+    .col-md-6
+      %p.message-title= user_messages_decorator.user_message_context_link(user_message)
+      %p= truncate(user_message.body, length: 60)
+
+    .col-md-1.message-action
+      = link_to "Read", user_message.show_path, class: 'btn btn-green'
+    .col-md-1.message-action
+      = link_to "Archive", user_message.archive_path, class: "btn btn-gray", method: :put

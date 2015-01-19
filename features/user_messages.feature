@@ -1,3 +1,4 @@
+@javascript
 Feature: A user can communicate with other user with context
 
   Background:

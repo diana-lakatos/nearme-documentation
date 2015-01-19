@@ -1,9 +1,0 @@
-= render 'ratings/rating_modal'
-= render 'listings/reservations/booking_successful_modal'
-= render 'listings/reservations/booking_failed_modal'
-= render 'listings/reservations/remote_payment_modal'
-= render 'listings/recurring_bookings/booking_successful_modal'
-
-- if params[:reservation_id].present?
-  - content_for :domready do
-    new Reservation.ListController($('section#reservations'), #{params[:reservation_id]});

@@ -1,0 +1,71 @@
+.checkout-wizard
+  .page-wrapper
+    = render 'header'
+
+    = simple_form_for @order, url: wizard_path, html: { class: 'form-horizontal' } do |f|
+      %section.checkout-form
+        .container-fluid
+          %h2= t 'buy_sell_market.checkout.labels.billing_address'
+          = f.simple_fields_for :bill_address do |b|
+            = b.input :firstname, placeholder: t('buy_sell_market.checkout.placeholders.first_name')
+            = b.input :lastname, placeholder: t('buy_sell_market.checkout.placeholders.last_name')
+            = b.input :address1, placeholder: t('buy_sell_market.checkout.placeholders.address1')
+            = b.input :address2, placeholder: t('buy_sell_market.checkout.placeholders.address2')
+            = b.input :city, placeholder: t('buy_sell_market.checkout.placeholders.city')
+            = b.input :zipcode, placeholder: t('buy_sell_market.checkout.placeholders.zipcode')
+            = b.association :country, collection: @countries, input_html: { class: 'checkout-select' }
+            = b.association :state, collection: @billing_states, include_blank: false, input_html: { class: 'checkout-select' }
+            = b.input :phone, as: :string
+
+      %section.checkout-form
+        .container-fluid
+          %h2= t 'buy_sell_market.checkout.labels.shipping_address'
+          = f.input :use_billing, as: :boolean, inline_label: t('buy_sell_market.checkout.labels.billing_address_shipping'), label: false
+          #shipping-address
+            = f.simple_fields_for :ship_address do |s|
+              = s.input :firstname, placeholder: t('buy_sell_market.checkout.placeholders.first_name')
+              = s.input :lastname, placeholder: t('buy_sell_market.checkout.placeholders.last_name')
+              = s.input :address1, placeholder: t('buy_sell_market.checkout.placeholders.address1')
+              = s.input :address2, placeholder: t('buy_sell_market.checkout.placeholders.address2')
+              = s.input :city, placeholder: t('buy_sell_market.checkout.placeholders.city')
+              = s.input :zipcode, placeholder: t('buy_sell_market.checkout.placeholders.zipcode')
+              = s.association :country, collection: @countries, input_html: { class: 'checkout-select' }
+              = s.association :state, collection: @shipping_states, include_blank: false, input_html: { class: 'checkout-select' }
+              = s.input :phone, as: :string
+
+      = render partial: 'checkout_buttons', locals: { form: f }
+
+-# TODO Refactor to asset pipeline
+= javascript_include_tag 'jquery'
+
+:javascript
+  function hide_or_show_shipping_address() {
+    if ($('#order_use_billing').prop('checked'))
+      {
+        $('#shipping-address').hide();
+      } else {
+        $('#shipping-address').show();
+      }
+  }
+
+  $('#order_use_billing').on('click', function() {
+    hide_or_show_shipping_address();
+  });
+
+  if ($('#order_use_billing').prop('checked')) {}
+
+  function load_states_for_country(country_id, bill_address) {
+    $.get('get_states.js', { country_id: country_id, bill_address: bill_address });
+  }
+
+  $('#order_bill_address_attributes_country_id').on('change', function() {
+    var country_id = $('#order_bill_address_attributes_country_id').val();
+    load_states_for_country(country_id, 1);
+  });
+
+  $('#order_ship_address_attributes_country_id').on('change', function() {
+    var country_id = $('#order_ship_address_attributes_country_id').val();
+    load_states_for_country(country_id, 0);
+  });
+
+  hide_or_show_shipping_address();

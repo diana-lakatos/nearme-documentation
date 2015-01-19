@@ -888,7 +888,7 @@ class UserTest < ActiveSupport::TestCase
     @photo  = FactoryGirl.create(:photo, :listing => @listing, :creator => @photo)
     @reservation = FactoryGirl.create(:reservation, :user => @user, :listing => @listing)
     @reservation_period = @reservation.periods.first
-    @reservation_charge = FactoryGirl.create(:reservation_charge, :reservation => @reservation)
+    @reservation_charge = FactoryGirl.create(:reservation_charge, :reference => @reservation)
     @charge = FactoryGirl.create(:charge, :reference => @reservation_charge)
     @payment_transfer = FactoryGirl.create(:payment_transfer, :company_id => @company.id)
     @objects = [@user, @user_industry, @authentication, @company, @company_industry,

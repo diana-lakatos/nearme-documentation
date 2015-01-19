@@ -125,3 +125,4 @@ $('.color-picker').click(function() {
 })
 
 $('.selectpicker').selectpicker();
+

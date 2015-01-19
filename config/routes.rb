@@ -9,6 +9,24 @@ DesksnearMe::Application.routes.draw do
 
   scope module: 'buy_sell_market' do
     resources :products, only: [:show]
+
+    resources :orders, only: [:show, :index] do
+      resources :checkout do
+        collection do
+          get 'get_states'
+        end
+      end
+    end
+
+    namespace :cart do
+      get '/', action: 'index', as: 'index'
+      delete 'empty'
+      delete 'clear_all/:order_id', action: 'clear_all', as: 'clear_all'
+      patch 'update'
+      get 'add', action: 'add', as: 'add_product' # Get is for redirection after login
+      delete 'remove/:item_id', action: 'remove', as: 'remove_product'
+      get 'next/:order_id', action: 'next', as: 'next'
+    end
   end
 
   get '/t/*taxon', to: 'search#index', as: :buy_sell_taxon
@@ -132,6 +150,7 @@ DesksnearMe::Application.routes.draw do
     namespace :settings do
       get '/', :to => 'base#index'
       resources :domains, except: :show
+      resource :dashboard, only: [:show, :update], :controller => 'dashboard'
       resource :certificate_request, only: [:new, :create]
       resource :configuration, :only => [:show, :update], :controller => 'configuration' do
         collection do
@@ -250,6 +269,7 @@ DesksnearMe::Application.routes.draw do
     namespace :buy_sell do
       get '/', :to => 'base#index'
       resource :configuration, only: [:show, :update], controller: 'configuration'
+      resource :commissions, :only => [:show, :update], :controller => 'commissions'
       resources :tax_categories
       resources :tax_rates
       resources :zones
@@ -287,11 +307,13 @@ DesksnearMe::Application.routes.draw do
   end
 
   resources :listings, :only => [:index, :show] do
+
     resources :recurring_bookings, :only => [:create, :update], :controller => "listings/recurring_bookings" do
       collection do
         post :review
         post :store_recurring_booking_request
       end
+
       member do
         get :booking_successful
       end
@@ -299,20 +321,22 @@ DesksnearMe::Application.routes.draw do
 
     resources :tickets, only: [:new, :create], :controller => 'listings/support/tickets'
 
-    resources :reservations, :only => [:create, :update], :controller => "listings/reservations" do
+    resources :reservations, :only => [:create, :update], :controller => 'listings/reservations' do
       collection do
         post :review
         post :store_reservation_request
       end
+
       member do
-        get :booking_successful
-        get :booking_failed
         get :remote_payment
       end
+
       get :hourly_availability_schedule, :on => :collection
     end
 
   end
+
+
 
   match '/auth/:provider/callback' => 'authentications#create', via: [:get, :post]
   get "/auth/failure", to: "authentications#failure"
@@ -327,12 +351,13 @@ DesksnearMe::Application.routes.draw do
     match "users/update_notification_preferences", :to => "registrations#update_notification_preferences", :as => "update_notification_preferences", via: [:patch, :put]
     post "users/store_google_analytics_id", :to => "registrations#store_google_analytics_id", :as => "store_google_analytics"
     post "users/store_geolocated_location", :to => "registrations#store_geolocated_location", :as => "store_geolocated_location"
-    get "users/social_accounts", :to => "registrations#social_accounts", :as => "social_accounts"
     get "users/", :to => "registrations#new"
     get "users/verify/:id/:token", :to => "registrations#verify", :as => "verify_user"
     delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
     get "users/:id", :to => "registrations#show", :as => "profile"
     get "users/unsubscribe/:signature", :to => "registrations#unsubscribe", :as => "unsubscribe"
+    get "dashboard/edit_profile", :to => "registrations#edit", :as => "dashboard_profile"
+    get "dashboard/social_accounts", :to => "registrations#social_accounts", :as => "social_accounts"
 
     match "users/store_correct_ip", :to => "sessions#store_correct_ip", :as => "store_correct_ip", via: [:patch, :put]
 
@@ -341,70 +366,170 @@ DesksnearMe::Application.routes.draw do
     delete "/instance_admin/sessions", :to => "instance_admin/sessions#destroy"
   end
 
-  resources :reservations, :except => [:update, :destroy, :show] do
-    member do
-      post :user_cancel
-      get :export
-      get :booking_successful
-      get :booking_failed
-      get :remote_payment
-      get :recurring_booking_successful
-    end
-    collection do
-      get :upcoming
-      get :archived
-    end
-    resources :guest_ratings, :only => [:new, :create]
-    resources :host_ratings, :only => [:new, :create]
-    resources :payment_notifications, :controller => "reservations/payment_notifications"
-  end
-  get '/reservations/:id/guest_rating' => 'dashboard#guest_rating', as: 'guest_rating'
-  get '/reservations/:id/host_rating' => 'reservations#host_rating', as: 'host_rating'
-
-  resources :recurring_bookings, :except => [:destroy] do
-    member do
-      post :user_cancel
-      get :export
-      get :booking_successful
-      get :upcoming
-      get :archived
-    end
-  end
-
-  resource :dashboard, :only => [:show], :controller => 'dashboard' do
-    member do
-      get :bookings, :to => 'reservations#upcoming'
-      get :analytics
-      get :listings
-      get :manage_guests
-      get :transfers
-    end
-  end
-
-  resources :user_messages, only: [:index] do
-    collection do
-      get :archived
-    end
-  end
-
   resources :listings, :users, :reservations, :products do
-    resources :user_messages, except: [:index] do
+    resources :user_messages, controller: "dashboard/user_messages", except: [:index] do
       patch :archive
       put :archive
     end
   end
 
-  namespace :manage do
-
+  namespace :dashboard do
+    resource  :analytics
     resources :companies, :only => [:edit, :update, :show]
+    resources :images
+    resources :locations
+    resources :orders, only: [:index, :show]
+    resources :orders_received, except: [:edit] do
+      member do
+        get :approve
+        get :cancel
+        get :resume
+      end
 
-    resources :white_labels, :only => [:edit, :update, :show]
+      resources :payments do
+        member do
+          get :capture
+        end
+      end
+      resources :shipments do
+        member do
+          get :ship
+        end
+      end
+    end
+
+    resources :products
+
+    namespace :support do
+      resources :tickets, only: [:show, :index] do
+        resources :ticket_messages, only: [:create]
+        resources :ticket_message_attachments, only: [:create, :edit, :update, :destroy]
+      end
+    end
+
+    resource :transfers
+    resources :transactable_types do
+      resources :transactables
+      resources :data_uploads, controller: 'transactable_types/data_uploads' do
+         collection do
+          get :status
+          get :download_csv_template
+          get :download_current_data_csv
+        end
+        member do
+          post :schedule_import
+        end
+      end
+    end
+
+    resources :user_messages, only: [:index, :show] do
+      collection do
+        get :archived
+      end
+    end
 
     resources :users, :except => [:edit, :update]
-    resources :themes, :only => [] do
+    resources :waiver_agreement_templates, only: [:index, :edit, :new, :update, :create, :destroy]
+    resources :white_labels, :only => [:edit, :update, :show] do
       member do
-        delete :destroy_image
+        delete 'destroy_image/:image', :action => :destroy_image, :as => 'destroy_theme_image'
+        get 'edit_image/:image', :action => :edit_image, :as => 'edit_theme_image'
+        match 'update_image/:image', :action => :update_image, :as => 'update_theme_image', via: [:post, :put]
+        match 'upload_image/:image', :action => :upload_image, :as => 'upload_theme_image', via: [:post, :put]
       end
+    end
+    resource :payouts, except: [:index, :show, :new, :create, :destroy]
+
+    resources :user_reservations, :except => [:update, :destroy, :show] do
+      member do
+        post :user_cancel
+        get :export
+        get :booking_successful
+        get :booking_failed
+        get :booking_successful_modal
+        get :recurring_booking_successful_modal
+        get :booking_failed_modal
+        get :remote_payment
+        get :remote_payment_modal
+        get :recurring_booking_successful
+      end
+
+      collection do
+        get :upcoming
+        get :archived
+      end
+    end
+
+    resources :user_recurring_bookings, :except => [:destroy] do
+      member do
+        post :user_cancel
+        get :export
+        get :booking_successful
+        get :upcoming
+        get :archived
+      end
+    end
+
+    resources :host_reservations do
+      member do
+        post :confirm
+        get :confirm
+        patch :reject
+        put :reject
+        get :rejection_form
+        post :host_cancel
+        get :request_payment
+      end
+    end
+
+    resources :host_recurring_bookings do
+      member do
+        post :confirm
+        get :confirm
+        patch :reject
+        put :reject
+        get :rejection_form
+        post :host_cancel
+      end
+    end
+  end
+
+  resources :reservations do
+    resources :payment_notifications, controller: 'reservations/payment_notifications'
+  end
+
+  get '/dashboard', controller: 'dashboard/dashboard', action: 'index'
+
+  namespace :manage do
+    namespace :buy_sell do
+      resources :api do
+        collection do
+          get :countries
+          get :states
+          get :taxons
+        end
+      end
+      resources :products, except: [:show] do
+        resources :images, :controller => 'products/images'
+        resources :variants, :controller => 'products/variants'
+        resources :product_properties, :controller => 'products/product_properties'
+        resources :stock_items, :controller => 'products/stock_items'
+        resource :stock, :controller => 'products/stock'
+      end
+
+      resources :option_types
+      resources :properties
+      resources :prototypes
+      resources :shipping_categories
+      resources :shipping_methods
+      resources :stock_locations
+      # Switched of, waiting for new spec
+      # resources :taxonomies
+      resources :taxons
+    end
+
+    resources :listings do
+      resource :booking_module, only: [:update], :controller => 'listings/booking_module'
     end
 
     resources :locations do
@@ -418,43 +543,11 @@ DesksnearMe::Application.routes.draw do
 
     resources :photos, :only => [:create, :destroy, :edit, :update]
 
-
-    resources :recurring_bookings, only: [:show]
-
-    resources :listings do
-      resources :reservations, :controller => 'listings/reservations' do
-        member do
-          post :confirm
-          get :confirm
-          patch :reject
-          put :reject
-          get :rejection_form
-          post :host_cancel
-          get :request_payment
-        end
-      end
-
-      resources :recurring_bookings, :controller => 'listings/recurring_bookings' do
-        member do
-          post :confirm
-          get :confirm
-          patch :reject
-          put :reject
-          get :rejection_form
-          post :host_cancel
-        end
-      end
-
-      resource :booking_module, only: [:update], :controller => 'listings/booking_module'
-    end
-
-    namespace :support do
-      resources :tickets, only: [:show, :index] do
-        resources :ticket_messages, only: [:create]
+    resources :themes, :only => [] do
+      member do
+        delete :destroy_image
       end
     end
-
-    resources :waiver_agreement_templates, only: [:index, :edit, :new, :update, :create, :destroy]
 
     resources :transactable_types, :only => [] do
       resources :data_uploads, controller: 'transactable_types/data_uploads' do
@@ -468,7 +561,8 @@ DesksnearMe::Application.routes.draw do
         end
       end
     end
-  end
+
+  end # /manage
 
   get "/search", :to => "search#index", :as => :search
 
@@ -486,6 +580,7 @@ DesksnearMe::Application.routes.draw do
     get '/new' => 'space_wizard#new', :as => "new_space_wizard"
     get "/list" => "space_wizard#list", :as => "space_wizard_list"
     post "/list" => "space_wizard#submit_listing"
+    post "/submit_item" => "space_wizard#submit_item", :as => "space_wizard_submit_item"
     match "/list" => "space_wizard#submit_listing", via: [:put, :patch]
     match "/photo" => "space_wizard#submit_photo", :as => "space_wizard_photo", via: [:post, :put]
     delete "/photo/:id" => "space_wizard#destroy_photo", :as => "destroy_space_wizard_photo"

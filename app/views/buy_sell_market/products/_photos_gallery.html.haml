@@ -1,6 +1,7 @@
+-# TODO: Obsolete
 .product-photos{:'data-photo-aspect-w' => SpreePhotoUploader::SPACE_FULL_IMAGE_W, :'data-photo-aspect-h' => SpreePhotoUploader::SPACE_FULL_IMAGE_H}
   .carousel{id: gallery_id, class: fullscreen ? '' : 'slide'}
-    - if product.images.count > 0 
+    - if product.images.count > 0
       .carousel-inner
         - product.images.each_with_index do |photo, index|
           .item{class: ("active" if index == 0), :'data-modalize' => true}

@@ -1,0 +1,26 @@
+- title "Shipping Categories"
+
+= show_manage_navigation(:configuration, :shipping_categories)
+
+.row-fluid
+  .span8.offset2
+    .box
+      %header
+        %ul.location-and-listings
+          %li.location
+            .name.left
+              Manage Shipping Categories
+      %ul.location-and-listings
+        %li.listing
+          .right
+            = link_to 'New Shipping Category', new_manage_buy_sell_shipping_category_path, class: 'btn btn-medium btn-green'
+        %li.listing.action-buttons
+          .span9
+            = t('shipping_category.name')
+          .span3.state.text-right
+
+
+          .clearfix
+        = render partial: 'shipping_category', collection: @shipping_categories
+      = will_paginate @shipping_categories
+

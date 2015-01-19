@@ -1,0 +1,72 @@
+!!!
+%html
+  %head
+    - if content_for(:canonical_url)
+      %link{rel:"canonical", href: yield(:canonical_url)}
+    - if ActionController::Base.asset_host
+      %link{rel:"dns-prefetch", href:"//#{ActionController::Base.asset_host}"}
+    %title
+      = title_tag
+    %meta{:'http-equiv' => "x-dns-prefetch-control", content: "off"}
+    %link{rel:"dns-prefetch", href:"//s3.amazonaws.com"}
+    %link{rel:"dns-prefetch", href:"//maps.googleapis.com"}
+    %link{rel:"dns-prefetch", href:"//static.olark.com"}
+    %link{rel:"dns-prefetch", href:"//cdn.mxpnl.com"}
+    %link{rel:"dns-prefetch", href:"//google-analytics.com"}
+
+    %meta{:'http-equiv' => "Content-type", :content=> "text/html;charset=UTF-8"}
+    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1, maximum-scale=1"}
+    %meta{:content => meta_description_content, :name => "description"}/
+    %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
+    %meta{:content => "black", :name => "apple-mobile-web-app-status-bar-style"}/
+    %meta{:content => "chrome=IE7", "http-equiv" => "X-UA-Compatible"}/
+
+    = render 'social/social_meta_tags'
+
+    = yield(:meta)
+    = csrf_meta_tag
+    - if !platform_context.stripe_public_key.blank?
+      = tag :meta, :name => "stripe-key", :content => platform_context.stripe_public_key
+    = render 'layouts/favicon'
+
+    = stylesheet_link_tag platform_context.compiled_dashboard_stylesheet_url || 'dashboard'
+    = render 'layouts/homepage_css' if home_page?
+
+    /[if lt IE 9]
+      = stylesheet_link_tag 'browser_specific/ie8'
+      = javascript_include_tag '//html5shim.googlecode.com/svn/trunk/html5.js'
+      = javascript_include_tag "//explorercanvas.googlecode.com/svn/trunk/excanvas.js"
+      = javascript_include_tag 'vendor/jquery.backgroundSize.min.js'
+      = javascript_include_tag 'vendor/respond.min.js'
+      - unless CarrierWave::Uploader::Base.asset_host.nil?
+        = tag('link', {href: "#{CarrierWave::Uploader::Base.asset_host}/respond-proxy/respond-proxy.html", id: 'respond-proxy', rel: 'respond-proxy'})
+        = tag('link', {href: image_path('respond.proxy.gif'), id: 'respond-redirect', rel: 'respond-redirect'})
+        = javascript_include_tag(javascript_path('vendor/respond.proxy.js'))
+    /[if lt IE 8]
+      = javascript_include_tag "//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"
+      = javascript_include_tag :chrome_frame
+
+  %body
+    - unless no_navbar?
+      .container
+        = render 'layouts/navbar'
+    - unless render_without_left_menu?
+      .container.page-wrapper.row
+        = render 'shared/bootstrap_flash_messages'
+        = render 'manage/layout/left_navigation'
+        .col-md-10.page-content
+          = render 'manage/layout/mobile_navigation'
+          = yield
+    - else
+      .container.page-wrapper.top.row
+        = render 'shared/bootstrap_flash_messages'
+        = yield
+
+    - unless no_footer?
+      .footer-push{class: "footer_#{section_class(@section_name)}"}
+      = render 'layouts/footer'
+
+    = javascript_include_tag "//maps.googleapis.com/maps/api/js?libraries=places&sensor=false"
+    = javascript_include_tag :dashboard
+    = render 'layouts/initializers'
+    = render 'layouts/scripts'

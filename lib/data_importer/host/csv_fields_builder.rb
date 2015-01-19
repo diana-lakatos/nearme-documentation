@@ -17,8 +17,8 @@ class DataImporter::Host::CsvFieldsBuilder
 
   def get_all_labels
     object_field_pairs.map do |object_field_pair|
-      get_label(object_field_pair)
-    end
+      get_label(object_field_pair).presence || nil
+    end.compact
   end
 
   def get_label(object_field_pair)

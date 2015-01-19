@@ -13,6 +13,18 @@ module FileuploadHelper
     }).to_s
   end
 
+  def new_file_upload_input(name, url, thumbnail_sizes, text='Photos', options = {}, &block)
+    render(partial: 'shared/components/new_file_upload_input', locals: {
+      uploaded_content: get_uploaded_content(options, &block),
+      error_message: options.delete(:error),
+      thumbnail_sizes: thumbnail_sizes,
+      url: url,
+      name: name,
+      text: text,
+      options: options
+    }).to_s
+  end
+
   def built_in_upload_input(input, &block)
     render(partial: 'shared/components/built_in_upload_input', locals: {
       uploaded_content: get_uploaded_content({ "no-multiple" => true }, &block),
@@ -20,18 +32,25 @@ module FileuploadHelper
     }).to_s
   end
 
-  def built_in_upload_input_with_label(label, input, &block)
-    content_tag(:div, 
-      "<label class='text optional control-label'>#{label}</label>".html_safe +
-      content_tag(:div, built_in_upload_input(input, &block), :class => 'controls'), 
-    :class => "control-group text optional")
+  def built_in_upload_input_with_label(form, label, input,  &block)
+    content_tag(:div, class: "col-md-4") do
+      content_tag(:div, label, class: "photo-top-label") + photo_label(form, input) + content_tag(:div, built_in_upload_input(form.file_field(input), &block), :class => 'hidden')
+    end
+  end
+
+  def photo_label(form, input)
+    form.label input, class: 'photo-box active' do
+      content_tag :div, class: 'photo-select' do
+        image_tag("themes/buy_sell/icon-cross.png") + "Add Photo"
+      end
+    end
   end
 
   def file_upload_input_with_label(label, name, url, thumbnail_sizes, text='Photos', options = {}, &block)
     label = required_field + label if options.delete(:required)
-    content_tag(:div, 
+    content_tag(:div,
       "<label class='text optional control-label' for='#{name}'>#{label}</label>".html_safe +
-      content_tag(:div, file_upload_input(name, url, thumbnail_sizes, text, options, &block), :class => 'controls'), 
+      content_tag(:div, file_upload_input(name, url, thumbnail_sizes, text, options, &block), :class => 'controls'),
     :class => "control-group text optional control-fileupload")
   end
 
@@ -57,7 +76,7 @@ module FileuploadHelper
       content,
     :class => 'photo-item', id: id)
   end
-  
+
 
   private
 
@@ -66,7 +85,7 @@ module FileuploadHelper
   end
 
   def resize_photo_link(resize_photo_path, id)
-    link_to('Rotate & Crop', resize_photo_path, { data: {id: id}, :rel => 'modal', :class => 'badge resize-photo photo-action'})
+    link_to('Rotate & Crop', resize_photo_path, { data: {id: id}, rel: 'modal', :class => 'badge resize-photo photo-action'})
   end
 
   def get_uploaded_content(options, &block)

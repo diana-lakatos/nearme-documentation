@@ -26,6 +26,7 @@ class User < ActiveRecord::Base
   has_many :recurring_bookings, :foreign_key => 'owner_id'
   has_many :listings, :through => :locations, class_name: 'Transactable', :inverse_of => :creator
   has_many :photos, :foreign_key => 'creator_id', :inverse_of => :creator
+  has_many :products_images, :foreign_key => 'uploader_id', class_name: 'Spree::Image'
   has_many :listing_reservations, :through => :listings, :source => :reservations, :inverse_of => :creator
   has_many :listing_recurring_bookings, :through => :listings, :source => :recurring_bookings, :inverse_of => :creator
   has_many :relationships, :class_name => "UserRelationship", :foreign_key => 'follower_id', :dependent => :destroy
@@ -49,7 +50,10 @@ class User < ActiveRecord::Base
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
+
   has_many :orders, foreign_key: :user_id, class_name: 'Spree::Order'
+  belongs_to :billing_address, class_name: 'Spree::Address'
+  belongs_to :shipping_address, class_name: 'Spree::Address'
 
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
@@ -67,13 +71,13 @@ class User < ActiveRecord::Base
   has_many :ticket_message_attachments, foreign_key: 'uploader_id', class_name: 'Support::TicketMessageAttachment'
 
   scope :patron_of, lambda { |listing|
-    joins(:reservations).where(:reservations => { :transactable_id => listing.id }).uniq
-  }
+                    joins(:reservations).where(:reservations => { :transactable_id => listing.id }).uniq
+                  }
 
   scope :without, lambda { |users|
-    users_ids = users.respond_to?(:pluck) ? users.pluck(:id) : Array.wrap(users).collect(&:id)
-    users_ids.any? ? where('users.id NOT IN (?)', users_ids) : scoped
-  }
+                  users_ids = users.respond_to?(:pluck) ? users.pluck(:id) : Array.wrap(users).collect(&:id)
+                  users_ids.any? ? where('users.id NOT IN (?)', users_ids) : scoped
+                }
 
   scope :ordered_by_email, -> { order('users.email ASC') }
 
@@ -86,11 +90,11 @@ class User < ActiveRecord::Base
   }
 
   scope :know_host_of, ->(listing) {
-    joins(:followers).where(:user_relationships => {:follower_id => listing.administrator_id}).references(:user_relationships).uniq
+    joins(:followers).where(:user_relationships => { :follower_id => listing.administrator_id }).references(:user_relationships).uniq
   }
 
   scope :mutual_friends_of, ->(user) {
-    joins(:followers).where(:user_relationships => {:follower_id => user.friends.pluck(:id)}).without(user).with_mutual_friendship_source
+    joins(:followers).where(:user_relationships => { :follower_id => user.friends.pluck(:id) }).without(user).with_mutual_friendship_source
   }
 
   scope :with_mutual_friendship_source, -> {
@@ -124,14 +128,17 @@ class User < ActiveRecord::Base
     :if => ->(u) {u.mobile_number.present?}
   validates_presence_of :country_name, :if => lambda { phone_required || country_name_required }
 
-  validates :current_location, length: {maximum: 50}
-  validates :company_name, length: {maximum: 50}
-  validates :job_title, length: {maximum: 50}
-  validates :skills_and_interests, length: {maximum: 150}
-  validates :biography, length: {maximum: BIOGRAPHY_MAX_LENGTH}
+  validates :current_location, length: { maximum: 50 }
+  validates :company_name, length: { maximum: 50 }
+  validates :job_title, length: { maximum: 50 }
+  validates :skills_and_interests, length: { maximum: 150 }
+  validates :biography, length: { maximum: BIOGRAPHY_MAX_LENGTH }
 
   attr_accessor :custom_validation
   attr_accessor :accept_terms_of_service
+  attr_accessor :verify_associated
+
+  validates_associated :companies, :if => :verify_associated
   validates_acceptance_of :accept_terms_of_service, on: :create, allow_nil: false, if: lambda { |u| PlatformContext.current.try(:instance).try(:force_accepting_tos) && u.custom_validation }
 
   validate do |user|
@@ -144,7 +151,7 @@ class User < ActiveRecord::Base
   end
 
   devise :database_authenticatable, :registerable, :recoverable,
-    :rememberable, :trackable, :user_validatable, :token_authenticatable, :temporary_token_authenticatable
+         :rememberable, :trackable, :user_validatable, :token_authenticatable, :temporary_token_authenticatable
 
   attr_accessor :phone_required, :country_name_required, :skip_password, :verify_identity
 
@@ -207,7 +214,7 @@ class User < ActiveRecord::Base
 
   def name(avoid_stack_too_deep = nil)
     avoid_stack_too_deep = false if avoid_stack_too_deep.nil?
-    name_from_components(avoid_stack_too_deep).presence || self.read_attribute(:name).to_s.split.collect{|w| w[0] = w[0].capitalize; w}.join(' ')
+    name_from_components(avoid_stack_too_deep).presence || self.read_attribute(:name).to_s.split.collect { |w| w[0] = w[0].capitalize; w }.join(' ')
   end
 
   def name_from_components(avoid_stack_too_deep)
@@ -300,6 +307,7 @@ class User < ActiveRecord::Base
       self.follow!(user, auth)
     end
   end
+
   alias_method :add_friends, :add_friend
 
   def friends
@@ -376,7 +384,7 @@ class User < ActiveRecord::Base
 
   def email_verification_token
     Digest::SHA1.hexdigest(
-      "--dnm-token-#{self.id}-#{self.created_at}"
+        "--dnm-token-#{self.id}-#{self.created_at}"
     )
   end
 
@@ -384,6 +392,12 @@ class User < ActiveRecord::Base
     new_token = SecureRandom.hex(32)
     self.update_attribute(:payment_token, new_token)
     new_token
+  end
+
+  def generate_spree_api_key
+    new_spree_api_key = SecureRandom.hex(32)
+    self.update_attribute(:spree_api_key, new_spree_api_key)
+    new_spree_api_key
   end
 
   def verify_payment_token(token)
@@ -413,9 +427,9 @@ class User < ActiveRecord::Base
 
   def to_balanced_params
     {
-      name: name,
-      email: email,
-      phone: phone
+        name: name,
+        email: email,
+        phone: phone
     }
   end
 
@@ -504,7 +518,7 @@ class User < ActiveRecord::Base
   end
 
   def recover_companies
-    self.created_companies.only_deleted.where('deleted_at >= ? AND deleted_at <= ?',  self.deleted_at, self.deleted_at + 30.seconds).each do |company|
+    self.created_companies.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', self.deleted_at, self.deleted_at + 30.seconds).each do |company|
       begin
         company.restore(:recursive => true)
       rescue
@@ -537,8 +551,8 @@ class User < ActiveRecord::Base
 
   def social_url(provider)
     authentications.where(provider: provider).
-      where('profile_url IS NOT NULL').
-      order('created_at asc').last.try(:profile_url)
+        where('profile_url IS NOT NULL').
+        order('created_at asc').last.try(:profile_url)
   end
 
   def approval_request_templates
@@ -570,7 +584,7 @@ class User < ActiveRecord::Base
   end
 
   def self.csv_fields
-    {email: 'User Email', name: 'User Name'}
+    { email: 'User Email', name: 'User Name' }
   end
 
   def normalize_gender
@@ -579,6 +593,22 @@ class User < ActiveRecord::Base
     unless ['male', 'female', 'unknown'].include?(gender)
       self.gender = nil
     end
+  end
+
+  def registration_in_progress?
+    has_draft_listings || has_draft_products
+  end
+
+  def registration_completed?
+    has_any_active_listings || has_any_active_products
+  end
+
+  def has_draft_products
+    companies.any? && companies.first.products.any? && !companies.first.products.first.valid?
+  end
+
+  def has_any_active_products
+    companies.any? && companies.first.products.any? && companies.first.products.first.valid?
   end
 
   def has_draft_listings
@@ -604,6 +634,14 @@ class User < ActiveRecord::Base
       @cached_profiles[PlatformContext.current.try(:instance).try(:id)] = user_instance_profiles.first
     end
     @cached_profiles[PlatformContext.current.try(:instance).try(:id)]
+  end
+
+  def cart_orders
+    orders.where(state: ['cart', 'address', 'delivery', 'payment']).order('created_at ASC')
+  end
+
+  def cart
+    BuySell::CartService.new(self)
   end
 
   private

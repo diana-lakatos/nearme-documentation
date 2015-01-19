@@ -1,0 +1,26 @@
+- title "Listings"
+
+.dash-head.clearfix
+  %p MANAGE #{@transactable}
+  = render 'bulk_upload_button'
+.dash-body
+  .new-profile
+    =image_tag('themes/buy_sell/icon-cross.png')
+    = link_to "List New Item", new_dashboard_transactable_type_transactable_path(@transactable_type)
+  .dash-sub-nav
+    %ul
+      - TransactableType.all.each do |transactable_type|
+        %li{class: transactable_type == @transactable_type ? "active" : ""}
+          = link_to transactable_type.name, dashboard_transactable_type_transactables_path(transactable_type)
+  .listings-header
+    .row
+      .col-md-3
+        %p Picture
+      .col-md-3
+        %p Name
+      .col-md-3
+        %p Location
+      .col-md-2
+        %p Price
+  = render @transactables
+  = will_paginate @transactables

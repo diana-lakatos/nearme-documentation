@@ -59,11 +59,9 @@ class Reservation < ActiveRecord::Base
            :inverse_of => :reservation,
            :dependent => :destroy
 
-  has_many :reservation_charges,
-    inverse_of: :reservation,
-    dependent: :destroy
+  has_many :reservation_charges, as: :reference, dependent: :destroy, class_name: 'Payment'
 
-  has_one :billing_authorization
+  has_one :billing_authorization, as: :reference
 
   validates :transactable_id, :presence => true
   # the if statement for periods is needed to make .recover work - otherwise reservation would be considered not valid even though it is
@@ -459,7 +457,7 @@ class Reservation < ActiveRecord::Base
   private
 
     def service_fee_calculator
-      @service_fee_calculator ||= Reservation::ServiceFeeCalculator.new(self)
+      @service_fee_calculator ||= Payment::ServiceFeeCalculator.new(self.subtotal_amount, self.service_fee_guest_percent, self.service_fee_host_percent)
     end
 
     def price_calculator

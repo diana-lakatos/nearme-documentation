@@ -1,0 +1,8 @@
+%ul.location-and-listings
+  %li.listing.action-buttons
+    .right
+      = link_to 'Product detail', edit_manage_buy_sell_product_path(@product), class: ['btn', 'btn-medium', controller_name == 'products' ? 'btn-blue' : 'btn-white']
+      = link_to 'Images', manage_buy_sell_product_images_path(@product), class: ['btn', 'btn-medium', controller_name == 'images' ? 'btn-blue' : 'btn-white']
+      = link_to 'Variants', manage_buy_sell_product_variants_path(@product), class: ['btn', 'btn-medium', controller_name == 'variants' ? 'btn-blue' : 'btn-white']
+      = link_to 'Product properties', manage_buy_sell_product_product_properties_path(@product), class: ['btn', 'btn-medium', controller_name == 'product_properties' ? 'btn-blue' : 'btn-white']
+      = link_to 'Stock management', manage_buy_sell_product_stock_path(@product), class: ['btn', 'btn-medium', controller_name == 'stock' ? 'btn-blue' : 'btn-white']

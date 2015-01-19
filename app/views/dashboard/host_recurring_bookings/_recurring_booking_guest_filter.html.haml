@@ -1,0 +1,11 @@
+%ul
+  %li
+    %h4
+      Guests
+
+  %li{class: (params[:action] == 'show' && (params[:state].blank? || params[:state] == 'unconfirmed')) ? 'active' : ''}
+    = link_to 'Unconfirmed', dashboard_host_recurring_booking_path(recurring_booking, state: 'unconfirmed')
+  %li{class: (params[:action] == 'show' && params[:state] == 'confirmed') ? 'active' : ''}
+    = link_to 'Confirmed', dashboard_host_recurring_booking_path(recurring_booking, state: 'confirmed')
+  %li{class: (params[:action] == 'show' && params[:state] == 'archived') ? 'active' : ''}
+    = link_to 'Archived', dashboard_host_recurring_booking_path(recurring_booking, state: 'archived')

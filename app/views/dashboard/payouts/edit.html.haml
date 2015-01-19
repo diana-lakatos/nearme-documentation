@@ -1,0 +1,8 @@
+.dash-head.clearfix
+  %p PAYOUT
+
+.dash-body
+  = simple_form_for @company, url: dashboard_payouts_path, wrapper: :bs3 do |f|
+    = render partial: 'form', locals: { f: f }
+    .submit-bar
+      = f.submit 'Save', class: 'btn medium blue'

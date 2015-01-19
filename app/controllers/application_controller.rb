@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  helper FilepickerRails::Engine.helpers
+
   prepend_view_path InstanceViewResolver.instance
 
   force_ssl if: :require_ssl?
@@ -87,6 +89,11 @@ class ApplicationController < ActionController::Base
     @authorizer ||= InstanceAdminAuthorizer.new(current_user)
   end
   helper_method :authorizer
+
+  def buyable?
+    @buyable ||= platform_context.instance.buyable?
+  end
+  helper_method :buyable?
 
   # Provides an EventTracker instance for the current request.
   #

@@ -1,0 +1,24 @@
+- title "Products"
+
+.dash-head.clearfix
+  %p MANAGE LISTINGS
+  %a.dash-head-btn{:href => ""}
+    .btn.blue Bulk Upload
+.dash-body
+  .new-profile
+    = link_to new_dashboard_product_path do
+      = image_tag("themes/buy_sell/icon-cross.png")
+      List New Item
+  %br
+  .listings-header
+    .row
+      .col-md-3
+        %p Picture
+      .col-md-3
+        %p Name
+      .col-md-3
+        %p Quantity
+      .col-md-2
+        %p Price
+  = render partial: 'product', collection: @products
+  = will_paginate @products

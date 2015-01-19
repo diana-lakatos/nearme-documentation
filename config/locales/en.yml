@@ -28,9 +28,232 @@ en:
     companies:
       theme_image_deleted: "That image has been deleted."
       theme_image_not_deleted: "We couldn't delete that image."
+    photos:
+      resize_succeeded: 'Image successfully cropped/rotated'
+      changes_applied_soon: 'Your changes will be applied within a few minutes.'
+      continue: 'Continue'
+      crop_and_rotate: 'Crop And Rotate'
     listings:
       photos:
         waiting_for_photo_processing: "Waiting for photo processing to finish"
+    buy_sell:
+      option_types:
+        new_title: "New Option Type"
+        edit_header: "Edit Option Type"
+        new_header: "New Option Type"
+      products:
+        new_title: "New Product"
+        edit_header: "Edit Product"
+        new_header: "New Product"
+        product_properties:
+          new_title: "New Product Property"
+          edit_header: "Edit Product Property"
+          new_header: "New Product Property"
+        images:
+          new_header: "New Product Image"
+          no_entries: "No images found"
+          manage: "Manage Product: Images"
+          title: "Product Images"
+          new_title: "New Product Image"
+
+  buy_sell_market:
+    products:
+      buttons:
+        add_to_cart: 'Add to cart'
+        out_of_stock: 'Out of stock'
+        favorite: 'Favorite'
+        contact_host: 'Contact Host'
+
+      labels:
+        rating: 'Rating:'
+        qty: 'Quantity:'
+        verifications: 'Verifications'
+        reviews_of: 'Reviews of'
+        item_details: 'Item details'
+        reviews: 'Reviews'
+        shippigng_policies: 'Shipping & Policies'
+        more_reviews: 'See more reviews'
+        summary: 'Summary'
+        communication: 'Communication'
+        shipping_speed: 'Shipping speed'
+        quality: 'Quality'
+        customer_attention: 'Customer Attention'
+        shipping_costs: 'Shipping Costs'
+        shipping: 'Shipping'
+        shipping_details: 'Shipping Details'
+        refunds_and_exchanges: 'Refunds and Exchanges'
+        phone_number: 'Phone Number'
+        email_address: 'Email Address'
+
+    checkout:
+      labels:
+        checkout: 'Checkout'
+        1address: '1. Address'
+        2delivery: '2. Delivery'
+        3payment: '3. Payment'
+        payment: 'Payment'
+        shipping_method: 'Shipping Method'
+        shipping_method2: 'SHIPPING METHOD'
+        billing_address: 'Billing Address'
+        shipping_address: 'Shipping Address'
+        order_summary: 'Order Summary'
+        order_details: 'ORDER DETAILS'
+        billing_address_shipping: 'Use billing address for shipping'
+        save_billing_address: 'Save billing and shipping address to user profile'
+        ending_in: 'Ending in'
+        na: 'N/A'
+
+        item: 'ITEM'
+        price: 'PRICE'
+        qty: 'QTY'
+        total: 'TOTAL'
+
+        service_fee: 'Service Fee'
+        tax: 'Tax'
+        total2: 'Total'
+        shipping: 'Shipping'
+        subtotal: 'Subtotal'
+
+      placeholders:
+        first_name: 'Enter your first name'
+        last_name: 'Enter your last name'
+        address1: 'Enter your street address'
+        address2: 'Enter your street address (continue)'
+        city: 'Enter your city'
+        zipcode: 'Enter Zip Code'
+        phone: 'Enter Phone Number'
+
+      buttons:
+        next_step: 'Next'
+        next_step_payment: 'Next'
+        previous_step: 'Go Back'
+        back_to_cart: 'Go Back'
+
+      errors:
+        skip: 'You cannot skip checkout steps'
+        qty: 'Some of the items in your cart are out of stock or the selected QTY is not available anymore: %{items}'
+
+      notices:
+        order_placed: 'Your order has been placed. Thank you!'
+
+      shipment_mailer:
+        resend: Resend
+
+        shipped_email:
+          subject: Shipment Notification
+          dear_customer: 'Dear Customer,'
+          instructions: 'Your order has been shipped'
+          shipment_summary: 'Shipment Summary'
+          track_information: 'Tracking Information: %{tracking}'
+          track_link: 'Tracking Link: %{url}'
+          thanks: 'Thank you for your business.'
+
+      order_mailer:
+        resend: RESEND
+        subtotal: 'Subtotal: %{subtotal}'
+        total: 'Order Total: %{total}'
+        service_fee: 'Service fee: %{fee}'
+
+        confirm_email:
+          subject: 'Order Confirmation'
+          dear_customer: 'Dear Customer,'
+          instructions: 'Please review and retain the following order information for your records.'
+          order_summary: 'Order Summary'
+          thanks: 'Thank you for your order.'
+          promotion: 'Promotion'
+          shipping: 'Shipping'
+          tax: 'Tax'
+
+        cancel_email:
+          subject: 'Cancellation of Order'
+          dear_customer: 'Dear Customer,'
+          instructions: 'Your order has been CANCELED.  Please retain this cancellation information for your records.'
+          order_summary_canceled: 'Order Summary [CANCELED]'
+
+        notify_seller_email:
+          subject: 'New order'
+          dear_seller: 'Dear Seller,'
+          instructions_1: 'New order has been placed.'
+          instructions_2: 'ACTION REQUIRED: Visit your Orders page to approve this order and capture payment.'
+          order_summary: 'Order Summary'
+
+    cart:
+      labels:
+        index: 'Shopping cart'
+        empty_cart: 'I am so empty :('
+        multiple_orders: 'Maybe some text explaining why we have to checkout multiple times (for every company separately)'
+        order_from: 'Order from'
+        x_items_in_cart: '%{nr} Items in Your Cart'
+
+      buttons:
+        browse_products: 'Browse %{bookable_noun}'
+        update_qty: 'Update'
+        remove_item: 'Remove'
+        empty_cart: 'Empty cart'
+        clear_all: 'Clear All'
+        checkout: 'CHECKOUT'
+        continue: 'Continue shopping'
+        orders: 'My orders'
+
+      notices:
+        add: 'Item has been successfully added to shopping cart'
+        update: 'Shopping cart has been updated'
+        empty: 'All items have been successfully removed'
+        remove: 'Item has been successfully removed from shopping cart'
+        clear_all: 'All items from %{company_name} have been removed'
+
+      errors:
+        qty: 'Selected quantity is not available.'
+
+  dashboard:
+    nav:
+      orders: 'My Orders'
+      user_reservations: 'My Orders'
+      user_messages: 'Messages'
+      companies: 'Shop Details'
+      products: 'Listings'
+      transactables: 'Listings'
+      payouts: 'Payout'
+      orders_received: 'Orders Received'
+      host_reservations: 'Orders Received'
+      transfers: 'Payment Transfers'
+      analytics: 'Analytics'
+      users: 'Manage Admins'
+      waiver_agreement_templates: 'Waiver Agreements'
+      white_labels: 'White-Label'
+      tickets: 'Request for Quote'
+      registrations: 'User Stuff'
+      edit: 'Edit Profile'
+      social_accounts: 'Trust & Verification'
+      notification_preferences: 'Notification Preferences'
+      user_recurring_bookings: 'My Orders'
+      host_recurring_bookings: 'Orders Received'
+
+      your_shop: 'YOUR SHOP'
+      admin: 'ADMIN'
+      account: 'ACCOUNT'
+      menu: 'MENU'
+
+  orders:
+    index:
+      title: 'My orders'
+
+    labels:
+      order_placed: 'ORDER PLACED'
+      total: 'TOTAL'
+      ship_to: 'SHIP TO'
+      order: 'ORDER'
+      sold_by: 'Sold by:'
+      est_delivery: 'Estimated delivery:'
+      no_orders: "You don't have any orders."
+
+    buttons:
+      track: 'Track package'
+      seller_feedback: 'Leave seller feedback'
+      buyer_feedback: 'Leave buyer feedback'
+      product_review: 'Write a product review'
+      order_details: 'View Order Details'
+
   registrations:
     tell_us: 'Tell us a little about yourself'
     custom_attributes: 'Custom Attributes'
@@ -41,6 +264,11 @@ en:
     social_accounts:
       connecting_social_accounts_info: "Connecting your social accounts will display the number of friends, connections, and followers that you have on your profile.<br />You will also be able to see your friends' and connections' activity on %{marketplace_name}."
       no_social_providers: "Unfortunately %{marketplace_name} does not support any social providers at the moment."
+      linkedin_info: "Link your trusted network of professionals by connecting with your LinkedIn account."
+      twitter_info: "Sign in with your Twitter account and connect with your followers."
+      facebook_info: "Log in with Facebook and connect with your friends around the world."
+      instagram_info: "Connect your Instagram account and link your visual content."
+
     accept_terms_of_service: 'confirm that you accept the <a href="/pages/legal" target="_blank">Terms of Service and Privacy Policy</a>'
   reservations:
     charge_after_confirmation: "Your card will not be charged until the booking is confirmed."
@@ -102,11 +330,9 @@ en:
         sync_mode: 'Delete absent objects'
         external_id_hint: 'Matching between objects already in the system and in CSV is done based on External Id. Hence External Ids have to be unique in scope of parent. If you are not sure what current External Ids are, please download current data first. Please make sure that any new objects that are inserted via CSV have populated External Id, otherwise the end result might not be as intendent.'
       edit:
-        queued: 'Task has been queued.'
-        processing: 'Your data is being processed. Please refresh the page after few minutes.'
-        waiting: 'Your data has been processed, however nothing has been imported yet! U can %{preview_link} that will be imported. To actually import data click the button below.'
-        schedule_import: 'Schedule Data Import'
-        being_imported: 'Your data is being imported.'
+        queued: "Import has been scheduled. You'll receive an email when it's done"
+        processing: "Import has been scheduled. You'll receive an email when it's done"
+        being_imported: "Import has begun. You'll receive an email when it's done"
         imported_header: 'Data has been imported.'
         new_entities:  'New entities:'
         updated_entities:  'Updated entities:'

@@ -10,9 +10,9 @@ namespace :cron do
 
   desc "Run hourly scheduled jobs"
   task :hourly => [:environment] do
-    run_job "Send Rating reminders" do
-      RatingReminderJob.perform(Time.zone.today.to_s)
-    end
+    # run_job "Send Rating reminders" do
+    #   RatingReminderJob.perform(Time.zone.today.to_s)
+    # end
   end
 
   desc "Run daily scheduled jobs"

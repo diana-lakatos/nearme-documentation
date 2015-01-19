@@ -20,7 +20,7 @@ class V1::HostRatingsControllerTest < ActionController::TestCase
           value: "0"
         },
         format: 'json'
-      }    
+      }
     end
     assert :success
   end
@@ -36,7 +36,7 @@ class V1::HostRatingsControllerTest < ActionController::TestCase
           value: "1"
         },
         format: 'json'
-      }    
+      }
     end
     assert :success
   end

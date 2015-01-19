@@ -66,18 +66,21 @@
               %input#tab1{checked: "checked", name: "tabs", type: "radio"}/
               %label.tab{for: "tab1"} Credit Card
               #tab-content1.tab-content
-                = render 'credit_card_fields', :f => f
+                = render 'payments/credit_card_fields', :f => f
+                = render 'confirm_reservations'
             .tab2
               %input#tab2{name: "tabs", type: "radio"}/
               %label.tab{for: "tab2"} PayPal
               #tab-content2.tab-content
                 = render 'paypal_fields', :f => f
+                = render 'confirm_reservations'
 
         - elsif @reservation_request.credit_card_payment?
 
           %h2 Payment
 
-          = render 'credit_card_fields', :f => f
+          = render 'payments/credit_card_fields', :f => f
+          = render 'confirm_reservations'
 
         - elsif @reservation_request.manual_payment?
 
@@ -110,11 +113,8 @@
         = f.button :submit, 'Request Booking', disable_with: "Booking..."
 
 - content_for :script do
-  = javascript_include_tag "https://js.stripe.com/v1/"
-  = javascript_include_tag "https://js.braintreegateway.com/v2/braintree.js"
   :javascript
     $(function() {
-      new Bookings.ReservationRequestFormController($('form.payment'));
       new PhoneNumbers.FieldsForm(
         $('form.payment'),
         {

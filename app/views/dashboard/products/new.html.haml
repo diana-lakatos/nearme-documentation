@@ -1,0 +1,25 @@
+.dash-head.clearfix
+  %p MANAGE LISTINGS > LIST NEW ITEM
+  %a.dash-head-btn{:href => ""}
+    .btn.blue Bulk Upload
+.dash-body
+  = simple_form_for @product_form, wrapper: :bs3, :url => dashboard_products_path(@product_form.product), :html => { id: "product_form", multipart: true, method: :post } do |f|
+    = render 'forms/product_form', f: f
+
+    = f.simple_fields_for :shipping_methods do |shipping_method|
+      %fieldset
+        = render 'forms/shipping_form', f: shipping_method
+    .row.text-right
+      %a.shipping-profile-top.add_shipping_profile
+        =image_tag("themes/buy_sell/icon-cross.png")
+        %span Create New Shipping Profile
+
+    .submit-bar
+      = link_to dashboard_products_path do
+        .btn.gray Cancel
+      = f.submit "List item", class: "btn medium blue"
+
+- content_for :domready do
+  new TaxonAutocomplete($("#product_form"));
+  new Dashboard.AddressController($("#product_form"));
+  var boarding_form = new BoardingForm($("#product_form"));

@@ -10,7 +10,7 @@
       %abbr{:title => "required"}= t('simple_form.required.mark')
       =t('simple_form.labels.listings.price')
 
-    .controls
+    .controlls
       - if f.object.transactable_type.pricing_options['daily'] || f.object.transactable_type.pricing_options['weekly'] || f.object.transactable_type.pricing_options['monthly']
         %div.price-inputs-daily
           %label.radio

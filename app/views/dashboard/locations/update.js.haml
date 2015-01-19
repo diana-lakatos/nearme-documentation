@@ -1,0 +1,5 @@
+Modal.close()
+$("#location-list .row[data-location-id=#{@location.id}]").replaceWith('#{escape_javascript( render @location )}');
+$(".alert").remove()
+$('.container.page-wrapper').prepend('#{escape_javascript( render 'shared/bootstrap_flash_messages')}');
+- flash.discard

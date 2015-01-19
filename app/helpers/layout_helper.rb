@@ -3,6 +3,14 @@ module LayoutHelper
     @render_content_outside_container
   end
 
+  def render_without_left_menu?
+    @render_without_left_menu
+  end
+
+  def render_without_left_menu!
+    @render_without_left_menu = true
+  end
+
   def render_content_outside_container!
     @render_content_outside_container = true
   end

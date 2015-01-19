@@ -1,3 +1,4 @@
+# TODO: Delete after new rating system is implemented
 class GuestRatingsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :find_reservation
