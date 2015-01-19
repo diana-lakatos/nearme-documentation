@@ -328,13 +328,15 @@ DesksnearMe::Application.routes.draw do
       end
 
       member do
-        get :remote_payment # TODO: Check
+        get :remote_payment
       end
 
       get :hourly_availability_schedule, :on => :collection
     end
 
   end
+
+
 
   match '/auth/:provider/callback' => 'authentications#create', via: [:get, :post]
   get "/auth/failure", to: "authentications#failure"
@@ -448,6 +450,7 @@ DesksnearMe::Application.routes.draw do
         get :recurring_booking_successful_modal
         get :booking_failed_modal
         get :remote_payment
+        get :remote_payment_modal
         get :recurring_booking_successful
       end
 
@@ -455,8 +458,6 @@ DesksnearMe::Application.routes.draw do
         get :upcoming
         get :archived
       end
-
-      resources :payment_notifications, controller: 'reservations/payment_notifications' # TODO: Check
     end
 
     resources :user_recurring_bookings, :except => [:destroy] do
@@ -491,6 +492,10 @@ DesksnearMe::Application.routes.draw do
         post :host_cancel
       end
     end
+  end
+
+  resources :reservations do
+    resources :payment_notifications, controller: 'reservations/payment_notifications'
   end
 
   get '/dashboard', controller: 'dashboard/dashboard', action: 'index'

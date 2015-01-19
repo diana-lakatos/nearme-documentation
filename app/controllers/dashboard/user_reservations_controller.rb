@@ -69,8 +69,13 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
     if reservation.paid?
       redirect_to booking_successful_dashboard_user_reservation_path(reservation)
     else
+      setup_payment_gateway
       upcoming
     end
+  end
+
+  def remote_payment_modal
+    setup_payment_gateway
   end
 
   def recurring_booking_successful
@@ -83,6 +88,12 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
   end
 
   protected
+
+  def setup_payment_gateway
+    res = reservation
+    @billing_gateway = Billing::Gateway::Incoming.new(current_user, res.instance, res.currency, res.listing.company.iso_country_code)
+    @billing_gateway.processor.set_payment_data(res)
+  end
 
   def reservations
     @reservations ||= current_user.reservations
