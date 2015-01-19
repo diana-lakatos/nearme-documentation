@@ -692,6 +692,10 @@ section.list .col-md-3 {
   padding: none;
 }
 
+textarea {
+  resize:vertical;
+}
+
 /*===== BLOG =====*/
 input#enable-blog {
   margin-right: 15px;
