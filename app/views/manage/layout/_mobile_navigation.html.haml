@@ -6,7 +6,9 @@
     - if buyable?
       = dashboard_menu_item 'dashboard/orders', dashboard_orders_path
     - else
-      = dashboard_menu_item 'dashboard/user_reservations', dashboard_user_reservations_path
+      = dashboard_menu_item 'dashboard/user_reservations', dashboard_user_reservations_path,
+        active: (params[:controller].include?('user_recurring_bookings') || params[:controller].include?('user_reservations'))
+
     = dashboard_menu_item 'dashboard/user_messages', dashboard_user_messages_path
 
     - if current_user.companies.any?
@@ -19,7 +21,9 @@
       - if buyable?
         = dashboard_menu_item 'dashboard/orders_received', dashboard_orders_received_index_path
       - else
-        = dashboard_menu_item 'dashboard/host_reservations', dashboard_host_reservations_path
+        = dashboard_menu_item 'dashboard/host_reservations', dashboard_host_reservations_path,
+          active: (params[:controller].include?('host_recurring_bookings') || params[:controller].include?('host_reservations'))
+
       = dashboard_menu_item 'dashboard/transfers', dashboard_transfers_path
       = dashboard_menu_item 'dashboard/analytics', dashboard_analytics_path
       = dashboard_menu_item 'dashboard/users', dashboard_users_path

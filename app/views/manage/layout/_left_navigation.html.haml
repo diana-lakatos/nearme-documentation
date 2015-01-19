@@ -4,7 +4,9 @@
       - if buyable?
         = dashboard_menu_item 'dashboard/orders', dashboard_orders_path
       - else
-        = dashboard_menu_item 'dashboard/user_reservations', dashboard_user_reservations_path
+        = dashboard_menu_item 'dashboard/user_reservations', dashboard_user_reservations_path,
+            active: (params[:controller].include?('user_recurring_bookings') || params[:controller].include?('user_reservations'))
+            
       = dashboard_menu_item 'dashboard/user_messages', dashboard_user_messages_path
 
     - if @company.present?
@@ -20,7 +22,8 @@
         - if buyable?
           = dashboard_menu_item 'dashboard/orders_received', dashboard_orders_received_index_path
         - else
-          = dashboard_menu_item 'dashboard/host_reservations', dashboard_host_reservations_path
+          = dashboard_menu_item 'dashboard/host_reservations', dashboard_host_reservations_path,
+            active: (params[:controller].include?('host_recurring_bookings') || params[:controller].include?('host_reservations'))
       %ul
         %li.nav-head
           = t('dashboard.nav.admin')

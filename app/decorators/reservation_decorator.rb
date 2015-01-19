@@ -130,6 +130,10 @@ class ReservationDecorator < Draper::Decorator
     status_info("You must confirm this booking within #{time_to_expiry(expiry_time)} or it will expire.")
   end
 
+  def manage_booking_status_info_new
+    raw("You must confirm this booking within <strong>#{time_to_expiry(expiry_time)}</strong> or it will expire.")
+  end
+
   def user_message_recipient
     owner
   end

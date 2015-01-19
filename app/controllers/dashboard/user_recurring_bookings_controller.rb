@@ -1,5 +1,5 @@
-class RecurringBookingsController < ApplicationController
-  before_filter :authenticate_user!, :except => :new
+class Dashboard::UserRecurringBookingsController < Dashboard::BaseController
+  skip_before_filter :redirect_if_no_company
 
   before_filter :only => [:user_cancel] do |controller|
     unless allowed_events.include?(controller.action_name)
@@ -31,7 +31,7 @@ class RecurringBookingsController < ApplicationController
   end
 
   def show
-    redirect_to upcoming_recurring_booking_path(params[:id])
+    redirect_to upcoming_dashboard_user_recurring_booking_path(params[:id])
   end
 
   def upcoming
@@ -66,9 +66,9 @@ class RecurringBookingsController < ApplicationController
 
   def redirection_path
     if @recurring_booking.owner.id == current_user.id
-      bookings_dashboard_path
+      dashboard_user_reservations_path
     else
-      manage_guests_dashboard_path
+      dashboard_host_reservations_path
     end
   end
 

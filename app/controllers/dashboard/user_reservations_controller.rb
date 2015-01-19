@@ -51,24 +51,6 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
     render :index
   end
 
-  # TODO: Delete after new rating system implemented
-  def host_rating
-    existing_host_rating = HostRating.where(reservation_id: reservation.id,
-                                            author_id: current_user.id)
-
-    if params[:track_email_event]
-      event_tracker.track_event_within_email(current_user, request)
-      params[:track_email_event] = nil
-    end
-
-    if existing_host_rating.blank?
-      upcoming
-    else
-      flash[:notice] = t('flash_messages.host_rating.already_exists')
-      redirect_to root_path
-    end
-  end
-
   def booking_successful
     upcoming
   end
@@ -87,8 +69,13 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
     if reservation.paid?
       redirect_to booking_successful_dashboard_user_reservation_path(reservation)
     else
+      setup_payment_gateway
       upcoming
     end
+  end
+
+  def remote_payment_modal
+    setup_payment_gateway
   end
 
   def recurring_booking_successful
@@ -97,7 +84,16 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
     upcoming
   end
 
+  def recurring_booking_successful_modal
+  end
+
   protected
+
+  def setup_payment_gateway
+    res = reservation
+    @billing_gateway = Billing::Gateway::Incoming.new(current_user, res.instance, res.currency, res.listing.company.iso_country_code)
+    @billing_gateway.processor.set_payment_data(res)
+  end
 
   def reservations
     @reservations ||= current_user.reservations

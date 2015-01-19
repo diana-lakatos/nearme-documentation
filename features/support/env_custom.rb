@@ -54,8 +54,6 @@ Before do
     instance_payment_gateway_id: ipg.id
   )
   instance.country_instance_payment_gateways << country_ipg
-
-  Utils::EnLocalesSeeder.new.go!
 end
 
 def last_json

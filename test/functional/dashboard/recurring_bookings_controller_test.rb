@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class RecurringBookingsControllerTest < ActionController::TestCase
+class Dashboard::UserRecurringBookingsControllerTest < ActionController::TestCase
 
   setup do
     @recurring_booking = FactoryGirl.create(:recurring_booking)
@@ -12,7 +12,7 @@ class RecurringBookingsControllerTest < ActionController::TestCase
     context 'one reservation in past' do
       should 'redirect to upcoming' do
         get :show, id: @recurring_booking.id
-        assert_redirected_to upcoming_recurring_booking_path(@recurring_booking)
+        assert_redirected_to upcoming_dashboard_user_recurring_booking_path(@recurring_booking)
       end
 
       context 'with two archived reservations' do

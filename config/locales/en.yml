@@ -226,6 +226,8 @@ en:
       edit: 'Edit Profile'
       social_accounts: 'Trust & Verification'
       notification_preferences: 'Notification Preferences'
+      user_recurring_bookings: 'My Orders'
+      host_recurring_bookings: 'Orders Received'
 
       your_shop: 'YOUR SHOP'
       admin: 'ADMIN'
