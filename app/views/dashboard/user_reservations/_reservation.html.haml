@@ -15,11 +15,12 @@
 
       .col-md-4
         %p Requested time
-        - if reservation.periods.first.read_attribute(:start_minute).present?
-          - reservation_period = reservation.periods.first.decorate
-          %p= reservation_period.hourly_summary(false).gsub('<br />', ' ').html_safe
-        - else
-          N/A
+        %p
+          - if reservation.periods.first.read_attribute(:start_minute).present?
+            - reservation_period = reservation.periods.first.decorate
+            = reservation_period.hourly_summary(false).gsub('<br />', ' ').html_safe
+          - else
+            N/A
 
       .col-md-2
         %p Total

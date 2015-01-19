@@ -1,0 +1,22 @@
+- title "Bookings (#{@reservations.count})"
+
+.dash-head.clearfix
+  %ul
+    %li{class: (params[:action] == 'upcoming') ? 'active' : ''}
+      = link_to 'Upcoming', upcoming_dashboard_user_recurring_booking_path(@recurring_booking)
+    %li{class: (params[:action] == 'archived') ? 'active' : ''}
+      = link_to 'Archived', archived_dashboard_user_recurring_booking_path(@recurring_booking)
+
+.dash-body
+  .recurring-booking-summary
+    %h2
+      = @recurring_booking.schedule
+
+    - if @recurring_booking.start_minute && @recurring_booking.end_minute
+      = @recurring_booking.hourly_summary(true)
+    - else
+      = @recurring_booking.short_dates
+
+  = render partial: 'dashboard/user_reservations/index', locals: { only_reservations: true }
+
+= render 'dashboard/user_reservations/modals'

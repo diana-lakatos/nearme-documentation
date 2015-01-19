@@ -7,11 +7,7 @@
 
       .col-md-3
         %p Requested date
-        %p.dates
-          - if reservation.listing.hourly_reservations?
-            = reservation.long_dates
-          - else
-            = reservation.long_dates
+        %p.dates= reservation.long_dates
 
       .col-md-4
         %p Requested time
@@ -25,11 +21,11 @@
         %p Total
         %p= reservation.total_price
 
-      -#.col-md-1
-
   .order-body
     .order-status
       %h3= reservation.state.humanize.capitalize
+      - if reservation.can_confirm?
+        %p= reservation.manage_booking_status_info_new
 
     .row
       .order-item
@@ -42,10 +38,13 @@
               - else
                 = "#{reservation.owner_including_deleted} (Deleted)"
               %br
-              %span.address= link_to reservation.listing.name, location_path(reservation.listing.location, reservation.listing)
+              - if reservation.listing.present?
+                %span.address= link_to reservation.listing.name, location_path(reservation.listing.location, reservation.listing)
+              - else
+                %span.address [listing deleted]
               %p QTY: #{reservation.quantity}
               %p= pluralize(reservation.total_days, 'day')
 
         .col-md-4.order-actions
-          = render 'owner_actions', reservation: reservation
+          = render 'dashboard/host_reservations/owner_actions', reservation: reservation
 

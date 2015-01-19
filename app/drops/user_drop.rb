@@ -84,19 +84,19 @@ class UserDrop < BaseDrop
   end
 
   def bookings_dashboard_url
-    routes.bookings_dashboard_path
+    routes.dashboard_user_reservations_path
   end
 
   def bookings_dashboard_url_with_tracking
-    routes.bookings_dashboard_path(track_email_event: true)
+    routes.dashboard_user_reservations_path(track_email_event: true)
   end
 
   def bookings_dashboard_url_with_token
-    routes.bookings_dashboard_path(token: @user.try(:temporary_token))
+    routes.dashboard_user_reservations_path(token: @user.try(:temporary_token))
   end
 
   def bookings_dashboard_url_with_tracking_and_token
-    routes.bookings_dashboard_path(token: @user.try(:temporary_token), track_email_event: true)
+    routes.dashboard_user_reservations_path(token: @user.try(:temporary_token), track_email_event: true)
   end
 
   def listings_in_near

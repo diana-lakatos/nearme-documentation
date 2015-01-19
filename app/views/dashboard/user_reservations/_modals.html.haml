@@ -13,3 +13,6 @@
   = content_for :domready do
     Modal.load('#{booking_failed_modal_dashboard_user_reservation_path(@reservation, listing_id: @reservation.listing)}')
 
+  - if params[:action] == 'recurring_booking_successful'
+    Modal.load('#{booking_successful_listing_recurring_booking_path(@recurring_booking.listing, @recurring_booking)}')
+

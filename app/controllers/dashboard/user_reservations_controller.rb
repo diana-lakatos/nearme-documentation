@@ -51,24 +51,6 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
     render :index
   end
 
-  # TODO: Delete after new rating system implemented
-  def host_rating
-    existing_host_rating = HostRating.where(reservation_id: reservation.id,
-                                            author_id: current_user.id)
-
-    if params[:track_email_event]
-      event_tracker.track_event_within_email(current_user, request)
-      params[:track_email_event] = nil
-    end
-
-    if existing_host_rating.blank?
-      upcoming
-    else
-      flash[:notice] = t('flash_messages.host_rating.already_exists')
-      redirect_to root_path
-    end
-  end
-
   def booking_successful
     upcoming
   end
