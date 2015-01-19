@@ -223,8 +223,8 @@ en:
       white_labels: 'White-Label'
       tickets: 'Request for Quote'
       registrations: 'User Stuff'
-      edit_profile: 'Edit Profile'
-      trust_verification: 'Trust & Verification'
+      edit: 'Edit Profile'
+      social_accounts: 'Trust & Verification'
       notification_preferences: 'Notification Preferences'
 
       your_shop: 'YOUR SHOP'

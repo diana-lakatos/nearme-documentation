@@ -21,7 +21,8 @@ class Dashboard::BaseController < ApplicationController
     "dashboard/waiver_agreement_templates",
     "dashboard/white_labels",
     "dashboard/tickets",
-    "registrations"
+    "registrations/edit",
+    "registrations/social_accounts"
   ]
 
   private

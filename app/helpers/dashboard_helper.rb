@@ -50,6 +50,7 @@ module DashboardHelper
   end
 
   def dashboard_menu_item(controller = nil, path = nil, options = {})
+    return nil if platform_context.instance.hidden_dashboard_menu_items.key?(controller)
     options.reverse_merge!(link_text: nil, active: nil)
     content_tag :li, class: (options[:active] || (params[:controller] == controller && options[:active] == nil)) ? 'active' : '' do
       link_to options[:link_text] || t("dashboard.nav.#{controller.split('/').last}"), path
@@ -61,8 +62,8 @@ module DashboardHelper
     action = params[:action]
 
     caption = t("dashboard.nav.#{controller.split('/').last}")
-    caption = t('dashboard.nav.edit_profile') if controller.include?('registration') && action.include?('edit')
-    caption = t('dashboard.nav.trust_verification') if controller.include?('registration') && action.include?('social_accounts')
+    caption = t('dashboard.nav.edit') if controller.include?('registration') && action.include?('edit')
+    caption = t('dashboard.nav.social_accounts') if controller.include?('registration') && action.include?('social_accounts')
     caption = t('dashboard.nav.menu') if caption.include?("translation missing")
     caption
   end

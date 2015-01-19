@@ -28,5 +28,5 @@
       - if TransactableType.all.any? { |t| t.has_action?('Request For Quote') }
         = dashboard_menu_item 'dashboard/tickets', dashboard_support_tickets_path
 
-    = dashboard_menu_item 'registrations', dashboard_profile_path, link_text: t('dashboard.nav.edit_profile'), active: (params[:controller].include?('registration') && params[:action].include?('edit'))
-    = dashboard_menu_item 'registrations', social_accounts_path, link_text: t('dashboard.nav.trust_verification'), active: (params[:controller].include?('registration') && params[:action].include?('social_accounts'))
+    = dashboard_menu_item 'registrations/edit', dashboard_profile_path, link_text: t('dashboard.nav.edit'), active: (params[:controller].include?('registration') && params[:action].include?('edit'))
+    = dashboard_menu_item 'registrations/social_accounts', social_accounts_path, link_text: t('dashboard.nav.social_accounts'), active: (params[:controller].include?('registration') && params[:action].include?('social_accounts'))
