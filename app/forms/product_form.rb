@@ -19,7 +19,7 @@ class ProductForm < Form
     @quantity ||= @stock_item.stock_movements.sum(:quantity)
   end
 
-  def quantity=quantity
+  def quantity=(quantity)
     @stock_movement.quantity = @quantity = quantity
   end
 
@@ -74,7 +74,6 @@ class ProductForm < Form
 
   def save!(options={})
     validate = options[:validate]
-    @stock_item.stock_movements.build stock_item: @stock_item, quantity: - @stock_item.stock_movements.sum(:quantity)
 
     @user.save!(validate: validate)
     @company.save!(validate: validate)
