@@ -49,24 +49,21 @@ module DashboardHelper
     end
   end
 
+  def dashboard_menu_item(controller = nil, path = nil, options = {})
+    options.reverse_merge!(link_text: nil, active: nil)
+    content_tag :li, class: (options[:active] || (params[:controller] == controller && options[:active] == nil)) ? 'active' : '' do
+      link_to options[:link_text] || t("dashboard.nav.#{controller.split('/').last}"), path
+    end
+  end
+
   def mobile_menu_caption
     controller = params[:controller]
     action = params[:action]
 
-    return t('dashboard.nav.my_orders') if controller == 'dashboard/orders' || controller == 'dashboard/user_reservations'
-    return t('dashboard.nav.messages') if controller.include? 'user_messages'
-    return t('dashboard.nav.shop_details') if controller.include? 'companies'
-    return t('dashboard.nav.listings') if %w(dashboard/products dashboard/transactables).include? controller
-    return t('dashboard.nav.payout') if controller.include? 'payouts'
-    return t('dashboard.nav.orders_received') if controller == 'dashboard/orders_received' || controller == 'dashboard/host_reservations'
-    return t('dashboard.nav.payment_transfers') if controller.include? 'transfers'
-    return t('dashboard.nav.analytics') if controller.include? 'analytics'
-    return t('dashboard.nav.manage_admins') if controller.include? 'users'
-    return t('dashboard.nav.waiver_agreements') if controller.include? 'waiver_agreement_templates'
-    return t('dashboard.nav.white_label') if controller.include? 'white_label'
-    return t('dashboard.nav.edit_profile') if controller.include?('registration') && action.include?('edit')
-    return t('dashboard.nav.trust_verification') if controller.include?('registration') && action.include?('social_accounts')
-
-    t('dashboard.nav.menu')
+    caption = t("dashboard.nav.#{controller.split('/').last}")
+    caption = t('dashboard.nav.edit_profile') if controller.include?('registration') && action.include?('edit')
+    caption = t('dashboard.nav.trust_verification') if controller.include?('registration') && action.include?('social_accounts')
+    caption = t('dashboard.nav.menu') if caption.include?("translation missing")
+    caption
   end
 end
