@@ -214,7 +214,6 @@ class TestDataSeeder
       FactoryGirl.create(:transactable_type_listing)
       FactoryGirl.create(:fetch_payment_gateway)
       FactoryGirl.create(:braintree_payment_gateway)
-      Utils::EnLocalesSeeder.new.go!
     end
   end
 end
