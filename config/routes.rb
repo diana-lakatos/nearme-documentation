@@ -310,6 +310,7 @@ DesksnearMe::Application.routes.draw do
 
     resources :recurring_bookings, :only => [:create, :update], :controller => "listings/recurring_bookings" do
       collection do
+        post :review
         post :store_recurring_booking_request
       end
 
@@ -322,6 +323,7 @@ DesksnearMe::Application.routes.draw do
 
     resources :reservations, :only => [:create, :update], :controller => 'listings/reservations' do
       collection do
+        post :review
         post :store_reservation_request
       end
 
