@@ -19,8 +19,8 @@ class ProductForm < Form
     @quantity ||= @stock_item.stock_movements.sum(:quantity)
   end
 
-  def quantity=(quantity)
-    @stock_movement.quantity = @quantity = quantity
+  def quantity=new_quantity
+    @stock_item.stock_movements.build stock_item: @stock_item, quantity: (new_quantity.to_i - quantity)
   end
 
   def taxon_ids
