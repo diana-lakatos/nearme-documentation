@@ -8,10 +8,49 @@ Given /^(Location|Listing) with my details should be created$/ do |model|
   end
 end
 
+Given /^#{capture_model} should not be pickable$/ do |model|
+  location = Location.with_deleted.last
+  within('.edit-locations') do
+    page.should_not have_content(location.name, visible: true)
+  end
+  assert_not_nil location.deleted_at
+end
+
+Given /^TransactableType is for bulk upload$/ do
+  FactoryGirl.create(:transactable_type_current_data)
+end
+
+When /^I upload csv file with locations and transactables$/ do
+  FactoryGirl.create(:location_type, name: 'My Type')
+  find(:css, 'a.bulk-upload-btn').click
+  stub_image_url('http://www.example.com/image1.jpg')
+  stub_image_url('http://www.example.com/image2.jpg')
+  work_in_modal do
+    page.should have_css('#new_data_upload')
+    attach_file('data_upload_csv_file', File.join(Rails.root, *%w[test assets data_importer current_data.csv]))
+    find('.btn-toolbar input[type=submit]').click
+  end
+  page.should_not have_css('#new_data_upload')
+end
+
+Then /^I should receive data upload report email when finished$/ do
+  mails = emails_for(model!('user').email)
+  assert_equal 1, mails.count
+  mail = mails.first
+  assert_equal "Importing 'current_data.csv' has finished", mail.subject
+end
+
+Then /^New locations and transactables from csv should be added$/ do
+  company = model!('user').companies.first
+  assert_equal ['Czestochowa', 'Rydygiera'], company.locations.pluck(:name).sort
+  assert_equal [["my name", "Rydygiera"], ["my name2", "Rydygiera"]], company.listings.joins(:location).select('name, locations.name as location_name, transactable_type_id, properties').map { |l| [l.name, l.location_name] }
+end
+
 Given /^#{capture_model} should be updated$/ do |model|
   if model=='the location'
     location = model!('location')
     assert_location_data(location)
+    page.should have_content(location.name, visible: true)
   else
     listing = model!('transactable')
     assert_listing_data(listing, true)

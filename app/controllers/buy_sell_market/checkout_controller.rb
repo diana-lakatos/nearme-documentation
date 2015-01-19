@@ -18,7 +18,7 @@ class BuySellMarket::CheckoutController < ApplicationController
     case step
     when :address
       @order.restart_checkout_flow
-      @order.use_billing = 0
+      @order.use_billing = 1
       set_countries_states
     when :delivery
       packages = @order.shipments.map { |s| s.to_package }
@@ -76,7 +76,7 @@ class BuySellMarket::CheckoutController < ApplicationController
           p.pend
           p.save!
           unless @order.next
-            flash[:error] = spree_errors
+            flash.now[:error] = spree_errors
             render_step order_state and return
           end
         end
@@ -86,12 +86,12 @@ class BuySellMarket::CheckoutController < ApplicationController
       end
     elsif @order.update_from_params(params, permitted_checkout_attributes)
       if step == :address
-        save_user_addresses # if params[:order][:save_billing_address] <- No checkbox in new UI
+        save_user_addresses
         set_countries_states
       end
 
       unless @order.next
-        flash[:error] = spree_errors
+        flash.now[:error] = spree_errors
         render_step order_state and return
       end
 
@@ -100,6 +100,7 @@ class BuySellMarket::CheckoutController < ApplicationController
         render_step :complete and return # TODO Refactor to redirect
       end
     else
+      set_countries_states if step == :address
       render_step order_state and return
     end
 

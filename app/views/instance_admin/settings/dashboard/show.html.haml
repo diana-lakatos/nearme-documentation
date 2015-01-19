@@ -1,0 +1,21 @@
+%h4 Hide Dashboard Menu Items
+.content-container
+  .row
+    = simple_form_for @instance, :url => instance_admin_settings_dashboard_path, method: :put do |f|
+      .table-container.col-xs-12.dropshadow
+        %table.table
+          %thead
+            %tr
+              %th Name
+              %th Hide
+          %tbody
+            - buysell_controllers = ['dashboard/orders', 'dashboard/products', 'dashboard/orders_received']
+            - services_controllers = ['dashboard/user_reservations', 'dashboard/transactables', 'dashboard/host_reservations']
+            - hidden_controllers = buyable? ? services_controllers : buysell_controllers
+            - (Dashboard::BaseController::DASHBOARD_CONTROLLERS - hidden_controllers).each do |controller|
+              %tr
+                %td
+                  = t("dashboard.nav.#{controller.split('/').last}")
+                %td
+                  = check_box_tag "hidden_dashboard_menu_items[#{controller}]", '1', @instance.hidden_dashboard_menu_items.key?(controller)
+      = f.button :submit, 'Update Settings', class: 'btn btn-green pull-right'

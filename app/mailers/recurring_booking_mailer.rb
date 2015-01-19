@@ -71,7 +71,7 @@ class RecurringBookingMailer < InstanceMailer
     setup_defaults(recurring_booking)
     @user = @recurring_booking.administrator
     set_bcc_email
-    @url  = manage_guests_dashboard_url(:token => @user.try(:temporary_token))
+    @url  = dashboard_host_reservations_url(:token => @user.try(:temporary_token))
     generate_mail("#{recurring_booking.owner.first_name} just booked your #{instance_bookable_noun}!")
   end
 
@@ -79,7 +79,7 @@ class RecurringBookingMailer < InstanceMailer
     setup_defaults(recurring_booking)
     @user = @recurring_booking.administrator
     set_bcc_email
-    @url  = manage_guests_dashboard_url(:token => @user.try(:temporary_token))
+    @url  = dashboard_host_reservations_url(:token => @user.try(:temporary_token))
     @reserver = @recurring_booking.owner.name
     generate_mail("#{recurring_booking.owner.first_name} just booked your #{instance_bookable_noun}!")
   end

@@ -6,6 +6,7 @@ module PhotoHelpers
 
   def attach_file_via_uploader
     page.execute_script "$('.browse-file').click()"
+    page.should_not have_css('#filepicker_dialog_container')
     page.should_not have_css('.photo-item .loading-icon')
   end
 end

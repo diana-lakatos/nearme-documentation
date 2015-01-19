@@ -41,6 +41,7 @@ en:
       no_payment_gateway: 'The seller does not support payments for the selected country.'
     dashboard:
       add_your_company: "Please add your company first"
+      company_not_valid: "Please add necessary details to your company first."
       no_bookings: "You haven't made any bookings yet!"
     guest_rating:
       already_exists: "Rating for this booking has already been submitted."
@@ -304,7 +305,7 @@ en:
         reservation_rejected: "You have rejected the reservation. Maybe next time!"
         payment_requested: "Your request has been sent"
       data_upload:
-        created: 'Data Upload has been created.'
+        created: "Import has been scheduled. You'll receive an email when it's done."
         scheduled: 'Data has been scheduled to be imported.'
         deleted: 'Data Upload has been deleted.'
         not_scheduled: 'The task has not been queued. Either data has been already imported or task is already in queue.'

@@ -68,13 +68,13 @@ When /^the (visitor|owner) (confirm|decline|cancel)s the reservation$/ do |user,
 
   if user == "visitor"
     login User.find_by_name("Keith Contractor")
-    visit reservations_dashboard_path
+    visit dashboard_user_reservations_path
   else
     login User.find_by_name("Bo Jeanes")
     visit dashboard_host_reservations_path
   end
   if action == 'cancel' and user == 'owner'
-    within('#reservations header') { click_on 'Confirmed'}
+    within('.dash-head') { click_on 'CONFIRMED'}
   end
   if action == 'decline'
     step 'I reject reservation with reason'
@@ -86,12 +86,12 @@ end
 
 When /^the reservation expires/ do
   login User.find_by_name("Keith Contractor")
-  visit reservations_dashboard_path
+  visit dashboard_user_reservations_path
 
   reservation = User.find_by_name("Keith Contractor").reservations.first
   reservation.perform_expiry!
 
-  visit reservations_dashboard_path
+  visit dashboard_user_reservations_path
 end
 
 When /^I select to book( and review)? space for:$/ do |and_review, table|
@@ -281,7 +281,7 @@ end
 Then /^The second booking should be highlighted$/ do
   page.should have_css(".reservation-list.just-booked #reservation_#{Reservation.last.id}")
   page.should have_css("#reservation_#{Reservation.last.id}")
-  page.should have_css(".reservation-details", :count => 2)
+  page.should have_css(".order", :count => 2)
 end
 
 Then /^I should be offered calendar and manage options$/ do

@@ -63,7 +63,7 @@ window.DNM = {
   },
 
   initializeBootstrap: function() {
-    $('.selectpicker').selectpicker();
+    $('.selectpicker').selectpicker({'iconShow': false});
     $('.switch input:visible')['bootstrapSwitch']();
   },
 

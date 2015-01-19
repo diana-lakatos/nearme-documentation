@@ -10,7 +10,7 @@ class DataUploadHostConvertJob < Job
     begin
       csv_file = DataImporter::Host::CsvFile::TemplateCsvFile.new(@data_upload)
       xml_path = "#{Dir.tmpdir}/#{@data_upload.transactable_type_id}-#{Time.zone.now.to_i}.xml"
-      DataImporter::CsvToXmlConverter.new(csv_file, xml_path).convert
+      DataImporter::CsvToXmlConverter.new(csv_file, xml_path, @data_upload.transactable_type).convert
       @data_upload.xml_file = File.open(xml_path)
 
       @data_upload.save!

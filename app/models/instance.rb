@@ -13,6 +13,7 @@ class Instance < ActiveRecord::Base
   attr_accessor :mark_as_locked
   serialize :user_required_fields, Array
   serialize :custom_sanitize_config, Hash
+  serialize :hidden_dashboard_menu_items, Hash
 
   API_KEYS = %w(paypal_username paypal_password paypal_signature paypal_app_id paypal_client_id paypal_client_secret stripe_api_key stripe_public_key balanced_api_key)
 

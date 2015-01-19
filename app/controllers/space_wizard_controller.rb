@@ -20,12 +20,12 @@ class SpaceWizardController < ApplicationController
     if buyable?
       @boarding_form = BoardingForm.new(current_user)
       @boarding_form.assign_all_attributes
-      @images = current_user.products_images.where(viewable_id: nil, viewable_type: nil)
+      @images = (@boarding_form.product_form.try(:product).try(:images) || []) + current_user.products_images.where(viewable_id: nil, viewable_type: nil)
       render :list_item, layout: "dashboard"
     else
       build_objects
       build_approval_requests
-      @photos = @user.first_listing.try(:photos).try(:present?) ? @user.first_listing.photos : @user.photos.where(transactable_id: nil)
+      @photos = (@user.first_listing.try(:photos) || []) + @user.photos.where(transactable_id: nil)
       @user.phone_required = true
       event_tracker.viewed_list_your_bookable
       event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
@@ -72,7 +72,7 @@ class SpaceWizardController < ApplicationController
 
     @boarding_form = BoardingForm.new(current_user)
     if @boarding_form.submit(boarding_form_params)
-      redirect_to space_wizard_list_url, notice: t('flash_messages.space_wizard.item_listed', bookable_noun: platform_context.decorate.bookable_noun)
+      redirect_to dashboard_products_path, notice: t('flash_messages.space_wizard.item_listed', bookable_noun: platform_context.decorate.bookable_noun)
     else
       @images = @boarding_form.product_form.product.images
       render :list_item, layout: "dashboard"

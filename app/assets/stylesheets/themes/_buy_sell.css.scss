@@ -743,7 +743,7 @@ body.buy-sell-theme {
     }
 
     .btn.next {
-      padding: 12px 125px;
+      padding: 12px 0px;
       cursor: pointer;
     }
 
@@ -945,7 +945,7 @@ body.buy-sell-theme {
       }
 
       .btn.next {
-        padding: 12px 125px;
+        padding: 12px 0px;
         cursor: pointer;
       }
 
@@ -1242,6 +1242,20 @@ body.buy-sell-theme {
       .categories-select img {
         display: inline-block;
       }
+    }
+  }
+
+  .checkout .button-row {
+    .next {
+      width: 100%;
+
+      button {
+        width: 100% !important;
+      }
+    }
+
+    .go-back a, .go-back span{
+      width: 100%;
     }
   }
 }

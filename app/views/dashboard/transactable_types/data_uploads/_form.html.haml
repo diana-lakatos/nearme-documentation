@@ -13,10 +13,6 @@
       = f.simple_fields_for :options, OpenStruct.new(@data_upload.options) do |option|
         = option.input :sync_mode, wrapper: :bs3_simple, required: false, as: :boolean, inline_label: t('data_upload.manage.new.sync_mode'), label: false, input_html: {class: "margin-right"}
     %br
-    %b CSV file
-    %label.upload{:for => "csv_template"}
-      Choose file
-      = f.input :csv_file, as: :file, label: false, input_html: {id: "csv_template"}
-      %span.file_name No photo chosen
+    = f.input :csv_file, as: :file
     .btn-toolbar
       = f.button :submit, 'Import', class: 'btn blue pull-right'

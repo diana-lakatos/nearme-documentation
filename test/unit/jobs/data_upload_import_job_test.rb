@@ -68,7 +68,7 @@ class DataUploadImportJobTest < ActiveSupport::TestCase
       @summary_tracker = stub(new_entities: {company: 1}, updated_entities: {company: 2}, deleted_entities: {company: 3})
       DataImporter::Tracker::Summary.expects(:new).returns(@summary_tracker)
       @progress_tracker = stub()
-      DataImporter::Tracker::Progress.expects(:new).returns(@progress_tracker)
+      DataImporter::Tracker::ProgressTracker.expects(:new).returns(@progress_tracker)
       @trackers = [@validation_errors_tracker, @summary_tracker, @progress_tracker]
       @xml_file_stub = stub()
       @counter_stub = stub(all_objects_count: 100)
