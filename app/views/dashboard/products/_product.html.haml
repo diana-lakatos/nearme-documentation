@@ -2,7 +2,7 @@
   .row
     .col-md-3.listing-img
       = link_to product_path(product) do
-        = image_tag(product.images.first.try{ |i| i.image.url(:medium) })
+        = image_tag product.images.first.try(:image_url, :medium)
     .col-md-3.listing-attr
       = link_to product.name, product_path(product)
     .col-md-3.listing-attr

@@ -34,6 +34,9 @@
     width: 0px;
     margin: 0px;
     padding: 0px;
+    position: absolute;
+    cursor: pointer;
+    right: 0px;
   }
 
   &.single-photo {
@@ -51,7 +54,6 @@
         top: 0px;
         overflow: hidden;
         background: #fff;
-        cursor: pointer;
 
       }
     }
