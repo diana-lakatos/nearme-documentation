@@ -1,8 +1,8 @@
-- title "Manage Store"
+- title t('dashboard.nav.companies')
 
 .dash-page
   .dash-head.clearfix
-    %p MANAGE STORE
+    %p= t('dashboard.nav.companies')
   .dash-body
     = simple_form_for [:dashboard, @company], wrapper: :bs3, :html => { multipart: true, :id => 'edit_company' } do |f|
 

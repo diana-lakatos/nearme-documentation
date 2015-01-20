@@ -1,7 +1,7 @@
 class Dashboard::UserMessagesController < Dashboard::BaseController
 
   before_filter :redirect_to_login, only: [:new]
-  skip_before_filter :find_company, :redirect_if_no_company
+  skip_before_filter :redirect_if_no_company
   skip_before_filter :authenticate_user!, only: [:new]
 
 

@@ -1,5 +1,7 @@
+- title t('dashboard.nav.payouts')
+
 .dash-head.clearfix
-  %p PAYOUT
+  %p= t('dashboard.nav.payouts')
 
 .dash-body
   = simple_form_for @company, url: dashboard_payouts_path, wrapper: :bs3 do |f|

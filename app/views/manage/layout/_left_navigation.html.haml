@@ -6,7 +6,7 @@
       - else
         = dashboard_menu_item 'dashboard/user_reservations', dashboard_user_reservations_path,
             active: (params[:controller].include?('user_recurring_bookings') || params[:controller].include?('user_reservations'))
-            
+
       = dashboard_menu_item 'dashboard/user_messages', dashboard_user_messages_path
 
     - if @company.present?
