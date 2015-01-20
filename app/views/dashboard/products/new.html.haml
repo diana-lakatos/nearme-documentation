@@ -1,7 +1,5 @@
 .dash-head.clearfix
   %p MANAGE LISTINGS > LIST NEW ITEM
-  %a.dash-head-btn{:href => ""}
-    .btn.blue Bulk Upload
 .dash-body
   = simple_form_for @product_form, wrapper: :bs3, :url => dashboard_products_path(@product_form.product), :html => { id: "product_form", multipart: true, method: :post } do |f|
     = render 'forms/product_form', f: f
