@@ -54,7 +54,7 @@ Then /^The product should be included in my cart$/ do
 end
 
 When /^I begin Checkout process$/ do
-  find('.checkout a').click
+  find('.checkout a div').click
 end
 
 When /^I fill in shippment details$/ do
@@ -114,7 +114,7 @@ And /^I should see order placed confirmation$/ do
 end
 
 Then /^The product should not be included in my cart$/ do
-  find('.checkout a').click
+  find('.checkout a div').click
   assert page.body.should have_content(I18n.t('flash_messages.buy_sell.no_payment_gateway'))
 end
 
