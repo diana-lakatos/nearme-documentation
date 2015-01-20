@@ -2,6 +2,8 @@ Spree::ShippingMethod.class_eval do
   include Spree::Scoper
   belongs_to :country
 
+  belongs_to :order
+
   attr_accessor :hidden, :removed
 
   accepts_nested_attributes_for :zones

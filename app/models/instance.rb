@@ -7,7 +7,7 @@ class Instance < ActiveRecord::Base
     :live_paypal_client_secret, :live_balanced_api_key, :marketplace_password, :test_stripe_api_key, :test_paypal_username, :test_paypal_password,
     :test_paypal_signature, :test_paypal_app_id, :test_paypal_client_id, :test_paypal_client_secret, :test_balanced_api_key, :olark_api_key,
     :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key, :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret,
-    :instagram_consumer_key, :instagram_consumer_secret, :db_connection_string,
+    :instagram_consumer_key, :instagram_consumer_secret, :db_connection_string, :shippo_username, :shippo_password,
     :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   attr_accessor :mark_as_locked
@@ -69,6 +69,8 @@ class Instance < ActiveRecord::Base
   validates_presence_of :marketplace_password, :if => :password_protected
   validates_presence_of :password_protected, :if => :test_mode, message: I18n.t("activerecord.errors.models.instance.test_mode_needs_password")
   validates_presence_of :olark_api_key, :if => :olark_enabled
+  validates_presence_of :shippo_username, :if => :shippo_enabled
+  validates_presence_of :shippo_password, :if => :shippo_enabled
   validates :payment_transfers_frequency, presence: true, inclusion: { in: PaymentTransfer::FREQUENCIES }
 
   accepts_nested_attributes_for :domains, allow_destroy: true, reject_if: proc { |params| params[:name].blank? && params.has_key?(:name) }

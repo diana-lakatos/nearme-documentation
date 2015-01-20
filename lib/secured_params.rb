@@ -211,6 +211,7 @@ class SecuredParams
       :olark_api_key, :olark_enabled,
       :facebook_consumer_key, :facebook_consumer_secret,
       :twitter_consumer_key, :twitter_consumer_secret,
+      :shippo_username, :shippo_password, :shippo_enabled,
       :linkedin_consumer_key, :linkedin_consumer_secret,
       :instagram_consumer_key, :instagram_consumer_secret,
       :support_imap_hash, :support_email,
