@@ -63,7 +63,6 @@
         = yield
 
     - unless no_footer?
-      .footer-push{class: "footer_#{section_class(@section_name)}"}
       = render 'layouts/footer'
 
     = javascript_include_tag "//maps.googleapis.com/maps/api/js?libraries=places&sensor=false"
