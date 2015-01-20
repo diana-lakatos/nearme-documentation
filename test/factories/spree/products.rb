@@ -18,6 +18,12 @@ FactoryGirl.define do
       p.variants_including_master.each { |v| v.save! }
     end
 
+    after(:create) do |p|
+      Spree::StockLocation.all.each do |stock_location|
+        stock_location.stock_items.where(:variant_id => p.master.id).first.adjust_count_on_hand(10)
+      end
+    end
+
     factory :custom_product do
       name 'Custom Product'
       price 17.99

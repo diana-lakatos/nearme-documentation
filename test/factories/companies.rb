@@ -49,5 +49,12 @@ FactoryGirl.define do
       white_label_enabled true
     end
 
+    factory :company_with_stock_location do
+      after(:build) do |company|
+        FactoryGirl.create(:stock_location, company: company)
+      end
+
+    end
+
   end
 end

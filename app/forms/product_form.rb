@@ -20,7 +20,8 @@ class ProductForm < Form
   end
 
   def quantity=new_quantity
-    @stock_item.stock_movements.build stock_item: @stock_item, quantity: (new_quantity.to_i - quantity)
+    @stock_item.stock_movements.build stock_item: @stock_item, quantity: new_quantity.to_i - quantity
+    @quantity = new_quantity.to_i
   end
 
   def taxon_ids
@@ -74,7 +75,6 @@ class ProductForm < Form
 
   def save!(options={})
     validate = options[:validate]
-
     @user.save!(validate: validate)
     @company.save!(validate: validate)
     @product.save!(validate: validate)
