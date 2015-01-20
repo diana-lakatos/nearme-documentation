@@ -9,28 +9,19 @@ namespace :instance_views do
       iv_attrs               = {}
       iv_attrs[:instance_id] = pathname.relative_path_from(Rails.root.join('tmp_views')).to_s.to_i
       iv_attrs[:body]        = pathname.read
-      iv_attrs[:path]        = pathname.relative_path_from(Rails.root.join('tmp_views', iv_attrs[:instance_id].to_s)).to_s.split('.').first
+      iv_attrs[:path]        = pathname.relative_path_from(Rails.root.join('tmp_views', iv_attrs[:instance_id].to_s)).dirname.to_s + '/' + pathname.basename.to_s.gsub(/^_/ , '').split('.').first
       iv_attrs[:locale]      = 'en'
       iv_attrs[:format]      = 'html'
-      iv_attrs[:handler]     = 'haml'
+      iv_attrs[:handler]     = pathname.extname.gsub(/^./, '')
       iv_attrs[:partial]     = pathname.basename.to_s.start_with? '_'
 
-      # Remove the leading underscore from the filename if the file is a partial
-      if iv_attrs[:partial]
-        iv_attrs[:path] = iv_attrs[:path].split('/')[0..-2].join('/') + '/' + iv_attrs[:path].split('/').last[1..-1]
-      end
-
-      # If the view already exists for that marketplace, delete it
-      iv = InstanceView.where(instance_id: iv_attrs[:instance_id], path: iv_attrs[:path]).first
-      if iv
-        puts 'deleted existing instance view instance_id: #{instance_id} path: #{path}'
-        iv.delete
-      end
-
-      if InstanceView.create(iv_attrs)
-        puts 'created instance view instance_id: #{instance_id} path: #{path}'
+      instance_view = InstanceView.find_or_create_by(instance_id: iv_attrs[:instance_id], path: iv_attrs[:path])
+      new_record = instance_view.new_record?
+      if instance_view.update_attributes(iv_attrs)
+        puts "#{new_record ? 'CREATED' : 'UPDATED'} instance_view id: #{instance_view.id} instance_id: #{instance_view.instance_id} path: #{instance_view.path}"
       else
-        puts 'could not create instance view instance_id: #{instance_id} path: #{path}'
+        puts "ERROR: could not create instance_view id: #{instance_view.id} instance_id: #{instance_view.instance_id} path: #{instance_view.path}"
+        puts "  #{instance_view.errors.full_messages.to_sentence}"
       end
     end
   end
