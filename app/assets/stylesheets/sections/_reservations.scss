@@ -378,14 +378,21 @@ section.reservations {
 
     .flash {
       &.error {
+
+        color: $red;
+        padding-bottom: 0.5em;
+
         p {
           text-align:center;
           color: $red;
           font-size: 1.1em;
         }
 
-        color: $red;
-        padding-bottom: 0.5em;
+        ul li {
+          color: $red;
+          font-size: 1.1em;
+          margin: 20px 0px;
+        }
       }
     }
   }
