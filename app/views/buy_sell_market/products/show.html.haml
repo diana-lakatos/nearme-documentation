@@ -53,7 +53,7 @@
               = t 'buy_sell_market.products.labels.shippigng_policies'
       .tab-content
         %article#product-details.tab-pane.active
-          %p= @product.description
+          %p= @product.description.html_safe
 
         - unless hidden.include?(:reviews)
           %article#product-reviews.tab-pane

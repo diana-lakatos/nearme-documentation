@@ -11,7 +11,7 @@ Given(/^I am adding new transactable$/) do
 end
 
 Given(/^I add a new transactable$/) do
-  find(:css, '.new-profile a').click
+  find(:css, 'a.new-transactable-btn ').click
 end
 
 Given(/^I add a new location$/) do

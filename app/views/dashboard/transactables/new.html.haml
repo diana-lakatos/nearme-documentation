@@ -1,6 +1,5 @@
 .dash-head.clearfix
   %p MANAGE LISTINGS > LIST NEW ITEM
-  = render 'bulk_upload_button'
 .dash-body
   = simple_form_for ["dashboard", @transactable_type, @transactable], wrapper: :bs3, :html => { :multipart => true, id: 'listing-form' } do |f|
 
