@@ -272,13 +272,13 @@ nav li.active a, .mobile-nav .nav li.active a {
   margin-right: 60px;
 }
 
-.dash-head a {
+.dash-head ul li a {
   color: #000;
   padding-bottom: 10px;
   font-size: 16px;
 }
 
-.dash-head li.active a {
+.dash-head li.active a, .dash-head li a.active  {
   border-bottom: 3px solid $color-blue;
 }
 

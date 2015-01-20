@@ -22,7 +22,7 @@ end
 
 When /^I upload csv file with locations and transactables$/ do
   FactoryGirl.create(:location_type, name: 'My Type')
-  find(:css, 'a.bulk-upload-btn').click
+  find(:css, 'a.bulk-upload').click
   stub_image_url('http://www.example.com/image1.jpg')
   stub_image_url('http://www.example.com/image2.jpg')
   work_in_modal do

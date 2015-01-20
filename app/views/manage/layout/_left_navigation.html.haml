@@ -33,7 +33,7 @@
         = dashboard_menu_item 'dashboard/waiver_agreement_templates', dashboard_waiver_agreement_templates_path
         = dashboard_menu_item 'dashboard/white_labels', edit_dashboard_white_label_path(current_user.companies.first)
         - if TransactableType.all.any? { |t| t.has_action?('Request For Quote') }
-          = dashboard_menu_item 'dashboard/tickets', dashboard_support_tickets_path
+          = dashboard_menu_item 'dashboard/support/tickets', dashboard_support_tickets_path
 
     %ul
       %li.nav-head
