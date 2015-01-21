@@ -258,6 +258,12 @@ h4.other-reservation-separator {
   }
 }
 
+@media (min-width: 768px) {
+  .form-horizontal .control-label {
+    text-align: left;
+  }
+}
+
 /*===== MY ORDERS (RESERVATIONS) =====*/
 
 #reservations {

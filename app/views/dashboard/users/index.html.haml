@@ -1,8 +1,10 @@
+- title t('dashboard.nav.users')
+
 .dash-page
   .dash-head.clearfix
-    %p MANAGE USERS
+    %p= t('dashboard.nav.users')
     = link_to new_dashboard_user_path, rel: "modal", class: "dash-head-btn" do
-      .btn.blue{:role => "button"} Add User
+      .btn.blue{:role => "button"} Add Admin
   .dash-body
     #users-list.table-responsive
       %table.table
@@ -13,5 +15,3 @@
             %th Actions
         %tbody
           = render @users
-
-

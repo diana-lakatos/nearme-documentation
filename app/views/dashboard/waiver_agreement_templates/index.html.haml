@@ -1,8 +1,8 @@
-- title "Waiver Agreement"
+- title t('dashboard.nav.waiver_agreement_templates')
 
 .dash-page
   .dash-head.clearfix
-    %p Manage Waiver Agreements
+    %p= t('dashboard.nav.waiver_agreement_templates')
     = link_to new_dashboard_waiver_agreement_template_path, class: "dash-head-btn", rel: "modal" do
       .btn.blue{:role => "button"} Add Waiver Agreement
 

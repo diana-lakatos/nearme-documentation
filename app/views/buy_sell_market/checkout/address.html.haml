@@ -12,7 +12,7 @@
             = b.input :address1, placeholder: t('buy_sell_market.checkout.placeholders.address1')
             = b.input :address2, placeholder: t('buy_sell_market.checkout.placeholders.address2')
             = b.input :city, placeholder: t('buy_sell_market.checkout.placeholders.city')
-            = b.input :zipcode, placeholder: t('buy_sell_market.checkout.placeholders.zipcode')
+            = b.input :zipcode, required: true, placeholder: t('buy_sell_market.checkout.placeholders.zipcode')
             = b.association :country, collection: @countries, input_html: { class: 'checkout-select' }
             = b.association :state, collection: @billing_states, include_blank: false, input_html: { class: 'checkout-select' }
             = b.input :phone, as: :string
@@ -28,7 +28,7 @@
               = s.input :address1, placeholder: t('buy_sell_market.checkout.placeholders.address1')
               = s.input :address2, placeholder: t('buy_sell_market.checkout.placeholders.address2')
               = s.input :city, placeholder: t('buy_sell_market.checkout.placeholders.city')
-              = s.input :zipcode, placeholder: t('buy_sell_market.checkout.placeholders.zipcode')
+              = s.input :zipcode, required: true, placeholder: t('buy_sell_market.checkout.placeholders.zipcode')
               = s.association :country, collection: @countries, input_html: { class: 'checkout-select' }
               = s.association :state, collection: @shipping_states, include_blank: false, input_html: { class: 'checkout-select' }
               = s.input :phone, as: :string

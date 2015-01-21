@@ -2,11 +2,11 @@
 
 .dash-head.clearfix
   %p MANAGE #{@transactable}
-  = render 'bulk_upload_button'
+  = link_to new_dashboard_transactable_type_transactable_path(@transactable_type), class: "new-transactable-btn dash-head-btn btn blue pull-right" do
+    List New Item
+  = link_to new_dashboard_transactable_type_data_upload_path(@transactable_type), class: "bulk-upload blue pull-right", rel: 'modal' do
+    Bulk Upload
 .dash-body
-  .new-profile
-    =image_tag('themes/buy_sell/icon-cross.png')
-    = link_to "List New Item", new_dashboard_transactable_type_transactable_path(@transactable_type)
   .dash-sub-nav
     %ul
       - TransactableType.all.each do |transactable_type|

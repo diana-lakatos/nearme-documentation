@@ -2,13 +2,9 @@
 
 .dash-head.clearfix
   %p MANAGE LISTINGS
-  %a.dash-head-btn{:href => ""}
-    .btn.blue Bulk Upload
+  = link_to new_dashboard_product_path, class: "dash-head-btn btn blue pull-right" do
+    List New Item
 .dash-body
-  .new-profile
-    = link_to new_dashboard_product_path do
-      = image_tag("themes/buy_sell/icon-cross.png")
-      List New Item
   %br
   .listings-header
     .row

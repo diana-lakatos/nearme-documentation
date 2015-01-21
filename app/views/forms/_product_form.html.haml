@@ -2,7 +2,7 @@
 
 = f.input :id, :as => :hidden if f.object.product.persisted?
 = f.input :name, label: "Item Name", placeholder: "Name"
-= f.input :description, label: "Item description", as: :text, placeholder: "Description"
+= f.input :description, label: "Item description", as: :ckeditor, :input_html => { :ckeditor => { :toolbar => 'simple' } }, placeholder: "Description"
 = f.input :taxon_ids, label: "Category", :placeholder => "Enter a category"
 .row
   .col-md-3

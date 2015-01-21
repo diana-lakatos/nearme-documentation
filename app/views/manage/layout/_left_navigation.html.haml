@@ -6,14 +6,14 @@
       - else
         = dashboard_menu_item 'dashboard/user_reservations', dashboard_user_reservations_path,
             active: (params[:controller].include?('user_recurring_bookings') || params[:controller].include?('user_reservations'))
-            
+
       = dashboard_menu_item 'dashboard/user_messages', dashboard_user_messages_path
 
-    - if current_user.companies.any?
+    - if @company.present?
       %ul
         %li.nav-head
           = t('dashboard.nav.your_shop')
-        = dashboard_menu_item 'dashboard/companies', edit_dashboard_company_path(current_user.companies.first)
+        = dashboard_menu_item 'dashboard/companies', edit_dashboard_company_path(@company)
         - if buyable?
           = dashboard_menu_item 'dashboard/products', dashboard_products_path
         - elsif TransactableType.first
@@ -33,7 +33,7 @@
         = dashboard_menu_item 'dashboard/waiver_agreement_templates', dashboard_waiver_agreement_templates_path
         = dashboard_menu_item 'dashboard/white_labels', edit_dashboard_white_label_path(current_user.companies.first)
         - if TransactableType.all.any? { |t| t.has_action?('Request For Quote') }
-          = dashboard_menu_item 'dashboard/tickets', dashboard_support_tickets_path
+          = dashboard_menu_item 'dashboard/support/tickets', dashboard_support_tickets_path
 
     %ul
       %li.nav-head

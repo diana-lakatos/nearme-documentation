@@ -1,7 +1,8 @@
-- title "White-label"
+- title t('dashboard.nav.white_labels')
+
 .dash-page
   .dash-head.clearfix
-    %p MANAGE USERS
+    %p= t('dashboard.nav.white_labels')
   .dash-body
     = simple_form_for @company, :url => dashboard_white_label_path(@company), wrapper: :bs3, :html => {multipart: true, :id => 'edit_company' } do |f|
 

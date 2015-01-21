@@ -1,6 +1,8 @@
+- title t('dashboard.nav.transfers')
+
 .dash-page
   .dash-head.clearfix
-    %p Payment Transfers
+    %p= t('dashboard.nav.transfers')
   .dash-body
     - if @last_week_payment_transfers.empty?
       %p.no_data.text-center No transfers have been made in the preceding 7 day period.
