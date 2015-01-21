@@ -28,7 +28,7 @@ class Dashboard::BaseController < ApplicationController
   private
 
   def find_company
-    @company = current_user.companies.first
+    @company = current_user.try(:companies).try(:first)
   end
 
   def redirect_if_no_company
