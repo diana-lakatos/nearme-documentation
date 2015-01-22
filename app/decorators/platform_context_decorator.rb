@@ -99,6 +99,14 @@ class PlatformContextDecorator
     Billing::Gateway::Processor::Outgoing::ProcessorFactory.supported_payout_via_ach?(self.instance)
   end
 
+  def map_view
+    if ['mixed', 'listing_mixed'].include?(platform_context.instance.default_search_view)
+      platform_context.instance.default_search_view
+    else
+      'mixed'
+    end
+  end
+
   private
 
   def platform_context

@@ -1,7 +1,6 @@
-- map_view = ['mixed', 'listing_mixed'].include?(platform_context.instance.default_search_view) ? platform_context.instance.default_search_view : 'mixed'
 %header#listing_search.container-fluid.mixed{class: platform_context.instance.default_search_view.present? ? 'with-toggle' : ''}
   .header-inner
-    %form.search_results{:action => search_path(v: map_view), :method => "get"}
+    %form.search_results{:action => search_path(v: result_view), :method => "get"}
       = hidden_field_tag :lntype, @searcher.search.lntype
       = hidden_field_tag :lgtype, @searcher.search.lgtype
       = hidden_field_tag :lgpricing, @searcher.search.lgpricing
@@ -10,9 +9,9 @@
         .span12
           - if platform_context.instance.default_search_view.present?
             .list-map-toggle
-              %a.map{ href: search_path(params.merge(v: map_view)), class: result_view == map_view ? 'active' : nil, title: 'Map' }
+              %a.map{ href: search_path(params.merge(v: platform_context.map_view)), class: active_class(result_view,platform_context.map_view), title: 'Map' }
                 Map
-              %a.list{ href: search_path(params.merge(v: 'list')), class: result_view == 'list' ? 'active' : nil, title: 'List' }
+              %a.list{ href: search_path(params.merge(v: 'list')), class: active_class(result_view, 'list'), title: 'List' }
                 List
           .search-container
             %input#search{:name => "loc", :placeholder => "enter location", :type => "text", :value => @searcher.query, :class => "query", :autocomplete => "off"}
@@ -26,7 +25,7 @@
       - search_geofields.each do |geofield|
         = hidden_field_tag geofield, params.fetch(geofield, '')
       = hidden_field_tag :sort, @searcher.search.sort
-      = hidden_field_tag :v, map_view
+      = hidden_field_tag :v, result_view
       = hidden_field_tag :ignore_search_event, 0
       = hidden_field_tag :page, 1
       = hidden_field_tag :per_page, per_page

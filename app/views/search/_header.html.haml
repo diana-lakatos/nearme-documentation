@@ -1,4 +1,3 @@
-- map_view = ['mixed', 'listing_mixed'].include?(platform_context.instance.default_search_view) ? platform_context.instance.default_search_view : 'mixed'
 - content_for :hero do
   %header#listing_search.container-fluid{class: result_view == 'map' ? 'with-map' : ''}
     .header-inner
@@ -11,9 +10,9 @@
         .row-fluid
           .span12
             .list-map-toggle
-              %a.map{ href: search_path(params.merge(v: map_view)), class: result_view == map_view ? 'active' : nil, title: 'Map' }
+              %a.map{ href: search_path(params.merge(v: platform_context.map_view)), class: active_class(result_view,platform_context.map_view), title: 'Map' }
                 Map
-              %a.list{ href: search_path(params.merge(v: 'list')), class: result_view == 'list' ? 'active' : nil, title: 'List' }
+              %a.list{ href: search_path(params.merge(v: 'list')), class: active_class(result_view, 'list'), title: 'List' }
                 List
             .search-container
               %input#search{:name => "loc", :placeholder => platform_context.search_field_placeholder, :type => "text", :value => @searcher.query, :class => "query", :autocomplete => "off"}
