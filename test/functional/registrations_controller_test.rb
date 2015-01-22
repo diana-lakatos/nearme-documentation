@@ -202,11 +202,11 @@ class RegistrationsControllerTest < ActionController::TestCase
       should 'store transformation data and rotate' do
         sign_in @user
         stub_image_url("http://www.example.com/image.jpg")
-        post :update_avatar, { :crop => { :w => 1, :h => 2, :x => 10, :y => 20 }, :rotate => 90 }
+        post :update_avatar, format: :js, crop: { w: 1, h: 2, x: 10, y: 20 }, rotate: 90
         @user = assigns(:user)
         assert_not_nil @user.avatar_transformation_data
-        assert_equal({ 'w' => '1', 'h' => '2', 'x' => '10', 'y' => '20' }, @user.avatar_transformation_data[:crop])
-        assert_equal "90", @user.avatar_transformation_data[:rotate]
+        assert_equal({ 'w' => 1, 'h' => 2, 'x' => 10, 'y' => 20 }, @user.avatar_transformation_data[:crop])
+        assert_equal 90, @user.avatar_transformation_data[:rotate]
       end
 
       should 'delete everything related to avatar when destroying avatar' do
@@ -215,7 +215,7 @@ class RegistrationsControllerTest < ActionController::TestCase
         @user.avatar_versions_generated_at = Time.zone.now
         @user.avatar_original_url = "example.jpg"
         @user.save!
-        delete :destroy_avatar, { :crop => { :w => 1, :h => 2, :x => 10, :y => 20 }, :rotate => 90 }
+        delete :destroy_avatar
         @user = assigns(:user)
         assert @user.avatar_transformation_data.empty?
         assert_nil @user.avatar_versions_generated_at

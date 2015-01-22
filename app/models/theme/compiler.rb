@@ -7,23 +7,15 @@ class Theme::Compiler
 
   # Generates the new stylesheet assets and updates the theme data accordingly.
   def generate_and_update_assets
-    path = "#{Dir.tmpdir}/ThemeStylesheet#{@theme.id}"
-    FileUtils.touch(path)
-    compressor = YUI::CssCompressor.new
-    if Rails.env.development?
-      File.open(path, 'w') do |gz|
-          gz.write compressor.compress(render_stylesheet)
-      end
-    else
-      Zlib::GzipWriter.open(path, 9) do |gz|
-          gz.write compressor.compress(render_stylesheet)
-      end
-    end
-    gzipped_file = File.open(path, 'rb')
 
     @theme.compiled_stylesheet = {
-      :tempfile => gzipped_file,
-      :filename => "theme-#{Time.now.to_i}.css"
+      :tempfile => create_compiled_file('theme.scss.erb'),
+      :filename => "theme-application-#{Time.zone.now.to_i}.css"
+    }
+
+    @theme.compiled_dashboard_stylesheet = {
+      :tempfile => create_compiled_file('dashboard_theme.scss.erb'),
+      :filename => "theme-dashboard-#{Time.zone.now.to_i}.css"
     }
 
     @theme.skipping_compilation do
@@ -36,10 +28,26 @@ class Theme::Compiler
 
   private
 
-  def render_stylesheet
+  def create_compiled_file(base_file_name)
+    path = "#{Dir.tmpdir}/#{base_file_name}-ThemeStylesheet#{@theme.id}"
+    FileUtils.touch(path)
+    compressor = YUI::CssCompressor.new
+    if Rails.env.development?
+      File.open(path, 'w') do |gz|
+          gz.write compressor.compress(render_stylesheet(base_file_name))
+      end
+    else
+      Zlib::GzipWriter.open(path, 9) do |gz|
+          gz.write compressor.compress(render_stylesheet(base_file_name))
+      end
+    end
+    File.open(path, 'rb')
+  end
+
+  def render_stylesheet(file_name)
     # Load the dynamic css template contents
     css_template_path = Rails.root.join(
-      'app', 'assets', 'stylesheets', 'dynamic', 'theme.scss.erb'
+      'app', 'assets', 'stylesheets', 'dynamic', file_name
     )
     css_template_content = File.read(css_template_path)
 

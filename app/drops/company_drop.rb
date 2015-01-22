@@ -10,7 +10,7 @@ class CompanyDrop < BaseDrop
   end
 
   def add_paypal_url_with_tracking_and_token
-    routes.edit_manage_company_path(@company, :token => @company.creator.temporary_token, :track_email_event => true)
+    routes.edit_dashboard_payouts_path(token: @company.creator.temporary_token, track_email_event: true)
   end
 
   def payment_transfers_as_string

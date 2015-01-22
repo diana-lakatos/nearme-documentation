@@ -12,7 +12,7 @@ class DataUploadImportJob < Job
       @validation_errors_tracker = DataImporter::Tracker::ValidationErrors.new
       @summary_tracker = DataImporter::Tracker::Summary.new
       xml_path = @data_upload.xml_file.proper_file_path
-      @progress_tracker = DataImporter::Tracker::Progress.new(@data_upload, DataImporter::XmlEntityCounter.new(xml_path).all_objects_count)
+      @progress_tracker = DataImporter::Tracker::ProgressTracker.new(@data_upload, DataImporter::XmlEntityCounter.new(xml_path).all_objects_count)
       @trackers = [@validation_errors_tracker, @summary_tracker, @progress_tracker]
       @xml_file = DataImporter::XmlFile.new(xml_path, @data_upload.transactable_type, {synchronizer: @synchronizer, trackers: @trackers })
       begin
@@ -27,6 +27,11 @@ class DataUploadImportJob < Job
         @data_upload.save!
         @data_upload.touch(:imported_at)
       end
+    end
+    if @data_upload.succeeded? || @data_upload.partially_succeeded?
+      DataUploadMailer.enqueue.notify_uploader_of_finished_import(@data_upload)
+    elsif @data_upload.failed?
+      DataUploadMailer.enqueue.notify_uploader_of_failed_import(@data_upload)
     end
   end
 

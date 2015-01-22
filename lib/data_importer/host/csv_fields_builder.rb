@@ -17,14 +17,14 @@ class DataImporter::Host::CsvFieldsBuilder
 
   def get_all_labels
     object_field_pairs.map do |object_field_pair|
-      get_label(object_field_pair)
-    end
+      get_label(object_field_pair).presence || nil
+    end.compact
   end
 
   def get_label(object_field_pair)
     object = object_field_pair.keys.first
     field = object_field_pair[object]
-    all_valid_fields_for_object(object).fetch(field)
+    all_valid_fields_for_object(object).fetch(field, nil)
   end
 
   def valid_object_field_pair?(object_field_pair)

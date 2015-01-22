@@ -9,6 +9,7 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     @location_type = FactoryGirl.create(:location_type, name: 'My Type')
     @transactable_type = FactoryGirl.create(:transactable_type_current_data)
     GmapsFake.stub_requests
+    stub_mixpanel
   end
 
   context 'current data' do
@@ -46,7 +47,8 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
         assert_no_difference 'Address.count' do
           assert_no_difference 'Transactable.count' do
             assert_no_difference 'Photo.count' do
-              DataUploadImportJob.perform(@data_upload.id)
+
+              DataUploadHostConvertJob.perform(@data_upload.id)
               assert @data_upload.reload.encountered_error.blank?, "Unexpected error: #{@data_upload.encountered_error}"
             end
           end
@@ -64,7 +66,7 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
         assert_no_difference 'Address.count' do
           assert_no_difference 'Transactable.count' do
             assert_no_difference 'Photo.count' do
-              DataUploadImportJob.perform(@data_upload.id)
+              DataUploadHostConvertJob.perform(@data_upload.id)
               assert @data_upload.reload.encountered_error.blank?, "Unexpected error: #{@data_upload.encountered_error}"
             end
           end
@@ -78,7 +80,7 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     @company = FactoryGirl.create(:company, creator: @user)
     assert_nothing_raised do
       setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data_without_external_ids.csv'), true)
-      DataUploadImportJob.perform(@data_upload.id)
+      DataUploadHostConvertJob.perform(@data_upload.id)
       assert @data_upload.reload.encountered_error.blank?, "Unexpected error: #{@data_upload.encountered_error}"
     end
     assert_equal 1, Location.with_deleted.count
@@ -94,7 +96,7 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     assert_no_difference 'Location.count' do
       @location_empty.destroy
       setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), true)
-      DataUploadImportJob.perform(@data_upload.id)
+      DataUploadHostConvertJob.perform(@data_upload.id)
       assert @data_upload.reload.encountered_error.blank?, "Unexpected error: #{@data_upload.encountered_error}"
     end
     refute @location_empty.reload.deleted?
@@ -109,7 +111,7 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     assert_no_difference 'Transactable.count' do
       @listing_one.destroy
       setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data.csv'), true)
-      DataUploadImportJob.perform(@data_upload.id)
+      DataUploadHostConvertJob.perform(@data_upload.id)
     end
     assert @data_upload.reload.encountered_error.blank?, "Unexpected error: #{@data_upload.encountered_error}"
     refute @listing_one.reload.deleted?
@@ -120,7 +122,7 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     setup_current_data
     setup_data_for_other_user
     setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data_modified.csv'))
-    DataUploadImportJob.perform(@data_upload.id)
+    DataUploadHostConvertJob.perform(@data_upload.id)
     assert @data_upload.reload.encountered_error.blank?, "Unexpected error: #{@data_upload.encountered_error}"
     refute @photo_one.reload.deleted?
     assert_equal 3, @listing_one.reload.photos.count
@@ -146,7 +148,7 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     setup_current_data
     setup_data_for_other_user
     setup_data_upload(Rails.root.join('test', 'assets', 'data_importer', 'current_data_modified.csv'), true)
-    DataUploadImportJob.perform(@data_upload.id)
+    DataUploadHostConvertJob.perform(@data_upload.id)
     assert @data_upload.reload.encountered_error.blank?, "Unexpected error: #{@data_upload.encountered_error}"
     assert @photo_one.reload.deleted?
     refute @photo_two.reload.deleted?
@@ -203,8 +205,6 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
 
   def setup_data_upload(csv_path, sync_mode = false)
     @data_upload = FactoryGirl.create(:data_upload, sync_mode: sync_mode, transactable_type: @transactable_type, csv_file: File.open(csv_path), target: @company, uploader: @user)
-    DataUploadHostConvertJob.perform(@data_upload.id)
-    @data_upload.reload.queue!
   end
 
 end

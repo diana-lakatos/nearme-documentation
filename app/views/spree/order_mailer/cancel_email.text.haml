@@ -1,0 +1,16 @@
+= t('buy_sell_market.checkout.order_mailer.cancel_email.dear_customer')
+\
+= t('buy_sell_market.checkout.order_mailer.cancel_email.instructions')
+\
+============================================================
+= t('buy_sell_market.checkout.order_mailer.cancel_email.order_summary_canceled')
+============================================================
+- @order.line_items.each do |item|
+  = "#{item.variant.sku} #{raw(item.variant.product.name)} #{raw(item.variant.options_text)} (#{item.quantity}) @ #{item.single_money} = #{item.display_amount}"
+============================================================
+= t('buy_sell_market.checkout.order_mailer.subtotal', subtotal: @order.display_item_total)
+- @order.adjustments.eligible.each do |adjustment|
+  = "#{raw(adjustment.label)} #{adjustment.display_amount}"
+= t('buy_sell_market.checkout.order_mailer.service_fee', fee: Spree::Money.new(@order.service_fee_amount_guest, currency: @order.currency))
+
+= t('buy_sell_market.checkout.order_mailer.total', total: Spree::Money.new(@order.total_amount_to_charge, currency: @order.currency))

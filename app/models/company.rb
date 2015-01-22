@@ -6,15 +6,10 @@ class Company < ActiveRecord::Base
   URL_REGEXP = URI::regexp(%w(http https))
   has_metadata :accessors => [:industries_metadata]
 
-  notify_associations_about_column_update([:payment_transfers, :reservation_charges, :reservations, :listings, :locations], [:instance_id, :partner_id])
+  notify_associations_about_column_update([:payment_transfers, :payments, :reservations, :listings, :locations], [:instance_id, :partner_id])
   notify_associations_about_column_update([:reservations, :listings, :locations], [:creator_id, :listings_public])
 
-  # attr_accessible :description, :url, :email, :name,
-  #   :mailing_address, :paypal_email, :industry_ids, :locations_attributes,
-  #   :domain_attributes, :theme_attributes, :white_label_enabled,
-  #   :listings_public, :bank_account_number, :bank_routing_number, :bank_owner_name
-
-  attr_accessor :created_payment_transfers, :bank_account_number, :bank_routing_number, :bank_owner_name
+  attr_accessor :created_payment_transfers, :bank_account_number, :bank_routing_number, :bank_owner_name, :verify_associated
 
   belongs_to :creator, class_name: "User", inverse_of: :created_companies
   belongs_to :instance
@@ -24,8 +19,27 @@ class Company < ActiveRecord::Base
   has_many :locations, dependent: :destroy, inverse_of: :company
   has_many :listings, class_name: 'Transactable', inverse_of: :company
   has_many :photos, through: :listings
+  has_many :products, class_name: 'Spree::Product', inverse_of: :company, dependent: :destroy
+  has_many :products_images, through: :products, source: :variant_images
+
+  has_many :properties, class_name: 'Spree::Property', dependent: :destroy
+  has_many :prototypes, class_name: 'Spree::Prototype', dependent: :destroy
+  has_many :option_types, class_name: 'Spree::OptionType', dependent: :destroy
+  has_many :order_line_items, class_name: 'Spree::LineItem'
+  has_many :orders, class_name: 'Spree::Order'
+  has_many :taxonomies, class_name: 'Spree::Taxonomy', dependent: :destroy
+  has_many :tax_categories, class_name: 'Spree::TaxCategory', dependent: :destroy
+  has_many :shipping_categories, class_name: 'Spree::ShippingCategory', dependent: :destroy
+  has_many :shipping_methods, class_name: 'Spree::ShippingMethod', dependent: :destroy
+  has_many :taxons, class_name: 'Spree::Taxon', dependent: :destroy
+  has_many :stock_locations, class_name: 'Spree::StockLocation', dependent: :destroy
+  has_many :variants, class_name: 'Spree::Variant', dependent: :destroy
+  has_many :zones, class_name: 'Spree::Zone', dependent: :destroy
+
   has_many :reservations
-  has_many :reservation_charges
+  has_many :reservation_charges, through: :reservations
+  has_many :payments
+  has_many :order_charges, through: :orders, source: :near_me_payments
   has_many :payment_transfers, :dependent => :destroy
   has_many :company_industries, :dependent => :destroy
   has_many :industries, :through => :company_industries
@@ -33,7 +47,6 @@ class Company < ActiveRecord::Base
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_one :domain, :as => :target, :dependent => :destroy
   has_one :theme, :as => :owner, :dependent => :destroy
-  has_many :order_line_items, class_name: 'Spree::LineItem'
 
   has_many :locations_impressions, :source => :impressions, :through => :locations
   has_many :instance_clients, :as => :client, :dependent => :destroy
@@ -61,9 +74,7 @@ class Company < ActiveRecord::Base
   #
   # NB: Will probably need to optimize this at some point
   scope :needs_payment_transfer, -> {
-    for_reservations = joins(:reservation_charges).merge(ReservationCharge.needs_payment_transfer).uniq
-    for_orders = joins(:order_line_items).merge(Spree::LineItem.needs_payment_transfer).uniq
-    from("(#{for_reservations.to_sql} UNION #{for_orders.to_sql}) AS companies")
+    joins(:payments).merge(Payment.needs_payment_transfer)
   }
 
   accepts_nested_attributes_for :domain, :reject_if => proc { |params| params.delete(:white_label_enabled).to_f.zero? }
@@ -71,7 +82,14 @@ class Company < ActiveRecord::Base
   accepts_nested_attributes_for :locations
   accepts_nested_attributes_for :company_address
   accepts_nested_attributes_for :approval_requests
+  accepts_nested_attributes_for :products, :shipping_methods, :shipping_categories, :stock_locations
 
+  validates_associated :shipping_methods, :if => :verify_associated
+  validates_associated :shipping_categories, :if => :verify_associated
+  validates_associated :products, :if => :verify_associated
+  validates_associated :stock_locations, :if => :verify_associated
+
+  validates :paypal_email, email: true, allow_blank: true
 
   def add_creator_to_company_users
     unless users.include?(creator)
@@ -88,19 +106,10 @@ class Company < ActiveRecord::Base
   def schedule_payment_transfer
     self.created_payment_transfers = []
     transaction do
-      charges_without_payment_transfer = reservation_charges.needs_payment_transfer
-      if charges_without_payment_transfer.any?
-        charges_without_payment_transfer.group_by(&:currency).each do |currency, charges|
-          payment_transfer = payment_transfers.create!(
-            reservation_charges: charges
-          )
-          self.created_payment_transfers << payment_transfer if payment_transfer.possible_automated_payout_not_supported?
-        end
-      end
-
-      if order_line_items.needs_payment_transfer.any?
+      charges_without_payment_transfer = payments.needs_payment_transfer
+      charges_without_payment_transfer.group_by(&:currency).each do |currency, charges|
         payment_transfer = payment_transfers.create!(
-          order_line_items: order_line_items.needs_payment_transfer
+          payments: charges
         )
         self.created_payment_transfers << payment_transfer if payment_transfer.possible_automated_payout_not_supported?
       end
@@ -158,6 +167,7 @@ class Company < ActiveRecord::Base
     errors.add(:url, "must be a valid URL") unless valid
   end
 
+  # TODO: Exctract to another object
   def create_bank_account_in_balanced!
     [:bank_account_number, :bank_routing_number, :bank_owner_name].each do |mandatory_field|
       errors.add(mandatory_field, 'cannot be blank') if self.send(mandatory_field).blank?

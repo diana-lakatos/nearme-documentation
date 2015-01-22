@@ -5,6 +5,7 @@ class DataImporter::Host::CsvFile::TemplateCsvFile < DataImporter::CsvFile::Temp
   def initialize(data_upload)
     @user = data_upload.uploader
     @company = @user.companies.first || @user.companies.create(name: @user.name, creator: @user)
+    @company.update_attribute(:creator, @user) if @company.creator.nil?
     @company.update_attribute(:external_id, @company.creator.email)
     super(data_upload.csv_file.proper_file_path, data_upload.transactable_type, data_upload.options)
   end

@@ -1,0 +1,50 @@
+.order{id: dom_id(reservation)}
+  .order-head
+    .row
+      .col-md-3
+        %p Order placed
+        %p= l reservation.created_at, format: :only_date
+
+      .col-md-3
+        %p Requested date
+        %p.dates= reservation.long_dates
+
+      .col-md-4
+        %p Requested time
+        %p
+          - if reservation.listing.hourly_reservations?
+            = reservation.hourly_summary_for_first_period(false).gsub('<br />', ' ').html_safe
+          - else
+            N/A
+
+      .col-md-2
+        %p Total
+        %p= reservation.total_price
+
+  .order-body
+    .order-status
+      %h3= reservation.state.humanize.capitalize
+      - if reservation.can_confirm?
+        %p= reservation.manage_booking_status_info_new
+
+    .row
+      .order-item
+        .col-md-8
+          .row
+            .inline
+              - if reservation.owner.present?
+                = link_to reservation.owner, profile_path(reservation.owner.slug)
+                = link_to '', new_reservation_user_message_path(reservation), rel: 'modal', class: 'ico-mail'
+              - else
+                = "#{reservation.owner_including_deleted} (Deleted)"
+              %br
+              - if reservation.listing.present?
+                %span.address= link_to reservation.listing.name, location_path(reservation.listing.location, reservation.listing)
+              - else
+                %span.address [listing deleted]
+              %p QTY: #{reservation.quantity}
+              %p= pluralize(reservation.total_days, 'day')
+
+        .col-md-4.order-actions
+          = render 'dashboard/host_reservations/owner_actions', reservation: reservation
+

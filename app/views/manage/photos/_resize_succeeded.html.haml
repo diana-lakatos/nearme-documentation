@@ -1,8 +1,10 @@
-%header
-  %h2== Image successfully cropped/rotated
-%p.text-center{:style => 'margin: 40px 0px;'}
-  Your changes will be applied within a few minutes.
-.actions.text-center
-  = link_to '#', :class => 'btn btn-large btn-green close-modal ' do
-    %span.ico-check.padding Continue
+.modal-header
+  .modal-title= t('manage.photos.resize_succeeded')
+.modal-body
+  %p.text-center{:style => 'margin: 40px 0px;'}
+    = t('manage.photos.changes_applied_soon')
+
+  .btn-toolbar
+    = link_to '#', class: 'btn medium blue close-modal pull-right' do
+      = t('manage.photos.continue')
 

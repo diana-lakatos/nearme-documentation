@@ -13,7 +13,11 @@ class Spree::ProductDrop < BaseDrop
   end
 
   def product_url
-    routes.product_url(@product)
+    urlify(routes.product_path(@product))
+  end
+
+  def product_path
+    routes.product_path(@product)
   end
 
   def photo_url

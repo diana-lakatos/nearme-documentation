@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141208143431) do
+ActiveRecord::Schema.define(version: 20150120102629) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -205,7 +205,11 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
     t.string   "payment_gateway_mode"
+    t.string   "reference_type"
+    t.integer  "reference_id"
   end
+
+  add_index "billing_authorizations", ["reference_id", "reference_type"], name: "index_billing_authorizations_on_reference_id_and_reference_type", using: :btree
 
   create_table "blog_instances", force: true do |t|
     t.string   "name"
@@ -629,7 +633,6 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.string   "lessor"
     t.string   "lessee"
     t.boolean  "skip_company",                                                default: false
-    t.boolean  "default_instance",                                            default: false
     t.text     "pricing_options"
     t.decimal  "service_fee_host_percent",            precision: 5, scale: 2, default: 0.0
     t.string   "live_stripe_public_key"
@@ -688,6 +691,8 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
     t.string   "payment_transfers_frequency",                                 default: "fortnightly"
+    t.boolean  "default_instance"
+    t.text     "hidden_dashboard_menu_items"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -830,6 +835,36 @@ ActiveRecord::Schema.define(version: 20141208143431) do
   add_index "payment_transfers", ["instance_id"], name: "index_payment_transfers_on_instance_id", using: :btree
   add_index "payment_transfers", ["partner_id"], name: "index_payment_transfers_on_partner_id", using: :btree
 
+  create_table "payments", force: true do |t|
+    t.integer  "reservation_id"
+    t.integer  "subtotal_amount_cents"
+    t.integer  "service_fee_amount_guest_cents"
+    t.datetime "paid_at"
+    t.datetime "failed_at"
+    t.datetime "created_at",                                             null: false
+    t.datetime "updated_at",                                             null: false
+    t.string   "currency"
+    t.datetime "deleted_at"
+    t.integer  "payment_transfer_id"
+    t.integer  "service_fee_amount_host_cents",              default: 0, null: false
+    t.datetime "refunded_at"
+    t.integer  "instance_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.integer  "cancellation_policy_hours_for_cancellation", default: 0
+    t.integer  "cancellation_policy_penalty_percentage",     default: 0
+    t.text     "recurring_booking_error"
+    t.string   "reference_type"
+    t.integer  "reference_id"
+  end
+
+  add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree
+  add_index "payments", ["instance_id"], name: "index_payments_on_instance_id", using: :btree
+  add_index "payments", ["partner_id"], name: "index_payments_on_partner_id", using: :btree
+  add_index "payments", ["payment_transfer_id"], name: "index_payments_on_payment_transfer_id", using: :btree
+  add_index "payments", ["reference_id", "reference_type"], name: "index_payments_on_reference_id_and_reference_type", using: :btree
+  add_index "payments", ["reservation_id"], name: "index_payments_on_reservation_id", using: :btree
+
   create_table "payouts", force: true do |t|
     t.integer  "reference_id"
     t.string   "reference_type"
@@ -970,33 +1005,6 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.datetime "updated_at",         null: false
     t.integer  "instance_id"
   end
-
-  create_table "reservation_charges", force: true do |t|
-    t.integer  "reservation_id"
-    t.integer  "subtotal_amount_cents"
-    t.integer  "service_fee_amount_guest_cents"
-    t.datetime "paid_at"
-    t.datetime "failed_at"
-    t.datetime "created_at",                                             null: false
-    t.datetime "updated_at",                                             null: false
-    t.string   "currency"
-    t.datetime "deleted_at"
-    t.integer  "payment_transfer_id"
-    t.integer  "service_fee_amount_host_cents",              default: 0, null: false
-    t.datetime "refunded_at"
-    t.integer  "instance_id"
-    t.integer  "company_id"
-    t.integer  "partner_id"
-    t.integer  "cancellation_policy_hours_for_cancellation", default: 0
-    t.integer  "cancellation_policy_penalty_percentage",     default: 0
-    t.text     "recurring_booking_error"
-  end
-
-  add_index "reservation_charges", ["company_id"], name: "index_reservation_charges_on_company_id", using: :btree
-  add_index "reservation_charges", ["instance_id"], name: "index_reservation_charges_on_instance_id", using: :btree
-  add_index "reservation_charges", ["partner_id"], name: "index_reservation_charges_on_partner_id", using: :btree
-  add_index "reservation_charges", ["payment_transfer_id"], name: "index_reservation_charges_on_payment_transfer_id", using: :btree
-  add_index "reservation_charges", ["reservation_id"], name: "index_reservation_charges_on_reservation_id", using: :btree
 
   create_table "reservation_periods", force: true do |t|
     t.integer  "reservation_id"
@@ -1146,6 +1154,9 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.text     "image_transformation_data"
     t.integer  "image_original_height"
     t.integer  "image_original_width"
+    t.string   "remote_image_url"
+    t.integer  "uploader_id"
+    t.integer  "instance_id"
   end
 
   add_index "spree_assets", ["viewable_id"], name: "index_assets_on_viewable_id", using: :btree
@@ -1345,16 +1356,16 @@ ActiveRecord::Schema.define(version: 20141208143431) do
   add_index "spree_option_values_variants", ["variant_id"], name: "index_spree_option_values_variants_on_variant_id", using: :btree
 
   create_table "spree_orders", force: true do |t|
-    t.string   "number",                 limit: 32
-    t.decimal  "item_total",                        precision: 10, scale: 2, default: 0.0,     null: false
-    t.decimal  "total",                             precision: 10, scale: 2, default: 0.0,     null: false
+    t.string   "number",                     limit: 32
+    t.decimal  "item_total",                            precision: 10, scale: 2, default: 0.0,     null: false
+    t.decimal  "total",                                 precision: 10, scale: 2, default: 0.0,     null: false
     t.string   "state"
-    t.decimal  "adjustment_total",                  precision: 10, scale: 2, default: 0.0,     null: false
+    t.decimal  "adjustment_total",                      precision: 10, scale: 2, default: 0.0,     null: false
     t.integer  "user_id"
     t.datetime "completed_at"
     t.integer  "bill_address_id"
     t.integer  "ship_address_id"
-    t.decimal  "payment_total",                     precision: 10, scale: 2, default: 0.0
+    t.decimal  "payment_total",                         precision: 10, scale: 2, default: 0.0
     t.integer  "shipping_method_id"
     t.string   "shipment_state"
     t.string   "payment_state"
@@ -1365,19 +1376,21 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.string   "currency"
     t.string   "last_ip_address"
     t.integer  "created_by_id"
-    t.decimal  "shipment_total",                    precision: 10, scale: 2, default: 0.0,     null: false
-    t.decimal  "additional_tax_total",              precision: 10, scale: 2, default: 0.0
-    t.decimal  "promo_total",                       precision: 10, scale: 2, default: 0.0
-    t.string   "channel",                                                    default: "spree"
-    t.decimal  "included_tax_total",                precision: 10, scale: 2, default: 0.0,     null: false
-    t.integer  "item_count",                                                 default: 0
+    t.decimal  "shipment_total",                        precision: 10, scale: 2, default: 0.0,     null: false
+    t.decimal  "additional_tax_total",                  precision: 10, scale: 2, default: 0.0
+    t.decimal  "promo_total",                           precision: 10, scale: 2, default: 0.0
+    t.string   "channel",                                                        default: "spree"
+    t.decimal  "included_tax_total",                    precision: 10, scale: 2, default: 0.0,     null: false
+    t.integer  "item_count",                                                     default: 0
     t.integer  "approver_id"
     t.datetime "approved_at"
-    t.boolean  "confirmation_delivered",                                     default: false
-    t.boolean  "considered_risky",                                           default: false
+    t.boolean  "confirmation_delivered",                                         default: false
+    t.boolean  "considered_risky",                                               default: false
     t.integer  "instance_id"
     t.integer  "company_id"
     t.integer  "partner_id"
+    t.decimal  "service_fee_buyer_percent",             precision: 5,  scale: 2, default: 0.0
+    t.decimal  "service_fee_seller_percent",            precision: 5,  scale: 2, default: 0.0
   end
 
   add_index "spree_orders", ["company_id"], name: "index_spree_orders_on_company_id", using: :btree
@@ -1494,9 +1507,17 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "position",    default: 0
+    t.integer  "instance_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.integer  "user_id"
   end
 
+  add_index "spree_product_properties", ["company_id"], name: "index_spree_product_properties_on_company_id", using: :btree
+  add_index "spree_product_properties", ["instance_id"], name: "index_spree_product_properties_on_instance_id", using: :btree
+  add_index "spree_product_properties", ["partner_id"], name: "index_spree_product_properties_on_partner_id", using: :btree
   add_index "spree_product_properties", ["product_id"], name: "index_product_properties_on_product_id", using: :btree
+  add_index "spree_product_properties", ["user_id"], name: "index_spree_product_properties_on_user_id", using: :btree
 
   create_table "spree_products", force: true do |t|
     t.string   "name",                 default: "",   null: false
@@ -1758,6 +1779,7 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.integer  "user_id"
+    t.integer  "processing_time", default: 0
   end
 
   add_index "spree_shipping_methods", ["company_id"], name: "index_spree_shipping_methods_on_company_id", using: :btree
@@ -1825,10 +1847,18 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.datetime "updated_at"
     t.boolean  "backorderable",     default: false
     t.datetime "deleted_at"
+    t.integer  "instance_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.integer  "user_id"
   end
 
+  add_index "spree_stock_items", ["company_id"], name: "index_spree_stock_items_on_company_id", using: :btree
+  add_index "spree_stock_items", ["instance_id"], name: "index_spree_stock_items_on_instance_id", using: :btree
+  add_index "spree_stock_items", ["partner_id"], name: "index_spree_stock_items_on_partner_id", using: :btree
   add_index "spree_stock_items", ["stock_location_id", "variant_id"], name: "stock_item_by_loc_and_var_id", using: :btree
   add_index "spree_stock_items", ["stock_location_id"], name: "index_spree_stock_items_on_stock_location_id", using: :btree
+  add_index "spree_stock_items", ["user_id"], name: "index_spree_stock_items_on_user_id", using: :btree
 
   create_table "spree_stock_locations", force: true do |t|
     t.string   "name"
@@ -2264,6 +2294,7 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.datetime "hero_image_versions_generated_at"
     t.integer  "hero_image_original_width"
     t.integer  "hero_image_original_height"
+    t.string   "compiled_dashboard_stylesheet"
   end
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree
@@ -2487,6 +2518,8 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.string   "linkedin_url"
     t.string   "facebook_url"
     t.string   "google_plus_url"
+    t.integer  "billing_address_id"
+    t.integer  "shipping_address_id"
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

@@ -63,6 +63,8 @@ en:
         bank_owner_name: "Account's Owner Name"
         bank_routing_number: 'Routing Number'
         bank_account_number: 'Account Number'
+      domain:
+        google_analytics_tracking_code: "GA Tracking Code"
       company:
         name: 'Company name'
         industries: 'Industries'
@@ -75,6 +77,7 @@ en:
         bank_routing_number: 'Routing Number'
         bank_account_number: 'Account Number'
       transactable:
+        name: "Item Title"
         price_daily: 'Daily'
         price_weekly: 'Weekly'
         price_monthly: 'Monthly'
@@ -93,12 +96,12 @@ en:
         name: 'Enter your business name'
         url: 'www.mycompany.com'
         email: 'yourname@example.com'
-        description: 'Give a brief description of your company'
+        description: 'Give a brief description of your company.'
       company:
         name: 'Enter your business name'
         url: 'www.mycompany.com'
         email: 'yourname@example.com'
-        description: 'Give a brief description of your company'
+        description: 'Give a brief description of your company.'
       location:
         email: 'Your booking email'
         special_notes: "For example, how your %{lessees} should check in, your Wi-Fi password, whether you have pets, or other special information relevant to your %{lessee}'s stay"

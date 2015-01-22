@@ -78,6 +78,7 @@ gem "non-stupid-digest-assets"
 gem 'asset_sync'
 gem 'sass-rails', '~> 4.0.0'
 gem 'bootstrap-sass', '~> 2.3.1.0'
+gem "bootstrap-switch-rails"
 gem 'chronic', '~> 0.9.1'
 gem 'jcrop-rails', github: 'bukalapak/jcrop-rails'
 
@@ -101,6 +102,7 @@ gem 'twilio-ruby'
 gem 'googl'
 
 gem 'jquery-rails', '~> 3.1'
+gem "select2-rails"
 gem 'chosen-rails'
 gem 'spectrum-rails'
 
@@ -109,7 +111,7 @@ gem "historyjs-rails"
 
 gem 'ranked-model'
 
-gem 'filepicker-rails', '0.1'
+gem 'filepicker-rails', '~> 1.2'
 
 gem 'premailer-rails'
 
@@ -192,3 +194,5 @@ gem 'nearme', path: 'vendor/gems/nearme'
 gem 'custom_attributes', path: 'vendor/gems/custom_attributes'
 
 gem 'figaro'
+gem 'wicked' # For easy multi-steps wizards. # TODO Remove after approval of other developers
+gem 'carmen'

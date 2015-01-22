@@ -139,12 +139,25 @@ module ApplicationHelper
     end
   end
 
+  def flash_key_name(key)
+    case key.to_s
+    when 'deleted'
+      'warning'
+    when 'error'
+      'danger'
+    when 'notice'
+      'info'
+    else
+      key
+    end
+  end
+
   def array_to_unordered_list(arr = [])
     arr.map{|s| "<li>#{s}</li>"}.join.tap{|s| "<ul>#{s}</ul>"}
   end
 
-  def show_manage_navigation(active_tab = :locations)
-    content_for :manage_navbar, render(:partial => 'shared/manage_navigation', :locals => {:active_tab => active_tab})
+  def show_manage_navigation(active_tab = :locations, sub_active_tab = :products)
+    content_for :manage_navbar, render(partial: 'shared/manage_navigation', :locals => {active_tab: active_tab, sub_active_tab: sub_active_tab})
   end
 
   def section_class(section_name = nil)
@@ -154,6 +167,15 @@ module ApplicationHelper
       "#{controller_name}-#{params[:action]}"
     ].compact.join(' ')
   end
+
+  def theme_class(theme_name = nil)
+    [
+      theme_name,
+      controller_name,
+      "#{controller_name}-#{params[:action]}",
+    ].compact.join(' ')
+  end
+
 
   def dnm_page_class
     [
@@ -165,14 +187,19 @@ module ApplicationHelper
   def distance_of_time_in_words_or_date(datetime)
     today = Date.current
 
-    if datetime.to_date == today
-      datetime.strftime("%l:%M%P")
-    elsif datetime.to_date == today.yesterday
-      'Yesterday'
-    elsif datetime > (today - 7.days)
-      datetime.strftime("%A")
+    case datetime
+    when DateTime, ActiveSupport::TimeWithZone, Time
+      if datetime.to_date == today
+        datetime.strftime("%l:%M%P")
+      elsif datetime.to_date == today.yesterday
+        'Yesterday'
+      elsif datetime > (today - 7.days)
+        datetime.strftime("%A")
+      else
+        datetime.strftime("%Y-%m-%d")
+      end
     else
-      datetime.strftime("%Y-%m-%d")
+      ''
     end
   end
 
@@ -214,5 +241,14 @@ module ApplicationHelper
     else
       html
     end
+  end
+
+  def orders_navigation_link(state)
+    link_to(content_tag(:span, state.titleize), orders_path(state: state),
+      class: [
+        'upcoming-reservations',
+        'btn btn-medium',
+        "btn-gray#{state==(params[:state] || 'new') ? " active" : "-darker"}"
+      ]).html_safe
   end
 end

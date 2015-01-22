@@ -14,6 +14,12 @@ class Form
     raise "Implement in the subclass"
   end
 
+  def store_attributes(attribs)
+    attribs.each do |name, value|
+      send("#{name}=", value) unless value.nil?
+    end
+  end
+
   private
 
   def add_errors(errors_messages, attribute = :base)
@@ -35,11 +41,4 @@ class Form
   def persisted?
     false
   end
-
-  def store_attributes(attribs)
-    attribs.each do |name, value|
-      send("#{name}=", value) unless value.nil?
-    end
-  end
-
 end

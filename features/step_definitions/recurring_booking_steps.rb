@@ -53,7 +53,7 @@ end
 
 Then /^I should be redirected to recurring bookings page$/ do
   page.should have_content('Your reservation has been made!')
-  assert_includes URI.parse(current_url).path, recurring_booking_successful_reservation_path(RecurringBooking.last)
+  assert_includes URI.parse(current_url).path, recurring_booking_successful_dashboard_user_reservation_path(RecurringBooking.last)
 end
 
 Then /^I should see the recurring booking confirmation screen for:$/ do |table|

@@ -1,0 +1,49 @@
+%div
+  .control-group
+  .control-group
+    = f.input :name, placeholder: 'What is the name of the stock location?', required: true, input_html: { class: 'form-control'}, label: "Method name"
+  .control-group
+    = f.input :admin_name, placeholder: 'What is the internal name of the stock location?', input_html: { class: 'form-control'}, label: "Internal name"
+
+  .control-group
+    .control-group.check_boxes.optional
+      %label.check_boxes.optional.control-label State
+      .controls
+        = f.label :active, class: 'checkbox' do
+          Active
+          = f.check_box :active
+        = f.label :backorderable_default, class: 'checkbox' do
+          Backorderable Default
+          = f.check_box :backorderable_default
+        = f.label :propagate_all_variants, class: 'checkbox' do
+          Propagate All Variants
+          = f.check_box :propagate_all_variants
+
+  .control-group
+    = f.label :address1
+    .controls
+      = f.text_field :address1
+  .control-group
+    = f.label :address2
+    .controls
+      = f.text_field :address2
+  .control-group
+    = f.label :city
+    .controls
+      = f.text_field :city
+  .control-group
+    = f.label :zipcode
+    .controls
+      = f.text_field :zipcode
+  .control-group
+    = f.association :country, collection: @countries
+
+    / - if f.object.country
+    /   = f.label :state_id, Spree.t(:state)
+    /   %span#state.region
+    /     = f.text_field :state_name, :style => "display: #{f.object.country.states.empty? ? 'block' : 'none' };", :disabled => !f.object.country.states.empty?, :class => 'fullwidth state_name'
+    /     = f.collection_select :state_id, f.object.country.states.sort, :id, :name, {:include_blank => true}, {:class => 'select2 fullwidth', :style => "display: #{f.object.country.states.empty? ? 'none' : 'block' };", :disabled => f.object.country.states.empty?}
+  .control-group
+    = f.label :phone
+    .controls
+      = f.phone_field :phone

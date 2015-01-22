@@ -1,0 +1,34 @@
+%div
+  -@product.option_types.each do |option_type|
+    .control-group
+      = label :new_variant, option_type.presentation, class: "string optional control-label"
+      .controls
+        = f.collection_select :option_value_ids, option_type.option_values, :id, :presentation, { prompt: true }, { name: 'variant[option_value_ids][]' }
+  .control-group
+    = f.label :sku
+    .controls
+      = f.text_field :sku
+  .control-group
+    = f.label :price
+    .controls
+      = f.text_field :price
+  .control-group
+    = f.label :cost_price
+    .controls
+      = f.text_field :cost_price
+  .control-group
+    = f.label :weight
+    .controls
+      = f.text_field :weight
+  .control-group
+    = f.label :height
+    .controls
+      = f.text_field :height
+  .control-group
+    = f.label :depth
+    .controls
+      = f.text_field :depth
+  .control-group
+    = f.label :tax_category_id
+    .controls
+      = f.collection_select(:tax_category_id, @tax_categories, :id, :name, { :include_blank => Spree.t('match_choices.none') }, { :class => 'select2 fullwidth' })

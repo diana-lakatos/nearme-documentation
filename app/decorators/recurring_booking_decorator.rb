@@ -77,7 +77,14 @@ class RecurringBookingDecorator < Draper::Decorator
     first = start_on.strftime('%-e %b %Y')
     last = end_on.strftime('%-e %b %Y')
 
-    first == last ? first : "#{first}-#{last}"
+    first == last ? first : "#{first} - #{last}"
+  end
+
+  def long_dates
+    first = start_on.strftime('%-e %b, %Y')
+    last = end_on.strftime('%-e %b, %Y')
+
+    first == last ? first : "#{first} - #{last}"
   end
 
   def format_reservation_periods
@@ -95,25 +102,19 @@ class RecurringBookingDecorator < Draper::Decorator
   end
 
   def my_booking_status_info
-    if state == 'unconfirmed'
-      tooltip_text = "Pending confirmation from host. Booking will expire in #{time_to_expiry(expiry_time)}."
-      link_text = "<span class='tooltip-spacer'>i</span>".html_safe
+    status_info("Pending confirmation from host. Booking will expire in #{time_to_expiry(expiry_time)}.")
+  end
 
-      tooltip(tooltip_text, link_text, {class: status_icon}, nil)
-    else
-      "<i class='#{status_icon}'></i>".html_safe
-    end
+  def my_booking_status_info_new
+    raw("Pending confirmation from host. Booking will expire in <strong>#{time_to_expiry(expiry_time)}</strong>.")
   end
 
   def manage_booking_status_info
-    if state == 'unconfirmed'
-      tooltip_text = "You must confirm this booking within #{time_to_expiry(expiry_time)} or it will expire."
-      link_text = "<span class='tooltip-spacer'>i</span>".html_safe
+    status_info("You must confirm this booking within #{time_to_expiry(expiry_time)} or it will expire.")
+  end
 
-      tooltip(tooltip_text, link_text, {class: status_icon}, nil)
-    else
-      "<i class='#{status_icon}'></i>".html_safe
-    end
+  def manage_booking_status_info_new
+    raw("You must confirm this booking within <strong>#{time_to_expiry(expiry_time)}</strong> or it will expire.")
   end
 
   def user_message_recipient
@@ -159,7 +160,16 @@ class RecurringBookingDecorator < Draper::Decorator
   def end_minute_of_day_to_time
     minute_of_day_to_time(end_minute)
   end
+
   private
+
+  def status_info(text)
+    if state == 'unconfirmed'
+      tooltip(text, "<span class='tooltip-spacer'>i</span>".html_safe, {class: status_icon}, nil)
+    else
+      "<i class='#{status_icon}'></i>".html_safe
+    end
+  end
 
   def time_to_expiry(time_of_event)
     current_time = Time.zone.now

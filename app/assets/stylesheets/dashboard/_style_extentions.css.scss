@@ -1,0 +1,281 @@
+.navbar-fixed-top,
+.navbar-inner {
+  border-width: 0 !important;
+}
+
+.navbar-fixed-top,
+.navbar-fixed-bottom {
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: $nav-z-index;
+  margin:0 !important;
+
+}
+
+.nav-tabs {
+  border: none;
+}
+
+.pac-container {
+  z-index: 10000;
+}
+
+
+.phone-number-country-code-field {
+  position: relative;
+
+  .country-calling-code {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1px;
+    line-height: 29px;
+    width: 50px;
+    text-align: right;
+  }
+
+  input {
+    padding-left: 60px !important;
+  }
+}
+.circular-image img {
+   width: 50px;
+   height: 50px;
+   -webkit-border-radius: 25px;
+   -moz-border-radius: 25px;
+   -ms-border-radius: 25px;
+   -o-border-radius: 25px;
+    border-radius: 25px;
+}
+
+.navbar .nav-links li {
+  float: left;
+}
+
+form input[type="price"], form input[type="password"], form input[type="url"], form input[type="email"], form input[type="number"], form input[type="tel"], .selectpicker , .select2-drop, .select2-container-multi .select2-choices {
+  background: #fff;
+  border: solid #D4D4D4 1px;
+  border-radius: 0;
+  width: 100%;
+  padding: 5px 10px;
+  font-weight: 300;
+  font-size: 14px;
+}
+
+label.checkbox {
+  margin-left: 20px;
+  margin-top: 0;
+}
+
+.photo-box.no-padding {
+  padding: 0;
+}
+
+.photo-top-label {
+  height: 40px;
+  font-weight: bold;
+}
+
+/*===== PAGE HEADER =====*/
+
+.page-banner {
+  padding: 90px 0;
+  text-align: center;
+  background: #5dbded;
+}
+
+.page-banner h1 {
+  color: #fff;
+  font-size: 40px;
+  font-weight: 300;
+}
+
+.page-wrapper {
+  padding: 100px 0;
+  margin: 0 auto;
+
+  &.top {
+    padding-top: 60px;
+  }
+}
+
+ /*===== INDIVIDUAL SECTIONS =====*/
+
+.select2-container {
+  width:100%;
+}
+
+section {
+
+  background: #fff;
+  padding: 50px 0;
+  margin-bottom: 30px;
+  border-bottom: solid #d5d5d5 2px;
+
+  .container-fluid {
+    width: 68%;
+    margin: 0 auto;
+  }
+
+  .section-heading {
+    color: #5dbded;
+    font-weight: 300;
+    margin-bottom: 40px;
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .section-heading:hover {
+    color: #5dbded;
+  }
+}
+
+.map-container {
+  height: 225px;
+  margin-top: 30px;
+}
+
+.remove_shipping_profile {
+  overflow: hidden;
+
+  label {
+    float: right;
+    color: #e85c41;
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+}
+
+.shipping_method_block.row {
+  margin: 10px 0px 0px 0px;
+}
+
+.shipping-form {
+  > .no-padding-top {
+    margin-top: 0px;
+  }
+}
+
+.row {
+  &.no-padding-top {
+    padding-top: 0px;
+  }
+  &.half-margin {
+    margin:15px 0px;
+  }
+}
+
+section .listings-header .row {
+  margin: 0;
+}
+
+section .row {
+  margin: 30px 0;
+}
+
+.select2-container {
+  width:100%;
+}
+
+.error {
+
+  input, textarea {
+    border: solid #ec8473 1px !important; //TODO remove important here
+  }
+
+  .bootstrap-select {
+
+    > button {
+      border: solid #ec8473 1px !important; //TODO remove important here
+    }
+
+    input {
+      border: solid #D4D4D4 1px !important;
+    }
+  }
+
+  .error-block, .help-inline {
+    float: right;
+    color: #ec8473;
+    font-size: 17px;
+    padding-right: 15px;
+  }
+
+}
+
+.modal-container .load-hide {
+  display: none;
+}
+
+.dash-head-btn .btn {
+  font-size: 14px;
+}
+
+h4.reservation-emphasis {
+  margin-bottom: 25px;
+}
+
+h4.other-reservation-separator {
+  margin-bottom: 25px;
+}
+
+.sharelocation {
+  margin-top: 15px;
+}
+
+.recurring-booking-summary {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 1000px) {
+  section {
+    padding: 20px 30px;
+  }
+
+ .input-container {
+    display: block;
+  }
+}
+
+@media (max-width: 650px) {
+  section .container-fluid {
+    width: 100%;
+  }
+
+  .page-banner {
+    padding: 20px 0;
+  }
+}
+
+
+@media (max-width: 400px) {
+  section {
+    padding: 20px 10px;
+  }
+}
+
+@media (min-width: 768px) {
+  .form-horizontal .control-label {
+    text-align: left;
+  }
+}
+
+/*===== MY ORDERS (RESERVATIONS) =====*/
+
+#reservations {
+
+  .promote-location {
+
+    h2 {
+      margin: 50px 0px 20px;
+
+      &:first-child {
+        margin-top: 0px;
+      }
+    }
+  }
+}

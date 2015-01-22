@@ -63,9 +63,9 @@ class Listings::RecurringBookingsController < ApplicationController
       flash[:notice] = t('flash_messages.reservations.reservation_made', message: card_message)
 
       if origin_domain?
-        redirect_to recurring_booking_successful_reservation_url(@recurring_booking, protocol: 'http', host: origin_domain)
+        redirect_to recurring_booking_successful_dashboard_user_reservation_url(@recurring_booking, protocol: 'http', host: origin_domain)
       else
-        redirect_to recurring_booking_successful_reservation_path(@recurring_booking)
+        redirect_to recurring_booking_successful_dashboard_user_reservation_path(@recurring_booking)
       end
     else
       render :review

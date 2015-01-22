@@ -8,7 +8,10 @@ body,
 input, 
 textarea, 
 select,
-p {
+p,
+ul,
+ol,
+em {
   font:400 18px/28px $font-regular, sans-serif;
   color: $gray120;
 
@@ -67,7 +70,11 @@ p {
 
 strong {
   font-family: $font-bold, sans-serif;
-  font-weight: normal;
+  font-weight: bold;
+}
+
+em {
+  font-style: italic;
 }
 
 address {

@@ -11,8 +11,9 @@ class Search.HomeController extends Search.Controller
         if(@queryField.val())
           @geocoder = new Search.Geocoder()
           deferred = @geocoder.geocodeAddress(@queryField.val())
-          deferred.done (resultset) =>
-            @setGeolocatedQuery(@queryField.val(), resultset.getBestResult())
+          deferred.always (resultset) =>
+            if(resultset?)
+              @setGeolocatedQuery(@queryField.val(), resultset.getBestResult())
             $(e.target).unbind('submit').submit()
         else
           @setGeolocatedQuery(@cached_geolocate_me_city_address, @cached_geolocate_me_result_set)

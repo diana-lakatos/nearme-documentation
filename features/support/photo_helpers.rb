@@ -6,7 +6,10 @@ module PhotoHelpers
 
   def attach_file_via_uploader
     page.execute_script "$('.browse-file').click()"
-    page.should_not have_css('.photo-item .loading-icon')
+    using_wait_time 20 do
+      page.should_not have_css('.photo-item .loading-icon')
+      page.should have_css('.photo-item img')
+    end
   end
 end
 
