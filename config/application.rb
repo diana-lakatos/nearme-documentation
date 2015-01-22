@@ -43,16 +43,22 @@ module DesksnearMe
     config.assets.paths           << %(#{Rails.root}/app/assets/swfs)
     config.assets.paths           << %(#{Rails.root}/app/assets/videos)
 
-    config.assets.precompile +=  ['*.js']
+    # By convention we put asset manifest files in the root javascript/stylesheets folders and
+    # the files they require or import in subfolders. Anything else that needs to be precompiled
+    # you can add to the proper group below.
 
     config.assets.precompile += [
-      "vendor/jquery.backgroundSize.min.js","vendor/respond.proxy.js", "vendor/respond.min.js",
-      "admin.js", "blog.js", "blog_admin.js", "chrome_frame.js", "instance_admin.js",
-      "platform_home.js", "analytics/sessioncam.js", "blog/admin/*"
+      "*.js",
+      "vendor/jquery.backgroundSize.min.js",
+      "vendor/respond.proxy.js",
+      "vendor/respond.min.js",
+      "analytics/sessioncam.js",
+      "blog/admin/*"
     ]
+
     config.assets.precompile += [
-      "browser_specific/ie8.css", "admin.css", "blog.css", "blog_admin.css", "errors.css",
-      "instance_admin.css", "platform_home.css"
+      "*.css",
+      "browser_specific/ie8.css"
     ]
 
     config.assets.precompile += [
