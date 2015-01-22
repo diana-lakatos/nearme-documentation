@@ -29,6 +29,10 @@ en:
         transactable:
           attributes:
             free: "must be free if no prices are provided"
+        spree/zone:
+          attributes:
+            kind:
+              members_missing: 'List of shipping destinations cannot be blank'
   errors:
     messages:
       free: "must be free if no prices are provided"

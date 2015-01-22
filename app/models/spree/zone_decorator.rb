@@ -11,6 +11,14 @@ Spree::Zone.class_eval do
 
   validates :name, presence: true, uniqueness: {scope: [:instance_id, :company_id, :partner_id, :user_id]}
 
+  validate  :list_of_countries_or_states_cannot_be_empty
+
+
+  def list_of_countries_or_states_cannot_be_empty
+    if self.members.blank?
+      errors.add(:kind, :members_missing)
+    end
+  end
 
   def country_ids=(ids)
     ids = ids.split(',') if ids.class == String
