@@ -6,8 +6,6 @@ Spree::ShippingMethod.class_eval do
 
   attr_accessor :hidden, :removed
 
-  validates_associated :zones
-
   accepts_nested_attributes_for :zones
 
   validates :processing_time, presence: true
