@@ -44,7 +44,7 @@ class Instance < ActiveRecord::Base
   has_many :instance_admins, :inverse_of => :instance
   has_many :instance_admin_roles, :inverse_of => :instance
   has_many :reservations, :as => :platform_context_detail
-  has_many :reservation_charges, :through => :reservations, :inverse_of => :instance
+  has_many :payments, :through => :reservations, :inverse_of => :instance
   has_many :instance_clients, :dependent => :destroy, :inverse_of => :instance
   has_many :translations, :dependent => :destroy, :inverse_of => :instance
   has_many :instance_billing_gateways, :dependent => :destroy, :inverse_of => :instance

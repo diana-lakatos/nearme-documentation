@@ -14,21 +14,21 @@ class Dashboard::AnalyticsController < Dashboard::BaseController
   end
 
   def prepare_data_for_analytics_revenue
-    # All paid ReservationCharges paginated
-    @reservation_charges = @company.reservation_charges.paid.order('payments.paid_at DESC')
-    @reservation_charges = @reservation_charges.paginate(
+    # All paid Payment paginated
+    @payments = @company.payments.paid.order('payments.paid_at DESC')
+    @payments = @payments.paginate(
       :page => params[:page],
       :per_page => 20
     )
 
     # Charges specifically from the last 7 days
-    @last_week_reservation_charges = @company.reservation_charges.paid.last_x_days(6).
+    @last_week_payments = @company.payments.paid.last_x_days(6).
       order('payments.created_at ASC')
 
     # Charge total summary by currency
-    @all_time_totals = @company.reservation_charges.total_by_currency
+    @all_time_totals = @company.payments.total_by_currency
 
-    @chart = ChartDecorator.decorate(@last_week_reservation_charges)
+    @chart = ChartDecorator.decorate(@last_week_payments)
   end
 
   def prepare_data_for_analytics_bookings

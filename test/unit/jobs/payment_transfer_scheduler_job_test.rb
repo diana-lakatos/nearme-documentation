@@ -34,21 +34,21 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
           assert_equal 13500, @company_2.payment_transfers.first.amount.cents
           assert_equal 'USD', @company_2.payment_transfers.first.currency
 
-          assert_equal @company_1.reservation_charges.sort,
+          assert_equal @company_1.payments.sort,
             @company_1.payment_transfers[0].payments.sort
 
-          assert_equal @company_1.reservation_charges.sum(&:subtotal_amount_cents),
+          assert_equal @company_1.payments.sum(&:subtotal_amount_cents),
             @company_1.payment_transfers[0].payments.sum(&:subtotal_amount_cents)
 
-          assert_equal @company_2.reservation_charges.sort,
+          assert_equal @company_2.payments.sort,
             @company_2.payment_transfers[0].payments.sort
 
-          assert_equal @company_2.reservation_charges.sum(&:subtotal_amount_cents),
+          assert_equal @company_2.payments.sum(&:subtotal_amount_cents),
             @company_2.payment_transfers[0].payments.sum(&:subtotal_amount_cents)
         end
 
         should "include refunded reservation charges" do
-          rc = @company_1.reservation_charges.first
+          rc = @company_1.payments.first
           rc.touch(:refunded_at)
           assert rc.refunded?
           PaymentTransferSchedulerJob.perform
@@ -56,25 +56,25 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
         end
 
         should 'calculate payment transfer amount correctly for refunded charges' do
-          rc = @company_1.reservation_charges.first
+          rc = @company_1.payments.first
           rc.update_attributes(
             cancellation_policy_penalty_percentage: 0.4,
             refunded_at: Time.zone.now
           )
-          FactoryGirl.create(:refund, reference: rc, amount: 3000)
+          FactoryGirl.create(:refund, payment: rc, amount: 3000)
           PaymentTransferSchedulerJob.perform
           assert_equal 6000, @company_1.payment_transfers.first.amount.cents
         end
 
         should "only include successfully paid reservation charges" do
-          rc = @company_1.reservation_charges.first
+          rc = @company_1.payments.first
           rc.paid_at = nil
           rc.save!
           assert !rc.paid?
 
           PaymentTransferSchedulerJob.perform
 
-          assert_equal (@company_1.reservation_charges - [rc]).sort, @company_1.payment_transfers[0].payments.sort
+          assert_equal (@company_1.payments - [rc]).sort, @company_1.payment_transfers[0].payments.sort
         end
 
         should "not touch already included reservation charges" do
@@ -103,7 +103,7 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
 
           nzd_transfer = @company_1.payment_transfers.detect { |pt| pt.currency == 'NZD' }
           assert nzd_transfer, "Expected an NZD payment transfer"
-          assert_equal nzd_reservations.map(&:reservation_charges).flatten.sort,
+          assert_equal nzd_reservations.map(&:payments).flatten.sort,
             nzd_transfer.payments.sort
 
         end
@@ -136,7 +136,7 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
       setup do
         @order = FactoryGirl.create(:completed_order_with_totals)
         @company = @order.company
-        @payment = FactoryGirl.create(:order_charge, reference: @order)
+        @payment = FactoryGirl.create(:order_charge, payable: @order)
         @company.instance.update_columns(payment_transfers_frequency: "daily")
       end
 

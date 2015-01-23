@@ -50,7 +50,7 @@ class ReservationDrop < BaseDrop
   end
 
   def remote_payment_url
-    routes.remote_payment_reservation_path(@reservation, token: @reservation.owner.try(:temporary_token))
+    routes.remote_payment_dashboard_user_reservation_path(@reservation, token: @reservation.owner.try(:temporary_token))
   end
 
   def created_at
@@ -59,7 +59,7 @@ class ReservationDrop < BaseDrop
 
   def reservation_confirm_url
     routes.confirm_manage_listing_reservation_path(@reservation.listing, @reservation, :token => @reservation.listing.administrator.try(:temporary_token))
-  end 
+  end
 
   def reservation_confirm_url_with_tracking
     routes.confirm_manage_listing_reservation_path(@reservation.listing, @reservation, :token => @reservation.listing.administrator.try(:temporary_token), :track_email_event => true)
