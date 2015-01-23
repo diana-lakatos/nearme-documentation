@@ -254,7 +254,7 @@ class RegistrationsController < Devise::RegistrationsController
   private
 
   def find_company
-    @company = current_user.companies.first
+    @company = current_user.try(:companies).try(:first)
   end
 
   def signed_up_via
