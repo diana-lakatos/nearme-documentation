@@ -36,6 +36,7 @@ module ShippoApi
       if purpose == :send_to
         address_object = spree_object
         options = {}
+
         options[:name] = "#{address_object.first_name} #{address_object.last_name}"
         options[:company] = address_object.company
         options[:street1] =  address_object.address1
@@ -49,16 +50,25 @@ module ShippoApi
       elsif purpose == :send_from
         stock_location = spree_object
         options = {}
-        options[:name] = stock_location.name
-        options[:company] = stock_location.name
-        options[:street1] = stock_location.address1
-        options[:street2] = stock_location.address2
-        options[:city] = stock_location.city
-        options[:state] = stock_location.try(:state).try(:abbr)
-        options[:zip] = stock_location.zipcode
-        options[:country] = stock_location.try(:country).try(:iso)
-        options[:phone] = stock_location.phone
-        options[:email] = package.order.try(:products).try(:first).try(:user).try(:email)
+
+        # We take the info instead from the user's first company as the address_object
+        # in the current implementation will not have the info set
+        products = package.contents.map(&:variant).map(&:product).compact.uniq
+        creator_user = products.try(:first).try(:user)
+        company = creator_user.try(:companies).try(:first)
+
+        if company.present?
+          options[:name] = creator_user.name
+          options[:company] = company.name
+          options[:street1] =  company.street
+          options[:street2] = ''
+          options[:city] = company.city
+          options[:state] = company.state_code
+          options[:zip] = company.postcode
+          options[:country] = company.iso_country_code
+          options[:phone] = creator_user.phone
+          options[:email] = creator_user.email
+        end
       else
         raise ShippoUnknownParameterType options.class.to_s
       end

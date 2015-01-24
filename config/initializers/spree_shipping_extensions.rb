@@ -114,17 +114,54 @@ if Spree::Stock::Estimator.methods.include?(:new)
         old_shipping_rates = instance_method(:shipping_rates)
         old_shipping_methods = instance_method(:shipping_methods)
   
+        def get_shippo_order_status(package)
+          result = nil
+
+          products = package.contents.map(&:variant).map(&:product).compact.uniq
+          shippo_products_present = false
+          non_shippo_products_present = false
+          products.each do |product|
+            if product.shippo_enabled?
+              shippo_products_present = true
+            else
+              non_shippo_products_present = true
+            end
+          end
+
+          if shippo_products_present && non_shippo_products_present
+            result = :mixed
+          elsif shippo_products_present
+            result = :shippo
+          else
+            result = :normal
+          end
+
+          result
+        end
+
         define_method(:shipping_rates) do |package, frontend_only = true|
-          if PlatformContext.current.instance.shippo_enabled?
+          shippo_order_status = get_shippo_order_status(package)
+
+          if shippo_order_status == :shippo
             ShippoExtensions::SpreeExtensions.create_shippo_spree_objects_for_package(package)
           end
 
-          old_shipping_rates.bind(self).(package, frontend_only)
+          if shippo_order_status == :mixed
+            []
+          else
+            old_shipping_rates.bind(self).(package, frontend_only)
+          end
         end
 
         define_method(:shipping_methods) do |package|
-          if PlatformContext.current.instance.shippo_enabled?
+          shippo_order_status = get_shippo_order_status(package)
+
+          if shippo_order_status == :shippo
             Spree::ShippingMethod.where(:order_id => package.order.id)
+          elsif shippo_order_status == :mixed
+            # This is not required though, as the master method shipping_rates
+            # will return an empty list in this case
+            []
           else
             old_shipping_methods.bind(self).(package)
           end

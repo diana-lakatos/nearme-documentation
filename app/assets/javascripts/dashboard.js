@@ -294,3 +294,27 @@ String.prototype.hashCode = function(){
     return this.get(0).scrollHeight > this.height();
   }
 })(jQuery);
+
+/* Shippo product form JS management */
+$(function(){
+  var toggle_shippo_fields_by_checked_status = function() {
+    var shippo_fields_element = $('.shippo_required_fields_row');
+    if($('#product_form_shippo_enabled').is(':checked')) {
+      shippo_fields_element.removeClass('disabled');
+      shippo_fields_element.addClass('enabled');
+    } else {
+      shippo_fields_element.removeClass('enabled');
+      shippo_fields_element.addClass('disabled');
+    }
+  }
+
+  $('#product_form_shippo_enabled').click(function() {
+    toggle_shippo_fields_by_checked_status();
+  });
+
+  $(document).ready(function() {
+    toggle_shippo_fields_by_checked_status();
+  });
+});
+/* End Shippo product form JS management */
+

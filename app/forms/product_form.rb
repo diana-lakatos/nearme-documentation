@@ -12,8 +12,16 @@ class ProductForm < Form
   validates :price, presence: true, numericality: { greater_than: 0 }
   validates :quantity, numericality: { only_integer: true }, presence: true
   validate :validate_images, :validate_shipping_methods
+  validates_presence_of :weight, :if => :shippo_enabled
+  validates_presence_of :depth, :if => :shippo_enabled
+  validates_presence_of :width, :if => :shippo_enabled
+  validates_presence_of :height, :if => :shippo_enabled
 
-  def_delegators :@product, :id, :price, :price=, :name, :name=, :description, :id=, :description=
+  def_delegators :@product, :id, :price, :price=, :name, :name=, :description, :id=, :description=,
+    :shippo_enabled=, :shippo_enabled
+
+  def_delegators :'@product.master', :weight=, :weight, :depth=, :depth,
+    :width=, :width, :height=, :height
 
   def quantity
     @quantity ||= @stock_item.stock_movements.sum(:quantity)

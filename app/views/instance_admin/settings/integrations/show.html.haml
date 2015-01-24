@@ -28,9 +28,6 @@
 
   %h4 Shippo
   .content-container
-    .row
-      .input-container.col-xs-12
-        = f.input :shippo_enabled, as: :boolean, label: "Enable Shippo shipping support", input_html: { class: 'form-control' }
     .row.dropshadow
       .input-container.col-xs-6
         = f.input :shippo_username, label: "Shippo Username", required: false, input_html: { class: 'form-control' }
