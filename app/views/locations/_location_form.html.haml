@@ -6,43 +6,13 @@
 
 - if only_inputs.empty? || only_inputs.include?(:address)
   = f.simple_fields_for :location_address, (f.object.location_address.presence || f.object.build_location_address) do |address_form|
-    %div{:class => "control-group #{"error" if f.object.errors.include?(:address) || f.object.errors.include?(:latitude)}"}
-      = address_form.label :address, :class => "control-label", :required => true
-      .controls
-        = address_form.text_field :address, :'data-behavior' => 'address-autocomplete', :placeholder => "", :id => 'location_address'
-        - if address_form.object.errors.include?(:address) || address_form.object.errors.include?(:latitude)
-          %p.error-block
-            - if address_form.object.errors[:address].present?
-              = address_form.object.errors[:address][0]
-            - else
-              does not exists
-
-        .map{:style => "display: none", :'data-marker' => image_path("components/map-pin.png")}
-          .map-container{:style => "height: 240px; width: 100%;"}
-
-        = address_form.hidden_field :local_geocoding, :id => 'location_local_geocoding'
-        = address_form.hidden_field :latitude, :id => 'location_latitude'
-        = address_form.hidden_field :longitude, :id => 'location_longitude'
-        = address_form.hidden_field :formatted_address, :id => 'location_formatted_address'
-        = address_form.hidden_field :street
-        = address_form.hidden_field :suburb
-        = address_form.hidden_field :city
-        = address_form.hidden_field :state
-        = address_form.hidden_field :country
-        = address_form.hidden_field :postcode
-
-        #address-component-wrapper.hidden
-          #address-component-template
-            - # we need this input to avoid hardcoding 'name' parameter for dynamically inserted inputs for address_components
-            - # i.e. in dashboard we use location[address_component], but in list your space it is user[company_attribues]... etc
-            - # must be disabled, otherwise update action could overwrite existing information with empty strings!!!
-            = address_form.input :address_components, :input_html => { :id => 'address_component_input' }, :disabled => true
+    = render :partial => 'addresses/form', :locals => { :f => address_form }
 
 - if f.object.name_and_description_required
   = f.input :description, :as => :limited_text, :limit => 250, :required => !f.object.listings.first.try(:description).try(:present?), :input_html => { :maxlength => 250, :rows => 2 } if only_inputs.empty? || only_inputs.include?(:description)
 - if platform_context.instance.location_types.count > 1
   = f.association :location_type, :collection => platform_context.instance.location_types if only_inputs.empty? || only_inputs.include?(:location_type)
-- else
+- elsif
   = f.hidden_field :location_type_id, value: platform_context.instance.location_types.first.id
 = f.input :email if only_inputs.empty? || only_inputs.include?(:email)
 = f.association :administrator, :collection => f.object.company_users.includes(:user).order('users.name').map(&:user), :label_method => 'name', :value_method => 'id', :input_html => { :class => 'custom-select' }, :include_blank => t('simple_form.prompts.location.administrator') if only_inputs.empty? || only_inputs.include?(:administrator)

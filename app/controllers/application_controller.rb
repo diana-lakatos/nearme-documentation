@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  helper FilepickerRails::Engine.helpers
+
   prepend_view_path InstanceViewResolver.instance
 
   force_ssl if: :require_ssl?
@@ -88,6 +90,11 @@ class ApplicationController < ActionController::Base
   end
   helper_method :authorizer
 
+  def buyable?
+    @buyable ||= platform_context.instance.buyable?
+  end
+  helper_method :buyable?
+
   # Provides an EventTracker instance for the current request.
   #
   # Use this for triggering predefined events from actions via
@@ -176,22 +183,18 @@ class ApplicationController < ActionController::Base
   end
 
   def secure_links?
-    secure? && !request.ssl?
+    require_ssl?
   end
   helper_method :secure_links?
 
   def nm_force_ssl
-    if secure? && !request.ssl?
+    if require_ssl?
       redirect_to url_for(platform_context.secured_constraint.merge(:return_to => params[:return_to]))
     end
   end
 
-  def secure?
-    Rails.application.config.secure_app
-  end
-
   def require_ssl?
-    secure? && platform_context.secured? && !request.ssl?
+    !request.ssl? && platform_context.require_ssl?
   end
 
   def stored_url_for(resource_or_scope)
@@ -334,6 +337,13 @@ class ApplicationController < ActionController::Base
       current_user.logged_out!
       flash[:notice] = nil
       sign_out current_user
+    end
+  end
+
+  def sign_in_resource(resource)
+    sign_in(resource)
+    if resource.respond_to?('logged_out!')
+      resource.logged_out!
     end
   end
 

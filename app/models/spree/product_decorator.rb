@@ -2,6 +2,8 @@ Spree::Product.class_eval do
   include Spree::Scoper
   include Impressionable
 
+  attr_accessor :validate_exisiting
+
   has_many :line_items, through: :variants
   has_many :orders, through: :line_items
 
@@ -9,26 +11,31 @@ Spree::Product.class_eval do
   belongs_to :user
   belongs_to :company
   belongs_to :administrator, class_name: 'User'
-  has_many   :user_messages, as: :thread_context, inverse_of: :thread_context
-  has_many   :impressions, as: :impressionable, dependent: :destroy
+  has_many :user_messages, as: :thread_context, inverse_of: :thread_context
+  has_many :impressions, as: :impressionable, dependent: :destroy
 
   scope :approved, -> { where(approved: true) }
   scope :currently_available, -> { where("(#{Spree::Product.quoted_table_name}.available_on <= ? OR #{Spree::Product.quoted_table_name}.available_on IS NULL)", Time.zone.now) }
   scope :searchable, -> { approved.currently_available }
 
-  _validators.reject!{ |key, _| key == :slug }
+  _validators.reject! { |key, _| [:slug, :shipping_category_id].include?(key) }
 
   _validate_callbacks.reject! do |callback|
     callback.raw_filter.attributes.delete :slug if callback.raw_filter.is_a?(ActiveModel::Validations::PresenceValidator)
+    callback.raw_filter.attributes.delete :shipping_category_id if callback.raw_filter.is_a?(ActiveModel::Validations::PresenceValidator)
   end
 
   validates :slug, uniqueness: { scope: [:instance_id, :company_id, :partner_id, :user_id] }
+
+  validate :shipping_category_presence
 
   # TODO: uncomment in Phase 3 during implementation of creating products
   # belongs_to :transactable_type, inverse_of: :transactables
   # has_custom_attributes target_type: 'TransactableType', target_id: :transactable_type_id
 
   store_accessor :status, [:current_status]
+
+  accepts_nested_attributes_for :shipping_category
 
   def cross_sell_products
     cross_sell_skus.map do |variant_sku|
@@ -44,7 +51,17 @@ Spree::Product.class_eval do
     super.presence || user
   end
 
+  def administrator_location
+    administrator.current_location ? administrator.country_name : administrator.current_location
+  end
+
   def has_photos?
     images.count > 0
+  end
+
+  private
+
+  def shipping_category_presence
+    self.shipping_category.present? ? true : errors.add(:shipping_category_id, "shipping category can't be blank")
   end
 end

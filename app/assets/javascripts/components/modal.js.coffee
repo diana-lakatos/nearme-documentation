@@ -30,6 +30,13 @@ class @Modal
       @load(ajaxOptions, modalClass)
       false
 
+    $('body').delegate 'form[data-modal]', 'submit', (e) =>
+      e.preventDefault()
+      form = $(e.currentTarget)
+      Modal.load({ type: "POST", url: form.attr("action"), data: form.serialize()})
+      false
+
+
     $(document).on 'ajaxSend', '.modal-content form', =>
       @showLoading()
 

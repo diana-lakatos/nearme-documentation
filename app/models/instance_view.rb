@@ -1,4 +1,5 @@
 class InstanceView < ActiveRecord::Base
+  has_paper_trail
   belongs_to :instance_type
   belongs_to :instance
   # attr_accessible :body, :path, :format, :handler, :locale, :partial
@@ -20,4 +21,3 @@ class InstanceView < ActiveRecord::Base
   end
 
 end
-

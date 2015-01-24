@@ -1,0 +1,14 @@
+.span10.page-content
+  .dash-page
+    .dash-head.clearfix
+      %a{:href => "#"} MANAGE LISTINGS >
+      %p LIST NEW ITEM
+      %a.dash-head-btn{:href => ""}
+        .btn.blue Bulk Upload
+    .dash-body
+      = simple_form_for @product_form, wrapper: :product, :url => manage_buy_sell_product_path(@product_form.product), :html => { :multipart => true, class: 'no_inheritance', method: :put } do |f|
+        = render 'forms/product_form', f: f
+        .submit-bar
+          = link_to manage_buy_sell_products_path do
+            .btn.grey Cancel
+          = f.submit "List item", class: "btn medium blue"

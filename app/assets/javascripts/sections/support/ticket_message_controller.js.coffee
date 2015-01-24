@@ -6,6 +6,7 @@ class @Support.TicketMessageController
     @fileUpload = @form.find('input[data-file]')
     @attachmentList = @container.find('[data-attachment-list]')
     @template = @attachmentList.find('[data-template]')
+    @modal = $("#bootstrap-modal")
     @bindEvents()
 
   bindEvents: ->
@@ -31,7 +32,12 @@ class @Support.TicketMessageController
 
     @form.find('input:file').on 'change', (event) =>
       $.each $(event.target)[0].files, (key, file) =>
-        Modal.showContent(@uploadAttachment.data('uploading'))
+
+        if @modal.length > 0
+          @modal.modal("show")
+        else
+          Modal.showContent(@uploadAttachment.data('uploading'))
+
         @data = new FormData()
         @data.append('support_ticket_message_attachment[file]', file)
         @data.append('form_name', @uploadAttachment.data('form-name'))
@@ -44,7 +50,13 @@ class @Support.TicketMessageController
           contentType: false
           success: (data) =>
             @attachmentList.append(data.attachment_content)
-            Modal.showContent(data.modal_content)
+            if @modal.length > 0
+              @modal.find(".modal-body").html(data.modal_content)
+            else
+              Modal.showContent(data.modal_content)
           error: (xhr) =>
-            Modal.showContent(@uploadAttachment.data('error'))
+            if @modal.length > 0
+              @modal.find(".modal-body").html(@uploadAttachment.data('error'))
+            else
+              Modal.showContent(@uploadAttachment.data('error'))
 

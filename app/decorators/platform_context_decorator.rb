@@ -4,7 +4,7 @@ class PlatformContextDecorator
     :platform_context_detail, :secured_constraint, :latest_products, :to => :platform_context
 
   delegate :tagline, :support_url, :blog_url, :twitter_url, :twitter_handle, :facebook_url, :gplus_url, :address,
-    :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :meta_title, :pages, :logo_image,
+    :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :compiled_dashboard_stylesheet, :meta_title, :pages, :logo_image,
     :favicon_image, :icon_image, :icon_retina_image, :homepage_content, :call_to_action, :is_company_theme?, :to => :theme
 
   delegate :bookable_noun, :lessor, :lessee, :name, :buyable?, :to => :instance
@@ -17,6 +17,10 @@ class PlatformContextDecorator
 
   def compiled_stylesheet_url
     compiled_stylesheet.present? ? compiled_stylesheet.url : nil
+  end
+
+  def compiled_dashboard_stylesheet_url
+    compiled_dashboard_stylesheet.present? ? compiled_dashboard_stylesheet.url : nil
   end
 
   def to_liquid
@@ -71,7 +75,8 @@ class PlatformContextDecorator
   end
 
   def normalized_footer_cache_timestamp
-    normalize_timestamp([pages.maximum(:updated_at), theme.updated_at].compact.max)
+    instance_view_footer_timestamp = @platform_context.instance.instance_views.find_by(:path => 'layouts/theme_footer').try(:updated_at)
+    normalize_timestamp([pages.maximum(:updated_at), theme.updated_at, instance_view_footer_timestamp].compact.max)
   end
 
   def normalize_timestamp(timestamp)

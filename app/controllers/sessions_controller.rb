@@ -16,6 +16,11 @@ class SessionsController < Devise::SessionsController
 
   def new
     super unless already_signed_in?
+
+    if !flash[:failed_login_attempt_with_email].blank?
+      params[:user] = { :email => flash[:failed_login_attempt_with_email], :password => '' }
+    end
+
     # populate errors but only if someone tried to submit form
     if !current_user && params[:user] && params[:user][:email] && params[:user][:password]
       render_view_with_errors
@@ -23,9 +28,17 @@ class SessionsController < Devise::SessionsController
   end
 
   def create
+    if params[:user] && params[:user][:email]
+      flash[:failed_login_attempt_with_email] = params[:user][:email].to_s[0..100]
+    end
+
     super
 
     if current_user
+      # The request was not interrupted by Devise and we also have a current_user object, which
+      # means it succeeded so we clear our flash variable
+      flash[:failed_login_attempt_with_email] = nil
+
       current_user.remember_me!
       update_analytics_google_id(current_user)
       analytics_apply_user(current_user)

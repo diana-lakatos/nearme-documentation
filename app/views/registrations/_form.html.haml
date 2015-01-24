@@ -1,7 +1,6 @@
-= simple_form_for resource, :as => resource_name, :url => url, :html => { class: "form-horizontal form-expandable" } do |f|
+= simple_form_for resource, wrapper: :bs3, :as => resource_name, :url => url, :html => { class: "form-horizontal form-expandable" } do |f|
 
-  = render :partial => 'registrations/attributes', :locals => { f: f, only_inputs: [], country: @country }
+  = render :partial => 'registrations/new_attributes', :locals => { f: f, only_inputs: [], country: @country }
 
-  .actions
-    = f.submit (resource.persisted?) ? "Save" : "Sign Up"
-
+  .submit-bar
+    = f.submit "Save", class: "btn medium blue"

@@ -38,35 +38,35 @@ class SupportMailer < InstanceMailer
     @ticket = request
     @message = message
     mail to: request.first_message.email,
-      subject: rfq_subject(request, 'Your request for quote has been received')
+      subject: rfq_subject(request, "Your #{t('reservations.rfq_long')} has been received")
   end
 
   def rfq_request_updated(request, message)
     @ticket = request
     @message = message
     mail to: request.first_message.email,
-      subject: rfq_subject(request, "Your request for quote was updated")
+      subject: rfq_subject(request, "Your #{t('reservations.rfq_long')} was updated")
   end
 
   def rfq_request_replied(request, message)
     @ticket = request
     @message = message
     mail to: request.first_message.email,
-      subject: rfq_subject(request, "#{message.full_name} replied to your request for quote")
+      subject: rfq_subject(request, "#{message.full_name} replied to your #{t('reservations.rfq_long')}")
   end
 
   def rfq_support_received(request, message)
     @ticket = request
     @message = message
     mail to: request.assigned_to.try(:email),
-      subject: rfq_subject(request, "#{message.full_name} has submited a request for quote")
+      subject: rfq_subject(request, "#{message.full_name} has submited a #{t('reservations.rfq_long')}")
   end
 
   def rfq_support_updated(request, message)
     @ticket = request
     @message = message
     mail to: request.assigned_to.try(:email),
-      subject: rfq_subject(request, "#{message.full_name} has updated their request for quote")
+      subject: rfq_subject(request, "#{message.full_name} has updated their #{t('reservations.rfq_long')}")
   end
 
   private

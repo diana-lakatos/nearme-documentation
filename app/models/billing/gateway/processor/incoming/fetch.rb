@@ -6,7 +6,7 @@ class Billing::Gateway::Processor::Incoming::Fetch < Billing::Gateway::Processor
     ['NZ']
   end
 
-  def self.supported_currencies
+  def supported_currencies
     ["NZD"]
   end
 
@@ -43,8 +43,8 @@ class Billing::Gateway::Processor::Incoming::Fetch < Billing::Gateway::Processor
     @payment_data = {
       account_id: @settings[:account_id],
       amount: reservation.total_amount_dollars,
-      return_url: "http://#{PlatformContext.current.decorate.host}/reservations/#{reservation.id}/payment_notifications",
-      notification_url: "http://#{PlatformContext.current.decorate.host}/reservations/#{reservation.id}/payment_notifications",
+      return_url: return_url(reservation),
+      notification_url: return_url(reservation),
       payment_method: 'standard'
     }
 
@@ -55,6 +55,13 @@ class Billing::Gateway::Processor::Incoming::Fetch < Billing::Gateway::Processor
       item_name: ERB::Util.url_encode(reservation.listing.name).truncate(40),
       store_card: "0"
     })
+  end
+
+  def return_url(reservation)
+    protocol = PlatformContext.current.require_ssl? ? "https://" : "http://"
+    host = PlatformContext.current.decorate.host
+    path = "/reservations/#{reservation.id}/payment_notifications"
+    return protocol + host + path
   end
 
   def charge(amount, reference, token)

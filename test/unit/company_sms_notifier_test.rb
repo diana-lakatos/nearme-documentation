@@ -8,7 +8,7 @@ class CompanySmsNotifierTest < ActiveSupport::TestCase
     @company = FactoryGirl.create(:company, :creator => @company_owner)
     @company.update_attribute(:instance_id, @instance.id)
     PlatformContext.current = PlatformContext.new(@company)
-    Googl.stubs(:shorten).with("http://notifcations.com/manage/companies/#{@company.id}/edit?token=abc#company_paypal_email").returns(stub(:short_url => "http://goo.gl/abf324"))
+    Googl.stubs(:shorten).with("http://notifcations.com/dashboard/payouts/edit?token=abc#company_paypal_email").returns(stub(:short_url => "http://goo.gl/abf324"))
   end
 
   context '#notify_host_with_confirmation' do

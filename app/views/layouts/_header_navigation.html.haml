@@ -5,18 +5,25 @@
         = link_to_registration({return_to: main_app.new_space_wizard_path}, platform_context.secured_constraint, secure_links?, rel: 'modal.sign-up-modal', class: 'nav-link btn btn-blue btn-medium') do
           %span.text= t('ui.header.list_your_thing', thing: platform_context.bookable_noun)
           %span.icon.ico-plus
-    - elsif current_user && current_user.has_draft_listings
+    - elsif current_user && current_user.registration_in_progress?
       %li
         = link_to main_app.new_space_wizard_path, :class => "nav-link btn btn-blue btn-medium" do
-          %span.text Complete Your Listing
+          %span.text= t('ui.header.complete_your_thing', thing: buyable? ? platform_context.bookable_noun : "Listing")
           %span.icon.ico-plus
-    - elsif current_user && !current_user.has_any_active_listings
+    - elsif current_user && !current_user.registration_completed?
       %li
         = link_to main_app.new_space_wizard_path, :class => "nav-link btn btn-blue btn-medium" do
           %span.text= t('ui.header.list_your_thing', thing: platform_context.bookable_noun)
           %span.icon.ico-plus
 
   - if user_signed_in?
+
+    - if buyable? && current_user.cart_orders.any?
+      %li.divider-vertical
+      %li
+        = link_to cart_index_path, class: 'nav-link' do
+          %span.text CART: #{CartDecorator.new(current_user).navigation}
+          %span.icon.ico-cart
 
     %li.divider-vertical
     %li.dropdown
@@ -33,17 +40,26 @@
 
         - if platform_context.white_label_company_user?(current_user) && current_user.has_any_active_listings
           %li
-            = link_to main_app.manage_locations_path, class: 'nav-link dropdown-toggle' do
+            = link_to main_app.dashboard_transactable_type_transactables_path(TransactableType.first), class: 'nav-link dropdown-toggle' do
               %span Manage #{platform_context.bookable_noun.pluralize}
-        %li
-          = link_to main_app.bookings_dashboard_path, class: 'nav-link dropdown-toggle' do
-            %span My Bookings
+        - if buyable?
+          - if current_user.registration_completed?
+            %li
+              = link_to main_app.dashboard_products_path, class: 'nav-link dropdown-toggle' do
+                %span Manage #{platform_context.bookable_noun.pluralize}
+            %li
+              = link_to main_app.dashboard_orders_path, class: 'nav-link dropdown-toggle' do
+                %span My Orders
+        - else
+          %li
+            = link_to main_app.dashboard_user_reservations_path, class: 'nav-link dropdown-toggle' do
+              %span My Bookings
         - if !current_user.requests_for_quotes.empty?
           %li
-            = link_to main_app.support_requests_for_quotes_path, class: 'nav-link dropdown-toggle' do
-              %span My RFQs
+            = link_to main_app.dashboard_support_tickets_path, class: 'nav-link dropdown-toggle' do
+              %span= "#{t('reservations.rfq_menu_text')}"
         %li
-          = link_to main_app.edit_user_registration_path, class: 'nav-link dropdown-toggle' do
+          = link_to '/dashboard/edit_profile', class: 'nav-link dropdown-toggle' do
             %span Account
         %li
           = link_to main_app.destroy_user_session_path, :method => :delete, class: 'nav-link dropdown-toggle', :data => {:user => current_user.first_name } do
@@ -51,7 +67,7 @@
 
     %li.divider-vertical
     %li
-      = link_to main_app.user_messages_path, class: 'nav-link' do
+      = link_to main_app.dashboard_user_messages_path, class: 'nav-link' do
         %span.text Messages
         %span.icon.ico-mail
         - if current_user.unread_user_message_threads_count_for(platform_context.instance) > 0

@@ -1,8 +1,0 @@
-%h2 LOADING...
-
-- title "Dashboard"
-- content_for :meta do
-  %meta{:content => "#{current_user.authentication_token}", :name => "auth-token"}/
-
-- content_for :domready do
-  $(function() { DNM.Dashboard(); });

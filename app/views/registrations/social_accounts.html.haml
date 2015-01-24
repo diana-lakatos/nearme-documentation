@@ -1,15 +1,12 @@
-- title "Trust & Verification"
+- title t('dashboard.nav.social_accounts')
 
-= render :layout => 'registrations/layout/account', :locals => { :active_tab => :trust_and_verification } do
-  .row-fluid
-    .span8.offset2
-      .box
-        - if @supported_providers.any?
-          %div
-            = t('registrations.social_accounts.connecting_social_accounts_info', marketplace_name: platform_context.name).html_safe
-          %p
-            = render "registrations/networks", :supported_providers => @supported_providers
-        - else
-          %div
-            = t('registrations.social_accounts.no_social_providers', marketplace_name: platform_context.name).html_safe
 
+.dash-page.verification
+  .dash-head.clearfix
+    %p= t('dashboard.nav.social_accounts')
+  .dash-body.notifications
+    - if @supported_providers.any?
+      = render "registrations/networks", :supported_providers => @supported_providers
+    - else
+      %div
+        = t('registrations.social_accounts.no_social_providers', marketplace_name: platform_context.name).html_safe

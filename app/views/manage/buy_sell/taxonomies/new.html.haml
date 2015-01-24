@@ -1,0 +1,14 @@
+- title t("manage.buy_sell.taxonomies.new_title")
+
+= show_manage_navigation(:configuration, :taxonomies)
+
+.row-fluid
+  .span8.offset2
+    .box
+      %ul.location-and-listings
+        %li.location
+          .name.left
+            =t("manage.buy_sell.option_types.new_header")
+
+      = render "form"
+

@@ -4,6 +4,7 @@ class RegistrationsController < Devise::RegistrationsController
   skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:update_password, :set_password]
   skip_before_filter :filter_out_token, :only => [:verify, :unsubscribe]
   before_filter :nm_force_ssl, only: [:new]
+  before_filter :find_company, only: [:social_accounts, :edit]
 
   # NB: Devise calls User.new_with_session when building the new User resource.
   # We use this to apply any Provider based authentications to the user record.
@@ -70,10 +71,11 @@ class RegistrationsController < Devise::RegistrationsController
     @country = current_user.country_name
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
     build_approval_request_for_object(current_user) unless current_user.is_trusted?
-    super
+    render :edit, layout: 'dashboard'
   end
 
   def show
+    @theme_name = 'buy-sell-theme' if buyable?
     @user = User.find(params[:id]).decorate
   end
 
@@ -88,10 +90,10 @@ class RegistrationsController < Devise::RegistrationsController
       set_flash_message :success, :updated
       sign_in(resource, :bypass => true)
       event_tracker.updated_profile_information(@user)
-      redirect_to :action => 'edit'
+      redirect_to '/dashboard/edit_profile'
     else
       @country = resource.country_name
-      render :edit
+      render :edit, layout: "dashboard"
     end
   end
 
@@ -125,6 +127,7 @@ class RegistrationsController < Devise::RegistrationsController
       render partial: 'manage/photos/resize_succeeded'
     else
       render partial: 'manage/photos/resize_form', :locals => { :form_url => update_avatar_path, :object => current_user.avatar, :object_url => current_user.avatar_url(:original) }
+      render :edit_avatar
     end
   end
 
@@ -211,6 +214,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def social_accounts
+    render layout: 'dashboard'
   end
 
   def edit_notification_preferences
@@ -248,6 +252,10 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   private
+
+  def find_company
+    @company = current_user.try(:companies).try(:first)
+  end
 
   def signed_up_via
     if !request.referrer.nil? && request.referrer.include?('return_to=%2Fspace%2Flist&wizard=space')

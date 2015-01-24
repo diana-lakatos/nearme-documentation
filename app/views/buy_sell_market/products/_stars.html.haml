@@ -1,0 +1,5 @@
+%span.star-container
+  - (1..stars).each do |i|
+    = image_tag 'themes/buy_sell/star.png'
+- if defined?(count)
+  %a (#{count})

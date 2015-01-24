@@ -1,5 +1,6 @@
 require "will_paginate/array"
 class SearchController < ApplicationController
+  before_filter :theme_name
 
   helper_method :searcher, :result_view, :current_page_offset, :per_page, :first_result_page?
 
@@ -63,4 +64,7 @@ class SearchController < ApplicationController
     params[:ignore_search_event].nil? || params[:ignore_search_event].to_i.zero?
   end
 
+  def theme_name
+    @theme_name = 'buy-sell-theme' if buyable?
+  end
 end

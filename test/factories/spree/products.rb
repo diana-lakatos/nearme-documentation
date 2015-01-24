@@ -9,12 +9,19 @@ FactoryGirl.define do
     deleted_at nil
     shipping_category { |r| Spree::ShippingCategory.first || r.association(:shipping_category) }
     administrator { |p| p.association(:user) }
+    company { |p| p.association(:company) }
 
     # ensure stock item will be created for this products master
     before(:create) { create(:stock_location) if Spree::StockLocation.count == 0 }
 
     after(:create) do |p|
       p.variants_including_master.each { |v| v.save! }
+    end
+
+    after(:create) do |p|
+      Spree::StockLocation.all.each do |stock_location|
+        stock_location.stock_items.where(:variant_id => p.master.id).first.adjust_count_on_hand(10)
+      end
     end
 
     factory :custom_product do

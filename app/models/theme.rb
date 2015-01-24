@@ -1,13 +1,10 @@
 class Theme < ActiveRecord::Base
-  has_paper_trail :ignore => [:updated_at, :compiled_stylesheet]
+  has_paper_trail :ignore => [:updated_at, :compiled_stylesheet, :compiled_dashboard_stylesheet]
   acts_as_paranoid
   DEFAULT_EMAIL = 'support@desksnear.me'
   DEFAULT_PHONE_NUMBER = '1.888.998.3375'
   COLORS = %w(blue red orange green gray black white)
   COLORS_DEFAULT_VALUES = %w(41bf8b e83d33 FF8D00 6651af 394449 1e2222 fafafa)
-  COLORS.each do |color|
-    # attr_accessible "color_#{color}"
-  end
 
   # TODO: We may want the ability to have multiple themes, and draft states,
   #       etc.
@@ -41,6 +38,7 @@ class Theme < ActiveRecord::Base
   mount_uploader :logo_retina_image, ThemeImageUploader, :use_inkfilepicker => true
   mount_uploader :hero_image, ThemeImageUploader, :use_inkfilepicker => true
   mount_uploader :compiled_stylesheet, ThemeStylesheetUploader
+  mount_uploader :compiled_dashboard_stylesheet, ThemeStylesheetUploader
 
   # Don't delete the from s3
   skip_callback :commit, :after, :remove_icon_image!
@@ -88,7 +86,7 @@ class Theme < ActiveRecord::Base
 
   # Checks if any of options that impact the theme stylesheet have been changed.
   def theme_changed?
-    attrs = attributes.keys - %w(updated_at compiled_stylesheet name homepage_content call_to_action address contact_email homepage_css)
+    attrs = attributes.keys - %w(updated_at compiled_dashboard_stylesheet compiled_stylesheet name homepage_content call_to_action address contact_email homepage_css)
     attrs.any? do |attr|
       return false if send("#{attr}_changed?") && attr.include?('_image')
       # we will run theme compile via generate_versions_callback, after we download images from inkfilepicker to s3
@@ -116,7 +114,7 @@ class Theme < ActiveRecord::Base
       when "Instance"
         owner
       when "Company"
-        owner.try(:instance) || Company.with_deleted.where(id: object_id).first.try(:instance)
+         (owner || Company.with_deleted.where(id: object_id).first).try(:instance)
       when "Partner"
         owner.try(:instance)
       else
@@ -202,6 +200,13 @@ class Theme < ActiveRecord::Base
 
   def hero_image_dimensions
     { :width => 250, :height => 202}
+  end
+
+  # useful on development :-)
+  def clear_stylesheets!
+    self.remove_compiled_stylesheet = true
+    self.compiled_dashboard_stylesheet = true
+    self.save(validate: true)
   end
 
   private

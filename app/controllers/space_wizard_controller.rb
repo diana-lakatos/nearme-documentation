@@ -1,10 +1,10 @@
 class SpaceWizardController < ApplicationController
 
-  before_filter :redirect_to_dashboard_if_user_has_listings, :only => [:new, :list]
   before_filter :find_transactable_type
-  before_filter :find_user, :except => [:new]
-  before_filter :find_user_country, :only => [:list, :submit_listing]
+  before_filter :redirect_to_dashboard_if_user_has_listings, :only => [:new, :list]
+  before_filter :set_common_variables, :only => [:list, :submit_listing]
   before_filter :sanitize_price_parameters, :only => [:submit_listing]
+  before_filter :set_theme, :only => [:list, :submit_item]
 
   def new
     flash.keep(:warning)
@@ -17,14 +17,19 @@ class SpaceWizardController < ApplicationController
   end
 
   def list
-    @company ||= @user.companies.build.locations.build.listings.build({:transactable_type_id => @transactable_type.id})
-    build_objects
-    build_approval_requests
-
-    @photos = @user.first_listing ? @user.first_listing.photos : nil
-    @user.phone_required = true
-    event_tracker.viewed_list_your_bookable
-    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
+    if buyable?
+      @boarding_form = BoardingForm.new(current_user)
+      @boarding_form.assign_all_attributes
+      @images = (@boarding_form.product_form.try(:product).try(:images) || []) + current_user.products_images.where(viewable_id: nil, viewable_type: nil)
+      render :list_item, layout: "dashboard"
+    else
+      build_objects
+      build_approval_requests
+      @photos = (@user.first_listing.try(:photos) || []) + @user.photos.where(transactable_id: nil)
+      @user.phone_required = true
+      event_tracker.viewed_list_your_bookable
+      event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
+    end
   end
 
   def submit_listing
@@ -32,8 +37,9 @@ class SpaceWizardController < ApplicationController
     params[:user][:companies_attributes]["0"][:name] = current_user.name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     @user.assign_attributes(wizard_params)
-    @user.companies.first.try(:locations).try(:first).try {|l| l.name_and_description_required = true} if TransactableType.first.name == "Listing"
+    @user.companies.first.try(:locations).try(:first).try {|l| l.name_and_description_required = true} unless buyable?
     @user.companies.first.creator_id = current_user.id
+    @user.verify_associated = @user.companies.first.verify_associated = !@user.companies.first.new_record? if buyable?
     build_objects
     build_approval_requests
     if params[:save_as_draft]
@@ -48,13 +54,30 @@ class SpaceWizardController < ApplicationController
       track_new_space_event
       track_new_company_event
       PostActionMailer.enqueue.list(@user)
-      flash[:success] = t('flash_messages.space_wizard.space_listed', bookable_noun: platform_context.decorate.bookable_noun)
-      redirect_to manage_locations_path
+      if buyable?
+        redirect_to dashboard_products_path
+      else
+        flash[:success] = t('flash_messages.space_wizard.space_listed', bookable_noun: platform_context.decorate.bookable_noun)
+        redirect_to dashboard_transactable_type_transactables_path(@transactable_type)
+      end
     else
       @photos = @user.first_listing ? @user.first_listing.photos : nil
       flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(@user.errors.full_messages)
       render :list
     end
+  end
+
+  def submit_item
+    redirect_to(new_space_wizard_url) && return unless current_user.present?
+
+    @boarding_form = BoardingForm.new(current_user)
+    if @boarding_form.submit(boarding_form_params)
+      redirect_to dashboard_products_path, notice: t('flash_messages.space_wizard.item_listed', bookable_noun: platform_context.decorate.bookable_noun)
+    else
+      @images = @boarding_form.product_form.product.images
+      render :list_item, layout: "dashboard"
+    end
+
   end
 
   def destroy_photo
@@ -74,36 +97,30 @@ class SpaceWizardController < ApplicationController
     return true if @company.listings.include?(photo.listing)     # if the photo content is a listing and belongs to company
   end
 
-  def find_user
+  def set_common_variables
+    redirect_to(new_space_wizard_url) && return unless current_user.present?
+
     @user = current_user
-    if @user
-      @country = current_user.country_name
-    else
-      redirect_to new_space_wizard_url unless @user
-    end
+    @company = @user.companies.first
+    @country = if params[:user] && params[:user][:country_name]
+                 params[:user][:country_name]
+               elsif @user.country_name.present?
+                 @user.country_name
+               else
+                 request.location.country rescue nil
+               end
   end
 
-  def find_company
-    @company = current_user.companies.first if current_user.companies.any?
-  end
-
-  def find_location
-    @location = @company.locations.first if @company && @company.locations.any?
-  end
-
-  def find_listing
-    @listing = @location.listings.first if @location && @location.listings.any?
+  def build_objects
+    @user.companies.build if @user.companies.first.nil?
+    @user.companies.first.locations.build if @user.companies.first.locations.first.nil?
+    @user.companies.first.locations.first.listings.build({:transactable_type_id => @transactable_type.id}) if @user.companies.first.locations.first.listings.first.nil?
   end
 
   def redirect_to_dashboard_if_user_has_listings
+    return if buyable?
     if current_user && current_user.companies.count > 0 && !current_user.has_draft_listings
-      if current_user.locations.count.zero?
-        redirect_to new_manage_location_path
-      elsif current_user.locations.count == 1 && current_user.listings.count.zero?
-        redirect_to new_manage_location_listing_path(current_user.locations.first)
-      else
-        redirect_to manage_locations_path
-      end
+      redirect_to dashboard_transactable_type_transactables_path(@transactable_type)
     end
   end
 
@@ -137,16 +154,6 @@ class SpaceWizardController < ApplicationController
     end
   end
 
-  def find_user_country
-    @country = if params[:user] && params[:user][:country_name]
-                 params[:user][:country_name]
-               elsif @user.country_name.present?
-                 @user.country_name
-               else
-                 request.location.country rescue nil
-               end
-  end
-
   def sanitize_price_parameters
     begin
       params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"].select { |k, v| k.include?('_price') }.each do |k, v|
@@ -158,17 +165,15 @@ class SpaceWizardController < ApplicationController
   end
 
   def find_transactable_type
-    @transactable_type = TransactableType.includes(:custom_attributes).first
+    @transactable_type = TransactableType.includes(:custom_attributes).try(:first)
   end
 
   def wizard_params
     params.require(:user).permit(secured_params.user)
   end
 
-  def build_objects
-    @user.companies.build if @user.companies.first.nil?
-    @user.companies.first.locations.build if @user.companies.first.locations.first.nil?
-    @user.companies.first.locations.first.listings.build({:transactable_type_id => @transactable_type.id}) if @user.companies.first.locations.first.listings.first.nil?
+  def boarding_form_params
+    params.require(:boarding_form).permit(secured_params.boarding_form)
   end
 
   def build_approval_requests
@@ -185,5 +190,8 @@ class SpaceWizardController < ApplicationController
     @user.companies.first.locations.first.listings.first.approval_requests = []
   end
 
+  def set_theme
+    @theme_name = 'product-theme'
+  end
 end
 

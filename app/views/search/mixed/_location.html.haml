@@ -1,6 +1,6 @@
 %article.location{:'data-id' => location.id, :'data-name' => location.name, :'data-latitude' => location.latitude, :'data-longitude' => location.longitude, :'data-offset' => current_page_offset}
   .location-counter= current_page_offset + location_counter + 1
-  - cache "search-locations-#{location.listings.map(&:id).join('-')}-#{search.lgpricing_filters.join('-')}-#{([location] + location.listings).max_by(&:updated_at).try(:updated_at).try(:utc).try(:to_s, :number)}" do
+  - cache "search-locations-#{location.listings.map(&:id).join('-')}-#{search.lgpricing_filters.join('-')}-#{([location] + location.listings).max_by(&:updated_at).try(:updated_at).try(:utc).try(:to_s, :number)}-#{location.try(:creator).try(:updated_at).try(:utc).try(:to_s, :number)}" do
     - listing_types_data = location.listings.inject({}) do |listing_types_data, listing|
       - listing_types_data["#{listing.listing_type}"] ||= { :name => listing.listing_type.try(:pluralize), :count => 0, :listings => [] }
       - listing_types_data["#{listing.listing_type}"][:count] += 1

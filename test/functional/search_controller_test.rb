@@ -36,13 +36,18 @@ class SearchControllerTest < ActionController::TestCase
     assert_select 'article[data-id=?]', location.id, count: 0
   end
 
-  alias :assert_product_in_result :assert_location_in_mixed_result
-  alias :refute_product_in_result :refute_location_in_mixed_result
+  def assert_product_in_result(product)
+    assert_select '.result-item[data-product-id=?]', product.id, count: 1
+  end
+
+  def refute_product_in_result(product)
+    assert_select '.result-item[data-product-id=?]', product.id, count: 0
+  end
 
   context 'for transactable type listing' do
     setup do
       FactoryGirl.create(:transactable_type_listing)
-    end 
+    end
 
     context 'search integration' do
       setup do

@@ -1,0 +1,42 @@
+- title "Variants"
+
+= show_manage_navigation(:products, :products)
+
+.row-fluid
+  .span8.offset2
+    .box
+      %header
+        %ul.location-and-listings
+          %li.location
+            .name.left
+              Manage Stock
+      = render 'manage/buy_sell/products/menu'
+
+      = render 'add_stock_form'
+
+      %ul.location-and-listings
+        %li.listing.action-buttons
+          .span5
+            Variant
+          .span7
+            Stock Location Info
+          .clearfix
+            - @variants.each do |variant|
+              - if variant.stock_items.present?
+                %li.listing.action-buttons
+                  .span5
+                    = variant.sku_and_options_text
+                  .span7
+                    %ul.location-and-listings
+                      %li.listing.action-buttons
+                        .span4
+                          Stock Location
+                        .span3
+                          Count On Hand
+                      - variant.stock_items.each do |item|
+                        - next unless @stock_locations.include?(item.stock_location)
+                        %li.listing
+                          .span4
+                            = item.stock_location.name
+                          .span3
+                            = item.count_on_hand

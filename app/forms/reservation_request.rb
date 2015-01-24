@@ -1,16 +1,16 @@
 class ReservationRequest < Form
 
   attr_accessor :dates, :start_minute, :end_minute
-  attr_accessor :card_number, :card_expires, :card_code, :card_holder_first_name, :card_holder_last_name
+  attr_accessor :card_number, :card_expires, :card_code, :card_holder_first_name, :card_holder_last_name, :payment_method_nonce
   attr_accessor :waiver_agreement_templates
-  attr_reader   :reservation, :listing, :location, :user
+  attr_reader   :reservation, :listing, :location, :user, :client_token, :payment_method_nonce
 
   def_delegators :@reservation, :quantity, :quantity=
-  def_delegators :@reservation, :credit_card_payment?, :manual_payment?, :remote_payment?
+  def_delegators :@reservation, :credit_card_payment?, :manual_payment?, :remote_payment?, :nonce_payment?
   def_delegators :@listing,     :confirm_reservations?, :hourly_reservations?, :location
   def_delegators :@user,        :mobile_number, :mobile_number=, :country_name, :country_name=, :country
 
-  before_validation :setup_credit_card_customer, :if => lambda { reservation and user and user.valid?}
+  before_validation :setup_active_merchant_customer, :if => lambda { reservation and user and user.valid?}
 
   validates :listing,     :presence => true
   validates :reservation, :presence => true
@@ -27,7 +27,8 @@ class ReservationRequest < Form
       @reservation = listing.reservations.build
       @instance = platform_context.instance
       @reservation.currency = @listing.currency
-      @billing_gateway = Billing::Gateway::Incoming.new(@user, @instance, @reservation.currency) if @user
+      @billing_gateway = Billing::Gateway::Incoming.new(@user, @instance, @reservation.currency, @listing.company.iso_country_code) if @user
+      @client_token = @billing_gateway.try(:client_token) if @billing_gateway.try(:possible?)
       @reservation.payment_method = payment_method
       @reservation.user = user
       @reservation = @reservation.decorate
@@ -76,6 +77,8 @@ class ReservationRequest < Form
                         Reservation::PAYMENT_METHODS[:free]
                       elsif @billing_gateway.try(:possible?) && @billing_gateway.try(:remote?)
                         Reservation::PAYMENT_METHODS[:remote]
+                      elsif nonce_payment_available? && payment_method_nonce.present?
+                        Reservation::PAYMENT_METHODS[:nonce]
                       elsif @billing_gateway.try(:possible?)
                         Reservation::PAYMENT_METHODS[:credit_card]
                       else
@@ -83,7 +86,17 @@ class ReservationRequest < Form
                       end
   end
 
+  def nonce_payment_available?
+    @billing_gateway.try(:nonce_payment?) if @billing_gateway.try(:possible?)
+  end
+
   private
+
+  def payment_method_nonce=(token)
+    return false if token.blank?
+    @payment_method_nonce = token
+    @reservation.payment_method = payment_method
+  end
 
   def validate_phone_and_country
     add_error("Please complete the contact details", :contact_info) unless user_has_mobile_phone_and_country?
@@ -96,7 +109,7 @@ class ReservationRequest < Form
   def save_reservation
     User.transaction do
       user.save!
-      if !reservation.listing.free? && @payment_method == Reservation::PAYMENT_METHODS[:credit_card]
+      if active_merchant_payment?
         mode = @instance.test_mode? ? "test" : "live"
         reservation.build_billing_authorization(
           token: @token,
@@ -115,9 +128,9 @@ class ReservationRequest < Form
     false
   end
 
-  def setup_credit_card_customer
+  def setup_active_merchant_customer
     clear_errors(:cc)
-    return true unless using_credit_card?
+    return true unless active_merchant_payment?
 
     begin
       self.card_expires = card_expires.to_s.strip
@@ -131,8 +144,9 @@ class ReservationRequest < Form
         verification_value: card_code.to_s
       )
 
-      if credit_card.valid?
-        response = @billing_gateway.authorize(@reservation.total_amount_cents, credit_card)
+      if payment_method_nonce.present? || credit_card.valid?
+        options = payment_method_nonce.present? ? {payment_method_nonce: payment_method_nonce} : {}
+        response = @billing_gateway.authorize(@reservation.total_amount_cents, credit_card, options)
         if response[:error].present?
           add_error(response[:error], :cc)
         else
@@ -147,8 +161,8 @@ class ReservationRequest < Form
     end
   end
 
-  def using_credit_card?
-    reservation.credit_card_payment?
+  def active_merchant_payment?
+    reservation.credit_card_payment? || reservation.nonce_payment?
   end
 
   def waiver_agreements_accepted

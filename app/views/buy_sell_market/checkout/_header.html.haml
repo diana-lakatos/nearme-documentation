@@ -1,0 +1,7 @@
+%h2.page-heading= t 'buy_sell_market.checkout.labels.checkout'
+
+.breadcrumbs
+  %ul
+    %li.first{class: step == :address ? 'active' : ''}= t 'buy_sell_market.checkout.labels.1address'
+    %li{class: step == :delivery ? 'active middle' : ''}= t 'buy_sell_market.checkout.labels.2delivery'
+    %li.last{class: step == :payment ? 'active' : ''}= t 'buy_sell_market.checkout.labels.3payment'

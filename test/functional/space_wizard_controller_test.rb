@@ -194,21 +194,21 @@ class SpaceWizardControllerTest < ActionController::TestCase
     should 'redirect to manage location page if has listings' do
       create_listing
       get :new
-      assert_redirected_to manage_locations_path
+      assert_redirected_to dashboard_transactable_type_transactables_path(TransactableType.first)
     end
 
     should 'redirect to new location if no listings' do
       create_listing
       @location.destroy
       get :new
-      assert_redirected_to new_manage_location_path
+      assert_redirected_to dashboard_transactable_type_transactables_path(TransactableType.first)
     end
 
     should 'redirect to new listing if no listings but with one location' do
       create_listing
       @listing.destroy
       get :new
-      assert_redirected_to new_manage_location_listing_path(@location)
+      assert_redirected_to dashboard_transactable_type_transactables_path(TransactableType.first)
     end
 
     should 'redirect to dashboard if no listings but more than one location' do
@@ -216,7 +216,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
       @listing.destroy
       FactoryGirl.create(:location, :company => @company)
       get :new
-      assert_redirected_to manage_locations_path
+      assert_redirected_to dashboard_transactable_type_transactables_path(TransactableType.first)
     end
 
     should 'redirect to space wizard list if no listings' do

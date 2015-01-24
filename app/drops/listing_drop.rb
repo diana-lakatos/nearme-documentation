@@ -6,7 +6,7 @@ class ListingDrop < BaseDrop
 
   attr_reader :listing
 
-  delegate :name, :location, :description, :hourly_reservations?, :creator, :administrator, :last_booked_days, to: :listing 
+  delegate :name, :location, :description, :hourly_reservations?, :creator, :administrator, :last_booked_days, to: :listing
   delegate :dashboard_url, :search_url, to: :routes
 
   def initialize(listing)
@@ -18,11 +18,11 @@ class ListingDrop < BaseDrop
   end
 
   def manage_guests_dashboard_url
-    routes.manage_guests_dashboard_path(:token => @listing.administrator.try(:temporary_token))
+    routes.dashboard_host_reservations_path(:token => @listing.administrator.try(:temporary_token))
   end
 
   def manage_guests_dashboard_url_with_tracking
-    routes.manage_guests_dashboard_path(:token => @listing.administrator.try(:temporary_token), :track_email_event => true)
+    routes.dashboard_host_reservations_path(:token => @listing.administrator.try(:temporary_token), :track_email_event => true)
   end
 
   def search_url_with_tracking

@@ -25,7 +25,7 @@ class Listings::RecurringBookingsController < ApplicationController
   end
 
   def load_payment_with_token
-    if secure? && request.ssl? and params["payment_token"]
+    if request.ssl? and params["payment_token"]
       user, recurring_booking_params = User::PaymentTokenVerifier.find_token(params["payment_token"])
       sign_in user
       set_origin_domain(recurring_booking_params['host'])
@@ -34,7 +34,7 @@ class Listings::RecurringBookingsController < ApplicationController
   end
 
   def secure_payment_with_token
-    if secure? && !request.ssl?
+    if require_ssl?
       params[:reservation_request][:host] = request.host
       verifier = User::PaymentTokenVerifier.new(current_user, params[:reservation_request])
       @token = verifier.generate
@@ -63,9 +63,9 @@ class Listings::RecurringBookingsController < ApplicationController
       flash[:notice] = t('flash_messages.reservations.reservation_made', message: card_message)
 
       if origin_domain?
-        redirect_to recurring_booking_successful_reservation_url(@recurring_booking, protocol: 'http', host: origin_domain)
+        redirect_to recurring_booking_successful_dashboard_user_reservation_url(@recurring_booking, protocol: 'http', host: origin_domain)
       else
-        redirect_to recurring_booking_successful_reservation_path(@recurring_booking)
+        redirect_to recurring_booking_successful_dashboard_user_reservation_path(@recurring_booking)
       end
     else
       render :review

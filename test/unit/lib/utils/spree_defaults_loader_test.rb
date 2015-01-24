@@ -16,7 +16,7 @@ class SpreeDefaultsLoaderTest < ActiveSupport::TestCase
       assert_equal Spree::Config.site_url, 'example.com'
       assert_equal Spree::Config.default_meta_keywords, 'Find a space to work'
       assert_equal Spree::Config.default_seo_title, 'Desks Near Me'
-      assert_equal Spree::Config.display_currency, true
+      assert_equal Spree::Config.display_currency, false
       assert_equal Spree::Config.allow_ssl_in_staging, false
       assert_equal Spree::Config.currency, 'USD'
       assert_equal Spree::Config.shipment_inc_vat, true

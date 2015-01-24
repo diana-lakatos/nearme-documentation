@@ -5,6 +5,7 @@ FactoryGirl.define do
     description "Aliquid eos ab quia officiis sequi."
     creator
     url "http://google.com"
+    association :company_address, factory: :address_in_san_francisco
 
     after(:build) do |company|
       company.industries = [FactoryGirl.build(:industry)] if company.industries.empty?
@@ -46,6 +47,13 @@ FactoryGirl.define do
 
     factory :white_label_company do
       white_label_enabled true
+    end
+
+    factory :company_with_stock_location do
+      after(:build) do |company|
+        FactoryGirl.create(:stock_location, company: company)
+      end
+
     end
 
   end

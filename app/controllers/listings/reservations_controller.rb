@@ -22,7 +22,7 @@ class Listings::ReservationsController < ApplicationController
   end
 
   def load_payment_with_token
-    if secure? && request.ssl? and params["payment_token"]
+    if request.ssl? and params["payment_token"]
       user, reservation_params = User::PaymentTokenVerifier.find_token(params["payment_token"])
       sign_in user
       set_origin_domain(reservation_params['host'])
@@ -31,7 +31,7 @@ class Listings::ReservationsController < ApplicationController
   end
 
   def secure_payment_with_token
-    if secure? && !request.ssl?
+    if require_ssl?
       params[:reservation_request][:host] = request.host
       verifier = User::PaymentTokenVerifier.new(current_user, params[:reservation_request])
       @token = verifier.generate
@@ -69,28 +69,20 @@ class Listings::ReservationsController < ApplicationController
       card_message = @reservation.credit_card_payment? ? t('flash_messages.reservations.credit_card_will_be_charged') : ''
       flash[:notice] = t('flash_messages.reservations.reservation_made', message: card_message)
 
-      redirect_to remote_payment_reservation_path(@reservation) and return if @reservation.remote_payment?
+      redirect_to remote_payment_dashboard_user_reservation_path(@reservation) and return if @reservation.remote_payment?
       if origin_domain?
-        redirect_to booking_successful_reservation_url(@reservation, protocol: 'http', host: origin_domain)
+        redirect_to booking_successful_dashboard_user_reservation_url(@reservation, protocol: 'http', host: origin_domain)
       else
-        redirect_to booking_successful_reservation_path(@reservation)
+        redirect_to booking_successful_dashboard_user_reservation_path(@reservation)
       end
     else
       render :review
     end
   end
 
-  # Renders booking successful modal
-  def booking_successful
-  end
-
-  # Renders booking failed modal
-  def booking_failed
-  end
-
   # Renders remote payment form
   def remote_payment
-    @billing_gateway = Billing::Gateway::Incoming.new(current_user, @reservation.instance, @reservation.currency)
+    @billing_gateway = Billing::Gateway::Incoming.new(current_user, @reservation.instance, @reservation.currency, @reservation.listing.company.iso_country_code)
     @billing_gateway.processor.set_payment_data(@reservation)
   end
 
@@ -160,7 +152,8 @@ class Listings::ReservationsController < ApplicationController
         card_number: attributes[:card_number],
         country_name: attributes[:country_name],
         mobile_number: attributes[:mobile_number],
-        waiver_agreement_templates: attributes[:waiver_agreement_templates]
+        waiver_agreement_templates: attributes[:waiver_agreement_templates],
+        payment_method_nonce: params[:payment_method_nonce]
       }
     )
   end

@@ -45,5 +45,18 @@ FactoryGirl.define do
       }
       active_merchant_class "Billing::Gateway::Processor::Incoming::Fetch"
     end
+
+    factory :braintree_payment_gateway do
+      name "Braintree"
+      settings {
+        {
+          merchant_id: "",
+          public_key: "",
+          private_key: ""
+        }
+      }
+      active_merchant_class "ActiveMerchant::Billing::BraintreeBlueGateway"
+    end
+
   end
 end

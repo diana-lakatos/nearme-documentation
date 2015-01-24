@@ -12,11 +12,11 @@ Feature: As a user of the site
 
   Scenario: User rejects reservation
     Given a reservation exists with listing: the transactable
-    Given I am on the manage guests dashboard page
+    Given I am on the guests page
     And I reject reservation with reason
     Then I should see "You have rejected the reservation. Maybe next time!"
 
   Scenario: A user will see information about no reservation
     Given a reservation exists with listing: the transactable, state: "confirmed"
-    Given I am on the manage guests dashboard page
+    Given I am on the guests page
     Then I should see "You have no unconfirmed reservations."

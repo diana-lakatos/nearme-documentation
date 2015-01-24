@@ -1,0 +1,14 @@
+- title t('dashboard.nav.companies')
+
+.dash-page
+  .dash-head.clearfix
+    %p= t('dashboard.nav.companies')
+  .dash-body
+    = simple_form_for [:dashboard, @company], wrapper: :bs3, :html => { multipart: true, :id => 'edit_company' } do |f|
+
+      = render :partial => 'form', :locals => { :f => f }
+      .submit-bar
+        = f.submit "Save", class: "btn medium blue"
+
+- content_for :domready do
+  $(function() { new CompanyForm($('#edit_company')) });

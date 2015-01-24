@@ -21,11 +21,12 @@ class CompilerTest < ActiveSupport::TestCase
       compiler.generate_and_update_assets
 
       assert @theme.compiled_stylesheet.present?
+      assert @theme.compiled_dashboard_stylesheet.present?
     end
 
     should 'render css rule' do
       compiler = Theme::Compiler.new(@theme)
-      assert compiler.send(:render_stylesheet) =~ /#logo/, "Expected to see a CSS rule"
+      assert compiler.send(:render_stylesheet, 'theme.scss.erb') =~ /#logo/, "Expected to see a CSS rule"
     end
   end
 
@@ -33,13 +34,13 @@ class CompilerTest < ActiveSupport::TestCase
     setup do
       @images = %w(hero_image icon_image icon_retina_image logo_image logo_retina_image)
       @images.each do |image|
-        Theme.any_instance.stubs(image.to_sym).returns(stub(:url => Rails.root.join('test', 'assets', image), :remove_previously_stored_files_after_update => true, :original_dimensions => [100, 100]))
+        Theme.any_instance.stubs(image.to_sym).returns(stub(url: Rails.root.join('test', 'assets', image), remove_previously_stored_files_after_update: true, original_dimensions: [100, 100]))
       end
     end
 
     should 'compiled css have theme assets' do
       compiler = Theme::Compiler.new(@theme)
-      css = compiler.send(:render_stylesheet)
+      css = compiler.send(:render_stylesheet, 'theme.scss.erb')
 
       @images.each do |image|
         regexp = "url(#{Rails.root.join('test', 'assets', image)})"
@@ -58,7 +59,7 @@ class CompilerTest < ActiveSupport::TestCase
 
     should 'compiled css have theme colors' do
       compiler = Theme::Compiler.new(@theme)
-      css = compiler.send(:render_stylesheet)
+      css = compiler.send(:render_stylesheet, 'theme.scss.erb')
 
       Theme::COLORS.each_with_index do |color, index|
         assert_match Regexp.new("##{index.to_s*6}"), css
@@ -81,7 +82,7 @@ class CompilerTest < ActiveSupport::TestCase
 
     should 'compiled css have theme logos and icons' do
       compiler = Theme::Compiler.new(@theme)
-      css = compiler.send(:render_stylesheet)
+      css = compiler.send(:render_stylesheet, 'theme.scss.erb')
 
       @icons.each_with_index do |image, index|
         assert_match Regexp.new("margin-top: #{30 - ((120 * (index + 1) * (2 / 3)) / 2)}"), css

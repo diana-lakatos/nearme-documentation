@@ -15,7 +15,7 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     @reservation = FactoryGirl.create(:reservation_with_credit_card, listing: @listing)
     stub_billing_gateway(@instance)
     stub_active_merchant_interaction
-    @billing_gateway = Billing::Gateway::Incoming.new(@reservation.owner, @instance, @reservation.currency)
+    @billing_gateway = Billing::Gateway::Incoming.new(@reservation.owner, @instance, @reservation.currency, 'US')
 
     response = @billing_gateway.authorize(@reservation.total_amount_cents, credit_card)
     @reservation.create_billing_authorization(token: response[:token], payment_gateway_class: response[:payment_gateway_class])
@@ -34,8 +34,8 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     post_via_redirect "/listings/#{FactoryGirl.create(:transactable).id}/reservations", booking_params
 
     @reservation_charge = @reservation.reservation_charges.last
-    charge = @reservation_charge.charge_attempts.new(amount: @reservation_charge.total_amount_cents, success: true)
     assert @reservation_charge.paid?
+    charge = @reservation_charge.charge_attempts.new(amount: @reservation_charge.total_amount_cents, success: true)
     assert_equal 2875, charge.amount
 
     PaymentTransferSchedulerJob.perform

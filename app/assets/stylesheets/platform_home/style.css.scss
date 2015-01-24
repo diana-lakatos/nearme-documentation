@@ -58,7 +58,7 @@ form{
 
 .container-fluid { width: 1217px; }
 .container { width: 1114px; }
-.navbar { margin: 0; padding: 0; text-transform: uppercase; font-family:'brandon_bldmedium', arial, serif; font-size:16px; line-height:16px;  }
+.navbar { display: inline-block; float: right; margin: 0; padding: 0; text-transform: uppercase; font-family:'brandon_bldmedium', arial, serif; font-size:16px; line-height:16px;  }
 .nav-pills>li { margin-left:20px; }
 .nav-pills>li+li { margin-left:20px; }
 .nav>li>a { color: #fff; padding: 15px 25px; }
@@ -75,6 +75,7 @@ form{
 .navbar .nav { float:right; }
 .brand { padding: 0; margin: 0; }
 .header { padding: 16px 100px; }
+.header span {display: inline-block; padding: 10px 20px; color: #fff;}
 
 .glyphicon { font-family:'glyphicons-halflings-regular', arial, serif; }
 .header .menu-btn {float:right; font-size:32px; display:none; }
