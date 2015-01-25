@@ -294,37 +294,3 @@ String.prototype.hashCode = function(){
     return this.get(0).scrollHeight > this.height();
   }
 })(jQuery);
-
-/* Shippo product form JS management */
-$(function(){
-  var toggle_shippo_fields_by_checked_status = function() {
-    var shippo_fields_element = $('.shippo_required_fields_row');
-    var shippo_checkbox_element = $('#product_form_shippo_enabled');
-    var shipping_profile_fields = $('.row.product_shipping_profile_fields_row');
-    if(shippo_checkbox_element.length > 0 && shippo_checkbox_element.is(':checked')) {
-      shippo_fields_element.removeClass('disabled');
-      shippo_fields_element.addClass('enabled');
-      if(shipping_profile_fields.length > 0) {
-        shipping_profile_fields.removeClass('enabled');
-        shipping_profile_fields.addClass('disabled');
-      }
-    } else {
-      shippo_fields_element.removeClass('enabled');
-      shippo_fields_element.addClass('disabled');
-      if(shipping_profile_fields.length > 0) {
-        shipping_profile_fields.removeClass('disabled');
-        shipping_profile_fields.addClass('enabled');
-      }
-    }
-  }
-
-  $(document).ready(function() {
-    toggle_shippo_fields_by_checked_status();
-
-    $('#product_form_shippo_enabled').click(function() {
-      toggle_shippo_fields_by_checked_status();
-    });
-  });
-});
-/* End Shippo product form JS management */
-
