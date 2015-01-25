@@ -137,6 +137,7 @@ section {
   margin-top: 30px;
 }
 
+/* Shippo product form fields */
 .product_form_shippo_enabled .row {
   margin-bottom: 0 !important;
 }
@@ -144,6 +145,11 @@ section {
 .shippo_required_fields_row {
   background-color: #fdfddd;
   margin-top: 0 !important;
+
+  .shippo_decimal_field {
+    /* important is required to override the defaults simple form places */
+    width: 100px !important;
+  }
 }
 
 .shippo_required_fields_row.disabled {
@@ -154,10 +160,14 @@ section {
   display: block;
 }
 
-.shippo_decimal_field {
-  /* important is required to override the defaults simple form places */
-  width: 100px !important;
+.product_shipping_profile_fields_row.disabled {
+  display: none;
 }
+
+.product_shipping_profile_fields_row.enabled {
+  display: block;
+}
+/* End Shippo product form fields */
 
 .remove_shipping_profile {
   overflow: hidden;
