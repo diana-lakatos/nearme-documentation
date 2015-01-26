@@ -6,6 +6,8 @@ class AdminSessionsTest < ActionDispatch::IntegrationTest
     @user = FactoryGirl.create(:user)
     @admin = FactoryGirl.create(:admin)
     stub_mixpanel
+    instance = Instance.first
+    instance.domains << FactoryGirl.create(:domain, name: "www.example.com")
   end
 
   test 'test user access restrictions to instance admin panel' do

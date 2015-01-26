@@ -140,7 +140,7 @@ class PlatformContextTest < ActiveSupport::TestCase
     end
 
     should 'no instance if domain is unknown' do
-      rq = PlatformContext.new('something.weird.example.com')
+      rq = PlatformContext.new('something.weird.com')
       assert_equal nil, rq.instance
       assert_equal nil, rq.theme
       assert_equal nil, rq.platform_context_detail
@@ -244,7 +244,7 @@ class PlatformContextTest < ActiveSupport::TestCase
   context '.latest_products' do
 
     setup do
-      @platform_context = PlatformContext.new
+      @platform_context = PlatformContext.new(Instance.first)
       @instance = @platform_context.instance
       2.times {
         FactoryGirl.create(:product, instance: @instance)

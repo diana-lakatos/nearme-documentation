@@ -24,7 +24,11 @@ class PlatformContext::RackSetter
     elsif request.path_info == '/ping'
       @app.call(env)
     else
-      [platform_context.redirect_code, { 'Location' => platform_context.redirect_url }, self]
+      [
+        platform_context.redirect_code,
+        { 'Location' => platform_context.redirect_url(request.path_info) },
+        self
+      ]
     end
   end
 

@@ -5,6 +5,7 @@ Feature: A user can reset their password
 
   Background:
     Given a user exists
+    And a domain www.example.com exists
 
   Scenario: User requests password reset using modal
     Given the transactable_type_listing exists

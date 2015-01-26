@@ -176,9 +176,9 @@ class PlatformContext
     @domain.name != @request_host
   end
 
-  def redirect_url
+  def redirect_url(path = '')
     return NEAR_ME_REDIRECT_URL unless @domain
-    @domain.redirect? ? @domain.redirect_to : @domain.url
+    "#{(@domain.redirect? ? @domain.redirect_to : @domain.url)}#{path}"
   end
 
   def redirect_code

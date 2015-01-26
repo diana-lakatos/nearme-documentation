@@ -50,6 +50,8 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
 
   def create_logged_in_user
     # TODO post_via_redirect '/users', :user => { :name => 'John Doe', :email => 'user@example.com', :password => 'password' }
+    instance = Instance.first
+    instance.domains << FactoryGirl.create(:domain, name: "www.example.com")
     user = FactoryGirl.create(:user)
     post_via_redirect '/users/sign_in', :user => { :email => user.email, :password => user.password }
   end
