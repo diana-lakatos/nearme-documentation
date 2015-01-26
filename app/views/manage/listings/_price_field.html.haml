@@ -1,7 +1,7 @@
 - price ||= nil
 - label ||= nil
 - include_checkbox ||= nil
-%div
+%div.price-containter
   -if include_checkbox
     %label.checkbox{:for => "enable_#{price}"}
       = check_box_tag "enable_#{price}", "1", f.object.send("#{price}_price").present?, class: "enable_#{price}", :'data-behavior' => 'enable-price'

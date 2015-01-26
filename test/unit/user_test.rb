@@ -147,6 +147,34 @@ class UserTest < ActiveSupport::TestCase
         end
       end
 
+      context "when wrong phone numbers provided" do
+        setup do
+          @user = FactoryGirl.build(:user)
+        end
+
+        should "be invalid with wrong phone" do
+          @user.phone = "3423jhjhg432"
+          refute @user.valid?
+        end
+
+        should "be invalid with wrong mobile number" do
+          @user.mobile_number = "3423jhjhg432"
+          refute @user.valid?
+        end
+
+        should "be valid with empty numbers" do
+          @user.mobile_number = nil
+          @user.phone = nil
+          assert @user.valid?
+        end
+
+        should "be invalid with empty number and phone required" do
+          @user.phone_required = true
+          @user.phone = nil
+          refute @user.valid?
+        end
+      end
+
     end
 
     context 'approval_requests' do
@@ -860,7 +888,7 @@ class UserTest < ActiveSupport::TestCase
     @photo  = FactoryGirl.create(:photo, :listing => @listing, :creator => @photo)
     @reservation = FactoryGirl.create(:reservation, :user => @user, :listing => @listing)
     @reservation_period = @reservation.periods.first
-    @reservation_charge = FactoryGirl.create(:reservation_charge, :reservation => @reservation)
+    @reservation_charge = FactoryGirl.create(:reservation_charge, :reference => @reservation)
     @charge = FactoryGirl.create(:charge, :reference => @reservation_charge)
     @payment_transfer = FactoryGirl.create(:payment_transfer, :company_id => @company.id)
     @objects = [@user, @user_industry, @authentication, @company, @company_industry,

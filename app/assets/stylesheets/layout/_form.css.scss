@@ -53,7 +53,7 @@ label.radio {
   }
 }
 
-form {
+form:not(.no_inheritance) {
 
   div.input,
   div.field {
@@ -258,6 +258,14 @@ form {
       @extend h2;
       border-radius: $border-radius-default $border-radius-default 0 0;
     }
+
+    > .border-legend {
+        position: absolute;
+        top: -14px;
+        background: #fafafa;
+        display: inline-block;
+        padding: 0px 10px;
+    }
   }
 
   // Wrapper element for input fields.
@@ -313,7 +321,6 @@ form {
     padding-bottom: 15px;
   }
 }
-
 
 // Form with horizontal label alignment
 //
@@ -411,6 +418,10 @@ form {
         font-size: 18px;
         font-weight: normal;
       }
+    }
+
+    .chosen-container {
+      width: 100% !important;
     }
   }
 }

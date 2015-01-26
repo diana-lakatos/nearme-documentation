@@ -26,6 +26,8 @@ Before do
   FactoryGirl.create(:paypal_payment_gateway)
   FactoryGirl.create(:stripe_payment_gateway)
   FactoryGirl.create(:balanced_payment_gateway)
+  FactoryGirl.create(:fetch_payment_gateway)
+  FactoryGirl.create(:braintree_payment_gateway)
 
   ActiveMerchant::Billing::Base.mode = :test
   Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:authorize).returns({token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe"})
@@ -52,8 +54,6 @@ Before do
     instance_payment_gateway_id: ipg.id
   )
   instance.country_instance_payment_gateways << country_ipg
-
-  Utils::EnLocalesSeeder.new.go!
 end
 
 def last_json

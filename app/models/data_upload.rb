@@ -23,12 +23,8 @@ class DataUpload < ActiveRecord::Base
       transition queued: :processing
     end
 
-    event :wait do
-      transition processing: :waiting
-    end
-
     event :queue do
-      transition waiting: :queued
+      transition processing: :queued
     end
 
     event :import do
@@ -58,6 +54,10 @@ class DataUpload < ActiveRecord::Base
 
   def should_be_monitored?
     queued? || processing? || importing?
+  end
+
+  def to_liquid
+    DataUploadDrop.new(self)
   end
 
 end

@@ -11,6 +11,7 @@ class Search.SearchMixedController extends Search.SearchController
     @sortValue = @sortField.find(':selected').val()
     @perPageValue = @perPageField.find(':selected').val()
     @bindLocationsEvents()
+    @initializeCarousel()
 
   bindEvents: =>
     super
@@ -306,3 +307,6 @@ class Search.SearchMixedController extends Search.SearchController
     params['loc'] = @buildSeoFriendlyQuery(result)
 
     params
+
+  initializeCarousel: ->
+    $('.carousel').carousel({ interval: 7000 })

@@ -24,7 +24,7 @@
 = f.input :biography, label: "Biography" if only_inputs.empty? || only_inputs.include?(:biography)
 = f.input :password, :label => (f.object.persisted? ? "Change password" : "Password" ) if only_inputs.empty? || only_inputs.include?(:password)
 = f.input :drivers_licence_number if only_inputs.empty? || only_inputs.include?(:drivers_licence_number)
-= f.input :gov_number, label: "Goverment Number" if only_inputs.empty? || only_inputs.include?(:goverment_number)
+= f.input :gov_number, label: "Government Number" if only_inputs.empty? || only_inputs.include?(:goverment_number)
 = f.input :twitter_url if only_inputs.empty? || only_inputs.include?(:twitter_url)
 = f.input :linkedin_url if only_inputs.empty? || only_inputs.include?(:linkedin_url)
 = f.input :facebook_url if only_inputs.empty? || only_inputs.include?(:facebook_url)

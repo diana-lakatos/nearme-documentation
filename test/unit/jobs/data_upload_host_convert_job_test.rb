@@ -3,8 +3,9 @@ require 'test_helper'
 class DataUploadHostConvertJobTest < ActiveSupport::TestCase
 
   setup do
-    @stub = stub(:save! => true, :process! => true, fail: true)
+    @stub = stub(:save! => true, :process! => true, fail: true, id: 10)
     DataUpload.stubs(:find).returns(@stub)
+    DataUploadImportJob.expects(:perform).with(10)
   end
   should 'store exception which has been raised' do
     DataImporter::Host::CsvFile::TemplateCsvFile.stubs(:new).raises(StandardError.new('*Custom exception*'))

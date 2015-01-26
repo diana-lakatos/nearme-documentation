@@ -11,8 +11,7 @@ class PaymentTransfer < ActiveRecord::Base
   belongs_to :instance
   belongs_to :partner
 
-  has_many :reservation_charges, :dependent => :nullify
-  has_many :order_line_items, class_name: 'Spree::LineItem', :dependent => :nullify
+  has_many :payments, :dependent => :nullify
 
   has_many :payout_attempts,
     :class_name => 'Payout',
@@ -65,7 +64,7 @@ class PaymentTransfer < ActiveRecord::Base
     Company.with_deleted.find(company_id)
   end
 
-   # Attempt to payout through the billing gateway
+  # Attempt to payout through the billing gateway
   def payout
     return if !billing_gateway.possible?
     return if transferred?
@@ -95,25 +94,15 @@ class PaymentTransfer < ActiveRecord::Base
   private
 
   def assign_amounts_and_currency
-    if reservation_charges.any?
-      self.currency = reservation_charges.first.try(:currency)
-      self.service_fee_amount_host_cents = reservation_charges.sum(:service_fee_amount_host_cents)
-      self.amount_cents = reservation_charges.all.inject(0) { |sum, rc| sum += rc.subtotal_amount_cents_after_refund } - self.service_fee_amount_host_cents
-      self.service_fee_amount_guest_cents = reservation_charges.sum(:service_fee_amount_guest_cents)
-    end
-
-    if order_line_items.any?
-      self.currency = Spree::Config[:currency]
-      self.service_fee_amount_host_cents = order_line_items.sum(:service_fee_amount_host_cents)
-      self.amount_cents = order_line_items.sum(:price).to_money(Spree::Config[:currency]).cents - self.service_fee_amount_host_cents
-      self.service_fee_amount_guest_cents = order_line_items.sum( :service_fee_amount_guest_cents)
-    end
-
+    self.currency = payments.first.try(:currency)
+    self.service_fee_amount_host_cents = payments.inject(0) { |sum, rc| sum += rc.final_service_fee_amount_host_cents }
+    self.amount_cents = payments.all.inject(0) { |sum, rc| sum += rc.subtotal_amount_cents_after_refund } - self.service_fee_amount_host_cents
+    self.service_fee_amount_guest_cents = payments.inject(0) { |sum, rc| sum += rc.final_service_fee_amount_guest_cents }
     self.save!
   end
 
   def validate_all_charges_in_currency
-    unless reservation_charges.map(&:currency).uniq.length <= 1
+    unless payments.map(&:currency).uniq.length <= 1
       errors.add :currency, 'all paid out payments must be in the same currency'
     end
   end

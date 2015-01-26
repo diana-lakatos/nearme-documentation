@@ -12,7 +12,7 @@ class UserMessageDecorator < Draper::Decorator
     classes << (read_for?(user) ? 'read' : 'unread')
     if user
       if author == user
-        classes << 'my-message'
+        classes << 'my-message striped'
       else
         classes << 'foreign-message'
       end

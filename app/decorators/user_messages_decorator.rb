@@ -53,9 +53,9 @@ class UserMessagesDecorator < Draper::CollectionDecorator
     link_class += (current_action.to_sym == action) ? ' active' : '-darker'
     path = case action
     when :index
-      user_messages_path
+      dashboard_user_messages_path
     when :archived
-      archived_user_messages_path
+      archived_dashboard_user_messages_path
     end
     link_to(path, class: link_class, &block)
   end

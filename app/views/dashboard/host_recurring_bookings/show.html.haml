@@ -1,0 +1,19 @@
+- title "#{platform_context.lessee.capitalize.pluralize} (#{@guest_list.reservations.size + @guest_list.recurring_bookings.size})"
+
+.dash-head.clearfix
+  = render 'recurring_booking_guest_filter', recurring_booking: @recurring_booking
+
+.dash-body
+  - if @guest_list.reservations_scope.empty? && !only_reservations && @guest_list.recurring_bookings_scope.empty?
+    = render 'dashboard/host_reservations/promote_locations', locations: @locations
+  - else
+    .recurring-booking-summary
+      %h2
+        = @recurring_booking.schedule
+
+      - if @recurring_booking.start_minute && @recurring_booking.end_minute
+        = @recurring_booking.hourly_summary(true)
+      - else
+        = @recurring_booking.short_dates
+
+    = render 'manage_guests', only_reservations: true

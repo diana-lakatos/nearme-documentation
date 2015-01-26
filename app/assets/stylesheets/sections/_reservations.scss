@@ -76,7 +76,7 @@ section.reservations {
         }
       }
     }
-    
+
     @media (max-width: 767px) {
       margin-bottom: 15px;
     }
@@ -106,9 +106,9 @@ section.reservations {
       margin: 0px;
     }
 
-    .actions .btn{ 
+    .actions .btn{
       margin-top: 15px;
-      width: 140px; 
+      width: 140px;
 
       @media (max-width: 767px) {
         margin-bottom: 15px;
@@ -158,7 +158,7 @@ section.reservations {
   .reservations-booking_successful, .reservations-booking_failed {
     .icons {
       padding: $padding-default;
-      
+
       h3 {
         margin: $padding-default 0;
         text-align: center;
@@ -237,7 +237,7 @@ section.reservations {
       }
 
       &.location-address {
-        color: #b8b8b8;
+        color: $gray100;
         margin-bottom: 25px;
       }
     }
@@ -255,7 +255,7 @@ section.reservations {
     }
 
     p {
-      color: #b8b8b8;
+      color: $gray100;
 
       &.error-block {
         color: $red;
@@ -263,9 +263,9 @@ section.reservations {
     }
 
     hr {
-      color: #e6e6e6;
-      background-color: #e6e6e6;
-      border-color: #e6e6e6;
+      color: $gray230;
+      background-color: $gray230;
+      border-color: $gray230;
     }
 
     .selected-dates-summary {
@@ -278,10 +278,77 @@ section.reservations {
     }
 
     .order-summary {
-      border-bottom: 1px solid #e6e6e6;
+      border-bottom: 1px solid $gray230;
 
       .summary-line {
-        border-color: #e6e6e6;
+        border-color: $gray230;
+      }
+    }
+
+    .tabs {
+      width: auto;
+      float: none;
+      list-style: none;
+      position: relative;
+      margin: 10px 0px 0 0px;
+      text-align: left;
+      li {
+        float: left;
+      }
+      input[type="radio"] {
+        display:none;
+      }
+      label.tab {
+        display: inline-block;
+        padding: 13px 21px !important;
+        border-radius: 2px 2px 0 0;
+        font-size: 20px;
+        font-weight: normal;
+        cursor: pointer;
+        position: relative;
+        top: 4px;
+        white-space: nowrap;
+        @include transition(all 0.2s ease-in-out);
+      }
+
+      .tab2 label {
+        position: absolute;
+        left: 130px;
+        top: 0px;
+      }
+
+      .tab-content{
+        z-index: 2;
+        display: none;
+        overflow: hidden;
+        width: 100%;
+        font-size: 17px;
+        line-height: 25px;
+
+        .confirm-reservations {
+          background-color: $dnm_white;
+          color: $gray100;
+          margin-bottom: 0px;
+          margin-top: 0px;
+          padding: 5px 0 15px 0;
+        }
+        #braintree-paypal-loggedin {
+          max-width: 100% !important;
+          border-bottom: 1px solid $gray230 !important;
+          border-top: 0px !important;
+        }
+      }
+
+      [id^="tab"]:checked + label {
+        top: 1px;
+        padding-top: 17px;
+        border: 1px solid $gray230;
+        border-bottom: 0px;
+        background-color: $dnm_white;
+      }
+
+      [id^="tab"]:checked ~ [id^="tab-content"] {
+        display: block;
       }
     }
 
@@ -300,87 +367,6 @@ section.reservations {
       }
     }
 
-    .submit-secure-payment {
-      border-bottom: 1px solid #e6e6e6;
-      .text {
-        line-height: 40px;
-      }
-
-      .credit-card-images {
-        text-align: right;
-        line-height: 18px;
-      }
-
-      @media (max-width: $ipad-width) {
-        .text {
-          line-height: inherit;
-          margin-bottom: 15px;
-        }
-        .credit-card-images {
-          text-align: left;
-        }
-      }
-    }
-
-    .credit-card-fields {
-      border: 1px solid #e6e6e6;
-      padding: $padding-default;
-
-      input {
-        font-size: 18px;
-        height: 49px;
-      }
-
-      .credit-card {
-        margin-top: $padding-default;
-
-        .card-number {
-
-          #reservation_request_card_number {
-            padding-right: 40px !important;
-          }
-
-          @mixin placeholder_with_icons($padding-top: 3px, $font-size: 10px, $letter-spacing: 3px) {
-            padding-top: $padding-top;
-            color: $gray190;
-            font-family: 'icon-font';
-            font-size: $font-size;
-            letter-spacing: $letter-spacing;
-          }
-          ::-webkit-input-placeholder { /* WebKit browsers */
-            @include placeholder_with_icons;
-          }
-          :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-            @include placeholder_with_icons;
-          }
-          ::-moz-placeholder { /* Mozilla Firefox 19+ */
-            @include placeholder_with_icons;
-          }
-          :-ms-input-placeholder { /* Internet Explorer 10+ */
-            @include placeholder_with_icons;
-            line-height: 46px;
-            height: 49px;
-            vertical-align: middle;
-          }
-        }
-        .ico-credit-card:before {
-          font-size: 30px;
-        }
-      }
-
-      .card-info.expiry {
-
-        @media (min-width: $ipad-width) and (max-width: $host-card-breakpoint-small) {
-          label {
-            text-overflow: clip;
-            white-space: nowrap;
-            width: 70px;
-            overflow: hidden;
-          }
-        }
-      }
-    }
-
     .confirm-reservations {
       margin: $padding-default 0 2*$padding-default 0;
     }
@@ -392,14 +378,21 @@ section.reservations {
 
     .flash {
       &.error {
+
+        color: $red;
+        padding-bottom: 0.5em;
+
         p {
           text-align:center;
           color: $red;
           font-size: 1.1em;
         }
 
-        color: $red;
-        padding-bottom: 0.5em;
+        ul li {
+          color: $red;
+          font-size: 1.1em;
+          margin: 20px 0px;
+        }
       }
     }
   }

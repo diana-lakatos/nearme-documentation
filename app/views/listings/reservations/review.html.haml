@@ -57,26 +57,30 @@
 
           = render 'contact_information_fields', :f => f
 
+        - if @reservation_request.nonce_payment_available?
 
-        - if @reservation_request.credit_card_payment?
+          %h2 Select Payment Method
+
+          .tabs
+            .tab1
+              %input#tab1{checked: "checked", name: "tabs", type: "radio"}/
+              %label.tab{for: "tab1"} Credit Card
+              #tab-content1.tab-content
+                = render 'payments/credit_card_fields', :f => f
+                = render 'confirm_reservations'
+            .tab2
+              %input#tab2{name: "tabs", type: "radio"}/
+              %label.tab{for: "tab2"} PayPal
+              #tab-content2.tab-content
+                = render 'paypal_fields', :f => f
+                = render 'confirm_reservations'
+
+        - elsif @reservation_request.credit_card_payment?
 
           %h2 Payment
 
-          = render 'credit_card_fields', :f => f
-
-          - if @reservation_request.confirm_reservations?
-            %p.confirm-reservations
-              = t('reservations.manually_confirm', lessor: platform_context.lessor)
-              = t('reservations.charge_after_confirmation')
-              %br
-              - if platform_context.instance.transactable_types.first.cancellation_policy_hours_for_cancellation.zero?
-                = t('reservations.no_cancellation_time')
-              - else
-                = t('reservations.cancellation_time', time: platform_context.instance.transactable_types.first.cancellation_policy_hours_for_cancellation)
-              - if platform_context.instance.transactable_types.first.cancellation_policy_penalty_percentage.zero?
-                = t('reservations.no_cancellation_fee')
-              - else
-                = t('reservations.cancellation_fee', fee: platform_context.instance.transactable_types.first.cancellation_policy_penalty_percentage)
+          = render 'payments/credit_card_fields', :f => f
+          = render 'confirm_reservations'
 
         - elsif @reservation_request.manual_payment?
 
@@ -96,6 +100,8 @@
                   = image_tag 'credit-cards.png', alt: "Visa, Mastercard, American Express, Discover"
                 .clearfix
 
+
+
         - @reservation.assigned_waiver_agreement_templates.each do |wat|
           %div
             %label.checkbox.controls{for: "reservation_request_waiver_agreement_templates_#{wat.id}"}
@@ -107,10 +113,8 @@
         = f.button :submit, 'Request Booking', disable_with: "Booking..."
 
 - content_for :script do
-  = javascript_include_tag "https://js.stripe.com/v1/"
   :javascript
     $(function() {
-      new Bookings.ReservationRequestFormController($('form.payment'));
       new PhoneNumbers.FieldsForm(
         $('form.payment'),
         {
@@ -121,4 +125,8 @@
         }
       );
       window.sessioncamConfiguration.customDataObjects.push( { key: "event", value: "booking_modal_opened" } );
+
+      braintree.setup("#{@reservation_request.client_token}", 'paypal', {
+        container: 'paypal-button'
+      });
     });

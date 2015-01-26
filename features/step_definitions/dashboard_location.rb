@@ -8,10 +8,49 @@ Given /^(Location|Listing) with my details should be created$/ do |model|
   end
 end
 
+Given /^#{capture_model} should not be pickable$/ do |model|
+  location = Location.with_deleted.last
+  within('.edit-locations') do
+    page.should_not have_content(location.name, visible: true)
+  end
+  assert_not_nil location.deleted_at
+end
+
+Given /^TransactableType is for bulk upload$/ do
+  FactoryGirl.create(:transactable_type_current_data)
+end
+
+When /^I upload csv file with locations and transactables$/ do
+  FactoryGirl.create(:location_type, name: 'My Type')
+  find(:css, 'a.bulk-upload').click
+  stub_image_url('http://www.example.com/image1.jpg')
+  stub_image_url('http://www.example.com/image2.jpg')
+  work_in_modal do
+    page.should have_css('#new_data_upload')
+    attach_file('data_upload_csv_file', File.join(Rails.root, *%w[test assets data_importer current_data.csv]))
+    find('.btn-toolbar input[type=submit]').click
+  end
+  page.should_not have_css('#new_data_upload')
+end
+
+Then /^I should receive data upload report email when finished$/ do
+  mails = emails_for(model!('user').email)
+  assert_equal 1, mails.count
+  mail = mails.first
+  assert_equal "Importing 'current_data.csv' has finished", mail.subject
+end
+
+Then /^New locations and transactables from csv should be added$/ do
+  company = model!('user').companies.first
+  assert_equal ['Czestochowa', 'Rydygiera'], company.locations.pluck(:name).sort
+  assert_equal [["my name", "Rydygiera"], ["my name2", "Rydygiera"]], company.listings.joins(:location).select('name, locations.name as location_name, transactable_type_id, properties').map { |l| [l.name, l.location_name] }
+end
+
 Given /^#{capture_model} should be updated$/ do |model|
   if model=='the location'
     location = model!('location')
     assert_location_data(location)
+    page.should have_content(location.name, visible: true)
   else
     listing = model!('transactable')
     assert_listing_data(listing, true)
@@ -29,7 +68,11 @@ end
 When /^I (disable|enable) (.*) pricing$/ do |action, period|
   page.find("#enable_#{period}").set(action == 'disable' ? false : true)
   if action=='enable'
-    page.find("#listing_#{period}_price").set(15.50)
+    if page.has_selector?("#listing_#{period}_price")
+      page.find("#listing_#{period}_price").set(15.50)
+    else
+      page.find("#transactable_#{period}_price").set(15.50)
+    end
   end
 
 end
@@ -40,6 +83,14 @@ When /^I provide new (location|listing) data$/ do |model|
   else
     fill_listing_form
   end
+end
+
+When /^I submit the location form$/ do
+  page.find('#location-form input[type=submit]').click
+end
+
+When /^I submit the transactable form$/ do
+  page.find('#listing-form input[type=submit]').click
 end
 
 When /^I submit the form$/ do
@@ -68,14 +119,22 @@ Then /^Listing (.*) pricing should be (disabled|enabled)$/ do |period, state|
   enable_period_checkbox = page.find("#enable_#{period}")
   if state=='enabled'
     assert enable_period_checkbox.checked?
-    assert_equal "15.50", page.find("#listing_#{period}_price").value
+    if page.has_selector?("#listing_#{period}_price")
+      assert_equal "15.50", page.find("#listing_#{period}_price").value
+    else
+      assert_equal "15.50", page.find("#transactable_#{period}_price").value
+    end
   else
     assert !enable_period_checkbox.checked?
   end
 end
 
 Then /^pricing should be free$/ do
-  page.find("#listing_price_type_free").checked?
+  if page.has_selector?("#listing_price_type_free")
+    page.find("#listing_price_type_free").checked?
+  else
+    page.find("#transactable_price_type_free").checked?
+  end
 end
 
 When /^I select custom availability:$/ do |table|

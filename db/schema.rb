@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141208143431) do
+ActiveRecord::Schema.define(version: 20150120102629) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -102,11 +102,11 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "hint"
     t.integer  "approval_request_id"
     t.integer  "approval_request_attachment_template_id"
     t.boolean  "required",                                default: false
     t.string   "label"
+    t.text     "hint"
   end
 
   add_index "approval_request_attachments", ["instance_id"], name: "index_approval_request_attachments_on_instance_id", using: :btree
@@ -205,7 +205,11 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
     t.string   "payment_gateway_mode"
+    t.string   "reference_type"
+    t.integer  "reference_id"
   end
+
+  add_index "billing_authorizations", ["reference_id", "reference_type"], name: "index_billing_authorizations_on_reference_id_and_reference_type", using: :btree
 
   create_table "blog_instances", force: true do |t|
     t.string   "name"
@@ -435,10 +439,11 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.string   "bcc"
     t.string   "reply_to"
     t.string   "subject"
-    t.boolean  "partial",    default: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.boolean  "partial",      default: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.integer  "theme_id"
+    t.boolean  "custom_email", default: false
   end
 
   add_index "email_templates", ["theme_id"], name: "index_email_templates_on_theme_id", using: :btree
@@ -560,37 +565,6 @@ ActiveRecord::Schema.define(version: 20141208143431) do
 
   add_index "instance_billing_gateways", ["instance_id"], name: "index_instance_billing_gateways_on_instance_id", using: :btree
 
-  create_table "instance_blog_instances", force: true do |t|
-    t.string   "name"
-    t.string   "header"
-    t.integer  "owner_id"
-    t.string   "owner_type"
-    t.string   "facebook_app_id"
-    t.boolean  "enabled",         default: false
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-    t.string   "header_logo"
-    t.string   "header_icon"
-    t.string   "header_text"
-    t.string   "header_motto"
-  end
-
-  create_table "instance_blog_posts", force: true do |t|
-    t.string   "title"
-    t.text     "content"
-    t.string   "header"
-    t.string   "author_name"
-    t.text     "author_biography"
-    t.string   "author_avatar"
-    t.integer  "blog_instance_id"
-    t.integer  "user_id"
-    t.string   "slug"
-    t.datetime "published_at"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-    t.text     "excerpt"
-  end
-
   create_table "instance_clients", force: true do |t|
     t.integer  "client_id"
     t.string   "client_type"
@@ -653,16 +627,16 @@ ActiveRecord::Schema.define(version: 20141208143431) do
 
   create_table "instances", force: true do |t|
     t.string   "name"
-    t.datetime "created_at",                                                                   null: false
-    t.datetime "updated_at",                                                                   null: false
-    t.string   "bookable_noun",                                               default: "Desk"
-    t.decimal  "service_fee_guest_percent",           precision: 5, scale: 2, default: 0.0
+    t.datetime "created_at",                                                                            null: false
+    t.datetime "updated_at",                                                                            null: false
+    t.string   "bookable_noun",                                                 default: "Desk"
+    t.decimal  "service_fee_guest_percent",             precision: 5, scale: 2, default: 0.0
     t.string   "lessor"
     t.string   "lessee"
-    t.boolean  "skip_company",                                                default: false
-    t.boolean  "default_instance",                                            default: false
+    t.boolean  "skip_company",                                                  default: false
+    t.boolean  "default_instance",                                              default: false
     t.text     "pricing_options"
-    t.decimal  "service_fee_host_percent",            precision: 5, scale: 2, default: 0.0
+    t.decimal  "service_fee_host_percent",              precision: 5, scale: 2, default: 0.0
     t.string   "live_stripe_public_key"
     t.string   "paypal_email"
     t.string   "encrypted_live_paypal_username"
@@ -682,8 +656,8 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.integer  "max_weekly_price_cents"
     t.integer  "min_monthly_price_cents"
     t.integer  "max_monthly_price_cents"
-    t.boolean  "password_protected",                                          default: false
-    t.boolean  "test_mode",                                                   default: false
+    t.boolean  "password_protected",                                            default: false
+    t.boolean  "test_mode",                                                     default: false
     t.string   "encrypted_test_paypal_username"
     t.string   "encrypted_test_paypal_password"
     t.string   "encrypted_test_paypal_signature"
@@ -694,7 +668,7 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.string   "test_stripe_public_key"
     t.string   "encrypted_test_balanced_api_key"
     t.string   "encrypted_olark_api_key"
-    t.boolean  "olark_enabled",                                               default: false
+    t.boolean  "olark_enabled",                                                 default: false
     t.string   "encrypted_facebook_consumer_key"
     t.string   "encrypted_facebook_consumer_secret"
     t.string   "encrypted_linkedin_consumer_key"
@@ -708,19 +682,25 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.text     "support_imap_hash"
     t.string   "support_email"
     t.string   "encrypted_db_connection_string"
-    t.string   "stripe_currency",                                             default: "USD"
-    t.boolean  "user_info_in_onboarding_flow",                                default: false
+    t.string   "stripe_currency",                                               default: "USD"
+    t.boolean  "user_info_in_onboarding_flow",                                  default: false
     t.string   "default_search_view"
-    t.boolean  "user_based_marketplace_views",                                default: false
+    t.boolean  "user_based_marketplace_views",                                  default: false
     t.string   "searcher_type"
     t.datetime "master_lock"
-    t.boolean  "onboarding_verification_required",                            default: false
-    t.boolean  "apply_text_filters",                                          default: false
+    t.boolean  "apply_text_filters",                                            default: false
     t.text     "user_required_fields"
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
-    t.boolean  "user_blogs_enabled",                                          default: false
+    t.boolean  "user_blogs_enabled",                                            default: false
+    t.string   "twilio_from_number"
+    t.string   "test_twilio_from_number"
+    t.string   "encrypted_test_twilio_consumer_key"
+    t.string   "encrypted_test_twilio_consumer_secret"
+    t.string   "encrypted_twilio_consumer_key"
+    t.string   "encrypted_twilio_consumer_secret"
     t.string   "payment_transfers_frequency",                                   default: "fortnightly"
+    t.text     "hidden_dashboard_menu_items"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -863,6 +843,36 @@ ActiveRecord::Schema.define(version: 20141208143431) do
   add_index "payment_transfers", ["instance_id"], name: "index_payment_transfers_on_instance_id", using: :btree
   add_index "payment_transfers", ["partner_id"], name: "index_payment_transfers_on_partner_id", using: :btree
 
+  create_table "payments", force: true do |t|
+    t.integer  "reservation_id"
+    t.integer  "subtotal_amount_cents"
+    t.integer  "service_fee_amount_guest_cents"
+    t.datetime "paid_at"
+    t.datetime "failed_at"
+    t.datetime "created_at",                                             null: false
+    t.datetime "updated_at",                                             null: false
+    t.string   "currency"
+    t.datetime "deleted_at"
+    t.integer  "payment_transfer_id"
+    t.integer  "service_fee_amount_host_cents",              default: 0, null: false
+    t.datetime "refunded_at"
+    t.integer  "instance_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.integer  "cancellation_policy_hours_for_cancellation", default: 0
+    t.integer  "cancellation_policy_penalty_percentage",     default: 0
+    t.text     "recurring_booking_error"
+    t.string   "reference_type"
+    t.integer  "reference_id"
+  end
+
+  add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree
+  add_index "payments", ["instance_id"], name: "index_payments_on_instance_id", using: :btree
+  add_index "payments", ["partner_id"], name: "index_payments_on_partner_id", using: :btree
+  add_index "payments", ["payment_transfer_id"], name: "index_payments_on_payment_transfer_id", using: :btree
+  add_index "payments", ["reference_id", "reference_type"], name: "index_payments_on_reference_id_and_reference_type", using: :btree
+  add_index "payments", ["reservation_id"], name: "index_payments_on_reservation_id", using: :btree
+
   create_table "payouts", force: true do |t|
     t.integer  "reference_id"
     t.string   "reference_type"
@@ -1004,33 +1014,6 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.integer  "instance_id"
   end
 
-  create_table "reservation_charges", force: true do |t|
-    t.integer  "reservation_id"
-    t.integer  "subtotal_amount_cents"
-    t.integer  "service_fee_amount_guest_cents"
-    t.datetime "paid_at"
-    t.datetime "failed_at"
-    t.datetime "created_at",                                             null: false
-    t.datetime "updated_at",                                             null: false
-    t.string   "currency"
-    t.datetime "deleted_at"
-    t.integer  "payment_transfer_id"
-    t.integer  "service_fee_amount_host_cents",              default: 0, null: false
-    t.datetime "refunded_at"
-    t.integer  "instance_id"
-    t.integer  "company_id"
-    t.integer  "partner_id"
-    t.integer  "cancellation_policy_hours_for_cancellation", default: 0
-    t.integer  "cancellation_policy_penalty_percentage",     default: 0
-    t.text     "recurring_booking_error"
-  end
-
-  add_index "reservation_charges", ["company_id"], name: "index_reservation_charges_on_company_id", using: :btree
-  add_index "reservation_charges", ["instance_id"], name: "index_reservation_charges_on_instance_id", using: :btree
-  add_index "reservation_charges", ["partner_id"], name: "index_reservation_charges_on_partner_id", using: :btree
-  add_index "reservation_charges", ["payment_transfer_id"], name: "index_reservation_charges_on_payment_transfer_id", using: :btree
-  add_index "reservation_charges", ["reservation_id"], name: "index_reservation_charges_on_reservation_id", using: :btree
-
   create_table "reservation_periods", force: true do |t|
     t.integer  "reservation_id"
     t.date     "date"
@@ -1115,6 +1098,13 @@ ActiveRecord::Schema.define(version: 20141208143431) do
 
   add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
 
+  create_table "sessions", force: true do |t|
+    t.string   "session_id", null: false
+    t.text     "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "spree_addresses", force: true do |t|
     t.string   "firstname"
     t.string   "lastname"
@@ -1163,7 +1153,7 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.integer  "position"
     t.string   "attachment_content_type"
     t.string   "attachment_file_name"
-    t.string   "type",                    limit: 75
+    t.string   "type",                        limit: 75
     t.datetime "attachment_updated_at"
     t.text     "alt"
     t.string   "image"
@@ -1172,6 +1162,9 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.text     "image_transformation_data"
     t.integer  "image_original_height"
     t.integer  "image_original_width"
+    t.string   "remote_image_url"
+    t.integer  "uploader_id"
+    t.integer  "instance_id"
   end
 
   add_index "spree_assets", ["viewable_id"], name: "index_assets_on_viewable_id", using: :btree
@@ -1371,16 +1364,16 @@ ActiveRecord::Schema.define(version: 20141208143431) do
   add_index "spree_option_values_variants", ["variant_id"], name: "index_spree_option_values_variants_on_variant_id", using: :btree
 
   create_table "spree_orders", force: true do |t|
-    t.string   "number",                 limit: 32
-    t.decimal  "item_total",                        precision: 10, scale: 2, default: 0.0,     null: false
-    t.decimal  "total",                             precision: 10, scale: 2, default: 0.0,     null: false
+    t.string   "number",                     limit: 32
+    t.decimal  "item_total",                            precision: 10, scale: 2, default: 0.0,     null: false
+    t.decimal  "total",                                 precision: 10, scale: 2, default: 0.0,     null: false
     t.string   "state"
-    t.decimal  "adjustment_total",                  precision: 10, scale: 2, default: 0.0,     null: false
+    t.decimal  "adjustment_total",                      precision: 10, scale: 2, default: 0.0,     null: false
     t.integer  "user_id"
     t.datetime "completed_at"
     t.integer  "bill_address_id"
     t.integer  "ship_address_id"
-    t.decimal  "payment_total",                     precision: 10, scale: 2, default: 0.0
+    t.decimal  "payment_total",                         precision: 10, scale: 2, default: 0.0
     t.integer  "shipping_method_id"
     t.string   "shipment_state"
     t.string   "payment_state"
@@ -1391,19 +1384,21 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.string   "currency"
     t.string   "last_ip_address"
     t.integer  "created_by_id"
-    t.decimal  "shipment_total",                    precision: 10, scale: 2, default: 0.0,     null: false
-    t.decimal  "additional_tax_total",              precision: 10, scale: 2, default: 0.0
-    t.decimal  "promo_total",                       precision: 10, scale: 2, default: 0.0
-    t.string   "channel",                                                    default: "spree"
-    t.decimal  "included_tax_total",                precision: 10, scale: 2, default: 0.0,     null: false
-    t.integer  "item_count",                                                 default: 0
+    t.decimal  "shipment_total",                        precision: 10, scale: 2, default: 0.0,     null: false
+    t.decimal  "additional_tax_total",                  precision: 10, scale: 2, default: 0.0
+    t.decimal  "promo_total",                           precision: 10, scale: 2, default: 0.0
+    t.string   "channel",                                                        default: "spree"
+    t.decimal  "included_tax_total",                    precision: 10, scale: 2, default: 0.0,     null: false
+    t.integer  "item_count",                                                     default: 0
     t.integer  "approver_id"
     t.datetime "approved_at"
-    t.boolean  "confirmation_delivered",                                     default: false
-    t.boolean  "considered_risky",                                           default: false
+    t.boolean  "confirmation_delivered",                                         default: false
+    t.boolean  "considered_risky",                                               default: false
     t.integer  "instance_id"
     t.integer  "company_id"
     t.integer  "partner_id"
+    t.decimal  "service_fee_buyer_percent",             precision: 5,  scale: 2, default: 0.0
+    t.decimal  "service_fee_seller_percent",            precision: 5,  scale: 2, default: 0.0
   end
 
   add_index "spree_orders", ["company_id"], name: "index_spree_orders_on_company_id", using: :btree
@@ -1520,9 +1515,17 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "position",    default: 0
+    t.integer  "instance_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.integer  "user_id"
   end
 
+  add_index "spree_product_properties", ["company_id"], name: "index_spree_product_properties_on_company_id", using: :btree
+  add_index "spree_product_properties", ["instance_id"], name: "index_spree_product_properties_on_instance_id", using: :btree
+  add_index "spree_product_properties", ["partner_id"], name: "index_spree_product_properties_on_partner_id", using: :btree
   add_index "spree_product_properties", ["product_id"], name: "index_product_properties_on_product_id", using: :btree
+  add_index "spree_product_properties", ["user_id"], name: "index_spree_product_properties_on_user_id", using: :btree
 
   create_table "spree_products", force: true do |t|
     t.string   "name",                 default: "",   null: false
@@ -1784,6 +1787,7 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.integer  "user_id"
+    t.integer  "processing_time", default: 0
   end
 
   add_index "spree_shipping_methods", ["company_id"], name: "index_spree_shipping_methods_on_company_id", using: :btree
@@ -1851,10 +1855,18 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.datetime "updated_at"
     t.boolean  "backorderable",     default: false
     t.datetime "deleted_at"
+    t.integer  "instance_id"
+    t.integer  "company_id"
+    t.integer  "partner_id"
+    t.integer  "user_id"
   end
 
+  add_index "spree_stock_items", ["company_id"], name: "index_spree_stock_items_on_company_id", using: :btree
+  add_index "spree_stock_items", ["instance_id"], name: "index_spree_stock_items_on_instance_id", using: :btree
+  add_index "spree_stock_items", ["partner_id"], name: "index_spree_stock_items_on_partner_id", using: :btree
   add_index "spree_stock_items", ["stock_location_id", "variant_id"], name: "stock_item_by_loc_and_var_id", using: :btree
   add_index "spree_stock_items", ["stock_location_id"], name: "index_spree_stock_items_on_stock_location_id", using: :btree
+  add_index "spree_stock_items", ["user_id"], name: "index_spree_stock_items_on_user_id", using: :btree
 
   create_table "spree_stock_locations", force: true do |t|
     t.string   "name"
@@ -1975,7 +1987,7 @@ ActiveRecord::Schema.define(version: 20141208143431) do
   create_table "spree_taxons", force: true do |t|
     t.integer  "parent_id"
     t.integer  "position",          default: 0
-    t.string   "name",                          null: false
+    t.string   "name",                              null: false
     t.string   "permalink"
     t.integer  "taxonomy_id"
     t.integer  "lft"
@@ -2287,20 +2299,10 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.datetime "hero_image_versions_generated_at"
     t.integer  "hero_image_original_width"
     t.integer  "hero_image_original_height"
+    t.string   "compiled_dashboard_stylesheet"
   end
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree
-
-  create_table "transactable_actions", force: true do |t|
-    t.integer  "action_type_id"
-    t.integer  "transactable_id"
-    t.integer  "instance_id"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "transactable_actions", ["action_type_id", "transactable_id"], name: "transactable_actions_at_t_unique", unique: true, where: "(deleted_at IS NULL)", using: :btree
 
   create_table "transactable_type_actions", force: true do |t|
     t.integer  "action_type_id"
@@ -2356,7 +2358,6 @@ ActiveRecord::Schema.define(version: 20141208143431) do
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
   add_index "transactables", ["parent_transactable_id"], name: "index_transactables_on_parent_transactable_id", using: :btree
-  add_index "transactables", ["properties"], name: "transactables_gin_properties", using: :gin
   add_index "transactables", ["transactable_type_id"], name: "index_transactables_on_transactable_type_id", using: :btree
 
   create_table "translations", force: true do |t|
@@ -2549,6 +2550,8 @@ ActiveRecord::Schema.define(version: 20141208143431) do
     t.string   "linkedin_url"
     t.string   "facebook_url"
     t.string   "google_plus_url"
+    t.integer  "billing_address_id"
+    t.integer  "shipping_address_id"
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
@@ -2599,5 +2602,27 @@ ActiveRecord::Schema.define(version: 20141208143431) do
 
   add_index "waiver_agreements", ["target_id", "target_type"], name: "index_waiver_agreements_on_target_id_and_target_type", using: :btree
   add_index "waiver_agreements", ["waiver_agreement_template_id"], name: "index_waiver_agreements_on_waiver_agreement_template_id", using: :btree
+
+  create_table "workflow_alerts", force: true do |t|
+    t.string   "name"
+    t.string   "alert_type"
+    t.string   "recipient_type"
+    t.string   "template_path"
+    t.integer  "workflow_id"
+    t.integer  "instance_id"
+    t.text     "options"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "workflows", force: true do |t|
+    t.string   "name"
+    t.string   "associated_event"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end

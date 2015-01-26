@@ -32,10 +32,9 @@ class ReservationIcsBuilder
           event.created = @reservation.created_at
           event.last_modified = @reservation.updated_at
           event.location = @reservation.listing.address
-          event.url = Rails.application.routes.url_helpers.bookings_dashboard_url(id: @reservation.id)
+          event.url = Rails.application.routes.url_helpers.dashboard_user_reservations_url(id: @reservation.id)
         end
       end
     end
   end
-  
 end

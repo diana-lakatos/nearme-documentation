@@ -10,7 +10,7 @@ module ReservationTestSupport
   end
 
   # Prepares some charged reservations for a listing
-  def prepare_charged_reservations_for_listing(listing, count = 1)
+  def prepare_charged_reservations_for_listing(listing, count = 1, options = {})
     stub_billing_gateway(listing.instance)
     stub_active_merchant_interaction
 
@@ -21,6 +21,11 @@ module ReservationTestSupport
         :listing => listing,
         :date => date + i
       )
+      if options.has_key?("reservation_#{i}".to_sym)
+        options["reservation_#{i}".to_sym].each do |key, value|
+          reservation.update_attribute(key, value)
+        end
+      end
 
       billing_gateway = Billing::Gateway::Incoming.new(reservation.owner, listing.instance, reservation.currency, 'US')
       response = billing_gateway.authorize(reservation.total_amount_cents, credit_card)

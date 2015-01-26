@@ -4,7 +4,9 @@ class @Dashboard.ListingController
     @availabilityRules = new AvailabilityRulesController(@container)
 
     @currencySelect = @container.find('#currency-select')
+    @locationRadios = @container.find('#location-list input[type="radio"]')
     @currencyHolders = @container.find('.currency-holder')
+    @currencyLocationHolders = @container.find('.currency_addon')
 
     @enableSwitch = @container.find('#listing_enabled').parent().parent()
     @enableAjaxUpdate = true
@@ -12,11 +14,18 @@ class @Dashboard.ListingController
     @initializePriceFields()
     @bindEvents()
     @updateCurrency()
+    if ( @locationRadios.length > 0 )
+      @updateCurrencyFromLocation()
 
   bindEvents: =>
 
     @container.on 'change', @currencySelect, (event) =>
       @updateCurrency()
+
+    if ( @locationRadios.length > 0 )
+      @locationRadios.on 'change', =>
+        @updateCurrencyFromLocation()
+
 
     @enableSwitch.on 'switch-change', (e, data) =>
       enabled_should_be_changed_by_ajax = @enableSwitch.data('ajax-updateable')
@@ -40,7 +49,10 @@ class @Dashboard.ListingController
 
 
   updateCurrency: () =>
-      @currencyHolders.html($('#currency_'+ @currencySelect.val()).text())
+    @currencyHolders.html($('#currency_'+ @currencySelect.val()).text())
+
+  updateCurrencyFromLocation: ->
+    @currencyLocationHolders.html(@container.find('#location-list input[type="radio"]:checked').next().val())
 
   initializePriceFields: ->
     @priceFieldsFree = new PriceFields(@container.find('.price-inputs-free'))
@@ -81,3 +93,5 @@ class @Dashboard.ListingController
     @priceFieldsFree.hide() unless @freeInput.is(':checked')
     @priceFieldsHourly.hide() unless @hourlyInput.is(':checked')
     @priceFieldsDaily.hide() unless @dailyInput.is(':checked')
+
+

@@ -10,7 +10,7 @@
       .row
         .input-container.col-xs-12
           = f.label :default_tax
-          = f.check_box :default_tax
+          = f.check_box :default_tax # TODO: Spree requires at least one zone to be default. We need to add validation
       .row
         .input-container.col-xs-12
           .radio-inline

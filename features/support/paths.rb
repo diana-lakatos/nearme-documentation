@@ -18,10 +18,13 @@ module NavigationHelpers
       edit_user_registration_path
 
     when /the settings page/
-      edit_manage_company_path(model!('the user'))
+      edit_dashboard_company_path(model!('the user').companies.first)
+
+    when /the payouts page/
+      edit_dashboard_payouts_path
 
     when /the white label settings page/
-      edit_manage_white_label_path(model!('the user'))
+      edit_dashboard_white_label_path(model!('the user').companies.first)
 
     when /the transactable's page/
       listing_path(model!('the transactable'))
@@ -29,21 +32,18 @@ module NavigationHelpers
     when /the transactables page/
       listings_path
 
-    when /the dashboard/
-      dashboard_path
+    when /the guests/
+      dashboard_host_reservations_path
+
+    when /manage guests/
+      dashboard_host_reservations_path
 
     when /the bookings/
-      bookings_dashboard_path
-
-    when /the guests/
-      manage_guests_dashboard_path
-
-    when /the manage locations page/
-      manage_locations_path
+      dashboard_user_reservations_path
 
     when /the manage listing page/
       listing = model!('the transactable')
-      edit_manage_location_listing_path(listing.location, listing)
+      edit_dashboard_transactable_type_transactable_path(listing.transactable_type, listing)
 
     when /the admin instances page/
       admin_instances_path

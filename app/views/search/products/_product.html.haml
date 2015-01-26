@@ -1,10 +1,11 @@
-%article.product.rounded-box{:'data-id' => product.id, :'data-name' => product.name} 
+%article.product.rounded-box{:'data-id' => product.id, :'data-name' => product.name}
   .photo-container{class: "#{'without-photos' unless product.has_photos?}"}
     .photo
-      - if photo = product.images.first
-        = image_tag photo.image.url(:space_listing), title: product.name, alt: product.name
-      - else
-        = image_tag space_listing_placeholder_path(height: 254, width: 410), title: product.name, alt: product.name
+      = link_to product_path(product) do
+        - if photo = product.images.first
+          = image_tag photo.image.url(:space_listing), title: product.name, alt: product.name
+        - else
+          = image_tag space_listing_placeholder_path(height: 254, width: 410), title: product.name, alt: product.name
   = link_to product_path(product) do
     .heading
       %h3.name

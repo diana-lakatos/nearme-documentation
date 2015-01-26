@@ -1,3 +1,4 @@
+# TODO: Delete after new rating system is implemented
 class V1::HostRatingsController <  V1::BaseController
   before_filter :verify_authenticity_token
   before_filter :require_authentication

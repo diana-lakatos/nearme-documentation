@@ -72,8 +72,22 @@ class PlatformContext
     end
   end
 
+  def fetch_secured_domain
+    result = nil
+
+    if !@request_host.blank?
+      result = @instance.domains.secured.where_hostname(@request_host)
+    end
+
+    if result.blank?
+      result = @instance.domains.secured.first
+    end
+
+    result
+  end
+
   def secured_constraint
-    if domain = @instance.domains.secured.first
+    if domain = fetch_secured_domain
       {host: domain.name, protocol: 'https', only_path: false}
     else
       {host: Rails.application.routes.default_url_options[:host], protocol: 'https', only_path: false}
@@ -196,10 +210,6 @@ class PlatformContext
 
   def latest_products(number = 6)
     products = Spree::Product.searchable.order('created_at desc').limit(number).all
-    while products.size < number && !products.size.zero?
-      products += products
-    end
-    products.first(number)
   end
 
   private

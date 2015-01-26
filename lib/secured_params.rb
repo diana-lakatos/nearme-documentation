@@ -1,4 +1,30 @@
 class SecuredParams
+
+  def boarding_form
+    [
+      :draft,
+      :store_name,
+      company_address_attributes: nested(self.address),
+      product_form: nested(self.product_form)
+
+    ]
+  end
+
+  def product_form
+    [
+      :draft,
+      :name,
+      :description,
+      :price,
+      :quantity,
+      :taxon_ids,
+      image_ids: [],
+      company_address_attributes: nested(self.address),
+      images_attributes: nested(self.spree_image),
+      shipping_methods_attributes: nested(self.spree_shipping_method)
+    ]
+  end
+
   def custom_attribute
     [ :name,
       :attribute_type
@@ -94,6 +120,8 @@ class SecuredParams
       :description,
       :default_tax,
       :kind,
+      :country_ids,
+      :state_ids,
       state_ids: [],
       country_ids: []
     ]
@@ -238,6 +266,126 @@ class SecuredParams
     ]
   end
 
+  def spree_image
+    [
+      :position
+    ]
+  end
+
+  def spree_option_type
+    [
+      :name,
+      :presentation,
+      :position,
+      option_values_attributes: nested(self.spree_option_value),
+
+    ]
+  end
+
+  def spree_option_value
+    [
+      :name,
+      :presentation,
+      :position
+    ]
+  end
+
+  def spree_property
+    [
+      :name,
+      :presentation,
+      :position
+    ]
+  end
+
+  def spree_product_property
+    [
+      :id,
+      :property_name,
+      :value,
+      :company_id
+    ]
+  end
+
+  def spree_variant
+    [
+      :sku,
+      :price,
+      :cost_price,
+      :weight,
+      :height,
+      :depth,
+      :tax_category_id,
+      option_value_ids: []
+    ]
+  end
+
+  def spree_prototype
+    [
+      :name,
+      property_ids: [],
+      option_type_ids: []
+    ]
+  end
+
+  def spree_shipping_category
+    [
+      :name
+    ]
+  end
+
+  def spree_shipping_method
+    [
+      :name,
+      :hidden,
+      :removed,
+      :admin_name,
+      :display_on,
+      :deleted_at,
+      :tracking_url,
+      :tax_category_id,
+      :processing_time,
+      calculator_attributes: nested(self.calculator),
+      zones_attributes: nested(self.zone),
+      shipping_category_ids: [],
+      zone_ids: []
+    ]
+  end
+
+  def spree_stock_location
+    [
+      :name,
+      :admin_name,
+      :address1,
+      :address2,
+      :city,
+      :state_id,
+      :state_name,
+      :country_id,
+      :zipcode,
+      :phone,
+      :active,
+      :backorderable_default,
+      :propagate_all_variants,
+      stock_items_attributes: nested(self.spree_stock_item)
+    ]
+  end
+
+  def spree_stock_item
+    [
+      :variant,
+      :backorderable,
+      stock_movements_attributes: nested(self.spree_stock_movement)
+
+    ]
+  end
+
+  def spree_stock_movement
+    [
+      :quantity
+    ]
+  end
+
   def availability_template
     [
       :transactable_type,
@@ -347,6 +495,37 @@ class SecuredParams
       :search_scope_option,
       :domain_attributes => nested(self.domain),
       :theme_attributes => self.theme
+    ]
+  end
+
+  def spree_product
+    [
+      :name,
+      :sku,
+      :slug,
+      :description,
+      :price,
+      :cost_price,
+      :cost_currency,
+      :available_on,
+      :user_id,
+      :weight,
+      :height,
+      :width,
+      :depth,
+      :shipping_category_id,
+      :tax_category_id,
+      :meta_keywords,
+      :meta_description,
+      :shipping_category_attributes => nested(self.spree_shipping_category),
+      option_type_ids: [],
+      taxon_ids: []
+    ]
+  end
+
+  def spree_shipping_category
+    [
+      :name
     ]
   end
 
@@ -465,7 +644,11 @@ class SecuredParams
       approval_requests_attributes: nested(self.approval_request),
       company_address_attributes: nested(self.address),
       theme_attributes: self.theme,
-      industry_ids: []
+      industry_ids: [],
+      products_attributes: nested(self.spree_product),
+      shipping_categories_attributes: nested(self.spree_shipping_category),
+      shipping_methods_attributes: nested(self.spree_shipping_method),
+      stock_locations_attributes: nested(self.spree_stock_location)
     ]
   end
 

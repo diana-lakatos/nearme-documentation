@@ -12,7 +12,7 @@
   = f.input :description, :as => :limited_text, :limit => 250, :required => !f.object.listings.first.try(:description).try(:present?), :input_html => { :maxlength => 250, :rows => 2 } if only_inputs.empty? || only_inputs.include?(:description)
 - if platform_context.instance.location_types.count > 1
   = f.association :location_type, :collection => platform_context.instance.location_types if only_inputs.empty? || only_inputs.include?(:location_type)
-- else
+- elsif
   = f.hidden_field :location_type_id, value: platform_context.instance.location_types.first.id
 = f.input :email if only_inputs.empty? || only_inputs.include?(:email)
 = f.association :administrator, :collection => f.object.company_users.includes(:user).order('users.name').map(&:user), :label_method => 'name', :value_method => 'id', :input_html => { :class => 'custom-select' }, :include_blank => t('simple_form.prompts.location.administrator') if only_inputs.empty? || only_inputs.include?(:administrator)

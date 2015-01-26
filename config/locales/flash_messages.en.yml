@@ -18,6 +18,7 @@ en:
         blog_post_updated: 'Blog post updated.'
     buy_sell:
       configuration_saved_successful: 'Configuration saved successfully.'
+      commissions_saved_successful: 'Commissions saved successfully.'
       tax_category_added: 'Tax category added.'
       tax_category_updated: 'Tax category updated.'
       tax_category_deleted: 'Tax category deleted.'
@@ -37,10 +38,12 @@ en:
       taxonomy_updated: 'Taxonomy updated.'
       taxonomy_deleted: 'Taxonomy deleted.'
       taxon_updated: 'Taxon updated.'
+      no_payment_gateway: 'The seller does not support payments for the selected country.'
     user_blog:
       settings_saved: 'Blog settings was saved.'
     dashboard:
       add_your_company: "Please add your company first"
+      company_not_valid: "Please add necessary details to your company first."
       no_bookings: "You haven't made any bookings yet!"
     guest_rating:
       already_exists: "Rating for this booking has already been submitted."
@@ -101,7 +104,188 @@ en:
       listing_removed: "This listing has been removed. Displaying other listings near %{address}."
       no_listings: "There aren't any listings at that location. Check out some other %{bookable_noun_plural}!"
       browsing_no_listings: "There aren't any active listings at that location. Other users will be redirected to search page."
+    dashboard:
+      order:
+        deleted: 'Order has been deleted.'
+        updated: 'Order has been updated.'
+        canceled: 'Order has been canceled.'
+        resumed: 'Order has been resumed.'
+        approved: 'Order has been approved.'
+        error_update: 'Order has not been updated.'
+      shipping_category:
+        created: 'Shipping category has been created.'
+        deleted: 'Shipping category has been deleted.'
+        updated: 'Shipping category has been updated.'
+        error_create: 'Shipping category has not been created.'
+        error_update: 'Shipping category has not been updated.'
+      shipping_method:
+        created: 'Shipping method has been created.'
+        deleted: 'Shipping method has been deleted.'
+        updated: 'Shipping method has been updated.'
+        error_create: 'Shipping method has not been created.'
+        error_update: 'Shipping method has not been updated.'
+      variant:
+        created: 'Product variant has been created.'
+        deleted: 'Product variant has been deleted.'
+        updated: 'Product variant has been updated.'
+        error_create: 'Product variant has not been created.'
+        error_update: 'Product variant has not been updated.'
+      product:
+        created: 'Product has been created.'
+        deleted: 'Product has been deleted.'
+        updated: 'Product has been updated.'
+        error_create: 'Product has not been created.'
+        error_update: 'Product has not been updated.'
+      product_image:
+        created: 'Product image has been created.'
+        deleted: 'Product image has been deleted.'
+        updated: 'Product image has been updated.'
+        error_create: 'Product image has not been created.'
+        error_update: 'Product image has not been updated.'
+      property:
+        created: 'Property has been created.'
+        deleted: 'Property has been deleted.'
+        updated: 'Property has been updated.'
+        error_create: 'Property has not been created.'
+        error_update: 'Property has not been updated.'
+      product_property:
+        created: 'Product property has been created.'
+        deleted: 'Product property has been deleted.'
+        updated: 'Product property has been updated.'
+        error_create: 'Product property has not been created.'
+        error_update: 'Product property has not been updated.'
+      prototype:
+        created: 'Prototype has been created.'
+        deleted: 'Prototype has been deleted.'
+        updated: 'Prototype has been updated.'
+        error_create: 'Prototype has not been created.'
+        error_update: 'Prototype has not been updated.'
+      option_type:
+        created: 'Option type has been created.'
+        deleted: 'Option type has been deleted.'
+        updated: 'Option type has been updated.'
+        error_create: 'Option type has not been created.'
+        error_update: 'Option type has not been updated.'
+      stock_location:
+        created: 'Stock location has been created.'
+        deleted: 'Stock location has been deleted.'
+        updated: 'Stock location has been updated.'
+        error_create: 'Stock location has not been created.'
+        error_update: 'Stock location has not been updated.'
+      stock_movement:
+        created: 'Stock movement has been created.'
+        deleted: 'Stock movement has been deleted.'
+        error_create: 'Stock movement has not been created.'
+      companies:
+        company_updated: "Great, your company's details have been updated."
+        white_label_updated: "Great, white-label details have been updated."
+      listings:
+        desk_added: "Great, your new %{bookable_noun} has been added!"
+        listing_deleted: "That listing has been deleted."
+        listing_updated: "Great, your listing's details have been updated."
+      locations:
+        add_your_company: "Please add your company first"
+        space_added: "Great, your new %{bookable_noun} has been added!"
+        space_deleted: "You've deleted %{name}"
+        space_not_deleted: "We couldn't delete %{name}"
+        updated: "Great, your location has been updated!"
+      reservations:
+        reservation_already_confirmed: "This reservation has already been confirmed."
+        reservation_cancelled: "You have cancelled this reservation."
+        reservation_confirmed: "You have confirmed the reservation!"
+        reservation_not_confirmed: "Your reservation could not be confirmed."
+        reservation_rejected: "You have rejected the reservation. Maybe next time!"
+        payment_requested: "Your request has been sent"
+      data_upload:
+        created: "Import has been scheduled. You'll receive an email when it's done."
+        scheduled: 'Data has been scheduled to be imported.'
+        deleted: 'Data Upload has been deleted.'
+        not_scheduled: 'The task has not been queued. Either data has been already imported or task is already in queue.'
+        too_many_rows: 'Max amount of rows in CSV is %{max}'
+      waiver_agreement_templates:
+        created: 'Waiver agreement template has been created.'
+        deleted: 'Waiver agreement template has been deleted.'
+        updated: 'Waiver agreement template has been updated.'
+      users:
+        user_added: "You've added %{name} to %{company_name}"
+        user_cannot_be_invited: "This user couldn't be invited as they are already associated with a company."
+        user_cant_delete_self: "You can't delete self."
+        user_deleted: "You've removed %{name} from %{company_name}"
+        user_does_not_exists: "A user does not exist with the specified email address."
+        user_is_not_in_company: "You can't delete user which is not in your company."
+
     manage:
+      order:
+        deleted: 'Order has been deleted.'
+        updated: 'Order has been updated.'
+        canceled: 'Order has been canceled.'
+        resumed: 'Order has been resumed.'
+        approved: 'Order has been approved.'
+        error_update: 'Order has not been updated.'
+      shipping_category:
+        created: 'Shipping category has been created.'
+        deleted: 'Shipping category has been deleted.'
+        updated: 'Shipping category has been updated.'
+        error_create: 'Shipping category has not been created.'
+        error_update: 'Shipping category has not been updated.'
+      shipping_method:
+        created: 'Shipping method has been created.'
+        deleted: 'Shipping method has been deleted.'
+        updated: 'Shipping method has been updated.'
+        error_create: 'Shipping method has not been created.'
+        error_update: 'Shipping method has not been updated.'
+      variant:
+        created: 'Product variant has been created.'
+        deleted: 'Product variant has been deleted.'
+        updated: 'Product variant has been updated.'
+        error_create: 'Product variant has not been created.'
+        error_update: 'Product variant has not been updated.'
+      product:
+        created: 'Product has been created.'
+        deleted: 'Product has been deleted.'
+        updated: 'Product has been updated.'
+        error_create: 'Product has not been created.'
+        error_update: 'Product has not been updated.'
+      product_image:
+        created: 'Product image has been created.'
+        deleted: 'Product image has been deleted.'
+        updated: 'Product image has been updated.'
+        error_create: 'Product image has not been created.'
+        error_update: 'Product image has not been updated.'
+      property:
+        created: 'Property has been created.'
+        deleted: 'Property has been deleted.'
+        updated: 'Property has been updated.'
+        error_create: 'Property has not been created.'
+        error_update: 'Property has not been updated.'
+      product_property:
+        created: 'Product property has been created.'
+        deleted: 'Product property has been deleted.'
+        updated: 'Product property has been updated.'
+        error_create: 'Product property has not been created.'
+        error_update: 'Product property has not been updated.'
+      prototype:
+        created: 'Prototype has been created.'
+        deleted: 'Prototype has been deleted.'
+        updated: 'Prototype has been updated.'
+        error_create: 'Prototype has not been created.'
+        error_update: 'Prototype has not been updated.'
+      option_type:
+        created: 'Option type has been created.'
+        deleted: 'Option type has been deleted.'
+        updated: 'Option type has been updated.'
+        error_create: 'Option type has not been created.'
+        error_update: 'Option type has not been updated.'
+      stock_location:
+        created: 'Stock location has been created.'
+        deleted: 'Stock location has been deleted.'
+        updated: 'Stock location has been updated.'
+        error_create: 'Stock location has not been created.'
+        error_update: 'Stock location has not been updated.'
+      stock_movement:
+        created: 'Stock movement has been created.'
+        deleted: 'Stock movement has been deleted.'
+        error_create: 'Stock movement has not been created.'
       companies:
         company_updated: "Great, your company's details have been updated."
         white_label_updated: "Great, white-label details have been updated."
@@ -123,7 +307,7 @@ en:
         reservation_rejected: "You have rejected the reservation. Maybe next time!"
         payment_requested: "Your request has been sent"
       data_upload:
-        created: 'Data Upload has been created.'
+        created: "Import has been scheduled. You'll receive an email when it's done."
         scheduled: 'Data has been scheduled to be imported.'
         deleted: 'Data Upload has been deleted.'
         not_scheduled: 'The task has not been queued. Either data has been already imported or task is already in queue.'
@@ -139,6 +323,8 @@ en:
         user_deleted: "You've removed %{name} from %{company_name}"
         user_does_not_exists: "A user does not exist with the specified email address."
         user_is_not_in_company: "You can't delete user which is not in your company."
+      payouts:
+        updated: 'Payment methods have been updated.'
     marketplace_sessions:
       wrong_password: 'Wrong password!'
     partner_inquiries:
@@ -167,10 +353,13 @@ en:
     search_notifications:
       you_will_be_notified: "You will be notified when a %{bookable_noun} is added at this location."
       you_will_not_be_notified: "We could not add you to the notifcation list because your email \"%{email}\" %{errors}"
+    product:
+      complete_fields: "Please complete all fields!"
     space_wizard:
       complete_fields: "Please complete all fields! Alternatively, you can Save a Draft for later."
       draft_saved: "Your draft has been saved!"
       space_listed: "Your %{bookable_noun} was listed! You can provide more details about your location and listing from this page."
+      item_listed: "Your %{bookable_noun} was listed! You can provide more details about your location and listing from this page."
     support:
       ticket:
         created: 'Ticket has been created.'

@@ -3,7 +3,7 @@ class ChartItemDecorator < Draper::Decorator
 
   def sum_by
     case object
-    when ReservationCharge
+    when Payment
       object.total_amount
     when PaymentTransfer
       object.amount

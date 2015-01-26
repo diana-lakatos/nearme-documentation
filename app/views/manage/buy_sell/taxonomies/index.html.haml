@@ -1,0 +1,24 @@
+- title "Taxonomies"
+
+= show_manage_navigation(:configuration, :taxonomies)
+
+.row-fluid
+  .span8.offset2
+    .box
+      %header
+        %ul.location-and-listings
+          %li.location
+            .name.left
+              Taxonomies
+      %ul.location-and-listings
+        %li.listing
+          .right
+            = link_to 'New taxonomy', new_manage_buy_sell_taxonomy_path, class: 'pull-right btn btn-green'
+        %li.listing.action-buttons
+          .span3
+            = t('prototype.name')
+          .span2.state.text-right
+
+        - @taxonomies.each do |taxonomy|
+          = render 'index_row', taxonomy: taxonomy
+

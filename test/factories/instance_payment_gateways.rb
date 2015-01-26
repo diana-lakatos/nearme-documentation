@@ -40,9 +40,15 @@ FactoryGirl.define do
     end
 
     factory :fetch_instance_payment_gateway do
-      payment_gateway_id { FactoryGirl.create(:fetch_payment_gateway).id }
+      payment_gateway_id { PaymentGateway.where(method_name: "fetch").first.id }
       test_settings { { account_id: '123456789', secret_key: '987654321' } }
       live_settings { { account_id: '123456789', secret_key: '987654321' } }
+    end
+
+    factory :braintree_instance_payment_gateway do
+      payment_gateway_id { PaymentGateway.where(method_name: "braintree").first.id }
+      test_settings { { merchant_id: "123456789", public_key: "987654321", private_key: "321543"} }
+      live_settings { { merchant_id: "123456789", public_key: "987654321", private_key: "321543"} }
     end
   end
 end
