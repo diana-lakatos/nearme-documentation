@@ -13,9 +13,13 @@ module SessionsHelper
 
   def login_manually(email='valid@example.com', password = 'password')
     visit new_user_session_path
+    fill_credentials(email, password)
+    click_button "Log In"
+  end
+
+  def fill_credentials(email='valid@example.com', password = 'password')
     fill_in 'user_email', with: email
     fill_in 'user_password', with: password
-    click_button "Log In"
   end
 
   def login_with_provider(provider)
