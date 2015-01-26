@@ -86,7 +86,6 @@ class Transactable < ActiveRecord::Base
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
   delegate :favourable_pricing_rate, :has_action?, to: :transactable_type
-  delegate :overnight_booking?, to: :transactable_type
 
   attr_accessor :distance_from_search_query, :photo_not_required
 
@@ -120,6 +119,9 @@ class Transactable < ActiveRecord::Base
     end
   end
 
+  def overnight_booking?
+    !hourly_reservations? && transactable_type.overnight_booking?
+  end
 
   # Trigger clearing of all existing availability rules on save
   def defer_availability_rules=(clear)

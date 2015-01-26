@@ -32,7 +32,7 @@
                 = "#{money_without_cents_and_with_symbol(listing.daily_price)}"
               - else
                 = '-'
-              %span.period= listing.transactable_type.overnight_booking? ? t('reservations.per_night') : t('reservations.per_day')
+              %span.period= listing.overnight_booking? ? t('reservations.per_night') : t('reservations.per_day')
 
           - if listing.transactable_type.pricing_options['weekly']
             %span.label

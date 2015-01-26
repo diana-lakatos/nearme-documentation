@@ -97,7 +97,7 @@ class @Bookings.Datepicker
 
     # If we're specifying more than just a start date, we need
     # to set the mode to Pick.
-    if dates.length > 1
+    if dates.length > 1 && !@listing.isOvernightBooking
       @setDatepickerToPickMode()
 
     @updateElementText()

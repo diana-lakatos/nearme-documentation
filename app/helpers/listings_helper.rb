@@ -37,7 +37,7 @@ module ListingsHelper
       :prices_by_days => Hash[ listing.prices_by_days.map { |k, v| [k, v.cents] } ],
       :initial_bookings => @initial_bookings ? @initial_bookings[listing.id] : {},
       recurring_booking: listing.transactable_type.recurring_booking,
-      overnight_booking: listing.transactable_type.overnight_booking
+      overnight_booking: listing.overnight_booking?
     }
   end
 
