@@ -45,9 +45,11 @@
         %li
           = link_to main_app.edit_user_registration_path, class: 'nav-link dropdown-toggle' do
             %span Account
-        %li
-          = link_to main_app.user_blog_path, class: 'nav-link dropdown-toggle' do
-            %span Blog
+        - if platform_context.instance.user_blogs_enabled?
+          %li
+            -
+            = link_to main_app.user_blog_path, class: 'nav-link dropdown-toggle' do
+              %span Blog
         %li
           = link_to main_app.destroy_user_session_path, :method => :delete, class: 'nav-link dropdown-toggle', :data => {:user => current_user.first_name } do
             %span Log Out

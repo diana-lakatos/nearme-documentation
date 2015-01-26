@@ -1,8 +1,11 @@
 .content-container.dropshadow
   .row
-    .input-container.col-xs-12
+    .input-container.col-xs-6
       = f.input :enabled
 
+    .input-container.col-xs-6
+      = f.simple_fields_for :owner do |i|
+        = i.input :user_blogs_enabled, label: 'Enable user blogs'
   .row
     .input-container.col-xs-6
       = f.input :name, placeholder: 'Enter blog name', input_html: { class: 'form-control' }

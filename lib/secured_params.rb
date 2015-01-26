@@ -146,7 +146,8 @@ class SecuredParams
       :header_text,
       :header_motto,
       :header_logo,
-      :header_icon
+      :header_icon,
+      owner_attributes: nested([:user_blogs_enabled])
     ]
   end
 
@@ -223,6 +224,7 @@ class SecuredParams
       :searcher_type, :onboarding_verification_required,
       :apply_text_filters, :force_accepting_tos,
       :payment_transfers_frequency,
+      :user_blogs_enabled,
       user_required_fields: [],
       transactable_types_attributes: nested(self.transactable_type),
       listing_amenity_types_attributes: nested(self.amenity_type),

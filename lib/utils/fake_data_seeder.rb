@@ -51,7 +51,7 @@ module Utils
       load_data!
     end
 
-    private
+    # private
 
     def do_task(task_name = "")
       ActiveRecord::Migration.say_with_time(task_name) do
@@ -415,6 +415,8 @@ module Utils
       do_task 'Loading user blog posts' do
 
         User.all.each do |user|
+          next unless user.blog
+
           user_blog = user.blog
           user_blog.enabled = true
           user_blog.name = "#{user.name}'s blog"

@@ -17,9 +17,5 @@ class CreateUserBlogs < ActiveRecord::Migration
 
       t.timestamps
     end
-
-    reversible do
-      User.all.each { |user| UserBlog.create(user_id: user.id) }
-    end
   end
 end
