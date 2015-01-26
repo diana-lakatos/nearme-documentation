@@ -6,6 +6,7 @@ class @Bookings.Listing
   constructor: (@data) ->
     @id = parseInt(@data.id, 10)
     @firstAvailableDate = DNM.util.Date.idToDate(@data.first_available_date)
+    @secondAvailableDate = DNM.util.Date.idToDate(@data.second_available_date)
 
     if @isReservedHourly()
       @availability = new HourlyAvailability(

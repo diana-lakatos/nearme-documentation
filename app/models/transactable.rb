@@ -86,6 +86,7 @@ class Transactable < ActiveRecord::Base
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
   delegate :favourable_pricing_rate, :has_action?, to: :transactable_type
+  delegate :overnight_booking?, to: :transactable_type
 
   attr_accessor :distance_from_search_query, :photo_not_required
 
@@ -282,6 +283,14 @@ class Transactable < ActiveRecord::Base
 
   def first_available_date
     date = Date.tomorrow
+
+    max_date = date + 31.days
+    date = date + 1.day until availability_for(date) > 0 || date==max_date
+    date
+  end
+
+  def second_available_date
+    date = first_available_date + 1.day
 
     max_date = date + 31.days
     date = date + 1.day until availability_for(date) > 0 || date==max_date

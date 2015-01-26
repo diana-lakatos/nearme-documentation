@@ -21,6 +21,9 @@ en:
   day:
     one: "1 day"
     other: "%{count} days"
+  night:
+    one: "1 night"
+    other: "%{count} nights"
   desk:
     reservation_rejected_body: "%{user} declined reservation with reason: %{reason}"
     reservation_rejected_title: "[internal] User has declined reservation"
