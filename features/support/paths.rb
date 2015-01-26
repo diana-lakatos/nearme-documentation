@@ -48,6 +48,12 @@ module NavigationHelpers
     when /the admin instances page/
       admin_instances_path
 
+    when /the instance settings page/
+      instance_admin_settings_configuration_path
+
+    when /instance admin sign in page/
+      instance_admin_login_path
+
     when /^#{capture_model} page which belong to deleted location$/   # eg. deleted listing page
       obj = model($1)
       deleted = obj.location.destroy
