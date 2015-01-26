@@ -378,6 +378,7 @@ class SecuredParams
       :pricing_validation,
       :availability_options,
       :favourable_pricing_rate,
+      :overnight_booking,
       :cancellation_policy_enabled,
       :cancellation_policy_penalty_percentage,
       :cancellation_policy_hours_for_cancellation,

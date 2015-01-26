@@ -9,9 +9,7 @@ class @Bookings.Datepicker
   asEvented.call(Datepicker.prototype)
 
   # Some text constants used in the UI
-  TEXT_START: '<div class="datepicker-text-fadein">Select a start date</div>'
   TEXT_END_RANGE: '<div class="datepicker-text-fadein">Select an end date</div>'
-  TEXT_END_PICK: '<div class="datepicker-text-fadein">Add or remove days</div>'
 
   # Initialize the date picker components
   #
@@ -27,6 +25,19 @@ class @Bookings.Datepicker
     @initializeStartDatepicker()
     @initializeEndDatepicker()
     @bindEvents()
+
+  #TODO: replace these with JS i18n system
+  start_text: ->
+    if @listing.isOvernightBooking()
+      '<div class="datepicker-text-fadein">Check in</div>'
+    else
+      '<div class="datepicker-text-fadein">Select a start date</div>'
+
+  end_text: ->
+    if @listing.isOvernightBooking()
+      '<div class="datepicker-text-fadein">Check out</div>'
+    else
+      '<div class="datepicker-text-fadein">Select an end date</div>'
 
   bindEvents: ->
     @startDatepicker.on 'datesChanged', (dates) =>
@@ -55,7 +66,7 @@ class @Bookings.Datepicker
       # Custom view to handle bookings availability display
       view: new Bookings.Datepicker.AvailabilityView(@listing,
         trigger: @startElement,
-        text: @TEXT_START
+        text: @start_text()
       ),
 
       # Limit to a single date selected at a time
@@ -131,7 +142,7 @@ class @Bookings.Datepicker
   setDatepickerToPickMode: ->
     return if @listing.minimumBookingDays > 1
     @endDatepicker.getModel().setMode(Bookings.Datepicker.ModeAndConstraintModel.MODE_PICK)
-    @endDatepicker.getView().setText(@TEXT_END_PICK)
+    @endDatepicker.getView().setText(@end_text())
 
   setDatepickerToRangeMode: ->
     @endDatepicker.getModel().setMode(Bookings.Datepicker.ModeAndConstraintModel.MODE_RANGE)
