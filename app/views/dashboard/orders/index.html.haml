@@ -12,5 +12,5 @@
 - unless @orders.empty?
   .row-fluid
     .col-md-12
-      .pagination
-        = will_paginate @orders, renderer: BuySellMarket::WillPaginateLinkRenderer::LinkRenderer, class: ''
+      = will_paginate_styled(@orders)
+
