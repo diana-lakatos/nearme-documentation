@@ -6,7 +6,7 @@ class ReservationDecorator < Draper::Decorator
 
   delegate_all
 
-  delegate :days_in_words, :selected_dates_summary, :dates_in_groups, :period_to_string, to: :date_presenter
+  delegate :days_in_words, :nights_in_words, :selected_dates_summary, :dates_in_groups, :period_to_string, to: :date_presenter
 
   def days
     periods.size
@@ -165,6 +165,10 @@ class ReservationDecorator < Draper::Decorator
         '%d hours, %d minutes' % [hours, minutes]
       end
     end
+  end
+
+  def humanized_number_of_periods
+    listing.overnight_booking? ? date_presenter.nights_in_words : date_presenter.days_in_words
   end
 
   private

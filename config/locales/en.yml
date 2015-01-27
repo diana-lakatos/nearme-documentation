@@ -21,6 +21,9 @@ en:
   day:
     one: "1 day"
     other: "%{count} days"
+  night:
+    one: "1 night"
+    other: "%{count} nights"
   desk:
     reservation_rejected_body: "%{user} declined reservation with reason: %{reason}"
     reservation_rejected_title: "[internal] User has declined reservation"
@@ -289,6 +292,13 @@ en:
     book: 'Book'
     rfq_message: 'Please, enter a message for the seller'
     rfq_explanation: 'Click on the button below to request a quote for this product'
+    per_hour: 'PER HOUR'
+    per_night: 'PER NIGHT'
+    per_day: 'PER DAY'
+    per_week: 'PER WEEK'
+    per_month: 'PER MONTH'
+    first_day: 'Select a start date'
+    last_day: 'Select an end date'
   search:
     list:
       additional_social_connections:
