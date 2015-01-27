@@ -55,7 +55,7 @@ module NearMe
     def stack_to_host_mapping
       {
         'nm-production' => 'utility1',
-        'nm-staging' => 'rails-app1',
+        'nm-staging' => 'rails-app-1',
         'nm-qa-1' => 'rails-qa-1',
         'nm-qa-2' => 'rails-qa-2'
       }
