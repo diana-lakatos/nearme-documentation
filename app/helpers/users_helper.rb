@@ -39,6 +39,10 @@ module UsersHelper
     })
   end
 
+  def hide_tab?(controller)
+    platform_context.instance.hidden_dashboard_menu_items.key?(controller)
+  end
+
   private
 
   def social_icon(provider)
