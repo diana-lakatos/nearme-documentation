@@ -92,6 +92,7 @@ class RegistrationsController < Devise::RegistrationsController
       event_tracker.updated_profile_information(@user)
       redirect_to '/dashboard/edit_profile'
     else
+      @company = current_user.companies.first
       @country = resource.country_name
       render :edit, layout: "dashboard"
     end

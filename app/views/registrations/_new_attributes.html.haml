@@ -64,8 +64,9 @@
 = f.input :linkedin_url if only_inputs.empty? || only_inputs.include?(:linkedin_url)
 = f.input :facebook_url if only_inputs.empty? || only_inputs.include?(:facebook_url)
 = f.input :google_plus_url if only_inputs.empty? || only_inputs.include?(:google_plus_url)
+= f.input :biography, as: :text
 - if only_inputs.empty? || only_inputs.include?(:avatar)
-  .row{:class => ('error' if f.object.errors[:phone].present?)}
+  .row{:class => ('error' if f.object.errors[:avatar].present?)}
     .col-md-3
       = f.label :avatar, "Profile Photo"
     .col-md-9
