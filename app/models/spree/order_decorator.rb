@@ -9,7 +9,7 @@ Spree::Order.class_eval do
   scope :completed, -> { where(state: 'complete') }
 
   has_one :billing_authorization, as: :reference
-  has_many :near_me_payments, as: :reference, class_name: '::Payment'
+  has_many :near_me_payments, as: :payable, class_name: '::Payment'
 
   alias_method :old_finalize!, :finalize!
 

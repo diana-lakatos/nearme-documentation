@@ -5,7 +5,7 @@ class Charge < ActiveRecord::Base
   scoped_to_platform_context
 
   belongs_to :user
-  belongs_to :reference, :polymorphic => true
+  belongs_to :payment
 
   scope :successful, -> { where(:success => true) }
 

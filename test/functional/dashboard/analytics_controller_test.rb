@@ -21,18 +21,18 @@ class Dashboard::AnalyticsControllerTest < ActionController::TestCase
 
         context 'ownership' do
           setup do
-            @owner_charge = create_reservation_charge(:amount => 100)
+            @owner_charge = create_payment(:amount => 100)
             @not_owner_charge = FactoryGirl.create(:charge)
           end
 
-          should '@last_week_reservation_charges ignores charges that do not belong to signed in user' do
+          should '@last_week_payments ignores charges that do not belong to signed in user' do
             get :show
-            assert_equal [@owner_charge], assigns(:last_week_reservation_charges)
+            assert_equal [@owner_charge], assigns(:last_week_payments)
           end
 
-          should '@reservation_charges ignores charges that do not belong to signed in user' do
+          should '@payments ignores charges that do not belong to signed in user' do
             get :show
-            assert_equal [@owner_charge], assigns(:reservation_charges)
+            assert_equal [@owner_charge], assigns(:payments)
           end
 
           should '@all_time_totals ' do
@@ -43,8 +43,8 @@ class Dashboard::AnalyticsControllerTest < ActionController::TestCase
           should 'be scoped to current instance' do
             set_second_instance
             get :show
-            assert_equal [], assigns(:reservation_charges)
-            assert_equal [], assigns(:last_week_reservation_charges)
+            assert_equal [], assigns(:payments)
+            assert_equal [], assigns(:last_week_payments)
             assert_equal [], assigns(:all_time_totals)
           end
 
@@ -53,18 +53,18 @@ class Dashboard::AnalyticsControllerTest < ActionController::TestCase
         context 'date' do
 
           setup do
-            @charge_created_6_days_ago = create_reservation_charge(:amount => 100, :created_at => Time.zone.now - 6.day)
-            @charge_created_7_days_ago = create_reservation_charge(:amount => 100, :created_at => Time.zone.now - 7.day)
+            @charge_created_6_days_ago = create_payment(:amount => 100, :created_at => Time.zone.now - 6.day)
+            @charge_created_7_days_ago = create_payment(:amount => 100, :created_at => Time.zone.now - 7.day)
           end
 
-          should '@last_week_reservation_charges includes only charges not older than 6 days' do
+          should '@last_week_payments includes only charges not older than 6 days' do
             get :show
-            assert_equal [@charge_created_6_days_ago], assigns(:last_week_reservation_charges)
+            assert_equal [@charge_created_6_days_ago], assigns(:last_week_payments)
           end
 
-          should '@reservation_charges includes all charges that belong to a user' do
+          should '@payments includes all charges that belong to a user' do
             get :show
-            assert_equal [@charge_created_6_days_ago, @charge_created_7_days_ago], assigns(:reservation_charges)
+            assert_equal [@charge_created_6_days_ago, @charge_created_7_days_ago], assigns(:payments)
           end
 
         end
@@ -159,15 +159,15 @@ class Dashboard::AnalyticsControllerTest < ActionController::TestCase
 
   private
 
-  def create_reservation_charge(options = {})
-    options.reverse_merge!({reference: FactoryGirl.create(:reservation, currency: 'USD', listing: @listing)})
+  def create_payment(options = {})
+    options.reverse_merge!({payable: FactoryGirl.create(:reservation, currency: 'USD', listing: @listing)})
     if amount = options.delete(:amount)
       options[:subtotal_amount] = amount
     end
 
     options[:paid_at] ||= options[:created_at] || Time.zone.now
 
-    FactoryGirl.create(:reservation_charge, options)
+    FactoryGirl.create(:payment, options)
   end
 
   def create_location_visit

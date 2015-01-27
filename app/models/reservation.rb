@@ -59,7 +59,7 @@ class Reservation < ActiveRecord::Base
            :inverse_of => :reservation,
            :dependent => :destroy
 
-  has_many :reservation_charges, as: :reference, dependent: :destroy, class_name: 'Payment'
+  has_many :payments, as: :payable, dependent: :destroy
 
   has_one :billing_authorization, as: :reference
 
@@ -325,7 +325,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def successful_payment_amount_cents
-    reservation_charges.paid.first.try(:total_amount_cents) || 0
+    payments.paid.first.try(:total_amount_cents) || 0
   end
 
   # FIXME: This should be +balance_cents+ to conform to our conventions
@@ -394,12 +394,12 @@ class Reservation < ActiveRecord::Base
 
   def attempt_payment_refund(counter = 0)
     return if !(active_merchant_payment? && paid?)
-    reservation_charge = reservation_charges.paid.first
-    if reservation_charge.nil?
-      BackgroundIssueLogger.log_issue("[reservation refund] Unexpected state", "support@desksnear.me", "Reservation id: #{self.id}. It's marked as paid via credit card but reservation_charge has not been created.")
+    payment = payments.paid.first
+    if payment.nil?
+      BackgroundIssueLogger.log_issue("[reservation refund] Unexpected state", "support@desksnear.me", "Reservation id: #{self.id}. It's marked as paid via credit card but payment has not been created.")
     else
       counter = counter + 1
-      if reservation_charge.refund
+      if payment.refund
         self.update_attribute(:payment_status, PAYMENT_STATUSES[:refunded])
       elsif counter < 3
         ReservationRefundJob.perform_later(Time.zone.now + (counter * 6).hours, self.id, counter)
@@ -412,31 +412,33 @@ class Reservation < ActiveRecord::Base
 
   def attempt_payment_capture
     return if !active_merchant_payment? || paid? || !confirmed?
-    generate_reservation_charge
+    generate_payment
   end
 
   def charge
     return if paid?
-    generate_reservation_charge
+    generate_payment
   end
 
-  def generate_reservation_charge
-    # Generates a ReservationCharge, which is a record of the charge incurred
+  def generate_payment
+    # Generates a Payment, which is a record of the charge incurred
     # by the user for the reservation (or a part of it), including the
     # gross amount and service fee components.
     #
     # NB: A future story is to separate out extended reservation payments
     #     across multiple payment dates, in which case a Reservation would
-    #     have more than one ReservationCharge.
-    charge = reservation_charges.create!(
+    #     have more than one Payment.
+    payment = payments.build(
       subtotal_amount: subtotal_amount,
       service_fee_amount_guest: service_fee_amount_guest,
       service_fee_amount_host: service_fee_amount_host,
       cancellation_policy_hours_for_cancellation: cancellation_policy_hours_for_cancellation,
       cancellation_policy_penalty_percentage: cancellation_policy_penalty_percentage
     )
+    payment.payment_response_params = payment_response_params
+    payment.save!
 
-    self.payment_status = if charge.paid?
+    self.payment_status = if payment.paid?
       PAYMENT_STATUSES[:paid]
     else
       PAYMENT_STATUSES[:failed]
@@ -480,7 +482,7 @@ class Reservation < ActiveRecord::Base
 
     def set_costs
       self.subtotal_amount_cents = price_calculator.price.try(:cents)
-      if active_merchant_payment?
+      if active_merchant_payment? || remote_payment?
         self.service_fee_amount_guest_cents = service_fee_calculator.service_fee_guest.try(:cents)
         self.service_fee_amount_host_cents = service_fee_calculator.service_fee_host.try(:cents)
       else
