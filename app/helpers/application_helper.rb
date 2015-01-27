@@ -251,10 +251,12 @@ module ApplicationHelper
         "btn-gray#{state==(params[:state] || 'new') ? " active" : "-darker"}"
       ]).html_safe
   end
-  
-  def will_paginate_styled(object)
+
+  def will_paginate_styled(collection, options = {})
     content_tag :div, class: 'pagination' do
-      will_paginate object, renderer: BuySellMarket::WillPaginateLinkRenderer::LinkRenderer, class: ''
+      options[:renderer] = BuySellMarket::WillPaginateLinkRenderer::LinkRenderer
+      options[:class] = ''
+      will_paginate collection, options
     end
   end
 end
