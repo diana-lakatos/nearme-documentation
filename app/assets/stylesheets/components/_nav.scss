@@ -21,6 +21,7 @@
       margin-top: $theme_logo_max_height - $theme_logo_height/2;
       background: image-url($theme_logo) no-repeat;
       background-size: auto 100%;
+      filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='#{$theme_logo}', sizingMethod='scale');
       text-indent: -9999px;
 
       @media (-webkit-min-device-pixel-ratio: 1.5), 
