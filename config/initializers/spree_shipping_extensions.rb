@@ -113,7 +113,7 @@ if Spree::Stock::Estimator.methods.include?(:new)
       class Estimator
         old_shipping_rates = instance_method(:shipping_rates)
         old_shipping_methods = instance_method(:shipping_methods)
-  
+
         def get_shippo_order_status(package)
           result = nil
 

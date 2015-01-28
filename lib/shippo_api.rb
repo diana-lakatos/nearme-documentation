@@ -140,12 +140,12 @@ module ShippoApi
   class ShippoApi
     MAX_GET_RATE_ATTEMPTS = 5
     MAX_BUY_RATE_ATTEMPTS = 5
-  
+
     def initialize(username, password)
       Shippo::api_user = username
       Shippo::api_pass = password
     end
-  
+
     def get_rates(address_from_info, address_to_info, parcel_info, customs_item_info, customs_declaration_info)
       default_result_rates = []
       result_rates = default_result_rates
@@ -181,7 +181,7 @@ module ShippoApi
         shipment = Shippo::Shipment.get(shipment["object_id"])
         attempts += 1
       end
-      
+
       result_rates = shipment.rates()
 
       result_rates
@@ -194,13 +194,13 @@ module ShippoApi
       result_purchase = default_result_purchase
 
       transaction = Shippo::Transaction.create(:rate => shippo_rate_id)
-      
+
       attempts = 0
       while ["QUEUED","WAITING"].include?(transaction.object_status) && (attempts < MAX_BUY_RATE_ATTEMPTS) do
         transaction = Shippo::Transaction.get(transaction["object_id"])
         attempts += 1
       end
-      
+
       if transaction.object_status != "ERROR"
         result_purchase = ShippoTransactionResultInfo.new(:label_url => transaction.label_url, :tracking_number => transaction.tracking_number)
       end
@@ -209,7 +209,7 @@ module ShippoApi
     rescue
       return default_result_purchase
     end
-  
+
   end
 end
 
