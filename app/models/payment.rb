@@ -3,23 +3,22 @@ class Payment < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
-  inherits_columns_from_association([:company_id], :reference)
+  inherits_columns_from_association([:company_id], :payable)
+
+  attr_accessor :payment_response_params
 
   # === Associations
-  belongs_to :reference, polymorphic: true
-  has_many :charge_attempts,
-    :class_name => 'Charge',
-    :as => :reference,
-    :dependent => :destroy
-  has_many :refunds,
-    :as => :reference
 
-  belongs_to :instance
+  # Payable association connects Payment with Reservation and Spree::Order
   belongs_to :company
+  belongs_to :instance
+  belongs_to :payable, polymorphic: true
+  has_many :charges, dependent: :destroy
+  has_many :refunds
 
   # === Scopes
   # These payments have been attempted but failed during the charge attempt.
-  # We can inspect the charge_attempts to see what the failure reason was
+  # We can inspect the charges to see what the failure reason was
   # from the gateway response.
   scope :needs_payment_capture, -> {
     where(paid_at: nil).where("#{table_name}.failed_at IS NOT NULL")
@@ -67,7 +66,7 @@ class Payment < ActiveRecord::Base
   def subtotal_amount_cents_after_refund
     result = nil
 
-    if self.reference.respond_to?(:cancelled_by_host?) && self.reference.cancelled_by_host?
+    if self.payable.respond_to?(:cancelled_by_host?) && self.payable.cancelled_by_host?
       result = 0
     else
       result = subtotal_amount_cents - refunds.successful.sum(&:amount)
@@ -79,7 +78,7 @@ class Payment < ActiveRecord::Base
   def final_service_fee_amount_host_cents
     result = self.service_fee_amount_host_cents
 
-    if (self.reference.respond_to?(:cancelled_by_host?) && self.reference.cancelled_by_host?) || (self.reference.respond_to?(:cancelled_by_guest?) && self.reference.cancelled_by_guest?)
+    if (self.payable.respond_to?(:cancelled_by_host?) && self.payable.cancelled_by_host?) || (self.payable.respond_to?(:cancelled_by_guest?) && self.payable.cancelled_by_guest?)
       result = 0
     end
 
@@ -89,7 +88,7 @@ class Payment < ActiveRecord::Base
   def final_service_fee_amount_guest_cents
     result = self.service_fee_amount_guest_cents
 
-    if self.reference.respond_to?(:cancelled_by_host?) && self.reference.cancelled_by_host?
+    if self.payable.respond_to?(:cancelled_by_host?) && self.payable.cancelled_by_host?
       result = 0
     end
 
@@ -104,14 +103,14 @@ class Payment < ActiveRecord::Base
   def capture
     return if paid?
 
-    # Generates a ChargeAttempt with this record as the reference.
+    # Generates a ChargeAttempt with this record as the payable.
 
-    if reference.billing_authorization.nil? && !reference.remote_payment?
-      response = billing_gateway.authorize(reference.total_amount_cents, reference.credit_card.token, { customer: reference.credit_card.instance_client.customer_id, order_id: reference.id })
+    if payable.billing_authorization.nil? && !payable.remote_payment?
+      response = billing_gateway.authorize(payable.total_amount_cents, payable.credit_card.token, { customer: payable.credit_card.instance_client.customer_id, order_id: payable.id })
       if response[:error].present?
-        raise Billing::Gateway::PaymentAttemptError, "Failed authorization of credit card token of InstanceClient(id=#{reference.owner.instance_clients.first.try(:id)}) - #{response[:error]}"
+        raise Billing::Gateway::PaymentAttemptError, "Failed authorization of credit card token of InstanceClient(id=#{payable.owner.instance_clients.first.try(:id)}) - #{response[:error]}"
       else
-        reference.create_billing_authorization(
+        payable.create_billing_authorization(
           token: response[:token],
           payment_gateway_class: billing_gateway.class.name,
           payment_gateway_mode: PlatformContext.current.instance.test_mode? ? "test" : "live"
@@ -120,11 +119,11 @@ class Payment < ActiveRecord::Base
     end
 
     begin
-      billing_gateway.charge(total_amount_cents, self, reference.billing_authorization.try(:token))
+      billing_gateway.charge(total_amount_cents, self, payable.billing_authorization.try(:token))
       touch(:paid_at)
 
-      if reference.respond_to?(:date)
-        ReservationChargeTrackerJob.perform_later(reference.date.end_of_day, reference.id)
+      if payable.respond_to?(:date)
+        ReservationChargeTrackerJob.perform_later(payable.date.end_of_day, payable.id)
       end
     rescue => e
       # Needs to be retried at a later time...
@@ -139,7 +138,7 @@ class Payment < ActiveRecord::Base
     return if refunded?
     return if amount_to_be_refunded <= 0
 
-    successful_charge = charge_attempts.successful.first
+    successful_charge = charges.successful.first
     return if successful_charge.nil?
 
     refund = billing_gateway.refund(amount_to_be_refunded, self, successful_charge)
@@ -153,7 +152,7 @@ class Payment < ActiveRecord::Base
   end
 
   def amount_to_be_refunded
-    if reference.respond_to?(:cancelled_by_guest?) && reference.cancelled_by_guest?
+    if payable.respond_to?(:cancelled_by_guest?) && payable.cancelled_by_guest?
       (subtotal_amount_cents * (1 - self.cancellation_policy_penalty_percentage.to_f/100.0)).to_i
     else
       total_amount_cents
@@ -171,15 +170,15 @@ class Payment < ActiveRecord::Base
   private
 
   def billing_gateway
-    @billing_gateway ||= if reference.billing_authorization.try(:payment_gateway_class).present?
-                           reference.billing_authorization.payment_gateway_class.to_s.constantize.new(reference.owner, instance, currency)
+    @billing_gateway ||= if payable.billing_authorization.try(:payment_gateway_class).present?
+                           payable.billing_authorization.payment_gateway_class.to_s.constantize.new(payable.owner, instance, currency)
                          else
-                           Billing::Gateway::Incoming.new(reference.owner, instance, currency, reference.company.iso_country_code)
+                           Billing::Gateway::Incoming.new(payable.owner, instance, currency, payable.company.iso_country_code)
                          end
   end
 
   def assign_currency
-    self.currency ||= reference.currency
+    self.currency ||= payable.currency
   end
 
 end

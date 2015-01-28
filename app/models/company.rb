@@ -37,7 +37,6 @@ class Company < ActiveRecord::Base
   has_many :zones, class_name: 'Spree::Zone', dependent: :destroy
 
   has_many :reservations
-  has_many :reservation_charges, through: :reservations
   has_many :payments
   has_many :order_charges, through: :orders, source: :near_me_payments
   has_many :payment_transfers, :dependent => :destroy

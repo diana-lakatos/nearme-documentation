@@ -17,6 +17,7 @@ FactoryGirl.define do
 
     factory :company_in_auckland do
       name "Company in Auckland"
+      association :company_address, factory: :address_in_auckland
     end
 
     factory :company_in_adelaide do

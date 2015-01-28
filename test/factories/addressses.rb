@@ -15,6 +15,12 @@ FactoryGirl.define do
       address "Parnell, Auckland 1010 New Zealand"
       latitude "-36.858675"
       longitude "174.777303"
+      address_components{{
+       "0"=> {
+        "long_name"=>"New Zealand",
+        "short_name"=>"NZ",
+        "types"=>["country","political"]},
+      }}
     end
 
     factory :address_in_adelaide do

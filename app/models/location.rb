@@ -6,7 +6,7 @@ class Location < ActiveRecord::Base
 
   has_metadata :accessors => [:photos_metadata]
   notify_associations_about_column_update([:reservations, :listings], :administrator_id)
-  notify_associations_about_column_update([:reservation_charges, :reservations, :listings], :company_id)
+  notify_associations_about_column_update([:payments, :reservations, :listings], :company_id)
   inherits_columns_from_association([:creator_id, :listings_public], :company)
 
   include Impressionable
@@ -40,7 +40,7 @@ class Location < ActiveRecord::Base
     class_name: 'Transactable'
 
   has_many :reservations, :through => :listings
-  has_many :reservation_charges, :through => :reservations
+  has_many :payments, :through => :reservations
   has_many :company_industries, through: :company
   has_many :photos, :through => :listings
   has_one :location_address, class_name: 'Address', as: :entity

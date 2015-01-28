@@ -6,6 +6,7 @@ class @Bookings.Listing
   constructor: (@data) ->
     @id = parseInt(@data.id, 10)
     @firstAvailableDate = DNM.util.Date.idToDate(@data.first_available_date)
+    @secondAvailableDate = DNM.util.Date.idToDate(@data.second_available_date)
 
     if @isReservedHourly()
       @availability = new HourlyAvailability(
@@ -25,6 +26,7 @@ class @Bookings.Listing
     @pricesByDays = @data.prices_by_days
     @hourlyPrice = @data.hourly_price_cents
     @recurringBooking = @data.recurring_booking
+    @overnightBooking = @data.overnight_booking
 
   setDefaultQuantity: (qty) ->
     @defaultQuantity = qty if qty >= 0
@@ -40,6 +42,9 @@ class @Bookings.Listing
 
   isRecurringBooking: ->
     @recurringBooking
+
+  isOvernightBooking: ->
+    @overnightBooking
 
   isReservedDaily: ->
     !@isReservedHourly()
@@ -88,6 +93,9 @@ class @Bookings.Listing
 
   # Set the dates active on this listing for booking
   setDates: (dates) ->
+    # If the booking mode is overnight, discard the last day. This is because
+    # we use night-of semantics (i.e. Mon-Wed would be the nights of Mon & Tues)
+    dates.pop() if @isOvernightBooking()
     @bookedDatesArray = dates
 
   # Set the start/end minutes for an hourly listing reservation.

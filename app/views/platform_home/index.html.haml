@@ -125,12 +125,10 @@
           %a.prev{href: "#"}
           %a.next{href: "#"}
 
-  #demo.section.section-form
+  .section.section-form
     =image_tag  "platform_home/section-form-bg.jpg", class: 'bg'
     .section-inner
       .section-head
-        %h2 GET INTO THE BUSINESS OF SHARING
-        %p We’ll power your marketplace with all of the features, tools, and support you need to grow your sharing economy business and lead the collaborative consumption movement.
-
-      .form-contact
-        = render partial: 'platform_home/shared/contact_form', locals: { platform_contact: @platform_contact }
+        %h2 Featured Resource
+        %a.featured-resource{href: "http://get.near-me.com/marketplace-101", target: "_blank"}
+          =image_tag "platform_home/banner-ebook.jpg"

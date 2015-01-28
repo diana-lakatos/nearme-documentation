@@ -4,7 +4,7 @@
 class AnalyticWrapper::GoogleAnalyticsSerializer::Item
 
   def initialize(serialized_objects)
-    @transaction_id = serialized_objects[:reservation_charge_id]
+    @transaction_id = serialized_objects[:payment_id]
     @item_name = serialized_objects[:listing_name]
     @revenue = serialized_objects[:amount]
     @category = serialized_objects[:instance_name]

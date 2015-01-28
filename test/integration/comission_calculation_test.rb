@@ -33,9 +33,9 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
 
     post_via_redirect "/listings/#{FactoryGirl.create(:transactable).id}/reservations", booking_params
 
-    @reservation_charge = @reservation.reservation_charges.last
-    assert @reservation_charge.paid?
-    charge = @reservation_charge.charge_attempts.new(amount: @reservation_charge.total_amount_cents, success: true)
+    @payment = @reservation.payments.last
+    assert @payment.paid?
+    charge = @payment.charges.new(amount: @payment.total_amount_cents, success: true)
     assert_equal 2875, charge.amount
 
     PaymentTransferSchedulerJob.perform

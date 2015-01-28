@@ -92,6 +92,7 @@ class RegistrationsController < Devise::RegistrationsController
       event_tracker.updated_profile_information(@user)
       redirect_to '/dashboard/edit_profile'
     else
+      @company = current_user.companies.first
       @country = resource.country_name
       render :edit, layout: "dashboard"
     end
@@ -254,7 +255,7 @@ class RegistrationsController < Devise::RegistrationsController
   private
 
   def find_company
-    @company = current_user.companies.first
+    @company = current_user.try(:companies).try(:first)
   end
 
   def signed_up_via
