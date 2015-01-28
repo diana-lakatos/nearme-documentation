@@ -44,16 +44,6 @@ class Reservation < ActiveRecord::Base
   # attr_accessible :cancelable, :confirmation_email, :date, :transactable_id,
   #   :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method, :rejection_reason
 
-  has_many :reviews,
-    :class_name => 'GuestRating',
-    :inverse_of => :reservation,
-    :dependent => :destroy
-
-  has_many :comments_about_guests,
-    :class_name => 'HostRating',
-    :inverse_of => :reservation,
-    :dependent => :destroy
-
   has_many :periods,
            :class_name => "ReservationPeriod",
            :inverse_of => :reservation,
@@ -62,6 +52,7 @@ class Reservation < ActiveRecord::Base
   has_many :payments, as: :payable, dependent: :destroy
 
   has_one :billing_authorization, as: :reference
+  has_many :reviews
 
   validates :transactable_id, :presence => true
   # the if statement for periods is needed to make .recover work - otherwise reservation would be considered not valid even though it is
@@ -210,6 +201,12 @@ class Reservation < ActiveRecord::Base
   }
 
   scope :for_listing, ->(listing) {where(:transactable_id => listing.id)}
+
+  scope :by_period, ->(start_date, end_date = Time.zone.today.end_of_day) {
+    where(created_at: start_date..end_date)
+  }
+
+  scope :with_listing, -> {where.not(transactable_id: nil)}
 
   validates_presence_of :payment_method, :in => PAYMENT_METHODS.values
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true

@@ -1,0 +1,6 @@
+.sub-header-nav
+  %ul
+    %li 
+      =link_to t('instance_admin.rating_reviews_shared.header.all_reviews'), instance_admin_manage_reviews_path, class: " #{'active' if request.path == instance_admin_manage_reviews_path }"
+    %li 
+      =link_to t('instance_admin.rating_reviews_shared.header.settings'), instance_admin_manage_rating_systems_path, class: " #{'active' if request.path == instance_admin_manage_rating_systems_path }"

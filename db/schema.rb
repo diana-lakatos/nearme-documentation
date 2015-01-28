@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150127093339) do
+ActiveRecord::Schema.define(version: 20150128181632) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -102,11 +102,11 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "hint"
     t.integer  "approval_request_id"
     t.integer  "approval_request_attachment_template_id"
     t.boolean  "required",                                default: false
     t.string   "label"
-    t.text     "hint"
   end
 
   add_index "approval_request_attachments", ["instance_id"], name: "index_approval_request_attachments_on_instance_id", using: :btree
@@ -457,36 +457,6 @@ ActiveRecord::Schema.define(version: 20150127093339) do
   add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
   add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
 
-  create_table "guest_ratings", force: true do |t|
-    t.integer  "author_id",      null: false
-    t.integer  "subject_id"
-    t.integer  "reservation_id"
-    t.integer  "value"
-    t.text     "comment"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-    t.datetime "deleted_at"
-  end
-
-  add_index "guest_ratings", ["author_id"], name: "index_guest_ratings_on_author_id", using: :btree
-  add_index "guest_ratings", ["reservation_id"], name: "index_guest_ratings_on_reservation_id", using: :btree
-  add_index "guest_ratings", ["subject_id"], name: "index_guest_ratings_on_subject_id", using: :btree
-
-  create_table "host_ratings", force: true do |t|
-    t.integer  "author_id",      null: false
-    t.integer  "subject_id"
-    t.integer  "reservation_id"
-    t.integer  "value"
-    t.text     "comment"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-    t.datetime "deleted_at"
-  end
-
-  add_index "host_ratings", ["author_id"], name: "index_host_ratings_on_author_id", using: :btree
-  add_index "host_ratings", ["reservation_id"], name: "index_host_ratings_on_reservation_id", using: :btree
-  add_index "host_ratings", ["subject_id"], name: "index_host_ratings_on_subject_id", using: :btree
-
   create_table "impressions", force: true do |t|
     t.integer  "impressionable_id"
     t.string   "impressionable_type"
@@ -705,6 +675,34 @@ ActiveRecord::Schema.define(version: 20150127093339) do
 
   add_index "listing_types", ["instance_id"], name: "index_listing_types_on_instance_id", using: :btree
 
+  create_table "listings", force: true do |t|
+    t.integer  "location_id"
+    t.string   "name"
+    t.text     "description"
+    t.integer  "quantity",                default: 1
+    t.text     "availability_rules_text"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+    t.boolean  "confirm_reservations",    default: true, null: false
+    t.boolean  "delta",                   default: true, null: false
+    t.integer  "listing_type_id"
+    t.integer  "daily_price_cents"
+    t.integer  "weekly_price_cents"
+    t.integer  "monthly_price_cents"
+    t.boolean  "hourly_reservations"
+    t.integer  "hourly_price_cents"
+    t.integer  "minimum_booking_minutes"
+    t.string   "external_id"
+  end
+
+  create_table "location_amenities", force: true do |t|
+    t.integer  "amenity_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "location_id"
+  end
+
   create_table "location_types", force: true do |t|
     t.string   "name"
     t.datetime "created_at",  null: false
@@ -747,8 +745,8 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.boolean  "listings_public",                default: true
     t.integer  "partner_id"
     t.integer  "address_id"
-    t.string   "external_id"
     t.boolean  "mark_to_be_bulk_update_deleted", default: false
+    t.string   "external_id"
   end
 
   add_index "locations", ["address_id"], name: "index_locations_on_address_id", using: :btree
@@ -953,6 +951,62 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "rating_answers", force: true do |t|
+    t.integer  "rating"
+    t.integer  "rating_question_id"
+    t.integer  "review_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+    t.integer  "instance_id"
+  end
+
+  add_index "rating_answers", ["deleted_at"], name: "index_rating_answers_on_deleted_at", using: :btree
+  add_index "rating_answers", ["instance_id"], name: "index_rating_answers_on_instance_id", using: :btree
+  add_index "rating_answers", ["rating_question_id"], name: "index_rating_answers_on_rating_question_id", using: :btree
+  add_index "rating_answers", ["review_id"], name: "index_rating_answers_on_review_id", using: :btree
+
+  create_table "rating_hints", force: true do |t|
+    t.string   "value"
+    t.string   "description"
+    t.integer  "rating_system_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+    t.integer  "instance_id"
+  end
+
+  add_index "rating_hints", ["deleted_at"], name: "index_rating_hints_on_deleted_at", using: :btree
+  add_index "rating_hints", ["instance_id"], name: "index_rating_hints_on_instance_id", using: :btree
+  add_index "rating_hints", ["rating_system_id"], name: "index_rating_hints_on_rating_system_id", using: :btree
+
+  create_table "rating_questions", force: true do |t|
+    t.text     "text"
+    t.integer  "rating_system_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+    t.integer  "instance_id"
+  end
+
+  add_index "rating_questions", ["deleted_at"], name: "index_rating_questions_on_deleted_at", using: :btree
+  add_index "rating_questions", ["instance_id"], name: "index_rating_questions_on_instance_id", using: :btree
+  add_index "rating_questions", ["rating_system_id"], name: "index_rating_questions_on_rating_system_id", using: :btree
+
+  create_table "rating_systems", force: true do |t|
+    t.string   "subject"
+    t.integer  "transactable_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "instance_id"
+    t.boolean  "active",               default: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "rating_systems", ["deleted_at"], name: "index_rating_systems_on_deleted_at", using: :btree
+  add_index "rating_systems", ["instance_id"], name: "index_rating_systems_on_instance_id", using: :btree
+  add_index "rating_systems", ["transactable_type_id"], name: "index_rating_systems_on_transactable_type_id", using: :btree
+
   create_table "recurring_bookings", force: true do |t|
     t.integer  "transactable_id"
     t.integer  "owner_id"
@@ -1036,19 +1090,17 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.string   "confirmation_email"
     t.integer  "subtotal_amount_cents"
     t.string   "currency"
-    t.datetime "created_at",                                                     null: false
-    t.datetime "updated_at",                                                     null: false
+    t.datetime "created_at",                                                        null: false
+    t.datetime "updated_at",                                                        null: false
     t.datetime "deleted_at"
     t.text     "comment"
     t.boolean  "create_charge"
-    t.string   "payment_method",                             default: "manual",  null: false
-    t.string   "payment_status",                             default: "unknown", null: false
-    t.integer  "quantity",                                   default: 1,         null: false
+    t.string   "payment_method",                                default: "manual",  null: false
+    t.string   "payment_status",                                default: "unknown", null: false
+    t.integer  "quantity",                                      default: 1,         null: false
     t.integer  "service_fee_amount_guest_cents"
     t.string   "rejection_reason"
-    t.datetime "request_guest_rating_email_sent_at"
-    t.datetime "request_host_rating_email_sent_at"
-    t.integer  "service_fee_amount_host_cents",              default: 0,         null: false
+    t.integer  "service_fee_amount_host_cents",                 default: 0,         null: false
     t.integer  "platform_context_detail_id"
     t.string   "platform_context_detail_type"
     t.integer  "instance_id"
@@ -1056,13 +1108,15 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.integer  "administrator_id"
     t.integer  "company_id"
     t.integer  "partner_id"
-    t.boolean  "listings_public",                            default: true
+    t.boolean  "listings_public",                               default: true
     t.datetime "confirmed_at"
     t.datetime "cancelled_at"
-    t.integer  "cancellation_policy_hours_for_cancellation", default: 0
-    t.integer  "cancellation_policy_penalty_percentage",     default: 0
+    t.integer  "cancellation_policy_hours_for_cancellation",    default: 0
+    t.integer  "cancellation_policy_penalty_percentage",        default: 0
     t.integer  "recurring_booking_id"
     t.integer  "credit_card_id"
+    t.datetime "request_guest_rating_email_sent_at"
+    t.datetime "request_host_and_product_rating_email_sent_at"
   end
 
   add_index "reservations", ["administrator_id"], name: "index_reservations_on_administrator_id", using: :btree
@@ -1074,6 +1128,25 @@ ActiveRecord::Schema.define(version: 20150127093339) do
   add_index "reservations", ["platform_context_detail_id"], name: "index_reservations_on_platform_context_detail_id", using: :btree
   add_index "reservations", ["recurring_booking_id"], name: "index_reservations_on_recurring_booking_id", using: :btree
   add_index "reservations", ["transactable_id"], name: "index_reservations_on_listing_id", using: :btree
+
+  create_table "reviews", force: true do |t|
+    t.integer  "rating"
+    t.string   "object"
+    t.text     "comment"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "reservation_id"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.integer  "transactable_type_id"
+  end
+
+  add_index "reviews", ["deleted_at"], name: "index_reviews_on_deleted_at", using: :btree
+  add_index "reviews", ["instance_id"], name: "index_reviews_on_instance_id", using: :btree
+  add_index "reviews", ["reservation_id"], name: "index_reviews_on_reservation_id", using: :btree
+  add_index "reviews", ["transactable_type_id"], name: "index_reviews_on_transactable_type_id", using: :btree
+  add_index "reviews", ["user_id"], name: "index_reviews_on_user_id", using: :btree
 
   create_table "search_notifications", force: true do |t|
     t.string   "email"
@@ -1087,6 +1160,23 @@ ActiveRecord::Schema.define(version: 20150127093339) do
   end
 
   add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
+
+  create_table "search_queries", force: true do |t|
+    t.string   "query"
+    t.text     "agent"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "sessions", force: true do |t|
+    t.string   "session_id", null: false
+    t.text     "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", using: :btree
+  add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
   create_table "spree_addresses", force: true do |t|
     t.string   "firstname"
@@ -1512,7 +1602,7 @@ ActiveRecord::Schema.define(version: 20150127093339) do
   add_index "spree_product_properties", ["user_id"], name: "index_spree_product_properties_on_user_id", using: :btree
 
   create_table "spree_products", force: true do |t|
-    t.string   "name",                 default: "",   null: false
+    t.string   "name",                 default: "",    null: false
     t.text     "description"
     t.datetime "available_on"
     t.datetime "deleted_at"
@@ -1531,7 +1621,7 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.hstore   "status"
     t.boolean  "products_public",      default: true
     t.boolean  "approved",             default: true
-    t.text     "cross_sell_skus",      default: [],                array: true
+    t.text     "cross_sell_skus",      default: [],                 array: true
     t.integer  "administrator_id"
     t.boolean  "shippo_enabled",       default: false
   end
@@ -1772,7 +1862,7 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.integer  "user_id"
-    t.integer  "processing_time", default: 0
+    t.integer  "processing_time",                                            default: 0
     t.integer  "order_id"
     t.decimal  "precalculated_cost",                 precision: 8, scale: 2
     t.string   "shippo_rate_id",         limit: 230
@@ -2295,6 +2385,17 @@ ActiveRecord::Schema.define(version: 20150127093339) do
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree
 
+  create_table "transactable_actions", force: true do |t|
+    t.integer  "action_type_id"
+    t.integer  "transactable_id"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "transactable_actions", ["action_type_id", "transactable_id"], name: "transactable_actions_at_t_unique", unique: true, where: "(deleted_at IS NULL)", using: :btree
+
   create_table "transactable_type_actions", force: true do |t|
     t.integer  "action_type_id"
     t.integer  "transactable_type_id"
@@ -2320,6 +2421,7 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.boolean  "show_page_enabled",                          default: false
     t.text     "custom_csv_fields"
     t.boolean  "overnight_booking",                          default: false, null: false
+    t.boolean  "enable_reviews"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -2479,10 +2581,6 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.string   "browser"
     t.string   "browser_version"
     t.string   "platform"
-    t.float    "guest_rating_average"
-    t.integer  "guest_rating_count"
-    t.float    "host_rating_average"
-    t.integer  "host_rating_count"
     t.text     "avatar_transformation_data"
     t.string   "avatar_original_url"
     t.datetime "avatar_versions_generated_at"
