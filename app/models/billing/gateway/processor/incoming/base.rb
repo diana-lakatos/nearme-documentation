@@ -24,16 +24,16 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
     end
   end
 
-  def charge(amount, reference, token)
+  def charge(amount, payment, token)
     @charge = Charge.create(
       amount: amount,
-      reference: reference,
+      payment: payment,
       currency: @currency,
       user_id: @user.id,
     )
 
     begin
-      set_active_merchant_mode(reference)
+      set_active_merchant_mode(payment.payable)
       options = custom_capture_options.merge(currency: @currency)
       response = @gateway.capture(amount, token, options.with_indifferent_access)
 
@@ -44,17 +44,17 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
     end
   end
 
-  def refund(amount, reference, charge)
+  def refund(amount, payment, charge)
     @refund = Refund.create(
       amount: amount,
       currency: @currency,
-      reference: reference
+      payment: payment
     )
 
     raise Billing::Gateway::RefundNotSupportedError, "Refund isn't supported or is not implemented. Please refund this user directly on your gateway account." if !defined?(refund_identification)
 
     begin
-      set_active_merchant_mode(reference)
+      set_active_merchant_mode(payment.payable)
       options = custom_refund_options.merge(currency: @currency)
       response = @gateway.refund(amount, refund_identification(charge), options.with_indifferent_access)
       response.success? ? refund_successful(response) : refund_failed(response)
@@ -129,9 +129,9 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
     @refund.refund_failed(response)
   end
 
-  def set_active_merchant_mode(reference)
-    if reference.is_a?(Reservation)
-      billing_authorization = reference.reservation.billing_authorization
+  def set_active_merchant_mode(payable)
+    if payable.is_a?(Reservation)
+      billing_authorization = payable.billing_authorization
       if billing_authorization.present? && billing_authorization.payment_gateway_mode.present?
         mode = billing_authorization.payment_gateway_mode.to_sym
       else

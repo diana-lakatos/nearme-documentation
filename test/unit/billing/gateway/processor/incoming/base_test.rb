@@ -39,7 +39,7 @@ class Billing::Gateway::Processor::Incoming::BaseTest < ActiveSupport::TestCase
 
   context '#charge' do
     setup do
-      @rc = FactoryGirl.create(:reservation_charge)
+      @rc = FactoryGirl.create(:payment)
     end
 
     should 'create charge object' do
@@ -49,7 +49,7 @@ class Billing::Gateway::Processor::Incoming::BaseTest < ActiveSupport::TestCase
       assert_equal @user.id, charge.user_id
       assert_equal 10_00, charge.amount
       assert_equal 'USD', charge.currency
-      assert_equal @rc, charge.reference
+      assert_equal @rc, charge.payment
       assert_equal SUCCESS_RESPONSE, charge.response.params
       assert charge.success?
     end
@@ -66,6 +66,7 @@ class Billing::Gateway::Processor::Incoming::BaseTest < ActiveSupport::TestCase
     setup do
       @payment_transfer = FactoryGirl.create(:payment_transfer)
       @charge = FactoryGirl.create(:charge)
+      @payment = @charge.payment
       @test_processor = TestProcessor.new(FactoryGirl.create(:user), FactoryGirl.create(:instance), 'JPY')
     end
 
@@ -73,11 +74,11 @@ class Billing::Gateway::Processor::Incoming::BaseTest < ActiveSupport::TestCase
       charge_params = { "id" => "3" }
       charge_response = ActiveMerchant::Billing::Response.new true, 'OK', charge_params
       @charge.update_attribute(:response, charge_response)
-      refund = @test_processor.refund(1000, @payment_transfer, @charge)
+      refund = @test_processor.refund(1000, @payment, @charge)
       assert_equal 1000, refund.amount
       assert_equal 'JPY', refund.currency
       assert_equal SUCCESS_RESPONSE, refund.response.params
-      assert_equal @payment_transfer, refund.reference
+      assert_equal @payment, refund.payment
       assert refund.success?
     end
 
@@ -85,7 +86,7 @@ class Billing::Gateway::Processor::Incoming::BaseTest < ActiveSupport::TestCase
       charge_params = { "id" => "2" }
       charge_response = ActiveMerchant::Billing::Response.new true, 'OK', charge_params
       @charge.update_attribute(:response, charge_response)
-      refund = @test_processor.refund(1000, @payment_transfer, @charge)
+      refund = @test_processor.refund(1000, @payment, @charge)
       assert_equal 1000, refund.amount
       assert_equal 'JPY', refund.currency
       assert_equal FAILURE_RESPONSE, refund.response.params

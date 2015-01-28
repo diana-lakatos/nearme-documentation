@@ -198,7 +198,7 @@ class Dashboard::HostReservationsControllerTest < ActionController::TestCase
   end
 
   def setup_refund_for_reservation(reservation)
-    reservation.reservation_charges.last.charge_attempts.successful.create(amount: reservation.total_amount_cents)
+    reservation.payments.last.charges.successful.create(amount: reservation.total_amount_cents)
     Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:refund_identification)
       .returns({id: "123"}.to_json)
     ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:refund)

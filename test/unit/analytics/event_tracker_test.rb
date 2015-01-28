@@ -15,7 +15,7 @@ class EventTrackerTest < ActiveSupport::TestCase
     setup do
       @listing = FactoryGirl.create(:transactable, :daily_price => 89.39)
       @reservation = FactoryGirl.create(:reservation_with_credit_card, :listing => @listing)
-      @reservation.reservation_charges = [FactoryGirl.create(:reservation_charge)]
+      @reservation.payments = [FactoryGirl.create(:payment)]
       @reservation.save!
     end
 
@@ -29,7 +29,7 @@ class EventTrackerTest < ActiveSupport::TestCase
         host_fee: @reservation.service_fee_amount_host.to_f,
         guest_id: @reservation.owner_id,
         host_id: @reservation.host.id,
-        reservation_charge_id: @reservation.reservation_charges.paid.first.id,
+        payment_id: @reservation.payments.paid.first.id,
         instance_name: @reservation.instance.name,
         listing_name: @reservation.listing.name,
       })

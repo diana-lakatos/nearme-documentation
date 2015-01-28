@@ -7,7 +7,7 @@ class Instance < ActiveRecord::Base
     :live_paypal_client_secret, :live_balanced_api_key, :marketplace_password, :test_stripe_api_key, :test_paypal_username, :test_paypal_password,
     :test_paypal_signature, :test_paypal_app_id, :test_paypal_client_id, :test_paypal_client_secret, :test_balanced_api_key, :olark_api_key,
     :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key, :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret,
-    :instagram_consumer_key, :instagram_consumer_secret, :db_connection_string,
+    :instagram_consumer_key, :instagram_consumer_secret, :db_connection_string, :shippo_username, :shippo_password,
     :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   attr_accessor :mark_as_locked
@@ -44,7 +44,7 @@ class Instance < ActiveRecord::Base
   has_many :instance_admins, :inverse_of => :instance
   has_many :instance_admin_roles, :inverse_of => :instance
   has_many :reservations, :as => :platform_context_detail
-  has_many :reservation_charges, :through => :reservations, :inverse_of => :instance
+  has_many :payments, :through => :reservations, :inverse_of => :instance
   has_many :instance_clients, :dependent => :destroy, :inverse_of => :instance
   has_many :translations, :dependent => :destroy, :inverse_of => :instance
   has_many :instance_billing_gateways, :dependent => :destroy, :inverse_of => :instance

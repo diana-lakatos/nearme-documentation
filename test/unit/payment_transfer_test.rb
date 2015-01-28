@@ -11,9 +11,9 @@ class PaymentTransferTest < ActiveSupport::TestCase
     @reservation_1 = @company.reservations[0]
     @reservation_2 = @company.reservations[1]
 
-    @reservation_charges = [
-      @reservation_1.reservation_charges.to_a,
-      @reservation_2.reservation_charges.to_a
+    @payments = [
+      @reservation_1.payments.to_a,
+      @reservation_2.payments.to_a
     ].flatten
     Billing::Gateway::Outgoing.any_instance.stubs(:payout).returns(stub(:success => true)).at_least(0)
   end
@@ -25,42 +25,42 @@ class PaymentTransferTest < ActiveSupport::TestCase
 
     should "only allow charges of the same currency" do
       rc = Payment.create!(
-        :reference => @reservation_1,
+        :payable => @reservation_1,
         :subtotal_amount => 10,
         :service_fee_amount_guest => 1,
         :service_fee_amount_host => 2,
         :currency => 'NZD'
       )
 
-      @payment_transfer.payments = [@reservation_charges, rc].flatten
+      @payment_transfer.payments = [@payments, rc].flatten
       assert !@payment_transfer.save
       assert @payment_transfer.errors[:currency].present?
     end
 
     should "assign instance id" do
-      @payment_transfer.payments = @reservation_charges
+      @payment_transfer.payments = @payments
       @payment_transfer.save!
       @payment_transfer.reload
       assert_equal @payment_transfer.company.instance_id, @payment_transfer.instance_id
     end
 
     should "assign currency attribute" do
-      @payment_transfer.payments = @reservation_charges
+      @payment_transfer.payments = @payments
       @payment_transfer.save!
       @payment_transfer.reload
 
-      assert_equal @reservation_charges.first.currency, @payment_transfer.currency
+      assert_equal @payments.first.currency, @payment_transfer.currency
     end
 
     should "calculate amounts" do
-      @payment_transfer.payments = @reservation_charges
+      @payment_transfer.payments = @payments
       @payment_transfer.save!
 
-      assert_equal @reservation_charges.map(&:subtotal_amount).sum - @reservation_charges.map(&:service_fee_amount_host).sum,
+      assert_equal @payments.map(&:subtotal_amount).sum - @payments.map(&:service_fee_amount_host).sum,
         @payment_transfer.amount
 
-      assert_equal @reservation_charges.map(&:service_fee_amount_guest).sum, @payment_transfer.service_fee_amount_guest
-      assert_equal @reservation_charges.map(&:service_fee_amount_host).sum, @payment_transfer.service_fee_amount_host
+      assert_equal @payments.map(&:service_fee_amount_guest).sum, @payment_transfer.service_fee_amount_guest
+      assert_equal @payments.map(&:service_fee_amount_host).sum, @payment_transfer.service_fee_amount_host
     end
   end
 
@@ -87,8 +87,8 @@ class PaymentTransferTest < ActiveSupport::TestCase
       @refunds_reservation_2 = @refunds_company.reservations.order(:id).second
 
       @refunds_payments = [
-        @refunds_reservation_1.reservation_charges.to_a,
-        @refunds_reservation_2.reservation_charges.to_a
+        @refunds_reservation_1.payments.to_a,
+        @refunds_reservation_2.payments.to_a
       ].flatten
     end
 
@@ -104,15 +104,15 @@ class PaymentTransferTest < ActiveSupport::TestCase
     should "calculate correctly the total sum for transfers with refunds" do
       #Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).returns(Refund.new(:success => true))
 
-      @refunds_payments[0].reference.user_cancel!
-      @refunds_payments[1].reference.host_cancel!
+      @refunds_payments[0].payable.user_cancel!
+      @refunds_payments[1].payable.host_cancel!
       @refunds_payments[0].refund
       @refunds_payments[1].refund
 
       assert_equal 400, @refunds_payments[0].amount_to_be_refunded
       assert_equal 1000 + 200, @refunds_payments[1].amount_to_be_refunded
-      Refund.create(:success => true, :amount => 400, :reference => @refunds_payments[0])
-      Refund.create(:success => true, :amount => 1000 + 200, :reference => @refunds_payments[1])
+      Refund.create(:success => true, :amount => 400, :payment => @refunds_payments[0])
+      Refund.create(:success => true, :amount => 1000 + 200, :payment => @refunds_payments[1])
 
       @refunds_payment_transfer.payments = @refunds_payments
       @refunds_payment_transfer.save!
@@ -151,7 +151,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
       Billing::Gateway::Processor::Outgoing::ProcessorFactory.stubs(:paypal_supported?).returns(true).once
       Billing::Gateway::Processor::Outgoing::ProcessorFactory.stubs(:receiver_supports_paypal?).returns(true).once
       @payment_transfer = @company.payment_transfers.build
-      @payment_transfer.payments = @reservation_charges
+      @payment_transfer.payments = @payments
     end
 
     should 'be not paid if attempt to payout failed' do
@@ -171,7 +171,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
 
     setup do
       @payment_transfer = @company.payment_transfers.build
-      @payment_transfer.payments = @reservation_charges
+      @payment_transfer.payments = @payments
     end
 
     should "return true if possible processor exists but company has not provided settings" do

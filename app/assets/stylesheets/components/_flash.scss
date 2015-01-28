@@ -47,7 +47,7 @@
   }
 
   &.success, &.notice {
-    background-color: #00693A;
+    background-color: $theme_green;
   }
 
   &.error {

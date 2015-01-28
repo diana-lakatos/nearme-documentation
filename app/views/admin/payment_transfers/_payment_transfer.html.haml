@@ -7,7 +7,7 @@
       = resource.company.name
     - else
       = "#{resource.company_including_deleted.name} (Deleted)"
-  %td= resource.reservation_charges.count
+  %td= resource.payments.count
   %td= resource.created_at
   %td= resource.transferred_at
   %td= resource.service_fee_amount_guest.format with_currency: true
