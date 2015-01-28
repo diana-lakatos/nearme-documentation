@@ -8,7 +8,7 @@ class MoveRecordsFromEmailTemplatesToInstanceViews < ActiveRecord::Migration
 
   class Instance < ActiveRecord::Base
     def self.default_instance
-      self.find_by_default_instance(true)
+      where(name: "DesksNearMe").first || self.first
     end
   end
 

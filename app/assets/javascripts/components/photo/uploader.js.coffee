@@ -50,7 +50,10 @@ class @Photo.Uploader
       if @photoCollection.multiplePhoto()
         filepicker.pickMultiple options, (inkBlobs) =>
           if Object.prototype.toString.call( inkBlobs ) == '[object Array]'
-            @createPhotos(inkBlobs)
+            if filepicker.debug_mode
+              @createPhoto(inkBlobs[0])
+            else
+              @createPhotos(inkBlobs)
           else
             @createPhoto(inkBlobs)
       else

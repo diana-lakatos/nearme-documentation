@@ -3,6 +3,8 @@ require 'test_helper'
 class Dashboard::UserBlog::BlogPostsControllerTest < ActionController::TestCase
   setup do
     @user = FactoryGirl.create(:user)
+    @company = FactoryGirl.create(:company, creator: @user)
+    User.any_instance.stubs(:registration_completed?).returns(true)
     sign_in @user
     PlatformContext.current.instance.update_column(:user_blogs_enabled, true)
   end

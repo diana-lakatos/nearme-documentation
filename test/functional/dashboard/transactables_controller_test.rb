@@ -7,6 +7,7 @@ class Dashboard::TransactablesControllerTest < ActionController::TestCase
     @user = FactoryGirl.create(:user)
     sign_in @user
     @company = FactoryGirl.create(:company, creator: @user)
+    @company.products << FactoryGirl.create(:product)
     @location = FactoryGirl.create(:location, company: @company)
     @location2 = FactoryGirl.create(:location, company: @company)
     @listing_type = "Desk"
@@ -198,6 +199,7 @@ class Dashboard::TransactablesControllerTest < ActionController::TestCase
       setup do
         @other_user = FactoryGirl.create(:user)
         @other_company = FactoryGirl.create(:company, creator: @other_user)
+        @other_company.products << FactoryGirl.create(:product)
         @other_location = FactoryGirl.create(:location, company: @company)
         sign_in @other_user
       end

@@ -536,6 +536,7 @@ DesksnearMe::Application.routes.draw do
     resource :blog, controller: 'user_blog/blog', only: [:show, :edit, :update] do
       resources :posts, controller: 'user_blog/blog_posts'
     end
+    resources :photos, :only => [:create, :destroy, :edit, :update]
   end
 
   resources :reservations do
@@ -584,8 +585,6 @@ DesksnearMe::Application.routes.draw do
         end
       end
     end
-
-    resources :photos, :only => [:create, :destroy, :edit, :update]
 
     resources :themes, :only => [] do
       member do

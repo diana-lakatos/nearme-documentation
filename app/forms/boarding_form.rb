@@ -1,7 +1,8 @@
 class BoardingForm < Form
 
   attr_accessor :store_name, :company_address, :product_form
-  attr_accessor :draft
+
+  def_delegators :@product, :draft?
 
   # Validations:
 
@@ -25,17 +26,16 @@ class BoardingForm < Form
   end
 
   def submit(params)
-    validate = params[:draft].nil?
+    params[:product_form].merge!(draft: params.delete(:draft).nil? ? false : true)
 
     store_attributes(params)
 
     @company.name = @store_name
 
-    if !validate || valid?
-
-      @user.save!(validate: validate)
-      @company.save!(validate: validate)
-      @product_form.save!(validate: validate)
+    if draft? || valid?
+      @user.save!(validate: !draft?)
+      @company.save!(validate: !draft?)
+      @product_form.save!(validate: !draft?)
 
       true
     else

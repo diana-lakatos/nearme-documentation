@@ -3,6 +3,8 @@ require 'test_helper'
 class Dashboard::ReviewsControllerTest < ActionController::TestCase
   setup do
     @user = FactoryGirl.create(:user)
+    @company = FactoryGirl.create(:company, creator: @user)
+    User.any_instance.stubs(:registration_completed?).returns(true)
     sign_in @user
     @reservation = FactoryGirl.create(:past_reservation, user: @user)
     @current_instance = PlatformContext.current.instance
