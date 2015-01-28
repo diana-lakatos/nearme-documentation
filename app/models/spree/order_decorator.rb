@@ -10,6 +10,9 @@ Spree::Order.class_eval do
 
   has_one :billing_authorization, as: :reference
   has_many :near_me_payments, as: :payable, class_name: '::Payment'
+  has_many :shipping_methods, class_name: 'Spree::ShippingMethod'
+
+  after_save :purchase_shippo_rate
 
   alias_method :old_finalize!, :finalize!
 
@@ -56,4 +59,17 @@ Spree::Order.class_eval do
   def owner
     user
   end
+
+  def purchase_shippo_rate
+    if self.state_changed? && self.state == 'complete'
+      shippo_shipping_method = self.shipping_methods.joins(:shipping_rates).merge(Spree::ShippingRate.only_selected).readonly(false).first
+      if shippo_shipping_method.present?
+        ShippoPurchaseRateJob.perform(shippo_shipping_method)
+      end
+    end
+
+    true
+  end
+
 end
+

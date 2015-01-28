@@ -11,7 +11,6 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
 ActiveRecord::Schema.define(version: 20150127093339) do
 
   # These are extensions that must be enabled in order to support this database
@@ -691,6 +690,8 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.text     "custom_sanitize_config"
     t.string   "payment_transfers_frequency",                                 default: "fortnightly"
     t.text     "hidden_dashboard_menu_items"
+    t.string   "encrypted_shippo_username"
+    t.string   "encrypted_shippo_password"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1381,6 +1382,7 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.integer  "partner_id"
     t.decimal  "service_fee_buyer_percent",             precision: 5,  scale: 2, default: 0.0
     t.decimal  "service_fee_seller_percent",            precision: 5,  scale: 2, default: 0.0
+    t.datetime "shippo_rate_purchased_at"
   end
 
   add_index "spree_orders", ["company_id"], name: "index_spree_orders_on_company_id", using: :btree
@@ -1531,6 +1533,7 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.boolean  "approved",             default: true
     t.text     "cross_sell_skus",      default: [],                array: true
     t.integer  "administrator_id"
+    t.boolean  "shippo_enabled",       default: false
   end
 
   add_index "spree_products", ["available_on"], name: "index_spree_products_on_available_on", using: :btree
@@ -1770,10 +1773,16 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.integer  "partner_id"
     t.integer  "user_id"
     t.integer  "processing_time", default: 0
+    t.integer  "order_id"
+    t.decimal  "precalculated_cost",                 precision: 8, scale: 2
+    t.string   "shippo_rate_id",         limit: 230
+    t.text     "shippo_label_url"
+    t.text     "shippo_tracking_number"
   end
 
   add_index "spree_shipping_methods", ["company_id"], name: "index_spree_shipping_methods_on_company_id", using: :btree
   add_index "spree_shipping_methods", ["instance_id"], name: "index_spree_shipping_methods_on_instance_id", using: :btree
+  add_index "spree_shipping_methods", ["order_id"], name: "index_spree_shipping_methods_on_order_id", using: :btree
   add_index "spree_shipping_methods", ["partner_id"], name: "index_spree_shipping_methods_on_partner_id", using: :btree
   add_index "spree_shipping_methods", ["user_id"], name: "index_spree_shipping_methods_on_user_id", using: :btree
 
