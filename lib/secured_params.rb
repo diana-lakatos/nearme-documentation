@@ -23,10 +23,36 @@ class SecuredParams
       :depth,
       :width,
       :height,
+      :weight_unit,
+      :depth_unit,
+      :width_unit,
+      :height_unit,
+      :unit_of_measure,
       image_ids: [],
       company_address_attributes: nested(self.address),
       images_attributes: nested(self.spree_image),
       shipping_methods_attributes: nested(self.spree_shipping_method)
+    ]
+  end
+
+  def instance_shipping_providers
+    [
+      :shippo_username, :shippo_password,
+    ]
+  end
+
+  def dimensions_template
+    [
+      :name,
+      :unit_of_measure,
+      :weight,
+      :height,
+      :width,
+      :depth,
+      :weight_unit,
+      :height_unit,
+      :width_unit,
+      :depth_unit
     ]
   end
 
@@ -75,6 +101,7 @@ class SecuredParams
       :permission_blog,
       :permission_support,
       :permission_buysell,
+      :permission_shippingoptions,
       :name
     ]
   end
@@ -258,7 +285,6 @@ class SecuredParams
       :olark_api_key, :olark_enabled,
       :facebook_consumer_key, :facebook_consumer_secret,
       :twitter_consumer_key, :twitter_consumer_secret,
-      :shippo_username, :shippo_password,
       :linkedin_consumer_key, :linkedin_consumer_secret,
       :instagram_consumer_key, :instagram_consumer_secret,
       :support_imap_hash, :support_email,

@@ -7,16 +7,15 @@
     = render 'forms/product_form', f: f
 
 
-    .row.product_shipping_profile_fields_row.enabled
+    .row.product_shipping_profile_fields_row.enabled{ :data => { :js_element_identifier => 'initial_shipping_profiles_section' } }
       = f.simple_fields_for :shipping_methods do |shipping_method|
         %fieldset
           = render 'forms/shipping_form', f: shipping_method
+      .row.text-right
+        %a.shipping-profile-top.add_shipping_profile
+          =image_tag("themes/buy_sell/icon-cross.png")
 
-    .row.text-right
-      %a.shipping-profile-top.add_shipping_profile
-        =image_tag("themes/buy_sell/icon-cross.png")
-
-        %span Create New Shipping Profile
+          %span Create New Shipping Profile
 
     .submit-bar
       = link_to dashboard_products_path do
@@ -27,4 +26,4 @@
   new TaxonAutocomplete($("#product_form"));
   new Dashboard.AddressController($("#product_form"));
   var boarding_form = new BoardingForm($("#product_form"));
-  new ShippoFieldsManager();
+  new ShippoFieldsManager(#{raw DimensionsTemplate::UNITS_OF_MEASURE.to_json});

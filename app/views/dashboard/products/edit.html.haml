@@ -7,7 +7,7 @@
     = simple_form_for @product_form, wrapper: :bs3, :url => dashboard_product_path(@product_form.product), :html => {id: "product_form", :multipart => true,  method: :put } do |f|
       = render 'forms/product_form', f: f
 
-      - if !@product_form.product.shippo_enabled?
+      .row.product_shipping_profile_fields_row.enabled{ :data => { :js_element_identifier => 'initial_shipping_profiles_section' } }
         = f.simple_fields_for :shipping_methods do |shipping_method|
           %fieldset
             = render 'forms/shipping_form', f: shipping_method
@@ -25,4 +25,4 @@
   new TaxonAutocomplete($("#product_form"));
   new Dashboard.AddressController($("#product_form"));
   var boarding_form = new BoardingForm($("#product_form"));
-  new ShippoFieldsManager();
+  new ShippoFieldsManager(#{raw DimensionsTemplate::UNITS_OF_MEASURE.to_json});

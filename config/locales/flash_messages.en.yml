@@ -9,6 +9,13 @@ en:
       unable_to_disconnect: "We are unable to disconnect your account from %{provider_name}. Make sure you have at least one other account linked so you can log in!"
     authorizations:
       not_authorized: "Sorry, you do not have permission to view that page."
+    shipping_options:
+      dimensions_templates:
+        template_added: 'Successfully added a new dimensions template.'
+        template_updated: 'Successfully update the dimensions template.'
+        template_deleted: 'Successfully deleted the dimensions template.'
+      shipping_providers:
+        options_updated: 'Shipping providers options successfully updated.'      
     blog_admin:
       blog_instance:
         blog_instance_updated: 'Blog settings were updated.'
