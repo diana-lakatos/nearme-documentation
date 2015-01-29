@@ -15,7 +15,14 @@
             - (Dashboard::BaseController::DASHBOARD_CONTROLLERS - hidden_controllers).each do |controller|
               %tr
                 %td
-                  = t("dashboard.nav.#{controller.split('/').join(' > ')}")
+                  = dashboard_controller_name controller
+
+
+                  -#= controller.split('/').map(&:capitalize).join(' > ').gsub(/#(.*)/, ' > (tab)')
+
+                  -#= t("dashboard.nav.#{controller.split('/').join(' > ').gsub('#', ' > ')}")
+                  -#- if controller.include?('#')
+                  -#  %span.label.label-success tab
                 %td
                   = check_box_tag "hidden_dashboard_menu_items[#{controller}]", '1', @instance.hidden_dashboard_menu_items.key?(controller)
       = f.button :submit, 'Update Settings', class: 'btn btn-green pull-right'

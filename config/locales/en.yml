@@ -240,6 +240,15 @@ en:
       menu: 'MENU'
       blog: 'BLOG'
 
+  hidden_items:
+    registrations:
+      show:
+        blog: 'User Profile > (tab) Blog'
+        buy_sell: 'User Profile > (tab) Products'
+        services: 'User Profile > (tab) Services'
+        reviews: 'User Profile > (tab) Reviews'
+
+
   user_blog:
     titles:
       index: 'Blog posts'
