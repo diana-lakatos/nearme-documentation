@@ -24,7 +24,11 @@ class Dashboard::BaseController < ApplicationController
     "registrations/edit",
     "registrations/social_accounts",
     "dashboard/user_blog/blog_controller",
-    "dashboard/user_blog/blog_posts_controller"
+    "dashboard/user_blog/blog_posts_controller",
+    "registrations/show/buy-sell",
+    "registrations/show/services",
+    "registrations/show/reviews",
+    "registrations/show/blog"
   ]
 
   private
