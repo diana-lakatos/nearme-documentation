@@ -72,9 +72,9 @@ module InstanceAdminHelper
     translation = t t_key
     return translation unless translation.include?('translation_missing')
 
-    name = controller.split('/').map(&:capitalize).join(' > ')
+    name = controller.split('/').map(&:capitalize).map(&:humanize).join(' > ')
     tab_name = (name.include?('#') ? name.match(/#(.+)/)[1] : '').capitalize
-    tab_name = " > (tab) #{tab_name}" unless tab_name.empty?
+    tab_name = " > #{tab_name}" unless tab_name.empty?
     "#{name.gsub(/#(.+)/, '')}#{tab_name}"
   end
 end

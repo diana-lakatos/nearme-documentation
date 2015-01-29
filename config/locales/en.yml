@@ -243,10 +243,10 @@ en:
   hidden_items:
     registrations:
       show:
-        blog: 'User Profile > (tab) Blog'
-        buy_sell: 'User Profile > (tab) Products'
-        services: 'User Profile > (tab) Services'
-        reviews: 'User Profile > (tab) Reviews'
+        blog: 'User Profile > Blog'
+        buy_sell: 'User Profile > Products'
+        services: 'User Profile > Services'
+        reviews: 'User Profile > Reviews'
 
 
   user_blog:
