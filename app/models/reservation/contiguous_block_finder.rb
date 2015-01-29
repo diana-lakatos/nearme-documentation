@@ -15,7 +15,7 @@ class Reservation::ContiguousBlockFinder
     current_start, previous_date = nil, nil
     dates.each do |date|
       if !previous_date || !contiguous?(previous_date, date)
-        current_start = date 
+        current_start = date
       end
 
       blocks[current_start] << date

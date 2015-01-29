@@ -1,5 +1,7 @@
 .dash-head.clearfix
-  %p MANAGE LISTINGS > LIST NEW ITEM
+  = link_to 'MANAGE LISTINGS', dashboard_transactable_type_transactables_path(@transactable_type)
+  &gt;
+  %p LIST NEW ITEM
 .dash-body
   = simple_form_for ["dashboard", @transactable_type, @transactable], wrapper: :bs3, :html => { :multipart => true, id: 'listing-form' } do |f|
 

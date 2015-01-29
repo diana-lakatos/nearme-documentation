@@ -64,21 +64,17 @@ class Billing::Gateway::Processor::Incoming::Fetch < Billing::Gateway::Processor
     return protocol + host + path
   end
 
-  def charge(amount, reference, token)
-    @mns_params = reference.reservation.payment_response_params
-
-    unless verify
-      raise Billing::Gateway::PaymentAttemptError, "Failed authorization of Fetch MNS response"
-    end
+  def charge(amount, payment, token)
+    @mns_params = payment.payment_response_params
 
     @charge = Charge.create(
       amount: amount,
-      reference: reference,
+      payment: payment,
       currency: @currency,
       user_id: @user.id,
     )
 
-    if mns_params["transaction_status"] == '2'
+    if verify && mns_params["transaction_status"] == '2'
       charge_successful(mns_params)
     else
       charge_failed(mns_params)

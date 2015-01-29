@@ -300,7 +300,7 @@ module Utils
           reservation.update_attribute :payment_status, Reservation::PAYMENT_STATUSES[:paid]
           reservation.update_attribute :payment_method, "credit_card"
 
-          reservation_charge = reservation.reservation_charges.create!(
+          payment = reservation.payments.create!(
             subtotal_amount: reservation.subtotal_amount,
             service_fee_amount: reservation.service_fee_amount,
             paid_at: Time.zone.now
@@ -309,14 +309,14 @@ module Utils
           charge = Charge.new(
             :amount => reservation.total_amount_cents,
             :currency => reservation.currency,
-            :reference => reservation_charge,
+            :reference => payment,
             :success => true
           )
           charge.user = reservation.owner
           charge.save!
 
           payment_transfer = listing.company.payment_transfers.create!(
-            reservation_charges: [reservation_charge]
+            payments: [payment]
           )
 
           payment_transfer.mark_transferred

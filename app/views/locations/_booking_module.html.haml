@@ -24,7 +24,7 @@
               = "#{money_without_cents_and_with_symbol(listing.hourly_price)}"
             - else
               = '-'
-            %span.period   PER HOUR
+            %span.period= t('reservations.per_hour')
         - else
           - if listing.transactable_type.pricing_options['daily']
             %span.label
@@ -32,7 +32,7 @@
                 = "#{money_without_cents_and_with_symbol(listing.daily_price)}"
               - else
                 = '-'
-              %span.period   PER DAY
+              %span.period= listing.overnight_booking? ? t('reservations.per_night') : t('reservations.per_day')
 
           - if listing.transactable_type.pricing_options['weekly']
             %span.label
@@ -40,7 +40,7 @@
                 = "#{money_without_cents_and_with_symbol(listing.weekly_price)}"
               - else
                 = '-'
-              %span.period   PER WEEK
+              %span.period= t('reservations.per_week')
 
           - if listing.transactable_type.pricing_options['monthly']
             %span.label
@@ -48,7 +48,7 @@
                 = "#{money_without_cents_and_with_symbol(listing.monthly_price)}"
               - else
                 = '-'
-              %span.period   PER MONTH
+              %span.period= t('reservations.per_month')
 
       .clearfix
       - if params[:controller] != 'locations/listings'

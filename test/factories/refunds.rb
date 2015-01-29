@@ -1,7 +1,7 @@
 FactoryGirl.define do
 
   factory :refund do
-    association(:reference, :factory => :reservation_charge)
+    association(:payment)
     created_at { Time.zone.now }
     success true
     amount 1000

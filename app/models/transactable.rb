@@ -119,6 +119,9 @@ class Transactable < ActiveRecord::Base
     end
   end
 
+  def overnight_booking?
+    !hourly_reservations? && transactable_type.overnight_booking?
+  end
 
   # Trigger clearing of all existing availability rules on save
   def defer_availability_rules=(clear)
@@ -282,6 +285,14 @@ class Transactable < ActiveRecord::Base
 
   def first_available_date
     date = Date.tomorrow
+
+    max_date = date + 31.days
+    date = date + 1.day until availability_for(date) > 0 || date==max_date
+    date
+  end
+
+  def second_available_date
+    date = first_available_date + 1.day
 
     max_date = date + 31.days
     date = date + 1.day until availability_for(date) > 0 || date==max_date

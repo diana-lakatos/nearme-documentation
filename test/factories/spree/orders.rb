@@ -31,6 +31,10 @@ FactoryGirl.define do
         order.update!
       end
 
+      factory :order_waiting_for_delivery do
+        state 'delivery'
+      end
+
       factory :order_waiting_for_payment do
         state 'payment'
       end

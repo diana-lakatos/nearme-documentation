@@ -54,6 +54,10 @@ class DatePresenter
     I18n.t('day', count: days).titleize
   end
 
+  def nights_in_words
+    I18n.t('night', count: days).titleize
+  end
+
   def days
     @dates_count ||= dates.count
   end
