@@ -4,7 +4,7 @@
 @import "fonts";
 
 body.user-blog {
-  background-color: white;
+  background-color: $white;
 
   .container-fluid.header-container {
     margin-top: 60px;
@@ -139,7 +139,6 @@ body.user-blog {
       }
 
       img {
-//        max-height: 15%;
         vertical-align: bottom;
 
         &.blog-logo {
@@ -237,7 +236,6 @@ body.user-blog {
         background-size: 56px 56px;
         background-position: center center;
         border-radius: 50%;
-//        border: 7px solid white;
       }
     }
   }
@@ -406,7 +404,7 @@ body.user-blog {
             background-size: 112px 112px;
             background-position: center center;
             border-radius: 50%;
-            border: 1px solid white;
+            border: 1px solid $white;
           }
         }
 

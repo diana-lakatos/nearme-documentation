@@ -344,19 +344,10 @@ DesksnearMe::Application.routes.draw do
   end
 
 
-
   match '/auth/:provider/callback' => 'authentications#create', via: [:get, :post]
   get "/auth/failure", to: "authentications#failure"
   devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions', :passwords => 'passwords' }
   devise_scope :user do
-
-    scope :users do
-      get 'blog', to: 'user_blog/blog#index', as: 'user_blog'
-      get 'blog/settings', to: 'user_blog/blog#settings', as: 'user_blog_settings'
-      patch 'blog/settings', to: 'user_blog/blog#update_settings', as: 'user_blog_update_settings'
-      resources :user_blog_posts, path: 'blog', controller: 'user_blog/blog_posts'
-    end
-
     post "users/avatar", :to => "registrations#avatar", :as => "avatar"
     get "users/edit_avatar", :to => "registrations#edit_avatar", :as => "edit_avatar"
     match "users/update_avatar", :to => "registrations#update_avatar", :as => "update_avatar", via: [:patch, :put]
@@ -391,7 +382,7 @@ DesksnearMe::Application.routes.draw do
   end
 
   namespace :dashboard do
-    resource  :analytics
+    resource :analytics
     resources :companies, :only => [:edit, :update, :show]
     resources :images
     resources :locations
@@ -428,7 +419,7 @@ DesksnearMe::Application.routes.draw do
     resources :transactable_types do
       resources :transactables
       resources :data_uploads, controller: 'transactable_types/data_uploads' do
-         collection do
+        collection do
           get :status
           get :download_csv_template
           get :download_current_data_csv
@@ -508,6 +499,10 @@ DesksnearMe::Application.routes.draw do
         get :rejection_form
         post :host_cancel
       end
+    end
+
+    resource :blog, controller: 'user_blog/blog', only: [:show, :edit, :update] do
+      resources :posts, controller: 'user_blog/blog_posts'
     end
   end
 
@@ -631,7 +626,7 @@ DesksnearMe::Application.routes.draw do
 
     resources :photos
 
-    resources :listings, only: [:show,:create, :update, :destroy] do
+    resources :listings, only: [:show, :create, :update, :destroy] do
       member do
         post 'reservation'
         post 'availability'

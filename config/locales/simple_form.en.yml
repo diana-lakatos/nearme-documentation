@@ -26,24 +26,24 @@ en:
 
       user_blog:
         enabled: 'Enable Blog'
-        name: 'NAME'
+        name: 'Name / Title'
         header_image: 'HEADER'
         header_text: 'HEADER TEXT'
         header_motto: 'HEADER MOTTO'
-        header_logo: 'HEADER LOGO'
-        header_icon: 'HEADER ICON'
-        facebook_app_id: 'FACEBOOK APP'
+        header_logo: 'Header Logo'
+        header_icon: 'Header Icon'
+        facebook_app_id: 'Facebook app ID'
 
       user_blog_post:
-        title: 'POST TITLE'
-        published_at: 'PUBLISH DATE'
-        slug: 'SLUG'
-        hero_image: 'HERO IMAGE'
-        content: 'CONTENT'
-        excerpt: 'EXCERPT'
-        author_name: 'AUTHOR NAME'
-        author_biography: 'AUTHOR BIO'
-        logo: 'LOGO'
+        title: 'Post title'
+        published_at: 'Publish date'
+        slug: 'Slug'
+        hero_image: 'Hero image'
+        content: 'Content'
+        excerpt: 'Excerpt'
+        author_name: 'Author name'
+        author_biography: 'Author Bio'
+        logo: 'Logo'
 
       theme:
         favicon_image: 'Favicon (16 x 16px or 32 x 32px)'
@@ -123,8 +123,8 @@ en:
         title: 'What is the title of the post?'
         published_at: 'When will this be published'
         slug: 'Enter a slug'
-        author_name: 'Enter a slug'
-        author_bio: 'Enter a slug'
+        author_name: ''
+        author_bio: ''
 
       companies:
         name: 'Enter your business name'

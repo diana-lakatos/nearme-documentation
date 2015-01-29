@@ -5,7 +5,7 @@ class CreateUserBlogs < ActiveRecord::Migration
 
   def change
     create_table :user_blogs do |t|
-      t.integer :user_id
+      t.integer :user_id, index: true
       t.boolean :enabled, default: false
       t.string :name
       t.string :header_image

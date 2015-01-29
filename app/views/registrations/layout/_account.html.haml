@@ -6,7 +6,7 @@
           %ul.nav
             %li
               = link_to edit_user_registration_path, :class => (active_tab == :account) ? 'active' : '' do
-                %span Edit Profile 
+                %span Edit Profile
             %li
               = link_to social_accounts_path, :class => (active_tab == :trust_and_verification) ? 'active' : '' do
                 %span Trust &amp; Verification
@@ -15,7 +15,7 @@
                 %span Notification Preferences
             - if platform_context.instance.user_blogs_enabled?
               %li
-                = link_to user_blog_settings_path, class: (active_tab == :user_blog) ? 'active' : '' do
-                  %span Blog
+                -#= link_to user_blog_settings_path, class: (active_tab == :user_blog) ? 'active' : '' do
+                -#  %span Blog
 
 = yield

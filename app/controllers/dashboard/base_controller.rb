@@ -22,7 +22,9 @@ class Dashboard::BaseController < ApplicationController
     "dashboard/white_labels",
     "dashboard/tickets",
     "registrations/edit",
-    "registrations/social_accounts"
+    "registrations/social_accounts",
+    "dashboard/user_blog/blog_controller",
+    "dashboard/user_blog/blog_posts_controller"
   ]
 
   private

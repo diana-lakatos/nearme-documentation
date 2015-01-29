@@ -4,7 +4,7 @@
 
 .blog-container
   #user-blog-posts.blog-posts
-    = render partial: '/user_blog/blog_posts/excerpt', collection: @blog_posts, as: :blog_post
+    = render partial: 'dashboard/user_blog/blog_posts/excerpt', collection: @blog_posts, as: :blog_post
 
   #infinite-scrolling
     = will_paginate @blog_posts

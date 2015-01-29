@@ -1,26 +1,31 @@
-class UserBlog::BlogController < UserBlog::BaseController
+class Dashboard::UserBlog::BlogController < Dashboard::UserBlog::BaseController
 
-  def index
+  before_filter :find_user_blog
+
+  def show
     @user_blog_posts = UserBlogPostDecorator.decorate_collection(current_user.blog_posts.by_date
                                                                  .paginate(page: params[:page], per_page: 10))
   end
 
-  def settings
-    @user_blog = current_user.blog.decorate
+  def edit
+    @blog = @blog.decorate
   end
 
-  def update_settings
-    @user_blog = current_user.blog
-    if @user_blog.update_attributes(user_blog_params)
+  def update
+    if @blog.update_attributes(user_blog_params)
       flash[:success] = t('flash_messages.user_blog.settings_saved')
-      redirect_to user_blog_path
+      redirect_to edit_dashboard_blog_path
     else
-      @user_blog = @user_blog.decorate
-      render :settings
+      @blog = @blog.decorate
+      render :edit
     end
   end
 
   private
+
+  def find_user_blog
+    @blog = current_user.blog
+  end
 
   def user_blog_params
     params.require(:user_blog).permit(secured_params.user_blog)

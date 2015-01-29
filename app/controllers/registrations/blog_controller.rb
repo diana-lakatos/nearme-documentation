@@ -1,5 +1,6 @@
 class Registrations::BlogController < ApplicationController
   before_filter :check_blog_enabled
+  before_filter :set_theme
 
   def index
     @user = blog_user
@@ -17,6 +18,10 @@ class Registrations::BlogController < ApplicationController
   end
 
   private
+
+  def set_theme
+    @theme_name = 'user-blog'
+  end
 
   def blog_user
     @blog_user ||= User.find(params[:user_id]).decorate

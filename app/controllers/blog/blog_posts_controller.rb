@@ -7,7 +7,7 @@ class Blog::BlogPostsController < Blog::ApplicationController
 
   def index
     @instance_blog_posts = @blog_instance.blog_posts.published
-    @user_blog_posts = instance.user_blog_posts.includes(:user).published
+    @user_blog_posts = instance.user_blog_posts.includes(:user).published.highlighted
     @blog_posts = @instance_blog_posts + @user_blog_posts
     @blog_posts = @blog_posts.sort_by(&:published_at).reverse.paginate(page: params[:page], per_page: 10)
   end

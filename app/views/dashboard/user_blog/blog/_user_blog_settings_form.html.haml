@@ -1,0 +1,13 @@
+= simple_form_for @blog, url: dashboard_blog_path, wrapper: :bs3, html: { multipart: true } do |f|
+
+  = f.input :enabled
+  = f.input :name
+
+  = f.input :header_logo
+  = @blog.image_preview(:header_logo)
+
+  = f.input :header_icon
+  = @blog.image_preview(:header_icon)
+
+  .submit-bar
+    = f.submit t('user_blog.buttons.save'), class: 'btn medium blue'

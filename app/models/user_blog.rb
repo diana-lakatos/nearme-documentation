@@ -13,6 +13,8 @@ class UserBlog < ActiveRecord::Base
   mount_uploader :header_icon, BaseImageUploader
 
   def test_enabled
-    enabled? ? self : (raise NotFound)
+    raise NotFound unless instance.user_blogs_enabled?
+    raise NotFound unless enabled?
+    self
   end
 end

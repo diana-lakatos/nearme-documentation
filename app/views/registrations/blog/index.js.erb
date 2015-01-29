@@ -1,4 +1,4 @@
-$('#user-blog-posts').append('<%= j render partial: '/user_blog/blog_posts/excerpt', collection: @blog_posts,
+$('#user-blog-posts').append('<%= j render partial: 'dashboard/user_blog/blog_posts/excerpt', collection: @blog_posts,
                                            as: :blog_post %>');
 
 <% if @blog_posts.next_page %>

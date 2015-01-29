@@ -1,0 +1,10 @@
+- title t('user_blog.titles.new')
+
+.dash-head.clearfix
+  %p= t 'user_blog.nav.new'
+
+.dash-body
+  = simple_form_for @blog_post, url: dashboard_blog_posts_path, wrapper: :bs3, html: { multipart: true } do |f|
+    = render 'user_blog_post_form', f: f
+    .submit-bar
+      = f.submit t('user_blog.buttons.save'), class: 'btn medium blue'

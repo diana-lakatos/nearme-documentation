@@ -244,6 +244,7 @@ section .row {
 
 .dash-head-btn .btn {
   font-size: 14px;
+  margin-left: 5px;
 }
 
 h4.reservation-emphasis {
@@ -261,6 +262,45 @@ h4.other-reservation-separator {
 .recurring-booking-summary {
   margin-bottom: 20px;
 }
+
+/*===== BLOG =====*/
+.upload {
+  display: inline-block;
+  width: 125px;
+  text-align: center;
+  padding: 5px 10px;
+  border: solid $color-light-gray 1px;
+
+  input[type="file"] {
+    display: none;
+  }
+
+  label {
+    display: block;
+  }
+
+  span {
+    display: inline-block;
+    padding-top: 5px;
+    margin-left: 15px;
+  }
+
+}
+
+.upload:hover {
+  cursor: pointer;
+}
+
+#user_blog_post_published_at {
+  width: 60%;
+  display: block;
+  background: #fff asset-url("dashboard/arrow-down.png") right no-repeat;
+}
+
+#user_blog_post_published_at:hover {
+  cursor: pointer;
+}
+
 
 @media (max-width: 1000px) {
   section {
