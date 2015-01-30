@@ -24,6 +24,7 @@ class Dashboard::UserBlog::BlogPostsController < Dashboard::UserBlog::BaseContro
   end
 
   def edit
+    @blog_post.published_at = @blog_post.published_at.to_date
   end
 
   def update
