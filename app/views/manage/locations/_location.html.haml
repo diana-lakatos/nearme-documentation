@@ -1,6 +1,6 @@
 = simple_form_for [:manage, location], :html => { :class => "form-horizontal", :multipart => true, :id => 'location-form' } do |f|
 
-  = render :partial => 'locations/location_form', :locals => { :f => f, :location => location }
+  = render partial: 'locations/location_form', locals: { f: f, location: location }
 
   - if location.persisted?
     = link_to manage_location_path(@location), :method => :delete, :confirm => 'Are you sure?', :class => "delete delete-location" do

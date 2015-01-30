@@ -26,3 +26,7 @@
 //= require sections/support/attachment_form
 //= require sections/support/ticket_message_controller
 //= require ./instance_admin/script
+
+//= require instance_admin/jquery-ui-datepicker
+//= require instance_admin/sections/rating_systems
+//= require instance_admin/sections/reviews

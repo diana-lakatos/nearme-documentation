@@ -23,7 +23,8 @@ class InstanceAdmin::BaseController < ApplicationController
     'transactable_types' => { controller: '/instance_admin/manage/transactable_types', default_action: 'index' },
     'support'            => { controller: '/instance_admin/manage/support', default_action: 'index' },
     'faq'                => { controller: '/instance_admin/manage/support/faqs', default_action: 'index' },
-    'workflows'          => { controller: '/instance_admin/manage/workflows', default_action: 'index' }
+    'workflows'          => { controller: '/instance_admin/manage/workflows', default_action: 'index' },
+    'reviews'            => { controller: '/instance_admin/manage/reviews', default_action: 'index' }
   }
 
   MANAGE_BLOG_CONTROLLERS = {

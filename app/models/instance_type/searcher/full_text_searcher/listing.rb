@@ -1,10 +1,11 @@
 class InstanceType::Searcher::FullTextSearcher::Listing
   include InstanceType::Searcher::FullTextSearcher
 
-  def initialize(params)
+  def initialize(transactable_type, params)
+    @transactable_type = transactable_type
     set_options_for_filters
     @params = params
-    @results = Transactable.searchable.where("CAST(avals(properties) AS text) @@ :q", q: params['loc'])
+    @results = @transactable_type.transactables.searchable.where("CAST(avals(properties) AS text) @@ :q", q: params['loc'])
   end
 
   def filters

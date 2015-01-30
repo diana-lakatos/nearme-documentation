@@ -2,7 +2,7 @@
   - if locations.present?
     - locations.each do |location|
       %h2 #{location.name}
-      %p You currently have no reservations. Promote your #{platform_context.bookable_noun.pluralize} by tweeting or sharing a direct link!
+      %p You currently have no reservations. Promote your locations by tweeting or sharing a direct link!
 
       .text-center.sharelocation
         %span
@@ -29,5 +29,5 @@
         }
 
   - else
-    %p You haven't added a #{platform_context.bookable_noun} yet!
+    %p You haven't added anything yet!
 

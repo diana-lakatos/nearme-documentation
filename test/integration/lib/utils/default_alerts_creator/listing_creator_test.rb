@@ -36,7 +36,7 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
         assert_equal "[#{@platform_context.decorate.name}] #{@transactable.creator.first_name}, you're almost ready for your first guests!", mail.subject
         assert mail.html_part.body.include?(@transactable.creator.first_name)
         assert_equal [@transactable.creator.email], mail.to
-        assert mail.html_part.body.include?("There are people looking for Desks in your area")
+        assert_contains "There are people looking for #{@transactable.transactable_type.bookable_noun.pluralize} in your area", mail.html_part.body
         assert_contains 'href="http://custom.domain.com/', mail.html_part.body
         assert_not_contains 'href="http://example.com', mail.html_part.body
         assert_not_contains 'href="/', mail.html_part.body
@@ -78,7 +78,7 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
       end
       mail = ActionMailer::Base.deliveries.last
       assert_equal "#{@sharer.name} has shared a #{PlatformContext.current.decorate.bookable_noun} with you on #{PlatformContext.current.decorate.name}", mail.subject
-      assert_contains "#{@sharer.name} has shared a #{PlatformContext.current.decorate.bookable_noun} with you!", mail.html_part.body
+      assert_contains "#{@sharer.name} has shared a #{@listing.name} with you!", mail.html_part.body
       assert_contains "View #{@listing.name} on #{PlatformContext.current.decorate.name}", mail.html_part.body
       assert_equal ['friend@example.com'], mail.to
       assert_contains 'href="http://custom.domain.com/', mail.html_part.body

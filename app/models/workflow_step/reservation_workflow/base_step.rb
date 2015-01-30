@@ -20,4 +20,8 @@ class WorkflowStep::ReservationWorkflow::BaseStep < WorkflowStep::BaseStep
     { reservation: @reservation, user: lister, host: enquirer, listing: @reservation.listing }
   end
 
+  def transactable_type_id
+    @reservation.try(:listing).try(:transactable_type_id)
+  end
+
 end

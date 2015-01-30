@@ -20,4 +20,8 @@ class WorkflowStep::ListingWorkflow::BaseStep < WorkflowStep::BaseStep
     { listing: @transactable }
   end
 
+  def transactable_type_id
+    @transactable.transactable_type_id
+  end
+
 end

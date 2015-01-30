@@ -29,7 +29,7 @@ class Location < ActiveRecord::Base
   belongs_to :administrator, class_name: "User", :inverse_of => :administered_locations
   belongs_to :instance
   belongs_to :creator, class_name: "User"
-  delegate :company_users, :url, :service_fee_guest_percent, :service_fee_host_percent, to: :company, allow_nil: true
+  delegate :company_users, :url, to: :company, allow_nil: true
   delegate :phone, :to => :creator, :allow_nil => true
   delegate :address, :address2, :formatted_address, :postcode, :suburb, :city, :state, :country, :street, :address_components,
    :latitude, :longitude, :state_code, :iso_country_code, to: :location_address, allow_nil: true
@@ -48,7 +48,6 @@ class Location < ActiveRecord::Base
   has_many :availability_rules, -> { order 'day ASC' }, :as => :target
 
   has_many :impressions, :as => :impressionable, :dependent => :destroy
-  has_many :reviews, :through => :listings
 
   validates_presence_of :company, :currency, :location_type_id
   validates_presence_of :description, :if => :name_and_description_required

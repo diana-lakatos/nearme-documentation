@@ -128,6 +128,9 @@ class CarrierWave::InkFilePickerTest < ActiveSupport::TestCase
   end
 
   context '#photo' do
+    setup do
+      stub_image_url('http://www.example.com/image.jpg')
+    end
 
     should 'respond to image_original_url ' do
       @photo = FactoryGirl.create(:photo, :image_original_url => 'http://www.example.com/image.jpg')

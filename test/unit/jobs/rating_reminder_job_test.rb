@@ -50,7 +50,7 @@ class RatingReminderJobTest < ActiveSupport::TestCase
     setup do
       @reservation = FactoryGirl.create(:past_reservation,
                                         request_guest_rating_email_sent_at: Time.zone.now,
-                                        request_host_rating_email_sent_at: Time.zone.now)
+                                        request_host_and_product_rating_email_sent_at: Time.zone.now)
     end
 
     should 'not send any reminders while reservation was already notified' do

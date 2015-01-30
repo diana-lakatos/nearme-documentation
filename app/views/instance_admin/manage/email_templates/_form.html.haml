@@ -9,6 +9,9 @@
         = f.input :path, label: 'Template path', :placeholder => 'email/path', disabled: @email_template.persisted? && WorkflowAlert.for_email_path(@email_template.path).count > 0, input_html: { class: 'form-control' }
     .row
       .input-container.col-xs-12
+        = f.association :transactable_type
+    .row
+      .input-container.col-xs-12
         = f.input :format, collection: ['text', 'html'], input_html: { class: 'form-control' }
     .row
       .input-container.col-xs-12

@@ -214,7 +214,7 @@ section .row {
 
 .error {
 
-  input, textarea {
+  input:not(.select2-input), textarea, .select2-container-multi ul.select2-choices {
     border: solid #ec8473 1px !important; //TODO remove important here
   }
 

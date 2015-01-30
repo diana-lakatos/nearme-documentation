@@ -14446,15 +14446,17 @@ ENmDmoS10Z3NPgn9uLDQzvq6uOeSnpIPuHICWabVy1KDzywlpyGPkMxjjc+S
 Nxcn8151A6AgaZ9MNq2BZIIjhprrM1/2bm+2h91r9jjt/hKEElcElIL0Hqkt
 sDK2aqkcGtlBIge3cj/HTGjHjEXcjk6Bpa1jVLhHtjkJ3Fem4ZKMaEJaP//Z"
 
-    instance = Instance.where(name: 'DesksNearMe').first
-    io = CarrierStringIO.new(Base64.decode64(base64_encoded_image))
-    io.original_filename = "startup-hq.jpg"
-    io.content_type = "image/jpeg"
+    if Object.const_defined?('Instance')
+      instance = Instance.where(name: 'DesksNearMe').first
+      io = CarrierStringIO.new(Base64.decode64(base64_encoded_image))
+      io.original_filename = "startup-hq.jpg"
+      io.content_type = "image/jpeg"
 
-    Page.create(instance: instance,
-                content: content,
-                path: 'about',
-                hero_image: io)
+      Page.create(instance: instance,
+                  content: content,
+                  path: 'about',
+                  hero_image: io) if instance.present?
+    end
   end
 
   def down

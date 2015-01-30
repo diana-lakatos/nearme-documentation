@@ -42,11 +42,15 @@ class @BoardingForm
 
   enableZoneSelect: (select) ->
     if $(select).val() == 'state_based'
-      @form.find(".state_based_select").show().removeAttr('disabled');
-      @form.find(".country_based_select").hide().attr('disabled','disabled');
+      @form.find(".state_based_select").parent().show()
+      @form.find(".state_based_select").removeAttr('disabled');
+      @form.find(".country_based_select").parent().hide()
+      @form.find(".country_based_select").attr('disabled','disabled');
     else
-      @form.find(".country_based_select").show().removeAttr('disabled');
-      @form.find(".state_based_select").hide().attr('disabled','disabled');
+      @form.find(".country_based_select").parent().show()
+      @form.find(".country_based_select").removeAttr('disabled');
+      @form.find(".state_based_select").parent().hide()
+      @form.find(".state_based_select").attr('disabled','disabled');
 
   processImage: (event, container) ->
     $(container).find('label').hide()

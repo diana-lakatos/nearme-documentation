@@ -27,13 +27,14 @@ class Dashboard::BaseController < ApplicationController
     "registrations/show#buy-sell",
     "registrations/show#services",
     "registrations/show#reviews",
-    "registrations/show#blog_posts"
+    "registrations/show#blog_posts",
+    "dashboard/reviews"
   ]
 
   private
 
   def find_company
-    @company = current_user.try(:companies).try(:first)
+    @company = current_user.try(:companies).try(:first).try(:decorate)
   end
 
   def redirect_if_no_company

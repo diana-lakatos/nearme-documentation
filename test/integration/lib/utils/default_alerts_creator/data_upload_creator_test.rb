@@ -62,7 +62,6 @@ class Utils::DefaultAlertsCreator::DataUploadCreatorTest < ActionDispatch::Integ
         assert_contains "Updated entities: User: 0, Company: 0, Location: 9, Transactable: 8, Photo: 7", mail.text_part.body
         assert_contains "Deleted entities: User: 1", mail.text_part.body
         assert_contains "http://custom.domain.com/dashboard/transactable_types/#{@data_upload.transactable_type_id}/transactables/new", mail.text_part.body
-        assert_not_contains 'http://example.com', mail.html_part.body
       end
 
       should 'not include deleted if irrelevant' do

@@ -211,6 +211,11 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
+      resources :reviews, only: [:index]
+      resources :rating_systems, only: [:index] do
+        put '/update_systems', to: 'rating_systems#update_systems', on: :collection
+      end
+
       resources :approval_requests, only: [:index, :edit, :update]
       resources :approval_request_templates do
         resources :approval_request_attachment_templates, controller: 'approval_request_templates/approval_request_attachment_templates'
@@ -231,7 +236,8 @@ DesksnearMe::Application.routes.draw do
         resources :custom_attributes, controller: 'instance_profile_types/custom_attributes'
       end
 
-      resources :transactable_types, :only => [:index, :edit, :update, :show] do
+      resources :transactable_types do
+        put :change_state, on: :member
         resources :custom_attributes, controller: 'transactable_types/custom_attributes'
         resources :data_uploads, controller: 'transactable_types/data_uploads' do
           collection do
@@ -239,6 +245,11 @@ DesksnearMe::Application.routes.draw do
           end
           member do
             post :schedule_import
+          end
+        end
+        resources :form_components, controller: 'transactable_types/form_components' do
+          member do
+            patch :update_rank
           end
         end
       end
@@ -302,6 +313,13 @@ DesksnearMe::Application.routes.draw do
 
   resources :blog_posts, path: 'blog', only: [:index, :show], controller: 'blog/blog_posts'
 
+  resources :transactable_types, only: [] do
+    resources :locations, :only => [] do
+      member do
+        get "(:listing_id)", :to => "locations#show", :as => ''
+      end
+    end
+  end
   resources :locations, :only => [] do
     member do
       get "(:listing_id)", :to => "locations#show", :as => ''
@@ -455,6 +473,7 @@ DesksnearMe::Application.routes.draw do
       end
     end
     resource :payouts, except: [:index, :show, :new, :create, :destroy]
+    resources :reviews, :only => [:index, :create, :update, :destroy]
 
     resources :user_reservations, :except => [:update, :destroy, :show] do
       member do
@@ -495,6 +514,11 @@ DesksnearMe::Application.routes.draw do
         get :rejection_form
         post :host_cancel
         get :request_payment
+      end
+    end
+
+    resources :transactable_types, only: [] do
+      resources :listings, only: [:new, :create] do
       end
     end
 
@@ -596,11 +620,18 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
+
+  resources :transactable_types do
+    get '/new', as: "new_space_wizard", controller: 'transactable_types/space_wizard', action: 'new'
+    get "/list", as: "space_wizard_list", controller: 'transactable_types/space_wizard', action: 'list'
+    post "/list", controller: 'transactable_types/space_wizard', action: 'submit_listing'
+    post "/submit_item", controller: 'transactable_types/space_wizard', action: 'submit_item'
+  end
+
   scope '/space' do
     get '/new' => 'space_wizard#new', :as => "new_space_wizard"
     get "/list" => "space_wizard#list", :as => "space_wizard_list"
     post "/list" => "space_wizard#submit_listing"
-    post "/submit_item" => "space_wizard#submit_item", :as => "space_wizard_submit_item"
     match "/list" => "space_wizard#submit_listing", via: [:put, :patch]
     match "/photo" => "space_wizard#submit_photo", :as => "space_wizard_photo", via: [:post, :put]
     delete "/photo/:id" => "space_wizard#destroy_photo", :as => "destroy_space_wizard_photo"
@@ -623,9 +654,6 @@ DesksnearMe::Application.routes.draw do
 
     get 'iplookup', :to => 'iplookup#index'
 
-    resources :guest_ratings, :only => [:create]
-    resources :host_ratings, :only => [:create]
-
     resources :locations do
       collection do
         get 'list'
@@ -647,7 +675,6 @@ DesksnearMe::Application.routes.draw do
         post 'search'
         post 'query'
       end
-      resource :rating, only: [:show, :update, :destroy]
     end
 
     resources :reservations do
