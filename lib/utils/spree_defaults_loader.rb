@@ -57,20 +57,23 @@ module Utils
     end
 
     def load_zones
-      eu_vat = Spree::Zone.create!(name: "EU_VAT", description: "Countries that make up the EU VAT zone.")
-      north_america = Spree::Zone.create!(name: "North America", description: "USA + Canada", default_tax: true)
+      eu_vat = Spree::Zone.new(name: "EU_VAT", description: "Countries that make up the EU VAT zone.")
+      north_america = Spree::Zone.new(name: "North America", description: "USA + Canada", default_tax: true)
 
       eu_countries = %w(Austria Belgium Bulgaria Croatia Cyprus Czech\ Republic Denmark Estonia Finland
                         France Germany Greece Hungary Ireland Italy Latvia Lithuania Luxembourg Malta Netherlands Poland
                         Portugal Romania Slovakia Slovenia Spain Sweden United\ Kingdom)
 
       eu_countries.each do |name|
-        eu_vat.zone_members.create!(zoneable: Spree::Country.find_by!(name: name))
+        eu_vat.zone_members.build(zoneable: Spree::Country.find_by!(name: name))
       end
 
       ['United States', 'Canada'].each do |name|
-        north_america.zone_members.create!(zoneable: Spree::Country.find_by!(name: name))
+        north_america.zone_members.build(zoneable: Spree::Country.find_by!(name: name))
       end
+
+      eu_vat.save!
+      north_america.save!
     end
 
     def load_tax_categories_and_rates
