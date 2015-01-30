@@ -64,6 +64,11 @@ class Instance < ActiveRecord::Base
   has_one :instance_profile_type, -> { where(instance_id: PlatformContext.current.try(:instance).try(:id)) }
   has_many :data_uploads, as: :target
   has_many :instance_views
+  has_many :rating_systems, dependent: :destroy
+  has_many :reviews, dependent: :destroy
+  has_many :rating_questions
+  has_many :rating_answers
+  has_many :rating_hints
   serialize :pricing_options, Hash
 
   validates_presence_of :name

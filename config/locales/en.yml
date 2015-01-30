@@ -27,6 +27,9 @@ en:
   desk:
     reservation_rejected_body: "%{user} declined reservation with reason: %{reason}"
     reservation_rejected_title: "[internal] User has declined reservation"
+  rating_question:
+    validation:
+      question_quantity: "Only %{number} questions or less for one rating system"
   manage:
     companies:
       theme_image_deleted: "That image has been deleted."
@@ -58,7 +61,43 @@ en:
           manage: "Manage Product: Images"
           title: "Product Images"
           new_title: "New Product Image"
-
+  instance_admin:
+    manage:
+      reviews:
+        index:
+          today: "Today"
+          yesterday: "Yesterday"
+          week_ago: "Last week"
+          month_ago: "Last month"
+          3_months_ago: "Last 3 months"
+          6_months_ago: "Last 6 months"
+          title_all: "All"
+          date_range: "Date range"
+          from: "From:"
+          to: "To:"
+          apply_filter: "Apply filter"
+          search_by_keyword: "Search by keyword"
+          more_filters: "More filters"
+          export_csv: "Export csv"
+          service: "Service"
+          rating: "Rating"
+          object: "Object"
+          user: "User"
+          date: "Date"
+    rating_systems:
+      index:
+        any_rating_system: "You don't have any rating system defined yet. Select a service below and create your first rating system."
+        define_title: "Define stars rating systems"
+        define_rating_systems: "Define rating systems"
+        stars_description: "Stars description"
+        define_question: "Define question to rate"
+        add_up_to_questions: "You can add up to %{number} questions"
+        enter_description: "Enter description"
+        save: "Save"
+    rating_reviews_shared:
+      header:
+        all_reviews: "All Reviews"
+        settings: "Settings"
   buy_sell_market:
     products:
       buttons:
@@ -231,11 +270,41 @@ en:
       notification_preferences: 'Notification Preferences'
       user_recurring_bookings: 'My Orders'
       host_recurring_bookings: 'Orders Received'
+      reviews: 'Reviews'
 
       your_shop: 'YOUR SHOP'
       admin: 'ADMIN'
       account: 'ACCOUNT'
       menu: 'MENU'
+    reviews:
+      templates:
+        comments: "Comments"
+        submit_review: "Submit Review"
+        create_comment_congratulations: "Thanks! Your feedback was successfully submitted!"
+      feedback:
+        seller_feedback: "Seller Feedback"
+        product_reviews: "Product Reviews"
+        guest_feedback: "Guest Feedback"
+        see_reviews_from: "See reviews from"
+        last_30_days: "Last 30 days"
+        past_6_months: "Past 6 months"
+        your_submitted_feedback: "Your submitted feedback"
+        edit: "Edit"
+        are_you_sure: "Are you sure?"
+        show_details: "Show details"
+        order_placed: "Order placed"
+        order: "Order #"
+        view_order_details: "View Order Details"
+        comments: "Comments"
+        view_seller_profile: "View Seller Profile"
+        contact_name_support: "Contact %{name} Support"
+        submit_review: "Submit Review"
+        leave: "Leave"
+        title: "Feedback"
+      index:
+        title: "Reviews"
+        rate_your_experience: "Rate Your Experience"
+        completed_feedback: "Completed Feedback"
 
   orders:
     index:
@@ -312,6 +381,7 @@ en:
     formats:
       day_and_month: "%^b %-d"
       only_date: "%B %d, %-Y"
+      day_month_year: "%m/%d/%Y"
   user_messages:
     inbox:
       one: "Inbox (1)"
@@ -350,3 +420,14 @@ en:
         no_errors: 'No validation errors encountered.'
         errors: 'Data has not been imported due to error during processing.'
         header:  'Data import for %{csv_identifier}'
+  decorators:
+    review:
+      today: 'Today'
+  helpers:
+    reviews:
+      user: 'User'
+      product: 'Product'
+  mailers:
+    rating:
+      experience_hosting: "How was your experience hosting %{name}?"
+      experience_at: "How was your experience at '%{name}'?"

@@ -611,13 +611,6 @@ class SecuredParams
     ]
   end
 
-  def rating
-    [
-      :comment,
-      :value
-    ]
-  end
-
   def company
     [
       :name,
@@ -837,5 +830,61 @@ class SecuredParams
 
   def nested(object)
     object + [:id, :_destroy]
+  end
+
+  def rating_systems
+    [
+      rating_systems: self.rating_system
+    ]
+  end
+
+  def rating_system
+    [
+      :subject, 
+      :active,
+      :transactable_type_id,
+      rating_hints_attributes: self.rating_hint,
+      rating_questions_attributes: self.nested(rating_question)
+    ]
+  end
+
+  def rating_hint
+    [
+      :id, 
+      :description
+    ]
+  end
+
+  def rating_question
+    [
+      :text,
+    ]
+  end
+
+  def review
+    [
+      :rating, 
+      :comment, 
+      :object, 
+      :date, 
+      :reservation_id,
+      :transactable_type_id,
+      :instance_id, 
+      :user_id
+    ]
+  end
+
+  def rating_answers
+    [
+      rating_answers: self.rating_answer
+    ]
+  end
+
+  def rating_answer
+    [
+      :id, 
+      :rating, 
+      :rating_question_id
+    ]
   end
 end

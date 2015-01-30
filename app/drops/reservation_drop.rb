@@ -39,22 +39,6 @@ class ReservationDrop < BaseDrop
     routes.dashboard_host_reservations_path
   end
 
-  def guest_rating_reservation_url
-    routes.guest_rating_path(@reservation.id, token: @reservation.listing.administrator.try(:temporary_token))
-  end
-
-  def guest_rating_reservation_url_with_tracking
-    routes.guest_rating_path(@reservation.id, token: @reservation.listing.administrator.try(:temporary_token), track_email_event: true)
-  end
-
-  def host_rating_reservation_url
-    routes.host_rating_path(@reservation.id, token: @reservation.owner.try(:temporary_token))
-  end
-
-  def host_rating_reservation_url_with_tracking
-    routes.host_rating_path(@reservation.id, token: @reservation.owner.try(:temporary_token), track_email_event: true)
-  end
-
   def export_to_ical_url
     routes.export_reservation_path(@reservation, format: :ics, token: @reservation.owner.try(:temporary_token))
   end
@@ -77,5 +61,9 @@ class ReservationDrop < BaseDrop
 
   def start_date
     @reservation.date.strftime('%b %e')
+  end
+
+  def reviews_reservation_url
+    routes.dashboard_reviews_path
   end
 end

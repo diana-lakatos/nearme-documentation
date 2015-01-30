@@ -8,7 +8,7 @@ class RatingReminderJob < Job
   def perform
     PlatformContext.clear_current
     reservations = Reservation.joins(:periods).confirmed.where('reservation_periods.date = ?', @date)
-    reservations = reservations.where("request_guest_rating_email_sent_at IS NULL OR request_host_rating_email_sent_at IS NULL")
+    reservations = reservations.where("request_guest_rating_email_sent_at IS NULL OR request_host_and_product_rating_email_sent_at IS NULL")
     reservations = reservations.select do |reservation|
       reservation.last_date >= @date && reservation.listing && reservation.location.local_time.hour == 12
     end
@@ -21,9 +21,9 @@ class RatingReminderJob < Job
         reservation.update_column(:request_guest_rating_email_sent_at, Time.zone.now)
       end
 
-      if reservation.request_host_rating_email_sent_at.blank?
+      if reservation.request_host_and_product_rating_email_sent_at.blank?
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::HostRatingRequested, reservation.id)
-        reservation.update_column(:request_host_rating_email_sent_at, Time.zone.now)
+        reservation.update_column(:request_host_and_product_rating_email_sent_at, Time.zone.now)
       end
     end
   end

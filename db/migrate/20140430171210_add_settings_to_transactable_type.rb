@@ -25,7 +25,7 @@ class AddSettingsToTransactableType < ActiveRecord::Migration
           pricing_validation[k.to_s]["max"] = instance.send("max_#{k}_price_cents") if instance.respond_to?("max_#{k}_price_cents")
         end
       end
-      tp.update_attribute(:pricing_options, instance.pricing_options)
+      tp.update_attribute(:pricing_options, instance.pricing_options) if tp
       tp.update_attribute(:pricing_validation, pricing_validation) if tp
     end
   end

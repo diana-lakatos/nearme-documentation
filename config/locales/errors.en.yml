@@ -37,6 +37,9 @@ en:
           attributes:
             kind:
               members_missing: 'List of shipping destinations cannot be blank'
+        review:
+          rating:
+            rating_is_required: 'Rating is required'
   errors:
     messages:
       free: "must be free if no prices are provided"

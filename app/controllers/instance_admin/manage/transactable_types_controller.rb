@@ -1,6 +1,6 @@
 class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage::BaseController
 
-  before_filter :set_theme
+  before_filter :set_theme, except: [:change_state]
 
   def index
     @transactable_types = TransactableType.all
@@ -49,6 +49,12 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
     redirect_to instance_admin_manage_transactable_types_path
   end
 
+  def change_state
+    @transactable_type = TransactableType.find(params[:id])
+    @transactable_type.update(transactable_type_state_params)
+    render nothing: true, status: 200
+  end
+
   private
 
   def set_theme
@@ -60,6 +66,10 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
       whitelisted[:custom_csv_fields] = params[:transactable_type][:custom_csv_fields].map { |el| el = el.split('=>'); { el[0] => el[1] } } if params[:transactable_type][:custom_csv_fields]
     end
 
+  end
+
+  def transactable_type_state_params
+    params.require(:transactable_type).permit(:enable_reviews)
   end
 
 end
