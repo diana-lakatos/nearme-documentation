@@ -1,0 +1,6 @@
+%tr 
+  %td= review.transactable_type.name
+  %td= link_to_object(review)
+  %td= rating_stars(review.rating)
+  %td= review.user_name
+  %td= review.decorate.date_format

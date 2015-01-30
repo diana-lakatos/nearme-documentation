@@ -211,6 +211,8 @@ en:
         user_deleted: "You've removed %{name} from %{company_name}"
         user_does_not_exists: "A user does not exist with the specified email address."
         user_is_not_in_company: "You can't delete user which is not in your company."
+      reviews:
+        review_deleted: 'Review has been deleted.'
 
     manage:
       order:

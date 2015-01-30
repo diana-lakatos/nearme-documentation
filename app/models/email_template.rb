@@ -15,7 +15,7 @@ class EmailTemplate < ActiveRecord::Base
                            inquiry_mailer/listing_creator_notification
                            listing_mailer/share
                            rating_mailer/request_rating_of_guest_from_host
-                           rating_mailer/request_rating_of_host_from_guest
+                           rating_mailer/request_rating_of_host_and_product_from_guest
                            reengagement_mailer/no_bookings
                            reengagement_mailer/one_booking
                            recurring_mailer/analytics

@@ -33,6 +33,7 @@
 //= require ./vendor/jquery.inview
 //= require ckeditor/basepath
 //= require ckeditor/init
+//= require vendor/jquery.raty
 //
 //
 //= require_self

@@ -29,6 +29,9 @@ en:
         transactable:
           attributes:
             free: "must be free if no prices are provided"
+        review:
+          rating:
+            rating_is_required: 'Rating is required'
   errors:
     messages:
       free: "must be free if no prices are provided"

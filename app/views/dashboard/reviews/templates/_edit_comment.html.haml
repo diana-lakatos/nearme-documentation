@@ -1,0 +1,7 @@
+%script#edit-comment-template(type="text/template" style='display:none;')
+  <% if (newComment){ %>
+  %p.comments-title
+    = t('dashboard.reviews.templates.comments').upcase
+  <% } %>
+  %textarea#comment
+    <%= commentValue %>
