@@ -24,11 +24,11 @@ Then(/^I can manage blog posts$/) do
   find('//a[title=Edit]').click
   fill_in 'Title', with: 'Another title.'
   click_button 'Update Blog post'
-  page.should have_content('Blog has been post updated.')
+  page.should have_content('Blog post has been updated.')
   @blog_instance.blog_posts.last.title.should == 'Another title.'
 
   find('//a[title=Delete]').click
-  page.should have_content('Blog has been post deleted.')
+  page.should have_content('Blog post has been deleted.')
   @blog_instance.blog_posts.reload.should be_empty
 end
 
