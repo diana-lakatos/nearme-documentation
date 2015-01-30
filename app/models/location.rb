@@ -48,6 +48,7 @@ class Location < ActiveRecord::Base
   has_many :availability_rules, -> { order 'day ASC' }, :as => :target
 
   has_many :impressions, :as => :impressionable, :dependent => :destroy
+  has_many :reviews, :through => :listings
 
   validates_presence_of :company, :currency, :location_type_id
   validates_presence_of :description, :if => :name_and_description_required

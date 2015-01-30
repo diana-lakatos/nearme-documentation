@@ -2,7 +2,8 @@ class User < ActiveRecord::Base
   has_paper_trail :ignore => [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
                               :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
                               :unlock_token, :locked_at, :google_analytics_id, :browser, :browser_version, :platform,
-                              :avatar_versions_generated_at, :last_geolocated_location_longitude,
+                              :guest_rating_average, :guest_rating_count, :host_rating_average,
+                              :host_rating_count, :avatar_versions_generated_at, :last_geolocated_location_longitude,
                               :last_geolocated_location_latitude, :instance_unread_messages_threads_count, :sso_log_out,
                               :avatar_transformation_data, :metadata]
   acts_as_paranoid
@@ -32,6 +33,8 @@ class User < ActiveRecord::Base
   has_many :followed_users, :through => :relationships, :source => :followed
   has_many :reverse_relationships, :class_name => "UserRelationship", :foreign_key => 'followed_id', :dependent => :destroy
   has_many :followers, :through => :reverse_relationships, :source => :follower
+  has_many :host_ratings, class_name: 'HostRating', foreign_key: 'subject_id'
+  has_many :guest_ratings, class_name: 'GuestRating', foreign_key: 'subject_id'
   has_many :user_industries, :dependent => :destroy
   has_many :industries, :through => :user_industries
   has_many :mailer_unsubscriptions
@@ -51,7 +54,6 @@ class User < ActiveRecord::Base
   has_many :orders, foreign_key: :user_id, class_name: 'Spree::Order'
   belongs_to :billing_address, class_name: 'Spree::Address'
   belongs_to :shipping_address, class_name: 'Spree::Address'
-  has_many :reviews
 
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag

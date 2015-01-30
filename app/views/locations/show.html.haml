@@ -2,7 +2,7 @@
 - canonical_url location_path(@location)
 
 - content_for :meta_description do
-  = "Book at #{@location.company.try(:name)}. #{mask_phone_and_email_if_necessary(@location.description).try(:truncate, 28)}"
+  = "Read reviews #{@location.reviews.count unless @location.reviews.count.zero?} and book at #{@location.company.try(:name)}. #{mask_phone_and_email_if_necessary(@location.description).try(:truncate, 28)}"
 
 - content_for :hero do
   %article#space

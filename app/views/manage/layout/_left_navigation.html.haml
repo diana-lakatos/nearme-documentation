@@ -8,8 +8,6 @@
             active: (params[:controller].include?('user_recurring_bookings') || params[:controller].include?('user_reservations'))
 
       = dashboard_menu_item 'dashboard/user_messages', dashboard_user_messages_path
-      - if platform_context.instance.rating_systems.where(active: true).present?
-        = dashboard_menu_item 'dashboard/reviews', dashboard_reviews_path
 
     - if @company.present?
       %ul

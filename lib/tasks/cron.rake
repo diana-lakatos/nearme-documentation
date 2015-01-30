@@ -7,7 +7,7 @@ namespace :cron do
       ReceiveMailsSpawnerJob.perform
     end
   end
-  
+
   desc "Run hourly scheduled jobs"
   task :hourly => [:environment] do
     # run_job "Send Rating reminders" do

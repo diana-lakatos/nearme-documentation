@@ -8,6 +8,6 @@ We would love to hear about your experience with <a href="{{ platform_context.ho
 
 <p>Please take a moment to give us your feedback!</p>
 
-<a class="btn" href="{{ platform_context.host | append:reservation.reviews_reservation_url }}" >Write a Review</a>
+<a class="btn" href="{{ platform_context.host | append:reservation.guest_rating_reservation_url_with_tracking | append:signature_for_tracking }}">Write a Review</a>
 
 <p>If you'd prefer to talk to us directly, please send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a> or call us on {{ platform_context.phone_number }} - we love to talk with our {{platform_context.lessors}}.</p>

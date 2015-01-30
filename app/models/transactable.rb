@@ -37,6 +37,7 @@ class Transactable < ActiveRecord::Base
   has_many :amenities, through: :amenity_holders, inverse_of: :listings
   has_one :location_address, through: :location
 
+  has_many :reviews, :through => :reservations
   has_many :company_industries, through: :location
 
   accepts_nested_attributes_for :availability_rules, allow_destroy: true

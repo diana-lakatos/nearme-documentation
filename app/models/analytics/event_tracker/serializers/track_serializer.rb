@@ -82,7 +82,11 @@ class Analytics::EventTracker::Serializers::TrackSerializer
         google_analytics_id: object.google_analytics_id,
         browser: object.browser,
         browser_version: object.browser_version,
-        platform: object.platform
+        platform: object.platform,
+        positive_host_ratings_count: object.host_ratings.positive.count,
+        negative_host_ratings_count: object.host_ratings.negative.count,
+        positive_guest_ratings_count: object.guest_ratings.positive.count,
+        negative_guest_ratings_count: object.guest_ratings.negative.count
       }
     when Listing::Search::Params::Web
       {

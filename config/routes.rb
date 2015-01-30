@@ -205,11 +205,6 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
-      resources :reviews, only: [:index]
-      resources :rating_systems, only: [:index] do
-        put '/update_systems', to: 'rating_systems#update_systems', on: :collection
-      end
-
       resources :approval_requests, only: [:index, :edit, :update]
       resources :approval_request_templates do
         resources :approval_request_attachment_templates, controller: 'approval_request_templates/approval_request_attachment_templates'
@@ -225,7 +220,6 @@ DesksnearMe::Application.routes.draw do
       end
 
       resources :transactable_types, :only => [:index, :edit, :update, :show] do
-        put :change_state, on: :member
         resources :custom_attributes, controller: 'transactable_types/custom_attributes'
         resources :data_uploads, controller: 'transactable_types/data_uploads' do
           collection do
@@ -445,7 +439,6 @@ DesksnearMe::Application.routes.draw do
       end
     end
     resource :payouts, except: [:index, :show, :new, :create, :destroy]
-    resources :reviews, :only => [:index, :create, :update, :destroy]
 
     resources :user_reservations, :except => [:update, :destroy, :show] do
       member do
@@ -610,6 +603,9 @@ DesksnearMe::Application.routes.draw do
 
     get  'iplookup',  :to => 'iplookup#index'
 
+    resources :guest_ratings, :only => [:create]
+    resources :host_ratings, :only => [:create]
+
     resources :locations do
       collection do
         get 'list'
@@ -631,6 +627,7 @@ DesksnearMe::Application.routes.draw do
         post 'search'
         post 'query'
       end
+      resource :rating, only: [:show, :update, :destroy]
     end
 
     resources :reservations do
@@ -670,6 +667,7 @@ DesksnearMe::Application.routes.draw do
     mount PostActionMailerPreview => 'mail_view/post_action'
     mount InquiryMailerPreview => 'mail_view/inquiries'
     mount ListingMailerPreview => 'mail_view/listings'
+    mount RatingMailerPreview => 'mail_view/ratings'
     mount UserMessageMailerPreview => 'mail_view/user_messages'
     mount ReengagementMailerPreview => 'mail_view/reengagement'
     mount RecurringMailerPreview => 'mail_view/recurring'

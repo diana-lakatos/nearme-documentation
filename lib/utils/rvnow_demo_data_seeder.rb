@@ -54,6 +54,8 @@ module Utils
 
                   listing.reservations.each do |reservation|
                     reservation.amenity_holders.each{|r| r.destroy!}
+                    reservation.reviews.each{|r| r.destroy!}
+                    reservation.comments_about_guests.each{|r| r.destroy!}
                     reservation.periods.each{|r| r.destroy!}
                     reservation.reservation_charges.each{|r| r.destroy!}
 

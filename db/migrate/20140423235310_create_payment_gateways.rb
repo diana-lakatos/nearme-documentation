@@ -1,6 +1,6 @@
 class CreatePaymentGateways < ActiveRecord::Migration
   class PaymentGateway < ActiveRecord::Base
-    attr_accessor :name, :method_name, :settings, :active_merchant_class
+    attr_accessible :name, :method_name, :settings, :active_merchant_class
     serialize :settings, Hash
 
     before_save :set_method_name

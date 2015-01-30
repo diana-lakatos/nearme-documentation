@@ -42,4 +42,5 @@ class InstanceTest < ActiveSupport::TestCase
       assert_equal 1, Instance.with_support_imap.count
     end
   end
+
 end
