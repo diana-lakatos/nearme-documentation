@@ -445,6 +445,18 @@ ActiveRecord::Schema.define(version: 20150127093339) do
 
   add_index "email_templates", ["theme_id"], name: "index_email_templates_on_theme_id", using: :btree
 
+  create_table "form_components", force: true do |t|
+    t.string   "name"
+    t.string   "form_type"
+    t.integer  "instance_id"
+    t.integer  "transactable_type_id"
+    t.text     "form_fields"
+    t.datetime "deleted_at"
+    t.integer  "rank"
+  end
+
+  add_index "form_components", ["instance_id", "transactable_type_id", "form_type"], name: "ttfs_instance_tt_form_type", using: :btree
+
   create_table "friendly_id_slugs", force: true do |t|
     t.string   "slug",                      null: false
     t.integer  "sluggable_id",              null: false
@@ -615,20 +627,21 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.string   "locale"
     t.string   "format"
     t.string   "handler"
-    t.boolean  "partial",          default: false
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.boolean  "partial",              default: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
     t.string   "view_type"
+    t.integer  "transactable_type_id"
   end
 
-  add_index "instance_views", ["instance_type_id", "instance_id", "path", "locale", "format", "handler"], name: "instance_path_with_format_and_handler", using: :btree
+  add_index "instance_views", ["instance_type_id", "instance_id", "transactable_type_id", "path", "locale", "format", "handler"], name: "instance_path_with_format_and_handler", using: :btree
 
   create_table "instances", force: true do |t|
     t.string   "name"
-    t.datetime "created_at",                                                                          null: false
-    t.datetime "updated_at",                                                                          null: false
-    t.string   "bookable_noun",                                               default: "Desk"
-    t.decimal  "service_fee_guest_percent",           precision: 5, scale: 2, default: 0.0
+    t.datetime "created_at",                                                                            null: false
+    t.datetime "updated_at",                                                                            null: false
+    t.string   "bookable_noun",                                                 default: "Desk"
+    t.decimal  "service_fee_guest_percent",             precision: 5, scale: 2, default: 0.0
     t.string   "lessor"
     t.string   "lessee"
     t.boolean  "skip_company",                                                  default: false
@@ -686,20 +699,20 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.boolean  "user_based_marketplace_views",                                  default: false
     t.string   "searcher_type"
     t.datetime "master_lock"
-    t.boolean  "apply_text_filters",                                          default: false
+    t.boolean  "apply_text_filters",                                            default: false
     t.text     "user_required_fields"
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
-    t.string   "payment_transfers_frequency",                                 default: "fortnightly"
+    t.string   "payment_transfers_frequency",                                   default: "fortnightly"
     t.text     "hidden_dashboard_menu_items"
-    t.string   "encrypted_shippo_username"
-    t.string   "encrypted_shippo_password"
     t.string   "twilio_from_number"
     t.string   "test_twilio_from_number"
     t.string   "encrypted_test_twilio_consumer_key"
     t.string   "encrypted_test_twilio_consumer_secret"
     t.string   "encrypted_twilio_consumer_key"
     t.string   "encrypted_twilio_consumer_secret"
+    t.string   "encrypted_shippo_username"
+    t.string   "encrypted_shippo_password"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1520,7 +1533,7 @@ ActiveRecord::Schema.define(version: 20150127093339) do
   add_index "spree_product_properties", ["user_id"], name: "index_spree_product_properties_on_user_id", using: :btree
 
   create_table "spree_products", force: true do |t|
-    t.string   "name",                 default: "",   null: false
+    t.string   "name",                 default: "",    null: false
     t.text     "description"
     t.datetime "available_on"
     t.datetime "deleted_at"
@@ -1539,7 +1552,7 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.hstore   "status"
     t.boolean  "products_public",      default: true
     t.boolean  "approved",             default: true
-    t.text     "cross_sell_skus",      default: [],                array: true
+    t.text     "cross_sell_skus",      default: [],                 array: true
     t.integer  "administrator_id"
     t.boolean  "shippo_enabled",       default: false
   end
@@ -1780,7 +1793,7 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.integer  "user_id"
-    t.integer  "processing_time", default: 0
+    t.integer  "processing_time",                                            default: 0
     t.integer  "order_id"
     t.decimal  "precalculated_cost",                 precision: 8, scale: 2
     t.string   "shippo_rate_id",         limit: 230
@@ -2319,15 +2332,22 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.text     "pricing_options"
     t.text     "pricing_validation"
     t.text     "availability_options"
-    t.boolean  "favourable_pricing_rate",                    default: true
-    t.integer  "days_for_monthly_rate",                      default: 0
+    t.boolean  "favourable_pricing_rate",                                            default: true
+    t.integer  "days_for_monthly_rate",                                              default: 0
     t.datetime "cancellation_policy_enabled"
-    t.integer  "cancellation_policy_hours_for_cancellation", default: 0
-    t.integer  "cancellation_policy_penalty_percentage",     default: 0
-    t.boolean  "recurring_booking",                          default: false, null: false
-    t.boolean  "show_page_enabled",                          default: false
+    t.integer  "cancellation_policy_hours_for_cancellation",                         default: 0
+    t.integer  "cancellation_policy_penalty_percentage",                             default: 0
+    t.boolean  "recurring_booking",                                                  default: false, null: false
+    t.boolean  "show_page_enabled",                                                  default: false
     t.text     "custom_csv_fields"
-    t.boolean  "overnight_booking",                          default: false, null: false
+    t.boolean  "overnight_booking",                                                  default: false, null: false
+    t.text     "onboarding_form_fields"
+    t.decimal  "service_fee_guest_percent",                  precision: 5, scale: 2, default: 0.0
+    t.decimal  "service_fee_host_percent",                   precision: 5, scale: 2, default: 0.0
+    t.string   "bookable_noun"
+    t.string   "lessor"
+    t.string   "lessee"
+    t.boolean  "groupable_with_others",                                              default: true
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

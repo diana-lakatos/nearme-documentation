@@ -1,4 +1,4 @@
-class DataImporter::Host::CsvFieldsBuilder
+class TransactableType::CsvFieldsBuilder
 
   def initialize(transactable_type)
     @transactable_type = transactable_type

@@ -11,8 +11,14 @@ class InstanceViewResolver < DbViewResolver
       :handler => normalize_array(details[:handlers]),
       :partial => partial || false
     }
-
-    ::InstanceView.for_instance_type_id(details[:instance_type_id]).for_instance_id(details[:instance_id]).where(conditions).order('instance_type_id, instance_id').map do |record|
+    scope = ::InstanceView.for_instance_type_id(details[:instance_type_id]).for_instance_id(details[:instance_id])
+    scope = if details[:transactable_type_id].present?
+      scope.for_transactable_type_id(details[:transactable_type_id]).order('instance_type_id, instance_id, transactable_type_id')
+    else
+      scope.for_nil_transactable_type.order('instance_type_id, instance_id')
+    end
+    scope = scope.where(conditions)
+    scope.map do |record|
       initialize_template(record, record.format)
     end
   end

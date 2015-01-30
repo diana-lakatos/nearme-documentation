@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'vcr_setup'
 
-class SpaceWizardControllerTest < ActionController::TestCase
+class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
@@ -10,7 +10,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
     FactoryGirl.create(:location_type)
     @partner = FactoryGirl.create(:partner)
     stub_mixpanel
-    FactoryGirl.create(:transactable_type_listing)
+    @transactable_type = FactoryGirl.create(:transactable_type_listing)
   end
 
   context 'scopes current partner for new company' do
@@ -65,7 +65,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
 
     should "not raise exception if hash is incomplete" do
       assert_no_difference('Transactable.count') do
-        post :submit_listing, { "user" => {"companies_attributes" => {"0"=> { "name"=>"International Secret Intelligence Service" }}}}
+        post :submit_listing, { transactable_type_id: @transactable_type.id, "user" => {"companies_attributes" => {"0"=> { "name"=>"International Secret Intelligence Service" }}}}
       end
     end
 
@@ -76,13 +76,14 @@ class SpaceWizardControllerTest < ActionController::TestCase
     setup do
       @user.country_name = nil
       @user.save!
+      FactoryGirl.create(:form_component, transactable_type: @transactable_type)
     end
 
     should "be set to Greece" do
       VCR.use_cassette "freegeoip_greece" do
         # Set request ip to an ip address in Greece
         @request.env['REMOTE_ADDR'] = '2.87.255.255'
-        get :list
+        get :list, transactable_type_id: @transactable_type.id
         assert assigns(:country) == "Greece"
         assert_select 'option[value="Greece"][selected="selected"]', 1
       end
@@ -92,7 +93,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
       VCR.use_cassette "freegeoip_brazil" do
         # Set request ip to an ip address in Brazil
         @request.env['REMOTE_ADDR'] = '139.82.255.255'
-        get :list
+        get :list, transactable_type_id: @transactable_type.id
         assert assigns(:country) == "Brazil"
         assert_select 'option[value="Brazil"][selected="selected"]', 1
       end
@@ -105,11 +106,11 @@ class SpaceWizardControllerTest < ActionController::TestCase
 
       setup do
         FactoryGirl.create(:approval_request_template, required_written_verification: true)
-
+        FactoryGirl.create(:form_component, transactable_type: @transactable_type)
       end
 
       should 'show form to write message'  do
-        get :list
+        get :list, transactable_type_id: @transactable_type.id
         assert_select '#user_approval_requests_attributes_0_message', 1
       end
     end
@@ -117,7 +118,7 @@ class SpaceWizardControllerTest < ActionController::TestCase
     context 'instance does not require verification' do
 
       should 'not show form to write message'  do
-        get :list
+        get :list, transactable_type_id: @transactable_type.id
         assert_select '#user_approval_requests_attributes_0_message', false
       end
     end
@@ -152,19 +153,19 @@ class SpaceWizardControllerTest < ActionController::TestCase
 
     should 'track clicked list your bookable when logged in' do
       @tracker.expects(:clicked_list_your_bookable)
-      get :new
+      get :new, transactable_type_id: @transactable_type.id
     end
 
     should 'track clicked list your bookable when not logged in' do
       sign_out @user
       @tracker.expects(:clicked_list_your_bookable)
-      get :new
+      get :new, transactable_type_id: @transactable_type.id
     end
 
 
     should 'track viewed list your bookable' do
       @tracker.expects(:viewed_list_your_bookable)
-      get :list
+      get :list, transactable_type_id: @transactable_type.id
     end
 
     context '#user has already bookable' do
@@ -177,12 +178,12 @@ class SpaceWizardControllerTest < ActionController::TestCase
 
       should 'not track clicked list your bookable if user already has bookable ' do
         @tracker.expects(:clicked_list_your_bookable).never
-        get :new
+        get :new, transactable_type_id: @transactable_type.id
       end
 
       should 'not track viewed list your bookable if user already has bookable ' do
         @tracker.expects(:viewed_list_your_bookable).never
-        get :list
+        get :list, transactable_type_id: @transactable_type.id
 
       end
 
@@ -191,71 +192,56 @@ class SpaceWizardControllerTest < ActionController::TestCase
   end
 
   context 'GET new' do
-    should 'redirect to manage location page if has listings' do
+    should 'redirect to manage listings page if has listings' do
       create_listing
-      get :new
-      assert_redirected_to dashboard_transactable_type_transactables_path(TransactableType.first)
+      get :new, transactable_type_id: @transactable_type.id
+      assert_redirected_to dashboard_transactable_type_transactables_path(@transactable_type.id)
     end
 
     should 'redirect to new location if no listings' do
       create_listing
       @location.destroy
-      get :new
-      assert_redirected_to dashboard_transactable_type_transactables_path(TransactableType.first)
+      get :new, transactable_type_id: @transactable_type.id
+      assert_redirected_to dashboard_transactable_type_transactables_path(@transactable_type.id)
     end
 
     should 'redirect to new listing if no listings but with one location' do
       create_listing
       @listing.destroy
-      get :new
-      assert_redirected_to dashboard_transactable_type_transactables_path(TransactableType.first)
+      get :new, transactable_type_id: @transactable_type.id
+      assert_redirected_to dashboard_transactable_type_transactables_path(@transactable_type.id)
     end
 
     should 'redirect to dashboard if no listings but more than one location' do
       create_listing
       @listing.destroy
       FactoryGirl.create(:location, :company => @company)
-      get :new
-      assert_redirected_to dashboard_transactable_type_transactables_path(TransactableType.first)
+      get :new, transactable_type_id: @transactable_type.id
+      assert_redirected_to dashboard_transactable_type_transactables_path(@transactable_type.id)
     end
 
     should 'redirect to space wizard list if no listings' do
-      get :new
-      assert_redirected_to space_wizard_list_url
+      get :new, transactable_type_id: @transactable_type.id
+      assert_redirected_to transactable_type_space_wizard_list_url(@transactable_type)
     end
 
     should 'redirect to registration path if not logged in' do
       sign_out @user
-      get :new
-      assert_redirected_to new_user_registration_url(:wizard => 'space', :return_to => space_wizard_list_path)
+      get :new, transactable_type_id: @transactable_type.id
+      assert_redirected_to new_user_registration_url(:wizard => 'space', :return_to => transactable_type_space_wizard_list_url(@transactable_type))
     end
   end
 
-  context 'with skip_company' do
-    should 'create listing when location skip_company is set to true' do
-      @instance_with_skip_company = FactoryGirl.create(:instance, skip_company: true)
-      PlatformContext.current = PlatformContext.new(@instance_with_skip_company)
-      FactoryGirl.create(:transactable_type_listing)
-
-      params_without_company_name = get_params
-      params_without_company_name['user']['companies_attributes']['0'].delete('name')
-      params_without_company_name['user']['companies_attributes']['0'].delete('industry_ids')
-
-      assert_difference('Transactable.count', 1) do
-        post :submit_listing, params_without_company_name
-      end
-    end
-  end
-
-  context 'with instance.user_info_in_onboarding_flow = true' do
-    should 'render the space wizard with the user info in the form' do
-      @instance_with_user_onboarding = FactoryGirl.create(:instance, user_info_in_onboarding_flow: true)
-      PlatformContext.current = PlatformContext.new(@instance_with_user_onboarding)
-      FactoryGirl.create(:transactable_type_listing)
-      FactoryGirl.create(:location_type)
-
-      get :list
-      assert_select ".user_first_name"
+  context 'with multiple sections' do
+    should 'render all sections correctly' do
+      FactoryGirl.create(:form_component, transactable_type: @transactable_type, form_fields: [{'company' => 'name'}, {'company' => 'address'}, {'location' => 'name'}], name: 'Super Cool Section 1')
+      FactoryGirl.create(:form_component, transactable_type: @transactable_type, form_fields: [{ 'transactable' => 'price' }, { 'transactable' => 'photos' }, { 'transactable' => 'name' }], name: 'Transactable Section')
+      FactoryGirl.create(:form_component, transactable_type: @transactable_type, form_fields: [{'user' => 'phone'}], name: 'Contact Information')
+      get :list, transactable_type_id: @transactable_type.id
+      assert_select "h2", 'Super Cool Section 1'
+      assert_select "h2", 'Transactable Section'
+      assert_select "h2", 'Contact Information'
+      assert_select '#user_phone'
     end
   end
 
@@ -303,7 +289,8 @@ class SpaceWizardControllerTest < ActionController::TestCase
       },
       "country_name" => "United States",
       "phone" => "123456789"
-     }
+     },
+     transactable_type_id: @transactable_type.id
     }
   end
 

@@ -36,9 +36,9 @@ class InstanceViewResolverTest < ActiveSupport::TestCase
   should 'find a default template if concrete exists for different instance' do
     @instance_view = FactoryGirl.create(:instance_view, body: 'default')
     FactoryGirl.create(:instance_view, :body => 'default')
-    @default_instance_view = FactoryGirl.build(:instance_view, :body => 'concrete')
-    @default_instance_view.instance_id = FactoryGirl.create(:instance).id
-    @default_instance_view.save!
+    @concrete_instance_view = FactoryGirl.build(:instance_view, :body => 'concrete')
+    @concrete_instance_view.instance_id = FactoryGirl.create(:instance).id
+    @concrete_instance_view.save!
     template = @resolver.find_all("index", "public", false, @details).first
     assert_equal "default", template.source
   end

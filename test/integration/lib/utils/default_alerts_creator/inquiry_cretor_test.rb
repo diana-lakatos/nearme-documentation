@@ -24,7 +24,7 @@ class Utils::DefaultAlertsCreator::InquiryCreatorTest < ActionDispatch::Integrat
         WorkflowStepJob.perform(WorkflowStep::InquiryWorkflow::Created, @inquiry.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_contains "#{@inquiry.inquiring_user_name} has asked a question about your #{PlatformContext.current.decorate.bookable_noun}, #{@inquiry.listing.name} on #{PlatformContext.current.decorate.name}", mail.html_part.body
+      assert_contains "#{@inquiry.inquiring_user_name} has asked a question about #{@inquiry.listing.name} on #{PlatformContext.current.decorate.name}", mail.html_part.body
       assert_contains "#{@inquiry.message}", mail.html_part.body
       assert_equal [@inquiry.listing.creator.email], mail.to
       assert_equal "New enquiry from #{@inquiry.inquiring_user.name} about #{@inquiry.listing.name}", mail.subject

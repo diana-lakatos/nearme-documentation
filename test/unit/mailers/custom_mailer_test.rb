@@ -34,12 +34,17 @@ class CustomMailerTest < ActiveSupport::TestCase
     end
   end
 
+
   setup do
     stub_mixpanel
+    @transactable_type = FactoryGirl.create(:transactable_type)
     @step = DummyWorkflow::DummyStep.new(stub(email: 'lister@example.com'), stub(email: 'enquirer@example.com'), stub(to_liquid: DummyArgDrop.new(stub(name: 'dummy name!'))))
     @email_template = FactoryGirl.create(:instance_view_email_text)
     @email_template = FactoryGirl.create(:instance_view_email_html)
+    @email_template_for_tt = FactoryGirl.create(:instance_view_email_text, transactable_type_id: @transactable_type.id, body: "Hi TT {{dummy_arg.name}}")
+    @email_template_for_tt = FactoryGirl.create(:instance_view_email_html, transactable_type_id: @transactable_type.id, body: "Hi TT {{dummy_arg.name}}")
     @layout_template = FactoryGirl.create(:instance_view_layout)
+    @layout_template_for_tt = FactoryGirl.create(:instance_view_layout, transactable_type_id: @transactable_type.id, body: "This is TTHeader {{ content_for_layout }} This is TTFooter")
   end
 
   should 'be able to send email to lister' do
@@ -55,6 +60,18 @@ class CustomMailerTest < ActiveSupport::TestCase
     assert_not_contains 'This is header!', mail.html_part.body
     assert_contains 'Hello dummy name!', mail.text_part.body
     assert_not_contains 'This is header!', mail.text_part.body
+  end
+
+  should 'work with transactable type id views' do
+    WorkflowAlert.stubs(:find).returns(stub(default_hash.merge(layout_path: @layout_template.path)))
+    @step.stubs(:transactable_type_id).returns(@transactable_type.id)
+    mail = CustomMailer.custom_mail(@step, 1)
+    assert_contains 'This is TTHeader Hi TT dummy name! This is TTFooter', mail.html_part.body
+    @step.stubs(:transactable_type_id).returns(@transactable_type.id + 1)
+    mail = CustomMailer.custom_mail(@step, 1)
+    assert_contains 'Hello dummy name!', mail.html_part.body
+    assert_contains 'Hello dummy name!', mail.text_part.body
+    assert_not_contains 'This is TTHeader', mail.html_part.body
   end
 
   should "be able to set multiple recipients" do

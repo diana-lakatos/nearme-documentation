@@ -1,8 +1,11 @@
 - resource ||= current_user
-= render :partial => 'approval_requests/form', :locals => { f: f, object: resource }
 - only_inputs ||= []
 - only_inputs.map!(&:to_sym)
 = f.input :name if only_inputs.include?(:name)
+
+- if only_inputs.empty? || only_inputs.include?(:approval_requests)
+  = render :partial => 'approval_requests/form', :locals => { f: f, object: resource }
+
 - if !only_inputs.include?(:name)
   = f.input :first_name, input_html: { value: f.object.first_name } if only_inputs.empty? || only_inputs.include?(:first_name)
   = f.input :middle_name, input_html: { value: f.object.middle_name } if only_inputs.empty? || only_inputs.include?(:middle_name)
@@ -15,6 +18,7 @@
 = f.input :gender, collection: [['Male', 'male'], ['Female', 'female'], ['Unspecified', 'unspecified']], include_blank: :true if only_inputs.empty? || only_inputs.include?(:gender)
 = f.input :email, label: "Email" if only_inputs.empty? || only_inputs.include?(:email)
 = f.input :time_zone if only_inputs.empty? || only_inputs.include?(:time_zone)
+
 = render :partial => 'registrations/phone_fields', :locals => { :f => f, :country => country } if only_inputs.empty? || only_inputs.include?(:phone)
 = f.input :current_location, label: "Current location", as: :string if only_inputs.empty? || only_inputs.include?(:current_location)
 = f.input :company_name, label: "Company name", as: :string if only_inputs.empty? || only_inputs.include?(:company_name)
@@ -43,6 +47,7 @@
           destroy_avatar_path,
           edit_avatar_path,
           :div)
+
 - if only_inputs.empty? || only_inputs.include?(:phone)
   - content_for :domready do
     $(function(){ new PhoneNumbers.FieldsForm() });

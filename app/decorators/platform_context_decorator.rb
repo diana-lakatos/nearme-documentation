@@ -1,13 +1,13 @@
 class PlatformContextDecorator
 
   delegate :white_label_company, :instance, :instance_type, :theme, :partner, :domain, :white_label_company_user?,
-    :platform_context_detail, :secured_constraint, :latest_products, :to => :platform_context
+    :platform_context_detail, :secured_constraint, :latest_products, to: :platform_context
 
   delegate :tagline, :support_url, :blog_url, :twitter_url, :twitter_handle, :facebook_url, :gplus_url, :address,
     :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :compiled_dashboard_stylesheet, :meta_title, :pages, :logo_image,
-    :favicon_image, :icon_image, :icon_retina_image, :homepage_content, :call_to_action, :is_company_theme?, :to => :theme
+    :favicon_image, :icon_image, :icon_retina_image, :homepage_content, :call_to_action, :is_company_theme?, to: :theme
 
-  delegate :bookable_noun, :lessor, :lessee, :name, :is_desksnearme?, :buyable?, :to => :instance
+  delegate :bookable_noun, :lessor, :lessee, :name, :is_desksnearme?, :buyable?, :transactable_types, to: :instance
 
   liquid_methods :lessors
 
@@ -21,6 +21,10 @@ class PlatformContextDecorator
 
   def compiled_dashboard_stylesheet_url
     compiled_dashboard_stylesheet.present? ? compiled_dashboard_stylesheet.url : nil
+  end
+
+  def multiplte_transactable_types?
+    self.transactable_types.count == 1
   end
 
   def to_liquid

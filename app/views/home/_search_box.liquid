@@ -13,6 +13,12 @@
           </div>
         {% endif %}
         <input class="query" id="search" name="loc" placeholder="{{ platform_context.search_field_placeholder }}" type="text"></input>
+        <br />
+        {% if platform_context.transactable_types.size > 1 %}
+          {% for transactable_type in platform_context.transactable_types %}
+            {{ transactable_type.name}} <input type="radio" name="transactable_type_id" value="{{ transactable_type.id }}">
+          {% endfor %}
+        {% endif %}
       </div>
       <div class="button-wrapper">
         <a class="btn btn-green btn-large" data-disable-with="Searching..." rel="submit" href="">

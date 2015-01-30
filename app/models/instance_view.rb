@@ -9,11 +9,21 @@ class InstanceView < ActiveRecord::Base
   EMAIL_LAYOUT_VIEW = 'mail_layout'
   VIEW_TYPES = [SMS_VIEW, EMAIL_VIEW, EMAIL_LAYOUT_VIEW, VIEW_VIEW]
 
+  belongs_to :transactable_type
+
+  scope :for_instance_type_id, ->(instance_type_id) {
+    where('instance_type_id IS NULL OR instance_type_id = ?', instance_type_id)
+  }
+
   scope :for_instance_id, ->(instance_id) {
     where('instance_id IS NULL OR instance_id = ?', instance_id)
   }
-  scope :for_instance_type_id, ->(instance_type_id) {
-    where('instance_type_id IS NULL OR instance_type_id = ?', instance_type_id)
+
+  scope :for_nil_transactable_type, ->  { where('transactable_type_id IS NULL') }
+
+
+  scope :for_transactable_type_id, -> (transactable_type_id) {
+    where('transactable_type_id IS NULL OR transactable_type_id = ?', transactable_type_id)
   }
 
   scope :custom_views, -> {

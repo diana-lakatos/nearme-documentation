@@ -55,6 +55,8 @@ class Transactable < ActiveRecord::Base
   scope :latest,   -> { order("transactables.created_at DESC") }
   scope :visible,  -> { where(:enabled => true) }
   scope :searchable, -> { active.visible }
+  scope :for_transactable_type_id, -> transactable_type_id { where(transactable_type_id: transactable_type_id) }
+  scope :for_groupable_transactable_types, -> { joins(:transactable_type).where('transactable_types.groupable_with_others = ?', true) }
   scope :filtered_by_listing_types_ids,  -> listing_types_ids { where("(transactables.properties->'listing_type') IN (?)", listing_types_ids) if listing_types_ids }
   scope :filtered_by_price_types,  -> price_types { where([(price_types - ['free']).map{|pt| "(properties->'#{pt}_price_cents') IS NOT NULL"}.join(' OR '),
                                                            ("properties @> 'free=>true'" if price_types.include?('free'))].reject(&:blank?).join(' OR ')) }
@@ -82,7 +84,7 @@ class Transactable < ActiveRecord::Base
   delegate :url, to: :company
   delegate :currency, :formatted_address, :local_geocoding,
     :latitude, :longitude, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
-  delegate :service_fee_guest_percent, :service_fee_host_percent, to: :location, allow_nil: true
+  delegate :service_fee_guest_percent, :service_fee_host_percent, to: :transactable_type
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
   delegate :favourable_pricing_rate, :has_action?, to: :transactable_type

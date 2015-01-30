@@ -14,11 +14,13 @@
             %th Format
             %th
             %th
+            %th
 
           - @email_layout_templates.each do |email_layout_template|
             %tr
               %td= pretty_path email_layout_template.path
               %td= email_layout_template.format
+              %td= email_layout_template.transactable_type.try(:name)
               %td
                 .pull-right
                   = link_to 'Edit', edit_instance_admin_manage_email_layout_template_path(email_layout_template)

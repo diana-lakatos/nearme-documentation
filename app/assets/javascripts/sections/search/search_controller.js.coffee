@@ -13,6 +13,7 @@ class Search.SearchController extends Search.Controller
     @resultsContainer ||= => @container.find('#results')
     @loader = new Search.ScreenLockLoader => @container.find('.loading')
     @resultsCountContainer = $('#search_results_count')
+    @transactable_types = $('div[data-transactable-type-filter] input')
     @filters = $('a[data-search-filter]')
     @filters_container = $('div[data-search-filters-container]')
     @processingResults = true
@@ -27,6 +28,9 @@ class Search.SearchController extends Search.Controller
     @form.bind 'submit', (event) =>
       event.preventDefault()
       @triggerSearchFromQuery()
+
+    @transactable_types.on 'change', (event) =>
+      document.location = "#{document.location.protocol}//#{document.location.host}#{document.location.pathname}?loc=#{DNM.util.Url.getParameterByName('loc')}&transactable_type_id=#{$(event.target).val()}"
 
     @closeFilterIfClickedOutside()
 
@@ -222,6 +226,7 @@ class Search.SearchController extends Search.Controller
     @loader.showWithoutLocker()
      # Infinite-Ajax-Scroller [ ias ] which we use disables itself when there are no more results
      # we need to reenable it when it is necessary, and only then - otherwise we will get duplicates
+
     if $('#reinitialize').length > 0
       @initializeEndlessScrolling()
     @geocodeSearchQuery =>

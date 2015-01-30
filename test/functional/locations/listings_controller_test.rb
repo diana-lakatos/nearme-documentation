@@ -11,7 +11,7 @@ class Locations::ListingsControllerTest < ActionController::TestCase
   should "redirect to locations#show and remember which listing has been chosen if show page disabled" do
     get :show, location_id: @location.id, id: @listing
     assert_response :redirect
-    assert_redirected_to location_path(@location, @listing)
+    assert_redirected_to transactable_type_location_path(@listing.transactable_type, @location, @listing)
   end
 
   context 'show page enabled' do

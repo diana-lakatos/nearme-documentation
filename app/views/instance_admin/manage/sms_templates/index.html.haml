@@ -13,10 +13,12 @@
             %th Template
             %th
             %th
+            %th
 
           - @sms_templates.each do |sms_template|
             %tr
               %td= pretty_path sms_template.path
+              %td= email_layout_template.transactable_type.try(:name)
               %td
                 .pull-right
                   = link_to 'Edit', edit_instance_admin_manage_sms_template_path(sms_template)

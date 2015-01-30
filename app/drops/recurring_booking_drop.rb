@@ -4,6 +4,8 @@ class RecurringBookingDrop < BaseDrop
   attr_reader :reservation
   delegate :quantity, :subtotal_price, :service_fee_guest, :total_price, :pending?, :listing, :state_to_string,
   :credit_cart_payment?, :paid, :rejection_reason, :owner, to: :reservation
+  delegate :transactable_type, to: :listing
+  delegate :bookable_noun, :bookable_noun_plural, to: :transactable_type
 
   def initialize(recurring_booking)
     @recurring_booking = recurring_booking.decorate
@@ -27,7 +29,7 @@ class RecurringBookingDrop < BaseDrop
   end
 
   def search_url
-    routes.search_path(q: location_query_string(@reservation.listing.location))
+    routes.search_path(q: location_query_string(@reservation.listing.location), transactable_type_id: @reservation.transactable_type.id)
   end
 
   def bookings_dashboard_url
