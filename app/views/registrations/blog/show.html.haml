@@ -41,10 +41,10 @@
       .links.row-fluid
         - if @blog_post.previous_blog_post.present?
           .span6
-            = link_to 'PREV POST', user_blog_post_show_path(user_id: @user, id: @blog_post.previous_blog_post),
+            = link_to t('user_blog.buttons.prev_post'), user_blog_post_show_path(user_id: @user, id: @blog_post.previous_blog_post),
               class: 'previous-blog-post'
 
         - if @blog_post.next_blog_post.present?
           .span6
-            = link_to 'NEXT POST', user_blog_post_show_path(user_id: @user, id: @blog_post.next_blog_post),
+            = link_to t('user_blog.buttons.next_post'), user_blog_post_show_path(user_id: @user, id: @blog_post.next_blog_post),
               class: 'next-blog-post'

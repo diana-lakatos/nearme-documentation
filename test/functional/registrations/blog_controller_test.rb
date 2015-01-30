@@ -6,6 +6,7 @@ class Registrations::BlogControllerTest < ActionController::TestCase
     @blog_post = FactoryGirl.create(:published_user_blog_post, user: @user)
     @another_blog_post = FactoryGirl.create(:published_user_blog_post, user: @user)
     @unpublished_blog_post = FactoryGirl.create(:unpublished_user_blog_post, user: @user)
+    @user.blog.instance.update_column(:user_blogs_enabled, true)
     FactoryGirl.create(:published_user_blog_post) #non-related blog post
   end
 

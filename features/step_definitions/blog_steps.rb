@@ -18,17 +18,17 @@ Then(/^I can manage blog posts$/) do
   fill_in 'Title', with: 'Great title!'
   fill_in 'Content', with: 'Content'
   click_button 'Create Blog post'
-  page.should have_content('New blog post added.')
+  page.should have_content('New blog post has been added. ')
   @blog_instance.blog_posts.last.title.should == 'Great title!'
 
   find('//a[title=Edit]').click
   fill_in 'Title', with: 'Another title.'
   click_button 'Update Blog post'
-  page.should have_content('Blog post updated.')
+  page.should have_content('Blog has been post updated.')
   @blog_instance.blog_posts.last.title.should == 'Another title.'
 
   find('//a[title=Delete]').click
-  page.should have_content('Blog post deleted.')
+  page.should have_content('Blog has been post deleted.')
   @blog_instance.blog_posts.reload.should be_empty
 end
 

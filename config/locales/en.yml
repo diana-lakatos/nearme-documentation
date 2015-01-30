@@ -279,6 +279,9 @@ en:
       visit_blog: 'Visit my blog'
       save: 'Save'
 
+      prev_post: 'PREV POST'
+      next_post: 'NEXT POST'
+
     errors:
       blogs_disabled: 'Marketplace owner has disabled blog functionality'
 
