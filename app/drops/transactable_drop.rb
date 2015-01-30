@@ -6,7 +6,8 @@ class TransactableDrop < BaseDrop
 
   attr_reader :listing
 
-  delegate :name, :location, :description, :hourly_reservations?, :creator, :administrator, :last_booked_days, to: :listing
+  delegate :name, :location, :transactable_type, :description, :hourly_reservations?, :creator, :administrator, :last_booked_days, to: :listing
+  delegate :bookable_noun, :bookable_noun_plural, to: :transactable_type
   delegate :dashboard_url, :search_url, to: :routes
 
   def initialize(listing)
@@ -47,6 +48,14 @@ class TransactableDrop < BaseDrop
 
   def manage_listing_url_with_tracking
     routes.edit_manage_location_listing_path(@listing.location, @listing, track_email_event: true, token: @listing.administrator.try(:temporary_token))
+  end
+
+  def space_wizard_list_path
+    routes.new_user_session_path(:return_to => routes.transactable_type_space_wizard_list_path(transactable_type))
+  end
+
+  def space_wizard_list_url_with_tracking
+    routes.transactable_type_space_wizard_list_path(transactable_type, token: @user.try(:temporary_token), track_email_event: true)
   end
 
 end

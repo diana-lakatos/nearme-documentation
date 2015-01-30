@@ -121,7 +121,7 @@ en:
       listing_inactive: "This listing is inactive. Displaying other listings in this location."
     locations:
       listing_removed: "This listing has been removed. Displaying other listings near %{address}."
-      no_listings: "There aren't any listings at that location. Check out some other %{bookable_noun_plural}!"
+      no_listings: "There aren't any listings at that location. Check out some other locations."
       browsing_no_listings: "There aren't any active listings at that location. Other users will be redirected to search page."
     dashboard:
       order:
@@ -204,7 +204,7 @@ en:
         listing_updated: "Great, your listing's details have been updated."
       locations:
         add_your_company: "Please add your company first"
-        space_added: "Great, your new %{bookable_noun} has been added!"
+        space_added: "Great, your new location has been added!"
         space_deleted: "You've deleted %{name}"
         space_not_deleted: "We couldn't delete %{name}"
         updated: "Great, your location has been updated!"
@@ -314,7 +314,7 @@ en:
         listing_updated: "Great, your listing's details have been updated."
       locations:
         add_your_company: "Please add your company first"
-        space_added: "Great, your new %{bookable_noun} has been added!"
+        space_added: "Great, your new location has been added!"
         space_deleted: "You've deleted %{name}"
         space_not_deleted: "We couldn't delete %{name}"
         space_updated: "Great, your %{bookable_noun} has been updated!"
@@ -370,7 +370,7 @@ en:
       reservation_made: "Your reservation has been made! %{message}"
       reservation_not_confirmed: "Your reservation could not be confirmed."
     search_notifications:
-      you_will_be_notified: "You will be notified when a %{bookable_noun} is added at this location."
+      you_will_be_notified: "You will be notified when this location will be added."
       you_will_not_be_notified: "We could not add you to the notifcation list because your email \"%{email}\" %{errors}"
     product:
       complete_fields: "Please complete all fields!"

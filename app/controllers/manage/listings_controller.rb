@@ -1,6 +1,6 @@
 class Manage::ListingsController < Manage::BaseController
-  before_filter :find_transactable_type
   before_filter :find_listing, :except => [:index, :new, :create]
+  before_filter :find_transactable_type, except: [:index]
   before_filter :find_location
   before_filter :disable_unchecked_prices, :only => :update
 
@@ -18,7 +18,7 @@ class Manage::ListingsController < Manage::BaseController
     @listing = @location.listings.build(listing_params)
     build_approval_request_for_object(@listing) unless @listing.is_trusted?
     if @listing.save
-      flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: platform_context.decorate.bookable_noun)
+      flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.bookable_noun)
       event_tracker.created_a_listing(@listing, { via: 'dashboard' })
       event_tracker.updated_profile_information(current_user)
       redirect_to manage_locations_path
@@ -119,7 +119,7 @@ class Manage::ListingsController < Manage::BaseController
   end
 
   def find_transactable_type
-    @transactable_type = TransactableType.first
+    @transactable_type = @listing.try(:persisted?) ? @listing.transactable_type : TransactableType.find(params[:transactable_type_id])
   end
 
   def listing_params

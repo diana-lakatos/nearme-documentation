@@ -281,7 +281,7 @@ en:
     no_cancellation_time: "You can cancel before the first day."
     cancellation_fee: "The penalty fee for cancelling is %{fee}%. Service fee is not refunded."
     no_cancellation_fee: "You will get full refund except of service fee."
-    no_bookings_html: "You don't have any %{type} bookings. <a href='/search'>Find a %{bookable_noun} near you!</a>"
+    no_bookings_html: "You don't have any bookings. <a href='/search'>Find something near you!</a>"
     payment_in_person: "You will make payment in person."
     rfq: 'Request Quote'
     rfq_short: 'RFQ'

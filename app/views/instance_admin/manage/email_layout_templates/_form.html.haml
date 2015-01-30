@@ -9,6 +9,9 @@
         = f.input :path, label: 'Template path', :placeholder => 'layouts/path', disabled: @email_layout_template.persisted? && WorkflowAlert.for_email_layout_path(@email_layout_template.path).count > 0, input_html: { class: 'form-control' }, hint: "Path must start with 'layouts/'"
     .row
       .input-container.col-xs-12
+        = f.association :transactable_type
+    .row
+      .input-container.col-xs-12
         = f.input :format, collection: ['text', 'html'], input_html: { class: 'form-control' }
     .row
       .input-container.col-xs-12

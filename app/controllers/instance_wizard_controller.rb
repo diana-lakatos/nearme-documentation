@@ -59,6 +59,7 @@ class InstanceWizardController < ActionController::Base
         at.availability_rules.build(day: i, open_hour: 9, open_minute: 0,close_hour: 17, close_minute: 0)
       end
       at.save!
+      Utils::FormComponentsCreator.new(tp).create!
       @instance.location_types.create!(name: 'General')
     end
 

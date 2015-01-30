@@ -8,10 +8,11 @@ class InstanceMailer < ActionMailer::Base
   attr_accessor :platform_context
 
   def mail(options = {})
+    lookup_context.class.register_detail(:transactable_type_id) { nil }
     @platform_context = PlatformContext.current.decorate
-    lookup_context.class.register_detail(:platform_context) { nil }
     template = options.delete(:template_name) || view_context.action_name
     layout_path = options.delete(:layout_path)
+    lookup_context.transactable_type_id = options.delete(:transactable_type_id)
     to = options[:to]
     bcc = options.delete(:bcc)
     cc = options.delete(:cc)
@@ -70,8 +71,8 @@ class InstanceMailer < ActionMailer::Base
 
   def details_for_lookup
     {
-      :instance_type_id => PlatformContext.current.try(:instance_type).try(:id),
-      :instance_id => PlatformContext.current.try(:instance).try(:id)
+      instance_type_id: PlatformContext.current.try(:instance_type).try(:id),
+      instance_id: PlatformContext.current.try(:instance).try(:id),
     }
   end
 
@@ -83,7 +84,7 @@ class InstanceMailer < ActionMailer::Base
     @mixpanel_wrapper ||= AnalyticWrapper::MixpanelApi.new(
       AnalyticWrapper::MixpanelApi.mixpanel_instance(),
       :current_user       => @user,
-      :request_details    => { :current_instance_id => @platform_context.instance.id }
+      :request_details    => { current_instance_id: @platform_context.instance.id }
     )
     @event_tracker ||= Analytics::EventTracker.new(@mixpanel_wrapper, AnalyticWrapper::GoogleAnalyticsApi.new(@user))
     @event_tracker

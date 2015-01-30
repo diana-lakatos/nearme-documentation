@@ -4,7 +4,6 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
   skip_before_filter :redirect_if_no_company
   skip_before_filter :authenticate_user!, only: [:new]
 
-
   helper_method :user_messages_decorator
 
   def index

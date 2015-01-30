@@ -21,7 +21,7 @@
               = link_to dashboard_host_reservations_path, :class => (active_tab == :guests) ? 'active' : '' do
                 %span= platform_context.lessee.capitalize.pluralize
 
-          -if TransactableType.first.try(:has_action?, 'Request For Quote')
+          -if TransactableType.all.any? { |tt| t.has_action?('Request For Quote') }
             %li
               = link_to manage_support_tickets_path, :class => (active_tab == :rfq) ? 'active' : '' do
                 %span= "#{t('reservations.rfq_short')} (#{current_user.companies.first.rfq_count})"

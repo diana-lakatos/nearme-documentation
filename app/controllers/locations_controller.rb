@@ -1,10 +1,12 @@
 class LocationsController < ApplicationController
   before_filter :authenticate_user!, only: [:ask_a_question]
+  before_filter :find_transactable_type, only: [:show]
   before_filter :find_location, only: [:show, :ask_a_question]
   before_filter :find_listing, only: [:show, :ask_a_question]
   before_filter :redirect_to_invidivual_page_if_enabled
   before_filter :redirect_if_location_deleted, only: [:show, :ask_a_question]
   before_filter :redirect_if_location_custom_page, only: [:show, :ask_a_question]
+  before_filter :find_listings, only: [:show, :ask_a_question]
   before_filter :redirect_if_no_active_listings, only: [:show, :ask_a_question]
   before_filter :redirect_if_listing_inactive, only: [:show, :ask_a_question]
 
@@ -40,7 +42,11 @@ class LocationsController < ApplicationController
 
   def find_listing
     # tmp hack before migrating to Rails 4.1 - with deleted breaks default scope
-    @listing = @location.listings.find(params[:listing_id]) if params[:listing_id]
+    if params[:listing_id]
+      scope = @location.listings
+      scope = scope.for_transactable_type_id(@transactable_type.id) if @transactable_type.present?
+      @listing = scope.find(params[:listing_id])
+    end
   end
 
   def redirect_if_location_deleted
@@ -57,8 +63,16 @@ class LocationsController < ApplicationController
     end
   end
 
-  def redirect_if_no_active_listings
+  def find_listings
     @listings = @location.listings
+    if @transactable_type.present?
+      @listings = @listings.for_transactable_type_id(@transactable_type.id)
+    else
+      @listings = @listings.for_groupable_transactable_types
+    end
+  end
+
+  def redirect_if_no_active_listings
     if current_user_can_manage_location?
       flash.now[:warning] = t('flash_messages.locations.browsing_no_listings') if @listings.searchable.empty?
     else
@@ -66,7 +80,7 @@ class LocationsController < ApplicationController
     end
     if @listings.empty?
       # If location doesn't have any listings, redirects to search page with notice
-      flash[:warning] = t('flash_messages.locations.no_listings', bookable_noun_plural: platform_context.decorate.bookable_noun.pluralize)
+      flash[:warning] = t('flash_messages.locations.no_listings')
       redirect_to search_path(:loc => @location.address)
     end
   end
@@ -95,8 +109,15 @@ class LocationsController < ApplicationController
   end
 
   def redirect_to_invidivual_page_if_enabled
-    if TransactableType.pluck(:show_page_enabled).first && @listing
-      redirect_to location_listing_path(@location, @listing, restore_reservations: params[:restore_reservations])
+    if @listing.try(:transactable_type).try(:show_page_enabled)
+      redirect_to location_listing_path(@location, @listing, restore_reservations: params[:restore_reservations]), status: :found
+    end
+  end
+
+  def find_transactable_type
+    @transactable_type = params[:transactable_type_id].present? ? TransactableType.find(params[:transactable_type_id]) : nil
+    if @transactable_type.try(:groupable_with_others)
+      redirect_to location_path(params.except(:transactable_type_id)), status: :found
     end
   end
 

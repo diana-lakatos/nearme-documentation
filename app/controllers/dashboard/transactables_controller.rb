@@ -20,7 +20,7 @@ class Dashboard::TransactablesController < Dashboard::BaseController
     @transactable.company = @company
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
     if @transactable.save
-      flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: platform_context.decorate.bookable_noun)
+      flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.bookable_noun)
       event_tracker.created_a_listing(@transactable, { via: 'dashboard' })
       event_tracker.updated_profile_information(current_user)
       redirect_to dashboard_transactable_type_transactables_path(@transactable_type)

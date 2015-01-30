@@ -1,6 +1,6 @@
 module InstanceType::Searcher
 
-  attr_reader :results
+  attr_reader :results, :transactable_type
 
   def result_count
     @result_count ||= results.count
