@@ -17,40 +17,17 @@ class RatingReminderJobTest < ActiveSupport::TestCase
 
     should 'send reminder to both guest and host' do
       stub_local_time_to_return_hour(Location.any_instance, 12)
-      assert_difference('ActionMailer::Base.deliveries.size', 2) do
-        RatingReminderJob.perform(Date.current.to_s)
-      end
-
-      @host_email = ActionMailer::Base.deliveries.detect { |e| e.to == [@host.email] }
-      assert_match /\[DesksNearMe\] How was your experience hosting User-\d+/, @host_email.subject
-
-      @guest_email = ActionMailer::Base.deliveries.detect { |e| e.to == [@guest.email] }
-      assert_match /\[DesksNearMe\] How was your experience at 'Listing \d+'/, @guest_email.subject
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::GuestRatingRequested, @reservation.id)
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::HostRatingRequested, @reservation.id)
+      RatingReminderJob.perform(Date.current.to_s)
     end
 
     should 'not send any reminders while its not noon in local time zone this hour' do
       stub_local_time_to_return_hour(Location.any_instance, 7)
-      assert_no_difference 'ActionMailer::Base.deliveries.size' do
-        RatingReminderJob.perform(Date.current.to_s)
-      end
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::GuestRatingRequested, @reservation.id).never
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::HostRatingRequested, @reservation.id).never
+      RatingReminderJob.perform(Date.current.to_s)
     end
-  end
-
-  context "With a different platform context" do
-
-    setup do
-      @reservation = FactoryGirl.create(:past_reservation)
-      PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance, :name => 'Example Instance'))
-      @reservation = FactoryGirl.create(:past_reservation)
-    end
-
-    should 'send raiting reminders from both instances' do
-      stub_local_time_to_return_hour(Location.any_instance, 12)
-      assert_difference('ActionMailer::Base.deliveries.size', 4) do
-        RatingReminderJob.perform(Date.current.to_s)
-      end
-    end
-
   end
 
   context "With a future reservation" do
@@ -60,9 +37,10 @@ class RatingReminderJobTest < ActiveSupport::TestCase
     end
 
     should 'not send any reminders while reservation didnt end yesterday' do
-      assert_no_difference 'ActionMailer::Base.deliveries.size' do
-        RatingReminderJob.perform(Date.current.to_s)
-      end
+      stub_local_time_to_return_hour(Location.any_instance, 12)
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::GuestRatingRequested, @reservation.id).never
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::HostRatingRequested, @reservation.id).never
+      RatingReminderJob.perform(Date.current.to_s)
     end
 
   end
@@ -77,9 +55,9 @@ class RatingReminderJobTest < ActiveSupport::TestCase
 
     should 'not send any reminders while reservation was already notified' do
       stub_local_time_to_return_hour(Location.any_instance, 12)
-      assert_no_difference 'ActionMailer::Base.deliveries.size' do
-        RatingReminderJob.perform(Date.current.to_s)
-      end
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::GuestRatingRequested, @reservation.id).never
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::HostRatingRequested, @reservation.id).never
+      RatingReminderJob.perform(Date.current.to_s)
     end
 
   end
@@ -92,9 +70,9 @@ class RatingReminderJobTest < ActiveSupport::TestCase
 
     should 'not send any reminders to expired reservations' do
       stub_local_time_to_return_hour(Location.any_instance, 12)
-      assert_no_difference 'ActionMailer::Base.deliveries.size' do
-        RatingReminderJob.perform(Date.current.to_s)
-      end
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::GuestRatingRequested, @reservation.id).never
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::HostRatingRequested, @reservation.id).never
+      RatingReminderJob.perform(Date.current.to_s)
     end
 
   end

@@ -12,8 +12,7 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
 
   def user_cancel
     if reservation.user_cancel
-      ReservationMailer.enqueue.notify_host_of_cancellation_by_guest(reservation)
-      ReservationMailer.enqueue.notify_guest_of_cancellation_by_guest(reservation)
+      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestCancelled, reservation.id)
       event_tracker.cancelled_a_booking(reservation, { actor: 'guest' })
       event_tracker.updated_profile_information(reservation.owner)
       event_tracker.updated_profile_information(reservation.host)

@@ -12,7 +12,7 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
     @user.skip_password = true
     if @user.save
       InstanceAdmin.create(:user_id => @user.id)
-      PostActionMailer.enqueue.created_by_instance_admin(@user, current_user)
+      WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::CreatedByAdmin, @user.id, current_user.id)
       flash[:success] = "User has been successfully created"
       redirect_to instance_admin_manage_users_path
     else

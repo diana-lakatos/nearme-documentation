@@ -63,17 +63,6 @@ ActiveSupport::TestCase.class_eval do
     refute object.to_s.include?(unexpected), message
   end
 
-  def raw_post(action, params, body)
-    # The problem with doing this is that the JSON sent to the app
-    # is that Rails will parse and put the JSON payload into params.
-    # But this approach doesn't behave like that for tests.
-    # The controllers are doing more work by parsing JSON than necessary.
-    @request.env['RAW_POST_DATA'] = body
-    response = post(action, params)
-    @request.env.delete('RAW_POST_DATA')
-    response
-  end
-
   def with_carrier_wave_processing(&blk)
     before, CarrierWave::Uploader::Base.enable_processing = CarrierWave::Uploader::Base.enable_processing, true
     yield

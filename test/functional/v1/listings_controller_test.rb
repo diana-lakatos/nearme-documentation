@@ -95,8 +95,10 @@ class V1::ListingsControllerTest < ActionController::TestCase
     setup do
       stub_mixpanel
       authenticate!
-      ReservationMailer.expects(:notify_host_with_confirmation).returns(stub(deliver: true)).once
-      ReservationMailer.expects(:notify_guest_with_confirmation).returns(stub(deliver: true)).once
+
+      WorkflowStepJob.expects(:perform).with do |klass, int|
+        klass == WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation
+      end
 
       raw_post :reservation, { id: @listing.id }, valid_reservation_params.to_json
       @reservation = Transactable.find_by_id(@listing.id).reservations.first

@@ -62,13 +62,14 @@ class InstanceWizardController < ActionController::Base
       @instance.location_types.create!(name: 'General')
     end
 
+    Utils::DefaultAlertsCreator.new.create_all_workflows!
     InstanceAdmin.create(user_id: @user.id)
 
     blog_instance = BlogInstance.new(name: @instance.name + ' Blog')
     blog_instance.owner = @instance
     blog_instance.save!
 
-    PostActionMailer.enqueue.instance_created(@instance, @user, (user_password || '[using existing account password]'))
+    WorkflowStepJob.perform(WorkflowStep::InstanceWorkflow::Created, @instance.id, @user.id, user_password || '[using existing account password]')
 
     redirect_to @instance.domains.first.url
   end

@@ -62,9 +62,8 @@ class Support::Ticket < ActiveRecord::Base
       ticket_message.message = body
       ticket_message.instance_id = self.instance_id
       self.save!
+      WorkflowStepJob.perform(WorkflowStep::SupportWorkflow::Created, ticket_message.id)
     end
-    SupportMailer.enqueue.request_received(self, self.first_message)
-    SupportMailer.enqueue.support_received(self, self.first_message)
   end
 
   def admin_emails

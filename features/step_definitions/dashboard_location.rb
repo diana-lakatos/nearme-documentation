@@ -22,6 +22,7 @@ end
 
 When /^I upload csv file with locations and transactables$/ do
   FactoryGirl.create(:location_type, name: 'My Type')
+  Utils::DefaultAlertsCreator::DataUploadCreator.new.notify_uploader_of_finished_import_email!
   find(:css, 'a.bulk-upload').click
   stub_image_url('http://www.example.com/image1.jpg')
   stub_image_url('http://www.example.com/image2.jpg')
@@ -37,7 +38,7 @@ Then /^I should receive data upload report email when finished$/ do
   mails = emails_for(model!('user').email)
   assert_equal 1, mails.count
   mail = mails.first
-  assert_equal "Importing 'current_data.csv' has finished", mail.subject
+  assert_equal "[DesksNearMe] Importing 'current_data.csv' has finished", mail.subject
 end
 
 Then /^New locations and transactables from csv should be added$/ do

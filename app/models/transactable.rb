@@ -262,11 +262,9 @@ class Transactable < ActiveRecord::Base
     reservation.save!
 
     if reservation.listing.confirm_reservations?
-      ReservationMailer.notify_host_with_confirmation(reservation).deliver
-      ReservationMailer.notify_guest_with_confirmation(reservation).deliver
+      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation, reservation.id)
     else
-      ReservationMailer.notify_host_without_confirmation(reservation).deliver
-      ReservationMailer.notify_guest_of_confirmation(reservation).deliver
+      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::CreatedWithAutoConfirmation, reservation.id)
     end
     reservation
   end

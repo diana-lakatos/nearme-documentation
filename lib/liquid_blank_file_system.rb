@@ -4,15 +4,20 @@ module Liquid
     # Called by Liquid to retrieve a template file
     def read_template_file(template_path, context)
       format = template_path.split('.').last.to_sym
-      details = {platform_context: [context.registers[:controller].platform_context], handlers: [:liquid], formats: [format]}
-      template = EmailResolver.instance.find_templates(template_path, '', true, details).first
+      details = {}
+      begin
+        details = {instance_type_id: context.registers[:controller].platform_context.instance_type.try(:id), instance_id: context.registers[:controller].platform_context.instance.id, handlers: [:liquid], formats: [format], locale: [I18n.locale]}
+        template = InstanceViewResolver.instance.find_templates(template_path, '', true, details).first
+      rescue
+        Rails.logger.error "Liquid::BlankFileSystem #{$!}. Details: #{details}"
+      end
 
       if template.nil?
-        template_path_splited = template_path.split('/') 
+        template_path_splited = template_path.split('/')
         template_path_splited[-1] = "_#{template_path_splited[-1]}"
         File.read(File.join('app/views', "#{template_path_splited.join('/')}.liquid"))
       else
-        template.render        
+        template.render
       end
     end
   end

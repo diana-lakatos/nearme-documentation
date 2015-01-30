@@ -56,7 +56,7 @@ class SecuredParams
   def data_upload
     [
       :csv_file,
-      options: nested([:send_invitational_email, :sync_mode])
+      options: [:send_invitational_email, :sync_mode]
     ]
 
   end
@@ -157,16 +157,27 @@ class SecuredParams
 
   def email_template
     [
-      :handler,
-      :html_body,
-      :text_body,
+      :body,
       :path,
-      :partial,
-      :subject,
-      :to,
-      :from,
-      :bcc,
-      :reply_to,
+      :locale,
+      :format
+    ]
+  end
+
+  def email_layout_template
+    [
+      :body,
+      :path,
+      :locale,
+      :format
+    ]
+  end
+
+  def sms_template
+    [
+      :body,
+      :path,
+      :locale
     ]
   end
 
@@ -259,6 +270,9 @@ class SecuredParams
       :apply_text_filters, :force_accepting_tos,
       :payment_transfers_frequency,
       :user_blogs_enabled,
+      :twilio_consumer_key, :twilio_consumer_secret,
+      :test_twilio_consumer_key, :test_twilio_consumer_secret,
+      :twilio_from_number, :test_twilio_from_number,
       user_required_fields: [],
       transactable_types_attributes: nested(self.transactable_type),
       listing_amenity_types_attributes: nested(self.amenity_type),
@@ -807,6 +821,35 @@ class SecuredParams
 
   def user_instance_profiles
     UserInstanceProfile.public_custom_attributes_names(InstanceProfileType.first.try(:id))
+  end
+
+  def workflow
+    [
+      :name
+    ]
+  end
+
+  def workflow_step()
+    [:name]
+  end
+
+  def workflow_alert(step_associated_class = nil)
+    [
+      :name,
+      :alert_type,
+      :recipient_type,
+      :recipient,
+      :template_path,
+      :delay,
+      :from,
+      :from_type,
+      :reply_to,
+      :replt_to_type,
+      :cc,
+      :bcc,
+      :subject,
+      :layout_path
+    ] + (step_associated_class.present? && defined?(step_associated_class.constantize::CUSTOM_OPTIONS) ? [custom_options: step_associated_class.constantize::CUSTOM_OPTIONS] : [])
   end
 
   def waiver_agreement_template

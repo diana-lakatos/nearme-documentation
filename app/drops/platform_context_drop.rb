@@ -16,7 +16,7 @@ class PlatformContextDrop < BaseDrop
   end
 
   def logo_url
-    @platform_context_decorator.logo_image.url || "https://s3.amazonaws.com/desksnearme.production/uploads/theme/logo_retina_image/1/logo_2x.png"
+    @platform_context_decorator.logo_image.url || image_url("platform_home/logo-01-dark.png").to_s
   end
 
   def host

@@ -1,0 +1,1 @@
+[{{ platform_context.name }}] Your booking for {{ reservation.listing.name }} was {{ reservation.state_to_string }}. View booking: {{ platform_context.host | append:reservation.bookings_dashboard_url | shorten_url}}

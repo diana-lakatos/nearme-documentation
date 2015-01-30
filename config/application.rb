@@ -165,5 +165,6 @@ module DesksnearMe
     config.secure_app = true
     config.root_secured = true
     config.run_jobs_in_background = true
+    config.send_real_sms = false
   end
 end

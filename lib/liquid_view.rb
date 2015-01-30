@@ -20,7 +20,7 @@ class LiquidView
   end
 
   def render(source, local_assigns = {})
-    @view.controller.headers["Content-Type"] ||= 'text/html; charset=utf-8'
+    @view.controller.headers["Content-Type"] ||= 'text/html; charset=utf-8' if @view.controller.respond_to?(:headers)
 
     assigns = @view.assigns.reject{ |k,v| PROTECTED_ASSIGNS.include?(k) }
 
@@ -41,7 +41,7 @@ class LiquidView
 
     liquid = Liquid::Template.parse(source)
 
-    filters = filters_from_controller(controller)
+    filters = filters_from_controller(controller) + [LiquidFilters]
 
     liquid.render(assigns, :filters => filters, :registers => {:action_view => @view, :controller => @view.controller}).html_safe
   end

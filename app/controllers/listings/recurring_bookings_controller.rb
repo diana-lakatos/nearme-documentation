@@ -48,14 +48,11 @@ class Listings::RecurringBookingsController < ApplicationController
     if @recurring_booking_request.process
       if @recurring_booking_request.confirm_reservations?
         @recurring_booking.schedule_expiry
-        RecurringBookingMailer.enqueue.notify_host_with_confirmation(@recurring_booking)
-        RecurringBookingMailer.enqueue.notify_guest_with_confirmation(@recurring_booking)
-        RecurringBookingSmsNotifier.notify_host_with_confirmation(@recurring_booking).deliver
+        WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithoutAutoConfirmation, @recurring_booking.id)
         event_tracker.updated_profile_information(@recurring_booking.owner)
         event_tracker.updated_profile_information(@recurring_booking.host)
       else
-        RecurringBookingMailer.enqueue.notify_host_without_confirmation(@recurring_booking)
-        RecurringBookingMailer.enqueue.notify_guest_of_confirmation(@recurring_booking)
+        WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithAutoConfirmation, @recurring_booking.id)
       end
 
       event_tracker.requested_a_recurring_booking(@recurring_booking)

@@ -217,6 +217,12 @@ DesksnearMe::Application.routes.draw do
       end
 
       resources :custom_attributes, only: [:index]
+      resources :workflows, only: [:index, :edit, :update, :show] do
+        resources :workflow_steps, only: [:show, :edit, :update], controller: 'workflows/workflow_steps'
+      end
+      resources :workflow_steps do
+        resources :workflow_alerts, excpet: [:index], controller: 'workflows/workflow_alerts'
+      end
 
       resources :instance_profile_types, :only => [:index, :destroy] do
         collection do
@@ -262,7 +268,9 @@ DesksnearMe::Application.routes.draw do
         resources :instance_admin_roles, :only => [:create, :update, :destroy, :index]
       end
 
+      resources :email_layout_templates, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :email_templates, :only => [:index, :new, :create, :edit, :update, :destroy]
+      resources :sms_templates, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :waiver_agreement_templates, :only => [:index, :create, :update, :destroy]
     end
 
@@ -673,19 +681,7 @@ DesksnearMe::Application.routes.draw do
   get "/rent-design-desks", to: 'locations#vertical_design'
 
   if defined? MailView
-    mount CompanyMailerPreview => 'mail_view/companies'
-    mount ReservationMailerPreview => 'mail_view/reservations'
-    mount UserMailerPreview => 'mail_view/users'
-    mount PostActionMailerPreview => 'mail_view/post_action'
-    mount InquiryMailerPreview => 'mail_view/inquiries'
-    mount ListingMailerPreview => 'mail_view/listings'
-    mount RatingMailerPreview => 'mail_view/ratings'
-    mount UserMessageMailerPreview => 'mail_view/user_messages'
-    mount ReengagementMailerPreview => 'mail_view/reengagement'
-    mount RecurringMailerPreview => 'mail_view/recurring'
-    mount SupportMailerPreview => 'mail_view/support'
     mount PlatformMailerPreview => 'mail_view/platform'
-    mount DeviseMailerPreview => 'mail_view/devise'
   end
 
 end

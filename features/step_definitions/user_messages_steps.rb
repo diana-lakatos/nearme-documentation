@@ -1,3 +1,7 @@
+Given /^UserMessage alerts exist$/ do
+  Utils::DefaultAlertsCreator::UserMessageCreator.new.create_all!
+end
+
 Given /^I ask a question about a transactable$/ do
   @listing = model('transactable')
   @user = model('user')

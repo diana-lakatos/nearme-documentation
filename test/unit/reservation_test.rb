@@ -262,8 +262,6 @@ class ReservationTest < ActiveSupport::TestCase
 
   context 'expiration' do
 
-    context 'with a confirmed reservation' do
-
       setup do
         Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:charge)
         @reservation = FactoryGirl.build(:reservation_with_credit_card)
@@ -274,15 +272,13 @@ class ReservationTest < ActiveSupport::TestCase
         @reservation.service_fee_amount_host_cents = 10_00
         @reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
         @reservation.save!
-        @reservation.confirm
       end
 
       should 'not send any email if the expire method is called' do
-        ReservationMailer.expects(:notify_guest_of_expiration).never
+        @reservation.confirm
+        WorkflowStepJob.expects(:perform).never
         @reservation.perform_expiry!
       end
-
-    end
 
   end
 
@@ -368,8 +364,10 @@ class ReservationTest < ActiveSupport::TestCase
       end
 
       should "not reset total cost when saving an existing reservation" do
-        ReservationMailer.expects(:notify_host_with_confirmation).returns(mailer_stub).at_least_once
-        ReservationMailer.expects(:notify_guest_with_confirmation).returns(mailer_stub).at_least_once
+
+        WorkflowStepJob.expects(:perform).with do |klass, id|
+          klass == WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation
+        end
 
         dates              = [1.week.from_now.monday]
         quantity           =  2

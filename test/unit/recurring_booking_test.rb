@@ -89,8 +89,8 @@ class RecurringBookingTest < ActiveSupport::TestCase
       @confirmed_reservation = @recurring_booking.reservations.last
       @confirmed_reservation.confirm!
 
-      RecurringBookingMailer.expects(:notify_guest_of_expiration).returns(stub(deliver: true)).once
-      RecurringBookingMailer.expects(:notify_host_of_expiration).returns(stub(deliver: true)).once
+
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::RecurringBookingWorkflow::Expired, @recurring_booking.id)
       @recurring_booking.perform_expiry!
       assert_equal 5, @recurring_booking.reservations.expired.count
       assert_equal 1, @recurring_booking.reservations.confirmed.count

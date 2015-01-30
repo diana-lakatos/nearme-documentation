@@ -6,7 +6,6 @@ class RegistrationsControllerTest < ActionController::TestCase
     @user = FactoryGirl.create(:user)
     @request.env["devise.mapping"] = Devise.mappings[:user]
     stub_mixpanel
-    PostActionMailer.stubs(:sign_up_verify).returns(stub(deliver: true))
   end
 
   context 'actions' do
@@ -92,16 +91,6 @@ class RegistrationsControllerTest < ActionController::TestCase
       assert_select ".info .connection .count", "5 followers"
     end
 
-    should 'successfully unsubscribe' do
-      verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
-      signature = verifier.generate("recurring_mailer/analytics")
-
-      assert_difference('ActionMailer::Base.deliveries.size', 1) do
-        get :unsubscribe, :token => @user.authentication_token, :signature => signature
-      end
-      assert @user.unsubscribed?("recurring_mailer/analytics")
-      assert_redirected_to root_path
-    end
   end
 
   context "verify" do

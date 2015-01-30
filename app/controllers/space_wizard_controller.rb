@@ -47,16 +47,16 @@ class SpaceWizardController < ApplicationController
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
       @user.save(:validate => false)
       track_saved_draft_event
-      PostActionMailer.enqueue_later(24.hours).list_draft(@user)
+      WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::DraftCreated, @user.first_listing.id)
       flash[:success] = t('flash_messages.space_wizard.draft_saved')
       redirect_to :list
     elsif @user.save
       track_new_space_event
       track_new_company_event
-      PostActionMailer.enqueue.list(@user)
       if buyable?
         redirect_to dashboard_products_path
       else
+        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Created, @user.first_listing.id)
         flash[:success] = t('flash_messages.space_wizard.space_listed', bookable_noun: platform_context.decorate.bookable_noun)
         redirect_to dashboard_transactable_type_transactables_path(@transactable_type)
       end

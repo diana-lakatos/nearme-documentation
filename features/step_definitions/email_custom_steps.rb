@@ -1,3 +1,11 @@
+Given /^Inquiry alerts exist$/ do
+  Utils::DefaultAlertsCreator::InquiryCreator.new.create_all!
+end
+
+Given /^Listing alerts exist$/ do
+  Utils::DefaultAlertsCreator::ListingCreator.new.create_all!
+end
+
 Then /^a shared listing email is( not)? sent to "([^"]+)"$/ do |no_email, email|
   if no_email
     last_email = emails_for(email).select { |e| e.subject.include?("shared a listing") }.empty?.should be_true
