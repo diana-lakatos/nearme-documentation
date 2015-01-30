@@ -2,7 +2,7 @@ class @ShippoFieldsManager
   constructor: ->
     $(document).ready =>
       @toggle_shippo_fields_by_checked_status()
-      $("#product_form_shippo_enabled").click =>
+      $("#product_form_shippo_enabled, #boarding_form_product_form_shippo_enabled").click =>
         @toggle_shippo_fields_by_checked_status()
         return
   
@@ -10,7 +10,7 @@ class @ShippoFieldsManager
 
   toggle_shippo_fields_by_checked_status: ->
     shippo_fields_element = $(".shippo_required_fields_row")
-    shippo_checkbox_element = $("#product_form_shippo_enabled")
+    shippo_checkbox_element = $("#product_form_shippo_enabled, #boarding_form_product_form_shippo_enabled")
     shipping_profile_fields = $(".row.product_shipping_profile_fields_row")
     if (shippo_checkbox_element.length > 0) and shippo_checkbox_element.is(":checked")
       shippo_fields_element.removeClass "disabled"
