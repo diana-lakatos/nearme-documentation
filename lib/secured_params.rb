@@ -348,12 +348,6 @@ class SecuredParams
     ]
   end
 
-  def spree_shipping_category
-    [
-      :name
-    ]
-  end
-
   def spree_shipping_method
     [
       :name,
