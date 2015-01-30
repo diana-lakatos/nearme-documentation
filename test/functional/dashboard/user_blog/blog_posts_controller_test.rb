@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class UserBlog::BlogPostsControllerTest < ActionController::TestCase
+class Dashboard::UserBlog::BlogPostsControllerTest < ActionController::TestCase
   setup do
     @user = FactoryGirl.create(:user)
     sign_in @user
@@ -33,7 +33,7 @@ class UserBlog::BlogPostsControllerTest < ActionController::TestCase
           delete :destroy, id: @blog.id
         }
         assert_response :redirect
-        assert_redirected_to user_blog_path
+        assert_redirected_to dashboard_blog_path
       end
     end
   end
@@ -44,10 +44,11 @@ class UserBlog::BlogPostsControllerTest < ActionController::TestCase
       assert_response :success
     end
 
-    should 'redirect to 404 if user blogging is disabled on instance' do
+    should 'redirect to dashboard if user blogging is disabled on instance' do
       PlatformContext.current.instance.update_column(:user_blogs_enabled, false)
       get :new
-      assert_response :missing
+      assert_response :redirect
+      assert_redirected_to dashboard_path
     end
   end
 
@@ -58,7 +59,7 @@ class UserBlog::BlogPostsControllerTest < ActionController::TestCase
         post :create, user_blog_post: params
       }
       assert_response :redirect
-      assert_redirected_to user_blog_path
+      assert_redirected_to dashboard_blog_path
     end
   end
 end
