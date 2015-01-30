@@ -111,6 +111,16 @@ class PlatformContextDecorator
     end
   end
 
+  def bookable_nouns
+    @bookable_nouns ||= transactable_types.map { |tt| tt.bookable_noun.presence || tt.name }.to_sentence(last_word_connector: 'or')
+  end
+
+  def bookable_nouns_plural
+    @bookable_nouns_plural ||= transactable_types.map { |tt| (tt.bookable_noun.presence || tt.name).pluralize }.to_sentence(last_word_connector: 'or')
+  end
+
+
+
   private
 
   def platform_context

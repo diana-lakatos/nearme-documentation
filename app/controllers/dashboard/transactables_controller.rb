@@ -5,7 +5,7 @@ class Dashboard::TransactablesController < Dashboard::BaseController
   before_filter :disable_unchecked_prices, :only => :update
 
   def index
-    @transactables = @transactable_type.transactables.where(company: @company).paginate(page: params[:page], per_page: 20)
+    @transactables = @transactable_type.transactables.where(company_id: @company).paginate(page: params[:page], per_page: 20)
   end
 
   def new
@@ -92,25 +92,13 @@ class Dashboard::TransactablesController < Dashboard::BaseController
 
   private
 
-  # def find_location
-  #   begin
-  #     @location = if @transactable
-  #                   @transactable.location
-  #                 else
-  #                   locations_scope.find(params[:location_id])
-  #                 end
-  #   rescue ActiveRecord::RecordNotFound
-  #     raise Location::NotFound
-  #   end
-  # end
-
   def find_locations
     @locations = @company.locations
   end
 
   def find_transactable
     begin
-      @transactable = @transactable_type.transactables.where(company: @company).find(params[:id])
+      @transactable = @transactable_type.transactables.where(company_id: @company).find(params[:id])
     rescue ActiveRecord::RecordNotFound
       raise Transactable::NotFound
     end
