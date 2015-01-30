@@ -16,12 +16,34 @@ class ProductForm < Form
   validates_presence_of :depth, :if => :shippo_enabled
   validates_presence_of :width, :if => :shippo_enabled
   validates_presence_of :height, :if => :shippo_enabled
+  validate  :list_of_countries_or_states_cannot_be_empty
 
   def_delegators :@product, :id, :price, :price=, :name, :name=, :description, :id=, :description=,
     :shippo_enabled=, :shippo_enabled
 
   def_delegators :'@product.master', :weight=, :weight, :depth=, :depth,
     :width=, :width, :height=, :height
+
+  def list_of_countries_or_states_cannot_be_empty
+    added_to_base = false
+    if self.try(:shipping_methods).present?
+      self.shipping_methods.each do |shipping_method|
+        if shipping_method.try(:zones).present?
+          shipping_method.zones.each do |zone|
+            if zone.members.empty?
+              if !added_to_base
+                # We add this to prevent the form from being saved
+                self.errors.add(:base, :zone_incomplete)
+                added_to_base = true
+              end
+              # And we add this to get the error message in the form
+              zone.errors.add(:kind, :members_missing)
+            end
+          end
+        end
+      end
+    end
+  end
 
   def quantity
     @quantity ||= @stock_item.stock_movements.sum(:quantity)

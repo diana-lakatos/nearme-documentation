@@ -11,7 +11,6 @@ Spree::Zone.class_eval do
 
   validates :name, presence: true, uniqueness: {scope: [:instance_id, :company_id, :partner_id, :user_id]}
 
-
   def country_ids=(ids)
     ids = ids.split(',') if ids.class == String
     zone_members.destroy_all
