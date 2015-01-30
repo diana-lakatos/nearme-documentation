@@ -102,11 +102,11 @@ ActiveRecord::Schema.define(version: 20150128181632) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "hint"
     t.integer  "approval_request_id"
     t.integer  "approval_request_attachment_template_id"
     t.boolean  "required",                                default: false
     t.string   "label"
+    t.text     "hint"
   end
 
   add_index "approval_request_attachments", ["instance_id"], name: "index_approval_request_attachments_on_instance_id", using: :btree
@@ -696,34 +696,6 @@ ActiveRecord::Schema.define(version: 20150128181632) do
 
   add_index "listing_types", ["instance_id"], name: "index_listing_types_on_instance_id", using: :btree
 
-  create_table "listings", force: true do |t|
-    t.integer  "location_id"
-    t.string   "name"
-    t.text     "description"
-    t.integer  "quantity",                default: 1
-    t.text     "availability_rules_text"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
-    t.boolean  "confirm_reservations",    default: true, null: false
-    t.boolean  "delta",                   default: true, null: false
-    t.integer  "listing_type_id"
-    t.integer  "daily_price_cents"
-    t.integer  "weekly_price_cents"
-    t.integer  "monthly_price_cents"
-    t.boolean  "hourly_reservations"
-    t.integer  "hourly_price_cents"
-    t.integer  "minimum_booking_minutes"
-    t.string   "external_id"
-  end
-
-  create_table "location_amenities", force: true do |t|
-    t.integer  "amenity_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "location_id"
-  end
-
   create_table "location_types", force: true do |t|
     t.string   "name"
     t.datetime "created_at",  null: false
@@ -766,8 +738,8 @@ ActiveRecord::Schema.define(version: 20150128181632) do
     t.boolean  "listings_public",                default: true
     t.integer  "partner_id"
     t.integer  "address_id"
-    t.boolean  "mark_to_be_bulk_update_deleted", default: false
     t.string   "external_id"
+    t.boolean  "mark_to_be_bulk_update_deleted", default: false
   end
 
   add_index "locations", ["address_id"], name: "index_locations_on_address_id", using: :btree
@@ -1181,23 +1153,6 @@ ActiveRecord::Schema.define(version: 20150128181632) do
   end
 
   add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
-
-  create_table "search_queries", force: true do |t|
-    t.string   "query"
-    t.text     "agent"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "sessions", force: true do |t|
-    t.string   "session_id", null: false
-    t.text     "data"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", using: :btree
-  add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
   create_table "spree_addresses", force: true do |t|
     t.string   "firstname"
@@ -2405,17 +2360,6 @@ ActiveRecord::Schema.define(version: 20150128181632) do
   end
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree
-
-  create_table "transactable_actions", force: true do |t|
-    t.integer  "action_type_id"
-    t.integer  "transactable_id"
-    t.integer  "instance_id"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "transactable_actions", ["action_type_id", "transactable_id"], name: "transactable_actions_at_t_unique", unique: true, where: "(deleted_at IS NULL)", using: :btree
 
   create_table "transactable_type_actions", force: true do |t|
     t.integer  "action_type_id"
