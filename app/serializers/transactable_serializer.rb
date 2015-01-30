@@ -5,7 +5,7 @@ class TransactableSerializer < ApplicationSerializer
   }
 
   attributes :id, :name, :description, :company_name, :company_description,
-    :address, :price, :quantity
+    :address, :price, :quantity, :rating
 
   attribute :latitude,  key: :lat
   attribute :longitude, key: :lon
@@ -40,6 +40,14 @@ class TransactableSerializer < ApplicationSerializer
       period:        price_period,
       label:         label,
       currency_code: object.daily_price.try(:currency).try(:iso_code) || 'USD'
+    }
+  end
+
+  # Serialize rating
+  def rating
+    {
+      average: 0,
+      count:   0
     }
   end
 

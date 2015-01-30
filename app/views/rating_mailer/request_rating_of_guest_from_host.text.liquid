@@ -6,6 +6,6 @@ Your opinion is very important and it will help us ensure that our {{ platform_c
 
 Please take a moment to give us your feedback!
 
-Write a Review: {{ platform_context.host | append:reservation.reviews_reservation_url }}
+Write a Review: {{ platform_context.host | append:reservation.guest_rating_reservation_url_with_tracking | append:signature_for_tracking }}
 
 If you'd prefer to talk to us directly, please send an email to {{ platform_context.support_email }} or call us on {{ platform_context.phone_number }} - we love to talk with our {{platform_context.lessors}}.

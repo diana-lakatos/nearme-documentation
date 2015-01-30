@@ -18,8 +18,6 @@ class TransactableType < ActiveRecord::Base
   has_many :data_uploads, inverse_of: :transactable_type
   has_many :transactable_type_actions
   has_many :action_types, through: :transactable_type_actions
-  has_many :rating_systems
-  has_many :reviews
 
   belongs_to :instance
 
@@ -39,10 +37,6 @@ class TransactableType < ActiveRecord::Base
   validates_inclusion_of :cancellation_policy_penalty_percentage, in: 0..100, allow_nil: true, message: 'must be between 0 and 100', if: lambda { |transactable_type| transactable_type.enable_cancellation_policy }
 
   accepts_nested_attributes_for :availability_templates
-
-  def any_rating_system_active?
-    self.rating_systems.any?(&:active)
-  end
 
   def normalize_cancellation_policy_enabled
     if self.enable_cancellation_policy == "1"

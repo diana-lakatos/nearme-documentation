@@ -3,13 +3,13 @@ class RatingMailer < InstanceMailer
 
   def request_rating_of_guest_from_host(reservation)
     user = reservation.administrator
-    @subject = I18n.t('mailers.rating.experience_hosting', name: reservation.owner.first_name)
+    @subject = "How was your experience hosting #{reservation.owner.first_name}?"
     request_rating(reservation, user)
   end
 
-  def request_rating_of_host_and_product_from_guest(reservation)
+  def request_rating_of_host_from_guest(reservation)
     user  = reservation.owner
-    @subject = I18n.t('mailers.rating.experience_at', name: reservation.listing.name)
+    @subject = "How was your experience at '#{reservation.listing.name}'?"
     request_rating(reservation, user)
   end
 
