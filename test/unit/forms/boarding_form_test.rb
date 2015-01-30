@@ -8,7 +8,7 @@ class BoardingFormTest < ActiveSupport::TestCase
     @boarding_form = BoardingForm.new(@user)
     10.times { FactoryGirl.create(:taxons) }
     @taxon_ids = Spree::Taxon.all.map(&:id)
-    @countries = Spree::Country.last(10)
+    @countries = [FactoryGirl.create(:country)]
   end
 
   context "Boarding First Product" do
