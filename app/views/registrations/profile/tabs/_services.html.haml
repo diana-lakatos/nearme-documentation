@@ -1,0 +1,13 @@
+- @user.companies.first.listings.decorate.in_groups_of(2) do |line|
+  .row-fluid
+    - line.each do |listing|
+      .span6
+        - if listing
+          = listing.name
+          -#= link_to product_url(product) do
+          -#  .item-img
+          -#    = product.first_image
+          -#  .details.clearfix
+          -#    %p= product.name
+          -#    %p.name= product.company.name
+          -#    %p.price= product.display_price

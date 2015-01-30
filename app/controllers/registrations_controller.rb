@@ -74,7 +74,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def show
-    @theme_name = 'buy-sell-theme' if buyable?
+    @theme_name = 'buy-sell-theme'
     @user = User.find(params[:id]).decorate
   end
 

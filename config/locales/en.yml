@@ -248,6 +248,33 @@ en:
         services: 'User Profile > Services'
         reviews: 'User Profile > Reviews'
 
+  user_profile:
+    labels:
+      visitor:
+        no_products: '%{name} does not offer any products yet.'
+        no_services: '%{name} does not offer any services yet.'
+        no_reviews: "%{name} did not received any reviews yet."
+        no_blog_posts: '%{name} does not have any blog posts yet.'
+
+      user:
+        no_products: "You don't have any products."
+        no_services: "You don't have any services."
+        no_reviews: "You did not received any reviews."
+        no_blog_posts: "You don't have any blog posts."
+
+      tabs:
+        products: 'Shop Items'
+        services: 'Services'
+        reviews: 'Reviews (%{count})'
+        blog_posts: 'Blog'
+
+      owner: 'SHOP OWNER'
+      recent_activity: 'RECENT ACTIVITY'
+      shop_info: 'SHOP INFO'
+      verifications: 'VERIFICATIONS'
+
+    buttons:
+      cta: 'Add new'
 
   user_blog:
     titles:
