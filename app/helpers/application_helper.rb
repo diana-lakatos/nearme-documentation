@@ -251,4 +251,8 @@ module ApplicationHelper
         "btn-gray#{state==(params[:state] || 'new') ? " active" : "-darker"}"
       ]).html_safe
   end
+
+  def active_class(arg1, arg2)
+    'active' if arg1 == arg2
+  end
 end
