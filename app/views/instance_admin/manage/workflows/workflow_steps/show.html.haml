@@ -1,0 +1,26 @@
+%h4= "#{link_to @workflow.name, instance_admin_manage_workflow_path(@workflow)} > #{resource.name}".html_safe
+.content-container
+  .row
+    = link_to 'Add Alert', new_instance_admin_manage_workflow_step_workflow_alert_path(resource), class: 'pull-right btn btn-green'
+
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table
+        %thead
+          %tr
+            %th Alert Name
+            %th Recipient Type
+            %th Alert Type
+            %th Delay?
+            %th
+            %th
+        %tbody
+          - resource.workflow_alerts.each do |workflow_alert|
+            %tr
+              %td= workflow_alert.name
+              %td= workflow_alert.recipient_type
+              %td= workflow_alert.alert_type
+              %td= workflow_alert.delay.zero? ? 'No' : "#{(workflow_alert.delay/60.0).round(2)}h"
+              %td= link_to 'Edit', edit_instance_admin_manage_workflow_step_workflow_alert_path(resource, workflow_alert), class: 'pull-right'
+              %td= link_to "Delete", instance_admin_manage_workflow_step_workflow_alert_path(resource, workflow_alert), method: :delete, confirm: "Are you sure?", class: "pull-right"

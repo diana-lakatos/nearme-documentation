@@ -16,7 +16,7 @@
       .row-fluid
         .span8.offset2
           - if @guest_list.reservations_scope.empty? && @guest_list.recurring_bookings_scope.empty?
-            = render 'promote_locations', locations: @locations
+            = render 'promote_locations', locations: @company.locations
           - else
             - only_reservations ||= false
             - if @guest_list.reservations.empty? && !only_reservations && @guest_list.recurring_bookings.empty?

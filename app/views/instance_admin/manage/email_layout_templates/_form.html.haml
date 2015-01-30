@@ -1,0 +1,18 @@
+= simple_form_for :email_layout_template, url: @email_layout_template.persisted? ? instance_admin_manage_email_layout_template_path(@email_layout_template) : instance_admin_manage_email_layout_templates_path, method: @email_layout_template.persisted? ? :put : :post do |f|
+  %h4
+    = link_to 'Manage email layout templates', instance_admin_manage_email_layout_templates_url
+    =  "> #{pretty_path(@email_layout_template.path)}" if @email_layout_template.path
+
+  .content-container
+    .row
+      .input-container.col-xs-12
+        = f.input :path, label: 'Template path', :placeholder => 'layouts/path', disabled: @email_layout_template.persisted? && WorkflowAlert.for_email_layout_path(@email_layout_template.path).count > 0, input_html: { class: 'form-control' }, hint: "Path must start with 'layouts/'"
+    .row
+      .input-container.col-xs-12
+        = f.input :format, collection: ['text', 'html'], input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-12
+        = f.input :body, as: :text, label: 'Body', input_html: { class: 'form-control', rows: "10" }
+
+    = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+    = link_to 'Cancel', instance_admin_manage_email_layout_templates_url , class: 'pull-right'

@@ -1,1 +1,0 @@
-[<%= @platform_context.name %>] New message from <%= @user_message.author.first_name %>: "<%= @user_message.body.try(:truncate, @message_size) %>" <%= shorten_url(@platform_context.build_url_for_path(@user_message.show_path(:token => @user.temporary_token))) %>

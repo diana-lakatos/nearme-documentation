@@ -120,6 +120,7 @@ Feature: A user can login
       And I should see an indication I've just signed in
 
   Scenario: A newly signed up user should get verification email
+    Given Alerts for sign up exist
      When I manually sign up with valid credentials
      Then I should get verification email
 

@@ -18,3 +18,4 @@ class InstanceViewResolver < DbViewResolver
   end
 
 end
+

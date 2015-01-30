@@ -1,15 +1,7 @@
 class Dashboard::HostReservationsController < Dashboard::BaseController
-  skip_before_filter :redirect_if_no_company
-  before_filter :find_listing, except: [:index]
   before_filter :find_reservation, except: [:index]
 
   def index
-    if current_user.companies.any?
-      @locations  = current_user.companies.first.locations
-    else
-      @locations = []
-    end
-
     @guest_list = Controller::GuestList.new(current_user).filter(params[:state])
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
@@ -19,9 +11,7 @@ class Dashboard::HostReservationsController < Dashboard::BaseController
       flash[:warning] = t('flash_messages.manage.reservations.reservation_already_confirmed')
     else
       if @reservation.confirm
-        ReservationMailer.enqueue.notify_guest_of_confirmation(@reservation)
-        ReservationMailer.enqueue.notify_host_of_confirmation(@reservation)
-        notify_guest_about_reservation_status_change
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ManuallyConfirmed, @reservation.id)
         event_tracker.confirmed_a_booking(@reservation)
         track_reservation_update_profile_informations
         event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
@@ -41,9 +31,7 @@ class Dashboard::HostReservationsController < Dashboard::BaseController
   def reject
     if @reservation.reject(rejection_reason)
       ReservationIssueLogger.rejected_with_reason @reservation, current_user if rejection_reason.present?
-      ReservationMailer.enqueue.notify_guest_of_rejection(@reservation)
-      ReservationMailer.enqueue.notify_host_of_rejection(@reservation)
-      notify_guest_about_reservation_status_change
+      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::Rejected, @reservation.id)
       event_tracker.rejected_a_booking(@reservation)
       track_reservation_update_profile_informations
       flash[:deleted] = t('flash_messages.manage.reservations.reservation_rejected')
@@ -56,16 +44,14 @@ class Dashboard::HostReservationsController < Dashboard::BaseController
   end
 
   def request_payment
-    ReservationMailer.enqueue.notify_guest_of_payment_request(@reservation)
+    WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::PaymentRequest, @reservation.id)
     flash[:success] = t('flash_messages.manage.reservations.payment_requested')
     redirect_to dashboard_host_reservations_url
   end
 
   def host_cancel
     if @reservation.host_cancel
-      ReservationMailer.enqueue.notify_guest_of_cancellation_by_host(@reservation)
-      ReservationMailer.enqueue.notify_host_of_cancellation_by_host(@reservation)
-      notify_guest_about_reservation_status_change
+      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::HostCancelled, @reservation.id)
       event_tracker.cancelled_a_booking(@reservation, { actor: 'host' })
       track_reservation_update_profile_informations
       flash[:deleted] = t('flash_messages.manage.reservations.reservation_cancelled')
@@ -78,29 +64,18 @@ class Dashboard::HostReservationsController < Dashboard::BaseController
 
   private
 
-  def find_listing
-    @listing = current_user.listings.find(params[:listing_id])
-  end
-
   def find_reservation
-    @reservation = @listing.reservations.find(params[:id])
-  end
-
-  def current_event
-    params[:event].downcase.to_sym
+    @reservation = @company.reservations.find(params[:id])
   end
 
   def rejection_reason
     params[:reservation][:rejection_reason] if params[:reservation] and params[:reservation][:rejection_reason]
   end
 
-  def notify_guest_about_reservation_status_change
-    ReservationSmsNotifier.notify_guest_with_state_change(@reservation).deliver
-  end
-
   def track_reservation_update_profile_informations
     event_tracker.updated_profile_information(@reservation.owner)
     event_tracker.updated_profile_information(@reservation.host)
   end
+
 end
 

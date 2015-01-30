@@ -19,7 +19,7 @@ class RecurringMailerRequestPhotosJob < Job
       # Send for listings with <= 1 photos, every 28 days at most per listing, for listings that have been active at least 7 days.
       if (last_sent_days.nil? || (last_sent_days % 28).zero?) && listing_activated_days.to_i >= 7
         @sent_to_users << listing.administrator.id
-        RecurringMailer.enqueue.request_photos(listing)
+        WorkflowStepJob.perform(WorkflowStep::RecurringWorkflow::RequestPhotos, listing.id)
         listing.last_request_photos_sent_at = Time.zone.now
         listing.save(validate: false)
       end

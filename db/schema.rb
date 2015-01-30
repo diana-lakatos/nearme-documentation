@@ -436,10 +436,11 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.string   "bcc"
     t.string   "reply_to"
     t.string   "subject"
-    t.boolean  "partial",    default: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.boolean  "partial",      default: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.integer  "theme_id"
+    t.boolean  "custom_email", default: false
   end
 
   add_index "email_templates", ["theme_id"], name: "index_email_templates_on_theme_id", using: :btree
@@ -617,6 +618,7 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.boolean  "partial",          default: false
     t.datetime "created_at",                       null: false
     t.datetime "updated_at",                       null: false
+    t.string   "view_type"
   end
 
   add_index "instance_views", ["instance_type_id", "instance_id", "path", "locale", "format", "handler"], name: "instance_path_with_format_and_handler", using: :btree
@@ -629,10 +631,10 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.decimal  "service_fee_guest_percent",           precision: 5, scale: 2, default: 0.0
     t.string   "lessor"
     t.string   "lessee"
-    t.boolean  "skip_company",                                                default: false
-    t.boolean  "default_instance",                                            default: false
+    t.boolean  "skip_company",                                                  default: false
+    t.boolean  "default_instance",                                              default: false
     t.text     "pricing_options"
-    t.decimal  "service_fee_host_percent",            precision: 5, scale: 2, default: 0.0
+    t.decimal  "service_fee_host_percent",              precision: 5, scale: 2, default: 0.0
     t.string   "live_stripe_public_key"
     t.string   "paypal_email"
     t.string   "encrypted_live_paypal_username"
@@ -652,8 +654,8 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.integer  "max_weekly_price_cents"
     t.integer  "min_monthly_price_cents"
     t.integer  "max_monthly_price_cents"
-    t.boolean  "password_protected",                                          default: false
-    t.boolean  "test_mode",                                                   default: false
+    t.boolean  "password_protected",                                            default: false
+    t.boolean  "test_mode",                                                     default: false
     t.string   "encrypted_test_paypal_username"
     t.string   "encrypted_test_paypal_password"
     t.string   "encrypted_test_paypal_signature"
@@ -664,7 +666,7 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.string   "test_stripe_public_key"
     t.string   "encrypted_test_balanced_api_key"
     t.string   "encrypted_olark_api_key"
-    t.boolean  "olark_enabled",                                               default: false
+    t.boolean  "olark_enabled",                                                 default: false
     t.string   "encrypted_facebook_consumer_key"
     t.string   "encrypted_facebook_consumer_secret"
     t.string   "encrypted_linkedin_consumer_key"
@@ -678,10 +680,10 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.text     "support_imap_hash"
     t.string   "support_email"
     t.string   "encrypted_db_connection_string"
-    t.string   "stripe_currency",                                             default: "USD"
-    t.boolean  "user_info_in_onboarding_flow",                                default: false
+    t.string   "stripe_currency",                                               default: "USD"
+    t.boolean  "user_info_in_onboarding_flow",                                  default: false
     t.string   "default_search_view"
-    t.boolean  "user_based_marketplace_views",                                default: false
+    t.boolean  "user_based_marketplace_views",                                  default: false
     t.string   "searcher_type"
     t.datetime "master_lock"
     t.boolean  "apply_text_filters",                                          default: false
@@ -692,6 +694,12 @@ ActiveRecord::Schema.define(version: 20150127093339) do
     t.text     "hidden_dashboard_menu_items"
     t.string   "encrypted_shippo_username"
     t.string   "encrypted_shippo_password"
+    t.string   "twilio_from_number"
+    t.string   "test_twilio_from_number"
+    t.string   "encrypted_test_twilio_consumer_key"
+    t.string   "encrypted_test_twilio_consumer_secret"
+    t.string   "encrypted_twilio_consumer_key"
+    t.string   "encrypted_twilio_consumer_secret"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -2567,5 +2575,91 @@ ActiveRecord::Schema.define(version: 20150127093339) do
 
   add_index "waiver_agreements", ["target_id", "target_type"], name: "index_waiver_agreements_on_target_id_and_target_type", using: :btree
   add_index "waiver_agreements", ["waiver_agreement_template_id"], name: "index_waiver_agreements_on_waiver_agreement_template_id", using: :btree
+
+  create_table "workflow_alert_logs", force: true do |t|
+    t.integer  "instance_id"
+    t.integer  "workflow_alert_id"
+    t.integer  "workflow_alert_weekly_aggregated_log_id"
+    t.integer  "workflow_alert_monthly_aggregated_log_id"
+    t.string   "alert_type"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "workflow_alert_logs", ["instance_id", "alert_type"], name: "index_workflow_alert_logs_on_instance_id_and_alert_type", using: :btree
+
+  create_table "workflow_alert_monthly_aggregated_logs", force: true do |t|
+    t.integer  "instance_id"
+    t.integer  "workflow_alert_id"
+    t.integer  "year"
+    t.integer  "month"
+    t.integer  "email_count",       default: 0, null: false
+    t.integer  "integer",           default: 0, null: false
+    t.integer  "sms_count",         default: 0, null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "workflow_alert_monthly_aggregated_logs", ["instance_id", "year", "month"], name: "wamal_instance_id_year_month_index", unique: true, using: :btree
+
+  create_table "workflow_alert_weekly_aggregated_logs", force: true do |t|
+    t.integer  "instance_id"
+    t.integer  "year"
+    t.integer  "week_number"
+    t.integer  "email_count", default: 0, null: false
+    t.integer  "integer",     default: 0, null: false
+    t.integer  "sms_count",   default: 0, null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "workflow_alert_weekly_aggregated_logs", ["instance_id", "year", "week_number"], name: "wamal_instance_id_year_week_number_index", unique: true, using: :btree
+
+  create_table "workflow_alerts", force: true do |t|
+    t.string   "name"
+    t.string   "alert_type"
+    t.string   "recipient_type"
+    t.string   "template_path"
+    t.integer  "workflow_step_id"
+    t.integer  "instance_id"
+    t.text     "options"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "delay",            default: 0
+    t.text     "subject"
+    t.string   "layout_path"
+    t.text     "custom_options"
+    t.string   "from"
+    t.string   "reply_to"
+    t.string   "cc"
+    t.string   "bcc"
+    t.string   "recipient"
+    t.string   "from_type"
+    t.string   "reply_to_type"
+  end
+
+  create_table "workflow_steps", force: true do |t|
+    t.string   "name"
+    t.string   "associated_class"
+    t.integer  "instance_id"
+    t.integer  "workflow_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "workflows", force: true do |t|
+    t.string   "name"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "events_metadata"
+    t.string   "workflow_type"
+  end
 
 end

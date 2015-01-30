@@ -13,6 +13,10 @@ Given /^(.*) has a( |n un)confirmed reservation for (.*)$/ do |lister, confirmed
 
 end
 
+Given /^Reservation alerts exist$/ do
+  Utils::DefaultAlertsCreator::ReservationCreator.new.create_all!
+end
+
 Given /^#{capture_model} is reserved hourly$/ do |listing_instance|
   listing = model!(listing_instance)
   listing.hourly_reservations = true

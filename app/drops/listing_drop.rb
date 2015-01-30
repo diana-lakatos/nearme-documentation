@@ -46,7 +46,7 @@ class ListingDrop < BaseDrop
   end
 
   def manage_listing_url_with_tracking
-    routes.edit_manage_location_listing_path(@listing.location, @listing, track_email_event: true, token: @listing.administrator.try(:temporary_token))
+    routes.edit_dashboard_transactable_path(@listing.transactable_type, @listing, track_email_event: true, token: @listing.administrator.try(:temporary_token))
   end
 
 end

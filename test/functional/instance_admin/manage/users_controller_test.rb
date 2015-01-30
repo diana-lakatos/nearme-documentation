@@ -52,10 +52,10 @@ class InstanceAdmin::Manage::UsersControllerTest < ActionController::TestCase
     end
 
     should 'send an email with authentication token' do
-      PostActionMailer.expects(:created_by_instance_admin).returns(stub(deliver: true))
+      WorkflowStepJob.expects(:perform).with do |klass, user_id, creator_id|
+        klass == WorkflowStep::SignUpWorkflow::CreatedByAdmin && assigns(:user).id == user_id && @user.id == creator_id
+      end
       post :create, :user => { :name => 'John Doe', :email => 'johndoe@example.com' }
-      last_email = ActionMailer::Base.deliveries.last
-      assert_equal 'johndoe@example.com', last_email['to'].to_s
     end
   end
 

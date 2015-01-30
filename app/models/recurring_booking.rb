@@ -150,9 +150,7 @@ class RecurringBooking < ActiveRecord::Base
       event_tracker.recurring_booking_expired(self)
       event_tracker.updated_profile_information(self.owner)
       event_tracker.updated_profile_information(self.host)
-
-      RecurringBookingMailer.notify_guest_of_expiration(self).deliver
-      RecurringBookingMailer.notify_host_of_expiration(self).deliver
+      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::Expired, self.id)
     end
   end
 
@@ -198,6 +196,10 @@ class RecurringBooking < ActiveRecord::Base
     else
       0
     end
+  end
+
+  def to_liquid
+    RecurringBookingDrop.new(self)
   end
 
 end

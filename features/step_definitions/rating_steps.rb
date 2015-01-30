@@ -19,9 +19,9 @@ Given(/^I receive an email request for (host|guest) rating$/) do |kind|
   assert_equal 2, ActionMailer::Base.deliveries.size
   @request_email = ActionMailer::Base.deliveries.detect { |e| e.to == [@user.email] }
   if kind=='host'
-    assert_match /\[#{model!('instance').name}\] How was your experience at 'Listing \d+'/, @request_email.subject
+    assert_match /How was your experience at 'Listing \d+'/, @request_email.subject
   else
-    assert_match /\[#{model!('instance').name}\] How was your experience hosting User-\d+/, @request_email.subject
+    assert_match /How was your experience hosting User-\d+/, @request_email.subject
   end
 end
 

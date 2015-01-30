@@ -7,6 +7,7 @@ Feature: A user can communicate with other user with context
 
   Scenario: A guest asks a question and gets a response from listings creator
     Given I am logged in as the user
+    And UserMessage alerts exist
     And I ask a question about a transactable
     Then I should see this question in my inbox marked as read
     And this listings creator should get email with notification

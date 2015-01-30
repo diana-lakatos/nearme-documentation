@@ -1,0 +1,12 @@
+%h4 Manage Workflows
+
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table
+        %tbody
+          - @workflows.each do |resource|
+            %tr
+              %td= link_to resource.name.humanize, instance_admin_manage_workflow_path(resource)
+              %td= link_to 'Edit', edit_instance_admin_manage_workflow_path(resource), class: 'pull-right'
+

@@ -5,7 +5,7 @@ class InstanceAdmin::Manage::Support::TicketMessagesController < InstanceAdmin::
     message.user = current_user
     message.ticket = ticket
     if message.save
-      SupportMailer.enqueue.request_replied(@ticket, message)
+      WorkflowStepJob.perform(WorkflowStep::SupportWorkflow::Replied, message.id)
       flash[:success] = t('flash_messages.support.ticket_message.created')
     else
       flash[:error] = t('flash_messages.support.ticket_message.error') unless close?

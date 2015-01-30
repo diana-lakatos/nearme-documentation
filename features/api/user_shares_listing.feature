@@ -3,6 +3,7 @@ Feature: User shares listing
 
   Scenario: Success
     Given I am an authenticated api user
+    And Listing alerts exist
     And a listed location
     When I send an authenticated POST request to "listings/:id/share":
     """

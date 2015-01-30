@@ -1,1 +1,0 @@
-[<%= @platform_context.name %>] Your booking for <%= @recurring_booking.listing.name %> was <%= @recurring_booking.state_to_string %>. View booking: <%= shorten_url(@platform_context.build_url_for_path(main_app.dashboard_user_recurring_booking_path(@recurring_booking, :token => @recurring_booking.owner.temporary_token))) %>

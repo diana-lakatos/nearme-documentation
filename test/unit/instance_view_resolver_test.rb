@@ -125,4 +125,6 @@ class InstanceViewResolverTest < ActiveSupport::TestCase
     template = @resolver.find_all("index", "public", false, @details).first
     assert_equal "correct", template.source
   end
+
 end
+

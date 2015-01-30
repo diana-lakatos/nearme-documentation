@@ -6,16 +6,14 @@ class Support::TicketMessagesController < Support::BaseController
     if message.valid?
       message.save!
       if Transactable === ticket.target
-        SupportMailer.enqueue.rfq_request_updated(@ticket, message)
-        SupportMailer.enqueue.rfq_support_updated(@ticket, message)
+        WorkflowStepJob.perform(WorkflowStep::RfqWorkflow::Updated, message.id)
         if ticket.target.free?
           flash[:success] = t('flash_messages.support.rfq_ticket_message.created')
         else
           flash[:success] = t('flash_messages.support.offer_ticket_message.created')
         end
       else
-        SupportMailer.enqueue.request_updated(@ticket, message)
-        SupportMailer.enqueue.support_updated(@ticket, message)
+        WorkflowStepJob.perform(WorkflowStep::SupportWorkflow::Updated, message.id)
         flash[:success] = t('flash_messages.support.ticket_message.created')
       end
     else

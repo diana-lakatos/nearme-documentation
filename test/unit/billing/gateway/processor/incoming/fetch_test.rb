@@ -25,7 +25,7 @@ class Billing::Gateway::Processor::Incoming::FetchTest < ActiveSupport::TestCase
   end
 
   should "set reservation as paid after success response" do
-    stub_request(:post, "https://my.fetchpayments.co.nz/webpayments/MNSHandler.aspx")
+    stub_request(:post, /https:\/\/(my|demo).fetchpayments.co.nz\/webpayments\/MNSHandler.aspx/)
       .to_return(:status => 200, :body => 'VERIFIED')
 
     @reservation = FactoryGirl.create(:reservation_with_remote_payment)
@@ -41,7 +41,7 @@ class Billing::Gateway::Processor::Incoming::FetchTest < ActiveSupport::TestCase
   end
 
   should "set reservation as failed after declined response" do
-    stub_request(:post, "https://my.fetchpayments.co.nz/webpayments/MNSHandler.aspx")
+    stub_request(:post, /https:\/\/(my|demo).fetchpayments.co.nz\/webpayments\/MNSHandler.aspx/)
       .to_return(:status => 200, :body => 'DECLINED')
 
     @reservation = FactoryGirl.create(:reservation_with_remote_payment)
