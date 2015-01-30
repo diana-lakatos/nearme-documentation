@@ -27,7 +27,7 @@ class Dashboard::BaseController < ApplicationController
     "registrations/show#buy-sell",
     "registrations/show#services",
     "registrations/show#reviews",
-    "registrations/show#blog"
+    "registrations/show#blog_posts"
   ]
 
   private
