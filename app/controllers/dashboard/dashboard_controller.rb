@@ -5,9 +5,9 @@ class Dashboard::DashboardController < ApplicationController
     company = current_user.companies.first
 
     if buyable?
-      redirect_to company ? dashboard_orders_received_index_path : dashboard_orders_path
+      redirect_to company ? dashboard_company_orders_received_index_path : dashboard_orders_path
     else
-      redirect_to company ? dashboard_host_reservations_path : dashboard_user_reservations_path
+      redirect_to company ? dashboard_company_host_reservations_path : dashboard_user_reservations_path
     end
   end
 end

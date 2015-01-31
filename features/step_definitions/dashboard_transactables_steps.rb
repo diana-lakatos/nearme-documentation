@@ -1,13 +1,13 @@
 Given(/^I am browsing transactables$/) do
-  visit dashboard_transactable_type_transactables_path(TransactableType.first)
+  visit dashboard_company_transactable_type_transactables_path(TransactableType.first)
 end
 
 Given(/^I am browsing bulk upload transactables$/) do
-  visit dashboard_transactable_type_transactables_path(TransactableType.last)
+  visit dashboard_company_transactable_type_transactables_path(TransactableType.last)
 end
 
 Given(/^I am adding new transactable$/) do
-  visit new_dashboard_transactable_type_transactable_path(TransactableType.last)
+  visit new_dashboard_company_transactable_type_transactable_path(TransactableType.last)
 end
 
 Given(/^I add a new transactable$/) do

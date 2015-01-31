@@ -1,6 +1,4 @@
 class Dashboard::PhotosController < Dashboard::BaseController
-
-  skip_before_filter :redirect_unless_registration_completed
   before_filter :get_proper_hash, :only => [:create]
 
   def create
@@ -26,7 +24,7 @@ class Dashboard::PhotosController < Dashboard::BaseController
   def edit
     @photo = current_user.photos.find(params[:id])
     if request.xhr?
-      render partial: 'manage/photos/resize_form', :locals => { :form_url => dashboard_photo_path(@photo), :object => @photo.image, :object_url => @photo.image_url(:original) }
+      render partial: 'dashboard/photos/resize_form', :locals => { :form_url => dashboard_photo_path(@photo), :object => @photo.image, :object_url => @photo.image_url(:original) }
     end
   end
 
@@ -34,9 +32,9 @@ class Dashboard::PhotosController < Dashboard::BaseController
     @photo = current_user.photos.find(params[:id])
     @photo.image_transformation_data = { :crop => params[:crop], :rotate => params[:rotate] }
     if @photo.save
-      render partial: 'manage/photos/resize_succeeded'
+      render partial: 'dashboard/photos/resize_succeeded'
     else
-      render partial: 'manage/photos/resize_form', :locals => { :form_url => dashboard_photo_path(@photo), :object => @photo.image, :object_url => @photo.image_url(:original) }
+      render partial: 'dashboard/photos/resize_form', :locals => { :form_url => dashboard_photo_path(@photo), :object => @photo.image, :object_url => @photo.image_url(:original) }
     end
   end
 

@@ -1,0 +1,14 @@
+.modal-header
+  .modal-title Add New Location
+.modal-body
+  = simple_form_for [:dashboard, :company, @location], html: {id: 'location-form'}, wrapper: :bs3_simple, data: { modal: true }  do |f|
+    .errors
+    = render :partial => 'location_form', :locals => { :f => f, :location => @location }
+
+    .btn-toolbar
+      = f.submit 'Save Location', id: 'submit-link', class: "btn blue pull-right"
+
+:javascript
+  DNM.initializeBootstrap();
+  new Dashboard.LocationController($('#location-form'));
+  Limiter.initialize($('#location-form'));

@@ -440,6 +440,7 @@ ActiveRecord::Schema.define(version: 20150205113805) do
     t.string   "dns_name"
     t.string   "redirect_to"
     t.integer  "redirect_code"
+    t.boolean  "use_as_default",                 default: false
   end
 
   add_index "domains", ["deleted_at"], name: "index_domains_on_deleted_at", using: :btree
@@ -508,8 +509,9 @@ ActiveRecord::Schema.define(version: 20150205113805) do
 
   create_table "industries", force: true do |t|
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "instance_id"
   end
 
   create_table "inquiries", force: true do |t|
@@ -635,7 +637,6 @@ ActiveRecord::Schema.define(version: 20150205113805) do
     t.string   "lessor"
     t.string   "lessee"
     t.boolean  "skip_company",                                                  default: false
-    t.boolean  "default_instance",                                              default: false
     t.text     "pricing_options"
     t.decimal  "service_fee_host_percent",              precision: 5, scale: 2, default: 0.0
     t.string   "live_stripe_public_key"
@@ -695,6 +696,7 @@ ActiveRecord::Schema.define(version: 20150205113805) do
     t.text     "custom_sanitize_config"
     t.string   "payment_transfers_frequency",                                   default: "fortnightly"
     t.text     "hidden_dashboard_menu_items"
+    t.boolean  "default_instance"
     t.string   "encrypted_shippo_username"
     t.string   "encrypted_shippo_password"
     t.string   "twilio_from_number"
@@ -1178,13 +1180,6 @@ ActiveRecord::Schema.define(version: 20150205113805) do
 
   add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
 
-  create_table "sessions", force: true do |t|
-    t.string   "session_id", null: false
-    t.text     "data"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "spree_addresses", force: true do |t|
     t.string   "firstname"
     t.string   "lastname"
@@ -1498,10 +1493,10 @@ ActiveRecord::Schema.define(version: 20150205113805) do
     t.decimal  "service_fee_buyer_percent",               precision: 5,  scale: 2, default: 0.0
     t.decimal  "service_fee_seller_percent",              precision: 5,  scale: 2, default: 0.0
     t.datetime "shippo_rate_purchased_at"
-    t.integer  "platform_context_detail_id"
-    t.string   "platform_context_detail_type"
     t.string   "guest_token"
     t.integer  "state_lock_version",                                               default: 0,       null: false
+    t.integer  "platform_context_detail_id"
+    t.string   "platform_context_detail_type"
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id", using: :btree
@@ -2538,7 +2533,6 @@ ActiveRecord::Schema.define(version: 20150205113805) do
     t.boolean  "show_page_enabled",                                                  default: false
     t.text     "custom_csv_fields"
     t.boolean  "overnight_booking",                                                  default: false, null: false
-    t.boolean  "enable_reviews"
     t.text     "onboarding_form_fields"
     t.decimal  "service_fee_guest_percent",                  precision: 5, scale: 2, default: 0.0
     t.decimal  "service_fee_host_percent",                   precision: 5, scale: 2, default: 0.0
@@ -2546,6 +2540,7 @@ ActiveRecord::Schema.define(version: 20150205113805) do
     t.string   "lessor"
     t.string   "lessee"
     t.boolean  "groupable_with_others",                                              default: true
+    t.boolean  "enable_reviews"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -2883,7 +2878,6 @@ ActiveRecord::Schema.define(version: 20150205113805) do
     t.string   "recipient"
     t.string   "from_type"
     t.string   "reply_to_type"
-    t.integer  "workflow_id"
   end
 
   create_table "workflow_steps", force: true do |t|
@@ -2904,7 +2898,6 @@ ActiveRecord::Schema.define(version: 20150205113805) do
     t.datetime "updated_at"
     t.text     "events_metadata"
     t.string   "workflow_type"
-    t.string   "associated_event"
   end
 
 end

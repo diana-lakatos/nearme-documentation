@@ -1,5 +1,5 @@
 Given /^I am adding new product$/ do
-  visit new_dashboard_product_path
+  visit new_dashboard_company_product_path
 end
 
 And /^I fill products form with valid details$/  do

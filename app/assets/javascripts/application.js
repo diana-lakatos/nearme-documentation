@@ -273,20 +273,3 @@ function centerSearchBox(){
   wood_box_height = $('.wood-box').height()
   $('#search_row').css('margin-top', (image_height)/2 - search_height/2 + navbar_height/2 - wood_box_height/2 + 'px');
 }
-
-String.prototype.hashCode = function(){
-    var hash = 0, i, char;
-    if (this.length == 0) return hash;
-    for (i = 0; i < this.length; i++) {
-        char = this.charCodeAt(i);
-        hash = ((hash<<5)-hash)+char;
-        hash = hash & hash; // Convert to 32bit integer
-    }
-    return hash;
-};
-
-(function($) {
-  $.fn.hasScrollBar = function() {
-    return this.get(0).scrollHeight > this.height();
-  }
-})(jQuery);

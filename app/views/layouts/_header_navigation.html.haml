@@ -49,12 +49,12 @@
 
         - if platform_context.white_label_company_user?(current_user) && current_user.has_any_active_listings
           %li
-            = link_to main_app.dashboard_transactable_type_transactables_path(TransactableType.first), class: 'nav-link dropdown-toggle' do
+            = link_to main_app.dashboard_company_transactable_type_transactables_path(TransactableType.first), class: 'nav-link dropdown-toggle' do
               %span Manage #{platform_context.bookable_noun.pluralize}
         - if buyable?
           - if current_user.registration_completed?
             %li
-              = link_to main_app.dashboard_products_path, class: 'nav-link dropdown-toggle' do
+              = link_to main_app.dashboard_company_products_path, class: 'nav-link dropdown-toggle' do
                 %span Manage #{platform_context.bookable_noun.pluralize}
             %li
               = link_to main_app.dashboard_orders_path, class: 'nav-link dropdown-toggle' do

@@ -69,7 +69,7 @@ class @InstanceAdmin.TaxonomiesTree
 
 
   @taxonTreeMenu: (obj, context) ->
-    edit_url = instance_admin_taxonomy_taxons_path + '/?taxon_id=' + obj.prop("id")
+    edit_url = taxonomy_taxons_path + '/' + obj.prop("id") + '/edit'
     create:
       label: "<i class='fa fa-plus'></i> Add",
       action: (obj) -> context.create(obj)

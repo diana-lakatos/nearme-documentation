@@ -19,11 +19,11 @@ class TransactableDrop < BaseDrop
   end
 
   def manage_guests_dashboard_url
-    routes.dashboard_host_reservations_path(:token => @listing.administrator.try(:temporary_token))
+    routes.dashboard_company_host_reservations_path(:token => @listing.administrator.try(:temporary_token))
   end
 
   def manage_guests_dashboard_url_with_tracking
-    routes.dashboard_host_reservations_path(:token => @listing.administrator.try(:temporary_token), :track_email_event => true)
+    routes.dashboard_company_host_reservations_path(:token => @listing.administrator.try(:temporary_token), :track_email_event => true)
   end
 
   def search_url_with_tracking
@@ -47,7 +47,7 @@ class TransactableDrop < BaseDrop
   end
 
   def manage_listing_url_with_tracking
-    routes.edit_manage_location_listing_path(@listing.location, @listing, track_email_event: true, token: @listing.administrator.try(:temporary_token))
+    routes.edit_dashboard_company_transactable_type_transactable_path(@listing.location, @listing, track_email_event: true, token: @listing.administrator.try(:temporary_token))
   end
 
   def space_wizard_list_path

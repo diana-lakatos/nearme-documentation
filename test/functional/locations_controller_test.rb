@@ -101,7 +101,7 @@ class LocationsControllerTest < ActionController::TestCase
     context 'edit links' do
 
       setup do
-        @edit_location_url = login_as_admin_user_path(@location.creator, :return_to => edit_manage_location_path(@location))
+        @edit_location_url = login_as_admin_user_path(@location.creator, :return_to => edit_dashboard_company_location_path(@location))
       end
 
       context 'user is logged in' do

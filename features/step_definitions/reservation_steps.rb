@@ -75,7 +75,7 @@ When /^the (visitor|owner) (confirm|decline|cancel)s the reservation$/ do |user,
     visit dashboard_user_reservations_path
   else
     login User.find_by_name("Bo Jeanes")
-    visit dashboard_host_reservations_path
+    visit dashboard_company_host_reservations_path
   end
   if action == 'cancel' and user == 'owner'
     within('.dash-head') { click_on 'CONFIRMED'}

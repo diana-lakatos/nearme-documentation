@@ -11,8 +11,8 @@
                 %th Type
                 %th Hide
             %tbody
-              - buysell_controllers = ['dashboard/orders', 'dashboard/products', 'dashboard/orders_received']
-              - services_controllers = ['dashboard/user_reservations', 'dashboard/transactables', 'dashboard/host_reservations']
+              - buysell_controllers = ['dashboard/orders', 'dashboard/company/products', 'dashboard/company/orders_received']
+              - services_controllers = ['dashboard/user_reservations', 'dashboard/company/transactables', 'dashboard/company/host_reservations']
               - hidden_controllers = buyable? ? services_controllers : buysell_controllers
               - (Dashboard::BaseController::DASHBOARD_CONTROLLERS - hidden_controllers).each do |controller|
                 %tr

@@ -3,10 +3,6 @@ require Rails.root.join('app', 'controllers', 'registrations_controller.rb') if 
 
 DesksnearMe::Application.routes.draw do
 
-  scope module: 'spree' do
-    mount Spree::Core::Engine, at: '/instance_buy_sell'
-  end
-
   scope module: 'buy_sell_market' do
     resources :products, only: [:show]
 
@@ -302,10 +298,14 @@ DesksnearMe::Application.routes.draw do
       resources :taxonomies do
         member do
           get :jstree
-          get :edit_taxon
-          patch :update_taxon
+        end
+        resources :taxons do
+          member do
+            get :jstree
+          end
         end
       end
+      
       resources :shipping_categories
       resources :shipping_methods
     end
@@ -414,32 +414,106 @@ DesksnearMe::Application.routes.draw do
   end
 
   namespace :dashboard do
-    resource :analytics
-    resources :companies, :only => [:edit, :update, :show]
-    resources :images
-    resources :locations
-    resources :orders, only: [:index, :show]
-    resources :orders_received, except: [:edit] do
-      member do
-        get :approve
-        get :cancel
-        get :resume
-      end
 
-      resources :payments do
+    resources :api do
+      collection do
+        get :countries
+        get :states
+        get :taxons
+      end
+    end
+
+    resource :blog, controller: 'user_blog/blog', only: [:show, :edit, :update] do
+      resources :posts, controller: 'user_blog/blog_posts'
+    end
+    
+    namespace :company do
+      resource :analytics
+      resources :orders_received, except: [:edit] do
         member do
-          get :capture
+          get :approve
+          get :cancel
+          get :resume
+        end
+
+        resources :payments do
+          member do
+            get :capture
+          end
+        end
+
+        resources :shipments do
+          member do
+            get :ship
+          end
         end
       end
-      resources :shipments do
+
+      resources :host_reservations do
         member do
-          get :ship
+          post :confirm
+          get :confirm
+          patch :reject
+          put :reject
+          get :rejection_form
+          post :host_cancel
+          get :request_payment
+        end
+      end
+
+      resources :locations
+      resource :payouts, except: [:index, :show, :new, :create, :destroy]
+      resources :products
+
+      resources :transactable_types do
+        resources :transactables do
+          member do
+            get :enable
+            get :disable
+          end
+        end
+
+        resources :data_uploads, controller: 'transactable_types/data_uploads' do
+          collection do
+            get :status
+            get :download_csv_template
+            get :download_current_data_csv
+          end
+          member do
+            post :schedule_import
+          end
+        end
+      end
+      resource :transfers
+      resources :users, :except => [:edit, :update]
+      resources :waiver_agreement_templates, only: [:index, :edit, :new, :update, :create, :destroy]
+
+      resources :white_labels, :only => [:edit, :update, :show] do
+        member do
+          delete 'destroy_image/:image', :action => :destroy_image, :as => 'destroy_theme_image'
+          get 'edit_image/:image', :action => :edit_image, :as => 'edit_theme_image'
+          match 'update_image/:image', :action => :update_image, :as => 'update_theme_image', via: [:post, :put]
+          match 'upload_image/:image', :action => :upload_image, :as => 'upload_theme_image', via: [:post, :put]
         end
       end
     end
 
-    resources :products
+    resources :companies, :only => [:edit, :update, :show]
+    resources :host_recurring_bookings do
+      member do
+        post :confirm
+        get :confirm
+        patch :reject
+        put :reject
+        get :rejection_form
+        post :host_cancel
+      end
+    end
 
+    resources :images
+    resources :orders, only: [:index, :show]
+    resources :photos, :only => [:create, :destroy, :edit, :update]
+    resources :reviews, :only => [:index, :create, :update, :destroy]
     namespace :support do
       resources :tickets, only: [:show, :index] do
         resources :ticket_messages, only: [:create]
@@ -447,18 +521,8 @@ DesksnearMe::Application.routes.draw do
       end
     end
 
-    resource :transfers
-    resources :transactable_types do
-      resources :transactables
-      resources :data_uploads, controller: 'transactable_types/data_uploads' do
-        collection do
-          get :status
-          get :download_csv_template
-          get :download_current_data_csv
-        end
-        member do
-          post :schedule_import
-        end
+    resources :transactable_types, only: [] do
+      resources :listings, only: [:new, :create] do
       end
     end
 
@@ -467,19 +531,6 @@ DesksnearMe::Application.routes.draw do
         get :archived
       end
     end
-
-    resources :users, :except => [:edit, :update]
-    resources :waiver_agreement_templates, only: [:index, :edit, :new, :update, :create, :destroy]
-    resources :white_labels, :only => [:edit, :update, :show] do
-      member do
-        delete 'destroy_image/:image', :action => :destroy_image, :as => 'destroy_theme_image'
-        get 'edit_image/:image', :action => :edit_image, :as => 'edit_theme_image'
-        match 'update_image/:image', :action => :update_image, :as => 'update_theme_image', via: [:post, :put]
-        match 'upload_image/:image', :action => :upload_image, :as => 'upload_theme_image', via: [:post, :put]
-      end
-    end
-    resource :payouts, except: [:index, :show, :new, :create, :destroy]
-    resources :reviews, :only => [:index, :create, :update, :destroy]
 
     resources :user_reservations, :except => [:update, :destroy, :show] do
       member do
@@ -494,7 +545,6 @@ DesksnearMe::Application.routes.draw do
         get :remote_payment_modal
         get :recurring_booking_successful
       end
-
       collection do
         get :upcoming
         get :archived
@@ -511,107 +561,13 @@ DesksnearMe::Application.routes.draw do
       end
     end
 
-    resources :host_reservations do
-      member do
-        post :confirm
-        get :confirm
-        patch :reject
-        put :reject
-        get :rejection_form
-        post :host_cancel
-        get :request_payment
-      end
-    end
-
-    resources :transactable_types, only: [] do
-      resources :listings, only: [:new, :create] do
-      end
-    end
-
-    resources :host_recurring_bookings do
-      member do
-        post :confirm
-        get :confirm
-        patch :reject
-        put :reject
-        get :rejection_form
-        post :host_cancel
-      end
-    end
-
-    resource :blog, controller: 'user_blog/blog', only: [:show, :edit, :update] do
-      resources :posts, controller: 'user_blog/blog_posts'
-    end
-    resources :photos, :only => [:create, :destroy, :edit, :update]
-  end
+  end #end /dashboard namespace
 
   resources :reservations do
     resources :payment_notifications, controller: 'reservations/payment_notifications'
   end
 
   get '/dashboard', controller: 'dashboard/dashboard', action: 'index'
-
-  namespace :manage do
-    namespace :buy_sell do
-      resources :api do
-        collection do
-          get :countries
-          get :states
-          get :taxons
-        end
-      end
-      resources :products, except: [:show] do
-        resources :images, :controller => 'products/images'
-        resources :variants, :controller => 'products/variants'
-        resources :product_properties, :controller => 'products/product_properties'
-        resources :stock_items, :controller => 'products/stock_items'
-        resource :stock, :controller => 'products/stock'
-      end
-
-      resources :option_types
-      resources :properties
-      resources :prototypes
-      resources :shipping_categories
-      resources :shipping_methods
-      resources :stock_locations
-      # Switched of, waiting for new spec
-      # resources :taxonomies
-      resources :taxons
-    end
-
-    resources :listings do
-      resource :booking_module, only: [:update], :controller => 'listings/booking_module'
-    end
-
-    resources :locations do
-      resources :listings do
-        member do
-          get :enable
-          get :disable
-        end
-      end
-    end
-
-    resources :themes, :only => [] do
-      member do
-        delete :destroy_image
-      end
-    end
-
-    resources :transactable_types, :only => [] do
-      resources :data_uploads, controller: 'transactable_types/data_uploads' do
-        collection do
-          get :status
-          get :download_csv_template
-          get :download_current_data_csv
-        end
-        member do
-          post :schedule_import
-        end
-      end
-    end
-
-  end # /manage
 
   get "/search", :to => "search#index", :as => :search
 

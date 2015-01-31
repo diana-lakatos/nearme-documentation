@@ -56,10 +56,10 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       track_new_company_event
       WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Created, @user.first_listing.id)
       if buyable?
-        redirect_to dashboard_products_path
+        redirect_to dashboard_company_products_path
       else
         flash[:success] = t('flash_messages.space_wizard.space_listed', bookable_noun: @transactable_type.name)
-        redirect_to dashboard_transactable_type_transactables_path(@transactable_type)
+        redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
       end
     else
       @photos = @user.first_listing ? @user.first_listing.photos : nil
@@ -76,7 +76,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       if @boarding_form.draft?
         redirect_to :list, notice: t('flash_messages.space_wizard.draft_saved', bookable_noun: platform_context.decorate.bookable_noun)
       else
-        redirect_to dashboard_products_path, notice: t('flash_messages.space_wizard.item_listed', bookable_noun: platform_context.decorate.bookable_noun)
+        redirect_to dashboard_company_products_path, notice: t('flash_messages.space_wizard.item_listed', bookable_noun: platform_context.decorate.bookable_noun)
       end
     else
       @images = @boarding_form.product_form.product.images
@@ -117,7 +117,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
 
   def redirect_to_dashboard_if_registration_completed
     if current_user.try(:registration_completed?) 
-      redirect_to dashboard_transactable_type_transactables_path(@transactable_type)
+      redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
     end
   end
 

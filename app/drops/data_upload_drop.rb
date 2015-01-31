@@ -38,7 +38,7 @@ class DataUploadDrop < BaseDrop
   end
 
   def new_transactable_url
-    routes.new_dashboard_transactable_type_transactable_path(@data_upload.transactable_type)
+    routes.new_dashboard_company_transactable_type_transactable_path(@data_upload.transactable_type)
   end
 
 end

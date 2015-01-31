@@ -12,11 +12,9 @@
 //= require ./vendor/modernizr
 //= require ./vendor/jquery.cookie
 //= require ./vendor/jquery.popover-1.1.2
-//= require ./vendor/jquery.payment
 //= require ./vendor/jquery.limiter
 //= require ./vendor/asevented
 //= require ./vendor/detect-mobile-browser
-//= require ./vendor/infobox
 //= require ./vendor/jquery.scrollto
 //= require ./vendor/jQueryRotate
 //= require ./vendor/placeholder
@@ -46,7 +44,13 @@
 //= require_directory ./components
 //
 // Sections
-//= require_tree ./sections
+//= require ./sections/dashboard
+//= require ./sections/search
+//= require ./sections/search_instance_admin
+//= require ./sections/company_form
+//= require ./sections/registrations/edit
+//= require_tree ./sections/buy_sell
+//= require_tree ./sections/dashboard
 //
 //= require ./vendor/bootstrap-modal-fullscreen
 //= require bootstrap-switch
@@ -61,7 +65,6 @@ window.DNM = {
     this.initializeCustomSelects($('body'));
     this.initializeCustomInputs();
     this.initializeBrowsersSpecificCode();
-    this.centerSearchBoxOnHomePage();
     this.setFooterPushHeight();
   },
 
@@ -115,22 +118,6 @@ window.DNM = {
   initializeBrowsersSpecificCode: function() {
     this.fixInputIconBackgroundTransparency();  // fix icon in input transparency in IE8
     this.fixMobileFixedPositionAfterInputFocus();
-  },
-
-  centerSearchBoxOnHomePage: function() {
-    if($('.main-page').length > 0){
-      centerSearchBox();
-      if (!window.addEventListener) {
-          window.attachEvent('resize', function(event){
-            centerSearchBox();
-          });
-      }
-      else {
-        window.addEventListener('resize', function(event){
-          centerSearchBox();
-        });
-      }
-    }
   },
 
   fixInputIconBackgroundTransparency: function() {
@@ -199,99 +186,3 @@ $(document).on('click', 'a[rel=submit]', function(e) {
     return false;
   }
 });
-
-function doListingGoogleMaps() {
-  return;
-  var locations = $(".map address"),
-      map       = null;
-
-  $.each(locations, function(index, location) {
-    location        = $(location);
-    var latlng      = new google.maps.LatLng(location.attr("data-lat"), location.attr("data-lng"));
-
-    if(!map) {
-      var layer = "toner";
-      map = SmartGoogleMap.getMap(document.getElementById("map"), {
-        zoom: 13,
-        mapTypeId: layer,
-        mapTypeControl: false,
-        center: latlng
-      })
-      map.mapTypes.set(layer, new google.maps.StamenMapType(layer));
-    }
-
-    var image       = location.attr("data-marker");
-    var beachMarker = new google.maps.Marker({
-      position: latlng,
-      map: map,
-      icon: image
-    });
-  });
-}
-
-function doInlineReservation() {
-  $("#content").on("click", "td.day .details.availability a", function(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    return false;
-  });
-}
-
-$(function(){
-  doInlineReservation();
-  doListingGoogleMaps();
-});
-
-$(function() {
-  var ellipses = $(".truncated-ellipsis")
-
-  $.each(ellipses, function() {
-    $(this).click(function() {
-      $(this).next('.truncated-text').toggleClass('hidden');
-      // If within an accordion, i.e. if has a parent of class accordion
-      if ($(this).parents('.accordion').length) {
-        $('.accordion').css('height', 'auto');
-      }
-    });
-  });
-});
-
-$(function(){
-    $.extend($.fn.disableTextSelect = function() {
-        return this.each(function(){
-            if($.browser.mozilla){//Firefox
-                $(this).css('MozUserSelect','none');
-            }else if($.browser.msie){//IE
-                $(this).bind('selectstart',function(){return false;});
-            }else{//Opera, etc.
-                $(this).mousedown(function(){return false;});
-            }
-        });
-    });
-    $('.no-select').disableTextSelect();//No text selection on elements with a class of 'noSelect'
-});
-
-function centerSearchBox(){
-  navbar_height = $('.navbar-fixed-top').height();
-  image_height = $('.dnm-page').height();
-  search_height = $('#search_row').height()
-  wood_box_height = $('.wood-box').height()
-  $('#search_row').css('margin-top', (image_height)/2 - search_height/2 + navbar_height/2 - wood_box_height/2 + 'px');
-}
-
-String.prototype.hashCode = function(){
-    var hash = 0, i, char;
-    if (this.length == 0) return hash;
-    for (i = 0; i < this.length; i++) {
-        char = this.charCodeAt(i);
-        hash = ((hash<<5)-hash)+char;
-        hash = hash & hash; // Convert to 32bit integer
-    }
-    return hash;
-};
-
-(function($) {
-  $.fn.hasScrollBar = function() {
-    return this.get(0).scrollHeight > this.height();
-  }
-})(jQuery);

@@ -1,0 +1,4 @@
+$("#location-list .row[data-location-id=#{@location.id}]").hide('slow')
+$(".alert").remove()
+$("body").prepend('#{escape_javascript( render 'shared/render_flash')}');
+- flash.discard

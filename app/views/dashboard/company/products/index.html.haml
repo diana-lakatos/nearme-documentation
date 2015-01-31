@@ -1,0 +1,20 @@
+- title "Products"
+
+.dash-head.clearfix
+  %p MANAGE LISTINGS
+  = link_to new_dashboard_company_product_path, class: "dash-head-btn btn blue pull-right" do
+    List New Item
+.dash-body
+  %br
+  .listings-header
+    .row
+      .col-md-3
+        %p Picture
+      .col-md-3
+        %p Name
+      .col-md-3
+        %p Quantity
+      .col-md-2
+        %p Price
+  = render partial: 'product', collection: @products
+  = will_paginate_styled @products
