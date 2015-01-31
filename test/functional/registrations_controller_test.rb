@@ -78,6 +78,29 @@ class RegistrationsControllerTest < ActionController::TestCase
       assert_select 'ul li', 'Twitter'
     end
 
+    should 'not display company info on user profile when user does not have a company' do
+      get :show, id: @user.id
+      assert_response 200
+      assert_select '.vendor-profile .shop-info p', false
+    end
+
+    should 'show company info on user profile' do
+      FactoryGirl.create(:company, creator: @user)
+      get :show, id: @user.id
+
+      assert_response 200
+      assert_select 'div#shop-info p', 'COMPANY INFO'
+    end
+
+    should 'display edit actions if user is logged in' do
+      FactoryGirl.create(:company, creator: @user)
+      sign_in @user
+      get :show, id: @user.id
+
+      assert_response 200
+      assert_select 'div#vendor-profile a', 'Edit'
+      assert_select 'div#shop-info a', 'Edit'
+    end
   end
 
   context "verify" do

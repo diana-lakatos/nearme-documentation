@@ -105,3 +105,11 @@ Feature: As a user of the site
         | 1   | Yes        | 9:00      | 17:00      |
         | 2   | Yes        | 9:00      | 17:00      |
 
+  Scenario: A user can't manage blog if blogging is disabled on instance
+    Given I visit blog section of dashboard
+    Then I should see "Marketplace owner has disabled blog functionality"
+
+  Scenario: A user can manage blog if blogging is enabled on instance
+    Given user blogging is enabled for my instance
+    Then I should be able to enable my blog
+
