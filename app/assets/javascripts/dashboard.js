@@ -31,6 +31,8 @@
 //= require jcrop
 //= require spectrum
 //= require ./vendor/jquery.inview
+//= require ckeditor/basepath
+//= require ckeditor/init
 //= require vendor/jquery.raty
 //
 //
