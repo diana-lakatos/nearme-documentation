@@ -343,6 +343,12 @@ body.buy-sell-theme {
       width: 25%;
     }
 
+    .user-badge a {
+      color: #5dbded;
+      font-size: 14px;
+      vertical-align: top;
+    }
+
     .vendor-profile {
       box-sizing: border-box;
       padding: 30px 40px;
@@ -352,8 +358,6 @@ body.buy-sell-theme {
       margin-bottom: 40px;
     }
 
-
-
     .shop-info p {
       font-size: 16px;
       margin-bottom: 20px;
@@ -361,6 +365,19 @@ body.buy-sell-theme {
 
     .verifications li {
       font-size: 12px;
+    }
+
+    .edit-link {
+      float: right;
+    }
+
+    .submit-bar {
+      text-align: center;
+    }
+
+    .submit-bar .btn {
+      width: 45%;
+      margin-left: 20px;
     }
 
     /*===== VENDOR LISTINGS ===== */
@@ -425,7 +442,7 @@ body.buy-sell-theme {
       .post-body {
         clear: both;
       }
-      
+
       p {
         font-size: 14px;
       }

@@ -1,5 +1,7 @@
-.user-badge 
+.user-badge
   .vendor-profile
+    - if current_user && @user.id == current_user.id
+      = link_to 'Edit', dashboard_profile_path, class: 'edit-link'
     .vendor-pic
       = image_tag @user.avatar.url(:big)
 
@@ -10,13 +12,22 @@
     = link_to new_user_user_message_path(user_id: @user.slug), rel: "modal" do
       .btn.blue= t 'buy_sell_market.products.buttons.contact_host'
 
-  .vendor-profile.shop-info
-    %p SHOP INFO
-    %h3 Urban Cactus
-    %p Opened on August 12, 1991
+  - if @user.companies.first.present?
+    .vendor-profile.shop-info
+      %p
+        = t 'user_profile.labels.shop_info'
+        - if current_user && @user.id == current_user.id
+          = link_to 'Edit', edit_dashboard_company_path(@user.companies.first), class: 'edit-link'
 
-  .vendor-profile
-    %h4= t 'buy_sell_market.products.labels.verifications'
+      %h3= @user.companies.first.name
+      %p
+        = @user.companies.first.country unless @user.companies.first.country.blank?
+        - unless @user.companies.first.url.blank?
+          %br
+          = link_to @user.companies.first.url, @user.companies.first.url, targe: '_blank'
+
+  .vendor-profile.shop-info
+    %p= t 'user_profile.labels.verifications'
     .verifications.clearfix
       %ul.pull-left
         %li
@@ -26,17 +37,17 @@
         %li
           - if @user.phone.present?
             = image_tag 'themes/buy_sell/check.png', class: 'check'
-            = t 'buy_sell_market.products.labels.phone_number'  
+            = t 'buy_sell_market.products.labels.phone_number'
         %li
           - if @user.decorate.social_connections_for('facebook')
             = image_tag 'themes/buy_sell/check.png', class: 'check'
-            Facebook 
+            Facebook
 
       %ul.pull-right
         %li
           - if @user.decorate.social_connections_for('linkedin')
             = image_tag 'themes/buy_sell/check.png', class: 'check'
-            LinkedIn 
+            LinkedIn
 
         %li
           - if @user.decorate.social_connections_for('twitter')

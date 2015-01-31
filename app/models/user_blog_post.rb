@@ -8,7 +8,7 @@ class UserBlogPost < ActiveRecord::Base
   friendly_id :slug_candidates, use: [:slugged, :history, :finders]
 
   mount_uploader :hero_image, HeroImageUploader
-  mount_uploader :logo, BaseImageUploader
+  mount_uploader :author_avatar_img, AuthorAvatarUploader
 
   validates :title, :published_at, :user, :content, presence: true
 
@@ -21,7 +21,15 @@ class UserBlogPost < ActiveRecord::Base
   self.per_page = 5
 
   def author_avatar
-    user.avatar
+    if author_avatar_img.present?
+      author_avatar_img
+    else
+      if user.avatar.present?
+        user.avatar
+      else
+        nil
+      end
+    end
   end
 
   def previous_blog_post

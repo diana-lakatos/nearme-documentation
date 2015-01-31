@@ -340,11 +340,12 @@ en:
 
       owner: 'SHOP OWNER'
       recent_activity: 'RECENT ACTIVITY'
-      shop_info: 'SHOP INFO'
+      shop_info: 'COMPANY INFO'
       verifications: 'VERIFICATIONS'
 
     buttons:
       cta: 'Add new'
+      visit_blog: 'Visit blog to see more posts'
 
   user_blog:
     titles:

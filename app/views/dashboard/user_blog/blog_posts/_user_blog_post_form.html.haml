@@ -8,10 +8,12 @@
 = f.input :slug
 
 = f.input :hero_image
+= @blog_post.decorate.image_preview(:hero_image)
 
 = f.input :author_name
 = f.input :author_biography
-= f.input :logo
+= f.input :author_avatar_img
+= @blog_post.decorate.image_preview(:author_avatar_img)
 
 
 = javascript_include_tag 'vendor/jquery.min'

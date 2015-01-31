@@ -25,7 +25,7 @@
         = render 'social_buttons', blog_post: @blog_post
 
     .row-fluid.author
-      - avatar = @blog_post.user.avatar
+      - avatar = @blog_post.author_avatar
       - if @blog_post.user.avatar.present? && @blog_post.author_name.strip.downcase == @blog_post.user.name.strip.downcase
         .span2.avatar
           = link_to user_path(@blog_post.user) do

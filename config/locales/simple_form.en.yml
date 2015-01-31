@@ -43,6 +43,7 @@ en:
         excerpt: 'Excerpt'
         author_name: 'Author name'
         author_biography: 'Author Bio'
+        author_avatar_img: 'Author avatar'
         logo: 'Logo'
 
       theme:

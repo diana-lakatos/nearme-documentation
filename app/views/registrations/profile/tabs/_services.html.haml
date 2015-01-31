@@ -1,13 +1,12 @@
 - @user.companies.first.listings.decorate.in_groups_of(2) do |line|
   .row-fluid
-    - line.each do |listing|
+    - line.each do |transactable|
       .span6
-        - if listing
-          = listing.name
-          -#= link_to product_url(product) do
-          -#  .item-img
-          -#    = product.first_image
-          -#  .details.clearfix
-          -#    %p= product.name
-          -#    %p.name= product.company.name
-          -#    %p.price= product.display_price
+        - if transactable
+          = link_to location_listing_path(transactable.location, transactable) do
+            .item-img
+              = image_tag(transactable.photos.first.try(:image_url, :large))
+            .details.clearfix
+              %p= transactable.name
+              %p.name= transactable.location.address
+              -#%p.price= product.display_price

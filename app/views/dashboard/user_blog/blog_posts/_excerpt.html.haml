@@ -10,13 +10,13 @@
       .span12.content
         %p= blog_post.excerpt.to_s.html_safe
 
-  - if blog_post.user.avatar.present? || blog_post.author_name.present?
+  - if blog_post.author_avatar.present? || blog_post.author_name.present?
     .clearfix.avatar
       .row-fluid
-        - if blog_post.user.avatar.present? && blog_post.author_name.strip.downcase == blog_post.user.name.strip.downcase
+        - if blog_post.author_avatar.present? && blog_post.author_name.strip.downcase == blog_post.user.name.strip.downcase
           .span1
             = link_to user_path(blog_post.user) do
-              .avatar-container{style: "background-image: url(#{blog_post.user.avatar.url(:thumb)});"}
+              .avatar-container{style: "background-image: url(#{blog_post.author_avatar.url(:thumb)});"}
 
-        .span11{class: blog_post.user.avatar.present? ? 'with-avatar' : ''}
+        .span11{class: blog_post.author_avatar.present? ? 'with-avatar' : ''}
           = link_to blog_post.author_name, user_path(blog_post.user), class: 'author-name'

@@ -231,6 +231,7 @@ class SecuredParams
         :excerpt,
         :author_name,
         :author_biography,
+        :author_avatar_img,
         :logo
     ]
   end
@@ -867,7 +868,7 @@ class SecuredParams
 
   def rating_system
     [
-      :subject, 
+      :subject,
       :active,
       :transactable_type_id,
       rating_hints_attributes: self.rating_hint,
@@ -877,7 +878,7 @@ class SecuredParams
 
   def rating_hint
     [
-      :id, 
+      :id,
       :description
     ]
   end
@@ -890,13 +891,13 @@ class SecuredParams
 
   def review
     [
-      :rating, 
-      :comment, 
-      :object, 
-      :date, 
+      :rating,
+      :comment,
+      :object,
+      :date,
       :reservation_id,
       :transactable_type_id,
-      :instance_id, 
+      :instance_id,
       :user_id
     ]
   end
@@ -909,8 +910,8 @@ class SecuredParams
 
   def rating_answer
     [
-      :id, 
-      :rating, 
+      :id,
+      :rating,
       :rating_question_id
     ]
   end
