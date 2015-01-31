@@ -2,6 +2,7 @@ class InstanceView < ActiveRecord::Base
   has_paper_trail
   belongs_to :instance_type
   belongs_to :instance
+  belongs_to :transactable_type
 
   VIEW_VIEW = 'view'
   EMAIL_VIEW = 'email'
@@ -9,7 +10,6 @@ class InstanceView < ActiveRecord::Base
   EMAIL_LAYOUT_VIEW = 'mail_layout'
   VIEW_TYPES = [SMS_VIEW, EMAIL_VIEW, EMAIL_LAYOUT_VIEW, VIEW_VIEW]
 
-  belongs_to :transactable_type
 
   scope :for_instance_type_id, ->(instance_type_id) {
     where('instance_type_id IS NULL OR instance_type_id = ?', instance_type_id)

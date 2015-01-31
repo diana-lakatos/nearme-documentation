@@ -83,7 +83,7 @@ class CustomMailerTest < ActiveSupport::TestCase
   should "be able to set enquirer's email as recipient" do
     WorkflowAlert.stubs(:find).returns(stub(default_hash.merge(recipient_type: 'enquirer')))
     mail = CustomMailer.custom_mail(@step, 1)
-    assert_equal ['enquirer@example.com'], mail.to
+    assert_equal ['enquirer@example.com', 'my_email@example.com'], mail.to
   end
 
   should "be able to set enquirer's email as reply-to" do
@@ -101,7 +101,7 @@ class CustomMailerTest < ActiveSupport::TestCase
   should "be able to set lister's email as recipient" do
     WorkflowAlert.stubs(:find).returns(stub(default_hash.merge(recipient_type: 'lister')))
     mail = CustomMailer.custom_mail(@step, 1)
-    assert_equal ['lister@example.com'], mail.to
+    assert_equal ['lister@example.com', 'my_email@example.com'], mail.to
   end
 
   should "be able to set lister's email as reply-to" do

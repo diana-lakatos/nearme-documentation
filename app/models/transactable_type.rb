@@ -21,6 +21,7 @@ class TransactableType < ActiveRecord::Base
   has_many :form_components
   has_many :rating_systems
   has_many :reviews
+  has_many :instance_views
 
   belongs_to :instance
 

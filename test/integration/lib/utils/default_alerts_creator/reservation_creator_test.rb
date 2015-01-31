@@ -299,7 +299,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_contains "How was #{ @reservation.owner.first_name }, your recent #{ @platform_context.decorate.lessee }?", mail.html_part.body
 
       assert_equal [@reservation.host.email], mail.to
-      assert_equal "How was your experience hosting #{@reservation.owner.first_name}?", mail.subject
+      assert_equal "[#{@platform_context.decorate.name}] How was your experience hosting #{@reservation.owner.first_name}?", mail.subject
       assert_contains 'href="http://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="http://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
@@ -316,7 +316,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_contains @reservation.listing.name, mail.html_part.body
 
       assert_equal [@reservation.owner.email], mail.to
-      assert_equal "How was your experience at '#{@reservation.listing.name}'?", mail.subject
+      assert_equal "[#{@platform_context.decorate.name}] How was your experience at '#{@reservation.listing.name}'?", mail.subject
       assert_contains 'href="http://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="http://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
