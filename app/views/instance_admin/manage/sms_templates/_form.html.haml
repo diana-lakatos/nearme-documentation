@@ -1,4 +1,4 @@
-= simple_form_for :sms_template, url: @sms_template.persisted? ? instance_admin_manage_sms_template_path(@sms_template) : instance_admin_manage_sms_templates_path, method: @sms_template.persisted? ? :put : :post do |f|
+= simple_form_for @sms_template, as: :sms_template, url: @sms_template.persisted? ? instance_admin_manage_sms_template_path(@sms_template) : instance_admin_manage_sms_templates_path, method: @sms_template.persisted? ? :put : :post do |f|
   %h4
     = link_to 'Manage sms templates', instance_admin_manage_sms_templates_url
     =  "> #{pretty_path(@sms_template.path)}" if @sms_template.path

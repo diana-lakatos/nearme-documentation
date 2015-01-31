@@ -1,4 +1,4 @@
-= simple_form_for :email_layout_template, url: @email_layout_template.persisted? ? instance_admin_manage_email_layout_template_path(@email_layout_template) : instance_admin_manage_email_layout_templates_path, method: @email_layout_template.persisted? ? :put : :post do |f|
+= simple_form_for @email_layout_template, as: :email_layout_template, url: @email_layout_template.persisted? ? instance_admin_manage_email_layout_template_path(@email_layout_template) : instance_admin_manage_email_layout_templates_path, method: @email_layout_template.persisted? ? :put : :post do |f|
   %h4
     = link_to 'Manage email layout templates', instance_admin_manage_email_layout_templates_url
     =  "> #{pretty_path(@email_layout_template.path)}" if @email_layout_template.path
