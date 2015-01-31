@@ -254,6 +254,7 @@ body.buy-sell-theme {
   .nav-tabs > .active > a, .nav-tabs > .active > a:hover, .nav-tabs > .active > a:focus {
     background: #fff !important;
     border: solid transparent 1px;
+    color: #000;
   }
 
   .nav-tabs li a {
@@ -274,16 +275,6 @@ body.buy-sell-theme {
   }
 
   /*===== VENDOR PROFILE =====*/
-
-  .vendor-profile {
-    padding: 30px 40px;
-    background: #fff;
-    border-bottom: solid #D5D5D5 2px;
-    width: 29%;
-    vertical-align: top;
-    float: right;
-    margin-top: 50px;
-  }
 
   .vendor-info {
     vertical-align: top;
@@ -336,28 +327,46 @@ body.buy-sell-theme {
     padding-bottom: 30px;
 
     .page-wrapper {
-      width: 90%;
+      width: 1200px;
+    }
+
+    .profile-content {
+      box-sizing: border-box;
+      float: right;
+      width: 65%;
     }
 
     /*===== VENDOR PROFILE =====*/
 
-    .vendor-profile {
-      width: 25%;
+    .user-badge {
       float: left;
-      margin-top: inherit;
+      width: 25%;
     }
 
-    .verifications p {
+    .vendor-profile {
+      box-sizing: border-box;
+      padding: 30px 40px;
+      background: #fff;
+      border-bottom: solid #D5D5D5 2px;
+      width: 100%;
+      margin-bottom: 40px;
+    }
+
+
+
+    .shop-info p {
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .verifications li {
       font-size: 12px;
-      padding-left: 10px;
-      margin: 0;
     }
 
     /*===== VENDOR LISTINGS ===== */
 
     .profile-listings {
-      float: right;
-      width: 60%;
+      box-sizing: border-box;
       background: #fff;
       padding: 30px;
       border-bottom: solid #D5D5D5 2px;
@@ -403,6 +412,30 @@ body.buy-sell-theme {
       width: 240px;
     }
 
+    article.post {
+
+      border-bottom: 1px solid #D5D5D5;
+      padding: 0;
+      margin-bottom: 20px;
+
+      .post-head {
+        margin-bottom: 20px;
+      }
+
+      .post-body {
+        clear: both;
+      }
+      
+      p {
+        font-size: 14px;
+      }
+
+      p.date {
+        margin-bottom: 0;
+      }
+
+    }
+
     @media (max-width: 1555px) {
       .page-wrapper {
         width: 90%;
@@ -411,21 +444,25 @@ body.buy-sell-theme {
 
     @media (max-width: 1166px) {
       .page-wrapper {
-        width: 90%;
+        width: 100%;
       }
 
-      .vendor-profile {
+      .user-badge {
         float: none;
-        width: 60%;
+        width: 80%;
         margin: 0 auto;
         padding: 30px;
         margin-bottom: 20px;
       }
 
-      .profile-listings {
-        width: 60%;
-        margin: 0 auto;
+      .profile-content {
         float: none;
+        width: 80%;
+        margin: 0 auto;
+      }
+
+      .profile-listings {
+        width: 100%;
       }
     }
   }
@@ -986,7 +1023,7 @@ body.buy-sell-theme {
   }
 
   @media (max-width: 924px) {
-    .vendor-profile {
+    .user-badge {
       float: none;
       width: 50%;
       margin: 50px auto;
@@ -999,8 +1036,9 @@ body.buy-sell-theme {
   }
 
   @media (max-width: 585px) {
-    .vendor-profile {
-      width: 80%;
+    body.buy-sell-theme .profile .user-badge {
+      width: 90%;
+      padding: 0;
     }
 
     .nav-tabs li a {
@@ -1010,6 +1048,10 @@ body.buy-sell-theme {
 
     .verifications .row-fluid {
       margin: 0;
+    }
+
+    .date {
+      float: left;
     }
   }
 

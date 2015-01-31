@@ -1,46 +1,49 @@
-.vendor-profile
-  .vendor-pic.inline
-    = image_tag @user.avatar.url(:big)
+.user-badge 
+  .vendor-profile
+    .vendor-pic
+      = image_tag @user.avatar.url(:big)
 
-  .vendor-info.inline
-    %h2= @user.name
-    %p= @user.display_location
+    .vendor-info
+      %h3= @user.name
+      %p= @user.display_location
 
-  = link_to new_user_user_message_path(user_id: @user.slug), rel: "modal" do
-    .btn.blue= t 'buy_sell_market.products.buttons.contact_host'
+    = link_to new_user_user_message_path(user_id: @user.slug), rel: "modal" do
+      .btn.blue= t 'buy_sell_market.products.buttons.contact_host'
 
-  .divider
+  .vendor-profile.shop-info
+    %p SHOP INFO
+    %h3 Urban Cactus
+    %p Opened on August 12, 1991
 
-  %h4= t 'buy_sell_market.products.labels.verifications'
-  .verifications
-    .row-fluid
-      .span12
-        - if @user.email.present?
-          %p
+  .vendor-profile
+    %h4= t 'buy_sell_market.products.labels.verifications'
+    .verifications.clearfix
+      %ul.pull-left
+        %li
+          - if @user.email.present?
             = image_tag 'themes/buy_sell/check.png', class: 'check'
             = t 'buy_sell_market.products.labels.email_address'
-
-        - if @user.phone.present?
-          %p
+        %li
+          - if @user.phone.present?
             = image_tag 'themes/buy_sell/check.png', class: 'check'
-            = t 'buy_sell_market.products.labels.phone_number'
-
-        - if @user.decorate.social_connections_for('facebook')
-          %p
+            = t 'buy_sell_market.products.labels.phone_number'  
+        %li
+          - if @user.decorate.social_connections_for('facebook')
             = image_tag 'themes/buy_sell/check.png', class: 'check'
-            Facebook
+            Facebook 
 
-        - if @user.decorate.social_connections_for('linkedin')
-          %p
+      %ul.pull-right
+        %li
+          - if @user.decorate.social_connections_for('linkedin')
             = image_tag 'themes/buy_sell/check.png', class: 'check'
-            LinkedIn
+            LinkedIn 
 
-        - if @user.decorate.social_connections_for('twitter')
-          %p
+        %li
+          - if @user.decorate.social_connections_for('twitter')
             = image_tag 'themes/buy_sell/check.png', class: 'check'
             Twitter
 
-          - # TODO For later use
-          -#%p
-          -#  = image_tag 'themes/buy_sell/check.png', class: 'check'
-          -#  = t 'buy_sell_market.products.labels.reviews'
+            - # TODO For later use
+            -#%p
+            -#  = image_tag 'themes/buy_sell/check.png', class: 'check'
+            -#  = t 'buy_sell_market.products.labels.reviews'

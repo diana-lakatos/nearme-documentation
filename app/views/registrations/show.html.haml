@@ -7,15 +7,15 @@
 .profile
   .container.row-fluid.page-wrapper
     = render 'buy_sell_market/users/user_badge'
-    .profile-listings
+    .profile-content
       %ul.nav.nav-tabs
         - if buyable?
           - unless hide_tab?('products')
-            %li
+            %li.active
               %a{href: '#products', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.products'
         - else
           - unless hide_tab?('services')
-            %li
+            %li.active
               %a{href: '#services', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.services'
 
         - unless hide_tab?('reviews')
@@ -26,34 +26,34 @@
           %li
             %a{href: '#blog_posts', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.blog_posts'
 
-    .profile-listings.tab-content
-      - if buyable?
-        - unless hide_tab?('products')
-          #products.tab-pane.active
-            - if @user.companies.first.present?
-              - if @user.companies.first.products.count > 0
-                = render 'registrations/profile/tabs/products'
+      .profile-listings.tab-content
+        - if buyable?
+          - unless hide_tab?('products')
+            #products.tab-pane.active
+              - if @user.companies.first.present?
+                - if @user.companies.first.products.count > 0
+                  = render 'registrations/profile/tabs/products'
+                - else
+                  = render 'registrations/profile/no_content', tab: :products
+        - else
+          - unless hide_tab?('services')
+            #services.tab-pane.active
+              - if @user.companies.first.listings.count > 0
+                = render 'registrations/profile/tabs/services'
               - else
-                = render 'registrations/profile/no_content', tab: :products
-      - else
-        - unless hide_tab?('services')
-          #services.tab-pane.active
-            - if @user.companies.first.listings.count > 0
-              = render 'registrations/profile/tabs/services'
-            - else
-              = render 'registrations/profile/no_content', tab: :services
+                = render 'registrations/profile/no_content', tab: :services
 
-      - unless hide_tab?('reviews')
-        #reviews.tab-pane
-          = render 'registrations/profile/no_content', tab: :reviews
+        - unless hide_tab?('reviews')
+          #reviews.tab-pane
+            = render 'registrations/profile/no_content', tab: :reviews
 
-      - if platform_context.instance.user_blogs_enabled?
-        - unless hide_tab?('blog_posts')
-          #blog_posts.tab-pane
-            - if @user.has_published_blogs?
-              = render 'registrations/profile/tabs/blog_posts'
-            - else
-              = render 'registrations/profile/no_content', tab: :blog_posts
+        - if platform_context.instance.user_blogs_enabled?
+          - unless hide_tab?('blog_posts')
+            #blog_posts.tab-pane
+              - if @user.has_published_blogs?
+                = render 'registrations/profile/tabs/blog_posts'
+              - else
+                = render 'registrations/profile/no_content', tab: :blog_posts
 
 
 -# TODO: Clean this mess and take useful stuff
