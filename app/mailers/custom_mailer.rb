@@ -21,16 +21,16 @@ class CustomMailer < InstanceMailer
   protected
 
   def get_email_for_type_with_fallback(field)
-    case @workflow_alert.send("#{field}_type")
+    (case @workflow_alert.send("#{field}_type")
     when 'lister'
-      @step.lister.email
+      [@step.lister.email]
     when 'enquirer'
-      @step.enquirer.email
+      [@step.enquirer.email]
     when 'administrator'
-      InstanceAdmin.joins(:user).pluck(:email)
+      InstanceAdmin.joins(:user).pluck(:email) || []
     else
-      @workflow_alert.send(field).try(:split, ',')
-    end
+      []
+    end + (@workflow_alert.send(field).try(:split, ',') || [])).uniq
   end
 
   def to
