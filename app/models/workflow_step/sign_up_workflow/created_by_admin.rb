@@ -1,0 +1,17 @@
+class WorkflowStep::SignUpWorkflow::CreatedByAdmin < WorkflowStep::SignUpWorkflow::BaseStep
+
+  def initialize(user_id, admin_id)
+    @user = User.find(user_id)
+    @creator = User.find(admin_id)
+  end
+
+  def lister
+    @creator
+  end
+
+  def data
+    { new_user: @user, creator: @creator }
+  end
+
+end
+

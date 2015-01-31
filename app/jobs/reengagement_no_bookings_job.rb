@@ -1,11 +1,14 @@
 class ReengagementNoBookingsJob < Job
 
-  def after_initialize(user)
-    @user = user
+  def after_initialize(user_id)
+    @user_id = user_id
   end
 
   def perform
-    ReengagementMailer.no_bookings(@user).deliver if @user && @user.reservations.empty?
+    @user = User.find_by_id(@user_id)
+    if @user
+      WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::NoReservations, @user.id) if @user.reservations.empty? && @user.listings_in_near.size > 0
+    end
   end
-    
+
 end

@@ -37,7 +37,6 @@ class Company < ActiveRecord::Base
   has_many :zones, class_name: 'Spree::Zone', dependent: :destroy
 
   has_many :reservations
-  has_many :reservation_charges, through: :reservations
   has_many :payments
   has_many :order_charges, through: :orders, source: :near_me_payments
   has_many :payment_transfers, :dependent => :destroy
@@ -117,8 +116,7 @@ class Company < ActiveRecord::Base
     # we want to notify company owner (once no matter how many payment transfers have been generated!)
     # that it is possible to make automated payout but he needs to enter credentials via edit company settings
     if mailing_address.blank? && self.created_payment_transfers.any?
-      CompanyMailer.enqueue.notify_host_of_no_payout_option(self)
-      CompanySmsNotifier.notify_host_of_no_payout_option(self).deliver
+      WorkflowStepJob.perform(WorkflowStep::PayoutWorkflow::NoPayoutOption, self.id, self.created_payment_transfers)
     end
   end
 

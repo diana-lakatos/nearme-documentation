@@ -1,32 +1,21 @@
-= simple_form_for [:instance_admin, :manage, @email_template] do |f|
+= simple_form_for @email_template, as: :email_template, url: @email_template.persisted? ? instance_admin_manage_email_template_path(@email_template) : instance_admin_manage_email_templates_path, method: @email_template.persisted? ? :put : :post do |f|
   %h4
     = link_to 'Manage email templates', instance_admin_manage_email_templates_url
-    =  "> #{pretty_path(@email_template.path)}"
+    =  "> #{pretty_path(@email_template.path)}" if @email_template.path
 
   .content-container
     .row
       .input-container.col-xs-12
-        = f.input :subject, :placeholder => 'Subject', input_html: { class: 'form-control' }
+        = f.input :path, label: 'Template path', :placeholder => 'email/path', disabled: @email_template.persisted? && WorkflowAlert.for_email_path(@email_template.path).count > 0, input_html: { class: 'form-control' }
     .row
       .input-container.col-xs-12
-        %ul.nav.nav-pills
-          %li.active
-            %a{href: "#plain-text-email", "data-toggle" => "tab"}  Plain Text Email
-          %li
-            %a{href: "#html-email", "data-toggle" => "tab"}  HTML Email
-        %br
+        = f.association :transactable_type
+    .row
+      .input-container.col-xs-12
+        = f.input :format, collection: ['text', 'html'], input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-12
+        = f.input :body, as: :text, label: 'Body', input_html: { class: 'form-control', rows: "10" }
 
-        .tab-content
-          #plain-text-email.tab-pane.active
-            .row
-              .col-xs-12
-                = f.input :text_body, label: false, input_html: { class: 'form-control', rows: "30" }
-
-          #html-email.tab-pane
-            .row
-              .col-xs-12
-                = f.input :html_body, label: false, input_html: { class: 'form-control', rows: "30" }
-
-    = f.input :path, as: :hidden
     = f.button :submit, 'Save', class: 'btn btn-green pull-right'
     = link_to 'Cancel', instance_admin_manage_email_templates_url , class: 'pull-right'

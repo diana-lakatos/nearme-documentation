@@ -51,6 +51,7 @@ class InstanceWizardController < ActionController::Base
     PlatformContext.current = PlatformContext.new(@instance)
     tp = @instance.transactable_types.create(name: params[:marketplace_type], pricing_options: { "free"=>"1", "hourly"=>"1", "daily"=>"1", "weekly"=>"1", "monthly"=>"1" },
                                              availability_options: { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => true } })
+    create_rating_systems(@instance)
 
     if @instance.buyable?
       CustomAttributes::CustomAttribute::Creator.new(tp).create_buy_sell_attributes!
@@ -62,16 +63,18 @@ class InstanceWizardController < ActionController::Base
         at.availability_rules.build(day: i, open_hour: 9, open_minute: 0,close_hour: 17, close_minute: 0)
       end
       at.save!
+      Utils::FormComponentsCreator.new(tp).create!
       @instance.location_types.create!(name: 'General')
     end
 
+    Utils::DefaultAlertsCreator.new.create_all_workflows!
     InstanceAdmin.create(user_id: @user.id)
 
     blog_instance = BlogInstance.new(name: @instance.name + ' Blog')
     blog_instance.owner = @instance
     blog_instance.save!
 
-    PostActionMailer.enqueue.instance_created(@instance, @user, (user_password || '[using existing account password]'))
+    WorkflowStepJob.perform(WorkflowStep::InstanceWorkflow::Created, @instance.id, @user.id, user_password || '[using existing account password]')
 
     redirect_to @instance.domains.first.url
   end
@@ -91,6 +94,15 @@ class InstanceWizardController < ActionController::Base
 
   def find_or_build_user
     @user = User.find_by_email(@instance_creator.email) || User.new(email: @instance_creator.email)
+  end
+
+  def create_rating_systems(instance)
+    instance.transactable_types.each do |transactable_type|
+      [instance.lessor, instance.lessee, instance.bookable_noun].each do |subject|
+        rating_system = instance.rating_systems.create(subject: subject, transactable_type_id: transactable_type.id)
+        RatingConstants::VALID_VALUES.each { |value| rating_system.rating_hints.create(value: value, instance: instance) }
+      end
+    end
   end
 
   def instance_params

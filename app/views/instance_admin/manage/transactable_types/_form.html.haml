@@ -7,31 +7,40 @@
       .input-container.col-xs-12
         = f.input :name, input_html: { class: 'form-control' }
     .row
-      .input-container.col-xs-6
+      .input-container.col-xs-4
         = f.input :favourable_pricing_rate#, hint: 'In case of multiple pricing schemas, like daily/weekly/monthly, if favourable pricing rate is checked, we will use only one price. If it is unchecked, we will use more favourable pricing only for periods that satisfies condition. For example, if weekly pricing is for 7 days, and someone books 8, with favourable pricing we will calculate it as 8/7 * weekly rate. If favourable pricing is not checked, we will calculate it as 1 * weekly rate + 1 * daily rate'
+      .input-container.col-xs-4
+        = f.input :show_page_enabled, as: :boolean
+      .input-container.col-xs-4
+        = f.input :overnight_booking, as: :boolean
+    .row
+      .input-container.col-xs-6
+        = f.input :service_fee_guest_percent, label: 'Guest Service Fee Percent' do
+          = f.input_field :service_fee_guest_percent, type: 'tel', class: 'form-control'
+      .input-container.col-xs-6
+        = f.input :service_fee_host_percent, label: 'Host Service Fee Percent' do
+          = f.input_field :service_fee_host_percent, type: 'tel', class: 'form-control'
+
+    .row
       .input-container.col-xs-6
         = f.input :show_page_enabled, as: :boolean
+      .input-container.col-xs-6
+        = f.input :groupable_with_others, as: :boolean
 
-  %h4 Bulk Upload CSV Fields
-  %ol#draggablePanelList
-    - csv_fields_builder = DataImporter::Host::CsvFieldsBuilder.new(@transactable_type)
+  %h4 Terminology
+  .content-container
+    .row
+      .input-container.col-xs-12
+        = f.input :bookable_noun, label: 'Bookable Noun (e.g. Desk)', input_html: { class: 'form-control' }
+    .row.dropshadow
+      .input-container.col-xs-6
+        = f.input :lessor, label: 'Lessor (e.g. host)', input_html: { class: 'form-control' }
+      .input-container.col-xs-6
+        = f.input :lessee, label: 'Lessee (e.g. guest)', input_html: { class: 'form-control' }
 
-    - all_fields = csv_fields_builder.object_field_pairs.clone
-    - csv_fields_builder.all_valid_object_field_pairs.each do |pair|
-      - all_fields << pair unless all_fields.include?({ pair.keys.first.to_s => pair.values.first.to_s})
-    - all_fields.each do |object_field_pair|
-      - object = object_field_pair.keys.first
-      - field = object_field_pair[object]
-      - if csv_fields_builder.get_label(object_field_pair).present?
-        %li.panel.panel-info
-          %div.panel-heading
-            = csv_fields_builder.get_label(object_field_pair)
-            - if field == 'external_id'
-              %span= check_box_tag "", field, true, disabled: true
-              %span.hidden= check_box_tag "#{f.object_name}[custom_csv_fields][]", "#{object}=>#{field}", true
-            - else
-              %span= check_box_tag "#{f.object_name}[custom_csv_fields][]", "#{object}=>#{field}", csv_fields_builder.object_field_pairs.include?(object_field_pair)
-
+  - if resource.persisted?
+    %h4 Bulk Upload CSV Fields
+    = render partial: "transactable_types/custom_csv_fields", locals: { f: f }
 
   %h4 Allowed Action Types
   .content-container.dropshadow
@@ -42,8 +51,3 @@
   .content-container
     = f.button :submit, 'Save', class: 'btn btn-green pull-right'
 
-= content_for :script do
-  :javascript
-    $(function() {
-      $("ol#draggablePanelList").sortable({ axis: "y", cursor: "move" });
-    });

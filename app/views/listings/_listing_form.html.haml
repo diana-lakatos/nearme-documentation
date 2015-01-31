@@ -1,6 +1,8 @@
-= render :partial => 'approval_requests/form', :locals => { f: f }
 - only_inputs ||= []
-- photo_input_name_prefix = "listing" if local_assigns[:photo_input_name_prefix].nil?
+- photo_input_name_prefix = f.object_name if local_assigns[:photo_input_name_prefix].nil?
+
+- if only_inputs.empty? || only_inputs.include?(:approval_requests)
+  = render :partial => 'approval_requests/form', :locals => { f: f }
 
 = f.hidden_field :transactable_type_id, value: @transactable_type.id
 - if only_inputs.empty? || only_inputs.include?(:enabled)

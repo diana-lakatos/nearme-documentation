@@ -10,7 +10,6 @@ class Theme < ActiveRecord::Base
   #       etc.
   belongs_to :owner, :polymorphic => true
   has_many :pages, :dependent => :destroy
-  has_many :email_templates, :dependent => :destroy
   has_one :theme_font, :dependent => :destroy
   delegate :bookable_noun, :to => :instance
   delegate :lessor, :to => :instance
@@ -69,11 +68,6 @@ class Theme < ActiveRecord::Base
 
   def recompile_theme
     CompileThemeJob.perform(self) unless skip_compilation
-  end
-
-  def default_mailer
-    EmailTemplate.new(from: contact_email_with_fallback,
-                      reply_to: contact_email_with_fallback)
   end
 
   def contact_email_with_fallback

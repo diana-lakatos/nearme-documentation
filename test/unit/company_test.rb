@@ -54,26 +54,32 @@ class CompanyTest < ActiveSupport::TestCase
       end
 
       should 'notify host via sms and email if company has no payout option and instance supports payouts' do
-        @company.stubs(:created_payment_transfers).returns([mock()])
-        @mock = mock()
-        @mock.expects(:deliver).once
-        CompanySmsNotifier.expects(:notify_host_of_no_payout_option).with(@company).returns(stub(deliver: true)).once
-        CompanyMailer.expects(:notify_host_of_no_payout_option).with(@company).returns(@mock)
+        @created_payment_transfers = [mock()]
+        @company.stubs(:created_payment_transfers).returns(@created_payment_transfers)
+        WorkflowStepJob.expects(:perform).with(::WorkflowStep::PayoutWorkflow::NoPayoutOption, @company.id, @created_payment_transfers).once
+        @company.schedule_payment_transfer
+      end
+
+      should 'not notify host via sms and email if payment transfers are empty' do
+        @created_payment_transfers = []
+        @company.stubs(:created_payment_transfers).returns(@created_payment_transfers)
+        WorkflowStepJob.expects(:perform).with(::WorkflowStep::PayoutWorkflow::NoPayoutOption, @company.id, @created_payment_transfers).never
         @company.schedule_payment_transfer
       end
 
       should 'not notify host via sms and email if mailing address present' do
-        @company.stubs(:created_payment_transfers).returns([mock()])
+        @created_payment_transfers = [mock()]
+        @company.stubs(:created_payment_transfers).returns(@created_payment_transfers)
         @company.stubs(:mailing_address).returns('address')
-        CompanySmsNotifier.expects(:notify_host_of_no_payout_option).never
-        CompanyMailer.expects(:notify_host_of_no_payout_option).never
+        WorkflowStepJob.expects(:perform).with(::WorkflowStep::PayoutWorkflow::NoPayoutOption, @company.id, @created_payment_transfers).never
         @company.schedule_payment_transfer
       end
 
       should 'not notify host via sms and email if company has payout option' do
+        @created_payment_transfers = [mock()]
+        @company.stubs(:created_payment_transfers).returns(@created_payment_transfers)
         @company.stubs(:created_payment_transfers).returns([])
-        CompanySmsNotifier.expects(:notify_host_of_no_payout_option).never
-        CompanyMailer.expects(:notify_host_of_no_payout_option).never
+        WorkflowStepJob.expects(:perform).with(::WorkflowStep::PayoutWorkflow::NoPayoutOption, @company.id, @created_payment_transfers).never
         @company.schedule_payment_transfer
       end
 
@@ -86,8 +92,8 @@ class CompanyTest < ActiveSupport::TestCase
     setup do
       @company = FactoryGirl.create(:company)
       @company.attributes = {
-        :bank_account_number => '123456789', 
-        :bank_routing_number => '987654321', 
+        :bank_account_number => '123456789',
+        :bank_routing_number => '987654321',
         :bank_owner_name => 'John Doe'
       }
     end
@@ -98,8 +104,8 @@ class CompanyTest < ActiveSupport::TestCase
 
       should 'return correct bank account details' do
         expected_details = {
-          :account_number => '123456789', 
-          :bank_code => '987654321', 
+          :account_number => '123456789',
+          :bank_code => '987654321',
           :name => 'John Doe',
           :type => 'checking'
         }
@@ -155,7 +161,7 @@ class CompanyTest < ActiveSupport::TestCase
       end
 
       should 'populate correct instance_admin hash' do
-        @company.expects(:update_metadata).with({ 
+        @company.expects(:update_metadata).with({
           :industries_metadata => ['test']
         })
         @company.populate_industries_metadata!

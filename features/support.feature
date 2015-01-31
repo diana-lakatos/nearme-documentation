@@ -3,6 +3,7 @@ Feature: User can communicate with support
   Background:
     Given a user: "Client" exists with name: "Client User"
     And a support admin
+    And Alerts for support exist
 
   Scenario: Client can open support ticket and gets a response from instance admin
     Given I am logged in as the user

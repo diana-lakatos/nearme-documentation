@@ -1,3 +1,7 @@
+Given /^Alerts for support exist$/ do
+  Utils::DefaultAlertsCreator::SupportCreator.new.create_all!
+end
+
 Given(/^a support admin$/) do
   @instance = Instance.first
   @role = FactoryGirl.create(:instance_admin_role_administrator, instance_id: @instance.id)
@@ -32,7 +36,7 @@ Then(/^I have one opened ticket$/) do
 end
 
 Then(/^I receive request received email$/) do
-  assert_equal 2, ActionMailer::Base.deliveries.count 
+  assert_equal 2, ActionMailer::Base.deliveries.count
 end
 
 Then(/^support admin has one opened ticket$/) do
@@ -40,7 +44,7 @@ Then(/^support admin has one opened ticket$/) do
 end
 
 Then(/^support admin receives support received email$/) do
-  assert_equal 2, ActionMailer::Base.deliveries.count 
+  assert_equal 2, ActionMailer::Base.deliveries.count
 end
 
 Then(/^I should see this support ticket$/) do
@@ -68,5 +72,5 @@ Then(/^I log in support admin$/) do
 end
 
 Then(/^support ticked owner should get email with notification$/) do
-  assert_equal 3, ActionMailer::Base.deliveries.count 
+  assert_equal 3, ActionMailer::Base.deliveries.count
 end

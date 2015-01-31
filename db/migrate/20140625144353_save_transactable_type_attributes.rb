@@ -3,9 +3,11 @@ class SaveTransactableTypeAttributes < ActiveRecord::Migration
   end
 
   def self.up
-    TransactableTypeAttribute.find_each do |tta|
-      next if tta.transactable_type.nil?
-      tta.save!
+    if Object.const_defined?('TransactableTypeAttribute')
+      TransactableTypeAttribute.find_each do |tta|
+        next if tta.transactable_type.nil?
+        tta.save!
+      end
     end
   end
 

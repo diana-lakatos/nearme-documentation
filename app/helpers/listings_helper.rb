@@ -6,6 +6,7 @@ module ListingsHelper
   # Listing data for initialising a client-side bookings module
   def listing_booking_data(listing)
     first_date = listing.first_available_date
+    second_date = listing.second_available_date
 
     # Daily open/quantity availability data for datepickers
     availability = listing.availability_status_between(Time.zone.today, Time.zone.today.advance(:years => 1))
@@ -21,6 +22,7 @@ module ListingsHelper
       :review_url => review_listing_reservations_url(listing),
       :hourly_availability_schedule_url => hourly_availability_schedule_listing_reservations_url(listing, :format => :json),
       :first_available_date => first_date.strftime("%Y-%m-%d"),
+      :second_available_date => second_date.strftime("%Y-%m-%d"),
       :hourly_reservations => listing.hourly_reservations?,
       :hourly_price_cents => listing.hourly_price_cents,
       :hourly_availability_schedule => hourly_availability,
@@ -34,7 +36,8 @@ module ListingsHelper
       :maximum_date => availability.end_date,
       :prices_by_days => Hash[ listing.prices_by_days.map { |k, v| [k, v.cents] } ],
       :initial_bookings => @initial_bookings ? @initial_bookings[listing.id] : {},
-      recurring_booking: listing.transactable_type.recurring_booking
+      recurring_booking: listing.transactable_type.recurring_booking,
+      overnight_booking: listing.overnight_booking?
     }
   end
 

@@ -9,7 +9,7 @@
 
     .box
       %h2
-        = @reservation_request.reservation.days_in_words
+        = @reservation.humanized_number_of_periods
 
       = simple_form_for @reservation_request, :url => secure_listing_url(@reservation_request.listing), :method => :post, :html => {:class => "payment form-horizontal"} do |f|
         = render 'listings/reservations/fields', :f => f

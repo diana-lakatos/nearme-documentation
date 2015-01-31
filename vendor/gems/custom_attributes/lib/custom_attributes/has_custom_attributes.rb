@@ -73,7 +73,7 @@ module CustomAttributes
               else
                 nil
               end
-            end
+            end.compact
           end
         RUBY
 

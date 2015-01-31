@@ -22,13 +22,14 @@ class Dashboard::BaseController < ApplicationController
     "dashboard/white_labels",
     "dashboard/tickets",
     "registrations/edit",
-    "registrations/social_accounts"
+    "registrations/social_accounts",
+    "dashboard/reviews"
   ]
 
   private
 
   def find_company
-    @company = current_user.try(:companies).try(:first)
+    @company = current_user.try(:companies).try(:first).try(:decorate)
   end
 
   def redirect_if_no_company

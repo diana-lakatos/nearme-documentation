@@ -4,7 +4,7 @@ class InstanceAdmin::Manage::CustomAttributesController < InstanceAdmin::Manage:
   before_filter :normalize_valid_values, only: [:create, :update]
 
   def index
-    @custom_attributes = @target.custom_attributes
+    @custom_attributes = @target.custom_attributes.order('internal, name')
   end
 
   def new

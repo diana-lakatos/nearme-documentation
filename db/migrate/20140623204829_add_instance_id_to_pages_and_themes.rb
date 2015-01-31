@@ -27,8 +27,7 @@ class AddInstanceIdToPagesAndThemes < ActiveRecord::Migration
 
   class Page < ActiveRecord::Base
     belongs_to :theme
-
-    delegate :instance, to: :theme
+    belongs_to :instance
   end
 
   def change
@@ -36,7 +35,7 @@ class AddInstanceIdToPagesAndThemes < ActiveRecord::Migration
     add_index  :pages, :instance_id
 
     Page.find_each do |page|
-      page.update_column(:instance_id, page.instance.id) if page.theme
+      page.update_column(:instance_id, page.instance.id) if page.theme && page.instance.present?
     end
 
   end

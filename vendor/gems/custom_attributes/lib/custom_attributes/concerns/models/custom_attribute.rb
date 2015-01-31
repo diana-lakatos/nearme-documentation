@@ -13,8 +13,8 @@ module CustomAttributes
           PUBLIC = 3 unless defined?(PUBLIC)
           VALIDATION_RULES = 4 unless defined?(VALIDATION_RULES)
           VALID_VALUES = 5 unless defined?(VALID_VALUES)
-          ATTRIBUTE_TYPES = %w(array string integer float decimal datetime time date binary boolean)
-          HTML_TAGS = %w(input select switch textarea check_box radio_buttons check_box_list)
+          ATTRIBUTE_TYPES = %w(array string integer float decimal datetime time date binary boolean) unless defined?(ATTRIBUTE_TYPES)
+          HTML_TAGS = %w(input select switch textarea check_box radio_buttons check_box_list) unless defined?(HTML_TAGS)
 
           scope :listable, -> { all }
           scope :not_internal, -> { where.not(internal: true) }

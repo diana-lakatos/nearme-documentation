@@ -4,7 +4,7 @@ class PlatformContextDrop < BaseDrop
 
   delegate :name, :bookable_noun, :pages, :platform_context, :blog_url, :twitter_url, :lessor, :lessors, :lessee, :lessees, :searcher_type,
     :facebook_url, :address, :phone_number, :gplus_url, :site_name, :support_url, :support_email, :logo_image, :tagline, :search_field_placeholder, :homepage_content,
-    :is_company_theme?, :call_to_action, :latest_products, :buyable?, :to => :platform_context_decorator
+    :is_company_theme?, :call_to_action, :latest_products, :buyable?, :transactable_types, :bookable_nouns, :bookable_nouns_plural, to: :platform_context_decorator
 
 
   def initialize(platform_context_decorator)
@@ -16,7 +16,7 @@ class PlatformContextDrop < BaseDrop
   end
 
   def logo_url
-    @platform_context_decorator.logo_image.url || "https://s3.amazonaws.com/desksnearme.production/uploads/theme/logo_retina_image/1/logo_2x.png"
+    @platform_context_decorator.logo_image.url || image_url("platform_home/logo-01-dark.png").to_s
   end
 
   def host

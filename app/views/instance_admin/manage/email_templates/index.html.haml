@@ -2,14 +2,30 @@
 
 .content-container
   .row
+    = link_to 'Add Email Template', new_instance_admin_manage_email_template_path, class: 'pull-right btn btn-green'
+
+.content-container
+  .row
     .table-container.col-xs-12.dropshadow
       %table.table
         %tbody
           %tr
             %th Template
+            %th Format
             %th
-          - EmailTemplate::CUSTOMIZABLE_EMAILS.each do |path|
-            - if @email_templates.select {|template| template.path == path}.empty?
-              = render 'new_index_row', path: path
-            - else
-              = render 'edit_index_row', email_template: @email_templates.select {|template| template.path == path}.first
+            %th
+            %th
+
+          - @email_templates.each do |email_template|
+            %tr
+              %td= pretty_path email_template.path
+              %td= email_template.format
+              %td= email_template.transactable_type.try(:name)
+              %td
+                .pull-right
+                  = link_to 'Edit', edit_instance_admin_manage_email_template_path(email_template)
+              %td
+                .pull-right
+                  = link_to 'Destroy', instance_admin_manage_email_template_path(email_template), method: :delete, confirm: 'Are you sure?'
+
+

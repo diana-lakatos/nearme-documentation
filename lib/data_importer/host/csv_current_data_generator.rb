@@ -6,7 +6,7 @@ class DataImporter::Host::CsvCurrentDataGenerator < DataImporter::File
     @transactable_type = transactable_type
     @user = user
     @company = @user.companies.first
-    @csv_fields_builder = DataImporter::Host::CsvFieldsBuilder.new(transactable_type)
+    @csv_fields_builder = TransactableType::CsvFieldsBuilder.new(transactable_type)
   end
 
   def generate_csv

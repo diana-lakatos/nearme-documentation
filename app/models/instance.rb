@@ -7,7 +7,8 @@ class Instance < ActiveRecord::Base
     :live_paypal_client_secret, :live_balanced_api_key, :marketplace_password, :test_stripe_api_key, :test_paypal_username, :test_paypal_password,
     :test_paypal_signature, :test_paypal_app_id, :test_paypal_client_id, :test_paypal_client_secret, :test_balanced_api_key, :olark_api_key,
     :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key, :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret,
-    :instagram_consumer_key, :instagram_consumer_secret, :db_connection_string,
+    :instagram_consumer_key, :instagram_consumer_secret, :db_connection_string, :shippo_username, :shippo_password,
+    :twilio_consumer_key, :twilio_consumer_secret, :test_twilio_consumer_key, :test_twilio_consumer_secret,
     :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   attr_accessor :mark_as_locked
@@ -44,7 +45,7 @@ class Instance < ActiveRecord::Base
   has_many :instance_admins, :inverse_of => :instance
   has_many :instance_admin_roles, :inverse_of => :instance
   has_many :reservations, :as => :platform_context_detail
-  has_many :reservation_charges, :through => :reservations, :inverse_of => :instance
+  has_many :payments, :through => :reservations, :inverse_of => :instance
   has_many :instance_clients, :dependent => :destroy, :inverse_of => :instance
   has_many :translations, :dependent => :destroy, :inverse_of => :instance
   has_many :instance_billing_gateways, :dependent => :destroy, :inverse_of => :instance
@@ -64,6 +65,11 @@ class Instance < ActiveRecord::Base
   has_many :data_uploads, as: :target
   has_many :industries
   has_many :instance_views
+  has_many :rating_systems, dependent: :destroy
+  has_many :reviews, dependent: :destroy
+  has_many :rating_questions
+  has_many :rating_answers
+  has_many :rating_hints
   serialize :pricing_options, Hash
 
   validates_presence_of :name
@@ -144,6 +150,43 @@ class Instance < ActiveRecord::Base
 
   def authenticate(password)
     password == marketplace_password
+  end
+
+  def twilio_config
+    if (!self.test_mode? && Rails.env.production?)
+      if twilio_consumer_key.present? && twilio_consumer_secret.present? && twilio_from_number.present?
+        { key: twilio_consumer_key, secret: twilio_consumer_secret, from: twilio_from_number }
+      else
+        default_twilio_config
+      end
+    else
+      if test_twilio_consumer_key.present? && test_twilio_consumer_secret.present? && test_twilio_from_number.present?
+        { key: test_twilio_consumer_key, secret: test_twilio_consumer_secret, from: test_twilio_from_number }
+      else
+        default_test_twilio_config
+      end
+    end
+  end
+
+  def test_mode?
+    super || (!Rails.env.staging? && !Rails.env.production?)
+  end
+
+  def default_twilio_config
+    {
+      key: 'AC5b979a4ff2aa576bafd240ba3f56c3ce',
+      secret: '0f9a2a5a9f847b0b135a94fe2aa7f346',
+      from: '+1 510-478-9196'
+    }
+
+  end
+
+  def default_test_twilio_config
+    {
+      key: 'AC83d13764f96b35292203c1a276326f5d',
+      secret: '709625e20011ace4b8b53a5a04160026',
+      from: '+15005550006'
+    }
   end
 
   def paypal_api_config

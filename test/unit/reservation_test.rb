@@ -161,9 +161,9 @@ class ReservationTest < ActiveSupport::TestCase
       assert_difference 'Payment.count' do
         @reservation.confirm!
       end
-      @reservation_charge = @reservation.reservation_charges.last
-      assert_equal 47, @reservation_charge.cancellation_policy_hours_for_cancellation
-      assert_equal 60, @reservation_charge.cancellation_policy_penalty_percentage
+      @payment = @reservation.payments.last
+      assert_equal 47, @payment.cancellation_policy_hours_for_cancellation
+      assert_equal 60, @payment.cancellation_policy_penalty_percentage
     end
 
     should 'create reservation charge without cancellation policy if disabled, despite adding it later' do
@@ -172,9 +172,9 @@ class ReservationTest < ActiveSupport::TestCase
       assert_difference 'Payment.count' do
         @reservation.confirm!
       end
-      @reservation_charge = @reservation.reservation_charges.last
-      assert_equal 0, @reservation_charge.cancellation_policy_hours_for_cancellation
-      assert_equal 0, @reservation_charge.cancellation_policy_penalty_percentage
+      @payment = @reservation.payments.last
+      assert_equal 0, @payment.cancellation_policy_hours_for_cancellation
+      assert_equal 0, @payment.cancellation_policy_penalty_percentage
     end
 
   end
@@ -182,7 +182,7 @@ class ReservationTest < ActiveSupport::TestCase
   context 'attempt_payment_refund' do
     setup do
       @charge = FactoryGirl.create(:charge)
-      @reservation = @charge.reference.reference
+      @reservation = @charge.payment.payable
       @reservation.stubs(:attempt_payment_capture).returns(true)
       @reservation.confirm!
       @reservation.update_column(:payment_status, Reservation::PAYMENT_STATUSES[:paid])
@@ -262,8 +262,6 @@ class ReservationTest < ActiveSupport::TestCase
 
   context 'expiration' do
 
-    context 'with a confirmed reservation' do
-
       setup do
         Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:charge)
         @reservation = FactoryGirl.build(:reservation_with_credit_card)
@@ -274,15 +272,13 @@ class ReservationTest < ActiveSupport::TestCase
         @reservation.service_fee_amount_host_cents = 10_00
         @reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
         @reservation.save!
-        @reservation.confirm
       end
 
       should 'not send any email if the expire method is called' do
-        ReservationMailer.expects(:notify_guest_of_expiration).never
+        @reservation.confirm
+        WorkflowStepJob.expects(:perform).never
         @reservation.perform_expiry!
       end
-
-    end
 
   end
 
@@ -368,8 +364,10 @@ class ReservationTest < ActiveSupport::TestCase
       end
 
       should "not reset total cost when saving an existing reservation" do
-        ReservationMailer.expects(:notify_host_with_confirmation).returns(mailer_stub).at_least_once
-        ReservationMailer.expects(:notify_guest_with_confirmation).returns(mailer_stub).at_least_once
+
+        WorkflowStepJob.expects(:perform).with do |klass, id|
+          klass == WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation
+        end
 
         dates              = [1.week.from_now.monday]
         quantity           =  2

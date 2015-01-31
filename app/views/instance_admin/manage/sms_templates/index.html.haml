@@ -1,0 +1,29 @@
+%h4 Manage Sms Templates
+
+.content-container
+  .row
+    = link_to 'Add Sms Template', new_instance_admin_manage_sms_template_path, class: 'pull-right btn btn-green'
+
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table
+        %tbody
+          %tr
+            %th Template
+            %th
+            %th
+            %th
+
+          - @sms_templates.each do |sms_template|
+            %tr
+              %td= pretty_path sms_template.path
+              %td= sms_template.transactable_type.try(:name)
+              %td
+                .pull-right
+                  = link_to 'Edit', edit_instance_admin_manage_sms_template_path(sms_template)
+              %td
+                .pull-right
+                  = link_to 'Destroy', instance_admin_manage_sms_template_path(sms_template), method: :delete, confirm: 'Are you sure?'
+
+

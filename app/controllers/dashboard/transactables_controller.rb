@@ -5,7 +5,7 @@ class Dashboard::TransactablesController < Dashboard::BaseController
   before_filter :disable_unchecked_prices, :only => :update
 
   def index
-    @transactables = @transactable_type.transactables.where(company: @company).paginate(page: params[:page], per_page: 20)
+    @transactables = @transactable_type.transactables.where(company_id: @company).paginate(page: params[:page], per_page: 20)
   end
 
   def new
@@ -20,7 +20,7 @@ class Dashboard::TransactablesController < Dashboard::BaseController
     @transactable.company = @company
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
     if @transactable.save
-      flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: platform_context.decorate.bookable_noun)
+      flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.bookable_noun)
       event_tracker.created_a_listing(@transactable, { via: 'dashboard' })
       event_tracker.updated_profile_information(current_user)
       redirect_to dashboard_transactable_type_transactables_path(@transactable_type)
@@ -92,25 +92,13 @@ class Dashboard::TransactablesController < Dashboard::BaseController
 
   private
 
-  # def find_location
-  #   begin
-  #     @location = if @transactable
-  #                   @transactable.location
-  #                 else
-  #                   locations_scope.find(params[:location_id])
-  #                 end
-  #   rescue ActiveRecord::RecordNotFound
-  #     raise Location::NotFound
-  #   end
-  # end
-
   def find_locations
     @locations = @company.locations
   end
 
   def find_transactable
     begin
-      @transactable = @transactable_type.transactables.where(company: @company).find(params[:id])
+      @transactable = @transactable_type.transactables.where(company_id: @company).find(params[:id])
     rescue ActiveRecord::RecordNotFound
       raise Transactable::NotFound
     end

@@ -3,7 +3,9 @@ class ActionType < ActiveRecord::Base
   acts_as_paranoid
 
   RFQ = 'Request For Quote'
-  AVAILABLE_NAMES = [RFQ]
+  BOOK = 'Book'
+  SUBSCRIBE = 'Subscribe'
+  AVAILABLE_NAMES = [RFQ, BOOK, SUBSCRIBE]
 
   validates_inclusion_of :name, in: AVAILABLE_NAMES
   validates_uniqueness_of :name

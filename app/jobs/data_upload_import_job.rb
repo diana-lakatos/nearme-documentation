@@ -29,9 +29,9 @@ class DataUploadImportJob < Job
       end
     end
     if @data_upload.succeeded? || @data_upload.partially_succeeded?
-      DataUploadMailer.enqueue.notify_uploader_of_finished_import(@data_upload)
+      WorkflowStepJob.perform(WorkflowStep::DataUploadWorkflow::Finished, @data_upload.id)
     elsif @data_upload.failed?
-      DataUploadMailer.enqueue.notify_uploader_of_failed_import(@data_upload)
+      WorkflowStepJob.perform(WorkflowStep::DataUploadWorkflow::Failed, @data_upload.id)
     end
   end
 

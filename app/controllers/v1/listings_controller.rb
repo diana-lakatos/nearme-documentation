@@ -56,7 +56,7 @@ class V1::ListingsController < V1::BaseController
 
   def search
     params_object = Listing::Search::Params::Api.new(json_params.merge(user: current_user))
-    search_params = params.merge({:midpoint => params_object.midpoint, :radius => params_object.radius, :available_dates => params_object.available_dates})
+    search_params = params.merge({:midpoint => params_object.midpoint, :radius => params_object.radius, :available_dates => params_object.available_dates, transactable_type_id: TransactableType.first.id})
     listings = Listing::SearchFetcher.new(search_params).listings
     render :json => listings
   end
@@ -85,8 +85,7 @@ class V1::ListingsController < V1::BaseController
     @message = json_params["message"]
 
     inquiry = listing.inquiry_from!(current_user, message: @message)
-    InquiryMailer.enqueue.inquiring_user_notification(inquiry)
-    InquiryMailer.enqueue.listing_creator_notification(inquiry)
+    WorkflowStepJob.perform(WorkflowStep::InquiryWorkflow::Created, inquiry.id)
 
     head :no_content
   end
@@ -96,7 +95,7 @@ class V1::ListingsController < V1::BaseController
     listing = Transactable.find(params[:id])
     message = json_params["query"]
     users.each do |user|
-      ListingMailer.enqueue.share(listing, user["email"], user["name"], current_user, message)
+      WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Shared, listing.id, user["email"], user["name"], current_user.id, message)
     end
 
     head :no_content

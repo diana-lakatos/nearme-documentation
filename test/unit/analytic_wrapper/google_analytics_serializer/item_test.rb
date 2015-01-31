@@ -5,7 +5,7 @@ class AnalyticWrapper::GoogleAnalyticsSerializer::ItemTest < ActiveSupport::Test
   setup do
     @google_analytic_item = AnalyticWrapper::GoogleAnalyticsSerializer::Item.new({
         amount: 10.28,
-        reservation_charge_id: 1,
+        payment_id: 1,
         instance_name: 'Instance name',
         listing_name: 'Listing name',
       })

@@ -91,7 +91,18 @@ end
 
 When /I sign in with invalid credentials/ do
   click_link 'Log In'
-  login_manually('invalid@example.com')
+  fill_credentials('invalid@example.com')
+  click_button "Log In"
+end
+
+When /I fill in invalid credentials and click (.*) button$/ do |button|
+  fill_credentials('invalid@example.com')
+  click_button button
+end
+
+When /I fill in valid credentials and click (.*) button$/ do |button|
+  fill_credentials
+  click_button button
 end
 
 Given /There is no user with my email/ do

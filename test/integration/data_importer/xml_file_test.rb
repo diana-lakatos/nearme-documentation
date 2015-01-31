@@ -179,6 +179,10 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
 
   context 'sending invitational emails' do
 
+    setup do
+      Utils::DefaultAlertsCreator::SignUpCreator.new.create_all!
+    end
+
     should 'do not send emails if setting is off' do
       assert_no_difference 'ActionMailer::Base.deliveries.count' do
         @xml_file = FactoryGirl.create(:xml_template_file)

@@ -18,6 +18,11 @@ class SecuredParams
       :price,
       :quantity,
       :taxon_ids,
+      :shippo_enabled,
+      :weight,
+      :depth,
+      :width,
+      :height,
       image_ids: [],
       company_address_attributes: nested(self.address),
       images_attributes: nested(self.spree_image),
@@ -51,7 +56,7 @@ class SecuredParams
   def data_upload
     [
       :csv_file,
-      options: nested([:send_invitational_email, :sync_mode])
+      options: [:send_invitational_email, :sync_mode]
     ]
 
   end
@@ -152,16 +157,27 @@ class SecuredParams
 
   def email_template
     [
-      :handler,
-      :html_body,
-      :text_body,
+      :body,
       :path,
-      :partial,
-      :subject,
-      :to,
-      :from,
-      :bcc,
-      :reply_to,
+      :locale,
+      :format
+    ]
+  end
+
+  def email_layout_template
+    [
+      :body,
+      :path,
+      :locale,
+      :format
+    ]
+  end
+
+  def sms_template
+    [
+      :body,
+      :path,
+      :locale
     ]
   end
 
@@ -194,8 +210,6 @@ class SecuredParams
   def instance
     [
       :name,
-      :service_fee_guest_percent, :service_fee_host_percent,
-      :bookable_noun, :lessor, :lessee,
       :skip_company, :mark_as_locked,
       :live_stripe_api_key, :live_stripe_public_key,
       :live_paypal_username, :live_paypal_password,
@@ -211,6 +225,7 @@ class SecuredParams
       :olark_api_key, :olark_enabled,
       :facebook_consumer_key, :facebook_consumer_secret,
       :twitter_consumer_key, :twitter_consumer_secret,
+      :shippo_username, :shippo_password,
       :linkedin_consumer_key, :linkedin_consumer_secret,
       :instagram_consumer_key, :instagram_consumer_secret,
       :support_imap_hash, :support_email,
@@ -220,6 +235,11 @@ class SecuredParams
       :searcher_type, :onboarding_verification_required,
       :apply_text_filters, :force_accepting_tos,
       :payment_transfers_frequency,
+      :twilio_consumer_key, :twilio_consumer_secret,
+      :test_twilio_consumer_key, :test_twilio_consumer_secret,
+      :twilio_from_number, :test_twilio_from_number,
+      :service_fee_guest_percent, :service_fee_host_percent,
+      :bookable_noun,
       user_required_fields: [],
       transactable_types_attributes: nested(self.transactable_type),
       listing_amenity_types_attributes: nested(self.amenity_type),
@@ -378,11 +398,15 @@ class SecuredParams
       :pricing_validation,
       :availability_options,
       :favourable_pricing_rate,
+      :overnight_booking,
       :cancellation_policy_enabled,
       :cancellation_policy_penalty_percentage,
       :cancellation_policy_hours_for_cancellation,
       :enable_cancellation_policy,
       :show_page_enabled,
+      :groupable_with_others,
+      :service_fee_guest_percent, :service_fee_host_percent,
+      :bookable_noun, :lessor, :lessee,
       :availability_templates_attributes => nested(self.availability_template),
       :action_type_ids => []
     ]
@@ -451,6 +475,7 @@ class SecuredParams
       :path,
       :format,
       :handler,
+      :transactable_type_id,
       :locale,
       :partial
     ]
@@ -586,13 +611,6 @@ class SecuredParams
     ]
   end
 
-  def rating
-    [
-      :comment,
-      :value
-    ]
-  end
-
   def company
     [
       :name,
@@ -646,10 +664,13 @@ class SecuredParams
     ]
   end
 
+  def form_component
+    [ :form_type, :name ]
+  end
+
   def location
     [
-      :company_id, :description, :email,
-      :info, :currency,
+      :description, :email, :info, :currency,
       :phone, :availability_template_id, :special_notes,
       :location_type_id, :photos,
       :administrator_id, :name, :location_address,
@@ -739,9 +760,7 @@ class SecuredParams
     [
       :image,
       :caption,
-      :image_versions_generated_at,
-      :position,
-      :transactable_id
+      :position
     ]
   end
 
@@ -752,9 +771,8 @@ class SecuredParams
       :biography, :country_name, :mobile_number,
       :facebook_url, :twitter_url, :linkedin_url, :instagram_url,
       :current_location, :company_name, :skills_and_interests,
-      :last_geolocated_location_longitude, :last_geolocated_location_latitude,
-      :sms_notifications_enabled, :domain_id, :time_zone,
-      :phone_required, :country_name_required, :skip_password,
+      :sms_notifications_enabled, :time_zone,
+      :country_name_required, :skip_password,
       :country_name, :phone, :mobile_phone,
       :first_name, :middle_name, :last_name, :gender,
       :drivers_licence_number, :gov_number, :twitter_url,
@@ -768,6 +786,35 @@ class SecuredParams
 
   def user_instance_profiles
     UserInstanceProfile.public_custom_attributes_names(InstanceProfileType.first.try(:id))
+  end
+
+  def workflow
+    [
+      :name
+    ]
+  end
+
+  def workflow_step()
+    [:name]
+  end
+
+  def workflow_alert(step_associated_class = nil)
+    [
+      :name,
+      :alert_type,
+      :recipient_type,
+      :recipient,
+      :template_path,
+      :delay,
+      :from,
+      :from_type,
+      :reply_to,
+      :replt_to_type,
+      :cc,
+      :bcc,
+      :subject,
+      :layout_path
+    ] + (step_associated_class.present? && defined?(step_associated_class.constantize::CUSTOM_OPTIONS) ? [custom_options: step_associated_class.constantize::CUSTOM_OPTIONS] : [])
   end
 
   def waiver_agreement_template
@@ -784,5 +831,61 @@ class SecuredParams
 
   def nested(object)
     object + [:id, :_destroy]
+  end
+
+  def rating_systems
+    [
+      rating_systems: self.rating_system
+    ]
+  end
+
+  def rating_system
+    [
+      :subject, 
+      :active,
+      :transactable_type_id,
+      rating_hints_attributes: self.rating_hint,
+      rating_questions_attributes: self.nested(rating_question)
+    ]
+  end
+
+  def rating_hint
+    [
+      :id, 
+      :description
+    ]
+  end
+
+  def rating_question
+    [
+      :text,
+    ]
+  end
+
+  def review
+    [
+      :rating, 
+      :comment, 
+      :object, 
+      :date, 
+      :reservation_id,
+      :transactable_type_id,
+      :instance_id, 
+      :user_id
+    ]
+  end
+
+  def rating_answers
+    [
+      rating_answers: self.rating_answer
+    ]
+  end
+
+  def rating_answer
+    [
+      :id, 
+      :rating, 
+      :rating_question_id
+    ]
   end
 end

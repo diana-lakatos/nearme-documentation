@@ -11,6 +11,7 @@ FactoryGirl.define do
     factory :location_in_auckland do
       association :location_address, factory: :address_in_auckland
       association(:company, factory: :company_in_auckland)
+      currency "NZD"
     end
 
     factory :location_in_adelaide do

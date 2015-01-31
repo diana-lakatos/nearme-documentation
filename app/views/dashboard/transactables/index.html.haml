@@ -1,7 +1,7 @@
 - title "Listings"
 
 .dash-head.clearfix
-  %p MANAGE #{@transactable}
+  %p MANAGE LISTINGS
   = link_to new_dashboard_transactable_type_transactable_path(@transactable_type), class: "new-transactable-btn dash-head-btn btn blue pull-right" do
     List New Item
   = link_to new_dashboard_transactable_type_data_upload_path(@transactable_type), class: "bulk-upload blue pull-right", rel: 'modal' do

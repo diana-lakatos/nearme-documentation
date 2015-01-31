@@ -10,7 +10,18 @@ Spree::Zone.class_eval do
   end
 
   validates :name, presence: true, uniqueness: {scope: [:instance_id, :company_id, :partner_id, :user_id]}
+  validate :validate_zone_member
 
+  def validate_zone_member
+    member = members.first
+    if !member.nil? && member.zoneable_type == 'Spree::Country' && member.zoneable_id.nil?
+      errors.add(:country_ids, I18n.t('errors.messages.blank'))
+    end
+
+    if member.nil? || member.zoneable_type == 'Spree::State' && member.zoneable_id.nil?
+      errors.add(:state_ids, I18n.t('errors.messages.blank'))
+    end
+  end
 
   def country_ids=(ids)
     ids = ids.split(',') if ids.class == String
@@ -33,4 +44,21 @@ Spree::Zone.class_eval do
       members << member
     end
   end
+
+  def country_ids
+    if kind == 'country'
+      members.map(&:zoneable_id)
+    else
+      []
+    end
+  end
+
+  def state_ids
+    if kind == 'state'
+      members.map(&:zoneable_id)
+    else
+      []
+    end
+  end
+
 end

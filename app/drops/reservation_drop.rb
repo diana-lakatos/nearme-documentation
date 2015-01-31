@@ -2,8 +2,10 @@ class ReservationDrop < BaseDrop
   include ReservationsHelper
 
   attr_reader :reservation
-  delegate :quantity, :subtotal_price, :service_fee_guest, :total_price, :pending?,
-  :credit_cart_payment?, :paid, :rejection_reason, :owner, to: :reservation
+  delegate :quantity, :subtotal_price, :service_fee_guest, :total_price, :pending?, :listing, :state_to_string,
+  :credit_cart_payment?, :location, :paid, :rejection_reason, :owner, to: :reservation
+  delegate :transactable_type, to: :listing
+  delegate :bookable_noun, :bookable_noun_plural, to: :transactable_type
 
   def initialize(reservation)
     @reservation = reservation.decorate
@@ -26,23 +28,15 @@ class ReservationDrop < BaseDrop
   end
 
   def search_url
-    routes.search_path(q: location_query_string(@reservation.listing.location))
+    routes.search_path(q: location_query_string(@reservation.listing.location), transactable_type_id: @reservation.transactable_type.id)
   end
 
-  def guest_rating_reservation_url
-    routes.guest_rating_path(@reservation.id, token: @reservation.listing.administrator.try(:temporary_token))
+  def bookings_dashboard_url
+    routes.dashboard_user_reservations_path(:reservation_id => @reservation, :token => @reservation.owner.temporary_token)
   end
 
-  def guest_rating_reservation_url_with_tracking
-    routes.guest_rating_path(@reservation.id, token: @reservation.listing.administrator.try(:temporary_token), track_email_event: true)
-  end
-
-  def host_rating_reservation_url
-    routes.host_rating_path(@reservation.id, token: @reservation.owner.try(:temporary_token))
-  end
-
-  def host_rating_reservation_url_with_tracking
-    routes.host_rating_path(@reservation.id, token: @reservation.owner.try(:temporary_token), track_email_event: true)
+  def manage_guests_dashboard_url
+    routes.dashboard_host_reservations_path
   end
 
   def export_to_ical_url
@@ -50,7 +44,7 @@ class ReservationDrop < BaseDrop
   end
 
   def remote_payment_url
-    routes.remote_payment_reservation_path(@reservation, token: @reservation.owner.try(:temporary_token))
+    routes.remote_payment_dashboard_user_reservation_path(@reservation, token: @reservation.owner.try(:temporary_token))
   end
 
   def created_at
@@ -58,14 +52,18 @@ class ReservationDrop < BaseDrop
   end
 
   def reservation_confirm_url
-    routes.confirm_manage_listing_reservation_path(@reservation.listing, @reservation, :token => @reservation.listing.administrator.try(:temporary_token))
-  end 
+    routes.confirm_dashboard_host_reservation_path(@reservation, token: @reservation.listing.administrator.try(:temporary_token))
+  end
 
   def reservation_confirm_url_with_tracking
-    routes.confirm_manage_listing_reservation_path(@reservation.listing, @reservation, :token => @reservation.listing.administrator.try(:temporary_token), :track_email_event => true)
+    routes.confirm_dashboard_host_reservation_path(@reservation, token: @reservation.listing.administrator.try(:temporary_token), track_email_event: true)
   end
 
   def start_date
     @reservation.date.strftime('%b %e')
+  end
+
+  def reviews_reservation_url
+    routes.dashboard_reviews_path
   end
 end

@@ -18,14 +18,7 @@
       .input-container.col-xs-6
         = f.input :skip_company, label: "Don't require company"
       .input-container.col-xs-6
-        = f.input :service_fee_guest_percent, label: 'Guest Service Fee Percent' do
-          = f.input_field :service_fee_guest_percent, type: 'tel', class: 'form-control'
-    .row.dropshadow
-      .input-container.col-xs-6
         = f.input :force_accepting_tos, label: "Force accepting ToS on sign up"
-      .input-container.col-xs-6
-        = f.input :service_fee_host_percent, label: 'Host Service Fee Percent' do
-          = f.input_field :service_fee_host_percent, type: 'tel', class: 'form-control'
 
   %h4 Marketplace Password
   .content-container
@@ -40,17 +33,6 @@
     .row.dropshadow
       .input-container.col-xs-6
         = f.input :payment_transfers_frequency, collection: PaymentTransfer::FREQUENCIES.collect { |f| [t(".#{f}"), f] }, input_html: { class: 'form-control' }, prompt: true
-
-  %h4 Terminology
-  .content-container
-    .row
-      .input-container.col-xs-12
-        = f.input :bookable_noun, label: 'Bookable Noun (e.g. Desk)', input_html: { class: 'form-control' }
-    .row.dropshadow
-      .input-container.col-xs-6
-        = f.input :lessor, label: 'Lessor (e.g. host)', input_html: { class: 'form-control' }
-      .input-container.col-xs-6
-        = f.input :lessee, label: 'Lessee (e.g. guest)', input_html: { class: 'form-control' }
 
   %h4 Text Filters
   .content-container.dropshadow

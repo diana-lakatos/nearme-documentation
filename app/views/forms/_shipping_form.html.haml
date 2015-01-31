@@ -32,6 +32,6 @@
           .col-md-1
           .col-md-6
             =# z.input :country_ids, collection: Spree::Country.all, label: false, :blank => false, :required => true,  as: :select, input_html: { class: 'country_based_select selectpicker', "data-live-search" => "true", multiple: true }
-            = z.text_field :country_ids, value: z.object.country_ids.join(","),  class: 'country_based_select select2 ', data: {api: 'countries'}
-            = z.text_field :state_ids, value: z.object.state_ids.join(","), class: 'state_based_select select2 ', data: {api: 'states'}
+            = z.input :country_ids, wrapper: :bs3_simple, label: false, as: :text,  input_html: { value: z.object.country_ids.join(","), class: 'country_based_select select2', data: {api: 'countries'}}, required: true
+            = z.input :state_ids, wrapper: :bs3_simple, label: false, as: :text, input_html: { value: z.object.state_ids.join(","), class: 'state_based_select  select2', data: {api: 'states'}}, required: true
 

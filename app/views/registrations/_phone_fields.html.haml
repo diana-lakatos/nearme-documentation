@@ -1,32 +1,33 @@
-= f.input :country_name, :label => "Country", :as => :select, :collection => user_country_name_options, :selected => user_country_default(@country), :input_html => { :class => "custom-select" }, :required => true, include_blank: true
+%div{'data-phone-fields-container' => true }
+  = f.input :country_name, :label => "Country", :as => :select, :collection => user_country_name_options, :selected => user_country_default(@country), :input_html => { 'data-country-selector' => true, :class => "custom-select" }, :required => true, include_blank: true
 
-.control-group.optional{:class => ('error' if f.object.errors[:phone].present?)}
-  = f.label :phone, :class => 'control-label required' do
-    - if f.object.phone_required
-      %abbr{:title => "required"} *
-    Phone number
+  .control-group.optional{:class => ('error' if f.object.errors[:phone].present?)}
+    = f.label :phone, :class => 'control-label required' do
+      - if f.object.phone_required
+        %abbr{:title => "required"} *
+      Phone number
 
-  .controls
-    .phone-number-country-code-field
-      .country-calling-code
-        = "+#{f.object.country.calling_code}" if f.object.country
-      = f.text_field :phone
+    .controls
+      .phone-number-country-code-field
+        .country-calling-code
+          = "+#{f.object.country.calling_code}" if f.object.country
+        = f.text_field :phone, data: { 'phone' => true }
 
-    - if f.object.errors[:phone].present?
-      .error-block= f.object.errors[:phone].to_sentence
+      - if f.object.errors[:phone].present?
+        .error-block= f.object.errors[:phone].to_sentence
 
-.control-group.optional.mobile-number-field{:class => ('error' if f.object.errors[:mobile_number].present?)}
-  = f.label :mobile_number
-  .controls
-    .phone-number-country-code-field
-      .country-calling-code
-        = "+#{f.object.country.calling_code}" if f.object.country
-      = f.text_field :mobile_number
+  .control-group.optional.mobile-number-field{:class => ('error' if f.object.errors[:mobile_number].present?)}
+    = f.label :mobile_number
+    .controls
+      .phone-number-country-code-field
+        .country-calling-code
+          = "+#{f.object.country.calling_code}" if f.object.country
+        = f.text_field :mobile_number, data: { 'mobile-number' => true }
 
-    = label_tag do
-      = check_box_tag "#{f.object.class.name.underscore}_mobile_same_as_phone", '1', (f.object.phone == f.object.mobile_number)
-      = "Same as phone"
+      = label_tag do
+        = check_box_tag "#{f.object.class.name.underscore}_mobile_same_as_phone", '1', (f.object.phone == f.object.mobile_number), data: { 'same-as-phone-checkbox' => true }
+        = "Same as phone"
 
-    - if f.object.errors[:mobile_number].present?
-      .error-block= f.object.errors[:mobile_number].to_sentence
+      - if f.object.errors[:mobile_number].present?
+        .error-block= f.object.errors[:mobile_number].to_sentence
 

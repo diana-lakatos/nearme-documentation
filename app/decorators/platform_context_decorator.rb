@@ -1,13 +1,13 @@
 class PlatformContextDecorator
 
-  delegate :white_label_company, :instance, :theme, :partner, :domain, :white_label_company_user?,
-    :platform_context_detail, :secured_constraint, :latest_products, :to => :platform_context
+  delegate :white_label_company, :instance, :instance_type, :theme, :partner, :domain, :white_label_company_user?,
+    :platform_context_detail, :secured_constraint, :latest_products, to: :platform_context
 
   delegate :tagline, :support_url, :blog_url, :twitter_url, :twitter_handle, :facebook_url, :gplus_url, :address,
     :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :compiled_dashboard_stylesheet, :meta_title, :pages, :logo_image,
-    :favicon_image, :icon_image, :icon_retina_image, :homepage_content, :call_to_action, :is_company_theme?, :to => :theme
+    :favicon_image, :icon_image, :icon_retina_image, :homepage_content, :call_to_action, :is_company_theme?, to: :theme
 
-  delegate :bookable_noun, :lessor, :lessee, :name, :buyable?, :to => :instance
+  delegate :bookable_noun, :lessor, :lessee, :name, :buyable?, :transactable_types, to: :instance
 
   liquid_methods :lessors
 
@@ -21,6 +21,10 @@ class PlatformContextDecorator
 
   def compiled_dashboard_stylesheet_url
     compiled_dashboard_stylesheet.present? ? compiled_dashboard_stylesheet.url : nil
+  end
+
+  def multiplte_transactable_types?
+    self.transactable_types.count == 1
   end
 
   def to_liquid
@@ -93,6 +97,22 @@ class PlatformContextDecorator
 
   def supported_payout_via_ach?
     Billing::Gateway::Processor::Outgoing::ProcessorFactory.supported_payout_via_ach?(self.instance)
+  end
+
+  def map_view
+    if ['mixed', 'listing_mixed'].include?(platform_context.instance.default_search_view)
+      platform_context.instance.default_search_view
+    else
+      'mixed'
+    end
+  end
+
+  def bookable_nouns
+    @bookable_nouns ||= transactable_types.map { |tt| tt.bookable_noun.presence || tt.name }.to_sentence(last_word_connector: 'or')
+  end
+
+  def bookable_nouns_plural
+    @bookable_nouns_plural ||= transactable_types.map { |tt| (tt.bookable_noun.presence || tt.name).pluralize }.to_sentence(last_word_connector: 'or')
   end
 
   private

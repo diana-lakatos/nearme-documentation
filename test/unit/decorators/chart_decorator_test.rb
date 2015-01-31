@@ -30,8 +30,8 @@ class ChartDecoratorTest < ActionView::TestCase
   context 'a filled ReservationCharge collection decorated with WeeklyChartDecorator' do
 
     setup do
-      @last_week_reservation_charges = build_reservation_charges
-      @chart = ChartDecorator.decorate(@last_week_reservation_charges)
+      @last_week_payments = build_payments
+      @chart = ChartDecorator.decorate(@last_week_payments)
     end
 
     should 'return array of sums for each day and each currency' do
@@ -51,32 +51,32 @@ class ChartDecoratorTest < ActionView::TestCase
   end
 
   private
-  def build_reservation_charge(reservation, days_ago, subtotal, service_fee_guest)
-    FactoryGirl.build(:reservation_charge,
+  def build_payment(reservation, days_ago, subtotal, service_fee_guest)
+    FactoryGirl.build(:payment,
                       created_at: days_ago.days.ago,
-                      reference: reservation,
+                      payable: reservation,
                       subtotal_amount_cents: subtotal,
                       service_fee_amount_guest_cents: service_fee_guest,
                       paid_at: days_ago.days.ago,
                       currency: reservation.currency)
   end
 
-  def build_reservation_charges
+  def build_payments
     reservation_usd = FactoryGirl.build(:reservation, currency: 'USD')
     reservation_cad = FactoryGirl.build(:reservation, currency: 'CAD')
 
     # create a reservation charge for every of last six days
-    reservation_charges = []
+    payments = []
     [reservation_usd, reservation_cad].each do |reservation|
       6.downto(0).each do |i|
-        reservation_charges << build_reservation_charge(reservation, i, 1000, 100)
+        payments << build_payment(reservation, i, 1000, 100)
       end
     end
     # create a yesterdays reservation charge with different amount
-    reservation_charges << build_reservation_charge(reservation_usd, 0, 5000, 300)
-    reservation_charges << build_reservation_charge(reservation_cad, 0, 8000, 800)
+    payments << build_payment(reservation_usd, 0, 5000, 300)
+    payments << build_payment(reservation_cad, 0, 8000, 800)
 
-    reservation_charges
+    payments
   end
 
 end

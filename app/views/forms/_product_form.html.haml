@@ -32,3 +32,12 @@
 = f.input :price, as: :price, input_html: { currency: currency_symbol_from_code(Spree::Config[:currency] ) }
 
 = f.input :quantity, as: :integer, :placeholder => "1"
+
+= f.input :shippo_enabled, as: :boolean
+
+.row.shippo_required_fields_row.disabled
+  = f.input :weight, as: :decimal, input_html: { :class => 'shippo_decimal_field' }
+  = f.input :depth, as: :decimal, input_html: { :class => 'shippo_decimal_field' }
+  = f.input :width, as: :decimal, input_html: { :class => 'shippo_decimal_field' }
+  = f.input :height, as: :decimal, input_html: { :class => 'shippo_decimal_field' }
+

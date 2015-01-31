@@ -18,6 +18,14 @@ FactoryGirl.define do
     instagram_consumer_key 'i1'
     instagram_consumer_secret 'i2'
 
+    twilio_consumer_key 'tc1'
+    twilio_consumer_secret 'tc2'
+    twilio_from_number '501'
+
+    test_twilio_consumer_key 'test_tc1'
+    test_twilio_consumer_secret 'test_tc2'
+    test_twilio_from_number 'test_501'
+
     after(:create) do |instance|
       instance.theme = FactoryGirl.create(:theme, :skip_compilation => true) unless instance.theme
     end

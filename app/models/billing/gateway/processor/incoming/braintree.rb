@@ -15,7 +15,7 @@ class Billing::Gateway::Processor::Incoming::Braintree < Billing::Gateway::Proce
   end
 
   def refund_identification(charge)
-    charge.reference.reservation.billing_authorization.token
+    charge.payment.payable.billing_authorization.token
   end
 
   def supported_currencies

@@ -1,24 +1,7 @@
-.form-contact
-  = simple_form_for platform_contact, remote: true, url: '/contact-submit' do |f|
-    .error-block
+%script(charset="utf-8" src="//js.hsforms.net/forms/current.js")
 
-    .form-group
-      %input#field-name.form-control{placeholder: "First & Last Name", title: "First & Last Name", type: "text", name: "platform_contact[name]"}/
-
-    .form-group
-      %input#field-company.form-control{placeholder: "Company name or working title", title: "Company name or working title", type: "text", name: "platform_contact[company]"}/
-
-    .form-group
-      %input#field-email.form-control{placeholder: "Email", title: "Email", type: "text", name: "platform_contact[email]"}/
-
-    .form-group
-      %input#field-phone.form-control{placeholder: "Phone Number", title: "Phone Number", type: "text", name: "platform_contact[phone]"}/
-
-    .form-group
-      %input#field-location.form-control{placeholder: "What city are you located in?", title: "What city are you located in?", type: "text", name: "platform_contact[location]"}/
-
-    .form-group
-      %textarea#field-description.form-control{placeholder: "Comments", rows: "3", title: "Comments", name: "platform_contact[comments]"}
-
-    .form-actions
-      %button.btn{type: "submit"} SEND
+:javascript
+  hbspt.forms.create({ 
+    portalId: '463957',
+    formId: 'e6ec9ae3-5aad-4f15-a1d0-96b99c909834'
+  });

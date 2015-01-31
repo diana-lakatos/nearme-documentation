@@ -2,8 +2,8 @@ class DataUploadDrop < BaseDrop
 
   attr_reader :data_upload
 
-  delegate :csv_file_identifier, :parsing_result_log, :uploader,
-    :parse_summary_html, to: :data_upload
+  delegate :csv_file_identifier, :transactable_type, :parsing_result_log, :uploader, :parse_summary_html, to: :data_upload
+  delegate :bookable_noun, to: :transactable_type
 
   def initialize(data_upload)
     @data_upload = data_upload

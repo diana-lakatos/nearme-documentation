@@ -1,0 +1,13 @@
+%h4= resource.name
+.content-container
+  .row
+
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table
+        %tbody
+          - resource.workflow_steps.each do |workflow_step|
+            %tr
+              %td= link_to workflow_step.name, instance_admin_manage_workflow_workflow_step_path(resource, workflow_step)
+              %td= link_to 'Edit', edit_instance_admin_manage_workflow_workflow_step_path(resource, workflow_step), class: 'pull-right'

@@ -184,7 +184,7 @@ class PopulateCompaniesAddresses < ActiveRecord::Migration
     puts "Populating addresses done!"
 
     Company.find_each do |c|
-      if c.company_address.nil? && c.locations.first.present? && (la = Address.where(entity_id: c.locations.first.id, entity_type: 'Location').first) && la.country.present?
+      if Address.where(entity_id: c.id, entity_type: 'Company').first.nil? && c.locations.first.present? && (la = Address.where(entity_id: c.locations.first.id, entity_type: 'Location').first) && la.country.present?
         correct << c.id
         Address.create(formatted_address: la.formatted_address, latitude: la.latitude, longitude: la.longitude, address: la.address, address_components: la.address_components, state: la.state, postcode: la.postcode, city: la.city, suburb: la.suburb, street: la.street, country: la.country, iso_country_code: la.iso_country_code, entity_id: c.id, entity_type: 'Company', instance_id: c.instance_id)
       else

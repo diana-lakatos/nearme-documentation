@@ -7,6 +7,7 @@ section.home {
     height: 580px;
     @include background-size(cover);
     background-image: image-url($theme_hero);
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='#{$theme_hero}', sizingMethod='scale');
     background-position: center center;
     background-repeat: no-repeat;
 

@@ -144,6 +144,8 @@ class Bookings.Controller
 
       # Map bookings to JS dates
       (DNM.util.Date.idToDate(date) for date in @listingData.initial_bookings.dates)
+    else if @listing.isOvernightBooking()
+      [@listing.firstAvailableDate, @listing.secondAvailableDate, new Date()]
     else
       [@listing.firstAvailableDate]
 

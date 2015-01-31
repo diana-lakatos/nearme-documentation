@@ -72,7 +72,7 @@ class Domain < ActiveRecord::Base
 
   def prepared_for_elb?
     # marked as secured but in unsecured state
-    self.secured? and self.unsecured?
+    self.secured? && self.unsecured? && !near_me_domain?
   end
 
   def delete_elb

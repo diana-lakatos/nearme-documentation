@@ -197,7 +197,7 @@ class PlatformContext
   end
 
   def latest_products(number = 6)
-    products = Spree::Product.searchable.order('created_at desc').limit(number).all
+    Spree::Product.searchable.order('created_at desc').limit(number).all
   end
 
   private

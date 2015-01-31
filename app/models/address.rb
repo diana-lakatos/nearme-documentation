@@ -136,5 +136,9 @@ class Address < ActiveRecord::Base
     (!address_changed? && (latitude_changed? || longitude_changed?))
   end
 
+  def to_liquid
+    AddressDrop.new(self)
+  end
+
 end
 

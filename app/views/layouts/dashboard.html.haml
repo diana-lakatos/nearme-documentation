@@ -47,19 +47,18 @@
       = javascript_include_tag :chrome_frame
 
   %body
+    = render 'shared/render_flash'
     - unless no_navbar?
       .container
         = render 'layouts/navbar'
     - unless render_without_left_menu?
       .container.page-wrapper.row
-        = render 'shared/bootstrap_flash_messages'
         = render 'manage/layout/left_navigation'
         .col-md-10.page-content
           = render 'manage/layout/mobile_navigation'
           = yield
     - else
       .container.page-wrapper.top.row
-        = render 'shared/bootstrap_flash_messages'
         = yield
 
     - unless no_footer?
