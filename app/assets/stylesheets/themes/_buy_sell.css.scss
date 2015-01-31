@@ -41,8 +41,8 @@ body.buy-sell-theme {
 
   margin: 0;
   background: #f1f1f1;
-//  background: #f2f2f2;
-//  background: #fff;
+  //  background: #f2f2f2;
+  //  background: #fff;
 
   header {
     height: 60px;
@@ -81,13 +81,13 @@ body.buy-sell-theme {
     padding-left: 20px;
   }
 
-//  .dnm-page {
-//    padding: 60px 0;
-//  }
+  //  .dnm-page {
+  //    padding: 60px 0;
+  //  }
 
-//  section {
-//    padding: 40px 0;
-//  }
+  //  section {
+  //    padding: 40px 0;
+  //  }
 
   section .container-fluid {
     width: 58%;
@@ -161,6 +161,44 @@ body.buy-sell-theme {
 
   .padding11 {
     padding: 11px 0;
+  }
+
+  /*===== PRODUCT USER BADGE =====*/
+  .product-profile-badge {
+    .vendor-profile {
+      padding: 30px 40px;
+      background: #fff;
+      border-bottom: solid #D5D5D5 2px;
+      width: 29%;
+      vertical-align: top;
+      float: right;
+      margin-top: 50px;
+    }
+
+//    @media (max-width: 1166px) {
+//      .vendor-profile {
+//        float: none;
+//        width: 60%;
+//        margin: 0 auto;
+//        padding: 30px;
+//        margin-bottom: 20px;
+//      }
+//
+//    }
+
+    @media (max-width: 924px) {
+      .vendor-profile {
+        float: none;
+        width: 80%;
+        margin: 50px auto;
+      }
+    }
+
+    @media (max-width: 585px) {
+      .vendor-profile {
+        width: 80%;
+      }
+    }
   }
 
   /*===== PRODUCT IMAGES =====*/
@@ -694,10 +732,9 @@ body.buy-sell-theme {
       margin-bottom: 40px;
     }
 
-//    .container-fluid {
-//      width: 70%;
-//    }
-
+    //    .container-fluid {
+    //      width: 70%;
+    //    }
 
     h2.page-heading {
       margin-bottom: 30px;
@@ -759,7 +796,6 @@ body.buy-sell-theme {
       font-weight: 300;
       font-size: 16px;
     }
-
 
     /*===== BUTTONS =====*/
     .button-row {
@@ -1099,7 +1135,7 @@ body.buy-sell-theme {
       margin-top: 1px;
     }
 
-    .btn.search{
+    .btn.search {
       width: initial;
       height: 36px;
       padding: initial;
@@ -1202,7 +1238,7 @@ body.buy-sell-theme {
 
     .item .details {
       background: #fff;
-//      margin-top: -8px;
+      //      margin-top: -8px;
       padding: 5px 15px;
     }
 
@@ -1317,7 +1353,7 @@ body.buy-sell-theme {
       }
     }
 
-    .go-back a, .go-back span{
+    .go-back a, .go-back span {
       width: 100%;
     }
   }
