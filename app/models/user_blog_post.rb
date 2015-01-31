@@ -24,11 +24,7 @@ class UserBlogPost < ActiveRecord::Base
     if author_avatar_img.present?
       author_avatar_img
     else
-      if user.avatar.present?
-        user.avatar
-      else
-        nil
-      end
+      user.avatar
     end
   end
 
