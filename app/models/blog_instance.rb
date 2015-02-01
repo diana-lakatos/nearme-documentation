@@ -6,6 +6,9 @@ class BlogInstance < ActiveRecord::Base
 
   has_many :blog_posts
   belongs_to :owner, polymorphic: true
+  belongs_to :instance, primary_key: 'owner_id'
+
+  has_many :user_blog_posts, foreign_key: 'instance_id', primary_key: 'owner_id'
 
   accepts_nested_attributes_for :owner
 

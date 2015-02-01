@@ -51,7 +51,7 @@ module Utils
       load_data!
     end
 
-    # private
+    private
 
     def do_task(task_name = "")
       ActiveRecord::Migration.say_with_time(task_name) do

@@ -2,7 +2,7 @@
 
 .profile
   .container.row-fluid.page-wrapper
-    = render 'buy_sell_market/users/user_badge'
+    = render 'registrations/profile/user_badge'
     .profile-content
       %ul.nav.nav-tabs
         - if buyable?
@@ -18,7 +18,7 @@
           %li
             %a{href: '#reviews', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.reviews', count: 0
 
-        - if platform_context.instance.user_blogs_enabled? && !hide_tab?('blog_posts')
+        - if platform_context.instance.user_blogs_enabled? && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')
           %li
             %a{href: '#blog_posts', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.blog_posts'
 
@@ -42,7 +42,7 @@
           #reviews.tab-pane
             = render 'registrations/profile/no_content', tab: :reviews
 
-        - if platform_context.instance.user_blogs_enabled?
+        - if platform_context.instance.user_blogs_enabled? && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')
           - unless hide_tab?('blog_posts')
             #blog_posts.tab-pane
               - if @user.blog.present? && @user.has_published_blogs?

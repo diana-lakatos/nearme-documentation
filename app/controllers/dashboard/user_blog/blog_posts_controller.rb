@@ -7,10 +7,8 @@ class Dashboard::UserBlog::BlogPostsController < Dashboard::UserBlog::BaseContro
   end
 
   def new
-    @blog_post = current_user.blog_posts.new
-    @blog_post.author_name = current_user.name
-    @blog_post.author_biography = current_user.biography
-    @blog_post.published_at = Time.zone.now.to_date
+    @blog_post = current_user.blog_posts.new author_name: current_user.name, author_biography: current_user.biography,
+                                             published_at: Time.zone.now.to_date
   end
 
   def create

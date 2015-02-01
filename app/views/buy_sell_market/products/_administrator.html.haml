@@ -22,20 +22,20 @@
           = image_tag 'themes/buy_sell/check.png', class: 'check'
           = t 'buy_sell_market.products.labels.email_address'
 
-      -#- if product.administrator.phone.present?
-      %p
-        = image_tag 'themes/buy_sell/check.png', class: 'check'
-        = t 'buy_sell_market.products.labels.phone_number'
+      - if product.administrator.phone.present?
+        %p
+          = image_tag 'themes/buy_sell/check.png', class: 'check'
+          = t 'buy_sell_market.products.labels.phone_number'
 
-      -#- if product.administrator.decorate.social_connections_for('facebook')
-      %p
-        = image_tag 'themes/buy_sell/check.png', class: 'check'
-        Facebook
+      - if product.administrator.decorate.social_connections_for('facebook')
+        %p
+          = image_tag 'themes/buy_sell/check.png', class: 'check'
+          Facebook
 
-      -#- if product.administrator.decorate.social_connections_for('linkedin')
-      %p
-        = image_tag 'themes/buy_sell/check.png', class: 'check'
-        LinkedIn
+      - if product.administrator.decorate.social_connections_for('linkedin')
+        %p
+          = image_tag 'themes/buy_sell/check.png', class: 'check'
+          LinkedIn
 
       - if product.administrator.decorate.social_connections_for('twitter')
         %p
