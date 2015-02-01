@@ -385,6 +385,7 @@ en:
 
     errors:
       blogs_disabled: 'Marketplace owner has disabled blog functionality'
+      blog_disabled: "You can't visit your blog, because it's disabled."
 
   orders:
     index:

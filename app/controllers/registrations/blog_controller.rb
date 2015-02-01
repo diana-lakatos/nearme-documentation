@@ -28,6 +28,11 @@ class Registrations::BlogController < ApplicationController
   end
 
   def check_blog_enabled
+    if blog_user.blog.present? && !blog_user.blog.enabled? && blog_user == current_user
+      redirect_to user_path(blog_user), notice: t('user_blog.errors.blog_disabled')
+      return
+    end
+
     blog_user.blog.test_enabled
   end
 end
