@@ -25,8 +25,6 @@
             - platform_context.transactable_types.each do |tt|
               = render partial: 'layouts/list_your_bookable', locals: { transactable_type: tt }
 
-
-
   - if user_signed_in?
 
     - if buyable? && current_user.cart_orders.any?
@@ -91,9 +89,9 @@
   - else
     %li.divider-vertical
     %li
-      = link_to_registration get_return_to_url, platform_context.secured_constraint, secure_links?, :rel => 'modal.sign-up-modal', :class => "nav-link header-first" do
+      = link_to_registration get_return_to_url, platform_context.secured_constraint, secure_links?, :class => "nav-link header-first", data: { modal: true, 'modal-class' => 'sign-up-modal' } do
         %span Sign Up
     %li.divider-vertical
     %li
-      = link_to_login get_return_to_url, platform_context.secured_constraint, secure_links?, :rel => 'modal.sign-up-modal', :class => "nav-link header-second" do
+      = link_to_login get_return_to_url, platform_context.secured_constraint, secure_links?, :class => "nav-link header-second", data: { modal: true, 'modal-class' => 'sign-up-modal' } do
         %span Log In

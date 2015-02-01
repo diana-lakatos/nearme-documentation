@@ -4,7 +4,7 @@
 .vendor-info.inline
   %h2= link_to product.administrator.name, user_path(product.administrator)
   %p= product.administrator_location
-= link_to new_product_user_message_path(product), rel: "modal" do
+= link_to '#', data: { modal: true, href: new_product_user_message_path(product) } do
   .btn.blue= t 'buy_sell_market.products.buttons.contact_host'
 .divider
 

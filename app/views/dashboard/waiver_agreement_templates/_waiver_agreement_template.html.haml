@@ -1,4 +1,4 @@
 %tr{:data => {:template_id => waiver_agreement_template.id} }
   %td= waiver_agreement_template.name
   %td
-    = link_to "Edit", edit_dashboard_waiver_agreement_template_path(waiver_agreement_template), rel: "modal"
+    = link_to "Edit", '#', data: { modal: true, href: edit_dashboard_waiver_agreement_template_path(waiver_agreement_template) }

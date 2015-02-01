@@ -12,7 +12,7 @@
         = link_to delete_url, :'data-delete' => 'Are you sure?' do
           %span.ico-trash
       .edit.pull-right
-        = link_to edit_url, data: { form_name: form_name }, rel: 'modal' do
+        = link_to '#', data: { modal: true, href: edit_url, 'ajax-options' => { form_name: form_name } } do
           %span.icon.ico-edit
   %input{name: "#{form_name}[attachment_ids][]", value: ticket_message_attachment.id, type: 'hidden' }
 
