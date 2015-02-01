@@ -369,6 +369,8 @@ en:
       no_posts: "You don't have any blog posts published yet. Click on the 'add new blog post' button above to create your first post."
       blog_disabled: "To activate the user's blog functionality, please go to the 'blog settings' and click 'Enable Blog'"
 
+      please_wait: 'Please wait ...'
+
     confirmations:
       delete: 'Are you sure you want to delete this post?'
 
@@ -379,6 +381,7 @@ en:
 
       prev_post: 'PREV POST'
       next_post: 'NEXT POST'
+
 
     errors:
       blogs_disabled: 'Marketplace owner has disabled blog functionality'

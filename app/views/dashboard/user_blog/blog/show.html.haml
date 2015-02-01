@@ -4,7 +4,7 @@
   %p= t 'user_blog.nav.index'
 
   = link_to new_dashboard_blog_post_path, class: 'dash-head-btn' do
-    .btn.blue
+    .btn.blue{class: @blog.enabled? ? '' : 'disabled'}
       = t 'user_blog.buttons.add_post'
 
   = link_to user_blog_posts_list_path(current_user), class: 'dash-head-btn', target: '_blank' do
