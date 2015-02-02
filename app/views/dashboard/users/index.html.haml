@@ -3,7 +3,7 @@
 .dash-page
   .dash-head.clearfix
     %p= t('dashboard.nav.users')
-    = link_to new_dashboard_user_path, rel: "modal", class: "dash-head-btn" do
+    = link_to '#', data: { modal: true, href: new_dashboard_user_path }, class: "dash-head-btn" do
       .btn.blue{:role => "button"} Add Admin
   .dash-body
     #users-list.table-responsive

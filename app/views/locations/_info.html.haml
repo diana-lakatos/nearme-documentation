@@ -27,5 +27,5 @@
       = location_contact_email(@location)
     - else
       %span.ico-warning.padding
-        =raw "#{link_to('Log in', new_user_session_path(:return_to => location_url(@location)), rel: 'modal.sign-up-modal')} or #{link_to('sign up', new_user_registration_path(:return_to => location_url(@location)), rel: 'modal.sign-up-modal')} to contact the #{platform_context.lessor}."
+        =raw "#{link_to( 'Log in', '#', :data => { modal: true, href: new_user_session_path(:return_to => location_url(@location)), 'modal-class' => 'sign-up-modal' } )} or #{link_to('sign up', '#', :data => { modal: true, href: new_user_registration_path(:return_to => location_url(@location)), 'modal-class' => 'sign-up-modal' } )} to contact the #{platform_context.lessor}."
 
