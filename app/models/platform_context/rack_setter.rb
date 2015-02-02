@@ -16,7 +16,7 @@ class PlatformContext::RackSetter
     platform_context = ::PlatformContext.new(request.host)
     if !platform_context.should_redirect?
       ::PlatformContext.current = platform_context
-      Rails.logger.info "platform_context: #{::PlatformContext.current.to_h}"
+      Rails.logger.info "platform_context: #{::PlatformContext.current.to_h}" if Rails.env.development?
       if I18n.backend.respond_to?(:backends)
         I18n.backend.backends.first.instance_id = ::PlatformContext.current.instance.id
       end

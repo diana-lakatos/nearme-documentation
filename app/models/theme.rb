@@ -23,10 +23,8 @@ class Theme < ActiveRecord::Base
     end.flatten.all?{|f| !f}
   }
 
-  validates :contact_email, email_rfc_822: true, allow_nil: false
-  validates :support_email, email_rfc_822: true, allow_nil: false
-  validates :contact_email, presence: true
-  validates :support_email, presence: true
+  validates :contact_email, presence: true, email_rfc_822: true, if: lambda { |t| t.owner.try(:domains).try(:first).present? }
+  validates :support_email, presence: true, email_rfc_822: true, if: lambda { |t| t.owner.try(:domains).try(:first).present? }
   validates_length_of :description, :maximum => 250
 
   extend CarrierWave::SourceProcessing
