@@ -27,7 +27,8 @@ namespace :translations do
       'dashboard.nav.your_shop' => 'YOUR SHOP',
       'dashboard.nav.admin' => 'ADMIN',
       'dashboard.nav.account' => 'ACCOUNT',
-      'dashboard.nav.menu' => 'MENU'
+      'dashboard.nav.menu' => 'MENU',
+      'dashboard.nav.blog' => 'BLOG',
     }
 
     dashboard_translations.each do |k,v|

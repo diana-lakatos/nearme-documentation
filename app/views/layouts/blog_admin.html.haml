@@ -18,11 +18,11 @@
         .navbar.navbar-fixed-top
           .navbar-inner
             .container
-              = link_to "#{@blog_instance.name} - Admin", blog_admin_url, :class => "brand"
+              = link_to "#{@blog_instance.name} - Admin", admin_blog_url, :class => "brand"
               .nav-collapse.collapse.navbar-inverse-collapse
                 %ul.nav.pull-right
-                  = blog_admin_nav_item "Posts", blog_admin_blog_posts_path, "blog_posts"
-                  = blog_admin_nav_item "Settings", edit_blog_admin_blog_instance_path, "blog_instances"
+                  = blog_admin_nav_item "Posts", admin_blog_blog_posts_path, "blog_posts"
+                  = blog_admin_nav_item "Settings", edit_admin_blog_blog_instance_path, "blog_instances"
 
                   %li= link_to "Log Out", destroy_user_session_url, :method => :delete, :data => {:user => current_user.first_name }
 

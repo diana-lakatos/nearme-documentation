@@ -142,6 +142,7 @@ module DesksnearMe
     config.action_dispatch.rescue_responses.merge!('Page::NotFound' => :not_found)
     config.action_dispatch.rescue_responses.merge!('Listing::NotFound' => :not_found)
     config.action_dispatch.rescue_responses.merge!('Location::NotFound' => :not_found)
+    config.action_dispatch.rescue_responses.merge!('UserBlog::NotFound' => :not_found)
 
     config.paypal_mode = 'sandbox'
     config.encrypt_sensitive_db_columns = true

@@ -47,7 +47,7 @@ DesksnearMe::Application.routes.draw do
     get '/features-security', :to => 'platform_home#features_security'
     get '/features-integration', :to => 'platform_home#features_integration'
     get '/features-support', :to => 'platform_home#features_support'
-    get '/',  :to => 'platform_home#index'
+    get '/', :to => 'platform_home#index'
     get '/features', :to => 'platform_home#features'
     get '/clients', :to => 'platform_home#clients'
     get '/contact', :to => 'platform_home#contact'
@@ -92,6 +92,12 @@ DesksnearMe::Application.routes.draw do
   end
 
   namespace :admin do
+    namespace :blog do
+      get '/', :to => redirect("/admin/blog/blog_posts")
+      resources :blog_posts
+      resource :blog_instance, only: [:edit, :update]
+    end
+
     get '/', :to => "dashboard#show"
     resources :users do
       member do
@@ -282,6 +288,7 @@ DesksnearMe::Application.routes.draw do
     namespace :manage_blog do
       get '/', :to => 'base#index'
       resources :posts
+      resources :user_posts
       resource :settings, only: [:edit, :update]
     end
 
@@ -363,7 +370,6 @@ DesksnearMe::Application.routes.draw do
   end
 
 
-
   match '/auth/:provider/callback' => 'authentications#create', via: [:get, :post]
   get "/auth/failure", to: "authentications#failure"
   devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions', :passwords => 'passwords' }
@@ -381,6 +387,8 @@ DesksnearMe::Application.routes.draw do
     get "users/verify/:id/:token", :to => "registrations#verify", :as => "verify_user"
     delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
     get "users/:id", :to => "registrations#show", :as => "profile"
+    get "users/:user_id/blog", :to => "registrations/blog#index", :as => "user_blog_posts_list"
+    get "users/:user_id/blog/:id", :to => "registrations/blog#show", :as => "user_blog_post_show"
     get "users/unsubscribe/:signature", :to => "registrations#unsubscribe", :as => "unsubscribe"
     get "dashboard/edit_profile", :to => "registrations#edit", :as => "dashboard_profile"
     get "dashboard/social_accounts", :to => "registrations#social_accounts", :as => "social_accounts"
@@ -400,7 +408,7 @@ DesksnearMe::Application.routes.draw do
   end
 
   namespace :dashboard do
-    resource  :analytics
+    resource :analytics
     resources :companies, :only => [:edit, :update, :show]
     resources :images
     resources :locations
@@ -524,6 +532,10 @@ DesksnearMe::Application.routes.draw do
         post :host_cancel
       end
     end
+
+    resource :blog, controller: 'user_blog/blog', only: [:show, :edit, :update] do
+      resources :posts, controller: 'user_blog/blog_posts'
+    end
   end
 
   resources :reservations do
@@ -635,12 +647,12 @@ DesksnearMe::Application.routes.draw do
 
     resource :registration, only: [:create]
 
-    get  'profile',  :to => 'profile#show'
-    match 'profile',  :to => 'profile#update', via: [:put, :patch]
+    get 'profile', :to => 'profile#show'
+    match 'profile', :to => 'profile#update', via: [:put, :patch]
     post 'profile/avatar/:filename', :to => 'profile#upload_avatar'
     delete 'profile/avatar', :to => 'profile#destroy_avatar'
 
-    get  'iplookup',  :to => 'iplookup#index'
+    get 'iplookup', :to => 'iplookup#index'
 
     resources :locations do
       collection do
@@ -650,14 +662,14 @@ DesksnearMe::Application.routes.draw do
 
     resources :photos
 
-    resources :listings, only: [:show,:create, :update, :destroy] do
+    resources :listings, only: [:show, :create, :update, :destroy] do
       member do
         post 'reservation'
         post 'availability'
         post 'inquiry'
         post 'share'
-        get  'patrons'
-        get  'connections'
+        get 'patrons'
+        get 'connections'
       end
       collection do
         post 'search'
@@ -675,11 +687,11 @@ DesksnearMe::Application.routes.draw do
     resource :social, only: [:show], controller: 'social' do
       # Hmm, can this be better?
       resource :facebook, only: [:show, :update, :destroy],
-        controller: 'social_provider', provider: 'facebook'
-      resource :twitter,  only: [:show, :update, :destroy],
-        controller: 'social_provider', provider: 'twitter'
+               controller: 'social_provider', provider: 'facebook'
+      resource :twitter, only: [:show, :update, :destroy],
+               controller: 'social_provider', provider: 'twitter'
       resource :linkedin, only: [:show, :update, :destroy],
-        controller: 'social_provider', provider: 'linkedin'
+               controller: 'social_provider', provider: 'linkedin'
     end
 
     get 'amenities', to: 'amenities#index'

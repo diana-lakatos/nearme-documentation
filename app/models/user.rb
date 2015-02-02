@@ -44,6 +44,8 @@ class User < ActiveRecord::Base
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :user_bans
   has_many :user_instance_profiles
+  has_one :blog, class_name: 'UserBlog'
+  has_many :blog_posts, class_name: 'UserBlogPost'
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
@@ -56,6 +58,8 @@ class User < ActiveRecord::Base
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
   before_validation :normalize_gender
+
+  after_create :create_blog
 
   after_destroy :perform_cleanup
   before_restore :recover_companies
@@ -192,6 +196,10 @@ class User < ActiveRecord::Base
                           :token => token,
                           :secret => secret,
                           :token_expires_at => expires_at)
+  end
+
+  def create_blog
+    build_blog.save
   end
 
   def cancelled_reservations
@@ -591,6 +599,18 @@ class User < ActiveRecord::Base
     unless ['male', 'female', 'unknown'].include?(gender)
       self.gender = nil
     end
+  end
+
+  def published_blogs
+    blog_posts.published
+  end
+
+  def recent_blogs
+    blog_posts.recent
+  end
+
+  def has_published_blogs?
+    blog_posts.published.any?
   end
 
   def registration_in_progress?

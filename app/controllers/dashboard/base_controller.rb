@@ -23,6 +23,11 @@ class Dashboard::BaseController < ApplicationController
     "dashboard/tickets",
     "registrations/edit",
     "registrations/social_accounts",
+    "dashboard/blog",
+    "registrations/show#buy-sell",
+    "registrations/show#services",
+    "registrations/show#reviews",
+    "registrations/show#blog_posts",
     "dashboard/reviews"
   ]
 

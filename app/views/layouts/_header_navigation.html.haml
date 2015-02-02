@@ -69,6 +69,10 @@
           %li
             = link_to main_app.dashboard_support_tickets_path, class: 'nav-link dropdown-toggle' do
               %span= "#{t('reservations.rfq_menu_text')}"
+        - if platform_context.instance.user_blogs_enabled?
+          %li
+            = link_to main_app.dashboard_blog_path, class: 'nav-link dropdown-toggle' do
+              %span Manage Blog
         %li
           = link_to '/dashboard/edit_profile', class: 'nav-link dropdown-toggle' do
             %span Account

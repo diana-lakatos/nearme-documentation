@@ -190,7 +190,8 @@ class SecuredParams
       :header_text,
       :header_motto,
       :header_logo,
-      :header_icon
+      :header_icon,
+      owner_attributes: nested([:user_blogs_enabled])
     ]
   end
 
@@ -205,6 +206,38 @@ class SecuredParams
       :author_biography,
       :author_avatar
     ]
+  end
+
+  def user_blog
+    [
+        :enabled,
+        :name,
+        :header_image,
+        :header_text,
+        :header_motto,
+        :header_logo,
+        :header_icon,
+        :facebook_app_id
+    ]
+  end
+
+  def user_blog_post
+    [
+        :title,
+        :published_at,
+        :slug,
+        :hero_image,
+        :content,
+        :excerpt,
+        :author_name,
+        :author_biography,
+        :author_avatar_img,
+        :logo
+    ]
+  end
+
+  def admin_user_blog_post
+    user_blog_post + [:highlighted]
   end
 
   def instance
@@ -235,6 +268,7 @@ class SecuredParams
       :searcher_type, :onboarding_verification_required,
       :apply_text_filters, :force_accepting_tos,
       :payment_transfers_frequency,
+      :user_blogs_enabled,
       :twilio_consumer_key, :twilio_consumer_secret,
       :test_twilio_consumer_key, :test_twilio_consumer_secret,
       :twilio_from_number, :test_twilio_from_number,
@@ -312,12 +346,6 @@ class SecuredParams
       :name,
       property_ids: [],
       option_type_ids: []
-    ]
-  end
-
-  def spree_shipping_category
-    [
-      :name
     ]
   end
 
@@ -840,7 +868,7 @@ class SecuredParams
 
   def rating_system
     [
-      :subject, 
+      :subject,
       :active,
       :transactable_type_id,
       rating_hints_attributes: self.rating_hint,
@@ -850,7 +878,7 @@ class SecuredParams
 
   def rating_hint
     [
-      :id, 
+      :id,
       :description
     ]
   end
@@ -863,13 +891,13 @@ class SecuredParams
 
   def review
     [
-      :rating, 
-      :comment, 
-      :object, 
-      :date, 
+      :rating,
+      :comment,
+      :object,
+      :date,
       :reservation_id,
       :transactable_type_id,
-      :instance_id, 
+      :instance_id,
       :user_id
     ]
   end
@@ -882,8 +910,8 @@ class SecuredParams
 
   def rating_answer
     [
-      :id, 
-      :rating, 
+      :id,
+      :rating,
       :rating_question_id
     ]
   end

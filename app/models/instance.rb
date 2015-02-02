@@ -63,6 +63,7 @@ class Instance < ActiveRecord::Base
   has_many :instance_profile_types
   has_one :instance_profile_type, -> { where(instance_id: PlatformContext.current.try(:instance).try(:id)) }
   has_many :data_uploads, as: :target
+  has_many :user_blog_posts
   has_many :instance_views
   has_many :rating_systems, dependent: :destroy
   has_many :reviews, dependent: :destroy

@@ -39,6 +39,11 @@ module UsersHelper
     })
   end
 
+  def hide_tab?(tab)
+    controller = "#{params[:controller]}/#{params[:action]}##{tab}"
+    platform_context.instance.hidden_dashboard_menu_items.key?(controller)
+  end
+
   private
 
   def social_icon(provider)
