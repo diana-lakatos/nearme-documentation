@@ -40,7 +40,7 @@ class InstanceAdmin::Manage::TransactableTypes::FormComponentsController < Insta
     @form_component = @transactable_type.form_components.find(params[:id])
     @form_component.destroy
     flash[:success] = t 'flash_messages.instance_admin.manage.form_component.deleted'
-    redirect_to edit_instance_admin_manage_transactable_type_form_components_path(@transactable_type)
+    redirect_to instance_admin_manage_transactable_type_form_components_path(@transactable_type)
   end
 
   def update_rank
@@ -64,7 +64,7 @@ class InstanceAdmin::Manage::TransactableTypes::FormComponentsController < Insta
 
   def form_component_params
     params.require(:form_component).permit(secured_params.form_component).tap do |whitelisted|
-      whitelisted[:form_fields] = params[:form_component][:form_fields].map { |el| el = el.split('=>'); { el[0] => el[1] } } if params[:form_component][:form_fields]
+      whitelisted[:form_fields] = params[:form_component][:form_fields].map { |el| el = el.split('=>'); { el[0].try(:strip) => el[1].try(:strip) } } if params[:form_component][:form_fields]
     end
 
   end
