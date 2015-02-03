@@ -28,6 +28,10 @@
                     = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => locations_form.object, :only_inputs => [ field.to_sym ] }
                   - elsif model == 'transactable'
                     = render 'listings/listing_form', f: listings_form, listing: listings_form.object, only_inputs: [ field.to_sym ], photos: @photos
+            .hidden
+              - Money::Currency.table.values.each do |c|
+                %span{:id => "currency_#{c[:iso_code]}"}
+                  = c[:symbol]
 
         .actions
           .centerbuttons

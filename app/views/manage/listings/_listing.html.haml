@@ -2,6 +2,11 @@
 
   = render partial: 'listings/listing_form', locals: { f: f, listing: listing, photos: photos}
 
+  .hidden
+    - Money::Currency.table.values.each do |c|
+      %span{:id => "currency_#{c[:iso_code]}"}
+        = c[:symbol]
+
   - if listing.persisted?
     = link_to manage_location_listing_path(location, listing), :method => :delete, data: { confirm: 'Are you sure?' }, :class => "delete delete-listing" do
       %span.ico-trash.padding

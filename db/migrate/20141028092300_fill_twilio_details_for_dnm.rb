@@ -6,7 +6,7 @@ class FillTwilioDetailsForDnm < ActiveRecord::Migration
       :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
     def self.default_instance
-      self.find_by_default_instance(true)
+      where(name: "DesksNearMe").first || self.first
     end
   end
 

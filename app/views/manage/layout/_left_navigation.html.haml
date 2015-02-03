@@ -11,7 +11,7 @@
       - if platform_context.instance.rating_systems.where(active: true).present?
         = dashboard_menu_item 'dashboard/reviews', dashboard_reviews_path
 
-    - if @company.present?
+    - if current_user.registration_completed?
       %ul
         %li.nav-head
           = t('dashboard.nav.your_shop')
