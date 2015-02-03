@@ -52,16 +52,16 @@ class Manage::PhotosController < Manage::BaseController
   private
   def get_proper_hash
     # we came from list your space flow
-    if params[:user]
-      photo_params = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"]
-      @listing = Transactable.find(photo_params[:id]) if photo_params[:id]
-      # we came from dashboard
-    elsif params[:listing]
+    if params[:listing]
       photo_params = params[:listing]
       @listing = current_user.listings.find(params[:listing][:id]) if params[:listing][:id].present?
     elsif params[:transactable]
       photo_params = params[:transactable]
       @listing = current_user.listings.find(params[:transactable][:id]) if params[:transactable][:id].present?
+    elsif params[:user]
+      photo_params = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"]
+      @listing = Transactable.find(photo_params[:id]) if photo_params[:id]
+      # we came from dashboard
     end
     @image_url = photo_params[:photos_attributes]["0"][:image]
   end
