@@ -82,7 +82,9 @@ end
 
 When /I navigate away via Log In link and sign in$/ do
   click_link 'Log In'
-  login_manually
+  work_in_modal do
+    login_manually
+  end
 end
 
 When /I sign in with valid credentials/ do
@@ -91,8 +93,10 @@ end
 
 When /I sign in with invalid credentials/ do
   click_link 'Log In'
-  fill_credentials('invalid@example.com')
-  click_button "Log In"
+  work_in_modal do
+    fill_credentials('invalid@example.com')
+    click_button "Log In"
+  end
 end
 
 When /I fill in invalid credentials and click (.*) button$/ do |button|
@@ -146,5 +150,8 @@ end
 
 Given /^the (.*) OAuth request with email is successful$/ do |social|
   mock_successful_authentication_with_provider(social, {info: {email: "#{social.downcase}@example.com"}})
+end
+
+Given /There is no user with my email/ do
 end
 
