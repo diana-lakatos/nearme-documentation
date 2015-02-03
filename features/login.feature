@@ -1,4 +1,3 @@
-@javascript
 Feature: A user can login
   In order to let people manage their reservations
   As a user
