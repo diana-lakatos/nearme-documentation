@@ -6,6 +6,7 @@ Feature: A user can reset their password
   Background:
     Given a user exists
 
+  @javascript
   Scenario: User requests password reset using modal
     Given the transactable_type_listing exists
     When I performed search for "Auckland"

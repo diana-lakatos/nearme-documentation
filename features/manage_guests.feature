@@ -10,6 +10,7 @@ Feature: As a user of the site
       And a location exists with company: the company, creator: the user
       And a transactable exists with location: the location, creator: the user, confirm_reservations: true
 
+  @javascript
   Scenario: User rejects reservation
     Given a reservation exists with listing: the transactable
     Given I am on the guests page
