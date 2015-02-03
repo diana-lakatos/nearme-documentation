@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Manage::PhotosControllerTest < ActionController::TestCase
+class Dashboard::PhotosControllerTest < ActionController::TestCase
   context 'update with crop and rotate' do
     setup do
       @listing = FactoryGirl.create(:transactable, photos_count: 1)
@@ -8,7 +8,7 @@ class Manage::PhotosControllerTest < ActionController::TestCase
       @user    = @listing.company.creator
 
       @user.stubs(:photos => stub(:find => @photo))
-      Manage::PhotosController.any_instance.stubs(:current_user).returns(@user)
+      Dashboard::PhotosController.any_instance.stubs(:current_user).returns(@user)
       @photo.expects(:save).once.returns(true)
 
       sign_in(@user)
