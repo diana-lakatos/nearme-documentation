@@ -24,7 +24,9 @@ module SessionsHelper
 
   def login_with_provider(provider)
     visit new_user_session_path
-    click_link authentication_link_text_for_provider(provider)
+    work_in_modal do
+      click_link authentication_link_text_for_provider(provider)
+    end
   end
 
   def log_out

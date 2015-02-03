@@ -6,14 +6,18 @@ module UserHelper
   end
 
   def sign_in_with_provider(provider)
-    try_to_sign_up_with_provider(provider)
+    work_in_modal do
+      try_to_sign_up_with_provider(provider)
+    end
   end
 
   def sign_up_with_provider(provider, email = nil)
-    email ||= "#{provider.downcase}@example.com"
-    try_to_sign_up_with_provider(provider)
-    fill_in 'user_email', with: "#{email}"
-    click_button "Sign up"
+    work_in_modal do
+      email ||= "#{provider.downcase}@example.com"
+      try_to_sign_up_with_provider(provider)
+      fill_in 'user_email', with: "#{email}"
+      click_button "Sign up"
+    end
   end
 
   def toggle_connection_with(provider)

@@ -76,16 +76,16 @@ Then /I should have password/ do
   assert User.first.has_password?
 end
 
-When /I manually sign up with valid credentials$/ do 
+When /I manually sign up with valid credentials$/ do
   sign_up_manually({:name => 'I am user'})
 end
 
-When /I navigate away via Log In link and sign in$/ do 
+When /I navigate away via Log In link and sign in$/ do
   click_link 'Log In'
   login_manually
 end
 
-When /I sign in with valid credentials/ do 
+When /I sign in with valid credentials/ do
   login_manually
 end
 
@@ -103,9 +103,6 @@ end
 When /I fill in valid credentials and click (.*) button$/ do |button|
   fill_credentials
   click_button button
-end
-
-Given /There is no user with my email/ do
 end
 
 Then /an account should be created for that (.*) user$/ do |social|
@@ -145,9 +142,9 @@ end
 Then  /^I should not be relogged as other user$/ do
   current_path = URI.parse(current_url).path
   assert_equal social_accounts_path, current_path
-
 end
 
 Given /^the (.*) OAuth request with email is successful$/ do |social|
   mock_successful_authentication_with_provider(social, {info: {email: "#{social.downcase}@example.com"}})
 end
+
