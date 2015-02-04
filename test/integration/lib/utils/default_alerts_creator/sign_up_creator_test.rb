@@ -70,23 +70,30 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
       assert_not_contains 'href="/', mail.html_part.body
     end
 
-    should "create_create_user_by_admin_email" do
-      @signup_creator.create_create_user_by_admin_email!
-      @creator = FactoryGirl.create(:user)
-      assert_difference 'ActionMailer::Base.deliveries.size' do
-        WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::CreatedByAdmin, @user.id, @creator.id)
+    context 'when sending invitation email' do
+      setup do
+        @new_user_token, @creator_token = 'new_user--token', 'creator--token'
+        User.any_instance.stubs(:temporary_token).returns(@new_user_token, @creator_token)
+        @signup_creator.create_create_user_by_admin_email!
+        @creator = FactoryGirl.create(:user)
       end
-      mail = ActionMailer::Base.deliveries.last
-      assert mail.html_part.body.include?(@user.first_name)
-      assert_equal [@user.email], mail.to
-      assert_equal "#{@user.first_name}, you were invited to #{@platform_context.decorate.name} by #{@creator.name}!", mail.subject
-      assert_contains "Welcome, #{@user.first_name }!", mail.html_part.body
-      assert_contains "You have been invited by #{ @creator.name } to join #{ @platform_context.decorate.name }!", mail.html_part.body
-      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
-      assert_not_contains 'href="http://example.com', mail.html_part.body
-      assert_not_contains 'href="/', mail.html_part.body
-      assert_contains CGI.escape(@user.temporary_token.split('--')[0]), mail.html_part.body, "Could not find User's authentication token in the email: #{mail.html_part.body}"
-      assert_not_contains CGI.escape(@creator.temporary_token.split('--')[0]), mail.html_part.body, "Authentication token is included in the email, which is sent the new user - new user should not have access to creator's account!"
+
+      should "create_create_user_by_admin_email" do
+        assert_difference 'ActionMailer::Base.deliveries.size' do
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::CreatedByAdmin, @user.id, @creator.id)
+        end
+        mail = ActionMailer::Base.deliveries.last
+        assert mail.html_part.body.include?(@user.first_name)
+        assert_equal [@user.email], mail.to
+        assert_equal "#{@user.first_name}, you were invited to #{@platform_context.decorate.name} by #{@creator.name}!", mail.subject
+        assert_contains "Welcome, #{@user.first_name }!", mail.html_part.body
+        assert_contains "You have been invited by #{ @creator.name } to join #{ @platform_context.decorate.name }!", mail.html_part.body
+        assert_contains 'href="http://custom.domain.com/', mail.html_part.body
+        assert_not_contains 'href="http://example.com', mail.html_part.body
+        assert_not_contains 'href="/', mail.html_part.body
+        assert_contains @new_user_token, mail.html_part.body, "Could not find User's authentication token in the email: #{mail.html_part.body}"
+        assert_not_contains @creator_token, mail.html_part.body, "Authentication token is included in the email, which is sent the new user - new user should not have access to creator's account!"
+      end
     end
 
     should "create_notify_of_wrong_phone_number_email" do
