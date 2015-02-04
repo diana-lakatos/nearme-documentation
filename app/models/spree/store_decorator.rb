@@ -3,9 +3,7 @@ Spree::Image.class_eval do
 
   def self.current(domain = nil)
     instance_id = PlatformContext.current.try(:instance).try(:id)
-
     current_store = Spree::Store.find_by(instance_id: instance_id) if instance_id
     current_store ||= Store.by_url(domain).first if domain
-    current_store || Store.default
   end
 end

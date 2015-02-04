@@ -35,7 +35,6 @@ class PaymentTransfer < ActiveRecord::Base
 
   validate :validate_all_charges_in_currency
 
-  register_currency :usd
   # Amount is the amount we're transferring to the Host from payments we've
   # received for their listings.
   #

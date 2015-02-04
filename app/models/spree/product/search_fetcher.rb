@@ -6,7 +6,7 @@ class Spree::Product::SearchFetcher
   end
 
   def products
-    order = @filters[:sort].blank? ? nil : "#{@filters[:sort]} ASC"
+    order = Spree::Product.column_names.include?(@filters[:sort]) ? "#{@filters[:sort]} ASC" : nil
     @products = filtered_products.order(order)
     if !@filters[:taxon].blank? || !@filters[:query].blank?
       @products = @products.in_taxon(taxon) if taxon.present?
