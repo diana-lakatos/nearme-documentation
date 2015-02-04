@@ -256,6 +256,14 @@ module ApplicationHelper
       ]).html_safe
   end
 
+  def will_paginate_styled(collection, options = {})
+    content_tag :div, class: 'pagination' do
+      options[:renderer] = BuySellMarket::WillPaginateLinkRenderer::LinkRenderer
+      options[:class] = ''
+      will_paginate collection, options
+    end
+  end
+
   def active_class(arg1, arg2)
     'active' if arg1 == arg2
   end
