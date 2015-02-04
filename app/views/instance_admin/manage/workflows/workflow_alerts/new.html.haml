@@ -1,0 +1,2 @@
+%h4= "#{link_to @workflow_step.workflow.name, instance_admin_manage_workflow_path(@workflow_step.workflow)} > #{link_to @workflow_step.name, instance_admin_manage_workflow_workflow_step_path(@workflow_step.workflow, @workflow_step)} > #{resource.name}".html_safe
+= render partial: 'form', locals: { resource: resource }

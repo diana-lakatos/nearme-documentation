@@ -7,6 +7,6 @@
     = f.submit 'Confirm', confirm: 'Do you want to confirm recurring booking?', class: 'btn blue full'
 
 - if recurring_booking.can_reject?
-  = link_to 'Decline', rejection_form_dashboard_host_recurring_booking_path(recurring_booking, listing_id: recurring_booking.listing),
-              rel: 'modal', class: 'btn dark-gray full'
+  = link_to 'Decline', '#',
+      data: { modal: true, href: rejection_form_dashboard_host_recurring_booking_path(recurring_booking, listing_id: recurring_booking.listing) }, class: 'btn dark-gray full'
 

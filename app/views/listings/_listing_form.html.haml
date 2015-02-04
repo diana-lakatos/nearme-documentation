@@ -1,6 +1,8 @@
-= render :partial => 'approval_requests/form', :locals => { f: f }
 - only_inputs ||= []
-- photo_input_name_prefix = "listing" if local_assigns[:photo_input_name_prefix].nil?
+- photo_input_name_prefix = f.object_name if local_assigns[:photo_input_name_prefix].nil?
+
+- if only_inputs.empty? || only_inputs.include?(:approval_requests)
+  = render :partial => 'approval_requests/form', :locals => { f: f }
 
 = f.hidden_field :transactable_type_id, value: @transactable_type.id
 - if only_inputs.empty? || only_inputs.include?(:enabled)
@@ -18,11 +20,6 @@
 - unless platform_context.instance.listing_amenity_types.count.zero?
   = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :label => "Amenities", :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select', :multiple => true } if only_inputs.empty? || only_inputs.include?(:amenities)
 
-- if content_for? :currency
-  = yield(:currency)
-- else
-  = hidden_field_tag '', listing.location.currency, :id => 'currency-select'
-
 - if only_inputs.empty? || only_inputs.include?(:price)
   = render partial: "custom_attributes/price", locals: { f: f }
 
@@ -37,7 +34,7 @@
     .span= t('manage.listings.photos.waiting_for_photo_processing')
   = file_upload_input_with_label('Photos',
                                   "#{photo_input_name_prefix}[photos_attributes][0][image]",
-                                  manage_photos_path,
+                                  dashboard_photos_path,
                                   Photo.new.image.thumbnail_dimensions[:medium],
                                   "Browse",
                                   :required => true,
@@ -50,7 +47,7 @@
       - @photos.each_with_index do |photo|
         = get_fileupload_photo_html(photo.image_url(:medium),
                                     destroy_space_wizard_photo_path(:id => photo.id),
-                                    edit_manage_photo_path(photo),
+                                    edit_dashboard_photo_path(photo),
                                     :div,
                                     id: photo.id) do
           = text_field_tag "#{photo_input_name_prefix}[photos_attributes][#{photo.id}][caption]", photo.caption, :placeholder => t('ui.photo_uploader.caption')
@@ -61,7 +58,3 @@
   %h2.with-margin Waiver Agreement Templates
   = f.association :waiver_agreement_templates, collection: f.object.location.company.waiver_agreement_templates.order(:name).pluck(:name, :id), as: :check_boxes
 
-.hidden
-  - Money::Currency.table.values.each do |c|
-    %span{:id => "currency_#{c[:iso_code]}"}
-      = c[:symbol]

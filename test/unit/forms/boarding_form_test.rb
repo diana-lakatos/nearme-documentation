@@ -6,9 +6,12 @@ class BoardingFormTest < ActiveSupport::TestCase
     PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
     @user = FactoryGirl.create(:user, name: "Firstname Lastname")
     @boarding_form = BoardingForm.new(@user)
-    10.times { FactoryGirl.create(:taxons) }
+    10.times do
+      FactoryGirl.create(:taxons)
+      FactoryGirl.create(:country)
+    end
     @taxon_ids = Spree::Taxon.all.map(&:id)
-    @countries = Spree::Country.last(10)
+    @countries = [FactoryGirl.create(:country)]
   end
 
   context "Boarding First Product" do
@@ -30,7 +33,6 @@ class BoardingFormTest < ActiveSupport::TestCase
 
     end
   end
-
 
   def boarding_attributes
     {
@@ -58,7 +60,7 @@ class BoardingFormTest < ActiveSupport::TestCase
               "0" => {
                 name: "Default - b38723c89b795233677b2795d77557af",
                 kind: "country",
-                country_ids: @countries.map(&:id).join(",")
+                country_ids: @countries.map(&:id)
               }
             }
           }

@@ -5,7 +5,7 @@ class Dashboard::Support::TicketMessagesController < Dashboard::BaseController
     message.user = current_user
     message.ticket = ticket
     if message.save
-      ::SupportMailer.enqueue.rfq_request_replied(@ticket, message)
+      WorkflowStepJob.perform(WorkflowStep::RfqWorkflow::Replied, @message.id)
       if ticket.target.free?
         flash[:success] = t('flash_messages.support.rfq_ticket_message.created')
       else

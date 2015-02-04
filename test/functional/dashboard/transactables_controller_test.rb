@@ -7,6 +7,7 @@ class Dashboard::TransactablesControllerTest < ActionController::TestCase
     @user = FactoryGirl.create(:user)
     sign_in @user
     @company = FactoryGirl.create(:company, creator: @user)
+    @company.products << FactoryGirl.create(:product)
     @location = FactoryGirl.create(:location, company: @company)
     @location2 = FactoryGirl.create(:location, company: @company)
     @listing_type = "Desk"
@@ -181,15 +182,12 @@ class Dashboard::TransactablesControllerTest < ActionController::TestCase
       end
 
       should 'notify guest about reservation expiration when listing is deleted' do
-        ReservationMailer.expects(:notify_guest_of_expiration).returns(stub(deliver: true)).twice
-        ReservationMailer.expects(:notify_host_of_expiration).returns(stub(deliver: true)).twice
+        WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::Expired, @reservation1.id)
+        WorkflowStepJob.expects(:perform).with(WorkflowStep::ReservationWorkflow::Expired, @reservation2.id)
         delete :destroy, id: @transactable.id, transactable_type_id: @transactable_type.id
       end
 
       should 'mark reservations as expired' do
-        ReservationMailer.stubs(:notify_guest_of_expiration).returns(stub(deliver: true))
-        ReservationMailer.stubs(:notify_host_of_expiration).returns(stub(deliver: true))
-
         delete :destroy, id: @transactable.id, transactable_type_id: @transactable_type.id
         assert_equal 'expired', @reservation1.reload.state
         assert_equal 'expired', @reservation2.reload.state
@@ -201,6 +199,7 @@ class Dashboard::TransactablesControllerTest < ActionController::TestCase
       setup do
         @other_user = FactoryGirl.create(:user)
         @other_company = FactoryGirl.create(:company, creator: @other_user)
+        @other_company.products << FactoryGirl.create(:product)
         @other_location = FactoryGirl.create(:location, company: @company)
         sign_in @other_user
       end

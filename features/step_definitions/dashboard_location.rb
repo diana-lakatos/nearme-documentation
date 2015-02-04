@@ -22,6 +22,7 @@ end
 
 When /^I upload csv file with locations and transactables$/ do
   FactoryGirl.create(:location_type, name: 'My Type')
+  Utils::DefaultAlertsCreator::DataUploadCreator.new.notify_uploader_of_finished_import_email!
   find(:css, 'a.bulk-upload').click
   stub_image_url('http://www.example.com/image1.jpg')
   stub_image_url('http://www.example.com/image2.jpg')
@@ -37,22 +38,22 @@ Then /^I should receive data upload report email when finished$/ do
   mails = emails_for(model!('user').email)
   assert_equal 1, mails.count
   mail = mails.first
-  assert_equal "Importing 'current_data.csv' has finished", mail.subject
+  assert_equal "[DesksNearMe] Importing 'current_data.csv' has finished", mail.subject
 end
 
 Then /^New locations and transactables from csv should be added$/ do
   company = model!('user').companies.first
-  assert_equal ['Czestochowa', 'Rydygiera'], company.locations.pluck(:name).sort
-  assert_equal [["my name", "Rydygiera"], ["my name2", "Rydygiera"]], company.listings.joins(:location).select('name, locations.name as location_name, transactable_type_id, properties').map { |l| [l.name, l.location_name] }
+  assert_equal ['Czestochowa', 'Rydygiera'], company.locations.pluck(:name).compact.sort
+  assert_equal [["my name", "Rydygiera"], ["my name2", "Rydygiera"]], company.listings.joins(:location).where('locations.name IS NOT NULL').select('name, locations.name as location_name, transactable_type_id, properties').map { |l| [l.name, l.location_name] }
 end
 
 Given /^#{capture_model} should be updated$/ do |model|
   if model=='the location'
-    location = model!('location')
+    location = Location.last
     assert_location_data(location)
     page.should have_content(location.name, visible: true)
   else
-    listing = model!('transactable')
+    listing = Transactable.first
     assert_listing_data(listing, true)
   end
 end
@@ -171,5 +172,10 @@ Then /^#{capture_model} should have availability:$/ do |model, table|
       assert_nil rule, "#{day} should not be open"
     end
   end
+
+end
+
+And /^I populate listing metadata for all users$/ do
+  User.all.each { |u| u.populate_listings_metadata! }
 end
 

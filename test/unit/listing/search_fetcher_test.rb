@@ -19,26 +19,32 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
     @private_listing = FactoryGirl.create(:transactable, :listing_type => @private_listing_type, :location => @private_location)
     @private_office_listing = FactoryGirl.create(:transactable, :listing_type => @office_listing_type, :location => @private_location)
 
+    @public_listing_other_tt = FactoryGirl.create(:transactable, transactable_type: FactoryGirl.create(:transactable_type), :listing_type => @public_listing_type, :location => @public_location)
+
     @free_listing = FactoryGirl.create(:free_listing)
 
-    @filters = { :midpoint => [7, 7], :radius => 1000 }
+    @filters = { :midpoint => [7, 7], :radius => 1000, transactable_type_id: TransactableType.first.id }
+  end
+
+  should 'return result for right transactable type' do
+    assert_equal [@public_listing_other_tt], Listing::SearchFetcher.new(@filters.merge({transactable_type_id: @public_listing_other_tt.transactable_type_id})).listings.sort
   end
 
   context '#geolocation' do
 
     should 'find locations near midpoint within given radius' do
-      @filters = { :midpoint => [5, 6], :radius => 300 }
+      @filters.merge!({ :midpoint => [5, 6], :radius => 300 })
 
       assert_equal [@public_listing, @public_office_listing].sort, Listing::SearchFetcher.new(@filters).listings.sort
     end
 
     should 'return all locations if midpoint is missing' do
-      @filters = { :midpoint => nil, :radius => 2 }
+      @filters.merge!({ :midpoint => nil, :radius => 2 })
       assert_equal [@public_listing, @public_office_listing, @private_listing, @private_office_listing, @free_listing], Listing::SearchFetcher.new(@filters).listings.sort
     end
 
     should 'return all locations if radius is missing' do
-      @filters = { :midpoint => [1, 3], :radius => nil }
+      @filters.merge!({ :midpoint => [1, 3], :radius => nil })
       assert_equal [@public_listing, @public_office_listing, @private_listing, @private_office_listing, @free_listing], Listing::SearchFetcher.new(@filters).listings.sort
     end
   end
@@ -106,7 +112,6 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
 
         @location1 = FactoryGirl.create(:location, :company => @internet_food_company, location_address: FactoryGirl.build(:address, :latitude => 5, :longitude => 5))
         @location2 = FactoryGirl.create(:location, :company => @economics_food_company, location_address: FactoryGirl.build(:address, :latitude => 5, :longitude => 5))
-        @filters = { :midpoint => [7, 7], :radius => 1000 }
 
         @listing1 = FactoryGirl.create(:transactable, :location => @location1)
         @listing2 = FactoryGirl.create(:transactable, :location => @location2)

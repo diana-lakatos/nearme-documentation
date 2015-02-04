@@ -7,6 +7,7 @@ class InstanceMailerTest < ActiveSupport::TestCase
       mail(to: "test@example.com",
            subject: "Hello #@interpolation",
            bcc: "bcc@example.com",
+           reply_to: 'reply@me.com',
            from: 'from@example.com',
            subject_locals: {'interpolation' => @interpolation})
     end
@@ -14,20 +15,13 @@ class InstanceMailerTest < ActiveSupport::TestCase
 
   setup do
     stub_mixpanel
+    FactoryGirl.create(:instance_view_email_text, path: 'instance_mailer/test_mailer')
+    FactoryGirl.create(:instance_view_email_html, path: 'instance_mailer/test_mailer')
   end
 
   context "email template exists in db" do
     setup do
-      FactoryGirl.build(:email_template, path: 'instance_mailer/test_mailer',
-                         subject: 'Test {{interpolation}}',
-                         theme: PlatformContext.current.instance.theme,
-                         reply_to: 'reply@me.com',
-                         bcc: 'test@example.com').save(:validate => false)
       @mail = InstanceMailer.test_mailer
-    end
-
-    should "will liquify subject" do
-      assert_equal "Test magic", @mail.subject
     end
 
     should "assign email template assigns" do
@@ -59,19 +53,14 @@ class InstanceMailerTest < ActiveSupport::TestCase
       assert_equal "Hello magic", @mail.subject
     end
 
-    should "will keep default reply_to email" do
-      assert_equal [PlatformContext.current.decorate.contact_email], @mail.reply_to
-    end
   end
 
-  test "use EmailResolver first" do
-    assert_equal EmailResolver.instance, InstanceMailer.view_paths.first
+  test "use InstanceView first" do
+    assert_equal InstanceViewResolver.instance, InstanceMailer.view_paths.first
   end
 
   test "fallbacks to filesystem paths" do
-    InstanceMailer.view_paths[1..-1].each do |view_path|
-      assert_kind_of ActionView::OptimizedFileSystemResolver, view_path
-    end
+    assert_kind_of ActionView::OptimizedFileSystemResolver, InstanceMailer.view_paths[1]
   end
 end
 

@@ -3,7 +3,7 @@ class LocationDrop < BaseDrop
   include SharingHelper
 
   attr_reader :location
-  delegate :name, :description, :phone, to: :location
+  delegate :name, :description, :phone, :street, :city, :suburb, to: :location
 
   def initialize(location)
     @location = location

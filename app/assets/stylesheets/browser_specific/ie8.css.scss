@@ -23,10 +23,7 @@
 
 .navbar {
   .navbar-inner {
-    #logo {
-      background-image: none !important;
-      filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='#{$theme_logo}', sizingMethod='scale');
-    }
+    filter: none !important;
   }
 }
 

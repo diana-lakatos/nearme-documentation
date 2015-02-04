@@ -4,6 +4,7 @@ Feature: User Inquires about Listing
   Scenario: Sending an inquiry
     Given I am an authenticated api user and my email is nik@desksnear.me
     And a listed location with a creator whose email is jared@desksnear.me
+    And Inquiry alerts exist
     When I send an authenticated POST request to "listings/:id/inquiry":
     """
     {

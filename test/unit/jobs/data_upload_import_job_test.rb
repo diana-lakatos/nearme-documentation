@@ -5,39 +5,37 @@ class DataUploadImportJobTest < ActiveSupport::TestCase
   context 'mailers' do
 
     setup do
-      @mock = mock()
-      DataUploadMailer.expects(:enqueue).returns(@mock).at_least(0)
     end
 
     should 'send finish mail if succeeded' do
-      @stub = mock(queued?: false, succeeded?: true)
+      @stub = mock(queued?: false, succeeded?: true, id: 1)
       DataUpload.stubs(:find).returns(@stub)
-      @mock.expects(:notify_uploader_of_finished_import).with(@stub).once
-      @mock.expects(:notify_uploader_of_failed_import).with(@stub).never
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::DataUploadWorkflow::Finished, 1)
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::DataUploadWorkflow::Failed, 1).never
       DataUploadImportJob.perform(1)
     end
 
     should 'send finish mail if partially succeeded' do
-      @stub = mock(queued?: false, succeeded?: false, partially_succeeded?: true)
+      @stub = mock(queued?: false, succeeded?: false, partially_succeeded?: true, id: 1)
       DataUpload.stubs(:find).returns(@stub)
-      @mock.expects(:notify_uploader_of_finished_import).with(@stub).once
-      @mock.expects(:notify_uploader_of_failed_import).with(@stub).never
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::DataUploadWorkflow::Finished, 1)
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::DataUploadWorkflow::Failed, 1).never
       DataUploadImportJob.perform(1)
     end
 
     should 'send fail mail if failed' do
-      @stub = mock(queued?: false, succeeded?: false, partially_succeeded?: false, failed?: true)
+      @stub = mock(queued?: false, succeeded?: false, partially_succeeded?: false, failed?: true, id: 1)
       DataUpload.stubs(:find).returns(@stub)
-      @mock.expects(:notify_uploader_of_finished_import).with(@stub).never
-      @mock.expects(:notify_uploader_of_failed_import).with(@stub).once
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::DataUploadWorkflow::Finished, 1).never
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::DataUploadWorkflow::Failed, 1)
       DataUploadImportJob.perform(1)
     end
 
     should 'do not send any email if not finished and failed' do
       @stub = mock(queued?: false, succeeded?: false, partially_succeeded?: false, failed?: false)
       DataUpload.stubs(:find).returns(@stub)
-      @mock.expects(:notify_uploader_of_finished_import).with(@stub).never
-      @mock.expects(:notify_uploader_of_failed_import).with(@stub).never
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::DataUploadWorkflow::Finished, 1).never
+      WorkflowStepJob.expects(:perform).with(WorkflowStep::DataUploadWorkflow::Failed, 1).never
       DataUploadImportJob.perform(1)
     end
 
@@ -81,7 +79,6 @@ class DataUploadImportJobTest < ActiveSupport::TestCase
       @stub.expects(:encountered_error=).with do |error_string|
         error_string.include?('*Custom exception*') && error_string.include?('app/jobs/data_upload_import_job.rb:')
       end
-      DataUploadMailer.any_instance.expects(:notify_uploader_of_finished_import).once
       DataUploadImportJob.perform(1)
     end
 

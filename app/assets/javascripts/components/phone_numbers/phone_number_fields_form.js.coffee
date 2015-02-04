@@ -4,12 +4,12 @@ class PhoneNumbers.FieldsForm
 
   constructor: (@container, {@countrySelector, @codeSelector, @mobileSelector, @phoneSelector, @sameAsSelector} = {}) ->
     _.defaults @,
-      container       : $('#edit_user')
-      countrySelector : '#user_country_name'
+      container       : $('div[data-phone-fields-container]')
+      countrySelector : 'select[data-country-selector]'
       codeSelector    : '.country-calling-code'
-      mobileSelector  : '#user_mobile_number'
-      phoneSelector   : '#user_phone'
-      sameAsSelector  : '#user_decorator_mobile_same_as_phone'
+      mobileSelector  : 'input[data-mobile-number]'
+      phoneSelector   : 'input[data-phone]'
+      sameAsSelector  : 'input[data-same-as-phone-checkbox]'
 
     @findFields()
     @bindEvents()

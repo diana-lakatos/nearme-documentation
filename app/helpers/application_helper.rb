@@ -87,13 +87,17 @@ module ApplicationHelper
   def link_to_registration(constraint, secured_constraint, secure_links, options = {}, &block)
     options[:rel] = nil if secure_links
     constraint.merge!(secured_constraint) if secure_links
-    link_to(new_user_registration_url(constraint), options, &block)
+    options[:data] ||= {}
+    options[:data].merge!({ href: new_user_registration_url(constraint) })
+    link_to('#', options, &block)
   end
 
   def link_to_login(constraint, secured_constraint, secure_links, options = {}, &block)
     options[:rel] = nil if secure_links
     constraint.merge!(secured_constraint) if secure_links
-    link_to(new_user_session_url(constraint), options, &block)
+    options[:data] ||= {}
+    options[:data].merge!({ href: new_user_session_url(constraint) })
+    link_to('#', options, &block)
   end
 
   def get_return_to_url
@@ -258,5 +262,9 @@ module ApplicationHelper
       options[:class] = ''
       will_paginate collection, options
     end
+  end
+
+  def active_class(arg1, arg2)
+    'active' if arg1 == arg2
   end
 end

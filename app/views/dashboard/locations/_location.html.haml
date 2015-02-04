@@ -11,6 +11,6 @@
       = label_tag "transactable_location_id_#{location.id}", location.name
   .col-md-5.col-xs-5
     %span.location-options
-      =link_to "Edit", edit_dashboard_location_path(location), rel: "modal"
+      =link_to "Edit", '#', data: { modal: true, href: edit_dashboard_location_path(location) }
       %span.blue |
       =link_to "Remove", dashboard_location_path(location), remote: true, method: :delete, confirm: "Are you sure?"

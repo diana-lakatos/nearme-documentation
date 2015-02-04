@@ -1,0 +1,42 @@
+- title t('user_blog.titles.index')
+
+.dash-head.clearfix
+  %p= t 'user_blog.nav.index'
+
+  = link_to new_dashboard_blog_post_path, class: 'dash-head-btn' do
+    .btn.blue{class: @blog.enabled? ? '' : 'disabled'}
+      = t 'user_blog.buttons.add_post'
+
+  = link_to user_blog_posts_list_path(current_user), class: 'dash-head-btn', target: '_blank' do
+    .btn.dark-gray
+      = t 'user_blog.buttons.visit_blog'
+
+.dash-body
+  - if !@blog.enabled? || @user_blog_posts.empty?
+    .dash-body-container
+      = image_tag 'dashboard/exclamation.png'
+      %p.inline
+        - if !@blog.enabled?
+          = t 'user_blog.labels.blog_disabled'
+        - else
+          = t 'user_blog.labels.no_posts'
+
+  - else
+    .table-responsive
+      %table.table
+        %thead
+          %tr
+            %th= t 'user_blog.labels.name'
+            %th= t 'user_blog.labels.created_at'
+            %th= t 'user_blog.labels.published_at'
+            %th= t 'user_blog.labels.actions'
+
+        %tbody
+          - @user_blog_posts.each do |blog_post|
+            %tr
+              %td= blog_post.title_link
+              %td= blog_post.created_at
+              %td= blog_post.published_at
+              %td
+                = link_to 'Edit', edit_dashboard_blog_post_path(blog_post)
+                = link_to 'Delete', dashboard_blog_post_path(blog_post.id), method: :delete, confirm: t('user_blog.confirmations.delete')

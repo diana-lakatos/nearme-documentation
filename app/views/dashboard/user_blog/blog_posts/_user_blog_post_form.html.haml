@@ -1,0 +1,27 @@
+= f.input :title
+
+= f.input :content, as: :ckeditor, input_html: { ckeditor: { toolbar: 'simple' } }
+= f.input :excerpt, as: :ckeditor, input_html: { ckeditor: { toolbar: 'simple' } }
+
+= f.input :published_at, as: :string, readonly: true
+
+= f.input :slug
+
+= f.input :hero_image
+= @blog_post.decorate.image_preview(:hero_image)
+
+= f.input :author_name
+= f.input :author_biography
+= f.input :author_avatar_img
+= @blog_post.decorate.image_preview(:author_avatar_img)
+
+
+= javascript_include_tag 'vendor/jquery.min'
+= javascript_include_tag 'vendor/jquery-ui-1.10.4.custom.min'
+
+:javascript
+  $('#user_blog_post_published_at').datepicker({
+        showOtherMonths: true,
+        selectOtherMonths: false,
+        dateFormat: 'yy-mm-dd'
+    });

@@ -19,37 +19,38 @@
 = f.input :time_zone, input_html: { class: 'selectpicker', "data-live-search" => "true" } if only_inputs.empty? || only_inputs.include?(:time_zone)
 
 
-= f.input :country_name, :label => "Country", :as => :select, :collection => user_country_name_options, :selected => user_country_default(@country), input_html: { class: 'selectpicker', "data-live-search" => "true" }, :required => true, include_blank: true
+%div{'data-phone-fields-container' => true}
+  = f.input :country_name, :label => "Country", :as => :select, :collection => user_country_name_options, :selected => user_country_default(@country), input_html: { 'data-country-selector' => true, class: 'selectpicker', "data-live-search" => "true" }, :required => true, include_blank: true
 
-.row{:class => ('error' if f.object.errors[:phone].present?)}
-  .col-md-3
-    = f.label :phone, :class => 'control-label required' do
-      - if f.object.phone_required
-        %abbr{:title => "required"} *
-      Phone number
+  .row{:class => ('error' if f.object.errors[:phone].present?) }
+    .col-md-3
+      = f.label :phone, :class => 'control-label required' do
+        - if f.object.phone_required
+          %abbr{:title => "required"} *
+        Phone number
 
-  .col-md-9.input-container
-    .phone-number-country-code-field
-      .country-calling-code
-        = "+#{f.object.country.calling_code}" if f.object.country
-      = f.text_field :phone
-    - if f.object.errors[:phone].present?
-      .error-block= f.object.errors[:phone].to_sentence
+    .col-md-9.input-container
+      .phone-number-country-code-field
+        .country-calling-code
+          = "+#{f.object.country.calling_code}" if f.object.country
+        = f.text_field :phone, data: { 'phone' => true }
+      - if f.object.errors[:phone].present?
+        .error-block= f.object.errors[:phone].to_sentence
 
-.row.mobile-number-field{:class => ('error' if f.object.errors[:mobile_number].present?)}
-  .col-md-3
-    = f.label :mobile_number
-  .col-md-9.input-container
-    .phone-number-country-code-field
-      .country-calling-code
-        = "+#{f.object.country.calling_code}" if f.object.country
-      = f.text_field :mobile_number
-    = label_tag do
-      = check_box_tag "#{f.object.class.name.underscore}_mobile_same_as_phone", '1', (f.object.phone == f.object.mobile_number)
-      = "Same as phone"
+  .row.mobile-number-field{:class => ('error' if f.object.errors[:mobile_number].present?)}
+    .col-md-3
+      = f.label :mobile_number
+    .col-md-9.input-container
+      .phone-number-country-code-field
+        .country-calling-code
+          = "+#{f.object.country.calling_code}" if f.object.country
+        = f.text_field :mobile_number, data: { 'mobile-number' => true }
+      = label_tag do
+        = check_box_tag "#{f.object.class.name.underscore}_mobile_same_as_phone", '1', (f.object.phone == f.object.mobile_number), data: { 'same-as-phone-checkbox' => true }
+        = "Same as phone"
 
-    - if f.object.errors[:mobile_number].present?
-      .error-block= f.object.errors[:mobile_number].to_sentence
+      - if f.object.errors[:mobile_number].present?
+        .error-block= f.object.errors[:mobile_number].to_sentence
 
 = f.input :current_location, label: "Current location", as: :string if only_inputs.empty? || only_inputs.include?(:current_location)
 = f.input :company_name, label: "Company name", as: :string if only_inputs.empty? || only_inputs.include?(:company_name)
@@ -64,7 +65,6 @@
 = f.input :linkedin_url if only_inputs.empty? || only_inputs.include?(:linkedin_url)
 = f.input :facebook_url if only_inputs.empty? || only_inputs.include?(:facebook_url)
 = f.input :google_plus_url if only_inputs.empty? || only_inputs.include?(:google_plus_url)
-= f.input :biography, as: :text
 - if only_inputs.empty? || only_inputs.include?(:avatar)
   .row{:class => ('error' if f.object.errors[:avatar].present?)}
     .col-md-3

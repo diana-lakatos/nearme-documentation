@@ -2,7 +2,7 @@ FactoryGirl.define do
 
   factory :charge do
     association :user
-    association(:reference, :factory => :reservation_charge)
+    association(:payment)
     created_at { Time.zone.now }
     success true
     amount 1000

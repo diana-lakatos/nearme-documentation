@@ -30,10 +30,41 @@ class SmsNotifierTest < ActiveSupport::TestCase
   end
 
   context 'Message' do
+    context 'twilio client config' do
+
+      should 'get test config by default' do
+        SmsNotifier::Message::DummyTwilioClient.expects(:new).with('test_tc1', 'test_tc2')
+        @message = SmsNotifier::Message.new(:to => "1", :from => "2", :body => "test")
+        @message.send(:build_twilio_client)
+      end
+
+      should 'get default config if instance has blank twilio key' do
+        PlatformContext.current.instance.update_attribute(:test_twilio_consumer_key, '')
+        SmsNotifier::Message::DummyTwilioClient.expects(:new).with('AC83d13764f96b35292203c1a276326f5d', '709625e20011ace4b8b53a5a04160026')
+        @message = SmsNotifier::Message.new(:to => "1", :from => "2", :body => "test")
+        @message.send(:build_twilio_client)
+      end
+
+      should 'get default config if instance has blank twilio secret' do
+        PlatformContext.current.instance.update_attribute(:test_twilio_consumer_secret, '')
+        SmsNotifier::Message::DummyTwilioClient.expects(:new).with('AC83d13764f96b35292203c1a276326f5d', '709625e20011ace4b8b53a5a04160026')
+        @message = SmsNotifier::Message.new(:to => "1", :from => "2", :body => "test")
+        @message.send(:build_twilio_client)
+      end
+
+      should 'get default config if instance has blank twilio from number' do
+        PlatformContext.current.instance.update_attribute(:test_twilio_from_number, '')
+        SmsNotifier::Message::DummyTwilioClient.expects(:new).with('AC83d13764f96b35292203c1a276326f5d', '709625e20011ace4b8b53a5a04160026')
+        @message = SmsNotifier::Message.new(:to => "1", :from => "2", :body => "test")
+        @message.send(:build_twilio_client)
+      end
+
+    end
+
     context '#deliver' do
       setup do
         @sms_client = stub()
-        SmsNotifier::Message.twilio_client = stub(:account => stub(:sms => stub(:messages => @sms_client)))
+        SmsNotifier::Message.any_instance.stubs(:twilio_client).returns(stub(:account => stub(:sms => stub(:messages => @sms_client))))
       end
 
       should "trigger twilio delivery" do

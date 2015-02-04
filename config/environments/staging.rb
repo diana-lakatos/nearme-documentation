@@ -65,4 +65,5 @@ DesksnearMe::Application.configure do
   }
   config.root_secured = false
   config.secure_app = false
+  config.send_real_sms = true
 end

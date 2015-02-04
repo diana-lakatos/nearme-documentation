@@ -24,6 +24,28 @@ en:
       availability_rule:
         open: 'Open'
 
+      user_blog:
+        enabled: 'Enable Blog'
+        name: 'Name / Title'
+        header_image: 'HEADER'
+        header_text: 'HEADER TEXT'
+        header_motto: 'HEADER MOTTO'
+        header_logo: 'Header Logo'
+        header_icon: 'Header Icon'
+        facebook_app_id: 'Facebook app ID'
+
+      user_blog_post:
+        title: 'Post title'
+        published_at: 'Publish date'
+        slug: 'Slug'
+        hero_image: 'Hero image'
+        content: 'Content'
+        excerpt: 'Excerpt'
+        author_name: 'Author name'
+        author_biography: 'Author Bio'
+        author_avatar_img: 'Author avatar'
+        logo: 'Logo'
+
       theme:
         favicon_image: 'Favicon (16 x 16px or 32 x 32px)'
         hero_image: 'Hero image'
@@ -92,6 +114,19 @@ en:
         biography: 'About me'
         sms_notifications_enabled: 'Enable Text Message Notifications'
     placeholders:
+      user_blog:
+        name: 'What is the name of your blog?'
+        header_text: 'Enter the text for the header'
+        header_motto: 'Enter the header motto'
+        facebook_app_id: 'Enter Facebook app key number'
+
+      user_blog_post:
+        title: 'What is the title of the post?'
+        published_at: 'When will this be published'
+        slug: 'Enter a slug'
+        author_name: ''
+        author_bio: ''
+
       companies:
         name: 'Enter your business name'
         url: 'www.mycompany.com'
@@ -115,9 +150,9 @@ en:
         administrator: 'Default'
     hints:
       location:
-        name: 'A unique title that describes the location of the %{bookable_noun}.'
+        name: 'A unique title that describes the location.'
       company:
-        mailing_address: 'Checks for revenue accrued by your %{bookable_noun} will be sent to this address. Find out more about payments in the Support Center.'
+        mailing_address: 'Checks for revenue will be sent to this address. Find out more about payments in the Support Center.'
         paypal_email: 'If you specify a PayPal email, we will make a PayPal transfer instead of sending checks.'
 
     required:

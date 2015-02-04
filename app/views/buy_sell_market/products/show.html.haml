@@ -150,5 +150,7 @@
                     occasion we will do, soil can get loose from the pot. Brush off the plant or gently blow to remove
                     the loose soil from the plant and replace the soil around the plants root.
 
-    .vendor-profile
-      = render partial: 'administrator', locals: { product: @product, hidden: hidden}
+
+    .product-profile-badge
+      .vendor-profile
+        = render partial: 'administrator', locals: { product: @product, hidden: hidden}

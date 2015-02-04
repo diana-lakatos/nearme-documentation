@@ -2,12 +2,44 @@ class InstanceView < ActiveRecord::Base
   has_paper_trail
   belongs_to :instance_type
   belongs_to :instance
-  # attr_accessible :body, :path, :format, :handler, :locale, :partial
+  belongs_to :transactable_type
+
+  VIEW_VIEW = 'view'
+  EMAIL_VIEW = 'email'
+  SMS_VIEW = 'sms'
+  EMAIL_LAYOUT_VIEW = 'mail_layout'
+  VIEW_TYPES = [SMS_VIEW, EMAIL_VIEW, EMAIL_LAYOUT_VIEW, VIEW_VIEW]
+
+
+  scope :for_instance_type_id, ->(instance_type_id) {
+    where('instance_type_id IS NULL OR instance_type_id = ?', instance_type_id)
+  }
+
   scope :for_instance_id, ->(instance_id) {
     where('instance_id IS NULL OR instance_id = ?', instance_id)
   }
-  scope :for_instance_type_id, ->(instance_type_id) {
-    where('instance_type_id IS NULL OR instance_type_id = ?', instance_type_id)
+
+  scope :for_nil_transactable_type, ->  { where('transactable_type_id IS NULL') }
+
+
+  scope :for_transactable_type_id, -> (transactable_type_id) {
+    where('transactable_type_id IS NULL OR transactable_type_id = ?', transactable_type_id)
+  }
+
+  scope :custom_views, -> {
+    where(view_type: VIEW_VIEW)
+  }
+
+  scope :custom_smses, -> {
+    where(view_type: SMS_VIEW, format: 'text', handler: 'liquid')
+  }
+
+  scope :custom_emails, -> {
+    where(view_type: EMAIL_VIEW, format: ['text', 'html'], handler: 'liquid')
+  }
+
+  scope :custom_email_layouts, -> {
+    where(view_type: EMAIL_LAYOUT_VIEW, format: ['text', 'html'], handler: 'liquid')
   }
 
   validates_presence_of :body

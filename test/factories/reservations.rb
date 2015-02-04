@@ -21,6 +21,11 @@ FactoryGirl.define do
       payment_method 'credit_card'
     end
 
+    factory :reservation_with_remote_payment do
+      association :listing, factory: :listing_in_auckland
+      payment_method 'remote'
+    end
+
     factory :reservation_in_san_francisco do
       association(:listing, factory: :listing_in_san_francisco_address_components)
     end

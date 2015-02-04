@@ -1,0 +1,47 @@
+- no_footer!
+- no_listing_buttons!
+- title "List your #{@transactable_type.name}"
+
+.row-fluid
+  .span8.offset2
+    %h1
+      %span List Your First #{@transactable_type.name}
+
+#space_wizard.row-fluid
+  .span8.offset2
+    = simple_form_for @user, url: transactable_type_space_wizard_list_url(@transactable_type), html: { class: "form-horizontal new_company", multipart: true, id: 'list-space-flow-form' }, method: :post do |f|
+      = f.simple_fields_for :companies, @user.companies.first do |companies_form|
+        = companies_form.simple_fields_for :locations, @user.companies.first.locations.first do |locations_form|
+          = locations_form.simple_fields_for :listings, @user.companies.first.locations.first.listings.first do |listings_form|
+            - @form_components.each do |form_component|
+              %h2= form_component.name
+              %br
+              .box
+                - form_component.form_fields.each do |form_field|
+                  - model = form_field.keys.first
+                  - field = form_field[model]
+                  - if model == 'user'
+                    = render :partial => 'registrations/attributes', :locals => { f: f, only_inputs: [field.to_sym], country: @country }
+                  - elsif model == 'company'
+                    = render :partial => 'companies/company_form', :locals => { :f => companies_form, :company => companies_form.object, :only_inputs => [ field.to_sym ] }
+                  - elsif model == 'location'
+                    = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => locations_form.object, :only_inputs => [ field.to_sym ] }
+                  - elsif model == 'transactable'
+                    = render 'listings/listing_form', f: listings_form, listing: listings_form.object, only_inputs: [ field.to_sym ], photos: @photos
+            .hidden
+              - Money::Currency.table.values.each do |c|
+                %span{:id => "currency_#{c[:iso_code]}"}
+                  = c[:symbol]
+
+        .actions
+          .centerbuttons
+            = f.submit "Submit", :name => "commit", data: { disable_with: 'Creating...' }, :class => "listmydesk btn-medium"
+            = f.submit "Save as draft", :name => "save_as_draft", data: { disable_with: 'Saving...' }, :class => "saveasdraft btn-gray btn-medium"
+
+- content_for :script do
+  :javascript
+    $(function() {
+      new SpaceWizardSpaceForm($('form.new_company'))
+      new Dashboard.LocationController($('#list-space-flow-form'))
+      new Dashboard.ListingController($('#list-space-flow-form'))
+    });

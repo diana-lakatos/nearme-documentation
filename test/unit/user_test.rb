@@ -558,6 +558,7 @@ class UserTest < ActiveSupport::TestCase
       stub_mixpanel
       FactoryGirl.create(:instance)
       @user = FactoryGirl.create(:user)
+      Utils::DefaultAlertsCreator::SignUpCreator.new.create_notify_of_wrong_phone_number_email!
     end
 
     should 'notify user about invalid phone via email' do
@@ -571,14 +572,14 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should 'not spam user' do
-      UserMailer.expects(:notify_about_wrong_phone_number).returns(mailer_stub).once
-      5.times do
-        @user.notify_about_wrong_phone_number
+      assert_difference 'ActionMailer::Base.deliveries.size', 1 do
+        5.times do
+          @user.notify_about_wrong_phone_number
+        end
       end
     end
 
     should 'update timestamp of notification' do
-      UserMailer.expects(:notify_about_wrong_phone_number).returns(mailer_stub).once
       Timecop.freeze(Time.zone.now)
       @user.notify_about_wrong_phone_number
       assert_equal Time.zone.now.to_a, @user.notified_about_mobile_number_issue_at.to_a
@@ -768,6 +769,7 @@ class UserTest < ActiveSupport::TestCase
       should 'have active listing and no draft listing if has only one active listing metadata' do
         @user.expects(:update_instance_metadata).with({
           has_draft_listings: false,
+          has_draft_products: false,
           has_any_active_listings: true
         })
         @user.populate_listings_metadata!
@@ -777,6 +779,7 @@ class UserTest < ActiveSupport::TestCase
         FactoryGirl.create(:transactable, :draft => Time.zone.now, :location => @listing.location)
         @user.expects(:update_instance_metadata).with({
           has_draft_listings: true,
+          has_draft_products: false,
           has_any_active_listings: true
         })
         @user.populate_listings_metadata!
@@ -786,12 +789,14 @@ class UserTest < ActiveSupport::TestCase
         @listing.update_column(:draft, Time.zone.now)
         @user.expects(:update_instance_metadata).with({
           has_draft_listings: true,
+          has_draft_products: false,
           has_any_active_listings: false
         })
         @user.populate_listings_metadata!
         @listing.update_column(:draft, nil)
         @user.expects(:update_instance_metadata).with({
           has_draft_listings: false,
+          has_draft_products: false,
           has_any_active_listings: true
         })
         @user.populate_listings_metadata!
@@ -801,6 +806,7 @@ class UserTest < ActiveSupport::TestCase
         @listing.destroy
         @user.expects(:update_instance_metadata).with({
           has_draft_listings: false,
+          has_draft_products: false,
           has_any_active_listings: false
         })
         @user.populate_listings_metadata!
@@ -820,6 +826,7 @@ class UserTest < ActiveSupport::TestCase
         @user.expects(:update_instance_metadata).with({
           companies_metadata: [],
           has_draft_listings: false,
+          has_draft_products: false,
           has_any_active_listings: false
         })
         @user.reload.populate_companies_metadata!
@@ -827,6 +834,7 @@ class UserTest < ActiveSupport::TestCase
         @user.expects(:update_instance_metadata).with({
           companies_metadata: [@company.id],
           has_draft_listings: false,
+          has_draft_products: false,
           has_any_active_listings: true
         })
         @user.reload.populate_companies_metadata!
@@ -888,8 +896,8 @@ class UserTest < ActiveSupport::TestCase
     @photo  = FactoryGirl.create(:photo, :listing => @listing, :creator => @photo)
     @reservation = FactoryGirl.create(:reservation, :user => @user, :listing => @listing)
     @reservation_period = @reservation.periods.first
-    @reservation_charge = FactoryGirl.create(:reservation_charge, :reference => @reservation)
-    @charge = FactoryGirl.create(:charge, :reference => @reservation_charge)
+    @payment = FactoryGirl.create(:payment, :payable => @reservation)
+    @charge = FactoryGirl.create(:charge, :payment => @payment)
     @payment_transfer = FactoryGirl.create(:payment_transfer, :company_id => @company.id)
     @objects = [@user, @user_industry, @authentication, @company, @company_industry,
                 @location, @listing, @photo ]

@@ -1,5 +1,5 @@
 class Dashboard::HostRecurringBookingsController < Dashboard::BaseController
-  skip_before_filter :redirect_if_no_company
+  skip_before_filter :redirect_unless_registration_completed
   before_filter :find_listing, except: [:show]
   before_filter :find_recurring_booking, except: [:show]
 
@@ -20,8 +20,7 @@ class Dashboard::HostRecurringBookingsController < Dashboard::BaseController
       flash[:warning] = t('flash_messages.manage.reservations.reservation_already_confirmed')
     else
       if @recurring_booking.confirm
-        RecurringBookingMailer.enqueue.notify_guest_of_confirmation(@recurring_booking)
-        RecurringBookingMailer.enqueue.notify_host_of_confirmation(@recurring_booking)
+        WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::ManuallyConfirmed, @recurring_booking.id)
         notify_guest_about_recurring_booking_status_change
         event_tracker.confirmed_a_recurring_booking(@recurring_booking)
         track_recurring_booking_update_profile_informations
@@ -41,8 +40,7 @@ class Dashboard::HostRecurringBookingsController < Dashboard::BaseController
   def reject
     if @recurring_booking.reject(rejection_reason)
       ReservationIssueLogger.rejected_with_reason @recurring_booking, current_user if rejection_reason.present?
-      RecurringBookingMailer.enqueue.notify_guest_of_rejection(@recurring_booking)
-      RecurringBookingMailer.enqueue.notify_host_of_rejection(@recurring_booking)
+      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::Rejected, @recurring_booking.id)
       notify_guest_about_recurring_booking_status_change
       event_tracker.rejected_a_recurring_booking(@recurring_booking)
       track_recurring_booking_update_profile_informations
@@ -56,8 +54,7 @@ class Dashboard::HostRecurringBookingsController < Dashboard::BaseController
 
   def host_cancel
     if @recurring_booking.host_cancel
-      RecurringBookingMailer.enqueue.notify_guest_of_cancellation_by_host(@recurring_booking)
-      RecurringBookingMailer.enqueue.notify_host_of_cancellation_by_host(@recurring_booking)
+      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::HostCancelled, @recurring_booking.id)
       notify_guest_about_recurring_booking_status_change
       event_tracker.cancelled_a_recurring_booking(@recurring_booking, { actor: 'host' })
       track_recurring_booking_update_profile_informations
@@ -94,5 +91,14 @@ class Dashboard::HostRecurringBookingsController < Dashboard::BaseController
     event_tracker.updated_profile_information(@recurring_booking.owner)
     event_tracker.updated_profile_information(@recurring_booking.host)
   end
+
+  def workflow_alerts_hash
+    {
+      enquirer: @recurring_booking.owner,
+      lister: @recurring_booking.host,
+      data: { recurring_booking: @recurring_booking.id, listing: @recurring_booking.listing.id, reservation: recurring_booking.reservations.first.id }
+    }
+  end
+
 end
 

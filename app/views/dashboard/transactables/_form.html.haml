@@ -1,6 +1,6 @@
 .row.edit-locations
   .col-md-3.add-new
-    = link_to new_dashboard_location_path, rel: "modal" do
+    = link_to '#', data: { modal: true, href: new_dashboard_location_path } do
       = image_tag 'themes/buy_sell/icon-cross.png'
       %span.blue Add New Location
   .col-md-3
@@ -40,7 +40,7 @@
       %br/
       .span= t('manage.listings.photos.waiting_for_photo_processing')
     = new_file_upload_input("#{f.object_name}[photos_attributes][0][image]",
-                                    manage_photos_path,
+                                    dashboard_photos_path,
                                     Photo.new.image.thumbnail_dimensions[:medium],
                                     "Add Photo",
                                     :required => true,
@@ -53,7 +53,7 @@
         - @photos.each_with_index do |photo|
           = get_fileupload_photo_html(photo.image_url(:medium),
                                       destroy_space_wizard_photo_path(:id => photo.id),
-                                      edit_manage_photo_path(photo),
+                                      edit_dashboard_photo_path(photo),
                                       :div,
                                       id: photo.id) do
             -# text_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][caption]", photo.caption, :placeholder => t('ui.photo_uploader.caption')

@@ -50,6 +50,7 @@ DesksnearMe::Application.configure do
     :port => config.redis_settings["port"].to_i,
     :namespace => "cache"
   }
+  config.send_real_sms = true
 
   # for ELB management
   AWS.config(access_key_id: 'AKIAJYA2ZJ5BQTU5QBMA',

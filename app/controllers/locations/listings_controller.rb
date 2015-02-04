@@ -21,8 +21,8 @@ class Locations::ListingsController < ApplicationController
   end
 
   def redirect_to_location_if_show_page_disabled
-    unless TransactableType.pluck(:show_page_enabled).first
-      redirect_to location_path(@location, @listing), :status => :moved_permanently
+    unless @listing.transactable_type.show_page_enabled
+      redirect_to transactable_type_location_path(@listing.transactable_type, @location, @listing), status: :found
     end
   end
 

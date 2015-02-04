@@ -47,9 +47,11 @@ gem 'amatch'
 gem 'ri_cal'
 gem 'ffaker', '~> 1.16'
 gem 'draper'
+gem 'counter_culture'
 
 gem 'ice_cube'
 gem 'recurring_select', path: 'vendor/gems/recurring_select'
+
 
 gem 'i18n-active_record',
     git: 'git://github.com/svenfuchs/i18n-active_record.git',
@@ -124,6 +126,8 @@ gem 'unicorn-worker-killer'
 
 gem 'activemerchant'
 gem 'iso_country_codes'
+
+gem 'shippo'
 
 gem 'spree', github: 'spree/spree', branch: '2-2-stable'
 #gem 'spree_auth_devise', github: 'spree/spree_auth_devise', branch: '2-2-stable'

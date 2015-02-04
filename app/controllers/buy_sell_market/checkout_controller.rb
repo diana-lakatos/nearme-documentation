@@ -29,7 +29,7 @@ class BuySellMarket::CheckoutController < ApplicationController
       return
 
       begin
-        @charge_info = @order.near_me_payments.paid.first.charge_attempts.successful.first
+        @charge_info = @order.near_me_payments.paid.first.charges.successful.first
       rescue
         @charge_info = nil
       end

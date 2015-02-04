@@ -3,7 +3,6 @@ class ProductForm < Form
   # attr_accessor :name, :description, :price, :category
   # attr_accessor :quantity
   attr_accessor :shipping_methods
-  attr_accessor :draft
   attr_reader :product
 
   # Validations:
@@ -12,8 +11,38 @@ class ProductForm < Form
   validates :price, presence: true, numericality: { greater_than: 0 }
   validates :quantity, numericality: { only_integer: true }, presence: true
   validate :validate_images, :validate_shipping_methods
+  validates_presence_of :weight, :if => :shippo_enabled
+  validates_presence_of :depth, :if => :shippo_enabled
+  validates_presence_of :width, :if => :shippo_enabled
+  validates_presence_of :height, :if => :shippo_enabled
+  validate  :list_of_countries_or_states_cannot_be_empty
 
-  def_delegators :@product, :id, :price, :price=, :name, :name=, :description, :id=, :description=
+  def_delegators :@product, :id, :price, :price=, :name, :name=, :description, :id=, :description=,
+    :shippo_enabled=, :shippo_enabled, :draft?, :draft=, :draft
+
+  def_delegators :'@product.master', :weight=, :weight, :depth=, :depth,
+    :width=, :width, :height=, :height
+
+  def list_of_countries_or_states_cannot_be_empty
+    added_to_base = false
+    if self.try(:shipping_methods).present?
+      self.shipping_methods.each do |shipping_method|
+        if shipping_method.try(:zones).present?
+          shipping_method.zones.each do |zone|
+            if zone.members.empty?
+              if !added_to_base
+                # We add this to prevent the form from being saved
+                self.errors.add(:base, :zone_incomplete)
+                added_to_base = true
+              end
+              # And we add this to get the error message in the form
+              zone.errors.add(:kind, :members_missing)
+            end
+          end
+        end
+      end
+    end
+  end
 
   def quantity
     @quantity ||= @stock_item.stock_movements.sum(:quantity)
@@ -44,7 +73,9 @@ class ProductForm < Form
   end
 
   def validate_shipping_methods
-    errors.add(:shipping_methods) if @shipping_methods.blank? || !@shipping_methods.map(&:valid?).all?
+    if !@product.shippo_enabled?
+      errors.add(:shipping_methods) if @shipping_methods.blank? || !@shipping_methods.map(&:valid?).all?
+    end
   end
 
   def initialize(product, options={})
@@ -60,11 +91,8 @@ class ProductForm < Form
   end
 
   def submit(params)
-    validate = params[:draft].nil?
-
     store_attributes(params)
-
-    if !validate || valid?
+    if valid?
       save!
       true
     else
@@ -74,24 +102,27 @@ class ProductForm < Form
   end
 
   def save!(options={})
-    validate = options[:validate]
-    @user.save!(validate: validate)
-    @company.save!(validate: validate)
-    @product.save!(validate: validate)
+    @user.save!(validate: !draft?)
+    @company.save!(validate: !draft?)
+    @product.save!(validate: !draft?)
     @product.images.each { |i| i.save!(validate: false) }
-    @product.classifications.each { |x| x.save!(validate: validate) }
-    @stock_location.save!(validate: validate)
-    @stock_item.save!(validate: validate)
-    @shipping_category.save!(validate: validate)
-    @shipping_methods.each do |shipping_method|
-      shipping_method.save!(validate: validate)
-      shipping_method.zones.each do |zone|
-        zone.company = @company
-        zone.save!(validate: validate)
-        zone.members.each(&:save)
+    @product.classifications.each { |x| x.save!(validate: !draft?) }
+    @stock_location.save!(validate: !draft?)
+    @stock_item.save!(validate: !draft?)
+    @shipping_category.save!(validate: !draft?)
+    # We do not touch shipping methods (which are auto-created) if the
+    # product is Shippo-enabled
+    if !@product.shippo_enabled?
+      @shipping_methods.each do |shipping_method|
+        shipping_method.save!(validate: !draft?)
+        shipping_method.zones.each do |zone|
+          zone.company = @company
+          zone.save!(validate: !draft?)
+          zone.members.each(&:save)
+        end
       end
+      @company.shipping_methods << @shipping_methods
     end
-    @company.shipping_methods << @shipping_methods
   end
 
   def category=(taxon_ids)

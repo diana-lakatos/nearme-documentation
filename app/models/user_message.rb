@@ -84,13 +84,13 @@ class UserMessage < ActiveRecord::Base
 
   def send_notification
     return if thread_context_type.blank?
-    UserMessageSmsNotifier.notify_user_about_new_message(self.decorate).deliver
+    WorkflowStepJob.perform(WorkflowStep::UserMessageWorkflow::Created, self.id)
     return if thread_context_type != 'Transactable'
 
     if author == thread_context.administrator
-      UserMessageMailer.enqueue.email_message_from_host(self)
+      WorkflowStepJob.perform(WorkflowStep::UserMessageWorkflow::TransactableMessageFromLister, self.id)
     else
-      UserMessageMailer.enqueue.email_message_from_guest(self)
+      WorkflowStepJob.perform(WorkflowStep::UserMessageWorkflow::TransactableMessageFromEnquirer, self.id)
     end
   end
 

@@ -18,15 +18,19 @@ Feature: As a user of the site
       And the transactable_type_listing exists
 
   Scenario: A user can add new location
-    Given I am adding new transactable
+    Given a location exists with company: the company
+      And a transactable exists with location: the location
+      And I am adding new transactable
      When I add a new location
       And I fill location form with valid details
       And I submit the location form
-      And I should see "Great, your new Desk has been added!"
+      And I should see "Great, your new location has been added!"
      Then Location with my details should be created
 
   Scenario: A user can edit existing location
+
     Given the location exists with company: the company
+      And a transactable exists with location: the location
      And I am adding new transactable
 
      When I edit first location
@@ -34,13 +38,14 @@ Feature: As a user of the site
       And I submit the location form
      Then I should see "Great, your location has been updated!"
       And the location should be updated
-      And I remove first location
+      And I remove all locations
       And I should see "You've deleted"
      Then the location should not be pickable
 
   Scenario: A user can add new listing
     Given the location exists with company: the company
-     And I am browsing transactables
+      And a transactable exists with location: the location
+      And I am browsing transactables
      When I add a new transactable
       And I fill listing form with valid details
       And I submit the transactable form
@@ -48,7 +53,9 @@ Feature: As a user of the site
      Then Listing with my details should be created
 
   Scenario: A user can add locations and listings via bulk upload
-    Given TransactableType is for bulk upload
+    Given the location exists with company: the company
+      And a transactable exists with location: the location
+      And TransactableType is for bulk upload
       And I am browsing bulk upload transactables
      When I upload csv file with locations and transactables
      Then I should see "Import has been scheduled. You'll receive an email when it's done."
@@ -104,4 +111,12 @@ Feature: As a user of the site
         | Day | Availabile | Open Time | Close Time |
         | 1   | Yes        | 9:00      | 17:00      |
         | 2   | Yes        | 9:00      | 17:00      |
+
+  Scenario: A user can't manage blog if blogging is disabled on instance
+    Given I visit blog section of dashboard
+    Then I should see "Marketplace owner has disabled blog functionality"
+
+  Scenario: A user can manage blog if blogging is enabled on instance
+    Given user blogging is enabled for my instance
+    Then I should be able to enable my blog
 

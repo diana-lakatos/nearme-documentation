@@ -5,6 +5,9 @@ Feature: Hacker Penetrates System
 
   Scenario: A hacker cant edit a transactable
     Given a user: "wally" exists
+    And a company exists with creator: a user: "wally"
+    And a location exists with company: the company
+    And a transactable exists with location: the location
     And a transactable exists with creator: the user "wally"
     And a user: "hacker" exists
     And I am logged in as the user: "hacker"

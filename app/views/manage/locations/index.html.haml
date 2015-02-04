@@ -13,10 +13,11 @@
           %ul.location-and-listings
             - location.listings.each do |listing|
               = render :partial => 'manage/listings/listing_name_with_link', :locals => { :location => location, :listing => listing }
-            %li.listing
-              = link_to new_manage_location_listing_path(location), :class => 'text-right' do
-                .links
-                  %span.icon.ico-plus
-                  %span.text
-                    Add #{platform_context.bookable_noun}
-                .clearfix
+            - platform_context.instance.transactable_types.each do |tt|
+              %li.listing
+                = link_to new_manage_location_transactable_type_listing_path(location, tt), :class => 'text-right' do
+                  .links
+                    %span.icon.ico-plus
+                    %span.text
+                      Add #{tt.bookable_noun}
+                  .clearfix

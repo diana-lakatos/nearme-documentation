@@ -15,7 +15,7 @@ class PaymentTest < ActiveSupport::TestCase
         @reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
         Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:charge)
         ReservationChargeTrackerJob.expects(:perform_later).with(@reservation.date.end_of_day, @reservation.id).once
-        @reservation.reservation_charges.create!(
+        @reservation.payments.create!(
           subtotal_amount: 105.24,
           service_fee_amount_guest: 23.18
         )
@@ -27,132 +27,132 @@ class PaymentTest < ActiveSupport::TestCase
 
     setup do
       @charge = FactoryGirl.create(:charge, :response => 'charge_response')
-      @reservation_charge = @charge.reference
-      @reservation_charge.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
-      @reservation_charge.reference.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
+      @payment = @charge.payment
+      @payment.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
+      @payment.payable.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
     end
 
     should 'find the right charge if there were failing attempts' do
       @charge.update_attribute(:success, false)
-      FactoryGirl.create(:charge, :reference => @reservation_charge, :response => { id: "id" })
+      FactoryGirl.create(:charge, :payment => @payment, :response => { id: "id" })
       Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).once.returns(Refund.new(:success => true))
-      @reservation_charge.refund
-      assert @reservation_charge.reload.refunded?
+      @payment.refund
+      assert @payment.reload.refunded?
     end
 
     should 'not be refunded if failed' do
       Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).with do |amount, reference, charge_response|
         amount = 0; charge_response = { id: nil }
       end.returns(Refund.new(:success => false))
-      @reservation_charge.refund
-      refute @reservation_charge.reload.refunded?
+      @payment.refund
+      refute @payment.reload.refunded?
     end
 
     should 'return if successful charge was not returned' do
       Billing::Gateway::Incoming.any_instance.expects(:refund).never
       @charge.update_attribute(:success, false)
-      @reservation_charge.refund
-      refute @reservation_charge.reload.refunded?
+      @payment.refund
+      refute @payment.reload.refunded?
     end
 
-    should 'return if reservation_charge was already refunded' do
+    should 'return if payment was already refunded' do
       Billing::Gateway::Incoming.any_instance.expects(:refund).never
-      @reservation_charge.update_attribute(:refunded_at, Time.zone.now)
-      @reservation_charge.refund
+      @payment.update_attribute(:refunded_at, Time.zone.now)
+      @payment.refund
     end
 
-    should 'return if reservation_charge was not paid' do
+    should 'return if payment was not paid' do
       Billing::Gateway::Incoming.any_instance.expects(:refund).never
-      @reservation_charge.update_attribute(:paid_at, nil)
-      @reservation_charge.refund
-      refute @reservation_charge.reload.refunded?
+      @payment.update_attribute(:paid_at, nil)
+      @payment.refund
+      refute @payment.reload.refunded?
     end
 
     should 'refund via billing gateway with correct arguments if all ok' do
       Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).once.returns(Refund.new(:success => true))
-      @reservation_charge.refund
+      @payment.refund
     end
 
     context 'advanced cancellation policy penalty' do
       setup do
-        @reservation_charge.update_attribute(:cancellation_policy_penalty_percentage, 60)
-        @reservation_charge.update_attribute(:subtotal_amount_cents, 1000)
-        @reservation_charge.update_attribute(:service_fee_amount_guest_cents, 100)
-        @reservation_charge.update_attribute(:service_fee_amount_host_cents, 150)
+        @payment.update_attribute(:cancellation_policy_penalty_percentage, 60)
+        @payment.update_attribute(:subtotal_amount_cents, 1000)
+        @payment.update_attribute(:service_fee_amount_guest_cents, 100)
+        @payment.update_attribute(:service_fee_amount_host_cents, 150)
       end
 
       should 'refund proper amount when guest cancels' do
-        @reservation_charge.reference.update_column(:state, 'cancelled_by_guest')
+        @payment.payable.update_column(:state, 'cancelled_by_guest')
         Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).once.returns(Refund.new(:success => true))
-        assert_equal 1000, @reservation_charge.subtotal_amount_cents
+        assert_equal 1000, @payment.subtotal_amount_cents
 
-        assert_equal 400, @reservation_charge.amount_to_be_refunded
-        Refund.create(:success => true, :amount => 400, :reference => @reservation_charge)
+        assert_equal 400, @payment.amount_to_be_refunded
+        Refund.create(:success => true, :amount => 400, :payment => @payment)
 
-        @reservation_charge.refund
-        assert @reservation_charge.reload.refunded?
-        assert_equal 0, @reservation_charge.final_service_fee_amount_host_cents
-        assert_equal 100, @reservation_charge.final_service_fee_amount_guest_cents
-        assert_equal 600, @reservation_charge.subtotal_amount_cents_after_refund
+        @payment.refund
+        assert @payment.reload.refunded?
+        assert_equal 0, @payment.final_service_fee_amount_host_cents
+        assert_equal 100, @payment.final_service_fee_amount_guest_cents
+        assert_equal 600, @payment.subtotal_amount_cents_after_refund
       end
 
       should 'refund proper amount when host cancels' do
-        @reservation_charge.reference.update_column(:state, 'cancelled_by_host')
+        @payment.payable.update_column(:state, 'cancelled_by_host')
         Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).once.returns(Refund.new(:success => true))
-        assert_equal 1000, @reservation_charge.subtotal_amount_cents
+        assert_equal 1000, @payment.subtotal_amount_cents
 
-        assert_equal 1100, @reservation_charge.amount_to_be_refunded
-        Refund.create(:success => true, :amount => 1100, :reference => @reservation_charge)
+        assert_equal 1100, @payment.amount_to_be_refunded
+        Refund.create(:success => true, :amount => 1100, :payment => @payment)
 
-        @reservation_charge.refund
-        assert @reservation_charge.reload.refunded?
-        assert_equal 0, @reservation_charge.final_service_fee_amount_host_cents
-        assert_equal 0, @reservation_charge.final_service_fee_amount_guest_cents
-        assert_equal 0, @reservation_charge.subtotal_amount_cents_after_refund
+        @payment.refund
+        assert @payment.reload.refunded?
+        assert_equal 0, @payment.final_service_fee_amount_host_cents
+        assert_equal 0, @payment.final_service_fee_amount_guest_cents
+        assert_equal 0, @payment.subtotal_amount_cents_after_refund
       end
     end
 
     context 'cancelation policy penalty' do
 
       setup do
-        @reservation_charge.update_attribute(:cancellation_policy_penalty_percentage, 60)
+        @payment.update_attribute(:cancellation_policy_penalty_percentage, 60)
       end
 
       should 'return have subtotal amount after refund equal to subtotal amount if no refund has been made' do
-        assert_equal 10000, @reservation_charge.subtotal_amount_cents_after_refund
+        assert_equal 10000, @payment.subtotal_amount_cents_after_refund
       end
 
       should 'calculate proper number for amount_to_be_refunded if cancelled by guest' do
-        @reservation_charge.reference.update_column(:state, 'cancelled_by_guest')
-        assert_equal 10000, @reservation_charge.subtotal_amount_cents
-        assert_equal 4000, @reservation_charge.amount_to_be_refunded
+        @payment.payable.update_column(:state, 'cancelled_by_guest')
+        assert_equal 10000, @payment.subtotal_amount_cents
+        assert_equal 4000, @payment.amount_to_be_refunded
       end
 
       should 'calculate proper number for amount_to_be_refunded if cancelled by host' do
-        @reservation_charge.reference.update_column(:state, 'cancelled_by_host')
-        assert_equal 10000, @reservation_charge.subtotal_amount_cents
-        assert_equal 11000, @reservation_charge.amount_to_be_refunded
+        @payment.payable.update_column(:state, 'cancelled_by_host')
+        assert_equal 10000, @payment.subtotal_amount_cents
+        assert_equal 11000, @payment.amount_to_be_refunded
       end
 
       should 'trigger refund method with proper amount when guest cancels ' do
-        @reservation_charge.reference.update_column(:state, 'cancelled_by_guest')
+        @payment.payable.update_column(:state, 'cancelled_by_guest')
         Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).once.with do |amount, reference, response|
           amount == 4000
         end.returns(Refund.new(:success => true))
-        @reservation_charge.refund
+        @payment.refund
       end
 
       should 'trigger refund method with proper amount when host cancels ' do
-        @reservation_charge.reference.update_column(:state, 'cancelled_by_host')
+        @payment.payable.update_column(:state, 'cancelled_by_host')
         Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).once.with do |amount, reference, response|
           amount == 11000
         end.returns(Refund.new(:success => true))
-        @reservation_charge.refund
+        @payment.refund
       end
 
       should 'calculate proper subtotal amount cents after refund once refund has been issued' do
-        @refund = FactoryGirl.create(:refund, reference: @reservation_charge, amount: 3000)
-        assert_equal @reservation_charge.subtotal_amount_cents - 3000, @reservation_charge.subtotal_amount_cents_after_refund
+        @refund = FactoryGirl.create(:refund, payment: @payment, amount: 3000)
+        assert_equal @payment.subtotal_amount_cents - 3000, @payment.subtotal_amount_cents_after_refund
       end
 
     end
@@ -161,52 +161,52 @@ class PaymentTest < ActiveSupport::TestCase
   context 'charge on save' do
 
     setup do
-      @reservation_charge = FactoryGirl.build(:reservation_charge_unpaid)
-      @reservation_charge.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
-      @reservation_charge.reference.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
+      @payment = FactoryGirl.build(:payment_unpaid)
+      @payment.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
+      @payment.payable.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
     end
 
     should 'trigger capture on save' do
-      @reservation_charge.expects(:capture)
-      @reservation_charge.save!
+      @payment.expects(:capture)
+      @payment.save!
     end
 
     should 'not charge again if already charged' do
       Billing::Gateway::Incoming.any_instance.expects(:charge).never
-      @reservation_charge.stubs(:paid_at).returns(Time.zone.now)
-      @reservation_charge.capture
+      @payment.stubs(:paid_at).returns(Time.zone.now)
+      @payment.capture
     end
 
   end
 
   context 'foreign keys' do
     setup do
-      @reservation_charge = FactoryGirl.create(:reservation_charge)
+      @payment = FactoryGirl.create(:payment)
     end
 
     should 'assign correct key immediately' do
-      assert @reservation_charge.company_id.present?
-      assert_equal @reservation_charge.company_id, @reservation_charge.reference.company_id
+      assert @payment.company_id.present?
+      assert_equal @payment.company_id, @payment.payable.company_id
     end
 
     context 'update company' do
 
       should 'assign correct company_id' do
-        @reservation_charge.reference.location.update_attribute(:company_id, @reservation_charge.reference.location.company_id + 1)
-        assert_equal @reservation_charge.reference.location.company_id, @reservation_charge.reload.company_id
+        @payment.payable.location.update_attribute(:company_id, @payment.payable.location.company_id + 1)
+        assert_equal @payment.payable.location.company_id, @payment.reload.company_id
       end
 
       should 'assign correct instance_id' do
         instance = FactoryGirl.create(:instance)
-        @reservation_charge.reference.company.update_attribute(:instance_id, instance.id)
+        @payment.payable.company.update_attribute(:instance_id, instance.id)
         PlatformContext.any_instance.stubs(:instance).returns(instance)
-        assert_equal instance.id, @reservation_charge.reload.instance_id
+        assert_equal instance.id, @payment.reload.instance_id
       end
 
       should 'assign correct partner_id' do
         partner = FactoryGirl.create(:partner)
-        @reservation_charge.company.update_attribute(:partner_id, partner.id)
-        assert_equal partner.id, @reservation_charge.reload.partner_id
+        @payment.company.update_attribute(:partner_id, partner.id)
+        assert_equal partner.id, @payment.reload.partner_id
       end
 
     end

@@ -5,10 +5,11 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
   setup do
     stub_what_has_to_be_stubbed
     @instance = Instance.default_instance
-    @instance.update_attribute(:service_fee_host_percent, 10)
-    @instance.update_attribute(:service_fee_guest_percent, 15)
-    @instance.update_attribute(:payment_transfers_frequency, 'daily')
     @listing = FactoryGirl.create(:transactable, :daily_price => 25.00)
+
+    @listing.transactable_type.update_attribute(:service_fee_host_percent, 10)
+    @listing.transactable_type.update_attribute(:service_fee_guest_percent, 15)
+    @instance.update_attribute(:payment_transfers_frequency, 'daily')
 
     FactoryGirl.create(:paypal_instance_payment_gateway)
 
@@ -33,9 +34,9 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
 
     post_via_redirect "/listings/#{FactoryGirl.create(:transactable).id}/reservations", booking_params
 
-    @reservation_charge = @reservation.reservation_charges.last
-    assert @reservation_charge.paid?
-    charge = @reservation_charge.charge_attempts.new(amount: @reservation_charge.total_amount_cents, success: true)
+    @payment = @reservation.payments.last
+    assert @payment.paid?
+    charge = @payment.charges.new(amount: @payment.total_amount_cents, success: true)
     assert_equal 2875, charge.amount
 
     PaymentTransferSchedulerJob.perform

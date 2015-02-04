@@ -30,7 +30,7 @@
     .actions
       = f.submit 'Sign up', :class => 'desksnearme submit', data: {:disable_with => "Signing up..."}, :tabindex => '4'
 
-.text-center.already-a-user= link_to('Already a user?', new_user_session_path(:return_to => params[:return_to]), :rel => "modal.sign-up-modal")
+.text-center.already-a-user= link_to('Already a user?', '#', data: { modal: true, href: new_user_session_path(:return_to => params[:return_to]), 'modal-class' => 'sign-up-modal' } )
 
 - if user_auth_provider
   .signup-provider

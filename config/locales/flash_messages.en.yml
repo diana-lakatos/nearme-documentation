@@ -13,9 +13,9 @@ en:
       blog_instance:
         blog_instance_updated: 'Blog settings were updated.'
       blog_posts:
-        blog_post_added: 'New blog post added.'
-        blog_post_deleted: 'Blog post deleted.'
-        blog_post_updated: 'Blog post updated.'
+        blog_post_added: 'New blog post has been added.'
+        blog_post_deleted: 'Blog post has been deleted.'
+        blog_post_updated: 'Blog post has been updated.'
     buy_sell:
       configuration_saved_successful: 'Configuration saved successfully.'
       commissions_saved_successful: 'Commissions saved successfully.'
@@ -39,6 +39,8 @@ en:
       taxonomy_deleted: 'Taxonomy deleted.'
       taxon_updated: 'Taxon updated.'
       no_payment_gateway: 'The seller does not support payments for the selected country.'
+    user_blog:
+      settings_saved: 'Blog settings has been saved.'
     dashboard:
       add_your_company: "Please add your company first"
       company_not_valid: "Please add necessary details to your company first."
@@ -62,14 +64,35 @@ en:
           deleted: 'Email template has been deleted.'
           invalid: 'Not a valid email template.'
           updated: 'Email template has been updated.'
+        email_layout_templates:
+          created: 'Email layout template has been created.'
+          deleted: 'Email layout template has been deleted.'
+          invalid: 'Not a valid email layout template.'
+          updated: 'Email layout template has been updated.'
         transactable_types:
           created: 'Transactable Type created.'
           updated: 'Transactable Type updated.'
           deleted: 'Transactable Type deleted.'
+        sms_templates:
+          created: 'Sms template has been created.'
+          deleted: 'Sms template has been deleted.'
+          cannot_be_deleted: 'Sms template cannot be deleted because it is used in at least one workflow alert.'
+          invalid: 'Not a valid sms template.'
+          updated: 'Sms template has been updated.'
         custom_attributes:
           created: 'New attribute created.'
           updated: 'Attribute updated.'
           deleted: 'Attribute deleted.'
+        workflows:
+          updated: 'Workflow has been updated.'
+        workflow_steps:
+          created: 'Workflow step has been created.'
+          deleted: 'Workflow step has been deleted.'
+          updated: 'Workflow step has been updated.'
+        workflow_alerts:
+          created: 'Workflow alert has been created.'
+          deleted: 'Workflow alert has been deleted.'
+          updated: 'Workflow alert has been updated.'
         waiver_agreement_templates:
           created: 'Waiver agreement template has been created.'
           already_created: 'Waiver agreement template has been already created.'
@@ -100,7 +123,7 @@ en:
       listing_inactive: "This listing is inactive. Displaying other listings in this location."
     locations:
       listing_removed: "This listing has been removed. Displaying other listings near %{address}."
-      no_listings: "There aren't any listings at that location. Check out some other %{bookable_noun_plural}!"
+      no_listings: "There aren't any listings at that location. Check out some other locations."
       browsing_no_listings: "There aren't any active listings at that location. Other users will be redirected to search page."
     dashboard:
       order:
@@ -183,7 +206,7 @@ en:
         listing_updated: "Great, your listing's details have been updated."
       locations:
         add_your_company: "Please add your company first"
-        space_added: "Great, your new %{bookable_noun} has been added!"
+        space_added: "Great, your new location has been added!"
         space_deleted: "You've deleted %{name}"
         space_not_deleted: "We couldn't delete %{name}"
         updated: "Great, your location has been updated!"
@@ -211,6 +234,8 @@ en:
         user_deleted: "You've removed %{name} from %{company_name}"
         user_does_not_exists: "A user does not exist with the specified email address."
         user_is_not_in_company: "You can't delete user which is not in your company."
+      reviews:
+        review_deleted: 'Review has been deleted.'
 
     manage:
       order:
@@ -293,7 +318,7 @@ en:
         listing_updated: "Great, your listing's details have been updated."
       locations:
         add_your_company: "Please add your company first"
-        space_added: "Great, your new %{bookable_noun} has been added!"
+        space_added: "Great, your new location has been added!"
         space_deleted: "You've deleted %{name}"
         space_not_deleted: "We couldn't delete %{name}"
         space_updated: "Great, your %{bookable_noun} has been updated!"
@@ -349,7 +374,7 @@ en:
       reservation_made: "Your reservation has been made! %{message}"
       reservation_not_confirmed: "Your reservation could not be confirmed."
     search_notifications:
-      you_will_be_notified: "You will be notified when a %{bookable_noun} is added at this location."
+      you_will_be_notified: "You will be notified when this location will be added."
       you_will_not_be_notified: "We could not add you to the notifcation list because your email \"%{email}\" %{errors}"
     product:
       complete_fields: "Please complete all fields!"

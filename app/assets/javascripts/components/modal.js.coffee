@@ -22,12 +22,12 @@ class @Modal
   # A custom class can be specified on the modal:
   #   <a href="modalurl" rel="modal.my-class">link</a>
   @listen : ->
+    $('body').delegate 'a[data-modal]', 'click', (e) =>
+      @modalClicked(e)
+      false
+
     $('body').delegate 'a[rel*="modal"]', 'click', (e) =>
-      e.preventDefault()
-      target = $(e.currentTarget)
-      modalClass = matches[1] if matches = target.attr("rel").match(/modal\.([^\s]+)/)
-      ajaxOptions = { url: target.attr("href"), data: target.data() }
-      @load(ajaxOptions, modalClass)
+      @modalClickedLegacy(e)
       false
 
     $('body').delegate 'form[data-modal]', 'submit', (e) =>
@@ -42,6 +42,23 @@ class @Modal
 
     $(document).on 'ajaxSuccess', '.modal-content form', (event, data) =>
       Modal.showContent(data)
+
+  @modalClickedLegacy : (e) ->
+    e.preventDefault()
+    target = $(e.currentTarget)
+    modalClass = matches[1] if matches = target.attr("rel").match(/modal\.([^\s]+)/)
+    ajaxOptions = { url: target.attr("href"), data: target.data() }
+    @load(ajaxOptions, modalClass)
+    false
+
+  @modalClicked : (e) ->
+    e.preventDefault()
+    target = $(e.currentTarget)
+    modalClass = null
+    if target.is('a[data-modal-class]')
+      modalClass = target.attr('data-modal-class')
+    ajaxOptions = { url: target.attr("data-href"), data: target.attr('data-ajax-options') }
+    @load(ajaxOptions, modalClass)
 
   # Show the loading status on the modal
   @showLoading : ->

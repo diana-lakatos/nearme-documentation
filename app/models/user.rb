@@ -2,8 +2,7 @@ class User < ActiveRecord::Base
   has_paper_trail :ignore => [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
                               :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
                               :unlock_token, :locked_at, :google_analytics_id, :browser, :browser_version, :platform,
-                              :guest_rating_average, :guest_rating_count, :host_rating_average,
-                              :host_rating_count, :avatar_versions_generated_at, :last_geolocated_location_longitude,
+                              :avatar_versions_generated_at, :last_geolocated_location_longitude,
                               :last_geolocated_location_latitude, :instance_unread_messages_threads_count, :sso_log_out,
                               :avatar_transformation_data, :metadata]
   acts_as_paranoid
@@ -27,14 +26,13 @@ class User < ActiveRecord::Base
   has_many :listings, :through => :locations, class_name: 'Transactable', :inverse_of => :creator
   has_many :photos, :foreign_key => 'creator_id', :inverse_of => :creator
   has_many :products_images, :foreign_key => 'uploader_id', class_name: 'Spree::Image'
+  has_many :products, :foreign_key => 'user_id', class_name: 'Spree::Product'
   has_many :listing_reservations, :through => :listings, :source => :reservations, :inverse_of => :creator
   has_many :listing_recurring_bookings, :through => :listings, :source => :recurring_bookings, :inverse_of => :creator
   has_many :relationships, :class_name => "UserRelationship", :foreign_key => 'follower_id', :dependent => :destroy
   has_many :followed_users, :through => :relationships, :source => :followed
   has_many :reverse_relationships, :class_name => "UserRelationship", :foreign_key => 'followed_id', :dependent => :destroy
   has_many :followers, :through => :reverse_relationships, :source => :follower
-  has_many :host_ratings, class_name: 'HostRating', foreign_key: 'subject_id'
-  has_many :guest_ratings, class_name: 'GuestRating', foreign_key: 'subject_id'
   has_many :user_industries, :dependent => :destroy
   has_many :industries, :through => :user_industries
   has_many :mailer_unsubscriptions
@@ -47,6 +45,8 @@ class User < ActiveRecord::Base
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :user_bans
   has_many :user_instance_profiles
+  has_one :blog, class_name: 'UserBlog'
+  has_many :blog_posts, class_name: 'UserBlogPost'
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
@@ -54,10 +54,13 @@ class User < ActiveRecord::Base
   has_many :orders, foreign_key: :user_id, class_name: 'Spree::Order'
   belongs_to :billing_address, class_name: 'Spree::Address'
   belongs_to :shipping_address, class_name: 'Spree::Address'
+  has_many :reviews
 
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
   before_validation :normalize_gender
+
+  after_create :create_blog
 
   after_destroy :perform_cleanup
   before_restore :recover_companies
@@ -196,6 +199,10 @@ class User < ActiveRecord::Base
                           :token_expires_at => expires_at)
   end
 
+  def create_blog
+    build_blog.save
+  end
+
   def cancelled_reservations
     reservations.cancelled
   end
@@ -284,7 +291,7 @@ class User < ActiveRecord::Base
 
   def notify_about_wrong_phone_number
     unless notified_about_mobile_number_issue_at
-      UserMailer.notify_about_wrong_phone_number(self).deliver
+      WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::WrongPhoneNumber, self.id)
       update_attribute(:notified_about_mobile_number_issue_at, Time.zone.now)
       IssueLogger.log_issue("[internal] invalid mobile number", email, "#{name} (#{id}) was asked to update his mobile number #{full_mobile_number}")
     end
@@ -595,12 +602,24 @@ class User < ActiveRecord::Base
     end
   end
 
+  def published_blogs
+    blog_posts.published
+  end
+
+  def recent_blogs
+    blog_posts.recent
+  end
+
+  def has_published_blogs?
+    blog_posts.published.any?
+  end
+
   def registration_in_progress?
     has_draft_listings || has_draft_products
   end
 
   def registration_completed?
-    has_any_active_listings || has_any_active_products
+    companies.first.try(:valid?) && !(has_draft_listings || has_draft_products)
   end
 
   def has_draft_products
@@ -608,11 +627,19 @@ class User < ActiveRecord::Base
   end
 
   def has_any_active_products
-    companies.any? && companies.first.products.any? && companies.first.products.first.valid?
+    companies.any? && companies.first.products.not_draft.any?
   end
+
+  # get_instance_metadata method comes from Metadata::Base
+  # you can add metadata attributes to class via: has_metadata :accessors => [:support_metadata]
+  # please check Metadata::Base for further reference
 
   def has_draft_listings
     get_instance_metadata("has_draft_listings")
+  end
+
+  def has_draft_products
+    get_instance_metadata("has_draft_products")
   end
 
   def has_any_active_listings

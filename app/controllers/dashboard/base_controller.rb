@@ -3,7 +3,7 @@ class Dashboard::BaseController < ApplicationController
 
   before_filter :authenticate_user!
   before_filter :find_company
-  before_filter :redirect_if_no_company
+  before_filter :redirect_unless_registration_completed
 
   DASHBOARD_CONTROLLERS = [
     "dashboard/orders",
@@ -22,19 +22,25 @@ class Dashboard::BaseController < ApplicationController
     "dashboard/white_labels",
     "dashboard/tickets",
     "registrations/edit",
-    "registrations/social_accounts"
+    "registrations/social_accounts",
+    "dashboard/blog",
+    "registrations/show#buy-sell",
+    "registrations/show#services",
+    "registrations/show#reviews",
+    "registrations/show#blog_posts",
+    "dashboard/reviews"
   ]
 
   private
 
   def find_company
-    @company = current_user.try(:companies).try(:first)
+    @company = current_user.try(:companies).try(:first).try(:decorate)
   end
 
-  def redirect_if_no_company
-    unless @company
+  def redirect_unless_registration_completed
+    unless current_user.registration_completed?
       flash[:warning] = t('flash_messages.dashboard.add_your_company')
-      redirect_to new_space_wizard_url
+      redirect_to transactable_type_new_space_wizard_path(TransactableType.first)
     end
   end
 

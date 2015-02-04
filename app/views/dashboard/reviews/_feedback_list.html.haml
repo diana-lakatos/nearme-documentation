@@ -1,0 +1,44 @@
+#products-tabs.container-row
+  %ul.nav.nav-tabs{role: 'tablist'}
+    - if @seller_rating_system  && seller_collection.present?
+      %li.active
+        %a{href: "##{status}-seller-feedback", role: "tab", :'data-toggle' => "tab"}
+          = t('dashboard.reviews.feedback.seller_feedback')
+    - if @product_rating_system  && product_collection.present?
+      %li
+        %a{href: "##{status}-prod-reviews", role: "tab", :'data-toggle' => "tab"}
+          = t('dashboard.reviews.feedback.product_reviews')
+    - if @buyer_rating_system && buyer_collection.present?
+      %li
+        %a{href: "##{status}-guest-reviews", role: "tab", :'data-toggle' => "tab"}
+          = t('dashboard.reviews.feedback.guest_feedback')
+
+.box.reviews
+  %p.select-label
+    = t('dashboard.reviews.feedback.see_reviews_from')
+  .select-container
+    %select.reviews-select
+      %option{value: Review::LAST_30_DAYS, selected: period_selected?(Review::LAST_30_DAYS)}
+        = t('dashboard.reviews.feedback.last_30_days')
+      %option{value: Review::LAST_6_MONTHS, selected: period_selected?(Review::LAST_6_MONTHS)}
+        = t('dashboard.reviews.feedback.past_6_months')
+      - array_of_last_years(4).each do |number|
+        %option{value: "#{number}", selected: period_selected?("#{number}")}
+          = number
+    %i.ico-chevron-down
+
+  .tab-content
+    - if @seller_rating_system  && seller_collection.present?
+      .tab-pane{id: "#{status}-seller-feedback"}
+        - seller_collection.each do |feedback|
+          = render "dashboard/reviews/#{status}_feedback", feedback: feedback, subject: 'seller', rating_system:  @seller_rating_system, status: status
+
+    - if @product_rating_system  && product_collection.present?
+      .tab-pane{id: "#{status}-prod-reviews"}
+        - product_collection.each do |feedback|
+          = render "dashboard/reviews/#{status}_feedback", feedback: feedback, subject: 'product', rating_system:  @product_rating_system , status: status
+
+    - if @buyer_rating_system && buyer_collection.present?
+      .tab-pane{id: "#{status}-guest-reviews"}
+        - buyer_collection.each do |feedback|
+          = render "dashboard/reviews/#{status}_feedback", feedback: feedback, subject: 'buyer', rating_system:  @buyer_rating_system, status: status

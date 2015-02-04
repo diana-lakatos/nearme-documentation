@@ -1,6 +1,6 @@
 class Dashboard::UserReservationsController < Dashboard::BaseController
 
-  skip_before_filter :redirect_if_no_company
+  skip_before_filter :redirect_unless_registration_completed
 
   before_filter :only => [:user_cancel] do |controller|
     unless allowed_events.include?(controller.action_name)
@@ -12,8 +12,7 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
 
   def user_cancel
     if reservation.user_cancel
-      ReservationMailer.enqueue.notify_host_of_cancellation_by_guest(reservation)
-      ReservationMailer.enqueue.notify_guest_of_cancellation_by_guest(reservation)
+      WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestCancelled, reservation.id)
       event_tracker.cancelled_a_booking(reservation, { actor: 'guest' })
       event_tracker.updated_profile_information(reservation.owner)
       event_tracker.updated_profile_information(reservation.host)

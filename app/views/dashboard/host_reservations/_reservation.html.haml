@@ -34,7 +34,7 @@
             .inline
               - if reservation.owner.present?
                 = link_to reservation.owner, profile_path(reservation.owner.slug)
-                = link_to '', new_reservation_user_message_path(reservation), rel: 'modal', class: 'ico-mail'
+                = link_to '', '#', data: { modal: true, href: new_reservation_user_message_path(reservation) }, class: 'ico-mail'
               - else
                 = "#{reservation.owner_including_deleted} (Deleted)"
               %br

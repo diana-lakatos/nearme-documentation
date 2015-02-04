@@ -1,0 +1,18 @@
+= simple_form_for @sms_template, as: :sms_template, url: @sms_template.persisted? ? instance_admin_manage_sms_template_path(@sms_template) : instance_admin_manage_sms_templates_path, method: @sms_template.persisted? ? :put : :post do |f|
+  %h4
+    = link_to 'Manage sms templates', instance_admin_manage_sms_templates_url
+    =  "> #{pretty_path(@sms_template.path)}" if @sms_template.path
+
+  .content-container
+    .row
+      .input-container.col-xs-12
+        = f.input :path, label: 'Template Name', :placeholder => 'sms name', disabled: @sms_template.persisted? && WorkflowAlert.for_sms_path(@sms_template.path).count > 0, input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-12
+        = f.association :transactable_type
+    .row
+      .input-container.col-xs-12
+        = f.input :body, as: :text, label: 'Body', input_html: { class: 'form-control', rows: "10" }, hint: 'We will automatically truncate messages to be no more than 160 characters'
+
+    = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+    = link_to 'Cancel', instance_admin_manage_sms_templates_url , class: 'pull-right'

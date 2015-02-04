@@ -1,0 +1,9 @@
+How was it, {{ reservation.owner.first_name }}?
+
+We can't wait to hear about your experience with '{{ listing.name }}'.
+
+Your opinion is very important and it will help other {{ platform_context.lessees }} to find great {{ platform_context.bookable_noun_plural }}. Take a moment and give us your feedback!
+
+Write a Review: {{ platform_context.host | append:reservation.reviews_reservation_url }}
+
+If you'd prefer to talk to us directly, please send an email to {{ platform_context.support_email }} or call us on {{ platform_context.phone_number }} - we love to talk with our {{ platform_context.lessees }}.

@@ -1,6 +1,6 @@
 <p>Dear {{ name }},</p>
 
-<p>{{ sharer.name }} has shared a listing with you!</p>
+<p>{{ sharer.name }} has shared a {{ listing.name }} with you!</p>
 
 <p><a href="{{ platform_context.host | append:listing.listing_url }}">View {{ listing.name }} on {{ platform_context.name }}</a></p>
 

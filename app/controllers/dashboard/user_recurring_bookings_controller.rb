@@ -1,5 +1,5 @@
 class Dashboard::UserRecurringBookingsController < Dashboard::BaseController
-  skip_before_filter :redirect_if_no_company
+  skip_before_filter :redirect_unless_registration_completed
 
   before_filter :only => [:user_cancel] do |controller|
     unless allowed_events.include?(controller.action_name)
@@ -10,8 +10,7 @@ class Dashboard::UserRecurringBookingsController < Dashboard::BaseController
 
   def user_cancel
     if recurring_booking.user_cancel
-      RecurringBookingMailer.enqueue.notify_host_of_cancellation_by_guest(recurring_booking)
-      RecurringBookingMailer.enqueue.notify_guest_of_cancellation_by_guest(recurring_booking)
+      WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::GuestCancelled, recurring_booking.id)
       event_tracker.cancelled_a_recurring_booking(recurring_booking, { actor: 'guest' })
       event_tracker.updated_profile_information(recurring_booking.owner)
       event_tracker.updated_profile_information(recurring_booking.host)

@@ -45,9 +45,8 @@ class RegistrationsController < Devise::RegistrationsController
           signed_up_via: signed_up_via,
           provider: Auth::Omni.new(session[:omniauth]).provider
         })
-        PostActionMailer.enqueue_later(30.minutes).sign_up_welcome(@user)
-        ReengagementNoBookingsJob.perform_later(72.hours.from_now, @user)
-        PostActionMailer.enqueue.sign_up_verify(@user)
+        ReengagementNoBookingsJob.perform_later(72.hours.from_now, @user.id)
+        WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::AccountCreated, @user.id)
       end
 
       # Clear out temporarily stored Provider authentication data if present
@@ -75,7 +74,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def show
-    @theme_name = 'buy-sell-theme' if buyable?
+    @theme_name = 'buy-sell-theme'
     @user = User.find(params[:id]).decorate
   end
 
@@ -199,7 +198,6 @@ class RegistrationsController < Devise::RegistrationsController
         mailer_name = verifier.verify(params[:signature])
         unless current_user.unsubscribed?(mailer_name)
           current_user.unsubscribe(mailer_name)
-          PostActionMailer.enqueue.unsubscription(current_user, mailer_name)
           flash[:success] = t('flash_messages.registrations.unsubscribed_successfully')
         else
           flash[:warning] = t('flash_messages.registrations.already_unsubscribed')

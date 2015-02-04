@@ -1,3 +1,7 @@
+Given /^UserMessage alerts exist$/ do
+  Utils::DefaultAlertsCreator::UserMessageCreator.new.create_all!
+end
+
 Given /^I ask a question about a transactable$/ do
   @listing = model('transactable')
   @user = model('user')
@@ -74,7 +78,7 @@ Given /^I send a message to another user on his profile page$/ do
   @user = model('user')
   @another_user = FactoryGirl.create(:user)
   visit profile_path(@another_user)
-  find("a.ico-mail").click
+  find("div#vendor-profile").find('a').click
   work_in_modal do
     fill_in 'user_message_body', with: "Short one"
     click_button 'Send'

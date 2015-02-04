@@ -6,7 +6,6 @@ class RegistrationsControllerTest < ActionController::TestCase
     @user = FactoryGirl.create(:user)
     @request.env["devise.mapping"] = Devise.mappings[:user]
     stub_mixpanel
-    PostActionMailer.stubs(:sign_up_verify).returns(stub(deliver: true))
   end
 
   context 'actions' do
@@ -57,50 +56,50 @@ class RegistrationsControllerTest < ActionController::TestCase
       get :show, :id => @user.slug
 
       assert_response 200
-      assert_select "h1", @user.name
-      assert_select ".info h2", "Manager at DesksNearMe"
-      assert_select ".info h4", "Prague"
-      assert_select ".info h4", "Skills &amp; Interests"
-      assert_select ".info .icon .ico-mail", 1
-
-      assert_select ".info .icon .ico-facebook-full", 0
-      assert_select ".info .icon .ico-linkedin", 0
-      assert_select ".info .icon .ico-twitter", 0
-      assert_select ".info .icon .ico-instagram", 0
+      assert_select ".vendor-info h3", @user.name
+      assert_select ".vendor-info p", "United States"
+      assert_select ".vendor-profile a", "Contact Host"
     end
 
-    should 'show profile with connections' do
+    should 'show profile with verifications' do
       sign_in @user
 
       fb = FactoryGirl.create(:authentication, provider: 'facebook', total_social_connections: 10)
       ln = FactoryGirl.create(:authentication, provider: 'linkedin', total_social_connections: 0)
       tw = FactoryGirl.create(:authentication, provider: 'twitter', total_social_connections: 5)
-      ig = FactoryGirl.create(:authentication, provider: 'instagram', total_social_connections: 1, profile_url: 'link')
-      @user.authentications << [fb, ln, tw, ig]
-
+      @user.authentications << [fb, ln, tw]
 
       get :show, :id => @user.slug
 
       assert_response 200
-      assert_select ".info .icon .ico-facebook-full", 1
-      assert_select ".info .icon .ico-linkedin", 1
-      assert_select ".info .icon .ico-twitter", 1
-      assert_select ".info .icon .ico-instagram", 1
-      assert_select ".info .icon .ico-mail", 1
-      assert_select ".info .connection .count", "10 friends"
-      assert_select ".info .connection .count", "0 connections"
-      assert_select ".info .connection .count", "5 followers"
+      assert_select 'ul li', 'Email Address'
+      assert_select 'ul li', 'Facebook'
+      assert_select 'ul li', 'LinkedIn'
+      assert_select 'ul li', 'Twitter'
     end
 
-    should 'successfully unsubscribe' do
-      verifier = ActiveSupport::MessageVerifier.new(DesksnearMe::Application.config.secret_token)
-      signature = verifier.generate("recurring_mailer/analytics")
+    should 'not display company info on user profile when user does not have a company' do
+      get :show, id: @user.id
+      assert_response 200
+      assert_select '.vendor-profile .shop-info p', false
+    end
 
-      assert_difference('ActionMailer::Base.deliveries.size', 1) do
-        get :unsubscribe, :token => @user.authentication_token, :signature => signature
-      end
-      assert @user.unsubscribed?("recurring_mailer/analytics")
-      assert_redirected_to root_path
+    should 'show company info on user profile' do
+      FactoryGirl.create(:company, creator: @user)
+      get :show, id: @user.id
+
+      assert_response 200
+      assert_select 'div#shop-info p', 'COMPANY INFO'
+    end
+
+    should 'display edit actions if user is logged in' do
+      FactoryGirl.create(:company, creator: @user)
+      sign_in @user
+      get :show, id: @user.id
+
+      assert_response 200
+      assert_select 'div#vendor-profile a', 'Edit'
+      assert_select 'div#shop-info a', 'Edit'
     end
   end
 

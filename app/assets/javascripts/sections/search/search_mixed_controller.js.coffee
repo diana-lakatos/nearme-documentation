@@ -231,7 +231,7 @@ class Search.SearchMixedController extends Search.SearchController
     params = @getSearchParams()
     filtered_params = []
     for k, param of params
-      if $.inArray(param["name"], ['lgtype', 'lntype', 'loc', 'lgpricing', 'lgattribute']) > -1
+      if $.inArray(param["name"], ['lgtype', 'lntype', 'loc', 'lgpricing', 'lgattribute', 'transactable_type_id']) > -1
         filtered_params.push {name: param["name"], value: param["value"]}
     if @sortValue != 'relevance'
       filtered_params.push {name: 'sort', value: @sortValue}

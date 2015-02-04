@@ -1,4 +1,4 @@
-# Extracts necessary attributes from objects passed to track_charge 
+# Extracts necessary attributes from objects passed to track_charge
 
 class Analytics::EventTracker::Serializers::TrackChargeSerializer
 
@@ -10,7 +10,7 @@ class Analytics::EventTracker::Serializers::TrackChargeSerializer
     @objects.compact.map { |o| serialize_object(o) }.inject(:merge) || {}
   end
 
-  private 
+  private
 
   def serialize_object(object)
     self.class.serialize_object(object)
@@ -25,9 +25,9 @@ class Analytics::EventTracker::Serializers::TrackChargeSerializer
         host_fee: object.service_fee_amount_host.to_f,
         guest_id: object.owner_id,
         host_id: object.host.try(:id),
-        reservation_charge_id: object.reservation_charges.paid.first.id,
+        payment_id: object.payments.paid.first.id,
         instance_name: object.instance.name,
-        listing_name: object.listing.name,
+        listing_name: object.listing.try(:name),
       }
     when Hash
       object
