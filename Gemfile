@@ -40,7 +40,7 @@ gem 'le'
 gem 'mini_magick', "~> 4.0.1"
 gem 'money-rails', '1.2.0'
 gem 'paranoia', '~> 2.0.0'
-gem 'simple_form', '~> 3.1.0'
+gem 'simple_form', '~> 3.0.3'
 gem 'nested_form'
 gem 'nokogiri', '~> 1.6.0'
 gem 'hpricot'

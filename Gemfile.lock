@@ -720,7 +720,7 @@ GEM
     shoulda-context (1.2.1)
     shoulda-matchers (2.7.0)
       activesupport (>= 3.0.0)
-    simple_form (3.1.0)
+    simple_form (3.0.3)
       actionpack (~> 4.0)
       activemodel (~> 4.0)
     simple_oauth (0.2.0)
@@ -939,7 +939,7 @@ DEPENDENCIES
   select2-rails
   shippo
   shoulda
-  simple_form (~> 3.1.0)
+  simple_form (~> 3.0.3)
   simplecov
   simplecov-rcov-text
   spectrum-rails
