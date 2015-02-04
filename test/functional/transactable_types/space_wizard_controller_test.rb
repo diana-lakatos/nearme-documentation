@@ -6,6 +6,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
   setup do
     @user = FactoryGirl.create(:user)
     @industry = FactoryGirl.create(:industry)
+
     sign_in @user
     FactoryGirl.create(:location_type)
     @partner = FactoryGirl.create(:partner)

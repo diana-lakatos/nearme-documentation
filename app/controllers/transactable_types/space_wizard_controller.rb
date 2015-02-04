@@ -1,7 +1,7 @@
 class TransactableTypes::SpaceWizardController < ApplicationController
 
   before_filter :find_transactable_type
-  before_filter :redirect_to_dashboard_if_user_has_listings, only: [:new, :list]
+  before_filter :redirect_to_dashboard_if_registration_completed, only: [:new, :list]
   before_filter :set_form_components
   before_filter :set_common_variables, :only => [:list, :submit_listing]
   before_filter :sanitize_price_parameters, :only => [:submit_listing]
@@ -73,7 +73,11 @@ class TransactableTypes::SpaceWizardController < ApplicationController
 
     @boarding_form = BoardingForm.new(current_user)
     if @boarding_form.submit(boarding_form_params)
-      redirect_to dashboard_products_path, notice: t('flash_messages.space_wizard.item_listed', bookable_noun: platform_context.decorate.bookable_noun)
+      if @boarding_form.draft?
+        redirect_to :list, notice: t('flash_messages.space_wizard.draft_saved', bookable_noun: platform_context.decorate.bookable_noun)
+      else
+        redirect_to dashboard_products_path, notice: t('flash_messages.space_wizard.item_listed', bookable_noun: platform_context.decorate.bookable_noun)
+      end
     else
       @images = @boarding_form.product_form.product.images
       render :list_item, layout: "dashboard"
@@ -111,9 +115,8 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     @user.companies.first.locations.first.listings.build({:transactable_type_id => @transactable_type.id}) if @user.companies.first.locations.first.listings.first.nil?
   end
 
-  def redirect_to_dashboard_if_user_has_listings
-    return if buyable?
-    if current_user && current_user.companies.count > 0 && !current_user.has_draft_listings
+  def redirect_to_dashboard_if_registration_completed
+    if current_user.try(:registration_completed?) 
       redirect_to dashboard_transactable_type_transactables_path(@transactable_type)
     end
   end

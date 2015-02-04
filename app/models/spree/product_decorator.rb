@@ -15,7 +15,9 @@ Spree::Product.class_eval do
   has_many :impressions, as: :impressionable, dependent: :destroy
 
   scope :approved, -> { where(approved: true) }
-  scope :currently_available, -> { where("(#{Spree::Product.quoted_table_name}.available_on <= ? OR #{Spree::Product.quoted_table_name}.available_on IS NULL)", Time.zone.now) }
+  scope :draft, -> { where(draft: true) }
+  scope :not_draft, -> { where(draft: false) }
+  scope :currently_available, -> { not_draft.where("(#{Spree::Product.quoted_table_name}.available_on <= ? OR #{Spree::Product.quoted_table_name}.available_on IS NULL)", Time.zone.now) }
   scope :searchable, -> { approved.currently_available }
 
   _validators.reject! { |key, _| [:slug, :shipping_category_id].include?(key) }

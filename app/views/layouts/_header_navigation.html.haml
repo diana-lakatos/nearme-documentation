@@ -1,6 +1,6 @@
 %ul.nav.main-menu
   - unless no_listing_buttons? || !platform_context.white_label_company_user?(current_user)
-    - if platform_context.multiplte_transactable_types?
+    - if platform_context.single_transactable_type?
       - if current_user && current_user.registration_in_progress?
         %li
           = link_to main_app.transactable_type_new_space_wizard_path(platform_context.transactable_types.first), :class => "nav-link btn btn-blue btn-medium" do

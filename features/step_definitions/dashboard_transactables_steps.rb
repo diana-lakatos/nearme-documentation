@@ -19,19 +19,21 @@ Given(/^I add a new location$/) do
 end
 
 Given(/^I edit first location$/) do
-  find(:css, '#location-list .location-options > a:first-child').click
+  all(:css, '#location-list .location-options > a:first-child').first.click
   page.should have_css('#location-form')
 end
 
-Given(/^I remove first location$/) do
-  find(:css, '#location-list .location-options > a:last-child').click
+Given(/^I remove all locations$/) do
+  all(:css, '#location-list .location-options > a:last-child').each do |remove_location|
+    remove_location.click
+  end
 end
 
 Given(/^I edit first transactable$/) do
-  find(:css, '.listings div:last-child > a:first-child').click
+  all(:css, '.listings div:last-child > a:first-child').last.click
 end
 
 Given(/^I remove first transactable$/) do
-  find(:css, '.listings div:last-child > a:last-child').click
+  first(:css, '.listings div:last-child > a:last-child').click
 end
 

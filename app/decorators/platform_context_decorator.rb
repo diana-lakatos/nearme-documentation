@@ -23,7 +23,7 @@ class PlatformContextDecorator
     compiled_dashboard_stylesheet.present? ? compiled_dashboard_stylesheet.url : nil
   end
 
-  def multiplte_transactable_types?
+  def single_transactable_type?
     self.transactable_types.count == 1
   end
 

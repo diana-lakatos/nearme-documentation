@@ -1,5 +1,6 @@
-class Manage::PhotosController < Manage::BaseController
+class Dashboard::PhotosController < Dashboard::BaseController
 
+  skip_before_filter :redirect_unless_registration_completed
   before_filter :get_proper_hash, :only => [:create]
 
   def create
@@ -14,7 +15,7 @@ class Manage::PhotosController < Manage::BaseController
         :thumbnail_dimensions => @photo.image.thumbnail_dimensions[:medium],
         :url => @photo.image_url(:medium),
         :destroy_url => destroy_space_wizard_photo_path(@photo),
-        :resize_url =>  edit_manage_photo_path(@photo)
+        :resize_url =>  edit_dashboard_photo_path(@photo)
       }.to_json,
       :content_type => 'text/plain'
     else
@@ -25,7 +26,7 @@ class Manage::PhotosController < Manage::BaseController
   def edit
     @photo = current_user.photos.find(params[:id])
     if request.xhr?
-      render partial: 'resize_form', :locals => { :form_url => manage_photo_path(@photo), :object => @photo.image, :object_url => @photo.image_url(:original) }
+      render partial: 'manage/photos/resize_form', :locals => { :form_url => dashboard_photo_path(@photo), :object => @photo.image, :object_url => @photo.image_url(:original) }
     end
   end
 
@@ -35,7 +36,7 @@ class Manage::PhotosController < Manage::BaseController
     if @photo.save
       render partial: 'manage/photos/resize_succeeded'
     else
-      render partial: 'resize_form', :locals => { :form_url => manage_photo_path(@photo), :object => @photo.image, :object_url => @photo.image_url(:original) }
+      render partial: 'manage/photos/resize_form', :locals => { :form_url => dashboard_photo_path(@photo), :object => @photo.image, :object_url => @photo.image_url(:original) }
     end
   end
 

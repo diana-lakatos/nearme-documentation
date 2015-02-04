@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150203133549) do
+ActiveRecord::Schema.define(version: 20150204113134) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1644,6 +1644,7 @@ ActiveRecord::Schema.define(version: 20150203133549) do
     t.text     "cross_sell_skus",      default: [],                 array: true
     t.integer  "administrator_id"
     t.boolean  "shippo_enabled",       default: false
+    t.boolean  "draft",                default: false
   end
 
   add_index "spree_products", ["available_on"], name: "index_spree_products_on_available_on", using: :btree

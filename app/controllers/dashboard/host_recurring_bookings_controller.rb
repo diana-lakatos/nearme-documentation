@@ -1,5 +1,5 @@
 class Dashboard::HostRecurringBookingsController < Dashboard::BaseController
-  skip_before_filter :redirect_if_no_company
+  skip_before_filter :redirect_unless_registration_completed
   before_filter :find_listing, except: [:show]
   before_filter :find_recurring_booking, except: [:show]
 

@@ -1,6 +1,6 @@
 class Dashboard::ImagesController < Dashboard::BaseController
 
-  skip_before_filter :redirect_if_no_company
+  skip_before_filter :redirect_unless_registration_completed
   before_filter :find_product, only: [:create]
   before_filter :find_image, only: [:edit, :update, :destroy]
 

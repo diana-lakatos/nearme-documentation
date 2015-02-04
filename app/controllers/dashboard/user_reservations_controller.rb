@@ -1,6 +1,6 @@
 class Dashboard::UserReservationsController < Dashboard::BaseController
 
-  skip_before_filter :redirect_if_no_company
+  skip_before_filter :redirect_unless_registration_completed
 
   before_filter :only => [:user_cancel] do |controller|
     unless allowed_events.include?(controller.action_name)
