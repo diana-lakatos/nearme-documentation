@@ -79,9 +79,9 @@ class RegistrationsController < Devise::RegistrationsController
     @company = @user.companies.first
 
     if buyable?
-      @products = @company.present? ? @company.products.paginate(page: params[:products_page], per_page: 6) : nil
+      @products = @company.present? ? @company.products.paginate(page: params[:products_page], per_page: 8) : nil
     else
-      @listings = @company.present? ? @company.listings.paginate(page: params[:services_page], per_page: 6) : nil
+      @listings = @company.present? ? @company.listings.paginate(page: params[:services_page], per_page: 8) : nil
     end
   end
 
