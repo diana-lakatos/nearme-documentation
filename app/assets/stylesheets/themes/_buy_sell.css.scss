@@ -199,6 +199,39 @@ body.buy-sell-theme {
     width: 100px;
   }
 
+  /*===== PAGINATION =====*/
+
+  .pagination {
+    text-align: center;
+  }
+
+  .pagination ul {
+    box-shadow: none;
+  }
+
+  .pagination ul li a {
+    background: transparent;
+    border: none;
+    float: inherit;
+  }
+
+  .pagination img {
+    float: inherit;
+  }
+
+  .pagination a {
+    color: #5dbded;
+  }
+
+  .pagination .page-link {
+    padding-top: 10px;
+    vertical-align: super;
+  }
+
+  .pagination .page-link.active {
+    color: #000;
+  }
+
   /*===== PRODUCT PRICE AND RATING =====*/
 
   .product-rating {
