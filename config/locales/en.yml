@@ -279,7 +279,8 @@ en:
       account: 'ACCOUNT'
       menu: 'MENU'
       blog: 'BLOG'
-
+    user_reservations:
+      pending_confirmation: 'Pending confirmation from host. Booking will expire in '
     reviews:
       templates:
         comments: "Comments"

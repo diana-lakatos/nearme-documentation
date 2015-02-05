@@ -317,14 +317,14 @@ class ApplicationController < ActionController::Base
   end
   helper_method :get_and_clear_stored_client_taggable_events
 
-  def register_lookup_context_detail(detail_name, value)
-    lookup_context.class.register_detail(detail_name.to_sym) { value }
+  def register_lookup_context_detail(detail_name)
+    lookup_context.class.register_detail(detail_name.to_sym) { nil }
   end
 
   def register_platform_context_as_lookup_context_detail
-    register_lookup_context_detail(:instance_type_id, PlatformContext.current.try(:instance_type).try(:id))
-    register_lookup_context_detail(:instance_id, PlatformContext.current.try(:instance).try(:id))
-    register_lookup_context_detail(:transactable_type_id, params[:transactable_type_id])
+    register_lookup_context_detail(:instance_type_id)
+    register_lookup_context_detail(:instance_id)
+    register_lookup_context_detail(:transactable_type_id)
   end
 
   def log_out_if_token_exists
