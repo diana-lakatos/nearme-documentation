@@ -45,7 +45,7 @@ class Theme < ActiveRecord::Base
   skip_callback :commit, :after, :remove_compiled_stylesheet!
 
   # Precompile the theme, unless we're saving the compiled stylesheet.
-  after_save :recompile_theme, :if => :theme_changed?
+  after_save :recompile, :if => :theme_changed?
 
   # Validations
   COLORS.each do |color|
@@ -62,7 +62,7 @@ class Theme < ActiveRecord::Base
     CompileThemeJob.perform(self)
   end
 
-  def recompile_theme
+  def recompile
     CompileThemeJob.perform(self) unless skip_compilation
   end
 

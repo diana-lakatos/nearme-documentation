@@ -188,7 +188,7 @@ module Utils
         theme.save!
 
         theme.skip_compilation = false
-        theme.recompile_theme
+        theme.recompile
 
         instance
       end
