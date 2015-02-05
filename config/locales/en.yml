@@ -315,9 +315,10 @@ en:
     registrations:
       show:
         blog: 'User Profile > Blog'
-        buy_sell: 'User Profile > Products'
+        products: 'User Profile > Products'
         services: 'User Profile > Services'
         reviews: 'User Profile > Reviews'
+        blog_posts: 'User Profile > Blog'
 
   user_profile:
     labels:

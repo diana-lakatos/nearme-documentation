@@ -267,4 +267,9 @@ module ApplicationHelper
   def active_class(arg1, arg2)
     'active' if arg1 == arg2
   end
+
+  def hide_tab?(tab)
+    key = "#{params[:controller]}/#{params[:action]}##{tab}"
+    HiddenUiControls.find(key).hidden?
+  end
 end

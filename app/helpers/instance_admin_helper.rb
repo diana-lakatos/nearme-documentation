@@ -66,15 +66,4 @@ module InstanceAdminHelper
   def next_payment_transfers_date
     l(PaymentTransfers::SchedulerMethods.new(platform_context.instance).next_payment_transfers_date.beginning_of_day, format: :long)
   end
-
-  def hidden_item_name(controller)
-    t_key = "hidden_items.#{controller.gsub('/', '.').gsub('#', '.').gsub('-', '_')}"
-    translation = t t_key
-    return translation unless translation.include?('translation_missing')
-
-    name = controller.split('/').map(&:capitalize).map(&:humanize).join(' > ')
-    tab_name = (name.include?('#') ? name.match(/#(.+)/)[1] : '').capitalize
-    tab_name = " > #{tab_name}" unless tab_name.empty?
-    "#{name.gsub(/#(.+)/, '')}#{tab_name}"
-  end
 end
