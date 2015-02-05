@@ -19,7 +19,6 @@ class InstanceAdmin::BuySell::ConfigurationControllerTest < ActionController::Te
       assert_select 'label', "Choose currency"
       assert_select 'h4', 'Currency symbol position'
       assert_select 'h4', 'Currency mark and separator'
-      assert_select 'h4', 'Tax settings'
       assert_select 'h4', 'Displaying modules options'
     end
   end
@@ -30,7 +29,6 @@ class InstanceAdmin::BuySell::ConfigurationControllerTest < ActionController::Te
                      "currency_symbol_position"=>"before",
                      "currency_decimal_mark"=>".",
                      "currency_thousands_separator"=>",",
-                     "shipment_inc_vat"=>"true",
                      "infinite_scroll"=>"false",
                      "random_products_for_cross_sell"=>"true" }
       put :update, update_hash

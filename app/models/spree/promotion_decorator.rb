@@ -3,7 +3,7 @@ Spree::Promotion.class_eval do
 
   _validators.reject!{ |key, _| key == :path }
 
-  _validate_callbacks.reject! do |callback|
+  _validate_callbacks.each do |callback|
     callback.raw_filter.attributes.delete :path if callback.raw_filter.is_a?(ActiveModel::Validations::PresenceValidator)
   end
 

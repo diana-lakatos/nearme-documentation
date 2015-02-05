@@ -59,6 +59,7 @@ module ColumnsObserver
   included do
 
     def self.inherits_columns_from_association(columns, associations)
+      return unless self.table_exists?
       inherits_columns_from_association_string = "before_create do \n"
       [columns].flatten.each do |column|
         raise ColumnsObserver::InvalidArgumentError.new("Invalid argument, #{self.name} does not contain column #{column}") unless self.column_names.include?(column.to_s) 
@@ -70,9 +71,10 @@ module ColumnsObserver
     end
 
     def self.notify_associations_about_column_update(associations, columns)
+      return unless self.table_exists?
       notify_associations_about_column_update = "after_update do\n"
       [columns].flatten.each do |column|
-        raise ColumnsObserver::InvalidArgumentError.new("Invalid argument, #{self.name} does not contain column #{column}") unless self.column_names.include?(column.to_s) 
+        raise ColumnsObserver::InvalidArgumentError.new("Invalid argument, #{self.name} does not contain column #{column}") unless self.column_names.include?(column.to_s)
         [associations].flatten.each do |association|
           notify_associations_about_column_update += "self.#{association}.reload.with_deleted.update_all(['#{column} = ?', self.#{column}]) if self.#{column}_changed?\n"
         end

@@ -452,10 +452,10 @@ class ApplicationController < ActionController::Base
   end
 
   def build_approval_request_for_object(object)
-    object.approval_requests.reject! { |ar| !object.approval_request_templates.pluck(:id).include?(ar.approval_request_template_id) }
+    object.approval_requests.to_a.reject! { |ar| !object.approval_request_templates.pluck(:id).include?(ar.approval_request_template_id) }
     if (art = object.approval_request_templates.first).present?
       ar = ((object.approval_requests.find { |approval_request| approval_request.approval_request_template_id == art.id }) || object.approval_requests.build(approval_request_template_id: art.id))
-      ar.approval_request_attachments.reject! { |ara| !art.approval_request_attachment_templates.pluck(:id).include?(ar.approval_request_template_id) }
+      ar.approval_request_attachments.to_a.reject! { |ara| !art.approval_request_attachment_templates.pluck(:id).include?(ar.approval_request_template_id) }
       ar.required_written_verification = art.required_written_verification
       art.approval_request_attachment_templates.each do |arat|
         if (ara = (ar.approval_request_attachments.find { |approval_request_attachment| approval_request_attachment.approval_request_attachment_template_id == arat.id })).nil?

@@ -4,7 +4,7 @@ class InstanceAdmin::Manage::Support::FaqsController < InstanceAdmin::Manage::Ba
   defaults :resource_class => ::Support::Faq
 
   def index
-    @faqs = ::Support::Faq.scoped.rank(:position)
+    @faqs = ::Support::Faq.all.rank(:position)
   end
 
   def create

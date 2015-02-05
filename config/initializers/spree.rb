@@ -10,7 +10,6 @@ if defined?(Spree)
     # Example:
     # Uncomment to override the default site name.
     # config.site_name = "Spree Demo Site"
-    config.override_actionmailer_config = false
   end
 
   Spree.user_class = "User"

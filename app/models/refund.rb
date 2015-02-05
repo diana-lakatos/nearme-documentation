@@ -7,7 +7,7 @@ class Refund < ActiveRecord::Base
   scope :successful, -> { where(:success => true) }
   belongs_to :payment
 
-  monetize :amount
+  monetize :amount, with_model_currency: :currency
   serialize :response, Hash
 
   attr_encrypted :response, :key => DesksnearMe::Application.config.secret_token, marshal: true

@@ -7,5 +7,5 @@ class RatingAnswerTest < ActiveSupport::TestCase
   should validate_presence_of(:rating_question_id) 
   should validate_presence_of(:review_id)
 
-  should ensure_inclusion_of(:rating).in_range(RatingConstants::VALID_VALUES).allow_blank
+  should validate_inclusion_of(:rating).in_range(RatingConstants::VALID_VALUES).allow_blank
 end

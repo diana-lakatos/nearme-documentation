@@ -26,14 +26,6 @@
         = label_tag :currency_thousands_separator, 'Currency thousands separator'
         = text_field_tag :currency_thousands_separator, Spree::Config[:currency_thousands_separator], placeholder: 'Enter currency thousands separator', class: 'form-control'
 
-  %h4 Tax settings
-  .content-container
-    .row.dropshadow
-      .input-container.col-xs-12
-        = label_tag 'Shipment including vat'
-        = hidden_field_tag 'shipment_inc_vat', '0'
-        = check_box_tag 'shipment_inc_vat', '1', Spree::Config[:shipment_inc_vat]
-
   %h4 Displaying modules options
   .content-container
     .row.dropshadow

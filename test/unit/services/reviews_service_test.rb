@@ -10,7 +10,7 @@ class ReviewsServiceTest < ActiveSupport::TestCase
 
     should 'return reviews' do
       reviews = @reviews_service.get_reviews
-      assert_equal 1, reviews.count
+      assert_equal 1, reviews.size
       assert_equal @review_5_stars, reviews.first
     end
   end

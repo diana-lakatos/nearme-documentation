@@ -22,7 +22,7 @@ Spree::Product.class_eval do
 
   _validators.reject! { |key, _| [:slug, :shipping_category_id].include?(key) }
 
-  _validate_callbacks.reject! do |callback|
+  _validate_callbacks.each do |callback|
     callback.raw_filter.attributes.delete :slug if callback.raw_filter.is_a?(ActiveModel::Validations::PresenceValidator)
     callback.raw_filter.attributes.delete :shipping_category_id if callback.raw_filter.is_a?(ActiveModel::Validations::PresenceValidator)
   end

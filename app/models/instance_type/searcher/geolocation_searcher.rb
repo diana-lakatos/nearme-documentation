@@ -60,17 +60,6 @@ module InstanceType::Searcher::GeolocationSearcher
     @search_notification ||= SearchNotification.new(query: @params[:loc], latitude: @params[:lat], longitude: @params[:lng])
   end
 
-  def search_query_values
-    {
-      :loc => @params[:loc],
-      :industries_ids => @params[:industries_ids],
-    }.merge(filters)
-  end
-
-  def repeated_search?(values)
-    @params[:loc] && search_query_values.to_s == values.try(:to_s)
-  end
-
   def should_log_conducted_search?
     @params[:loc].present?
   end

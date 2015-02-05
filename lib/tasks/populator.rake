@@ -179,7 +179,7 @@ namespace :populate do
     Instance.find_each do |instance|
       PlatformContext.current = PlatformContext.new(instance)
       PlatformContext.scope_to_instance
-      tp = TransactableType.find_or_create_by_name("Listing")
+      tp = TransactableType.where(name: 'Listing').first_or_create!
       CustomAttributes::CustomAttribute::Creator.new(tp).create_listing_attributes!
       Transactable.update_all(:transactable_type_id => tp.id)
       Transactable.find_each do |t|

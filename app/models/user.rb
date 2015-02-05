@@ -79,7 +79,7 @@ class User < ActiveRecord::Base
 
   scope :without, lambda { |users|
                   users_ids = users.respond_to?(:pluck) ? users.pluck(:id) : Array.wrap(users).collect(&:id)
-                  users_ids.any? ? where('users.id NOT IN (?)', users_ids) : scoped
+                  users_ids.any? ? where('users.id NOT IN (?)', users_ids) : all
                 }
 
   scope :ordered_by_email, -> { order('users.email ASC') }

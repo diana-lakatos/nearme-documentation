@@ -37,14 +37,14 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
           assert_equal @company_1.payments.sort,
             @company_1.payment_transfers[0].payments.sort
 
-          assert_equal @company_1.payments.sum(&:subtotal_amount_cents),
-            @company_1.payment_transfers[0].payments.sum(&:subtotal_amount_cents)
+          assert_equal @company_1.payments.sum(:subtotal_amount_cents),
+            @company_1.payment_transfers[0].payments.sum(:subtotal_amount_cents)
 
           assert_equal @company_2.payments.sort,
             @company_2.payment_transfers[0].payments.sort
 
-          assert_equal @company_2.payments.sum(&:subtotal_amount_cents),
-            @company_2.payment_transfers[0].payments.sum(&:subtotal_amount_cents)
+          assert_equal @company_2.payments.sum(:subtotal_amount_cents),
+            @company_2.payment_transfers[0].payments.sum(:subtotal_amount_cents)
         end
 
         should "include refunded reservation charges" do
@@ -136,7 +136,7 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
       setup do
         @order = FactoryGirl.create(:completed_order_with_totals)
         @company = @order.company
-        @payment = FactoryGirl.create(:order_charge, payable: @order)
+        @payment = FactoryGirl.create(:order_charge, payable: @order, currency: 'USD')
         @company.instance.update_columns(payment_transfers_frequency: "daily")
       end
 
@@ -155,16 +155,15 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
         end
       end
 
+      should "schedule payment transfers with daily payment transfers frequency" do
+        PaymentTransferSchedulerJob.perform
 
-        should "schedule payment transfers with daily payment transfers frequency" do
-          PaymentTransferSchedulerJob.perform
-
-          assert_equal 1, @company.payment_transfers.count
-          assert_equal 5000, @company.payment_transfers.first.amount.cents
-          assert_equal 'USD', @company.payment_transfers.first.currency
-          assert_equal @order.near_me_payments.sort,
-            @company.payment_transfers[0].payments.sort
-        end
+        assert_equal 1, @company.payment_transfers.count
+        assert_equal 5000, @company.payment_transfers.first.amount.cents
+        assert_equal 'USD', @company.payment_transfers.first.currency
+        assert_equal @order.near_me_payments.sort,
+          @company.payment_transfers[0].payments.sort
+      end
 
     end
 

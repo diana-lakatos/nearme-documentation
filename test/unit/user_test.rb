@@ -363,7 +363,7 @@ class UserTest < ActiveSupport::TestCase
 
   should "know what authentication providers it is linked to" do
     @user = FactoryGirl.create(:user)
-    @user.authentications.find_or_create_by_provider("exists").tap do |a|
+    @user.authentications.where(provider: 'exists').first_or_create.tap do |a|
       a.uid = @user.id
       a.token = "abcd"
     end.save!

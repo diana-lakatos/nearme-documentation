@@ -23,7 +23,7 @@ class Support::Ticket < ActiveRecord::Base
     end
   end
 
-  scope :for_filter, ->(filter) { filter == 'all' ? scoped : where('support_tickets.state = ?', filter)}
+  scope :for_filter, ->(filter) { filter == 'all' ? all : where('support_tickets.state = ?', filter)}
 
   accepts_nested_attributes_for :messages
 
