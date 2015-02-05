@@ -79,5 +79,8 @@ class InstanceAdmin::Manage::Workflows::WorkflowAlertsController < InstanceAdmin
     @custom_email_layouts = (['layouts/mailer'] + InstanceView.for_instance_id(PlatformContext.current.instance.id).custom_email_layouts.pluck('path')).uniq
   end
 
+  def permitting_controller_class
+    'manage'
+  end
 end
 
