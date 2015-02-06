@@ -93,10 +93,9 @@ class ReviewsServiceTest < ActiveSupport::TestCase
     end
 
     should 'return rating systems' do
-      RatingSystem.destroy_all
       @rating_system = FactoryGirl.create(:active_rating_system)
       rating_systems = @reviews_service.get_rating_systems
-      assert_equal @rating_system, rating_systems[:active_rating_systems].first
+      assert_includes rating_systems[:active_rating_systems], @rating_system
     end
   end
 
