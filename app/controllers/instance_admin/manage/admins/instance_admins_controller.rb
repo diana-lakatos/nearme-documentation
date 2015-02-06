@@ -1,9 +1,9 @@
-class InstanceAdmin::Manage::Users::InstanceAdminsController < InstanceAdmin::Manage::BaseController
+class InstanceAdmin::Manage::Admins::InstanceAdminsController < InstanceAdmin::Manage::BaseController
 
   skip_before_filter :check_if_locked
 
   def index
-    redirect_to instance_admin_manage_users_path
+    redirect_to instance_admin_manage_admins_path
   end
 
   def create
@@ -15,10 +15,10 @@ class InstanceAdmin::Manage::Users::InstanceAdminsController < InstanceAdmin::Ma
         InstanceAdmin.create(:user_id => @user.id)
         flash[:success] = "User with email #{@user.email} has been successfully added as admin"
       end
-      redirect_to instance_admin_manage_users_path
+      redirect_to instance_admin_manage_admins_path
     else
       flash[:error] = "Unfortunately we could not find user with email \"#{params[:email]}\""
-      render "instance_admin/manage/users/index"
+      render "instance_admin/manage/admins/index"
     end
   end
 
@@ -36,9 +36,9 @@ class InstanceAdmin::Manage::Users::InstanceAdminsController < InstanceAdmin::Ma
       flash[:error] = 'Instance owner cannot be deleted'
     else
       @instance_admin.destroy
-      flash[:deleted] = "#{@instance_admin.name} is no longer instance admin"
+      flash[:deleted] = "#{@instance_admin.name} is no longer an instance admin"
     end
-    redirect_to instance_admin_manage_users_path
+    redirect_to instance_admin_manage_admins_path
   end
 
   private

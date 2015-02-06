@@ -1,4 +1,4 @@
-class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseController
+class InstanceAdmin::Manage::AdminsController < InstanceAdmin::Manage::BaseController
 
   skip_before_filter :check_if_locked
 
@@ -13,8 +13,8 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
     if @user.save
       InstanceAdmin.create(:user_id => @user.id)
       WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::CreatedByAdmin, @user.id, current_user.id)
-      flash[:success] = "User has been successfully created"
-      redirect_to instance_admin_manage_users_path
+      flash[:success] = "Admin has been successfully created"
+      redirect_to instance_admin_manage_admins_path
     else
       render :index
     end

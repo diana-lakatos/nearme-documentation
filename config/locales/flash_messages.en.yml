@@ -113,7 +113,7 @@ en:
         domain_not_deleted: "Can't delete this domain."
       theme:
         theme_updated_successfully: 'Theme updated.'
-      users:
+      admins:
         instance_admin_roles:
           role_added: "Great, new role has been added!"
           role_deleted: "That role has been deleted"

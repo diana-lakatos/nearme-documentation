@@ -273,8 +273,8 @@ DesksnearMe::Application.routes.draw do
 
       resources :partners
 
-      resources :users, :only => [:index, :create]
-      namespace :users do
+      resources :admins, :only => [:index, :create]
+      namespace :admins do
         resources :instance_admins, :only => [:create, :update, :destroy, :index]
         resources :instance_admin_roles, :only => [:create, :update, :destroy, :index]
       end

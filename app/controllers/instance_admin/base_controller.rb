@@ -16,7 +16,7 @@ class InstanceAdmin::BaseController < ApplicationController
     'inventories'        => { controller: '/instance_admin/manage/inventories', default_action: 'index' },
     'transfers'          => { controller: '/instance_admin/manage/transfers', default_action: 'index' },
     'partners'           => { controller: '/instance_admin/manage/partners', default_action: 'index' },
-    'users'              => { controller: '/instance_admin/manage/users', default_action: 'index' },
+    'admins'             => { controller: '/instance_admin/manage/admins', default_action: 'index' },
     'emails'             => { controller: '/instance_admin/manage/email_templates', default_action: 'index' },
     'smses'              => { controller: '/instance_admin/manage/sms_templates', default_action: 'index' },
     'email layouts'      => { controller: '/instance_admin/manage/email_layout_templates', default_action: 'index' },
