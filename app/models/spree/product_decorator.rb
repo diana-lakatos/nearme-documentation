@@ -11,6 +11,7 @@ Spree::Product.class_eval do
   belongs_to :user
   belongs_to :company
   belongs_to :administrator, class_name: 'User'
+
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   has_many :impressions, as: :impressionable, dependent: :destroy
 
@@ -59,6 +60,28 @@ Spree::Product.class_eval do
 
   def has_photos?
     images.count > 0
+  end
+
+  def reviews
+    @reviews ||= Review.where(object: 'product', reviewable_type: 'Spree::LineItem', reviewable_id: self.line_items.pluck(:id))
+  end
+
+  def reviews_count
+    @reviews_count ||= reviews.count
+  end
+
+  def has_reviews?
+    reviews_count > 0
+  end
+
+  def question_average_rating
+    @rating_answers_rating ||= RatingAnswer.where(review_id: reviews.pluck(:id))
+      .group(:rating_question_id).average(:rating)
+  end
+
+  def recalculate_average_rating!
+    average_rating = reviews.average(:rating)
+    self.update(average_rating: average_rating)
   end
 
   private

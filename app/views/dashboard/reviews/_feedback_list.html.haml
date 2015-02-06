@@ -1,17 +1,19 @@
 #products-tabs.container-row
-  %ul.nav.nav-tabs{role: 'tablist'}
-    - if @seller_rating_system  && seller_collection.present?
-      %li.active
-        %a{href: "##{status}-seller-feedback", role: "tab", :'data-toggle' => "tab"}
-          = t('dashboard.reviews.feedback.seller_feedback')
-    - if @product_rating_system  && product_collection.present?
-      %li
-        %a{href: "##{status}-prod-reviews", role: "tab", :'data-toggle' => "tab"}
-          = t('dashboard.reviews.feedback.product_reviews')
-    - if @buyer_rating_system && buyer_collection.present?
-      %li
-        %a{href: "##{status}-guest-reviews", role: "tab", :'data-toggle' => "tab"}
-          = t('dashboard.reviews.feedback.guest_feedback')
+  - if @rating_systems[:seller_rating_system] && seller_collection.present? || @rating_systems[:product_rating_system]  && product_collection.present? || @rating_systems[:buyer_rating_system] && buyer_collection.present?
+    .dash-sub-nav
+      %ul{role: 'tablist'}
+        - if @rating_systems[:seller_rating_system] && seller_collection.present?
+          %li.active
+            %a{href: "##{status}-seller-feedback", role: "tab", :'data-toggle' => "tab"}
+              = t('dashboard.reviews.feedback.seller_feedback')
+        - if @rating_systems[:product_rating_system]  && product_collection.present?
+          %li
+            %a{href: "##{status}-prod-reviews", role: "tab", :'data-toggle' => "tab"}
+              = t('dashboard.reviews.feedback.product_reviews')
+        - if @rating_systems[:buyer_rating_system] && buyer_collection.present?
+          %li
+            %a{href: "##{status}-guest-reviews", role: "tab", :'data-toggle' => "tab"}
+              = t('dashboard.reviews.feedback.guest_feedback')
 
 .box.reviews
   %p.select-label
@@ -28,17 +30,17 @@
     %i.ico-chevron-down
 
   .tab-content
-    - if @seller_rating_system  && seller_collection.present?
+    - if @rating_systems[:seller_rating_system] && seller_collection.present?
       .tab-pane{id: "#{status}-seller-feedback"}
         - seller_collection.each do |feedback|
-          = render "dashboard/reviews/#{status}_feedback", feedback: feedback, subject: 'seller', rating_system:  @seller_rating_system, status: status
+          = render "dashboard/reviews/#{status}_feedback", feedback: feedback, subject: 'seller', rating_system:  @rating_systems[:seller_rating_system], status: status
 
-    - if @product_rating_system  && product_collection.present?
+    - if @rating_systems[:product_rating_system] && product_collection.present?
       .tab-pane{id: "#{status}-prod-reviews"}
         - product_collection.each do |feedback|
-          = render "dashboard/reviews/#{status}_feedback", feedback: feedback, subject: 'product', rating_system:  @product_rating_system , status: status
+          = render "dashboard/reviews/#{status}_feedback", feedback: feedback, subject: 'product', rating_system:  @rating_systems[:product_rating_system], status: status
 
-    - if @buyer_rating_system && buyer_collection.present?
+    - if @rating_systems[:buyer_rating_system] && buyer_collection.present?
       .tab-pane{id: "#{status}-guest-reviews"}
         - buyer_collection.each do |feedback|
-          = render "dashboard/reviews/#{status}_feedback", feedback: feedback, subject: 'buyer', rating_system:  @buyer_rating_system, status: status
+          = render "dashboard/reviews/#{status}_feedback", feedback: feedback, subject: 'buyer', rating_system:  @rating_systems[:buyer_rating_system], status: status

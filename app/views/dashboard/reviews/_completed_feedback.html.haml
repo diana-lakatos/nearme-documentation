@@ -1,45 +1,36 @@
 = form_tag dashboard_reviews_path, class: 'update-form' do
-  .review{'data-reservation-id' => feedback.reservation.id, 'data-object' => subject}
-    = hidden_field_tag :transactable_type_id, feedback.reservation.listing.transactable_type.id
-    = hidden_field_tag :reservation_id, feedback.reservation.id
+  .review{'data-reviewable-id' => feedback.reviewable.id, 'data-reviewable-type' => feedback.reviewable.class.name, 'data-object' => subject}
+    = hidden_field_tag :reviewable_id, feedback.reviewable.id
+    = hidden_field_tag :reviewable_type, feedback.reviewable.class.name
     .row-fluid.clearfix
       .span8
-        .order-image
-          -if feedback.reservation.listing.has_photos?
-            =image_tag feedback.reservation.listing.photos.last.image.medium.url
-          -else
-            =image_tag "ratings/reviews-placeholder.png"
+        = render 'order_image', feedback: feedback
         .review-actions
-          %h1.review-title= feedback.reservation.listing.name
+          = render 'review_title', feedback: feedback
           %p= t('dashboard.reviews.feedback.your_submitted_feedback').upcase
           .wrapper
             .rating.non-editable{'data-score' => feedback.rating}
-            %a.edit{'data-review-id' => feedback.id}
-              = t('dashboard.reviews.feedback.edit')
-            = link_to dashboard_review_path(feedback), method: :delete, class: 'remove', confirm: t('dashboard.reviews.feedback.are_you_sure') do
-              %i.ico-trash
-          %p
-            %a.show-details{"data-target" => "##{subject}-#{feedback.reservation.id}.reviews-additional-content", "data-toggle" => "collapse", "style" => "cursor: pointer;"}
-              = t('dashboard.reviews.feedback.show_details')
+            .actions
+              %a.edit{'data-review-id' => feedback.id}
+                = t('dashboard.reviews.feedback.edit')
+              = link_to dashboard_review_path(feedback), method: :delete, class: 'remove', confirm: t('dashboard.reviews.feedback.are_you_sure') do
+                %i.ico-trash
+          = render 'show_details_link', subject: subject, id: feedback.reviewable.id
 
       .span4
+        = render 'order_info_created', created_at: feedback.reviewable.created_at
         .order-info
-          %p= t('dashboard.reviews.feedback.order_placed')
-          %p= l(feedback.reservation.created_at, format: :only_date)
+          = render 'order_info_id', id: feedback.reviewable.id
+          - if feedback.decorate.line_item?
+            = link_to t('dashboard.reviews.feedback.view_order_details'), dashboard_order_path(feedback.reviewable.order)
         .order-info
-          %p 
-            = t('dashboard.reviews.feedback.order').upcase
-            = feedback.reservation.id
-          %a{ :href => "#"}
-            = t('dashboard.reviews.feedback.view_order_details')
-        .order-info
-          %p
-            = link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(feedback.reservation.creator)
+          %p= feedback.decorate.link_to_seller_profile
+          
           - if platform_context.support_email
             %p
               = mail_to platform_context.support_email, t('dashboard.reviews.feedback.contact_name_support', name: @current_instance.name)
 
-    .reviews-additional-content.collapse{id: "#{subject}-#{feedback.reservation.id}"}
+    .reviews-additional-content.collapse{id: "#{subject}-#{feedback.reviewable.id}"}
       - feedback.rating_answers.each do |answer|
         .row-fluid.clearfix
           .span12

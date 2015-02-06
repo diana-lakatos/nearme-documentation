@@ -890,13 +890,13 @@ class SecuredParams
 
   def review
     [
-      :rating,
-      :comment,
-      :object,
-      :date,
-      :reservation_id,
-      :transactable_type_id,
-      :instance_id,
+      :rating, 
+      :comment, 
+      :object, 
+      :date, 
+      :transactable_type_id, 
+      :reviewable_id, 
+      :reviewable_type, 
       :user_id
     ]
   end
