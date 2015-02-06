@@ -6,7 +6,14 @@ class RatingReminderJob < Job
   end
 
   def perform
-    PlatformContext.clear_current
+    reservations_reminder
+    orders_reminder
+  end
+
+  private
+
+  def reservations_reminder
+    clear_platform_context
     reservations = Reservation.joins(:periods).confirmed.where('reservation_periods.date = ?', @date)
     reservations = reservations.where("request_guest_rating_email_sent_at IS NULL OR request_host_and_product_rating_email_sent_at IS NULL")
     reservations = reservations.select do |reservation|
@@ -26,7 +33,10 @@ class RatingReminderJob < Job
         reservation.update_column(:request_host_and_product_rating_email_sent_at, Time.zone.now)
       end
     end
+  end
 
+  def orders_reminder
+    clear_platform_context
     order_ids = Spree::Order.complete.where('completed_at = ?', @date).pluck(:id)
     line_items = Spree::LineItem.where(order_id: order_ids)
       .where("request_guest_rating_email_sent_at IS NULL OR request_host_and_product_rating_email_sent_at IS NULL")
@@ -44,6 +54,9 @@ class RatingReminderJob < Job
         line_item.update_column(:request_host_and_product_rating_email_sent_at, Time.zone.now)
       end
     end
+  end
 
+  def clear_platform_context
+    PlatformContext.clear_current
   end
 end
