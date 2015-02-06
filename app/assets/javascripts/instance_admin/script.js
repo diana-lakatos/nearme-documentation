@@ -29,9 +29,9 @@ $("#toggle-help").click(function() {
 
 
 
-//Bootstrap Popovers
 $(function () {
   $(".line-item-btn").popover();
+  var icui = $("input[type=hidden].icui").icui();
 });
 
 

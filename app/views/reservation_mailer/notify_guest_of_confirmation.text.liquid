@@ -7,7 +7,7 @@ Your booking for '{{ listing.name }}' has been confirmed! Here it is:
 What: {{ listing.name }} x {{ reservation.quantity }}
 
 When:
-{% if listing.hourly_reservations? %}
+{% if listing.action_hourly_booking? %}
   {{ reservation.hourly_summary }}
 {% else %}
   {{ reservation.dates_summary }}

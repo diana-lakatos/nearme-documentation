@@ -11,7 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20150214125057) do
+=======
+ActiveRecord::Schema.define(version: 20150209162144) do
+>>>>>>> ec3cfd4... NM-1346 Fixed price and hourly + daily at the same time
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -690,8 +694,8 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.boolean  "user_based_marketplace_views",                                  default: false
     t.string   "searcher_type"
     t.datetime "master_lock"
-    t.boolean  "apply_text_filters",                                            default: false
     t.text     "user_required_fields"
+    t.boolean  "apply_text_filters",                                            default: false
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
     t.string   "payment_transfers_frequency",                                   default: "fortnightly"
@@ -1127,14 +1131,15 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.boolean  "listings_public",                               default: true
+    t.integer  "recurring_booking_id"
     t.datetime "confirmed_at"
     t.datetime "cancelled_at"
     t.integer  "cancellation_policy_hours_for_cancellation",    default: 0
     t.integer  "cancellation_policy_penalty_percentage",        default: 0
-    t.integer  "recurring_booking_id"
     t.integer  "credit_card_id"
     t.datetime "request_guest_rating_email_sent_at"
     t.datetime "request_host_and_product_rating_email_sent_at"
+    t.string   "type"
   end
 
   add_index "reservations", ["administrator_id"], name: "index_reservations_on_administrator_id", using: :btree
@@ -1169,6 +1174,21 @@ ActiveRecord::Schema.define(version: 20150214125057) do
   add_index "reviews", ["transactable_type_id"], name: "index_reviews_on_transactable_type_id", using: :btree
   add_index "reviews", ["user_id"], name: "index_reviews_on_user_id", using: :btree
 
+  create_table "schedules", force: true do |t|
+    t.datetime "start_at"
+    t.datetime "end_at"
+    t.text     "schedule"
+    t.string   "scheduable_type"
+    t.integer  "scheduable_id"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.boolean  "exception",       default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "schedules", ["instance_id", "scheduable_id", "scheduable_type"], name: "index_schedules_scheduable", using: :btree
+
   create_table "search_notifications", force: true do |t|
     t.string   "email"
     t.integer  "user_id"
@@ -1182,11 +1202,11 @@ ActiveRecord::Schema.define(version: 20150214125057) do
 
   add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
 
-  create_table "sessions", force: true do |t|
-    t.string   "session_id", null: false
-    t.text     "data"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table "search_queries", force: true do |t|
+    t.string   "query"
+    t.text     "agent"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "spree_addresses", force: true do |t|
@@ -1501,11 +1521,12 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.integer  "partner_id"
     t.decimal  "service_fee_buyer_percent",               precision: 5,  scale: 2, default: 0.0
     t.decimal  "service_fee_seller_percent",              precision: 5,  scale: 2, default: 0.0
+    t.boolean  "shippo_rate_purchased",                                            default: false
     t.datetime "shippo_rate_purchased_at"
-    t.integer  "platform_context_detail_id"
-    t.string   "platform_context_detail_type"
     t.string   "guest_token"
     t.integer  "state_lock_version",                                               default: 0,       null: false
+    t.integer  "platform_context_detail_id"
+    t.string   "platform_context_detail_type"
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id", using: :btree
@@ -1944,7 +1965,6 @@ ActiveRecord::Schema.define(version: 20150214125057) do
   add_index "spree_shipping_methods", ["company_id"], name: "index_spree_shipping_methods_on_company_id", using: :btree
   add_index "spree_shipping_methods", ["deleted_at"], name: "index_spree_shipping_methods_on_deleted_at", using: :btree
   add_index "spree_shipping_methods", ["instance_id"], name: "index_spree_shipping_methods_on_instance_id", using: :btree
-  add_index "spree_shipping_methods", ["order_id"], name: "index_spree_shipping_methods_on_order_id", using: :btree
   add_index "spree_shipping_methods", ["partner_id"], name: "index_spree_shipping_methods_on_partner_id", using: :btree
   add_index "spree_shipping_methods", ["tax_category_id"], name: "index_spree_shipping_methods_on_tax_category_id", using: :btree
   add_index "spree_shipping_methods", ["user_id"], name: "index_spree_shipping_methods_on_user_id", using: :btree
@@ -2391,9 +2411,12 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.text     "message",     null: false
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "target_id"
+    t.string   "target_type"
   end
 
   add_index "support_ticket_messages", ["instance_id"], name: "index_support_ticket_messages_on_instance_id", using: :btree
+  add_index "support_ticket_messages", ["target_id", "target_type"], name: "index_support_ticket_messages_on_target_id_and_target_type", using: :btree
   add_index "support_ticket_messages", ["ticket_id"], name: "index_support_ticket_messages_on_ticket_id", using: :btree
   add_index "support_ticket_messages", ["user_id"], name: "index_support_ticket_messages_on_user_id", using: :btree
 
@@ -2534,16 +2557,15 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.text     "pricing_options"
     t.text     "pricing_validation"
     t.text     "availability_options"
+    t.boolean  "action_recurring_booking",                                           default: false, null: false
     t.boolean  "favourable_pricing_rate",                                            default: true
     t.integer  "days_for_monthly_rate",                                              default: 0
     t.datetime "cancellation_policy_enabled"
     t.integer  "cancellation_policy_hours_for_cancellation",                         default: 0
     t.integer  "cancellation_policy_penalty_percentage",                             default: 0
-    t.boolean  "recurring_booking",                                                  default: false, null: false
     t.boolean  "show_page_enabled",                                                  default: false
     t.text     "custom_csv_fields"
-    t.boolean  "overnight_booking",                                                  default: false, null: false
-    t.boolean  "enable_reviews"
+    t.boolean  "action_overnight_booking",                                           default: false, null: false
     t.text     "onboarding_form_fields"
     t.decimal  "service_fee_guest_percent",                  precision: 5, scale: 2, default: 0.0
     t.decimal  "service_fee_host_percent",                   precision: 5, scale: 2, default: 0.0
@@ -2551,6 +2573,14 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.string   "lessor"
     t.string   "lessee"
     t.boolean  "groupable_with_others",                                              default: true
+    t.boolean  "enable_reviews"
+    t.boolean  "action_rfq",                                                         default: false
+    t.boolean  "action_hourly_booking",                                              default: false
+    t.boolean  "action_free_booking",                                                default: false
+    t.boolean  "action_daily_booking",                                               default: false
+    t.boolean  "action_monthly_booking",                                             default: false
+    t.boolean  "action_weekly_booking",                                              default: false
+    t.boolean  "action_schedule_booking"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -2577,6 +2607,19 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.integer  "parent_transactable_id"
     t.string   "external_id"
     t.boolean  "mark_to_be_bulk_update_deleted", default: false
+    t.integer  "hourly_price_cents",             default: 0
+    t.integer  "daily_price_cents",              default: 0
+    t.integer  "weekly_price_cents",             default: 0
+    t.integer  "monthly_price_cents",            default: 0
+    t.boolean  "action_rfq",                     default: false
+    t.boolean  "action_hourly_booking",          default: false
+    t.boolean  "action_free_booking",            default: false
+    t.boolean  "action_recurring_booking",       default: false
+    t.boolean  "action_daily_booking",           default: false
+    t.boolean  "action_schedule_booking"
+    t.integer  "fixed_price_cents"
+    t.integer  "min_fixed_price_cents"
+    t.integer  "max_fixed_price_cents"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
@@ -2911,7 +2954,6 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.string   "recipient"
     t.string   "from_type"
     t.string   "reply_to_type"
-    t.integer  "workflow_id"
   end
 
   create_table "workflow_steps", force: true do |t|
@@ -2932,7 +2974,6 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.datetime "updated_at"
     t.text     "events_metadata"
     t.string   "workflow_type"
-    t.string   "associated_event"
   end
 
 end

@@ -18,7 +18,7 @@ class Support::TicketDrop < BaseDrop
   end
 
   def rfq
-    if ticket.target.free?
+    if ticket.target.action_free_booking?
       'request'
     else
       'offer'

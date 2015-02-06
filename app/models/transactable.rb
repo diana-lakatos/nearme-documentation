@@ -38,11 +38,13 @@ class Transactable < ActiveRecord::Base
   has_one :location_address, through: :location
 
   has_many :company_industries, through: :location
+  has_one :schedule, as: :scheduable
 
   accepts_nested_attributes_for :availability_rules, allow_destroy: true
   accepts_nested_attributes_for :photos, allow_destroy: true
   accepts_nested_attributes_for :waiver_agreement_templates, allow_destroy: true
   accepts_nested_attributes_for :approval_requests
+  accepts_nested_attributes_for :schedule
 
   before_destroy :decline_reservations
 
@@ -57,8 +59,8 @@ class Transactable < ActiveRecord::Base
   scope :for_transactable_type_id, -> transactable_type_id { where(transactable_type_id: transactable_type_id) }
   scope :for_groupable_transactable_types, -> { joins(:transactable_type).where('transactable_types.groupable_with_others = ?', true) }
   scope :filtered_by_listing_types_ids,  -> listing_types_ids { where("(transactables.properties->'listing_type') IN (?)", listing_types_ids) if listing_types_ids }
-  scope :filtered_by_price_types,  -> price_types { where([(price_types - ['free']).map{|pt| "(properties->'#{pt}_price_cents') IS NOT NULL"}.join(' OR '),
-                                                           ("properties @> 'free=>true'" if price_types.include?('free'))].reject(&:blank?).join(' OR ')) }
+  scope :filtered_by_price_types,  -> price_types { where([(price_types - ['free']).map{|pt| "#{pt}_price_cents IS NOT NULL"}.join(' OR '),
+                                                           ("action_free_booking=true" if price_types.include?('free'))].reject(&:blank?).join(' OR ')) }
   scope :filtered_by_attribute_values,  -> attribute_values { where("(transactables.properties->'filterable_attribute') IN (?)", attribute_values) if attribute_values }
   scope :where_attribute_has_value, -> (attr, value) { where("properties @> '#{attr}=>#{value}'")}
 
@@ -77,7 +79,7 @@ class Transactable < ActiveRecord::Base
   include Listing::Search
   include AvailabilityRule::TargetHelper
 
-  PRICE_TYPES = [:hourly, :weekly, :daily, :monthly]
+  PRICE_TYPES = [:hourly, :weekly, :daily, :monthly, :fixed]
 
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
@@ -90,32 +92,11 @@ class Transactable < ActiveRecord::Base
 
   attr_accessor :distance_from_search_query, :photo_not_required
 
-  def hourly_reservations?
-    nil
-  end
-
-  def free?
-    nil
-  end
-
-  PRICE_TYPES.each do |price|
-    price_cents = "#{price}_price_cents"
-    # Flag each price type as a Money attribute.
-    # @see rails-money
-    define_method(price_cents) do
-      nil
-    end
-    monetize price_cents, :allow_nil => true
-
-    # If we set a new value to #{price}_price method, monetize will call write_attribute
-    # which will raise an error "ActiveModel::MissingAttributeError: can't write unknown attribute `#{price}_price_cents`"
-    # since #{price}_price_cents fields are attributes of the hstore 'properties' column
-    # Hence we need this hack to make it work in order to skip monetize call
-    define_method("#{price}_price=") do |value|
-      amount = value.blank? ? nil : (value.to_d * 100).to_i
-      send("#{price_cents}=".to_sym, amount)
-    end
-  end
+  monetize :daily_price_cents, allow_nil: true
+  monetize :hourly_price_cents, allow_nil: true
+  monetize :weekly_price_cents, allow_nil: true
+  monetize :monthly_price_cents, allow_nil: true
+  monetize :fixed_price_cents, allow_nil: true
 
   # Defer to the parent Location for availability rules unless this Listing has specific
   # rules.
@@ -127,8 +108,8 @@ class Transactable < ActiveRecord::Base
     end
   end
 
-  def overnight_booking?
-    !hourly_reservations? && transactable_type.overnight_booking?
+  def action_overnight_booking?
+    !action_hourly_booking? && transactable_type.action_overnight_booking?
   end
 
   # Trigger clearing of all existing availability rules on save
@@ -149,7 +130,18 @@ class Transactable < ActiveRecord::Base
   alias_method :defer_availability_rules?, :defer_availability_rules
 
   def open_on?(date, start_min = nil, end_min = nil)
-    availability.open_on?(:date => date, :start_minute => start_min, :end_minute => end_min)
+    if transactable_type.action_schedule_booking?
+      hour = start_min/60
+      minute = start_min - (60 * hour)
+      # to datetime is to have date in UTC otherwise we won't be able to check in IceCube schedule :|
+      self.schedule.schedule.occurs_at?("#{date} #{hour}:#{minute}".to_datetime.to_time)
+    else
+      availability.open_on?(:date => date, :start_minute => start_min, :end_minute => end_min)
+    end
+  end
+
+  def next_available_occurrences(number_of_occurrences = 10)
+    schedule.schedule.next_occurrences(number_of_occurrences)
   end
 
   def availability_for(date, start_min = nil, end_min = nil)
@@ -193,34 +185,35 @@ class Transactable < ActiveRecord::Base
     PRICE_TYPES.map { |price| self.send("#{price}_price_cents") }.compact.any? { |price| !price.zero? }
   end
 
-  def price_type=(price_type)
-    case price_type.to_sym
-    when PRICE_TYPES[2] #Daily
-      self.free = false if self.respond_to?(:free=)
-      self.hourly_reservations = false if self.respond_to?(:hourly_reservations=)
-    when PRICE_TYPES[0] #Hourly
-      self.free = false if self.respond_to?(:free=)
-      self.hourly_reservations = true
-    when :free
-      self.null_price!
-      self.free = true
-      self.hourly_reservations = false if self.respond_to?(:hourly_reservations=)
-    else
-      errors.add(:price_type, 'no pricing type set')
-    end
-  end
+  # def price_type=(price_type)
+  #   case price_type.to_sym
+  #   when PRICE_TYPES[2] #Daily
+  #     self.free = false if self.respond_to?(:free=)
+  #     self.action_hourly_booking = false if self.respond_to?(:action_hourly_booking=)
+  #   when PRICE_TYPES[0] #Hourly
+  #     self.free = false if self.respond_to?(:free=)
+  #     self.action_hourly_booking = true
+  #   when :free
+  #     self.null_price!
+  #     self.free = true
+  #     self.action_hourly_booking = false if self.respond_to?(:action_hourly_booking=)
+  #   else
+  #     errors.add(:price_type, 'no pricing type set')
+  #   end
+  # end
 
-  def price_type
-    if free?
-      :free
-    elsif hourly_reservations?
-      PRICE_TYPES[0] #Hourly
-    else
-      PRICE_TYPES[2] #Daily
-    end
+  # def price_type
+  #   if action_free_booking?
+  #     :free
+  #   elsif action_hourly_booking?
+  #     PRICE_TYPES[0] #Hourly
+  #   else
+  #     PRICE_TYPES[2] #Daily
+  #   end
+  # end
 
-  end
 
+  #TODO refactor
   def lowest_price_with_type(available_price_types = [])
     PRICE_TYPES.reject{ |price|
       !available_price_types.empty? && !available_price_types.include?(price.to_s)
@@ -307,7 +300,7 @@ class Transactable < ActiveRecord::Base
 
   # Number of minimum consecutive booking days required for this listing
   def minimum_booking_days
-    if free? || hourly_reservations? || daily_price_cents.to_i > 0 || (daily_price_cents.to_i + weekly_price_cents.to_i + monthly_price_cents.to_i).zero?
+    if action_free_booking? || action_hourly_booking? || daily_price_cents.to_i > 0 || (daily_price_cents.to_i + weekly_price_cents.to_i + monthly_price_cents.to_i).zero?
       1
     elsif weekly_price_cents.to_i > 0
       booking_days_per_week
@@ -328,7 +321,7 @@ class Transactable < ActiveRecord::Base
 
   # Returns a hash of booking block sizes to prices for that block size.
   def prices_by_days
-    if free?
+    if action_free_booking?
       { 1 => 0.to_money }
     else
       Hash[

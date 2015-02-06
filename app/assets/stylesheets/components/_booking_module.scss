@@ -6,6 +6,23 @@
     margin-left: 15px;
   }
 
+  .booking-module {
+    .calendar-wrapper.fixed-date-picker {
+      width: 100%;
+    }
+
+    .date-suggestion {
+      .resource {
+        font-size: 0.65em;
+      }
+
+      textarea {
+        width: 100%;
+      }
+    }
+  }
+
+
   .book {
     width: 100%;
 
@@ -223,7 +240,6 @@
 
     .calendar-wrapper {
       @include border-radius($border-radius-default);
-      display: block;
       float: left;
       @include box-sizing(border-box);
       margin: 15px 0px;
@@ -381,6 +397,20 @@
 
     .recurring_select {
       width: 100%;
+    }
+
+    #pricingTabs {
+      li {
+        &.active span {
+          color: $gray80;
+        }
+
+        a { 
+          padding-right: 6px;
+          padding-left: 6px;
+          display: inline-block;
+        }
+      }
     }
 
   }

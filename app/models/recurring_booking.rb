@@ -186,7 +186,7 @@ class RecurringBooking < ActiveRecord::Base
     reservations.unconfirmed.each(&:expire!)
   end
 
-  def hourly_reservations?
+  def action_hourly_booking?
     start_minute.present? && end_minute.present?
   end
 

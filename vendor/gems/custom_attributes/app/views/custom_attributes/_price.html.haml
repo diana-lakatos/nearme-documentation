@@ -1,7 +1,7 @@
 - if f.object.transactable_type.pricing_options.present? && f.object.transactable_type.pricing_options.any? { |k, v| v.to_i == 1 }
-  - if f.object.respond_to?(:free?) && f.object.free?
+  - if f.action_free_booking?
     - enable_inputs_daily, enable_inputs_hourly, enable_inputs_free = false, false, true
-  - elsif f.object.respond_to?(:hourly_reservations) && f.object.hourly_reservations
+  - elsif f.object.respond_to?(:action_hourly_booking) && f.object.action_hourly_booking
     - enable_inputs_daily, enable_inputs_hourly, enable_inputs_free = false, true, false
   - else
     - enable_inputs_daily, enable_inputs_hourly, enable_inputs_free = true, false, false
@@ -32,8 +32,8 @@
             .price-inputs-wrapper.left
               = render 'manage/listings/price_field', :f => f, :price => :hourly, :label => t("simple_form.labels.transactable.price.hourly")
 
-      - if f.object.errors.include?(:hourly_reservations).present?
-        %p.error-block= f.object.errors[:hourly_reservations].first
+      - if f.object.errors.include?(:action_hourly_booking).present?
+        %p.error-block= f.object.errors[:action_hourly_booking].first
 
       - if f.object.transactable_type.pricing_options['free']
         %div.price-inputs-free

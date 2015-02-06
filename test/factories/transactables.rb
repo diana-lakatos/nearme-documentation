@@ -4,6 +4,7 @@ FactoryGirl.define do
       photos_count 0
     end
     location
+    daily_price_cents 5000
 
     photo_not_required true
 
@@ -16,7 +17,6 @@ FactoryGirl.define do
         "listing_type" => "Desk",
         "quantity" => "1",
         "confirm_reservations" => true,
-        "daily_price_cents" => "5000",
         "description" => "Aliquid eos ab quia officiis sequi.",
         "name" => "Listing #{Random.rand(1000)}"
       }.each do |key, value|
@@ -39,8 +39,8 @@ FactoryGirl.define do
 
     factory :free_listing do
       after(:build) do |listing|
-        listing.properties.delete("daily_price_cents")
-        listing.properties["free"] = true
+        listing.daily_price_cents = nil
+        listing.action_free_booking = true
       end
     end
 
@@ -53,7 +53,7 @@ FactoryGirl.define do
     factory :listing_with_10_dollars_per_hour do
       after(:build) do |listing|
         listing.properties["hourly_price_cents"] = "1000"
-        listing.properties["hourly_reservations"] = true
+        listing.action_hourly_booking = true
       end
     end
 
@@ -117,7 +117,7 @@ FactoryGirl.define do
 
     factory :demo_listing do
       after(:build) do |listing|
-        listing.properties["daily_price_cents"] =  5000 + (100 * rand(50)).to_i
+        listing.daily_price_cents =  5000 + (100 * rand(50)).to_i
       end
 
       after(:create) do |listing, evaluator|
@@ -127,7 +127,6 @@ FactoryGirl.define do
     end
 
     factory :listing_from_transactable_type_with_price_constraints do
-      association(:transactable_type, factory: :transactable_type_listing_with_price_constraints)
       initialize_with do
         new(transactable_type: (FactoryGirl.create(:transactable_type_listing_with_price_constraints)))
       end

@@ -19,17 +19,27 @@ class @Bookings.Datepicker
   #           endElement - The end range trigger element
   constructor: (options = {}) ->
     @listing = options.listing
-    @startElement = options.startElement
-    @endElement = options.endElement
+    @container = options.container
+    @startElement = @container.find(".calendar-wrapper.date-start")
+    @endElement = @container.find(".calendar-wrapper.date-end")
+
+    @listingData = options.listingData
 
     @initializeStartDatepicker()
     @initializeEndDatepicker()
+
+    if @listing.isReservedHourly()
+      @initializeTimePicker()
+
     @bindEvents()
+    @assignInitialDates()
 
   #TODO: replace these with JS i18n system
   start_text: ->
     if @listing.isOvernightBooking()
       '<div class="datepicker-text-fadein">Check in</div>'
+    else if @listing.isReservedHourly()
+      '<div class="datepicker-text-fadein">Select date</div>'
     else
       '<div class="datepicker-text-fadein">Select a start date</div>'
 
@@ -42,9 +52,11 @@ class @Bookings.Datepicker
   bindEvents: ->
     @startDatepicker.on 'datesChanged', (dates) =>
       @startDatepickerWasChanged()
+      @timePicker.updateSelectableTimes() if @timePicker
 
     @endDatepicker.on 'datesChanged', (dates) =>
       @datesWereChanged()
+    
 
     # The 'rangeApplied' event is fired by our custom endDatepicker model when a date
     # is toggled with the 'range' mode on. We bind this to set the mode to the second
@@ -97,7 +109,7 @@ class @Bookings.Datepicker
 
     # If we're specifying more than just a start date, we need
     # to set the mode to Pick.
-    if dates.length > 1 && !@listing.isOvernightBooking
+    if dates.length > 1 && !@listing.isOvernightBooking()
       @setDatepickerToPickMode()
 
     @updateElementText()
@@ -105,6 +117,7 @@ class @Bookings.Datepicker
 
   reset: ->
     @setDates([])
+    @timePicker.updateSelectableTimes() if @timePicker
 
   addDate: (date) ->
     # If the added date is prior to the current start date, we set the
@@ -161,7 +174,10 @@ class @Bookings.Datepicker
     @setDatepickerToRangeMode()
 
     # Show the end datepicker instantly
-    @endDatepicker.show()
+    if @container.find("#hourly-booking").hasClass('active')
+      @timePicker.show()
+    else
+      @endDatepicker.show()
 
     # Bubble event
     @datesWereChanged()
@@ -169,4 +185,41 @@ class @Bookings.Datepicker
   formatDateForLabel: (date) ->
     "#{DNM.util.Date.monthName(date, 3)} #{date.getDate()}"
 
+  # Sets up the time picker view controller which handles the user selecting the
+  # start/end times for the reservation.
+  initializeTimePicker: ->
+    options = {
+      openMinute: @listing.data.earliest_open_minute,
+      closeMinute: @listing.data.latest_close_minute
+    }
 
+    if @listingData.initial_bookings && @listingData.initial_bookings.start_minute && @listingData.initial_bookings.end_minute
+      options.startMinute = @listingData.initial_bookings.start_minute
+      options.endMinute = @listingData.initial_bookings.end_minute
+    @timePicker = new Bookings.TimePicker(
+      @listing,
+      @container.find('.time-picker'),
+      options
+    )
+
+    @timePicker.on 'change', =>
+      @listing.setTimes(@timePicker.startMinute(), @timePicker.endMinute())
+      @trigger 'timesChanged'
+
+  # Assign initial dates from a restored session or the default
+  # start date.
+  assignInitialDates: ->
+    initialDates = if @listingData.initial_bookings
+      # Format is:
+      # {quantity: 1, dates: ['2013-11-04', ...] }
+      @listing.setDefaultQuantity(@listingData.initial_bookings.quantity)
+
+      # Map bookings to JS dates
+      (DNM.util.Date.idToDate(date) for date in @listingData.initial_bookings.dates)
+    else if @listing.isOvernightBooking()
+      [@listing.firstAvailableDate, @listing.secondAvailableDate, new Date()]
+    else
+      [@listing.firstAvailableDate]
+
+    @trigger 'datesChanged', initialDates
+    @setDates(initialDates)

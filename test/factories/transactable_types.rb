@@ -4,6 +4,10 @@ FactoryGirl.define do
     sequence(:name) { |n| "Transactable Type #{n}" }
     pricing_options { { "free"=>"1", "hourly"=>"1", "daily"=>"1", "weekly"=>"1", "monthly"=>"1" } }
     availability_options { { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => true } } }
+    action_hourly_booking true
+    action_recurring_booking false
+    action_free_booking true
+    action_rfq false
     service_fee_guest_percent '10.00'
     service_fee_host_percent '10.00'
     bookable_noun 'Desk'

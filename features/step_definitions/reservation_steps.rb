@@ -19,7 +19,7 @@ end
 
 Given /^#{capture_model} is reserved hourly$/ do |listing_instance|
   listing = model!(listing_instance)
-  listing.hourly_reservations = true
+  listing.action_hourly_booking = true
   listing.save!
 end
 

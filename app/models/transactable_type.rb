@@ -11,8 +11,6 @@ class TransactableType < ActiveRecord::Base
 
   attr_accessor :enable_cancellation_policy
 
-  # attr_accessible :name, :pricing_options, :pricing_validation, :availability_options, :availability_templates_attributes
-
   has_many :transactables, inverse_of: :transactable_type
   has_many :availability_templates, inverse_of: :transactable_type, :dependent => :destroy
   has_many :data_uploads, inverse_of: :transactable_type
@@ -22,18 +20,18 @@ class TransactableType < ActiveRecord::Base
   has_many :rating_systems
   has_many :reviews
   has_many :instance_views
-  has_many :rating_systems
-  has_many :reviews
+
+  has_one :schedule, as: :scheduable
+  accepts_nested_attributes_for :schedule
 
   belongs_to :instance
 
-  serialize :pricing_options, Hash
+  # serialize :pricing_options, Hash
   serialize :pricing_validation, Hash
   serialize :availability_options, Hash
   serialize :custom_csv_fields, Array
 
   before_save :normalize_cancellation_policy_enabled
-  after_save :setup_price_attributes, :if => lambda { |transactable_type| transactable_type.pricing_options_changed? || transactable_type.pricing_validation_changed? }
   after_save :setup_availability_attributes, :if => lambda { |transactable_type| transactable_type.availability_options_changed? && transactable_type.availability_options.present? }
 
   validates_presence_of :name
@@ -60,12 +58,12 @@ class TransactableType < ActiveRecord::Base
     availability_options && availability_options["defer_availability_rules"]
   end
 
-  def pricing_options
-    super.select { |k,v| v == "1" }
-  end
-
   def pricing_options_long_period_names
-    pricing_options.keys.reject { |k| %w(free hourly).include?(k) }
+    pricing_options = []
+    pricing_options << "daily" if action_daily_booking
+    pricing_options << "weekly" if action_weekly_booking
+    pricing_options << "monthly" if action_monthly_booking
+    pricing_options
   end
 
   def pricing_validation_is_correct
@@ -84,26 +82,6 @@ class TransactableType < ActiveRecord::Base
   rescue
     errors.add("availability_options[confirm_reservations][public]", "must be set")
     errors.add("availability_options[confirm_reservations][default_value]", "must be set")
-  end
-
-  def setup_price_attributes
-    { "free" => "free", "hourly" => "hourly_reservations" }.each do |field, attribute|
-      if pricing_options.keys.include?(field)
-        custom_attributes.create(name: attribute, attribute_type: :boolean, public: false, default_value: false, internal: true, validation_rules: self.class.mandatory_boolean_validation_rules) unless custom_attributes.where(:name => attribute).first.present?
-      else
-        custom_attributes.where(:name => attribute).first.try(:destroy)
-      end
-    end
-    %w(daily weekly monthly hourly).each do |price|
-      price_field = "#{price}_price_cents"
-      if pricing_options.keys.include?(price)
-        tta = custom_attributes.where(:name => price_field).first.presence || custom_attributes.build(name: price_field)
-        tta.attributes = {attribute_type: :integer, public: true, internal: true, validation_rules: build_validation_rule_for(price) }
-        tta.save!
-      else
-        custom_attributes.where(:name => price_field).first.try(:destroy)
-      end
-    end
   end
 
   def build_validation_rule_for(price)

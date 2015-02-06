@@ -12,7 +12,7 @@
       .col-md-4
         %p Requested time
         %p
-          - if reservation.listing.hourly_reservations?
+          - if reservation.listing.action_hourly_booking?
             = reservation.hourly_summary_for_first_period(false).gsub('<br />', ' ').html_safe
           - else
             N/A

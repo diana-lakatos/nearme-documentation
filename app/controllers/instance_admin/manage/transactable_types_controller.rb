@@ -12,7 +12,11 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
 
   def create
     @transactable_type = TransactableType.new(transactable_type_params.merge(
-      pricing_options: { "free"=>"1", "hourly"=>"1", "daily"=>"1", "weekly"=>"1", "monthly"=>"1" },
+      action_free_booking: true, 
+      action_hourly_booking: true,
+      action_daily_booking: true, 
+      action_weekly_booking: true, 
+      action_monthly_booking: true,
       availability_options: { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => true } }
     ))
     if @transactable_type.save

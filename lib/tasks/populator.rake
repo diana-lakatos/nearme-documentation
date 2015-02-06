@@ -203,7 +203,7 @@ namespace :populate do
       Transactable.transaction do
         values = []
         1000.times do |j|
-          values << %Q((NULL, NULL,143, now(), 246, NULL, 'jkl', NULL, false, 1, NULL, 2, true, 261, NULL, 'jkljkl', NULL, '"quantity"=>"#{Random.rand(20)}","capacity"=>"#{Random.rand(20)}","free"=>"false","hourly_reservations"=>"false","weekly_price_cents"=>"6700","color" => "#{colors[Random.rand(3)]}", "confirm_reservations"=>"0", "delta"=>"true", "rank"=>"#{Random.rand(20)}"', now()))
+          values << %Q((NULL, NULL,143, now(), 246, NULL, 'jkl', NULL, false, 1, NULL, 2, true, 261, NULL, 'jkljkl', NULL, '"quantity"=>"#{Random.rand(20)}","capacity"=>"#{Random.rand(20)}","free"=>"false","action_hourly_booking"=>"false","weekly_price_cents"=>"6700","color" => "#{colors[Random.rand(3)]}", "confirm_reservations"=>"0", "delta"=>"true", "rank"=>"#{Random.rand(20)}"', now()))
         end
         Transactable.connection.execute head_sql + values.join(", ")
         puts "added #{(i+1)}"

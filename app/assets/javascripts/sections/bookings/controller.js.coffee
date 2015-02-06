@@ -6,18 +6,10 @@ class Bookings.Controller
 
   constructor: (@container, @listingData, @options = {}) ->
     @setupDelayedMethods()
-
     @listing = new Bookings.Listing(@listingData)
-
     @bindDomElements()
     @initializeDatepicker()
-
-    if @listing.isReservedHourly()
-      @initializeTimePicker()
-
     @bindEvents()
-
-    @assignInitialDates()
     @updateQuantityField()
 
     if @listingData.initial_bookings and @options.submitFormImmediately
@@ -52,8 +44,12 @@ class Bookings.Controller
     @securedDomain = @bookButton.data('secured')
     @storeReservationRequestUrl = @bookButton.data('store-reservation-request-url')
     @userSignedIn = @bookButton.data('user-signed-in')
+    @bookingTabs = @container.find("#pricingTabs li a")
 
   bindEvents: ->
+    @bookingTabs.on 'click', (event) => 
+      @listing.setHourlyBooking(@container.find("#hourly-booking").hasClass('active'))
+
     @bookButton.on 'click', (event) =>
       @formTrigger = @bookButton
 
@@ -67,93 +63,25 @@ class Bookings.Controller
       else
         @rfqBooking()
 
-
     @quantityField.on 'change', (event) =>
       @quantityWasChanged()
 
     @datepicker.bind 'datesChanged', (dates) =>
       @listing.setDates(dates)
       @delayedUpdateBookingStatus()
-      @timePicker.updateSelectableTimes() if @timePicker
+
+    @datepicker.bind 'timesChanged', (dates) =>
+      @updateTimesFromTimePicker()
 
   # Setup the datepicker for the simple booking UI
   initializeDatepicker: ->
-    startElement = @container.find(".calendar-wrapper.date-start")
-    endElement = @container.find(".calendar-wrapper.date-end")
-
-    if @listing.isReservedHourly()
-      @datepicker = new window.Datepicker(
-        trigger: startElement,
-
-        # Custom view to handle bookings availability display
-        view: new Bookings.Datepicker.AvailabilityView(@listing,
-          trigger: startElement,
-          text: '<div class="datepicker-text-fadein">Select date</div>'
-        ),
-
-        # Limit to a single date selected at a time
-        model: new window.Datepicker.Model.Single(
-          allowDeselection: false
-        )
-      )
-
-      @datepicker.bind 'datesChanged', (dates) =>
-        date = dates[0]
-        startElement.find('.calendar-text').text("#{DNM.util.Date.monthName(date, 3)} #{date.getDate()}")
-
-        if @datepicker.getView().isVisible()
-          @datepicker.hide()
-          @timePicker.show()
-    else
-      # Special datepicker wrapper that handles the start/end date semantics,
-      # ranges, pick/choose, etc.
-      @datepicker = new Bookings.Datepicker(
-        listing: @listing
-        startElement: startElement
-        endElement: endElement
-      )
-
-  # Sets up the time picker view controller which handles the user selecting the
-  # start/end times for the reservation.
-  initializeTimePicker: ->
-    options = {
-      openMinute: @listing.data.earliest_open_minute,
-      closeMinute: @listing.data.latest_close_minute
-    }
-
-    if @listingData.initial_bookings && @listingData.initial_bookings.start_minute && @listingData.initial_bookings.end_minute
-      options.startMinute = @listingData.initial_bookings.start_minute
-      options.endMinute = @listingData.initial_bookings.end_minute
-    @timePicker = new Bookings.TimePicker(
-      @listing,
-      @container.find('.time-picker'),
-      options
-    )
-
-
-    @timePicker.on 'change', =>
-      @updateTimesFromTimePicker()
-
-  # Assign initial dates from a restored session or the default
-  # start date.
-  assignInitialDates: ->
-    initialDates = if @listingData.initial_bookings
-      # Format is:
-      # {quantity: 1, dates: ['2013-11-04', ...] }
-      @listing.setDefaultQuantity(@listingData.initial_bookings.quantity)
-
-      # Map bookings to JS dates
-      (DNM.util.Date.idToDate(date) for date in @listingData.initial_bookings.dates)
-    else if @listing.isOvernightBooking()
-      [@listing.firstAvailableDate, @listing.secondAvailableDate, new Date()]
-    else
-      [@listing.firstAvailableDate]
-
-    @datepicker.trigger 'datesChanged', initialDates
-    @datepicker.setDates(initialDates)
+    @datepicker = new Bookings.Datepicker({
+      listing: @listing,
+      container: @container,
+      listingData: @listingData
+    })
 
   updateTimesFromTimePicker: ->
-    @listing.setTimes(@timePicker.startMinute(), @timePicker.endMinute())
     @updateSummary()
     @updateBookingStatus()
 
@@ -181,8 +109,10 @@ class Bookings.Controller
     # Reset the datepicker if the booking is no longer available
     # with the new quantity.
     @datepicker.reset() unless @listing.bookingValid()
-    @timePicker.updateSelectableTimes() if @timePicker
     @updateSummary()
+
+  updateSummary: ->
+    @totalElement.text((@listing.bookingSubtotal()/100).toFixed(2))
 
   updateQuantityField: (qty = @listing.defaultQuantity) ->
     @container.find('.customSelect.quantity .customSelectInner').text(qty)
@@ -191,9 +121,6 @@ class Bookings.Controller
       @quantityResourceElement.text(@quantityResourceElement.data('plural'))
     else
       @quantityResourceElement.text(@quantityResourceElement.data('singular'))
-
-  updateSummary: ->
-    @totalElement.text((@listing.bookingSubtotal()/100).toFixed(2))
 
   reviewBooking: ->
     return unless @listing.isBooked()

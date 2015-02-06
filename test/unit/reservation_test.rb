@@ -420,7 +420,7 @@ class ReservationTest < ActiveSupport::TestCase
 
     context "hourly priced listing" do
       setup do
-        @listing = FactoryGirl.create(:transactable, quantity: 10, hourly_reservations: true, hourly_price_cents: 100)
+        @listing = FactoryGirl.create(:transactable, quantity: 10, action_hourly_booking: true, hourly_price_cents: 100)
         @user = FactoryGirl.create(:user)
         @reservation = @listing.reservations.build(
           :user => @user
@@ -459,7 +459,7 @@ class ReservationTest < ActiveSupport::TestCase
       Reservation::DailyPriceCalculator.any_instance.stubs(:price).returns(0.to_money).at_least(1)
       reservation = FactoryGirl.build(:reservation)
       reservation.save!
-      assert reservation.free?
+      assert reservation.action_free_booking?
       assert reservation.paid?
     end
   end

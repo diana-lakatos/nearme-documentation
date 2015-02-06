@@ -7,7 +7,7 @@ class ReservationRequest < Form
 
   def_delegators :@reservation, :quantity, :quantity=
   def_delegators :@reservation, :credit_card_payment?, :manual_payment?, :remote_payment?, :nonce_payment?
-  def_delegators :@listing,     :confirm_reservations?, :hourly_reservations?, :location
+  def_delegators :@listing,     :confirm_reservations?, :action_hourly_booking?, :location
   def_delegators :@user,        :mobile_number, :mobile_number=, :country_name, :country_name=, :country
 
   before_validation :setup_active_merchant_customer, :if => lambda { reservation and user and user.valid?}
@@ -44,7 +44,7 @@ class ReservationRequest < Form
     end
 
     if @listing
-      if @listing.hourly_reservations?
+      if @listing.action_hourly_booking? || @listing.transactable_type.action_schedule_booking?
         @start_minute = start_minute.try(:to_i)
         @end_minute = end_minute.try(:to_i)
       else
@@ -52,7 +52,15 @@ class ReservationRequest < Form
         @end_minute   = nil
       end
 
-      @dates = @dates.split(',') if @dates.is_a?(String)
+      if listing.transactable_type.action_schedule_booking?
+        if @dates.is_a?(String)
+          @start_minute = @dates.to_datetime.min.to_i + (60 * @dates.to_datetime.hour.to_i)
+          @end_minute = @start_minute
+          @dates = [@dates.to_datetime.to_date.to_s]
+        end
+      else
+        @dates = @dates.split(',') if @dates.is_a?(String)
+      end
       @dates.each do |date_string|
         @reservation.add_period(Date.parse(date_string), start_minute, end_minute)
       end
@@ -73,7 +81,7 @@ class ReservationRequest < Form
   end
 
   def payment_method
-    @payment_method = if @reservation.listing.free?
+    @payment_method = if @reservation.listing.action_free_booking?
                         Reservation::PAYMENT_METHODS[:free]
                       elsif @billing_gateway.try(:possible?) && @billing_gateway.try(:remote?)
                         Reservation::PAYMENT_METHODS[:remote]

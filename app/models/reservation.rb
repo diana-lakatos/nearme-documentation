@@ -286,19 +286,19 @@ class Reservation < ActiveRecord::Base
   end
 
   def total_amount_cents
-    subtotal_amount_cents + service_fee_amount_guest_cents rescue nil
+    subtotal_amount_cents + service_fee_amount_guest_cents
   end
 
   def subtotal_amount_cents
-    super || price_calculator.price.cents rescue nil
+    super || price_calculator.price.cents
   end
 
   def service_fee_amount_guest_cents
-    super || service_fee_calculator.service_fee_guest.cents rescue nil
+    super || service_fee_calculator.service_fee_guest.cents
   end
 
   def service_fee_amount_host_cents
-    super || service_fee_calculator.service_fee_host.cents rescue nil
+    super || service_fee_calculator.service_fee_host.cents
   end
 
   def total_amount_dollars
@@ -352,7 +352,7 @@ class Reservation < ActiveRecord::Base
     super.presence || listing.try(:currency)
   end
 
-  def free?
+  def action_free_booking?
     total_amount.to_f <= 0
   end
 
@@ -458,7 +458,9 @@ class Reservation < ActiveRecord::Base
     end
 
     def price_calculator
-      @price_calculator ||= if listing.hourly_reservations?
+      @price_calculator ||= if listing.transactable_type.action_schedule_booking?
+        FixedPriceCalculator.new(self)
+      elsif listing.action_hourly_booking?
         HourlyPriceCalculator.new(self)
       else
         DailyPriceCalculator.new(self)
@@ -468,7 +470,7 @@ class Reservation < ActiveRecord::Base
     def set_default_payment_status
       return if paid?
 
-      self.payment_status = if free?
+      self.payment_status = if action_free_booking?
         PAYMENT_STATUSES[:paid]
       else
         PAYMENT_STATUSES[:pending]

@@ -1,20 +1,28 @@
 class PriceValidator < ActiveModel::Validator
   def validate(record)
     # Make sure free listing does not have price and vice-versa
-    if record.respond_to?(:free)
-      if record.free? && record.has_price?
-        record.errors.add("free", :free)
-      elsif !record.free? && !record.has_price?
-        record.errors.add("free", :free)
-      end
+    if record.action_free_booking? && record.has_price?
+      record.errors.add(:action_free_booking, I18n.t('errors.messages.free'))
+    elsif !record.action_free_booking? && !record.has_price?
+      record.errors.add(:action_free_booking, I18n.t('errors.messages.free_if_zero'))
     end
 
     #Make sure a free listing does not have the hourly listing bool set
-    if record.respond_to?(:free?) && record.respond_to?(:hourly_reservations?)
-      if record.free? && record.hourly_reservations?
-        record.errors.add(:price_type, "listing cannot be free and have an hourly rate")
-      end
+    if record.action_free_booking? && record.action_hourly_booking?
+      record.errors.add(:price_type, I18n.t('errors.messages.free_and_hourly'))
+    end
+
+    %w(hourly daily weekly monthly).each do |price|
+      options = { attributes: "#{price}_price_cents", allow_nil: true, greater_than_or_equal_to: 0, less_than_or_equal_to: TransactableType::MAX_PRICE }
+      options.merge!(record.transactable_type.try(:build_validation_rule_for, price) || {})
+      ActiveModel::Validations::NumericalityValidator.new(options).validate(record)
     end
   end
-end
 
+  private
+
+  def price_above_max(price)
+
+
+  end
+end

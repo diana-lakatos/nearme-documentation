@@ -15,29 +15,6 @@ class TransactableTypeTest < ActiveSupport::TestCase
     end
   end
 
-  context "setup_price_attributes" do
-
-    setup do
-      @transactable_type = TransactableType.first
-    end
-
-    should 'be triggered on create' do
-      TransactableType.any_instance.expects(:setup_price_attributes)
-      FactoryGirl.create(:transactable_type)
-    end
-
-    should 'be triggered when updating pricing option' do
-      TransactableType.any_instance.expects(:setup_price_attributes)
-      @transactable_type.update_attribute(:pricing_options, { "daily" => "1", "monthly" => "1" })
-    end
-
-    should 'be triggered when updating pricing validation' do
-      TransactableType.any_instance.expects(:setup_price_attributes)
-      @transactable_type.update_attribute(:pricing_validation, { "daily" => { "min" => "10" } })
-    end
-
-  end
-
   context 'pricing_validation_is_correct' do
     setup do
       @transactable_type = TransactableType.first
@@ -78,65 +55,19 @@ class TransactableTypeTest < ActiveSupport::TestCase
 
   end
 
-  context 'setup_price_attributes' do
-
-    should 'ignore options that do not make sense' do
-      FactoryGirl.create(:transactable_type, :pricing_options => { "some" => "thing", "use" => { "le" => "ss" } })
-    end
-
-    should 'populate free boolean attribute if pricing_options include it' do
-      transactable_type = FactoryGirl.create(:transactable_type, :pricing_options => { "free" => "1" })
-      tta = transactable_type.custom_attributes.find { |attr| attr.name == "free" }
-      assert_equal "free", tta.name
-      assert_equal "boolean", tta.attribute_type
-      assert_equal true, tta.internal
-      assert_equal false, tta.public
-      transactable_type.update_attribute(:pricing_options, {})
-      assert_nil transactable_type.reload.custom_attributes.find { |attr| attr.name == "free" }
-      transactable_type.update_attribute(:pricing_options, { "free" => "1" })
-      assert tta.reload.destroyed?
-      assert_not_nil transactable_type.reload.custom_attributes.find { |attr| attr.name == "free" }
-    end
-
-    should 'populate hourly_reservations boolean attribute if pricing_options include it' do
-      transactable_type = FactoryGirl.create(:transactable_type, :pricing_options => { "hourly" => "1" })
-      tta = transactable_type.custom_attributes.find { |attr| attr.name == "hourly_reservations" }
-      assert_not_nil tta
-      assert_equal "boolean", tta.attribute_type
-      assert_equal true, tta.internal
-      assert_equal false, tta.public
-      transactable_type.update_attribute(:pricing_options, {})
-      tta.reload.destroyed?
-    end
-
-    should 'populate cents fields' do
-      transactable_type = FactoryGirl.create(:transactable_type, :pricing_options => { "hourly" => "1", "daily" => "1", "weekly" => "1", "monthly" => "1" })
-      %w(hourly daily weekly monthly).each do |price_field|
-        tta = transactable_type.custom_attributes.find { |attr| attr.name == "#{price_field}_price_cents" }
-        assert_not_nil tta
-        assert_equal "integer", tta.attribute_type
-        assert tta.internal
-        assert tta.public
-        transactable_type.update_attribute(:pricing_options, {})
-        tta.reload.destroyed?
-      end
-    end
-  end
-
   context 'build_validation_rule_for' do
 
     setup do
-      @expected_hash = { :numericality => { allow_nil: true, :redirect => "daily_price", :greater_than_or_equal_to => 0, :less_than_or_equal_to => TransactableType::MAX_PRICE } }
+      @expected_hash = { :greater_than_or_equal_to => 0, :less_than_or_equal_to => TransactableType::MAX_PRICE } }
     end
 
     should 'populate default restrictions if nothing is provide' do
       assert_equal @expected_hash, FactoryGirl.build(:transactable_type).build_validation_rule_for("daily")
     end
 
-    should 'populate custom min restriction if available and default max' do
+    should 'not use daily for hourly' do
       transactable_type = FactoryGirl.build(:transactable_type, :pricing_validation => { "daily" => { "min" => "342" } })
-      @expected_hash[:numericality][:greater_than_or_equal_to] = 342
-      assert_equal @expected_hash, transactable_type.build_validation_rule_for("daily")
+      assert_equal @expected_hash, transactable_type.build_validation_rule_for("hourly")
     end
 
     should 'populate custom min restriction if nothing populated for key ' do

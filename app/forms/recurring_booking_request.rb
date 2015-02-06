@@ -5,7 +5,7 @@ class RecurringBookingRequest < Form
   attr_reader   :recurring_booking, :listing, :location, :user
 
   def_delegators :@recurring_booking, :credit_card_payment?, :manual_payment?
-  def_delegators :@listing,     :confirm_reservations?, :hourly_reservations?, :location
+  def_delegators :@listing,     :confirm_reservations?, :action_hourly_booking?, :location
   def_delegators :@user,        :mobile_number, :mobile_number=, :country_name, :country_name=, :country
 
   before_validation :setup_credit_card_customer, :if => lambda { recurring_booking.try(:reservations).try(:first) and user and user.valid?}
@@ -25,8 +25,8 @@ class RecurringBookingRequest < Form
     if @listing
       @recurring_booking = @listing.recurring_bookings.build
       @recurring_booking.owner = user
-      @recurring_booking.start_minute = start_minute.to_i if @recurring_booking.listing.hourly_reservations?
-      @recurring_booking.end_minute = end_minute.to_i if @recurring_booking.listing.hourly_reservations?
+      @recurring_booking.start_minute = start_minute.to_i if @recurring_booking.listing.action_hourly_booking?
+      @recurring_booking.end_minute = end_minute.to_i if @recurring_booking.listing.action_hourly_booking?
       @recurring_booking.start_on = start_on || Date.current
       @recurring_booking.end_on = end_on
       @recurring_booking.occurrences = occurrences.to_i - 1 <= 0 ? 49 : [occurrences.to_i - 1, 49].min
@@ -78,7 +78,7 @@ class RecurringBookingRequest < Form
   end
 
   def payment_method
-    @payment_method = if @listing.free?
+    @payment_method = if @listing.action_free_booking?
                         Reservation::PAYMENT_METHODS[:free]
                       elsif @billing_gateway.try(:possible?)
                         Reservation::PAYMENT_METHODS[:credit_card]
@@ -107,7 +107,7 @@ class RecurringBookingRequest < Form
       @charged = false
       @recurring_booking.reservations.each do |reservation|
         if reservation.valid?
-          if !reservation.listing.free? && reservation.payment_method == Reservation::PAYMENT_METHODS[:credit_card] && !@charged
+          if !reservation.listing.action_free_booking? && reservation.payment_method == Reservation::PAYMENT_METHODS[:credit_card] && !@charged
             mode = @instance.test_mode? ? "test" : "live"
             reservation.build_billing_authorization(
               token: @token,
