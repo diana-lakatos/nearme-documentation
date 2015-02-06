@@ -43,7 +43,7 @@ module Utils
           seo_title: @instance.theme.meta_title,
           mail_from_address: @instance.support_email || "support@#{@instance.domains.first.name}",
           default_currency: 'USD',
-          code: 'spree'
+          code: @instance.theme.site_name || @instance.name
       )
     end
 
