@@ -26,14 +26,14 @@
         - if buyable?
           - unless hide_tab?('products')
             #products.tab-pane.active
-              - if @user.companies.first.present? && @user.companies.first.products.count > 0
+              - if @company.present? && @products.count > 0
                 = render 'registrations/profile/tabs/products'
               - else
                 = render 'registrations/profile/no_content', tab: :products
         - else
           - unless hide_tab?('services')
             #services.tab-pane.active
-              - if @user.companies.first.present? && @user.companies.first.listings.count > 0
+              - if @company.present? && @listings.count > 0
                 = render 'registrations/profile/tabs/services'
               - else
                 = render 'registrations/profile/no_content', tab: :services

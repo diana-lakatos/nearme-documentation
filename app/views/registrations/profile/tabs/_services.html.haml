@@ -1,4 +1,4 @@
-- @user.companies.first.listings.decorate.in_groups_of(2) do |line|
+- @listings.decorate.in_groups_of(2) do |line|
   .row-fluid
     - line.each do |transactable|
       .span6
@@ -9,4 +9,5 @@
             .details.clearfix
               %p= transactable.name
               %p.name= transactable.location.address
-              -#%p.price= product.display_price
+
+= will_paginate_styled @listings, param_name: 'services_page'
