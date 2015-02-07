@@ -1,4 +1,4 @@
-class InstanceAdmin::Manage::InventoriesController < InstanceAdmin::Manage::BaseController
+class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseController
   defaults :resource_class => User, :collection_name => 'users', :instance_name => 'user', :route_prefix => 'instance_admin'
 
   skip_before_filter :authorize_user!, :only => [:restore_session]
@@ -26,7 +26,7 @@ class InstanceAdmin::Manage::InventoriesController < InstanceAdmin::Manage::Base
     if session[:instance_admin_as_user].present?
       client_user = current_user
       admin_user = User.find(session[:instance_admin_as_user][:admin_user_id])
-      redirect_url = session[:instance_admin_as_user][:redirect_back_to] || instance_admin_inventory_url(client_user)
+      redirect_url = session[:instance_admin_as_user][:redirect_back_to] || instance_admin_users_url(client_user)
       sign_out # clears session
       sign_in_resource(admin_user)
       redirect_to redirect_url

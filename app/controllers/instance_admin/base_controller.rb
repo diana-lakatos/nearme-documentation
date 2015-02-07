@@ -13,7 +13,7 @@ class InstanceAdmin::BaseController < ApplicationController
 
   MANAGE_CONTROLLERS = {
     'approval_requests'  => { controller: '/instance_admin/manage/approval_requests', default_action: 'index' },
-    'inventories'        => { controller: '/instance_admin/manage/inventories', default_action: 'index' },
+    'users'              => { controller: '/instance_admin/manage/users', default_action: 'index' },
     'transfers'          => { controller: '/instance_admin/manage/transfers', default_action: 'index' },
     'partners'           => { controller: '/instance_admin/manage/partners', default_action: 'index' },
     'admins'             => { controller: '/instance_admin/manage/admins', default_action: 'index' },
@@ -37,22 +37,22 @@ class InstanceAdmin::BaseController < ApplicationController
 
   SETTINGS_CONTROLLERS = {
     'configuration'        => { default_action: 'show' },
-    'domains'              => { default_action: 'index' },
-    'dashboard'            => { default_action: 'show' },
     'locations'            => { default_action: 'show' },
     'listings'             => { default_action: 'show' },
-    'translations'         => { default_action: 'show' },
     'integrations'         => { default_action: 'show' },
+    'domains'              => { default_action: 'index' },
     'cancellation_policy'  => { default_action: 'show' },
+    'dashboard'            => { default_action: 'show' },
+    'translations'         => { default_action: 'show' }
   }
 
   THEME_CONTROLLERS = {
     'info'             => { default_action: 'show' },
     'design'           => { default_action: 'show' },
-    'footer'           => { default_action: 'show' },
     'homepage'         => { controller: '/instance_admin/theme/homepage_template', default_action: 'show' },
     'homepage content' => { controller: '/instance_admin/theme/homepage', default_action: 'show' },
-    'pages'            => { default_action: 'index' }
+    'pages'            => { default_action: 'index' },
+    'footer'           => { default_action: 'show' }
   }
 
   BUY_SELL_CONTROLLERS = {
@@ -61,7 +61,7 @@ class InstanceAdmin::BaseController < ApplicationController
     'tax_categories' => { default_action: 'index' },
     'tax_rates'      => { default_action: 'index' },
     'zones'          => { default_action: 'index' },
-    'taxonomies'     => { default_action: 'index' },
+    'taxonomies'     => { default_action: 'index' }
     # 'shipping_categories' => { default_action: 'index' },
     # 'shipping_methods' => { default_action: 'index' },
   }
