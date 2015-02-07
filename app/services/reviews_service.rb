@@ -1,5 +1,7 @@
 class ReviewsService
-  def initialize(params = {})
+  def initialize(current_user, current_instance, params = {})
+    @current_user = current_user
+    @current_instance = current_instance
     @params = params
   end
 
@@ -31,6 +33,71 @@ class ReviewsService
     end
   end
 
+  def get_rating_systems
+    active_rating_systems = RatingSystem.includes(:rating_hints, :rating_questions).where(active: true)
+    {
+      active_rating_systems: active_rating_systems,
+      buyer_rating_system: active_rating_systems.find_by(subject:  @current_instance.lessee),
+      seller_rating_system: active_rating_systems.find_by(subject:  @current_instance.lessor),
+      product_rating_system: active_rating_systems.find_by(subject:  @current_instance.bookable_noun)
+    }
+  end
+
+  def get_line_items_for_owner_and_creator
+    orders_ids = @current_user.orders.complete.pluck(:id)
+    creator_products = Spree::Product.where(administrator_id: @current_user.id)
+    creator_line_items_ids = []
+    creator_products.each{|p| creator_line_items_ids << p.line_items.pluck(:id) }
+    {
+      owner_line_items: Spree::LineItem.where(order_id: orders_ids),
+      creator_line_items: Spree::LineItem.where(id: creator_line_items_ids.uniq)
+    }
+  end
+
+  def get_orders_reviews(line_items)
+    {
+      seller_collection: reviews_with_object('seller').by_line_items(line_items[:owner_line_items].pluck(:id)),
+      product_collection: reviews_with_object('product').by_line_items(line_items[:owner_line_items].pluck(:id)),
+      buyer_collection: reviews_with_object('buyer').by_line_items(line_items[:creator_line_items].pluck(:id))
+    }
+  end
+
+  def get_orders(line_items)
+    {
+      seller_collection: exclude_line_items_by(line_items, :seller_ids),
+      product_collection: exclude_line_items_by(line_items, :product_ids),
+      buyer_collection: exclude_line_items_by(line_items, :buyer_ids)
+    }
+  end
+
+  def get_reservations_for_owner_and_creator
+    reservations = Reservation.with_listing.past.confirmed.includes(listing: :transactable_type)
+    {
+      owner_reservations: reservations.where(owner_id: @current_user.id).by_period(*filter_period),
+      creator_reservations: reservations.where(creator_id: @current_user.id).by_period(*filter_period)
+    }
+  end
+
+  def get_reviews_by(reservations)
+    {
+      seller_collection: reviews_with_object('seller').by_reservations(reservations[:owner_reservations].pluck(:id)),
+      product_collection: reviews_with_object('product').by_reservations(reservations[:owner_reservations].pluck(:id)),
+      buyer_collection: reviews_with_object('buyer').by_reservations(reservations[:creator_reservations].pluck(:id))
+    }
+  end
+
+  def get_reservations(reservations)
+    {
+      seller_collection: exclude_reservations_by(reservations, :seller_ids),
+      product_collection: exclude_reservations_by(reservations, :product_ids),
+      buyer_collection: exclude_reservations_by(reservations, :buyer_ids)
+    }
+  end
+
+  def get_transactable_type_id
+    @params[:review][:reviewable_type] == 'Reservation' ? Reservation.find(@params[:review][:reviewable_id]).listing.transactable_type_id : @current_instance.buyable_transactable_type.id
+  end
+
   private
 
   def date_from_params
@@ -50,5 +117,31 @@ class ReviewsService
 
   def date_range(start_date, end_date = Time.zone.today)
     start_date.beginning_of_day..end_date.end_of_day
+  end
+
+  def exclude_reservations_by(reservations, type)
+    collection = type == :buyer_ids ? reservations[:creator_reservations] : reservations[:owner_reservations]
+    collection.where.not(id: reservation_ids_with_feedback[type])
+  end
+
+  def exclude_line_items_by(line_items, type)
+    collection = type == :buyer_ids ? line_items[:creator_line_items] : line_items[:owner_line_items]
+    collection.where.not(id: line_items_ids_with_feedback[type])
+  end
+
+  def reservation_ids_with_feedback
+    @reservation_ids_with_feedback ||= RatingConstants::FEEDBACK_TYPES.each_with_object({}) do |type, hash|
+      hash["#{type}_ids".to_sym] = reviews_with_object(type).pluck(:reviewable_id)
+    end
+  end
+
+  def line_items_ids_with_feedback
+    @line_items_ids_with_feedback ||= RatingConstants::FEEDBACK_TYPES.each_with_object({}) do |type, hash|
+      hash["#{type}_ids".to_sym] = reviews_with_object(type).pluck(:reviewable_id)
+    end
+  end
+
+  def reviews_with_object(type)
+    @current_user.reviews.with_object(type)
   end
 end

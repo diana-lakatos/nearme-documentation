@@ -45,6 +45,7 @@ class Instance < ActiveRecord::Base
   has_many :instance_admins, :inverse_of => :instance
   has_many :instance_admin_roles, :inverse_of => :instance
   has_many :reservations, :as => :platform_context_detail
+  has_many :orders, :as => :platform_context_detail
   has_many :payments, :through => :reservations, :inverse_of => :instance
   has_many :instance_clients, :dependent => :destroy, :inverse_of => :instance
   has_many :translations, :dependent => :destroy, :inverse_of => :instance
@@ -224,5 +225,9 @@ class Instance < ActiveRecord::Base
   end
 
   def onboarding_verification_required=(arg)
+  end
+
+  def buyable_transactable_type
+    self.transactable_types.where(name: TransactableType::AVAILABLE_TYPES[1]).first
   end
 end

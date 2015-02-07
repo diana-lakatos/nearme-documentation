@@ -407,6 +407,9 @@ en:
       buyer_feedback: 'Leave buyer feedback'
       product_review: 'Write a product review'
       order_details: 'View Order Details'
+      update_seller_feedback: 'Update seller feedback'
+      update_buyer_feedback: 'Update buyer feedback'
+      update_product_review: 'Update a product review'
 
   registrations:
     tell_us: 'Tell us a little about yourself'
@@ -462,12 +465,15 @@ en:
   time:
     formats:
       day_and_month: "%^b %-d"
+      day_month_year: "%m/%d/%Y"
       only_date: "%B %d, %-Y"
+      month_year: "%B %Y"
   date:
     formats:
       short: '%B %d, %-Y'
       day_and_month: "%^b %-d"
       day_month_year: "%m/%d/%Y"
+      month_year: "%B %Y"
   user_messages:
     inbox:
       one: "Inbox (1)"

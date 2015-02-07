@@ -1,0 +1,36 @@
+.pagination {
+  text-align: center;
+  display: inherit;
+}
+
+.pagination ul {
+  box-shadow: none;
+  list-style: none;
+}
+
+.pagination li {
+  display: inline;
+}
+
+.pagination ul li a {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  padding: 4px 12px;
+}
+
+.pagination img {
+  float: inherit;
+}
+
+.pagination a {
+  color: #5dbded;
+}
+
+.pagination .page-link {
+  padding-top: 10px;
+}
+
+.pagination .page-link.active {
+  color: #000;
+}
