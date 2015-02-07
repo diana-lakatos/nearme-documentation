@@ -40,6 +40,6 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
   end
 
   def collection
-    @users ||= end_of_association_chain.for_instance(platform_context.instance).order("created_at DESC").paginate(:page => params[:page])
+    @users ||= UsersService.new(platform_context, params).get_users.paginate(:page => params[:page])
   end
 end

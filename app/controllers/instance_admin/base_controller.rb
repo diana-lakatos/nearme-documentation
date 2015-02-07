@@ -12,21 +12,21 @@ class InstanceAdmin::BaseController < ApplicationController
   }
 
   MANAGE_CONTROLLERS = {
-    'approval_requests'  => { controller: '/instance_admin/manage/approval_requests', default_action: 'index' },
-    'users'              => { controller: '/instance_admin/manage/users', default_action: 'index' },
     'transfers'          => { controller: '/instance_admin/manage/transfers', default_action: 'index' },
-    'partners'           => { controller: '/instance_admin/manage/partners', default_action: 'index' },
+    'users'              => { controller: '/instance_admin/manage/users', default_action: 'index' },
     'admins'             => { controller: '/instance_admin/manage/admins', default_action: 'index' },
-    'emails'             => { controller: '/instance_admin/manage/email_templates', default_action: 'index' },
-    'smses'              => { controller: '/instance_admin/manage/sms_templates', default_action: 'index' },
-    'email layouts'      => { controller: '/instance_admin/manage/email_layout_templates', default_action: 'index' },
-    'waiver_agreements'  => { controller: '/instance_admin/manage/waiver_agreement_templates', default_action: 'index' },
-    'custom_attributes'  => { controller: '/instance_admin/manage/instance_profile_types', default_action: 'index' },
-    'transactable_types' => { controller: '/instance_admin/manage/transactable_types', default_action: 'index' },
+    'partners'           => { controller: '/instance_admin/manage/partners', default_action: 'index' },
+    'reviews'            => { controller: '/instance_admin/manage/reviews', default_action: 'index' },
     'support'            => { controller: '/instance_admin/manage/support', default_action: 'index' },
     'faq'                => { controller: '/instance_admin/manage/support/faqs', default_action: 'index' },
+    'approval_requests'  => { controller: '/instance_admin/manage/approval_requests', default_action: 'index' },
+    'waiver_agreements'  => { controller: '/instance_admin/manage/waiver_agreement_templates', default_action: 'index' },
+    'email layouts'      => { controller: '/instance_admin/manage/email_layout_templates', default_action: 'index' },
+    'emails'             => { controller: '/instance_admin/manage/email_templates', default_action: 'index' },
+    'smses'              => { controller: '/instance_admin/manage/sms_templates', default_action: 'index' },
     'workflows'          => { controller: '/instance_admin/manage/workflows', default_action: 'index' },
-    'reviews'            => { controller: '/instance_admin/manage/reviews', default_action: 'index' }
+    'custom_attributes'  => { controller: '/instance_admin/manage/instance_profile_types', default_action: 'index' },
+    'transactable_types' => { controller: '/instance_admin/manage/transactable_types', default_action: 'index' }
   }
 
   MANAGE_BLOG_CONTROLLERS = {

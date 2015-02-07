@@ -1,5 +1,42 @@
 %h4 Manage Users
 
+= form_tag instance_admin_manage_users_path, method: :get, enforce_utf8: :false do
+  .filters
+    .filter.period
+      .dropdown.date-dropdown
+        %a#dLabel.dropdown-trigger{"aria-expanded" => "false", "aria-haspopup" => "true", "data-target" => "#", "data-toggle" => "dropdown", :role => "button"}
+          - if params[:date].present?
+            %span.current= selected_date_value(params[:date])
+          - else
+            %span.current
+              = t('instance_admin.manage.users.index.title_all')
+          %span.caret
+          = hidden_field_tag 'date', date_param_value
+        %ul.dropdown-menu{"aria-labelledby" => "dLabel", :role => "menu"}
+          %li
+            %a{data: {date: ''}}
+              = t('instance_admin.manage.users.index.title_all')
+          - Review::DATE_VALUES.each do |value|
+            %li
+              %a{data: {date: value}}
+                = selected_date_value(value)
+          %li.divider
+          %li.date-range
+            .date-range-header
+              = t('instance_admin.manage.users.index.date_range')
+            .from
+              = t('instance_admin.manage.users.index.from')
+            %input#from{type: 'text'}
+            .to
+              = t('instance_admin.manage.users.index.to')
+            %input#to{type: 'text'}
+            %button.apply-filter.btn.btn-green
+              = t('instance_admin.manage.users.index.apply_filter')
+
+    .filter.search
+      %input{placeholder: t('instance_admin.manage.users.index.search_by_keyword'), type: 'text', name: 'q', value: params[:q]}
+      =fa_icon "search"
+
 .content-container
   .row
     .table-container.col-xs-12.dropshadow
@@ -18,3 +55,6 @@
           = render 'index_row', :resource => resource
 
 = will_paginate collection
+
+- content_for :domready do
+  new InstanceAdmin.UsersController($('.users'))

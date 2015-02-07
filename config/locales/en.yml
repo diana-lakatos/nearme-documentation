@@ -84,6 +84,25 @@ en:
           object: "Object"
           user: "User"
           date: "Date"
+      users:
+        index:
+          today: "Today"
+          yesterday: "Yesterday"
+          week_ago: "Last week"
+          month_ago: "Last month"
+          3_months_ago: "Last 3 months"
+          6_months_ago: "Last 6 months"
+          title_all: "All"
+          date_range: "Date range"
+          from: "From:"
+          to: "To:"
+          apply_filter: "Apply filter"
+          search_by_keyword: "Search by keyword"
+          more_filters: "More filters"
+          service: "Service"
+          rating: "Rating"
+          user: "User"
+          date: "Date"
     rating_systems:
       index:
         any_rating_system: "You don't have any rating system defined yet. Select a service below and create your first rating system."

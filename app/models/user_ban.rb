@@ -11,5 +11,4 @@ class UserBan < ActiveRecord::Base
   delegate :cleanup, to: :user, prefix: true
   after_create :user_cleanup
 
-
 end
