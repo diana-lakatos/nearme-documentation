@@ -1,0 +1,5 @@
+.row-fluid.clearfix
+  .span12
+    %span=q.text
+    .additional-ratings{'data-question-id' => q.id}
+      .rating.editable{'data-hints' => rating_system.rating_hints.map(&:description_or_value).reverse}

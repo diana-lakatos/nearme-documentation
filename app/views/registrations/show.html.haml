@@ -7,17 +7,14 @@
       %ul.nav.nav-tabs
         - if buyable?
           - unless hide_tab?('products')
-            %li.active
+            %li{ class: "#{ 'active' unless param_reviews_page_present? }"}
               %a{href: '#products', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.products'
         - else
           - unless hide_tab?('services')
-            %li.active
+            %li{ class: "#{ 'active' unless param_reviews_page_present? }"}
               %a{href: '#services', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.services'
-
-        - if hide_tab?('reviews') && false # TODO: Remove when reviews are implemented
-          %li
-            %a{href: '#reviews', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.reviews', count: 0
-
+        %li{ class: "#{ 'active' if param_reviews_page_present? }"}
+          %a{href: '#reviews', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.reviews', count: @user.reviews_as_seller.count
         - if platform_context.instance.user_blogs_enabled? && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')
           %li
             %a{href: '#blog_posts', 'data-toggle' => 'tab'}= t 'user_profile.labels.tabs.blog_posts'
@@ -37,9 +34,10 @@
                 = render 'registrations/profile/tabs/services'
               - else
                 = render 'registrations/profile/no_content', tab: :services
-
-        - if hide_tab?('reviews') && false # TODO: Remove when reviews are implemented
-          #reviews.tab-pane
+        #reviews.tab-pane{ class: "#{ 'active' if param_reviews_page_present? }"}
+          - if @user.has_reviews?
+            = render 'registrations/profile/tabs/reviews'
+          - else
             = render 'registrations/profile/no_content', tab: :reviews
 
         - if platform_context.instance.user_blogs_enabled? && @user.blog.present? && @user.blog.enabled? && !hide_tab?('blog_posts')

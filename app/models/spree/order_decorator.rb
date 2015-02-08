@@ -4,6 +4,7 @@ Spree::Order.class_eval do
   belongs_to :company
   belongs_to :instance
   belongs_to :partner
+  belongs_to :platform_context_detail, :polymorphic => true
 
   attr_accessor :card_number, :card_code, :card_expires, :card_holder_first_name, :card_holder_last_name
   scope :completed, -> { where(state: 'complete') }
@@ -13,6 +14,7 @@ Spree::Order.class_eval do
   has_many :shipping_methods, class_name: 'Spree::ShippingMethod'
 
   after_save :purchase_shippo_rate
+  before_create :store_platform_context_detail
 
   alias_method :old_finalize!, :finalize!
 
@@ -71,5 +73,9 @@ Spree::Order.class_eval do
     true
   end
 
+  def store_platform_context_detail
+    self.platform_context_detail_type = PlatformContext.current.platform_context_detail.class.to_s
+    self.platform_context_detail_id = PlatformContext.current.platform_context_detail.id
+  end
 end
 

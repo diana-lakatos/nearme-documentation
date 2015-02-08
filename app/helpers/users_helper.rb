@@ -39,6 +39,10 @@ module UsersHelper
     })
   end
 
+  def param_reviews_page_present?
+    params[:reviews_page].present?
+  end
+
   private
 
   def social_icon(provider)

@@ -671,6 +671,36 @@ class User < ActiveRecord::Base
     BuySell::CartService.new(self)
   end
 
+  def reviews_as_seller
+    @reviews_as_seller ||= Review.where(object: 'seller', reviewable_type: 'Spree::LineItem', reviewable_id: line_items.pluck(:id))
+  end
+
+  def line_items
+    @line_items ||= Spree::LineItem.where(variant_id: variants.pluck(:id))
+  end
+
+  def variants
+    @variants ||= Spree::Variant.where(product_id: products.pluck(:id))
+  end
+
+  def products
+    @products ||= Spree::Product.where(administrator_id: self.id)
+  end
+
+  def has_reviews?
+    reviews_as_seller.count > 0
+  end
+
+  def question_average_rating
+    @rating_answers_rating ||= RatingAnswer.where(review_id: reviews_as_seller.pluck(:id))
+      .group(:rating_question_id).average(:rating)
+  end
+
+  def recalculate_average_rating!
+    average_rating = reviews_as_seller.average(:rating)
+    self.update(average_rating: average_rating)
+  end
+
   private
 
   def get_first_name_from_name

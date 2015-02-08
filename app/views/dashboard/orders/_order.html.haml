@@ -44,11 +44,18 @@
             -#  = link_to order.shipments.first.tracking, target: '_blank' do
             -#    %col-md-.btn.blue= t'orders.buttons.track'
 
-            - unless hidden.include?(:feedback)
-              = link_to '#' do
-                %col-md-.btn.gray= feedback_caption
-            - unless hidden.include?(:review)
-              = link_to '#' do
+            - if item.has_seller_reviews?
+              = link_to dashboard_reviews_path(tab: 'completed') do
+                %col-md-.btn.blue= t 'orders.buttons.update_seller_feedback'
+            - else
+              = link_to dashboard_reviews_path do
+                %col-md-.btn.gray= t 'orders.buttons.seller_feedback'
+            %br
+            - if item.has_product_reviews?
+              = link_to dashboard_reviews_path(tab: 'completed') do
+                %col-md-.btn.blue= t 'orders.buttons.update_product_review'
+            - else
+              = link_to dashboard_reviews_path do
                 %col-md-.btn.gray= t 'orders.buttons.product_review'
 
             - if manage
