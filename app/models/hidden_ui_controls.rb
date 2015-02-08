@@ -1,7 +1,6 @@
 class HiddenUiControls
 
-  class KeyNotFound < ActiveRecord::RecordNotFound;
-  end
+  class KeyNotFound < ActiveRecord::RecordNotFound; end
 
   BUY_SELL_KEYS = [
       'dashboard/orders',
