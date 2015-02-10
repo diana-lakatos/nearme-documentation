@@ -8,6 +8,7 @@ class Support::ReceiveMails
       # in our system
       subject("[Support Ticket #%ticket_id%]", Support::TicketMessage)
       subject("[Ticket Support #%ticket_id%]", Support::TicketMessage)
+      subject("[Ticket Support %ticket_id%]", Support::TicketMessage)
 
       # If subject does not follow our convention, it means that this is new email
       # and we will create a Support::Ticket for it. We will also notify
