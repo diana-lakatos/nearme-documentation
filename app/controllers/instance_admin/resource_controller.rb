@@ -37,5 +37,3 @@ class InstanceAdmin::ResourceController < InstanceAdmin::BaseController
   def collection_default_scope
   end
 end
-
-

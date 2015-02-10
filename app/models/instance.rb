@@ -66,6 +66,7 @@ class Instance < ActiveRecord::Base
   has_many :data_uploads, as: :target
   has_many :user_blog_posts
   has_many :instance_views
+  has_many :dimensions_templates
   has_many :rating_systems, dependent: :destroy
   has_many :reviews, dependent: :destroy
   has_many :rating_questions

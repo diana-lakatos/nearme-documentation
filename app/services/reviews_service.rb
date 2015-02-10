@@ -108,7 +108,7 @@ class ReviewsService
     when 'month_ago' then date_range 1.month.ago.to_date
     when '3_months_ago' then date_range 3.months.ago.to_date
     when '6_months_ago' then date_range 6.months.ago.to_date
-    else 
+    else
       date_range_array = @params[:date].split('-')
       date_range_array.map! {|string| Date.strptime(string, '%m/%d/%Y') }
       date_range *date_range_array

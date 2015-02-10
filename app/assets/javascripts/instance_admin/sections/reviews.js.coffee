@@ -31,5 +31,5 @@ class @InstanceAdmin.ReviewsController
       startDate = $('#from').val()
       endDate = $('#to').val()
       if startDate && endDate
-        $('input[type="hidden"]#date').val(startDate + '-' + endDate) 
+        $('input[type="hidden"]#date').val(startDate + '-' + endDate)
         $(@).parents('form').submit()
