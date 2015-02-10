@@ -1,7 +1,7 @@
 section.listings {
 
   .padding-row {
-    padding: $padding-medium 0; 
+    padding: $padding-medium 0;
 
     &.small {
       padding-top: 0;
@@ -9,7 +9,7 @@ section.listings {
   }
 
   h2 {
-    padding: $padding-default 0; 
+    padding: $padding-default 0;
     font-size: 150%;
     padding-bottom: 30px;
 
@@ -64,8 +64,8 @@ section.listings {
         color: $gray80;
 
         span {
-          position: absolute; 
-          right:0;
+          position: absolute;
+          right: 0;
           top: 0px;
         }
 
@@ -81,7 +81,7 @@ section.listings {
         @media (max-width: $booking-module-breakpoint) {
           display: none;
         }
-      } 
+      }
     }
 
     .amenities-container {
@@ -91,7 +91,7 @@ section.listings {
       display: block;
 
       .amenities-row {
-        border-top: 1px solid $gray210; 
+        border-top: 1px solid $gray210;
 
         .span3 {
           white-space: nowrap;
@@ -105,8 +105,8 @@ section.listings {
         @media (max-width: $booking-module-breakpoint-desktop) {
           border-top: 0;
 
-          .span3 { 
-            width: 50%;  
+          .span3 {
+            width: 50%;
             margin-left: 0;
             border-top: 1px solid $gray210;
           }
@@ -118,8 +118,8 @@ section.listings {
             border-top: 1px solid $gray210;
             width: 100%;
           }
-        } 
-      } 
+        }
+      }
 
       @media (max-width: $booking-module-breakpoint) {
         display: none;
@@ -224,7 +224,7 @@ section.listings {
     }
 
     @media (min-width: $host-card-breakpoint-tiny) and (max-width: $host-card-breakpoint-small),
-      (min-width: $host-card-breakpoint-medium) and (max-width: $host-card-breakpoint-large) {
+    (min-width: $host-card-breakpoint-medium) and (max-width: $host-card-breakpoint-large) {
 
       .info {
         padding: 8px;
@@ -262,7 +262,7 @@ section.listings {
   }
 
   article.listing, article.location, article.company, article.administrator {
-    max-width: $space-full-image-width; 
+    max-width: $space-full-image-width;
   }
 
   .availabilities {
@@ -332,7 +332,6 @@ section.listings {
     }
   }
 
-
   .other-listings {
     @include box-sizing(border-box);
     @include border-radius($border-radius-default);
@@ -354,6 +353,15 @@ section.listings {
           color: $gray80;
         }
       }
+    }
+  }
+
+  .favorite {
+    margin-left: 15px;
+
+    a {
+      text-align: center;
+      width: 100%;
     }
   }
 
@@ -423,7 +431,6 @@ section.listings {
         width: 33px;
         padding-top: 20px;
 
-
         &.right {
           left: auto;
           right: 0;
@@ -440,8 +447,8 @@ section.listings {
 
     .carousel {
       margin-bottom: 0;
-      
-      ol.carousel-indicators{
+
+      ol.carousel-indicators {
         bottom: 10px;
         left: 0px;
         top: auto;
@@ -486,21 +493,21 @@ section.listings {
 
       .carousel-inner {
         width: 100%;
-        max-width: $space-full-image-width; 
+        max-width: $space-full-image-width;
 
         .item {
           width: 100%;
           height: 100%;
 
           img {
-            @include border-radius($border-radius-default);          
+            @include border-radius($border-radius-default);
             height: auto;
           }
         }
       }
 
       &#photos-container {
-        max-width: $space-full-image-width; 
+        max-width: $space-full-image-width;
       }
 
       &#photos-container-enlarged {
@@ -563,7 +570,7 @@ section.listings {
 
         &.close {
           position: fixed;
-          @include border-bottom-left-radius($border-radius-default);          
+          @include border-bottom-left-radius($border-radius-default);
         }
       }
 
@@ -576,9 +583,8 @@ section.listings {
         height: 15%;
         color: $theme_white;
         font-size: 13px;
-        @include background-image(linear-gradient(rgba(250,250,250,0), $black));
+        @include background-image(linear-gradient(rgba(250, 250, 250, 0), $black));
         @include border-radius($border-radius-bottom);
-        
 
         .caption {
           position: absolute;
@@ -596,7 +602,7 @@ section.listings {
     width: 100%;
 
     .one-third.column {
-      margin:0;
+      margin: 0;
       width: 33.3333%;
 
       @media (max-width: $booking-module-breakpoint-desktop) {
@@ -620,7 +626,7 @@ section.listings {
       @media (max-width: $booking-module-breakpoint) {
         width: 100%;
         clear: both;
-      }	
+      }
     }
   }
 
@@ -707,7 +713,7 @@ section.listings {
     @media (max-width: $booking-module-breakpoint) {
       margin-left: 0px;
     }
-        
+
   }
 }
 

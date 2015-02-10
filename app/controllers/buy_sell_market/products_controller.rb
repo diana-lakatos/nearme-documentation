@@ -1,5 +1,5 @@
 class BuySellMarket::ProductsController < ApplicationController
-  before_filter :set_product, only: [:show]
+  before_filter :set_product, only: [:show, :add_to_wish_list]
   before_filter :theme_name, only: [:show]
 
   def show

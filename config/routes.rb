@@ -142,6 +142,8 @@ DesksnearMe::Application.routes.draw do
   end
 
   resources :marketplace_sessions, only: [:new, :create]
+  get '/wish_list/add_item', to: 'wish_list#add_item'
+  get '/wish_list/remove_item', to: 'wish_list#remove_item'
 
   namespace :instance_admin do
     get '/', :to => 'base#index'
@@ -283,6 +285,8 @@ DesksnearMe::Application.routes.draw do
       resources :email_templates, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :sms_templates, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :waiver_agreement_templates, :only => [:index, :create, :update, :destroy]
+
+      resource :wish_lists, only: [:show, :update]
     end
 
     namespace :manage_blog do
@@ -537,6 +541,12 @@ DesksnearMe::Application.routes.draw do
       resources :posts, controller: 'user_blog/blog_posts'
     end
     resources :photos, :only => [:create, :destroy, :edit, :update]
+
+    resources :wish_list_items, only: [:index, :destroy], path: 'favourites' do
+      collection do
+        delete :clear
+      end
+    end
   end
 
   resources :reservations do

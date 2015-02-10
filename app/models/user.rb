@@ -56,6 +56,8 @@ class User < ActiveRecord::Base
   belongs_to :shipping_address, class_name: 'Spree::Address'
   has_many :reviews
 
+  has_many :wish_lists, dependent: :destroy
+
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
   before_validation :normalize_gender
@@ -126,9 +128,9 @@ class User < ActiveRecord::Base
   #        a 'Form' object containing their own additional validations specific
   #        to their context.
   validates :phone, phone_number: true,
-    :if => ->(u) {u.phone.present? || u.phone_required}
+            :if => ->(u) { u.phone.present? || u.phone_required }
   validates :mobile_number, phone_number: true,
-    :if => ->(u) {u.mobile_number.present?}
+            :if => ->(u) { u.mobile_number.present? }
   validates_presence_of :country_name, :if => lambda { phone_required || country_name_required }
 
   validates :current_location, length: { maximum: 50 }
@@ -669,6 +671,14 @@ class User < ActiveRecord::Base
 
   def cart
     BuySell::CartService.new(self)
+  end
+
+  def default_wish_list
+    unless wish_lists.any?
+      wish_lists.create default: true, name: I18n.t('wish_lists.name')
+    end
+
+    wish_lists.default.first
   end
 
   private

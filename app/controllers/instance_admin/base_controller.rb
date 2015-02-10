@@ -26,7 +26,8 @@ class InstanceAdmin::BaseController < ApplicationController
     'support'            => { controller: '/instance_admin/manage/support', default_action: 'index' },
     'faq'                => { controller: '/instance_admin/manage/support/faqs', default_action: 'index' },
     'workflows'          => { controller: '/instance_admin/manage/workflows', default_action: 'index' },
-    'reviews'            => { controller: '/instance_admin/manage/reviews', default_action: 'index' }
+    'reviews'            => { controller: '/instance_admin/manage/reviews', default_action: 'index' },
+    'wish_lists'         => { controller: '/instance_admin/manage/wish_lists', default_action: 'show' }
   }
 
   MANAGE_BLOG_CONTROLLERS = {

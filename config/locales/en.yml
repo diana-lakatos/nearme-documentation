@@ -98,6 +98,12 @@ en:
       header:
         all_reviews: "All Reviews"
         settings: "Settings"
+
+    wish_lists:
+      labels:
+        name: 'LIST TITLE'
+        unselected_state: 'UNSELECTED STATE'
+        selected_state: 'SELECTED STATE'
   buy_sell_market:
     products:
       buttons:
@@ -318,6 +324,27 @@ en:
         buy_sell: 'User Profile > Products'
         services: 'User Profile > Services'
         reviews: 'User Profile > Reviews'
+
+    dashboard:
+      wish_list_items: 'Dashboard > Favourites'
+
+  wish_lists:
+    name: 'Favorites'
+    empty_list: "You don't have any items yet"
+
+    buttons:
+      clear: 'Remove all'
+      unselected_state: 'Add to Favorites'
+      selected_state: 'Remove from Favorites'
+      delete: 'Delete'
+
+    notices:
+      item_added: 'Item has been added to the list.'
+      item_removed: 'Item has been removed from the list.'
+      already_listed: 'This item is already in the list.'
+
+    confirmations:
+      clear: 'Are you sure you want to delete all items?'
 
   user_profile:
     labels:
