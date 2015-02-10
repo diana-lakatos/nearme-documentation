@@ -20,12 +20,45 @@ class ProductForm < Form
   def_delegators :@product, :id, :price, :price=, :name, :name=, :description, :id=, :description=,
     :shippo_enabled=, :shippo_enabled, :draft?, :draft=, :draft
 
-  def_delegators :'@product.master', :weight=, :weight, :depth=, :depth,
-    :width=, :width, :height=, :height
+  def_delegators :'@product.master', :weight_unit, :weight_unit=, :height_unit, :height_unit=,
+    :width_unit, :width_unit=, :depth_unit, :depth_unit=,
+    :unit_of_measure, :unit_of_measure=
+
+  def weight=(value)
+    @product.master.weight_user = value
+  end
+
+  def weight
+    @product.master.weight_user
+  end
+
+  def width=(value)
+    @product.master.width_user = value
+  end
+
+  def width
+    @product.master.width_user
+  end
+
+  def height=(value)
+    @product.master.height_user = value
+  end
+
+  def height
+    @product.master.height_user
+  end
+
+  def depth=(value)
+    @product.master.depth_user = value
+  end
+
+  def depth
+    @product.master.depth_user
+  end
 
   def list_of_countries_or_states_cannot_be_empty
     added_to_base = false
-    if self.try(:shipping_methods).present?
+    if !@product.try(:shippo_enabled).present? && self.try(:shipping_methods).present?
       self.shipping_methods.each do |shipping_method|
         if shipping_method.try(:zones).present?
           shipping_method.zones.each do |zone|
@@ -112,6 +145,7 @@ class ProductForm < Form
     @shipping_category.save!(validate: !draft?)
     # We do not touch shipping methods (which are auto-created) if the
     # product is Shippo-enabled
+
     if !@product.shippo_enabled?
       @shipping_methods.each do |shipping_method|
         shipping_method.save!(validate: !draft?)

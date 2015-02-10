@@ -16,7 +16,7 @@
         %h2.section-heading List New Item
         = render 'forms/product_form', f: product_form
 
-    %section.list#shipping-info
+    %section.list#shipping-info{ :data => { 'js-element-identifier' => 'initial_shipping_profiles_section' } }
       .container-fluid
         %h2.section-heading Shipping Info
         = product_form.simple_fields_for :shipping_methods do |shipping_method|
@@ -37,4 +37,4 @@
   new TaxonAutocomplete($("#boarding_form"));
   new Dashboard.AddressController($("#boarding_form"));
   var boarding_form = new BoardingForm($("#boarding_form"));
-  new ShippoFieldsManager();
+  new ShippoFieldsManager(#{raw DimensionsTemplate::UNITS_OF_MEASURE.to_json});

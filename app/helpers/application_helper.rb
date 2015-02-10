@@ -267,4 +267,9 @@ module ApplicationHelper
   def active_class(arg1, arg2)
     'active' if arg1 == arg2
   end
+
+  def admin_breadcrumbs
+    @breadcrumbs_title.presence || controller.class.to_s.deconstantize.demodulize
+  end
+
 end

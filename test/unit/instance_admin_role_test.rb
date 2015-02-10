@@ -22,7 +22,7 @@ class InstanceAdminRoleTest < ActiveSupport::TestCase
     should 'return correct first permission have access to' do
       assert_equal "theme", FactoryGirl.create(:instance_admin_role, :permission_analytics => false, :permission_theme => true).first_permission_have_access_to
     end
-    
+
     should 'return nil if all are false' do
       assert_nil FactoryGirl.create(:instance_admin_role, :permission_analytics => false).first_permission_have_access_to
     end
