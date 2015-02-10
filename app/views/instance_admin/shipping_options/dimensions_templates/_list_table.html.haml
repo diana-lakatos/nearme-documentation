@@ -1,0 +1,20 @@
+.row
+  .table-container.col-xs-12.dropshadow
+    %table.table.sortable
+      %thead
+        %tr
+          %th Name
+          %th Details
+          %th 
+            %span.header-link
+              = link_to '+ Add New Dimension Template', new_instance_admin_shipping_options_dimensions_template_path
+    
+      - collection.each do |resource|
+        %tr
+          %td
+            = resource.name
+          %td
+          %td
+            = link_to "Edit", edit_instance_admin_shipping_options_dimensions_template_path(resource), :class => 'btn btn-green'
+            = link_to "Delete", instance_admin_shipping_options_dimensions_template_path(resource), :class => 'btn btn-green', :method => :delete, :confirm => t('confirmations.are_you_sure')
+    

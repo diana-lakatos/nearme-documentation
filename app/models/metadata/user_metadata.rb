@@ -15,6 +15,7 @@ module Metadata
       def populate_listings_metadata!
         update_instance_metadata({
           has_draft_listings: listings.reload.draft.any?,
+          has_draft_products: products.reload.draft.any?,
           has_any_active_listings: listings.reload.active.any?
         })
       end
@@ -31,6 +32,7 @@ module Metadata
         update_instance_metadata({
           companies_metadata: companies.reload.collect(&:id),
           has_draft_listings: listings.reload.draft.any?,
+          has_draft_products: products.reload.draft.any?,
           has_any_active_listings: listings.reload.active.any?
         })
       end

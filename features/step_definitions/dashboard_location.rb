@@ -43,17 +43,17 @@ end
 
 Then /^New locations and transactables from csv should be added$/ do
   company = model!('user').companies.first
-  assert_equal ['Czestochowa', 'Rydygiera'], company.locations.pluck(:name).sort
-  assert_equal [["my name", "Rydygiera"], ["my name2", "Rydygiera"]], company.listings.joins(:location).select('name, locations.name as location_name, transactable_type_id, properties').map { |l| [l.name, l.location_name] }
+  assert_equal ['Czestochowa', 'Rydygiera'], company.locations.pluck(:name).compact.sort
+  assert_equal [["my name", "Rydygiera"], ["my name2", "Rydygiera"]], company.listings.joins(:location).where('locations.name IS NOT NULL').select('transactables.id, name, locations.name as location_name, transactable_type_id, properties').sort.map { |l| [l.name, l.location_name] }
 end
 
 Given /^#{capture_model} should be updated$/ do |model|
   if model=='the location'
-    location = model!('location')
+    location = Location.last
     assert_location_data(location)
     page.should have_content(location.name, visible: true)
   else
-    listing = model!('transactable')
+    listing = Transactable.first
     assert_listing_data(listing, true)
   end
 end
@@ -172,5 +172,10 @@ Then /^#{capture_model} should have availability:$/ do |model, table|
       assert_nil rule, "#{day} should not be open"
     end
   end
+
+end
+
+And /^I populate listing metadata for all users$/ do
+  User.all.each { |u| u.populate_listings_metadata! }
 end
 

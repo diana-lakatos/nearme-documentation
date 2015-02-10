@@ -3,8 +3,10 @@
 FactoryGirl.define do
   factory :review do
     rating { rand(RatingConstants::VALID_VALUES) }
-    object %w(product seller buyer).sample
+    object RatingConstants::FEEDBACK_TYPES.sample
     user
     instance { Instance.first.presence || FactoryGirl.create(:instance) }
+    reviewable { FactoryGirl.create(:reservation, instance: instance)  }
+    transactable_type { instance.transactable_types.first }
   end
 end

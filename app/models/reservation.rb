@@ -96,11 +96,11 @@ class Reservation < ActiveRecord::Base
     super.presence || creator
   end
 
-  monetize :total_amount_cents
-  monetize :subtotal_amount_cents
-  monetize :service_fee_amount_guest_cents
-  monetize :service_fee_amount_host_cents
-  monetize :successful_payment_amount_cents
+  monetize :total_amount_cents, with_model_currency: :currency
+  monetize :subtotal_amount_cents, with_model_currency: :currency
+  monetize :service_fee_amount_guest_cents, with_model_currency: :currency
+  monetize :service_fee_amount_host_cents, with_model_currency: :currency
+  monetize :successful_payment_amount_cents, with_model_currency: :currency
 
   state_machine :state, initial: :unconfirmed do
     after_transition unconfirmed: :confirmed, do: :attempt_payment_capture, if: lambda { |r| r.billing_authorization.present? }

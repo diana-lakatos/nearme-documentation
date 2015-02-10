@@ -99,15 +99,22 @@ class Transactable < ActiveRecord::Base
   end
 
   PRICE_TYPES.each do |price|
+    price_cents = "#{price}_price_cents"
     # Flag each price type as a Money attribute.
     # @see rails-money
-    define_method("#{price}_price_cents") do
+    define_method(price_cents) do
       nil
     end
-    monetize "#{price}_price_cents", :allow_nil => true
+    monetize price_cents, :allow_nil => true
 
-    # Mark price fields as attr-accessible
-    # attr_accessible "#{price}_price_cents", "#{price}_price"
+    # If we set a new value to #{price}_price method, monetize will call write_attribute
+    # which will raise an error "ActiveModel::MissingAttributeError: can't write unknown attribute `#{price}_price_cents`"
+    # since #{price}_price_cents fields are attributes of the hstore 'properties' column
+    # Hence we need this hack to make it work in order to skip monetize call
+    define_method("#{price}_price=") do |value|
+      amount = value.blank? ? nil : (value.to_d * 100).to_i
+      send("#{price_cents}=".to_sym, amount)
+    end
   end
 
   # Defer to the parent Location for availability rules unless this Listing has specific
@@ -137,7 +144,7 @@ class Transactable < ActiveRecord::Base
 
   # Are we deferring availability rules to the Location?
   def defer_availability_rules
-    availability_rules.reject(&:marked_for_destruction?).empty?
+    availability_rules.to_a.reject(&:marked_for_destruction?).empty?
   end
   alias_method :defer_availability_rules?, :defer_availability_rules
 
@@ -391,7 +398,7 @@ class Transactable < ActiveRecord::Base
 
   def self.csv_fields(transactable_type)
     { external_id: 'External Id', enabled: 'Enabled' }.reverse_merge(
-      transactable_type.custom_attributes.public.pluck(:name, :label).inject({}) do |hash, arr|
+      transactable_type.custom_attributes.shared.pluck(:name, :label).inject({}) do |hash, arr|
         hash[arr[0].to_sym] = arr[1].presence || arr[0].humanize
         hash
       end

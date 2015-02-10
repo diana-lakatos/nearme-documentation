@@ -3,7 +3,6 @@ class ProductForm < Form
   # attr_accessor :name, :description, :price, :category
   # attr_accessor :quantity
   attr_accessor :shipping_methods
-  attr_accessor :draft
   attr_reader :product
 
   # Validations:
@@ -19,14 +18,47 @@ class ProductForm < Form
   validate  :list_of_countries_or_states_cannot_be_empty
 
   def_delegators :@product, :id, :price, :price=, :name, :name=, :description, :id=, :description=,
-    :shippo_enabled=, :shippo_enabled
+    :shippo_enabled=, :shippo_enabled, :draft?, :draft=, :draft
 
-  def_delegators :'@product.master', :weight=, :weight, :depth=, :depth,
-    :width=, :width, :height=, :height
+  def_delegators :'@product.master', :weight_unit, :weight_unit=, :height_unit, :height_unit=,
+    :width_unit, :width_unit=, :depth_unit, :depth_unit=,
+    :unit_of_measure, :unit_of_measure=
+
+  def weight=(value)
+    @product.master.weight_user = value
+  end
+
+  def weight
+    @product.master.weight_user
+  end
+
+  def width=(value)
+    @product.master.width_user = value
+  end
+
+  def width
+    @product.master.width_user
+  end
+
+  def height=(value)
+    @product.master.height_user = value
+  end
+
+  def height
+    @product.master.height_user
+  end
+
+  def depth=(value)
+    @product.master.depth_user = value
+  end
+
+  def depth
+    @product.master.depth_user
+  end
 
   def list_of_countries_or_states_cannot_be_empty
     added_to_base = false
-    if self.try(:shipping_methods).present?
+    if !@product.try(:shippo_enabled).present? && self.try(:shipping_methods).present?
       self.shipping_methods.each do |shipping_method|
         if shipping_method.try(:zones).present?
           shipping_method.zones.each do |zone|
@@ -92,11 +124,8 @@ class ProductForm < Form
   end
 
   def submit(params)
-    validate = params[:draft].nil?
-
     store_attributes(params)
-
-    if !validate || valid?
+    if valid?
       save!
       true
     else
@@ -106,23 +135,23 @@ class ProductForm < Form
   end
 
   def save!(options={})
-    validate = options[:validate]
-    @user.save!(validate: validate)
-    @company.save!(validate: validate)
-    @product.save!(validate: validate)
+    @user.save!(validate: !draft?)
+    @company.save!(validate: !draft?)
+    @product.save!(validate: !draft?)
     @product.images.each { |i| i.save!(validate: false) }
-    @product.classifications.each { |x| x.save!(validate: validate) }
-    @stock_location.save!(validate: validate)
-    @stock_item.save!(validate: validate)
-    @shipping_category.save!(validate: validate)
+    @product.classifications.each { |x| x.save!(validate: !draft?) }
+    @stock_location.save!(validate: !draft?)
+    @stock_item.save!(validate: !draft?)
+    @shipping_category.save!(validate: !draft?)
     # We do not touch shipping methods (which are auto-created) if the
     # product is Shippo-enabled
+
     if !@product.shippo_enabled?
       @shipping_methods.each do |shipping_method|
-        shipping_method.save!(validate: validate)
+        shipping_method.save!(validate: !draft?)
         shipping_method.zones.each do |zone|
           zone.company = @company
-          zone.save!(validate: validate)
+          zone.save!(validate: !draft?)
           zone.members.each(&:save)
         end
       end

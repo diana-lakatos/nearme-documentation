@@ -11,16 +11,19 @@ Spree::Product.class_eval do
   belongs_to :user
   belongs_to :company
   belongs_to :administrator, class_name: 'User'
+
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   has_many :impressions, as: :impressionable, dependent: :destroy
 
   scope :approved, -> { where(approved: true) }
-  scope :currently_available, -> { where("(#{Spree::Product.quoted_table_name}.available_on <= ? OR #{Spree::Product.quoted_table_name}.available_on IS NULL)", Time.zone.now) }
+  scope :draft, -> { where(draft: true) }
+  scope :not_draft, -> { where(draft: false) }
+  scope :currently_available, -> { not_draft.where("(#{Spree::Product.quoted_table_name}.available_on <= ? OR #{Spree::Product.quoted_table_name}.available_on IS NULL)", Time.zone.now) }
   scope :searchable, -> { approved.currently_available }
 
   _validators.reject! { |key, _| [:slug, :shipping_category_id].include?(key) }
 
-  _validate_callbacks.reject! do |callback|
+  _validate_callbacks.each do |callback|
     callback.raw_filter.attributes.delete :slug if callback.raw_filter.is_a?(ActiveModel::Validations::PresenceValidator)
     callback.raw_filter.attributes.delete :shipping_category_id if callback.raw_filter.is_a?(ActiveModel::Validations::PresenceValidator)
   end
@@ -57,6 +60,28 @@ Spree::Product.class_eval do
 
   def has_photos?
     images.count > 0
+  end
+
+  def reviews
+    @reviews ||= Review.where(object: 'product', reviewable_type: 'Spree::LineItem', reviewable_id: self.line_items.pluck(:id))
+  end
+
+  def reviews_count
+    @reviews_count ||= reviews.count
+  end
+
+  def has_reviews?
+    reviews_count > 0
+  end
+
+  def question_average_rating
+    @rating_answers_rating ||= RatingAnswer.where(review_id: reviews.pluck(:id))
+      .group(:rating_question_id).average(:rating)
+  end
+
+  def recalculate_average_rating!
+    average_rating = reviews.average(:rating)
+    self.update(average_rating: average_rating)
   end
 
   private

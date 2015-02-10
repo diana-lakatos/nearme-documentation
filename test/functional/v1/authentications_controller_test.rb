@@ -32,7 +32,7 @@ class V1::AuthenticationsControllerTest < ActionController::TestCase
   # Social Authentication
 
   test "social should authenticate valid social credentials" do
-    @user.authentications.find_or_create_by_provider("facebook").tap do |a|
+    @user.authentications.where(provider: 'facebook').first_or_create.tap do |a|
       a.uid = "123456"
       a.token = "123456"
     end.save!

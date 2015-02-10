@@ -19,7 +19,7 @@ class V1::SocialProviderController < V1::BaseController
       raise DNM::Unauthorized
     end
 
-    current_user.authentications.find_or_create_by_provider(provider_name).tap do |a|
+    current_user.authentications.where(provider: provider_name).first_or_create.tap do |a|
       a.uid    = uid
       a.info   = info
       a.token  = token

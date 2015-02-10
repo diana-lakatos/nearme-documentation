@@ -1,38 +1,29 @@
 = form_tag dashboard_reviews_path, class: 'create-form' do
-  .review{'data-reservation-id' => feedback.id, 'data-object' => subject}
-    = hidden_field_tag :transactable_type_id, feedback.listing.transactable_type.id
-    = hidden_field_tag :reservation_id, feedback.id
+  .review{'data-reviewable-id' => feedback.id, 'data-reviewable-type' => feedback.class.name, 'data-object' => subject}
+    = hidden_field_tag :reviewable_id, feedback.id
+    = hidden_field_tag :reviewable_type, feedback.class.name
     .row-fluid.clearfix
       .span8
-        .order-image
-          -if feedback.listing.has_photos?
-            =image_tag feedback.listing.photos.last.image.medium.url
-          -else
-            =image_tag "ratings/reviews-placeholder.png"
+        = render 'order_image', feedback: feedback
         .review-actions
-          %h1.review-title= feedback.listing.name
+          = render 'review_title', feedback: feedback
           %p 
             = t('dashboard.reviews.feedback.leave').upcase 
             = subject.upcase 
             = t('dashboard.reviews.feedback.title').upcase
           .rating.editable{'data-hints' => rating_system.rating_hints.map(&:description_or_value).reverse}
-          %p
-            %a.show-details{"data-target" => "##{subject}-#{feedback.id}.reviews-additional-content", "data-toggle" => "collapse", "style" => "cursor: pointer;"}
-              = t('dashboard.reviews.feedback.show_details')
+          = render 'show_details_link', subject: subject, id: feedback.id
 
       .span4
+        = render 'order_info_created', created_at: feedback.created_at
         .order-info
-          %p= t('dashboard.reviews.feedback.order_placed').upcase
-          %p= I18n.l(feedback.created_at, format: :only_date)
-        .order-info
-          %p 
-            = t('dashboard.reviews.feedback.order').upcase
-            = feedback.id
-          %a{ :href => "#"}
-            = t('dashboard.reviews.feedback.view_order_details')
+          = render 'order_info_id', id: feedback.id
+          - if feedback.decorate.line_item?
+            = link_to t('dashboard.reviews.feedback.view_order_details'), dashboard_order_path(feedback.order)
         .order-info
           %p
-            = link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(feedback.creator)
+            - if feedback.decorate.reservation?
+              = link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(feedback.creator)
           - if platform_context.support_email
             %p
               = mail_to platform_context.support_email, t('dashboard.reviews.feedback.contact_name_support', name: @current_instance.name)
@@ -50,4 +41,4 @@
           %p= t('dashboard.reviews.feedback.comments').upcase
           .comment-wrapper
             = text_area_tag :comment
-          %input.submit-review.btn.btn-green{ :type => "submit", :value => t('dashboard.reviews.feedback.submit_review') }
+          %input.submit-review.btn.medium.blue{ :type => "submit", :value => t('dashboard.reviews.feedback.submit_review') }

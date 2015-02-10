@@ -28,6 +28,11 @@ FactoryGirl.define do
 
     after(:create) do |instance|
       instance.theme = FactoryGirl.create(:theme, :skip_compilation => true) unless instance.theme
+
+      [instance.lessor, instance.lessee, instance.bookable_noun].each do |subject|
+        rating_system = FactoryGirl.create(:active_rating_system, subject: subject, instance: instance)
+        RatingConstants::VALID_VALUES.each { |value| FactoryGirl.create(:rating_hint, value: value, instance: instance, rating_system: rating_system) }
+      end
     end
 
     after(:create) do |instance|
@@ -53,7 +58,6 @@ FactoryGirl.define do
         instance.approval_request_templates = [approval_request_template]
       end
     end
-
   end
 
 end

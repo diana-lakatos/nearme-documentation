@@ -1,29 +1,25 @@
-- if @active_rating_systems.present?
+- if @rating_systems[:active_rating_systems].present?
   - title t('dashboard.reviews.index.title')
 
   %section#reviews
-    .row-fluid
-      .span8.offset2
-        .container-row.page-tabs-container
-          .reviews-search
-            %input#search
-            .ico-search
-          %ul.nav.page-tabs
-            %li{class: active_uncompleted_tab}
-              = link_to t('dashboard.reviews.index.rate_your_experience'), dashboard_reviews_path(tab: 'uncompleted')
-            %li{class: active_completed_tab}
-              = link_to t('dashboard.reviews.index.completed_feedback'), dashboard_reviews_path(tab: 'completed')
-
-          - unless show_completed_feedback?
-            #rate-experience.active
-              = render 'dashboard/reviews/feedback_list', product_collection: @product_reservations, seller_collection: @seller_reservations, buyer_collection: @buyer_reservations, status: 'uncompleted'
-          - else
-            #completed-feedback
-              = render 'dashboard/reviews/feedback_list', product_collection: @product_reviews, seller_collection: @seller_reviews, buyer_collection: @buyer_reviews, status: 'completed'
+    .dash-head.clearfix
+      %ul
+        %li{class: active_uncompleted_tab}
+          = link_to t('dashboard.reviews.index.rate_your_experience'), dashboard_reviews_path(tab: 'uncompleted')
+        %li{class: active_completed_tab}
+          = link_to t('dashboard.reviews.index.completed_feedback'), dashboard_reviews_path(tab: 'completed')
+    .dash-body
+      .row-fluid
+        .span8.offset2
+          .container-row.page-tabs-container
+            - unless show_completed_feedback?
+              #rate-experience.active
+                = render 'dashboard/reviews/feedback_list', product_collection: @collections[:product_collection], seller_collection: @collections[:seller_collection], buyer_collection: @collections[:buyer_collection], status: 'uncompleted'
+            - else
+              #completed-feedback
+                = render 'dashboard/reviews/feedback_list', product_collection: @collections[:product_collection], seller_collection: @collections[:seller_collection], buyer_collection: @collections[:buyer_collection], status: 'completed'
 
   - content_for :domready do
     new Dashboard.ReviewsController($('#reviews'))
 
   = render 'dashboard/reviews/reviews_templates'
-
-

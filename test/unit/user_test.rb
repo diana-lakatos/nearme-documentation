@@ -363,7 +363,7 @@ class UserTest < ActiveSupport::TestCase
 
   should "know what authentication providers it is linked to" do
     @user = FactoryGirl.create(:user)
-    @user.authentications.find_or_create_by_provider("exists").tap do |a|
+    @user.authentications.where(provider: 'exists').first_or_create.tap do |a|
       a.uid = @user.id
       a.token = "abcd"
     end.save!
@@ -769,6 +769,7 @@ class UserTest < ActiveSupport::TestCase
       should 'have active listing and no draft listing if has only one active listing metadata' do
         @user.expects(:update_instance_metadata).with({
           has_draft_listings: false,
+          has_draft_products: false,
           has_any_active_listings: true
         })
         @user.populate_listings_metadata!
@@ -778,6 +779,7 @@ class UserTest < ActiveSupport::TestCase
         FactoryGirl.create(:transactable, :draft => Time.zone.now, :location => @listing.location)
         @user.expects(:update_instance_metadata).with({
           has_draft_listings: true,
+          has_draft_products: false,
           has_any_active_listings: true
         })
         @user.populate_listings_metadata!
@@ -787,12 +789,14 @@ class UserTest < ActiveSupport::TestCase
         @listing.update_column(:draft, Time.zone.now)
         @user.expects(:update_instance_metadata).with({
           has_draft_listings: true,
+          has_draft_products: false,
           has_any_active_listings: false
         })
         @user.populate_listings_metadata!
         @listing.update_column(:draft, nil)
         @user.expects(:update_instance_metadata).with({
           has_draft_listings: false,
+          has_draft_products: false,
           has_any_active_listings: true
         })
         @user.populate_listings_metadata!
@@ -802,6 +806,7 @@ class UserTest < ActiveSupport::TestCase
         @listing.destroy
         @user.expects(:update_instance_metadata).with({
           has_draft_listings: false,
+          has_draft_products: false,
           has_any_active_listings: false
         })
         @user.populate_listings_metadata!
@@ -821,6 +826,7 @@ class UserTest < ActiveSupport::TestCase
         @user.expects(:update_instance_metadata).with({
           companies_metadata: [],
           has_draft_listings: false,
+          has_draft_products: false,
           has_any_active_listings: false
         })
         @user.reload.populate_companies_metadata!
@@ -828,6 +834,7 @@ class UserTest < ActiveSupport::TestCase
         @user.expects(:update_instance_metadata).with({
           companies_metadata: [@company.id],
           has_draft_listings: false,
+          has_draft_products: false,
           has_any_active_listings: true
         })
         @user.reload.populate_companies_metadata!

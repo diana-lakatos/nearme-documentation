@@ -2,13 +2,20 @@ require 'test_helper'
 
 class ReviewTest < ActiveSupport::TestCase
   should belong_to(:instance)
-  should belong_to(:reservation)
+  should belong_to(:reviewable)
   should belong_to(:user)
+  should belong_to(:transactable_type)
 
   should have_many(:rating_answers).dependent(:destroy)
 
+  should validate_presence_of(:rating)
+  should validate_presence_of(:object)
+  should validate_presence_of(:user)
+  should validate_presence_of(:reviewable)
+  should validate_presence_of(:transactable_type)
+
   should ensure_length_of(:comment).is_at_most(255)
-  should ensure_inclusion_of(:rating).in_range(RatingConstants::VALID_VALUES).with_message('Rating is required')
+  should validate_inclusion_of(:rating).in_range(RatingConstants::VALID_VALUES).with_message('Rating is required')
 
   context "#scopes" do
     context '#with_object' do
@@ -74,12 +81,25 @@ class ReviewTest < ActiveSupport::TestCase
     context '#by_reservations' do
       setup do
         @reservations = FactoryGirl.create_list(:reservation, 2)
-        @first_review = FactoryGirl.create(:review, reservation: @reservations.first)
-        second_review = FactoryGirl.create(:review, reservation: @reservations.last)
+        @first_review = FactoryGirl.create(:review, reviewable: @reservations.first)
+        second_review = FactoryGirl.create(:review, reviewable: @reservations.last)
       end
 
       should 'return reviews by reservation' do
         assert_equal @first_review, Review.by_reservations(@reservations.first.id).first
+        assert_equal 2, Review.count
+      end
+    end
+
+    context '#by_line_items' do
+      setup do
+        @line_items = FactoryGirl.create_list(:line_item, 2)
+        @first_review = FactoryGirl.create(:review, reviewable: @line_items.first)
+        second_review = FactoryGirl.create(:review, reviewable: @line_items.last)
+      end
+
+      should 'return reviews by reservation' do
+        assert_equal @first_review, Review.by_line_items(@line_items.first.id).first
         assert_equal 2, Review.count
       end
     end

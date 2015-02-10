@@ -37,18 +37,6 @@ module ReviewsHelper
     ( number.years.ago.year..(Time.now.year - 1) ).to_a.reverse
   end
 
-  def link_to_object(review)
-    case review.object
-      when 'seller' then link_to_new_tab(I18n.t('helpers.reviews.user'), profile_path(review.reservation.creator_id))
-      when 'buyer' then link_to_new_tab(I18n.t('helpers.reviews.user'), profile_path(review.reservation.owner_id))
-      when 'product' then link_to_new_tab(I18n.t('helpers.reviews.product'), listing_path(review.reservation.transactable_id))
-    end
-  end
-
-  def link_to_new_tab(name, path)
-    link_to name, path, target: "_blank"
-  end
-
   def rating_stars(number)
     unselected_count = RatingConstants::MAX_RATING - number
     raw(content_tag(:i, nil, class: 'fa fa-star selected') * number +

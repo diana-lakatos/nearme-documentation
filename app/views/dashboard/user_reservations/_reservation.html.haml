@@ -31,7 +31,7 @@
       %h3= reservation.state.humanize.capitalize
       - if reservation.state == 'unconfirmed'
         %p
-          Pending confirmation from host. Booking will expire in <strong>#{reservation.time_to_expiry(reservation.expiry_time)}</strong>.
+          #{t('dashboard.user_reservations.pending_confirmation')} <strong>#{reservation.time_to_expiry(reservation.expiry_time)}</strong>.
 
     .row
       .order-item

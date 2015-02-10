@@ -26,6 +26,7 @@ class User < ActiveRecord::Base
   has_many :listings, :through => :locations, class_name: 'Transactable', :inverse_of => :creator
   has_many :photos, :foreign_key => 'creator_id', :inverse_of => :creator
   has_many :products_images, :foreign_key => 'uploader_id', class_name: 'Spree::Image'
+  has_many :products, :foreign_key => 'user_id', class_name: 'Spree::Product'
   has_many :listing_reservations, :through => :listings, :source => :reservations, :inverse_of => :creator
   has_many :listing_recurring_bookings, :through => :listings, :source => :recurring_bookings, :inverse_of => :creator
   has_many :relationships, :class_name => "UserRelationship", :foreign_key => 'follower_id', :dependent => :destroy
@@ -44,6 +45,8 @@ class User < ActiveRecord::Base
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :user_bans
   has_many :user_instance_profiles
+  has_one :blog, class_name: 'UserBlog'
+  has_many :blog_posts, class_name: 'UserBlogPost'
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
@@ -56,6 +59,8 @@ class User < ActiveRecord::Base
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
   before_validation :normalize_gender
+
+  after_create :create_blog
 
   after_destroy :perform_cleanup
   before_restore :recover_companies
@@ -74,7 +79,7 @@ class User < ActiveRecord::Base
 
   scope :without, lambda { |users|
                   users_ids = users.respond_to?(:pluck) ? users.pluck(:id) : Array.wrap(users).collect(&:id)
-                  users_ids.any? ? where('users.id NOT IN (?)', users_ids) : scoped
+                  users_ids.any? ? where('users.id NOT IN (?)', users_ids) : all
                 }
 
   scope :ordered_by_email, -> { order('users.email ASC') }
@@ -192,6 +197,10 @@ class User < ActiveRecord::Base
                           :token => token,
                           :secret => secret,
                           :token_expires_at => expires_at)
+  end
+
+  def create_blog
+    build_blog.save
   end
 
   def cancelled_reservations
@@ -593,12 +602,24 @@ class User < ActiveRecord::Base
     end
   end
 
+  def published_blogs
+    blog_posts.published
+  end
+
+  def recent_blogs
+    blog_posts.recent
+  end
+
+  def has_published_blogs?
+    blog_posts.published.any?
+  end
+
   def registration_in_progress?
     has_draft_listings || has_draft_products
   end
 
   def registration_completed?
-    has_any_active_listings || has_any_active_products
+    companies.first.try(:valid?) && !(has_draft_listings || has_draft_products)
   end
 
   def has_draft_products
@@ -606,11 +627,19 @@ class User < ActiveRecord::Base
   end
 
   def has_any_active_products
-    companies.any? && companies.first.products.any? && companies.first.products.first.valid?
+    companies.any? && companies.first.products.not_draft.any?
   end
+
+  # get_instance_metadata method comes from Metadata::Base
+  # you can add metadata attributes to class via: has_metadata :accessors => [:support_metadata]
+  # please check Metadata::Base for further reference
 
   def has_draft_listings
     get_instance_metadata("has_draft_listings")
+  end
+
+  def has_draft_products
+    get_instance_metadata("has_draft_products")
   end
 
   def has_any_active_listings
@@ -640,6 +669,36 @@ class User < ActiveRecord::Base
 
   def cart
     BuySell::CartService.new(self)
+  end
+
+  def reviews_as_seller
+    @reviews_as_seller ||= Review.where(object: 'seller', reviewable_type: 'Spree::LineItem', reviewable_id: line_items.pluck(:id))
+  end
+
+  def line_items
+    @line_items ||= Spree::LineItem.where(variant_id: variants.pluck(:id))
+  end
+
+  def variants
+    @variants ||= Spree::Variant.where(product_id: products.pluck(:id))
+  end
+
+  def products
+    @products ||= Spree::Product.where(administrator_id: self.id)
+  end
+
+  def has_reviews?
+    reviews_as_seller.count > 0
+  end
+
+  def question_average_rating
+    @rating_answers_rating ||= RatingAnswer.where(review_id: reviews_as_seller.pluck(:id))
+      .group(:rating_question_id).average(:rating)
+  end
+
+  def recalculate_average_rating!
+    average_rating = reviews_as_seller.average(:rating)
+    self.update(average_rating: average_rating)
   end
 
   private

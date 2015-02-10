@@ -9,13 +9,20 @@ en:
       unable_to_disconnect: "We are unable to disconnect your account from %{provider_name}. Make sure you have at least one other account linked so you can log in!"
     authorizations:
       not_authorized: "Sorry, you do not have permission to view that page."
+    shipping_options:
+      dimensions_templates:
+        template_added: 'Successfully added a new dimensions template.'
+        template_updated: 'Successfully update the dimensions template.'
+        template_deleted: 'Successfully deleted the dimensions template.'
+      shipping_providers:
+        options_updated: 'Shipping providers options successfully updated.'      
     blog_admin:
       blog_instance:
         blog_instance_updated: 'Blog settings were updated.'
       blog_posts:
-        blog_post_added: 'New blog post added.'
-        blog_post_deleted: 'Blog post deleted.'
-        blog_post_updated: 'Blog post updated.'
+        blog_post_added: 'New blog post has been added.'
+        blog_post_deleted: 'Blog post has been deleted.'
+        blog_post_updated: 'Blog post has been updated.'
     buy_sell:
       configuration_saved_successful: 'Configuration saved successfully.'
       commissions_saved_successful: 'Commissions saved successfully.'
@@ -39,6 +46,8 @@ en:
       taxonomy_deleted: 'Taxonomy deleted.'
       taxon_updated: 'Taxon updated.'
       no_payment_gateway: 'The seller does not support payments for the selected country.'
+    user_blog:
+      settings_saved: 'Blog settings has been saved.'
     dashboard:
       add_your_company: "Please add your company first"
       company_not_valid: "Please add necessary details to your company first."

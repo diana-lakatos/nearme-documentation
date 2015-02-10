@@ -23,10 +23,36 @@ class SecuredParams
       :depth,
       :width,
       :height,
+      :weight_unit,
+      :depth_unit,
+      :width_unit,
+      :height_unit,
+      :unit_of_measure,
       image_ids: [],
       company_address_attributes: nested(self.address),
       images_attributes: nested(self.spree_image),
       shipping_methods_attributes: nested(self.spree_shipping_method)
+    ]
+  end
+
+  def instance_shipping_providers
+    [
+      :shippo_username, :shippo_password,
+    ]
+  end
+
+  def dimensions_template
+    [
+      :name,
+      :unit_of_measure,
+      :weight,
+      :height,
+      :width,
+      :depth,
+      :weight_unit,
+      :height_unit,
+      :width_unit,
+      :depth_unit
     ]
   end
 
@@ -75,6 +101,7 @@ class SecuredParams
       :permission_blog,
       :permission_support,
       :permission_buysell,
+      :permission_shippingoptions,
       :name
     ]
   end
@@ -190,7 +217,8 @@ class SecuredParams
       :header_text,
       :header_motto,
       :header_logo,
-      :header_icon
+      :header_icon,
+      owner_attributes: nested([:user_blogs_enabled])
     ]
   end
 
@@ -205,6 +233,38 @@ class SecuredParams
       :author_biography,
       :author_avatar
     ]
+  end
+
+  def user_blog
+    [
+        :enabled,
+        :name,
+        :header_image,
+        :header_text,
+        :header_motto,
+        :header_logo,
+        :header_icon,
+        :facebook_app_id
+    ]
+  end
+
+  def user_blog_post
+    [
+        :title,
+        :published_at,
+        :slug,
+        :hero_image,
+        :content,
+        :excerpt,
+        :author_name,
+        :author_biography,
+        :author_avatar_img,
+        :logo
+    ]
+  end
+
+  def admin_user_blog_post
+    user_blog_post + [:highlighted]
   end
 
   def instance
@@ -225,7 +285,6 @@ class SecuredParams
       :olark_api_key, :olark_enabled,
       :facebook_consumer_key, :facebook_consumer_secret,
       :twitter_consumer_key, :twitter_consumer_secret,
-      :shippo_username, :shippo_password,
       :linkedin_consumer_key, :linkedin_consumer_secret,
       :instagram_consumer_key, :instagram_consumer_secret,
       :support_imap_hash, :support_email,
@@ -235,6 +294,7 @@ class SecuredParams
       :searcher_type, :onboarding_verification_required,
       :apply_text_filters, :force_accepting_tos,
       :payment_transfers_frequency,
+      :user_blogs_enabled,
       :twilio_consumer_key, :twilio_consumer_secret,
       :test_twilio_consumer_key, :test_twilio_consumer_secret,
       :twilio_from_number, :test_twilio_from_number,
@@ -312,12 +372,6 @@ class SecuredParams
       :name,
       property_ids: [],
       option_type_ids: []
-    ]
-  end
-
-  def spree_shipping_category
-    [
-      :name
     ]
   end
 
@@ -442,7 +496,6 @@ class SecuredParams
       :currency_symbol_position,
       :currency_decimal_mark,
       :currency_thousands_separator,
-      :shipment_inc_vat,
       :infinite_scroll,
       :random_products_for_cross_sell
     ]
@@ -841,7 +894,7 @@ class SecuredParams
 
   def rating_system
     [
-      :subject, 
+      :subject,
       :active,
       :transactable_type_id,
       rating_hints_attributes: self.rating_hint,
@@ -851,7 +904,7 @@ class SecuredParams
 
   def rating_hint
     [
-      :id, 
+      :id,
       :description
     ]
   end
@@ -868,9 +921,9 @@ class SecuredParams
       :comment, 
       :object, 
       :date, 
-      :reservation_id,
-      :transactable_type_id,
-      :instance_id, 
+      :transactable_type_id, 
+      :reviewable_id, 
+      :reviewable_type, 
       :user_id
     ]
   end
@@ -883,8 +936,8 @@ class SecuredParams
 
   def rating_answer
     [
-      :id, 
-      :rating, 
+      :id,
+      :rating,
       :rating_question_id
     ]
   end

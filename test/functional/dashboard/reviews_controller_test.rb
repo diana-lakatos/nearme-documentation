@@ -3,58 +3,52 @@ require 'test_helper'
 class Dashboard::ReviewsControllerTest < ActionController::TestCase
   setup do
     @user = FactoryGirl.create(:user)
+    @company = FactoryGirl.create(:company, creator: @user)
+    User.any_instance.stubs(:registration_completed?).returns(true)
     sign_in @user
-    @reservation = FactoryGirl.create(:past_reservation, user: @user)
     @current_instance = PlatformContext.current.instance
     @current_instance.rating_systems.update_all(active: true)
+    @reservation = FactoryGirl.create(:past_reservation, user: @user)
   end
 
   context '#index' do
     should "get index" do
       get :index
       assert_response :success
-      assert_includes assigns(:owner_reservations), @reservation
-      assert_includes assigns(:seller_reservations), @reservation
-      assert_includes assigns(:product_reservations), @reservation
-      assert_empty assigns(:buyer_reservations)
-      assert_empty assigns(:creator_reservations)
-      assert_nil assigns(:seller_reviews)
-      assert_nil assigns(:product_reviews)
-      assert_nil assigns(:buyer_reviews)
     end
   end
 
   context '#create' do
     should 'respond with success' do
-      post :create, review: {rating: 5, object: 'product', reservation: @reservation, user: @user}
+      post :create, review: FactoryGirl.attributes_for(:review, object: 'product', user: @user, reviewable_id: @reservation.id, reviewable_type: @reservation.class.name, instance: @current_instance)
       assert_response :success
     end
 
     should 'respond with failure if rating is blank' do
-      post :create, review: {rating: '', object: 'product', reservation: @reservation, user: @user}
+      post :create, review: FactoryGirl.attributes_for(:review, rating: '', object: 'product', user: @user, reviewable_id: @reservation.id, reviewable_type: @reservation.class.name, instance: @current_instance)
       assert_response 422
     end
   end
 
   context '#update' do
     setup do
-      @review = FactoryGirl.create(:review, reservation: @reservation, user: @user)
+      @review = FactoryGirl.create(:review, object: 'product', user: @user, reviewable_id: @reservation.id, reviewable_type: @reservation.class.name, instance: @current_instance)
     end
 
     should 'respond with success' do
-      put :update, id: @review.id, review: {rating: 3}
+      put :update, id: @review.id, review: {rating: 3, reviewable_type: @review.reviewable_type, reviewable_id: @review.reviewable_id, instance_id: @current_instance.id}
       assert_response :success
     end
 
     should 'respond with failure' do
-      put :update, id: @review.id, review: {rating: ''}
+      put :update, id: @review.id, review: {rating: '', reviewable_type: @review.reviewable_type, reviewable_id: @review.reviewable_id, instance_id: @current_instance.id}
       assert_response 422
     end
   end
 
   context '#destroy' do
     setup do
-      @review = FactoryGirl.create(:review, reservation: @reservation, user: @user)
+      @review = FactoryGirl.create(:review, object: 'product', reviewable: @reservation, user: @user, instance: @current_instance)
     end
 
     should 'redirect to dashboard_reviews_path' do

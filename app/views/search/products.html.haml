@@ -32,8 +32,7 @@
                       %p.price= product.display_price
 
         - if @searcher.results.total_pages > 1
-          .pagination
-            = will_paginate @searcher.results, renderer: BuySellMarket::WillPaginateLinkRenderer::LinkRenderer, class: ''
+          = will_paginate_styled(@searcher.results)
 
         = render 'shared/loading_spinner'
         - unless @searcher.results.any?

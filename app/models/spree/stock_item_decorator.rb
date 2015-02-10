@@ -5,7 +5,7 @@ Spree::StockItem.class_eval do
 
   _validators.reject!{ |key, _| [:stock_location].include?(key) }
 
-  _validate_callbacks.reject! do |callback|
+  _validate_callbacks.each do |callback|
     callback.raw_filter.attributes.delete :stock_location if callback.raw_filter.is_a?(ActiveModel::Validations::PresenceValidator)
   end
 

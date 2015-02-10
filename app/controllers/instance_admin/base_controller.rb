@@ -31,6 +31,7 @@ class InstanceAdmin::BaseController < ApplicationController
 
   MANAGE_BLOG_CONTROLLERS = {
     'posts' => { default_action: 'index' },
+    'user_posts' => { controller: '/instance_admin/manage_blog/user_posts', default_action: 'index' },
     'settings'   => { default_action: 'edit' }
   }
 
@@ -63,6 +64,11 @@ class InstanceAdmin::BaseController < ApplicationController
     'taxonomies'     => { default_action: 'index' },
     # 'shipping_categories' => { default_action: 'index' },
     # 'shipping_methods' => { default_action: 'index' },
+  }
+
+  SHIPPING_OPTIONS_CONTROLLERS = {
+    'dimensions_templates' => { default_action: 'index' },
+    'providers' => { default_action: 'show' },
   }
 
   def index

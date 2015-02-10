@@ -40,10 +40,10 @@ class PaymentTransfer < ActiveRecord::Base
   #
   # Note that this is the gross amount excluding the service fee that we charged
   # to the end user. The service fee is our cut of the revenue.
-  monetize :amount_cents
-  monetize :service_fee_amount_guest_cents
-  monetize :service_fee_amount_host_cents
-  monetize :gross_amount_cents
+  monetize :amount_cents, with_model_currency: :currency
+  monetize :service_fee_amount_guest_cents, with_model_currency: :currency
+  monetize :service_fee_amount_host_cents, with_model_currency: :currency
+  monetize :gross_amount_cents, with_model_currency: :currency
 
   # This is the gross amount of revenue received from the charges included in
   # this payout - including the service fees recieved.

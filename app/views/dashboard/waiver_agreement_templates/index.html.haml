@@ -3,7 +3,7 @@
 .dash-page
   .dash-head.clearfix
     %p= t('dashboard.nav.waiver_agreement_templates')
-    = link_to new_dashboard_waiver_agreement_template_path, class: "dash-head-btn", rel: "modal" do
+    = link_to '#', class: "dash-head-btn", data: { modal: true, href: new_dashboard_waiver_agreement_template_path } do
       .btn.blue{:role => "button"} Add Waiver Agreement
 
   .dash-body

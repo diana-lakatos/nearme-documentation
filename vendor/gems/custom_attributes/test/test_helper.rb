@@ -6,11 +6,11 @@ require "rails/test_help"
 require 'shoulda'
 require 'mocha/setup'
 require 'mocha/mini_test'
-require 'turn'
+require 'minitest/reporters'
 require 'factory_girl_rails'
 require 'timecop'
 
-Turn.config.format = :dot
+Minitest::Reporters.use!
 
 Rails.backtrace_cleaner.remove_silencers!
 

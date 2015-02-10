@@ -317,14 +317,14 @@ class ApplicationController < ActionController::Base
   end
   helper_method :get_and_clear_stored_client_taggable_events
 
-  def register_lookup_context_detail(detail_name, value)
-    lookup_context.class.register_detail(detail_name.to_sym) { value }
+  def register_lookup_context_detail(detail_name)
+    lookup_context.class.register_detail(detail_name.to_sym) { nil }
   end
 
   def register_platform_context_as_lookup_context_detail
-    register_lookup_context_detail(:instance_type_id, PlatformContext.current.try(:instance_type).try(:id))
-    register_lookup_context_detail(:instance_id, PlatformContext.current.try(:instance).try(:id))
-    register_lookup_context_detail(:transactable_type_id, params[:transactable_type_id])
+    register_lookup_context_detail(:instance_type_id)
+    register_lookup_context_detail(:instance_id)
+    register_lookup_context_detail(:transactable_type_id)
   end
 
   def log_out_if_token_exists
@@ -452,10 +452,10 @@ class ApplicationController < ActionController::Base
   end
 
   def build_approval_request_for_object(object)
-    object.approval_requests.reject! { |ar| !object.approval_request_templates.pluck(:id).include?(ar.approval_request_template_id) }
+    object.approval_requests.to_a.reject! { |ar| !object.approval_request_templates.pluck(:id).include?(ar.approval_request_template_id) }
     if (art = object.approval_request_templates.first).present?
       ar = ((object.approval_requests.find { |approval_request| approval_request.approval_request_template_id == art.id }) || object.approval_requests.build(approval_request_template_id: art.id))
-      ar.approval_request_attachments.reject! { |ara| !art.approval_request_attachment_templates.pluck(:id).include?(ar.approval_request_template_id) }
+      ar.approval_request_attachments.to_a.reject! { |ara| !art.approval_request_attachment_templates.pluck(:id).include?(ar.approval_request_template_id) }
       ar.required_written_verification = art.required_written_verification
       art.approval_request_attachment_templates.each do |arat|
         if (ara = (ar.approval_request_attachments.find { |approval_request_attachment| approval_request_attachment.approval_request_attachment_template_id == arat.id })).nil?

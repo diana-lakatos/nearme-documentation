@@ -11,7 +11,7 @@ Spree::Image.class_eval do
   default_scope -> { rank(:position) }
 
   _validators.reject!{ |key, _| [:attachment].include?(key) }
-  _validate_callbacks.reject! do |callback|
+  _validate_callbacks.each do |callback|
     callback.raw_filter.attributes.delete :attachment if callback.raw_filter.is_a?(ActiveModel::Validations::PresenceValidator)
   end
 end

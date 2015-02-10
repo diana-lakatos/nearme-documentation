@@ -10,6 +10,10 @@ class PhotoTest < ActiveSupport::TestCase
 
   context 'metadata' do
 
+    setup do
+      stub_image_url('http://www.example.com/image.jpg')
+    end
+
     context 'triggering' do
 
       should 'not trigger populate metadata on listing if condition fails' do

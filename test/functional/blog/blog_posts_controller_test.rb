@@ -5,10 +5,31 @@ class Blog::BlogPostsControllerTest < ActionController::TestCase
   context '#show' do
     setup do
       @blog_post = FactoryGirl.create(:blog_post)
+      @user_blog_post = FactoryGirl.create(:highlighted_user_blog_post)
+    end
+
+    context 'user highlighted blog post' do
+      should 'be present on list' do
+        get :index
+        assert assigns(:blog_posts).include?(@user_blog_post)
+        assert :success
+      end
+
+      should 'be viewable' do
+        get :show, id: @user_blog_post
+        assert_equal assigns(:blog_post), @user_blog_post
+        assert :success
+      end
+    end
+
+    should 'show list index' do
+      get :index
+      assert :success
     end
 
     should 'show blog post' do
       get :show, :id => @blog_post
+      assert_equal assigns(:blog_post), @blog_post
       assert :success
     end
 

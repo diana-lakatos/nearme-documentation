@@ -38,7 +38,7 @@ class GuestListTest < ActiveSupport::TestCase
     end
 
     should 'filter archived reservation for user' do
-      assert_equal @archived_reservations.sort_by(&:date).reverse, @guest_list.filter('archived').reservations
+      assert_equal @archived_reservations.sort_by(&:created_at).reverse, @guest_list.filter('archived').reservations
     end
   end
 

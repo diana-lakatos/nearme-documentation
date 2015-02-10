@@ -7,6 +7,7 @@ Feature: A user can reset their password
     Given a user exists
     And a domain www.example.com exists
 
+  @javascript
   Scenario: User requests password reset using modal
     Given the transactable_type_listing exists
     When I performed search for "Auckland"

@@ -11,7 +11,7 @@
       - if platform_context.instance.rating_systems.where(active: true).present?
         = dashboard_menu_item 'dashboard/reviews', dashboard_reviews_path
 
-    - if @company.present?
+    - if current_user.registration_completed?
       %ul
         %li.nav-head
           = t('dashboard.nav.your_shop')
@@ -36,6 +36,15 @@
         = dashboard_menu_item 'dashboard/white_labels', edit_dashboard_white_label_path(current_user.companies.first)
         - if TransactableType.all.any? { |t| t.has_action?('Request For Quote') }
           = dashboard_menu_item 'dashboard/support/tickets', dashboard_support_tickets_path
+
+    - if platform_context.instance.user_blogs_enabled?
+      %ul
+        %li.nav-head
+          = t('dashboard.nav.blog')
+        = dashboard_menu_item 'dashboard/blog', dashboard_blog_path, link_text: t('dashboard.nav.blog_posts'),
+          active: (params[:controller].include?('user_blog') && params[:action] == 'show') || (params[:controller].include?('blog_posts'))
+        = dashboard_menu_item 'dashboard/blog', edit_dashboard_blog_path, link_text: t('dashboard.nav.blog_settings'),
+          active: (params[:controller].include?('user_blog') && params[:action] == 'edit' && !params[:controller].include?('blog_posts'))
 
     %ul
       %li.nav-head

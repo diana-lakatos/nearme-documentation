@@ -1,6 +1,6 @@
 %ul.nav.main-menu
   - unless no_listing_buttons? || !platform_context.white_label_company_user?(current_user)
-    - if platform_context.multiplte_transactable_types?
+    - if platform_context.single_transactable_type?
       - if current_user && current_user.registration_in_progress?
         %li
           = link_to main_app.transactable_type_new_space_wizard_path(platform_context.transactable_types.first), :class => "nav-link btn btn-blue btn-medium" do
@@ -24,8 +24,6 @@
           %ul.dropdown-menu
             - platform_context.transactable_types.each do |tt|
               = render partial: 'layouts/list_your_bookable', locals: { transactable_type: tt }
-
-
 
   - if user_signed_in?
 
@@ -69,6 +67,10 @@
           %li
             = link_to main_app.dashboard_support_tickets_path, class: 'nav-link dropdown-toggle' do
               %span= "#{t('reservations.rfq_menu_text')}"
+        - if platform_context.instance.user_blogs_enabled?
+          %li
+            = link_to main_app.dashboard_blog_path, class: 'nav-link dropdown-toggle' do
+              %span Manage Blog
         %li
           = link_to '/dashboard/edit_profile', class: 'nav-link dropdown-toggle' do
             %span Account
@@ -87,9 +89,9 @@
   - else
     %li.divider-vertical
     %li
-      = link_to_registration get_return_to_url, platform_context.secured_constraint, secure_links?, :rel => 'modal.sign-up-modal', :class => "nav-link header-first" do
+      = link_to_registration get_return_to_url, platform_context.secured_constraint, secure_links?, :class => "nav-link header-first", data: { modal: true, 'modal-class' => 'sign-up-modal' } do
         %span Sign Up
     %li.divider-vertical
     %li
-      = link_to_login get_return_to_url, platform_context.secured_constraint, secure_links?, :rel => 'modal.sign-up-modal', :class => "nav-link header-second" do
+      = link_to_login get_return_to_url, platform_context.secured_constraint, secure_links?, :class => "nav-link header-second", data: { modal: true, 'modal-class' => 'sign-up-modal' } do
         %span Log In

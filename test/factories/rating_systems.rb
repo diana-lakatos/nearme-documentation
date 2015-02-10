@@ -2,7 +2,12 @@
 
 FactoryGirl.define do
   factory :rating_system do
-    subject %w(host guest item).sample
     instance
+    subject { [instance.bookable_noun, instance.lessor, instance.lessee].sample }
+    active false
+  end
+
+  factory :active_rating_system, parent: :rating_system do
+    active true
   end
 end

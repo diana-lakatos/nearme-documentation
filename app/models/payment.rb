@@ -54,10 +54,10 @@ class Payment < ActiveRecord::Base
   validates :currency, presence: true
 
   # === Helpers
-  monetize :subtotal_amount_cents
-  monetize :service_fee_amount_guest_cents
-  monetize :service_fee_amount_host_cents
-  monetize :total_amount_cents
+  monetize :subtotal_amount_cents, with_model_currency: :currency
+  monetize :service_fee_amount_guest_cents, with_model_currency: :currency
+  monetize :service_fee_amount_host_cents, with_model_currency: :currency
+  monetize :total_amount_cents, with_model_currency: :currency
 
   def total_amount_cents
     subtotal_amount_cents + service_fee_amount_guest_cents
@@ -69,7 +69,7 @@ class Payment < ActiveRecord::Base
     if self.payable.respond_to?(:cancelled_by_host?) && self.payable.cancelled_by_host?
       result = 0
     else
-      result = subtotal_amount_cents - refunds.successful.sum(&:amount)
+      result = subtotal_amount_cents - refunds.successful.sum(:amount)
     end
 
     result

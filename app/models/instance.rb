@@ -45,6 +45,7 @@ class Instance < ActiveRecord::Base
   has_many :instance_admins, :inverse_of => :instance
   has_many :instance_admin_roles, :inverse_of => :instance
   has_many :reservations, :as => :platform_context_detail
+  has_many :orders, :as => :platform_context_detail
   has_many :payments, :through => :reservations, :inverse_of => :instance
   has_many :instance_clients, :dependent => :destroy, :inverse_of => :instance
   has_many :translations, :dependent => :destroy, :inverse_of => :instance
@@ -64,7 +65,9 @@ class Instance < ActiveRecord::Base
   has_one :instance_profile_type, -> { where(instance_id: PlatformContext.current.try(:instance).try(:id)) }
   has_many :data_uploads, as: :target
   has_many :industries
+  has_many :user_blog_posts
   has_many :instance_views
+  has_many :dimensions_templates
   has_many :rating_systems, dependent: :destroy
   has_many :reviews, dependent: :destroy
   has_many :rating_questions
@@ -224,5 +227,9 @@ class Instance < ActiveRecord::Base
 
   def default_domain
     domains.order('use_as_default desc').try(:first)
+  end
+
+  def buyable_transactable_type
+    self.transactable_types.where(name: TransactableType::AVAILABLE_TYPES[1]).first
   end
 end

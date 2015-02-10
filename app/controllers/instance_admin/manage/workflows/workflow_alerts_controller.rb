@@ -71,7 +71,8 @@ class InstanceAdmin::Manage::Workflows::WorkflowAlertsController < InstanceAdmin
                        'reservation_mailer/notify_host_of_cancellation_by_host',
                        'reservation_mailer/notify_host_of_confirmation', 'reservation_mailer/notify_host_of_expiration',
                        'reservation_mailer/notify_host_of_rejection', 'reservation_mailer/notify_host_with_confirmation',
-                       'reservation_mailer/notify_host_without_confirmation', 'reservation_mailer/pre_booking'] +
+                       'reservation_mailer/notify_host_without_confirmation', 'reservation_mailer/pre_booking',
+                       'rating_mailer/line_items/request_rating_of_guest_from_host', 'rating_mailer/line_items/request_rating_of_host_and_product_from_guest'] +
                        InstanceView.for_instance_id(PlatformContext.current.instance.id).custom_emails.pluck('path')).uniq
   end
 
@@ -79,5 +80,8 @@ class InstanceAdmin::Manage::Workflows::WorkflowAlertsController < InstanceAdmin
     @custom_email_layouts = (['layouts/mailer'] + InstanceView.for_instance_id(PlatformContext.current.instance.id).custom_email_layouts.pluck('path')).uniq
   end
 
+  def permitting_controller_class
+    'manage'
+  end
 end
 

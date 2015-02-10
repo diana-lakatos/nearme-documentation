@@ -15,8 +15,8 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
         @store[_instance_key]
       end
       touch_cache_timestamp_for(_instance_key, read_cached_at_for(_instance_key)) unless get_cache_timestamp_for(_instance_key)
-      # avoid storing all translations in memory - will be too big in the future
-      @store[_instance_key] = nil if instance_id.present?
+      # to avoid storing all translations in memory in the future, uncomment line:
+      #@store[_instance_key] = nil if instance_id.present?
     end
   end
 
@@ -54,7 +54,7 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
     _instance_key = instance_key(_instance_id)
     translations_scope = (_instance_id.nil? ? Translation.defaults : Translation.for_instance(_instance_id))
     translations_scope = translations_scope.updated_after(get_cache_timestamp_for(_instance_key)) if get_cache_timestamp_for(_instance_key)
-    translations_scope.find_each do |translation|
+    translations_scope.pluck(:locale, :key, :value, :instance_id).each do |translation|
       cache_changed = true
       store_translation(translation)
     end
@@ -65,7 +65,7 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
   end
 
   def store_translation(translation)
-    store_translations(translation.locale, convert_dot_to_hash(translation.key, translation.value), { :instance_id => translation.instance_id })
+    store_translations(translation[0], convert_dot_to_hash(translation[1], translation[2]), { :instance_id => translation[3] })
   end
 
   def store_translations(locale, data, options = {})

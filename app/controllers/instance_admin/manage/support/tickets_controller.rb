@@ -5,7 +5,7 @@ class InstanceAdmin::Manage::Support::TicketsController < InstanceAdmin::Manage:
   def show
     @first_message = @ticket.first_message
     @message = Support::TicketMessage.new(attachments: @ticket.attachments.where(ticket_message_id: nil, uploader_id: current_user.id))
-    @admins = InstanceAdmin.scoped.includes(:user).collect(&:user)
+    @admins = InstanceAdmin.all.includes(:user).collect(&:user)
   end
 
   def update

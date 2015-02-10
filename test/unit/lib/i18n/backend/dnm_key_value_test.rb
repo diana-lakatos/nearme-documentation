@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class FooterResolverTest < ActiveSupport::TestCase
+class DnmKeyValueTest < ActiveSupport::TestCase
 
   setup do
     @translation_global = FactoryGirl.create(:translation, :key => 'translation_key', :value => 'global value', instance_id: nil)

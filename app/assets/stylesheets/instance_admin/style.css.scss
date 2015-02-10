@@ -1026,3 +1026,48 @@ body.login {
   line-height: 20px;
   height: 20px;
 }
+
+th.actions-2 {
+  width: 105px;
+}
+
+/* Shipping options */
+#main-container.dimensions_templates {
+  table {
+    thead {
+      span.header-link {
+        float: right;
+      }
+    }
+  }
+
+  form {
+    .row.submit-row {
+      margin-top: 25px;
+      float: right;
+    }
+  }
+
+  &.dimensions_templates-index {
+    .new_dimensions_template_container_explanation {
+      font-size: 20px;
+      margin-bottom: 25px;
+    }
+  
+    .new_dimensions_template_link_container {
+      font-size: 24px;
+      text-align: center;
+    }
+  }
+}
+
+#main-container.providers {
+  form {
+    .row.submit-row {
+      margin-top: 25px;
+      float: right;
+    }
+  }
+}
+/* End shipping options */
+
