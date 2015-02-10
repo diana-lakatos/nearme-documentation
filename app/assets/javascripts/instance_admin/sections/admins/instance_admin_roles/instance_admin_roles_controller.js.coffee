@@ -1,4 +1,4 @@
-class @Users.InstanceAdminRoles.Controller
+class @Admins.InstanceAdminRoles.Controller
 
   constructor: (@container, @options = {}) ->
     @permissionCheckboxes = @container.find('input[data-permission-checkbox]')
@@ -12,7 +12,7 @@ class @Users.InstanceAdminRoles.Controller
       @loading_gif.show()
       $.ajax(
         type: 'PUT',
-        url: '/instance_admin/manage/users/instance_admin_roles/' + $(event.target).data('role-id'),
+        url: '/instance_admin/manage/admins/instance_admin_roles/' + $(event.target).data('role-id'),
         data: JSON.parse(str),
         success: =>
           @loading_gif.hide()

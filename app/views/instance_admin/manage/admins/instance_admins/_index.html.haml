@@ -1,12 +1,12 @@
 %form#instance_admins_form
-  %h4 Users
+  %h4 Admin
   .content-container
     .row
       .table-container.col-xs-12.dropshadow
         %table.table
           %thead
             %tr
-              %th Users
+              %th Admin
               %th Role
               %th
           %tbody
@@ -24,5 +24,5 @@
                 %td
                   - unless instance_admin.instance_owner
                     .pull-right
-                      = link_to instance_admin_manage_users_instance_admin_path(instance_admin), :method => :delete, :confirm => 'Are you sure?' do
+                      = link_to instance_admin_manage_admins_instance_admin_path(instance_admin), :method => :delete, :confirm => 'Are you sure?' do
                         .fa.fa-trash-o.fa-2x.inline-form-icon

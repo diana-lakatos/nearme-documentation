@@ -15,7 +15,7 @@ class Review < ActiveRecord::Base
   belongs_to :reviewable, polymorphic: true
   belongs_to :instance
   belongs_to :transactable_type
-  
+
   has_many :rating_answers, -> { order(:id) }, dependent: :destroy
 
   validates_presence_of :rating, :object, :user, :reviewable, :transactable_type

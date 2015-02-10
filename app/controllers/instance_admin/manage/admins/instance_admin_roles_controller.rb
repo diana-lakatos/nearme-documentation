@@ -1,9 +1,9 @@
-class InstanceAdmin::Manage::Users::InstanceAdminRolesController < InstanceAdmin::Manage::BaseController
+class InstanceAdmin::Manage::Admins::InstanceAdminRolesController < InstanceAdmin::Manage::BaseController
 
   skip_before_filter :check_if_locked
 
   def index
-    redirect_to instance_admin_manage_users_path
+    redirect_to instance_admin_manage_admins_path
   end
 
   def create
@@ -11,10 +11,10 @@ class InstanceAdmin::Manage::Users::InstanceAdminRolesController < InstanceAdmin
     @instance_admin_role.instance_id = PlatformContext.current.instance.id
     if @instance_admin_role.save
 
-      flash[:success] = t('flash_messages.instance_admin.users.instance_admin_roles.role_added')
-      redirect_to instance_admin_manage_users_path
+      flash[:success] = t('flash_messages.instance_admin.admins.instance_admin_roles.role_added')
+      redirect_to instance_admin_manage_admins_path
     else
-      render "instance_admin/manage/users/index"
+      render "instance_admin/manage/admins/index"
     end
   end
 
@@ -31,8 +31,8 @@ class InstanceAdmin::Manage::Users::InstanceAdminRolesController < InstanceAdmin
     if @instance_admin_role.instance_id.present?
       @instance_admin_role.destroy
     end
-    flash[:deleted] = t('flash_messages.instance_admin.users.instance_admin_roles.role_deleted')
-    redirect_to instance_admin_manage_users_path
+    flash[:deleted] = t('flash_messages.instance_admin.admins.instance_admin_roles.role_deleted')
+    redirect_to instance_admin_manage_admins_path
   end
 
   private
