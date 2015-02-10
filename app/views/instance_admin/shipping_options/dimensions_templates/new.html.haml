@@ -1,0 +1,6 @@
+
+= render partial: 'form', locals: { form_title: 'Add', form_method: 'post' }
+
+- content_for :domready do
+  new DimensionsTemplates(#{raw DimensionsTemplate::UNITS_OF_MEASURE.to_json});
+

@@ -66,6 +66,11 @@ class InstanceAdmin::BaseController < ApplicationController
     # 'shipping_methods' => { default_action: 'index' },
   }
 
+  SHIPPING_OPTIONS_CONTROLLERS = {
+    'dimensions_templates' => { default_action: 'index' },
+    'providers' => { default_action: 'show' },
+  }
+
   def index
     redirect_to url_for([:instance_admin, @authorizer.first_permission_have_access_to])
   end

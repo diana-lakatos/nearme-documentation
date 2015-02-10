@@ -309,6 +309,12 @@ DesksnearMe::Application.routes.draw do
       resources :shipping_categories
       resources :shipping_methods
     end
+
+    namespace :shipping_options do
+      resource :providers
+      resources :dimensions_templates
+    end
+
   end
 
   resources :blog_posts, path: 'blog', only: [:index, :show], controller: 'blog/blog_posts'

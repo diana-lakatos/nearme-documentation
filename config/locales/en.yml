@@ -5,6 +5,13 @@ en:
         name: "Listing type"
       location_type:
         name: "Location type"
+      spree/product:
+        shippo_enabled: 'Integrated Shipping'
+      spree/variant:
+        weight_unit: 'Type of Unit'
+        height_unit: 'Type of Unit'
+        width_unit: 'Type of Unit'
+        depth_unit: 'Type of Unit'
   connections:
     facebook:
       count:
@@ -18,6 +25,8 @@ en:
       count:
         one: "1 follower"
         other: "%{count} followers"
+  confirmations:
+    are_you_sure: 'Are you sure?'
   day:
     one: "1 day"
     other: "%{count} days"
@@ -61,6 +70,9 @@ en:
           manage: "Manage Product: Images"
           title: "Product Images"
           new_title: "New Product Image"
+      dimensions_templates:
+        explanation1: 'This will provide a tracking code and a shipping label for your product sale.'
+        explanation2: "Select your item's dimensions from the menu below or add your own measures."
   instance_admin:
     manage:
       reviews:
@@ -542,3 +554,7 @@ en:
     rating:
       experience_hosting: "How was your experience hosting %{name}?"
       experience_at: "How was your experience at '%{name}'?"
+  instance_admin:
+    shipping_options:
+      dimensions_templates:
+        add_new_dimensions_template: '+ Add new dimension template'
