@@ -77,12 +77,13 @@ class RegistrationsController < Devise::RegistrationsController
     @theme_name = 'buy-sell-theme'
     @user = User.find(params[:id]).decorate
     @company = @user.companies.first
-
     if buyable?
       @products = @company.present? ? @company.products.paginate(page: params[:products_page], per_page: 8) : nil
     else
       @listings = @company.present? ? @company.listings.paginate(page: params[:services_page], per_page: 8) : nil
     end
+    @rating_questions = RatingSystem.find_by(subject: platform_context.instance.lessor).rating_questions
+    @reviews_as_seller = @user.reviews_as_seller.paginate(page: params[:reviews_page])
   end
 
   def update

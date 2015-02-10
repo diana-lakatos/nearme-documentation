@@ -32,3 +32,4 @@
 //= require instance_admin/sections/reviews
 
 //= require instance_admin/sections/wish_lists
+//= require instance_admin/sections/users

@@ -5,6 +5,13 @@ en:
         name: "Listing type"
       location_type:
         name: "Location type"
+      spree/product:
+        shippo_enabled: 'Integrated Shipping'
+      spree/variant:
+        weight_unit: 'Type of Unit'
+        height_unit: 'Type of Unit'
+        width_unit: 'Type of Unit'
+        depth_unit: 'Type of Unit'
   connections:
     facebook:
       count:
@@ -18,6 +25,8 @@ en:
       count:
         one: "1 follower"
         other: "%{count} followers"
+  confirmations:
+    are_you_sure: 'Are you sure?'
   day:
     one: "1 day"
     other: "%{count} days"
@@ -61,6 +70,9 @@ en:
           manage: "Manage Product: Images"
           title: "Product Images"
           new_title: "New Product Image"
+      dimensions_templates:
+        explanation1: 'This will provide a tracking code and a shipping label for your product sale.'
+        explanation2: "Select your item's dimensions from the menu below or add your own measures."
   instance_admin:
     manage:
       reviews:
@@ -82,6 +94,25 @@ en:
           service: "Service"
           rating: "Rating"
           object: "Object"
+          user: "User"
+          date: "Date"
+      users:
+        index:
+          today: "Today"
+          yesterday: "Yesterday"
+          week_ago: "Last week"
+          month_ago: "Last month"
+          3_months_ago: "Last 3 months"
+          6_months_ago: "Last 6 months"
+          title_all: "All"
+          date_range: "Date range"
+          from: "From:"
+          to: "To:"
+          apply_filter: "Apply filter"
+          search_by_keyword: "Search by keyword"
+          more_filters: "More filters"
+          service: "Service"
+          rating: "Rating"
           user: "User"
           date: "Date"
     rating_systems:
@@ -434,6 +465,9 @@ en:
       buyer_feedback: 'Leave buyer feedback'
       product_review: 'Write a product review'
       order_details: 'View Order Details'
+      update_seller_feedback: 'Update seller feedback'
+      update_buyer_feedback: 'Update buyer feedback'
+      update_product_review: 'Update a product review'
 
   registrations:
     tell_us: 'Tell us a little about yourself'
@@ -489,12 +523,15 @@ en:
   time:
     formats:
       day_and_month: "%^b %-d"
+      day_month_year: "%m/%d/%Y"
       only_date: "%B %d, %-Y"
+      month_year: "%B %Y"
   date:
     formats:
       short: '%B %d, %-Y'
       day_and_month: "%^b %-d"
       day_month_year: "%m/%d/%Y"
+      month_year: "%B %Y"
   user_messages:
     inbox:
       one: "Inbox (1)"
@@ -544,3 +581,7 @@ en:
     rating:
       experience_hosting: "How was your experience hosting %{name}?"
       experience_at: "How was your experience at '%{name}'?"
+  instance_admin:
+    shipping_options:
+      dimensions_templates:
+        add_new_dimensions_template: '+ Add new dimension template'

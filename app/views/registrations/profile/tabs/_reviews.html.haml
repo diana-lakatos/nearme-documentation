@@ -1,1 +1,28 @@
-%h1 TODO
+.rating-averages
+  .row-fluid.reviews-summary
+    .span3
+      %p= t 'buy_sell_market.products.labels.summary'
+    .span9
+      .rating
+        = render 'buy_sell_market/products/stars', stars: @user.try(:average_rating).try(:round)
+  .row-fluid
+    - @rating_questions.each do |rating_question|
+      .span3
+        %p= rating_question.text
+      .span3
+        .rating
+          = render 'buy_sell_market/products/stars', stars: (@user.question_average_rating[rating_question.id] || 0).round
+- @reviews_as_seller.each do |review|
+  .review
+    .row-fluid
+      .span2
+        = image_tag review.user.avatar_url
+        %p= review.user.first_name
+      .span10
+        .rating
+          = render 'buy_sell_market/products/stars', stars: review.rating 
+          %p.review-date= I18n.l(review.created_at, format: :month_year)
+        %p
+          = review.comment
+
+= will_paginate_styled @reviews_as_seller, param_name: 'reviews_page'

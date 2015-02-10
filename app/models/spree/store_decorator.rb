@@ -1,4 +1,4 @@
-Spree::Image.class_eval do
+Spree::Store.class_eval do
   include Spree::Scoper
 
   def self.current(domain = nil)

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class InstanceAdmin::Manage::Users::InstanceAdminRolesControllerTest < ActionController::TestCase
+class InstanceAdmin::Manage::Admins::InstanceAdminRolesControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)

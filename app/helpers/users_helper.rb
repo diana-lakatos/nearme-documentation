@@ -44,6 +44,14 @@ module UsersHelper
     platform_context.instance.hidden_dashboard_menu_items.key?(controller)
   end
 
+  def param_reviews_page_present?
+    params[:reviews_page].present?
+  end
+
+  def user_filter_checked?(filter)
+    params[:filters].try(:include?, filter.to_s)
+  end
+
   private
 
   def social_icon(provider)

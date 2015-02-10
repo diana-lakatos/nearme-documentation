@@ -14,6 +14,7 @@ class Utils::DefaultAlertsCreator
     #Utils::DefaultAlertsCreator::RecurringCreator.new.create_all!
     Utils::DefaultAlertsCreator::UserMessageCreator.new.create_all!
     Utils::DefaultAlertsCreator::DataUploadCreator.new.create_all!
+    Utils::DefaultAlertsCreator::LineItemCreator.new.create_all!
   end
 
 end

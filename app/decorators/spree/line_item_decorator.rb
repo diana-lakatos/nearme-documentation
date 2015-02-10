@@ -1,6 +1,7 @@
 class Spree::LineItemDecorator < Draper::Decorator
   include Draper::LazyHelpers
   include MoneyRails::ActionViewExtension
+  include FeedbackDecoratorHelper
 
   delegate_all
 
@@ -38,6 +39,10 @@ class Spree::LineItemDecorator < Draper::Decorator
         image_tag 'placeholders/144x89.gif'
       end
     end
+  end
+
+  def feedback_object
+    object
   end
 
   private

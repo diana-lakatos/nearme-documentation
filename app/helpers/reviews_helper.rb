@@ -27,6 +27,7 @@ module ReviewsHelper
     Review::DATE_VALUES.each do |value|
       return I18n.t("instance_admin.manage.reviews.index.#{value}") if value == date
     end
+    date
   end
 
   def show_completed_feedback?
@@ -35,18 +36,6 @@ module ReviewsHelper
 
   def array_of_last_years(number)
     ( number.years.ago.year..(Time.now.year - 1) ).to_a.reverse
-  end
-
-  def link_to_object(review)
-    case review.object
-      when 'seller' then link_to_new_tab(I18n.t('helpers.reviews.user'), profile_path(review.reservation.creator_id))
-      when 'buyer' then link_to_new_tab(I18n.t('helpers.reviews.user'), profile_path(review.reservation.owner_id))
-      when 'product' then link_to_new_tab(I18n.t('helpers.reviews.product'), listing_path(review.reservation.transactable_id))
-    end
-  end
-
-  def link_to_new_tab(name, path)
-    link_to name, path, target: "_blank"
   end
 
   def rating_stars(number)

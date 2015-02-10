@@ -1,5 +1,5 @@
 - render_content_outside_container!
-- hidden = [:rating, :reviews, :user_reviews, :shipping, :refunds] # TODO: Remove when implemented
+- hidden = [:user_reviews, :shipping, :refunds] # TODO: Remove when implemented
 
 %section.product-head
   .container-fluid
@@ -9,13 +9,12 @@
       .span4
         %h1= @product.name
         %h1= @product.humanized_price
-        - if hidden.include?(:rating)
-          %br
-        - else
+        - if @product.has_reviews?
           .rating.product-rating
             %p= t 'buy_sell_market.products.labels.rating'
-            = render partial: 'stars', locals: { stars: 5, count: 8 }
-
+            = render partial: 'stars', locals: { stars: @product.try(:average_rating).try(:round), count: @product.reviews_count }
+        - else
+          %br
         - if @product.total_on_hand > 0
           = form_tag cart_add_product_path, method: :get, class: 'inline' do
             = hidden_field_tag 'product_id', @product.id
@@ -23,7 +22,7 @@
             = select_tag 'quantity', options_for_select((1..10)), class: ''
             - if @product.total_on_hand > 0
               %button.cta.btn.blue.padding11.add_to_cart
-                = t('buy_sell_market.products.buttons.add_to_cart')
+                = t('buy_sell_market.produc.undecoratets.buttons.add_to_cart')
         - else
           .btn.disabled= t('buy_sell_market.products.buttons.out_of_stock')
 
@@ -37,67 +36,51 @@
   .container-fluid
     .tab-content-container
       %ul.nav.nav-tabs.page-tabs{role: 'tablist'}
-        %li.active
+        %li{ class: "#{ 'active' if !param_reviews_page_present? }" }
           %a{'data-toggle' => 'tab', href: '#product-details', role: 'tab'}
             = t 'buy_sell_market.products.labels.item_details'
-        - unless hidden.include?(:reviews)
-          %li
+        - if @product.has_reviews?
+          %li{ class: "#{ 'active' if param_reviews_page_present? }" }
             %a{'data-toggle' => 'tab', href: '#product-reviews', role: 'tab'}
-              #{t('buy_sell_market.products.labels.reviews')} (8)
+              #{t('buy_sell_market.products.labels.reviews')}
+              = "(#{@product.reviews_count})"
         - unless hidden.include?(:shipping)
           %li
             %a{'data-toggle' => 'tab', href: '#product-shipping', role: 'tab'}
               = t 'buy_sell_market.products.labels.shippigng_policies'
       .tab-content
-        %article#product-details.tab-pane.active
+        %article#product-details.tab-pane{ class: "#{ 'active' if !param_reviews_page_present? }" }
           %p= @product.description.html_safe
 
-        - unless hidden.include?(:reviews)
-          %article#product-reviews.tab-pane
+        - if @product.has_reviews?
+          %article#product-reviews.tab-pane{ class: "#{ 'active' if param_reviews_page_present? }" }
             .rating-averages
               .row-fluid.reviews-summary
                 .span3
                   %p= t 'buy_sell_market.products.labels.summary'
                 .span9
                   .rating
-                    = render partial: 'stars', locals: { stars: 5 }
+                    = render partial: 'stars', locals: { stars: @product.try(:average_rating).try(:round) }
               .row-fluid
-                .span3
-                  %p= t 'buy_sell_market.products.labels.communication'
-                .span3
-                  .rating
-                    = render partial: 'stars', locals: { stars: 5 }
-                .span3
-                  %p= t 'buy_sell_market.products.labels.quality'
-                .span3
-                  .rating
-                    = render partial: 'stars', locals: { stars: 5 }
-              .row-fluid
-                .span3
-                  %p= t 'buy_sell_market.products.labels.shipping_speed'
-                .span3
-                  .rating
-                    = render partial: 'stars', locals: { stars: 5 }
-                .span3
-                  %p= t 'buy_sell_market.products.labels.customer_attention'
-                .span3
-                  .rating
-                    = render partial: 'stars', locals: { stars: 5 }
-            .review
-              .row-fluid
-                .span2
-                  = image_tag 'themes/buy_sell/profile-pic.png'
-                  %p Angela
-                .span10
-                  .rating
-                    = render partial: 'stars', locals: { stars: 5 }
-                    %p.review-date November 2014
-                  %p
-                    Plants came in great shape and have transferred well so far. There was a nice assortment.
-                    I'll be ordering again for more special succulents!
-            .see-more
-              %a{href: '#'}
-                = t 'buy_sell_market.products.labels.more_reviews'
+                - @rating_questions.each do |rating_question|
+                  .span3
+                    %p= rating_question.text
+                  .span3
+                    .rating
+                      = render partial: 'stars', locals: { stars:  (@product.question_average_rating[rating_question.id] || 0).round }
+            - @reviews.each do |review|
+              .review
+                .row-fluid
+                  .span2
+                    = image_tag review.user.avatar_url
+                    %p= review.user.first_name
+                  .span10
+                    .rating
+                      = render partial: 'stars', locals: { stars: review.rating }
+                      %p.review-date= I18n.l(review.created_at, format: :month_year)
+                    %p
+                      = review.comment
+            = will_paginate_styled @reviews, param_name: 'reviews_page'
 
         - unless hidden.include?(:shipping)
           %article#product-shipping.tab-pane
