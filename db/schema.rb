@@ -102,11 +102,11 @@ ActiveRecord::Schema.define(version: 20150205113805) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "hint"
     t.integer  "approval_request_id"
     t.integer  "approval_request_attachment_template_id"
     t.boolean  "required",                                default: false
     t.string   "label"
+    t.text     "hint"
   end
 
   add_index "approval_request_attachments", ["instance_id"], name: "index_approval_request_attachments_on_instance_id", using: :btree
@@ -2513,17 +2513,6 @@ ActiveRecord::Schema.define(version: 20150205113805) do
   end
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree
-
-  create_table "transactable_actions", force: true do |t|
-    t.integer  "action_type_id"
-    t.integer  "transactable_id"
-    t.integer  "instance_id"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "transactable_actions", ["action_type_id", "transactable_id"], name: "transactable_actions_at_t_unique", unique: true, where: "(deleted_at IS NULL)", using: :btree
 
   create_table "transactable_type_actions", force: true do |t|
     t.integer  "action_type_id"

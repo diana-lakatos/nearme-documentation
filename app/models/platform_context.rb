@@ -110,14 +110,18 @@ class PlatformContext
   end
 
   def initialize_with_domain(domain)
-    if domain.present? && domain.white_label_enabled? && domain.target.present?
-      @domain = domain
-      if @domain.white_label_company?
-        initialize_with_company(@domain.target)
-      elsif @domain.instance?
-        initialize_with_instance(@domain.target)
-      elsif @domain.partner?
-        initialize_with_partner(@domain.target)
+    if is_root_domain?
+      initialize_with_instance(Instance.first)
+    else
+      if domain.present? && domain.white_label_enabled? && domain.target.present?
+        @domain = domain
+        if @domain.white_label_company?
+          initialize_with_company(@domain.target)
+        elsif @domain.instance?
+          initialize_with_instance(@domain.target)
+        elsif @domain.partner?
+          initialize_with_partner(@domain.target)
+        end
       end
     end
     self
@@ -171,6 +175,7 @@ class PlatformContext
   end
 
   def should_redirect?
+    return false if is_root_domain?
     return true unless @domain
     return true if @domain.redirect?
     @domain.name != @request_host
@@ -198,6 +203,12 @@ class PlatformContext
 
   def latest_products(number = 6)
     Spree::Product.searchable.order('created_at desc').limit(number).all
+  end
+
+   def is_root_domain?
+    root_domains = [Regexp.escape(remove_port_from_hostname(Rails.application.routes.default_url_options[:host])), '0\.0\.0\.0', 'near-me.com', 'api\.desksnear\.me', '127\.0\.0\.1']
+    root_domains += ['test\.host', '127\.0\.0\.1', 'example\.org', 'www.example\.com'] if Rails.env.test?
+    @request_host =~ Regexp.new("^(#{root_domains.join('|')})$", true)
   end
 
   private
