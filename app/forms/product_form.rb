@@ -102,7 +102,7 @@ class ProductForm < Form
   end
 
   def validate_images
-    errors.add(:images) unless @product.images.map(&:valid?).all?
+    @product.errors.add(:images) unless @product.images.map(&:valid?).all?
   end
 
   def validate_shipping_methods
