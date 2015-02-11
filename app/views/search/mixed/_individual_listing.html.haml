@@ -6,7 +6,7 @@
       .span5.location-photos-container
         .location-photos
           - if platform_context.instance.user_based_marketplace_views?
-            = link_to location_listing_path(listing.location, listing) do
+            = link_to transactable_type_location_listing_path(listing.transactable_type, listing.location, listing) do
               - if listing.administrator.avatar?
                 = image_tag listing.administrator.avatar.url(:big)
               - else
@@ -17,18 +17,18 @@
                 - if listing.photos_metadata.try(:any?)
                   - listing.photos_metadata.each_with_index do |photo_metadata, index|
                     .item{:class => ("active" if index == 0)}
-                      = link_to location_listing_path(listing.location, listing) do
+                      = link_to transactable_type_location_listing_path(listing.transactable_type, listing.location, listing) do
                         = image_tag photo_metadata[:space_listing], :alt => listing.name
                 - else
                   .item{:class => "active"}
-                    = link_to location_listing_path(listing.location, listing) do
+                    = link_to transactable_type_location_listing_path(listing.transactable_type, listing.location, listing) do
                       = image_tag space_listing_placeholder_path(:height => 254, :width => 410), :title => listing.name, :alt => listing.name
               - if listing.photos_metadata.try(:count).to_i > 1
                 .carousel-nav
                   = link_to "", "#location-gallery-#{listing.id}", :class => "carousel-control left ico-chevron-left", 'data-slide' => 'prev'
                   = link_to "", "#location-gallery-#{listing.id}", :class => "carousel-control right ico-chevron-right", 'data-slide' => 'next'
       .span5.location-data
-        %h2= link_to listing.name, location_listing_path(listing.location, listing)
+        %h2= link_to listing.name, transactable_type_location_listing_path(listing.transactable_type, listing.location, listing)
         .subheader
           with
           = platform_context.instance.user_based_marketplace_views? ? listing.administrator.name : listing.company.name
@@ -39,4 +39,4 @@
           .location-price
             = individual_listing_price_information(listing, search.lgpricing_filters)
       .span2.reserve-listing.padding-top.pull-right
-        = link_to 'reserve', location_listing_path(listing.location, listing), class: "btn btn-green btn-small"
+        = link_to 'reserve', transactable_type_location_listing_path(listing.transactable_type, listing.location, listing), class: "btn btn-green btn-small"
