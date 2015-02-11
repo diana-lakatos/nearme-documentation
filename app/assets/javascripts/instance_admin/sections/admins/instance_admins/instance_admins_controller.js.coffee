@@ -1,4 +1,4 @@
-class @Users.InstanceAdmins.Controller
+class @Admins.InstanceAdmins.Controller
 
   constructor: (@container, @options = {}) ->
     @roleSelects = @container.find('select[data-role-select]')
@@ -10,7 +10,7 @@ class @Users.InstanceAdmins.Controller
       @loading_gif.show()
       $.ajax(
         type: 'PUT',
-        url: '/instance_admin/manage/users/instance_admins/' + $(event.target).data('instance-admin-id'),
+        url: '/instance_admin/manage/admins/instance_admins/' + $(event.target).data('instance-admin-id'),
         data: { instance_admin_role_id: $(event.target).val() },
         success: =>
           @loading_gif.hide()

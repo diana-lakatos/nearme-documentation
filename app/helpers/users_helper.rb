@@ -48,6 +48,10 @@ module UsersHelper
     params[:reviews_page].present?
   end
 
+  def user_filter_checked?(filter)
+    params[:filters].try(:include?, filter.to_s)
+  end
+
   private
 
   def social_icon(provider)

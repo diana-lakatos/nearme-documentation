@@ -254,10 +254,10 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
-      resources :inventories, only: [:index] do
+      resources :users, only: [:index] do
         post :login_as, on: :member
         post :restore_session, on: :collection
-        resources :user_bans, only: [:create, :index, :destroy], controller: 'inventories/user_bans'
+        resources :user_bans, only: [:create, :index, :destroy], controller: 'users/user_bans'
       end
 
       resources :transfers do
@@ -273,8 +273,8 @@ DesksnearMe::Application.routes.draw do
 
       resources :partners
 
-      resources :users, :only => [:index, :create]
-      namespace :users do
+      resources :admins, :only => [:index, :create]
+      namespace :admins do
         resources :instance_admins, :only => [:create, :update, :destroy, :index]
         resources :instance_admin_roles, :only => [:create, :update, :destroy, :index]
       end

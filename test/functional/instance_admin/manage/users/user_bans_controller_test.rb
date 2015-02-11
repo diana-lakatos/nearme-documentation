@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class InstanceAdmin::Manage::Inventories::UserBansControllerTest < ActionController::TestCase
+class InstanceAdmin::Manage::Users::UserBansControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user)
@@ -17,7 +17,7 @@ class InstanceAdmin::Manage::Inventories::UserBansControllerTest < ActionControl
 
     should 'ban user' do
       assert_difference 'UserBan.count', 1 do
-        post :create, { inventory_id: @user_to_be_banned.id }
+        post :create, { user_id: @user_to_be_banned.id }
       end
       @user_ban = assigns(:user_ban)
       assert_equal @user_to_be_banned.id, @user_ban.user_id

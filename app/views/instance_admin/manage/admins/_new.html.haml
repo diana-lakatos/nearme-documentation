@@ -1,5 +1,5 @@
-= simple_form_for [:instance_admin, :manage, @user ||= User.new] do |f|
-  %h4 Create new user
+= simple_form_for @user ||= User.new, url: instance_admin_manage_admins_path do |f|
+  %h4 Create new admin user
   .content-container
     .row.dropshadow
       .input-container.col-xs-6
