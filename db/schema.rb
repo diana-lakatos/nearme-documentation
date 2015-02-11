@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150214125057) do
+ActiveRecord::Schema.define(version: 20150217192911) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -418,10 +418,9 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.string   "height_unit",                             default: "in"
     t.string   "width_unit",                              default: "in"
     t.string   "depth_unit",                              default: "in"
+    t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "details"
-    t.datetime "deleted_at"
   end
 
   create_table "domains", force: true do |t|
@@ -1494,9 +1493,9 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.integer  "partner_id"
     t.decimal  "service_fee_buyer_percent",               precision: 5,  scale: 2, default: 0.0
     t.decimal  "service_fee_seller_percent",              precision: 5,  scale: 2, default: 0.0
+    t.datetime "shippo_rate_purchased_at"
     t.string   "guest_token"
     t.integer  "state_lock_version",                                               default: 0,       null: false
-    t.datetime "shippo_rate_purchased_at"
     t.integer  "platform_context_detail_id"
     t.string   "platform_context_detail_type"
   end
@@ -1896,6 +1895,7 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.integer  "user_id"
+    t.boolean  "company_default", default: false
   end
 
   add_index "spree_shipping_categories", ["company_id"], name: "index_spree_shipping_categories_on_company_id", using: :btree
@@ -1932,6 +1932,7 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.string   "shippo_rate_id",         limit: 230
     t.text     "shippo_label_url"
     t.text     "shippo_tracking_number"
+    t.boolean  "is_user_template",                                           default: false
   end
 
   add_index "spree_shipping_methods", ["company_id"], name: "index_spree_shipping_methods_on_company_id", using: :btree
@@ -2535,6 +2536,7 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.boolean  "recurring_booking",                                                  default: false, null: false
     t.boolean  "show_page_enabled",                                                  default: false
     t.text     "custom_csv_fields"
+    t.boolean  "overnight_booking",                                                  default: false, null: false
     t.text     "onboarding_form_fields"
     t.decimal  "service_fee_guest_percent",                  precision: 5, scale: 2, default: 0.0
     t.decimal  "service_fee_host_percent",                   precision: 5, scale: 2, default: 0.0

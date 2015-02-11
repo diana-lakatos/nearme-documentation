@@ -90,6 +90,17 @@ class Company < ActiveRecord::Base
 
   validates :paypal_email, email: true, allow_blank: true
 
+  after_create :add_company_to_partially_created_shipping_categories
+
+  def add_company_to_partially_created_shipping_categories
+    partial_categories = Spree::ShippingCategory.where(:user_id => self.creator_id, :company_id => nil)
+    partial_categories.each do |partial_category|
+      partial_category.update_attribute(:company_id, self.id)
+    end
+
+    true
+  end
+
   def add_creator_to_company_users
     unless users.include?(creator)
       users << creator

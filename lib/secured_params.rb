@@ -10,6 +10,13 @@ class SecuredParams
     ]
   end
 
+  def shipping_category_form
+    [
+      :name,
+      shipping_methods_attributes: nested(self.spree_shipping_method)
+    ]
+  end
+
   def product_form
     [
       :draft,
@@ -27,6 +34,7 @@ class SecuredParams
       :depth_unit,
       :width_unit,
       :height_unit,
+      :shipping_category_id,
       :unit_of_measure,
       image_ids: [],
       company_address_attributes: nested(self.address),

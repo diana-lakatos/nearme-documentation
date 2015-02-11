@@ -33,7 +33,12 @@ class @Modal
     $('body').delegate 'form[data-modal]', 'submit', (e) =>
       e.preventDefault()
       form = $(e.currentTarget)
-      Modal.load({ type: "POST", url: form.attr("action"), data: form.serialize()})
+
+      modalClass = null
+      if form.is('form[data-modal-class]')
+        modalClass = form.attr('data-modal-class')
+
+      Modal.load({ type: "POST", url: form.attr("action"), data: form.serialize()}, modalClass)
       false
 
 

@@ -19,9 +19,10 @@ class BoardingForm < Form
 
   def initialize(user)
     @user = user
-    @company = @user.companies.first || @user.companies.build
+    @company = @user.companies.first || @user.companies.build(:creator_id => @user.id)
     @company_address = @company.company_address || @company.build_company_address
     @product = @company.products.first || @company.products.build(user_id: @user.id)
+    @product.user = @user if @product.user.blank?
     @product_form = ProductForm.new(@product)
   end
 

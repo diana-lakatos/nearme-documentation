@@ -241,6 +241,41 @@ section#shipping-info.enabled {
 
 /* End Shippo product form fields */
 
+.row {
+  .shipping_method_block.shipping_method_list {
+    .col-md-9.input-container {
+      padding-left: 33px;
+    }
+  }
+}
+
+.shipping_profiles_modal {
+  .modal-content {
+    .modal-body {
+      padding: 15px 35px 0 35px;
+    }
+
+    .shipping-form {
+      .shipping-cost {
+        .controls {
+          padding-top: 37px;
+        }
+
+        input.price {
+          margin-top: 0;
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+form#boarding_form {
+  .shipping_profiles_modal_edit_link {
+    display: none;
+  }
+}
+
 .remove_shipping_profile {
   overflow: hidden;
 

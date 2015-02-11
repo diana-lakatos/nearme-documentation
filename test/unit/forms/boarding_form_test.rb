@@ -6,6 +6,9 @@ class BoardingFormTest < ActiveSupport::TestCase
     PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
     @user = FactoryGirl.create(:user, name: "Firstname Lastname")
     @boarding_form = BoardingForm.new(@user)
+    @shipping_category = FactoryGirl.create(:shipping_category)
+    @shipping_category.company_id = @boarding_form.product_form.product.company.id
+    @shipping_category.save!
     10.times do
       FactoryGirl.create(:taxons)
       FactoryGirl.create(:country)
@@ -20,16 +23,11 @@ class BoardingFormTest < ActiveSupport::TestCase
 
       @company = Company.last
       @product = @company.products.first
-      @shipping_method = @company.shipping_methods.first
 
       assert_equal @company.name, boarding_attributes[:store_name]
       assert_equal @company.company_address.address, "Poznań, Polska"
       assert_equal @product.taxons.map(&:id).sort, @taxon_ids.sort
       assert_equal @product.name, "Test Product"
-      assert_equal @shipping_method.name, "Test"
-      assert_equal @shipping_method.calculator.preferred_amount, 10
-      assert_equal @shipping_method.zones.first.company_id, @company.id
-      assert_equal @shipping_method.zones.first.members.map(&:zoneable), @countries
 
     end
   end
@@ -48,23 +46,7 @@ class BoardingFormTest < ActiveSupport::TestCase
         price: "100",
         taxon_ids: @taxon_ids.join(","),
         quantity: "10",
-        shipping_methods_attributes: {
-          "0" => {
-            name: "Test",
-            removed: "0",
-            processing_time: "1 day",
-            calculator_attributes: {
-              preferred_amount: "10.0"
-            },
-            zones_attributes: {
-              "0" => {
-                name: "Default - b38723c89b795233677b2795d77557af",
-                kind: "country",
-                country_ids: @countries.map(&:id)
-              }
-            }
-          }
-        }
+        shipping_category_id: @shipping_category.id
       }
     }
   end

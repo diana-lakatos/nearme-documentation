@@ -1,6 +1,10 @@
 class Dashboard::ProductsController < Dashboard::BaseController
   before_filter :find_product, only: [:edit, :update, :destroy]
 
+  skip_before_filter :redirect_if_no_company, only: [:get_shipping_categories_list]
+
+  skip_before_filter :redirect_unless_registration_completed, only: [:get_shipping_categories_list]
+
   def index
     @products = @company.products.paginate(page: params[:page], per_page: 20)
   end
@@ -43,6 +47,18 @@ class Dashboard::ProductsController < Dashboard::BaseController
   def destroy
     @product.destroy
     redirect_to dashboard_products_url
+  end
+
+  def get_shipping_categories_list
+    @company ||= Company.new
+    @product = @company.products.build user: current_user
+    @product_form = ProductForm.new(@product)
+
+    if params['form'] == 'boarding'
+      render :partial => "shipping_profiles_list_form_boarding"
+    else
+      render :partial => "shipping_profiles_list_form_products"
+    end
   end
 
   private

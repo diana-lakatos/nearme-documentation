@@ -8,13 +8,13 @@
       = render 'forms/product_form', f: f
 
       .row.product_shipping_profile_fields_row.enabled{ :data => { :js_element_identifier => 'initial_shipping_profiles_section' } }
-        = f.simple_fields_for :shipping_methods do |shipping_method|
-          %fieldset
-            = render 'forms/shipping_form', f: shipping_method
+        .row.shipping_method_block.shipping_method_list
+          = render 'shipping_profiles_list', f: f
         .row.text-right
-          %a.shipping-profile-top.add_shipping_profile
+          %a.shipping-profile-top.add_shipping_profile{ :data => { modal: true, href: new_dashboard_shipping_category_path, 'modal-class' => 'shipping_profiles_modal' } }
             =image_tag("themes/buy_sell/icon-cross.png")
-            %span Create New Shipping Profile
+            %span
+              = t('manage.buy_sell.shipping_profiles.add_new_shipping_profile')
 
       .submit-bar
         = link_to dashboard_products_path do

@@ -21,7 +21,6 @@ class ProductFormTest < ActiveSupport::TestCase
       @product_form.depth = 104
       @product_form.depth_unit = 'ft'
 
-      @product_form.shipping_methods_attributes = {"0"=>{"name"=>"sdsadasad", "removed"=>"0", "processing_time"=>"0", "calculator_attributes"=>{"preferred_amount"=>"0.00", "id"=>"24"}, "zones_attributes"=>{"0"=>{"name"=>"Default - 7c9a98679439b6f3f6966f2246d1fe13", "kind"=>"state_based", "state_ids"=>"485" }}}}
       @product.shippo_enabled = true
       @product_form.unit_of_measure = 'imperial'
       @product_form.save!
@@ -44,7 +43,6 @@ class ProductFormTest < ActiveSupport::TestCase
       @product_form.depth = 104
       @product_form.depth_unit = 'cm'
 
-      @product_form.shipping_methods_attributes = {"0"=>{"name"=>"sdsadasad", "removed"=>"0", "processing_time"=>"0", "calculator_attributes"=>{"preferred_amount"=>"0.00", "id"=>"24"}, "zones_attributes"=>{"0"=>{"name"=>"Default - 7c9a98679439b6f3f6966f2246d1fe13", "kind"=>"state_based", "state_ids"=>"485" }}}}
       @product.shippo_enabled = true
       @product_form.unit_of_measure = 'metric'
       @product_form.save!

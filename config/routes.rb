@@ -451,7 +451,13 @@ DesksnearMe::Application.routes.draw do
       end
     end
 
-    resources :products
+    resources :products do
+      collection do
+        get :get_shipping_categories_list
+      end
+    end
+
+    resources :shipping_categories
 
     namespace :support do
       resources :tickets, only: [:show, :index] do
