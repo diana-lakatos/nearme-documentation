@@ -24,7 +24,7 @@ DesksnearMe::Application.configure do
   Rails.application.routes.default_url_options[:protocol] = 'https'
 
   config.assets.compile = false
-  config.assets.manifest = "#{Rails.root}/config/manifest.json"
+  config.assets.manifest = "#{Rails.root}/public#{config.assets.prefix}/manifest.json"
 
   Rails.application.routes.default_url_options[:host] = 'staging.near-me.com'
   config.test_email = "notifications-staging@desksnear.me"

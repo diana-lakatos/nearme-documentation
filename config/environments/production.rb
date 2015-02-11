@@ -25,7 +25,7 @@ DesksnearMe::Application.configure do
   config.active_support.deprecation = :notify
 
   config.assets.compile = false
-  config.assets.manifest = "#{Rails.root}/config/manifest.json"
+  config.assets.manifest = "#{Rails.root}/public#{config.assets.prefix}/manifest.json"
 
   # Clould services credentials
   CarrierWave.configure do |config|
