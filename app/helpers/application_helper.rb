@@ -272,4 +272,8 @@ module ApplicationHelper
     key = "#{params[:controller]}/#{params[:action]}##{tab}"
     HiddenUiControls.find(key).hidden?
   end
+
+  def admin_breadcrumbs
+    @breadcrumbs_title.presence || controller.class.to_s.deconstantize.demodulize
+  end
 end

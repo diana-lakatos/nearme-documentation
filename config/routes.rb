@@ -254,10 +254,10 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
-      resources :inventories, only: [:index] do
+      resources :users, only: [:index] do
         post :login_as, on: :member
         post :restore_session, on: :collection
-        resources :user_bans, only: [:create, :index, :destroy], controller: 'inventories/user_bans'
+        resources :user_bans, only: [:create, :index, :destroy], controller: 'users/user_bans'
       end
 
       resources :transfers do
@@ -273,8 +273,8 @@ DesksnearMe::Application.routes.draw do
 
       resources :partners
 
-      resources :users, :only => [:index, :create]
-      namespace :users do
+      resources :admins, :only => [:index, :create]
+      namespace :admins do
         resources :instance_admins, :only => [:create, :update, :destroy, :index]
         resources :instance_admin_roles, :only => [:create, :update, :destroy, :index]
       end
@@ -309,6 +309,12 @@ DesksnearMe::Application.routes.draw do
       resources :shipping_categories
       resources :shipping_methods
     end
+
+    namespace :shipping_options do
+      resource :providers
+      resources :dimensions_templates
+    end
+
   end
 
   resources :blog_posts, path: 'blog', only: [:index, :show], controller: 'blog/blog_posts'
@@ -318,8 +324,17 @@ DesksnearMe::Application.routes.draw do
       member do
         get "(:listing_id)", :to => "locations#show", :as => ''
       end
-    end
+
+      resources :listings, :controller => 'locations/listings', :only => [:show] do
+        member do
+          get :ask_a_question
+        end
+      end
+
+      resource :social_share, :only => [:new], :controller => 'locations/social_share'
+      end
   end
+
   resources :locations, :only => [] do
     member do
       get "(:listing_id)", :to => "locations#show", :as => ''

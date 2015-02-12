@@ -1,28 +1,45 @@
 class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseController
+  defaults :resource_class => User, :collection_name => 'users', :instance_name => 'user', :route_prefix => 'instance_admin'
 
-  skip_before_filter :check_if_locked
+  skip_before_filter :authorize_user!, :only => [:restore_session]
 
   def index
-    @user = User.new
-    @instance_admin = InstanceAdmin.new
   end
 
-  def create
-    @user = User.new(user_params)
-    @user.skip_password = true
-    if @user.save
-      InstanceAdmin.create(:user_id => @user.id)
-      WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::CreatedByAdmin, @user.id, current_user.id)
-      flash[:success] = "User has been successfully created"
-      redirect_to instance_admin_manage_users_path
-    else
-      render :index
+  def login_as
+    admin_user = current_user
+    sign_out
+
+    # Add special session parameters to flag we're an instance admin
+    # logged in as the user.
+    session[:instance_admin_as_user] = {
+      :user_id => resource.id,
+      :admin_user_id => admin_user.id,
+      :redirect_back_to => request.referer
+    }
+
+    sign_in_resource(resource)
+    redirect_to params[:return_to] || root_url
+  end
+
+  def restore_session
+    if session[:instance_admin_as_user].present?
+      client_user = current_user
+      admin_user = User.find(session[:instance_admin_as_user][:admin_user_id])
+      redirect_url = session[:instance_admin_as_user][:redirect_back_to] || instance_admin_users_url(client_user)
+      sign_out # clears session
+      sign_in_resource(admin_user)
+      redirect_to redirect_url
     end
   end
 
-  private
+  protected
 
-  def user_params
-    params.require(:user).permit(secured_params.user)
+  def collection_search_fields
+    %w(name email)
+  end
+
+  def collection
+    @users ||= UsersService.new(platform_context, params).get_users.paginate(:page => params[:page])
   end
 end

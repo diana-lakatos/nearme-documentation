@@ -405,6 +405,25 @@ ActiveRecord::Schema.define(version: 20150206151843) do
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
+  create_table "dimensions_templates", force: true do |t|
+    t.string   "name"
+    t.integer  "creator_id"
+    t.integer  "instance_id"
+    t.decimal  "weight",          precision: 8, scale: 2
+    t.decimal  "height",          precision: 8, scale: 2
+    t.decimal  "width",           precision: 8, scale: 2
+    t.decimal  "depth",           precision: 8, scale: 2
+    t.string   "unit_of_measure",                         default: "imperial"
+    t.string   "weight_unit",                             default: "oz"
+    t.string   "height_unit",                             default: "in"
+    t.string   "width_unit",                              default: "in"
+    t.string   "depth_unit",                              default: "in"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "details"
+    t.datetime "deleted_at"
+  end
+
   create_table "domains", force: true do |t|
     t.string   "name"
     t.datetime "created_at",                                     null: false
@@ -507,15 +526,16 @@ ActiveRecord::Schema.define(version: 20150206151843) do
   create_table "instance_admin_roles", force: true do |t|
     t.string   "name"
     t.integer  "instance_id"
-    t.boolean  "permission_settings",  default: false
-    t.boolean  "permission_theme",     default: false
-    t.boolean  "permission_analytics", default: true
-    t.datetime "created_at",                           null: false
-    t.datetime "updated_at",                           null: false
-    t.boolean  "permission_manage",    default: false
-    t.boolean  "permission_blog",      default: false
-    t.boolean  "permission_support",   default: false
-    t.boolean  "permission_buysell",   default: false
+    t.boolean  "permission_settings",        default: false
+    t.boolean  "permission_theme",           default: false
+    t.boolean  "permission_analytics",       default: true
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
+    t.boolean  "permission_manage",          default: false
+    t.boolean  "permission_blog",            default: false
+    t.boolean  "permission_support",         default: false
+    t.boolean  "permission_buysell",         default: false
+    t.boolean  "permission_shippingoptions", default: false
   end
 
   add_index "instance_admin_roles", ["instance_id"], name: "index_instance_admin_roles_on_instance_id", using: :btree
@@ -2247,11 +2267,11 @@ ActiveRecord::Schema.define(version: 20150206151843) do
   end
 
   create_table "spree_variants", force: true do |t|
-    t.string   "sku",                                      default: "",    null: false
-    t.decimal  "weight",          precision: 8,  scale: 2, default: 0.0
-    t.decimal  "height",          precision: 8,  scale: 2
-    t.decimal  "width",           precision: 8,  scale: 2
-    t.decimal  "depth",           precision: 8,  scale: 2
+    t.string   "sku",                                     default: "",         null: false
+    t.decimal  "weight",          precision: 8, scale: 2, default: 0.0
+    t.decimal  "height",          precision: 8, scale: 2
+    t.decimal  "width",           precision: 8, scale: 2
+    t.decimal  "depth",           precision: 8, scale: 2
     t.datetime "deleted_at"
     t.boolean  "is_master",                                default: false
     t.integer  "product_id"
@@ -2265,6 +2285,15 @@ ActiveRecord::Schema.define(version: 20150206151843) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.integer  "user_id"
+    t.string   "weight_unit",                             default: "oz"
+    t.string   "height_unit",                             default: "in"
+    t.string   "width_unit",                              default: "in"
+    t.string   "depth_unit",                              default: "in"
+    t.text     "unit_of_measure",                         default: "imperial"
+    t.decimal  "weight_user",     precision: 8, scale: 2
+    t.decimal  "height_user",     precision: 8, scale: 2
+    t.decimal  "width_user",      precision: 8, scale: 2
+    t.decimal  "depth_user",      precision: 8, scale: 2
   end
 
   add_index "spree_variants", ["company_id"], name: "index_spree_variants_on_company_id", using: :btree

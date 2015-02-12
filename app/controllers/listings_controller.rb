@@ -3,11 +3,11 @@ class ListingsController < ApplicationController
   before_filter :find_listing, :only => [:show]
 
   def index
-    @listings = Transactable.latest.includes(:location).paginate(:page => params[:page])
+    @listings = Transactable.latest.includes(:transactable_type, :location).paginate(:page => params[:page])
   end
 
   def show
-    redirect_to location_listing_path(@location, @listing), :status => :moved_permanently
+    redirect_to transactable_type_location_listing_path(@listing.transactable_type, @location, @listing), :status => :moved_permanently
   end
 
   protected

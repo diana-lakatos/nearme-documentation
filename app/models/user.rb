@@ -108,6 +108,8 @@ class User < ActiveRecord::Base
     instance.is_desksnearme? ? where('users.instance_id IS NULL OR users.instance_id = ?', instance.id) : where(:'users.instance_id' => instance.id)
   }
 
+  scope :with_date, ->(date) { where(created_at: date) }
+
   extend CarrierWave::SourceProcessing
   mount_uploader :avatar, AvatarUploader, :use_inkfilepicker => true
   skip_callback :commit, :after, :remove_avatar!

@@ -9,6 +9,13 @@ en:
       unable_to_disconnect: "We are unable to disconnect your account from %{provider_name}. Make sure you have at least one other account linked so you can log in!"
     authorizations:
       not_authorized: "Sorry, you do not have permission to view that page."
+    shipping_options:
+      dimensions_templates:
+        template_added: 'Successfully added a new dimensions template.'
+        template_updated: 'Successfully update the dimensions template.'
+        template_deleted: 'Successfully deleted the dimensions template.'
+      shipping_providers:
+        options_updated: 'Shipping providers options successfully updated.'      
     blog_admin:
       blog_instance:
         blog_instance_updated: 'Blog settings were updated.'
@@ -69,6 +76,10 @@ en:
           deleted: 'Email layout template has been deleted.'
           invalid: 'Not a valid email layout template.'
           updated: 'Email layout template has been updated.'
+        users:
+          user_ban:
+            created: 'User has been removed from the marketplace.'
+            not_created: 'User has not been reomved from the marketplace.'
         transactable_types:
           created: 'Transactable Type created.'
           updated: 'Transactable Type updated.'
@@ -113,7 +124,7 @@ en:
         domain_not_deleted: "Can't delete this domain."
       theme:
         theme_updated_successfully: 'Theme updated.'
-      users:
+      admins:
         instance_admin_roles:
           role_added: "Great, new role has been added!"
           role_deleted: "That role has been deleted"
