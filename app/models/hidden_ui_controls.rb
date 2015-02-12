@@ -42,7 +42,7 @@ class HiddenUiControls
       'main_menu/cta',
       'main_menu/rfq',
       'main_menu/manage_blog',
-      'main_menu/favorites',
+      'main_menu/wish_list',
       'main_menu/account',
       'main_menu/messages'
   ]

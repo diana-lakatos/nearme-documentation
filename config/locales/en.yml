@@ -362,7 +362,7 @@ en:
       cta: 'Main Menu > CTA button'
 
     dashboard:
-      wish_list_items: 'Dashboard > Favourites'
+      wish_list_items: 'Dashboard > Wish list'
 
   wish_lists:
     name: 'Favorites'
