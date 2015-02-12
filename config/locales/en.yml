@@ -351,6 +351,10 @@ en:
         reviews: 'User Profile > Reviews'
         blog_posts: 'User Profile > Blog'
 
+    main_menu:
+      rfq: 'Main Menu > RFQ'
+      cta: 'Main Menu > CTA button'
+
   user_profile:
     labels:
       visitor:

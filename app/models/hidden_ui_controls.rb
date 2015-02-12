@@ -1,12 +1,15 @@
 class HiddenUiControls
 
-  class KeyNotFound < ActiveRecord::RecordNotFound; end
+  class KeyNotFound < ActiveRecord::RecordNotFound;
+  end
 
   BUY_SELL_KEYS = [
       'dashboard/orders',
       'dashboard/products',
       'dashboard/orders_received',
       'registrations/show#products',
+      'main_menu/my_orders',
+      'main_menu/cart'
   ]
 
   SERVICE_KEYS = [
@@ -14,6 +17,7 @@ class HiddenUiControls
       'dashboard/transactables',
       'dashboard/host_reservations',
       'registrations/show#services',
+      'main_menu/my_bookings'
   ]
 
   COMMON_KEYS = [
@@ -32,7 +36,14 @@ class HiddenUiControls
       'dashboard/blog',
       'registrations/show#reviews',
       'registrations/show#blog_posts',
-      'dashboard/reviews'
+      'dashboard/reviews',
+      'main_menu/manage_items',
+      'main_menu/cta',
+      'main_menu/rfq',
+      'main_menu/manage_blog',
+      'main_menu/favorites',
+      'main_menu/account',
+      'main_menu/messages'
   ]
 
   def self.find(key)
@@ -65,8 +76,9 @@ class HiddenUiControls
   end
 
   def self.to_obj(key)
-    OpenStruct.new(name: key, tab?: is_key_tab?(key), hidden?: is_key_hidden?(key), visible?: is_key_visible?(key),
-                   display_name: key_display_name(key), display_type: key_display_type(key))
+    OpenStruct.new(name: key, tab?: is_key_tab?(key), menu?: is_key_menu?(key), hidden?: is_key_hidden?(key),
+                   visible?: is_key_visible?(key), type: key_type(key), display_name: key_display_name(key),
+                   display_type: key_display_type(key))
   end
 
   def self.all_keys
@@ -96,11 +108,32 @@ class HiddenUiControls
     key.include? '#'
   end
 
+  def self.is_key_menu?(key)
+    key.include? 'menu'
+  end
+
   def self.is_key_visible?(key)
     !is_key_hidden?(key)
   end
 
+  def self.key_type(key)
+    if is_key_tab?(key)
+      :tab
+    elsif is_key_menu?(key)
+      :menu
+    else
+      :page
+    end
+  end
+
   def self.key_display_type(key)
-    is_key_tab?(key) ? 'Tab' : 'Page'
+    case key_type(key)
+    when :tab
+      'Tab'
+    when :menu
+      'Menu'
+    else
+      'Page'
+    end
   end
 end
