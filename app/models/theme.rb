@@ -21,7 +21,7 @@ class Theme < ActiveRecord::Base
     end.flatten.all?{|f| !f}
   }
 
-  validates :contact_email, email_rfc_822: true, allow_nil: true
+  validates :contact_email, email: true, allow_nil: true
   validates :contact_email, presence: true, if: lambda { |t| t.owner.try(:domains).try(:first).present? }
   validates_length_of :description, :maximum => 250
 
@@ -45,7 +45,7 @@ class Theme < ActiveRecord::Base
   skip_callback :commit, :after, :remove_compiled_stylesheet!
 
   # Precompile the theme, unless we're saving the compiled stylesheet.
-  after_save :recompile_theme, :if => :theme_changed?
+  after_save :recompile, :if => :theme_changed?
 
   # Validations
   COLORS.each do |color|
@@ -62,7 +62,7 @@ class Theme < ActiveRecord::Base
     CompileThemeJob.perform(self)
   end
 
-  def recompile_theme
+  def recompile
     CompileThemeJob.perform(self) unless skip_compilation
   end
 

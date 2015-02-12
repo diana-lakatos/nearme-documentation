@@ -47,7 +47,7 @@ class TransactableDrop < BaseDrop
   end
 
   def manage_listing_url_with_tracking
-    routes.edit_manage_location_listing_path(@listing.location, @listing, track_email_event: true, token: @listing.administrator.try(:temporary_token))
+    routes.edit_dashboard_transactable_type_transactable_path(@listing.transactable_type, @listing.location, @listing, track_email_event: true, token: @listing.administrator.try(:temporary_token))
   end
 
   def space_wizard_list_path

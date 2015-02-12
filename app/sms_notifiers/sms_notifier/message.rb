@@ -51,11 +51,11 @@ class SmsNotifier::Message
     return if twilio_client.nil?
     validate!
 
-
     begin
       send_twilio_message
     rescue Twilio::REST::RequestError => e
-      if e.message.include?('is not a valid phone number')
+      # TODO: use codes instead of messages
+      if e.message.include?('is not a valid phone number') || e.message.include?('is not a mobile number')
         fallback_user.notify_about_wrong_phone_number if fallback_user.present?
       else
         raise e

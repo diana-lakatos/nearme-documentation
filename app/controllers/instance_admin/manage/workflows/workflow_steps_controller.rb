@@ -23,5 +23,9 @@ class InstanceAdmin::Manage::Workflows::WorkflowStepsController < InstanceAdmin:
     params.require(:workflow_step).permit(secured_params.workflow_step)
   end
 
+  def permitting_controller_class
+    'manage'
+  end
+
 end
 

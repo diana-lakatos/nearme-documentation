@@ -1,7 +1,7 @@
 class @InstanceAdmin.RatingSystemsController
   constructor: (@container) ->
     @bindEvents()
-    
+
   bindEvents: ->
     @toggleSlide('.rating-system', '.table-container')
     @toggleSlide('.service', '.content-container')
@@ -9,7 +9,7 @@ class @InstanceAdmin.RatingSystemsController
     @container.find('.header input[type="checkbox"]').on 'click', ->
       checkedValue = $(@).prop('checked')
       $(@).prop('checked', !checkedValue)
-        
+
     @container.on 'click', '.remove-question.enabled', ->
       parent = $(@).parent()
       questions = $(@).parents('.questions')
@@ -35,7 +35,7 @@ class @InstanceAdmin.RatingSystemsController
         newQuestion.find('input').each ()->
           $(@).attr('id', $(@).attr('id').replace(/attributes\_\d+/, "attributes_#{questionsCount}"))
           $(@).attr('name', $(@).attr('name').replace(/attributes\]\[\d+/, "attributes][#{questionsCount}"))
-  
+
   toggleSlide: (clickElement, container) ->
     @container.find(clickElement + '> .header').on 'click', ->
       checkbox = $(@).children('input[type="checkbox"]')
@@ -45,8 +45,8 @@ class @InstanceAdmin.RatingSystemsController
 
       if checkbox.is(':checked')
         tableContainer.hide().removeClass('hidden')
-        tableContainer.slideDown()   
-      else 
+        tableContainer.slideDown()
+      else
         tableContainer.slideUp()
 
       if clickElement is '.service'

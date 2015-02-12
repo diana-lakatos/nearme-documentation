@@ -24,7 +24,7 @@ class InstanceAdmin::Manage::RatingSystemsControllerTest < ActionController::Tes
 
   context 'update_systems' do
     setup do
-      Instance.any_instance.stubs(:rating_systems).returns([])
+      RatingSystem.stubs(:all).returns([])
       post :update_systems
     end
 

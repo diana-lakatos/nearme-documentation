@@ -21,8 +21,8 @@
               %a{data: {date: value}}
                 = selected_date_value(value)
           %li.divider
-          %li.date-range 
-            .header
+          %li.date-range
+            .date-range-header
               = t('instance_admin.manage.reviews.index.date_range')
             .from
               = t('instance_admin.manage.reviews.index.from')
@@ -32,14 +32,14 @@
             %input#to{type: 'text'}
             %button.apply-filter.btn.btn-green
               = t('instance_admin.manage.reviews.index.apply_filter')
-      
+
     .filter.search
       %input{placeholder: t('instance_admin.manage.reviews.index.search_by_keyword'), type: 'text'}
       =fa_icon "search"
     .filter.more-filters
       %a
         = t('instance_admin.manage.reviews.index.more_filters')
-        =fa_icon "angle-right"
+        = fa_icon "angle-right"
     .filter.export-csv
       %a{href: instance_admin_manage_reviews_path(params.slice(:date, :rating).merge!(format: 'csv'))}
         = t('instance_admin.manage.reviews.index.export_csv')
@@ -55,12 +55,12 @@
               - @transactable_types.each do |transactable_type|
                 %td
                   = check_box_tag "transactable_type[]", transactable_type.id, transactable_type_checked?(transactable_type.id), id: "service-#{transactable_type.id}"
-                  %label{for: "service-#{transactable_type.id}"}=transactable_type.name 
+                  %label{for: "service-#{transactable_type.id}"}=transactable_type.name
             %tr.group
               %td.title
                 = t('instance_admin.manage.reviews.index.rating')
               - RatingConstants::VALID_VALUES.to_a.reverse.each do |rating_value|
-                %td.border 
+                %td.border
                   = check_box_tag "rating[]", rating_value, rating_checked?(rating_value), id: "#{rating_value}-stars"
                   %label{for: "#{rating_value}-stars"}
                     = rating_stars(rating_value)
@@ -84,7 +84,7 @@
               = t('instance_admin.manage.reviews.index.date')
         %tbody
           = render @reviews
-          
+
 = will_paginate @reviews
 
 - content_for :domready do

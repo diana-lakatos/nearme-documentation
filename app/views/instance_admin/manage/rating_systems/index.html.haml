@@ -4,7 +4,7 @@
   - unless @transactable_types.any? {|transactable_type| transactable_type.any_rating_system_active? }
     .row
       .table-container.col-xs-12.dropshadow
-        .rating-blank-state 
+        .rating-blank-state
           .question-icon !
           = t('instance_admin.rating_systems.index.any_rating_system')
 .define-title
@@ -14,7 +14,7 @@
     .service
       .header
         %input{type: 'checkbox', checked: (true if transactable_type.enable_reviews?), 'data-url' => change_state_instance_admin_manage_transactable_type_path(transactable_type)}
-        %label=transactable_type.name 
+        %label=transactable_type.name
       .content-container{class: "#{'hidden' unless transactable_type.enable_reviews?}"}
         = form_tag update_systems_instance_admin_manage_rating_systems_path, method: :put do
           - transactable_type.rating_systems.each_with_index do |rating_system, index|
@@ -25,7 +25,7 @@
                 = hidden_field_tag "rating_systems[#{rating_system.id}][active]", false
                 = check_box_tag "rating_systems[#{rating_system.id}][active]", true, rating_system.active?, id: "active"
                 %label.title{for: "seller"}=rating_system.subject
-              .table-container.col-xs-12.dropshadow{class: "#{'hidden' unless rating_system.active?}"}  
+              .table-container.col-xs-12.dropshadow{class: "#{'hidden' unless rating_system.active?}"}
                 .stars-description
                   .title
                     = t('instance_admin.rating_systems.index.stars_description')
@@ -42,13 +42,13 @@
                     = t('instance_admin.rating_systems.index.add_up_to_questions', number: RatingConstants::MAX_QUESTIONS_QUANTITY)
                   - rating_system.rating_questions.each_with_index do |rating_question, question_index|
                     .line.question
-                      %span.number= "#{question_index + 1}." 
+                      %span.number= "#{question_index + 1}."
                       = hidden_field_tag "rating_systems[#{rating_system.id}][rating_questions_attributes][#{question_index}][id]", rating_question.id, class: 'question-id'
                       = text_field_tag "rating_systems[#{rating_system.id}][rating_questions_attributes][#{question_index}][text]", rating_question.text, class: 'question-input'
                       = check_box_tag "rating_systems[#{rating_system.id}][rating_questions_attributes][#{question_index}][_destroy]"
                       - if rating_question.text.present?
                         %span.remove-question.enabled=fa_icon 'times'
-                      - else 
+                      - else
                         %span.remove-question=fa_icon 'times'
           .clearfix
             %input.save-btn.btn.btn-green.pull-right{type: 'submit', value: t('instance_admin.rating_systems.index.save')}

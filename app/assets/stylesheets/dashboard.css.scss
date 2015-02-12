@@ -29,6 +29,7 @@ $color-headings: #3a3a3a;
 $color-placeholder: #ccc;
 
 @import "dashboard/*";
+@import "dashboard/pagination";
 
 @import "fonts";
 @import "layout/footer";

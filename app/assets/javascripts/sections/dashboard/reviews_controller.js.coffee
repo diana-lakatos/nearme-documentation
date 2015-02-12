@@ -1,5 +1,4 @@
 class @Dashboard.ReviewsController
-
   constructor: (@container) ->
     @bindEvents()
     @container.find('#products-tabs li:first').addClass('active')
@@ -43,7 +42,8 @@ class @Dashboard.ReviewsController
       e.preventDefault()
       form = $(e.currentTarget)
       submitBtn = form.find('input[type="submit"]')
-      reservationId = form.find('.review').data('reservation-id')
+      reviewableId = form.find('.review').data('reviewable-id')
+      reviewableType = form.find('.review').data('reviewable-type')
       transactableTypeId = form.find('.review input[name=transactable_type_id]').val()
       object = form.find('.review').data('object')
       commentArea = form.find('.comment-wrapper textarea')
@@ -55,7 +55,8 @@ class @Dashboard.ReviewsController
           review:
             rating: form.find('.rating').first().raty('score')
             comment: commentArea.val()
-            reservation_id: reservationId
+            reviewable_id: reviewableId
+            reviewable_type: reviewableType
             transactable_type_id: transactableTypeId
             object: object
           rating_answers:
@@ -75,6 +76,8 @@ class @Dashboard.ReviewsController
       form = $(e.currentTarget)
       submitBtn = form.find('input[type="submit"]')
       reviewId = form.find('a.edit').data('review-id')
+      reviewableId = form.find('.review').data('reviewable-id')
+      reviewableType = form.find('.review').data('reviewable-type')
       commentArea = form.find('textarea')
       updateReviewPath = form.attr('action') + "/#{reviewId}"
       $.ajax
@@ -84,6 +87,8 @@ class @Dashboard.ReviewsController
           review:
             rating: form.find('.rating').first().raty('score') || 0
             comment: commentArea.val()
+            reviewable_id: reviewableId
+            reviewable_type: reviewableType
           rating_answers:
             for questionRating in form.find('.additional-ratings')
               {id: $(questionRating).data('answerId'), rating_question_id: $(questionRating).data('questionId'), rating: $(questionRating).find('.rating').raty('score') || ''}
@@ -101,7 +106,7 @@ class @Dashboard.ReviewsController
   showErrors: (response, form) =>
     @removeErrorsFrom(form)
     errors = response.responseJSON
-    if errors.rating_error
+    if errors.rating_error && form.find('.rating-error').length is 0
       if form.hasClass('update-form')
         form.find('.rating').closest('.wrapper').after(errors.rating_error)
       else
@@ -111,7 +116,7 @@ class @Dashboard.ReviewsController
 
   removeErrorsFrom: (form) ->
     form.find('span.comment-error').remove()
-    form.find('span.error').remove()
+    form.find('span.rating-error').remove()
 
   editableRatingInit: ->
     for rating in $(@container).find(".rating.editable")
@@ -134,4 +139,8 @@ class @Dashboard.ReviewsController
         score: ->
           return $(@).data('score');
         
-    
+  disableRatingStarts: (form) =>
+    score = form.find('input[name=score]').val()
+    form.find('.rating').data('score', score)
+    form.find('.rating').toggleClass('editable non-editable')
+    @nonEditableRatingInit()

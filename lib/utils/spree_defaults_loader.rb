@@ -26,6 +26,7 @@ module Utils
       create_store unless @store.present?
 
       Spree.config do |config|
+        config.require_master_price = false
         config.display_currency = false
         config.allow_ssl_in_staging = false
         config.currency = 'USD'
@@ -43,7 +44,7 @@ module Utils
           seo_title: @instance.theme.meta_title,
           mail_from_address: @instance.support_email || "support@#{@instance.domains.first.name}",
           default_currency: 'USD',
-          code: 'spree'
+          code: @instance.theme.site_name || @instance.name
       )
     end
 

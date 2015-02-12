@@ -1,4 +1,4 @@
-- @user.companies.first.products.decorate.in_groups_of(2) do |line|
+- @products.decorate.in_groups_of(2) do |line|
   .row-fluid
     - line.each do |product|
       .span6
@@ -10,3 +10,5 @@
               %p= product.name
               %p.name= product.company.name
               %p.price= product.display_price
+
+= will_paginate_styled @products, param_name: 'products_page'

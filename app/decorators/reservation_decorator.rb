@@ -1,9 +1,9 @@
 class ReservationDecorator < Draper::Decorator
   include Draper::LazyHelpers
-
   include CurrencyHelper
   include TooltipHelper
-
+  include FeedbackDecoratorHelper
+  
   delegate_all
 
   delegate :days_in_words, :nights_in_words, :selected_dates_summary, :dates_in_groups, :period_to_string, to: :date_presenter
@@ -169,6 +169,10 @@ class ReservationDecorator < Draper::Decorator
 
   def humanized_number_of_periods
     listing.overnight_booking? ? date_presenter.nights_in_words : date_presenter.days_in_words
+  end
+
+  def feedback_object
+    object
   end
 
   private
