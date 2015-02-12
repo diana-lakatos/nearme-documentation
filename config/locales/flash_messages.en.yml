@@ -15,7 +15,7 @@ en:
         template_updated: 'Successfully update the dimensions template.'
         template_deleted: 'Successfully deleted the dimensions template.'
       shipping_providers:
-        options_updated: 'Shipping providers options successfully updated.'      
+        options_updated: 'Shipping providers options successfully updated.'
     blog_admin:
       blog_instance:
         blog_instance_updated: 'Blog settings were updated.'
@@ -122,6 +122,10 @@ en:
         domain_preparing: 'Preparing new domain.'
         domain_updated: 'Domain updated.'
         domain_not_deleted: "Can't delete this domain."
+
+        hidden_controls:
+          update: 'Settings have been successfully saved.'
+
       theme:
         theme_updated_successfully: 'Theme updated.'
       admins:

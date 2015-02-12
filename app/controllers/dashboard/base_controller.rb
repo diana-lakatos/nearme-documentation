@@ -5,33 +5,6 @@ class Dashboard::BaseController < ApplicationController
   before_filter :find_company
   before_filter :redirect_unless_registration_completed
 
-  DASHBOARD_CONTROLLERS = [
-    "dashboard/orders",
-    "dashboard/user_reservations",
-    "dashboard/user_messages",
-    "dashboard/companies",
-    "dashboard/products",
-    "dashboard/transactables",
-    "dashboard/payouts",
-    "dashboard/orders_received",
-    "dashboard/host_reservations",
-    "dashboard/transfers",
-    "dashboard/analytics",
-    "dashboard/users",
-    "dashboard/waiver_agreement_templates",
-    "dashboard/white_labels",
-    "dashboard/tickets",
-    "registrations/edit",
-    "registrations/social_accounts",
-    "dashboard/blog",
-    "registrations/show#buy-sell",
-    "registrations/show#services",
-    "registrations/show#reviews",
-    "registrations/show#blog_posts",
-    "dashboard/reviews",
-    'dashboard/wish_list_items'
-  ]
-
   private
 
   def find_company
