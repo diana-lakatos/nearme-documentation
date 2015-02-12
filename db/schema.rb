@@ -694,7 +694,6 @@ ActiveRecord::Schema.define(version: 20150205113805) do
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
     t.string   "payment_transfers_frequency",                                   default: "fortnightly"
-    t.text     "hidden_dashboard_menu_items"
     t.string   "encrypted_shippo_username"
     t.string   "encrypted_shippo_password"
     t.string   "twilio_from_number"
