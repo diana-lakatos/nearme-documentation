@@ -110,7 +110,7 @@ class LocationsController < ApplicationController
 
   def redirect_to_invidivual_page_if_enabled
     if @listing.try(:transactable_type).try(:show_page_enabled)
-      redirect_to location_listing_path(@location, @listing, restore_reservations: params[:restore_reservations]), status: :found
+      redirect_to transactable_type_location_listing_path(@listing.transactable_type, @location, @listing, restore_reservations: params[:restore_reservations]), status: :found
     end
   end
 
