@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150205113805) do
+ActiveRecord::Schema.define(version: 20150210155949) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -704,6 +704,8 @@ ActiveRecord::Schema.define(version: 20150205113805) do
     t.string   "encrypted_twilio_consumer_key"
     t.string   "encrypted_twilio_consumer_secret"
     t.boolean  "user_blogs_enabled",                                            default: false
+    t.boolean  "wish_lists_enabled",                                            default: false
+    t.string   "wish_lists_icon_set",                                           default: "heart"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -761,6 +763,7 @@ ActiveRecord::Schema.define(version: 20150205113805) do
     t.integer  "address_id"
     t.boolean  "mark_to_be_bulk_update_deleted", default: false
     t.string   "external_id"
+    t.integer  "wish_list_items_count",          default: 0
   end
 
   add_index "locations", ["address_id"], name: "index_locations_on_address_id", using: :btree
@@ -1674,6 +1677,7 @@ ActiveRecord::Schema.define(version: 20150205113805) do
     t.boolean  "shippo_enabled",       default: false
     t.boolean  "draft",                default: false
     t.float    "average_rating",       default: 0.0
+    t.integer  "wish_list_items_count", default: 0
   end
 
   add_index "spree_products", ["available_on"], name: "index_spree_products_on_available_on", using: :btree
@@ -2818,6 +2822,26 @@ ActiveRecord::Schema.define(version: 20150205113805) do
 
   add_index "waiver_agreements", ["target_id", "target_type"], name: "index_waiver_agreements_on_target_id_and_target_type", using: :btree
   add_index "waiver_agreements", ["waiver_agreement_template_id"], name: "index_waiver_agreements_on_waiver_agreement_template_id", using: :btree
+
+  create_table "wish_list_items", force: true do |t|
+    t.integer  "instance_id"
+    t.integer  "wish_list_id"
+    t.integer  "wishlistable_id"
+    t.string   "wishlistable_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "wish_list_items", ["wishlistable_id", "wishlistable_type"], name: "index_wish_list_items_on_wishlistable_id_and_wishlistable_type", using: :btree
+
+  create_table "wish_lists", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "instance_id"
+    t.string   "name"
+    t.boolean  "default",     default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "workflow_alert_logs", force: true do |t|
     t.integer  "instance_id"
