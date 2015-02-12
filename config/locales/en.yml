@@ -378,6 +378,7 @@ en:
       item_added: 'Item has been added to the list.'
       item_removed: 'Item has been removed from the list.'
       already_listed: 'This item is already in the list.'
+      wish_lists_disabled: 'Wish lists are disabled for this marketplace.'
 
     confirmations:
       clear: 'Are you sure you want to delete all items?'

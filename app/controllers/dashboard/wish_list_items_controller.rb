@@ -1,5 +1,6 @@
 class Dashboard::WishListItemsController < Dashboard::BaseController
   skip_before_filter :redirect_unless_registration_completed
+  before_filter :check_wish_lists_enabled
   before_filter :find_default_wish_list
   before_filter :create_default_wish_list
   before_filter :find_item, only: [:destroy]
@@ -19,6 +20,10 @@ class Dashboard::WishListItemsController < Dashboard::BaseController
   end
 
   private
+
+  def check_wish_lists_enabled
+    redirect_to(dashboard_path, notice: t('wish_lists.notices.wish_lists_disabled')) unless platform_context.instance.wish_lists_enabled?
+  end
 
   def find_default_wish_list
     @wish_list = current_user.default_wish_list

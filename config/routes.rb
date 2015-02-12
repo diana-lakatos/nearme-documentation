@@ -557,7 +557,7 @@ DesksnearMe::Application.routes.draw do
     end
     resources :photos, :only => [:create, :destroy, :edit, :update]
 
-    resources :wish_list_items, only: [:index, :destroy], path: 'favourites' do
+    resources :wish_list_items, only: [:index, :destroy], path: 'favorites' do
       collection do
         delete :clear
       end
