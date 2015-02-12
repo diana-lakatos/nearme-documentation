@@ -18,5 +18,5 @@
   .span2.listing-price.padding-top
     = listing_price_information(listing, search.lgpricing_filters)
   .span2.reserve-listing.padding-top
-    = link_to 'reserve', location_listing_path(location, listing), class: "btn btn-green btn-small"
+    = link_to 'reserve', transactable_type_location_listing_path(listing.transactable_type, location, listing), class: "btn btn-green btn-small"
 

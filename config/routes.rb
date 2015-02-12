@@ -328,8 +328,17 @@ DesksnearMe::Application.routes.draw do
       member do
         get "(:listing_id)", :to => "locations#show", :as => ''
       end
-    end
+
+      resources :listings, :controller => 'locations/listings', :only => [:show] do
+        member do
+          get :ask_a_question
+        end
+      end
+
+      resource :social_share, :only => [:new], :controller => 'locations/social_share'
+      end
   end
+
   resources :locations, :only => [] do
     member do
       get "(:listing_id)", :to => "locations#show", :as => ''
