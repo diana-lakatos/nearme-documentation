@@ -703,6 +703,7 @@ ActiveRecord::Schema.define(version: 20150210155949) do
     t.string   "encrypted_twilio_consumer_key"
     t.string   "encrypted_twilio_consumer_secret"
     t.boolean  "user_blogs_enabled",                                            default: false
+    t.text     "hidden_ui_controls"
     t.boolean  "wish_lists_enabled",                                            default: false
     t.string   "wish_lists_icon_set",                                           default: "heart"
   end
