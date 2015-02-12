@@ -694,7 +694,6 @@ ActiveRecord::Schema.define(version: 20150205113805) do
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
     t.string   "payment_transfers_frequency",                                   default: "fortnightly"
-    t.text     "hidden_dashboard_menu_items"
     t.string   "encrypted_shippo_username"
     t.string   "encrypted_shippo_password"
     t.string   "twilio_from_number"
@@ -704,6 +703,7 @@ ActiveRecord::Schema.define(version: 20150205113805) do
     t.string   "encrypted_twilio_consumer_key"
     t.string   "encrypted_twilio_consumer_secret"
     t.boolean  "user_blogs_enabled",                                            default: false
+    t.text     "hidden_ui_controls"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree

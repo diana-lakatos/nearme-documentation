@@ -39,11 +39,6 @@ module UsersHelper
     })
   end
 
-  def hide_tab?(tab)
-    controller = "#{params[:controller]}/#{params[:action]}##{tab}"
-    platform_context.instance.hidden_dashboard_menu_items.key?(controller)
-  end
-
   def param_reviews_page_present?
     params[:reviews_page].present?
   end

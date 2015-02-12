@@ -35,7 +35,7 @@ module DashboardHelper
   end
 
   def periods_dates(periods)
-    periods.map(&:date).map{ |date| date.to_s(:db) }
+    periods.map(&:date).map { |date| date.to_s(:db) }
   end
 
   def no_reservations_info_for_state(state)
@@ -49,11 +49,11 @@ module DashboardHelper
     end
   end
 
-  def dashboard_menu_item(controller = nil, path = nil, options = {})
-    return nil if platform_context.instance.hidden_dashboard_menu_items.key?(controller)
+  def dashboard_menu_item(key = nil, path = nil, options = {})
+    return nil if HiddenUiControls.find(key).hidden?
     options.reverse_merge!(link_text: nil, active: nil)
-    content_tag :li, class: (options[:active] || (params[:controller] == controller && options[:active] == nil)) ? 'active' : '' do
-      link_to options[:link_text] || t("dashboard.nav.#{controller.split('/').last}"), path
+    content_tag :li, class: (options[:active] || (params[:controller] == key && options[:active] == nil)) ? 'active' : '' do
+      link_to options[:link_text] || t("dashboard.nav.#{key.split('/').last}"), path
     end
   end
 
@@ -64,7 +64,7 @@ module DashboardHelper
     caption = t("dashboard.nav.#{controller.split('/').last}")
     caption = t('dashboard.nav.edit') if controller.include?('registration') && action.include?('edit')
     caption = t('dashboard.nav.social_accounts') if controller.include?('registration') && action.include?('social_accounts')
-    caption = t('dashboard.nav.menu') if caption.include?("translation missing")
+    caption = t('dashboard.nav.menu') if caption.include?('translation missing')
     caption
   end
 end
