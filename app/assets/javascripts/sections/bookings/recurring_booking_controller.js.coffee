@@ -44,4 +44,24 @@ class Bookings.RecurringBookingController
         return $(this).text().indexOf(text, 0) > -1
       option.prop('selected', true)
       @recurringSelect.trigger('change')
+      @updateRecurringForm()
 
+  # This function is used to populated the upsell charges into the recurringForm
+  updateRecurringForm: ->
+    @recurringDialog = $('.rs_dialog_content')
+    @updateAdditionalCharges()
+
+  updateAdditionalCharges: ->
+    additionalChargesArea       = $('#additional_charges')
+    recurringChargesArea        = $('.recurring-booking form #recurring-charges')
+    recurringBookingFormSummary = @recurringDialog.find('.rs_summary')
+
+    recurringBookingFormSummary.before(additionalChargesArea.clone())
+    recurringChargesArea.append(additionalChargesArea.find('input[type=checkbox]').clone())
+
+    # Binding event that will copy all of the updated checkboxes with charges to the main recurring form
+    additionalChargeCheckboxes = @recurringDialog.find("#additional_charges input[type=checkbox]")
+    additionalChargeCheckboxes.on 'change', (event) ->
+      additionalChargeFields = $(".rs_dialog_content #additional_charges input[type=checkbox")
+      recurringChargesArea.empty()
+      recurringChargesArea.append(additionalChargeFields.clone())

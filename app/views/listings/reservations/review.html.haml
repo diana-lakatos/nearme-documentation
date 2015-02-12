@@ -46,6 +46,14 @@
               .summary-line-value.service-fee-amount= @reservation.service_fee_guest
               .clearfix
 
+          - if @reservation.additional_charges.any?
+            - @reservation.additional_charges.each do |charge|
+              .summary-line
+                .summary-line-label= charge.name
+                .summary-line-value.service-fee-amount= charge.amount
+                = hidden_field_tag 'reservation_request[additional_charge_ids][]', charge.additional_charge_type_id
+                .clearfix
+
           .summary-line
             .summary-line-label Total
             .summary-line-value.total-amount= @reservation.total_price

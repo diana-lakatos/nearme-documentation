@@ -40,6 +40,8 @@ class Reservation < ActiveRecord::Base
   belongs_to :user_instance_profile, foreign_key: 'owner_id', primary_key: 'user_id', counter_cache: true
   has_many :user_messages, as: :thread_context
   has_many :waiver_agreements, as: :target
+  has_many :additional_charges, as: :target
+  accepts_nested_attributes_for :additional_charges
 
   # attr_accessible :cancelable, :confirmation_email, :date, :transactable_id,
   #   :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method, :rejection_reason
@@ -297,6 +299,12 @@ class Reservation < ActiveRecord::Base
     super || service_fee_calculator.service_fee_guest.cents rescue nil
   end
 
+  # Calculate service fee without additionalCharges
+  def service_fee_guest_wo_charges
+    charge_amount = additional_charges.collect(&:amount).sum
+    service_fee_calculator.service_fee_guest - charge_amount
+  end
+
   def service_fee_amount_host_cents
     super || service_fee_calculator.service_fee_host.cents rescue nil
   end
@@ -357,7 +365,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def has_service_fee?
-    !service_fee_amount_guest.to_f.zero?
+    !service_fee_guest_wo_charges.to_f.zero?
   end
 
   def paid?
@@ -454,7 +462,13 @@ class Reservation < ActiveRecord::Base
   private
 
     def service_fee_calculator
-      @service_fee_calculator ||= Payment::ServiceFeeCalculator.new(self.subtotal_amount, self.service_fee_guest_percent, self.service_fee_host_percent)
+      options = {
+        amount:             subtotal_amount,
+        guest_fee_percent:  service_fee_guest_percent,
+        host_fee_percent:   service_fee_host_percent,
+        additional_charges: additional_charges
+      }
+      @service_fee_calculator ||= Payment::ServiceFeeCalculator.new(options)
     end
 
     def price_calculator

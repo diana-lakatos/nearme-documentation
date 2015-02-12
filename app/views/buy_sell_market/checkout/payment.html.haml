@@ -21,6 +21,18 @@
                   %td= item.quantity
                   %td= item.total
 
+            - if @additional_charges.try(:optional_charges).present?
+              %thead
+                %th= t 'buy_sell_market.checkout.labels.options'
+              %tbody
+                - @additional_charges.optional_charges.each do |charge|
+                  %tr
+                    %td
+                      = check_box_tag 'additional_charge_ids[]', charge.id
+                      = charge.name
+                    %td= charge.amount
+                    %td
+                    %td= charge.amount
           .divider
 
           %table.payment-totals{align: 'right'}
@@ -35,7 +47,12 @@
               %td= humanized_money_with_cents_and_symbol @order.monetize(@order.additional_tax_total)
             %tr
               %td= t 'buy_sell_market.checkout.labels.service_fee'
-              %td= humanized_money_with_cents_and_symbol @order.service_fee_amount_guest
+              %td= humanized_money_with_cents_and_symbol @order.service_fee_guest_wo_ac
+            - if @additional_charges.try(:mandatory_charges).present?
+              - @additional_charges.mandatory_charges.each do |charge|
+                %tr
+                  %td= charge.name
+                  %td= humanized_money_with_cents_and_symbol charge.amount
             %tr
               %td.total= t 'buy_sell_market.checkout.labels.total2'
               %td.total= humanized_money_with_cents_and_symbol @order.total_amount_to_charge

@@ -204,6 +204,8 @@ DesksnearMe::Application.routes.draw do
     namespace :manage do
       get '/', :to => 'base#index'
       get 'support' => 'support#index', as: 'support_root'
+
+      resources :upsell_addons, except: [:show]
       namespace :support do
         resources :faqs, except: [:show]
         resources :tickets, only: [:show, :update] do

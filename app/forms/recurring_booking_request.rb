@@ -20,6 +20,10 @@ class RecurringBookingRequest < Form
     @user = user
     @listing = listing
     @instance = platform_context.instance
+
+    # We need to store additional_charge_ids to pass it to reservations
+    @additional_charge_ids = attributes[:additional_charge_ids]
+    attributes.delete(:additional_charge_ids)
     store_attributes(attributes)
 
     if @listing
@@ -44,6 +48,7 @@ class RecurringBookingRequest < Form
         @reservation.payment_method = @recurring_booking.payment_method
         @reservation.quantity = @recurring_booking.quantity
         @reservation.user = user
+        @reservation.additional_charges << get_additional_charges
         @reservation = @reservation.decorate
         @last_date = date
         @count += 1
@@ -92,6 +97,12 @@ class RecurringBookingRequest < Form
   end
 
   private
+
+  def get_additional_charges
+    additional_charge_ids = AdditionalChargeType.get_charges(@additional_charge_ids).pluck(:id)
+    additional_charges = additional_charge_ids.map { |id| AdditionalCharge.new(additional_charge_type_id: id) }
+    additional_charges
+  end
 
   def validate_phone_and_country
     add_error("Please complete the contact details", :contact_info) unless user_has_mobile_phone_and_country?

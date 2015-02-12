@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150204113134) do
+ActiveRecord::Schema.define(version: 20150212132150) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,38 @@ ActiveRecord::Schema.define(version: 20150204113134) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "additional_charge_types", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "amount_cents"
+    t.string   "currency"
+    t.string   "commission_for"
+    t.integer  "provider_commission_percentage"
+    t.string   "status"
+    t.integer  "instance_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "additional_charge_types", ["instance_id"], name: "index_additional_charge_types_on_instance_id", using: :btree
+
+  create_table "additional_charges", force: true do |t|
+    t.string   "name"
+    t.integer  "amount_cents"
+    t.string   "currency"
+    t.string   "commission_for"
+    t.integer  "additional_charge_type_id"
+    t.integer  "instance_id"
+    t.integer  "target_id"
+    t.string   "target_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "additional_charges", ["additional_charge_type_id"], name: "index_additional_charges_on_additional_charge_type_id", using: :btree
+  add_index "additional_charges", ["instance_id"], name: "index_additional_charges_on_instance_id", using: :btree
+  add_index "additional_charges", ["target_id"], name: "index_additional_charges_on_target_id", using: :btree
 
   create_table "addresses", force: true do |t|
     t.integer  "instance_id"
@@ -604,7 +636,7 @@ ActiveRecord::Schema.define(version: 20150204113134) do
     t.integer  "transactable_type_id"
   end
 
-  add_index "instance_views", ["instance_type_id", "instance_id", "transactable_type_id", "path", "locale", "format", "handler"], name: "instance_path_with_format_and_handler", using: :btree
+  add_index "instance_views", ["instance_id", "transactable_type_id", "path", "locale", "format", "handler"], name: "instance_path_with_format_and_handler", using: :btree
 
   create_table "instances", force: true do |t|
     t.string   "name"
@@ -1475,6 +1507,8 @@ ActiveRecord::Schema.define(version: 20150204113134) do
     t.datetime "shippo_rate_purchased_at"
     t.string   "guest_token"
     t.integer  "state_lock_version",                                             default: 0,       null: false
+    t.integer  "service_fee_amount_guest_cents",                                     default: 0
+    t.integer  "service_fee_amount_host_cents",                                      default: 0
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id", using: :btree

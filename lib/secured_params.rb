@@ -914,4 +914,18 @@ class SecuredParams
       :rating_question_id
     ]
   end
+
+  def additional_charge_type
+    [
+      :id,
+      :name,
+      :description,
+      :amount,
+      :currency,
+      :commission_for,
+      :provider_commission_percentage,
+      :status,
+      :instance_id
+    ]
+  end
 end

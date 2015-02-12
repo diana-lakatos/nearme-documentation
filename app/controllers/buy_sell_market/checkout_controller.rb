@@ -23,6 +23,8 @@ class BuySellMarket::CheckoutController < ApplicationController
     when :delivery
       packages = @order.shipments.map { |s| s.to_package }
       @differentiator = Spree::Stock::Differentiator.new(@order, packages)
+    when :payment
+      @additional_charges = platform_context.instance.additional_charge_types
     when :complete
       flash[:success] = t('buy_sell_market.checkout.notices.order_placed')
       redirect_to dashboard_order_path(params[:order_id])
@@ -67,6 +69,7 @@ class BuySellMarket::CheckoutController < ApplicationController
           p.failure!
           render_step order_state and return
         else
+          setup_upsell_charges
           @order.create_billing_authorization(
               token: response[:token],
               payment_gateway_class: response[:payment_gateway_class],
@@ -75,6 +78,13 @@ class BuySellMarket::CheckoutController < ApplicationController
           p = @order.payments.build(amount: @order.total_amount_to_charge, company_id: @order.company_id)
           p.pend
           p.save!
+
+          # Charging the client with the right calculated service fees
+          # It includes any upsell charges and percentage fee that can apply to the order
+          @order.update(
+              service_fee_amount_guest_cents: @order.service_fee_amount_guest.cents,
+              service_fee_amount_host_cents:  @order.service_fee_amount_host.cents
+          )
           unless @order.next
             flash.now[:error] = spree_errors
             render_step order_state and return
@@ -167,6 +177,14 @@ class BuySellMarket::CheckoutController < ApplicationController
                else
                  current_user.cart_orders.find_by(number: params[:order_id]).try(:decorate)
                end
+  end
+
+  def setup_upsell_charges
+    additional_charge_ids = AdditionalChargeType.get_charges(params[:additional_charge_ids]).pluck(:id)
+    additional_charge_ids.each do |id|
+      next if @order.additional_charges.pluck(:additional_charge_type_id).include?(id)
+      @order.additional_charges.create(additional_charge_type_id: id)
+    end
   end
 
   def spree_errors

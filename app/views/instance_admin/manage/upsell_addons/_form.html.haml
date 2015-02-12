@@ -1,0 +1,53 @@
+- url = @additional_charge.persisted? ? instance_admin_manage_upsell_addon_path(@additional_charge.id) : instance_admin_manage_upsell_addons_path
+- method = @additional_charge.persisted? ? :put : :post
+
+= simple_form_for @additional_charge, url: url, method: method do |f|
+  .content-container
+    .row
+      .input-container.col-xs-12
+        = f.input :name,
+          placeholder: "What's the name of this upsell?",
+          input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-12
+        = f.input :description,
+          placeholder: "Please, describe this upsell",
+          input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-12
+        = f.input :service,
+          collection: [@additional_charge.service],
+          prompt: 'Select the service that is associated to this upsell',
+          input_html: { class: 'form-control' }
+
+    .row
+      .input-container.col-xs-6
+        = f.input :amount,
+          placeholder: 'Enter amount',
+          input_html: { class: 'form-control' }
+      .input-container.col-xs-6
+        = f.input :currency,
+          collection: [platform_context.instance.stripe_currency],
+          selected: platform_context.instance.stripe_currency,
+          input_html: { class: 'form-control' }
+
+    .row
+      .input-container.col-xs-12
+        = f.input :status,
+          collection: AdditionalChargeType::STATUSES.map(&:titleize),
+          prompt: 'Select Optional or Mandatory',
+          input_html: { class: 'form-control' }
+
+    .row
+      .input-container.col-xs-12
+        = f.input :commission_for,
+          collection: AdditionalChargeType::COMMISSION_TYPES.map(&:titleize),
+          prompt: 'Select commission recipient',
+          input_html: { class: 'form-control' }
+      -#.input-container.col-xs-6
+        = f.input :provider_commission_percentage,
+          placeholder: 'Enter percentage to provider',
+          input_html: { class: 'form-control' }
+
+    = f.button :submit, 'ADD', class: 'btn btn-green pull-right'
+    = link_to 'Cancel', instance_admin_manage_upsell_addons_path , class: 'pull-right'

@@ -45,6 +45,7 @@ class Bookings.Controller
     @quantityResourceElement = @container.find('.quantity .resource')
     @totalElement = @container.find('.total')
     @daysElement = @container.find('.total-days')
+    @additionalCharges = @container.find('#additional_charges input[type=checkbox]')
     @bookButton = @container.find('[data-behavior=reviewBooking]')
     @rfqButton = @container.find('[data-behavior=RFQ]')
     @bookForm = @bookButton.closest('form')
@@ -70,6 +71,10 @@ class Bookings.Controller
 
     @quantityField.on 'change', (event) =>
       @quantityWasChanged()
+
+    @additionalCharges.on 'change', (event) =>
+      @delayedUpdateBookingStatus()
+      @updateCharges()
 
     @datepicker.bind 'datesChanged', (dates) =>
       @listing.setDates(dates)
@@ -191,6 +196,12 @@ class Bookings.Controller
       @quantityResourceElement.text(@quantityResourceElement.data('plural'))
     else
       @quantityResourceElement.text(@quantityResourceElement.data('singular'))
+
+  updateCharges: ->
+    additionalChargeFields = @container.find("#additional_charges input[name='reservation_request[additional_charge_ids][]']")
+    reservationRequestForm = $('#reservation_request_form_' + @listing.id + ' #reservation-charges')
+    reservationRequestForm.empty()
+    additionalChargeFields.clone().prependTo(reservationRequestForm)
 
   updateSummary: ->
     @totalElement.text((@listing.bookingSubtotal()/100).toFixed(2))

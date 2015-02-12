@@ -6,11 +6,14 @@
 class @Bookings.PriceCalculator
 
   constructor: (@listing) ->
+    @additionalCharges = new Bookings.AdditionalChargesCalculator
 
   getPrice: ->
-    _.inject(@contiguousBlocks(), (sum, block) =>
+    total = _.inject(@contiguousBlocks(), (sum, block) =>
       sum + @priceForDays(block.length)*@listing.getQuantity()
     , 0)
+    total += @additionalCharges.getCharges()
+    total
 
   priceForDays: (days) ->
     prices = @listing.pricesByDays
