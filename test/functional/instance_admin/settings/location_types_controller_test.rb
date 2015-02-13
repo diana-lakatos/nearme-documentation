@@ -75,4 +75,22 @@ class InstanceAdmin::Settings::LocationTypesControllerTest < ActionController::T
       assert_redirected_to instance_admin_settings_locations_path
     end
   end
+
+  context 'update' do
+    setup do
+      @location_type = FactoryGirl.create(:location_type, name: 'Location type')
+    end
+
+    should 'fail if request is not xhr' do
+      assert_raise ActionController::MethodNotAllowed do
+        patch :update, id: @location_type.id, location_type: {name: "new name"}
+      end
+    end
+
+    should 'successfully update location type' do
+      new_name = "Updated"
+      xhr :patch, :update, id: @location_type.id, location_type: {name: new_name}
+      assert_equal new_name, @location_type.reload.name
+    end
+  end
 end

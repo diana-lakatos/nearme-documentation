@@ -11,6 +11,15 @@ class InstanceAdmin::Settings::LocationTypesController < InstanceAdmin::Settings
     end
   end
 
+  def update
+    if request.xhr?
+      @location_type = LocationType.find(params[:id])
+      render json: {success: @location_type.update_attributes(location_type_params)}
+    else
+      raise ActionController::MethodNotAllowed
+    end
+  end
+
   def destroy_modal
     @location_type = LocationType.find(params[:id])
 

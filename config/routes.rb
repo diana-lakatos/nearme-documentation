@@ -173,7 +173,7 @@ DesksnearMe::Application.routes.draw do
         end
       end
       resource :locations, :only => [:show, :update], :controller => 'locations'
-      resources :location_types, only: [:index, :create, :destroy_modal, :destroy] do
+      resources :location_types, only: [:index, :create, :update, :destroy_modal, :destroy] do
         get 'destroy_modal', on: :member
       end
       resource :listings, :only => [:show, :update], :controller => 'listings'
