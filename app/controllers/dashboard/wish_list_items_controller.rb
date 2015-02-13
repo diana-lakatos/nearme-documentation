@@ -2,7 +2,6 @@ class Dashboard::WishListItemsController < Dashboard::BaseController
   skip_before_filter :redirect_unless_registration_completed
   before_filter :check_wish_lists_enabled
   before_filter :find_default_wish_list
-  before_filter :create_default_wish_list
   before_filter :find_item, only: [:destroy]
 
   def index
@@ -26,11 +25,7 @@ class Dashboard::WishListItemsController < Dashboard::BaseController
   end
 
   def find_default_wish_list
-    @wish_list = current_user.default_wish_list
-  end
-
-  def create_default_wish_list
-    @wish_list = current_user.wish_lists.create(name: t('wish_lists.name'), default: true) unless @wish_list
+    @wish_list = current_user.default_wish_list || current_user.wish_lists.create(name: t('wish_lists.name'), default: true)
   end
 
   def find_item

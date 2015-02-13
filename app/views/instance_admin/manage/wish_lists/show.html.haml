@@ -14,24 +14,24 @@
       .input-container.col-xs-3
         .icon-set
           - wish_lists_icon_sets.each do |icon_set|
-            - hidden = (icon_set[1] == @instance.wish_lists_icon_set) ? ' ': 'display: none;'
-            %div{id: "set-#{icon_set[1]}", style: "#{hidden}"}
+            - hidden = (icon_set[1] == @instance.wish_lists_icon_set) ? '' : 'js-hidden'
+            %div{id: "set-#{icon_set[1]}", class: "#{hidden}"}
               = wish_lists_icon_set_image(icon_set[1])
 
     .row
       .input-container.col-xs-12
-        - name = Translation.defaults_for(:en).find_by(key: 'wish_lists.name')
+        - name = Translation.defaults_for(:en).create_with(value: t('wish_lists.name')).find_or_create_by(key: 'wish_lists.name')
         = render 'translation_row', translation: name, index: 0, title: t('instance_admin.wish_lists.labels.name')
 
     .row
       .input-container.col-xs-12
-        - unselected = Translation.defaults_for(:en).find_by(key: 'wish_lists.buttons.unselected_state')
+        - unselected = Translation.defaults_for(:en).create_with(value: t('wish_lists.buttons.unselected_state')).find_or_create_by(key: 'wish_lists.buttons.unselected_state')
         = render 'translation_row', translation: unselected, index: 1,
             title: t('instance_admin.wish_lists.labels.unselected_state')
 
     .row
       .input-container.col-xs-12
-        - selected = Translation.defaults_for(:en).find_by(key: 'wish_lists.buttons.selected_state')
+        - selected = Translation.defaults_for(:en).create_with(value: t('wish_lists.buttons.selected_state')).find_or_create_by(key: 'wish_lists.buttons.selected_state')
         = render 'translation_row', translation: selected, index: 2,
             title: t('instance_admin.wish_lists.labels.selected_state')
 

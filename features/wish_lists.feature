@@ -22,8 +22,8 @@ Feature: User can add locations to wish list
 
   Scenario: User can't add location twice
     Given I have one favorite item
-    Then I go to the location's page
-    And I click to Add to Favorites
+    And I go to the location's page
+    Then I click to Add to Favorites
     And I log in as the user
     Then I should see "This item is already in the list."
 

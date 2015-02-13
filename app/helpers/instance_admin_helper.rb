@@ -11,10 +11,10 @@ module InstanceAdminHelper
 
   def support_ticket_title_with_link(ticket)
     [
-        support_ticket_title(ticket),
-        " (#{ticket.messages.count})",
-        "<br />",
-        link_to(ticket.open_text, instance_admin_manage_support_ticket_path(ticket)).html_safe
+      support_ticket_title(ticket),
+      " (#{ticket.messages.count})",
+      "<br />",
+      link_to(ticket.open_text, instance_admin_manage_support_ticket_path(ticket)).html_safe
     ].join.html_safe
   end
 

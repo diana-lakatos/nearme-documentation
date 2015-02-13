@@ -2,6 +2,7 @@ class WishListItem < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
+  # Accepts Spree::Product and Location
   belongs_to :wishlistable, polymorphic: true
 
   belongs_to :wish_list
