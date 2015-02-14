@@ -12,6 +12,6 @@ Spree::Image.class_eval do
 
   _validators.reject!{ |key, _| [:attachment].include?(key) }
   _validate_callbacks.each do |callback|
-    callback.raw_filter.attributes.delete :attachment if callback.raw_filter.is_a?(ActiveModel::Validations::PresenceValidator)
+    callback.raw_filter.attributes.delete :attachment if callback.raw_filter.is_a?(Paperclip::Validators::AttachmentPresenceValidator)
   end
 end
