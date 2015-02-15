@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150205113805) do
+ActiveRecord::Schema.define(version: 20150214125057) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2267,11 +2267,11 @@ ActiveRecord::Schema.define(version: 20150205113805) do
   end
 
   create_table "spree_variants", force: true do |t|
-    t.string   "sku",                                     default: "",         null: false
-    t.decimal  "weight",          precision: 8, scale: 2, default: 0.0
-    t.decimal  "height",          precision: 8, scale: 2
-    t.decimal  "width",           precision: 8, scale: 2
-    t.decimal  "depth",           precision: 8, scale: 2
+    t.string   "sku",                                      default: "",         null: false
+    t.decimal  "weight",          precision: 8,  scale: 2, default: 0.0
+    t.decimal  "height",          precision: 8,  scale: 2
+    t.decimal  "width",           precision: 8,  scale: 2
+    t.decimal  "depth",           precision: 8,  scale: 2
     t.datetime "deleted_at"
     t.boolean  "is_master",                                default: false
     t.integer  "product_id"
@@ -2285,15 +2285,15 @@ ActiveRecord::Schema.define(version: 20150205113805) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.integer  "user_id"
-    t.string   "weight_unit",                             default: "oz"
-    t.string   "height_unit",                             default: "in"
-    t.string   "width_unit",                              default: "in"
-    t.string   "depth_unit",                              default: "in"
-    t.text     "unit_of_measure",                         default: "imperial"
-    t.decimal  "weight_user",     precision: 8, scale: 2
-    t.decimal  "height_user",     precision: 8, scale: 2
-    t.decimal  "width_user",      precision: 8, scale: 2
-    t.decimal  "depth_user",      precision: 8, scale: 2
+    t.string   "weight_unit",                              default: "oz"
+    t.string   "height_unit",                              default: "in"
+    t.string   "width_unit",                               default: "in"
+    t.string   "depth_unit",                               default: "in"
+    t.text     "unit_of_measure",                          default: "imperial"
+    t.decimal  "weight_user",     precision: 8,  scale: 2
+    t.decimal  "height_user",     precision: 8,  scale: 2
+    t.decimal  "width_user",      precision: 8,  scale: 2
+    t.decimal  "depth_user",      precision: 8,  scale: 2
   end
 
   add_index "spree_variants", ["company_id"], name: "index_spree_variants_on_company_id", using: :btree
