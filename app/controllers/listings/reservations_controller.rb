@@ -149,7 +149,8 @@ class Listings::ReservationsController < ApplicationController
         country_name: attributes[:country_name],
         mobile_number: attributes[:mobile_number],
         waiver_agreement_templates: attributes[:waiver_agreement_templates],
-        payment_method_nonce: params[:payment_method_nonce]
+        payment_method_nonce: params[:payment_method_nonce],
+        reservation_type: attributes[:reservation_type]
       }
     )
   end

@@ -445,8 +445,8 @@ class SecuredParams
       :action_daily_booking,
       :action_weekly_booking,
       :action_monthly_booking,
-      :availability_templates_attributes => nested(self.availability_template)m
       :bookable_noun, :lessor, :lessee, :action_schedule_booking,
+      :availability_templates_attributes => nested(self.availability_template),
       :action_type_ids => [],
       schedule_attributes: self.schedule
     ]

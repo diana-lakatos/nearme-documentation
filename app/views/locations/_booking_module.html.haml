@@ -26,7 +26,7 @@
                 %span.label
                   Free
             - if listing.action_hourly_booking?
-              %li
+              = content_tag :li, data: { hourly: true } do
                 = link_to '#hourly-booking' do
                   %span.label
                     - unless listing.hourly_price.to_f.zero?
@@ -36,7 +36,7 @@
                     %span.period= t('reservations.per_hour')
             - if listing.action_daily_booking?
               - if listing.transactable_type.action_daily_booking
-                %li
+                = content_tag :li, data: { daily: true } do
                   = link_to '#daily-booking' do
                     %span.label
                       - unless listing.daily_price.to_f.zero?
@@ -110,6 +110,7 @@
             = f.hidden_field :end_on, class: 'end_on'
             = f.hidden_field :start_minute, class: 'start_minute'
             = f.hidden_field :end_minute, class: 'end_minute'
+            = f.hidden_field :reservation_type, class: 'reservation_type'
             .controls
               %label.radio
                 Weekly on #{Time.zone.now.strftime('%A')}
@@ -151,6 +152,7 @@
             = f.input :dates, collection: listing.next_available_occurrences(10)
           - else
             = f.hidden_field :dates
+          = f.hidden_field :reservation_type, class: 'reservation_type'
 
           - book_hash = {id:"book-#{listing.id}", class: "btn btn-green btn-large ", rel: "tooltip", :'data-original-title' => "Please select days first", :'data-behavior' => 'reviewBooking', :'data-listing-id' => listing.id, :'data-registration-url' => registration_url, :'data-store-reservation-request-url' => store_reservation_request_url, :'data-user-signed-in' => user_signed_in?, :'data-secured' => (not secure_links?), :'data-force-modal' => false}
 

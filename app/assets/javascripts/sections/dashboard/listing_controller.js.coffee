@@ -70,14 +70,18 @@ class @Dashboard.ListingController
       @togglePriceFields()
 
     @hourlyInput.on 'change', (e) =>
+      @freeInput.prop('checked', false)
       @togglePriceFields()
 
     @dailyInput.on 'change', (e) =>
+      @freeInput.prop('checked', false)
       @togglePriceFields()
 
   togglePriceFields: ->
     if @freeInput.is(':checked')
       @priceFieldsFree.show()
+      @dailyInput.prop('checked', false)
+      @hourlyInput.prop('checked', false)
     if @hourlyInput.is(':checked')
       @priceFieldsHourly.show()
     if @dailyInput.is(':checked')

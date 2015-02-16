@@ -28,11 +28,11 @@ class @Bookings.Datepicker
     @initializeStartDatepicker()
     @initializeEndDatepicker()
 
-    if @listing.isReservedHourly()
-      @initializeTimePicker()
-
     @bindEvents()
     @assignInitialDates()
+
+    if @listing.isReservedHourly()
+      @initializeTimePicker()
 
   #TODO: replace these with JS i18n system
   start_text: ->
@@ -174,7 +174,7 @@ class @Bookings.Datepicker
     @setDatepickerToRangeMode()
 
     # Show the end datepicker instantly
-    if @container.find("#hourly-booking").hasClass('active')
+    if @container.find("li[hourly-booking]").hasClass('active')
       @timePicker.show()
     else
       @endDatepicker.show()
@@ -188,6 +188,7 @@ class @Bookings.Datepicker
   # Sets up the time picker view controller which handles the user selecting the
   # start/end times for the reservation.
   initializeTimePicker: ->
+
     options = {
       openMinute: @listing.data.earliest_open_minute,
       closeMinute: @listing.data.latest_close_minute
@@ -196,6 +197,7 @@ class @Bookings.Datepicker
     if @listingData.initial_bookings && @listingData.initial_bookings.start_minute && @listingData.initial_bookings.end_minute
       options.startMinute = @listingData.initial_bookings.start_minute
       options.endMinute = @listingData.initial_bookings.end_minute
+
     @timePicker = new Bookings.TimePicker(
       @listing,
       @container.find('.time-picker'),
@@ -203,8 +205,13 @@ class @Bookings.Datepicker
     )
 
     @timePicker.on 'change', =>
-      @listing.setTimes(@timePicker.startMinute(), @timePicker.endMinute())
-      @trigger 'timesChanged'
+      @updateTimes()
+    @updateTimes()
+
+
+  updateTimes: ->
+    @listing.setTimes(@timePicker.startMinute(), @timePicker.endMinute())
+    @trigger 'timesChanged'
 
   # Assign initial dates from a restored session or the default
   # start date.
@@ -223,3 +230,4 @@ class @Bookings.Datepicker
 
     @trigger 'datesChanged', initialDates
     @setDates(initialDates)
+    @listing.setDates(initialDates)

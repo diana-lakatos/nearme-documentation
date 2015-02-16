@@ -21,6 +21,7 @@ class Bookings.Controller
     if @listing.isRecurringBooking()
       new Bookings.RecurringBookingController(@container.find('form[data-recurring-booking-form]'))
 
+    @updateSummary()
 
   # We need to set up delayed methods per each instance, not the prototype.
   # Otherwise, it will debounce for any instance calling the method.
@@ -45,10 +46,14 @@ class Bookings.Controller
     @storeReservationRequestUrl = @bookButton.data('store-reservation-request-url')
     @userSignedIn = @bookButton.data('user-signed-in')
     @bookingTabs = @container.find("#pricingTabs li a")
+    @setReservationType()
+
 
   bindEvents: ->
     @bookingTabs.on 'click', (event) => 
-      @listing.setHourlyBooking(@container.find("#hourly-booking").hasClass('active'))
+      @listing.setHourlyBooking(@hourlyBookingSelected())
+      @setReservationType()
+      @updateBookingStatus()
 
     @bookButton.on 'click', (event) =>
       @formTrigger = @bookButton
@@ -73,6 +78,15 @@ class Bookings.Controller
     @datepicker.bind 'timesChanged', (dates) =>
       @updateTimesFromTimePicker()
 
+  setReservationType: ->
+    if @hourlyBookingSelected()
+      @bookForm.find('.reservation_type').val('hourly')
+    else
+      @bookForm.find('.reservation_type').val('daily')
+
+  hourlyBookingSelected: ->
+    @container.find("li[data-hourly]").hasClass('active')
+    
   # Setup the datepicker for the simple booking UI
   initializeDatepicker: ->
     @datepicker = new Bookings.Datepicker({
@@ -82,7 +96,6 @@ class Bookings.Controller
     })
 
   updateTimesFromTimePicker: ->
-    @updateSummary()
     @updateBookingStatus()
 
   # Update the view to display pricing, date selections, etc. based on
@@ -111,9 +124,6 @@ class Bookings.Controller
     @datepicker.reset() unless @listing.bookingValid()
     @updateSummary()
 
-  updateSummary: ->
-    @totalElement.text((@listing.bookingSubtotal()/100).toFixed(2))
-
   updateQuantityField: (qty = @listing.defaultQuantity) ->
     @container.find('.customSelect.quantity .customSelectInner').text(qty)
     @quantityField.val(qty)
@@ -121,6 +131,9 @@ class Bookings.Controller
       @quantityResourceElement.text(@quantityResourceElement.data('plural'))
     else
       @quantityResourceElement.text(@quantityResourceElement.data('singular'))
+
+  updateSummary: ->
+    @totalElement.text((@listing.bookingSubtotal()/100).toFixed(2))
 
   reviewBooking: ->
     return unless @listing.isBooked()

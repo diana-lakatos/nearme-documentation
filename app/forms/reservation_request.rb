@@ -5,9 +5,9 @@ class ReservationRequest < Form
   attr_accessor :waiver_agreement_templates
   attr_reader   :reservation, :listing, :location, :user, :client_token, :payment_method_nonce
 
-  def_delegators :@reservation, :quantity, :quantity=
+  def_delegators :@reservation, :quantity, :quantity=, :action_hourly_booking?, :reservation_type=
   def_delegators :@reservation, :credit_card_payment?, :manual_payment?, :remote_payment?, :nonce_payment?
-  def_delegators :@listing,     :confirm_reservations?, :action_hourly_booking?, :location
+  def_delegators :@listing,     :confirm_reservations?, :location
   def_delegators :@user,        :mobile_number, :mobile_number=, :country_name, :country_name=, :country
 
   before_validation :setup_active_merchant_customer, :if => lambda { reservation and user and user.valid?}

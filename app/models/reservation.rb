@@ -450,6 +450,14 @@ class Reservation < ActiveRecord::Base
       PlatformContext.current.instance.waiver_agreement_templates
     end
   end
+ 
+  def action_hourly_booking?
+    reservation_type == 'hourly'
+  end
+
+  def action_daily_booking?
+    reservation_type == 'daily'
+  end
 
   private
 
@@ -460,7 +468,7 @@ class Reservation < ActiveRecord::Base
     def price_calculator
       @price_calculator ||= if listing.transactable_type.action_schedule_booking?
         FixedPriceCalculator.new(self)
-      elsif listing.action_hourly_booking?
+      elsif action_hourly_booking?
         HourlyPriceCalculator.new(self)
       else
         DailyPriceCalculator.new(self)
@@ -531,6 +539,4 @@ class Reservation < ActiveRecord::Base
       end
     end
 
-
 end
-

@@ -11,11 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(version: 20150214125057) do
-=======
-ActiveRecord::Schema.define(version: 20150209162144) do
->>>>>>> ec3cfd4... NM-1346 Fixed price and hourly + daily at the same time
+ActiveRecord::Schema.define(version: 20150216211049) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1140,6 +1136,7 @@ ActiveRecord::Schema.define(version: 20150209162144) do
     t.datetime "request_guest_rating_email_sent_at"
     t.datetime "request_host_and_product_rating_email_sent_at"
     t.string   "type"
+    t.string   "reservation_type"
   end
 
   add_index "reservations", ["administrator_id"], name: "index_reservations_on_administrator_id", using: :btree
@@ -1675,7 +1672,7 @@ ActiveRecord::Schema.define(version: 20150209162144) do
   add_index "spree_product_properties", ["user_id"], name: "index_spree_product_properties_on_user_id", using: :btree
 
   create_table "spree_products", force: true do |t|
-    t.string   "name",                 default: "",    null: false
+    t.string   "name",                  default: "",    null: false
     t.text     "description"
     t.datetime "available_on"
     t.datetime "deleted_at"
@@ -1692,9 +1689,9 @@ ActiveRecord::Schema.define(version: 20150209162144) do
     t.integer  "user_id"
     t.hstore   "extra_properties"
     t.hstore   "status"
-    t.boolean  "products_public",      default: true
-    t.boolean  "approved",             default: true
-    t.text     "cross_sell_skus",      default: [],                 array: true
+    t.boolean  "products_public",       default: true
+    t.boolean  "approved",              default: true
+    t.text     "cross_sell_skus",       default: [],                 array: true
     t.integer  "administrator_id"
     t.boolean  "shippo_enabled",       default: false
     t.boolean  "draft",                default: false
