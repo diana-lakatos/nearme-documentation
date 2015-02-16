@@ -56,4 +56,4 @@ Feature: User can add locations to wish list
     And wish lists are enabled for the instance
     When I visit product page
     And I click to Add to Favorites
-    Then I should see "Remove from Favorites."
+    Then I should see "Remove from Favorites"
