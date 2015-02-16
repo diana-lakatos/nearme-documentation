@@ -36,12 +36,12 @@ DesksnearMe::Application.configure do
       :path_style                 => true
     }
     config.fog_directory        = 'near-me.production'
-    config.asset_host           = 'https://s3.amazonaws.com/near-me.production'
+    config.asset_host           = 'https://production-uploads-nearme.netdna-ssl.com'
     config.storage              = :fog
   end
 
-  config.action_controller.asset_host = "//near-me-assets.s3.amazonaws.com"
-  config.action_mailer.asset_host = "http://near-me-assets.s3.amazonaws.com"
+  config.action_controller.asset_host = "//production-nearme.netdna-ssl.com"
+  config.action_mailer.asset_host     = "//production-nearme.netdna-ssl.com"
 
   config.paypal_mode = 'live'
   config.redis_settings = YAML.load_file(Rails.root.join("config", "redis.yml"))["production"]
