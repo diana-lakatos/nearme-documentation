@@ -4,7 +4,8 @@ class DnmKeyValueTest < ActiveSupport::TestCase
 
   setup do
     @translation_global = FactoryGirl.create(:translation, :key => 'translation_key', :value => 'global value', instance_id: nil)
-    @instance = Instance.default_instance
+    @instance = Instance.first
+    PlatformContext.current = PlatformContext.new(@instance)
     FactoryGirl.create(:translation, :key => 'some_key_for_instance', :value => 'default value', instance_id: nil)
     FactoryGirl.create(:translation, :key => 'some_key_for_instance', :value => 'instance value', instance_id: @instance.id)
     @backend = I18N_DNM_BACKEND

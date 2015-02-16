@@ -62,19 +62,19 @@ class UserMessagesDecoratorTest < ActionView::TestCase
       user_inbox = UserMessagesDecorator.new(@user.user_messages, @user).inbox.fetch
       assert_equal 1, user_inbox.size
       thread = user_inbox.first[1]
-      assert_equal [@user_message.id, @answer_user_message.id], thread.map(&:id)
+      assert_equal [@user_message.id, @answer_user_message.id].sort, thread.map(&:id).sort
 
       user2_inbox = UserMessagesDecorator.new(@user2.user_messages, @user2).inbox.fetch
       assert_equal 1, user2_inbox.size
       thread = user2_inbox.first[1]
-      assert_equal [@user_message.id, @answer_user_message.id], thread.map(&:id)
+      assert_equal [@user_message.id, @answer_user_message.id].sort, thread.map(&:id).sort
     end
 
     should 'return unread' do
       user_unread = UserMessagesDecorator.new(@user.user_messages, @user).unread.fetch
       assert_equal 1, user_unread.size
       thread = user_unread.first[1]
-      assert_equal [@user_message.id, @answer_user_message.id], thread.map(&:id)
+      assert_equal [@user_message.id, @answer_user_message.id].sort, thread.map(&:id).sort
 
       user2_unread = UserMessagesDecorator.new(@user2.user_messages, @user2).unread.fetch
       assert_equal 0, user2_unread.size
@@ -84,7 +84,7 @@ class UserMessagesDecoratorTest < ActionView::TestCase
       user_archived = UserMessagesDecorator.new(@user.user_messages, @user).archived.fetch
       assert_equal 1, user_archived.size
       thread = user_archived.first[1]
-      assert_equal [@archived_user_message.id], thread.map(&:id)
+      assert_equal [@archived_user_message.id].sort, thread.map(&:id).sort
 
       user2_archived = UserMessagesDecorator.new(@user2.user_messages, @user2).archived.fetch
       assert_equal 0, user2_archived.size
@@ -123,20 +123,20 @@ class UserMessagesDecoratorTest < ActionView::TestCase
       owners_inbox = UserMessagesDecorator.new(@owner.user_messages, @owner).inbox.fetch
       assert_equal 1, owners_inbox.size
       thread = owners_inbox.first[1]
-      assert_equal [@user_message.id, @answer_user_message.id], thread.map(&:id)
+      assert_equal [@user_message.id, @answer_user_message.id].sort, thread.map(&:id).sort
 
       creators_inbox = UserMessagesDecorator.new(@listing_administrator.user_messages,
                                                     @listing_administrator).inbox.fetch
       assert_equal 1, creators_inbox.size
       thread = owners_inbox.first[1]
-      assert_equal [@user_message.id, @answer_user_message.id], thread.map(&:id)
+      assert_equal [@user_message.id, @answer_user_message.id].sort, thread.map(&:id).sort
     end
 
     should 'return unread' do
       owners_unread = UserMessagesDecorator.new(@owner.user_messages, @owner).unread.fetch
       assert_equal 1, owners_unread.size
       thread = owners_unread.first[1]
-      assert_equal [@user_message.id, @answer_user_message.id], thread.map(&:id)
+      assert_equal [@user_message.id, @answer_user_message.id].sort, thread.map(&:id).sort
 
       creators_unread = UserMessagesDecorator.new(@listing_administrator.user_messages,
                                                     @listing_administrator).unread.fetch
@@ -147,7 +147,7 @@ class UserMessagesDecoratorTest < ActionView::TestCase
       owners_archived = UserMessagesDecorator.new(@owner.user_messages, @owner).archived.fetch
       assert_equal 1, owners_archived.size
       thread = owners_archived.first[1]
-      assert_equal [@archived_user_message.id], thread.map(&:id)
+      assert_equal [@archived_user_message.id].sort, thread.map(&:id).sort
 
       creators_archived = UserMessagesDecorator.new(@listing_administrator.user_messages,
                                                     @listing_administrator).archived.fetch
@@ -189,19 +189,19 @@ class UserMessagesDecoratorTest < ActionView::TestCase
       user_inbox = UserMessagesDecorator.new(@user.user_messages, @user).inbox.fetch
       assert_equal 1, user_inbox.size
       thread = user_inbox.first[1]
-      assert_equal [@user_message.id, @answer_user_message.id], thread.map(&:id)
+      assert_equal [@user_message.id, @answer_user_message.id].sort, thread.map(&:id).sort
 
       user2_inbox = UserMessagesDecorator.new(@user2.user_messages, @user2).inbox.fetch
       assert_equal 1, user2_inbox.size
       thread = user2_inbox.first[1]
-      assert_equal [@user_message.id, @answer_user_message.id], thread.map(&:id)
+      assert_equal [@user_message.id, @answer_user_message.id].sort, thread.map(&:id).sort
     end
 
     should 'return unread' do
       user_unread = UserMessagesDecorator.new(@user.user_messages, @user).unread.fetch
       assert_equal 1, user_unread.size
       thread = user_unread.first[1]
-      assert_equal [@user_message.id, @answer_user_message.id], thread.map(&:id)
+      assert_equal [@user_message.id, @answer_user_message.id].sort, thread.map(&:id).sort
 
       user2_unread = UserMessagesDecorator.new(@user2.user_messages, @user2).unread.fetch
       assert_equal 0, user2_unread.size
@@ -211,7 +211,7 @@ class UserMessagesDecoratorTest < ActionView::TestCase
       user_archived = UserMessagesDecorator.new(@user.user_messages, @user).archived.fetch
       assert_equal 1, user_archived.size
       thread = user_archived.first[1]
-      assert_equal [@archived_user_message.id], thread.map(&:id)
+      assert_equal [@archived_user_message.id].sort, thread.map(&:id).sort
 
       user2_archived = UserMessagesDecorator.new(@user2.user_messages, @user2).archived.fetch
       assert_equal 0, user2_archived.size
@@ -252,19 +252,19 @@ class UserMessagesDecoratorTest < ActionView::TestCase
       host_inbox = UserMessagesDecorator.new(@host.user_messages, @host).inbox.fetch
       assert_equal 1, host_inbox.size
       thread = host_inbox.first[1]
-      assert_equal [@user_message.id, @answer_user_message.id], thread.map(&:id)
+      assert_equal [@user_message.id, @answer_user_message.id].sort, thread.map(&:id).sort
 
       owner_inbox = UserMessagesDecorator.new(@reservation.owner.user_messages, @reservation.owner).inbox.fetch
       assert_equal 1, owner_inbox.size
       thread = owner_inbox.first[1]
-      assert_equal [@user_message.id, @answer_user_message.id], thread.map(&:id)
+      assert_equal [@user_message.id, @answer_user_message.id].sort, thread.map(&:id).sort
     end
 
     should 'return unread' do
       host_unread = UserMessagesDecorator.new(@host.user_messages, @host).unread.fetch
       assert_equal 1, host_unread.size
       thread = host_unread.first[1]
-      assert_equal [@user_message.id, @answer_user_message.id], thread.map(&:id)
+      assert_equal [@user_message.id, @answer_user_message.id].sort, thread.map(&:id).sort
 
       owner_unread = UserMessagesDecorator.new(@reservation.owner.user_messages, @reservation.owner).unread.fetch
       assert_equal 0, owner_unread.size
@@ -274,7 +274,7 @@ class UserMessagesDecoratorTest < ActionView::TestCase
       host_archived = UserMessagesDecorator.new(@host.user_messages, @host).archived.fetch
       assert_equal 1, host_archived.size
       thread = host_archived.first[1]
-      assert_equal [@archived_user_message.id], thread.map(&:id)
+      assert_equal [@archived_user_message.id].sort, thread.map(&:id).sort
 
       owner_archived = UserMessagesDecorator.new(@reservation.owner.user_messages, @reservation.owner).archived.fetch
       assert_equal 0, owner_archived.size
@@ -315,20 +315,20 @@ class UserMessagesDecoratorTest < ActionView::TestCase
       owners_inbox = UserMessagesDecorator.new(@owner.user_messages, @owner).inbox.fetch
       assert_equal 1, owners_inbox.size
       thread = owners_inbox.first[1]
-      assert_equal [@user_message.id, @answer_user_message.id], thread.map(&:id)
+      assert_equal [@user_message.id, @answer_user_message.id].sort, thread.map(&:id).sort
 
       creators_inbox = UserMessagesDecorator.new(@product_administrator.user_messages,
                                                     @product_administrator).inbox.fetch
       assert_equal 1, creators_inbox.size
       thread = owners_inbox.first[1]
-      assert_equal [@user_message.id, @answer_user_message.id], thread.map(&:id)
+      assert_equal [@user_message.id, @answer_user_message.id].sort, thread.map(&:id).sort
     end
 
     should 'return unread' do
       owners_unread = UserMessagesDecorator.new(@owner.user_messages, @owner).unread.fetch
       assert_equal 1, owners_unread.size
       thread = owners_unread.first[1]
-      assert_equal [@user_message.id, @answer_user_message.id], thread.map(&:id)
+      assert_equal [@user_message.id, @answer_user_message.id].sort, thread.map(&:id).sort
 
       creators_unread = UserMessagesDecorator.new(@product_administrator.user_messages,
                                                     @product_administrator).unread.fetch
