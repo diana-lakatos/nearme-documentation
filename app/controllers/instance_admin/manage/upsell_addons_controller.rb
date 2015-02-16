@@ -1,4 +1,5 @@
 class InstanceAdmin::Manage::UpsellAddonsController < InstanceAdmin::Manage::BaseController
+  before_filter :set_breadcrumps, only: [:index, :new, :edit]
 
   def index
     @additional_charges = AdditionalChargeType.all
@@ -39,6 +40,10 @@ class InstanceAdmin::Manage::UpsellAddonsController < InstanceAdmin::Manage::Bas
     @additional_charge.destroy
     flash[:success] = t 'flash_messages.instance_admin.manage.upsell_addons.deleted'
     redirect_to instance_admin_manage_upsell_addons_path
+  end
+
+  def set_breadcrumps
+    @breadcrumbs_title = 'Upsell & Add-ons'
   end
 
   private

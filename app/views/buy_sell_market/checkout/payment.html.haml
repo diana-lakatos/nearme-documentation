@@ -23,7 +23,7 @@
 
             - if @additional_charges.try(:optional_charges).present?
               %thead
-                %th= t 'buy_sell_market.checkout.labels.options'
+                %th#options= t 'buy_sell_market.checkout.labels.options'
               %tbody
                 - @additional_charges.optional_charges.each do |charge|
                   %tr

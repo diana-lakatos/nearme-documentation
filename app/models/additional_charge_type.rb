@@ -15,7 +15,6 @@ class AdditionalChargeType < ActiveRecord::Base
   scope :get_charges, -> (ids) { where("status = 'mandatory' or id in (?)", ids) }
 
   STATUSES = ['mandatory', 'optional']
-  # Later commission can receive a provider
   COMMISSION_TYPES = ['mpo']
 
   def mandatory?
@@ -33,10 +32,14 @@ class AdditionalChargeType < ActiveRecord::Base
 
   private
   def correct_status
-    errors.add(:status, ' can only be mandatory or optional') unless STATUSES.include?(status.downcase!)
+    unless status && STATUSES.include?(status.upcase.downcase!)
+      errors.add(:status, ' can only be mandatory or optional')
+    end
   end
 
   def commission_recipient
-    errors.add(:commission_for, ' recipient can only be MPO') unless COMMISSION_TYPES.include?(commission_for.downcase!)
+    unless commission_for && COMMISSION_TYPES.include?(commission_for.upcase.downcase!)
+      errors.add(:commission_for, ' recipient can only be MPO')
+    end
   end
 end

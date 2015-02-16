@@ -1,8 +1,8 @@
 class Payment::ServiceFeeCalculator
   def initialize(args = {})
     @amount = args[:amount]
-    @guest_fee_percent = args[:guest_fee_percent]
-    @host_fee_percent = args[:host_fee_percent]
+    @guest_fee_percent = args[:guest_fee_percent] || BigDecimal(0)
+    @host_fee_percent = args[:host_fee_percent] || BigDecimal(0)
     @additional_charges = args[:additional_charges]
   end
 
@@ -19,6 +19,7 @@ class Payment::ServiceFeeCalculator
     @amount * @host_fee_percent / BigDecimal(100)
   end
 
+  private
   # Returns the total price of all the additional charges that were applied to the reservation
   def additional_charges_amt
     return @additional_charges.collect(&:amount).sum if @additional_charges.present?

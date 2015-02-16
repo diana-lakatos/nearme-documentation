@@ -49,5 +49,6 @@
           placeholder: 'Enter percentage to provider',
           input_html: { class: 'form-control' }
 
-    = f.button :submit, 'ADD', class: 'btn btn-green pull-right'
-    = link_to 'Cancel', instance_admin_manage_upsell_addons_path , class: 'pull-right'
+  .pull-right
+    = link_to 'Cancel', instance_admin_manage_upsell_addons_path, class: 'btn btn-grey'
+    = f.button :submit, 'ADD', class: 'btn btn-green'

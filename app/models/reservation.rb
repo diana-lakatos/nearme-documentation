@@ -301,8 +301,7 @@ class Reservation < ActiveRecord::Base
 
   # Calculate service fee without additionalCharges
   def service_fee_guest_wo_charges
-    charge_amount = additional_charges.collect(&:amount).sum
-    service_fee_calculator.service_fee_guest - charge_amount
+    service_fee_calculator.service_fee_guest_wo_ac
   end
 
   def service_fee_amount_host_cents
