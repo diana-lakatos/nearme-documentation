@@ -22,7 +22,7 @@
             = select_tag 'quantity', options_for_select((1..10)), class: ''
             - if @product.total_on_hand > 0
               %button.cta.btn.blue.padding11.add_to_cart
-                = t('buy_sell_market.produc.undecoratets.buttons.add_to_cart')
+                = t 'buy_sell_market.products.buttons.add_to_cart'
         - else
           .btn.disabled= t('buy_sell_market.products.buttons.out_of_stock')
 

@@ -2832,6 +2832,7 @@ ActiveRecord::Schema.define(version: 20150210155949) do
     t.datetime "updated_at"
   end
 
+  add_index "wish_list_items", ["instance_id", "wish_list_id"], name: "index_wish_list_items_on_instance_id_and_wish_list_id", using: :btree
   add_index "wish_list_items", ["wishlistable_id", "wishlistable_type"], name: "index_wish_list_items_on_wishlistable_id_and_wishlistable_type", using: :btree
 
   create_table "wish_lists", force: true do |t|
@@ -2842,6 +2843,8 @@ ActiveRecord::Schema.define(version: 20150210155949) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "wish_lists", ["instance_id", "user_id"], name: "index_wish_lists_on_instance_id_and_user_id", using: :btree
 
   create_table "workflow_alert_logs", force: true do |t|
     t.integer  "instance_id"

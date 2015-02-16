@@ -48,3 +48,12 @@ Feature: User can add locations to wish list
     And wish lists are disabled for the instance
     When I visit dashboard wish list page
     Then I should see "Wish lists are disabled for this marketplace."
+
+  Scenario: User can add product to wish list
+    Given I am logged in as the user
+    And Current marketplace is buy_sell
+    And A buy sell product exist in current marketplace
+    And wish lists are enabled for the instance
+    When I visit product page
+    And I click to Add to Favorites
+    Then I should see "Remove from Favorites."

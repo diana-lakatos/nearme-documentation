@@ -2,7 +2,11 @@ class WishListItem < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  # Accepts Spree::Product and Location
+  PERMITTED_CLASSES = %w(Spree::Product Location)
+
+  class NotPermitted < Exception
+  end
+
   belongs_to :wishlistable, polymorphic: true
 
   belongs_to :wish_list
@@ -13,10 +17,13 @@ class WishListItem < ActiveRecord::Base
   after_create :increment_counters
   after_destroy :decrement_counters
 
-  [:increment, :decrement].each do |type|
-    define_method("#{type}_counters") do
-      wishlistable_type.classify.constantize.send("#{type}_counter", 'wish_list_items_count'.to_sym,
-                                                  self.wishlistable_id)
-    end
+  private
+
+  def increment_counters
+    wishlistable.class.increment_counter 'wish_list_items_count', wishlistable_id
+  end
+
+  def decrement_counters
+    wishlistable.class.decrement_counter 'wish_list_items_count', wishlistable_id
   end
 end

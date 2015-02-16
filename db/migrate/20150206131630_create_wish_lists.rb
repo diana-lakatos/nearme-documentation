@@ -8,5 +8,7 @@ class CreateWishLists < ActiveRecord::Migration
 
       t.timestamps
     end
+
+    add_index :wish_lists, [:instance_id, :user_id]
   end
 end

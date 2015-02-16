@@ -1,6 +1,5 @@
 class InstanceAdmin::Manage::WishListsController < InstanceAdmin::Manage::BaseController
   before_filter :find_instance
-  before_filter :find_instance_translations
 
   def show
   end
@@ -20,10 +19,6 @@ class InstanceAdmin::Manage::WishListsController < InstanceAdmin::Manage::BaseCo
 
   def find_instance
     @instance = platform_context.instance
-  end
-
-  def find_instance_translations
-    @translations = @instance.translations
   end
 
   def instance_params

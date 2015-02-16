@@ -130,9 +130,9 @@ class User < ActiveRecord::Base
   #        a 'Form' object containing their own additional validations specific
   #        to their context.
   validates :phone, phone_number: true,
-            :if => ->(u) { u.phone.present? || u.phone_required }
+    :if => ->(u) {u.phone.present? || u.phone_required}
   validates :mobile_number, phone_number: true,
-            :if => ->(u) { u.mobile_number.present? }
+    :if => ->(u) {u.mobile_number.present?}
   validates_presence_of :country_name, :if => lambda { phone_required || country_name_required }
 
   validates :current_location, length: { maximum: 50 }

@@ -1,9 +1,9 @@
 And(/^wish lists are enabled for the instance$/) do
-  Instance.default_instance.update_attribute :wish_lists_enabled, true
+  Instance.first.update_attribute :wish_lists_enabled, true
 end
 
 And(/^wish lists are disabled for the instance$/) do
-  Instance.default_instance.update_attribute :wish_lists_enabled, false
+  Instance.first.update_attribute :wish_lists_enabled, false
 end
 
 When(/^I click to Add to Favorites$/) do
@@ -24,4 +24,8 @@ end
 
 And(/^I have one favorite item$/) do
   Location.last.wish_list_items.create wish_list_id: User.last.default_wish_list.id
+end
+
+Then(/^I visit product page$/) do
+  visit product_path(Spree::Product.last)
 end
