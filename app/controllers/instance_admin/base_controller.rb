@@ -25,6 +25,8 @@ class InstanceAdmin::BaseController < ApplicationController
     'emails'             => { controller: '/instance_admin/manage/email_templates', default_action: 'index' },
     'smses'              => { controller: '/instance_admin/manage/sms_templates', default_action: 'index' },
     'workflows'          => { controller: '/instance_admin/manage/workflows', default_action: 'index' },
+    'reviews'            => { controller: '/instance_admin/manage/reviews', default_action: 'index' },
+    'wish_lists'         => { controller: '/instance_admin/manage/wish_lists', default_action: 'show' },
     'custom_attributes'  => { controller: '/instance_admin/manage/instance_profile_types', default_action: 'index' },
     'transactable_types' => { controller: '/instance_admin/manage/transactable_types', default_action: 'index' }
   }
