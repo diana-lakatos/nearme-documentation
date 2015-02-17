@@ -1,6 +1,6 @@
 namespace :translations do
 
-  desc "Add dashboard translations"
+  desc 'Add dashboard translations'
   task :add_dashboard => [:environment] do
     dashboard_translations = {
       'dashboard.nav.orders' => 'My Orders',
@@ -31,7 +31,24 @@ namespace :translations do
       'dashboard.nav.blog' => 'BLOG',
     }
 
-    dashboard_translations.each do |k,v|
+    create_keys(dashboard_translations)
+  end
+
+  desc 'Add wish lists translations'
+  task :add_wish_lists => [:environment] do
+    wish_lists_translations = {
+      'wish_lists.name' => 'Favorites',
+      'wish_lists.buttons.clear' => 'Remove all',
+      'wish_lists.buttons.unselected_state' => 'Add to favorites',
+      'wish_lists.buttons.selected_state' => 'Remove from favorites',
+
+    }
+
+    create_keys(wish_lists_translations)
+  end
+
+  def create_keys(hash)
+    hash.each do |k, v|
       if Translation.where(key: k).empty?
         puts "creating translation #{k}: #{v}"
         Translation.create(locale: 'en', key: k, value: v)
@@ -40,5 +57,4 @@ namespace :translations do
       end
     end
   end
-
 end

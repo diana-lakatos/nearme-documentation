@@ -37,11 +37,12 @@ class HiddenUiControls
       'registrations/show#reviews',
       'registrations/show#blog_posts',
       'dashboard/reviews',
+      'dashboard/wish_list_items',
       'main_menu/manage_items',
       'main_menu/cta',
       'main_menu/rfq',
       'main_menu/manage_blog',
-      'main_menu/favorites',
+      'main_menu/wish_list',
       'main_menu/account',
       'main_menu/messages'
   ]

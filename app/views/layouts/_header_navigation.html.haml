@@ -67,6 +67,11 @@
               = link_to main_app.dashboard_user_reservations_path, class: 'nav-link dropdown-toggle' do
                 %span My Bookings
 
+        - if platform_context.instance.wish_lists_enabled? && HiddenUiControls.find('main_menu/wish_list').visible?
+          %li
+            = link_to main_app.dashboard_wish_list_items_path, class: 'nav-link dropdown-toggle' do
+              %span= t 'wish_lists.name'
+
         - if !current_user.requests_for_quotes.empty? && HiddenUiControls.find('main_menu/rfq').visible?
           %li
             = link_to main_app.dashboard_support_tickets_path, class: 'nav-link dropdown-toggle' do

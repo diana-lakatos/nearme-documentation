@@ -49,6 +49,8 @@ class Location < ActiveRecord::Base
 
   has_many :impressions, :as => :impressionable, :dependent => :destroy
 
+  has_many :wish_list_items, as: :wishlistable
+
   validates_presence_of :company, :currency, :location_type_id
   validates_presence_of :description, :if => :name_and_description_required
   validates_presence_of :name, :if => :name_and_description_required

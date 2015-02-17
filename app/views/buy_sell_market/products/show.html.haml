@@ -1,5 +1,5 @@
 - render_content_outside_container!
-- hidden = [:favorite, :user_reviews, :shipping, :refunds] # TODO: Remove when implemented
+- hidden = [:user_reviews, :shipping, :refunds] # TODO: Remove when implemented
 
 %section.product-head
   .container-fluid
@@ -22,16 +22,14 @@
             = select_tag 'quantity', options_for_select((1..10)), class: ''
             - if @product.total_on_hand > 0
               %button.cta.btn.blue.padding11.add_to_cart
-                = t('buy_sell_market.products.buttons.add_to_cart')
+                = t 'buy_sell_market.products.buttons.add_to_cart'
         - else
           .btn.disabled= t('buy_sell_market.products.buttons.out_of_stock')
 
         .product-social-wrapper
-          - unless hidden.include?(:favorite)
-            %a{href: '#'}
-              .btn.gray
-                = image_tag 'themes/buy_sell/heart-gray.png', class: 'social-icon'
-                = t 'buy_sell_market.products.buttons.favorite'
+          - if platform_context.instance.wish_lists_enabled?
+            = render 'shared/components/wish_list_button', object:  Draper.undecorate(@product), link_to_class: 'btn gray'
+
           = render partial: 'social_buttons', locals: { product: @product }
 
 %section.product-details
