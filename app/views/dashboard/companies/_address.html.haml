@@ -2,7 +2,8 @@
   .col-md-3
     = f.label :address, required: true
   .col-md-9.input-container
-    = f.text_field :address, :'data-behavior' => 'address-autocomplete', placeholder: "Where is your store located?", 'data-address-input' => true
+    = f.text_field :address, :'data-behavior' => 'address-autocomplete',
+        placeholder: t('simple_form.placeholders.company.company_address.address'), 'data-address-input' => true
 
     .map{:style => "display: none", :'data-marker' => image_path("components/map-pin.png")}
       .map-container{:style => "height: 240px; width: 100%;"}

@@ -74,6 +74,10 @@ en:
         administrator: 'Administrator'
         special_notes: '%{lessee} instructions'
         currency: 'Currency'
+        location_address:
+          address: 'Address'
+        amenities: 'Amenities'
+
       companies:
         name: 'Company name'
         industries: 'Industries'
@@ -98,6 +102,14 @@ en:
         bank_owner_name: "Account's Owner Name"
         bank_routing_number: 'Routing Number'
         bank_account_number: 'Account Number'
+        company_address:
+          address: 'Address'
+        payout:
+          via_paypal: 'Payouts via Paypal'
+          via_ach: 'Payouts via ACH (US only)'
+          ach_update: 'Update bank account details for ACH payouts'
+          ach_error: 'Unfortunately we could not process the credentials you have entered.'
+
       transactable:
         name: "Item Title"
         price_daily: 'Daily'
@@ -137,6 +149,8 @@ en:
         url: 'www.mycompany.com'
         email: 'yourname@example.com'
         description: 'Give a brief description of your company.'
+        company_address:
+          address: 'Where is your store located?'
       location:
         email: 'Your booking email'
         special_notes: "For example, how your %{lessees} should check in, your Wi-Fi password, whether you have pets, or other special information relevant to your %{lessee}'s stay"

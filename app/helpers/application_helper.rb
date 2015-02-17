@@ -268,8 +268,12 @@ module ApplicationHelper
     'active' if arg1 == arg2
   end
 
+  def hide_tab?(tab)
+    key = "#{params[:controller]}/#{params[:action]}##{tab}"
+    HiddenUiControls.find(key).hidden?
+  end
+
   def admin_breadcrumbs
     @breadcrumbs_title.presence || controller.class.to_s.deconstantize.demodulize
   end
-
 end

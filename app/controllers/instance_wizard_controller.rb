@@ -36,7 +36,6 @@ class InstanceWizardController < ActionController::Base
     begin
       Instance.transaction do
         @instance.save!
-        @instance.instance_profile_types.create(name: 'User Instance Profile')
         @user.instance = @instance
         @user.save!
       end
@@ -49,6 +48,8 @@ class InstanceWizardController < ActionController::Base
     @instance_creator.update_attribute(:created_instance, true)
 
     PlatformContext.current = PlatformContext.new(@instance)
+
+    @instance.instance_profile_types.create(name: 'User Instance Profile')
     tp = @instance.transactable_types.create(name: params[:marketplace_type], pricing_options: { "free"=>"1", "hourly"=>"1", "daily"=>"1", "weekly"=>"1", "monthly"=>"1" },
                                              availability_options: { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => true } })
     create_rating_systems(@instance)
