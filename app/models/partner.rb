@@ -31,8 +31,9 @@ class Partner < ActiveRecord::Base
 
   def build_theme_from_instance
     if instance.present?
-      self.theme = instance.theme.build_clone
-      self.theme
+      new_theme = instance.theme.build_clone
+      new_theme.owner = self
+      self.theme = new_theme
     end
   end
 

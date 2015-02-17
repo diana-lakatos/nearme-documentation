@@ -91,6 +91,7 @@ Feature: A user can login
   @javascript
   Scenario: A user is redirected to the page accessed prior to login page after successful logging in
     Given a user exists with email: "valid@example.com", password: "password", name: "I am user"
+      And a domain www.example.com exists
       And a transactable_type_listing exists with name: "Listing"
       And a listing in Auckland exists
       And I performed search for "Auckland"
@@ -100,6 +101,7 @@ Feature: A user can login
   @javascript
   Scenario: A user is redirected to the page accessed prior to login page after failed first atttempt
     Given a user exists with email: "valid@example.com", password: "password", name: "I am user"
+      And a domain www.example.com exists
       And a transactable_type_listing exists with name: "Listing"
       And a listing in Auckland exists
       And I performed search for "Auckland"

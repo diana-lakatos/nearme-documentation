@@ -21,7 +21,7 @@ class PartnerTest < ActiveSupport::TestCase
     context 'partner is not persisted' do
 
       setup do
-        @partner = FactoryGirl.build(:partner, :instance => Instance.default_instance)
+        @partner = FactoryGirl.build(:partner, :instance => Instance.first)
         @instance_theme = @partner.instance.theme
         @partner_theme = @partner.theme
       end

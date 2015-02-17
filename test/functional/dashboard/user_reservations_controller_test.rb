@@ -114,7 +114,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
         @instance = FactoryGirl.create(:instance)
         get :upcoming
         assert_response :success
-        assert_select "p.text-center", "You don't have any upcoming bookings. Find #{@listing.transactable_type.bookable_noun} near you!"
+        assert_select "div.dash-body", "You don't have any upcoming bookings. Find #{Instance.first.bookable_noun} near you!"
       end
 
       should 'if any upcoming bookings' do

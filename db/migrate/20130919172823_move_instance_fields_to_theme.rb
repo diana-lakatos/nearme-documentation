@@ -1,16 +1,10 @@
 class MoveInstanceFieldsToTheme < ActiveRecord::Migration
 
   class Instance < ActiveRecord::Base
-    attr_accessor :name, :site_name, :description, :tagline, :support_email, :contact_email,
-                  :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url, :meta_title
-
     has_one :theme, :as => :owner
   end
 
   class Theme < ActiveRecord::Base
-    attr_accessor :name, :site_name, :description, :tagline, :support_email, :contact_email,
-                  :phone_number, :support_url, :blog_url, :twitter_url, :facebook_url, :meta_title
-
     belongs_to :owner, :polymorphic => true
   end
 

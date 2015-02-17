@@ -2,6 +2,9 @@ class Industry < ActiveRecord::Base
 
   has_metadata :without_db_column => true
 
+  auto_set_platform_context
+  scoped_to_platform_context
+
   # attr_accessible :name, :company_ids, :user_ids
 
   validates_presence_of :name

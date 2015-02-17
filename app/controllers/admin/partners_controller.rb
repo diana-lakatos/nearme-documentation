@@ -1,5 +1,6 @@
 class Admin::PartnersController < Admin::ResourceController
   belongs_to :instance, parent_class: Instance
+  before_filter :set_instance, :except => [:destroy]
 
   # hack because build_resource doesn't work here
   # https://github.com/josevalim/inherited_resources/blob/v1.5.0/lib/inherited_resources/base_helpers.rb#L58
@@ -22,5 +23,11 @@ class Admin::PartnersController < Admin::ResourceController
       # reject_if block doesn't work in app/models/partner.rb  :(
       p.delete("theme_attributes") if p["theme_attributes"] and p["theme_attributes"]["name"].blank?
     end
+  end
+
+  private
+
+  def set_instance
+    @instance = Instance.find(params[:instance_id])
   end
 end

@@ -102,11 +102,11 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "hint"
     t.integer  "approval_request_id"
     t.integer  "approval_request_attachment_template_id"
     t.boolean  "required",                                default: false
     t.string   "label"
+    t.text     "hint"
   end
 
   add_index "approval_request_attachments", ["instance_id"], name: "index_approval_request_attachments_on_instance_id", using: :btree
@@ -440,6 +440,7 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.string   "dns_name"
     t.string   "redirect_to"
     t.integer  "redirect_code"
+    t.boolean  "use_as_default",                 default: false
   end
 
   add_index "domains", ["deleted_at"], name: "index_domains_on_deleted_at", using: :btree
@@ -508,8 +509,9 @@ ActiveRecord::Schema.define(version: 20150214125057) do
 
   create_table "industries", force: true do |t|
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "instance_id"
   end
 
   create_table "inquiries", force: true do |t|
@@ -635,7 +637,6 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.string   "lessor"
     t.string   "lessee"
     t.boolean  "skip_company",                                                  default: false
-    t.boolean  "default_instance",                                              default: false
     t.text     "pricing_options"
     t.decimal  "service_fee_host_percent",              precision: 5, scale: 2, default: 0.0
     t.string   "live_stripe_public_key"

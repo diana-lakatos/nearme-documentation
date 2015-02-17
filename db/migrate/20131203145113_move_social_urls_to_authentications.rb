@@ -4,7 +4,6 @@ class MoveSocialUrlsToAuthentications < ActiveRecord::Migration
 
   class Authentication < ActiveRecord::Base
     belongs_to :user
-    attr_accessor :user_id, :provider, :uid, :info
     serialize :info, Hash
   end
 

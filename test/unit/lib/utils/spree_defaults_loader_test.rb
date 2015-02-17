@@ -3,24 +3,22 @@ require 'test_helper'
 class SpreeDefaultsLoaderTest < ActiveSupport::TestCase
 
   setup do
-    @instance = FactoryGirl.create(:instance)
-    @domain = FactoryGirl.create(:domain, name: 'example.com', target: @instance)
-    @loader = Utils::SpreeDefaultsLoader.new(@instance)
+    @loader = Utils::SpreeDefaultsLoader.new(Instance.first)
   end
 
   context '#load!' do
     setup do
-      PlatformContext.current = PlatformContext.new(@instance)
       @loader.load!
     end
 
     should 'find Spree::Store record' do
       store = Spree::Store.find_by(name: 'Desks Near Me')
+      instance = Instance.first
       assert_not_nil store
-      assert_equal store.name, @instance.theme.site_name
-      assert_equal store.url, @instance.domains.first.name
-      assert_equal store.meta_keywords, @instance.theme.tagline
-      assert_equal store.seo_title, @instance.theme.meta_title
+      assert_equal store.name, instance.theme.site_name
+      assert_equal store.url, instance.domains.first.name
+      assert_equal store.meta_keywords, instance.theme.tagline
+      assert_equal store.seo_title, instance.theme.meta_title
     end
 
     should 'set preferences' do

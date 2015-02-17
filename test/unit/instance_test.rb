@@ -5,7 +5,7 @@ class InstanceTest < ActiveSupport::TestCase
   should validate_presence_of(:name)
 
   setup do
-    @instance = Instance.default_instance
+    @instance = Instance.first
   end
 
   context 'test mode' do

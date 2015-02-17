@@ -17,6 +17,7 @@ class AddSettingsToTransactableType < ActiveRecord::Migration
 
     Instance.all.each do |instance|
       tp = instance.transactable_types.first
+      next if tp.nil?
       pricing_validation = {}
       instance.pricing_options.each do |k, v|
         if v.to_i == 1

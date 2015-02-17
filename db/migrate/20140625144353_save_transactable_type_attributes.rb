@@ -1,4 +1,6 @@
 class SaveTransactableTypeAttributes < ActiveRecord::Migration
+  class TransactableTypeAttribute < ActiveRecord::Base
+  end
 
   def self.up
     if Object.const_defined?('TransactableTypeAttribute')

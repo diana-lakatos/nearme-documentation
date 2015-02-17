@@ -3,7 +3,7 @@ require 'test_helper'
 class Billing::Gateway::IncomingTest < ActiveSupport::TestCase
 
   setup do
-    @instance = Instance.default_instance
+    @instance = Instance.first
     @user = FactoryGirl.create(:user)
     @country = 'US'
   end

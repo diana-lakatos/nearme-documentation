@@ -24,6 +24,9 @@ class InstanceWizardController < ActionController::Base
       render :new and return
     end
 
+    @instance.domains.first.use_as_default = true
+    @instance.theme.support_email = @instance.theme.contact_email
+
     user_password = nil
     if @user.new_record?
       @user.name = user_params[:name]

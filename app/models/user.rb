@@ -106,8 +106,8 @@ class User < ActiveRecord::Base
     joins(:followers).select('"users".*, "user_relationships"."follower_id" AS mutual_friendship_source')
   }
 
-  scope :for_instance, ->(instance) {
-    instance.is_desksnearme? ? where('users.instance_id IS NULL OR users.instance_id = ?', instance.id) : where(:'users.instance_id' => instance.id)
+  scope :for_instance, -> (instance) {
+    where(:'users.instance_id' => instance.id)
   }
 
   scope :with_date, ->(date) { where(created_at: date) }

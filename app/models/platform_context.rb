@@ -65,8 +65,6 @@ class PlatformContext
       initialize_with_company(object)
     when Instance
       initialize_with_instance(object)
-    when nil
-      initialize_with_instance(Instance.default_instance)
     else
       raise "Can't initialize PlatformContext with object of class #{object.class}"
     end
@@ -95,7 +93,7 @@ class PlatformContext
   end
 
   def secured?
-    (is_root_domain? and root_secured?) || @domain.try(:secured?)
+    (root_secured?) || @domain.try(:secured?)
   end
 
   def require_ssl?
@@ -112,17 +110,19 @@ class PlatformContext
   end
 
   def initialize_with_domain(domain)
-    @domain = domain
-    if @domain && @domain.white_label_enabled?
-      if @domain.white_label_company?
-        initialize_with_company(@domain.target)
-      elsif @domain.instance?
-        initialize_with_instance(@domain.target)
-      elsif @domain.partner?
-        initialize_with_partner(@domain.target)
-      end
+    if is_root_domain?
+      initialize_with_instance(Instance.first)
     else
-      initialize_with_instance(Instance.default_instance)
+      if domain.present? && domain.white_label_enabled? && domain.target.present?
+        @domain = domain
+        if @domain.white_label_company?
+          initialize_with_company(@domain.target)
+        elsif @domain.instance?
+          initialize_with_instance(@domain.target)
+        elsif @domain.partner?
+          initialize_with_partner(@domain.target)
+        end
+      end
     end
     self
   end
@@ -160,9 +160,7 @@ class PlatformContext
     @instance_type = @instance.instance_type
     @platform_context_detail = @instance
     @theme = @instance.theme
-    # the reason why we don't want default instance to have domain is that currently it has assigned only one domain as a hack - api.desksnear.me and
-    # our urls in mailers will be wrong
-    @domain ||= @instance.domains.try(:first) unless @instance.is_desksnearme?
+    @domain ||= @instance.default_domain
     self
   end
 
@@ -176,21 +174,16 @@ class PlatformContext
     @decorator ||= PlatformContextDecorator.new(self)
   end
 
-  # Check if domain is configured
-  def valid_domain?
-    @domain || is_root_domain?
-  end
-
   def should_redirect?
-    return true unless valid_domain?
-    return false unless @domain
+    return false if is_root_domain?
+    return true unless @domain
     return true if @domain.redirect?
     @domain.name != @request_host
   end
 
-  def redirect_url
+  def redirect_url(path = '')
     return NEAR_ME_REDIRECT_URL unless @domain
-    @domain.redirect? ? @domain.redirect_to : @domain.url
+    "#{(@domain.redirect? ? @domain.redirect_to : @domain.url)}#{path}"
   end
 
   def redirect_code
@@ -212,16 +205,16 @@ class PlatformContext
     Spree::Product.searchable.order('created_at desc').limit(number).all
   end
 
+   def is_root_domain?
+    root_domains = [Regexp.escape(remove_port_from_hostname(Rails.application.routes.default_url_options[:host])), '0\.0\.0\.0', 'near-me.com', 'api\.desksnear\.me', '127\.0\.0\.1']
+    root_domains += ['test\.host', '127\.0\.0\.1', 'example\.org', 'www.example\.com'] if Rails.env.test?
+    @request_host =~ Regexp.new("^(#{root_domains.join('|')})$", true)
+  end
+
   private
 
   def fetch_domain
     Domain.where_hostname(@request_host)
-  end
-
-  def is_root_domain?
-    root_domains = [Regexp.escape(remove_port_from_hostname(Rails.application.routes.default_url_options[:host])), '0\.0\.0\.0', 'near-me.com', 'api\.desksnear\.me', '127\.0\.0\.1']
-    root_domains += ['test\.host', '127\.0\.0\.1', 'example\.org', 'www.example\.com'] if Rails.env.test?
-    @request_host =~ Regexp.new("^(#{root_domains.join('|')})$", true)
   end
 
   def remove_port_from_hostname(hostname)
