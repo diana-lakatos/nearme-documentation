@@ -82,8 +82,8 @@ class BuySellMarket::CheckoutController < ApplicationController
           # Charging the client with the right calculated service fees
           # It includes any upsell charges and percentage fee that can apply to the order
           @order.update(
-              service_fee_amount_guest_cents: @order.service_fee_amount_guest.cents,
-              service_fee_amount_host_cents:  @order.service_fee_amount_host.cents
+              service_fee_amount_guest_cents: @order.service_fee_amount_guest_cents,
+              service_fee_amount_host_cents:  @order.service_fee_amount_host_cents
           )
           unless @order.next
             flash.now[:error] = spree_errors
@@ -180,10 +180,10 @@ class BuySellMarket::CheckoutController < ApplicationController
   end
 
   def setup_upsell_charges
-    additional_charge_ids = AdditionalChargeType.get_charges(params[:additional_charge_ids]).pluck(:id)
+    additional_charge_ids = AdditionalChargeType.get_mandatory_and_optional_charges(params[:additional_charge_ids]).pluck(:id)
     additional_charge_ids.each do |id|
       next if @order.additional_charges.pluck(:additional_charge_type_id).include?(id)
-      @order.additional_charges.create(additional_charge_type_id: id)
+      @order.additional_charges.create!(additional_charge_type_id: id, currency: @order.currency)
     end
   end
 

@@ -4,7 +4,8 @@ class CreateAdditionalCharges < ActiveRecord::Migration
       t.string  :name
       t.integer :amount_cents
       t.string  :currency
-      t.string  :commission_for
+      t.string  :commission_receiver
+      t.string  :status
       t.integer :additional_charge_type_id
       t.integer :instance_id
       t.integer :target_id

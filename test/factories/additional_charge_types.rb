@@ -3,7 +3,7 @@ FactoryGirl.define do
     name 'Insurance'
     amount 10
     currency 'USD'
-    commission_for 'mpo'
+    commission_receiver 'mpo'
     status 'mandatory'
   end
 end

@@ -7,12 +7,12 @@ class AdditionalChargeType < ActiveRecord::Base
   belongs_to :instance
   has_many :additional_charges
 
-  validates :name, :status, :amount, :currency, :commission_for, presence: true
+  validates :name, :status, :amount, :currency, :commission_receiver, presence: true
   validate :correct_status, :commission_recipient
 
   scope :mandatory_charges, -> { where(status: 'mandatory') }
   scope :optional_charges, -> { where(status: 'optional') }
-  scope :get_charges, -> (ids) { where("status = 'mandatory' or id in (?)", ids) }
+  scope :get_mandatory_and_optional_charges, -> (ids) { where("status = 'mandatory' or id in (?)", ids) }
 
   STATUSES = ['mandatory', 'optional']
   COMMISSION_TYPES = ['mpo']
@@ -32,14 +32,10 @@ class AdditionalChargeType < ActiveRecord::Base
 
   private
   def correct_status
-    unless status && STATUSES.include?(status.upcase.downcase!)
-      errors.add(:status, ' can only be mandatory or optional')
-    end
+    errors.add(:status, ' can only be mandatory or optional') unless STATUSES.include?(status)
   end
 
   def commission_recipient
-    unless commission_for && COMMISSION_TYPES.include?(commission_for.upcase.downcase!)
-      errors.add(:commission_for, ' recipient can only be MPO')
-    end
+    errors.add(:commission_receiver, ' recipient can only be MPO') unless COMMISSION_TYPES.include?(commission_receiver)
   end
 end

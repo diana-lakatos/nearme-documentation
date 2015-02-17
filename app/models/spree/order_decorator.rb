@@ -55,23 +55,21 @@ Spree::Order.class_eval do
     service_fee_calculator.service_fee_guest
   end
 
-  # This is amount of service fees without additional charges
-  def service_fee_guest_wo_ac
+  def service_fee_guest_without_charges
     service_fee_calculator.service_fee_guest_wo_ac
   end
 
   def service_fee_amount_host
-    service_fee_calculator.service_fee_host
+    service_fee_calculator.service_fee_guest.cents
   end
 
   def service_fee_calculator
     options = {
-      amount:             subtotal_amount_to_charge,
       guest_fee_percent:  instance.service_fee_guest_percent,
       host_fee_percent:   instance.service_fee_host_percent,
       additional_charges: additional_charges
     }
-    @service_fee_calculator ||= Payment::ServiceFeeCalculator.new(options)
+    @service_fee_calculator ||= Payment::ServiceFeeCalculator.new(subtotal_amount_to_charge, options)
   end
 
   def monetize(amount)

@@ -26,27 +26,16 @@
           placeholder: 'Enter amount',
           input_html: { class: 'form-control' }
       .input-container.col-xs-6
-        = f.input :currency,
-          collection: [platform_context.instance.stripe_currency],
-          selected: platform_context.instance.stripe_currency,
-          input_html: { class: 'form-control' }
-
-    .row
-      .input-container.col-xs-12
         = f.input :status,
-          collection: AdditionalChargeType::STATUSES.map(&:titleize),
+          collection: AdditionalChargeType::STATUSES,
           prompt: 'Select Optional or Mandatory',
           input_html: { class: 'form-control' }
 
     .row
       .input-container.col-xs-12
-        = f.input :commission_for,
-          collection: AdditionalChargeType::COMMISSION_TYPES.map(&:titleize),
-          prompt: 'Select commission recipient',
-          input_html: { class: 'form-control' }
-      -#.input-container.col-xs-6
-        = f.input :provider_commission_percentage,
-          placeholder: 'Enter percentage to provider',
+        = f.input :commission_receiver,
+          collection: AdditionalChargeType::COMMISSION_TYPES,
+          prompt: 'Select commission receiver',
           input_html: { class: 'form-control' }
 
   .pull-right

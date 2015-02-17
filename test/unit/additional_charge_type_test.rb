@@ -12,11 +12,11 @@ class AdditionalChargeTypeTest < ActiveSupport::TestCase
     should validate_presence_of(:status)
     should validate_presence_of(:amount)
     should validate_presence_of(:currency)
-    should validate_presence_of(:commission_for)
+    should validate_presence_of(:commission_receiver)
     should_not allow_value('wrong').for(:status)
     should allow_value('mandatory').for(:status)
-    should_not allow_value('wrong').for(:commission_for)
-    should allow_value('mpo').for(:commission_for)
+    should_not allow_value('wrong').for(:commission_receiver)
+    should allow_value('mpo').for(:commission_receiver)
   end
 
   should 'have a valid factory' do

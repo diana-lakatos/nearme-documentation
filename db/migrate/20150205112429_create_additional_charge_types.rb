@@ -5,7 +5,7 @@ class CreateAdditionalChargeTypes < ActiveRecord::Migration
       t.text      :description
       t.integer   :amount_cents
       t.string    :currency
-      t.string    :commission_for
+      t.string    :commission_receiver
       t.integer   :provider_commission_percentage
       t.string    :status
       t.integer   :instance_id

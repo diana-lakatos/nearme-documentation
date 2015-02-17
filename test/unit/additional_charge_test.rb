@@ -13,7 +13,6 @@ class AdditionalChargeTest < ActiveSupport::TestCase
     ac = AdditionalCharge.create(additional_charge_type_id: act.id)
     assert_equal ac.name, act.name
     assert_equal ac.amount_cents, act.amount_cents
-    assert_equal ac.currency, act.currency
-    assert_equal ac.commission_for, act.commission_for
+    assert_equal ac.commission_receiver, act.commission_receiver
   end
 end

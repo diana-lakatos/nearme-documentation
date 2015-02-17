@@ -6,7 +6,7 @@
 class @Bookings.PriceCalculator
 
   constructor: (@listing) ->
-    @additionalCharges = new Bookings.AdditionalChargesCalculator
+    @additionalCharges = new Bookings.AdditionalChargesCalculator($('#additional_charges'))
 
   getPrice: ->
     total = _.inject(@contiguousBlocks(), (sum, block) =>

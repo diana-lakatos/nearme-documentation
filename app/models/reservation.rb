@@ -299,7 +299,6 @@ class Reservation < ActiveRecord::Base
     super || service_fee_calculator.service_fee_guest.cents rescue nil
   end
 
-  # Calculate service fee without additionalCharges
   def service_fee_guest_wo_charges
     service_fee_calculator.service_fee_guest_wo_ac
   end
@@ -462,12 +461,11 @@ class Reservation < ActiveRecord::Base
 
     def service_fee_calculator
       options = {
-        amount:             subtotal_amount,
         guest_fee_percent:  service_fee_guest_percent,
         host_fee_percent:   service_fee_host_percent,
         additional_charges: additional_charges
       }
-      @service_fee_calculator ||= Payment::ServiceFeeCalculator.new(options)
+      @service_fee_calculator ||= Payment::ServiceFeeCalculator.new(subtotal_amount, options)
     end
 
     def price_calculator

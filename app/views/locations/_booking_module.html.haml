@@ -106,21 +106,8 @@
         %span.resource{:'data-singular' => listing.listing_type, :'data-plural' => listing.listing_type.try(:pluralize)}= listing.listing_type
         = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
 
-      #additional_charges
-        - platform_context.instance.additional_charge_types.sort.each do |ac|
-          - if ac.mandatory?
-            .mandatory-charge
-              %span
-                = ac.name
-              .pull-right= number_to_currency_symbol(listing.location.currency, content_tag(:span, ac.amount, { class: 'charge-amount' }))
-              %br
-          - else
-            .optional-charge
-              %span
-                = check_box_tag 'reservation_request[additional_charge_ids][]', ac.id
-                = ac.name
-              %span.pull-right= number_to_currency_symbol(listing.location.currency, content_tag(:span, ac.amount, { class: 'charge-amount' }))
-              %br
+      = render partial: 'locations/additional_charges', locals: { listing: listing }
+
       .price{class: "#{'hidden' if listing.free?}"}
         Total
         %span #{currency_content_tag(listing.location.currency, 0.00, :span, { :rel => false })}

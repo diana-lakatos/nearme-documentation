@@ -5,8 +5,6 @@ class AdditionalCharge < ActiveRecord::Base
 
   after_initialize :copy_ac_type_data, if: :new_record?
 
-  delegate :mandatory?, :optional?, to: :additional_charge_type
-
   belongs_to :instance
   belongs_to :additional_charge_type
   belongs_to :target, polymorphic: true
@@ -14,6 +12,14 @@ class AdditionalCharge < ActiveRecord::Base
   validates :additional_charge_type_id, presence: true
 
   monetize :amount_cents, with_model_currency: :currency
+
+  def mandatory?
+    status == 'mandatory'
+  end
+
+  def optional?
+    status == 'optional'
+  end
 
   private
   # We need to copy this data from AdditionalChargeType record
@@ -23,7 +29,7 @@ class AdditionalCharge < ActiveRecord::Base
     return if additional_charge_type_id.blank?
     self.name = additional_charge_type.name
     self.amount_cents = additional_charge_type.amount_cents
-    self.currency = additional_charge_type.currency
-    self.commission_for = additional_charge_type.commission_for
+    self.commission_receiver = additional_charge_type.commission_receiver
+    self.status = additional_charge_type.status
   end
 end

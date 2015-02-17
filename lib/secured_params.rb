@@ -948,7 +948,7 @@ class SecuredParams
       :description,
       :amount,
       :currency,
-      :commission_for,
+      :commission_receiver,
       :provider_commission_percentage,
       :status,
       :instance_id

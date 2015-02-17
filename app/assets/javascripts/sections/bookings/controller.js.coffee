@@ -45,7 +45,7 @@ class Bookings.Controller
     @quantityResourceElement = @container.find('.quantity .resource')
     @totalElement = @container.find('.total')
     @daysElement = @container.find('.total-days')
-    @additionalCharges = @container.find('#additional_charges input[type=checkbox]')
+    @additionalCharges = @container.find('[data-optional-charge-select]')
     @bookButton = @container.find('[data-behavior=reviewBooking]')
     @rfqButton = @container.find('[data-behavior=RFQ]')
     @bookForm = @bookButton.closest('form')

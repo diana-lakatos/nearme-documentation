@@ -22,8 +22,7 @@ class RecurringBookingRequest < Form
     @instance = platform_context.instance
 
     # We need to store additional_charge_ids to pass it to reservations
-    @additional_charge_ids = attributes[:additional_charge_ids]
-    attributes.delete(:additional_charge_ids)
+    @additional_charge_ids = attributes.delete(:additional_charge_ids)
     store_attributes(attributes)
 
     if @listing
@@ -99,9 +98,12 @@ class RecurringBookingRequest < Form
   private
 
   def get_additional_charges
-    additional_charge_ids = AdditionalChargeType.get_charges(@additional_charge_ids).pluck(:id)
-    additional_charges = additional_charge_ids.map { |id| AdditionalCharge.new(additional_charge_type_id: id) }
-    additional_charges
+    AdditionalChargeType.get_mandatory_and_optional_charges(@additional_charge_ids).pluck(:id).map do |id|
+      AdditionalCharge.new(
+        additional_charge_type_id: id,
+        currency: @reservation.currency
+      )
+    end
   end
 
   def validate_phone_and_country

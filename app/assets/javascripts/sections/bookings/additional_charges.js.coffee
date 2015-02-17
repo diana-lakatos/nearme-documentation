@@ -1,12 +1,11 @@
 class @Bookings.AdditionalChargesCalculator
-  constructor: ->
-    @container = $('#additional_charges')
+  constructor: (@container) ->
 
   getMandatoryCharges: ->
-    mandatoryCharges = @container.find('.mandatory-charge span.charge-amount')
+    @container.find('[data-mandatory-charge]')
 
   getActiveOptionalCharges: ->
-    optionalCharges = @container.find('.optional-charge span.charge-amount')
+    @container.find('[data-optional-charge]')
 
   getCharges: ->
     total = 0
@@ -17,9 +16,9 @@ class @Bookings.AdditionalChargesCalculator
 
     for charge in charges
       $charge = $(charge)
-      if ($oc = $charge.closest('.optional-charge')).length > 0
-        if $oc.find('input[type=checkbox]:checked').length > 0
-          total += parseFloat($charge.text())
+      if ($oc = $charge.find('[data-optional-charge-select]')).length > 0
+        if $oc.is(':checked')
+          total += parseFloat($charge.data().optionalCharge)
       else
-        total += parseFloat($charge.text())
+        total += parseFloat($charge.data().mandatoryCharge)
     total * 100

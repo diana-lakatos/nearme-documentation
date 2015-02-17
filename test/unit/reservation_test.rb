@@ -357,11 +357,10 @@ class ReservationTest < ActiveSupport::TestCase
         reservation.save!
 
         options = {
-          amount: Money.new(reservation.subtotal_amount_cents, reservation.currency),
           guest_fee_percent: reservation.service_fee_guest_percent,
           host_fee_percent: reservation.service_fee_host_percent
         }
-        service_fee_calculator = Payment::ServiceFeeCalculator.new(options)
+        service_fee_calculator = Payment::ServiceFeeCalculator.new(Money.new(reservation.subtotal_amount_cents, reservation.currency), options)
         assert_equal Reservation::DailyPriceCalculator.new(reservation).price.cents, reservation.subtotal_amount_cents
         assert_equal service_fee_calculator.service_fee_guest.cents, reservation.service_fee_amount_guest_cents
         assert_equal service_fee_calculator.service_fee_host.cents, reservation.service_fee_amount_host_cents
@@ -422,7 +421,7 @@ class ReservationTest < ActiveSupport::TestCase
         assert_equal 0, reservation.service_fee_amount_guest_cents
         assert_equal 0, reservation.service_fee_amount_host_cents
       end
-       
+
       context 'with additional charges' do
         setup do
           @act = FactoryGirl.create(:additional_charge_type)
@@ -451,12 +450,11 @@ class ReservationTest < ActiveSupport::TestCase
       should "set total cost based on HourlyPriceCalculator" do
         @reservation.periods.build :date => Time.zone.today.advance(:weeks => 1).beginning_of_week, :start_minute => 9*60, :end_minute => 12*60
         options = {
-          amount: Money.new(@reservation.subtotal_amount_cents, @reservation.currency),
           guest_fee_percent: @reservation.service_fee_guest_percent,
           host_fee_percent: @reservation.service_fee_host_percent
         }
         assert_equal Reservation::HourlyPriceCalculator.new(@reservation).price.cents +
-          Payment::ServiceFeeCalculator.new(options)
+          Payment::ServiceFeeCalculator.new(Money.new(@reservation.subtotal_amount_cents, @reservation.currency), options)
 .service_fee_guest.cents,
           @reservation.total_amount_cents
       end

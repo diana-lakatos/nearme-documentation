@@ -47,7 +47,7 @@
               %td= humanized_money_with_cents_and_symbol @order.monetize(@order.additional_tax_total)
             %tr
               %td= t 'buy_sell_market.checkout.labels.service_fee'
-              %td= humanized_money_with_cents_and_symbol @order.service_fee_guest_wo_ac
+              %td= humanized_money_with_cents_and_symbol @order.service_fee_guest_without_charges
             - if @additional_charges.try(:mandatory_charges).present?
               - @additional_charges.mandatory_charges.each do |charge|
                 %tr
