@@ -60,6 +60,7 @@ class PhotoTest < ActiveSupport::TestCase
       end
 
       should 'return true if original url was changed' do
+        stub_image_url('http://www.example.com/image.jpg')
         @photo.image_original_url = 'http://www.example.com/image.jpg'
         @photo.save!
         assert @photo.should_populate_metadata?

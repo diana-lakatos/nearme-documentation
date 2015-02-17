@@ -3,6 +3,7 @@
   %td= domain.state.to_s.humanize
   %td= domain.dns_name
   %td= domain.redirect_to
+  %td= domain.use_as_default ? "Yes" : "No"
   %td
     .pull-right
       - if domain.deletable?

@@ -4,7 +4,10 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
 
   setup do
     stub_what_has_to_be_stubbed
-    @instance = Instance.default_instance
+    @instance = Instance.first
+    @instance.update_attribute(:service_fee_host_percent, 10)
+    @instance.update_attribute(:service_fee_guest_percent, 15)
+    @instance.update_attribute(:payment_transfers_frequency, 'daily')
     @listing = FactoryGirl.create(:transactable, :daily_price => 25.00)
 
     @listing.transactable_type.update_attribute(:service_fee_host_percent, 10)
@@ -51,6 +54,8 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
 
   def create_logged_in_user
     # TODO post_via_redirect '/users', :user => { :name => 'John Doe', :email => 'user@example.com', :password => 'password' }
+    instance = Instance.first
+    instance.domains << FactoryGirl.create(:domain, name: "www.example.com")
     user = FactoryGirl.create(:user)
     post_via_redirect '/users/sign_in', :user => { :email => user.email, :password => user.password }
   end

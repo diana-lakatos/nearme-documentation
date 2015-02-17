@@ -701,6 +701,7 @@ class SecuredParams
       :target_id,
       :target_type,
       :secured,
+      :use_as_default,
       :white_label_enabled,
       :google_analytics_tracking_code,
       :certificate_body,

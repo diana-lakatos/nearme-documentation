@@ -6,8 +6,9 @@ class Authentication::TokenBasedLoginTest < ActionDispatch::IntegrationTest
 
     @user = FactoryGirl.create(:user)
     @verifier = User::TemporaryTokenVerifier.new(@user)
+    instance = Instance.first
+    instance.domains << FactoryGirl.create(:domain, name: "www.example.com")
   end
-
   context 'using a valid token' do
     context "redirects" do
       should 'without token parameter' do

@@ -35,7 +35,7 @@ class AddInstanceIdToPagesAndThemes < ActiveRecord::Migration
     add_index  :pages, :instance_id
 
     Page.find_each do |page|
-      page.update_column(:instance_id, page.instance.id) if page.instance.present?
+      page.update_column(:instance_id, page.instance.id) if page.theme && page.instance.present?
     end
 
   end

@@ -3,6 +3,9 @@
     .row
       .input-container.col-xs-12
         = f.input :secured, as: :boolean, label: "Enable HTTPS", input_html: { checked: f.object.secured? }
+    .row
+      .input-container.col-xs-12
+        = f.input :use_as_default, as: :boolean, label: "Use as default domain", input_html: { checked: f.object.use_as_default?, disabled: f.object.use_as_default? && !f.object.new_record? }
     .row.dropshadow
       .input-container.col-xs-12
         = f.input :name, required: false, label: "Domain", placeholder: "example.com", input_html: { class: 'form-control' }

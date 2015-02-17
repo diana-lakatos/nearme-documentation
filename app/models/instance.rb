@@ -64,6 +64,7 @@ class Instance < ActiveRecord::Base
   has_many :instance_profile_types
   has_one :instance_profile_type, -> { where(instance_id: PlatformContext.current.try(:instance).try(:id)) }
   has_many :data_uploads, as: :target
+  has_many :industries
   has_many :user_blog_posts
   has_many :instance_views
   has_many :dimensions_templates
@@ -134,16 +135,8 @@ class Instance < ActiveRecord::Base
     self.master_lock = nil
   end
 
-  def is_desksnearme?
-    self.default_instance?
-  end
-
   def white_label_enabled?
     true
-  end
-
-  def self.default_instance
-    self.find_by_default_instance(true)
   end
 
   def lessor
@@ -226,6 +219,14 @@ class Instance < ActiveRecord::Base
   end
 
   def onboarding_verification_required=(arg)
+  end
+
+  def has_industries?
+    industries.any?
+  end
+
+  def default_domain
+    domains.order('use_as_default desc').try(:first)
   end
 
   def buyable_transactable_type

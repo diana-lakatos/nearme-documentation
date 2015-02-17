@@ -11,7 +11,7 @@ class InstancePaymentGatewayTest < ActiveSupport::TestCase
   should belong_to(:payment_gateway)
 
   setup do
-    @instance = Instance.default_instance  
+    @instance = Instance.first
   end
 
 
@@ -20,7 +20,7 @@ class InstancePaymentGatewayTest < ActiveSupport::TestCase
       @stripe = FactoryGirl.build(:stripe_instance_payment_gateway)
       @balanced = FactoryGirl.build(:balanced_instance_payment_gateway)
     end
-    
+
     should "respond_to? country" do
       assert @stripe.respond_to?(:country)
     end
@@ -59,7 +59,7 @@ class InstancePaymentGatewayTest < ActiveSupport::TestCase
   end
 
   context "methods" do
-    
+
     setup do
       @stripe = FactoryGirl.create(:stripe_instance_payment_gateway)
       @instance.instance_payment_gateways << @stripe

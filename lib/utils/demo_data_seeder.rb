@@ -201,7 +201,7 @@ module Utils
     end
 
     def load_integration_keys!
-      dnm_instance = Instance.default_instance
+      dnm_instance = Instance.first
       create_payment_gateways
       @stripe = PaymentGateway.where(name: "Stripe").first
 

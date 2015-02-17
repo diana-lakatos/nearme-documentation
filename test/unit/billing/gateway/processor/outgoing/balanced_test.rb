@@ -2,7 +2,7 @@ require 'test_helper'
 
 class Billing::Gateway::Processor::Outgoing::BalancedTest < ActiveSupport::TestCase
   setup do
-    @instance = Instance.default_instance
+    @instance = Instance.first
 
     @instance.instance_payment_gateways << FactoryGirl.create(:balanced_instance_payment_gateway)
     @instance.instance_payment_gateways.set_settings_for(:balanced, {api_key: 'test_key'})
@@ -25,7 +25,7 @@ class Billing::Gateway::Processor::Outgoing::BalancedTest < ActiveSupport::TestC
   context '#payout' do
 
     context 'existing customer' do
-      setup do 
+      setup do
         @instance_client = FactoryGirl.create(:instance_client, :client => @company, :balanced_user_id => 'test-customer')
         @customer = mock()
         @credit = mock()
@@ -34,7 +34,7 @@ class Billing::Gateway::Processor::Outgoing::BalancedTest < ActiveSupport::TestC
 
       should "raise error if not USD" do
         Balanced::Customer.unstub(:find)
-        assert_raise Billing::Gateway::Processor::Base::InvalidStateError do 
+        assert_raise Billing::Gateway::Processor::Base::InvalidStateError do
           @balanced_processor.process_payout(Money.new(1000, 'EUR'))
         end
       end
@@ -55,7 +55,7 @@ class Billing::Gateway::Processor::Outgoing::BalancedTest < ActiveSupport::TestC
 
       should "invoke payout with the right arguments" do
         @credit.expects(:save).returns(stub(:status => 'paid', :to_yaml => 'yaml'))
-        @customer.expects(:credit).with do |credit_hash| 
+        @customer.expects(:credit).with do |credit_hash|
           credit_hash[:amount] == 1234 &&
           credit_hash[:description] == "Payout from Instance(id=#{@company.instance.id}) #{@company.instance.name} to Company(id=#{@company.id}) #{@company.name}" &&
           credit_hash[:appears_on_statement_as] == @company.instance.name

@@ -1,4 +1,5 @@
 class PartnerInquiriesController < ApplicationController
+
   before_filter :redirect_if_not_desksnearme
 
   def index
@@ -17,7 +18,7 @@ class PartnerInquiriesController < ApplicationController
   private
 
   def redirect_if_not_desksnearme
-    redirect_to root_path if !platform_context.theme.is_desksnearme?
+    redirect_to root_path if !platform_context.domain.name.include?('desksnear.me')
   end
 
   def inquiry_params

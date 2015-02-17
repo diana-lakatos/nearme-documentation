@@ -6,6 +6,8 @@ class Theme < ActiveRecord::Base
   COLORS = %w(blue red orange green gray black white)
   COLORS_DEFAULT_VALUES = %w(41bf8b e83d33 FF8D00 6651af 394449 1e2222 fafafa)
 
+  # TODO: We may want the ability to have multiple themes, and draft states,
+  #       etc.
   belongs_to :owner, :polymorphic => true
   has_many :pages, :dependent => :destroy
   has_one :theme_font, :dependent => :destroy
@@ -21,8 +23,8 @@ class Theme < ActiveRecord::Base
     end.flatten.all?{|f| !f}
   }
 
-  validates :contact_email, email: true, allow_nil: true
-  validates :contact_email, presence: true, if: lambda { |t| t.owner.try(:domains).try(:first).present? }
+  validates :contact_email, presence: true, email: true, if: lambda { |t| t.owner.try(:domains).try(:first).present? }
+  validates :support_email, presence: true, email: true, if: lambda { |t| t.owner.try(:domains).try(:first).present? }
   validates_length_of :description, :maximum => 250
 
   extend CarrierWave::SourceProcessing
@@ -98,19 +100,15 @@ class Theme < ActiveRecord::Base
     self
   end
 
-  def is_desksnearme?
-    self.id == 1
-  end
-
   def instance
     @instance ||= begin
       case owner_type
       when "Instance"
         owner
       when "Company"
-        (owner || Company.with_deleted.where(id: object_id).first).instance
+         (owner || Company.with_deleted.where(id: object_id).first).try(:instance)
       when "Partner"
-        owner.instance
+        owner.try(:instance)
       else
         raise "Unknown owner #{owner_type}"
       end

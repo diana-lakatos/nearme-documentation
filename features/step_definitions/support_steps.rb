@@ -3,7 +3,7 @@ Given /^Alerts for support exist$/ do
 end
 
 Given(/^a support admin$/) do
-  @instance = Instance.default_instance
+  @instance = Instance.first
   @role = FactoryGirl.create(:instance_admin_role_administrator, instance_id: @instance.id)
   @user = FactoryGirl.create(:user)
   @instance_admin = FactoryGirl.create(:instance_admin, :user_id => @user.id, :instance_id => @instance.id)
@@ -40,7 +40,7 @@ Then(/^I receive request received email$/) do
 end
 
 Then(/^support admin has one opened ticket$/) do
-  assert_equal 1, Instance.default_instance.tickets.for_filter('open').count
+  assert_equal 1, Instance.first.tickets.for_filter('open').count
 end
 
 Then(/^support admin receives support received email$/) do
@@ -62,7 +62,7 @@ Then(/^I should be able to answer and marked as resolved this support ticket$/) 
   click_link 'View and resolve'
   fill_in 'Message', with: 'That is ok.'
   click_button 'Update and Resolve'
-  assert_equal 1, Instance.default_instance.tickets.for_filter('resolved').count
+  assert_equal 1, Instance.first.tickets.for_filter('resolved').count
   assert_equal 1, user.tickets.for_filter('resolved').count if user
   assert_equal 2, Support::TicketMessage.count
 end

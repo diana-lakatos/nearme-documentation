@@ -3,7 +3,7 @@ require 'test_helper'
 class Billing::Gateway::Processor::Incoming::ProcessorFactoryTest < ActiveSupport::TestCase
 
   setup do
-    @instance = Instance.default_instance
+    @instance = Instance.first
     @user = FactoryGirl.create(:user)
   end
 
@@ -32,7 +32,7 @@ class Billing::Gateway::Processor::Incoming::ProcessorFactoryTest < ActiveSuppor
 
       @instance.instance_payment_gateways << paypal
 
-      FactoryGirl.create(
+      ca = FactoryGirl.create(
        :country_instance_payment_gateway,
        country_alpha2_code: "CA",
        instance_payment_gateway_id: paypal.id

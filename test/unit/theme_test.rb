@@ -8,7 +8,7 @@ class ThemeTest < ActiveSupport::TestCase
 
   context 'creating' do
     should "trigger a compilation of the theme" do
-      theme = Theme.new(contact_email: 'support@desksnear.me')
+      theme = Theme.new(contact_email: 'support@desksnear.me', support_email: 'support@desksnear.me')
       theme.owner = @instance
 
       CompileThemeJob.expects(:perform).with(theme)
@@ -19,7 +19,7 @@ class ThemeTest < ActiveSupport::TestCase
   context 'updating' do
     setup do
       @instance_theme = Theme.new.skipping_compilation do |theme|
-        theme.contact_email = 'support@desksnear.me'
+        theme.contact_email = theme.support_email = 'support@desksnear.me'
         theme.owner = @instance
         theme.save!
       end

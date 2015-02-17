@@ -68,7 +68,7 @@ module Utils
           # === INSTANCES ========================================
 
           load_instances!
-          PlatformContext.current = PlatformContext.new
+          PlatformContext.current = PlatformContext.new(Instance.first)
           # === BASIC STUFF ======================================
 
           load_instance_admin_roles!
@@ -201,7 +201,7 @@ module Utils
 
     def load_instance_admins!
       do_task "Loading instance admins" do
-        InstanceAdmin.create(:user_id => users.first.id, :instance_id => Instance.default_instance.id)
+        InstanceAdmin.create(:user_id => users.first.id, :instance_id => Instance.first.id)
       end
     end
 
@@ -269,7 +269,7 @@ module Utils
     end
 
     def load_integration_keys!
-      dnm_instance = Instance.default_instance
+      dnm_instance = Instance.first
       create_payment_gateways
       @stripe = PaymentGateway.where(name: "Stripe").first
 

@@ -877,7 +877,7 @@ class UserTest < ActiveSupport::TestCase
       assert_equal @user.profile, @profile_one
       PlatformContext.current = PlatformContext.new(@instance)
       assert_equal @user.profile, @profile_two
-      PlatformContext.current = PlatformContext.new
+      PlatformContext.current = PlatformContext.new(Instance.first)
       assert_equal @user.profile, @profile_one
     end
 

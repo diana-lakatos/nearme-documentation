@@ -8,7 +8,7 @@ class InstanceAdmin::Settings::DomainsControllerTest < ActionController::TestCas
       sign_in @user
       InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
       InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
-      @domain = FactoryGirl.create(:domain)
+      @domain = Instance.first.default_domain
     end
 
     should 'show list' do
@@ -32,7 +32,7 @@ class InstanceAdmin::Settings::DomainsControllerTest < ActionController::TestCas
         balancer = stub(:dns_name => dns_name, :create! => nil)
         NearMe::Balancer.expects(:new).returns(balancer)
         assert_difference("Domain.count") {
-          post :create, domain: {"name" => 'example.com', "secured" => true, "certificate_body" => 'body', "private_key" => 'key' }
+          post :create, domain: {"name" => 'example.org', "secured" => true, "certificate_body" => 'body', "private_key" => 'key'}
           assert_equal flash[:success], I18n.t('flash_messages.instance_admin.settings.domain_preparing')
           assert_response :redirect
           assert_redirected_to instance_admin_settings_domains_path
@@ -41,7 +41,7 @@ class InstanceAdmin::Settings::DomainsControllerTest < ActionController::TestCas
 
       should 'unsecured' do
         assert_difference("Domain.count") {
-          post :create, domain: {"name" => 'example.com'}
+          post :create, domain: {"name" => 'example.org'}
           assert_equal flash[:success], I18n.t('flash_messages.instance_admin.settings.domain_created')
           assert_response :redirect
           assert_redirected_to instance_admin_settings_domains_path

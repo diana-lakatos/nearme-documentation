@@ -4,6 +4,7 @@ class RecurringBookingRequestTest < ActiveSupport::TestCase
 
   setup do
     @listing = FactoryGirl.create(:transactable, :name => "blah")
+    @instance = @listing.instance
     @user = FactoryGirl.create(:user, name: "Firstname Lastname")
     @first_monday = Time.zone.now.next_week
     @last_thursday = (Time.zone.now + 3.weeks).next_week + 3.days
@@ -17,9 +18,9 @@ class RecurringBookingRequestTest < ActiveSupport::TestCase
       card_expires: "05/2020",
       card_code: "411"
     }
-    stub_billing_gateway(@listing.instance)
+    stub_billing_gateway(@instance)
     stub_active_merchant_interaction
-    @recurring_booking_request = RecurringBookingRequest.new(@listing, @user, PlatformContext.new, @attributes)
+    @recurring_booking_request = RecurringBookingRequest.new(@listing, @user, PlatformContext.new(@instance), @attributes)
   end
 
   context "#initialize" do
@@ -60,14 +61,14 @@ class RecurringBookingRequestTest < ActiveSupport::TestCase
     context "invalid arguments" do
       context "no listing" do
         should "be invalid" do
-          recurring_booking_request = RecurringBookingRequest.new(nil, @user, PlatformContext.new, @attributes)
+          recurring_booking_request = RecurringBookingRequest.new(nil, @user, PlatformContext.new(@instance), @attributes)
           assert !recurring_booking_request.valid?
         end
       end
 
       context "no user" do
         should "be invalid" do
-          recurring_booking_request = RecurringBookingRequest.new(@listing, nil, PlatformContext.new, @attributes)
+          recurring_booking_request = RecurringBookingRequest.new(@listing, nil, PlatformContext.new(@instance), @attributes)
           assert !recurring_booking_request.valid?
         end
       end
@@ -148,7 +149,7 @@ class RecurringBookingRequestTest < ActiveSupport::TestCase
         card_expires: "05/2020",
         card_code: "411"
       }
-      @recurring_booking_request = RecurringBookingRequest.new(@listing, @user, PlatformContext.new, @attributes)
+      @recurring_booking_request = RecurringBookingRequest.new(@listing, @user, PlatformContext.new(@instance), @attributes)
       assert_equal 50, @recurring_booking_request.dates.count
       assert_equal 50, @recurring_booking_request.recurring_booking.reservations.size
     end
