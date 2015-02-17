@@ -138,6 +138,8 @@ DesksnearMe::Application.routes.draw do
   end
 
   resources :marketplace_sessions, only: [:new, :create]
+  get '/wish_list/add_item', to: 'wish_list#add_item'
+  get '/wish_list/remove_item', to: 'wish_list#remove_item'
 
   namespace :instance_admin do
     get '/', :to => 'base#index'
@@ -152,7 +154,7 @@ DesksnearMe::Application.routes.draw do
     namespace :settings do
       get '/', :to => 'base#index'
       resources :domains, except: :show
-      resource :dashboard, only: [:show, :update], :controller => 'dashboard'
+      resource :hidden_controls, only: [:show, :update], :controller => 'hidden_controls'
       resource :certificate_request, only: [:new, :create]
       resource :configuration, :only => [:show, :update], :controller => 'configuration' do
         collection do
@@ -169,7 +171,7 @@ DesksnearMe::Application.routes.draw do
         end
       end
       resource :locations, :only => [:show, :update], :controller => 'locations'
-      resources :location_types, only: [:index, :create, :destroy_modal, :destroy] do
+      resources :location_types, only: [:index, :create, :update, :destroy_modal, :destroy] do
         get 'destroy_modal', on: :member
       end
       resource :listings, :only => [:show, :update], :controller => 'listings'
@@ -279,6 +281,8 @@ DesksnearMe::Application.routes.draw do
       resources :email_templates, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :sms_templates, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :waiver_agreement_templates, :only => [:index, :create, :update, :destroy]
+
+      resource :wish_lists, only: [:show, :update]
     end
 
     namespace :manage_blog do
@@ -324,8 +328,17 @@ DesksnearMe::Application.routes.draw do
       member do
         get "(:listing_id)", :to => "locations#show", :as => ''
       end
-    end
+
+      resources :listings, :controller => 'locations/listings', :only => [:show] do
+        member do
+          get :ask_a_question
+        end
+      end
+
+      resource :social_share, :only => [:new], :controller => 'locations/social_share'
+      end
   end
+
   resources :locations, :only => [] do
     member do
       get "(:listing_id)", :to => "locations#show", :as => ''
@@ -558,6 +571,12 @@ DesksnearMe::Application.routes.draw do
         get :booking_successful
         get :upcoming
         get :archived
+      end
+    end
+
+    resources :wish_list_items, only: [:index, :destroy], path: 'favorites' do
+      collection do
+        delete :clear
       end
     end
 

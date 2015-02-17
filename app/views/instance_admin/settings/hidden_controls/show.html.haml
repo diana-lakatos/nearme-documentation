@@ -1,0 +1,23 @@
+%h4 Hidden Controls
+.content-container
+  = simple_form_for @instance, :url => instance_admin_settings_hidden_controls_path, method: :put do |f|
+    .content-container
+      .row
+        .table-container.col-xs-12.dropshadow
+          %table.table
+            %thead
+              %tr
+                %th Name
+                %th Type
+                %th Hide
+            %tbody
+              - HiddenUiControls.all(:auto).each do |key|
+                %tr
+                  %td= key.display_name
+                  %td= key.display_type
+                  %td
+                    = check_box_tag "hidden_ui_controls[#{key.name}]", '1', key.hidden?
+
+    .content-container
+      .row
+        = f.button :submit, 'Update Settings', class: 'btn btn-green pull-right'

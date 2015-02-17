@@ -56,6 +56,8 @@ class User < ActiveRecord::Base
   belongs_to :shipping_address, class_name: 'Spree::Address'
   has_many :reviews
 
+  has_many :wish_lists, dependent: :destroy
+
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
   before_validation :normalize_gender
@@ -560,8 +562,8 @@ class User < ActiveRecord::Base
 
   def social_url(provider)
     authentications.where(provider: provider).
-        where('profile_url IS NOT NULL').
-        order('created_at asc').last.try(:profile_url)
+      where('profile_url IS NOT NULL').
+      order('created_at asc').last.try(:profile_url)
   end
 
   def approval_request_templates
@@ -673,6 +675,14 @@ class User < ActiveRecord::Base
     BuySell::CartService.new(self)
   end
 
+  def default_wish_list
+    unless wish_lists.any?
+      wish_lists.create default: true, name: I18n.t('wish_lists.name')
+    end
+
+    wish_lists.default.first
+  end
+
   def reviews_as_seller
     @reviews_as_seller ||= Review.where(object: 'seller', reviewable_type: 'Spree::LineItem', reviewable_id: line_items.pluck(:id))
   end
@@ -695,7 +705,7 @@ class User < ActiveRecord::Base
 
   def question_average_rating
     @rating_answers_rating ||= RatingAnswer.where(review_id: reviews_as_seller.pluck(:id))
-      .group(:rating_question_id).average(:rating)
+                                 .group(:rating_question_id).average(:rating)
   end
 
   def recalculate_average_rating!

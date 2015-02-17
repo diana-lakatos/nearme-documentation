@@ -1,5 +1,6 @@
 class Locations::ListingsController < ApplicationController
   before_filter :find_listing, only: [:show]
+  before_filter :redirect_to_transactable_type_version
   before_filter :find_location, only: [:show]
   before_filter :redirect_to_location_if_show_page_disabled
   before_filter :redirect_if_listing_inactive, only: [:show]
@@ -43,4 +44,12 @@ class Locations::ListingsController < ApplicationController
   def current_user_can_manage_listing?
     user_signed_in? && (current_user.can_manage_listing?(@listing) || current_user.instance_admin?)
   end
+
+  def redirect_to_transactable_type_version
+    if params[:transactable_type_id].nil?
+      redirect_to transactable_type_location_listing_path(@listing.transactable_type, @listing.location, @listing)
+    end
+  end
+
 end
+

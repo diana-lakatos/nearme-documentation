@@ -51,7 +51,7 @@ class LocationsControllerTest < ActionController::TestCase
         @listing.transactable_type.update_attribute(:show_page_enabled, true)
         get :show, id: @location.id, listing_id: @listing
         assert_response :redirect
-        assert_redirected_to location_listing_path(@location, @listing)
+        assert_redirected_to transactable_type_location_listing_path(@listing.transactable_type, @location, @listing)
       end
 
       should 'show warning if listing is inactive but there is at least one active listing' do

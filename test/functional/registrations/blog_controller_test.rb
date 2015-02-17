@@ -42,7 +42,7 @@ class Registrations::BlogControllerTest < ActionController::TestCase
         get :index, user_id: @user.id
         assert_equal @user, assigns(:user)
         refute assigns(:blog_posts).include?(@unpublished_blog_post)
-        assert_equal [@another_blog_post, @blog_post], assigns(:blog_posts)
+        assert_equal [@another_blog_post.id, @blog_post.id].sort, assigns(:blog_posts).map(&:id).sort
         assert_response :success
       end
     end

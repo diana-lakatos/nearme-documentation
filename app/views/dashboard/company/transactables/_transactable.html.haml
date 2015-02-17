@@ -4,7 +4,7 @@
       = link_to listing_path(transactable) do
         = image_tag(transactable.photos.first.try(:image_url, :medium))
     .col-md-3.listing-attr
-      = link_to transactable.name, location_listing_path(transactable.location, transactable)
+      = link_to transactable.name, transactable_type_location_listing_path(@transactable_type, transactable.location, transactable)
     .col-md-3.listing-attr
       %p= transactable.location.try(&:name)
     .col-md-2.listing-attr

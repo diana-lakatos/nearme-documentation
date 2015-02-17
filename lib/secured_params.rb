@@ -302,6 +302,8 @@ class SecuredParams
       :twilio_from_number, :test_twilio_from_number,
       :service_fee_guest_percent, :service_fee_host_percent,
       :bookable_noun,
+      :wish_lists_enabled,
+      :wish_lists_icon_set,
       user_required_fields: [],
       transactable_types_attributes: nested(self.transactable_type),
       listing_amenity_types_attributes: nested(self.amenity_type),
