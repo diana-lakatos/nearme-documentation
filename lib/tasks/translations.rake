@@ -110,6 +110,18 @@ namespace :translations do
     create_keys(nm_1363_translations)
   end
 
+  desc 'Clean NM-1331 translations'
+  task :clean_nm_1331 => [:environment] do
+    wish_lists_translations = [
+      'wish_lists.name',
+      'wish_lists.buttons.clear',
+      'wish_lists.buttons.unselected_state',
+      'wish_lists.buttons.selected_state'
+    ]
+
+    wish_lists_translations.each { |key| Translation.where(key: key).destroy_all }
+  end
+
   def create_keys(hash)
     hash.each do |k, v|
       if Translation.where(key: k).empty?
