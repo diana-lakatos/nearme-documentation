@@ -68,7 +68,7 @@ module InstanceAdminHelper
   end
 
   def wish_lists_icon_sets
-    [['Heart', 'heart'], ['Thubs Up', 'thumbs_up'], ['Tick', 'tick']]
+    [['Heart', 'heart'], ['Thumbs Up', 'thumbs_up'], ['Tick', 'tick']]
   end
 
   def wish_lists_icon_set_image(set_name)
