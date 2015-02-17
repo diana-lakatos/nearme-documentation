@@ -8,9 +8,9 @@ class AddPricesToTransactables < ActiveRecord::Migration
     Transactable.connection.execute <<-SQL
       UPDATE transactables
       SET properties = properties || '"daily_price_cents"=>""'::hstore
-      WHERE properties->'daily_price_cents' LIKE 'a' OR properties->'daily_price_cents' LIKE '$ 400'
+      WHERE properties->'daily_price_cents' LIKE 'a' OR properties->'daily_price_cents' LIKE '$ 400';
     SQL
-    expression = "%name% = NULLIF(properties->'%name%', '')::int"
+    expression = "%name% = round(NULLIF(properties->'%name%', '')::float)::int"
     connection.execute <<-SQL
       UPDATE transactables
       SET

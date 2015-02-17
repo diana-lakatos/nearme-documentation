@@ -213,6 +213,10 @@ form:not(.no_inheritance) {
       width: 80px;
     }
 
+    &.price-mini {
+      width: 100px;
+    }
+
     &:disabled {
       @include opacity(0.5);
     }

@@ -26,7 +26,6 @@ class TransactableType < ActiveRecord::Base
 
   belongs_to :instance
 
-  # serialize :pricing_options, Hash
   serialize :pricing_validation, Hash
   serialize :availability_options, Hash
   serialize :custom_csv_fields, Array
@@ -35,12 +34,23 @@ class TransactableType < ActiveRecord::Base
   after_save :setup_availability_attributes, :if => lambda { |transactable_type| transactable_type.availability_options_changed? && transactable_type.availability_options.present? }
 
   validates_presence_of :name
-  validate :pricing_validation_is_correct
+  validate :min_max_prices_are_correct
   validate :availability_options_are_correct
   validates_presence_of :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_percentage, if: lambda { |transactable_type| transactable_type.enable_cancellation_policy }
   validates_inclusion_of :cancellation_policy_penalty_percentage, in: 0..100, allow_nil: true, message: 'must be between 0 and 100', if: lambda { |transactable_type| transactable_type.enable_cancellation_policy }
 
   accepts_nested_attributes_for :availability_templates
+
+  monetize :min_daily_price_cents, allow_nil: true
+  monetize :max_daily_price_cents, allow_nil: true
+  monetize :min_hourly_price_cents, allow_nil: true
+  monetize :max_hourly_price_cents, allow_nil: true
+  monetize :min_weekly_price_cents, allow_nil: true
+  monetize :max_weekly_price_cents, allow_nil: true
+  monetize :min_monthly_price_cents, allow_nil: true
+  monetize :max_monthly_price_cents, allow_nil: true
+  monetize :min_fixed_price_cents, allow_nil: true
+  monetize :max_fixed_price_cents, allow_nil: true
 
   def any_rating_system_active?
     self.rating_systems.any?(&:active)
@@ -58,7 +68,7 @@ class TransactableType < ActiveRecord::Base
     availability_options && availability_options["defer_availability_rules"]
   end
 
-  def pricing_options_long_period_names
+  def daily_options_names
     pricing_options = []
     pricing_options << "daily" if action_daily_booking
     pricing_options << "weekly" if action_weekly_booking
@@ -66,13 +76,22 @@ class TransactableType < ActiveRecord::Base
     pricing_options
   end
 
-  def pricing_validation_is_correct
-    self.pricing_validation.each do |price, pair|
-      if pair["min"].present? && pair["max"].present?
-        errors.add("pricing_validation[#{price}]['min']", "min can't be greater than max") if pair["min"].to_i > pair["max"].to_i
+  def pricing_options_long_period_names
+    pricing_options = []
+    pricing_options << "hourly" if action_hourly_booking
+    pricing_options << "daily" if action_daily_booking
+    pricing_options << "weekly" if action_weekly_booking
+    pricing_options << "monthly" if action_monthly_booking
+    pricing_options
+  end
+
+  def min_max_prices_are_correct
+    Transactable::PRICE_TYPES.each do |price|
+      if self.send(:"min_#{price}_price_cents").present? && self.send(:"max_#{price}_price_cents").present?
+        errors.add(:"min_#{price}_price_cents", "min can't be greater than max") if self.send(:"min_#{price}_price_cents").to_i > self.send(:"max_#{price}_price_cents").to_i
       end
-      errors.add("pricing_validation[#{price}]['min']", "min can't be lower than zero") if pair["min"].present? && pair["min"].to_i < 0
-      errors.add("pricing_validation[#{price}]['max']", "max can't be greater than #{MAX_PRICE}") if pair["max"].present? && pair["max"].to_i > MAX_PRICE
+      errors.add(:"min_#{price}_price_cents", "min can't be lower than zero") if self.send(:"min_#{price}_price_cents").to_i < 0
+      errors.add(:"max_#{price}_price_cents", "max can't be greater than #{MAX_PRICE}") if self.send(:"max_#{price}_price_cents").to_i > MAX_PRICE
     end
   end
 
@@ -82,16 +101,6 @@ class TransactableType < ActiveRecord::Base
   rescue
     errors.add("availability_options[confirm_reservations][public]", "must be set")
     errors.add("availability_options[confirm_reservations][default_value]", "must be set")
-  end
-
-  def build_validation_rule_for(price)
-    @greater_than = 0
-    @less_than = MAX_PRICE
-    if pricing_validation[price].present?
-      @greater_than = pricing_validation[price]["min"].to_i if pricing_validation[price]["min"].present?
-      @less_than = pricing_validation[price]["max"].to_i if pricing_validation[price]["max"].present?
-    end
-    { :numericality => { redirect: "#{price}_price", allow_nil: true, greater_than_or_equal_to: @greater_than, less_than_or_equal_to: @less_than } }
   end
 
   def setup_availability_attributes

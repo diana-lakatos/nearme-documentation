@@ -5,6 +5,7 @@ FactoryGirl.define do
     end
     location
     daily_price_cents 5000
+    action_daily_booking true
 
     photo_not_required true
 
@@ -46,13 +47,13 @@ FactoryGirl.define do
 
     factory :hundred_dollar_listing do
       after(:build) do |listing|
-        listing.properties["daily_price_cents"] = 100_00
+        listing.daily_price_cents = 100_00
       end
     end
 
     factory :listing_with_10_dollars_per_hour do
       after(:build) do |listing|
-        listing.properties["hourly_price_cents"] = "1000"
+        listing.hourly_price_cents = 10_00
         listing.action_hourly_booking = true
       end
     end

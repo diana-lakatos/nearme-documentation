@@ -19,7 +19,7 @@ class DataImporter::Tracker::ValidationErrorsTest < ActiveSupport::TestCase
     assert_no_difference 'Location.count' do
       assert_no_difference 'Transactable.count' do
         @xml_file.parse
-        assert_equal "Validation error for Transactable 1: My attribute can't be blank and Free must be free if no prices are provided. Ignoring all children.\nValidation error for Location 1: Listings my attribute can't be blank and Listings free must be free if no prices are provided. Ignoring all children.", @validation_errors_tracker.to_s.strip
+        assert_equal "Validation error for Transactable 1: My attribute can't be blank and Action free booking must be free if all prices are zero. Ignoring all children.\nValidation error for Location 1: Listings my attribute can't be blank and Listings action free booking must be free if all prices are zero. Ignoring all children.", @validation_errors_tracker.to_s.strip
       end
     end
   end

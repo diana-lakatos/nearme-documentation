@@ -7,18 +7,8 @@
   }
 
   .booking-module {
-    .calendar-wrapper.fixed-date-picker {
-      width: 100%;
-    }
-
-    .date-suggestion {
-      .resource {
-        font-size: 0.65em;
-      }
-
-      textarea {
-        width: 100%;
-      }
+    .form-horizontal .control-group .controls {
+      margin-left: 0px;
     }
   }
 
@@ -405,7 +395,7 @@
           color: $gray80;
         }
 
-        a { 
+        a {
           padding-right: 6px;
           padding-left: 6px;
           display: inline-block;

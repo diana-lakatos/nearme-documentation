@@ -3,6 +3,7 @@ class ReservationDecorator < Draper::Decorator
 
   include CurrencyHelper
   include TooltipHelper
+  include FeedbackDecoratorHelper
 
   delegate_all
 
@@ -67,7 +68,7 @@ class ReservationDecorator < Draper::Decorator
     elsif unconfirmed?
       'ico-pending'
     elsif cancelled? || rejected?
-       'ico-close'
+      'ico-close'
     elsif expired?
       'ico-time'
     end
@@ -169,6 +170,10 @@ class ReservationDecorator < Draper::Decorator
 
   def humanized_number_of_periods
     listing.action_overnight_booking? ? date_presenter.nights_in_words : date_presenter.days_in_words
+  end
+
+  def feedback_object
+    object
   end
 
   private

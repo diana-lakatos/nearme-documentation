@@ -44,7 +44,7 @@ class ReservationRequest < Form
     end
 
     if @listing
-      if @listing.action_hourly_booking? || @listing.transactable_type.action_schedule_booking?
+      if @reservation.action_hourly_booking? || @listing.transactable_type.action_schedule_booking?
         @start_minute = start_minute.try(:to_i)
         @end_minute = end_minute.try(:to_i)
       else

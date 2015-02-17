@@ -73,7 +73,6 @@ class Instance < ActiveRecord::Base
   has_many :rating_questions
   has_many :rating_answers
   has_many :rating_hints
-  serialize :pricing_options, Hash
 
   validates_presence_of :name
   validates_presence_of :marketplace_password, :if => :password_protected

@@ -10,9 +10,8 @@ class AddFlagsForActions < ActiveRecord::Migration
     add_column :transactable_types, :action_daily_booking, :boolean, default: false
     add_column :transactable_types, :action_monthly_booking, :boolean, default: false
     add_column :transactable_types, :action_weekly_booking, :boolean, default: false
-   
+
     rename_column :transactable_types, :recurring_booking, :action_recurring_booking
-    rename_column :transactable_types, :overnight_booking, :action_overnight_booking
 
     add_column :transactables, :action_rfq, :boolean, default: false
     add_column :transactables, :action_hourly_booking, :boolean, default: false
@@ -47,7 +46,6 @@ class AddFlagsForActions < ActiveRecord::Migration
     remove_column :transactable_types, :action_weekly_booking
 
     rename_column :transactable_types, :action_recurring_booking, :recurring_booking
-    rename_column :transactable_types, :action_overnight_booking, :overnight_booking
 
     remove_column :transactables, :action_rfq
     remove_column :transactables, :action_hourly_booking

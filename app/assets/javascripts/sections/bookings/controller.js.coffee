@@ -50,7 +50,7 @@ class Bookings.Controller
 
 
   bindEvents: ->
-    @bookingTabs.on 'click', (event) => 
+    @bookingTabs.on 'click', (event) =>
       @listing.setHourlyBooking(@hourlyBookingSelected())
       @setReservationType()
       @updateBookingStatus()
@@ -86,7 +86,7 @@ class Bookings.Controller
 
   hourlyBookingSelected: ->
     @container.find("li[data-hourly]").hasClass('active')
-    
+
   # Setup the datepicker for the simple booking UI
   initializeDatepicker: ->
     @datepicker = new Bookings.Datepicker({

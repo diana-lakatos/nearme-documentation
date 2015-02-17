@@ -5,4 +5,5 @@
 
 = f.input :start_minute, as: :hidden, input_html: {value: @reservation_request.reservation_periods.first.try(:start_minute)}
 = f.input :end_minute, as: :hidden, input_html: {value: @reservation_request.reservation_periods.first.try(:end_minute)}
+= f.input :reservation_type, as: :hidden, input_html: {value: @reservation_request.reservation.reservation_type}
 

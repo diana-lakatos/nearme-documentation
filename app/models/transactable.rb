@@ -141,7 +141,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def next_available_occurrences(number_of_occurrences = 10)
-    schedule.schedule.next_occurrences(number_of_occurrences)
+    schedule.try(:schedule).try(:next_occurrences, number_of_occurrences) || []
   end
 
   def availability_for(date, start_min = nil, end_min = nil)
@@ -184,34 +184,6 @@ class Transactable < ActiveRecord::Base
   def has_price?
     PRICE_TYPES.map { |price| self.send("#{price}_price_cents") }.compact.any? { |price| !price.zero? }
   end
-
-  # def price_type=(price_type)
-  #   case price_type.to_sym
-  #   when PRICE_TYPES[2] #Daily
-  #     self.free = false if self.respond_to?(:free=)
-  #     self.action_hourly_booking = false if self.respond_to?(:action_hourly_booking=)
-  #   when PRICE_TYPES[0] #Hourly
-  #     self.free = false if self.respond_to?(:free=)
-  #     self.action_hourly_booking = true
-  #   when :free
-  #     self.null_price!
-  #     self.free = true
-  #     self.action_hourly_booking = false if self.respond_to?(:action_hourly_booking=)
-  #   else
-  #     errors.add(:price_type, 'no pricing type set')
-  #   end
-  # end
-
-  # def price_type
-  #   if action_free_booking?
-  #     :free
-  #   elsif action_hourly_booking?
-  #     PRICE_TYPES[0] #Hourly
-  #   else
-  #     PRICE_TYPES[2] #Daily
-  #   end
-  # end
-
 
   #TODO refactor
   def lowest_price_with_type(available_price_types = [])
@@ -390,7 +362,10 @@ class Transactable < ActiveRecord::Base
   end
 
   def self.csv_fields(transactable_type)
-    { external_id: 'External Id', enabled: 'Enabled' }.reverse_merge(
+    transactable_type.pricing_options_long_period_names.inject({}) do |hash, price|
+      hash[:"#{price}_price_cents"] = "#{price}_price_cents".humanize
+      hash
+    end.merge({ external_id: 'External Id', enabled: 'Enabled' }).reverse_merge(
       transactable_type.custom_attributes.shared.pluck(:name, :label).inject({}) do |hash, arr|
         hash[arr[0].to_sym] = arr[1].presence || arr[0].humanize
         hash
@@ -404,6 +379,10 @@ class Transactable < ActiveRecord::Base
 
   def set_external_id
     self.update_column(:external_id, "manual-#{id}") if self.external_id.blank?
+  end
+
+  def bookable?
+    !self.transactable_type.action_schedule_booking? || (self.transactable_type.action_schedule_booking? && self.schedule.present? && self.next_available_occurrences(1).any? )
   end
 
   private

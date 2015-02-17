@@ -76,12 +76,7 @@
               %h3 Hours
               %span= pretty_availability_sentence(listing.availability)
 
-      - if listing.transactable_type.action_schedule_booking?
-        .calendar-wrapper.fixed-date-picker
-          .calendar
-            %span.ico-calender-end
-            %span.calendar-text= t('reservations.booking_module.pick_fixed_date')
-      - else
+      - unless listing.transactable_type.action_schedule_booking?
         .tab-content
 
           .calendar-wrapper.date-start
@@ -124,15 +119,10 @@
                   = radio_button_tag 'recurring_radio_button', :custom
             = f.select_recurring :schedule_params, [ IceCube::Rule.weekly.day(Time.zone.now.wday), IceCube::Rule.monthly.day_of_month([]).day_of_week(Time.zone.now.wday => [1]) ], allow_blank: false
 
-      - if listing.transactable_type.action_schedule_booking?
-        .date-suggestion
-          %span.resource= t('reservations.booking_module.suggest_date')
-          = text_area_tag :date_suggestion
-
-
-      .quantity
-        %span.resource{:'data-singular' => listing.listing_type, :'data-plural' => listing.listing_type.try(:pluralize)}= listing.listing_type
-        = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
+      - unless listing.transactable_type.action_schedule_booking?
+        .quantity
+          %span.resource{:'data-singular' => listing.listing_type, :'data-plural' => listing.listing_type.try(:pluralize)}= listing.listing_type
+          = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
 
       .price{class: "#{'hidden' if listing.action_free_booking?}"}
         Total
@@ -143,14 +133,15 @@
         - store_reservation_request_url = store_reservation_request_listing_reservations_path(listing)
         = simple_form_for :reservation_request, :url => review_listing_reservations_path(listing), html: { id: "reservation_request_form_#{listing.id}" } do |f|
           = hidden_field_tag :listing_id, listing.id
-          = f.hidden_field :quantity
           = f.hidden_field :start_on
           = f.hidden_field :end_on
           = f.hidden_field :start_minute
           = f.hidden_field :end_minute
           - if listing.transactable_type.action_schedule_booking?
-            = f.input :dates, collection: listing.next_available_occurrences(10)
+            = f.input :quantity, collection: 1..listing.quantity, prompt: 'Select quantity', label: false
+            = f.input :dates, collection: listing.next_available_occurrences(10).map { |d| l(d, format: :long) }, prompt: 'Choose date', label: false
           - else
+            = f.hidden_field :quantity
             = f.hidden_field :dates
           = f.hidden_field :reservation_type, class: 'reservation_type'
 

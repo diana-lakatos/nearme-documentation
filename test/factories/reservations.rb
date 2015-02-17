@@ -17,6 +17,10 @@ FactoryGirl.define do
       make_valid_period(reservation) unless reservation.valid?
     end
 
+    factory :reservation_hourly do
+      reservation_type 'hourly'
+    end
+
     factory :reservation_with_credit_card do
       payment_method 'credit_card'
     end

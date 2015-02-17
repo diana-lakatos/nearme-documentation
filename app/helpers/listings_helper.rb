@@ -47,7 +47,7 @@ module ListingsHelper
       :maximum_date => availability.end_date,
       :prices_by_days => Hash[ listing.prices_by_days.map { |k, v| [k, v.cents] } ],
       :initial_bookings => @initial_bookings ? @initial_bookings[listing.id] : {},
-      recurring_booking: listing.transactable_type.action_recurring_booking,
+      action_recurring_booking: listing.transactable_type.action_recurring_booking,
       action_overnight_booking: listing.action_overnight_booking?
     }
   end

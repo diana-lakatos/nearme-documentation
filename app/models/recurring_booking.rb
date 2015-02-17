@@ -77,6 +77,14 @@ class RecurringBooking < ActiveRecord::Base
     payment_method == Reservation::PAYMENT_METHODS[:credit_card]
   end
 
+  def action_hourly_booking?
+    listing.action_hourly_booking?
+  end
+
+  def action_daily_booking?
+    listing.action_daily_booking?
+  end
+
   def schedule_params=(params)
     write_attribute(:schedule_params, RecurringSelect.dirty_hash_to_rule(params).to_hash)
   end

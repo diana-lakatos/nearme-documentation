@@ -2,16 +2,9 @@ require 'test_helper'
 
 class TransactableTypeTest < ActiveSupport::TestCase
 
-  context 'pricing options' do
-
-    should 'return only active pricing options' do
-      assert_equal({"daily" => "1", "monthly" => "1"}, FactoryGirl.build(:transactable_type, pricing_options: {"daily" => "1", "weekly" => "0", "monthly" => "1"}).pricing_options)
-    end
-
-    context 'pricing_options_long_period_names' do
-      should 'return only active long term names' do
-        assert_equal(%w(weekly monthly), FactoryGirl.build(:transactable_type, pricing_options: {"daily" => "0", "free" => "1", "hourly" => "1", "weekly" => "1", "monthly" => "1"}).pricing_options_long_period_names)
-      end
+  context 'pricing_options_long_period_names' do
+    should 'return only active long term names' do
+      assert_equal(%w(weekly monthly), FactoryGirl.build(:transactable_type, action_hourly_booking: false, action_daily_booking: false, action_weekly_booking: true, action_monthly_booking: true).pricing_options_long_period_names)
     end
   end
 
@@ -19,75 +12,51 @@ class TransactableTypeTest < ActiveSupport::TestCase
     setup do
       @transactable_type = TransactableType.first
     end
+
     should 'be valid if max is greater than min' do
-      @transactable_type.pricing_validation = { "daily" => { "min" => "1", "max" => "9" } }
+      @transactable_type.min_daily_price_cents = 1
+      @transactable_type.max_daily_price_cents = 9
       assert @transactable_type.valid?, "expected valid, but errors were found: #{@transactable_type.errors.to_json}"
     end
 
     should 'not be valid if min is lower than 0' do
-      @transactable_type.pricing_validation = { "daily" => { "min" => "-1" } }
+      @transactable_type.min_daily_price_cents = -1
+      @transactable_type.max_daily_price_cents = nil
       refute @transactable_type.valid?
     end
 
     should 'be valid if min is 0' do
-      assert FactoryGirl.build(:transactable_type, :pricing_validation => { "daily" => { "min" => "0" } }).valid?
+      @transactable_type.min_daily_price_cents = 0
+      @transactable_type.max_daily_price_cents = nil
+      assert @transactable_type.valid?
     end
 
     should 'be valid if max is equal to max price' do
-      assert FactoryGirl.build(:transactable_type, :pricing_validation => { "daily" => { "max" => "#{TransactableType::MAX_PRICE}" } }).valid?
+      @transactable_type.max_daily_price_cents = TransactableType::MAX_PRICE
+      assert @transactable_type.valid?
     end
 
     should 'not be valid if max is greater than max price' do
-      refute FactoryGirl.build(:transactable_type, :pricing_validation => { "daily" => { "max" => "#{TransactableType::MAX_PRICE+1}" } }).valid?
+      @transactable_type.max_daily_price_cents = TransactableType::MAX_PRICE+1
+      refute @transactable_type.valid?
     end
 
     should 'be valid if min and max are nil' do
-      assert FactoryGirl.build(:transactable_type, :pricing_validation => { "daily" => { "min" => nil, "max" => nil } }).valid?
+      @transactable_type.min_daily_price_cents = nil
+      @transactable_type.max_daily_price_cents = nil
+      assert @transactable_type.valid?
     end
 
     should 'not be valid if min is greater than max' do
-      refute FactoryGirl.build(:transactable_type, :pricing_validation => { "daily" => { "min" => "10", "max" => "9" } }).valid?
+      @transactable_type.min_daily_price_cents = 10
+      @transactable_type.max_daily_price_cents = 9
+      refute @transactable_type.valid?
     end
 
     should 'be valid if daily min is greater than weekly max' do
-      assert FactoryGirl.build(:transactable_type, :pricing_validation => { "daily" => { "min" => "10" }, "weekly" => { "max" => "9" } }).valid?
-    end
-
-  end
-
-  context 'build_validation_rule_for' do
-
-    setup do
-      @expected_hash = { :greater_than_or_equal_to => 0, :less_than_or_equal_to => TransactableType::MAX_PRICE } }
-    end
-
-    should 'populate default restrictions if nothing is provide' do
-      assert_equal @expected_hash, FactoryGirl.build(:transactable_type).build_validation_rule_for("daily")
-    end
-
-    should 'not use daily for hourly' do
-      transactable_type = FactoryGirl.build(:transactable_type, :pricing_validation => { "daily" => { "min" => "342" } })
-      assert_equal @expected_hash, transactable_type.build_validation_rule_for("hourly")
-    end
-
-    should 'populate custom min restriction if nothing populated for key ' do
-      transactable_type = FactoryGirl.build(:transactable_type, :pricing_validation => { "daily" => { "min" => "342" } })
-      transactable_type.build_validation_rule_for("daily")
-      @expected_hash[:numericality][:redirect] = "monthly_price"
-      assert_equal @expected_hash, transactable_type.build_validation_rule_for("monthly")
-    end
-
-    should 'populate custom max restriction if available and default min' do
-      transactable_type = FactoryGirl.build(:transactable_type, :pricing_validation => { "daily" => { "max" => "123" } })
-      @expected_hash[:numericality][:less_than_or_equal_to] = 123
-      assert_equal @expected_hash, transactable_type.build_validation_rule_for("daily")
-    end
-
-    should 'populate custom max and min if available' do
-      transactable_type = FactoryGirl.build(:transactable_type, :pricing_validation => { "daily" => { "max" => "123", "min" => "88" } })
-      @expected_hash[:numericality][:less_than_or_equal_to] = 123
-      @expected_hash[:numericality][:greater_than_or_equal_to] = 88
-      assert_equal @expected_hash, transactable_type.build_validation_rule_for("daily")
+      @transactable_type.min_daily_price_cents = 10
+      @transactable_type.max_weekly_price_cents = 9
+      assert @transactable_type.valid?
     end
 
   end

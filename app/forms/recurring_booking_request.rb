@@ -4,8 +4,8 @@ class RecurringBookingRequest < Form
   attr_accessor :card_number, :card_expires, :card_code, :card_holder_first_name, :card_holder_last_name, :occurrences
   attr_reader   :recurring_booking, :listing, :location, :user
 
-  def_delegators :@recurring_booking, :credit_card_payment?, :manual_payment?, :action_hourly_booking?, :reservation_type=
-  def_delegators :@listing,     :confirm_reservations?, :location
+  def_delegators :@recurring_booking, :credit_card_payment?, :manual_payment?, :reservation_type=
+  def_delegators :@listing,     :confirm_reservations?, :location, :action_hourly_booking?
   def_delegators :@user,        :mobile_number, :mobile_number=, :country_name, :country_name=, :country
 
   before_validation :setup_credit_card_customer, :if => lambda { recurring_booking.try(:reservations).try(:first) and user and user.valid?}
@@ -25,8 +25,8 @@ class RecurringBookingRequest < Form
     if @listing
       @recurring_booking = @listing.recurring_bookings.build
       @recurring_booking.owner = user
-      @recurring_booking.start_minute = start_minute.to_i if @recurring_booking.listing.action_hourly_booking?
-      @recurring_booking.end_minute = end_minute.to_i if @recurring_booking.listing.action_hourly_booking?
+      @recurring_booking.start_minute = start_minute.to_i if @listing.action_hourly_booking?
+      @recurring_booking.end_minute = end_minute.to_i if @listing.action_hourly_booking?
       @recurring_booking.start_on = start_on || Date.current
       @recurring_booking.end_on = end_on
       @recurring_booking.occurrences = occurrences.to_i - 1 <= 0 ? 49 : [occurrences.to_i - 1, 49].min
@@ -39,6 +39,7 @@ class RecurringBookingRequest < Form
       @recurring_booking.schedule.occurrences(@recurring_booking.end_on || Time.zone.now + 20.years)[0..@recurring_booking.occurrences].each do |date|
         @reservation = @recurring_booking.reservations.build
         @reservation.listing = @listing
+        @reservation.reservation_type = @listing.action_hourly_booking ? 'hourly' : 'daily'
         @reservation.currency = @listing.currency
         @reservation.add_period(date, @recurring_booking.start_minute, @recurring_booking.end_minute)
         @reservation.payment_method = @recurring_booking.payment_method

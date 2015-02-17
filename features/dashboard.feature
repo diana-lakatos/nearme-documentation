@@ -81,7 +81,7 @@ Feature: As a user of the site
       And I am browsing transactables
      When I edit first transactable
       And I disable daily pricing
-      And I choose "transactable_price_type_free"
+      And I check "transactable_action_free_booking"
       And I submit the transactable form
       And I edit first transactable
      Then pricing should be free

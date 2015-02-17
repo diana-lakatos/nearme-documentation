@@ -424,8 +424,6 @@ class SecuredParams
   def transactable_type
     [
       :name,
-      :pricing_options,
-      :pricing_validation,
       :availability_options,
       :favourable_pricing_rate,
       :cancellation_policy_enabled,
@@ -445,6 +443,14 @@ class SecuredParams
       :action_daily_booking,
       :action_weekly_booking,
       :action_monthly_booking,
+      :min_daily_price,
+      :max_daily_price,
+      :min_hourly_price,
+      :max_hourly_price,
+      :min_weekly_price,
+      :max_weekly_price,
+      :min_monthly_price,
+      :max_monthly_price,
       :bookable_noun, :lessor, :lessee, :action_schedule_booking,
       :availability_templates_attributes => nested(self.availability_template),
       :action_type_ids => [],
