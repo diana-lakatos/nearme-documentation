@@ -64,7 +64,7 @@ Spree::Product.class_eval do
   end
 
   def reviews
-    @reviews ||= Review.where(object: 'product', reviewable_type: 'Spree::LineItem', reviewable_id: self.line_items.pluck(:id))
+    @reviews ||= Review.where(object: 'product', reviewable_type: 'Spree::LineItem', reviewable_id: self.line_items.unscope(where: :is_master).pluck(:id))
   end
 
   def reviews_count

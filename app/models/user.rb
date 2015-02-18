@@ -696,7 +696,7 @@ class User < ActiveRecord::Base
   end
 
   def products
-    @products ||= Spree::Product.where(administrator_id: self.id)
+    @products ||= self.companies.first.products
   end
 
   def has_reviews?
