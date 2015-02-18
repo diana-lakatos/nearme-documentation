@@ -9,7 +9,7 @@ class ReengagementOneBookingJob < Job
     if @reservation
       @user = @reservation.owner
       if @user.reservations.count == 1 && @user.listings_in_near.size > 0
-        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::OneReservationSuggestions, @reservation_id) if @reservation.confirmed?
+        WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::OneBookingSuggestions, @reservation_id) if @reservation.confirmed?
       end
     end
   end
