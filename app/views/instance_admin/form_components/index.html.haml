@@ -2,7 +2,7 @@
 
 .content-container
   .row
-    = link_to 'New Form Component', new_instance_admin_manage_transactable_type_form_component_path(@transactable_type), class: 'pull-right btn btn-green'
+    = link_to 'New Form Component', new_polymorphic_url([:instance_admin, @controller_scope, @form_componentable, FormComponent.new]), class: 'pull-right btn btn-green'
 
 %h4 Form Components
 .content-container
@@ -14,8 +14,8 @@
             %tr
               %td= resource.name.humanize
               %td= resource.form_type
-              %td= link_to 'Edit', edit_instance_admin_manage_transactable_type_form_component_path(@transactable_type, resource), class: 'pull-right'
-              %td= link_to "Delete", instance_admin_manage_transactable_type_form_component_path(@transactable_type, resource), method: :delete, confirm: "Are you sure you want to delete this transactable type?", class: "pull-right"
+              %td= link_to 'Edit', edit_polymorphic_url([:instance_admin, @controller_scope, @form_componentable, resource]), class: 'pull-right'
+              %td= link_to "Delete", polymorphic_url([:instance_admin, @controller_scope, @form_componentable, resource]), :method => :delete, confirm: "Are you sure you want to delete this transactable type?", class: "pull-right"
 
 - @form_components.group_by(&:form_type).each do |form_type, form_components|
   %h4= form_type.humanize
@@ -30,4 +30,4 @@
 
 = content_for :script do
   :javascript
-    new FormComponents("ol.formComponentPanelList", "#{@transactable_type.id}")
+    new FormComponents("ol.formComponentPanelList", "#{@form_componentable.id}")

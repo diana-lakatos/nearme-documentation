@@ -34,7 +34,7 @@ class InstanceAdmin::Manage::TransactableTypes::FormComponentsControllerTest < A
       form_component = assigns(:form_component)
       assert_equal 'My section', form_component.name
       assert_equal [{ 'location' => 'address'}, {'transactable' => 'price'}], form_component.form_fields
-      assert_equal @transactable_type.id, form_component.transactable_type_id
+      assert_equal @transactable_type.id, form_component.form_componentable_id
       assert_equal FormComponent::SPACE_WIZARD, form_component.form_type
       assert_redirected_to instance_admin_manage_transactable_type_form_components_path(@transactable_type)
     end
@@ -68,7 +68,7 @@ class InstanceAdmin::Manage::TransactableTypes::FormComponentsControllerTest < A
       form_component.reload
       assert_equal 'My section', form_component.name
       assert_equal [{ 'location' => 'address'}, {'transactable' => 'price'}], form_component.form_fields
-      assert_equal @transactable_type.id, form_component.transactable_type_id
+      assert_equal @transactable_type.id, form_component.form_componentable_id
       assert_equal FormComponent::SPACE_WIZARD, form_component.form_type
       assert_redirected_to instance_admin_manage_transactable_type_form_components_path(@transactable_type)
     end

@@ -133,8 +133,7 @@ DesksnearMe::Application.routes.draw do
       resources :instance_views
     end
     resources :transactable_types, :only => [] do
-      resources :custom_attributes do
-      end
+      resources :custom_attributes
     end
     resources :pages
     get '/platform_home', to: 'platform_home#edit', as: 'edit_platform_home'
@@ -300,6 +299,14 @@ DesksnearMe::Application.routes.draw do
       get '/', :to => 'base#index'
       resource :configuration, only: [:show, :update], controller: 'configuration'
       resource :commissions, :only => [:show, :update], :controller => 'commissions'
+      resources :product_types do 
+        resources :custom_attributes, controller: 'product_types/custom_attributes'
+        resources :form_components, controller: 'product_types/form_components' do
+          member do
+            patch :update_rank
+          end
+        end
+      end
       resources :tax_categories
       resources :tax_rates
       resources :zones
@@ -450,8 +457,9 @@ DesksnearMe::Application.routes.draw do
         end
       end
     end
-
-    resources :products
+    resources :product_type do
+      resources :products
+    end
 
     namespace :support do
       resources :tickets, only: [:show, :index] do
@@ -650,6 +658,10 @@ DesksnearMe::Application.routes.draw do
     get "/list", as: "space_wizard_list", controller: 'transactable_types/space_wizard', action: 'list'
     post "/list", controller: 'transactable_types/space_wizard', action: 'submit_listing'
     post "/submit_item", controller: 'transactable_types/space_wizard', action: 'submit_item'
+  end
+
+  resources :product_types do
+    resources :product_wizard, only: [:new, :create], controller: 'product_types/product_wizard'
   end
 
   scope '/space' do

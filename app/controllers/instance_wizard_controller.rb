@@ -55,7 +55,7 @@ class InstanceWizardController < ActionController::Base
     create_rating_systems(@instance)
 
     if @instance.buyable?
-      CustomAttributes::CustomAttribute::Creator.new(tp).create_buy_sell_attributes!
+      CustomAttributes::CustomAttribute::Creator.new(tp).create_spree_product_type_attributes!
       Utils::SpreeDefaultsLoader.new(@instance).load!
     else
       CustomAttributes::CustomAttribute::Creator.new(tp, bookable_noun: @instance.bookable_noun).create_listing_attributes!

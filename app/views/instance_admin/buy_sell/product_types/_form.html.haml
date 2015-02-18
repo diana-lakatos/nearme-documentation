@@ -1,0 +1,12 @@
+= simple_form_for [:instance_admin, :buy_sell, @product_type], :html => { :multipart => true} do |f|
+  %br
+  %br
+  %h4 Basic Configuration
+  .content-container.dropshadow
+    .row
+      .input-container.col-xs-12
+        = f.input :name, input_html: { class: 'form-control' }
+   
+  .content-container
+    = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+

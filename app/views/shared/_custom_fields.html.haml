@@ -1,0 +1,21 @@
+%ol.draggablePanelList
+  - fields_builder = "#{form_componentable.class.name}::CustomFieldsBuilder".constantize.new(f.object)
+  - all_fields = fields_builder.object_field_pairs.clone
+  - modified = false
+  - fields_builder.all_valid_object_field_pairs.each do |pair|
+    - unless all_fields.include?({ pair.keys.first.to_s => pair.values.first.to_s})
+      - modified = true
+      - all_fields << pair
+  - all_fields.each do |object_field_pair|
+    - object = object_field_pair.keys.first
+    - field = object_field_pair[object]
+    %li.panel.panel-info
+      %div.panel-heading
+        = fields_builder.get_label(object_field_pair)
+        %span= check_box_tag "#{f.object_name}[form_fields][]", "#{object}=>#{field}", fields_builder.object_field_pairs.include?(object_field_pair) && modified
+
+= content_for :script do
+  :javascript
+    $(function() {
+      $("ol.draggablePanelList").sortable({ axis: "y", cursor: "move" });
+    });

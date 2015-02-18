@@ -21,7 +21,7 @@
           = t('dashboard.nav.your_shop')
         = dashboard_menu_item 'dashboard/companies', edit_dashboard_company_path(@company)
         - if buyable?
-          = dashboard_menu_item 'dashboard/products', dashboard_products_path
+          = dashboard_menu_item 'dashboard/products', dashboard_product_type_products_path(Spree::ProductType.first)
         - elsif TransactableType.first
           = dashboard_menu_item 'dashboard/transactables', dashboard_transactable_type_transactables_path(TransactableType.first)
         = dashboard_menu_item 'dashboard/payouts', edit_dashboard_payouts_path

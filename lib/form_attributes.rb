@@ -41,5 +41,8 @@ class FormAttributes
     Transactable.public_custom_attributes_names(transactable_type.id)
   end
 
+  def product(product_type = nil)
+    Spree::Product.public_custom_attributes_names(product_type.id)
+  end
 end
 

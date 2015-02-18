@@ -692,9 +692,9 @@ class User < ActiveRecord::Base
     @variants ||= Spree::Variant.where(product_id: products.pluck(:id))
   end
 
-  def products
-    @products ||= Spree::Product.where(administrator_id: self.id)
-  end
+  # def products
+  #   @products ||= Spree::Product.where(administrator_id: self.id)
+  # end
 
   def has_reviews?
     reviews_as_seller.count > 0

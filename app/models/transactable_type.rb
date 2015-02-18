@@ -18,7 +18,7 @@ class TransactableType < ActiveRecord::Base
   has_many :data_uploads, inverse_of: :transactable_type
   has_many :transactable_type_actions
   has_many :action_types, through: :transactable_type_actions
-  has_many :form_components
+  has_many :form_components, as: :form_componentable
   has_many :rating_systems
   has_many :reviews
   has_many :instance_views
@@ -143,5 +143,8 @@ class TransactableType < ActiveRecord::Base
     (bookable_noun.presence || name).pluralize
   end
 
+  def wizard_path
+    "/transactable_types/#{id}/new"
+  end
 end
 

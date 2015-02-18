@@ -1,4 +1,4 @@
-= simple_form_for [:instance_admin, :manage, @target, resource], :html => { :multipart => true} do |f|
+= simple_form_for [:instance_admin, @controller_scope, @target, resource], :html => { :multipart => true} do |f|
   .content-container
     .row
       .input-container.col-xs-6

@@ -1,16 +1,16 @@
 class SecuredParams
 
-  def boarding_form
+  def boarding_form(product_type=nil)
     [
       :draft,
       :store_name,
       company_address_attributes: nested(self.address),
-      product_form: nested(self.product_form)
+      product_form: nested(self.product_form(product_type))
 
     ]
   end
 
-  def product_form
+  def product_form(product_type=nil)
     [
       :draft,
       :name,
@@ -31,7 +31,8 @@ class SecuredParams
       image_ids: [],
       company_address_attributes: nested(self.address),
       images_attributes: nested(self.spree_image),
-      shipping_methods_attributes: nested(self.spree_shipping_method)
+      shipping_methods_attributes: nested(self.spree_shipping_method),
+      extra_properties:  Spree::Product.public_custom_attributes_names((product_type.presence || PlatformContext.current.try(:instance).try(:product_types).try(:first)).try(:id))
     ]
   end
 
@@ -444,6 +445,12 @@ class SecuredParams
       :regexp,
       :flags,
       :replacement_text
+    ]
+  end
+  
+  def product_type
+    [
+      :name
     ]
   end
 

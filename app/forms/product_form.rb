@@ -18,7 +18,7 @@ class ProductForm < Form
   validate  :list_of_countries_or_states_cannot_be_empty
 
   def_delegators :@product, :id, :price, :price=, :name, :name=, :description, :id=, :description=,
-    :shippo_enabled=, :shippo_enabled, :draft?, :draft=, :draft
+    :shippo_enabled=, :shippo_enabled, :draft?, :draft=, :draft, :extra_properties, :extra_properties=
 
   def_delegators :'@product.master', :weight_unit, :weight_unit=, :height_unit, :height_unit=,
     :width_unit, :width_unit=, :depth_unit, :depth_unit=,

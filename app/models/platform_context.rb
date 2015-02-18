@@ -40,6 +40,7 @@ class PlatformContext
     ActiveRecord::Base.establish_connection(platform_context.instance.db_connection_string) if platform_context.instance.db_connection_string.present?
     Transactable.clear_custom_attributes_cache
     User.clear_custom_attributes_cache
+    Spree::Product.clear_custom_attributes_cache
   end
 
   def self.scope_to_instance
@@ -79,6 +80,10 @@ class PlatformContext
 
     if result.blank?
       result = @instance.domains.secured.first
+    end
+
+    if Rails.env.development?
+      result ||= @instance.domains.first
     end
 
     result
