@@ -24,7 +24,7 @@
       - if buyable?
         = dashboard_menu_item 'dashboard/orders_received', dashboard_company_orders_received_index_path
       - else
-        = dashboard_menu_item 'dashboard/company/host_reservations', dashboard_company_host_reservations_path,
+        = dashboard_menu_item 'dashboard/host_reservations', dashboard_company_host_reservations_path,
           active: (params[:controller].include?('host_recurring_bookings') || params[:controller].include?('host_reservations'))
 
       = dashboard_menu_item 'dashboard/transfers', dashboard_company_transfers_path
