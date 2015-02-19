@@ -598,7 +598,7 @@ en:
     manage_blog: 'Manage Blog'
     account: 'Account'
     messages: 'Messages'
-    log_out: 'Log out'
+    log_out: 'Log Out'
     my_bookings: 'My Bookings'
     my_orders: 'My Orders'
     manage_bookable: 'Manage %{bookable_noun}'
@@ -614,7 +614,7 @@ en:
     title: 'Sign in'
     buttons:
       sign_up: 'Sign up'
-      log_in: 'Log in'
+      log_in: 'Log In'
       close: 'Close'
       reset_password: 'Reset your password'
       already_user: 'Already a user?'
