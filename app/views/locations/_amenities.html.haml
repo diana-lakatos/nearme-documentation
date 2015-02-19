@@ -1,9 +1,9 @@
 - if amenities_owner.amenities.any?
   .amenities-block
     .amenities-header
-      %h3 Amenities
+      %h3= t 'location.amenities'
       %a{href: '#amenities'}
-        %h3 Amenities
+        %h3= t 'location.amenities'
         %span.ico-chevron-right
     .amenities-container
       - amenities_owner.amenities.order('name ASC').in_groups_of(4).each do |amenity_group|

@@ -6,6 +6,6 @@
     %form#listing_search.home_search{:action => search_path, :method => "get"}
       .no-text-search
         %input#search{:name => "q", :type => "hidden", :value => " "}
-        %a.btn.btn-green.btn-large{ "data-disable-with" => "Searching...", :rel => "submit", :href => "" }
+        %a.btn.btn-green.btn-large{ "data-disable-with" => t('homepage.disabled_buttons.search'), :rel => "submit", :href => "" }
           %span.ico-search
-          Search
+          = t 'homepage.buttons.search'

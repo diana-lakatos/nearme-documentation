@@ -9,9 +9,9 @@
   - if location.company.industries_metadata.try(:any?) && platform_context.instance.has_industries?
     .amenities-block
       .amenities-header
-        %h3 Industries
+        %h3= t 'location.company.industries'
         %a{href: '#industries'}
-          %h3 Industries
+          %h3= t 'location.company.industries'
           %span.ico-chevron-right
       .amenities-container
         - location.company.industries_metadata.in_groups_of(4).each do |industry_group|
