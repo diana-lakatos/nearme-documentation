@@ -18,6 +18,14 @@ class @InstanceAdmin.LocationsController
       if event.keyCode == 13
         @updateLocationType(event)
 
+    $('a[data-location-types-instance-admin-modal]').click (event) ->
+      event.preventDefault()
+      target = $(this).attr('href')
+      $('#instanceAdminModal .modal-content').load target, ->
+        $('#instanceAdminModal').modal 'show'
+        return
+      return
+
   updateLocationType: (event) =>
     self = $(event.target)
     modifiedValue = self.val()
