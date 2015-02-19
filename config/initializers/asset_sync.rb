@@ -35,7 +35,7 @@ AssetSync.configure do |config|
   #
   # Use the Rails generated 'manifest.yml' file to produce the list of files to
   # upload instead of searching the assets directory.
-  config.manifest = true
+  # config.manifest = true
 
   config.always_upload = ["manifest.json"]
 
