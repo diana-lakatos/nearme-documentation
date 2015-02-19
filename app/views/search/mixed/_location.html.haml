@@ -42,7 +42,7 @@
 
         .price-and-types
           .location-price
-            = location_price_information(location, search.lgpricing_filters)
+            = location.decorate.lowest_price_with_currency(search.lgpricing_filters)
           %ul.nav.nav-tabs
             - listing_types_data.each_with_index do |(listing_type, listing_type_data), i|
               %li{class: i.zero? ? 'active' : ''}

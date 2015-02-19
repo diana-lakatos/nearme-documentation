@@ -21,7 +21,7 @@
         - elsif listing.hourly_reservations?
           %span.label
             - unless listing.hourly_price.to_f.zero?
-              = "#{money_without_cents_and_with_symbol(listing.hourly_price)}"
+              = "#{listing.decorate.price_with_currency(:hourly_price)}"
             - else
               = '-'
             %span.period= t('reservations.per_hour')
@@ -29,7 +29,7 @@
           - if listing.transactable_type.pricing_options['daily']
             %span.label
               - unless listing.daily_price.to_f.zero?
-                = "#{money_without_cents_and_with_symbol(listing.daily_price)}"
+                = "#{listing.decorate.price_with_currency(:daily_price)}"
               - else
                 = '-'
               %span.period= listing.overnight_booking? ? t('reservations.per_night') : t('reservations.per_day')
@@ -37,7 +37,7 @@
           - if listing.transactable_type.pricing_options['weekly']
             %span.label
               - unless listing.weekly_price.to_f.zero?
-                = "#{money_without_cents_and_with_symbol(listing.weekly_price)}"
+                = "#{listing.decorate.price_with_currency(:weekly_price)}"
               - else
                 = '-'
               %span.period= t('reservations.per_week')
@@ -45,7 +45,7 @@
           - if listing.transactable_type.pricing_options['monthly']
             %span.label
               - unless listing.monthly_price.to_f.zero?
-                = "#{money_without_cents_and_with_symbol(listing.monthly_price)}"
+                = "#{listing.decorate.price_with_currency(:monthly_price)}"
               - else
                 = '-'
               %span.period= t('reservations.per_month')
