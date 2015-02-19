@@ -2694,6 +2694,7 @@ ActiveRecord::Schema.define(version: 20150305182254) do
     t.integer  "max_hourly_price_cents"
     t.integer  "min_fixed_price_cents"
     t.integer  "max_fixed_price_cents"
+    t.boolean  "manual_payment",                                                     default: false
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -2735,6 +2736,7 @@ ActiveRecord::Schema.define(version: 20150305182254) do
     t.integer  "max_fixed_price_cents"
     t.float    "average_rating",                 default: 0.0,       null: false
     t.string   "booking_type",                   default: "regular"
+    t.boolean  "manual_payment",                 default: false
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree

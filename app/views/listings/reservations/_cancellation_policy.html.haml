@@ -1,0 +1,8 @@
+- if platform_context.instance.transactable_types.first.cancellation_policy_hours_for_cancellation.zero?
+  = t('reservations.no_cancellation_time')
+- else
+  = t('reservations.cancellation_time', time: platform_context.instance.transactable_types.first.cancellation_policy_hours_for_cancellation)
+- if platform_context.instance.transactable_types.first.cancellation_policy_penalty_percentage.zero?
+  = t('reservations.no_cancellation_fee')
+- else
+  = t('reservations.cancellation_fee', fee: platform_context.instance.transactable_types.first.cancellation_policy_penalty_percentage)

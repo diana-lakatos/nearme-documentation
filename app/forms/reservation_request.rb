@@ -2,7 +2,7 @@ class ReservationRequest < Form
 
   attr_accessor :dates, :start_minute, :end_minute
   attr_accessor :card_number, :card_expires, :card_code, :card_holder_first_name, :card_holder_last_name, :payment_method_nonce
-  attr_accessor :waiver_agreement_templates, :documents
+  attr_accessor :waiver_agreement_templates, :documents, :payment_method
   attr_reader   :reservation, :listing, :location, :user, :client_token, :payment_method_nonce
 
   def_delegators :@reservation, :quantity, :quantity=, :action_hourly_booking?, :reservation_type=
@@ -32,13 +32,14 @@ class ReservationRequest < Form
       @reservation.currency = @listing.currency
       @billing_gateway = Billing::Gateway::Incoming.new(@user, @instance, @reservation.currency, @listing.company.iso_country_code) if @user
       @client_token = @billing_gateway.try(:client_token) if @billing_gateway.try(:possible?)
-      @reservation.payment_method = payment_method
       @reservation.user = user
       @reservation.additional_charges << get_additional_charges(attributes)
       @reservation = @reservation.decorate
     end
 
     store_attributes(attributes)
+    @reservation.try(:payment_method=, (payment_method.present? && payment_methods.include?(payment_method.to_sym)) ? payment_method : payment_methods.first)
+    self.payment_method = @reservation.try(:payment_method)
 
     if @user
       @user.phone_required = true
@@ -84,18 +85,37 @@ class ReservationRequest < Form
     reservation.periods
   end
 
-  def payment_method
-    @payment_method = if @reservation.listing.action_free_booking?
-                        Reservation::PAYMENT_METHODS[:free]
-                      elsif @billing_gateway.try(:possible?) && @billing_gateway.try(:remote?)
-                        Reservation::PAYMENT_METHODS[:remote]
-                      elsif nonce_payment_available? && payment_method_nonce.present?
-                        Reservation::PAYMENT_METHODS[:nonce]
-                      elsif @billing_gateway.try(:possible?)
-                        Reservation::PAYMENT_METHODS[:credit_card]
-                      else
-                        Reservation::PAYMENT_METHODS[:manual]
-                      end
+  def payment_methods
+    @payment_methods = []
+    if is_free?
+      @payment_methods << Reservation::PAYMENT_METHODS[:free]
+    else
+      @payment_methods << Reservation::PAYMENT_METHODS[:remote] if possible_remote_payment?
+      @payment_methods << Reservation::PAYMENT_METHODS[:nonce] if possible_nonce_payment?
+      @payment_methods << Reservation::PAYMENT_METHODS[:credit_card] if possible_credit_card_payment?
+      @payment_methods << Reservation::PAYMENT_METHODS[:manual] if possible_manual_payment?
+    end
+    @payment_methods
+  end
+
+  def is_free?
+    @listing.try(:action_free_booking?)
+  end
+
+  def possible_credit_card_payment?
+    @billing_gateway.try(:possible?) && !possible_nonce_payment? && !possible_remote_payment?
+  end
+
+  def possible_manual_payment?
+    @reservation.try(:possible_manual_payment?) || !(possible_credit_card_payment? || possible_remote_payment? || possible_nonce_payment?)
+  end
+
+  def possible_remote_payment?
+    @billing_gateway.try(:possible?) && @billing_gateway.try(:remote?)
+  end
+
+  def possible_nonce_payment?
+    nonce_payment_available? && payment_method_nonce.present?
   end
 
   def nonce_payment_available?
