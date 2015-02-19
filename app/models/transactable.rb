@@ -419,10 +419,12 @@ class Transactable < ActiveRecord::Base
     if enabled_changed?
       self.activated_at = (enabled ? Time.current : nil)
     end
+    true
   end
 
   def set_enabled
     self.enabled = is_trusted? if self.enabled
+    true
   end
 
   def decline_reservations
