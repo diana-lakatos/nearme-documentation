@@ -40,32 +40,15 @@ module SearchHelper
     end
   end
 
-  def listing_price_information(listing, filter_pricing = [])
-
+  def individual_listing_price_information(listing, filter_pricing = [])
     if listing.transactable_type.action_schedule_booking?
       money_without_cents_and_with_symbol(listing.fixed_price)
     else
       listing_price = listing.lowest_price_with_type(filter_pricing)
       if listing_price
         periods = {:monthly => 'month', :weekly => 'week', :daily => 'day', :hourly => 'hour'}
-        "#{money_without_cents_and_with_symbol(listing_price[0])} <span>/ #{periods[listing_price[1]]}</span>".html_safe
+        "From <span>#{money_without_cents_and_with_symbol(listing_price[0])}</span> / #{periods[listing_price[1]]}".html_safe
       end
-    end
-  end
-
-  def individual_listing_price_information(listing, filter_pricing = [])
-    listing_price = listing.lowest_price_with_type(filter_pricing)
-    if listing_price
-      periods = {:monthly => 'month', :weekly => 'week', :daily => 'day', :hourly => 'hour'}
-      "From <span>#{money_without_cents_and_with_symbol(listing_price[0])}</span> / #{periods[listing_price[1]]}".html_safe
-    end
-  end
-
-  def location_price_information(location, filter_pricing = [])
-    listing_price = location.lowest_price(filter_pricing)
-    if listing_price
-      periods = {:monthly => 'month', :weekly => 'week', :daily => 'day', :hourly => 'hour'}
-      "From <span>#{money_without_cents_and_with_symbol(listing_price[0])}</span> / #{periods[listing_price[1]]}".html_safe
     end
   end
 
@@ -110,8 +93,8 @@ module SearchHelper
       root_taxon.children.map do |taxon|
         css_class = (current_taxon && current_taxon == taxon) ? 'current' : nil
         content_tag :li do
-         link_to(taxon.name, buy_sell_taxon_path(taxon), class: css_class) +
-         display_taxonomies(taxon, current_taxon)
+          link_to(taxon.name, buy_sell_taxon_path(taxon), class: css_class) +
+            display_taxonomies(taxon, current_taxon)
         end
       end.join("\n").html_safe
     end

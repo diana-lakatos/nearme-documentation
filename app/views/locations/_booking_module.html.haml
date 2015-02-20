@@ -1,5 +1,6 @@
 - location_pretty_availability ||= pretty_availability_sentence(listing.location.availability)
 - collapsed ||= false
+- listing = listing.decorate
 .booking-module-container{:class => "#{booking_module_class(listing)} #{collapsed ? " collapsed" : ""}", :'data-toggleable-booking-module' => true}
   .booking-module
     .booking-header
@@ -17,7 +18,7 @@
       .booking-price
         - if listing.transactable_type.action_schedule_booking?
           %span.label
-            = "#{money_without_cents_and_with_symbol(listing.fixed_price)}"
+            = "#{listing.price_with_currency(:fixed_price)}"
             %span.period= t('reservations.booking_module.fixed')
         - else
           %ul#pricingTabs.nav.nav-tabs
@@ -30,7 +31,7 @@
                 = link_to '#hourly-booking' do
                   %span.label
                     - unless listing.hourly_price.to_f.zero?
-                      = "#{money_without_cents_and_with_symbol(listing.hourly_price)}"
+                      = "#{listing.price_with_currency(:hourly_price)}"
                     - else
                       = '-'
                     %span.period= t('reservations.per_hour')
@@ -40,7 +41,7 @@
                   = link_to '#daily-booking' do
                     %span.label
                       - unless listing.daily_price.to_f.zero?
-                        = "#{money_without_cents_and_with_symbol(listing.daily_price)}"
+                        = "#{listing.price_with_currency(:daily_price)}"
                       - else
                         = '-'
                       %span.period= listing.action_overnight_booking? ? t('reservations.per_night') : t('reservations.per_day')
@@ -50,7 +51,7 @@
                   = link_to '#daily-booking' do
                     %span.label
                       - unless listing.weekly_price.to_f.zero?
-                        = "#{money_without_cents_and_with_symbol(listing.weekly_price)}"
+                        = "#{listing.price_with_currency(:weekly_price)}"
                       - else
                         = '-'
                       %span.period= t('reservations.per_week')
@@ -60,7 +61,7 @@
                   = link_to '#daily-booking' do
                     %span.label
                       - unless listing.monthly_price.to_f.zero?
-                        = "#{money_without_cents_and_with_symbol(listing.monthly_price)}"
+                        = "#{listing.price_with_currency(:monthly_price)}"
                       - else
                         = '-'
                       %span.period= t('reservations.per_month')
