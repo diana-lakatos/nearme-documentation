@@ -51,7 +51,7 @@ class Dashboard::ProductsController < Dashboard::BaseController
   private
 
   def find_product_type
-    @product_type = Spree::ProductType.find(params[:product_type_id])
+    @product_type = params[:product_type_id].present? ? Spree::ProductType.find(params[:product_type_id]) : Spree::ProductType.first
   end
 
   def set_form_components

@@ -15,8 +15,6 @@ module CustomAttributes
         if validation_rules.present? && !validation_rules.empty?
           validation_rules.each do |validation_rule_type, validation_rule_options|
             validation_rule_options ||= {}
-            # hack for now to make the tests pass - will need to change the way TT price validation for new system works
-            next if name = validation_rule_options.fetch("redirect", name)
             options = ({ attributes:  name }.merge(validation_rule_options)).symbolize_keys
 
             klass = case validation_rule_type.to_sym

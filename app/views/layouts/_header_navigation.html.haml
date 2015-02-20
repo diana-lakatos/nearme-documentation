@@ -2,12 +2,19 @@
   - if (!no_listing_buttons? || platform_context.white_label_company_user?(current_user)) && HiddenUiControls.find('main_menu/cta').visible?
     - if platform_context.single_type?
       - if current_user && current_user.registration_in_progress?
-        %li
-          = link_to main_app.transactable_type_new_space_wizard_path(platform_context.transactable_types.first), :class => "nav-link btn btn-blue btn-medium" do
-            %span.text= t('ui.header.complete_your_thing', thing: platform_context.transactable_types.first.name)
-            %span.icon.ico-plus
+        - if platform_context.product_types.count == 1
+          %li
+            = link_to main_app.transactable_type_new_space_wizard_path(platform_context.transactable_types.first), :class => "nav-link btn btn-blue btn-medium" do
+              %span.text= t('ui.header.complete_your_thing', thing: platform_context.transactable_types.first.name)
+              %span.icon.ico-plus
+        - else
+          %li
+            = link_to main_app.product_type_new_space_wizard_path(platform_context.product_types.first), :class => "nav-link btn btn-blue btn-medium" do
+              %span.text= t('ui.header.complete_your_thing', thing: platform_context.product_types.first.name)
+              %span.icon.ico-plus
+
       - elsif !current_user.try(:registration_completed?)
-        = render partial: 'layouts/list_your_bookable', locals: { transactable_type: platform_context.transactable_types.first }
+        = render partial: 'layouts/list_your_bookable', locals: { transactable_type: platform_context.product_types.first || platform_context.transactable_types.first }
     - else
       - if current_user && current_user.registration_in_progress?
         %li

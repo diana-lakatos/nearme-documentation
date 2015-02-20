@@ -299,7 +299,7 @@ DesksnearMe::Application.routes.draw do
       get '/', :to => 'base#index'
       resource :configuration, only: [:show, :update], controller: 'configuration'
       resource :commissions, :only => [:show, :update], :controller => 'commissions'
-      resources :product_types do 
+      resources :product_types do
         resources :custom_attributes, controller: 'product_types/custom_attributes'
         resources :form_components, controller: 'product_types/form_components' do
           member do
@@ -457,6 +457,7 @@ DesksnearMe::Application.routes.draw do
         end
       end
     end
+    resources :products
     resources :product_type do
       resources :products
     end

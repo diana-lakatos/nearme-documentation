@@ -16,6 +16,9 @@ class ProductForm < Form
   validates_presence_of :width, :if => :shippo_enabled
   validates_presence_of :height, :if => :shippo_enabled
   validate  :list_of_countries_or_states_cannot_be_empty
+  validate do
+    product.valid?
+  end
 
   def_delegators :@product, :id, :price, :price=, :name, :name=, :description, :id=, :description=,
     :shippo_enabled=, :shippo_enabled, :draft?, :draft=, :draft, :extra_properties, :extra_properties=
