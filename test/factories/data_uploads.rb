@@ -4,7 +4,7 @@ FactoryGirl.define do
     csv_file { fixture_file_upload(Rails.root.join('test', 'assets', 'data_importer', 'sample_data.csv'), 'text/csv') }
     target { (Instance.first.presence || FactoryGirl.create(:instance)) }
     association :uploader, factory: :user
-    transactable_type { TransactableType.first || FactoryGirl.create(:transactable_type) }
+    importable { TransactableType.first || FactoryGirl.create(:transactable_type) }
 
     factory :data_upload_with_encountered_error do
       encountered_error "#<NoMethodError: undefined method `queue' for #<DataUpload:0x007fdcaba47bf0>>\n\n[\"/sample/stack/trace/activemodel-4.0.8/lib/active_model/attribute_methods.rb:439:in `method_missing'\", \"/sample/stack/trace/activerecord-4.0.8/lib/active_record/attribute_methods.rb:168:in `method_missing'\", \"/app/jobs/data_upload_host_convert_job.rb:17:in `perform'\", \"/app/jobs/job.rb:60:in `perform'\", \"/app/controllers/manage/transactable_types/data_uploads_controller.rb:25:in `create'\", \"/sample/stack/trace/actionpack-4.0.8/lib/action_controller/metal/implicit_render.rb:4:in `send_action'\"]"
@@ -55,7 +55,16 @@ FactoryGirl.define do
         state 'partially_succeeded'
       end
     end
-
   end
+
+  factory :products_data_upload, parent: :data_upload do
+    csv_file { fixture_file_upload(Rails.root.join('test', 'assets', 'data_importer', 'products', 'full_data.csv'), 'text/csv') }
+    importable { Spree::ProductType.first || FactoryGirl.create(:product_type) }
+
+    factory :products_data_upload_from_dashboard do
+      csv_file { fixture_file_upload(Rails.root.join('test', 'assets', 'data_importer', 'products', 'current_data.csv'), 'text/csv') }
+    end
+  end
+
 end
 

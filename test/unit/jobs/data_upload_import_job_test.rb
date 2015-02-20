@@ -46,7 +46,7 @@ class DataUploadImportJobTest < ActiveSupport::TestCase
       @transactable_type = stub()
       @stub = stub( xml_file: stub(proper_file_path: '/some/path'),
                    id: 1,
-                   transactable_type: @transactable_type,
+                   importable: @transactable_type,
                    :parsing_result_log= => 'hello',
                    :parse_summary= => { new: { company: 1 }, updated: { company: 2 } },
                    :save! => true,

@@ -7,13 +7,15 @@ require 'minitest/reporters'
 require 'mocha/setup'
 require 'mocha/mini_test'
 require 'webmock/minitest'
+require 'backtrace_filter'
 
 require Rails.root.join('test', 'helpers', 'stub_helper.rb')
 
 require 'spree/testing_support/factories'
 
 reporter_options = { color: true, slow_count: 5 }
-Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(reporter_options)]
+Minitest.backtrace_filter = BacktraceFilter.new
+Minitest::Reporters.use!(Minitest::Reporters::DefaultReporter.new(reporter_options), ENV, Minitest.backtrace_filter)
 
 # Disable carrierwave processing in tests
 # It can be enabled on a per-test basis as needed.

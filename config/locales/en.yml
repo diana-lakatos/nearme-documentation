@@ -572,6 +572,7 @@ en:
     price_too_low: '%{price} is too low'
   data_upload:
     manage:
+      bulk_upload: 'Bulk upload'
       csv_file: 'Csv File'
       review_file: 'Review File'
       import: 'Import '

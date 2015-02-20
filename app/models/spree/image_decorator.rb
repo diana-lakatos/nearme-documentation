@@ -14,4 +14,8 @@ Spree::Image.class_eval do
   _validate_callbacks.each do |callback|
     callback.raw_filter.attributes.delete :attachment if callback.raw_filter.is_a?(Paperclip::Validators::AttachmentPresenceValidator)
   end
+
+  def self.csv_fields
+    { image_original_url: 'Image URL' }
+  end
 end
