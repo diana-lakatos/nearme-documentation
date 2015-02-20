@@ -695,16 +695,16 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
     t.string   "payment_transfers_frequency",                                   default: "fortnightly"
-    t.string   "encrypted_shippo_username"
-    t.string   "encrypted_shippo_password"
+    t.text     "hidden_ui_controls"
+    t.boolean  "user_blogs_enabled",                                            default: false
     t.string   "twilio_from_number"
     t.string   "test_twilio_from_number"
     t.string   "encrypted_test_twilio_consumer_key"
     t.string   "encrypted_test_twilio_consumer_secret"
     t.string   "encrypted_twilio_consumer_key"
     t.string   "encrypted_twilio_consumer_secret"
-    t.boolean  "user_blogs_enabled",                                            default: false
-    t.text     "hidden_ui_controls"
+    t.string   "encrypted_shippo_username"
+    t.string   "encrypted_shippo_password"
     t.boolean  "wish_lists_enabled",                                            default: false
     t.string   "wish_lists_icon_set",                                           default: "heart"
   end
@@ -762,8 +762,8 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.boolean  "listings_public",                default: true
     t.integer  "partner_id"
     t.integer  "address_id"
-    t.boolean  "mark_to_be_bulk_update_deleted", default: false
     t.string   "external_id"
+    t.boolean  "mark_to_be_bulk_update_deleted", default: false
     t.integer  "wish_list_items_count",          default: 0
   end
 
@@ -1182,13 +1182,6 @@ ActiveRecord::Schema.define(version: 20150214125057) do
 
   add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
 
-  create_table "sessions", force: true do |t|
-    t.string   "session_id", null: false
-    t.text     "data"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "spree_addresses", force: true do |t|
     t.string   "firstname"
     t.string   "lastname"
@@ -1501,11 +1494,11 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.integer  "partner_id"
     t.decimal  "service_fee_buyer_percent",               precision: 5,  scale: 2, default: 0.0
     t.decimal  "service_fee_seller_percent",              precision: 5,  scale: 2, default: 0.0
+    t.string   "guest_token"
+    t.integer  "state_lock_version",                                               default: 0,       null: false
     t.datetime "shippo_rate_purchased_at"
     t.integer  "platform_context_detail_id"
     t.string   "platform_context_detail_type"
-    t.string   "guest_token"
-    t.integer  "state_lock_version",                                               default: 0,       null: false
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id", using: :btree
@@ -1654,7 +1647,7 @@ ActiveRecord::Schema.define(version: 20150214125057) do
   add_index "spree_product_properties", ["user_id"], name: "index_spree_product_properties_on_user_id", using: :btree
 
   create_table "spree_products", force: true do |t|
-    t.string   "name",                 default: "",    null: false
+    t.string   "name",                  default: "",    null: false
     t.text     "description"
     t.datetime "available_on"
     t.datetime "deleted_at"
@@ -1671,13 +1664,13 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.integer  "user_id"
     t.hstore   "extra_properties"
     t.hstore   "status"
-    t.boolean  "products_public",      default: true
-    t.boolean  "approved",             default: true
-    t.text     "cross_sell_skus",      default: [],                 array: true
+    t.boolean  "products_public",       default: true
+    t.boolean  "approved",              default: true
+    t.text     "cross_sell_skus",       default: [],                 array: true
     t.integer  "administrator_id"
-    t.boolean  "shippo_enabled",       default: false
-    t.boolean  "draft",                default: false
-    t.float    "average_rating",       default: 0.0
+    t.boolean  "shippo_enabled",        default: false
+    t.boolean  "draft",                 default: false
+    t.float    "average_rating",        default: 0.0
     t.integer  "wish_list_items_count", default: 0
   end
 
@@ -2542,8 +2535,6 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.boolean  "recurring_booking",                                                  default: false, null: false
     t.boolean  "show_page_enabled",                                                  default: false
     t.text     "custom_csv_fields"
-    t.boolean  "overnight_booking",                                                  default: false, null: false
-    t.boolean  "enable_reviews"
     t.text     "onboarding_form_fields"
     t.decimal  "service_fee_guest_percent",                  precision: 5, scale: 2, default: 0.0
     t.decimal  "service_fee_host_percent",                   precision: 5, scale: 2, default: 0.0
@@ -2551,6 +2542,8 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.string   "lessor"
     t.string   "lessee"
     t.boolean  "groupable_with_others",                                              default: true
+    t.boolean  "overnight_booking",                                                  default: false, null: false
+    t.boolean  "enable_reviews"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -2911,7 +2904,6 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.string   "recipient"
     t.string   "from_type"
     t.string   "reply_to_type"
-    t.integer  "workflow_id"
   end
 
   create_table "workflow_steps", force: true do |t|
@@ -2932,7 +2924,6 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.datetime "updated_at"
     t.text     "events_metadata"
     t.string   "workflow_type"
-    t.string   "associated_event"
   end
 
 end
