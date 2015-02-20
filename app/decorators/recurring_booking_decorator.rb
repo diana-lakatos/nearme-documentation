@@ -91,7 +91,7 @@ class RecurringBookingDecorator < Draper::Decorator
     periods.map do |period|
       period = period.decorate
       date = period.date.strftime('%-e %b %Y')
-      if listing.hourly_reservations?
+      if listing.action_hourly_booking?
         start_time = period.start_minute_of_day_to_time.strftime("%l:%M%P").strip
         end_time = period.end_minute_of_day_to_time.strftime("%l:%M%P").strip
         ('%s %s&ndash;%s' % [date, start_time, end_time]).html_safe

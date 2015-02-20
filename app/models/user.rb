@@ -1,3 +1,4 @@
+
 class User < ActiveRecord::Base
   has_paper_trail :ignore => [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
                               :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
@@ -378,7 +379,7 @@ class User < ActiveRecord::Base
   end
 
   def has_listing_without_price?
-    listings.any?(&:free?)
+    listings.any?(&:action_free_booking?)
   end
 
   def log_out!

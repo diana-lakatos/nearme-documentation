@@ -1138,6 +1138,8 @@ ActiveRecord::Schema.define(version: 20150218142759) do
     t.integer  "credit_card_id"
     t.datetime "request_guest_rating_email_sent_at"
     t.datetime "request_host_and_product_rating_email_sent_at"
+    t.string   "type"
+    t.string   "reservation_type"
   end
 
   add_index "reservations", ["administrator_id"], name: "index_reservations_on_administrator_id", using: :btree
@@ -1171,6 +1173,21 @@ ActiveRecord::Schema.define(version: 20150218142759) do
   add_index "reviews", ["reviewable_type"], name: "index_reviews_on_reviewable_type", using: :btree
   add_index "reviews", ["transactable_type_id"], name: "index_reviews_on_transactable_type_id", using: :btree
   add_index "reviews", ["user_id"], name: "index_reviews_on_user_id", using: :btree
+
+  create_table "schedules", force: true do |t|
+    t.datetime "start_at"
+    t.datetime "end_at"
+    t.text     "schedule"
+    t.string   "scheduable_type"
+    t.integer  "scheduable_id"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.boolean  "exception",       default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "schedules", ["instance_id", "scheduable_id", "scheduable_type"], name: "index_schedules_scheduable", using: :btree
 
   create_table "search_notifications", force: true do |t|
     t.string   "email"
@@ -2543,7 +2560,7 @@ ActiveRecord::Schema.define(version: 20150218142759) do
     t.datetime "cancellation_policy_enabled"
     t.integer  "cancellation_policy_hours_for_cancellation",                         default: 0
     t.integer  "cancellation_policy_penalty_percentage",                             default: 0
-    t.boolean  "recurring_booking",                                                  default: false, null: false
+    t.boolean  "action_recurring_booking",                                           default: false, null: false
     t.boolean  "show_page_enabled",                                                  default: false
     t.text     "custom_csv_fields"
     t.text     "onboarding_form_fields"
@@ -2553,8 +2570,25 @@ ActiveRecord::Schema.define(version: 20150218142759) do
     t.string   "lessor"
     t.string   "lessee"
     t.boolean  "groupable_with_others",                                              default: true
-    t.boolean  "overnight_booking",                                                  default: false, null: false
+    t.boolean  "action_overnight_booking",                                           default: false, null: false
     t.boolean  "enable_reviews"
+    t.boolean  "action_rfq",                                                         default: false
+    t.boolean  "action_hourly_booking",                                              default: false
+    t.boolean  "action_free_booking",                                                default: false
+    t.boolean  "action_daily_booking",                                               default: false
+    t.boolean  "action_monthly_booking",                                             default: false
+    t.boolean  "action_weekly_booking",                                              default: false
+    t.boolean  "action_schedule_booking"
+    t.integer  "min_daily_price_cents"
+    t.integer  "max_daily_price_cents"
+    t.integer  "min_weekly_price_cents"
+    t.integer  "max_weekly_price_cents"
+    t.integer  "min_monthly_price_cents"
+    t.integer  "max_monthly_price_cents"
+    t.integer  "min_hourly_price_cents"
+    t.integer  "max_hourly_price_cents"
+    t.integer  "min_fixed_price_cents"
+    t.integer  "max_fixed_price_cents"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -2581,6 +2615,19 @@ ActiveRecord::Schema.define(version: 20150218142759) do
     t.integer  "parent_transactable_id"
     t.string   "external_id"
     t.boolean  "mark_to_be_bulk_update_deleted", default: false
+    t.boolean  "action_rfq",                     default: false
+    t.boolean  "action_hourly_booking",          default: false
+    t.boolean  "action_free_booking",            default: false
+    t.boolean  "action_recurring_booking",       default: false
+    t.boolean  "action_daily_booking",           default: false
+    t.integer  "hourly_price_cents",             default: 0
+    t.integer  "daily_price_cents",              default: 0
+    t.integer  "weekly_price_cents",             default: 0
+    t.integer  "monthly_price_cents",            default: 0
+    t.boolean  "action_schedule_booking"
+    t.integer  "fixed_price_cents"
+    t.integer  "min_fixed_price_cents"
+    t.integer  "max_fixed_price_cents"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree

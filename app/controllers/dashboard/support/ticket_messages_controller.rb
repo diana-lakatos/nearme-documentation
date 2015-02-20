@@ -6,7 +6,7 @@ class Dashboard::Support::TicketMessagesController < Dashboard::BaseController
     message.ticket = ticket
     if message.save
       WorkflowStepJob.perform(WorkflowStep::RfqWorkflow::Replied, message.id)
-      if ticket.target.free?
+      if ticket.target.action_free_booking?
         flash[:success] = t('flash_messages.support.rfq_ticket_message.created')
       else
         flash[:success] = t('flash_messages.support.offer_ticket_message.created')
@@ -17,13 +17,13 @@ class Dashboard::Support::TicketMessagesController < Dashboard::BaseController
 
     if close?
       if ticket.resolve
-        if ticket.target.free?
+        if ticket.target.action_free_booking?
           flash[:success] = t('flash_messages.support.rfq_ticket_message.closed')
         else
           flash[:success] = t('flash_messages.support.offer_ticket_message.closed')
         end
       else
-        if ticket.target.free?
+        if ticket.target.action_free_booking?
           flash[:success] = t('flash_messages.support.rfq_ticket_message.error')
         else
           flash[:success] = t('flash_messages.support.offer_ticket_message.error')

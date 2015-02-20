@@ -420,15 +420,12 @@ class ReservationTest < ActiveSupport::TestCase
 
     context "hourly priced listing" do
       setup do
-        @listing = FactoryGirl.create(:transactable, quantity: 10, hourly_reservations: true, hourly_price_cents: 100)
-        @user = FactoryGirl.create(:user)
-        @reservation = @listing.reservations.build(
-          :user => @user
-        )
+        @listing = FactoryGirl.create(:transactable, quantity: 10, action_hourly_booking: true, hourly_price_cents: 100)
+        @reservation = @listing.reservations.build(reservation_type: 'hourly')
       end
 
       should "set total cost based on HourlyPriceCalculator" do
-        @reservation.periods.build :date => Time.zone.today.advance(:weeks => 1).beginning_of_week, :start_minute => 9*60, :end_minute => 12*60
+        @reservation.periods.build date: Time.zone.today.advance(weeks: 1).beginning_of_week, start_minute: 9*60, end_minute: 12*60
         assert_equal Reservation::HourlyPriceCalculator.new(@reservation).price.cents +
           Payment::ServiceFeeCalculator.new(Money.new(@reservation.subtotal_amount_cents, @reservation.currency), @reservation.service_fee_guest_percent, @reservation.service_fee_host_percent)
 .service_fee_guest.cents,
@@ -459,7 +456,7 @@ class ReservationTest < ActiveSupport::TestCase
       Reservation::DailyPriceCalculator.any_instance.stubs(:price).returns(0.to_money).at_least(1)
       reservation = FactoryGirl.build(:reservation)
       reservation.save!
-      assert reservation.free?
+      assert reservation.action_free_booking?
       assert reservation.paid?
     end
   end

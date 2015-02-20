@@ -74,7 +74,6 @@ class Instance < ActiveRecord::Base
   has_many :rating_questions
   has_many :rating_answers
   has_many :rating_hints
-  serialize :pricing_options, Hash
 
   validates_presence_of :name
   validates_presence_of :marketplace_password, :if => :password_protected
@@ -101,10 +100,11 @@ class Instance < ActiveRecord::Base
     self.send(:"#{provider.downcase}_consumer_key").present? && self.send(:"#{provider.downcase}_consumer_secret").present?
   end
 
-  PRICING_OPTIONS = %w(free hourly daily weekly monthly)
+  PRICING_OPTIONS = %w(free hourly daily weekly monthly fixed)
 
   PRICING_OPTIONS.each do |price|
     next if price == 'free'
+    next if price == 'fixed'
     %w(min max).each do |edge|
       # Flag each price type as a Money attribute.
       # @see rails-money

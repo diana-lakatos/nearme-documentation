@@ -122,7 +122,7 @@ class Listings::ReservationsController < ApplicationController
       current_user,
       platform_context,
       {
-        quantity: attributes[:quantity],
+        quantity: attributes[:quantity].presence || 1,
         dates: attributes[:dates],
         start_minute: attributes[:start_minute],
         end_minute: attributes[:end_minute],
@@ -134,7 +134,8 @@ class Listings::ReservationsController < ApplicationController
         country_name: attributes[:country_name],
         mobile_number: attributes[:mobile_number],
         waiver_agreement_templates: attributes[:waiver_agreement_templates],
-        payment_method_nonce: params[:payment_method_nonce]
+        payment_method_nonce: params[:payment_method_nonce],
+        reservation_type: attributes[:reservation_type]
       }
     )
   end

@@ -8,7 +8,7 @@ module CustomAttributes
         metaclass = class << self; self; end
         hstore_attributes = custom_attributes_names_types_hash
         metaclass.class_eval do
-          hstore_attributes.reject { |k, v| method_defined?(k) && !k.include?('_price_cents') }.each do |key, type|
+          hstore_attributes.each do |key, type|
             define_method("#{key}") do
               self.send("#{store_accessor_name}").send(key)
             end

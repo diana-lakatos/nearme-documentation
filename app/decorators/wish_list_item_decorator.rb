@@ -33,3 +33,4 @@ class WishListItemDecorator < Draper::Decorator
     asset_url 'placeholders/895x554.gif'
   end
 end
+

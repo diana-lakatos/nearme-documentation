@@ -21,7 +21,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
         name: 'My listing',
         description: 'nice listing',
         listing_type: "Desk",
-        hourly_reservations: true,
+        action_hourly_booking: true,
         hourly_price_cents: 1000,
         quantity: 10
       },

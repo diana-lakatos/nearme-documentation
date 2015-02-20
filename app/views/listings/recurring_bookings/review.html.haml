@@ -13,7 +13,7 @@
         = @recurring_booking_request.recurring_booking.schedule.to_s
         %p
           = @recurring_booking.short_dates
-          - if @recurring_booking_request.hourly_reservations?
+          - if @recurring_booking_request.action_hourly_booking?
             %br
             = @recurring_booking.hourly_summary
 
