@@ -15,7 +15,7 @@ class InstanceAdmin::Manage::TransactableTypes::FormComponentsControllerTest < A
   end
 
   should '#index' do
-    @form_component = FactoryGirl.create(:form_component, transactable_type: @transactable_type)
+    @form_component = FactoryGirl.create(:form_component, form_componentable: @transactable_type)
     get :index, transactable_type_id: @transactable_type.id
     assert_response :success
     assert_equal [@form_component], assigns(:form_components)
