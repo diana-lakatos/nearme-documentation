@@ -30,12 +30,20 @@ module NearMe
       check_clean_tree
       puts "Compiling..."
       if not Kernel.system("ASSETS_PREFIX=#{@prefix} RAILS_ENV=#{@environment} bundle exec rake assets:precompile")
-        puts "precompile failed :("
+        puts "Precompile failed."
         exit 6
       end
+
+      puts "Moving manifest.json..."
+      if not Kernel.system("ASSETS_PREFIX=#{@prefix} RAILS_ENV=#{@environment} bundle exec rake assets:move_manifest
+        ")
+        puts "manifest.json copy failed."
+        exit 6
+      end
+
       puts "Sync..."
       if not Kernel.system("ASSETS_PREFIX=#{@prefix} FOG_DIR=#{@bucket} bundle exec rake assets:sync")
-        puts "sync failed :("
+        puts "sync failed."
         exit 7
       end
     end
