@@ -1,12 +1,11 @@
-- title "Reset Password"
+- title t('reset_password_form.title')
 
 .row-fluid
   #signup
     .span8.offset2
       .box
-        %h2== Reset Your Password
-        %p.intro
-          Fill in your email below and we'll send you instructions to reset your password.
+        %h2= t 'reset_password_form.heading'
+        %p.intro= t 'reset_password_form.instructions_email'
 
         = simple_form_for(resource, :as => resource_name, :url => password_path(resource_name)) do |f|
           .email-holder.input-icon-holder
@@ -14,7 +13,7 @@
             %span.ico-mail
 
           .actions
-            = f.submit "Reset Password"
+            = f.submit t('reset_password_form.buttons.reset')
 
 - if request.xhr?
   :javascript

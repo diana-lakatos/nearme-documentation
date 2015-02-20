@@ -1,13 +1,11 @@
-- title "Sign up to #{platform_context.name}"
+- title t('sign_up_form.sign_up_to', marketplace_name: platform_context.name)
 
 #signup
   .row-fluid
     .span8.offset2
       .box
         %header
-          %h2
-            Sign up to
-            = platform_context.name
+          %h2= t 'sign_up_form.sign_up_to', marketplace_name: platform_context.name
 
         = render 'registrations/signup_form'
 

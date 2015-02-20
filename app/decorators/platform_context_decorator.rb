@@ -60,9 +60,9 @@ class PlatformContextDecorator
   def search_field_placeholder
     case instance.buyable?
     when false
-      instance.searcher_type == 'fulltext' ? "Search by keyword" : "Search by city or address"
+      instance.searcher_type == 'fulltext' ? I18n.t('homepage.search_field_placeholder.full_text') : I18n.t('homepage.search_field_placeholder.location')
     when true
-      'Search'
+      I18n.t 'homepage.search_field_placeholder.search'
     end
   end
 

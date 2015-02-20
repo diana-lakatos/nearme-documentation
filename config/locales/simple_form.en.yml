@@ -127,6 +127,10 @@ en:
       user:
         biography: 'About me'
         sms_notifications_enabled: 'Enable Text Message Notifications'
+
+      registration:
+        email: 'Your email address'
+
     placeholders:
       user_blog:
         name: 'What is the name of your blog?'
@@ -156,6 +160,16 @@ en:
       location:
         email: 'Your booking email'
         special_notes: "For example, how your %{lessees} should check in, your Wi-Fi password, whether you have pets, or other special information relevant to your %{lessee}'s stay"
+
+      registration:
+        name: 'Full name'
+        email: 'Email'
+        password: 'Password'
+        we_can_contact_you: 'So we can contact you'
+
+      session:
+        email: 'Email'
+        password: 'Password'
 
     prompts:
       companies:
