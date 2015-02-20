@@ -8,7 +8,7 @@
             .input-container.col-xs-12.location-type-entry
               = f.input :id, as: :hidden, input_html: { class: 'location-type-id'}
               = f.input :name, label: false, input_html: { class: 'span10 location-type-name' }
-              %a{"data-target" => "#instanceAdminModal", "data-toggle" => "modal", "href" => "#{destroy_modal_instance_admin_settings_location_type_path(f.object)}"}
+              %a{"data-target" => "#instanceAdminModal", "href" => "#{destroy_modal_instance_admin_settings_location_type_path(f.object)}", "data-location-types-instance-admin-modal" => '1' }
                 .fa.fa-trash-o.fa-2x.inline-form-icon.pull-right
 
 - content_for :domready do
