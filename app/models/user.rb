@@ -79,13 +79,13 @@ class User < ActiveRecord::Base
   has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
 
   scope :patron_of, lambda { |listing|
-                    joins(:reservations).where(:reservations => { :transactable_id => listing.id }).uniq
-                  }
+    joins(:reservations).where(:reservations => { :transactable_id => listing.id }).uniq
+  }
 
   scope :without, lambda { |users|
-                  users_ids = users.respond_to?(:pluck) ? users.pluck(:id) : Array.wrap(users).collect(&:id)
-                  users_ids.any? ? where('users.id NOT IN (?)', users_ids) : all
-                }
+    users_ids = users.respond_to?(:pluck) ? users.pluck(:id) : Array.wrap(users).collect(&:id)
+    users_ids.any? ? where('users.id NOT IN (?)', users_ids) : all
+  }
 
   scope :ordered_by_email, -> { order('users.email ASC') }
 
@@ -161,7 +161,7 @@ class User < ActiveRecord::Base
   end
 
   devise :database_authenticatable, :registerable, :recoverable,
-         :rememberable, :trackable, :user_validatable, :token_authenticatable, :temporary_token_authenticatable
+    :rememberable, :trackable, :user_validatable, :token_authenticatable, :temporary_token_authenticatable
 
   attr_accessor :phone_required, :country_name_required, :skip_password, :verify_identity
 
@@ -392,7 +392,7 @@ class User < ActiveRecord::Base
 
   def email_verification_token
     Digest::SHA1.hexdigest(
-        "--dnm-token-#{self.id}-#{self.created_at}"
+      "--dnm-token-#{self.id}-#{self.created_at}"
     )
   end
 
@@ -435,9 +435,9 @@ class User < ActiveRecord::Base
 
   def to_balanced_params
     {
-        name: name,
-        email: email,
-        phone: phone
+      name: name,
+      email: email,
+      phone: phone
     }
   end
 
@@ -526,7 +526,7 @@ class User < ActiveRecord::Base
   end
 
   def recover_companies
-    self.created_companies.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', self.deleted_at, self.deleted_at + 30.seconds).each do |company|
+    self.created_companies.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', [self.deleted_at, self.banned_at].compact.first, [self.deleted_at, self.banned_at].compact.first + 30.seconds).each do |company|
       begin
         company.restore(:recursive => true)
       rescue
@@ -703,7 +703,7 @@ class User < ActiveRecord::Base
 
   def question_average_rating
     @rating_answers_rating ||= RatingAnswer.where(review_id: reviews_as_seller.pluck(:id))
-                                 .group(:rating_question_id).average(:rating)
+      .group(:rating_question_id).average(:rating)
   end
 
   def recalculate_average_rating!

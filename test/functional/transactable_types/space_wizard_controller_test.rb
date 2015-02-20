@@ -79,7 +79,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
     setup do
       @user.country_name = nil
       @user.save!
-      FactoryGirl.create(:form_component, transactable_type: @transactable_type)
+      FactoryGirl.create(:form_component, form_componentable: @transactable_type)
     end
 
     should "be set to Greece" do
@@ -109,7 +109,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
 
       setup do
         FactoryGirl.create(:approval_request_template, required_written_verification: true)
-        FactoryGirl.create(:form_component, transactable_type: @transactable_type)
+        FactoryGirl.create(:form_component, form_componentable: @transactable_type)
       end
 
       should 'show form to write message'  do
@@ -237,9 +237,9 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
 
   context 'with multiple sections' do
     should 'render all sections correctly' do
-      FactoryGirl.create(:form_component, transactable_type: @transactable_type, form_fields: [{'company' => 'name'}, {'company' => 'address'}, {'location' => 'name'}], name: 'Super Cool Section 1')
-      FactoryGirl.create(:form_component, transactable_type: @transactable_type, form_fields: [{ 'transactable' => 'price' }, { 'transactable' => 'photos' }, { 'transactable' => 'name' }], name: 'Transactable Section')
-      FactoryGirl.create(:form_component, transactable_type: @transactable_type, form_fields: [{'user' => 'phone'}], name: 'Contact Information')
+      FactoryGirl.create(:form_component, form_componentable: @transactable_type, form_fields: [{'company' => 'name'}, {'company' => 'address'}, {'location' => 'name'}], name: 'Super Cool Section 1')
+      FactoryGirl.create(:form_component, form_componentable: @transactable_type, form_fields: [{ 'transactable' => 'price' }, { 'transactable' => 'photos' }, { 'transactable' => 'name' }], name: 'Transactable Section')
+      FactoryGirl.create(:form_component, form_componentable: @transactable_type, form_fields: [{'user' => 'phone'}], name: 'Contact Information')
       get :list, transactable_type_id: @transactable_type.id
       assert_select "h2", 'Super Cool Section 1'
       assert_select "h2", 'Transactable Section'
