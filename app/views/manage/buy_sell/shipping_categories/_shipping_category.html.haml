@@ -3,7 +3,8 @@
     = shipping_category.name
   .span3
     .links.right
-      = link_to manage_buy_sell_shipping_category_path(shipping_category), :method => :delete, :confirm => 'Are you sure?', :class => "delete", style: 'padding-top: 0px;' do
+      = link_to manage_buy_sell_shipping_category_path(shipping_category), :method => :delete,
+          data: { confirm: 'Are you sure?' }, :class => "delete", style: 'padding-top: 0px;' do
         %span.ico-trash
         %span.text Delete
 

@@ -15,4 +15,7 @@
       .span2= number_to_currency_symbol(payment.order.currency, payment.amount)
       .span2 Credit Card
       .span2= payment.state
-      .span2= link_to("Capture", capture_manage_buy_sell_order_payment_path(@order.number, payment.id), class: 'btn btn-medium btn-green', confirm: "Are you sure you want to capture this order?") unless payment.completed?
+      .span2
+        = link_to("Capture", capture_manage_buy_sell_order_payment_path(@order.number, payment.id),
+            class: 'btn btn-medium btn-green',
+            data: { confirm: 'Are you sure you want to capture this order?' }) unless payment.completed?

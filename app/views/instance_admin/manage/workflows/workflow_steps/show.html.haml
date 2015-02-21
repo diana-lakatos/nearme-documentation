@@ -23,4 +23,6 @@
               %td= workflow_alert.alert_type
               %td= workflow_alert.delay.to_i.zero? ? 'No' : "#{(workflow_alert.delay.to_f/60.0).round(2)}h"
               %td= link_to 'Edit', edit_instance_admin_manage_workflow_step_workflow_alert_path(resource, workflow_alert), class: 'pull-right'
-              %td= link_to "Delete", instance_admin_manage_workflow_step_workflow_alert_path(resource, workflow_alert), method: :delete, confirm: "Are you sure?", class: "pull-right"
+              %td
+                = link_to "Delete", instance_admin_manage_workflow_step_workflow_alert_path(resource, workflow_alert),
+                    method: :delete, data: { confirm: 'Are you sure?' }, class: "pull-right"

@@ -22,5 +22,6 @@
               %td= resource.internal
               %td= link_to 'Edit', edit_polymorphic_url([:instance_admin, :manage, @target, resource]), class: 'pull-right'
               - unless resource.required_internally?
-                %td= link_to "Delete", polymorphic_url([:instance_admin, :manage, @target, resource]), :method => :delete, :confirm => "Are you sure you want to delete this attribute?", :class => "pull-right"
+                %td= link_to "Delete", polymorphic_url([:instance_admin, :manage, @target, resource]), method: :delete,
+                        data: { confirm: 'Are you sure you want to delete this attribute?' }, :class => "pull-right"
 

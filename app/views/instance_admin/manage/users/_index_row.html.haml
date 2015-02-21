@@ -3,6 +3,8 @@
   %td= resource.email
   %td= resource.created_at.strftime("%b %-d, %Y")
   %td
-    = link_to "Login As", login_as_instance_admin_manage_user_path(resource), :method => :post, data: {:confirm => "This will log you out and re-log you in as this user"}
+    = link_to "Login As", login_as_instance_admin_manage_user_path(resource), :method => :post,
+        data: { confirm: 'This will log you out and re-log you in as this user' }
   %td
-    = link_to "Delete", instance_admin_manage_user_user_bans_path(resource), :method => :post, data: {:confirm => "You will prohibit this user from logging in to your marketplace, do you want to continue?"}
+    = link_to "Delete", instance_admin_manage_user_user_bans_path(resource), :method => :post,
+        data: { confirm:  'You will prohibit this user from logging in to your marketplace, do you want to continue?' }
