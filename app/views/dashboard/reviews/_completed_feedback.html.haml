@@ -13,8 +13,10 @@
             .actions
               %a.edit{'data-review-id' => feedback.id}
                 = t('dashboard.reviews.feedback.edit')
-              = link_to dashboard_review_path(feedback), method: :delete, class: 'remove', confirm: t('dashboard.reviews.feedback.are_you_sure') do
+              = link_to dashboard_review_path(feedback), method: :delete, class: 'remove',
+                  data: { confirm: t('dashboard.reviews.feedback.are_you_sure') } do
                 %i.ico-trash
+
           = render 'show_details_link', subject: subject, id: feedback.reviewable.id
 
       .span4
@@ -25,7 +27,7 @@
             = link_to t('dashboard.reviews.feedback.view_order_details'), dashboard_order_path(feedback.reviewable.order)
         .order-info
           %p= feedback.decorate.link_to_seller_profile
-          
+
           - if platform_context.support_email
             %p
               = mail_to platform_context.support_email, t('dashboard.reviews.feedback.contact_name_support', name: @current_instance.name)

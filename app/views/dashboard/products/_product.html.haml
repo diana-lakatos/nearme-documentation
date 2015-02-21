@@ -11,4 +11,5 @@
       %p= number_to_currency_symbol product.currency, product.price
     .col-md-1.listing-attr
       = link_to "Edit", edit_dashboard_product_path(product)
-      = link_to "Delete", dashboard_product_path(product), :method => :delete, :confirm => 'Are you sure?', style: 'margin-top:0px;'
+      = link_to "Delete", dashboard_product_path(product), :method => :delete, data: { confirm: 'Are you sure?' },
+          style: 'margin-top:0px;'

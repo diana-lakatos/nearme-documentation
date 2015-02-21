@@ -24,5 +24,6 @@
                 %td
                   - unless instance_admin.instance_owner
                     .pull-right
-                      = link_to instance_admin_manage_admins_instance_admin_path(instance_admin), :method => :delete, :confirm => 'Are you sure?' do
+                      = link_to instance_admin_manage_admins_instance_admin_path(instance_admin), :method => :delete,
+                          data: { confirm: 'Are you sure?' } do
                         .fa.fa-trash-o.fa-2x.inline-form-icon
