@@ -13,11 +13,15 @@
             %h3= "Order ##{@order.number}"
           .right
             - unless @order.approved?
-              = link_to 'Approve', approve_manage_buy_sell_order_path(@order), class: 'btn btn-medium btn-blue', confirm: "Are you sure you want to approve this order?"
+              = link_to 'Approve', approve_manage_buy_sell_order_path(@order), class: 'btn btn-medium btn-blue',
+                  data: { confirm: 'Are you sure you want to approve this order?' }
+
             - if @order.canceled?
-              = link_to 'Resume', resume_manage_buy_sell_order_path(@order), class: 'btn btn-medium btn-green', confirm: "Are you sure you want to resume this order?"
+              = link_to 'Resume', resume_manage_buy_sell_order_path(@order), class: 'btn btn-medium btn-green',
+                  data: { confirm: 'Are you sure you want to resume this order?' }
             - else
-              = link_to 'Cancel', cancel_manage_buy_sell_order_path(@order), class: 'btn btn-medium btn-red', confirm: "Are you sure you want to cancel this order?"
+              = link_to 'Cancel', cancel_manage_buy_sell_order_path(@order), class: 'btn btn-medium btn-red',
+                  data: { confirm: 'Are you sure you want to cancel this order?' }
 
 
       = render 'payments'

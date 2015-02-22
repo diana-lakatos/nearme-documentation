@@ -5,7 +5,8 @@
     = property.presentation
   .span3
     .links.right
-      = link_to manage_buy_sell_property_path(property), :method => :delete, :confirm => 'Are you sure?', :class => "delete", style: 'padding-top: 0px;' do
+      = link_to manage_buy_sell_property_path(property), :method => :delete, data: { confirm: 'Are you sure?' },
+          :class => "delete", style: 'padding-top: 0px;' do
         %span.ico-trash
         %span.text Delete
 

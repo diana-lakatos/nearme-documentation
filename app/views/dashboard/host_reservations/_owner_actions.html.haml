@@ -11,5 +11,5 @@
 
 - if !reservation.paid? && reservation.remote_payment?
   = link_to 'Request payment', request_payment_dashboard_host_reservation_path(reservation, listing_id: reservation.listing),
-    class: 'btn red full', confirm: 'Do you want to send payment request email for this guest?'
+      class: 'btn red full', data: { confirm: 'Do you want to send payment request email for this guest?' }
 

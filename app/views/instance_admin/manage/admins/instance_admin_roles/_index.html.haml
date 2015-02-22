@@ -24,5 +24,6 @@
                       = image_tag('spinner_mini.gif')
                 %td
                   - if instance_admin_role.instance_id.present?
-                    = link_to instance_admin_manage_admins_instance_admin_role_path(instance_admin_role), :method => :delete, :confirm => 'Are you sure?' do
+                    = link_to instance_admin_manage_admins_instance_admin_role_path(instance_admin_role),
+                        method: :delete, data: { confirm: 'Are you sure?' } do
                       .fa.fa-trash-o.fa-2x.inline-form-icon
