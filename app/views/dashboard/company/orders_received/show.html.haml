@@ -4,15 +4,18 @@
 .dash-body
   .action-row
     - if !@order.approved? && !@order.canceled?
-      = link_to approve_dashboard_company_orders_received_path(@order), confirm: 'Are you sure you want to approve this order?' do
+      = link_to approve_dashboard_company_orders_received_path(@order),
+          data: { confirm: 'Are you sure you want to approve this order?' } do
         .btn.blue Approve Order
 
     - if @order.allow_cancel? && @order.payment_state != 'paid'
-      = link_to cancel_dashboard_company_orders_received_path(@order), confirm: 'Are you sure you want to cancel this order?' do
+      = link_to cancel_dashboard_company_orders_received_path(@order),
+          data: { confirm: 'Are you sure you want to cancel this order?' } do
         .btn.red Cancel Order
 
     - if @order.canceled?
-      = link_to resume_dashboard_company_orders_received_path(@order), confirm: 'Are you sure you want to resume this order?' do
+      = link_to resume_dashboard_company_orders_received_path(@order),
+          data: { confirm: 'Are you sure you want to resume this order?' } do
         .btn.blue Resume Order
 
   .divider
@@ -48,7 +51,7 @@
                 .btn.gray.disabled Payment captured
               - else
                 = link_to capture_dashboard_company_orders_received_payment_path(@order.number, payment.id),
-                            confirm: 'Are you sure you want to capture payment for this order?' do
+                    data: { confirm: 'Are you sure you want to capture payment for this order?' } do
                   .btn.blue Capture
 
 
@@ -105,7 +108,8 @@
           %td= shipment.stock_location.name
           %td
             - if shipment.ready?
-              = link_to ship_dashboard_company_orders_received_shipment_path(@order.number, shipment), confirm: 'Are you sure you want to ship this package?' do
+              = link_to ship_dashboard_company_orders_received_shipment_path(@order.number, shipment),
+                  data: { confirm: 'Are you sure you want to ship this package?' } do
                 .btn.blue Mark as Shipped
 
   .divider

@@ -13,4 +13,5 @@
     %span.location-options
       =link_to "Edit", '#', data: { modal: true, href: edit_dashboard_company_location_path(location) }
       %span.blue |
-      =link_to "Remove", dashboard_company_location_path(location), remote: true, method: :delete, confirm: "Are you sure?"
+      =link_to "Remove", dashboard_company_location_path(location), remote: true, method: :delete,
+          data: { confirm: 'Are you sure?' }

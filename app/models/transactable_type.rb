@@ -13,8 +13,8 @@ class TransactableType < ActiveRecord::Base
 
   # attr_accessible :name, :pricing_options, :pricing_validation, :availability_options, :availability_templates_attributes
 
-  has_many :transactables, inverse_of: :transactable_type
-  has_many :availability_templates, inverse_of: :transactable_type, :dependent => :destroy
+  has_many :transactables, inverse_of: :transactable_type, dependent: :destroy
+  has_many :availability_templates, inverse_of: :transactable_type, dependent: :destroy
   has_many :data_uploads, inverse_of: :transactable_type
   has_many :transactable_type_actions
   has_many :action_types, through: :transactable_type_actions

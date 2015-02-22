@@ -5,10 +5,10 @@
         %tr
           %th Name
           %th Details
-          %th 
+          %th
             %span.header-link
               = link_to '+ Add New Dimension Template', new_instance_admin_shipping_options_dimensions_template_path
-    
+
       - collection.each do |resource|
         %tr
           %td
@@ -16,5 +16,6 @@
           %td
           %td
             = link_to "Edit", edit_instance_admin_shipping_options_dimensions_template_path(resource), :class => 'btn btn-green'
-            = link_to "Delete", instance_admin_shipping_options_dimensions_template_path(resource), :class => 'btn btn-green', :method => :delete, :confirm => t('confirmations.are_you_sure')
-    
+            = link_to "Delete", instance_admin_shipping_options_dimensions_template_path(resource),
+                :class => 'btn btn-green', :method => :delete, data: { confirm: t('confirmations.are_you_sure') }
+

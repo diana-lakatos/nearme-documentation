@@ -39,4 +39,5 @@
               %td= blog_post.published_at
               %td
                 = link_to 'Edit', edit_dashboard_blog_post_path(blog_post)
-                = link_to 'Delete', dashboard_blog_post_path(blog_post.id), method: :delete, confirm: t('user_blog.confirmations.delete')
+                = link_to 'Delete', dashboard_blog_post_path(blog_post.id), method: :delete,
+                  data: { confirm: t('user_blog.confirmations.delete') }

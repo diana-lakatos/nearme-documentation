@@ -11,13 +11,16 @@ class SearchHelperTest < ActionView::TestCase
     end
 
     should "#listing_price_information" do
-      assert_equal "$10 <span>/ hour</span>", listing_price_information(@listing)
-      assert_equal "$50 <span>/ day</span>", listing_price_information(@listing, ['daily'])
+      assert_equal "$12", @listing.decorate.price_with_currency(Money.new(1200, 'EUR'))
+      assert_equal "$50", @listing.decorate.price_with_currency(:daily_price)
+      assert_equal "$10 <span>/ hour</span>", @listing.decorate.lowest_price_with_currency
+      assert_equal "$50 <span>/ day</span>", @listing.decorate.lowest_price_with_currency(['daily'])
     end
 
     should "#location_price_information" do
-      assert_equal "From <span>$10</span> / hour", location_price_information(@location)
-      assert_equal "From <span>$50</span> / day", location_price_information(@location, ['daily'])
+      assert_equal "$12", @location.decorate.price_with_currency(Money.new(1200, 'EUR'))
+      assert_equal "From <span>$10</span> / hour", @location.decorate.lowest_price_with_currency
+      assert_equal "From <span>$50</span> / day", @location.decorate.lowest_price_with_currency(['daily'])
     end
   end
 

@@ -13,8 +13,8 @@
     = link_to "Payout via #{resource.payout_processor}", payout_instance_admin_manage_transfer_path(resource),
       :method => :post,
       :class => 'btn btn-default',
-      :confirm => 'Payment will go live. Do you want to continue?'
-  - else 
+      data: { confirm: 'Payment will go live. Do you want to continue?' }
+  - else
     %button.btn.btn_default{disabled: true}
       Payout
 

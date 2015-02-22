@@ -695,16 +695,16 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
     t.string   "payment_transfers_frequency",                                   default: "fortnightly"
-    t.string   "encrypted_shippo_username"
-    t.string   "encrypted_shippo_password"
+    t.text     "hidden_ui_controls"
+    t.boolean  "user_blogs_enabled",                                            default: false
     t.string   "twilio_from_number"
     t.string   "test_twilio_from_number"
     t.string   "encrypted_test_twilio_consumer_key"
     t.string   "encrypted_test_twilio_consumer_secret"
     t.string   "encrypted_twilio_consumer_key"
     t.string   "encrypted_twilio_consumer_secret"
-    t.boolean  "user_blogs_enabled",                                            default: false
-    t.text     "hidden_ui_controls"
+    t.string   "encrypted_shippo_username"
+    t.string   "encrypted_shippo_password"
     t.boolean  "wish_lists_enabled",                                            default: false
     t.string   "wish_lists_icon_set",                                           default: "heart"
   end
@@ -762,8 +762,8 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.boolean  "listings_public",                default: true
     t.integer  "partner_id"
     t.integer  "address_id"
-    t.boolean  "mark_to_be_bulk_update_deleted", default: false
     t.string   "external_id"
+    t.boolean  "mark_to_be_bulk_update_deleted", default: false
     t.integer  "wish_list_items_count",          default: 0
   end
 
@@ -1495,10 +1495,10 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.decimal  "service_fee_buyer_percent",               precision: 5,  scale: 2, default: 0.0
     t.decimal  "service_fee_seller_percent",              precision: 5,  scale: 2, default: 0.0
     t.datetime "shippo_rate_purchased_at"
-    t.string   "guest_token"
-    t.integer  "state_lock_version",                                               default: 0,       null: false
     t.integer  "platform_context_detail_id"
     t.string   "platform_context_detail_type"
+    t.string   "guest_token"
+    t.integer  "state_lock_version",                                               default: 0,       null: false
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id", using: :btree
@@ -1647,7 +1647,7 @@ ActiveRecord::Schema.define(version: 20150214125057) do
   add_index "spree_product_properties", ["user_id"], name: "index_spree_product_properties_on_user_id", using: :btree
 
   create_table "spree_products", force: true do |t|
-    t.string   "name",                 default: "",    null: false
+    t.string   "name",                  default: "",    null: false
     t.text     "description"
     t.datetime "available_on"
     t.datetime "deleted_at"
@@ -1664,13 +1664,13 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.integer  "user_id"
     t.hstore   "extra_properties"
     t.hstore   "status"
-    t.boolean  "products_public",      default: true
-    t.boolean  "approved",             default: true
-    t.text     "cross_sell_skus",      default: [],                 array: true
+    t.boolean  "products_public",       default: true
+    t.boolean  "approved",              default: true
+    t.text     "cross_sell_skus",       default: [],                 array: true
     t.integer  "administrator_id"
-    t.boolean  "shippo_enabled",       default: false
-    t.boolean  "draft",                default: false
-    t.float    "average_rating",       default: 0.0
+    t.boolean  "shippo_enabled",        default: false
+    t.boolean  "draft",                 default: false
+    t.float    "average_rating",        default: 0.0
     t.integer  "wish_list_items_count", default: 0
   end
 
@@ -2535,7 +2535,6 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.boolean  "recurring_booking",                                                  default: false, null: false
     t.boolean  "show_page_enabled",                                                  default: false
     t.text     "custom_csv_fields"
-    t.boolean  "overnight_booking",                                                  default: false, null: false
     t.text     "onboarding_form_fields"
     t.decimal  "service_fee_guest_percent",                  precision: 5, scale: 2, default: 0.0
     t.decimal  "service_fee_host_percent",                   precision: 5, scale: 2, default: 0.0
@@ -2543,6 +2542,7 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.string   "lessor"
     t.string   "lessee"
     t.boolean  "groupable_with_others",                                              default: true
+    t.boolean  "overnight_booking",                                                  default: false, null: false
     t.boolean  "enable_reviews"
   end
 
