@@ -66,6 +66,9 @@ en:
         description: 'Location description'
         location_type: 'Location type'
         currency: 'Currency'
+        location_address:
+          address: 'Address'
+
       location:
         name: 'Location name'
         description: 'Location description'
@@ -77,6 +80,7 @@ en:
         location_address:
           address: 'Address'
         amenities: 'Amenities'
+        location_type: 'Location type'
 
       companies:
         name: 'Company name'
@@ -89,6 +93,8 @@ en:
         bank_owner_name: "Account's Owner Name"
         bank_routing_number: 'Routing Number'
         bank_account_number: 'Account Number'
+        company_address:
+          address: 'Address'
       domain:
         google_analytics_tracking_code: "GA Tracking Code"
       company:
