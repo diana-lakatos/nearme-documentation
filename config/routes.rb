@@ -253,6 +253,9 @@ DesksnearMe::Application.routes.draw do
           member do
             patch :update_rank
           end
+          collection do
+            post :create_as_copy
+          end
         end
       end
 
@@ -305,6 +308,9 @@ DesksnearMe::Application.routes.draw do
         resources :form_components, controller: 'product_types/form_components' do
           member do
             patch :update_rank
+          end
+          collection do
+            post :create_as_copy
           end
         end
       end

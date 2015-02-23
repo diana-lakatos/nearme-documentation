@@ -1,5 +1,5 @@
 %ol.draggablePanelList
-  - fields_builder = TransactableType::CustomFieldsBuilder.new(f.object)
+  - fields_builder = CustomFieldsBuilder.new(f.object)
   - all_fields = fields_builder.object_field_pairs.clone
   - modified = false
   - fields_builder.all_valid_object_field_pairs.each do |pair|

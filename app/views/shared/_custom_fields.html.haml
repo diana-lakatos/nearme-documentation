@@ -1,5 +1,5 @@
 %ol.draggablePanelList
-  - fields_builder = "#{form_componentable.class.name}::CustomFieldsBuilder".constantize.new(f.object)
+  - fields_builder = CustomFieldsBuilder.new(f.object)
   - all_fields = fields_builder.object_field_pairs.clone
   - fields_builder.all_valid_object_field_pairs.each do |pair|
     - unless all_fields.include?({ pair.keys.first.to_s => pair.values.first.to_s})

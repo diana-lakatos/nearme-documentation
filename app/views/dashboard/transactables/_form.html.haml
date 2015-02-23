@@ -1,82 +1,92 @@
-.row.edit-locations
-  .col-md-3.add-new
-    = link_to '#', data: { modal: true, href: new_dashboard_location_path } do
-      = image_tag 'themes/buy_sell/icon-cross.png'
-      %span.blue Add New Location
-  .col-md-3
-    %label{:for => ""} Location
-  #location-list.col-md-6
-    = render @locations, form: f
-    .show-more
-      %a{"data-target" => ".hidden-location", "data-toggle" => "collapse", :href => "#"} Show more locations
-  - if f.object.errors.messages[:location]
-    .col-md-12.error
-      .error-block
-        You need to pick up location
-
-= render :partial => 'approval_requests/form', :locals => { f: f }
-
+- custom_attribute_names = @transactable_type.custom_attributes.collect { |custom_attribute| custom_attribute.name }
 = f.hidden_field :transactable_type_id, value: @transactable_type.id
-
-= f.input :enabled, as: :bootstrap_switch
 = f.input :id, :as => :hidden
 
-- @transactable_type.custom_attributes.each do |attribute|
-  - next if platform_context.instance.user_based_marketplace_views? && ( attribute.name == 'quantity' || attribute.name == 'capacity' )
-  = draw_attribute_for_form(attribute, f)
+- @form_components.each do |form_component|
+  - form_component.form_fields.each do |form_field|
+    - model = form_field.keys.first
+    - field = form_field[model]
 
-- unless platform_context.instance.listing_amenity_types.count.zero?
-  = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :label => "Amenities", :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'selectpicker', :multiple => true }
+    - case field
+    - when 'location_id'
+      .row.edit-locations
+        .col-md-3.add-new
+          = link_to '#', data: { modal: true, href: new_dashboard_location_path } do
+            = image_tag 'themes/buy_sell/icon-cross.png'
+            %span.blue Add New Location
+        .col-md-3
+          %label{:for => ""} Location
+        #location-list.col-md-6
+          = render @locations, form: f
+          .show-more
+            %a{"data-target" => ".hidden-location", "data-toggle" => "collapse", :href => "#"} Show more locations
+        - if f.object.errors.messages[:location]
+          .col-md-12.error
+            .error-block
+              You need to pick up location
+    - when 'approval_requests'
+      = render :partial => 'approval_requests/form', :locals => { f: f }
+    - when 'enabled'
+      = f.input :enabled, as: :bootstrap_switch
+    - when 'amenity_types'
+      - unless platform_context.instance.listing_amenity_types.count.zero?
+        = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :label => "Amenities", :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'selectpicker', :multiple => true }
+    - when 'price'
+      = render partial: "price_form", locals: { f: f }
+    - when 'schedule'
+      - if @transactable_type.action_schedule_booking?
+        %div{:class => "row #{"error" if f.object.errors.include?(:fixed_price).present?}"}
+          .col-md-3
+            %label
+              %abbr{:title => "required"}= t('simple_form.required.mark')
+              =t('simple_form.labels.listings.schedule')
+          .col-md-9
+            = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule(schedule: f.object.transactable_type.schedule.try(:schedule)) do |schedule_form|
+              = schedule_form.hidden_field :schedule, class: 'icui'
+      - else
+        = render partial: 'availability_rules_form', locals: { f: f }
+    - when 'photos'
+      .row
+        .col-md-3
+          = f.label :photos
+        .col-md-9
+          .loading{:style => "display: none"}
+            = image_tag "spinner.gif"
+            %br/
+            .span= t('manage.listings.photos.waiting_for_photo_processing')
+          = new_file_upload_input("#{f.object_name}[photos_attributes][0][image]",
+                                          dashboard_photos_path,
+                                          Photo.new.image.thumbnail_dimensions[:medium],
+                                          "Add Photo",
+                                          :required => true,
+                                          :error => f.object.errors.include?(:photos).present? ? "Please upload at least one photo." : nil) do
+            - # caches img so it is displayed even for the first photo. Without this, loader icon is not displayed for the first photo
+            .hidden.thumbnail-processing
+              .loading-icon
+            = hidden_field_tag "#{f.object_name}", nil, placeholder: t('ui.photo_uploader.caption'), id: 'photo-item-input-template', disabled: true, 'data-number' => 0, 'data-no-caption' => true
+            - unless @photos.nil?
+              - @photos.each_with_index do |photo|
+                = get_fileupload_photo_html(photo.image_url(:medium),
+                                            destroy_space_wizard_photo_path(:id => photo.id),
+                                            edit_dashboard_photo_path(photo),
+                                            :div,
+                                            id: photo.id) do
+                  -# text_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][caption]", photo.caption, :placeholder => t('ui.photo_uploader.caption')
+                  = hidden_field_tag "#{f.object_name}[photo_ids][]", photo.id
+                  = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][id]", photo.id
+                  = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][position]", photo.position, class: 'photo-position-input'
 
-= render partial: "price_form", locals: { f: f }
-
-- if @transactable_type.action_schedule_booking?
-  %div{:class => "row #{"error" if f.object.errors.include?(:fixed_price).present?}"}
-    .col-md-3
-      %label
-        %abbr{:title => "required"}= t('simple_form.required.mark')
-        =t('simple_form.labels.listings.schedule')
-    .col-md-9
-      = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule(schedule: f.object.transactable_type.schedule.try(:schedule)) do |schedule_form|
-        = schedule_form.hidden_field :schedule, class: 'icui'
-- else
-  = render partial: 'availability_rules_form', locals: { f: f }
-
-.row
-  .col-md-3
-    = f.label :photos
-  .col-md-9
-    .loading{:style => "display: none"}
-      = image_tag "spinner.gif"
-      %br/
-      .span= t('manage.listings.photos.waiting_for_photo_processing')
-    = new_file_upload_input("#{f.object_name}[photos_attributes][0][image]",
-                                    dashboard_photos_path,
-                                    Photo.new.image.thumbnail_dimensions[:medium],
-                                    "Add Photo",
-                                    :required => true,
-                                    :error => f.object.errors.include?(:photos).present? ? "Please upload at least one photo." : nil) do
-      - # caches img so it is displayed even for the first photo. Without this, loader icon is not displayed for the first photo
-      .hidden.thumbnail-processing
-        .loading-icon
-      = hidden_field_tag "#{f.object_name}", nil, placeholder: t('ui.photo_uploader.caption'), id: 'photo-item-input-template', disabled: true, 'data-number' => 0, 'data-no-caption' => true
-      - unless @photos.nil?
-        - @photos.each_with_index do |photo|
-          = get_fileupload_photo_html(photo.image_url(:medium),
-                                      destroy_space_wizard_photo_path(:id => photo.id),
-                                      edit_dashboard_photo_path(photo),
-                                      :div,
-                                      id: photo.id) do
-            -# text_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][caption]", photo.caption, :placeholder => t('ui.photo_uploader.caption')
-            = hidden_field_tag "#{f.object_name}[photo_ids][]", photo.id
-            = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][id]", photo.id
-            = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][position]", photo.position, class: 'photo-position-input'
-
-- if @company.waiver_agreement_templates.any?
-  = f.association :waiver_agreement_templates, collection: @company.waiver_agreement_templates.order(:name).pluck(:name, :id), as: :check_boxes
-
-- if platform_context.instance.documents_upload_enabled?
-  = render "forms/document_requirements", f: f
+    - when 'waiver_agreement_templates'
+      - if @company.waiver_agreement_templates.any?
+        = f.association :waiver_agreement_templates, collection: @company.waiver_agreement_templates.order(:name).pluck(:name, :id), as: :check_boxes
+    - when 'documents_upload'
+      - if platform_context.instance.documents_upload_enabled?
+        = render "forms/document_requirements", f: f
+    - else
+      - if custom_attribute_names.include?(field)
+        - @transactable_type.custom_attributes.each do |attribute|
+          - next if (platform_context.instance.user_based_marketplace_views? && ( attribute.name == 'quantity' || attribute.name == 'capacity' )) || attribute.name != field
+          = draw_attribute_for_form(attribute, f)
 
 - content_for :domready do
   $(function() { new Dashboard.ListingController($('#listing-form')) });

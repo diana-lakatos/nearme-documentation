@@ -3,6 +3,7 @@ class Dashboard::TransactablesController < Dashboard::BaseController
   before_filter :find_transactable, :except => [:index, :new, :create]
   before_filter :find_locations
   before_filter :disable_unchecked_prices, :only => :update
+  before_filter :set_form_components
 
   def index
     @transactables = @transactable_type.transactables.where(company_id: @company).paginate(page: params[:page], per_page: 20)
@@ -94,6 +95,10 @@ class Dashboard::TransactablesController < Dashboard::BaseController
   end
 
   private
+
+  def set_form_components
+    @form_components = @transactable_type.form_components.where(form_type: FormComponent::TRANSACTABLE_ATTRIBUTES).rank(:rank)
+  end
 
   def find_locations
     @locations = @company.locations

@@ -19,6 +19,7 @@ class Dashboard::TransactablesControllerTest < ActionController::TestCase
   context '#new' do
 
     should 'display available Waiver Agreement check boxes' do
+      FactoryGirl.create(:form_component_transactable)
       @waiver_agreement_template1 = FactoryGirl.create(:waiver_agreement_template, target: @company)
       @waiver_agreement_template2 = FactoryGirl.create(:waiver_agreement_template, target: @company)
       @waiver_agreement_template3 = FactoryGirl.create(:waiver_agreement_template, target: @company)
