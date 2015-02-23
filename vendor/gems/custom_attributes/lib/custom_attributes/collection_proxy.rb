@@ -16,16 +16,6 @@ module CustomAttributes
         model.custom_attributes.each do |custom_attributes_array|
           key = custom_attributes_array[CustomAttribute::NAME]
           type = custom_attributes_array[CustomAttribute::ATTRIBUTE_TYPE].to_sym
-          if key.include?('_price_cents')
-            money_method = "#{key.gsub('_cents', '')}"
-            define_method(money_method) do
-              @model.send(money_method)
-            end
-
-            define_method("#{money_method}=") do
-              @model.send("#{money_method}=")
-            end
-          end
 
           define_method(key) { custom_property_type_cast(@hash[key], "#{type}".to_sym) }
           define_method("#{key}?") { self.send("#{key}") } if type == :boolean

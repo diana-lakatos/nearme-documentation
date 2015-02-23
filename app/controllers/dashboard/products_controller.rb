@@ -9,14 +9,14 @@ class Dashboard::ProductsController < Dashboard::BaseController
   end
 
   def new
-    @product = @company.products.build user: current_user, product_type: @product_type
+    @product = @company.products.build(user: current_user, product_type: @product_type)
     @product_form = ProductForm.new(@product)
     @product_form.assign_all_attributes
     @images = current_user.products_images.where(viewable_id: nil, viewable_type: nil)
   end
 
   def create
-    @product = @company.products.build user: current_user, product_type: @product_type
+    @product = @company.products.build(user: current_user, product_type: @product_type)
     @product_form = ProductForm.new(@product)
     if @product_form.submit(product_form_params)
       redirect_to location_after_save, notice: t('flash_messages.manage.product.created')

@@ -38,11 +38,11 @@ class FormAttributes
     [
       :availability_rules, :price, :photos, :approval_requests
     ] +
-    Transactable.public_custom_attributes_names(transactable_type.id)
+    Transactable.public_custom_attributes_names(transactable_type.id).map { |k| Hash === k ? k.keys : k }.flatten
   end
 
   def product(product_type = nil)
-    Spree::Product.public_custom_attributes_names(product_type.id)
+    Spree::Product.public_custom_attributes_names(product_type.id).map { |k| Hash === k ? k.keys : k }.flatten
   end
 end
 

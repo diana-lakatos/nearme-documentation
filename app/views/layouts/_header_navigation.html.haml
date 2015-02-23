@@ -63,11 +63,10 @@
 
         - if buyable?
           - if current_user.registration_completed? && HiddenUiControls.find('main_menu/manage_items').visible?
-            - if Spree::ProductType.any?
+            - platform_context.product_types.each do |product_type|
               %li
-                = link_to main_app.dashboard_product_type_products_path(Spree::ProductType.first), class: 'nav-link dropdown-toggle' do
-                  %span= t 'top_navbar.manage_bookable', bookable_noun: platform_context.bookable_noun.pluralize
-                  %span Manage #{platform_context.product_types.first.name.pluralize}
+                = link_to main_app.dashboard_product_type_products_path(product_type), class: 'nav-link dropdown-toggle' do
+                  %span Manage #{product_type.name.pluralize}
 
             - if HiddenUiControls.find('main_menu/my_orders').visible?
               %li

@@ -85,6 +85,11 @@ module CustomAttributes
               end
               value.reverse_merge!(hash)
             end
+            value.each do |k, v|
+              if Array === v
+                value[k] = v.join(',')
+              end
+            end
             super(value)
           end
 
@@ -96,7 +101,7 @@ module CustomAttributes
             return [] if target_id.nil?
             CustomAttributes::CustomAttribute.get_from_cache(target_id, "#{@options[:target_type]}").map do |attr_array|
               if attr_array[#{CustomAttributes::CustomAttribute::PUBLIC}]
-                if attr_array[#{CustomAttributes::CustomAttribute::ATTRIBUTE_TYPE}].to_sym == :array
+                if attr_array[#{CustomAttributes::CustomAttribute::ATTRIBUTE_TYPE}].to_sym == :array && #{CustomAttributes::CustomAttribute::MULTIPLE_ARRAY_TAGS}.include?(attr_array[#{CustomAttributes::CustomAttribute::HTML_TAG}].to_s)
                   { attr_array[#{CustomAttributes::CustomAttribute::NAME}] => [] }
                 else
                   attr_array[#{CustomAttributes::CustomAttribute::NAME}]
