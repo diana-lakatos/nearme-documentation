@@ -7,7 +7,7 @@ class FormAttributes
       :linkedin_url, :instagram_url, :skills_and_interests, :name,
       :first_name, :middle_name, :last_name, :gender,
       :drivers_licence_number, :gov_number, :approval_requests
-    ] + UserInstanceProfile.public_custom_attributes_names(InstanceProfileType.first.try(:id))
+    ] + User.public_custom_attributes_names(InstanceProfileType.first.try(:id))
   end
 
   def company
@@ -38,8 +38,11 @@ class FormAttributes
     [
       :availability_rules, :price, :photos, :approval_requests
     ] +
-    Transactable.public_custom_attributes_names(transactable_type.id)
+    Transactable.public_custom_attributes_names(transactable_type.id).map { |k| Hash === k ? k.keys : k }.flatten
   end
 
+  def product(product_type = nil)
+    Spree::Product.public_custom_attributes_names(product_type.id).map { |k| Hash === k ? k.keys : k }.flatten
+  end
 end
 

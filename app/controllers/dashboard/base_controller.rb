@@ -14,7 +14,11 @@ class Dashboard::BaseController < ApplicationController
   def redirect_unless_registration_completed
     unless current_user.registration_completed?
       flash[:warning] = t('flash_messages.dashboard.add_your_company')
-      redirect_to transactable_type_new_space_wizard_path(TransactableType.first)
+      if Spree::ProductType.any?
+        redirect_to product_type_new_space_wizard_path(Spree::ProductType.first)
+      else
+        redirect_to transactable_type_new_space_wizard_path(TransactableType.first)
+      end
     end
   end
 

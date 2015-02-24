@@ -26,6 +26,11 @@ class AvatarUploader < BaseUploader
 
   ASPECT_RATIO = 1
 
+  # tmp hack to make avatars work
+  def instance_id
+    instance_id_nil
+  end
+
   def legacy_store_dir
     "media/#{model.class.to_s.underscore}/#{model.id}/#{mounted_as}"
   end

@@ -5,6 +5,20 @@ module NearMe
   class CLI < Thor
     include Thor::Actions
 
+    desc "info", "currect opsworks stack info"
+    long_desc <<DESC
+    get info about the current opsworks stacks
+    for example:
+
+    nearme info
+
+    will show you the current stacks and some assorted info
+DESC
+    def info
+      puts "Retrieving opsworks stack info..."
+      result = NearMe::Info.new(options).status
+    end
+
     desc "deploy", "deploy NearMe application to AWS OpsWorks"
     long_desc <<DESC
     deploy NearMe application to AWS OpsWorks

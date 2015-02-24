@@ -205,7 +205,28 @@ namespace :translations do
       'payments.cc_fields.last_name' => 'Last Name',
       'payments.cc_fields.card_number' => 'Card number',
       'payments.cc_fields.expiration_date' => 'Expiration date',
-      'payments.cc_fields.security_code' => 'Security code'
+      'payments.cc_fields.security_code' => 'Security code',
+
+      'simple_form.labels.locations.name' => 'Location name',
+      'simple_form.labels.locations.description' => 'Location description',
+      'simple_form.labels.locations.location_address.address' => 'Address',
+      'simple_form.labels.locations.location_type' => 'Location type',
+
+      'simple_form.labels.companies.name' => 'Company name',
+      'simple_form.placeholders.companies.name' => 'Enter your business name',
+      'simple_form.labels.companies.industries' => 'Industries',
+      'simple_form.labels.companies.description' => 'Description',
+      'simple_form.placeholders.companies.description' => 'Give a brief description of your company.',
+      'simple_form.labels.companies.url' => 'Website',
+      'simple_form.placeholders.companies.url' => 'www.mycompany.com',
+      'simple_form.labels.companies.email' => 'Company email',
+      'simple_form.placeholders.companies.email' => 'yourname@example.com',
+      'simple_form.labels.companies.company_address.address' => 'Address',
+      'simple_form.prompts.companies.industries' => 'Select one or more',
+
+      'simple_form.labels.listings.price' => 'Price',
+      'simple_form.labels.listings.photos' => 'Photos',
+      'simple_form.labels.listings.upload_photos' => 'Browse',
     }
 
     create_keys(nm_1363_translations)
@@ -234,7 +255,7 @@ namespace :translations do
 
   def create_keys(hash)
     hash.each do |k, v|
-      if Translation.where(key: k).empty?
+      if Translation.where(key: k, instance_id: nil).empty?
         puts "creating translation #{k}: #{v}"
         Translation.create(locale: 'en', key: k, value: v)
       else

@@ -6,6 +6,13 @@
     margin-left: 15px;
   }
 
+  .booking-module {
+    .form-horizontal .control-group .controls {
+      margin-left: 0px;
+    }
+  }
+
+
   .book {
     width: 100%;
 
@@ -179,7 +186,7 @@
         margin-top: 4px;
         color: $gray160;
         font-family: $font-bold;
-        font-size: 50%;
+        font-size: 40%;
         text-transform: uppercase;
         letter-spacing: 1px;
 
@@ -223,7 +230,6 @@
 
     .calendar-wrapper {
       @include border-radius($border-radius-default);
-      display: block;
       float: left;
       @include box-sizing(border-box);
       margin: 15px 0px;
@@ -381,6 +387,20 @@
 
     .recurring_select {
       width: 100%;
+    }
+
+    #pricingTabs {
+      li {
+        &.active span {
+          color: $gray80;
+        }
+
+        a {
+          padding-right: 6px;
+          padding-left: 6px;
+          display: inline-block;
+        }
+      }
     }
 
   }

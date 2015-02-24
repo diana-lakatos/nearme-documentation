@@ -25,11 +25,14 @@ class @Bookings.Listing
     @favourablePricingRate = @data.favourable_pricing_rate
     @pricesByDays = @data.prices_by_days
     @hourlyPrice = @data.hourly_price_cents
-    @recurringBooking = @data.recurring_booking
-    @overnightBooking = @data.overnight_booking
+    @recurringBooking = @data.action_recurring_booking
+    @overnightBooking = @data.action_overnight_booking
 
   setDefaultQuantity: (qty) ->
     @defaultQuantity = qty if qty >= 0
+
+  setHourlyBooking: (hourlyBooking) ->
+    @data.action_hourly_booking = hourlyBooking
 
   getQuantity: ->
     @defaultQuantity
@@ -38,7 +41,7 @@ class @Bookings.Listing
     @favourablePricingRate
 
   isReservedHourly: ->
-    @data.hourly_reservations
+    @data.action_hourly_booking
 
   isRecurringBooking: ->
     @recurringBooking
@@ -47,7 +50,7 @@ class @Bookings.Listing
     @overnightBooking
 
   isReservedDaily: ->
-    !@isReservedHourly()
+    @data.action_daily_booking
 
   # Returns whether the date is within the bounds available for booking
   dateWithinBounds: (date) ->

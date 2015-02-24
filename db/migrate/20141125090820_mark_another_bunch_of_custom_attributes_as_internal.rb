@@ -1,4 +1,4 @@
-class MarkAnotherBunchOfCustomAttributesAsInternet < ActiveRecord::Migration
+class MarkAnotherBunchOfCustomAttributesAsInternal < ActiveRecord::Migration
   def up
     connection.execute <<-SQL
       UPDATE custom_attributes

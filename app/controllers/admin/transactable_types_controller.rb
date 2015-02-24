@@ -20,10 +20,6 @@ class Admin::TransactableTypesController < Admin::ResourceController
   end
 
   def transactable_type_params
-    params.require(:transactable_type).permit(secured_params.transactable_type).tap do |whitelisted|
-      whitelisted[:pricing_options] = params[:transactable_type][:pricing_options]
-      whitelisted[:pricing_validation] = params[:transactable_type][:pricing_validation]
-    end
-
+    params.require(:transactable_type).permit(secured_params.transactable_type)
   end
 end

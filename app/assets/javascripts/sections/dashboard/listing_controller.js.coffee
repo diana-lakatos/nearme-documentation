@@ -56,14 +56,14 @@ class @Dashboard.ListingController
     @currencyLocationHolders.html(@container.find('#location-list input[type="radio"]:checked').next().val())
 
   initializePriceFields: ->
-    @priceFieldsFree = new PriceFields(@container.find('.price-inputs-free'))
-    @priceFieldsHourly = new PriceFields(@container.find('.price-inputs-hourly'))
-    @priceFieldsDaily = new PriceFields(@container.find('.price-inputs-daily'))
+    @priceFieldsFree = new PriceFields(@container.find('.price-inputs-free:first'))
+    @priceFieldsHourly = new PriceFields(@container.find('.price-inputs-hourly:first'))
+    @priceFieldsDaily = new PriceFields(@container.find('.price-inputs-daily:first'))
 
 
-    @freeInput = @container.find('.price-inputs-free').find('input[type="radio"]')
-    @dailyInput = @container.find('.price-inputs-daily').find('input[type="radio"]')
-    @hourlyInput = @container.find('.price-inputs-hourly').find('input[type="radio"]')
+    @freeInput = @container.find('.price-inputs-free').find('input:checkbox:first')
+    @dailyInput = @container.find('.price-inputs-daily').find('input:checkbox:first')
+    @hourlyInput = @container.find('.price-inputs-hourly').find('input:checkbox:first')
 
     @hideNotCheckedPriceFields()
 
@@ -71,24 +71,24 @@ class @Dashboard.ListingController
       @togglePriceFields()
 
     @hourlyInput.on 'change', (e) =>
+      @freeInput.prop('checked', false)
       @togglePriceFields()
 
     @dailyInput.on 'change', (e) =>
+      @freeInput.prop('checked', false)
       @togglePriceFields()
 
   togglePriceFields: ->
     if @freeInput.is(':checked')
       @priceFieldsFree.show()
-      @priceFieldsHourly.hide()
-      @priceFieldsDaily.hide()
-    else if @hourlyInput.is(':checked')
-      @priceFieldsFree.hide()
+      @dailyInput.prop('checked', false)
+      @hourlyInput.prop('checked', false)
+    if @hourlyInput.is(':checked')
       @priceFieldsHourly.show()
-      @priceFieldsDaily.hide()
-    else if @dailyInput.is(':checked')
-      @priceFieldsFree.hide()
-      @priceFieldsHourly.hide()
+    if @dailyInput.is(':checked')
       @priceFieldsDaily.show()
+
+    @hideNotCheckedPriceFields()
 
   hideNotCheckedPriceFields: ->
     @priceFieldsFree.hide() unless @freeInput.is(':checked')
