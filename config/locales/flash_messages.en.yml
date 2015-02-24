@@ -76,6 +76,10 @@ en:
           deleted: 'Email layout template has been deleted.'
           invalid: 'Not a valid email layout template.'
           updated: 'Email layout template has been updated.'
+        form_component:
+          created: 'Form component has been created.'
+          deleted: 'Form component has been deleted.'
+          updated: 'Form component has been updated.'
         users:
           user_ban:
             created: 'User has been removed from the marketplace.'
@@ -132,6 +136,11 @@ en:
         instance_admin_roles:
           role_added: "Great, new role has been added!"
           role_deleted: "That role has been deleted"
+      buy_sell:
+        product_types:
+          created: 'Product Type created.'
+          updated: 'Product Type updated.'
+          deleted: 'Product Type deleted.'
     listings:
       listing_disabled: "This listing has been temporarily disabled by the owner. Displaying other listings in this location."
       listing_disabled_but_admin: "This listing has been temporarily disabled by the owner. Other users will not be able to browse it."

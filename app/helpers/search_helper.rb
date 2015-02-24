@@ -25,22 +25,30 @@ module SearchHelper
   end
 
   def price_information(listing)
-    if listing.hourly_reservations? && !listing.hourly_price.to_f.zero?
-      "From #{money_without_cents_and_with_symbol(listing.hourly_price)} / hour"
-    elsif !listing.daily_price.to_f.zero?
-      "From #{money_without_cents_and_with_symbol(listing.daily_price)} / day"
-    elsif !listing.weekly_price.to_f.zero?
-      "From #{money_without_cents_and_with_symbol(listing.weekly_price)} / week"
-    elsif !listing.monthly_price.to_f.zero?
-      "From #{money_without_cents_and_with_symbol(listing.monthly_price)} / month"
+    if listing.transactable_type.action_schedule_booking?
+      money_without_cents_and_with_symbol(listing.fixed_price)
+    else
+      if listing.action_hourly_booking? && !listing.hourly_price.to_f.zero?
+        "From #{money_without_cents_and_with_symbol(listing.hourly_price)} / hour"
+      elsif !listing.daily_price.to_f.zero?
+        "From #{money_without_cents_and_with_symbol(listing.daily_price)} / day"
+      elsif !listing.weekly_price.to_f.zero?
+        "From #{money_without_cents_and_with_symbol(listing.weekly_price)} / week"
+      elsif !listing.monthly_price.to_f.zero?
+        "From #{money_without_cents_and_with_symbol(listing.monthly_price)} / month"
+      end
     end
   end
 
   def individual_listing_price_information(listing, filter_pricing = [])
-    listing_price = listing.lowest_price_with_type(filter_pricing)
-    if listing_price
-      periods = {:monthly => 'month', :weekly => 'week', :daily => 'day', :hourly => 'hour'}
-      "From <span>#{money_without_cents_and_with_symbol(listing_price[0])}</span> / #{periods[listing_price[1]]}".html_safe
+    if listing.transactable_type.action_schedule_booking?
+      money_without_cents_and_with_symbol(listing.fixed_price)
+    else
+      listing_price = listing.lowest_price_with_type(filter_pricing)
+      if listing_price
+        periods = {:monthly => 'month', :weekly => 'week', :daily => 'day', :hourly => 'hour'}
+        "From <span>#{money_without_cents_and_with_symbol(listing_price[0])}</span> / #{periods[listing_price[1]]}".html_safe
+      end
     end
   end
 
@@ -85,8 +93,8 @@ module SearchHelper
       root_taxon.children.map do |taxon|
         css_class = (current_taxon && current_taxon == taxon) ? 'current' : nil
         content_tag :li do
-         link_to(taxon.name, buy_sell_taxon_path(taxon), class: css_class) +
-         display_taxonomies(taxon, current_taxon)
+          link_to(taxon.name, buy_sell_taxon_path(taxon), class: css_class) +
+            display_taxonomies(taxon, current_taxon)
         end
       end.join("\n").html_safe
     end

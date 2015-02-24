@@ -7,7 +7,7 @@ Then /^I should see a search form$/ do
 end
 
 Then /^I should see a free booking module$/ do
-  within '.booking-module .label' do
+  within '.booking-module .booking-price' do
     assert page.has_content?('Free')
   end
   page.should_not have_css('.booking-module .price .total')

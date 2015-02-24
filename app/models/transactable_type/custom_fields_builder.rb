@@ -2,7 +2,7 @@ class TransactableType::CustomFieldsBuilder
 
   def initialize(form_component)
     @form_component = form_component
-    @transactable_type = form_component.transactable_type
+    @transactable_type = form_component.form_componentable
   end
 
   def all_valid_object_field_pairs

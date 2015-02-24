@@ -21,11 +21,15 @@
   = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :label => "Amenities", :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select', :multiple => true } if only_inputs.empty? || only_inputs.include?(:amenities)
 
 - if only_inputs.empty? || only_inputs.include?(:price)
-  = render partial: "custom_attributes/price", locals: { f: f }
+  = render partial: "manage/listings/price", locals: { f: f }
 
 - if only_inputs.empty? || only_inputs.include?(:availability_rules)
   .control-group
-    = render :partial => 'availability_rules/form', :locals => { :f => f }
+    - if @transactable_type.action_schedule_booking?
+      = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule(schedule: f.object.transactable_type.schedule.try(:schedule)) do |schedule_form|
+        = schedule_form.hidden_field :schedule, class: 'icui'
+    - else
+      = render :partial => 'availability_rules/form', :locals => { :f => f }
 
 - if only_inputs.empty? || only_inputs.include?(:photos)
   .loading{:style => "display: none"}

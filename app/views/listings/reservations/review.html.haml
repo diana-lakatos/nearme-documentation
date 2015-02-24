@@ -21,7 +21,7 @@
               - @reservation_request.errors[:base].each do |error|
                 %li= error
 
-        - if @reservation_request.hourly_reservations?
+        - if @reservation_request.action_hourly_booking?
           %p
             = @reservation.hourly_summary_for_first_period
 

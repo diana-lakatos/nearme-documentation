@@ -8,7 +8,6 @@ class ApplicationController < ActionController::Base
   before_filter :log_out_if_token_exists
   before_filter :log_out_if_sso_logout
   before_filter :redirect_to_set_password_unless_unnecessary
-  before_filter :ensure_user_has_profile
 
   protect_from_forgery
   layout :layout_for_request_type
@@ -26,7 +25,6 @@ class ApplicationController < ActionController::Base
   before_filter :redirect_if_marketplace_password_protected
   before_filter :set_raygun_custom_data
   before_filter :filter_out_token
-  before_filter :ensure_proper_spree_route
 
   @@instance_view_cache_key = {}
 
@@ -47,17 +45,6 @@ class ApplicationController < ActionController::Base
   end
 
   protected
-
-  def ensure_user_has_profile
-    # this is for now to not create bad impression for existing users. Later,
-    # we should change the implementation to display a 'create profile' page
-    # if user signs in for the first time to marketplace. This will be the place
-    # to add marketplace specific ToS etc
-    if current_user && current_user.profile.nil?
-      profile = current_user.user_instance_profiles.build(instance_profile_type_id: InstanceProfileType.first.try(:id))
-      profile.save(validate: false)
-    end
-  end
 
   # Returns the layout to use for the current request.
   #

@@ -28,7 +28,7 @@ class Locations::ListingsController < ApplicationController
   end
 
   def redirect_if_listing_inactive
-    if @listing.deleted? || @listing.draft?
+    if @listing.deleted? || @listing.draft? || !@listing.bookable?
       flash[:warning] = t('flash_messages.listings.listing_inactive', address: @listing.address)
       redirect_to location_path(@listing.location)
     elsif @listing.disabled?

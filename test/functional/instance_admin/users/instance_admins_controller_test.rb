@@ -37,6 +37,9 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsControllerTest < ActionContro
         @second_instance = FactoryGirl.create(:instance, :name => "second instance")
         @third_instance = FactoryGirl.create(:instance, :name => "third instance")
         PlatformContext.any_instance.stubs(:instance).returns(@second_instance)
+        @user_to_be_added = FactoryGirl.create(:user)
+        @user = FactoryGirl.create(:user)
+        sign_in @user
         assert_difference "Instance.find_by_name('second instance').instance_admins.size" do
           assert_no_difference "Instance.find_by_name('third instance').instance_admins.size" do
             post :create, { :email => @user_to_be_added.email }

@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :authentication do
-    association :user
+    user
     provider 'twitter'
     sequence(:uid) { |n| "uid #{n}" }
     sequence(:token) { |n| "token#{n}" }

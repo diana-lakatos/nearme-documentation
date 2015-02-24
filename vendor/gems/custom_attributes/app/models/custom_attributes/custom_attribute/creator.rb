@@ -107,9 +107,25 @@ module CustomAttributes
       end
     end
 
-    def create_buy_sell_attributes!
+    def create_spree_product_type_attributes!
+      PRODUCT_TYPE_DEFAULT_ATTRIBUTES.each do |product_type_attributes|
+        @target.custom_attributes.find_or_create_by(name: product_type_attributes[:name]) do |custom_attributes|
+          custom_attributes.attributes = product_type_attributes
+        end
+      end
     end
+      
+    PRODUCT_TYPE_DEFAULT_ATTRIBUTES = [
+     {
+        name: "Brand",
+        label: "Brand",
+        attribute_type: "String",
+        html_tag: 'input',
+        public: "true",
+        internal: false,
+        validation_rules: { :presence => {} }
+      }
+    ]
 
   end
-
 end

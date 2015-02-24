@@ -48,6 +48,10 @@
           %li
             %a{'data-toggle' => 'tab', href: '#product-shipping', role: 'tab'}
               = t 'buy_sell_market.products.labels.shippigng_policies'
+        - if @product.extra_properties.present?
+          %li
+            %a{'data-toggle' => 'tab', href: '#product-properties', role: 'tab'}
+              = t 'buy_sell_market.products.labels.properties'
       .tab-content
         %article#product-details.tab-pane{ class: "#{ 'active' if !param_reviews_page_present? }" }
           %p= @product.description.html_safe
@@ -130,7 +134,14 @@
                     occasion we will do, soil can get loose from the pot. Brush off the plant or gently blow to remove
                     the loose soil from the plant and replace the soil around the plants root.
 
-
+        - if @product.extra_properties.present?
+          %article#product-properties.tab-pane
+            - @product.extra_properties.each do |property|
+              .row-fluid
+                .span3
+                  %h5= property.first.capitalize
+                .span9
+                  %p= property.last
     .product-profile-badge
       .vendor-profile
         = render partial: 'administrator', locals: { product: @product, hidden: hidden}

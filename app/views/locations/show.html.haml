@@ -69,23 +69,23 @@
 
 .clearfix.padding-row
 
-- content_for :script do
-  :javascript
-    // Initialize the ui controller
-    $(function() {
-      new Space.Controller(
-        $('article#space'),
-        {
-          bookings: {
-            listings: #{raw location_listings_json},
-
-            // Have we returned from setting up a session. If there are bookings, the JS controller
-            // will trigger showing the booking confirmation modal.
-            returnedFromSession: #{@initial_bookings.present? ? ("'" + @form_trigger + "'") : 'false'}
-          }
+- unless @listings.map(&:transactable_type).uniq.any? { |tt| tt.action_schedule_booking }
+  - content_for :script do
+    :javascript
+      // Initialize the ui controller
+      $(function() {
+        new Space.Controller(
+          $('article#space'),
+          {
+            bookings: {
+              listings: #{raw location_listings_json},
+              // Have we returned from setting up a session. If there are bookings, the JS controller
+              // will trigger showing the booking confirmation modal.
+              returnedFromSession: #{@initial_bookings.present? ? ("'" + @form_trigger + "'") : 'false'}
+            }
+          });
         });
-      });
 
-- content_for :domready do
-  - if @listing && params[:action] == 'ask_a_question'
-    Modal.load('#{new_listing_listing_message_path(@listing)}')
+  - content_for :domready do
+    - if @listing && params[:action] == 'ask_a_question'
+      Modal.load('#{new_listing_listing_message_path(@listing)}')

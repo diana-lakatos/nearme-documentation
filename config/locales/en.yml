@@ -517,6 +517,10 @@ en:
     per_month: 'PER MONTH'
     first_day: 'Select a start date'
     last_day: 'Select an end date'
+    booking_module:
+      fixed: 'Fixed Price'
+      pick_fixed_date: 'Select a date'
+      suggest_date: 'What time works best for you?'
   search:
     list:
       additional_social_connections:

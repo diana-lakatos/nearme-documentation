@@ -118,12 +118,14 @@ en:
 
       transactable:
         name: "Item Title"
+        price_fixed: 'Fixed'
         price_daily: 'Daily'
         price_weekly: 'Weekly'
         price_monthly: 'Monthly'
         price_hourly: 'Hourly'
         price_free: 'Free'
         price:
+          fixed: 'fixed price'
           daily: 'day'
           weekly: 'week'
           monthly: 'month'

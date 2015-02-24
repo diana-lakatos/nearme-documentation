@@ -46,7 +46,7 @@ module Auth
     def email_taken_by_other_user?(current_user)
       if email = @auth_params['info']['email'].presence
         user = User.find_by_email(@auth_params['info']['email'])
-        current_user.try(:email) != email && user.present? && Authentication.unscoped.where('user_id = ? AND provider = ?', user.id, provider).count.zero?
+        current_user.try(:email) != email && user.present? && Authentication.where('user_id = ? AND provider = ?', user.id, provider).count.zero?
       else
         false
       end
@@ -63,7 +63,7 @@ module Auth
     end
 
     def authentication
-      @authentication ||= Authentication.unscoped.find_by_provider_and_uid(provider, uid)
+      @authentication ||= Authentication.find_by_provider_and_uid(provider, uid)
     end
 
     def provider
@@ -85,7 +85,7 @@ module Auth
     def expires_at
       # FIXME: https://github.com/decioferreira/omniauth-linkedin-oauth2/issues/10
       if provider == 'linkedin'
-        Time.now + 60.days
+        Time.zone.now + 60.days
       else
         Time.at(@auth_params['credentials']['expires_at']) rescue nil
       end

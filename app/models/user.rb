@@ -1,3 +1,4 @@
+
 class User < ActiveRecord::Base
   has_paper_trail :ignore => [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
                               :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
@@ -7,6 +8,7 @@ class User < ActiveRecord::Base
                               :avatar_transformation_data, :metadata]
   acts_as_paranoid
   auto_set_platform_context
+  scoped_to_platform_context allow_admin: :admin
 
   extend FriendlyId
   has_metadata :accessors => [:support_metadata]
@@ -44,9 +46,9 @@ class User < ActiveRecord::Base
   has_many :requests_for_quotes, -> { where(target_type: 'Transactable').order('updated_at DESC') }, :class_name => 'Support::Ticket'
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :user_bans
-  has_many :user_instance_profiles
   has_one :blog, class_name: 'UserBlog'
   has_many :blog_posts, class_name: 'UserBlogPost'
+  belongs_to :instance_profile_type
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
@@ -71,18 +73,19 @@ class User < ActiveRecord::Base
 
   accepts_nested_attributes_for :companies
   accepts_nested_attributes_for :approval_requests
-  accepts_nested_attributes_for :user_instance_profiles
 
   has_many :ticket_message_attachments, foreign_key: 'uploader_id', class_name: 'Support::TicketMessageAttachment'
 
+  has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
+
   scope :patron_of, lambda { |listing|
-                    joins(:reservations).where(:reservations => { :transactable_id => listing.id }).uniq
-                  }
+    joins(:reservations).where(:reservations => { :transactable_id => listing.id }).uniq
+  }
 
   scope :without, lambda { |users|
-                  users_ids = users.respond_to?(:pluck) ? users.pluck(:id) : Array.wrap(users).collect(&:id)
-                  users_ids.any? ? where('users.id NOT IN (?)', users_ids) : all
-                }
+    users_ids = users.respond_to?(:pluck) ? users.pluck(:id) : Array.wrap(users).collect(&:id)
+    users_ids.any? ? where('users.id NOT IN (?)', users_ids) : all
+  }
 
   scope :ordered_by_email, -> { order('users.email ASC') }
 
@@ -158,15 +161,9 @@ class User < ActiveRecord::Base
   end
 
   devise :database_authenticatable, :registerable, :recoverable,
-         :rememberable, :trackable, :user_validatable, :token_authenticatable, :temporary_token_authenticatable
+    :rememberable, :trackable, :user_validatable, :token_authenticatable, :temporary_token_authenticatable
 
   attr_accessor :phone_required, :country_name_required, :skip_password, :verify_identity
-
-  # attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :avatar_versions_generated_at, :avatar_transformation_data,
-  #   :biography, :industry_ids, :country_name, :mobile_number, :facebook_url, :twitter_url, :linkedin_url, :instagram_url,
-  #   :current_location, :company_name, :skills_and_interests, :last_geolocated_location_longitude, :last_geolocated_location_latitude,
-  #
-  #   :domain_id, :time_zone, :companies_attributes, :sms_notifications_enabled, :sms_preferences
 
   serialize :sms_preferences, Hash
   serialize :instance_unread_messages_threads_count, Hash
@@ -382,7 +379,7 @@ class User < ActiveRecord::Base
   end
 
   def has_listing_without_price?
-    listings.any?(&:free?)
+    listings.any?(&:action_free_booking?)
   end
 
   def log_out!
@@ -395,7 +392,7 @@ class User < ActiveRecord::Base
 
   def email_verification_token
     Digest::SHA1.hexdigest(
-        "--dnm-token-#{self.id}-#{self.created_at}"
+      "--dnm-token-#{self.id}-#{self.created_at}"
     )
   end
 
@@ -438,9 +435,9 @@ class User < ActiveRecord::Base
 
   def to_balanced_params
     {
-        name: name,
-        email: email,
-        phone: phone
+      name: name,
+      email: email,
+      phone: phone
     }
   end
 
@@ -516,7 +513,7 @@ class User < ActiveRecord::Base
       if company.company_users.count == company_users_number
         company.destroy
       else
-        company.creator = company.company_users.find { |cu| cu.user_id != self.id }.user
+        company.creator = company.company_users.find { |cu| cu.user_id != self.id }.try(:user)
         company.save!
       end
     end
@@ -529,7 +526,7 @@ class User < ActiveRecord::Base
   end
 
   def recover_companies
-    self.created_companies.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', self.deleted_at, self.deleted_at + 30.seconds).each do |company|
+    self.created_companies.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', [self.deleted_at, self.banned_at].compact.first, [self.deleted_at, self.banned_at].compact.first + 30.seconds).each do |company|
       begin
         company.restore(:recursive => true)
       rescue
@@ -587,7 +584,7 @@ class User < ActiveRecord::Base
   end
 
   def banned?
-    user_bans.count > 0
+    banned_at.present?
   end
 
   def self.xml_attributes
@@ -659,12 +656,13 @@ class User < ActiveRecord::Base
     get_instance_metadata("instance_admins_metadata")
   end
 
+  def instance_profile_type_id
+    read_attribute(:instance_profile_type_id) || instance_profile_type.try(:id)
+  end
+
+  # hack for compatibiltiy reason, to be removed soon
   def profile
-    @cached_profiles ||= {}
-    if @cached_profiles[PlatformContext.current.try(:instance).try(:id)].nil?
-      @cached_profiles[PlatformContext.current.try(:instance).try(:id)] = user_instance_profiles.first
-    end
-    @cached_profiles[PlatformContext.current.try(:instance).try(:id)]
+    properties
   end
 
   def cart_orders
@@ -701,7 +699,7 @@ class User < ActiveRecord::Base
 
   def question_average_rating
     @rating_answers_rating ||= RatingAnswer.where(review_id: reviews_as_seller.pluck(:id))
-                                 .group(:rating_question_id).average(:rating)
+      .group(:rating_question_id).average(:rating)
   end
 
   def recalculate_average_rating!
@@ -737,4 +735,6 @@ class User < ActiveRecord::Base
       errors.add(:name, :last_name_too_long, count: User::MAX_NAME_LENGTH)
     end
   end
+
 end
+

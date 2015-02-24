@@ -13,8 +13,10 @@ module CustomAttributes
           PUBLIC = 3 unless defined?(PUBLIC)
           VALIDATION_RULES = 4 unless defined?(VALIDATION_RULES)
           VALID_VALUES = 5 unless defined?(VALID_VALUES)
+          HTML_TAG = 6 unless defined?(HTML_TAG)
           ATTRIBUTE_TYPES = %w(array string integer float decimal datetime time date binary boolean) unless defined?(ATTRIBUTE_TYPES)
           HTML_TAGS = %w(input select switch textarea check_box radio_buttons check_box_list) unless defined?(HTML_TAGS)
+          MULTIPLE_ARRAY_TAGS = %w(check_box_list) unless defined?(MULTIPLE_ARRAY_TAGS)
 
           scope :listable, -> { all }
           scope :not_internal, -> { where.not(internal: true) }
@@ -86,7 +88,7 @@ module CustomAttributes
           end
 
           def self.find_as_array(target_id, target_type)
-            self.where(target_id: target_id, target_type: target_type).pluck(:name, :attribute_type, :default_value, :public, :validation_rules, :valid_values)
+            self.where(target_id: target_id, target_type: target_type).pluck(:name, :attribute_type, :default_value, :public, :validation_rules, :valid_values, :html_tag)
           end
 
           def valid_values_translated
