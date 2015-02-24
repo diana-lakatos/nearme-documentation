@@ -57,6 +57,7 @@ en:
         price: 'Price'
         photos: 'Photos'
         upload_photos: 'Browse'
+        schedule: 'Availability Schedule'
       listing:
         price: 'Price'
         photos: 'Photos'

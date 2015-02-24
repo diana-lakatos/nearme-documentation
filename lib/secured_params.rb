@@ -421,7 +421,7 @@ class SecuredParams
       :replacement_text
     ]
   end
-  
+
   def product_type
     [
       :name
@@ -741,7 +741,7 @@ class SecuredParams
         :location_id, :availability_template_id,
         :defer_availability_rules, :free,
         :price_type, :draft, :enabled,
-        :hourly_price, :daily_price, :weekly_price, :monthly_price,
+        :hourly_price, :daily_price, :weekly_price, :monthly_price, :fixed_price, :fixed_price_cents,
         :hourly_price_cents, :daily_price_cents, :weekly_price_cents, :monthly_price_cents,
         :action_rfq,
         :action_recurring_booking,

@@ -31,8 +31,14 @@
 = render partial: "price_form", locals: { f: f }
 
 - if @transactable_type.action_schedule_booking?
-  = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule(schedule: f.object.transactable_type.schedule.try(:schedule)) do |schedule_form|
-    = schedule_form.hidden_field :schedule, class: 'icui'
+  %div{:class => "row #{"error" if f.object.errors.include?(:fixed_price).present?}"}
+    .col-md-3
+      %label
+        %abbr{:title => "required"}= t('simple_form.required.mark')
+        =t('simple_form.labels.listings.schedule')
+    .col-md-9
+      = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule(schedule: f.object.transactable_type.schedule.try(:schedule)) do |schedule_form|
+        = schedule_form.hidden_field :schedule, class: 'icui'
 - else
   = render partial: 'availability_rules_form', locals: { f: f }
 
