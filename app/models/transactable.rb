@@ -10,6 +10,7 @@ class Transactable < ActiveRecord::Base
 
   has_custom_attributes target_type: 'TransactableType', target_id: :transactable_type_id
 
+  has_many :document_requirements, as: :item, dependent: :destroy, inverse_of: :item
   has_many :reservations, inverse_of: :listing
   has_many :recurring_bookings, inverse_of: :listing
   has_many :photos, dependent: :destroy, inverse_of: :listing do
@@ -35,6 +36,7 @@ class Transactable < ActiveRecord::Base
   has_many :amenity_holders, as: :holder, dependent: :destroy, inverse_of: :holder
   has_many :amenities, through: :amenity_holders, inverse_of: :listings
   has_one :location_address, through: :location
+  has_one :upload_obligation, as: :item, dependent: :destroy
 
   has_many :company_industries, through: :location
   has_one :schedule, as: :scheduable
@@ -44,6 +46,8 @@ class Transactable < ActiveRecord::Base
   accepts_nested_attributes_for :waiver_agreement_templates, allow_destroy: true
   accepts_nested_attributes_for :approval_requests
   accepts_nested_attributes_for :schedule
+  accepts_nested_attributes_for :document_requirements, allow_destroy: true, reject_if: :document_requirement_hidden?
+  accepts_nested_attributes_for :upload_obligation
 
   before_destroy :decline_reservations
 
@@ -402,6 +406,11 @@ class Transactable < ActiveRecord::Base
     reservations.unconfirmed.each do |r|
       r.reject!
     end
+  end
+
+  def document_requirement_hidden?(attributes)
+    attributes.merge!(_destroy: '1') if attributes['removed'] == '1'
+    attributes['hidden'] == '1'
   end
 end
 

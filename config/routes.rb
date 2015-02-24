@@ -183,6 +183,7 @@ DesksnearMe::Application.routes.draw do
       end
       resource :translations, :only => [:show, :update], :controller => 'translations'
       resource :cancellation_policy, :only => [:show, :update], :controller => 'cancellation_policy'
+      resource :documents_upload, except: [:index, :destroy], :controller => 'documents_upload'
     end
 
     namespace :theme do
@@ -227,7 +228,7 @@ DesksnearMe::Application.routes.draw do
         resources :workflow_steps, only: [:show, :edit, :update], controller: 'workflows/workflow_steps'
       end
       resources :workflow_steps do
-        resources :workflow_alerts, excpet: [:index], controller: 'workflows/workflow_alerts'
+        resources :workflow_alerts, except: [:index], controller: 'workflows/workflow_alerts'
       end
 
       resources :instance_profile_types, :only => [:index, :destroy] do
@@ -498,6 +499,12 @@ DesksnearMe::Application.routes.draw do
         get 'edit_image/:image', :action => :edit_image, :as => 'edit_theme_image'
         match 'update_image/:image', :action => :update_image, :as => 'update_theme_image', via: [:post, :put]
         match 'upload_image/:image', :action => :upload_image, :as => 'upload_theme_image', via: [:post, :put]
+      end
+    end
+    resources :payment_documents do
+      collection do
+        get :sent_to_me
+        get :uploaded_by_me
       end
     end
     resource :payouts, except: [:index, :show, :new, :create, :destroy]

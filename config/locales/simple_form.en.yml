@@ -195,6 +195,12 @@ en:
     required:
       mark: '*'
       text: 'required'
+    options:
+      documents_upload:
+        requirement:
+          mandatory: 'Mandatory'
+          optional: 'Optional'
+          vendor_decides: 'Vendor decides'
   instance_admin:
     settings:
       configuration:
@@ -204,3 +210,12 @@ en:
           semiweekly: Twice a week
           weekly: Weekly
           daily: Daily
+      documents_upload:
+        form:
+          title: "Documents Upload"
+          activate_upload_files: "Activate upload files"
+          safety_and_trust: "For safety and trust purposes, some services might need extra documentation from customers before completing the booking."
+          documents_can_be: "These documents can be ids, licenses, certifications, and other files."
+          can_make_this: "You can make this a mandatory requirement within your marketplace, optional or let vendors decide."
+          mark_your_choice: "Please mark your choice below:"
+          save_button: "Save"

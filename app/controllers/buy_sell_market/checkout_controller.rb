@@ -35,6 +35,8 @@ class BuySellMarket::CheckoutController < ApplicationController
       end
     end
 
+    checkout_service.build_payment_documents if step == :payment
+
     render_wizard
   end
 
@@ -43,8 +45,10 @@ class BuySellMarket::CheckoutController < ApplicationController
       set_countries_states
     end
 
+
     params[:order] ||= {}
     if @order.payment?
+      checkout_service.update_payment_documents
       @order.card_expires = params[:order][:card_expires].try(:to_s).try(:strip)
       @order.card_number = params[:order][:card_number].try(:to_s).try(:strip)
       @order.card_code = params[:order][:card_code].try(:to_s).try(:strip)
@@ -176,12 +180,16 @@ class BuySellMarket::CheckoutController < ApplicationController
   def order_state
     @order.state.to_sym
   end
-
+    
   def check_billing_gateway
     @billing_gateway = Billing::Gateway::Incoming.new(current_user, PlatformContext.current.instance, @order.currency, @order.company.iso_country_code)
     if @billing_gateway.processor.nil?
       flash[:error] = t('flash_messages.buy_sell.no_payment_gateway')
       redirect_to cart_index_path
     end
+  end
+
+  def checkout_service
+    @checkout_service ||= BuySell::CheckoutService.new(current_user, @order, params)
   end
 end

@@ -9,6 +9,7 @@ class Listings::ReservationsController < ApplicationController
   before_filter :find_current_country, :only => [:review, :create]
 
   def review
+    reservations_service.build_documents
     event_tracker.reviewed_a_booking(@reservation_request.reservation)
   end
 
@@ -135,9 +136,34 @@ class Listings::ReservationsController < ApplicationController
         mobile_number: attributes[:mobile_number],
         waiver_agreement_templates: attributes[:waiver_agreement_templates],
         payment_method_nonce: params[:payment_method_nonce],
-        reservation_type: attributes[:reservation_type]
+        reservation_type: attributes[:reservation_type],
+        documents: params_documents[:documents_attributes]
       }
     )
+  end
+
+  def origin_domain?
+    session[:origin_domain]
+  end
+
+  def clear_origin_domain
+    session.delete(:origin_domain) if origin_domain?
+  end
+
+  def origin_domain
+    session[:origin_domain] || request.host
+  end
+
+  def set_origin_domain(domain)
+    session[:origin_domain] = domain
+  end
+
+  def reservations_service
+    @reservations_service ||= Listings::ReservationsService.new(current_user, @reservation_request, params)
+  end
+
+  def params_documents
+    params.require(:reservation_request).permit(documents_attributes: [:id, :file, :user_id, payment_document_info_attributes: [:attachment_id, :document_requirement_id]])
   end
 end
 

@@ -596,7 +596,7 @@ GEM
       activesupport (>= 3.0.0)
       cocaine (~> 0.5.3)
       mime-types
-    paranoia (2.0.4)
+    paranoia (2.0.5)
       activerecord (~> 4.0)
     paypal-sdk-adaptivepayments (1.117.0)
       paypal-sdk-core (~> 0.3.0)

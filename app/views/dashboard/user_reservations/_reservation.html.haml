@@ -58,3 +58,9 @@
 
             - if reservation.confirmed?
               = link_to 'Add to iCal', export_dashboard_user_reservation_path(reservation, format: :ics), class: 'btn gray full'
+
+    - if reservation.payment_documents.present?
+      .row
+        - reservation.payment_documents.each do |pd|
+          .payment-document
+            = link_to pd.file.file_name, pd.file.url, target: '_blank'

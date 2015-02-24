@@ -1,0 +1,21 @@
+.documents{
+  .row-fluid{
+    margin-bottom: 5px;
+  }
+  .hidden-field{
+    display: none;
+  }
+  .upload{
+    .btn-upload-payment-document { 
+      color: black;
+      background-color: white;
+      border: 1px solid #eee;
+      width: 30%;
+      padding: 10px 20px;
+    }
+
+    span.file-name {
+      padding-left: 20px
+    }    
+  }
+}

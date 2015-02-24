@@ -12,6 +12,7 @@ Spree::Order.class_eval do
   has_one :billing_authorization, as: :reference
   has_many :near_me_payments, as: :payable, class_name: '::Payment'
   has_many :shipping_methods, class_name: 'Spree::ShippingMethod'
+  has_many :payment_documents, as: :attachable, class_name: 'Attachable::PaymentDocument', dependent: :destroy
 
   after_save :purchase_shippo_rate
   before_create :store_platform_context_detail
@@ -19,6 +20,8 @@ Spree::Order.class_eval do
   alias_method :old_finalize!, :finalize!
 
   self.per_page = 5
+
+  accepts_nested_attributes_for :payment_documents
 
   def finalize!
     old_finalize!
