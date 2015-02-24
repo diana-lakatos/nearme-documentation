@@ -11,6 +11,8 @@ class SessionsTest < ActionDispatch::IntegrationTest
     @instance_admin = FactoryGirl.create(:instance_admin, :user_id => @user.id)
     @instance_admin.update_attribute(:instance_owner, false)
     @instance_admin.update_attribute(:instance_admin_role_id, @role.id)
+    instance = Instance.first
+    instance.domains << FactoryGirl.create(:domain, name: "www.example.com")
   end
 
   test 'redirect to first page instance_admin has access to' do

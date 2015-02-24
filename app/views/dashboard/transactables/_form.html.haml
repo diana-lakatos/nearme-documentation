@@ -28,8 +28,19 @@
 - unless platform_context.instance.listing_amenity_types.count.zero?
   = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :label => "Amenities", :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'selectpicker', :multiple => true }
 
-= render partial: "custom_attributes/new_price", locals: { f: f }
-= render partial: 'availability_rules_form', locals: { f: f }
+= render partial: "price_form", locals: { f: f }
+
+- if @transactable_type.action_schedule_booking?
+  %div{:class => "row #{"error" if f.object.errors.include?(:fixed_price).present?}"}
+    .col-md-3
+      %label
+        %abbr{:title => "required"}= t('simple_form.required.mark')
+        =t('simple_form.labels.listings.schedule')
+    .col-md-9
+      = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule(schedule: f.object.transactable_type.schedule.try(:schedule)) do |schedule_form|
+        = schedule_form.hidden_field :schedule, class: 'icui'
+- else
+  = render partial: 'availability_rules_form', locals: { f: f }
 
 .row
   .col-md-3
@@ -64,6 +75,8 @@
 - if @company.waiver_agreement_templates.any?
   = f.association :waiver_agreement_templates, collection: @company.waiver_agreement_templates.order(:name).pluck(:name, :id), as: :check_boxes
 
+- if platform_context.instance.documents_upload_enabled?
+  = render "forms/document_requirements", f: f
 
 - content_for :domready do
   $(function() { new Dashboard.ListingController($('#listing-form')) });

@@ -24,6 +24,9 @@ class InstanceWizardController < ActionController::Base
       render :new and return
     end
 
+    @instance.domains.first.use_as_default = true
+    @instance.theme.support_email = @instance.theme.contact_email
+
     user_password = nil
     if @user.new_record?
       @user.name = user_params[:name]
@@ -33,7 +36,6 @@ class InstanceWizardController < ActionController::Base
     begin
       Instance.transaction do
         @instance.save!
-        @instance.instance_profile_types.create(name: 'User Instance Profile')
         @user.instance = @instance
         @user.save!
       end
@@ -46,14 +48,21 @@ class InstanceWizardController < ActionController::Base
     @instance_creator.update_attribute(:created_instance, true)
 
     PlatformContext.current = PlatformContext.new(@instance)
-    tp = @instance.transactable_types.create(name: params[:marketplace_type], pricing_options: { "free"=>"1", "hourly"=>"1", "daily"=>"1", "weekly"=>"1", "monthly"=>"1" },
-                                             availability_options: { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => true } })
-    create_rating_systems(@instance)
 
     if @instance.buyable?
-      CustomAttributes::CustomAttribute::Creator.new(tp).create_buy_sell_attributes!
+      pt = @instance.product_types.create(name: @instance.bookable_noun)
+      CustomAttributes::CustomAttribute::Creator.new(pt).create_spree_product_type_attributes!
       Utils::SpreeDefaultsLoader.new(@instance).load!
     else
+      tp = @instance.transactable_types.create(
+        name: params[:marketplace_type],
+        action_free_booking: "1",
+        action_hourly_booking: "1",
+        action_daily_booking: "1",
+        action_weekly_booking: "1",
+        action_monthly_booking: "1",
+        availability_options: { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => true } })
+      create_rating_systems(@instance)
       CustomAttributes::CustomAttribute::Creator.new(tp, bookable_noun: @instance.bookable_noun).create_listing_attributes!
       at = tp.availability_templates.build(name: "Working Week", description: "Mon - Fri, 9:00 AM - 5:00 PM")
       (1..5).each do |i|

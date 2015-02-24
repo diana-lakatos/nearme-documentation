@@ -42,7 +42,7 @@ class ReservationPeriod < ActiveRecord::Base
     start_minute, end_minute = self[:start_minute], self[:end_minute]
     return unless start_minute || end_minute
 
-    unless start_minute && end_minute && start_minute < end_minute
+    unless start_minute && end_minute && start_minute <= end_minute
       errors.add(:base, "Booking start and end times are invalid")
     end
   end

@@ -11,8 +11,8 @@ module CustomAttributes
       end
 
       def fetch(target_id, target_type, &block)
-        if (data = get(target_id, target_type)).present?
-          data
+        if !(data = get(target_id, target_type)).nil?
+         data
         else
           store(target_id, target_type, yield)
         end

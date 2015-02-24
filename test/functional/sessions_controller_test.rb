@@ -29,16 +29,9 @@ class SessionsControllerTest < ActionController::TestCase
   end
 
   should 'not be able to log in to banned instance' do
-    FactoryGirl.create(:user_ban, user: @user)
+    @user.update_attribute(:banned_at, Time.zone.now)
     post :create, user: { email: @user.email, password: @user.password }
     assert_equal 'Your account was not activated yet.', flash[:alert]
-  end
-
-  should 'be able to log in to unbanned instance' do
-    FactoryGirl.create(:user_ban, user: @user)
-    PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
-    post :create, user: { email: @user.email, password: @user.password }
-    assert_equal 'Signed in successfully.', flash[:notice]
   end
 
   context 'versions' do

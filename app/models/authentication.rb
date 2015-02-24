@@ -2,10 +2,7 @@ class Authentication < ActiveRecord::Base
   class InvalidToken < Exception; end;
   acts_as_paranoid
   auto_set_platform_context
-
-  # attr_accessible :user_id, :provider, :uid, :info, :token, :secret,
-  #   :token_expires_at, :token_expires, :token_expired, :profile_url,
-  #   :total_social_connections
+  scoped_to_platform_context
 
   belongs_to :user
   belongs_to :instance
@@ -14,8 +11,8 @@ class Authentication < ActiveRecord::Base
   has_many :connections, through: :user_relationships, source: :follower, class_name: 'User'
 
   validates :provider, :uid, :token, presence: true
-  validates :provider, uniqueness: { scope: :user_id }
-  validates :uid,      uniqueness: { scope: [:provider, :deleted_at] }
+  validates :provider, uniqueness: { scope: [:instance_id, :user_id] }
+  validates :uid,      uniqueness: { scope: [:instance_id, :provider, :deleted_at] }
 
   serialize :info, Hash
 

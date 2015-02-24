@@ -1,9 +1,10 @@
 class ReservationDecorator < Draper::Decorator
   include Draper::LazyHelpers
+
   include CurrencyHelper
   include TooltipHelper
   include FeedbackDecoratorHelper
-  
+
   delegate_all
 
   delegate :days_in_words, :nights_in_words, :selected_dates_summary, :dates_in_groups, :period_to_string, to: :date_presenter
@@ -42,7 +43,7 @@ class ReservationDecorator < Draper::Decorator
   end
 
   def paid
-    if free?
+    if action_free_booking?
       humanized_money_with_cents_and_symbol(0.0)
     elsif paid?
       humanized_money_with_cents_and_symbol(successful_payment_amount)
@@ -67,7 +68,7 @@ class ReservationDecorator < Draper::Decorator
     elsif unconfirmed?
       'ico-pending'
     elsif cancelled? || rejected?
-       'ico-close'
+      'ico-close'
     elsif expired?
       'ico-time'
     end
@@ -112,7 +113,7 @@ class ReservationDecorator < Draper::Decorator
     periods.map do |period|
       period = period.decorate
       date = period.date.strftime('%-e %b')
-      if listing.hourly_reservations?
+      if listing.action_hourly_booking?
         start_time = period.start_minute_of_day_to_time.strftime("%l:%M%P").strip
         end_time = period.end_minute_of_day_to_time.strftime("%l:%M%P").strip
         ('%s %s&ndash;%s' % [date, start_time, end_time]).html_safe
@@ -168,7 +169,7 @@ class ReservationDecorator < Draper::Decorator
   end
 
   def humanized_number_of_periods
-    listing.overnight_booking? ? date_presenter.nights_in_words : date_presenter.days_in_words
+    listing.action_overnight_booking? ? date_presenter.nights_in_words : date_presenter.days_in_words
   end
 
   def feedback_object

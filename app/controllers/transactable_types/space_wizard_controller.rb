@@ -18,19 +18,12 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   end
 
   def list
-    if buyable?
-      @boarding_form = BoardingForm.new(current_user)
-      @boarding_form.assign_all_attributes
-      @images = (@boarding_form.product_form.try(:product).try(:images) || []) + current_user.products_images.where(viewable_id: nil, viewable_type: nil)
-      render :list_item, layout: "dashboard"
-    else
-      build_objects
-      build_approval_requests
-      @photos = (@user.first_listing.try(:photos) || []) + @user.photos.where(transactable_id: nil)
-      @user.phone_required = true
-      event_tracker.viewed_list_your_bookable
-      event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
-    end
+    build_objects
+    build_approval_requests
+    @photos = (@user.first_listing.try(:photos) || []) + @user.photos.where(transactable_id: nil)
+    @user.phone_required = true
+    event_tracker.viewed_list_your_bookable
+    event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
   end
 
   def submit_listing
@@ -38,9 +31,8 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     params[:user][:companies_attributes]["0"][:name] = current_user.name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     @user.assign_attributes(wizard_params)
-    @user.companies.first.try(:locations).try(:first).try {|l| l.name_and_description_required = true} unless buyable?
+    @user.companies.first.try(:locations).try(:first).try {|l| l.name_and_description_required = true}
     @user.companies.first.creator_id = current_user.id
-    @user.verify_associated = @user.companies.first.verify_associated = !@user.companies.first.new_record? if buyable?
     build_objects
     build_approval_requests
     if params[:save_as_draft]
@@ -66,23 +58,6 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(@user.errors.full_messages)
       render :list
     end
-  end
-
-  def submit_item
-    redirect_to(new_space_wizard_url) && return unless current_user.present?
-
-    @boarding_form = BoardingForm.new(current_user)
-    if @boarding_form.submit(boarding_form_params)
-      if @boarding_form.draft?
-        redirect_to :list, notice: t('flash_messages.space_wizard.draft_saved', bookable_noun: platform_context.decorate.bookable_noun)
-      else
-        redirect_to dashboard_products_path, notice: t('flash_messages.space_wizard.item_listed', bookable_noun: platform_context.decorate.bookable_noun)
-      end
-    else
-      @images = @boarding_form.product_form.product.images
-      render :list_item, layout: "dashboard"
-    end
-
   end
 
   private
@@ -166,7 +141,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   end
 
   def boarding_form_params
-    params.require(:boarding_form).permit(secured_params.boarding_form)
+    params.require(:boarding_form).permit(secured_params.boarding_form(@product_type))
   end
 
   def build_approval_requests
@@ -184,10 +159,6 @@ class TransactableTypes::SpaceWizardController < ApplicationController
 
   def set_theme
     @theme_name = 'product-theme'
-  end
-
-  def buyable?
-    @buyable ||= @transactable_type.buy_sell?
   end
 
   def remove_approval_requests

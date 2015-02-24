@@ -21,14 +21,14 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsControllerTest < ActionContro
       end
 
       should 'be able to add user by email' do
-        assert_difference "Instance.default_instance.instance_admins.size" do
+        assert_difference "Instance.first.instance_admins.size" do
           post :create, { :email => @user_to_be_added.email }
         end
       end
 
       should 'not duplicate instance admin' do
-        FactoryGirl.create(:instance_admin, :user_id => @user.id, :instance_id => Instance.default_instance.id)
-        assert_no_difference "Instance.default_instance.instance_admins.size" do
+        FactoryGirl.create(:instance_admin, :user_id => @user.id, :instance_id => Instance.first.id)
+        assert_no_difference "Instance.first.instance_admins.size" do
           post :create, { :email => @user.email }
         end
       end
@@ -37,6 +37,9 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsControllerTest < ActionContro
         @second_instance = FactoryGirl.create(:instance, :name => "second instance")
         @third_instance = FactoryGirl.create(:instance, :name => "third instance")
         PlatformContext.any_instance.stubs(:instance).returns(@second_instance)
+        @user_to_be_added = FactoryGirl.create(:user)
+        @user = FactoryGirl.create(:user)
+        sign_in @user
         assert_difference "Instance.find_by_name('second instance').instance_admins.size" do
           assert_no_difference "Instance.find_by_name('third instance').instance_admins.size" do
             post :create, { :email => @user_to_be_added.email }
@@ -46,7 +49,7 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsControllerTest < ActionContro
 
       should 'return error message if user has not been found' do
         email = "idontexist@example.com"
-        assert_no_difference "Instance.default_instance.instance_admins.size" do
+        assert_no_difference "Instance.first.instance_admins.size" do
           post :create, { :email => email }
         end
         assert_equal flash[:error], "Unfortunately we could not find user with email \"#{email}\""
@@ -58,7 +61,7 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsControllerTest < ActionContro
     context 'update' do
 
       setup do
-        @instance_admin = FactoryGirl.create(:instance_admin, :user_id => @user.id, :instance_id => Instance.default_instance.id)
+        @instance_admin = FactoryGirl.create(:instance_admin, :user_id => @user.id, :instance_id => Instance.first.id)
       end
 
       should 'update the role' do
@@ -95,8 +98,8 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsControllerTest < ActionContro
     context 'destroy' do
 
       setup do
-        @instance_owner = FactoryGirl.create(:instance_admin, :user_id => FactoryGirl.create(:user).id, :instance_id => Instance.default_instance.id)
-        @instance_admin = FactoryGirl.create(:instance_admin, :user_id => FactoryGirl.create(:user).id, :instance_id => Instance.default_instance.id)
+        @instance_owner = FactoryGirl.create(:instance_admin, :user_id => FactoryGirl.create(:user).id, :instance_id => Instance.first.id)
+        @instance_admin = FactoryGirl.create(:instance_admin, :user_id => FactoryGirl.create(:user).id, :instance_id => Instance.first.id)
       end
 
       should 'allow to destroy regular instance admin' do

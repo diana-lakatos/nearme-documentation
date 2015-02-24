@@ -26,6 +26,7 @@
                   = link_to 'Edit', edit_instance_admin_manage_email_template_path(email_template)
               %td
                 .pull-right
-                  = link_to 'Destroy', instance_admin_manage_email_template_path(email_template), method: :delete, confirm: 'Are you sure?'
+                  = link_to 'Destroy', instance_admin_manage_email_template_path(email_template), method: :delete,
+                      data: { confirm: 'Are you sure?' }
 
 

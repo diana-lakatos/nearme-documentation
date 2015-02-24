@@ -4,6 +4,7 @@ class SearchControllerTest < ActionController::TestCase
   setup do
     stub_request(:get, /.*maps\.googleapis\.com.*/)
     stub_mixpanel
+    PlatformContext.current = PlatformContext.new(Instance.first)
   end
 
   context 'for transactable type listing' do
@@ -97,10 +98,11 @@ class SearchControllerTest < ActionController::TestCase
 
         context 'with attribute value filter' do
           should 'filter only filtered locations' do
+            FactoryGirl.create(:custom_attribute, target: TransactableType.first, attribute_type: 'string', name: 'filterable_attribute')
             listing = FactoryGirl.create(:listing_in_cleveland, photos_count: 1)
             listing.properties[:filterable_attribute] = 'Lefthanded'
             listing.properties_will_change!
-            listing.save
+            listing.save!
             filtered_auckland = listing.location
             another_auckland = FactoryGirl.create(:listing_in_cleveland).location
 

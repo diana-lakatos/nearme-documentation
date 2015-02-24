@@ -132,7 +132,7 @@ class TransactableTest < ActiveSupport::TestCase
       @listing.daily_price = nil
       @listing.monthly_price = nil
       @listing.weekly_price = nil
-      @listing.free = true
+      @listing.action_free_booking = true
       assert_equal({ 1 => 0 }, @listing.prices_by_days)
     end
 
@@ -157,7 +157,7 @@ class TransactableTest < ActiveSupport::TestCase
   context "free flag and prices" do
 
     should "valid if free flag is true and no prices are provided" do
-      @listing.free = true
+      @listing.action_free_booking = true
       @listing.daily_price = nil
       @listing.weekly_price = nil
       @listing.monthly_price = nil
@@ -165,7 +165,7 @@ class TransactableTest < ActiveSupport::TestCase
     end
 
     should "valid if free flag is false and at daily price is greater than zero" do
-      @listing.free = false
+      @listing.action_free_booking = false
       @listing.daily_price = 1
       @listing.weekly_price = nil
       @listing.monthly_price = nil
@@ -173,7 +173,7 @@ class TransactableTest < ActiveSupport::TestCase
     end
 
     should "valid if free flag is false and at weekly price is greater than zero" do
-      @listing.free = false
+      @listing.action_free_booking = false
       @listing.daily_price = 0
       @listing.weekly_price = 1
       @listing.monthly_price = nil
@@ -181,16 +181,16 @@ class TransactableTest < ActiveSupport::TestCase
     end
 
     should "valid if free flag is false and at monthly price is greater than zero" do
-      @listing.free = false
+      @listing.action_free_booking = false
       @listing.daily_price = 0
       @listing.weekly_price = 0
       @listing.monthly_price = 5
       assert @listing.valid?
     end
 
-    should "be invalid if free flag is true and the hourly_reservations flag is true" do
-      @listing.free = true
-      @listing.hourly_reservations = true
+    should "be invalid if free flag is true and the action_hourly_booking flag is true" do
+      @listing.action_free_booking = true
+      @listing.action_hourly_booking = true
       refute @listing.valid?
     end
 
@@ -199,9 +199,9 @@ class TransactableTest < ActiveSupport::TestCase
       should 'be valid if hourly price within specified range' do
         listing = FactoryGirl.create(:listing_from_transactable_type_with_price_constraints)
         listing.hourly_price_cents = 9999
-        assert listing.valid?
+        assert listing.valid?, listing.errors.full_messages.join(', ')
         listing.hourly_price = 99
-        assert listing.valid?
+        assert listing.valid?, listing.errors.full_messages.join(', ')
       end
 
       should 'be invalid if hourly price outside specified range' do
@@ -209,7 +209,7 @@ class TransactableTest < ActiveSupport::TestCase
         listing.hourly_price_cents = 100001
         refute listing.valid?
         listing.hourly_price = 100
-        assert listing.valid?
+        assert listing.valid?, listing.errors.full_messages.join(', ')
       end
 
       should 'not be valid if hourly price is too low' do
@@ -217,7 +217,7 @@ class TransactableTest < ActiveSupport::TestCase
         listing.hourly_price_cents = 1
         refute listing.valid?
         listing.hourly_price = 11
-        assert listing.valid?
+        assert listing.valid?, listing.errors.full_messages.join(', ')
       end
 
     end
@@ -311,7 +311,7 @@ class TransactableTest < ActiveSupport::TestCase
     end
 
     should "return wednesday for monday if hourly reservation and custom availability template" do
-      @listing.hourly_reservations = true
+      @listing.action_hourly_booking = true
       @listing.hourly_price_cents = 5000
       @listing.availability_template_id = nil
 

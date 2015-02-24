@@ -8,7 +8,7 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
   MODELS_WITH_LISTINGS_PUBLIC = [:location, :transactable, :reservation]
 
   setup do
-    @platform_context = PlatformContext.new
+    @platform_context = PlatformContext.new(Instance.first)
     PlatformContext.clear_current
     PlatformContext.current = @platform_context
   end
@@ -27,7 +27,7 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
         # if we enter desksnear.me instance we don't want to see records from boatsnear.you instance
         should 'scope models to current instance' do
           ([:company] + MODELS_SCOPEABLE_ONLY_TO_INSTANCE + MODELS_SCOPEABLE_TO_WHITE_LABEL_COMPANY_AND_PARTNER).each do |model_symbol|
-            PlatformContext.current = PlatformContext.new
+            PlatformContext.current = PlatformContext.new(Instance.first)
             model_symbol.to_s.camelize.constantize.destroy_all
             @current = FactoryGirl.create(model_symbol)
             @current.update_column(:instance_id, @instance.id)
@@ -41,7 +41,7 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
         # if we enter desksnear.me instance we don't want to see records from privatecompany.desksnear.me
         should 'ignore entities that belong to company with private listings' do
           (MODELS_WITH_LISTINGS_PUBLIC).each do |model_symbol|
-            PlatformContext.current = PlatformContext.new
+            PlatformContext.current = PlatformContext.new(Instance.first)
             model_symbol.to_s.camelize.constantize.destroy_all
             @public = FactoryGirl.create(model_symbol)
             @public.update_column(:instance_id, @instance.id)
@@ -60,7 +60,7 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
           # if we for example enter desksnear.me/instance_admin we actually want to see records even from privatecompany.desksnear.me
           should 'not scope entities that belong to company with private listings if scope forced to instance' do
             (MODELS_WITH_LISTINGS_PUBLIC).each do |model_symbol|
-              PlatformContext.current = PlatformContext.new
+              PlatformContext.current = PlatformContext.new(Instance.first)
               model_symbol.to_s.camelize.constantize.destroy_all
               @public = FactoryGirl.create(model_symbol)
               @public.update_column(:instance_id, @instance.id)
@@ -83,7 +83,7 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
             @other_company = FactoryGirl.create(:white_label_company)
             @other_company.update_attribute(:instance_id, @company_instance.id)
             MODELS_SCOPEABLE_TO_WHITE_LABEL_COMPANY_AND_PARTNER.each do |model_symbol|
-              PlatformContext.current = PlatformContext.new
+              PlatformContext.current = PlatformContext.new(Instance.first)
               model_symbol.to_s.camelize.constantize.destroy_all
               @current_object = FactoryGirl.create(model_symbol)
               @current_object.update_column(:instance_id, @instance.id)
@@ -130,7 +130,7 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
         # if we are on whitelabelcompany.com we want to see records only for this company
         should 'scope these objects to company' do
           MODELS_SCOPEABLE_TO_WHITE_LABEL_COMPANY_AND_PARTNER.each do |model_symbol|
-            PlatformContext.current = PlatformContext.new
+            PlatformContext.current = PlatformContext.new(Instance.first)
             model_symbol.to_s.camelize.constantize.destroy_all
             @current_object = FactoryGirl.create(model_symbol)
             @current_object.update_column(:instance_id, @instance.id)
@@ -149,7 +149,7 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
         # some models should be scoped to white label company's instance
         should 'scope these objects to company instance' do
           MODELS_SCOPEABLE_ONLY_TO_INSTANCE.each do |model_symbol|
-            PlatformContext.current = PlatformContext.new
+            PlatformContext.current = PlatformContext.new(Instance.first)
             model_symbol.to_s.camelize.constantize.destroy_all
             @current_object = FactoryGirl.create(model_symbol)
             @current_object.update_column(:instance_id, @instance.id)
@@ -184,7 +184,7 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
         # if partner has scoping enabled, show only records created via this partner's domain
         should 'scope these objects to partner' do
           MODELS_SCOPEABLE_TO_WHITE_LABEL_COMPANY_AND_PARTNER.each do |model_symbol|
-            PlatformContext.current = PlatformContext.new
+            PlatformContext.current = PlatformContext.new(Instance.first)
             model_symbol.to_s.camelize.constantize.destroy_all
             @current_object = FactoryGirl.create(model_symbol)
             @current_object.update_column(:instance_id, @instance.id)
@@ -205,7 +205,7 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
         # some objects should be scoped to partner's instance
         should 'scope these objects to partner instance' do
           MODELS_SCOPEABLE_ONLY_TO_INSTANCE.each do |model_symbol|
-            PlatformContext.current = PlatformContext.new
+            PlatformContext.current = PlatformContext.new(Instance.first)
             model_symbol.to_s.camelize.constantize.destroy_all
             @current_object = FactoryGirl.create(model_symbol)
             @current_object.update_column(:instance_id, @instance.id)
@@ -240,7 +240,7 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
         # if partner has scoping disabled, we want o show records that belong to partner's instance
         should 'scope these objects to partner instance' do
           MODELS_SCOPEABLE_ONLY_TO_INSTANCE.each do |model_symbol|
-            PlatformContext.current = PlatformContext.new
+            PlatformContext.current = PlatformContext.new(Instance.first)
             model_symbol.to_s.camelize.constantize.destroy_all
             @current_object = FactoryGirl.create(model_symbol)
             @current_object.update_column(:instance_id, @instance.id)
@@ -256,7 +256,7 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
         # some objects can't be scoped to partner, but they should be scoped to partner's instance in this case
         should 'scope these objects partner instance instead of partner' do
           MODELS_SCOPEABLE_TO_WHITE_LABEL_COMPANY_AND_PARTNER.each do |model_symbol|
-            PlatformContext.current = PlatformContext.new
+            PlatformContext.current = PlatformContext.new(Instance.first)
             model_symbol.to_s.camelize.constantize.destroy_all
             @current_object = FactoryGirl.create(model_symbol)
             @current_object.update_column(:instance_id, @instance.id)

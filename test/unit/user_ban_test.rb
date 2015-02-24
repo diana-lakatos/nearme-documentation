@@ -22,12 +22,13 @@ class UserBanTest < ActiveSupport::TestCase
 
       should 'ignore things in other instances' do
         PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
+        @user = FactoryGirl.create(:user)
         @other_company = FactoryGirl.create(:company, creator: @user)
         @other_location = FactoryGirl.create(:location, company: @other_company)
         FactoryGirl.create(:user_ban, user: @user)
         assert @other_company.reload.deleted?
         assert @other_location.reload.deleted?
-        PlatformContext.current = PlatformContext.new
+        PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
         refute @company.reload.deleted?
         refute @location.reload.deleted?
         refute @listing.reload.deleted?

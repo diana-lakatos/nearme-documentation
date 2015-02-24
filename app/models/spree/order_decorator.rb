@@ -13,7 +13,10 @@ Spree::Order.class_eval do
   has_many :near_me_payments, as: :payable, class_name: '::Payment'
   has_many :shipping_methods, class_name: 'Spree::ShippingMethod'
   has_many :additional_charges, as: :target
+  has_many :payment_documents, as: :attachable, class_name: 'Attachable::PaymentDocument', dependent: :destroy
+
   accepts_nested_attributes_for :additional_charges
+  accepts_nested_attributes_for :payment_documents
 
   after_save :purchase_shippo_rate
   before_create :store_platform_context_detail

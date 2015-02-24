@@ -15,15 +15,16 @@ Before do
   WebMock.disable_net_connect!
   GmapsFake.stub_requests
   stub_request(:get, /.*api\.mixpanel\.com.*/)
+  stub_request(:get, /.*mixpanel\.com\/api.*/).to_return(body: "[]")
   stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
   stub_request(:get, 'https://www.filepicker.io/api/file/-nBq2onTSemLBxlcBWn1').to_return(:status => 200,:body => File.read(Rails.root.join("test", "assets", "foobear.jpeg")), :headers => {'Content-Type' => 'image/jpeg'})
   stub_request(:get, 'http://static.ak.facebook.com')
-  instance = FactoryGirl.create(:default_instance)
-  instance.domains = [FactoryGirl.create(:domain)]
-  instance.save!
+  instance = FactoryGirl.create(:instance)
+  FactoryGirl.create(:domain, target: instance, name: "127.0.0.1")
+  FactoryGirl.create(:domain, target: instance, name: "example.org")
   store_model("instance", nil, instance)
   store_model("theme", nil, instance.theme)
-  Thread.current[:platform_context] = PlatformContext.new
+  Thread.current[:platform_context] = PlatformContext.new(instance)
   FactoryGirl.create(:instance)
   FactoryGirl.create(:paypal_payment_gateway)
   FactoryGirl.create(:stripe_payment_gateway)

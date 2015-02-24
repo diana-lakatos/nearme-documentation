@@ -74,7 +74,8 @@ class CacheableTest < ActionDispatch::IntegrationTest
     CustomAttributes::CustomAttribute::CacheDataHolder.custom_attributes_as_array = {}
     CustomAttributes::CustomAttribute::CacheTimestampsHolder.custom_attributes_cache_update_at = {}
     ::CustomAttributes::CustomAttribute::CacheTimestampsHolder.expects(:touch).once
-    SampleModel.all.load
+    models = SampleModel.all.load
+    models.map(&:properties)
   end
 
 

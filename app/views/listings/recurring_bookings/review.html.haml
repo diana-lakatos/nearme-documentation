@@ -4,7 +4,7 @@
 .row-fluid
   .span8.offset2
     .header
-      %h1 Review your booking
+      %h1= t 'reservations_review.heading'
       %p.location-name= @recurring_booking_request.listing.name
       %p.location-address= @recurring_booking_request.location.address
 
@@ -13,7 +13,7 @@
         = @recurring_booking_request.recurring_booking.schedule.to_s
         %p
           = @recurring_booking.short_dates
-          - if @recurring_booking_request.hourly_reservations?
+          - if @recurring_booking_request.action_hourly_booking?
             %br
             = @recurring_booking.hourly_summary
 
@@ -22,7 +22,7 @@
 
         - if @recurring_booking_request.errors.present?
           .flash.error
-            %p Whoops! We couldn't make that recurring purchase.
+            %p= t 'recurring_reservations_review.errors.whoops'
             %ul
               - @recurring_booking_request.errors[:base].each do |error|
                 %li= error
@@ -38,17 +38,17 @@
 
         %hr.thin
 
-        %h2 Order Summary
+        %h2= t 'reservations_review.summary'
 
         .order-summary
           .summary-line
-            .summary-line-label Subtotal
+            .summary-line-label= t 'reservations_review.subtotal'
             .summary-line-value.subtotal-amount= @decorated_reservation.subtotal_price
             .clearfix
 
           - if @decorated_reservation.has_service_fee?
             .summary-line
-              .summary-line-label Service fee
+              .summary-line-label= t 'reservations_review.service_fee'
               .summary-line-value.service-fee-amount= @decorated_reservation.service_fee_guest
               .clearfix
 
@@ -62,20 +62,20 @@
                 .clearfix
 
           .summary-line
-            .summary-line-label Total per reservation
+            .summary-line-label= t 'recurring_reservations_review.total'
             .summary-line-value.total-amount= @decorated_reservation.total_price
             .clearfix
 
         - if @recurring_booking_request.display_phone_and_country_block?
 
-          %h2 Contact Information
+          %h2= t 'reservations_review.contact_information'
 
           = render 'contact_information_fields', :f => f
 
 
         - if @decorated_reservation.credit_card_payment?
 
-          %h2 Payment
+          %h2= t 'reservations_review.payment'
 
           = render 'payments/credit_card_fields', :f => f
 
@@ -84,12 +84,12 @@
 
         - elsif @decorated_reservation.manual_payment?
 
-          %h2 Payment
+          %h2= t 'reservations_review.payment'
 
           .box.gray= t('reservations.payment_in_person')
-          %p= "This #{platform_context.lessor} manually confirms all bookings"
+          %p= t('reservations.manually_confirm', lessor: platform_context.lessor)
 
-        = f.button :submit, 'Request Booking', disable_with: "Booking..."
+        = f.button :submit, t('reservations_review.buttons.request'), disable_with: t('reservations_review.disabled_buttons.request')
 
 - content_for :script do
   :javascript

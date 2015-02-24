@@ -7,7 +7,7 @@ FactoryGirl.define do
     quantity 1
     state 'unconfirmed'
     platform_context_detail_type "Instance"
-    platform_context_detail_id { (Instance.default_instance.presence || FactoryGirl.create(:instance)).id }
+    platform_context_detail_id { (Instance.first.presence || FactoryGirl.create(:instance)).id }
 
     before(:create) do |reservation|
       make_valid_period(reservation).save! unless reservation.valid?
@@ -15,6 +15,10 @@ FactoryGirl.define do
 
     after(:build) do |reservation|
       make_valid_period(reservation) unless reservation.valid?
+    end
+
+    factory :reservation_hourly do
+      reservation_type 'hourly'
     end
 
     factory :reservation_with_credit_card do

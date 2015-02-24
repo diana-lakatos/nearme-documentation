@@ -31,14 +31,14 @@ class Theme::Compiler
   def create_compiled_file(base_file_name)
     path = "#{Dir.tmpdir}/#{base_file_name}-ThemeStylesheet#{@theme.id}"
     FileUtils.touch(path)
-    compressor = YUI::CssCompressor.new
-    if Rails.env.development?
+    if Rails.env.test? || Rails.env.development?
       File.open(path, 'w') do |gz|
-          gz.write compressor.compress(render_stylesheet(base_file_name))
+        gz.write render_stylesheet(base_file_name)
       end
     else
+      compressor = YUI::CssCompressor.new
       Zlib::GzipWriter.open(path, 9) do |gz|
-          gz.write compressor.compress(render_stylesheet(base_file_name))
+        gz.write compressor.compress(render_stylesheet(base_file_name))
       end
     end
     File.open(path, 'rb')

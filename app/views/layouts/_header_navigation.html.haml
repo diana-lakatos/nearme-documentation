@@ -1,13 +1,20 @@
 %ul.nav.main-menu
   - if (!no_listing_buttons? || platform_context.white_label_company_user?(current_user)) && HiddenUiControls.find('main_menu/cta').visible?
-    - if platform_context.single_transactable_type?
+    - if platform_context.single_type?
       - if current_user && current_user.registration_in_progress?
-        %li
-          = link_to main_app.transactable_type_new_space_wizard_path(platform_context.transactable_types.first), :class => "nav-link btn btn-blue btn-medium" do
-            %span.text= t('ui.header.complete_your_thing', thing: platform_context.transactable_types.first.name)
-            %span.icon.ico-plus
+        - if platform_context.product_types.count == 1
+          %li
+            = link_to main_app.product_type_new_space_wizard_path(platform_context.product_types.first), :class => "nav-link btn btn-blue btn-medium" do
+              %span.text= t('ui.header.complete_your_thing', thing: platform_context.product_types.first.name)
+              %span.icon.ico-plus
+        - else
+          %li
+            = link_to main_app.transactable_type_new_space_wizard_path(platform_context.transactable_types.first), :class => "nav-link btn btn-blue btn-medium" do
+              %span.text= t('ui.header.complete_your_thing', thing: platform_context.transactable_types.first.name)
+              %span.icon.ico-plus
+
       - elsif !current_user.try(:registration_completed?)
-        = render partial: 'layouts/list_your_bookable', locals: { transactable_type: platform_context.transactable_types.first }
+        = render partial: 'layouts/list_your_bookable', locals: { transactable_type: platform_context.product_types.first || platform_context.transactable_types.first }
     - else
       - if current_user && current_user.registration_in_progress?
         %li
@@ -22,15 +29,18 @@
             %span.ico-chevron-down
           .clearfix
           %ul.dropdown-menu
-            - platform_context.transactable_types.each do |tt|
-              = render partial: 'layouts/list_your_bookable', locals: { transactable_type: tt }
-
+            - if buyable?
+              - platform_context.product_types.each do |tt|
+                = render partial: 'layouts/list_your_bookable', locals: { transactable_type: tt }
+            - else
+              - platform_context.transactable_types.each do |tt|
+                = render partial: 'layouts/list_your_bookable', locals: { transactable_type: tt }
   - if user_signed_in?
     - if buyable? && current_user.cart_orders.any? && HiddenUiControls.find('main_menu/cart').visible?
       %li.divider-vertical
       %li
         = link_to cart_index_path, class: 'nav-link' do
-          %span.text CART: #{CartDecorator.new(current_user).navigation}
+          %span.text= t 'top_navbar.cart', cart: CartDecorator.new(current_user).navigation
           %span.icon.ico-cart
 
     %li.divider-vertical
@@ -44,28 +54,34 @@
         - if current_user.instance_admins_metadata
           %li
             = link_to main_app.send("instance_admin_#{current_user.instance_admins_metadata}_path"), class: 'nav-link dropdown-toggle' do
-              %span Marketplace Admin
+              %span= t 'top_navbar.marketplace_admin'
 
         - if platform_context.white_label_company_user?(current_user) && current_user.has_any_active_listings && HiddenUiControls.find('main_menu/manage_items').visible?
           %li
             = link_to main_app.dashboard_transactable_type_transactables_path(TransactableType.first), class: 'nav-link dropdown-toggle' do
-              %span Manage #{platform_context.bookable_noun.pluralize}
+              %span= t 'top_navbar.manage_bookable', bookable_noun: platform_context.bookable_noun.pluralize
 
         - if buyable?
           - if current_user.registration_completed? && HiddenUiControls.find('main_menu/manage_items').visible?
-            %li
-              = link_to main_app.dashboard_products_path, class: 'nav-link dropdown-toggle' do
-                %span Manage #{platform_context.bookable_noun.pluralize}
+            - platform_context.product_types.each do |product_type|
+              %li
+                = link_to main_app.dashboard_product_type_products_path(product_type), class: 'nav-link dropdown-toggle' do
+                  %span Manage #{product_type.name.pluralize}
 
             - if HiddenUiControls.find('main_menu/my_orders').visible?
               %li
                 = link_to main_app.dashboard_orders_path, class: 'nav-link dropdown-toggle' do
-                  %span My Orders
+                  %span= t 'top_navbar.my_orders'
         - else
           - if HiddenUiControls.find('main_menu/my_bookings').visible?
             %li
               = link_to main_app.dashboard_user_reservations_path, class: 'nav-link dropdown-toggle' do
-                %span My Bookings
+                %span= t 'top_navbar.my_bookings'
+
+        - if platform_context.instance.wish_lists_enabled? && HiddenUiControls.find('main_menu/wish_list').visible?
+          %li
+            = link_to main_app.dashboard_wish_list_items_path, class: 'nav-link dropdown-toggle' do
+              %span= t 'wish_lists.name'
 
         - if !current_user.requests_for_quotes.empty? && HiddenUiControls.find('main_menu/rfq').visible?
           %li
@@ -75,22 +91,22 @@
         - if platform_context.instance.user_blogs_enabled? && HiddenUiControls.find('main_menu/manage_blog').visible?
           %li
             = link_to main_app.dashboard_blog_path, class: 'nav-link dropdown-toggle' do
-              %span Manage Blog
+              %span= t 'top_navbar.manage_blog'
 
         - if HiddenUiControls.find('main_menu/account').visible?
           %li
             = link_to '/dashboard/edit_profile', class: 'nav-link dropdown-toggle' do
-              %span Account
+              %span= t 'top_navbar.account'
 
         %li
           = link_to main_app.destroy_user_session_path, :method => :delete, class: 'nav-link dropdown-toggle', :data => {:user => current_user.first_name } do
-            %span Log Out
+            %span= t 'top_navbar.log_out'
 
     - if HiddenUiControls.find('main_menu/messages').visible?
       %li.divider-vertical
       %li
         = link_to main_app.dashboard_user_messages_path, class: 'nav-link' do
-          %span.text Messages
+          %span.text= t 'top_navbar.messages'
           %span.icon.ico-mail
           - if current_user.unread_user_message_threads_count_for(platform_context.instance) > 0
             %span.count= current_user.unread_user_message_threads_count_for(platform_context.instance)
@@ -99,8 +115,8 @@
     %li.divider-vertical
     %li
       = link_to_registration get_return_to_url, platform_context.secured_constraint, secure_links?, :class => "nav-link header-first", data: { modal: true, 'modal-class' => 'sign-up-modal' } do
-        %span Sign Up
+        %span= t 'top_navbar.sign_up'
     %li.divider-vertical
     %li
       = link_to_login get_return_to_url, platform_context.secured_constraint, secure_links?, :class => "nav-link header-second", data: { modal: true, 'modal-class' => 'sign-up-modal' } do
-        %span Log In
+        %span= t 'top_navbar.log_in'

@@ -14,8 +14,8 @@ class ReservationRequestTest < ActiveSupport::TestCase
     }
     stub_billing_gateway(@listing.instance)
     stub_active_merchant_interaction
-    
-    @reservation_request = ReservationRequest.new(@listing, @user, PlatformContext.new, @attributes)
+    @instance = Instance.first || create(:instance)
+    @reservation_request = ReservationRequest.new(@listing, @user, PlatformContext.new(@instance), @attributes)
   end
 
   context "#initialize" do
@@ -58,14 +58,14 @@ class ReservationRequestTest < ActiveSupport::TestCase
     context "invalid arguments" do
       context "no listing" do
         should "be invalid" do
-          reservation_request = ReservationRequest.new(nil, @user, PlatformContext.new, @attributes)
+          reservation_request = ReservationRequest.new(nil, @user, PlatformContext.new(@instance), @attributes)
           assert !reservation_request.valid?
         end
       end
 
       context "no user" do
         should "be invalid" do
-          reservation_request = ReservationRequest.new(@listing, nil, PlatformContext.new, @attributes)
+          reservation_request = ReservationRequest.new(@listing, nil, PlatformContext.new(@instance), @attributes)
           assert !reservation_request.valid?
         end
       end

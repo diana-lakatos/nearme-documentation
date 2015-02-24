@@ -11,15 +11,23 @@ Spree::Product.class_eval do
   belongs_to :user
   belongs_to :company
   belongs_to :administrator, class_name: 'User'
+  belongs_to :product_type, class_name: "Spree::ProductType", foreign_key: :product_type_id
 
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   has_many :impressions, as: :impressionable, dependent: :destroy
+  has_many :wish_list_items, as: :wishlistable
+  has_many :document_requirements, as: :item, dependent: :destroy
+
+  has_one :upload_obligation, as: :item, dependent: :destroy
+
+  has_custom_attributes target_type: 'Spree::ProductType', target_id: :product_type_id, store_accessor_name: :extra_properties
 
   scope :approved, -> { where(approved: true) }
   scope :draft, -> { where(draft: true) }
   scope :not_draft, -> { where(draft: false) }
   scope :currently_available, -> { not_draft.where("(#{Spree::Product.quoted_table_name}.available_on <= ? OR #{Spree::Product.quoted_table_name}.available_on IS NULL)", Time.zone.now) }
   scope :searchable, -> { approved.currently_available }
+  scope :of_type, -> (product_type) { where(product_type: product_type) }
 
   _validators.reject! { |key, _| [:slug, :shipping_category_id].include?(key) }
 
@@ -29,12 +37,7 @@ Spree::Product.class_eval do
   end
 
   validates :slug, uniqueness: { scope: [:instance_id, :company_id, :partner_id, :user_id] }
-
   validate :shipping_category_presence
-
-  # TODO: uncomment in Phase 3 during implementation of creating products
-  # belongs_to :transactable_type, inverse_of: :transactables
-  # has_custom_attributes target_type: 'TransactableType', target_id: :transactable_type_id
 
   store_accessor :status, [:current_status]
 
@@ -63,7 +66,7 @@ Spree::Product.class_eval do
   end
 
   def reviews
-    @reviews ||= Review.where(object: 'product', reviewable_type: 'Spree::LineItem', reviewable_id: self.line_items.pluck(:id))
+    @reviews ||= Review.where(object: 'product', reviewable_type: 'Spree::LineItem', reviewable_id: self.line_items.unscope(where: :is_master).pluck(:id))
   end
 
   def reviews_count

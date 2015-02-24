@@ -68,7 +68,7 @@ module Utils
           # === INSTANCES ========================================
 
           load_instances!
-          PlatformContext.current = PlatformContext.new
+          PlatformContext.current = PlatformContext.new(Instance.first)
           # === BASIC STUFF ======================================
 
           load_instance_admin_roles!
@@ -201,7 +201,7 @@ module Utils
 
     def load_instance_admins!
       do_task "Loading instance admins" do
-        InstanceAdmin.create(:user_id => users.first.id, :instance_id => Instance.default_instance.id)
+        InstanceAdmin.create(:user_id => users.first.id, :instance_id => Instance.first.id)
       end
     end
 
@@ -228,7 +228,7 @@ module Utils
     alias_method :locations, :load_locations!
 
     def load_transactable_types!
-      tp = TransactableType.where(name: 'Listing').first_or_create!
+      tp = TransactableType.where(name: 'Listing').first_or_initialize
       tp.attributes = FactoryGirl.attributes_for(:transactable_type_listing)
       tp.save!
       CustomAttributes::CustomAttribute::Creator.new(tp).create_listing_attributes!
@@ -238,8 +238,10 @@ module Utils
       @listings ||= do_task "Loading listings" do
         locations.map do |location|
           ["Desk", "Meeting Room", "Office Space", "Salon Booth"].sample(rand(1..4)).map do |name|
-            FactoryGirl.create(:transactable, :listing_type => name, :name => "#{name} #{Faker::Company.name}".truncate(50, :separator => ''), :location => location,
+            transactable = FactoryGirl.build(:transactable, :listing_type => name, :name => "#{name} #{Faker::Company.name}".truncate(50, :separator => ''), :location => location,
                                :description => Faker::Lorem.paragraph.truncate(200), :photos_count => 0)
+            transactable.save(:validate => false)
+            transactable
           end
         end.flatten
       end
@@ -267,7 +269,7 @@ module Utils
     end
 
     def load_integration_keys!
-      dnm_instance = Instance.default_instance
+      dnm_instance = Instance.first
       create_payment_gateways
       @stripe = PaymentGateway.where(name: "Stripe").first
 

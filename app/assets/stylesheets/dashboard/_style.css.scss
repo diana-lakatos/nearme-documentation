@@ -1141,3 +1141,29 @@ table.order-header td {
   }
 
 }
+
+.document-requirements {
+  .radio_buttons {
+    margin-left: 15px;
+    margin-bottom: 30px;
+
+    label {
+      font-size: 14px;
+    }
+  }
+}
+
+.payment-documents {
+  font-size: 14px;
+  .file {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 130px;
+  }
+}
+
+.payment-documents-tabs {
+  li {text-transform: uppercase;}
+}

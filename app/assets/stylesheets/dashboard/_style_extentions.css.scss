@@ -241,7 +241,7 @@ section#shipping-info.enabled {
 
 /* End Shippo product form fields */
 
-.remove_shipping_profile {
+.remove_shipping_profile, .remove-document-requirement {
   overflow: hidden;
 
   label {
@@ -423,3 +423,30 @@ h4.other-reservation-separator {
     }
   }
 }
+
+.wish-list-image {
+  margin-right: 5px;
+  max-height: 24px;
+}
+
+/* PRICE */
+
+.price-containter {
+  padding: 0px;
+
+  > div:first-child {
+    padding-left: 0px;
+  }
+}
+
+.icui {
+
+  input {
+    line-height: normal;
+  }
+
+  > .DatePicker:first-child {
+    margin-top: 0px;
+  }
+}
+

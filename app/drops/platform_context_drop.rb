@@ -2,7 +2,7 @@ class PlatformContextDrop < BaseDrop
 
   attr_reader :platform_context_decorator
 
-  delegate :name, :bookable_noun, :pages, :platform_context, :is_desksnearme, :blog_url, :twitter_url, :lessor, :lessors, :lessee, :lessees, :searcher_type,
+  delegate :name, :bookable_noun, :pages, :platform_context, :blog_url, :twitter_url, :lessor, :lessors, :lessee, :lessees, :searcher_type,
     :facebook_url, :address, :phone_number, :gplus_url, :site_name, :support_url, :support_email, :logo_image, :tagline, :search_field_placeholder, :homepage_content,
     :is_company_theme?, :call_to_action, :latest_products, :buyable?, :transactable_types, :bookable_nouns, :bookable_nouns_plural, to: :platform_context_decorator
 

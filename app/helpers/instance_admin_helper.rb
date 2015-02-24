@@ -20,7 +20,7 @@ module InstanceAdminHelper
 
   def support_author(message)
     return "" unless message
-     author = link_to_if message.user, message.full_name, message.user
+    author = link_to_if message.user, message.full_name, message.user
     "by #{author}".html_safe
   end
 
@@ -40,7 +40,7 @@ module InstanceAdminHelper
   end
 
   def pretty_path(path)
-    path.gsub('/',' > ').titleize
+    path.gsub('/', ' > ').titleize
   end
 
   def currency_name(iso_code)
@@ -51,12 +51,12 @@ module InstanceAdminHelper
   def redirect_codes
     Domain::REDIRECT_CODES.map do |code|
       label = case code
-                when 301
-                  'Moved permanently (301)'
-                when 302
-                  'Temporary (302)'
-                else
-                  code
+              when 301
+                'Moved permanently (301)'
+              when 302
+                'Temporary (302)'
+              else
+                code
               end
 
       [label, code]
@@ -65,5 +65,13 @@ module InstanceAdminHelper
 
   def next_payment_transfers_date
     l(PaymentTransfers::SchedulerMethods.new(platform_context.instance).next_payment_transfers_date.beginning_of_day, format: :long)
+  end
+
+  def wish_lists_icon_sets
+    [['Heart', 'heart'], ['Thumbs Up', 'thumbs_up'], ['Tick', 'tick']]
+  end
+
+  def wish_lists_icon_set_image(set_name)
+    image_tag "instance_admin/wish_lists/#{set_name}_set.png"
   end
 end

@@ -5,7 +5,7 @@ FactoryGirl.define do
     rating { rand(RatingConstants::VALID_VALUES) }
     object RatingConstants::FEEDBACK_TYPES.sample
     user
-    instance { Instance.default_instance.presence || FactoryGirl.create(:instance) }
+    instance { Instance.first.presence || FactoryGirl.create(:instance) }
     reviewable { FactoryGirl.create(:reservation, instance: instance)  }
     transactable_type { instance.transactable_types.first }
   end

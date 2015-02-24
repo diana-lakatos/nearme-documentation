@@ -8,7 +8,8 @@
     .col-md-3.listing-attr
       %p= transactable.location.try(&:name)
     .col-md-2.listing-attr
-      %p= listing_price_information(transactable)
+      %p= transactable.decorate.lowest_price_with_currency
     .col-md-1.listing-attr
       = link_to "Edit", edit_dashboard_transactable_type_transactable_path(@transactable_type, transactable)
-      = link_to "Delete", dashboard_transactable_type_transactable_path(@transactable_type, transactable), :method => :delete, :confirm => 'Are you sure?', style: 'margin-top:0px;'
+      = link_to "Delete", dashboard_transactable_type_transactable_path(@transactable_type, transactable),
+          method: :delete, data: { confirm: 'Are you sure?' }, style: 'margin-top:0px;'

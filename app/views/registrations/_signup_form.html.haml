@@ -6,15 +6,17 @@
     = hidden_field_tag 'wizard', params[:wizard] if params[:wizard]
 
     .name-holder.input-icon-holder
-      = f.input :name, :label => false, :placeholder => "Full name", :input_html => { :tabindex => '1' }
+      = f.input :name, :label => false, placeholder: t('simple_form.placeholders.registration.name'), :input_html => { :tabindex => '1' }
       %span.ico-user
 
     .email-holder.input-icon-holder
-      = f.input :email, :label => false, :placeholder => "Email", :input_html => { :tabindex => '2' }
+      = f.input :email, :label => false, placeholder:  t('simple_form.placeholders.registration.email'),
+        :input_html => { :tabindex => '2' }
       %span.ico-mail
 
     .password-holder.input-icon-holder
-      = f.input :password, :label => false, placeholder: "Password", :input_html => { :tabindex => '3' }
+      = f.input :password, :label => false, placeholder: t('simple_form.placeholders.registration.password'),
+        :input_html => { :tabindex => '3' }
       %span.ico-lock
 
       - if platform_context.instance.force_accepting_tos
@@ -26,32 +28,33 @@
           - if f.object.errors.include?(:accept_terms_of_service)
             %p.error-block= f.object.errors[:accept_terms_of_service].first
       - else
-        %p.notice.text-center.legal By signing up, you confirm that you accept the #{link_to "Terms of Service and Privacy Policy", pages_path('legal'), :target => '_blank'}.
+        %p.notice.text-center.legal #{t('sign_up_form.confirm_tos')} #{link_to t('sign_up_form.tos'), pages_path('legal'), :target => '_blank'}.
     .actions
-      = f.submit 'Sign up', :class => 'desksnearme submit', data: {:disable_with => "Signing up..."}, :tabindex => '4'
+      = f.submit t('sign_up_form.buttons.sign_up'), :class => 'desksnearme submit', data: { disable_with: t('sign_up_form.disabled_buttons.sign_up') }, :tabindex => '4'
 
-.text-center.already-a-user= link_to('Already a user?', '#', data: { modal: true, href: new_user_session_path(:return_to => params[:return_to]), 'modal-class' => 'sign-up-modal' } )
+.text-center.already-a-user= link_to(t('sign_up_form.buttons.already_user'), '#', data: { modal: true, href: new_user_session_path(:return_to => params[:return_to]), 'modal-class' => 'sign-up-modal' } )
 
 - if user_auth_provider
   .signup-provider
     .inner-box.connected-provider
-      = link_to 'Close', clear_authentications_url, :method => :post, :remote => true, :class => "close-button"
+      = link_to t('sign_up_form.buttons.close'), clear_authentications_url, :method => :post, :remote => true, :class => "close-button"
       .avatar
         = image_tag user_auth_provider.avatar_url
       %h3= user_auth_provider.name
       %p= user_auth_provider.connection_description
 
     %p.intro
-      We just need a couple more details:
+      = t 'sign_up_form.more_details'
 
     = simple_form_for resource, :as => :user, :url => registration_path(resource_name), :html => { :class => "form-horizontal new_user" } do |f|
       = hidden_field_tag 'wizard', params[:wizard] if params[:wizard]
 
       - # TODO: Certain providers may have particular additional fields they require
-      = f.input :email, :label => "Your email address", :placeholder => "So we can contact you"
+      = f.input :email, label: t('simple_form.labels.registration.email'),
+          placeholder: t('simple_form.placeholders.registration.we_can_contact_you')
 
       .actions
-        = f.submit 'Sign up', :disable_with => "Signing up..."
+        = f.submit t('sign_up_form.buttons.sign_up'), disable_with: t('sign_up_form.disabled_buttons.sign_up')
 
 - if request.xhr?
   :javascript

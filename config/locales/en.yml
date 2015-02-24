@@ -132,6 +132,11 @@ en:
     upsell_addons:
       index:
         no_addons_yet: "You don't have any add-ons yet. Click on the link below and start upselling now"
+    wish_lists:
+      labels:
+        name: 'LIST TITLE'
+        unselected_state: 'UNSELECTED STATE'
+        selected_state: 'SELECTED STATE'
   buy_sell_market:
     products:
       buttons:
@@ -190,6 +195,12 @@ en:
         total2: 'Total'
         shipping: 'Shipping'
         subtotal: 'Subtotal'
+
+        required_documents: 'Required Documents'
+        the_following_documents: 'The following documents are required to book this item.'
+        choose_another_file: 'Choose another file'
+        choose_file: 'Choose file'
+        no_file_chosen: 'No file chosen'
 
       placeholders:
         first_name: 'Enter your first name'
@@ -308,6 +319,7 @@ en:
       blog_posts: 'Posts'
       blog_settings: 'Settings'
       reviews: 'Reviews'
+      sent_to_me: 'Uploaded Files'
 
       your_shop: 'YOUR SHOP'
       admin: 'ADMIN'
@@ -345,7 +357,20 @@ en:
         title: "Reviews"
         rate_your_experience: "Rate Your Experience"
         completed_feedback: "Completed Feedback"
-
+    document_requirements:
+      upload_files: "Upload Files"
+      enter_your_documents: "Please, enter below the documents your users will need to provide before booking the item"
+      add_new_document_requirement: "Add new Document Requirement"
+    payment_documents:
+      files_sent_to_me: "Files sent to me"
+      files_uploaded_by_me: "Files uploaded by me"
+      order: "Order"
+      reservation: "Reservation"
+      table_head:
+        order: "Order"
+        user: "User"
+        date: "Date"
+        document: "Document"
   hidden_items:
     registrations:
       show:
@@ -358,6 +383,28 @@ en:
     main_menu:
       rfq: 'Main Menu > RFQ'
       cta: 'Main Menu > CTA button'
+
+    dashboard:
+      wish_list_items: 'Dashboard > Wish list'
+
+  wish_lists:
+    name: 'Favorites'
+    empty_list: "You don't have any items yet"
+
+    buttons:
+      clear: 'Remove all'
+      unselected_state: 'Add to Favorites'
+      selected_state: 'Remove from Favorites'
+      delete: 'Delete'
+
+    notices:
+      item_added: 'Item has been added to the list.'
+      item_removed: 'Item has been removed from the list.'
+      already_listed: 'This item is already in the list.'
+      wish_lists_disabled: 'Wish lists are disabled for this marketplace.'
+
+    confirmations:
+      clear: 'Are you sure you want to delete all items?'
 
   user_profile:
     labels:
@@ -493,6 +540,10 @@ en:
     per_month: 'PER MONTH'
     first_day: 'Select a start date'
     last_day: 'Select an end date'
+    booking_module:
+      fixed: 'Fixed Price'
+      pick_fixed_date: 'Select a date'
+      suggest_date: 'What time works best for you?'
   search:
     list:
       additional_social_connections:
@@ -567,3 +618,130 @@ en:
     shipping_options:
       dimensions_templates:
         add_new_dimensions_template: '+ Add new dimension template'
+
+  top_navbar:
+    sign_up: 'Sign Up'
+    log_in: 'Log In'
+    manage_blog: 'Manage Blog'
+    account: 'Account'
+    messages: 'Messages'
+    log_out: 'Log Out'
+    my_bookings: 'My Bookings'
+    my_orders: 'My Orders'
+    manage_bookable: 'Manage %{bookable_noun}'
+    marketplace_admin: 'Marketplace Admin'
+    cart: 'CART %{cart}'
+
+  sign_up_form:
+    sign_up_to: 'Sign up to %{marketplace_name}'
+    log_in_to: 'Log in to %{marketplace_name}'
+    confirm_tos: 'By signing up, you confirm that you accept the'
+    tos: 'Terms of Service and Privacy Policy'
+
+    title: 'Sign in'
+    buttons:
+      sign_up: 'Sign up'
+      log_in: 'Log In'
+      close: 'Close'
+      reset_password: 'Reset your password'
+      already_user: 'Already a user?'
+      new_user: 'New User?'
+
+    disabled_buttons:
+      sign_up: 'Signing up...'
+
+    forgot: 'Forgot?'
+    more_details: 'We just need a couple more details:'
+
+  reset_password_form:
+    title: 'Reset Password'
+    heading: 'Reset Your Password'
+    instructions: "Enter your new password below and we'll update your account."
+    instructions_email: "Fill in your email below and we'll send you instructions to reset your password."
+
+    buttons:
+      change: 'Change Password'
+      reset: 'Reset Password'
+
+  homepage:
+    buttons:
+      search: 'Search'
+
+    disabled_buttons:
+      search: 'Searching...'
+
+    search_field_placeholder:
+      full_text: 'Search by keyword'
+      location: 'Search by city or address'
+      search: 'Search'
+
+  location:
+    the_location: 'The location'
+    hours: 'Hours'
+    amenities: 'Amenities'
+
+    confirmations:
+      admin_login: 'This will log you out and re-log you in as location administrator.'
+
+    buttons:
+      view_profile: 'View profile'
+      contact: 'Contact'
+
+    company:
+      industries: 'Industries'
+
+  booking_module:
+    description: 'Description'
+    hours: 'Hours'
+    free: 'Free'
+    start: 'Start'
+    end: 'End'
+    nine: '9:00am'
+    weekly_on: 'Weekly on'
+    custom: 'Custom'
+    total: 'Total'
+
+    notices:
+      days_first: 'Please select days first'
+
+  reservations_review:
+    heading: 'Review your booking'
+    summary: 'Order summary'
+    subtotal: 'Subtotal'
+    service_fee: 'Service fee'
+    total: 'Total'
+    contact_information: 'Contact information'
+    select_payment_method: 'Select Payment Method'
+    credit_card: 'Credit Card'
+    paypal: 'PayPal'
+    payment: 'Payment'
+    submit_secure_payment: 'Submit a secure payment.'
+    cc_image_alt: 'Visa, Mastercard, American Express, Discover'
+    wat_accept: 'I have read and accept %{link_to_wat}'
+
+    buttons:
+      request: 'Request Booking'
+
+    disabled_buttons:
+      request: 'Booking...'
+
+    errors:
+      whoops: "Whoops! We couldn't make that reservation."
+
+  recurring_reservations_review:
+    total: 'Total per reservation'
+
+    errors:
+      whoops: "Whoops! We couldn't make that recurring purchase."
+
+  payments:
+    heading: 'Submit a secure payment.'
+    cc_image_alt: 'Visa, Mastercard, American Express, Discover'
+
+    cc_fields:
+      first_name: 'First Name'
+      last_name: 'Last Name'
+      card_number: 'Card number'
+      expiration_date: 'Expiration date'
+      security_code: 'Security code'
+

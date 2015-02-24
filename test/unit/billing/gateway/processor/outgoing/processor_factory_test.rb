@@ -33,7 +33,7 @@ class Billing::Gateway::Processor::Outgoing::ProcessorFactoryTest < ActiveSuppor
     context 'balanced_supported?' do
 
       setup do
-        @instance = Instance.default_instance
+        @instance = Instance.first
         @instance.instance_payment_gateways << FactoryGirl.create(:balanced_instance_payment_gateway)
       end
 
@@ -85,7 +85,7 @@ class Billing::Gateway::Processor::Outgoing::ProcessorFactoryTest < ActiveSuppor
 
     context 'paypal_supported?' do
       setup do
-        @instance = Instance.default_instance
+        @instance = Instance.first
         @instance.instance_payment_gateways << FactoryGirl.create(:paypal_instance_payment_gateway)
       end
 

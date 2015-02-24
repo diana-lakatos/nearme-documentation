@@ -55,6 +55,7 @@ class Instance < ActiveRecord::Base
   has_many :faqs, class_name: 'Support::Faq'
   has_many :tickets, -> { where(target_type: 'Instance').order('created_at DESC') }, class_name: 'Support::Ticket'
   has_many :transactable_types
+  has_many :product_types, class_name: "Spree::ProductType"
   has_many :instance_payment_gateways, :inverse_of => :instance
   has_many :country_instance_payment_gateways, :inverse_of => :instance
   has_many :users, inverse_of: :instance
@@ -64,6 +65,7 @@ class Instance < ActiveRecord::Base
   has_many :instance_profile_types
   has_one :instance_profile_type, -> { where(instance_id: PlatformContext.current.try(:instance).try(:id)) }
   has_many :data_uploads, as: :target
+  has_many :industries
   has_many :user_blog_posts
   has_many :instance_views
   has_many :dimensions_templates
@@ -73,6 +75,7 @@ class Instance < ActiveRecord::Base
   has_many :rating_answers
   has_many :rating_hints
   has_many :additional_charge_types
+  has_one :documents_upload, dependent: :destroy
   serialize :pricing_options, Hash
 
   validates_presence_of :name
@@ -100,10 +103,11 @@ class Instance < ActiveRecord::Base
     self.send(:"#{provider.downcase}_consumer_key").present? && self.send(:"#{provider.downcase}_consumer_secret").present?
   end
 
-  PRICING_OPTIONS = %w(free hourly daily weekly monthly)
+  PRICING_OPTIONS = %w(free hourly daily weekly monthly fixed)
 
   PRICING_OPTIONS.each do |price|
     next if price == 'free'
+    next if price == 'fixed'
     %w(min max).each do |edge|
       # Flag each price type as a Money attribute.
       # @see rails-money
@@ -135,16 +139,8 @@ class Instance < ActiveRecord::Base
     self.master_lock = nil
   end
 
-  def is_desksnearme?
-    self.default_instance?
-  end
-
   def white_label_enabled?
     true
-  end
-
-  def self.default_instance
-    self.find_by_default_instance(true)
   end
 
   def lessor
@@ -229,7 +225,19 @@ class Instance < ActiveRecord::Base
   def onboarding_verification_required=(arg)
   end
 
+  def has_industries?
+    industries.any?
+  end
+
+  def default_domain
+    domains.order('use_as_default desc').try(:first)
+  end
+
   def buyable_transactable_type
     self.transactable_types.where(name: TransactableType::AVAILABLE_TYPES[1]).first
+  end
+
+  def documents_upload_enabled?
+    self.documents_upload.present? && self.documents_upload.enabled?
   end
 end

@@ -12,4 +12,5 @@
   .content-contiainer
     = f.button :submit, 'Save', class: 'btn btn-green pull-right'
     - if @waiver_agreement_template.persisted?
-      = link_to 'Delete', instance_admin_manage_waiver_agreement_template_path(@waiver_agreement_template), method: :delete, confirm: 'Are you sure?'
+      = link_to 'Delete', instance_admin_manage_waiver_agreement_template_path(@waiver_agreement_template),
+          method: :delete, data: { confirm: 'Are you sure?' }

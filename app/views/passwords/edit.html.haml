@@ -1,13 +1,12 @@
-- title "Reset Password"
+- title t('reset_password_form.title')
 
 .sign-up
   .container-fluid
     .row-fluid
       .span8.offset2
         .box
-          %h2== Reset Your Password
-          %p.intro
-            Enter your new password below and we'll update your account.
+          %h2= t 'reset_password_form.heading'
+          %p.intro= t 'reset_password_form.instructions'
 
           = simple_form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put, :class => "form-horizontal" }) do |f|
             = f.hidden_field :reset_password_token
@@ -16,5 +15,5 @@
             = f.input :password_confirmation, label: "Confirm Password"
 
             .actions
-              = f.submit "Change Password"
+              = f.submit t('reset_password_form.buttons.change')
 

@@ -9,33 +9,22 @@ class Listings::RecurringBookingsController < ApplicationController
   before_filter :load_payment_with_token, only: [:review]
   before_filter :find_recurring_booking, only: [:booking_successful]
   before_filter :find_current_country, only: [:review, :create]
-  after_filter  :clear_origin_domain, only: [:create]
   before_filter :set_section_name, only: [:review, :create]
 
   def review
     event_tracker.reviewed_a_recurring_booking(@recurring_booking_request.recurring_booking)
   end
 
-  def platform_context
-    if not origin_domain?
-      PlatformContext.current = PlatformContext.new(origin_domain)
-    else
-      super
-    end
-  end
-
   def load_payment_with_token
     if request.ssl? and params["payment_token"]
       user, recurring_booking_params = User::PaymentTokenVerifier.find_token(params["payment_token"])
       sign_in user
-      set_origin_domain(recurring_booking_params['host'])
       params[:reservation_request] = recurring_booking_params.symbolize_keys!
     end
   end
 
   def secure_payment_with_token
     if require_ssl?
-      params[:reservation_request][:host] = request.host
       verifier = User::PaymentTokenVerifier.new(current_user, params[:reservation_request])
       @token = verifier.generate
       @url = url_for(platform_context.secured_constraint)
@@ -59,11 +48,7 @@ class Listings::RecurringBookingsController < ApplicationController
       card_message = @recurring_booking.credit_card_payment? ? t('flash_messages.reservations.credit_card_will_be_charged') : ''
       flash[:notice] = t('flash_messages.reservations.reservation_made', message: card_message)
 
-      if origin_domain?
-        redirect_to recurring_booking_successful_dashboard_user_reservation_url(@recurring_booking, protocol: 'http', host: origin_domain)
-      else
-        redirect_to recurring_booking_successful_dashboard_user_reservation_path(@recurring_booking)
-      end
+      redirect_to recurring_booking_successful_dashboard_user_reservation_path(@recurring_booking)
     else
       render :review
     end
@@ -146,22 +131,6 @@ class Listings::RecurringBookingsController < ApplicationController
         additional_charge_ids: attributes[:additional_charge_ids]
       }
     )
-  end
-
-  def origin_domain?
-    session[:origin_domain]
-  end
-
-  def clear_origin_domain
-    session.delete(:origin_domain) if origin_domain?
-  end
-
-  def origin_domain
-    session[:origin_domain] || request.host
-  end
-
-  def set_origin_domain(domain)
-    session[:origin_domain] = domain
   end
 
   def redirect_if_invalid

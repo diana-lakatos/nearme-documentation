@@ -23,17 +23,19 @@
               %p= @location.administrator.biography
             - else
               %h2
-                The location
+                = t 'location.the_location'
                 - if current_user.try(:admin) && @location.administrator.present?
-                  = link_to login_as_admin_user_path(@location.administrator, :return_to => edit_manage_location_path(@location)), :method => :post, :confirm => "This will log you out and re-log you in as location administrator." do
+                  = link_to login_as_admin_user_path(@location.administrator, return_to: edit_manage_location_path(@location)),
+                      :method => :post, data: { confirm: t('location.confirmations.admin_login') } do
                     %span.ico-edit
+
               %p= custom_sanitze mask_phone_and_email_if_necessary(@location.description)
 
               .amenities-block
                 .amenities-header
-                  %h3 Hours
+                  %h3= t 'location.hours'
                   %a{href: '#industries'}
-                    %h3 Hours
+                    %h3= t 'location.hours'
                     %span.ico-chevron-right
                 .amenities-container
                   .row-fluid.amenities-row
@@ -48,8 +50,14 @@
         .one-third.column.left
           .toggleable-booking-modules
             - @listings.each_with_index do |listing, index|
-              = render 'locations/listings/booking', listing: listing, collapsed: index > 0, location_pretty_availability: location_pretty_availability
+              = render 'locations/listings/booking', listing: listing, collapsed: index > 0,
+                location_pretty_availability: location_pretty_availability
               .padding-row
+
+          - if platform_context.instance.wish_lists_enabled?
+            = render 'shared/components/wish_list_button', object: @location, link_to_class: 'btn btn-white btn-large ask'
+
+          .padding-row
 
           -if @location.administrator
             = render 'locations/administrator', administrator: @location.administrator
@@ -61,23 +69,23 @@
 
 .clearfix.padding-row
 
-- content_for :script do
-  :javascript
-    // Initialize the ui controller
-    $(function() {
-      new Space.Controller(
-        $('article#space'),
-        {
-          bookings: {
-            listings: #{raw location_listings_json},
-
-            // Have we returned from setting up a session. If there are bookings, the JS controller
-            // will trigger showing the booking confirmation modal.
-            returnedFromSession: #{@initial_bookings.present? ? ("'" + @form_trigger + "'") : 'false'}
-          }
+- unless @listings.map(&:transactable_type).uniq.any? { |tt| tt.action_schedule_booking }
+  - content_for :script do
+    :javascript
+      // Initialize the ui controller
+      $(function() {
+        new Space.Controller(
+          $('article#space'),
+          {
+            bookings: {
+              listings: #{raw location_listings_json},
+              // Have we returned from setting up a session. If there are bookings, the JS controller
+              // will trigger showing the booking confirmation modal.
+              returnedFromSession: #{@initial_bookings.present? ? ("'" + @form_trigger + "'") : 'false'}
+            }
+          });
         });
-      });
 
-- content_for :domready do
-  - if @listing && params[:action] == 'ask_a_question'
-    Modal.load('#{new_listing_listing_message_path(@listing)}')
+  - content_for :domready do
+    - if @listing && params[:action] == 'ask_a_question'
+      Modal.load('#{new_listing_listing_message_path(@listing)}')

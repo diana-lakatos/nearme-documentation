@@ -13,11 +13,13 @@ class Dashboard::TransactablesController < Dashboard::BaseController
     @transactable.availability_template_id = AvailabilityRule.default_template.id
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
     @photos = current_user.photos.where(transactable_id: nil)
+    build_document_requirements_and_obligation if platform_context.instance.documents_upload_enabled?
   end
 
   def create
     @transactable = @transactable_type.transactables.build(transactable_params)
     @transactable.company = @company
+
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
     if @transactable.save
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.bookable_noun)
@@ -38,6 +40,7 @@ class Dashboard::TransactablesController < Dashboard::BaseController
     @photos = @transactable.photos
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
+    build_document_requirements_and_obligation if platform_context.instance.documents_upload_enabled?
   end
 
   def update
@@ -118,5 +121,14 @@ class Dashboard::TransactablesController < Dashboard::BaseController
 
   def transactable_params
     params.require(:transactable).permit(secured_params.transactable(@transactable_type))
+  end
+
+  def build_document_requirements_and_obligation
+    @transactable.build_upload_obligation(level: UploadObligation::LEVELS.first) unless @transactable.upload_obligation
+    DocumentRequirement::MAX_COUNT.times do
+      hidden = @transactable.document_requirements.blank? ? "0" : "1"
+      document_requirement = @transactable.document_requirements.build
+      document_requirement.hidden = hidden
+    end
   end
 end

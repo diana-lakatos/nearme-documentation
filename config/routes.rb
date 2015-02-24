@@ -133,8 +133,7 @@ DesksnearMe::Application.routes.draw do
       resources :instance_views
     end
     resources :transactable_types, :only => [] do
-      resources :custom_attributes do
-      end
+      resources :custom_attributes
     end
     resources :pages
     get '/platform_home', to: 'platform_home#edit', as: 'edit_platform_home'
@@ -142,6 +141,8 @@ DesksnearMe::Application.routes.draw do
   end
 
   resources :marketplace_sessions, only: [:new, :create]
+  get '/wish_list/add_item', to: 'wish_list#add_item'
+  get '/wish_list/remove_item', to: 'wish_list#remove_item'
 
   namespace :instance_admin do
     get '/', :to => 'base#index'
@@ -173,7 +174,7 @@ DesksnearMe::Application.routes.draw do
         end
       end
       resource :locations, :only => [:show, :update], :controller => 'locations'
-      resources :location_types, only: [:index, :create, :destroy_modal, :destroy] do
+      resources :location_types, only: [:index, :create, :update, :destroy_modal, :destroy] do
         get 'destroy_modal', on: :member
       end
       resource :listings, :only => [:show, :update], :controller => 'listings'
@@ -182,6 +183,7 @@ DesksnearMe::Application.routes.draw do
       end
       resource :translations, :only => [:show, :update], :controller => 'translations'
       resource :cancellation_policy, :only => [:show, :update], :controller => 'cancellation_policy'
+      resource :documents_upload, except: [:index, :destroy], :controller => 'documents_upload'
     end
 
     namespace :theme do
@@ -228,7 +230,7 @@ DesksnearMe::Application.routes.draw do
         resources :workflow_steps, only: [:show, :edit, :update], controller: 'workflows/workflow_steps'
       end
       resources :workflow_steps do
-        resources :workflow_alerts, excpet: [:index], controller: 'workflows/workflow_alerts'
+        resources :workflow_alerts, except: [:index], controller: 'workflows/workflow_alerts'
       end
 
       resources :instance_profile_types, :only => [:index, :destroy] do
@@ -285,6 +287,8 @@ DesksnearMe::Application.routes.draw do
       resources :email_templates, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :sms_templates, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :waiver_agreement_templates, :only => [:index, :create, :update, :destroy]
+
+      resource :wish_lists, only: [:show, :update]
     end
 
     namespace :manage_blog do
@@ -298,6 +302,14 @@ DesksnearMe::Application.routes.draw do
       get '/', :to => 'base#index'
       resource :configuration, only: [:show, :update], controller: 'configuration'
       resource :commissions, :only => [:show, :update], :controller => 'commissions'
+      resources :product_types do
+        resources :custom_attributes, controller: 'product_types/custom_attributes'
+        resources :form_components, controller: 'product_types/form_components' do
+          member do
+            patch :update_rank
+          end
+        end
+      end
       resources :tax_categories
       resources :tax_rates
       resources :zones
@@ -448,8 +460,10 @@ DesksnearMe::Application.routes.draw do
         end
       end
     end
-
     resources :products
+    resources :product_type do
+      resources :products
+    end
 
     namespace :support do
       resources :tickets, only: [:show, :index] do
@@ -487,6 +501,12 @@ DesksnearMe::Application.routes.draw do
         get 'edit_image/:image', :action => :edit_image, :as => 'edit_theme_image'
         match 'update_image/:image', :action => :update_image, :as => 'update_theme_image', via: [:post, :put]
         match 'upload_image/:image', :action => :upload_image, :as => 'upload_theme_image', via: [:post, :put]
+      end
+    end
+    resources :payment_documents do
+      collection do
+        get :sent_to_me
+        get :uploaded_by_me
       end
     end
     resource :payouts, except: [:index, :show, :new, :create, :destroy]
@@ -554,6 +574,12 @@ DesksnearMe::Application.routes.draw do
       resources :posts, controller: 'user_blog/blog_posts'
     end
     resources :photos, :only => [:create, :destroy, :edit, :update]
+
+    resources :wish_list_items, only: [:index, :destroy], path: 'favorites' do
+      collection do
+        delete :clear
+      end
+    end
   end
 
   resources :reservations do
@@ -642,6 +668,10 @@ DesksnearMe::Application.routes.draw do
     get "/list", as: "space_wizard_list", controller: 'transactable_types/space_wizard', action: 'list'
     post "/list", controller: 'transactable_types/space_wizard', action: 'submit_listing'
     post "/submit_item", controller: 'transactable_types/space_wizard', action: 'submit_item'
+  end
+
+  resources :product_types do
+    resources :product_wizard, only: [:new, :create], controller: 'product_types/product_wizard'
   end
 
   scope '/space' do

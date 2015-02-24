@@ -25,8 +25,11 @@
               %h2
                 The listing
                 - if current_user.try(:admin) && @location.administrator.present?
-                  = link_to login_as_admin_user_path(@location.administrator, :return_to => edit_manage_listing_path(@listing)), :method => :post, :confirm => "This will log you out and re-log you in as location administrator." do
+                  = link_to login_as_admin_user_path(@location.administrator,
+                      :return_to => edit_manage_listing_path(@listing)), :method => :post,
+                      data: { confirm: 'This will log you out and re-log you in as location administrator.' } do
                     %span.ico-edit
+
               %p= custom_sanitze mask_phone_and_email_if_necessary(@listing.description)
 
               .amenities-block

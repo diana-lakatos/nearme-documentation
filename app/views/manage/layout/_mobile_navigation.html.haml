@@ -11,10 +11,13 @@
 
     = dashboard_menu_item 'dashboard/user_messages', dashboard_user_messages_path
 
+    - if platform_context.instance.wish_lists_enabled?
+      = dashboard_menu_item 'dashboard/wish_list_items', dashboard_wish_list_items_path, link_text: t('wish_lists.name')
+
     - if current_user.companies.any?
       = dashboard_menu_item 'dashboard/companies', edit_dashboard_company_path(current_user.companies.first)
       - if buyable?
-        = dashboard_menu_item 'dashboard/products', dashboard_products_path
+        = dashboard_menu_item 'dashboard/products', dashboard_product_type_products_path(Spree::ProductType.first)
       - elsif TransactableType.first
         = dashboard_menu_item 'dashboard/transactables', dashboard_transactable_type_transactables_path(TransactableType.first)
       = dashboard_menu_item 'dashboard/payouts', edit_dashboard_payouts_path

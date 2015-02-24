@@ -1,13 +1,11 @@
-- title "Sign In"
+- title t('sign_up_form.title')
 
 .row-fluid
   #signup
     .span8.offset2
       .box
         %header
-          %h2
-            Log in to
-            = platform_context.name
+          %h2= t 'sign_up_form.log_in_to', marketplace_name: platform_context.name
 
         - if request.xhr?
           = render 'shared/render_flash'
@@ -16,19 +14,22 @@
 
         = simple_form_for resource, :as => resource_name, :url => session_path(resource_name) do |f|
           .email-holder.input-icon-holder
-            = f.input :email, :label => false, :placeholder => "Email", :input_html => { :tabindex => '1' }
+            = f.input :email, :label => false, placeholder: t('simple_form.placeholders.session.email'), :input_html => { :tabindex => '1' }
             %span.ico-mail
           .password-holder.input-icon-holder
-            = f.input :password, :label => false, :placeholder => "Password", :input_html => { :tabindex => '2' }
+            = f.input :password, :label => false, placeholder: t('simple_form.placeholders.session.password'),
+              :input_html => { :tabindex => '2' }
             %span.ico-lock
 
           %div.pnotice
-            =raw "Forgot? #{link_to('Reset your password', '#', data: { modal:true, href: new_user_password_url(return_to: params[:return_to]), 'modal-class' => 'sign-up-modal' } )}"
+            =raw "#{t('sign_up_form.forgot')} #{link_to(t('sign_up_form.buttons.reset_password'), '#',
+              data: { modal:true, href: new_user_password_url(return_to: params[:return_to]),
+              'modal-class' => 'sign-up-modal' } )}"
 
           .actions
-            = f.submit "Log In", :tabindex => '3'
+            = f.submit t('sign_up_form.buttons.log_in'), :tabindex => '3'
 
-        .text-center.already-a-user= link_to('New User?', '#', data: { modal: true, href: new_user_registration_path(:return_to => params[:return_to]), 'modal-class' => 'sign-up-modal' })
+        .text-center.already-a-user= link_to(t('sign_up_form.buttons.new_user'), '#', data: { modal: true, href: new_user_registration_path(:return_to => params[:return_to]), 'modal-class' => 'sign-up-modal' })
 
 - if request.xhr?
   :javascript

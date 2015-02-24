@@ -88,6 +88,7 @@ end
 
 When /^I submit the location form$/ do
   page.find('#location-form input[type=submit]').click
+  wait_for_ajax
 end
 
 When /^I submit the transactable form$/ do
@@ -134,7 +135,7 @@ Then /^pricing should be free$/ do
   if page.has_selector?("#listing_price_type_free")
     page.find("#listing_price_type_free").checked?
   else
-    page.find("#transactable_price_type_free").checked?
+    page.find("#transactable_action_free_booking").checked?
   end
 end
 

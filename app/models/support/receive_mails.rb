@@ -18,6 +18,8 @@ class Support::ReceiveMails
         Support::Ticket.new.receive(message, params)
       end
     end
+  rescue Net::IMAP::NoResponseError
+    puts "#{PlatformContext.current.instance.name}(id=#{PlatformContext.current.instance.id}) support_imap_hash not valid"
   end
 
   def config

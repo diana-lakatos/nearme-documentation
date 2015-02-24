@@ -61,13 +61,13 @@ class MoveRecordsFromEmailTemplatesToInstanceViews < ActiveRecord::Migration
       puts "Finding email templates for theme: #{t.id}"
       EmailTemplate.where(theme_id: t.id).find_each do |email_template|
         puts "Processing #{email_template.path}"
-        iv = InstanceView.find_or_initialize_by(instance_id: t.instance.id, locale: 'en', view_type: 'email', partial: false, path: email_template.path, format: 'text', handler: 'liquid')
+        iv = InstanceView.find_or_initialize_by(instance_id: t.instance_id, locale: 'en', view_type: 'email', partial: false, path: email_template.path, format: 'text', handler: 'liquid')
         iv.body = email_template.text_body
         iv.save!
-        iv = InstanceView.find_or_initialize_by(instance_id: t.instance.id, locale: 'en', view_type: 'email', partial: false, path: email_template.path, format: 'html', handler: 'liquid')
+        iv = InstanceView.find_or_initialize_by(instance_id: t.instance_id, locale: 'en', view_type: 'email', partial: false, path: email_template.path, format: 'html', handler: 'liquid')
         iv.body = email_template.html_body
         iv.save!
-        if(workflow_alert = WorkflowAlert.where(instance_id: t.instance.id, template_path: email_template.path).first).present?
+        if(workflow_alert = WorkflowAlert.where(instance_id: t.instance_id, template_path: email_template.path).first).present?
           puts "Changing #{workflow_alert.subject} to #{email_template.subject}"
           workflow_alert.subject = email_template.subject if email_template.subject.present?
           workflow_alert.from = email_template.from if email_template.from.present?

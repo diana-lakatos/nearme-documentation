@@ -57,6 +57,7 @@ en:
         price: 'Price'
         photos: 'Photos'
         upload_photos: 'Browse'
+        schedule: 'Availability Schedule'
       listing:
         price: 'Price'
         photos: 'Photos'
@@ -66,6 +67,9 @@ en:
         description: 'Location description'
         location_type: 'Location type'
         currency: 'Currency'
+        location_address:
+          address: 'Address'
+
       location:
         name: 'Location name'
         description: 'Location description'
@@ -74,6 +78,11 @@ en:
         administrator: 'Administrator'
         special_notes: '%{lessee} instructions'
         currency: 'Currency'
+        location_address:
+          address: 'Address'
+        amenities: 'Amenities'
+        location_type: 'Location type'
+
       companies:
         name: 'Company name'
         industries: 'Industries'
@@ -85,6 +94,8 @@ en:
         bank_owner_name: "Account's Owner Name"
         bank_routing_number: 'Routing Number'
         bank_account_number: 'Account Number'
+        company_address:
+          address: 'Address'
       domain:
         google_analytics_tracking_code: "GA Tracking Code"
       company:
@@ -98,14 +109,24 @@ en:
         bank_owner_name: "Account's Owner Name"
         bank_routing_number: 'Routing Number'
         bank_account_number: 'Account Number'
+        company_address:
+          address: 'Address'
+        payout:
+          via_paypal: 'Payouts via Paypal'
+          via_ach: 'Payouts via ACH (US only)'
+          ach_update: 'Update bank account details for ACH payouts'
+          ach_error: 'Unfortunately we could not process the credentials you have entered.'
+
       transactable:
         name: "Item Title"
+        price_fixed: 'Fixed'
         price_daily: 'Daily'
         price_weekly: 'Weekly'
         price_monthly: 'Monthly'
         price_hourly: 'Hourly'
         price_free: 'Free'
         price:
+          fixed: 'fixed price'
           daily: 'day'
           weekly: 'week'
           monthly: 'month'
@@ -113,6 +134,10 @@ en:
       user:
         biography: 'About me'
         sms_notifications_enabled: 'Enable Text Message Notifications'
+
+      registration:
+        email: 'Your email address'
+
     placeholders:
       user_blog:
         name: 'What is the name of your blog?'
@@ -137,9 +162,21 @@ en:
         url: 'www.mycompany.com'
         email: 'yourname@example.com'
         description: 'Give a brief description of your company.'
+        company_address:
+          address: 'Where is your store located?'
       location:
         email: 'Your booking email'
         special_notes: "For example, how your %{lessees} should check in, your Wi-Fi password, whether you have pets, or other special information relevant to your %{lessee}'s stay"
+
+      registration:
+        name: 'Full name'
+        email: 'Email'
+        password: 'Password'
+        we_can_contact_you: 'So we can contact you'
+
+      session:
+        email: 'Email'
+        password: 'Password'
 
     prompts:
       companies:
@@ -158,6 +195,12 @@ en:
     required:
       mark: '*'
       text: 'required'
+    options:
+      documents_upload:
+        requirement:
+          mandatory: 'Mandatory'
+          optional: 'Optional'
+          vendor_decides: 'Vendor decides'
   instance_admin:
     settings:
       configuration:
@@ -167,3 +210,12 @@ en:
           semiweekly: Twice a week
           weekly: Weekly
           daily: Daily
+      documents_upload:
+        form:
+          title: "Documents Upload"
+          activate_upload_files: "Activate upload files"
+          safety_and_trust: "For safety and trust purposes, some services might need extra documentation from customers before completing the booking."
+          documents_can_be: "These documents can be ids, licenses, certifications, and other files."
+          can_make_this: "You can make this a mandatory requirement within your marketplace, optional or let vendors decide."
+          mark_your_choice: "Please mark your choice below:"
+          save_button: "Save"

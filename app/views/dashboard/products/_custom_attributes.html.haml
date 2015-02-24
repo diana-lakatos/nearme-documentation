@@ -1,0 +1,9 @@
+= f.simple_fields_for :extra_properties, f.object.extra_properties do |properties_form|
+  - @form_components.each do |form_component|
+    - form_component.form_fields.each do |form_field|
+      - model = form_field.keys.first
+      - field = form_field[model]
+      - if model == 'product'
+        - @product_type.custom_attributes.each do |attribute|
+          - next if platform_context.instance.user_based_marketplace_views? && ( attribute.name == 'quantity' || attribute.name == 'capacity' )
+          = draw_attribute_for_form(attribute, properties_form) if field.to_sym == attribute.name.to_sym

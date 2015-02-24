@@ -21,7 +21,7 @@ class BoardingForm < Form
     @user = user
     @company = @user.companies.first || @user.companies.build
     @company_address = @company.company_address || @company.build_company_address
-    @product = @company.products.first || @company.products.build(user_id: @user.id)
+    @product = @company.products.first || @company.products.build(user_id: @user.id, product_type: Spree::ProductType.last)
     @product_form = ProductForm.new(@product)
   end
 

@@ -1,0 +1,15 @@
+= simple_form_for [:instance_admin, @controller_scope, @form_componentable, resource] do |f|
+  %br
+  %br
+  %h4 Basic Configuration
+  .content-container.dropshadow
+    .row
+      .input-container.col-xs-12
+        = f.input :name, input_html: { class: 'form-control' }
+        = f.input :form_type, collection: FormComponent::FORM_TYPES.map { |t| [t.humanize, t] }, include_blank: false
+
+    %h4 Fields in this component
+    = render partial: "shared/custom_fields", locals: { f: f, form_componentable: @form_componentable }
+  .content-container
+    = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+

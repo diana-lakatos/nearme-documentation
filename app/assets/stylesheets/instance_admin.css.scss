@@ -7,6 +7,7 @@
 @import "instance_admin/variables";
 @import "jcrop";
 @import "vendor/overrides/jcrop";
+@import "vendor/icui";
 @import "components/filepicker";
 @import "instance_admin/support";
 @import "instance_admin/bootstrap";
@@ -22,3 +23,5 @@
 @import "instance_admin/reviews";
 @import "instance_admin/users";
 @import "instance_admin/upsell_addons";
+@import "instance_admin/wish_lists";
+@import "instance_admin/documents_upload";
