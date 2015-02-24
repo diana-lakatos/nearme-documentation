@@ -69,3 +69,5 @@
     .last
       = f.input :height_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[f.object.unit_of_measure]['length'], label: Spree::Variant.human_attribute_name(:height_unit), as: :select, input_html: { 'data-js-element-identifier' => 'product_form_input_height_unit' }
 
+- if platform_context.instance.documents_upload_enabled?
+  = render "forms/document_requirements", f: f

@@ -16,6 +16,7 @@ class @Dashboard.ListingController
     @updateCurrency()
     if ( @locationRadios.length > 0 )
       @updateCurrencyFromLocation()
+    @setupDocumentRequirements()
 
   bindEvents: =>
 
@@ -94,4 +95,10 @@ class @Dashboard.ListingController
     @priceFieldsHourly.hide() unless @hourlyInput.is(':checked')
     @priceFieldsDaily.hide() unless @dailyInput.is(':checked')
 
+  setupDocumentRequirements: ->
+    nestedForm = new SetupNestedForm(@container)
+    nestedForm.setup(".remove-document-requirement:not(:first)", 
+                ".document-hidden", ".remove-document", 
+                ".document-requirement", 
+                ".document-requirements .add-new", true)
 

@@ -35,3 +35,4 @@
 
 //= require instance_admin/sections/wish_lists
 //= require instance_admin/sections/users
+//= require instance_admin/sections/documents_upload

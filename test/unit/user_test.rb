@@ -907,8 +907,13 @@ class UserTest < ActiveSupport::TestCase
     @payment = FactoryGirl.create(:payment, :payable => @reservation)
     @charge = FactoryGirl.create(:charge, :payment => @payment)
     @payment_transfer = FactoryGirl.create(:payment_transfer, :company_id => @company.id)
+    FactoryGirl.build(:upload_obligation, level: UploadObligation::LEVELS[0], item: @listing)
+    document_requirement = FactoryGirl.create(:document_requirement, item: @listing)
+    @payment_document= FactoryGirl.create(:attachable_payment_document, attachable: @reservation, user: @user,
+      payment_document_info: FactoryGirl.create(:payment_document_info, document_requirement: document_requirement)
+    )
     @objects = [@user, @user_industry, @authentication, @company, @company_industry,
-                @location, @listing, @photo ]
+                @location, @listing, @photo, @payment_document]
   end
 
 end

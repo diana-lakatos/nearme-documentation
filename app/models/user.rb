@@ -48,6 +48,7 @@ class User < ActiveRecord::Base
   has_many :user_bans
   has_one :blog, class_name: 'UserBlog'
   has_many :blog_posts, class_name: 'UserBlogPost'
+  has_many :payment_documents, class_name: 'Attachable::PaymentDocument', dependent: :destroy
   belongs_to :instance_profile_type
   belongs_to :partner
   belongs_to :instance
@@ -532,7 +533,6 @@ class User < ActiveRecord::Base
       rescue
       end
     end
-
   end
 
   # Returns a temporary token to be used as the login token parameter
