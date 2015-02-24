@@ -29,7 +29,7 @@ class InstanceAdmin::Settings::DocumentsUploadControllerTest < ActionController:
     end
   end
 
-  context '#show' do    
+  context '#show' do
     should 'redirect to new action' do
       get :show
       assert_response :redirect

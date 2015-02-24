@@ -15,7 +15,8 @@ class ProductForm < Form
   validates_presence_of :depth, :if => :shippo_enabled
   validates_presence_of :width, :if => :shippo_enabled
   validates_presence_of :height, :if => :shippo_enabled
-  validate  :list_of_countries_or_states_cannot_be_empty
+  validate :list_of_countries_or_states_cannot_be_empty
+  validate :label_and_description_cannot_be_empty
   validate do
     product.valid?
   end

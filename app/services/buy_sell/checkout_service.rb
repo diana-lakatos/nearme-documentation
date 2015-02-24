@@ -24,8 +24,8 @@ class BuySell::CheckoutService
 
       item.product.document_requirements.each do |req|
         if !req.item.upload_obligation.not_required? && !requirement_ids.include?(req.id)
-          document = @order.payment_documents.build( 
-            attachable: @order, 
+          document = @order.payment_documents.build(
+            attachable: @order,
             user: @user
           )
           document.build_payment_document_info(document_requirement: req)
@@ -38,7 +38,7 @@ class BuySell::CheckoutService
     if @params[:order][:payment_documents_attributes].present?
       @params[:order][:payment_documents_attributes].each do |document|
         document_requirement_id = document.last.try(:fetch, 'payment_document_info_attributes').try(:fetch, 'document_requirement_id')
-        if document.last['file'].present? || 
+        if document.last['file'].present? ||
           DocumentRequirement.find_by(id: document_requirement_id).try(:item).try(:upload_obligation).required?
 
           if document.last['id'].present?

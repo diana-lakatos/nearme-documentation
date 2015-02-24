@@ -45,6 +45,8 @@ class Transactable < ActiveRecord::Base
   accepts_nested_attributes_for :photos, allow_destroy: true
   accepts_nested_attributes_for :waiver_agreement_templates, allow_destroy: true
   accepts_nested_attributes_for :approval_requests
+  accepts_nested_attributes_for :document_requirements, allow_destroy: true, reject_if: :document_requirement_hidden?
+  accepts_nested_attributes_for :upload_obligation
   accepts_nested_attributes_for :schedule
   accepts_nested_attributes_for :document_requirements, allow_destroy: true, reject_if: :document_requirement_hidden?
   accepts_nested_attributes_for :upload_obligation

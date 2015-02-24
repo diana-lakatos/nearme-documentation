@@ -180,7 +180,7 @@ class BuySellMarket::CheckoutController < ApplicationController
   def order_state
     @order.state.to_sym
   end
-    
+
   def check_billing_gateway
     @billing_gateway = Billing::Gateway::Incoming.new(current_user, PlatformContext.current.instance, @order.currency, @order.company.iso_country_code)
     if @billing_gateway.processor.nil?

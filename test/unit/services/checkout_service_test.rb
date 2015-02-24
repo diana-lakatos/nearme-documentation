@@ -38,6 +38,4 @@ class CheckoutServiceTest < ActiveSupport::TestCase
     end
 
   end
-
-
 end

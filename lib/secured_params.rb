@@ -26,6 +26,8 @@ class SecuredParams
       image_ids: [],
       company_address_attributes: nested(self.address),
       images_attributes: nested(self.spree_image),
+      document_requirements_attributes: nested(self.document_requirement),
+      upload_obligation_attributes: nested(self.upload_obligation),
       shipping_methods_attributes: nested(self.spree_shipping_method),
       extra_properties:  Spree::Product.public_custom_attributes_names((product_type.presence || PlatformContext.current.try(:instance).try(:product_types).try(:first)).try(:id)),
       document_requirements_attributes: nested(self.document_requirement),
@@ -985,7 +987,7 @@ class SecuredParams
 
   def document_requirement
     [
-      :label, 
+      :label,
       :description,
       :hidden,
       :removed
