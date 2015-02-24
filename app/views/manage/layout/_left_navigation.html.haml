@@ -40,6 +40,8 @@
         = dashboard_menu_item 'dashboard/white_labels', edit_dashboard_white_label_path(current_user.companies.first)
         - if TransactableType.all.any? { |t| t.has_action?('Request For Quote') }
           = dashboard_menu_item 'dashboard/support/tickets', dashboard_support_tickets_path
+        - if platform_context.instance.documents_upload_enabled?
+          = dashboard_menu_item 'dashboard/payment_documents/sent_to_me', sent_to_me_dashboard_payment_documents_path
 
     - if platform_context.instance.user_blogs_enabled?
       %ul

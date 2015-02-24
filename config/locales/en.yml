@@ -193,6 +193,12 @@ en:
         shipping: 'Shipping'
         subtotal: 'Subtotal'
 
+        required_documents: 'Required Documents'
+        the_following_documents: 'The following documents are required to book this item.'
+        choose_another_file: 'Choose another file'
+        choose_file: 'Choose file'
+        no_file_chosen: 'No file chosen'
+
       placeholders:
         first_name: 'Enter your first name'
         last_name: 'Enter your last name'
@@ -310,6 +316,7 @@ en:
       blog_posts: 'Posts'
       blog_settings: 'Settings'
       reviews: 'Reviews'
+      sent_to_me: 'Uploaded Files'
 
       your_shop: 'YOUR SHOP'
       admin: 'ADMIN'
@@ -347,7 +354,20 @@ en:
         title: "Reviews"
         rate_your_experience: "Rate Your Experience"
         completed_feedback: "Completed Feedback"
-
+    document_requirements:
+      upload_files: "Upload Files"
+      enter_your_documents: "Please, enter below the documents your users will need to provide before booking the item"
+      add_new_document_requirement: "Add new Document Requirement"
+    payment_documents:
+      files_sent_to_me: "Files sent to me"
+      files_uploaded_by_me: "Files uploaded by me"
+      order: "Order"
+      reservation: "Reservation"
+      table_head:
+        order: "Order"
+        user: "User"
+        date: "Date"
+        document: "Document"
   hidden_items:
     registrations:
       show:

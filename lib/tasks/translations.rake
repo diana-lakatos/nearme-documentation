@@ -223,6 +223,15 @@ namespace :translations do
     wish_lists_translations.each { |key| Translation.where(key: key).destroy_all }
   end
 
+  desc 'Upload documents translations'
+  task :upload_documents => [:environment] do
+    upload_documents_translations = {
+      'upload_documents.file.default.label' => 'Secure Document Upload',
+      'upload_documents.file.default.description' => 'Please upload your document here.'
+    }
+    create_keys(upload_documents_translations)
+  end
+
   def create_keys(hash)
     hash.each do |k, v|
       if Translation.where(key: k).empty?

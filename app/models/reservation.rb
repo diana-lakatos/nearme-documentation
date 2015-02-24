@@ -41,6 +41,9 @@ class Reservation < ActiveRecord::Base
   has_many :user_messages, as: :thread_context
   has_many :waiver_agreements, as: :target
 
+  has_many :payment_documents, as: :attachable, class_name: 'Attachable::PaymentDocument', dependent: :destroy
+  accepts_nested_attributes_for :payment_documents
+
   # attr_accessible :cancelable, :confirmation_email, :date, :transactable_id,
   #   :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method, :rejection_reason
 

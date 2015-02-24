@@ -2,7 +2,7 @@ class ReservationRequest < Form
 
   attr_accessor :dates, :start_minute, :end_minute
   attr_accessor :card_number, :card_expires, :card_code, :card_holder_first_name, :card_holder_last_name, :payment_method_nonce
-  attr_accessor :waiver_agreement_templates
+  attr_accessor :waiver_agreement_templates, :documents
   attr_reader   :reservation, :listing, :location, :user, :client_token, :payment_method_nonce
 
   def_delegators :@reservation, :quantity, :quantity=
@@ -11,6 +11,7 @@ class ReservationRequest < Form
   def_delegators :@user,        :mobile_number, :mobile_number=, :country_name, :country_name=, :country
 
   before_validation :setup_active_merchant_customer, :if => lambda { reservation and user and user.valid?}
+  before_validation :build_documents, :if => lambda { reservation.present? and documents.present? }
 
   validates :listing,     :presence => true
   validates :reservation, :presence => true
@@ -18,6 +19,8 @@ class ReservationRequest < Form
 
   validate :validate_phone_and_country
   validate :waiver_agreements_accepted
+
+  validate :files_cannot_be_empty, :if => lambda { reservation.present? }
 
   def initialize(listing, user, platform_context, attributes = {})
     @listing = listing
@@ -107,6 +110,7 @@ class ReservationRequest < Form
   end
 
   def save_reservation
+    remove_empty_optional_documents
     User.transaction do
       user.save!
       if active_merchant_payment?
@@ -158,6 +162,71 @@ class ReservationRequest < Form
       end
     rescue Billing::Error => e
       add_error(e.message, :cc)
+    end
+  end
+
+  def build_documents
+    documents.each do |document|
+      document_requirement_id = document.try(:fetch, 'payment_document_info_attributes').try(:fetch, 'document_requirement_id')
+      document_requirement = DocumentRequirement.find_by(id: document_requirement_id)
+      upload_obligation = document_requirement.try(:item).try(:upload_obligation)
+      if upload_obligation && !upload_obligation.not_required?
+        build_or_attach_document document
+      else
+        build_document(document)
+      end
+    end
+  end
+
+  def build_or_attach_document(document_params)
+    attachable = Attachable::AttachableService.new(Attachable::PaymentDocument, document_params)
+    if attachable.valid? && document = attachable.get_attachable
+      reservation.payment_documents << document
+    else
+      reservation.payment_documents.build(document_params)
+    end
+  end
+
+  def build_document document_params
+    if reservation.listing.document_requirements.blank? && 
+    PlatformContext.current.instance.documents_upload_enabled? &&
+    PlatformContext.current.instance.documents_upload.is_mandatory?
+      
+      document_params.delete :payment_document_info_attributes
+      document_params[:user_id] = @user.id
+      document = reservation.payment_documents.build(document_params)
+      document_requirement = reservation.listing.document_requirements.build({
+        label: I18n.t("upload_documents.file.default.label"),
+        description: I18n.t("upload_documents.file.default.description"),
+        item: reservation.listing
+      })
+
+      reservation.listing.build_upload_obligation(level: UploadObligation::LEVELS[0])
+
+      document.build_payment_document_info(
+        document_requirement: document_requirement,
+        payment_document: document
+      )
+
+      reservation.listing.upload_obligation.save
+    end
+  end
+
+  def remove_empty_optional_documents
+    if reservation.payment_documents.present?
+      reservation.payment_documents.each do |document|
+        if document.file.blank? && document.payment_document_info.document_requirement.item.upload_obligation.optional?
+          reservation.payment_documents.delete(document)
+        end
+      end
+    end
+  end
+
+  def files_cannot_be_empty
+    reservation.payment_documents.each do |document|
+      unless document.valid?
+        self.errors.add(:base, "file_cannot_be_empty".to_sym) unless self.errors[:base].include?(I18n.t("activemodel.errors.models.reservation_request.attributes.base.file_cannot_be_empty")) 
+      end
     end
   end
 

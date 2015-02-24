@@ -1,6 +1,6 @@
 - @reservation = @reservation_request.reservation
 
-.row-fluid
+.row-fluid.reservation-wizard
   .span8.offset2
     .header
       %h1= t 'reservations_review.heading'
@@ -57,6 +57,8 @@
 
           = render 'contact_information_fields', :f => f
 
+        = render 'documents', :f => f
+
         - if @reservation_request.nonce_payment_available?
 
           %h2= t 'reservations_review.select_payment_method'
@@ -111,6 +113,9 @@
 
         = f.button :submit, t('reservations_review.buttons.request'),
             disable_with: t('reservations_review.disabled_buttons.request')
+
+- content_for :domready do
+  new PaymentController($('.reservation-wizard'))
 
 - content_for :script do
   :javascript

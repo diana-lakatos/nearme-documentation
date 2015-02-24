@@ -15,6 +15,9 @@ Spree::Product.class_eval do
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   has_many :impressions, as: :impressionable, dependent: :destroy
   has_many :wish_list_items, as: :wishlistable
+  has_many :document_requirements, as: :item, dependent: :destroy
+
+  has_one :upload_obligation, as: :item, dependent: :destroy
 
   scope :approved, -> { where(approved: true) }
   scope :draft, -> { where(draft: true) }

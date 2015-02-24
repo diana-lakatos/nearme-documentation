@@ -2,7 +2,7 @@ class ProductForm < Form
 
   # attr_accessor :name, :description, :price, :category
   # attr_accessor :quantity
-  attr_accessor :shipping_methods
+  attr_accessor :shipping_methods, :document_requirements, :upload_obligation
   attr_reader :product
 
   # Validations:
@@ -15,7 +15,8 @@ class ProductForm < Form
   validates_presence_of :depth, :if => :shippo_enabled
   validates_presence_of :width, :if => :shippo_enabled
   validates_presence_of :height, :if => :shippo_enabled
-  validate  :list_of_countries_or_states_cannot_be_empty
+  validate :list_of_countries_or_states_cannot_be_empty
+  validate :label_and_description_cannot_be_empty
 
   def_delegators :@product, :id, :price, :price=, :name, :name=, :description, :id=, :description=,
     :shippo_enabled=, :shippo_enabled, :draft?, :draft=, :draft
@@ -77,6 +78,19 @@ class ProductForm < Form
     end
   end
 
+  def label_and_description_cannot_be_empty
+    if @document_requirements.present?
+      @document_requirements.each do |document_requirement|
+        [:label, :description].each do |field|
+          if document_requirement.try(field).empty?
+            self.errors.add(:base, "#{field}_empty".to_sym)
+            document_requirement.errors.add(field.to_sym, :empty)
+          end
+        end
+      end
+    end
+  end
+
   def quantity
     @quantity ||= @stock_item.stock_movements.sum(:quantity)
   end
@@ -115,12 +129,14 @@ class ProductForm < Form
     @product = product
     @company = @product.company
     @user = @product.user
+    @upload_obligation = @product.upload_obligation || @product.build_upload_obligation(level: UploadObligation::LEVELS.first)
     @shipping_category = @product.shipping_category || @product.build_shipping_category(name: 'Default')
     @product.shipping_category = @shipping_category
     @stock_location = @company.stock_locations.first || @company.stock_locations.build(propagate_all_variants: false, name: "Default")
     @stock_item = @stock_location.stock_items.where(variant_id: @product.master.id).first || @stock_location.stock_items.build(backorderable: false)
     @stock_item.variant = @product.master
     @stock_movement = @stock_item.stock_movements.build stock_item: @stock_item
+    @document_requirements = [] unless PlatformContext.current.instance.documents_upload_enabled?
   end
 
   def submit(params)
@@ -140,6 +156,8 @@ class ProductForm < Form
     @product.save!(validate: !draft?)
     @product.images.each { |i| i.save!(validate: false) }
     @product.classifications.each { |x| x.save!(validate: !draft?) }
+    @upload_obligation.save!
+    @document_requirements.each { |x| x.save! }
     @stock_location.save!(validate: !draft?)
     @stock_item.save!(validate: !draft?)
     @shipping_category.save!(validate: !draft?)
@@ -170,6 +188,26 @@ class ProductForm < Form
     end
   end
 
+  def document_requirements_attributes=(attributes)
+    @document_requirements = []
+    attributes.each do |key, document_requirements_attributes|
+      next if document_requirements_attributes["hidden"] == "1"
+      document_requirement = @product.document_requirements.where(id: document_requirements_attributes["id"]).first
+      if document_requirements_attributes["removed"] == "1"
+        document_requirement.try(:destroy)
+      else
+        document_requirement ||= @product.document_requirements.build
+        document_requirement.assign_attributes(document_requirements_attributes)
+        document_requirement.item = @product
+        @document_requirements << document_requirement
+      end
+    end
+  end
+
+  def upload_obligation_attributes=(attributes)
+    @upload_obligation.assign_attributes(attributes)
+  end
+
   def shipping_methods_attributes=(attributes)
     @shipping_methods = []
     attributes.each do |key, shipping_methods_attributes|
@@ -190,6 +228,7 @@ class ProductForm < Form
     build_shipping_methods
     @category = @product.taxons.map(&:id).join(",")
     @price = @product.price
+    build_document_requirements if PlatformContext.current.instance.documents_upload_enabled?
   end
 
   def build_shipping_methods
@@ -201,6 +240,16 @@ class ProductForm < Form
       shipping_method.calculator ||= Spree::Calculator::Shipping::FlatRate.new(preferred_amount: 0)
       shipping_method.zones.build(kind: "country", name: "Default - #{SecureRandom.hex}")
       @shipping_methods << shipping_method
+    end
+  end
+
+  def build_document_requirements
+    @document_requirements = @product.document_requirements.to_a
+    DocumentRequirement::MAX_COUNT.times do
+      hidden = @document_requirements.blank? ? "0" : "1"
+      document_requirement = @product.document_requirements.build
+      document_requirement.hidden = hidden
+      @document_requirements << document_requirement
     end
   end
 end

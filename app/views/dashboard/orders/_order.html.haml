@@ -92,8 +92,14 @@
           .additional-item
             = render 'dashboard/orders/line_item', item: item
             .col-md-4
-              - unless hidden.include?(:review)
-                = link_to '#' do
-                  %span.btn.gray= t 'orders.buttons.product_review'
+              - if item.has_product_reviews?
+                = link_to dashboard_reviews_path(tab: 'completed') do
+                  %col-md-.btn.blue= t 'orders.buttons.update_product_review'
+              - else
+                = link_to dashboard_reviews_path do
+                  %col-md-.btn.gray= t 'orders.buttons.product_review'
 
+      - order.payment_documents.each do |pd|
+        .payment-document
+          = link_to pd.file.file_name, pd.file.url, target: '_blank'
 

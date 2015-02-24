@@ -149,6 +149,22 @@ ActiveRecord::Schema.define(version: 20150214125057) do
   add_index "assigned_waiver_agreement_templates", ["target_id", "target_type"], name: "awat_target_id_and_target_type", using: :btree
   add_index "assigned_waiver_agreement_templates", ["waiver_agreement_template_id"], name: "awat_wat_id", using: :btree
 
+  create_table "attachments", force: true do |t|
+    t.string   "type"
+    t.string   "file"
+    t.integer  "attachable_id"
+    t.string   "attachable_type"
+    t.integer  "instance_id"
+    t.integer  "user_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "attachments", ["attachable_id", "attachable_type"], name: "index_attachments_on_attachable_id_and_attachable_type", using: :btree
+  add_index "attachments", ["instance_id"], name: "index_attachments_on_instance_id", using: :btree
+  add_index "attachments", ["user_id"], name: "index_attachments_on_user_id", using: :btree
+
   create_table "authentications", force: true do |t|
     t.integer  "user_id"
     t.string   "provider"
@@ -424,6 +440,30 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.datetime "deleted_at"
   end
 
+  create_table "document_requirements", force: true do |t|
+    t.string   "label"
+    t.text     "description"
+    t.integer  "item_id"
+    t.string   "item_type"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "document_requirements", ["deleted_at"], name: "index_document_requirements_on_deleted_at", using: :btree
+  add_index "document_requirements", ["instance_id"], name: "index_document_requirements_on_instance_id", using: :btree
+  add_index "document_requirements", ["item_id", "item_type"], name: "index_document_requirements_on_item_id_and_item_type", using: :btree
+
+  create_table "documents_uploads", force: true do |t|
+    t.boolean  "enabled",     default: false
+    t.string   "requirement"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "domains", force: true do |t|
     t.string   "name"
     t.datetime "created_at",                                     null: false
@@ -696,15 +736,15 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.text     "custom_sanitize_config"
     t.string   "payment_transfers_frequency",                                   default: "fortnightly"
     t.text     "hidden_ui_controls"
-    t.boolean  "user_blogs_enabled",                                            default: false
+    t.string   "encrypted_shippo_username"
+    t.string   "encrypted_shippo_password"
     t.string   "twilio_from_number"
     t.string   "test_twilio_from_number"
     t.string   "encrypted_test_twilio_consumer_key"
     t.string   "encrypted_test_twilio_consumer_secret"
     t.string   "encrypted_twilio_consumer_key"
     t.string   "encrypted_twilio_consumer_secret"
-    t.string   "encrypted_shippo_username"
-    t.string   "encrypted_shippo_password"
+    t.boolean  "user_blogs_enabled",                                            default: false
     t.boolean  "wish_lists_enabled",                                            default: false
     t.string   "wish_lists_icon_set",                                           default: "heart"
   end
@@ -762,8 +802,8 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.boolean  "listings_public",                default: true
     t.integer  "partner_id"
     t.integer  "address_id"
-    t.string   "external_id"
     t.boolean  "mark_to_be_bulk_update_deleted", default: false
+    t.string   "external_id"
     t.integer  "wish_list_items_count",          default: 0
   end
 
@@ -822,6 +862,19 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.datetime "updated_at",                                 null: false
     t.string   "search_scope_option", default: "no_scoping"
   end
+
+  create_table "payment_document_infos", force: true do |t|
+    t.integer  "document_requirement_id"
+    t.integer  "attachment_id"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "payment_document_infos", ["attachment_id"], name: "index_payment_document_infos_on_attachment_id", using: :btree
+  add_index "payment_document_infos", ["document_requirement_id"], name: "index_payment_document_infos_on_document_requirement_id", using: :btree
+  add_index "payment_document_infos", ["instance_id"], name: "index_payment_document_infos_on_instance_id", using: :btree
 
   create_table "payment_gateways", force: true do |t|
     t.string   "name"
@@ -1182,6 +1235,13 @@ ActiveRecord::Schema.define(version: 20150214125057) do
 
   add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
 
+  create_table "sessions", force: true do |t|
+    t.string   "session_id", null: false
+    t.text     "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "spree_addresses", force: true do |t|
     t.string   "firstname"
     t.string   "lastname"
@@ -1494,11 +1554,11 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.integer  "partner_id"
     t.decimal  "service_fee_buyer_percent",               precision: 5,  scale: 2, default: 0.0
     t.decimal  "service_fee_seller_percent",              precision: 5,  scale: 2, default: 0.0
-    t.string   "guest_token"
-    t.integer  "state_lock_version",                                               default: 0,       null: false
     t.datetime "shippo_rate_purchased_at"
     t.integer  "platform_context_detail_id"
     t.string   "platform_context_detail_type"
+    t.string   "guest_token"
+    t.integer  "state_lock_version",                                               default: 0,       null: false
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id", using: :btree
@@ -2535,6 +2595,8 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.boolean  "recurring_booking",                                                  default: false, null: false
     t.boolean  "show_page_enabled",                                                  default: false
     t.text     "custom_csv_fields"
+    t.boolean  "overnight_booking",                                                  default: false, null: false
+    t.boolean  "enable_reviews"
     t.text     "onboarding_form_fields"
     t.decimal  "service_fee_guest_percent",                  precision: 5, scale: 2, default: 0.0
     t.decimal  "service_fee_host_percent",                   precision: 5, scale: 2, default: 0.0
@@ -2542,8 +2604,6 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.string   "lessor"
     t.string   "lessee"
     t.boolean  "groupable_with_others",                                              default: true
-    t.boolean  "overnight_booking",                                                  default: false, null: false
-    t.boolean  "enable_reviews"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -2599,6 +2659,20 @@ ActiveRecord::Schema.define(version: 20150214125057) do
   end
 
   add_index "unit_prices", ["transactable_id"], name: "index_unit_prices_on_listing_id", using: :btree
+
+  create_table "upload_obligations", force: true do |t|
+    t.string   "level"
+    t.integer  "item_id"
+    t.string   "item_type"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "upload_obligations", ["deleted_at"], name: "index_upload_obligations_on_deleted_at", using: :btree
+  add_index "upload_obligations", ["instance_id"], name: "index_upload_obligations_on_instance_id", using: :btree
+  add_index "upload_obligations", ["item_id", "item_type"], name: "index_upload_obligations_on_item_id_and_item_type", using: :btree
 
   create_table "user_bans", force: true do |t|
     t.integer  "user_id"
@@ -2904,6 +2978,7 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.string   "recipient"
     t.string   "from_type"
     t.string   "reply_to_type"
+    t.integer  "workflow_id"
   end
 
   create_table "workflow_steps", force: true do |t|
@@ -2924,6 +2999,7 @@ ActiveRecord::Schema.define(version: 20150214125057) do
     t.datetime "updated_at"
     t.text     "events_metadata"
     t.string   "workflow_type"
+    t.string   "associated_event"
   end
 
 end
