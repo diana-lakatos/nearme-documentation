@@ -34,6 +34,12 @@ input[type=tel] {
    cursor: pointer;
 }
 
+body.home-index, body.search-index {
+  input#search {
+    cursor: text;
+  }
+}
+
 label.radio {
   margin-right: 1em;
 }
