@@ -91,7 +91,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   end
 
   def redirect_to_dashboard_if_registration_completed
-    if current_user.try(:registration_completed?) 
+    if current_user.try(:registration_completed?)
       redirect_to dashboard_transactable_type_transactables_path(@transactable_type)
     end
   end
