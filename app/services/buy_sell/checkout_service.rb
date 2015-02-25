@@ -19,7 +19,7 @@ class BuySell::CheckoutService
       end
 
       if item.product.upload_obligation.blank?
-        item.product.create_upload_obligation(level: UploadObligation.dafault_level)
+        item.product.create_upload_obligation(level: UploadObligation.default_level)
       end
 
       item.product.document_requirements.each do |req|
