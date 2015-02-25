@@ -225,7 +225,7 @@ class SecuredParams
     [
       :title,
       :content,
-      :exceprt,
+      :excerpt,
       :published_at,
       :slug,
       :author_name,
