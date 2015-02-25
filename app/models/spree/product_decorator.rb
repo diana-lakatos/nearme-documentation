@@ -98,7 +98,7 @@ Spree::Product.class_eval do
   end
 
   def recalculate_average_rating!
-    average_rating = reviews.average(:rating)
+    average_rating = reviews.average(:rating) || 0.0
     self.update(average_rating: average_rating)
   end
 

@@ -434,11 +434,13 @@ DesksnearMe::Application.routes.draw do
     get "dashboard/social_accounts", :to => "registrations#social_accounts", :as => "social_accounts"
 
     match "users/store_correct_ip", :to => "sessions#store_correct_ip", :as => "store_correct_ip", via: [:patch, :put]
-
+    
     get "/instance_admin/sessions/new", :to => "instance_admin/sessions#new", :as => 'instance_admin_login'
     post "/instance_admin/sessions", :to => "instance_admin/sessions#create"
     delete "/instance_admin/sessions", :to => "instance_admin/sessions#destroy"
   end
+
+  get "users/:id/reviews_collections", :to => "user_reviews#reviews_collections", :as => "reviews_collections"
 
   resources :listings, :users, :reservations, :products do
     resources :user_messages, controller: "dashboard/user_messages", except: [:index] do

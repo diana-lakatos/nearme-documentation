@@ -1,28 +1,21 @@
-.rating-averages
-  .row-fluid.reviews-summary
-    .span3
-      %p= t 'buy_sell_market.products.labels.summary'
-    .span9
-      .rating
-        = render 'buy_sell_market/products/stars', stars: @user.try(:average_rating).try(:round)
+.sorting-reviews{ 'data-sorting-reviews' => true }
   .row-fluid
-    - @rating_questions.each do |rating_question|
-      .span3
-        %p= rating_question.text
-      .span3
-        .rating
-          = render 'buy_sell_market/products/stars', stars: (@user.question_average_rating[rating_question.id] || 0).round
-- @reviews_as_seller.each do |review|
-  .review
-    .row-fluid
-      .span2
-        = image_tag review.user.avatar_url
-        %p= review.user.first_name
-      .span10
-        .rating
-          = render 'buy_sell_market/products/stars', stars: review.rating 
-          %p.review-date= I18n.l(review.created_at, format: :month_year)
-        %p
-          = review.comment
+    .span7
+    .span5
+      = t('registrations.sort')
+      .dropdown.reviews-dropdown{ 'data-reviews-dropdown' => true, 'data-url' => reviews_collections_path(@user) }
+        %a.nav-link.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
+          %span.title{'data-title' => true}=t('user_reviews.reviews_about_this_seller') 
+          %span.ico-chevron-down
+        .clearfix
+        %ul.dropdown-menu
+          - if @reviews.exists?
+            %li{'data-option' => 'reviews_about_seller'}=t('user_reviews.reviews_about_this_seller') 
+          - if @reviews_left_by_seller.exists?
+            %li{'data-option' => 'reviews_left_by_seller'}=t('user_reviews.reviews_left_by_this_seller') 
+          - if @reviews_about_buyer.exists?
+            %li{'data-option' => 'reviews_about_buyer'}=t('user_reviews.reviews_about_this_buyer')
+          - if @reviews_left_by_buyer.exists?
+            %li{'data-option' => 'reviews_left_by_buyer'}=t('user_reviews.reviews_left_by_this_buyer')
 
-= will_paginate_styled @reviews_as_seller, param_name: 'reviews_page'
+.reviews-content{'data-reviews-content' => true}

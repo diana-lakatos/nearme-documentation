@@ -684,30 +684,62 @@ class User < ActiveRecord::Base
     wish_lists.default.first
   end
 
-  def reviews_as_seller
-    @reviews_as_seller ||= Review.where(object: 'seller', reviewable_type: 'Spree::LineItem', reviewable_id: line_items.pluck(:id))
+  def reviews_about_seller
+    query = <<-QUERY
+    reviews.reviewable_type = 'Spree::LineItem' 
+      AND reviews.reviewable_id IN (
+        SELECT spree_line_items.id FROM spree_line_items 
+        WHERE spree_line_items.variant_id IN (
+          SELECT spree_variants.id FROM spree_variants 
+          WHERE spree_variants.deleted_at IS NULL 
+            AND spree_variants.product_id IN (
+              SELECT spree_products.id FROM spree_products 
+              WHERE spree_products.deleted_at IS NULL 
+                AND spree_products.user_id = :user_id))) 
+      OR reviews.reviewable_type = 'Reservation' 
+        AND reviews.reviewable_id IN (
+          SELECT reservations.id FROM reservations 
+          WHERE reservations.creator_id = :user_id)
+    QUERY
+
+    Review.with_object('seller').where(query, user_id: id)
   end
 
-  def line_items
-    @line_items ||= Spree::LineItem.where(variant_id: variants.pluck(:id))
-  end
+  def reviews_about_buyer
+    query = <<-QUERY
+    reviews.reviewable_type = 'Spree::LineItem' 
+      AND reviews.reviewable_id IN (
+        SELECT spree_line_items.id FROM spree_line_items 
+        WHERE spree_line_items.order_id IN (
+          SELECT spree_orders.id FROM spree_orders 
+          WHERE spree_orders.user_id = :user_id)) 
+      OR reviews.reviewable_type = 'Reservation' 
+        AND reviewable_id IN (
+          SELECT reservations.id FROM reservations 
+          WHERE reservations.deleted_at IS NULL 
+            AND reservations.owner_id = :user_id)
+    QUERY
 
-  def variants
-    @variants ||= Spree::Variant.where(product_id: products.pluck(:id))
+    Review.for_buyer.where(query, user_id: id)
   end
 
   def has_reviews?
-    reviews_as_seller.count > 0
+    reviews_about_seller.count > 0 || reviews_about_buyer.count > 0 || reviews.count > 0
   end
 
-  def question_average_rating
-    @rating_answers_rating ||= RatingAnswer.where(review_id: reviews_as_seller.pluck(:id))
-      .group(:rating_question_id).average(:rating)
+  def question_average_rating(reviews)
+    @rating_answers_rating ||= RatingAnswer.where(review_id: reviews.pluck(:id))
+                                 .group(:rating_question_id).average(:rating)
   end
 
-  def recalculate_average_rating!
-    average_rating = reviews_as_seller.average(:rating)
-    self.update(average_rating: average_rating)
+  def recalculate_seller_average_rating!
+    seller_average_rating = reviews_about_seller.average(:rating) || 0.0
+    self.update(seller_average_rating: seller_average_rating)
+  end
+
+  def recalculate_buyer_average_rating!
+    buyer_average_rating = reviews_about_buyer.average(:rating) || 0.0
+    self.update(buyer_average_rating: buyer_average_rating)
   end
 
   private

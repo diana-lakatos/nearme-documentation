@@ -82,8 +82,10 @@ class RegistrationsController < Devise::RegistrationsController
     else
       @listings = @company.present? ? @company.listings.paginate(page: params[:services_page], per_page: 8) : nil
     end
-    @rating_questions = RatingSystem.find_by(subject: platform_context.instance.lessor).rating_questions
-    @reviews_as_seller = @user.reviews_as_seller.paginate(page: params[:reviews_page])
+    @reviews = @user.reviews_about_seller.paginate(page: params[:reviews_page])
+    @reviews_about_buyer = @user.reviews_about_buyer
+    @reviews_left_by_seller = @user.reviews.for_buyer
+    @reviews_left_by_buyer = @user.reviews.for_seller_and_product
   end
 
   def update
