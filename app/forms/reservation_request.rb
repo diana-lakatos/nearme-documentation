@@ -196,10 +196,10 @@ class ReservationRequest < Form
   end
 
   def build_document document_params
-    if reservation.listing.document_requirements.blank? && 
+    if reservation.listing.document_requirements.blank? &&
     PlatformContext.current.instance.documents_upload_enabled? &&
     PlatformContext.current.instance.documents_upload.is_mandatory?
-      
+
       document_params.delete :payment_document_info_attributes
       document_params[:user_id] = @user.id
       document = reservation.payment_documents.build(document_params)
@@ -209,7 +209,7 @@ class ReservationRequest < Form
         item: reservation.listing
       })
 
-      reservation.listing.build_upload_obligation(level: UploadObligation::LEVELS[0])
+      reservation.listing.build_upload_obligation(level: UploadObligation.default_level)
 
       document.build_payment_document_info(
         document_requirement: document_requirement,

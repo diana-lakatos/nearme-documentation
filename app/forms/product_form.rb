@@ -21,6 +21,8 @@ class ProductForm < Form
     product.valid?
   end
 
+  validate :label_and_description_cannot_be_empty
+
   def_delegators :@product, :id, :price, :price=, :name, :name=, :description, :id=, :description=,
     :shippo_enabled=, :shippo_enabled, :draft?, :draft=, :draft, :extra_properties, :extra_properties=
 

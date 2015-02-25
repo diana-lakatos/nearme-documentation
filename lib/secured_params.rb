@@ -29,7 +29,30 @@ class SecuredParams
       document_requirements_attributes: nested(self.document_requirement),
       upload_obligation_attributes: nested(self.upload_obligation),
       shipping_methods_attributes: nested(self.spree_shipping_method),
-      extra_properties:  Spree::Product.public_custom_attributes_names((product_type.presence || PlatformContext.current.try(:instance).try(:product_types).try(:first)).try(:id))
+      extra_properties:  Spree::Product.public_custom_attributes_names((product_type.presence || PlatformContext.current.try(:instance).try(:product_types).try(:first)).try(:id)),
+      document_requirements_attributes: nested(self.document_requirement),
+      upload_obligation_attributes: nested(self.upload_obligation)
+    ]
+  end
+
+  def instance_shipping_providers
+    [
+      :shippo_username, :shippo_password,
+    ]
+  end
+
+  def dimensions_template
+    [
+      :name,
+      :unit_of_measure,
+      :weight,
+      :height,
+      :width,
+      :depth,
+      :weight_unit,
+      :height_unit,
+      :width_unit,
+      :depth_unit
     ]
   end
 
@@ -758,9 +781,9 @@ class SecuredParams
         photo_ids: [],
         amenity_ids: [],
         waiver_agreement_template_ids: [],
+        schedule_attributes: self.schedule,
         document_requirements_attributes: nested(self.document_requirement),
-        upload_obligation_attributes: nested(self.upload_obligation),
-        schedule_attributes: self.schedule
+        upload_obligation_attributes: nested(self.upload_obligation)
     ] +
     Transactable.public_custom_attributes_names((transactable_type.presence || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
   end

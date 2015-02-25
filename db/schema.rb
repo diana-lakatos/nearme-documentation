@@ -2623,7 +2623,7 @@ ActiveRecord::Schema.define(version: 20150224083306) do
     t.boolean  "action_recurring_booking",                                           default: false, null: false
     t.boolean  "show_page_enabled",                                                  default: false
     t.text     "custom_csv_fields"
-    t.boolean  "overnight_booking",                                                  default: false, null: false
+    t.boolean  "action_overnight_booking",                                           default: false, null: false
     t.boolean  "enable_reviews"
     t.text     "onboarding_form_fields"
     t.decimal  "service_fee_guest_percent",                  precision: 5, scale: 2, default: 0.0
@@ -2632,8 +2632,6 @@ ActiveRecord::Schema.define(version: 20150224083306) do
     t.string   "lessor"
     t.string   "lessee"
     t.boolean  "groupable_with_others",                                              default: true
-    t.boolean  "action_overnight_booking",                                           default: false, null: false
-    t.boolean  "enable_reviews"
     t.boolean  "action_rfq",                                                         default: false
     t.boolean  "action_hourly_booking",                                              default: false
     t.boolean  "action_free_booking",                                                default: false
