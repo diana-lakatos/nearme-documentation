@@ -107,7 +107,7 @@
             %label.checkbox.controls{for: "reservation_request_waiver_agreement_templates_#{wat.id}"}
               = check_box_tag "reservation_request[waiver_agreement_templates][#{wat.id}]", "1", f.object.send(:waiver_agreement_templates).include?("#{wat.id}"), { class: 'input-block-level' }
               = t('reservations_review.wat_accept', link_to_wat: link_to(wat.name, '#',
-                data: { modal: true, href: waiver_agreement_template_path(wat)}))
+                data: { modal: true, href: waiver_agreement_template_path(wat)})).html_safe
             - if f.object.errors.include?(:"waiver_agreement_template_#{wat.id}")
               %p.error-block= f.object.errors[:"waiver_agreement_template_#{wat.id}"].first
 
