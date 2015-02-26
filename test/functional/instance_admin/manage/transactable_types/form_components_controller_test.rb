@@ -22,7 +22,7 @@ class InstanceAdmin::Manage::TransactableTypes::FormComponentsControllerTest < A
   end
 
   should '#new' do
-    get :new, transactable_type_id: @transactable_type.id
+    get :new, transactable_type_id: @transactable_type.id, form_type: 'space_wizard'
     assert_response :success
   end
 

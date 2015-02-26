@@ -70,6 +70,7 @@ class InstanceWizardController < ActionController::Base
     end
     at.save!
     Utils::FormComponentsCreator.new(tp).create!
+    Utils::FormComponentsCreator.new(tp, 'transactable').create!
     @instance.location_types.create!(name: 'General')
 
     Utils::DefaultAlertsCreator.new.create_all_workflows!

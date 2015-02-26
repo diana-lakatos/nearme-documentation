@@ -7,7 +7,8 @@ class InstanceAdmin::FormComponentsController  < InstanceAdmin::ResourceControll
   end
 
   def new
-    @form_component = @form_componentable.form_components.build
+    @form_type = params[:form_type]
+    @form_component = @form_componentable.form_components.build(:form_type => @form_type)
   end
 
   def create
@@ -16,6 +17,10 @@ class InstanceAdmin::FormComponentsController  < InstanceAdmin::ResourceControll
       flash[:success] = t 'flash_messages.instance_admin.manage.form_component.created'
       redirect_to redirect_path
     else
+      # This will not  happen unless the user plays with the console and is mainly done to make
+      # the view renderable so tests can pass; can't use ||= because it may be a blank string
+      @form_component.form_type = FormComponent::SPACE_WIZARD if @form_component.form_type.blank?
+
       flash[:error] = @form_component.errors.full_messages.to_sentence
       render action: :new
     end
@@ -31,6 +36,10 @@ class InstanceAdmin::FormComponentsController  < InstanceAdmin::ResourceControll
       flash[:success] = t 'flash_messages.instance_admin.manage.form_component.updated'
       redirect_to redirect_path
     else
+      # This will not  happen unless the user plays with the console and is mainly done to make
+      # the view renderable so tests can pass
+      @form_component.form_type = FormComponent::SPACE_WIZARD if @form_component.form_type.blank?
+
       flash[:error] = @form_component.errors.full_messages.to_sentence
       render action: :edit
     end
