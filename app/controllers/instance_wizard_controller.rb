@@ -49,10 +49,8 @@ class InstanceWizardController < ActionController::Base
 
     PlatformContext.current = PlatformContext.new(@instance)
 
-    if @instance.buyable?
-      pt = @instance.product_types.create(name: @instance.bookable_noun)
-      CustomAttributes::CustomAttribute::Creator.new(pt).create_spree_product_type_attributes!
-      Utils::SpreeDefaultsLoader.new(@instance).load!
+    if params[:marketplace_type] == "Buy/Sell"
+      @instance.product_types.create(name: @instance.bookable_noun)
     else
       tp = @instance.transactable_types.create(
         name: params[:marketplace_type],
