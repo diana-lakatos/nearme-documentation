@@ -3,6 +3,8 @@
 = f.input :id, :as => :hidden
 
 - @form_components.each do |form_component|
+  %h4
+    = form_component.name
   - form_component.form_fields.each do |form_field|
     - model = form_field.keys.first
     - field = form_field[model]
