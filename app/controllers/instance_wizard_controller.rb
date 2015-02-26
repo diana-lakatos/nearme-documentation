@@ -51,25 +51,26 @@ class InstanceWizardController < ActionController::Base
 
     if params[:marketplace_type] == "Buy/Sell"
       @instance.product_types.create(name: @instance.bookable_noun)
-    else
-      tp = @instance.transactable_types.create(
-        name: params[:marketplace_type],
-        action_free_booking: "1",
-        action_hourly_booking: "1",
-        action_daily_booking: "1",
-        action_weekly_booking: "1",
-        action_monthly_booking: "1",
-        availability_options: { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => true } })
-      create_rating_systems(@instance)
-      CustomAttributes::CustomAttribute::Creator.new(tp, bookable_noun: @instance.bookable_noun).create_listing_attributes!
-      at = tp.availability_templates.build(name: "Working Week", description: "Mon - Fri, 9:00 AM - 5:00 PM")
-      (1..5).each do |i|
-        at.availability_rules.build(day: i, open_hour: 9, open_minute: 0,close_hour: 17, close_minute: 0)
-      end
-      at.save!
-      Utils::FormComponentsCreator.new(tp).create!
-      @instance.location_types.create!(name: 'General')
+      @instance.update_attribute :default_search_view, 'products'
     end
+
+    tp = @instance.transactable_types.create(
+      name: params[:marketplace_type],
+      action_free_booking: "1",
+      action_hourly_booking: "1",
+      action_daily_booking: "1",
+      action_weekly_booking: "1",
+      action_monthly_booking: "1",
+      availability_options: { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => true } })
+    create_rating_systems(@instance)
+    CustomAttributes::CustomAttribute::Creator.new(tp, bookable_noun: @instance.bookable_noun).create_listing_attributes!
+    at = tp.availability_templates.build(name: "Working Week", description: "Mon - Fri, 9:00 AM - 5:00 PM")
+    (1..5).each do |i|
+      at.availability_rules.build(day: i, open_hour: 9, open_minute: 0,close_hour: 17, close_minute: 0)
+    end
+    at.save!
+    Utils::FormComponentsCreator.new(tp).create!
+    @instance.location_types.create!(name: 'General')
 
     Utils::DefaultAlertsCreator.new.create_all_workflows!
     InstanceAdmin.create(user_id: @user.id)
