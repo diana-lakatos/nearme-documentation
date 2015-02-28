@@ -93,7 +93,11 @@ class RegistrationsController < Devise::RegistrationsController
     resource.custom_validation = true
     resource.assign_attributes(user_params)
     build_approval_request_for_object(resource) unless resource.is_trusted?
-    if resource.update_with_password(user_params)
+
+    # We remove approval_requests_attributes from the params used to update the user
+    # to avoid duplication, as the approval request is already set by assign_attributes
+    # and build_approval_request_for_object
+    if resource.update_with_password(user_params.except(:approval_requests_attributes))
       set_flash_message :success, :updated
       sign_in(resource, :bypass => true)
       event_tracker.updated_profile_information(@user)
