@@ -24,9 +24,9 @@
           - @approval_requests.each do |resource|
             %tr
               %td
-                = resource.owner.name.try(:truncate, 25)
+                = resource.owner.try(:name).try(:truncate, 25)
               %td
-                = resource.owner.class.name
+                = resource.owner.try(:class).try(:name)
               %td
                 = resource.notes.try(:truncate, 25)
               %td
