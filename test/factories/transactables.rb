@@ -8,7 +8,6 @@ FactoryGirl.define do
     action_daily_booking true
 
     photo_not_required true
-
     initialize_with do
       new(transactable_type: (TransactableType.first.presence || FactoryGirl.create(:transactable_type_listing)))
     end
