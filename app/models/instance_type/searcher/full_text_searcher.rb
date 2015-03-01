@@ -51,7 +51,7 @@ module InstanceType::Searcher::FullTextSearcher
   def set_options_for_filters
     @filterable_location_types = LocationType.all
     @filterable_listing_types = @transactable_type.custom_attributes.where(name: 'listing_type').try(:first).try(:valid_values)
-    @filterable_pricing = @transactable_type.pricing_options.keys.map { |k| [k.downcase, k.capitalize] }
+    @filterable_pricing = @transactable_type.pricing_options_long_period_names.map { |k| [k.downcase, k.capitalize] }
     @filterable_attribute = @transactable_type.custom_attributes.where(name: 'filterable_attribute').try(:first).try(:valid_values)
   end
 

@@ -1,6 +1,7 @@
 module CustomAttributes
   class Validator < ActiveModel::Validator
     def validate(record)
+      return true if !record.respond_to?(:properties) || !record.properties.kind_of?(CustomAttributes::CollectionProxy)
       record.custom_attributes.each do |array|
         name = array[CustomAttribute::NAME]
         type = array[CustomAttribute::ATTRIBUTE_TYPE]

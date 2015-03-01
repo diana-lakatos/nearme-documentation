@@ -47,7 +47,8 @@ class Job
                                                     end
                                                   end
     Transactable.clear_custom_attributes_cache
-    UserInstanceProfile.clear_custom_attributes_cache
+    User.clear_custom_attributes_cache
+    Spree::Product.clear_custom_attributes_cache
   end
 
   def after_initialize(*args)

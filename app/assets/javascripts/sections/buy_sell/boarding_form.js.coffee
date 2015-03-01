@@ -3,6 +3,7 @@ class @BoardingForm
     @setupZoneInputs()
     @setupZoneKind()
     @setupShippingMethods()
+    @setupDocumentRequirements()
     @setupImages()
 
   setupZoneInputs: =>
@@ -63,27 +64,15 @@ class @BoardingForm
       $(this).parent().hide()
 
   setupShippingMethods: ->
-    @form.find(".remove_shipping_profile:not(:first)").removeClass('hidden');
+    nestedForm = new SetupNestedForm(@form)
+    nestedForm.setup(".remove_shipping_profile:not(:first)", 
+                ".shipping_hidden", ".remove_shipping", 
+                ".shipping_method_block", 
+                ".add_shipping_profile")
 
-    for shipping_hidden in @form.find(".shipping_hidden")
-      if $(shipping_hidden).prop("checked")
-        $(shipping_hidden).parents(".shipping_method_block").hide()
-
-    @form.find(".shipping_hidden").change ->
-      if $(this).prop("checked")
-        $(this).parents(".shipping_method_block").hide('slow')
-      else
-        $(this).parents(".shipping_method_block").show('slow')
-
-    for shipping_remove in @form.find(".remove_shipping")
-      if $(shipping_remove).prop("checked")
-        $(shipping_remove).parents(".shipping_method_block").hide()
-
-    @form.find(".remove_shipping").change ->
-      if ($(this).prop("checked"))
-        $(this).parents(".shipping_method_block").hide("slow")
-
-    @form.find(".add_shipping_profile").click =>
-      @form.find(".shipping_hidden:checked").eq(0).prop('checked', false).trigger("change")
-      if @form.find(".shipping_hidden:checked").length == 0
-        @form.find(".add_shipping_profile").hide()
+  setupDocumentRequirements: ->
+    nestedForm = new SetupNestedForm(@form)
+    nestedForm.setup(".remove-document-requirement:not(:first)", 
+                ".document-hidden", ".remove-document", 
+                ".document-requirement", 
+                ".document-requirements .add-new", true)

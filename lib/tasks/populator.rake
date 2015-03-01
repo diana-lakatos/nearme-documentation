@@ -1,5 +1,25 @@
 namespace :populate do
   desc "Populates unit prices"
+  task :multi_user_account => :environment do
+    users = User.includes({company_users: :company}, :authentications).all.select { |u| u.companies.pluck(:instance_id).uniq.count > 1 && !u.admin? }
+    users.each do |u|
+      puts "Processing user: #{u.email} [instance: #{u.instance_id}], iterating over companies"
+      u.companies.each do |c|
+        puts "  Company #{c.id} with creator #{c.creator_id} which belongs to instance: #{c.instance_id}. Skipping if #{u.instance_id} == #{c.instance_id}"
+        next if c.instance_id == u.instance_id
+        puts "Not Skipping - different instance ids, creating new user!"
+        new_u = User.new(u.attributes.except('id', 'properties'))
+        new_u.instance_id = c.instance_id
+        new_u.instance_profile_type_id = Instance.find(c.instance_id).instance_profile_types.first.id
+        new_u.save(validate: false)
+        puts "Duplicated account #{new_u.email} - id: #{new_u.id}, instance_id: #{new_u.instance_id}"
+        c.update_attribute(:creator_id, new_u.id)
+        puts "company has now new creator: #{c.creator_id}, listings also have updated creator_id: #{c.listings.pluck(:creator_id).inspect}]"
+      end
+    end
+  end
+
+  desc "Populates unit prices"
   task :prices => :environment do
     {"daily_price_cents" => 1440, "weekly_price_cents" => 10080, "monthly_price_cents" => 43200}.each do |column, period|
       ActiveRecord::Base.connection.execute("
@@ -203,7 +223,7 @@ namespace :populate do
       Transactable.transaction do
         values = []
         1000.times do |j|
-          values << %Q((NULL, NULL,143, now(), 246, NULL, 'jkl', NULL, false, 1, NULL, 2, true, 261, NULL, 'jkljkl', NULL, '"quantity"=>"#{Random.rand(20)}","capacity"=>"#{Random.rand(20)}","free"=>"false","hourly_reservations"=>"false","weekly_price_cents"=>"6700","color" => "#{colors[Random.rand(3)]}", "confirm_reservations"=>"0", "delta"=>"true", "rank"=>"#{Random.rand(20)}"', now()))
+          values << %Q((NULL, NULL,143, now(), 246, NULL, 'jkl', NULL, false, 1, NULL, 2, true, 261, NULL, 'jkljkl', NULL, '"quantity"=>"#{Random.rand(20)}","capacity"=>"#{Random.rand(20)}","free"=>"false","action_hourly_booking"=>"false","weekly_price_cents"=>"6700","color" => "#{colors[Random.rand(3)]}", "confirm_reservations"=>"0", "delta"=>"true", "rank"=>"#{Random.rand(20)}"', now()))
         end
         Transactable.connection.execute head_sql + values.join(", ")
         puts "added #{(i+1)}"

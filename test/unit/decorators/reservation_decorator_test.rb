@@ -146,7 +146,7 @@ class ReservationDecoratorTest < ActionView::TestCase
       stub_mixpanel
       @time = DateTime.new(2014, 1, 1).in_time_zone
       Timecop.travel(@time)
-      listing = FactoryGirl.create(:transactable, hourly_reservations: true)
+      listing = FactoryGirl.create(:transactable, action_hourly_booking: true)
       @reservation = FactoryGirl.build(:reservation,
                                        subtotal_amount_cents: 500_00,
                                        service_fee_amount_guest_cents: 50_00,

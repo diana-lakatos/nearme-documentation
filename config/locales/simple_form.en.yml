@@ -57,6 +57,7 @@ en:
         price: 'Price'
         photos: 'Photos'
         upload_photos: 'Browse'
+        schedule: 'Availability Schedule'
       listing:
         price: 'Price'
         photos: 'Photos'
@@ -66,6 +67,9 @@ en:
         description: 'Location description'
         location_type: 'Location type'
         currency: 'Currency'
+        location_address:
+          address: 'Address'
+
       location:
         name: 'Location name'
         description: 'Location description'
@@ -77,6 +81,7 @@ en:
         location_address:
           address: 'Address'
         amenities: 'Amenities'
+        location_type: 'Location type'
 
       companies:
         name: 'Company name'
@@ -89,6 +94,8 @@ en:
         bank_owner_name: "Account's Owner Name"
         bank_routing_number: 'Routing Number'
         bank_account_number: 'Account Number'
+        company_address:
+          address: 'Address'
       domain:
         google_analytics_tracking_code: "GA Tracking Code"
       company:
@@ -112,12 +119,14 @@ en:
 
       transactable:
         name: "Item Title"
+        price_fixed: 'Fixed'
         price_daily: 'Daily'
         price_weekly: 'Weekly'
         price_monthly: 'Monthly'
         price_hourly: 'Hourly'
         price_free: 'Free'
         price:
+          fixed: 'fixed price'
           daily: 'day'
           weekly: 'week'
           monthly: 'month'
@@ -186,6 +195,12 @@ en:
     required:
       mark: '*'
       text: 'required'
+    options:
+      documents_upload:
+        requirement:
+          mandatory: 'Mandatory'
+          optional: 'Optional'
+          vendor_decides: 'Vendor decides'
   instance_admin:
     settings:
       configuration:
@@ -195,3 +210,12 @@ en:
           semiweekly: Twice a week
           weekly: Weekly
           daily: Daily
+      documents_upload:
+        form:
+          title: "Documents Upload"
+          activate_upload_files: "Activate upload files"
+          safety_and_trust: "For safety and trust purposes, some services might need extra documentation from customers before completing the booking."
+          documents_can_be: "These documents can be ids, licenses, certifications, and other files."
+          can_make_this: "You can make this a mandatory requirement within your marketplace, optional or let vendors decide."
+          mark_your_choice: "Please mark your choice below:"
+          save_button: "Save"

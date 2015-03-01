@@ -5,7 +5,7 @@ Given /^a( disabled)? listing( with nil prices)? in (.*) exists( with that ameni
     listing.daily_price = nil
     listing.weekly_price = nil
     listing.monthly_price = nil
-    listing.free = true if !listing.has_price?
+    listing.action_free_booking = true if !listing.has_price?
     listing.save!
   end
   if disabled

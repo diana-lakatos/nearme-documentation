@@ -12,6 +12,7 @@ class Utils::DefaultAlertsCreator::PayoutTest < ActionDispatch::IntegrationTest
     @domain = FactoryGirl.create(:domain, :name => 'notifcations.com', :target => @instance)
     @company = FactoryGirl.create(:company, :creator => @company_owner)
     @company.update_column(:instance_id, @instance.id)
+    @company.creator.update_column(:instance_id, @instance.id)
     PlatformContext.current = PlatformContext.new(@company)
     @company.stubs(:created_payment_transfers).returns([
       PaymentTransfer.new(:amount_cents => 7887, :currency => 'USD'),

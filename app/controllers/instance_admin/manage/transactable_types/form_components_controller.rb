@@ -1,71 +1,29 @@
-class InstanceAdmin::Manage::TransactableTypes::FormComponentsController < InstanceAdmin::Manage::BaseController
+class InstanceAdmin::Manage::TransactableTypes::FormComponentsController < InstanceAdmin::FormComponentsController
 
-  before_filter :find_transactable_type
+  def create_as_copy
+    transactable_type_id = params[:copy_template][:form_componentable_id]
+    form_type = params[:copy_template][:form_type]
 
-  def index
-    @form_components = @transactable_type.form_components.rank(:rank).order('form_type')
-  end
+    transactable_type = TransactableType.where(:instance_id => PlatformContext.current.instance, :id => transactable_type_id).first
 
-  def new
-    @form_component = @transactable_type.form_components.build
-  end
-
-  def create
-    @form_component = @transactable_type.form_components.build(form_component_params)
-    if @form_component.save
-      flash[:success] = t 'flash_messages.instance_admin.manage.form_component.created'
-      redirect_to instance_admin_manage_transactable_type_form_components_path(@transactable_type)
-    else
-      flash[:error] = @form_component.errors.full_messages.to_sentence
-      render action: :new
-    end
-  end
-
-  def edit
-    @form_component = @transactable_type.form_components.find(params[:id])
-  end
-
-  def update
-    @form_component = @transactable_type.form_components.find(params[:id])
-    if @form_component.update_attributes(form_component_params)
-      flash[:success] = t 'flash_messages.instance_admin.manage.form_component.updated'
-      redirect_to instance_admin_manage_transactable_type_form_components_path(@transactable_type)
-    else
-      flash[:error] = @form_component.errors.full_messages.to_sentence
-      render action: :edit
-    end
-  end
-
-  def destroy
-    @form_component = @transactable_type.form_components.find(params[:id])
-    @form_component.destroy
-    flash[:success] = t 'flash_messages.instance_admin.manage.form_component.deleted'
-    redirect_to instance_admin_manage_transactable_type_form_components_path(@transactable_type)
-  end
-
-  def update_rank
-    @form_component = @transactable_type.form_components.find(params[:id])
-    @form_component.update_attribute(:rank_position, params[:rank_position])
-    respond_to do |format|
-      format.json { head :ok }
+    transactable_type.form_components.where(:form_type => form_type).each do |form_component|
+      @form_componentable.form_components << form_component.dup
     end
 
+    redirect_to redirect_path
   end
 
   private
 
-  def find_transactable_type
-    @transactable_type = TransactableType.find(params[:transactable_type_id])
+  def find_form_componentable
+    @form_componentable = TransactableType.find(params[:transactable_type_id])
+  end
+
+  def redirect_path
+    instance_admin_manage_transactable_type_form_components_path(@form_componentable)
   end
 
   def permitting_controller_class
-    'manage'
-  end
-
-  def form_component_params
-    params.require(:form_component).permit(secured_params.form_component).tap do |whitelisted|
-      whitelisted[:form_fields] = params[:form_component][:form_fields].map { |el| el = el.split('=>'); { el[0].try(:strip) => el[1].try(:strip) } } if params[:form_component][:form_fields]
-    end
-
+    @controller_scope ||= 'manage'
   end
 end

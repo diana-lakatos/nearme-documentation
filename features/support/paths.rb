@@ -51,6 +51,9 @@ module NavigationHelpers
     when /the instance settings page/
       instance_admin_settings_configuration_path
 
+    when /instance documents upload page/
+      instance_admin_settings_documents_upload_path
+
     when /instance admin sign in page/
       instance_admin_login_path
 

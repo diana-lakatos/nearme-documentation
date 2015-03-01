@@ -17,5 +17,11 @@ Spree::Variant.class_eval do
     true
   end
 
+  def check_price
+    if currency.nil?
+      self.currency = Spree::Config[:currency]
+    end
+  end
+
 end
 

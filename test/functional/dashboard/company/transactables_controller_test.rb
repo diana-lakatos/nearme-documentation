@@ -19,6 +19,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
   context '#new' do
 
     should 'display available Waiver Agreement check boxes' do
+      FactoryGirl.create(:form_component_transactable)
       @waiver_agreement_template1 = FactoryGirl.create(:waiver_agreement_template, target: @company)
       @waiver_agreement_template2 = FactoryGirl.create(:waiver_agreement_template, target: @company)
       @waiver_agreement_template3 = FactoryGirl.create(:waiver_agreement_template, target: @company)
@@ -79,6 +80,8 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
         stub_mixpanel
         @related_instance = FactoryGirl.create(:instance)
         PlatformContext.current = PlatformContext.new(@related_instance)
+        @user = FactoryGirl.create(:user)
+        sign_in @user
         @transactable_type = FactoryGirl.create(:transactable_type_listing)
 
         @related_company = FactoryGirl.create(:company_in_auckland, creator_id: @user.id, instance: @related_instance)

@@ -19,7 +19,7 @@ end
 
 Given /^#{capture_model} is reserved hourly$/ do |listing_instance|
   listing = model!(listing_instance)
-  listing.hourly_reservations = true
+  listing.action_hourly_booking = true
   listing.save!
 end
 
@@ -219,7 +219,7 @@ Then /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved f
 end
 
 When /^#{capture_model} is free$/ do |transactable|
-  model!(transactable).update_attribute(:free, true)
+  model!(transactable).update_attribute(:action_free_booking, true)
 end
 
 Then /^I should see the following reservations in order:$/ do |table|

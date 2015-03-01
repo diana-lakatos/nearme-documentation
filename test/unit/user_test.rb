@@ -383,6 +383,17 @@ class UserTest < ActiveSupport::TestCase
     assert @user.reservations
   end
 
+  should "allow users to use the same email across marketplaces" do
+    @user = FactoryGirl.create(:user, email: "hulk@desksnear.me")
+    assert_raise ActiveRecord::RecordInvalid do
+      FactoryGirl.create(:user, email: "hulk@desksnear.me")
+    end
+    PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
+    assert_nothing_raised do
+      FactoryGirl.create(:user, email: "hulk@desksnear.me")
+    end
+  end
+
   should "have full email address" do
     @user = User.new(name: "Hulk Hogan", email: "hulk@desksnear.me")
 
@@ -863,22 +874,19 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  context 'profiles' do
+  context 'custom attributes' do
 
     setup do
-      @user = FactoryGirl.create(:user)
-      @instance = FactoryGirl.create(:instance)
+      @type = FactoryGirl.create(:instance_profile_type)
+      @custom_attribute = FactoryGirl.create(:custom_attribute, name: 'custom_profile_attr', label: 'Custom Profile Attr', target: @type, attribute_type: 'string')
+      @user = @type.users.build
     end
 
-    should 'get the right profile based on instance' do
-      @profile_one = FactoryGirl.create(:user_instance_profile, user: @user)
-      @profile_two = FactoryGirl.create(:user_instance_profile, user: @user)
-      @profile_two.update_column(:instance_id, @instance.id)
-      assert_equal @user.profile, @profile_one
-      PlatformContext.current = PlatformContext.new(@instance)
-      assert_equal @user.profile, @profile_two
-      PlatformContext.current = PlatformContext.new(Instance.first)
-      assert_equal @user.profile, @profile_one
+    should 'be able to set value' do
+      assert_nothing_raised do
+        @user.custom_profile_attr = 'hello'
+        assert_equal 'hello', @user.custom_profile_attr
+      end
     end
 
   end
@@ -899,8 +907,13 @@ class UserTest < ActiveSupport::TestCase
     @payment = FactoryGirl.create(:payment, :payable => @reservation)
     @charge = FactoryGirl.create(:charge, :payment => @payment)
     @payment_transfer = FactoryGirl.create(:payment_transfer, :company_id => @company.id)
+    FactoryGirl.build(:upload_obligation, level: UploadObligation::LEVELS[0], item: @listing)
+    document_requirement = FactoryGirl.create(:document_requirement, item: @listing)
+    @payment_document= FactoryGirl.create(:attachable_payment_document, attachable: @reservation, user: @user,
+      payment_document_info: FactoryGirl.create(:payment_document_info, document_requirement: document_requirement)
+    )
     @objects = [@user, @user_industry, @authentication, @company, @company_industry,
-                @location, @listing, @photo ]
+                @location, @listing, @photo, @payment_document]
   end
 
 end

@@ -1,16 +1,16 @@
 class SecuredParams
 
-  def boarding_form
+  def boarding_form(product_type=nil)
     [
       :draft,
       :store_name,
       company_address_attributes: nested(self.address),
-      product_form: nested(self.product_form)
+      product_form: nested(self.product_form(product_type))
 
     ]
   end
 
-  def product_form
+  def product_form(product_type=nil)
     [
       :draft,
       :name,
@@ -23,15 +23,15 @@ class SecuredParams
       :depth,
       :width,
       :height,
-      :weight_unit,
-      :depth_unit,
-      :width_unit,
-      :height_unit,
-      :unit_of_measure,
       image_ids: [],
       company_address_attributes: nested(self.address),
       images_attributes: nested(self.spree_image),
-      shipping_methods_attributes: nested(self.spree_shipping_method)
+      document_requirements_attributes: nested(self.document_requirement),
+      upload_obligation_attributes: nested(self.upload_obligation),
+      shipping_methods_attributes: nested(self.spree_shipping_method),
+      extra_properties:  Spree::Product.public_custom_attributes_names((product_type.presence || PlatformContext.current.try(:instance).try(:product_types).try(:first)).try(:id)),
+      document_requirements_attributes: nested(self.document_requirement),
+      upload_obligation_attributes: nested(self.upload_obligation)
     ]
   end
 
@@ -101,7 +101,6 @@ class SecuredParams
       :permission_blog,
       :permission_support,
       :permission_buysell,
-      :permission_shippingoptions,
       :name
     ]
   end
@@ -228,7 +227,7 @@ class SecuredParams
     [
       :title,
       :content,
-      :exceprt,
+      :excerpt,
       :published_at,
       :slug,
       :author_name,
@@ -287,6 +286,7 @@ class SecuredParams
       :olark_api_key, :olark_enabled,
       :facebook_consumer_key, :facebook_consumer_secret,
       :twitter_consumer_key, :twitter_consumer_secret,
+      :shippo_username, :shippo_password,
       :linkedin_consumer_key, :linkedin_consumer_secret,
       :instagram_consumer_key, :instagram_consumer_secret,
       :support_imap_hash, :support_email,
@@ -449,14 +449,17 @@ class SecuredParams
     ]
   end
 
+  def product_type
+    [
+      :name
+    ]
+  end
+
   def transactable_type
     [
       :name,
-      :pricing_options,
-      :pricing_validation,
       :availability_options,
       :favourable_pricing_rate,
-      :overnight_booking,
       :cancellation_policy_enabled,
       :cancellation_policy_penalty_percentage,
       :cancellation_policy_hours_for_cancellation,
@@ -465,8 +468,27 @@ class SecuredParams
       :groupable_with_others,
       :service_fee_guest_percent, :service_fee_host_percent,
       :bookable_noun, :lessor, :lessee,
+      :action_rfq,
+      :action_overnight_booking,
+      :action_booking,
+      :action_recurring_booking,
+      :action_free_booking,
+      :action_hourly_booking,
+      :action_daily_booking,
+      :action_weekly_booking,
+      :action_monthly_booking,
+      :min_daily_price,
+      :max_daily_price,
+      :min_hourly_price,
+      :max_hourly_price,
+      :min_weekly_price,
+      :max_weekly_price,
+      :min_monthly_price,
+      :max_monthly_price,
+      :bookable_noun, :lessor, :lessee, :action_schedule_booking,
       :availability_templates_attributes => nested(self.availability_template),
-      :action_type_ids => []
+      :action_type_ids => [],
+      schedule_attributes: self.schedule
     ]
   end
 
@@ -742,11 +764,17 @@ class SecuredParams
   end
 
   def transactable(transactable_type = nil)
-    Transactable::PRICE_TYPES.collect{|t| "#{t}_price".to_sym} +
       [
         :location_id, :availability_template_id,
         :defer_availability_rules, :free,
-        :hourly_reservations, :price_type, :draft, :enabled,
+        :price_type, :draft, :enabled,
+        :hourly_price, :daily_price, :weekly_price, :monthly_price, :fixed_price, :fixed_price_cents,
+        :hourly_price_cents, :daily_price_cents, :weekly_price_cents, :monthly_price_cents,
+        :action_rfq,
+        :action_recurring_booking,
+        :action_hourly_booking,
+        :action_free_booking,
+        :action_daily_booking,
         :last_request_photos_sent_at, :activated_at, :rank,
         :transactable_type_id, :transactable_type,
         photos_attributes: nested(self.photo),
@@ -755,8 +783,15 @@ class SecuredParams
         photo_ids: [],
         amenity_ids: [],
         waiver_agreement_template_ids: [],
+        schedule_attributes: self.schedule,
+        document_requirements_attributes: nested(self.document_requirement),
+        upload_obligation_attributes: nested(self.upload_obligation)
     ] +
     Transactable.public_custom_attributes_names((transactable_type.presence || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
+  end
+
+  def schedule
+    [:schedule]
   end
 
   def availability_rule
@@ -836,13 +871,12 @@ class SecuredParams
       :linkedin_url, :facebook_url, :google_plus_url,
       industry_ids: [],
       companies_attributes: nested(self.company),
-      approval_requests_attributes: nested(self.approval_request),
-      user_instance_profiles_attributes: nested(self.user_instance_profiles)
-    ]
+      approval_requests_attributes: nested(self.approval_request)
+    ] + User.public_custom_attributes_names(InstanceProfileType.first.try(:id))
   end
 
   def user_instance_profiles
-    UserInstanceProfile.public_custom_attributes_names(InstanceProfileType.first.try(:id))
+
   end
 
   def workflow
@@ -921,13 +955,13 @@ class SecuredParams
 
   def review
     [
-      :rating, 
-      :comment, 
-      :object, 
-      :date, 
-      :transactable_type_id, 
-      :reviewable_id, 
-      :reviewable_type, 
+      :rating,
+      :comment,
+      :object,
+      :date,
+      :transactable_type_id,
+      :reviewable_id,
+      :reviewable_type,
       :user_id
     ]
   end
@@ -944,5 +978,25 @@ class SecuredParams
       :rating,
       :rating_question_id
     ]
+  end
+
+  def documents_upload
+    [
+      :requirement,
+      :enabled
+    ]
+  end
+
+  def document_requirement
+    [
+      :label,
+      :description,
+      :hidden,
+      :removed
+    ]
+  end
+
+  def upload_obligation
+    [ :level ]
   end
 end

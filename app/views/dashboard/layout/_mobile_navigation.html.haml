@@ -17,7 +17,7 @@
     - if current_user.companies.any?
       = dashboard_menu_item 'dashboard/companies', edit_dashboard_company_path(current_user.companies.first)
       - if buyable?
-        = dashboard_menu_item 'dashboard/products', dashboard_company_products_path
+        = dashboard_menu_item 'dashboard/products', dashboard_company_product_type_products_path(Spree::ProductType.first)
       - elsif TransactableType.first
         = dashboard_menu_item 'dashboard/transactables', dashboard_company_transactable_type_transactables_path(TransactableType.first)
       = dashboard_menu_item 'dashboard/payouts', edit_dashboard_company_payouts_path

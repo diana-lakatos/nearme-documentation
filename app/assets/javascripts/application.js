@@ -21,6 +21,8 @@
 //= require ./vendor/jquery.ias
 //= require ./vendor/ZeroClipboard
 //= require ./vendor/markerclusterer
+//= require ./vendor/icui
+//= require ./vendor/strftime
 //= require recurring_select
 //= require history_jquery
 //= require ./vendor/underscore
@@ -52,6 +54,7 @@ window.DNM = {
   initialize : function() {
     this.initializeAjaxCSRF();
     this.initializeComponents();
+    this.initializeIcui();
     this.initializeBootstrapSwitch();
     this.initializeTooltips();
     this.initializeCustomSelects($('body'));
@@ -59,6 +62,10 @@ window.DNM = {
     this.initializeBrowsersSpecificCode();
     this.centerSearchBoxOnHomePage();
     this.setFooterPushHeight();
+  },
+
+  initializeIcui: function() {
+    var icui = $("input[type=hidden].icui").icui();
   },
 
   initializeBootstrapSwitch: function() {

@@ -2,6 +2,7 @@ Given /^Current marketplace is buy_sell$/ do
   TransactableType.destroy_all
   @instance = PlatformContext.current.instance
   FactoryGirl.create(:transactable_type_buy_sell)
+  FactoryGirl.create(:product_type, instance: @instance)
   Utils::SpreeDefaultsLoader.new(@instance).load!
   @instance.update_attribute(:service_fee_host_percent, 10)
   @instance.update_attribute(:service_fee_guest_percent, 15)

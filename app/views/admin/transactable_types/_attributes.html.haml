@@ -2,9 +2,11 @@
 
 %fieldset
   %legend Pricing
-  - Instance::PRICING_OPTIONS.each do |price|
-    = f.simple_fields_for :pricing_options, OpenStruct.new(resource.pricing_options) do |pricing_option|
-      = pricing_option.input price, as: :boolean, checked_value: "1", unchecked_value: "0"
+  = f.input :action_hourly_booking
+  = f.input :action_free_booking
+  = f.input :action_daily_booking
+  = f.input :action_monthly_booking
+  = f.input :action_weekly_booking
 
   - resource.pricing_validation ||= {}
   - Instance::PRICING_OPTIONS.each do |price|

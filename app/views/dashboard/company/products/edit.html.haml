@@ -1,11 +1,12 @@
 .dash-page
   .dash-head.clearfix
-    = link_to 'MANAGE LISTINGS', dashboard_company_products_path
+    = link_to 'MANAGE LISTINGS', dashboard_company_product_type_products_path(@product_type)
     &gt;
     %p EDIT ITEM
   .dash-body
-    = simple_form_for @product_form, wrapper: :bs3, :url => dashboard_company_product_path(@product_form.product), :html => {id: "product_form", :multipart => true,  method: :put } do |f|
+    = simple_form_for @product_form, wrapper: :bs3, :url => dashboard_company_product_type_product_path(@product_type, @product_form.product), :html => {id: "product_form", :multipart => true,  method: :put } do |f|
       = render 'forms/product_form', f: f
+      = render 'custom_attributes', f: f
 
       .row.product_shipping_profile_fields_row.enabled{ :data => { :js_element_identifier => 'initial_shipping_profiles_section' } }
         = f.simple_fields_for :shipping_methods do |shipping_method|
@@ -17,7 +18,7 @@
             %span Create New Shipping Profile
 
       .submit-bar
-        = link_to dashboard_company_products_path do
+        = link_to dashboard_company_product_type_products_path(@product_type) do
           .btn.gray Cancel
         = f.submit "Save item", class: "btn medium blue"
 

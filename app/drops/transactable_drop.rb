@@ -6,7 +6,7 @@ class TransactableDrop < BaseDrop
 
   attr_reader :listing
 
-  delegate :name, :location, :transactable_type, :description, :hourly_reservations?, :creator, :administrator, :last_booked_days, to: :listing
+  delegate :name, :location, :transactable_type, :description, :action_hourly_booking?, :creator, :administrator, :last_booked_days, to: :listing
   delegate :bookable_noun, :bookable_noun_plural, to: :transactable_type
   delegate :dashboard_url, :search_url, to: :routes
 

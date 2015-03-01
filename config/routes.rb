@@ -129,8 +129,7 @@ DesksnearMe::Application.routes.draw do
       resources :instance_views
     end
     resources :transactable_types, :only => [] do
-      resources :custom_attributes do
-      end
+      resources :custom_attributes
     end
     resources :pages
     get '/platform_home', to: 'platform_home#edit', as: 'edit_platform_home'
@@ -180,6 +179,7 @@ DesksnearMe::Application.routes.draw do
       end
       resource :translations, :only => [:show, :update], :controller => 'translations'
       resource :cancellation_policy, :only => [:show, :update], :controller => 'cancellation_policy'
+      resource :documents_upload, except: [:index, :destroy], :controller => 'documents_upload'
     end
 
     namespace :theme do
@@ -224,7 +224,7 @@ DesksnearMe::Application.routes.draw do
         resources :workflow_steps, only: [:show, :edit, :update], controller: 'workflows/workflow_steps'
       end
       resources :workflow_steps do
-        resources :workflow_alerts, excpet: [:index], controller: 'workflows/workflow_alerts'
+        resources :workflow_alerts, except: [:index], controller: 'workflows/workflow_alerts'
       end
 
       resources :instance_profile_types, :only => [:index, :destroy] do
@@ -248,6 +248,9 @@ DesksnearMe::Application.routes.draw do
         resources :form_components, controller: 'transactable_types/form_components' do
           member do
             patch :update_rank
+          end
+          collection do
+            post :create_as_copy
           end
         end
       end
@@ -296,6 +299,17 @@ DesksnearMe::Application.routes.draw do
       get '/', :to => 'base#index'
       resource :configuration, only: [:show, :update], controller: 'configuration'
       resource :commissions, :only => [:show, :update], :controller => 'commissions'
+      resources :product_types do
+        resources :custom_attributes, controller: 'product_types/custom_attributes'
+        resources :form_components, controller: 'product_types/form_components' do
+          member do
+            patch :update_rank
+          end
+          collection do
+            post :create_as_copy
+          end
+        end
+      end
       resources :tax_categories
       resources :tax_rates
       resources :zones
@@ -475,8 +489,17 @@ DesksnearMe::Application.routes.draw do
       end
 
       resources :locations
+      resources :payment_documents do
+        collection do
+          get :sent_to_me
+          get :uploaded_by_me
+        end
+      end
       resource :payouts, except: [:index, :show, :new, :create, :destroy]
       resources :products
+      resources :product_type do
+        resources :products
+      end
 
       resources :transactable_types do
         resources :transactables do
@@ -509,7 +532,7 @@ DesksnearMe::Application.routes.draw do
           match 'upload_image/:image', :action => :upload_image, :as => 'upload_theme_image', via: [:post, :put]
         end
       end
-    end
+    end #ends company namespace
 
     resources :companies, :only => [:edit, :update, :show]
     resources :host_recurring_bookings do
@@ -606,6 +629,10 @@ DesksnearMe::Application.routes.draw do
     get "/list", as: "space_wizard_list", controller: 'transactable_types/space_wizard', action: 'list'
     post "/list", controller: 'transactable_types/space_wizard', action: 'submit_listing'
     post "/submit_item", controller: 'transactable_types/space_wizard', action: 'submit_item'
+  end
+
+  resources :product_types do
+    resources :product_wizard, only: [:new, :create], controller: 'product_types/product_wizard'
   end
 
   scope '/space' do

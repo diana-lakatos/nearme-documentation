@@ -12,7 +12,7 @@
       .col-md-4
         %p Requested time
         %p
-          - if recurring_booking.hourly_reservations?
+          - if recurring_booking.action_hourly_booking?
             = recurring_booking.hourly_summary(false).gsub('<br />', ' ').html_safe
           - else
             N/A

@@ -6,7 +6,7 @@ class InstanceProfileType < ActiveRecord::Base
 
   acts_as_custom_attributes_set
   belongs_to :instance
-  has_many :user_instance_profiles
+  has_many :users
 
 end
 

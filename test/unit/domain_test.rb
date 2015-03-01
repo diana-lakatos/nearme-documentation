@@ -35,13 +35,6 @@ class DomainTest < ActiveSupport::TestCase
   end
 
   context 'validation' do
-
-    should 'not be able to set desksnear.me' do
-      @desksnearme_domain = FactoryGirl.build(:domain, :name => 'desksnear.me', :target => FactoryGirl.create(:instance))
-      assert @desksnearme_domain.invalid?
-      assert @desksnearme_domain.errors[:name].join.include?("This domain is not available")
-    end
-
     should 'allow to remove random domain' do
       domain = FactoryGirl.create(:domain, name: 'somedomain.com')
       assert domain.destroy

@@ -157,6 +157,16 @@
           }
         }
 
+        .truncate {
+          width: 200px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          @media (max-width: $ipad-width){
+            width: 165px;
+          }
+        }
+
         /* Remove bootstrap dropdown arrow */
         &:before,
         &:after {
@@ -189,6 +199,7 @@
         @include box-shadow(none);
 
         li {
+          width: 100%;
           background:$theme_black;
 
           a:hover{

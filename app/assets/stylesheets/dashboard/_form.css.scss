@@ -256,7 +256,7 @@ textarea {
   }
 }
 
-.remove_shipping_profile {
+.remove_shipping_profile, .remove-document-requirement {
   overflow: hidden;
 
   label {
@@ -285,5 +285,26 @@ textarea {
   }
   &.half-margin {
     margin:15px 0px;
+  }
+}
+
+/* PRICE */
+
+.price-containter {
+  padding: 0px;
+
+  > div:first-child {
+    padding-left: 0px;
+  }
+}
+
+.icui {
+
+  input {
+    line-height: normal;
+  }
+
+  > .DatePicker:first-child {
+    margin-top: 0px;
   }
 }

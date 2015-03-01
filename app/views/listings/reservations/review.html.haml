@@ -1,6 +1,6 @@
 - @reservation = @reservation_request.reservation
 
-.row-fluid
+.row-fluid.reservation-wizard
   .span8.offset2
     .header
       %h1= t 'reservations_review.heading'
@@ -21,7 +21,7 @@
               - @reservation_request.errors[:base].each do |error|
                 %li= error
 
-        - if @reservation_request.hourly_reservations?
+        - if @reservation_request.action_hourly_booking?
           %p
             = @reservation.hourly_summary_for_first_period
 
@@ -56,6 +56,8 @@
           %h2= t 'reservations_review.contact_information'
 
           = render 'contact_information_fields', :f => f
+
+        = render 'documents', :f => f
 
         - if @reservation_request.nonce_payment_available?
 
@@ -105,12 +107,15 @@
             %label.checkbox.controls{for: "reservation_request_waiver_agreement_templates_#{wat.id}"}
               = check_box_tag "reservation_request[waiver_agreement_templates][#{wat.id}]", "1", f.object.send(:waiver_agreement_templates).include?("#{wat.id}"), { class: 'input-block-level' }
               = t('reservations_review.wat_accept', link_to_wat: link_to(wat.name, '#',
-                data: { modal: true, href: waiver_agreement_template_path(wat)}))
+                data: { modal: true, href: waiver_agreement_template_path(wat)})).html_safe
             - if f.object.errors.include?(:"waiver_agreement_template_#{wat.id}")
               %p.error-block= f.object.errors[:"waiver_agreement_template_#{wat.id}"].first
 
         = f.button :submit, t('reservations_review.buttons.request'),
             disable_with: t('reservations_review.disabled_buttons.request')
+
+- content_for :domready do
+  new PaymentController($('.reservation-wizard'))
 
 - content_for :script do
   :javascript

@@ -3,6 +3,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   before_filter :find_transactable, :except => [:index, :new, :create]
   before_filter :find_locations
   before_filter :disable_unchecked_prices, :only => :update
+  before_filter :set_form_components
 
   def index
     @transactables = @transactable_type.transactables.where(company_id: @company).paginate(page: params[:page], per_page: 20)
@@ -13,11 +14,13 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     @transactable.availability_template_id = AvailabilityRule.default_template.id
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
     @photos = current_user.photos.where(transactable_id: nil)
+    build_document_requirements_and_obligation if platform_context.instance.documents_upload_enabled?
   end
 
   def create
     @transactable = @transactable_type.transactables.build(transactable_params)
     @transactable.company = @company
+
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
     if @transactable.save
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.bookable_noun)
@@ -38,6 +41,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     @photos = @transactable.photos
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
+    build_document_requirements_and_obligation if platform_context.instance.documents_upload_enabled?
   end
 
   def update
@@ -92,6 +96,10 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
 
   private
 
+  def set_form_components
+    @form_components = @transactable_type.form_components.where(form_type: FormComponent::TRANSACTABLE_ATTRIBUTES).rank(:rank)
+  end
+
   def find_locations
     @locations = @company.locations
   end
@@ -118,5 +126,14 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
 
   def transactable_params
     params.require(:transactable).permit(secured_params.transactable(@transactable_type))
+  end
+
+  def build_document_requirements_and_obligation
+    @transactable.build_upload_obligation(level: UploadObligation::LEVELS.first) unless @transactable.upload_obligation
+    DocumentRequirement::MAX_COUNT.times do
+      hidden = @transactable.document_requirements.blank? ? "0" : "1"
+      document_requirement = @transactable.document_requirements.build
+      document_requirement.hidden = hidden
+    end
   end
 end

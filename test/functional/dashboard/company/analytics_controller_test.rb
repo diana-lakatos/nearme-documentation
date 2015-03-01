@@ -40,14 +40,6 @@ class Dashboard::Company::AnalyticsControllerTest < ActionController::TestCase
             assert_equal 1, assigns(:all_time_totals).length
           end
 
-          should 'be scoped to current instance' do
-            set_second_instance
-            get :show
-            assert_equal [], assigns(:payments)
-            assert_equal [], assigns(:last_week_payments)
-            assert_equal [], assigns(:all_time_totals)
-          end
-
         end
 
         context 'date' do
@@ -92,12 +84,6 @@ class Dashboard::Company::AnalyticsControllerTest < ActionController::TestCase
           assert_equal [@reservation], assigns(:reservations)
         end
 
-        should 'be scoped to current instance' do
-          set_second_instance
-          get :show, :analytics_mode => 'bookings'
-          assert_equal [], assigns(:reservations)
-        end
-
       end
 
       context 'date' do
@@ -109,12 +95,6 @@ class Dashboard::Company::AnalyticsControllerTest < ActionController::TestCase
         should '@last_week_reservations includes only reservations not older than 6 days' do
           get :show, :analytics_mode => 'bookings'
           assert_equal [@reservation_created_6_days_ago], assigns(:last_week_reservations)
-        end
-
-        should '@last_week is scoped to current instance' do
-          set_second_instance
-          get :show, :analytics_mode => 'bookings'
-          assert_equal [], assigns(:last_week_reservations)
         end
 
       end
@@ -143,13 +123,6 @@ class Dashboard::Company::AnalyticsControllerTest < ActionController::TestCase
           assert_equal 1, assigns(:visits).size
         end
 
-        should '@last_month_visits has no visits from today in second instance' do
-          set_second_instance
-          get :show, :analytics_mode => 'location_views'
-          assert_equal [], assigns(:last_month_visits)
-          assert_equal [], assigns(:visits)
-        end
-
       end
 
     end
@@ -172,14 +145,6 @@ class Dashboard::Company::AnalyticsControllerTest < ActionController::TestCase
 
   def create_location_visit
     @listing.location.track_impression
-  end
-
-  def set_second_instance
-    second_instance = FactoryGirl.create(:instance)
-    company = FactoryGirl.create(:company, :creator => @user)
-    company.update_attribute(:instance_id, second_instance.id)
-    PlatformContext.current = PlatformContext.new(second_instance)
-    FactoryGirl.create(:transactable_type)
   end
 
 end

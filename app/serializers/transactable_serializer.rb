@@ -27,7 +27,7 @@ class TransactableSerializer < ApplicationSerializer
 
   # Serialize price
   def price
-    label = if object.free?
+    label = if object.action_free_booking?
               'Free'
             elsif object.daily_price.nil?
               'Call'
@@ -46,7 +46,7 @@ class TransactableSerializer < ApplicationSerializer
   private
 
   def price_period
-    if object.free?
+    if object.action_free_booking?
       PRICE_PERIODS[:free]
     else
       PRICE_PERIODS[:day]

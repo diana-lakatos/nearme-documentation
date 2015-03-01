@@ -2,9 +2,15 @@
 
 .dash-head.clearfix
   %p MANAGE LISTINGS
-  = link_to new_dashboard_company_product_path, class: "dash-head-btn btn blue pull-right" do
+  = link_to new_dashboard_company_product_type_product_path(@product_type), class: "dash-head-btn btn blue pull-right" do
     List New Item
 .dash-body
+  .dash-sub-nav
+    %ul
+      - Spree::ProductType.all.each do |product_type|
+        %li{class: product_type == @product_type ? "active" : ""}
+          = link_to product_type.name.pluralize, dashboard_company_product_type_products_path(product_type)
+
   %br
   .listings-header
     .row

@@ -1,5 +1,4 @@
 class Dashboard::ReviewsController < Dashboard::BaseController
-  skip_before_filter :redirect_if_no_company
 
   def index
     @current_instance = platform_context.instance
