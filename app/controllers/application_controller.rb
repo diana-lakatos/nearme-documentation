@@ -269,7 +269,7 @@ class ApplicationController < ActionController::Base
 
   def store_referal_info
     if first_time_visited?
-      cookies.signed.permanent[:referer] = request.referer
+      session[:referer] = request.referer
       if params[:source] && params[:campaign]
         cookies.signed.permanent[:source] = params[:source]
         cookies.signed.permanent[:campaign] = params[:campaign]
