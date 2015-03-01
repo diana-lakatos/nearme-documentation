@@ -25,7 +25,7 @@ module SearchHelper
   end
 
   def price_information(listing)
-    if listing.transactable_type.action_schedule_booking?
+    if listing.schedule_booking?
       money_without_cents_and_with_symbol(listing.fixed_price)
     else
       if listing.action_hourly_booking? && !listing.hourly_price.to_f.zero?
@@ -41,7 +41,7 @@ module SearchHelper
   end
 
   def individual_listing_price_information(listing, filter_pricing = [])
-    if listing.transactable_type.action_schedule_booking?
+    if listing.schedule_booking?
       money_without_cents_and_with_symbol(listing.fixed_price)
     else
       listing_price = listing.lowest_price_with_type(filter_pricing)

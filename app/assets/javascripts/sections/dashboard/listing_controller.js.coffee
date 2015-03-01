@@ -20,6 +20,8 @@ class @Dashboard.ListingController
 
   bindEvents: =>
 
+    @setupBookingType()
+
     @container.on 'change', @currencySelect, (event) =>
       @updateCurrency()
 
@@ -97,8 +99,23 @@ class @Dashboard.ListingController
 
   setupDocumentRequirements: ->
     nestedForm = new SetupNestedForm(@container)
-    nestedForm.setup(".remove-document-requirement:not(:first)", 
-                ".document-hidden", ".remove-document", 
-                ".document-requirement", 
+    nestedForm.setup(".remove-document-requirement:not(:first)",
+                ".document-hidden", ".remove-document",
+                ".document-requirement",
                 ".document-requirements .add-new", true)
 
+  setupBookingType: =>
+    bookingTypeInput = $('input[data-booking-type]')
+    hourlyPrice = @container.find('div[data-hourly-price]')
+
+    if bookingTypeInput.val() == 'overnight'
+      hourlyPrice.hide()
+
+    $('ul[data-booking-type-list] a[data-toggle="tab"]').on 'show.bs.tab', (e) =>
+      bookingType = $(e.target).attr('data-booking-type')
+      bookingTypeInput.val(bookingType)
+
+      if bookingType == 'overnight'
+        hourlyPrice.hide()
+      else if bookingType == 'regular'
+        hourlyPrice.show()

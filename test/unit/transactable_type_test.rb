@@ -106,4 +106,21 @@ class TransactableTypeTest < ActiveSupport::TestCase
 
     end
   end
+
+  context '#booking_choices' do
+    setup do
+      @transactable_type = TransactableType.first
+    end
+
+    should "include regular if hourly, daily, weekly, monthly or free action is enabled" do
+      @transactable_type.action_daily_booking = true
+      assert(@transactable_type.booking_choices.include?('regular'))
+    end
+
+    should "define enabled methods" do
+      TransactableType::BOOKING_TYPES.each do |bt|
+        assert(@transactable_type.respond_to?("#{bt}_booking_enabled?"))
+      end
+    end
+  end
 end

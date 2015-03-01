@@ -742,3 +742,9 @@ en:
       expiration_date: 'Expiration date'
       security_code: 'Security code'
 
+  shared:
+    booking_types_tabs:
+      booking_types: 'Booking types'
+      booking_type_regular: 'Regular'
+      booking_type_schedule: 'Schedule'
+      booking_type_overnight: 'Overnight'

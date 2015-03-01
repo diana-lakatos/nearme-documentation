@@ -4,7 +4,7 @@ module ListingsHelper
   end
 
   def booking_module_class(listing)
-    if listing.transactable_type.action_schedule_booking?
+    if listing.schedule_booking?
       'booking-fixed'
     elsif listing.action_hourly_booking?
       'booking-hourly'
@@ -48,7 +48,7 @@ module ListingsHelper
       :prices_by_days => Hash[ listing.prices_by_days.map { |k, v| [k, v.cents] } ],
       :initial_bookings => @initial_bookings ? @initial_bookings[listing.id] : {},
       action_recurring_booking: listing.transactable_type.action_recurring_booking,
-      action_overnight_booking: listing.action_overnight_booking?
+      action_overnight_booking: listing.overnight_booking?
     }
   end
 

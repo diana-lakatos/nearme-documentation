@@ -454,7 +454,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def action_hourly_booking?
-    reservation_type == 'hourly' || self.listing.transactable_type.action_schedule_booking?
+    reservation_type == 'hourly' || self.listing.schedule_booking?
   end
 
   def action_daily_booking?
@@ -468,7 +468,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def price_calculator
-    @price_calculator ||= if listing.transactable_type.action_schedule_booking?
+    @price_calculator ||= if listing.schedule_booking?
                             FixedPriceCalculator.new(self)
                           elsif action_hourly_booking?
                             HourlyPriceCalculator.new(self)

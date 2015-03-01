@@ -776,7 +776,7 @@ class SecuredParams
         :action_free_booking,
         :action_daily_booking,
         :last_request_photos_sent_at, :activated_at, :rank,
-        :transactable_type_id, :transactable_type,
+        :transactable_type_id, :transactable_type, :booking_type,
         photos_attributes: nested(self.photo),
         approval_requests_attributes: nested(self.approval_request),
         availability_rules_attributes: nested(self.availability_rule),

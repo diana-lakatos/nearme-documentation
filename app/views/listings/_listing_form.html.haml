@@ -5,6 +5,7 @@
   = render :partial => 'approval_requests/form', :locals => { f: f }
 
 = f.hidden_field :transactable_type_id, value: @transactable_type.id
+= f.hidden_field :booking_type, value: f.object.booking_type, 'data-booking-type' => true
 - if only_inputs.empty? || only_inputs.include?(:enabled)
   .control-group
     = f.label :enabled, t('simple_form.switch.enabled'), :class => 'control-label'
@@ -22,14 +23,18 @@
 
 - if only_inputs.empty? || only_inputs.include?(:price)
   = render partial: "dashboard/company/transactables/price", locals: { f: f }
+  = render partial: 'shared/booking_types_tabs', locals: { f: f }
 
 - if only_inputs.empty? || only_inputs.include?(:availability_rules)
-  .control-group
-    - if @transactable_type.action_schedule_booking?
-      = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule(schedule: f.object.transactable_type.schedule.try(:schedule)) do |schedule_form|
-        = schedule_form.hidden_field :schedule, class: 'icui'
-    - else
-      = render :partial => 'availability_rules/form', :locals => { :f => f }
+  - if @transactable_type.schedule_booking_enabled?
+    - content_for :booking_type_schedule_tab_content do
+      .control-group
+        = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule(schedule: f.object.transactable_type.schedule.try(:schedule)) do |schedule_form|
+          = schedule_form.hidden_field :schedule, class: 'icui'
+  - if @transactable_type.regular_booking_enabled?
+    - content_for :booking_type_regular_tab_content do
+      .control-group
+        = render :partial => 'availability_rules/form', :locals => { :f => f }
 
 - if only_inputs.empty? || only_inputs.include?(:photos)
   .loading{:style => "display: none"}
