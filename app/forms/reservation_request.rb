@@ -198,7 +198,7 @@ class ReservationRequest < Form
   def build_document document_params
     if reservation.listing.document_requirements.blank? &&
     PlatformContext.current.instance.documents_upload_enabled? &&
-    PlatformContext.current.instance.documents_upload.is_mandatory?
+    !PlatformContext.current.instance.documents_upload.is_vendor_decides?
 
       document_params.delete :payment_document_info_attributes
       document_params[:user_id] = @user.id
