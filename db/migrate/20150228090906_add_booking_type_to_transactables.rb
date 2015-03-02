@@ -10,7 +10,7 @@ class AddBookingTypeToTransactables < ActiveRecord::Migration
     TransactableType.find_each do |transactable_type|
       booking_type = if transactable_type.action_schedule_booking?
           'schedule'
-        elsif transactable_type.overnight_schedule_booking?
+        elsif transactable_type.action_overnight_booking?
           'overnight'
         else
           'regular'
