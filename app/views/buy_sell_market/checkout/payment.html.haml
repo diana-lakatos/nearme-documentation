@@ -69,12 +69,31 @@
                         = t 'buy_sell_market.checkout.labels.no_file_chosen'
 
       %section.checkout-form#credit-card-select
+
         .container-fluid
           %h2 Payment Information
-          - if @order.billing_authorization.nil?
-            = render 'checkout_credit_card_fields', f: f
-          - else
-            Credit Card has been already authorized. Please proceed.
+          = f.error :payment_method
+          - if @billing_gateway.processor.present?
+            .row-fluid
+              .span3
+                %label
+                  = f.radio_button :payment_method, Spree::Order::PAYMENT_METHODS[:credit_card]
+                  = t('buy_sell_market.checkout.credit_card')
+              .span9
+                - if @order.billing_authorization.nil?
+                  = render 'checkout_credit_card_fields', f: f
+                - else
+                  Credit Card has been already authorized. Please proceed.
+
+          - if @order.possible_manual_payment?
+            .row-fluid
+              .span3
+                %label
+                = f.radio_button :payment_method, Spree::Order::PAYMENT_METHODS[:manual]
+                = t('buy_sell_market.checkout.manual_payment')
+              .span9
+                = t('buy_sell_market.checkout.manual_payment_description')
+
 
       = render partial: 'checkout_buttons', locals: { form: f }
 

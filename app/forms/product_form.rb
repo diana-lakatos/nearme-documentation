@@ -20,7 +20,7 @@ class ProductForm < Form
   validate :label_and_description_cannot_be_empty
 
   def_delegators :@product, :id, :price, :price=, :name, :name=, :description, :id=, :description=,
-    :shippo_enabled=, :shippo_enabled, :action_rfq, :action_rfq=, :draft?, :draft=, :draft, :extra_properties, :extra_properties=
+    :shippo_enabled=, :shippo_enabled, :possible_manual_payment, :possible_manual_payment=, :action_rfq, :action_rfq=, :draft?, :draft=, :draft, :extra_properties, :extra_properties=
 
   def_delegators :'@product.master', :weight_unit, :weight_unit=, :height_unit, :height_unit=,
     :width_unit, :width_unit=, :depth_unit, :depth_unit=,

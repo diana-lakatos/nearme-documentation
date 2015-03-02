@@ -24,7 +24,7 @@
               = t 'buy_sell_market.products.buttons.add_to_cart'
             - if @product.action_rfq?
               - rfq_label = (@product.action_free? ?  t('reservations.rfq') : t('reservations.offer'))
-              = link_to rfq_label, '#', data: { modal: true, href: new_product_ticket_path(@product) }, class: 'btn gray'
+              = link_to rfq_label, '#', data: { modal: true, href: new_product_ticket_path(@product) }, class: 'btn gray', style: 'margin-top: 20px'
         - else
           .btn.disabled= t('buy_sell_market.products.buttons.out_of_stock')
 

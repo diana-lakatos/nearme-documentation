@@ -29,6 +29,9 @@
 
 = f.input :price, as: :price, input_html: { currency: currency_symbol_from_code(Spree::Config[:currency] ) }
 
+- if f.object.product.product_type.possible_manual_payment?
+  = f.input :possible_manual_payment, as: :boolean
+
 - if f.object.product.product_type.action_rfq?
   = f.input :action_rfq, as: :boolean
 

@@ -43,9 +43,6 @@ class Reservation < ActiveRecord::Base
   has_many :payment_documents, as: :attachable, class_name: 'Attachable::PaymentDocument', dependent: :destroy
   accepts_nested_attributes_for :payment_documents
 
-  # attr_accessible :cancelable, :confirmation_email, :date, :transactable_id,
-  #   :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method, :rejection_reason
-
   has_many :periods,
     :class_name => "ReservationPeriod",
     :inverse_of => :reservation,
@@ -208,7 +205,7 @@ class Reservation < ActiveRecord::Base
 
   scope :with_listing, -> {where.not(transactable_id: nil)}
 
-  validates_presence_of :payment_method, :in => PAYMENT_METHODS.values
+  validates_presence_of :payment_method, :in => Reservation::PAYMENT_METHODS.values
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
 
   delegate :location, to: :listing

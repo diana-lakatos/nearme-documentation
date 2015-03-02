@@ -17,6 +17,7 @@ class InstanceAdmin::BuySell::ProductTypesController < InstanceAdmin::BuySell::B
     if @product_type.save
       CustomAttributes::CustomAttribute::Creator.new(@product_type, bookable_noun: @product_type.name).create_spree_product_type_attributes!
       Utils::FormComponentsCreator.new(@product_type).create!
+      update_relevant_translations
       flash[:success] = t 'flash_messages.instance_admin.buy_sell.product_types.created'
       redirect_to instance_admin_buy_sell_product_types_path
     else
@@ -28,6 +29,7 @@ class InstanceAdmin::BuySell::ProductTypesController < InstanceAdmin::BuySell::B
   def update
     @product_type = product_type_scope.find(params[:id])
     if @product_type.update_attributes(product_type_params)
+      update_relevant_translations
       flash[:success] = t 'flash_messages.instance_admin.buy_sell.product_types.updated'
       redirect_to instance_admin_buy_sell_product_types_path
     else
@@ -52,4 +54,14 @@ class InstanceAdmin::BuySell::ProductTypesController < InstanceAdmin::BuySell::B
   def product_type_params
     params.require(:product_type).permit(secured_params.product_type)
   end
+
+  def update_relevant_translations
+    return unless params[:translations]
+    %w(buy_sell_market.checkout.manual_payment buy_sell_market.checkout.manual_payment_description).each do |key|
+      t = Translation.where(instance_id: PlatformContext.current.instance.id, key: key, locale: I18n.locale).first_or_initialize
+      t.update_attribute(:value, params[:translations][key])
+    end
+  end
+
 end
+

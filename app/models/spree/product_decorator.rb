@@ -95,6 +95,14 @@ Spree::Product.class_eval do
     false
   end
 
+  def possible_manual_payment?
+    super && product_type.try(:possible_manual_payment)
+  end
+
+  def action_rfq?
+    super && product_type.try(:possible_manual_payment)
+  end
+
   private
 
   def shipping_category_presence

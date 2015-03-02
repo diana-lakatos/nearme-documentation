@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150302101822) do
+ActiveRecord::Schema.define(version: 20150302133802) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1572,6 +1572,7 @@ ActiveRecord::Schema.define(version: 20150302101822) do
     t.datetime "shippo_rate_purchased_at"
     t.integer  "platform_context_detail_id"
     t.string   "platform_context_detail_type"
+    t.string   "payment_method"
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id", using: :btree
@@ -1724,10 +1725,11 @@ ActiveRecord::Schema.define(version: 20150302101822) do
     t.integer  "instance_id"
     t.datetime "deleted_at"
     t.boolean  "action_rfq"
+    t.boolean  "possible_manual_payment"
   end
 
   create_table "spree_products", force: true do |t|
-    t.string   "name",                  default: "",    null: false
+    t.string   "name",                    default: "",    null: false
     t.text     "description"
     t.datetime "available_on"
     t.datetime "deleted_at"
@@ -1744,16 +1746,17 @@ ActiveRecord::Schema.define(version: 20150302101822) do
     t.integer  "user_id"
     t.hstore   "extra_properties"
     t.hstore   "status"
-    t.boolean  "products_public",       default: true
-    t.boolean  "approved",              default: true
-    t.text     "cross_sell_skus",       default: [],                 array: true
+    t.boolean  "products_public",         default: true
+    t.boolean  "approved",                default: true
+    t.text     "cross_sell_skus",         default: [],                 array: true
     t.integer  "administrator_id"
-    t.boolean  "shippo_enabled",        default: false
-    t.boolean  "draft",                 default: false
-    t.float    "average_rating",        default: 0.0
-    t.integer  "wish_list_items_count", default: 0
+    t.boolean  "shippo_enabled",          default: false
+    t.boolean  "draft",                   default: false
+    t.float    "average_rating",          default: 0.0
+    t.integer  "wish_list_items_count",   default: 0
     t.integer  "product_type_id"
     t.boolean  "action_rfq"
+    t.boolean  "possible_manual_payment"
   end
 
   add_index "spree_products", ["available_on"], name: "index_spree_products_on_available_on", using: :btree
