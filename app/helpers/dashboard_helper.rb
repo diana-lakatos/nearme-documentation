@@ -67,4 +67,9 @@ module DashboardHelper
     caption = t('dashboard.nav.menu') if caption.include?('translation missing')
     caption
   end
+
+  def booking_types_active_toggle(transactable, booking_type, content = false)
+    'active' if transactable.booking_type == booking_type \
+             || (content && transactable.booking_type == 'overnight' && booking_type == 'regular')
+  end
 end

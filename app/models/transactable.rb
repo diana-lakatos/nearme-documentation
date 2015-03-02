@@ -70,13 +70,13 @@ class Transactable < ActiveRecord::Base
   scope :where_attribute_has_value, -> (attr, value) { where("properties @> '#{attr}=>#{value}'")}
 
   # == Callbacks
-  before_validation :set_activated_at
-  before_validation :set_enabled
+  before_validation :set_activated_at, :set_enabled
 
   # == Validations
   validates_presence_of :location, :transactable_type
   validates_with PriceValidator
   validates :photos, :length => { :minimum => 1 }, :unless => :photo_not_required
+  validates_inclusion_of :booking_type, in: TransactableType::BOOKING_TYPES
 
   after_save :set_external_id
 
@@ -113,10 +113,6 @@ class Transactable < ActiveRecord::Base
     end
   end
 
-  def action_overnight_booking?
-    !action_hourly_booking? && transactable_type.action_overnight_booking?
-  end
-
   # Trigger clearing of all existing availability rules on save
   def defer_availability_rules=(clear)
     if clear.to_i == 1
@@ -135,7 +131,7 @@ class Transactable < ActiveRecord::Base
   alias_method :defer_availability_rules?, :defer_availability_rules
 
   def open_on?(date, start_min = nil, end_min = nil)
-    if transactable_type.action_schedule_booking?
+    if schedule_booking?
       hour = start_min/60
       minute = start_min - (60 * hour)
       # to datetime is to have date in UTC otherwise we won't be able to check in IceCube schedule :|
@@ -387,7 +383,13 @@ class Transactable < ActiveRecord::Base
   end
 
   def bookable?
-    !self.transactable_type.action_schedule_booking? || (self.transactable_type.action_schedule_booking? && self.schedule.present? && self.next_available_occurrences(1).any? )
+    !schedule_booking? || (schedule_booking? && schedule.present? && next_available_occurrences(1).any? )
+  end
+
+  TransactableType::BOOKING_TYPES.each do |bt|
+    define_method("#{bt}_booking?") do
+      booking_type == bt
+    end
   end
 
   private

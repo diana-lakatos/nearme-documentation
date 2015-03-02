@@ -169,7 +169,7 @@ class ReservationDecorator < Draper::Decorator
   end
 
   def humanized_number_of_periods
-    listing.action_overnight_booking? ? date_presenter.nights_in_words : date_presenter.days_in_words
+    listing.overnight_booking? ? date_presenter.nights_in_words : date_presenter.days_in_words
   end
 
   def feedback_object

@@ -69,7 +69,7 @@
 
 .clearfix.padding-row
 
-- unless @listings.map(&:transactable_type).uniq.any? { |tt| tt.action_schedule_booking }
+- unless @listings.any?(&:schedule_booking?)
   - content_for :script do
     :javascript
       // Initialize the ui controller

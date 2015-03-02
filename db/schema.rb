@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150226193231) do
+ActiveRecord::Schema.define(version: 20150228090906) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2681,6 +2681,7 @@ ActiveRecord::Schema.define(version: 20150226193231) do
     t.integer  "fixed_price_cents"
     t.integer  "min_fixed_price_cents"
     t.integer  "max_fixed_price_cents"
+    t.string   "booking_type",                   default: "regular"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree

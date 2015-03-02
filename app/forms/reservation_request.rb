@@ -47,7 +47,7 @@ class ReservationRequest < Form
     end
 
     if @listing
-      if @reservation.action_hourly_booking? || @listing.transactable_type.action_schedule_booking?
+      if @reservation.action_hourly_booking? || @listing.schedule_booking?
         @start_minute = start_minute.try(:to_i)
         @end_minute = end_minute.try(:to_i)
       else
@@ -55,7 +55,7 @@ class ReservationRequest < Form
         @end_minute   = nil
       end
 
-      if listing.transactable_type.action_schedule_booking?
+      if listing.schedule_booking?
         if @dates.is_a?(String)
           @start_minute = @dates.to_datetime.min.to_i + (60 * @dates.to_datetime.hour.to_i)
           @end_minute = @start_minute
@@ -233,7 +233,7 @@ class ReservationRequest < Form
   def files_cannot_be_empty
     reservation.payment_documents.each do |document|
       unless document.valid?
-        self.errors.add(:base, "file_cannot_be_empty".to_sym) unless self.errors[:base].include?(I18n.t("activemodel.errors.models.reservation_request.attributes.base.file_cannot_be_empty")) 
+        self.errors.add(:base, "file_cannot_be_empty".to_sym) unless self.errors[:base].include?(I18n.t("activemodel.errors.models.reservation_request.attributes.base.file_cannot_be_empty"))
       end
     end
   end

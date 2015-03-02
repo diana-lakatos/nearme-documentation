@@ -37,3 +37,14 @@ Given(/^I remove first transactable$/) do
   first(:css, '.listings div:last-child > a:last-child').click
 end
 
+Given(/^transactable type has multiple booking types enabled$/) do
+  TransactableType.first.update_attribute(:action_overnight_booking, true)
+end
+
+Given(/^I click on overnight booking tab$/) do
+  first(:css, "ul[data-booking-type-list] a[data-booking-type=\"overnight\"]").click
+end
+
+Then(/^transactables booking type is overnight$/) do
+  Transactable.last.booking_type.should == 'overnight'
+end

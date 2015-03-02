@@ -1,5 +1,6 @@
 - custom_attribute_names = @transactable_type.custom_attributes.collect { |custom_attribute| custom_attribute.name }
 = f.hidden_field :transactable_type_id, value: @transactable_type.id
+= f.hidden_field :booking_type, value: @transactable.booking_type, 'data-booking-type' => true
 = f.input :id, :as => :hidden
 
 - @form_components.each do |form_component|
@@ -34,20 +35,15 @@
       - unless platform_context.instance.listing_amenity_types.count.zero?
         = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :label => "Amenities", :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'selectpicker', :multiple => true }
     - when 'price'
-      = render partial: "price_form", locals: { f: f }
+      = render partial: 'price_form', locals: { f: f }
     - when 'schedule'
-      - if @transactable_type.action_schedule_booking?
-        %div{:class => "row #{"error" if f.object.errors.include?(:fixed_price).present?}"}
-          .col-md-3
-            %label
-              %abbr{:title => "required"}= t('simple_form.required.mark')
-              =t('simple_form.labels.listings.schedule')
-          .col-md-9
-            = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule(schedule: f.object.transactable_type.schedule.try(:schedule)) do |schedule_form|
-              = schedule_form.hidden_field :schedule, class: 'icui'
-      - else
+      - if f.object.transactable_type.regular_booking_enabled?
         = render partial: 'availability_rules_form', locals: { f: f }
+      - if f.object.transactable_type.schedule_booking_enabled?
+        = render partial: 'schedule_form', locals: { f: f }
     - when 'photos'
+      / need to render tabs here because it must be rendered after price and schedule
+      = render partial: 'shared/booking_types_tabs', locals: { f: f }
       .row
         .col-md-3
           = f.label :photos
