@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150228090906) do
+ActiveRecord::Schema.define(version: 20150302101822) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1567,11 +1567,11 @@ ActiveRecord::Schema.define(version: 20150228090906) do
     t.integer  "partner_id"
     t.decimal  "service_fee_buyer_percent",               precision: 5,  scale: 2, default: 0.0
     t.decimal  "service_fee_seller_percent",              precision: 5,  scale: 2, default: 0.0
+    t.string   "guest_token"
+    t.integer  "state_lock_version",                                               default: 0,       null: false
     t.datetime "shippo_rate_purchased_at"
     t.integer  "platform_context_detail_id"
     t.string   "platform_context_detail_type"
-    t.string   "guest_token"
-    t.integer  "state_lock_version",                                               default: 0,       null: false
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id", using: :btree
@@ -1723,6 +1723,7 @@ ActiveRecord::Schema.define(version: 20150228090906) do
     t.string   "name"
     t.integer  "instance_id"
     t.datetime "deleted_at"
+    t.boolean  "action_rfq"
   end
 
   create_table "spree_products", force: true do |t|
@@ -1752,6 +1753,7 @@ ActiveRecord::Schema.define(version: 20150228090906) do
     t.float    "average_rating",        default: 0.0
     t.integer  "wish_list_items_count", default: 0
     t.integer  "product_type_id"
+    t.boolean  "action_rfq"
   end
 
   add_index "spree_products", ["available_on"], name: "index_spree_products_on_available_on", using: :btree

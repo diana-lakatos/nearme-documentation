@@ -87,6 +87,14 @@ Spree::Product.class_eval do
     self.update(average_rating: average_rating)
   end
 
+  def action_free?
+    false
+  end
+
+  def action_free_booking?
+    false
+  end
+
   private
 
   def shipping_category_presence

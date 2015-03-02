@@ -23,6 +23,7 @@ class SecuredParams
       :depth,
       :width,
       :height,
+      :action_rfq,
       image_ids: [],
       company_address_attributes: nested(self.address),
       images_attributes: nested(self.spree_image),
@@ -451,7 +452,8 @@ class SecuredParams
 
   def product_type
     [
-      :name
+      :name,
+      :action_rfq
     ]
   end
 
