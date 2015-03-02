@@ -104,7 +104,7 @@ Spree::Order.class_eval do
   end
 
   def possible_manual_payment?
-    products.all?(&:possible_manual_payment?)
+    instance.possible_manual_payment?
   end
 
 end

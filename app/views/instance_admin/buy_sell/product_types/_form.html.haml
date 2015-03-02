@@ -9,19 +9,6 @@
     .row
       .input-container.col-xs-12
         = f.input :action_rfq, input_html: { class: 'form-control' }, label: 'Request for Quote'
-    .row
-      .input-container.col-xs-4
-        = f.input :possible_manual_payment, input_html: { class: 'form-control' }
-      .input-container.col-xs-4
-        .control-group.optional
-          %label.optional.control-label Label translation
-          .controls
-            %input{name: "translations[buy_sell_market.checkout.manual_payment]", class: 'form-control', value: t('buy_sell_market.checkout.manual_payment') }
-      .input-container.col-xs-4
-        .control-group.optional
-          %label.optional.control-label Description translation
-          .controls
-            %input{name: 'translations[buy_sell_market.checkout.manual_payment_description]', class: 'form-control', value: t('buy_sell_market.checkout.manual_payment_description') }
 
   .content-container
     = f.button :submit, 'Save', class: 'btn btn-green pull-right'

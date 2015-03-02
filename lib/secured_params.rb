@@ -306,6 +306,7 @@ class SecuredParams
       :bookable_noun,
       :wish_lists_enabled,
       :wish_lists_icon_set,
+      :possible_manual_payment,
       user_required_fields: [],
       transactable_types_attributes: nested(self.transactable_type),
       listing_amenity_types_attributes: nested(self.amenity_type),
@@ -454,8 +455,7 @@ class SecuredParams
   def product_type
     [
       :name,
-      :action_rfq,
-      :possible_manual_payment
+      :action_rfq
     ]
   end
 

@@ -55,13 +55,5 @@ class InstanceAdmin::BuySell::ProductTypesController < InstanceAdmin::BuySell::B
     params.require(:product_type).permit(secured_params.product_type)
   end
 
-  def update_relevant_translations
-    return unless params[:translations]
-    %w(buy_sell_market.checkout.manual_payment buy_sell_market.checkout.manual_payment_description).each do |key|
-      t = Translation.where(instance_id: PlatformContext.current.instance.id, key: key, locale: I18n.locale).first_or_initialize
-      t.update_attribute(:value, params[:translations][key])
-    end
-  end
-
 end
 
