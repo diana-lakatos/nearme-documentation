@@ -9,7 +9,7 @@ FactoryGirl.define do
     factory :form_component_transactable do
       form_type { FormComponent::TRANSACTABLE_ATTRIBUTES }
 
-      form_fields { [ {'transactable' => 'schedule'},{'transactable' => 'location_id'}, { 'transactable' => 'price' }, {'transactable' => 'description'}, { 'transactable' => 'photos' }, {'transactable' => 'quantity'}, { 'transactable' => 'name' }, { 'transactable' => 'listing_type' }, { 'transactable' => 'waiver_agreement_templates'} ] }
+      form_fields { [ {'transactable' => 'schedule'},{'transactable' => 'location_id'}, { 'transactable' => 'price' }, {'transactable' => 'description'}, { 'transactable' => 'photos' }, {'transactable' => 'quantity'}, { 'transactable' => 'name' }, { 'transactable' => 'listing_type' }, { 'transactable' => 'waiver_agreement_templates'}, {'transactable' => 'documents_upload'} ] }
     end
 
   end

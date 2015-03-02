@@ -705,6 +705,7 @@ DesksnearMe::Application.routes.draw do
     get 'organizations', to: 'organizations#index'
   end
 
+  get "/dashboard/api", to: 'dashboard#api', as: :spree
   get "/pages/:path", to: 'pages#show', as: :pages
   get "/w-hotels-desks-near-me", to: 'locations#w_hotels', as: :w_hotels_location
   get "/W-hotels-desks-near-me", to: 'locations#w_hotels'

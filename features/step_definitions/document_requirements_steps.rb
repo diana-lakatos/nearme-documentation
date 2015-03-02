@@ -25,11 +25,11 @@ And /^Document requirement for transactable exists$/ do
 end
 
 And /^Visit edit listing page$/ do
-  visit edit_dashboard_transactable_type_transactable_path(listing.transactable_type, listing)
+  visit edit_dashboard_company_transactable_type_transactable_path(listing.transactable_type, listing)
 end
 
 And /^Visit edit product page$/ do
-  visit edit_dashboard_product_path(@product)
+  visit edit_dashboard_company_product_type_product_path(@product.product_type, @product)
 end
 
 And /^Updated document requirement should be present in form$/ do
@@ -45,12 +45,12 @@ And /^Two document requirements should be present in form$/ do
 end
 
 Given /^Product and document requirement for it exist$/ do
-  @product = FactoryGirl.create(:base_product, company: user.companies.first, user: user)
+  @product = FactoryGirl.create(:base_product, company: user.companies.first, user: user, product_type: user.instance.product_types.first)
   @document_requirement = FactoryGirl.create(:document_requirement, item: @product)
 end
 
 When /^I edit first product$/ do
-  visit edit_dashboard_product_path(@product)
+  visit edit_dashboard_company_product_type_product_path(@product.product_type, @product)
 end
 
 And /^document upload enabled$/ do
