@@ -1,0 +1,26 @@
+- title "Listings"
+
+.dash-head.clearfix
+  %p MANAGE LISTINGS
+  = link_to new_dashboard_company_transactable_type_transactable_path(@transactable_type), class: "new-transactable-btn dash-head-btn btn blue pull-right" do
+    List New Item
+  = link_to '#', class: "bulk-upload blue pull-right", data: { modal: true, href: new_dashboard_company_transactable_type_data_upload_path(@transactable_type) } do
+    Bulk Upload
+.dash-body
+  .dash-sub-nav
+    %ul
+      - TransactableType.all.each do |transactable_type|
+        %li{class: transactable_type == @transactable_type ? "active" : ""}
+          = link_to transactable_type.name, dashboard_company_transactable_type_transactables_path(transactable_type)
+  .listings-header
+    .row
+      .col-md-3
+        %p Picture
+      .col-md-3
+        %p Name
+      .col-md-3
+        %p Location
+      .col-md-2
+        %p Price
+  = render @transactables
+  = will_paginate_styled @transactables

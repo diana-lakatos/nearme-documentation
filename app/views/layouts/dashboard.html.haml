@@ -53,9 +53,9 @@
         = render 'layouts/navbar'
     - unless render_without_left_menu?
       .container.page-wrapper.row
-        = render 'manage/layout/left_navigation'
+        = render 'dashboard/layout/left_navigation'
         .col-md-10.page-content
-          = render 'manage/layout/mobile_navigation'
+          = render 'dashboard/layout/mobile_navigation'
           = yield
     - else
       .container.page-wrapper.top.row

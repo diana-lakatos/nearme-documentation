@@ -18,7 +18,7 @@
               = link_to manage_locations_path, :class => (active_tab == :locations) ? 'active' : '' do
                 %span Locations
             %li
-              = link_to dashboard_host_reservations_path, :class => (active_tab == :guests) ? 'active' : '' do
+              = link_to dashboard_company_host_reservations_path, :class => (active_tab == :guests) ? 'active' : '' do
                 %span= platform_context.lessee.capitalize.pluralize
 
           -if TransactableType.all.any? { |tt| t.has_action?('Request For Quote') }
@@ -26,7 +26,7 @@
               = link_to manage_support_tickets_path, :class => (active_tab == :rfq) ? 'active' : '' do
                 %span= "#{t('reservations.rfq_short')} (#{current_user.companies.first.rfq_count})"
           %li
-            = link_to dashboard_analytics_path, :class => (active_tab == :analytics) ? 'active' : '' do
+            = link_to dashboard_company_analytics_path, :class => (active_tab == :analytics) ? 'active' : '' do
               %span Analytics
           / %li
           /   = link_to transfers_dashboard_path, :class => (active_tab == :transfers) ? 'active' : '' do
@@ -36,17 +36,17 @@
               = link_to edit_dashboard_company_path(current_user.companies.first), :class => (active_tab == :company) ? 'active' : '' do
                 %span Company
             %li
-              = link_to dashboard_users_path, :class => (active_tab == :users) ? 'active' : '' do
+              = link_to dashboard_company_users_path, :class => (active_tab == :users) ? 'active' : '' do
                 %span Users
             %li
-              = link_to dashboard_waiver_agreement_templates_path, :class => (active_tab == :waiver_agreement_template) ? 'active' : '' do
+              = link_to dashboard_company_waiver_agreement_templates_path, :class => (active_tab == :waiver_agreement_template) ? 'active' : '' do
                 %span Waiver Agreements
             - if(transactable_type = TransactableType.first).present?
               %li
                 = link_to manage_transactable_type_data_uploads_path(transactable_type), :class => (active_tab == :data_upload) ? 'active' : '' do
                   %span Data Upload
             %li
-              = link_to edit_dashboard_white_label_path(current_user.companies.first), :class => (active_tab == :white_label) ? 'active' : '' do
+              = link_to edit_dashboard_company_white_label_path(current_user.companies.first), :class => (active_tab == :white_label) ? 'active' : '' do
                 %span White-label
             - if platform_context.instance.rating_systems.where(active: true).present?
               %li

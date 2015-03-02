@@ -25,7 +25,7 @@
               %h2
                 = t 'location.the_location'
                 - if current_user.try(:admin) && @location.administrator.present?
-                  = link_to login_as_admin_user_path(@location.administrator, return_to: edit_manage_location_path(@location)),
+                  = link_to login_as_admin_user_path(@location.administrator, return_to: edit_dashboard_company_location_path(@location)),
                       :method => :post, data: { confirm: t('location.confirmations.admin_login') } do
                     %span.ico-edit
 

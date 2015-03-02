@@ -30,7 +30,7 @@ class Dashboard::HostRecurringBookingsController < Dashboard::BaseController
         flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
       end
     end
-    redirect_to dashboard_host_reservations_url
+    redirect_to dashboard_company_host_reservations_url
   end
 
   def rejection_form
@@ -48,7 +48,7 @@ class Dashboard::HostRecurringBookingsController < Dashboard::BaseController
     else
       flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
     end
-    redirect_to dashboard_host_reservations_url
+    redirect_to dashboard_company_host_reservations_url
     render_redirect_url_as_json if request.xhr?
   end
 
@@ -62,7 +62,7 @@ class Dashboard::HostRecurringBookingsController < Dashboard::BaseController
     else
       flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
     end
-    redirect_to dashboard_host_reservations_url
+    redirect_to dashboard_company_host_reservations_url
   end
 
   private

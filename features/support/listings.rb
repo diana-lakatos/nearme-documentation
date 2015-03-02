@@ -1,6 +1,6 @@
 module ListingsHelpers
   def create_listing(location, name="Awesome Listing")
-    visit new_manage_location_listing_url(location)
+    visit new_dashboard_company_transactable_type_transactable_path(location)
     create_listing_without_visit(location, name) do
       yield if block_given?
     end

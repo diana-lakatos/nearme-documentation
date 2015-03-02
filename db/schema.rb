@@ -1567,11 +1567,11 @@ ActiveRecord::Schema.define(version: 20150226193231) do
     t.integer  "partner_id"
     t.decimal  "service_fee_buyer_percent",               precision: 5,  scale: 2, default: 0.0
     t.decimal  "service_fee_seller_percent",              precision: 5,  scale: 2, default: 0.0
-    t.string   "guest_token"
-    t.integer  "state_lock_version",                                               default: 0,       null: false
     t.datetime "shippo_rate_purchased_at"
     t.integer  "platform_context_detail_id"
     t.string   "platform_context_detail_type"
+    t.string   "guest_token"
+    t.integer  "state_lock_version",                                               default: 0,       null: false
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id", using: :btree

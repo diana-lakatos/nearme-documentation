@@ -37,7 +37,7 @@ class RecurringBookingDrop < BaseDrop
   end
 
   def manage_guests_dashboard_url
-    routes.dashboard_host_reservations_path
+    routes.dashboard_company_host_reservations_path
   end
 
   def guest_rating_reservation_url
@@ -69,11 +69,11 @@ class RecurringBookingDrop < BaseDrop
   end
 
   def reservation_confirm_url
-    routes.confirm_manage_listing_reservation_path(@reservation.listing, @reservation, :token => @reservation.listing.administrator.try(:temporary_token))
+    routes.confirm_dashboard_host_recurring_booking_path(@reservation.listing, @reservation, :token => @reservation.listing.administrator.try(:temporary_token))
   end
 
   def reservation_confirm_url_with_tracking
-    routes.confirm_manage_listing_reservation_path(@reservation.listing, @reservation, :token => @reservation.listing.administrator.try(:temporary_token), :track_email_event => true)
+    routes.confirm_dashboard_host_recurring_booking_path(@reservation.listing, @reservation, :token => @reservation.listing.administrator.try(:temporary_token), :track_email_event => true)
   end
 
   def start_date

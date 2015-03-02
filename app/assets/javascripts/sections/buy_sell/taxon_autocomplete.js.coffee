@@ -5,13 +5,13 @@ class @TaxonAutocomplete
         placeholder: "Enter a category"
         multiple: true
         initSelection: (element, callback) ->
-          url = '/manage/buy_sell/api/taxons?ids=' + element.val()
+          url = '/dashboard/api/taxons?ids=' + element.val()
 
           $.getJSON url, null, (data) ->
             callback data
 
         ajax:
-          url: '/manage/buy_sell/api/taxons'
+          url: '/dashboard/api/taxons'
           datatype: "json"
           data: (term, page) ->
             per_page: 50

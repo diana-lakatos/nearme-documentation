@@ -168,7 +168,9 @@ class SecuredParams
     [
       :name,
       :in_top_nav,
-      :top_nav_position
+      :top_nav_position,
+      :parent_id,
+      :child_index
     ]
   end
 

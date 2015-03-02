@@ -1,0 +1,106 @@
+/*===== TABLES =====*/
+table {
+  width: 100%;
+  margin-top: 30px;
+
+  thead {
+    border-bottom: solid $color-light-gray 1px;
+  }
+
+  th {
+    padding-bottom: 20px;
+  }
+
+  tbody tr:nth-child(1) td {
+    padding-top: 20px;
+  }
+
+  th, td {
+    font-size: 16px;
+    font-weight: 300;
+    color: $color-dark-gray;
+  }
+
+  a {
+    color: $color-blue;
+    text-decoration: none;
+  }
+
+  td.delete a {
+    color: #e85c41;
+  }
+
+  &.payment-totals {
+    width: 55%;
+    float: right;
+  }
+
+  &.order-header td {
+    vertical-align: top;
+  }
+
+}
+
+.payment-totals {
+
+  .total {
+    font-size: 18px;
+    font-weight: 400;
+    color: #3a3a3a;
+  }
+  
+  td {
+    text-align: right;
+  }
+}
+
+.table {
+  
+  &>tbody>tr>td {
+    border-top: none;
+  }
+
+  &.orders {
+
+    thead>tr>th {
+      border-bottom: none;
+    }
+
+    thead {
+      border-bottom: none;
+    }
+
+    td {
+      padding: 0 10px;
+    }
+
+    .status {
+      color: #fdcc51;
+    }
+  }
+}
+
+.action-row {
+  text-align: right;
+  margin-bottom: 15px;
+
+  .btn {
+    margin-left: 15px;
+  }
+}
+
+.divider {
+  border: 1px solid #d5d5d5;
+  margin: 40px 0;
+}
+
+table, table.payment-summary {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#waiver-agreement-template-list {
+  table td:last-child a {
+    display: block;
+  }
+}

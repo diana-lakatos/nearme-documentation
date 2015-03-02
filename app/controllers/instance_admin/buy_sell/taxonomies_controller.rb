@@ -8,6 +8,10 @@ class InstanceAdmin::BuySell::TaxonomiesController < InstanceAdmin::BuySell::Bas
     @taxonomy = taxonomy_scope.new
   end
 
+  def jstree
+    @taxonomy = taxonomy_scope.find(params[:id])
+  end
+
   def create
     @taxonomy = taxonomy_scope.new(taxonomy_params)
     if @taxonomy.save
@@ -39,22 +43,6 @@ class InstanceAdmin::BuySell::TaxonomiesController < InstanceAdmin::BuySell::Bas
     redirect_to instance_admin_buy_sell_taxonomies_path
   end
 
-  def edit_taxon
-    @taxonomy = taxonomy_scope.find(params[:id])
-    @taxon = @taxonomy.taxons.find(params[:taxon_id])
-  end
-
-  def update_taxon
-    @taxonomy = taxonomy_scope.find(params[:id])
-    @taxon = @taxonomy.taxons.find(params[:taxon_id])
-    if @taxon.update_attributes(taxon_params)
-      flash[:success] = t('flash_messages.buy_sell.taxon_updated')
-      redirect_to edit_instance_admin_buy_sell_taxonomy_path(@taxonomy)
-    else
-      render 'edit_taxon'
-    end
-  end
-
   private
 
   def taxonomy_scope
@@ -65,7 +53,4 @@ class InstanceAdmin::BuySell::TaxonomiesController < InstanceAdmin::BuySell::Bas
     params.require(:taxonomy).permit(secured_params.taxonomy)
   end
 
-  def taxon_params
-    params.require(:taxon).permit(secured_params.taxon)
-  end
 end

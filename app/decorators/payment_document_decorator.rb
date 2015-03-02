@@ -8,7 +8,7 @@ class Attachable::PaymentDocumentDecorator < Draper::Decorator
       if attachable.user == current_user
         h.link_to "#{t('dashboard.payment_documents.order')} #{ attachable.number }", dashboard_order_path(attachable) 
       else
-        h.link_to "#{t('dashboard.payment_documents.order')} #{ attachable.number }", dashboard_orders_received_path(attachable)
+        h.link_to "#{t('dashboard.payment_documents.order')} #{ attachable.number }", dashboard_company_orders_received_path(attachable)
       end
     else
       h.link_to "#{t('dashboard.payment_documents.reservation')} #{ attachable.id }", listing_path(attachable.listing)

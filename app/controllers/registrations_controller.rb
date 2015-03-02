@@ -128,7 +128,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def edit_avatar
     if request.xhr?
-      render partial: 'manage/photos/resize_form', :locals => { :form_url => update_avatar_path, :object => current_user.avatar, :object_url => current_user.avatar_url(:original) }
+      render partial: 'dashboard/photos/resize_form', :locals => { :form_url => update_avatar_path, :object => current_user.avatar, :object_url => current_user.avatar_url(:original) }
     end
   end
 
@@ -136,9 +136,9 @@ class RegistrationsController < Devise::RegistrationsController
     @user = current_user
     @user.avatar_transformation_data = { :crop => params[:crop], :rotate => params[:rotate] }
     if @user.save
-      render partial: 'manage/photos/resize_succeeded'
+      render partial: 'dashboard/photos/resize_succeeded'
     else
-      render partial: 'manage/photos/resize_form', :locals => { :form_url => update_avatar_path, :object => current_user.avatar, :object_url => current_user.avatar_url(:original) }
+      render partial: 'dashboard/photos/resize_form', :locals => { :form_url => update_avatar_path, :object => current_user.avatar, :object_url => current_user.avatar_url(:original) }
       render :edit_avatar
     end
   end
@@ -173,7 +173,7 @@ class RegistrationsController < Devise::RegistrationsController
       sign_in(@user)
       event_tracker.track_event_within_email(@user, request) if params[:track_email_event]
       flash[:success] = t('flash_messages.registrations.address_verified')
-      redirect_to @user.listings.count > 0 ? manage_locations_path : edit_user_registration_path
+      redirect_to @user.listings.count > 0 ? dashboard_company_locations_path : edit_user_registration_path
     else
       if @user.verified_at
         flash[:warning] = t('flash_messages.registrations.address_already_verified')

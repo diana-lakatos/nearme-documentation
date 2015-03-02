@@ -1,7 +1,0 @@
-= render :layout => 'manage/layout/dashboard' do
-  = render :partial => 'manage/locations/location_name_with_links', :locals => { :location => location }
-  = render :partial => 'manage/listings/listing_name_with_link', :locals => { :location => location, :listing => listing }
-  = render :partial => 'listing', :locals => {:listing => listing, :location => location, photos: photos}
-
-- content_for :domready do
-  $(function() { new Dashboard.ListingController($('#listing-form')) });

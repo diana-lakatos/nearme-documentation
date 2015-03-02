@@ -1,0 +1,10 @@
+- title t('dashboard.nav.payouts')
+
+.dash-head.clearfix
+  %p= t('dashboard.nav.payouts')
+
+.dash-body
+  = simple_form_for @company, url: dashboard_company_payouts_path, wrapper: :bs3 do |f|
+    = render partial: 'form', locals: { f: f }
+    .submit-bar
+      = f.submit 'Save', class: 'btn medium blue'

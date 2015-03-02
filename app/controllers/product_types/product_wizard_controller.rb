@@ -22,7 +22,7 @@ class ProductTypes::ProductWizardController < ApplicationController
         flash[:notice] = t('flash_messages.space_wizard.draft_saved', bookable_noun: platform_context.decorate.bookable_noun)
         redirect_to action: :new
       else
-        redirect_to dashboard_product_type_products_path(@product_type), notice: t('flash_messages.space_wizard.item_listed', bookable_noun: platform_context.decorate.bookable_noun)
+        redirect_to dashboard_company_product_type_products_path(@product_type), notice: t('flash_messages.space_wizard.item_listed', bookable_noun: platform_context.decorate.bookable_noun)
       end
     else
       render :new
@@ -43,7 +43,7 @@ class ProductTypes::ProductWizardController < ApplicationController
 
   def redirect_to_dashboard_if_registration_completed
     if current_user.try(:registration_completed?)
-      #redirect_to dashboard_product_type_products_path(@product_type)
+      #redirect_to dashboard_company_product_type_products_path(@product_type)
     end
   end
 

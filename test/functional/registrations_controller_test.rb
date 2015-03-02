@@ -117,7 +117,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       @location = FactoryGirl.create(:location, :company => @company)
       FactoryGirl.create(:transactable, :location => @location)
       get :verify, :id => @user.id, :token => @user.email_verification_token
-      assert_redirected_to manage_locations_path
+      assert_redirected_to dashboard_company_locations_path
     end
 
     should "redirect verified user without listing to settings" do
