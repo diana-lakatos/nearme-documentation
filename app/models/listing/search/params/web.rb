@@ -1,6 +1,7 @@
 class Listing::Search::Params::Web < Listing::Search::Params
   attr :location_string
-  attr_reader :listing_types_ids, :location_types_ids, :attribute_values, :industries_ids, :lntype, :lgtype, :lgpricing, :lntypes, :lgattribute, :sort
+  attr_reader :listing_types_ids, :location_types_ids, :attribute_values, :industries_ids, :lntype, :lgtype, :lgpricing,
+              :lntypes, :lgattribute, :sort, :dates, :start_date, :end_date, :display_dates
 
   def initialize(options)
     super
@@ -12,6 +13,10 @@ class Listing::Search::Params::Web < Listing::Search::Params
     @lgattribute = @options[:lgattribute].blank? ? nil : @options[:lgattribute]
     @lgpricing = @options[:lgpricing]
     @sort = (@options[:sort].presence || 'relevance').inquiry
+    @dates = (@options[:availability].present? && @options[:availability][:dates][:start].present? &&
+      @options[:availability][:dates][:end].present?) ? @options[:availability][:dates] : nil
+    @display_dates = (@options[:start_date].present? && @options[:end_date].present?) ?
+      { start: @options[:start_date], end: @options[:end_date] } : nil
   end
 
   def bounding_box
@@ -106,5 +111,20 @@ class Listing::Search::Params::Web < Listing::Search::Params
 
   def lgpricing_filters
     @lgpricing.to_s.split(',')
+  end
+
+  def start_date
+    return nil unless @dates
+    @dates[:start]
+  end
+
+  def end_date
+    return nil unless @dates
+    @dates[:end]
+  end
+
+  def display_dates
+    return { start: nil, end: nil } unless @display_dates
+    @display_dates
   end
 end

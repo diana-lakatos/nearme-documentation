@@ -159,6 +159,10 @@ class Search.SearchMixedController extends Search.SearchController
       per_page: @container.find('#per_page').val()
       loc: @form.find("input#search").val().replace(', United States', '')
       page: page || 1
+      start_date: @container.find('input[name="fake_start_date"]').val()
+      end_date: @container.find('input[name="fake_end_date"]').val()
+      avilability_start: @container.find('input[availability_dates_start]').val()
+      avilability_end: @container.find('input[availability_dates_end]').val()
     )
     super
 
@@ -231,7 +235,8 @@ class Search.SearchMixedController extends Search.SearchController
     params = @getSearchParams()
     filtered_params = []
     for k, param of params
-      if $.inArray(param["name"], ['lgtype', 'lntype', 'loc', 'lgpricing', 'lgattribute', 'transactable_type_id']) > -1
+      if $.inArray(param["name"], ['lgtype', 'lntype', 'loc', 'lgpricing', 'lgattribute', 'transactable_type_id',
+                                   'start_date', 'end_date', 'availability[dates][start]', 'availability[dates][end]']) > -1
         filtered_params.push {name: param["name"], value: param["value"]}
     if @sortValue != 'relevance'
       filtered_params.push {name: 'sort', value: @sortValue}

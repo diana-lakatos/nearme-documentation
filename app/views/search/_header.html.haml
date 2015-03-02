@@ -8,6 +8,10 @@
         = hidden_field_tag :transactable_type_id, @transactable_type.id
         = hidden_field_tag :ignore_search_event, 0
         = hidden_field_tag :page, 1
+        = hidden_field_tag :start_date, @searcher.search.display_dates[:start]
+        = hidden_field_tag :end_date, @searcher.search.display_dates[:end]
+        = hidden_field_tag 'availability[dates][start]', @searcher.search.start_date
+        = hidden_field_tag 'availability[dates][end]', @searcher.search.end_date
         .row-fluid
           .span12
             .list-map-toggle

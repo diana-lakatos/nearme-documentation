@@ -11,7 +11,10 @@ class Transactable < ActiveRecord::Base
   has_custom_attributes target_type: 'TransactableType', target_id: :transactable_type_id
 
   has_many :document_requirements, as: :item, dependent: :destroy, inverse_of: :item
+
   has_many :reservations, inverse_of: :listing
+  has_many :periods, through: :reservations
+
   has_many :recurring_bookings, inverse_of: :listing
   has_many :photos, dependent: :destroy, inverse_of: :listing do
     def thumb
@@ -56,20 +59,33 @@ class Transactable < ActiveRecord::Base
   before_destroy :decline_reservations
 
   # == Scopes
-  scope :featured, -> {where(%{ (select count(*) from "photos" where transactable_id = "listings".id) > 0  }).
-                       includes(:photos).order(%{ random() }).limit(5) }
-  scope :draft,    -> { where('transactables.draft IS NOT NULL') }
-  scope :active,   -> { where('transactables.draft IS NULL') }
-  scope :latest,   -> { order("transactables.created_at DESC") }
-  scope :visible,  -> { where(:enabled => true) }
+  scope :featured, -> { where(%{ (select count(*) from "photos" where transactable_id = "listings".id) > 0  }).
+    includes(:photos).order(%{ random() }).limit(5) }
+  scope :draft, -> { where('transactables.draft IS NOT NULL') }
+  scope :active, -> { where('transactables.draft IS NULL') }
+  scope :latest, -> { order("transactables.created_at DESC") }
+  scope :visible, -> { where(:enabled => true) }
   scope :searchable, -> { active.visible }
   scope :for_transactable_type_id, -> transactable_type_id { where(transactable_type_id: transactable_type_id) }
   scope :for_groupable_transactable_types, -> { joins(:transactable_type).where('transactable_types.groupable_with_others = ?', true) }
-  scope :filtered_by_listing_types_ids,  -> listing_types_ids { where("(transactables.properties->'listing_type') IN (?)", listing_types_ids) if listing_types_ids }
-  scope :filtered_by_price_types,  -> price_types { where([(price_types - ['free']).map{|pt| "#{pt}_price_cents IS NOT NULL"}.join(' OR '),
-                                                           ("action_free_booking=true" if price_types.include?('free'))].reject(&:blank?).join(' OR ')) }
-  scope :filtered_by_attribute_values,  -> attribute_values { where("(transactables.properties->'filterable_attribute') IN (?)", attribute_values) if attribute_values }
-  scope :where_attribute_has_value, -> (attr, value) { where("properties @> '#{attr}=>#{value}'")}
+  scope :filtered_by_listing_types_ids, -> listing_types_ids { where("(transactables.properties->'listing_type') IN (?)", listing_types_ids) if listing_types_ids }
+  scope :filtered_by_price_types, -> price_types { where([(price_types - ['free']).map { |pt| "#{pt}_price_cents IS NOT NULL" }.join(' OR '),
+                                                          ("action_free_booking=true" if price_types.include?('free'))].reject(&:blank?).join(' OR ')) }
+  scope :filtered_by_attribute_values, -> attribute_values { where("(transactables.properties->'filterable_attribute') IN (?)", attribute_values) if attribute_values }
+  scope :where_attribute_has_value, -> (attr, value) { where("properties @> '#{attr}=>#{value}'") }
+
+  scope :available_on, -> (start_date, end_date) {
+    where_sql = <<-SQL
+      ((SELECT COALESCE(MAX(qty), 0) FROM (SELECT SUM(reservations.quantity) as qty
+      FROM "reservations" INNER JOIN "reservation_periods" ON "reservation_periods"."reservation_id" = "reservations"."id"
+      AND "reservation_periods"."deleted_at" IS NULL AND "reservations"."listings_public" = 't' AND ("reservations"."state"
+      NOT IN ('cancelled_by_guest','cancelled_by_host','rejected')) AND "reservations"."transactable_id" = "transactables"."id"
+      WHERE "reservation_periods"."date" BETWEEN ? AND ?
+      GROUP BY reservation_periods.date) AS my_virtual_table) < transactables.quantity)
+    SQL
+
+    includes(:reservations).where(where_sql, start_date, end_date)
+  }
 
   # == Callbacks
   before_validation :set_activated_at, :set_enabled, :nullify_not_needed_attributes
@@ -91,7 +107,7 @@ class Transactable < ActiveRecord::Base
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
   delegate :currency, :formatted_address, :local_geocoding,
-    :latitude, :longitude, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
+           :latitude, :longitude, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
   delegate :service_fee_guest_percent, :service_fee_host_percent, to: :transactable_type
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
@@ -202,11 +218,11 @@ class Transactable < ActiveRecord::Base
 
   #TODO refactor
   def lowest_price_with_type(available_price_types = [])
-    PRICE_TYPES.reject{ |price|
+    PRICE_TYPES.reject { |price|
       !available_price_types.empty? && !available_price_types.include?(price.to_s)
     }.map { |price|
       [self.send("#{price}_price"), price]
-    }.reject{|p| p[0].to_f.zero?}.sort{|a, b| a[0] <=> b[0]}.first
+    }.reject { |p| p[0].to_f.zero? }.sort { |a, b| a[0] <=> b[0] }.first
   end
 
   def null_price!
@@ -269,6 +285,14 @@ class Transactable < ActiveRecord::Base
     availability_for(date, start_min, end_min) >= quantity
   end
 
+  # def available_between?(start_date, end_date, quantity=1, start_min = nil, end_min = nil)
+  #   start_date.upto(end_date) do |date|
+  #     return false unless availability_for(date, start_min, end_min) >= quantity
+  #   end
+  #
+  #   true
+  # end
+
   def first_available_date
     date = Date.tomorrow
 
@@ -303,7 +327,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def booking_days_per_month
-    @booking_days_per_month ||= transactable_type.days_for_monthly_rate.zero? ? booking_days_per_week * 4  : transactable_type.days_for_monthly_rate
+    @booking_days_per_month ||= transactable_type.days_for_monthly_rate.zero? ? booking_days_per_week * 4 : transactable_type.days_for_monthly_rate
   end
 
   # Returns a hash of booking block sizes to prices for that block size.

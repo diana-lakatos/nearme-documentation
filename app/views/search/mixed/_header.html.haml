@@ -6,6 +6,10 @@
       = hidden_field_tag :lgtype, @searcher.search.lgtype
       = hidden_field_tag :lgpricing, @searcher.search.lgpricing
       = hidden_field_tag :lgattribute, @searcher.search.lgattribute
+      = hidden_field_tag :start_date, @searcher.search.display_dates[:start]
+      = hidden_field_tag :end_date, @searcher.search.display_dates[:end]
+      = hidden_field_tag 'availability[dates][start]', @searcher.search.start_date
+      = hidden_field_tag 'availability[dates][end]', @searcher.search.end_date
       .row-fluid
         .span12
           - if platform_context.instance.default_search_view.present?

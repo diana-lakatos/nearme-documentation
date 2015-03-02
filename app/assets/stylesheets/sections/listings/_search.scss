@@ -42,9 +42,9 @@ section.search#content {
   .google-map-wrapper .cluster[title] {
     margin-top: -10px;
     margin-left: -2px;
-    border: 2px solid rgb(107,11,13);
+    border: 2px solid rgb(107, 11, 13);
     @include border-radius(42px);
-    background: rgb(186,0,13) !important;
+    background: rgb(186, 0, 13) !important;
     color: $pure-white !important;
     font-size: 14px !important;
   }
@@ -106,7 +106,7 @@ section.search#content {
     }
 
     .search-map-redo-search-control {
-      background: rgba(255,255,255,0.7);
+      background: rgba(255, 255, 255, 0.7);
       padding: 2px 4px;
       margin-left: 12px;
       @include border-radius($border-radius-default);
@@ -161,6 +161,7 @@ section.search#content {
     }
   }
 }
+
 /*** End Map View ***/
 
 #search_row,
@@ -174,12 +175,11 @@ section.search#content {
 }
 
 #search_row {
-  .tagline{
+  .tagline {
     float: none;
     text-align: center;
   }
 }
-
 
 /*** Home Page Search ***/
 #listing_search {
@@ -193,11 +193,16 @@ section.search#content {
   }
 
   .input-wrapper {
-    width: 75%;
+    width: 85%;
     padding-right: 8px;
 
     input {
       padding-left: 46px;
+    }
+
+    input.search_date {
+      padding-left: 5px;
+      opacity: 1.0;
     }
 
     .geolocation {
@@ -207,16 +212,52 @@ section.search#content {
     }
   }
 
+  .select2-choice, .select2-container {
+    border: solid #D4D4D4 1px;
+    border-radius: 4px;
+    background: #e6e6e6 image-url('themes/buy_sell/arrow.png') right no-repeat;
+    width: 100%;
+    font-size: 22px;
+    box-sizing: border-box;
+
+    .select2-arrow {
+      display: none;
+    }
+  }
+
+  .select2-container {
+    padding: 10px 0 10px 5px;
+  }
+
+  .select2-choice {
+    border: none;
+    box-shadow: none;
+  }
+
   .no-text-search {
     width: 100%;
     height: 50px;
   }
 
   .button-wrapper {
-    width: 25%;
+    width: 15%;
 
     a {
       display: block;
+    }
+  }
+
+  .row-fluid [class*="span2"] {
+    margin-left: 1.5%;
+  }
+
+  @media (max-width: 767px) {
+    .row-fluid [class*="span"] {
+      margin-bottom: 10px;
+    }
+
+    .customSelect {
+      width: 100%;
     }
   }
 
@@ -233,6 +274,87 @@ section.search#content {
     }
   }
 }
+
+.select2-results {
+  margin-right: 0;
+  padding-left: 0;
+}
+
+.select2-results .select2-highlighted {
+  background: #edf8fe;
+  color: #aca8aa;
+}
+
+.select2-drop-active {
+  margin-top: 5px;
+  border-radius: 2px;
+  border-color: transparent;
+}
+
+#ui-datepicker-div {
+  background: #fff;
+  box-shadow: 5px 6px 25px #727272;
+  width: initial;
+  text-align: center;
+
+  .ui-datepicker-header {
+    padding: 5px 10px;
+  }
+
+  table {
+    background: #edeff0;
+    padding: 0px 20px 10px 20px;
+  }
+
+  table th {
+    padding-bottom: 5px;
+  }
+
+  table td {
+    height: 30px;
+    width: 30px;
+    background: #fff;
+    border: none;
+  }
+
+  tr:nth-child(1) td {
+    padding-top: 0;
+  }
+
+  td a, td span, th span {
+    color: #000;
+    font-size: 12px;
+    text-align: center;
+    padding: 7px;
+    font-weight: 200;
+  }
+
+  a.ui-corner-all:hover {
+    cursor: pointer;
+  }
+
+  .ui-datepicker-next {
+    float: right;
+    font-size: 12px;
+  }
+
+  .ui-datepicker-prev {
+    float: left;
+    font-size: 12px;
+  }
+
+  .ui-datepicker-unselectable {
+    background: #edeff0;
+    color: #000;
+  }
+
+  .ui-state-active {
+    background: #1c7bca;
+    color: #fff;
+  }
+
+}
+
 /*** End Home Page Search ***/
 
 header#listing_search {
@@ -279,7 +401,7 @@ header#listing_search {
       z-index: 100;
       display: block;
       width: 96px;
-      height:45px;
+      height: 45px;
       @include border-radius($border-radius-default);
       background: rgba($dnm_blue, 0.5);
       color: $dnm_white;
@@ -295,7 +417,6 @@ header#listing_search {
         line-height: 28px;
         @include border-radius($border-radius-default);
       }
-
 
       &:hover {
         background: rgba($dnm_blue, 0.75);
@@ -585,7 +706,6 @@ header#listing_search {
         text-align: right;
         @include border-radius($border-radius-default);
 
-
         @media (max-width: $search-bar-breakpoint-desktop) {
           right: 0px;
         }
@@ -694,7 +814,7 @@ header#listing_search {
       }
     }
 
-    h3 span{
+    h3 span {
 
       font-size: 0.8em;
       padding-right: 8px;
@@ -854,7 +974,7 @@ section.search section#results.list {
       height: 25%;
       color: $theme_white;
       font-size: 13px;
-      @include background-image(linear-gradient(rgba(250,250,250,0), $black));
+      @include background-image(linear-gradient(rgba(250, 250, 250, 0), $black));
 
       .miles,
       .price {
@@ -886,24 +1006,25 @@ section.search section#results.list {
     margin-top: 180px;
   }
 
-
 }
+
 /*** End Listing View ***/
 
 /*** Infinite Scroll ***/
 .ias_loader {
 
-  h1{
+  h1 {
     text-align: center;
     margin: 35px 0px;
 
-    img{
+    img {
       display: inline-block;
       margin: 0px 20px 4px 0px;
       vertical-align: middle;
     }
   }
 }
+
 /*** End Infinite Scroll ***/
 
 /*** Products View ***/
@@ -977,6 +1098,7 @@ section.search section#results.products {
     }
   }
 }
+
 /*** End Products View ***/
 
 form.search-notification-form {
@@ -996,7 +1118,6 @@ form.search-notification-form {
     vertical-align: top;
   }
 }
-
 
 section.search section#results.mixed {
   height: 100%;
@@ -1036,6 +1157,57 @@ section.search section#results.mixed {
         padding: 10px;
         margin-bottom: 1px;
 
+        .date-range {
+          input {
+            position: relative;
+            display: block;
+            float: left;
+            margin-top: 5px 0 0;
+            padding: 5px 5px 5px 10px;
+            border: 2px solid $gray230;
+            background: $theme_white;
+
+            &:focus {
+              border: 2px solid $gray210;
+            }
+
+            @media (max-width: $iphone-landscape) {
+              height: 28px;
+              @include border-radius($border-radius-default);
+              border: none;
+              font-size: 16px;
+              line-height: 24px !important;
+              margin-top: 0px;
+              margin-bottom: 3px;
+              padding: 0 0 0 29px;
+            }
+          }
+
+          #date-range-refresh {
+            @include box-sizing(border-box);
+            display: block;
+            margin-top: 2px;
+            padding: 5px 7px 0px 7px;
+            height: 38px;
+            color: $theme_white;
+            cursor: pointer;
+
+            @include border-radius($border-radius-default);
+
+            @media (max-width: $search-bar-breakpoint-desktop) {
+              right: 0px;
+            }
+
+            @media (max-width: $iphone-landscape) {
+              top: 5px;
+              padding: 0px 8px 0px 8px;
+              line-height: 32px;
+              height: 28px;
+              font-size: 18px;
+            }
+          }
+        }
+
         .container-fluid {
           padding-left: 0px;
         }
@@ -1064,7 +1236,6 @@ section.search section#results.mixed {
       @media (max-width: $iphone-portrait - 1) {
         display: none;
       }
-
 
       @media (max-width: 2 * $iphone-portrait) {
         margin-right: 10px;
@@ -1132,7 +1303,6 @@ section.search section#results.mixed {
           cursor: pointer;
         }
       }
-
 
       .custom-select-dropdown-icon {
         position: static;
@@ -1313,7 +1483,6 @@ section.search section#results.mixed {
                 margin-left: 2%;
               }
             }
-
 
             .listing-main-photo {
               @media (min-width: $ipad-width + 1) {

@@ -166,8 +166,6 @@ end
 group :development do
   gem 'quiet_assets'
   gem 'thin'
-  gem 'pry-rails'
-  gem 'awesome_print'
   gem 'spring'
   gem "spring-commands-cucumber"
 end
@@ -200,5 +198,8 @@ gem 'nearme', path: 'vendor/gems/nearme'
 gem 'custom_attributes', path: 'vendor/gems/custom_attributes'
 
 gem 'figaro'
-gem 'wicked' # For easy multi-steps wizards. # TODO Remove after approval of other developers
+gem 'wicked'
 gem 'carmen'
+
+gem 'pry-rails'
+gem 'awesome_print'
