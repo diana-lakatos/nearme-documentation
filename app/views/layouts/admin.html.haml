@@ -28,6 +28,8 @@
               %li{:class => ("active" if request.url.include?(admin_users_url))}
                 = link_to "Users", admin_users_url
               %li{:class => ("active" if request.url.include?(admin_reservations_url))}
+                = link_to "Platform Admins", admin_platform_admins_url
+              %li{:class => ("active" if request.url.include?(admin_platform_admins_url))}
                 = link_to "Reservations", admin_reservations_url
               %li{:class => ("active" if request.url.include?(admin_companies_url))}
                 = link_to "Companies", admin_companies_url

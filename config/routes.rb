@@ -117,6 +117,8 @@ DesksnearMe::Application.routes.draw do
       end
     end
 
+    resources :platform_admins, only: [:index, :create, :destroy]
+
     resources :instance_creators
 
     resources :instances, :only => [:index, :show, :edit, :update] do

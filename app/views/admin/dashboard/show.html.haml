@@ -1,13 +1,4 @@
 .hero-unit
-  %h1 Welcome to the Admin
-
-- @funnels.each do |funnel|
-
-  %h2 #{funnel.name} #{funnel.dates}
-  %p.clearfix 
-    - if funnel.data_loaded?
-      %canvas{id: funnel.dom_id}
-      - content_for :domready do
-        new ChartWrapper.Bar($('##{funnel.dom_id}'), #{funnel.chart_values}, #{funnel.chart_labels}, #{funnel.chart_legend})
-    - else
-      No data
+  %h1 Near me Platform Admin
+  %br
+  %p With great power comes great responsibility.

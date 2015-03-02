@@ -1,0 +1,13 @@
+%h1 Platform Admins
+%p These users have instance admin level permissions across every instance on the platform.
+
+.row-fluid
+  %h4 Add platform admin
+  .pull-left
+    = render 'form'
+
+%table.table.table-striped
+  - collection.each do |resource|
+    = render 'index_row', :resource => resource
+
+= will_paginate collection
