@@ -5,7 +5,8 @@ class Dashboard::Company::ProductsControllerTest < ActionController::TestCase
   setup do
     @user = FactoryGirl.create(:user)
     @company = FactoryGirl.create(:company, creator: @user)
-    @product = FactoryGirl.create(:product)
+    @product_type = FactoryGirl.create(:product_type)
+    @product = FactoryGirl.create(:product, product_type: @product_type)
     @product.company = @company
     @product.save
     10.times { FactoryGirl.create(:taxons) }
@@ -18,12 +19,19 @@ class Dashboard::Company::ProductsControllerTest < ActionController::TestCase
 
   should 'create new product' do
     assert_difference 'Spree::Product.count' do
-      post :create, product_form: product_form_attributes
+      post :create, {
+        product_type_id: @product.product_type.id,
+        product_form: product_form_attributes
+      }
     end
   end
 
   should 'edit product name' do
-    put :update, product_form: {name: 'Changed name'}, id: @product.slug
+    put :update, {
+      product_form: {name: 'Changed name'},
+      id: @product.slug,
+      product_type_id: @product.product_type.id
+    }
     assert assigns(:product).name, @product.reload.name
   end
 

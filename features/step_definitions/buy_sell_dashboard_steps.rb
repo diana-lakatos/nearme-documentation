@@ -1,5 +1,5 @@
 Given /^I am adding new product$/ do
-  visit new_dashboard_company_product_path
+  visit new_dashboard_company_product_type_product_path(PlatformContext.current.instance.product_types.first)
 end
 
 And /^I fill products form with valid details$/  do
