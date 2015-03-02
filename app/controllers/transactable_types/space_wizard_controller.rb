@@ -55,12 +55,23 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       end
     else
       @photos = @user.first_listing ? @user.first_listing.photos : nil
-      flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(@user.errors.full_messages)
+      flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(filter_error_messages(@user.errors.full_messages))
       render :list
     end
   end
 
   private
+
+  def filter_error_messages(messages)
+    pattern = /^Companies locations listings photos /
+    messages.collect do |message|
+      if message.to_s.match(pattern)
+        message.to_s.gsub(pattern, '')
+      else
+        message
+      end
+    end
+  end
 
   def find_transactable_type
     @transactable_type = TransactableType.includes(:custom_attributes).find(params[:transactable_type_id])
