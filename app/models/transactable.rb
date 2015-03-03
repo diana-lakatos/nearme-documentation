@@ -70,7 +70,7 @@ class Transactable < ActiveRecord::Base
   scope :where_attribute_has_value, -> (attr, value) { where("properties @> '#{attr}=>#{value}'")}
 
   # == Callbacks
-  before_validation :set_activated_at, :set_enabled
+  before_validation :set_activated_at, :set_enabled, :nullify_not_needed_attributes
 
   # == Validations
   validates_presence_of :location, :transactable_type
@@ -421,6 +421,17 @@ class Transactable < ActiveRecord::Base
 
   def set_enabled
     self.enabled = is_trusted? if self.enabled
+    true
+  end
+
+  def nullify_not_needed_attributes
+    if schedule_booking?
+      self.hourly_price = self.daily_price = self.weekly_price = self.monthly_price = nil
+      self.action_hourly_booking = self.action_daily_booking = self.action_free_booking = nil
+    else
+      self.fixed_price = nil
+      self.action_schedule_booking = nil
+    end
     true
   end
 
