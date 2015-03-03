@@ -11,14 +11,16 @@ class BuySell::CheckoutService
     end
 
     @order.line_items.each do |item|
-      if item.product.document_requirements.blank?
+      if item.product.document_requirements.blank? &&
+        PlatformContext.current.instance.documents_upload_enabled?
         item.product.document_requirements.create({
           label: I18n.t("upload_documents.file.default.label"),
           description: I18n.t("upload_documents.file.default.description")
         })
       end
 
-      if item.product.upload_obligation.blank?
+      if item.product.upload_obligation.blank? &&
+        PlatformContext.current.instance.documents_upload_enabled?
         item.product.create_upload_obligation(level: UploadObligation.default_level)
       end
 
@@ -49,6 +51,6 @@ class BuySell::CheckoutService
         end
       end
     end
-    build_payment_documents
+    build_payment_documents if PlatformContext.current.instance.documents_upload_enabled?
   end
 end

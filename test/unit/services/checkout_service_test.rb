@@ -21,6 +21,7 @@ class CheckoutServiceTest < ActiveSupport::TestCase
 
     context "build documents for products without upload obligation and document requirement"  do
       setup do
+        PlatformContext.current.instance.create_documents_upload(enabled: true, requirement: DocumentsUpload::REQUIREMENTS[0])
         @documents_upload = FactoryGirl.create(:documents_upload)
         @user = FactoryGirl.create(:user)
         @order = FactoryGirl.create(:order_with_line_items, user: @user)
