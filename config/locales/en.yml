@@ -198,6 +198,11 @@ en:
         choose_another_file: 'Choose another file'
         choose_file: 'Choose file'
         no_file_chosen: 'No file chosen'
+      credit_card: 'Credit Card'
+      manual_payment: 'Manual Payment'
+      manual_payment_description: 'You will make payment in person'
+      invalid_cc: "Those credit card details don't look valid"
+      invalid_payment_method: "Please choose payment method"
 
       placeholders:
         first_name: 'Enter your first name'

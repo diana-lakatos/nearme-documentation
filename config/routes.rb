@@ -4,7 +4,10 @@ require Rails.root.join('app', 'controllers', 'registrations_controller.rb') if 
 DesksnearMe::Application.routes.draw do
 
   scope module: 'buy_sell_market' do
-    resources :products, only: [:show]
+    resources :products, only: [:show] do
+      resources :tickets, only: [:new, :create], :controller => 'support/tickets'
+    end
+
 
     resources :orders, only: [:show, :index] do
       resources :checkout do

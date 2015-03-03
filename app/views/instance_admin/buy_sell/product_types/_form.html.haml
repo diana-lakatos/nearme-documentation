@@ -6,6 +6,9 @@
     .row
       .input-container.col-xs-12
         = f.input :name, input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-12
+        = f.input :action_rfq, input_html: { class: 'form-control' }, label: 'Request for Quote'
 
   - if @product_type.persisted?
     %h4 Bulk Upload CSV Fields
@@ -13,4 +16,3 @@
 
   .content-container
     = f.button :submit, 'Save', class: 'btn btn-green pull-right'
-

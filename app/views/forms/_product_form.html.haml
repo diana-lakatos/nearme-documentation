@@ -29,6 +29,9 @@
 
 = f.input :price, as: :price, input_html: { currency: currency_symbol_from_code(Spree::Config[:currency] ) }
 
+- if f.object.product.product_type.action_rfq?
+  = f.input :action_rfq, as: :boolean
+
 = f.input :quantity, as: :integer, :placeholder => "1"
 
 = f.input :shippo_enabled, label: Spree::Product.human_attribute_name(:shippo_enabled), as: :boolean, input_html: { 'data-js-element-identifier' => 'product_form_shippo_enabled' }

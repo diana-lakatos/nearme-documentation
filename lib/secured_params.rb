@@ -23,6 +23,8 @@ class SecuredParams
       :depth,
       :width,
       :height,
+      :action_rfq,
+      :possible_manual_payment,
       image_ids: [],
       company_address_attributes: nested(self.address),
       images_attributes: nested(self.spree_image),
@@ -304,6 +306,7 @@ class SecuredParams
       :bookable_noun,
       :wish_lists_enabled,
       :wish_lists_icon_set,
+      :possible_manual_payment,
       user_required_fields: [],
       transactable_types_attributes: nested(self.transactable_type),
       listing_amenity_types_attributes: nested(self.amenity_type),
@@ -451,7 +454,8 @@ class SecuredParams
 
   def product_type
     [
-      :name
+      :name,
+      :action_rfq
     ]
   end
 

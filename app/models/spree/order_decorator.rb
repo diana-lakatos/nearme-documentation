@@ -24,6 +24,21 @@ Spree::Order.class_eval do
 
   accepts_nested_attributes_for :payment_documents
 
+  PAYMENT_METHODS = {
+    :credit_card => 'credit_card',
+    :manual      => 'manual',
+  }
+
+  validates_inclusion_of :payment_method, in: PAYMENT_METHODS.values, allow_nil: true
+
+  def credit_card_payment?
+    payment_method == Reservation::PAYMENT_METHODS[:credit_card]
+  end
+
+  def manual_payment?
+    payment_method == Reservation::PAYMENT_METHODS[:manual]
+  end
+
   def finalize!
     old_finalize!
     deliver_notify_seller_email
@@ -87,5 +102,10 @@ Spree::Order.class_eval do
       self.payment_documents = self.payment_documents.reject { |document| document.file.blank? }
     end
   end
+
+  def possible_manual_payment?
+    instance.possible_manual_payment?
+  end
+
 end
 

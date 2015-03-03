@@ -102,6 +102,22 @@ Spree::Product.class_eval do
     self.update(average_rating: average_rating)
   end
 
+  def action_free?
+    false
+  end
+
+  def action_free_booking?
+    false
+  end
+
+  def possible_manual_payment?
+    super && product_type.try(:possible_manual_payment)
+  end
+
+  def action_rfq?
+    super && product_type.try(:possible_manual_payment)
+  end
+
   private
 
   def shipping_category_presence
