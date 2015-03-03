@@ -74,3 +74,10 @@ class @Bookings.PriceCalculator
       total = @listing.hourlyPrice*bookedHours*@listing.getQuantity()
       total += @additionalCharges.getCharges()
 
+  class @FixedPriceCalculator
+    constructor: (@listing) ->
+      @additionalCharges = new Bookings.AdditionalChargesCalculator($("#additional-charges-#{@listing.id}"))
+
+    getPrice: ->
+      total = @listing.fixedPrice*@listing.getQuantity()
+      total += @additionalCharges.getCharges()

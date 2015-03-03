@@ -5,28 +5,27 @@ class @Bookings.Listing
 
   constructor: (@data) ->
     @id = parseInt(@data.id, 10)
-    @firstAvailableDate = DNM.util.Date.idToDate(@data.first_available_date)
-    @secondAvailableDate = DNM.util.Date.idToDate(@data.second_available_date)
-
-    if @isReservedHourly()
-      @availability = new HourlyAvailability(
-        @data.availability,
-        @data.hourly_availability_schedule,
-        @data.hourly_availability_schedule_url
-      )
-    else
-      @availability = new Availability(@data.availability)
-
     @bookedDatesArray = []
+    if @withCalendars()
+      @firstAvailableDate = DNM.util.Date.idToDate(@data.first_available_date)
+      @secondAvailableDate = DNM.util.Date.idToDate(@data.second_available_date)
+      if @isReservedHourly()
+        @availability = new HourlyAvailability(
+          @data.availability,
+          @data.hourly_availability_schedule,
+          @data.hourly_availability_schedule_url
+        )
+      else
+        @availability = new Availability(@data.availability)
 
-    @minimumBookingDays = @data.minimum_booking_days
-    @minimumDate = DNM.util.Date.idToDate(@data.minimum_date)
-    @maximumDate = DNM.util.Date.idToDate(@data.maximum_date)
-    @favourablePricingRate = @data.favourable_pricing_rate
-    @pricesByDays = @data.prices_by_days
-    @hourlyPrice = @data.hourly_price_cents
-    @recurringBooking = @data.action_recurring_booking
-    @overnightBooking = @data.action_overnight_booking
+      @minimumBookingDays = @data.minimum_booking_days
+      @minimumDate = DNM.util.Date.idToDate(@data.minimum_date)
+      @maximumDate = DNM.util.Date.idToDate(@data.maximum_date)
+      @favourablePricingRate = @data.favourable_pricing_rate
+      @pricesByDays = @data.prices_by_days
+      @hourlyPrice = @data.hourly_price_cents
+    else
+      @fixedPrice = @data.fixed_price_cents
 
   setDefaultQuantity: (qty) ->
     @defaultQuantity = qty if qty >= 0
@@ -44,10 +43,16 @@ class @Bookings.Listing
     @data.action_hourly_booking
 
   isRecurringBooking: ->
-    @recurringBooking
+    @data.booking_type == 'recurring'
 
   isOvernightBooking: ->
-    @overnightBooking
+    @data.booking_type == 'overnight'
+
+  isFixedBooking: ->
+    @data.booking_type == 'schedule'
+
+  withCalendars: ->
+    !@isFixedBooking()
 
   isReservedDaily: ->
     @data.action_daily_booking
@@ -69,12 +74,13 @@ class @Bookings.Listing
     @availability.openFor(date)
 
   isBooked: ->
-    hasDate = @bookedDates().length > 0
-    hasTime = if @isReservedHourly()
-      @minutesBooked() > 0
-    else
-      true
-    hasDate and hasTime
+      hasDate = @bookedDates().length > 0
+      hasTime = if @isReservedHourly() && @withCalendars()
+        @minutesBooked() > 0
+      else
+        true
+      hasDate and hasTime
+
 
   # Return the days where there exist bookings
   bookedDays: ->
@@ -91,6 +97,8 @@ class @Bookings.Listing
   priceCalculator: ->
     if @isReservedHourly()
       new Bookings.PriceCalculator.HourlyPriceCalculator(this)
+    else if @isFixedBooking()
+      new Bookings.PriceCalculator.FixedPriceCalculator(this)
     else
       new Bookings.PriceCalculator(this)
 
@@ -126,18 +134,18 @@ class @Bookings.Listing
 
   reservationOptions: ->
     options = {
-      dates: @bookedDays(),
       quantity: @getQuantity()
     }
-
-    # Hourly reserved listings send through the start/end minute of
-    # the day with the booking request.
-    if @isReservedHourly()
-      options.start_minute = @startMinute
-      options.end_minute   = @endMinute
-    if @isRecurringBooking()
-      options.start_on = @startOn
-      options.end_on   = @endOn
+    if @withCalendars()
+      options.dates = @bookedDays()
+      # Hourly reserved listings send through the start/end minute of
+      # the day with the booking request.
+      if @isReservedHourly()
+        options.start_minute = @startMinute
+        options.end_minute   = @endMinute
+      if @isRecurringBooking()
+        options.start_on = @startOn
+        options.end_on   = @endOn
 
     options
 

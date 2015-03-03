@@ -122,10 +122,9 @@
             = f.select_recurring :schedule_params, [ IceCube::Rule.weekly.day(Time.zone.now.wday), IceCube::Rule.monthly.day_of_month([]).day_of_week(Time.zone.now.wday => [1]) ], allow_blank: false
 
       = render partial: 'locations/additional_charges', locals: { listing: listing }
-      - unless listing.schedule_booking?
-        .quantity
-          %span.resource{:'data-singular' => listing.listing_type, :'data-plural' => listing.listing_type.try(:pluralize)}= listing.listing_type
-          = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
+      .quantity
+        %span.resource{:'data-singular' => listing.listing_type, :'data-plural' => listing.listing_type.try(:pluralize)}= listing.listing_type
+        = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
 
       .price{class: "#{'hidden' if listing.action_free_booking?}"}
         = t 'booking_module.total'
@@ -141,11 +140,10 @@
           = f.hidden_field :start_minute
           = f.hidden_field :end_minute
           .reservation-charges.hidden{:'data-reservation-charges' => true}
+          = f.hidden_field :quantity
           - if listing.schedule_booking?
-            = f.input :quantity, collection: 1..listing.quantity, prompt: 'Select quantity', label: false
-            = f.input :dates, collection: listing.next_available_occurrences(10).map { |d| l(d, format: :long) }, prompt: 'Choose date', label: false
+            = f.input :dates, collection: listing.next_available_occurrences(10).map { |d| l(d, format: :long) }, prompt: 'Choose date', label: false, input_html: { :'data-fixed-date-select' => true }
           - else
-            = f.hidden_field :quantity
             = f.hidden_field :dates
           = f.hidden_field :reservation_type, class: 'reservation_type'
 
