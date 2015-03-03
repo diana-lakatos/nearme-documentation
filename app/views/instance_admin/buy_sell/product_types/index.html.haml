@@ -14,6 +14,7 @@
               %td= resource.name.humanize
               %td
                 = link_to 'Form Components', instance_admin_buy_sell_product_type_form_components_path(resource), class: 'pull-right btn btn-green'
+                = link_to 'Data Upload', instance_admin_buy_sell_product_type_data_uploads_path(resource), class: 'pull-right btn btn-green'
                 = link_to 'Custom Attributes', instance_admin_buy_sell_product_type_custom_attributes_path(resource), class: 'pull-right btn btn-green'
               %td= link_to 'Edit', edit_instance_admin_buy_sell_product_type_path(resource), class: 'pull-right'
               %td= link_to "Delete", instance_admin_buy_sell_product_type_path(resource), method: :delete, confirm: "Are you sure you want to delete this transactable type?", class: "pull-right"

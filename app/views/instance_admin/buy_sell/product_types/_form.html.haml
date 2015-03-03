@@ -10,6 +10,9 @@
       .input-container.col-xs-12
         = f.input :action_rfq, input_html: { class: 'form-control' }, label: 'Request for Quote'
 
+  - if @product_type.persisted?
+    %h4 Bulk Upload CSV Fields
+    = render partial: "instance_admin/data_uploads/custom_csv_fields", locals: { f: f }
+
   .content-container
     = f.button :submit, 'Save', class: 'btn btn-green pull-right'
-

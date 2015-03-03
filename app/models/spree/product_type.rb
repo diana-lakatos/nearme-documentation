@@ -12,6 +12,8 @@ class Spree::ProductType < ActiveRecord::Base
 
   belongs_to :user
 
+  serialize :custom_csv_fields, Array
+
   def wizard_path
     "/product_types/#{id}/product_wizard/new"
   end

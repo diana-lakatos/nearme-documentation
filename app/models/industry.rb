@@ -18,4 +18,8 @@ class Industry < ActiveRecord::Base
   scope :with_listings, -> { joins(:listings).merge(Transactable.searchable).group('industries.id HAVING count(transactables.id) > 0') }
   scope :ordered, -> { order('name asc') }
 
+  def self.csv_fields
+    {name: 'Industry'}
+  end
+
 end

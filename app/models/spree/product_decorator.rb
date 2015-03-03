@@ -39,9 +39,24 @@ Spree::Product.class_eval do
   validates :slug, uniqueness: { scope: [:instance_id, :company_id, :partner_id, :user_id] }
   validate :shipping_category_presence
 
+  after_save :set_external_id
+
   store_accessor :status, [:current_status]
 
   accepts_nested_attributes_for :shipping_category
+
+  def self.csv_fields(product_type)
+    {
+      name: 'Product Name', description: 'Product Description', external_id: 'Product External Id', price: 'Price', available_on: 'Available On',
+      meta_description: 'Meta Description', meta_keywords: 'Meta Keywords',
+      products_public: 'Public',  shippo_enabled: 'Shippo Enabled', draft: 'Draft'
+    }.reverse_merge(
+      product_type.custom_attributes.shared.pluck(:name, :label).inject({}) do |hash, arr|
+        hash[arr[0].to_sym] = arr[1].presence || arr[0].humanize
+        hash
+      end
+    )
+  end
 
   def cross_sell_products
     cross_sell_skus.map do |variant_sku|
@@ -107,5 +122,9 @@ Spree::Product.class_eval do
 
   def shipping_category_presence
     self.shipping_category.present? ? true : errors.add(:shipping_category_id, "shipping category can't be blank")
+  end
+
+  def set_external_id
+    self.update_column(:external_id, "manual-#{id}") if self.external_id.blank?
   end
 end

@@ -242,12 +242,9 @@ DesksnearMe::Application.routes.draw do
       resources :transactable_types do
         put :change_state, on: :member
         resources :custom_attributes, controller: 'transactable_types/custom_attributes'
-        resources :data_uploads, controller: 'transactable_types/data_uploads' do
+        resources :data_uploads, only: %i(new index create show), controller: 'transactable_types/data_uploads' do
           collection do
             get :download_csv_template
-          end
-          member do
-            post :schedule_import
           end
         end
         resources :form_components, controller: 'transactable_types/form_components' do
@@ -306,6 +303,11 @@ DesksnearMe::Application.routes.draw do
       resource :commissions, :only => [:show, :update], :controller => 'commissions'
       resources :product_types do
         resources :custom_attributes, controller: 'product_types/custom_attributes'
+        resources :data_uploads, only: %i(new index create show), controller: 'product_types/data_uploads' do
+          collection do
+            get :download_csv_template
+          end
+        end
         resources :form_components, controller: 'product_types/form_components' do
           member do
             patch :update_rank
@@ -504,6 +506,12 @@ DesksnearMe::Application.routes.draw do
       resources :products
       resources :product_type do
         resources :products
+        resources :data_uploads, only: %i(new create), controller: 'product_types/data_uploads' do
+          collection do
+            get :download_csv_template
+            get :download_current_data_csv
+          end
+        end
       end
 
       resources :transactable_types do
@@ -519,9 +527,6 @@ DesksnearMe::Application.routes.draw do
             get :status
             get :download_csv_template
             get :download_current_data_csv
-          end
-          member do
-            post :schedule_import
           end
         end
       end
