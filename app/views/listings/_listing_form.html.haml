@@ -22,7 +22,7 @@
   = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :label => "Amenities", :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select', :multiple => true } if only_inputs.empty? || only_inputs.include?(:amenities)
 
 - if only_inputs.empty? || only_inputs.include?(:price)
-  = render partial: "dashboard/company/transactables/price", locals: { f: f }
+  = render partial: "listings/price", locals: { f: f }
   = render partial: 'shared/booking_types_tabs', locals: { f: f }
 
 - if only_inputs.empty? || only_inputs.include?(:availability_rules)
