@@ -25,7 +25,7 @@ Feature: A user can recurre book at a space
 
   Scenario: Paying manually should not incur a service fee
     Given a location exists with company: that company, currency: "RUB"
-    And a transactable exists with location: that location, quantity: 10
+    And a transactable exists with location: that location, quantity: 10, booking_type: recurring
     And I am logged in as the user
     When I go to the location's page
     And I select to recurre book and review space for:

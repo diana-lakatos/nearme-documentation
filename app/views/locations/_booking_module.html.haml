@@ -97,7 +97,7 @@
                 %span.calendar-text= t 'booking_module.end'
 
       .clearfix
-      - if listing.transactable_type.action_recurring_booking
+      - if listing.recurring_booking?
         .recurring-booking
           = simple_form_for :reservation_request, :url => review_listing_recurring_bookings_path(listing), data: { :'recurring-booking-form' => true, :'registration-url' => current_user ? nil : new_user_registration_path(return_to: location_listing_url(listing.location, listing)), hourly: listing.action_hourly_booking? } do |f|
             = f.hidden_field :quantity, class: 'quantity'

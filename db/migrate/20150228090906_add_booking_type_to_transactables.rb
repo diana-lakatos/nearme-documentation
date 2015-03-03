@@ -12,6 +12,8 @@ class AddBookingTypeToTransactables < ActiveRecord::Migration
           'schedule'
         elsif transactable_type.action_overnight_booking?
           'overnight'
+        elsif transactable_type.action_recurring_booking?
+          'recurring'
         else
           'regular'
         end
