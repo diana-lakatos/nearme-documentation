@@ -16,3 +16,10 @@ Feature: As a user of the site
       And I submit the product form
       And I should see "Product has been created."
      Then Product with my details should be created
+
+  Scenario: A user can add products via bulk upload
+    Given I am browsing bulk upload products
+     When I upload csv file with products
+     Then I should see "Import has been scheduled. You'll receive an email when it's done."
+      And I should receive data upload report email when finished
+      And New products from csv should be added

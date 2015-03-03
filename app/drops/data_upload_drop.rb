@@ -37,8 +37,15 @@ class DataUploadDrop < BaseDrop
     @data_upload.parse_summary[:deleted].present? ? @data_upload.parse_summary[:deleted].map { |k, v| "#{k.to_s.humanize}: #{v}"}.join(', ') : nil
   end
 
-  def new_transactable_url
-    routes.new_dashboard_company_transactable_type_transactable_path(@data_upload.transactable_type)
+  def new_importable_url
+    case @data_upload.importable
+    when TransactableType
+      routes.new_dashboard_company_transactable_type_transactable_path(@data_upload.importable)
+    when Spree::ProductType
+      routes.new_dashboard_product_type_product_path(@data_upload.importable)
+    else
+      raise TypeError
+    end
   end
 
 end

@@ -10,4 +10,4 @@ Updated entities: {{ data_upload.updated_parse_summary }}
 {% if data_upload.parsing_result_log %}Encountered validation errors log:
 {{ data_upload.parsing_result_log }}{% endif %}
 
-You can access dashboard {{ platform_context.host | append:data_upload.new_transactable_url }}
+You can access dashboard {{ platform_context.host | append:data_upload.new_importable_url }}

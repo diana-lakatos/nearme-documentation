@@ -7,7 +7,7 @@ class DataImporter::Host::CsvFile::TemplateCsvFile < DataImporter::CsvFile::Temp
     @company = @user.companies.first || @user.companies.create(name: @user.name, creator: @user)
     @company.update_attribute(:creator, @user) if @company.creator.nil?
     @company.update_attribute(:external_id, @company.creator.email)
-    super(data_upload.csv_file.proper_file_path, data_upload.transactable_type, data_upload.options)
+    super(data_upload.csv_file.proper_file_path, data_upload.importable, data_upload.options)
   end
 
   def parse_header(header)
@@ -16,7 +16,7 @@ class DataImporter::Host::CsvFile::TemplateCsvFile < DataImporter::CsvFile::Temp
     fields_hash = {
       location: Location.csv_fields,
       address: Address.csv_fields,
-      transactable: Transactable.csv_fields(@transactable_type),
+      transactable: Transactable.csv_fields(@importable),
       photo: Photo.csv_fields
     }
     # maps attributes of models to index in csv - like user name is in column 0, user email in column 1 etc

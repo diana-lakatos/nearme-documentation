@@ -1,17 +1,12 @@
 class DataImporter::Host::CsvTemplateGenerator < DataImporter::CsvTemplateGenerator
 
-  private
-
-  def user_fields
-    raise NotImplementedError
-  end
-
-  def company_fields
-    raise NotImplementedError
-  end
-
-  def static_fields
-    location_fields.values + address_fields.values + transactable_fields.keys.sort.map { |k| transactable_fields[k] } + photo_fields.values
+  def initialize(importable)
+    @importable = importable
+    @models = if import_model == :transactable
+      [:location, :address, import_model, :photo]
+    else
+      [import_model, :'spree/variant', :'spree/shipping_category', :'spree/image']
+    end
   end
 
 end
