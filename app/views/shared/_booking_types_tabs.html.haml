@@ -4,13 +4,13 @@
     %ul{class: 'nav nav-tabs', 'data-booking-type-list' => true}
       - f.object.transactable_type.booking_choices.each do |booking_type|
         %li{class: booking_types_active_toggle(f.object, booking_type)}
-          - if booking_type == 'overnight'
+          - if booking_type == 'overnight' || booking_type == 'recurring'
             = link_to t(".booking_type_#{booking_type}"), "#booking-type-regular", 'data-booking-type' => booking_type, 'data-toggle' => 'tab'
           - else
             = link_to t(".booking_type_#{booking_type}"), "#booking-type-#{booking_type}", 'data-booking-type' => booking_type, 'data-toggle' => 'tab'
 
 .tab-content
   - f.object.transactable_type.booking_choices.each_with_index do |booking_type|
-    - if booking_type != 'overnight'
+    - if booking_type != 'overnight' && booking_type != 'recurring'
       %div{id: "booking-type-#{booking_type}", class: "tab-pane #{booking_types_active_toggle(f.object, booking_type, true)}"}
         = yield "booking_type_#{booking_type}_tab_content".to_sym

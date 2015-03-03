@@ -1,0 +1,4 @@
+%span{'data-all-periods-label' => true, style: "#{'display: none' if transactable.recurring_booking?}"}
+  = transactable.transactable_type.daily_options_names.map {|p| t("simple_form.labels.transactable.price_#{p}")}.to_sentence(last_word_connector: " #{t('form.or')} ", two_words_connector: " #{t('form.or')} ")
+%span{'data-daily-label' => true, style: "#{'display: none;' unless transactable.recurring_booking?}"}
+  = t("simple_form.labels.transactable.price_daily")

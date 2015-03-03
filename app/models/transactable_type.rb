@@ -8,7 +8,7 @@ class TransactableType < ActiveRecord::Base
 
   MAX_PRICE = 2147483647
   AVAILABLE_TYPES = ['Listing', 'Buy/Sell']
-  BOOKING_TYPES = %w(regular overnight schedule).freeze
+  BOOKING_TYPES = %w(regular overnight recurring schedule).freeze
 
   attr_accessor :enable_cancellation_policy
 

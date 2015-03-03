@@ -757,6 +757,7 @@ en:
       booking_type_regular: 'Regular'
       booking_type_schedule: 'Schedule'
       booking_type_overnight: 'Overnight'
+      booking_type_recurring: 'Recurring'
 
   user_reviews:
     reviews_about_this_seller: "Reviews about this seller"
