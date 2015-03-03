@@ -93,9 +93,11 @@ class Company < ActiveRecord::Base
   after_create :add_company_to_partially_created_shipping_categories
 
   def add_company_to_partially_created_shipping_categories
-    partial_categories = Spree::ShippingCategory.where(:user_id => self.creator_id, :company_id => nil)
-    partial_categories.each do |partial_category|
-      partial_category.update_attribute(:company_id, self.id)
+    if self.creator_id.present?
+      partial_categories = Spree::ShippingCategory.where(:user_id => self.creator_id, :company_id => nil)
+      partial_categories.each do |partial_category|
+        partial_category.update_attribute(:company_id, self.id)
+      end
     end
 
     true
