@@ -40,7 +40,7 @@ class Instance < ActiveRecord::Base
   has_many :listing_amenity_types, :inverse_of => :instance
   has_many :location_amenity_types, :inverse_of => :instance
   has_many :listings, class_name: "Transactable", :inverse_of => :instance
-  has_many :domains, :as => :target
+  has_many :domains, :as => :target, dependent: :destroy
   has_many :partners, :inverse_of => :instance
   has_many :instance_admins, :inverse_of => :instance
   has_many :instance_admin_roles, :inverse_of => :instance
@@ -207,7 +207,7 @@ class Instance < ActiveRecord::Base
   end
 
   def buyable?
-    @buyable ||= self.transactable_types.any?(&:buy_sell?)
+    @buyable ||= product_types.any?
   end
 
   def marketplace_type

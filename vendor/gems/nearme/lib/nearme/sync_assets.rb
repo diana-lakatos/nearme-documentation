@@ -3,7 +3,7 @@ module NearMe
     attr_accessor :branch, :bucket, :stack, :prefix
     def initialize(options = {})
       @branch      = options[:branch]
-      @environment = options[:environment] || 'production'
+      @environment = options[:environment] || @branch == 'production' ? 'production' : 'staging'
       @bucket      = options[:bucket] || stack_mapping[options[:stack]] || 'near-me-assets-staging'
       @prefix      = options[:prefix] || prefix_mapping[options[:stack]] || "/#{options[:stack].gsub('nm-', '')}/assets"
 
@@ -28,22 +28,36 @@ module NearMe
     def start!
       check_branch
       check_clean_tree
-      puts "Compiling..."
-      if not Kernel.system("ASSETS_PREFIX=#{@prefix} RAILS_ENV=#{@environment} bundle exec rake assets:precompile")
-        puts "Precompile failed."
+
+      command = 'bundle exec rake tmp:cache:clear'
+      puts 'Cleaning cache ...'
+      puts command
+      if not Kernel.system command
+        puts 'Clean failed.'
         exit 6
       end
 
-      puts "Moving manifest.json..."
-      if not Kernel.system("ASSETS_PREFIX=#{@prefix} RAILS_ENV=#{@environment} bundle exec rake assets:move_manifest
-        ")
-        puts "manifest.json copy failed."
+      command = "ASSETS_PREFIX=#{@prefix} RAILS_ENV=#{@environment} bundle exec rake assets:precompile"
+      puts 'Compiling...'
+      puts command
+      if not Kernel.system command
+        puts 'Precompile failed.'
         exit 6
       end
 
-      puts "Sync..."
-      if not Kernel.system("ASSETS_PREFIX=#{@prefix} FOG_DIR=#{@bucket} bundle exec rake assets:sync")
-        puts "sync failed."
+      command = "ASSETS_PREFIX=#{@prefix} RAILS_ENV=#{@environment} bundle exec rake assets:move_manifest"
+      puts 'Moving manifest.json...'
+      puts command
+      if not Kernel.system command
+        puts 'manifest.json copy failed.'
+        exit 6
+      end
+
+      command = "ASSETS_PREFIX=#{@prefix} FOG_DIR=#{@bucket} bundle exec rake assets:sync"
+      puts 'Sync...'
+      puts command
+      if not Kernel.system command
+        puts 'Sync failed.'
         exit 7
       end
     end

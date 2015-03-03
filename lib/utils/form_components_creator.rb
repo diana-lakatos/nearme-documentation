@@ -1,13 +1,23 @@
 module Utils
   class FormComponentsCreator
 
-    def initialize(form_componentable)
+    def initialize(form_componentable, class_name = nil)
       @form_componentable = form_componentable
+      @class_name = class_name
     end
 
     def create!
-      @form_componentable.form_components.destroy_all
-      send("create_#{@form_componentable.class.model_name.param_key}_components")
+      if @class_name.blank?
+        if @form_componentable.is_a?(TransactableType)
+          @form_componentable.form_components.where(form_type: FormComponent::SPACE_WIZARD).destroy_all
+        else
+          @form_componentable.form_components.destroy_all
+        end
+        send("create_#{@form_componentable.class.model_name.param_key}_components")
+      elsif @class_name == 'transactable'
+        @form_componentable.form_components.where(form_type: FormComponent::TRANSACTABLE_ATTRIBUTES).destroy_all
+        send("create_#{@class_name}_components")
+      end
     end
 
     protected
@@ -27,6 +37,11 @@ module Utils
     def create_product_type_components
       @form_type_class = FormComponent::PRODUCT_ATTRIBUTES
       create_component!("Please in additional product information", [])
+    end
+
+    def create_transactable_components
+      @form_type_class = FormComponent::TRANSACTABLE_ATTRIBUTES
+      create_component!('Main', [{'transactable' => 'location_id'}, {'transactable' => 'approval_requests'}, {'transactable' => 'enabled'}, {'transactable' => 'amenity_types'}, {'transactable' => 'price'}, {'transactable' => 'schedule'}, {'transactable' => 'photos'}, {'transactable' => 'waiver_agreement_templates'}, {'transactable' => 'documents_upload'}, {'transactable' => 'capacity'}, {'transactable' => 'name'}, {'transactable' => 'description'}, {'transactable' => 'quantity'}, {'transactable' => 'confirm_reservations'}, {'transactable' => 'listing_type'}])
     end
 
     def create_component!(name, form_fields)

@@ -8,6 +8,13 @@ Spree::Variant.class_eval do
 
   before_save :update_native_fields_from_user_fields
 
+  def self.csv_fields
+    {
+      weight_user: 'Weight', weight_unit: 'Weight Unit', height_user: 'Height', height_unit: 'Height Unit',
+      width_user: 'Width', width_unit: 'Width Unit', depth_user: 'Depth', depth_unit: 'Depth Unit'
+    }
+  end
+
   def update_native_fields_from_user_fields
     self.weight = MetricsConverter.new(self.weight_user, self.weight_unit).convert_weight_value_to_oz_by_unit_type
     self.height = MetricsConverter.new(self.height_user, self.height_unit).convert_length_value_to_inch_by_unit_type

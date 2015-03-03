@@ -97,7 +97,6 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
     []
   end
 
-
   protected
 
   def lookup(locale, key, scope = [], options = {})

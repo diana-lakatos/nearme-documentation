@@ -44,15 +44,15 @@ class UserDrop < BaseDrop
   end
 
   def manage_locations_url
-    routes.manage_locations_path
+    routes.dashboard_company_transactable_types_path
   end
 
   def manage_locations_url_with_tracking
-    routes.manage_locations_path(track_email_event: true)
+    routes.dashboard_company_transactable_types_path(track_email_event: true)
   end
 
   def manage_locations_url_with_tracking_and_token
-    routes.manage_locations_path(token: @user.try(:temporary_token), track_email_event: true)
+    routes.dashboard_company_transactable_types_path(token: @user.try(:temporary_token), track_email_event: true)
   end
 
   def edit_user_registration_url(with_token = false)

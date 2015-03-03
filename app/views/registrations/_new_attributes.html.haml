@@ -9,7 +9,7 @@
   = f.input :first_name, input_html: { value: f.object.first_name } if only_inputs.empty? || only_inputs.include?(:first_name)
   = f.input :middle_name, input_html: { value: f.object.middle_name } if only_inputs.empty? || only_inputs.include?(:middle_name)
   = f.input :last_name, input_html: { value: f.object.last_name } if only_inputs.empty? || only_inputs.include?(:last_name)
-  - f.object.custom_attributes.each do |attribute|
+  - (f.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
     = draw_attribute_for_form(attribute, f) if only_inputs.empty? || only_inputs.include?(attribute.name.to_sym)
 
 = f.input :gender, collection: [['Male', 'male'], ['Female', 'female'], ['Unspecified', 'unspecified']], input_html: { class: 'selectpicker'}, include_blank: :true if only_inputs.empty? || only_inputs.include?(:gender)

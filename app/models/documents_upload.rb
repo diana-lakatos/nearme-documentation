@@ -22,4 +22,8 @@ class DocumentsUpload < ActiveRecord::Base
   def is_optional?
     requirement == "optional"
   end
+
+  def is_vendor_decides?
+    requirement == "vendor_decides"
+  end
 end

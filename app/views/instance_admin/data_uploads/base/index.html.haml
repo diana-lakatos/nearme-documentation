@@ -1,0 +1,25 @@
+%h4 Manage Data Uploads for #{@importable.name}
+.content-container
+  .row
+    = link_to 'Download CSV Template', {action: :download_csv_template}, class: 'pull-right btn btn-green'
+    = link_to 'New Data Upload', {action: :new}, class: 'pull-right btn btn-green'
+
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table
+        %thead
+          %tr
+            %th File Name
+            %th Data preview
+            %th Imported at
+            %th Success
+            %th Created at
+        %tbody
+          - @data_uploads.each do |resource|
+            %tr
+              %td= link_to resource.csv_file_identifier, {action: :show, id: resource}
+              %td= link_to resource.xml_file_identifier, resource.xml_file.try(:url), target: :blank if resource.xml_file.present?
+              %td= resource.imported_at
+              %td= resource.encountered_error.blank?
+              %td= resource.created_at

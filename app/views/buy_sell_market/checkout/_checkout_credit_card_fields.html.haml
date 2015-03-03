@@ -1,9 +1,5 @@
 #credit-card
-  - if f.object.errors[:cc].present?
-    .flash.error{style: 'color: red;'}
-      %ul
-        - f.object.errors[:cc].each do |e|
-          %li= e
+  = f.error :cc
 
   .padding-bottom
     .row-fluid

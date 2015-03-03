@@ -12,5 +12,6 @@ class InstanceAdmin::BuySell::ProductTypes::CustomAttributesController < Instanc
 
   def permitting_controller_class
     @controller_scope ||= 'buy_sell'
+    'buysell'
   end
 end

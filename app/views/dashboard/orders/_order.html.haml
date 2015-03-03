@@ -3,7 +3,7 @@
 - if params[:controller].include?('received')
   - manage = true
   - feedback_caption = t('orders.buttons.buyer_feedback')
-  - details_url = dashboard_orders_received_path(order)
+  - details_url = dashboard_company_orders_received_path(order)
 - else
   - manage = false
   - feedback_caption = t('orders.buttons.seller_feedback')

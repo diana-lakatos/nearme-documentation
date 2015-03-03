@@ -1,11 +1,7 @@
 class ProductForm < Form
 
-  # attr_accessor :name, :description, :price, :category
-  # attr_accessor :quantity
   attr_accessor :shipping_methods, :document_requirements, :upload_obligation
   attr_reader :product
-
-  # Validations:
 
   validates :name, presence: true, length: {minimum: 3}
   validates :price, presence: true, numericality: { greater_than: 0 }
@@ -21,8 +17,10 @@ class ProductForm < Form
     product.valid?
   end
 
+  validate :label_and_description_cannot_be_empty
+
   def_delegators :@product, :id, :price, :price=, :name, :name=, :description, :id=, :description=,
-    :shippo_enabled=, :shippo_enabled, :draft?, :draft=, :draft, :extra_properties, :extra_properties=
+    :shippo_enabled=, :shippo_enabled, :possible_manual_payment, :possible_manual_payment=, :action_rfq, :action_rfq=, :draft?, :draft=, :draft, :extra_properties, :extra_properties=
 
   def_delegators :'@product.master', :weight_unit, :weight_unit=, :height_unit, :height_unit=,
     :width_unit, :width_unit=, :depth_unit, :depth_unit=,

@@ -2,8 +2,8 @@ require 'csv'
 
 class DataImporter::CsvFile::TemplateCsvFile < DataImporter::CsvFile
 
-  def initialize(path, transactable_type, options = {})
-    @transactable_type = transactable_type
+  def initialize(path, importable, options = {})
+    @importable = importable
     @options = options.symbolize_keys.reverse_merge(send_invitational_email: false, sync_mode: false)
     super(path)
     @header_metadata = parse_header(@csv_handle.shift)
@@ -18,7 +18,7 @@ class DataImporter::CsvFile::TemplateCsvFile < DataImporter::CsvFile
       company: Company.csv_fields,
       location: Location.csv_fields,
       address: Address.csv_fields,
-      transactable: Transactable.csv_fields(@transactable_type),
+      transactable: Transactable.csv_fields(@importable),
       photo: Photo.csv_fields
     }
     # maps attributes of models to index in csv - like user name is in column 0, user email in column 1 etc
@@ -56,7 +56,7 @@ class DataImporter::CsvFile::TemplateCsvFile < DataImporter::CsvFile
   end
 
   def build_attributes_hash(klass, sym)
-    @csv_attributes[sym] ||= (sym == :transactable ? (klass.csv_fields(@transactable_type)) : klass.csv_fields).keys
+    @csv_attributes[sym] ||= (sym == :transactable ? (klass.csv_fields(@importable)) : klass.csv_fields).keys
     @csv_attributes[sym].inject({}) do |hash, attribute|
       if @mapping_hash[sym][attribute.to_sym].present?
         hash[attribute.to_sym] = @current_row[@mapping_hash[sym][attribute.to_sym]]

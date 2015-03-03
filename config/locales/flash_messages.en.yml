@@ -71,6 +71,8 @@ en:
           deleted: 'Email template has been deleted.'
           invalid: 'Not a valid email template.'
           updated: 'Email template has been updated.'
+        partners:
+          partner_updated: "Partner updated successfully."
         email_layout_templates:
           created: 'Email layout template has been created.'
           deleted: 'Email layout template has been deleted.'

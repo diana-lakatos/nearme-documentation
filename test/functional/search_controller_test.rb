@@ -281,7 +281,7 @@ class SearchControllerTest < ActionController::TestCase
 
   context 'for transactable type buy/sell' do
     setup do
-      FactoryGirl.create(:transactable_type_buy_sell)
+      FactoryGirl.create(:product_type)
     end
 
     context 'search integration' do

@@ -45,9 +45,6 @@ class Reservation < ActiveRecord::Base
   has_many :payment_documents, as: :attachable, class_name: 'Attachable::PaymentDocument', dependent: :destroy
   accepts_nested_attributes_for :payment_documents
 
-  # attr_accessible :cancelable, :confirmation_email, :date, :transactable_id,
-  #   :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method, :rejection_reason
-
   has_many :periods,
     :class_name => "ReservationPeriod",
     :inverse_of => :reservation,
@@ -210,7 +207,7 @@ class Reservation < ActiveRecord::Base
 
   scope :with_listing, -> {where.not(transactable_id: nil)}
 
-  validates_presence_of :payment_method, :in => PAYMENT_METHODS.values
+  validates_presence_of :payment_method, :in => Reservation::PAYMENT_METHODS.values
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
 
   delegate :location, to: :listing
@@ -460,7 +457,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def action_hourly_booking?
-    reservation_type == 'hourly' || self.listing.transactable_type.action_schedule_booking?
+    reservation_type == 'hourly' || self.listing.schedule_booking?
   end
 
   def action_daily_booking?
@@ -479,7 +476,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def price_calculator
-    @price_calculator ||= if listing.transactable_type.action_schedule_booking?
+    @price_calculator ||= if listing.schedule_booking?
                             FixedPriceCalculator.new(self)
                           elsif action_hourly_booking?
                             HourlyPriceCalculator.new(self)

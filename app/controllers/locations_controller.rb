@@ -21,6 +21,8 @@ class LocationsController < ApplicationController
     end
     @location.track_impression(request.remote_ip)
     event_tracker.viewed_a_location(@location, { logged_in: user_signed_in? })
+    @reviews = @listing.reviews.paginate(page: params[:reviews_page])
+    @rating_questions = RatingSystem.find_by(subject: @listing.transactable_type.bookable_noun, active: true).try(:rating_questions)
   end
 
   def ask_a_question

@@ -1,0 +1,7 @@
+%tr{:data => {:template_id => waiver_agreement_template.id} }
+  %td= waiver_agreement_template.name
+  %td
+    = link_to "Edit", '#', data: { modal: true, href: edit_dashboard_company_waiver_agreement_template_path(waiver_agreement_template) }
+    = link_to 'Delete', dashboard_company_waiver_agreement_template_path(waiver_agreement_template), :method => :delete,
+        data: { confirm: 'Are you sure?' }
+

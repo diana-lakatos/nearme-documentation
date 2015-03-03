@@ -16,7 +16,7 @@
         = listing.listing_type
     .booking-body
       .booking-price
-        - if listing.transactable_type.action_schedule_booking?
+        - if listing.schedule_booking?
           %span.label
             = "#{listing.price_with_currency(:fixed_price)}"
             %span.period= t('reservations.booking_module.fixed')
@@ -44,7 +44,7 @@
                         = "#{listing.price_with_currency(:daily_price)}"
                       - else
                         = '-'
-                      %span.period= listing.action_overnight_booking? ? t('reservations.per_night') : t('reservations.per_day')
+                      %span.period= listing.overnight_booking? ? t('reservations.per_night') : t('reservations.per_day')
 
               - if listing.transactable_type.action_weekly_booking
                 %li
@@ -77,7 +77,7 @@
               %h3= t 'booking_module.hours'
               %span= pretty_availability_sentence(listing.availability)
 
-      - unless listing.transactable_type.action_schedule_booking?
+      - unless listing.schedule_booking?
         .tab-content
 
           .calendar-wrapper.date-start
@@ -122,8 +122,7 @@
             = f.select_recurring :schedule_params, [ IceCube::Rule.weekly.day(Time.zone.now.wday), IceCube::Rule.monthly.day_of_month([]).day_of_week(Time.zone.now.wday => [1]) ], allow_blank: false
 
       = render partial: 'locations/additional_charges', locals: { listing: listing }
-
-      - unless listing.transactable_type.action_schedule_booking?
+      - unless listing.schedule_booking?
         .quantity
           %span.resource{:'data-singular' => listing.listing_type, :'data-plural' => listing.listing_type.try(:pluralize)}= listing.listing_type
           = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
@@ -142,8 +141,7 @@
           = f.hidden_field :start_minute
           = f.hidden_field :end_minute
           #reservation-charges.hidden
-
-          - if listing.transactable_type.action_schedule_booking?
+          - if listing.schedule_booking?
             = f.input :quantity, collection: 1..listing.quantity, prompt: 'Select quantity', label: false
             = f.input :dates, collection: listing.next_available_occurrences(10).map { |d| l(d, format: :long) }, prompt: 'Choose date', label: false
           - else

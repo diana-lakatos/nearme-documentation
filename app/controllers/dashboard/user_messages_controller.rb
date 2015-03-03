@@ -1,7 +1,5 @@
 class Dashboard::UserMessagesController < Dashboard::BaseController
-
   before_filter :redirect_to_login, only: [:new]
-  skip_before_filter :redirect_unless_registration_completed
   skip_before_filter :authenticate_user!, only: [:new]
 
   helper_method :user_messages_decorator

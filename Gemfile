@@ -169,6 +169,7 @@ group :development do
   gem 'pry-rails'
   gem 'awesome_print'
   gem 'spring'
+  gem "spring-commands-cucumber"
 end
 
 group :test do

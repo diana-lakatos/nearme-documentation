@@ -48,19 +48,30 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       track_new_company_event
       WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Created, @user.first_listing.id)
       if buyable?
-        redirect_to dashboard_products_path
+        redirect_to dashboard_company_products_path
       else
         flash[:success] = t('flash_messages.space_wizard.space_listed', bookable_noun: @transactable_type.name)
-        redirect_to dashboard_transactable_type_transactables_path(@transactable_type)
+        redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
       end
     else
       @photos = @user.first_listing ? @user.first_listing.photos : nil
-      flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(@user.errors.full_messages)
+      flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(filter_error_messages(@user.errors.full_messages))
       render :list
     end
   end
 
   private
+
+  def filter_error_messages(messages)
+    pattern = /^Companies locations listings photos /
+    messages.collect do |message|
+      if message.to_s.match(pattern)
+        message.to_s.gsub(pattern, '')
+      else
+        message
+      end
+    end
+  end
 
   def find_transactable_type
     @transactable_type = TransactableType.includes(:custom_attributes).find(params[:transactable_type_id])
@@ -91,8 +102,8 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   end
 
   def redirect_to_dashboard_if_registration_completed
-    if current_user.try(:registration_completed?) 
-      redirect_to dashboard_transactable_type_transactables_path(@transactable_type)
+    if current_user.try(:registration_completed?)
+      redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
     end
   end
 

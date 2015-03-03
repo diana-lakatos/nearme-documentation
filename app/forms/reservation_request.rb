@@ -48,7 +48,7 @@ class ReservationRequest < Form
     end
 
     if @listing
-      if @reservation.action_hourly_booking? || @listing.transactable_type.action_schedule_booking?
+      if @reservation.action_hourly_booking? || @listing.schedule_booking?
         @start_minute = start_minute.try(:to_i)
         @end_minute = end_minute.try(:to_i)
       else
@@ -56,7 +56,7 @@ class ReservationRequest < Form
         @end_minute   = nil
       end
 
-      if listing.transactable_type.action_schedule_booking?
+      if listing.schedule_booking?
         if @dates.is_a?(String)
           @start_minute = @dates.to_datetime.min.to_i + (60 * @dates.to_datetime.hour.to_i)
           @end_minute = @start_minute
@@ -208,10 +208,10 @@ class ReservationRequest < Form
   end
 
   def build_document document_params
-    if reservation.listing.document_requirements.blank? && 
+    if reservation.listing.document_requirements.blank? &&
     PlatformContext.current.instance.documents_upload_enabled? &&
-    PlatformContext.current.instance.documents_upload.is_mandatory?
-      
+    !PlatformContext.current.instance.documents_upload.is_vendor_decides?
+
       document_params.delete :payment_document_info_attributes
       document_params[:user_id] = @user.id
       document = reservation.payment_documents.build(document_params)
@@ -221,7 +221,7 @@ class ReservationRequest < Form
         item: reservation.listing
       })
 
-      reservation.listing.build_upload_obligation(level: UploadObligation::LEVELS[0])
+      reservation.listing.build_upload_obligation(level: UploadObligation.default_level)
 
       document.build_payment_document_info(
         document_requirement: document_requirement,
@@ -245,7 +245,7 @@ class ReservationRequest < Form
   def files_cannot_be_empty
     reservation.payment_documents.each do |document|
       unless document.valid?
-        self.errors.add(:base, "file_cannot_be_empty".to_sym) unless self.errors[:base].include?(I18n.t("activemodel.errors.models.reservation_request.attributes.base.file_cannot_be_empty")) 
+        self.errors.add(:base, "file_cannot_be_empty".to_sym) unless self.errors[:base].include?(I18n.t("activemodel.errors.models.reservation_request.attributes.base.file_cannot_be_empty"))
       end
     end
   end

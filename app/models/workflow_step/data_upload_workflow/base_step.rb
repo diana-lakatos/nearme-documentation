@@ -20,8 +20,8 @@ class WorkflowStep::DataUploadWorkflow::BaseStep < WorkflowStep::BaseStep
     { data_upload: @data_upload }
   end
 
-  def transactable_type_id
-    @data_upload.transactable_type_id
+  def importable_id
+    @data_upload.importable_id
   end
 
 end

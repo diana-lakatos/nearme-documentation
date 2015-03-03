@@ -8,6 +8,7 @@ class TransactableType < ActiveRecord::Base
 
   MAX_PRICE = 2147483647
   AVAILABLE_TYPES = ['Listing', 'Buy/Sell']
+  BOOKING_TYPES = %w(regular overnight schedule).freeze
 
   attr_accessor :enable_cancellation_policy
 
@@ -133,5 +134,22 @@ class TransactableType < ActiveRecord::Base
   def wizard_path
     "/transactable_types/#{id}/new"
   end
+
+  def booking_choices
+    BOOKING_TYPES.select do |booking_type|
+      if booking_type == 'regular'
+        %w(hourly daily weekly monthly free).any? { |period| attributes["action_#{period}_booking"] }
+      else
+        attributes["action_#{booking_type}_booking"]
+      end
+    end
+  end
+
+  BOOKING_TYPES.each do |booking_type|
+    define_method("#{booking_type}_booking_enabled?") do
+      booking_choices.include?(booking_type)
+    end
+  end
+
 end
 

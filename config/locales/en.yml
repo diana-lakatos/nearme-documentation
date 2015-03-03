@@ -74,6 +74,9 @@ en:
         explanation1: 'This will provide a tracking code and a shipping label for your product sale.'
         explanation2: "Select your item's dimensions from the menu below or add your own measures."
   instance_admin:
+    shipping_options:
+      dimensions_templates:
+        add_new_dimensions_template: '+ Add new dimension template'
     manage:
       reviews:
         index:
@@ -201,6 +204,11 @@ en:
         choose_another_file: 'Choose another file'
         choose_file: 'Choose file'
         no_file_chosen: 'No file chosen'
+      credit_card: 'Credit Card'
+      manual_payment: 'Manual Payment'
+      manual_payment_description: 'You will make payment in person'
+      invalid_cc: "Those credit card details don't look valid"
+      invalid_payment_method: "Please choose payment method"
 
       placeholders:
         first_name: 'Enter your first name'
@@ -501,6 +509,7 @@ en:
   registrations:
     tell_us: 'Tell us a little about yourself'
     custom_attributes: 'Custom Attributes'
+    sort: 'Sort:'
     sms_preferences:
       new_reservation: 'I receive a reservation request.'
       reservation_state_changed: 'A reservation I have requested is accepted or declined.'
@@ -575,6 +584,7 @@ en:
     price_too_low: '%{price} is too low'
   data_upload:
     manage:
+      bulk_upload: 'Bulk upload'
       csv_file: 'Csv File'
       review_file: 'Review File'
       import: 'Import '
@@ -614,10 +624,6 @@ en:
     rating:
       experience_hosting: "How was your experience hosting %{name}?"
       experience_at: "How was your experience at '%{name}'?"
-  instance_admin:
-    shipping_options:
-      dimensions_templates:
-        add_new_dimensions_template: '+ Add new dimension template'
 
   top_navbar:
     sign_up: 'Sign Up'
@@ -744,4 +750,17 @@ en:
       card_number: 'Card number'
       expiration_date: 'Expiration date'
       security_code: 'Security code'
+
+  shared:
+    booking_types_tabs:
+      booking_types: 'Booking types'
+      booking_type_regular: 'Regular'
+      booking_type_schedule: 'Schedule'
+      booking_type_overnight: 'Overnight'
+
+  user_reviews:
+    reviews_about_this_seller: "Reviews about this seller"
+    reviews_left_by_this_seller: "Reviews left by this seller"
+    reviews_about_this_buyer: "Reviews about this buyer"
+    reviews_left_by_this_buyer: "Reviews left by this buyer"
 

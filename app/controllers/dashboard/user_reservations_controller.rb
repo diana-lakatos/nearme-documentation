@@ -1,7 +1,5 @@
 class Dashboard::UserReservationsController < Dashboard::BaseController
 
-  skip_before_filter :redirect_unless_registration_completed
-
   before_filter :only => [:user_cancel] do |controller|
     unless allowed_events.include?(controller.action_name)
       flash[:error] = t('flash_messages.reservations.invalid_operation')
@@ -122,7 +120,7 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
     if @reservation.owner.id == current_user.id
       dashboard_user_reservations_path
     else
-      dashboard_host_reservations_path
+      dashboard_company_host_reservations_path
     end
   end
 

@@ -570,6 +570,33 @@ body.buy-sell-theme {
     color: #858585;
   }
 
+  .reviews-dropdown {
+    display: inline-block;
+    .title {
+      font-size: 14px;
+      color: #5dbded;
+    }
+
+    .ico-chevron-down {
+      font-size: 14px;
+      margin-left: 5px;
+      color: gray;
+    }
+
+    .dropdown-menu {
+      min-width: 200px;
+
+      li {
+        padding: 0 15px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #f1f1f1;
+        }
+      }
+    }
+  }
+
   .cart-view {
     margin-top: -30px;
     padding-top: 30px;

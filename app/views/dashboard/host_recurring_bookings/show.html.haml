@@ -5,7 +5,7 @@
 
 .dash-body
   - if @guest_list.reservations_scope.empty? && !only_reservations && @guest_list.recurring_bookings_scope.empty?
-    = render 'dashboard/host_reservations/promote_locations', locations: @locations
+    = render 'dashboard/company/host_reservations/promote_locations', locations: @locations
   - else
     .recurring-booking-summary
       %h2

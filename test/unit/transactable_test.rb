@@ -483,4 +483,20 @@ class TransactableTest < ActiveSupport::TestCase
     @transactable = FactoryGirl.create(:transactable)
     assert_not_nil @transactable.reload.external_id
   end
+
+  context "booking methods" do
+    setup do
+      @transactable = FactoryGirl.create(:transactable)
+    end
+
+    should "define booking methods" do
+      TransactableType::BOOKING_TYPES.each do |bt|
+        assert(@transactable.respond_to?("#{bt}_booking?"))
+      end
+    end
+
+    should "return true for needed booking type" do
+      assert_equal('regular', @transactable.booking_type)
+    end
+  end
 end

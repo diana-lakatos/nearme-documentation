@@ -22,7 +22,7 @@
         %tbody
 
           = render partial: 'dashboard/support/tickets/ticket', collection: @tickets
-    = will_paginate @tickets
+    = will_paginate_styled @tickets
 
 - content_for :script do
   :javascript

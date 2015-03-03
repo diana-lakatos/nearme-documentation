@@ -20,6 +20,7 @@ Spree::Order.class_eval do
 
   after_save :purchase_shippo_rate
   before_create :store_platform_context_detail
+  before_update :reject_empty_documents
 
   alias_method :old_finalize!, :finalize!
 
@@ -31,6 +32,21 @@ Spree::Order.class_eval do
   _validate_callbacks.each do |callback|
     callback.raw_filter.attributes.delete(:email) if callback.raw_filter.is_a?(ActiveModel::Validations::PresenceValidator)
     callback.raw_filter.attributes.delete(:email) if callback.raw_filter.is_a?(EmailValidator)
+  end
+
+  PAYMENT_METHODS = {
+    :credit_card => 'credit_card',
+    :manual      => 'manual',
+  }
+
+  validates_inclusion_of :payment_method, in: PAYMENT_METHODS.values, allow_nil: true
+
+  def credit_card_payment?
+    payment_method == Reservation::PAYMENT_METHODS[:credit_card]
+  end
+
+  def manual_payment?
+    payment_method == Reservation::PAYMENT_METHODS[:manual]
   end
 
   def finalize!
@@ -99,5 +115,16 @@ Spree::Order.class_eval do
     self.platform_context_detail_type = PlatformContext.current.platform_context_detail.class.to_s
     self.platform_context_detail_id = PlatformContext.current.platform_context_detail.id
   end
+
+  def reject_empty_documents
+    if self.state == "complete"
+      self.payment_documents = self.payment_documents.reject { |document| document.file.blank? }
+    end
+  end
+
+  def possible_manual_payment?
+    instance.possible_manual_payment?
+  end
+
 end
 

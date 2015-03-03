@@ -6,7 +6,7 @@ module CustomAttributes
 
       def set_custom_attributes(store_accessor_name)
         metaclass = class << self; self; end
-        hstore_attributes = custom_attributes_names_types_hash
+        hstore_attributes = custom_attributes_names_types_hash.reject { |k, v| k.include?('_price_cents') }
         metaclass.class_eval do
           hstore_attributes.each do |key, type|
             define_method("#{key}") do

@@ -6,7 +6,8 @@ class FormComponent < ActiveRecord::Base
 
   SPACE_WIZARD = 'space_wizard'
   PRODUCT_ATTRIBUTES = 'product_attributes'
-  FORM_TYPES = [SPACE_WIZARD, PRODUCT_ATTRIBUTES]
+  TRANSACTABLE_ATTRIBUTES = 'transactable_attributes'
+  FORM_TYPES = [SPACE_WIZARD, PRODUCT_ATTRIBUTES, TRANSACTABLE_ATTRIBUTES]
 
   include RankedModel
 

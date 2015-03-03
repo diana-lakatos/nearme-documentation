@@ -6,8 +6,8 @@
   - else
     -if !only_reservations
       - @guest_list.recurring_bookings.each do |recurring_booking|
-        = render 'dashboard/host_reservations/recurring_booking', recurring_booking: recurring_booking
+        = render 'dashboard/company/host_reservations/recurring_booking', recurring_booking: recurring_booking
 
 
     - @guest_list.reservations.each do |reservation|
-      = render 'dashboard/host_reservations/reservation', reservation: reservation
+      = render 'dashboard/company/host_reservations/reservation', reservation: reservation

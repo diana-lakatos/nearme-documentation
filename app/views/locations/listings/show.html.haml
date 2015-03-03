@@ -26,7 +26,7 @@
                 The listing
                 - if current_user.try(:admin) && @location.administrator.present?
                   = link_to login_as_admin_user_path(@location.administrator,
-                      :return_to => edit_manage_listing_path(@listing)), :method => :post,
+                      :return_to => edit_dashboard_company_location_path(@listing)), :method => :post,
                       data: { confirm: 'This will log you out and re-log you in as location administrator.' } do
                     %span.ico-edit
 

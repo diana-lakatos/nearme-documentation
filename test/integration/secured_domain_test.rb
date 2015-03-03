@@ -34,8 +34,8 @@ class SecuredDomainTest < ActionDispatch::IntegrationTest
         domain = FactoryGirl.create(:secured_domain, name: 'secured.com')
         https!
         host! domain.name
-        get manage_locations_path
-        assert_redirected_to new_user_session_url(host: domain.name, protocol: 'https', return_to: manage_locations_url)
+        get dashboard_url
+        assert_redirected_to new_user_session_url(host: domain.name, protocol: 'https', return_to: dashboard_url)
       end
     end
 
@@ -43,8 +43,8 @@ class SecuredDomainTest < ActionDispatch::IntegrationTest
       should 'be redirected to secured login' do
         domain = FactoryGirl.create(:unsecured_domain, name: 'unsecured.com')
         host! domain.name
-        get manage_locations_path
-        assert_redirected_to new_user_session_url(host: 'example.com', protocol: 'https', return_to: manage_locations_url)
+        get dashboard_url
+        assert_redirected_to new_user_session_url(host: 'example.com', protocol: 'https', return_to: dashboard_url)
       end
 
       should 'be redirected back with valid token' do
@@ -55,9 +55,9 @@ class SecuredDomainTest < ActionDispatch::IntegrationTest
         User::TemporaryTokenVerifier.any_instance.stubs(:generate => 'my_little_token')
 
         user_hash = {user: {email: user.email, password: user.password}}
-        post user_session_url(user_hash.merge(host: 'example.com', protocol: 'https', return_to: manage_locations_url(host: domain.name, protocol: 'http')))
+        post user_session_url(user_hash.merge(host: 'example.com', protocol: 'https', return_to: dashboard_url(host: domain.name, protocol: 'http')))
         assert_response :redirect
-        assert_redirected_to manage_locations_url(host: domain.name, protocol: 'http', token: 'my_little_token')
+        assert_redirected_to dashboard_url(host: domain.name, protocol: 'http', token: 'my_little_token')
       end
     end
   end

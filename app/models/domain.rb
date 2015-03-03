@@ -40,11 +40,6 @@ class Domain < ActiveRecord::Base
   after_save :mark_as_default
 
   validates_presence_of :target_type
-  validates_each :name do |record, attr, value|
-    if value =~ /^(www\.)?desksnear\.me$/i
-      record.errors[:name] << "This domain is not available."
-    end
-  end
 
   validates :redirect_code, inclusion: { in: REDIRECT_CODES }, allow_blank: true
   validates :redirect_to, presence: true, if: :redirect_code?
