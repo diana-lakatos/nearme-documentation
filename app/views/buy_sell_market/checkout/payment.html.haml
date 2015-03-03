@@ -24,16 +24,16 @@
             - if @additional_charges.try(:optional_charges).present?
               %thead
                 %th#options= t 'buy_sell_market.checkout.labels.options'
-              %tbody{data: { :'additional-charges' => true } }
+              %tbody{:'data-additional-charges' => true }
                 - @additional_charges.optional_charges.each do |charge|
-                  %tr
+                  %tr{:'data-additional-charge-wrapper' => true }
                     %td
                       = check_box_tag 'additional_charge_ids[]', charge.id, params[:additional_charge_ids].try(:include?, "#{charge.id}")
                       = charge.name
 
                     %td= humanized_money_with_cents_and_symbol charge.amount
                     %td
-                    %td= humanized_money_with_cents_and_symbol charge.amount
+                    %td #{currency_content_tag(charge.amount.currency, charge.amount, :span, { :rel => false }, { :'data-additional-charge-price' => true})}
           .divider
 
           %table.payment-totals{align: 'right'}
@@ -56,7 +56,7 @@
                   %td= humanized_money_with_cents_and_symbol charge.amount
             %tr
               %td.total= t 'buy_sell_market.checkout.labels.total2'
-              %td.total= humanized_money_with_cents_and_symbol @order.total_amount_to_charge
+              %td.total #{currency_content_tag(@order.total_amount_to_charge.currency, @order.total_amount_to_charge, :span, { :rel => false }, { :'data-total-price' => true})}
 
       - if platform_context.instance.documents_upload_enabled?
         %section.checkout-form
