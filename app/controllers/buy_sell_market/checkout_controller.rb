@@ -48,9 +48,11 @@ class BuySellMarket::CheckoutController < ApplicationController
     end
     params[:order] ||= {}
     if @order.payment?
+      @additional_charges = platform_context.instance.additional_charge_types
       checkout_service.update_payment_documents
       @order.payment_method = params[:order][:payment_method]
       if @order.manual_payment? && @order.possible_manual_payment?
+        setup_upsell_charges
         create_spree_payment_records
       elsif @billing_gateway.processor.present?
         @order.payment_method = Spree::Order::PAYMENT_METHODS[:credit_card]
@@ -68,8 +70,11 @@ class BuySellMarket::CheckoutController < ApplicationController
           verification_value: @order.card_code
         )
         if @order.billing_authorization.present?
-          # all done, proceeding
-        elsif credit_card.valid?
+          # all done, proceeding, we don't want to setup upsell charges as this might result in charging less/more
+          # than we should
+        else
+          setup_upsell_charges
+          if credit_card.valid?
           response = @billing_gateway.authorize(@order.total_amount_to_charge, credit_card)
           if response[:error].present?
             @order.errors.add(:cc, response[:error])
@@ -78,7 +83,6 @@ class BuySellMarket::CheckoutController < ApplicationController
             p.failure!
             render_step order_state and return
           else
-            setup_upsell_charges
             @order.create_billing_authorization(
               token: response[:token],
               payment_gateway_class: response[:payment_gateway_class],
@@ -93,9 +97,10 @@ class BuySellMarket::CheckoutController < ApplicationController
               service_fee_amount_host_cents:  @order.service_fee_amount_host_cents
             )
           end
-        else
-          @order.errors.add(:cc, I18n.t('buy_sell_market.checkout.invalid_cc'))
-          render_step order_state and return
+          else
+            @order.errors.add(:cc, I18n.t('buy_sell_market.checkout.invalid_cc'))
+            render_step order_state and return
+          end
         end
       else
         @order.errors.add(:payment_method, I18n.t('buy_sell_market.checkout.invalid_payment_method'))
@@ -191,6 +196,8 @@ class BuySellMarket::CheckoutController < ApplicationController
   end
 
   def setup_upsell_charges
+
+    @order.additional_charges.destroy_all
     additional_charge_ids = AdditionalChargeType.get_mandatory_and_optional_charges(params[:additional_charge_ids]).pluck(:id)
     additional_charge_ids.each do |id|
       next if @order.additional_charges.pluck(:additional_charge_type_id).include?(id)

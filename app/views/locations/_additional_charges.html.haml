@@ -1,4 +1,4 @@
-#additional_charges
+.additional-charges{id: "additional-charges-#{listing.id}", :'data-additional-charges' => true}
   - platform_context.instance.additional_charge_types.sort.each do |ac|
     - if ac.mandatory?
       .mandatory-charge{ data: { 'mandatory-charge' => ac.amount } }

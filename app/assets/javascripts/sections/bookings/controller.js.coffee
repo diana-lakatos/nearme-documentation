@@ -46,7 +46,7 @@ class Bookings.Controller
     @securedDomain = @bookButton.data('secured')
     @storeReservationRequestUrl = @bookButton.data('store-reservation-request-url')
     @userSignedIn = @bookButton.data('user-signed-in')
-    @bookingTabs = @container.find("#pricingTabs li a")
+    @bookingTabs = @container.find("[data-pricing-tabs] li a")
     @setReservationType()
 
 
@@ -138,8 +138,8 @@ class Bookings.Controller
       @quantityResourceElement.text(@quantityResourceElement.data('singular'))
 
   updateCharges: ->
-    additionalChargeFields = @container.find("#additional_charges input[name='reservation_request[additional_charge_ids][]']")
-    reservationRequestForm = $('#reservation_request_form_' + @listing.id + ' #reservation-charges')
+    additionalChargeFields = @container.find("[data-additional-charges] input[name='reservation_request[additional_charge_ids][]']")
+    reservationRequestForm = @container.find('[data-reservation-charges]')
     reservationRequestForm.empty()
     additionalChargeFields.clone().prependTo(reservationRequestForm)
 

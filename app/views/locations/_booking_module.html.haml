@@ -21,14 +21,14 @@
             = "#{listing.price_with_currency(:fixed_price)}"
             %span.period= t('reservations.booking_module.fixed')
         - else
-          %ul#pricingTabs.nav.nav-tabs
+          %ul.pricing-tabs.nav.nav-tabs{:'data-pricing-tabs' => true}
             - if listing.action_free_booking?
               %li
                 %span.label
                   = t 'booking_module.free'
             - if listing.action_hourly_booking?
               = content_tag :li, data: { hourly: true } do
-                = link_to '#hourly-booking' do
+                = link_to "#hourly-booking-#{listing.id}" do
                   %span.label
                     - unless listing.hourly_price.to_f.zero?
                       = "#{listing.price_with_currency(:hourly_price)}"
@@ -38,7 +38,7 @@
             - if listing.action_daily_booking?
               - if listing.transactable_type.action_daily_booking
                 = content_tag :li, data: { daily: true } do
-                  = link_to '#daily-booking' do
+                  = link_to "#daily-booking-#{listing.id}" do
                     %span.label
                       - unless listing.daily_price.to_f.zero?
                         = "#{listing.price_with_currency(:daily_price)}"
@@ -48,7 +48,7 @@
 
               - if listing.transactable_type.action_weekly_booking
                 %li
-                  = link_to '#daily-booking' do
+                  = link_to "#daily-booking-#{listing.id}" do
                     %span.label
                       - unless listing.weekly_price.to_f.zero?
                         = "#{listing.price_with_currency(:weekly_price)}"
@@ -58,7 +58,7 @@
 
               - if listing.transactable_type.action_monthly_booking
                 %li
-                  = link_to '#daily-booking' do
+                  = link_to "#daily-booking-#{listing.id}" do
                     %span.label
                       - unless listing.monthly_price.to_f.zero?
                         = "#{listing.price_with_currency(:monthly_price)}"
@@ -85,13 +85,13 @@
               %span.ico-calender-end
               %span.calendar-text= t 'booking_module.start'
           - if listing.action_hourly_booking?
-            #hourly-booking.tab-pane.calendar-wrapper.time-picker
+            .hourly-booking.tab-pane.calendar-wrapper.time-picker{id: "hourly-booking-#{listing.id}"}
               .time
                 %span.ico-clock
                 %span.time-text= t 'booking_module.nine'
 
           - if listing.action_daily_booking?
-            #daily-booking.tab-pane.calendar-wrapper.date-end
+            .daily-booking.tab-pane.calendar-wrapper.date-end{id: "daily-booking-#{listing.id}"}
               .calendar
                 %span.ico-calender-start
                 %span.calendar-text= t 'booking_module.end'
@@ -140,7 +140,7 @@
           = f.hidden_field :end_on
           = f.hidden_field :start_minute
           = f.hidden_field :end_minute
-          #reservation-charges.hidden
+          .reservation-charges.hidden{:'data-reservation-charges' => true}
           - if listing.schedule_booking?
             = f.input :quantity, collection: 1..listing.quantity, prompt: 'Select quantity', label: false
             = f.input :dates, collection: listing.next_available_occurrences(10).map { |d| l(d, format: :long) }, prompt: 'Choose date', label: false
@@ -180,8 +180,8 @@
 
   - content_for :domready do
     $("##{listing.to_param} .quantity select").customSelect();
-    $('#pricingTabs a').click(function (e) {
+    $('.pricing-tabs a').click(function (e) {
     e.preventDefault();
     $(this).tab('show');
     })
-    $('#pricingTabs a:first').tab('show');
+    $('.pricing-tabs a:first').tab('show');

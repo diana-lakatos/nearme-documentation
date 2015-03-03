@@ -24,15 +24,16 @@
             - if @additional_charges.try(:optional_charges).present?
               %thead
                 %th#options= t 'buy_sell_market.checkout.labels.options'
-              %tbody
+              %tbody{data: { :'additional-charges' => true } }
                 - @additional_charges.optional_charges.each do |charge|
                   %tr
                     %td
-                      = check_box_tag 'additional_charge_ids[]', charge.id
+                      = check_box_tag 'additional_charge_ids[]', charge.id, params[:additional_charge_ids].try(:include?, "#{charge.id}")
                       = charge.name
-                    %td= charge.amount
+
+                    %td= humanized_money_with_cents_and_symbol charge.amount
                     %td
-                    %td= charge.amount
+                    %td= humanized_money_with_cents_and_symbol charge.amount
           .divider
 
           %table.payment-totals{align: 'right'}
