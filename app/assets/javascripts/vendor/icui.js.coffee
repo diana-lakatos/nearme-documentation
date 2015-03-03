@@ -109,8 +109,10 @@ do ($ = jQuery) ->
     # cloning UI.
     render: ->
       out = $ "<div></div>"
-      out.append $("<span class='btn clone'>+</span>").click(@clone) if @clonable()
-      out.append $("<span class='btn destroy'>-</span>").click(@destroy) if @destroyable()
+      buttons = $ "<div class='col-md-2'></div>"
+      buttons.append $("<span class='btn clone'>+</span>").click(@clone) if @clonable()
+      buttons.append $("<span class='btn destroy'>-</span>").click(@destroy) if @destroyable()
+      out.append buttons
       out.append @renderChildren()
       out.children() # <- get's rid of the container div
 
@@ -159,7 +161,7 @@ do ($ = jQuery) ->
     render: ->
       @target.html(@renderChildren())
       unless @has_ending_time
-        link = $("<a href='#'>Add Ending Time</a> ")
+        link = $("<div class='row'><a href='#'>Add Ending Time</a></div> ")
         link.click =>
           @has_ending_time = yes
           link.hide()
@@ -167,9 +169,9 @@ do ($ = jQuery) ->
           @triggerRender()
           false
         @target.append(link)
-        @target.append("<br />")
+        # @target.append("<br />")
       unless @has_rules
-        link = $("<a href='#'>Add Repetition</a>")
+        link = $("<div class='row'><a href='#'>Add Repetition</a></div>")
         link.click =>
           @has_rules = yes
           link.hide()
@@ -240,13 +242,22 @@ do ($ = jQuery) ->
 
     render: ->
       @elem = $("""
-    <div class="toplevel">Event <select>
-      #{Helpers.option 1, "occurs", => @data.type.match /^r/}
-      #{Helpers.option -1, "doesn't occur", => @data.type.match /^ex/}
-    </select> on <select>
-      #{Helpers.option 'dates', "specific dates", => @data.type.match /times$/}
-      #{Helpers.option 'rules', "every", => @data.type.match /rules$/}
-    </select>
+    <div class="toplevel">
+      <div class='row'>
+        <div class="col-md-2 label"><label>Event</label></div>
+        <div class="col-md-4 small-padding">
+          <select class="select required selectpicker">
+            #{Helpers.option 1, "occurs", => @data.type.match /^r/}
+            #{Helpers.option -1, "doesn't occur", => @data.type.match /^ex/}
+          </select>
+        </div>
+        <div class="col-md-4 small-padding">
+          <select>
+            #{Helpers.option 'dates', "specific dates", => @data.type.match /times$/}
+            #{Helpers.option 'rules', "every", => @data.type.match /rules$/}
+          </select>
+        </div>
+      </div>
     </div>
     """)
       ss = @elem.find('select')
@@ -269,7 +280,11 @@ do ($ = jQuery) ->
             @data.type = 'exrules'
           @children = [new Rule @]
         @triggerRender()
-      @elem.append super
+      row = @elem.find('div.row')
+      children = super.toArray()
+      row.append children.shift()
+      @elem.append children
+      @elem.find('select').selectpicker()
       @elem
 
   # Choosing Individual DateTimes
@@ -287,9 +302,16 @@ do ($ = jQuery) ->
     getData: -> @data
     render: ->
       @elem = $("""
-        <div class="DatePicker">
-          <input type="date" value="#{@data.time.strftime('%Y-%m-%d')}" />
-          <input type="time" value="#{@data.time.strftime('%H:%M')}" />
+        <div class="DatePicker row">
+          <div class="col-md-2 label">
+            <label>#{@getData().label || ''}</label>
+          </div>
+          <div class="col-md-4 small-padding">
+            <input type="date" value="#{@data.time.strftime('%Y-%m-%d')}" />
+          </div>
+          <div class="col-md-4 small-padding">
+            <input type="time" value="#{@data.time.strftime('%H:%M')}" />
+          </div>
         </div>
       """)
       ss = @elem.find('input')
@@ -297,6 +319,10 @@ do ($ = jQuery) ->
       time = ss.last()
       ss.change (e) =>
         @data.time = Helpers.dateFromString date.val() + ' ' + time.val()
+      @elem.find("input[type='date']").datepicker(
+        dateFormat: "yy-mm-dd",
+        altFormat: "yy-mm-dd"
+      )
       @elem.append super
       @elem
 
@@ -307,11 +333,9 @@ do ($ = jQuery) ->
   class StartDate extends DatePicker
     destroyable: -> false
     clonable: -> false
-    getData: -> {type: "start_date", values: @data.time}
-
+    getData: -> {type: "start_date", values: @data.time, label: "Start time"}
     render: ->
       @elem = super
-      @elem.prepend("Start time")
       @elem
 
   # Picking the ending Date
@@ -321,11 +345,10 @@ do ($ = jQuery) ->
   class EndTime extends DatePicker
     destroyable: -> true
     clonable: -> false
-    getData: -> {type: "end_time", values: @data.time}
+    getData: -> {type: "end_time", values: @data.time, label: "End time"}
 
     render: ->
       @elem = super
-      @elem.prepend("End time")
       @elem
 
   # Specifying Rules
@@ -364,13 +387,19 @@ do ($ = jQuery) ->
     render: ->
       @elem = $("""
         <div class="Rule">
-          Every
-          <input type="number" value="#{@data.interval}" size="2" width="30" />
-          #{Helpers.select @data.rule_type,
-          "IceCube::YearlyRule": 'years'
-          "IceCube::MonthlyRule": 'months'
-          "IceCube::WeeklyRule": 'weeks'
-          "IceCube::DailyRule": 'days'}
+          <div class="row">
+            <div class="col-md-2 label"><label>Every</label></div>
+            <div class="col-md-4 small-padding">
+              <input type="number" value="#{@data.interval}" size="2" width="30" />
+            </div>
+            <div class="col-md-4 small-padding">
+              #{Helpers.select @data.rule_type,
+              "IceCube::YearlyRule": 'years'
+              "IceCube::MonthlyRule": 'months'
+              "IceCube::WeeklyRule": 'weeks'
+              "IceCube::DailyRule": 'days'}
+            </div>
+          </div>
         </div>
       """)
       @elem.find('input').change (e) =>
@@ -379,7 +408,10 @@ do ($ = jQuery) ->
         @data.rule_type = e.target.value
         @children = [new Validation @]
         @triggerRender()
-      @elem.append super
+      row = @elem.find('div.row')
+      children = super.toArray()
+      row.append children.shift()
+      @elem.append children
       @elem
 
   # Validation
@@ -441,10 +473,15 @@ do ($ = jQuery) ->
     render: ->
       str = """
       <div class="Validation">
-        #{if @parent.children.indexOf(@) > 0 then "and if" else "If"} <select>
-          #{Helpers.option "count", 'event occured less than', @data.type}
-          #{Helpers.option "until", 'event is before', @data.type}
-          #{Helpers.option "day", 'is this day of the week', @data.type}"""
+        <div class="row">
+          <div class="col-md-2 label"> 
+            <label>#{if @parent.children.indexOf(@) > 0 then "and if" else "If"}</label>
+          </div>
+          <div class="col-md-8 small-padding big-input">
+            <select>
+              #{Helpers.option "count", 'event occured less than', @data.type}
+              #{Helpers.option "until", 'event is before', @data.type}
+              #{Helpers.option "day", 'is this day of the week', @data.type}"""
       if @parent.data.rule_type in ["IceCube::YearlyRule", "IceCube::MonthlyRule"]
         str += Helpers.option "day_of_week", 'is this day of the nth week', @data.type
         str += Helpers.option "day_of_month", 'is the nth day of the month', @data.type
@@ -452,7 +489,9 @@ do ($ = jQuery) ->
         str += Helpers.option "day_of_year", 'is the nth day of the year', @data.type
         str += Helpers.option "offset_from_pascha", 'is offset from Pascha', @data.type
       str += """
-        </select>
+            </select>
+          </div>
+        <div>
       </div>
       """
       @elem = $(str)
@@ -468,7 +507,10 @@ do ($ = jQuery) ->
         @children = [new klass @]
         @data.type = e.target.value
         @triggerRender()
-      @elem.append super
+      row = @elem.find('div.row')
+      children = super.toArray()
+      row.append children.shift()
+      @elem.append children
       @elem
 
   # Validation Types
@@ -494,7 +536,9 @@ do ($ = jQuery) ->
       @elem = $ @html()
       @elem.find('input,select').change (e) =>
         @data.value = @dataTransformer(e.target.value)
-      @elem.append(super)
+      row = @elem.find('div.row')
+      children = super.toArray()
+      row.append children.shift()
       @elem
   # Count
   # -----
@@ -502,8 +546,11 @@ do ($ = jQuery) ->
   class Count extends ValidationInstance
     clonable: -> false
     html: -> """
-      <div class="Count">
-        <input type="number" value=#{@data.value} /> times.
+      <div class="row">
+        <div class="col-md-2 label"><label></label></div>
+        <div class="Count col-md-5 small-padding">
+          <input type="number" value=#{@data.value} /> times.
+        </div>
       </div>
       """
   # Until
@@ -527,11 +574,16 @@ do ($ = jQuery) ->
         else 'th'
       str = """
       <div class="DayOfMonth">
-        <select>"""
+        <div class="row">
+          <div class="col-md-2 label"><label></label></div>
+          <div class="col-md-8 small-padding">
+            <select>"""
       for i in [1..31]
         str += Helpers.option i.toString(), "#{i}#{pluralize i}", @data.value.toString()
       str += Helpers.option "-1", "last", @data.value.toString()
       str +=  """</select> day of the month.
+          </div>
+        </div>
       </div>
       """
   # Day
@@ -542,10 +594,16 @@ do ($ = jQuery) ->
     html: ->
       str = """
       <div class="Day">
-        <select>"""
+        <div class="row">
+          <div class="col-md-2 label"><label></label></div>
+          <div class="col-md-8 small-padding">
+            <select>"""
       for day, i in Helpers.daysOfTheWeek
         str += Helpers.option i.toString(), day, @data.value.toString()
-      str +=  """</select>
+      str +=  """
+            </select>
+          </div>
+        </div>
       </div>
       """
   # Day of Week
@@ -561,11 +619,21 @@ do ($ = jQuery) ->
     render: ->
       str = """
       <div class="DayOfWeek">
-        <input type="number" value=#{@data.nth} /><span>nth</span>.
-        <select>"""
+        <div class="row">
+          <div class="col-md-2 label"><label><label></div>
+          <div class="col-md-4 small-padding">
+              <input type="number" value=#{@data.nth} /><span>nth</span>.
+          </div>
+          <div class="col-md-4 small-padding">
+            <select>
+      """
       for day, i in Helpers.daysOfTheWeek
         str += Helpers.option i.toString(), day, @data.day.toString()
-      str +=  "</select></div>"
+      str +=  "
+            </select>
+          </div>
+        </div>
+      </div>"
       @elem = $ str
       pluralize = => @elem.find('span').first().text switch @data.nth
         when 1 then 'st'
@@ -577,8 +645,10 @@ do ($ = jQuery) ->
         pluralize()
       @elem.find('select').change (e) =>
         @data.day = parseInt e.target.value
+      row = @elem.find('div.row')
+      children = super.toArray()
+      row.append children.shift()
       pluralize()
-      @elem.append(super)
       @elem
 
   # Day of Year
@@ -591,17 +661,27 @@ do ($ = jQuery) ->
     render: ->
       str = """
       <div class="DayOfYear">
-        <input type="number" value=#{Math.abs @data.value} /> day from the
-        <select>
-          #{Helpers.option '+', 'beggening', => @data.value >= 0}
-          #{Helpers.option '-', 'end', => @data.value < 0}
-        </select> of the year.</div>
+        <div class="row">
+          <div class="col-md-2 label"><label><label></div>
+          <div class="col-md-4 small-padding">
+            <input type="number" value=#{Math.abs @data.value} /> day from the
+          </div>
+          <div class="col-md-4 small-padding">
+            <select>
+              #{Helpers.option '+', 'beginning', => @data.value >= 0}
+              #{Helpers.option '-', 'end', => @data.value < 0}
+            </select> of the year.
+          </div>
+        </div>
+      </div>
       """
       @elem = $ str
       @elem.find('input,select').change (e) =>
         @data.value = parseInt @elem.find('input').val()
         @data.value *= if @elem.find('select').val() == '+' then 1 else -1
-      @elem.append(super)
+      row = @elem.find('div.row')
+      children = super.toArray()
+      row.append children.shift()
       @elem
 
   # Offset from Pascha
@@ -617,17 +697,27 @@ do ($ = jQuery) ->
     render: ->
       str = """
       <div class="OffsetFromPascha">
-        <input type="number" value=#{Math.abs @data.value} /> days
-        <select>
-          #{Helpers.option '+', 'after', => @data.value >= 0}
-          #{Helpers.option '-', 'before', => @data.value < 0}
-        </select> Pascha.</div>
+        <div class="row">
+          <div class="col-md-2 label"><label><label></div>
+          <div class="col-md-4 small-padding">
+            <input type="number" value=#{Math.abs @data.value} /> days
+          </div>
+          <div class="col-md-4 small-padding">
+            <select>
+              #{Helpers.option '+', 'after', => @data.value >= 0}
+              #{Helpers.option '-', 'before', => @data.value < 0}
+            </select> Pascha.
+          </div>
+        </div>
+      </div>
       """
       @elem = $ str
       @elem.find('input,select').change (e) =>
         @data.value = parseInt @elem.find('input').val()
         @data.value *= if @elem.find('select').val() == '+' then 1 else -1
-      @elem.append(super)
+      row = @elem.find('div.row')
+      children = super.toArray()
+      row.append children.shift()
       @elem
 
   # ICUI
