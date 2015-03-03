@@ -23,7 +23,7 @@ class InstanceAdmin::ManageBlog::UserPostsController < InstanceAdmin::ManageBlog
   end
 
   def destroy
-    @blog_post = @instance.blog_posts.find(params[:id])
+    @blog_post = @instance.user_blog_posts.find(params[:id])
     @blog_post.destroy
     flash[:success] = t('flash_messages.blog_admin.blog_posts.blog_post_deleted')
     redirect_to instance_admin_manage_blog_user_posts_path
