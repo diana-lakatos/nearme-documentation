@@ -1,6 +1,6 @@
 class ProductForm < Form
 
-  attr_reader :all_shipping_categories, :document_requirements, :upload_obligation
+  attr_accessor :all_shipping_categories, :document_requirements, :upload_obligation
 
   attr_reader :product
 
