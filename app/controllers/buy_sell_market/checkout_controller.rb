@@ -29,12 +29,6 @@ class BuySellMarket::CheckoutController < ApplicationController
       flash[:success] = t('buy_sell_market.checkout.notices.order_placed')
       redirect_to dashboard_order_path(params[:order_id])
       return
-
-      begin
-        @charge_info = @order.near_me_payments.paid.first.charges.successful.first
-      rescue
-        @charge_info = nil
-      end
     end
 
     checkout_service.build_payment_documents if step == :payment
