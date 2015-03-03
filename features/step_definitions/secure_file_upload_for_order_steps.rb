@@ -80,6 +80,33 @@ And /^Two files should be saved$/ do
   page.should have_content(Attachable::PaymentDocument.first.file.file_name, count: 2)
 end
 
+Given /^Document upload is disabled$/ do
+  @documents_upload.update(enabled: false)
+end
+
+Given /^Upload obligation for product is blank$/ do
+  @order.line_items.first.product.upload_obligation.try(:destroy)
+end
+
+Given /^Dorument requairments for product is blank$/ do
+  @order.line_items.first.product.document_requirements.try(:destroy_all)
+end
+
+Given /^Upload obligation for product is exist$/ do
+  if @order.line_items.first.product.upload_obligation.blank?
+    @order.line_items.first.product.create_upload_obligation(level: UploadObligation::LEVELS[0])
+  end
+end
+
+Given /^Dorument requairments for product is exist$/ do
+  if @order.line_items.first.product.document_requirements.blank?
+    @order.line_items.first.product.document_requirements.create({
+      label: "Passport",
+      description: "Please upload your passport"
+    })
+  end
+end
+
 def attach_secure_file(number)
   page.execute_script("$('#order_payment_documents_attributes_#{number}_file').show();")
   attach_file("order_payment_documents_attributes_#{number}_file", "#{Rails.root}/features/fixtures/photos/boss's desk.jpg")
