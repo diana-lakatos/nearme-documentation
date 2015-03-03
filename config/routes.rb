@@ -507,11 +507,7 @@ DesksnearMe::Application.routes.draw do
         end
       end
       resource :payouts, except: [:index, :show, :new, :create, :destroy]
-      resources :products do
-        collection do
-          get :get_shipping_categories_list
-        end
-      end
+      resources :products
       resources :product_type do
         resources :products
         resources :data_uploads, only: %i(new create), controller: 'product_types/data_uploads' do
@@ -552,7 +548,11 @@ DesksnearMe::Application.routes.draw do
       end
     end #ends company namespace
 
-    resources :shipping_categories
+    resources :shipping_categories do
+      collection do
+        get :get_shipping_categories_list
+      end
+    end
 
     resources :companies, :only => [:edit, :update, :show]
     resources :host_recurring_bookings do

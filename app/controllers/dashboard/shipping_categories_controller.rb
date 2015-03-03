@@ -37,6 +37,18 @@ class Dashboard::ShippingCategoriesController < Dashboard::BaseController
     end
   end
 
+  def get_shipping_categories_list
+    @company ||= Company.new
+    @product = @company.products.build user: current_user
+    @product_form = ProductForm.new(@product)
+
+    if params['form'] == 'boarding'
+      render :partial => "shipping_profiles_list_form_boarding"
+    else
+      render :partial => "shipping_profiles_list_form_products"
+    end
+  end
+
   private
 
   def shipping_category_form_params

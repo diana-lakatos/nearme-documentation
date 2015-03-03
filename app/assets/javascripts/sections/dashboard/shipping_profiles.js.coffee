@@ -16,7 +16,7 @@ class @ShippingProfiles
 
       jQuery.ajax
         type: 'get'
-        url: '/dashboard/products/get_shipping_categories_list'
+        url: '/dashboard/shipping_categories/get_shipping_categories_list'
         data: params
         success: (data) ->
           $('.shipping_method_block.shipping_method_list').empty()
