@@ -8,6 +8,7 @@ class BoardingFormTest < ActiveSupport::TestCase
     @boarding_form = BoardingForm.new(@user)
     @shipping_category = FactoryGirl.create(:shipping_category)
     @shipping_category.company_id = @boarding_form.product_form.product.company.id
+    @shipping_category.user_id = @user.id
     @shipping_category.save!
     10.times do
       FactoryGirl.create(:taxons)
