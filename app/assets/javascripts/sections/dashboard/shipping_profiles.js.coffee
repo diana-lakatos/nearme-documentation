@@ -27,11 +27,11 @@ class @ShippingProfiles
       $(input).select2
         multiple: true
         initSelection: (element, callback) ->
-          url = '/manage/buy_sell/api/' + $(input).attr('data-api') + "?ids="+ element.val()
+          url = '/dashboard/api/' + $(input).attr('data-api') + "?ids="+ element.val()
           $.getJSON url, null, (data) ->
             callback data
         ajax:
-          url: '/manage/buy_sell/api/' + $(input).attr('data-api')
+          url: '/dashboard/api/' + $(input).attr('data-api')
           datatype: "json"
           data: (term, page) ->
             per_page: 50
