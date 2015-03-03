@@ -2,14 +2,14 @@ require 'csv'
 
 class DataImporter::CsvTemplateGenerator < DataImporter::File
 
-  def initialize(importable)
+  def initialize(importable, include_user_fields = false)
     @importable = importable
-    @models = %i(user company)
-    if import_model == :transactable
-      @models += [:location, :address, import_model, :photo]
-    else
-      @models += [import_model, :'spree/variant', :industry, :'spree/shipping_category', :'spree/image']
-    end
+    @include_user_fields = include_user_fields
+    @models = if import_model == :transactable
+        [:location, :address, import_model, :photo]
+      else
+        [import_model, :'spree/variant', :industry, :'spree/shipping_category', :'spree/image']
+      end
   end
 
   def generate
@@ -19,11 +19,15 @@ class DataImporter::CsvTemplateGenerator < DataImporter::File
   private
 
   def required_fields
-    @importable.custom_csv_fields.empty? ? static_fields : custom_fields(@importable.custom_csv_fields)
+    (@include_user_fields ? static_fields(%i(user company)) : []) + if @importable.custom_csv_fields.empty?
+        static_fields
+      else
+        custom_fields(@importable.custom_csv_fields)
+      end
   end
 
-  def static_fields
-    @models.inject([]) do |ar, model|
+  def static_fields(models = nil)
+    (models || @models).inject([]) do |ar, model|
       klass = model.to_s.classify.constantize
       ar + ((model == import_model ? klass.csv_fields(@importable) : klass.csv_fields).values)
     end

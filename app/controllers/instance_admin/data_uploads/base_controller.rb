@@ -28,7 +28,7 @@ class InstanceAdmin::DataUploads::BaseController < InstanceAdmin::BaseController
   end
 
   def download_csv_template
-    send_data DataImporter::CsvTemplateGenerator.new(@importable).generate,
+    send_data DataImporter::CsvTemplateGenerator.new(@importable, true).generate,
       filename: "#{@importable.name.parameterize}_csv_template.csv"
   end
 

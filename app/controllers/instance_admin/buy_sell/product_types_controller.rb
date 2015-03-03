@@ -50,6 +50,10 @@ class InstanceAdmin::BuySell::ProductTypesController < InstanceAdmin::BuySell::B
   end
 
   def product_type_params
-    params.require(:product_type).permit(secured_params.product_type)
+    params.require(:product_type).permit(secured_params.transactable_type).tap do |whitelisted|
+      if params[:product_type][:custom_csv_fields]
+        whitelisted[:custom_csv_fields] = params[:product_type][:custom_csv_fields].map { |el| el = el.split('=>'); { el[0] => el[1] } }
+      end
+    end
   end
 end

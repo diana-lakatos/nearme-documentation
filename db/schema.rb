@@ -2666,8 +2666,8 @@ ActiveRecord::Schema.define(version: 20150228090906) do
     t.boolean  "listings_public"
     t.boolean  "enabled"
     t.text     "metadata"
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
+    t.datetime "created_at",                                         null: false
+    t.datetime "updated_at",                                         null: false
     t.integer  "transactable_type_id"
     t.integer  "parent_transactable_id"
     t.string   "external_id"
@@ -3040,6 +3040,7 @@ ActiveRecord::Schema.define(version: 20150228090906) do
     t.string   "recipient"
     t.string   "from_type"
     t.string   "reply_to_type"
+    t.integer  "workflow_id"
   end
 
   create_table "workflow_steps", force: true do |t|
@@ -3060,6 +3061,7 @@ ActiveRecord::Schema.define(version: 20150228090906) do
     t.datetime "updated_at"
     t.text     "events_metadata"
     t.string   "workflow_type"
+    t.string   "associated_event"
   end
 
 end
