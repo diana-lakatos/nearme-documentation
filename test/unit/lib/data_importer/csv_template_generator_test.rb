@@ -20,7 +20,7 @@ class DataImporter::CsvTemplateGeneratorTest < ActiveSupport::TestCase
     context 'template for MPO' do
 
       should 'contain only public attributes' do
-        result_csv = DataImporter::CsvTemplateGenerator.new(@transactable_type).generate
+        result_csv = DataImporter::CsvTemplateGenerator.new(@transactable_type, true).generate
         assert result_csv.include?('User Email'), "User email not included in: #{result_csv}"
         assert result_csv.include?('Company Name'), "Company Name not included in: #{result_csv}"
         assert result_csv.include?('Location Email'), "Location Email not included in: #{result_csv}"
@@ -60,7 +60,7 @@ class DataImporter::CsvTemplateGeneratorTest < ActiveSupport::TestCase
 
     context 'template for MPO' do
       should 'contain only public attributes' do
-        result_csv = DataImporter::CsvTemplateGenerator.new(@product_type).generate
+        result_csv = DataImporter::CsvTemplateGenerator.new(@product_type, true).generate
         assert result_csv.include?('User Email'), "User email not included in: #{result_csv}"
         assert result_csv.include?('Company Name'), "Company Name not included in: #{result_csv}"
         assert result_csv.include?('Product Name'), "Product Name not included in: #{result_csv}"

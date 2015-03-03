@@ -21,7 +21,7 @@ class Dashboard::DataUploads::BaseController < Dashboard::BaseController
   end
 
   def download_csv_template
-    send_data DataImporter::Host::CsvTemplateGenerator.new(@importable).generate_template,
+    send_data DataImporter::Host::CsvTemplateGenerator.new(@importable).generate,
       filename: "#{@importable.name.parameterize}_csv_template.csv"
   end
 
