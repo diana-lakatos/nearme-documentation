@@ -1,0 +1,9 @@
+%tr
+  %td= additional_charge.name
+  %td= additional_charge.service
+  %td= additional_charge.amount
+  %td= additional_charge.status
+  %td
+    = link_to 'Edit', edit_instance_admin_manage_upsell_addon_path(additional_charge.id)
+    &nbsp;
+    = link_to 'Delete', instance_admin_manage_upsell_addon_path(additional_charge.id), method: :delete, data: { confirm: 'Are you sure?' }

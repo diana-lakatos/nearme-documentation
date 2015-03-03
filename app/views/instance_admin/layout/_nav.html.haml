@@ -50,7 +50,7 @@
             - next if platform_context.instance.buyable? && controller_name == 'transactable_types'
             %li
               %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/manage/" + controller_name), action: settings[:default_action]}", :class => ("active" if controller.controller_name == (settings[:controller] || controller_name).split('/').last)}
-                %span= "#{controller_name.titleize}"
+                %span= settings[:title] || controller_name.titleize
 
 
     - if @authorizer.authorized?('Blog')

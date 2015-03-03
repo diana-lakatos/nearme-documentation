@@ -26,6 +26,39 @@ ActiveRecord::Schema.define(version: 20150302181849) do
     t.datetime "updated_at"
   end
 
+  create_table "additional_charge_types", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "amount_cents"
+    t.string   "currency"
+    t.string   "commission_receiver"
+    t.integer  "provider_commission_percentage"
+    t.string   "status"
+    t.integer  "instance_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "additional_charge_types", ["instance_id"], name: "index_additional_charge_types_on_instance_id", using: :btree
+
+  create_table "additional_charges", force: true do |t|
+    t.string   "name"
+    t.integer  "amount_cents"
+    t.string   "currency"
+    t.string   "commission_receiver"
+    t.string   "status"
+    t.integer  "additional_charge_type_id"
+    t.integer  "instance_id"
+    t.integer  "target_id"
+    t.string   "target_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "additional_charges", ["additional_charge_type_id"], name: "index_additional_charges_on_additional_charge_type_id", using: :btree
+  add_index "additional_charges", ["instance_id"], name: "index_additional_charges_on_instance_id", using: :btree
+  add_index "additional_charges", ["target_id"], name: "index_additional_charges_on_target_id", using: :btree
+
   create_table "addresses", force: true do |t|
     t.integer  "instance_id"
     t.string   "address"
@@ -1534,16 +1567,16 @@ ActiveRecord::Schema.define(version: 20150302181849) do
   add_index "spree_option_values_variants", ["variant_id"], name: "index_spree_option_values_variants_on_variant_id", using: :btree
 
   create_table "spree_orders", force: true do |t|
-    t.string   "number",                       limit: 32
-    t.decimal  "item_total",                              precision: 10, scale: 2, default: 0.0,     null: false
-    t.decimal  "total",                                   precision: 10, scale: 2, default: 0.0,     null: false
+    t.string   "number",                         limit: 32
+    t.decimal  "item_total",                                precision: 10, scale: 2, default: 0.0,     null: false
+    t.decimal  "total",                                     precision: 10, scale: 2, default: 0.0,     null: false
     t.string   "state"
-    t.decimal  "adjustment_total",                        precision: 10, scale: 2, default: 0.0,     null: false
+    t.decimal  "adjustment_total",                          precision: 10, scale: 2, default: 0.0,     null: false
     t.integer  "user_id"
     t.datetime "completed_at"
     t.integer  "bill_address_id"
     t.integer  "ship_address_id"
-    t.decimal  "payment_total",                           precision: 10, scale: 2, default: 0.0
+    t.decimal  "payment_total",                             precision: 10, scale: 2, default: 0.0
     t.integer  "shipping_method_id"
     t.string   "shipment_state"
     t.string   "payment_state"
@@ -1554,27 +1587,29 @@ ActiveRecord::Schema.define(version: 20150302181849) do
     t.string   "currency"
     t.string   "last_ip_address"
     t.integer  "created_by_id"
-    t.decimal  "shipment_total",                          precision: 10, scale: 2, default: 0.0,     null: false
-    t.decimal  "additional_tax_total",                    precision: 10, scale: 2, default: 0.0
-    t.decimal  "promo_total",                             precision: 10, scale: 2, default: 0.0
-    t.string   "channel",                                                          default: "spree"
-    t.decimal  "included_tax_total",                      precision: 10, scale: 2, default: 0.0,     null: false
-    t.integer  "item_count",                                                       default: 0
+    t.decimal  "shipment_total",                            precision: 10, scale: 2, default: 0.0,     null: false
+    t.decimal  "additional_tax_total",                      precision: 10, scale: 2, default: 0.0
+    t.decimal  "promo_total",                               precision: 10, scale: 2, default: 0.0
+    t.string   "channel",                                                            default: "spree"
+    t.decimal  "included_tax_total",                        precision: 10, scale: 2, default: 0.0,     null: false
+    t.integer  "item_count",                                                         default: 0
     t.integer  "approver_id"
     t.datetime "approved_at"
-    t.boolean  "confirmation_delivered",                                           default: false
-    t.boolean  "considered_risky",                                                 default: false
+    t.boolean  "confirmation_delivered",                                             default: false
+    t.boolean  "considered_risky",                                                   default: false
     t.integer  "instance_id"
     t.integer  "company_id"
     t.integer  "partner_id"
-    t.decimal  "service_fee_buyer_percent",               precision: 5,  scale: 2, default: 0.0
-    t.decimal  "service_fee_seller_percent",              precision: 5,  scale: 2, default: 0.0
+    t.decimal  "service_fee_buyer_percent",                 precision: 5,  scale: 2, default: 0.0
+    t.decimal  "service_fee_seller_percent",                precision: 5,  scale: 2, default: 0.0
     t.string   "guest_token"
-    t.integer  "state_lock_version",                                               default: 0,       null: false
+    t.integer  "state_lock_version",                                                 default: 0,       null: false
     t.datetime "shippo_rate_purchased_at"
     t.integer  "platform_context_detail_id"
     t.string   "platform_context_detail_type"
     t.string   "payment_method"
+    t.integer  "service_fee_amount_guest_cents",                                     default: 0
+    t.integer  "service_fee_amount_host_cents",                                      default: 0
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id", using: :btree

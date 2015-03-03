@@ -39,6 +39,8 @@ class Reservation < ActiveRecord::Base
   belongs_to :credit_card
   has_many :user_messages, as: :thread_context
   has_many :waiver_agreements, as: :target
+  has_many :additional_charges, as: :target
+  accepts_nested_attributes_for :additional_charges
 
   has_many :payment_documents, as: :attachable, class_name: 'Attachable::PaymentDocument', dependent: :destroy
   accepts_nested_attributes_for :payment_documents
@@ -296,6 +298,10 @@ class Reservation < ActiveRecord::Base
     super || service_fee_calculator.service_fee_guest.cents
   end
 
+  def service_fee_guest_wo_charges
+    service_fee_calculator.service_fee_guest_wo_ac
+  end
+
   def service_fee_amount_host_cents
     super || service_fee_calculator.service_fee_host.cents
   end
@@ -356,7 +362,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def has_service_fee?
-    !service_fee_amount_guest.to_f.zero?
+    !service_fee_guest_wo_charges.to_f.zero?
   end
 
   def paid?
@@ -461,7 +467,12 @@ class Reservation < ActiveRecord::Base
   private
 
   def service_fee_calculator
-    @service_fee_calculator ||= Payment::ServiceFeeCalculator.new(self.subtotal_amount, self.service_fee_guest_percent, self.service_fee_host_percent)
+    options = {
+      guest_fee_percent:  service_fee_guest_percent,
+      host_fee_percent:   service_fee_host_percent,
+      additional_charges: additional_charges
+    }
+    @service_fee_calculator ||= Payment::ServiceFeeCalculator.new(subtotal_amount, options)
   end
 
   def price_calculator

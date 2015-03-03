@@ -132,7 +132,9 @@ en:
       header:
         all_reviews: "All Reviews"
         settings: "Settings"
-
+    upsell_addons:
+      index:
+        no_addons_yet: "You don't have any add-ons yet. Click on the link below and start upselling now"
     wish_lists:
       labels:
         name: 'LIST TITLE'
@@ -189,6 +191,7 @@ en:
         price: 'PRICE'
         qty: 'QTY'
         total: 'TOTAL'
+        options: 'OPTIONS'
 
         service_fee: 'Service Fee'
         tax: 'Tax'

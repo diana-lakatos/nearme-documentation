@@ -127,7 +127,8 @@ class Listings::RecurringBookingsController < ApplicationController
         card_holder_first_name: attributes[:card_holder_first_name],
         card_holder_last_name: attributes[:card_holder_last_name],
         country_name: attributes[:country_name],
-        mobile_number: attributes[:mobile_number]
+        mobile_number: attributes[:mobile_number],
+        additional_charge_ids: attributes[:additional_charge_ids]
       }
     )
   end

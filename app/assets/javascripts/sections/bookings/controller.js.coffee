@@ -38,6 +38,7 @@ class Bookings.Controller
     @quantityResourceElement = @container.find('.quantity .resource')
     @totalElement = @container.find('.total')
     @daysElement = @container.find('.total-days')
+    @additionalCharges = @container.find('[data-optional-charge-select]')
     @bookButton = @container.find('[data-behavior=reviewBooking]')
     @rfqButton = @container.find('[data-behavior=RFQ]')
     @bookForm = @bookButton.closest('form')
@@ -45,7 +46,7 @@ class Bookings.Controller
     @securedDomain = @bookButton.data('secured')
     @storeReservationRequestUrl = @bookButton.data('store-reservation-request-url')
     @userSignedIn = @bookButton.data('user-signed-in')
-    @bookingTabs = @container.find("#pricingTabs li a")
+    @bookingTabs = @container.find("[data-pricing-tabs] li a")
     @setReservationType()
 
 
@@ -70,6 +71,10 @@ class Bookings.Controller
 
     @quantityField.on 'change', (event) =>
       @quantityWasChanged()
+
+    @additionalCharges.on 'change', (event) =>
+      @delayedUpdateBookingStatus()
+      @updateCharges()
 
     @datepicker.bind 'datesChanged', (dates) =>
       @listing.setDates(dates)
@@ -131,6 +136,12 @@ class Bookings.Controller
       @quantityResourceElement.text(@quantityResourceElement.data('plural'))
     else
       @quantityResourceElement.text(@quantityResourceElement.data('singular'))
+
+  updateCharges: ->
+    additionalChargeFields = @container.find("[data-additional-charges] input[name='reservation_request[additional_charge_ids][]']")
+    reservationRequestForm = @container.find('[data-reservation-charges]')
+    reservationRequestForm.empty()
+    additionalChargeFields.clone().prependTo(reservationRequestForm)
 
   updateSummary: ->
     @totalElement.text((@listing.bookingSubtotal()/100).toFixed(2))

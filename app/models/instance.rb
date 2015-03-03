@@ -74,6 +74,7 @@ class Instance < ActiveRecord::Base
   has_many :rating_questions
   has_many :rating_answers
   has_many :rating_hints
+  has_many :additional_charge_types
   has_one :documents_upload, dependent: :destroy
   serialize :pricing_options, Hash
 

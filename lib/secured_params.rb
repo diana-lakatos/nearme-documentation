@@ -984,6 +984,20 @@ class SecuredParams
     ]
   end
 
+  def additional_charge_type
+    [
+      :id,
+      :name,
+      :description,
+      :amount,
+      :currency,
+      :commission_receiver,
+      :provider_commission_percentage,
+      :status,
+      :instance_id
+    ]
+  end
+
   def documents_upload
     [
       :requirement,

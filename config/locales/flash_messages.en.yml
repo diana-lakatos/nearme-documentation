@@ -115,6 +115,10 @@ en:
           already_created: 'Waiver agreement template has been already created.'
           deleted: 'Waiver agreement template has been deleted.'
           updated: 'Waiver agreement template has been updated.'
+        upsell_addons:
+          created: 'Upsell charge has been created'
+          updated: 'Upsell charge has been updated'
+          deleted: 'Upsell charge has been deleted'
       settings:
         listing_type_added: 'New listing type added.'
         listing_type_deleted: 'Listing type deleted.'

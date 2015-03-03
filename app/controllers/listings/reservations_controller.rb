@@ -136,6 +136,7 @@ class Listings::ReservationsController < ApplicationController
         mobile_number: attributes[:mobile_number],
         waiver_agreement_templates: attributes[:waiver_agreement_templates],
         payment_method_nonce: params[:payment_method_nonce],
+        additional_charge_ids: attributes[:additional_charge_ids],
         reservation_type: attributes[:reservation_type],
         documents: params_documents[:documents_attributes]
       }

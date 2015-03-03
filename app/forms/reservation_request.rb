@@ -34,6 +34,7 @@ class ReservationRequest < Form
       @client_token = @billing_gateway.try(:client_token) if @billing_gateway.try(:possible?)
       @reservation.payment_method = payment_method
       @reservation.user = user
+      @reservation.additional_charges << get_additional_charges(attributes)
       @reservation = @reservation.decorate
     end
 
@@ -102,6 +103,17 @@ class ReservationRequest < Form
   end
 
   private
+
+  def get_additional_charges(attributes)
+    additional_charge_ids = AdditionalChargeType.get_mandatory_and_optional_charges(attributes.delete(:additional_charge_ids)).pluck(:id)
+    additional_charges = additional_charge_ids.map { |id|
+      AdditionalCharge.new(
+        additional_charge_type_id: id,
+        currency: @reservation.currency
+      )
+    }
+    additional_charges
+  end
 
   def payment_method_nonce=(token)
     return false if token.blank?
