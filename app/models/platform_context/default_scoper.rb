@@ -121,6 +121,8 @@ module PlatformContext::DefaultScoper
     def instance_scope
       if @options[:allow_nil]
         "return scope.where('#{@klass.table_name}.instance_id = ? OR #{@klass.table_name}.instance_id is null', PlatformContext.current.instance.id)"
+      elsif @options[:allow_admin].present?
+        "return scope.where('#{@klass.table_name}.instance_id = ? OR #{@klass.table_name}.#{@options[:allow_admin]} = ?', PlatformContext.current.instance.id, true)"
       else
         "return scope.where(:'#{@klass.table_name}.instance_id' => PlatformContext.current.instance.id)"
       end

@@ -29,6 +29,6 @@ class TransactableDecorator < Draper::Decorator
       "#{self.price_with_currency(listing_price[0])} <span>/ #{periods[listing_price[1]]}</span>".html_safe
     end
   end
-  
+
 
 end

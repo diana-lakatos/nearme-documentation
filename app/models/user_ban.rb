@@ -8,7 +8,19 @@ class UserBan < ActiveRecord::Base
   belongs_to :creator, class_name: 'User'
   belongs_to :instance
 
-  delegate :cleanup, to: :user, prefix: true
-  after_create :user_cleanup
+  after_create :ban_user!
+  after_destroy :unban_user!
+
+  def ban_user!
+    user.cleanup
+    user.update_attribute(:banned_at, self.created_at)
+  end
+
+  def unban_user!
+    user.recover_companies
+    user.update_attribute(:banned_at, nil)
+  end
+
+
 
 end

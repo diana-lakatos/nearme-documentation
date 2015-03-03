@@ -1,0 +1,5 @@
+Modal.close()
+$('#location-list').prepend('#{escape_javascript( render @location )}');
+$("body").prepend('#{escape_javascript( render 'shared/render_flash')}');
+
+- flash.discard

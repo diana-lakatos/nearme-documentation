@@ -570,6 +570,33 @@ body.buy-sell-theme {
     color: #858585;
   }
 
+  .reviews-dropdown {
+    display: inline-block;
+    .title {
+      font-size: 14px;
+      color: #5dbded;
+    }
+
+    .ico-chevron-down {
+      font-size: 14px;
+      margin-left: 5px;
+      color: gray;
+    }
+
+    .dropdown-menu {
+      min-width: 200px;
+
+      li {
+        padding: 0 15px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #f1f1f1;
+        }
+      }
+    }
+  }
+
   .cart-view {
     margin-top: -30px;
     padding-top: 30px;
@@ -742,6 +769,11 @@ body.buy-sell-theme {
       color: #5dbded;
       font-weight: 300;
       margin-bottom: 40px;
+    }
+
+    section.checkout-form #options {
+      padding-top: 10px;
+      padding-bottom: 5px;
     }
 
     h2.page-heading {
@@ -964,6 +996,28 @@ body.buy-sell-theme {
       font-size: 18px;
       font-weight: 400;
       color: #3a3a3a;
+    }
+
+    .document-requirements {
+      margin-top: 30px;
+
+      .title {
+        font-weight: bold;
+      }
+
+      .upload {
+        .btn-upload-payment-document { 
+          color: black;
+          background-color: white;
+          border: 1px solid #eee;
+          width: 30%;
+          padding: 10px 20px;
+        }
+
+        span.file-name {
+          padding-left: 20px
+        }
+      }
     }
 
     /*===== BREADCRUMBS =====*/

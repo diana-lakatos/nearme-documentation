@@ -1,4 +1,11 @@
 en:
+  activemodel:
+    errors:
+      models:
+        reservation_request:
+          attributes:
+            base:
+              file_cannot_be_empty: "File cannot be empty"
   activerecord:
     attributes:
       listing_type:

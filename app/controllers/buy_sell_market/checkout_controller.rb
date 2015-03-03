@@ -23,17 +23,15 @@ class BuySellMarket::CheckoutController < ApplicationController
     when :delivery
       packages = @order.shipments.map { |s| s.to_package }
       @differentiator = Spree::Stock::Differentiator.new(@order, packages)
+    when :payment
+      @additional_charges = platform_context.instance.additional_charge_types
     when :complete
       flash[:success] = t('buy_sell_market.checkout.notices.order_placed')
       redirect_to dashboard_order_path(params[:order_id])
       return
-
-      begin
-        @charge_info = @order.near_me_payments.paid.first.charges.successful.first
-      rescue
-        @charge_info = nil
-      end
     end
+
+    checkout_service.build_payment_documents if step == :payment
 
     render_wizard
   end
@@ -42,46 +40,68 @@ class BuySellMarket::CheckoutController < ApplicationController
     if step == :address
       set_countries_states
     end
-
     params[:order] ||= {}
     if @order.payment?
-      @order.card_expires = params[:order][:card_expires].try(:to_s).try(:strip)
-      @order.card_number = params[:order][:card_number].try(:to_s).try(:strip)
-      @order.card_code = params[:order][:card_code].try(:to_s).try(:strip)
-      @order.card_holder_first_name = params[:order][:card_holder_first_name].try(:to_s).try(:strip)
-      @order.card_holder_last_name = params[:order][:card_holder_last_name].try(:to_s).try(:strip)
-      credit_card = ActiveMerchant::Billing::CreditCard.new(
+      @additional_charges = platform_context.instance.additional_charge_types
+      checkout_service.update_payment_documents
+      @order.payment_method = params[:order][:payment_method]
+      if @order.manual_payment? && @order.possible_manual_payment?
+        setup_upsell_charges
+        create_spree_payment_records
+      elsif @billing_gateway.processor.present?
+        @order.payment_method = Spree::Order::PAYMENT_METHODS[:credit_card]
+        @order.card_expires = params[:order][:card_expires].try(:to_s).try(:strip)
+        @order.card_number = params[:order][:card_number].try(:to_s).try(:strip)
+        @order.card_code = params[:order][:card_code].try(:to_s).try(:strip)
+        @order.card_holder_first_name = params[:order][:card_holder_first_name].try(:to_s).try(:strip)
+        @order.card_holder_last_name = params[:order][:card_holder_last_name].try(:to_s).try(:strip)
+        credit_card = ActiveMerchant::Billing::CreditCard.new(
           first_name: @order.card_holder_first_name,
           last_name: @order.card_holder_last_name,
           number: @order.card_number,
           month: @order.card_expires.to_s[0, 2],
           year: @order.card_expires.to_s[-4, 4],
           verification_value: @order.card_code
-      )
-      if credit_card.valid?
-        response = @billing_gateway.authorize(@order.total_amount_to_charge, credit_card)
-        if response[:error].present?
-          @order.errors.add(:cc, response[:error])
-          p = @order.payments.build(amount: @order.total_amount_to_charge, company_id: @order.company_id)
-          p.started_processing
-          p.failure!
-          render_step order_state and return
+        )
+        if @order.billing_authorization.present?
+          # all done, proceeding, we don't want to setup upsell charges as this might result in charging less/more
+          # than we should
         else
-          @order.create_billing_authorization(
+          setup_upsell_charges
+          if credit_card.valid?
+          response = @billing_gateway.authorize(@order.total_amount_to_charge, credit_card)
+          if response[:error].present?
+            @order.errors.add(:cc, response[:error])
+            p = @order.payments.build(amount: @order.total_amount_to_charge, company_id: @order.company_id)
+            p.started_processing
+            p.failure!
+            render_step order_state and return
+          else
+            @order.create_billing_authorization(
               token: response[:token],
               payment_gateway_class: response[:payment_gateway_class],
               payment_gateway_mode: PlatformContext.current.instance.test_mode? ? "test" : "live"
-          )
-          p = @order.payments.build(amount: @order.total_amount_to_charge, company_id: @order.company_id)
-          p.pend
-          p.save!
-          unless @order.next
-            flash.now[:error] = spree_errors
+            )
+            create_spree_payment_records
+
+            # Charging the client with the right calculated service fees
+            # It includes any upsell charges and percentage fee that can apply to the order
+            @order.update(
+              service_fee_amount_guest_cents: @order.service_fee_amount_guest_cents,
+              service_fee_amount_host_cents:  @order.service_fee_amount_host_cents
+            )
+          end
+          else
+            @order.errors.add(:cc, I18n.t('buy_sell_market.checkout.invalid_cc'))
             render_step order_state and return
           end
         end
       else
-        @order.errors.add(:cc, "Those credit card details don't look valid")
+        @order.errors.add(:payment_method, I18n.t('buy_sell_market.checkout.invalid_payment_method'))
+        render_step order_state and return
+      end
+      unless @order.next
+        flash.now[:error] = spree_errors
         render_step order_state and return
       end
     elsif @order.update_from_params(params, permitted_checkout_attributes)
@@ -169,6 +189,16 @@ class BuySellMarket::CheckoutController < ApplicationController
                end
   end
 
+  def setup_upsell_charges
+
+    @order.additional_charges.destroy_all
+    additional_charge_ids = AdditionalChargeType.get_mandatory_and_optional_charges(params[:additional_charge_ids]).pluck(:id)
+    additional_charge_ids.each do |id|
+      next if @order.additional_charges.pluck(:additional_charge_type_id).include?(id)
+      @order.additional_charges.create!(additional_charge_type_id: id, currency: @order.currency)
+    end
+  end
+
   def spree_errors
     @order.errors.full_messages.join("\n")
   end
@@ -179,9 +209,21 @@ class BuySellMarket::CheckoutController < ApplicationController
 
   def check_billing_gateway
     @billing_gateway = Billing::Gateway::Incoming.new(current_user, PlatformContext.current.instance, @order.currency, @order.company.iso_country_code)
-    if @billing_gateway.processor.nil?
+    if @billing_gateway.processor.nil? && !@order.possible_manual_payment?
       flash[:error] = t('flash_messages.buy_sell.no_payment_gateway')
       redirect_to cart_index_path
     end
   end
+
+  def checkout_service
+    @checkout_service ||= BuySell::CheckoutService.new(current_user, @order, params)
+  end
+
+  def create_spree_payment_records
+    p = @order.payments.build(amount: @order.total_amount_to_charge, company_id: @order.company_id)
+    p.pend
+    p.save!
+  end
+
 end
+

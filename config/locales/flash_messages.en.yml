@@ -71,11 +71,17 @@ en:
           deleted: 'Email template has been deleted.'
           invalid: 'Not a valid email template.'
           updated: 'Email template has been updated.'
+        partners:
+          partner_updated: "Partner updated successfully."
         email_layout_templates:
           created: 'Email layout template has been created.'
           deleted: 'Email layout template has been deleted.'
           invalid: 'Not a valid email layout template.'
           updated: 'Email layout template has been updated.'
+        form_component:
+          created: 'Form component has been created.'
+          deleted: 'Form component has been deleted.'
+          updated: 'Form component has been updated.'
         users:
           user_ban:
             created: 'User has been removed from the marketplace.'
@@ -109,6 +115,10 @@ en:
           already_created: 'Waiver agreement template has been already created.'
           deleted: 'Waiver agreement template has been deleted.'
           updated: 'Waiver agreement template has been updated.'
+        upsell_addons:
+          created: 'Upsell charge has been created'
+          updated: 'Upsell charge has been updated'
+          deleted: 'Upsell charge has been deleted'
       settings:
         listing_type_added: 'New listing type added.'
         listing_type_deleted: 'Listing type deleted.'
@@ -132,6 +142,11 @@ en:
         instance_admin_roles:
           role_added: "Great, new role has been added!"
           role_deleted: "That role has been deleted"
+      buy_sell:
+        product_types:
+          created: 'Product Type created.'
+          updated: 'Product Type updated.'
+          deleted: 'Product Type deleted.'
     listings:
       listing_disabled: "This listing has been temporarily disabled by the owner. Displaying other listings in this location."
       listing_disabled_but_admin: "This listing has been temporarily disabled by the owner. Other users will not be able to browse it."

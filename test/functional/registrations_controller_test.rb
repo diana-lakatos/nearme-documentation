@@ -117,7 +117,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       @location = FactoryGirl.create(:location, :company => @company)
       FactoryGirl.create(:transactable, :location => @location)
       get :verify, :id => @user.id, :token => @user.email_verification_token
-      assert_redirected_to manage_locations_path
+      assert_redirected_to dashboard_company_locations_path
     end
 
     should "redirect verified user without listing to settings" do
@@ -164,7 +164,7 @@ class RegistrationsControllerTest < ActionController::TestCase
         get :new, source: 'xxx', campaign: 'yyy'
         assert_equal 'xxx', cookies.signed[:source]
         assert_equal 'yyy', cookies.signed[:campaign]
-        assert_equal 'http://example.com/', cookies.signed[:referer]
+        assert_equal 'http://example.com/', session[:referer]
 
         post :create, user: user_attributes
         user = User.find_by_email('user@example.com')
@@ -180,13 +180,13 @@ class RegistrationsControllerTest < ActionController::TestCase
         get :new
         assert_nil cookies.signed[:source]
         assert_nil cookies.signed[:campaign]
-        assert_equal 'http://example.com/', cookies.signed[:referer]
+        assert_equal 'http://example.com/', session[:referer]
 
         @request.env['HTTP_REFERER'] = 'http://homepage.com/'
         get :new, source: 'xxx', campaign: 'yyy'
         assert_nil cookies.signed[:source]
         assert_nil cookies.signed[:campaign]
-        assert_equal 'http://example.com/', cookies.signed[:referer]
+        assert_equal 'http://example.com/', session[:referer]
 
         post :create, user: user_attributes
         user = User.find_by_email('user@example.com')

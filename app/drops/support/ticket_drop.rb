@@ -18,7 +18,7 @@ class Support::TicketDrop < BaseDrop
   end
 
   def rfq
-    if ticket.target.free?
+    if ticket.target.action_free_booking?
       'request'
     else
       'offer'
@@ -31,7 +31,7 @@ class Support::TicketDrop < BaseDrop
 
   def admin_url
     case ticket.target
-    when Transactable
+    when Transactable, Spree::Product
       routes.dashboard_support_ticket_path(ticket)
     when Instance
       routes.instance_admin_manage_support_ticket_path(ticket)

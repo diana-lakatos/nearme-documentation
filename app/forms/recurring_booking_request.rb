@@ -4,8 +4,8 @@ class RecurringBookingRequest < Form
   attr_accessor :card_number, :card_expires, :card_code, :card_holder_first_name, :card_holder_last_name, :occurrences
   attr_reader   :recurring_booking, :listing, :location, :user
 
-  def_delegators :@recurring_booking, :credit_card_payment?, :manual_payment?
-  def_delegators :@listing,     :confirm_reservations?, :hourly_reservations?, :location
+  def_delegators :@recurring_booking, :credit_card_payment?, :manual_payment?, :reservation_type=
+  def_delegators :@listing,     :confirm_reservations?, :location, :action_hourly_booking?
   def_delegators :@user,        :mobile_number, :mobile_number=, :country_name, :country_name=, :country
 
   before_validation :setup_credit_card_customer, :if => lambda { recurring_booking.try(:reservations).try(:first) and user and user.valid?}
@@ -20,13 +20,16 @@ class RecurringBookingRequest < Form
     @user = user
     @listing = listing
     @instance = platform_context.instance
+
+    # We need to store additional_charge_ids to pass it to reservations
+    @additional_charge_ids = attributes.delete(:additional_charge_ids)
     store_attributes(attributes)
 
     if @listing
       @recurring_booking = @listing.recurring_bookings.build
       @recurring_booking.owner = user
-      @recurring_booking.start_minute = start_minute.to_i if @recurring_booking.listing.hourly_reservations?
-      @recurring_booking.end_minute = end_minute.to_i if @recurring_booking.listing.hourly_reservations?
+      @recurring_booking.start_minute = start_minute.to_i if @listing.action_hourly_booking?
+      @recurring_booking.end_minute = end_minute.to_i if @listing.action_hourly_booking?
       @recurring_booking.start_on = start_on || Date.current
       @recurring_booking.end_on = end_on
       @recurring_booking.occurrences = occurrences.to_i - 1 <= 0 ? 49 : [occurrences.to_i - 1, 49].min
@@ -39,11 +42,13 @@ class RecurringBookingRequest < Form
       @recurring_booking.schedule.occurrences(@recurring_booking.end_on || Time.zone.now + 20.years)[0..@recurring_booking.occurrences].each do |date|
         @reservation = @recurring_booking.reservations.build
         @reservation.listing = @listing
+        @reservation.reservation_type = @listing.action_hourly_booking ? 'hourly' : 'daily'
         @reservation.currency = @listing.currency
         @reservation.add_period(date, @recurring_booking.start_minute, @recurring_booking.end_minute)
         @reservation.payment_method = @recurring_booking.payment_method
         @reservation.quantity = @recurring_booking.quantity
         @reservation.user = user
+        @reservation.additional_charges << get_additional_charges
         @reservation = @reservation.decorate
         @last_date = date
         @count += 1
@@ -78,7 +83,7 @@ class RecurringBookingRequest < Form
   end
 
   def payment_method
-    @payment_method = if @listing.free?
+    @payment_method = if @listing.action_free_booking?
                         Reservation::PAYMENT_METHODS[:free]
                       elsif @billing_gateway.try(:possible?)
                         Reservation::PAYMENT_METHODS[:credit_card]
@@ -92,6 +97,15 @@ class RecurringBookingRequest < Form
   end
 
   private
+
+  def get_additional_charges
+    AdditionalChargeType.get_mandatory_and_optional_charges(@additional_charge_ids).pluck(:id).map do |id|
+      AdditionalCharge.new(
+        additional_charge_type_id: id,
+        currency: @reservation.currency
+      )
+    end
+  end
 
   def validate_phone_and_country
     add_error("Please complete the contact details", :contact_info) unless user_has_mobile_phone_and_country?
@@ -107,7 +121,7 @@ class RecurringBookingRequest < Form
       @charged = false
       @recurring_booking.reservations.each do |reservation|
         if reservation.valid?
-          if !reservation.listing.free? && reservation.payment_method == Reservation::PAYMENT_METHODS[:credit_card] && !@charged
+          if !reservation.listing.action_free_booking? && reservation.payment_method == Reservation::PAYMENT_METHODS[:credit_card] && !@charged
             mode = @instance.test_mode? ? "test" : "live"
             reservation.build_billing_authorization(
               token: @token,

@@ -1,5 +1,4 @@
 class Dashboard::WishListItemsController < Dashboard::BaseController
-  skip_before_filter :redirect_unless_registration_completed
   before_filter :check_wish_lists_enabled
   before_filter :find_default_wish_list
   before_filter :find_item, only: [:destroy]

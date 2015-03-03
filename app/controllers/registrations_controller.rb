@@ -34,7 +34,7 @@ class RegistrationsController < Devise::RegistrationsController
 
       # Only track the sign up if the user has actually been saved (i.e. there are no errors)
       if @user.persisted?
-        User.where(id: @user.id).update_all({referer: cookies.signed[:referer],
+        User.where(id: @user.id).update_all({referer: session[:referer],
                                              source: cookies.signed[:source],
                                              campaign: cookies.signed[:campaign]})
         update_analytics_google_id(@user)
@@ -82,8 +82,10 @@ class RegistrationsController < Devise::RegistrationsController
     else
       @listings = @company.present? ? @company.listings.paginate(page: params[:services_page], per_page: 8) : nil
     end
-    @rating_questions = RatingSystem.find_by(subject: platform_context.instance.lessor).rating_questions
-    @reviews_as_seller = @user.reviews_as_seller.paginate(page: params[:reviews_page])
+    @reviews = @user.reviews_about_seller.paginate(page: params[:reviews_page])
+    @reviews_about_buyer = @user.reviews_about_buyer
+    @reviews_left_by_seller = @user.reviews.for_buyer
+    @reviews_left_by_buyer = @user.reviews.for_seller_and_product
   end
 
   def update
@@ -93,7 +95,11 @@ class RegistrationsController < Devise::RegistrationsController
     resource.custom_validation = true
     resource.assign_attributes(user_params)
     build_approval_request_for_object(resource) unless resource.is_trusted?
-    if resource.update_with_password(user_params)
+
+    # We remove approval_requests_attributes from the params used to update the user
+    # to avoid duplication, as the approval request is already set by assign_attributes
+    # and build_approval_request_for_object
+    if resource.update_with_password(user_params.except(:approval_requests_attributes))
       set_flash_message :success, :updated
       sign_in(resource, :bypass => true)
       event_tracker.updated_profile_information(@user)
@@ -124,7 +130,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def edit_avatar
     if request.xhr?
-      render partial: 'manage/photos/resize_form', :locals => { :form_url => update_avatar_path, :object => current_user.avatar, :object_url => current_user.avatar_url(:original) }
+      render partial: 'dashboard/photos/resize_form', :locals => { :form_url => update_avatar_path, :object => current_user.avatar, :object_url => current_user.avatar_url(:original) }
     end
   end
 
@@ -132,9 +138,9 @@ class RegistrationsController < Devise::RegistrationsController
     @user = current_user
     @user.avatar_transformation_data = { :crop => params[:crop], :rotate => params[:rotate] }
     if @user.save
-      render partial: 'manage/photos/resize_succeeded'
+      render partial: 'dashboard/photos/resize_succeeded'
     else
-      render partial: 'manage/photos/resize_form', :locals => { :form_url => update_avatar_path, :object => current_user.avatar, :object_url => current_user.avatar_url(:original) }
+      render partial: 'dashboard/photos/resize_form', :locals => { :form_url => update_avatar_path, :object => current_user.avatar, :object_url => current_user.avatar_url(:original) }
       render :edit_avatar
     end
   end
@@ -169,7 +175,7 @@ class RegistrationsController < Devise::RegistrationsController
       sign_in(@user)
       event_tracker.track_event_within_email(@user, request) if params[:track_email_event]
       flash[:success] = t('flash_messages.registrations.address_verified')
-      redirect_to @user.listings.count > 0 ? manage_locations_path : edit_user_registration_path
+      redirect_to @user.listings.count > 0 ? dashboard_company_locations_path : edit_user_registration_path
     else
       if @user.verified_at
         flash[:warning] = t('flash_messages.registrations.address_already_verified')

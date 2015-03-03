@@ -1,9 +1,8 @@
 class ProductForm < Form
 
-  attr_reader :all_shipping_categories
-  attr_reader :product
+  attr_reader :all_shipping_categories, :document_requirements, :upload_obligation
 
-  # Validations:
+  attr_reader :product
 
   validates :name, presence: true, length: {minimum: 3}
   validates :price, presence: true, numericality: { greater_than: 0 }
@@ -14,9 +13,15 @@ class ProductForm < Form
   validates_presence_of :width, :if => :shippo_enabled
   validates_presence_of :height, :if => :shippo_enabled
   validates_presence_of :shipping_category_id, :unless => :shippo_enabled
+  validate :label_and_description_cannot_be_empty
+  validate do
+    product.valid?
+  end
+
+  validate :label_and_description_cannot_be_empty
 
   def_delegators :@product, :id, :price, :price=, :name, :name=, :description, :id=, :description=,
-    :shippo_enabled=, :shippo_enabled, :draft?, :draft=, :draft
+    :shippo_enabled=, :shippo_enabled, :possible_manual_payment, :possible_manual_payment=, :action_rfq, :action_rfq=, :draft?, :draft=, :draft, :extra_properties, :extra_properties=
 
   def_delegators :'@product.master', :weight_unit, :weight_unit=, :height_unit, :height_unit=,
     :width_unit, :width_unit=, :depth_unit, :depth_unit=,
@@ -69,6 +74,19 @@ class ProductForm < Form
     @product.master.depth_user
   end
 
+  def label_and_description_cannot_be_empty
+    if @document_requirements.present?
+      @document_requirements.each do |document_requirement|
+        [:label, :description].each do |field|
+          if document_requirement.try(field).empty?
+            self.errors.add(:base, "#{field}_empty".to_sym)
+            document_requirement.errors.add(field.to_sym, :empty)
+          end
+        end
+      end
+    end
+  end
+
   def quantity
     @quantity ||= @stock_item.stock_movements.sum(:quantity)
   end
@@ -110,10 +128,12 @@ class ProductForm < Form
       @shipping_category_id = @shipping_category.id
     end
 
+    @upload_obligation = @product.upload_obligation || @product.build_upload_obligation(level: UploadObligation::LEVELS.first)
     @stock_location = @company.stock_locations.first || @company.stock_locations.build(propagate_all_variants: false, name: "Default")
     @stock_item = @stock_location.stock_items.where(variant_id: @product.master.id).first || @stock_location.stock_items.build(backorderable: false)
     @stock_item.variant = @product.master
     @stock_movement = @stock_item.stock_movements.build stock_item: @stock_item
+    @document_requirements = [] unless PlatformContext.current.instance.documents_upload_enabled?
   end
 
   def submit(params)
@@ -139,6 +159,8 @@ class ProductForm < Form
     @product.save!(validate: !draft?)
     @product.images.each { |i| i.save!(validate: false) }
     @product.classifications.each { |x| x.save!(validate: !draft?) }
+    @upload_obligation.save!
+    @document_requirements.each { |x| x.save! }
     @stock_location.save!(validate: !draft?)
     @stock_item.save!(validate: !draft?)
     @shipping_category.save!(validate: !draft?)
@@ -155,9 +177,30 @@ class ProductForm < Form
     end
   end
 
+  def document_requirements_attributes=(attributes)
+    @document_requirements = []
+    attributes.each do |key, document_requirements_attributes|
+      next if document_requirements_attributes["hidden"] == "1"
+      document_requirement = @product.document_requirements.where(id: document_requirements_attributes["id"]).first
+      if document_requirements_attributes["removed"] == "1"
+        document_requirement.try(:destroy)
+      else
+        document_requirement ||= @product.document_requirements.build
+        document_requirement.assign_attributes(document_requirements_attributes)
+        document_requirement.item = @product
+        @document_requirements << document_requirement
+      end
+    end
+  end
+
+  def upload_obligation_attributes=(attributes)
+    @upload_obligation.assign_attributes(attributes)
+  end
+
   def assign_all_attributes
     @category = @product.taxons.map(&:id).join(",")
     @price = @product.price
+    build_document_requirements if PlatformContext.current.instance.documents_upload_enabled?
   end
 
   private
@@ -173,6 +216,16 @@ class ProductForm < Form
     end
 
     default_category
+  end
+
+  def build_document_requirements
+    @document_requirements = @product.document_requirements.to_a
+    DocumentRequirement::MAX_COUNT.times do
+      hidden = @document_requirements.blank? ? "0" : "1"
+      document_requirement = @product.document_requirements.build
+      document_requirement.hidden = hidden
+      @document_requirements << document_requirement
+    end
   end
 
 end

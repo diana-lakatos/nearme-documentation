@@ -84,6 +84,9 @@ en:
         enter_name_for_shipping_profile: 'Enter a name for your shipping profile'
         ready_to_ship_in: 'Ready to ship in...'
   instance_admin:
+    shipping_options:
+      dimensions_templates:
+        add_new_dimensions_template: '+ Add new dimension template'
     manage:
       reviews:
         index:
@@ -139,7 +142,9 @@ en:
       header:
         all_reviews: "All Reviews"
         settings: "Settings"
-
+    upsell_addons:
+      index:
+        no_addons_yet: "You don't have any add-ons yet. Click on the link below and start upselling now"
     wish_lists:
       labels:
         name: 'LIST TITLE'
@@ -196,12 +201,24 @@ en:
         price: 'PRICE'
         qty: 'QTY'
         total: 'TOTAL'
+        options: 'OPTIONS'
 
         service_fee: 'Service Fee'
         tax: 'Tax'
         total2: 'Total'
         shipping: 'Shipping'
         subtotal: 'Subtotal'
+
+        required_documents: 'Required Documents'
+        the_following_documents: 'The following documents are required to book this item.'
+        choose_another_file: 'Choose another file'
+        choose_file: 'Choose file'
+        no_file_chosen: 'No file chosen'
+      credit_card: 'Credit Card'
+      manual_payment: 'Manual Payment'
+      manual_payment_description: 'You will make payment in person'
+      invalid_cc: "Those credit card details don't look valid"
+      invalid_payment_method: "Please choose payment method"
 
       placeholders:
         first_name: 'Enter your first name'
@@ -320,6 +337,7 @@ en:
       blog_posts: 'Posts'
       blog_settings: 'Settings'
       reviews: 'Reviews'
+      sent_to_me: 'Uploaded Files'
 
       your_shop: 'YOUR SHOP'
       admin: 'ADMIN'
@@ -357,7 +375,20 @@ en:
         title: "Reviews"
         rate_your_experience: "Rate Your Experience"
         completed_feedback: "Completed Feedback"
-
+    document_requirements:
+      upload_files: "Upload Files"
+      enter_your_documents: "Please, enter below the documents your users will need to provide before booking the item"
+      add_new_document_requirement: "Add new Document Requirement"
+    payment_documents:
+      files_sent_to_me: "Files sent to me"
+      files_uploaded_by_me: "Files uploaded by me"
+      order: "Order"
+      reservation: "Reservation"
+      table_head:
+        order: "Order"
+        user: "User"
+        date: "Date"
+        document: "Document"
   hidden_items:
     registrations:
       show:
@@ -488,6 +519,7 @@ en:
   registrations:
     tell_us: 'Tell us a little about yourself'
     custom_attributes: 'Custom Attributes'
+    sort: 'Sort:'
     sms_preferences:
       new_reservation: 'I receive a reservation request.'
       reservation_state_changed: 'A reservation I have requested is accepted or declined.'
@@ -527,6 +559,10 @@ en:
     per_month: 'PER MONTH'
     first_day: 'Select a start date'
     last_day: 'Select an end date'
+    booking_module:
+      fixed: 'Fixed Price'
+      pick_fixed_date: 'Select a date'
+      suggest_date: 'What time works best for you?'
   search:
     list:
       additional_social_connections:
@@ -558,6 +594,7 @@ en:
     price_too_low: '%{price} is too low'
   data_upload:
     manage:
+      bulk_upload: 'Bulk upload'
       csv_file: 'Csv File'
       review_file: 'Review File'
       import: 'Import '
@@ -597,10 +634,6 @@ en:
     rating:
       experience_hosting: "How was your experience hosting %{name}?"
       experience_at: "How was your experience at '%{name}'?"
-  instance_admin:
-    shipping_options:
-      dimensions_templates:
-        add_new_dimensions_template: '+ Add new dimension template'
 
   top_navbar:
     sign_up: 'Sign Up'
@@ -727,4 +760,17 @@ en:
       card_number: 'Card number'
       expiration_date: 'Expiration date'
       security_code: 'Security code'
+
+  shared:
+    booking_types_tabs:
+      booking_types: 'Booking types'
+      booking_type_regular: 'Regular'
+      booking_type_schedule: 'Schedule'
+      booking_type_overnight: 'Overnight'
+
+  user_reviews:
+    reviews_about_this_seller: "Reviews about this seller"
+    reviews_left_by_this_seller: "Reviews left by this seller"
+    reviews_about_this_buyer: "Reviews about this buyer"
+    reviews_left_by_this_buyer: "Reviews left by this buyer"
 

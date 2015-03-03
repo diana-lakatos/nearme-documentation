@@ -1,0 +1,28 @@
+form#documents-upload-form {
+  .dropshadow {
+    border-bottom: solid #eee 2px;
+  }
+
+  label.radio {
+    padding: 20px 0px 20px 80px;
+    border: 2px solid #eee;
+    border-bottom: none;
+    background: white;
+    margin: 0;
+
+    input {
+      margin-left: -60px
+    }
+  }
+  .radio:last-of-type {
+    border-bottom: 2px solid #eee;
+  }
+
+  .submit-bar {
+    margin-top: 20px;
+  }
+
+  .description {
+    margin-bottom: 20px;
+  }
+}

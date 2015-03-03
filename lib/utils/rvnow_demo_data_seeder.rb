@@ -263,7 +263,7 @@ module Utils
             daily_price_cents: row['daily_price'].blank? ? nil : row['daily_price'].to_i * 100,
             weekly_price_cents: row['weekly_price'].blank? ? nil : row['weekly_price'].to_i * 100,
             monthly_price_cents: row['monthly_price'].blank? ? nil : row['monthly_price'].to_i * 100,
-            hourly_reservations: false
+            action_hourly_booking: false
           })
 
           Dir.glob(Rails.root.join('db', 'seeds', 'demo', 'rvnow', 'listing_photos', row['folder_referrence'], '*')).each do |photo_filename|

@@ -204,7 +204,7 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
   end
 
   def setup_data_upload(csv_path, sync_mode = false)
-    @data_upload = FactoryGirl.create(:data_upload, sync_mode: sync_mode, transactable_type: @transactable_type, csv_file: File.open(csv_path), target: @company, uploader: @user)
+    @data_upload = FactoryGirl.create(:data_upload, sync_mode: sync_mode, importable: @transactable_type, csv_file: File.open(csv_path), target: @company, uploader: @user)
   end
 
 end

@@ -3,7 +3,7 @@ class ReservationDrop < BaseDrop
 
   attr_reader :reservation
   delegate :quantity, :subtotal_price, :service_fee_guest, :total_price, :pending?, :listing, :state_to_string,
-  :credit_cart_payment?, :location, :paid, :rejection_reason, :owner, to: :reservation
+  :credit_cart_payment?, :location, :paid, :rejection_reason, :owner, :action_hourly_booking?, to: :reservation
   delegate :transactable_type, to: :listing
   delegate :bookable_noun, :bookable_noun_plural, to: :transactable_type
 
@@ -36,7 +36,7 @@ class ReservationDrop < BaseDrop
   end
 
   def manage_guests_dashboard_url
-    routes.dashboard_host_reservations_path
+    routes.dashboard_company_host_reservations_path
   end
 
   def export_to_ical_url
@@ -52,11 +52,11 @@ class ReservationDrop < BaseDrop
   end
 
   def reservation_confirm_url
-    routes.confirm_dashboard_host_reservation_path(@reservation, token: @reservation.listing.administrator.try(:temporary_token))
+    routes.confirm_dashboard_company_host_reservation_path(@reservation, token: @reservation.listing.administrator.try(:temporary_token))
   end
 
   def reservation_confirm_url_with_tracking
-    routes.confirm_dashboard_host_reservation_path(@reservation, token: @reservation.listing.administrator.try(:temporary_token), track_email_event: true)
+    routes.confirm_dashboard_company_host_reservation_path(@reservation, token: @reservation.listing.administrator.try(:temporary_token), track_email_event: true)
   end
 
   def start_date

@@ -11,16 +11,23 @@ Spree::Product.class_eval do
   belongs_to :user
   belongs_to :company
   belongs_to :administrator, class_name: 'User'
+  belongs_to :product_type, class_name: "Spree::ProductType", foreign_key: :product_type_id
 
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   has_many :impressions, as: :impressionable, dependent: :destroy
   has_many :wish_list_items, as: :wishlistable
+  has_many :document_requirements, as: :item, dependent: :destroy
+
+  has_one :upload_obligation, as: :item, dependent: :destroy
+
+  has_custom_attributes target_type: 'Spree::ProductType', target_id: :product_type_id, store_accessor_name: :extra_properties
 
   scope :approved, -> { where(approved: true) }
   scope :draft, -> { where(draft: true) }
   scope :not_draft, -> { where(draft: false) }
   scope :currently_available, -> { not_draft.where("(#{Spree::Product.quoted_table_name}.available_on <= ? OR #{Spree::Product.quoted_table_name}.available_on IS NULL)", Time.zone.now) }
   scope :searchable, -> { approved.currently_available }
+  scope :of_type, -> (product_type) { where(product_type: product_type) }
 
   _validators.reject! { |key, _| [:slug, :shipping_category_id].include?(key) }
 
@@ -30,16 +37,26 @@ Spree::Product.class_eval do
   end
 
   validates :slug, uniqueness: { scope: [:instance_id, :company_id, :partner_id, :user_id] }
-
   validate :shipping_category_presence
 
-  # TODO: uncomment in Phase 3 during implementation of creating products
-  # belongs_to :transactable_type, inverse_of: :transactables
-  # has_custom_attributes target_type: 'TransactableType', target_id: :transactable_type_id
+  after_save :set_external_id
 
   store_accessor :status, [:current_status]
 
   accepts_nested_attributes_for :shipping_category
+
+  def self.csv_fields(product_type)
+    {
+      name: 'Product Name', description: 'Product Description', external_id: 'Product External Id', price: 'Price', available_on: 'Available On',
+      meta_description: 'Meta Description', meta_keywords: 'Meta Keywords',
+      products_public: 'Public',  shippo_enabled: 'Shippo Enabled', draft: 'Draft'
+    }.reverse_merge(
+      product_type.custom_attributes.shared.pluck(:name, :label).inject({}) do |hash, arr|
+        hash[arr[0].to_sym] = arr[1].presence || arr[0].humanize
+        hash
+      end
+    )
+  end
 
   def cross_sell_products
     cross_sell_skus.map do |variant_sku|
@@ -64,7 +81,7 @@ Spree::Product.class_eval do
   end
 
   def reviews
-    @reviews ||= Review.where(object: 'product', reviewable_type: 'Spree::LineItem', reviewable_id: self.line_items.pluck(:id))
+    @reviews ||= Review.where(object: 'product', reviewable_type: 'Spree::LineItem', reviewable_id: self.line_items.unscope(where: :is_master).pluck(:id))
   end
 
   def reviews_count
@@ -81,13 +98,33 @@ Spree::Product.class_eval do
   end
 
   def recalculate_average_rating!
-    average_rating = reviews.average(:rating)
+    average_rating = reviews.average(:rating) || 0.0
     self.update(average_rating: average_rating)
+  end
+
+  def action_free?
+    false
+  end
+
+  def action_free_booking?
+    false
+  end
+
+  def possible_manual_payment?
+    super && product_type.try(:possible_manual_payment)
+  end
+
+  def action_rfq?
+    super && product_type.try(:possible_manual_payment)
   end
 
   private
 
   def shipping_category_presence
     self.shipping_category.present? ? true : errors.add(:shipping_category_id, "shipping category can't be blank")
+  end
+
+  def set_external_id
+    self.update_column(:external_id, "manual-#{id}") if self.external_id.blank?
   end
 end

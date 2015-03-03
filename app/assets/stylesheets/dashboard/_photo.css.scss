@@ -115,31 +115,31 @@
   text-align: center;
   border: dashed 1px $color-light-gray;
   width: 100%;
+
+  &.active {
+    background: #def2fc;
+    border: solid $color-blue 1px;
+  }
+
+  img {
+    display: block;
+    height: 25px;
+    margin: 5px auto;
+  }
+
+  input {
+    display: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .photo-select {
   visibility: hidden;
 }
 
-.photo-box.active {
-  background: #def2fc;
-  border: solid $color-blue 1px;
-}
-
 .photo-box.active .photo-select {
   visibility: visible;
-}
-
-.photo-box img {
-  display: block;
-  height: 25px;
-  margin: 5px auto;
-}
-
-.photo-box input {
-  display: none;
-}
-
-.photo-box:hover {
-  cursor: pointer;
 }

@@ -28,7 +28,8 @@ class InstanceAdmin::BaseController < ApplicationController
     'reviews'            => { controller: '/instance_admin/manage/reviews', default_action: 'index' },
     'wish_lists'         => { controller: '/instance_admin/manage/wish_lists', default_action: 'show' },
     'custom_attributes'  => { controller: '/instance_admin/manage/instance_profile_types', default_action: 'index' },
-    'transactable_types' => { controller: '/instance_admin/manage/transactable_types', default_action: 'index' }
+    'transactable_types' => { controller: '/instance_admin/manage/transactable_types', default_action: 'index' },
+    'upsell_addons'      => { controller: '/instance_admin/manage/upsell_addons', default_action: 'index', title: 'Upsell & Add-ons' }
   }
 
   MANAGE_BLOG_CONTROLLERS = {
@@ -44,9 +45,9 @@ class InstanceAdmin::BaseController < ApplicationController
     'locations'            => { default_action: 'show' },
     'listings'             => { default_action: 'show' },
     'integrations'         => { default_action: 'show' },
-    'domains'              => { default_action: 'index' },
     'cancellation_policy'  => { default_action: 'show' },
-    'translations'         => { default_action: 'show' }
+    'translations'         => { default_action: 'show' },
+    'documents_upload'     => { default_action: 'show' }
   }
 
   THEME_CONTROLLERS = {
@@ -64,9 +65,8 @@ class InstanceAdmin::BaseController < ApplicationController
     'tax_categories' => { default_action: 'index' },
     'tax_rates'      => { default_action: 'index' },
     'zones'          => { default_action: 'index' },
-    'taxonomies'     => { default_action: 'index' }
-    # 'shipping_categories' => { default_action: 'index' },
-    # 'shipping_methods' => { default_action: 'index' },
+    'taxonomies'     => { default_action: 'index' },
+    'product_types'  => { default_action: 'index' }
   }
 
   SHIPPING_OPTIONS_CONTROLLERS = {

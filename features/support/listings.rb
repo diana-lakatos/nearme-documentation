@@ -1,6 +1,6 @@
 module ListingsHelpers
   def create_listing(location, name="Awesome Listing")
-    visit new_manage_location_listing_url(location)
+    visit new_dashboard_company_transactable_type_transactable_path(location)
     create_listing_without_visit(location, name) do
       yield if block_given?
     end
@@ -18,7 +18,7 @@ module ListingsHelpers
     fill_in "Name", with: name
     fill_in "Description", with: "Nulla rutrum neque eu enim eleifend bibendum."
     fill_in "Quantity", with: "2"
-    choose "listing_confirm_reservations_true"
+    check "listing_confirm_reservations_true"
     select "Desk"
     yield if block_given?
     click_link_or_button("Create Listing")
@@ -84,7 +84,7 @@ module ListingsHelpers
       select "Meeting Room", from: "listing_listing_type"
       fill_in "listing_quantity", with: "5"
 
-      choose "Daily, Weekly or Monthly"
+      check "Daily, Weekly or Monthly"
 
       check "enable_daily"
       fill_in "listing_daily_price", with: "10"
@@ -103,7 +103,7 @@ module ListingsHelpers
       page.execute_script "$('select#transactable_listing_type option[value=\"Meeting Room\"]').prop('selected', true).trigger('change');"
       fill_in "transactable_quantity", with: "5"
 
-      choose "transactable_price_type_daily"
+      check "transactable_action_daily_booking"
 
       check "enable_daily"
       fill_in "transactable_daily_price", with: "10"

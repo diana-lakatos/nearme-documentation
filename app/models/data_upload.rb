@@ -5,7 +5,7 @@ class DataUpload < ActiveRecord::Base
   scoped_to_platform_context
 
   belongs_to :instance
-  belongs_to :transactable_type
+  belongs_to :importable, polymorphic: true
   belongs_to :uploader, class_name: 'User'
   belongs_to :target, polymorphic: true
   serialize :parse_summary, Hash
@@ -15,7 +15,7 @@ class DataUpload < ActiveRecord::Base
   validates :csv_file, :presence => true, :file_size => { :maximum => 10.megabytes.to_i }
 
   store :options, accessors: [ :send_invitational_email, :sync_mode ], coder: Hash
-  scope :for_transactable_type, -> (transactable_type) { where(transactable_type: transactable_type) }
+  scope :for_importable, -> (importable) { where(importable: importable) }
 
   state_machine :state, initial: :queued do
 
@@ -50,6 +50,16 @@ class DataUpload < ActiveRecord::Base
 
   def send_invitational_email
     ActiveRecord::ConnectionAdapters::Column.value_to_boolean(super)
+  end
+
+  def num_rows
+    if csv_file.file && File.exists?(csv_file.file.path)
+      # don't want to open the file to count the rows, so the command
+      # don't count headers so -1
+      @num_rows ||= `wc -l #{csv_file.proper_file_path}`.to_i - 1
+    else
+      raise IOError, 'No CSV file'
+    end
   end
 
   def should_be_monitored?

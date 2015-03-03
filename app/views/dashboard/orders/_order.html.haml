@@ -3,7 +3,7 @@
 - if params[:controller].include?('received')
   - manage = true
   - feedback_caption = t('orders.buttons.buyer_feedback')
-  - details_url = dashboard_orders_received_path(order)
+  - details_url = dashboard_company_orders_received_path(order)
 - else
   - manage = false
   - feedback_caption = t('orders.buttons.seller_feedback')
@@ -17,7 +17,7 @@
         %p= order.display_completed_at
       .col-md-3
         %p= t('orders.labels.total')
-        %p= order.display_total
+        %p= order.total_amount_to_charge
       .col-md-3
         %p= t('orders.labels.ship_to')
         %p= order.display_shipping_address
@@ -92,8 +92,14 @@
           .additional-item
             = render 'dashboard/orders/line_item', item: item
             .col-md-4
-              - unless hidden.include?(:review)
-                = link_to '#' do
-                  %span.btn.gray= t 'orders.buttons.product_review'
+              - if item.has_product_reviews?
+                = link_to dashboard_reviews_path(tab: 'completed') do
+                  %col-md-.btn.blue= t 'orders.buttons.update_product_review'
+              - else
+                = link_to dashboard_reviews_path do
+                  %col-md-.btn.gray= t 'orders.buttons.product_review'
 
+      - order.payment_documents.each do |pd|
+        .payment-document
+          = link_to pd.file.file_name, pd.file.url, target: '_blank'
 

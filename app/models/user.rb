@@ -1,3 +1,4 @@
+
 class User < ActiveRecord::Base
   has_paper_trail :ignore => [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
                               :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
@@ -7,6 +8,7 @@ class User < ActiveRecord::Base
                               :avatar_transformation_data, :metadata]
   acts_as_paranoid
   auto_set_platform_context
+  scoped_to_platform_context allow_admin: :admin
 
   extend FriendlyId
   has_metadata :accessors => [:support_metadata]
@@ -40,13 +42,15 @@ class User < ActiveRecord::Base
   has_many :authored_messages, :class_name => "UserMessage", :foreign_key => 'author_id', :inverse_of => :author
   has_many :tickets, -> { order 'updated_at DESC' }, :class_name => 'Support::Ticket'
   has_many :assigned_tickets, -> { order 'updated_at DESC' }, foreign_key: 'assigned_to_id', :class_name => 'Support::Ticket'
-  has_many :assigned_transactable_tickets, -> { where(target_type: 'Transactable').order('updated_at DESC') }, foreign_key: 'assigned_to_id', :class_name => 'Support::Ticket'
+  has_many :assigned_company_tickets, -> { where(target_type: ['Transactable', 'Spree::Product']).order('updated_at DESC') }, foreign_key: 'assigned_to_id', :class_name => 'Support::Ticket'
   has_many :requests_for_quotes, -> { where(target_type: 'Transactable').order('updated_at DESC') }, :class_name => 'Support::Ticket'
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :user_bans
-  has_many :user_instance_profiles
   has_one :blog, class_name: 'UserBlog'
   has_many :blog_posts, class_name: 'UserBlogPost'
+  has_many :payment_documents, class_name: 'Attachable::PaymentDocument', dependent: :destroy
+  belongs_to :instance_profile_type
+  has_many :payment_documents, class_name: 'Attachable::PaymentDocument', dependent: :destroy
   belongs_to :partner
   belongs_to :instance
   belongs_to :domain
@@ -71,18 +75,19 @@ class User < ActiveRecord::Base
 
   accepts_nested_attributes_for :companies
   accepts_nested_attributes_for :approval_requests
-  accepts_nested_attributes_for :user_instance_profiles
 
   has_many :ticket_message_attachments, foreign_key: 'uploader_id', class_name: 'Support::TicketMessageAttachment'
 
+  has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
+
   scope :patron_of, lambda { |listing|
-                    joins(:reservations).where(:reservations => { :transactable_id => listing.id }).uniq
-                  }
+    joins(:reservations).where(:reservations => { :transactable_id => listing.id }).uniq
+  }
 
   scope :without, lambda { |users|
-                  users_ids = users.respond_to?(:pluck) ? users.pluck(:id) : Array.wrap(users).collect(&:id)
-                  users_ids.any? ? where('users.id NOT IN (?)', users_ids) : all
-                }
+    users_ids = users.respond_to?(:pluck) ? users.pluck(:id) : Array.wrap(users).collect(&:id)
+    users_ids.any? ? where('users.id NOT IN (?)', users_ids) : all
+  }
 
   scope :ordered_by_email, -> { order('users.email ASC') }
 
@@ -111,6 +116,8 @@ class User < ActiveRecord::Base
   }
 
   scope :with_date, ->(date) { where(created_at: date) }
+
+  scope :admin, -> { where(admin: true) }
 
   extend CarrierWave::SourceProcessing
   mount_uploader :avatar, AvatarUploader, :use_inkfilepicker => true
@@ -158,15 +165,9 @@ class User < ActiveRecord::Base
   end
 
   devise :database_authenticatable, :registerable, :recoverable,
-         :rememberable, :trackable, :user_validatable, :token_authenticatable, :temporary_token_authenticatable
+    :rememberable, :trackable, :user_validatable, :token_authenticatable, :temporary_token_authenticatable
 
   attr_accessor :phone_required, :country_name_required, :skip_password, :verify_identity
-
-  # attr_accessible :name, :email, :phone, :job_title, :password, :avatar, :avatar_versions_generated_at, :avatar_transformation_data,
-  #   :biography, :industry_ids, :country_name, :mobile_number, :facebook_url, :twitter_url, :linkedin_url, :instagram_url,
-  #   :current_location, :company_name, :skills_and_interests, :last_geolocated_location_longitude, :last_geolocated_location_latitude,
-  #
-  #   :domain_id, :time_zone, :companies_attributes, :sms_notifications_enabled, :sms_preferences
 
   serialize :sms_preferences, Hash
   serialize :instance_unread_messages_threads_count, Hash
@@ -382,7 +383,7 @@ class User < ActiveRecord::Base
   end
 
   def has_listing_without_price?
-    listings.any?(&:free?)
+    listings.any?(&:action_free_booking?)
   end
 
   def log_out!
@@ -395,7 +396,7 @@ class User < ActiveRecord::Base
 
   def email_verification_token
     Digest::SHA1.hexdigest(
-        "--dnm-token-#{self.id}-#{self.created_at}"
+      "--dnm-token-#{self.id}-#{self.created_at}"
     )
   end
 
@@ -438,9 +439,9 @@ class User < ActiveRecord::Base
 
   def to_balanced_params
     {
-        name: name,
-        email: email,
-        phone: phone
+      name: name,
+      email: email,
+      phone: phone
     }
   end
 
@@ -516,7 +517,7 @@ class User < ActiveRecord::Base
       if company.company_users.count == company_users_number
         company.destroy
       else
-        company.creator = company.company_users.find { |cu| cu.user_id != self.id }.user
+        company.creator = company.company_users.find { |cu| cu.user_id != self.id }.try(:user)
         company.save!
       end
     end
@@ -529,13 +530,12 @@ class User < ActiveRecord::Base
   end
 
   def recover_companies
-    self.created_companies.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', self.deleted_at, self.deleted_at + 30.seconds).each do |company|
+    self.created_companies.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', [self.deleted_at, self.banned_at].compact.first, [self.deleted_at, self.banned_at].compact.first + 30.seconds).each do |company|
       begin
         company.restore(:recursive => true)
       rescue
       end
     end
-
   end
 
   # Returns a temporary token to be used as the login token parameter
@@ -587,7 +587,7 @@ class User < ActiveRecord::Base
   end
 
   def banned?
-    user_bans.count > 0
+    banned_at.present?
   end
 
   def self.xml_attributes
@@ -659,12 +659,13 @@ class User < ActiveRecord::Base
     get_instance_metadata("instance_admins_metadata")
   end
 
+  def instance_profile_type_id
+    read_attribute(:instance_profile_type_id) || instance_profile_type.try(:id)
+  end
+
+  # hack for compatibiltiy reason, to be removed soon
   def profile
-    @cached_profiles ||= {}
-    if @cached_profiles[PlatformContext.current.try(:instance).try(:id)].nil?
-      @cached_profiles[PlatformContext.current.try(:instance).try(:id)] = user_instance_profiles.first
-    end
-    @cached_profiles[PlatformContext.current.try(:instance).try(:id)]
+    properties
   end
 
   def cart_orders
@@ -683,34 +684,62 @@ class User < ActiveRecord::Base
     wish_lists.default.first
   end
 
-  def reviews_as_seller
-    @reviews_as_seller ||= Review.where(object: 'seller', reviewable_type: 'Spree::LineItem', reviewable_id: line_items.pluck(:id))
+  def reviews_about_seller
+    query = <<-QUERY
+    reviews.reviewable_type = 'Spree::LineItem' 
+      AND reviews.reviewable_id IN (
+        SELECT spree_line_items.id FROM spree_line_items 
+        WHERE spree_line_items.variant_id IN (
+          SELECT spree_variants.id FROM spree_variants 
+          WHERE spree_variants.deleted_at IS NULL 
+            AND spree_variants.product_id IN (
+              SELECT spree_products.id FROM spree_products 
+              WHERE spree_products.deleted_at IS NULL 
+                AND spree_products.user_id = :user_id))) 
+      OR reviews.reviewable_type = 'Reservation' 
+        AND reviews.reviewable_id IN (
+          SELECT reservations.id FROM reservations 
+          WHERE reservations.creator_id = :user_id)
+    QUERY
+
+    Review.with_object('seller').where(query, user_id: id)
   end
 
-  def line_items
-    @line_items ||= Spree::LineItem.where(variant_id: variants.pluck(:id))
-  end
+  def reviews_about_buyer
+    query = <<-QUERY
+    reviews.reviewable_type = 'Spree::LineItem' 
+      AND reviews.reviewable_id IN (
+        SELECT spree_line_items.id FROM spree_line_items 
+        WHERE spree_line_items.order_id IN (
+          SELECT spree_orders.id FROM spree_orders 
+          WHERE spree_orders.user_id = :user_id)) 
+      OR reviews.reviewable_type = 'Reservation' 
+        AND reviewable_id IN (
+          SELECT reservations.id FROM reservations 
+          WHERE reservations.deleted_at IS NULL 
+            AND reservations.owner_id = :user_id)
+    QUERY
 
-  def variants
-    @variants ||= Spree::Variant.where(product_id: products.pluck(:id))
-  end
-
-  def products
-    @products ||= Spree::Product.where(administrator_id: self.id)
+    Review.for_buyer.where(query, user_id: id)
   end
 
   def has_reviews?
-    reviews_as_seller.count > 0
+    reviews_about_seller.count > 0 || reviews_about_buyer.count > 0 || reviews.count > 0
   end
 
-  def question_average_rating
-    @rating_answers_rating ||= RatingAnswer.where(review_id: reviews_as_seller.pluck(:id))
+  def question_average_rating(reviews)
+    @rating_answers_rating ||= RatingAnswer.where(review_id: reviews.pluck(:id))
                                  .group(:rating_question_id).average(:rating)
   end
 
-  def recalculate_average_rating!
-    average_rating = reviews_as_seller.average(:rating)
-    self.update(average_rating: average_rating)
+  def recalculate_seller_average_rating!
+    seller_average_rating = reviews_about_seller.average(:rating) || 0.0
+    self.update(seller_average_rating: seller_average_rating)
+  end
+
+  def recalculate_buyer_average_rating!
+    buyer_average_rating = reviews_about_buyer.average(:rating) || 0.0
+    self.update(buyer_average_rating: buyer_average_rating)
   end
 
   private
@@ -741,4 +770,6 @@ class User < ActiveRecord::Base
       errors.add(:name, :last_name_too_long, count: User::MAX_NAME_LENGTH)
     end
   end
+
 end
+

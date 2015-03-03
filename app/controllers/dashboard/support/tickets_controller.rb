@@ -2,7 +2,7 @@ class Dashboard::Support::TicketsController < Dashboard::BaseController
   before_filter :find_ticket, only: [:show, :update]
 
   def index
-    @tickets = current_user.assigned_transactable_tickets.for_filter(filter).paginate(page: params[:page])
+    @tickets = current_user.assigned_company_tickets.for_filter(filter).paginate(page: params[:page])
     @filter = filter
     @filter_name = filter_name[@filter]
   end
@@ -27,7 +27,7 @@ class Dashboard::Support::TicketsController < Dashboard::BaseController
   private
 
   def find_ticket
-    @ticket = current_user.assigned_transactable_tickets.find(params[:id])
+    @ticket = current_user.assigned_company_tickets.find(params[:id])
   end
 
   def translated_filter_name(name)

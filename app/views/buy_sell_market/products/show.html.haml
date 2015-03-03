@@ -20,9 +20,11 @@
             = hidden_field_tag 'product_id', @product.id
             = label_tag 'quantity', t('buy_sell_market.products.labels.qty')
             = select_tag 'quantity', options_for_select((1..10)), class: ''
-            - if @product.total_on_hand > 0
-              %button.cta.btn.blue.padding11.add_to_cart
-                = t 'buy_sell_market.products.buttons.add_to_cart'
+            %button.cta.btn.blue.padding11.add_to_cart
+              = t 'buy_sell_market.products.buttons.add_to_cart'
+            - if @product.action_rfq?
+              - rfq_label = (@product.action_free? ?  t('reservations.rfq') : t('reservations.offer'))
+              = link_to rfq_label, '#', data: { modal: true, href: new_product_ticket_path(@product) }, class: 'btn gray', style: 'margin-top: 20px'
         - else
           .btn.disabled= t('buy_sell_market.products.buttons.out_of_stock')
 
@@ -48,6 +50,10 @@
           %li
             %a{'data-toggle' => 'tab', href: '#product-shipping', role: 'tab'}
               = t 'buy_sell_market.products.labels.shippigng_policies'
+        - if @product.extra_properties.present?
+          %li
+            %a{'data-toggle' => 'tab', href: '#product-properties', role: 'tab'}
+              = t 'buy_sell_market.products.labels.properties'
       .tab-content
         %article#product-details.tab-pane{ class: "#{ 'active' if !param_reviews_page_present? }" }
           %p= @product.description.html_safe
@@ -61,13 +67,14 @@
                 .span9
                   .rating
                     = render partial: 'stars', locals: { stars: @product.try(:average_rating).try(:round) }
-              .row-fluid
-                - @rating_questions.each do |rating_question|
-                  .span3
-                    %p= rating_question.text
-                  .span3
-                    .rating
-                      = render partial: 'stars', locals: { stars:  (@product.question_average_rating[rating_question.id] || 0).round }
+              - if @rating_questions.present?
+                .row-fluid
+                  - @rating_questions.each do |rating_question|
+                    .span3
+                      %p= rating_question.text
+                    .span3
+                      .rating
+                        = render partial: 'stars', locals: { stars:  (@product.question_average_rating[rating_question.id] || 0).round }
             - @reviews.each do |review|
               .review
                 .row-fluid
@@ -130,7 +137,14 @@
                     occasion we will do, soil can get loose from the pot. Brush off the plant or gently blow to remove
                     the loose soil from the plant and replace the soil around the plants root.
 
-
+        - if @product.extra_properties.present?
+          %article#product-properties.tab-pane
+            - @product.extra_properties.each do |property|
+              .row-fluid
+                .span3
+                  %h5= property.first.capitalize
+                .span9
+                  %p= property.last
     .product-profile-badge
       .vendor-profile
         = render partial: 'administrator', locals: { product: @product, hidden: hidden}

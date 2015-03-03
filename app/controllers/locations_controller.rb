@@ -21,6 +21,8 @@ class LocationsController < ApplicationController
     end
     @location.track_impression(request.remote_ip)
     event_tracker.viewed_a_location(@location, { logged_in: user_signed_in? })
+    @reviews = @listing.reviews.paginate(page: params[:reviews_page])
+    @rating_questions = RatingSystem.find_by(subject: @listing.transactable_type.bookable_noun, active: true).try(:rating_questions)
   end
 
   def ask_a_question
@@ -74,9 +76,9 @@ class LocationsController < ApplicationController
 
   def redirect_if_no_active_listings
     if current_user_can_manage_location?
-      flash.now[:warning] = t('flash_messages.locations.browsing_no_listings') if @listings.searchable.empty?
+      flash.now[:warning] = t('flash_messages.locations.browsing_no_listings') if @listings.searchable.select(&:bookable?).empty?
     else
-      @listings = @listings.searchable
+      @listings = @listings.searchable.select(&:bookable?)
     end
     if @listings.empty?
       # If location doesn't have any listings, redirects to search page with notice

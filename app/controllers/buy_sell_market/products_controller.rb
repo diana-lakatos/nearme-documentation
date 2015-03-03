@@ -7,7 +7,7 @@ class BuySellMarket::ProductsController < ApplicationController
       @product = @product.decorate
       @product_properties = @product.product_properties.includes(:property)
       @product.track_impression(request.remote_ip)
-      @rating_questions = RatingSystem.find_by(subject: platform_context.instance.bookable_noun).rating_questions
+      @rating_questions = RatingSystem.find_by(subject: platform_context.instance.bookable_noun, active: true).try(:rating_questions)
       @reviews = @product.reviews.paginate(page: params[:reviews_page])
     rescue ActiveRecord::RecordNotFound
       raise Transactable::NotFound

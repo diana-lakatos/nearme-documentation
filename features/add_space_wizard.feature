@@ -7,7 +7,7 @@ Feature: A user can add a space
     Given a location_type exists with name: "Business"
     Given a location_type exists with name: "Public Space"
     Given a transactable_type_listing exists with name: "Listing"
-    And a form component exists with transactable_type: the transactable_type_listing
+    And a form component exists with form_componentable: the transactable_type_listing
     And a industry exists with name: "Industry"
 
     Given I go to the home page

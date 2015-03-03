@@ -1,0 +1,18 @@
+.modal-header
+  .modal-title= "Bulk Upload"
+.modal-body
+  %p= t('data_upload.manage.new.external_id_hint')
+  %br
+  %p
+    In order for data to be properly imported, you must use a specific format:
+    = link_to 'Download CSV template', {action: :download_csv_template, importable: @importable}
+  %br
+  = simple_form_for @data_upload, url: {action: :create}, wrapper: :bs3, html: { multipart: true } do |f|
+    %p
+      = t('data_upload.manage.new.sync_mode_hint')
+      = f.simple_fields_for :options, OpenStruct.new(@data_upload.options) do |option|
+        = option.input :sync_mode, wrapper: :bs3_simple, required: false, as: :boolean, inline_label: t('data_upload.manage.new.sync_mode'), label: false, input_html: {class: "margin-right"}
+    %br
+    = f.input :csv_file, as: :file
+    .btn-toolbar
+      = f.button :submit, 'Import', class: 'btn blue pull-right'

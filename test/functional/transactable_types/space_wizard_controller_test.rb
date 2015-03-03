@@ -17,6 +17,8 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
   context 'scopes current partner for new company' do
     should 'match partner_id' do
       PlatformContext.current = PlatformContext.new(@partner)
+      @user = FactoryGirl.create(:user)
+      sign_in @user
       assert_difference 'Transactable.count' do
         post :submit_listing, get_params
       end
@@ -77,7 +79,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
     setup do
       @user.country_name = nil
       @user.save!
-      FactoryGirl.create(:form_component, transactable_type: @transactable_type)
+      FactoryGirl.create(:form_component, form_componentable: @transactable_type)
     end
 
     should "be set to Greece" do
@@ -107,7 +109,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
 
       setup do
         FactoryGirl.create(:approval_request_template, required_written_verification: true)
-        FactoryGirl.create(:form_component, transactable_type: @transactable_type)
+        FactoryGirl.create(:form_component, form_componentable: @transactable_type)
       end
 
       should 'show form to write message'  do
@@ -196,21 +198,21 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
     should 'redirect to manage listings page if has listings' do
       create_listing
       get :new, transactable_type_id: @transactable_type.id
-      assert_redirected_to dashboard_transactable_type_transactables_path(@transactable_type.id)
+      assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.id)
     end
 
     should 'redirect to new location if no listings' do
       create_listing
       @location.destroy
       get :new, transactable_type_id: @transactable_type.id
-      assert_redirected_to dashboard_transactable_type_transactables_path(@transactable_type.id)
+      assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.id)
     end
 
     should 'redirect to new listing if no listings but with one location' do
       create_listing
       @listing.destroy
       get :new, transactable_type_id: @transactable_type.id
-      assert_redirected_to dashboard_transactable_type_transactables_path(@transactable_type.id)
+      assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.id)
     end
 
     should 'redirect to dashboard if no listings but more than one location' do
@@ -218,7 +220,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
       @listing.destroy
       FactoryGirl.create(:location, :company => @company)
       get :new, transactable_type_id: @transactable_type.id
-      assert_redirected_to dashboard_transactable_type_transactables_path(@transactable_type.id)
+      assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.id)
     end
 
     should 'redirect to space wizard list if no listings' do
@@ -235,14 +237,32 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
 
   context 'with multiple sections' do
     should 'render all sections correctly' do
-      FactoryGirl.create(:form_component, transactable_type: @transactable_type, form_fields: [{'company' => 'name'}, {'company' => 'address'}, {'location' => 'name'}], name: 'Super Cool Section 1')
-      FactoryGirl.create(:form_component, transactable_type: @transactable_type, form_fields: [{ 'transactable' => 'price' }, { 'transactable' => 'photos' }, { 'transactable' => 'name' }], name: 'Transactable Section')
-      FactoryGirl.create(:form_component, transactable_type: @transactable_type, form_fields: [{'user' => 'phone'}], name: 'Contact Information')
+      FactoryGirl.create(:form_component, form_componentable: @transactable_type, form_fields: [{'company' => 'name'}, {'company' => 'address'}, {'location' => 'name'}], name: 'Super Cool Section 1')
+      FactoryGirl.create(:form_component, form_componentable: @transactable_type, form_fields: [{ 'transactable' => 'price' }, { 'transactable' => 'photos' }, { 'transactable' => 'name' }], name: 'Transactable Section')
+      FactoryGirl.create(:form_component, form_componentable: @transactable_type, form_fields: [{'user' => 'phone'}], name: 'Contact Information')
       get :list, transactable_type_id: @transactable_type.id
       assert_select "h2", 'Super Cool Section 1'
       assert_select "h2", 'Transactable Section'
       assert_select "h2", 'Contact Information'
       assert_select '#user_phone'
+    end
+  end
+
+  context 'with skip_company' do
+    should 'create listing when location skip_company is set to true' do
+      @instance_with_skip_company = FactoryGirl.create(:instance, skip_company: true)
+      PlatformContext.current = PlatformContext.new(@instance_with_skip_company)
+      @user = FactoryGirl.create(:user)
+      sign_in @user
+      @transactable_type = FactoryGirl.create(:transactable_type_listing)
+
+      params_without_company_name = get_params
+      params_without_company_name['user']['companies_attributes']['0'].delete('name')
+      params_without_company_name['user']['companies_attributes']['0'].delete('industry_ids')
+
+      assert_difference('Transactable.count', 1) do
+        post :submit_listing, params_without_company_name
+      end
     end
   end
 
@@ -274,13 +294,13 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
             "transactable_type_id" => TransactableType.first.id,
             "name"=>"Desk",
             "description"=>"We have a group of several shared desks available.",
-            "hourly_reservations" => false,
+            "action_hourly_booking" => false,
             "listing_type"=>"Desk",
             "quantity"=>"1",
             "daily_price"=>daily_price,
             "weekly_price"=>weekly_price,
             "monthly_price"=> monthly_price,
-            "free"=>free,
+            "action_free_booking"=>free,
             "confirm_reservations"=>"0",
             "photos_attributes" => [FactoryGirl.attributes_for(:photo)]}
           },

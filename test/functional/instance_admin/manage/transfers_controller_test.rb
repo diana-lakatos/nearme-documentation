@@ -22,14 +22,14 @@ class InstanceAdmin::Manage::TransfersControllerTest < ActionController::TestCas
 
     should 'show a listing of payment transfers associated with current instance' do
       @instance = FactoryGirl.create(:instance)
-      @company = FactoryGirl.create(:company)
-      @company.update_attribute(:instance_id, @instance.id)
-      @payment_transfer = FactoryGirl.create(:payment_transfer, company: @company)
-      @payment_transfer.update_attribute(:instance_id, @instance.id)
-
       @other_company = FactoryGirl.create(:company)
       @other_payment_transfer = FactoryGirl.create(:payment_transfer, company: @other_company)
       PlatformContext.current = PlatformContext.new(@instance)
+      @user = FactoryGirl.create(:user)
+      sign_in @user
+      @company = FactoryGirl.create(:company)
+      @payment_transfer = FactoryGirl.create(:payment_transfer, company: @company)
+
       get :index
       assert_select 'td', @company.name
       assert_equal [@payment_transfer], assigns(:transfers)

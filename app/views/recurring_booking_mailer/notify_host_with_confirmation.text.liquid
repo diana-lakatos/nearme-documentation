@@ -7,7 +7,7 @@ Who: {{ reservation.owner.first_name }}
 What: {{ listing.name }} x {{ reservation.quantity }}
 
 When:
-{% if listing.hourly_reservations? %}
+{% if reservation.action_hourly_booking? %}
   {{ reservation.hourly_summary }}
 {% else %}
   {{ reservation.dates_summary }}

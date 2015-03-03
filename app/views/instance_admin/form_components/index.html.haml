@@ -1,0 +1,33 @@
+%h4 Manage Form Components
+
+.content-container
+  .row
+    = link_to 'New Form Component', new_polymorphic_url([:instance_admin, @controller_scope, @form_componentable, FormComponent.new], :form_type => :space_wizard), class: 'pull-right btn btn-green'
+
+%h4 Form Components
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table
+        %tbody
+          - @form_components.each do |resource|
+            %tr
+              %td= resource.name.humanize
+              %td= resource.form_type
+              %td= link_to 'Edit', edit_polymorphic_url([:instance_admin, @controller_scope, @form_componentable, resource]), class: 'pull-right'
+              %td= link_to "Delete", polymorphic_url([:instance_admin, @controller_scope, @form_componentable, resource]), :method => :delete, data: { confirm: 'Are you sure you want to delete this transactable type?' }, class: "pull-right"
+
+- @form_components.group_by(&:form_type).each do |form_type, form_components|
+  %h4= form_type.humanize
+  .content-container
+    .row
+      .table-container.col-xs-12.dropshadow
+        %ol.formComponentPanelList
+          - form_components.each do |form_component|
+            %li.panel.panel-info{'data-id'=>form_component.id}
+              %div.panel-heading
+                = form_component.name
+
+= content_for :script do
+  :javascript
+    new FormComponents("ol.formComponentPanelList", "#{@form_componentable.id}")

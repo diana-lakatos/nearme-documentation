@@ -13,7 +13,7 @@ class AddUnreadListingMessageThreadsCountToUsers < ActiveRecord::Migration
       :source => :listings
 
     has_many :company_users, dependent: :destroy
-    has_many :companies, :through => :company_users, :order => "company_users.created_at ASC"
+    has_many :companies, -> { order("company_users.created_at ASC") }, :through => :company_users
 
     has_many :locations, :through => :companies
     has_many :listings, :through => :locations

@@ -1,9 +1,0 @@
-%div
-  .control-group
-    = f.label :name
-    .controls
-      = f.text_field :name
-  .control-group
-    = f.association :properties, :blank => false, collection: @properties, :input_html => { 'data-placeholder' => t('simple_form.prompts.company.industries'), :class => 'custom-select' }, :required => true
-  .control-group
-    = f.association :option_types, :blank => false, collection: @option_types, :input_html => { 'data-placeholder' => t('simple_form.prompts.company.industries'), :class => 'custom-select' }, :required => true

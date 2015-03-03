@@ -1,8 +1,8 @@
 - link = case tab
   - when :products
-    - dashboard_products_path
+    - dashboard_company_products_path
   - when :services
-    - dashboard_transactable_type_transactables_path(TransactableType.first) if TransactableType.first
+    - dashboard_company_transactable_type_transactables_path(TransactableType.first) if TransactableType.first
   - when :reviews
     - dashboard_reviews_path
   - when :blog_posts

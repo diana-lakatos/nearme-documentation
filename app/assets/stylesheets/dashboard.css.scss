@@ -8,13 +8,15 @@
 
 @import "jcrop";
 @import "vendor/overrides/jcrop";
+@import "vendor/icui";
 
 @import "globals/*";
 @import "components/nav";
 @import "components/modal";
 @import "components/flash";
 
-$font-stack: 'Open Sans', sans-serif, helvetica;
+$font-stack: $font-regular, sans-serif, helvetica;
+
 $color-blue: #5dbded;
 $color-light-blue: #acdef7;
 $color-dark-blue: #51a1ca;

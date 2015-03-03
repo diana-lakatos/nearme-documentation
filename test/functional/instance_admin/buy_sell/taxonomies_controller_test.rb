@@ -35,24 +35,6 @@ class InstanceAdmin::BuySell::TaxonomiesControllerTest < ActionController::TestC
     end
   end
 
-  context "edit_taxon" do
-    should 'allow show edit form for related taxon' do
-      @taxon = FactoryGirl.create(:taxon, taxonomy: @taxonomy)
-      get :edit_taxon, id: @taxonomy.id, taxon_id: @taxon.id
-      assert_response :success
-    end
-  end
-
-  context "update_taxon" do
-    should 'allow update taxon' do
-      @taxon = FactoryGirl.create(:taxon, taxonomy: @taxonomy)
-      put :update_taxon, id: @taxonomy.id, taxon_id: @taxon.id, taxon: {
-        "name"=>"taxon name", "in_top_nav"=>"1", "top_nav_position"=>"1"
-      }
-      assert_redirected_to edit_instance_admin_buy_sell_taxonomy_path(@taxonomy)
-    end
-  end
-
   context 'destroy' do
     should 'destroy taxonomy' do
       assert_difference 'Spree::Taxonomy.count', -1 do

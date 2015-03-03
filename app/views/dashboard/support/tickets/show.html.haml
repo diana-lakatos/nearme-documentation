@@ -6,7 +6,7 @@
 
 .dash-page
   .dash-head.clearfix
-    - if @ticket.target.free?
+    - if @ticket.target.action_free_booking?
       %p="#{t('reservations.rfq_short')} ##{@ticket.id}: "
     - else
       %p="#{t('reservations.offer')} ##{@ticket.id}: "

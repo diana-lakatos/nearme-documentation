@@ -13,7 +13,7 @@
         = @recurring_booking_request.recurring_booking.schedule.to_s
         %p
           = @recurring_booking.short_dates
-          - if @recurring_booking_request.hourly_reservations?
+          - if @recurring_booking_request.action_hourly_booking?
             %br
             = @recurring_booking.hourly_summary
 
@@ -51,6 +51,15 @@
               .summary-line-label= t 'reservations_review.service_fee'
               .summary-line-value.service-fee-amount= @decorated_reservation.service_fee_guest
               .clearfix
+
+
+          - if @decorated_reservation.additional_charges.any?
+            - @decorated_reservation.additional_charges.each do |charge|
+              .summary-line
+                .summary-line-label= charge.name
+                .summary-line-value.service-fee-amount= charge.amount
+                = hidden_field_tag "#{f.object_name}[additional_charge_ids][]", charge.additional_charge_type_id
+                .clearfix
 
           .summary-line
             .summary-line-label= t 'recurring_reservations_review.total'

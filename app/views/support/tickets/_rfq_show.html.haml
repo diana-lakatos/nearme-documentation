@@ -6,7 +6,7 @@
 .row-fluid.support.detail.rfq
   .span8.offset2
     %h1
-      - if @ticket.target.free?
+      - if @ticket.target.action_free_booking?
         ="#{t('reservations.rfq')} ##{@ticket.id}: "
       - else
         ="#{t('reservations.offer')} ##{@ticket.id}: "

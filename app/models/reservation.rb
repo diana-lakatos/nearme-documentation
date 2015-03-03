@@ -30,24 +30,25 @@ class Reservation < ActiveRecord::Base
 
   belongs_to :instance
   belongs_to :listing, class_name: 'Transactable', foreign_key: 'transactable_id'
-  belongs_to :owner, :class_name => "User"
+  belongs_to :owner, :class_name => "User", counter_cache: true
   belongs_to :creator, class_name: "User"
   belongs_to :administrator, class_name: "User"
   belongs_to :company
   belongs_to :recurring_booking
   belongs_to :platform_context_detail, :polymorphic => true
   belongs_to :credit_card
-  belongs_to :user_instance_profile, foreign_key: 'owner_id', primary_key: 'user_id', counter_cache: true
   has_many :user_messages, as: :thread_context
   has_many :waiver_agreements, as: :target
+  has_many :additional_charges, as: :target
+  accepts_nested_attributes_for :additional_charges
 
-  # attr_accessible :cancelable, :confirmation_email, :date, :transactable_id,
-  #   :owner_id, :periods, :state, :user, :comment, :quantity, :payment_method, :rejection_reason
+  has_many :payment_documents, as: :attachable, class_name: 'Attachable::PaymentDocument', dependent: :destroy
+  accepts_nested_attributes_for :payment_documents
 
   has_many :periods,
-           :class_name => "ReservationPeriod",
-           :inverse_of => :reservation,
-           :dependent => :destroy
+    :class_name => "ReservationPeriod",
+    :inverse_of => :reservation,
+    :dependent => :destroy
 
   has_many :payments, as: :payable, dependent: :destroy
 
@@ -140,14 +141,14 @@ class Reservation < ActiveRecord::Base
 
   scope :upcoming, lambda {
     joins(:periods).
-      where('reservation_periods.date >= ?', Time.zone.today).
-      uniq
+    where('reservation_periods.date >= ?', Time.zone.today).
+    uniq
   }
 
   scope :past, lambda {
     joins(:periods).
-      where('reservation_periods.date < ?', Time.zone.today).
-      uniq
+    where('reservation_periods.date < ?', Time.zone.today).
+    uniq
   }
 
   scope :visible, lambda {
@@ -206,7 +207,7 @@ class Reservation < ActiveRecord::Base
 
   scope :with_listing, -> {where.not(transactable_id: nil)}
 
-  validates_presence_of :payment_method, :in => PAYMENT_METHODS.values
+  validates_presence_of :payment_method, :in => Reservation::PAYMENT_METHODS.values
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
 
   delegate :location, to: :listing
@@ -286,19 +287,23 @@ class Reservation < ActiveRecord::Base
   end
 
   def total_amount_cents
-    subtotal_amount_cents + service_fee_amount_guest_cents rescue nil
+    subtotal_amount_cents + service_fee_amount_guest_cents
   end
 
   def subtotal_amount_cents
-    super || price_calculator.price.cents rescue nil
+    super || price_calculator.price.cents
   end
 
   def service_fee_amount_guest_cents
-    super || service_fee_calculator.service_fee_guest.cents rescue nil
+    super || service_fee_calculator.service_fee_guest.cents
+  end
+
+  def service_fee_guest_wo_charges
+    service_fee_calculator.service_fee_guest_wo_ac
   end
 
   def service_fee_amount_host_cents
-    super || service_fee_calculator.service_fee_host.cents rescue nil
+    super || service_fee_calculator.service_fee_host.cents
   end
 
   def total_amount_dollars
@@ -352,12 +357,12 @@ class Reservation < ActiveRecord::Base
     super.presence || listing.try(:currency)
   end
 
-  def free?
+  def action_free_booking?
     total_amount.to_f <= 0
   end
 
   def has_service_fee?
-    !service_fee_amount_guest.to_f.zero?
+    !service_fee_guest_wo_charges.to_f.zero?
   end
 
   def paid?
@@ -434,10 +439,10 @@ class Reservation < ActiveRecord::Base
     payment.save!
 
     self.payment_status = if payment.paid?
-      PAYMENT_STATUSES[:paid]
-    else
-      PAYMENT_STATUSES[:failed]
-    end
+                            PAYMENT_STATUSES[:paid]
+                          else
+                            PAYMENT_STATUSES[:failed]
+                          end
     save!
   end
 
@@ -451,84 +456,97 @@ class Reservation < ActiveRecord::Base
     end
   end
 
+  def action_hourly_booking?
+    reservation_type == 'hourly' || self.listing.schedule_booking?
+  end
+
+  def action_daily_booking?
+    reservation_type == 'daily'
+  end
+
   private
 
-    def service_fee_calculator
-      @service_fee_calculator ||= Payment::ServiceFeeCalculator.new(self.subtotal_amount, self.service_fee_guest_percent, self.service_fee_host_percent)
+  def service_fee_calculator
+    options = {
+      guest_fee_percent:  service_fee_guest_percent,
+      host_fee_percent:   service_fee_host_percent,
+      additional_charges: additional_charges
+    }
+    @service_fee_calculator ||= Payment::ServiceFeeCalculator.new(subtotal_amount, options)
+  end
+
+  def price_calculator
+    @price_calculator ||= if listing.schedule_booking?
+                            FixedPriceCalculator.new(self)
+                          elsif action_hourly_booking?
+                            HourlyPriceCalculator.new(self)
+                          else
+                            DailyPriceCalculator.new(self)
+                          end
+  end
+
+  def set_default_payment_status
+    return if paid?
+
+    self.payment_status = if action_free_booking?
+                            PAYMENT_STATUSES[:paid]
+                          else
+                            PAYMENT_STATUSES[:pending]
+                          end
+  end
+
+  def set_costs
+    self.subtotal_amount_cents = price_calculator.price.try(:cents)
+    if active_merchant_payment? || remote_payment?
+      self.service_fee_amount_guest_cents = service_fee_calculator.service_fee_guest.try(:cents)
+      self.service_fee_amount_host_cents = service_fee_calculator.service_fee_host.try(:cents)
+    else
+      # This feels a bit hax, but the this is a specific edge case where we don't
+      # apply a service fee to manual payments at this stage. However, we still
+      # need to calculate and present the service fee as the payment type for
+      # supported listings is not confirmed until the executes the reservation.
+      self.service_fee_amount_guest_cents = 0
+      self.service_fee_amount_host_cents = 0
     end
+  end
 
-    def price_calculator
-      @price_calculator ||= if listing.hourly_reservations?
-        HourlyPriceCalculator.new(self)
-      else
-        DailyPriceCalculator.new(self)
-      end
+  def set_currency
+    self.currency ||= listing.try(:currency)
+  end
+
+  def auto_confirm_reservation
+    confirm! unless listing.confirm_reservations?
+  end
+
+  def create_scheduled_expiry_task
+    Delayed::Job.enqueue Delayed::PerformableMethod.new(self, :should_expire!, nil), run_at: expiry_time
+  end
+
+  def schedule_refund(transition, counter = 0, run_at = Time.zone.now)
+    ReservationRefundJob.perform_later(run_at, self.id, counter)
+  end
+
+  def schedule_payment_capture
+    ReservationPaymentCaptureJob.perform_later(date + first_period.start_minute.minutes - recurring_booking.hours_before_reservation_to_charge.hours, self.id)
+  end
+
+  def validate_all_dates_available
+    invalid_dates = periods.reject(&:bookable?)
+    if invalid_dates.any?
+      errors.add(:base, "Unfortunately the following bookings are no longer available: #{invalid_dates.map(&:as_formatted_string).join(', ')}")
     end
+  end
 
-    def set_default_payment_status
-      return if paid?
-
-      self.payment_status = if free?
-        PAYMENT_STATUSES[:paid]
-      else
-        PAYMENT_STATUSES[:pending]
-      end
+  def validate_booking_selection
+    unless price_calculator.valid?
+      errors.add(:base, "Booking selection does not meet requirements. A minimum of #{listing.minimum_booking_days} consecutive bookable days are required.")
     end
+  end
 
-    def set_costs
-      self.subtotal_amount_cents = price_calculator.price.try(:cents)
-      if active_merchant_payment? || remote_payment?
-        self.service_fee_amount_guest_cents = service_fee_calculator.service_fee_guest.try(:cents)
-        self.service_fee_amount_host_cents = service_fee_calculator.service_fee_host.try(:cents)
-      else
-        # This feels a bit hax, but the this is a specific edge case where we don't
-        # apply a service fee to manual payments at this stage. However, we still
-        # need to calculate and present the service fee as the payment type for
-        # supported listings is not confirmed until the executes the reservation.
-        self.service_fee_amount_guest_cents = 0
-        self.service_fee_amount_host_cents = 0
-      end
+  def create_waiver_agreements
+    assigned_waiver_agreement_templates.each do |t|
+      waiver_agreements.create(waiver_agreement_template: t, vendor_name: host.name, guest_name: owner.name)
     end
-
-    def set_currency
-      self.currency ||= listing.try(:currency)
-    end
-
-    def auto_confirm_reservation
-      confirm! unless listing.confirm_reservations?
-    end
-
-    def create_scheduled_expiry_task
-      Delayed::Job.enqueue Delayed::PerformableMethod.new(self, :should_expire!, nil), run_at: expiry_time
-    end
-
-    def schedule_refund(transition, counter = 0, run_at = Time.zone.now)
-      ReservationRefundJob.perform_later(run_at, self.id, counter)
-    end
-
-    def schedule_payment_capture
-      ReservationPaymentCaptureJob.perform_later(date + first_period.start_minute.minutes - recurring_booking.hours_before_reservation_to_charge.hours, self.id)
-    end
-
-    def validate_all_dates_available
-      invalid_dates = periods.reject(&:bookable?)
-      if invalid_dates.any?
-        errors.add(:base, "Unfortunately the following bookings are no longer available: #{invalid_dates.map(&:as_formatted_string).join(', ')}")
-      end
-    end
-
-    def validate_booking_selection
-      unless price_calculator.valid?
-        errors.add(:base, "Booking selection does not meet requirements. A minimum of #{listing.minimum_booking_days} consecutive bookable days are required.")
-      end
-    end
-
-    def create_waiver_agreements
-      assigned_waiver_agreement_templates.each do |t|
-        waiver_agreements.create(waiver_agreement_template: t, vendor_name: host.name, guest_name: owner.name)
-      end
-    end
-
+  end
 
 end
-

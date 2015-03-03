@@ -1,5 +1,5 @@
 Given /recurre booking is enabled/ do
-  TransactableType.first.update_attribute(:recurring_booking, true)
+  TransactableType.first.update_attribute(:action_recurring_booking, true)
 end
 
 When /^I select to recurre book( and review)? space for:$/ do |and_review, table|

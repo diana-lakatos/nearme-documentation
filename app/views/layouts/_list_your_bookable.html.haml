@@ -1,20 +1,17 @@
 %li
-  - if platform_context.single_transactable_type?
+  - if platform_context.single_type?
     - if current_user.nil?
-      = link_to_registration({return_to: main_app.transactable_type_new_space_wizard_path(transactable_type)}, platform_context.secured_constraint, secure_links?, data: { modal: true, 'modal-class' => 'sign-up-modal' }, class: 'nav-link btn btn-blue btn-medium') do
-        %span.text= t('ui.header.list_your_thing', thing: transactable_type.buy_sell? ? platform_context.bookable_noun : transactable_type.name)
+      = link_to_registration({return_to: transactable_type.wizard_path}, platform_context.secured_constraint, secure_links?, data: { modal: true, 'modal-class' => 'sign-up-modal' }, class: 'nav-link btn btn-blue btn-medium') do
+        %span.text= t('ui.header.list_your_thing', thing: transactable_type.name)
         %span.icon.ico-plus
     - else
-      = link_to main_app.transactable_type_new_space_wizard_path(transactable_type), :class => "nav-link btn btn-blue btn-medium" do
-        %span.text= t('ui.header.list_your_thing', thing: transactable_type.buy_sell? ? platform_context.bookable_noun : transactable_type.name)
+      = link_to transactable_type.wizard_path, :class => "nav-link btn btn-blue btn-medium" do
+        %span.text= t('ui.header.list_your_thing', thing: transactable_type.name)
         %span.icon.ico-plus
   - else
     - if current_user.nil?
-      = link_to_registration({return_to: main_app.transactable_type_new_space_wizard_path(transactable_type)}, platform_context.secured_constraint, secure_links?, data: { modal: true, 'modal-class' => 'sign-up-modal' }, class: 'nav-link dropdown-toggle') do
-        %span.text= transactable_type.buy_sell? ? platform_context.bookable_noun : transactable_type.name
+      = link_to_registration({return_to: transactable_type.wizard_path}, platform_context.secured_constraint, secure_links?, data: { modal: true, 'modal-class' => 'sign-up-modal' }, class: 'nav-link dropdown-toggle') do
+        %span.text= transactable_type.name
     - else
-      = link_to main_app.transactable_type_new_space_wizard_path(transactable_type), :class => "nav-link dropdown-toggle" do
-        %span.text= transactable_type.buy_sell? ? platform_context.bookable_noun : transactable_type.name
-
-
-
+      = link_to transactable_type.wizard_path, :class => "nav-link dropdown-toggle" do
+        %span.text= transactable_type.name

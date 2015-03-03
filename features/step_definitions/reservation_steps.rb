@@ -19,7 +19,7 @@ end
 
 Given /^#{capture_model} is reserved hourly$/ do |listing_instance|
   listing = model!(listing_instance)
-  listing.hourly_reservations = true
+  listing.action_hourly_booking = true
   listing.save!
 end
 
@@ -75,7 +75,7 @@ When /^the (visitor|owner) (confirm|decline|cancel)s the reservation$/ do |user,
     visit dashboard_user_reservations_path
   else
     login User.find_by_name("Bo Jeanes")
-    visit dashboard_host_reservations_path
+    visit dashboard_company_host_reservations_path
   end
   if action == 'cancel' and user == 'owner'
     within('.dash-head') { click_on 'CONFIRMED'}
@@ -219,7 +219,7 @@ Then /^#{capture_model} should have(?: ([0-9]+) of)? #{capture_model} reserved f
 end
 
 When /^#{capture_model} is free$/ do |transactable|
-  model!(transactable).update_attribute(:free, true)
+  model!(transactable).update_attribute(:action_free_booking, true)
 end
 
 Then /^I should see the following reservations in order:$/ do |table|

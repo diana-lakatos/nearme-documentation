@@ -1,6 +1,6 @@
 module Devise
   module Models
-    # UserValidatable creates all needed validations for a user email 
+    # UserValidatable creates all needed validations for a user email
     # scoped by deleted_at column and password.
     # It's optional, given you may want to create the validations by yourself.
     # Automatically validate if the email is present, unique and its format is
@@ -18,7 +18,7 @@ module Devise
 
         base.class_eval do
           validates_presence_of   :email, :if => :email_required?
-          validates_uniqueness_of :email, :allow_blank => true, :scope => :deleted_at, :if => :email_changed?
+          validates_uniqueness_of :email, :allow_blank => true, :scope => [:instance_id, :deleted_at], :if => :email_changed?
           validates               :email, email: true, :if => :email_changed?
 
           validates_presence_of     :password, :if => :password_required?

@@ -1,7 +1,0 @@
-= render :layout => 'manage/layout/dashboard' do
-  = render :partial => 'location_name_with_links', :locals => { :location => location }
-  .spacer
-  = render location
-
-- content_for :domready do
-  $(function() { new Dashboard.LocationController($('#location-form')) });

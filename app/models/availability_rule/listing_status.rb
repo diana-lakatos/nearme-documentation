@@ -14,7 +14,7 @@ class AvailabilityRule::ListingStatus
     return if date < @start_date || date > @end_date
     return unless @listing.open_on?(date)
 
-    if @listing.hourly_reservations?
+    if @listing.action_hourly_booking?
       @listing.quantity
     else
       q = @listing.quantity - booked_on(date)

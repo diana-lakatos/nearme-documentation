@@ -2,8 +2,15 @@ FactoryGirl.define do
   factory :transactable_type do
 
     sequence(:name) { |n| "Transactable Type #{n}" }
-    pricing_options { { "free"=>"1", "hourly"=>"1", "daily"=>"1", "weekly"=>"1", "monthly"=>"1" } }
+
+    action_daily_booking true
+    action_weekly_booking true
+    action_monthly_booking true
+    action_free_booking true
+    action_hourly_booking true
     availability_options { { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => true } } }
+    action_recurring_booking false
+    action_rfq false
     service_fee_guest_percent '10.00'
     service_fee_host_percent '10.00'
     bookable_noun 'Desk'
@@ -19,11 +26,13 @@ FactoryGirl.define do
         TransactableType.transaction do
           transactable_type.availability_templates << FactoryGirl.build(:availability_template, :transactable_type => transactable_type)
           CustomAttributes::CustomAttribute::Creator.new(transactable_type, bookable_noun: "Desk", listing_types: ["Desk", "Meeting Room", "Office Space", "Salon Booth"]).create_listing_attributes!
+          transactable_type.form_components << FactoryGirl.build(:form_component_transactable, form_componentable: transactable_type)
         end
       end
 
       factory :transactable_type_listing_with_price_constraints do
-        pricing_validation { { "hourly" => { "max" => "100", "min" => "11" } } }
+        max_hourly_price_cents 100_00
+        min_hourly_price_cents 11_00
       end
 
     end
@@ -51,7 +60,13 @@ FactoryGirl.define do
     end
 
     factory :transactable_type_current_data do
-      pricing_options { { "daily"=>"1", "weekly"=>"1", "monthly"=>"1" } }
+
+      action_free_booking false
+      action_hourly_booking true
+      action_daily_booking true
+      action_weekly_booking true
+      action_monthly_booking true
+
       availability_options { { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => false } } }
       custom_csv_fields { [{'location' => 'name'}, {'location' => 'email'}, {'location' => 'external_id'}, {'location' => 'location_type'}, {'location' => 'description'}, { 'location' => 'special_notes'}, { 'address' => 'address'}, {'address' => 'city'}, { 'address' => 'street' }, { 'address' => 'suburb' }, { 'address' => 'state' }, { 'address' => 'postcode' }, { 'transactable' => 'monthly_price_cents' }, { 'transactable' => 'weekly_price_cents' }, { 'transactable' => 'daily_price_cents' }, { 'transactable' => 'name' }, { 'transactable' => 'my_attribute' }, { 'transactable' => 'external_id' }, { 'transactable' => 'enabled' }, { 'photo' => 'image_original_url' }] }
 

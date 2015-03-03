@@ -18,7 +18,6 @@
 
 - unless @taxonomy.new_record?
   - content_for :domready do
-    var taxonomy_taxons_path = "#{spree.api_taxonomy_taxons_path(@taxonomy)}";
-    var instance_admin_taxonomy_taxons_path = "#{edit_taxon_instance_admin_buy_sell_taxonomy_path(@taxonomy)}";
+    var taxonomy_taxons_path = "#{instance_admin_buy_sell_taxonomy_taxons_path(@taxonomy)}";
     var jstree_theme_path = "#{stylesheet_path("instance_admin/jstree_themes/apple/style.css")}";
     new InstanceAdmin.BuySellController($('#taxonomy_form'), #{@taxonomy.id});

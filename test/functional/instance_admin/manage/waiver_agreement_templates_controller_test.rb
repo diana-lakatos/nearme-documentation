@@ -3,9 +3,9 @@ require 'test_helper'
 class InstanceAdmin::Manage::WaiverAgreementTemplatesControllerTest < ActionController::TestCase
 
   setup do
-    @user = FactoryGirl.create(:user)
     @instance = FactoryGirl.create(:instance)
     PlatformContext.any_instance.stubs(:instance).returns(@instance)
+    @user = FactoryGirl.create(:user)
     @transactable_type = FactoryGirl.create(:transactable_type)
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
     InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)

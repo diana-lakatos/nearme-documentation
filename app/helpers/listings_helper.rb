@@ -3,6 +3,16 @@ module ListingsHelper
     raw(truncate(strip_tags(listing.company_description), :length => length))
   end
 
+  def booking_module_class(listing)
+    if listing.schedule_booking?
+      'booking-fixed'
+    elsif listing.action_hourly_booking?
+      'booking-hourly'
+    else
+      'booking-daily'
+    end
+  end
+
   # Listing data for initialising a client-side bookings module
   def listing_booking_data(listing)
     first_date = listing.first_available_date
@@ -14,7 +24,7 @@ module ListingsHelper
     # Initial hourly availability schedule data for hourly reservations
     hourly_availability = {
       first_date.strftime("%Y-%m-%d") => listing.hourly_availability_schedule(first_date).as_json
-    } if listing.hourly_reservations?
+    } if listing.action_hourly_booking?
 
     {
       :id => listing.id,
@@ -23,7 +33,8 @@ module ListingsHelper
       :hourly_availability_schedule_url => hourly_availability_schedule_listing_reservations_url(listing, :format => :json),
       :first_available_date => first_date.strftime("%Y-%m-%d"),
       :second_available_date => second_date.strftime("%Y-%m-%d"),
-      :hourly_reservations => listing.hourly_reservations?,
+      :action_hourly_booking => listing.action_hourly_booking?,
+      :action_daily_booking => listing.action_daily_booking?,
       :hourly_price_cents => listing.hourly_price_cents,
       :hourly_availability_schedule => hourly_availability,
       :earliest_open_minute => listing.availability.earliest_open_minute,
@@ -36,8 +47,8 @@ module ListingsHelper
       :maximum_date => availability.end_date,
       :prices_by_days => Hash[ listing.prices_by_days.map { |k, v| [k, v.cents] } ],
       :initial_bookings => @initial_bookings ? @initial_bookings[listing.id] : {},
-      recurring_booking: listing.transactable_type.recurring_booking,
-      overnight_booking: listing.overnight_booking?
+      action_recurring_booking: listing.transactable_type.action_recurring_booking,
+      action_overnight_booking: listing.overnight_booking?
     }
   end
 

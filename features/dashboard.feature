@@ -45,12 +45,15 @@ Feature: As a user of the site
   Scenario: A user can add new listing
     Given the location exists with company: the company
       And a transactable exists with location: the location
+      And transactable type has multiple booking types enabled
       And I am browsing transactables
      When I add a new transactable
+      And I click on overnight booking tab
       And I fill listing form with valid details
       And I submit the transactable form
       And I should see "Great, your new Desk has been added!"
      Then Listing with my details should be created
+      And transactables booking type is overnight
 
   Scenario: A user can add locations and listings via bulk upload
     Given the location exists with company: the company
@@ -81,7 +84,7 @@ Feature: As a user of the site
       And I am browsing transactables
      When I edit first transactable
       And I disable daily pricing
-      And I choose "transactable_price_type_free"
+      And I check "transactable_action_free_booking"
       And I submit the transactable form
       And I edit first transactable
      Then pricing should be free

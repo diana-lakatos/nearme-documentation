@@ -1,5 +1,3 @@
-
-
 = f.input :id, :as => :hidden if f.object.product.persisted?
 = f.input :name, label: "Item Name", placeholder: "Name"
 = f.input :description, label: "Item description", as: :ckeditor, :input_html => { :ckeditor => { :toolbar => 'simple' } }, placeholder: "Description"
@@ -30,6 +28,9 @@
             = hidden_field_tag "#{f.object_name}[images_attributes][#{image.id}][position]", image.position, class: 'photo-position-input'
 
 = f.input :price, as: :price, input_html: { currency: currency_symbol_from_code(Spree::Config[:currency] ) }
+
+- if f.object.product.product_type.action_rfq?
+  = f.input :action_rfq, as: :boolean
 
 = f.input :quantity, as: :integer, :placeholder => "1"
 
@@ -71,3 +72,5 @@
     .last
       = f.input :height_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[f.object.unit_of_measure]['length'], label: Spree::Variant.human_attribute_name(:height_unit), as: :select, input_html: { 'data-js-element-identifier' => 'product_form_input_height_unit' }
 
+- if platform_context.instance.documents_upload_enabled?
+  = render "forms/document_requirements", f: f

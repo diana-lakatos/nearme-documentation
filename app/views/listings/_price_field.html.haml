@@ -1,0 +1,15 @@
+- price ||= nil
+- label ||= nil
+- include_checkbox ||= nil
+%div.price-containter{class: "#{'error' if f.object.errors[:"#{price}_price"].present?}"}
+  -if include_checkbox
+    %label.checkbox{for: "enable_#{price}"}
+      = check_box_tag "enable_#{price}", "1", f.object.send("#{price}_price").present?, class: "enable_#{price}", :'data-behavior' => 'enable-price'
+  %span.currency-holder
+  = f.number_field "#{price}_price", as: :decimal, label: false, class: 'price-mini price-input', :'data-type' => 'price-input'
+  %span.periodicity /#{label}
+
+  - if f.object.errors[:"#{price}_price"].present?
+    .clearfix
+    %p.error-block= f.object.errors[:"#{price}_price"].first
+

@@ -15,6 +15,8 @@
 //= require_tree ./instance_admin/sections
 //= require jquery_nested_form
 //= require ./vendor/urlify
+//= require ./vendor/icui
+//= require ./vendor/strftime
 //= require ./blog/admin/blog_posts_form
 //= require lib/timeago.jquery
 //= require ckeditor/basepath
@@ -33,3 +35,4 @@
 
 //= require instance_admin/sections/wish_lists
 //= require instance_admin/sections/users
+//= require instance_admin/sections/documents_upload

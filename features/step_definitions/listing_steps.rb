@@ -5,7 +5,7 @@ Given /^a( disabled)? listing( with nil prices)? in (.*) exists( with that ameni
     listing.daily_price = nil
     listing.weekly_price = nil
     listing.monthly_price = nil
-    listing.free = true if !listing.has_price?
+    listing.action_free_booking = true if !listing.has_price?
     listing.save!
   end
   if disabled
@@ -38,7 +38,7 @@ Given /^(.*) does( not)? require confirmation for his listing$/ do |person, with
 end
 
 When /^I view that transactable's edit page$/ do
-  visit edit_manage_location_path(model!('transactable').location)
+  visit edit_dashboard_company_location_path(model!('transactable').location)
 end
 
 Then /^I (do not )?see a search result for the ([^\$].*) listing$/ do |negative, city|

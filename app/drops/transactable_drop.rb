@@ -6,7 +6,7 @@ class TransactableDrop < BaseDrop
 
   attr_reader :listing
 
-  delegate :name, :location, :transactable_type, :description, :hourly_reservations?, :creator, :administrator, :last_booked_days, to: :listing
+  delegate :name, :location, :transactable_type, :description, :action_hourly_booking?, :creator, :administrator, :last_booked_days, to: :listing
   delegate :bookable_noun, :bookable_noun_plural, to: :transactable_type
   delegate :dashboard_url, :search_url, to: :routes
 
@@ -19,11 +19,11 @@ class TransactableDrop < BaseDrop
   end
 
   def manage_guests_dashboard_url
-    routes.dashboard_host_reservations_path(:token => @listing.administrator.try(:temporary_token))
+    routes.dashboard_company_host_reservations_path(:token => @listing.administrator.try(:temporary_token))
   end
 
   def manage_guests_dashboard_url_with_tracking
-    routes.dashboard_host_reservations_path(:token => @listing.administrator.try(:temporary_token), :track_email_event => true)
+    routes.dashboard_company_host_reservations_path(:token => @listing.administrator.try(:temporary_token), :track_email_event => true)
   end
 
   def search_url_with_tracking
@@ -47,7 +47,7 @@ class TransactableDrop < BaseDrop
   end
 
   def manage_listing_url_with_tracking
-    routes.edit_dashboard_transactable_type_transactable_path(@listing.transactable_type, @listing.location, @listing, track_email_event: true, token: @listing.administrator.try(:temporary_token))
+    routes.edit_dashboard_company_transactable_type_transactable_path(@listing.location, @listing, track_email_event: true, token: @listing.administrator.try(:temporary_token))
   end
 
   def space_wizard_list_path
