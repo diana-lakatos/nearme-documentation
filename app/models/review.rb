@@ -31,12 +31,29 @@ class Review < ActiveRecord::Base
   scope :with_transactable_type, ->(transactable_type_id) { where(transactable_type_id: transactable_type_id) }
   scope :by_reservations, ->(id) { where(reviewable_id: id, reviewable_type: 'Reservation').includes(:reviewable, rating_answers: [:rating_question]) }
   scope :by_line_items, ->(id) { where(reviewable_id: id, reviewable_type: 'Spree::LineItem').includes(:reviewable, rating_answers: [:rating_question]) }
-
+  scope :for_buyer, ->{ with_object('buyer') }
+  scope :for_seller_and_product, -> { with_object(['seller', 'product']) }
+  
   def recalculate_reviewable_average_rating
-    if self.reviewable.is_a?(Spree::LineItem) && self.object == 'seller'
-      self.reviewable.product.administrator.recalculate_average_rating!
-    elsif self.reviewable.is_a?(Spree::LineItem) && self.object == 'product'
-      self.reviewable.product.recalculate_average_rating!
+    if self.reviewable.is_a?(Spree::LineItem)
+      recalculate_by_type(-> { self.reviewable.product.user.recalculate_seller_average_rating! },
+                          -> { self.reviewable.order.user.recalculate_buyer_average_rating! },
+                          -> { self.reviewable.product.recalculate_average_rating! })
+    else
+      recalculate_by_type(-> { self.reviewable.creator.recalculate_seller_average_rating! },
+                          -> { self.reviewable.owner.recalculate_buyer_average_rating! },
+                          -> { self.reviewable.listing.recalculate_average_rating! })
     end
+  end
+
+  private
+
+  def recalculate_by_type(recalculate_seller, recalculate_buyer, recalculate_product)
+    block = case object
+      when 'seller' then recalculate_seller
+      when 'buyer' then recalculate_buyer
+      when 'product' then recalculate_product
+    end
+    block.call
   end
 end

@@ -1,4 +1,43 @@
 section.listings {
+  /*===== TABS AND TABBED CONTENT =====*/
+
+  .tab-content-container {
+    float: left;
+    width: 100%;
+    border-bottom: solid #D5D5D5 2px;
+  }
+
+  .nav {
+    margin: 0;
+  }
+
+  .nav-tabs li a:hover {
+    background: transparent;
+    border: solid transparent 1px;
+  }
+
+  .nav-tabs > .active > a, .nav-tabs > .active > a:hover, .nav-tabs > .active > a:focus {
+    background: #fff !important;
+    border: solid transparent 1px;
+    color: #000;
+  }
+
+  .nav-tabs li a {
+    color: #3a3a3a;
+    padding: 22px 25px;
+    font-weight: 600;
+  }
+
+  .tab-content > article {
+    background: #fff;
+    padding: 30px 40px;
+  }
+
+  .tab-content > article p {
+    font-size: 16px;
+    font-weight: 300;
+    margin-bottom: 25px;
+  }
 
   .padding-row {
     padding: $padding-medium 0;

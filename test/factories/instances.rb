@@ -26,12 +26,18 @@ FactoryGirl.define do
     test_twilio_consumer_secret 'test_tc2'
     test_twilio_from_number 'test_501'
 
-    after(:create) do |instance|
+    ignore do
+      generate_rating_systems true
+    end
+
+    after(:create) do |instance, evaluator|
       instance.theme = FactoryGirl.create(:theme, :skip_compilation => true) unless instance.theme
 
-      [instance.lessor, instance.lessee, instance.bookable_noun].each do |subject|
-        rating_system = FactoryGirl.create(:active_rating_system, subject: subject, instance: instance)
-        RatingConstants::VALID_VALUES.each { |value| FactoryGirl.create(:rating_hint, value: value, instance: instance, rating_system: rating_system) }
+      if evaluator.generate_rating_systems
+        [instance.lessor, instance.lessee, instance.bookable_noun].each do |subject|
+          rating_system = FactoryGirl.create(:active_rating_system, subject: subject, instance: instance)
+          RatingConstants::VALID_VALUES.each { |value| FactoryGirl.create(:rating_hint, value: value, instance: instance, rating_system: rating_system) }
+        end
       end
     end
 

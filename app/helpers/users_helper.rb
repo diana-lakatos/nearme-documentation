@@ -47,6 +47,10 @@ module UsersHelper
     params[:filters].try(:include?, filter.to_s)
   end
 
+  def user_has_own_reviews?
+    params[:option] == 'reviews_left_by_seller' || params[:option] == 'reviews_left_by_buyer'
+  end
+
   private
 
   def social_icon(provider)

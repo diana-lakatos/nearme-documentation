@@ -67,13 +67,14 @@
                 .span9
                   .rating
                     = render partial: 'stars', locals: { stars: @product.try(:average_rating).try(:round) }
-              .row-fluid
-                - @rating_questions.each do |rating_question|
-                  .span3
-                    %p= rating_question.text
-                  .span3
-                    .rating
-                      = render partial: 'stars', locals: { stars:  (@product.question_average_rating[rating_question.id] || 0).round }
+              - if @rating_questions.present?
+                .row-fluid
+                  - @rating_questions.each do |rating_question|
+                    .span3
+                      %p= rating_question.text
+                    .span3
+                      .rating
+                        = render partial: 'stars', locals: { stars:  (@product.question_average_rating[rating_question.id] || 0).round }
             - @reviews.each do |review|
               .review
                 .row-fluid

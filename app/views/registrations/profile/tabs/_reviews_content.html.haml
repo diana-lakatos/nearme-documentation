@@ -1,0 +1,32 @@
+- unless user_has_own_reviews?
+  .rating-averages
+    .row-fluid.reviews-summary
+      .span3
+        %p= t 'buy_sell_market.products.labels.summary'
+      .span9
+        .rating
+          - if params[:option].blank? || params[:option] == 'reviews_about_seller'
+            = render 'buy_sell_market/products/stars', stars: @user.try(:seller_average_rating).try(:round)
+          - else
+            = render 'buy_sell_market/products/stars', stars: @user.try(:buyer_average_rating).try(:round)
+    - if rating_questions.present?
+      .row-fluid
+        - rating_questions.each do |rating_question|
+          .span3
+            %p= rating_question.text
+          .span3
+            .rating
+              = render 'buy_sell_market/products/stars', stars: (@user.question_average_rating(@reviews)[rating_question.id] || 0).round
+
+.reviews
+  - reviews.each do |review|
+    .review
+      .row-fluid
+        .span2
+          =review.decorate.show_reviewable_info
+        .span10
+          .rating
+            = render 'buy_sell_market/products/stars', stars: review.rating 
+            %p.review-date= I18n.l(review.created_at, format: :month_year)
+          %p
+            = review.comment

@@ -17,35 +17,79 @@
 
           .padding-row
 
-          %article.location.listing
-            - if platform_context.instance.user_based_marketplace_views?
-              %h2= @location.administrator.name
-              %p= @location.administrator.biography
-            - else
-              %h2
-                = t 'location.the_location'
-                - if current_user.try(:admin) && @location.administrator.present?
-                  = link_to login_as_admin_user_path(@location.administrator, return_to: edit_dashboard_company_location_path(@location)),
-                      :method => :post, data: { confirm: t('location.confirmations.admin_login') } do
-                    %span.ico-edit
+          %section.listing-details
+            .container-fluid
+              .tab-content-container
+                %ul.nav.nav-tabs.page-tabs{role: 'tablist'}
+                  %li{ class: "#{ 'active' if !param_reviews_page_present? }" }
+                    %a{'data-toggle' => 'tab', href: '#location-details', role: 'tab'}
+                      = t 'buy_sell_market.products.labels.item_details'
+                  - if @listing.has_reviews?
+                    %li{ class: "#{ 'active' if param_reviews_page_present? }" }
+                      %a{'data-toggle' => 'tab', href: '#listing-reviews', role: 'tab'}
+                        #{t('buy_sell_market.products.labels.reviews')}
+                        = "(#{@listing.reviews.count})"
+                .tab-content
+                  %article#location-details.location.listing.tab-pane{ class: "#{ 'active' if !param_reviews_page_present? }" }
+                    - if platform_context.instance.user_based_marketplace_views?
+                      %h2= @location.administrator.name
+                      %p= @location.administrator.biography
+                    - else
+                      %h2
+                        = t 'location.the_location'
+                        - if current_user.try(:admin) && @location.administrator.present?
+                          = link_to login_as_admin_user_path(@location.administrator, return_to: edit_dashboard_company_location_path(@location)),
+                              :method => :post, data: { confirm: t('location.confirmations.admin_login') } do
+                            %span.ico-edit
 
-              %p= custom_sanitze mask_phone_and_email_if_necessary(@location.description)
+                      %p= custom_sanitze mask_phone_and_email_if_necessary(@location.description)
 
-              .amenities-block
-                .amenities-header
-                  %h3= t 'location.hours'
-                  %a{href: '#industries'}
-                    %h3= t 'location.hours'
-                    %span.ico-chevron-right
-                .amenities-container
-                  .row-fluid.amenities-row
-                    .span3
-                      - location_pretty_availability = pretty_availability_sentence(@location.availability)
-                      = location_pretty_availability
+                      .amenities-block
+                        .amenities-header
+                          %h3= t 'location.hours'
+                          %a{href: '#industries'}
+                            %h3= t 'location.hours'
+                            %span.ico-chevron-right
+                        .amenities-container
+                          .row-fluid.amenities-row
+                            .span3
+                              - location_pretty_availability = pretty_availability_sentence(@location.availability)
+                              = location_pretty_availability
 
-              = render 'locations/amenities', amenities_owner: @location
+                      = render 'locations/amenities', amenities_owner: @location
 
-              = render 'locations/company', location: @location
+                      = render 'locations/company', location: @location
+
+                  - if @listing.has_reviews?
+                    %article#listing-reviews.tab-pane{ class: "#{ 'active' if param_reviews_page_present? }" }
+                      .rating-averages
+                        .row-fluid.reviews-summary
+                          .span3
+                            %p= t 'buy_sell_market.products.labels.summary'
+                          .span9
+                            .rating
+                              = render partial: 'buy_sell_market/products/stars', locals: { stars: @listing.try(:average_rating).try(:round) }
+                        - if @rating_questions.present?
+                          .row-fluid
+                            - @rating_questions.each do |rating_question|
+                              .span3
+                                %p= rating_question.text
+                              .span3
+                                .rating
+                                  = render partial: 'buy_sell_market/products/stars', locals: { stars:  (@listing.question_average_rating[rating_question.id] || 0).round }
+                      -  @reviews.each do |review|
+                        .review
+                          .row-fluid
+                            .span2
+                              = image_tag review.user.avatar_url
+                              %p= review.user.first_name
+                            .span10
+                              .rating
+                                = render partial: 'buy_sell_market/products/stars', locals: { stars: review.rating }
+                                %p.review-date= I18n.l(review.created_at, format: :month_year)
+                              %p
+                                = review.comment
+                      = will_paginate_styled @reviews, param_name: 'reviews_page'
 
         .one-third.column.left
           .toggleable-booking-modules
