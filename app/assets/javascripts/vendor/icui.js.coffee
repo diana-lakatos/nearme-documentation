@@ -284,7 +284,8 @@ do ($ = jQuery) ->
       children = super.toArray()
       row.append children.shift()
       @elem.append children
-      @elem.find('select').selectpicker()
+      if $.prototype.selectpicker?
+        @elem.find('select').selectpicker()
       @elem
 
   # Choosing Individual DateTimes
@@ -548,9 +549,10 @@ do ($ = jQuery) ->
     html: -> """
       <div class="row">
         <div class="col-md-2 label"><label></label></div>
-        <div class="Count col-md-5 small-padding">
+        <div class="Count col-md-8 small-padding">
           <input type="number" value=#{@data.value} /> times.
         </div>
+        <div class="col-md-2 label"><label></label></div>
       </div>
       """
   # Until
