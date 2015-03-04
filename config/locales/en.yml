@@ -84,6 +84,8 @@ en:
         enter_name_for_shipping_profile: 'Enter a name for your shipping profile'
         ready_to_ship_in: 'Ready to ship in...'
   instance_admin:
+    form_components:
+      approval_requests_section_title: 'Approval Requests'
     shipping_options:
       dimensions_templates:
         add_new_dimensions_template: '+ Add new dimension template'

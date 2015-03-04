@@ -17,7 +17,8 @@ class InstanceAdmin::Manage::ApprovalRequestTemplatesController < InstanceAdmin:
 
   def create
     @approval_request_template = ApprovalRequestTemplate.new(approval_request_template_params)
-    if @approval_request_template.save
+    @approval_request_template_creation = ApprovalRequestTemplateCreation.new(@approval_request_template)
+    if @approval_request_template_creation.create
       flash[:success] = t('flash_messages.instance_admin.manage.approval_request_templates.created')
       redirect_to instance_admin_manage_approval_request_templates_path
     else
