@@ -1,0 +1,51 @@
+/*===== DATEPICKER =====*/
+
+#ui-datepicker-div {
+  background: #fff;
+  box-shadow: 5px 6px 25px #727272;
+  width: initial;
+  text-align: center;
+  padding: 10px;
+
+  .ui-datepicker-header {
+    padding: 10px 5px;
+  }
+
+  table {
+    margin-top: 15px;
+  }
+
+  table th {
+    padding-bottom: 5px;
+  }
+
+  table td {
+    height: 30px;
+    width: 30px;
+  }
+
+  tr:nth-child(1) td {
+    padding-top: 0;
+  }
+
+  td a, td span, th span {
+    color: #000;
+    font-size: 12px;
+    text-align: center;
+    padding: 7px;
+    font-weight: 200;
+  }
+
+  .ui-datepicker-next {
+    float: right;
+  }
+
+  .ui-datepicker-prev {
+    float: left;
+  }
+
+  .ui-datepicker-other-month {
+    background: #f7f9f9;
+  }
+
+}
