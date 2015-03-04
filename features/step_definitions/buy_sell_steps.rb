@@ -98,7 +98,7 @@ Then /^I should see order summary page$/ do
   assert page.body.should have_content("Order Summary")
   @order = @user.orders.first
   total = @order.item_total.to_f + @order.shipment_total.to_f + @order.additional_tax_total.to_f + @order.service_fee_amount_guest.to_f
-  assert_equal ("%.2f" % total), page.all(:css, ".payment-totals .total").last.text
+  assert page.all(:css, ".payment-totals .total").last.text.include?(("%.2f" % total))
 end
 
 When /^I fill billing data$/ do

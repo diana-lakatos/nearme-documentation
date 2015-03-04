@@ -62,7 +62,7 @@ module CustomAttributes
       when :integer              then value.to_i rescue value ? 1 : 0
       when :float                then value.to_f
       when :decimal              then klass.value_to_decimal(value)
-      when :datetime, :timestamp then klass.string_to_time(value).in_time_zone
+      when :datetime, :timestamp then klass.string_to_time(value).try(:in_time_zone)
       when :time                 then klass.string_to_dummy_time(value)
       when :date                 then klass.string_to_date(value)
       when :binary               then klass.binary_to_string(value)

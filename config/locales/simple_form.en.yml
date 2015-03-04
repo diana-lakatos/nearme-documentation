@@ -10,6 +10,8 @@ en:
     "no": 'No'
     switch:
       enabled: 'Enabled?'
+    schedule:
+      schedule: 'Schedule'
 
     companies:
       current_bank_account: "Current Bank Account: xxxxxx%{last_four_digits}."

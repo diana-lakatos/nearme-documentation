@@ -84,8 +84,8 @@ Spree::Order.class_eval do
 
   def service_fee_calculator
     options = {
-      guest_fee_percent:  instance.service_fee_guest_percent,
-      host_fee_percent:   instance.service_fee_host_percent,
+      guest_fee_percent:  (manual_payment? ? 0 : instance.service_fee_guest_percent),
+      host_fee_percent:   (manual_payment? ? 0 : instance.service_fee_host_percent),
       additional_charges: additional_charges
     }
     @service_fee_calculator ||= Payment::ServiceFeeCalculator.new(subtotal_amount_to_charge, options)
