@@ -28,7 +28,7 @@
                   = t 'booking_module.free'
             - if listing.action_hourly_booking?
               = content_tag :li, data: { hourly: true } do
-                = link_to "#hourly-booking-#{listing.id}" do
+                = link_to "#hourly-booking-#{listing.id}", class: "#{'possible' unless listing.hourly_price.to_f.zero? }" do
                   %span.label
                     - unless listing.hourly_price.to_f.zero?
                       = "#{listing.price_with_currency(:hourly_price)}"
@@ -38,7 +38,7 @@
             - if listing.action_daily_booking?
               - if listing.transactable_type.action_daily_booking
                 = content_tag :li, data: { daily: true } do
-                  = link_to "#daily-booking-#{listing.id}" do
+                  = link_to "#daily-booking-#{listing.id}", class: "#{'possible' unless listing.daily_price.to_f.zero? }" do
                     %span.label
                       - unless listing.daily_price.to_f.zero?
                         = "#{listing.price_with_currency(:daily_price)}"
@@ -48,7 +48,7 @@
 
               - if listing.transactable_type.action_weekly_booking
                 %li
-                  = link_to "#daily-booking-#{listing.id}" do
+                  = link_to "#daily-booking-#{listing.id}", class: "#{'possible' unless listing.weekly_price.to_f.zero? }" do
                     %span.label
                       - unless listing.weekly_price.to_f.zero?
                         = "#{listing.price_with_currency(:weekly_price)}"
@@ -58,7 +58,7 @@
 
               - if listing.transactable_type.action_monthly_booking
                 %li
-                  = link_to "#daily-booking-#{listing.id}" do
+                  = link_to "#daily-booking-#{listing.id}", class: "#{'possible' unless listing.monthly_price.to_f.zero? }" do
                     %span.label
                       - unless listing.monthly_price.to_f.zero?
                         = "#{listing.price_with_currency(:monthly_price)}"
@@ -182,4 +182,4 @@
     e.preventDefault();
     $(this).tab('show');
     })
-    $('.pricing-tabs a:first').tab('show');
+    $('.pricing-tabs a.possible:first').tab('show');
