@@ -46,6 +46,7 @@ class Job
                                                       PlatformContext.new(@platform_context_detail_class.find(@platform_context_detail_id))
                                                     end
                                                   end
+
     Transactable.clear_custom_attributes_cache
     User.clear_custom_attributes_cache
     Spree::Product.clear_custom_attributes_cache
@@ -64,7 +65,8 @@ class Job
 
   def self.perform_later(when_perform, *args)
     if run_in_background?
-      Delayed::Job.enqueue build_new(*args), :run_at => get_performing_time(when_perform), priority: get_priority
+      Delayed::Job.enqueue build_new(*args), run_at: get_performing_time(when_perform),
+        priority: get_priority, instance_name: PlatformContext.current.try(:instance).try(:name)
     else
       # invoking get_perfming_time is unnecessary, but we want to catch errors in this method in test environment
       get_performing_time(when_perform)
@@ -73,7 +75,8 @@ class Job
   end
 
   def self.perform_async(*args)
-    Delayed::Job.enqueue build_new(*args), priority: get_priority
+    Delayed::Job.enqueue build_new(*args), priority: get_priority,
+      instance_name: PlatformContext.current.try(:instance).try(:name)
   end
 
   def self.build_new(*args)
