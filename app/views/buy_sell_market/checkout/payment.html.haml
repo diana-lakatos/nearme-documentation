@@ -33,7 +33,7 @@
 
                     %td= humanized_money_with_cents_and_symbol charge.amount
                     %td
-                    %td #{currency_content_tag(charge.amount.currency, charge.amount, :span, { :rel => false }, { :'data-additional-charge-price' => true})}
+                    %td #{currency_content_tag(charge.amount.currency, charge.amount, :span, { class: 'additional-charge', rel: false }, { :'data-additional-charge-price' => true})}
           .divider
 
           %table.payment-totals{align: 'right'}

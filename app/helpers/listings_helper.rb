@@ -15,41 +15,50 @@ module ListingsHelper
 
   # Listing data for initialising a client-side bookings module
   def listing_booking_data(listing)
-    first_date = listing.first_available_date
-    second_date = listing.second_available_date
-
-    # Daily open/quantity availability data for datepickers
-    availability = listing.availability_status_between(Time.zone.today, Time.zone.today.advance(:years => 1))
-
-    # Initial hourly availability schedule data for hourly reservations
-    hourly_availability = {
-      first_date.strftime("%Y-%m-%d") => listing.hourly_availability_schedule(first_date).as_json
-    } if listing.action_hourly_booking?
-
-    {
-      :id => listing.id,
-      :name => listing.name,
-      :review_url => review_listing_reservations_url(listing),
-      :hourly_availability_schedule_url => hourly_availability_schedule_listing_reservations_url(listing, :format => :json),
-      :first_available_date => first_date.strftime("%Y-%m-%d"),
-      :second_available_date => second_date.strftime("%Y-%m-%d"),
-      :action_hourly_booking => listing.action_hourly_booking?,
-      :action_daily_booking => listing.action_daily_booking?,
-      :hourly_price_cents => listing.hourly_price_cents,
-      :hourly_availability_schedule => hourly_availability,
-      :earliest_open_minute => listing.availability.earliest_open_minute,
-      :latest_close_minute => listing.availability.latest_close_minute,
-      :minimum_booking_days => listing.minimum_booking_days,
-      :favourable_pricing_rate => listing.favourable_pricing_rate,
-      :quantity => listing.quantity,
-      :availability => availability.as_json,
-      :minimum_date => availability.start_date,
-      :maximum_date => availability.end_date,
-      :prices_by_days => Hash[ listing.prices_by_days.map { |k, v| [k, v.cents] } ],
-      :initial_bookings => @initial_bookings ? @initial_bookings[listing.id] : {},
-      action_recurring_booking: listing.transactable_type.action_recurring_booking,
-      action_overnight_booking: listing.overnight_booking?
+    base_data = {
+      id: listing.id,
+      name: listing.name,
+      review_url: review_listing_reservations_url(listing),
+      quantity: listing.quantity,
+      initial_bookings: @initial_bookings ? @initial_bookings[listing.id] : {},
+      booking_type: listing.booking_type
     }
+    if listing.schedule_booking?
+      base_data.merge!({
+        fixed_price_cents: listing.fixed_price_cents
+      })
+    else
+      first_date = listing.first_available_date
+      second_date = listing.second_available_date
+
+      # Daily open/quantity availability data for datepickers
+      availability = listing.availability_status_between(Time.zone.today, Time.zone.today.advance(:years => 1))
+
+      # Initial hourly availability schedule data for hourly reservations
+      hourly_availability = {
+        first_date.strftime("%Y-%m-%d") => listing.hourly_availability_schedule(first_date).as_json
+      } if listing.action_hourly_booking?
+
+      base_data.merge!({
+        prices_by_days: Hash[ listing.prices_by_days.map { |k, v| [k, v.cents] } ],
+        availability: availability.as_json,
+        minimum_date: availability.start_date,
+        maximum_date: availability.end_date,
+        favourable_pricing_rate: listing.favourable_pricing_rate,
+        first_available_date: first_date.strftime("%Y-%m-%d"),
+        second_available_date: second_date.strftime("%Y-%m-%d"),
+        earliest_open_minute: listing.availability.earliest_open_minute,
+        latest_close_minute: listing.availability.latest_close_minute,
+        minimum_booking_days: listing.minimum_booking_days,
+        hourly_availability_schedule_url: hourly_availability_schedule_listing_reservations_url(listing, format: :json),
+        action_hourly_booking: listing.action_hourly_booking?,
+        action_daily_booking: listing.action_daily_booking?,
+        hourly_price_cents: listing.hourly_price_cents,
+        hourly_availability_schedule: hourly_availability
+      })
+    end
+    base_data
+
   end
 
   def strip_http(url)

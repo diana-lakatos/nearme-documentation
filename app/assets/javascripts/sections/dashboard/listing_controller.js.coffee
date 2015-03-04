@@ -106,16 +106,29 @@ class @Dashboard.ListingController
 
   setupBookingType: =>
     bookingTypeInput = $('input[data-booking-type]')
-    hourlyPrice = @container.find('div[data-hourly-price]')
+    allPeriodsLabel = $('div[data-all-periods-label]')
+    dailyLabel = $('div[data-daily-label]')
 
-    if bookingTypeInput.val() == 'overnight'
-      hourlyPrice.hide()
+    periodInputs = {}
+    for period in ['hourly', 'daily', 'weekly', 'monthly']
+      periodInputs[period] = @container.find("div[data-period=\"#{period}\"]")
 
     $('ul[data-booking-type-list] a[data-toggle="tab"]').on 'show.bs.tab', (e) =>
       bookingType = $(e.target).attr('data-booking-type')
       bookingTypeInput.val(bookingType)
 
       if bookingType == 'overnight'
-        hourlyPrice.hide()
-      else if bookingType == 'regular'
-        hourlyPrice.show()
+        periodInputs.hourly.hide()
+      else
+        periodInputs.hourly.show()
+
+      if bookingType == 'recurring'
+        periodInputs.weekly.hide()
+        periodInputs.monthly.hide()
+        allPeriodsLabel.hide()
+        dailyLabel.show()
+      else
+        periodInputs.weekly.show()
+        periodInputs.monthly.show()
+        allPeriodsLabel.show()
+        dailyLabel.hide()

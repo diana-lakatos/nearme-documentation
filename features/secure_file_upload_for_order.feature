@@ -73,3 +73,20 @@ Feature: User can add secure files to order
     Then User should see two labels and file fields
     When I fill billing data
     Then Sees file cannot be blank
+
+  Scenario: User can buy product if document upload disabled
+    Given Document upload is disabled
+    Given Upload obligation for product is blank
+    Given Dorument requairments for product is blank
+    When User visits order payment page
+    When I fill billing data
+    Then I should see order placed confirmation
+
+  Scenario: User can buy product if document upload disabled and upload obligation is ex
+    Given Document upload is disabled
+    Given Upload obligation for product is exist
+    Given Dorument requairments for product is exist
+    When User visits order payment page
+    When I fill billing data
+    Then I should see order placed confirmation
+

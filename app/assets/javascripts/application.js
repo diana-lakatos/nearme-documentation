@@ -21,7 +21,7 @@
 //= require ./vendor/jquery.ias
 //= require ./vendor/ZeroClipboard
 //= require ./vendor/markerclusterer
-//= require ./vendor/icui
+//= require ./vendor/icui2
 //= require ./vendor/strftime
 //= require recurring_select
 //= require history_jquery

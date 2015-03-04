@@ -33,11 +33,20 @@ class HourlyPresenter
 
     start_time += start_time_suffix unless start_time_suffix == end_time_suffix
 
-    if show_date
-      formatted_date = date.strftime("%B %-e")
-      ('%s%s%s&ndash;%s%s(%0.2f %s)' % [formatted_date, options[:separator], start_time, end_time, options[:separator], hours, 'hour'.pluralize(hours.to_i)]).html_safe
+    if options[:schedule_booking]
+      if show_date
+        formatted_date = date.strftime("%B %-e")
+        ('%s%s%s' % [formatted_date, options[:separator], start_time]).html_safe
+      else
+        ('%s' % [start_time]).html_safe
+      end
     else
-      ('%s&ndash;%s<br />(%0.2f %s)' % [start_time, end_time, hours, 'hour'.pluralize(hours.to_i)]).html_safe
+      if show_date
+        formatted_date = date.strftime("%B %-e")
+        ('%s%s%s&ndash;%s%s(%0.2f %s)' % [formatted_date, options[:separator], start_time, end_time, options[:separator], hours, 'hour'.pluralize(hours.to_i)]).html_safe
+      else
+        ('%s&ndash;%s<br />(%0.2f %s)' % [start_time, end_time, hours, 'hour'.pluralize(hours.to_i)]).html_safe
+      end
     end
   end
 

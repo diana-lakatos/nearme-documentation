@@ -29,8 +29,10 @@
   - if @transactable_type.schedule_booking_enabled?
     - content_for :booking_type_schedule_tab_content do
       .control-group
-        = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule(schedule: f.object.transactable_type.schedule.try(:schedule)) do |schedule_form|
-          = schedule_form.hidden_field :schedule, class: 'icui'
+        %label.control-label.flush-top= t('simple_form.schedule.schedule')
+        .controls
+          = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule(schedule: f.object.transactable_type.schedule.try(:schedule)) do |schedule_form|
+            = schedule_form.hidden_field :schedule, class: 'icui'
   - if @transactable_type.regular_booking_enabled?
     - content_for :booking_type_regular_tab_content do
       .control-group

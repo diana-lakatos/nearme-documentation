@@ -498,5 +498,32 @@ class TransactableTest < ActiveSupport::TestCase
     should "return true for needed booking type" do
       assert_equal('regular', @transactable.booking_type)
     end
+
+    context '#nullify_not_needed_attributes' do
+      should 'nullify hourly, daily, weekly and monthly prices and corresponding bookings if schedule booking is chosen' do
+        @transactable.hourly_price = 10000
+        @transactable.daily_price  = 20000
+        @transactable.weekly_price = 30000
+        @transactable.monthly_price = 30000
+        @transactable.action_hourly_booking = @transactable.action_daily_booking = @transactable.action_free_booking = nil
+        @transactable.booking_type = 'schedule'
+        @transactable.save
+        %w(
+          hourly_price daily_price weekly_price monthly_price
+          action_hourly_booking action_daily_booking action_free_booking
+        ).each do |attr|
+          assert_nil(@transactable[attr])
+        end
+      end
+
+      should 'fixed price if non schedule booking is chosen' do
+        @transactable.fixed_price = 10000
+        @transactable.action_schedule_booking = true
+        @transactable.booking_type = 'regular'
+        @transactable.save
+        assert_nil(@transactable.fixed_price)
+        assert_nil(@transactable.action_schedule_booking)
+      end
+    end
   end
 end

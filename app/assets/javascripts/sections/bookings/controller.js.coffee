@@ -8,7 +8,8 @@ class Bookings.Controller
     @setupDelayedMethods()
     @listing = new Bookings.Listing(@listingData)
     @bindDomElements()
-    @initializeDatepicker()
+    if @listing.withCalendars()
+      @initializeDatepicker()
     @bindEvents()
     @updateQuantityField()
 
@@ -22,6 +23,7 @@ class Bookings.Controller
       new Bookings.RecurringBookingController(@container.find('form[data-recurring-booking-form]'))
 
     @updateSummary()
+    @delayedUpdateBookingStatus()
 
   # We need to set up delayed methods per each instance, not the prototype.
   # Otherwise, it will debounce for any instance calling the method.
@@ -47,6 +49,11 @@ class Bookings.Controller
     @storeReservationRequestUrl = @bookButton.data('store-reservation-request-url')
     @userSignedIn = @bookButton.data('user-signed-in')
     @bookingTabs = @container.find("[data-pricing-tabs] li a")
+    if !@listing.withCalendars()
+      @fixedPriceSelect = @container.find("[data-fixed-date-select]")
+      @fixedPriceSelect.on 'change', (e) =>
+        @updateBookingStatus()
+
     @setReservationType()
 
 
@@ -76,12 +83,13 @@ class Bookings.Controller
       @delayedUpdateBookingStatus()
       @updateCharges()
 
-    @datepicker.bind 'datesChanged', (dates) =>
-      @listing.setDates(dates)
-      @delayedUpdateBookingStatus()
+    if @listing.withCalendars()
+      @datepicker.bind 'datesChanged', (dates) =>
+        @listing.setDates(dates)
+        @delayedUpdateBookingStatus()
 
-    @datepicker.bind 'timesChanged', (dates) =>
-      @updateTimesFromTimePicker()
+      @datepicker.bind 'timesChanged', (dates) =>
+        @updateTimesFromTimePicker()
 
   setReservationType: ->
     if @hourlyBookingSelected()
@@ -107,6 +115,12 @@ class Bookings.Controller
   # current selected dates.
   updateBookingStatus: ->
     @updateSummary()
+    if @fixedPriceSelect
+      if @fixedPriceSelect.val()
+        @listing.bookedDatesArray = [@fixedPriceSelect.val()]
+      else
+        @listing.bookedDatesArray = []
+
     if !@listing.isBooked()
       @bookButton.addClass('disabled')
       @bookButton.tooltip()
@@ -126,7 +140,8 @@ class Bookings.Controller
 
     # Reset the datepicker if the booking is no longer available
     # with the new quantity.
-    @datepicker.reset() unless @listing.bookingValid()
+    if @listing.withCalendars()
+      @datepicker.reset() unless @listing.bookingValid()
     @updateSummary()
 
   updateQuantityField: (qty = @listing.defaultQuantity) ->
@@ -167,12 +182,13 @@ class Bookings.Controller
 
   setFormFields: ->
     @bookForm.find('[name="reservation_request[quantity]"]').val(@listing.reservationOptions().quantity)
-    @bookForm.find('[name="reservation_request[dates]"]').val(@listing.reservationOptions().dates)
-    @bookForm.find('[name="reservation_request[start_on]"]').val(@listing.reservationOptions().start_on)
-    @bookForm.find('[name="reservation_request[end_on]"]').val(@listing.reservationOptions().end_on)
-    if @listing.isReservedHourly()
-      @bookForm.find('[name="reservation_request[start_minute]"]').val(@listing.reservationOptions().start_minute)
-      @bookForm.find('[name="reservation_request[end_minute]"]').val(@listing.reservationOptions().end_minute)
+    if @listing.withCalendars()
+      @bookForm.find('[name="reservation_request[dates]"]').val(@listing.reservationOptions().dates)
+      @bookForm.find('[name="reservation_request[start_on]"]').val(@listing.reservationOptions().start_on)
+      @bookForm.find('[name="reservation_request[end_on]"]').val(@listing.reservationOptions().end_on)
+      if @listing.isReservedHourly()
+        @bookForm.find('[name="reservation_request[start_minute]"]').val(@listing.reservationOptions().start_minute)
+        @bookForm.find('[name="reservation_request[end_minute]"]').val(@listing.reservationOptions().end_minute)
 
   storeFormFields: ->
     $.post @storeReservationRequestUrl, @bookForm.serialize() + "&commit=#{@formTrigger.data('behavior')}", (data) =>

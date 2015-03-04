@@ -15,7 +15,7 @@ class ReservationDecorator < Draper::Decorator
 
   def hourly_summary_for_first_period(show_date = true)
     reservation_period = periods.first.decorate
-    reservation_period.hourly_summary(show_date)
+    reservation_period.hourly_summary(show_date, { schedule_booking: listing.schedule_booking? })
   end
 
   def subtotal_price
@@ -113,7 +113,9 @@ class ReservationDecorator < Draper::Decorator
     periods.map do |period|
       period = period.decorate
       date = period.date.strftime('%-e %b')
-      if listing.action_hourly_booking?
+      if listing.schedule_booking?
+        ('%s %s' % [date, start_time]).html_safe
+      elsif listing.action_hourly_booking?
         start_time = period.start_minute_of_day_to_time.strftime("%l:%M%P").strip
         end_time = period.end_minute_of_day_to_time.strftime("%l:%M%P").strip
         ('%s %s&ndash;%s' % [date, start_time, end_time]).html_safe
