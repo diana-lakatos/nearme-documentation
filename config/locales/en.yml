@@ -73,6 +73,16 @@ en:
       dimensions_templates:
         explanation1: 'This will provide a tracking code and a shipping label for your product sale.'
         explanation2: "Select your item's dimensions from the menu below or add your own measures."
+      shipping_profiles:
+        add_new_shipping_profile: 'Create New Shipping Profile'
+        add_new_shipping_rule: 'Add New Shipping Rule'
+        shipping_rule: 'Shipping Rule'
+        remove_shipping_rule: 'Remove shipping rule'
+        new_rule_name: 'New Rule Name'
+        processing_time_in_days: 'Processing time (days)'
+        shipping_cost: 'Shipping Cost'
+        enter_name_for_shipping_profile: 'Enter a name for your shipping profile'
+        ready_to_ship_in: 'Ready to ship in...'
   instance_admin:
     shipping_options:
       dimensions_templates:

@@ -34,6 +34,7 @@
 //= require ckeditor/basepath
 //= require ckeditor/init
 //= require vendor/jquery.raty
+//= require ./advanced_closest
 //
 //
 //= require_self

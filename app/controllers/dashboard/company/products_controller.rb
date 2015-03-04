@@ -3,6 +3,10 @@ class Dashboard::Company::ProductsController < Dashboard::Company::BaseControlle
   before_filter :find_product, only: [:edit, :update, :destroy]
   before_filter :set_form_components
 
+  skip_before_filter :redirect_if_no_company, only: [:get_shipping_categories_list]
+
+  skip_before_filter :redirect_unless_registration_completed, only: [:get_shipping_categories_list]
+
   def index
     @products = @company.products.of_type(@product_type).paginate(page: params[:page], per_page: 20)
   end

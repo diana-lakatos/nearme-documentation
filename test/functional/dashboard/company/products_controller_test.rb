@@ -8,7 +8,11 @@ class Dashboard::Company::ProductsControllerTest < ActionController::TestCase
     @product_type = FactoryGirl.create(:product_type)
     @product = FactoryGirl.create(:product, product_type: @product_type)
     @product.company = @company
-    @product.save
+    @product.user = @user
+    @product.save!
+    @shipping_category = FactoryGirl.create(:shipping_category)
+    @shipping_category.company_id = @company.id
+    @shipping_category.save!
     10.times { FactoryGirl.create(:taxons) }
     @taxon_ids = Spree::Taxon.all.map(&:id)
     @countries = Spree::Country.last(10)
@@ -43,23 +47,7 @@ class Dashboard::Company::ProductsControllerTest < ActionController::TestCase
       price: "100",
       taxon_ids: @taxon_ids.join(","),
       quantity: "10",
-      shipping_methods_attributes: {
-        "0" => {
-          name: "Test",
-          removed: "0",
-          processing_time: "1 day",
-          calculator_attributes: {
-            preferred_amount: "10.0"
-          },
-          zones_attributes: {
-            "0" => {
-              name: "Default - b38723c89b795233677b2795d77557af",
-              kind: "country",
-              country_ids: @countries.map(&:id).join(",")
-            }
-          }
-        }
-      }
+      shipping_category_id: @shipping_category.id
     }
   end
 end

@@ -548,6 +548,12 @@ DesksnearMe::Application.routes.draw do
       end
     end #ends company namespace
 
+    resources :shipping_categories do
+      collection do
+        get :get_shipping_categories_list
+      end
+    end
+
     resources :companies, :only => [:edit, :update, :show]
     resources :host_recurring_bookings do
       member do

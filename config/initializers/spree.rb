@@ -10,6 +10,7 @@ if defined?(Spree)
     # Example:
     # Uncomment to override the default site name.
     # config.site_name = "Spree Demo Site"
+    config.require_master_price = nil
   end
 
   Spree.user_class = "User"
