@@ -129,7 +129,7 @@ class Address < ActiveRecord::Base
   end
 
   def should_fetch_coordinates?
-    (address_changed? && !(latitude_changed? || longitude_changed?))
+    address_changed? && (!(latitude_changed? || longitude_changed?) || (latitude.blank? && longitude.blank?))
   end
 
   def should_fetch_address?

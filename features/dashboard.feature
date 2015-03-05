@@ -30,9 +30,8 @@ Feature: As a user of the site
   Scenario: A user can edit existing location
 
     Given the location exists with company: the company
-      And a transactable exists with location: the location
+     And a transactable exists with location: the location
      And I am adding new transactable
-
      When I edit first location
       And I provide new location data
       And I submit the location form

@@ -23,7 +23,7 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
   def set_instance_id(instance_id)
     self.instance_id = instance_id
     # we don't want to run into memory issues once we support lots of instances
-    @store = @store.slice(instance_key(nil), instance_key(instance_id))
+    # @store = @store.slice(instance_key(nil), instance_key(instance_id))
     update_store_for_instance_if_necessary(nil)
     update_store_for_instance_if_necessary(instance_id)
     populate(instance_id)
