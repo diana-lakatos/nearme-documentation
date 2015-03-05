@@ -114,18 +114,8 @@ module CustomAttributes
         end
       end
     end
-      
-    PRODUCT_TYPE_DEFAULT_ATTRIBUTES = [
-     {
-        name: "Brand",
-        label: "Brand",
-        attribute_type: "String",
-        html_tag: 'input',
-        public: "true",
-        internal: false,
-        validation_rules: { :presence => {} }
-      }
-    ]
+
+    PRODUCT_TYPE_DEFAULT_ATTRIBUTES = []
 
   end
 end

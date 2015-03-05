@@ -22,10 +22,7 @@
   = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :label => "Amenities", :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select', :multiple => true } if only_inputs.empty? || only_inputs.include?(:amenities)
 
 - if only_inputs.empty? || only_inputs.include?(:price)
-  = render partial: "listings/price", locals: { f: f }
-  = render partial: 'shared/booking_types_tabs', locals: { f: f }
-
-- if only_inputs.empty? || only_inputs.include?(:availability_rules)
+  - # always display calendar for fixed price, but make availability rules optional
   - if @transactable_type.schedule_booking_enabled?
     - content_for :booking_type_schedule_tab_content do
       .control-group
@@ -33,6 +30,10 @@
         .controls
           = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule(schedule: f.object.transactable_type.schedule.try(:schedule)) do |schedule_form|
             = schedule_form.hidden_field :schedule, class: 'icui'
+  = render partial: "listings/price", locals: { f: f }
+  = render partial: 'shared/booking_types_tabs', locals: { f: f }
+
+- if only_inputs.empty? || only_inputs.include?(:availability_rules)
   - if @transactable_type.regular_booking_enabled?
     - content_for :booking_type_regular_tab_content do
       .control-group
