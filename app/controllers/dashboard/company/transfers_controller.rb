@@ -1,7 +1,7 @@
 class Dashboard::Company::TransfersController < Dashboard::Company::BaseController
   def show
     # All transferred PaymentTransfers paginated
-    @payment_transfers = @company.payment_transfers.transferred.order('transferred_at DESC')
+    @payment_transfers = @company.payment_transfers.order('transferred_at DESC')
     @payment_transfers = @payment_transfers.paginate(page: params[:page], per_page: 20)
 
     # PaymentTransfers specifically from the last 7 days

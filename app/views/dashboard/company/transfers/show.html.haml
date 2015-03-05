@@ -5,7 +5,7 @@
     %p= t('dashboard.nav.transfers')
   .dash-body
     - if @last_week_payment_transfers.empty?
-      %p.no_data.text-center No transfers have been made in the preceding 7 day period.
+      %p.no_data.text-center= t('dashboard.transfers.no_transfers_last_week')
     - else
       .chart
         .total.right
@@ -18,8 +18,8 @@
     - unless @company.any_payout_option_available?
       %p.warning.text-center
         %i.ico-warning
-        You haven't set a payment method yet.
-        = link_to "Set one up now.", edit_dashboard_company_payouts_path
+        = t('dashboard.transfers.cannot_transfer')
+        = link_to t('dashboard.transfers.setup'), edit_dashboard_company_payouts_path
     - if @payment_transfers.present?
       .table-responsive
         %table.table.table-simple
@@ -39,7 +39,11 @@
                 %td
                   = currency_content_tag(payment_transfer.currency, payment_transfer.amount, :span)
                 %td
-                  = payment_transfer.created_at.strftime('%Y-%m-%d')
+                  - if payment_transfer.transferred_at.present?
+                    = l(payment_transfer.transferred_at, format: :short)
+                  - else
+                    %i.ico-warning
+                    = t('dashboard.transfers.not_transferred')
 
       = will_paginate_styled @payment_transfers
 

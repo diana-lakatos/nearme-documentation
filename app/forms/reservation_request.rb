@@ -10,7 +10,7 @@ class ReservationRequest < Form
   def_delegators :@listing,     :confirm_reservations?, :location
   def_delegators :@user,        :mobile_number, :mobile_number=, :country_name, :country_name=, :country
 
-  before_validation :setup_active_merchant_customer, :if => lambda { reservation.try(:valid?) && user.try(:valid?)}
+  before_validation :setup_active_merchant_customer, :if => lambda { reservation.try(:valid?) && user.try(:valid?) }
   before_validation :build_documents, :if => lambda { reservation.present? && documents.present? }
 
   validates :listing,     :presence => true

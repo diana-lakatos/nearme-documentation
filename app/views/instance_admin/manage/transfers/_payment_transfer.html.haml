@@ -7,8 +7,15 @@
     - else
       = "#{resource.company_including_deleted.name} (Deleted)"
   %td= resource.payments.count
-  %td= resource.created_at
-  %td= resource.transferred_at
+  %td= l(resource.created_at, format: :long)
+  %td
+    - if resource.transferred_at.present?
+      = l(resource.transferred_at, format: :long)
+    - else
+      - if resource.payout_processor.present?
+        N/A (Retry possible)
+      - else
+        N/A
   %td= resource.service_fee_amount_guest.format with_currency: true
   %td= resource.amount.format with_currency: true
   %td= link_to "Details", instance_admin_manage_transfer_path(resource)

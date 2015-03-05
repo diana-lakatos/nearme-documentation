@@ -442,8 +442,8 @@ ActiveRecord::Schema.define(version: 20150305182254) do
   add_index "data_uploads", ["target_id", "target_type"], name: "index_data_uploads_on_target_id_and_target_type", using: :btree
 
   create_table "delayed_jobs", force: true do |t|
-    t.integer  "priority",   default: 20
-    t.integer  "attempts",   default: 0
+    t.integer  "priority",      default: 20
+    t.integer  "attempts",      default: 0
     t.text     "handler"
     t.text     "last_error"
     t.datetime "run_at"
@@ -451,8 +451,8 @@ ActiveRecord::Schema.define(version: 20150305182254) do
     t.datetime "failed_at"
     t.string   "locked_by"
     t.string   "queue"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.string   "instance_name"
   end
 
@@ -775,15 +775,15 @@ ActiveRecord::Schema.define(version: 20150305182254) do
     t.text     "custom_sanitize_config"
     t.string   "payment_transfers_frequency",                                   default: "fortnightly"
     t.text     "hidden_ui_controls"
-    t.string   "encrypted_shippo_username"
-    t.string   "encrypted_shippo_password"
+    t.boolean  "user_blogs_enabled",                                            default: false
     t.string   "twilio_from_number"
     t.string   "test_twilio_from_number"
     t.string   "encrypted_test_twilio_consumer_key"
     t.string   "encrypted_test_twilio_consumer_secret"
     t.string   "encrypted_twilio_consumer_key"
     t.string   "encrypted_twilio_consumer_secret"
-    t.boolean  "user_blogs_enabled",                                            default: false
+    t.string   "encrypted_shippo_username"
+    t.string   "encrypted_shippo_password"
     t.boolean  "wish_lists_enabled",                                            default: false
     t.string   "wish_lists_icon_set",                                           default: "heart"
     t.boolean  "possible_manual_payment"
@@ -982,7 +982,6 @@ ActiveRecord::Schema.define(version: 20150305182254) do
     t.integer  "reference_id"
     t.string   "reference_type"
     t.boolean  "success"
-    t.text     "response"
     t.integer  "amount"
     t.string   "currency"
     t.datetime "created_at",                         null: false
@@ -1609,14 +1608,14 @@ ActiveRecord::Schema.define(version: 20150305182254) do
     t.integer  "partner_id"
     t.decimal  "service_fee_buyer_percent",                 precision: 5,  scale: 2, default: 0.0
     t.decimal  "service_fee_seller_percent",                precision: 5,  scale: 2, default: 0.0
-    t.datetime "shippo_rate_purchased_at"
     t.string   "guest_token"
     t.integer  "state_lock_version",                                                 default: 0,       null: false
+    t.datetime "shippo_rate_purchased_at"
     t.integer  "platform_context_detail_id"
     t.string   "platform_context_detail_type"
+    t.string   "payment_method"
     t.integer  "service_fee_amount_guest_cents",                                     default: 0
     t.integer  "service_fee_amount_host_cents",                                      default: 0
-    t.string   "payment_method"
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id", using: :btree
@@ -1717,6 +1716,7 @@ ActiveRecord::Schema.define(version: 20150305182254) do
 
   add_index "spree_preferences", ["company_id"], name: "index_spree_preferences_on_company_id", using: :btree
   add_index "spree_preferences", ["instance_id"], name: "index_spree_preferences_on_instance_id", using: :btree
+  add_index "spree_preferences", ["key"], name: "index_spree_preferences_on_key", unique: true, using: :btree
   add_index "spree_preferences", ["partner_id"], name: "index_spree_preferences_on_partner_id", using: :btree
   add_index "spree_preferences", ["user_id"], name: "index_spree_preferences_on_user_id", using: :btree
 
@@ -1767,9 +1767,9 @@ ActiveRecord::Schema.define(version: 20150305182254) do
     t.string   "name"
     t.integer  "instance_id"
     t.datetime "deleted_at"
-    t.text     "custom_csv_fields"
     t.boolean  "action_rfq"
     t.boolean  "possible_manual_payment"
+    t.text     "custom_csv_fields"
   end
 
   create_table "spree_products", force: true do |t|
@@ -1799,9 +1799,9 @@ ActiveRecord::Schema.define(version: 20150305182254) do
     t.float    "average_rating",          default: 0.0,   null: false
     t.integer  "wish_list_items_count",   default: 0
     t.integer  "product_type_id"
-    t.string   "external_id"
     t.boolean  "action_rfq"
     t.boolean  "possible_manual_payment"
+    t.string   "external_id"
   end
 
   add_index "spree_products", ["available_on"], name: "index_spree_products_on_available_on", using: :btree
@@ -2668,7 +2668,6 @@ ActiveRecord::Schema.define(version: 20150305182254) do
     t.boolean  "action_recurring_booking",                                           default: false, null: false
     t.boolean  "show_page_enabled",                                                  default: false
     t.text     "custom_csv_fields"
-    t.boolean  "action_overnight_booking",                                           default: false, null: false
     t.text     "onboarding_form_fields"
     t.decimal  "service_fee_guest_percent",                  precision: 5, scale: 2, default: 0.0
     t.decimal  "service_fee_host_percent",                   precision: 5, scale: 2, default: 0.0
@@ -2676,6 +2675,7 @@ ActiveRecord::Schema.define(version: 20150305182254) do
     t.string   "lessor"
     t.string   "lessee"
     t.boolean  "groupable_with_others",                                              default: true
+    t.boolean  "action_overnight_booking",                                           default: false, null: false
     t.boolean  "enable_reviews"
     t.boolean  "action_rfq",                                                         default: false
     t.boolean  "action_hourly_booking",                                              default: false
@@ -2734,8 +2734,8 @@ ActiveRecord::Schema.define(version: 20150305182254) do
     t.integer  "fixed_price_cents"
     t.integer  "min_fixed_price_cents"
     t.integer  "max_fixed_price_cents"
-    t.float    "average_rating",                 default: 0.0,       null: false
     t.string   "booking_type",                   default: "regular"
+    t.float    "average_rating",                 default: 0.0,       null: false
     t.boolean  "manual_payment",                 default: false
   end
 
