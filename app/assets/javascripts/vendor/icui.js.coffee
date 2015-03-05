@@ -100,6 +100,10 @@ do ($ = jQuery) ->
     destroy: =>
       @elem.slideUp 100, =>
         @parent.children.splice(@parent.children.indexOf(@), 1)
+        if this instanceof TopLevel
+          has_rules = child for child in @parent.children when child instanceof TopLevel
+          @parent.has_rules = no  unless has_rules?
+        @parent.has_ending_time = no if this instanceof EndTime
         @parent.triggerRender()
 
     # Render is the code that is responsible for setting up an
