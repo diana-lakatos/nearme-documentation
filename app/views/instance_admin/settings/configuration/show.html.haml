@@ -61,7 +61,12 @@
     .row.dropshadow
       .input-container.col-xs-12
         = f.input :support_email, label: "Support email", placeholder: 'example@gmail.com', input_html: { class: 'form-control' }
-      .input-container.col-xs-12
-        = f.input :support_imap_hash, label: "IMAP YAML for Support email", as: :text, input_html: { class: 'field-textarea', rows: "15" }
+      .input-container.col-xs-12.admin-stylish-inputs
+        = f.input :support_imap_username
+        = f.input :support_imap_password
+        = f.input :support_imap_server
+        = f.input :support_imap_port
+        = f.input :support_imap_ssl
+        = f.submit t('instance_admin.imap_settings.validate_imap_settings'), class: 'btn btn-green', name: 'validate_imap_settings_button'
 
   = f.button :submit, 'Save', class: 'btn btn-green pull-right'
