@@ -125,6 +125,5 @@ Spree::Order.class_eval do
   def possible_manual_payment?
     instance.possible_manual_payment?
   end
-
 end
 

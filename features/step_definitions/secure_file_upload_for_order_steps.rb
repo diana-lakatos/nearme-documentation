@@ -88,7 +88,7 @@ Given /^Upload obligation for product is blank$/ do
   @order.line_items.first.product.upload_obligation.try(:destroy)
 end
 
-Given /^Dorument requairments for product is blank$/ do
+Given /^Document requirements for product is blank$/ do
   @order.line_items.first.product.document_requirements.try(:destroy_all)
 end
 
@@ -98,7 +98,7 @@ Given /^Upload obligation for product is exist$/ do
   end
 end
 
-Given /^Dorument requairments for product is exist$/ do
+Given /^Document requirements for product is exist$/ do
   if @order.line_items.first.product.document_requirements.blank?
     @order.line_items.first.product.document_requirements.create({
       label: "Passport",
