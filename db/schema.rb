@@ -550,6 +550,7 @@ ActiveRecord::Schema.define(version: 20150304163134) do
     t.datetime "deleted_at"
     t.integer  "rank"
     t.string   "form_componentable_type"
+    t.boolean  "is_approval_request_surfacing", default: false
   end
 
   add_index "form_components", ["instance_id", "form_componentable_id", "form_type"], name: "ttfs_instance_tt_form_type", using: :btree
