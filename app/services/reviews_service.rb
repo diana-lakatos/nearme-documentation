@@ -34,7 +34,7 @@ class ReviewsService
   end
 
   def get_rating_systems
-    active_rating_systems = RatingSystem.includes(:rating_hints, :rating_questions).where(active: true)
+    active_rating_systems = RatingSystem.includes(:rating_hints, :rating_questions).active
     {
       active_rating_systems: active_rating_systems,
       buyer_rating_system: active_rating_systems.find_by(subject:  @current_instance.lessee),

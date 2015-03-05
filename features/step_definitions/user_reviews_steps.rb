@@ -5,7 +5,7 @@ end
 Given /^User exists$/ do
   @user = FactoryGirl.create(:user)
 end
- 
+
 When /^Goes to reviews tab$/ do
   find('[data-reviews-count]').click
 end
@@ -55,4 +55,22 @@ end
 Then /^List of reviews should be updated$/ do
   page.should have_css('.review', count: 1)
   page.should have_content(@review_by_buyer.reviewable.creator.first_name)
+end
+
+Given /^Reviews left by the user exist for pagination$/ do
+  @review_by_seller = FactoryGirl.create_list(:review, 10, object: 'buyer', user: @user)
+  @review_by_buyer = FactoryGirl.create_list(:review, 10, object: 'seller', user: @user)
+end
+
+And /^Pagination with active first page$/ do
+  page.should have_css('.reviews .pagination')
+  page.should have_css('.reviews .pagination a.active', text: '1')
+end
+
+When /^Visitor clicks on next page$/ do
+  find('.reviews .pagination .next_page').click
+end
+
+Then /^Sees second page$/ do
+  page.should have_css('.reviews .pagination a.active', text: '2')
 end

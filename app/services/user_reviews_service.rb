@@ -21,6 +21,6 @@ class UserReviewsService
       @platform_context.instance.lessor
     end
 
-    RatingSystem.find_by(subject: subject, active: true).try(:rating_questions)
+    RatingSystem.active_with_subject(subject).try(:rating_questions)
   end
 end
