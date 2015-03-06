@@ -1,6 +1,7 @@
 - hidden = [:review, :feedback] # TODO: Remove when implemented
+- received_orders = params[:controller].include?('received')
 
-- if params[:controller].include?('received')
+- if received_orders
   - manage = true
   - feedback_caption = t('orders.buttons.buyer_feedback')
   - details_url = dashboard_company_orders_received_path(order)
@@ -44,19 +45,21 @@
             -#  = link_to order.shipments.first.tracking, target: '_blank' do
             -#    %col-md-.btn.blue= t'orders.buttons.track'
 
-            - if item.has_seller_reviews?
-              = link_to dashboard_reviews_path(tab: 'completed') do
-                %col-md-.btn.blue= t 'orders.buttons.update_seller_feedback'
-            - else
-              = link_to dashboard_reviews_path do
-                %col-md-.btn.gray= t 'orders.buttons.seller_feedback'
-            %br
-            - if item.has_product_reviews?
-              = link_to dashboard_reviews_path(tab: 'completed') do
-                %col-md-.btn.blue= t 'orders.buttons.update_product_review'
-            - else
-              = link_to dashboard_reviews_path do
-                %col-md-.btn.gray= t 'orders.buttons.product_review'
+            - if has_active_rating_system? and !received_orders
+
+              - if item.has_seller_reviews?
+                = link_to dashboard_reviews_path(tab: 'completed') do
+                  %col-md-.btn.blue= t 'orders.buttons.update_seller_feedback'
+              - else
+                = link_to dashboard_reviews_path do
+                  %col-md-.btn.gray= t 'orders.buttons.seller_feedback'
+              %br
+              - if item.has_product_reviews?
+                = link_to dashboard_reviews_path(tab: 'completed') do
+                  %col-md-.btn.blue= t 'orders.buttons.update_product_review'
+              - else
+                = link_to dashboard_reviews_path do
+                  %col-md-.btn.gray= t 'orders.buttons.product_review'
 
             - if manage
               - if order.approved?
