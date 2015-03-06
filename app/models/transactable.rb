@@ -422,6 +422,24 @@ class Transactable < ActiveRecord::Base
     self.update(average_rating: average_rating)
   end
 
+  def reviews
+    @reviews ||= Review.where(object: 'product', reviewable_type: 'Reservation', reviewable_id: self.reservations.pluck(:id) )
+  end
+
+  def has_reviews?
+    reviews.count > 0
+  end
+
+  def question_average_rating
+    @rating_answers_rating ||= RatingAnswer.where(review_id: reviews.pluck(:id))
+      .group(:rating_question_id).average(:rating)
+  end
+
+  def recalculate_average_rating!
+    average_rating = reviews.average(:rating) || 0.0
+    self.update(average_rating: average_rating)
+  end
+
   private
 
   def set_activated_at

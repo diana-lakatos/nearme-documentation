@@ -689,20 +689,25 @@ class User < ActiveRecord::Base
     reviews.reviewable_type = 'Spree::LineItem' 
       AND reviews.reviewable_id IN (
         SELECT spree_line_items.id FROM spree_line_items 
-        WHERE spree_line_items.variant_id IN (
-          SELECT spree_variants.id FROM spree_variants 
-          WHERE spree_variants.deleted_at IS NULL 
-            AND spree_variants.product_id IN (
-              SELECT spree_products.id FROM spree_products 
-              WHERE spree_products.deleted_at IS NULL 
-                AND spree_products.user_id = :user_id))) 
+        WHERE spree_line_items.instance_id = :instance_id 
+          AND spree_line_items.variant_id IN (
+            SELECT spree_variants.id FROM spree_variants 
+            WHERE spree_variants.deleted_at IS NULL 
+              AND spree_variants.instance_id = :instance_id
+              AND spree_variants.product_id IN (
+                SELECT spree_products.id FROM spree_products 
+                WHERE spree_products.deleted_at IS NULL
+                  AND spree_products.instance_id = :instance_id
+                  AND spree_products.user_id = :user_id))) 
       OR reviews.reviewable_type = 'Reservation' 
         AND reviews.reviewable_id IN (
           SELECT reservations.id FROM reservations 
-          WHERE reservations.creator_id = :user_id)
+          WHERE reservations.instance_id = :instance_id
+            AND reservations.deleted_at IS NULL
+            AND reservations.creator_id = :user_id)
     QUERY
 
-    Review.with_object('seller').where(query, user_id: id)
+    Review.with_object('seller').where(query, user_id: id, instance_id: PlatformContext.current.instance.id)
   end
 
   def reviews_about_buyer
@@ -710,17 +715,20 @@ class User < ActiveRecord::Base
     reviews.reviewable_type = 'Spree::LineItem' 
       AND reviews.reviewable_id IN (
         SELECT spree_line_items.id FROM spree_line_items 
-        WHERE spree_line_items.order_id IN (
-          SELECT spree_orders.id FROM spree_orders 
-          WHERE spree_orders.user_id = :user_id)) 
+        WHERE spree_line_items.instance_id = :instance_id 
+          AND spree_line_items.order_id IN (
+            SELECT spree_orders.id FROM spree_orders 
+            WHERE spree_orders.instance_id = :instance_id
+              AND spree_orders.user_id = :user_id)) 
       OR reviews.reviewable_type = 'Reservation' 
         AND reviewable_id IN (
           SELECT reservations.id FROM reservations 
           WHERE reservations.deleted_at IS NULL 
+            AND reservations.instance_id = :instance_id 
             AND reservations.owner_id = :user_id)
     QUERY
 
-    Review.for_buyer.where(query, user_id: id)
+    Review.for_buyer.where(query, user_id: id, instance_id: PlatformContext.current.instance.id)
   end
 
   def has_reviews?
