@@ -18,7 +18,7 @@ class Locations::SocialShareController < ApplicationController
     when 'facebook'
       "https://www.facebook.com/sharer/sharer.php?u=#{location_url(@location)}"
     when 'twitter'
-      tweet_body = "Need a place to work? Check out our space on @DesksNearMe: #{location_url(@location)}"
+      tweet_body = "#{t('location.social_share.twitter', instance_name: @location.instance.name)}: #{location_url(@location)}"
       "https://twitter.com/intent/tweet?text=#{URI::escape(tweet_body)}"
     when 'linkedin'
       "http://www.linkedin.com/shareArticle?mini=true&url=#{location_url(@location)}&title=#{URI::escape(@location.name )}&summary=#{URI::escape(@location.description)}&source=DesksNear.Me"

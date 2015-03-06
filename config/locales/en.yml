@@ -721,6 +721,10 @@ en:
     company:
       industries: 'Industries'
 
+    social_share:
+      twitter: 'Check out @%{instance_name}'
+
+
   booking_module:
     description: 'Description'
     hours: 'Hours'
