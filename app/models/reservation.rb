@@ -349,6 +349,10 @@ class Reservation < ActiveRecord::Base
     payment_method == Reservation::PAYMENT_METHODS[:manual]
   end
 
+  def possible_manual_payment?
+    instance.possible_manual_payment?
+  end
+
   def remote_payment?
     payment_method == Reservation::PAYMENT_METHODS[:remote]
   end

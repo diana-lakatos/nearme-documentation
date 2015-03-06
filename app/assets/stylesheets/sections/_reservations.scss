@@ -152,6 +152,18 @@ section.reservations {
       margin-right: 10px;
     }
   }
+
+  #payment-options {
+    margin: 0px;
+
+    a {
+      color: $gray100;
+    }
+
+    &.active {
+      margin-bottom: -1px;
+    }
+  }
 }
 
 .modal-content {

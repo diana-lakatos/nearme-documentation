@@ -134,7 +134,11 @@ class ReservationDecorator < Draper::Decorator
   end
 
   def manage_booking_status_info_new
-    raw("You must confirm this booking within <strong>#{time_to_expiry(expiry_time)}</strong> or it will expire.")
+    raw I18n.t('dashboard.host_reservations.pending_confirmation', time_to_expiry: time_to_expiry(expiry_time))
+  end
+
+  def next_payment_transfer
+    I18n.l(PaymentTransfers::SchedulerMethods.new(instance).next_payment_transfers_date, format: :long)
   end
 
   def user_message_recipient
