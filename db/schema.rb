@@ -775,18 +775,23 @@ ActiveRecord::Schema.define(version: 20150306073535) do
     t.text     "custom_sanitize_config"
     t.string   "payment_transfers_frequency",                                   default: "fortnightly"
     t.text     "hidden_ui_controls"
-    t.boolean  "user_blogs_enabled",                                            default: false
+    t.string   "encrypted_shippo_username"
+    t.string   "encrypted_shippo_password"
     t.string   "twilio_from_number"
     t.string   "test_twilio_from_number"
     t.string   "encrypted_test_twilio_consumer_key"
     t.string   "encrypted_test_twilio_consumer_secret"
     t.string   "encrypted_twilio_consumer_key"
     t.string   "encrypted_twilio_consumer_secret"
-    t.string   "encrypted_shippo_username"
-    t.string   "encrypted_shippo_password"
+    t.boolean  "user_blogs_enabled",                                            default: false
     t.boolean  "wish_lists_enabled",                                            default: false
     t.string   "wish_lists_icon_set",                                           default: "heart"
     t.boolean  "possible_manual_payment"
+    t.string   "support_imap_username"
+    t.string   "encrypted_support_imap_password"
+    t.string   "support_imap_server"
+    t.integer  "support_imap_port"
+    t.boolean  "support_imap_ssl"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1712,7 +1717,6 @@ ActiveRecord::Schema.define(version: 20150306073535) do
 
   add_index "spree_preferences", ["company_id"], name: "index_spree_preferences_on_company_id", using: :btree
   add_index "spree_preferences", ["instance_id"], name: "index_spree_preferences_on_instance_id", using: :btree
-  add_index "spree_preferences", ["key"], name: "index_spree_preferences_on_key", unique: true, using: :btree
   add_index "spree_preferences", ["partner_id"], name: "index_spree_preferences_on_partner_id", using: :btree
   add_index "spree_preferences", ["user_id"], name: "index_spree_preferences_on_user_id", using: :btree
 

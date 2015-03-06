@@ -86,6 +86,8 @@ en:
   instance_admin:
     form_components:
       approval_requests_section_title: 'Approval Requests'
+    imap_settings:
+      validate_imap_settings: 'Validate IMAP Settings'
     shipping_options:
       dimensions_templates:
         add_new_dimensions_template: '+ Add new dimension template'

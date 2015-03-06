@@ -23,8 +23,17 @@ class Support::ReceiveMails
   end
 
   def config
+    instance = PlatformContext.current.instance
+    imap_settings = {
+      server: instance.support_imap_server,
+      port: instance.support_imap_port,
+      ssl: instance.support_imap_ssl,
+      username: instance.support_imap_username,
+      password: instance.support_imap_password
+    }
+
     Mailman::Configuration.new.tap do |c|
-      c.imap = YAML.load(PlatformContext.current.instance.support_imap_hash).symbolize_keys
+      c.imap = imap_settings
       c.poll_interval = 0
     end
   end
