@@ -13,12 +13,12 @@ Feature: A user can edit their settings
   Scenario: A user can select industries for company
     Given a company exists with creator: the user
       And I go to the settings page
-      And a transactable_type_listing exists with name: "Listing"
+      And a transactable_type_listing exists with name: "Desk"
     When I select industries for company
     Then company should be connected to selected industries
 
   Scenario: A user with listing will see settings
-    Given a transactable_type_listing exists with name: "Listing"
+    Given a transactable_type_listing exists with name: "Desk"
       And a company exists with creator: the user
       And a location exists with company: the company
       And a transactable exists with location: the location
@@ -27,7 +27,7 @@ Feature: A user can edit their settings
 
   Scenario: A user can update existing company
     Given a company exists with creator: the user
-    And a transactable_type exists with name: "Listing"
+    And a transactable_type exists with name: "Desk"
     And I go to the settings page
     When I update company settings
     Then The company should be updated

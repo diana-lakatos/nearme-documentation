@@ -3,7 +3,8 @@ class InstanceType::Searcher::ProductsSearcher
 
   attr_reader :filterable_attribute, :search
 
-  def initialize(params)
+  def initialize(product_type, params)
+    @product_type = product_type
     set_options_for_filters
     @params = params
     @results = fetcher.products
@@ -46,21 +47,21 @@ class InstanceType::Searcher::ProductsSearcher
   end
 
   def repeated_search?(values)
-    @params[:loc] && search_query_values.to_s == values.try(:to_s)
+    @params[:query] && search_query_values.to_s == values.try(:to_s)
   end
 
   def set_options_for_filters
-    @filterable_attribute = TransactableType.first.custom_attributes.where(name: 'filterable_attribute').try(:first).try(:valid_values)
+    @filterable_attribute = @product_type.custom_attributes.where(name: 'filterable_attribute').try(:first).try(:valid_values)
   end
 
   def search_query_values
     {
-      loc: @params[:loc]
+      query: @params[:query]
     }.merge(filters)
   end
 
   def should_log_conducted_search?
-    @params[:loc].present?
+    @params[:query].present?
   end
 
 end

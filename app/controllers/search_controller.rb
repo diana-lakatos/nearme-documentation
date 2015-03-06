@@ -7,8 +7,8 @@ class SearchController < ApplicationController
   helper_method :searcher, :result_view, :current_page_offset, :per_page, :first_result_page?
 
   def index
-    if platform_context.instance.buyable?
-      @searcher = InstanceType::Searcher::ProductsSearcher.new(params)
+    if @transactable_type.buyable?
+      @searcher = InstanceType::Searcher::ProductsSearcher.new(@transactable_type, params)
     elsif platform_context.instance.searcher_type == 'fulltext'
       @searcher = InstanceType::Searcher::FullTextSearcher::Listing.new(@transactable_type, params)
     elsif result_view == 'mixed'
@@ -27,7 +27,7 @@ class SearchController < ApplicationController
   private
 
   def result_view
-    @result_view = params[:v].presence || platform_context.instance.default_search_view
+    @result_view = params[:v].presence || (@transactable_type.buyable? ? "products" : platform_context.instance.default_search_view)
     @result_view.in?( %w( list map mixed listing_mixed products ) ) ? @result_view : 'mixed'
   end
 
@@ -71,7 +71,11 @@ class SearchController < ApplicationController
   end
 
   def find_transactable_type
-    @transactable_type = params[:transactable_type_id].present? ? TransactableType.find(params[:transactable_type_id]) : TransactableType.first
+    if params[:buyable] == "true"
+      @transactable_type = params[:transactable_type_id].present? ? Spree::ProductType.find(params[:transactable_type_id]) : Spree::ProductType.first
+    else
+      @transactable_type = params[:transactable_type_id].present? ? TransactableType.find(params[:transactable_type_id]) : TransactableType.first
+    end
     params[:transactable_type_id] ||= @transactable_type.id
   end
 

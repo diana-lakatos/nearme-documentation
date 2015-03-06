@@ -7,7 +7,7 @@ class PlatformContextDecorator
     :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :compiled_dashboard_stylesheet, :meta_title, :pages, :logo_image,
     :favicon_image, :icon_image, :icon_retina_image, :homepage_content, :call_to_action, :is_company_theme?, to: :theme
 
-  delegate :bookable_noun, :lessor, :lessee, :name, :buyable?, :transactable_types, :product_types, to: :instance
+  delegate :bookable_noun, :lessor, :lessee, :name, :buyable?, :bookable?, :transactable_types, :product_types, to: :instance
 
   liquid_methods :lessors
 

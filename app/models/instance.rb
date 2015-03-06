@@ -210,6 +210,10 @@ class Instance < ActiveRecord::Base
     @buyable ||= product_types.any?
   end
 
+  def bookable?
+    @bookable ||= transactable_types.services.any?
+  end
+
   def marketplace_type
     TransactableType::AVAILABLE_TYPES[buyable? ? 1 : 0]
   end

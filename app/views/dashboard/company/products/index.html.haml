@@ -1,7 +1,7 @@
 - title "Products"
 
 .dash-head.clearfix
-  %p MANAGE LISTINGS
+  %p= t "dashboard.products.manage"
   = link_to new_dashboard_company_product_type_product_path(@product_type), class: "dash-head-btn btn blue pull-right" do
     List New Item
   = link_to '#', class: "bulk-upload blue pull-right", data: { modal: true, href: new_dashboard_company_product_type_data_upload_path(@product_type) } do

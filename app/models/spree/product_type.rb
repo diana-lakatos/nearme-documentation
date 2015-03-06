@@ -17,4 +17,12 @@ class Spree::ProductType < ActiveRecord::Base
   def wizard_path
     "/product_types/#{id}/product_wizard/new"
   end
+
+  def buyable?
+    true
+  end
+
+  def to_liquid
+    Spree::ProductTypeDrop.new(self)
+  end
 end

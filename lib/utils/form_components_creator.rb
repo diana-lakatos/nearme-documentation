@@ -36,7 +36,6 @@ module Utils
 
     def create_product_type_components
       @form_type_class = FormComponent::PRODUCT_ATTRIBUTES
-      create_component!("Please in additional product information", [])
     end
 
     def create_transactable_components

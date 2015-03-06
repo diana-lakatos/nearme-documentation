@@ -16,6 +16,7 @@ FactoryGirl.define do
     bookable_noun 'Desk'
     lessor 'host'
     lessee 'guest'
+    buyable false
 
     factory :transactable_type_listing do
       sequence(:name) do |n|
@@ -41,6 +42,7 @@ FactoryGirl.define do
       sequence(:name) do |n|
         "Buy/Sell"
       end
+      buyable true
     end
 
     factory :transactable_type_location do

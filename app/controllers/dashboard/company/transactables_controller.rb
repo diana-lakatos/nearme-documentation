@@ -11,7 +11,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
 
   def new
     @transactable = @transactable_type.transactables.build company: @company
-    @transactable.availability_template_id = AvailabilityRule.default_template.id
+    @transactable.availability_template_id = @transactable_type.availability_templates.first.id
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
     @photos = current_user.photos.where(transactable_id: nil)
     build_document_requirements_and_obligation if platform_context.instance.documents_upload_enabled?

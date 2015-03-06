@@ -56,13 +56,15 @@ class InstanceWizardController < ActionController::Base
     @instance.instance_profile_types.create!(name: 'User Custom Attributes')
 
     tp = @instance.transactable_types.create(
-      name: params[:marketplace_type],
+      name: @instance.bookable_noun,
       action_free_booking: "1",
       action_hourly_booking: "1",
       action_daily_booking: "1",
       action_weekly_booking: "1",
       action_monthly_booking: "1",
-      availability_options: { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => true } })
+      availability_options: { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => true } },
+      buyable: params[:marketplace_type] == "Buy/Sell"
+    )
     create_rating_systems(@instance)
     CustomAttributes::CustomAttribute::Creator.new(tp, bookable_noun: @instance.bookable_noun).create_listing_attributes!
     at = tp.availability_templates.build(name: "Working Week", description: "Mon - Fri, 9:00 AM - 5:00 PM")

@@ -6,7 +6,7 @@
     = item.image
     .item-description
       %p= item.name_with_link
-      %p= item.short_description
+      %p= sanitize item.short_description
 
   .span2{class: first_item ? '' : 'price'}
     - if first_item

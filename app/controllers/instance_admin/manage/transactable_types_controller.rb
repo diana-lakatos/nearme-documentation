@@ -3,7 +3,7 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
   before_filter :set_theme, except: [:change_state]
 
   def index
-    @transactable_types = TransactableType.all
+    @transactable_types = TransactableType.services
   end
 
   def new
@@ -17,7 +17,8 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
       action_daily_booking: true, 
       action_weekly_booking: true, 
       action_monthly_booking: true,
-      availability_options: { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => true } }
+      availability_options: { "defer_availability_rules" => true, "confirm_reservations" => { "default_value" => true, "public" => true } },
+      buyable: false
     ))
     if @transactable_type.save
       CustomAttributes::CustomAttribute::Creator.new(@transactable_type, bookable_noun: @transactable_type.name).create_listing_attributes!

@@ -293,19 +293,19 @@ class SearchControllerTest < ActionController::TestCase
         should 'exclude disabled listing' do
           FactoryGirl.create(:product, approved: false, name: 'product')
 
-          get :index, loc: 'product', v: 'products'
+          get :index, query: 'product', v: 'products', buyable: 'true'
           assert_no_products_found
         end
       end
 
       context 'for invalid place' do
         should 'find nothing for empty query' do
-          get :index, loc: '', v: 'products'
+          get :index, query: '', v: 'products', buyable: 'true'
           assert_no_products_found
         end
 
         should 'find nothing for invalid query' do
-          get :index, loc: 'bung', v: 'products'
+          get :index, query: 'bung', v: 'products', buyable: 'true'
           assert_no_products_found
         end
       end
@@ -318,7 +318,7 @@ class SearchControllerTest < ActionController::TestCase
             filtered_product = FactoryGirl.create(:product, taxons: [taxon])
             another_product = FactoryGirl.create(:product, taxons: [another_taxon])
 
-            get :index, { taxon: taxon.permalink, v: 'products' }
+            get :index, { taxon: taxon.permalink, v: 'products', buyable: 'true' }
 
             assert_product_in_result(filtered_product)
             refute_product_in_result(another_product)
@@ -330,7 +330,7 @@ class SearchControllerTest < ActionController::TestCase
             product1 = FactoryGirl.create(:product, name: 'product_one')
             product2 = FactoryGirl.create(:product, name: 'product_two')
 
-            get :index, loc: 'product_one', v: 'products'
+            get :index, query: 'product_one', v: 'products', buyable: 'true'
             assert_product_in_result(product1)
             refute_product_in_result(product2)
           end
@@ -342,39 +342,39 @@ class SearchControllerTest < ActionController::TestCase
 
       should "not track search for empty query" do
         @tracker.expects(:conducted_a_search).never
-        get :index, loc: nil, v: 'products'
+        get :index, query: nil, v: 'products', buyable: 'true'
       end
 
       should 'track search for first page' do
         @tracker.expects(:conducted_a_search).once
-        get :index, loc: 'product_1', page: 1, v: 'products'
+        get :index, query: 'product_1', page: 1, v: 'products', buyable: 'true'
       end
 
       should 'not track search for second page' do
         @tracker.expects(:conducted_a_search).never
-        get :index, loc: 'product_1', page: 2, v: 'products'
+        get :index, query: 'product_1', page: 2, v: 'products', buyable: 'true'
       end
 
       should 'not track second search for the different query' do
         @tracker.expects(:conducted_a_search).twice
-        get :index, loc: 'product_1', v: 'products'
-        get :index, loc: 'product_2', v: 'products'
+        get :index, query: 'product_1', v: 'products', buyable: 'true'
+        get :index, query: 'product_2', v: 'products', buyable: 'true'
       end
 
       should 'track search if ignore_search flag is set to 0' do
         @tracker.expects(:conducted_a_search).once
-        get :index, loc: 'product_1', ignore_search_event: "0", v: 'products'
+        get :index, query: 'product_1', ignore_search_event: "0", v: 'products', buyable: 'true'
       end
 
       should 'not track search if ignore_search flag is set to 1' do
         @tracker.expects(:conducted_a_search).never
-        get :index, loc: 'product_1', ignore_search_event: "1", v: 'products'
+        get :index, query: 'product_1', ignore_search_event: "1", v: 'products', buyable: 'true'
       end
 
       should 'not track second search for the same query if filters have not been changed' do
         @tracker.expects(:conducted_a_search).once
-        get :index, loc: 'product_1', v: 'products'
-        get :index, loc: 'product_1', v: 'products'
+        get :index, query: 'product_1', v: 'products', buyable: 'true'
+        get :index, query: 'product_1', v: 'products', buyable: 'true'
       end
 
       should 'log filters in mixpanel along with other arguments for products result type' do
@@ -387,7 +387,7 @@ class SearchControllerTest < ActionController::TestCase
         @tracker.expects(:conducted_a_search).with do |search, custom_options|
           expected_custom_options == custom_options
         end
-        get :index, { loc: 'product_1', attribute_values: ['Lefthanded'], v: 'products' }
+        get :index, { query: 'product_1', attribute_values: ['Lefthanded'], v: 'products', buyable: 'true' }
       end
     end
   end

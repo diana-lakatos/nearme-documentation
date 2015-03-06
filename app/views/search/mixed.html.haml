@@ -53,10 +53,10 @@
           .container-fluid
             .row-fluid
               .span2
-                %h4 Transactable Type
+                %h4 Service Type
               .span10
                 %ul
-                  - platform_context.transactable_types.each do |transactable_type|
+                  - platform_context.transactable_types.services.each do |transactable_type|
                     %li.filter-option
                       %label.radio.small-radio
                         %input{type: 'radio', name: 'transactable_type_id', value: transactable_type.id, checked: @transactable_type.id == transactable_type.id}

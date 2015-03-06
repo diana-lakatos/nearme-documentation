@@ -31,14 +31,14 @@ class TransactableType < ActiveRecord::Base
   serialize :availability_options, Hash
   serialize :custom_csv_fields, Array
 
-  before_save :normalize_cancellation_policy_enabled
-  after_save :setup_availability_attributes, :if => lambda { |transactable_type| transactable_type.availability_options_changed? && transactable_type.availability_options.present? }
+  before_save :normalize_cancellation_policy_enabled, unless: lambda { |transactable_type| transactable_type.buyable }
+  after_save :setup_availability_attributes, :if => lambda { |transactable_type| !transactable_type.buyable && transactable_type.availability_options_changed? && transactable_type.availability_options.present? }
 
   validates_presence_of :name
-  validate :min_max_prices_are_correct
-  validate :availability_options_are_correct
-  validates_presence_of :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_percentage, if: lambda { |transactable_type| transactable_type.enable_cancellation_policy }
-  validates_inclusion_of :cancellation_policy_penalty_percentage, in: 0..100, allow_nil: true, message: 'must be between 0 and 100', if: lambda { |transactable_type| transactable_type.enable_cancellation_policy }
+  validate :min_max_prices_are_correct, unless: lambda { |transactable_type| transactable_type.buyable }
+  validate :availability_options_are_correct, unless: lambda { |transactable_type| transactable_type.buyable }
+  validates_presence_of :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_percentage, if: lambda { |transactable_type| !transactable_type.buyable && transactable_type.enable_cancellation_policy }
+  validates_inclusion_of :cancellation_policy_penalty_percentage, in: 0..100, allow_nil: true, message: 'must be between 0 and 100', if: lambda { |transactable_type| !transactable_type.buyable && transactable_type.enable_cancellation_policy }
 
   accepts_nested_attributes_for :availability_templates
 
@@ -52,6 +52,9 @@ class TransactableType < ActiveRecord::Base
   monetize :max_monthly_price_cents, allow_nil: true
   monetize :min_fixed_price_cents, allow_nil: true
   monetize :max_fixed_price_cents, allow_nil: true
+
+  scope :products, -> { where(buyable: true) }
+  scope :services, -> { where(buyable: false) }
 
   def any_rating_system_active?
     self.rating_systems.any?(&:active)

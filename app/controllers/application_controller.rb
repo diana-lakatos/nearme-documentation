@@ -80,7 +80,12 @@ class ApplicationController < ActionController::Base
   def buyable?
     @buyable ||= platform_context.instance.buyable?
   end
-  helper_method :buyable?
+
+  def bookable?
+    @bookable ||= platform_context.instance.bookable?
+  end
+  
+  helper_method :buyable?, :bookable?
 
   # Provides an EventTracker instance for the current request.
   #

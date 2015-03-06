@@ -7,19 +7,23 @@
   <div class="black-box row-fluid">
     <form action="/search" class="home_search" id="listing_search" method="get">
       <div class="input-wrapper">
-        {% if platform_context.buyable? == false %}
+        {% if platform_context.bookable? %}
           <div class="geolocation no-bookings">
             <span class="ico-crosshairs"></span>
           </div>
         {% endif %}
         <input class="query" id="search" name="loc" placeholder="{{ platform_context.search_field_placeholder }}" type="text"></input>
-        <br />
-        {% if platform_context.transactable_types.size > 1 %}
-          {% for transactable_type in platform_context.transactable_types %}
-            {{ transactable_type.name}} <input type="radio" name="transactable_type_id" value="{{ transactable_type.id }}">
+        {% if platform_context.all_transactables.size > 1 %}
+          {% if platform_context.bookable? and platform_context.buyable?%}
+            <input class="query" id="search_prod" name="query" placeholder="{{ platform_context.search_field_placeholder }}" type="text" style="display: none;"></input>
+          {% endif %}
+          <br />
+          {% for transactable_type in platform_context.all_transactables  %}
+            {{ transactable_type.name}} <input type="radio" name="transactable_type_id" value="{{ transactable_type.id }}" {% if forloop.first == true %} checked {% endif %} data-buyable="{{transactable_type.buyable?}}">
           {% endfor %}
         {% endif %}
       </div>
+      <input name="buyable" id="is_buyable" value="{{platform_context.buyable?}}" type="hidden"></input>
       <div class="button-wrapper">
         <a class="btn btn-green btn-large" data-disable-with="{{ 'homepage.disabled_buttons.search' | translate }}" rel="submit" href="">
           <span class="ico-search"></span>
@@ -28,7 +32,7 @@
         <div id="suggest_location" style="display: none"></div>
       </div>
     </form>
-    {% if platform_context.buyable? == false %}
+    {% if platform_context.bookable? %}
       <input id="lat" name="lat" type="hidden" value>
       <input id="lng" name="lng" type="hidden" value>
       <input id="nx" name="nx" type="hidden" value>
@@ -45,7 +49,7 @@
   </div>
 </div>
 
-{% if platform_context.searcher_type != 'fulltext' and platform_context.buyable? == false %}
+{% if platform_context.searcher_type != 'fulltext' and platform_context.bookable? %}
   {% content_for domready %}
     new Search.HomeController($('#listing_search'))
   {% endcontent_for %}
