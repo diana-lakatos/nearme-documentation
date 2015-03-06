@@ -156,13 +156,13 @@
 
           -if listing.has_action?('Request For Quote')
             - book_hash[:class] += (listing.action_free_booking? ? 'hidden' : 'span6')
-            - rfq_class = (listing.action_free_booking? ? 'btn btn-green btn-large' :  'btn btn-gray-light btn-large span6' )
+            - rfq_class = (listing.action_free_booking? ? 'btn btn-green btn-large' :  'btn btn-gray-light btn-large offer-button span6' )
             - rfq_label = (listing.action_free_booking? ?  t('reservations.rfq') : t('reservations.offer'))
 
             - if listing.action_free_booking?
               .rfq-explanation
                 %span= t('reservations.rfq_explanation')
-            .row-fluid
+            .row-fluid.booking-submit-row
               = f.submit rfq_label, id:"rfq-#{listing.id}", class: rfq_class, :'data-behavior' => 'RFQ', :'data-modal-method' => 'GET', :'data-modal-url' => new_listing_ticket_path(listing), :'data-force-modal' => true
               - if listing.action_free_booking?
                 .hidden
