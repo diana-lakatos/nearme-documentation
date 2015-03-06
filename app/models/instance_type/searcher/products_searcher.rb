@@ -47,7 +47,7 @@ class InstanceType::Searcher::ProductsSearcher
   end
 
   def repeated_search?(values)
-    @params[:loc] && search_query_values.to_s == values.try(:to_s)
+    @params[:query] && search_query_values.to_s == values.try(:to_s)
   end
 
   def set_options_for_filters
@@ -56,12 +56,12 @@ class InstanceType::Searcher::ProductsSearcher
 
   def search_query_values
     {
-      loc: @params[:loc]
+      query: @params[:query]
     }.merge(filters)
   end
 
   def should_log_conducted_search?
-    @params[:loc].present?
+    @params[:query].present?
   end
 
 end
