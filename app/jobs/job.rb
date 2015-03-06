@@ -66,7 +66,7 @@ class Job
   def self.perform_later(when_perform, *args)
     if run_in_background?
       Delayed::Job.enqueue build_new(*args), run_at: get_performing_time(when_perform),
-        priority: get_priority, instance_name: PlatformContext.current.try(:instance).try(:name)
+        priority: get_priority, instance_id: PlatformContext.current.try(:instance).try(:annotated_id)
     else
       # invoking get_perfming_time is unnecessary, but we want to catch errors in this method in test environment
       get_performing_time(when_perform)
@@ -76,7 +76,7 @@ class Job
 
   def self.perform_async(*args)
     Delayed::Job.enqueue build_new(*args), priority: get_priority,
-      instance_name: PlatformContext.current.try(:instance).try(:name)
+      instance_id: PlatformContext.current.try(:instance).try(:annotated_id)
   end
 
   def self.build_new(*args)

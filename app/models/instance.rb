@@ -244,4 +244,8 @@ class Instance < ActiveRecord::Base
   def documents_upload_enabled?
     self.documents_upload.present? && self.documents_upload.enabled?
   end
+
+  def annotated_id
+    "#{id} - #{name}"
+  end
 end
