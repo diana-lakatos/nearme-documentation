@@ -4,6 +4,7 @@ class InstanceType::Searcher::FullTextSearcher::Listing
   def initialize(transactable_type, params)
     @transactable_type = transactable_type
     set_options_for_filters
+    params.delete :query
     @params = params
     @results = @transactable_type.transactables.searchable.where("CAST(avals(properties) AS text) @@ :q", q: params['loc'])
   end

@@ -316,14 +316,14 @@ en:
   dashboard:
     nav:
       orders: 'My Orders'
-      user_reservations: 'My Orders'
+      user_reservations: 'My Bookings'
       user_messages: 'Messages'
       companies: 'Shop Details'
-      products: 'Listings'
-      transactables: 'Listings'
+      products: 'My Products'
+      transactables: 'My Listings'
       payouts: 'Payout'
       orders_received: 'Orders Received'
-      host_reservations: 'Orders Received'
+      host_reservations: 'Bookings Received'
       transfers: 'Payment Transfers'
       analytics: 'Analytics'
       users: 'Manage Admins'
@@ -334,8 +334,8 @@ en:
       edit: 'Edit Profile'
       social_accounts: 'Trust & Verification'
       notification_preferences: 'Notification Preferences'
-      user_recurring_bookings: 'My Orders'
-      host_recurring_bookings: 'Orders Received'
+      user_recurring_bookings: 'My Bookings'
+      host_recurring_bookings: 'Bookings Received'
       blog_posts: 'Posts'
       blog_settings: 'Settings'
       reviews: 'Reviews'
@@ -346,8 +346,14 @@ en:
       account: 'ACCOUNT'
       menu: 'MENU'
       blog: 'BLOG'
+      products_header: 'PRODUCTS'
+      services_header: 'SERVICES'
     user_reservations:
       pending_confirmation: 'Pending confirmation from host. Booking will expire in '
+    products:
+      manage: 'MANAGE PRODUCTS'
+    transactables:
+      manage: 'MANAGE LISTINGS'
     reviews:
       templates:
         comments: "Comments"

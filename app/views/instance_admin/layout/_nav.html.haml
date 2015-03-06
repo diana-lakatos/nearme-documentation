@@ -65,7 +65,7 @@
                 %span= "#{controller_name.titleize}"
 
 
-    - if platform_context.instance.buyable? && @authorizer.authorized?('BuySell')
+    - if @authorizer.authorized?('BuySell')
       %li#buy_sell
         %a{"data-parent" => "#buy_sell", "data-toggle" => "collapse", :href => "#buy-sell-sub"}
           %i.fa.fa-shopping-cart

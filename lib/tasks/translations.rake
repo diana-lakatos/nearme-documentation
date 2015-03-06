@@ -4,14 +4,14 @@ namespace :translations do
   task :add_dashboard => [:environment] do
     dashboard_translations = {
       'dashboard.nav.orders' => 'My Orders',
-      'dashboard.nav.user_reservations' => 'My Orders',
+      'dashboard.nav.user_reservations' => 'My Bookings',
       'dashboard.nav.user_messages' => 'Messages',
       'dashboard.nav.companies' => 'Shop Details',
-      'dashboard.nav.products' => 'Listings',
-      'dashboard.nav.transactables' => 'Listings',
+      'dashboard.nav.products' => 'My Products',
+      'dashboard.nav.transactables' => 'My Listings',
       'dashboard.nav.payouts' => 'Payout',
       'dashboard.nav.orders_received' => 'Orders Received',
-      'dashboard.nav.host_reservations' => 'Orders Received',
+      'dashboard.nav.host_reservations' => 'Bookings Received',
       'dashboard.nav.transfers' => 'Payment Transfers',
       'dashboard.nav.analytics' => 'Analytics',
       'dashboard.nav.users' => 'Manage Admins',
@@ -22,13 +22,17 @@ namespace :translations do
       'dashboard.nav.edit' => 'Edit Profile',
       'dashboard.nav.social_accounts' => 'Trust & Verification',
       'dashboard.nav.notification_preferences' => 'Notification Preferences',
-      'dashboard.nav.user_recurring_bookings' => 'My Orders',
-      'dashboard.nav.host_recurring_bookings' => 'Orders Received',
+      'dashboard.nav.user_recurring_bookings' => 'My Bookings',
+      'dashboard.nav.host_recurring_bookings' => 'Bookings Received',
       'dashboard.nav.your_shop' => 'YOUR SHOP',
       'dashboard.nav.admin' => 'ADMIN',
       'dashboard.nav.account' => 'ACCOUNT',
       'dashboard.nav.menu' => 'MENU',
       'dashboard.nav.blog' => 'BLOG',
+      'dashboard.nav.services_header' => "SERVICES",
+      'dashboard.nav.products_header' => "PRODUCTS",
+      'dashboard.products.manage' => 'MANAGE PRODUCTS',
+      'dashboard.transactables.manage' => 'MANAGE LISTINGS'
     }
 
     create_keys(dashboard_translations)

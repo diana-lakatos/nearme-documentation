@@ -4,7 +4,7 @@ class PlatformContextDrop < BaseDrop
 
   delegate :name, :bookable_noun, :pages, :platform_context, :blog_url, :twitter_url, :lessor, :lessors, :lessee, :lessees, :searcher_type,
     :facebook_url, :address, :phone_number, :gplus_url, :site_name, :support_url, :support_email, :logo_image, :tagline, :search_field_placeholder, :homepage_content,
-    :is_company_theme?, :call_to_action, :latest_products, :buyable?, :transactable_types, :bookable_nouns, :bookable_nouns_plural, to: :platform_context_decorator
+    :is_company_theme?, :call_to_action, :latest_products, :buyable?, :bookable?, :transactable_types, :product_types, :bookable_nouns, :bookable_nouns_plural, to: :platform_context_decorator
 
 
   def initialize(platform_context_decorator)
@@ -33,6 +33,10 @@ class PlatformContextDrop < BaseDrop
 
   def color_blue
     theme_color('blue')
+  end
+
+  def all_transactables
+    transactable_types.services + product_types
   end
 
   private

@@ -4,6 +4,7 @@ class InstanceType::Searcher::GeolocationSearcher::Location
   def initialize(transactable_type, params)
     @transactable_type = transactable_type
     set_options_for_filters
+    params.delete :query
     @params = params
     @results = fetcher.locations
   end

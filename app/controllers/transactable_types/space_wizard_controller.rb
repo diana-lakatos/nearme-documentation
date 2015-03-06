@@ -47,12 +47,8 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       track_new_space_event
       track_new_company_event
       WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Created, @user.first_listing.id)
-      if buyable?
-        redirect_to dashboard_company_products_path
-      else
-        flash[:success] = t('flash_messages.space_wizard.space_listed', bookable_noun: @transactable_type.name)
-        redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
-      end
+      flash[:success] = t('flash_messages.space_wizard.space_listed', bookable_noun: @transactable_type.name)
+      redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
     else
       @photos = @user.first_listing ? @user.first_listing.photos : nil
       flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(filter_error_messages(@user.errors.full_messages))

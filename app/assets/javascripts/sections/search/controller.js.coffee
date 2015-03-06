@@ -32,7 +32,15 @@ class Search.Controller
     # Override to trigger automatic updating etc.
 
   initializeQueryField: ->
-    @queryField = @form.find('input.query')
+    @queryField = @form.find('input#search')
+    @prodQueryField = @form.find('input#search_prod')
+    transactableTypeRadio = @form.find("input[name='transactable_type_id']")
+    @isBuyableField = @form.find("input#is_buyable")
+    @crosshairs = @form.find("div.geolocation")
+    if @prodQueryField?
+      @toggleGeocoding()
+      transactableTypeRadio.bind "change", (event) =>
+        @toggleGeocoding($(event.target))
     query_value = DNM.util.Url.getParameterByName('loc')
     if @queryField.val() == '' && !query_value
       _.defer(=>@geolocateMe())
@@ -64,6 +72,18 @@ class Search.Controller
       @searchButton.bind 'click', =>
         @form.submit()
 
+  toggleGeocoding: (field)->
+    field ||= @form.find("input[name='transactable_type_id']:checked")
+    is_buyable = field.data('buyable')
+    @isBuyableField.val(is_buyable)
+    if is_buyable
+      @queryField.hide()
+      @crosshairs.hide()
+      @prodQueryField.show()
+    else
+      @queryField.show()
+      @crosshairs.show()
+      @prodQueryField.hide()
 
   geolocateMe: ->
     @determineUserLocation()
