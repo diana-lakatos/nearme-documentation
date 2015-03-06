@@ -135,14 +135,26 @@ class Transactable < ActiveRecord::Base
       hour = start_min/60
       minute = start_min - (60 * hour)
       # to datetime is to have date in UTC otherwise we won't be able to check in IceCube schedule :|
-      self.schedule.schedule.occurs_at?("#{date} #{hour}:#{minute}".to_datetime.to_time)
+      self.schedule.schedule.occurs_at?("#{date} #{hour}:#{minute}".to_datetime.to_time.utc)
     else
       availability.open_on?(:date => date, :start_minute => start_min, :end_minute => end_min)
     end
   end
 
   def next_available_occurrences(number_of_occurrences = 10)
-    schedule.try(:schedule).try(:next_occurrences, number_of_occurrences) || []
+    occurences = []
+    occurence = Time.now
+    checks_to_be_performed = 100
+    loop do
+      checks_to_be_performed  -= 1
+      occurence = schedule.try(:schedule).try(:next_occurrences, 10, occurence).first
+      if occurence
+        start_minute = occurence.to_datetime.min.to_i + (60 * occurence.to_datetime.hour.to_i)
+        occurences << occurence if self.quantity - desks_booked_on(occurence.to_datetime, start_minute, start_minute) > 0
+      end
+      break if occurences.count == number_of_occurrences || occurence.nil? || checks_to_be_performed.zero?
+    end
+    occurences
   end
 
   def availability_for(date, start_min = nil, end_min = nil)
@@ -390,6 +402,24 @@ class Transactable < ActiveRecord::Base
     define_method("#{bt}_booking?") do
       booking_type == bt
     end
+  end
+
+  def reviews
+    @reviews ||= Review.where(object: 'product', reviewable_type: 'Reservation', reviewable_id: self.reservations.pluck(:id) )
+  end
+
+  def has_reviews?
+    reviews.count > 0
+  end
+
+  def question_average_rating
+    @rating_answers_rating ||= RatingAnswer.where(review_id: reviews.pluck(:id))
+      .group(:rating_question_id).average(:rating)
+  end
+
+  def recalculate_average_rating!
+    average_rating = reviews.average(:rating) || 0.0
+    self.update(average_rating: average_rating)
   end
 
   def reviews

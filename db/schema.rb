@@ -442,8 +442,8 @@ ActiveRecord::Schema.define(version: 20150306073535) do
   add_index "data_uploads", ["target_id", "target_type"], name: "index_data_uploads_on_target_id_and_target_type", using: :btree
 
   create_table "delayed_jobs", force: true do |t|
-    t.integer  "priority",   default: 20
-    t.integer  "attempts",   default: 0
+    t.integer  "priority",      default: 20
+    t.integer  "attempts",      default: 0
     t.text     "handler"
     t.text     "last_error"
     t.datetime "run_at"
@@ -451,8 +451,8 @@ ActiveRecord::Schema.define(version: 20150306073535) do
     t.datetime "failed_at"
     t.string   "locked_by"
     t.string   "queue"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.string   "instance_name"
   end
 
@@ -775,15 +775,15 @@ ActiveRecord::Schema.define(version: 20150306073535) do
     t.text     "custom_sanitize_config"
     t.string   "payment_transfers_frequency",                                   default: "fortnightly"
     t.text     "hidden_ui_controls"
-    t.string   "encrypted_shippo_username"
-    t.string   "encrypted_shippo_password"
+    t.boolean  "user_blogs_enabled",                                            default: false
     t.string   "twilio_from_number"
     t.string   "test_twilio_from_number"
     t.string   "encrypted_test_twilio_consumer_key"
     t.string   "encrypted_test_twilio_consumer_secret"
     t.string   "encrypted_twilio_consumer_key"
     t.string   "encrypted_twilio_consumer_secret"
-    t.boolean  "user_blogs_enabled",                                            default: false
+    t.string   "encrypted_shippo_username"
+    t.string   "encrypted_shippo_password"
     t.boolean  "wish_lists_enabled",                                            default: false
     t.string   "wish_lists_icon_set",                                           default: "heart"
     t.boolean  "possible_manual_payment"
@@ -982,7 +982,6 @@ ActiveRecord::Schema.define(version: 20150306073535) do
     t.integer  "reference_id"
     t.string   "reference_type"
     t.boolean  "success"
-    t.text     "response"
     t.integer  "amount"
     t.string   "currency"
     t.datetime "created_at",                         null: false
@@ -1717,6 +1716,7 @@ ActiveRecord::Schema.define(version: 20150306073535) do
 
   add_index "spree_preferences", ["company_id"], name: "index_spree_preferences_on_company_id", using: :btree
   add_index "spree_preferences", ["instance_id"], name: "index_spree_preferences_on_instance_id", using: :btree
+  add_index "spree_preferences", ["key"], name: "index_spree_preferences_on_key", unique: true, using: :btree
   add_index "spree_preferences", ["partner_id"], name: "index_spree_preferences_on_partner_id", using: :btree
   add_index "spree_preferences", ["user_id"], name: "index_spree_preferences_on_user_id", using: :btree
 
@@ -2694,6 +2694,7 @@ ActiveRecord::Schema.define(version: 20150306073535) do
     t.integer  "max_hourly_price_cents"
     t.integer  "min_fixed_price_cents"
     t.integer  "max_fixed_price_cents"
+    t.boolean  "manual_payment",                                                     default: false
     t.boolean  "buyable"
   end
 
@@ -2736,6 +2737,7 @@ ActiveRecord::Schema.define(version: 20150306073535) do
     t.integer  "max_fixed_price_cents"
     t.string   "booking_type",                   default: "regular"
     t.float    "average_rating",                 default: 0.0,       null: false
+    t.boolean  "manual_payment",                 default: false
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree

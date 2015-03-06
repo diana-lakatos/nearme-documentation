@@ -5,30 +5,35 @@
     This payout has been marked as transferred to the Company.
 
 - else
-  = link_to "Mark Transferred", transferred_instance_admin_manage_transfer_path(resource),
+  = link_to "Mark as manually transferred", transferred_instance_admin_manage_transfer_path(resource),
       :method => :post,
-      :class => 'btn btn-default'
+      :class => 'btn btn-green'
 
   - if resource.payout_processor.present?
     = link_to "Payout via #{resource.payout_processor}", payout_instance_admin_manage_transfer_path(resource),
       :method => :post,
-      :class => 'btn btn-default',
+      :class => 'btn btn-green',
       data: { confirm: 'Payment will go live. Do you want to continue?' }
   - else
-    %button.btn.btn_default{disabled: true}
-      Payout
+    %p
+      %i.ico-warning
+      Automatic payout is not available - company has not provided PayPal/ACH details
+
+%hr
 
 .payout-attemps
-  %h4 Payout attemps
+  %h4 Automatic payout attemps
 
-  - resource.payout_attempts.each do |payout_attempt|
-    .payout_attempt
-      = "#{Money.new(payout_attempt.amount, payout_attempt.currency).format with_currency: true} at #{payout_attempt.created_at.in_time_zone(current_user.time_zone).strftime('%Y-%m-%d %H:%M (%Z)')} - "
-      = 'succeeded' if payout_attempt.success
-      = payout_attempt.failure_message if payout_attempt.failed?
-      = "pending " if payout_attempt.pending?
-      = (link_to('Confirm', payout_attempt.confirmation_url)).html_safe if payout_attempt.confirmation_url.present?
-
+  - if resource.payout_attempts.count.zero?
+    No automatic payout attempts has been performed yet.
+  - else
+    - resource.payout_attempts.each do |payout_attempt|
+      .payout_attempt
+        = "#{Money.new(payout_attempt.amount, payout_attempt.currency).format with_currency: true} at #{payout_attempt.created_at.in_time_zone(current_user.time_zone).strftime('%Y-%m-%d %H:%M (%Z)')} - "
+        = 'succeeded' if payout_attempt.success
+        = payout_attempt.failure_message if payout_attempt.failed?
+        = "pending " if payout_attempt.pending?
+        = (link_to('Confirm', payout_attempt.confirmation_url)).html_safe if payout_attempt.confirmation_url.present?
 
 %hr
 

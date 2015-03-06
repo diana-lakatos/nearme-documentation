@@ -8,7 +8,7 @@
   .padding-bottom.submit-secure-payment
     .row-fluid
       .span5.text
-        .ico-lock= t 'payments.heading'
+        .ico-lock= t 'payments.heading', default: 'Credit Card'
       .span7.credit-card-images
         = image_tag 'credit-cards.png', alt: t('payments.cc_image_alt', default: 'Credit cards')
       .clearfix

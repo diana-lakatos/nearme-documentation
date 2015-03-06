@@ -133,6 +133,11 @@ class Company < ActiveRecord::Base
     end
   end
 
+  def possible_automated_payout_not_supported?(currency)
+    billing_gateway = Billing::Gateway::Outgoing.new(self, currency)
+    !billing_gateway.possible? && billing_gateway.support_automated_payout?
+  end
+
   def to_balanced_params
     {
       name: name,

@@ -352,6 +352,12 @@ en:
       services_header: 'SERVICES'
     user_reservations:
       pending_confirmation: 'Pending confirmation from host. Booking will expire in '
+      money_info: "Payment has been authorized but it will be captured only upon confirmation."
+    host_reservations:
+      pending_confirmation: 'You must confirm this booking within <strong>%{time_to_expiry}</strong> or it will expire.'
+      money_info: "Payment has been authorized but it will be captured only upon confirmation."
+      next_payment_transfer: "The next automated payout occurs at %{next_payment_transfer}."
+      remember_to_setup_automated_payout: "To receive automated payout please <a href='%{setup_link}'>setup payouts</a>."
     products:
       manage: 'MANAGE PRODUCTS'
     transactables:
@@ -399,6 +405,11 @@ en:
         user: "User"
         date: "Date"
         document: "Document"
+    transfers:
+      not_transferred: 'N/A'
+      cannot_transfer: "You haven't set a payment method yet."
+      setup: "Set one up now."
+      no_transfers_last_week: 'No transfers have been made in the preceding 7 day period.'
   hidden_items:
     registrations:
       show:
@@ -544,9 +555,9 @@ en:
 
     accept_terms_of_service: 'confirm that you accept the <a href="/pages/legal" target="_blank">Terms of Service and Privacy Policy</a>'
   reservations:
-    charge_after_confirmation: "Your card will not be charged until the booking is confirmed."
+    charge_after_confirmation: "You will not be charged until the booking is confirmed."
     manually_confirm: "This %{lessor} manually confirms all bookings."
-    paypal_and_cc_charge_after_confirmation: "Your card or PayPal will not be charged until the booking is confirmed."
+    paypal_and_cc_charge_after_confirmation: "Your will not be charged until the booking is confirmed."
     cancellation_time: "You have up to %{time} hours before the booking takes place to cancel."
     no_cancellation_time: "You can cancel before the first day."
     cancellation_fee: "The penalty fee for cancelling is %{fee}%. Service fee is not refunded."
@@ -716,6 +727,10 @@ en:
     company:
       industries: 'Industries'
 
+    social_share:
+      twitter: 'Check out @%{instance_name}'
+
+
   booking_module:
     description: 'Description'
     hours: 'Hours'
@@ -784,4 +799,10 @@ en:
     reviews_left_by_this_seller: "Reviews left by this seller"
     reviews_about_this_buyer: "Reviews about this buyer"
     reviews_left_by_this_buyer: "Reviews left by this buyer"
+
+  payments:
+    credit_card: 'Credit Card Payment'
+    manual: 'Manual Payment'
+    nonce: 'PayPal Payment'
+    remote: 'Fetch Payment'
 

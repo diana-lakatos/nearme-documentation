@@ -13,4 +13,7 @@ class RatingSystem < ActiveRecord::Base
   accepts_nested_attributes_for :rating_hints
 
   default_scope { order('active ASC') }
+
+  scope :active, -> { where(active: true) }
+  scope :active_with_subject, ->(subject) { active.find_by(subject: subject) }
 end

@@ -257,6 +257,14 @@ namespace :translations do
     create_keys(upload_documents_translations)
   end
 
+  desc 'Social share translation'
+  task :social_share => [:environment] do
+    social_share_translations = {
+      'location.social_share.twitter' => 'Check out @%{instance_name}'
+    }
+    create_keys(social_share_translations)
+  end
+
   def create_keys(hash)
     hash.each do |k, v|
       if Translation.where(key: k, instance_id: nil).empty?

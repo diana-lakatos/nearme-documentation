@@ -26,7 +26,9 @@
           =review.decorate.show_reviewable_info
         .span10
           .rating
-            = render 'buy_sell_market/products/stars', stars: review.rating 
+            = render 'buy_sell_market/products/stars', stars: review.rating
             %p.review-date= I18n.l(review.created_at, format: :month_year)
           %p
             = review.comment
+
+  = will_paginate_styled reviews, param_name: 'reviews_page'
