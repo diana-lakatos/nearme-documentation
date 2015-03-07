@@ -30,6 +30,10 @@ module DashboardHelper
     classes.join ' '
   end
 
+  def has_active_rating_system?
+    @rating_systems ? @rating_systems[:active_rating_systems].present? : false
+  end
+
   def guest_filter_class(guest_list, filter)
     guest_list.state == filter ? 'btn-gray active' : 'btn-gray-darker'
   end
