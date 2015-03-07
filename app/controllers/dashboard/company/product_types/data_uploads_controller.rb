@@ -1,4 +1,4 @@
-class Dashboard::ProductTypes::DataUploadsController < Dashboard::DataUploads::BaseController
+class Dashboard::Company::ProductTypes::DataUploadsController < Dashboard::DataUploads::BaseController
 
   def download_current_data_csv
     raise NotImplementedError

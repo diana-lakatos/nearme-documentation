@@ -20,12 +20,18 @@ class DataImporter::Product::Importer
   def import
     while params = @product_csv.process_next_row
       begin
+        quantity = params[:'spree/product'].delete(:total_on_hand) if params[:'spree/product'].has_key?(:total_on_hand)
         import_industry(params[:industry]) do |industry|
           import_company(params[:company], industry) do |company|
             import_user(params[:user], company) do |user|
               import_shipping_category(params[:'spree/shipping_category'], user, company) do |shipping_category|
                 import_product(params[:'spree/product'], user, company, shipping_category) do |product|
-                  import_variant(params[:'spree/variant'], product) do |variant|
+                  import_master_variant(params[:'spree/variant'], product) do |variant|
+                    if quantity
+                      import_stock_item(variant) do |stock_item|
+                        import_stock_movement(stock_item, quantity)
+                      end
+                    end
                     import_image(params[:'spree/image'], variant)
                   end
                 end
@@ -105,6 +111,7 @@ class DataImporter::Product::Importer
     import_entity(block) do
       find_or_initialize_by_and_assign(Spree::Product, external_id: params.delete(:external_id), company_id: company.id) do |product|
         product.assign_attributes(params)
+        product.product_type = @data_upload.importable
         product.user = user
         product.shipping_category = shipping_category
       end
@@ -112,7 +119,7 @@ class DataImporter::Product::Importer
   end
 
 
-  def import_variant(params, product, &block)
+  def import_master_variant(params, product, &block)
     import_entity(block) do
       find_or_initialize_by_and_assign(Spree::Variant, product_id: product.id) do |variant|
         variant.assign_attributes(params)
@@ -122,11 +129,26 @@ class DataImporter::Product::Importer
     end
   end
 
+  def import_stock_item(variant, &block)
+    import_entity(block) do
+      find_or_initialize_by_and_assign(Spree::StockItem, variant_id: variant.id)
+    end
+  end
+
+  def import_stock_movement(stock_item, quantity)
+    import_entity do
+      find_or_initialize_by_and_assign(Spree::StockMovement, stock_item_id: stock_item.id) do |stock_movement|
+        stock_movement.quantity = quantity
+      end
+    end
+  end
+
   def import_image(params, variant)
     import_entity do
-      find_or_initialize_by_and_assign(Spree::Image, image_original_url: params.delete(:image_original_url)) do |image|
-        image.viewable = variant
-      end
+      Spree::Image.find_or_initialize_by(
+        viewable: variant,
+        image_original_url: params.delete(:image_original_url)
+      )
     end
   end
 
@@ -162,7 +184,8 @@ class DataImporter::Product::Importer
 
   %i(created updated).each do |action|
     define_method("entity_#{action}") do |entity|
-      instance_variable_get("@entities_counters")[action][entity.class.name.underscore.to_sym] += 1
+      model = entity.class.name.underscore.to_sym
+      @entities_counters[action][model] += 1 if @entities_counters[action].has_key?(model)
     end
   end
 

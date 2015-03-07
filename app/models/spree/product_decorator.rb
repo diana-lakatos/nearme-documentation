@@ -47,7 +47,8 @@ Spree::Product.class_eval do
 
   def self.csv_fields(product_type)
     {
-      name: 'Product Name', description: 'Product Description', external_id: 'Product External Id', price: 'Price', available_on: 'Available On',
+      name: 'Product Name', description: 'Product Description', external_id: 'Product External Id',
+      price: 'Price', total_on_hand: 'Quantity', available_on: 'Available On',
       meta_description: 'Meta Description', meta_keywords: 'Meta Keywords',
       products_public: 'Public',  shippo_enabled: 'Shippo Enabled', draft: 'Draft'
     }.reverse_merge(
