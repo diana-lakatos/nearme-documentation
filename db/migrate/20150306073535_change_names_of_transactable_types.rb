@@ -4,7 +4,7 @@ class ChangeNamesOfTransactableTypes < ActiveRecord::Migration
     TransactableType.all.each do |tt|
       PlatformContext.current = PlatformContext.new(tt.instance)
       if ["Buy/Sell", "Listing"].include? tt.name
-        tt.update_attribute :name, tt.bookable_noun.presence || tt.instance.bookable_noun
+        tt.update_column :name, tt.bookable_noun.presence || tt.instance.bookable_noun
       end
     end
   end
