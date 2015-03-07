@@ -287,23 +287,23 @@ class Reservation < ActiveRecord::Base
   end
 
   def total_amount_cents
-    subtotal_amount_cents + service_fee_amount_guest_cents
+    subtotal_amount_cents + service_fee_amount_guest_cents rescue nil
   end
 
   def subtotal_amount_cents
-    super || price_calculator.price.try(:cents)
+    super || price_calculator.price.cents rescue nil
   end
 
   def service_fee_amount_guest_cents
-    super || service_fee_calculator.service_fee_guest.try(:cents)
+    super || service_fee_calculator.service_fee_guest.cents rescue nil
   end
 
   def service_fee_guest_wo_charges
-    service_fee_calculator.service_fee_guest_wo_ac
+    service_fee_calculator.service_fee_guest_wo_ac rescue nil
   end
 
   def service_fee_amount_host_cents
-    super || service_fee_calculator.service_fee_host.cents
+    super || service_fee_calculator.service_fee_host.cents rescue nil
   end
 
   def total_amount_dollars
