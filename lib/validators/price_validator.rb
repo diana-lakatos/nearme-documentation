@@ -12,6 +12,10 @@ class PriceValidator < ActiveModel::Validator
       record.errors.add(:price_type, I18n.t('errors.messages.free_and_hourly'))
     end
 
+    if !record.action_free_booking? && !record.has_price?
+      record.errors.add(:price_type, I18n.t('errors.messages.price_cant_be_blank'))
+    end
+
     %w(hourly daily weekly monthly fixed).reject do |price|
       record.send(:"#{price}_price_cents").to_i.zero?
     end.each do |price|

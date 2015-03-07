@@ -52,6 +52,7 @@ en:
     messages:
       free: "must be free if no prices are provided"
       free_if_zero: "must be free if all prices are zero"
+      price_cant_be_blank: "can't be blank"
       wrong_content_type: "is the wrong content type"
       wrong_size: "is the wrong size (should be %{file_size})"
       size_too_small: "is too small (should be at least %{file_size})"
