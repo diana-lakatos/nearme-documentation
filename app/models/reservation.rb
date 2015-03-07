@@ -291,11 +291,11 @@ class Reservation < ActiveRecord::Base
   end
 
   def subtotal_amount_cents
-    super || price_calculator.price.cents
+    super || price_calculator.price.try(:cents)
   end
 
   def service_fee_amount_guest_cents
-    super || service_fee_calculator.service_fee_guest.cents
+    super || service_fee_calculator.service_fee_guest.try(:cents)
   end
 
   def service_fee_guest_wo_charges
