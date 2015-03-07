@@ -5,7 +5,8 @@ class InstanceAdmin::Theme::InfoController < InstanceAdmin::Theme::BaseControlle
   end
 
   def update
-    if @theme.update_attributes(theme_params)
+    theme_update_service = ThemeUpdateService.new(@theme)
+    if theme_update_service.update(theme_params)
       flash[:success] = t('flash_messages.instance_admin.theme.theme_updated_successfully')
       redirect_to :action => :show
     else
