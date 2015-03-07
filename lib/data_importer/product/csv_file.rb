@@ -19,9 +19,18 @@ class DataImporter::Product::CsvFile
 
   def attributes_for(model, row)
     csv_fields_for_model(model).inject({}) do |hsh, (attr, label)|
-      hsh[attr] = row[label.downcase]
+      if custom_attribute?(model, attr)
+        hsh[:extra_properties] ||= {}
+        hsh[:extra_properties][attr] = row[label.downcase]
+      else
+        hsh[attr] = row[label.downcase]
+      end
       hsh
     end
+  end
+
+  def custom_attribute?(model, attr)
+    model == :'spree/product' && @importable.custom_attributes.map(&:name).include?(attr.to_s)
   end
 
   def csv_fields_for_model(model)
