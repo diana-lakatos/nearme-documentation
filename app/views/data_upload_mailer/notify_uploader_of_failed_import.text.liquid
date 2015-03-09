@@ -1,3 +1,6 @@
 We were not able to import data.
 
 Either the upload file was not correct CSV file or it includes unexpected content which interrupted importing. We were notified about the issue and will fix it if it is the second case.
+
+{% if data_upload.parsing_result_log %}Encountered validation errors log:
+{{ data_upload.parsing_result_log }}{% endif %}
