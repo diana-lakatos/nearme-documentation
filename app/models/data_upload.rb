@@ -52,16 +52,6 @@ class DataUpload < ActiveRecord::Base
     ActiveRecord::ConnectionAdapters::Column.value_to_boolean(super)
   end
 
-  def num_rows
-    if csv_file.file && File.exists?(csv_file.file.path)
-      # don't want to open the file to count the rows, so the command
-      # don't count headers so -1
-      @num_rows ||= `wc -l #{csv_file.proper_file_path}`.to_i - 1
-    else
-      raise IOError, 'No CSV file'
-    end
-  end
-
   def should_be_monitored?
     queued? || processing? || importing?
   end

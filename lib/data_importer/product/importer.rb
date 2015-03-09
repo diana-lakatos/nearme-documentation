@@ -41,7 +41,6 @@ class DataImporter::Product::Importer
         end
       ensure
         @processed_rows += 1
-        @data_upload.update_column(:progress_percentage, (@processed_rows.to_f * 100 / @data_upload.num_rows).floor)
       end
     end
 
@@ -222,7 +221,7 @@ class DataImporter::Product::Importer
       @data_upload.fail!
     end
 
-    @data_upload.parsing_result_log = @validation_errors.join('\n')
+    @data_upload.parsing_result_log = @validation_errors.join("\n")
     @data_upload.parse_summary = {
       new:     @entities_counters[:created],
       updated: @entities_counters[:updated],
