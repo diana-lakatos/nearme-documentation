@@ -267,11 +267,15 @@ namespace :translations do
 
   def create_keys(hash)
     hash.each do |k, v|
-      if Translation.where(key: k, instance_id: nil).empty?
+      translations = Translation.where(locale: 'en', key: k, instance_id: nil)
+      if translations.any?
+        translations.each do |t|
+          t.value = v
+          puts "translation updated #{k}: #{v}" if t.changed? && t.save
+        end
+      else
         puts "creating translation #{k}: #{v}"
         Translation.create(locale: 'en', key: k, value: v)
-      else
-        puts "translation already exists #{k}: #{v}"
       end
     end
   end

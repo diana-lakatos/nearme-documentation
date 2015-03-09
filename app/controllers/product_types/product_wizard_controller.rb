@@ -25,6 +25,7 @@ class ProductTypes::ProductWizardController < ApplicationController
         redirect_to dashboard_company_product_type_products_path(@product_type), notice: t('flash_messages.space_wizard.item_listed', bookable_noun: @product_type.name)
       end
     else
+      flash.now[:error] = t('flash_messages.product.complete_fields')
       render :new
     end
 
