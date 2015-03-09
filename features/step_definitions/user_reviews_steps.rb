@@ -37,6 +37,14 @@ Given /^Reviews left by the user exist$/ do
   @review_by_buyer = FactoryGirl.create(:review, object: 'seller', user: @user)
 end
 
+And /^seller respond to review$/ do
+  FactoryGirl.create(:review, object: 'seller', reviewable: @user.reviews.for_buyer.first.reviewable)
+end
+
+Given /^TransactableType has show_reviews_if_both_completed field set to (.*)$/ do |value|
+  TransactableType.first.update_column :show_reviews_if_both_completed, value == "true"
+end
+
 Then /^Sees sorting reviews dropdown with selected Left by this seller option$/ do
   page.should have_css('[data-reviews-dropdown]')
   find('[data-reviews-dropdown] span.title').should have_content(I18n.t('user_reviews.reviews_left_by_this_seller'))
@@ -45,6 +53,11 @@ end
 And /^Review for buyer$/ do
   page.should have_css('.review', count: 1)
   page.should have_content(@review_by_seller.reviewable.owner.first_name)
+end
+
+And /^should not see Review for buyer$/ do
+  page.should_not have_css('.review', count: 1)
+  page.should_not have_content(@review_by_seller.reviewable.owner.first_name)
 end
 
 When /^Visitor clicks on Left by this buyer option$/ do

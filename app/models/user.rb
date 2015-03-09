@@ -707,7 +707,9 @@ class User < ActiveRecord::Base
             AND reservations.creator_id = :user_id)
     QUERY
 
-    Review.with_object('seller').where(query, user_id: id, instance_id: PlatformContext.current.instance.id)
+    Review.for_seller.
+      both_sides_reviewed_for('buyer').
+      where(query, user_id: id, instance_id: PlatformContext.current.instance.id)
   end
 
   def reviews_about_buyer
@@ -721,14 +723,16 @@ class User < ActiveRecord::Base
             WHERE spree_orders.instance_id = :instance_id
               AND spree_orders.user_id = :user_id)) 
       OR reviews.reviewable_type = 'Reservation' 
-        AND reviewable_id IN (
+        AND reviews.reviewable_id IN (
           SELECT reservations.id FROM reservations 
           WHERE reservations.deleted_at IS NULL 
             AND reservations.instance_id = :instance_id 
             AND reservations.owner_id = :user_id)
     QUERY
 
-    Review.for_buyer.where(query, user_id: id, instance_id: PlatformContext.current.instance.id)
+    Review.for_buyer.
+      both_sides_reviewed_for('seller').
+      where(query, user_id: id, instance_id: PlatformContext.current.instance.id)
   end
 
   def has_reviews?

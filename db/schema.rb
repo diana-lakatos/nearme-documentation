@@ -2699,6 +2699,7 @@ ActiveRecord::Schema.define(version: 20150310071114) do
     t.integer  "max_fixed_price_cents"
     t.boolean  "manual_payment",                                                     default: false
     t.boolean  "buyable"
+    t.boolean  "show_reviews_if_both_completed",                                     default: false
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

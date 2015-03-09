@@ -63,6 +63,16 @@
     > .header {
       background-color:  #fff;
       margin-bottom: 15px;
+
+      .service-name label {
+        margin-left: 20px;
+        font-size: 16px;
+      }
+    }
+
+    .only-if-both-completed {
+      margin-left: 30px;
+      margin-top: 10px;
     }
   }
   .rating-system {

@@ -4,13 +4,7 @@ class Dashboard::ReviewsController < Dashboard::BaseController
     @current_instance = platform_context.instance
     completed_tab = params[:tab] == 'completed'
     @rating_systems = reviews_service.get_rating_systems
-    if @current_instance.buyable?
-      @line_items = reviews_service.get_line_items_for_owner_and_creator
-      @collections = completed_tab ? reviews_service.get_orders_reviews(@line_items) : reviews_service.get_orders(@line_items)
-    else
-      @reservations_for_owner_and_creator = reviews_service.get_reservations_for_owner_and_creator
-      @collections = completed_tab ? reviews_service.get_reviews_by(@reservations_for_owner_and_creator) : reviews_service.get_reservations(@reservations_for_owner_and_creator)
-    end
+    @collections = reviews_service.get_reviews_collection(completed_tab)
   end
 
   def create

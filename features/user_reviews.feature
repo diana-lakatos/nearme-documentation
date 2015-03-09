@@ -22,6 +22,25 @@ Feature: Reviews for user are shown on user page
     When Visitor clicks on Left by this buyer option
     Then List of reviews should be updated
 
+  Scenario: Reviews left by this seller/buyer not shown when show_reviews_if_both_completed
+    Given User exists
+    Given Reviews left by the user exist
+    Given TransactableType has show_reviews_if_both_completed field set to true
+    Given Visitor goes to the user page
+    When Goes to reviews tab
+    Then Sees sorting reviews dropdown with selected Left by this seller option
+    And should not see Review for buyer
+
+  Scenario: Reviews left by this seller/buyer shown when show_reviews_if_both_completed
+    Given User exists
+    Given Reviews left by the user exist
+    Given seller respond to review
+    Given TransactableType has show_reviews_if_both_completed field set to true
+    Given Visitor goes to the user page
+    When Goes to reviews tab
+    Then Sees sorting reviews dropdown with selected Left by this seller option
+    And Review for buyer
+
   Scenario: Reviews left by this seller/buyer shown with pagination
     Given User exists
     Given Reviews left by the user exist for pagination

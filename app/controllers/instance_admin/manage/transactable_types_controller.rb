@@ -75,7 +75,7 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
   end
 
   def transactable_type_state_params
-    params.require(:transactable_type).permit(:enable_reviews)
+    params.require(:transactable_type).permit(:enable_reviews, :show_reviews_if_both_completed)
   end
 
 end

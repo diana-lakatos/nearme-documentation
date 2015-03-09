@@ -11,7 +11,7 @@ module FeedbackDecoratorHelper
     if reservation? && feedback_object.listing && feedback_object.listing.has_photos?
       h.image_tag feedback_object.listing.photos.last.image_url(:medium)
     elsif line_item? && feedback_object.product && feedback_object.product.variant_images.present?
-      h.image_tag feedback_object.product.variant_images.first.attachment_url
+      h.image_tag feedback_object.product.variant_images.first.image_url(:medium)
     else
       h.image_tag "ratings/reviews-placeholder.png"
     end
