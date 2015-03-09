@@ -6,7 +6,7 @@ class DataImporter::Product::CsvFile
 
   def initialize(data_upload)
     @data_upload = data_upload
-    @csv_handle = CSV.open(data_upload.csv_file.proper_file_path, 'r', headers: true, header_converters: ->(h) { h.downcase })
+    @csv_handle = CSV.new(open(data_upload.csv_file.proper_file_path), headers: true, header_converters: :downcase)
     @importable = data_upload.importable
   end
 
