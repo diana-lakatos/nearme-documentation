@@ -84,6 +84,7 @@
         = f.input :support_imap_server, input_html: { autocomplete: 'off' }
         = f.input :support_imap_port, input_html: { autocomplete: 'off' }
         = f.input :support_imap_ssl, input_html: { autocomplete: 'off' }
+        = f.submit 'Save', class: 'form_component_not_shown'
         = f.submit t('instance_admin.imap_settings.validate_imap_settings'), class: 'btn btn-green', name: 'validate_imap_settings_button'
 
   = f.button :submit, 'Save', class: 'btn btn-green pull-right'
