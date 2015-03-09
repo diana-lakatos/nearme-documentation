@@ -15,7 +15,7 @@ class InstanceAdmin::Settings::IntegrationsControllerTest < ActionController::Te
                       "olark_api_key"=>"1234-123-12-1234",
                       "olark_enabled"=>true
                     }
-      assert_response :success
+      assert_redirected_to instance_admin_settings_integrations_path
       instance = assigns[:instance]
       assert_equal instance.olark_api_key, "1234-123-12-1234"
       assert_equal instance.olark_enabled?, true

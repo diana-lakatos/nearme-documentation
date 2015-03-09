@@ -46,12 +46,12 @@ class InstanceAdmin::Settings::ConfigurationControllerTest < ActionController::T
                       "service_fee_host_percent"=> "12.00",
                       "domains_attributes"=>{ "0"=>{"name"=>"example.org", "use_as_default" => "true"} }
                     }
-      assert_response :success
       instance = assigns[:instance]
       assert_equal instance.name, "New Instance Name"
       assert_equal instance.service_fee_guest_percent, BigDecimal.new(16)
       assert_equal instance.service_fee_host_percent, BigDecimal.new(12)
       assert_equal instance.default_domain.name, "example.org"
+      assert_redirected_to instance_admin_settings_configuration_path
     end
   end
 end
