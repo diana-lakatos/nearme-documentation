@@ -1,0 +1,8 @@
+%h4= resource_class.name.underscore.humanize.pluralize
+
+%p
+  Here you can see all payments that are pending transfer. Next transfer will happen at #{I18n.l(PaymentTransfers::SchedulerMethods.new(platform_context.instance).next_payment_transfers_date, format: :long)}
+
+= render 'list_table'
+
+= will_paginate @payments

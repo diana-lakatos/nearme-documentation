@@ -6,9 +6,6 @@ class InstanceAdmin::Settings::ConfigurationController < InstanceAdmin::Settings
       validate_imap_settings
     else
       super
-      if @instance.valid?
-        update_relevant_translations
-      end
     end
   end
 
@@ -32,14 +29,6 @@ class InstanceAdmin::Settings::ConfigurationController < InstanceAdmin::Settings
     else
       flash[:error] = t('flash_messages.instance_admin.imap_settings.could_not_validate')
       redirect_to action: :show
-    end
-  end
-
-  def update_relevant_translations
-    return unless params[:instance][:translations]
-    %w(buy_sell_market.checkout.manual_payment buy_sell_market.checkout.manual_payment_description).each do |key|
-      t = Translation.where(instance_id: PlatformContext.current.instance.id, key: key, locale: I18n.locale).first_or_initialize
-      t.update_attribute(:value, params[:instance][:translations][key])
     end
   end
 

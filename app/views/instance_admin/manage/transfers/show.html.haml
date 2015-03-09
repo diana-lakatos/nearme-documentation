@@ -9,11 +9,11 @@
       :method => :post,
       :class => 'btn btn-green'
 
-  - if resource.payout_processor.present?
-    = link_to "Payout via #{resource.payout_processor}", payout_instance_admin_manage_transfer_path(resource),
-      :method => :post,
-      :class => 'btn btn-green',
-      data: { confirm: 'Payment will go live. Do you want to continue?' }
+  - if resource.pending?
+    %p
+      We are waiting for confirmation whether payout was successful or not.
+  - elsif resource.payout_processor.present?
+    = link_to "Payout via #{resource.payout_processor}", payout_instance_admin_manage_transfer_path(resource), method: :post, class: 'btn btn-green', data: { confirm: 'Payment will go live. Do you want to continue?' }
   - else
     %p
       %i.ico-warning
@@ -22,23 +22,27 @@
 %hr
 
 .payout-attemps
-  %h4 Automatic payout attemps
+  %h4 Automatic payout attempts
 
   - if resource.payout_attempts.count.zero?
-    No automatic payout attempts has been performed yet.
+    No automatic payout attempts have been performed yet.
   - else
     - resource.payout_attempts.each do |payout_attempt|
       .payout_attempt
         = "#{Money.new(payout_attempt.amount, payout_attempt.currency).format with_currency: true} at #{payout_attempt.created_at.in_time_zone(current_user.time_zone).strftime('%Y-%m-%d %H:%M (%Z)')} - "
         = 'succeeded' if payout_attempt.success
-        = payout_attempt.failure_message if payout_attempt.failed?
-        = "pending " if payout_attempt.pending?
+        - if payout_attempt.failed?
+          failed
+          = " - #{payout_attempt.failure_message}" if payout_attempt.failure_message.present?
+        - if payout_attempt.pending?
+          pending -
+          = link_to "check and update status", update_status_instance_admin_manage_payout_path(payout_attempt), method: :post, data: { confirm: 'Are you sure you want to check status?' }
         = (link_to('Confirm', payout_attempt.confirmation_url)).html_safe if payout_attempt.confirmation_url.present?
 
 %hr
 
 .payment-advice
-  %h4 Payment Advice
+  %h4 Payout Information
 
   %div
     %strong Amount due:
@@ -59,4 +63,42 @@
 
 %hr
 
-= render 'attributes_table'
+%table.table
+  %tr
+    %th Company
+    %td= resource.company.name
+  %tr
+    %th Transferred at
+    %td= l(resource.transferred_at, format: :long) if resource.transferred_at.present?
+  %tr
+    %th Amount transferred
+    %td= humanized_money_with_cents_and_symbol(resource.amount)
+  %tr
+    %th Guest fee
+    %td= humanized_money_with_cents_and_symbol(resource.service_fee_amount_guest)
+  %tr
+    %th Host fee
+    %td= humanized_money_with_cents_and_symbol(resource.service_fee_amount_host)
+
+
+%h2
+  Payments included in the payout for:
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table
+        %thead
+          %tr
+            %th Reference
+            %th Id
+            %th Lessor
+            %th Paid at
+
+        %tbody
+          - resource.payments.each do |payment|
+            %tr
+              %td= payment.payable.class
+              %td= payment.payable.id
+              %td= payment.payable.user.try(:name)
+              %td= l(payment.created_at, format: :long)
+

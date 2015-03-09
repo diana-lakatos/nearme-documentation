@@ -4,13 +4,13 @@
       %table.table
         %thead
           %tr
-            %th State
             %th Company
             %th Charges
             %th Created at
             %th Transferred At
+            %th State
             %th Service Fees
             %th Transfer Amount
 
-        - collection.each do |resource|
+        - @payment_transfers.each do |resource|
           = render 'instance_admin/manage/transfers/payment_transfer', :resource => resource

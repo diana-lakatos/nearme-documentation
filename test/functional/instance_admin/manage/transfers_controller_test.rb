@@ -17,7 +17,7 @@ class InstanceAdmin::Manage::TransfersControllerTest < ActionController::TestCas
 
       get :index
       assert_select 'td', @company.name
-      assert_equal [@payment_transfer], assigns(:transfers)
+      assert_equal [@payment_transfer].map(&:id), assigns(:payment_transfers).map(&:id)
     end
 
     should 'show a listing of payment transfers associated with current instance' do
@@ -32,7 +32,7 @@ class InstanceAdmin::Manage::TransfersControllerTest < ActionController::TestCas
 
       get :index
       assert_select 'td', @company.name
-      assert_equal [@payment_transfer], assigns(:transfers)
+      assert_equal [@payment_transfer].map(&:id), assigns(:payment_transfers).map(&:id)
     end
   end
 

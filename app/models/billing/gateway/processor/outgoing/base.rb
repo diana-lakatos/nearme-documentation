@@ -24,13 +24,19 @@ class Billing::Gateway::Processor::Outgoing::Base < Billing::Gateway::Processor:
     @payout
   end
 
-  def update_payout_status
+  def update_payout_status(payout)
+    return false unless status_updateable? && payout.present?
+    @payout = payout
     update_payout_status_process(@payout.verify_after_time_arguments)
   end
 
   # Contains implementation for transferring money to company
   def process_payout
     raise NotImplementedError
+  end
+
+  def status_updateable?
+    false
   end
 
   protected

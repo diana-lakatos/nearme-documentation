@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150306210947) do
+ActiveRecord::Schema.define(version: 20150309125501) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -442,8 +442,8 @@ ActiveRecord::Schema.define(version: 20150306210947) do
   add_index "data_uploads", ["target_id", "target_type"], name: "index_data_uploads_on_target_id_and_target_type", using: :btree
 
   create_table "delayed_jobs", force: true do |t|
-    t.integer  "priority",      default: 20
-    t.integer  "attempts",      default: 0
+    t.integer  "priority",    default: 20
+    t.integer  "attempts",    default: 0
     t.text     "handler"
     t.text     "last_error"
     t.datetime "run_at"
@@ -451,8 +451,8 @@ ActiveRecord::Schema.define(version: 20150306210947) do
     t.datetime "failed_at"
     t.string   "locked_by"
     t.string   "queue"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.string   "instance_id"
   end
 

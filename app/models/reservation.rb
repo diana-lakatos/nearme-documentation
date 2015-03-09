@@ -227,6 +227,10 @@ class Reservation < ActiveRecord::Base
     self.confirmation_email = value.try(:email)
   end
 
+  def user
+    @user ||= creator
+  end
+
   def host
     @host ||= creator
   end

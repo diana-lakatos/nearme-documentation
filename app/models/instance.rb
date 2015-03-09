@@ -12,6 +12,7 @@ class Instance < ActiveRecord::Base
     :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   attr_accessor :mark_as_locked
+  attr_accessor :custom_translations
   serialize :user_required_fields, Array
   serialize :custom_sanitize_config, Hash
   serialize :hidden_ui_controls, Hash
@@ -247,5 +248,12 @@ class Instance < ActiveRecord::Base
 
   def annotated_id
     "#{id} - #{name}"
+  end
+
+  def custom_translations=(translations)
+    %w(buy_sell_market.checkout.manual_payment buy_sell_market.checkout.manual_payment_description).each do |key|
+      t = Translation.where(instance_id: self.id, key: key, locale: I18n.locale).first_or_initialize
+      t.update_attribute(:value, translations[key])
+    end
   end
 end
