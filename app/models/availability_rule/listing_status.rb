@@ -23,15 +23,6 @@ class AvailabilityRule::ListingStatus
     end
   end
 
-  def availability_for_range
-    (@start_date..@end_date).each do |day|
-      aval = availability_for(day)
-      return false if aval && aval > 0
-    end
-
-    true
-  end
-
   def as_json
     hash = {}
     current = start_date.beginning_of_month

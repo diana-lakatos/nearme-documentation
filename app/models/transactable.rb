@@ -285,14 +285,6 @@ class Transactable < ActiveRecord::Base
     availability_for(date, start_min, end_min) >= quantity
   end
 
-  # def available_between?(start_date, end_date, quantity=1, start_min = nil, end_min = nil)
-  #   start_date.upto(end_date) do |date|
-  #     return false unless availability_for(date, start_min, end_min) >= quantity
-  #   end
-  #
-  #   true
-  # end
-
   def first_available_date
     date = Date.tomorrow
 

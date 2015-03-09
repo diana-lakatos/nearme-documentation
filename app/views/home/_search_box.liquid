@@ -17,15 +17,19 @@
                 <input class="query" id="search" name="loc" placeholder="{{ platform_context.search_field_placeholder }}" type="text"></input>
             </div>
 
-            {% unless platform_context.single_type? %}
+            {% if platform_context.all_transactables.size > 1 %}
+              {% if platform_context.bookable? and platform_context.buyable?%}
+                <input class="query" id="search_prod" name="query" placeholder="{{ platform_context.search_field_placeholder }}" type="text" style="display: none;"></input>
+              {% endif %}
+
               <div class="span2">
                   <select class="no-icon select2" name="transactable_type_id">
-                      {% for transactable_type in platform_context.transactable_types %}
-                        <option value="{{ transactable_type.id }}">{{ transactable_type.name }}</option>
+                      {% for transactable_type in platform_context.all_transactables %}
+                        <option value="{{ transactable_type.id }}" data-buyable="{{transactable_type.buyable?}}">{{ transactable_type.name }}</option>
                       {% endfor %}
                   </select>
               </div>
-            {% endunless %}
+            {% endif %}
 
             <div class="span2">
                 <input id='start_date' class='search_date' type="text" name='start_date' readonly="readonly" value="From"/>
@@ -38,6 +42,8 @@
             </div>
           </div>
       </div>
+
+      <input name="buyable" id="is_buyable" value="{{platform_context.buyable?}}" type="hidden"></input>
 
       <div class="button-wrapper">
         <a class="btn btn-green btn-large" data-disable-with="{{ 'homepage.disabled_buttons.search' | translate }}" rel="submit" href="">

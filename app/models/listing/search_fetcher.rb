@@ -35,7 +35,6 @@ class Listing::SearchFetcher
     @listings_scope = @listings_scope.filtered_by_listing_types_ids(@filters[:listing_types_ids]) if @filters[:listing_types_ids]
     @listings_scope = @listings_scope.filtered_by_price_types(@filters[:listing_pricing] & (Transactable::PRICE_TYPES + [:free]).map(&:to_s)) if @filters[:listing_pricing]
     @listings_scope = @listings_scope.filtered_by_attribute_values(@filters[:attribute_values]) if @filters[:attribute_values]
-    # @listings_scope = Transactable.where(id: @listings_scope.available_on(@filters[:date_range].first, @filters[:date_range].last).pluck(:id)) if availability_filter?
     @listings_scope = @listings_scope.available_on(@filters[:date_range].first, @filters[:date_range].last) if availability_filter?
     @listings_scope
   end
