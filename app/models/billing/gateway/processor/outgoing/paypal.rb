@@ -16,12 +16,12 @@ class Billing::Gateway::Processor::Outgoing::Paypal < Billing::Gateway::Processo
       :receiverList => {
         :receiver => [{
           :amount => amount.to_s,
-          :email => @receiver.paypal_email 
-        }] 
+          :email => @receiver.paypal_email
+        }]
       },
       :senderEmail => @sender.instance_payment_gateways.get_settings_for(:paypal, :email)
     })
-    @pay_response = @api.pay(@pay) 
+    @pay_response = @api.pay(@pay)
     if @pay_response.success?
       if @pay_response.paymentExecStatus == 'COMPLETED'
         payout_successful(@pay_response)
@@ -35,5 +35,5 @@ class Billing::Gateway::Processor::Outgoing::Paypal < Billing::Gateway::Processo
     end
   end
 
-
 end
+

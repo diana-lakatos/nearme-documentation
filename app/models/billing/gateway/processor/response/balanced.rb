@@ -5,7 +5,7 @@ class Billing::Gateway::Processor::Response::Balanced < Billing::Gateway::Proces
   end
 
   def failure_message
-    @response.body["description"].split('Your request id')[0]
+    @response.body["description"].split('Your request id')[0] if @response.respond_to?(:body)
   end
 
   def should_be_verified_after_time?

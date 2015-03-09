@@ -15,7 +15,7 @@ class InstanceAdmin::Settings::BaseController < InstanceAdmin::BaseController
       if @instance.update_attributes(instance_params)
         flash.now[:success] = t('flash_messages.instance_admin.settings.settings_updated')
         find_or_build_billing_gateway_for_usd
-        render :show
+        redirect_to action: :show
       else
         flash.now[:error] = @instance.errors.full_messages.to_sentence
         find_or_build_billing_gateway_for_usd
@@ -45,3 +45,4 @@ class InstanceAdmin::Settings::BaseController < InstanceAdmin::BaseController
     params.require(:instance).permit(secured_params.instance)
   end
 end
+

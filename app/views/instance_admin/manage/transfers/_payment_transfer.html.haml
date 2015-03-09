@@ -1,6 +1,4 @@
-%tr
-  %td
-    = resource.transferred? ? 'Paid' : 'Pending'
+%tr{class: resource.css_row_class }
   %td
     - if resource.company.present?
       = resource.company.name
@@ -12,10 +10,13 @@
     - if resource.transferred_at.present?
       = l(resource.transferred_at, format: :long)
     - else
-      - if resource.payout_processor.present?
-        N/A (Retry possible)
+      - if resource.pending? || resource.failed?
+      - elsif resource.payout_processor.present?
+        Retry possible
       - else
         N/A
+  %td
+    = resource.transfer_status
   %td= resource.service_fee_amount_guest.format with_currency: true
   %td= resource.amount.format with_currency: true
   %td= link_to "Details", instance_admin_manage_transfer_path(resource)

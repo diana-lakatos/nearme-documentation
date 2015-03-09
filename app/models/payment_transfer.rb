@@ -14,6 +14,7 @@ class PaymentTransfer < ActiveRecord::Base
   has_many :payments, :dependent => :nullify
 
   has_many :payout_attempts,
+    -> { order 'created_at ASC' },
     :class_name => 'Payout',
     :as => :reference,
     :dependent => :nullify
@@ -81,6 +82,24 @@ class PaymentTransfer < ActiveRecord::Base
     end
   end
 
+  def pending?
+    payout_attempts.last && payout_attempts.last.pending? && payout_attempts.last.should_be_verified_after_time?
+  end
+
+  def failed?
+    payout_attempts.last.present? && !payout_attempts.last.pending? && !payout_attempts.last.success?
+  end
+
+  def fail!
+    self.update_column(:transferred_at, nil) if self.payout_attempts.reload.successful.count.zero? && persisted?
+  end
+
+  def success!
+    if (payout = self.payout_attempts.reload.successful.first).present? && persisted?
+      self.update_column(:transferred_at, payout.created_at)
+    end
+  end
+
   def payout_processor
     billing_gateway.processor_class
   end
@@ -89,6 +108,11 @@ class PaymentTransfer < ActiveRecord::Base
     # true if instance makes it possible to make automated payout for given currency, but company does not support it
     # false if either company can process this payment transfer automatically or instance does not support it
     !billing_gateway.possible? && billing_gateway.support_automated_payout?
+  end
+
+  def update_payout_status(payout)
+    return false unless billing_gateway.processor.status_updateable?
+    billing_gateway.processor.update_payout_status(payout)
   end
 
   private

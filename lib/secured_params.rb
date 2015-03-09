@@ -325,7 +325,7 @@ class SecuredParams
       :support_imap_server,
       :support_imap_port,
       :support_imap_ssl,
-      translations: [],
+      custom_translations: [:'buy_sell_market.checkout.manual_payment', :'buy_sell_market.checkout.manual_payment_description'],
       user_required_fields: [],
       transactable_types_attributes: nested(self.transactable_type),
       listing_amenity_types_attributes: nested(self.amenity_type),

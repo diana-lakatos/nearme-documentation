@@ -54,7 +54,7 @@ class TransactableType < ActiveRecord::Base
   monetize :max_fixed_price_cents, allow_nil: true
 
   scope :products, -> { where(buyable: true) }
-  scope :services, -> { where("buyable != true") }
+  scope :services, -> { where(buyable: false) }
 
   def any_rating_system_active?
     self.rating_systems.any?(&:active)

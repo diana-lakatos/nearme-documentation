@@ -1,0 +1,27 @@
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table
+        %thead
+          %tr
+            %th Company
+            %th Lessor
+            %th State
+            %th Service Fees
+            %th Payment Amount
+            %th Payment Gateway
+            %th Created at
+
+        - @payments.each do |payment|
+          %tr
+            %td
+              - if payment.company.present?
+                = payment.company.name
+              - else
+                = "#{payment.company_including_deleted.name} (Deleted)"
+            %td= payment.payable.user.try(:name)
+            %td= payment.state
+            %td= humanized_money_with_cents_and_symbol(payment.service_fee_amount_guest)
+            %td= humanized_money_with_cents_and_symbol(payment.subtotal_amount)
+            %td= payment.payable.billing_authorization.try(:payment_gateway_class).try(:split, 'Incoming::').try(:last)
+            %td= l(payment.created_at, format: :long)

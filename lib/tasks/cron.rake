@@ -7,7 +7,7 @@ namespace :cron do
       ReceiveMailsSpawnerJob.perform
     end
   end
-  
+
   desc "Run hourly scheduled jobs"
   task :hourly => [:environment] do
     # run_job "Send Rating reminders" do
@@ -17,12 +17,20 @@ namespace :cron do
 
   desc "Run daily scheduled jobs"
   task :daily => [:environment] do
-    run_job "Send Share mails" do
-      RecurringMailerShareJob.perform
-    end
+    #run_job "Send Share mails" do
+      #RecurringMailerShareJob.perform
+    #end
 
     run_job "Schedule Payment Transfers" do
       PaymentTransferSchedulerJob.perform
+    end
+
+    run_job "Update Payment Transfers status" do
+      Instance.find_each do |i|
+        PlatformContext.current = PlatformContext.new(i)
+        UpdatePayoutStatusJob.perform
+        PlatformContext.current = nil
+      end
     end
 
     #run_job "Send Request photos mails" do

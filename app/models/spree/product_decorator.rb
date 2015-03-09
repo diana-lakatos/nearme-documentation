@@ -104,7 +104,7 @@ Spree::Product.class_eval do
   end
 
   def action_free?
-    false
+    price.to_f.zero?
   end
 
   def action_free_booking?

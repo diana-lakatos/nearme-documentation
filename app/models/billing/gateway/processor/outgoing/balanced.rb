@@ -45,12 +45,8 @@ class Billing::Gateway::Processor::Outgoing::Balanced < Billing::Gateway::Proces
     end
   end
 
-
-  private
-
   def update_payout_status_process(credit_uri)
-    setup_api_on_initialize
-    credit = Balanced::Credit.fetch(credit_uri)
+    credit = Balanced::Credit.find(credit_uri)
     if credit.status ==  'paid' || credit.status == 'succeeded'
       payout_successful(credit)
     elsif credit.status == 'pending'
@@ -60,4 +56,8 @@ class Billing::Gateway::Processor::Outgoing::Balanced < Billing::Gateway::Proces
     end
   end
 
+  def status_updateable?
+    true
+  end
 end
+

@@ -265,6 +265,11 @@ DesksnearMe::Application.routes.draw do
         resources :user_bans, only: [:create, :index, :destroy], controller: 'users/user_bans'
       end
 
+      resources :payouts, only: [] do
+        member do
+          post :update_status
+        end
+      end
       resources :transfers do
         member do
           post :transferred
@@ -275,6 +280,7 @@ DesksnearMe::Application.routes.draw do
           post :generate
         end
       end
+      resources :payments, only: [:index]
 
       resources :partners
 
@@ -436,7 +442,7 @@ DesksnearMe::Application.routes.draw do
     get "dashboard/social_accounts", :to => "registrations#social_accounts", :as => "social_accounts"
 
     match "users/store_correct_ip", :to => "sessions#store_correct_ip", :as => "store_correct_ip", via: [:patch, :put]
-    
+
     get "/instance_admin/sessions/new", :to => "instance_admin/sessions#new", :as => 'instance_admin_login'
     post "/instance_admin/sessions", :to => "instance_admin/sessions#create"
     delete "/instance_admin/sessions", :to => "instance_admin/sessions#destroy"
