@@ -3,8 +3,8 @@ module CarrierWave::TransformableImage
 
   included do
     version :transformed do
-      process :apply_crop
       process :apply_rotate
+      process :apply_crop
     end
   end
 
