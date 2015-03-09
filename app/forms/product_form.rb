@@ -163,7 +163,7 @@ class ProductForm < Form
     @document_requirements.each { |x| x.save! }
     @stock_location.save!(validate: !draft?)
     @stock_item.save!(validate: !draft?)
-    @shipping_category.save!(validate: !draft?)
+    @shipping_category.try(:save!, validate: !draft?)
   end
 
   def category=(taxon_ids)
