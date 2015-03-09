@@ -15,13 +15,12 @@
           <div class="row-fluid">
             <div class="span6">
                 <input class="query" id="search" name="loc" placeholder="{{ platform_context.search_field_placeholder }}" type="text"></input>
+                {% if platform_context.bookable? and platform_context.buyable?%}
+                  <input class="query" id="search_prod" name="query" placeholder="{{ platform_context.search_field_placeholder }}" type="text" style="display: none;"></input>
+                {% endif %}
             </div>
 
             {% if platform_context.all_transactables.size > 1 %}
-              {% if platform_context.bookable? and platform_context.buyable?%}
-                <input class="query" id="search_prod" name="query" placeholder="{{ platform_context.search_field_placeholder }}" type="text" style="display: none;"></input>
-              {% endif %}
-
               <div class="span2">
                   <select class="no-icon select2" name="transactable_type_id">
                       {% for transactable_type in platform_context.all_transactables %}
