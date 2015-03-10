@@ -26,6 +26,7 @@ class Transactable < ActiveRecord::Base
   has_many :transactable_tickets, as: :target, class_name: 'Suppport::Ticket'
   has_many :assigned_waiver_agreement_templates, as: :target
   has_many :waiver_agreement_templates, through: :assigned_waiver_agreement_templates
+  has_many :billing_authorizations, as: :reference
   belongs_to :transactable_type, inverse_of: :transactables
   belongs_to :company, inverse_of: :listings
   belongs_to :location, inverse_of: :listings

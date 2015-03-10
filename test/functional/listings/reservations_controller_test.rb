@@ -50,6 +50,38 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
     end
   end
 
+  context 'billing authorization' do
+    should 'store failed authorization' do
+      authorize_response = { error: 'No $$$ on account', payment_gateway_class: Billing::Gateway::Processor::Incoming::Stripe }
+      Billing::Gateway::Incoming.any_instance.expects(:authorize).with do |amount, credit_card|
+        amount == 55_00
+      end.returns(authorize_response)
+      post :create, booking_params_for(@listing)
+      billing_authorization = @listing.reload.billing_authorizations.first
+      assert_not_nil billing_authorization
+      refute billing_authorization.success?
+      assert_equal authorize_response.stringify_keys, billing_authorization.response
+      assert_nil billing_authorization.token
+      assert_equal @user.id, billing_authorization.user_id
+      assert_not_equal @listing.creator_id, billing_authorization.user_id
+    end
+
+    should 'store successful authorization' do
+      authorize_response = { token: 'abc', payment_gateway_class: Billing::Gateway::Processor::Incoming::Stripe }
+      Billing::Gateway::Incoming.any_instance.expects(:authorize).with do |amount, credit_card|
+        amount == 55_00
+      end.returns(authorize_response)
+      post :create, booking_params_for(@listing)
+      assert_nil @listing.reload.billing_authorizations.first
+      billing_authorization = assigns(:reservation).billing_authorization
+      assert billing_authorization.success?
+      assert_equal authorize_response.stringify_keys, billing_authorization.response
+      assert_equal 'abc', billing_authorization.token
+      assert_equal @user.id, billing_authorization.user_id
+      assert_not_equal @listing.creator_id, billing_authorization.user_id
+    end
+  end
+
   should "track booking request" do
 
     WorkflowStepJob.expects(:perform).with do |klass, id|

@@ -85,6 +85,7 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
           assert_equal 'pending', payment.state
           assert_equal 'complete', @order.state
           assert_not_nil @order.billing_authorization
+          assert @order.billing_authorization.success?
           assert_equal 'abc', @order.billing_authorization.token
           assert_equal 'Billing::Gateway::Processor::Incoming::Stripe', @order.billing_authorization.payment_gateway_class
         end
@@ -101,16 +102,23 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
         end
 
         should 'render error if authorization failed' do
+          authorize_response = { error: 'No $$$ on account', payment_gateway_class: Billing::Gateway::Processor::Incoming::Stripe }
           ActiveMerchant::Billing::CreditCard.expects(:new).returns(stub('valid?' => true))
-          Billing::Gateway::Incoming.any_instance.expects(:authorize).returns({error: 'Epic fail'})
+          Billing::Gateway::Incoming.any_instance.expects(:authorize).returns(authorize_response)
           assert_difference 'Spree::Payment.count' do
             put :update, order_id: @order, id: 'payment'
           end
           order = assigns(:order)
-          assert_contains "Epic fail", order.errors[:cc].first
+          assert_contains "No $$$ on account", order.errors[:cc].first
           assert_equal 'payment', order.state
           assert_nil order.billing_authorization
           assert_equal 'failed', order.payments.first.state
+          billing_authorization = order.billing_authorizations.first
+          assert_not_nil billing_authorization
+          refute billing_authorization.success?
+          assert_equal authorize_response.stringify_keys, billing_authorization.response
+          assert_nil billing_authorization.token
+          assert_equal @user.id, billing_authorization.user_id
         end
       end
   end

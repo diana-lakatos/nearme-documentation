@@ -156,9 +156,12 @@ class ReservationRequest < Form
       if active_merchant_payment?
         mode = @instance.test_mode? ? "test" : "live"
         reservation.build_billing_authorization(
+          success: true,
           token: @token,
           payment_gateway_class: @gateway_class,
-          payment_gateway_mode: mode
+          payment_gateway_mode: mode,
+          response: @response,
+          user_id: @user.id
         )
         if reservation.listing.transactable_type.cancellation_policy_enabled.present?
           reservation.cancellation_policy_hours_for_cancellation = reservation.listing.transactable_type.cancellation_policy_hours_for_cancellation
@@ -190,12 +193,19 @@ class ReservationRequest < Form
 
       if payment_method_nonce.present? || credit_card.valid?
         options = payment_method_nonce.present? ? {payment_method_nonce: payment_method_nonce} : {}
-        response = @billing_gateway.authorize(@reservation.total_amount_cents, credit_card, options)
-        if response[:error].present?
-          add_error(response[:error], :cc)
+        @response = @billing_gateway.authorize(@reservation.total_amount_cents, credit_card, options)
+        if @response[:error].present?
+          @listing.billing_authorizations.create(
+            success: false,
+            response: @response,
+            payment_gateway_class: @response[:payment_gateway_class],
+            payment_gateway_mode: (@instance.test_mode? ? "test" : "live"),
+            user_id: @user.id
+          )
+          add_error(@response[:error], :cc)
         else
-          @token = response[:token]
-          @gateway_class = response[:payment_gateway_class]
+          @token = @response[:token]
+          @gateway_class = @response[:payment_gateway_class]
         end
       else
         add_error("Those credit card details don't look valid", :cc)
