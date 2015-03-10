@@ -2742,6 +2742,7 @@ ActiveRecord::Schema.define(version: 20150310071114) do
     t.string   "booking_type",                   default: "regular"
     t.float    "average_rating",                 default: 0.0,       null: false
     t.boolean  "manual_payment",                 default: false
+    t.integer  "wish_list_items_count",          default: 0
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree

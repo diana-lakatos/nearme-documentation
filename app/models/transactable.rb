@@ -41,6 +41,7 @@ class Transactable < ActiveRecord::Base
 
   has_many :company_industries, through: :location
   has_one :schedule, as: :scheduable
+  has_many :wish_list_items, as: :wishlistable
 
   accepts_nested_attributes_for :availability_rules, allow_destroy: true
   accepts_nested_attributes_for :photos, allow_destroy: true
