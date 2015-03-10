@@ -1,7 +1,3 @@
-.navbar.navbar-inverse.navbar-fixed-top
-  .navbar-inner.nav-links
-    = link_to platform_context.name, main_app.root_path, :id => "logo"
-    #header_links.links-container.pull-right
-      = render "layouts/header_navigation" unless no_header_links?
-- unless no_header_links?
-  = yield :manage_navbar
+- navigation_links = render 'layouts/header_navigation'
+= render 'layouts/theme_header', platform_context: platform_context, navigation_links: navigation_links,
+    no_header_links: (no_header_links?.nil? ? false : no_header_links?)

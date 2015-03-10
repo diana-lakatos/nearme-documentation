@@ -57,6 +57,7 @@ class InstanceAdmin::BaseController < ApplicationController
     'homepage'         => { controller: '/instance_admin/theme/homepage_template', default_action: 'show' },
     'homepage content' => { controller: '/instance_admin/theme/homepage', default_action: 'show' },
     'pages'            => { default_action: 'index' },
+    'header'           => { default_action: 'show' },
     'footer'           => { default_action: 'show' }
   }
 

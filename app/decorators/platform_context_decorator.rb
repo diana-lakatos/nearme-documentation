@@ -87,10 +87,6 @@ class PlatformContextDecorator
     timestamp.try(:utc).try(:to_s, :number)
   end
 
-  def contact_email
-    @platform_context.theme.contact_email_with_fallback
-  end
-
   def stripe_public_key
     @platform_context.instance.instance_payment_gateways.get_settings_for(:stripe, :public_key)
   end

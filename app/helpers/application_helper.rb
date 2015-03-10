@@ -160,10 +160,6 @@ module ApplicationHelper
     arr.map{|s| "<li>#{s}</li>"}.join.tap{|s| "<ul>#{s}</ul>"}
   end
 
-  def show_manage_navigation(active_tab = :locations, sub_active_tab = :products)
-    content_for :manage_navbar, render(partial: 'shared/manage_navigation', :locals => {active_tab: active_tab, sub_active_tab: sub_active_tab})
-  end
-
   def section_class(section_name = nil)
     [
       section_name,
@@ -182,10 +178,7 @@ module ApplicationHelper
 
 
   def dnm_page_class
-    [
-      content_for?(:manage_navbar) || content_for?(:top_sub_navigation) ? 'with-sub-navbar' : nil,
-      no_navbar? ? 'no-navbar' : nil
-    ].compact.join(' ')
+    [(content_for?(:top_sub_navigation) ? 'with-sub-navbar' : nil), (no_navbar? ? 'no-navbar' : nil)].compact.join(' ')
   end
 
   def distance_of_time_in_words_or_date(datetime)

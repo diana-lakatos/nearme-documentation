@@ -1,0 +1,10 @@
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner nav-links">
+        <a href="{{ platform_context.root_path }}" id="logo">{{ platform_context.name }}</a>
+        {% if no_header_links == false %}
+            <div id="header_links" class="links-container pull-right">
+                {{ navigation_links }}
+            </div>
+        {% endif %}
+    </div>
+</div>
