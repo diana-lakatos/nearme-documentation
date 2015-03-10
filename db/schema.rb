@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150309125501) do
+ActiveRecord::Schema.define(version: 20150310071114) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -253,11 +253,14 @@ ActiveRecord::Schema.define(version: 20150309125501) do
     t.integer  "reservation_id"
     t.string   "encrypted_token"
     t.string   "encrypted_payment_gateway_class"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
     t.string   "payment_gateway_mode"
     t.string   "reference_type"
     t.integer  "reference_id"
+    t.boolean  "success",                         default: false
+    t.text     "encrypted_response"
+    t.integer  "user_id"
   end
 
   add_index "billing_authorizations", ["reference_id", "reference_type"], name: "index_billing_authorizations_on_reference_id_and_reference_type", using: :btree
