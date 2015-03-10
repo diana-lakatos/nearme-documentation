@@ -116,7 +116,7 @@ Spree::Product.class_eval do
   end
 
   def action_rfq?
-    super && product_type.try(:possible_manual_payment)
+    super && product_type.try(:action_rfq?)
   end
 
   private
