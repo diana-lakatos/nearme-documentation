@@ -1,4 +1,7 @@
-= f.input :mailing_address, placeholder: t('simple_form.hints.company.mailing_address'), hint: false
+= f.simple_fields_for :payments_mailing_address, (f.object.payments_mailing_address.presence || f.object.build_payments_mailing_address) do |address_form|
+  = render :partial => 'addresses/form', :locals => { :f => address_form, label: t('payouts.mailing_address') }
+
+%br
 
 %h3.with-margin= t 'simple_form.labels.company.payout.via_paypal'
 = f.input :paypal_email, placeholder: t('simple_form.hints.company.paypal_email'), hint: false

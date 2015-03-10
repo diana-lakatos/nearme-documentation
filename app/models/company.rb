@@ -14,6 +14,7 @@ class Company < ActiveRecord::Base
   belongs_to :creator, class_name: "User", inverse_of: :created_companies
   belongs_to :instance
   belongs_to :partner
+  belongs_to :payments_mailing_address, class_name: 'Address', foreign_key: 'mailing_address_id'
   has_many :company_users, dependent: :destroy
   has_many :users, :through => :company_users
   has_many :locations, dependent: :destroy, inverse_of: :company
@@ -80,6 +81,7 @@ class Company < ActiveRecord::Base
   accepts_nested_attributes_for :theme, reject_if: proc { |params| params.delete(:white_label_enabled).to_f.zero? }
   accepts_nested_attributes_for :locations
   accepts_nested_attributes_for :company_address
+  accepts_nested_attributes_for :payments_mailing_address
   accepts_nested_attributes_for :approval_requests
   accepts_nested_attributes_for :products, :shipping_methods, :shipping_categories, :stock_locations
 
@@ -245,6 +247,14 @@ class Company < ActiveRecord::Base
 
   def rfq_count
     Support::Ticket.for_filter('open').where('target_type = ? AND target_id IN (?)', 'Transactable', listings.pluck(:id)).count
+  end
+
+  def mailing_address
+    if payments_mailing_address.present?
+      payments_mailing_address.address
+    else
+      read_attribute(:mailing_address)
+    end
   end
 
 end

@@ -344,6 +344,7 @@ ActiveRecord::Schema.define(version: 20150313124830) do
     t.boolean  "listings_public",     default: true
     t.integer  "partner_id"
     t.text     "metadata"
+    t.integer  "mailing_address_id"
   end
 
   add_index "companies", ["creator_id"], name: "index_companies_on_creator_id", using: :btree

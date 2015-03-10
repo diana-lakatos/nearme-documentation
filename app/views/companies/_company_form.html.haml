@@ -11,7 +11,9 @@
 = f.input :url if (only_inputs.empty? || only_inputs.include?(:url))
 = f.input :email if (only_inputs.empty? || only_inputs.include?(:email))
 = f.input :description, :as => :limited_text, :limit => 250, :input_html => { :maxlength => 250} if (only_inputs.empty? || only_inputs.include?(:description))
-= f.input :mailing_address, :label => tooltip(t("simple_form.hints.company.mailing_address"), t('simple_form.labels.company.mailing_address')), hint: false if (only_inputs.empty? || only_inputs.include?(:mailing_address))
+- if (only_inputs.empty? || only_inputs.include?(:payments_mailing_address))
+  = f.simple_fields_for :payments_mailing_address, (f.object.payments_mailing_address.presence || f.object.build_payments_mailing_address) do |address_form|
+    = render :partial => 'addresses/form', :locals => { :f => address_form, label: t('payouts.mailing_address') }
 
 - if (only_inputs.empty? || only_inputs.include?(:paypal))
   %h2.with-margin Payouts via Paypal

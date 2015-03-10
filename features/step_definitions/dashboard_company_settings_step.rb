@@ -38,14 +38,14 @@ When /^I update company settings$/ do
 end
 
 When /^I update payouts settings$/ do
-  fill_in "company_mailing_address", with: "mail-update@example.com"
+  fill_in "company_payments_mailing_address_attributes_address", with: "Adelaide, South Australia, Australia"
   fill_in "company_paypal_email", with: "paypal-update@example.com"
   find('input[@type="submit"]').click
 end
 
 Then /^The company payouts settings should be updated$/ do
   company = model!("the company")
-  assert_equal "mail-update@example.com", company.mailing_address
+  assert_equal "Adelaide SA, Australia", company.mailing_address
   assert_equal "paypal-update@example.com", company.paypal_email
 end
 
