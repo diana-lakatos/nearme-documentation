@@ -32,7 +32,17 @@ class Review < ActiveRecord::Base
   scope :by_reservations, ->(id) { where(reviewable_id: id, reviewable_type: 'Reservation').includes(:reviewable, rating_answers: [:rating_question]) }
   scope :by_line_items, ->(id) { where(reviewable_id: id, reviewable_type: 'Spree::LineItem').includes(:reviewable, rating_answers: [:rating_question]) }
   scope :for_buyer, ->{ with_object('buyer') }
+  scope :for_seller, ->{ with_object('seller') }
   scope :for_seller_and_product, -> { with_object(['seller', 'product']) }
+  scope :both_sides_reviewed_for, ->(object) {
+    select('DISTINCT reviews.*').
+    joins("INNER JOIN reviews AS rev ON rev.reviewable_type = reviews.reviewable_type
+        AND rev.reviewable_id = reviews.reviewable_id").
+    where("reviews.object = 'product'
+      OR NOT (SELECT tt.show_reviews_if_both_completed FROM transactable_types AS tt WHERE tt.id = reviews.transactable_type_id)
+      OR rev.object=?", object
+    )
+  }
   
   def recalculate_reviewable_average_rating
     if self.reviewable.is_a?(Spree::LineItem)

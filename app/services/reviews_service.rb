@@ -13,6 +13,24 @@ class ReviewsService
     reviews
   end
 
+  def get_reviews_collection(completed_tab)
+    collections = {}
+    if @current_instance.buyable?
+      line_items = get_line_items_for_owner_and_creator
+      orders_reviews = completed_tab ? get_orders_reviews(line_items) : get_orders(line_items)
+    end
+    if @current_instance.bookable?
+      reservations_for_owner_and_creator = get_reservations_for_owner_and_creator
+      reservations_reviews = completed_tab ? get_reviews_by(reservations_for_owner_and_creator) : get_reservations(reservations_for_owner_and_creator)
+    end
+    if orders_reviews && reservations_reviews
+      orders_reviews.map{|k,v| collections[k] = reservations_reviews[k] + v }
+    else
+      collections = orders_reviews.presence || reservations_reviews.presence
+    end
+    collections
+  end
+
   def generate_csv_for(reviews)
     CSV.generate do |csv|
       csv.add_row %w(id object rating user created_at)

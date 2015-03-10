@@ -142,6 +142,8 @@ en:
         add_up_to_questions: "You can add up to %{number} questions"
         enter_description: "Enter description"
         save: "Save"
+        only_if_both_completed_services: "Only display reviews if both Guest and Host have completed"
+        only_if_both_completed_products: "Only display reviews if both buyer and seller have completed"
     rating_reviews_shared:
       header:
         all_reviews: "All Reviews"

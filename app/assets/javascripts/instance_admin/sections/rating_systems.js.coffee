@@ -3,8 +3,9 @@ class @InstanceAdmin.RatingSystemsController
     @bindEvents()
 
   bindEvents: ->
-    @toggleSlide('.rating-system', '.table-container')
-    @toggleSlide('.service', '.content-container')
+    @toggleSlide('.rating-system', '.table-container', '> .header')
+    @toggleSlide('.service', '.content-container', ' .service-name')
+    @toggleSlide('.service', '.content-container', ' .only-if-both-completed')
 
     @container.find('.header input[type="checkbox"]').on 'click', ->
       checkedValue = $(@).prop('checked')
@@ -36,30 +37,40 @@ class @InstanceAdmin.RatingSystemsController
           $(@).attr('id', $(@).attr('id').replace(/attributes\_\d+/, "attributes_#{questionsCount}"))
           $(@).attr('name', $(@).attr('name').replace(/attributes\]\[\d+/, "attributes][#{questionsCount}"))
 
-  toggleSlide: (clickElement, container) ->
-    @container.find(clickElement + '> .header').on 'click', ->
+  toggleSlide: (clickElement, container, selector) ->
+    @container.find(clickElement + selector).on 'click', ->
       checkbox = $(@).children('input[type="checkbox"]')
       checkedValue = checkbox.prop('checked')
       checkbox.prop('checked', !checkedValue)
       tableContainer = $(@).parents(clickElement).find(container)
 
-      if checkbox.is(':checked')
-        tableContainer.hide().removeClass('hidden')
-        tableContainer.slideDown()
-      else
-        tableContainer.slideUp()
-
-      if clickElement is '.service'
-        systemsCheckboxes = $(@).parents(clickElement).find('.content-container .header input:checkbox')
-        checkedCheckboxes = $(@).parents(clickElement).find('.content-container .header input:checkbox:checked')
-        if checkedCheckboxes.length is 0 and !checkedValue
+      if selector is ' .only-if-both-completed'
+        params = { show_reviews_if_both_completed: checkbox.is(':checked') }
+        if checkbox.is(':checked')
+          systemsCheckboxes = $(@).parents(clickElement).find('.content-container .header input:checkbox')
           for ratingCheckbox in systemsCheckboxes
-            $(ratingCheckbox).trigger('click')
+            if !$(ratingCheckbox).is(':checked') && $(ratingCheckbox).data('subject') != checkbox.data('service-name')
+              $(ratingCheckbox).trigger('click')
+      else
+        if checkbox.is(':checked')
+          tableContainer.hide().removeClass('hidden')
+          tableContainer.slideDown()
+        else
+          tableContainer.slideUp()
 
+        if selector is ' .service-name'
+          params = { enable_reviews: checkbox.is(':checked') }
+          systemsCheckboxes = $(@).parents(clickElement).find('.content-container .header input:checkbox')
+          checkedCheckboxes = $(@).parents(clickElement).find('.content-container .header input:checkbox:checked')
+          if checkedCheckboxes.length is 0 and !checkedValue
+            for ratingCheckbox in systemsCheckboxes
+              $(ratingCheckbox).trigger('click')
+
+      if params?
         $.ajax
           url: checkbox.data('url')
           method: 'post'
           data:
             _method: 'put'
             transactable_type:
-              enable_reviews: checkbox.is(':checked')
+              params

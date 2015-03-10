@@ -9,8 +9,8 @@ class UserReviewsService
     case @params[:option]
       when 'reviews_about_seller' then @user.reviews_about_seller
       when 'reviews_about_buyer' then @user.reviews_about_buyer
-      when 'reviews_left_by_seller' then @user.reviews.for_buyer
-      when 'reviews_left_by_buyer' then @user.reviews.for_seller_and_product
+      when 'reviews_left_by_seller' then @user.reviews.for_buyer.both_sides_reviewed_for('seller')
+      when 'reviews_left_by_buyer' then @user.reviews.for_seller_and_product.both_sides_reviewed_for('buyer')
     end
   end
 
