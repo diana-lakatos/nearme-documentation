@@ -53,6 +53,11 @@
             = render 'locations/listings/booking', listing: @listing, collapsed: false, location_pretty_availability: location_pretty_availability
             .padding-row
 
+          - if platform_context.instance.wish_lists_enabled?
+            = render 'shared/components/wish_list_button', object: @listing, link_to_class: 'btn btn-white btn-large ask'
+
+          .padding-row
+
           -if @location.administrator
             = render 'locations/administrator', administrator: @location.administrator
 

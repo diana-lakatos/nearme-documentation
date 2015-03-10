@@ -3,10 +3,10 @@
 .listings
   .row
     .col-md-3.listing-img
-      = link_to polymorphic_path(wishlistable), target: '_blank' do
+      = link_to polymorphic_wishlistable_path(wishlistable), target: '_blank' do
         = image_tag wish_list_item.decorate.image_url
     .col-md-6
-      = link_to wishlistable.name, polymorphic_path(wishlistable), target: '_blank'
+      = link_to wishlistable.name, polymorphic_wishlistable_path(wishlistable), target: '_blank'
       %br
       %span{style: 'color: gray'}
         = wish_list_item.decorate.company_name
