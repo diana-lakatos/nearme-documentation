@@ -67,7 +67,7 @@ class SearchController < ApplicationController
   end
 
   def theme_name
-    @theme_name = 'buy-sell-theme' if buyable?
+    @theme_name = 'buy-sell-theme' if params[:buyable] == "true"
   end
 
   def find_transactable_type
