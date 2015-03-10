@@ -16,8 +16,14 @@ class InstanceAdmin::Theme::HeaderController < InstanceAdmin::Theme::BaseControl
 
   def find_or_build_template
     template_body = File.read(File.join(Rails.root, 'app', 'views', 'layouts/_theme_header.html.liquid')) rescue nil
-    @template = InstanceView.where("instance_id = ? AND path = 'layouts/theme_header'", platform_context.instance.id).first ||
-      InstanceView.new(path: 'layouts/theme_header', locale: 'en', format: 'html', handler: 'liquid', partial: 'true', body: template_body)
+
+    @template = InstanceView.find_or_initialize_by(instance_id: platform_context.instance.id, path: 'layouts/theme_header') do |view|
+      view.locale = 'en'
+      view.format = 'html'
+      view.handler = 'liquid'
+      view.partial = 'true'
+      view.body = template_body
+    end
   end
 
   def update_or_create

@@ -16,8 +16,14 @@ class InstanceAdmin::Theme::FooterController < InstanceAdmin::Theme::BaseControl
 
   def find_or_build_template
     template_body = File.read(File.join(Rails.root, 'app', 'views', 'layouts/_theme_footer.html.liquid')) rescue nil
-    @template = InstanceView.where("instance_id = ? AND path = 'layouts/theme_footer'", platform_context.instance.id).first ||
-      InstanceView.new(path: 'layouts/theme_footer', locale: 'en', format: 'html', handler: 'liquid', partial: 'true', body: template_body)
+
+    @template = InstanceView.find_or_initialize_by(instance_id: platform_context.instance.id, path: 'layouts/theme_footer') do |view|
+      view.locale = 'en'
+      view.format = 'html'
+      view.handler = 'liquid'
+      view.partial = 'true'
+      view.body = template_body
+    end
   end
 
   def update_or_create
