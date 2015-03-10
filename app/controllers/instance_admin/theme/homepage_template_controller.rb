@@ -16,8 +16,14 @@ class InstanceAdmin::Theme::HomepageTemplateController < InstanceAdmin::Theme::B
 
   def find_or_build_homepage_template
     template_body = File.read(File.join(Rails.root, 'app', 'views', 'home/index.liquid')) rescue nil
-    @homepage_template = InstanceView.where("instance_id = ? AND path = 'home/index'", platform_context.instance.id).first ||
-      InstanceView.new(path: 'home/index', locale: 'en', format: 'html', handler: 'liquid', partial: 'false', body: template_body)
+
+    @homepage_template = InstanceView.find_or_initialize_by(instance_id: platform_context.instance.id, path: 'home/index') do |view|
+      view.locale = 'en'
+      view.format = 'html'
+      view.handler = 'liquid'
+      view.partial = 'false'
+      view.body = template_body
+    end
   end
 
   def update_or_create

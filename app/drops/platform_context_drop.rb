@@ -19,6 +19,10 @@ class PlatformContextDrop < BaseDrop
     @platform_context_decorator.logo_image.url || image_url("platform_home/logo-01-dark.png").to_s
   end
 
+  def root_path
+    Rails.application.routes.url_helpers.root_path
+  end
+
   def host
     "http://#{platform_context_decorator.host}"
   end
