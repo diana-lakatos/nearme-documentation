@@ -105,7 +105,7 @@ class UserMessage < ActiveRecord::Base
   end
 
   def author_with_deleted
-    author.presence || User.with_deleted.find(author_id)
+    author.presence || User.with_deleted.find_by_id(author_id)
   end
 
   def thread_owner_with_deleted
