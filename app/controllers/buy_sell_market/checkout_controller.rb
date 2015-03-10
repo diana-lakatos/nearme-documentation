@@ -72,15 +72,25 @@ class BuySellMarket::CheckoutController < ApplicationController
           response = @billing_gateway.authorize(@order.total_amount_to_charge, credit_card)
           if response[:error].present?
             @order.errors.add(:cc, response[:error])
+            @order.billing_authorizations.create!(
+              success: false,
+              payment_gateway_class: response[:payment_gateway_class],
+              payment_gateway_mode: PlatformContext.current.instance.test_mode? ? "test" : "live",
+              response: response,
+              user_id: current_user.id
+            )
             p = @order.payments.build(amount: @order.total_amount_to_charge, company_id: @order.company_id)
             p.started_processing
             p.failure!
             render_step order_state and return
           else
-            @order.create_billing_authorization(
+            @order.billing_authorizations.create!(
+              success: true,
               token: response[:token],
               payment_gateway_class: response[:payment_gateway_class],
-              payment_gateway_mode: PlatformContext.current.instance.test_mode? ? "test" : "live"
+              payment_gateway_mode: PlatformContext.current.instance.test_mode? ? "test" : "live",
+              response: response,
+              user_id: current_user.id
             )
             create_spree_payment_records
 

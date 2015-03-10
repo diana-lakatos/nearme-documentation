@@ -9,7 +9,8 @@ Spree::Order.class_eval do
   attr_accessor :card_number, :card_code, :card_expires, :card_holder_first_name, :card_holder_last_name
   scope :completed, -> { where(state: 'complete') }
 
-  has_one :billing_authorization, as: :reference
+  has_one :billing_authorization, -> { where(success: true) }, as: :reference
+  has_many :billing_authorizations, as: :reference
   has_many :near_me_payments, as: :payable, class_name: '::Payment'
   has_many :shipping_methods, class_name: 'Spree::ShippingMethod'
   has_many :additional_charges, as: :target
