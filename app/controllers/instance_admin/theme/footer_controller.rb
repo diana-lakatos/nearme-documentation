@@ -15,14 +15,12 @@ class InstanceAdmin::Theme::FooterController < InstanceAdmin::Theme::BaseControl
   private
 
   def find_or_build_template
-    template_body = File.read(File.join(Rails.root, 'app', 'views', 'layouts/_theme_footer.html.liquid')) rescue nil
-
     @template = InstanceView.find_or_initialize_by(instance_id: platform_context.instance.id, path: 'layouts/theme_footer') do |view|
       view.locale = 'en'
       view.format = 'html'
       view.handler = 'liquid'
       view.partial = 'true'
-      view.body = template_body
+      view.body = File.read(File.join(Rails.root, 'app', 'views', 'layouts/_theme_footer.html.liquid')) rescue nil
     end
   end
 
