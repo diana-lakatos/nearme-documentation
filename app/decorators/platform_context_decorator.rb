@@ -104,11 +104,11 @@ class PlatformContextDecorator
   end
 
   def bookable_nouns
-    @bookable_nouns ||= transactable_types.map { |tt| tt.bookable_noun.presence || tt.name }.to_sentence(last_word_connector: 'or')
+    @bookable_nouns ||= transactable_types.map { |tt| tt.bookable_noun.presence || tt.name }.to_sentence(last_word_connector: I18n.t('general.or_spaced'))
   end
 
   def bookable_nouns_plural
-    @bookable_nouns_plural ||= transactable_types.map { |tt| (tt.bookable_noun.presence || tt.name).pluralize }.to_sentence(last_word_connector: 'or')
+    @bookable_nouns_plural ||= transactable_types.map { |tt| (tt.bookable_noun.presence || tt.name).pluralize }.to_sentence(last_word_connector: I18n.t('general.or_spaced'))
   end
 
   private
