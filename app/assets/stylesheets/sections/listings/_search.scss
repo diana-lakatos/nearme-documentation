@@ -193,8 +193,35 @@ section.search#content {
   }
 
   .input-wrapper {
-    width: 85%;
-    padding-right: 8px;
+    width: 100%;
+
+
+    @media (min-width: $ipad-width) {
+      .row-fluid [class*="span2"] {
+        margin-left: 1%;
+        width: 13%
+      }
+
+      .row-fluid [class*="span3"] {
+        margin-left: 1%;
+      }
+
+      .row-fluid [class*="span4"] {
+        width: 43.9%;
+      }
+
+      .row-fluid [class*="span5"] {
+        width: 47.9%;
+      }
+
+      .row-fluid [class*="span7"] {
+        width: 61.9%;
+      }
+
+      .row-fluid [class*="span9"] {
+        width: 75.9%;
+      }
+    }
 
     input {
       padding-left: 46px;
@@ -247,8 +274,8 @@ section.search#content {
     }
   }
 
-  .row-fluid [class*="span2"] {
-    margin-left: 1.5%;
+  .search-button {
+    display: block;
   }
 
   @media (max-width: 767px) {

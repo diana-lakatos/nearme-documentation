@@ -4,30 +4,31 @@
 
 @Home = {}
 
-$('#start_date,#fake_start_date').datepicker({
+common_options = {
   altFormat: 'yy-mm-dd',
-  altField: '#availability_dates_start',
   dateFormat: 'mm/dd/yy',
   constrainInput: true,
-  minDate: 0,
+  minDate: 0
+}
+
+$('#start_date, #fake_start_date').datepicker($.extend({}, common_options, {
+  altField: '#availability_dates_start',
   showOtherMonths: true,
   selectOtherMonths: true,
+  maxDate: 7,
   onClose: (selectedDate) ->
     $('#end_date, #fake_end_date').datepicker "option", "minDate", selectedDate
-});
+}));
 
-$('#end_date,#fake_end_date').datepicker({
-  altFormat: 'yy-mm-dd',
+$('#end_date, #fake_end_date').datepicker($.extend({}, common_options, {
   altField: '#availability_dates_end',
-  dateFormat: 'mm/dd/yy',
-  constrainInput: true,
   defaultDate: 7,
-  minDate: 0,
   showOtherMonths: false
   selectOtherMonths: false,
   onClose: (selectedDate) ->
     $('#start_date, #fake_start_date').datepicker "option", "maxDate", selectedDate
-});
+}));
 
-$("#start_date").datepicker('setDate', new Date());
-$("#end_date").datepicker('setDate', 7);
+
+$("#start_date:not(:hidden)").datepicker('setDate', new Date());
+$("#end_date:not(:hidden)").datepicker('setDate', 8);

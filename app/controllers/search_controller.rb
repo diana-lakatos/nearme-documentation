@@ -27,8 +27,9 @@ class SearchController < ApplicationController
   private
 
   def result_view
-    @result_view = params[:v].presence || (@transactable_type.buyable? ? "products" : platform_context.instance.default_search_view)
-    @result_view.in?( %w( list map mixed listing_mixed products ) ) ? @result_view : 'mixed'
+    @result_view = params[:v].presence || (@transactable_type.buyable? ? 'products' : platform_context.instance.default_search_view)
+    @result_view = @result_view.in?(Instance::SEARCH_RESULTS_VIEWS) ? @result_view : 'mixed'
+    @result_view == 'products' && !@transactable_type.buyable? ? 'mixed' : @result_view
   end
 
   def should_log_conducted_search?

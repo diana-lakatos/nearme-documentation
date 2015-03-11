@@ -1,10 +1,10 @@
-- if @searcher.search.dates
+- if platform_context.instance.date_pickers && !@transactable_type.buyable?
   .search-mixed-filter{:'data-date-range-filter' => true}
     .date-range
       .container-fluid
         .row-fluid
           .span2
-            %h4 Date range
+            %h4= t 'search.date_range.title'
           .span10
             %ul
               %li.filter-option
@@ -15,6 +15,6 @@
 
               %li.filter-option
                 .search-icon.btn.btn-green#date-range-refresh
-                  Update
+                  = t 'search.date_range.buttons.update'
 
 

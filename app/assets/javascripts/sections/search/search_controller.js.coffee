@@ -32,7 +32,11 @@ class Search.SearchController extends Search.Controller
       @triggerSearchFromQuery()
 
     @transactable_types.on 'change', (event) =>
-      document.location = "#{document.location.protocol}//#{document.location.host}#{document.location.pathname}?loc=#{DNM.util.Url.getParameterByName('loc')}&transactable_type_id=#{$(event.target).val()}"
+      date_range = ''
+      if @date_range.length > 0 && window.location.search.match('start_date')
+        date_range = "&start_date=#{$('#fake_start_date').val()}&end_date=#{$('#fake_end_date').val()}&availability[dates][start]=#{$('#availability_dates_start').val()}&availability[dates][end]=#{$('#availability_dates_end').val()}"
+
+      document.location = "#{document.location.protocol}//#{document.location.host}#{document.location.pathname}?loc=#{DNM.util.Url.getParameterByName('loc')}&transactable_type_id=#{$(event.target).val()}" + date_range
 
     # TODO Discuss with the team during QA, I am not sure about approach here
 #   @date_range.on 'change', (event) =>

@@ -18,6 +18,8 @@ class Instance < ActiveRecord::Base
   serialize :hidden_ui_controls, Hash
 
   API_KEYS = %w(paypal_username paypal_password paypal_signature paypal_app_id paypal_client_id paypal_client_secret stripe_api_key stripe_public_key balanced_api_key)
+  SEARCH_TYPES = %w(geo fulltext)
+  SEARCH_RESULTS_VIEWS = %w(mixed list map listing_mixed products)
 
   API_KEYS.each do |meth|
     define_method(meth) do
@@ -97,6 +99,8 @@ class Instance < ActiveRecord::Base
   accepts_nested_attributes_for :text_filters, allow_destroy: true
 
   scope :with_support_imap, -> { where 'support_imap_hash IS NOT NULL AND support_imap_hash not like ?', '' }
+
+  store_accessor :search_settings, :date_pickers, :tt_select_type
 
   before_update :check_lock
 
@@ -259,5 +263,9 @@ class Instance < ActiveRecord::Base
       t = Translation.where(instance_id: self.id, key: key, locale: I18n.locale).first_or_initialize
       t.update_attribute(:value, translations[key])
     end
+  end
+
+  def date_pickers
+    super == '1'
   end
 end

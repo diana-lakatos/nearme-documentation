@@ -161,8 +161,8 @@ class Search.SearchMixedController extends Search.SearchController
       page: page || 1
       start_date: @container.find('input[name="fake_start_date"]').val()
       end_date: @container.find('input[name="fake_end_date"]').val()
-      avilability_start: @container.find('input[availability_dates_start]').val()
       avilability_end: @container.find('input[availability_dates_end]').val()
+      avilability_start: @container.find('input[availability_dates_start]').val()
     )
     super
 

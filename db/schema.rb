@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150308220220) do
+ActiveRecord::Schema.define(version: 20150311140540) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -768,9 +768,9 @@ ActiveRecord::Schema.define(version: 20150308220220) do
     t.string   "encrypted_db_connection_string"
     t.string   "stripe_currency",                                               default: "USD"
     t.boolean  "user_info_in_onboarding_flow",                                  default: false
-    t.string   "default_search_view"
+    t.string   "default_search_view",                                           default: "mixed"
     t.boolean  "user_based_marketplace_views",                                  default: false
-    t.string   "searcher_type"
+    t.string   "searcher_type",                                                 default: "geo"
     t.datetime "master_lock"
     t.boolean  "apply_text_filters",                                            default: false
     t.text     "user_required_fields"
@@ -795,6 +795,7 @@ ActiveRecord::Schema.define(version: 20150308220220) do
     t.string   "support_imap_server"
     t.integer  "support_imap_port"
     t.boolean  "support_imap_ssl"
+    t.hstore   "search_settings",                                               default: {},            null: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree

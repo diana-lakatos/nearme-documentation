@@ -43,6 +43,18 @@ class PlatformContextDrop < BaseDrop
     transactable_types.services + product_types
   end
 
+  def multiple_transactable_types?
+    all_transactables.size > 1
+  end
+
+  def date_pickers?
+    @platform_context_decorator.instance.date_pickers
+  end
+
+  def tt_select_type
+    @platform_context_decorator.instance.tt_select_type
+  end
+
   private
 
   def theme_color(color)
