@@ -35,7 +35,11 @@ class Support::TicketsController < Support::BaseController
 
   def show
     @ticket = current_user.tickets.find(params[:id])
-    @message = Support::TicketMessage.new(attachments: @ticket.attachments.where(ticket_message_id: nil, uploader_id: current_user.id))
+    if @ticket.target_rfq?
+      redirect_to dashboard_user_requests_for_quote_path(@ticket)
+    else
+      @message = Support::TicketMessage.new(attachments: @ticket.attachments.where(ticket_message_id: nil, uploader_id: current_user.id))
+    end
   end
 
   private

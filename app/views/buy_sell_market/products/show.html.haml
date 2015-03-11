@@ -8,7 +8,8 @@
         = render partial: 'photos', locals: { product: @product }
       .span4
         %h1= @product.name
-        %h1= @product.humanized_price
+        - if @product.price.to_f > 0
+          %h1= @product.humanized_price
         - if @product.has_reviews?
           .rating.product-rating
             %p= t 'buy_sell_market.products.labels.rating'
@@ -26,6 +27,19 @@
           - if @product.action_rfq?
             - rfq_label = (@product.action_free? ?  t('reservations.rfq') : t('reservations.offer'))
             = link_to rfq_label, '#', data: { modal: true, href: new_product_ticket_path(@product) }, class: 'btn gray', style: 'margin-top: 20px'
+
+            - if @product.company.company_users.pluck(:user_id).compact.include?(current_user.try(:id))
+              .edit-product-inline
+                %h2= t('buy_sell_market.products.edit_inline')
+                = simple_form_for ProductForm.new(@product), url: dashboard_company_product_type_product_path(@product.product_type, @product), html: {class: 'form-horizontal', id: "product_form", method: :put } do |f|
+
+                  = hidden_field_tag :return_to, product_path(@product)
+                  .all-inline
+                    = f.input :price, as: :numeric
+                    .currency
+                      = currency_symbol_from_code(Spree::Config[:currency])
+                    = f.submit "Save", class: "btn medium blue"
+
         - else
           .btn.disabled= t('buy_sell_market.products.buttons.out_of_stock')
 

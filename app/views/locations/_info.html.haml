@@ -3,7 +3,7 @@
     %h2 Our Space
     %p= truncate_with_ellipsis mask_phone_and_email_if_necessary(sanitize(@location.description)), 250
     - if @amenities
-      %h2 Amenities
+      %h2= t('amenities_attribute')
       %ul
         - @location.amenities.each do |amenity|
           %li= amenity
@@ -14,7 +14,7 @@
     %p= truncate_with_ellipsis mask_phone_and_email_if_necessary(@location.company.description), 250
 
     - if @amenities
-      %h2 Amenities
+      %h2= t('amenities_attribute')
       %ul
         - @location.amenities.each do |amenity|
           %li= amenity

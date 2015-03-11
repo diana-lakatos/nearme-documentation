@@ -14,7 +14,7 @@ class Support::TicketDrop < BaseDrop
   end
 
   def url
-    routes.support_ticket_path(ticket)
+    routes.dashboard_user_requests_for_quotes_path(ticket)
   end
 
   def rfq
@@ -32,7 +32,7 @@ class Support::TicketDrop < BaseDrop
   def admin_url
     case ticket.target
     when Transactable, Spree::Product
-      routes.dashboard_support_ticket_path(ticket)
+      routes.dashboard_company_support_ticket_path(ticket)
     when Instance
       routes.instance_admin_manage_support_ticket_path(ticket)
     else

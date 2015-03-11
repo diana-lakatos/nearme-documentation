@@ -34,9 +34,12 @@ class RegistrationsController < Devise::RegistrationsController
 
       # Only track the sign up if the user has actually been saved (i.e. there are no errors)
       if @user.persisted?
-        User.where(id: @user.id).update_all({referer: session[:referer],
-                                             source: cookies.signed[:source],
-                                             campaign: cookies.signed[:campaign]})
+        User.where(id: @user.id).update_all({
+          instance_profile_type_id: InstanceProfileType.first.try(:id),
+          referer: session[:referer],
+          source: cookies.signed[:source],
+          campaign: cookies.signed[:campaign]
+        })
         update_analytics_google_id(@user)
         analytics_apply_user(@user)
         event_tracker.signed_up(@user, {

@@ -18,5 +18,6 @@
   %td
     = resource.transfer_status
   %td= resource.service_fee_amount_guest.format with_currency: true
+  %td= resource.service_fee_amount_host.format with_currency: true
   %td= resource.amount.format with_currency: true
   %td= link_to "Details", instance_admin_manage_transfer_path(resource)

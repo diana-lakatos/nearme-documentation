@@ -1,4 +1,4 @@
-class Dashboard::Support::TicketMessagesController < Dashboard::BaseController
+class Dashboard::Company::Support::TicketMessagesController < Dashboard::Company::BaseController
 
   def create
     message = ::Support::TicketMessage.new(support_ticket_message_params)
@@ -31,7 +31,7 @@ class Dashboard::Support::TicketMessagesController < Dashboard::BaseController
       end
     end
 
-    redirect_to dashboard_support_ticket_path(ticket)
+    redirect_to dashboard_company_support_ticket_path(ticket)
   end
 
   private

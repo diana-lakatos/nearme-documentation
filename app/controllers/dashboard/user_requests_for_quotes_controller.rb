@@ -1,16 +1,17 @@
-class Dashboard::Support::TicketsController < Dashboard::BaseController
-  before_filter :find_ticket, only: [:show, :update]
+class Dashboard::UserRequestsForQuotesController < Dashboard::BaseController
 
   def index
-    @tickets = current_user.assigned_company_tickets.for_filter(filter).paginate(page: params[:page])
     @filter = filter
     @filter_name = filter_name[@filter]
+    @tickets = Support::TicketDecorator.decorate_collection(current_user.requests_for_quotes.for_filter(filter).paginate(page: params[:page]))
   end
 
   def show
-    @first_message = @ticket.first_message
+    @ticket = current_user.tickets.find(params[:id])
     @message = Support::TicketMessage.new(attachments: @ticket.attachments.where(ticket_message_id: nil, uploader_id: current_user.id))
   end
+
+  private
 
   def filter
     params[:filter].presence || 'open'
@@ -24,16 +25,9 @@ class Dashboard::Support::TicketsController < Dashboard::BaseController
     }
   end
 
-  private
-
-  def find_ticket
-    @ticket = current_user.assigned_company_tickets.find(params[:id])
-  end
-
   def translated_filter_name(name)
     I18n.translate(name, scope: ['support', 'filter_name'])
   end
-
 
 end
 

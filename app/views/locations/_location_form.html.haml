@@ -24,7 +24,7 @@
   .control-group
     = render :partial => 'availability_rules/form', :locals => { :f => f }
 - unless platform_context.instance.location_amenity_types.count.zero?
-  = f.association :amenities, :collection => platform_context.instance.location_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :label => "Amenities", :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select', :multiple => true } if only_inputs.empty? || only_inputs.include?(:amenities)
+  = f.association :amenities, :collection => platform_context.instance.location_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select', :multiple => true } if only_inputs.empty? || only_inputs.include?(:amenities)
 - if (only_inputs.empty? || only_inputs.include?(:assigned_waiver_agreement_templates)) && f.object.company.waiver_agreement_templates.count > 0
   %h2.with-margin Waiver Agreement Templates
   = f.association :waiver_agreement_templates, collection: f.object.company.waiver_agreement_templates.order(:name).pluck(:name, :id), as: :check_boxes

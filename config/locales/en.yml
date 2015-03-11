@@ -158,6 +158,7 @@ en:
         selected_state: 'SELECTED STATE'
   buy_sell_market:
     products:
+      edit_inline: 'Edit your Product'
       buttons:
         add_to_cart: 'Add to cart'
         out_of_stock: 'Out of stock'
@@ -333,6 +334,7 @@ en:
       users: 'Manage Admins'
       waiver_agreement_templates: 'Waiver Agreements'
       white_labels: 'White-Label'
+      my_rfq: 'My RFQs'
       tickets: 'Request for Quote'
       registrations: 'User Stuff'
       edit: 'Edit Profile'
@@ -807,4 +809,7 @@ en:
     manual: 'Manual Payment'
     nonce: 'PayPal Payment'
     remote: 'Fetch Payment'
+
+  amenities_attribute: 'Amenities'
+  amenity_attribute: 'amenity'
 

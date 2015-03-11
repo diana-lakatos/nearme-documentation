@@ -82,7 +82,7 @@
 
         - if !current_user.requests_for_quotes.empty? && HiddenUiControls.find('main_menu/rfq').visible?
           %li
-            = link_to main_app.dashboard_support_tickets_path, class: 'nav-link dropdown-toggle' do
+            = link_to main_app.dashboard_user_requests_for_quotes_path, class: 'nav-link dropdown-toggle' do
               %span= "#{t('reservations.rfq_menu_text')}"
 
         - if platform_context.instance.user_blogs_enabled? && HiddenUiControls.find('main_menu/manage_blog').visible?

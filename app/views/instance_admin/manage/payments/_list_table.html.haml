@@ -7,7 +7,8 @@
             %th Company
             %th Lessor
             %th State
-            %th Service Fees
+            %th Lessor Service Fees
+            %th Lessee Service Fees
             %th Payment Amount
             %th Payment Gateway
             %th Created at
@@ -22,6 +23,7 @@
             %td= payment.payable.user.try(:name)
             %td= payment.state
             %td= humanized_money_with_cents_and_symbol(payment.service_fee_amount_guest)
+            %td= humanized_money_with_cents_and_symbol(payment.service_fee_amount_host)
             %td= humanized_money_with_cents_and_symbol(payment.subtotal_amount)
             %td= payment.payable.billing_authorization.try(:payment_gateway_class).try(:split, 'Incoming::').try(:last)
             %td= l(payment.created_at, format: :long)

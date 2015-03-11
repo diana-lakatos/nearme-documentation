@@ -54,12 +54,14 @@ module DashboardHelper
   end
 
   def dashboard_menu_item(key = nil, path = nil, options = {})
-    return nil if HiddenUiControls.find(key).hidden?
-    options.reverse_merge!(link_text: nil, active: nil)
+    if !options[:not_hideable]
+      return nil if HiddenUiControls.find(key).hidden?
+    end
     controller = params[:controller].split('/').last
     key_controller = key.split('/').last
+    options.reverse_merge!(link_text: t("dashboard.nav.#{key_controller}"), active: nil)
     content_tag :li, class: (options[:active] || (controller == key_controller && options[:active] == nil)) ? 'active' : '' do
-      link_to options[:link_text] || t("dashboard.nav.#{key_controller}"), path
+      link_to options[:link_text], path
     end
   end
 

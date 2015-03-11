@@ -250,6 +250,10 @@ class Instance < ActiveRecord::Base
     "#{id} - #{name}"
   end
 
+  def action_rfq?
+    (product_types.pluck(:action_rfq) + transactable_types.pluck(:action_rfq)).any?
+  end
+
   def custom_translations=(translations)
     %w(buy_sell_market.checkout.manual_payment buy_sell_market.checkout.manual_payment_description).each do |key|
       t = Translation.where(instance_id: self.id, key: key, locale: I18n.locale).first_or_initialize

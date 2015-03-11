@@ -19,7 +19,7 @@
   = draw_attribute_for_form(attribute, f) if only_inputs.empty? || only_inputs.include?(attribute.name.to_sym)
 
 - unless platform_context.instance.listing_amenity_types.count.zero?
-  = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :label => "Amenities", :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select', :multiple => true } if only_inputs.empty? || only_inputs.include?(:amenities)
+  = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select', :multiple => true } if only_inputs.empty? || only_inputs.include?(:amenities)
 
 - if only_inputs.empty? || only_inputs.include?(:price)
   - # always display calendar for fixed price, but make availability rules optional

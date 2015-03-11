@@ -7,6 +7,12 @@ class Support::TicketDecorator < Draper::Decorator
     target_with_deleted = self.target_type.constantize.respond_to?(:with_deleted) ? self.target_type.constantize.with_deleted.find(self.target_id) : self.target
     if Transactable === target_with_deleted
       transactable_type_location_listing_path(target_with_deleted.transactable_type, target_with_deleted.location, target_with_deleted, options)
+    elsif Spree::Product === target_with_deleted
+      product_path(target_with_deleted, options)
     end
+  end
+
+  def self.collection_decorator_class
+    PaginatingDecorator
   end
 end
