@@ -60,6 +60,7 @@ class DataImporter::Product::Importer
 
   def import_company(params, industry)
     company = find_or_initialize_by_and_assign(Company, external_id: params.delete(:external_id)) do |company|
+      company.update_column(:deleted_at, nil) unless company.deleted_at.nil?
       company.assign_attributes(params)
       company.industries << industry
     end
@@ -72,12 +73,13 @@ class DataImporter::Product::Importer
   end
 
   def import_user(params, company)
-    user = User.find_or_initialize_by(email: params.delete(:email).downcase) do |u|
+    user = User.with_deleted.find_or_initialize_by(email: params.delete(:email).downcase) do |u|
       password = SecureRandom.hex(8)
       @new_users[u.email] = password
       u.password = u.password_confirmation = password
       u.country_name = 'United States'
     end
+    user.update_column(:deleted_at, nil) unless user.deleted_at.nil?
     user.assign_attributes(params)
 
     if user.new_record? && user.save
@@ -109,6 +111,11 @@ class DataImporter::Product::Importer
   def import_product(params, user, company, shipping_category, &block)
     import_entity(block) do
       find_or_initialize_by_and_assign(Spree::Product, external_id: params.delete(:external_id), company_id: company.id) do |product|
+        unless product.deleted_at.nil?
+          product.update_column(:deleted_at, nil)
+          product.master.update_column(:deleted_at, nil)
+          product.stock_items.update_all(deleted_at: nil)
+        end
         product.assign_attributes(params)
         product.product_type = @data_upload.importable
         product.user = user
@@ -176,7 +183,7 @@ class DataImporter::Product::Importer
   end
 
   def find_or_initialize_by_and_assign(klass, params)
-    entity = klass.find_or_initialize_by(params)
+    entity = (klass.respond_to?(:with_deleted) ? klass.with_deleted : klass).find_or_initialize_by(params)
     yield(entity) if block_given?
     entity
   end

@@ -3,7 +3,7 @@
 
   - all_fields = csv_fields_builder.object_field_pairs.clone
   - csv_fields_builder.all_valid_object_field_pairs.each do |pair|
-    - all_fields << pair unless all_fields.include?({ pair.keys.first => pair.values.first})
+    - all_fields << pair unless all_fields.include?({ pair.keys.first.to_s => pair.values.first.to_s})
   - all_fields.each do |object_field_pair|
     - object = object_field_pair.keys.first
     - field = object_field_pair[object]

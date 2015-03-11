@@ -19,11 +19,14 @@ class DataImporter::Product::CsvFile
 
   def attributes_for(model, row)
     csv_fields_for_model(model).inject({}) do |hsh, (attr, label)|
-      if custom_attribute?(model, attr)
-        hsh[:extra_properties] ||= {}
-        hsh[:extra_properties][attr] = row[label.downcase]
-      else
-        hsh[attr] = row[label.downcase]
+      value = row[label.downcase]
+      unless value.nil?
+        if custom_attribute?(model, attr)
+          hsh[:extra_properties] ||= {}
+          hsh[:extra_properties][attr] = value
+        else
+          hsh[attr] = value
+        end
       end
       hsh
     end
