@@ -39,6 +39,8 @@ en:
   rating_question:
     validation:
       question_quantity: "Only %{number} questions or less for one rating system"
+  general:
+    or_spaced: ' or '
   manage:
     companies:
       theme_image_deleted: "That image has been deleted."
