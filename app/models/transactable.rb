@@ -149,7 +149,7 @@ class Transactable < ActiveRecord::Base
     checks_to_be_performed = 100
     loop do
       checks_to_be_performed  -= 1
-      occurence = schedule.try(:schedule).try(:next_occurrences, 10, occurence).first
+      occurence = schedule.try(:schedule).try(:next_occurrences, 10, occurence).try(:first)
       if occurence
         start_minute = occurence.to_datetime.min.to_i + (60 * occurence.to_datetime.hour.to_i)
         occurences << occurence if self.quantity - desks_booked_on(occurence.to_datetime, start_minute, start_minute) > 0
