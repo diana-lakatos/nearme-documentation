@@ -129,6 +129,20 @@ module CustomAttributes
             string.underscore.tr(' ', '_')
           end
 
+          def required?
+            self.validation_rules.present? && self.validation_rules['presence'] == {}
+          end
+
+          def require!
+            self.validation_rules ||= {}
+            self.validation_rules['presence'] = {}
+          end
+
+          def unrequire!
+            self.validation_rules ||= {}
+            self.validation_rules.delete('presence')
+          end
+
         end
 
       end

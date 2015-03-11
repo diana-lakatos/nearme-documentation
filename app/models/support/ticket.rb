@@ -117,4 +117,8 @@ class Support::Ticket < ActiveRecord::Base
     end
     @reservation_dates
   end
+
+  def target_rfq?
+    ["Transactable", 'Spree::Product'].include?(self.target_type)
+  end
 end

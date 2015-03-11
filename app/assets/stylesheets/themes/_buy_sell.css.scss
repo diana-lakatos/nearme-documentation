@@ -1006,7 +1006,7 @@ body.buy-sell-theme {
       }
 
       .upload {
-        .btn-upload-payment-document { 
+        .btn-upload-payment-document {
           color: black;
           background-color: white;
           border: 1px solid #eee;
@@ -1416,6 +1416,47 @@ body.buy-sell-theme {
 
     .go-back a, .go-back span {
       width: 100%;
+    }
+  }
+
+  .edit-product-inline {
+    h2 {
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+
+    .all-inline {
+      overflow: hidden;
+    }
+
+    .form-horizontal .control-group {
+      clear: none;
+      float: left;
+
+      .control-label {
+        width: auto;
+      }
+
+      .controls {
+        float: left;
+        margin-left: 0px;
+
+        input {
+          margin-left: 0px;
+        }
+      }
+    }
+
+    .btn.medium {
+      height: 43px;
+      padding-top: 0px;
+      margin-top: 0px;
+    }
+
+    .currency {
+      font-size: 1.5em;
+      float: left;
+      margin-top: 11px;
     }
   }
 }

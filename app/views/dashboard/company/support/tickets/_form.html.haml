@@ -7,13 +7,13 @@
   = simple_form_for message, url: form_url do |f|
     = f.input :message, as: :text, label: message_label, placeholder: 'Please, enter message'
     .attachments{:'data-attachment-list' => true }
-      = render partial: 'dashboard/support/ticket_message_attachments/attachment', collection: message.attachments, as: :ticket_message_attachment
+      = render partial: 'dashboard/company/support/ticket_message_attachments/attachment', collection: message.attachments, as: :ticket_message_attachment
     %div
       .btn-toolbar
         = f.submit submit_label, class: 'btn blue pull-right'
         - if with_close
           = f.submit 'Send and Resolve', class: 'btn blue pull-right resolve'
-      = render partial: 'dashboard/support/ticket_message_attachments/form', locals: { f: f }
+      = render partial: 'dashboard/company/support/ticket_message_attachments/form', locals: { f: f }
 
-  = simple_form_for ticket.attachments.build, url: dashboard_support_ticket_ticket_message_attachments_path(ticket), html: { class: 'hidden', :'data-attachment-form'=> true } do |f|
+  = simple_form_for ticket.attachments.build, url: dashboard_company_support_ticket_ticket_message_attachments_path(ticket), html: { multipart: true, class: 'hidden', :'data-attachment-form'=> true } do |f|
     = f.input :file, as: :file, input_html: { data: { file: true } }

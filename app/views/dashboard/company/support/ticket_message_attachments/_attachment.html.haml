@@ -7,10 +7,10 @@
   - if ticket_message_attachment.ticket_message.nil?
     .col-md-1
       .destroy.pull-right
-        = link_to dashboard_support_ticket_ticket_message_attachment_path(params[:ticket_id], ticket_message_attachment), :'data-delete' => 'Are you sure?' do
+        = link_to dashboard_company_support_ticket_ticket_message_attachment_path(ticket_message_attachment.ticket, ticket_message_attachment), :'data-delete' => 'Are you sure?' do
           %span.ico-trash
       .edit.pull-right
-        = link_to '#', data: { modal: true, href: edit_dashboard_support_ticket_ticket_message_attachment_path(params[:ticket_id],ticket_message_attachment), 'ajax-options' => { form_name: form_name } } do
+        = link_to '#', data: { modal: true, href: edit_dashboard_company_support_ticket_ticket_message_attachment_path(ticket_message_attachment.ticket, ticket_message_attachment), 'ajax-options' => { form_name: form_name } } do
           %span.icon.ico-edit
   %input{name: "#{form_name}[attachment_ids][]", value: ticket_message_attachment.id, type: 'hidden' }
 

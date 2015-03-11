@@ -553,6 +553,12 @@ DesksnearMe::Application.routes.draw do
           match 'upload_image/:image', :action => :upload_image, :as => 'upload_theme_image', via: [:post, :put]
         end
       end
+      namespace :support do
+        resources :tickets, only: [:show, :index] do
+          resources :ticket_messages, only: [:create]
+          resources :ticket_message_attachments, only: [:create, :edit, :update, :destroy]
+        end
+      end
     end #ends company namespace
 
     resources :shipping_categories do
@@ -577,12 +583,6 @@ DesksnearMe::Application.routes.draw do
     resources :orders, only: [:index, :show]
     resources :photos, :only => [:create, :destroy, :edit, :update]
     resources :reviews, :only => [:index, :create, :update, :destroy]
-    namespace :support do
-      resources :tickets, only: [:show, :index] do
-        resources :ticket_messages, only: [:create]
-        resources :ticket_message_attachments, only: [:create, :edit, :update, :destroy]
-      end
-    end
 
     resources :transactable_types, only: [] do
       resources :listings, only: [:new, :create] do
@@ -595,6 +595,7 @@ DesksnearMe::Application.routes.draw do
       end
     end
 
+    resources :user_requests_for_quotes, only: [:index, :show]
     resources :user_reservations, :except => [:update, :destroy, :show] do
       member do
         post :user_cancel

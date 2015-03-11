@@ -5,7 +5,7 @@ class Support::TicketMessagesController < Support::BaseController
     message.ticket = ticket
     if message.valid?
       message.save!
-      if Transactable === ticket.target
+      if ticket.target_rfq?
         WorkflowStepJob.perform(WorkflowStep::RfqWorkflow::Updated, message.id)
         if ticket.target.action_free_booking?
           flash[:success] = t('flash_messages.support.rfq_ticket_message.created')
@@ -18,7 +18,7 @@ class Support::TicketMessagesController < Support::BaseController
       end
     else
       unless close?
-        if Transactable === ticket.target
+        if ticket.target_rfq?
           if ticket.target.action_free_booking?
             flash[:error] = t('flash_messages.support.rfq_ticket_message.error')
           else
@@ -39,7 +39,11 @@ class Support::TicketMessagesController < Support::BaseController
       end
     end
 
-    redirect_to support_ticket_path(ticket)
+    if ticket.target_rfq?
+      redirect_to dashboard_user_requests_for_quote_path(ticket)
+    else
+      redirect_to support_ticket_path(ticket)
+    end
   end
 
   private

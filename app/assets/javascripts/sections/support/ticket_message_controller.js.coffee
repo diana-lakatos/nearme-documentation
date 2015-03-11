@@ -41,14 +41,17 @@ class @Support.TicketMessageController
         @data = new FormData()
         @data.append('support_ticket_message_attachment[file]', file)
         @data.append('form_name', @uploadAttachment.data('form-name'))
+        console.log "url: "
+        console.log @form.attr("action")
         $.ajax
           type: 'POST'
           url: @form.attr("action")
           data: @data
+          dataType: 'JSON'
           cache: false
           processData: false
           contentType: false
-          success: (data) =>
+          success: (data, a, b) =>
             @attachmentList.append(data.attachment_content)
             if @modal.length > 0
               @modal.find(".modal-body").html(data.modal_content)

@@ -1,6 +1,6 @@
 %h4
   #{type.camelize}
-  Amenity Types
+  #{t('amenities_attribute')} Types
 %table.table.table-condensed{id: "#{type}-amenity-types"}
   = f.fields_for "#{type}_amenity_types".to_sym, wrapper: false  do |f_at|
     %tr.fields
@@ -10,7 +10,7 @@
             .input-container.col-xs-12
               %h4
                 #{type.camelize}
-                Amenity Type
+                #{t('amenities_attribute')} Types
               = f_at.input :name, label: false, placeholder: 'Enter location amenity type', input_html: { class: 'form-control' }
               .pull-right
                 - if f_at.object.send(type.pluralize).count == 0
@@ -18,7 +18,7 @@
         .content-container
           .row.dropshadow
             .input-container.col-xs-12
-              %h4 Amenities
+              %h4= t('amenities_attribute')
               %table.table.amenities{id: "#{type}-amenities-#{f_at.object.id}", width: '100%'}
                 = f_at.fields_for :amenities, wrapper: false do |fa|
                   %tr.fields
@@ -28,8 +28,8 @@
                       %td.pull-right= fa.link_to_remove "Delete"
                     - else
                       %td.pull-right= "(in use by #{fa.object.send(type.pluralize).count} locations)"
-              %p.pull-right= f_at.link_to_add "Add amenity", :amenities, :model_object => Amenity.new, :data => { :target => "##{type}-amenities-#{f_at.object.id}" }
+              %p.pull-right= f_at.link_to_add "Add #{t('amenity_attribute')}", :amenities, :model_object => Amenity.new, :data => { :target => "##{type}-amenities-#{f_at.object.id}" }
 %p.pull-right
   = f.button :submit, 'Save', class: 'btn btn-green'
 %p.pull-right
-  = f.link_to_add "Add #{type} amenity type", "#{type}_amenity_types".to_sym, :model_object => "#{type}_amenity_type".classify.constantize.build_with_amenity, :data => { :target => "##{type}-amenity-types" }, class: 'btn btn-grey'
+  = f.link_to_add "Add #{type} #{t('amenity_attribute')} type", "#{type}_amenity_types".to_sym, :model_object => "#{type}_amenity_type".classify.constantize.build_with_amenity, :data => { :target => "##{type}-amenity-types" }, class: 'btn btn-grey'

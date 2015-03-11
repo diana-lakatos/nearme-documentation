@@ -1,4 +1,4 @@
-- if Transactable === @ticket.target
+- if @ticket.target_rfq?
   = render 'support/tickets/rfq_show'
 - else
   = render 'support/tickets/show'

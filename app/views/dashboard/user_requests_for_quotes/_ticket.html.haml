@@ -1,0 +1,7 @@
+%tr
+  %td= "#{t('reservations.rfq_short')} ##{ticket.id}"
+  %td= link_to support_ticket_title(ticket), dashboard_user_requests_for_quote_path(ticket)
+  %td= link_to ticket.target.name, ticket.show_target_path
+  %td
+    %abbr.timeago= timeago(ticket.created_at)
+  %td= ticket.state.titleize

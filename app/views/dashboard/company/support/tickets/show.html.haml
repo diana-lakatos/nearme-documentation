@@ -10,8 +10,9 @@
       %p="#{t('reservations.rfq_short')} ##{@ticket.id}: "
     - else
       %p="#{t('reservations.offer')} ##{@ticket.id}: "
-    %p
-      Quantity: #{@ticket.reservation_details['quantity']}
+    - if @ticket.reservation_details && @ticket.reservation_details['quantity'].present?
+      %p
+        Quantity: #{@ticket.reservation_details['quantity']}
     %p.pull-right
       Status:
       %span{class: "#{@ticket.state}"}= @ticket.state.titleize
@@ -25,10 +26,10 @@
     - span_class3 = 'span1 offset1'
   .dash-body.thread
 
-    = render partial: 'ticket_message', collection: @ticket.messages, spacer_template: 'spacer'
+    = render partial: 'dashboard/company/support/tickets/ticket_message', collection: @ticket.messages, spacer_template: 'dashboard/company/support/tickets/spacer'
 
     - if @ticket.open?
-      = render partial: 'form', locals: { ticket: @ticket, message: @message, with_close: true, form_url: dashboard_support_ticket_ticket_messages_path(@ticket, @message) }
+      = render partial: 'dashboard/company/support/tickets/form', locals: { ticket: @ticket, message: @message, with_close: true, form_url: dashboard_company_support_ticket_ticket_messages_path(@ticket) }
 
 = content_for :script do
   :javascript

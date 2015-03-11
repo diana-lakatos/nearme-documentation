@@ -1,6 +1,6 @@
 
 class User < ActiveRecord::Base
-  has_paper_trail :ignore => [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
+  has_paper_trail ignore: [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
                               :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
                               :unlock_token, :locked_at, :google_analytics_id, :browser, :browser_version, :platform,
                               :avatar_versions_generated_at, :last_geolocated_location_longitude,
@@ -11,39 +11,39 @@ class User < ActiveRecord::Base
   scoped_to_platform_context allow_admin: :admin
 
   extend FriendlyId
-  has_metadata :accessors => [:support_metadata]
+  has_metadata accessors: [:support_metadata]
   friendly_id :name, use: [:slugged, :finders]
 
-  has_many :authentications, :dependent => :destroy
-  has_many :instance_clients, :as => :client, :dependent => :destroy
+  has_many :authentications, dependent: :destroy
+  has_many :instance_clients, as: :client, dependent: :destroy
   has_many :company_users, -> { order(created_at: :asc) }, dependent: :destroy
-  has_many :companies, :through => :company_users
-  has_many :created_companies, :class_name => "Company", :foreign_key => 'creator_id', :inverse_of => :creator
-  has_many :administered_locations, :class_name => "Location", :foreign_key => 'administrator_id', :inverse_of => :administrator
-  has_many :administered_listings, :class_name => "Transactable", :through => :administered_locations, :source => :listings, :inverse_of => :administrator
-  has_many :instance_admins, :foreign_key => 'user_id', :dependent => :destroy
-  has_many :locations, :through => :companies, :inverse_of => :creator
-  has_many :reservations, :foreign_key => 'owner_id'
-  has_many :recurring_bookings, :foreign_key => 'owner_id'
-  has_many :listings, :through => :locations, class_name: 'Transactable', :inverse_of => :creator
-  has_many :photos, :foreign_key => 'creator_id', :inverse_of => :creator
-  has_many :products_images, :foreign_key => 'uploader_id', class_name: 'Spree::Image'
-  has_many :products, :foreign_key => 'user_id', class_name: 'Spree::Product'
-  has_many :listing_reservations, :through => :listings, :source => :reservations, :inverse_of => :creator
-  has_many :listing_recurring_bookings, :through => :listings, :source => :recurring_bookings, :inverse_of => :creator
-  has_many :relationships, :class_name => "UserRelationship", :foreign_key => 'follower_id', :dependent => :destroy
-  has_many :followed_users, :through => :relationships, :source => :followed
-  has_many :reverse_relationships, :class_name => "UserRelationship", :foreign_key => 'followed_id', :dependent => :destroy
-  has_many :followers, :through => :reverse_relationships, :source => :follower
-  has_many :user_industries, :dependent => :destroy
-  has_many :industries, :through => :user_industries
+  has_many :companies, through: :company_users
+  has_many :created_companies, class_name: "Company", foreign_key: 'creator_id', inverse_of: :creator
+  has_many :administered_locations, class_name: "Location", foreign_key: 'administrator_id', inverse_of: :administrator
+  has_many :administered_listings, class_name: "Transactable", through: :administered_locations, source: :listings, inverse_of: :administrator
+  has_many :instance_admins, foreign_key: 'user_id', dependent: :destroy
+  has_many :locations, through: :companies, inverse_of: :creator
+  has_many :reservations, foreign_key: 'owner_id'
+  has_many :recurring_bookings, foreign_key: 'owner_id'
+  has_many :listings, through: :locations, class_name: 'Transactable', inverse_of: :creator
+  has_many :photos, foreign_key: 'creator_id', inverse_of: :creator
+  has_many :products_images, foreign_key: 'uploader_id', class_name: 'Spree::Image'
+  has_many :products, foreign_key: 'user_id', class_name: 'Spree::Product'
+  has_many :listing_reservations, through: :listings, source: :reservations, inverse_of: :creator
+  has_many :listing_recurring_bookings, through: :listings, source: :recurring_bookings, inverse_of: :creator
+  has_many :relationships, class_name: "UserRelationship", foreign_key: 'follower_id', dependent: :destroy
+  has_many :followed_users, through: :relationships, source: :followed
+  has_many :reverse_relationships, class_name: "UserRelationship", foreign_key: 'followed_id', dependent: :destroy
+  has_many :followers, through: :reverse_relationships, source: :follower
+  has_many :user_industries, dependent: :destroy
+  has_many :industries, through: :user_industries
   has_many :mailer_unsubscriptions
   has_many :charges, foreign_key: 'user_id', dependent: :destroy
-  has_many :authored_messages, :class_name => "UserMessage", :foreign_key => 'author_id', :inverse_of => :author
-  has_many :tickets, -> { order 'updated_at DESC' }, :class_name => 'Support::Ticket'
-  has_many :assigned_tickets, -> { order 'updated_at DESC' }, foreign_key: 'assigned_to_id', :class_name => 'Support::Ticket'
-  has_many :assigned_company_tickets, -> { where(target_type: ['Transactable', 'Spree::Product']).order('updated_at DESC') }, foreign_key: 'assigned_to_id', :class_name => 'Support::Ticket'
-  has_many :requests_for_quotes, -> { where(target_type: 'Transactable').order('updated_at DESC') }, :class_name => 'Support::Ticket'
+  has_many :authored_messages, class_name: "UserMessage", foreign_key: 'author_id', inverse_of: :author
+  has_many :tickets, -> { order 'updated_at DESC' }, class_name: 'Support::Ticket'
+  has_many :assigned_tickets, -> { order 'updated_at DESC' }, foreign_key: 'assigned_to_id', class_name: 'Support::Ticket'
+  has_many :assigned_company_tickets, -> { where(target_type: ['Transactable', 'Spree::Product']).order('updated_at DESC') }, foreign_key: 'assigned_to_id', class_name: 'Support::Ticket'
+  has_many :requests_for_quotes, -> { where(target_type: ['Transactable', 'Spree::Product']).order('updated_at DESC') }, class_name: 'Support::Ticket'
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :user_bans
   has_one :blog, class_name: 'UserBlog'
@@ -81,7 +81,7 @@ class User < ActiveRecord::Base
   has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
 
   scope :patron_of, lambda { |listing|
-    joins(:reservations).where(:reservations => { :transactable_id => listing.id }).uniq
+    joins(:reservations).where(reservations: { transactable_id: listing.id }).uniq
   }
 
   scope :without, lambda { |users|
@@ -96,15 +96,15 @@ class User < ActiveRecord::Base
   }
 
   scope :hosts_of_listing, ->(listing) {
-    where(:id => listing.try(:administrator_id)).uniq
+    where(id: listing.try(:administrator_id)).uniq
   }
 
   scope :know_host_of, ->(listing) {
-    joins(:followers).where(:user_relationships => { :follower_id => listing.administrator_id }).references(:user_relationships).uniq
+    joins(:followers).where(user_relationships: { follower_id: listing.administrator_id }).references(:user_relationships).uniq
   }
 
   scope :mutual_friends_of, ->(user) {
-    joins(:followers).where(:user_relationships => { :follower_id => user.friends.pluck(:id) }).without(user).with_mutual_friendship_source
+    joins(:followers).where(user_relationships: { follower_id: user.friends.pluck(:id) }).without(user).with_mutual_friendship_source
   }
 
   scope :with_mutual_friendship_source, -> {
@@ -120,7 +120,7 @@ class User < ActiveRecord::Base
   scope :admin, -> { where(admin: true) }
 
   extend CarrierWave::SourceProcessing
-  mount_uploader :avatar, AvatarUploader, :use_inkfilepicker => true
+  mount_uploader :avatar, AvatarUploader, use_inkfilepicker: true
   skip_callback :commit, :after, :remove_avatar!
 
   BIOGRAPHY_MAX_LENGTH = 2000
@@ -137,10 +137,10 @@ class User < ActiveRecord::Base
   #        a 'Form' object containing their own additional validations specific
   #        to their context.
   validates :phone, phone_number: true,
-    :if => ->(u) {u.phone.present? || u.phone_required}
+    if: ->(u) {u.phone.present? || u.phone_required}
   validates :mobile_number, phone_number: true,
-    :if => ->(u) {u.mobile_number.present?}
-  validates_presence_of :country_name, :if => lambda { phone_required || country_name_required }
+    if: ->(u) {u.mobile_number.present?}
+  validates_presence_of :country_name, if: lambda { phone_required || country_name_required }
 
   validates :current_location, length: { maximum: 50 }
   validates :company_name, length: { maximum: 50 }
@@ -152,7 +152,7 @@ class User < ActiveRecord::Base
   attr_accessor :accept_terms_of_service
   attr_accessor :verify_associated
 
-  validates_associated :companies, :if => :verify_associated
+  validates_associated :companies, if: :verify_associated
   validates_acceptance_of :accept_terms_of_service, on: :create, allow_nil: false, if: lambda { |u| PlatformContext.current.try(:instance).try(:force_accepting_tos) && u.custom_validation }
 
   validate do |user|
@@ -173,7 +173,7 @@ class User < ActiveRecord::Base
   serialize :instance_unread_messages_threads_count, Hash
   serialize :avatar_transformation_data, Hash
 
-  delegate :to_s, :to => :name
+  delegate :to_s, to: :name
 
   SMS_PREFERENCES = %w(user_message reservation_state_changed new_reservation)
 
@@ -196,12 +196,12 @@ class User < ActiveRecord::Base
     expires_at = omniauth['credentials'] && omniauth['credentials']['expires_at'] ? Time.at(omniauth['credentials']['expires_at']) : nil
     token = omniauth['credentials'] && omniauth['credentials']['token']
     secret = omniauth['credentials'] && omniauth['credentials']['secret']
-    authentications.build(:provider => omniauth['provider'],
-                          :uid => omniauth['uid'],
-                          :info => omniauth['info'],
-                          :token => token,
-                          :secret => secret,
-                          :token_expires_at => expires_at)
+    authentications.build(provider: omniauth['provider'],
+                          uid: omniauth['uid'],
+                          info: omniauth['info'],
+                          token: token,
+                          secret: secret,
+                          token_expires_at: expires_at)
   end
 
   def create_blog
@@ -422,7 +422,7 @@ class User < ActiveRecord::Base
   def verify_email_with_token(token)
     if token.present? && self.email_verification_token == token && !self.verified_at
       self.verified_at = Time.zone.now
-      self.save(:validate => false)
+      self.save(validate: false)
       true
     else
       false
@@ -532,7 +532,7 @@ class User < ActiveRecord::Base
   def recover_companies
     self.created_companies.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', [self.deleted_at, self.banned_at].compact.first, [self.deleted_at, self.banned_at].compact.first + 30.seconds).each do |company|
       begin
-        company.restore(:recursive => true)
+        company.restore(recursive: true)
       rescue
       end
     end
@@ -635,7 +635,7 @@ class User < ActiveRecord::Base
   end
 
   # get_instance_metadata method comes from Metadata::Base
-  # you can add metadata attributes to class via: has_metadata :accessors => [:support_metadata]
+  # you can add metadata attributes to class via: has_metadata accessors: [:support_metadata]
   # please check Metadata::Base for further reference
 
   def has_draft_listings
@@ -686,22 +686,22 @@ class User < ActiveRecord::Base
 
   def reviews_about_seller
     query = <<-QUERY
-    reviews.reviewable_type = 'Spree::LineItem' 
+    reviews.reviewable_type = 'Spree::LineItem'
       AND reviews.reviewable_id IN (
-        SELECT spree_line_items.id FROM spree_line_items 
-        WHERE spree_line_items.instance_id = :instance_id 
+        SELECT spree_line_items.id FROM spree_line_items
+        WHERE spree_line_items.instance_id = :instance_id
           AND spree_line_items.variant_id IN (
-            SELECT spree_variants.id FROM spree_variants 
-            WHERE spree_variants.deleted_at IS NULL 
+            SELECT spree_variants.id FROM spree_variants
+            WHERE spree_variants.deleted_at IS NULL
               AND spree_variants.instance_id = :instance_id
               AND spree_variants.product_id IN (
-                SELECT spree_products.id FROM spree_products 
+                SELECT spree_products.id FROM spree_products
                 WHERE spree_products.deleted_at IS NULL
                   AND spree_products.instance_id = :instance_id
-                  AND spree_products.user_id = :user_id))) 
-      OR reviews.reviewable_type = 'Reservation' 
+                  AND spree_products.user_id = :user_id)))
+      OR reviews.reviewable_type = 'Reservation'
         AND reviews.reviewable_id IN (
-          SELECT reservations.id FROM reservations 
+          SELECT reservations.id FROM reservations
           WHERE reservations.instance_id = :instance_id
             AND reservations.deleted_at IS NULL
             AND reservations.creator_id = :user_id)
@@ -714,19 +714,19 @@ class User < ActiveRecord::Base
 
   def reviews_about_buyer
     query = <<-QUERY
-    reviews.reviewable_type = 'Spree::LineItem' 
+    reviews.reviewable_type = 'Spree::LineItem'
       AND reviews.reviewable_id IN (
-        SELECT spree_line_items.id FROM spree_line_items 
-        WHERE spree_line_items.instance_id = :instance_id 
+        SELECT spree_line_items.id FROM spree_line_items
+        WHERE spree_line_items.instance_id = :instance_id
           AND spree_line_items.order_id IN (
-            SELECT spree_orders.id FROM spree_orders 
+            SELECT spree_orders.id FROM spree_orders
             WHERE spree_orders.instance_id = :instance_id
-              AND spree_orders.user_id = :user_id)) 
-      OR reviews.reviewable_type = 'Reservation' 
+              AND spree_orders.user_id = :user_id))
+      OR reviews.reviewable_type = 'Reservation'
         AND reviews.reviewable_id IN (
-          SELECT reservations.id FROM reservations 
-          WHERE reservations.deleted_at IS NULL 
-            AND reservations.instance_id = :instance_id 
+          SELECT reservations.id FROM reservations
+          WHERE reservations.deleted_at IS NULL
+            AND reservations.instance_id = :instance_id
             AND reservations.owner_id = :user_id)
     QUERY
 

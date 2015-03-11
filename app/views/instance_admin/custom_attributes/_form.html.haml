@@ -25,6 +25,9 @@
         = f.input :hint, input_html: { class: 'form-control' }
       .input-container.col-xs-6
         = f.input :valid_values, label: 'Valid values (separate with coma)', wrapper_html_options: { class: 'for-select-tag' }, input_html: { value: f.object.valid_values.join(', ') }
+    .row
+      .input-container.col-xs-12
+        = f.input :required, as: :boolean
     .row.dropshadow
       .input-container.col-xs-6
         = f.input :input_html_options_string, label: 'Input Html Options(key1 => value1, key2 => value2)', input_html: { value: f.object.input_html_options.map { |k, v| "#{k} => #{v}"}.join(', ') }, input_html: { class: 'form-control' }

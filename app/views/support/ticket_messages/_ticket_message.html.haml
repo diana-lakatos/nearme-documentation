@@ -2,7 +2,7 @@
   .span1.profile
     .row-fluid
     - if ticket_message.user
-      = image_tag ticket_message.user.avatar.url(:medium)
+      = image_tag ticket_message.user.avatar_url(:medium)
 
   .span11.text
     .name.pull-left

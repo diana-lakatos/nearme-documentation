@@ -37,9 +37,10 @@ class Dashboard::Company::ProductsController < Dashboard::Company::BaseControlle
   end
 
   def update
+    return_to = params[:return_to].presence || location_after_save
     @product_form = ProductForm.new(@product)
     if @product_form.submit(product_form_params)
-      redirect_to location_after_save, notice: t('flash_messages.manage.product.updated')
+      redirect_to return_to, notice: t('flash_messages.manage.product.updated')
     else
       @images = @product_form.product.images
       render :edit

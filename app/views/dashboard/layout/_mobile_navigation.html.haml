@@ -10,6 +10,8 @@
         active: (params[:controller].include?('user_recurring_bookings') || params[:controller].include?('user_reservations'))
 
     = dashboard_menu_item 'dashboard/user_messages', dashboard_user_messages_path
+    - if platform_context.instance.action_rfq?
+      = dashboard_menu_item 'dashboard/my_rfq', dashboard_user_requests_for_quotes_path, not_hideable: true
 
     - if platform_context.instance.wish_lists_enabled?
       = dashboard_menu_item 'dashboard/wish_list_items', dashboard_wish_list_items_path, link_text: t('wish_lists.name')
@@ -32,8 +34,8 @@
       = dashboard_menu_item 'dashboard/users', dashboard_company_users_path
       = dashboard_menu_item 'dashboard/waiver_agreement_templates', dashboard_company_waiver_agreement_templates_path
       = dashboard_menu_item 'dashboard/white_labels', edit_dashboard_company_white_label_path(current_user.companies.first)
-      - if (TransactableType.pluck(:action_rfq) +  Spree::ProductType.pluck(:action_rfq)).any?
-        = dashboard_menu_item 'dashboard/tickets', dashboard_support_tickets_path
+      - if platform_context.instance.action_rfq?
+        = dashboard_menu_item 'dashboard/tickets', dashboard_company_support_tickets_path
 
     - if platform_context.instance.user_blogs_enabled?
       = dashboard_menu_item 'dashboard/blog', dashboard_blog_path, link_text: t('dashboard.nav.blog_posts'),

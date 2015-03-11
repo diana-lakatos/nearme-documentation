@@ -126,7 +126,7 @@ section {
   display: none;
 }
 
-abbr[title] {
+abbr[title]:not(.timeago) {
   border-bottom: none;
   color: $color-red;
   margin-left: -7px;
@@ -919,7 +919,7 @@ input#enable-blog {
 
 .payment-documents {
   font-size: 14px;
-  
+
   .file {
     display: block;
     overflow: hidden;

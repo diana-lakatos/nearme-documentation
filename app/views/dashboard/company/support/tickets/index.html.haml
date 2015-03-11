@@ -21,7 +21,7 @@
             %th Status
         %tbody
 
-          = render partial: 'dashboard/support/tickets/ticket', collection: @tickets
+          = render partial: 'dashboard/company/support/tickets/ticket', collection: @tickets
     = will_paginate_styled @tickets
 
 - content_for :script do
