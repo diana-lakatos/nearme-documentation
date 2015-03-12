@@ -287,7 +287,7 @@ class Transactable < ActiveRecord::Base
 
   # Number of minimum consecutive booking days required for this listing
   def minimum_booking_days
-    if action_free_booking? || action_hourly_booking? || daily_price_cents.to_i > 0 || (daily_price_cents.to_i + weekly_price_cents.to_i + monthly_price_cents.to_i).zero?
+    if action_free_booking? || (action_hourly_booking? && hourly_price_cents.to_i > 0) || daily_price_cents.to_i > 0 || (daily_price_cents.to_i + weekly_price_cents.to_i + monthly_price_cents.to_i).zero?
       1
     elsif weekly_price_cents.to_i > 0
       booking_days_per_week

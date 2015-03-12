@@ -10,6 +10,7 @@ class Bookings.Controller
     @bindDomElements()
     if @listing.withCalendars()
       @initializeDatepicker()
+      @listing.setDates(@datepicker.getDates())
     @bindEvents()
     @updateQuantityField()
 
