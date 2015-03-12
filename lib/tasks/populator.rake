@@ -1,22 +1,7 @@
 namespace :populate do
   desc "Populates unit prices"
   task :multi_user_account => :environment do
-    users = User.includes({company_users: :company}, :authentications).all.select { |u| u.companies.pluck(:instance_id).uniq.count > 1 && !u.admin? }
-    users.each do |u|
-      puts "Processing user: #{u.email} [instance: #{u.instance_id}], iterating over companies"
-      u.companies.each do |c|
-        puts "  Company #{c.id} with creator #{c.creator_id} which belongs to instance: #{c.instance_id}. Skipping if #{u.instance_id} == #{c.instance_id}"
-        next if c.instance_id == u.instance_id
-        puts "Not Skipping - different instance ids, creating new user!"
-        new_u = User.new(u.attributes.except('id', 'properties'))
-        new_u.instance_id = c.instance_id
-        new_u.instance_profile_type_id = Instance.find(c.instance_id).instance_profile_types.first.id
-        new_u.save(validate: false)
-        puts "Duplicated account #{new_u.email} - id: #{new_u.id}, instance_id: #{new_u.instance_id}"
-        c.update_attribute(:creator_id, new_u.id)
-        puts "company has now new creator: #{c.creator_id}, listings also have updated creator_id: #{c.listings.pluck(:creator_id).inspect}]"
-      end
-    end
+    MultiUserAccountPopulator.run!
   end
 
   desc "Populates unit prices"

@@ -34,6 +34,13 @@ FactoryGirl.define do
       format "html"
       handler "liquid"
     end
+    
+    factory :instance_view_footer do
+      body "This is footer"
+      path "layouts/theme_footer"
+      format "html"
+      handler "liquid"
+    end
   end
 end
 

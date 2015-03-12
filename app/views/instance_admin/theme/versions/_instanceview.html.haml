@@ -1,0 +1,12 @@
+%h4= "#{@parent_resource.titleize} version ##{resource.id}"
+
+.content-container.show-version
+  .row
+    .input-container.col-xs-12
+      .field-name Html body
+      %textarea.form-control{rows: 20, data: { editor: 'liquid' } }= resource.reify.body
+
+.content-container
+  .row
+    = link_to 'Rollback', { action: 'rollback', parent_resource: @parent_resource }, class: 'btn btn-green pull-right', data: { confirm: 'Are you sure you want to rollback page to this version?'}
+    = link_to 'All Versions', instance_admin_theme_homepage_template_paper_trail_versions_path(parent_resource: @parent_resource), class: 'btn btn-green pull-right'

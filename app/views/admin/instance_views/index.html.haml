@@ -9,5 +9,6 @@
       %tr
         %td= view.path
         %td= view.transactable_type.try(:name)
+        %td= link_to 'Versions', admin_instance_instance_view_versions_path(view.instance_id, view.id), class: 'btn'
         %td= link_to 'Edit', edit_admin_instance_instance_view_path(view.instance_id, view.id), class: 'btn'
         %td= button_to "Delete", admin_instance_instance_view_path(view.instance_id, view.id), :method => :delete, class: 'btn btn-danger'
