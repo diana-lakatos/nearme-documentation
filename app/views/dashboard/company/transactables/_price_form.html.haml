@@ -37,9 +37,6 @@
             .col-md-11
               = t("simple_form.labels.transactable.price_free")
 
-        - if f.object.errors.include?(:price_type).present?
-          %p.error-block= f.object.errors[:price_type].first
-
         - if f.object.errors.include?(:free).present?
           %p.error-block
             = t('errors.messages.free_if_zero')
@@ -47,7 +44,7 @@
 
 - if f.object.transactable_type.schedule_booking_enabled?
   - content_for :booking_type_schedule_tab_content do
-    %div{:class => "row #{"error" if f.object.errors.include?(:fixed_price).present?}"}
+    %div{:class => "row #{"error" if f.object.errors.include?(:fixed_price).present? || f.object.errors.include?(:price_type)}"}
       .col-md-3
         = f.label :daily_price, :price, :class => 'control-label flush-top' do
           %abbr{:title => "required"}= t('simple_form.required.mark')

@@ -99,11 +99,11 @@ class ReservationRequest < Form
   end
 
   def is_free?
-    @listing.try(:action_free_booking?)
+    @reservation.total_amount_cents.to_f.zero?
   end
 
   def possible_credit_card_payment?
-    @billing_gateway.try(:possible?) && !possible_nonce_payment? && !possible_remote_payment?
+    @billing_gateway.try(:possible?) && !possible_nonce_payment? && !possible_remote_payment? && !is_free?
   end
 
   def possible_manual_payment?
@@ -111,11 +111,11 @@ class ReservationRequest < Form
   end
 
   def possible_remote_payment?
-    @billing_gateway.try(:possible?) && @billing_gateway.try(:remote?)
+    @billing_gateway.try(:possible?) && @billing_gateway.try(:remote?) && !is_free?
   end
 
   def possible_nonce_payment?
-    nonce_payment_available? && payment_method_nonce.present?
+    nonce_payment_available? && payment_method_nonce.present? && !is_free?
   end
 
   def nonce_payment_available?

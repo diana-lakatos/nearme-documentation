@@ -1,7 +1,7 @@
 - price ||= nil
 - label ||= nil
 - include_checkbox ||= nil
-.col-md-12.price-containter{class: "#{'error' if f.object.errors[:"#{price}_price"].present?}"}
+.col-md-12.price-containter{class: "#{'error' if f.object.errors[:"#{price}_price"].present? || f.object.errors[:price_type].present?}"}
   -if include_checkbox
     .col-md-1
       %label.checkbox{for: "enable_#{price}"}
@@ -13,6 +13,8 @@
   .col-md-3
     %span.periodicity /#{label}
 
-  - if f.object.errors[:"#{price}_price"].present?
+  - if f.object.errors[:"#{price}_price"].present? || f.object.errors[:price_type].present?
     .col-md-3
-      %p.error-block= f.object.errors[:"#{price}_price"].first
+      %p.error-block
+        = f.object.errors[:"#{price}_price"].try(:first)
+        = f.object.errors[:price_type].try(:first)
