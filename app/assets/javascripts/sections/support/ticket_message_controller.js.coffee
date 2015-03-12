@@ -41,8 +41,6 @@ class @Support.TicketMessageController
         @data = new FormData()
         @data.append('support_ticket_message_attachment[file]', file)
         @data.append('form_name', @uploadAttachment.data('form-name'))
-        console.log "url: "
-        console.log @form.attr("action")
         $.ajax
           type: 'POST'
           url: @form.attr("action")
