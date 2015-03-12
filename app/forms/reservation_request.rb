@@ -99,7 +99,7 @@ class ReservationRequest < Form
   end
 
   def is_free?
-    @reservation.total_amount_cents.to_f.zero?
+    @listing.try(:action_free_booking?) && @reservation.try(:additional_charges).try(:count).try(:zero?)
   end
 
   def possible_credit_card_payment?
