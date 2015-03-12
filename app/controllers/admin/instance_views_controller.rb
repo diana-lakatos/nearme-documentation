@@ -1,6 +1,6 @@
 class Admin::InstanceViewsController < Admin::BaseController
   before_filter :set_instance, :except => [:destroy]
-  before_filter :set_instance_view, :only => [:edit, :update, :destroy]
+  before_filter :set_instance_view, :only => [:show, :edit, :update, :destroy]
 
   def index
     @instance_views = InstanceView.custom_views.where('instance_id = ?', params[:instance_id])
@@ -12,6 +12,9 @@ class Admin::InstanceViewsController < Admin::BaseController
                                        view_type: InstanceView::VIEW_VIEW,
                                        format: 'html',
                                        partial: false })
+  end
+
+  def show
   end
 
   def edit
