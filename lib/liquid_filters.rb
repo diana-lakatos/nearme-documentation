@@ -1,7 +1,7 @@
 module LiquidFilters
 
   def shorten_url(url)
-    Googl.shorten(url).short_url
+    Rails.env.development? ? url : Googl.shorten(url).short_url
   end
 
   def translate(key, options={})
