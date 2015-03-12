@@ -117,7 +117,8 @@ class User < ActiveRecord::Base
 
   scope :with_date, ->(date) { where(created_at: date) }
 
-  scope :admin, -> { where(admin: true) }
+  scope :admin,     -> { where(admin: true) }
+  scope :not_admin, -> { where("admin iS NULL") }
 
   extend CarrierWave::SourceProcessing
   mount_uploader :avatar, AvatarUploader, use_inkfilepicker: true
