@@ -99,11 +99,11 @@ class Transactable < ActiveRecord::Base
 
   attr_accessor :distance_from_search_query, :photo_not_required
 
-  monetize :daily_price_cents, allow_nil: true
-  monetize :hourly_price_cents, allow_nil: true
-  monetize :weekly_price_cents, allow_nil: true
-  monetize :monthly_price_cents, allow_nil: true
-  monetize :fixed_price_cents, allow_nil: true
+  monetize :daily_price_cents, with_model_currency: :currency, allow_nil: true
+  monetize :hourly_price_cents, with_model_currency: :currency, allow_nil: true
+  monetize :weekly_price_cents, with_model_currency: :currency, allow_nil: true
+  monetize :monthly_price_cents, with_model_currency: :currency, allow_nil: true
+  monetize :fixed_price_cents, with_model_currency: :currency, allow_nil: true
 
   # Defer to the parent Location for availability rules unless this Listing has specific
   # rules.
