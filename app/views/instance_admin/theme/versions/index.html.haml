@@ -1,0 +1,18 @@
+%h4= "Previous versions"
+-parent_path = @parent.is_a?(Theme) ? 'homepage' : @parent.is_a?(InstanceView) ? 'homepage_template' : @parent
+
+.content-container.dropshadow
+  .row
+    .table-container.col-xs-12
+      %table#pages.table.sortable
+        %thead
+          %tr
+            %th Version ID
+            %th Author
+            %th Changed At
+            %th
+        %tbody
+          = render partial: 'version', collection: collection, locals: { parent: @parent.is_a?(Page) ? @parent : @parent_resource}
+
+.content-container
+  = link_to 'Return', polymorphic_url([:instance_admin, :theme, @parent_resource]), class: 'btn btn-green pull-right'

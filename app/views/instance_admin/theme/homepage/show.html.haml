@@ -10,3 +10,4 @@
   .content-container
     .row
       = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+      = link_to "Versions", instance_admin_theme_homepage_paper_trail_versions_path(parent_resource: 'homepage'), class: 'btn btn-green pull-right' if @theme.versions.many?

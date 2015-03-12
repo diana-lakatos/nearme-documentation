@@ -1,0 +1,16 @@
+%h4= "Homepage version ##{resource.id}"
+
+.content-container.show-version
+  .row
+    .input-container.col-xs-12
+      .field-name Homepage Conetent
+      %textarea.form-control{rows: 20, data: { editor: 'liquid' } }= resource.reify.homepage_content
+  .row
+    .input-container.col-xs-12
+      .field-name Homepage CSS
+      %textarea.form-control{rows: 20, data: { editor: 'liquid' } }= resource.reify.homepage_css
+
+.content-container
+  .row
+    = link_to 'Rollback', {action: 'rollback', parent_resource: @parent_resource}, class: 'btn btn-green pull-right', data: { confirm: 'Are you sure you want to rollback page to this version?'}
+    = link_to 'All Versions', instance_admin_theme_homepage_paper_trail_versions_path(parent_resource: @parent_resource), class: 'btn btn-green pull-right'

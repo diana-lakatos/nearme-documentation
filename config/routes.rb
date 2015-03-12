@@ -131,7 +131,13 @@ DesksnearMe::Application.routes.draw do
       resources :transactable_types do
       end
       resources :partners
-      resources :instance_views
+      resources :instance_views do
+        resources :versions, only: [:index, :show] do
+          member do
+            get :rollback
+          end
+        end
+      end
     end
     resources :transactable_types, :only => [] do
       resources :custom_attributes
@@ -198,11 +204,17 @@ DesksnearMe::Application.routes.draw do
           match 'upload_image/:image', :action => :upload_image, :as => 'upload_theme_image', via: [:post, :put]
         end
       end
-      resources :pages
-      resource :footer, only: [:show, :create, :update], controller: 'footer'
-      resource :header, only: [:show, :create, :update], controller: 'header'
-      resource :homepage, only: [:show, :update], controller: 'homepage'
-      resource :homepage_template, only: [:show, :create, :update], controller: 'homepage_template'
+
+      concern :versionable do
+        resources :paper_trail_versions, only: [:index, :show], controller: 'versions', path: 'versions' do
+          get :rollback, on: :member
+        end
+      end
+      resources :pages, concerns: :versionable
+      resource :footer, only: [:show, :create, :update], controller: 'footer', concerns: :versionable
+      resource :header, only: [:show, :create, :update], controller: 'header', concerns: :versionable
+      resource :homepage, only: [:show, :update], controller: 'homepage', concerns: :versionable
+      resource :homepage_template, only: [:show, :create, :update], controller: 'homepage_template', concerns: :versionable
     end
 
     namespace :manage do
