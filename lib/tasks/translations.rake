@@ -257,12 +257,13 @@ namespace :translations do
     create_keys(upload_documents_translations)
   end
 
-  desc 'Social share translation'
-  task :social_share => [:environment] do
-    social_share_translations = {
-      'location.social_share.twitter' => 'Check out @%{instance_name}'
+  desc 'Update translations'
+  task :update => [:environment] do
+    keys_to_update = {
+      'location.social_share.twitter' => 'Check out @%{instance_name}',
+      'flash_messages.manage.locations.space_added' => 'Great, your new location has been added!'
     }
-    create_keys(social_share_translations)
+    create_keys(keys_to_update)
   end
 
   def create_keys(hash)
@@ -270,8 +271,9 @@ namespace :translations do
       translations = Translation.where(locale: 'en', key: k, instance_id: nil)
       if translations.any?
         translations.each do |t|
+          old_value = t.value
           t.value = v
-          puts "translation updated #{k}: #{v}" if t.changed? && t.save
+          puts "Key |#{k}| updated from |#{old_value}| to |#{v}|" if t.changed? && t.save
         end
       else
         puts "creating translation #{k}: #{v}"
