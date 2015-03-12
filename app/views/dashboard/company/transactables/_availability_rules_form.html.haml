@@ -38,7 +38,7 @@
                 %label.checkbox
                   = check_box_tag "open", "1", active, :class => "open-checkbox"
                   = t('simple_form.labels.availability_rule.open')
-          - if f.object.errors.any? { |e| e.to_s == "availability_rules.day_#{day}" }
-            .error-block
-              = f.object.errors["availability_rules.day_#{day}".to_sym][0]
+            - if f.object.errors.any? { |e| e.to_s == "availability_rules.day_#{day}" }
+              .error-block
+                = f.object.errors["availability_rules.day_#{day}".to_sym][0]
 
