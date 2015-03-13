@@ -32,7 +32,7 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
     context "for reviews on Reservation" do
       setup do
         @owner_of_reservation = FactoryGirl.create(:user)
-        @reservation = FactoryGirl.create(:reservation, owner: @owner_of_reservation)
+        @reservation = FactoryGirl.create(:reservation, owner: @owner_of_reservation, creator: FactoryGirl.create(:user))
         @reservation.update_column(:creator_id, @user.id)
       end
 
@@ -47,7 +47,8 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
       end
 
       should "return reviews_about_buyer" do
-        review = FactoryGirl.create(:review, object: 'buyer', user: @user, reviewable: @reservation)
+        user = FactoryGirl.create(:user)
+        review = FactoryGirl.create(:review, object: 'buyer', user: user, reviewable: @reservation)
         params = {:option => 'reviews_about_buyer'}
         user_reviews_service = UserReviewsService.new(@owner_of_reservation, @platform_context, params)
         reviews_about_buyer = user_reviews_service.reviews_by_role
@@ -78,6 +79,9 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
       end
 
       should "return reviews_about_buyer" do
+        product_mock = mock
+        product_mock.expects(:user_id).returns(@buyer.id+1)
+        Spree::LineItem.any_instance.expects(:product).returns(product_mock)
         review = FactoryGirl.create(:review, object: 'buyer', user: @user, reviewable: @line_item)
         params = {:option => 'reviews_about_buyer'}
         user_reviews_service = UserReviewsService.new(@buyer, @platform_context, params)
