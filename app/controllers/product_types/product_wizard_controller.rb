@@ -1,5 +1,6 @@
 class ProductTypes::ProductWizardController < ApplicationController
 
+  before_filter :authenticate_user!
   before_filter :find_product_type
   before_filter :redirect_to_dashboard_if_registration_completed, only: [:new]
   before_filter :set_form_components
