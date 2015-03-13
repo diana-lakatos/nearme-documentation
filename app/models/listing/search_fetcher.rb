@@ -44,8 +44,10 @@ class Listing::SearchFetcher
 
   def t_avail?(transactable)
     (@filters[:date_range].first..@filters[:date_range].last).each do |day|
-      return false unless transactable.open_on?(day)
+      return true if transactable.open_on?(day) # Returns the transactable if it's opened at least one day during the date range
     end
+
+    false
   end
 
   def availability_filter?
