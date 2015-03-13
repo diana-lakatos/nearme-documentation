@@ -15,7 +15,7 @@ class Reservation < ActiveRecord::Base
     :nonce       => 'nonce',
     :remote      => 'remote',
     :free        => 'free'
-  }
+  }.freeze
 
   PAYMENT_STATUSES = {
     :paid => 'paid',
@@ -23,7 +23,7 @@ class Reservation < ActiveRecord::Base
     :pending => 'pending',
     :refunded => 'refunded',
     :unknown => 'unknown'
-  }
+  }.freeze
 
   attr_encrypted :authorization_token, :payment_gateway_class, :key => DesksnearMe::Application.config.secret_token
   attr_accessor :payment_response_params

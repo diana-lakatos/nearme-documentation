@@ -12,7 +12,7 @@
         = f.association :transactable_type
     .row
       .input-container.col-xs-12
-        = f.input :body, as: :text, label: 'Body', input_html: { class: 'form-control', rows: "10" }, hint: 'We will automatically truncate messages to be no more than 160 characters'
+        = f.input :body, as: :text, label: 'Body', input_html: { class: 'form-control', :"data-editor" => 'liquid', rows: '5' }, hint: 'We will automatically truncate messages to be no more than 160 characters'
 
     = f.button :submit, 'Save', class: 'btn btn-green pull-right'
     = link_to 'Cancel', instance_admin_manage_sms_templates_url , class: 'pull-right'

@@ -15,7 +15,7 @@
         = f.input :format, collection: ['text', 'html'], input_html: { class: 'form-control' }
     .row
       .input-container.col-xs-12
-        = f.input :body, as: :text, label: 'Body', input_html: { class: 'form-control', rows: "10" }
+        = f.input :body, as: :text, label: 'Body', input_html: { class: 'form-control', :"data-editor" => 'liquid', rows: '30' }
 
     = f.button :submit, 'Save', class: 'btn btn-green pull-right'
     = link_to 'Cancel', instance_admin_manage_email_templates_url , class: 'pull-right'

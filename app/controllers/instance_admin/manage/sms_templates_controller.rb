@@ -2,10 +2,16 @@ class InstanceAdmin::Manage::SmsTemplatesController < InstanceAdmin::Manage::Bas
 
   def index
     @sms_templates = platform_context.instance.instance_views.custom_smses
+    @not_customized_sms_templates_paths = InstanceView.not_customized_sms_templates_paths
   end
 
   def new
-    @sms_template = platform_context.instance.instance_views.build
+    if params[:path] && InstanceView::DEFAULT_SMS_TEMPLATES_PATHS.include?(params[:path])
+      @body = File.read(File.join(Rails.root, 'app', 'views', "#{params[:path]}.text.liquid"))
+    else
+      @body = ''
+    end
+    @sms_template = platform_context.instance.instance_views.build(path: params[:path], format: params[:sms_format], body: @body)
   end
 
   def edit
