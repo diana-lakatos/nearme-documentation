@@ -27,4 +27,21 @@
                   = link_to 'Destroy', instance_admin_manage_sms_template_path(sms_template), method: :delete,
                       data: { confirm: 'Are you sure?' }
 
+%h4 Customize default
+
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table
+        %tbody
+          %tr
+            %th Template
+            %th Customize
+
+          - @not_customized_sms_templates_paths.each do |sms_template_path|
+            %tr
+              %td= pretty_path sms_template_path
+              %td= link_to 'text', new_instance_admin_manage_sms_template_path(path: sms_template_path, sms_format: 'text')
+
+
 

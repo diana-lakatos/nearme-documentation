@@ -29,4 +29,23 @@
                   = link_to 'Destroy', instance_admin_manage_email_template_path(email_template), method: :delete,
                       data: { confirm: 'Are you sure?' }
 
+%h4 Customize default
+
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table
+        %tbody
+          %tr
+            %th Template
+            %th{colspan: 2} Customize
+
+          - @not_customized_email_templates_paths.each do |email_template_path, formats|
+            - next if formats.count == 2
+            %tr
+              %td= pretty_path email_template_path
+              - (%w(html text) - formats).each do |format|
+                %td= link_to format, new_instance_admin_manage_email_template_path(path: email_template_path, email_format: format)
+
+
 

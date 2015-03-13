@@ -13,9 +13,7 @@ class InstanceViewResolverTest < ActiveSupport::TestCase
   end
 
   should 'return a template if exists with exact details' do
-    @instance_view = FactoryGirl.build(:instance_view)
-    @instance_view.instance_id = @instance.id
-    @instance_view.save!
+    @instance_view = FactoryGirl.create(:instance_view, instance_id: @instance.id)
     template = @resolver.find_all("index", "public", false, @details).first
     assert_kind_of ActionView::Template, template
     assert_equal "%h1\n\tHello", template.source
@@ -33,43 +31,28 @@ class InstanceViewResolverTest < ActiveSupport::TestCase
 
   should 'find a default template if concrete exists for different instance' do
     @instance_view = FactoryGirl.create(:instance_view, body: 'default')
-    FactoryGirl.create(:instance_view, :body => 'default')
-    @concrete_instance_view = FactoryGirl.build(:instance_view, :body => 'concrete')
-    @concrete_instance_view.instance_id = FactoryGirl.create(:instance).id
-    @concrete_instance_view.save!
+    @concrete_instance_view = FactoryGirl.create(:instance_view, body: 'concrete', instance_id: FactoryGirl.create(:instance).id)
     template = @resolver.find_all("index", "public", false, @details).first
     assert_equal "default", template.source
   end
 
   should 'prioritize concrete template if was created last' do
-    FactoryGirl.create(:instance_view, :body => 'default')
-    @default_instance_view = FactoryGirl.build(:instance_view, :body => 'concrete')
-    @default_instance_view.save!
-    @instance_view = FactoryGirl.build(:instance_view, :body => 'concrete')
-    @instance_view.instance_id = @instance.id
-    @instance_view.save!
+    FactoryGirl.create(:instance_view, body: 'default')
+    @instance_view = FactoryGirl.create(:instance_view, body: 'concrete', instance_id: @instance.id)
     template = @resolver.find_all("index", "public", false, @details).first
     assert_equal "concrete", template.source
   end
 
   should 'prioritize concrete template if was created first' do
-    @instance_view = FactoryGirl.build(:instance_view, :body => 'concrete')
-    @instance_view.instance_id = @instance.id
-    @instance_view.save!
-    FactoryGirl.create(:instance_view, :body => 'default')
-    @default_instance_view = FactoryGirl.build(:instance_view, :body => 'concrete')
-    @default_instance_view.save!
+    @instance_view = FactoryGirl.create(:instance_view, body: 'concrete', instance_id: @instance.id)
+    FactoryGirl.create(:instance_view, body: 'default')
     template = @resolver.find_all("index", "public", false, @details).first
     assert_equal "concrete", template.source
   end
 
   should 'not confuse templates that belong to other instance if created earlier' do
-    @instance_view = FactoryGirl.build(:instance_view, :body => 'this')
-    @instance_view.instance_id = @instance.id
-    @instance_view.save!
-    @instance_view_other = FactoryGirl.build(:instance_view, :body => 'other')
-    @instance_view_other.instance_id = FactoryGirl.create(:instance).id
-    @instance_view_other.save!
+    @instance_view = FactoryGirl.create(:instance_view, body: 'this', instance_id: @instance.id)
+    @instance_view_other = FactoryGirl.create(:instance_view, body: 'other', instance_id: FactoryGirl.create(:instance).id)
     template = @resolver.find_all("index", "public", false, @details).first
     assert_equal "this", template.source
   end
@@ -77,12 +60,8 @@ class InstanceViewResolverTest < ActiveSupport::TestCase
   should 'not confuse templates that belong to other instance if created later' do
     @other_instance = FactoryGirl.create(:instance)
     @details[:instance_id] = @other_instance.id
-    @instance_view = FactoryGirl.build(:instance_view, :body => 'this')
-    @instance_view.instance_id = @instance.id
-    @instance_view.save!
-    @instance_view_other = FactoryGirl.build(:instance_view, :body => 'other')
-    @instance_view_other.instance_id = @other_instance.id
-    @instance_view_other.save!
+    @instance_view = FactoryGirl.create(:instance_view, body: 'this', instance_id: @instance.id)
+    @instance_view_other = FactoryGirl.create(:instance_view, body: 'other', instance_id: @other_instance.id)
     template = @resolver.find_all("index", "public", false, @details).first
     assert_equal "other", template.source
   end

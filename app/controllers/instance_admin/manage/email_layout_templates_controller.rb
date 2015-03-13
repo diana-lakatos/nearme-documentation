@@ -2,10 +2,16 @@ class InstanceAdmin::Manage::EmailLayoutTemplatesController < InstanceAdmin::Man
 
   def index
     @email_layout_templates = platform_context.instance.instance_views.custom_email_layouts.order('path')
+    @not_customized_email_template_layouts_paths = InstanceView.not_customized_email_template_layouts_paths
   end
 
   def new
-    @email_layout_template = platform_context.instance.instance_views.build
+    if params[:path] && InstanceView::DEFAULT_EMAIL_TEMPLATE_LAYOUTS_PATHS.include?(params[:path]) && %w(html text).include?(params[:email_format])
+      @body = File.read(File.join(Rails.root, 'app', 'views', "#{params[:path]}.#{params[:email_format]}.liquid"))
+    else
+      @body = ''
+    end
+    @email_layout_template = platform_context.instance.instance_views.build(path: params[:path], format: params[:email_format], body: @body)
   end
 
   def edit
