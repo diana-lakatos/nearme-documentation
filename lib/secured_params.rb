@@ -798,6 +798,7 @@ class SecuredParams
         :hourly_price, :daily_price, :weekly_price, :monthly_price, :fixed_price, :fixed_price_cents,
         :hourly_price_cents, :daily_price_cents, :weekly_price_cents, :monthly_price_cents,
         :action_rfq,
+        :quantity,
         :action_recurring_booking,
         :action_hourly_booking,
         :action_free_booking,

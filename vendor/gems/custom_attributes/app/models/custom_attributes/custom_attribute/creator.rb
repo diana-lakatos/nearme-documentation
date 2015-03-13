@@ -12,7 +12,6 @@ module CustomAttributes
         name: :string,
         description: :string,
         listing_type: :string,
-        quantity: :integer,
         capacity: :integer,
         delta: :boolean,
         minimum_booking_minutes: :integer,
@@ -22,8 +21,6 @@ module CustomAttributes
         tta = @target.custom_attributes.where(name: attr_name).first || CustomAttribute.new(target: @target)
 
         default = case attr_name
-                  when :quantity
-                    1
                   when :delta, :listings_public
                     true
                   when :rank
@@ -32,22 +29,20 @@ module CustomAttributes
                     nil
                   end
         public_flag =  case  attr_name
-                       when :listing_type, :quantity, :capacity, :name, :description
+                       when :listing_type, :capacity, :name, :description
                          true
                        else
                          false
                        end
 
         internal_flag =  case  attr_name
-                         when :quantity, :name, :description, :minimum_booking_minutes, :last_request_photos_sent_at
+                         when :name, :description, :minimum_booking_minutes, :last_request_photos_sent_at
                            true
                          else
                            false
                          end
 
         validation_rules = case attr_name
-                           when :quantity
-                             { :presence => {}, :numericality => { greater_than: 0, only_integer: true } }
                            when :description
                              { :length => { :maximum => 250 }, :presence => {} }
                            when :name
@@ -58,14 +53,6 @@ module CustomAttributes
                              {}
                            end
         rest_attributes = case attr_name
-                          when :quantity
-                            {
-                              label:  'Quantity available',
-                              input_html_options: { :class => "mini" },
-                              hint: "How many of this type of #{@bookable_noun} do you have available?",
-                              placeholder: 2
-
-                            }
                           when :capacity
                             {
                               hint: "How many people does your #{@bookable_noun} accommodate?",

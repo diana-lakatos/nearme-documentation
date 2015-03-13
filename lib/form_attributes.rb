@@ -36,14 +36,14 @@ class FormAttributes
 
   def transactable(transactable_type = nil)
     [
-      :availability_rules, :price, :photos, :approval_requests
+      :availability_rules, :price, :photos, :approval_requests, :quantity
     ] +
     Transactable.public_custom_attributes_names(transactable_type.id).map { |k| Hash === k ? k.keys : k }.flatten
   end
 
   def dashboard_transactable(transactable_type = nil)
     [
-      :location_id, :approval_requests, :enabled, :amenity_types, :price, :schedule, :photos, :waiver_agreement_templates, :documents_upload
+      :location_id, :approval_requests, :enabled, :amenity_types, :price, :schedule, :photos, :waiver_agreement_templates, :documents_upload, :quantity
     ] +
     Transactable.public_custom_attributes_names(transactable_type.id)
   end

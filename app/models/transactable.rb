@@ -13,7 +13,6 @@ class Transactable < ActiveRecord::Base
   has_many :document_requirements, as: :item, dependent: :destroy, inverse_of: :item
 
   has_many :reservations, inverse_of: :listing
-  has_many :periods, through: :reservations
 
   has_many :recurring_bookings, inverse_of: :listing
   has_many :photos, dependent: :destroy, inverse_of: :listing do
@@ -95,6 +94,8 @@ class Transactable < ActiveRecord::Base
   validates_with PriceValidator
   validates :photos, :length => { :minimum => 1 }, :unless => :photo_not_required
   validates_inclusion_of :booking_type, in: TransactableType::BOOKING_TYPES
+  validates :quantity, presence: true
+  validates :quantity, numericality: { greater_than: 0 }
 
   after_save :set_external_id
 

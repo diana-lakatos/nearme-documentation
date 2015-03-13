@@ -15,7 +15,7 @@ class Search.SearchController extends Search.Controller
     @resultsCountContainer = $('#search_results_count')
     @transactable_types = $('div[data-transactable-type-filter] input')
     @date_range = $('div[data-date-range-filter] input')
-    @date_range_btn = $('div[data-date-range-filter] #date-range-refresh')
+    @date_range_btn = $('div[data-date-range-filter] div[data-date-range-filter-update]')
     @filters = $('a[data-search-filter]')
     @filters_container = $('div[data-search-filters-container]')
     @processingResults = true
@@ -38,13 +38,8 @@ class Search.SearchController extends Search.Controller
 
       document.location = "#{document.location.protocol}//#{document.location.host}#{document.location.pathname}?loc=#{DNM.util.Url.getParameterByName('loc')}&transactable_type_id=#{$(event.target).val()}" + date_range
 
-    # TODO Discuss with the team during QA, I am not sure about approach here
-#   @date_range.on 'change', (event) =>
-#     @fieldChanged()
-
     @date_range_btn.on 'click', (event) =>
       @triggerSearchFromQuery()
-    # --- --- #
 
     @closeFilterIfClickedOutside()
 

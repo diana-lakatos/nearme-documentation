@@ -7,25 +7,25 @@
 
 {% assign button_wrapper_class = 'span3' %}
 
-{% if platform_context.date_pickers? == true and platform_context.multiple_transactable_types? == true %}
+{% if platform_context.display_date_pickers? == true and platform_context.multiple_transactable_types? == true %}
     {% assign search_box_class = 'span12' %}
     {% assign search_input_class = 'span4' %}
     {% assign button_wrapper_class = 'span2' %}
 {% endif %}
 
-{% if platform_context.date_pickers? == true and platform_context.multiple_transactable_types? == false %}
+{% if platform_context.display_date_pickers? == true and platform_context.multiple_transactable_types? == false %}
     {% assign search_box_class = 'span10 offset1' %}
     {% assign search_input_class = 'span5' %}
     {% assign button_wrapper_class = 'span3' %}
 {% endif %}
 
-{% if platform_context.date_pickers? == true and platform_context.multiple_transactable_types? == true and platform_context.tt_select_type == 'radio'%}
+{% if platform_context.display_date_pickers? == true and platform_context.multiple_transactable_types? == true and platform_context.tt_select_type == 'radio'%}
     {% assign search_box_class = 'span10 offset1' %}
     {% assign search_input_class = 'span5' %}
     {% assign button_wrapper_class = 'span3' %}
 {% endif %}
 
-{% if platform_context.date_pickers? == false and platform_context.multiple_transactable_types? == true and platform_context.tt_select_type == 'radio'%}
+{% if platform_context.display_date_pickers? == false and platform_context.multiple_transactable_types? == true and platform_context.tt_select_type == 'radio'%}
     {% assign search_box_class = 'span10 offset1' %}
     {% assign search_input_class = 'span9' %}
     {% assign button_wrapper_class = 'span3' %}
@@ -48,7 +48,7 @@
           <div class="row-fluid">
             <div class="{{ search_input_class }}">
                 <input class="query" id="search" name="loc" placeholder="{{ platform_context.search_field_placeholder }}" type="text"></input>
-                {% if platform_context.bookable? == true and platform_context.buyable? == true%}
+                {% if platform_context.bookable? == true and platform_context.buyable? == true %}
                     <input class="query" id="search_prod" name="query" placeholder="{{ platform_context.search_field_placeholder }}" type="text" style="display: none;"></input>
                 {% endif %}
 
@@ -71,7 +71,7 @@
               </div>
           {% endif %}
 
-          {% if platform_context.date_pickers? == true %}
+          {% if platform_context.display_date_pickers? == true && %}
               <div class="span2">
                   <input id='start_date' class='search_date' type="text" name='start_date' readonly="readonly" value="From"/>
                   <input id='availability_dates_start' type="hidden" name="availability[dates][start]"/>

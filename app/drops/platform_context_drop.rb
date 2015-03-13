@@ -47,7 +47,7 @@ class PlatformContextDrop < BaseDrop
     all_transactables.size > 1
   end
 
-  def date_pickers?
+  def display_date_pickers?
     @platform_context_decorator.instance.date_pickers
   end
 

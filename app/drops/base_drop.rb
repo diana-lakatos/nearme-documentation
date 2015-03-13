@@ -1,9 +1,5 @@
 class BaseDrop < Liquid::Drop
 
-  def formatted_date
-    
-  end
-
   private
 
   def routes
