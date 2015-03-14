@@ -16,14 +16,11 @@ class MultiUserAccountPopulator
           process_company_association(company, :listings)
         end
         process_association(u, :created_companies, :creator_id)
-        process_association(u, :locations, :creator_id)
-        process_association(u, :transactables, :creator_id)
         process_association(u, :instance_admins)
         process_association(u, :tickets)
         process_association(u, :ticket_message_attachments, :uploader_id)
         process_association(u, :authored_messages, :author_id)
         process_association(u, :reservations, :owner_id)
-        process_association(u, :reservations, :creator_id)
       end
     end
 
@@ -45,12 +42,12 @@ class MultiUserAccountPopulator
     def process_company_association(company, assoc)
       company.send(assoc).each do |entity|
         next if company.instance_id == entity.instance_id && company.creator_id == entity.creator_id
-        entity.update_columns(creator_id: company.creator_id, instance_id: company.instance_id)
+        entity.update_attributes(creator_id: company.creator_id, instance_id: company.instance_id)
       end
     end
 
     def find_or_create_new_user_for_instance(user, entity)
-      new_user = User.find_by(instance_id: entity.instance_id, slug: user.slug)
+      new_user = User.find_by(instance_id: entity.instance_id, email: user.email)
       unless new_user
         new_user = User.new(user.attributes.except('id', 'properties'))
         new_user.instance_id = entity.instance_id
