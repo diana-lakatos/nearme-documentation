@@ -166,10 +166,8 @@ end
 group :development do
   gem 'quiet_assets'
   gem 'thin'
-  gem 'pry-rails'
   gem 'pry-nav'
   gem 'pry-doc'
-  gem 'awesome_print'
   gem 'spring'
   gem 'spring-commands-cucumber'
 end
