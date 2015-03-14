@@ -17,11 +17,11 @@ class BoardingForm < Form
     errors.add(:company_address, "doesn't look like valid product") unless @product_form.valid?
   end
 
-  def initialize(user)
+  def initialize(user, product_type)
     @user = user
     @company = @user.companies.first || @user.companies.build(:creator_id => @user.id)
     @company_address = @company.company_address || @company.build_company_address
-    @product = @company.products.first || @company.products.build(user_id: @user.id, product_type: Spree::ProductType.last)
+    @product = @company.products.first || @company.products.build(user_id: @user.id, product_type_id: product_type.id)
     @product.user = @user if @product.user.blank?
     @product_form = ProductForm.new(@product)
   end

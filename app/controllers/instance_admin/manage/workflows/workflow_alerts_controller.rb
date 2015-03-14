@@ -49,35 +49,15 @@ class InstanceAdmin::Manage::Workflows::WorkflowAlertsController < InstanceAdmin
   end
 
   def find_custom_smses
-    @custom_smses = (['company_sms_notifier/notify_host_of_no_payout_option', 'recurring_booking_sms_notifier/notify_guest_with_state_change', 'recurring_booking_sms_notifier/notify_host_with_confirmation', 'reservation_sms_notifier/notify_guest_with_state_change', 'reservation_sms_notifier/notify_host_with_confirmation', 'user_message_sms_notifier/notify_user_about_new_message'] + InstanceView.for_instance_id(PlatformContext.current.instance.id).custom_smses.pluck('path')).uniq
+    @custom_smses =  InstanceView.all_sms_template_layouts_paths
   end
 
   def find_custom_emails
-    @custom_emails = (['post_action_mailer/sign_up_welcome', 'post_action_mailer/sign_up_verify',
-                       'post_action_mailer/created_by_instance_admin', 'post_action_mailer/list',
-                       'post_action_mailer/list_draft', 'post_action_mailer/unsubscription',
-                       'post_action_mailer/user_created_invitation',
-                       'inquiry_mailer/inquiring_user_notification',
-                       'inquiry_mailer/listing_creator_notification', 'listing_mailer/share',
-                       'rating_mailer/request_rating_of_guest_from_host',
-                       'rating_mailer/request_rating_of_host_from_guest',
-                       'reengagement_mailer/no_bookings', 'reengagement_mailer/one_booking',
-                       'recurring_mailer/analytics', 'recurring_mailer/request_photos',
-                       'recurring_mailer/share', 'reservation_mailer/notify_guest_of_cancellation_by_guest',
-                       'reservation_mailer/notify_guest_of_cancellation_by_host',
-                       'reservation_mailer/notify_guest_of_confirmation', 'reservation_mailer/notify_guest_of_expiration',
-                       'reservation_mailer/notify_guest_of_rejection', 'reservation_mailer/notify_guest_with_confirmation',
-                       'reservation_mailer/notify_host_of_cancellation_by_guest',
-                       'reservation_mailer/notify_host_of_cancellation_by_host',
-                       'reservation_mailer/notify_host_of_confirmation', 'reservation_mailer/notify_host_of_expiration',
-                       'reservation_mailer/notify_host_of_rejection', 'reservation_mailer/notify_host_with_confirmation',
-                       'reservation_mailer/notify_host_without_confirmation', 'reservation_mailer/pre_booking',
-                       'rating_mailer/line_items/request_rating_of_guest_from_host', 'rating_mailer/line_items/request_rating_of_host_and_product_from_guest'] +
-                       InstanceView.for_instance_id(PlatformContext.current.instance.id).custom_emails.pluck('path')).uniq
+    @custom_emails =  InstanceView.all_email_templates_paths
   end
 
   def find_custom_email_layouts
-    @custom_email_layouts = (['layouts/mailer'] + InstanceView.for_instance_id(PlatformContext.current.instance.id).custom_email_layouts.pluck('path')).uniq
+    @custom_email_layouts = InstanceView.all_email_template_layouts_paths
   end
 
   def permitting_controller_class

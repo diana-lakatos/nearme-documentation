@@ -19,7 +19,7 @@
               - if payment.company.present?
                 = payment.company.name
               - else
-                = "#{payment.company_including_deleted.name} (Deleted)"
+                (Deleted)
             %td= payment.payable.user.try(:name)
             %td= payment.state
             %td= humanized_money_with_cents_and_symbol(payment.service_fee_amount_guest)

@@ -1,9 +1,9 @@
 class ReservationDecorator < Draper::Decorator
-  include Draper::LazyHelpers
 
   include CurrencyHelper
   include TooltipHelper
   include FeedbackDecoratorHelper
+  include Rails.application.routes.url_helpers
 
   delegate_all
 
@@ -134,7 +134,7 @@ class ReservationDecorator < Draper::Decorator
   end
 
   def manage_booking_status_info_new
-    raw I18n.t('dashboard.host_reservations.pending_confirmation', time_to_expiry: time_to_expiry(expiry_time))
+    I18n.t('dashboard.host_reservations.pending_confirmation', time_to_expiry: time_to_expiry(expiry_time)).html_safe
   end
 
   def next_payment_transfer
@@ -147,7 +147,7 @@ class ReservationDecorator < Draper::Decorator
 
   def user_message_summary(user_message)
     if user_message.thread_context.present? && user_message.thread_context.listing.present? && user_message.thread_context.location
-      link_to user_message.thread_context.name, location_path(user_message.thread_context.location, user_message.thread_context.listing)
+      h.link_to user_message.thread_context.name, location_path(user_message.thread_context.location, user_message.thread_context.listing)
     else
       "[Deleted]"
     end

@@ -41,6 +41,13 @@ en:
       question_quantity: "Only %{number} questions or less for one rating system"
   general:
     or_spaced: ' or '
+  transactable_types:
+    locations:
+      listings:
+        hours: 'Hours'
+        book_at: 'Book at'
+        the_listing: 'The listing'
+        admin_logout_confirmation: 'This will log you out and re-log you in as location administrator.'
   manage:
     companies:
       theme_image_deleted: "That image has been deleted."

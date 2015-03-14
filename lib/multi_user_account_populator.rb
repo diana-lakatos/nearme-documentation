@@ -47,11 +47,11 @@ class MultiUserAccountPopulator
     end
 
     def find_or_create_new_user_for_instance(user, entity)
-      new_user = User.find_by(instance_id: entity.instance_id, slug: user.slug)
+      new_user = User.find_by(instance_id: entity.instance_id, email: user.email)
       unless new_user
         new_user = User.new(user.attributes.except('id', 'properties'))
         new_user.instance_id = entity.instance_id
-        new_user.instance_profile_type_id = Instance.find(entity.instance_id).instance_profile_types.first.id
+        new_user.instance_profile_type_id = Instance.find(entity.instance_id).instance_profile_types.first.try(:id) || Instance.find(entity.instance_id).instance_profile_types.create(name: 'User custom attribute').id
         new_user.save(validate: false)
         puts "Duplicated user #{user.id} for email #{user.email}, new user id is: #{new_user.id}"
       end

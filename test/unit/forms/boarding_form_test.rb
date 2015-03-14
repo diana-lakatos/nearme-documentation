@@ -4,8 +4,9 @@ class BoardingFormTest < ActiveSupport::TestCase
 
   setup do
     PlatformContext.current = PlatformContext.new(FactoryGirl.create(:instance))
+    @product_type = FactoryGirl.create(:product_type)
     @user = FactoryGirl.create(:user, name: "Firstname Lastname")
-    @boarding_form = BoardingForm.new(@user)
+    @boarding_form = BoardingForm.new(@user, @product_type)
     @shipping_category = FactoryGirl.create(:shipping_category)
     @shipping_category.company_id = @boarding_form.product_form.product.company.id
     @shipping_category.user_id = @user.id

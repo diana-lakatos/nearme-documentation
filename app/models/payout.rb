@@ -60,7 +60,7 @@ class Payout < ActiveRecord::Base
   end
 
   def update_status
-    reference.update_payout_status(self)
+    reference.try(:update_payout_status, self)
   end
 
 end

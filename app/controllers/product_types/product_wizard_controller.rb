@@ -1,5 +1,6 @@
 class ProductTypes::ProductWizardController < ApplicationController
 
+  before_filter :authenticate_user!
   before_filter :find_product_type
   before_filter :redirect_to_dashboard_if_registration_completed, only: [:new]
   before_filter :set_form_components
@@ -7,7 +8,7 @@ class ProductTypes::ProductWizardController < ApplicationController
   layout "dashboard"
 
   def new
-    @boarding_form = BoardingForm.new(current_user)
+    @boarding_form = BoardingForm.new(current_user, @product_type)
     @boarding_form.assign_all_attributes
     @images = (@boarding_form.product_form.try(:product).try(:images) || []) + current_user.products_images.where(viewable_id: nil, viewable_type: nil)
   end
@@ -15,7 +16,7 @@ class ProductTypes::ProductWizardController < ApplicationController
   def create
     redirect_to(new_space_wizard_url) && return unless current_user.present?
 
-    @boarding_form = BoardingForm.new(current_user)
+    @boarding_form = BoardingForm.new(current_user, @product_type)
     @images = @boarding_form.product_form.product.images
     if @boarding_form.submit(boarding_form_params)
       if @boarding_form.draft?

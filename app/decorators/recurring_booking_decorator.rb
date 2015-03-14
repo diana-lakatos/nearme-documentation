@@ -47,7 +47,7 @@ class RecurringBookingDecorator < Draper::Decorator
     elsif unconfirmed?
       'ico-pending'
     elsif cancelled? || rejected?
-       'ico-close'
+      'ico-close'
     elsif expired?
       'ico-time'
     end
