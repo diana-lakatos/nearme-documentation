@@ -11,9 +11,9 @@ class AddSearchSettingsToInstances < ActiveRecord::Migration
     Instance.where(default_search_view: [nil, '']).each { |instance| instance.update_column :default_search_view, 'mixed' }
     Instance.where(searcher_type: [nil, '']).each { |instance| instance.update_column :searcher_type, 'geo' }
 
-    # Set default vaules
+    # Set default values
     execute <<-SQL
-      UPDATE instances SET search_settings = search_settings || '"date_pickers"=>"0", "tt_select_type"=>"dropdown"'::hstore
+      UPDATE instances SET search_settings = search_settings || '"date_pickers"=>"0", "tt_select_type"=>"dropdown", "date_pickers_mode"=>"relative", "date_pickers_use_availability_rules"=>"1"'::hstore
     SQL
   end
 

@@ -313,6 +313,8 @@ class SecuredParams
       :search_settings,
       :date_pickers,
       :tt_select_type,
+      :date_pickers_use_availability_rules,
+      :date_pickers_mode,
       :apply_text_filters, :force_accepting_tos,
       :payment_transfers_frequency,
       :user_blogs_enabled,

@@ -31,4 +31,7 @@ $('#end_date, #fake_end_date').datepicker($.extend({}, common_options, {
 
 
 $("#start_date:not(:hidden)").datepicker('setDate', new Date());
-$("#end_date:not(:hidden)").datepicker('setDate', 8);
+$("#end_date:not(:hidden)").datepicker('setDate', 7);
+
+$("#fake_start_date").datepicker 'option', 'maxDate', $('#fake_end_date').val()
+$("#fake_end_date").datepicker 'option', 'minDate', $('#fake_start_date').val()

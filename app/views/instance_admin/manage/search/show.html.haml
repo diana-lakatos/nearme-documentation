@@ -3,24 +3,39 @@
 = simple_form_for @instance, url: instance_admin_manage_search_path, method: :put, html: { multipart: true } do |f|
   .content-container.dropshadow
     .row
-      .input-container.col-xs-6
+      .input-container.col-xs-4
         .input-col-clearfix
           = f.input :searcher_type, collection: Instance::SEARCH_TYPES, include_blank: false,
             input_html: { class: 'form-control' }
 
-      .input-container.col-xs-6
+      .input-container.col-xs-4
         .input-col-clearfix
           = f.input :default_search_view, collection: Instance::SEARCH_RESULTS_VIEWS, include_blank: false,
           input_html: { class: 'form-control' }
 
-    .row
-      .input-container.col-xs-6
+      .input-container.col-xs-4
         .input-col-clearfix
-          = f.input :date_pickers, as: :boolean, input_html: { class: 'form-control' }
+          = f.input :tt_select_type, collection: %w(dropdown radio), include_blank: false,
+              input_html: { class: 'form-control' }, label: 'Listing type UI'
 
-      .input-container.col-xs-6
+  %h4 Date pickers
+
+  .content-container.dropshadow
+    .row
+      .input-container.col-xs-4
         .input-col-clearfix
-          = f.input :tt_select_type, collection: %w(dropdown radio), include_blank: false, input_html: { class: 'form-control' }
+          = f.input :date_pickers, as: :boolean, input_html: { class: 'form-control' }, label: 'Enable date pickers'
+
+      .input-container.col-xs-4
+        .input-col-clearfix
+          = f.input :date_pickers_use_availability_rules, as: :boolean, input_html: { class: 'form-control' },
+              label: 'Use availability rules'
+
+      .input-container.col-xs-4
+        .input-col-clearfix
+          = f.input :date_pickers_mode, collection: %w(relative absolute), include_blank: false,
+              input_html: { class: 'form-control' }, label: 'Search Mode'
+
 
     .row
 

@@ -100,7 +100,7 @@ class Instance < ActiveRecord::Base
 
   scope :with_support_imap, -> { where 'support_imap_hash IS NOT NULL AND support_imap_hash not like ?', '' }
 
-  store_accessor :search_settings, :date_pickers, :tt_select_type
+  store_accessor :search_settings, :date_pickers, :tt_select_type, :date_pickers_mode, :date_pickers_use_availability_rules
 
   before_update :check_lock
 
@@ -267,5 +267,13 @@ class Instance < ActiveRecord::Base
 
   def date_pickers
     super == '1'
+  end
+
+  def date_pickers_use_availability_rules
+    super == '1'
+  end
+
+  def date_pickers_relative_mode?
+    date_pickers_mode == 'relative'
   end
 end
