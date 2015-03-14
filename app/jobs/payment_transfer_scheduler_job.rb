@@ -8,6 +8,7 @@ class PaymentTransferSchedulerJob < Job
       if PaymentTransfers::SchedulerMethods.new(company.instance).generate_payment_transfers_today?
         company.schedule_payment_transfer
       end
+      PlatformContext.current = nil
     end
   end
 end
