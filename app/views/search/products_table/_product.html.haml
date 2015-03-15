@@ -1,0 +1,17 @@
+%tr
+  %td.image
+    - if photo = product.images.first
+      = link_to product_path(product) do
+        = image_tag photo.image.url(:thumb), :title => product.name, :alt => product.name
+  %td
+    = link_to product_path(product) do
+      = product.name
+  %td= product.try(:manufacturer)
+  %td= product.try(:part_or_model_number)
+  %td= truncate_with_ellipsis sanitize(product.description), 50
+  %td= product.try(:total_on_hand)
+  %td= "Call"
+  %td= product.company.name
+  %td
+    = link_to product_path(product), class: 'btn btn-green' do
+      = "View"

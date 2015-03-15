@@ -27,8 +27,8 @@ class SearchController < ApplicationController
   private
 
   def result_view
-    @result_view = params[:v].presence || (@transactable_type.buyable? ? "products" : platform_context.instance.default_search_view)
-    @result_view.in?( %w( list map mixed listing_mixed products ) ) ? @result_view : 'mixed'
+    @result_view = params[:v].presence || (@transactable_type.buyable? ? (Spree::Config[:products_table] ? "products_table" : "products") : platform_context.instance.default_search_view)
+    @result_view.in?( %w( list map mixed listing_mixed products products_table ) ) ? @result_view : 'mixed'
   end
 
   def should_log_conducted_search?

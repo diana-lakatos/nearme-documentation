@@ -1,0 +1,39 @@
+- no_footer!
+- content_for :hero do
+  = render 'search/products_table/header'
+
+- if @searcher.results.any?
+  %section#results.products_table
+    %table
+      %tr
+        %th Image
+        %th Stock Number
+        %th Manufacturer
+        %th Part/Model Number
+        %th Description
+        %th Quantity
+        %th Price (ea)
+        %th Supplier
+        %th
+      = render partial: 'search/products_table/product', collection: @searcher.results
+    = will_paginate @searcher.results
+    = render 'shared/loading_spinner'
+- elsif !@located
+  %section#results.no_results
+    = render 'shared/loading_spinner'
+    .text-center
+      %br/
+      %br/
+      %h1.tk-adelle.fat No results found
+      %p= t '.address_could_not_be_found'
+- else
+  %section#results.no_results
+    = render 'shared/loading_spinner'
+    .text-center
+      %br/
+      %br/
+      %h1.tk-adelle.fat No results found, but!
+      #search-notification
+        = render 'search_notifications/form', search_notification: @searcher.search_notification
+- content_for :domready do
+  $(".span12 .search-icon").click(function () { $("form.search_results").submit() });
