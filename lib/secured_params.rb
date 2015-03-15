@@ -552,7 +552,8 @@ class SecuredParams
       :currency_decimal_mark,
       :currency_thousands_separator,
       :infinite_scroll,
-      :random_products_for_cross_sell
+      :random_products_for_cross_sell,
+      :products_table
     ]
   end
 

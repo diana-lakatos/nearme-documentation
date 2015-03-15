@@ -1037,6 +1037,74 @@ section.search section#results.list {
 
 /*** End Listing View ***/
 
+/*** List Table View ***/
+
+section#results.products_table {
+  margin-top: 90px;
+}
+
+.products_table {
+
+  table {
+    min-width: 958px;
+
+    @media (max-width: $search-bar-breakpoint-desktop) {
+      min-width: 200px;
+    }
+  }
+
+  table, th, td {
+    background-color: white;
+    border: 1px solid #D3D3D3;
+  }
+
+  th, td {
+    padding:5px;
+  }
+
+  table, th, td, p, a {
+    font-size: 14px !important;
+    font-family: $font-regular !important;
+    color: $gray120 !important;
+  }
+
+  a.btn {
+    font-size: 14px !important;
+    font-family: $font-regular !important;
+    padding: 0 10px 0 10px !important;
+  }
+
+  th {
+    text-align:center;
+    text-decoration:underline;
+    color: #545454;
+    background: #D3D3D3;
+  }
+
+  td {
+    border-bottom: 1px solid #D3D3D3;
+
+    &.image {
+      text-align:center;
+    }
+
+  }
+}
+
+header#listing_search.products_table {
+  background: #F0F0F0;
+  padding: 0 !important;
+
+  form .search-container {
+    padding-left: 0px;
+
+    input[type="text"]#search {
+      padding-left: 8px;
+    }
+  }
+}
+/*** End List Table View ***/
+
 /*** Infinite Scroll ***/
 .ias_loader {
 
