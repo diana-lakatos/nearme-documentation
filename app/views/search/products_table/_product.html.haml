@@ -1,8 +1,5 @@
 %tr
-  %td.image
-    - if photo = product.images.first
-      = link_to product_path(product) do
-        = image_tag photo.image.url(:thumb), :title => product.name, :alt => product.name
+  %td.image= image_for_table product
   %td
     = link_to product_path(product) do
       = product.name

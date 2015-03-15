@@ -6,14 +6,14 @@
   %section#results.products_table
     %table
       %tr
-        %th Image
-        %th Stock Number
-        %th Manufacturer
-        %th Part/Model Number
-        %th Description
-        %th Quantity
-        %th Price (ea)
-        %th Supplier
+        %th= t 'buy_sell_market.products.search_results.header.image'
+        %th= t 'buy_sell_market.products.search_results.header.stock_number'
+        %th= t 'buy_sell_market.products.search_results.header.manufacturer.'
+        %th= t 'buy_sell_market.products.search_results.header.part_model_no'
+        %th= t 'buy_sell_market.products.search_results.header.description'
+        %th= t 'buy_sell_market.products.search_results.header.quantity'
+        %th= t 'buy_sell_market.products.search_results.header.price'
+        %th= t 'buy_sell_market.products.search_results.header.supplier'
         %th
       = render partial: 'search/products_table/product', collection: @searcher.results
     = will_paginate @searcher.results
@@ -24,7 +24,7 @@
     .text-center
       %br/
       %br/
-      %h1.tk-adelle.fat No results found
+      %h1.tk-adelle.fat= t 'buy_sell_market.products.search_results.no_results'
       %p= t '.address_could_not_be_found'
 - else
   %section#results.no_results
@@ -32,7 +32,7 @@
     .text-center
       %br/
       %br/
-      %h1.tk-adelle.fat No results found, but!
+      %h1.tk-adelle.fat= t 'buy_sell_market.products.search_results.no_results_but'
       #search-notification
         = render 'search_notifications/form', search_notification: @searcher.search_notification
 - content_for :domready do
