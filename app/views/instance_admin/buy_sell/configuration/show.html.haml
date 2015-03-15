@@ -37,5 +37,10 @@
         = label_tag 'Random suggested products'
         = hidden_field_tag 'random_products_for_cross_sell', '0'
         = check_box_tag 'random_products_for_cross_sell', '1', Spree::Config[:random_products_for_cross_sell]
+    .row.dropshadow
+      .input-container.col-xs-6
+        = label_tag 'Search results table layout'
+        = hidden_field_tag 'products_table', '0'
+        = check_box_tag 'products_table', '1', Spree::Config[:products_table]
 
   = submit_tag 'Save', class: 'btn btn-green pull-right'
