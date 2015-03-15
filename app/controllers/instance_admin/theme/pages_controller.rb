@@ -33,6 +33,16 @@ class InstanceAdmin::Theme::PagesController < InstanceAdmin::Theme::BaseControll
     end
   end
 
+  def destroy
+    destroy!
+    # Inherited resources recommends that we use errors to check whether record was destroyed
+    if resource.errors.empty?
+      new_page_slug = "#{resource.slug}_#{SecureRandom.hex(30)}"
+      new_page_slug = SecureRandom(30) if new_page_slug.length > 255
+      resource.update_attribute(:slug, new_page_slug)
+    end
+  end
+
   private
 
   def set_redirect_form
