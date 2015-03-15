@@ -313,6 +313,7 @@ class SecuredParams
       :search_settings,
       :date_pickers,
       :tt_select_type,
+      :default_products_search_view,
       :date_pickers_use_availability_rules,
       :date_pickers_mode,
       :apply_text_filters, :force_accepting_tos,
@@ -552,8 +553,7 @@ class SecuredParams
       :currency_decimal_mark,
       :currency_thousands_separator,
       :infinite_scroll,
-      :random_products_for_cross_sell,
-      :products_table
+      :random_products_for_cross_sell
     ]
   end
 
