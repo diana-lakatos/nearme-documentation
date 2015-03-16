@@ -21,19 +21,17 @@ class DataImporter::Product::Importer
     while params = @product_csv.process_next_row
       begin
         quantity = params[:'spree/product'].delete(:total_on_hand) if params[:'spree/product'].has_key?(:total_on_hand)
-        import_industry(params[:industry]) do |industry|
-          import_company(params[:company], industry) do |company|
-            import_user(params[:user], company) do |user|
-              import_shipping_category(params[:'spree/shipping_category'], user, company) do |shipping_category|
-                import_product(params[:'spree/product'], user, company, shipping_category) do |product|
-                  import_master_variant(params[:'spree/variant'], product) do |variant|
-                    if quantity
-                      import_stock_item(variant) do |stock_item|
-                        import_stock_movement(stock_item, quantity)
-                      end
+        import_company(params[:company]) do |company|
+          import_user(params[:user], company) do |user|
+            import_shipping_category(params[:'spree/shipping_category'], user, company) do |shipping_category|
+              import_product(params[:'spree/product'], user, company, shipping_category) do |product|
+                import_master_variant(params[:'spree/variant'], product) do |variant|
+                  if quantity
+                    import_stock_item(variant) do |stock_item|
+                      import_stock_movement(stock_item, quantity)
                     end
-                    import_image(params[:'spree/image'], variant)
                   end
+                  import_image(params[:'spree/image'], variant)
                 end
               end
             end
@@ -52,17 +50,10 @@ class DataImporter::Product::Importer
 
   private
 
-  def import_industry(params, &block)
-    import_entity(block) do
-      Industry.find_or_create_by(name: params[:name])
-    end
-  end
-
-  def import_company(params, industry)
+  def import_company(params)
     company = find_or_initialize_by_and_assign(Company, external_id: params.delete(:external_id)) do |company|
       company.update_column(:deleted_at, nil) unless company.deleted_at.nil?
       company.assign_attributes(params)
-      company.industries << industry
     end
 
     if company.save

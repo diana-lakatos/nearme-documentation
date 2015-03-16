@@ -40,7 +40,7 @@ class Billing::Gateway::Processor::Outgoing::Balanced < Billing::Gateway::Proces
       else
         payout_failed(credit)
       end
-    rescue Balanced::BadRequest, Balanced::Unauthorized => e
+    rescue Balanced::BadRequest, Balanced::Unauthorized, Balanced::Conflict => e
       payout_failed(e)
     end
   end

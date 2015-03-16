@@ -23,7 +23,7 @@ class Review < ActiveRecord::Base
   validates_length_of :comment, :maximum => 255
   validates :object, inclusion: { in: RatingConstants::FEEDBACK_TYPES }
 
-  default_scope { order('created_at DESC') }
+  default_scope { order('reviews.created_at DESC') }
 
   scope :with_object, ->(object) { where(object: object) }
   scope :with_rating, ->(rating_value) { where(rating: rating_value) }

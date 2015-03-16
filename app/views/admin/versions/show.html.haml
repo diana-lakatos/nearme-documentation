@@ -10,7 +10,7 @@
     %td= @instance_view.path
   %tr
     %th= "Transactable Type"
-    %td= @instance_view.transactable_type.name
+    %td= @instance_view.transactable_type.try(:name)
   %tr
     %th= "Locale"
     %td= @instance_view.locale
