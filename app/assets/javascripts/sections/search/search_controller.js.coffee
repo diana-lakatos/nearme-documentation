@@ -14,6 +14,8 @@ class Search.SearchController extends Search.Controller
     @loader = new Search.ScreenLockLoader => @container.find('.loading')
     @resultsCountContainer = $('#search_results_count')
     @transactable_types = $('div[data-transactable-type-filter] input')
+    @date_range = $('div[data-date-range-filter] input')
+    @date_range_btn = $('div[data-date-range-filter] div[data-date-range-filter-update]')
     @filters = $('a[data-search-filter]')
     @filters_container = $('div[data-search-filters-container]')
     @processingResults = true
@@ -30,7 +32,14 @@ class Search.SearchController extends Search.Controller
       @triggerSearchFromQuery()
 
     @transactable_types.on 'change', (event) =>
-      document.location = "#{document.location.protocol}//#{document.location.host}#{document.location.pathname}?loc=#{DNM.util.Url.getParameterByName('loc')}&transactable_type_id=#{$(event.target).val()}"
+      date_range = ''
+      if @date_range.length > 0 && window.location.search.match('start_date')
+        date_range = "&start_date=#{$('#fake_start_date').val()}&end_date=#{$('#fake_end_date').val()}&availability[dates][start]=#{$('#availability_dates_start').val()}&availability[dates][end]=#{$('#availability_dates_end').val()}"
+
+      document.location = "#{document.location.protocol}//#{document.location.host}#{document.location.pathname}?loc=#{DNM.util.Url.getParameterByName('loc')}&transactable_type_id=#{$(event.target).val()}" + date_range
+
+    @date_range_btn.on 'click', (event) =>
+      @triggerSearchFromQuery()
 
     @closeFilterIfClickedOutside()
 

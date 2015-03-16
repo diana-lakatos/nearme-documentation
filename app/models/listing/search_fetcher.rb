@@ -4,9 +4,9 @@ class Listing::SearchFetcher
   TOP_CITIES = ['san francisco', 'london', 'new york', 'los angeles', 'chicago']
 
   def initialize(filters = {})
-   if filters.fetch(:transactable_type_id, nil).blank?
-     raise NotImplementedError.new('transactable_type_id filter is mandatory')
-   end
+    if filters.fetch(:transactable_type_id, nil).blank?
+      raise NotImplementedError.new('transactable_type_id filter is mandatory')
+    end
     @midpoint = filters.fetch(:midpoint)
     @radius = filters.fetch(:radius)
     @filters = filters
@@ -35,7 +35,34 @@ class Listing::SearchFetcher
     @listings_scope = @listings_scope.filtered_by_listing_types_ids(@filters[:listing_types_ids]) if @filters[:listing_types_ids]
     @listings_scope = @listings_scope.filtered_by_price_types(@filters[:listing_pricing] & (Transactable::PRICE_TYPES + [:free]).map(&:to_s)) if @filters[:listing_pricing]
     @listings_scope = @listings_scope.filtered_by_attribute_values(@filters[:attribute_values]) if @filters[:attribute_values]
-    @listings_scope
+
+    # Date pickers
+    if availability_filter?
+      if relative_availability?
+        @listings_scope = @listings_scope.not_booked_relative(@filters[:date_range].first, @filters[:date_range].last)
+        @listings_scope = @listings_scope.only_opened_on_at_least_one_of(date_range_to_days)
+      else
+        @listings_scope = @listings_scope.not_booked_absolute(@filters[:date_range].first, @filters[:date_range].last)
+        @listings_scope = @listings_scope.only_opened_on_all_of(date_range_to_days)
+      end
+    end
+
+    @listings_scope = Transactable.where(id: @listings_scope.pluck(:id))
   end
 
+  def date_range_to_days
+    @filters[:date_range].inject([]) do |days, date|
+      # we need only weekdays, so no point in iterating further
+      return days if days.count == 7
+      days << date.wday
+    end.sort
+  end
+
+  def availability_filter?
+    @filters[:availability] && @filters[:availability][:dates][:start].present? && @filters[:availability][:dates][:end].present?
+  end
+
+  def relative_availability?
+    @relative ||= PlatformContext.current.instance.date_pickers_relative_mode?
+  end
 end

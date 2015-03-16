@@ -32,6 +32,7 @@
 //= require spectrum
 //= require ./vendor/jquery.inview
 //= require user_blog/pagination
+//= require select2
 //
 //
 //= require_self
@@ -100,8 +101,8 @@ window.DNM = {
   },
 
   initializeCustomSelects: function(container){
-    container.find('select').not('.time-wrapper select, .custom-select, .recurring_select').customSelect();
-    container.find('.customSelect').not('.checkout-select').append('<i class="custom-select-dropdown-icon ico-chevron-down"></i>').closest('.controls').css({'position': 'relative'});
+    container.find('select').not('.select2, .time-wrapper select, .custom-select, .recurring_select, .ordinary-select').customSelect();
+    container.find('.customSelect').not('.checkout-select, .no-icon').append('<i class="custom-select-dropdown-icon ico-chevron-down"></i>').closest('.controls').css({'position': 'relative'});
     container.find('.customSelect').siblings('select').css({'margin': '0px', 'z-index': 1 });
 
     container.find('.custom-select').chosen()
@@ -112,6 +113,10 @@ window.DNM = {
     }).blur(function(){
       $(this).parent().parent().removeClass('chzn-choices-active');
     })
+
+    container.find('.select2').select2({
+      minimumResultsForSearch: -1
+    });
   },
 
   initializeBrowsersSpecificCode: function() {

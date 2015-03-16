@@ -80,6 +80,8 @@
     - when 'documents_upload'
       - if platform_context.instance.documents_upload_enabled?
         = render "forms/document_requirements", f: f
+    - when 'quantity'
+      = f.input :quantity
     - else
       - if custom_attribute_names.include?(field)
         - @transactable_type.custom_attributes.each do |attribute|

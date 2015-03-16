@@ -3,7 +3,8 @@ class Transactable < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
-  class NotFound < ActiveRecord::RecordNotFound; end
+  class NotFound < ActiveRecord::RecordNotFound;
+  end
   include Impressionable
   has_metadata accessors: [:photos_metadata]
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id, :listings_public], :location)
@@ -11,7 +12,9 @@ class Transactable < ActiveRecord::Base
   has_custom_attributes target_type: 'TransactableType', target_id: :transactable_type_id
 
   has_many :document_requirements, as: :item, dependent: :destroy, inverse_of: :item
+
   has_many :reservations, inverse_of: :listing
+
   has_many :recurring_bookings, inverse_of: :listing
   has_many :photos, dependent: :destroy, inverse_of: :listing do
     def thumb
@@ -56,20 +59,67 @@ class Transactable < ActiveRecord::Base
   before_destroy :decline_reservations
 
   # == Scopes
-  scope :featured, -> {where(%{ (select count(*) from "photos" where transactable_id = "listings".id) > 0  }).
-                       includes(:photos).order(%{ random() }).limit(5) }
-  scope :draft,    -> { where('transactables.draft IS NOT NULL') }
-  scope :active,   -> { where('transactables.draft IS NULL') }
-  scope :latest,   -> { order("transactables.created_at DESC") }
-  scope :visible,  -> { where(:enabled => true) }
+  scope :featured, -> { where(%{ (select count(*) from "photos" where transactable_id = "listings".id) > 0  }).
+                        includes(:photos).order(%{ random() }).limit(5) }
+  scope :draft, -> { where('transactables.draft IS NOT NULL') }
+  scope :active, -> { where('transactables.draft IS NULL') }
+  scope :latest, -> { order("transactables.created_at DESC") }
+  scope :visible, -> { where(:enabled => true) }
   scope :searchable, -> { active.visible }
   scope :for_transactable_type_id, -> transactable_type_id { where(transactable_type_id: transactable_type_id) }
   scope :for_groupable_transactable_types, -> { joins(:transactable_type).where('transactable_types.groupable_with_others = ?', true) }
-  scope :filtered_by_listing_types_ids,  -> listing_types_ids { where("(transactables.properties->'listing_type') IN (?)", listing_types_ids) if listing_types_ids }
-  scope :filtered_by_price_types,  -> price_types { where([(price_types - ['free']).map{|pt| "#{pt}_price_cents IS NOT NULL"}.join(' OR '),
-                                                           ("action_free_booking=true" if price_types.include?('free'))].reject(&:blank?).join(' OR ')) }
-  scope :filtered_by_attribute_values,  -> attribute_values { where("(transactables.properties->'filterable_attribute') IN (?)", attribute_values) if attribute_values }
-  scope :where_attribute_has_value, -> (attr, value) { where("properties @> '#{attr}=>#{value}'")}
+  scope :filtered_by_listing_types_ids, -> listing_types_ids { where("(transactables.properties->'listing_type') IN (?)", listing_types_ids) if listing_types_ids }
+  scope :filtered_by_price_types, -> price_types { where([(price_types - ['free']).map { |pt| "#{pt}_price_cents IS NOT NULL" }.join(' OR '),
+                                                          ("action_free_booking=true" if price_types.include?('free'))].reject(&:blank?).join(' OR ')) }
+  scope :filtered_by_attribute_values, -> attribute_values { where("(transactables.properties->'filterable_attribute') IN (?)", attribute_values) if attribute_values }
+  scope :where_attribute_has_value, -> (attr, value) { where("properties @> '#{attr}=>#{value}'") }
+
+  scope :not_booked_relative, -> (start_date, end_date) {
+    joins(ActiveRecord::Base.send(:sanitize_sql_array, ['LEFT OUTER JOIN (
+       SELECT MIN(qty) as min_qty, transactable_id, count(*) as number_of_days_booked
+       FROM (SELECT SUM(reservations.quantity) as qty, reservations.transactable_id, reservation_periods.date
+         FROM "reservations"
+         INNER JOIN "reservation_periods" ON "reservation_periods"."reservation_id" = "reservations"."id"
+         WHERE
+          "reservations"."instance_id" = ? AND
+          "reservations"."deleted_at" IS NULL AND
+          "reservations"."state" NOT IN (\'cancelled_by_guest\',\'cancelled_by_host\',\'rejected\',\'expired\') AND
+          "reservation_periods"."date" BETWEEN ? AND ?
+         GROUP BY reservation_periods.date, reservations.transactable_id) AS spots_taken_per_transactable_per_date
+       GROUP BY transactable_id
+       ) as min_spots_taken_per_transactable_during_date_period ON min_spots_taken_per_transactable_during_date_period.transactable_id = transactables.id', PlatformContext.current.instance.id, start_date.to_s, end_date.to_s]))
+      .where('(COALESCE(min_spots_taken_per_transactable_during_date_period.min_qty, 0) < transactables.quantity OR min_spots_taken_per_transactable_during_date_period.number_of_days_booked <= ?)', (end_date - start_date).to_i)
+  }
+
+  scope :not_booked_absolute, -> (start_date, end_date) {
+    joins(ActiveRecord::Base.send(:sanitize_sql_array, ['LEFT OUTER JOIN (
+       SELECT MAX(qty) as max_qty, transactable_id
+       FROM (SELECT SUM(reservations.quantity) as qty, reservations.transactable_id, reservation_periods.date
+         FROM "reservations"
+         INNER JOIN "reservation_periods" ON "reservation_periods"."reservation_id" = "reservations"."id"
+         WHERE
+          "reservations"."instance_id" = ? AND
+          "reservations"."deleted_at" IS NULL AND
+          "reservations"."state" NOT IN (\'cancelled_by_guest\',\'cancelled_by_host\',\'rejected\',\'expired\') AND
+          "reservation_periods"."date" BETWEEN ? AND ?
+         GROUP BY reservation_periods.date, reservations.transactable_id) AS spots_taken_per_transactable_per_date
+       GROUP BY transactable_id
+       ) as min_spots_taken_per_transactable_during_date_period ON min_spots_taken_per_transactable_during_date_period.transactable_id = transactables.id', PlatformContext.current.instance.id, start_date.to_s, end_date.to_s]))
+      .where('COALESCE(min_spots_taken_per_transactable_during_date_period.max_qty, 0) < transactables.quantity')
+  }
+
+  # see http://www.postgresql.org/docs/9.4/static/functions-array.html
+  scope :only_opened_on_at_least_one_of, -> (days) {
+    # check overlap -> && operator
+    # for now only regular booking are supported - fixed price transactables are just returned
+    where('transactables.action_schedule_booking = ? OR transactables.opened_on_days && \'{?}\'', true, days)
+  }
+
+  scope :only_opened_on_all_of, -> (days) {
+    # check if opened_on_days contains days -> @> operator
+    # for now only regular booking are supported - fixed price transactables are just returned
+    where('transactables.action_schedule_booking = ? OR transactables.opened_on_days @> \'{?}\'', true, days)
+  }
 
   # == Callbacks
   before_validation :set_activated_at, :set_enabled, :nullify_not_needed_attributes
@@ -77,10 +127,13 @@ class Transactable < ActiveRecord::Base
   # == Validations
   validates_presence_of :location, :transactable_type
   validates_with PriceValidator
-  validates :photos, :length => { :minimum => 1 }, :unless => :photo_not_required
+  validates :photos, :length => {:minimum => 1}, :unless => :photo_not_required
   validates_inclusion_of :booking_type, in: TransactableType::BOOKING_TYPES
+  validates :quantity, presence: true
+  validates :quantity, numericality: {greater_than: 0}
 
   after_save :set_external_id
+  after_save { self.update_column(:opened_on_days, availability.days_open.sort) }
 
   # == Helpers
   include Listing::Search
@@ -130,6 +183,7 @@ class Transactable < ActiveRecord::Base
   def defer_availability_rules
     availability_rules.to_a.reject(&:marked_for_destruction?).empty?
   end
+
   alias_method :defer_availability_rules?, :defer_availability_rules
 
   def open_on?(date, start_min = nil, end_min = nil)
@@ -148,7 +202,7 @@ class Transactable < ActiveRecord::Base
     occurence = Time.now
     checks_to_be_performed = 100
     loop do
-      checks_to_be_performed  -= 1
+      checks_to_be_performed -= 1
       occurence = schedule.try(:schedule).try(:next_occurrences, 10, occurence).try(:first)
       if occurence
         start_minute = occurence.to_datetime.min.to_i + (60 * occurence.to_datetime.hour.to_i)
@@ -178,7 +232,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def desks_booked_on(date, start_minute = nil, end_minute = nil)
-    scope = reservations.not_rejected_or_cancelled.joins(:periods).where(:reservation_periods => { :date => date })
+    scope = reservations.not_rejected_or_cancelled.joins(:periods).where(:reservation_periods => {:date => date})
 
     if start_minute
       hourly_conditions = []
@@ -202,11 +256,11 @@ class Transactable < ActiveRecord::Base
 
   #TODO refactor
   def lowest_price_with_type(available_price_types = [])
-    PRICE_TYPES.reject{ |price|
+    PRICE_TYPES.reject { |price|
       !available_price_types.empty? && !available_price_types.include?(price.to_s)
     }.map { |price|
       [self.send("#{price}_price"), price]
-    }.reject{|p| p[0].to_f.zero?}.sort{|a, b| a[0] <=> b[0]}.first
+    }.reject { |p| p[0].to_f.zero? }.sort { |a, b| a[0] <=> b[0] }.first
   end
 
   def null_price!
@@ -303,13 +357,13 @@ class Transactable < ActiveRecord::Base
   end
 
   def booking_days_per_month
-    @booking_days_per_month ||= transactable_type.days_for_monthly_rate.zero? ? booking_days_per_week * 4  : transactable_type.days_for_monthly_rate
+    @booking_days_per_month ||= transactable_type.days_for_monthly_rate.zero? ? booking_days_per_week * 4 : transactable_type.days_for_monthly_rate
   end
 
   # Returns a hash of booking block sizes to prices for that block size.
   def prices_by_days
     if action_free_booking?
-      { 1 => 0.to_money }
+      {1 => 0.to_money}
     else
       Hash[
         [[1, daily_price], [booking_days_per_week, weekly_price], [booking_days_per_month, monthly_price]]
@@ -380,7 +434,7 @@ class Transactable < ActiveRecord::Base
     transactable_type.pricing_options_long_period_names.inject({}) do |hash, price|
       hash[:"#{price}_price_cents"] = "#{price}_price_cents".humanize
       hash
-    end.merge({ external_id: 'External Id', enabled: 'Enabled' }).reverse_merge(
+    end.merge({external_id: 'External Id', enabled: 'Enabled'}).reverse_merge(
       transactable_type.custom_attributes.shared.pluck(:name, :label).inject({}) do |hash, arr|
         hash[arr[0].to_sym] = arr[1].presence || arr[0].humanize
         hash
@@ -397,7 +451,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def bookable?
-    !schedule_booking? || (schedule_booking? && schedule.present? && next_available_occurrences(1).any? )
+    !schedule_booking? || (schedule_booking? && schedule.present? && next_available_occurrences(1).any?)
   end
 
   TransactableType::BOOKING_TYPES.each do |bt|
@@ -407,7 +461,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def reviews
-    @reviews ||= Review.where(object: 'product', reviewable_type: 'Reservation', reviewable_id: self.reservations.pluck(:id) )
+    @reviews ||= Review.where(object: 'product', reviewable_type: 'Reservation', reviewable_id: self.reservations.pluck(:id))
   end
 
   def has_reviews?

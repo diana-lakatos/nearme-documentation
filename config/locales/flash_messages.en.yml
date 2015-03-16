@@ -273,6 +273,8 @@ en:
       item_deleted: 'Item has ben successfully deleted.'
       all_items_deleted: 'All items have been successfully deleted.'
       setting_saved: 'Wish lists settings has been saved.'
+    search:
+      setting_saved: 'Search settings has been saved.'
 
     manage:
       order:

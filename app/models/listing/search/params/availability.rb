@@ -24,9 +24,9 @@ class Listing::Search::Params::Availability
       @dates = @dates.map { |d| coerce_date(d) }.compact
     elsif dates.is_a?(Hash) && dates[:start].present? && dates[:end].present?
       start, finish = coerce_date(dates[:start]), coerce_date(dates[:end])
-      @dates = (start...finish) if start.present? and finish.present?
+      @dates = (start..finish) if start.present? and finish.present?
     end
-    
+
     @dates ||= default_dates
   end
 

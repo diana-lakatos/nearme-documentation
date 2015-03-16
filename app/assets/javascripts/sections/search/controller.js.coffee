@@ -34,13 +34,20 @@ class Search.Controller
   initializeQueryField: ->
     @queryField = @form.find('input#search')
     @prodQueryField = @form.find('input#search_prod')
-    transactableTypeRadio = @form.find("input[name='transactable_type_id']")
+    @transactableTypeRadio = @form.find("input[name='transactable_type_id']")
+    transactableTypeSelect = @form.find("select[name='transactable_type_id']")
     @isBuyableField = @form.find("input#is_buyable")
     @crosshairs = @form.find("div.geolocation")
+
     if @prodQueryField?
-      @toggleGeocoding()
-      transactableTypeRadio.bind "change", (event) =>
-        @toggleGeocoding($(event.target))
+      @toggleGeocoding(transactableTypeSelect)
+      if @transactableTypeRadio.length > 0
+        @transactableTypeRadio.bind "change", (event) =>
+          @toggleGeocoding($(event.target))
+      else
+        transactableTypeSelect.bind "change", (event) =>
+          @toggleGeocoding($(event.target))
+
     query_value = DNM.util.Url.getParameterByName('loc')
     if @queryField.val() == '' && !query_value
       _.defer(=>@geolocateMe())
@@ -73,7 +80,11 @@ class Search.Controller
         @form.submit()
 
   toggleGeocoding: (field)->
-    field ||= @form.find("input[name='transactable_type_id']:checked")
+    if @transactableTypeRadio.length > 0
+      field ||= @form.find("input[name='transactable_type_id']:checked")
+    else
+      field = field.find("option:selected")
+
     is_buyable = field.data('buyable')
     @isBuyableField.val(is_buyable)
     if is_buyable

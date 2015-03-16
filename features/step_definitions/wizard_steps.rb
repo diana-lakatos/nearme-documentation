@@ -12,7 +12,7 @@ When /^I fill in valid space details$/ do
   fill_in "#{model!("theme").bookable_noun} name", with:'Desk'
   fill_in "#{model!("theme").bookable_noun} description", with:'We have a group of several shared desks available.'
   select 'Desk', from: "#{model!("theme").bookable_noun} type"
-  fill_in 'Quantity available', with:1
+  fill_in 'Quantity', with:1
   page.execute_script "$('#user_companies_attributes_0_locations_attributes_0_listings_attributes_0_action_free_booking').prop('checked', true);"
   page.should_not have_content('Processing...')
 end

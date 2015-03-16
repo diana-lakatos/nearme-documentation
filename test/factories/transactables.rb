@@ -34,6 +34,7 @@ FactoryGirl.define do
         listing.availability.each_day do |dow, rule|
           listing.availability_rules.create!(:day => dow, :open_hour => 9, :close_hour => 18)
         end
+        listing.save!
       end
     end
 

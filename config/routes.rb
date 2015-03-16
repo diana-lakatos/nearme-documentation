@@ -309,6 +309,7 @@ DesksnearMe::Application.routes.draw do
       resources :waiver_agreement_templates, :only => [:index, :create, :update, :destroy]
 
       resource :wish_lists, only: [:show, :update]
+      resource :search, only: [:show, :update], controller: :search
     end
 
     namespace :manage_blog do

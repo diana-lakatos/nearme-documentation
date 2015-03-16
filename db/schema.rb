@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150313124830) do
+ActiveRecord::Schema.define(version: 20150316174314) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -768,9 +768,9 @@ ActiveRecord::Schema.define(version: 20150313124830) do
     t.string   "encrypted_db_connection_string"
     t.string   "stripe_currency",                                               default: "USD"
     t.boolean  "user_info_in_onboarding_flow",                                  default: false
-    t.string   "default_search_view"
+    t.string   "default_search_view",                                           default: "mixed"
     t.boolean  "user_based_marketplace_views",                                  default: false
-    t.string   "searcher_type"
+    t.string   "searcher_type",                                                 default: "geo"
     t.datetime "master_lock"
     t.boolean  "apply_text_filters",                                            default: false
     t.text     "user_required_fields"
@@ -795,6 +795,7 @@ ActiveRecord::Schema.define(version: 20150313124830) do
     t.string   "support_imap_server"
     t.integer  "support_imap_port"
     t.boolean  "support_imap_ssl"
+    t.hstore   "search_settings",                                               default: {},            null: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -853,6 +854,7 @@ ActiveRecord::Schema.define(version: 20150313124830) do
     t.string   "external_id"
     t.boolean  "mark_to_be_bulk_update_deleted", default: false
     t.integer  "wish_list_items_count",          default: 0
+    t.integer  "opened_on_days",                 default: [],                     array: true
   end
 
   add_index "locations", ["address_id"], name: "index_locations_on_address_id", using: :btree
@@ -861,6 +863,7 @@ ActiveRecord::Schema.define(version: 20150313124830) do
   add_index "locations", ["creator_id"], name: "index_locations_on_creator_id", using: :btree
   add_index "locations", ["external_id", "company_id"], name: "index_locations_on_external_id_and_company_id", unique: true, using: :btree
   add_index "locations", ["instance_id"], name: "index_locations_on_instance_id", using: :btree
+  add_index "locations", ["opened_on_days"], name: "index_locations_on_opened_on_days", using: :gin
   add_index "locations", ["location_type_id"], name: "index_locations_on_location_type_id", using: :btree
   add_index "locations", ["partner_id"], name: "index_locations_on_partner_id", using: :btree
   add_index "locations", ["slug"], name: "index_locations_on_slug", using: :btree
@@ -2743,9 +2746,12 @@ ActiveRecord::Schema.define(version: 20150313124830) do
     t.float    "average_rating",                 default: 0.0,       null: false
     t.boolean  "manual_payment",                 default: false
     t.integer  "wish_list_items_count",          default: 0
+    t.integer  "quantity",                       default: 1
+    t.integer  "opened_on_days",                 default: [],                     array: true
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
+  add_index "transactables", ["opened_on_days"], name: "index_transactables_on_opened_on_days", using: :gin
   add_index "transactables", ["parent_transactable_id"], name: "index_transactables_on_parent_transactable_id", using: :btree
   add_index "transactables", ["properties"], name: "transactables_gin_properties", using: :gin
   add_index "transactables", ["transactable_type_id"], name: "index_transactables_on_transactable_type_id", using: :btree

@@ -24,7 +24,7 @@ module InstanceType::Searcher::GeolocationSearcher
         @search_params = @params.merge({
           :midpoint => search.midpoint,
           :radius => search.radius,
-          :available_dates => search.available_dates,
+          :date_range => search.available_dates,
           :query => search.query,
           transactable_type_id: @transactable_type.id,
           location_types_ids: search.location_types_ids,

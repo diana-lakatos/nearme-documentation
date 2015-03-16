@@ -65,6 +65,8 @@
 
         = render :partial => 'search/mixed/filter', :locals => { :header_name => "#{@transactable_type.bookable_noun} Types", :selected_values => @searcher.search.lgtypes_filters || [], :input_name => 'listing_types_ids[]', :options => (@searcher.filterable_listing_types || []).map { |lt| [lt, lt] } }
 
+        = render partial: 'search/shared/date_range'
+
         - if @searcher.filterable_attribute
           = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Type', :selected_values => @searcher.search.attribute_values_filters || [], :input_name => 'attribute_values[]', :options => (@searcher.filterable_attribute || []).map { |fa| [fa, fa]} }
 
