@@ -5,7 +5,7 @@ class TransactableType::CsvFieldsBuilder
     @models = if import_model == :transactable
         [:location, :address, import_model, :photo]
       else
-        [import_model, :'spree/variant', :industry, :'spree/shipping_category', :'spree/image']
+        [import_model, :'spree/variant', :'spree/shipping_category', :'spree/image']
       end
   end
 
@@ -47,7 +47,7 @@ class TransactableType::CsvFieldsBuilder
   end
 
   def to_object_field_notation(model)
-    csv_fields_for_object(model).map { |field, _| { model => field } }
+    csv_fields_for_object(model).map { |field, _| { model.to_s => field.to_s } }
   end
 
   def import_class
