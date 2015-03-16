@@ -1,0 +1,21 @@
+.content-container.dropshadow
+  - i = 0
+  - %w(logo_image logo_retina_image favicon_image icon_image icon_retina_image hero_image).each_slice(2) do |image_attrs|
+    - i += 1
+    .row
+      .input-container.col-xs-12
+        - max_height = image_attrs.map { |image_attr| f.object.attributes[image_attr.to_s] ? f.object.send("#{image_attr}_dimensions")[:height]+30 : 0 }.max
+        - image_attrs.each do |image_attr|
+          .control-group.col-xs-6{class: image_attr}
+            = f.label image_attr
+            .controls
+              .single-photo
+                = file_upload_input('image_data', upload_image_instance_admin_theme_path(f.object.id, image_attr), f.object.send("#{image_attr}_dimensions"), "Upload #{image_attr}", {"no-multiple" => true, height: max_height, row: i}) do
+                  - if f.object.attributes[image_attr.to_s]
+                    = fileupload_photo(f.object.send("#{image_attr}_url"),
+                      destroy_image_instance_admin_theme_path(f.object.id, image_attr),
+                      edit_image_instance_admin_theme_path(f.object.id, image_attr),
+                      :div)
+              - if f.object.send("remote_#{image_attr}_url")
+                <br />Or copy from instance's theme:<br />
+                = f.text_field "remote_#{image_attr}_url"

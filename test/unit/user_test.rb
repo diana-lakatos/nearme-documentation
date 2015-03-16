@@ -405,7 +405,7 @@ class UserTest < ActiveSupport::TestCase
     @user.remove_avatar!
     @user.save!
 
-    assert !@user.avatar.any_url_exists?
+    assert !@user.avatar.file.present?
   end
 
   should "have avatar if user uploaded it" do
@@ -413,7 +413,7 @@ class UserTest < ActiveSupport::TestCase
     @user.avatar = File.open(File.expand_path("../../assets/foobear.jpeg", __FILE__))
     @user.avatar_versions_generated_at = Time.zone.now
     @user.save!
-    assert @user.avatar.any_url_exists?
+    assert @user.avatar.file.present?
   end
 
   should "allow to download image from linkedin which do not have extension" do

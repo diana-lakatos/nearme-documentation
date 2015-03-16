@@ -193,17 +193,19 @@ DesksnearMe::Application.routes.draw do
       resource :documents_upload, except: [:index, :destroy], :controller => 'documents_upload'
     end
 
+    resources :themes, only: [] do
+      member do
+        delete 'destroy_image/:image', action: :destroy_image, as: 'destroy_image'
+        get 'edit_image/:image', action: :edit_image, as: 'edit_image'
+        match 'update_image/:image', action: :update_image, as: 'update_image', via: [:post, :put]
+        match 'upload_image/:image', action: :upload_image, as: 'upload_image', via: [:post, :put]
+      end
+    end
+
     namespace :theme do
       get '/', :to => 'base#index'
       resource :info, :only => [:show, :update], :controller => 'info'
-      resource :design, :only => [:show, :update], :controller => 'design' do
-        member do
-          delete 'destroy_image/:image', :action => :destroy_image, :as => 'destroy_theme_image'
-          get 'edit_image/:image', :action => :edit_image, :as => 'edit_theme_image'
-          match 'update_image/:image', :action => :update_image, :as => 'update_theme_image', via: [:post, :put]
-          match 'upload_image/:image', :action => :upload_image, :as => 'upload_theme_image', via: [:post, :put]
-        end
-      end
+      resource :design, :only => [:show, :update], :controller => 'design'
 
       concern :versionable do
         resources :paper_trail_versions, only: [:index, :show], controller: 'versions', path: 'versions' do

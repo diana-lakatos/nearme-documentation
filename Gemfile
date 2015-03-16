@@ -115,7 +115,7 @@ gem "historyjs-rails"
 
 gem 'ranked-model'
 
-gem 'filepicker-rails', '~> 1.2'
+gem 'jquery-fileupload-rails'
 
 gem 'premailer-rails'
 

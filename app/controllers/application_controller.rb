@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::Base
-  helper FilepickerRails::Engine.helpers
 
   prepend_view_path InstanceViewResolver.instance
 
@@ -84,7 +83,7 @@ class ApplicationController < ActionController::Base
   def bookable?
     @bookable ||= platform_context.instance.bookable?
   end
-  
+
   helper_method :buyable?, :bookable?
 
   # Provides an EventTracker instance for the current request.

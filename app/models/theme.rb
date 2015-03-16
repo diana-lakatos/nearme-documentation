@@ -28,13 +28,12 @@ class Theme < ActiveRecord::Base
   validates :support_email, presence: true, email: true, if: lambda { |t| t.owner.try(:domains).try(:first).present? }
   validates_length_of :description, :maximum => 250
 
-  extend CarrierWave::SourceProcessing
-  mount_uploader :icon_image, ThemeImageUploader, :use_inkfilepicker => true
-  mount_uploader :icon_retina_image, ThemeImageUploader, :use_inkfilepicker => true
-  mount_uploader :favicon_image, ThemeImageUploader, :use_inkfilepicker => true
-  mount_uploader :logo_image, ThemeImageUploader, :use_inkfilepicker => true
-  mount_uploader :logo_retina_image, ThemeImageUploader, :use_inkfilepicker => true
-  mount_uploader :hero_image, ThemeImageUploader, :use_inkfilepicker => true
+  mount_uploader :icon_image, ThemeImageUploader
+  mount_uploader :icon_retina_image, ThemeImageUploader
+  mount_uploader :favicon_image, ThemeImageUploader
+  mount_uploader :logo_image, ThemeImageUploader
+  mount_uploader :logo_retina_image, ThemeImageUploader
+  mount_uploader :hero_image, ThemeImageUploader
   mount_uploader :compiled_stylesheet, ThemeStylesheetUploader
   mount_uploader :compiled_dashboard_stylesheet, ThemeStylesheetUploader
 

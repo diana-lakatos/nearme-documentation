@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150318115439) do
+ActiveRecord::Schema.define(version: 20150319152019) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2629,32 +2629,26 @@ ActiveRecord::Schema.define(version: 20150318115439) do
     t.text     "homepage_css"
     t.datetime "deleted_at"
     t.text     "icon_image_transformation_data"
-    t.string   "icon_image_original_url"
     t.datetime "icon_image_versions_generated_at"
     t.integer  "icon_image_original_width"
     t.integer  "icon_image_original_height"
     t.text     "icon_retina_image_transformation_data"
-    t.string   "icon_retina_image_original_url"
     t.datetime "icon_retina_image_versions_generated_at"
     t.integer  "icon_retina_image_original_width"
     t.integer  "icon_retina_image_original_height"
     t.text     "favicon_image_transformation_data"
-    t.string   "favicon_image_original_url"
     t.datetime "favicon_image_versions_generated_at"
     t.integer  "favicon_image_original_width"
     t.integer  "favicon_image_original_height"
     t.text     "logo_image_transformation_data"
-    t.string   "logo_image_original_url"
     t.datetime "logo_image_versions_generated_at"
     t.integer  "logo_image_original_width"
     t.integer  "logo_image_original_height"
     t.text     "logo_retina_image_transformation_data"
-    t.string   "logo_retina_image_original_url"
     t.datetime "logo_retina_image_versions_generated_at"
     t.integer  "logo_retina_image_original_width"
     t.integer  "logo_retina_image_original_height"
     t.text     "hero_image_transformation_data"
-    t.string   "hero_image_original_url"
     t.datetime "hero_image_versions_generated_at"
     t.integer  "hero_image_original_width"
     t.integer  "hero_image_original_height"
@@ -2939,7 +2933,6 @@ ActiveRecord::Schema.define(version: 20150318115439) do
     t.string   "browser_version"
     t.string   "platform"
     t.text     "avatar_transformation_data"
-    t.string   "avatar_original_url"
     t.datetime "avatar_versions_generated_at"
     t.integer  "avatar_original_height"
     t.integer  "avatar_original_width"

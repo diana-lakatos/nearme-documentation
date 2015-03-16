@@ -8,7 +8,7 @@ module CarrierWave::TransformableImage
     end
   end
 
-  def aspect_ratio 
+  def aspect_ratio
     self.class::ASPECT_RATIO
   end
 

@@ -1,4 +1,5 @@
 class BaseImageUploader < BaseUploader
+
   process :auto_orient
 
   def auto_orient
@@ -17,5 +18,4 @@ class BaseImageUploader < BaseUploader
   def default_url
     Placeholder.new(height: 100, width: 100).path
   end
-
 end

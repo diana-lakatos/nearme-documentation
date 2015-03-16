@@ -33,6 +33,7 @@
 //= require ./vendor/jquery.inview
 //= require user_blog/pagination
 //= require select2
+//= require jquery-fileupload/basic
 //
 //
 //= require_self
@@ -81,8 +82,8 @@ window.DNM = {
     Multiselect.initialize(scope);
     Flash.initialize(scope);
     Clipboard.initialize(scope);
-    Photo.Initializer.initialize(scope);
     Limiter.initialize(scope);
+    Fileupload.initialize(scope);
   },
 
   initializeAjaxCSRF: function() {

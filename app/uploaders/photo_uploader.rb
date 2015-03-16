@@ -1,7 +1,9 @@
 # encoding: utf-8
 class PhotoUploader < BaseImageUploader
-  include CarrierWave::InkFilePicker
+
   include CarrierWave::TransformableImage
+
+  cattr_reader :delayed_versions
 
   SPACE_FULL_IMAGE_W = 895
   SPACE_FULL_IMAGE_H = 554
@@ -31,24 +33,24 @@ class PhotoUploader < BaseImageUploader
     end
   end
 
-  version :thumb, :from_version => :transformed do
-    process :resize_to_fill => [dimensions[:thumb][:width], dimensions[:thumb][:height]]
+  version :thumb, from_version: :transformed, if: :delayed_processing? do
+    process resize_to_fill: [dimensions[:thumb][:width], dimensions[:thumb][:height]]
   end
 
-  version :medium, :from_version => :transformed do
-    process :resize_to_fill => [dimensions[:medium][:width], dimensions[:medium][:height]]
+  version :medium, from_version: :transformed do
+    process resize_to_fill: [dimensions[:medium][:width], dimensions[:medium][:height]]
   end
 
-  version :large, :from_version => :transformed do
-    process :resize_to_fill => [dimensions[:large][:width], dimensions[:large][:height]]
+  version :large, from_version: :transformed, if: :delayed_processing? do
+    process resize_to_fill: [dimensions[:large][:width], dimensions[:large][:height]]
   end
 
-  version :space_listing, :from_version => :transformed do
-    process :resize_to_fill => [dimensions[:space_listing][:width], dimensions[:space_listing][:height]]
+  version :space_listing, from_version: :transformed, if: :delayed_processing? do
+    process resize_to_fill: [dimensions[:space_listing][:width], dimensions[:space_listing][:height]]
   end
 
-  version :golden, :from_version => :transformed do
-    process :resize_to_fill => [dimensions[:golden][:width], dimensions[:golden][:height]]
+  version :golden, from_version: :transformed, if: :delayed_processing? do
+    process resize_to_fill: [dimensions[:golden][:width], dimensions[:golden][:height]]
   end
 
   protected
