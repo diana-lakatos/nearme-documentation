@@ -104,6 +104,7 @@ class UserDrop < BaseDrop
   end
 
   def properties
-    @user.profile.try(:properties) || {}
+    @user.properties
   end
 end
+

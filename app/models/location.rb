@@ -81,6 +81,12 @@ class Location < ActiveRecord::Base
   accepts_nested_attributes_for :waiver_agreement_templates, :allow_destroy => true
   accepts_nested_attributes_for :approval_requests
 
+  after_save do
+    days = availability_rules.order(:day).pluck(:day)
+    self.update_column(:opened_on_days, days)
+    self.listings.each { |l| l.update_column(:opened_on_days, days) if l.defer_availability_rules? }
+  end
+
   def name_and_description_required
     TransactableType.first.try(:name) == "Listing"
   end

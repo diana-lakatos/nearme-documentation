@@ -40,29 +40,22 @@ class Listing::SearchFetcher
     if availability_filter?
       if relative_availability?
         @listings_scope = @listings_scope.not_booked_relative(@filters[:date_range].first, @filters[:date_range].last)
+        @listings_scope = @listings_scope.only_opened_on_at_least_one_of(date_range_to_days)
       else
         @listings_scope = @listings_scope.not_booked_absolute(@filters[:date_range].first, @filters[:date_range].last)
-      end
-
-      # This one is ugly and slow as hell :o(
-      if PlatformContext.current.instance.date_pickers_use_availability_rules
-        @listings_scope = Transactable.where(id: @listings_scope.collect.select { |l| t_avail?(l) }.map(&:id))
+        @listings_scope = @listings_scope.only_opened_on_all_of(date_range_to_days)
       end
     end
 
-    @listings_scope
+    @listings_scope = Transactable.where(id: @listings_scope.pluck(:id))
   end
 
-  def t_avail?(transactable)
-    (@filters[:date_range].first..@filters[:date_range].last).each do |day|
-      if relative_availability?
-        return true if transactable.open_on?(day) # Returns the transactable if it's opened at least one day during the date range
-      else
-        return false unless transactable.open_on?(day) # Returns the transactable if it's opened for the whole date range
-      end
-    end
-
-    !relative_availability?
+  def date_range_to_days
+    @filters[:date_range].inject([]) do |days, date|
+      # we need only weekdays, so no point in iterating further
+      return days if days.count == 7
+      days << date.wday
+    end.sort
   end
 
   def availability_filter?

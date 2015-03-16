@@ -60,7 +60,7 @@ class Transactable < ActiveRecord::Base
 
   # == Scopes
   scope :featured, -> { where(%{ (select count(*) from "photos" where transactable_id = "listings".id) > 0  }).
-    includes(:photos).order(%{ random() }).limit(5) }
+                        includes(:photos).order(%{ random() }).limit(5) }
   scope :draft, -> { where('transactables.draft IS NOT NULL') }
   scope :active, -> { where('transactables.draft IS NULL') }
   scope :latest, -> { order("transactables.created_at DESC") }
@@ -74,46 +74,52 @@ class Transactable < ActiveRecord::Base
   scope :filtered_by_attribute_values, -> attribute_values { where("(transactables.properties->'filterable_attribute') IN (?)", attribute_values) if attribute_values }
   scope :where_attribute_has_value, -> (attr, value) { where("properties @> '#{attr}=>#{value}'") }
 
-  # Returns all transactables with all days free (based on reservations)
-  scope :not_booked_absolute, -> (start_date, end_date) {
-    where_sql = <<-SQL
-      ((SELECT COALESCE(MAX(qty), 0) FROM (SELECT SUM(reservations.quantity) as qty
-      FROM "reservations" INNER JOIN "reservation_periods" ON "reservation_periods"."reservation_id" = "reservations"."id"
-      AND "reservation_periods"."deleted_at" IS NULL AND "reservations"."listings_public" = 't' AND ("reservations"."state"
-      NOT IN ('cancelled_by_guest','cancelled_by_host','rejected','expired')) AND "reservations"."transactable_id" = "transactables"."id"
-      WHERE "reservation_periods"."date" BETWEEN ? AND ?
-      GROUP BY reservation_periods.date) AS my_virtual_table) < transactables.quantity)
-    SQL
-
-    includes(:reservations).where(where_sql, start_date, end_date)
+  scope :not_booked_relative, -> (start_date, end_date) {
+    joins(ActiveRecord::Base.send(:sanitize_sql_array, ['LEFT OUTER JOIN (
+       SELECT MIN(qty) as min_qty, transactable_id, count(*) as number_of_days_booked
+       FROM (SELECT SUM(reservations.quantity) as qty, reservations.transactable_id, reservation_periods.date
+         FROM "reservations"
+         INNER JOIN "reservation_periods" ON "reservation_periods"."reservation_id" = "reservations"."id"
+         WHERE
+          "reservations"."instance_id" = ? AND
+          "reservations"."deleted_at" IS NULL AND
+          "reservations"."state" NOT IN (\'cancelled_by_guest\',\'cancelled_by_host\',\'rejected\',\'expired\') AND
+          "reservation_periods"."date" BETWEEN ? AND ?
+         GROUP BY reservation_periods.date, reservations.transactable_id) AS spots_taken_per_transactable_per_date
+       GROUP BY transactable_id
+       ) as min_spots_taken_per_transactable_during_date_period ON min_spots_taken_per_transactable_during_date_period.transactable_id = transactables.id', PlatformContext.current.instance.id, start_date.to_s, end_date.to_s]))
+      .where('(COALESCE(min_spots_taken_per_transactable_during_date_period.min_qty, 0) < transactables.quantity OR min_spots_taken_per_transactable_during_date_period.number_of_days_booked <= ?)', (end_date - start_date).to_i)
   }
 
-  # Returns all transactables with at least one free day (based on reservations)
+  scope :not_booked_absolute, -> (start_date, end_date) {
+    joins(ActiveRecord::Base.send(:sanitize_sql_array, ['LEFT OUTER JOIN (
+       SELECT MAX(qty) as max_qty, transactable_id
+       FROM (SELECT SUM(reservations.quantity) as qty, reservations.transactable_id, reservation_periods.date
+         FROM "reservations"
+         INNER JOIN "reservation_periods" ON "reservation_periods"."reservation_id" = "reservations"."id"
+         WHERE
+          "reservations"."instance_id" = ? AND
+          "reservations"."deleted_at" IS NULL AND
+          "reservations"."state" NOT IN (\'cancelled_by_guest\',\'cancelled_by_host\',\'rejected\',\'expired\') AND
+          "reservation_periods"."date" BETWEEN ? AND ?
+         GROUP BY reservation_periods.date, reservations.transactable_id) AS spots_taken_per_transactable_per_date
+       GROUP BY transactable_id
+       ) as min_spots_taken_per_transactable_during_date_period ON min_spots_taken_per_transactable_during_date_period.transactable_id = transactables.id', PlatformContext.current.instance.id, start_date.to_s, end_date.to_s]))
+      .where('COALESCE(min_spots_taken_per_transactable_during_date_period.max_qty, 0) < transactables.quantity')
+  }
 
-  # scope :not_booked_relative, -> (start_date, end_date) {
-  #   reservation_status = %w(cancelled_by_guest cancelled_by_host rejected expired)
-  #
-  #   # TODO Refactor common parts to SQL function
-  #   where_sql = <<-SQL
-  #     (SELECT COALESCE(COUNT(qty), 0) FROM (SELECT SUM(reservations.quantity) as qty
-  #     FROM "reservations" INNER JOIN "reservation_periods" ON "reservation_periods"."reservation_id" = "reservations"."id"
-  #     AND "reservation_periods"."deleted_at" IS NULL AND "reservations"."listings_public" = 't' AND ("reservations"."state"
-  #     NOT IN (:reservation_status)) AND "reservations"."transactable_id" = "transactables"."id"
-  #     WHERE "reservation_periods"."date" BETWEEN :start AND :end
-  #     GROUP BY reservation_periods.date) AS my_virtual_table) <= (:end::date - :start::date)
-  #
-  #     OR
-  #
-  #     (SELECT COALESCE(MIN(qty), 0) FROM (SELECT SUM(reservations.quantity) as qty
-  #     FROM "reservations" INNER JOIN "reservation_periods" ON "reservation_periods"."reservation_id" = "reservations"."id"
-  #     AND "reservation_periods"."deleted_at" IS NULL AND "reservations"."listings_public" = 't' AND ("reservations"."state"
-  #     NOT IN (:reservation_status)) AND "reservations"."transactable_id" = "transactables"."id"
-  #     WHERE "reservation_periods"."date" BETWEEN :start AND :end
-  #     GROUP BY reservation_periods.date) AS my_virtual_table) < transactables.quantity
-  #   SQL
-  #
-  #   includes(:reservations).where(where_sql, start: start_date, end: end_date, reservation_status: reservation_status)
-  # }
+  # see http://www.postgresql.org/docs/9.4/static/functions-array.html
+  scope :only_opened_on_at_least_one_of, -> (days) {
+    # check overlap -> && operator
+    # for now only regular booking are supported - fixed price transactables are just returned
+    where('transactables.action_schedule_booking = ? OR transactables.opened_on_days && \'{?}\'', true, days)
+  }
+
+  scope :only_opened_on_all_of, -> (days) {
+    # check if opened_on_days contains days -> @> operator
+    # for now only regular booking are supported - fixed price transactables are just returned
+    where('transactables.action_schedule_booking = ? OR transactables.opened_on_days @> \'{?}\'', true, days)
+  }
 
   # == Callbacks
   before_validation :set_activated_at, :set_enabled, :nullify_not_needed_attributes
@@ -127,6 +133,7 @@ class Transactable < ActiveRecord::Base
   validates :quantity, numericality: {greater_than: 0}
 
   after_save :set_external_id
+  after_save { self.update_column(:opened_on_days, availability.days_open.sort) }
 
   # == Helpers
   include Listing::Search
@@ -137,7 +144,7 @@ class Transactable < ActiveRecord::Base
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
   delegate :currency, :formatted_address, :local_geocoding,
-           :latitude, :longitude, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
+    :latitude, :longitude, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
   delegate :service_fee_guest_percent, :service_fee_host_percent, to: :transactable_type
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
@@ -150,22 +157,6 @@ class Transactable < ActiveRecord::Base
   monetize :weekly_price_cents, with_model_currency: :currency, allow_nil: true
   monetize :monthly_price_cents, with_model_currency: :currency, allow_nil: true
   monetize :fixed_price_cents, with_model_currency: :currency, allow_nil: true
-
-  def self.not_booked_relative(start_date, end_date)
-    virtual_table_query = <<-SQL
-       LEFT OUTER JOIN (SELECT SUM(reservations.quantity) as qty, reservations.transactable_id, reservation_periods.date
-       FROM "reservations"
-       INNER JOIN "transactables" ON "transactables"."id" = "reservations"."transactable_id"
-       INNER JOIN "reservation_periods" ON "reservation_periods"."reservation_id" = "reservations"."id"
-       WHERE "reservation_periods"."date" BETWEEN '#{start_date.strftime}' AND '#{end_date.strftime}'
-       GROUP BY reservation_periods.date, reservations.transactable_id) AS foo ON transactables.id = foo.transactable_id
-    SQL
-
-    self.searchable
-      .joins(virtual_table_query)
-      .group('transactables.id, transactables.quantity')
-      .having('COUNT(*) <= ? OR MIN(qty) < transactables.quantity', (end_date - start_date).to_i)
-  end
 
   # Defer to the parent Location for availability rules unless this Listing has specific
   # rules.
@@ -479,7 +470,7 @@ class Transactable < ActiveRecord::Base
 
   def question_average_rating
     @rating_answers_rating ||= RatingAnswer.where(review_id: reviews.pluck(:id))
-                                 .group(:rating_question_id).average(:rating)
+      .group(:rating_question_id).average(:rating)
   end
 
   def recalculate_average_rating!
