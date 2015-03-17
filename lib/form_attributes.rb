@@ -18,7 +18,7 @@ class FormAttributes
       :description,
       :address,
       :industries,
-      :mailing_address,
+      :payments_mailing_address,
       :paypal_email,
       :bank_owner_name,
       :bank_routing_number,
