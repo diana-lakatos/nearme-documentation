@@ -6,7 +6,11 @@ class InstanceType::Searcher::FullTextSearcher::Listing
     set_options_for_filters
     params.delete :query
     @params = params
-    @results = @transactable_type.transactables.searchable.where("CAST(avals(properties) AS text) @@ :q", q: params['loc'])
+    scoped_transactables  = @transactable_type.transactables.searchable
+    if params['loc'].present?
+      scoped_transactables = scoped_transactables.where("CAST(avals(properties) AS text) @@ :q", q: params['loc'])
+    end
+    @results = scoped_transactables
   end
 
   def filters
