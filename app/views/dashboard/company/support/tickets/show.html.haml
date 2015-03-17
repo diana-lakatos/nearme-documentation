@@ -13,6 +13,10 @@
     - if @ticket.reservation_details && @ticket.reservation_details['quantity'].present?
       %p
         Quantity: #{@ticket.reservation_details['quantity']}
+    - if @ticket.target.present?
+      = link_to @ticket.target.name, @ticket.show_target_path
+    - else
+      Deleted
     %p.pull-right
       Status:
       %span{class: "#{@ticket.state}"}= @ticket.state.titleize
