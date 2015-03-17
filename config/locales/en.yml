@@ -839,6 +839,9 @@ en:
     nonce: 'PayPal Payment'
     remote: 'Fetch Payment'
 
+  payouts:
+    mailing_address: 'Payments Mailing Address'
+
   amenities_attribute: 'Amenities'
   amenity_attribute: 'amenity'
 

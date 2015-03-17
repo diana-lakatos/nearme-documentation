@@ -260,5 +260,9 @@ namespace :populate do
     end
   end
 
+  desc 'Populate companies payments_mailing_addresses'
+  task :companies_payments_mailing_addresses => :environment do
+    MailingAddressPopulator.new.fetch
+  end
 end
 
