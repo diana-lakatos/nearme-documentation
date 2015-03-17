@@ -1,0 +1,15 @@
+= simple_form_for [:instance_admin, :theme, resource], :html => { :multipart => true } do |f|
+  .content-container
+    .row
+      .input-container.col-xs-12
+        = f.input :name, :placeholder => 'Content Holder name', input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-12
+        = f.input :enabled
+    .row
+      .input-container.col-xs-12
+        = f.input :content, input_html: { class: 'form-control', rows: "20", data: { editor: 'liquid' } }
+  .content-container
+    .row
+      = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+      = link_to 'Cancel', [:instance_admin, :theme, resource] , class: 'btn btn-green pull-right'

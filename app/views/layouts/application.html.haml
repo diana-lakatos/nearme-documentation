@@ -20,6 +20,7 @@
     %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
     %meta{:content => "black", :name => "apple-mobile-web-app-status-bar-style"}/
     %meta{:content => "chrome=IE7", "http-equiv" => "X-UA-Compatible"}/
+    = inject_content_holder('HEAD')
 
     = render 'social/social_meta_tags'
 

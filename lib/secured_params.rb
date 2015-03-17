@@ -1047,4 +1047,12 @@ class SecuredParams
   def upload_obligation
     [ :level ]
   end
+
+  def content_holder
+    [
+      :name,
+      :content,
+      :enabled
+    ]
+  end
 end

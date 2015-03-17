@@ -1,0 +1,19 @@
+%h4= "Content Holder"
+
+.content-container.show-version
+  .row
+    .input-container.col-xs-12
+      .field-name Name
+      = resource.name
+  .row
+    .input-container.col-xs-12
+      .field-name Enabled
+      = resource.enabled
+  .row
+    .input-container.col-xs-12
+      .field-name Content
+      %textarea.form-control{rows: 15}= resource.content
+
+.content-container
+  .row
+    = link_to 'Edit', edit_instance_admin_theme_content_holder_path(resource), class: 'btn btn-green pull-right'

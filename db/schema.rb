@@ -370,6 +370,20 @@ ActiveRecord::Schema.define(version: 20150316174314) do
   add_index "company_users", ["company_id"], name: "index_company_users_on_company_id", using: :btree
   add_index "company_users", ["user_id"], name: "index_company_users_on_user_id", using: :btree
 
+  create_table "content_holders", force: true do |t|
+    t.string   "name"
+    t.integer  "theme_id"
+    t.integer  "instance_id"
+    t.text     "content"
+    t.boolean  "enabled",     default: true
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "content_holders", ["instance_id", "theme_id", "name"], name: "index_content_holders_on_instance_id_and_theme_id_and_name", using: :btree
+
+
   create_table "country_instance_payment_gateways", force: true do |t|
     t.string   "country_alpha2_code"
     t.integer  "instance_payment_gateway_id"
