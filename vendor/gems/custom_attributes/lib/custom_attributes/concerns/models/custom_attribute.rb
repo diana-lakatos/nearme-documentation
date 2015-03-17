@@ -5,6 +5,8 @@ module CustomAttributes
         extend ActiveSupport::Concern
 
         included do
+          attr_accessor :required, :max_length, :min_length
+
           self.table_name = 'custom_attributes'
 
           NAME = 0 unless defined?(NAME)
@@ -129,18 +131,20 @@ module CustomAttributes
             string.underscore.tr(' ', '_')
           end
 
-          def required?
-            self.validation_rules.present? && self.validation_rules['presence'] == {}
+          def set_validation_rules
+            self.validation_rules ||= {}
+            self.required.to_i == 1 ? (self.validation_rules['presence'] = {}) : self.validation_rules.delete('presence')
+            if self.min_length || self.max_length
+              self.validation_rules['length'] = {}
+              self.min_length.present? ? self.validation_rules['length']['minimum'] = self.min_length.to_i : self.validation_rules['length'].delete('minimum')
+              self.max_length.present? ? self.validation_rules['length']['maximum'] = self.max_length.to_i : self.validation_rules['length'].delete('maximum')
+            else
+              self.validation_rules.delete('length')
+            end
           end
 
-          def require!
-            self.validation_rules ||= {}
-            self.validation_rules['presence'] = {}
-          end
-
-          def unrequire!
-            self.validation_rules ||= {}
-            self.validation_rules.delete('presence')
+          def set_validation_rules!
+            set_validation_rules and save!
           end
 
         end

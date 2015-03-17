@@ -82,6 +82,8 @@ class SecuredParams
       :html_tag,
       :prompt,
       :required,
+      :min_length,
+      :max_length,
       :default_value,
       :public,
       :label,

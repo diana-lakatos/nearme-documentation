@@ -16,14 +16,14 @@ class InstanceAdmin::CustomAttributesController < InstanceAdmin::ResourceControl
 
   def edit
     @custom_attribute = @target.custom_attributes.listable.find(params[:id])
-    @custom_attribute.required = @custom_attribute.required?
+    @custom_attribute.required = @custom_attribute.validation_rules['presence'] == {} rescue false
+    @custom_attribute.min_length = @custom_attribute.validation_rules['length']['minimum'] rescue nil
+    @custom_attribute.max_length = @custom_attribute.validation_rules['length']['maximum'] rescue nil
   end
 
   def create
     @custom_attribute = @target.custom_attributes.build(custom_attributes_params)
-    if @custom_attribute.required
-      @custom_attribute.require!
-    end
+    @custom_attribute.set_validation_rules
     if @custom_attribute.save
       flash[:success] = t 'flash_messages.instance_admin.manage.custom_attributes.created'
       redirect_to redirection_path
@@ -35,12 +35,8 @@ class InstanceAdmin::CustomAttributesController < InstanceAdmin::ResourceControl
 
   def update
     @custom_attribute = @target.custom_attributes.find(params[:id])
-    if params[:custom_attribute][:required] == "1"
-      @custom_attribute.require!
-    else
-      @custom_attribute.unrequire!
-    end
     if @custom_attribute.update_attributes(custom_attributes_params(@custom_attribute.required_internally?))
+      @custom_attribute.set_validation_rules!
       flash[:success] = t 'flash_messages.instance_admin.manage.custom_attributes.updated'
       redirect_to redirection_path
     else
