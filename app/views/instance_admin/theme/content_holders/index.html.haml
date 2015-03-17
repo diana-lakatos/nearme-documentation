@@ -1,0 +1,17 @@
+%h4 Content Holders
+
+.content-container.dropshadow
+  .row
+    .table-container.col-xs-12
+      %table#content_holders.table
+        %thead
+          %tr
+            %th Name
+            %th Enabled
+            %th Created At
+            %th
+        %tbody
+          = render partial: 'holder', collection: platform_context.theme.content_holders
+
+.content-container
+  = link_to 'Add content holder', new_instance_admin_theme_content_holder_path, class: 'btn btn-green pull-right'

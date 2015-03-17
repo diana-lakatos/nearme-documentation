@@ -10,6 +10,7 @@ class Theme < ActiveRecord::Base
   #       etc.
   belongs_to :owner, :polymorphic => true
   has_many :pages, :dependent => :destroy
+  has_many :content_holders, :dependent => :destroy
   has_one :theme_font, :dependent => :destroy
   delegate :bookable_noun, :to => :instance
   delegate :lessor, :to => :instance

@@ -59,7 +59,8 @@ class InstanceAdmin::BaseController < ApplicationController
     'homepage content' => { controller: '/instance_admin/theme/homepage', default_action: 'show' },
     'pages'            => { default_action: 'index' },
     'header'           => { default_action: 'show' },
-    'footer'           => { default_action: 'show' }
+    'footer'           => { default_action: 'show' },
+    'content_holders'  => { default_action: 'index' }
   }
 
   BUY_SELL_CONTROLLERS = {

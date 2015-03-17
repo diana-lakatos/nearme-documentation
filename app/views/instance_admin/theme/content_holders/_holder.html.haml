@@ -1,0 +1,11 @@
+%tr
+  %td= link_to holder.name, [:instance_admin, :theme, holder]
+  %td= holder.enabled
+  %td= l holder.created_at, format: :long
+  %td
+    .pull-right
+      = link_to [:edit, :instance_admin, :theme, holder] do
+        .fa.fa-pencil.fa-2x.inline-form-icon
+      = link_to [:instance_admin, :theme, holder], :method => :delete,
+          data: { confirm: 'Are you sure you want to delete this?' } do
+        .fa.fa-trash-o.fa-2x.inline-form-icon
