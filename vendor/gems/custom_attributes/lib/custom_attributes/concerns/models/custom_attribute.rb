@@ -29,7 +29,7 @@ module CustomAttributes
           validates_uniqueness_of :name, :scope => [:target_id, :target_type, :deleted_at]
           validates_inclusion_of :html_tag, in: HTML_TAGS, allow_blank: true
 
-          belongs_to :target, polymorphic: true
+          belongs_to :target, polymorphic: true, touch: true
           belongs_to :instance
 
           serialize :valid_values, Array
@@ -120,11 +120,11 @@ module CustomAttributes
           end
 
           def translation_key_suffix
-            underscore(self.target.name) + '.' + name
+            self.target.translation_key_suffix + '.' + name
           end
 
           def translation_key_pluralized_suffix
-            underscore(self.target.name.pluralize) + '.' + name
+            self.target.translation_key_pluralized_suffix + '.' + name
           end
 
           def underscore(string)

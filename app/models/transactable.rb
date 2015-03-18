@@ -32,7 +32,7 @@ class Transactable < ActiveRecord::Base
   has_many :billing_authorizations, as: :reference
   belongs_to :transactable_type, inverse_of: :transactables
   belongs_to :company, inverse_of: :listings
-  belongs_to :location, inverse_of: :listings
+  belongs_to :location, inverse_of: :listings, touch: true
   belongs_to :instance, inverse_of: :listings
   belongs_to :creator, class_name: "User", inverse_of: :listings, counter_cache: true
   belongs_to :administrator, class_name: "User", inverse_of: :administered_listings

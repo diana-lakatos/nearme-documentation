@@ -1,6 +1,8 @@
 - location_pretty_availability ||= pretty_availability_sentence(listing.location.availability)
 - collapsed ||= false
 - listing = listing.decorate
+- old = lookup_context.transactable_type_id
+- lookup_context.transactable_type_id = listing.transactable_type_id if old != listing.transactable_type_id
 .booking-module-container{:class => "#{booking_module_class(listing)} #{collapsed ? " collapsed" : ""}", :'data-toggleable-booking-module' => true}
   .booking-module
     .booking-header
@@ -69,13 +71,7 @@
       .clearfix
       - if params[:controller] != 'locations/listings'
         .booking-description
-          %h3= t 'booking_module.description'
-          %span= custom_sanitze mask_phone_and_email_if_necessary(listing.description)
-          - listing_availability = pretty_availability_sentence(listing.availability)
-          - if listing_availability != location_pretty_availability
-            .booking-opening-hours
-              %h3= t 'booking_module.hours'
-              %span= pretty_availability_sentence(listing.availability)
+          = render 'locations/booking_module_listing_description'
 
       - unless listing.schedule_booking?
         .tab-content
@@ -183,3 +179,5 @@
     $(this).tab('show');
     })
     $('.pricing-tabs a.possible:first').tab('show');
+
+- lookup_context.transactable_type_id = old

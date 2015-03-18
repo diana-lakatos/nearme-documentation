@@ -1,4 +1,5 @@
 class InstanceAdmin::Manage::SmsTemplatesController < InstanceAdmin::Manage::BaseController
+  before_filter :find_transactable_type, only: [:create, :update]
 
   def index
     @sms_templates = platform_context.instance.instance_views.custom_smses
@@ -22,7 +23,7 @@ class InstanceAdmin::Manage::SmsTemplatesController < InstanceAdmin::Manage::Bas
     @sms_template = platform_context.instance.instance_views.build(template_params)
     @sms_template.format = 'text'
     @sms_template.handler = 'liquid'
-    @sms_template.view_type = 'sms'
+    @sms_template.view_type = InstanceView::SMS_VIEW
     @sms_template.partial = false
     if @sms_template.save
       flash[:success] = t 'flash_messages.instance_admin.manage.sms_templates.created'
@@ -66,5 +67,8 @@ class InstanceAdmin::Manage::SmsTemplatesController < InstanceAdmin::Manage::Bas
     params.require(:sms_template).permit(secured_params.sms_template)
   end
 
+  def find_transactable_type
+    @transactable_type = TransactableType.find(params[:sms_template][:transactable_type_id]) if params[:sms_template][:transactable_type_id].present? rescue nil
+  end
 end
 

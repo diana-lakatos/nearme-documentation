@@ -11,7 +11,7 @@ class FormComponent < ActiveRecord::Base
 
   include RankedModel
 
-  belongs_to :form_componentable, polymorphic: true
+  belongs_to :form_componentable, polymorphic: true, touch: true
   belongs_to :instance
   validates_inclusion_of :form_type, in: FORM_TYPES, allow_nil: false
 

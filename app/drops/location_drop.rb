@@ -1,12 +1,18 @@
 class LocationDrop < BaseDrop
+
+  include AvailabilityRulesHelper
   include ReservationsHelper
   include SharingHelper
 
   attr_reader :location
-  delegate :name, :description, :phone, :street, :city, :suburb, to: :location
+  delegate :name, :description, :phone, :street, :city, :suburb, :company, to: :location
 
   def initialize(location)
     @location = location
+  end
+
+  def availability
+    pretty_availability_sentence(@location.availability).to_s
   end
 
   def url

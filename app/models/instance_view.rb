@@ -44,6 +44,12 @@ class InstanceView < ActiveRecord::Base
 
   DEFAULT_EMAIL_TEMPLATE_LAYOUTS_PATHS = ['layouts/mailer'].freeze
 
+  DEFAULT_LIQUID_VIEWS_PATHS = [
+    'locations/booking_module_listing_description',
+    'locations/location_description',
+    'locations/listings/listing_description'
+  ].freeze
+
   scope :for_instance_type_id, ->(instance_type_id) {
     where('instance_type_id IS NULL OR instance_type_id = ?', instance_type_id)
   }
@@ -57,6 +63,10 @@ class InstanceView < ActiveRecord::Base
 
   scope :for_transactable_type_id, -> (transactable_type_id) {
     where('transactable_type_id IS NULL OR transactable_type_id = ?', transactable_type_id)
+  }
+
+  scope :liquid_views, -> {
+    custom_views.where(handler: 'liquid', partial: true)
   }
 
   scope :custom_views, -> {
@@ -81,6 +91,10 @@ class InstanceView < ActiveRecord::Base
 
   def self.not_customized_sms_templates_paths
     DEFAULT_SMS_TEMPLATES_PATHS - self.for_instance_id(PlatformContext.current.instance.id).custom_smses.pluck(:path)
+  end
+
+  def self.not_customized_liquid_views_paths
+    DEFAULT_LIQUID_VIEWS_PATHS - self.for_instance_id(PlatformContext.current.instance.id).liquid_views.pluck(:path)
   end
 
   def self.not_customized_email_templates_paths
@@ -122,7 +136,7 @@ class InstanceView < ActiveRecord::Base
   validates_inclusion_of :locale, in: I18n.available_locales.map(&:to_s)
   validates_inclusion_of :handler, in: ActionView::Template::Handlers.extensions.map(&:to_s)
   validates_inclusion_of :format, in: Mime::SET.symbols.map(&:to_s)
-  validates_uniqueness_of :path, { scope: [:instance_id, :transactable_type_id, :transactable_type_id, :locale, :format, :handler] }
+  validates_uniqueness_of :path, { scope: [:instance_id, :transactable_type_id, :locale, :format, :handler, :partial] }
 
   before_validation do
     self.locale ||= 'en'

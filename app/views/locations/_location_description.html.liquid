@@ -1,0 +1,24 @@
+<h2>{{ 'location.the_location' || translate }}</h2>
+<p>{{ location.description | filter_text | custom_sanitize }}</p>
+
+<div class='amenities-block'>
+  <div class='amenities-header'>
+    <h3>{{ 'location.hours' | translate }}</h3>
+  </div>
+  <div class='amenities-container'>
+    <div class='row-fluid amenities-row'>
+      <div class='span3'>{{ location.availability }}</div>
+    </div>
+  </div>
+
+<article class='company'>
+  <h2>
+    {{ location.company.name }}
+    {% if location.company.url != blank %}
+      <a href="{{ location.company.url }}" rel='nofollow', target='_blank'><span class='ico-open-link'></span></a>
+    {% endif %}
+  </h2>
+
+  <p> {{ location.company.description }}</p>
+  <div class='clearfix'></div>
+</article>

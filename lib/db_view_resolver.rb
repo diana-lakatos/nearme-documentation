@@ -1,6 +1,6 @@
 class DbViewResolver < ActionView::Resolver
 
-  def find_templates(name, prefix, partial, details) 
+  def find_templates(name, prefix, partial, details)
     raise NotImplementedError.new('You must implement find_templates method!')
   end
 
@@ -33,13 +33,17 @@ class DbViewResolver < ActionView::Resolver
     record.body
   end
 
-  def virtual_path(path, partial)
+  def self.virtual_path(path, partial)
     return path unless partial
     if index = path.rindex('/')
       path.insert(index + 1, '_')
     else
       "_#{path}"
     end
+  end
+
+  def virtual_path(path, partial)
+    self.class.virtual_path(path, partial)
   end
 end
 
