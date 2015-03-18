@@ -1,0 +1,17 @@
+<div class="administrator">
+  <img src="{{administrator.avatar_url_big}}">
+  <div class="info">
+    <span class="name">{{ administrator.name }}</span>
+    <span class="title">{{ administrator.job_title }}</span>
+  </div>
+  <div class="buttons">
+    <a href="{{administrator.profile_path}}" class="btn btn-medium view">
+      <span class="text">{{ 'location.buttons.view_profile' | translate }}</span>
+    </a>
+    <a href="#" class="btn btn-blue btn-medium ask" data-modal="true" data-href="{{listing.new_user_message_path}}">
+      <span class="text">{{ 'location.buttons.contact' | translate }}</span>
+    </a>
+  </div>
+  <div class="clearfix"></div>
+</div>
+<div class="padding-row"></div>

@@ -215,6 +215,7 @@ DesksnearMe::Application.routes.draw do
       resources :pages, concerns: :versionable
       resource :footer, only: [:show, :create, :update], controller: 'footer', concerns: :versionable
       resource :header, only: [:show, :create, :update], controller: 'header', concerns: :versionable
+      resource :user_badge, only: [:show, :create, :update], controller: 'user_badge', concerns: :versionable
       resource :homepage, only: [:show, :update], controller: 'homepage', concerns: :versionable
       resource :homepage_template, only: [:show, :create, :update], controller: 'homepage_template', concerns: :versionable
       resources :content_holders

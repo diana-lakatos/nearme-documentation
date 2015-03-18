@@ -2990,6 +2990,7 @@ ActiveRecord::Schema.define(version: 20150320134444) do
     t.integer  "transactables_count",                                default: 0
     t.float    "buyer_average_rating",                               default: 0.0,                                                                                 null: false
     t.boolean  "accept_emails",                                      default: true
+    t.boolean  "public_profile",                                     default: false
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

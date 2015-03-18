@@ -1,0 +1,26 @@
+<div class="map">
+  <div class="map-wrapper google-map">
+    <div class="map-container">
+    </div>
+  </div>
+
+  <div class="bottom-heading">
+    <a href='{{location.google_maps_route}}' data-destination='{{location.address}}' data-lat='{{location.latitude}}' data-long='{{location.longitude}}' data-routelink=true target="_blank">
+      {{ location.address }}
+    </a>
+    <span class="ico-chevron-right pull-right">
+    </span>
+  </div>
+
+  <address data-lat='{{location.latitude}}' data-lng='{{location.longitude}}' class="hidden">
+    <div id="address-popover">
+      <strong>{{ location.address_formatted }}</strong>
+      {{ if location.display_parts_of_address? }}
+        <span>{{ location.address_formatted_additional }}</span>
+      {{ endif }}
+      <a href="https://maps.google.com/maps?q={{location.address}}" target="_blank">
+        <span class="ico-open-link padding"></span>
+      </a>
+    </div>
+  </address>
+</div>
