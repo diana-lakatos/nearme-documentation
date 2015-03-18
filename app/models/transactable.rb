@@ -127,7 +127,7 @@ class Transactable < ActiveRecord::Base
   # == Validations
   validates_presence_of :location, :transactable_type
   validates_with PriceValidator
-  validates :photos, :length => {:minimum => 1}, :unless => :photo_not_required
+  validates :photos, length: {:minimum => 1}, unless: ->(record) { record.photo_not_required || !record.transactable_type.enable_photo_required }
   validates_inclusion_of :booking_type, in: TransactableType::BOOKING_TYPES
   validates :quantity, presence: true
   validates :quantity, numericality: {greater_than: 0}
