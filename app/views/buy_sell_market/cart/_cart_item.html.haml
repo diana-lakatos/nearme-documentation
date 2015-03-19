@@ -3,7 +3,7 @@
   .span5.item
     - if first_item
       %p ITEM
-    = item.image
+    = image_tag item.try(:product).try(:images).try(:first).try(:image_url, :medium)
     .item-description
       %p= item.name_with_link
       %p= sanitize item.short_description
