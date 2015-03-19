@@ -479,4 +479,19 @@ class ApplicationController < ActionController::Base
     # TODO: uncomment
     #redirect_to main_app.root_path if request.path.include?('/instance_buy_sell')
   end
+
+  def set_taxon_breadcrumb
+    if @taxon
+      @breadcrumbs = []
+      add_breadcrumbs(@taxon)
+      @breadcrumbs.reverse.each do |breadcrumb|
+        add_crumb breadcrumb[:name], breadcrumb[:path]
+      end
+    end
+  end
+
+  def add_taxon_breadcrumbs(taxon)
+    @breadcrumbs << { name: taxon.name, path: taxon_custom_path(taxon) }
+    add_breadcrumbs(taxon.parent) if taxon.parent
+  end
 end
