@@ -510,6 +510,7 @@ class SecuredParams
       :enable_cancellation_policy,
       :show_page_enabled,
       :groupable_with_others,
+      :enable_photo_required,
       :service_fee_guest_percent, :service_fee_host_percent,
       :bookable_noun, :lessor, :lessee,
       :action_rfq,

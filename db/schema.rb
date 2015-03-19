@@ -2716,6 +2716,7 @@ ActiveRecord::Schema.define(version: 20150318115439) do
     t.boolean  "manual_payment",                                                     default: false
     t.boolean  "buyable",                                                            default: false
     t.boolean  "show_reviews_if_both_completed",                                     default: false
+    t.boolean  "enable_photo_required",                                              default: true
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

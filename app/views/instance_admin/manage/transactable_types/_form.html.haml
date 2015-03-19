@@ -24,6 +24,8 @@
     .row
       .input-container.col-xs-6
         = f.input :groupable_with_others, as: :boolean
+      .input-container.col-xs-6
+        = f.input :enable_photo_required, as: :boolean
   %h4 Pricing
   .content-container.dropshadow
     - %w(hourly daily weekly monthly free).each do |price|
