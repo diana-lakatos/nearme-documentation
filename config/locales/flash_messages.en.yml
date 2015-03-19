@@ -74,6 +74,11 @@ en:
           deleted: 'Email template has been deleted.'
           invalid: 'Not a valid email template.'
           updated: 'Email template has been updated.'
+        liquid_views:
+          created: 'Liquid view has been created.'
+          deleted: 'Liquid view has been deleted.'
+          invalid: 'Not a valid liquid view.'
+          updated: 'Liquid view has been updated.'
         partners:
           partner_updated: "Partner updated successfully."
         email_layout_templates:

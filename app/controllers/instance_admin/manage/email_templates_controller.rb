@@ -1,4 +1,5 @@
 class InstanceAdmin::Manage::EmailTemplatesController < InstanceAdmin::Manage::BaseController
+  before_filter :find_transactable_type, only: [:create, :update]
 
   def index
     @email_templates = platform_context.instance.instance_views.custom_emails.order('path')
@@ -63,6 +64,10 @@ class InstanceAdmin::Manage::EmailTemplatesController < InstanceAdmin::Manage::B
 
   def template_params
     params.require(:email_template).permit(secured_params.email_template)
+  end
+
+  def find_transactable_type
+    @transactable_type = TransactableType.find(params[:email_template][:transactable_type_id]) if params[:email_template][:transactable_type_id].present? rescue nil
   end
 
 end

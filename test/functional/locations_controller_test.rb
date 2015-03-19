@@ -98,35 +98,5 @@ class LocationsControllerTest < ActionController::TestCase
       end
     end
 
-    context 'edit links' do
-
-      setup do
-        @edit_location_url = login_as_admin_user_path(@location.creator, :return_to => edit_dashboard_company_location_path(@location))
-      end
-
-      context 'user is logged in' do
-        setup do
-          @user = FactoryGirl.create(:user).decorate
-          sign_in @user
-        end
-
-        should 'be visible for admins' do
-          @user.update_attribute(:admin, true)
-          get :show, id: @location.id
-          assert_select 'a[href=?]', @edit_location_url, count: 1
-        end
-
-        should 'be hidden for customers' do
-          get :show, id: @location.id
-          assert_select 'a[href=?]', @edit_location_url, count: 0
-        end
-      end
-
-      should 'be hidden for anonymous users' do
-        get :show, id: @location.id
-        assert_select 'a[href=?]', @edit_location_url, count: 0
-      end
-    end
-
   end
 end

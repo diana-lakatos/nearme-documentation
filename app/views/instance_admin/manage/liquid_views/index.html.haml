@@ -1,0 +1,47 @@
+%h4 Manage Liquid Views
+
+.content-container
+  .row
+    = link_to 'Add Liquid View', new_instance_admin_manage_liquid_view_path, class: 'pull-right btn btn-green'
+
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table
+        %tbody
+          %tr
+            %th Template
+            %th
+            %th
+            %th
+            %th
+
+          - @liquid_views.each do |liquid_view|
+            %tr
+              %td= pretty_path liquid_view.path
+              %td= liquid_view.transactable_type.try(:name)
+              %td
+                .pull-right{style: 'margin-left: 10px'}
+                  = link_to 'Destroy', instance_admin_manage_liquid_view_path(liquid_view), method: :delete,
+                      data: { confirm: 'Are you sure?' }
+                .pull-right{style: 'margin-left: 10px'}
+                  = link_to 'Edit', edit_instance_admin_manage_liquid_view_path(liquid_view)
+                .pull-right{style: 'margin-left: 10px'}
+                  = link_to 'Duplicate default', new_instance_admin_manage_liquid_view_path(path: liquid_view.path)
+
+%h4 Customize defaults
+
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table
+        %tbody
+          %tr
+            %th Template
+
+          - @not_customized_liquid_views_paths.each do |liquid_view_path, formats|
+            %tr
+              %td= link_to pretty_path(liquid_view_path), new_instance_admin_manage_liquid_view_path(path: liquid_view_path)
+
+
+

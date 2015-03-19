@@ -206,7 +206,17 @@ class SecuredParams
       :body,
       :path,
       :locale,
-      :format
+      :format,
+      :transactable_type_id
+    ]
+  end
+
+  def liquid_view
+    [
+      :body,
+      :path,
+      :locale,
+      :transactable_type_id
     ]
   end
 
@@ -215,7 +225,8 @@ class SecuredParams
       :body,
       :path,
       :locale,
-      :format
+      :format,
+      :transactable_type_id
     ]
   end
 
@@ -223,7 +234,8 @@ class SecuredParams
     [
       :body,
       :path,
-      :locale
+      :locale,
+      :transactable_type_id
     ]
   end
 

@@ -50,6 +50,10 @@ module CustomAttributes
       send("#{key}=", value)
     end
 
+    def to_liquid
+      @hash
+    end
+
     protected
 
     def custom_property_type_cast(value, type)
