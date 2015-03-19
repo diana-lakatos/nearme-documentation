@@ -56,4 +56,5 @@ DesksnearMe::Application.configure do
   AWS.config(access_key_id: 'AKIAJYA2ZJ5BQTU5QBMA',
              secret_access_key: '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',
              region: 'us-west-1')
+  config.googl_api_key = 'AIzaSyDQfdHdnh0u-0yRhqmSZchhkpFVIgXy2Jc'
 end
