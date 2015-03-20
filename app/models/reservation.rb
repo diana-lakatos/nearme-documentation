@@ -63,9 +63,11 @@ class Reservation < ActiveRecord::Base
   validate :validate_all_dates_available, on: :create, :if => lambda { listing }
   validate :validate_booking_selection, on: :create, :if => lambda { listing }
 
+  before_create :set_hours_to_expiration, if: lambda { listing }
   before_create :set_costs, :if => lambda { listing }
-  before_validation :set_currency, on: :create, :if => lambda { listing }
-  before_validation :set_default_payment_status, on: :create, :if => lambda { listing }
+  before_validation :set_minimum_booking_minutes, on: :create, if: lambda { listing }
+  before_validation :set_currency, on: :create, if: lambda { listing }
+  before_validation :set_default_payment_status, on: :create, if: lambda { listing }
   after_create :auto_confirm_reservation
 
   def perform_expiry!
@@ -85,7 +87,11 @@ class Reservation < ActiveRecord::Base
   end
 
   def schedule_expiry
-    ReservationExpiryJob.perform_later(listing.transactable_type.hours_to_expiration.to_i.hours, self.id) if listing.transactable_type.hours_to_expiration.to_i > 0
+    ReservationExpiryJob.perform_later(hours_to_expiration.to_i.hours, self.id) if hours_to_expiration.to_i > 0
+  end
+
+  def expiry_time
+    created_at + hours_to_expiration.to_i.hours
   end
 
   def store_platform_context_detail
@@ -514,6 +520,14 @@ class Reservation < ActiveRecord::Base
     end
   end
 
+  def set_hours_to_expiration
+    self.hours_to_expiration = listing.hours_to_expiration
+  end
+
+  def set_minimum_booking_minutes
+    self.minimum_booking_minutes = listing.minimum_booking_minutes
+  end
+
   def set_currency
     self.currency ||= listing.try(:currency)
   end
@@ -539,7 +553,11 @@ class Reservation < ActiveRecord::Base
 
   def validate_booking_selection
     unless price_calculator.valid?
+      if HourlyPriceCalculator === price_calculator
+        errors.add(:base, "Booking selection does not meet requirements. A minimum of #{sprintf('%.2f', minimum_booking_minutes/60.0)} hours are required.")
+      else
       errors.add(:base, "Booking selection does not meet requirements. A minimum of #{listing.minimum_booking_days} consecutive bookable days are required.")
+      end
     end
   end
 

@@ -285,23 +285,26 @@ class ReservationTest < ActiveSupport::TestCase
 
   context 'expiration settings' do
     setup do
-      @reservation = FactoryGirl.create(:reservation)
     end
 
     should 'set proper expiration time' do
-      @reservation.listing.transactable_type.update_attribute(:hours_to_expiration, 45)
+      TransactableType.first.update_attribute(:hours_to_expiration, 45)
+      @reservation = FactoryGirl.create(:reservation)
       Timecop.freeze Time.zone.now do
         ReservationExpiryJob.expects(:perform_later).with do |hours, id|
           hours == 45.hours && id == @reservation.id
         end
         @reservation.schedule_expiry
       end
+      assert_equal 45, @reservation.hours_to_expiration
     end
 
     should 'not create expiry job if hours is 0' do
-      @reservation.listing.transactable_type.update_attribute(:hours_to_expiration, 0)
+      TransactableType.first.update_attribute(:hours_to_expiration, 0)
+      @reservation = FactoryGirl.create(:reservation)
       ReservationExpiryJob.expects(:perform_later).never
       @reservation.schedule_expiry
+      assert_equal 0, @reservation.hours_to_expiration
     end
 
   end

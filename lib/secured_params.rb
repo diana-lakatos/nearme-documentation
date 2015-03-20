@@ -509,6 +509,7 @@ class SecuredParams
       :cancellation_policy_hours_for_cancellation,
       :enable_cancellation_policy,
       :hours_to_expiration,
+      :minimum_booking_minutes,
       :show_page_enabled,
       :groupable_with_others,
       :enable_photo_required,
