@@ -67,8 +67,8 @@ class ReviewsService
     creator_line_items_ids = []
     creator_products.each{|p| creator_line_items_ids << p.line_items.pluck(:id) }
     {
-      owner_line_items: Spree::LineItem.where(order_id: orders_ids),
-      creator_line_items: Spree::LineItem.where(id: creator_line_items_ids.uniq)
+      owner_line_items: Spree::LineItem.where(order_id: orders_ids).joins(:product).where('spree_products.user_id != ?', @current_user.id),
+      creator_line_items: Spree::LineItem.where(id: creator_line_items_ids.uniq).joins(:order).where('spree_orders.user_id != ?', @current_user.id)
     }
   end
 
@@ -91,8 +91,8 @@ class ReviewsService
   def get_reservations_for_owner_and_creator
     reservations = Reservation.with_listing.past.confirmed.includes(listing: :transactable_type)
     {
-      owner_reservations: reservations.where(owner_id: @current_user.id).by_period(*filter_period),
-      creator_reservations: reservations.where(creator_id: @current_user.id).by_period(*filter_period)
+      owner_reservations: reservations.where(owner_id: @current_user.id).where('reservations.owner_id != reservations.creator_id').by_period(*filter_period),
+      creator_reservations: reservations.where(creator_id: @current_user.id).where('reservations.owner_id != reservations.creator_id').by_period(*filter_period)
     }
   end
 
