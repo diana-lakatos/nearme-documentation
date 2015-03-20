@@ -23,9 +23,7 @@ class InstanceMailer < ActionMailer::Base
     @email_method = template
     custom_tracking_options  = (options.delete(:custom_tracking_options) || {}).reverse_merge({template: template, campaign: @email_method.split('/')[0].humanize})
 
-    @mail_type = mail_type
     @mailer_signature = generate_signature
-    @unsubscribe_link = unsubscribe_url(signature: @mailer_signature, token: @user.try(:temporary_token)) if non_transactional?
     @signature_for_tracking = "&email_signature=#{@mailer_signature}"
 
     track_sending_email(custom_tracking_options)
@@ -53,18 +51,6 @@ class InstanceMailer < ActionMailer::Base
 
       mixed.content_type 'multipart/mixed'
       mixed.header['content-type'].parameters[:boundary] = mixed.body.boundary
-  end
-
-  def mail_type
-    DNM::MAIL_TYPES::BULK
-  end
-
-  def transactional?
-    mail_type == DNM::MAIL_TYPES::TRANSACTIONAL
-  end
-
-  def non_transactional?
-    mail_type == DNM::MAIL_TYPES::NON_TRANSACTIONAL
   end
 
   private

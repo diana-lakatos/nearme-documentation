@@ -14,7 +14,6 @@ module CustomAttributes
         listing_type: :string,
         capacity: :integer,
         delta: :boolean,
-        minimum_booking_minutes: :integer,
         rank: :integer,
         last_request_photos_sent_at: :datetime,
       }.each do |attr_name, attr_type|
@@ -36,7 +35,7 @@ module CustomAttributes
                        end
 
         internal_flag =  case  attr_name
-                         when :name, :description, :minimum_booking_minutes, :last_request_photos_sent_at
+                         when :name, :description, :last_request_photos_sent_at
                            true
                          else
                            false

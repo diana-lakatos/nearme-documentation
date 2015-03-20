@@ -145,7 +145,7 @@ class Transactable < ActiveRecord::Base
   delegate :url, to: :company
   delegate :currency, :formatted_address, :local_geocoding,
     :latitude, :longitude, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
-  delegate :service_fee_guest_percent, :service_fee_host_percent, to: :transactable_type
+  delegate :service_fee_guest_percent, :service_fee_host_percent, :hours_to_expiration, :minimum_booking_minutes, to: :transactable_type
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
   delegate :favourable_pricing_rate, :has_action?, to: :transactable_type

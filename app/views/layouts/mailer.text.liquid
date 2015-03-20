@@ -1,5 +1,4 @@
 {{ content_for_layout }}
 
-{% capture footer_path %}{{ 'shared/mailers/' | append:mail_type | append:'_footer.text' }}{% endcapture %}
-{% include footer_path %}
-
+You are receiving this email because you signed up to {{ platform_context.name }} using the email address {{ user.email }}. After logging in to {{platform_context.unsubscribe_url}} you will be able to unsubscribe
+{{ platform_context.address }}

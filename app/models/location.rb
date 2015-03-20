@@ -91,6 +91,10 @@ class Location < ActiveRecord::Base
     TransactableType.first.try(:name) == "Listing"
   end
 
+  def minimum_booking_minutes
+    listings.joins(:transactable_type).pluck(:minimum_booking_minutes).max || 60
+  end
+
   def assign_default_availability_rules
     if availability_rules.reject(&:marked_for_destruction?).empty?
       AvailabilityRule.default_template.apply(self)
