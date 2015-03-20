@@ -17,7 +17,7 @@ class SearchController < ApplicationController
       @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(@transactable_type, params)
     end
 
-    @searcher.paginate_results(params[:page], per_page) unless result_view == 'map'
+    @searcher.paginate_results(params[:page], per_page)
     event_tracker.conducted_a_search(@searcher.search, @searcher.to_event_params.merge(result_view: result_view)) if should_log_conducted_search?
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
     remember_search_query
