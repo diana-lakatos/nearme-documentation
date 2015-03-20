@@ -508,6 +508,8 @@ class SecuredParams
       :cancellation_policy_penalty_percentage,
       :cancellation_policy_hours_for_cancellation,
       :enable_cancellation_policy,
+      :hours_to_expiration,
+      :minimum_booking_minutes,
       :show_page_enabled,
       :groupable_with_others,
       :enable_photo_required,
@@ -920,6 +922,13 @@ class SecuredParams
       companies_attributes: nested(self.company),
       approval_requests_attributes: nested(self.approval_request)
     ] + User.public_custom_attributes_names(InstanceProfileType.first.try(:id))
+  end
+
+  def notification_preferences
+    [:accept_emails,
+     :sms_notifications_enabled
+    ]
+
   end
 
   def user_instance_profiles

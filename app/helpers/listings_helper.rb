@@ -50,6 +50,7 @@ module ListingsHelper
         earliest_open_minute: listing.availability.earliest_open_minute,
         latest_close_minute: listing.availability.latest_close_minute,
         minimum_booking_days: listing.minimum_booking_days,
+        minimum_booking_minutes: listing.minimum_booking_minutes,
         hourly_availability_schedule_url: hourly_availability_schedule_listing_reservations_url(listing, format: :json),
         action_hourly_booking: listing.action_hourly_booking? && listing.hourly_price_cents.to_i > 0,
         action_daily_booking: listing.action_daily_booking?,

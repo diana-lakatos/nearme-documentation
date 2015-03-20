@@ -216,6 +216,7 @@ DesksnearMe::Application.routes.draw do
       resource :homepage, only: [:show, :update], controller: 'homepage', concerns: :versionable
       resource :homepage_template, only: [:show, :create, :update], controller: 'homepage_template', concerns: :versionable
       resources :content_holders
+      resources :liquid_views, :only => [:index, :new, :create, :edit, :update, :destroy]
     end
 
     namespace :manage do
@@ -304,7 +305,6 @@ DesksnearMe::Application.routes.draw do
         resources :instance_admin_roles, :only => [:create, :update, :destroy, :index]
       end
 
-      resources :liquid_views, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :email_layout_templates, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :email_templates, :only => [:index, :new, :create, :edit, :update, :destroy]
       resources :sms_templates, :only => [:index, :new, :create, :edit, :update, :destroy]
@@ -582,7 +582,9 @@ DesksnearMe::Application.routes.draw do
       end
     end
 
-    resources :companies, :only => [:edit, :update, :show]
+    resource :notification_preferences, only: [:edit, :update]
+
+    resources :companies, only: [:edit, :update, :show]
     resources :host_recurring_bookings do
       member do
         post :confirm

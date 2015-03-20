@@ -263,23 +263,49 @@ class ReservationTest < ActiveSupport::TestCase
 
   context 'expiration' do
 
-      setup do
-        Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:charge)
-        @reservation = FactoryGirl.build(:reservation_with_credit_card)
-        @reservation.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
+    setup do
+      Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:charge)
+      @reservation = FactoryGirl.build(:reservation_with_credit_card)
+      @reservation.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
 
-        @reservation.subtotal_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
-        @reservation.service_fee_amount_guest_cents = 10_00
-        @reservation.service_fee_amount_host_cents = 10_00
-        @reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
-        @reservation.save!
-      end
+      @reservation.subtotal_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
+      @reservation.service_fee_amount_guest_cents = 10_00
+      @reservation.service_fee_amount_host_cents = 10_00
+      @reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
+      @reservation.save!
+    end
 
-      should 'not send any email if the expire method is called' do
-        @reservation.confirm
-        WorkflowStepJob.expects(:perform).never
-        @reservation.perform_expiry!
+    should 'not send any email if the expire method is called' do
+      @reservation.confirm
+      WorkflowStepJob.expects(:perform).never
+      @reservation.perform_expiry!
+    end
+
+  end
+
+  context 'expiration settings' do
+    setup do
+    end
+
+    should 'set proper expiration time' do
+      TransactableType.first.update_attribute(:hours_to_expiration, 45)
+      @reservation = FactoryGirl.create(:reservation)
+      Timecop.freeze Time.zone.now do
+        ReservationExpiryJob.expects(:perform_later).with do |hours, id|
+          hours == 45.hours && id == @reservation.id
+        end
+        @reservation.schedule_expiry
       end
+      assert_equal 45, @reservation.hours_to_expiration
+    end
+
+    should 'not create expiry job if hours is 0' do
+      TransactableType.first.update_attribute(:hours_to_expiration, 0)
+      @reservation = FactoryGirl.create(:reservation)
+      ReservationExpiryJob.expects(:perform_later).never
+      @reservation.schedule_expiry
+      assert_equal 0, @reservation.hours_to_expiration
+    end
 
   end
 
@@ -452,8 +478,8 @@ class ReservationTest < ActiveSupport::TestCase
         }
         assert_equal Reservation::HourlyPriceCalculator.new(@reservation).price.cents +
           Payment::ServiceFeeCalculator.new(Money.new(@reservation.subtotal_amount_cents, @reservation.currency), options)
-.service_fee_guest.cents,
-          @reservation.total_amount_cents
+          .service_fee_guest.cents,
+        @reservation.total_amount_cents
       end
     end
   end
@@ -718,7 +744,7 @@ class ReservationTest < ActiveSupport::TestCase
       end
       assert_equal [@waiver_agreement_template_company.name, @waiver_agreement_template_company2.name], @reservation.waiver_agreements.pluck(:name)
     end
-
   end
+
 end
 

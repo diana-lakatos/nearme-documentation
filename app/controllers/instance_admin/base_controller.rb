@@ -22,7 +22,6 @@ class InstanceAdmin::BaseController < ApplicationController
     'faq'                => { controller: '/instance_admin/manage/support/faqs', default_action: 'index' },
     'approval_requests'  => { controller: '/instance_admin/manage/approval_requests', default_action: 'index' },
     'waiver_agreements'  => { controller: '/instance_admin/manage/waiver_agreement_templates', default_action: 'index' },
-    'liquid views'       => { controller: '/instance_admin/manage/liquid_views', default_action: 'index' },
     'email layouts'      => { controller: '/instance_admin/manage/email_layout_templates', default_action: 'index' },
     'emails'             => { controller: '/instance_admin/manage/email_templates', default_action: 'index' },
     'smses'              => { controller: '/instance_admin/manage/sms_templates', default_action: 'index' },
@@ -48,7 +47,6 @@ class InstanceAdmin::BaseController < ApplicationController
     'locations'            => { default_action: 'show' },
     'listings'             => { default_action: 'show' },
     'integrations'         => { default_action: 'show' },
-    'cancellation_policy'  => { default_action: 'show' },
     'translations'         => { default_action: 'show' },
     'documents_upload'     => { default_action: 'show' }
   }
@@ -61,7 +59,8 @@ class InstanceAdmin::BaseController < ApplicationController
     'pages'            => { default_action: 'index' },
     'header'           => { default_action: 'show' },
     'footer'           => { default_action: 'show' },
-    'content_holders'  => { default_action: 'index' }
+    'content_holders'  => { default_action: 'index' },
+    'liquid views'     => { controller: '/instance_admin/theme/liquid_views', default_action: 'index' }
   }
 
   BUY_SELL_CONTROLLERS = {

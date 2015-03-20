@@ -15,8 +15,8 @@ class AvailabilityRule < ActiveRecord::Base
     total_opening_time = record.floor_total_opening_time_in_hours
     if total_opening_time < 0
       record.errors["day_#{value}"] << "The opening hour must occur before the closing hour."
-    elsif total_opening_time < 1
-      record.errors["day_#{value}"] << "must be opened for at least 1 hour"
+    elsif total_opening_time < record.minimum_booking_hours
+      record.errors["day_#{value}"] << "must be opened for at least #{sprintf('%.2f', record.minimum_booking_hours)} #{'hour'.pluralize(record.minimum_booking_hours)}"
     end
   end
 
@@ -34,6 +34,14 @@ class AvailabilityRule < ActiveRecord::Base
 
   def day_name
     Date::DAYNAMES[day]
+  end
+
+  def minimum_booking_hours
+    if target.respond_to?(:minimum_booking_minutes)
+      @minimum_booking_hours ||= (target.minimum_booking_minutes/60.0)
+    else
+      1
+    end
   end
 
   def open_time
