@@ -10,6 +10,7 @@ class @Bookings.TimePicker
 
     @openMinute = if options.openMinute? then options.openMinute else 9*60
     @closeMinute = options.closeMinute or 18*60
+    @minimumBookingMinutes = options.minimumBookingMinutes
     @initialStartMinute = options.startMinute if options.startMinute?
     @initialEndMinute = options.endMinute if options.endMinute?
 
@@ -31,6 +32,7 @@ class @Bookings.TimePicker
     if @initialEndMinute
       @endTime.val("#{@initialEndMinute}")
       @endTime.trigger('change')
+    @disableEndTimesFromStartTime()
 
   bindEvents: ->
     @container.on 'click', (event) =>
@@ -141,8 +143,8 @@ class @Bookings.TimePicker
   disableEndTimesFromStartTime: ->
     start = @startMinute()
     if start?
-      # We disable all times before or at the current start time
-      before = (min for min in @allMinutes when min <= start)
+      # We disable all times before or at the current start time + minimumBookingMinutes
+      before = (min for min in @allMinutes when min <= start + @minimumBookingMinutes - BOOKING_STEP)
 
       # We disable any time after the first unavailable end-time,
       # as a time booking needs to be contiguous.

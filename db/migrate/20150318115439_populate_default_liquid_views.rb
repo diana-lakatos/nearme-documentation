@@ -5,7 +5,7 @@ class PopulateDefaultLiquidViews < ActiveRecord::Migration
       iv = InstanceView.where(instance_id: i.id, transactable_type_id: nil, path: 'locations/location_description', locale: 'en', partial: true, view_type: 'view', format: 'html', handler: 'liquid').first_or_initialize do |iv|
         iv.body = <<-BODY
 <h2>{{ location.administrator.name }}</h2>
-<p>{{ location.administrator.biography }}</p>
+<p>{{ location.administrator.biography | filter_text | custom_sanitize }}</p>
         BODY
       end
       if iv.new_record?
@@ -15,7 +15,7 @@ class PopulateDefaultLiquidViews < ActiveRecord::Migration
       iv = InstanceView.where(instance_id: i.id, transactable_type_id: nil, path: 'locations/listings/listing_description', locale: 'en', partial: true, view_type: 'view', format: 'html', handler: 'liquid').first_or_initialize do |iv|
         iv.body = <<-BODY
 <h2>{{ listing.administrator.name }}</h2>
-<p>{{ listing.administrator.biography }}</p>
+<p>{{ listing.administrator.biography | filter_text | custom_sanitize }}</p>
         BODY
       end
       if iv.new_record?

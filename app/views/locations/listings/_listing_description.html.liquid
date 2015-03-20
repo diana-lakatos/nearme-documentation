@@ -19,6 +19,6 @@
     {% endif %}
   </h2>
 
-  <p> {{ listing.company.description }}</p>
+  <p> {{ listing.company.description | filter_text | custom_sanitize }}</p>
   <div class='clearfix'></div>
 </article>

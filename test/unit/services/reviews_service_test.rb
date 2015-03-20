@@ -104,7 +104,15 @@ class ReviewsServiceTest < ActiveSupport::TestCase
       @order = create(:completed_order_with_totals)
       @order.update(completed_at: Date.today.yesterday)
       @line_items = @order.line_items
+
+      @line_items.each do |line_item|
+        product = line_item.product
+        product.user = FactoryGirl.create(:user)
+        product.save
+      end
+
       user = @order.user
+
       instance = user.instance
       @reviews_service = ReviewsService.new(user, instance)
     end

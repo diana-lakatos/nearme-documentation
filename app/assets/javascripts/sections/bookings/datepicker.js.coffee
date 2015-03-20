@@ -56,7 +56,7 @@ class @Bookings.Datepicker
 
     @endDatepicker.on 'datesChanged', (dates) =>
       @datesWereChanged()
-    
+
 
     # The 'rangeApplied' event is fired by our custom endDatepicker model when a date
     # is toggled with the 'range' mode on. We bind this to set the mode to the second
@@ -191,7 +191,8 @@ class @Bookings.Datepicker
 
     options = {
       openMinute: @listing.data.earliest_open_minute,
-      closeMinute: @listing.data.latest_close_minute
+      closeMinute: @listing.data.latest_close_minute,
+      minimumBookingMinutes: @listing.data.minimum_booking_minutes
     }
 
     if @listingData.initial_bookings && @listingData.initial_bookings.start_minute && @listingData.initial_bookings.end_minute
