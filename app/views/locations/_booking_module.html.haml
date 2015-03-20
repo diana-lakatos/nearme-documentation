@@ -69,9 +69,7 @@
                       %span.period= t('reservations.per_month')
 
       .clearfix
-      - if params[:controller] != 'locations/listings'
-        .booking-description
-          = render 'locations/booking_module_listing_description'
+      = render 'locations/booking_module_listing_description'
 
       - unless listing.schedule_booking?
         .tab-content
