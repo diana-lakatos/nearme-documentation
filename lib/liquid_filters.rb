@@ -1,7 +1,11 @@
 module LiquidFilters
 
   def shorten_url(url)
-    Googl.shorten(url, '192.168.0.1', DesksnearMe::Application.config.googl_api_key).short_url
+    if DesksnearMe::Application.config.googl_api_key.present?
+      Googl.shorten(url, '192.168.0.1', DesksnearMe::Application.config.googl_api_key).short_url
+    else
+      Googl.shorten(url).short_url
+    end
   end
 
   def translate_property(property, target_acting_as_set)
