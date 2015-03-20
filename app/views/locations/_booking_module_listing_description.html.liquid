@@ -2,7 +2,7 @@
 {% for property in displayable_properties %}
   {% if listing.properties[property] != blank %}
     <h3>{{ property | translate_property:listing.transactable_type }}</h3>
-    <span>{{ listing.properties[property] }}</span>
+    <span>{{ listing.properties[property] | filter_text | custom_sanitize }}</span>
   {% endif %}
 {% endfor %}
 {% if listing.defer_availability_rules? %}

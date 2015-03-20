@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150319105742) do
+ActiveRecord::Schema.define(version: 20150320102027) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2979,6 +2979,7 @@ ActiveRecord::Schema.define(version: 20150319105742) do
     t.integer  "reservations_count",                                 default: 0
     t.integer  "transactables_count",                                default: 0
     t.float    "buyer_average_rating",                               default: 0.0,                                                                                 null: false
+    t.boolean  "accept_emails",                                      default: true
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

@@ -922,6 +922,13 @@ class SecuredParams
     ] + User.public_custom_attributes_names(InstanceProfileType.first.try(:id))
   end
 
+  def notification_preferences
+    [:accept_emails,
+     :sms_notifications_enabled
+    ]
+
+  end
+
   def user_instance_profiles
 
   end

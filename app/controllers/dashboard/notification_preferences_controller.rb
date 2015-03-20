@@ -1,0 +1,22 @@
+class Dashboard::NotificationPreferencesController < Dashboard::BaseController
+
+  def edit
+    @user = current_user
+  end
+
+  def update
+    @user = current_user
+    @user.assign_attributes(notification_preferences_params)
+    if @user.save
+      flash[:success] = t('flash_messages.dashboard.notification_preferences.updated')
+      redirect_to edit_dashboard_notification_preferences_path
+    else
+      render :edit
+    end
+  end
+
+  def notification_preferences_params
+    params.require(:user).permit(secured_params.notification_preferences)
+  end
+end
+

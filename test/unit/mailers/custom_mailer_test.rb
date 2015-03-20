@@ -38,7 +38,10 @@ class CustomMailerTest < ActiveSupport::TestCase
   setup do
     stub_mixpanel
     @transactable_type = FactoryGirl.create(:transactable_type)
-    @step = DummyWorkflow::DummyStep.new(stub(email: 'lister@example.com'), stub(email: 'enquirer@example.com'), stub(to_liquid: DummyArgDrop.new(stub(name: 'dummy name!'))))
+    @lister = FactoryGirl.create(:user, email: 'lister@example.com', accept_emails: true)
+    @enquirer = FactoryGirl.create(:user, email: 'enquirer@example.com', accept_emails: true)
+    @arg = stub(to_liquid: DummyArgDrop.new(stub(name: 'dummy name!')))
+    @step = DummyWorkflow::DummyStep.new(@lister, @enquirer, @arg)
     @email_template = FactoryGirl.create(:instance_view_email_text)
     @email_template = FactoryGirl.create(:instance_view_email_html)
     @email_template_for_tt = FactoryGirl.create(:instance_view_email_text, transactable_type_id: @transactable_type.id, body: "Hi TT {{dummy_arg.name}}")
@@ -137,6 +140,66 @@ class CustomMailerTest < ActiveSupport::TestCase
     CustomMailer.custom_mail(@step , 1)
   end
 
+  context 'unsubscribe' do
+
+    setup do
+      @default_hash = default_hash.except(:recipient).merge(recipient: nil)
+    end
+
+    context 'not send' do
+      should 'email to unsubscribed lister' do
+        WorkflowAlert.stubs(:find).returns(stub(@default_hash.merge(recipient_type: 'lister')))
+        @lister.update_attribute(:accept_emails, false)
+        mail = CustomMailer.custom_mail(@step, 1)
+        assert_kind_of ActionMailer::Base::NullMail, mail
+      end
+
+      should 'email to unsubscribed enquirer' do
+        WorkflowAlert.stubs(:find).returns(stub(@default_hash.merge(recipient_type: 'enquirer')))
+        @enquirer.update_attribute(:accept_emails, false)
+        mail = CustomMailer.custom_mail(@step, 1)
+        assert_kind_of ActionMailer::Base::NullMail, mail
+      end
+
+      should 'email to hardcoded email if user exists and is unsubscribed' do
+        WorkflowAlert.stubs(:find).returns(stub(@default_hash.merge(to: 'some_user@example.com')))
+        FactoryGirl.create(:user, email: 'some_user@example.com', accept_emails: false)
+        mail = CustomMailer.custom_mail(@step, 1)
+        assert_kind_of ActionMailer::Base::NullMail, mail
+      end
+    end
+
+    context 'send' do
+
+      should 'email to lister if enquirer is unsubscribed' do
+        WorkflowAlert.stubs(:find).returns(stub(@default_hash.merge(recipient_type: 'lister')))
+        @enquirer.update_attribute(:accept_emails, false)
+        assert_not_nil CustomMailer.custom_mail(@step, 1)
+      end
+
+      should 'email to enquirer if lister is unsubscribed' do
+        WorkflowAlert.stubs(:find).returns(stub(@default_hash.merge(recipient_type: 'enquirer')))
+        @lister.update_attribute(:accept_emails, false)
+        assert_not_nil CustomMailer.custom_mail(@step, 1)
+      end
+    end
+
+    should 'send email even if user who is set as from does not accept emails' do
+        WorkflowAlert.stubs(:find).returns(stub(@default_hash.merge(recipient_type: 'lister', from_type: 'enquirer')))
+        @enquirer.update_attribute(:accept_emails, false)
+        mail = CustomMailer.custom_mail(@step, 1)
+        assert_equal ['lister@example.com'], mail.to
+        assert_equal ['enquirer@example.com'], mail.from
+    end
+
+    should 'ignore cc if user does not accept emails' do
+      user_to_not_be_cc = FactoryGirl.create(:user, email: 'cc@example.com', accept_emails: false)
+      WorkflowAlert.stubs(:find).returns(stub(@default_hash.merge(recipient_type: 'lister', cc: user_to_not_be_cc.email)))
+      mail = CustomMailer.custom_mail(@step, 1)
+      assert_equal [], mail.cc
+    end
+  end
+
   context 'logger' do
 
     setup do
@@ -171,5 +234,5 @@ class CustomMailerTest < ActiveSupport::TestCase
       subject: 'Subject'
     }
   end
-end
 
+end
