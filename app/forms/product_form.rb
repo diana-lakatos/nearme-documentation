@@ -16,7 +16,9 @@ class ProductForm < Form
   validates_presence_of :shipping_category_id, :unless => :shippo_enabled
   validate :label_and_description_cannot_be_empty
   validate do
-    product.valid?
+    unless product.valid?
+      self.errors.add(:product)
+    end
   end
 
   validate :label_and_description_cannot_be_empty
@@ -202,6 +204,11 @@ class ProductForm < Form
     @category = @product.taxons.map(&:id).join(",")
     @price = @product.price
     build_document_requirements if PlatformContext.current.instance.documents_upload_enabled?
+  end
+
+  def required_field_missing?
+    form_fields = product.product_type.form_components.map(&:fields_names).flatten.map(&:to_sym)
+    (product.extra_properties.errors.keys - form_fields).present?
   end
 
   private
