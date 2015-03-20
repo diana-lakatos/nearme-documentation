@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 
   force_ssl if: :require_ssl?
 
+  before_filter :set_locale
   before_filter :log_out_if_token_exists
   before_filter :log_out_if_sso_logout
   before_filter :redirect_to_set_password_unless_unnecessary
@@ -46,6 +47,36 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def set_locale
+    params_locale = params[:lang]
+    primary_locale = platform_context.instance.primary_locale
+
+    # Set language from cookie
+    if params_locale.blank? && cookies[:lang].present?
+      params_locale = cookies[:lang]
+    end
+
+    # Set primary language
+    if params_locale.blank? || params_locale == primary_locale
+      I18n.locale = primary_locale.to_sym
+      default_url_options.delete(:lang)
+      cookies.delete :lang
+    end
+
+    # Set language requested by visitor
+    if params_locale != primary_locale
+      if platform_context.instance.locales.find_by(code: params_locale) #
+        I18n.locale = params_locale.to_sym
+        default_url_options[:lang] = params_locale
+        cookies.permanent[:lang] = params_locale
+      else
+        I18n.locale = primary_locale.to_sym
+        default_url_options.delete(:lang)
+        cookies.delete :lang
+      end
+    end
+  end
+
   # Returns the layout to use for the current request.
   #
   # By default this is 'application', except for XHR requests where
@@ -75,6 +106,7 @@ class ApplicationController < ActionController::Base
   def authorizer
     @authorizer ||= InstanceAdminAuthorizer.new(current_user)
   end
+
   helper_method :authorizer
 
   def buyable?
@@ -84,7 +116,7 @@ class ApplicationController < ActionController::Base
   def bookable?
     @bookable ||= platform_context.instance.bookable?
   end
-  
+
   helper_method :buyable?, :bookable?
 
   # Provides an EventTracker instance for the current request.
@@ -99,10 +131,10 @@ class ApplicationController < ActionController::Base
 
   def mixpanel
     @mixpanel ||= begin
-      # Load any persisted session properties
+                    # Load any persisted session properties
       session_properties = if cookies.signed[:mixpanel_session_properties].present?
-        ActiveSupport::JSON.decode(cookies.signed[:mixpanel_session_properties]) rescue nil
-      end
+                             ActiveSupport::JSON.decode(cookies.signed[:mixpanel_session_properties]) rescue nil
+                           end
 
       # Gather information about requests
       request_details = {
@@ -114,20 +146,22 @@ class ApplicationController < ActionController::Base
 
       AnalyticWrapper::MixpanelApi.new(
         AnalyticWrapper::MixpanelApi.mixpanel_instance(),
-        :current_user       => current_user,
-        :request_details    => request_details,
+        :current_user => current_user,
+        :request_details => request_details,
         :anonymous_identity => anonymous_identity,
         :session_properties => session_properties,
-        :request_params     => params,
-        :request            => user_signed_in? ? nil : request   # we assume that logged in user is not a bot
+        :request_params => params,
+        :request => user_signed_in? ? nil : request # we assume that logged in user is not a bot
       )
     end
   end
+
   helper_method :mixpanel
 
   def google_analytics
     @google_analytics ||= AnalyticWrapper::GoogleAnalyticsApi.new(current_user)
   end
+
   helper_method :google_analytics
 
   # Stores cross-request mixpanel options.
@@ -177,6 +211,7 @@ class ApplicationController < ActionController::Base
   def secure_links?
     require_ssl?
   end
+
   helper_method :secure_links?
 
   def nm_force_ssl
@@ -226,7 +261,7 @@ class ApplicationController < ActionController::Base
   end
 
   def already_signed_in?
-    request.xhr? && current_user ?  (render :json => { :redirect => stored_url_for(nil) }) : false
+    request.xhr? && current_user ? (render :json => {:redirect => stored_url_for(nil)}) : false
   end
 
   # Some generic information on wizard for use accross controllers
@@ -237,10 +272,11 @@ class ApplicationController < ActionController::Base
     return name if WizardInfo === name
 
     case name.to_s
-    when 'space'
-      WizardInfo.new(name.to_s, new_space_wizard_url)
+      when 'space'
+        WizardInfo.new(name.to_s, new_space_wizard_url)
     end
   end
+
   helper_method :wizard
 
   def redirect_for_wizard(wizard_id_or_object)
@@ -293,6 +329,7 @@ class ApplicationController < ActionController::Base
   def user_google_analytics_id
     current_user.try(:google_analytics_id) ? current_user.google_analytics_id : cookies.signed[:google_analytics_id]
   end
+
   helper_method :user_google_analytics_id
 
   def store_client_taggable_events
@@ -307,6 +344,7 @@ class ApplicationController < ActionController::Base
     session[:triggered_client_taggable_events] = nil
     events
   end
+
   helper_method :get_and_clear_stored_client_taggable_events
 
   def register_lookup_context_detail(detail_name)

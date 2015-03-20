@@ -1,0 +1,28 @@
+%h4 Translation keys for #{@locale.name}
+= simple_nested_form_for @instance, :url => instance_admin_settings_translations_path, :html => { :multipart => true } do |f|
+  .content-container.dropshadow
+    %table#translations-table
+      %thead
+        %tr
+          %th
+      %tbody
+        - @default_translations.order('key ASC').each_with_index do |translation, index|
+          - instance_translation = @translations.detect { |t| t.key == translation.key }
+          %tr
+            %td{'data-search' => "#{instance_translation ? (instance_translation.value.empty? ? translation.value : instance_translation.value) : translation.value} #{translation.key}" }
+              .row
+                .input-container.col-xs-12
+                  %label{for: "instance_translations_#{index}"}= translation.key
+                  %input{type: 'hidden', name: "instance[translations_attributes][#{index}][key]", value: translation.key}
+                  %input{type: 'hidden', name: "instance[translations_attributes][#{index}][instance_id]", value: @instance.id}
+                  %input{type: 'hidden', name: "instance[translations_attributes][#{index}][locale]", value: @locale.code}
+                  - if instance_translation
+                    %input.form-control{id: "instance_translations_#{index}", type: 'text', name: "instance[translations_attributes][#{index}][value]", value: instance_translation.value, placeholder: translation.value}
+                    %input{type: 'hidden', name: "instance[translations_attributes][#{index}][_destroy]", value: 'false'}
+                    %input{type: 'hidden', name: "instance[translations_attributes][#{index}][id]", value: instance_translation.id}
+                  - else
+                    %input.form-control{id: "instance_translations_#{index}", type: 'text', name: "instance[translations_attributes][#{index}][value]", value: '', placeholder: translation.value}
+
+  .content-container
+    .row
+      = f.button :submit, 'Save', class: 'btn btn-green pull-right'

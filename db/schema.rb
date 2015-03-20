@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150318115439) do
+ActiveRecord::Schema.define(version: 20150319135404) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -822,6 +822,15 @@ ActiveRecord::Schema.define(version: 20150318115439) do
   end
 
   add_index "listing_types", ["instance_id"], name: "index_listing_types_on_instance_id", using: :btree
+
+  create_table "locales", force: true do |t|
+    t.integer  "instance_id"
+    t.string   "code"
+    t.string   "custom_name"
+    t.boolean  "primary",     default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "location_types", force: true do |t|
     t.string   "name"

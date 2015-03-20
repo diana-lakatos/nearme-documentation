@@ -191,6 +191,12 @@ DesksnearMe::Application.routes.draw do
       resource :translations, :only => [:show, :update], :controller => 'translations'
       resource :cancellation_policy, :only => [:show, :update], :controller => 'cancellation_policy'
       resource :documents_upload, except: [:index, :destroy], :controller => 'documents_upload'
+
+      resources :locales, except: [:index, :show], controller: 'locales' do
+        member do
+          get 'edit_keys'
+        end
+      end
     end
 
     namespace :theme do
@@ -381,7 +387,7 @@ DesksnearMe::Application.routes.draw do
       end
 
       resource :social_share, :only => [:new], :controller => 'locations/social_share'
-      end
+    end
   end
 
   resources :locations, :only => [] do
@@ -436,7 +442,7 @@ DesksnearMe::Application.routes.draw do
 
   match '/auth/:provider/callback' => 'authentications#create', via: [:get, :post]
   get "/auth/failure", to: "authentications#failure"
-  devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions', :passwords => 'passwords' }
+  devise_for :users, :controllers => {:registrations => 'registrations', :sessions => 'sessions', :passwords => 'passwords'}
   devise_scope :user do
     post "users/avatar", :to => "registrations#avatar", :as => "avatar"
     get "users/edit_avatar", :to => "registrations#edit_avatar", :as => "edit_avatar"
@@ -690,7 +696,7 @@ DesksnearMe::Application.routes.draw do
   resources :partner_inquiries, :only => [:index, :create], :controller => 'partner_inquiries', :path => 'partner'
   resources :waiver_agreement_templates, only: [:show]
 
-  namespace :v1, :defaults => { :format => 'json' } do
+  namespace :v1, :defaults => {:format => 'json'} do
 
     resource :authentication, only: [:create]
     post 'authentication/:provider', :to => 'authentications#social'

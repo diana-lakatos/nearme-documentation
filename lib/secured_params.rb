@@ -1068,4 +1068,12 @@ class SecuredParams
       :enabled
     ]
   end
+
+  def locale
+    [
+      :code,
+      :custom_name,
+      :primary
+    ]
+  end
 end

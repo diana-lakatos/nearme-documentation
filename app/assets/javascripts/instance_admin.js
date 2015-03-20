@@ -36,3 +36,7 @@
 //= require instance_admin/sections/wish_lists
 //= require instance_admin/sections/users
 //= require instance_admin/sections/documents_upload
+
+//= require instance_admin/data_tables/jquery.dataTables.min
+//= require instance_admin/data_tables/dataTables.bootstrap
+//= require instance_admin/sections/translations

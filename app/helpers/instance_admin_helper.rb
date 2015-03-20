@@ -74,4 +74,8 @@ module InstanceAdminHelper
   def wish_lists_icon_set_image(set_name)
     image_tag "instance_admin/wish_lists/#{set_name}_set.png"
   end
+
+  def languages
+    I18nData.languages.map { |lang| [lang[1].capitalize, lang[0].downcase] }
+  end
 end

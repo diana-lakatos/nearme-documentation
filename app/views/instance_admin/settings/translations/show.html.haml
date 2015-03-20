@@ -1,20 +1,43 @@
-= simple_nested_form_for @instance, :url => instance_admin_settings_translations_path, :html => { :multipart => true } do |f|
-  %h4 Translations
-  .content-container.dropshadow
-    - Translation.defaults_for(:en).order('key ASC').each_with_index do |translation, index|
-      .row
-        .input-container.col-xs-12
-          %label{for: "instance_translations_#{index}"}= translation.key
-          %input{type: 'hidden', name: "instance[translations_attributes][#{index}][key]", value: translation.key}
-          %input{type: 'hidden', name: "instance[translations_attributes][#{index}][instance_id]", value: @instance.id}
-          %input{type: 'hidden', name: "instance[translations_attributes][#{index}][locale]", value: translation.locale}
-          - if instance_translation = @translations.detect{|t| t.key == translation.key}
-            %input.form-control{id: "instance_translations_#{index}", type: 'text', name: "instance[translations_attributes][#{index}][value]", value: instance_translation.value, placeholder: translation.value}
-            %input{type: 'hidden', name: "instance[translations_attributes][#{index}][_destroy]", value: 'false'}
-            %input{type: 'hidden', name: "instance[translations_attributes][#{index}][id]", value: instance_translation.id}
-          - else
-            %input.form-control{id: "instance_translations_#{index}", type: 'text', name: "instance[translations_attributes][#{index}][value]", value: '', placeholder: translation.value}
 
-  .content-container
-    .row
-      = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+.row
+  .col-xs-12
+    %h4 Languages & Translations
+    = link_to 'Add new language', new_instance_admin_settings_locale_path, class: 'btn btn-green pull-right'
+
+%br
+
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table
+        %thead
+          %tr
+            %th Name
+            %th Code
+            %th Custom name
+            %th Default
+            %th
+            %th
+
+        %tbody
+          - Locale.order('created_at').each do |locale|
+            %tr
+              %td
+                = locale.name
+              %td
+                = locale.code
+              %td
+                = locale.custom_name
+              %td
+                = locale.primary ? 'Yes' : 'No'
+              %td
+                = link_to 'Edit keys', edit_keys_instance_admin_settings_locale_path(locale), class: 'btn btn-green btn-small'
+              %td
+                - unless locale.code == 'en'
+                  = link_to instance_admin_settings_locale_path(locale), method: :delete, data: { confirm: 'Are you sure?' } do
+                    .fa.fa-trash-o.fa-2x.inline-form-icon.pull-right
+
+                = link_to edit_instance_admin_settings_locale_path(locale) do
+                  .fa.fa-edit.fa-2x.inline-form-icon.pull-right
+
+
