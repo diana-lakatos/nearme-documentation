@@ -1,7 +1,7 @@
 module LiquidFilters
 
   def shorten_url(url)
-    Rails.env.development? ? url : Googl.shorten(url).short_url
+    Googl.shorten(url, '192.168.0.1', DesksnearMe::Application.config.googl_api_key).short_url
   end
 
   def translate_property(property, target_acting_as_set)
