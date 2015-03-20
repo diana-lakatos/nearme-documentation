@@ -22,6 +22,7 @@ class Review < ActiveRecord::Base
   validates :rating, inclusion: { in: RatingConstants::VALID_VALUES , message: :rating_is_required }
   validates_length_of :comment, :maximum => 255
   validates :object, inclusion: { in: RatingConstants::FEEDBACK_TYPES }
+  validate  :creator_does_not_review_own_objects
 
   default_scope { order('reviews.created_at DESC') }
 
@@ -53,6 +54,14 @@ class Review < ActiveRecord::Base
       recalculate_by_type(-> { self.reviewable.creator.recalculate_seller_average_rating! },
                           -> { self.reviewable.owner.recalculate_buyer_average_rating! },
                           -> { self.reviewable.listing.recalculate_average_rating! })
+    end
+  end
+
+  protected
+
+  def creator_does_not_review_own_objects
+    if user_id.present? && ((user_id == reviewable.try(:creator_id) && user_id == reviewable.try(:owner_id)) || user_id == reviewable.try(:product).try(:user_id))
+      errors.add(:base, I18n.t('errors.messages.cant_review_own_product'))
     end
   end
 
