@@ -21,6 +21,20 @@ class Dashboard::UserBlog::BlogController < Dashboard::UserBlog::BaseController
     end
   end
 
+  def delete_image
+    # We avoid interpolation because easy to go wrong and add security vulnerabilities
+    case params[:image_type]
+    when 'header_logo'
+      @blog.remove_header_logo!
+      @blog.save!
+    when 'header_icon'
+      @blog.remove_header_icon!
+      @blog.save!
+    end
+
+    redirect_to edit_dashboard_blog_path
+  end
+
   private
 
   def find_user_blog
