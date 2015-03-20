@@ -33,6 +33,7 @@ class TransactableType < ActiveRecord::Base
 
   before_save :normalize_cancellation_policy_enabled, unless: lambda { |transactable_type| transactable_type.buyable }
   after_save :setup_availability_attributes, :if => lambda { |transactable_type| !transactable_type.buyable && transactable_type.availability_options_changed? && transactable_type.availability_options.present? }
+  after_update :destroy_translations!, if: lambda { |transactable_type| transactable_type.name_changed? }
 
   validates_presence_of :name
   validate :min_max_prices_are_correct, unless: lambda { |transactable_type| transactable_type.buyable }
@@ -70,6 +71,17 @@ class TransactableType < ActiveRecord::Base
 
   def defer_availability_rules?
     availability_options && availability_options["defer_availability_rules"]
+  end
+
+  def destroy_translations!
+    ids = Translation.where('instance_id = ? AND (key like ? OR key like ?)', PlatformContext.current.instance.id, "%.#{self.translation_key_suffix_was}.%", "%.#{self.translation_key_pluralized_suffix_was}.%").inject([]) do |ids_to_delete, t|
+      if t.key  =~ /\Asimple_form\.(.+).#{self.translation_key_suffix_was}\.(.+)\z/ || t.key  =~ /\Asimple_form\.(.+).#{self.translation_key_pluralized_suffix_was}\.(.+)\z/
+          ids_to_delete << t.id
+      end
+      ids_to_delete
+    end
+    Translation.destroy(ids)
+    custom_attributes.reload.each(&:create_translations)
   end
 
   def daily_options_names

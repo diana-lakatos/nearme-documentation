@@ -10,7 +10,7 @@ module CustomAttributes
       return unless should_create_translations?
       build_key_value_translations
       @key_value_translations.each do |key, value|
-        translation = get_or_build_translation(key, value)
+        translation = get_or_build_translation(key)
         if value.nil?
           translation.destroy if translation.persisted?
         else
@@ -33,8 +33,8 @@ module CustomAttributes
       end
     end
 
-    def get_or_build_translation(key, value)
-      Translation.where(locale: 'en', key: key, instance_id: @custom_attribute.instance_id).first.presence || Translation.new(locale: 'en', key: key, instance_id: @custom_attribute.instance_id)
+    def get_or_build_translation(key)
+      Translation.where(locale: 'en', key: key, instance_id: @custom_attribute.instance_id).first_or_initialize
     end
 
     def input_translations!
