@@ -85,7 +85,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def schedule_expiry
-    ReservationExpiryJob.perform_later(expiry_time, self.id)
+    ReservationExpiryJob.perform_later(listing.transactable_type.hours_to_expiration.to_i.hours, self.id) if listing.transactable_type.hours_to_expiration.to_i > 0
   end
 
   def store_platform_context_detail
@@ -385,10 +385,6 @@ class Reservation < ActiveRecord::Base
     expire! if unconfirmed?
   end
 
-  def expiry_time
-    created_at + 24.hours
-  end
-
   def to_liquid
     ReservationDrop.new(self)
   end
@@ -524,10 +520,6 @@ class Reservation < ActiveRecord::Base
 
   def auto_confirm_reservation
     confirm! unless listing.confirm_reservations?
-  end
-
-  def create_scheduled_expiry_task
-    Delayed::Job.enqueue Delayed::PerformableMethod.new(self, :should_expire!, nil), run_at: expiry_time
   end
 
   def schedule_refund(transition, counter = 0, run_at = Time.zone.now)

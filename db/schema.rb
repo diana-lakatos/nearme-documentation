@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150320102027) do
+ActiveRecord::Schema.define(version: 20150320131021) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2717,6 +2717,7 @@ ActiveRecord::Schema.define(version: 20150320102027) do
     t.boolean  "buyable",                                                            default: false
     t.boolean  "show_reviews_if_both_completed",                                     default: false
     t.boolean  "enable_photo_required",                                              default: true
+    t.integer  "hours_to_expiration",                                                default: 24
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

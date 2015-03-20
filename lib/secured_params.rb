@@ -508,6 +508,7 @@ class SecuredParams
       :cancellation_policy_penalty_percentage,
       :cancellation_policy_hours_for_cancellation,
       :enable_cancellation_policy,
+      :hours_to_expiration,
       :show_page_enabled,
       :groupable_with_others,
       :enable_photo_required,
