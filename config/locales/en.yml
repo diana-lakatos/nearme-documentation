@@ -177,6 +177,7 @@ en:
         code: 'Code'
         custom_name: 'Custom name'
         default: 'Default'
+        keys: 'Translation keys for %{language}'
 
       buttons:
         add: 'Add language'

@@ -1,4 +1,4 @@
-%h4 Translation keys for #{@locale.name}
+%h4= t 'instance_admin.locales.labels.keys', language: @locale.name
 = simple_nested_form_for @instance, :url => instance_admin_settings_translations_path, :html => { :multipart => true } do |f|
   .content-container.dropshadow
     %table#translations-table
