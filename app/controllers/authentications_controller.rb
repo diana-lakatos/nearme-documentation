@@ -86,6 +86,8 @@ class AuthenticationsController < ApplicationController
     @oauth.update_token_info
     update_analytics_google_id(@oauth.authenticated_user)
     log_logged_in
+
+    @oauth.authenticated_user.logged_out! if @oauth.authenticated_user.respond_to?('logged_out!')
     sign_in_and_redirect(:user, @oauth.authenticated_user)
   end
 
