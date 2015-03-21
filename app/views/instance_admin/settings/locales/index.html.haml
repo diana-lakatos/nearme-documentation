@@ -30,7 +30,7 @@
               %td
                 = locale.custom_name
               %td
-                = locale.primary ? t('instance_admin.locales.labels.yes') : t('instance_admin.locales.labels.no')
+                = locale.primary ? t('instance_admin.locales.labels.primary.yes') : t('instance_admin.locales.labels.primary_no')
               %td
                 = link_to t('instance_admin.locales.buttons.edit_keys'),
                     edit_keys_instance_admin_settings_locale_path(locale), class: 'btn btn-green btn-small'
