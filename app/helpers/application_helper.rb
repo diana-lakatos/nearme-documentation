@@ -224,7 +224,7 @@ module ApplicationHelper
   def mask_phone_and_email_if_necessary(text)
     if PlatformContext.current.instance.apply_text_filters
       @text_filters ||= TextFilter.pluck(:regexp, :replacement_text, :flags)
-      @text_filters.each { |text_filter| text.gsub!(Regexp.new(text_filter[0], text_filter[2]), text_filter[1]) }
+      @text_filters.each { |text_filter| text.gsub!(Regexp.new(text_filter[0].try(:strip), text_filter[2]), text_filter[1]) }
       text
     else
       text

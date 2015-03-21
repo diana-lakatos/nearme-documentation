@@ -47,7 +47,8 @@ class InstanceView < ActiveRecord::Base
   DEFAULT_LIQUID_VIEWS_PATHS = [
     'locations/booking_module_listing_description',
     'locations/location_description',
-    'locations/listings/listing_description'
+    'locations/listings/listing_description',
+    'booking_module_listing_description_below_dates'
   ].freeze
 
   scope :for_instance_type_id, ->(instance_type_id) {
