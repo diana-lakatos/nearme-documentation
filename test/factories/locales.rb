@@ -1,8 +1,9 @@
 FactoryGirl.define do
   factory :locale do
-    instance_id 1
-code "MyString"
-name "MyString"
-  end
+    code 'en'
 
+    factory :default_locale do
+      primary true
+    end
+  end
 end

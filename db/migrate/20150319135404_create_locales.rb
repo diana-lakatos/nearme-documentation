@@ -20,7 +20,7 @@ class CreateLocales < ActiveRecord::Migration
       Locale.create! instance_id: instance[0], code: 'en', primary: true
     end
 
-    add_index :locales, :code
+    add_index :locales, [:instance_id, :code], unique: true
   end
 
   def down

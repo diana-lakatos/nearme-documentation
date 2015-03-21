@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150321135404) do
+ActiveRecord::Schema.define(version: 20150319135404) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -832,7 +832,7 @@ ActiveRecord::Schema.define(version: 20150321135404) do
     t.datetime "updated_at"
   end
 
-  add_index "locales", ["code"], name: "index_locales_on_code", using: :btree
+  add_index "locales", ["instance_id", "code"], name: "index_locales_on_instance_id_and_code", unique: true, using: :btree
 
   create_table "location_types", force: true do |t|
     t.string   "name"
