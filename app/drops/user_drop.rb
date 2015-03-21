@@ -1,10 +1,16 @@
 class UserDrop < BaseDrop
 
+  include ActionView::Helpers::AssetUrlHelper
+
   attr_reader :user
   delegate :name, :job_title, :first_name, :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, to: :user
 
   def initialize(user)
     @user = user
+  end
+
+  def display_location
+    @user.decorate.display_location
   end
 
   def name_pluralize
@@ -13,6 +19,22 @@ class UserDrop < BaseDrop
 
   def first_name_pluralize
     first_name.pluralize
+  end
+
+  def public_profile?
+    @user.public_profile
+  end
+
+  def facebook_connections
+    @user.decorate.social_connections_for('facebook').present?
+  end
+
+  def linkedin_connections
+    @user.decorate.social_connections_for('linkedin').present?
+  end
+
+  def twitter_connections
+    @user.decorate.social_connections_for('twitter').present?
   end
 
   def search_url
@@ -53,6 +75,10 @@ class UserDrop < BaseDrop
 
   def manage_locations_url_with_tracking_and_token
     routes.dashboard_company_transactable_types_path(token: @user.try(:temporary_token), track_email_event: true)
+  end
+
+  def edit_profile_path
+    routes.dashboard_profile_path
   end
 
   def edit_user_registration_url(with_token = false)
@@ -108,7 +134,17 @@ class UserDrop < BaseDrop
   end
 
   def avatar_url_big
-    @user.avatar_url(:big)
+    avatar_url = @user.avatar_url(:big)
+    avatar_url = '/assets' + avatar_url if avatar_url =~ /placeholder/ && !avatar_url.include?('/assets/')
+    avatar_url
+  end
+
+  def profile_path
+    routes.profile_path(@user)
+  end
+
+  def user_message_path
+    routes.new_user_user_message_path(user_id: @user.slug)
   end
 end
 

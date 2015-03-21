@@ -19,6 +19,10 @@ class PlatformContextDrop < BaseDrop
     @platform_context_decorator.logo_image.url || image_url("platform_home/logo-01-dark.png").to_s
   end
 
+  def checked_badge_url
+    image_url("themes/buy_sell/check.png").to_s
+  end
+
   def root_path
     routes.root_path
   end

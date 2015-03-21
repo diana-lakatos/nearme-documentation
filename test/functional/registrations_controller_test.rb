@@ -3,7 +3,7 @@ require 'test_helper'
 class RegistrationsControllerTest < ActionController::TestCase
 
   setup do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryGirl.create(:user, properties: {company_name: "DesksNearMe", country_name: "United States"})
     @request.env["devise.mapping"] = Devise.mappings[:user]
     stub_mixpanel
   end
@@ -70,7 +70,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       @user.authentications << [fb, ln, tw]
 
       get :show, :id => @user.slug
-
+      
       assert_response 200
       assert_select 'ul li', 'Email Address'
       assert_select 'ul li', 'Facebook'
