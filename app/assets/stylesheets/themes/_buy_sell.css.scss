@@ -1172,11 +1172,16 @@ body.buy-sell-theme {
 
   /*===== SEARCH BAR =====*/
   .search-view {
+    .crumbs a {
+      font-size: 14px;
+      color: #858585;
+      font-weight: 300;
+    }
 
     .page-wrapper {
-      width: 63%;
       padding: 60px 0;
       margin: 0 auto;
+      margin-top: 60;
     }
 
     .search-bar form input, .search-bar form input:focus {

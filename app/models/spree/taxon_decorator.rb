@@ -8,4 +8,8 @@ Spree::Taxon.class_eval do
     result += " (in top navigation at position #{top_nav_position})" if in_top_nav?
     result
   end
+
+  def encoded_permalink
+    permalink.gsub("/", "%2F")
+  end
 end

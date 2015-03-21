@@ -313,8 +313,9 @@ class SearchControllerTest < ActionController::TestCase
       context 'for existing products' do
         context 'with taxon filter' do
           should 'filter only filtered products' do
-            taxon = FactoryGirl.create(:taxon, name: 'taxon_1')
-            another_taxon = FactoryGirl.create(:taxon)
+            parent = FactoryGirl.create(:taxon, name: 'Categories')
+            taxon = FactoryGirl.create(:taxon, name: 'taxon_1', parent: parent)
+            another_taxon = FactoryGirl.create(:taxon, parent: parent)
             filtered_product = FactoryGirl.create(:product, taxons: [taxon])
             another_product = FactoryGirl.create(:product, taxons: [another_taxon])
 

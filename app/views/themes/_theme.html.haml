@@ -20,8 +20,8 @@
       - image_attrs.each do |image_attr|
         .col-md-4
           .single-photo
-            = new_file_upload_input("url", upload_theme_image_dashboard_company_white_label_path(image: image_attr), f.object.send("#{image_attr}_dimensions"), "Add Photo", {:"top-label" => "#{image_attr.humanize} (#{f.object.send("#{image_attr}_dimensions")[:width]}x#{f.object.send("#{image_attr}_dimensions")[:height]})", "no-multiple" => true}) do
-              - if f.object.send(image_attr).any_url_exists?
+            = new_file_upload_input('image_data', upload_theme_image_dashboard_company_white_label_path(image: image_attr), f.object.send("#{image_attr}_dimensions"), "Add Photo", {:"top-label" => "#{image_attr.humanize} (#{f.object.send("#{image_attr}_dimensions")[:width]}x#{f.object.send("#{image_attr}_dimensions")[:height]})", "no-multiple" => true}) do
+              - if f.object.attributes[image_attr.to_s]
                 = fileupload_photo(f.object.send("#{image_attr}_url"),
                   destroy_theme_image_dashboard_company_white_label_path(image: image_attr),
                   edit_theme_image_dashboard_company_white_label_path(image: image_attr),

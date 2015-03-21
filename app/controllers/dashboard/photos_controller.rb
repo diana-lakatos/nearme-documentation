@@ -4,7 +4,7 @@ class Dashboard::PhotosController < Dashboard::BaseController
   def create
     @photo = Photo.new
     @photo.listing = @listing
-    @photo.image_original_url = @image_url
+    @photo.image = @image
     @photo.creator_id = current_user.id
     if @photo.save
       render :text => {
@@ -62,7 +62,7 @@ class Dashboard::PhotosController < Dashboard::BaseController
       @listing = Transactable.find(photo_params[:id]) if photo_params[:id]
       # we came from dashboard
     end
-    @image_url = photo_params[:photos_attributes]["0"][:image]
+    @image = photo_params[:photos_attributes]["0"][:image]
   end
 
 end

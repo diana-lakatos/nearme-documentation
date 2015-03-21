@@ -61,7 +61,10 @@ class @Photo.View
     @photo.append(hidden_listing_id)
 
   normalizeData: (data) ->
-    result = jQuery.parseJSON(data)
-    if !result
-      result = jQuery.parseJSON($('pre', data).text())
-    result
+    if typeof(data) is 'object'
+      data
+    else
+      result = jQuery.parseJSON(data)
+      if !result
+        result = jQuery.parseJSON($('pre', data).text())
+      result

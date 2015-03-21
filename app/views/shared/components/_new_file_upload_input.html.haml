@@ -4,12 +4,18 @@
       = options[:'top-label']
   .uploaded
     = uploaded_content
-  %label.action
-    .active.photo-box
-      %span.btn.btn-blue.btn-medium.upload-photos.fileinput-button
-        %span
-          = image_tag("themes/buy_sell/icon-cross.png")
-          = text
-      %input.browse-file{"data-url" => url, "data-thumbnail-width" => thumbnail_sizes[:width], "data-thumbnail-height" => thumbnail_sizes[:height], name: name, type: "file"}/
-      - if error_message
-        %p.error-block= error_message
+
+  %div{:'data-fileupload-wrapper' => true, :'data-url' => url, :'data-name' => name}
+    %label.action
+      .active.photo-box
+        %span.btn.btn-blue.btn-medium.upload-photos.fileinput-button
+          %span
+            = image_tag("themes/buy_sell/icon-cross.png")
+            = text
+        %input.browse-file{name: name, type: 'file', multiple: !options['no-multiple']}
+        - if error_message
+          %p.error-block= error_message
+
+    .progress{:'data-progress-container' => true, style: 'display: none;'}
+      .progress-bar{:'data-progress-bar' => true, style: 'width: 0%;'}
+        %span.sr-only

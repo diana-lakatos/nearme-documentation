@@ -9,7 +9,7 @@ class Dashboard::ImagesController < Dashboard::BaseController
     else
       @image = current_user.products_images.build
     end
-    @image.image_original_url = @image_url
+    @image.image = @image_data
     if @image.save
       render :text => {
         :id => @image.id,
@@ -55,9 +55,9 @@ class Dashboard::ImagesController < Dashboard::BaseController
   def find_product
     @product = @company.products.with_deleted.find(params[:product_id]) if params[:product_id].present? if @company.present?
     if params[:product_form]
-      @image_url = params[:product_form][:images_attributes]["0"][:image]
+      @image_data = params[:product_form][:images_attributes]["0"][:image]
     elsif params[:boarding_form]
-      @image_url = params[:boarding_form][:product_form][:images_attributes]["0"][:image]
+      @image_data = params[:boarding_form][:product_form][:images_attributes]["0"][:image]
     else
       raise NotImplementedError
     end

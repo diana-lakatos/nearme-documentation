@@ -1,5 +1,8 @@
 class BaseUploader < CarrierWave::Uploader::Base
   include CarrierWave::MiniMagick
+
+  attr_accessor :delayed_processing
+
   # Define the dimensions for versions of the uploader in a class attribute
   # that can be accessed by parts of the Uploader stack.
   class_attribute :dimensions
@@ -58,5 +61,23 @@ class BaseUploader < CarrierWave::Uploader::Base
 
   def instance_id_nil
     'universal'
+  end
+
+  def current_url(version = nil, *args)
+    version = :transformed if version.blank? && self.respond_to?(:transformation_data)
+    args.unshift(version) if version && version != :original
+    self.url(*args)
+  end
+
+  def self.version(name, options = {}, &block)
+    if options[:if] == :delayed_processing?
+      @@delayed_versions ||= []
+      @@delayed_versions << name
+    end
+    super
+  end
+
+  def delayed_processing?(image = nil)
+    !!@delayed_processing
   end
 end

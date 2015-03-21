@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::Base
-  helper FilepickerRails::Engine.helpers
 
   prepend_view_path InstanceViewResolver.instance
 
@@ -84,7 +83,7 @@ class ApplicationController < ActionController::Base
   def bookable?
     @bookable ||= platform_context.instance.bookable?
   end
-  
+
   helper_method :buyable?, :bookable?
 
   # Provides an EventTracker instance for the current request.
@@ -478,5 +477,20 @@ class ApplicationController < ActionController::Base
   def ensure_proper_spree_route
     # TODO: uncomment
     #redirect_to main_app.root_path if request.path.include?('/instance_buy_sell')
+  end
+
+  def set_taxon_breadcrumb
+    if @taxon
+      @breadcrumbs = []
+      add_breadcrumbs(@taxon)
+      @breadcrumbs.reverse.each do |breadcrumb|
+        add_crumb breadcrumb[:name], breadcrumb[:path]
+      end
+    end
+  end
+
+  def add_taxon_breadcrumbs(taxon)
+    @breadcrumbs << { name: taxon.name, path: taxon_custom_path(taxon) }
+    add_breadcrumbs(taxon.parent) if taxon.parent
   end
 end
