@@ -209,18 +209,17 @@ class RegistrationsControllerTest < ActionController::TestCase
       end
 
       should 'delete everything related to avatar when destroying avatar' do
+        stub_image_url('http://www.example.com/image1.jpg')
         sign_in @user
         @user.avatar_transformation_data = { :crop => { :w => 1 } }
         @user.avatar_versions_generated_at = Time.zone.now
-        @user.avatar_original_url = "example.jpg"
+        @user.remote_avatar_url = 'http://www.example.com/image1.jpg'
         @user.save!
         delete :destroy_avatar
         @user = assigns(:user)
         assert @user.avatar_transformation_data.empty?
         assert_nil @user.avatar_versions_generated_at
-        assert_nil @user.avatar_original_url
-        assert !@user.avatar.any_url_exists?
-
+        assert !@user.avatar.file.present?
       end
     end
 

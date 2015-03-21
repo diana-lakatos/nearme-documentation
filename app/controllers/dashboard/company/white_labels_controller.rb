@@ -16,7 +16,7 @@ class Dashboard::Company::WhiteLabelsController < Dashboard::Company::BaseContro
   end
 
   def upload_image
-    @theme.send("#{@image_param}_original_url=", params[:url])
+    @theme.send("#{@image_param}=", params[:image_data])
     if @theme.save
       render :text => {
         :url => @theme.send("#{@image_param}_url"),

@@ -1,10 +1,16 @@
 .fileupload
   .uploaded{ 'data-row' => "#{options[:row]}", :style => "#{"height: #{options[:height]}px" if options[:height].to_f > 0}" }
     = uploaded_content
-  %label.action
-    %span.btn.btn-blue.btn-medium.upload-photos.fileinput-button
-      %span
-        = text
-    %input.browse-file{"data-url" => url, "data-thumbnail-width" => thumbnail_sizes[:width], "data-thumbnail-height" => thumbnail_sizes[:height], :name => name, :type => "file"}/
-    - if error_message
-      %p.error-block= error_message
+
+  %div{:'data-fileupload-wrapper' => true, :'data-url' => url, :'data-name' => name}
+    %label.action
+      %span.btn.btn-blue.btn-medium.upload-photos.fileinput-button
+        %span
+          = text
+        %input.browse-file.hidden{name: name, type: 'file', multiple: !options['no-multiple']}
+        - if error_message
+          %p.error-block= error_message
+
+    .progress{:'data-progress-container' => true, style: 'display: none;'}
+      .progress-bar{:'data-progress-bar' => true, style: 'width: 0%;'}
+        %span.sr-only

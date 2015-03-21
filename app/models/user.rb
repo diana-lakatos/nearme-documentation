@@ -120,8 +120,7 @@ class User < ActiveRecord::Base
   scope :admin,     -> { where(admin: true) }
   scope :not_admin, -> { where("admin iS NULL") }
 
-  extend CarrierWave::SourceProcessing
-  mount_uploader :avatar, AvatarUploader, use_inkfilepicker: true
+  mount_uploader :avatar, AvatarUploader
   skip_callback :commit, :after, :remove_avatar!
 
   BIOGRAPHY_MAX_LENGTH = 2000

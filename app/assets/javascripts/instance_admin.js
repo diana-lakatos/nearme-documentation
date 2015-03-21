@@ -9,6 +9,8 @@
 //= require components/chart_wrapper
 //= require bootstrap-switch
 //= require components/photo
+//= require jquery-fileupload/basic
+//= require components/fileupload
 //= require components/modal
 //= require jcrop
 //= require sections/search_instance_admin
@@ -36,3 +38,8 @@
 //= require instance_admin/sections/wish_lists
 //= require instance_admin/sections/users
 //= require instance_admin/sections/documents_upload
+
+
+$(function() {
+  Fileupload.initialize();
+})

@@ -23,6 +23,8 @@ require 'uri'
 require 'cgi'
 require File.expand_path(File.join(File.dirname(__FILE__), "..", "support", "paths"))
 require File.expand_path(File.join(File.dirname(__FILE__), "..", "support", "selectors"))
+# hack to ged rid off Circular dependency detected while autoloading constant Dashboard::PhotosController
+require File.join(Rails.root, 'app', 'controllers', 'dashboard', 'photos_controller')
 
 module WithinHelpers
   def with_scope(locator)
