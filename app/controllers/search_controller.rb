@@ -1,8 +1,12 @@
 require "will_paginate/array"
 class SearchController < ApplicationController
-  before_filter :theme_name
 
+  include SearchHelper
+
+  before_filter :theme_name
   before_filter :find_transactable_type
+  before_filter :set_taxonomies
+  before_filter :set_taxon_breadcrumb
 
   helper_method :searcher, :result_view, :current_page_offset, :per_page, :first_result_page?
 
@@ -80,5 +84,29 @@ class SearchController < ApplicationController
     params[:transactable_type_id] ||= @transactable_type.id
   end
 
+  def set_taxonomies
+    @taxon = Spree::Taxon.where.not(parent_id: nil).find_by_permalink(params[:taxon]) if params[:taxon]
+    if @taxon.present?
+      @taxons = [@taxon.children.present? ? @taxon : @taxon.parent] 
+    else
+      @taxons = Spree::Taxonomy.includes(root: :children).map(&:root)
+      params[:taxon] = nil if @taxon.blank?
+    end
+  end
+
+  def set_taxon_breadcrumb
+    if @taxon
+      @breadcrumbs = []
+      add_taxon_breadcrumbs (@taxon)
+      @breadcrumbs.reverse.each do |breadcrumb|
+        add_crumb breadcrumb[:name], breadcrumb[:path]
+      end
+    end
+  end
+
+  def add_taxon_breadcrumbs(taxon)
+    @breadcrumbs << { name: taxon.name, path: taxon_custom_path(taxon) }
+    add_taxon_breadcrumbs(taxon.parent) if taxon.parent
+  end
 end
 

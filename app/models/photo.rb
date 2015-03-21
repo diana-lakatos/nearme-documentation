@@ -1,4 +1,5 @@
 class Photo < ActiveRecord::Base
+
   has_paper_trail
   acts_as_paranoid
   auto_set_platform_context
@@ -20,11 +21,15 @@ class Photo < ActiveRecord::Base
 
   validates_length_of :caption, :maximum => 120, :allow_blank => true
 
-  extend CarrierWave::SourceProcessing
-  mount_uploader :image, PhotoUploader, use_inkfilepicker: true
+  mount_uploader :image, PhotoUploader
 
   # Don't delete the photo from s3
   skip_callback :commit, :after, :remove_image!
+
+  def image_original_url=(value)
+    super
+    self.remote_image_url = value
+  end
 
   def self.xml_attributes
     self.csv_fields.keys

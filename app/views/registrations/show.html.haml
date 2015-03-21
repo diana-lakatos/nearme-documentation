@@ -2,7 +2,7 @@
 
 .profile
   .container.row-fluid.page-wrapper
-    = render 'registrations/profile/user_badge'
+    = render 'registrations/profile/user_badge', platform_context: platform_context, user: @user, is_current_user: (current_user && current_user.id == @user.try(:id)), company: @company
     .profile-content
       %ul.nav.nav-tabs
         - if buyable?

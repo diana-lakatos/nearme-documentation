@@ -32,6 +32,7 @@ class HiddenUiControls
       'dashboard/tickets',
       'dashboard/support/tickets',
       'registrations/edit',
+      'dashboard/notification_preferences',
       'registrations/social_accounts',
       'dashboard/blog',
       'registrations/show#reviews',

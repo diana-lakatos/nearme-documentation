@@ -133,7 +133,6 @@ module DesksnearMe
     config.mixpanel = (YAML.load_file(Rails.root.join("config", "mixpanel.yml"))[Rails.env] || {}).with_indifferent_access
     config.google_analytics = (YAML.load_file(Rails.root.join("config", "google_analytics.yml"))[Rails.env] || {}).with_indifferent_access
     config.near_me_analytics = (YAML.load_file(Rails.root.join("config", "near_me_analytics.yml"))[Rails.env] || {}).with_indifferent_access
-    config.filepicker_rails.api_key = YAML.load_file(Rails.root.join("config", "inkfilepicker.yml"))[Rails.env]["api_key"]
 
     config.perform_mixpanel_requests = true
     config.perform_google_analytics_requests = true
@@ -166,5 +165,6 @@ module DesksnearMe
     config.root_secured = true
     config.run_jobs_in_background = true
     config.send_real_sms = false
+    config.googl_api_key = nil
   end
 end

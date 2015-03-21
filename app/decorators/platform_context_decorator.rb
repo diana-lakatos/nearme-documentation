@@ -111,6 +111,11 @@ class PlatformContextDecorator
     @bookable_nouns_plural ||= transactable_types.map { |tt| (tt.bookable_noun.presence || tt.name).pluralize }.to_sentence(last_word_connector: I18n.t('general.or_spaced'))
   end
 
+  def display_taxonomy_tree?
+    platform_context.instance.taxonomy_tree
+  end
+
+
   private
 
   def platform_context

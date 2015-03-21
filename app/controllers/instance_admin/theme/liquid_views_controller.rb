@@ -1,4 +1,4 @@
-class InstanceAdmin::Manage::LiquidViewsController < InstanceAdmin::Manage::BaseController
+class InstanceAdmin::Theme::LiquidViewsController < InstanceAdmin::Theme::BaseController
   before_filter :find_transactable_type, only: [:create, :update]
 
   def index

@@ -19,8 +19,12 @@ class PlatformContextDrop < BaseDrop
     @platform_context_decorator.logo_image.url || image_url("platform_home/logo-01-dark.png").to_s
   end
 
+  def checked_badge_url
+    image_url("themes/buy_sell/check.png").to_s
+  end
+
   def root_path
-    Rails.application.routes.url_helpers.root_path
+    routes.root_path
   end
 
   def host
@@ -45,6 +49,10 @@ class PlatformContextDrop < BaseDrop
 
   def multiple_transactable_types?
     all_transactables.size > 1
+  end
+
+  def unsubscribe_url
+    urlify(routes.edit_dashboard_notification_preferences_path)
   end
 
   def display_date_pickers?

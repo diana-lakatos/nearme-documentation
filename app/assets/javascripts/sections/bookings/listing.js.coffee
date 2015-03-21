@@ -24,6 +24,7 @@ class @Bookings.Listing
       @favourablePricingRate = @data.favourable_pricing_rate
       @pricesByDays = @data.prices_by_days
       @hourlyPrice = @data.hourly_price_cents
+      @minimumBookingMinutes = @data.minimum_booking_minutes
     else
       @fixedPrice = @data.fixed_price_cents
 

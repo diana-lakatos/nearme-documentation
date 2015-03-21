@@ -120,7 +120,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def avatar
     @user = current_user
-    @user.avatar_original_url = params[:avatar]
+    @user.avatar = params[:avatar]
     if @user.save
       render :text => { :url => @user.avatar_url(:medium),
                         :resize_url =>  edit_avatar_path,
@@ -308,6 +308,7 @@ class RegistrationsController < Devise::RegistrationsController
   def user_params
     params.require(:user).permit(secured_params.user).tap do |whitelisted|
       whitelisted[:sms_preferences] = params[:user][:sms_preferences] if params[:user][:sms_preferences]
+      whitelisted[:properties] = params[:user][:properties] if params[:user][:properties]
     end
   end
 end

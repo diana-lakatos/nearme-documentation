@@ -21,4 +21,8 @@ class CompanyDrop < BaseDrop
     routes.edit_dashboard_company_payouts_path(anchor: 'company_paypal_email', token: @company.creator.temporary_token)
   end
 
+  def edit_path
+    routes.edit_dashboard_company_path(@company)
+  end
+
 end

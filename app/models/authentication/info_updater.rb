@@ -24,7 +24,7 @@ class Authentication::InfoUpdater
     @user.current_location ||= info_hash['location']
     @user.country_name ||= Geocoder.search(info_hash['location']).first.country rescue nil
 
-    if !@user.avatar.any_url_exists? && info_hash['image'].present?
+    if !@user.attributes['avatar'] && info_hash['image'].present?
       @user.avatar_versions_generated_at = Time.zone.now
       @user.remote_avatar_url = info_hash['image']
     end

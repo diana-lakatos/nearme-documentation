@@ -7,12 +7,11 @@ class Reservation::HourlyPriceCalculator
     # Price is for each day, hours reserved in day * hourly price * quantity
     @reservation.periods.map { |period|
       listing.hourly_price * period.hours * @reservation.quantity
-    }.sum.to_money if valid?
+    }.sum.to_money
   end
 
   def valid?
-    # TODO: Add minimum hourly requirement, etc.
-    !@reservation.periods.empty? && @reservation.periods.all? { |p| p.hours > 0 }
+    !@reservation.periods.empty? && @reservation.periods.all? { |p| p.hours > 0 && @reservation.minimum_booking_minutes <= p.minutes }
   end
 
   private

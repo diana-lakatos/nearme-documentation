@@ -56,14 +56,30 @@
     .row
       .input-container.col-xs-12
         = f.input :apply_text_filters, label: "Apply text filters"
+      .fields
+        .row
+          .input-container.col-xs-2
+            Name
+          .input-container.col-xs-4
+            Regexp
+          .input-container.col-xs-3
+            Replacement Text
+          .input-container.col-xs-2
+            Ignore case
+          .input-container.col-xs-1
     #text-filters
       = f.fields_for :text_filters, wrapper: false do |f|
         .fields
           .row
-            .input-container.col-xs-12
+            .input-container.col-xs-2
               = f.input :name, label: false, placeholder: 'Name', input_html: { class: 'form-control' }
+            .input-container.col-xs-4
               = f.input :regexp, label: false, placeholder: 'Regexp', input_html: { class: 'form-control' }
+            .input-container.col-xs-3
               = f.input :replacement_text, placeholder: 'Replacement Text', label: false, input_html: { class: 'form-control' }
+            .input-container.col-xs-2.text-center
+              = f.input :flags, as: :boolean, label: false
+            .input-container.col-xs-1.text-center
               = f.link_to_remove confirm: (f.object.try(:name).present? ? "Are you sure you want to delete #{f.object.name}?" : false) do
                 .fa.fa-trash-o.fa-2x.inline-form-icon.pull-right
 

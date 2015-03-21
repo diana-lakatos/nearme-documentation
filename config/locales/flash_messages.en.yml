@@ -245,6 +245,8 @@ en:
       companies:
         company_updated: "Great, your company's details have been updated."
         white_label_updated: "Great, white-label details have been updated."
+      notification_preferences:
+        updated: "Notification preferences have been updated."
       listings:
         desk_added: "Great, your new %{bookable_noun} has been added!"
         listing_deleted: "That listing has been deleted."

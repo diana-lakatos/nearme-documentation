@@ -20,6 +20,14 @@ class ReservationPeriod < ActiveRecord::Base
     end
   end
 
+  def minutes
+    if start_minute && end_minute
+      (end_minute - start_minute)
+    else
+      0
+    end
+  end
+
   def start_minute
     super || listing.availability.open_minute_for(date)
   end

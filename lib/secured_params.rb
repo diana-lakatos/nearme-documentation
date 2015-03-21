@@ -325,6 +325,7 @@ class SecuredParams
       :default_search_view, :user_based_marketplace_views,
       :searcher_type, :onboarding_verification_required,
       :search_settings,
+      :taxonomy_tree,
       :date_pickers,
       :tt_select_type,
       :default_products_search_view,
@@ -508,6 +509,8 @@ class SecuredParams
       :cancellation_policy_penalty_percentage,
       :cancellation_policy_hours_for_cancellation,
       :enable_cancellation_policy,
+      :hours_to_expiration,
+      :minimum_booking_minutes,
       :show_page_enabled,
       :groupable_with_others,
       :enable_photo_required,
@@ -915,11 +918,18 @@ class SecuredParams
       :country_name, :phone, :mobile_phone,
       :first_name, :middle_name, :last_name, :gender,
       :drivers_licence_number, :gov_number, :twitter_url,
-      :linkedin_url, :facebook_url, :google_plus_url,
+      :linkedin_url, :facebook_url, :google_plus_url, :public_profile,
       industry_ids: [],
       companies_attributes: nested(self.company),
       approval_requests_attributes: nested(self.approval_request)
     ] + User.public_custom_attributes_names(InstanceProfileType.first.try(:id))
+  end
+
+  def notification_preferences
+    [:accept_emails,
+     :sms_notifications_enabled
+    ]
+
   end
 
   def user_instance_profiles

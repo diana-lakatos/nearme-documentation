@@ -1,12 +1,13 @@
-{% assign displayable_properties = "description|capacity|" | split: "|" %}
-{% for property in displayable_properties %}
-  {% if listing.properties[property] != blank %}
-    <h3>{{ property | translate_property:listing.transactable_type }}</h3>
-    <span>{{ listing.properties[property] }}</span>
+<div class='booking-description'
+  {% assign displayable_properties = "description|capacity|" | split: "|" %}
+  {% for property in displayable_properties %}
+    {% if listing.properties[property] != blank %}
+      <h3>{{ property | translate_property:listing.transactable_type }}</h3>
+      <span>{{ listing.properties[property] | filter_text | custom_sanitize }}</span>
+    {% endif %}
+  {% endfor %}
+  {% if listing.defer_availability_rules? %}
+    <h3>{{ 'booking_module.hours' | translate }}</h3>
+    <span>{{ listing.availability }}</span>
   {% endif %}
-{% endfor %}
-{% if listing.defer_availability_rules? %}
-  <h3>{{ 'booking_module.hours' | translate }}</h3>
-  <span>{{ listing.availability }}</span>
-{% endif %}
-
+</div>
