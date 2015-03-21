@@ -45,7 +45,7 @@ class FormAttributes
     [
       :location_id, :approval_requests, :enabled, :amenity_types, :price, :schedule, :photos, :waiver_agreement_templates, :documents_upload, :quantity
     ] +
-    Transactable.public_custom_attributes_names(transactable_type.id)
+    Transactable.public_custom_attributes_names(transactable_type.id).map { |k| Hash === k ? k.keys : k }.flatten
   end
 
   def product(product_type = nil)
