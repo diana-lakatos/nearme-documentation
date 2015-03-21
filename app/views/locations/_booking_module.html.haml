@@ -168,6 +168,8 @@
                 = f.submit t('reservations.book'), book_hash
           -else
             = f.submit t('reservations.book'), book_hash
+          .clearfix
+          = render 'locations/booking_module_listing_description_below_call_to_action'
 
 
     .clearfix
