@@ -31,12 +31,12 @@ class Locale < ActiveRecord::Base
   end
 
   def check_locale
-    if !(code == 'en')
+    if code == 'en'
       errors[:base] << "You can't delete English locale"
       return false
     end
 
-    if !(primary?)
+    if primary?
       errors[:base] << "You can't delete default locale"
       return false
     end

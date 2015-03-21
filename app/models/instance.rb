@@ -281,6 +281,6 @@ class Instance < ActiveRecord::Base
   end
 
   def primary_locale
-    @primary_locale ||= locales.primary ? locales.primary.code : 'en'
+    @primary_locale ||= locales.primary.try(:code) || 'en'
   end
 end

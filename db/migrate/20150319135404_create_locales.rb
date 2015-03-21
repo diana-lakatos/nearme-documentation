@@ -19,6 +19,8 @@ class CreateLocales < ActiveRecord::Migration
       puts "Creating English locale for: #{instance[1]}"
       Locale.create! instance_id: instance[0], code: 'en', primary: true
     end
+
+    add_index :locales, :code
   end
 
   def down

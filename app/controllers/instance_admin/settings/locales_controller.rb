@@ -1,13 +1,23 @@
 class InstanceAdmin::Settings::LocalesController < InstanceAdmin::Settings::BaseController
-  before_filter :find_locale, except: [:new, :create]
+  before_filter :find_locale, except: [:index, :new, :create]
+
+  def index
+    @locales = Locale.order('created_at')
+  end
 
   def new
-    @locale = platform_context.instance.locales.new
+    @locale = platform_context.instance.locales.build
   end
 
   def create
     @locale = platform_context.instance.locales.new(locale_params)
-    @locale.save ? redirect_to(redirect_url, notice: 'Language has been successfully created') : render('new')
+
+    if @locale.save
+      flash[:success] = t 'flash_messages.instance_admin.settings.locales.created'
+      redirect_to redirect_url
+    else
+      render 'new'
+    end
   end
 
   def edit
@@ -19,12 +29,18 @@ class InstanceAdmin::Settings::LocalesController < InstanceAdmin::Settings::Base
   end
 
   def update
-    @locale.update_attributes(locale_params) ? redirect_to(redirect_url, notice: 'Language has been successfully updated') : render('edit')
+    if @locale.update_attributes(locale_params)
+      flash[:success] = t 'flash_messages.instance_admin.settings.locales.updated'
+      redirect_to redirect_url
+    else
+      render 'edit'
+    end
   end
 
   def destroy
     if @locale.destroy
-      redirect_to redirect_url, notice: 'Language has been successfully deleted'
+      flash[:success] = t 'flash_messages.instance_admin.settings.locales.deleted'
+      redirect_to redirect_url
     else
       flash[:error] = @locale.errors.full_messages.to_sentence
       redirect_to redirect_url

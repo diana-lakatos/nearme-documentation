@@ -1,4 +1,4 @@
-%h4 Add language
+%h4= t 'instance_admin.locales.labels.add'
 
 = simple_form_for @locale, url: instance_admin_settings_locales_path do |f|
   = render 'form', f: f

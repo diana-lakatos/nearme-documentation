@@ -1,0 +1,44 @@
+
+.row
+  .col-xs-12
+    %h4= t 'instance_admin.locales.labels.title'
+    = link_to t('instance_admin.locales.buttons.add'), new_instance_admin_settings_locale_path,
+        class: 'btn btn-green pull-right'
+
+%br
+
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table
+        %thead
+          %tr
+            %th= t 'instance_admin.locales.labels.name'
+            %th= t 'instance_admin.locales.labels.code'
+            %th= t 'instance_admin.locales.labels.custom_name'
+            %th= t 'instance_admin.locales.labels.default'
+            %th
+            %th
+
+        %tbody
+          - @locales.each do |locale|
+            %tr
+              %td
+                = locale.name
+              %td
+                = locale.code
+              %td
+                = locale.custom_name
+              %td
+                = locale.primary ? t('instance_admin.locales.labels.yes') : t('instance_admin.locales.labels.no')
+              %td
+                = link_to t('instance_admin.locales.buttons.edit_keys'),
+                    edit_keys_instance_admin_settings_locale_path(locale), class: 'btn btn-green btn-small'
+              %td
+                - unless locale.code == 'en'
+                  = link_to instance_admin_settings_locale_path(locale), method: :delete,
+                      data: { confirm: t('instance_admin.locales.confirmations.delete') } do
+                    .fa.fa-trash-o.fa-2x.inline-form-icon.pull-right
+
+                = link_to edit_instance_admin_settings_locale_path(locale) do
+                  .fa.fa-edit.fa-2x.inline-form-icon.pull-right

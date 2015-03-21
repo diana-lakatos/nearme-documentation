@@ -2,15 +2,15 @@
   .row
     .input-container.col-xs-4
       .input-col-clearfix
-        = f.input :code, collection: languages, input_html: { class: 'form-control' },
-            label: 'Select language', include_blank: false, disabled: (!@locale.new_record?)
+        = f.input :code, collection: languages, input_html: { class: 'form-control' }, include_blank: false,
+            disabled: (!@locale.new_record?)
 
     .input-container.col-xs-4
-      = f.input :custom_name, input_html: { class: 'form-control' }, label: 'Custom name'
+      = f.input :custom_name, input_html: { class: 'form-control' }
 
     .input-container.col-xs-4
-      = f.input :primary, input_html: { class: 'form-control' }, label: 'Default language', disabled: (@locale.primary)
+      = f.input :primary, input_html: { class: 'form-control' }, disabled: (@locale.primary)
 
 .content-container
   .row
-    = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+    = f.button :submit, t('instance_admin.locales.buttons.save'), class: 'btn btn-green pull-right'

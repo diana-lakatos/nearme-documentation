@@ -192,7 +192,7 @@ DesksnearMe::Application.routes.draw do
       resource :cancellation_policy, :only => [:show, :update], :controller => 'cancellation_policy'
       resource :documents_upload, except: [:index, :destroy], :controller => 'documents_upload'
 
-      resources :locales, except: [:index, :show], controller: 'locales' do
+      resources :locales, except: [:show], controller: 'locales' do
         member do
           get 'edit_keys'
         end

@@ -115,7 +115,7 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
   end
 
   def lookup_for_instance_key(locale, key)
-    value = @store[instance_key(self.instance_id)]["#{locale}.#{key}"]
+    value = @store[instance_key(instance_id)]["#{locale}.#{key}"]
     sanitize_empty_value value
   rescue
     nil

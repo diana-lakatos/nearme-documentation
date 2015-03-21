@@ -49,7 +49,7 @@ class InstanceAdmin::BaseController < ApplicationController
     'listings'             => { default_action: 'show' },
     'integrations'         => { default_action: 'show' },
     'cancellation_policy'  => { default_action: 'show' },
-    'translations'         => { default_action: 'show' },
+    'languages'            => { default_action: 'index', controller: '/instance_admin/settings/locales' },
     'documents_upload'     => { default_action: 'show' }
   }
 
