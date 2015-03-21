@@ -325,6 +325,7 @@ class SecuredParams
       :default_search_view, :user_based_marketplace_views,
       :searcher_type, :onboarding_verification_required,
       :search_settings,
+      :taxonomy_tree,
       :date_pickers,
       :tt_select_type,
       :default_products_search_view,

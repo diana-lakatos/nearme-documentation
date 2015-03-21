@@ -41,6 +41,13 @@
           = f.input :date_pickers_mode, collection: %w(relative absolute), include_blank: false,
               input_html: { class: 'form-control' }, label: 'Search Mode'
 
+  %h4 Taxonomy tree search
+
+  .content-container.dropshadow
+    .row
+      .input-container.col-xs-12
+        .input-col-clearfix
+          = f.input :taxonomy_tree, as: :boolean, input_html: { class: 'form-control' }, label: 'Enable taxonomy tree'
 
     .row
 
