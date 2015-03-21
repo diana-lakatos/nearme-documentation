@@ -64,9 +64,22 @@ class BaseUploader < CarrierWave::Uploader::Base
   end
 
   def current_url(version = nil, *args)
-    version = :transformed if version.blank? && self.respond_to?(:transformation_data)
-    args.unshift(version) if version && version != :original
-    self.url(*args)
+    if exists? || !source_url
+      version = :transformed if version.blank? && self.respond_to?(:transformation_data)
+      args.unshift(version) if version && version != :original
+      self.url(*args)
+    elsif source_url
+      #  see https://developers.inkfilepicker.com/docs/web/#convert
+      if version && dimensions[version]
+        source_url + "/convert?" + { :w => dimensions[version][:width], :h => dimensions[version][:height], :fit => 'crop' }.to_query
+      else
+        source_url
+      end
+    end
+  end
+
+  def source_url
+    model["#{mounted_as}_original_url"].presence
   end
 
   def self.version(name, options = {}, &block)
