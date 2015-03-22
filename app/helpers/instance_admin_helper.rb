@@ -76,6 +76,9 @@ module InstanceAdminHelper
   end
 
   def languages
-    I18nData.languages.map { |lang| [lang[1].capitalize, lang[0].downcase] }
+    I18nData.languages.map do |lang|
+      translated_name = I18nData.languages(lang[0])[lang[0]].mb_chars.capitalize rescue lang[1].capitalize
+      [lang[1].capitalize, lang[0].downcase, {'data-translated' => translated_name}]
+    end
   end
 end
