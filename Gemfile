@@ -205,3 +205,4 @@ gem 'carmen'
 
 gem 'pry-rails'
 gem 'awesome_print'
+gem 'i18n_data'

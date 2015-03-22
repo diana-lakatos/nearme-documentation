@@ -824,6 +824,17 @@ ActiveRecord::Schema.define(version: 20150320134444) do
 
   add_index "listing_types", ["instance_id"], name: "index_listing_types_on_instance_id", using: :btree
 
+  create_table "locales", force: true do |t|
+    t.integer  "instance_id"
+    t.string   "code"
+    t.string   "custom_name"
+    t.boolean  "primary",     default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "locales", ["instance_id", "code"], name: "index_locales_on_instance_id_and_code", unique: true, using: :btree
+
   create_table "location_types", force: true do |t|
     t.string   "name"
     t.datetime "created_at",  null: false

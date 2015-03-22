@@ -83,6 +83,8 @@ class InstanceWizardController < ActionController::Base
     blog_instance.owner = @instance
     blog_instance.save!
 
+    @instance.locales.create! code: 'en', primary: true
+
     WorkflowStepJob.perform(WorkflowStep::InstanceWorkflow::Created, @instance.id, @user.id, user_password || '[using existing account password]')
 
     redirect_to @instance.domains.first.url

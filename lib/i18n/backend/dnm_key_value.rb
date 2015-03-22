@@ -59,13 +59,13 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
       store_translation(translation)
     end
     if cache_changed
-      @cache.write "locales.#{_instance_key}", @store[_instance_key]  if get_cache_timestamp_for(_instance_key)
+      @cache.write "locales.#{_instance_key}", @store[_instance_key] if get_cache_timestamp_for(_instance_key)
       touch_cache_timestamp_for(_instance_key, write_cached_at_for(_instance_key))
     end
   end
 
   def store_translation(translation)
-    store_translations(translation[0], convert_dot_to_hash(translation[1], translation[2]), { :instance_id => translation[3] })
+    store_translations(translation[0], convert_dot_to_hash(translation[1], translation[2]), {:instance_id => translation[3]})
   end
 
   def store_translations(locale, data, options = {})
@@ -75,13 +75,13 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
     flatten_translations(locale, data, escape, @subtrees).each do |key, value|
       key = "#{locale}.#{key}"
       case value
-      when Hash
-        if @subtrees && (old_value = @store[_instance_key][key])
-          old_value = ActiveSupport::JSON.decode(old_value)
-          value = old_value.deep_symbolize_keys.deep_merge!(value) if old_value.is_a?(Hash)
-        end
-      when Proc
-        raise "Key-value stores cannot handle procs"
+        when Hash
+          if @subtrees && (old_value = @store[_instance_key][key])
+            old_value = ActiveSupport::JSON.decode(old_value)
+            value = old_value.deep_symbolize_keys.deep_merge!(value) if old_value.is_a?(Hash)
+          end
+        when Proc
+          raise "Key-value stores cannot handle procs"
       end
       @store[_instance_key][key] = ActiveSupport::JSON.encode(value) unless value.is_a?(Symbol)
     end
@@ -101,14 +101,44 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
 
   def lookup(locale, key, scope = [], options = {})
     key = normalize_flat_keys(locale, key, scope, options[:separator])
-    value = begin @store[instance_key(self.instance_id)]["#{locale}.#{key}"] rescue nil end
-    value = ActiveSupport::JSON.decode(value) if value.present?
-    # note that we have to JSON.decode first, as 'empty' value is "\"\"" before that and blank? would return false instead of true
-    if value.blank?
-      value = begin @store[instance_key(nil)]["#{locale}.#{key}"] rescue nil end
-      value = ActiveSupport::JSON.decode(value) if value.present?
+
+    value = lookup_for_instance_key locale, key
+    value = lookup_for_default_key locale, key if value.blank?
+
+    # Fallback to English
+    if value.blank? && locale != :en
+      value = lookup_for_en_instance_key(key)
+      value = lookup_for_en_default_key(key) if value.blank?
     end
+
     value.is_a?(Hash) ? value.deep_symbolize_keys : value
+  end
+
+  def lookup_for_instance_key(locale, key)
+    value = @store[instance_key(instance_id)]["#{locale}.#{key}"]
+    sanitize_empty_value value
+  rescue
+    nil
+  end
+
+  def lookup_for_default_key(locale, key)
+    value = @store[instance_key(nil)]["#{locale}.#{key}"]
+    sanitize_empty_value value
+  rescue
+    nil
+  end
+
+  def lookup_for_en_instance_key(key)
+    lookup_for_instance_key(:en, key)
+  end
+
+  def lookup_for_en_default_key(key)
+    lookup_for_default_key(:en, key)
+  end
+
+  # Note that we have to JSON.decode first, as 'empty' value is "\"\"" before that and blank? would return false instead of true
+  def sanitize_empty_value(value)
+    value.present? ? ActiveSupport::JSON.decode(value) : value
   end
 
   # transforms key in format "a.b.c.d" and value "x" to hash

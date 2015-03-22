@@ -165,6 +165,28 @@ en:
         name: 'LIST TITLE'
         unselected_state: 'UNSELECTED STATE'
         selected_state: 'SELECTED STATE'
+
+    locales:
+      labels:
+        title: 'Languages & Translations'
+        add: 'Add language'
+        edit: 'Edit language'
+        primary_yes: 'Yes'
+        primary_no: 'No'
+        name: 'Name'
+        code: 'Code'
+        custom_name: 'Custom name'
+        default: 'Default'
+        keys: 'Translation keys for %{language}'
+
+      buttons:
+        add: 'Add language'
+        save: 'Save'
+        edit_keys: 'Edit keys'
+
+      confirmations:
+        delete: 'Are you sure?'
+
   buy_sell_market:
     products:
       edit_inline: 'Edit your Product'
