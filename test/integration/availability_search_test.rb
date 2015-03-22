@@ -18,10 +18,10 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
 
       setup do
         PlatformContext.current.instance.update_attribute(:date_pickers_mode, 'strict')
+        @date_start = Time.zone.now.next_week.to_date + 7.days
       end
 
       should 'get only listings that are booked for each day if search above week' do
-        @date_start = Time.zone.now.next_week.to_date
         @date_end = @date_start + 14.days
         @params = { availability: { dates: { start: @date_start.to_s, end: @date_end.to_s } } }
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
@@ -29,7 +29,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
       end
 
       should 'get listings that are opened on all days' do
-        @date_start = Time.zone.now.next_week.to_date + 3
+        @date_start = @date_start + 3.day
         @date_end = @date_start + 5.days
         @params = { availability: { dates: { start: @date_start.to_s, end: @date_end.to_s } } }
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
@@ -37,7 +37,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
       end
 
       should 'include both listings with own and location rules' do
-        @date_start = Time.zone.now.next_week.to_date + 1
+        @date_start = @date_start + 1.day
         @params = { availability: { dates: { start: @date_start.to_s, end: @date_start.to_s } } }
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
         assert_equal([
@@ -52,10 +52,10 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
     context 'relative mode' do
       setup do
         PlatformContext.current.instance.update_attribute(:date_pickers_mode, 'relative')
+        @date_start = Time.zone.now.next_week.to_date
       end
 
       should 'get all listings if search for more than week' do
-        @date_start = Time.zone.now.next_week.to_date
         @date_end = @date_start + 14.days
         @params = { availability: { dates: { start: @date_start.to_s, end: @date_end.to_s } } }
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
@@ -66,7 +66,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
       end
 
       should 'get listings that are opened during at least one day' do
-        @date_start = Time.zone.now.next_week.to_date + 4
+        @date_start = @date_start + 4.days
         @date_end = @date_start + 1.days
         @params = { availability: { dates: { start: @date_start.to_s, end: @date_end.to_s } } }
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
@@ -80,7 +80,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
 
   context 'not booked scope' do
     setup do
-      @date_start = Time.zone.now.next_week.to_date
+      @date_start = Time.zone.now.next_week.to_date + 7.days
       @date_end = @date_start + 2.days
 
       create_transactable_with_all_days_booked_for_three_days!
@@ -111,7 +111,7 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
 
       should 'return correct transactables for searching for 1 day difference' do
         PlatformContext.current.instance.update_attribute(:date_pickers_mode, 'relative')
-        @params = { availability: { dates: { start: @date_start.to_s, end: (@date_start + 1).to_s } } }
+        @params = { availability: { dates: { start: @date_start.to_s, end: (@date_start + 1.day).to_s } } }
         @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(TransactableType.first, @params)
         assert_equal([
           @transactable_with_some_days_fully_booked_via_one_reservation,
