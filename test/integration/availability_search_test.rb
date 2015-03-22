@@ -2,6 +2,10 @@ require "test_helper"
 
 class AvailabilitySearchTest < ActionDispatch::IntegrationTest
 
+  setup do
+    @date_start = Time.zone.now.next_week.to_date + 7.days
+  end
+
   context 'availability rules' do
 
     setup do
@@ -18,7 +22,6 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
 
       setup do
         PlatformContext.current.instance.update_attribute(:date_pickers_mode, 'strict')
-        @date_start = Time.zone.now.next_week.to_date + 7.days
       end
 
       should 'get only listings that are booked for each day if search above week' do
@@ -52,7 +55,6 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
     context 'relative mode' do
       setup do
         PlatformContext.current.instance.update_attribute(:date_pickers_mode, 'relative')
-        @date_start = Time.zone.now.next_week.to_date
       end
 
       should 'get all listings if search for more than week' do
@@ -80,7 +82,6 @@ class AvailabilitySearchTest < ActionDispatch::IntegrationTest
 
   context 'not booked scope' do
     setup do
-      @date_start = Time.zone.now.next_week.to_date + 7.days
       @date_end = @date_start + 2.days
 
       create_transactable_with_all_days_booked_for_three_days!
