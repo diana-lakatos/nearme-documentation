@@ -37,7 +37,7 @@ module CarrierWave
       end
 
       def assign_dimensions
-        dimensions = @model.send(@field).original_dimensions
+        dimensions = @model.send(@field).read_original_dimensions
         @model.send("#{@field}_original_width=",  dimensions[0])
         @model.send("#{@field}_original_height=", dimensions[1])
       end

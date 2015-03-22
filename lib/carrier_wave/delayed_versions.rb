@@ -29,11 +29,10 @@ module CarrierWave::DelayedVersions
 
         if previous_changes[column].present? && attributes[column.to_s]
           if uploader.respond_to?(:delayed_versions)
-            processor.enqueue_processing(false)
+            processor.enqueue_processing
           else
             processor.touch_versions_timestamp_and_callback
           end
-          update_column "#{column}_versions_generated_at", Time.zone.now
         end
 
         if previous_changes["#{column}_transformation_data"].present? && attributes["#{column}_transformation_data"] != {}
