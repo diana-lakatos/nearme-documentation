@@ -19,4 +19,11 @@ class LocaleTest < ActiveSupport::TestCase
     refute locale.destroy
     assert_equal ["You can't delete English locale"], locale.errors[:base]
   end
+
+  should 'delete all instance keys for locale' do
+    locale = FactoryGirl.create(:locale, code: 'cs', instance_id: 1)
+    FactoryGirl.create(:czech_translation, instance_id: 1)
+    locale.destroy
+    assert_equal 0, Translation.where(locale: locale.code).count
+  end
 end
