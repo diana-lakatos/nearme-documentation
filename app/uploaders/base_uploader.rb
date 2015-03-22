@@ -20,9 +20,13 @@ class BaseUploader < CarrierWave::Uploader::Base
     if model["#{mounted_as}_original_width"] && model["#{mounted_as}_original_height"]
       [model["#{mounted_as}_original_width"], model["#{mounted_as}_original_height"]]
     else
-      img = image
-      img.nil? ? [] : [img[:width], img[:height]]
+      read_original_dimensions
     end
+  end
+
+  def read_original_dimensions
+    img = image
+    img.nil? ? [] : [img[:width], img[:height]]
   end
 
   def proper_file_path

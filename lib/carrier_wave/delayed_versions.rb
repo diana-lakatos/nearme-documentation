@@ -33,7 +33,6 @@ module CarrierWave::DelayedVersions
           else
             processor.touch_versions_timestamp_and_callback
           end
-          update_column "#{column}_versions_generated_at", Time.zone.now
         end
 
         if previous_changes["#{column}_transformation_data"].present? && attributes["#{column}_transformation_data"] != {}

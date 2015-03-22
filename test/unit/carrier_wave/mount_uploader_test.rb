@@ -8,10 +8,20 @@ class MountUploaderTest < ActiveSupport::TestCase
     assert_not_nil(photo.image_original_height)
   end
 
+  should 'reassign dimensions on attachment update' do
+    @user = FactoryGirl.build(:user)
+    @user.avatar = File.open(File.join(Rails.root, 'test', 'assets', 'foobear.jpeg'))
+    @user.save!
+    width, height = @user.avatar_original_width, @user.avatar_original_height
+    @user.avatar = File.open(File.join(Rails.root, 'test', 'assets', 'bully.jpeg'))
+    @user.save!
+    assert_not_equal(width, @user.avatar_original_width)
+    assert_not_equal(height, @user.avatar_original_height)
+  end
+
   should 'remove metadata if avatar removed' do
     @user = FactoryGirl.build(:user)
     @user.avatar = File.open(File.join(Rails.root, 'test', 'assets', 'foobear.jpeg'))
-    @user.avatar_versions_generated_at = Time.zone.now
     @user.save!
     assert @user.avatar.file.present?
     assert_not_nil @user.avatar_original_width
