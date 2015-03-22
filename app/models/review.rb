@@ -60,7 +60,7 @@ class Review < ActiveRecord::Base
   protected
 
   def creator_does_not_review_own_objects
-    if user_id.present? && ((user_id == reviewable.try(:creator_id) && user_id == reviewable.try(:owner_id)) || user_id == reviewable.try(:product).try(:user_id))
+    if user_id.present? && (user_id == reviewable.try(:creator_id) && user_id == reviewable.try(:owner_id))
       errors.add(:base, I18n.t('errors.messages.cant_review_own_product'))
     end
   end

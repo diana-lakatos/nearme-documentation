@@ -80,6 +80,7 @@ class Instance < ActiveRecord::Base
   has_many :rating_hints
   has_many :additional_charge_types
   has_one :documents_upload, dependent: :destroy
+  has_many :locales, dependent: :destroy
   serialize :pricing_options, Hash
 
   validates_presence_of :name
@@ -281,5 +282,9 @@ class Instance < ActiveRecord::Base
 
   def date_pickers_relative_mode?
     date_pickers_mode == 'relative'
+  end
+
+  def primary_locale
+    @primary_locale ||= locales.primary.try(:code) || 'en'
   end
 end

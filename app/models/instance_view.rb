@@ -49,7 +49,10 @@ class InstanceView < ActiveRecord::Base
     'locations/location_description',
     'locations/listings/listing_description',
     'locations/booking_module_listing_description_below_dates',
-    'locations/booking_module_listing_description_below_call_to_action'
+    'locations/booking_module_listing_description_below_call_to_action',
+    'registrations/profile/user_badge',
+    'locations/google_map',
+    'locations/administrator'
   ].freeze
 
   scope :for_instance_type_id, ->(instance_type_id) {

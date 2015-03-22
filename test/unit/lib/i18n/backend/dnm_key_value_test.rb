@@ -10,6 +10,7 @@ class DnmKeyValueTest < ActiveSupport::TestCase
     FactoryGirl.create(:translation, :key => 'some_key_for_instance', :value => 'instance value', instance_id: @instance.id)
     @backend = I18N_DNM_BACKEND
     @backend.set_instance_id(@instance.id)
+    I18n.locale = :en
   end
 
   should 'fallback to global translation' do
@@ -63,6 +64,33 @@ class DnmKeyValueTest < ActiveSupport::TestCase
   should 'fallback to default if instance translation is nil' do
     @translation = FactoryGirl.create(:translation, value: nil, instance_id: @instance.id)
     @backend.set_instance_id(@instance.id)
+    assert_equal 'global value', I18n.t('translation_key')
+  end
+
+  should 'return another languages' do
+    @translation = FactoryGirl.create(:czech_translation, value: 'Jaromír je král', instance_id: @instance.id)
+    @backend.set_instance_id(@instance.id)
+    I18n.locale = :cs
+    assert_equal 'Jaromír je král', I18n.t('translation_key')
+  end
+
+  should 'fallback to English if instance language key does not exist' do
+    @backend.set_instance_id(@instance.id)
+    I18n.locale = :cs
+    assert_equal 'global value', I18n.t('translation_key')
+  end
+
+  should 'fallback to English if instance language key is empty' do
+    @translation = FactoryGirl.create(:czech_translation, value: '', instance_id: @instance.id)
+    @backend.set_instance_id(@instance.id)
+    I18n.locale = :cs
+    assert_equal 'global value', I18n.t('translation_key')
+  end
+
+  should 'fallback to English if instance language key is nil' do
+    @translation = FactoryGirl.create(:czech_translation, value: nil, instance_id: @instance.id)
+    @backend.set_instance_id(@instance.id)
+    I18n.locale = :cs
     assert_equal 'global value', I18n.t('translation_key')
   end
 end

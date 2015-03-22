@@ -824,6 +824,17 @@ ActiveRecord::Schema.define(version: 20150320134444) do
 
   add_index "listing_types", ["instance_id"], name: "index_listing_types_on_instance_id", using: :btree
 
+  create_table "locales", force: true do |t|
+    t.integer  "instance_id"
+    t.string   "code"
+    t.string   "custom_name"
+    t.boolean  "primary",     default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "locales", ["instance_id", "code"], name: "index_locales_on_instance_id_and_code", unique: true, using: :btree
+
   create_table "location_types", force: true do |t|
     t.string   "name"
     t.datetime "created_at",  null: false
@@ -2643,26 +2654,32 @@ ActiveRecord::Schema.define(version: 20150320134444) do
     t.text     "homepage_css"
     t.datetime "deleted_at"
     t.text     "icon_image_transformation_data"
+    t.string   "icon_image_original_url"
     t.datetime "icon_image_versions_generated_at"
     t.integer  "icon_image_original_width"
     t.integer  "icon_image_original_height"
     t.text     "icon_retina_image_transformation_data"
+    t.string   "icon_retina_image_original_url"
     t.datetime "icon_retina_image_versions_generated_at"
     t.integer  "icon_retina_image_original_width"
     t.integer  "icon_retina_image_original_height"
     t.text     "favicon_image_transformation_data"
+    t.string   "favicon_image_original_url"
     t.datetime "favicon_image_versions_generated_at"
     t.integer  "favicon_image_original_width"
     t.integer  "favicon_image_original_height"
     t.text     "logo_image_transformation_data"
+    t.string   "logo_image_original_url"
     t.datetime "logo_image_versions_generated_at"
     t.integer  "logo_image_original_width"
     t.integer  "logo_image_original_height"
     t.text     "logo_retina_image_transformation_data"
+    t.string   "logo_retina_image_original_url"
     t.datetime "logo_retina_image_versions_generated_at"
     t.integer  "logo_retina_image_original_width"
     t.integer  "logo_retina_image_original_height"
     t.text     "hero_image_transformation_data"
+    t.string   "hero_image_original_url"
     t.datetime "hero_image_versions_generated_at"
     t.integer  "hero_image_original_width"
     t.integer  "hero_image_original_height"
@@ -2950,6 +2967,7 @@ ActiveRecord::Schema.define(version: 20150320134444) do
     t.string   "browser_version"
     t.string   "platform"
     t.text     "avatar_transformation_data"
+    t.string   "avatar_original_url"
     t.datetime "avatar_versions_generated_at"
     t.integer  "avatar_original_height"
     t.integer  "avatar_original_width"
@@ -2990,6 +3008,7 @@ ActiveRecord::Schema.define(version: 20150320134444) do
     t.integer  "transactables_count",                                default: 0
     t.float    "buyer_average_rating",                               default: 0.0,                                                                                 null: false
     t.boolean  "accept_emails",                                      default: true
+    t.boolean  "public_profile",                                     default: false
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

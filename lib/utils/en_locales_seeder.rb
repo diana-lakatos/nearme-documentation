@@ -5,7 +5,7 @@ module Utils
       count = {existed: 0, created: 0, updated: 0}
 
       Dir.glob(Rails.root.join('config', 'locales', '*.yml')).each do |yml_filename|
-        puts "File: #{yml_filename}"
+        print_out "File: #{yml_filename}"
         en_locales = YAML.load_file(yml_filename)
         en_locales_hash = convert_hash_to_dot_notation(en_locales['en'])
 
@@ -15,26 +15,31 @@ module Utils
           if t.persisted? && t.value != value
             t.value = value
             t.save!
-            puts "  Translation updated: key: #{key}, value: #{t.value} -> #{value}"
+            print_out "  Translation updated: key: #{key}, value: #{t.value} -> #{value}"
             count[:updated] += 1
           elsif t.persisted?
             count[:existed] += 1
           else
             t.value = value
             t.save!
-            puts "  Translation created: key: #{key}, value: #{value}"
+            print_out "  Translation created: key: #{key}, value: #{value}"
             count[:created] += 1
           end
         end
       end
 
-      puts "Translation populator report:"
-      puts "  #{count[:existed]} translations already existed."
-      puts "  #{count[:created]} translations were created."
-      puts "  #{count[:updated]} translations were updated."
+
+      print_out "Translation populator report:"
+      print_out "  #{count[:existed]} translations already existed."
+      print_out "  #{count[:created]} translations were created."
+      print_out "  #{count[:updated]} translations were updated."
     end
 
     protected
+
+    def print_out(text)
+      puts text unless Rails.env.test?
+    end
 
     def convert_hash_to_dot_notation(hash, path = '')
       hash.each_with_object({}) do |(k, v), ret|

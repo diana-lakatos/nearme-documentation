@@ -12,7 +12,6 @@
   - (f.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
     = draw_attribute_for_form(attribute, f) if only_inputs.empty? || only_inputs.include?(attribute.name.to_sym)
 
-= f.input :gender, collection: [['Male', 'male'], ['Female', 'female'], ['Unspecified', 'unspecified']], input_html: { class: 'selectpicker'}, include_blank: :true if only_inputs.empty? || only_inputs.include?(:gender)
 = f.input :email, label: "Email" if only_inputs.empty? || only_inputs.include?(:email)
 = f.input :time_zone, input_html: { class: 'selectpicker', "data-live-search" => "true" } if only_inputs.empty? || only_inputs.include?(:time_zone)
 
@@ -53,16 +52,8 @@
 = f.input :current_location, label: "Current location", as: :string if only_inputs.empty? || only_inputs.include?(:current_location)
 = f.input :company_name, label: "Company name", as: :string if only_inputs.empty? || only_inputs.include?(:company_name)
 = f.association :industries, :blank => false, input_html: { class: 'selectpicker', "data-live-search" => "true" } if only_inputs.empty? || only_inputs.include?(:industries)
-= f.input :job_title, label: "Job title", as: :string if only_inputs.empty? || only_inputs.include?(:job_title)
-= f.input :skills_and_interests, label: "Skills and interests" if only_inputs.empty? || only_inputs.include?(:skills_and_interests)
-= f.input :biography, label: "Biography" if only_inputs.empty? || only_inputs.include?(:biography)
 = f.input :password, :label => (f.object.persisted? ? "Change password" : "Password" ) if only_inputs.empty? || only_inputs.include?(:password)
-= f.input :drivers_licence_number if only_inputs.empty? || only_inputs.include?(:drivers_licence_number)
-= f.input :gov_number, label: "Goverment Number" if only_inputs.empty? || only_inputs.include?(:goverment_number)
-= f.input :twitter_url if only_inputs.empty? || only_inputs.include?(:twitter_url)
-= f.input :linkedin_url if only_inputs.empty? || only_inputs.include?(:linkedin_url)
-= f.input :facebook_url if only_inputs.empty? || only_inputs.include?(:facebook_url)
-= f.input :google_plus_url if only_inputs.empty? || only_inputs.include?(:google_plus_url)
+
 - if only_inputs.empty? || only_inputs.include?(:avatar)
   .row{:class => ('error' if f.object.errors[:avatar].present?)}
     .col-md-3
@@ -81,6 +72,7 @@
                 destroy_avatar_path,
                 edit_avatar_path,
                 :div)
+= f.input :public_profile if only_inputs.empty? || only_inputs.include?(:public_profile)
 - if only_inputs.empty? || only_inputs.include?(:phone)
   - content_for :domready do
     $(function(){ new PhoneNumbers.FieldsForm() });

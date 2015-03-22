@@ -34,7 +34,7 @@ class Spree::LineItemDecorator < Draper::Decorator
   def image(target='')
     link_to product_url(object.product), target: target do
       if object.product.variant_images.count > 0
-        image_tag object.product.variant_images.first.image_url(:medium)
+        image_tag object.product.variant_images.first.image.url(:medium)
       else
         image_tag 'placeholders/144x89.gif'
       end
