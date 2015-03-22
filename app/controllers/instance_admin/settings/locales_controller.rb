@@ -2,7 +2,7 @@ class InstanceAdmin::Settings::LocalesController < InstanceAdmin::Settings::Base
   before_filter :find_locale, except: [:index, :new, :create]
 
   def index
-    @locales = Locale.order('created_at')
+    @locales = platform_context.instance.locales.order('created_at')
   end
 
   def new
