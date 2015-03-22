@@ -7,6 +7,6 @@ jQuery ->
   })
 
 jQuery ->
-  $('form').on 'submit', ->
+  $("form[data-edit=keys").on 'submit', ->
     $('#translations-table').DataTable().search('').columns().search('').draw()
     true
