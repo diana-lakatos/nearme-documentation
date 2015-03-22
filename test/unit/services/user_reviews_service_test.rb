@@ -79,9 +79,6 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
       end
 
       should "return reviews_about_buyer" do
-        product_mock = mock
-        product_mock.expects(:user_id).returns(@buyer.id+1)
-        Spree::LineItem.any_instance.expects(:product).returns(product_mock)
         review = FactoryGirl.create(:review, object: 'buyer', user: @user, reviewable: @line_item)
         params = {:option => 'reviews_about_buyer'}
         user_reviews_service = UserReviewsService.new(@buyer, @platform_context, params)
