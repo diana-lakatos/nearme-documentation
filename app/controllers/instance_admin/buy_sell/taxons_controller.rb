@@ -50,7 +50,7 @@ class InstanceAdmin::BuySell::TaxonsController < InstanceAdmin::BuySell::BaseCon
 
   def destroy
     @taxon.destroy
-    render json: taxon, status: 204
+    render json: @taxon, status: 204
   end
 
   private
