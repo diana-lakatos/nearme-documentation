@@ -42,5 +42,36 @@ class InstanceAdmin::Theme::PagesControllerTest < ActionController::TestCase
     assert_redirected_to instance_admin_theme_pages_path
   end
 
+   context "previous versions of page" do
+    setup do
+      with_versioning do
+        @page = FactoryGirl.create(:page, path: 'Page test')
+        @page.update content: "Lorem"
+      end
+    end
+
+    should 'be listed' do
+      get :versions, id: @page.id
+      assert_response :success
+      assert_select 'table tbody tr:first-child td:first-child', text: @page.versions.first.id
+    end
+
+    should "be viewable" do
+      get :show_version, id: @page.id, version_id: @page.versions.last.id
+      assert_response :success
+      assert_not_equal @page.content, @page.versions.last.reify.content
+      assert_select 'textarea', @page.versions.last.reify.content
+    end
+
+    should "be rollbackable" do
+      last_version_id = @page.versions.last.id
+      get :rollback, id: @page.id, version_id: last_version_id
+      assert_redirected_to instance_admin_theme_pages_path
+      assert_equal "Page has been successfully restored to previous version", flash[:notice]
+      version = @page.versions.find last_version_id
+      assert_equal @page.reload.content, version.reify.content
+    end
+  end
+
 end
 

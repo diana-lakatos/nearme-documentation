@@ -1,5 +1,8 @@
 class InstanceAdmin::Theme::HomepageTemplateController < InstanceAdmin::Theme::BaseController
+  include InstanceAdmin::Versionable
+
   before_action :find_or_build_homepage_template
+  set_resource_method :find_or_build_homepage_template
 
   def show
   end
@@ -15,7 +18,7 @@ class InstanceAdmin::Theme::HomepageTemplateController < InstanceAdmin::Theme::B
   private
 
   def find_or_build_homepage_template
-    @homepage_template = InstanceView.find_or_initialize_by(instance_id: platform_context.instance.id, path: 'home/index') do |view|
+    @homepage_template ||= InstanceView.find_or_initialize_by(instance_id: platform_context.instance.id, path: 'home/index') do |view|
       view.locale = 'en'
       view.format = 'html'
       view.handler = 'liquid'

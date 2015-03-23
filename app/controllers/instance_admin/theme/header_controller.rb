@@ -1,5 +1,8 @@
 class InstanceAdmin::Theme::HeaderController < InstanceAdmin::Theme::BaseController
+  include InstanceAdmin::Versionable
+
   before_action :find_or_build_template
+  set_resource_method :find_or_build_template
 
   def show
   end
@@ -15,7 +18,7 @@ class InstanceAdmin::Theme::HeaderController < InstanceAdmin::Theme::BaseControl
   private
 
   def find_or_build_template
-    @template = InstanceView.find_or_initialize_by(instance_id: platform_context.instance.id, path: 'layouts/theme_header') do |view|
+    @template ||= InstanceView.find_or_initialize_by(instance_id: platform_context.instance.id, path: 'layouts/theme_header') do |view|
       view.locale = 'en'
       view.format = 'html'
       view.handler = 'liquid'
