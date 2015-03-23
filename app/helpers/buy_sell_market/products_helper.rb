@@ -22,7 +22,7 @@ module BuySellMarket::ProductsHelper
   def image_for_table(product)
     if photo = product.images.first
       link_to product_path(product) do
-        image_tag photo.image.url(:thumb), :title => product.name, :alt => product.name
+        image_tag photo.image.current_url(:thumb), :title => product.name, :alt => product.name
       end
     end
   end
