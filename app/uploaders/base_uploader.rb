@@ -26,7 +26,7 @@ class BaseUploader < CarrierWave::Uploader::Base
 
   def read_original_dimensions
     img = image
-    img.nil? ? [] : [img[:width], img[:height]]
+    img.nil? ? [] : [img[0], img[1]]
   end
 
   def proper_file_path
@@ -35,8 +35,8 @@ class BaseUploader < CarrierWave::Uploader::Base
   end
 
   def image
-    # we don't want to assign this to variable, becuase there are issues with serialization in versions_regeneration_job
-    MiniMagick::Image.open(proper_file_path)
+    # if MiniMagick opens file then CW does not clear the tmp dir, so identify call
+    `identify -format "%[fx:w]x%[fx:h]" #{Rails.root.join('public', file.path)}`.split('x')
   rescue
     nil
   end
