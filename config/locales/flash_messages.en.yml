@@ -433,6 +433,7 @@ en:
       you_will_not_be_notified: "We could not add you to the notifcation list because your email \"%{email}\" %{errors}"
     product:
       complete_fields: "Please complete all fields!"
+      missing_fields_invalid: "The form is missing required fields. Please contact administrator for further information."
     space_wizard:
       complete_fields: "Please complete all fields! Alternatively, you can Save a Draft for later."
       draft_saved: "Your draft has been saved!"

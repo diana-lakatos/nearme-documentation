@@ -19,5 +19,11 @@ class FormComponent < ActiveRecord::Base
 
   ranks :rank, with_same: [:form_componentable_id, :form_type]
 
+  def fields_names
+    form_fields.inject([]) do |all_fields_names, field|
+      all_fields_names << field[field.keys.first]
+      all_fields_names
+    end
+  end
 end
 
