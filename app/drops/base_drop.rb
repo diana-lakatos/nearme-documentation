@@ -7,7 +7,7 @@ class BaseDrop < Liquid::Drop
   end
 
   def image_url(source)
-    URI.join(routes.root_url, 'assets/', source)
+    ActionController::Base.helpers.asset_url(source)
   end
 
   def urlify(path)

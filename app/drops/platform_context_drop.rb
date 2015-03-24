@@ -20,7 +20,7 @@ class PlatformContextDrop < BaseDrop
   end
 
   def checked_badge_url
-    image_url("themes/buy_sell/check.png").to_s
+    image_url("themes/buy_sell/check.png")
   end
 
   def root_path
