@@ -84,7 +84,7 @@ class Domain < ActiveRecord::Base
   end
 
   def deletable?
-    not(preparing? || use_as_default)
+    not(preparing? || use_as_default || near_me_domain?)
   end
 
   def editable?
