@@ -20,5 +20,9 @@ class Spree::ProductTypeDrop < BaseDrop
     name.pluralize
   end
 
+  def translation_key_suffix
+    @product_type.translation_key_suffix
+  end
+
 end
 

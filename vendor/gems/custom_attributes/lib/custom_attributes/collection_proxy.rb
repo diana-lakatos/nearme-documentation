@@ -13,9 +13,15 @@ module CustomAttributes
       metaclass = class << self; self; end
 
       metaclass.class_eval do
+        labels_hash = {}
+
+        define_method(:labels) { labels_hash }
         model.custom_attributes.each do |custom_attributes_array|
           key = custom_attributes_array[CustomAttribute::NAME]
           type = custom_attributes_array[CustomAttribute::ATTRIBUTE_TYPE].to_sym
+          label = custom_attributes_array[CustomAttribute::ATTRIBUTE_LABEL]
+
+          labels_hash[key] = label
 
           define_method(key) { custom_property_type_cast(@hash[key], "#{type}".to_sym) }
           define_method("#{key}?") { self.send("#{key}") } if type == :boolean

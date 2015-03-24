@@ -20,6 +20,16 @@ class Spree::ProductDrop < BaseDrop
     routes.product_path(@product)
   end
 
+  def extra_properties_with_labels
+    @product.extra_properties.collect do |property|
+      [@product.extra_properties.labels[property.first], property.last]
+    end
+  end
+
+  def product_type
+    @product.product_type
+  end
+
   def photo_url
     if photo = @product.images.first
       photo.image.url(:space_listing)
