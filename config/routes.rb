@@ -214,8 +214,10 @@ DesksnearMe::Application.routes.draw do
       resource :design, :only => [:show, :update], :controller => 'design'
 
       concern :versionable do
-        resources :paper_trail_versions, only: [:index, :show], controller: 'versions', path: 'versions' do
-          get :rollback, on: :member
+        member do 
+          get :versions
+          get 'show_version/:version_id', action: :show_version
+          get 'rollback_version/:version_id', action: :rollback
         end
       end
       resources :pages, concerns: :versionable
@@ -225,7 +227,7 @@ DesksnearMe::Application.routes.draw do
       resource :homepage, only: [:show, :update], controller: 'homepage', concerns: :versionable
       resource :homepage_template, only: [:show, :create, :update], controller: 'homepage_template', concerns: :versionable
       resources :content_holders
-      resources :liquid_views, :only => [:index, :new, :create, :edit, :update, :destroy]
+      resources :liquid_views, :only => [:index, :new, :create, :edit, :update, :destroy], concerns: :versionable
     end
 
     namespace :manage do

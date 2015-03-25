@@ -1,4 +1,6 @@
 class InstanceAdmin::Theme::HomepageController < InstanceAdmin::Theme::BaseController
+  include InstanceAdmin::Versionable
+  set_resource_method { @theme }
 
   def show
   end

@@ -1,4 +1,7 @@
 class InstanceAdmin::Theme::PagesController < InstanceAdmin::Theme::BaseController
+  include InstanceAdmin::Versionable
+  actions :all, :except => [ :show ]
+
   before_filter :set_redirect_form
 
   def index

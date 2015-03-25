@@ -1,5 +1,10 @@
 class InstanceAdmin::Theme::LiquidViewsController < InstanceAdmin::Theme::BaseController
+  include InstanceAdmin::Versionable
+  actions :all, :except => [ :show ]
+
   before_filter :find_transactable_type, only: [:create, :update]
+  before_filter :find_liquid_view, only: [:edit, :update, :destroy]
+  set_resource_method :find_liquid_view
 
   def index
     @liquid_views = platform_context.instance.instance_views.liquid_views
@@ -16,7 +21,6 @@ class InstanceAdmin::Theme::LiquidViewsController < InstanceAdmin::Theme::BaseCo
   end
 
   def edit
-    @liquid_view = platform_context.instance.instance_views.liquid_views.find(params[:id])
   end
 
   def create
@@ -36,7 +40,6 @@ class InstanceAdmin::Theme::LiquidViewsController < InstanceAdmin::Theme::BaseCo
   end
 
   def update
-    @liquid_view = platform_context.instance.instance_views.liquid_views.find(params[:id])
     # do not allow to change path for now
     params[:liquid_view][:path] = @liquid_view.path
     if @liquid_view.update_attributes(template_params.merge(transactable_type_id: @transactable_type.try(:id)))
@@ -49,7 +52,6 @@ class InstanceAdmin::Theme::LiquidViewsController < InstanceAdmin::Theme::BaseCo
   end
 
   def destroy
-    @liquid_view = platform_context.instance.instance_views.liquid_views.find(params[:id])
     @liquid_view.destroy
       flash[:success] = t 'flash_messages.instance_admin.manage.liquid_views.deleted'
     redirect_to action: :index
@@ -63,6 +65,10 @@ class InstanceAdmin::Theme::LiquidViewsController < InstanceAdmin::Theme::BaseCo
 
   def find_transactable_type
     @transactable_type = TransactableType.find(params[:liquid_view][:transactable_type_id]) if params[:liquid_view][:transactable_type_id].present? rescue nil
+  end
+
+  def find_liquid_view
+    @liquid_view ||= platform_context.instance.instance_views.liquid_views.find(params[:id])
   end
 
 end

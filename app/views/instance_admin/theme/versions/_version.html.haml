@@ -5,7 +5,7 @@
   %td
     .pull-right
       -if version.reify
-        = link_to polymorphic_url([:instance_admin, :theme, parent, version], parent_resource: @parent_resource), title: "Show version" do
+        = link_to url_for(action: :show_version, version_id: version.id), title: "Show version" do
           .fa.fa-eye.fa-2x.inline-form-icon
-        = link_to polymorphic_url([:instance_admin, :theme, parent, version], action: :rollback, parent_resource: @parent_resource), title: "Rollback to this version", data: { confirm: 'Are you sure you want to rollback page to this version?'} do
+        = link_to url_for(action: :rollback, version_id: version.id), {title: "Rollback to this version", data: { confirm: 'Are you sure you want to rollback page to this version?'}} do
           .fa.fa-undo.fa-2x.inline-form-icon
