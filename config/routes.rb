@@ -329,7 +329,11 @@ DesksnearMe::Application.routes.draw do
       get '/', :to => 'base#index'
       resources :posts
       resources :user_posts
-      resource :settings, only: [:edit, :update]
+      resource :settings, only: [:edit, :update] do
+        collection do
+          delete :delete_image
+        end
+      end
     end
 
     namespace :buy_sell do
@@ -495,6 +499,9 @@ DesksnearMe::Application.routes.draw do
     end
 
     resource :blog, controller: 'user_blog/blog', only: [:show, :edit, :update] do
+      collection do
+        delete :delete_image
+      end
       resources :posts, controller: 'user_blog/blog_posts'
     end
 

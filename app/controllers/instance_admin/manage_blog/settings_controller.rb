@@ -12,6 +12,23 @@ class InstanceAdmin::ManageBlog::SettingsController < InstanceAdmin::ManageBlog:
     end
   end
 
+  def delete_image
+    # We avoid interpolation because easy to go wrong and add security vulnerabilities
+    case params[:image_type]
+    when 'header'
+      @blog_instance.remove_header!
+      @blog_instance.save!
+    when 'header_logo'
+      @blog_instance.remove_header_logo!
+      @blog_instance.save!
+    when 'header_icon'
+      @blog_instance.remove_header_icon!
+      @blog_instance.save!
+    end
+
+    redirect_to edit_instance_admin_manage_blog_settings_path
+  end
+
   private
 
   def instance_params

@@ -16,6 +16,7 @@
     .row
       .input-container.col-xs-12
         = link_to(@blog_instance.header.filename, @blog_instance.header.url)
+        = link_to 'Delete', delete_image_instance_admin_manage_blog_settings_path(:image_type => :header), data: { confirm: t('confirmations.are_you_sure') }, method: :delete
 
   .row
     .input-container.col-xs-12
@@ -35,6 +36,7 @@
     .row
       .input-container.col-xs-12
         = link_to(@blog_instance.header_logo.filename, @blog_instance.header_logo.url)
+        = link_to 'Delete', delete_image_instance_admin_manage_blog_settings_path(:image_type => :header_logo), data: { confirm: t('confirmations.are_you_sure') }, method: :delete
 
   .row
     .input-container.col-xs-12
@@ -44,6 +46,7 @@
     .row
       .input-container.col-xs-12
         = link_to(@blog_instance.header_icon.filename, @blog_instance.header_icon.url)
+        = link_to 'Delete', delete_image_instance_admin_manage_blog_settings_path(:image_type => :header_icon), data: { confirm: t('confirmations.are_you_sure') }, method: :delete
 
 .content-container
   .row
