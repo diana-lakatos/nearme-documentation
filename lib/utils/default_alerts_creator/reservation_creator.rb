@@ -114,7 +114,7 @@ class Utils::DefaultAlertsCreator::ReservationCreator < Utils::DefaultAlertsCrea
   end
 
   def request_rating_of_host_from_guest_email!
-    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::HostRatingRequested, name: 'request_rating_of_host_from_guest', path: 'rating_mailer/request_rating_of_host_and_product_from_guest', subject: "[{{platform_context.name}}] How was your experience at '{{reservation.listing.name}}'?", alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::HostRatingRequested, name: 'request_rating_of_host_from_guest', path: 'rating_mailer/request_rating_of_host_from_guest', subject: "[{{platform_context.name}}] How was your experience at '{{reservation.listing.name}}'?", alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   protected
