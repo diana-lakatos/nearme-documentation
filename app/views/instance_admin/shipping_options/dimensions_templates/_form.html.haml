@@ -33,6 +33,9 @@
         = f.input :depth, required: true, input_html: { class: 'form-control' }
       .input-container.col-xs-6
         = f.input :depth_unit, as: :select, include_blank: false, collection: size_units, label: "Type of Unit", required: true, input_html: { class: 'form-control', 'data-js-element-identifier' => 'admin_dimensions_template_form_depth' }
+    .row.dropshadow
+      .input-container.col-xs-12
+        = f.input :use_as_default, required: true, input_html: { class: 'form-control' }
     .row.submit-row
       = link_to 'Cancel', instance_admin_shipping_options_dimensions_templates_path, class: 'btn btn-green'
       = f.submit form_title, class: 'btn btn-green'

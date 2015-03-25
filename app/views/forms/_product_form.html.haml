@@ -37,6 +37,9 @@
 = f.input :shippo_enabled, label: Spree::Product.human_attribute_name(:shippo_enabled), as: :boolean, input_html: { 'data-js-element-identifier' => 'product_form_shippo_enabled' }
 
 .row.shippo_required_fields_row.enabled
+  - if f.object.errors.present?
+    = hidden_field_tag 'product_errors_present'
+
   .explanation
     %p
       = t('manage.buy_sell.dimensions_templates.explanation1')

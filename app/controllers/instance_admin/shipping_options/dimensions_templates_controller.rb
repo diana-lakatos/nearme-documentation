@@ -13,7 +13,9 @@ class InstanceAdmin::ShippingOptions::DimensionsTemplatesController < InstanceAd
   def create
     @dimensions_template = DimensionsTemplate.all.build(template_params)
     @dimensions_template.creator = current_user
-    if @dimensions_template.save
+
+    dimensions_template_editor = DimensionsTemplateEditorService.new(@dimensions_template)
+    if dimensions_template_editor.save
       flash[:success] = t('flash_messages.shipping_options.dimensions_templates.template_added')
       redirect_to instance_admin_shipping_options_dimensions_templates_path
     else
@@ -27,7 +29,9 @@ class InstanceAdmin::ShippingOptions::DimensionsTemplatesController < InstanceAd
 
   def update
     @dimensions_template = DimensionsTemplate.find(params[:id])
-    if @dimensions_template.update_attributes(template_params)
+
+    dimensions_template_editor = DimensionsTemplateEditorService.new(@dimensions_template)
+    if dimensions_template_editor.update_attributes(template_params)
       flash[:success] = t('flash_messages.shipping_options.dimensions_templates.template_updated')
       redirect_to instance_admin_shipping_options_dimensions_templates_path
     else
