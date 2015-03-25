@@ -593,7 +593,8 @@ class SecuredParams
       :hero_image,
       :slug,
       :position,
-      :redirect_url
+      :redirect_url,
+      :open_in_new_window
     ]
   end
 
