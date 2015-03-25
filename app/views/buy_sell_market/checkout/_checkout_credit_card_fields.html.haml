@@ -33,17 +33,23 @@
         = f.object.errors[:number].first
 
   .row-fluid
-    .span3.card-info.expiry.column.left{class: "#{"error" if f.object.errors.include?(:exp_month).present? or f.object.errors.include?(:exp_year).present?}"}
-      = f.label :card_expires, "Expiration date", class: 'control-label'
-    .span2
+    .span3.card-info.expiry.column.left{class: "#{"error" if f.object.errors.include?(:card_exp_month).present? or f.object.errors.include?(:card_exp_year).present?}"}
+      = f.label :card_exp_month, "Expiration date", class: 'control-label'
+    .span2{class: "#{"error" if f.object.errors.include?(:card_exp_month).present?}"}
       .controls.card-expires
-        = f.input_field :card_expires, input_html: {size: 6}, placeholder: 'MM/YYYY', required: true, class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: "off", 'data-card-expires' => true
-      - if f.object.errors[:exp_month].present?
+        = f.input_field :card_exp_month, collection: credit_card_date[:month], prompt: false, class: 'checkout-select sessioncamexclude'
+
+      - if f.object.errors[:card_exp_month].present?
         %p.error-block
-          = f.object.errors[:exp_month].first
-      - if f.object.errors[:exp_year].present?
+          = f.object.errors[:card_exp_month].first
+
+    .span2{class: "#{"error" if f.object.errors.include?(:card_exp_year).present?}"}
+      .controls.card-expires
+        = f.input_field :card_exp_year, collection: credit_card_date[:year], prompt: false, class: 'checkout-select sessioncamexclude'
+
+      - if f.object.errors[:card_exp_year].present?
         %p.error-block
-          = f.object.errors[:exp_year].first
+          = f.object.errors[:card_exp_year].first
 
   .row-fluid
     .span3.card-info.security.column.right{class: "#{"error" if f.object.errors.include?(:cvc).present?}"}
@@ -67,6 +73,5 @@
   :javascript
     $(function() {
       $('input[data-card-number]').eq(0).payment('formatCardNumber');
-      $('input[data-card-expires]').eq(0).payment('formatCardExpiry');
       $('input[data-card-code]').eq(0).payment('formatCardCVC');
     })

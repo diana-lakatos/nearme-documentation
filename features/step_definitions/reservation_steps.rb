@@ -166,7 +166,8 @@ When /^I provide reservation credit card details$/ do
   fill_in 'reservation_request_card_holder_first_name', with: 'FirstName'
   fill_in 'reservation_request_card_holder_last_name', with: 'LastName'
   fill_in 'reservation_request_card_number', :with => "4242424242424242"
-  fill_in 'reservation_request_card_expires', :with => '12/2020'
+  select '12', from: 'reservation_request_card_exp_month'
+  select '2020', from: 'reservation_request_card_exp_year'
   fill_in 'reservation_request_card_code', :with => '411'
   @credit_card_reservation = true
 end

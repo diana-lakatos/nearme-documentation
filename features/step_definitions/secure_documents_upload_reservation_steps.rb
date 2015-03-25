@@ -31,7 +31,8 @@ And (/^I enter data in the credit card form$/) do
   fill_in 'reservation_request_card_holder_first_name', with: 'John'
   fill_in 'reservation_request_card_holder_last_name', with: 'Doe'
   fill_in 'reservation_request_card_number', with: '4111111111111111'
-  fill_in 'reservation_request_card_expires', with: '02/2020'
+  select '12', from: 'reservation_request_card_exp_month'
+  select '2020', from: 'reservation_request_card_exp_year'
   fill_in 'reservation_request_card_code', with: '111'
 end
 

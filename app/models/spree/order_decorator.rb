@@ -6,7 +6,7 @@ Spree::Order.class_eval do
   belongs_to :partner
   belongs_to :platform_context_detail, :polymorphic => true
 
-  attr_accessor :card_number, :card_code, :card_expires, :card_holder_first_name, :card_holder_last_name
+  attr_accessor :card_number, :card_code, :card_exp_month, :card_exp_year, :card_holder_first_name, :card_holder_last_name
   scope :completed, -> { where(state: 'complete') }
 
   has_one :billing_authorization, -> { where(success: true) }, as: :reference

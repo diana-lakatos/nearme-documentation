@@ -77,7 +77,8 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
         dates: [Chronic.parse('Monday')],
         quantity: "1",
         card_number: "4242 4242 4242 4242",
-        card_expires: 1.year.from_now.strftime("%m/%Y"),
+        card_exp_month: 1.year.from_now.month.to_s,
+        card_exp_year: 1.year.from_now.year.to_s,
         card_code: '411',
         country_name: 'United States',
         mobile_number: '57489473'
