@@ -246,7 +246,7 @@ class Instance < ActiveRecord::Base
   end
 
   def buyable_transactable_type
-    self.transactable_types.where(name: TransactableType::AVAILABLE_TYPES[1]).first
+    self.transactable_types.where(buyable: true).first
   end
 
   def documents_upload_enabled?
