@@ -10,6 +10,10 @@ module InstanceType::Searcher::GeolocationSearcher
     @query ||= search.query
   end
 
+  def keyword
+    @keyword ||= search.keyword
+  end
+
   def located
     @params[:lat].present? and @params[:lng].present?
   end
@@ -41,6 +45,7 @@ module InstanceType::Searcher::GeolocationSearcher
   def search_query_values
     {
       :loc => @params[:loc],
+      :query => @params[:query],
       :industries_ids => @params[:industries_ids],
     }.merge(filters)
   end

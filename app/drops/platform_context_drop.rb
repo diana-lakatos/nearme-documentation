@@ -2,8 +2,8 @@ class PlatformContextDrop < BaseDrop
 
   attr_reader :platform_context_decorator
 
-  delegate :name, :bookable_noun, :pages, :platform_context, :blog_url, :twitter_url, :lessor, :lessors, :lessee, :lessees, :searcher_type,
-    :facebook_url, :address, :phone_number, :gplus_url, :site_name, :support_url, :support_email, :logo_image, :tagline, :search_field_placeholder, :homepage_content,
+  delegate :name, :bookable_noun, :pages, :platform_context, :blog_url, :twitter_url, :lessor, :lessors, :lessee, :lessees, :searcher_type, :search_by_keyword_placeholder,
+    :facebook_url, :address, :phone_number, :gplus_url, :site_name, :support_url, :support_email, :logo_image, :tagline, :search_field_placeholder, :homepage_content, :fulltext_geo_search?,
     :is_company_theme?, :call_to_action, :latest_products, :buyable?, :bookable?, :transactable_types, :product_types, :bookable_nouns, :bookable_nouns_plural, to: :platform_context_decorator
 
 
@@ -61,6 +61,24 @@ class PlatformContextDrop < BaseDrop
 
   def tt_select_type
     @platform_context_decorator.instance.tt_select_type
+  end
+
+  def calculate_elements
+    sum = 2 #search button
+    sum += 4 if display_date_pickers?
+    sum += 2 if multiple_transactable_types? && tt_select_type != 'radio'
+    input_size = 12 - sum #span12
+    input_size /= 2 if fulltext_geo_search? #two input fields
+    container = input_size == 2 ? "span12" : "span10 offset1"
+    [container, input_size]
+  end
+
+  def calculate_container
+    calculate_elements[0]
+  end
+
+  def calculate_input_size
+    "span#{calculate_elements[1]}"
   end
 
   private

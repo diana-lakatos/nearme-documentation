@@ -49,19 +49,20 @@
           #listings_map.inner
     .list{:'data-list' => true}
       .filters{:'data-search-filters-container' => true}
-        .search-mixed-filter{:'data-transactable-type-filter' => true}
-          .container-fluid
-            .row-fluid
-              .span2
-                %h4 Service Type
-              .span10
-                %ul
-                  - platform_context.transactable_types.services.each do |transactable_type|
-                    %li.filter-option
-                      %label.radio.small-radio
-                        %input{type: 'radio', name: 'transactable_type_id', value: transactable_type.id, checked: @transactable_type.id == transactable_type.id}
-                        %span.filter-label-text
-                          = transactable_type.name
+        -if platform_context.transactable_types.services.many?
+          .search-mixed-filter{:'data-transactable-type-filter' => true}
+            .container-fluid
+              .row-fluid
+                .span2
+                  %h4 Service Type
+                .span10
+                  %ul
+                    - platform_context.transactable_types.services.each do |transactable_type|
+                      %li.filter-option
+                        %label.radio.small-radio
+                          %input{type: 'radio', name: 'transactable_type_id', value: transactable_type.id, checked: @transactable_type.id == transactable_type.id}
+                          %span.filter-label-text
+                            = transactable_type.name
 
         = render :partial => 'search/mixed/filter', :locals => { :header_name => "#{@transactable_type.bookable_noun} Types", :selected_values => @searcher.search.lgtypes_filters || [], :input_name => 'listing_types_ids[]', :options => (@searcher.filterable_listing_types || []).map { |lt| [lt, lt] } }
 

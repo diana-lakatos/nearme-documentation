@@ -4,9 +4,13 @@ class InstanceType::Searcher::GeolocationSearcher::Listing
   def initialize(transactable_type, params)
     @transactable_type = transactable_type
     set_options_for_filters
-    params.delete :query
     @params = params
-    @results = fetcher.listings
+    scoped_transactables  = fetcher.listings
+    if params['query'].present?
+      query = params['query'] + ":*"
+      scoped_transactables = scoped_transactables.where("CAST(avals(properties) AS text) @@ to_tsquery(:q)", q: query)
+    end
+    @results = scoped_transactables
   end
 
   def filters

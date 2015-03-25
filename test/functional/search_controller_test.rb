@@ -175,6 +175,73 @@ class SearchControllerTest < ActionController::TestCase
 
     context 'conduct search' do
 
+      context 'for fulltext golocation' do
+
+        setup do
+           @adelaide = FactoryGirl.create(:listing_in_adelaide)
+           @adelaide_super = FactoryGirl.create(:listing_in_adelaide)
+           @adelaide_super.description = "super location"
+           @adelaide_super.save
+           PlatformContext.current.instance.searcher_type = "fulltext_geo"
+           PlatformContext.current.instance.save
+        end
+
+        context 'on mixed results page' do
+
+          should 'return only super location' do
+            get :index, loc: 'adelaide', query: 'super', v: 'mixed'
+            assert_transactable_in_mixed_result(@adelaide_super)
+            refute_transactable_in_mixed_result(@adelaide)
+          end
+
+          should 'return only super location with half word' do
+            get :index, loc: 'adelaide', query: 'loca', v: 'mixed'
+            assert_transactable_in_mixed_result(@adelaide_super)
+            refute_transactable_in_mixed_result(@adelaide)
+          end
+
+          should 'return both locations' do
+            get :index, loc: 'adelaide', v: 'mixed'
+            assert_transactable_in_mixed_result(@adelaide)
+            assert_transactable_in_mixed_result(@adelaide_super)
+          end
+
+          should 'return one location by query only' do
+            get :index, query: 'super', v: 'mixed'
+            assert_transactable_in_mixed_result(@adelaide_super)
+            refute_transactable_in_mixed_result(@adelaide)
+          end
+        end
+
+        context 'on list results page' do
+
+          should 'return only super location' do
+            get :index, loc: 'adelaide', query: 'super', v: 'list'
+            assert_location_in_mixed_result(@adelaide_super)
+            refute_location_in_mixed_result(@adelaide)
+          end
+
+          should 'return only super location with half word' do
+            get :index, loc: 'adelaide', query: 'loca', v: 'list'
+            assert_location_in_mixed_result(@adelaide_super)
+            refute_location_in_mixed_result(@adelaide)
+          end
+
+          should 'return both locations' do
+            get :index, loc: 'adelaide', v: 'list'
+            assert_location_in_mixed_result(@adelaide)
+            assert_location_in_mixed_result(@adelaide_super)
+          end
+
+          should 'return one location by query only' do
+            get :index, query: 'super', v: 'list'
+            assert_location_in_mixed_result(@adelaide_super)
+            refute_location_in_mixed_result(@adelaide)
+          end
+        end
+
+      end
+
 
       should "not track search for empty query" do
         @tracker.expects(:conducted_a_search).never
@@ -418,6 +485,14 @@ class SearchControllerTest < ActionController::TestCase
 
   def assert_location_in_mixed_result(location)
     assert_select 'article[data-id=?]', location.id, count: 1
+  end
+
+  def assert_transactable_in_mixed_result(transactable)
+    assert_select 'div.listing[data-id=?]', transactable.id, count: 1
+  end
+
+  def refute_transactable_in_mixed_result(transactable)
+    assert_select 'div.listing[data-id=?]', transactable.id, count: 0
   end
 
   def refute_location_in_mixed_result(location)
