@@ -22,7 +22,8 @@ module NearMe
 
     def latest_deployment(stack_id)
       keys = [:completed_at, :duration, :iam_user_arn, :command, :status, :custom_json]
-      opsworks_client.describe_deployments(stack_id: stack_id).data.fetch(:deployments, {}).first.select{|k,v| keys.include? k}
+      deployment = opsworks_client.describe_deployments(stack_id: stack_id).data.fetch(:deployments, {}).first
+      deployment ? deployment.select{|k,v| keys.include? k} : "no deploys yet"
     end
 
     def status
