@@ -20,10 +20,8 @@ class Spree::ProductDrop < BaseDrop
     routes.product_path(@product)
   end
 
-  def extra_properties_with_labels
-    @product.extra_properties.collect do |property|
-      [@product.extra_properties.labels[property.first], property.last]
-    end
+  def extra_properties
+    @product.extra_properties
   end
 
   def product_type
