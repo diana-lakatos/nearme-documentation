@@ -154,12 +154,7 @@
 
         - if @product.extra_properties.present?
           %article#product-properties.tab-pane
-            - @product.extra_properties.each do |property|
-              .row-fluid
-                .span3
-                  %h5= property.first.capitalize
-                .span9
-                  %p= property.last
+            = render partial: 'extra_properties', locals: { product: @product }
     .product-profile-badge
       .vendor-profile
         = render partial: 'administrator', locals: { product: @product, hidden: hidden}
