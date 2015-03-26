@@ -8,7 +8,8 @@ class InstanceType::Searcher::FullTextSearcher::Listing
     @params = params
     scoped_transactables  = @transactable_type.transactables.searchable
     if params['loc'].present?
-      scoped_transactables = scoped_transactables.where("CAST(avals(properties) AS text) @@ :q", q: params['loc'])
+      query = params['loc'] + ":*"
+      scoped_transactables = scoped_transactables.where("CAST(avals(properties) AS text) @@ to_tsquery(:q)", q: query)
     end
     @results = scoped_transactables
   end

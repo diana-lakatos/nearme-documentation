@@ -34,7 +34,11 @@ class Listing::Search::Params
   end
 
   def query
-    @options[:query] || @options[:q] || @options[:address] || @options[:loc]
+    @options[:loc] || @options[:q] || @options[:address] || @options[:query]
+  end
+
+  def keyword
+    @options[:query]
   end
 
   def radius
