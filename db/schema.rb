@@ -2776,6 +2776,11 @@ ActiveRecord::Schema.define(version: 20150403104757) do
     t.integer  "hours_to_expiration",                                                default: 24
     t.integer  "minimum_booking_minutes",                                            default: 60
     t.boolean  "multiple_root_categries"
+    t.boolean  "skip_location"
+    t.string   "default_currency"
+    t.text     "allowed_currencies"
+    t.string   "default_country"
+    t.text     "allowed_countries"
     t.boolean  "action_na",                                                          default: false
   end
 

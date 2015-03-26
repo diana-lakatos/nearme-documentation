@@ -7,6 +7,7 @@ class @Dashboard.ListingController
     @locationRadios = @container.find('#location-list input[type="radio"]')
     @currencyHolders = @container.find('.currency-holder')
     @currencyLocationHolders = @container.find('.currency_addon')
+    @defalt_currency = @container.find('#default_currency').text()
 
     @enableSwitch = @container.find('#listing_enabled').parent().parent()
     @enableAjaxUpdate = true
@@ -52,7 +53,7 @@ class @Dashboard.ListingController
 
 
   updateCurrency: () =>
-    @currencyHolders.html($('#currency_'+ @currencySelect.val()).text())
+    @currencyHolders.html($('#currency_'+ (@currencySelect.val() || @defalt_currency)).text())
 
   updateCurrencyFromLocation: ->
     @currencyLocationHolders.html(@container.find('#location-list input[type="radio"]:checked').next().val())

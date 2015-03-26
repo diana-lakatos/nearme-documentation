@@ -20,8 +20,10 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   def create
     @transactable = @transactable_type.transactables.build(transactable_params)
     @transactable.company = @company
+    @transactable.location ||= @company.locations.first if @transactable_type.skip_location?
 
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
+
     if @transactable.save
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.bookable_noun)
       event_tracker.created_a_listing(@transactable, { via: 'dashboard' })

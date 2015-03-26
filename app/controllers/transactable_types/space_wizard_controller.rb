@@ -32,7 +32,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     @user.assign_attributes(wizard_params)
     @user.companies.first.try(:locations).try(:first).try {|l| l.name_and_description_required = true}
-    @user.companies.first.creator_id = current_user.id
+    @user.companies.first.creator = current_user
     build_objects
     build_approval_requests
     if params[:save_as_draft]
@@ -94,6 +94,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   def build_objects
     @user.companies.build if @user.companies.first.nil?
     @user.companies.first.locations.build if @user.companies.first.locations.first.nil?
+    @user.companies.first.locations.first.transactable_type = @transactable_type
     @user.companies.first.locations.first.listings.build({:transactable_type_id => @transactable_type.id}) if @user.companies.first.locations.first.listings.first.nil?
   end
 

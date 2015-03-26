@@ -12,7 +12,7 @@ module AvailabilityRulesHelper
     choices = []
 
     # Are we dealing with an object that can "defer" availability rules to another object?
-    if object.respond_to? :defer_availability_rules
+    if object.respond_to?(:display_defered_availability_rules?) && object.display_defered_availability_rules?
       defer_options = { :id => "availability_rules_defer", :'data-clear-rules' => true }
       if object.defer_availability_rules?
         defer_options[:checked] = true

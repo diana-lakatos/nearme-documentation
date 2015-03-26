@@ -57,6 +57,7 @@ class Company < ActiveRecord::Base
    :latitude, :longitude, :state_code, :iso_country_code, to: :company_address, allow_nil: true
 
   before_validation :add_default_url_scheme
+  before_validation :set_creator_address
 
   before_save :create_bank_account_in_balanced!, :if => lambda { |c| c.bank_account_number.present? || c.bank_routing_number.present? || c.bank_owner_name.present? }
 
@@ -255,6 +256,14 @@ class Company < ActiveRecord::Base
       payments_mailing_address.address
     else
       read_attribute(:mailing_address)
+    end
+  end
+
+  def set_creator_address
+    if company_address.nil? && instance.skip_company
+      if creator.present? && country_name = creator.country.try(:name)
+        build_company_address(address: country_name).fetch_coordinates!
+      end
     end
   end
 

@@ -358,6 +358,7 @@ class SecuredParams
       :support_imap_server,
       :support_imap_port,
       :support_imap_ssl,
+      :default_currency,
       custom_translations: [:'buy_sell_market.checkout.manual_payment', :'buy_sell_market.checkout.manual_payment_description'],
       user_required_fields: [],
       transactable_types_attributes: nested(self.transactable_type),
@@ -546,8 +547,12 @@ class SecuredParams
       :min_monthly_price,
       :max_monthly_price,
       :multiple_root_categries,
+      :skip_location,
+      :default_country, :default_currency,
       :bookable_noun, :lessor, :lessee, :action_schedule_booking,
       :availability_templates_attributes => nested(self.availability_template),
+      :allowed_currencies => [], 
+      :allowed_countries => [],
       :action_type_ids => [],
       schedule_attributes: self.schedule
     ]
