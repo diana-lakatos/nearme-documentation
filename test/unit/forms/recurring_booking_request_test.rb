@@ -15,7 +15,8 @@ class RecurringBookingRequestTest < ActiveSupport::TestCase
       end_on: @last_thursday,
       quantity: 1,
       card_number: 4242424242424242,
-      card_expires: "05/2020",
+      card_exp_month: '05',
+      card_exp_year: '2020',
       card_code: "411"
     }
     stub_billing_gateway(@instance)
@@ -146,7 +147,8 @@ class RecurringBookingRequestTest < ActiveSupport::TestCase
         end_on: @last_thursday + 50.years,
         quantity: 1,
         card_number: 4242424242424242,
-        card_expires: "05/2020",
+        card_exp_month: '05',
+        card_exp_year: '2020',
         card_code: "411"
       }
       @recurring_booking_request = RecurringBookingRequest.new(@listing, @user, PlatformContext.new(@instance), @attributes)

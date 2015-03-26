@@ -50,7 +50,8 @@ class BuySellMarket::CheckoutController < ApplicationController
         create_spree_payment_records
       elsif @billing_gateway.processor.present?
         @order.payment_method = Spree::Order::PAYMENT_METHODS[:credit_card]
-        @order.card_expires = params[:order][:card_expires].try(:to_s).try(:strip)
+        @order.card_exp_month = params[:order][:card_exp_month].try(:to_s).try(:strip)
+        @order.card_exp_year = params[:order][:card_exp_year].try(:to_s).try(:strip)
         @order.card_number = params[:order][:card_number].try(:to_s).try(:strip)
         @order.card_code = params[:order][:card_code].try(:to_s).try(:strip)
         @order.card_holder_first_name = params[:order][:card_holder_first_name].try(:to_s).try(:strip)
@@ -59,8 +60,8 @@ class BuySellMarket::CheckoutController < ApplicationController
           first_name: @order.card_holder_first_name,
           last_name: @order.card_holder_last_name,
           number: @order.card_number,
-          month: @order.card_expires.to_s[0, 2],
-          year: @order.card_expires.to_s[-4, 4],
+          month: @order.card_exp_month.to_s,
+          year: @order.card_exp_year.to_s,
           verification_value: @order.card_code
         )
         if @order.billing_authorization.present?

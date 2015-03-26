@@ -9,7 +9,8 @@ class ReservationRequestTest < ActiveSupport::TestCase
     @attributes = {
       :dates => [@date.to_s(:db)],
       :card_number => 4242424242424242,
-      :card_expires => "05/2020",
+      card_exp_month: '05',
+      card_exp_year: '2020',
       :card_code => "411"
     }
     stub_billing_gateway(@listing.instance)

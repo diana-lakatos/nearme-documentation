@@ -77,4 +77,24 @@
       }
     }
   }
+
+  .select2-container {
+    border: 2px solid #e6e6e6;
+    border-radius: 4px;
+    background: #e6e6e6 image-url('themes/buy_sell/arrow.png') right no-repeat;
+    width: 100%;
+    font-size: 22px;
+    box-sizing: border-box;
+    padding: 10px 0 10px 5px;
+
+    .select2-choice {
+      border: none;
+      background: none;
+      box-shadow: none;
+
+      .select2-arrow {
+        display: none;
+      }
+    }
+  }
 }

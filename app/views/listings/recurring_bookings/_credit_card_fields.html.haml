@@ -31,16 +31,30 @@
           %p.error-block
             = f.object.errors[:number].first
 
-      .span3.card-info.expiry.column.left{class: "#{"error" if f.object.errors.include?(:exp_month).present? or f.object.errors.include?(:exp_year).present?}"}
-        = f.label :card_expires, "Expiration date", class: 'control-label'
+      .span2.card-info.expiry.column.left{class: "#{"error" if f.object.errors.include?(:card_exp_month).present?}"}
+        .visible-phone
+          = f.label :card_exp_month, t('payments.cc_fields.expiration_date_month'), class: 'control-label'
+        .hidden-phone
+          = f.label :card_exp_month, t('payments.cc_fields.expiration_date'), class: 'control-label'
         .controls.card-expires
-          = f.input_field :card_expires, input_html: {size: 6}, placeholder: 'MM/YYYY', required: true, class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: "off"
-        - if f.object.errors[:exp_month].present?
+          = f.input_field :card_exp_month, collection: credit_card_date[:month], prompt: false, class: 'sessioncamexclude no-icon select2'
+
+        - if f.object.errors[:card_exp_month].present?
           %p.error-block
-            = f.object.errors[:exp_month].first
-        - if f.object.errors[:exp_year].present?
+            = f.object.errors[:card_exp_month].first
+
+      .span2.card-info.expiry.column.left{class: "#{"error" if f.object.errors.include?(:card_exp_year).present?}"}
+        .hidden-phone
+          %label.control-label
+            &nbsp;
+        .visible-phone
+          = f.label :card_exp_year, t('payments.cc_fields.expiration_date_year'), class: 'control-label'
+        .controls.card-expires
+          = f.input_field :card_exp_year, collection: credit_card_date[:year], prompt: false, class: 'sessioncamexclude no-icon select2'
+
+        - if f.object.errors[:card_exp_year].present?
           %p.error-block
-            = f.object.errors[:exp_year].first
+            = f.object.errors[:card_exp_year].first
 
       .span3.card-info.security.column.right{class: "#{"error" if f.object.errors.include?(:cvc).present?}"}
         = f.label :card_code, "Security code", class: 'control-label'

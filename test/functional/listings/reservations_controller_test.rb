@@ -170,7 +170,8 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
         dates: [Chronic.parse('Monday')],
         quantity: "1",
         card_number: 4242424242424242,
-        card_expires: "05/2020",
+        card_exp_month: '05',
+        card_exp_year: '2020',
         card_code: "411"
       }
     }

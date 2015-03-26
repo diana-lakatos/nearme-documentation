@@ -1,7 +1,8 @@
 class RecurringBookingRequest < Form
 
   attr_accessor :start_minute, :end_minute, :start_on, :end_on, :schedule_params, :quantity
-  attr_accessor :card_number, :card_expires, :card_code, :card_holder_first_name, :card_holder_last_name, :occurrences
+  attr_accessor :card_number, :card_exp_month, :card_exp_year, :card_code, :card_holder_first_name,
+                :card_holder_last_name, :occurrences
   attr_reader   :recurring_booking, :listing, :location, :user
 
   def_delegators :@recurring_booking, :credit_card_payment?, :manual_payment?, :reservation_type=
@@ -147,14 +148,12 @@ class RecurringBookingRequest < Form
     return true unless using_credit_card?
 
     begin
-      self.card_expires = card_expires.to_s.strip
-
       credit_card = ActiveMerchant::Billing::CreditCard.new(
         first_name: card_holder_first_name.to_s,
         last_name: card_holder_last_name.to_s,
         number: card_number.to_s,
-        month: card_expires.to_s[0,2],
-        year: card_expires.to_s[-4,4],
+        month: card_exp_month.to_s,
+        year: card_exp_year.to_s,
         verification_value: card_code.to_s
       )
 

@@ -105,7 +105,8 @@ When /^I fill billing data$/ do
   fill_in 'order_card_holder_first_name', with: 'John'
   fill_in 'order_card_holder_last_name', with: 'Doe'
   fill_in 'order_card_number', with: '4111111111111111'
-  fill_in 'order_card_expires', with: 1.years.from_now.strftime("%m/%Y")
+  select 1.years.from_now.month.to_s, from: 'order_card_exp_month'
+  select 1.years.from_now.year.to_s, from: 'order_card_exp_year'
   fill_in 'order_card_code', with: '111'
   click_button 'Next'
 end

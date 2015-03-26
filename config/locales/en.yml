@@ -839,6 +839,8 @@ en:
       last_name: 'Last Name'
       card_number: 'Card number'
       expiration_date: 'Expiration date'
+      expiration_date_month: 'Expiration date: Month'
+      expiration_date_year: 'Expiration date: Year'
       security_code: 'Security code'
 
   shared:
@@ -866,4 +868,3 @@ en:
 
   amenities_attribute: 'Amenities'
   amenity_attribute: 'amenity'
-

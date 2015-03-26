@@ -282,4 +282,13 @@ module ApplicationHelper
     end
   end
 
+  def credit_card_date
+    months = (1..12).map do |m|
+      m.to_s.rjust(2, '0')
+    end
+
+    years = (Time.zone.now.year..(Time.zone.now + 15.years).year)
+    {month: months, year: years}
+  end
+
 end

@@ -1,7 +1,8 @@
 class ReservationRequest < Form
 
   attr_accessor :dates, :start_minute, :end_minute
-  attr_accessor :card_number, :card_expires, :card_code, :card_holder_first_name, :card_holder_last_name, :payment_method_nonce
+  attr_accessor :card_number, :card_exp_month, :card_exp_year, :card_code, :card_holder_first_name,
+                :card_holder_last_name, :payment_method_nonce
   attr_accessor :waiver_agreement_templates, :documents, :payment_method
   attr_reader   :reservation, :listing, :location, :user, :client_token, :payment_method_nonce
 
@@ -180,14 +181,12 @@ class ReservationRequest < Form
     return true unless active_merchant_payment?
 
     begin
-      self.card_expires = card_expires.to_s.strip
-
       credit_card = ActiveMerchant::Billing::CreditCard.new(
         first_name: card_holder_first_name.to_s,
         last_name: card_holder_last_name.to_s,
         number: card_number.to_s,
-        month: card_expires.to_s[0,2],
-        year: card_expires.to_s[-4,4],
+        month: card_exp_month.to_s,
+        year: card_exp_year.to_s,
         verification_value: card_code.to_s
       )
 
