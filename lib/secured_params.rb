@@ -67,7 +67,8 @@ class SecuredParams
       :weight_unit,
       :height_unit,
       :width_unit,
-      :depth_unit
+      :depth_unit,
+      :use_as_default
     ]
   end
 
