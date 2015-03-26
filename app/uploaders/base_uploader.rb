@@ -75,6 +75,15 @@ class BaseUploader < CarrierWave::Uploader::Base
     model["#{mounted_as}_versions_generated_at"].present?
   end
 
+  def url(*args)
+    super_url = super
+    if versions_generated? && super_url !~ /\?\d+$/
+      "#{super_url}?#{model["#{mounted_as}_versions_generated_at"].to_i}"
+    else
+      super_url
+    end
+  end
+
   def current_url(version = nil, *args)
     if exists? || !source_url
       version = :transformed if version.blank? && self.respond_to?(:transformation_data)
