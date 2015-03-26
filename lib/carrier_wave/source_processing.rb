@@ -9,7 +9,7 @@ module CarrierWave
       # to determine whether external has changed - if it is nil, we will re-download the image
       def enqueue_processing(all = true)
         if @model.attributes[@field.to_s]
-          VersionRegenerationJob.perform(@model.class, @model.id, @field, all)
+          VersionRegenerationJob.perform_later(20.seconds.from_now, @model.class, @model.id, @field, all)
         end
       end
 
