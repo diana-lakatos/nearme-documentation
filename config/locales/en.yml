@@ -687,7 +687,7 @@ en:
         header: 'New Data Upload %{transactable_type_name}'
         sync_mode_hint: 'Checking this checkbox allows you to delelete anything that is not included in CSV. Use with caution! Empty CSV file is ignored to protect your data.'
         sync_mode: 'Delete absent objects'
-        external_id_hint: 'Matching between objects already in the system and in CSV is done based on External Id. Hence External Ids have to be unique in scope of parent. If you are not sure what current External Ids are, please download current data first. Please make sure that any new objects that are inserted via CSV have populated External Id, otherwise the end result might not be as intendent.'
+        external_id_hint: 'Objects that are already in the system are matched to your CSV based on the External ID. Thus, external IDs should be unique in scope to their parent element (if applicable). Please ensure that you have specified a unique external ID for any new objects in your CSV, otherwise the end result might not be as intended.'
       edit:
         queued: "Import has been scheduled. You'll receive an email when it's done"
         processing: "Import has been scheduled. You'll receive an email when it's done"
