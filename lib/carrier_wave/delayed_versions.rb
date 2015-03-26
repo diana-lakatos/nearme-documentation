@@ -20,21 +20,18 @@ module CarrierWave::DelayedVersions
       before_save do
         if changes[column].present?
           processor = CarrierWave::SourceProcessing::Processor.new(self, column)
-          attributes[column.to_s] ? processor.assign_dimensions : processor.clear_meta
+          if attributes[column.to_s]
+            processor.assign_dimensions
+            self["#{column}_versions_generated_at"] = Time.zone.now
+            generate_versions_callback if respond_to?(:generate_versions_callback)
+          else
+            processor.clear_meta
+          end
         end
       end
 
       after_commit do
         processor = CarrierWave::SourceProcessing::Processor.new(self, column)
-
-        if previous_changes[column].present? && attributes[column.to_s]
-          if uploader.respond_to?(:delayed_versions)
-            processor.enqueue_processing
-          else
-            processor.touch_versions_timestamp_and_callback
-          end
-        end
-
         if previous_changes["#{column}_transformation_data"].present? && attributes["#{column}_transformation_data"] != {}
           processor.enqueue_processing
         end

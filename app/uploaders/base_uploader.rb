@@ -112,6 +112,7 @@ class BaseUploader < CarrierWave::Uploader::Base
   end
 
   def delayed_processing?(image = nil)
-    !!@delayed_processing
+    # !!@delayed_processing
+    true
   end
 end
