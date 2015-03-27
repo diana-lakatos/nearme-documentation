@@ -379,6 +379,16 @@ DesksnearMe::Application.routes.draw do
     namespace :shipping_options do
       resource :providers
       resources :dimensions_templates
+      resources :shipping_profiles do
+        collection do
+          get :get_shipping_categories_list
+        end
+
+        member do
+          post :disable_category
+          post :enable_category
+        end
+      end
     end
 
   end

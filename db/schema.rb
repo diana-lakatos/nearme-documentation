@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150328110043) do
+ActiveRecord::Schema.define(version: 20150330140428) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2071,7 +2071,10 @@ ActiveRecord::Schema.define(version: 20150328110043) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.integer  "user_id"
-    t.boolean  "company_default", default: false
+    t.boolean  "company_default",                  default: false
+    t.boolean  "is_system_profile",                default: false
+    t.integer  "from_system_shipping_category_id"
+    t.boolean  "is_system_category_enabled",       default: true
   end
 
   add_index "spree_shipping_categories", ["company_id"], name: "index_spree_shipping_categories_on_company_id", using: :btree

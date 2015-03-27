@@ -1,0 +1,76 @@
+.shipping_profiles_form_container {
+  margin-left: 25px;
+}
+
+.shipping_profiles-index {
+  .shipping-profile-top {
+    margin-top: 15px;
+    display: block;
+  }
+}
+
+.modal-container.shipping_profiles_modal {
+  .modal-content .modal-body {
+    padding: 15px !important;
+ 
+    input.select2-input {
+      border: 0 none !important;
+    }
+
+    .help-inline {
+      color: #e60000;
+      float: right;
+    }
+
+    .remove_shipping_profile {
+      text-align: right;
+      color: #e60000;
+    }
+
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    .btn.blue.pull-left {
+      background-color: #5dbded;
+    }
+
+    .shipping_category_form_name .help-inline {
+      margin-right: 15px;
+    }
+  
+    form input[type="price"], form input[type="password"], form input[type="url"], form input[type="email"], form input[type="number"], form input[type="tel"], form input[type="text"], form textarea, .selectpicker, .select2-drop, .select2-container-multi .select2-choices {
+      background: #fff;
+      border: solid #D4D4D4 1px;
+      border-radius: 0;
+      width: 100%;
+      padding: 5px 10px;
+      font-weight: 300;
+      font-size: 14px;
+    }
+  
+    form label {
+      text-transform: none;
+    }
+  
+    .select2-container {
+      width: 100%;
+    }
+  
+    .shipping-cost .controls {
+      padding-top: 14px;
+      .input-group {
+        height: 32px;
+      }
+    }
+  
+    .shipping-cost input.price {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  
+    background-color: #fff;
+  }
+}
+

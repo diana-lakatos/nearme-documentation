@@ -7,9 +7,10 @@ class ShippingCategoryForm < Form
 
   def_delegators :'@shipping_category', :shipping_methods, :name, :name=
 
-  def initialize(shipping_category, company)
+  def initialize(shipping_category, company, options = {})
     @shipping_category = shipping_category
     @company = company
+    @options = options
   end
 
   def validate_shipping_methods
@@ -57,6 +58,7 @@ class ShippingCategoryForm < Form
   end
 
   def save!
+    @shipping_category.is_system_profile = true if @options[:is_system_profile]
     @shipping_category.save!(validate: true)
 
     @shipping_methods.each do |shipping_method|

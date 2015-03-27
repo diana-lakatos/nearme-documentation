@@ -76,6 +76,7 @@ class InstanceAdmin::BaseController < ApplicationController
   SHIPPING_OPTIONS_CONTROLLERS = {
     'dimensions_templates' => { default_action: 'index' },
     'providers' => { default_action: 'show' },
+    'shipping_profiles' => { default_action: 'index' },
   }
 
   def index

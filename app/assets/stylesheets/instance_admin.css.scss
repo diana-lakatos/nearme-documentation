@@ -9,6 +9,9 @@
 @import "vendor/overrides/jcrop";
 @import "vendor/icui";
 @import "components/fileupload";
+@import "instance_admin/modal";
+@import "dashboard/modal";
+@import "select2";
 @import "instance_admin/support";
 @import "instance_admin/bootstrap";
 @import "instance_admin/bootstrap-theme";
@@ -28,3 +31,4 @@
 @import "instance_admin/form_components";
 @import "instance_admin/versions";
 @import "instance_admin/data_tables/dataTables.bootstrap";
+@import "instance_admin/shipping_profiles";

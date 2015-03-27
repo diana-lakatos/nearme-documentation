@@ -7,6 +7,8 @@ class Dashboard::Company::ProductsController < Dashboard::Company::BaseControlle
 
   skip_before_filter :redirect_unless_registration_completed, only: [:get_shipping_categories_list]
 
+  before_filter :ensure_system_shipping_categories_copied, only: [:new]
+
   def index
     @products = @company.products.of_type(@product_type).paginate(page: params[:page], per_page: 20)
   end
