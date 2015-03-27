@@ -7,7 +7,7 @@ class InstanceType::Searcher::GeolocationSearcher::Location
     @params = params
     scoped_transactables  = fetcher.locations
     if params['query'].present?
-      query = params['query'] + ":*"
+      query = params['query'].split(' ').join(' & ') + ":*"
       scoped_transactables = scoped_transactables.where("CAST(avals(properties) AS text) @@ to_tsquery(:q)", q: query)
     end
     @results = scoped_transactables

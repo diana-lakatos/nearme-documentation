@@ -9,8 +9,8 @@
         = hidden_field_tag :buyable, true
         .row-fluid
           .span12
-            .search-container
+            .search-container.span10
               %input#search{:name => "query", :placeholder => platform_context.search_field_placeholder, :type => "text", :value => @searcher.query, :class => "query", :autocomplete => "off"}
-            .search-icon.btn.btn-green
+            .search-icon.btn.btn-green.span2
               %span.ico-search
 

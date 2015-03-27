@@ -13,8 +13,6 @@ class SearchController < ApplicationController
   def index
     if @transactable_type.buyable?
       @searcher = InstanceType::Searcher::ProductsSearcher.new(@transactable_type, params)
-    elsif platform_context.instance.searcher_type == 'fulltext'
-      @searcher = InstanceType::Searcher::FullTextSearcher::Listing.new(@transactable_type, params)
     elsif result_view == 'mixed'
       @searcher = InstanceType::Searcher::GeolocationSearcher::Location.new(@transactable_type, params)
     else

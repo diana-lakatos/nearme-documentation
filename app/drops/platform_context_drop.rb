@@ -2,9 +2,9 @@ class PlatformContextDrop < BaseDrop
 
   attr_reader :platform_context_decorator
 
-  delegate :name, :bookable_noun, :pages, :platform_context, :blog_url, :twitter_url, :lessor, :lessors, :lessee, :lessees, :searcher_type, :search_by_keyword_placeholder,
+  delegate :name, :bookable_noun, :pages, :platform_context, :blog_url, :twitter_url, :lessor, :lessors, :lessee, :lessees, :searcher_type, :search_by_keyword_placeholder, :fulltext_search?,
     :facebook_url, :address, :phone_number, :gplus_url, :site_name, :support_url, :support_email, :logo_image, :tagline, :search_field_placeholder, :homepage_content, :fulltext_geo_search?,
-    :is_company_theme?, :call_to_action, :latest_products, :buyable?, :bookable?, :transactable_types, :product_types, :bookable_nouns, :bookable_nouns_plural, to: :platform_context_decorator
+    :is_company_theme?, :call_to_action, :latest_products, :buyable?, :bookable?, :transactable_types, :product_types, :bookable_nouns, :bookable_nouns_plural, :search_input_name, to: :platform_context_decorator
 
 
   def initialize(platform_context_decorator)

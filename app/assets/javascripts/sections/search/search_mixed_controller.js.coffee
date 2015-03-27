@@ -28,24 +28,25 @@ class Search.SearchMixedController extends Search.SearchController
         @perPageValue = @perPageField.find(':selected').val()
         @form.submit()
 
-    @queryField.keypress (e) =>
-      if e.which == 13
-        # if user pressed enter, we will prevent submitting the form and do it manually, when we are ready [ i.e. after geocoding query ]
-        @submit_form = false
-        query = @queryField.val()
-        deferred = @geocoder.geocodeAddress(query)
-        deferred.always (results) =>
-          result = results.getBestResult() if results
-          @clearBoundParams()
-          @setGeolocatedQuery(query, result)
+    if @autocompleteEnabled()
+      $('input.query').keypress (e) =>
+        if e.which == 13
+          # if user pressed enter, we will prevent submitting the form and do it manually, when we are ready [ i.e. after geocoding query ]
+          @submit_form = false
+          query = @queryField.val()
+          deferred = @geocoder.geocodeAddress(query)
+          deferred.always (results) =>
+            result = results.getBestResult() if results
+            @clearBoundParams()
+            @setGeolocatedQuery(query, result)
 
-          @submit_form = true
-          _.defer =>
-            google.maps.event.trigger(@autocomplete, 'place_changed')
-        false
-      else
-        @submit_form = false
-        true
+            @submit_form = true
+            _.defer =>
+              google.maps.event.trigger(@autocomplete, 'place_changed')
+          false
+        else
+          @submit_form = false
+          true
 
     @searchButton.bind 'click', =>
       @submit_form = true
@@ -72,7 +73,6 @@ class Search.SearchMixedController extends Search.SearchController
 
   adjustListHeight: ->
     @list_container().height($(window).height() - @list_container().offset().top)
-
 
   initializeMap: ->
     mapContainer = @container.find('#listings_map')[0]
@@ -235,7 +235,7 @@ class Search.SearchMixedController extends Search.SearchController
     params = @getSearchParams()
     filtered_params = []
     for k, param of params
-      if $.inArray(param["name"], ['lgtype', 'lntype', 'loc', 'lgpricing', 'lgattribute', 'transactable_type_id',
+      if $.inArray(param["name"], ['query', 'lgtype', 'lntype', 'loc', 'lgpricing', 'lgattribute', 'transactable_type_id',
                                    'start_date', 'end_date', 'availability[dates][start]', 'availability[dates][end]']) > -1
         filtered_params.push {name: param["name"], value: param["value"]}
     if @sortValue != 'relevance'
