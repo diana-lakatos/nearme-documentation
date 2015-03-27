@@ -458,6 +458,13 @@ en:
       cannot_transfer: "You haven't set a payment method yet."
       setup: "Set one up now."
       no_transfers_last_week: 'No transfers have been made in the preceding 7 day period.'
+    analytics:
+      revenue: 'Revenue'
+      bookings: 'Orders'
+      location_views: 'Location Views'
+      product_views: 'Product Views'
+      no_reservations_yet: "Your locations haven't got any reservations yet."
+      no_purchases_yet: 'Your products have not received any orders.'
   hidden_items:
     registrations:
       show:

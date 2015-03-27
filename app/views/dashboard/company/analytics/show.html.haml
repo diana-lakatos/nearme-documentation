@@ -3,7 +3,7 @@
 .dash-page.analytics
   .dash-head
     .row
-      .col-md-3= select_tag :analytics_mode, options_for_select([['Revenue', 'revenue'], ['Orders', 'bookings'], ['Location Views', 'location_views']], @analytics_mode), class: 'analytics-mode'
+      .col-md-3= select_tag :analytics_mode, analytics_options_for_select, class: 'analytics-mode'
   .dash-body
     = render :partial => "analytics_#{@analytics_mode}"
 

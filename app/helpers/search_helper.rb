@@ -8,6 +8,14 @@ module SearchHelper
     date ? date.strftime('%b %e') : ''
   end
 
+  def searchable_item_could_not_be_found_text
+    if PlatformContext.current.instance.buyable?
+      t('.product_could_not_be_found')
+    else
+      t('.address_could_not_be_found')
+    end
+  end
+
   def search_availability_quantity
     params[:availability].present? && params[:availability][:quantity].to_i || 1
   end

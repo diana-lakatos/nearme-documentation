@@ -1,6 +1,7 @@
 .box
   - if @reservations.total_entries.zero?
-    %p.no_data Your locations haven't got any reservations yet.
+    %p.no_data
+      = no_purchases_yet_text
   - else
     .weekly-chart
       .total.right

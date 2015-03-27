@@ -16,7 +16,8 @@
       %br/
       %br/
       %h1.tk-adelle.fat No results found
-      %p= t '.address_could_not_be_found'
+      %p
+        = searchable_item_could_not_be_found_text
 - else
   %section#results.no_results
     = render 'shared/loading_spinner'
