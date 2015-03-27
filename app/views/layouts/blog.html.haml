@@ -12,7 +12,8 @@
       = stylesheet_link_tag 'browser_specific/ie8'
     = stylesheet_link_tag '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/css/bootstrap.min.css'
     = stylesheet_link_tag 'blog'
-    = stylesheet_link_tag platform_context.compiled_stylesheet_url || 'application'
+    = stylesheet_link_tag platform_context.compiled_stylesheet_url || 'application_dynamic'
+    = stylesheet_link_tag 'application_static'
     = javascript_include_tag :blog
 
   %body.blog
