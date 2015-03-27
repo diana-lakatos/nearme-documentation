@@ -29,7 +29,7 @@ module CarrierWave::DelayedVersions
 
         if previous_changes[column].present? && attributes[column.to_s]
           if uploader.respond_to?(:delayed_versions)
-            processor.enqueue_processing
+            processor.enqueue_processing(false)
           else
             processor.touch_versions_timestamp_and_callback
           end
