@@ -7,9 +7,8 @@
       = link_to pages_path(page), pages_path(page), target: '_blank'
   %td
     .pull-right
-      -if page.versions.many?
-        = link_to versions_instance_admin_theme_page_path(page.id), title: 'Show previous versions' do
-          .fa.fa-archive.fa-2x.inline-form-icon
+      = link_to versions_instance_admin_theme_page_path(page.id), title: 'Show previous versions' do
+        .fa.fa-archive.fa-2x.inline-form-icon
       = link_to edit_instance_admin_theme_page_path(page.id) do
         .fa.fa-pencil.fa-2x.inline-form-icon
       = link_to instance_admin_theme_page_path(page.id), :method => :delete,

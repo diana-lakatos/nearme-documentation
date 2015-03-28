@@ -35,18 +35,18 @@ class MountUploaderTest < ActiveSupport::TestCase
 
   should 'process delayed_versions in the background if uploader responds to delayed_versions' do
     photo = FactoryGirl.build(:photo)
-    VersionRegenerationJob.expects(:perform_later).with(Photo, photo.save! && photo.id, :image, false)
+    VersionRegenerationJob.expects(:perform).with(Photo, photo.save! && photo.id, :image, false)
   end
 
   should 'not process all versions on initial save if uploader responds to delayed_versions' do
     photo = FactoryGirl.build(:photo)
-    VersionRegenerationJob.expects(:perform_later).once
+    VersionRegenerationJob.expects(:perform).once
     photo.save!
   end
 
   should 'only set timestamp if uploader does not respond to delayed_versions' do
     theme = FactoryGirl.build(:theme_with_logo_image)
-    VersionRegenerationJob.expects(:perform_later).never
+    VersionRegenerationJob.expects(:perform).never
     theme.save!
     assert_not_nil(theme.logo_image_versions_generated_at)
   end
@@ -54,7 +54,7 @@ class MountUploaderTest < ActiveSupport::TestCase
   should 'recreate all versions if transformation data is changed' do
     photo = FactoryGirl.create(:photo)
     photo.image_transformation_data = {rotate: 180}
-    VersionRegenerationJob.expects(:perform_later).with(Photo, photo.save! && photo.id, :image, true).once
+    VersionRegenerationJob.expects(:perform).with(Photo, photo.save! && photo.id, :image, true).once
   end
 
 end
