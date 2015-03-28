@@ -2,7 +2,7 @@ FactoryGirl.define do
 
   factory :instance do
     instance_type_id { (InstanceType.first || FactoryGirl.create(:instance_type)).id }
-    sequence(:name) {|n| Instance.first ? "desks near me #{n}" : 'DesksNearMe'}
+    sequence(:name) { |n| Instance.first ? "desks near me #{n}" : 'DesksNearMe' }
     bookable_noun 'Desk'
     lessor 'host'
     lessee 'guest'

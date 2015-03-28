@@ -92,7 +92,7 @@
 
         - if HiddenUiControls.find('main_menu/account').visible?
           %li
-            = link_to '/dashboard/edit_profile', class: 'nav-link dropdown-toggle' do
+            = link_to main_app.dashboard_profile_path, class: 'nav-link dropdown-toggle' do
               %span= t 'top_navbar.account'
 
         %li

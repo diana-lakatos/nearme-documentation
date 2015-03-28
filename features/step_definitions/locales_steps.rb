@@ -19,11 +19,11 @@ And(/^we have translations in place$/) do
 end
 
 And /^(?:|I )change language to "([^"]*)"$/ do |language|
-  visit root_path(lang: language)
+  visit root_path(language: language)
 end
 
 And(/^I change language to not existing one$/) do
-  visit root_path(lang: 'fr')
+  visit root_path(language: 'fr')
 end
 
 And(/^I reload page without language parameter$/) do

@@ -5,11 +5,21 @@ module Liquid
     def read_template_file(template_path, context)
       format = template_path.split('.').last.to_sym
       details = {}
+
       begin
-        details = {instance_type_id: context.registers[:controller].platform_context.instance_type.try(:id), instance_id: context.registers[:controller].platform_context.instance.id, handlers: [:liquid], formats: [format], locale: [::I18n.locale]}
+        details = {instance_type_id: context.registers[:controller].platform_context.instance_type.try(:id),
+                   instance_id: context.registers[:controller].platform_context.instance.id, handlers: [:liquid],
+                   formats: [format], locale: [::I18n.locale]}
+
         template = InstanceViewResolver.instance.find_templates(template_path, '', true, details).first
       rescue
         Rails.logger.error "Liquid::BlankFileSystem #{$!}. Details: #{details}"
+      end
+
+      # Fallback to English
+      if template.nil? && details[:locale].first != :en
+        details[:locale] = [:en]
+        template = InstanceViewResolver.instance.find_templates(template_path, '', true, details).first
       end
 
       if template.nil?

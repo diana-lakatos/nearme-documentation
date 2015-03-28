@@ -126,5 +126,4 @@ class InstanceAdmin::BaseController < ApplicationController
     @instance_admin_roles ||= InstanceAdminRole.all
   end
   helper_method :instance_admin_roles
-
 end

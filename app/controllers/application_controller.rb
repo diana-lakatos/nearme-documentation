@@ -47,32 +47,27 @@ class ApplicationController < ActionController::Base
   protected
 
   def set_locale
-    params_locale = params[:lang]
+    unless request.get?
+      I18n.locale = :en unless request.get?
+      return true
+    end
+
+    params_locale = params[:language].try(:to_sym)
+    params_locale_exists = platform_context.instance.locales.find_by(code: params_locale)
     primary_locale = platform_context.instance.primary_locale
 
-    # Set language from cookie
-    if params_locale.blank? && cookies[:lang].present?
-      params_locale = cookies[:lang]
+    # Redirect -> This is necessary for proper functionality of the current_page? method
+    if params_locale.present? && (params_locale == primary_locale || !params_locale_exists)
+      path = request.fullpath
+      Locale.remove_locale_from_url(path)
+      redirect_to path, status: 301
     end
 
-    # Set primary language
-    if params_locale.blank? || params_locale == primary_locale
-      I18n.locale = primary_locale.to_sym
-      default_url_options.delete(:lang)
-      cookies.delete :lang
-    end
-
-    # Set language requested by visitor
-    if params_locale != primary_locale
-      if platform_context.instance.locales.find_by(code: params_locale) #
-        I18n.locale = params_locale.to_sym
-        default_url_options[:lang] = params_locale
-        cookies.permanent[:lang] = params_locale
-      else
-        I18n.locale = primary_locale.to_sym
-        default_url_options.delete(:lang)
-        cookies.delete :lang
-      end
+    # Set either primary or requested language
+    if params_locale.present?
+      I18n.locale = params_locale
+    else
+      I18n.locale = primary_locale
     end
   end
 
@@ -260,7 +255,7 @@ class ApplicationController < ActionController::Base
   end
 
   def already_signed_in?
-    request.xhr? && current_user ? (render :json => {:redirect => stored_url_for(nil)}) : false
+    request.xhr? && current_user ? (render :json => { :redirect => stored_url_for(nil) }) : false
   end
 
   # Some generic information on wizard for use accross controllers
@@ -271,8 +266,8 @@ class ApplicationController < ActionController::Base
     return name if WizardInfo === name
 
     case name.to_s
-      when 'space'
-        WizardInfo.new(name.to_s, new_space_wizard_url)
+    when 'space'
+      WizardInfo.new(name.to_s, new_space_wizard_url)
     end
   end
 
@@ -297,7 +292,7 @@ class ApplicationController < ActionController::Base
       raise "No redirect url provided. Need to call redirect_to first."
     end
 
-    redirect_json = {redirect: response.location}
+    redirect_json = { redirect: response.location }
     # Clear out existing response
     self.response_body = nil
     render(

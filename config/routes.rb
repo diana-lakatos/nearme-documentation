@@ -2,6 +2,8 @@
 require Rails.root.join('app', 'controllers', 'registrations_controller.rb') if Rails.env.test?
 
 DesksnearMe::Application.routes.draw do
+  # lib/routing_filters/filters/language.rb
+  filter :language, exclude: %r(^/.*admin|^/near-me.com|^/api|^/v\d+)
 
   scope module: 'buy_sell_market' do
     resources :products, only: [:show] do
@@ -214,7 +216,7 @@ DesksnearMe::Application.routes.draw do
       resource :design, :only => [:show, :update], :controller => 'design'
 
       concern :versionable do
-        member do 
+        member do
           get :versions
           get 'show_version/:version_id', action: :show_version
           get 'rollback_version/:version_id', action: :rollback
@@ -781,5 +783,4 @@ DesksnearMe::Application.routes.draw do
   if defined? MailView
     mount PlatformMailerPreview => 'mail_view/platform'
   end
-
 end
