@@ -1,7 +1,6 @@
-- hidden ||= false
 .document-requirement
   .remove-document-requirement.hidden
-    = f.check_box :hidden, class: "hidden document-hidden", checked: hidden
+    = f.check_box :hidden, class: "hidden document-hidden"
     - if f.object.new_record?
       = f.label :hidden, "Remove document requirement"
     - else

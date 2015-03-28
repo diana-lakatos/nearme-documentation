@@ -7,7 +7,7 @@
     .fields{class: "#{'hidden' if f.object.upload_obligation.not_required?}"}
       .note= t('dashboard.document_requirements.enter_your_documents')
       = f.simple_fields_for :document_requirements do |document_requirement|
-        = render "forms/document_requirement_form", f: document_requirement, hidden: f.object.upload_obligation.not_required?
+        = render "forms/document_requirement_form", f: document_requirement
       %a.add-new
         = image_tag("themes/buy_sell/icon-cross.png")
         = t('dashboard.document_requirements.add_new_document_requirement')
