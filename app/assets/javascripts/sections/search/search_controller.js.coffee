@@ -18,6 +18,9 @@ class Search.SearchController extends Search.Controller
     @date_range_btn = $('div[data-date-range-filter] div[data-date-range-filter-update]')
     @filters = $('a[data-search-filter]')
     @filters_container = $('div[data-search-filters-container]')
+    @movableGoogleMap = $('#search-result-movable-google-map')
+    if @movableGoogleMap.length > 0
+      new Search.SearchResultsGoogleMapController(@resultsContainer(), @movableGoogleMap);
     @processingResults = true
     @initializeMap()
     @bindEvents()
@@ -240,6 +243,7 @@ class Search.SearchController extends Search.Controller
       @initializeEndlessScrolling()
     @geocodeSearchQuery =>
       @triggerSearchAndHandleResults =>
+        new Search.SearchResultsGoogleMapController(@resultsContainer(), @movableGoogleMap) if @movableGoogleMap?
         @updateMapWithListingResults() if @map?
 
 
