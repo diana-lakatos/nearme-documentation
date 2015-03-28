@@ -3,7 +3,11 @@
 class Search.SearchResultsGoogleMapController
 
   constructor: (@container, @googleMapWrapper) ->
+      @googleMapWrapper = @googleMapWrapper.clone()
       @map = @initializeGoogleMap()
+      @setBindings()
+
+  setBindings: ->
       @container.on 'mouseenter', '.photo-container', (event) =>
         element = $(event.target).closest('.listing')
         elementsGoogleMapWrapper = element.find('.listing-google-map')
@@ -13,6 +17,7 @@ class Search.SearchResultsGoogleMapController
         element.find('.listing-google-map-wrapper').show()
         google.maps.event.trigger(@map, "resize")
         @map.setCenter(@map.marker.getPosition())
+
       @container.on 'mouseleave', '.photo-container', (event) =>
         element = $(event.target).closest('.listing')
         elementsGoogleMapWrapper = element.find('.listing-google-map')
