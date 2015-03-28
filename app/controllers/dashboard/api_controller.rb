@@ -1,7 +1,7 @@
 class Dashboard::ApiController < Dashboard::BaseController
 
   def taxons
-    taxons = Spree::Taxon.select(:id, :name, :lft, :rgt)
+    taxons = Spree::Taxon.select(:id, :name, :lft, :rgt).order(:permalink)
     process_collection(taxons, :pretty_name)
   end
 
