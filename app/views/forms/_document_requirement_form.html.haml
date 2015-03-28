@@ -1,11 +1,12 @@
+- hidden ||= false
 .document-requirement
   .remove-document-requirement.hidden
-    = f.check_box :hidden, class: "hidden document-hidden"
+    = f.check_box :hidden, class: "hidden document-hidden", checked: hidden
     - if f.object.new_record?
       = f.label :hidden, "Remove document requirement"
     - else
       = f.check_box :removed, class: "hidden remove-document red"
       = f.label :removed, "Remove document requirement"
   .row
-    = f.input :label, wrapper: :bs3_simple, wrapper_html: { class: 'col-md-5' } 
+    = f.input :label, wrapper: :bs3_simple, wrapper_html: { class: 'col-md-5' }
     = f.input :description, wrapper: :bs3_simple, wrapper_html: { class: 'col-md-7' }
