@@ -29,8 +29,7 @@
                 .pull-right{style: 'margin-left: 10px'}
                   = link_to 'Duplicate default', new_instance_admin_theme_liquid_view_path(path: liquid_view.path)
                 .pull-right{style: 'margin-left: 10px'}
-                  - if liquid_view.versions.many?
-                    = link_to 'Versions', versions_instance_admin_theme_liquid_view_path(liquid_view.id), title: 'Show previous versions'
+                  = link_to 'Versions', versions_instance_admin_theme_liquid_view_path(liquid_view.id), title: 'Show previous versions'
 %h4 Customize defaults
 
 .content-container
