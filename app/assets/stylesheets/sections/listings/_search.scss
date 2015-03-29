@@ -4,6 +4,10 @@ $map-z-index: $nav-z-index - 20;
 section.search#content {
   margin-top: -30px;
 
+  @media (max-width: $ipad-width) {
+    margin-top: -55px;
+  }
+
   .loading {
     position: fixed;
     top: 50%;
@@ -192,6 +196,10 @@ section.search#content {
 
   }
 
+  input[type='submit'] {
+    display: none;
+  }
+
   .input-wrapper {
     width: 100%;
 
@@ -218,7 +226,6 @@ section.search#content {
     width: 100%;
     font-size: 22px;
     box-sizing: border-box;
-    // height: 49px;
 
     .select2-arrow {
       display: none;
@@ -253,7 +260,7 @@ section.search#content {
 
   @media (max-width: 767px) {
     .row-fluid [class*="span"] {
-      margin-bottom: 10px;
+      margin-bottom: 5px;
     }
 
     .customSelect {
@@ -369,12 +376,11 @@ header#listing_search {
   background: $gray230;
   @include border-radius($border-radius-default);
 
-  @media (max-width: $iphone-portrait){
-    top: 40px;
-  }
-
-  @media (max-width: $iphone-landscape) {
+  @media (max-width: $ipad-width) {
+    position: static !important;
     padding-top: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
   .header-inner {
@@ -389,19 +395,18 @@ header#listing_search {
     background: transparent;
     @include border-radius($border-radius-default);
 
-    @media (max-width: $iphone-landscape) {
+    @media (max-width: $ipad-width) {
       top: 5px;
       height: 28px;
-      width: 54px;
       @include border-radius($border-radius-default);
     }
 
     a.map,
     a.list {
-      position: absolute;
+      float: left;
       z-index: 100;
       display: block;
-      width: 96px;
+      width: 50%;
       height: 45px;
       @include border-radius($border-radius-default);
       background: rgba($dnm_blue, 0.5);
@@ -410,9 +415,8 @@ header#listing_search {
       text-align: center;
       line-height: 45px;
 
-      @media (max-width: $iphone-landscape) {
+      @media (max-width: $ipad-width) {
         height: 28px;
-        width: 66px;
         left: 64px;
         font-size: 16px;
         line-height: 28px;
@@ -434,7 +438,6 @@ header#listing_search {
     }
 
     a.map {
-      left: 100px;
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
 
@@ -442,16 +445,9 @@ header#listing_search {
         position: relative;
         left: -5px;
       }
-
-      @media (max-width: $iphone-landscape) {
-        left: 54px;
-        width: 50px;
-      }
     }
 
     a.list {
-      left: 0px;
-      width: 96px;
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
 
@@ -460,29 +456,17 @@ header#listing_search {
         left: -8px;
       }
 
-      @media (max-width: $iphone-landscape) {
-        width: 50px;
-      }
     }
   }
 
   .geolocation-input, .keyword-input {
     position: relative;
-    float: left;
 
     .geolocation {
       position: absolute;
       top: 14px;
       left: 13px;
       z-index: 1;
-
-      @media (max-width: $ipad-width) {
-        top: 13px;
-      }
-
-      @media (max-width: $iphone-landscape) {
-        top: 3px;
-      }
     }
   }
 
@@ -496,7 +480,7 @@ header#listing_search {
     width: 35px;
     z-index: 1;
 
-    @media (max-width: $iphone-landscape) {
+    @media (max-width: $ipad-width) {
       font-size: 18px;
       top: -2px;
       left: 7px;
@@ -522,24 +506,6 @@ header#listing_search {
       max-width: 100%;
     }
 
-    .search-container {
-      padding-left: 0px;
-      padding-right: 0;
-
-      input {
-        padding-left: 40px !important;
-        padding-right: 40px !important;
-        margin-top: 5px;
-
-        @media (max-width: $iphone-landscape) {
-          margin-top: 5px !important;
-        }
-
-        @media (max-width: $iphone-portrait) {
-          padding-left: 11px;
-        }
-      }
-    }
   }
 
 
@@ -573,7 +539,7 @@ header#listing_search {
     @include transition(margin .1s linear, padding .1s linear);
 
     input {
-      margin-top: 5px;
+      margin-top: 6px;
       margin-bottom: 0px;
 
       @media (max-width: $ipad-width) {
@@ -582,42 +548,27 @@ header#listing_search {
 
     }
 
-    .search-container {
-      @include box-sizing(border-box);
-      margin-left: 1.5% !important;
-      margin-top: 1px;
+    input[type="text"].query {
+      position: relative;
+      display: block;
+      float: left;
+      padding: 8px 5px 8px 45px;
+      border: 2px solid $gray230;
+      background: $theme_white;
 
-      @media (max-width: $search-bar-breakpoint-desktop) {
-        padding-right: 15px;
+      &:focus {
+        border: 2px solid $gray210;
       }
 
-      @media (max-width: $iphone-landscape) {
-        padding-right: 15px;
-      }
-
-      input[type="text"]#search {
-        position: relative;
-        display: block;
-        float: left;
-        margin-top: 5px 0 0;
-        padding: 8px 5px 8px 45px;
-        border: 2px solid $gray230;
-        background: $theme_white;
-
-        &:focus {
-          border: 2px solid $gray210;
-        }
-
-        @media (max-width: $iphone-landscape) {
-          height: 28px;
-          @include border-radius($border-radius-default);
-          border: none;
-          font-size: 16px;
-          line-height: 24px !important;
-          margin-top: 0px;
-          margin-bottom: 3px;
-          padding: 0 0 0 29px;
-        }
+      @media (max-width: $ipad-width) {
+        height: 28px;
+        @include border-radius($border-radius-default);
+        border: none;
+        font-size: 16px;
+        line-height: 24px !important;
+        margin-top: 0px;
+        margin-bottom: 3px;
+        padding: 0 0 0 29px;
       }
     }
 
@@ -626,13 +577,14 @@ header#listing_search {
       .geolocation,
       .search-icon {
         @include transition(all .1s ease-in);
-        // position: absolute;
         line-height: 35px;
         font-size: 20px;
         cursor: pointer;
 
-        @media (max-width: $iphone-landscape) {
+        @media (max-width: $ipad-width) {
           font-size: 18px;
+          top: -2px;
+          left: 7px
         }
       }
 
@@ -643,15 +595,6 @@ header#listing_search {
         &:hover {
           color: $icon-hover;
         }
-
-        @media (max-width: $ipad-width) {
-          top: 9px;
-        }
-
-        @media (max-width: $iphone-landscape) {
-          top: 2px;
-          left: 7px;
-        }
       }
 
       .search-icon {
@@ -659,52 +602,29 @@ header#listing_search {
         margin-top: 7px;
         display: block;
         float: left;
-        padding: 7px 11px 0 0;
+        padding: 7px 0px 0 0;
         width: 45px;
         height: 45px;
         color: $theme_white;
-        text-align: right;
+        text-align: center;
         @include border-radius($border-radius-default);
+
+        span.text {
+          display: none;
+        }
 
         @media (max-width: $search-bar-breakpoint-desktop) {
           right: 0px;
         }
 
-        @media (max-width: $iphone-landscape) {
-          margin-top: 5px;
+        @media (max-width: $ipad-width) {
+          margin-top: 0;
           padding: 0 6px 0 0;
           line-height: 32px;
-          width: 28px;
+          width: 100%;
           height: 28px;
-          position: absolute;
-          top: 1px;
-        }
-
-        @media (max-width: $iphone-portrait) {
-          position: absolute;
-          top: 0px;
-        }
-      }
-    }
-
-    @media (max-width: $ipad-width) {
-
-      &.query-active {
-        @include transition(padding .5s linear, margin .5s linear);
-
-        .list-map-toggle {
-          margin-left: -250px;
-        }
-
-        .search-container {
-          padding-left: 0;
-        }
-
-        .geolocation {
-          left: 8px;
-
-          @media (max-width: $iphone-landscape) {
-            left: 5px;
+          span.text {
+            display: inline;
           }
         }
       }
@@ -712,19 +632,17 @@ header#listing_search {
   }
 
   .search-filters {
-    position: absolute;
-    top: 7px;
-    width: 399px;
-    right: 0px;
+    margin-top: 8px;
     font-size: 0.9em;
 
     .search-filter {
       position: relative;
       float: left;
-      margin-right: 4px;
       padding: 8px 8px;
       border: 1px solid $theme_white;
       border-radius: $default-border-radius;
+      box-sizing: border-box;
+      width: 50%;
 
       &:last-child {
         margin-right: 0px;
@@ -738,7 +656,7 @@ header#listing_search {
         display: none;
         position: absolute;
         z-index: $map-z-index+1;
-        right: 0px;
+        left: -1px;
         top: 30px;
         overflow-y: auto;
         padding: 7px 0px;
@@ -760,7 +678,7 @@ header#listing_search {
           padding-left: 0px 0px 0px 39px;
         }
 
-        @media (max-width: $iphone-portrait) {
+        @media (max-width: $ipad-width) {
           top: 25px;
         }
       }
@@ -773,40 +691,17 @@ header#listing_search {
         background: $theme_white;
       }
 
-      @media (max-width: $iphone-portrait) {
-        @include box-sizing(border-box);
-        clear: both;
-        margin-right: 0px;
-        width: 100%;
+      @media (max-width: $ipad-width) {
+        padding: 0 8px;
+        height: 28px;
       }
     }
 
     h3 span {
-
       font-size: 0.8em;
       padding-right: 8px;
     }
 
-    @media (max-width: $search-bar-breakpoint-desktop) {
-      position: relative;
-      top: 0px;
-      right: 0px;
-      margin-top: 5px;
-    }
-
-    @media (max-width: $iphone-portrait) {
-      @include box-sizing(border-box);
-      width: 100%;
-    }
-
-    &.two-filters {
-
-      .search-filter {
-        @media (min-width: $search-bar-breakpoint-desktop) {
-          padding-right: 65px;
-        }
-      }
-    }
   }
 
   @media (max-width: $iphone-landscape) {
@@ -965,12 +860,8 @@ section.search section#results.list {
     margin-top: 125px;
   }
 
-  @media (max-width: $iphone-landscape) {
-    margin-top: 100px;
-  }
-
-  @media (max-width: $iphone-portrait) {
-    margin-top: 180px;
+  @media (max-width: $ipad-width) {
+    margin-top: 0;
   }
 
 }
@@ -980,10 +871,14 @@ section.search section#results.list {
 /*** List Table View ***/
 
 section#results.products_table, nav.taxons_tree {
-  margin-top: 50px;
+  margin-top: 100px;
 }
 
 .products_table {
+
+  .search-icon {
+    margin-left: 0;
+  }
 
   table {
     min-width: 958px;
@@ -1032,13 +927,13 @@ section#results.products_table, nav.taxons_tree {
 }
 
 header#listing_search.products_table {
-  background: #F0F0F0;
+  background: none;
   padding: 0 !important;
 
   form .search-container {
     padding-left: 0px;
 
-    input[type="text"]#search {
+    input[type="text"].query {
       padding-left: 8px;
     }
   }
@@ -1623,11 +1518,7 @@ section.search section#results.mixed {
   }
 
   @media (max-width: $ipad-width) {
-    padding-top: 60px;
-  }
-
-  @media (max-width: $iphone-landscape) {
-    padding-top: 50px;
+    padding-top: 10px;
   }
 }
 

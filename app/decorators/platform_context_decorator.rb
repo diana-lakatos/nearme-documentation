@@ -127,6 +127,9 @@ class PlatformContextDecorator
     platform_context.instance.taxonomy_tree
   end
 
+  def search_input_name
+    fulltext_search? ? "query" : "loc"
+  end
 
   private
 

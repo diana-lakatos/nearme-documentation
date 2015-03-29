@@ -14,9 +14,9 @@
         {% endif %}
           <div class="row-fluid">
               <div class="{{ platform_context.calculate_input_size }}">
-                <input class="query" id="search" name="loc" placeholder="{{ platform_context.search_field_placeholder }}" type="text"></input>
-                {% if platform_context.bookable? == true and platform_context.buyable? == true %}
-                    <input class="query" id="search_prod" name="query" placeholder="{{ platform_context.search_field_placeholder }}" type="text" style="display: none;"></input>
+                  <input class="query" id="search" name="{{ platform_context.search_input_name }}" placeholder="{{ platform_context.search_field_placeholder }}" type="text" {% if platform_context.fulltext_search? %} data-disable-autocomplete {% endif %}/>
+                {% if platform_context.searcher_type == "geo" and platform_context.bookable? == true and platform_context.buyable? == true %}
+                    <input class="query" id="search_prod" name="query" placeholder="{{ platform_context.search_field_placeholder }}" type="text" style="display: none;" />
                 {% endif %}
                  {% if platform_context.multiple_transactable_types? == true %}
                     {% if platform_context.tt_select_type == 'radio' %}
@@ -62,11 +62,11 @@
               </a>
               <div id="suggest_location" style="display: none"></div>
            </div>
-          </div>
+        </div>
       </div>
 
-      <input name="buyable" id="is_buyable" value="{{platform_context.buyable?}}" type="hidden"></input>
-
+      <input name="buyable" id="is_buyable" value="" type="hidden"></input>
+      <input type="submit"/>
     </form>
     {% if platform_context.bookable? %}
       <input id="lat" name="lat" type="hidden" value>

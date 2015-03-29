@@ -5,21 +5,21 @@ class Search.Controller
     @initializeFields()
     @initializeGeolocateButton()
     @initializeSearchButton()
-    @initializeAutocomplete()
+    if @autocompleteEnabled()
+      @initializeAutocomplete()
     @initializeGeocoder()
 
   initializeAutocomplete: ->
-    if @queryField.data('disable-autocomplete') == undefined
-      @autocomplete = new google.maps.places.Autocomplete(@queryField[0], {})
-      @submit_form = false
-      google.maps.event.addListener @autocomplete, 'place_changed', =>
-        place = Search.Geocoder.wrapResult @autocomplete.getPlace()
-        place = null unless place.isValid()
+    @autocomplete = new google.maps.places.Autocomplete(@queryField[0], {})
+    @submit_form = false
+    google.maps.event.addListener @autocomplete, 'place_changed', =>
+      place = Search.Geocoder.wrapResult @autocomplete.getPlace()
+      place = null unless place.isValid()
 
-        @setGeolocatedQuery(@queryField.val(), place)
-        @fieldChanged('query', @queryField.val())
-        if @submit_form
-          @form.submit()
+      @setGeolocatedQuery(@queryField.val(), place)
+      @fieldChanged('query', @queryField.val())
+      if @submit_form
+        @form.submit()
 
   initializeGeocoder: ->
     @geocoder = new Search.Geocoder()
@@ -34,20 +34,7 @@ class Search.Controller
 
   initializeQueryField: ->
     @queryField = @form.find('input#search')
-    @prodQueryField = @form.find('input#search_prod')
-    @transactableTypeRadio = @form.find("input[name='transactable_type_id']")
-    transactableTypeSelect = @form.find("select[name='transactable_type_id']")
-    @isBuyableField = @form.find("input#is_buyable")
-    @crosshairs = @form.find("div.geolocation")
-
-    if @prodQueryField?
-      @toggleGeocoding(transactableTypeSelect)
-      if @transactableTypeRadio.length > 0
-        @transactableTypeRadio.bind "change", (event) =>
-          @toggleGeocoding($(event.target))
-      else
-        transactableTypeSelect.bind "change", (event) =>
-          @toggleGeocoding($(event.target))
+    @keywordField = @form.find('input[name="query"]')
 
     query_value = DNM.util.Url.getParameterByName('loc')
     if @queryField.val() == '' && !query_value
@@ -79,23 +66,6 @@ class Search.Controller
     if @searchButton.length > 0
       @searchButton.bind 'click', =>
         @form.submit()
-
-  toggleGeocoding: (field)->
-    if @transactableTypeRadio.length > 0
-      field ||= @form.find("input[name='transactable_type_id']:checked")
-    else
-      field = field.find("option:selected")
-
-    is_buyable = field.data('buyable')
-    @isBuyableField.val(is_buyable)
-    if is_buyable
-      @queryField.hide()
-      @crosshairs.hide()
-      @prodQueryField.show()
-    else
-      @queryField.show()
-      @crosshairs.show()
-      @prodQueryField.hide()
 
   geolocateMe: ->
     @determineUserLocation()
@@ -154,6 +124,7 @@ class Search.Controller
       params['street']  = result.street()
       params['postcode']  = result.postcode()
     params['loc'] = @buildSeoFriendlyQuery(result)
+    params['query'] = @keywordField.val()
 
     params
 
@@ -216,3 +187,7 @@ class Search.Controller
       else
         params.push(param)
     params
+
+  autocompleteEnabled: ->
+    @queryField.data('disable-autocomplete') == undefined
+
