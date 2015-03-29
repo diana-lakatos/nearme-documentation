@@ -42,9 +42,9 @@ module Utils
           meta_description: @instance.theme.description,
           meta_keywords: @instance.theme.tagline,
           seo_title: @instance.theme.meta_title,
-          mail_from_address: @instance.support_email || "support@#{@instance.domains.first.name}",
+          mail_from_address: @instance.support_email.present? ? @instance.support_email : "support@#{@instance.domains.first.name}",
           default_currency: 'USD',
-          code: @instance.theme.site_name || @instance.name
+          code: "#{@instance.id}-#{@instance.theme.site_name || @instance.name}"
       )
     end
 

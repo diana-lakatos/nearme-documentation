@@ -3,7 +3,8 @@ require 'test_helper'
 class SpreeDefaultsLoaderTest < ActiveSupport::TestCase
 
   setup do
-    @loader = Utils::SpreeDefaultsLoader.new(Instance.first)
+    @instance = Instance.first
+    @loader = Utils::SpreeDefaultsLoader.new(@instance)
   end
 
   context '#load!' do
@@ -12,19 +13,16 @@ class SpreeDefaultsLoaderTest < ActiveSupport::TestCase
     end
 
     should 'find Spree::Store record' do
-      store = Spree::Store.find_by(name: 'Desks Near Me')
-      instance = Instance.first
+      store = Spree::Store.find_by(name: @instance.theme.site_name)
+
       assert_not_nil store
-      assert_equal store.name, instance.theme.site_name
-      assert_equal store.url, instance.domains.first.name
-      assert_equal store.meta_keywords, instance.theme.tagline
-      assert_equal store.seo_title, instance.theme.meta_title
+      assert_equal store.url, @instance.domains.first.name
+      assert_equal store.meta_keywords, @instance.theme.tagline
+      assert_equal store.seo_title, @instance.theme.meta_title
     end
 
     should 'set preferences' do
-      assert_equal Spree::Config.display_currency, false
-      assert_equal Spree::Config.allow_ssl_in_staging, false
-      assert_equal Spree::Config.currency, 'USD'
+      check_default_preferences
     end
 
     should 'load countries' do
@@ -49,5 +47,51 @@ class SpreeDefaultsLoaderTest < ActiveSupport::TestCase
       assert_equal Spree::ShippingCategory.count, 1
       assert_equal Spree::ShippingCategory.first.shipping_methods.count, 1
     end
+  end
+
+  context 'load multiple instances' do
+    setup do
+      @test_instance = create(:instance, name: 'Test instance')
+      @domain = FactoryGirl.create(:domain, :target => @test_instance)
+
+      PlatformContext.current = PlatformContext.new(@test_instance)
+      Utils::SpreeDefaultsLoader.new(@test_instance).load!
+    end
+
+    should 'find Spree::Store record' do
+      store = Spree::Store.find_by(name: @test_instance.theme.site_name)
+
+      assert_not_nil store
+      assert_equal store.url, @test_instance.domains.first.name
+      assert_equal store.meta_keywords, @test_instance.theme.tagline
+      assert_equal store.seo_title, @test_instance.theme.meta_title
+    end
+
+    should 'set preferences' do
+      check_default_preferences
+    end
+
+    should 'mantain preferences for other instances after preference change' do
+      PlatformContext.current = PlatformContext.new(@test_instance)
+
+      Spree::Config.display_currency =  true
+      Spree::Config.allow_ssl_in_staging = true
+      Spree::Config.currency = 'PLN'
+
+      PlatformContext.current = PlatformContext.new(@instance)
+      check_default_preferences
+
+      PlatformContext.current = PlatformContext.new(@test_instance)
+      assert_equal Spree::Config.display_currency, true
+      assert_equal Spree::Config.allow_ssl_in_staging, true
+      assert_equal Spree::Config.currency, 'PLN'
+    end
+
+  end
+
+  def check_default_preferences
+    assert_equal Spree::Config.display_currency, false
+    assert_equal Spree::Config.allow_ssl_in_staging, false
+    assert_equal Spree::Config.currency, 'USD'
   end
 end
