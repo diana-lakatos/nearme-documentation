@@ -34,7 +34,8 @@
           %br/
           %br/
           %h1.tk-adelle.fat= t 'buy_sell_market.products.search_results.no_results'
-          %p= t '.address_could_not_be_found'
+          %p
+            = searchable_item_could_not_be_found_text
     - else
       %section#results.no_results{class: platform_context.display_taxonomy_tree? ? "span10" : "span12"}    
         = render 'shared/loading_spinner'

@@ -8,6 +8,22 @@ module DashboardHelper
     ['new', 'create', 'edit', 'update'].include?(params[:action])
   end
 
+  def analytics_options_for_select
+    if PlatformContext.current.instance.buyable?
+      options_for_select([[t('dashboard.analytics.revenue'), 'revenue'], [t('dashboard.analytics.bookings'), 'bookings'], [t('dashboard.analytics.product_views'), 'location_views']], @analytics_mode)
+    else
+      options_for_select([[t('dashboard.analytics.revenue'), 'revenue'], [t('dashboard.analytics.bookings'), 'bookings'], [t('dashboard.analytics.location_views'), 'location_views']], @analytics_mode)
+    end
+  end
+
+  def no_purchases_yet_text
+    if PlatformContext.current.instance.buyable?
+      t('dashboard.analytics.no_purchases_yet')
+    else
+      t('dashboard.analytics.no_reservations_yet')
+    end
+  end
+
   def dashboard_company_nav_class(company)
     classes = []
 
