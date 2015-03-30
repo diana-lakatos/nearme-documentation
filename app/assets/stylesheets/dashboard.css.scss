@@ -30,9 +30,13 @@ $color-light-gray: #dadada;
 $color-ultra-light-gray: #f2f2f2;
 $color-headings: #3a3a3a;
 $color-placeholder: #ccc;
+$dark_text_color: #3B3B3B;
 
 @import "dashboard/*";
 @import "dashboard/pagination";
 
 @import "fonts";
 @import "layout/footer";
+
+@import "instance_admin/jstree";
+

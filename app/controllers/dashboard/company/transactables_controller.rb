@@ -28,6 +28,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
       event_tracker.updated_profile_information(current_user)
       redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
     else
+      flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(@transactable.errors.full_messages)
       @photos = @transactable.photos
       render :new
     end
@@ -53,6 +54,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
           flash[:success] = t('flash_messages.manage.listings.listing_updated')
           redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
         else
+          flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(@transactable.errors.full_messages)
           @photos = @transactable.photos
           render :edit
         end

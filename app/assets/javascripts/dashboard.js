@@ -55,6 +55,7 @@
 //= require ./sections/setup_nested_form
 //= require ./sections/registrations/edit
 //= require ./sections/support
+//= require ./sections/categories
 //= require ./sections/support/attachment_form
 //= require ./sections/support/ticket_message_controller
 //= require_tree ./sections/buy_sell

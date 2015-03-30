@@ -193,6 +193,16 @@ class SecuredParams
     ]
   end
 
+  def category
+    [
+      :name,
+      :in_top_nav,
+      :top_nav_position,
+      :parent_id,
+      :child_index
+    ]
+  end
+
   def search_notification
     [
       :email,
@@ -534,6 +544,7 @@ class SecuredParams
       :max_weekly_price,
       :min_monthly_price,
       :max_monthly_price,
+      :multiple_root_categries,
       :bookable_noun, :lessor, :lessee, :action_schedule_booking,
       :availability_templates_attributes => nested(self.availability_template),
       :action_type_ids => [],
@@ -834,6 +845,7 @@ class SecuredParams
         availability_rules_attributes: nested(self.availability_rule),
         photo_ids: [],
         amenity_ids: [],
+        category_ids: [],
         waiver_agreement_template_ids: [],
         schedule_attributes: self.schedule,
         document_requirements_attributes: nested(self.document_requirement),
