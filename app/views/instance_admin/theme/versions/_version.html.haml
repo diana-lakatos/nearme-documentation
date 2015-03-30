@@ -4,7 +4,7 @@
   %td= l(version.created_at, format: :long)
   %td
     .pull-right
-      -if version.reify
+      -if (version.reify rescue false)
         = link_to url_for(action: :show_version, version_id: version.id), title: "Show version" do
           .fa.fa-eye.fa-2x.inline-form-icon
         = link_to url_for(action: :rollback, version_id: version.id), {title: "Rollback to this version", data: { confirm: 'Are you sure you want to rollback page to this version?'}} do
