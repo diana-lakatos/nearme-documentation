@@ -10,7 +10,7 @@ class Spree::Product::SearchFetcher
     @products = filtered_products.order(order)
     if !@filters[:taxon].blank? || !@filters[:query].blank?
       @products = @products.in_taxon(taxon) if taxon.present?
-      @products = @products.like_any([:name, :description], @filters[:query].split) unless @filters[:query].blank?
+      @products = @products.search_by_query([:name, :description, :extra_properties], @filters[:query]) unless @filters[:query].blank?
     end
     @products
   end
