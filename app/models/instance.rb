@@ -270,7 +270,7 @@ class Instance < ActiveRecord::Base
 
   def taxonomy_tree
     super == '1'
-  end  
+  end
 
   def date_pickers
     super == '1'
@@ -285,6 +285,6 @@ class Instance < ActiveRecord::Base
   end
 
   def primary_locale
-    @primary_locale ||= locales.primary.try(:code) || 'en'
+    locales.default_locale || :en
   end
 end
