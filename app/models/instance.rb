@@ -20,7 +20,7 @@ class Instance < ActiveRecord::Base
   API_KEYS = %w(paypal_username paypal_password paypal_signature paypal_app_id paypal_client_id paypal_client_secret stripe_api_key stripe_public_key balanced_api_key)
   SEARCH_TYPES = %w(geo fulltext fulltext_geo)
   SEARCH_SERVICE_VIEWS = %w(mixed list listing_mixed)
-  SEARCH_PRODUCTS_VIEWS = %w(products products_table)
+  SEARCH_PRODUCTS_VIEWS = %w(products products_table products_list)
   PRICING_OPTIONS = %w(free hourly daily weekly monthly fixed)
 
   API_KEYS.each do |meth|

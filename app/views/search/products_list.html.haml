@@ -1,0 +1,33 @@
+- title @searcher.query
+- meta_description @searcher.query
+.search-view
+  .crumbs= render_crumbs
+  .page-wrapper.row-fluid
+    - if platform_context.display_taxonomy_tree?
+      %nav.span2.taxons_tree_products_list
+        - @taxons.each do |taxon|
+          .nav-categories.collapse.in
+            %ul
+              %li.nav-heading
+                = taxon.name
+              = taxons_tree(taxon, @taxon, 1)
+
+    =render 'search/products_list/header'
+    - if @searcher.results.any?
+      %section#results{ class: "products_list #{platform_context.display_taxonomy_tree? ? 'span10 with_taxons' : 'span12 no_taxons'}" }
+        = render partial: 'search/products_list/product', collection: @searcher.results
+        = will_paginate @searcher.results
+        = render 'shared/loading_spinner'
+    - else
+      %section#results{ class: "no_products_list no_results #{platform_context.display_taxonomy_tree? ? 'span10 with_taxons' : 'span12 no_taxons'}" }
+        = render 'shared/loading_spinner'
+        .text-center
+          %br/
+          %br/
+          %h1.tk-adelle.fat
+            = t('buy_sell_market.products.search_results.no_results')
+          %p
+            = t('buy_sell_market.products.search_results.product_could_not_be_found')
+
+- content_for :domready do
+  new Search.ProductsListSearchController($('#listing_search form'), $("#content"));
