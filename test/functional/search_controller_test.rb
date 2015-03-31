@@ -379,28 +379,56 @@ class SearchControllerTest < ActionController::TestCase
 
       context 'for existing products' do
         context 'with taxon filter' do
-          should 'filter only filtered products' do
+          setup do
             parent = FactoryGirl.create(:taxon, name: 'Categories')
-            taxon = FactoryGirl.create(:taxon, name: 'taxon_1', parent: parent)
-            another_taxon = FactoryGirl.create(:taxon, parent: parent)
-            filtered_product = FactoryGirl.create(:product, taxons: [taxon])
-            another_product = FactoryGirl.create(:product, taxons: [another_taxon])
+            @taxon = FactoryGirl.create(:taxon, name: 'taxon_1', parent: parent)
+            @another_taxon = FactoryGirl.create(:taxon, parent: parent)
+            @filtered_product = FactoryGirl.create(:product, taxons: [@taxon])
+            @another_product = FactoryGirl.create(:product, taxons: [@another_taxon])
+          end
 
-            get :index, { taxon: taxon.permalink, v: 'products', buyable: 'true' }
+          should 'filter only filtered products' do
+            get :index, { taxon: @taxon.permalink, v: 'products', buyable: 'true' }
 
-            assert_product_in_result(filtered_product)
-            refute_product_in_result(another_product)
+            assert_product_in_result(@filtered_product)
+            refute_product_in_result(@another_product)
+          end
+
+          should 'query only filtered products' do
+            another_product2 = FactoryGirl.create(:product, name: 'product three', taxons: [@another_taxon])
+
+            get :index, { taxon: @taxon.permalink, v: 'products', buyable: 'true', query: 'product' }
+
+            assert_product_in_result(@filtered_product)
+            refute_products_in_result([@another_product, another_product2])
           end
         end
 
         context 'without filter' do
-          should 'show only valid products' do
-            product1 = FactoryGirl.create(:product, name: 'product_one')
-            product2 = FactoryGirl.create(:product, name: 'product_two')
+          setup do
+            @product1 = FactoryGirl.create(:product, name: 'product_one')
+            @product2 = FactoryGirl.create(:product, name: 'product_two')
+            @product_type = FactoryGirl.create(:product_type, :with_custom_attribute)
+            @product3 = FactoryGirl.create(:product, name: 'product three', product_type: @product_type)
+            @product3.extra_properties['manufacturer'] = "Bosh"
+            @product3.save
+          end
 
+          should 'show only valid products' do
             get :index, query: 'product_one', v: 'products', buyable: 'true'
-            assert_product_in_result(product1)
-            refute_product_in_result(product2)
+            assert_product_in_result(@product1)
+            refute_products_in_result([@product2, @product3])
+          end
+
+          should 'show only valid products like' do
+            get :index, query: 'product one', v: 'products', buyable: 'true'
+            assert_products_in_result([@product1, @product2, @product3])
+          end
+
+          should 'show only valid products from extra_properties' do
+            get :index, query: 'product_one bosh', v: 'products', buyable: 'true'
+            assert_products_in_result([@product1, @product3])
+            refute_product_in_result(@product2)
           end
         end
       end
@@ -497,6 +525,18 @@ class SearchControllerTest < ActionController::TestCase
 
   def refute_location_in_mixed_result(location)
     assert_select 'article[data-id=?]', location.id, count: 0
+  end
+
+  def assert_products_in_result(products)
+    products.each do |product|
+      assert_product_in_result(product)
+    end
+  end
+
+  def refute_products_in_result(products)
+    products.each do |product|
+      refute_product_in_result(product)
+    end
   end
 
   def assert_product_in_result(product)
