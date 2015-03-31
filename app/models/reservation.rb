@@ -62,6 +62,7 @@ class Reservation < ActiveRecord::Base
   validates :owner_id, :presence => true, :unless => lambda { owner.present? }
   validate :validate_all_dates_available, on: :create, :if => lambda { listing }
   validate :validate_booking_selection, on: :create, :if => lambda { listing }
+  validate :validate_book_it_out, on: :create, :if => lambda { listing && !book_it_out_discount.to_i.zero? }
 
   before_create :set_hours_to_expiration, if: lambda { listing }
   before_create :set_costs, :if => lambda { listing }
@@ -254,6 +255,10 @@ class Reservation < ActiveRecord::Base
 
   def last_date
     periods.sort_by(&:date).last.date
+  end
+
+  def max_availability_for_booking_day
+    listing.availability_for(date, first_period.start_minute, first_period.end_minute)
   end
 
   def cancelable?
@@ -558,6 +563,15 @@ class Reservation < ActiveRecord::Base
       else
       errors.add(:base, "Booking selection does not meet requirements. A minimum of #{listing.minimum_booking_days} consecutive bookable days are required.")
       end
+    end
+  end
+
+  def validate_book_it_out
+    if max_availability_for_booking_day != quantity
+      errors.add(:base, I18n.t('reservations_review.errors.book_it_out_quantity'))
+    end
+    unless listing.book_it_out_available? || quantity < listing.book_it_out_minimum_qty
+      errors.add(:base, I18n.t('reservations_review.errors.book_it_out_not_available'))
     end
   end
 

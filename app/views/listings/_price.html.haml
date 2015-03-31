@@ -6,6 +6,10 @@
         =t('simple_form.labels.listings.price')
       .controls
         = render 'listings/price_field', :f => f, :price => 'fixed', :label => t("simple_form.labels.transactable.price.fixed"), :include_checkbox => false
+    - if form_fields.find{ |h| h['transactable'] == 'book_it_out' }
+      %div.price_container
+        =f.input :book_it_out_discount, label: t('simple_form.labels.transactable.book_it_out_discount'), hint: t('simple_form.hints.transactable.book_it_out_discount')
+        =f.input :book_it_out_minimum_qty, label: t('simple_form.labels.transactable.book_it_out_minimum_qty'), hint: t('simple_form.hints.transactable.book_it_out_minimum_qty')
 - if f.object.transactable_type.regular_booking_enabled?
   - content_for :booking_type_regular_tab_content do
     %div{:class => "control-group #{"error" if f.object.errors.include?(:free).present?}"}

@@ -4,7 +4,11 @@ class Reservation::FixedPriceCalculator
   end
 
   def price
-    (listing.fixed_price * (@reservation.quantity)).to_money
+    if @reservation.book_it_out_discount
+      (listing.fixed_price * @reservation.quantity * (1 - @reservation.book_it_out_discount / 100.to_f)).to_money
+    else
+      (listing.fixed_price * (@reservation.quantity)).to_money
+    end
   end
 
   def valid?

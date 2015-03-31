@@ -36,6 +36,7 @@ en:
         transactable:
           attributes:
             free: "must be free if no prices are provided"
+            book_it_out_minimum_qty: "Must be less than or equal to quantity"
         spree/shipping_method:
           attributes:
             base:

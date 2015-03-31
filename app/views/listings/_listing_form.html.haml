@@ -30,7 +30,7 @@
         .controls
           = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule(schedule: f.object.transactable_type.schedule.try(:schedule)) do |schedule_form|
             = schedule_form.hidden_field :schedule, class: 'icui'
-  = render partial: "listings/price", locals: { f: f }
+  = render partial: "listings/price", locals: { f: f, form_fields: form_fields }
   = render partial: 'shared/booking_types_tabs', locals: { f: f }
 
 - if only_inputs.empty? || only_inputs.include?(:availability_rules)

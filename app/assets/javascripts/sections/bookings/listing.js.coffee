@@ -6,6 +6,7 @@ class @Bookings.Listing
   constructor: (@data) ->
     @id = parseInt(@data.id, 10)
     @bookedDatesArray = []
+    @bookedDateAvailability = 0
     if @withCalendars()
       @firstAvailableDate = DNM.util.Date.idToDate(@data.first_available_date)
       @secondAvailableDate = DNM.util.Date.idToDate(@data.second_available_date)
@@ -71,6 +72,15 @@ class @Bookings.Listing
   availabilityFor: (date, minute = null) ->
     @availability.availableFor(date, minute)
 
+  bookItOutAvailable: ->
+    @isFixedBooking() && @data.book_it_out_discount > 0
+
+  bookItOutAvailableForDate: ->
+     @bookItOutAvailable() && @fixedAvailability() >= @data.book_it_out_minimum_qty
+
+  fixedAvailability: ->
+    @bookedDateAvailability
+
   openFor: (date) ->
     @availability.openFor(date)
 
@@ -92,8 +102,14 @@ class @Bookings.Listing
     @bookedDatesArray
 
   # Return the subtotal for booking this listing
-  bookingSubtotal: ->
-    @priceCalculator().getPrice()
+  bookingSubtotal: (book_it_out = false) ->
+    if book_it_out
+      @priceCalculator().getPriceForBookItOut()
+    else
+      @priceCalculator().getPrice()
+
+  bookItOutSubtotal: ->
+    @priceCalculator().getPriceForBookItOut()
 
   priceCalculator: ->
     if @isReservedHourly()
