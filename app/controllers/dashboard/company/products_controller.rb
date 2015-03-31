@@ -59,6 +59,10 @@ class Dashboard::Company::ProductsController < Dashboard::Company::BaseControlle
 
   private
 
+  def ensure_system_shipping_categories_copied
+    ShippingProfileableService.new(@company, current_user).clone!
+  end
+
   def find_product_type
     @product_type = params[:product_type_id].present? ? Spree::ProductType.find(params[:product_type_id]) : Spree::ProductType.first
   end

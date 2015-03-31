@@ -36,6 +36,10 @@ class ProductTypes::ProductWizardController < ApplicationController
 
   private
 
+  def ensure_system_shipping_categories_copied
+    ShippingProfileableService.new(@company, current_user).clone!
+  end
+
   def find_product_type
     @product_type = Spree::ProductType.includes(:custom_attributes).find(params[:product_type_id])
   end

@@ -47,6 +47,8 @@ class ShippingCategoryForm < Form
   end
 
   def submit(params)
+    @shipping_category.is_system_profile = true if @options[:is_system_profile]
+
     store_attributes(params)
     if valid?
       save!
@@ -58,7 +60,6 @@ class ShippingCategoryForm < Form
   end
 
   def save!
-    @shipping_category.is_system_profile = true if @options[:is_system_profile]
     @shipping_category.save!(validate: true)
 
     @shipping_methods.each do |shipping_method|

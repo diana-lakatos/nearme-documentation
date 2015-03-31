@@ -11,3 +11,11 @@
 
 = render partial: 'shared/modal'
 
+- content_for :styles do
+  = stylesheet_link_tag 'instance_admin/shipping_profiles_includes'
+
+- content_for :script do
+  = javascript_include_tag 'select2'
+  = javascript_include_tag 'advanced_closest'
+  = javascript_include_tag 'sections/dashboard/shipping_profiles'
+

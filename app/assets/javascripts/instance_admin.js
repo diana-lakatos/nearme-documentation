@@ -42,9 +42,6 @@
 //= require instance_admin/data_tables/jquery.dataTables.min
 //= require instance_admin/data_tables/dataTables.bootstrap
 //= require instance_admin/sections/translations
-//= require select2
-//= require ./advanced_closest
-//= require sections/dashboard/shipping_profiles
 
 $(function() {
   Fileupload.initialize();
