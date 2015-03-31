@@ -88,7 +88,7 @@ class Domain < ActiveRecord::Base
   end
 
   def editable?
-    (not self.secured? || self.error?)
+    !self.near_me_domain? && !self.error?
   end
 
   def url
