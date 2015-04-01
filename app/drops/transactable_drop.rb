@@ -60,7 +60,7 @@ class TransactableDrop < BaseDrop
   end
 
   def amenities
-    @amenities ||= @location.amenities.pluck(:name)
+    @amenities ||= @listing.amenities.pluck(:name)
   end
 
   def new_user_message_path
