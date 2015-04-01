@@ -13,7 +13,7 @@ class Dashboard::ShippingCategoriesController < Dashboard::BaseController
     @shipping_category = @company.shipping_categories.build
     @shipping_category.user_id = current_user.id
     @shipping_category_form = ShippingCategoryForm.new(@shipping_category, @company)
-    if @shipping_category_form.submit(params[:shipping_category_form])
+    if @shipping_category_form.submit(shipping_category_form_params)
       render :partial => 'shipping_category_form', :locals => { :form_url => dashboard_shipping_categories_path, :form_method => :post, :is_success => true }
     else
       render :partial => 'shipping_category_form', :locals => { :form_url => dashboard_shipping_categories_path, :form_method => :post }
@@ -30,7 +30,7 @@ class Dashboard::ShippingCategoriesController < Dashboard::BaseController
   def update
     @shipping_category = @company.shipping_categories.find(params[:id])
     @shipping_category_form = ShippingCategoryForm.new(@shipping_category, @company)
-    if @shipping_category_form.submit(params[:shipping_category_form])
+    if @shipping_category_form.submit(shipping_category_form_params)
       render :partial => 'shipping_category_form', :locals => { :form_url => dashboard_shipping_categories_path, :form_method => :post, :is_success => true }
     else
       render :partial => 'shipping_category_form', :locals => { :form_url => dashboard_shipping_categories_path, :form_method => :post }

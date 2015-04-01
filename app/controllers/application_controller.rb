@@ -526,4 +526,5 @@ class ApplicationController < ActionController::Base
     @breadcrumbs << { name: taxon.name, path: taxon_custom_path(taxon) }
     add_breadcrumbs(taxon.parent) if taxon.parent
   end
+
 end

@@ -4,6 +4,7 @@ class ProductTypes::ProductWizardController < ApplicationController
   before_filter :find_product_type
   before_filter :redirect_to_dashboard_if_registration_completed, only: [:new]
   before_filter :set_form_components
+  before_filter :ensure_system_shipping_categories_copied, only: [:new]
 
   layout "dashboard"
 
@@ -34,6 +35,10 @@ class ProductTypes::ProductWizardController < ApplicationController
   end
 
   private
+
+  def ensure_system_shipping_categories_copied
+    ShippingProfileableService.new(@company, current_user).clone!
+  end
 
   def find_product_type
     @product_type = Spree::ProductType.includes(:custom_attributes).find(params[:product_type_id])

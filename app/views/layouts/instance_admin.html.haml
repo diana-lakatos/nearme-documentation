@@ -8,6 +8,7 @@
     = csrf_meta_tag
     = render 'layouts/favicon'
     = stylesheet_link_tag 'instance_admin'
+    = yield :styles
     %script{:src => "//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"}
     /[if lt IE 9]
       = javascript_include_tag '//html5shim.googlecode.com/svn/trunk/html5.js'

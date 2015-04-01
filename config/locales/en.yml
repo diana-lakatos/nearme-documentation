@@ -41,6 +41,10 @@ en:
       question_quantity: "Only %{number} questions or less for one rating system"
   general:
     or_spaced: ' or '
+    edit: Edit
+    delete: Delete
+    disable: Disable
+    enable: Enable
   transactable_types:
     locations:
       listings:
@@ -97,6 +101,9 @@ en:
       approval_requests_section_title: 'Approval Requests'
     imap_settings:
       validate_imap_settings: 'Validate IMAP Settings'
+    shipping_profiles:
+      shipping_profiles: 'Shipping Profiles'
+      you_must_create_company: 'You must create a company first.'
     shipping_options:
       dimensions_templates:
         add_new_dimensions_template: '+ Add new dimension template'
