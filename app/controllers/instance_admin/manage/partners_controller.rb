@@ -5,13 +5,20 @@ class InstanceAdmin::Manage::PartnersController < InstanceAdmin::Manage::BaseCon
 
   def create
     @partner = Partner.new(partner_params)
-    create! { instance_admin_manage_partners_path }
+
+    if @partner.save
+      create_theme! && return if params[:add_theme].present?
+      redirect_to instance_admin_manage_partners_path
+    else
+      render action: :new
+    end
   end
 
   def update
     @partner = Partner.find(params[:id])
 
     if @partner.update_attributes(partner_params)
+      create_theme! && return if params[:add_theme].present?
       flash[:success] = t 'flash_messages.instance_admin.manage.partners.partner_updated'
     else
       flash[:error] = @partner.errors.full_messages.to_sentence
@@ -21,6 +28,11 @@ class InstanceAdmin::Manage::PartnersController < InstanceAdmin::Manage::BaseCon
   end
 
   private
+
+  def create_theme!
+    @partner.build_theme_from_instance.save!
+    redirect_to edit_instance_admin_manage_partner_path(@partner)
+  end
 
   def partner_params
     params.require(:partner).permit(secured_params.partner)
