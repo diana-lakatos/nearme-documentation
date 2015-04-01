@@ -52,6 +52,10 @@ class Job
     Spree::Product.clear_custom_attributes_cache
   end
 
+  def after(job)
+    PlatformContext.current = nil
+  end
+
   def after_initialize(*args)
   end
 
