@@ -13,7 +13,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
     @listing_type = "Desk"
     @amenity_type = FactoryGirl.create(:amenity_type)
     @amenity = FactoryGirl.create(:amenity, amenity_type: @amenity_type)
-    @transactable_type = TransactableType.first
+    @transactable_type = ServiceType.first
   end
 
   context '#new' do
@@ -32,7 +32,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
 
   context "#create" do
     setup do
-      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge!({ transactable_type_id: TransactableType.first.id,
+      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge!({ transactable_type_id: ServiceType.first.id,
                                                                                photos_attributes: [FactoryGirl.attributes_for(:photo)],
                                                                                listing_type: @listing_type,
                                                                                description: "Aliquid eos ab quia officiis sequi.",

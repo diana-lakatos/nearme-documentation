@@ -44,10 +44,6 @@ class PlatformContextDrop < BaseDrop
     theme_color('blue')
   end
 
-  def all_transactables
-    transactable_types.services + product_types
-  end
-
   def service_categories
     transactable_types.services.map{ |t| t.categories.searchable.roots }.flatten
   end
@@ -57,7 +53,7 @@ class PlatformContextDrop < BaseDrop
   end
 
   def multiple_transactable_types?
-    all_transactables.size > 1
+    transactable_types.many?
   end
 
   def unsubscribe_url

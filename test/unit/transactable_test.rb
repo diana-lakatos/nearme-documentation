@@ -495,7 +495,7 @@ class TransactableTest < ActiveSupport::TestCase
     end
 
     should "define booking methods" do
-      TransactableType::BOOKING_TYPES.each do |bt|
+      ServiceType::BOOKING_TYPES.each do |bt|
         assert(@transactable.respond_to?("#{bt}_booking?"))
       end
     end

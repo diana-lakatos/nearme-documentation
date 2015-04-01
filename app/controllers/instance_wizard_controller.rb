@@ -48,31 +48,31 @@ class InstanceWizardController < ActionController::Base
     @instance_creator.update_attribute(:created_instance, true)
     @instance.set_context!
 
-    if params[:marketplace_type] == "Buy/Sell"
-      @instance.product_types.create(name: @instance.bookable_noun)
-      @instance.update_attribute :default_search_view, 'products'
-    end
     @instance.instance_profile_types.create!(name: 'User Custom Attributes')
-
-    tp = @instance.transactable_types.create(
-      name: @instance.bookable_noun,
-      action_free_booking: "1",
-      action_hourly_booking: "1",
-      action_daily_booking: "1",
-      action_weekly_booking: "1",
-      action_monthly_booking: "1",
-      availability_options: { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => true } },
-      buyable: params[:marketplace_type] == "Buy/Sell"
-    )
-    create_rating_systems(@instance)
-    CustomAttributes::CustomAttribute::Creator.new(tp, bookable_noun: @instance.bookable_noun).create_listing_attributes!
-    at = tp.availability_templates.build(name: "Working Week", description: "Mon - Fri, 9:00 AM - 5:00 PM")
-    (1..5).each do |i|
-      at.availability_rules.build(day: i, open_hour: 9, open_minute: 0,close_hour: 17, close_minute: 0)
+    if params[:marketplace_type] == "Buy/Sell"
+      tp = @instance.product_types.create(name: @instance.bookable_noun)
+      @instance.update_attribute :default_search_view, 'products'
+    else
+      tp = @instance.service_types.create(
+        name: @instance.bookable_noun,
+        action_free_booking: "1",
+        action_hourly_booking: "1",
+        action_daily_booking: "1",
+        action_weekly_booking: "1",
+        action_monthly_booking: "1",
+        availability_options: { "defer_availability_rules" => true,"confirm_reservations" => { "default_value" => true, "public" => true } }
+      )
+      at = tp.availability_templates.build(name: "Working Week", description: "Mon - Fri, 9:00 AM - 5:00 PM")
+      (1..5).each do |i|
+        at.availability_rules.build(day: i, open_hour: 9, open_minute: 0,close_hour: 17, close_minute: 0)
+      end
+      at.save!
+      Utils::FormComponentsCreator.new(tp, 'transactable').create!
     end
-    at.save!
+    CustomAttributes::CustomAttribute::Creator.new(tp, bookable_noun: @instance.bookable_noun).create_attributes!
+    tp.create_rating_systems
+    
     Utils::FormComponentsCreator.new(tp).create!
-    Utils::FormComponentsCreator.new(tp, 'transactable').create!
     @instance.location_types.create!(name: 'General')
 
     Utils::DefaultAlertsCreator.new.create_all_workflows!
@@ -104,15 +104,6 @@ class InstanceWizardController < ActionController::Base
 
   def find_or_build_user
     @user = User.find_by_email(@instance_creator.email) || User.new(email: @instance_creator.email)
-  end
-
-  def create_rating_systems(instance)
-    instance.transactable_types.each do |transactable_type|
-      [instance.lessor, instance.lessee, instance.bookable_noun].each do |subject|
-        rating_system = instance.rating_systems.create(subject: subject, transactable_type_id: transactable_type.id)
-        RatingConstants::VALID_VALUES.each { |value| rating_system.rating_hints.create(value: value, instance: instance) }
-      end
-    end
   end
 
   def instance_params

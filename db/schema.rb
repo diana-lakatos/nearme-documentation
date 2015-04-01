@@ -19,13 +19,6 @@ ActiveRecord::Schema.define(version: 20150510125525) do
   enable_extension "btree_gist"
   enable_extension "hstore"
 
-  create_table "action_types", force: true do |t|
-    t.string   "name"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "additional_charge_types", force: true do |t|
     t.string   "name"
     t.text     "description"
@@ -2777,15 +2770,6 @@ ActiveRecord::Schema.define(version: 20150510125525) do
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree
 
-  create_table "transactable_type_actions", force: true do |t|
-    t.integer  "action_type_id"
-    t.integer  "transactable_type_id"
-    t.integer  "instance_id"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "transactable_types", force: true do |t|
     t.string   "name"
     t.integer  "instance_id"
@@ -2842,6 +2826,7 @@ ActiveRecord::Schema.define(version: 20150510125525) do
     t.text     "allowed_countries"
     t.boolean  "action_exclusive_price",                                             default: false
     t.boolean  "action_price_per_unit",                                              default: false
+    t.string   "type"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -2892,6 +2877,10 @@ ActiveRecord::Schema.define(version: 20150510125525) do
     t.integer  "book_it_out_minimum_qty"
     t.integer  "exclusive_price_cents",          default: 0
     t.string   "currency"
+    t.string   "name"
+    t.boolean  "confirm_reservations"
+    t.datetime "last_request_photos_sent_at"
+    t.integer  "rank"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree

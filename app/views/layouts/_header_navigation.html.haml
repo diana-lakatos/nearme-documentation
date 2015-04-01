@@ -14,13 +14,13 @@
               %span.icon.ico-plus
 
       - elsif !current_user.try(:registration_completed?)
-        = render partial: 'layouts/list_your_bookable', locals: { transactable_type: platform_context.product_types.first || platform_context.transactable_types.first }
+        = render partial: 'layouts/list_your_bookable', locals: { transactable_type: platform_context.product_types.first || platform_context.service_types.first }
     - else
       - if current_user && current_user.registration_in_progress?
         %li
-          - tt = current_user.first_listing.try(:transactable_type) || TransactableType.all.find(&:buy_sell?)
+          - tt = current_user.first_listing.try(:transactable_type) || Spree::ProductType.first
           = link_to main_app.transactable_type_new_space_wizard_path(tt), :class => "nav-link btn btn-blue btn-medium" do
-            %span.text= t('ui.header.complete_your_thing', thing: tt.buy_sell? ? platform_context.bookable_noun : tt.name)
+            %span.text= t('ui.header.complete_your_thing', thing: tt.name)
             %span.icon.ico-plus
       - elsif !current_user.try(:registration_completed?)
         %li.dropdown
@@ -29,9 +29,7 @@
             %span.ico-chevron-down
           .clearfix
           %ul.dropdown-menu
-            - platform_context.product_types.each do |tt|
-              = render partial: 'layouts/list_your_bookable', locals: { transactable_type: tt }
-            - platform_context.transactable_types.services.each do |tt|
+            - platform_context.transactable_types.each do |tt|
               = render partial: 'layouts/list_your_bookable', locals: { transactable_type: tt }
   - if user_signed_in?
     - if buyable? && current_user.cart_orders.any? && HiddenUiControls.find('main_menu/cart').visible?
@@ -55,7 +53,7 @@
               %span= t 'top_navbar.marketplace_admin'
 
         - if platform_context.white_label_company_user?(current_user) && current_user.has_any_active_listings && HiddenUiControls.find('main_menu/manage_items').visible?
-          - platform_context.transactable_types.services.each do |transactable_type|
+          - platform_context.service_types.each do |transactable_type|
             %li
               = link_to main_app.dashboard_company_transactable_type_transactables_path(transactable_type), class: 'nav-link dropdown-toggle' do
                 %div.truncate= t 'top_navbar.manage_bookable', bookable_noun: transactable_type.name.pluralize
@@ -64,16 +62,14 @@
               = link_to main_app.dashboard_user_reservations_path, class: 'nav-link dropdown-toggle' do
                 %span= t 'top_navbar.my_bookings'
 
-        - if buyable?
-          - if current_user.registration_completed? && HiddenUiControls.find('main_menu/manage_items').visible?
-            - platform_context.product_types.each do |product_type|
-              %li
-                = link_to main_app.dashboard_company_product_type_products_path(product_type), class: 'nav-link dropdown-toggle' do
-                  %div.truncate Manage #{product_type.name.pluralize}
-            - if HiddenUiControls.find('main_menu/my_orders').visible?
-              %li
-                = link_to main_app.dashboard_orders_path, class: 'nav-link dropdown-toggle' do
-                  %span= t 'top_navbar.my_orders'
+          - platform_context.product_types.each do |product_type|
+            %li
+              = link_to main_app.dashboard_company_product_type_products_path(product_type), class: 'nav-link dropdown-toggle' do
+                %div.truncate Manage #{product_type.name.pluralize}
+          - if HiddenUiControls.find('main_menu/my_orders').visible?
+            %li
+              = link_to main_app.dashboard_orders_path, class: 'nav-link dropdown-toggle' do
+                %span= t 'top_navbar.my_orders'
 
         - if platform_context.instance.wish_lists_enabled? && HiddenUiControls.find('main_menu/wish_list').visible?
           %li

@@ -1,12 +1,12 @@
 require 'test_helper'
 
-class InstanceAdmin::Manage::TransactableTypes::CustomAttributesControllerTest < ActionController::TestCase
+class InstanceAdmin::Manage::ServiceTypes::CustomAttributesControllerTest < ActionController::TestCase
 
   setup do
     @instance = FactoryGirl.create(:instance)
     PlatformContext.any_instance.stubs(:instance).returns(@instance)
     @user = FactoryGirl.create(:user)
-    @transactable_type = FactoryGirl.create(:transactable_type)
+    @service_type = FactoryGirl.create(:transactable_type)
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
     InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
     sign_in @user
@@ -16,7 +16,7 @@ class InstanceAdmin::Manage::TransactableTypes::CustomAttributesControllerTest <
 
     should 'create a new transactable_type' do
       assert_difference 'CustomAttributes::CustomAttribute.count', 1 do
-        post :create, {"custom_attribute"=>{"name"=>"new_attribute", "label"=>"attribute label", "attribute_type"=>"string", "html_tag"=>"select", "placeholder"=>"", "prompt"=>"my prompt", "default_value"=>"value5", "hint"=>"this is hint", "public"=>"1", "valid_values"=>"value1, value2, value5", "input_html_options_string"=>"class => myclass, style => color: red", "wrapper_html_options_string"=>"class => wrapper-class, style => color: blue"}, transactable_type_id: @transactable_type.id}
+        post :create, {"custom_attribute"=>{"name"=>"new_attribute", "label"=>"attribute label", "attribute_type"=>"string", "html_tag"=>"select", "placeholder"=>"", "prompt"=>"my prompt", "default_value"=>"value5", "hint"=>"this is hint", "public"=>"1", "valid_values"=>"value1, value2, value5", "input_html_options_string"=>"class => myclass, style => color: red", "wrapper_html_options_string"=>"class => wrapper-class, style => color: blue"}, service_type_id: @service_type.id}
       end
       custom_attribute = assigns(:custom_attribute).reload
       assert_equal 'new_attribute', custom_attribute.name
@@ -28,8 +28,8 @@ class InstanceAdmin::Manage::TransactableTypes::CustomAttributesControllerTest <
       assert_equal %w(value1 value2 value5), custom_attribute.valid_values
       assert_equal({'class' => 'myclass', 'style' => 'color: red'}, custom_attribute.input_html_options)
       assert_equal({'class' => 'wrapper-class', 'style' => 'color: blue'}, custom_attribute.wrapper_html_options)
-      assert_equal @transactable_type.id, custom_attribute.target_id
-      assert_equal @transactable_type.class.name, custom_attribute.target_type
+      assert_equal @service_type.id, custom_attribute.target_id
+      assert_equal @service_type.class.name, custom_attribute.target_type
       assert_equal @instance.id, custom_attribute.instance_id
     end
   end
@@ -37,11 +37,11 @@ class InstanceAdmin::Manage::TransactableTypes::CustomAttributesControllerTest <
   context 'existing normal attribute' do
 
     setup do
-      @custom_attribute = FactoryGirl.create(:custom_attribute, target: @transactable_type)
+      @custom_attribute = FactoryGirl.create(:custom_attribute, target: @service_type)
     end
 
     should 'update custom attributes' do
-      put :update, transactable_type_id: @transactable_type.id, id: @custom_attribute.id, custom_attribute: { label: 'New Label', name: 'new_name' }
+      put :update, service_type_id: @service_type.id, id: @custom_attribute.id, custom_attribute: { label: 'New Label', name: 'new_name' }
       assert_response :redirect
       assert_equal 'New Label', @custom_attribute.reload.label
       assert_equal 'new_name', @custom_attribute.name
@@ -49,18 +49,18 @@ class InstanceAdmin::Manage::TransactableTypes::CustomAttributesControllerTest <
 
     should 'destroy custom attribute' do
       assert_difference 'CustomAttributes::CustomAttribute.count', -1 do
-        delete :destroy, transactable_type_id: @transactable_type.id, id: @custom_attribute.id
+        delete :destroy, service_type_id: @service_type.id, id: @custom_attribute.id
       end
     end
   end
 
   context 'internal fields' do
     setup do
-      @custom_attribute = FactoryGirl.create(:custom_attribute, target: @transactable_type, name: 'internal_attribute', internal: true, label: 'Label')
+      @custom_attribute = FactoryGirl.create(:custom_attribute, target: @service_type, name: 'internal_attribute', internal: true, label: 'Label')
     end
 
     should 'not be able to change name' do
-      put :update, transactable_type_id: @transactable_type.id, id: @custom_attribute.id, custom_attribute: { label: 'New Label', name: 'new_name' }
+      put :update, service_type_id: @service_type.id, id: @custom_attribute.id, custom_attribute: { label: 'New Label', name: 'new_name' }
       assert_response :redirect
       assert_equal 'New Label', @custom_attribute.reload.label
       assert_equal 'internal_attribute', @custom_attribute.name
@@ -68,7 +68,7 @@ class InstanceAdmin::Manage::TransactableTypes::CustomAttributesControllerTest <
 
     should 'not be able to destroy internal attribute' do
       assert_raise ActiveRecord::RecordNotFound do
-        delete :destroy, transactable_type_id: @transactable_type.id, id: @custom_attribute.id
+        delete :destroy, service_type_id: @service_type.id, id: @custom_attribute.id
       end
     end
 

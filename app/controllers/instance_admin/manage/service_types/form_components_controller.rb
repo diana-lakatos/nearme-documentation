@@ -1,4 +1,4 @@
-class InstanceAdmin::Manage::TransactableTypes::FormComponentsController < InstanceAdmin::FormComponentsController
+class InstanceAdmin::Manage::ServiceTypes::FormComponentsController < InstanceAdmin::FormComponentsController
 
   before_filter :set_breadcrumbs_title
 
@@ -18,11 +18,11 @@ class InstanceAdmin::Manage::TransactableTypes::FormComponentsController < Insta
   private
 
   def find_form_componentable
-    @form_componentable = TransactableType.find(params[:transactable_type_id])
+    @form_componentable = ServiceType.find(params[:service_type_id])
   end
 
   def redirect_path
-    instance_admin_manage_transactable_type_form_components_path(@form_componentable)
+    instance_admin_manage_service_type_form_components_path(@form_componentable)
   end
 
   def permitting_controller_class

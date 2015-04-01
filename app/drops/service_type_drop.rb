@@ -1,0 +1,3 @@
+class ServiceTypeDrop < TransactableTypeDrop
+end
+

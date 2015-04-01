@@ -72,5 +72,5 @@ class @InstanceAdmin.RatingSystemsController
           method: 'post'
           data:
             _method: 'put'
-            transactable_type:
+            service_type:
               params

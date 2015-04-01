@@ -9,7 +9,7 @@ class Transactable < ActiveRecord::Base
   has_metadata accessors: [:photos_metadata]
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id, :listings_public], :location)
 
-  has_custom_attributes target_type: 'TransactableType', target_id: :transactable_type_id
+  has_custom_attributes target_type: 'ServiceType', target_id: :transactable_type_id
 
   has_many :availability_rules, -> { order 'day ASC' }, as: :target, dependent: :destroy, inverse_of: :target
   has_many :approval_requests, as: :owner, dependent: :destroy
@@ -30,12 +30,13 @@ class Transactable < ActiveRecord::Base
   end
   has_many :recurring_bookings, inverse_of: :listing
   has_many :reservations, inverse_of: :listing
-  has_many :transactable_tickets, as: :target, class_name: 'Suppport::Ticket'
+  has_many :transactable_tickets, as: :target, class_name: 'Support::Ticket'
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   has_many :waiver_agreement_templates, through: :assigned_waiver_agreement_templates
   has_many :wish_list_items, as: :wishlistable
-
-  belongs_to :transactable_type, inverse_of: :transactables
+  has_many :billing_authorizations, as: :reference
+  belongs_to :transactable_type
+  belongs_to :service_type, foreign_key: 'transactable_type_id'
   belongs_to :company, inverse_of: :listings
   belongs_to :location, inverse_of: :listings, touch: true
   belongs_to :instance, inverse_of: :listings
@@ -129,7 +130,7 @@ class Transactable < ActiveRecord::Base
 
   validates :book_it_out_minimum_qty, numericality: {greater_than_or_equal_to: 0}, allow_blank: true
   validates :book_it_out_discount, numericality: {greater_than: 0, less_than: 100}, allow_blank: true
-  validates :booking_type, inclusion: { in: TransactableType::BOOKING_TYPES }
+  validates :booking_type, inclusion: { in: ServiceType::BOOKING_TYPES }
   validates :currency, presence: true, allow_nil: false, currency: true
   validates :location, :transactable_type, presence: true
   validates :photos, length: {:minimum => 1}, unless: ->(record) { record.photo_not_required || !record.transactable_type.enable_photo_required }
@@ -497,7 +498,7 @@ class Transactable < ActiveRecord::Base
     !schedule_booking? || (schedule_booking? && schedule.present? && next_available_occurrences(1).any?)
   end
 
-  TransactableType::BOOKING_TYPES.each do |bt|
+  ServiceType::BOOKING_TYPES.each do |bt|
     define_method("#{bt}_booking?") do
       booking_type == bt
     end
@@ -592,5 +593,6 @@ class Transactable < ActiveRecord::Base
     attributes.merge!(_destroy: '1') if attributes['removed'] == '1'
     attributes['hidden'] == '1'
   end
+
 end
 

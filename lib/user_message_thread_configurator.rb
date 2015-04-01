@@ -39,6 +39,7 @@ class UserMessageThreadConfigurator
     end
 
     @user_message.thread_context = @message_context
+    @user_message.thread_context_type = @user_message.thread_context_type.sub('Decorator', '')
 
     raise DNM::MessageContextNotAvailable if !@user_message.author_has_access_to_message_context?
   end

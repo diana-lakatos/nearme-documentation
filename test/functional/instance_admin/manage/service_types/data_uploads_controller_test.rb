@@ -1,11 +1,11 @@
 require 'test_helper'
 
-class InstanceAdmin::Manage::TransactableTypes::DataUploadsControllerTest < ActionController::TestCase
+class InstanceAdmin::Manage::ServiceTypes::DataUploadsControllerTest < ActionController::TestCase
 
   setup do
     @instance = FactoryGirl.create(:instance)
     PlatformContext.current = PlatformContext.new(@instance)
-    @transactable_type = FactoryGirl.create(:transactable_type_csv_template)
+    @service_type = FactoryGirl.create(:transactable_type_csv_template)
     FactoryGirl.create(:location_type, name: 'My Type') unless LocationType.where(name: 'My Type').count > 0
     @user = FactoryGirl.create(:user)
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
@@ -18,7 +18,7 @@ class InstanceAdmin::Manage::TransactableTypes::DataUploadsControllerTest < Acti
 
     should 'create new data upload with xml' do
       assert_difference 'DataUpload.count' do
-        post :create, transactable_type_id: @transactable_type.id, data_upload: FactoryGirl.attributes_for(:data_upload)
+        post :create, service_type_id: @service_type.id, data_upload: FactoryGirl.attributes_for(:data_upload)
       end
       @data_upload = assigns(:data_upload)
       @data_upload.reload

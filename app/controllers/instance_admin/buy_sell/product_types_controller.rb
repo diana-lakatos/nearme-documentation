@@ -17,7 +17,7 @@ class InstanceAdmin::BuySell::ProductTypesController < InstanceAdmin::BuySell::B
     if @product_type.save
       CustomAttributes::CustomAttribute::Creator.new(@product_type, bookable_noun: @product_type.name).create_spree_product_type_attributes!
       Utils::FormComponentsCreator.new(@product_type).create!
-      TransactableType.create(name: @product_type.name, buyable: true)
+      @product_type.create_rating_systems
       flash[:success] = t 'flash_messages.instance_admin.buy_sell.product_types.created'
       redirect_to instance_admin_buy_sell_product_types_path
     else

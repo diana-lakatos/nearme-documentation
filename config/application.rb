@@ -20,6 +20,7 @@ module DesksnearMe
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
     config.autoload_paths -= Dir["#{config.root}/lib/previewers/"] unless defined? MailView
 
+    ActiveRecord::Base.store_base_sti_class = false
     config.to_prepare do
       # Load application's view overrides
       Dir.glob(File.join(File.dirname(__FILE__), "../app/overrides/*.rb")) do |c|

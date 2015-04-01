@@ -1,4 +1,4 @@
-class InstanceAdmin::Manage::TransactableTypes::DataUploadsController < InstanceAdmin::DataUploads::BaseController
+class InstanceAdmin::Manage::ServiceTypes::DataUploadsController < InstanceAdmin::DataUploads::BaseController
 
   before_filter :set_breadcrumbs_title
 
@@ -13,7 +13,7 @@ class InstanceAdmin::Manage::TransactableTypes::DataUploadsController < Instance
   end
 
   def find_importable
-    @importable = TransactableType.find(params[:transactable_type_id])
+    @importable = ServiceType.find(params[:service_type_id])
   end
 
   def set_breadcrumbs_title

@@ -10,7 +10,7 @@ class TransactableTypeTest < ActiveSupport::TestCase
 
   context 'pricing_validation_is_correct' do
     setup do
-      @transactable_type = TransactableType.first
+      @transactable_type = ServiceType.first
     end
 
     should 'be valid if max is greater than min' do
@@ -32,12 +32,12 @@ class TransactableTypeTest < ActiveSupport::TestCase
     end
 
     should 'be valid if max is equal to max price' do
-      @transactable_type.max_daily_price_cents = TransactableType::MAX_PRICE
+      @transactable_type.max_daily_price_cents = ServiceType::MAX_PRICE
       assert @transactable_type.valid?
     end
 
     should 'not be valid if max is greater than max price' do
-      @transactable_type.max_daily_price_cents = TransactableType::MAX_PRICE+1
+      @transactable_type.max_daily_price_cents = ServiceType::MAX_PRICE+1
       refute @transactable_type.valid?
     end
 
@@ -118,7 +118,7 @@ class TransactableTypeTest < ActiveSupport::TestCase
     end
 
     should "define enabled methods" do
-      TransactableType::BOOKING_TYPES.each do |bt|
+      ServiceType::BOOKING_TYPES.each do |bt|
         assert(@transactable_type.respond_to?("#{bt}_booking_enabled?"))
       end
     end

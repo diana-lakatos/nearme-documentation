@@ -7,6 +7,14 @@ module CustomAttributes
       @listing_types = options[:listing_types] || ["Type 1", "Type 2"]
     end
 
+    def create_attributes!
+      if target.is_a? ServiceType
+        create_listing_attributes!
+      else
+        create_spree_product_type_attributes!
+      end
+    end
+
     def create_listing_attributes!
       {
         name: :string,
@@ -15,7 +23,7 @@ module CustomAttributes
         capacity: :integer,
         delta: :boolean,
         rank: :integer,
-        last_request_photos_sent_at: :datetime,
+        last_request_photos_sent_at: :datetime
       }.each do |attr_name, attr_type|
         tta = @target.custom_attributes.where(name: attr_name).first || CustomAttribute.new(target: @target)
 
