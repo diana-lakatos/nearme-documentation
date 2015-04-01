@@ -1,0 +1,24 @@
+.accordion-group {
+  border-radius: $border-radius-default;
+
+  a.accordion-toggle {
+    background: url('//s3.amazonaws.com/desksnearme.assets/img/ui/arrow-down.png') right center no-repeat;
+    background-origin: content-box;
+    color: black;
+    @include opacity(.8);
+    @include transition(opacity .1s ease-in);
+
+    &:hover {
+      @include opacity(1);
+    }
+  }
+}
+
+.accordion-dim {
+
+  .accordion-group {
+    border:none;
+    background: $gray210;
+
+  } 
+}

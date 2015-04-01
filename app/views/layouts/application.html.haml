@@ -33,7 +33,7 @@
     = render 'layouts/favicon'
     
     = stylesheet_link_tag 'application_static'
-    = stylesheet_link_tag 'application_dynamic'
+    = stylesheet_link_tag platform_context.compiled_stylesheet_url || 'application_dynamic'
     
     = render 'layouts/homepage_css' if home_page?
 

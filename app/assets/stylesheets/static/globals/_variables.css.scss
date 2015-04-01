@@ -1,0 +1,161 @@
+// Colors
+
+$dnm_blue:   #5dbded;
+$dnm_red:    #e85c41;
+$dnm_orange: #ffc840;
+$dnm_green:  #5dc988;
+$dnm_gray:   #b6b6b6;
+$dnm_black:  #353535;
+$dnm_white:  #FFFFFF;
+
+$sjcc_blue:   #4d8fcc;
+$sjcc_red:    #e83d33;
+$sjcc_orange: #f79239;
+$sjcc_green:  #009e60;
+$sjcc_gray:   #394449;
+$sjcc_black:  #343434;
+$sjcc_white:  #FFFFFF;
+
+$theme_blue:   $dnm_blue !default;
+$theme_red:    $dnm_red !default;
+$theme_orange: $dnm_orange !default;
+$theme_green:  $dnm_green !default;
+$theme_gray:   $dnm_gray !default;
+$theme_black:  $dnm_black !default;
+$theme_lighter_black: lighten($theme_black, 5%);
+$theme_white:  $dnm_white !default;
+
+$blue:   $theme_blue;
+$red:    $theme_red;
+$green:  #157A49;
+$orange:  $theme_orange;
+$gray:   $theme_gray;
+$light-gray: #E2E2E2;
+$line-gray: #cecfcf;
+$dark-gray: rgb(80,80,80);
+$black:  $theme_black;
+$white: $theme_white;
+$pure-white: #fff;
+$pure-black: #000;
+
+$gray245: rgb(245,245,245);
+$gray240: rgb(240,240,240);
+$gray230: rgb(230,230,230);
+$gray220: rgb(220,220,220);
+$gray210: rgb(210,210,210);
+$gray204: rgb(204,204,204);
+$gray190: rgb(190,190,190);
+$gray170: rgb(170,170,170);
+$gray160: rgb(160,160,160);
+$gray120: rgb(120,120,120);
+$gray100: rgb(100,100,100);
+$gray80: rgb(80,80,80);
+$gray60: rgb(60,60,60);
+$gray40: rgb(40,40,40);
+
+$twitter-blue: #33CCFF;
+$facebook-blue: #3B5998;
+$linkedin-blue: #4875B4;
+$instagram-brown: #905f4c;
+
+$link-color: $theme_blue;
+$link_hover: darken($theme_blue, 10%);
+$icon: $gray160;
+$icon-hover: $gray80;
+
+$checkbox-radio-color: $blue;
+$checkbox-radio-neutral: $gray220;
+
+// Logo
+
+$theme_name: 'desksnearme';
+$theme_logo_width: 240px !default;
+$theme_logo_height: 30px !default;
+$theme_icon_width: 60px !default;
+$theme_icon_height: 30px !default;
+$theme_logo_retina_width: 240px !default;
+$theme_logo_retina_height: 30px !default;
+$theme_icon_retina_width: 60px !default;
+$theme_icon_retina_height: 30px !default;
+$theme_logo_max_height: 30;
+
+$theme_hero: "/assets/theme/#{$theme_name}/hero.jpg" !default;
+$theme_icon: "/assets/theme/#{$theme_name}/logo/icon.png" !default;
+$theme_icon2x: "/assets/theme/#{$theme_name}/logo/icon@2x.png" !default;
+$theme_logo: "/assets/theme/#{$theme_name}/logo/logo.png" !default;
+$theme_logo2x: "/assets/theme/#{$theme_name}/logo/logo@2x.png" !default;
+
+// Transitions
+
+$navigation-animation-time: 0.1s;
+$checkbox-radio-transition: 0.1s;
+
+// Padding
+
+$padding-default: 15px;
+$padding-medium: 12px;
+$padding-small: 8px;
+
+
+// Border Radius
+
+$border-radius-default: 5px;
+$border-radius-right: 0 5px 5px 0;
+$border-radius-left: 5px 0 0 5px;
+$border-radius-bottom: 0 0 5px 5px;
+$border-radius-top: 5px 5px 0 0;
+
+
+// Webfonts
+
+$font-regular: 'Futura-regular', sans-serif !default;
+$font-medium:  'Futura-medium', sans-serif !default;
+$font-bold:    'Futura-bold', sans-serif !default;
+
+
+// Z index
+
+$modal-z-index: 1000;
+$nav-z-index: $modal-z-index - 2; // -1 is overlay, so it must be lower than overlay, that's why -2
+$flash-z-index: $nav-z-index - 1;
+$absolute-top-z-index: 9000;
+
+
+// Breakpoints
+
+$iphone-portrait: 320px;
+$iphone-landscape: 480px;
+$ipad-width: 767px;
+$default-width: 980px;
+$search-bar-breakpoint-desktop: 1150px;
+$search-bar-desktop-width: 600px;
+$booking-module-breakpoint: 610px;
+$booking-module-breakpoint-calendar-icons: 650px;
+$booking-module-breakpoint-size: 1200px;
+$booking-module-breakpoint-desktop: 1000px;
+$host-card-breakpoint-tiny: 611px;
+$host-card-breakpoint-small: 860px;
+$host-card-breakpoint-medium: 1001px;
+$host-card-breakpoint-large: 1260px;
+$navbar-mobile-narrow-links: 340px;
+
+// Booking Module
+
+$listing-photo-width: 410px;
+$listing-photo-height: 254px;
+$booking-module-height: $listing-photo-height;
+$booking-module-width: 280px;
+$listing-header-height: 58px;
+
+// Footer
+
+$footer-height: 192px;
+
+// IE support
+
+$legacy-support-for-ie8: true;
+
+// Photos
+
+$space-full-image-width: 895px;
+$space-full-image-height: 554px;
