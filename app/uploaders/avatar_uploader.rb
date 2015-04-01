@@ -52,8 +52,9 @@ class AvatarUploader < BaseUploader
     process resize_to_fill: [dimensions[:large][:width], dimensions[:large][:height]]
   end
 
-  def default_url
-    current_version = (version_name && self.dimensions[version_name]) ? version_name : :big
+  def default_url(*args)
+    version = args.shift
+    current_version = (version && self.dimensions[version]) ? version : :big
     Placeholder.new(height: self.dimensions[current_version][:height],
                     width:  self.dimensions[current_version][:width]).path
   end
