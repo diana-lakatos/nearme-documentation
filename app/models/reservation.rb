@@ -281,7 +281,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def archived?
-    rejected? or cancelled? or periods.all? {|p| p.date < Time.zone.today}
+    rejected? || cancelled? || (periods.all? {|p| p.date < Time.zone.today} || expired?)
   end
 
   def cancelled?
