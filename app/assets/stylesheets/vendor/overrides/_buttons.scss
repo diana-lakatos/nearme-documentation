@@ -1,6 +1,20 @@
 .btn,
 a.btn {
 
+  &.twitter,
+  &.facebook,
+  &.linkedin,
+  &.instagram {
+
+    &.connected {
+      background: $red;
+
+      &:hover {
+        background: darken($red, 10%);
+      }
+    }
+  }
+
   &.btn-blue {
     background: $blue;
 

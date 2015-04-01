@@ -10,4 +10,28 @@ form:not(.no_inheritance) {
       }
     }
   }
+
+  .preamble,
+  .error-block {
+    color: $red;
+  }
+
+  .error-block {
+    color: $red;
+  }
+
+  .card-info.error, .row-fluid.error, .control-group.error {
+
+
+    // ul is for chosen
+    .controls {
+      input,
+      textarea,
+      ul,
+      select {
+        border-color: lighten($red, 10%);
+      }
+    }
+
+  }
 }

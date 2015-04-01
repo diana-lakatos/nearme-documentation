@@ -7,3 +7,11 @@
     } 
   }
 }
+
+.space-reservation-modal {
+  .flash {
+    &.error {
+      color: $red;
+    }
+  }
+}

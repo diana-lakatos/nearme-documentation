@@ -56,35 +56,6 @@ a.btn {
     font-size: 18px;
   }
 
-  &.btn-blue {
-    background: $blue;
-
-  }
-
-
-  &.btn-red {
-    background: $red;
-    &:hover {
-      background: darken($red, 10%);
-    }
-
-    &:active {
-      background: darken($red, 15%);
-    }
-  }
-
-  &.btn-orange {
-    background: $orange;
-
-    &:hover {
-      background: lighten($orange, 10%);
-    }
-
-    &:active {
-      background: darken($orange, 10%);
-    }
-  }
-
   &.btn-gray {
     background: $light-gray;
     color: black;
@@ -161,20 +132,6 @@ a.btn {
 
     &:active {
       background: darken($gray120, 10%);
-    }
-  }
-
-  &.twitter,
-  &.facebook,
-  &.linkedin,
-  &.instagram {
-
-    &.connected {
-      background: $red;
-
-      &:hover {
-        background: darken($red, 10%);
-      }
     }
   }
 

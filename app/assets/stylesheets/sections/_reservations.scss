@@ -1,3 +1,69 @@
+section#reservations,
+section.reservations {
+  .reservation-navigation {
+    margin-bottom: 30px;
+
+    a {
+      background: $white;
+
+      &.active {
+
+        span {
+          color: $black;
+        }
+      }
+    }
+
+  }
+
+  .reservation-details {
+    .reservation-status {
+
+      &.confirmed i {
+        color: $green;
+      }
+
+      &.unconfirmed i {
+        color: $orange;
+      }
+
+      &.cancelled i {
+        color: $red;
+      }
+    }
+
+    .pending-confirmation {
+      color: $orange
+    }
+  }
+
+}
+
+.reservations-review, .reservations-create {
+  .box {
+    p {
+      &.error-block {
+        color: $red;
+      }
+    }
+
+    .flash {
+      &.error {
+
+        color: $red;
+
+        p {
+          color: $red;
+        }
+
+        ul li {
+          color: $red;
+        }
+      }
+    }
+  }
+}
+
 .modal-content {
   .reservations-booking_successful, .reservations-booking_failed {
     .buttons {
