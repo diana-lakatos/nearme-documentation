@@ -20,7 +20,7 @@ class CompilerTest < ActiveSupport::TestCase
       compiler = Theme::Compiler.new(@theme)
       compiler.generate_and_update_assets
 
-      assert @theme.compiled_stylesheet.present?
+      assert @theme.reload.compiled_stylesheet.present?
       assert @theme.compiled_dashboard_stylesheet.present?
     end
 
