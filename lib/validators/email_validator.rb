@@ -6,6 +6,7 @@ class EmailValidator < ActiveModel::EachValidator
     rescue Mail::Field::ParseError => e
     end
 
+
     parsed = nil unless parsed && parsed.domain.present?
 
     record.errors[attribute] << (options[:message] || "is invalid") unless parsed
