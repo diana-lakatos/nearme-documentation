@@ -52,7 +52,7 @@ module DesksnearMe
     ]
     config.assets.precompile += [
       "browser_specific/ie8.css", "admin.css", "blog.css", "blog_admin.css", "errors.css",
-      "instance_admin.css", "platform_home.css", "application_static.css", "dashboard_static.css"
+      "instance_admin.css", "platform_home.css"
     ]
 
     config.assets.precompile += [
