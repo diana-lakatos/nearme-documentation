@@ -10,7 +10,7 @@ module DashboardHelper
 
   def analytics_options_for_select
     if PlatformContext.current.instance.buyable?
-      options_for_select([[t('dashboard.analytics.revenue'), 'revenue'], [t('dashboard.analytics.bookings'), 'bookings'], [t('dashboard.analytics.product_views'), 'location_views']], @analytics_mode)
+      options_for_select([[t('dashboard.analytics.revenue'), 'revenue'], [t('dashboard.analytics.orders'), 'orders'], [t('dashboard.analytics.product_views'), 'product_views']], @analytics_mode)
     else
       options_for_select([[t('dashboard.analytics.revenue'), 'revenue'], [t('dashboard.analytics.bookings'), 'bookings'], [t('dashboard.analytics.location_views'), 'location_views']], @analytics_mode)
     end

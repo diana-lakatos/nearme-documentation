@@ -49,6 +49,7 @@ class Company < ActiveRecord::Base
   has_one :theme, :as => :owner, foreign_key: 'owner_id', :dependent => :destroy
 
   has_many :locations_impressions, :source => :impressions, :through => :locations
+  has_many :products_impressions, :source => :impressions, :through => :products
   has_many :instance_clients, :as => :client, :dependent => :destroy
   has_many :data_uploads, as: :target
   has_one :company_address, class_name: 'Address', as: :entity
