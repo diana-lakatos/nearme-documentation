@@ -7,7 +7,7 @@ class CompileThemeJob < Job
   end
 
   def perform
-    bm.report('Theme::Compiler'){Theme::Compiler.new(@theme).generate_and_update_assets}
+    Theme::Compiler.new(@theme).generate_and_update_assets
   end
 end
 
