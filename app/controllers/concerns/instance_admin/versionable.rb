@@ -6,7 +6,7 @@ module InstanceAdmin::Versionable
   end
   
   def versions
-    @versions = resource.versions
+    @versions = resource.versions.where.not(whodunnit: nil)
     render template: "instance_admin/theme/versions/index"
   end
 
