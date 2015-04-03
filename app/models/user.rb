@@ -123,8 +123,6 @@ class User < ActiveRecord::Base
   mount_uploader :avatar, AvatarUploader
   skip_callback :commit, :after, :remove_avatar!
 
-  BIOGRAPHY_MAX_LENGTH = 2000
-
   MAX_NAME_LENGTH = 30
 
   validates :name, :first_name, presence: true
@@ -144,9 +142,6 @@ class User < ActiveRecord::Base
 
   validates :current_location, length: { maximum: 50 }
   validates :company_name, length: { maximum: 50 }
-  validates :job_title, length: { maximum: 50 }
-  validates :skills_and_interests, length: { maximum: 150 }
-  validates :biography, length: { maximum: BIOGRAPHY_MAX_LENGTH }
 
   attr_accessor :custom_validation
   attr_accessor :accept_terms_of_service

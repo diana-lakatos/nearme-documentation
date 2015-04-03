@@ -20,7 +20,6 @@ class Authentication::InfoUpdater
     @authentication.save!
 
     @user.name ||= info_hash['name']
-    @user.biography ||= ActionController::Base.helpers.truncate(info_hash['description'], length: User::BIOGRAPHY_MAX_LENGTH)
     @user.current_location ||= info_hash['location']
     @user.country_name ||= Geocoder.search(info_hash['location']).first.country rescue nil
 

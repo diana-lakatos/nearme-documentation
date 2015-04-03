@@ -31,7 +31,7 @@ module Auth
                                            :token_expires_at => expires_at,
                                            :token_expires => expires_at ? true : false,
                                            :token_expired => false)
-      current_user.save!
+      current_user.save!(validate: false)
     end
 
     def update_token_info
