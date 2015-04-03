@@ -2,7 +2,7 @@ module CustomAttributes
   class CustomAttribute::FormElementDecorator
 
     delegate :name, :label, :errors, :valid_values, :input_html_options, :validation_rules, :html_tag,
-      :label_key, :prompt_key, :placeholder_key, :hint_key, to: :attribute
+      :label_key, :attribute_type, :prompt_key, :placeholder_key, :hint_key, to: :attribute
 
     attr_accessor :attribute
 

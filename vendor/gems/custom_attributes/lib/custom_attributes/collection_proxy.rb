@@ -68,7 +68,7 @@ module CustomAttributes
       when :decimal              then klass.value_to_decimal(value)
       when :datetime, :timestamp then klass.string_to_time(value).try(:in_time_zone)
       when :time                 then klass.string_to_dummy_time(value)
-      when :date                 then klass.string_to_date(value)
+      when :date                 then klass.value_to_date(value)
       when :binary               then klass.binary_to_string(value)
       when :boolean              then klass.value_to_boolean(value)
       when :array                then value.split(',').map(&:strip)
