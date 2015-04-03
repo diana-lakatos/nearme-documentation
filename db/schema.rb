@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150402233938) do
+ActiveRecord::Schema.define(version: 20150403104757) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2776,6 +2776,7 @@ ActiveRecord::Schema.define(version: 20150402233938) do
     t.integer  "hours_to_expiration",                                                default: 24
     t.integer  "minimum_booking_minutes",                                            default: 60
     t.boolean  "multiple_root_categries"
+    t.boolean  "action_na",                                                          default: false
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

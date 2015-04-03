@@ -30,5 +30,8 @@ class TransactableDecorator < Draper::Decorator
     end
   end
 
+  def actions_allowed?
+    !self.transactable_type.action_na
+  end
 
 end
