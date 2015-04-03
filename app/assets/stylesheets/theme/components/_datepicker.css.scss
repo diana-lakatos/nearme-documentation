@@ -1,0 +1,28 @@
+.dnm-datepicker {
+  background: $black;
+
+  .datepicker-text {
+    background-color: $black;
+    color: $black;
+  }
+
+  .datepicker-days {
+    
+    .datepicker-day {
+
+      &.datepicker-day-other-month {
+        color: $gray;
+      }
+
+      &.active {
+        background: $green;
+        color: $pure-white;
+      }
+
+      &.disabled {
+        color: $red;
+        background: none;
+      }
+    }
+  }
+}

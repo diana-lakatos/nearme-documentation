@@ -1,0 +1,189 @@
+.btn,
+a.btn {
+
+  &.twitter,
+  &.facebook,
+  &.linkedin,
+  &.instagram {
+
+    &.connected {
+      background: $red;
+
+      &:hover {
+        background: darken($red, 10%);
+      }
+    }
+  }
+
+  &.btn-blue {
+    background: $blue;
+
+    &:hover {
+      background: lighten($theme_blue, 10%);
+    }
+
+    &:active {
+      background: darken($theme_blue, 10%);
+    }
+  }
+
+  &.btn-green {
+    background: $theme_green;
+
+    &:hover {
+      background: lighten($theme_green, 10%);
+    }
+
+    &:active {
+      background: darken($theme_green, 10%);
+    }
+  }
+
+  &.btn-red {
+    background: $red;
+    &:hover {
+      background: darken($red, 10%);
+    }
+
+    &:active {
+      background: darken($red, 15%);
+    }
+  }
+
+  &.btn-orange {
+    background: $orange;
+
+    &:hover {
+      background: lighten($orange, 10%);
+    }
+
+    &:active {
+      background: darken($orange, 10%);
+    }
+  }
+
+  &.btn-gray {
+    background: $light-gray;
+    color: black;
+    &:hover {
+      background: $pure-white;
+    }
+
+    &:active {
+      background: $pure-white;
+    }
+  }
+
+  &.btn-white {
+    border: 2px solid $light_gray !important;
+    background: $dnm_white;
+    color: black;
+    &:hover {
+      background: $pure-white;
+    }
+
+    &:active {
+      background: $pure-white;
+    }
+  }
+
+  &.btn-gray-dark {
+    background: $gray60;
+    color: $gray120;
+    border: 1px solid $gray120 !important;
+
+    span {
+      color: $gray120;
+    }
+
+    &:hover {
+      background: lighten($gray60, 10%);
+    }
+
+    &:active {
+      background: darken($gray60, 10%);
+    }
+  }
+
+  &.btn-gray-darker {
+    background: $gray210;
+    color: $gray80;
+    border: 1px solid $light-gray !important;
+
+    span {
+      color: $gray80;
+    }
+
+    &:hover {
+      background: lighten($gray210, 10%);
+    }
+
+    &:active {
+      background: darken($gray210, 10%);
+    }
+  }
+
+  &.btn-gray-light {
+    background: $gray120;
+    color: $pure-white;
+    border: 1px solid $gray120 !important;
+
+    span {
+      color: $pure-white;
+    }
+
+    &:hover {
+      background: lighten($gray120, 10%);
+    }
+
+    &:active {
+      background: darken($gray120, 10%);
+    }
+  }
+
+  &.twitter,
+  &.facebook,
+  &.linkedin,
+  &.instagram {
+
+    &.connected {
+      background: $red;
+
+      &:hover {
+        background: darken($red, 10%);
+      }
+    }
+  }
+
+  &.twitter {
+    background: $twitter-blue;
+
+    &:hover {
+      background: darken($twitter-blue, 15%);
+    }
+  }
+
+  &.facebook {
+    background: $facebook-blue;
+
+    &:hover {
+      background: darken($facebook-blue, 15%);
+    }
+  }
+
+  &.linkedin {
+    background: $linkedin-blue;
+
+    &:hover {
+      background: darken($linkedin-blue, 15%);
+    }
+  }
+
+  &.instagram {
+    background: $instagram-brown;
+
+    &:hover {
+      background: darken($instagram-brown, 15%);
+    }
+  }
+}

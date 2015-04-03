@@ -1,0 +1,37 @@
+form:not(.no_inheritance) {
+
+  label {
+
+    a[rel=tooltip] {
+      color: $theme_black;
+
+      &:hover {
+        color: $theme_gray;
+      }
+    }
+  }
+
+  .preamble,
+  .error-block {
+    color: $red;
+  }
+
+  .error-block {
+    color: $red;
+  }
+
+  .card-info.error, .row-fluid.error, .control-group.error {
+
+
+    // ul is for chosen
+    .controls {
+      input,
+      textarea,
+      ul,
+      select {
+        border-color: lighten($red, 10%);
+      }
+    }
+
+  }
+}

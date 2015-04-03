@@ -1,0 +1,63 @@
+body.user-blog {
+  background-color: $white;
+
+  .container-fluid.header-container {
+    span.blog-header {
+      color: $white;
+      border-left: 1px solid $white;
+    }
+  }
+}
+
+.user-blog {
+  .header {
+    .heading {
+      a {
+        color: $white;
+      }
+    }
+    .header-text-and-logo {
+      span.header-text {
+        color: $white;
+
+        &.with-border {
+          border-left: 1px solid $white;
+        }
+      }
+
+      p.header-motto {
+        color: $white;
+      }
+    }
+  }
+  .blog-container {
+    .blog-post-detail {
+    
+      .info {
+        .social-buttons-wrapper {
+          .social {
+            a {
+              color: $white;
+            }
+          }
+        }
+      }
+
+      .author {
+        .avatar {
+          .avatar-container {
+            border: 1px solid $white;
+          }
+        }
+      }
+
+      .links {
+        .previous-blog-post, .next-blog-post {
+          color: $white;
+        }
+      }
+
+    }
+  }
+
+}
