@@ -10,6 +10,7 @@ class DataImporter::XmlFile < DataImporter::File
     @location_types = {}
     @synchronizer = options.fetch(:synchronizer, DataImporter::NullSynchronizer.new)
     @send_invitations = options.fetch(:send_invitational_email, false)
+    @enable_rfq = options.fetch(:enable_rfq, false)
     @trackers = options.fetch(:trackers, [])
   end
 
@@ -168,6 +169,7 @@ class DataImporter::XmlFile < DataImporter::File
       if @listing.valid?
         trigger_event('object_valid', @listing)
         yield
+        @listing.action_rfq = @enable_rfq
         @listing.skip_metadata = true
         @listing.save! if @listing.changed? || (@listing_photo_updated && @listing.new_record?)
         @listing.populate_photos_metadata! if @listing_photo_updated
