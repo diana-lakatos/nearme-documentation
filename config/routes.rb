@@ -285,6 +285,11 @@ DesksnearMe::Application.routes.draw do
             post :create_as_copy
           end
         end
+        resources :categories, controller: 'transactable_types/categories' do
+          member do
+            get :jstree
+          end
+        end
       end
 
       resources :users, only: [:index] do
@@ -409,6 +414,7 @@ DesksnearMe::Application.routes.draw do
 
       resource :social_share, :only => [:new], :controller => 'locations/social_share'
     end
+    resources :categories, only: [:index, :show], :controller => 'transactable_types/categories'
   end
 
   resources :locations, :only => [] do

@@ -9,6 +9,7 @@ class Spree::ProductType < ActiveRecord::Base
   belongs_to :instance
   has_many :products, class_name: "Spree::Product", inverse_of: :product_type
   has_many :form_components, as: :form_componentable
+  has_many :categories, as: :categorable
 
   belongs_to :user
 
