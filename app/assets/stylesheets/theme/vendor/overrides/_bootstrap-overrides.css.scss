@@ -1,0 +1,22 @@
+// Bootstrap Overrides - Do not edit the Vendor Bootstrap files, override them please!
+
+a[rel="tooltip"] {
+  color: $theme_black;
+}
+
+abbr[title] {
+  cursor: auto;
+  border: none;
+  color: $theme_red;
+}
+
+.accordion-group {
+
+	background: $theme_white;
+}
+
+
+abbr[title],
+abbr[data-original-title] {
+  color: $theme_red;
+}

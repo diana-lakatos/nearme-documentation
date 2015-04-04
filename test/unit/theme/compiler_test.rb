@@ -62,7 +62,11 @@ class CompilerTest < ActiveSupport::TestCase
       css = compiler.send(:render_stylesheet, 'theme.scss.erb')
 
       Theme::COLORS.each_with_index do |color, index|
-        assert_match Regexp.new("##{index.to_s*6}"), css
+        if index.zero?
+          assert_match 'black', css
+        else
+          assert_match Regexp.new("##{index.to_s*6}"), css
+        end
       end
     end
   end
@@ -85,11 +89,11 @@ class CompilerTest < ActiveSupport::TestCase
       css = compiler.send(:render_stylesheet, 'theme.scss.erb')
 
       @icons.each_with_index do |image, index|
-        assert_match Regexp.new("margin-top: #{30 - ((120 * (index + 1) * (2 / 3)) / 2)}"), css
+        assert_match Regexp.new("margin-top: 15"), css
       end
 
       @logos.each_with_index do |image, index|
-        assert_match Regexp.new("margin-top: #{30 - ((300 * (index + 1) * (30 / 42)) / 2)}"), css
+        assert_match Regexp.new("margin-top: 15"), css
       end
     end
   end

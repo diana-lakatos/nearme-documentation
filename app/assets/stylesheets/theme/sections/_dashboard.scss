@@ -1,0 +1,41 @@
+section.dashboard {
+
+  ul.locations {
+
+    li.new-location {
+
+      a {
+        &:hover {
+          background: lighten($theme_blue, 10%);
+        }
+      }
+    }
+    li.new-location {
+      padding: 0px;
+      margin: 0 0 25px 0;
+      border: none;
+
+      .links .icon {
+        vertical-align: top;
+      }
+
+      a {
+        color: $pure-white;
+        padding: 0 10px;
+        background: $blue;
+
+      }
+    }
+
+  }
+}
+
+.bank_account_fields {
+  .flash.error {
+    color: $red;
+
+    ul li {
+      color: $red;
+    }
+  }
+}

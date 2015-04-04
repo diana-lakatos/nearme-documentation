@@ -1,0 +1,36 @@
+.box {
+  background: $theme_white;
+
+  hr, 
+  .hr {
+    > span {
+      background: $white;
+    }
+  }
+}
+
+.box-inverse {  
+  header {
+    color: $theme_white;
+  }
+}
+
+
+.box-nav {
+  li {
+    a {
+      &:hover {
+        color: $theme_white;
+      }
+    }
+
+    &.active {
+
+      a, 
+      a:hover {
+        background: $theme_black;
+        color: $theme_white;
+      }
+    }
+  }
+}

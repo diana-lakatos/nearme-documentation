@@ -1,0 +1,15 @@
+.modal-container {
+
+  &.sign-up-modal {
+    
+    .modal-content {
+
+      .pnotice {
+        a {
+          color: $theme_white;
+        }
+      }
+    }
+
+  }
+}

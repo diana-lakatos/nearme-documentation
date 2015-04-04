@@ -1,0 +1,32 @@
+.support.detail {
+
+  h1 {
+    a {
+      color: $theme_blue;
+    }
+  }
+}
+
+
+.support {
+
+  .tickets {
+    color: $theme_gray;
+
+    .ticket {
+      .time {
+        abbr {
+          color: $theme_gray;
+        }
+      }
+
+      .link {
+        a {
+          color: $theme_gray;
+        }
+      }
+
+    }
+  }
+
+}

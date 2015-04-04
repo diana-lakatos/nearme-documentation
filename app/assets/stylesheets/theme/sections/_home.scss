@@ -1,0 +1,7 @@
+section.home {
+
+  #hero {
+    background-image: image-url($theme_hero);
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='#{$theme_hero}', sizingMethod='scale');
+  }
+}

@@ -1,0 +1,35 @@
+.checkbox {
+
+  &.checked {
+
+    .checkbox-icon-outer {
+      color: $white;
+      background: $blue;
+    }
+  }
+}
+
+.radio {
+
+  &.checked {
+
+    .radio-icon-outer {
+      background: $blue;
+
+      .radio-icon-inner {
+        background: $white;
+      }
+    }
+  }
+}
+
+.error {
+
+  .radio {
+
+    .radio-icon-outer {
+      background: $red;
+    }
+  }
+
+}

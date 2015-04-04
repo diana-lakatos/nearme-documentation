@@ -63,7 +63,7 @@ class ApplicationController < ActionController::Base
       redirect_to path, status: 301
     end
 
-    # Set either primary or requested language
+    # Set either primary or requested language#
     if params_locale.present?
       I18n.locale = params_locale
     else
