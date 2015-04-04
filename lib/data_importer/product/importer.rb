@@ -20,18 +20,15 @@ class DataImporter::Product::Importer
   def import
     while params = @product_csv.process_next_row
       begin
-        quantity = params[:'spree/product'].delete(:total_on_hand) if params[:'spree/product'].has_key?(:total_on_hand)
+        quantity = params[:'spree/product'].delete(:total_on_hand).to_i if params[:'spree/product'].has_key?(:total_on_hand)
+        price    = params[:'spree/product'].delete(:price).to_f if params[:'spree/product'].has_key?(:price)
         import_company(params[:company]) do |company|
           import_user(params[:user], company) do |user|
             import_shipping_category(params[:'spree/shipping_category'], user, company) do |shipping_category|
-              import_product(params[:'spree/product'], user, company, shipping_category) do |product|
-                import_master_variant(params[:'spree/variant'], product) do |variant|
-                  if quantity
-                    import_stock_item(variant) do |stock_item|
-                      import_stock_movement(stock_item, quantity)
-                    end
-                  end
-                  import_image(params[:'spree/image'], variant)
+              import_product(params[:'spree/product'], user, company, shipping_category, price) do |product|
+                import_master_variant(params[:'spree/variant'], product, price) do |variant|
+                  import_stock_item(variant, quantity) if quantity
+                  import_image(params[:'spree/image'], variant) if params[:'spree/image'].present?
                 end
               end
             end
@@ -52,7 +49,7 @@ class DataImporter::Product::Importer
 
   def import_company(params)
     company = find_or_initialize_by_and_assign(Company, external_id: params.delete(:external_id)) do |company|
-      company.update_column(:deleted_at, nil) unless company.deleted_at.nil?
+      company.restore! if company.deleted?
       company.assign_attributes(params)
     end
 
@@ -65,6 +62,7 @@ class DataImporter::Product::Importer
 
   def import_user(params, company)
     user = User.with_deleted.find_or_initialize_by(email: params.delete(:email).downcase) do |u|
+      user.restore! if user.deleted?
       password = SecureRandom.hex(8)
       @new_users[u.email] = password
       u.password = u.password_confirmation = password
@@ -95,11 +93,12 @@ class DataImporter::Product::Importer
   def import_shipping_category(params, user, company, &block)
     import_entity(block) do
       params.merge!(instance_id: PlatformContext.current.instance.id, user_id: user.id, company_id: company.id)
+      params.merge!(name: 'Default') unless params[:name].present?
       find_or_initialize_by_and_assign(Spree::ShippingCategory, params)
     end
   end
 
-  def import_product(params, user, company, shipping_category, &block)
+  def import_product(params, user, company, shipping_category, price, &block)
     import_entity(block) do
       find_or_initialize_by_and_assign(Spree::Product, external_id: params.delete(:external_id), company_id: company.id) do |product|
         unless product.deleted_at.nil?
@@ -108,6 +107,7 @@ class DataImporter::Product::Importer
           product.stock_items.update_all(deleted_at: nil)
         end
         product.assign_attributes(params)
+        product.action_rfq = @data_upload.enable_rfq
         product.product_type = @data_upload.importable
         product.user = user
         product.shipping_category = shipping_category
@@ -116,26 +116,21 @@ class DataImporter::Product::Importer
   end
 
 
-  def import_master_variant(params, product, &block)
+  def import_master_variant(params, product, price, &block)
     import_entity(block) do
       find_or_initialize_by_and_assign(Spree::Variant, product_id: product.id) do |variant|
         variant.assign_attributes(params)
         variant.user_id = product.user_id
         variant.company_id = product.company_id
+        variant.price = price
       end
     end
   end
 
-  def import_stock_item(variant, &block)
+  def import_stock_item(variant, quantity, &block)
     import_entity(block) do
-      find_or_initialize_by_and_assign(Spree::StockItem, variant_id: variant.id)
-    end
-  end
-
-  def import_stock_movement(stock_item, quantity)
-    import_entity do
-      find_or_initialize_by_and_assign(Spree::StockMovement, stock_item_id: stock_item.id) do |stock_movement|
-        stock_movement.quantity = quantity
+      find_or_initialize_by_and_assign(Spree::StockItem, variant_id: variant.id) do |stock_item|
+        stock_item.set_count_on_hand(quantity)
       end
     end
   end
@@ -153,7 +148,7 @@ class DataImporter::Product::Importer
     entity = yield
     if entity.new_record? && entity.save
       entity_created(entity)
-    elsif entity.changed? && entity.save
+    elsif (entity.changed? || (entity.is_a?(Spree::Variant) && entity.default_price.changed?)) && entity.save
       entity_updated(entity)
     end
 
@@ -175,6 +170,7 @@ class DataImporter::Product::Importer
 
   def find_or_initialize_by_and_assign(klass, params)
     entity = (klass.respond_to?(:with_deleted) ? klass.with_deleted : klass).find_or_initialize_by(params)
+    entity.restore! if entity.respond_to?(:deleted_at) && entity.deleted?
     yield(entity) if block_given?
     entity
   end
