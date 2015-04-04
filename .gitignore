@@ -38,3 +38,4 @@ dump.rdb
 work_files
 app/assets/images/sections/listings/amenity-categories-*
 app/assets/images/sections/space-wizard/signup/service-icons-*
+instances/

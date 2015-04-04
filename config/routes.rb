@@ -198,6 +198,12 @@ DesksnearMe::Application.routes.draw do
         member do
           get 'edit_keys'
         end
+
+        collection do
+          get 'new_key'
+          post 'create_key'
+          delete 'destroy_key'
+        end
       end
     end
 

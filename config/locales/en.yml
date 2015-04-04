@@ -185,14 +185,22 @@ en:
         custom_name: 'Custom name'
         default: 'Default'
         keys: 'Translation keys for %{language}'
+        new_key: 'Add Translation Key'
+        example_key: 'Example: home.welcome.label'
+        default_en_value: 'Default English text'
 
       buttons:
         add: 'Add language'
         save: 'Save'
         edit_keys: 'Edit keys'
+        new_key: 'Add key'
 
       confirmations:
         delete: 'Are you sure?'
+
+      notices:
+        key_created: "Custom translation key has been successfully created: %{key}."
+        key_destroyed: 'Custom translation key has been deleted.'
 
   buy_sell_market:
     products:

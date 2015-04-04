@@ -1,0 +1,18 @@
+%h4= t 'instance_admin.locales.labels.new_key'
+
+= simple_form_for @translation, url: create_key_instance_admin_settings_locales_path do |f|
+  .content-container.dropshadow
+    .row
+      .input-container.col-xs-12
+        .input-col-clearfix
+          = f.input :key, placeholder: t('instance_admin.locales.labels.example_key'), required: true,
+              input_html: { class: 'form-control' }
+
+      .input-container.col-xs-12
+        .input-col-clearfix
+          = f.input :value, as: :string, label: t('instance_admin.locales.labels.default_en_value'), required: true,
+              input_html: { class: 'form-control' }
+
+  .content-container
+    .row
+      = f.button :submit, t('instance_admin.locales.buttons.save'), class: 'btn btn-green pull-right'
