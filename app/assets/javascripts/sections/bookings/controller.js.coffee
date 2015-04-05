@@ -61,6 +61,7 @@ class Bookings.Controller
   bindEvents: ->
     @bookingTabs.on 'click', (event) =>
       @listing.setHourlyBooking(@hourlyBookingSelected())
+      @datepicker.setDates(@listing.bookedDatesArray)
       @setReservationType()
       @updateBookingStatus()
 
