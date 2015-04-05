@@ -6,10 +6,11 @@
         %tr
           %th
       %tbody
-        - @default_translations.order('key ASC').each_with_index do |translation, index|
+        - (@default_translations + @custom_translations).each_with_index do |translation, index|
           - instance_translation = @translations.detect { |t| t.key == translation.key }
+
           %tr
-            %td{'data-search' => "#{instance_translation ? (instance_translation.value.empty? ? translation.value : instance_translation.value) : translation.value} #{translation.key}" }
+            %td{'data-search' => "#{instance_translation ? (instance_translation.value.present? ? translation.value : instance_translation.value) : translation.value} #{translation.key}" }
               .row
                 .input-container.col-xs-12
                   %label{for: "instance_translations_#{index}"}= translation.key
@@ -25,4 +26,4 @@
 
   .content-container
     .row
-      = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+      = f.button :submit, t('instance_admin.locales.buttons.save'), class: 'btn btn-green pull-right'
