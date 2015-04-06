@@ -90,6 +90,7 @@
   .content-container.dropshadow
     .row
       .input-container.col-xs-12
+        = f.association :action_types, collection: ActionType.pluck(:name, :id), as: :check_boxes, label: "Actions"
         = f.input :action_na, as: :boolean, label: 'NO ACTION'
 
   .content-container
