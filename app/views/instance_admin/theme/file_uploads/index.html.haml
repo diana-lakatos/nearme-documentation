@@ -1,0 +1,37 @@
+.mpo_file_uploads
+  .file_upload_form
+    = simple_form_for :upload, url: instance_admin_theme_file_uploads_path do |f|
+      = f.input :file, as: :file, label: t('ckeditor_custom.file_uploads.upload_file')
+      = f.submit t('ckeditor_custom.file_uploads.upload_file'), class: 'upload_file'
+
+  #fileupload.gal-holder
+    .fileupload-list
+      - @files.scoped.each do |asset|
+        = content_tag(:div, :id => dom_id(asset), :class => "gal-item", :"data-url" => image_path(asset.url_content)) do
+          = link_to image_tag('ckeditor/filebrowser/images/gal_del.png',
+            :title => I18n.t('ckeditor.buttons.delete')),
+            instance_admin_theme_file_upload_path(asset),
+            :method => :delete, 
+            :data => {:confirm => t('ckeditor.confirm_delete')},
+            :class => "fileupload-cancel gal-del"
+          
+          .fileupload-file.gal-inner-holder
+            .img
+              = image_tag(asset.url_thumb, :title => asset.filename)
+            .img-data
+              .img-name
+                = asset.filename
+              .time-size
+                .time
+                  = asset.format_created_at
+                .fileupload-size.size
+                  = number_to_human_size(asset.size) if asset.size
+
+    .clear
+    - unless @files.first_page?
+      .pagination
+        = link_to t('ckeditor_custom.file_uploads.prev'), params.merge(:page => @files.prev_page), :class => "prev", :rel => "prev"
+    - unless @files.last_page?
+      .pagination
+        = link_to t('ckeditor_custom.file_uploads.next'), params.merge(:page => @files.next_page), :class => "next", :rel => "next"
+

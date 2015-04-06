@@ -60,7 +60,8 @@ class InstanceAdmin::BaseController < ApplicationController
     'header'           => { default_action: 'show' },
     'footer'           => { default_action: 'show' },
     'content_holders'  => { default_action: 'index' },
-    'liquid views'     => { controller: '/instance_admin/theme/liquid_views', default_action: 'index' }
+    'liquid views'     => { controller: '/instance_admin/theme/liquid_views', default_action: 'index' },
+    'file upload'      => { controller: '/instance_admin/theme/file_uploads', default_action: 'index' }
   }
 
   BUY_SELL_CONTROLLERS = {

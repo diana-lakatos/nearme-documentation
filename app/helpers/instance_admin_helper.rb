@@ -81,4 +81,5 @@ module InstanceAdminHelper
       [lang[1].capitalize, lang[0].downcase, {'data-translated' => translated_name}]
     end
   end
+
 end
