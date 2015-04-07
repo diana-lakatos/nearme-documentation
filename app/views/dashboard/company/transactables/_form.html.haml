@@ -82,6 +82,14 @@
         = render "forms/document_requirements", f: f
     - when 'quantity'
       = f.input :quantity
+    - when 'categories'
+      .row
+        .col-md-3
+          = f.label :categories
+        .col-md-9          
+          #ajax_error{style: 'display: none;'}
+          #category_tree
+          #category_tree_inputs
     - else
       - if custom_attribute_names.include?(field)
         - @transactable_type.custom_attributes.each do |attribute|
@@ -90,3 +98,10 @@
 
 - content_for :domready do
   $(function() { new Dashboard.ListingController($('#listing-form')) });
+
+  var single_choice_category = #{!@transactable_type.multiple_root_categries}
+  var selected_categories = #{raw @transactable.category_ids.to_json}
+  var categories_path = "#{transactable_type_categories_path(@transactable_type)}"
+  var jstree_theme_path = "#{stylesheet_path("instance_admin/jstree_themes/apple/style.css")}";
+  var category_input_name = "transactable[category_ids][]"
+  new CategoriesController($('#listing-form'));

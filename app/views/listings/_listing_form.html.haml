@@ -74,3 +74,11 @@
   %h2.with-margin Waiver Agreement Templates
   = f.association :waiver_agreement_templates, collection: f.object.location.company.waiver_agreement_templates.order(:name).pluck(:name, :id), as: :check_boxes
 
+- if only_inputs.empty? || only_inputs.include?(:categories)
+  .control-group
+    = f.label :categories
+    .controls
+      #ajax_error{style: 'display: none;'}
+      #category_tree
+      #category_tree_inputs
+

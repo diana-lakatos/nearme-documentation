@@ -10,26 +10,31 @@ class Transactable < ActiveRecord::Base
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id, :listings_public], :location)
 
   has_custom_attributes target_type: 'TransactableType', target_id: :transactable_type_id
-
+  
+  has_many :availability_rules, -> { order 'day ASC' }, as: :target, dependent: :destroy, inverse_of: :target
+  has_many :approval_requests, as: :owner, dependent: :destroy
+  has_many :amenity_holders, as: :holder, dependent: :destroy, inverse_of: :holder
+  has_many :amenities, through: :amenity_holders, inverse_of: :listings
+  has_many :assigned_waiver_agreement_templates, as: :target
+  has_many :billing_authorizations, as: :reference
+  has_many :categories_transactables
+  has_many :categories, through: :categories_transactables
+  has_many :company_industries, through: :location
   has_many :document_requirements, as: :item, dependent: :destroy, inverse_of: :item
-
-  has_many :reservations, inverse_of: :listing
-
-  has_many :recurring_bookings, inverse_of: :listing
+  has_many :inquiries, inverse_of: :listing
+  has_many :impressions, :as => :impressionable, :dependent => :destroy
   has_many :photos, dependent: :destroy, inverse_of: :listing do
     def thumb
       (first || build).thumb
     end
   end
-  has_many :inquiries, inverse_of: :listing
-  has_many :availability_rules, -> { order 'day ASC' }, as: :target, dependent: :destroy, inverse_of: :target
-  has_many :user_messages, as: :thread_context, inverse_of: :thread_context
-  has_many :approval_requests, as: :owner, dependent: :destroy
-  has_many :impressions, :as => :impressionable, :dependent => :destroy
+  has_many :recurring_bookings, inverse_of: :listing
+  has_many :reservations, inverse_of: :listing
   has_many :transactable_tickets, as: :target, class_name: 'Suppport::Ticket'
-  has_many :assigned_waiver_agreement_templates, as: :target
+  has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   has_many :waiver_agreement_templates, through: :assigned_waiver_agreement_templates
-  has_many :billing_authorizations, as: :reference
+  has_many :wish_list_items, as: :wishlistable
+
   belongs_to :transactable_type, inverse_of: :transactables
   belongs_to :company, inverse_of: :listings
   belongs_to :location, inverse_of: :listings, touch: true
@@ -37,14 +42,9 @@ class Transactable < ActiveRecord::Base
   belongs_to :creator, class_name: "User", inverse_of: :listings, counter_cache: true
   belongs_to :administrator, class_name: "User", inverse_of: :administered_listings
 
-  has_many :amenity_holders, as: :holder, dependent: :destroy, inverse_of: :holder
-  has_many :amenities, through: :amenity_holders, inverse_of: :listings
   has_one :location_address, through: :location
-  has_one :upload_obligation, as: :item, dependent: :destroy
-
-  has_many :company_industries, through: :location
   has_one :schedule, as: :scheduable
-  has_many :wish_list_items, as: :wishlistable
+  has_one :upload_obligation, as: :item, dependent: :destroy
 
   accepts_nested_attributes_for :availability_rules, allow_destroy: true
   accepts_nested_attributes_for :photos, allow_destroy: true

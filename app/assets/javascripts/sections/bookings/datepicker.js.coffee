@@ -174,7 +174,7 @@ class @Bookings.Datepicker
     @setDatepickerToRangeMode()
 
     # Show the end datepicker instantly
-    if @container.find("li[hourly-booking]").hasClass('active')
+    if @container.find("li[data-hourly]").hasClass('active')
       @timePicker.show()
     else
       @endDatepicker.show()

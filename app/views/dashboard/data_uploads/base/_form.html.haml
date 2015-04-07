@@ -12,6 +12,7 @@
       = t('data_upload.manage.new.sync_mode_hint')
       = f.simple_fields_for :options, OpenStruct.new(@data_upload.options) do |option|
         = option.input :sync_mode, wrapper: :bs3_simple, required: false, as: :boolean, inline_label: t('data_upload.manage.new.sync_mode'), label: false, input_html: {class: "margin-right"}
+        = option.input :enable_rfq, wrapper: :bs3_simple, required: false, as: :boolean, inline_label: t('data_upload.manage.new.enable_rfq'), label: false, input_html: {class: "margin-right"}
     %br
     = f.input :csv_file, as: :file
     .btn-toolbar

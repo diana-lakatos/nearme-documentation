@@ -48,7 +48,11 @@
     .row
       .input-container.col-xs-12
         = f.input :minimum_booking_minutes, required: false, label: "Minimum booking minutes (for hourly pricing)", input_html: { class: 'form-control' }
-
+  %h4 Categories
+  .content-container.dropshadow
+    .row
+      .input-container.col-xs-12
+        = f.input :multiple_root_categries, required: false, label: "Allow multiple root categories", input_html: { class: 'form-control' }
 
   %h4 Pricing
   .content-container.dropshadow
@@ -83,16 +87,18 @@
       .input-container.col-xs-6
         = f.input :lessee, label: 'Lessee (e.g. guest)', input_html: { class: 'form-control' }
 
-  - if resource.persisted?
-    %h4 Bulk Upload CSV Fields
-    = render partial: "instance_admin/data_uploads/custom_csv_fields", locals: { f: f }
-
   %h4 Allowed Action Types
   .content-container.dropshadow
     .row
       .input-container.col-xs-12
         = f.association :action_types, collection: ActionType.pluck(:name, :id), as: :check_boxes, label: "Actions"
+        = f.input :action_na, as: :boolean, label: 'NO ACTION'
 
   .content-container
-    = f.button :submit, 'Save', class: 'btn btn-green pull-right'
-
+    .row
+      = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+  
+  .content-container
+  - if resource.persisted?
+    %h4 Bulk Upload CSV Fields
+    = render partial: "instance_admin/data_uploads/custom_csv_fields", locals: { f: f }

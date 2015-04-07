@@ -13,6 +13,7 @@ class Dashboard::Company::ProductsControllerTest < ActionController::TestCase
     @shipping_category = FactoryGirl.create(:shipping_category)
     @shipping_category.company_id = @company.id
     @shipping_category.save!
+    @shipping_method = FactoryGirl.create(:shipping_method, shipping_category_param: @shipping_category)
     10.times { FactoryGirl.create(:taxons) }
     @taxon_ids = Spree::Taxon.all.map(&:id)
     @countries = Spree::Country.last(10)
@@ -39,6 +40,25 @@ class Dashboard::Company::ProductsControllerTest < ActionController::TestCase
     assert assigns(:product).name, @product.reload.name
   end
 
+  should 'create mirror copies of system shipping categories' do
+    initial_count = Spree::ShippingCategory.where(user_id: @user.id, is_system_profile: false).length
+    get :new
+    after_count = Spree::ShippingCategory.where(user_id: @user.id, is_system_profile: false).length
+    assert_equal initial_count, after_count
+
+    @shipping_category.update_attributes(is_system_profile: true, is_system_category_enabled: true)
+
+    initial_count = Spree::ShippingCategory.where(user_id: @user.id, is_system_profile: false).length
+    get :new
+    after_count = Spree::ShippingCategory.where(user_id: @user.id, is_system_profile: false).length
+    after_shipping_category = Spree::ShippingCategory.order('id DESC').where(user_id: @user.id, is_system_profile: false).first
+    assert_equal initial_count + 1, after_count
+
+    assert_not_equal @shipping_category.id, after_shipping_category.id
+    assert_equal @shipping_category.shipping_methods.length, after_shipping_category.shipping_methods.length
+    assert_equal @shipping_category.shipping_methods.first.zones.length, after_shipping_category.shipping_methods.first.zones.length
+    assert_equal @shipping_category.shipping_methods.first.zones.first.members.length, after_shipping_category.shipping_methods.first.zones.first.members.length
+  end
 
   def product_form_attributes
     {

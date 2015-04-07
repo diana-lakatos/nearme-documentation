@@ -65,7 +65,7 @@
         </div>
       </div>
 
-      <input name="buyable" id="is_buyable" value="" type="hidden"></input>
+      <input name="buyable" id="is_buyable" value="{{  platform_context.buyable? }}" type="hidden"></input>
       <input type="submit"/>
     </form>
     {% if platform_context.bookable? %}

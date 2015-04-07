@@ -971,6 +971,7 @@ DEPENDENCIES
   stripe
   test_after_commit
   thin
+  tilt
   timecop (= 0.3.5)
   twilio-ruby
   twitter (~> 5.5.1)

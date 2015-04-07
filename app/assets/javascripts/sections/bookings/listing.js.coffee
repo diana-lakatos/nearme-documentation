@@ -33,6 +33,8 @@ class @Bookings.Listing
     @defaultQuantity = qty if qty >= 0
 
   setHourlyBooking: (hourlyBooking) ->
+    if hourlyBooking
+      @bookedDatesArray = @bookedDatesArray.slice(0,1)
     @data.action_hourly_booking = hourlyBooking
 
   getQuantity: ->

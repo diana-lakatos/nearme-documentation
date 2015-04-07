@@ -198,6 +198,12 @@ DesksnearMe::Application.routes.draw do
         member do
           get 'edit_keys'
         end
+
+        collection do
+          get 'new_key'
+          post 'create_key'
+          delete 'destroy_key'
+        end
       end
     end
 
@@ -283,6 +289,11 @@ DesksnearMe::Application.routes.draw do
           end
           collection do
             post :create_as_copy
+          end
+        end
+        resources :categories, controller: 'transactable_types/categories' do
+          member do
+            get :jstree
           end
         end
       end
@@ -379,6 +390,16 @@ DesksnearMe::Application.routes.draw do
     namespace :shipping_options do
       resource :providers
       resources :dimensions_templates
+      resources :shipping_profiles do
+        collection do
+          get :get_shipping_categories_list
+        end
+
+        member do
+          post :disable_category
+          post :enable_category
+        end
+      end
     end
 
   end
@@ -399,6 +420,7 @@ DesksnearMe::Application.routes.draw do
 
       resource :social_share, :only => [:new], :controller => 'locations/social_share'
     end
+    resources :categories, only: [:index, :show], :controller => 'transactable_types/categories'
   end
 
   resources :locations, :only => [] do

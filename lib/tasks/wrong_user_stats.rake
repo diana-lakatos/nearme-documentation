@@ -24,6 +24,7 @@ class WrongUserStats
       process_association(u, :ticket_message_attachments)
       process_association(u, :authored_messages)
       process_association(u, :reservations)
+      process_association(u, :authentications)
     end
 
     @wrong.each do |entity, num|

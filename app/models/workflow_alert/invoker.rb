@@ -6,7 +6,7 @@ class WorkflowAlert::Invoker
 
   def invoke!(step)
     begin
-      if @workflow_alert.delay > 0
+      if @workflow_alert.delay.to_i > 0
         processor_class.enqueue_later(@workflow_alert.delay.minutes.from_now)
       else
         processor_class.enqueue

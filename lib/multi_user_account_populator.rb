@@ -18,6 +18,7 @@ class MultiUserAccountPopulator
         process_association(u, :created_companies, :creator_id)
         process_association(u, :instance_admins)
         process_association(u, :tickets)
+        process_association(u, :authentications)
         process_association(u, :ticket_message_attachments, :uploader_id)
         process_association(u, :authored_messages, :author_id)
         process_association(u, :reservations, :owner_id)

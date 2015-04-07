@@ -6,10 +6,10 @@ class Spree::Product::SearchFetcherTest < ActiveSupport::TestCase
     Transactable.destroy_all
     @taxon1 = FactoryGirl.create(:taxon, name: 'taxon 1')
     @taxon2 = FactoryGirl.create(:taxon, name: 'taxon 2')
-
-    @product1 = FactoryGirl.create(:product, name: 'product one')
+    @product_type = FactoryGirl.create(:product_type, :with_custom_attribute)
+    @product1 = FactoryGirl.create(:product, name: 'product one', product_type: @product_type)
     @product1.taxons << @taxon1
-    @product2 = FactoryGirl.create(:product, name: 'product two')
+    @product2 = FactoryGirl.create(:product, name: 'product two', product_type: @product_type)
     @product2.taxons << @taxon2
 
     @filters = {}
@@ -25,6 +25,24 @@ class Spree::Product::SearchFetcherTest < ActiveSupport::TestCase
     should 'find products with any keyword from query' do
       @filters.merge!({ query: 'product' })
       assert_equal [@product1, @product2].sort, Spree::Product::SearchFetcher.new(@filters).products.sort
+    end
+
+    context 'extra_properties' do
+      setup do
+        @product3 = FactoryGirl.create(:product, name: 'product three', product_type: @product_type)
+        @product3.extra_properties['manufacturer'] = "Bosh"
+        @product3.save
+      end
+
+      should 'find products with any keyword from query in properties' do
+        @filters.merge!({ query: 'bosh' })
+        assert_equal [@product3], Spree::Product::SearchFetcher.new(@filters).products
+      end
+
+      should 'find products with any keyword from query in properties and name' do
+        @filters.merge!({ query: 'bosh product' })
+        assert_equal [@product1, @product2, @product3].sort, Spree::Product::SearchFetcher.new(@filters).products.sort
+      end
     end
   end
 end

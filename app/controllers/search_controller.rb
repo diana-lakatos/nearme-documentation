@@ -40,8 +40,8 @@ class SearchController < ApplicationController
 
   def remember_search_query
     cookies[:last_search_query] = {
-      :value => searcher.search_query_values,
-      :expires => (Time.zone.now + 1.hour),
+      value: searcher.search_query_values,
+      expires: (Time.zone.now + 1.hour),
     }
   end
 
@@ -85,7 +85,7 @@ class SearchController < ApplicationController
   def set_taxonomies
     @taxon = Spree::Taxon.where.not(parent_id: nil).find_by_permalink(params[:taxon]) if params[:taxon]
     if @taxon.present?
-      @taxons = [@taxon.children.present? ? @taxon : @taxon.parent] 
+      @taxons = [@taxon.children.present? ? @taxon : @taxon.parent]
     else
       @taxons = Spree::Taxonomy.includes(root: :children).map(&:root)
       params[:taxon] = nil if @taxon.blank?

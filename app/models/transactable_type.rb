@@ -21,6 +21,7 @@ class TransactableType < ActiveRecord::Base
   has_many :rating_systems
   has_many :reviews
   has_many :instance_views
+  has_many :categories, as: :categorable
 
   has_one :schedule, as: :scheduable
   accepts_nested_attributes_for :schedule

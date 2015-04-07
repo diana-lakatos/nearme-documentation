@@ -18,7 +18,7 @@
           .padding-row
 
           %article.location.listing
-            = render 'locations/listings/listing_description'
+            = render partial: 'shared/tabs_for_listing', locals: { description_partial: 'locations/listings/listing_description' }
 
         .one-third.column.left
           .toggleable-booking-modules

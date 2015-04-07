@@ -24,7 +24,7 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
       user_reviews_service = UserReviewsService.new(@user, @platform_context, params)
       reviews_left_by_buyer = user_reviews_service.reviews_by_role
 
-      assert_equal @user.reviews.for_seller_and_product, reviews_left_by_buyer
+      assert_equal @user.reload.reviews.for_seller_and_product, reviews_left_by_buyer
       assert_includes reviews_left_by_buyer, review_on_seller
       assert_includes reviews_left_by_buyer, review_on_product
     end

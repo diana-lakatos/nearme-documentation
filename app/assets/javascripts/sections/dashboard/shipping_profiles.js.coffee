@@ -14,9 +14,13 @@ class @ShippingProfiles
       if !url.match(/\/dashboard\//)
         params['form'] = 'boarding'
 
+      url_for_shipping_categories = '/dashboard/shipping_categories/get_shipping_categories_list'
+      if url.match(/instance_admin/)
+        url_for_shipping_categories = '/instance_admin/shipping_options/shipping_profiles/get_shipping_categories_list'
+
       jQuery.ajax
         type: 'get'
-        url: '/dashboard/shipping_categories/get_shipping_categories_list'
+        url: url_for_shipping_categories
         data: params
         success: (data) ->
           $('.shipping_method_block.shipping_method_list').empty()

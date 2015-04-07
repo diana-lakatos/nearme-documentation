@@ -21,6 +21,10 @@ class WorkflowAlert < ActiveRecord::Base
   validates_inclusion_of :reply_to_type, in: WorkflowAlert::RECIPIENT_TYPES, allow_blank: true
   validates_uniqueness_of :template_path, scope: [:workflow_step_id, :recipient_type, :alert_type, :deleted_at]
   validates_presence_of :template_path
+  validates :from, email: true, allow_blank: true
+  validates :cc, emails_list: true, allow_blank: true
+  validates :bcc, emails_list: true, allow_blank: true
+
 
   serialize :custom_options, Hash
 end

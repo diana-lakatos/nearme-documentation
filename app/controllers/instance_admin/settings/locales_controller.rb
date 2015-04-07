@@ -1,5 +1,5 @@
 class InstanceAdmin::Settings::LocalesController < InstanceAdmin::Settings::BaseController
-  before_filter :find_locale, except: [:index, :new, :create]
+  before_filter :find_locale, except: [:index, :new, :create, :new_key, :create_key, :destroy_key]
 
   def index
     @locales = platform_context.instance.locales.order('created_at')
@@ -25,7 +25,8 @@ class InstanceAdmin::Settings::LocalesController < InstanceAdmin::Settings::Base
 
   def edit_keys
     @translations = @instance.translations.where(locale: @locale.code)
-    @default_translations = Translation.defaults_for 'en'
+    @default_translations = Translation.defaults_for('en').order('key ASC')
+    @custom_translations = @instance.translations.custom_defaults
   end
 
   def update
@@ -47,6 +48,33 @@ class InstanceAdmin::Settings::LocalesController < InstanceAdmin::Settings::Base
     end
   end
 
+  def new_key
+    @translation = @instance.translations.new
+  end
+
+  def create_key
+    @translation = @instance.translations.new locale: 'en'
+    @translation.attributes = translation_params
+
+    if @translation.valid?(:instance_admin)
+      @translation.prepend_custom_label
+      @translation.save(context: :instance_admin)
+
+      flash[:success] = t 'instance_admin.locales.notices.key_created', key: @translation.key
+      redirect_to instance_admin_settings_locales_path
+    else
+      render 'new_key'
+    end
+  end
+
+  def destroy_key
+    @translation = @instance.translations.find params[:id]
+    @translation.destroy
+
+    flash[:success] = t 'instance_admin.locales.notices.key_destroyed'
+    redirect_to instance_admin_settings_locales_path
+  end
+
   private
 
   def redirect_url
@@ -59,5 +87,9 @@ class InstanceAdmin::Settings::LocalesController < InstanceAdmin::Settings::Base
 
   def locale_params
     params.require(:locale).permit(secured_params.locale)
+  end
+
+  def translation_params
+    params.require(:translation).permit [:key, :value]
   end
 end

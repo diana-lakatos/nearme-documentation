@@ -22,9 +22,9 @@ class InstanceAdmin::BuySell::TaxonomiesControllerTest < ActionController::TestC
   context "create" do
     should 'allow create taxonomy' do
       assert_difference 'Spree::Taxonomy.count', 1 do
-        post :create, taxonomy: { name: 'new name'}
+        post :create, taxonomy: { name: 'new name taxonomy'}
       end
-      assert_redirected_to edit_instance_admin_buy_sell_taxonomy_path(Spree::Taxonomy.last)
+      assert_redirected_to edit_instance_admin_buy_sell_taxonomy_path(Spree::Taxonomy.where(name: 'new name taxonomy').last)
     end
   end
 

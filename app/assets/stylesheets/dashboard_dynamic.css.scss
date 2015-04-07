@@ -1,0 +1,26 @@
+@import "compass";
+
+@import "globals/*";
+@import "components/nav";
+@import "components/modal";
+@import "components/flash";
+@import "components/fileupload";
+
+$font-stack: $font-regular, sans-serif, helvetica;
+
+$color-blue: #5dbded;
+$color-light-blue: #acdef7;
+$color-dark-blue: #51a1ca;
+$color-red: #e85c41;
+$color-light-red: #f5ad9e;
+$color-dark-red: #c6533a;
+$color-dark-gray: #555;
+$color-gray: #b6b6b6;
+$color-light-gray: #dadada;
+$color-ultra-light-gray: #f2f2f2;
+$color-headings: #3a3a3a;
+$color-placeholder: #ccc;
+
+
+
+@import "layout/footer";

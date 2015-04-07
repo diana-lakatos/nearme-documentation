@@ -124,8 +124,8 @@ class ProductForm < Form
     @user = @product.user
 
     @all_shipping_categories = []
-    @all_shipping_categories = @company.shipping_categories.where(:company_default => false) if @company.present? && !@company.new_record?
-    @all_shipping_categories = Spree::ShippingCategory.where(:user_id => @user.id, :company_default => false) if @all_shipping_categories.blank? && @user.present?
+    @all_shipping_categories = @company.shipping_categories.where(company_default: false, is_system_profile: false) if @company.present? && !@company.new_record?
+    @all_shipping_categories = Spree::ShippingCategory.where(user_id: @user.id, company_default: false, is_system_profile: false) if @all_shipping_categories.blank? && @user.present?
     if @product.shipping_category.present?
       @shipping_category = @product.shipping_category
       @shipping_category_id = @shipping_category.id

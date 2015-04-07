@@ -1,8 +1,8 @@
 # Compiles our custom instance theme stylesheets, etc.
 class Theme::Compiler
   def initialize(theme)
-    @theme = theme
-    PlatformContext.current = PlatformContext.new(@theme.instance)
+    PlatformContext.current = PlatformContext.new(theme.instance)
+    @theme = Theme.find(theme.id)
   end
 
   # Generates the new stylesheet assets and updates the theme data accordingly.

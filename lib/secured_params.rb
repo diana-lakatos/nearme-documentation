@@ -101,7 +101,7 @@ class SecuredParams
   def data_upload
     [
       :csv_file,
-      options: [:send_invitational_email, :sync_mode]
+      options: [:send_invitational_email, :sync_mode, :enable_rfq]
     ]
 
   end
@@ -184,6 +184,16 @@ class SecuredParams
   end
 
   def taxon
+    [
+      :name,
+      :in_top_nav,
+      :top_nav_position,
+      :parent_id,
+      :child_index
+    ]
+  end
+
+  def category
     [
       :name,
       :in_top_nav,
@@ -515,6 +525,7 @@ class SecuredParams
       :show_page_enabled,
       :groupable_with_others,
       :enable_photo_required,
+      :action_na,
       :service_fee_guest_percent, :service_fee_host_percent,
       :bookable_noun, :lessor, :lessee,
       :action_rfq,
@@ -535,6 +546,7 @@ class SecuredParams
       :min_monthly_price,
       :max_monthly_price,
       :action_book_it_out,
+      :multiple_root_categries,
       :bookable_noun, :lessor, :lessee, :action_schedule_booking,
       :availability_templates_attributes => nested(self.availability_template),
       :action_type_ids => [],
@@ -837,6 +849,7 @@ class SecuredParams
         availability_rules_attributes: nested(self.availability_rule),
         photo_ids: [],
         amenity_ids: [],
+        category_ids: [],
         waiver_agreement_template_ids: [],
         schedule_attributes: self.schedule,
         document_requirements_attributes: nested(self.document_requirement),

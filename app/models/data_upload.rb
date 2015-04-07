@@ -14,7 +14,7 @@ class DataUpload < ActiveRecord::Base
   mount_uploader :xml_file, DataImportFileUploader
   validates :csv_file, :presence => true, :file_size => { :maximum => 10.megabytes.to_i }
 
-  store :options, accessors: [ :send_invitational_email, :sync_mode ], coder: Hash
+  store :options, accessors: [ :send_invitational_email, :sync_mode, :enable_rfq ], coder: Hash
   scope :for_importable, -> (importable) { where(importable: importable) }
 
   state_machine :state, initial: :queued do
@@ -44,12 +44,10 @@ class DataUpload < ActiveRecord::Base
     end
   end
 
-  def sync_mode
-    ActiveRecord::ConnectionAdapters::Column.value_to_boolean(super)
-  end
-
-  def send_invitational_email
-    ActiveRecord::ConnectionAdapters::Column.value_to_boolean(super)
+  %w(sync_mode send_invitational_email enable_rfq).each do |attr|
+    define_method attr do
+      ActiveRecord::ConnectionAdapters::Column.value_to_boolean(attributes['options'][attr])
+    end
   end
 
   def should_be_monitored?

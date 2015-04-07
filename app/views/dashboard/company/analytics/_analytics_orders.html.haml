@@ -1,0 +1,27 @@
+.box
+  - if @orders.total_entries.zero?
+    %p.no_data
+      = no_purchases_yet_text
+  - else
+    .weekly-chart
+      .total.right
+        .total-number.left
+          %span.total
+            = "#{@chart.total} orders"
+        %span.total-text 7 day total
+      %canvas#chart
+
+    %table.table.table-simple
+      %thead
+        %tr
+          %th Date
+          %th Orders
+      - @orders.each do |order|
+        %tr
+          %td
+            = order.orders_date
+          %td
+            = order.orders_count
+
+    = will_paginate_styled @orders, :params => { :analytics_mode => 'orders' }
+

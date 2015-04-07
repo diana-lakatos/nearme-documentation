@@ -9,7 +9,7 @@ module CustomAttributes
         { as: :limited_text }
       end.merge({
         limit: limit,
-        input_html: { :maxlength => limit }
+        input_html: { maxlength: limit }
       })
     end
 

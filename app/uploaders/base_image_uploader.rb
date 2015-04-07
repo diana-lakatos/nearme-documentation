@@ -15,7 +15,9 @@ class BaseImageUploader < BaseUploader
   end
 
   # Offers a placeholder while image is not uploaded yet
-  def default_url
-    Placeholder.new(height: 100, width: 100).path
+  def default_url(*args)
+    version = args.shift
+    dimensions = version && self.class.dimensions.has_key?(version) ? self.class.dimensions[version] : {width: 100, height: 100}
+    Placeholder.new(dimensions).path
   end
 end

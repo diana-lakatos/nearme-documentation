@@ -11,7 +11,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
 
   def new
     @transactable = @transactable_type.transactables.build company: @company
-    @transactable.availability_template_id = @transactable_type.availability_templates.first.id
+    @transactable.availability_template_id = @transactable_type.availability_templates.try(:first).try(:id)
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
     @photos = current_user.photos.where(transactable_id: nil)
     build_document_requirements_and_obligation if platform_context.instance.documents_upload_enabled?
@@ -28,6 +28,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
       event_tracker.updated_profile_information(current_user)
       redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
     else
+      flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(@transactable.errors.full_messages)
       @photos = @transactable.photos
       render :new
     end
@@ -53,6 +54,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
           flash[:success] = t('flash_messages.manage.listings.listing_updated')
           redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
         else
+          flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(@transactable.errors.full_messages)
           @photos = @transactable.photos
           render :edit
         end

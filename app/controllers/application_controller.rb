@@ -63,7 +63,7 @@ class ApplicationController < ActionController::Base
       redirect_to path, status: 301
     end
 
-    # Set either primary or requested language
+    # Set either primary or requested language#
     if params_locale.present?
       I18n.locale = params_locale
     else
@@ -526,4 +526,5 @@ class ApplicationController < ActionController::Base
     @breadcrumbs << { name: taxon.name, path: taxon_custom_path(taxon) }
     add_breadcrumbs(taxon.parent) if taxon.parent
   end
+
 end
