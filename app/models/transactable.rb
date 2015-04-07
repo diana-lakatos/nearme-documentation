@@ -129,6 +129,9 @@ class Transactable < ActiveRecord::Base
   validates_inclusion_of :booking_type, in: TransactableType::BOOKING_TYPES
   validates :quantity, presence: true
   validates :quantity, numericality: {greater_than: 0}
+  validates :book_it_out_minimum_qty, numericality: {greater_than_or_equal_to: 0}, allow_blank: true
+  validates :book_it_out_discount, numericality: {greater_than: 0, less_than: 100}, allow_blank: true
+  validate :check_book_it_out_minimum_qty, if: ->(record) { record.book_it_out_minimum_qty.present? }
 
   after_save :set_external_id
   after_save { self.update_column(:opened_on_days, availability.days_open.sort) }
@@ -196,7 +199,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def next_available_occurrences(number_of_occurrences = 10)
-    occurences = []
+    occurences = {}
     occurence = Time.now
     checks_to_be_performed = 100
     loop do
@@ -204,7 +207,10 @@ class Transactable < ActiveRecord::Base
       occurence = schedule.try(:schedule).try(:next_occurrences, 10, occurence).try(:first)
       if occurence
         start_minute = occurence.to_datetime.min.to_i + (60 * occurence.to_datetime.hour.to_i)
-        occurences << occurence if self.quantity - desks_booked_on(occurence.to_datetime, start_minute, start_minute) > 0
+        availability = self.quantity - desks_booked_on(occurence.to_datetime, start_minute, start_minute)
+        if availability > 0
+          occurences[occurence.to_datetime.to_i.to_s] = { date: occurence, availability: availability }
+        end
       end
       break if occurences.count == number_of_occurrences || occurence.nil? || checks_to_be_performed.zero?
     end
@@ -474,6 +480,16 @@ class Transactable < ActiveRecord::Base
   def recalculate_average_rating!
     average_rating = reviews.average(:rating) || 0.0
     self.update(average_rating: average_rating)
+  end
+
+  def book_it_out_available?
+    schedule_booking? && transactable_type.action_book_it_out? && book_it_out_discount.to_i > 0
+  end
+
+  def check_book_it_out_minimum_qty
+    if book_it_out_minimum_qty > quantity
+      errors.add(:book_it_out_minimum_qty, I18n.t('activerecord.errors.models.transactable.attributes.book_it_out_minimum_qty'))
+    end
   end
 
   private

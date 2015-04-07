@@ -385,6 +385,20 @@
       }
     }
 
+    .book-it-out {
+      display: none;
+      width: 100%;
+
+      input#book_it_out {
+        margin-top: 10px;
+      }
+
+      .price {
+        margin-top: 0px;
+        margin-bottom: 50px;
+      }
+    }
+
     .recurring_select {
       width: 100%;
     }

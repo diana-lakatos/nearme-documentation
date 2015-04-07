@@ -27,6 +27,10 @@ module ListingsHelper
       base_data.merge!({
         fixed_price_cents: listing.fixed_price_cents
       })
+      base_data.merge!({
+        book_it_out_discount: listing.book_it_out_discount,
+        book_it_out_minimum_qty: listing.book_it_out_minimum_qty
+      }) if listing.book_it_out_available?
     else
       first_date = listing.first_available_date
       second_date = listing.second_available_date

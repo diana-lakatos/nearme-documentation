@@ -161,6 +161,41 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
 
   end
 
+  context 'Book It Out' do
+    setup do
+      @transactable = FactoryGirl.create(:transactable, :fixed_price, :with_book_it_out)
+      @transactable.transactable_type.action_book_it_out = true
+      @transactable.transactable_type.save
+      @params = booking_params_for(@transactable)
+      @params[:reservation_request].merge!({ dates: [@transactable.next_available_occurrences.first.last[:date]], quantity: 10, book_it_out: "true", start_minute: 365, end_minute: 365})
+    end
+
+    should 'create reservation with discount' do
+      post :create, @params
+      reservation = Reservation.last
+      assert_redirected_to booking_successful_dashboard_user_reservation_path(Reservation.last)
+      assert_equal reservation.book_it_out_discount, @transactable.book_it_out_discount
+      assert_equal reservation.subtotal_amount, @transactable.quantity * @transactable.fixed_price * ( 1 - @transactable.book_it_out_discount / 100.to_f)
+      assert_not_equal reservation.subtotal_amount, @transactable.quantity * @transactable.fixed_price
+    end
+
+    should 'not create reservation with discount and wrong quantity' do
+      @params[:reservation_request].merge!({quantity: 8})
+      post :create, @params
+      assert_response 200
+      assert response.body.include?(I18n.t('reservations_review.errors.book_it_out_quantity'))
+    end
+
+    should 'not create reservation with discount if it is turned off' do
+      @transactable.transactable_type.action_book_it_out = false
+      @transactable.transactable_type.save
+      post :create, @params
+      assert_response 200
+      assert response.body.include?(I18n.t('reservations_review.errors.book_it_out_not_available'))
+    end
+
+  end
+
   private
 
   def booking_params_for(listing)

@@ -124,6 +124,7 @@ class Listings::ReservationsController < ApplicationController
       platform_context,
       {
         quantity: attributes[:quantity].presence || 1,
+        book_it_out: attributes[:book_it_out],
         dates: attributes[:dates],
         start_minute: attributes[:start_minute],
         end_minute: attributes[:end_minute],

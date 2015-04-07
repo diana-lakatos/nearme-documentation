@@ -1306,6 +1306,7 @@ ActiveRecord::Schema.define(version: 20150403104757) do
     t.string   "type"
     t.string   "reservation_type"
     t.integer  "hours_to_expiration",                           default: 24,        null: false
+    t.integer  "book_it_out_discount"
     t.integer  "minimum_booking_minutes",                       default: 60
   end
 
@@ -2774,6 +2775,7 @@ ActiveRecord::Schema.define(version: 20150403104757) do
     t.boolean  "show_reviews_if_both_completed",                                     default: false
     t.boolean  "enable_photo_required",                                              default: true
     t.integer  "hours_to_expiration",                                                default: 24
+    t.boolean  "action_book_it_out"
     t.integer  "minimum_booking_minutes",                                            default: 60
     t.boolean  "multiple_root_categries"
     t.boolean  "action_na",                                                          default: false
@@ -2823,6 +2825,8 @@ ActiveRecord::Schema.define(version: 20150403104757) do
     t.integer  "quantity",                       default: 1
     t.integer  "opened_on_days",                 default: [],                     array: true
     t.integer  "minimum_booking_minutes",        default: 60
+    t.integer  "book_it_out_discount"
+    t.integer  "book_it_out_minimum_qty"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree

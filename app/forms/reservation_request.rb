@@ -1,6 +1,6 @@
 class ReservationRequest < Form
 
-  attr_accessor :dates, :start_minute, :end_minute
+  attr_accessor :dates, :start_minute, :end_minute, :book_it_out
   attr_accessor :card_number, :card_exp_month, :card_exp_year, :card_code, :card_holder_first_name,
                 :card_holder_last_name, :payment_method_nonce
   attr_accessor :waiver_agreement_templates, :documents, :payment_method
@@ -31,6 +31,7 @@ class ReservationRequest < Form
       @reservation = listing.reservations.build
       @instance = platform_context.instance
       @reservation.currency = @listing.currency
+      @reservation.book_it_out_discount = @listing.book_it_out_discount if attributes[:book_it_out] == 'true'
       @billing_gateway = Billing::Gateway::Incoming.new(@user, @instance, @reservation.currency, @listing.company.iso_country_code) if @user
       @client_token = @billing_gateway.try(:client_token) if @billing_gateway.try(:possible?)
       @reservation.user = user

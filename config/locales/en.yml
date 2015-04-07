@@ -654,6 +654,7 @@ en:
     last_day: 'Select an end date'
     booking_module:
       fixed: 'Fixed Price'
+      book_it_out: 'Book It Out'
       pick_fixed_date: 'Select a date'
       suggest_date: 'What time works best for you?'
   search:
@@ -848,6 +849,8 @@ en:
 
     errors:
       whoops: "Whoops! We couldn't make that reservation."
+      book_it_out_quantity: "Quantity for Book It Out option should equal maximal available quantity."
+      book_it_out_not_available: 'Book It Out option is no longer available'
 
   recurring_reservations_review:
     total: 'Total per reservation'

@@ -139,6 +139,10 @@ en:
           weekly: 'week'
           monthly: 'month'
           hourly: 'hour'
+        book_it_out_minimum_qty: "Book It Out minimum quantity"
+        book_it_out_discount: "Book It Out discount"
+      transactable_type:
+        action_book_it_out: 'Enable Book it Out option'
       user:
         biography: 'About me'
         sms_notifications_enabled: 'Enable Text Message Notifications'
@@ -199,6 +203,9 @@ en:
       company:
         mailing_address: 'Checks for revenue will be sent to this address. Find out more about payments in the Support Center.'
         paypal_email: 'If you specify a PayPal email, we will make a PayPal transfer instead of sending checks.'
+      transactable:
+        book_it_out_discount: "Set your % discount amount"
+        book_it_out_minimum_qty: "Book it Out is only available if the set minimum quantity is available"
 
     required:
       mark: '*'

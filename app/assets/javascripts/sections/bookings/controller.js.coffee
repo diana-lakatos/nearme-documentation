@@ -22,7 +22,6 @@ class Bookings.Controller
 
     if @listing.isRecurringBooking()
       new Bookings.RecurringBookingController(@container.find('form[data-recurring-booking-form]'))
-
     @updateSummary()
     @delayedUpdateBookingStatus()
 
@@ -38,8 +37,11 @@ class Bookings.Controller
   # Bind to the various DOM elements managed by this controller.
   bindDomElements: ->
     @quantityField = @container.find('select.quantity')
+    @bookItOutContainer = @container.find('.book-it-out')
+    @bookItOutCheck = @container.find('input#book_it_out')
+    @bookItOutTotal = @bookItOutContainer.find('.total')
     @quantityResourceElement = @container.find('.quantity .resource')
-    @totalElement = @container.find('.total')
+    @totalElement = @container.find('.booking-body > .price .total')
     @daysElement = @container.find('.total-days')
     @additionalCharges = @container.find('[data-optional-charge-select]')
     @bookButton = @container.find('[data-behavior=reviewBooking]')
@@ -54,6 +56,7 @@ class Bookings.Controller
       @fixedPriceSelect = @container.find("[data-fixed-date-select]")
       @fixedPriceSelect.on 'change', (e) =>
         @updateBookingStatus()
+        @updateBookItOut() if @listing.bookItOutAvailable()
 
     @setReservationType()
 
@@ -84,6 +87,10 @@ class Bookings.Controller
     @additionalCharges.on 'change', (event) =>
       @delayedUpdateBookingStatus()
       @updateCharges()
+
+    if @listing.bookItOutAvailable()
+      @bookItOutContainer.on 'change','input', (event) =>
+        @bookItOut(event.target)
 
     if @listing.withCalendars()
       @datepicker.bind 'datesChanged', (dates) =>
@@ -120,6 +127,12 @@ class Bookings.Controller
     if @fixedPriceSelect
       if @fixedPriceSelect.val()
         @listing.bookedDatesArray = [@fixedPriceSelect.val()]
+        @listing.bookedDateAvailability = @fixedPriceSelect.find(':selected').data('availability')
+        for option in @quantityField.find('option')
+          if parseInt(option.value) > @listing.fixedAvailability()
+            $(option).prop('disabled', true)
+          else
+            $(option).prop('disabled', false)
       else
         @listing.bookedDatesArray = []
 
@@ -136,8 +149,8 @@ class Bookings.Controller
   disableRFQButton: ->
     @rfqButton.addClass('click-disabled').find('span.text').text('Requesting...')
 
-  quantityWasChanged: ->
-    @listing.setDefaultQuantity(parseInt(@quantityField.val(), 10))
+  quantityWasChanged: (quantity = @quantityField.val())->
+    @listing.setDefaultQuantity(parseInt(quantity, 10))
     @updateQuantityField()
 
     # Reset the datepicker if the booking is no longer available
@@ -161,7 +174,7 @@ class Bookings.Controller
     additionalChargeFields.clone().prependTo(reservationRequestForm)
 
   updateSummary: ->
-    @totalElement.text((@listing.bookingSubtotal()/100).toFixed(2))
+    @totalElement.text((@listing.bookingSubtotal(@bookItOutSelected())/100).toFixed(2))
 
   reviewBooking: ->
     return unless @listing.isBooked()
@@ -184,6 +197,7 @@ class Bookings.Controller
 
   setFormFields: ->
     @bookForm.find('[name="reservation_request[quantity]"]').val(@listing.reservationOptions().quantity)
+    @bookForm.find('[name="reservation_request[book_it_out]"]').val(@bookItOutSelected())
     if @listing.withCalendars()
       @bookForm.find('[name="reservation_request[dates]"]').val(@listing.reservationOptions().dates)
       @bookForm.find('[name="reservation_request[start_on]"]').val(@listing.reservationOptions().start_on)
@@ -198,4 +212,26 @@ class Bookings.Controller
         Modal.load(@registrationUrl)
       else
         window.location.replace(@registrationUrl)
+
+  bookItOutSelected: ->
+    @listing.bookItOutAvailable() && @bookItOutCheck.is(':checked')
+
+  updateBookItOut: ->
+    if @listing.bookItOutAvailableForDate()
+      @bookItOutContainer.show()
+      @bookItOutTotal.text((@listing.bookItOutSubtotal()/100).toFixed(0))
+    else
+      @bookItOutContainer.hide()
+
+  bookItOut: (element) ->
+    if $(element).is(':checked')
+      @bookItOutTotal.parents('.price').hide()
+      @totalElement.text (@listing.bookItOutSubtotal()/100).toFixed(2)
+      @listing.setDefaultQuantity @listing.fixedAvailability()
+      @updateQuantityField()
+      @quantityField.prop('disabled', true)
+    else
+      @bookItOutTotal.parents('.price').show()
+      @quantityField.prop('disabled', false)
+      @quantityWasChanged 1
 

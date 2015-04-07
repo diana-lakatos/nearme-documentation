@@ -22,11 +22,12 @@
           = f.input_field :service_fee_host_percent, type: 'tel', class: 'form-control'
 
     .row
-      .input-container.col-xs-6
+      .input-container.col-xs-4
         = f.input :groupable_with_others, as: :boolean
-      .input-container.col-xs-6
+      .input-container.col-xs-4
         = f.input :enable_photo_required, as: :boolean
-
+      .input-container.col-xs-4
+        = f.input :action_book_it_out, label: "Bulk Booking Discount", as: :boolean
   %h4 Cancellation Policy
   .content-container.dropshadow
     .row

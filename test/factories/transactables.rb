@@ -38,6 +38,20 @@ FactoryGirl.define do
       end
     end
 
+    trait :fixed_price do
+      daily_price_cents nil
+      action_daily_booking false
+      fixed_price_cents 10000
+      booking_type 'schedule'
+      quantity 10
+      schedule
+    end
+
+    trait :with_book_it_out do
+      book_it_out_discount 20
+      book_it_out_minimum_qty 8
+    end
+
     factory :free_listing do
       after(:build) do |listing|
         listing.daily_price_cents = nil

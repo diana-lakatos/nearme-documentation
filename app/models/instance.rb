@@ -21,6 +21,7 @@ class Instance < ActiveRecord::Base
   SEARCH_TYPES = %w(geo fulltext fulltext_geo)
   SEARCH_SERVICE_VIEWS = %w(mixed list listing_mixed)
   SEARCH_PRODUCTS_VIEWS = %w(products products_table)
+  PRICING_OPTIONS = %w(free hourly daily weekly monthly fixed)
 
   API_KEYS.each do |meth|
     define_method(meth) do
@@ -110,8 +111,6 @@ class Instance < ActiveRecord::Base
   def authentication_supported?(provider)
     self.send(:"#{provider.downcase}_consumer_key").present? && self.send(:"#{provider.downcase}_consumer_secret").present?
   end
-
-  PRICING_OPTIONS = %w(free hourly daily weekly monthly fixed)
 
   PRICING_OPTIONS.each do |price|
     next if price == 'free'

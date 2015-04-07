@@ -51,4 +51,8 @@
           =t('simple_form.labels.listings.price')
       .col-md-9
         = render 'price_field', :f => f, :price => 'fixed', :label => t("simple_form.labels.transactable.price.fixed"), :include_checkbox => false
-
+    - if form_fields.find{ |h| h['transactable'] == 'book_it_out' }
+      %div.row.price_container
+        =f.input :book_it_out_discount
+        =f.input :book_it_out_minimum_qty
+      

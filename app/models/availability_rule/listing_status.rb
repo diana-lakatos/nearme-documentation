@@ -53,6 +53,6 @@ class AvailabilityRule::ListingStatus
   end
 
   def booked_on(date)
-    booked_by_date[date.strftime("%Y-%m-%d")] || 0
+    booked_by_date[date.to_date] || 0
   end
 end
