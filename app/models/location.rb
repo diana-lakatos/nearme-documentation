@@ -13,6 +13,7 @@ class Location < ActiveRecord::Base
 
   attr_accessor :name_and_description_required
   attr_accessor :searched_locations, :search_rank
+  attr_accessor :transactable_type
 
   liquid_methods :name
 
@@ -51,7 +52,8 @@ class Location < ActiveRecord::Base
 
   has_many :wish_list_items, as: :wishlistable
 
-  validates_presence_of :company, :currency, :location_type_id
+  validates_presence_of :company, :currency
+  validates_presence_of :location_type_id, if: :location_type_required
   validates_presence_of :description, :if => :name_and_description_required
   validates_presence_of :name, :if => :name_and_description_required
   validates :email, email: true, allow_nil: true
@@ -59,7 +61,8 @@ class Location < ActiveRecord::Base
   validates_length_of :description, :maximum => 250, :if => :name_and_description_required
   validates_length_of :name, :maximum => 50, :if => :name_and_description_required
 
-  before_save :assign_default_availability_rules
+  before_validation :set_location_type
+  before_save :assign_default_availability_rules, :set_currency
   after_save :set_external_id
 
   extend FriendlyId
@@ -91,6 +94,10 @@ class Location < ActiveRecord::Base
     TransactableType.first.try(:name) == "Listing"
   end
 
+  def location_type_required
+    !(transactable_type && transactable_type.skip_location)
+  end
+
   def minimum_booking_minutes
     listings.joins(:transactable_type).pluck(:minimum_booking_minutes).max || 60
   end
@@ -102,7 +109,7 @@ class Location < ActiveRecord::Base
   end
 
   def currency
-    super.presence || "USD"
+    super.presence || transactable_type.try(:default_currency) || "USD"
   end
 
   def name
@@ -205,4 +212,17 @@ class Location < ActiveRecord::Base
     self.update_column(:external_id, "manual-#{id}") if self.external_id.blank?
   end
 
+  def set_location_type
+    if transactable_type.try(:skip_location)
+      self.location_type ||= instance.location_types.first
+      if company.company_address.present?
+        self.location_address ||= company.company_address.dup
+        self.location_address.fetch_coordinates!
+      end
+    end
+  end
+
+  def set_currency
+    self.currency = currency
+  end
 end

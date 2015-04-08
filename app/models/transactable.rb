@@ -176,6 +176,10 @@ class Transactable < ActiveRecord::Base
     end
   end
 
+  def display_defered_availability_rules?
+    respond_to?(:defer_availability_rules) && !transactable_type.skip_location?
+  end
+
   def set_custom_defaults
     self.enabled = is_trusted? if self.enabled.nil?
   end

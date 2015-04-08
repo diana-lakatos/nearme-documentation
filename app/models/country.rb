@@ -25,6 +25,11 @@ class Country
       @countries ||= load_countries
     end
 
+    def where options={}
+      names = options[:name] || []
+      all.select { |c| names.include?(c.name) }
+    end
+
     def find(name)
       if name.present?
         countries[name]

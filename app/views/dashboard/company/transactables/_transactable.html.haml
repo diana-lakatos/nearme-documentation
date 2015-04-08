@@ -6,9 +6,9 @@
     .col-md-3.listing-attr
       = link_to transactable.name, transactable_type_location_listing_path(@transactable_type, transactable.location, transactable)
     .col-md-3.listing-attr
-      %p= transactable.location.try(&:name)
+      %p= @transactable_type.skip_location? ? transactable.quantity : transactable.location.try(&:name)
     .col-md-2.listing-attr
-      %p= transactable.decorate.lowest_price_with_currency
+      %p= transactable.decorate.lowest_price_with_currency || t('Free')
     .col-md-1.listing-attr
       = link_to "Edit", edit_dashboard_company_transactable_type_transactable_path(@transactable_type, transactable)
       = link_to "Delete", dashboard_company_transactable_type_transactable_path(@transactable_type, transactable),

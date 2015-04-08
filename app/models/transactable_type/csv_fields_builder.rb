@@ -3,7 +3,9 @@ class TransactableType::CsvFieldsBuilder
   def initialize(importable)
     @importable = importable
     @models = if import_model == :transactable
-        [:location, :address, import_model, :photo]
+        models = [:address, import_model, :photo]
+        models.unshift(:location) unless @importable.skip_location?
+        models
       else
         [import_model, :'spree/variant', :'spree/shipping_category', :'spree/image']
       end

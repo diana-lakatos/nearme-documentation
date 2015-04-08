@@ -19,7 +19,7 @@
       .col-md-3
         %p Name
       .col-md-3
-        %p Location
+        %p= @transactable_type.skip_location? ? t('quantity') : t('simple_form.labels.location.name')
       .col-md-2
         %p Price
   = render @transactables

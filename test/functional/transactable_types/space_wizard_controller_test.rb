@@ -249,19 +249,57 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
   end
 
   context 'with skip_company' do
-    should 'create listing when location skip_company is set to true' do
+    setup do 
       @instance_with_skip_company = FactoryGirl.create(:instance, skip_company: true)
+      @domain = FactoryGirl.create(:domain, target: @instance_with_skip_company)
+
       PlatformContext.current = PlatformContext.new(@instance_with_skip_company)
       @user = FactoryGirl.create(:user)
       sign_in @user
       @transactable_type = FactoryGirl.create(:transactable_type_listing)
 
-      params_without_company_name = get_params
-      params_without_company_name['user']['companies_attributes']['0'].delete('name')
-      params_without_company_name['user']['companies_attributes']['0'].delete('industry_ids')
+      @params_without_company_name = get_params
+      @params_without_company_name['user']['companies_attributes']['0'].delete('name')
+      @params_without_company_name['user']['companies_attributes']['0'].delete('industry_ids')
+    end
+
+    should 'create listing when location skip_company is set to true' do
+      assert_difference('Transactable.count', 1) do
+        post :submit_listing, @params_without_company_name
+      end
+    end
+
+    should 'create listing when location skip_company is set to true and address is missing' do
+      stub_us_geolocation
+      @params_without_company_name['user']['companies_attributes']['0'].delete('company_address_attributes')
 
       assert_difference('Transactable.count', 1) do
-        post :submit_listing, params_without_company_name
+        post :submit_listing, @params_without_company_name
+      end
+
+      company = Company.last
+      assert_equal company.latitude, 37.09024
+      assert_equal company.longitude, -95.712891
+    end
+
+    context 'with skip_location' do
+      setup do
+        @transactable_type.update_attribute :skip_location, true
+      end
+
+      should 'create listing when location skip_company is set to true and address is missing' do
+        stub_us_geolocation
+        @params_without_company_name['user']['companies_attributes']['0'].delete('company_address_attributes')
+        @params_without_company_name['user'].delete('locations_attributes')
+
+        assert_difference('Location.count', 1) do
+          post :submit_listing, @params_without_company_name
+        end
+
+        company = Company.last
+        location = Location.last
+        assert_equal company.latitude, location.latitude
+        assert_equal company.longitude, location.longitude
       end
     end
   end
@@ -272,22 +310,28 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
     {"user" =>
      {"companies_attributes"=>
       {"0" =>
-       {
-         "name"=>"International Secret Intelligence Service",
-         "industry_ids"=>["#{@industry.id}"],
-         "locations_attributes"=>
-         {"0"=>
-          {"description"=>"Our historic 11-story Southern Pacific Building, also known as \"The Landmark\", was completed in 1916. We are in the 172 m Spear Tower.",
-           "name" => 'Location',
-           "location_type_id"=>"1",
-           "location_address_attributes" =>
-          {
-            "address"=>"usa",
-            "local_geocoding"=>"10",
-            "latitude"=>"5",
-            "longitude"=>"8",
-            "formatted_address"=>"formatted usa",
-          },
+        {
+          "name"=>"International Secret Intelligence Service",
+          "company_address_attributes" => {
+            "address" => "Poznań, Polska",
+            "latitude" => "52.406374",
+            "longitude" => "16.925168100000064",
+          },         
+          "industry_ids"=>["#{@industry.id}"],
+          "locations_attributes"=>
+            {"0"=>
+              {
+                "description"=>"Our historic 11-story Southern Pacific Building, also known as \"The Landmark\", was completed in 1916. We are in the 172 m Spear Tower.",
+                "name" => 'Location',
+                "location_type_id"=>"1",
+                "location_address_attributes" =>
+                {
+                  "address"=>"usa",
+                  "local_geocoding"=>"10",
+                  "latitude"=>"5",
+                  "longitude"=>"8",
+                  "formatted_address"=>"formatted usa",
+                },
           "listings_attributes"=>
           {"0"=>
            {
@@ -320,6 +364,5 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
     @location = FactoryGirl.create(:location, :company => @company)
     @listing = FactoryGirl.create(:transactable, :location => @location)
   end
-
 end
 
