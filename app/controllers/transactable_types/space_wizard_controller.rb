@@ -38,11 +38,15 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     if params[:save_as_draft]
       remove_approval_requests
       @user.valid? # Send .valid? message to object to trigger any validation callbacks
-      @user.save(:validate => false)
-      track_saved_draft_event
-      WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::DraftCreated, @user.first_listing.id)
+      if @user.first_listing.new_record?
+        @user.save(validate: false)
+        track_saved_draft_event
+        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::DraftCreated, @user.first_listing.id)
+      else
+        @user.save(validate: false)
+      end
       flash[:success] = t('flash_messages.space_wizard.draft_saved')
-      redirect_to :list
+      redirect_to transactable_type_space_wizard_list_path(@transactable_type)
     elsif @user.save
       track_new_space_event
       track_new_company_event
@@ -78,7 +82,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   end
 
   def set_common_variables
-    redirect_to(new_space_wizard_url) && return unless current_user.present?
+    redirect_to(new_transactable_type_space_wizard_url(@transactable_type)) && return unless current_user.present?
 
     @user = current_user
     @company = @user.companies.first
