@@ -2790,13 +2790,13 @@ ActiveRecord::Schema.define(version: 20150413171745) do
     t.integer  "hours_to_expiration",                                                default: 24
     t.integer  "minimum_booking_minutes",                                            default: 60
     t.boolean  "multiple_root_categries"
-    t.boolean  "action_na",                                                          default: false
-    t.boolean  "action_book_it_out"
     t.boolean  "skip_location"
     t.string   "default_currency"
     t.text     "allowed_currencies"
     t.string   "default_country"
     t.text     "allowed_countries"
+    t.boolean  "action_na",                                                          default: false
+    t.boolean  "action_book_it_out"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

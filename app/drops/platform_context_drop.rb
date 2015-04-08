@@ -9,6 +9,7 @@ class PlatformContextDrop < BaseDrop
 
   def initialize(platform_context_decorator)
     @platform_context_decorator = platform_context_decorator
+    @instance = platform_context_decorator.instance
   end
 
   def bookable_noun_plural
@@ -45,6 +46,10 @@ class PlatformContextDrop < BaseDrop
 
   def all_transactables
     transactable_types.services + product_types
+  end  
+
+  def all_categories
+    transactable_types.services.map{ |t| t.categories.roots }.flatten
   end
 
   def multiple_transactable_types?
@@ -56,17 +61,18 @@ class PlatformContextDrop < BaseDrop
   end
 
   def display_date_pickers?
-    @platform_context_decorator.instance.date_pickers
+    @instance.date_pickers
   end
 
   def tt_select_type
-    @platform_context_decorator.instance.tt_select_type
+    @instance.tt_select_type
   end
 
   def calculate_elements
     sum = 2 #search button
     sum += 4 if display_date_pickers?
     sum += 2 if multiple_transactable_types? && tt_select_type != 'radio'
+    sum += 3 if category_search?
     input_size = 12 - sum #span12
     input_size /= 2 if fulltext_geo_search? #two input fields
     container = input_size == 2 ? "span12" : "span10 offset1"
@@ -79,6 +85,18 @@ class PlatformContextDrop < BaseDrop
 
   def calculate_input_size
     "span#{calculate_elements[1]}"
+  end
+
+  def fulltext_category_search?
+    @instance.searcher_type == 'fulltext_category'
+  end
+
+  def geo_category_search?
+    @instance.searcher_type == 'geo_category'
+  end
+
+  def category_search?
+    fulltext_category_search? || geo_category_search?
   end
 
   private

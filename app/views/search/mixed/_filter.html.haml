@@ -3,7 +3,9 @@
   .container-fluid
     .row-fluid
       .span2
-        %h4= header_name
+        %h4
+          = header_name
+          = ": #{header_object.name}" if defined?(header_object) && header_object.present?
       .span10
         %ul
           - options.each do |option|
@@ -12,4 +14,4 @@
                 %input{type: 'checkbox', name: input_name, value: option[0], checked: selected_values.include?(option[0].to_s) }
                 %span.filter-label-text
                   #{option[1]}
-
+                  

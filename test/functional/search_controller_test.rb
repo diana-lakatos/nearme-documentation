@@ -110,6 +110,23 @@ class SearchControllerTest < ActionController::TestCase
           end
         end
 
+        context 'with category filter' do
+          should 'filter only filtered locations' do
+            filtered_category = FactoryGirl.create(:category, name: "Desk")
+            filtered_category_child = FactoryGirl.create(:category, name: "Standing Desk", parent: filtered_category)
+            another_category = FactoryGirl.create(:category, name: "Meeting Room")
+            filtered_auckland_1 = FactoryGirl.create(:listing_in_auckland, category_ids: [filtered_category.id]).location
+            filtered_auckland_2 = FactoryGirl.create(:listing_in_auckland, category_ids: [filtered_category_child.id]).location
+            another_auckland = FactoryGirl.create(:listing_in_auckland, category_ids: [another_category.id]).location
+
+            get :index, { loc: 'Auckland', category_ids: filtered_category.id, v: 'mixed', buyable: false}
+
+            assert_location_in_mixed_result(filtered_auckland_1)
+            assert_location_in_mixed_result(filtered_auckland_2)
+            refute_location_in_mixed_result(another_auckland)
+          end
+        end
+
         context 'without filter' do
           context 'show only valid locations' do
             setup do

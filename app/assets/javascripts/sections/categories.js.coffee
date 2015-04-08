@@ -73,7 +73,6 @@ class @CategoriesController
         if e.keyCode == 13
           e.preventDefault() 
 
-
   handleAjaxError: (XMLHttpRequest, textStatus, errorThrown) ->
     $.jstree.rollback(last_rollback)
     $("#ajax_error").show().html("<strong>The server returned an error</strong><br />The requested change has not been accepted and the tree has been returned to its previous state, please try again")

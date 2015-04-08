@@ -234,6 +234,7 @@ class Search.SearchController extends Search.Controller
     # we want to log any new search query
     @assignFormParams(
       ignore_search_event: 0
+      category_ids: _.toArray(@container.find('input[name="category_ids[]"]:checked').map(-> $(this).val())).join(',')
     )
     @loader.showWithoutLocker()
      # Infinite-Ajax-Scroller [ ias ] which we use disables itself when there are no more results
