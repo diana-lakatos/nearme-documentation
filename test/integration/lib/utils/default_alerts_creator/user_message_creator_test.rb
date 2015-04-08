@@ -74,7 +74,7 @@ class Utils::DefaultAlertsCreator::UserMessageCreatorTest < ActionDispatch::Inte
         should "render with the user_message" do
           sms = WorkflowAlert::SmsInvoker.new(WorkflowAlert.where(alert_type: 'sms').last).invoke!(WorkflowStep::UserMessageWorkflow::Created.new(@user_message.id))
           assert_equal @recipient.full_mobile_number, sms.to
-          assert sms.body =~ /\[DesksNearMe\] New message from Krzysztof: \"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor inv...\"/i, "Sms body does not include expected content: #{sms.body}"
+          assert sms.body =~ /\[DesksNearMe\] New message from Krzysztof: \"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invid...\"/i, "Sms body does not include expected content: #{sms.body}"
           assert sms.body =~ /http:\/\/goo.gl\/abc324/
         end
 
