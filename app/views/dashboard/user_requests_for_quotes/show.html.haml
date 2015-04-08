@@ -6,14 +6,14 @@
 
 .dash-page
   .dash-head.clearfix
-    - if @ticket.target.action_free_booking?
-      %p="#{t('reservations.rfq_short')} ##{@ticket.id}: "
-    - else
-      %p="#{t('reservations.offer')} ##{@ticket.id}: "
-    - if @ticket.reservation_details && @ticket.reservation_details['quantity'].present?
-      %p
-        Quantity: #{@ticket.reservation_details['quantity']}
     - if @ticket.target.present?
+      - if @ticket.target.action_free_booking?
+        %p="#{t('reservations.rfq_short')} ##{@ticket.id}: "
+      - else
+        %p="#{t('reservations.offer')} ##{@ticket.id}: "
+      - if @ticket.reservation_details && @ticket.reservation_details['quantity'].present?
+        %p
+          Quantity: #{@ticket.reservation_details['quantity']}
       = link_to @ticket.target.name, @ticket.show_target_path
     - else
       Deleted
