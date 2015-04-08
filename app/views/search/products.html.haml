@@ -10,8 +10,8 @@
             %ul
               %li.nav-heading= taxon.name
               = taxons_tree(taxon, @taxon, 1)
-         
-    %section.search-results{class: platform_context.display_taxonomy_tree? ? "span10" : "span12"}    
+
+    %section.search-results{class: platform_context.display_taxonomy_tree? ? "span10" : "span12"}
       .row
         %p.search-breadcrumbs
           #{@searcher.result_count} results for "#{@searcher.query}"
@@ -23,6 +23,10 @@
               = hidden_field_tag :buyable, true
               %button.btn.blue.search
                 = image_tag 'themes/buy_sell/search-icon.png'
+              - @searcher.filterable_custom_attributes.each do |ca|
+                %span
+                  = label_tag t(ca.label_key)
+                  = select_tag "lg_custom_attributes[#{ca.name}][]", options_for_select(ca.valid_values_translated, @searcher.search.lg_custom_attributes[ca.name.to_sym] || []), include_blank: true
               %span.sort-pages.sort
                 = label_tag :per_page, 'Per page:'
                 = select_tag :per_page, options_for_select(%w(20 50 100).map{|v| [v, v]}, params[:per_page]), onchange: '$("#search_form").submit();'

@@ -1,18 +1,15 @@
 class Spree::Product::Search::Params::Web < Spree::Product::Search::Params
-  attr_reader :attribute_values, :sort, :taxon
+  attr_reader :sort, :taxon, :lg_custom_attributes
 
   def initialize(options)
     super
-    @attribute_values = @options[:attribute_values]
     @sort = (@options[:sort].presence || 'name').inquiry
     @taxon = @options[:taxon]
+    @lg_custom_attributes = @options[:lg_custom_attributes] || {}
+    @lg_custom_attributes.each do |key, value|
+      @lg_custom_attributes[key] = (String === value ? value.split(',') : value).map(&:strip)
+    end
   end
 
-  def attribute_values
-    @attribute_values
-  end
-
-  def attribute_values_filters
-    nil
-  end
 end
+

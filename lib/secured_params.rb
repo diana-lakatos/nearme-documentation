@@ -90,6 +90,7 @@ class SecuredParams
       :label,
       :placeholder,
       :hint,
+      :searchable,
       :input_html_options,
       :wrapper_html_options,
       :input_html_options_string,
@@ -552,7 +553,7 @@ class SecuredParams
       :default_country, :default_currency,
       :bookable_noun, :lessor, :lessee, :action_schedule_booking,
       :availability_templates_attributes => nested(self.availability_template),
-      :allowed_currencies => [], 
+      :allowed_currencies => [],
       :allowed_countries => [],
       :action_type_ids => [],
       schedule_attributes: self.schedule

@@ -1,22 +1,23 @@
 class Listing::Search::Params::Web < Listing::Search::Params
   attr :location_string
-  attr_reader :listing_types_ids, :location_types_ids, :attribute_values, :industries_ids, :lntype, :lgtype, :lgpricing,
-              :lntypes, :lgattribute, :sort, :dates, :start_date, :end_date, :display_dates
+  attr_reader :location_types_ids, :industries_ids, :lntype, :lgtype, :lgpricing,
+    :lntypes, :sort, :dates, :start_date, :end_date, :display_dates, :lg_custom_attributes
 
   def initialize(options)
     super
     @location_types_ids = @options[:location_types_ids]
-    @listing_types_ids = @options[:listing_types_ids]
-    @attribute_values = @options[:attribute_values]
     @lntype = @options[:lntype].blank? ? nil : @options[:lntype]
     @lgtype = @options[:lgtype].blank? ? nil : @options[:lgtype]
-    @lgattribute = @options[:lgattribute].blank? ? nil : @options[:lgattribute]
     @lgpricing = @options[:lgpricing]
     @sort = (@options[:sort].presence || 'relevance').inquiry
     @dates = (@options[:availability].present? && @options[:availability][:dates][:start].present? &&
-      @options[:availability][:dates][:end].present?) ? @options[:availability][:dates] : nil
+              @options[:availability][:dates][:end].present?) ? @options[:availability][:dates] : nil
     @display_dates = (@options[:start_date].present? && @options[:end_date].present?) ?
       { start: @options[:start_date], end: @options[:end_date] } : nil
+    @lg_custom_attributes = @options[:lg_custom_attributes] || {}
+    @lg_custom_attributes.each do |key, value|
+      @lg_custom_attributes[key] = (String === value ? value.split(',') : value).map(&:strip)
+    end
   end
 
   def bounding_box
@@ -90,23 +91,6 @@ class Listing::Search::Params::Web < Listing::Search::Params
 
   def lgtypes_filters
     lgtypes
-  end
-
-  def lgattributes
-    return [] if @lgattribute.nil?
-    @lgattributes ||= @lgattribute.to_s.split(',')
-  end
-
-  def attribute_values
-    @attribute_values.presence || (lgattributes.empty? ? nil : lgattributes)
-  end
-
-  def attribute_values_filters
-    @lgattribute.presence ? @lgattribute.to_s.split(',') : nil
-  end
-
-  def listing_types_ids
-    @listing_types_ids.presence || (lgtypes.empty? ? nil : lgtypes)
   end
 
   def lgpricing_filters

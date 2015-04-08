@@ -1,6 +1,6 @@
 module InstanceType::Searcher::GeolocationSearcher
   include InstanceType::Searcher
-  attr_reader :filterable_location_types, :filterable_listing_types, :filterable_pricing, :filterable_attribute, :search
+  attr_reader :filterable_location_types, :filterable_custom_attributes, :filterable_pricing, :search
 
   def to_event_params
     { search_query: query, result_count: result_count }.merge(filters)
@@ -37,9 +37,8 @@ module InstanceType::Searcher::GeolocationSearcher
           :date_range => search.available_dates,
           :query => search.query,
           transactable_type_id: @transactable_type.id,
+          custom_attributes: search.lg_custom_attributes,
           location_types_ids: search.location_types_ids,
-          listing_types_ids: search.listing_types_ids,
-          attribute_values: search.attribute_values_filters,
           listing_pricing: search.lgpricing.blank? ? [] : search.lgpricing_filters,
           :sort => search.sort
         })
@@ -66,9 +65,8 @@ module InstanceType::Searcher::GeolocationSearcher
 
   def set_options_for_filters
     @filterable_location_types = LocationType.all
-    @filterable_listing_types = @transactable_type.custom_attributes.where(:name => 'listing_type').try(:first).try(:valid_values)
     @filterable_pricing = [["daily", "Daily"], ["weekly", "Weekly"], ["monthly", "Monthly"], ['hourly', "Hourly"]]
-    @filterable_attribute = @transactable_type.custom_attributes.where(:name => 'filterable_attribute').try(:first).try(:valid_values)
+    @filterable_custom_attributes = @transactable_type.custom_attributes.searchable
   end
 
   def search_notification

@@ -152,9 +152,7 @@ class Search.SearchMixedController extends Search.SearchController
     # assign filter values
     @assignFormParams(
       lntype: _.toArray(@container.find('input[name="location_types_ids[]"]:checked').map(-> $(this).val())).join(',')
-      lgtype: _.toArray(@container.find('input[name="listing_types_ids[]"]:checked').map(-> $(this).val())).join(',')
       lgpricing: _.toArray(@container.find('input[name="listing_pricing[]"]:checked').map(-> $(this).val())).join(',')
-      lgattribute: _.toArray(@container.find('input[name="attribute_values[]"]:checked').map(-> $(this).val())).join(',')
       sort: @container.find('#sort').val()
       per_page: @container.find('#per_page').val()
       loc: @form.find("input#search").val().replace(', United States', '')
@@ -164,6 +162,11 @@ class Search.SearchMixedController extends Search.SearchController
       avilability_end: @container.find('input[availability_dates_end]').val()
       avilability_start: @container.find('input[availability_dates_start]').val()
     )
+    custom_attributes = {}
+    for custom_attribute in @container.find('div[data-custom-attribute]')
+      custom_attribute = $(custom_attribute)
+      custom_attributes[custom_attribute.data('custom-attribute')] = _.toArray(custom_attribute.find('input[name="lg_custom_attributes[' + custom_attribute.data('custom-attribute') + '][]"]:checked').map(-> $(this).val())).join(',')
+    @assignFormParams(lg_custom_attributes: custom_attributes)
     super
 
 
@@ -235,8 +238,7 @@ class Search.SearchMixedController extends Search.SearchController
     params = @getSearchParams()
     filtered_params = []
     for k, param of params
-      if $.inArray(param["name"], ['query', 'lgtype', 'lntype', 'loc', 'lgpricing', 'lgattribute', 'transactable_type_id',
-                                   'start_date', 'end_date', 'availability[dates][start]', 'availability[dates][end]']) > -1
+      if $.inArray(param["name"], ['ignore_search_event', 'country', 'v', 'lat', 'lon']) < 0
         filtered_params.push {name: param["name"], value: param["value"]}
     if @sortValue != 'relevance'
       filtered_params.push {name: 'sort', value: @sortValue}

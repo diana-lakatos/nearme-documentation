@@ -10,6 +10,7 @@
         %thead
           %tr
             %th Name
+            %th Search?
             %th Public?
             %th Internal?
             %th
@@ -18,6 +19,7 @@
           - @custom_attributes.each do |resource|
             %tr
               %td= resource.name.humanize
+              %td= resource.searchable
               %td= resource.public
               %td= resource.internal
               %td= link_to 'Edit', edit_polymorphic_url([:instance_admin, @controller_scope, @target, resource]), class: 'pull-right'

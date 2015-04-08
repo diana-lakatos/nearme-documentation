@@ -50,16 +50,8 @@
           #listings_map.inner
     .list{:'data-list' => true}
       .filters{:'data-search-filters-container' => true}
-        - if @searcher.filterable_listing_types.try(:count).to_i > 0
-          = render :partial => 'search/mixed/filter', :locals => { :header_name => "#{@transactable_type.bookable_noun} Types", :selected_values => @searcher.search.lgtypes_filters || [], :input_name => 'listing_types_ids[]', :options => @searcher.filterable_listing_types.map { |lt| [lt, lt] } }
-
         = render partial: 'search/shared/date_range'
-
-        - if @searcher.filterable_attribute
-          = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Type', :selected_values => @searcher.search.attribute_values_filters || [], :input_name => 'attribute_values[]', :options => @searcher.filterable_attribute.map { |fa| [fa, fa]} }
-
-        = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Pricing', :selected_values => @searcher.search.lgpricing_filters || [], :input_name => 'listing_pricing[]', :options => @searcher.filterable_pricing }
-
+        = render partial: 'search/mixed/filter', locals: { header_name: 'Pricing', selected_values: @searcher.search.lgpricing_filters || [], input_name: 'listing_pricing[]', options: @searcher.filterable_pricing }
         - if platform_context.instance.location_types.count > 1
           = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Location Type', :selected_values => @searcher.search.lntypes_filters || [], :input_name => 'location_types_ids[]', :options => @searcher.filterable_location_types.map { |lt| [lt.name.downcase, lt.name ] } }
 

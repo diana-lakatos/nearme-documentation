@@ -149,7 +149,11 @@ class Search.Controller
   assignFormParams: (paramsHash) ->
     # Write params to search form
     for field, value of paramsHash
-      @form.parent().find("input[name=#{field}]").val(value)
+      if field == 'lg_custom_attributes'
+        for key, val of value
+          @form.parent().find('input[name="lg_custom_attributes[' + key + ']"]').val(val)
+      else
+        @form.parent().find("input[name=#{field}]").val(value)
 
   getSearchParams: ->
     form_params = @form.serializeArray()
