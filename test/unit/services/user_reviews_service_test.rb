@@ -13,7 +13,7 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
       user_reviews_service = UserReviewsService.new(@user, @platform_context, params)
       reviews_left_by_seller = user_reviews_service.reviews_by_role
 
-      assert_equal @user.reviews.for_buyer, reviews_left_by_seller
+      assert_equal @user.reviews.for_buyer.sort, reviews_left_by_seller.sort
       assert_includes reviews_left_by_seller, review_on_buyer
     end
 
@@ -24,7 +24,7 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
       user_reviews_service = UserReviewsService.new(@user, @platform_context, params)
       reviews_left_by_buyer = user_reviews_service.reviews_by_role
 
-      assert_equal @user.reload.reviews.for_seller_and_product, reviews_left_by_buyer
+      assert_equal @user.reload.reviews.for_seller_and_product.sort, reviews_left_by_buyer.sort
       assert_includes reviews_left_by_buyer, review_on_seller
       assert_includes reviews_left_by_buyer, review_on_product
     end
@@ -42,7 +42,7 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
         user_reviews_service = UserReviewsService.new(@user, @platform_context, params)
         reviews_about_seller = user_reviews_service.reviews_by_role
 
-        assert_equal @user.reviews_about_seller, reviews_about_seller
+        assert_equal @user.reviews_about_seller.sort, reviews_about_seller.sort
         assert_includes reviews_about_seller, review
       end
 
@@ -99,17 +99,17 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
 
     should "return rating_questions for lessor rating system" do
       rating_system = FactoryGirl.create(:active_rating_system, subject: @platform_context.instance.lessor, instance: @instance )
-      rating_questions = (1..2).map { FactoryGirl.create(:rating_question, rating_system: rating_system, instance: @instance ) } 
+      rating_questions = (1..2).map { FactoryGirl.create(:rating_question, rating_system: rating_system, instance: @instance ) }
       params = {:option => 'reviews_about_seller'}
       @user_reviews_service = UserReviewsService.new(@user, @platform_context, params)
       rating_questions_by_role = @user_reviews_service.rating_questions_by_role
-      
+
       assert_equal rating_questions, rating_questions_by_role
     end
 
     should "return rating_questions for lessee rating system" do
       rating_system = FactoryGirl.create(:active_rating_system, subject: @platform_context.instance.lessee, instance: @instance )
-      rating_questions = (1..2).map { FactoryGirl.create(:rating_question, rating_system: rating_system, instance: @instance ) } 
+      rating_questions = (1..2).map { FactoryGirl.create(:rating_question, rating_system: rating_system, instance: @instance ) }
       params = {:option => 'reviews_about_buyer'}
       @user_reviews_service = UserReviewsService.new(@user, @platform_context, params)
       rating_questions_by_role = @user_reviews_service.rating_questions_by_role
