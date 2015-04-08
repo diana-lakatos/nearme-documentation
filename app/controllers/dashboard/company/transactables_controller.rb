@@ -24,6 +24,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
     if @transactable.save
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.bookable_noun)
+      flash[:error] = t('manage.listings.no_trust_explanation') if !@transactable.is_trusted?
       event_tracker.created_a_listing(@transactable, { via: 'dashboard' })
       event_tracker.updated_profile_information(current_user)
       redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
@@ -52,6 +53,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
       format.html {
         if @transactable.save
           flash[:success] = t('flash_messages.manage.listings.listing_updated')
+          flash[:error] = t('manage.listings.no_trust_explanation') if !@transactable.is_trusted?
           redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
         else
           flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(@transactable.errors.full_messages)
