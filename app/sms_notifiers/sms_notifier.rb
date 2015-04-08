@@ -72,8 +72,7 @@ class SmsNotifier < AbstractController::Base
   def sms(options)
     @platform_context = PlatformContext.current.decorate
     @template_path = options.fetch(:template_name, nil)
-    options[:body] ||= render_message
-
+    options[:body] ||= render_message.try(:strip)
     @message = Message.new(options)
   end
 

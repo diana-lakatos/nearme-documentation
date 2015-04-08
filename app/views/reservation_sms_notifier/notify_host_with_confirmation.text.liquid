@@ -1,1 +1,1 @@
-You have received a booking request on {{ platform_context.name }}. Please confirm or decline from your dashboard: {{ platform_context.host | append:reservation.manage_guests_dashboard_url | shorten_url}}
+You have received a booking request on {{ platform_context.name | truncate: 50 }}. Please confirm or decline from your dashboard: {{ platform_context.host | append:reservation.manage_guests_dashboard_url | shorten_url}}
