@@ -134,9 +134,7 @@ class UserDrop < BaseDrop
   end
 
   def avatar_url_big
-    avatar_url = @user.avatar_url(:big)
-    avatar_url = '/assets' + avatar_url if avatar_url =~ /placeholder/ && !avatar_url.include?('/assets/')
-    avatar_url
+    ActionController::Base.helpers.asset_url(@user.avatar_url(:big))
   end
 
   def profile_path
