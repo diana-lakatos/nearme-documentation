@@ -1,6 +1,7 @@
-.search-filter{:'data-div-cached-listings-ids' => header_name.underscore.tr(" ","-").gsub('desk', 'listing') + '-listings-ids', :'data-filter' => true}
+- name ||= nil
+.search-filter{:'data-div-cached-listings-ids' => header_name.underscore.tr(" ","-").gsub('desk', 'listing') + '-listings-ids', :'data-filter' => true, :"data-custom-attribute" => name}
   = link_to '#', :class => header_name.underscore.tr(" ","_"),  :'data-search-filter' => true  do
-    %h3 
+    %h3
       %span.ico-chevron-down
       = header_name
   %ul
@@ -8,4 +9,4 @@
       %li.filter-option
         %label.checkbox.small-checkbox
           %input{:type => 'checkbox', :name => input_name, :value => option[0], :checked => selected_values.include?(option[0].to_s)}
-          #{option[1]} 
+          #{option[1]}

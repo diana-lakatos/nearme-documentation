@@ -10,7 +10,7 @@ class Transactable < ActiveRecord::Base
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id, :listings_public], :location)
 
   has_custom_attributes target_type: 'TransactableType', target_id: :transactable_type_id
-  
+
   has_many :availability_rules, -> { order 'day ASC' }, as: :target, dependent: :destroy, inverse_of: :target
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :amenity_holders, as: :holder, dependent: :destroy, inverse_of: :holder
@@ -66,11 +66,10 @@ class Transactable < ActiveRecord::Base
   scope :searchable, -> { active.visible }
   scope :for_transactable_type_id, -> transactable_type_id { where(transactable_type_id: transactable_type_id) }
   scope :for_groupable_transactable_types, -> { joins(:transactable_type).where('transactable_types.groupable_with_others = ?', true) }
-  scope :filtered_by_listing_types_ids, -> listing_types_ids { where("(transactables.properties->'listing_type') IN (?)", listing_types_ids) if listing_types_ids }
   scope :filtered_by_price_types, -> price_types { where([(price_types - ['free']).map { |pt| "#{pt}_price_cents IS NOT NULL" }.join(' OR '),
                                                           ("action_free_booking=true" if price_types.include?('free'))].reject(&:blank?).join(' OR ')) }
-  scope :filtered_by_attribute_values, -> attribute_values { where("(transactables.properties->'filterable_attribute') IN (?)", attribute_values) if attribute_values }
   scope :where_attribute_has_value, -> (attr, value) { where("properties @> '#{attr}=>#{value}'") }
+  scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((transactables.properties->?), ',') && ARRAY[?]", property, values) unless values.blank? }
 
   scope :not_booked_relative, -> (start_date, end_date) {
     joins(ActiveRecord::Base.send(:sanitize_sql_array, ['LEFT OUTER JOIN (

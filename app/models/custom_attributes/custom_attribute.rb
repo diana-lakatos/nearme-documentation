@@ -10,6 +10,9 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   after_save :create_translations
 
   scope :not_internal, -> { where(internal: false) }
+  scope :searchable, -> { where(searchable: true) }
+
+  validates_presence_of :valid_values, if: :searchable
 
   def create_translations
     ::CustomAttributes::CustomAttribute::TranslationCreator.new(self).create_translations!

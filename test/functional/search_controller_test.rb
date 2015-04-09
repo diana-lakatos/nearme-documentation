@@ -89,7 +89,7 @@ class SearchControllerTest < ActionController::TestCase
             filtered_auckland = FactoryGirl.create(:listing_in_auckland, listing_type: filtered_listing_type).location
             another_auckland = FactoryGirl.create(:listing_in_auckland, listing_type: another_listing_type).location
 
-            get :index, { loc: 'Auckland', lgtype: filtered_listing_type, v: 'mixed' }
+            get :index, { loc: 'Auckland', lg_custom_attributes: { 'listing_type' => [filtered_listing_type] }, v: 'mixed' }
 
             assert_location_in_mixed_result(filtered_auckland)
             refute_location_in_mixed_result(another_auckland)
@@ -98,15 +98,12 @@ class SearchControllerTest < ActionController::TestCase
 
         context 'with attribute value filter' do
           should 'filter only filtered locations' do
-            FactoryGirl.create(:custom_attribute, target: TransactableType.first, attribute_type: 'string', name: 'filterable_attribute')
-            listing = FactoryGirl.create(:listing_in_cleveland, photos_count: 1)
-            listing.properties[:filterable_attribute] = 'Lefthanded'
-            listing.properties_will_change!
-            listing.save!
+            FactoryGirl.create(:custom_attribute, target: TransactableType.first, attribute_type: 'string', name: 'filterable_attribute', searchable: true, valid_values: ['Righthanded', 'Lefthanded'])
+            listing = FactoryGirl.create(:listing_in_cleveland, photos_count: 1, properties: { filterable_attribute: 'Lefthanded' })
             filtered_auckland = listing.location
-            another_auckland = FactoryGirl.create(:listing_in_cleveland).location
 
-            get :index, { loc: 'Cleveland', lgattribute: 'Lefthanded', v: 'mixed' }
+            another_auckland = FactoryGirl.create(:listing_in_cleveland, properties: { filterable_attribute: ['Righthanded'] }).location
+            get :index, { loc: 'Cleveland', lg_custom_attributes: { filterable_attribute: ['Lefthanded'] }, v: 'mixed' }
 
             assert_location_in_mixed_result(filtered_auckland)
             refute_location_in_mixed_result(another_auckland)
@@ -266,15 +263,14 @@ class SearchControllerTest < ActionController::TestCase
           search_query: 'adelaide',
           result_view: 'list',
           result_count: 0,
-          listing_type_filter: [@listing_type],
+          custom_attributes: { 'listing_type' => [@listing_type] },
           location_type_filter: [@location_type.name],
           industry_filter: [@industry.name],
-          attribute_filter: ['Lefthanded']
         }
         @tracker.expects(:conducted_a_search).with do |search, custom_options|
           expected_custom_options == custom_options
         end
-        get :index, { loc: 'adelaide', attribute_values: ['Lefthanded'], listing_types_ids: [@listing_type], location_types_ids: [@location_type.id], industries_ids: [@industry.id], v: 'list' }
+        get :index, { loc: 'adelaide', lg_custom_attributes: { listing_type: [@listing_type] }, location_types_ids: [@location_type.id], industries_ids: [@industry.id], v: 'list' }
       end
 
       should 'log filters in mixpanel along with other arguments for mixed result type' do
@@ -284,15 +280,14 @@ class SearchControllerTest < ActionController::TestCase
           search_query: 'adelaide',
           result_view: 'mixed',
           result_count: 0,
-          listing_type_filter: [@listing_type],
+          custom_attributes: { 'listing_type' => [@listing_type] },
           location_type_filter: [@location_type.name],
           listing_pricing_filter: ['daily'],
-          attribute_filter: ['Lefthanded']
         }
         @tracker.expects(:conducted_a_search).with do |search, custom_options|
           expected_custom_options == custom_options
         end
-        get :index, { loc: 'adelaide', lgtype: @listing_type, lntype: @location_type.name.downcase, lgpricing: 'daily', lgattribute: 'Lefthanded', v: 'mixed' }
+        get :index, { loc: 'adelaide', lg_custom_attributes: { listing_type: [@listing_type] }, lntype: @location_type.name.downcase, lgpricing: 'daily', v: 'mixed' }
       end
 
       should 'track search if ignore_search flag is set to 0' do
@@ -320,7 +315,7 @@ class SearchControllerTest < ActionController::TestCase
         end
 
         should 'track search if listing filter has been modified' do
-          get :index, loc: 'adelaide', lgtype: "Some Filter"
+          get :index, loc: 'adelaide', lg_custom_attributes: { listing_type: ["Some Filter"] }
         end
 
         should 'track search if location filter has been modified' do
@@ -478,12 +473,12 @@ class SearchControllerTest < ActionController::TestCase
           search_query: 'product_1',
           result_view: 'products',
           result_count: 0,
-          attribute_filter: ['Lefthanded']
+          custom_attributes: { 'attribute_filter' => ['Lefthanded'] }
         }
         @tracker.expects(:conducted_a_search).with do |search, custom_options|
           expected_custom_options == custom_options
         end
-        get :index, { query: 'product_1', attribute_values: ['Lefthanded'], v: 'products', buyable: 'true' }
+        get :index, { query: 'product_1', lg_custom_attributes: { attribute_filter: ['Lefthanded'] }, v: 'products', buyable: 'true' }
       end
     end
   end

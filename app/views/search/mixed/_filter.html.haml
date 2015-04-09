@@ -1,4 +1,5 @@
-.search-mixed-filter{:'data-div-cached-listings-ids' => header_name.underscore.tr(" ","-").gsub('desk', 'listing') + '-listings-ids', :'data-filter' => true}
+- name ||= nil
+.search-mixed-filter{:'data-div-cached-listings-ids' => header_name.underscore.tr(" ","-").gsub('desk', 'listing') + '-listings-ids', :'data-filter' => true, :"data-custom-attribute" => name}
   .container-fluid
     .row-fluid
       .span2
@@ -8,7 +9,7 @@
           - options.each do |option|
             %li.filter-option
               %label.checkbox.small-checkbox
-                %input{:type => 'checkbox', :name => input_name, :value => option[0], :checked => selected_values.include?(option[0].to_s)}
+                %input{type: 'checkbox', name: input_name, value: option[0], checked: selected_values.include?(option[0].to_s) }
                 %span.filter-label-text
                   #{option[1]}
 

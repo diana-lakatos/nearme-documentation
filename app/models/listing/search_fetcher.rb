@@ -32,9 +32,12 @@ class Listing::SearchFetcher
 
   def filtered_listings
     @listings_scope = Transactable.searchable.where(transactable_type_id: @filters[:transactable_type_id])
-    @listings_scope = @listings_scope.filtered_by_listing_types_ids(@filters[:listing_types_ids]) if @filters[:listing_types_ids]
     @listings_scope = @listings_scope.filtered_by_price_types(@filters[:listing_pricing] & (Transactable::PRICE_TYPES + [:free]).map(&:to_s)) if @filters[:listing_pricing]
-    @listings_scope = @listings_scope.filtered_by_attribute_values(@filters[:attribute_values]) if @filters[:attribute_values]
+
+    (@filters[:custom_attributes] || {}).each do |field_name, values|
+      next if values.blank? || values.all?(&:blank?)
+      @listings_scope = @listings_scope.filtered_by_custom_attribute(field_name, values)
+    end
 
     # Date pickers
     if availability_filter?

@@ -149,7 +149,7 @@ class Search.ProductsSearchController extends Search.Controller
     params = @getSearchParams()
     filtered_params = []
     for k, param of params
-      if $.inArray(param["name"], ['loc', 'query', 'lgattribute', 'page', 'per_page', 'taxon']) > -1
+      if $.inArray(param["name"], ['ignore_search_event', 'country', 'v'] ) < 0
         filtered_params.push {name: param["name"], value: param["value"]}
 
     # we need to decodeURIComponent, otherwise accents will not be handled correctly. Remove decodeURICompoent if we switch back

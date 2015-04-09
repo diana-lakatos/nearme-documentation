@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150403104757) do
+ActiveRecord::Schema.define(version: 20150408122118) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -467,6 +467,7 @@ ActiveRecord::Schema.define(version: 20150403104757) do
     t.datetime "updated_at"
     t.integer  "target_id"
     t.string   "target_type"
+    t.boolean  "searchable",           default: false
   end
 
   add_index "custom_attributes", ["instance_id", "transactable_type_id"], name: "index_tta_on_instance_id_and_transactable_type_id", using: :btree
@@ -1306,8 +1307,8 @@ ActiveRecord::Schema.define(version: 20150403104757) do
     t.string   "type"
     t.string   "reservation_type"
     t.integer  "hours_to_expiration",                           default: 24,        null: false
-    t.integer  "book_it_out_discount"
     t.integer  "minimum_booking_minutes",                       default: 60
+    t.integer  "book_it_out_discount"
   end
 
   add_index "reservations", ["administrator_id"], name: "index_reservations_on_administrator_id", using: :btree
@@ -2775,15 +2776,15 @@ ActiveRecord::Schema.define(version: 20150403104757) do
     t.boolean  "show_reviews_if_both_completed",                                     default: false
     t.boolean  "enable_photo_required",                                              default: true
     t.integer  "hours_to_expiration",                                                default: 24
-    t.boolean  "action_book_it_out"
     t.integer  "minimum_booking_minutes",                                            default: 60
     t.boolean  "multiple_root_categries"
+    t.boolean  "action_na",                                                          default: false
+    t.boolean  "action_book_it_out"
     t.boolean  "skip_location"
     t.string   "default_currency"
     t.text     "allowed_currencies"
     t.string   "default_country"
     t.text     "allowed_countries"
-    t.boolean  "action_na",                                                          default: false
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -2837,6 +2838,7 @@ ActiveRecord::Schema.define(version: 20150403104757) do
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
   add_index "transactables", ["opened_on_days"], name: "index_transactables_on_opened_on_days", using: :gin
   add_index "transactables", ["parent_transactable_id"], name: "index_transactables_on_parent_transactable_id", using: :btree
+  add_index "transactables", ["properties"], name: "transactables_gin_properties", using: :gin
   add_index "transactables", ["transactable_type_id"], name: "index_transactables_on_transactable_type_id", using: :btree
 
   create_table "translations", force: true do |t|

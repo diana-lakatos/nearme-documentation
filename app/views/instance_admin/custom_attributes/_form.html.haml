@@ -11,20 +11,22 @@
       .input-container.col-xs-6
         = f.input :html_tag, as: :select, collection: CustomAttributes::CustomAttribute::HTML_TAGS.map { |t| [t.humanize, t] }, include_blank: true, prompt: "Choose...", input_html: { class: 'form-control' }
     .row
-      .input-container.col-xs-6
+      .input-container.col-xs-4
         = f.input :placeholder, input_html: { class: 'form-control' }
-      .input-container.col-xs-6
+      .input-container.col-xs-4
         = f.input :prompt, input_html: { class: 'form-control' }
-    .row
-      .input-container.col-xs-6
+      .input-container.col-xs-4
         = f.input :default_value, input_html: { class: 'form-control' }
-      .input-container.col-xs-6
-        = f.input :public, as: :boolean
     .row
       .input-container.col-xs-6
         = f.input :hint, input_html: { class: 'form-control' }
       .input-container.col-xs-6
-        = f.input :valid_values, label: 'Valid values (separate with coma)', wrapper_html_options: { class: 'for-select-tag' }, input_html: { value: f.object.valid_values.join(', ') }
+        = f.input :public, as: :boolean
+    .row
+      .input-container.col-xs-6
+        = f.input :searchable, as: :boolean
+      .input-container.col-xs-6
+        = f.input :valid_values, label: 'Valid values (separate with coma)', wrapper_html_options: { class: 'for-select-tag' }, input_html: { value: f.object.valid_values.join(', '), style: "width: 100%;" }
     .row
       .input-container.col-xs-4
         = f.input :required, as: :boolean

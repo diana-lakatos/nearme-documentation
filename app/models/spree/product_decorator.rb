@@ -28,6 +28,7 @@ Spree::Product.class_eval do
   scope :currently_available, -> { not_draft.where("(#{Spree::Product.quoted_table_name}.available_on <= ? OR #{Spree::Product.quoted_table_name}.available_on IS NULL)", Time.zone.now) }
   scope :searchable, -> { approved.currently_available }
   scope :of_type, -> (product_type) { where(product_type: product_type) }
+  scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((#{Spree::Product.quoted_table_name}.extra_properties->?), ',') && ARRAY[?]", property, values) unless values.blank? }
 
   _validators.reject! { |key, _| [:slug, :shipping_category_id].include?(key) }
 

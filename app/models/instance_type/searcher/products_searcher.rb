@@ -1,7 +1,7 @@
 class InstanceType::Searcher::ProductsSearcher
   include InstanceType::Searcher
 
-  attr_reader :filterable_attribute, :search
+  attr_reader :search, :filterable_custom_attributes
 
   def initialize(product_type, params)
     @product_type = product_type
@@ -12,7 +12,7 @@ class InstanceType::Searcher::ProductsSearcher
 
   def filters
     search_filters = {}
-    search_filters[:attribute_filter] = @params[:attribute_values]
+    search_filters[:custom_attributes] = @params[:lg_custom_attributes] unless @params[:lg_custom_attributes].blank?
     search_filters
   end
 
@@ -38,7 +38,7 @@ class InstanceType::Searcher::ProductsSearcher
         @search_params = @params.merge({
           query: search.query,
           taxon: search.taxon,
-          attribute_values: search.attribute_values_filters,
+          custom_attributes: search.lg_custom_attributes,
           sort: search.sort
         })
 
@@ -51,7 +51,7 @@ class InstanceType::Searcher::ProductsSearcher
   end
 
   def set_options_for_filters
-    @filterable_attribute = @product_type.custom_attributes.where(name: 'filterable_attribute').try(:first).try(:valid_values)
+    @filterable_custom_attributes = @product_type.custom_attributes.searchable
   end
 
   def search_query_values

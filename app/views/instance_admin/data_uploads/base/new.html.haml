@@ -9,10 +9,10 @@
     .content-container
       .row.dropshadow
         .input-container.col-xs-12
-          = option.input :send_invitational_email, required: false, as: :boolean, label: "Send invitational email", input_html: { class: 'form-control' }
+          = option.input :send_invitational_email, required: false, as: :boolean, label: "Send invitational email"
       .row.dropshadow
         .input-container.col-xs-12
-          = option.input :enable_rfq, required: false, as: :boolean, label: "Enable request for quote", input_html: { class: 'form-control' }
+          = option.input :enable_rfq, required: false, as: :boolean, label: "Enable request for quote"
 
   = link_to 'Download CSV Template', {action: :download_csv_template}, class: 'pull-left btn btn-green'
   = f.button :submit, 'Upload', class: 'btn btn-green pull-right'

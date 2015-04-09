@@ -63,6 +63,7 @@ module CustomAttributes
                             {
                               html_tag: "select",
                               prompt: "",
+                              searchable: true,
                               valid_values: @listing_types,
                               input_html_options: { :class => 'selectpicker' },
                               label: "#{@bookable_noun} type"
