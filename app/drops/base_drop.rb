@@ -6,9 +6,11 @@ class BaseDrop < Liquid::Drop
     Rails.application.routes.url_helpers
   end
 
-  def image_url(source)
+  def asset_url(source)
     ActionController::Base.helpers.asset_url(source)
   end
+
+  alias_method :image_url, :asset_url
 
   def urlify(path)
     'http://' + platform_context_decorator.host + path
