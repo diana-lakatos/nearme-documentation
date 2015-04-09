@@ -71,15 +71,15 @@ class LocationDrop < BaseDrop
   end
 
   def facebook_img_url
-    image_url('mailers/facebook.png').path
+    image_url('mailers/facebook.png')
   end
 
   def twitter_img_url
-    image_url('mailers/twitter.png').path
+    image_url('mailers/twitter.png')
   end
 
   def linkedin_img_url
-    image_url('mailers/linkedin.png').path
+    image_url('mailers/linkedin.png')
   end
 
   def facebook_social_share_url
