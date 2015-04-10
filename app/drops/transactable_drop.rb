@@ -32,13 +32,11 @@ class TransactableDrop < BaseDrop
     routes.search_path(track_email_event: true)
   end
 
-  def listing_url
-    routes.transactable_type_location_listing_path(transactable_type, location, listing)
-  end
-
   def url
     routes.transactable_type_location_listing_path(transactable_type, location, listing)
   end
+
+  alias_method :listing_url, :url
 
   def street
     @listing.location.street
