@@ -7,9 +7,8 @@ class ShippingCategoryForm < Form
 
   def_delegators :'@shipping_category', :shipping_methods, :name, :name=
 
-  def initialize(shipping_category, company, options = {})
+  def initialize(shipping_category, options = {})
     @shipping_category = shipping_category
-    @company = company
     @options = options
   end
 
@@ -65,13 +64,10 @@ class ShippingCategoryForm < Form
     @shipping_methods.each do |shipping_method|
       shipping_method.save!(validate: true)
       shipping_method.zones.each do |zone|
-        zone.company = @company
         zone.save!(validate: true)
         zone.members.each(&:save)
       end
     end
-
-    @company.shipping_methods << @shipping_methods
   end
 
   def build_shipping_methods
