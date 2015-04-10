@@ -425,7 +425,16 @@ class Transactable < ActiveRecord::Base
     if approval_request_templates.count > 0
       self.approval_requests.approved.count > 0
     else
-      location.nil? ? true : self.location.try(:is_trusted?)
+      if self.location.present?
+        self.location.is_trusted?
+      elsif self.company.present?
+        self.company.is_trusted?
+      elsif self.creator.present?
+        self.creator.is_trusted?
+      else
+        # Not tied to anything, so it's trusted
+        true
+      end
     end
   end
 

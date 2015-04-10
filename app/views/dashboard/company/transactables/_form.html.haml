@@ -30,7 +30,8 @@
     - when 'approval_requests'
       = render :partial => 'approval_requests/form', :locals => { f: f }
     - when 'enabled'
-      = f.input :enabled, as: :bootstrap_switch
+      .switch_meta_container{ class: (!f.object.is_trusted? ? "no_trust_explanation_needed" : ""), data: { explanation: t('manage.listings.no_trust_explanation') } }
+        = f.input :enabled, as: :bootstrap_switch, disabled: !f.object.is_trusted?
     - when 'amenity_types'
       - unless platform_context.instance.listing_amenity_types.count.zero?
         = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'selectpicker', :multiple => true }

@@ -30,6 +30,8 @@ class @Dashboard.ListingController
       @locationRadios.on 'change', =>
         @updateCurrencyFromLocation()
 
+    @setupTooltips()
+
 
     @enableSwitch.on 'switch-change', (e, data) =>
       enabled_should_be_changed_by_ajax = @enableSwitch.data('ajax-updateable')
@@ -51,6 +53,11 @@ class @Dashboard.ListingController
         else
           @enableAjaxUpdate = true
 
+  setupTooltips: () =>
+    if $('.no_trust_explanation_needed').length > 0
+      $('.no_trust_explanation_needed .bootstrap-switch-wrapper').attr('data-original-title', $('.no_trust_explanation_needed').attr('data-explanation'))
+      $('.no_trust_explanation_needed .bootstrap-switch-wrapper').tooltip
+        trigger: 'hover'
 
   updateCurrency: () =>
     @currencyHolders.html($('#currency_'+ (@currencySelect.val() || @defalt_currency)).text())

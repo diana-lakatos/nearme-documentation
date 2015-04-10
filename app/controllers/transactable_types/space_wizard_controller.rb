@@ -52,6 +52,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       track_new_company_event
       WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Created, @user.first_listing.id)
       flash[:success] = t('flash_messages.space_wizard.space_listed', bookable_noun: @transactable_type.name)
+      flash[:error] = t('manage.listings.no_trust_explanation') if @user.listings.first.present? && !@user.listings.first.is_trusted?
       redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
     else
       @photos = @user.first_listing ? @user.first_listing.photos : nil
