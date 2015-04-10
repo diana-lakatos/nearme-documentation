@@ -869,6 +869,143 @@ section.search section#results.list {
 
 /*** End Listing View ***/
 
+/*** Products List View ***/
+nav.taxons_tree_products_list {
+  margin-top: 100px;
+
+  @media (max-width: $iphone-landscape) {
+    margin-top: 25px;
+    margin-bottom: 10px;
+  }
+  @media (max-width: $ipad-width) {
+    margin-top: 25px;
+    margin-bottom: 10px;
+  }
+}
+
+section.search {
+  header.products_list {
+    .header-inner {
+      @media (max-width: $ipad-width) {
+        margin-top: 4px !important;
+      }
+    }
+  }
+
+  header#listing_search.products_list.no_taxons {
+    @media (max-width: $ipad-width) {
+      margin-top: 35px;
+    }
+  }
+
+  section.products_list.no_taxons, section.no_products_list.no_taxons {
+    margin-left: 0;
+  }
+
+  section#results.products_list {
+    margin-top: 80px;
+    margin-bottom: 20px;
+  
+    article.product {
+      @include box-sizing(border-box);
+      float: left;
+      position: relative;
+      margin-top: 25px;
+      background: $gray230;
+      @include border-radius($border-radius-default);
+      width: 22.9%;
+      margin-left: 1%;
+      margin-right: 1%;
+  
+      .tooltip-inner {
+        text-align: left;
+        max-width: none;
+      }
+  
+      @media (max-width: $iphone-landscape) {
+        width: 100%;
+        margin-left: 0px;
+        margin-right: 0px;
+      }
+  
+      @media (min-width: $iphone-landscape) and (max-width: $ipad-width) {
+        width: 46.9%;
+        margin-left: 1.5%;
+        margin-right: 1.5%;
+      }
+  
+      @media (min-width: $ipad-width) and (max-width: $default-width) {
+        width: 29.9%;
+        margin-left: 1.5%;
+        margin-right: 1.5%;
+      }
+  
+      .heading {
+        @include box-sizing(border-box);
+        padding-top: 8px;
+        padding-left: 10px;
+        height: 74px;
+  
+        .company {
+          color: $gray160;
+        }
+  
+        .company,
+        .name {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+  
+      .photo {
+        @include box-sizing(border-box);
+        z-index: -1;
+        padding-right: 1px;
+  
+        img {
+          width: 100%;
+          display: block;
+        }
+      }
+  
+      .photo-container {
+        position: relative;
+      }
+  
+      .info {
+        @include box-sizing(border-box);
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 25%;
+        color: $theme_white;
+        font-size: 13px;
+        @include background-image(linear-gradient(rgba(250, 250, 250, 0), $black));
+  
+        .price {
+          position: absolute;
+          bottom: 0;
+          padding-left: 5px;
+          padding-right: 5px;
+          right: 0;
+        }
+      }
+    }
+  
+    @media (max-width: $search-bar-breakpoint-desktop) {
+      margin-top: 125px;
+    }
+  
+    @media (max-width: $ipad-width) {
+      margin-top: 0;
+    }
+  }
+}
+
+/*** End Products List View ***/
+
 /*** List Table View ***/
 
 section#results.products_table, nav.taxons_tree {

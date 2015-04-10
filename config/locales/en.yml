@@ -223,6 +223,7 @@ en:
           price: 'Price (ea)'
           supplier: 'Supplier'
         no_results: 'No results found'
+        product_could_not_be_found: 'Product could not be found'
         no_results_but: 'No results found, but!'
 
       labels:
