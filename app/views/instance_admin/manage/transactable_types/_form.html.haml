@@ -45,7 +45,7 @@
   .content-container.dropshadow
     .row
       .input-container.col-xs-12
-        = f.input :enable_cancellation_policy, required: false, as: :boolean, label: "Should cancellation policy be enabled?", checked: f.object.enable_cancellation_policy.nil? ? f.object.cancellation_policy_enabled.present? : f.object.enable_cancellation_policy=="1"
+        = f.input :enable_cancellation_policy, required: false, as: :boolean, label: "Should cancellation policy be enabled?", input_html: { checked: f.object.enable_cancellation_policy.nil? ? f.object.cancellation_policy_enabled.present? : f.object.enable_cancellation_policy=="1" }
     .row
       .input-container.col-xs-6
         = f.input :cancellation_policy_hours_for_cancellation, label: 'Number of hours before booking to cancel', required: false, input_html: { class: 'form-control' }

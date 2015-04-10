@@ -1,11 +1,10 @@
 class Spree::ProductDrop < BaseDrop
 
+  attr_reader :product
+  delegate :id, :name, :extra_properties, :product_type, :company, to: :product
+
   def initialize(product)
     @product = product.decorate
-  end
-
-  def name
-    @product.name
   end
 
   def price
@@ -16,23 +15,20 @@ class Spree::ProductDrop < BaseDrop
     urlify(routes.product_path(@product))
   end
 
+  def display_price
+    @product.display_price.to_s
+  end
+
   def product_path
     routes.product_path(@product)
   end
 
-  def extra_properties
-    @product.extra_properties
-  end
-
-  def product_type
-    @product.product_type
+  def url
+    routes.product_path(@product)
   end
 
   def photo_url
-    if photo = @product.images.first
-      photo.image.url(:space_listing)
-    else
-      Placeholder.new(height: 254, width: 405).path
-    end
+    @product.images.first.try(:url, :space_listing).presence || image_url(Placeholder.new(height: 254, width: 405).path).to_s
   end
 end
+

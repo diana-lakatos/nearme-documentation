@@ -3,7 +3,7 @@ class UserDrop < BaseDrop
   include ActionView::Helpers::AssetUrlHelper
 
   attr_reader :user
-  delegate :name, :job_title, :first_name, :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, to: :user
+  delegate :name, :friends, :friends_know_host_of, :mutual_friends, :know_host_of, :with_mutual_friendship_source, :job_title, :first_name, :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, to: :user
 
   def initialize(user)
     @user = user

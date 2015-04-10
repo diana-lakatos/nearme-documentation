@@ -1,4 +1,5 @@
 module LiquidFilters
+  include MoneyRails::ActionViewExtension
 
   def shorten_url(url)
     if DesksnearMe::Application.config.googl_api_key.present?
@@ -6,6 +7,74 @@ module LiquidFilters
     else
       Googl.shorten(url).short_url
     end
+  end
+
+  def location_path(transactable_type, location)
+    Rails.application.routes.url_helpers.transactable_type_location_path(transactable_type.id, location.slug)
+  end
+
+  def lowest_price_without_cents_with_currency(object, lgpricing_filters = [])
+    prices = object.lowest_price(lgpricing_filters)
+    if prices
+      periods = {monthly: 'month', weekly: 'week', daily: 'day', hourly: 'hour'}
+      { 'price' => self.price_without_cents_with_currency(prices[0]), 'period' =>  periods[prices[1]] }
+    else
+      {}
+    end
+  end
+
+  def connections_for(listing, current_user)
+    return [] if current_user.nil? || current_user.friends.count.zero?
+
+    friends = current_user.friends.visited_listing(listing).collect do |user|
+      "#{user.name} worked here";
+    end
+
+    hosts = current_user.friends.hosts_of_listing(listing).collect do |user|
+      "#{user.name} is the host"
+    end
+
+    host_friends = current_user.friends_know_host_of(listing).collect do |user|
+      "#{user.name} knows the host"
+    end
+
+    mutual_visitors = current_user.mutual_friends.visited_listing(listing).collect do |user|
+      next unless user.mutual_friendship_source
+      "#{user.mutual_friendship_source.name} knows #{user.name} who worked here"
+    end
+
+    [friends, hosts, host_friends, mutual_visitors].flatten
+  end
+
+  def connections_tooltip(connections, size = 5)
+    difference = connections.size - size
+    connections = connections.first(5)
+    connections << t('search.list.additional_social_connections', count: difference) if difference > 0
+    connections.join('<br />').html_safe
+  end
+
+  def price_without_cents_with_currency(price)
+    currency = self.try(:currency) || 'USD'
+    money_without_cents_and_with_symbol(Money.new(price.try(:fractional), currency))
+  end
+
+  def lowest_price_with_cents_with_currency(object, lgpricing_filters)
+    prices = object.lowest_price(lgpricing_filters)
+    if prices
+      periods = {monthly: 'month', weekly: 'week', daily: 'day', hourly: 'hour'}
+      { 'price' => self.price_with_cents_with_currency(prices[0]), 'period' =>  periods[prices[1]] }
+    else
+      {}
+    end
+  end
+
+  def price_with_cents_with_currency(price)
+    currency = self.try(:currency) || 'USD'
+    humanized_money_with_symbol(Money.new(price.try(:fractional), currency))
+  end
+
+  def space_listing_placeholder_path(height, width)
+    ActionController::Base.helpers.asset_url(Placeholder.new(height: height.to_i, width: width.to_i).path)
   end
 
   def translate_property(property, target_acting_as_set)

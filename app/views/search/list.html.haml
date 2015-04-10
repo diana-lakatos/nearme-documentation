@@ -6,7 +6,7 @@
 
 - if @searcher.results.any?
   %section#results.list
-    = render partial: 'search/list/listing', collection: @searcher.results
+    = render partial: 'search/list/listing', collection: @searcher.results, locals: { current_user: current_user }
     = will_paginate @searcher.results
     = render 'shared/loading_spinner'
 - elsif !@located

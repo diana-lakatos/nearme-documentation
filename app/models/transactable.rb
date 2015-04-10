@@ -270,6 +270,11 @@ class Transactable < ActiveRecord::Base
     }.reject { |p| p[0].to_f.zero? }.sort { |a, b| a[0] <=> b[0] }.first
   end
 
+  # TODO: remove lowest_price_with_type or ideally move this to decorator
+  def lowest_price(available_price_types = [])
+    lowest_price_with_type(available_price_types)
+  end
+
   def null_price!
     PRICE_TYPES.map { |price|
       self.send(:"#{price}_price_cents=", nil) if self.respond_to?(:"#{price}_price_cents=")

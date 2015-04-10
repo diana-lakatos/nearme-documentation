@@ -10,7 +10,9 @@
         %input{type: 'hidden', id: 'result_count', value: @searcher.result_count}
         %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, @searcher.search, @searcher.transactable_type.name)}
       = render 'search/mixed/pagination', locations: @searcher.results, result_count: @searcher.result_count
-      = render partial: 'search/mixed/location', collection: @searcher.results, locals: {search: @searcher.search}
+      - @searcher.results.each_with_index do |location, location_counter|
+        = render partial: 'search/mixed/location', locals: {location: location, location_counter: location_counter, transactable_type: @searcher.transactable_type, current_page_offset: current_page_offset, lgpricing_filters: @searcher.search.lgpricing_filters }
+
       = render 'search/mixed/pagination', locations: @searcher.results, result_count: @searcher.result_count
   - elsif !@searcher.located
     .locations
