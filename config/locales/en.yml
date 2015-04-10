@@ -663,6 +663,9 @@ en:
         one: 'Plus one more connection'
         other: 'Plus %{count} more connections'
       address_could_not_be_found: "The address you entered couldn't be found, please try another search query."
+      view_listing: 'View listing'
+    reserve: 'reserve'
+    price_from: 'From'
 
     date_range:
       title: 'Date range'

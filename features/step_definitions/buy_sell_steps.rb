@@ -35,7 +35,7 @@ end
 
 Then /^I should see relevant buy sell products$/ do
   assert page.body.should have_content(@product.name)
-  assert page.should have_css("div.result-item", count: 3)
+  assert page.should have_css("div.result-item", count: 1)
   assert page.should have_css("div.result-item[data-product-id]", count: 1)
 end
 

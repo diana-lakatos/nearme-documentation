@@ -7,7 +7,7 @@ class LocationDrop < BaseDrop
   include LocationsHelper
 
   attr_reader :location
-  delegate :name, :description, :phone, :street, :city, :suburb, :company, :address, :latitude, :longitude, to: :location
+  delegate :id, :slug, :listings, :lowest_price, :name, :description, :phone, :street, :city, :suburb, :company, :address, :latitude, :longitude, to: :location
 
   def initialize(location)
     @location = location
@@ -23,6 +23,10 @@ class LocationDrop < BaseDrop
 
   def tweet_url
     tweet_location_path(routes.location_url(@location))
+  end
+
+  def photos
+    location.photos_metadata
   end
 
   def google_map_url

@@ -53,7 +53,10 @@ class InstanceView < ActiveRecord::Base
     'registrations/profile/user_badge',
     'locations/google_map',
     'locations/administrator',
-    'buy_sell_market/products/extra_properties'
+    'buy_sell_market/products/extra_properties',
+    'search/mixed/location',
+    'search/mixed/listing',
+    'search/list/listing'
   ].freeze
 
   scope :for_instance_type_id, ->(instance_type_id) {

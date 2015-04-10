@@ -6,9 +6,10 @@ class TransactableDrop < BaseDrop
 
   attr_reader :listing
 
-  delegate :name, :location, :transactable_type, :description, :action_hourly_booking?, :creator, :administrator, :last_booked_days,
-   :defer_availability_rules?, :company, :properties, to: :listing
+  delegate :id, :location_id, :name, :location, :transactable_type, :description, :action_hourly_booking?, :creator, :administrator, :last_booked_days,
+   :defer_availability_rules?, :lowest_price, :company, :properties, :quantity, :administrator_id, :has_photos?, to: :listing
   delegate :bookable_noun, :bookable_noun_plural, to: :transactable_type
+  delegate :latitude, :longitude, :address, to: :location
   delegate :dashboard_url, :search_url, to: :routes
 
   def initialize(listing)
@@ -32,7 +33,11 @@ class TransactableDrop < BaseDrop
   end
 
   def listing_url
-    routes.listing_path(@listing)
+    routes.transactable_type_location_listing_path(transactable_type, location, listing)
+  end
+
+  def url
+    routes.transactable_type_location_listing_path(transactable_type, location, listing)
   end
 
   def street
@@ -40,7 +45,7 @@ class TransactableDrop < BaseDrop
   end
 
   def photo_url
-    @listing.has_photos? ? @listing.photos.first.image_url(:space_listing) : image_url(Placeholder.new(:width => 410, :height => 254).path).to_s
+    @listing.photos.first.try(:image_url, :space_listing).presence || image_url(Placeholder.new(:width => 410, :height => 254).path).to_s
   end
 
   def from_money_period
