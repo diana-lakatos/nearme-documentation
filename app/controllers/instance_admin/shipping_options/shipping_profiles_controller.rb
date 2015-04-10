@@ -9,7 +9,7 @@ class InstanceAdmin::ShippingOptions::ShippingProfilesController < InstanceAdmin
   end
 
   def new
-    @shipping_category_form = ShippingCategoryForm.new(Spree::ShippingCategory.new, @company)
+    @shipping_category_form = ShippingCategoryForm.new(Spree::ShippingCategory.new)
     @shipping_category_form.assign_all_attributes
     render :partial => 'dashboard/shipping_categories/shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post }
   end
@@ -17,7 +17,7 @@ class InstanceAdmin::ShippingOptions::ShippingProfilesController < InstanceAdmin
   def create
     @shipping_category = @company.shipping_categories.build
     @shipping_category.user_id = current_user.id
-    @shipping_category_form = ShippingCategoryForm.new(@shipping_category, @company, is_system_profile: true)
+    @shipping_category_form = ShippingCategoryForm.new(@shipping_category, is_system_profile: true)
     if @shipping_category_form.submit(shipping_category_form_params)
       render :partial => 'dashboard/shipping_categories/shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post, :is_success => true }
     else
@@ -28,7 +28,7 @@ class InstanceAdmin::ShippingOptions::ShippingProfilesController < InstanceAdmin
   def edit
     shipping_category = Spree::ShippingCategory.system_profiles.find(params[:id])
 
-    @shipping_category_form = ShippingCategoryForm.new(shipping_category, @company)
+    @shipping_category_form = ShippingCategoryForm.new(shipping_category)
     @shipping_category_form.assign_all_attributes
     render :partial => 'dashboard/shipping_categories/shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profile_path(shipping_category), :form_method => :put }
   end
@@ -36,7 +36,7 @@ class InstanceAdmin::ShippingOptions::ShippingProfilesController < InstanceAdmin
   def update
     @shipping_category = Spree::ShippingCategory.system_profiles.find(params[:id])
 
-    @shipping_category_form = ShippingCategoryForm.new(@shipping_category, @company, is_system_profile: true)
+    @shipping_category_form = ShippingCategoryForm.new(@shipping_category, is_system_profile: true)
     if @shipping_category_form.submit(shipping_category_form_params)
       render :partial => 'dashboard/shipping_categories/shipping_category_form', :locals => { :form_url => instance_admin_shipping_options_shipping_profiles_path, :form_method => :post, :is_success => true }
     else
