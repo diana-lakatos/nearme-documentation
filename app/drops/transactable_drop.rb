@@ -32,7 +32,7 @@ class TransactableDrop < BaseDrop
   end
 
   def listing_url
-    @listing.transactable_type.show_page_enabled? ? routes.listing_path(@listing) : routes.location_path(@listing.location, @listing)
+    routes.listing_path(@listing)
   end
 
   def street

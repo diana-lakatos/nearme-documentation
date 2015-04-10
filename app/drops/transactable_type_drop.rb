@@ -2,7 +2,7 @@ class TransactableTypeDrop < BaseDrop
 
   attr_reader :transactable_type
 
-  delegate :id, :buyable?,:translation_key_suffix, to: :transactable_type
+  delegate :id, :buyable?, :show_page_enabled?, :translation_key_suffix, to: :transactable_type
 
   def initialize(transactable_type)
     @transactable_type = transactable_type
