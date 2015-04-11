@@ -9,6 +9,7 @@
 //= require components/chart_wrapper
 //= require bootstrap-switch
 //= require components/photo
+//= require components/ckfile
 //= require jquery-fileupload/basic
 //= require components/fileupload
 //= require components/modal

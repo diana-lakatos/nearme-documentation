@@ -6,18 +6,30 @@ class @Fileupload
 
   constructor : (@fileInputWrapper) ->
     @fileInput = @fileInputWrapper.find('input[type="file"]')
-    @photoCollection = new Photo.Collection(@fileInputWrapper.parent())
+    @file_types = @fileInput.attr('data-file-types')
+    @upload_type = @fileInput.attr('data-upload-type')
+    @files_container = @fileInput.attr('data-files-container')
+    if @upload_type == 'ckfile'
+      @fileCollection = new Ckfile.Collection($(@files_container))
+      @dataType = 'html'
+    else
+      @fileCollection = new Photo.Collection(@fileInputWrapper.parent())
+      @dataType = 'json'
+      
     @fileInput.fileupload
       url: @fileInputWrapper.data('url')
       paramName: @fileInputWrapper.data('name')
-      dataType: 'json'
+      dataType: @dataType
       dropZone: @fileInputWrapper
       formData: (form) ->
         params = form.clone()
         params.find("input[name=_method]").remove()
         params.serializeArray()
       add: (e, data) =>
-        types = /(\.|\/)(gif|jpe?g|png)$/i
+        if @file_types && @file_types != ''
+          types = new RegExp(@file_types, 'i');
+        else
+          types = /(\.|\/)(gif|jpe?g|png)$/i
         file = data.files[0]
         if types.test(file.type) || types.test(file.name)
           progressBar = @fileInputWrapper.find('div[data-progress-container]:first').clone()
@@ -33,5 +45,5 @@ class @Fileupload
           data.progressBar.find('div[data-progress-bar]').css('width', progress + '%')
       done: (e, data) =>
         data.progressBar.remove()
-        photoIndex = @photoCollection.add()
-        @photoCollection.update(photoIndex, data.result)
+        fileIndex = @fileCollection.add()
+        @fileCollection.update(fileIndex, data.result)

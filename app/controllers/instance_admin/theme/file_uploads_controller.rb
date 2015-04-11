@@ -18,22 +18,23 @@ class InstanceAdmin::Theme::FileUploadsController < InstanceAdmin::Theme::BaseCo
       @attachment.assetable = PlatformContext.current.instance
 
       if @attachment.save
-        flash[:success] = 'File uploaded successfully'
-      else
-        flash[:error] = 'File upload failed'
+        render(partial: 'asset', locals: { asset: @attachment })
       end
-    else
-        flash[:error] = 'File upload failed'
     end
-
-    redirect_to instance_admin_theme_file_uploads_path
   end
 
   def destroy
     @file = Ckeditor::Asset.where(assetable: PlatformContext.current.instance, id: params[:id]).first
     @file.destroy
 
-    redirect_to instance_admin_theme_file_uploads_path
+    respond_to do |format|
+        format.js {
+          render :text => %Q"
+              jQuery('#picture_#{@file.id}').remove();
+              jQuery('#attachment_file_#{@file.id}').remove();
+            "
+        }
+    end
   end
 
 end
