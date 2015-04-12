@@ -23,6 +23,15 @@ class InstanceAdmin::Theme::FileUploadsController < InstanceAdmin::Theme::BaseCo
     end
   end
 
+  def search
+    @query = params[:search][:query] if params[:search] && params[:search][:query]
+    escaped_search_param = ActiveRecord::Base.connection.quote_like_string(@query.to_s)
+    @files = Ckeditor::Asset.where(assetable: PlatformContext.current.instance).where("data_file_name ILIKE ?", "%#{escaped_search_param}%").order(:id => :desc)
+    @files = Ckeditor::Paginatable.new(@files).page(params[:page])
+
+    render 'index'
+  end
+
   def destroy
     @file = Ckeditor::Asset.where(assetable: PlatformContext.current.instance, id: params[:id]).first
     @file.destroy

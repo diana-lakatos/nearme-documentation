@@ -1,4 +1,8 @@
 .mpo_file_uploads {
+  .btn.upload-photos.fileinput-button {
+    margin-left: 0;
+  }
+
   input.upload_file {
     padding: 5px;
     background-color: #fff;
@@ -6,6 +10,16 @@
 
   .file_upload_form {
     padding: 20px;
+  }
+
+  .search_form {
+    padding-bottom: 20px;
+    .controls {
+      float: left;
+    }
+    input.btn {
+      float: left;
+    }
   }
 
   .clear {
@@ -93,6 +107,10 @@
   	font-size: 12px;
   	overflow: hidden;
   	width: 500px;
+
+    a {
+      white-space: nowrap;
+    }
   }
   .gal-holder .gal-item .gal-inner-holder .img-data .img-info {
   	display: block;

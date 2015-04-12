@@ -12,7 +12,7 @@
       = image_tag(asset.url_thumb, :title => asset.filename)
     .img-data
       .img-name
-        = link_to asset.filename, asset.url_content
+        = link_to asset.filename, asset.url_content, target: '_blank'
       .time-size
         .time
           = asset.format_created_at
