@@ -28,7 +28,7 @@ class Spree::ProductDrop < BaseDrop
   end
 
   def photo_url
-    @product.images.first.try(:url, :space_listing).presence || image_url(Placeholder.new(height: 254, width: 405).path).to_s
+    @product.images.first.try(:image_url, :space_listing).presence || image_url(Placeholder.new(height: 254, width: 405).path).to_s
   end
 end
 
