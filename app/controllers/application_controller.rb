@@ -51,7 +51,7 @@ class ApplicationController < ActionController::Base
     user_locale = current_user.try(:language).try(:to_sym)
 
     locale_service = LocaleService.new(platform_context.instance, params_locale, user_locale, request.fullpath)
-    if locale_service.redirect? && request.get?
+    if locale_service.redirect? && request.get? && !request.xhr?
       # Redirect -> This is necessary for proper functionality of the 'current_page?' method
       redirect_to(locale_service.redirect_url, status: 301)
     end
