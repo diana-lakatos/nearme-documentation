@@ -38,7 +38,10 @@ class @Fileupload
           data.progressBar = progressBar
           data.submit()
         else
-          alert("#{file.name} seems to not be an image - please select gif, jpg, jpeg or png file")
+          if @upload_type == 'ckfile'
+            alert("#{file.name} does not have an accepted extension. Please select a document or an image.")
+          else
+            alert("#{file.name} seems to not be an image - please select gif, jpg, jpeg or png file")
       progress: (e, data) ->
         if data.progressBar
           progress = parseInt(data.loaded / data.total * 100, 10)
