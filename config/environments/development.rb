@@ -37,4 +37,5 @@ DesksnearMe::Application.configure do
   config.root_secured = false
   config.secure_app = false
   config.run_jobs_in_background = false
+  config.googl_api_key = 'AIzaSyBV7BhIuT6s2HbprOP4jfXSmpdBFmocSMg'
 end
