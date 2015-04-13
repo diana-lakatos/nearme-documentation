@@ -38,7 +38,8 @@ class RegistrationsController < Devise::RegistrationsController
           instance_profile_type_id: InstanceProfileType.first.try(:id),
           referer: session[:referer],
           source: cookies.signed[:source],
-          campaign: cookies.signed[:campaign]
+          campaign: cookies.signed[:campaign],
+          language: platform_context.instance.primary_locale.to_s
         })
         update_analytics_google_id(@user)
         analytics_apply_user(@user)
