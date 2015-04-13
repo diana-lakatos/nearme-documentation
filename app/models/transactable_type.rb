@@ -141,8 +141,7 @@ class TransactableType < ActiveRecord::Base
   end
 
   def has_action?(name)
-    @action_type_names ||= action_types.pluck(:name)
-    @action_type_names.include?(name)
+    action_rfq?
   end
 
   def bookable_noun_plural

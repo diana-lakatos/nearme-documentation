@@ -1,10 +1,6 @@
 Given /^request for feature is enabled$/ do
-  @action_type = (ActionType.where(name: 'Request For Quote').first || ActionType.create(name: 'Request For Quote'))
-  TransactableType.find_each do |t|
-    t.update_attribute(:action_types, t.action_types << @action_type)
-  end
+  TransactableType.update_all(action_rfq: true)
 end
-
 
 When /^I select to request quote( and review)? space for:$/ do |and_review, table|
   bookings = extract_reservation_options(table)
