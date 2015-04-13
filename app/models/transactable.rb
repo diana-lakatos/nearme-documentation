@@ -148,7 +148,7 @@ class Transactable < ActiveRecord::Base
   delegate :service_fee_guest_percent, :service_fee_host_percent, :hours_to_expiration, :minimum_booking_minutes, to: :transactable_type
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
-  delegate :favourable_pricing_rate, :has_action?, to: :transactable_type
+  delegate :favourable_pricing_rate, to: :transactable_type
 
   attr_accessor :distance_from_search_query, :photo_not_required
 
@@ -507,6 +507,15 @@ class Transactable < ActiveRecord::Base
     if book_it_out_minimum_qty > quantity
       errors.add(:book_it_out_minimum_qty, I18n.t('activerecord.errors.models.transactable.attributes.book_it_out_minimum_qty'))
     end
+  end
+
+  def action_rfq?
+    super && self.transactable_type.action_rfq?
+  end
+
+  # TODO: to be deleted once we get rid of instance views
+  def has_action?(*args)
+    action_rfq?
   end
 
   private
