@@ -3,7 +3,7 @@ module LiquidFilters
 
   def shorten_url(url)
     if DesksnearMe::Application.config.googl_api_key.present?
-      Googl.shorten(url, '192.168.0.1', DesksnearMe::Application.config.googl_api_key).short_url
+      Googl.shorten(url, nil, DesksnearMe::Application.config.googl_api_key).short_url
     else
       Googl.shorten(url).short_url
     end
