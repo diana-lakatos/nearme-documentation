@@ -16,6 +16,10 @@ And(/^we have translations in place$/) do
   FactoryGirl.create(:translation, locale: 'cs', key: 'top_navbar.log_in', value: 'Přihlásit se')
   FactoryGirl.create(:translation, locale: 'pl', key: 'top_navbar.log_in', value: 'Zaloguj się',
                      instance_id: Instance.first.id)
+
+  FactoryGirl.create(:translation, locale: 'cs', key: 'top_navbar.messages', value: 'Zprávy')
+  FactoryGirl.create(:translation, locale: 'pl', key: 'top_navbar.messages', value: 'Wiadomości',
+                     instance_id: Instance.first.id)
 end
 
 And /^(?:|I )change language to "([^"]*)"$/ do |language|
@@ -28,4 +32,12 @@ end
 
 And(/^I reload page without language parameter$/) do
   visit root_path
+end
+
+Given /^#{capture_model} sets his language preferences to "([^"]*)"$/ do |model, language|
+  model!(model).update_attribute :language, language
+end
+
+Then /^Language should be "([^"]*)"$/ do |language|
+  assert_equal language.to_sym, I18n.locale
 end

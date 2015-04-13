@@ -13,8 +13,12 @@
     = draw_attribute_for_form(attribute, f) if only_inputs.empty? || only_inputs.include?(attribute.name.to_sym)
 
 = f.input :email, label: "Email" if only_inputs.empty? || only_inputs.include?(:email)
-= f.input :time_zone, input_html: { class: 'selectpicker', "data-live-search" => "true" } if only_inputs.empty? || only_inputs.include?(:time_zone)
 
+- if only_inputs.empty? || only_inputs.include?(:language)
+  = f.input :language, collection: platform_context.instance.locales.by_created_at, label_method: :display_name,
+    value_method: :code, include_blank: false
+
+= f.input :time_zone, input_html: { class: 'selectpicker', "data-live-search" => "true" } if only_inputs.empty? || only_inputs.include?(:time_zone)
 
 %div{'data-phone-fields-container' => true}
   = f.input :country_name, :label => "Country", :as => :select, :collection => user_country_name_options, :selected => user_country_default(@country), input_html: { 'data-country-selector' => true, class: 'selectpicker', "data-live-search" => "true" }, :required => true, include_blank: true

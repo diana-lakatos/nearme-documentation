@@ -1,6 +1,7 @@
 class InstanceAdmin::BaseController < ApplicationController
   layout 'instance_admin'
 
+  before_filter :set_english_locale
   before_filter :auth_user!
   before_filter :authorize_user!
   before_filter :check_if_locked, only: [:new, :create, :edit, :update, :destroy]
@@ -85,6 +86,10 @@ class InstanceAdmin::BaseController < ApplicationController
   end
 
   private
+
+  def set_english_locale
+    I18n.locale = :en
+  end
 
   def check_if_locked
     if PlatformContext.current.instance.locked?
