@@ -215,6 +215,7 @@ en:
       search_results:
         header:
           image: 'Image'
+          name: 'Name'
           stock_number: 'Stock Number'
           manufacturer: 'Manufacturer'
           part_model_no: 'Part/Model Number'

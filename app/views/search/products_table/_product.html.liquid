@@ -1,0 +1,22 @@
+<tr>
+  <td class="image">
+    <a href="{{product.url}}"">
+      <img src="{{ product.thumbnail_url }}" title="{{product.name}}" alt="{{product.name}}"">
+    </a>
+  </td>
+  <td>
+    {{ product.name }}
+  </td>
+  <td>
+    {{ product.sanitized_product_description | truncate: 80, '...'  }}
+  </td>
+  <td class="number">
+    {{ product.total_on_hand }}
+  </td>
+  <td class="number">
+    {{ product.display_price }}
+  </td>
+  <td>
+    {{ product.company.name }}
+  </td>
+</tr>
