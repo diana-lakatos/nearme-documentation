@@ -901,3 +901,12 @@ en:
 
   amenities_attribute: 'Amenities'
   amenity_attribute: 'amenity'
+
+  ckeditor_custom:
+    file_uploads:
+      next: Next
+      prev: Previous
+      upload_file: Upload File
+      public_url: Public URL
+      search: Search
+

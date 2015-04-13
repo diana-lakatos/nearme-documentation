@@ -1,0 +1,23 @@
+.mpo_file_uploads
+  .file_upload_form
+    .search_form
+      = simple_form_for :search, url: search_instance_admin_theme_file_uploads_path, method: :get do |f|
+        = f.input :query, label: false, as: :string, input_html: { value: @query }, class: 'string'
+        = f.submit t('ckeditor_custom.file_uploads.search'), class: 'btn'
+      .clear
+
+    = file_upload_input('upload[file]', instance_admin_theme_file_uploads_path, nil, 'Upload File', {"no-multiple" => true, height: 0, row: 0, file_types: '(\.|\/)(gif|jpe?g|png|tiff|doc|docx|xls|odt|ods|pdf|rar|zip|tar|tar.gz|swf)$', upload_type: 'ckfile', files_container: '#fileupload'})
+
+  #fileupload.gal-holder
+    .fileupload-list
+      - @files.scoped.each do |asset|
+        = render :partial => 'asset', locals: { asset: asset }
+
+    .clear
+    - unless @files.first_page?
+      .pagination
+        = link_to t('ckeditor_custom.file_uploads.prev'), params.merge(:page => @files.prev_page), :class => "prev", :rel => "prev"
+    - unless @files.last_page?
+      .pagination
+        = link_to t('ckeditor_custom.file_uploads.next'), params.merge(:page => @files.next_page), :class => "next", :rel => "next"
+

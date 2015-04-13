@@ -236,6 +236,11 @@ DesksnearMe::Application.routes.draw do
       resource :homepage_template, only: [:show, :create, :update], controller: 'homepage_template', concerns: :versionable
       resources :content_holders
       resources :liquid_views, :only => [:index, :new, :create, :edit, :update, :destroy], concerns: :versionable
+      resources :file_uploads do
+        collection do
+          get :search
+        end
+      end
     end
 
     namespace :manage do
