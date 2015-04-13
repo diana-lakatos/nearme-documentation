@@ -10,7 +10,7 @@
             = link_to t(".booking_type_#{booking_type}"), "#booking-type-#{booking_type}", 'data-booking-type' => booking_type, 'data-toggle' => 'tab'
 
 .tab-content.control-group
-  - f.object.transactable_type.booking_choices.each_with_index do |booking_type|
-    - if booking_type != 'overnight' && booking_type != 'recurring'
-      %div{id: "booking-type-#{booking_type}", class: "tab-pane #{booking_types_active_toggle(f.object, booking_type, true)}"}
-        = yield "booking_type_#{booking_type}_tab_content".to_sym
+  %div{id: 'booking-type-regular', class: "tab-pane #{booking_types_active_toggle(f.object, 'regular', true)}"}
+    = yield :booking_type_regular_tab_content
+  %div{id: 'booking-type-schedule', class: "tab-pane #{booking_types_active_toggle(f.object, 'schedule', true)}"}
+    = yield :booking_type_schedule_tab_content

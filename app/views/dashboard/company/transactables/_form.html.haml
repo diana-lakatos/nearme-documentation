@@ -7,8 +7,11 @@
   %h4
     = form_component.name
   - form_component.form_fields.each do |form_field|
+
     - model = form_field.keys.first
     - field = form_field[model]
+
+    - next if field == 'schedule'
 
     - case field
     - when 'location_id'
@@ -36,15 +39,14 @@
       - unless platform_context.instance.listing_amenity_types.count.zero?
         = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'selectpicker', :multiple => true }
     - when 'price'
-      = render partial: 'price_form', locals: { f: f, form_fields: form_component.form_fields }
-    - when 'schedule'
-      - if f.object.transactable_type.regular_booking_enabled?
-        = render partial: 'availability_rules_form', locals: { f: f }
-      - if f.object.transactable_type.schedule_booking_enabled?
-        = render partial: 'schedule_form', locals: { f: f }
+      = render 'price_form', f: f, form_fields: form_component.form_fields
+      - if form_component.form_fields.find { |ff| ff.keys.first == model && ff.values.first == 'schedule' }
+        - if f.object.transactable_type.regular_booking_enabled?
+          = render 'availability_rules_form', f: f
+        - if f.object.transactable_type.schedule_booking_enabled?
+          = render 'schedule_form', f: f
+      = render 'shared/booking_types_tabs', f: f
     - when 'photos'
-      / need to render tabs here because it must be rendered after price and schedule
-      = render partial: 'shared/booking_types_tabs', locals: { f: f }
       .row
         .col-md-3
           = f.label :photos
