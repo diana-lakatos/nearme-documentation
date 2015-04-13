@@ -6,7 +6,7 @@
         = f.submit t('ckeditor_custom.file_uploads.search'), class: 'btn'
       .clear
 
-    = file_upload_input('upload[file]', instance_admin_theme_file_uploads_path, nil, 'Upload File', {"no-multiple" => true, height: 0, row: 0, file_types: '(\.|\/)(gif|jpe?g|png|tiff|doc|docx|xls|odt|ods|pdf|rar|zip|tar|tar.gz|swf)$', upload_type: 'ckfile', files_container: '#fileupload'})
+    = file_upload_input('upload[file]', instance_admin_theme_file_uploads_path, nil, 'Upload File', {"no-multiple" => true, height: 0, row: 0, file_types: '(\.|\/)(gif|jpe?g|png|tiff|doc|docx|xls|odt|ods|pdf|rar|zip|tar|tar.gz|swf|mp4|css|txt|text)$', upload_type: 'ckfile', files_container: '#fileupload'})
 
   #fileupload.gal-holder
     .fileupload-list
