@@ -19,18 +19,21 @@
             %th Object Type
             %th Notes
             %th Created At
+            %th Creator
 
         %tbody
           - @approval_requests.each do |resource|
             %tr
               %td
-                = resource.owner.try(:name).try(:truncate, 25)
+                = approval_request_owner_name(resource.owner)
               %td
-                = resource.owner.try(:class).try(:name)
+                = approval_request_owner_class(resource.owner)
               %td
                 = resource.notes.try(:truncate, 25)
               %td
                 =l resource.created_at, format: :short
+              %td
+                = approval_request_login_as_owner_creator(resource.owner)
               %td
                 = link_to 'Manage', edit_instance_admin_manage_approval_request_path(resource)
         = will_paginate @approval_requests
