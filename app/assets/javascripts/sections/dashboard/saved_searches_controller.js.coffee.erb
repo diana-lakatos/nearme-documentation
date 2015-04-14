@@ -60,8 +60,8 @@ class @Dashboard.SavedSearchController
     link.text(title) if success
     link.show()
 
-    imgSuccessUrl = '<%= asset_path("assets/dashboard/green-check.png") %>'
-    imgErrorUrl   = '<%= asset_path("assets/dashboard/x-red.png") %>'
+    imgSuccessUrl = '<%= asset_path("dashboard/green-check.png") %>'
+    imgErrorUrl   = '<%= asset_path("dashboard/x-red.png") %>'
     imgUrl = if success then imgSuccessUrl else imgErrorUrl
     img = $('<img>').attr('src', imgUrl).addClass('status').hide()
     container.append(img)

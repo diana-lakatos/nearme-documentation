@@ -1,3 +1,10 @@
+Given(/^saved search enabled$/) do
+  Instance.find_each do |instance|
+    instance.saved_search = '1'
+    instance.save!
+  end
+end
+
 When(/^I click save search button$/) do
   find('a[data-save-search]').click
 end
@@ -9,7 +16,7 @@ When(/^I enter saved search title$/) do
 end
 
 When(/^I click on saved search dialog Save button$/) do
-  find('button[data-save-search-submit]').click
+  click_button 'Save'
   wait_for_ajax
 end
 

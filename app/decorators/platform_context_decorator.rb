@@ -127,6 +127,10 @@ class PlatformContextDecorator
     platform_context.instance.taxonomy_tree
   end
 
+  def display_saved_search?
+    platform_context.instance.saved_search
+  end
+
   def search_input_name
     fulltext_search? ? "query" : "loc"
   end

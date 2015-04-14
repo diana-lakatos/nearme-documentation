@@ -529,13 +529,13 @@ en:
 
   saved_searches:
     dialog:
-      title: 'Save your Search'
-      description: 'You can easily access your saved searches from the dashboard. Everytime you click on one of your saved searches, we will run your search automatically and show you the results.'
-      search_saved: 'Your %{title} search has been successfully saved'
-      dashboard_link: 'Find all your saved searches in your %{link}'
+      title: 'Save your search'
+      description: 'You can easily access your saved searches from the dashboard! Every time you select one of your saved searches, we will run your search again automatically and display the most up-to-date results.'
+      search_saved: 'Your search has been successfully saved!'
+      dashboard_link: 'Find all your saved searches in the %{link}.'
       search_failed_to_save: 'Search faield to save'
       dashboard: 'dashboard'
-      title_placeholder: 'Please, enter the name of your search'
+      title_placeholder: 'Name your search'
     nav:
       index: 'Saved Searches'
     headers:
