@@ -46,8 +46,7 @@ class HiddenUiControls
       'main_menu/wish_list',
       'main_menu/account',
       'main_menu/messages',
-      'dashboard/payment_documents/sent_to_me',
-      'dashboard/saved_searches'
+      'dashboard/payment_documents/sent_to_me'
   ]
 
   def self.find(key)

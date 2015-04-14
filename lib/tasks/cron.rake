@@ -33,10 +33,6 @@ namespace :cron do
       end
     end
 
-    run_job "Send saved searches daily alerts" do
-      SavedSearchesAlertsJob.perform(:daily)
-    end
-
     #run_job "Send Request photos mails" do
     #  RecurringMailerRequestPhotosJob.perform
     #end
@@ -46,10 +42,6 @@ namespace :cron do
   task :weekly => [:environment] do
     run_job "Find new social connections" do
       PrepareFriendFindersJob.perform
-    end
-
-    run_job "Send saved searches weekly alerts" do
-      SavedSearchesAlertsJob.perform(:weekly)
     end
   end
 

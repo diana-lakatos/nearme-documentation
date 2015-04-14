@@ -48,14 +48,14 @@ table {
     font-weight: 400;
     color: #3a3a3a;
   }
-
+  
   td {
     text-align: right;
   }
 }
 
 .table {
-
+  
   &>tbody>tr>td {
     border-top: none;
   }
@@ -102,56 +102,5 @@ table, table.payment-summary {
 #waiver-agreement-template-list {
   table td:last-child a {
     display: block;
-  }
-}
-
-div.saved_searches {
-  h4 {
-    margin: 10px 0px 20px 0px;
-    font-weight: normal;
-    font-size: 20px;
-  }
-}
-
-table.saved-searches {
-
-  margin-top: 40px;
-
-  th {
-    background-color: $gray240;
-    padding: 10px 30px;
-    border-bottom: 10px solid $white;
-  }
-
-  td {
-    padding: 10px 30px;
-    border-bottom: 1px solid $gray210;
-  }
-
-  td img.status {
-    margin-left: 10px;
-  }
-
-  tr.data-row {
-    .controls {
-      text-align: right;
-      visibility: hidden;
-
-      a:hover {
-        color: $red;
-      }
-
-      a.delete {
-        margin-left: 5px;
-      }
-    }
-
-    &:hover {
-      background-color: $light_blue;
-
-      .controls {
-        visibility: visible;
-      }
-    }
   }
 }
