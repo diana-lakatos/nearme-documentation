@@ -9,6 +9,8 @@ class @Fileupload
     @file_types = @fileInput.attr('data-file-types')
     @upload_type = @fileInput.attr('data-upload-type')
     @files_container = @fileInput.attr('data-files-container')
+    @wrong_file_message = @fileInput.attr('data-wrong-file-message')
+
     if @upload_type == 'ckfile'
       @fileCollection = new Ckfile.Collection($(@files_container))
       @dataType = 'html'
@@ -38,8 +40,8 @@ class @Fileupload
           data.progressBar = progressBar
           data.submit()
         else
-          if @upload_type == 'ckfile'
-            alert("#{file.name} does not have an accepted extension. Please select a document or an image.")
+          if @wrong_file_message && @wrong_file_message != ''
+            alert("#{file.name} " + @wrong_file_message)
           else
             alert("#{file.name} seems to not be an image - please select gif, jpg, jpeg or png file")
       progress: (e, data) ->
