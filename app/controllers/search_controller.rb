@@ -2,7 +2,6 @@ require "will_paginate/array"
 class SearchController < ApplicationController
 
   include SearchHelper
-  include SearcherHelper
 
   before_filter :theme_name
   before_filter :find_transactable_type
@@ -12,7 +11,14 @@ class SearchController < ApplicationController
   helper_method :searcher, :result_view, :current_page_offset, :per_page, :first_result_page?
 
   def index
-    @searcher = instantiate_searcher(@transactable_type, params)
+    if @transactable_type.buyable?
+      @searcher = InstanceType::Searcher::ProductsSearcher.new(@transactable_type, params)
+    elsif result_view == 'mixed'
+      @searcher = InstanceType::Searcher::GeolocationSearcher::Location.new(@transactable_type, params)
+    else
+      @searcher = InstanceType::Searcher::GeolocationSearcher::Listing.new(@transactable_type, params)
+    end
+
     @searcher.paginate_results(params[:page], per_page)
     event_tracker.conducted_a_search(@searcher.search, @searcher.to_event_params.merge(result_view: result_view)) if should_log_conducted_search?
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
@@ -21,6 +27,12 @@ class SearchController < ApplicationController
   end
 
   private
+
+  def result_view
+    @result_view = params[:v].presence || (@transactable_type.buyable? ? platform_context.instance.default_products_search_view : platform_context.instance.default_search_view)
+    @result_view = @result_view.in?(Instance::SEARCH_SERVICE_VIEWS + Instance::SEARCH_PRODUCTS_VIEWS) ? @result_view : 'mixed'
+    (@result_view.in?(Instance::SEARCH_PRODUCTS_VIEWS) && !@transactable_type.buyable?) ? 'mixed' : @result_view
+  end
 
   def should_log_conducted_search?
     first_result_page? && ignore_search_event_flag_false? && searcher.should_log_conducted_search? && !repeated_search?
@@ -59,6 +71,15 @@ class SearchController < ApplicationController
 
   def theme_name
     @theme_name = 'buy-sell-theme' if params[:buyable] == "true"
+  end
+
+  def find_transactable_type
+    if params[:buyable] == "true"
+      @transactable_type = params[:transactable_type_id].present? ? Spree::ProductType.find(params[:transactable_type_id]) : Spree::ProductType.first
+    else
+      @transactable_type = params[:transactable_type_id].present? ? TransactableType.find(params[:transactable_type_id]) : TransactableType.first
+    end
+    params[:transactable_type_id] ||= @transactable_type.id
   end
 
   def set_taxonomies

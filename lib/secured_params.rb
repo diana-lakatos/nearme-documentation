@@ -1110,8 +1110,4 @@ class SecuredParams
       :primary
     ]
   end
-
-  def saved_search
-    %i(title query)
-  end
 end

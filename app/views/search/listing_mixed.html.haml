@@ -62,7 +62,6 @@
           %h3#search_results_count
             = @searcher.result_count
             results
-        = render 'search/save'
         .per-page
           %span per page
           = select_tag :per_page, options_for_select(['20', '50', '100'].map{|v| [v, v]})
