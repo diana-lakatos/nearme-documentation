@@ -204,15 +204,6 @@ class SecuredParams
     ]
   end
 
-  def search_notification
-    [
-      :email,
-      :latitude,
-      :longitude,
-      :query
-    ]
-  end
-
   def email_template
     [
       :body,

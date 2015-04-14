@@ -104,8 +104,6 @@ class Analytics::EventTracker::Serializers::TrackSerializer
         company_url: object.url,
         company_paypal_email: object.paypal_email
       }
-    when SearchNotification
-      {}
     when Hash
       object
     else

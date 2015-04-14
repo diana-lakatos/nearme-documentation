@@ -78,10 +78,6 @@ module InstanceType::Searcher::GeolocationSearcher
     @filterable_custom_attributes = @transactable_type.custom_attributes.searchable
   end
 
-  def search_notification
-    @search_notification ||= SearchNotification.new(query: @params[:loc], latitude: @params[:lat], longitude: @params[:lng])
-  end
-
   def should_log_conducted_search?
     @params[:loc].present? || @params[:query].present?
   end
