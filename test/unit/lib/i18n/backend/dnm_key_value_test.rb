@@ -94,7 +94,7 @@ class DnmKeyValueTest < ActiveSupport::TestCase
   end
 
   teardown do
-    I18n.locale = :cs
+    I18n.locale = :en
     @backend.set_instance_id(@instance.id)
   end
 end
