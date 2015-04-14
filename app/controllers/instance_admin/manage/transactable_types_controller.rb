@@ -29,6 +29,7 @@ class InstanceAdmin::Manage::TransactableTypesController < InstanceAdmin::Manage
       at.save!
       Utils::FormComponentsCreator.new(@transactable_type).create!
       Utils::FormComponentsCreator.new(@transactable_type, 'transactable').create!
+      RatingSystemsInitializerService.new(@transactable_type).create_rating_systems!
       flash[:success] = t 'flash_messages.instance_admin.manage.transactable_types.created'
       redirect_to instance_admin_manage_transactable_types_path
     else

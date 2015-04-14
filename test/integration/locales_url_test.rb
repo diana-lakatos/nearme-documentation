@@ -46,4 +46,8 @@ class LocalesUrlTest < ActionDispatch::IntegrationTest
     assert_redirected_to 'http://www.example.com/cs'
     assert :cs, I18n.locale
   end
+
+  teardown do
+    RoutingFilter.active = false
+  end
 end

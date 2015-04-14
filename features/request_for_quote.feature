@@ -7,7 +7,7 @@ Feature: A user can recurre book at a space
   Background:
     Given a company exists
       And a location exists with company: that company, currency: "USD"
-      And a transactable exists with location: that location, quantity: 10, photos_count: 1
+      And a transactable exists with location: that location, quantity: 10, photos_count: 1, action_rfq: true
       And a user exists with name: "John Doe"
       And request for feature is enabled
 
@@ -23,7 +23,7 @@ Feature: A user can recurre book at a space
 
   Scenario: Hourly reserved listing can be requested for quote
     Given the transactable is reserved hourly
-      And   the transactable has an hourly price of 100.00
+      And the transactable has an hourly price of 100.00
       And I am logged in as the user
      When I go to the location's page
      When I select to request quote and review space for:

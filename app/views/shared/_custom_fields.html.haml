@@ -7,10 +7,16 @@
   - all_fields.each do |object_field_pair|
     - object = object_field_pair.keys.first
     - field = object_field_pair[object]
+    - next if object == 'transactable' && field == 'schedule'
     %li.panel.panel-info
       %div.panel-heading
         = fields_builder.get_label(object_field_pair)
         %span= check_box_tag "#{f.object_name}[form_fields][]", "#{object}=>#{field}", fields_builder.object_field_pairs.include?(object_field_pair)
+        - if field == 'price' && all_fields.find { |pair| pair.keys.first == object && pair[pair.keys.first] == 'schedule' }
+          \/
+          = fields_builder.get_label(object => 'schedule')
+          %span= check_box_tag "#{f.object_name}[form_fields][]", "#{object}=>schedule", fields_builder.object_field_pairs.include?({object => 'schedule'})
+
 
 = content_for :script do
   :javascript
