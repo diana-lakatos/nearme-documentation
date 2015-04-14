@@ -26,6 +26,25 @@ class SearchController < ApplicationController
     render "search/#{result_view}"
   end
 
+  def categories
+    @categories = Category.where(id: params[:category_ids].to_s.split(','))
+    @categories_html = ''
+    @categories.each do |category|
+      next if category.children.blank?
+      @categories_html << render_to_string(
+        partial: 'search/mixed/filter',
+        locals: {
+          header_name: 'Category',
+          header_object: category,
+          selected_values: params[:category_ids].split(',') || [],
+          input_name: 'category_ids[]',
+          options: category.children.inject([]) { |options, c| options << [c.id, c.name]}
+        }
+      )
+    end
+    render text: @categories_html
+  end
+
   private
 
   def result_view

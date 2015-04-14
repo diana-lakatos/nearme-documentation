@@ -704,6 +704,7 @@ DesksnearMe::Application.routes.draw do
   get '/dashboard', controller: 'dashboard/dashboard', action: 'index'
 
   get "/search", :to => "search#index", :as => :search
+  get "/search/categories", :to => "search#categories"
 
   resources :search_notifications, only: [:create]
 

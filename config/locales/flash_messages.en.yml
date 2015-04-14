@@ -291,6 +291,8 @@ en:
       setting_saved: 'Search settings has been saved.'
 
     manage:
+      category:
+        created: 'Category has been created.'
       order:
         deleted: 'Order has been deleted.'
         updated: 'Order has been updated.'

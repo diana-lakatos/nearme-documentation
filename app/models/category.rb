@@ -39,6 +39,10 @@ class Category < ActiveRecord::Base
       self.permalink = name.to_url
     end
   end
+
+  def to_liquid
+    CategoryDrop.new(self)
+  end
 end
 
 

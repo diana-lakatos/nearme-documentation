@@ -1,7 +1,7 @@
 class Listing::Search::Params::Web < Listing::Search::Params
   attr :location_string
   attr_reader :location_types_ids, :industries_ids, :lntype, :lgtype, :lgpricing,
-    :lntypes, :sort, :dates, :start_date, :end_date, :display_dates, :lg_custom_attributes
+    :lntypes, :sort, :dates, :start_date, :end_date, :display_dates, :lg_custom_attributes, :category_ids
 
   def initialize(options)
     super
@@ -18,6 +18,7 @@ class Listing::Search::Params::Web < Listing::Search::Params
     @lg_custom_attributes.each do |key, value|
       @lg_custom_attributes[key] = (String === value ? value.split(',') : value).map(&:strip)
     end
+    @category_ids = get_category_ids
   end
 
   def bounding_box
@@ -36,6 +37,20 @@ class Listing::Search::Params::Web < Listing::Search::Params
       location.fetch_address_component(val, name_type)
     else
       options[val.to_sym]
+    end
+  end
+
+  def get_category_ids
+    categories = Category.where(id: @options[:category_ids].split(',')) if @options[:category_ids]
+    if categories.present? 
+      parent_ids = categories.map(&:parent_id)
+      categories.map do |category| 
+        unless parent_ids.include?(category.id)
+          category.self_and_descendants.map(&:id)
+        end
+      end.flatten.compact
+    else
+      []
     end
   end
 

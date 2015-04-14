@@ -12,6 +12,8 @@ class Search.SearchMixedController extends Search.SearchController
     @perPageValue = @perPageField.find(':selected').val()
     @bindLocationsEvents()
     @initializeCarousel()
+    @renderChildCategories()
+
 
   bindEvents: =>
     super
@@ -169,6 +171,17 @@ class Search.SearchMixedController extends Search.SearchController
     @assignFormParams(lg_custom_attributes: custom_attributes)
     super
 
+  renderChildCategories: ->
+    category_ids = _.toArray(@container.find('input[name="category_ids[]"]:checked').map(-> $(this).val())).join(',')
+
+    $.ajax(
+      url  : '/search/categories'
+      type : 'GET',
+      data : {category_ids: category_ids },
+      success: (data, textStatus, jqXHR) =>
+        @container.find('#categories-children').html(data)
+        CustomInputs.initialize();
+    )
 
   updateResultsCount: ->
     count = parseInt(@hiddenResultsContainer().find('input#result_count').val())
@@ -230,6 +243,7 @@ class Search.SearchMixedController extends Search.SearchController
 
   # Trigger automatic updating of search results
   fieldChanged: (field, value) ->
+    @renderChildCategories()
     @triggerSearchFromQueryAfterDelay()
 
 
