@@ -4,8 +4,7 @@ class LocalesUrlTest < ActionDispatch::IntegrationTest
 
   setup do
     RoutingFilter.active = true
-    @instance = FactoryGirl.create(:instance)
-    FactoryGirl.create(:default_locale, code: 'en', instance: @instance)
+    FactoryGirl.create(:default_locale, code: 'en')
   end
 
   should 'redirect to default language if locale does not exist' do
@@ -14,13 +13,13 @@ class LocalesUrlTest < ActionDispatch::IntegrationTest
   end
 
   should 'redirect to path without locale for default locale' do
-    FactoryGirl.create(:default_locale, code: 'aa', instance: @instance)
+    FactoryGirl.create(:default_locale, code: 'aa')
     get 'http://www.example.com/aa/'
     assert_redirected_to 'http://www.example.com/'
   end
 
   should 'not redirect for existing locale' do
-    FactoryGirl.create(:locale, code: 'fr', instance: @instance)
+    FactoryGirl.create(:locale, code: 'fr')
     get 'http://www.example.com/fr/'
     assert_response :success
   end
@@ -30,4 +29,9 @@ class LocalesUrlTest < ActionDispatch::IntegrationTest
       get root_path(language: 'xy')
     end
   end
+
+  teardown do
+    RoutingFilter.active = false
+  end
+
 end
