@@ -1660,3 +1660,52 @@ section.search section#results.mixed {
   }
 }
 
+#save-search-modal {
+  width: 70%;
+  margin-left: -35%;
+
+  .content {
+    margin: 0px 30px;
+
+    h4 {
+      margin-top: 25px;
+      margin-bottom: 15px;
+      font-size: 24px;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .controls {
+    text-align: center;
+
+    input {
+      width: 70%;
+      margin: 30px 0px;
+      border: 1px solid $theme_blue;
+      padding: 15px;
+    }
+
+    button.btn-saved-search-title {
+      padding: 0px 70px;
+      margin-bottom: 30px;
+    }
+  }
+}
+
+#save-search-status-modal {
+  .content {
+    padding: 40px;
+    text-align: center;
+
+    h4.modal-title {
+      font-size: 24px;
+    }
+
+    a {
+      color: $theme_blue;
+    }
+  }
+}
