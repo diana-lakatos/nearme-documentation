@@ -158,7 +158,11 @@ DesksnearMe::Application.routes.draw do
 
     namespace :analytics do
       get '/', :to => 'base#index'
-      resource :overview, :only => [:show], :controller => 'overview'
+      resource :overview, :only => [:show], :controller => 'overview' do
+        member do
+          get :products
+        end
+      end
       resource :sales, :only => [:show]
       resource :profiles, :only => [:show]
     end
