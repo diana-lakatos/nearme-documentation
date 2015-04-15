@@ -50,9 +50,9 @@
           #listings_map.inner
     .list{:'data-list' => true}
       .filters{:'data-search-filters-container' => true}
-
-        = render partial: 'search/mixed/filter', locals: { header_name: 'Category', selected_values: @searcher.category_ids || [], input_name: 'category_ids[]', options: @searcher.category_options}
-        #categories-children
+        - if @searcher.category_options.present?
+          = render partial: 'search/mixed/filter', locals: { header_name: t('search.category.title'), selected_values: @searcher.category_ids || [], input_name: 'category_ids[]', options: @searcher.category_options}
+          #categories-children
 
         = render partial: 'search/shared/date_range'
         - @searcher.filterable_custom_attributes.each do |ca|
