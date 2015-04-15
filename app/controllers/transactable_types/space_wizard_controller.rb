@@ -83,7 +83,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   end
 
   def set_common_variables
-    redirect_to(new_transactable_type_space_wizard_url(@transactable_type)) && return unless current_user.present?
+    redirect_to(transactable_type_new_space_wizard_url(@transactable_type)) && return unless current_user.present?
 
     @user = current_user
     @company = @user.companies.first
