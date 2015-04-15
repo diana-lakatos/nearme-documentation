@@ -249,6 +249,11 @@ module ApplicationHelper
       ]).html_safe
   end
 
+  def user_menu_instance_admin_path(users_instance_admin)
+    users_instance_admin = 'manage_blog' if users_instance_admin == 'blog'
+    main_app.send("instance_admin_#{users_instance_admin}_path")
+  end
+
   def will_paginate_styled(collection, options = {})
     content_tag :div, class: 'pagination' do
       options[:renderer] = BuySellMarket::WillPaginateLinkRenderer::LinkRenderer
