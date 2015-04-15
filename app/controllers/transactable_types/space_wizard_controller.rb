@@ -50,6 +50,8 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     elsif @user.save
       track_new_space_event
       track_new_company_event
+
+      WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::PendingApproval, @user.first_listing.id) unless @user.first_listing.is_trusted?
       WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Created, @user.first_listing.id)
       flash[:success] = t('flash_messages.space_wizard.space_listed', bookable_noun: @transactable_type.name)
       flash[:error] = t('manage.listings.no_trust_explanation') if @user.listings.first.present? && !@user.listings.first.is_trusted?

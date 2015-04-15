@@ -4,6 +4,8 @@ class Utils::DefaultAlertsCreator::ListingCreator < Utils::DefaultAlertsCreator:
     create_listing_created_email!
     create_draft_listing_created_email!
     share_with_user_email!
+    create_listing_pending_approval_email!
+    create_approved_email!
   end
 
   def create_listing_created_email!
@@ -16,6 +18,14 @@ class Utils::DefaultAlertsCreator::ListingCreator < Utils::DefaultAlertsCreator:
 
   def share_with_user_email!
     create_alert!({associated_class: WorkflowStep::ListingWorkflow::Shared, name: 'share with user email', path: 'listing_mailer/share', subject: "{{sharer.name}} has shared a {{platform_context.bookable_noun}} with you on {{platform_context.name}}", alert_type: 'email', recipient_type: 'enquirer'})
+  end
+
+  def create_listing_pending_approval_email!
+    create_alert!({associated_class: WorkflowStep::ListingWorkflow::PendingApproval, name: 'listing_pending_approval_email', path: 'vendor_approval_mailer/notify_admin_of_new_listings', subject: "New listing is pending approval", alert_type: 'email', recipient_type: 'administrator', delay: 0})
+  end
+
+  def create_approved_email!
+    create_alert!({associated_class: WorkflowStep::ListingWorkflow::Approved, name: 'listing_approved_email', path: 'vendor_approval_mailer/notify_host_of_listing_approval', subject: "{{ listing.name }} has been approved!", alert_type: 'email', recipient_type: 'lister', delay: 0})
   end
 
   protected

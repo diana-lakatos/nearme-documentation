@@ -13,6 +13,7 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
     @signup_creator.expects(:create_create_user_by_admin_email!).once
     @signup_creator.expects(:create_notify_of_wrong_phone_number_email!).once
     @signup_creator.expects(:create_create_user_via_bulk_uploader_email!).once
+    @signup_creator.expects(:create_approved_email!).once
     @signup_creator.create_all!
   end
 
@@ -124,6 +125,23 @@ class Utils::DefaultAlertsCreator::SignupCreatorTest < ActionDispatch::Integrati
       assert_contains "We'd like to invite you to participate in our #{@platform_context.decorate.name} marketplace", mail.html_part.body
       assert_contains "Password: cool_password", mail.html_part.body
       assert_contains 'href="http://custom.domain.com', mail.html_part.body
+      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_not_contains 'href="/', mail.html_part.body
+    end
+
+    should 'send email to approved user' do
+      @signup_creator.create_approved_email!
+      @user = FactoryGirl.create(:user)
+      User.any_instance.stubs(:is_trusted?).returns(true)
+      assert_difference 'ActionMailer::Base.deliveries.size' do
+        WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::Approved, @user.id)
+      end
+      mail = ActionMailer::Base.deliveries.last
+      assert_equal "#{ @user.first_name }, you have been approved at #{ @platform_context.decorate.name }!", mail.subject
+      assert mail.html_part.body.include?(@user.first_name)
+      assert_equal [@user.email], mail.to
+      assert mail.html_part.body.include?("You have been approved")
+      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="http://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
     end

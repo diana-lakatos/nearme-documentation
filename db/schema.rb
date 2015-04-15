@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150415122118) do
+ActiveRecord::Schema.define(version: 20150415112915) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1342,6 +1342,14 @@ ActiveRecord::Schema.define(version: 20150415122118) do
   add_index "reviews", ["reviewable_type"], name: "index_reviews_on_reviewable_type", using: :btree
   add_index "reviews", ["transactable_type_id"], name: "index_reviews_on_transactable_type_id", using: :btree
   add_index "reviews", ["user_id"], name: "index_reviews_on_user_id", using: :btree
+
+  create_table "saved_searches", force: true do |t|
+    t.string   "title"
+    t.integer  "user_id"
+    t.text     "query"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "schedules", force: true do |t|
     t.datetime "start_at"
@@ -2778,13 +2786,13 @@ ActiveRecord::Schema.define(version: 20150415122118) do
     t.integer  "hours_to_expiration",                                                default: 24
     t.integer  "minimum_booking_minutes",                                            default: 60
     t.boolean  "multiple_root_categries"
+    t.boolean  "action_na",                                                          default: false
+    t.boolean  "action_book_it_out"
     t.boolean  "skip_location"
     t.string   "default_currency"
     t.text     "allowed_currencies"
     t.string   "default_country"
     t.text     "allowed_countries"
-    t.boolean  "action_na",                                                          default: false
-    t.boolean  "action_book_it_out"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
