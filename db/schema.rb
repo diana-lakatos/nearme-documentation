@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150415122118) do
+ActiveRecord::Schema.define(version: 20150415151657) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -851,6 +851,8 @@ ActiveRecord::Schema.define(version: 20150415122118) do
     t.integer  "support_imap_port"
     t.boolean  "support_imap_ssl"
     t.hstore   "search_settings",                                               default: {},            null: false
+    t.string   "default_country"
+    t.text     "allowed_countries"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1342,6 +1344,17 @@ ActiveRecord::Schema.define(version: 20150415122118) do
   add_index "reviews", ["reviewable_type"], name: "index_reviews_on_reviewable_type", using: :btree
   add_index "reviews", ["transactable_type_id"], name: "index_reviews_on_transactable_type_id", using: :btree
   add_index "reviews", ["user_id"], name: "index_reviews_on_user_id", using: :btree
+
+  create_table "saved_searches", force: true do |t|
+    t.string   "title"
+    t.integer  "user_id"
+    t.text     "query"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "instance_id"
+  end
+
+  add_index "saved_searches", ["title", "user_id"], name: "index_saved_searches_on_title_and_user_id", unique: true, using: :btree
 
   create_table "schedules", force: true do |t|
     t.datetime "start_at"
@@ -2778,13 +2791,13 @@ ActiveRecord::Schema.define(version: 20150415122118) do
     t.integer  "hours_to_expiration",                                                default: 24
     t.integer  "minimum_booking_minutes",                                            default: 60
     t.boolean  "multiple_root_categries"
+    t.boolean  "action_na",                                                          default: false
+    t.boolean  "action_book_it_out"
     t.boolean  "skip_location"
     t.string   "default_currency"
     t.text     "allowed_currencies"
-    t.string   "default_country"
     t.text     "allowed_countries"
-    t.boolean  "action_na",                                                          default: false
-    t.boolean  "action_book_it_out"
+    t.string   "default_country"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -3052,10 +3065,10 @@ ActiveRecord::Schema.define(version: 20150415122118) do
     t.float    "buyer_average_rating",                               default: 0.0,                                                                                 null: false
     t.boolean  "public_profile",                                     default: false
     t.boolean  "accept_emails",                                      default: true
-    t.string   "language",                                           default: "en"
     t.string   "saved_searches_alerts_frequency",                    default: "daily"
     t.integer  "saved_searches_count",                               default: 0
     t.datetime "saved_searches_alert_sent_at"
+    t.string   "language",                               limit: 2,   default: "en"
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
@@ -3066,6 +3079,7 @@ ActiveRecord::Schema.define(version: 20150415122118) do
   add_index "users", ["instance_id"], name: "index_users_on_instance_id", using: :btree
   add_index "users", ["instance_profile_type_id"], name: "index_users_on_instance_profile_type_id", using: :btree
   add_index "users", ["partner_id"], name: "index_users_on_partner_id", using: :btree
+  add_index "users", ["saved_searches_alerts_frequency", "saved_searches_count", "saved_searches_alert_sent_at"], name: "index_users_on_saved_search_attrs", using: :btree
 
   create_table "versions", force: true do |t|
     t.string   "item_type",  null: false

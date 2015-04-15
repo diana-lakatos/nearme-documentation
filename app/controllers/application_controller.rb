@@ -32,6 +32,12 @@ class ApplicationController < ActionController::Base
     super.try(:decorate)
   end
 
+  helper_method :current_instance
+
+  def current_instance
+    platform_context.try(:instance)
+  end
+
   def secured_params
     @secured_params ||= SecuredParams.new
   end

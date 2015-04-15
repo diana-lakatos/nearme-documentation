@@ -361,8 +361,10 @@ class SecuredParams
       :support_imap_port,
       :support_imap_ssl,
       :default_currency,
+      :default_country,
       custom_translations: [:'buy_sell_market.checkout.manual_payment', :'buy_sell_market.checkout.manual_payment_description'],
       user_required_fields: [],
+      :allowed_countries => [],
       transactable_types_attributes: nested(self.transactable_type),
       listing_amenity_types_attributes: nested(self.amenity_type),
       location_amenity_types_attributes: nested(self.amenity_type),
@@ -551,11 +553,10 @@ class SecuredParams
       :action_book_it_out,
       :multiple_root_categries,
       :skip_location,
-      :default_country, :default_currency,
+      :default_currency,
       :bookable_noun, :lessor, :lessee, :action_schedule_booking,
       :availability_templates_attributes => nested(self.availability_template),
       :allowed_currencies => [],
-      :allowed_countries => [],
       :action_type_ids => [],
       schedule_attributes: self.schedule
     ]

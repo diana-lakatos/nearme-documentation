@@ -16,6 +16,7 @@ class Instance < ActiveRecord::Base
   serialize :user_required_fields, Array
   serialize :custom_sanitize_config, Hash
   serialize :hidden_ui_controls, Hash
+  serialize :allowed_countries, Array
 
   API_KEYS = %w(paypal_username paypal_password paypal_signature paypal_app_id paypal_client_id paypal_client_secret stripe_api_key stripe_public_key balanced_api_key)
   SEARCH_TYPES = %w(geo fulltext fulltext_geo fulltext_category geo_category)
@@ -123,6 +124,10 @@ class Instance < ActiveRecord::Base
       # Mark price fields as attr-accessible
       # attr_accessible "#{edge}_#{price}_price_cents", "#{edge}_#{price}_price"
     end
+  end
+
+  def allowed_countries_list
+    Country.where(name: allowed_countries)
   end
 
   def check_lock

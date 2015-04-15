@@ -31,7 +31,6 @@ class TransactableType < ActiveRecord::Base
   serialize :pricing_validation, Hash
   serialize :availability_options, Hash
   serialize :custom_csv_fields, Array
-  serialize :allowed_countries, Array
   serialize :allowed_currencies, Array
 
   before_save :normalize_cancellation_policy_enabled, unless: lambda { |transactable_type| transactable_type.buyable }

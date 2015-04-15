@@ -4,11 +4,15 @@ module UsersHelper
   end
 
   def user_country_name_options
-    Country.all.map { |c| [c.name, c.name, {:'data-calling-code' => c.calling_code}] }.sort_by(&:first)
+    if (allowed_countries = current_instance.allowed_countries_list).present?
+      allowed_countries.map { |c| [c.name, c.name, {:'data-calling-code' => c.calling_code}] }.sort_by(&:first)
+    else
+      Country.all.map { |c| [c.name, c.name, {:'data-calling-code' => c.calling_code}] }.sort_by(&:first)
+    end
   end
 
   def user_country_default(country)
-    Country.find(country) ? country : nil
+    Country.find(country) ? country : current_instance.default_country
   end
 
   def admin_as_user?
