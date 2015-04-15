@@ -82,50 +82,5 @@ module InstanceAdminHelper
     end
   end
 
-  def approval_request_owner_class(object)
-    class_name = object.class.name
-
-    if class_name == 'Transactable'
-      class_name = "Service (#{object.try(:transactable_type).try(:name)})"
-    end
-
-    class_name
-  end
-
-  def approval_request_login_as_owner_creator(object)
-    if object.class.name == 'User'
-      creator = object
-    else
-      creator = object.try(:creator)
-    end
-
-    if creator.present?
-      link_to "Login As Creator", login_as_instance_admin_manage_user_path(creator), :method => :post,
-        data: { confirm: 'This will log you out and re-log you in as this user' }
-    else
-      ""
-    end
-  end
-
-  def approval_request_owner_name(object)
-    name = object.try(:name).try(:truncate, 25)
-    link = '#'
-
-    case object.class.name
-    when 'Transactable'
-      link = transactable_type_location_listing_path(object.transactable_type, object.location, object)
-    when 'Location'
-      link = location_path(object)
-    when 'Company'
-      if object.creator.present?
-        link = user_path(object.creator)
-      end
-    when 'User'
-      link = user_path(object)
-    end
-
-    link_to name, link
-  end
-
 end
 

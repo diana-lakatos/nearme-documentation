@@ -25,15 +25,15 @@
           - @approval_requests.each do |resource|
             %tr
               %td
-                = approval_request_owner_name(resource.owner)
+                = resource.decorate.owner_name
               %td
-                = approval_request_owner_class(resource.owner)
+                = resource.decorate.owner_class
               %td
                 = resource.notes.try(:truncate, 25)
               %td
                 =l resource.created_at, format: :short
               %td
-                = approval_request_login_as_owner_creator(resource.owner)
+                = resource.decorate.login_as_owner_creator_link
               %td
                 = link_to 'Manage', edit_instance_admin_manage_approval_request_path(resource)
         = will_paginate @approval_requests
