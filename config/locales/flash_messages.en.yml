@@ -283,8 +283,6 @@ en:
         user_is_not_in_company: "You can't delete user which is not in your company."
       reviews:
         review_deleted: 'Review has been deleted.'
-      saved_searches:
-        deleted: 'Search has been deleted'
     wish_list_items:
       item_deleted: 'Item has ben successfully deleted.'
       all_items_deleted: 'All items have been successfully deleted.'
@@ -293,6 +291,8 @@ en:
       setting_saved: 'Search settings has been saved.'
 
     manage:
+      category:
+        created: 'Category has been created.'
       order:
         deleted: 'Order has been deleted.'
         updated: 'Order has been updated.'

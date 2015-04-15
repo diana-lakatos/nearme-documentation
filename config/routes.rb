@@ -695,12 +695,6 @@ DesksnearMe::Application.routes.draw do
       end
     end
 
-    resources :saved_searches, only: %i(index create update destroy) do
-      collection do
-        patch :change_alerts_frequency
-      end
-    end
-
   end #end /dashboard namespace
 
   resources :reservations do
@@ -710,6 +704,7 @@ DesksnearMe::Application.routes.draw do
   get '/dashboard', controller: 'dashboard/dashboard', action: 'index'
 
   get "/search", :to => "search#index", :as => :search
+  get "/search/categories", :to => "search#categories"
 
   resources :search_notifications, only: [:create]
 

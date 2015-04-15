@@ -338,6 +338,7 @@ class SecuredParams
       :searcher_type, :onboarding_verification_required,
       :search_settings,
       :taxonomy_tree,
+      :categories,
       :date_pickers,
       :tt_select_type,
       :default_products_search_view,
@@ -1110,9 +1111,5 @@ class SecuredParams
       :custom_name,
       :primary
     ]
-  end
-
-  def saved_search
-    %i(title query)
   end
 end

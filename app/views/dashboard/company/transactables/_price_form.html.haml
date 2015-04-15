@@ -58,3 +58,6 @@
         =f.input :book_it_out_discount
         =f.input :book_it_out_minimum_qty
 
+    - if f.object.transactable_type.action_rfq?
+      = f.input :action_rfq, as: :boolean
+
