@@ -30,7 +30,8 @@
     = render 'layouts/favicon'
 
     = stylesheet_link_tag 'dashboard'
-    = stylesheet_link_tag platform_context.compiled_dashboard_stylesheet_url || 'dashboard_dynamic'
+    - if platform_context.compiled_dashboard_stylesheet_url
+      = stylesheet_link_tag platform_context.compiled_dashboard_stylesheet_url
     
     = render 'layouts/homepage_css' if home_page?
 
