@@ -14,10 +14,19 @@ class Locale < ActiveRecord::Base
 
   before_destroy :check_locale
   after_destroy :delete_instance_keys
+  after_destroy :check_user_settings
+
+  scope :by_created_at, -> { order('created_at ASC') }
 
   def self.remove_locale_from_url(url)
     url.sub!(DOMAIN_PATTERN) { $2 || '' }
     url.replace('/') if url.empty?
+    $1
+  end
+
+  def self.change_locale_in_url(url, new_locale)
+    url.sub!(DOMAIN_PATTERN) { $2 || "/#{new_locale}" }
+    url.sub!('/', "/#{new_locale}") if url == '/'
     $1
   end
 
@@ -61,5 +70,9 @@ class Locale < ActiveRecord::Base
 
   def delete_instance_keys
     Translation.for_instance(instance_id).where(locale: code).delete_all
+  end
+
+  def check_user_settings
+    instance.users.where(language: code).update_all(language: instance.primary_locale)
   end
 end

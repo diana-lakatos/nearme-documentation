@@ -944,6 +944,7 @@ class SecuredParams
       :first_name, :middle_name, :last_name, :gender,
       :drivers_licence_number, :gov_number, :twitter_url,
       :linkedin_url, :facebook_url, :google_plus_url, :public_profile,
+      :language,
       industry_ids: [],
       companies_attributes: nested(self.company),
       approval_requests_attributes: nested(self.approval_request)

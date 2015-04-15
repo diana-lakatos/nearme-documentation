@@ -38,7 +38,8 @@ class RegistrationsController < Devise::RegistrationsController
           instance_profile_type_id: InstanceProfileType.first.try(:id),
           referer: session[:referer],
           source: cookies.signed[:source],
-          campaign: cookies.signed[:campaign]
+          campaign: cookies.signed[:campaign],
+          language: platform_context.instance.primary_locale.to_s
         })
         update_analytics_google_id(@user)
         analytics_apply_user(@user)
@@ -103,10 +104,14 @@ class RegistrationsController < Devise::RegistrationsController
     # to avoid duplication, as the approval request is already set by assign_attributes
     # and build_approval_request_for_object
     if resource.update_with_password(user_params.except(:approval_requests_attributes))
+      if @user.language.to_sym != I18n.locale
+        I18n.locale = @user.language.to_sym
+      end
+
       set_flash_message :success, :updated
       sign_in(resource, :bypass => true)
       event_tracker.updated_profile_information(@user)
-      redirect_to '/dashboard/edit_profile'
+      redirect_to dashboard_profile_path
     else
       @company = current_user.companies.first
       @country = resource.country_name

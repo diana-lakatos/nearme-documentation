@@ -1,6 +1,7 @@
 class InstanceAdmin::BaseController < ApplicationController
   layout 'instance_admin'
 
+  skip_before_filter :set_locale
   before_filter :auth_user!
   before_filter :authorize_user!
   before_filter :check_if_locked, only: [:new, :create, :edit, :update, :destroy]
