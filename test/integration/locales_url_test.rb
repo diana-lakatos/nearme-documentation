@@ -32,6 +32,7 @@ class LocalesUrlTest < ActionDispatch::IntegrationTest
 
   should 'set locale based on user preference' do
     FactoryGirl.create(:locale, code: 'cs')
+    Utils::EnLocalesSeeder.new.go!
     user = FactoryGirl.create(:user, language: 'cs')
 
     get 'http://www.example.com/'
