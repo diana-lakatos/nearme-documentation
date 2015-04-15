@@ -7,7 +7,7 @@
       %span.btn.btn-blue.btn-medium.upload-photos.fileinput-button
         %span
           = text
-        %input.browse-file.hidden{name: name, type: 'file', multiple: !options['no-multiple'], data: { 'file-types' => options[:file_types], 'upload-type' => options[:upload_type], 'files-container' => options[:files_container] }}
+        %input.browse-file.hidden{name: name, type: 'file', multiple: !options['no-multiple'], data: { 'file-types' => options[:file_types], 'upload-type' => options[:upload_type], 'files-container' => options[:files_container], 'wrong-file-message' => options[:wrong_file_message] }}
         - if error_message
           %p.error-block= error_message
 

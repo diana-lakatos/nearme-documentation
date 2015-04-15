@@ -913,4 +913,5 @@ en:
       upload_file: Upload File
       public_url: Public URL
       search: Search
+      wrong_file_message: 'does not have an accepted extension. Please select a document or an image.'
 

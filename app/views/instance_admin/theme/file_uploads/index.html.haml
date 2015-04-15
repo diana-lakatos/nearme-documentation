@@ -5,8 +5,8 @@
         = f.input :query, label: false, as: :string, input_html: { value: @query }, class: 'string'
         = f.submit t('ckeditor_custom.file_uploads.search'), class: 'btn'
       .clear
-
-    = file_upload_input('upload[file]', instance_admin_theme_file_uploads_path, nil, 'Upload File', {"no-multiple" => true, height: 0, row: 0, file_types: '(\.|\/)(gif|jpe?g|png|tiff|doc|docx|xls|odt|ods|pdf|rar|zip|tar|tar.gz|swf)$', upload_type: 'ckfile', files_container: '#fileupload'})
+ 
+    = file_upload_input('upload[file]', instance_admin_theme_file_uploads_path, nil, 'Upload File', {"no-multiple" => true, height: 0, row: 0, file_types: '(\.|\/)(' + [Ckeditor.attachment_file_types, Ckeditor.image_file_types].flatten.join('|') + ')$', upload_type: 'ckfile', files_container: '#fileupload', wrong_file_message: t('ckeditor_custom.file_uploads.wrong_file_message') })
 
   #fileupload.gal-holder
     .fileupload-list
