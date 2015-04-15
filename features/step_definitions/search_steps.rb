@@ -16,6 +16,30 @@ Given /^Auckland listing has fixed_price: (.*)$/ do |fixed_price|
   listing.save(validate: false)
 end
 
+Given /^Elasticsearch is turned (.*)$/ do |switch|
+  if switch.strip.downcase == 'on'
+    Instance.update_all(search_engine: Instance::SEARCH_ENGINES.last)
+  else
+    Instance.update_all(search_engine: Instance::SEARCH_ENGINES.first)
+  end
+end
+
+Then /^Elasticsearch (.*) index should be (.*)$/ do |index_name, action_name|
+  if index_name == 'transactables'
+    if action_name == 'created'
+      Transactable.searchable.import force: true
+    else
+      Transactable.__elasticsearch__.client.indices.delete index: Transactable.index_name
+    end
+  elsif index_name == 'products'
+    if action_name == 'created'
+      Spree::Product.searchable.import force: true
+    else
+      Spree::Product.__elasticsearch__.client.indices.delete index: Spree::Product.index_name
+    end
+  end
+end
+
 When /^I search for "([^"]*)" with prices (\d+) (\d+)$/ do |query, min, max|
   visit search_path(:q => query, "price[min]" => min, "price[max]" => max, :lgpricing => "fixed")
 end

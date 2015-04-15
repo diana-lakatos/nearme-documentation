@@ -6,6 +6,7 @@ class Transactable < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound;
   end
   include Impressionable
+  include Searchable
   has_metadata accessors: [:photos_metadata]
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id, :listings_public], :location)
 

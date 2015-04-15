@@ -24,6 +24,7 @@ module LiquidFilters
   end
 
   def lowest_price_without_cents_with_currency(object, lgpricing_filters = [])
+    lgpricing_filters ||= []
     prices = object.lowest_price(lgpricing_filters)
     if prices
       periods = {monthly: 'month', weekly: 'week', daily: 'day', hourly: 'hour'}

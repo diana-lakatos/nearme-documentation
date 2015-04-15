@@ -4,6 +4,10 @@ source 'http://rubygems.org'
 
 gem 'rails', '4.1.8'
 gem 'pg'
+gem 'elasticsearch-persistence'
+gem 'elasticsearch-model' 
+gem 'elasticsearch-rails'
+gem 'patron'
 
 gem 'sprockets', '2.11.0'
 gem 'sprockets-rails', '~> 2.1'
