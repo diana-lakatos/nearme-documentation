@@ -101,8 +101,11 @@ do ($ = jQuery) ->
       @elem.slideUp 100, =>
         @parent.children.splice(@parent.children.indexOf(@), 1)
         if this instanceof TopLevel
-          has_rules = child for child in @parent.children when child instanceof TopLevel
-          @parent.has_rules = no  unless has_rules?
+          for child in @parent.children when child instanceof TopLevel
+              has_negative_rules = child if child.isNegative()
+              has_positive_rules = child if child.isPositive()
+          @parent.has_negative_rules = no unless has_negative_rules?
+          @parent.has_positive_rules = no unless has_positive_rules?
         @parent.has_ending_time = no if this instanceof EndTime
         @parent.triggerRender()
 
@@ -113,7 +116,7 @@ do ($ = jQuery) ->
     # cloning UI.
     render: ->
       out = $ "<div></div>"
-      buttons = $ "<div class='col-md-2'></div>"
+      buttons = $ "<div class='col-md-2 small-padding text-right'></div>"
       buttons.append $("<span class='btn clone'>+</span>").click(@clone) if @clonable()
       buttons.append $("<span class='btn destroy'>-</span>").click(@destroy) if @destroyable()
       out.append buttons
@@ -125,7 +128,6 @@ do ($ = jQuery) ->
     # to keep a global reference to the root node.
     triggerRender: -> @parent.triggerRender()
 
-
   # The Root Node
   # -------------
   #
@@ -136,7 +138,8 @@ do ($ = jQuery) ->
     clonable: -> no
     destroyable: -> no
     has_ending_time: no
-    has_rules: no
+    has_positive_rules: no
+    has_negative_rules: no
 
     constructor: ->
       super
@@ -144,8 +147,10 @@ do ($ = jQuery) ->
       # itself, this will typically be an `<input type="hidden">`.
       # We insert our container div after it and save it into the
       # `@target` variable.
-      @parent.after "<div class='icui'></div>"
-      @target = @parent.siblings('.icui').first()
+      @parent.after "<div class='icui'><div class='positive-rules'></div><div class='negative-rules'></div></div>"
+      @target = @parent.siblings('.icui')
+      @positive_target = @target.find('.positive-rules').first()
+      @negative_target = @target.find('.negative-rules').first()
 
     fromData: (d) ->
       @children.push new StartDate(@, d["start_date"])
@@ -153,7 +158,11 @@ do ($ = jQuery) ->
         @has_ending_time = yes
         @children.push new EndTime(@, d["end_time"])
       for k,v of d when v.length > 0 and k != "start_date" and k != "end_time"
-        @has_rules = yes
+        if k.match /^r/
+          @has_positive_rules = yes
+        else if k.match /^ex/
+          @has_negative_rules = yes
+
         @children.push new TopLevel(@, {type: k, values: v})
 
     defaults: ->
@@ -163,7 +172,8 @@ do ($ = jQuery) ->
     triggerRender: -> @render()
 
     render: ->
-      @target.html(@renderChildren())
+      @positive_target.html(@renderPositiveChildren())
+      @negative_target.html(@renderNegativeChildren())
       unless @has_ending_time
         link = $("<div class='row'><a href='#'>Add Ending Time</a></div> ")
         link.click =>
@@ -172,18 +182,42 @@ do ($ = jQuery) ->
           @children.push new EndTime(@)
           @triggerRender()
           false
-        @target.append(link)
-        # @target.append("<br />")
-      unless @has_rules
-        link = $("<div class='row'><a href='#'>Add Repetition</a></div>")
-        link.click =>
-          @has_rules = yes
-          link.hide()
+        @positive_target.append(link)
+      unless @has_positive_rules
+        positive_link = $("<div class='row'><a href='#'>Add Availability</a></div>")
+        positive_link.click =>
+          @has_positive_rules = yes
+          positive_link.hide()
           @children.push new TopLevel(@)
           @triggerRender()
           false
-        @target.append(link)
+        @positive_target.append(positive_link)
+      unless @has_negative_rules
+        negative_link = $("<div class='row'><a href='#'>Add Unavailability</a></div>")
+        @negative_target.append(negative_link)
+        negative_link.click =>
+          @has_negative_rules = yes
+          negative_link.hide()
+          top_level = new TopLevel(@)
+          top_level.data.type = 'extimes'
+          top_level.children = [new DatePicker top_level]
+          @children.push top_level
+          @triggerRender()
+          false
 
+    renderPositiveChildren: ->
+      arr = []
+      arr.push $('<h4>Availability</h4>')
+      for child in @children
+        arr.push child.render() unless child instanceof TopLevel && child.isNegative()
+      arr
+
+    renderNegativeChildren: ->
+      arr = []
+      arr.push $('<h4>Unavailability</h4>')
+      for child in @children
+        arr.push child.render() if child instanceof TopLevel && child.isNegative()
+      arr
 
     getData: ->
       data = {}
@@ -214,17 +248,17 @@ do ($ = jQuery) ->
   #              |- Count
   #              |- Until
   #              |- Day +-
+  #              |- HourOfDay +-
+  #              |- MinuteOfHour +-
   #              |- DayOfWeek +-
   #              |- DayOfMonth +-
   #              |- DayOfYear +-
   #              `- OffsetFromPascha +-
   class TopLevel extends Option
 
-    #destroyable: -> @parent.children.length > 2
-
     defaults: ->
-      @data.type = 'rtimes'
-      @children = [new DatePicker @]
+      @data.type = 'rrules'
+      @children = [new Rule @]
 
     fromData: (d) ->
       @data.type = d.type
@@ -243,19 +277,24 @@ do ($ = jQuery) ->
         values = (child.getData() for child in @children)
         {type: @data.type, values}
 
+    isPositive: ->
+      @data.type.match /^r/
+
+    isNegative: ->
+      @data.type.match /^ex/
 
     render: ->
       @elem = $("""
     <div class="toplevel">
       <div class='row'>
         <div class="col-md-2 label"><label>Event</label></div>
-        <div class="col-md-4 small-padding">
+        <div class="col-md-4 small-padding hidden">
           <select class="select required selectpicker">
             #{Helpers.option 1, "occurs", => @data.type.match /^r/}
             #{Helpers.option -1, "doesn't occur", => @data.type.match /^ex/}
           </select>
         </div>
-        <div class="col-md-4 small-padding">
+        <div class="col-md-8 small-padding big-input">
           <select>
             #{Helpers.option 'dates', "specific dates", => @data.type.match /times$/}
             #{Helpers.option 'rules', "every", => @data.type.match /rules$/}
@@ -312,7 +351,7 @@ do ($ = jQuery) ->
             <label>#{@getData().label || ''}</label>
           </div>
           <div class="col-md-4 small-padding">
-            <input type="date" value="#{@data.time.strftime('%Y-%m-%d')}" />
+            <input type="text" data-type="date" value="#{@data.time.strftime('%Y-%m-%d')}" />
           </div>
           <div class="col-md-4 small-padding">
             <input type="time" value="#{@data.time.strftime('%H:%M')}" />
@@ -324,7 +363,7 @@ do ($ = jQuery) ->
       time = ss.last()
       ss.change (e) =>
         @data.time = Helpers.dateFromString date.val() + ' ' + time.val()
-      @elem.find("input[type='date']").datepicker(
+      @elem.find("input[data-type='date']").datepicker(
         dateFormat: "yy-mm-dd",
         altFormat: "yy-mm-dd"
       )
@@ -364,7 +403,7 @@ do ($ = jQuery) ->
   class Rule extends Option
 
     defaults: ->
-      @data.rule_type = 'IceCube::YearlyRule'
+      @data.rule_type = 'IceCube::WeeklyRule'
       @children = [new Validation @]
       @data.interval = 1
 
@@ -393,7 +432,7 @@ do ($ = jQuery) ->
       @elem = $("""
         <div class="Rule">
           <div class="row">
-            <div class="col-md-2 label"><label>Every</label></div>
+            <div class="col-md-2"></div>
             <div class="col-md-4 small-padding">
               <input type="number" value="#{@data.interval}" size="2" width="30" min="1" />
             </div>
@@ -402,7 +441,9 @@ do ($ = jQuery) ->
               "IceCube::YearlyRule": 'years'
               "IceCube::MonthlyRule": 'months'
               "IceCube::WeeklyRule": 'weeks'
-              "IceCube::DailyRule": 'days'}
+              "IceCube::DailyRule": 'days',
+              "IceCube::HourlyRule": 'hours'
+              }
             </div>
           </div>
         </div>
@@ -411,7 +452,12 @@ do ($ = jQuery) ->
         @data.interval = parseInt e.target.value
       @elem.find('select').change (e) =>
         @data.rule_type = e.target.value
-        @children = [new Validation @]
+        console.log @data.rule_type
+        if @data.rule_type == 'IceCube::HourlyRule'
+          console.log 'yes'
+          @children = [new Validation @, { type: 'count' }]
+        else
+          @children = [new Validation @]
         @triggerRender()
       row = @elem.find('div.row')
       children = super.toArray()
@@ -425,8 +471,8 @@ do ($ = jQuery) ->
   # and also agregates the arguments to the validation.
   class Validation extends Option
     defaults: ->
-      @data.type = 'count'
-      @children = [new Count @]
+      @data.type = 'day'
+      @children = [new Day @]
 
     fromData: (d) ->
       @data.type = d.type
@@ -451,6 +497,8 @@ do ($ = jQuery) ->
         count: Count
         until: Until
         day:   Day
+        hour_of_day: HourOfDay
+        minute_of_hour: MinuteOfHour
         day_of_week: DayOfWeek
         day_of_month: DayOfMonth
         day_of_year: DayOfYear
@@ -479,14 +527,17 @@ do ($ = jQuery) ->
       str = """
       <div class="Validation">
         <div class="row">
-          <div class="col-md-2 label"> 
+          <div class="col-md-2 label">
             <label>#{if @parent.children.indexOf(@) > 0 then "and if" else "If"}</label>
           </div>
-          <div class="col-md-8 small-padding big-input">
+          <div class="col-md-8 small-padding">
             <select>
-              #{Helpers.option "count", 'event occured less than', @data.type}
-              #{Helpers.option "until", 'event is before', @data.type}
-              #{Helpers.option "day", 'is this day of the week', @data.type}"""
+              #{Helpers.option "count", 'event occured less than', @data.type}"""
+      if @parent.data.rule_type in ["IceCube::YearlyRule", "IceCube::MonthlyRule", "IceCube::WeeklyRule", "IceCube::DailyRule"]
+        str += Helpers.option "until", 'event is before', @data.type
+        str += Helpers.option "day", 'is this day of the week', @data.type
+        str += Helpers.option "hour_of_day", 'is this hour of the day', @data.type
+        str += Helpers.option "minute_of_hour", 'is this minute of the hour', @data.type
       if @parent.data.rule_type in ["IceCube::YearlyRule", "IceCube::MonthlyRule"]
         str += Helpers.option "day_of_week", 'is this day of the nth week', @data.type
         str += Helpers.option "day_of_month", 'is the nth day of the month', @data.type
@@ -567,6 +618,46 @@ do ($ = jQuery) ->
     clonable: -> false
     destroyable: -> false
 
+
+  # Hour of Day
+  # ------------
+  # Hour of day overwrites start time and allows for multiple occurrences during same day
+  class HourOfDay extends ValidationInstance
+    html: ->
+      str = """
+      <div class="HourOfDay">
+        <div class="row">
+          <div class="col-md-2 label"><label></label></div>
+          <div class="col-md-8 small-padding">
+            <select>"""
+      for i in [0..11]
+        str += Helpers.option i.toString(), "#{if i == 0 then 12 else i} AM", @data.value.toString()
+      for i in [12..23]
+        str += Helpers.option (i).toString(), "#{if i == 12 then 12 else i - 12} PM", @data.value.toString()
+      str +=  """</select> hour of day.
+          </div>
+        </div>
+      </div>
+      """
+
+  # Minute of hour
+  # ------------
+  # minute of hour overwrites start time and allows for multiple occurrences within an hour
+  class MinuteOfHour extends ValidationInstance
+    html: ->
+      str = """
+      <div class="HourOfDay">
+        <div class="row">
+          <div class="col-md-2 label"><label></label></div>
+          <div class="col-md-8 small-padding">
+            <select>"""
+      for i in [0..59]
+        str += Helpers.option i.toString(), "#{i}", @data.value.toString()
+      str +=  """</select> minute of hour.
+          </div>
+        </div>
+      </div>
+      """
 
   # Day of Month
   # ------------
@@ -737,6 +828,7 @@ do ($ = jQuery) ->
         JSON.parse($el.val())
       catch e
         null
+
       @root = new Root $el, data
       $el.parents('form').on 'submit', (e) =>
         if opts['submit']
