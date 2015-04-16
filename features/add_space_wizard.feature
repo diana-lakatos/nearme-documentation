@@ -31,7 +31,7 @@ Feature: A user can add a space
     Then I should see "Your Listing was listed!"
 
   Scenario: A draft listing does not show up in search
-    And I partially fill in space details
+   When I partially fill in space details
     And I press "Save as draft"
     Then I go to the home page
     When I search for "USA"

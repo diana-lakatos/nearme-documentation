@@ -11,6 +11,7 @@ DesksnearMe::Application.configure do
   config.serve_static_assets = true
   config.static_cache_control = "public, max-age=3600"
   config.assets.compile = true
+  config.assets.raise_runtime_errors = false
 
   config.perform_social_jobs = false
   config.after_initialize do
