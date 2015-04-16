@@ -1,0 +1,10 @@
+{{ 'buy_sell_market.checkout.order_mailer.approved_email.dear_customer' || translate }}
+
+{{ 'buy_sell_market.checkout.order_mailer.approved_email.instructions' || translate }}
+
+============================================================
+{% for item in order.line_items %}
+{{item.variant.sku}} {{item.variant.product.name}} {{ item.variant.options_text }} {{item.quantity}} @ {{item.single_money}} = {{item.display_amount}}
+{% endfor %}
+============================================================
+

@@ -5,6 +5,7 @@
     <div class="price"><span>{{ listing.currency | currency_content_tag: 0.00,'span',rel: false }}</span></div>
   </div>
 {% endif %}
+
 <div class="quantity">
   <span class='resource' data-singular='{{listing.properties.listing_type}}' data-plural='{{ listing.properties.listing_type | pluralize }}'>{{listing.listing_type}}</span>
   <select name='quantity' class="quantity">

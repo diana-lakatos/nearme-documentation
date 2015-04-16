@@ -30,5 +30,9 @@ Spree::Variant.class_eval do
     end
   end
 
+  def to_liquid
+    Spree::VariantDrop.new(self)
+  end
+
 end
 
