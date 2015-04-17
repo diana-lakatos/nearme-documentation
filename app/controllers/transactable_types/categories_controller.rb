@@ -4,7 +4,7 @@ class TransactableTypes::CategoriesController < ApplicationController
   before_filter :set_selected_categories
 
   def index
-    @categories = @transactable_type.categories.roots.order(:position)
+    @categories = @transactable_type.categories.roots.where(id: params[:category_id]).order(:position)
     render :jstree
   end
 

@@ -9,6 +9,10 @@ class Category < ActiveRecord::Base
   has_many :categories_transactables
   has_many :transactables, through: :categories_transactables
 
+  # Validation
+  validates :name, presence: true
+
+
   # Polymprophic association to TransactableType and ProductType
   belongs_to :categorable, polymorphic: true
   belongs_to :instance
@@ -17,10 +21,12 @@ class Category < ActiveRecord::Base
   after_save :update_children_permalink
 
   def child_index=(idx)
-    if parent
-      move_to_child_with_index(parent, idx.to_i) unless self.new_record?
-    else
-      move_to_root
+    unless self.new_record?
+      if parent
+        move_to_child_with_index(parent, idx.to_i)
+      else
+        move_to_root
+      end
     end
   end
 

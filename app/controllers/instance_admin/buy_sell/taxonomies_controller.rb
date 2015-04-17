@@ -16,7 +16,10 @@ class InstanceAdmin::BuySell::TaxonomiesController < InstanceAdmin::BuySell::Bas
     @taxonomy = taxonomy_scope.new(taxonomy_params)
     if @taxonomy.save
       flash[:success] = t('flash_messages.buy_sell.taxonomy_added')
-      redirect_to edit_instance_admin_buy_sell_taxonomy_path(@taxonomy)
+      respond_to do |format|
+        format.html { redirect_to edit_instance_admin_buy_sell_taxonomy_path(@taxonomy) }
+        format.js { render json: @taxonomy.to_json }
+      end
     else
       render :new
     end

@@ -98,6 +98,11 @@ en:
           created: 'Transactable Type created.'
           updated: 'Transactable Type updated.'
           deleted: 'Transactable Type deleted.'
+        category:
+          created: 'Category group created.'
+          updated: 'Category group updated.'
+          deleted: 'Category group deleted.'
+          renamed: 'Remember to reconfigure form component with new name!'
         sms_templates:
           created: 'Sms template has been created.'
           deleted: 'Sms template has been deleted.'
