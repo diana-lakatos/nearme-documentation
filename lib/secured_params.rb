@@ -755,7 +755,7 @@ class SecuredParams
     ]
   end
 
-  def company
+  def company(transactable_type = nil)
     [
       :name,
       :url,
@@ -767,7 +767,7 @@ class SecuredParams
       :bank_account_number,
       :white_label_enabled,
       :listings_public,
-      locations_attributes: nested(self.location),
+      locations_attributes: nested(self.location(transactable_type)),
       domain_attributes: nested(self.domain),
       approval_requests_attributes: nested(self.approval_request),
       company_address_attributes: nested(self.address),
@@ -812,7 +812,7 @@ class SecuredParams
     [ :form_type, :name ]
   end
 
-  def location
+  def location(transactable_type = nil)
     [
       :description, :email, :info, :currency,
       :phone, :availability_template_id, :special_notes,
@@ -821,14 +821,14 @@ class SecuredParams
       :availability_template_id,
       availability_rules_attributes: nested(self.availability_rule),
       location_address_attributes: nested(self.address),
-      listings_attributes: nested(self.transactable),
+      listings_attributes: nested(self.transactable(transactable_type)),
       approval_requests_attributes: nested(self.approval_request),
       amenity_ids: [],
       waiver_agreement_template_ids: []
     ] + self.address
   end
 
-  def transactable(transactable_type = nil)
+  def transactable(transactable_type)
       [
         :location_id, :availability_template_id,
         :defer_availability_rules, :free,
@@ -856,7 +856,7 @@ class SecuredParams
         document_requirements_attributes: nested(self.document_requirement),
         upload_obligation_attributes: nested(self.upload_obligation)
     ] +
-    Transactable.public_custom_attributes_names((transactable_type.presence || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
+    Transactable.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
   end
 
   def schedule
@@ -925,7 +925,7 @@ class SecuredParams
     ]
   end
 
-  def user
+  def user(transactable_type = nil)
     [
       :name, :email, :phone, :job_title, :password, :avatar,
       :avatar_versions_generated_at, :avatar_transformation_data,
@@ -940,7 +940,7 @@ class SecuredParams
       :linkedin_url, :facebook_url, :google_plus_url, :public_profile,
       :language,
       industry_ids: [],
-      companies_attributes: nested(self.company),
+      companies_attributes: nested(self.company(transactable_type)),
       approval_requests_attributes: nested(self.approval_request)
     ] + User.public_custom_attributes_names(InstanceProfileType.first.try(:id))
   end

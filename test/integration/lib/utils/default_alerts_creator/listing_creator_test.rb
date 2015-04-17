@@ -42,6 +42,7 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
         assert_contains 'href="http://custom.domain.com/', mail.html_part.body
         assert_not_contains 'href="http://example.com', mail.html_part.body
         assert_not_contains 'href="/', mail.html_part.body
+        assert_not_contains 'Liquid error:', mail.html_part.body
       end
 
       should 'not send draft listing is it is not draft anymore' do
@@ -69,6 +70,7 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
       assert_contains 'href="http://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="http://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
+      assert_not_contains 'Liquid error:', mail.html_part.body
     end
 
     should 'share with user' do
@@ -87,6 +89,7 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
       assert_not_contains 'href="http://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert_contains 'Check it out', mail.html_part.body
+      assert_not_contains 'Liquid error:', mail.html_part.body
     end
 
     should 'send email if listing pending approval' do
@@ -106,6 +109,7 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
       assert_contains 'href="http://custom.domain.com/instance_admin/', mail.html_part.body
       assert_not_contains 'href="http://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
+      assert_not_contains 'Liquid error:', mail.html_part.body
     end
 
     should 'send email to host if listing approved' do
@@ -124,6 +128,7 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
       assert_contains 'href="http://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="http://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
+      assert_not_contains 'Liquid error:', mail.html_part.body
     end
 
   end

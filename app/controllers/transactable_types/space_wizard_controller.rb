@@ -152,7 +152,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   end
 
   def wizard_params
-    params.require(:user).permit(secured_params.user)
+    params.require(:user).permit(secured_params.user(@transactable_type))
   end
 
   def boarding_form_params

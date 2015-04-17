@@ -50,6 +50,7 @@ class InstanceView < ActiveRecord::Base
     'locations/listings/listing_description',
     'locations/booking_module_listing_description_below_dates',
     'locations/booking_module_listing_description_below_call_to_action',
+    'locations/booking_module_listing_description_above_call_to_action',
     'registrations/profile/user_badge',
     'locations/google_map',
     'locations/administrator',

@@ -62,11 +62,10 @@ module SearchHelper
 
   def meta_title_for_search(platform_context, search, transactable_type_name = '')
     location_types_names = search.lntypes.blank? ? [] : search.lntypes.pluck(:name)
-    listing_types_names = search.lgtypes.blank? ? [] : search.lgtypes
 
-    title = (location_types_names.empty? && listing_types_names.empty?) ? (transactable_type_name.try(:pluralize).presence || platform_context.bookable_noun.pluralize) : ''
+    title = location_types_names.empty? ? (transactable_type_name.try(:pluralize).presence || platform_context.bookable_noun.pluralize) : ''
 
-    title += %Q{#{location_types_names.join(', ')} #{listing_types_names.join(', ')}}
+    title += %Q{#{location_types_names.join(', ')}}
     search_location = []
     search_location << search.city
     search_location << (search.is_united_states? ? search.state_short : search.state)
@@ -125,9 +124,9 @@ module SearchHelper
     current_path = request.fullpath
     r = /taxon\=([^\&]+)/
     if current_path.match(r)
-      current_path.gsub(r) { |m| m.gsub("taxon=#{$1}", "taxon=#{taxon.encoded_permalink}") } 
+      current_path.gsub(r) { |m| m.gsub("taxon=#{$1}", "taxon=#{taxon.encoded_permalink}") }
     else
-      current_path + (request.query_parameters.blank? ? "?" : "&") +  "taxon=#{taxon.encoded_permalink}" 
+      current_path + (request.query_parameters.blank? ? "?" : "&") +  "taxon=#{taxon.encoded_permalink}"
     end
   end
 
@@ -135,7 +134,6 @@ module SearchHelper
     return '' if max_level < 1 || root_category.children.empty?
     content_tag :ul, class: 'categories-list' do
       root_category.children.map do |category|
-        css_class = (current_category && current_category.self_and_ancestors.include?(category)) ? ' active' : ''
         content_tag :li, class: 'nav-item' do
           label = label_tag "category_#{category.id}" do
             check_box_tag("category_ids[]", category.id, false, {id: "category_#{category.id}"}) +

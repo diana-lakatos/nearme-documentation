@@ -1,5 +1,7 @@
 module LiquidFilters
   include MoneyRails::ActionViewExtension
+  include CurrencyHelper
+  include ActionView::Helpers::NumberHelper
 
   def shorten_url(url)
     if DesksnearMe::Application.config.googl_api_key.present?
@@ -11,6 +13,10 @@ module LiquidFilters
 
   def in_groups_of(array, integer)
     array.in_groups_of(integer)
+  end
+
+  def pluralize(string)
+    string.try(:pluralize)
   end
 
   def location_path(transactable_type, location)
