@@ -5,4 +5,4 @@
 
 .row-fluid
   .span8.offset2
-    = raw Liquid::Template.parse(@page.html_content).render(nil, :registers => {:action_view => self})
+    = raw Liquid::Template.parse(@page.html_content).render(nil, registers: { action_view: self }, filters: [LiquidFilters])
