@@ -1,3 +1,10 @@
+.sub-header-nav
+  %ul
+    %li
+      = link_to 'Services', instance_admin_analytics_overview_path, class: 'active'
+    %li
+      = link_to 'Products', products_instance_admin_analytics_overview_path
+
 %h4 Revenue
 .box
   - if @last_month_revenue.inject(0) { |sum, revenue| sum += revenue.total_amount.to_f; sum }.zero?
