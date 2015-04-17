@@ -194,7 +194,7 @@ do ($ = jQuery) ->
           false
         @positive_target.append(positive_link)
       unless @has_negative_rules
-        negative_link = $("<div class='row'><a href='#'>Add Unavailability</a></div>")
+        negative_link = $("<div class='row'><a href='#'>Add Unavailable</a></div>")
         @negative_target.append(negative_link)
         negative_link.click =>
           @has_negative_rules = yes
