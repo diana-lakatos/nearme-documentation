@@ -165,6 +165,7 @@ do ($ = jQuery) ->
 
         @children.push new TopLevel(@, {type: k, values: v})
 
+
     defaults: ->
       @children.push new StartDate(@)
       #@children.push new TopLevel(@)
@@ -214,7 +215,7 @@ do ($ = jQuery) ->
 
     renderNegativeChildren: ->
       arr = []
-      arr.push $('<h4>Unavailability</h4>')
+      arr.push $('<h4>Unavailable</h4>')
       for child in @children
         arr.push child.render() if child instanceof TopLevel && child.isNegative()
       arr
