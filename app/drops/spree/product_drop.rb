@@ -36,7 +36,7 @@ class Spree::ProductDrop < BaseDrop
   end
 
   def thumbnail_url
-    @product.images.first.try(:image_url, :thumb).presence || image_url(Placeholder.new(height: 96, width: 96).path).to_s
+    image_url(@product.images.first.try(:image_url, :thumb).presence) || image_url(Placeholder.new(height: 96, width: 96).path).to_s
   end
 
 end
