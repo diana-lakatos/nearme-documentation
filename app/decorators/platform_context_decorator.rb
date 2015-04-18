@@ -1,11 +1,11 @@
 class PlatformContextDecorator
 
   delegate :white_label_company, :instance, :instance_type, :theme, :partner, :domain, :white_label_company_user?,
-    :platform_context_detail, :secured_constraint, :latest_products, to: :platform_context
+           :platform_context_detail, :secured_constraint, :latest_products, to: :platform_context
 
   delegate :tagline, :support_url, :blog_url, :twitter_url, :twitter_handle, :facebook_url, :gplus_url, :address,
-    :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :compiled_dashboard_stylesheet, :meta_title, :pages, :logo_image,
-    :favicon_image, :icon_image, :icon_retina_image, :homepage_content, :call_to_action, :is_company_theme?, :content_holders, to: :theme
+           :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :compiled_dashboard_stylesheet, :meta_title, :pages, :logo_image,
+           :favicon_image, :icon_image, :icon_retina_image, :call_to_action, :is_company_theme?, :content_holders, to: :theme
 
   delegate :bookable_noun, :lessor, :lessee, :name, :buyable?, :bookable?, :transactable_types, :product_types, to: :instance
 
@@ -24,7 +24,7 @@ class PlatformContextDecorator
   end
 
   def single_type?
-    [self.transactable_types.services.count, self.product_types.count].sum  == 1
+    [self.transactable_types.services.count, self.product_types.count].sum == 1
   end
 
   def to_liquid
@@ -133,6 +133,10 @@ class PlatformContextDecorator
 
   def search_input_name
     fulltext_search? ? "query" : "loc"
+  end
+
+  def homepage_content
+    Liquid::Template.parse(theme.homepage_content).render(nil, filters: [LiquidFilters]).html_safe
   end
 
   private
