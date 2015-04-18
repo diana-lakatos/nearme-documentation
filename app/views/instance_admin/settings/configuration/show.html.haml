@@ -20,7 +20,11 @@
         = f.input :skip_company, label: "Don't require company"
       .input-container.col-xs-6
         = f.input :force_accepting_tos, label: "Force accepting ToS on sign up"
-
+    .row
+      .input-container.col-xs-6
+        = f.input :allowed_countries, collection: Country.all, value_method: :name,  input_html: { class: 'selectpicker', "data-live-search" => "true", multiple: true }, hint: "Leave blank to use all countries"
+      .input-container.col-xs-6
+        = f.input :default_country, collection: Country.all, value_method: :name, input_html: { class: 'selectpicker', "data-live-search" => "true"}
   %h4 Checkout
   .content-container
     .row.dropshadow
