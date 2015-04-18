@@ -18,9 +18,9 @@ class Support::ReceiveMails
         default do
           Support::Ticket.new.receive(message, params)
         end
-      else
-        puts "#{PlatformContext.current.instance.name}(id=#{PlatformContext.current.instance.id}) support_imap settings are not valid"
       end
+    else
+      puts "#{PlatformContext.current.instance.name}(id=#{PlatformContext.current.instance.id}) support_imap settings are not valid"
     end
   end
 
