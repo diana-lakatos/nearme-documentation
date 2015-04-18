@@ -3,8 +3,8 @@ class InstanceAdmin::Manage::TransactableTypes::CategoriesController < InstanceA
   before_filter :find_categorable
 
   def index
-    @categories = @categorable.categories.order(:position)
-    @category = @categorable.categories.first 
+    @categories = @categorable.categories.roots.order(:position)
+    @category = @categorable.categories.first
     @new_category = Category.new categorable: @categorable
   end
 
@@ -18,41 +18,42 @@ class InstanceAdmin::Manage::TransactableTypes::CategoriesController < InstanceA
 
     if @category.save
       flash[:success] = t 'flash_messages.instance_admin.manage.category.created'
-      redirect_to redirect_path
+
+      respond_to do |format|
+        format.html { redirect_to( redirect_path) }
+        format.js { render json: @category.to_json }
+      end
     else
+      @new_category = Category.new categorable: @categorable
+      @categories = @categorable.categories.roots.order(:position)
+
       flash[:error] = @category.errors.full_messages.to_sentence
-      render action: :new
+      render action: :index
     end
   end
 
-  # def show
-  #   @category = @categorable.categories.find(params[:id])
-  #   @categories = @category.children
-  # end
-
   def jstree
     if params[:root]
-      @categories = @categorable.categories.roots.order(:position)
+      @categories = @categorable.categories.roots.where(id: params[:id]).order(:position)
     else
       @category = @categorable.categories.find(params[:id])
       @categories = @category.children.order(:position)
     end
   end
 
-  # def edit
-  #   @category = @categorable.categories.find(params[:id])
-  # end
+  def edit
+    @category = @categorable.categories.find(params[:id])
+  end
 
   def update
     @category = @categorable.categories.find(params[:id])
-    if @category.update_attributes(category_params)
+    @category.attributes = category_params
+    flash[:error] =  t 'flash_messages.instance_admin.manage.category.renamed' if @category.name_changed?
+
+    if @category.save
       flash[:success] = t 'flash_messages.instance_admin.manage.category.updated'
       redirect_to redirect_path
     else
-      # This will not  happen unless the user plays with the console and is mainly done to make
-      # the view renderable so tests can pass
-      @category.form_type = FormComponent::SPACE_WIZARD if @category.form_type.blank?
-
       flash[:error] = @category.errors.full_messages.to_sentence
       render action: :edit
     end
@@ -62,7 +63,7 @@ class InstanceAdmin::Manage::TransactableTypes::CategoriesController < InstanceA
     @category = @categorable.categories.find(params[:id])
     @category.destroy
     flash[:success] = t 'flash_messages.instance_admin.manage.category.deleted'
-    redirect_to redirect_path
+    redirect_to instance_admin_manage_transactable_type_categories_path(@categorable)
   end
 
   private
@@ -76,7 +77,7 @@ class InstanceAdmin::Manage::TransactableTypes::CategoriesController < InstanceA
   end
 
   def redirect_path
-    instance_admin_manage_transactable_type_categories_path(@categorable, @category)
+    edit_instance_admin_manage_transactable_type_category_path(@categorable, @category)
   end
 
   def permitting_controller_class

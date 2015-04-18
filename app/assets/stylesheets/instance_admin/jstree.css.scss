@@ -1,6 +1,6 @@
-#taxonomy_tree,  #category_tree {
+#taxonomy_tree, .category_tree, #category_tree {
   > ul, .jstree-icon {
-    background-image: none;
+    background-image: none !important;
   }
 
   .jstree-icon {
@@ -16,7 +16,7 @@
   }
 
   li {
-    background-image: none;
+    background-image: none !important;
 
     a {
       background-color: very-light($gray80);

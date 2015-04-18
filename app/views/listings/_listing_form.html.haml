@@ -74,11 +74,15 @@
   %h2.with-margin Waiver Agreement Templates
   = f.association :waiver_agreement_templates, collection: f.object.location.company.waiver_agreement_templates.order(:name).pluck(:name, :id), as: :check_boxes
 
-- if only_inputs.empty? || only_inputs.include?(:categories)
-  .control-group
-    = f.label :categories
-    .controls
-      #ajax_error{style: 'display: none;'}
-      #category_tree
-      #category_tree_inputs
-
+- if only_inputs.empty? || @transactable_type.categories.roots.map { |c| "Category - #{c.name}".to_sym }.include?(only_inputs.first)
+  - category_name = only_inputs.first.to_s.split(" - ")[1]
+  - category = @transactable_type.categories.roots.where(name: category_name).first
+  -if category.present?
+    = content_tag :div, id: "category_#{category.id}_tree_content" do
+      = hidden_field_tag "single_choice_category", category.multiple_root_categries == true, class: 'single_choice_category'
+      .control-group
+        = f.label :categories, category_name, :class => 'control-label'
+        .controls
+          #ajax_error{style: 'display: none;'}
+          .category_tree
+          .category_tree_inputs

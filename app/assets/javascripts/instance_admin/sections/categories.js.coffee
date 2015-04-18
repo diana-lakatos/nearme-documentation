@@ -83,7 +83,6 @@ class @InstanceAdmin.CategoriesController
 
 
   handleCreate: (e, data) ->
-    console.log("create")
     last_rollback = data.rlbk
     node = data.rslt.obj
     name = data.rslt.name

@@ -40,8 +40,8 @@
             = f.submit "Save as draft", :name => "save_as_draft", data: { disable_with: 'Saving...' }, :class => "saveasdraft btn-gray btn-medium"
 
 - content_for :domready do
-  var single_choice_category = #{!@transactable_type.multiple_root_categries}
   var selected_categories = #{raw @user.companies.first.locations.first.listings.first.category_ids.to_json}
+  var display_categories = #{raw @transactable_type.categories.roots.map(&:id).to_json}
   var categories_path = "#{transactable_type_categories_path(@transactable_type)}"
   var jstree_theme_path = "#{stylesheet_path("instance_admin/jstree_themes/apple/style.css")}";
   var category_input_name = 'user[companies_attributes][0][locations_attributes][0][listings_attributes][0][category_ids][]'

@@ -1,14 +1,23 @@
 class @CategoriesController
 
   constructor: (@container) ->
-    @setupCategoriesTree()
+    @setupCategoriesTrees()
 
-  setupCategoriesTree: =>
-    if @container.find('#category_tree').length > 0
-      that = this
+  setupCategoriesTrees: =>
+    if @container.find('.category_tree').length > 0
+      for category_id, i in display_categories
+        @setupCategoriesTreeFor(category_id)
+
+  setupCategoriesTreeFor: (category_id) =>
+    that = this
+    tree_content = @container.find("#category_" + category_id + "_tree_content")
+    tree_container = tree_content.find('.category_tree')
+    if tree_container.length > 0
       $.ajax
-        url: categories_path
-        data: {category_ids: selected_categories}
+        url: (categories_path + '/' + category_id).toString()
+        data:
+          category_ids: selected_categories,
+          category_id: category_id
         success: (category) ->
           last_rollback = null
 
@@ -34,56 +43,55 @@ class @CategoriesController
               cascade: 'up',
               two_state: true
 
-          $("#category_tree").jstree(conf)
+          tree_container.jstree(conf)
             .bind "loaded.jstree", (e, data) ->
+              that.bindClickEvent(tree_container)
               if selected_categories.length > 0
-                $.jstree._reference($('#category_tree')).open_all($('#category_tree').jstree('get_checked', null, true))
+                $.jstree._reference(tree_container).open_all(tree_container.jstree('get_checked', null, true))
                 for category_id, i in selected_categories
-                  $("#category_tree").jstree('check_node', '#' + category_id);
-                  $("#category_tree").jstree('open_node', '#' + category_id);
+                  tree_container.jstree('check_node', '#' + category_id);
+                  tree_container.jstree('open_node', '#' + category_id);
 
             .bind "check_node.jstree uncheck_node.jstree ", ->
-              that.setChecboxesValues()
+              that.setChecboxesValues(tree_content)
 
             .bind 'check_node.jstree', (e, data) ->
-              if single_choice_category && data.rslt.obj.attr('root') == 'true'
+              if (tree_content.find(".single_choice_category").val() == "false") && data.rslt.obj.attr('root') == 'true'
                 currentNode = data.rslt.obj.attr('id')
-                $('#category_tree').jstree('get_checked', null, true).each ->
+                tree_container.jstree('get_checked', null, true).each ->
                   if currentNode != @id && $(@).attr("root") == 'true'
-                    $.jstree._reference($('#category_tree')).uncheck_node '#' + @id
+                    $.jstree._reference(tree_container).uncheck_node '#' + @id
                   return
                 return
             .bind 'after_open.jstree', (e, data) ->
-              $("#category_tree a").unbind "click"
-              $("#category_tree a").on "click", (e) ->
-                e.preventDefault();
-                e.stopPropagation();
-                if $("#category_tree").jstree("is_checked", this)
-                  $("#category_tree").jstree("uncheck_node", this)
-                else
-                  $("#category_tree").jstree("check_node", this)
-
+              that.bindClickEvent(tree_container)
             .bind 'check_node.jstree', (e, data) ->
               data.inst.open_all(data.rslt.obj, true)
-              # data.inst.uncheck_all()
-              # data.inst.check_node()
 
             .bind 'uncheck_node.jstree', (e, data) ->
               data.inst.close_all(data.rslt.obj, true);
               data.rslt.obj.find('li.jstree-checked').removeClass('jstree-checked').addClass('jstree-unchecked')
 
-              # data.inst.uncheck_all()
-
+  bindClickEvent: (tree_container) ->
+    tree_container.find("a").unbind "click"
+    tree_container.find("a").on "click", (e) ->
+      e.preventDefault();
+      e.stopPropagation();
+      if tree_container.jstree("is_checked", this)
+        tree_container.jstree("uncheck_node", this)
+      else
+        tree_container.jstree("check_node", this)
 
   handleAjaxError: (XMLHttpRequest, textStatus, errorThrown) ->
     $.jstree.rollback(last_rollback)
     $("#ajax_error").show().html("<strong>The server returned an error</strong><br />The requested change has not been accepted and the tree has been returned to its previous state, please try again")
 
-  setChecboxesValues: ->
+  setChecboxesValues: (tree_content) ->
+    tree_container = tree_content.find('.category_tree')
     categories_inputs = []
-    category_tree_inputs = @container.find("#category_tree_inputs")
+    category_tree_inputs = tree_content.find(".category_tree_inputs")
     category_tree_inputs.html('')
-    $('#category_tree').jstree('get_checked', null, true).each ->
+    tree_container.jstree('get_checked', null, true).each ->
       $('<input name="'+ category_input_name + '">').attr('type','hidden').val(@id).appendTo(category_tree_inputs);
       return
     return

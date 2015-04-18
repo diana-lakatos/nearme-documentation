@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150416124009) do
+ActiveRecord::Schema.define(version: 20150416165724) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -298,7 +298,7 @@ ActiveRecord::Schema.define(version: 20150416124009) do
 
   create_table "categories", force: true do |t|
     t.string   "name"
-    t.integer  "position",          default: 0
+    t.integer  "position",                default: 0
     t.integer  "instance_id"
     t.integer  "partner_id"
     t.integer  "user_id"
@@ -308,7 +308,7 @@ ActiveRecord::Schema.define(version: 20150416124009) do
     t.string   "meta_title"
     t.string   "meta_description"
     t.string   "meta_keywords"
-    t.boolean  "in_top_nav",        default: false
+    t.boolean  "in_top_nav",              default: false
     t.integer  "top_nav_positions"
     t.string   "categorable_type"
     t.integer  "categorable_id"
@@ -317,6 +317,7 @@ ActiveRecord::Schema.define(version: 20150416124009) do
     t.integer  "rgt"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "multiple_root_categries"
   end
 
   add_index "categories", ["categorable_id"], name: "index_categories_on_categorable_id", using: :btree
@@ -2777,7 +2778,6 @@ ActiveRecord::Schema.define(version: 20150416124009) do
     t.boolean  "enable_photo_required",                                              default: true
     t.integer  "hours_to_expiration",                                                default: 24
     t.integer  "minimum_booking_minutes",                                            default: 60
-    t.boolean  "multiple_root_categries"
     t.boolean  "action_na",                                                          default: false
     t.boolean  "action_book_it_out"
     t.boolean  "skip_location"
