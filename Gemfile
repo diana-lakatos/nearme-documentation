@@ -137,6 +137,7 @@ gem 'spree', github: 'spree/spree', branch: '2-3-stable'
 
 gem 'domainatrix'
 
+
 group :profiling do
   gem 'rack-mini-profiler'
   gem 'bullet'
@@ -171,6 +172,7 @@ group :development do
   gem 'pry-doc'
   gem 'spring'
   gem 'spring-commands-cucumber'
+  gem "parallel_tests"
 end
 
 group :test do
