@@ -158,7 +158,11 @@ DesksnearMe::Application.routes.draw do
 
     namespace :analytics do
       get '/', :to => 'base#index'
-      resource :overview, :only => [:show], :controller => 'overview'
+      resource :overview, :only => [:show], :controller => 'overview' do
+        member do
+          get :products
+        end
+      end
       resource :sales, :only => [:show]
       resource :profiles, :only => [:show]
     end
@@ -695,6 +699,12 @@ DesksnearMe::Application.routes.draw do
       end
     end
 
+    resources :saved_searches, only: %i(index create update destroy) do
+      collection do
+        patch :change_alerts_frequency
+      end
+    end
+
   end #end /dashboard namespace
 
   resources :reservations do
@@ -705,8 +715,6 @@ DesksnearMe::Application.routes.draw do
 
   get "/search", :to => "search#index", :as => :search
   get "/search/categories", :to => "search#categories"
-
-  resources :search_notifications, only: [:create]
 
   resource :event_tracker, only: [:create], :controller => 'event_tracker'
 

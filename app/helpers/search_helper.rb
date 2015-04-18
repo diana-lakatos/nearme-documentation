@@ -137,9 +137,11 @@ module SearchHelper
       root_category.children.map do |category|
         css_class = (current_category && current_category.self_and_ancestors.include?(category)) ? ' active' : ''
         content_tag :li, class: 'nav-item' do
-          check_box_tag("category_ids[]", category.id, false, {id: "category_#{category.id}"}) +
-          label_tag("category_#{category.id}", category.name) +
-          category_tree(category, current_category, max_level - 1)
+          label = label_tag "category_#{category.id}" do
+            check_box_tag("category_ids[]", category.id, false, {id: "category_#{category.id}"}) +
+            category.name
+          end
+          label + category_tree(category, current_category, max_level - 1)
         end
       end.join("\n").html_safe
     end

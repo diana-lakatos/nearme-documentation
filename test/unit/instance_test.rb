@@ -27,18 +27,28 @@ class InstanceTest < ActiveSupport::TestCase
 
   context 'imap' do
 
+    setup do
+      @support_settings = {
+        support_imap_username: 'supportteam@desksnear.me',
+        support_imap_password: 'pass',
+        support_imap_server: 'imap.gmail.com',
+        support_imap_port: 993,
+        support_imap_ssl: true
+      }
+    end
+
     should 'not be considered with imap if it is blank' do
-      @instance.update_column(:support_imap_hash, '')
+      @instance.update_attributes(@support_settings.merge({support_imap_username: ''}))
       assert_equal 0, Instance.with_support_imap.count
     end
 
     should 'not be considered with imap if it is nil' do
-      @instance.update_column(:support_imap_hash, nil)
+      @instance.update_attributes(@support_settings.merge({support_imap_username: nil}))
       assert_equal 0, Instance.with_support_imap.count
     end
 
     should 'not be considered with imap if it is filled' do
-      @instance.update_column(:support_imap_hash, "server: 'imap.gmail.com',port: 993")
+      @instance.update_attributes(@support_settings)
       assert_equal 1, Instance.with_support_imap.count
     end
   end

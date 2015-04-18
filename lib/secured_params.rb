@@ -204,15 +204,6 @@ class SecuredParams
     ]
   end
 
-  def search_notification
-    [
-      :email,
-      :latitude,
-      :longitude,
-      :query
-    ]
-  end
-
   def email_template
     [
       :body,
@@ -331,13 +322,14 @@ class SecuredParams
       :shippo_username, :shippo_password,
       :linkedin_consumer_key, :linkedin_consumer_secret,
       :instagram_consumer_key, :instagram_consumer_secret,
-      :support_imap_hash, :support_email,
+      :support_email,
       :paypal_email, :db_connection_string,
       :stripe_currency, :user_info_in_onboarding_flow,
       :default_search_view, :user_based_marketplace_views,
       :searcher_type, :onboarding_verification_required,
       :search_settings,
       :taxonomy_tree,
+      :saved_search,
       :categories,
       :date_pickers,
       :tt_select_type,
@@ -1112,5 +1104,9 @@ class SecuredParams
       :custom_name,
       :primary
     ]
+  end
+
+  def saved_search
+    %i(title query)
   end
 end

@@ -165,6 +165,7 @@ do ($ = jQuery) ->
 
         @children.push new TopLevel(@, {type: k, values: v})
 
+
     defaults: ->
       @children.push new StartDate(@)
       #@children.push new TopLevel(@)
@@ -193,7 +194,7 @@ do ($ = jQuery) ->
           false
         @positive_target.append(positive_link)
       unless @has_negative_rules
-        negative_link = $("<div class='row'><a href='#'>Add Unavailability</a></div>")
+        negative_link = $("<div class='row'><a href='#'>Add Unavailable</a></div>")
         @negative_target.append(negative_link)
         negative_link.click =>
           @has_negative_rules = yes
@@ -214,7 +215,7 @@ do ($ = jQuery) ->
 
     renderNegativeChildren: ->
       arr = []
-      arr.push $('<h4>Unavailability</h4>')
+      arr.push $('<h4>Unavailable</h4>')
       for child in @children
         arr.push child.render() if child instanceof TopLevel && child.isNegative()
       arr
