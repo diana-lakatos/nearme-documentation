@@ -14,6 +14,14 @@ class InstanceAdmin::Manage::ApprovalRequestsController < InstanceAdmin::Manage:
     params[:approval_request] ||= {}
     @approval_request = ApprovalRequest.find(params[:id])
     if @approval_request.update_attributes(approval_request_params)
+      if @approval_request.approved?
+        case @approval_request.owner
+        when User
+          WorkflowStepJob.perform(WorkflowStep::SignUpWorkflow::Approved, @approval_request.owner_id)
+        when Transactable
+          WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Approved, @approval_request.owner_id)
+        end
+      end
       flash[:success] = t 'flash_messages.instance_admin.manage.approval_request.updated'
       redirect_to instance_admin_manage_approval_requests_path
     else

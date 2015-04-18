@@ -10,6 +10,8 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
     @listing_creator.expects(:create_listing_created_email!).once
     @listing_creator.expects(:create_draft_listing_created_email!).once
     @listing_creator.expects(:share_with_user_email!).once
+    @listing_creator.expects(:create_listing_pending_approval_email!).once
+    @listing_creator.expects(:create_approved_email!).once
     @listing_creator.create_all!
   end
 
@@ -85,6 +87,43 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
       assert_not_contains 'href="http://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert_contains 'Check it out', mail.html_part.body
+    end
+
+    should 'send email if listing pending approval' do
+      @listing_creator.create_listing_pending_approval_email!
+      @listing = FactoryGirl.create(:transactable)
+      Transactable.any_instance.stubs(:is_trusted?).returns(false)
+      @admin = FactoryGirl.create(:user)
+      @admin.instance_admins.create!
+      assert_difference 'ActionMailer::Base.deliveries.size' do
+        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::PendingApproval, @listing.id)
+      end
+      mail = ActionMailer::Base.deliveries.last
+      assert_equal "New listing is pending approval", mail.subject
+      assert mail.html_part.body.include?(@listing.name)
+      assert_equal [@admin.email], mail.to
+      assert mail.html_part.body.include?("You can decide whether to approve")
+      assert_contains 'href="http://custom.domain.com/instance_admin/', mail.html_part.body
+      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_not_contains 'href="/', mail.html_part.body
+    end
+
+    should 'send email to host if listing approved' do
+      @listing_creator.create_approved_email!
+      @listing = FactoryGirl.create(:transactable)
+      Transactable.any_instance.stubs(:is_trusted?).returns(true)
+      @user = @listing.creator
+      assert_difference 'ActionMailer::Base.deliveries.size' do
+        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Approved, @listing.id)
+      end
+      mail = ActionMailer::Base.deliveries.last
+      assert_equal "#{@listing.name} has been approved!", mail.subject
+      assert mail.html_part.body.include?(@user.first_name)
+      assert_equal [@user.email], mail.to
+      assert mail.html_part.body.include?("It will be accessible for")
+      assert_contains 'href="http://custom.domain.com/', mail.html_part.body
+      assert_not_contains 'href="http://example.com', mail.html_part.body
+      assert_not_contains 'href="/', mail.html_part.body
     end
 
   end
