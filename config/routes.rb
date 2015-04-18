@@ -699,6 +699,12 @@ DesksnearMe::Application.routes.draw do
       end
     end
 
+    resources :saved_searches, only: %i(index create update destroy) do
+      collection do
+        patch :change_alerts_frequency
+      end
+    end
+
   end #end /dashboard namespace
 
   resources :reservations do
