@@ -63,6 +63,8 @@ class User < ActiveRecord::Base
 
   has_many :wish_lists, dependent: :destroy
 
+  has_many :saved_searches, dependent: :destroy
+
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
   before_validation :normalize_gender
@@ -143,6 +145,8 @@ class User < ActiveRecord::Base
 
   validates :current_location, length: { maximum: 50 }
   validates :company_name, length: { maximum: 50 }
+
+  validates_inclusion_of :saved_searches_alerts_frequency, in: SavedSearch::ALERTS_FREQUENCIES
 
   attr_accessor :custom_validation
   attr_accessor :accept_terms_of_service

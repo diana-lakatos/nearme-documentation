@@ -1,0 +1,36 @@
+- title t('saved_searches.titles.index')
+
+.dash-head.clearfix
+  %p= t('saved_searches.nav.index')
+
+.dash-body.saved_searches
+  %h4= t('saved_searches.headers.alerts_frequency')
+  = form_tag change_alerts_frequency_dashboard_saved_searches_path do
+    = select_tag :alerts_frequency, options_for_select(SavedSearch::ALERTS_FREQUENCIES.map { |af| [t(af, scope: :general), af] }, current_user.saved_searches_alerts_frequency), :'data-alerts-frequency' => true
+
+  %table.saved-searches{:'data-saved-searches' => true}
+    %tr
+      %th= SavedSearch.human_attribute_name :title
+      %th= SavedSearch.human_attribute_name :results
+      %th{colspan: 2}= SavedSearch.human_attribute_name :created_at
+    - if @saved_searches.empty?
+      %tr
+        %td{colspan: 4}= t('.no_results')
+    - else
+      - @saved_searches.each do |saved_search|
+        %tr.data-row
+          %td{:'data-saved-search-title' => saved_search.id}= link_to saved_search.title, saved_search.path
+          %td= saved_search.results_count
+          %td= l(saved_search.created_at, format: :only_date)
+          %td
+            .controls
+              %a{:'data-saved-search-edit-id' => saved_search.id, href: '#'}
+                %span.glyphicon.glyphicon-pencil{:'aria-hidden' => true}
+                = t('general.edit')
+              %a.delete{href: dashboard_saved_search_path(saved_search), data: {method: :delete, confirm: t('confirmations.are_you_sure')}}
+                %span.glyphicon.glyphicon-trash{:'aria-hidden' => true}
+                = t('general.delete')
+
+
+- content_for :domready do
+  $(function() { new Dashboard.SavedSearchController($('table[data-saved-searches]')); });

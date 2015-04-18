@@ -3,17 +3,18 @@
   = render 'search/header'
   #search-result-google-map{:'data-marker' => image_path("components/map-pin.png")}
     #search-result-movable-google-map{:style => 'width: 100%; height: 100%;'}
-- if !platform_context.display_taxonomy_tree? ||  request.xhr? 
+- if !platform_context.display_taxonomy_tree? ||  request.xhr?
   = render 'search/list_results'
-- else 
+- else
   .span2{"data-search-filters-container" => true}
     %section#category-tree
       - Category.roots.each do |category|
         .nav-categories.collapse.in
           %ul
             %li.nav-heading
-              = check_box_tag("category_ids[]", category.id, @searcher.category_ids.include?(category.id.to_s), id: "category_#{category.id}")
-              = label_tag "category_#{category.id}", category.name
+              = label_tag "category_#{category.id}" do
+                = check_box_tag("category_ids[]", category.id, @searcher.category_ids.include?(category.id.to_s), id: "category_#{category.id}")
+                = category.name
             = category_tree(category, @category, 2)
   .span10
     = render 'search/list_results'

@@ -12,6 +12,10 @@ en:
         height_unit: 'Type of Unit'
         width_unit: 'Type of Unit'
         depth_unit: 'Type of Unit'
+      saved_search:
+        title: 'Title'
+        created_at: 'Created at'
+        results: 'Results'
   connections:
     facebook:
       count:
@@ -45,6 +49,9 @@ en:
     delete: Delete
     disable: Disable
     enable: Enable
+    save: 'Save'
+    daily: 'Daily'
+    weekly: 'Weekly'
   transactable_types:
     locations:
       listings:
@@ -225,7 +232,6 @@ en:
           supplier: 'Supplier'
         no_results: 'No results found'
         product_could_not_be_found: 'Product could not be found'
-        no_results_but: 'No results found, but!'
 
       labels:
         rating: 'Rating:'
@@ -408,6 +414,7 @@ en:
       blog_settings: 'Settings'
       reviews: 'Reviews'
       sent_to_me: 'Uploaded Files'
+      saved_searches: 'Saved Searches'
 
       your_shop: 'YOUR SHOP'
       admin: 'ADMIN'
@@ -519,6 +526,36 @@ en:
 
     confirmations:
       clear: 'Are you sure you want to delete all items?'
+
+  saved_searches:
+    dialog:
+      title: 'Save your search'
+      description: 'You can easily access your saved searches from the dashboard! Every time you select one of your saved searches, we will run your search again automatically and display the most up-to-date results.'
+      search_saved: 'Your search has been successfully saved!'
+      dashboard_link: 'Find all your saved searches in the %{link}.'
+      search_failed_to_save: 'Search faield to save'
+      dashboard: 'dashboard'
+      title_placeholder: 'Name your search'
+    nav:
+      index: 'Saved Searches'
+    headers:
+      alerts_frequency: 'Frequency of Saved Search Alerts'
+    buttons:
+      save_search: 'Save Search'
+    mailer:
+      subject:
+        daily:
+          new_search_results: 'New search results for'
+        weekly:
+          new_search_results: 'New search results for'
+      content:
+        dashboard_link_html: 'You can access saved searches dashboard'
+        dashboard_link_text: 'You can access saved searches dashboard'
+        here: 'here'
+        daily:
+          new_search_results: 'There are new search results for your saved searches:'
+        weekly:
+          new_search_results: 'There are new search results for your saved searches:'
 
   user_profile:
     labels:
@@ -675,13 +712,8 @@ en:
 
       buttons:
         update: 'Refresh'
-
     category:
       title: "Category"
-
-  search_notifications:
-    form:
-      subscribe: "Subscribe to be notified of new listings in this area."
   time:
     formats:
       day_and_month: "%^b %-d"
