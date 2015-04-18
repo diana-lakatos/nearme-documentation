@@ -38,6 +38,7 @@ class Listing::SearchFetcher
       next if values.blank? || values.all?(&:blank?)
       @listings_scope = @listings_scope.filtered_by_custom_attribute(field_name, values)
     end
+    @listings_scope = @listings_scope.includes(:categories).where(categories: {id: @filters[:category_ids]}) if @filters[:category_ids].present?
 
     # Date pickers
     if availability_filter?

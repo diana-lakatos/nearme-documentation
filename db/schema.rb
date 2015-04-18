@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150413171745) do
+ActiveRecord::Schema.define(version: 20150416124009) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -818,7 +818,6 @@ ActiveRecord::Schema.define(version: 20150413171745) do
     t.string   "encrypted_instagram_consumer_secret"
     t.integer  "instance_type_id"
     t.text     "metadata"
-    t.text     "support_imap_hash"
     t.string   "support_email"
     t.string   "encrypted_db_connection_string"
     t.string   "stripe_currency",                                               default: "USD"
@@ -851,6 +850,8 @@ ActiveRecord::Schema.define(version: 20150413171745) do
     t.integer  "support_imap_port"
     t.boolean  "support_imap_ssl"
     t.hstore   "search_settings",                                               default: {},            null: false
+    t.string   "default_country"
+    t.text     "allowed_countries"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1369,19 +1370,6 @@ ActiveRecord::Schema.define(version: 20150413171745) do
   end
 
   add_index "schedules", ["instance_id", "scheduable_id", "scheduable_type"], name: "index_schedules_scheduable", using: :btree
-
-  create_table "search_notifications", force: true do |t|
-    t.string   "email"
-    t.integer  "user_id"
-    t.string   "query"
-    t.float    "latitude"
-    t.float    "longitude"
-    t.boolean  "notified",   default: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-  end
-
-  add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
 
   create_table "spree_addresses", force: true do |t|
     t.string   "firstname"
@@ -2795,8 +2783,8 @@ ActiveRecord::Schema.define(version: 20150413171745) do
     t.boolean  "skip_location"
     t.string   "default_currency"
     t.text     "allowed_currencies"
-    t.string   "default_country"
     t.text     "allowed_countries"
+    t.string   "default_country"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -3067,6 +3055,7 @@ ActiveRecord::Schema.define(version: 20150413171745) do
     t.string   "saved_searches_alerts_frequency",                    default: "daily"
     t.integer  "saved_searches_count",                               default: 0
     t.datetime "saved_searches_alert_sent_at"
+    t.string   "language",                               limit: 2,   default: "en"
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

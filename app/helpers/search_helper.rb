@@ -130,4 +130,20 @@ module SearchHelper
       current_path + (request.query_parameters.blank? ? "?" : "&") +  "taxon=#{taxon.encoded_permalink}" 
     end
   end
+
+  def category_tree(root_category, current_category, max_level = 1)
+    return '' if max_level < 1 || root_category.children.empty?
+    content_tag :ul, class: 'categories-list' do
+      root_category.children.map do |category|
+        css_class = (current_category && current_category.self_and_ancestors.include?(category)) ? ' active' : ''
+        content_tag :li, class: 'nav-item' do
+          label = label_tag "category_#{category.id}" do
+            check_box_tag("category_ids[]", category.id, false, {id: "category_#{category.id}"}) +
+            category.name
+          end
+          label + category_tree(category, current_category, max_level - 1)
+        end
+      end.join("\n").html_safe
+    end
+  end
 end

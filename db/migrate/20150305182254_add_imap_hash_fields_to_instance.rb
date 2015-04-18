@@ -7,11 +7,6 @@ class AddImapHashFieldsToInstance < ActiveRecord::Migration
     add_column :instances, :support_imap_server, :string
     add_column :instances, :support_imap_port, :integer
     add_column :instances, :support_imap_ssl, :boolean
-
-    Instance.all.each do |instance|
-      isc = ImapSettingsConverter.new(instance)
-      isc.convert_hash
-    end
   end
 
   def self.down
@@ -21,6 +16,5 @@ class AddImapHashFieldsToInstance < ActiveRecord::Migration
     remove_column :instances, :support_imap_port
     remove_column :instances, :support_imap_ssl
   end
-
 end
 

@@ -18,7 +18,7 @@ class Instance < ActiveRecord::Base
   serialize :hidden_ui_controls, Hash
 
   API_KEYS = %w(paypal_username paypal_password paypal_signature paypal_app_id paypal_client_id paypal_client_secret stripe_api_key stripe_public_key balanced_api_key)
-  SEARCH_TYPES = %w(geo fulltext fulltext_geo)
+  SEARCH_TYPES = %w(geo fulltext fulltext_geo fulltext_category geo_category)
   SEARCH_SERVICE_VIEWS = %w(mixed list listing_mixed)
   SEARCH_PRODUCTS_VIEWS = %w(products products_table products_list)
   PRICING_OPTIONS = %w(free hourly daily weekly monthly fixed)
@@ -101,7 +101,7 @@ class Instance < ActiveRecord::Base
   accepts_nested_attributes_for :transactable_types
   accepts_nested_attributes_for :text_filters, allow_destroy: true
 
-  scope :with_support_imap, -> { where 'support_imap_hash IS NOT NULL AND support_imap_hash not like ?', '' }
+  scope :with_support_imap, -> {  where("support_imap_username <> '' AND encrypted_support_imap_password  <> '' AND support_imap_server  <> '' AND support_imap_port IS NOT NULL") }
 
   store_accessor :search_settings, :date_pickers, :tt_select_type, :date_pickers_mode, :default_products_search_view,
                  :date_pickers_use_availability_rules, :taxonomy_tree, :saved_search

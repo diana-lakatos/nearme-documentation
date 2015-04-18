@@ -158,7 +158,11 @@ DesksnearMe::Application.routes.draw do
 
     namespace :analytics do
       get '/', :to => 'base#index'
-      resource :overview, :only => [:show], :controller => 'overview'
+      resource :overview, :only => [:show], :controller => 'overview' do
+        member do
+          get :products
+        end
+      end
       resource :sales, :only => [:show]
       resource :profiles, :only => [:show]
     end
@@ -710,8 +714,7 @@ DesksnearMe::Application.routes.draw do
   get '/dashboard', controller: 'dashboard/dashboard', action: 'index'
 
   get "/search", :to => "search#index", :as => :search
-
-  resources :search_notifications, only: [:create]
+  get "/search/categories", :to => "search#categories"
 
   resource :event_tracker, only: [:create], :controller => 'event_tracker'
 

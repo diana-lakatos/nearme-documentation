@@ -47,28 +47,16 @@ class ApplicationController < ActionController::Base
   protected
 
   def set_locale
-    unless request.get?
-      I18n.locale = :en unless request.get?
-      return true
-    end
-
     params_locale = params[:language].try(:to_sym)
-    params_locale_exists = platform_context.instance.locales.find_by(code: params_locale)
-    primary_locale = platform_context.instance.primary_locale
+    user_locale = current_user.try(:language).try(:to_sym)
 
-    # Redirect -> This is necessary for proper functionality of the current_page? method
-    if params_locale.present? && (params_locale == primary_locale || !params_locale_exists)
-      path = request.fullpath
-      Locale.remove_locale_from_url(path)
-      redirect_to path, status: 301
+    locale_service = LocaleService.new(platform_context.instance, params_locale, user_locale, request.fullpath)
+    if locale_service.redirect? && request.get? && !request.xhr?
+      # Redirect -> This is necessary for proper functionality of the 'current_page?' method
+      redirect_to(locale_service.redirect_url, status: 301)
     end
 
-    # Set either primary or requested language#
-    if params_locale.present?
-      I18n.locale = params_locale
-    else
-      I18n.locale = primary_locale
-    end
+    I18n.locale = locale_service.locale
   end
 
   # Returns the layout to use for the current request.

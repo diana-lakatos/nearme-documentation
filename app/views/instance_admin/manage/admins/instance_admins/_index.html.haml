@@ -7,6 +7,7 @@
           %thead
             %tr
               %th Admin
+              %th Email
               %th Role
               %th
           %tbody
@@ -14,6 +15,8 @@
               %tr.instance-admins-table
                 %td
                   = instance_admin.name
+                %td
+                  = instance_admin.user.try(:email)
                 %td
                   - if instance_admin.instance_owner
                     Instance Owner

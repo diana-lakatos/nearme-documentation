@@ -293,6 +293,8 @@ en:
       setting_saved: 'Search settings has been saved.'
 
     manage:
+      category:
+        created: 'Category has been created.'
       order:
         deleted: 'Order has been deleted.'
         updated: 'Order has been updated.'
@@ -430,9 +432,6 @@ en:
       reservation_cancelled: "You have cancelled your reservation."
       reservation_made: "Your reservation has been made! %{message}"
       reservation_not_confirmed: "Your reservation could not be confirmed."
-    search_notifications:
-      you_will_be_notified: "You will be notified when this location will be added."
-      you_will_not_be_notified: "We could not add you to the notifcation list because your email \"%{email}\" %{errors}"
     product:
       complete_fields: "Please complete all fields!"
       missing_fields_invalid: "The form is missing required fields. Please contact administrator for further information."

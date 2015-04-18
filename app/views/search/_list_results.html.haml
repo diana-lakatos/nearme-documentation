@@ -1,0 +1,17 @@
+- if @searcher.results.any?
+  %section#results.list
+    = render partial: 'search/list/listing', collection: @searcher.results, locals: { current_user: current_user }
+    = will_paginate @searcher.results
+    = render 'shared/loading_spinner'
+- else
+  %section#results.no_results
+    = render 'shared/loading_spinner'
+    .text-center
+      %br/
+      %br/
+      %br/
+      %br/
+      %br/
+      %h1.tk-adelle.fat No results found
+      %p
+        = searchable_item_could_not_be_found_tex

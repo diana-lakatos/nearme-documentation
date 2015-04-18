@@ -52,7 +52,8 @@ module DesksnearMe
     ]
     config.assets.precompile += [
       "browser_specific/ie8.css", "admin.css", "blog.css", "blog_admin.css", "errors.css",
-      "instance_admin.css", "platform_home.css", "instance_admin/shipping_profiles_includes.css"
+      "instance_admin.css", "platform_home.css", "instance_admin/shipping_profiles_includes.css",
+      "dashboard.css"
     ]
 
     config.assets.precompile += [

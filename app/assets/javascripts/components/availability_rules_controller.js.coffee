@@ -9,9 +9,17 @@ class @AvailabilityRulesController
       # Set up event listeners
       @bindEvents()
 
+      # Set up defaults
+      @setupDefaults()
+
       # Update for initial state
       @updateCustomState()
       @updateDayStates()
+
+  setupDefaults: ->
+    @container.find('.close-time select').each ->
+      if $(this).val() == '0:00'
+        $(this).val('23:45')
 
   updateCustomState: ->
     if @selector.filter(':checked').attr('data-custom-rules')?

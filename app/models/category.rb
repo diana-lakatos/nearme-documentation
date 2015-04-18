@@ -5,7 +5,7 @@ class Category < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
   acts_as_nested_set dependent: :destroy
- 
+
   has_many :categories_transactables
   has_many :transactables, through: :categories_transactables
 
@@ -38,6 +38,10 @@ class Category < ActiveRecord::Base
     else
       self.permalink = name.to_url
     end
+  end
+
+  def to_liquid
+    CategoryDrop.new(self)
   end
 end
 

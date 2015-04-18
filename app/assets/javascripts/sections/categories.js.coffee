@@ -27,7 +27,7 @@ class @CategoriesController
               new_node: "New category",
               loading: "Loading ..."
             plugins: ["themes", "json_data", "dnd", "checkbox", 'real_checkboxes']
-            checkbox: 
+            checkbox:
               real_checkboxes: false,
               three_state: false,
               tie_selection: false,
@@ -39,20 +39,29 @@ class @CategoriesController
               if selected_categories.length > 0
                 $.jstree._reference($('#category_tree')).open_all($('#category_tree').jstree('get_checked', null, true))
                 for category_id, i in selected_categories
-                  $("#category_tree").jstree('check_node', '#' + category_id); 
-                  $("#category_tree").jstree('open_node', '#' + category_id); 
+                  $("#category_tree").jstree('check_node', '#' + category_id);
+                  $("#category_tree").jstree('open_node', '#' + category_id);
 
-            .bind "check_node.jstree uncheck_node.jstree ", -> 
+            .bind "check_node.jstree uncheck_node.jstree ", ->
               that.setChecboxesValues()
 
             .bind 'check_node.jstree', (e, data) ->
-              if single_choice_category && data.rslt.obj.attr('root') == 'true'    
+              if single_choice_category && data.rslt.obj.attr('root') == 'true'
                 currentNode = data.rslt.obj.attr('id')
                 $('#category_tree').jstree('get_checked', null, true).each ->
                   if currentNode != @id && $(@).attr("root") == 'true'
                     $.jstree._reference($('#category_tree')).uncheck_node '#' + @id
                   return
                 return
+            .bind 'after_open.jstree', (e, data) ->
+              $("#category_tree a").unbind "click"
+              $("#category_tree a").on "click", (e) ->
+                e.preventDefault();
+                e.stopPropagation();
+                if $("#category_tree").jstree("is_checked", this)
+                  $("#category_tree").jstree("uncheck_node", this)
+                else
+                  $("#category_tree").jstree("check_node", this)
 
             .bind 'check_node.jstree', (e, data) ->
               data.inst.open_all(data.rslt.obj, true)
@@ -64,14 +73,6 @@ class @CategoriesController
               data.rslt.obj.find('li.jstree-checked').removeClass('jstree-checked').addClass('jstree-unchecked')
 
               # data.inst.uncheck_all()
-
-      $("#category_tree a").on "dblclick", (e) ->
-        $("#category_tree").jstree("rename", this)
-
-      # surpress form submit on enter/return
-      $(document).keypress (e) ->
-        if e.keyCode == 13
-          e.preventDefault() 
 
 
   handleAjaxError: (XMLHttpRequest, textStatus, errorThrown) ->

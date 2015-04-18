@@ -204,15 +204,6 @@ class SecuredParams
     ]
   end
 
-  def search_notification
-    [
-      :email,
-      :latitude,
-      :longitude,
-      :query
-    ]
-  end
-
   def email_template
     [
       :body,
@@ -331,7 +322,7 @@ class SecuredParams
       :shippo_username, :shippo_password,
       :linkedin_consumer_key, :linkedin_consumer_secret,
       :instagram_consumer_key, :instagram_consumer_secret,
-      :support_imap_hash, :support_email,
+      :support_email,
       :paypal_email, :db_connection_string,
       :stripe_currency, :user_info_in_onboarding_flow,
       :default_search_view, :user_based_marketplace_views,
@@ -339,6 +330,7 @@ class SecuredParams
       :search_settings,
       :taxonomy_tree,
       :saved_search,
+      :categories,
       :date_pickers,
       :tt_select_type,
       :default_products_search_view,
@@ -944,6 +936,7 @@ class SecuredParams
       :first_name, :middle_name, :last_name, :gender,
       :drivers_licence_number, :gov_number, :twitter_url,
       :linkedin_url, :facebook_url, :google_plus_url, :public_profile,
+      :language,
       industry_ids: [],
       companies_attributes: nested(self.company),
       approval_requests_attributes: nested(self.approval_request)

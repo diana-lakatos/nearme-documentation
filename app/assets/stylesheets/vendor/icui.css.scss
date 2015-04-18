@@ -91,6 +91,10 @@
       max-width: 181px;
     }
 
+    input[type='text'] {
+      box-sizing: initial;
+    }
+
     input[type='number'] {
       max-width: 199px;
     }

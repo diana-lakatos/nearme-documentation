@@ -9,7 +9,7 @@
   
   .fileupload-file.gal-inner-holder
     .img
-      = image_tag(asset.url_thumb, :title => asset.filename)
+      = link_to image_tag(asset.url_thumb, :title => asset.filename), asset.url_content, target: '_blank'
     .img-data
       .img-name
         = link_to asset.filename, asset.url_content, target: '_blank'

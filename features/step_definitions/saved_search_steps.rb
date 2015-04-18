@@ -6,6 +6,8 @@ Given(/^saved search enabled$/) do
 end
 
 When(/^I click save search button$/) do
+  page.execute_script("$('#save-search-modal').show()")
+  page.execute_script("$('#save-search-status-modal').show()")
   find('a[data-save-search]').click
 end
 
@@ -16,7 +18,7 @@ When(/^I enter saved search title$/) do
 end
 
 When(/^I click on saved search dialog Save button$/) do
-  click_button 'Save'
+  find('button[data-save-search-submit]').click
   wait_for_ajax
 end
 

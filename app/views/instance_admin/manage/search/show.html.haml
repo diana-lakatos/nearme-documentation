@@ -5,7 +5,7 @@
     .row
       .input-container.col-xs-3
         .input-col-clearfix
-          = f.input :searcher_type, collection: Instance::SEARCH_TYPES, include_blank: false,
+          = f.input :searcher_type, collection: Instance::SEARCH_TYPES.map { |s| [s.humanize, s]}, include_blank: false,
             input_html: { class: 'form-control' }
 
       .input-container.col-xs-3
@@ -41,13 +41,13 @@
           = f.input :date_pickers_mode, collection: %w(relative absolute), include_blank: false,
               input_html: { class: 'form-control' }, label: 'Search Mode'
 
-  %h4 Taxonomy tree search
+  %h4 Category tree search
 
   .content-container.dropshadow
     .row
       .input-container.col-xs-12
         .input-col-clearfix
-          = f.input :taxonomy_tree, as: :boolean, label: 'Enable taxonomy tree'
+          = f.input :taxonomy_tree, as: :boolean, label: 'Enable category tree'
 
     .row
 
@@ -60,7 +60,6 @@
           = f.input :saved_search, as: :boolean, label: 'Enable saved search'
 
     .row
-
 
   .content-container
     .row

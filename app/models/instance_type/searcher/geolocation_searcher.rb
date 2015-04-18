@@ -30,21 +30,30 @@ module InstanceType::Searcher::GeolocationSearcher
     @search ||= ::Listing::Search::Params::Web.new(@params)
   end
 
+  def category_ids
+    input_value(:category_ids).try { |ids| ids.split(',') } || []
+  end
+
+  def categories
+    @categories ||= Category.where(id: category_ids) if input_value(:category_ids)
+  end
+
   def fetcher
     @fetcher ||=
       begin
         @search_params = @params.merge({
-          :date_range => search.available_dates,
-          :query => search.query,
+          date_range: search.available_dates,
+          query: search.query,
           transactable_type_id: @transactable_type.id,
           custom_attributes: search.lg_custom_attributes,
+          category_ids: search.category_ids,
           location_types_ids: search.location_types_ids,
           listing_pricing: search.lgpricing.blank? ? [] : search.lgpricing_filters,
-          :sort => search.sort
+          sort: search.sort
         })
         @search_params.merge!({
-          :midpoint => search.midpoint,
-          :radius => search.radius,
+          midpoint: search.midpoint,
+          radius: search.radius,
         }) if located || adjust_to_map
 
         ::Listing::SearchFetcher.new(@search_params)
@@ -53,9 +62,9 @@ module InstanceType::Searcher::GeolocationSearcher
 
   def search_query_values
     {
-      :loc => @params[:loc],
-      :query => @params[:query],
-      :industries_ids => @params[:industries_ids],
+      loc: @params[:loc],
+      query: @params[:query],
+      industries_ids: @params[:industries_ids],
     }.merge(filters)
   end
 
@@ -69,11 +78,11 @@ module InstanceType::Searcher::GeolocationSearcher
     @filterable_custom_attributes = @transactable_type.custom_attributes.searchable
   end
 
-  def search_notification
-    @search_notification ||= SearchNotification.new(query: @params[:loc], latitude: @params[:lat], longitude: @params[:lng])
-  end
-
   def should_log_conducted_search?
     @params[:loc].present? || @params[:query].present?
+  end
+
+  def category_options 
+    Category.roots.inject([]) { |options, c| options << [c.id, c.name] } 
   end
 end

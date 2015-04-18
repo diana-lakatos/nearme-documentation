@@ -75,7 +75,7 @@ class PlatformContextDecorator
   end
 
   def fulltext_search?
-    searcher_type == 'fulltext'
+    ['fulltext', 'fulltext_category'].include?(searcher_type)
   end
 
   def fulltext_geo_search?
