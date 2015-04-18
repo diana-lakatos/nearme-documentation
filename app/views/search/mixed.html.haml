@@ -77,11 +77,10 @@
           %h3#search_results_count
             = @searcher.result_count
             results
-        &nbsp;
-        = render 'search/save'
         .per-page
           %span per page
           = select_tag :per_page, options_for_select(['20', '50', '100'].map{|v| [v, v]})
+        = render 'search/save'
 
       - if not request.xhr?
         = yield :mixed_locations

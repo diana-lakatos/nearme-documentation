@@ -11,6 +11,7 @@ Feature: A user can save a search
 
   Scenario: Saving the search results actually saves them
     Given I am on the home page
+    And saved search enabled
     When I search for "Auckland"
     And I see a search result for the Auckland listing
     And I click save search button

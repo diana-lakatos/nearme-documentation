@@ -19,7 +19,7 @@ class SavedSearch < ActiveRecord::Base
   end
 
   def params
-    @params ||= Rack::Utils.parse_query(query.sub('?', '')).with_indifferent_access
+    @params ||= Rack::Utils.parse_query(query.sub('?', '').sub(/&sort=$/, '')).with_indifferent_access
   end
 
   def results_count

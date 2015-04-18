@@ -1,4 +1,13 @@
+Given(/^saved search enabled$/) do
+  Instance.find_each do |instance|
+    instance.saved_search = '1'
+    instance.save!
+  end
+end
+
 When(/^I click save search button$/) do
+  page.execute_script("$('#save-search-modal').show()")
+  page.execute_script("$('#save-search-status-modal').show()")
   find('a[data-save-search]').click
 end
 

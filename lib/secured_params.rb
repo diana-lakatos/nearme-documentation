@@ -329,6 +329,7 @@ class SecuredParams
       :searcher_type, :onboarding_verification_required,
       :search_settings,
       :taxonomy_tree,
+      :saved_search,
       :categories,
       :date_pickers,
       :tt_select_type,
