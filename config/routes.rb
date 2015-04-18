@@ -710,8 +710,6 @@ DesksnearMe::Application.routes.draw do
   get "/search", :to => "search#index", :as => :search
   get "/search/categories", :to => "search#categories"
 
-  resources :search_notifications, only: [:create]
-
   resource :event_tracker, only: [:create], :controller => 'event_tracker'
 
   resources :authentications, :only => [:create, :destroy] do

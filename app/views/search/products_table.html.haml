@@ -17,7 +17,7 @@
           = render partial: 'search/products_table/head'
           = render partial: 'search/products_table/product', collection: @searcher.results
         = will_paginate @searcher.results
-    - elsif !@located
+    - else
       %section#results.no_results{class: platform_context.display_taxonomy_tree? ? "span10" : "span12"}
         .text-center
           %br/
@@ -25,14 +25,6 @@
           %h1.tk-adelle.fat= t 'buy_sell_market.products.search_results.no_results'
           %p
             = searchable_item_could_not_be_found_text
-    - else
-      %section#results.no_results{class: platform_context.display_taxonomy_tree? ? "span10" : "span12"}
-        .text-center
-          %br/
-          %br/
-          %h1.tk-adelle.fat= t 'buy_sell_market.products.search_results.no_results_but'
-          #search-notification
-            = render 'search_notifications/form', search_notification: @searcher.search_notification
     = render 'shared/loading_spinner'
 - content_for :domready do
   $(".span12 .search-icon").click(function () { $("form.search_results").submit() });
