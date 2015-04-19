@@ -2,12 +2,14 @@
   = f.input :payment_gateway_id, as: :hidden, input_html: { value: f.object.payment_gateway_id }
   .row
     .input-container.col-xs-6
-      %h5 Live Settings (used when test mode is off)
+      %h5
+        = t('instance_admin.settings.integrations.payment_gateways_section.live_settings')
       = f.fields_for :live_settings do |live|
         - f.object.live_settings.each do |k, v|
           = live.input k.to_sym, as: :string, input_html: { value: v, class: 'form-control', required: false }
     .input-container.col-xs-6
-      %h5 Test Settings (used when test mode is on)
+      %h5
+        = t('instance_admin.settings.integrations.payment_gateways_section.test_settings')
       = f.fields_for :test_settings do |test|
         - f.object.test_settings.each do |k, v|
           = test.input k.to_sym, as: :string, input_html: { value: v, class: 'form-control', required: false }
@@ -15,4 +17,4 @@
 
   .row
     .input-container.col-xs-12
-      = f.button :submit, "Use #{instance_payment_gateway.name} for #{country.name}", class: 'btn btn-green pull-right'
+      = f.button :submit, "#{t('instance_admin.settings.integrations.payment_gateways_section.use')} #{instance_payment_gateway.name} #{t('instance_admin.settings.integrations.payment_gateways_section.for')} #{country.name}", class: 'btn btn-blue pull-right'

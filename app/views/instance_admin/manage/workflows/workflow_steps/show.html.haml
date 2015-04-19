@@ -1,11 +1,6 @@
-%h4= "#{link_to @workflow.name, instance_admin_manage_workflow_path(@workflow)} > #{resource.name}".html_safe
 .content-container
   .row
-    = link_to 'Add Alert', new_instance_admin_manage_workflow_step_workflow_alert_path(resource), class: 'pull-right btn btn-green'
-
-.content-container
-  .row
-    .table-container.col-xs-12.dropshadow
+    .table-container.col-xs-12
       %table.table
         %thead
           %tr
@@ -26,3 +21,7 @@
               %td
                 = link_to "Delete", instance_admin_manage_workflow_step_workflow_alert_path(resource, workflow_alert),
                     method: :delete, data: { confirm: 'Are you sure?' }, class: "pull-right"
+
+= content_for :header_buttons do
+  = link_to 'Add Alert', new_instance_admin_manage_workflow_step_workflow_alert_path(resource), class: 'pull-right btn btn-blue'
+

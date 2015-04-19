@@ -1,31 +1,36 @@
 = simple_form_for @theme, :url => instance_admin_theme_design_path, :html => { id: 'theme_form', :multipart => true } do |f|
-  %h4 Colors
-  .content-container.dropshadow
-    - Theme::COLORS.each_slice(2).each_with_index do |color, index|
+  .content-container
+    %h4 Colors
+    - Theme::COLORS.each_slice(4).with_index do |colors, index|
       .row
-        .input-container{ class: "#{color[1] ? 'col-xs-6' : 'col-xs-12'}" }
-          = f.input "color_#{color[0]}", :label => color[0].humanize do
-            = f.text_field "color_#{color[0]}", {:type => :color, :value => f.object.hex_color(color[0]).presence || hexify(Theme::COLORS_DEFAULT_VALUES[index*2]), 'data-default' => hexify(Theme::COLORS_DEFAULT_VALUES[index*2]), 'data-color' => color[0]}
-            = link_to "default", '', 'data-reset' => color[0]
+        - colors.each_with_index do |color, color_index|
+          .input-container.color-picker-container{ class: 'col-xs-3' }
+            = f.input "color_#{color}", :label => t("instance_admin.theme.design.colors.#{color}") do
+              - real_color = f.object.hex_color(color).presence || hexify(Theme::COLORS_DEFAULT_VALUES[index*4+color_index])
+              .color-picker-color{ style: "background-color: #{real_color}" }
+              = f.text_field "color_#{color}", {:type => :text, :value => real_color, 'data-default' => hexify(Theme::COLORS_DEFAULT_VALUES[index*4+color_index]), 'data-color-name' => color, 'class' => 'color-picker-text-field' }
+              .default-container
+                = link_to "default", '', 'data-reset' => color
 
-        - if color[1]
-          .input-container.col-xs-6
-            = f.input "color_#{color[1]}", :label => color[1].humanize do
-              = f.text_field "color_#{color[1]}", {:type => :color, :value => f.object.hex_color(color[1]).presence || hexify(Theme::COLORS_DEFAULT_VALUES[index*2+1]), 'data-default' => hexify(Theme::COLORS_DEFAULT_VALUES[index*2+1]), 'data-color' => color[1]}
-              = link_to "default", '', 'data-reset' => color[1]
+    .row
+      &nbsp;
 
-  %h4 Visuals
-  = render 'images', f: f
+  .content-container
+    %h4
+      = t('instance_admin.theme.design.visuals')
+    = render 'images', f: f
 
   = render 'font_fields', f: f
 
-  %h4 Call to action
-  .content-container.dropshadow
+  .content-container
+    %h4
+      = t('instance_admin.theme.design.call_to_action')
     .row
       .input-container.col-xs-12
-        = f.input :call_to_action, label: 'CTA Button Text', :placeholder => 'Find out more', wrapper_html: { class: 'span6' }, input_html: { class: 'form-control' }
-  .content-container
-    = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+        = f.input :call_to_action, wrapper_html: { class: 'span6' }, input_html: { class: 'form-control' }
+
+  = content_for :header_buttons do
+    = f.button :submit, 'Save', class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form.edit_theme' }
 
 - content_for :script do
   = render 'shared/modal'

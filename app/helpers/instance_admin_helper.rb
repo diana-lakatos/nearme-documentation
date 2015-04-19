@@ -27,11 +27,11 @@ module InstanceAdminHelper
   def instance_admin_ico_for_flash(key)
     case key.to_s
     when 'notice'
-      "fa fa-check"
-    when 'success'
-      "fa fa-check"
+      "ai-notice"
     when 'error'
-      "fa fa-exclamation-triangle"
+      "ai-error"
+    when 'success'
+      "ai-success"
     when 'warning'
       "fa fa-exclamation-triangle"
     when 'deleted'

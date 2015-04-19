@@ -126,3 +126,8 @@ $('.color-picker').click(function() {
 
 $('.selectpicker').selectpicker();
 
+// Header submit buttons
+$("[data-submit-form]").click(function() {
+  $($(this).attr('data-form-selector')).submit();
+});
+

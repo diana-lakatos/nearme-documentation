@@ -1,11 +1,13 @@
-= simple_form_for @user ||= User.new, url: instance_admin_manage_admins_path do |f|
-  %h4 Create new admin user
-  .content-container
-    .row.dropshadow
+.content-container
+  %h4
+    = t('instance_admin.manage.admins.create_new_admin_user')
+  = simple_form_for @user ||= User.new, url: instance_admin_manage_admins_path do |f|
+    .row
       .input-container.col-xs-6
-        = f.input :name, label: 'Full Name', placeholder: 'John Smith', required: false, input_html: { class: 'form-control' }
+        = f.input :name, label: t('instance_admin.manage.admins.user_name'), placeholder: t('instance_admin.manage.admins.user_name_placeholder'), required: false, input_html: { class: 'form-control' }
       .input-container.col-xs-6
-        = f.input :email, label: 'Email', placeholder: 'example@gmail.com', required: false, input_html: { class: 'form-control' }
-  .content-container
-    = f.submit "Create", :class => 'btn btn-green pull-right'
-  %br
+        = f.input :email, label: t('instance_admin.manage.admins.user_email'), placeholder: t('instance_admin.manage.admins.user_email_placeholder'), required: false, input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-6
+        = f.submit t('instance_admin.create'), :class => 'btn btn-blue pull-right'
+

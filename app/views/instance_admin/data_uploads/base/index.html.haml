@@ -1,12 +1,7 @@
-%h4 Manage Data Uploads for #{@importable.name}
 .content-container
+  %h4 Manage Data Uploads for #{@importable.name}
   .row
-    = link_to 'Download CSV Template', {action: :download_csv_template}, class: 'pull-right btn btn-green'
-    = link_to 'New Data Upload', {action: :new}, class: 'pull-right btn btn-green'
-
-.content-container
-  .row
-    .table-container.col-xs-12.dropshadow
+    .table-container.col-xs-12
       %table.table
         %thead
           %tr
@@ -23,3 +18,8 @@
               %td= resource.imported_at
               %td= resource.encountered_error.blank?
               %td= resource.created_at
+
+= content_for :header_buttons do
+  = link_to 'Download CSV Template', {action: :download_csv_template}, class: 'pull-right btn btn-blue'
+  = link_to 'New Data Upload', {action: :new}, class: 'pull-right btn btn-blue'
+

@@ -1,11 +1,18 @@
-%h4= resource_class.name.underscore.humanize.pluralize
+.content-container
+  %h4
+    = t("instance_admin.manage.transfers.resource.plural.#{resource_class.name.underscore}")
 
-%p
-  Transfers are generated automatically depending on your setting in 'Settings > Configuration' for
-  outstanding charges we've recieved on behalf of hosts. The next batch will be generated at about:
-  %strong
-    = next_payment_transfers_date
+  .row
+    .text-container
+      = t('instance_admin.manage.transfers.transfers_are_generated_automatically')
+      %strong
+        = next_payment_transfers_date
+  
+  = render 'list_table'
 
-= render 'list_table'
 
-= will_paginate @payment_transfers
+.row
+  .text-container
+    .pull-right
+      = will_paginate @payment_transfers
+

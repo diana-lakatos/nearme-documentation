@@ -2,6 +2,7 @@ class InstanceAdmin::CustomAttributesController < InstanceAdmin::ResourceControl
 
   before_filter :find_target
   before_filter :normalize_valid_values, only: [:create, :update]
+  before_filter :set_breadcrumbs
 
   def index
     @custom_attributes = @target.custom_attributes.order('internal, name')
@@ -53,6 +54,10 @@ class InstanceAdmin::CustomAttributesController < InstanceAdmin::ResourceControl
   end
 
   protected
+
+  def set_breadcrumbs
+    @breadcrumbs_title = 'Manage Attributes'
+  end
 
   def redirection_path
     raise NotImplementedError

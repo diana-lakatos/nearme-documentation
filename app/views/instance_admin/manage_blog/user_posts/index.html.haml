@@ -1,16 +1,13 @@
-.row
-  .col-xs-12
-    %h4 User Posts
-
-.sub-header-nav
-  %ul
-    - %w(all highlighted not_highlighted).each do |state|
-      %li
-        = link_to "#{state.humanize.capitalize} (#{UserBlogPost.send(state).count})", url_for(:filter => state), class: " #{'active' if state == params[:filter]}"
-
 .content-container
+  .sub-header-nav
+    %ul
+      - %w(all highlighted not_highlighted).each do |state|
+        %li
+          = link_to "#{state.humanize.capitalize} (#{UserBlogPost.send(state).count})", url_for(:filter => state), class: " #{'active' if state == params[:filter]}"
+
+  %h4 User Posts
   .row
-    .table-container.col-xs-12.dropshadow
+    .table-container.col-xs-12
       %table.table.sortable
         %thead
           %tr
@@ -23,3 +20,4 @@
         %tbody
           - @blog_posts.each do |blog_post|
             = render 'index_row', blog_post: blog_post
+

@@ -1,15 +1,18 @@
-= simple_nested_form_for @instance, :url => instance_admin_settings_location_type_path(':id'), :html => { :multipart => true, :id => 'edit-location-types-form' } do |f|
-  %h4 Location Types
-  .content-container.dropshadow
-    #location-types
-      = f.fields_for :location_types, wrapper: false do |f|
-        .fields
-          .row
-            .input-container.col-xs-12.location-type-entry
-              = f.input :id, as: :hidden, input_html: { class: 'location-type-id'}
-              = f.input :name, label: false, input_html: { class: 'span10 location-type-name' }
-              %a{"data-target" => "#instanceAdminModal", "href" => "#{destroy_modal_instance_admin_settings_location_type_path(f.object)}", "data-location-types-instance-admin-modal" => '1' }
-                .fa.fa-trash-o.fa-2x.inline-form-icon.pull-right
-
+- if @instance.location_types.present?
+  .content-container
+    %h4
+      = t('instance_admin.settings.locations.location_types')
+    = simple_nested_form_for @instance, :url => instance_admin_settings_location_type_path(':id'), :html => { :multipart => true, :id => 'edit-location-types-form' } do |f|
+      #location-types
+        = f.fields_for :location_types, wrapper: false do |f|
+          .fields
+            .row
+              .input-container.col-xs-10.location-type-entry
+                = f.input :id, as: :hidden, input_html: { class: 'location-type-id'}
+                = f.input :name, label: false, input_html: { class: 'span10 location-type-name form-control' }
+              .input-container.col-xs-2
+                %a{"data-target" => "#instanceAdminModal", "href" => "#{destroy_modal_instance_admin_settings_location_type_path(f.object)}", "data-location-types-instance-admin-modal" => '1' }
+                  .fa.fa-trash-o.fa-2x.inline-form-icon.pull-right
+    
 - content_for :domready do
   new InstanceAdmin.LocationsController($('#edit-location-types-form'))

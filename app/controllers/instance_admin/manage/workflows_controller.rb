@@ -1,5 +1,7 @@
 class InstanceAdmin::Manage::WorkflowsController < InstanceAdmin::Manage::BaseController
 
+  before_filter :set_breadcrumbs
+
   def index
     @workflows = Workflow.all
   end
@@ -16,6 +18,10 @@ class InstanceAdmin::Manage::WorkflowsController < InstanceAdmin::Manage::BaseCo
   end
 
   private
+
+  def set_breadcrumbs
+    @breadcrumbs_title = 'Manage Workflows'
+  end
 
   def workflow_params
     params.require(:workflow).permit(secured_params.workflow)
