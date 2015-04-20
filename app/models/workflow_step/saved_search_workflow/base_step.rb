@@ -1,8 +1,7 @@
 class WorkflowStep::SavedSearchWorkflow::BaseStep < WorkflowStep::BaseStep
 
-  def initialize(saved_searches_ids_results_hash)
-    @saved_searches = SavedSearch.where(id: saved_searches_ids_results_hash.keys)
-    @saved_searches_ids_results_hash = saved_searches_ids_results_hash
+  def initialize(saved_searches_ids)
+    @saved_searches = SavedSearch.where(id: saved_searches_ids)
     raise 'There should be saved searches' if @saved_searches.empty?
   end
 
@@ -18,7 +17,6 @@ class WorkflowStep::SavedSearchWorkflow::BaseStep < WorkflowStep::BaseStep
   def data
     {
       saved_searches: @saved_searches,
-      saved_searches_ids_results_hash: @saved_searches_ids_results_hash,
       saved_searches_titles: @saved_searches.map { |ss| "'#{ss.title}'" }.join(', ')
     }
   end

@@ -2,7 +2,7 @@
 
 <p>
 {% for saved_search in saved_searches %}
-  <a href="{{ platform_context.host | append:saved_search.path }}">{{ saved_search.title }}</a>: {{ saved_searches_ids_results_hash[saved_search.id] }}
+  <a href="{{ platform_context.host | append:saved_search.path }}">{{ saved_search.title }}</a>: {{ saved_search.new_results }}
   <br />
 {% endfor %}
 </p>

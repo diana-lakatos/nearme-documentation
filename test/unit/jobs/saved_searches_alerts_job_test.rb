@@ -15,14 +15,14 @@ class SavedSearchesAlertsJobTest < ActiveSupport::TestCase
 
   should 'send notification if there are new search results' do
     FactoryGirl.create('listing_in_auckland')
-    WorkflowStepJob.expects(:perform).with(WorkflowStep::SavedSearchWorkflow::Daily, {@saved_search.id => 1}).once
+    WorkflowStepJob.expects(:perform).with(WorkflowStep::SavedSearchWorkflow::Daily, [@saved_search.id]).once
     SavedSearchesAlertsJob.perform(:daily)
   end
 
   should 'send notification if there are new search results if notification was not sent during the period' do
     FactoryGirl.create('listing_in_auckland')
     @user.update_column :saved_searches_alert_sent_at, 36.hours.ago
-    WorkflowStepJob.expects(:perform).with(WorkflowStep::SavedSearchWorkflow::Daily, {@saved_search.id => 1}).once
+    WorkflowStepJob.expects(:perform).with(WorkflowStep::SavedSearchWorkflow::Daily, [@saved_search.id]).once
     SavedSearchesAlertsJob.perform(:daily)
   end
 
@@ -40,8 +40,15 @@ class SavedSearchesAlertsJobTest < ActiveSupport::TestCase
   should 'not send notification if there are no search results if it was sent during the period' do
     FactoryGirl.create('listing_in_auckland')
     @user.update_column :saved_searches_alert_sent_at, 12.hours.ago
-    WorkflowStepJob.expects(:perform).with(WorkflowStep::SavedSearchWorkflow::Daily, {@saved_search.id => 1}).never
+    WorkflowStepJob.expects(:perform).with(WorkflowStep::SavedSearchWorkflow::Daily, [@saved_search.id]).never
     SavedSearchesAlertsJob.perform(:daily)
+  end
+
+  should 'update saved search new_results attr' do
+    assert_equal 0, @saved_search.new_results
+    FactoryGirl.create('listing_in_auckland')
+    SavedSearchesAlertsJob.perform(:daily)
+    assert_not_equal 0, @saved_search.reload.new_results
   end
 
 end
