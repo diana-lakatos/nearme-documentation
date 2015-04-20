@@ -522,11 +522,13 @@ class TransactableTest < ActiveSupport::TestCase
       end
 
       should 'fixed price if non schedule booking is chosen' do
-        @transactable.fixed_price = 10000
+        @transactable.fixed_price = Money.new(10000, 'USD')
         @transactable.action_schedule_booking = true
         @transactable.booking_type = 'regular'
         @transactable.save
-        assert_nil(@transactable.fixed_price)
+        @transactable.reload
+        assert_equal(@transactable.fixed_price, Money.new(nil, 'USD'))
+        assert_equal(@transactable.currency, 'USD')
         assert_nil(@transactable.action_schedule_booking)
       end
     end

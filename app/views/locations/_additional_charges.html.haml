@@ -4,12 +4,12 @@
       .mandatory-charge{ data: { 'mandatory-charge' => ac.amount } }
         %span
           = ac.name
-        .pull-right= number_to_currency_symbol(listing.location.currency, content_tag(:span, ac.amount))
+        .pull-right= number_to_currency_symbol(listing.currency, content_tag(:span, ac.amount))
         %br
     - else
       .optional-charge{ data: { 'optional-charge' => ac.amount } }
         %span
           = check_box_tag "reservation_request[additional_charge_ids][]", ac.id, false, data: { 'optional-charge-select' => '' }
           = ac.name
-        %span.pull-right= number_to_currency_symbol(listing.location.currency, content_tag(:span, ac.amount))
+        %span.pull-right= number_to_currency_symbol(listing.currency, content_tag(:span, ac.amount))
         %br

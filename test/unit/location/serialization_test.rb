@@ -35,10 +35,6 @@ class Location::SerializationTest < ActiveSupport::TestCase
       assert_equal @location.longitude, @json[:longitude]
     end
 
-    should "have a currency" do
-      assert_equal @location.currency, @json[:currency]
-    end
-
     should "have a location_type_id" do
       assert_equal @location.location_type_id, @json[:location_type_id]
     end

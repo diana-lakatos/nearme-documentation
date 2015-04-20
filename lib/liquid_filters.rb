@@ -63,9 +63,8 @@ module LiquidFilters
     connections.join('<br />').html_safe
   end
 
-  def price_without_cents_with_currency(price)
-    currency = self.try(:currency) || 'USD'
-    money_without_cents_and_with_symbol(Money.new(price.try(:fractional), currency))
+  def price_without_cents_with_currency(money)
+    money_without_cents_and_with_symbol(money)
   end
 
   def lowest_price_with_cents_with_currency(object, lgpricing_filters)
@@ -78,9 +77,8 @@ module LiquidFilters
     end
   end
 
-  def price_with_cents_with_currency(price)
-    currency = self.try(:currency) || 'USD'
-    humanized_money_with_symbol(Money.new(price.try(:fractional), currency))
+  def price_with_cents_with_currency(money)
+    humanized_money_with_symbol(money)
   end
 
   def space_listing_placeholder_path(height, width)

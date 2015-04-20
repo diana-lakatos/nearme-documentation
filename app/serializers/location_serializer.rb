@@ -1,5 +1,5 @@
 class LocationSerializer < ActiveModel::Serializer
-  attributes :id , :name, :description, :email, :phone, :latitude, :longitude, :currency, :location_type_id, :special_notes, :formatted_address, :amenity_ids
+  attributes :id , :name, :description, :email, :phone, :latitude, :longitude, :location_type_id, :special_notes, :formatted_address, :amenity_ids
 
   attributes :availability_template_id
 

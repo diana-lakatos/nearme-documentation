@@ -333,9 +333,11 @@ ActiveRecord::Schema.define(version: 20150422160658) do
     t.integer  "transactable_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "instance_id"
   end
 
   add_index "categories_transactables", ["category_id"], name: "index_categories_transactables_on_category_id", using: :btree
+  add_index "categories_transactables", ["instance_id"], name: "index_categories_transactables_on_instance_id", using: :btree
   add_index "categories_transactables", ["transactable_id"], name: "index_categories_transactables_on_transactable_id", using: :btree
 
   create_table "charges", force: true do |t|
@@ -855,6 +857,8 @@ ActiveRecord::Schema.define(version: 20150422160658) do
     t.hstore   "search_settings",                                               default: {},            null: false
     t.string   "default_country"
     t.text     "allowed_countries"
+    t.string   "default_currency"
+    t.text     "allowed_currencies"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -900,7 +904,7 @@ ActiveRecord::Schema.define(version: 20150422160658) do
     t.datetime "updated_at",                                     null: false
     t.datetime "deleted_at"
     t.string   "formatted_address"
-    t.string   "currency"
+    t.string   "deprecated_currency"
     t.text     "special_notes"
     t.text     "address_components"
     t.string   "street"
@@ -1366,7 +1370,7 @@ ActiveRecord::Schema.define(version: 20150422160658) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "instance_id"
-    t.integer  "new_results", default: 0
+    t.integer  "new_results",    default: 0
     t.datetime "last_viewed_at"
   end
 
@@ -2851,6 +2855,7 @@ ActiveRecord::Schema.define(version: 20150422160658) do
     t.integer  "book_it_out_discount"
     t.integer  "book_it_out_minimum_qty"
     t.integer  "exclusive_price_cents",          default: 0
+    t.string   "currency"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
@@ -3070,8 +3075,8 @@ ActiveRecord::Schema.define(version: 20150422160658) do
     t.float    "buyer_average_rating",                               default: 0.0,                                                                                 null: false
     t.boolean  "public_profile",                                     default: false
     t.boolean  "accept_emails",                                      default: true
-    t.string   "language",                               limit: 2,   default: "en"
     t.string   "saved_searches_alerts_frequency",                    default: "daily"
+    t.string   "language",                               limit: 2,   default: "en"
     t.integer  "saved_searches_count",                               default: 0
     t.datetime "saved_searches_alert_sent_at"
   end

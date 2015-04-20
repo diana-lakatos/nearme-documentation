@@ -17,6 +17,8 @@ class Instance < ActiveRecord::Base
   serialize :custom_sanitize_config, Hash
   serialize :hidden_ui_controls, Hash
   serialize :allowed_countries, Array
+  serialize :allowed_currencies, Array
+
 
   API_KEYS = %w(paypal_username paypal_password paypal_signature paypal_app_id paypal_client_id paypal_client_secret stripe_api_key stripe_public_key balanced_api_key)
   SEARCH_TYPES = %w(geo fulltext fulltext_geo fulltext_category geo_category)
@@ -294,5 +296,9 @@ class Instance < ActiveRecord::Base
 
   def primary_locale
     locales.default_locale || :en
+  end
+
+  def set_context!
+    PlatformContext.current = PlatformContext.new(self)
   end
 end

@@ -32,7 +32,7 @@
               - Money::Currency.table.values.each do |c|
                 %span{:id => "currency_#{c[:iso_code]}"}
                   = c[:symbol]
-                %span{:id => "default_currency"}= @transactable_type.default_currency
+              %span{:id => "default_currency"}= @transactable_type.default_currency
 
         .actions
           .centerbuttons

@@ -332,26 +332,28 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
                   "longitude"=>"8",
                   "formatted_address"=>"formatted usa",
                 },
-          "listings_attributes"=>
-          {"0"=>
-           {
-            "transactable_type_id" => TransactableType.first.id,
-            "name"=>"Desk",
-            "description"=>"We have a group of several shared desks available.",
-            "action_hourly_booking" => false,
-            "listing_type"=>"Desk",
-            "quantity"=>"1",
-            "daily_price"=>daily_price,
-            "weekly_price"=>weekly_price,
-            "monthly_price"=> monthly_price,
-            "action_free_booking"=>free,
-            "confirm_reservations"=>"0",
-            "photos_attributes" => [FactoryGirl.attributes_for(:photo)]}
+              "listings_attributes"=>
+                {"0"=>
+                  {
+                    "transactable_type_id" => TransactableType.first.id,
+                    "name"=>"Desk",
+                    "description"=>"We have a group of several shared desks available.",
+                    "action_hourly_booking" => false,
+                    "listing_type"=>"Desk",
+                    "quantity"=>"1",
+                    "daily_price"=>daily_price,
+                    "weekly_price"=>weekly_price,
+                    "monthly_price"=> monthly_price,
+                    "action_free_booking"=>free,
+                    "confirm_reservations"=>"0",
+                    "photos_attributes" => [FactoryGirl.attributes_for(:photo)],
+                    "currency"=>"USD"
+                  }
+                },
+              }
+            }
           },
-          "currency"=>"USD"}
-         }
-       },
-      },
+        },
       "country_name" => "United States",
       "phone" => "123456789"
      },

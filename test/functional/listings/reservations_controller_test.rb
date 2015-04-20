@@ -258,9 +258,9 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
     {
       booking_desks: reservation.quantity,
       booking_days: reservation.total_days,
+      booking_currency: reservation.currency,
       booking_total: reservation.total_amount_dollars,
       location_address: reservation.location.address,
-      location_currency: reservation.location.currency,
       location_suburb: reservation.location.suburb,
       location_city: reservation.location.city,
       location_state: reservation.location.state,

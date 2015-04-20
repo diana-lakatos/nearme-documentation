@@ -92,6 +92,8 @@
         = f.input :quantity, as: :hidden, value: 1
       -else
         = f.input :quantity
+    - when 'currency'
+      = f.input :currency, :as => :currency, allowed_currencies: @transactable_type.allowed_currencies, default: @transactable_type.default_currency, :input_html => { "data-live-search" => "true", :class => 'selectpicker', :id => 'currency-select' }
     - when *@transactable_type.categories.roots.map { |c| "Category - #{c.name}" }
       - category_name = field.split(" - ")[1]
       - category = @transactable_type.categories.roots.where(name: category_name).first
@@ -110,6 +112,11 @@
         - @transactable_type.custom_attributes.each do |attribute|
           - next if (platform_context.instance.user_based_marketplace_views? && ( attribute.name == 'quantity' || attribute.name == 'capacity' )) || attribute.name != field
           = draw_attribute_for_form(attribute, f)
+.hidden
+  - Money::Currency.table.values.each do |c|
+    %span{:id => "currency_#{c[:iso_code]}"}
+      = c[:symbol]
+  %span{:id => "default_currency"}= @transactable_type.default_currency
 
 - content_for :domready do
   $(function() { new Dashboard.ListingController($('#listing-form')) });

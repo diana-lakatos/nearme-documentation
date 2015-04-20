@@ -52,17 +52,16 @@ class Location < ActiveRecord::Base
 
   has_many :wish_list_items, as: :wishlistable
 
-  validates_presence_of :company, :currency
+  validates_presence_of :company
   validates_presence_of :location_type_id, if: :location_type_required
   validates_presence_of :description, :if => :name_and_description_required
   validates_presence_of :name, :if => :name_and_description_required
   validates :email, email: true, allow_nil: true
-  validates :currency, currency: true, allow_nil: false
   validates_length_of :description, :maximum => 250, :if => :name_and_description_required
   validates_length_of :name, :maximum => 50, :if => :name_and_description_required
 
   before_validation :set_location_type
-  before_save :assign_default_availability_rules, :set_currency
+  before_save :assign_default_availability_rules
   after_save :set_external_id
 
   extend FriendlyId
@@ -106,10 +105,6 @@ class Location < ActiveRecord::Base
     if availability_rules.reject(&:marked_for_destruction?).empty?
       AvailabilityRule.default_template.apply(self)
     end
-  end
-
-  def currency
-    super.presence || transactable_type.try(:default_currency) || "USD"
   end
 
   def name
@@ -220,9 +215,5 @@ class Location < ActiveRecord::Base
         self.location_address.fetch_coordinates!
       end
     end
-  end
-
-  def set_currency
-    self.currency = currency
   end
 end

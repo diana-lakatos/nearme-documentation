@@ -87,12 +87,12 @@ class PaymentTransferSchedulerJobTest < ActiveSupport::TestCase
 
         should "generate separate transfers for separate currencies" do
           location = FactoryGirl.create(:location,
-                                        :company => @company_1,
-                                        :currency => 'NZD'
+                                        :company => @company_1
                                        )
 
           listing = FactoryGirl.create(:transactable,
                                        :daily_price => 50,
+                                       :currency => 'NZD',
                                        :location => location
                                       )
 
