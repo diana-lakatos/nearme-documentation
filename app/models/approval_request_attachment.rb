@@ -7,6 +7,10 @@ class ApprovalRequestAttachment < ActiveRecord::Base
   belongs_to :uploader, class_name: 'User'
   belongs_to :approval_request, inverse_of: :approval_request_attachments
 
+  scope :for_attachment_template, -> (template_id) { where(approval_request_attachment_template_id: template_id) }
+  scope :free,                    -> { where(approval_request_id: nil) }
+  scope :for_request_or_free,     -> (request_id) { where(approval_request_id: [nil, request_id]) }
+
   mount_uploader :file, PrivateFileUploader
   validates_presence_of :file, unless: lambda { |ara| ara.file.present? || ara.file_cache.present? || !ara.required? }
   skip_callback :commit, :after, :remove_file!

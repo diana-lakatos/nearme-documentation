@@ -54,6 +54,7 @@ en:
     save: 'Save'
     daily: 'Daily'
     weekly: 'Weekly'
+    browse: 'Browse'
   transactable_types:
     locations:
       listings:
@@ -965,4 +966,8 @@ en:
       public_url: Public URL
       search: Search
       wrong_file_message: 'does not have an accepted extension. Please select a document or an image.'
+
+  approval_request_attachments:
+    please_upload_document: 'Please upload document'
+    wrong_file_message: 'does not have an accepted extension. Please select a pdf document or an image.'
 

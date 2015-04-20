@@ -4,7 +4,9 @@ module FileuploadHelper
   def file_upload_input(name, url, thumbnail_sizes, text='Photos', options = {}, &block)
     render(partial: 'shared/components/file_upload_input', locals: {
       uploaded_content: get_uploaded_content(options, &block),
+      uploaded_content_placement: options.delete(:uploaded_content_placement) || :top,
       error_message: options.delete(:error),
+      hint: options.delete(:hint),
       thumbnail_sizes: thumbnail_sizes,
       url: url,
       name: name,
@@ -17,6 +19,7 @@ module FileuploadHelper
     render(partial: 'shared/components/new_file_upload_input', locals: {
       uploaded_content: get_uploaded_content(options, &block),
       error_message: options.delete(:error),
+      hint: options.delete(:hint),
       thumbnail_sizes: thumbnail_sizes,
       url: url,
       name: name,

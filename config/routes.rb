@@ -521,6 +521,8 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
+  resources :approval_request_attachments, only: %i(create destroy)
+
   namespace :dashboard do
 
     resources :api do

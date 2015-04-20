@@ -58,6 +58,7 @@
 //= require ./sections/categories
 //= require ./sections/support/attachment_form
 //= require ./sections/support/ticket_message_controller
+//= require ./sections/approval_request_attachments_controller
 //= require_tree ./sections/buy_sell
 //= require_tree ./sections/dashboard
 //

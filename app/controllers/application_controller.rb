@@ -472,17 +472,15 @@ class ApplicationController < ActionController::Base
   def build_approval_request_for_object(object)
     object.approval_requests.to_a.reject! { |ar| !object.approval_request_templates.pluck(:id).include?(ar.approval_request_template_id) }
     if (art = object.approval_request_templates.first).present?
-      ar = ((object.approval_requests.find { |approval_request| approval_request.approval_request_template_id == art.id }) || object.approval_requests.build(approval_request_template_id: art.id))
-      ar.approval_request_attachments.to_a.reject! { |ara| !art.approval_request_attachment_templates.pluck(:id).include?(ar.approval_request_template_id) }
+      unless ar = object.approval_requests.find { |approval_request| approval_request.approval_request_template_id == art.id }
+        ar = object.approval_requests.build(approval_request_template_id: art.id)
+        object.approval_requests << ar
+      end
       ar.required_written_verification = art.required_written_verification
       art.approval_request_attachment_templates.each do |arat|
-        if (ara = (ar.approval_request_attachments.find { |approval_request_attachment| approval_request_attachment.approval_request_attachment_template_id == arat.id })).nil?
-          ara = ar.approval_request_attachments.build(approval_request_attachment_template_id: arat.id)
+        if ara = current_user.approval_request_attachments.for_request_or_free(ar.id).for_attachment_template(arat.id).first
+          ar.approval_request_attachments << ara
         end
-        ara.uploader = current_user
-        ara.label = arat.label
-        ara.hint = arat.hint
-        ara.required = arat.required
       end
     end
     object

@@ -13,6 +13,8 @@
             = image_tag("themes/buy_sell/icon-cross.png")
             = text
         %input.browse-file{name: name, type: 'file', multiple: !options['no-multiple']}
+        - if hint
+          %p.hint-block= hint
         - if error_message
           %p.error-block= error_message
 
