@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150420133116) do
+ActiveRecord::Schema.define(version: 20150420154725) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -261,6 +261,8 @@ ActiveRecord::Schema.define(version: 20150420133116) do
     t.boolean  "success",                         default: false
     t.text     "encrypted_response"
     t.integer  "user_id"
+    t.datetime "void_at"
+    t.text     "void_response"
   end
 
   add_index "billing_authorizations", ["reference_id", "reference_type"], name: "index_billing_authorizations_on_reference_id_and_reference_type", using: :btree
@@ -831,17 +833,17 @@ ActiveRecord::Schema.define(version: 20150420133116) do
     t.text     "user_required_fields"
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
-    t.boolean  "user_blogs_enabled",                                            default: false
+    t.string   "payment_transfers_frequency",                                   default: "fortnightly"
+    t.text     "hidden_ui_controls"
+    t.string   "encrypted_shippo_username"
+    t.string   "encrypted_shippo_password"
     t.string   "twilio_from_number"
     t.string   "test_twilio_from_number"
     t.string   "encrypted_test_twilio_consumer_key"
     t.string   "encrypted_test_twilio_consumer_secret"
     t.string   "encrypted_twilio_consumer_key"
     t.string   "encrypted_twilio_consumer_secret"
-    t.string   "payment_transfers_frequency",                                   default: "fortnightly"
-    t.string   "encrypted_shippo_username"
-    t.string   "encrypted_shippo_password"
-    t.text     "hidden_ui_controls"
+    t.boolean  "user_blogs_enabled",                                            default: false
     t.boolean  "wish_lists_enabled",                                            default: false
     t.string   "wish_lists_icon_set",                                           default: "heart"
     t.boolean  "possible_manual_payment"
@@ -919,8 +921,8 @@ ActiveRecord::Schema.define(version: 20150420133116) do
     t.boolean  "listings_public",                default: true
     t.integer  "partner_id"
     t.integer  "address_id"
-    t.boolean  "mark_to_be_bulk_update_deleted", default: false
     t.string   "external_id"
+    t.boolean  "mark_to_be_bulk_update_deleted", default: false
     t.integer  "wish_list_items_count",          default: 0
     t.integer  "opened_on_days",                 default: [],                 array: true
   end
@@ -1355,7 +1357,6 @@ ActiveRecord::Schema.define(version: 20150420133116) do
     t.integer  "new_results", default: 0
   end
 
-  add_index "saved_searches", ["user_id"], name: "index_saved_searches_on_user_id", using: :btree
   add_index "saved_searches", ["title", "user_id"], name: "index_saved_searches_on_title_and_user_id", unique: true, using: :btree
 
   create_table "schedules", force: true do |t|
@@ -2784,8 +2785,8 @@ ActiveRecord::Schema.define(version: 20150420133116) do
     t.boolean  "skip_location"
     t.string   "default_currency"
     t.text     "allowed_currencies"
-    t.text     "allowed_countries"
     t.string   "default_country"
+    t.text     "allowed_countries"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -2825,11 +2826,11 @@ ActiveRecord::Schema.define(version: 20150420133116) do
     t.integer  "fixed_price_cents"
     t.integer  "min_fixed_price_cents"
     t.integer  "max_fixed_price_cents"
-    t.boolean  "manual_payment",                 default: false
     t.float    "average_rating",                 default: 0.0,       null: false
     t.string   "booking_type",                   default: "regular"
-    t.integer  "quantity",                       default: 1
+    t.boolean  "manual_payment",                 default: false
     t.integer  "wish_list_items_count",          default: 0
+    t.integer  "quantity",                       default: 1
     t.integer  "opened_on_days",                 default: [],                     array: true
     t.integer  "minimum_booking_minutes",        default: 60
     t.integer  "book_it_out_discount"
@@ -3053,10 +3054,10 @@ ActiveRecord::Schema.define(version: 20150420133116) do
     t.float    "buyer_average_rating",                               default: 0.0,                                                                                 null: false
     t.boolean  "public_profile",                                     default: false
     t.boolean  "accept_emails",                                      default: true
+    t.string   "language",                               limit: 2,   default: "en"
     t.string   "saved_searches_alerts_frequency",                    default: "daily"
     t.integer  "saved_searches_count",                               default: 0
     t.datetime "saved_searches_alert_sent_at"
-    t.string   "language",                               limit: 2,   default: "en"
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

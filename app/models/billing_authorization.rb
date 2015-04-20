@@ -6,9 +6,21 @@ class BillingAuthorization < ActiveRecord::Base
 
   serialize :response, Hash
 
-  attr_encrypted :response, key: DesksnearMe::Application.config.secret_token, marshal: true
+  attr_encrypted :response, :void_response, key: DesksnearMe::Application.config.secret_token, marshal: true
 
+  belongs_to :instance
   belongs_to :reference, polymorphic: true
   validates :payment_gateway_class, presence: true
   validates_presence_of :token, if: lambda { |billing_authorization| billing_authorization.success? }
+
+  def void!
+    return if void_at.present?
+    self.void_response = billing_gateway.void(self)
+    touch(:void_at)
+  end
+
+  def billing_gateway
+    @billing_gateway ||= payment_gateway_class.to_s.constantize.new(reference.owner, instance, reference.currency)
+  end
 end
+

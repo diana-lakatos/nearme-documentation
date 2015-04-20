@@ -50,6 +50,7 @@ class ReservationTest < ActiveSupport::TestCase
       assert_nil @reservation.confirmed_at
       assert_nil @reservation.cancelled_at
     end
+
     should 'have correct confirmed_at' do
       @reservation = FactoryGirl.create(:reservation, :state => 'unconfirmed')
       Timecop.freeze(Time.zone.now) do
@@ -209,6 +210,43 @@ class ReservationTest < ActiveSupport::TestCase
 
     end
 
+    context 'void' do
+
+      context 'manual payment reservation' do
+
+        should 'not schedule payment transfer on cancel' do
+          @reservation = FactoryGirl.create(:reservation, state: 'unconfirmed')
+          ReservationVoidPaymentJob.expects(:perform).never
+          @reservation.user_cancel!
+        end
+      end
+
+      context 'credit card reservation' do
+
+        setup do
+          @reservation = FactoryGirl.create(:reservation_with_credit_card, state: 'unconfirmed')
+          @reservation.stubs(:billing_authorization).returns(stub(present: true))
+        end
+
+        should 'schedule void on guest cancellation' do
+          ReservationVoidPaymentJob.expects(:perform).once
+          @reservation.user_cancel!
+        end
+
+        should 'schedule void on expiration' do
+          ReservationVoidPaymentJob.expects(:perform).once
+          @reservation.expire!
+        end
+
+        should 'not schedule void on confirmation' do
+          Payment.any_instance.expects(:capture).once
+          @reservation.confirm!
+          ReservationVoidPaymentJob.expects(:perform).never
+        end
+      end
+
+    end
+
     should 'be able to schedule refund' do
       Timecop.freeze(Time.zone.now) do
         ReservationRefundJob.expects(:perform_later).with do |time, id, counter|
@@ -338,16 +376,16 @@ class ReservationTest < ActiveSupport::TestCase
       reservation.service_fee_amount_host_cents = nil
       Reservation::CancellationPolicy.any_instance.stubs(:cancelable?).returns(true)
 
-      expected = { :reservation =>
-                   {
-                     :id         => nil,
-                     :user_id    => nil,
-                     :listing_id => reservation.listing.id,
-                     :state      => "pending",
-                     :cancelable => true,
-                     :total_cost => { :amount=>0.0, :label=>"$0.00", :currency_code=> "USD" },
-                     :times      => []
-                   }
+      expected = {
+        reservation: {
+          id:nil,
+          user_id: nil,
+          listing_id: reservation.listing.id,
+          state: "pending",
+          cancelable: true,
+          total_cost: { amount: 0.0, label: "$0.00", currency_code: "USD" },
+          times: []
+        }
       }
 
       assert_equal expected, ReservationSerializer.new(reservation).as_json
