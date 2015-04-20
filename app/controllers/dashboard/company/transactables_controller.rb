@@ -58,7 +58,6 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
           flash[:success] = t('flash_messages.manage.listings.listing_updated')
           unless @transactable.is_trusted?
             flash[:error] = t('manage.listings.no_trust_explanation')
-            WorkflowStepJob.perform(WorkflowStep::VendorApprovalWorkflow::ListingUpdated, @transactable.id) unless @transactable.is_trusted?
           end
           redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
         else
