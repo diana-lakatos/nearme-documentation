@@ -50,5 +50,6 @@ class LocalesUrlTest < ActionDispatch::IntegrationTest
 
   teardown do
     RoutingFilter.active = false
+    I18n.locale = :en
   end
 end
