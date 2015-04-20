@@ -754,6 +754,11 @@ class User < ActiveRecord::Base
     self.update(buyer_average_rating: buyer_average_rating)
   end
 
+  def reset_password!(*args)
+    self.skip_custom_attribute_validation = true
+    super(*args)
+  end
+
   private
 
   def get_first_name_from_name
