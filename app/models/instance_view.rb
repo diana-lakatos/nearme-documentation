@@ -56,7 +56,10 @@ class InstanceView < ActiveRecord::Base
     'buy_sell_market/products/extra_properties',
     'search/mixed/location',
     'search/mixed/listing',
-    'search/list/listing'
+    'search/list/listing',
+    'search/products/product',
+    'search/products_table/head',
+    'search/products_table/product'
   ].freeze
 
   scope :for_instance_type_id, ->(instance_type_id) {
