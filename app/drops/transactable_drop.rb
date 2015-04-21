@@ -75,4 +75,8 @@ class TransactableDrop < BaseDrop
     @transactable.amenities.order('name ASC').pluck(:name)
   end
 
+  def photos
+    @transactable.photos_metadata
+  end
+
 end
