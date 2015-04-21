@@ -2,7 +2,7 @@ class SavedSearchDrop < BaseDrop
 
   attr_reader :saved_search
 
-  delegate :id, :title, :path, to: :saved_search
+  delegate :id, :title, :path, :new_results, to: :saved_search
 
   def initialize(saved_search)
     @saved_search = saved_search

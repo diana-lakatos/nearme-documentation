@@ -11,7 +11,7 @@
   %table.saved-searches{:'data-saved-searches' => true}
     %tr
       %th= SavedSearch.human_attribute_name :title
-      %th= SavedSearch.human_attribute_name :results
+      %th= SavedSearch.human_attribute_name :new_results
       %th{colspan: 2}= SavedSearch.human_attribute_name :created_at
     - if @saved_searches.empty?
       %tr
@@ -20,7 +20,7 @@
       - @saved_searches.each do |saved_search|
         %tr.data-row
           %td{:'data-saved-search-title' => saved_search.id}= link_to saved_search.title, saved_search.path
-          %td= saved_search.results_count
+          %td= saved_search.new_results
           %td= l(saved_search.created_at, format: :only_date)
           %td
             .controls

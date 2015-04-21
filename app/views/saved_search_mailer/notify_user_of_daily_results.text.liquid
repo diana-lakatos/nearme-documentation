@@ -1,7 +1,7 @@
 {{ 'saved_searches.mailer.content.daily.new_search_results' | translate }}
 
 {% for saved_search in saved_searches %}
-{{ saved_search.title }}: {{ saved_searches_ids_results_hash[saved_search.id] }} ({{ platform_context.host | append:saved_search.path }})
+{{ saved_search.title }}: {{ saved_search.new_results }} ({{ platform_context.host | append:saved_search.path }})
 {% endfor %}
 
 {{ 'saved_searches.mailer.content.dashboard_link_text' | translate }} {{ platform_context.host | append:saved_searches.first.dashboard_saved_searches_url }}

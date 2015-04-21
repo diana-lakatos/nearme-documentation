@@ -19,15 +19,16 @@ class SavedSearchesAlertsJob < Job
         # move timestamp to beginning of hour, unless period will be smaller than needed one
         user.update_column :saved_searches_alert_sent_at, Time.zone.now.beginning_of_hour
 
-        saved_searches_ids_results_hash = user.saved_searches.inject({}) do |hsh, saved_search|
+        saved_searches_ids = user.saved_searches.inject([]) do |ar, saved_search|
           new_results = saved_search.fetch_new_results
-          hsh[saved_search.id] = new_results.size if new_results.size > 0
-          hsh
+          saved_search.update_column :new_results, new_results.size
+          ar << saved_search.id if new_results.present?
+          ar
         end
 
-        unless saved_searches_ids_results_hash.empty?
+        unless saved_searches_ids.empty?
           klass = @period == :daily ? WorkflowStep::SavedSearchWorkflow::Daily : WorkflowStep::SavedSearchWorkflow::Weekly
-          WorkflowStepJob.perform(klass, saved_searches_ids_results_hash)
+          WorkflowStepJob.perform(klass, saved_searches_ids)
         end
       end
     end
