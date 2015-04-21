@@ -21,13 +21,17 @@ class Locale < ActiveRecord::Base
   def self.remove_locale_from_url(url)
     url.sub!(DOMAIN_PATTERN) { $2 || '' }
     url.replace('/') if url.empty?
-    $1
+    url
   end
 
   def self.change_locale_in_url(url, new_locale)
     url.sub!(DOMAIN_PATTERN) { $2 || "/#{new_locale}" }
-    url.sub!('/', "/#{new_locale}") if url == '/'
-    $1
+    if url == '/'
+      url.sub!('/', "/#{new_locale}")
+    else
+       url = "/#{new_locale}" + url unless url =~ DOMAIN_PATTERN
+    end
+    url
   end
 
   def self.primary
