@@ -3,6 +3,7 @@ module CustomAttributes
     extend ActiveSupport::Concern
 
     included do
+      attr_accessor :skip_custom_attribute_validation
     end
 
     module ClassMethods

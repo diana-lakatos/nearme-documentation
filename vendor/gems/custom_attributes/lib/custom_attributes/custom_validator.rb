@@ -6,6 +6,7 @@ module CustomAttributes
     end
 
     def validate(record)
+      return true if record.skip_custom_attribute_validation
       record.custom_attributes.each do |array|
         name = array[CustomAttribute::NAME]
         type = array[CustomAttribute::ATTRIBUTE_TYPE]
