@@ -10,6 +10,7 @@ class LocaleService
 
     @primary_locale = instance.primary_locale
     @params_locale_exists = instance.locales.find_by(code: @params_locale.to_s)
+    @user_locale_exists = instance.locales.find_by(code: @user_locale.to_s)
 
     @redirect_url = nil
     @locale = nil
@@ -32,7 +33,7 @@ class LocaleService
   # 4) Redirect if @params_locale does not exist on instance
   # 5) Redirect if @params_locale is same as @primary_locale on instance
   def process
-    if @user_locale.present?
+    if @user_locale.present? && @user_locale_exists
       @locale = @user_locale
 
       if @params_locale.present? && @user_locale != @params_locale
@@ -61,14 +62,10 @@ class LocaleService
   end
 
   def url_without_locale
-    path = @requested_path
-    Locale.remove_locale_from_url(path)
-    path
+    Locale.remove_locale_from_url(@requested_path)
   end
 
   def url_with_locale(locale)
-    path = @requested_path
-    Locale.change_locale_in_url(path, locale.to_s)
-    path
+    Locale.change_locale_in_url(@requested_path, locale.to_s)
   end
 end
