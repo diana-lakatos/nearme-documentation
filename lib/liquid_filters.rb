@@ -9,6 +9,10 @@ module LiquidFilters
     end
   end
 
+  def in_groups_of(array, integer)
+    array.in_groups_of(integer)
+  end
+
   def location_path(transactable_type, location)
     Rails.application.routes.url_helpers.transactable_type_location_path(transactable_type.id, location.slug)
   end
