@@ -39,6 +39,7 @@ class Utils::DefaultAlertsCreator::UserMessageCreatorTest < ActionDispatch::Inte
       assert_contains "#{@user_message.author.first_name} wrote: \"#{ @user_message.body }\"", mail.html_part.body
       assert_equal [@user_message.recipient.email], mail.to
       assert_equal "[#{PlatformContext.current.decorate.name}] You received a message!", mail.subject
+      assert_not_contains 'Liquid error', mail.html_part.body
     end
 
     context 'sms' do

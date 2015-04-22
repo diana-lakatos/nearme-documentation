@@ -20,4 +20,8 @@ class WorkflowStep::UserMessageWorkflow::BaseStep < WorkflowStep::BaseStep
     { user_message: @user_message, user: @user_message.recipient }
   end
 
+  def transactable_type_id
+    @user_message.thread_context.try(:transactable_type_id)
+  end
+
 end
