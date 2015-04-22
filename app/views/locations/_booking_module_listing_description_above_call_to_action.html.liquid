@@ -1,0 +1,23 @@
+{% if listing.book_it_out_available? %}
+  <div class="book-it-out">
+    {{ 'reservations.booking_module.book_it_out' | translate }}
+    <input class="pull-right" name="book_it_out" type="checkbox" value="1">
+    <div class="price"><span>{{ listing.currency | currency_content_tag: 0.00,'span',rel: false }}</span></div>
+  </div>
+{% endif %}
+<div class="quantity">
+  <span class='resource' data-singular='{{listing.properties.listing_type}}' data-plural='{{ listing.properties.listing_type | pluralize }}'>{{listing.listing_type}}</span>
+  <select name='quantity' class="quantity">
+    {% for i in (1..listing.quantity) %}
+      <option value="{{i}}">{{i}}</option>
+    {% endfor %}
+  </select>
+</div>
+
+{% if listing.action_free_booking? %}
+  {% assign klass = ' hidden' %}
+{% endif %}
+<div class="price{{ klass }}">
+  {{ 'booking_module.total' | translate }}
+  {{ listing.currency | currency_content_tag: 0.00,'span',rel: false }}
+</div>

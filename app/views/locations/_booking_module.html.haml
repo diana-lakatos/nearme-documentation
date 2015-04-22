@@ -119,19 +119,8 @@
         .clearfix
 
         = render partial: 'locations/additional_charges', locals: { listing: listing }
-        -if listing.book_it_out_available?
-          .book-it-out
-            =t 'reservations.booking_module.book_it_out'
-            =check_box_tag 'book_it_out', '1', false, class: 'pull-right'
-            .price
-              %span #{currency_content_tag(listing.location.currency, 0.00, :span, { :rel => false })}
-        .quantity
-          %span.resource{:'data-singular' => listing.listing_type, :'data-plural' => listing.listing_type.try(:pluralize)}= listing.listing_type
-          = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
 
-        .price{class: "#{'hidden' if listing.action_free_booking?}"}
-          = t 'booking_module.total'
-          %span #{currency_content_tag(listing.location.currency, 0.00, :span, { :rel => false })}
+        = render partial: 'locations/booking_module_listing_description_above_call_to_action', locals: { listing: listing }
 
         .book
           - registration_url = new_user_registration_path(return_to: location_url(listing.location, listing, restore_reservations: true))

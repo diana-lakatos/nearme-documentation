@@ -31,6 +31,7 @@ class Utils::DefaultAlertsCreator::DataUploadCreatorTest < ActionDispatch::Integ
       assert_equal "[#{@platform_context.decorate.name}] Importing '#{@data_upload.csv_file_identifier}' has failed", mail.subject
       assert_equal [@data_upload.uploader.email], mail.to
       assert mail.html_part.body.include?("We were not able to import data")
+      assert_not_contains 'Liquid error:', mail.html_part.body
     end
 
     context 'finished data upload' do
@@ -91,6 +92,7 @@ class Utils::DefaultAlertsCreator::DataUploadCreatorTest < ActionDispatch::Integ
         assert_contains "Encountered validation errors log", mail.text_part.body
         assert_contains "Validation error for Transactable 3178: some error. Ignoring all children.", mail.text_part.body
         assert_contains "Validation error for Transactable 3179: another error. Ignoring all children.", mail.text_part.body
+        assert_not_contains 'Liquid error:', mail.html_part.body
 
       end
     end

@@ -42,6 +42,8 @@ class TransactableType < ActiveRecord::Base
   validate :availability_options_are_correct, unless: lambda { |transactable_type| transactable_type.buyable }
   validates_presence_of :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_percentage, if: lambda { |transactable_type| !transactable_type.buyable && transactable_type.enable_cancellation_policy }
   validates_inclusion_of :cancellation_policy_penalty_percentage, in: 0..100, allow_nil: true, message: 'must be between 0 and 100', if: lambda { |transactable_type| !transactable_type.buyable && transactable_type.enable_cancellation_policy }
+  validates_numericality_of :hours_to_expiration, :minimum_booking_minutes, :cancellation_policy_hours_for_cancellation,
+    :cancellation_policy_penalty_percentage, greater_than_or_equal_to: 0
 
   accepts_nested_attributes_for :availability_templates
 

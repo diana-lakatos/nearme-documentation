@@ -10,10 +10,6 @@ module Metadata
       delegate :populate_photos_metadata!, to: :location, :prefix => true
       delegate :populate_listings_metadata!, to: :creator, :prefix => true
 
-      def populate_listing_type_name_metadata!
-        update_metadata({ :listing_type_name => listing_type.try(:name) })
-      end
-
       def populate_photos_metadata!
         update_metadata({ :photos_metadata => build_photos_metadata_array })
         location_populate_photos_metadata!
