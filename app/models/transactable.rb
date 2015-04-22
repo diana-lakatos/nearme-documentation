@@ -157,6 +157,7 @@ class Transactable < ActiveRecord::Base
   monetize :weekly_price_cents, with_model_currency: :currency, allow_nil: true
   monetize :monthly_price_cents, with_model_currency: :currency, allow_nil: true
   monetize :fixed_price_cents, with_model_currency: :currency, allow_nil: true
+  monetize :exclusive_price_cents, with_model_currency: :currency, allow_nil: true
 
   # Defer to the parent Location for availability rules unless this Listing has specific
   # rules.
@@ -501,6 +502,10 @@ class Transactable < ActiveRecord::Base
 
   def book_it_out_available?
     schedule_booking? && transactable_type.action_book_it_out? && book_it_out_discount.to_i > 0
+  end
+
+  def exclusive_price_available?
+     transactable_type.action_exclusive_price? && exclusive_price > 0
   end
 
   def check_book_it_out_minimum_qty

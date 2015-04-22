@@ -5,6 +5,12 @@
     <div class="price"><span>{{ listing.currency | currency_content_tag: 0.00,'span',rel: false }}</span></div>
   </div>
 {% endif %}
+{% if listing.exclusive_price_available? %}
+  <div class="exclusive-price">
+    {{ 'reservations.booking_module.exclusive_price' | translate }}
+    <input class="pull-right" name="exclusive_price" type="checkbox" value="1">
+    <div class="price"><span>{{ listing.currency | currency_content_tag: listing.exclusive_price,'span',rel: false }}</span></div>
+{% endif %}
 <div class="quantity">
   <span class='resource' data-singular='{{listing.properties.listing_type}}' data-plural='{{ listing.properties.listing_type | pluralize }}'>{{listing.listing_type}}</span>
   <select name='quantity' class="quantity">

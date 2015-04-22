@@ -53,6 +53,13 @@
           =t('simple_form.labels.listings.price')
       .col-md-9
         = render 'price_field', :f => f, :price => 'fixed', :label => t("simple_form.labels.transactable.price.fixed"), :include_checkbox => false
+    - if form_fields.find{ |h| h['transactable'] == 'exclusive_price' }
+      %div.row
+        .col-md-3
+          = f.label :exclusive_price, :exclusive_price, :class => 'control-label flush-top' do
+            =t('simple_form.labels.listings.exclusive_price')
+        .col-md-9
+          = render 'price_field', :f => f, :price => 'exclusive', :label => t("simple_form.labels.transactable.price.exclusive_price"), :include_checkbox => false
     - if form_fields.find{ |h| h['transactable'] == 'book_it_out' }
       %div.row.price_container
         =f.input :book_it_out_discount

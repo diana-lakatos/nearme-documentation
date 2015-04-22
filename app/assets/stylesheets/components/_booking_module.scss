@@ -385,8 +385,7 @@
       }
     }
 
-    .book-it-out {
-      display: none;
+    .book-it-out, .exclusive-price {
       width: 100%;
 
       input#book_it_out {
@@ -397,6 +396,10 @@
         margin-top: 0px;
         margin-bottom: 50px;
       }
+    }
+
+    .book-it-out {
+      display: none;
     }
 
     .recurring_select {

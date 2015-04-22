@@ -31,6 +31,9 @@ module ListingsHelper
         book_it_out_discount: listing.book_it_out_discount,
         book_it_out_minimum_qty: listing.book_it_out_minimum_qty
       }) if listing.book_it_out_available?
+      base_data.merge!({
+        exclusive_price_cents: listing.exclusive_price_cents
+      }) if listing.exclusive_price_available?
     else
       first_date = listing.first_available_date
       second_date = listing.second_available_date

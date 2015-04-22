@@ -1313,6 +1313,7 @@ ActiveRecord::Schema.define(version: 20150420154725) do
     t.integer  "hours_to_expiration",                           default: 24,        null: false
     t.integer  "minimum_booking_minutes",                       default: 60
     t.integer  "book_it_out_discount"
+    t.integer  "exclusive_price_cents"
   end
 
   add_index "reservations", ["administrator_id"], name: "index_reservations_on_administrator_id", using: :btree
@@ -2787,6 +2788,7 @@ ActiveRecord::Schema.define(version: 20150420154725) do
     t.text     "allowed_currencies"
     t.string   "default_country"
     t.text     "allowed_countries"
+    t.boolean  "action_exclusive_price",                                             default: false
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -2835,6 +2837,7 @@ ActiveRecord::Schema.define(version: 20150420154725) do
     t.integer  "minimum_booking_minutes",        default: 60
     t.integer  "book_it_out_discount"
     t.integer  "book_it_out_minimum_qty"
+    t.integer  "exclusive_price_cents",          default: 0
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree

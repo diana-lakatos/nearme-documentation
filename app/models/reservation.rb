@@ -63,6 +63,7 @@ class Reservation < ActiveRecord::Base
   validate :validate_all_dates_available, on: :create, :if => lambda { listing }
   validate :validate_booking_selection, on: :create, :if => lambda { listing }
   validate :validate_book_it_out, on: :create, :if => lambda { listing && !book_it_out_discount.to_i.zero? }
+  validate :validate_exclusive_price, on: :create, :if => lambda { listing && !exclusive_price_cents.to_i.zero? }
 
   before_create :set_hours_to_expiration, if: lambda { listing }
   before_create :set_costs, :if => lambda { listing }
@@ -109,6 +110,7 @@ class Reservation < ActiveRecord::Base
   monetize :service_fee_amount_guest_cents, with_model_currency: :currency
   monetize :service_fee_amount_host_cents, with_model_currency: :currency
   monetize :successful_payment_amount_cents, with_model_currency: :currency
+  monetize :exclusive_price_cents, with_model_currency: :currency, allow_nil: true
 
   state_machine :state, initial: :unconfirmed do
     after_transition unconfirmed: :confirmed, do: :attempt_payment_capture, if: lambda { |r| r.billing_authorization.present? }
@@ -577,6 +579,12 @@ class Reservation < ActiveRecord::Base
     end
     unless listing.book_it_out_available? || quantity < listing.book_it_out_minimum_qty
       errors.add(:base, I18n.t('reservations_review.errors.book_it_out_not_available'))
+    end
+  end
+
+  def validate_exclusive_price
+    unless listing.exclusive_price_available?
+      errors.add(:base, I18n.t('reservations_review.errors.exclusive_price_not_available'))
     end
   end
 
