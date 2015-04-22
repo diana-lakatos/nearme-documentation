@@ -117,9 +117,6 @@ section.listings {
       > h3 {
         display: block;
 
-        @media (max-width: $booking-module-breakpoint) {
-          display: none;
-        }
       }
     }
 
@@ -160,17 +157,9 @@ section.listings {
         }
       }
 
-      @media (max-width: $booking-module-breakpoint) {
-        display: none;
-      }
     }
 
     @media (max-width: $booking-module-breakpoint) {
-      @include box-sizing(border-box);
-      @include border-radius($border-radius-default);
-      background: $gray240;
-      border: 1px solid $gray210;
-      padding: 12px;
 
       &.amenities-shown {
         padding-bottom: 0;

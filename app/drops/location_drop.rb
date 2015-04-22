@@ -101,4 +101,8 @@ class LocationDrop < BaseDrop
   def default_title
     [location.company.name, location.suburb, location.city, location.country == "United States" ? location.state_code : location.country].reject(&:blank?).join(' - ')
   end
+
+  def amenities
+    @location.amenities.order('name ASC').pluck(:name)
+  end
 end
