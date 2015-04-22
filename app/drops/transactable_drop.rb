@@ -70,4 +70,8 @@ class TransactableDrop < BaseDrop
     routes.new_listing_user_message_path(@listing)
   end
 
+  def amenities
+    @listing.amenities.order('name ASC').pluck(:name)
+  end
+
 end
