@@ -24,7 +24,6 @@ class SecuredParams
       :description,
       :price,
       :quantity,
-      :taxon_ids,
       :shippo_enabled,
       :weight,
       :depth,
@@ -39,6 +38,7 @@ class SecuredParams
       :action_rfq,
       :possible_manual_payment,
       image_ids: [],
+      category_ids: [],
       company_address_attributes: nested(self.address),
       images_attributes: nested(self.spree_image),
       document_requirements_attributes: nested(self.document_requirement),
@@ -178,22 +178,6 @@ class SecuredParams
     ]
   end
 
-  def taxonomy
-    [
-      :name
-    ]
-  end
-
-  def taxon
-    [
-      :name,
-      :in_top_nav,
-      :top_nav_position,
-      :parent_id,
-      :child_index
-    ]
-  end
-
   def category
     [
       :name,
@@ -201,7 +185,10 @@ class SecuredParams
       :top_nav_position,
       :parent_id,
       :child_index,
-      :multiple_root_categries
+      :multiple_root_categories,
+      :search_options,
+      :display_options,
+      :mandatory
     ]
   end
 
@@ -548,7 +535,6 @@ class SecuredParams
       :action_book_it_out,
       :action_exclusive_price,
       :action_price_per_unit,
-      :multiple_root_categries,
       :skip_location,
       :default_currency,
       :bookable_noun, :lessor, :lessee, :action_schedule_booking,
@@ -658,8 +644,7 @@ class SecuredParams
       :meta_keywords,
       :meta_description,
       :shipping_category_attributes => nested(self.spree_shipping_category),
-      option_type_ids: [],
-      taxon_ids: []
+      option_type_ids: []
     ]
   end
 

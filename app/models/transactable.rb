@@ -121,10 +121,11 @@ class Transactable < ActiveRecord::Base
 
   # == Callbacks
   before_validation :set_activated_at, :set_enabled, :nullify_not_needed_attributes
+  after_save :set_external_id
+  after_save { self.update_column(:opened_on_days, availability.days_open.sort) }
 
   # == Validations
   validates_with PriceValidator
-  validate :check_book_it_out_minimum_qty, if: ->(record) { record.book_it_out_minimum_qty.present? }
 
   validates :book_it_out_minimum_qty, numericality: {greater_than_or_equal_to: 0}, allow_blank: true
   validates :book_it_out_discount, numericality: {greater_than: 0, less_than: 100}, allow_blank: true
@@ -135,8 +136,14 @@ class Transactable < ActiveRecord::Base
   validates :quantity, presence: true
   validates :quantity, numericality: {greater_than: 0}
 
-  after_save :set_external_id
-  after_save { self.update_column(:opened_on_days, availability.days_open.sort) }
+  validate :check_book_it_out_minimum_qty, if: ->(record) { record.book_it_out_minimum_qty.present? }
+  validate :validate_mandatory_categories
+
+  def validate_mandatory_categories
+    transactable_type.categories.mandatory.each do |mandatory_category|
+      errors.add(mandatory_category.name, I18n.t('errors.messages.blank')) if common_categories(mandatory_category).blank?
+    end
+  end
 
   # == Helpers
   include Listing::Search
@@ -170,6 +177,14 @@ class Transactable < ActiveRecord::Base
     else
       super # See: AvailabilityRule::TargetHelper#availability
     end
+  end
+
+  def category_ids=ids
+    super(ids.map {|e| e.gsub(/\[|\]/, '').split(',')}.flatten.compact)
+  end
+
+  def common_categories(category)
+    categories & category.descendants
   end
 
   # Trigger clearing of all existing availability rules on save

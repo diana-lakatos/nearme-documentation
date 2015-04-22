@@ -97,16 +97,8 @@
     - when *@transactable_type.categories.roots.map { |c| "Category - #{c.name}" }
       - category_name = field.split(" - ")[1]
       - category = @transactable_type.categories.roots.where(name: category_name).first
-      -if category.present?
-        = content_tag :div, id: "category_#{category.id}_tree_content" do
-          = hidden_field_tag "single_choice_category", category.multiple_root_categries == true, class: 'single_choice_category'
-          .row
-            .col-md-3
-              = f.label :categories, category_name
-            .col-md-9
-              #ajax_error{style: 'display: none;'}
-              .category_tree
-              .category_tree_inputs
+      = render partial: 'shared/category', locals: { category: category, f: f, categorable: @transactable_type }
+
     - else
       - if custom_attribute_names.include?(field)
         - @transactable_type.custom_attributes.each do |attribute|
@@ -123,6 +115,7 @@
 
   var selected_categories = #{raw @transactable.category_ids.to_json}
   var display_categories = #{raw @transactable_type.categories.roots.map(&:id).to_json}
+  var autocomplete_categories_path = "#{dashboard_api_categories_path}"
   var categories_path = "#{transactable_type_categories_path(@transactable_type)}"
   var jstree_theme_path = "#{stylesheet_path("instance_admin/jstree_themes/apple/style.css")}";
   var category_input_name = "transactable[category_ids][]"

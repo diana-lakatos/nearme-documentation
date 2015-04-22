@@ -195,3 +195,26 @@ class Search.Controller
   autocompleteEnabled: ->
     @queryField.data('disable-autocomplete') == undefined
 
+  responsiveCategoryTree: ->
+    if $("#category-tree").length > 0
+      $(window).resize =>
+        @categoryTreeInit()
+      @categoryTreeInit()
+
+  categoryTreeInit: ->
+
+    if ($(window).width() < 767)
+      $(".categories-list").hide()
+      $(".nav-heading input:checked").parents('.nav-heading').next().show()
+      $(".nav-heading input").on 'change', (event) ->
+        $(".nav-heading input:not(:checked)").parents('.nav-heading').next().hide('slow')
+        $(".nav-heading input:not(:checked)").parents('.nav-heading').next().find('input:checkbox').prop('checked', false);
+        $(".nav-heading input:checked").parents('.nav-heading').next().show('slow')
+    else
+      $(".nav-heading input").parents('.nav-heading').next().show()
+      $(".nav-heading input").unbind 'change'
+
+    $(".nav-item input[type='checkbox'").on 'change', (event) ->
+      if $(event.target).prop('checked')
+        $(event.target).parents('ul').prev().find('input:checked').prop('checked', false)
+

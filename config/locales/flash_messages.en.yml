@@ -41,9 +41,6 @@ en:
       zone_added: 'Zone added.'
       zone_updated: 'Zone updated.'
       zone_deleted: 'Zone deleted.'
-      taxonomy_added: 'Taxonomy added.'
-      taxonomy_updated: 'Taxonomy updated.'
-      taxonomy_deleted: 'Taxonomy deleted.'
       taxon_updated: 'Taxon updated.'
       no_payment_gateway: 'The seller does not support payments for the selected country.'
     user_blog:
@@ -102,7 +99,7 @@ en:
           created: 'Category group created.'
           updated: 'Category group updated.'
           deleted: 'Category group deleted.'
-          renamed: 'Remember to reconfigure form component with new name!'
+          renamed: 'Remember to reconfigure form component with new name and adjust translations!'
         sms_templates:
           created: 'Sms template has been created.'
           deleted: 'Sms template has been deleted.'

@@ -1,0 +1,29 @@
+= render 'forms/product_form', f: f
+= render 'custom_attributes', f: f
+
+.row.product_shipping_profile_fields_row.enabled{ :data => { :js_element_identifier => 'initial_shipping_profiles_section' } }
+  .row.shipping_method_block.shipping_method_list
+    = render 'shipping_profiles_list', f: f
+  .row.text-right
+    %a.shipping-profile-top.add_shipping_profile{ :data => { modal: true, href: new_dashboard_shipping_category_path, 'modal-class' => 'shipping_profiles_modal' } }
+      =image_tag("themes/buy_sell/icon-cross.png")
+      %span
+        = t('manage.buy_sell.shipping_profiles.add_new_shipping_profile')
+
+.submit-bar
+  = link_to dashboard_company_product_type_products_path(@product_type) do
+    .btn.gray= t('cancel')
+  = f.submit "Save item", class: "btn medium blue"
+
+- content_for :domready do
+  new Dashboard.AddressController($("#product_form"));
+  var boarding_form = new BoardingForm($("#product_form"));
+  new ShippoFieldsManager(#{raw DimensionsTemplate::UNITS_OF_MEASURE.to_json});
+
+  var selected_categories = #{raw @product.category_ids.to_json}
+  var display_categories = #{raw @product_type.categories.roots.map(&:id).to_json}
+  var categories_path = "#{product_type_categories_path(@product_type)}"
+  var autocomplete_categories_path = "#{dashboard_api_categories_path}"
+  var jstree_theme_path = "#{stylesheet_path("instance_admin/jstree_themes/apple/style.css")}";
+  var category_input_name = "product_form[category_ids][]"
+  new CategoriesController($('#product_form'));

@@ -6,8 +6,6 @@ class SearchController < ApplicationController
 
   before_filter :theme_name
   before_filter :find_transactable_type
-  before_filter :set_taxonomies
-  before_filter :set_taxon_breadcrumb
 
   helper_method :searcher, :result_view, :current_page_offset, :per_page, :first_result_page?
 
@@ -28,8 +26,7 @@ class SearchController < ApplicationController
       @categories_html << render_to_string(
         partial: 'search/mixed/filter',
         locals: {
-          header_name: 'Category',
-          header_object: category,
+          header_name: category.translated_name,
           selected_values: params[:category_ids].split(',') || [],
           input_name: 'category_ids[]',
           options: category.children.inject([]) { |options, c| options << [c.id, c.name]}
@@ -80,29 +77,5 @@ class SearchController < ApplicationController
     @theme_name = 'buy-sell-theme' if params[:buyable] == "true"
   end
 
-  def set_taxonomies
-    @taxon = Spree::Taxon.where.not(parent_id: nil).find_by_permalink(params[:taxon]) if params[:taxon]
-    if @taxon.present?
-      @taxons = [@taxon.children.present? ? @taxon : @taxon.parent]
-    else
-      @taxons = Spree::Taxonomy.includes(root: :children).map(&:root)
-      params[:taxon] = nil if @taxon.blank?
-    end
-  end
-
-  def set_taxon_breadcrumb
-    if @taxon
-      @breadcrumbs = []
-      add_taxon_breadcrumbs (@taxon)
-      @breadcrumbs.reverse.each do |breadcrumb|
-        add_crumb breadcrumb[:name], breadcrumb[:path]
-      end
-    end
-  end
-
-  def add_taxon_breadcrumbs(taxon)
-    @breadcrumbs << { name: taxon.name, path: taxon_custom_path(taxon) }
-    add_taxon_breadcrumbs(taxon.parent) if taxon.parent
-  end
 end
 

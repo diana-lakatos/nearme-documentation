@@ -6,6 +6,8 @@ Spree::Product.class_eval do
 
   has_many :line_items, through: :variants
   has_many :orders, through: :line_items
+  has_many :categories_products, foreign_key: 'spree_product_id'
+  has_many :categories, through: :categories_products
 
   belongs_to :instance
   belongs_to :user

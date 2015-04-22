@@ -730,7 +730,7 @@ header#listing_search {
 
 /*** Listing View ***/
 section.search section#category-tree {
-  margin-top: 120px;
+  margin-top: 145px;
 
   label {
     display: inline-block;
@@ -743,7 +743,7 @@ section.search section#category-tree {
   }
   .nav-item {
     input {
-      margin-left: 20px;
+      margin-left: 15px;
     }
 
     a {
@@ -751,6 +751,9 @@ section.search section#category-tree {
       color: #858585;
       font-weight: 300;
       padding-left: 2px;
+    }
+    .categories-list {
+      margin-left: 15px;
     }
   }
 
@@ -914,20 +917,6 @@ section.search section#results.list {
 }
 
 /*** End Listing View ***/
-
-/*** Products List View ***/
-nav.taxons_tree_products_list {
-  margin-top: 100px;
-
-  @media (max-width: $iphone-landscape) {
-    margin-top: 25px;
-    margin-bottom: 10px;
-  }
-  @media (max-width: $ipad-width) {
-    margin-top: 25px;
-    margin-bottom: 10px;
-  }
-}
 
 section.search {
   header.products_list {

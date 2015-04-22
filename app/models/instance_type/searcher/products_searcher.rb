@@ -24,10 +24,6 @@ class InstanceType::Searcher::ProductsSearcher
     @query ||= search.query
   end
 
-  def taxon
-    @taxon ||= Spree::Taxon.find_by!(permalink: search.taxon) unless search.taxon.blank?
-  end
-
   def search
     @search ||= Spree::Product::Search::Params::Web.new(@params)
   end
@@ -37,8 +33,8 @@ class InstanceType::Searcher::ProductsSearcher
       begin
         @search_params = @params.merge({
           query: search.query,
-          taxon: search.taxon,
           custom_attributes: search.lg_custom_attributes,
+          category_ids: search.category_ids,
           sort: search.sort
         })
 
@@ -64,4 +60,11 @@ class InstanceType::Searcher::ProductsSearcher
     @params[:query].present?
   end
 
+  def input_value(input_name)
+    @params[input_name]
+  end
+
+  def category_ids
+    input_value(:category_ids).try { |ids| ids.split(',') } || []
+  end
 end

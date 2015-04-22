@@ -7,3 +7,5 @@
         - @product_type.custom_attributes.each do |attribute|
           - next if platform_context.instance.user_based_marketplace_views? && ( attribute.name == 'quantity' || attribute.name == 'capacity' )
           = draw_attribute_for_form(attribute, properties_form) if field.to_sym == attribute.name.to_sym
+        - if (category = @product_type.categories.roots.where(name: field.split(" - ")[1]).first).present?
+          = render partial: 'shared/category', locals: { category: category, f: f, categorable: @product_type }

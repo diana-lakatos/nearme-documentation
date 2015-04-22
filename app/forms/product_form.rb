@@ -1,8 +1,11 @@
 class ProductForm < Form
 
-  attr_accessor :all_shipping_categories, :document_requirements, :upload_obligation
+  # ACCESSORS
 
+  attr_accessor :all_shipping_categories, :document_requirements, :upload_obligation
   attr_reader :product
+
+  # VALIDATIONS
 
   validates :name, presence: true, length: {minimum: 3}
   validates :price, presence: true, numericality: { greater_than: 0 }, unless: lambda { |f| @product.action_rfq? }
@@ -14,7 +17,6 @@ class ProductForm < Form
   validates_presence_of :width, :if => :shippo_enabled
   validates_presence_of :height, :if => :shippo_enabled
   validates_presence_of :shipping_category_id, :unless => :shippo_enabled
-  validate :label_and_description_cannot_be_empty
   validate do
     unless product.valid?
       self.errors.add(:product)
@@ -23,12 +25,43 @@ class ProductForm < Form
 
   validate :label_and_description_cannot_be_empty
 
-  def_delegators :@product, :id, :price, :price=, :name, :name=, :description, :id=, :description=,
+  def label_and_description_cannot_be_empty
+    if @document_requirements.present?
+      @document_requirements.each do |document_requirement|
+        [:label, :description].each do |field|
+          if document_requirement.try(field).empty?
+            self.errors.add(:base, "#{field}_empty".to_sym)
+            document_requirement.errors.add(field.to_sym, :empty)
+          end
+        end
+      end
+    end
+  end
+
+  validate :validate_mandatory_categories
+
+  def validate_mandatory_categories
+    @product.product_type.categories.mandatory.each do |mandatory_category|
+      errors.add(mandatory_category.name, I18n.t('errors.messages.blank')) if common_categories(mandatory_category).blank?
+    end
+  end
+
+  # DELEGATORS
+
+  def_delegators :@product, :id, :price, :categories, :category_ids, :price=, :name, :name=, :description, :id=, :description=,
     :shippo_enabled=, :shippo_enabled, :possible_manual_payment, :possible_manual_payment=, :action_rfq, :action_rfq=, :draft?, :draft=, :draft, :extra_properties, :extra_properties=
 
   def_delegators :'@product.master', :weight_unit, :weight_unit=, :height_unit, :height_unit=,
     :width_unit, :width_unit=, :depth_unit, :depth_unit=,
     :unit_of_measure, :unit_of_measure=
+
+  def common_categories(category)
+    categories & category.descendants
+  end
+
+  def category_ids=ids
+    @product.category_ids= ids.map {|e| e.gsub(/\[|\]/, '').split(',')}.flatten.compact
+  end
 
   def shipping_category_id=(id)
     shipping_category = @company.shipping_categories.where(:id => id).first
@@ -77,19 +110,6 @@ class ProductForm < Form
     @product.master.depth_user
   end
 
-  def label_and_description_cannot_be_empty
-    if @document_requirements.present?
-      @document_requirements.each do |document_requirement|
-        [:label, :description].each do |field|
-          if document_requirement.try(field).empty?
-            self.errors.add(:base, "#{field}_empty".to_sym)
-            document_requirement.errors.add(field.to_sym, :empty)
-          end
-        end
-      end
-    end
-  end
-
   def quantity
     @quantity ||= @stock_item.stock_movements.sum(:quantity)
   end
@@ -97,14 +117,6 @@ class ProductForm < Form
   def quantity=new_quantity
     @stock_item.stock_movements.build stock_item: @stock_item, quantity: new_quantity.to_i - quantity
     @quantity = new_quantity.to_i
-  end
-
-  def taxon_ids
-    @product.taxon_ids.join(",")
-  end
-
-  def taxon_ids=(taxon_ids)
-    @product.taxon_ids = taxon_ids.split(",")
   end
 
   def image_ids=(image_ids)
@@ -184,10 +196,6 @@ class ProductForm < Form
     @shipping_category.try(:save!, validate: !draft?)
   end
 
-  def category=(taxon_ids)
-    @product.taxon_ids = taxon_ids.split(",")
-  end
-
   def images_attributes=(attributes)
     attributes.each do |key, images_attributes|
       image = @product.images.where(id: images_attributes["id"]).first
@@ -216,7 +224,6 @@ class ProductForm < Form
   end
 
   def assign_all_attributes
-    @category = @product.taxons.map(&:id).join(",")
     @price = @product.price
     build_document_requirements if PlatformContext.current.instance.documents_upload_enabled?
   end

@@ -111,6 +111,8 @@ class @InstanceAdmin.CategoriesController
       dataType: "json",
       url: url.toString(),
       data: {_method: "put", "category[name]": name },
+      success: (data,result) ->
+        alert(data["message"])
       error: @handleAjaxError
 
 

@@ -606,3 +606,22 @@ form:not(.no_inheritance) {
   }
 }
 
+.select2-container {
+  width:100%;
+
+  input.select2-input:focus {
+    border: none !important;
+  }
+}
+
+
+.error {
+
+  .select2-container, .category_tree a {
+    border: solid #ec8473 1px !important; //TODO remove important here
+    input, textarea {
+      border: none !important;
+    }
+
+  }
+}

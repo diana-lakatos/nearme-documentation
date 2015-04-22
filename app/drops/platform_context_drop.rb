@@ -46,10 +46,14 @@ class PlatformContextDrop < BaseDrop
 
   def all_transactables
     transactable_types.services + product_types
-  end  
+  end
 
-  def all_categories
-    transactable_types.services.map{ |t| t.categories.roots }.flatten
+  def service_categories
+    transactable_types.services.map{ |t| t.categories.searchable.roots }.flatten
+  end
+
+  def product_categories
+    product_types.map{ |t| t.categories.searchable.roots }.flatten
   end
 
   def multiple_transactable_types?
