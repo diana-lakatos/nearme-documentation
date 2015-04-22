@@ -44,6 +44,11 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
     end
   end
 
+  def void(billing_authorization)
+    set_active_merchant_mode(billing_authorization)
+    @gateway.void(billing_authorization.token)
+  end
+
   def refund(amount, payment, charge)
     @refund = Refund.create(
       amount: amount,
@@ -138,6 +143,8 @@ class Billing::Gateway::Processor::Incoming::Base < Billing::Gateway::Processor:
         mode = :test
       end
       ActiveMerchant::Billing::Base.mode = mode
+    elsif payable.is_a?(BillingAuthorization)
+      ActiveMerchant::Billing::Base.mode = payable.payment_gateway_mode.to_sym
     else
       ActiveMerchant::Billing::Base.mode = :test if @instance.test_mode?
     end
