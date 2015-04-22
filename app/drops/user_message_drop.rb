@@ -1,7 +1,7 @@
 class UserMessageDrop < BaseDrop
 
   attr_reader :user_message
-  delegate :body, to: :user_message
+  delegate :body, :thread_context, to: :user_message
 
   def initialize(user_message)
     @user_message = user_message.decorate
@@ -28,3 +28,4 @@ class UserMessageDrop < BaseDrop
   end
 
 end
+
