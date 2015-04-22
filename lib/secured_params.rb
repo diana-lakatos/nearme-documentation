@@ -545,6 +545,7 @@ class SecuredParams
       :max_monthly_price,
       :action_book_it_out,
       :action_exclusive_price,
+      :action_price_per_unit,
       :multiple_root_categries,
       :skip_location,
       :default_currency,

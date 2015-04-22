@@ -21,7 +21,10 @@
         - if listing.schedule_booking?
           %span.label
             = "#{listing.price_with_currency(:fixed_price)}"
-            %span.period= t('reservations.booking_module.fixed')
+            - if listing.price_per_unit?
+              %span.period= t('reservations.booking_module.per_unit')
+            -else
+              %span.period= t('reservations.booking_module.fixed')
         - else
           %ul.pricing-tabs.nav.nav-tabs{:'data-pricing-tabs' => true}
             - if listing.action_free_booking?

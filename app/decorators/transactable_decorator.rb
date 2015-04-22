@@ -44,4 +44,8 @@ class TransactableDecorator < Draper::Decorator
     end
   end
 
+  def price_per_unit?
+    self.transactable_type.action_price_per_unit?
+  end
+
 end

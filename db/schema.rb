@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150420154725) do
+ActiveRecord::Schema.define(version: 20150422160658) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1288,7 +1288,7 @@ ActiveRecord::Schema.define(version: 20150420154725) do
     t.boolean  "create_charge"
     t.string   "payment_method",                                default: "manual",  null: false
     t.string   "payment_status",                                default: "unknown", null: false
-    t.integer  "quantity",                                      default: 1,         null: false
+    t.float    "quantity",                                      default: 1.0,       null: false
     t.integer  "service_fee_amount_guest_cents"
     t.string   "rejection_reason"
     t.integer  "service_fee_amount_host_cents",                 default: 0,         null: false
@@ -2789,6 +2789,7 @@ ActiveRecord::Schema.define(version: 20150420154725) do
     t.string   "default_country"
     t.text     "allowed_countries"
     t.boolean  "action_exclusive_price",                                             default: false
+    t.boolean  "action_price_per_unit",                                              default: false
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

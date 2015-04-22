@@ -698,6 +698,8 @@ en:
       exclusive_price: 'Exclusive Price'
       pick_fixed_date: 'Select a date'
       suggest_date: 'What time works best for you?'
+      per_unit: 'Per Unit'
+      number_of_units: 'Number Of Units'
   search:
     list:
       additional_social_connections:

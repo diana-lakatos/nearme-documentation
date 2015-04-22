@@ -25,7 +25,8 @@ module ListingsHelper
     }
     if listing.schedule_booking?
       base_data.merge!({
-        fixed_price_cents: listing.fixed_price_cents
+        fixed_price_cents: listing.fixed_price_cents,
+        action_price_per_unit: listing.transactable_type.action_price_per_unit
       })
       base_data.merge!({
         book_it_out_discount: listing.book_it_out_discount,

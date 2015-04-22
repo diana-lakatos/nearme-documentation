@@ -345,6 +345,21 @@
       }
     }
 
+    .number-of-units {
+
+      input {
+        clear: none;
+        max-width: 88px;
+        float: right;
+        text-align: center;
+      }
+
+      span {
+        float: left;
+        margin: 15px 0px;
+      }
+    }
+
     .quantity {
       position: relative;
       display: block;
@@ -376,6 +391,7 @@
     }
 
     .price {
+      clear: both;
       margin: 15px 0px;
       @include background-clip(border-box);
       text-align: left;

@@ -213,7 +213,7 @@ class Transactable < ActiveRecord::Base
         start_minute = occurence.to_datetime.min.to_i + (60 * occurence.to_datetime.hour.to_i)
         availability = self.quantity - desks_booked_on(occurence.to_datetime, start_minute, start_minute)
         if availability > 0
-          occurences[occurence.to_datetime.to_i.to_s] = { date: occurence, availability: availability }
+          occurences[occurence.to_datetime.to_i.to_s] = { date: occurence, availability: availability.to_i }
         end
       end
       break if occurences.count == number_of_occurrences || occurence.nil? || checks_to_be_performed.zero?
@@ -333,6 +333,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def available_on?(date, quantity=1, start_min = nil, end_min = nil)
+    quantity = 1 if transactable_type.action_price_per_unit?
     availability_for(date, start_min, end_min) >= quantity
   end
 

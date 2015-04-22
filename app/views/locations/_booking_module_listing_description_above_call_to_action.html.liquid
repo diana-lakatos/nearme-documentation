@@ -9,16 +9,27 @@
   <div class="exclusive-price">
     {{ 'reservations.booking_module.exclusive_price' | translate }}
     <input class="pull-right" name="exclusive_price" type="checkbox" value="1">
-    <div class="price"><span>{{ listing.currency | currency_content_tag: listing.exclusive_price,'span',rel: false }}</span></div>
+    <div class="price"><span>{{ listing.currency | currency_content_tag: listing.exclusive_price, 'span',rel: false }}</span></div>
+  </div>
 {% endif %}
-<div class="quantity">
-  <span class='resource' data-singular='{{listing.properties.listing_type}}' data-plural='{{ listing.properties.listing_type | pluralize }}'>{{listing.listing_type}}</span>
-  <select name='quantity' class="quantity">
-    {% for i in (1..listing.quantity) %}
-      <option value="{{i}}">{{i}}</option>
-    {% endfor %}
-  </select>
-</div>
+{% if listing.price_per_unit? %}
+  <div class="number-of-units">
+    <span>
+      {{ 'reservations.booking_module.number_of_units' | translate }}
+    </span>
+    <input type="text" name="quantity" id="quantity" class="quantity" value="1"/>
+  </div>
+{% else %}
+  <div class="quantity">
+    <span class='resource' data-singular='{{listing.properties.listing_type}}' data-plural='{{ listing.properties.listing_type | pluralize }}'>{{listing.listing_type}}</span>
+    <select name='quantity' class="quantity">
+      {% for i in (1..listing.quantity) %}
+        <option value="{{i}}">{{i}}</option>
+      {% endfor %}
+    </select>
+  </div>
+{% endif %}
+
 
 {% if listing.action_free_booking? %}
   {% assign klass = ' hidden' %}

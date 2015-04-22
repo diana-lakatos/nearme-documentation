@@ -141,6 +141,7 @@ en:
           monthly: 'month'
           hourly: 'hour'
           exclusive_price: 'full quantity'
+          per_unit: "per unit"
         book_it_out_minimum_qty: "Book It Out minimum quantity"
         book_it_out_discount: "Book It Out discount"
       transactable_type:

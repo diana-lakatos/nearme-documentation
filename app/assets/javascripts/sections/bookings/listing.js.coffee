@@ -66,6 +66,9 @@ class @Bookings.Listing
   isReservedDaily: ->
     @data.action_daily_booking
 
+  isPerUnitBooking: ->
+    @data.action_price_per_unit
+
   # Returns whether the date is within the bounds available for booking
   dateWithinBounds: (date) ->
     time = date.getTime()
@@ -126,6 +129,8 @@ class @Bookings.Listing
   priceCalculator: ->
     if @isReservedHourly()
       new Bookings.PriceCalculator.HourlyPriceCalculator(this)
+    else if @isPerUnitBooking()
+      new Bookings.PriceCalculator.PerUnitPriceCalculator(this)
     else if @isFixedBooking()
       new Bookings.PriceCalculator.FixedPriceCalculator(this)
     else

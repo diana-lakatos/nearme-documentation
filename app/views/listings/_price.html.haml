@@ -5,7 +5,16 @@
         %abbr{:title => "required"}= t('simple_form.required.mark')
         =t('simple_form.labels.listings.price')
       .controls
-        = render 'listings/price_field', :f => f, :price => 'fixed', :label => t("simple_form.labels.transactable.price.fixed"), :include_checkbox => false
+        -if f.object.transactable_type.action_price_per_unit?
+          = render 'listings/price_field', :f => f, :price => 'fixed', :label => t("simple_form.labels.transactable.price.per_unit"), :include_checkbox => false
+        -else
+          = render 'listings/price_field', :f => f, :price => 'fixed', :label => t("simple_form.labels.transactable.price.fixed"), :include_checkbox => false
+    - if form_fields.find{ |h| h['transactable'] == 'exclusive_price' }
+      %div.control-group
+      = f.label :exclusive_price, :price, :class => 'control-label flush-top' do
+        =t('simple_form.labels.listings.exclusive_price')
+      .controls
+        = render 'listings/price_field', :f => f, :price => 'exclusive', :label => t("simple_form.labels.transactable.price.exclusive_price"), :include_checkbox => false
     - if form_fields.find{ |h| h['transactable'] == 'book_it_out' }
       %div.price_container
         =f.input :book_it_out_discount, label: t('simple_form.labels.transactable.book_it_out_discount'), hint: t('simple_form.hints.transactable.book_it_out_discount')

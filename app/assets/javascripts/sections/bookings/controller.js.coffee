@@ -36,7 +36,7 @@ class Bookings.Controller
 
   # Bind to the various DOM elements managed by this controller.
   bindDomElements: ->
-    @quantityField = @container.find('select.quantity')
+    @quantityField = @container.find('[name=quantity].quantity')
     @bookItOutContainer = @container.find('.book-it-out')
     @bookItOutCheck = @container.find('input#book_it_out')
     @exclusivePriceContainer = @container.find('.exclusive-price')
@@ -84,20 +84,18 @@ class Bookings.Controller
       else
         @rfqBooking()
 
-    @quantityField.on 'change', (event) =>
+    @quantityField.on 'change paste keyup', (event) =>
       @quantityWasChanged()
 
     @additionalCharges.on 'change', (event) =>
       @delayedUpdateBookingStatus()
       @updateCharges()
 
-    if @listing.bookItOutAvailable()
-      @bookItOutContainer.on 'change','input', (event) =>
-        @bookItOut(event.target)
+    @bookItOutContainer.on 'change','input', (event) =>
+      @bookItOut(event.target)
 
-    if @listing.exclusivePriceAvailable()
-      @exclusivePriceCheck.on 'change', (event) =>
-        @exclusivePrice()
+    @exclusivePriceCheck.on 'change', (event) =>
+      @exclusivePrice()
 
     if @listing.withCalendars()
       @datepicker.bind 'datesChanged', (dates) =>
@@ -157,8 +155,9 @@ class Bookings.Controller
     @rfqButton.addClass('click-disabled').find('span.text').text('Requesting...')
 
   quantityWasChanged: (quantity = @quantityField.val())->
-    @listing.setDefaultQuantity(parseInt(quantity, 10))
-    @updateQuantityField()
+    quantity = quantity.replace(',', '.')
+    @listing.setDefaultQuantity(parseFloat(quantity, 10))
+    @updateQuantityField() unless @listing.isPerUnitBooking()
 
     # Reset the datepicker if the booking is no longer available
     # with the new quantity.
