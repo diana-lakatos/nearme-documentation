@@ -1,5 +1,11 @@
 class Dashboard::SavedSearchesController < Dashboard::BaseController
 
+  def search
+    @saved_search = current_user.saved_searches.find(params[:id])
+    @saved_search.touch(:last_viewed_at)
+    redirect_to @saved_search.path
+  end
+
   def index
     @saved_searches = current_user.saved_searches.desc
   end

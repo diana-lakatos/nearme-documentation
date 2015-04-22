@@ -703,6 +703,9 @@ DesksnearMe::Application.routes.draw do
       collection do
         patch :change_alerts_frequency
       end
+      member do
+        get :search
+      end
     end
 
   end #end /dashboard namespace

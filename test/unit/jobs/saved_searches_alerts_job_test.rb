@@ -32,6 +32,13 @@ class SavedSearchesAlertsJobTest < ActiveSupport::TestCase
     assert_not_equal last_saved_searches_alert_sent_at, @user.reload.saved_searches_alert_sent_at
   end
 
+  should 'create alert log entry if there are new search results' do
+    FactoryGirl.create('listing_in_auckland')
+    assert_difference 'SavedSearchAlertLog.count' do
+      SavedSearchesAlertsJob.perform(:daily)
+    end
+  end
+
   should 'not send notification if there are no search results' do
     WorkflowStepJob.expects(:perform).never
     SavedSearchesAlertsJob.perform(:daily)

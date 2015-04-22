@@ -12,16 +12,16 @@
     %tr
       %th= SavedSearch.human_attribute_name :title
       %th= SavedSearch.human_attribute_name :new_results
-      %th{colspan: 2}= SavedSearch.human_attribute_name :created_at
+      %th{colspan: 2}= SavedSearch.human_attribute_name :last_viewed
     - if @saved_searches.empty?
       %tr
-        %td{colspan: 4}= t('.no_results')
+        %td{colspan: 4}= t('saved_searches.nav.no_results')
     - else
       - @saved_searches.each do |saved_search|
         %tr.data-row
-          %td{:'data-saved-search-title' => saved_search.id}= link_to saved_search.title, saved_search.path
-          %td= saved_search.new_results
-          %td= l(saved_search.created_at, format: :only_date)
+          %td{:'data-saved-search-title' => saved_search.id}= link_to saved_search.title, search_dashboard_saved_search_path(saved_search)
+          %td= saved_search.unseen_results
+          %td= l(saved_search.last_viewed_at, format: :only_date)
           %td
             .controls
               %a{:'data-saved-search-edit-id' => saved_search.id, href: '#'}
