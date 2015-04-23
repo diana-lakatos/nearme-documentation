@@ -239,7 +239,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def desks_booked_on(date, start_minute = nil, end_minute = nil)
-    scope = reservations.not_rejected_or_cancelled.joins(:periods).where(:reservation_periods => {:date => date})
+    scope = reservations.confirmed.joins(:periods).where(:reservation_periods => {:date => date})
 
     if start_minute
       hourly_conditions = []
