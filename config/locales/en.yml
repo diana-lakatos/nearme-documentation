@@ -16,6 +16,8 @@ en:
         title: 'Title'
         created_at: 'Created at'
         results: 'Results'
+      transactable:
+        action_rfq: 'Request for Quote'
   connections:
     facebook:
       count:

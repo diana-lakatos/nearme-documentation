@@ -158,8 +158,7 @@ class User < ActiveRecord::Base
   validate do |user|
     if user.persisted? && PlatformContext.current.instance.user_info_in_onboarding_flow? && self.custom_validation
       PlatformContext.current.instance.user_required_fields.each do |field|
-        field_to_check = field == 'avatar' ? 'avatar_original_url' : field
-        user.errors.add(field, I18n.t('errors.messages.blank')) unless self.send(field_to_check).present?
+        user.errors.add(field, I18n.t('errors.messages.blank')) unless self.send(field).present?
       end
     end
   end

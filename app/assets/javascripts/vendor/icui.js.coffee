@@ -195,7 +195,6 @@ do ($ = jQuery) ->
         @positive_target.append(positive_link)
       unless @has_negative_rules
         negative_link = $("<div class='row'><a href='#'>Add Unavailable</a></div>")
-        @negative_target.append(negative_link)
         negative_link.click =>
           @has_negative_rules = yes
           negative_link.hide()
@@ -205,6 +204,8 @@ do ($ = jQuery) ->
           @children.push top_level
           @triggerRender()
           false
+        @negative_target.append(negative_link)
+      ''
 
     renderPositiveChildren: ->
       arr = []

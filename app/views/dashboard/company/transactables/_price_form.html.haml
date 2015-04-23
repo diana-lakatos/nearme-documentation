@@ -40,9 +40,6 @@
         - if f.object.errors.include?(:free).present?
           %p.error-block
             = t('errors.messages.free_if_zero')
-    - if f.object.transactable_type.action_rfq?
-      = f.input :action_rfq, as: :boolean
-
 
 - if f.object.transactable_type.schedule_booking_enabled?
   - content_for :booking_type_schedule_tab_content do
@@ -68,6 +65,4 @@
         =f.input :book_it_out_discount
         =f.input :book_it_out_minimum_qty
 
-    - if f.object.transactable_type.action_rfq?
-      = f.input :action_rfq, as: :boolean
 

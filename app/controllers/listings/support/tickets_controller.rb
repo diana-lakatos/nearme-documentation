@@ -48,11 +48,21 @@ class Listings::Support::TicketsController < ApplicationController
 
   def set_presenters
     @details = params[:reservation_request].presence || params[:details].presence || {}
-    dates = @details[:dates].try(:split, ',') || []
-    dates.map!(&:to_date)
-    @date_presenter = DatePresenter.new(dates)
-    if @details[:start_minute].present? && @details[:end_minute].present?
-      @hourly_presenter = HourlyPresenter.new(dates.first, @details[:start_minute].to_i, @details[:end_minute].to_i)
+    if @listing.schedule_booking?
+      datetime = @details[:dates].try(:to_datetime)
+      @schedule_presenter = SchedulePresenter.new(datetime)
+      if datetime
+        params[:reservation_request] ||= {}
+        params[:reservation_request][:start_minute] = datetime.min.to_i + (60 * datetime.hour.to_i)
+        params[:reservation_request][:end_minute] = params[:reservation_request][:start_minute]
+      end
+    else
+      dates = @details[:dates].try(:split, ',') || []
+      dates.map!(&:to_date)
+      @date_presenter = DatePresenter.new(dates)
+      if @details[:start_minute].present? && @details[:end_minute].present?
+        @hourly_presenter = HourlyPresenter.new(dates.first, @details[:start_minute].to_i, @details[:end_minute].to_i)
+      end
     end
   end
 

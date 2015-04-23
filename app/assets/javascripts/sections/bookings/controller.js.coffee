@@ -197,7 +197,6 @@ class Bookings.Controller
       @storeFormFields()
 
   rfqBooking: ->
-    return unless @listing.isBooked()
     @setFormFields()
 
     if @userSignedIn
