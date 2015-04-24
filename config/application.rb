@@ -29,6 +29,11 @@ module DesksnearMe
         Rails.configuration.cache_classes ? require(c) : load(c)
       end
 
+      # Load liquid tags
+      Dir.glob(File.join(File.dirname(__FILE__), "../app/liquid_tags/*.rb")) do |c|
+        Rails.configuration.cache_classes ? require(c) : load(c)
+      end
+
       # Load Spree controllers's decorators
       Dir.glob(File.join(File.dirname(__FILE__), "../app/controllers/spree/**/*_decorator*.rb")) do |c|
         Rails.configuration.cache_classes ? require(c) : load(c)
