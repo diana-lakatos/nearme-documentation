@@ -28,9 +28,10 @@
         - else
           %ul.pricing-tabs.nav.nav-tabs{:'data-pricing-tabs' => true}
             - if listing.action_free_booking?
-              %li
-                %span.label
-                  = t 'booking_module.free'
+              = content_tag :li, data: { daily: true } do
+                = link_to "#daily-booking-#{listing.id}", class: "#{'possible' if listing.action_free_booking? }" do
+                  %span.label
+                    = t 'booking_module.free'
             - if listing.action_hourly_booking?
               = content_tag :li, data: { hourly: true } do
                 = link_to "#hourly-booking-#{listing.id}", class: "#{'possible' unless listing.hourly_price.to_f.zero? }" do
@@ -87,7 +88,7 @@
                   %span.ico-clock
                   %span.time-text= t 'booking_module.nine'
 
-            - if listing.action_daily_booking?
+            - if listing.action_daily_booking? || (listing.action_free_booking? && !listing.action_hourly_booking? && !listing.schedule_booking?)
               .daily-booking.tab-pane.calendar-wrapper.date-end{id: "daily-booking-#{listing.id}"}
                 .calendar
                   %span.ico-calender-start
