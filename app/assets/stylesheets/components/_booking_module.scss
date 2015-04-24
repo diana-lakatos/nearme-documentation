@@ -345,6 +345,21 @@
       }
     }
 
+    .number-of-units {
+
+      input {
+        clear: none;
+        max-width: 88px;
+        float: right;
+        text-align: center;
+      }
+
+      span {
+        float: left;
+        margin: 15px 0px;
+      }
+    }
+
     .quantity {
       position: relative;
       display: block;
@@ -376,6 +391,7 @@
     }
 
     .price {
+      clear: both;
       margin: 15px 0px;
       @include background-clip(border-box);
       text-align: left;
@@ -385,8 +401,7 @@
       }
     }
 
-    .book-it-out {
-      display: none;
+    .book-it-out, .exclusive-price {
       width: 100%;
 
       input#book_it_out {
@@ -397,6 +412,10 @@
         margin-top: 0px;
         margin-bottom: 50px;
       }
+    }
+
+    .book-it-out {
+      display: none;
     }
 
     .recurring_select {
@@ -425,7 +444,7 @@
 
   .booking-submit-row {
     .offer-button {
-      margin-bottom: 10px;
+      margin-top: 8px;
     }
   }
 

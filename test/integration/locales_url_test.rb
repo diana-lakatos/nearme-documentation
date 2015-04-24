@@ -30,7 +30,8 @@ class LocalesUrlTest < ActionDispatch::IntegrationTest
     end
   end
 
-  should 'set locale based on user preference' do
+  should 'give url locale higher preference than user locale' do
+    FactoryGirl.create(:locale, code: 'de')
     FactoryGirl.create(:locale, code: 'cs')
     Utils::EnLocalesSeeder.new.go!
     user = FactoryGirl.create(:user, language: 'cs')
@@ -43,9 +44,9 @@ class LocalesUrlTest < ActionDispatch::IntegrationTest
     post_via_redirect 'users/sign_in', 'user[email]' => user.email, 'user[password]' => user.password
     assert_equal 'Signed in successfully.', flash[:notice]
 
-    get 'http://www.example.com/hy/'
-    assert_redirected_to 'http://www.example.com/cs'
-    assert :cs, I18n.locale
+    get 'http://www.example.com/de'
+    assert_response :success
+    assert :de, I18n.locale
   end
 
   teardown do

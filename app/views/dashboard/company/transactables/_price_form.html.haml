@@ -40,9 +40,6 @@
         - if f.object.errors.include?(:free).present?
           %p.error-block
             = t('errors.messages.free_if_zero')
-    - if f.object.transactable_type.action_rfq?
-      = f.input :action_rfq, as: :boolean
-
 
 - if f.object.transactable_type.schedule_booking_enabled?
   - content_for :booking_type_schedule_tab_content do
@@ -52,12 +49,20 @@
           %abbr{:title => "required"}= t('simple_form.required.mark')
           =t('simple_form.labels.listings.price')
       .col-md-9
-        = render 'price_field', :f => f, :price => 'fixed', :label => t("simple_form.labels.transactable.price.fixed"), :include_checkbox => false
+        -if f.object.transactable_type.action_price_per_unit?
+          = render 'price_field', :f => f, :price => 'fixed', :label => t("simple_form.labels.transactable.price.per_unit"), :include_checkbox => false
+        -else
+          = render 'price_field', :f => f, :price => 'fixed', :label => t("simple_form.labels.transactable.price.fixed"), :include_checkbox => false
+    - if form_fields.find{ |h| h['transactable'] == 'exclusive_price' }
+      %div.row
+        .col-md-3
+          = f.label :exclusive_price, :exclusive_price, :class => 'control-label flush-top' do
+            =t('simple_form.labels.listings.exclusive_price')
+        .col-md-9
+          = render 'price_field', :f => f, :price => 'exclusive', :label => t("simple_form.labels.transactable.price.exclusive_price"), :include_checkbox => false
     - if form_fields.find{ |h| h['transactable'] == 'book_it_out' }
       %div.row.price_container
         =f.input :book_it_out_discount
         =f.input :book_it_out_minimum_qty
 
-    - if f.object.transactable_type.action_rfq?
-      = f.input :action_rfq, as: :boolean
 

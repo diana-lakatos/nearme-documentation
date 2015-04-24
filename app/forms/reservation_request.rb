@@ -1,6 +1,6 @@
 class ReservationRequest < Form
 
-  attr_accessor :dates, :start_minute, :end_minute, :book_it_out
+  attr_accessor :dates, :start_minute, :end_minute, :book_it_out, :exclusive_price
   attr_accessor :card_number, :card_exp_month, :card_exp_year, :card_code, :card_holder_first_name,
                 :card_holder_last_name, :payment_method_nonce
   attr_accessor :waiver_agreement_templates, :documents, :payment_method
@@ -32,6 +32,7 @@ class ReservationRequest < Form
       @instance = platform_context.instance
       @reservation.currency = @listing.currency
       @reservation.book_it_out_discount = @listing.book_it_out_discount if attributes[:book_it_out] == 'true'
+      @reservation.exclusive_price_cents = @listing.exclusive_price_cents if attributes[:exclusive_price] == 'true'
       @billing_gateway = Billing::Gateway::Incoming.new(@user, @instance, @reservation.currency, @listing.company.iso_country_code) if @user
       @client_token = @billing_gateway.try(:client_token) if @billing_gateway.try(:possible?)
       @reservation.user = user
@@ -40,7 +41,7 @@ class ReservationRequest < Form
     end
 
     store_attributes(attributes)
-    @reservation.try(:payment_method=, (payment_method.present? && payment_methods.include?(payment_method.to_sym)) ? payment_method : payment_methods.first)
+    @reservation.try(:payment_method=, (payment_method.present? && payment_methods.include?(payment_method.to_s)) ? payment_method : payment_methods.first)
     self.payment_method = @reservation.try(:payment_method)
 
     if @user
@@ -61,14 +62,14 @@ class ReservationRequest < Form
 
       if listing.schedule_booking?
         if @dates.is_a?(String)
-          @start_minute = @dates.to_datetime.min.to_i + (60 * @dates.to_datetime.hour.to_i)
+          @start_minute = @dates.to_datetime.try(:min).to_i + (60 * @dates.to_datetime.try(:hour).to_i)
           @end_minute = @start_minute
-          @dates = [@dates.to_datetime.to_date.to_s]
+          @dates = [@dates.try(:to_datetime).try(:to_date).try(:to_s)]
         end
       else
         @dates = @dates.split(',') if @dates.is_a?(String)
       end
-      @dates.each do |date_string|
+      @dates.reject(&:blank?).each do |date_string|
         @reservation.add_period(Date.parse(date_string), start_minute, end_minute)
       end
     end

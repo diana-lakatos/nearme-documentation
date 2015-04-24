@@ -18,7 +18,7 @@ class AvailabilityRule::HourlyListingStatus
   end
 
   def build_time_quantities
-    @listing.reservations.not_rejected_or_cancelled.joins(:periods).
+    @listing.reservations.confirmed.joins(:periods).
      where(:reservation_periods => { :date => @date }).
      select('reservations.quantity as quantity_booked, reservation_periods.start_minute, reservation_periods.end_minute').
      each do |period|

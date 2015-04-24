@@ -118,6 +118,13 @@ class Support::Ticket < ActiveRecord::Base
     @reservation_dates
   end
 
+  def reservation_date
+    if @reservation_date.nil?
+      @reservation_date = self.reservation_details['dates'].try(:to_datetime)
+    end
+    @reservation_date
+  end
+
   def target_rfq?
     ["Transactable", 'Spree::Product'].include?(self.target_type)
   end

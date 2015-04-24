@@ -16,6 +16,8 @@ en:
         title: 'Title'
         created_at: 'Created at'
         results: 'Results'
+      transactable:
+        action_rfq: 'Request for Quote'
   connections:
     facebook:
       count:
@@ -115,6 +117,9 @@ en:
     shipping_options:
       dimensions_templates:
         add_new_dimensions_template: '+ Add new dimension template'
+    nav:
+      brand:
+        open_marketplace: 'Open Marketplace'
     manage:
       reviews:
         index:
@@ -702,8 +707,11 @@ en:
     booking_module:
       fixed: 'Fixed Price'
       book_it_out: 'Book It Out'
+      exclusive_price: 'Exclusive Price'
       pick_fixed_date: 'Select a date'
       suggest_date: 'What time works best for you?'
+      per_unit: 'Per Unit'
+      number_of_units: 'Number Of Units'
   search:
     list:
       additional_social_connections:
@@ -899,6 +907,7 @@ en:
       whoops: "Whoops! We couldn't make that reservation."
       book_it_out_quantity: "Quantity for Book It Out option should equal maximal available quantity."
       book_it_out_not_available: 'Book It Out option is no longer available'
+      exclusive_price_not_available: 'Exclusive Price option is no longer available'
 
   recurring_reservations_review:
     total: 'Total per reservation'

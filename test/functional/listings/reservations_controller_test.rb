@@ -164,8 +164,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
   context 'Book It Out' do
     setup do
       @transactable = FactoryGirl.create(:transactable, :fixed_price, :with_book_it_out)
-      @transactable.transactable_type.action_book_it_out = true
-      @transactable.transactable_type.save
+      @transactable.transactable_type.update_attributes! action_book_it_out: true
       @params = booking_params_for(@transactable)
       @params[:reservation_request].merge!({ dates: [@transactable.next_available_occurrences.first.last[:date]], quantity: 10, book_it_out: "true", start_minute: 365, end_minute: 365})
     end
@@ -187,11 +186,54 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
     end
 
     should 'not create reservation with discount if it is turned off' do
-      @transactable.transactable_type.action_book_it_out = false
-      @transactable.transactable_type.save
+      @transactable.transactable_type.update_attributes! action_book_it_out: false
       post :create, @params
       assert_response 200
       assert response.body.include?(I18n.t('reservations_review.errors.book_it_out_not_available'))
+    end
+
+  end
+
+  context 'Exclusive Price' do
+    setup do
+      @transactable = FactoryGirl.create(:transactable, :fixed_price, :with_exclusive_price)
+      @transactable.transactable_type.update_attributes! action_exclusive_price: true
+      @params = booking_params_for(@transactable)
+      @params[:reservation_request].merge!({ dates: [@transactable.next_available_occurrences.first.last[:date]], quantity: 10, exclusive_price: "true", start_minute: 365, end_minute: 365})
+    end
+
+    should 'create reservation with exclusive price' do
+      post :create, @params
+      reservation = Reservation.last
+      assert_redirected_to booking_successful_dashboard_user_reservation_path(Reservation.last)
+      assert_equal reservation.exclusive_price, @transactable.exclusive_price
+      assert_equal reservation.subtotal_amount, @transactable.exclusive_price
+      assert_not_equal reservation.subtotal_amount, @transactable.quantity * @transactable.fixed_price
+    end
+
+    should 'not create reservation with discount if it is turned off' do
+      @transactable.transactable_type.update_attributes! action_exclusive_price: false
+      post :create, @params
+      assert_response 200
+      assert response.body.include?(I18n.t('reservations_review.errors.exclusive_price_not_available'))
+    end
+
+  end
+
+  context 'Price per unit' do
+    setup do
+      @transactable = FactoryGirl.create(:transactable, :fixed_price)
+      @transactable.transactable_type.update_attributes! action_price_per_unit: true
+      @params = booking_params_for(@transactable)
+      @params[:reservation_request].merge!({ dates: [@transactable.next_available_occurrences.first.last[:date]], quantity: 11.23, start_minute: 365, end_minute: 365})
+    end
+
+    should 'create reservation with price per unit' do
+      post :create, @params
+      reservation = Reservation.last
+      assert_redirected_to booking_successful_dashboard_user_reservation_path(Reservation.last)
+      assert_equal reservation.subtotal_amount, @transactable.fixed_price * @params[:reservation_request][:quantity]
+      assert_equal reservation.quantity, 11.23
     end
 
   end

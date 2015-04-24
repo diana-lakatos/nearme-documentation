@@ -157,6 +157,7 @@ class Transactable < ActiveRecord::Base
   monetize :weekly_price_cents, with_model_currency: :currency, allow_nil: true
   monetize :monthly_price_cents, with_model_currency: :currency, allow_nil: true
   monetize :fixed_price_cents, with_model_currency: :currency, allow_nil: true
+  monetize :exclusive_price_cents, with_model_currency: :currency, allow_nil: true
 
   # Defer to the parent Location for availability rules unless this Listing has specific
   # rules.
@@ -212,7 +213,7 @@ class Transactable < ActiveRecord::Base
         start_minute = occurence.to_datetime.min.to_i + (60 * occurence.to_datetime.hour.to_i)
         availability = self.quantity - desks_booked_on(occurence.to_datetime, start_minute, start_minute)
         if availability > 0
-          occurences[occurence.to_datetime.to_i.to_s] = { date: occurence, availability: availability }
+          occurences[occurence.to_datetime.to_i.to_s] = { date: occurence, availability: availability.to_i }
         end
       end
       break if occurences.count == number_of_occurrences || occurence.nil? || checks_to_be_performed.zero?
@@ -239,7 +240,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def desks_booked_on(date, start_minute = nil, end_minute = nil)
-    scope = reservations.not_rejected_or_cancelled.joins(:periods).where(:reservation_periods => {:date => date})
+    scope = reservations.confirmed.joins(:periods).where(:reservation_periods => {:date => date})
 
     if start_minute
       hourly_conditions = []
@@ -332,6 +333,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def available_on?(date, quantity=1, start_min = nil, end_min = nil)
+    quantity = 1 if transactable_type.action_price_per_unit?
     availability_for(date, start_min, end_min) >= quantity
   end
 
@@ -501,6 +503,10 @@ class Transactable < ActiveRecord::Base
 
   def book_it_out_available?
     schedule_booking? && transactable_type.action_book_it_out? && book_it_out_discount.to_i > 0
+  end
+
+  def exclusive_price_available?
+     transactable_type.action_exclusive_price? && exclusive_price > 0
   end
 
   def check_book_it_out_minimum_qty

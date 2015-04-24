@@ -52,6 +52,10 @@ FactoryGirl.define do
       book_it_out_minimum_qty 8
     end
 
+    trait :with_exclusive_price do
+      exclusive_price_cents 89900
+    end
+
     factory :free_listing do
       after(:build) do |listing|
         listing.daily_price_cents = nil

@@ -89,3 +89,5 @@ class @Bookings.PriceCalculator
       total *= (100 - @listing.data.book_it_out_discount) / 100
       total += @additionalCharges.getCharges()
       total
+
+  class @PerUnitPriceCalculator extends @FixedPriceCalculator

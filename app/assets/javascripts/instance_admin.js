@@ -48,3 +48,6 @@
 $(function() {
   Fileupload.initialize();
 })
+
+$('[rel=tooltip]').tooltip()
+
