@@ -127,10 +127,25 @@ p {
   background: $color-brand;
   padding: 15px 0 0px 25px;
   height: 59px;
+
+  .tooltip {
+    .tooltip-inner {
+      width: 150px;
+    }
+  }
 }
 
 .brand-logo {
   height: 30px;
+  float: left;
+}
+
+.open-marketplace-icon {
+  width: 23px;
+  height: 24px;
+  background: transparent image-url("instance_admin/enter-door.png") center center no-repeat;
+  float: right;
+  margin: 2px 14px 0 0;
 }
 
 .nav-wrapper {
