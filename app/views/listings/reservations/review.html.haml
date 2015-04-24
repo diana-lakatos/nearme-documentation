@@ -98,7 +98,9 @@
       );
       window.sessioncamConfiguration.customDataObjects.push( { key: "event", value: "booking_modal_opened" } );
 
-      braintree.setup("#{@reservation_request.client_token}", 'paypal', {
-        container: 'paypal-button'
-      });
+      if('braintree' in window) {
+        braintree.setup("#{@reservation_request.client_token}", 'paypal', {
+          container: 'paypal-button'
+        });
+      }
     });
