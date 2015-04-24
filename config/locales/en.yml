@@ -115,6 +115,9 @@ en:
     shipping_options:
       dimensions_templates:
         add_new_dimensions_template: '+ Add new dimension template'
+    nav:
+      brand:
+        open_marketplace: 'Open Marketplace'
     manage:
       reviews:
         index:
