@@ -41,7 +41,7 @@ class ReservationRequest < Form
     end
 
     store_attributes(attributes)
-    @reservation.try(:payment_method=, (payment_method.present? && payment_methods.include?(payment_method.to_sym)) ? payment_method : payment_methods.first)
+    @reservation.try(:payment_method=, (payment_method.present? && payment_methods.include?(payment_method.to_s)) ? payment_method : payment_methods.first)
     self.payment_method = @reservation.try(:payment_method)
 
     if @user
