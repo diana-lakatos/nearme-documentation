@@ -6,7 +6,10 @@
       %h2= @listing.name
       .box
         %h3
-          = "#{params[:reservation_request][:quantity]} x #{@hourly_presenter.present? ? "#{@hourly_presenter.hours} #{'hour'.pluralize(@hourly_presenter.hours.to_i)}" : @date_presenter.days_in_words}"
+          - if @listing.schedule_booking?
+            = @schedule_presenter.selected_date_summary
+          -else
+            = "#{params[:reservation_request][:quantity]} x #{@hourly_presenter.present? ? "#{@hourly_presenter.hours} #{'hour'.pluralize(@hourly_presenter.hours.to_i)}" : @date_presenter.days_in_words}"
 
         .form
           = simple_form_for @ticket, url: listing_tickets_path(@listing), html: { id: 'rfq' }, method: :post do |t|

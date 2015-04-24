@@ -46,6 +46,8 @@
         - if f.object.transactable_type.schedule_booking_enabled?
           = render 'schedule_form', f: f
       = render 'shared/booking_types_tabs', f: f
+      - if f.object.transactable_type.action_rfq?
+        = f.input :action_rfq, as: :boolean
     - when 'photos'
       .row
         .col-md-3
