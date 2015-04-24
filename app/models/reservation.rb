@@ -111,6 +111,10 @@ class Reservation < ActiveRecord::Base
   monetize :successful_payment_amount_cents, with_model_currency: :currency
 
   state_machine :state, initial: :unconfirmed do
+    before_transition unconfirmed: :confirmed do |object, transaction|
+      object.validate_all_dates_available
+      object.errors.empty?
+    end
     after_transition unconfirmed: :confirmed, do: :attempt_payment_capture, if: lambda { |r| r.billing_authorization.present? }
     after_transition unconfirmed: :confirmed, do: :schedule_payment_capture, if: lambda { |r| r.recurring_booking_id.present? && r.billing_authorization.nil? }
     after_transition unconfirmed: :confirmed, do: :set_confirmed_at
@@ -480,6 +484,13 @@ class Reservation < ActiveRecord::Base
     reservation_type == 'daily'
   end
 
+  def validate_all_dates_available
+    invalid_dates = periods.reject(&:bookable?)
+    if invalid_dates.any?
+      errors.add(:base, "Unfortunately the following bookings are no longer available: #{invalid_dates.map(&:as_formatted_string).join(', ')}")
+    end
+  end
+
   private
 
   def service_fee_calculator
@@ -552,13 +563,6 @@ class Reservation < ActiveRecord::Base
 
   def schedule_payment_capture
     ReservationPaymentCaptureJob.perform_later(date + first_period.start_minute.minutes - recurring_booking.hours_before_reservation_to_charge.hours, self.id)
-  end
-
-  def validate_all_dates_available
-    invalid_dates = periods.reject(&:bookable?)
-    if invalid_dates.any?
-      errors.add(:base, "Unfortunately the following bookings are no longer available: #{invalid_dates.map(&:as_formatted_string).join(', ')}")
-    end
   end
 
   def validate_booking_selection

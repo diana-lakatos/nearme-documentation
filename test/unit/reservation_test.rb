@@ -588,6 +588,7 @@ class ReservationTest < ActiveSupport::TestCase
         reservation = @listing.reservations.build(:user => @user, :quantity => 2)
         reservation.add_period(@monday)
         reservation.save!
+        reservation.confirm
 
         @reservation.add_period(@monday)
         refute @reservation.valid?
