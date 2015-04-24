@@ -6,10 +6,10 @@ class TransactableDrop < BaseDrop
 
   attr_reader :transactable
 
-  delegate :id, :location_id, :name, :location, :transactable_type, :description, :action_hourly_booking?, :creator, :administrator, :last_booked_days,
+  delegate :id, :location_id, :name, :location, :transactable_type, :description, :action_hourly_booking?, :action_rfq?, :creator, :administrator, :last_booked_days,
    :defer_availability_rules?, :lowest_price, :company, :properties, :quantity, :administrator_id, :has_photos?, :book_it_out_available?,
-   :action_free_booking?, :currency, to: :transactable
-  delegate :bookable_noun, :bookable_noun_plural, to: :transactable_type
+   :action_free_booking?, :currency, :exclusive_price_available?, to: :transactable
+  delegate :bookable_noun, :bookable_noun_plural, :action_price_per_unit, to: :transactable_type
   delegate :latitude, :longitude, :address, to: :location
   delegate :dashboard_url, :search_url, to: :routes
 
@@ -79,4 +79,17 @@ class TransactableDrop < BaseDrop
     @transactable.photos_metadata
   end
 
+  def price_per_unit?
+    action_price_per_unit
+  end
+
+  def exclusive_price
+    @transactable.exclusive_price.to_s
+  end
+
+  def new_ticket_url
+    routes.new_listing_ticket_path(@transactable)
+  end
+
 end
+

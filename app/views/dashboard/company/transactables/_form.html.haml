@@ -46,6 +46,8 @@
         - if f.object.transactable_type.schedule_booking_enabled?
           = render 'schedule_form', f: f
       = render 'shared/booking_types_tabs', f: f
+      - if f.object.transactable_type.action_rfq?
+        = f.input :action_rfq, as: :boolean
     - when 'photos'
       .row
         .col-md-3
@@ -84,7 +86,10 @@
       - if platform_context.instance.documents_upload_enabled?
         = render "forms/document_requirements", f: f
     - when 'quantity'
-      = f.input :quantity
+      -if @transactable_type.action_price_per_unit?
+        = f.input :quantity, as: :hidden, value: 1
+      -else
+        = f.input :quantity
     - when *@transactable_type.categories.roots.map { |c| "Category - #{c.name}" }
       - category_name = field.split(" - ")[1]
       - category = @transactable_type.categories.roots.where(name: category_name).first

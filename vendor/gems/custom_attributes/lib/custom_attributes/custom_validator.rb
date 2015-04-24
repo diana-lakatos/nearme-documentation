@@ -33,7 +33,7 @@ module CustomAttributes
             klass.new(options).validate(record.send(:"#{@store_accessor_name}"))
           end
         end
-        if valid_values.present? && type.to_sym != :array
+        if valid_values.present? && type.to_sym != :array && record.send(:"#{@store_accessor_name}").send(name).present?
           unless valid_values.map { |s| s.mb_chars.downcase }.include?(record.send(:"#{@store_accessor_name}").send(name).try(:mb_chars).try(:downcase))
             record.send(:"#{@store_accessor_name}").errors.add(name, :inclusion, value: record.send(:"#{@store_accessor_name}").send(name))
           end

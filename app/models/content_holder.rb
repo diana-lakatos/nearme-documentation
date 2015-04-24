@@ -9,6 +9,7 @@ class ContentHolder < ActiveRecord::Base
   belongs_to :instance
 
   after_validation :expire_cache
+  after_destroy :expire_cache
 
   validates :name, uniqueness: { scope: :theme_id }
 

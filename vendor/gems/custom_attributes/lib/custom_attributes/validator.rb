@@ -30,7 +30,7 @@ module CustomAttributes
             klass.new(options).validate(record)
           end
         end
-        if valid_values.present? && type.to_sym != :array
+        if valid_values.present? && type.to_sym != :array && record.properties[name].present?
           unless valid_values.map { |s| s.mb_chars.downcase }.include?(record.properties[name].try(:mb_chars).try(:downcase))
             record.errors.add(name, :inclusion, value: record.properties[name])
           end

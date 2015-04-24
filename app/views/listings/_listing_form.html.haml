@@ -68,7 +68,10 @@
           = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{photo.id}][position]", photo.position, class: 'photo-position-input'
 
 - if only_inputs.empty? || only_inputs.include?(:quantity)
-  = f.input :quantity
+  -if @transactable_type.action_price_per_unit?
+    = f.input :quantity, as: :hidden, value: 1
+  -else
+    = f.input :quantity
 
 - if (only_inputs.empty? || only_inputs.include?(:assigned_waiver_agreement_templates)) && f.object.location.company.waiver_agreement_templates.count > 0
   %h2.with-margin Waiver Agreement Templates

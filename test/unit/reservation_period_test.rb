@@ -15,10 +15,12 @@ class ReservationPeriodTest < ActiveSupport::TestCase
         period = @reservation.periods.build(:date => @next_monday)
         assert period.bookable?
 
-        @listing.reservations.create(:quantity => 1, :date => @next_monday, :user => @user)
+        res = @listing.reservations.create(:quantity => 1, :date => @next_monday, :user => @user)
+        res.confirm
         assert period.bookable?
 
-        @listing.reservations.create(:quantity => 1, :date => @next_monday, :user => @user)
+        res = @listing.reservations.create(:quantity => 1, :date => @next_monday, :user => @user)
+        res.confirm
         assert !period.bookable?
       end
     end
@@ -36,11 +38,13 @@ class ReservationPeriodTest < ActiveSupport::TestCase
         res = @listing.reservations.build(:quantity => 1, :user => @user)
         res.add_period(@next_monday, @nine, @one)
         res.save!
+        res.confirm
         assert period.bookable?
 
         res = @listing.reservations.build(:quantity => 1, :user => @user)
         res.add_period(@next_monday, @nine, @one)
         res.save!
+        res.confirm
         assert !period.bookable?
       end
 

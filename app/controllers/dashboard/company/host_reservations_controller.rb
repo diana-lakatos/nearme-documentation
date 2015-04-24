@@ -17,7 +17,10 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
         event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
         flash[:success] = t('flash_messages.manage.reservations.reservation_confirmed')
       else
-        flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
+        flash[:error] = [
+          t('flash_messages.manage.reservations.reservation_not_confirmed'),
+          *@reservation.errors.full_messages
+        ].join(' ')
       end
     end
 

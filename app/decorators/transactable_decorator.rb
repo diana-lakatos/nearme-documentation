@@ -34,4 +34,18 @@ class TransactableDecorator < Draper::Decorator
     !self.transactable_type.action_na
   end
 
+  def schedule_collection
+    self.next_available_occurrences(10).map do |id, v|
+      [
+        l(v[:date], format: :long),
+        l(v[:date], format: :long),
+        { 'data-availability' => v[:availability] }
+      ]
+    end
+  end
+
+  def price_per_unit?
+    self.transactable_type.action_price_per_unit?
+  end
+
 end

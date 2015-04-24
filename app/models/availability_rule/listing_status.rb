@@ -44,7 +44,7 @@ class AvailabilityRule::ListingStatus
 
   def booked_by_date
     @booked_by_date ||= begin
-      @listing.reservations.not_rejected_or_cancelled.
+      @listing.reservations.confirmed.
         joins(:periods).
         where(:reservation_periods => { :date => @start_date..@end_date }).
         group('reservation_periods.date').

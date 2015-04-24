@@ -7,6 +7,7 @@ class @Bookings.Listing
     @id = parseInt(@data.id, 10)
     @bookedDatesArray = []
     @bookedDateAvailability = 0
+    @maxQuantity = @data.quantity
     if @withCalendars()
       @firstAvailableDate = DNM.util.Date.idToDate(@data.first_available_date)
       @secondAvailableDate = DNM.util.Date.idToDate(@data.second_available_date)
@@ -28,6 +29,7 @@ class @Bookings.Listing
       @minimumBookingMinutes = @data.minimum_booking_minutes
     else
       @fixedPrice = @data.fixed_price_cents
+      @exclusivePrice = @data.exclusive_price_cents
 
   setDefaultQuantity: (qty) ->
     @defaultQuantity = qty if qty >= 0
@@ -39,6 +41,9 @@ class @Bookings.Listing
 
   getQuantity: ->
     @defaultQuantity
+
+  getMaxQuantity: ->
+    @maxQuantity
 
   hasFavourablePricingRate: ->
     @favourablePricingRate
@@ -61,6 +66,9 @@ class @Bookings.Listing
   isReservedDaily: ->
     @data.action_daily_booking
 
+  isPerUnitBooking: ->
+    @data.action_price_per_unit
+
   # Returns whether the date is within the bounds available for booking
   dateWithinBounds: (date) ->
     time = date.getTime()
@@ -76,6 +84,9 @@ class @Bookings.Listing
 
   bookItOutAvailable: ->
     @isFixedBooking() && @data.book_it_out_discount > 0
+
+  exclusivePriceAvailable: ->
+    @data.exclusive_price_cents > 0
 
   bookItOutAvailableForDate: ->
      @bookItOutAvailable() && @fixedAvailability() >= @data.book_it_out_minimum_qty
@@ -104,9 +115,11 @@ class @Bookings.Listing
     @bookedDatesArray
 
   # Return the subtotal for booking this listing
-  bookingSubtotal: (book_it_out = false) ->
+  bookingSubtotal: (book_it_out = false, exclusive_price = false) ->
     if book_it_out
       @priceCalculator().getPriceForBookItOut()
+    else if exclusive_price
+      @exclusivePrice
     else
       @priceCalculator().getPrice()
 
@@ -116,6 +129,8 @@ class @Bookings.Listing
   priceCalculator: ->
     if @isReservedHourly()
       new Bookings.PriceCalculator.HourlyPriceCalculator(this)
+    else if @isPerUnitBooking()
+      new Bookings.PriceCalculator.PerUnitPriceCalculator(this)
     else if @isFixedBooking()
       new Bookings.PriceCalculator.FixedPriceCalculator(this)
     else
