@@ -326,13 +326,14 @@ en:
         resend: Resend
 
         shipped_email:
-          subject: Shipment Notification
+          subject: 'Shipment Notification'
           dear_customer: 'Dear Customer,'
           instructions: 'Your order has been shipped'
           shipment_summary: 'Shipment Summary'
           track_information: 'Tracking Information: %{tracking}'
           track_link: 'Tracking Link: %{url}'
-          thanks: 'Thank you for your business.'
+          thanks: 'Thank you for your order.'
+
 
       order_mailer:
         resend: RESEND
@@ -350,16 +351,22 @@ en:
           shipping: 'Shipping'
           tax: 'Tax'
 
+        approved_email:
+          subject: 'Approval of Order'
+          dear_customer: 'Dear Customer,'
+          instructions: 'Your order has been approved.'
+
         cancel_email:
           subject: 'Cancellation of Order'
           dear_customer: 'Dear Customer,'
-          instructions: 'Your order has been CANCELED.  Please retain this cancellation information for your records.'
+          instructions: 'Your order has been CANCELLED. Please retain this cancellation information for your records.'
           order_summary_canceled: 'Order Summary [CANCELED]'
 
         notify_seller_email:
-          subject: 'New order'
+          subject: 'New Order'
           dear_seller: 'Dear Seller,'
           instructions_1: 'New order has been placed.'
+          manual_payment_instructions: 'Email to which invoice should be sent: %{email}'
           instructions_2: 'ACTION REQUIRED: Visit your Orders page to approve this order and capture payment.'
           order_summary: 'Order Summary'
 
