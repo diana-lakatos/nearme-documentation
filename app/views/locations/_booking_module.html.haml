@@ -21,7 +21,10 @@
         - if listing.schedule_booking?
           %span.label
             = "#{listing.price_with_currency(:fixed_price)}"
-            %span.period= t('reservations.booking_module.fixed')
+            - if listing.price_per_unit?
+              %span.period= t('reservations.booking_module.per_unit')
+            -else
+              %span.period= t('reservations.booking_module.fixed')
         - else
           %ul.pricing-tabs.nav.nav-tabs{:'data-pricing-tabs' => true}
             - if listing.action_free_booking?
@@ -134,8 +137,9 @@
             .reservation-charges.hidden{:'data-reservation-charges' => true}
             = f.hidden_field :quantity
             = f.hidden_field :book_it_out
+            = f.hidden_field :exclusive_price
             - if listing.schedule_booking?
-              = f.input :dates, collection: listing.next_available_occurrences(10).map { |id, v| [l(v[:date], format: :long), l(v[:date], format: :long), { 'data-availability' => v[:availability]}]  }, prompt: 'Choose date', label: false, input_html: { :'data-fixed-date-select' => true }
+              = f.input :dates, collection: listing.schedule_collection, prompt: 'Choose date', label: false, input_html: { :'data-fixed-date-select' => true }
             - else
               = f.hidden_field :dates
             = f.hidden_field :reservation_type, class: 'reservation_type'

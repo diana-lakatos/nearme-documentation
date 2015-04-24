@@ -36,9 +36,11 @@ class Bookings.Controller
 
   # Bind to the various DOM elements managed by this controller.
   bindDomElements: ->
-    @quantityField = @container.find('select.quantity')
+    @quantityField = @container.find('[name=quantity].quantity')
     @bookItOutContainer = @container.find('.book-it-out')
     @bookItOutCheck = @container.find('input#book_it_out')
+    @exclusivePriceContainer = @container.find('.exclusive-price')
+    @exclusivePriceCheck = @container.find('input#exclusive_price')
     @bookItOutTotal = @bookItOutContainer.find('.total')
     @quantityResourceElement = @container.find('.quantity .resource')
     @totalElement = @container.find('.booking-body > .price .total')
@@ -57,6 +59,7 @@ class Bookings.Controller
       @fixedPriceSelect.on 'change', (e) =>
         @updateBookingStatus()
         @updateBookItOut() if @listing.bookItOutAvailable()
+        @exclusivePrice() if @listing.exclusivePriceAvailable()
 
     @setReservationType()
 
@@ -81,16 +84,18 @@ class Bookings.Controller
       else
         @rfqBooking()
 
-    @quantityField.on 'change', (event) =>
+    @quantityField.on 'change paste keyup', (event) =>
       @quantityWasChanged()
 
     @additionalCharges.on 'change', (event) =>
       @delayedUpdateBookingStatus()
       @updateCharges()
 
-    if @listing.bookItOutAvailable()
-      @bookItOutContainer.on 'change','input', (event) =>
-        @bookItOut(event.target)
+    @bookItOutContainer.on 'change','input', (event) =>
+      @bookItOut(event.target)
+
+    @exclusivePriceCheck.on 'change', (event) =>
+      @exclusivePrice()
 
     if @listing.withCalendars()
       @datepicker.bind 'datesChanged', (dates) =>
@@ -150,8 +155,9 @@ class Bookings.Controller
     @rfqButton.addClass('click-disabled').find('span.text').text('Requesting...')
 
   quantityWasChanged: (quantity = @quantityField.val())->
-    @listing.setDefaultQuantity(parseInt(quantity, 10))
-    @updateQuantityField()
+    quantity = quantity.replace(',', '.')
+    @listing.setDefaultQuantity(parseFloat(quantity, 10))
+    @updateQuantityField() unless @listing.isPerUnitBooking()
 
     # Reset the datepicker if the booking is no longer available
     # with the new quantity.
@@ -174,7 +180,11 @@ class Bookings.Controller
     additionalChargeFields.clone().prependTo(reservationRequestForm)
 
   updateSummary: ->
-    @totalElement.text((@listing.bookingSubtotal(@bookItOutSelected())/100).toFixed(2))
+    @totalElement.text(
+      (
+        @listing.bookingSubtotal(@bookItOutSelected(), @exclusivePriceSelected())/100
+      ).toFixed(2)
+    )
 
   reviewBooking: ->
     return unless @listing.isBooked()
@@ -198,6 +208,7 @@ class Bookings.Controller
   setFormFields: ->
     @bookForm.find('[name="reservation_request[quantity]"]').val(@listing.reservationOptions().quantity)
     @bookForm.find('[name="reservation_request[book_it_out]"]').val(@bookItOutSelected())
+    @bookForm.find('[name="reservation_request[exclusive_price]"]').val(@exclusivePriceSelected())
     if @listing.withCalendars()
       @bookForm.find('[name="reservation_request[dates]"]').val(@listing.reservationOptions().dates)
       @bookForm.find('[name="reservation_request[start_on]"]').val(@listing.reservationOptions().start_on)
@@ -232,6 +243,19 @@ class Bookings.Controller
       @quantityField.prop('disabled', true)
     else
       @bookItOutTotal.parents('.price').show()
+      @quantityField.prop('disabled', false)
+      @quantityWasChanged 1
+
+  exclusivePriceSelected: ->
+    @listing.exclusivePriceAvailable() && @exclusivePriceCheck.is(':checked')
+
+  exclusivePrice: ->
+    if @exclusivePriceSelected()
+      @exclusivePriceContainer.find('.price').hide()
+      @quantityWasChanged @listing.getMaxQuantity()
+      @quantityField.prop('disabled', true)
+    else
+      @exclusivePriceContainer.find('.price').show()
       @quantityField.prop('disabled', false)
       @quantityWasChanged 1
 

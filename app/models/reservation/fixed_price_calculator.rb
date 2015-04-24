@@ -6,6 +6,8 @@ class Reservation::FixedPriceCalculator
   def price
     if @reservation.book_it_out_discount
       (listing.fixed_price * @reservation.quantity * (1 - @reservation.book_it_out_discount / 100.to_f)).to_money
+    elsif @reservation.exclusive_price_cents
+      @reservation.exclusive_price
     else
       (listing.fixed_price * (@reservation.quantity)).to_money
     end

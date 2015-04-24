@@ -25,12 +25,16 @@ module ListingsHelper
     }
     if listing.schedule_booking?
       base_data.merge!({
-        fixed_price_cents: listing.fixed_price_cents
+        fixed_price_cents: listing.fixed_price_cents,
+        action_price_per_unit: listing.transactable_type.action_price_per_unit
       })
       base_data.merge!({
         book_it_out_discount: listing.book_it_out_discount,
         book_it_out_minimum_qty: listing.book_it_out_minimum_qty
       }) if listing.book_it_out_available?
+      base_data.merge!({
+        exclusive_price_cents: listing.exclusive_price_cents
+      }) if listing.exclusive_price_available?
     else
       first_date = listing.first_available_date
       second_date = listing.second_available_date

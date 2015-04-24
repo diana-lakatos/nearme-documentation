@@ -36,12 +36,11 @@
           = f.input_field :service_fee_host_percent, type: 'tel', class: 'form-control'
 
     .row
-      .input-container.col-xs-4
+      .input-container.col-xs-6
         = f.input :groupable_with_others, as: :boolean
-      .input-container.col-xs-4
+      .input-container.col-xs-6
         = f.input :enable_photo_required, as: :boolean
-      .input-container.col-xs-4
-        = f.input :action_book_it_out, label: "Bulk Booking Discount", as: :boolean
+
   %h4 Cancellation Policy
   .content-container.dropshadow
     .row
@@ -74,6 +73,16 @@
             = f.input :"min_#{price}_price", input_html: { class: 'form-control' }
           .input-container.col-xs-4
             = f.input :"max_#{price}_price", input_html: { class: 'form-control' }
+
+  %h4 Pricing Options
+  .content-container.dropshadow
+    .row
+      .input-container.col-xs-4
+        = f.input :action_book_it_out, label: "Bulk Booking Discount", as: :boolean
+      .input-container.col-xs-4
+        = f.input :action_exclusive_price, label: "Enable Exclusive Price", as: :boolean
+      .input-container.col-xs-4
+        = f.input :action_price_per_unit, label: "Enable Per Unit Pricing", as: :boolean
 
 
   %h4 Calendar
