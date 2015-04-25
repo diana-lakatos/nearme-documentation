@@ -6,6 +6,7 @@ class LocaleServiceTest < ActiveSupport::TestCase
     @instance = Instance.first
     FactoryGirl.create(:primary_locale)
     FactoryGirl.create(:locale, code: 'cs')
+    FactoryGirl.create(:locale, code: 'fr')
   end
 
   should 'not return redirect URL for no locale given' do
@@ -29,11 +30,11 @@ class LocaleServiceTest < ActiveSupport::TestCase
     assert_equal @instance.primary_locale, locale_service.locale
   end
 
-  should "return redirect URL when user's language is different than requested locale" do
-    locale_service = LocaleService.new @instance, 'en', 'cs', '/'
-    assert locale_service.redirect?
-    assert_equal '/cs', locale_service.redirect_url
-    assert_equal :cs, locale_service.locale
+  should "give url locale higher precedence than user locale" do
+    locale_service = LocaleService.new @instance, 'fr', 'cs', '/'
+    refute locale_service.redirect?
+    assert_nil locale_service.redirect_url
+    assert_equal :fr, locale_service.locale
   end
 
   should "not return redirect URL when user's language is same as requested locale" do
