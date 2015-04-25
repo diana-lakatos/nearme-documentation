@@ -93,7 +93,11 @@ module DashboardHelper
   end
 
   def booking_types_active_toggle(transactable, booking_type, content = false)
-    'active' if transactable.booking_type == booking_type \
-             || (content && transactable.booking_type.in?(%w(overnight recurring)) && booking_type == 'regular')
+    if transactable.transactable_type.booking_choices.size == 1
+      'active' if booking_type == transactable.transactable_type.booking_choices.first
+    else
+      'active' if transactable.booking_type == booking_type \
+        || (content && transactable.booking_type.in?(%w(overnight recurring)) && booking_type == 'regular')
+    end
   end
 end
