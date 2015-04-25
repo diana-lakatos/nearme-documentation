@@ -22,7 +22,10 @@ class SavedSearchesAlertsJob < Job
         saved_searches_ids = user.saved_searches.inject([]) do |ar, saved_search|
           new_results = saved_search.fetch_new_results
           saved_search.update_column :new_results, new_results.size
-          ar << saved_search.id if new_results.present?
+          if new_results.present?
+            ar << saved_search.id
+            saved_search.alert_logs.create(results_count: new_results.size)
+          end
           ar
         end
 

@@ -552,6 +552,7 @@ en:
       index: 'Saved Searches'
     headers:
       alerts_frequency: 'Frequency of Saved Search Alerts'
+      no_results: 'No saved searches found'
     buttons:
       save_search: 'Save Search'
     mailer:

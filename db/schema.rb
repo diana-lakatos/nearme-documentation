@@ -1348,6 +1348,17 @@ ActiveRecord::Schema.define(version: 20150422160658) do
   add_index "reviews", ["transactable_type_id"], name: "index_reviews_on_transactable_type_id", using: :btree
   add_index "reviews", ["user_id"], name: "index_reviews_on_user_id", using: :btree
 
+  create_table "saved_search_alert_logs", force: true do |t|
+    t.integer  "instance_id"
+    t.integer  "saved_search_id"
+    t.integer  "results_count"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "saved_search_alert_logs", ["instance_id"], name: "index_saved_search_alert_logs_on_instance_id", using: :btree
+  add_index "saved_search_alert_logs", ["saved_search_id", "created_at"], name: "index_saved_search_alert_logs_on_saved_search_id_and_created_at", using: :btree
+
   create_table "saved_searches", force: true do |t|
     t.string   "title"
     t.integer  "user_id"
@@ -1356,6 +1367,7 @@ ActiveRecord::Schema.define(version: 20150422160658) do
     t.datetime "updated_at"
     t.integer  "instance_id"
     t.integer  "new_results", default: 0
+    t.datetime "last_viewed_at"
   end
 
   add_index "saved_searches", ["title", "user_id"], name: "index_saved_searches_on_title_and_user_id", unique: true, using: :btree

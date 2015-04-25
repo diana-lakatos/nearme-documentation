@@ -9,17 +9,21 @@ class SavedSearch < ActiveRecord::Base
 
   belongs_to :user, counter_cache: true
 
+  has_many :alert_logs, class_name: 'SavedSearchAlertLog'
+
   scope :desc, -> { order('id DESC') }
 
   validates :title, presence: true, uniqueness: {scope: :user_id}
   validates :user_id, :query, presence: true
+
+  before_create :set_last_viewed_at, :change_sort
 
   def path
     Rails.application.routes.url_helpers.search_path + query
   end
 
   def params
-    @params ||= Rack::Utils.parse_query(query.sub('?', '').sub(/&sort=$/, '')).with_indifferent_access
+    @params ||= Rack::Utils.parse_query(query.sub('?', '')).with_indifferent_access
   end
 
   def results_count
@@ -37,8 +41,22 @@ class SavedSearch < ActiveRecord::Base
     end
   end
 
+  def unseen_results
+    alert_logs.where("created_at > ?", last_viewed_at).sum(:results_count)
+  end
+
   def to_liquid
     SavedSearchDrop.new(self)
+  end
+
+  private
+
+  def set_last_viewed_at
+    self.last_viewed_at = created_at
+  end
+
+  def change_sort
+    self.query = query.gsub(/&sort=\w+/, '') + '&sort=created_at&order=desc'
   end
 
 end
