@@ -34,6 +34,21 @@ class InstanceAdmin::ManageBlog::PostsController < InstanceAdmin::ManageBlog::Ba
     end
   end
 
+  def delete_image
+    case params[:image_type]
+    when 'header'
+      @blog_post = @blog_instance.blog_posts.find(params[:id])
+      @blog_post.remove_header!
+      @blog_post.save!
+    when 'author_avatar'
+      @blog_post = @blog_instance.blog_posts.find(params[:id])
+      @blog_post.remove_author_avatar!
+      @blog_post.save!
+    end
+
+    redirect_to :action => :edit
+  end
+
   def destroy
     @blog_post = @blog_instance.blog_posts.find(params[:id])
     @blog_post.destroy

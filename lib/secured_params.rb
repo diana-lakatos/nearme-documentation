@@ -264,6 +264,7 @@ class SecuredParams
       :excerpt,
       :published_at,
       :slug,
+      :header,
       :author_name,
       :author_biography,
       :author_avatar
