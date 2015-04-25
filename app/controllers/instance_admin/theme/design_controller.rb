@@ -15,4 +15,12 @@ class InstanceAdmin::Theme::DesignController < InstanceAdmin::Theme::BaseControl
       render :show
     end
   end
+
+  def delete_font
+    @theme.theme_font.destroy
+
+    redirect_to :action => :show
+  end
+
 end
+

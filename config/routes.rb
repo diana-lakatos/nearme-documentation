@@ -223,7 +223,11 @@ DesksnearMe::Application.routes.draw do
     namespace :theme do
       get '/', :to => 'base#index'
       resource :info, :only => [:show, :update], :controller => 'info'
-      resource :design, :only => [:show, :update], :controller => 'design'
+      resource :design, :only => [:show, :update], :controller => 'design' do
+        member do
+          delete 'delete_font'
+        end
+      end
 
       concern :versionable do
         member do
@@ -232,7 +236,11 @@ DesksnearMe::Application.routes.draw do
           get 'rollback_version/:version_id', action: :rollback
         end
       end
-      resources :pages, concerns: :versionable
+      resources :pages, concerns: :versionable do
+        member do
+          delete :delete_image
+        end
+      end
       resource :footer, only: [:show, :create, :update], controller: 'footer', concerns: :versionable
       resource :header, only: [:show, :create, :update], controller: 'header', concerns: :versionable
       resource :user_badge, only: [:show, :create, :update], controller: 'user_badge', concerns: :versionable

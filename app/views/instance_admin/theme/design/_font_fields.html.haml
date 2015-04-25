@@ -10,3 +10,10 @@
               = tf_f.file_field "#{font_type}_#{file_extension}"
               - if tf_f.object.persisted? && tf_f.object.send("#{font_type}_#{file_extension}")
                 = File.basename(tf_f.object.send("#{font_type}_#{file_extension}_url"))
+
+- if f.object.theme_font.present? && !f.object.theme_font.new_record?
+  .content-container.dropshadow
+    .row
+      .input-container.col-xs-12
+        = link_to 'Delete font', delete_font_instance_admin_theme_design_path, data: { confirm: t('confirmations.are_you_sure') }, method: :delete
+  
