@@ -91,5 +91,9 @@ class TransactableDrop < BaseDrop
     routes.new_listing_ticket_path(@transactable)
   end
 
+  def reviews_count
+    @transactable.reviews.count
+  end
+
 end
 
