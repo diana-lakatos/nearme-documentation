@@ -505,7 +505,7 @@ class ReservationTest < ActiveSupport::TestCase
     context "hourly priced listing" do
       setup do
         @listing = FactoryGirl.create(:transactable, quantity: 10, action_hourly_booking: true, hourly_price_cents: 100)
-        @reservation = @listing.reservations.build(reservation_type: 'hourly')
+        @reservation = @listing.reservations.build(reservation_type: 'hourly', payment_method: :credit_card)
       end
 
       should "set total cost based on HourlyPriceCalculator" do

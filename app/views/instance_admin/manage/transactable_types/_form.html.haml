@@ -92,7 +92,7 @@
         = f.input :action_schedule_booking, as: :boolean, label: 'Schedule Booking', hint: 'Use recurring rules to define recurring services instead of simple availability rules'
         - if f.object.action_schedule_booking?
           = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule do |schedule_form|
-            = schedule_form.hidden_field :schedule, class: 'icui'
+            = render 'schedules/fields', f: schedule_form
 
   %h4 Terminology
   .content-container

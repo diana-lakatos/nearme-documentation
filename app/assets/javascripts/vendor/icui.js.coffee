@@ -157,7 +157,8 @@ do ($ = jQuery) ->
       if d["end_time"]
         @has_ending_time = yes
         @children.push new EndTime(@, d["end_time"])
-      for k,v of d when v.length > 0 and k != "start_date" and k != "end_time"
+      for k,v of d when v.length > 0 and k != "start_date" and k != "end_time" and k != "start_time"
+
         if k.match /^r/
           @has_positive_rules = yes
         else if k.match /^ex/
@@ -175,8 +176,8 @@ do ($ = jQuery) ->
     render: ->
       @positive_target.html(@renderPositiveChildren())
       @negative_target.html(@renderNegativeChildren())
-      unless @has_ending_time
-        link = $("<div class='row'><a href='#'>Add Ending Time</a></div> ")
+      unless @has_ending_time || true
+        link = $("<div class='row'><a href='#'>#{@parent.data('add-duration')}</a></div> ")
         link.click =>
           @has_ending_time = yes
           link.hide()
@@ -185,7 +186,7 @@ do ($ = jQuery) ->
           false
         @positive_target.append(link)
       unless @has_positive_rules
-        positive_link = $("<div class='row'><a href='#'>Add Availability</a></div>")
+        positive_link = $("<div class='row'><a href='#'>#{@parent.data('add-availability')}</a></div>")
         positive_link.click =>
           @has_positive_rules = yes
           positive_link.hide()
@@ -194,7 +195,7 @@ do ($ = jQuery) ->
           false
         @positive_target.append(positive_link)
       unless @has_negative_rules
-        negative_link = $("<div class='row'><a href='#'>Add Unavailable</a></div>")
+        negative_link = $("<div class='row'><a href='#'>#{@parent.data('add-unavailable')}</a></div>")
         negative_link.click =>
           @has_negative_rules = yes
           negative_link.hide()
@@ -209,14 +210,14 @@ do ($ = jQuery) ->
 
     renderPositiveChildren: ->
       arr = []
-      arr.push $('<h4>Availability</h4>')
+      arr.push $("<h4>#{@parent.data('availability')}</h4>")
       for child in @children
         arr.push child.render() unless child instanceof TopLevel && child.isNegative()
       arr
 
     renderNegativeChildren: ->
       arr = []
-      arr.push $('<h4>Unavailable</h4>')
+      arr.push $("<h4>#{@parent.data('unavailable')}</h4>")
       for child in @children
         arr.push child.render() if child instanceof TopLevel && child.isNegative()
       arr
@@ -289,7 +290,7 @@ do ($ = jQuery) ->
       @elem = $("""
     <div class="toplevel">
       <div class='row'>
-        <div class="col-md-2 label"><label>Event</label></div>
+        <div class="col-md-2 label"><label>#{@parent.parent.data('event')}</label></div>
         <div class="col-md-4 small-padding hidden">
           <select class="select required selectpicker">
             #{Helpers.option 1, "occurs", => @data.type.match /^r/}
@@ -298,8 +299,8 @@ do ($ = jQuery) ->
         </div>
         <div class="col-md-8 small-padding big-input">
           <select>
-            #{Helpers.option 'dates', "specific dates", => @data.type.match /times$/}
-            #{Helpers.option 'rules', "every", => @data.type.match /rules$/}
+            #{Helpers.option 'dates', "#{@parent.parent.data('specific-dates')}", => @data.type.match /times$/}
+            #{Helpers.option 'rules', "#{@parent.parent.data('every')}", => @data.type.match /rules$/}
           </select>
         </div>
       </div>
@@ -379,7 +380,8 @@ do ($ = jQuery) ->
   class StartDate extends DatePicker
     destroyable: -> false
     clonable: -> false
-    getData: -> {type: "start_date", values: @data.time, label: "Start time"}
+    getData: ->
+      {type: "start_date", values: @data.time, label: @parent.parent.data('start-time')}
     render: ->
       @elem = super
       @elem
@@ -391,7 +393,7 @@ do ($ = jQuery) ->
   class EndTime extends DatePicker
     destroyable: -> true
     clonable: -> false
-    getData: -> {type: "end_time", values: @data.time, label: "End time"}
+    getData: -> {type: "end_time", values: @data.time, label: @parent.parent.data('duration')}
 
     render: ->
       @elem = super
@@ -454,9 +456,7 @@ do ($ = jQuery) ->
         @data.interval = parseInt e.target.value
       @elem.find('select').change (e) =>
         @data.rule_type = e.target.value
-        console.log @data.rule_type
         if @data.rule_type == 'IceCube::HourlyRule'
-          console.log 'yes'
           @children = [new Validation @, { type: 'count' }]
         else
           @children = [new Validation @]
@@ -526,6 +526,7 @@ do ($ = jQuery) ->
 
     destroyable: -> true
     render: ->
+      translation_holder = (if @parent.parent then (if @parent.parent.parent then @parent.parent.parent else @parent.parent) else @parent).parent
       str = """
       <div class="Validation">
         <div class="row">
@@ -534,18 +535,18 @@ do ($ = jQuery) ->
           </div>
           <div class="col-md-8 small-padding">
             <select>
-              #{Helpers.option "count", 'event occured less than', @data.type}"""
+              #{Helpers.option "count", translation_holder.data('event-occured-less'), @data.type}"""
       if @parent.data.rule_type in ["IceCube::YearlyRule", "IceCube::MonthlyRule", "IceCube::WeeklyRule", "IceCube::DailyRule"]
-        str += Helpers.option "until", 'event is before', @data.type
-        str += Helpers.option "day", 'is this day of the week', @data.type
-        str += Helpers.option "hour_of_day", 'is this hour of the day', @data.type
-        str += Helpers.option "minute_of_hour", 'is this minute of the hour', @data.type
+        str += Helpers.option "until", translation_holder.data('event-before'), @data.type
+        str += Helpers.option "day", translation_holder.data('this-day-of-week'), @data.type
+        str += Helpers.option "hour_of_day", translation_holder.data('this-hour-of-day'), @data.type
+        str += Helpers.option "minute_of_hour", translation_holder.data('this-minute-of-hour'), @data.type
       if @parent.data.rule_type in ["IceCube::YearlyRule", "IceCube::MonthlyRule"]
-        str += Helpers.option "day_of_week", 'is this day of the nth week', @data.type
-        str += Helpers.option "day_of_month", 'is the nth day of the month', @data.type
+        str += Helpers.option "day_of_week", translation_holder.data('this-day-of-nth-week'), @data.type
+        str += Helpers.option "day_of_month", translation_holder.data('this-nth-day-of-month'), @data.type
       if @parent.data.rule_type is "IceCube::YearlyRule"
-        str += Helpers.option "day_of_year", 'is the nth day of the year', @data.type
-        str += Helpers.option "offset_from_pascha", 'is offset from Pascha', @data.type
+        str += Helpers.option "day_of_year", translation_holder.data('this-nth-day-of-year'), @data.type
+        str += Helpers.option "offset_from_pascha", translation_holder.data('pascha-offset'), @data.type
       str += """
             </select>
           </div>

@@ -29,7 +29,7 @@
         %label.control-label.flush-top= t('simple_form.schedule.schedule')
         .controls
           = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule(schedule: f.object.transactable_type.schedule.try(:schedule)) do |schedule_form|
-            = schedule_form.hidden_field :schedule, class: 'icui'
+            = render 'schedules/fields', f: schedule_form
   = render partial: "listings/price", locals: { f: f, form_fields: form_fields }
   = render partial: 'shared/booking_types_tabs', locals: { f: f }
 

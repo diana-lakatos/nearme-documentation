@@ -970,4 +970,24 @@ en:
   approval_request_attachments:
     please_upload_document: 'Please upload document'
     wrong_file_message: 'does not have an accepted extension. Please select a pdf document or an image.'
+  schedule:
+    add_availability: 'Add Availability'
+    add_unavailable: 'Add Unavailable'
+    duration: 'Add duration'
+    availability: 'Availability'
+    unavailable: 'Unavailable'
+    start_time: 'Start time'
+    event_occured_less: 'event occured less than'
+    event_before: 'event is before'
+    this_day_of_week: 'is this day of the week'
+    this_hour_of_day: 'is this hour of the day'
+    this_minute_of_hour: 'is this minute of the hour'
+    this_day_of_nth_week: 'is this day of the nth week'
+    this_nth_day_of_month: 'is the nth day of the month'
+    this_nth_day_of_year: 'is the nth day of the year'
+    pascha_offset: 'is offset from Pascha'
+    event: 'Event'
+    every: 'every'
+    specific_dates: 'specific dates'
+
 
