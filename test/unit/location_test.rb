@@ -16,9 +16,6 @@ class LocationTest < ActiveSupport::TestCase
   should_not allow_value('not_an_email').for(:email)
   should allow_value('an_email@domain.com').for(:email)
 
-  should_not allow_value('xxx').for(:currency)
-  should allow_value('USD').for(:currency)
-
   should "be valid even if its listing is not valid" do
     @location = FactoryGirl.create(:location)
     @listing = FactoryGirl.create(:transactable, :location => @location)

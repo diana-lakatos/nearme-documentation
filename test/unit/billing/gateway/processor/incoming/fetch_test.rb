@@ -28,7 +28,7 @@ class Billing::Gateway::Processor::Incoming::FetchTest < ActiveSupport::TestCase
     stub_request(:post, /https:\/\/(my|demo).fetchpayments.co.nz\/webpayments\/MNSHandler.aspx/)
       .to_return(:status => 200, :body => 'VERIFIED')
 
-    @reservation = FactoryGirl.create(:reservation_with_remote_payment)
+    @reservation = FactoryGirl.create(:reservation_with_remote_payment, currency: 'NZD')
     @reservation.payment_response_params = SUCCESS_FETCH_RESPONSE
     @reservation.charge
     @reservation.reload
@@ -44,7 +44,7 @@ class Billing::Gateway::Processor::Incoming::FetchTest < ActiveSupport::TestCase
     stub_request(:post, /https:\/\/(my|demo).fetchpayments.co.nz\/webpayments\/MNSHandler.aspx/)
       .to_return(:status => 200, :body => 'DECLINED')
 
-    @reservation = FactoryGirl.create(:reservation_with_remote_payment)
+    @reservation = FactoryGirl.create(:reservation_with_remote_payment, currency: 'NZD')
     @reservation.payment_response_params = FAILED_FETCH_RESPONSE
     @reservation.charge
     @reservation.reload

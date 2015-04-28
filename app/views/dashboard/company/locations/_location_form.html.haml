@@ -17,7 +17,6 @@
 = f.input :email if only_inputs.empty? || only_inputs.include?(:email)
 = f.association :administrator, :collection => f.object.company_users.includes(:user).order('users.name').map(&:user), :label_method => 'name', :value_method => 'id', :input_html => { :class => 'selectpicker' }, :include_blank => t('simple_form.prompts.location.administrator') if only_inputs.empty? || only_inputs.include?(:administrator)
 = f.input :special_notes, :label => t('simple_form.labels.location.special_notes', lessee: platform_context.lessee.capitalize), :placeholder => t('simple_form.placeholders.location.special_notes', lessee: platform_context.lessee, lessees: platform_context.lessee.pluralize) if only_inputs.empty? || only_inputs.include?(:special_notes)
-= f.input :currency, :as => :currency, :default => 'USD', :input_html => { "data-live-search" => "true", :class => 'selectpicker', :id => 'currency-select' } if only_inputs.empty? || only_inputs.include?(:currency)
 - if only_inputs.empty? || only_inputs.include?(:availability_rules)
   = render :partial => 'dashboard/company/transactables/availability_rules_form', :locals => { :f => f }
 - unless platform_context.instance.location_amenity_types.count.zero?

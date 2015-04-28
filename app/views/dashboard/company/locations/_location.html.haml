@@ -2,12 +2,10 @@
   .location-select.col-md-7.col-xs-7
     - if defined?(form)
       = form.radio_button :location_id, location.id
-      = form.hidden_field :currency, value: currency_symbol_from_code(location.currency)
       = form.label "location_id_#{location.id}", location.name
 
     -else
       = radio_button_tag "transactable[location_id]", location.id
-      = hidden_field_tag :currency, currency_symbol_from_code(location.currency)
       = label_tag "transactable_location_id_#{location.id}", location.name
   .col-md-5.col-xs-5
     %span.location-options

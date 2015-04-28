@@ -2,7 +2,6 @@ FactoryGirl.define do
   factory :location do
     email "psherman@smilehouse.com"
     description "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-    currency "USD"
     availability_template_id { (AvailabilityTemplate.first || FactoryGirl.create(:availability_template)).id }
     association(:location_type, factory: :location_type)
     company
@@ -11,7 +10,6 @@ FactoryGirl.define do
     factory :location_in_auckland do
       association :location_address, factory: :address_in_auckland
       association(:company, factory: :company_in_auckland)
-      currency "NZD"
     end
 
     factory :location_in_adelaide do

@@ -6,8 +6,8 @@ Feature: A user can recurre book at a space
 
   Background:
     Given a company exists
-      And a location exists with company: that company, currency: "USD"
-      And a transactable exists with location: that location, quantity: 10, photos_count: 1, action_rfq: true
+      And a location exists with company: that company
+      And a transactable exists with location: that location, quantity: 10, photos_count: 1, action_rfq: true, currency: "USD"
       And a user exists with name: "John Doe"
       And request for feature is enabled
 

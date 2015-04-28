@@ -6,8 +6,8 @@ Feature: A user can book at a space
 
   Background:
     Given a company exists
-      And a location exists with company: that company, currency: "USD"
-      And a transactable exists with location: that location, quantity: 10, photos_count: 1
+      And a location exists with company: that company
+      And a transactable exists with location: that location, quantity: 10, photos_count: 1, currency: "USD"
       And a user exists
 
   Scenario: Booking for a non-'automatically confirm' listing should show relevant details
@@ -23,8 +23,8 @@ Feature: A user can book at a space
     And the reservation total should show $55.00
 
   Scenario: Paying manually should not incur a service fee
-    Given a location exists with company: that company, currency: "RUB"
-    And a transactable exists with location: that location, quantity: 10
+    Given a location exists with company: that company
+    And a transactable exists with location: that location, quantity: 10, currency: "RUB"
     And I am logged in as the user
     When I go to the location's page
     And I select to book and review space for:
@@ -50,8 +50,8 @@ Feature: A user can book at a space
 
   Scenario: Booking and paying by credit card via Paypal
      Given I am logged in as the user
-       And a location exists with company: that company, currency: "JPY"
-       And a transactable exists with location: that location, quantity: 10
+       And a location exists with company: that company
+       And a transactable exists with location: that location, quantity: 10, currency: "JPY"
        When I book space for:
         | Transactable     | Date   | Quantity |
         | the transactable | Monday | 1        |

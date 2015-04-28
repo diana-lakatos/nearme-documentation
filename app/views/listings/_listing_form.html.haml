@@ -93,3 +93,7 @@
           #ajax_error{style: 'display: none;'}
           .category_tree
           .category_tree_inputs
+
+- if only_inputs.empty? || only_inputs.include?(:currency)
+  = f.input :currency, :as => :currency, allowed_currencies: @transactable_type.allowed_currencies, default: @transactable_type.default_currency || "USD", :input_html => { :class => 'custom-select', :id => 'currency-select' }
+

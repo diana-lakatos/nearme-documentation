@@ -19,7 +19,7 @@ class TransactableDecorator < Draper::Decorator
       actual_price = self.send(price_name_or_object)
     end
 
-    self.location.decorate.price_with_currency(actual_price)
+    money_without_cents_and_with_symbol(Money.new(actual_price.try(:fractional), currency))
   end
 
   def lowest_price_with_currency(filter_pricing = [])

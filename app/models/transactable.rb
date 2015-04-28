@@ -55,6 +55,7 @@ class Transactable < ActiveRecord::Base
   accepts_nested_attributes_for :schedule
 
   before_destroy :decline_reservations
+  before_save :set_currency
 
   # == Scopes
   scope :featured, -> { where(%{ (select count(*) from "photos" where transactable_id = "listings".id) > 0  }).
@@ -122,15 +123,17 @@ class Transactable < ActiveRecord::Base
   before_validation :set_activated_at, :set_enabled, :nullify_not_needed_attributes
 
   # == Validations
-  validates_presence_of :location, :transactable_type
   validates_with PriceValidator
-  validates :photos, length: {:minimum => 1}, unless: ->(record) { record.photo_not_required || !record.transactable_type.enable_photo_required }
-  validates_inclusion_of :booking_type, in: TransactableType::BOOKING_TYPES
-  validates :quantity, presence: true
-  validates :quantity, numericality: {greater_than: 0}
+  validate :check_book_it_out_minimum_qty, if: ->(record) { record.book_it_out_minimum_qty.present? }
+
   validates :book_it_out_minimum_qty, numericality: {greater_than_or_equal_to: 0}, allow_blank: true
   validates :book_it_out_discount, numericality: {greater_than: 0, less_than: 100}, allow_blank: true
-  validate :check_book_it_out_minimum_qty, if: ->(record) { record.book_it_out_minimum_qty.present? }
+  validates :booking_type, inclusion: { in: TransactableType::BOOKING_TYPES }
+  validates :currency, presence: true, allow_nil: false, currency: true
+  validates :location, :transactable_type, presence: true
+  validates :photos, length: {:minimum => 1}, unless: ->(record) { record.photo_not_required || !record.transactable_type.enable_photo_required }
+  validates :quantity, presence: true
+  validates :quantity, numericality: {greater_than: 0}
 
   after_save :set_external_id
   after_save { self.update_column(:opened_on_days, availability.days_open.sort) }
@@ -143,7 +146,7 @@ class Transactable < ActiveRecord::Base
 
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
-  delegate :currency, :formatted_address, :local_geocoding,
+  delegate :formatted_address, :local_geocoding,
     :latitude, :longitude, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
   delegate :service_fee_guest_percent, :service_fee_host_percent, :hours_to_expiration, :minimum_booking_minutes, to: :transactable_type
   delegate :name, to: :creator, prefix: true
@@ -524,7 +527,15 @@ class Transactable < ActiveRecord::Base
     action_rfq?
   end
 
+  def currency
+    super.presence || transactable_type.try(:default_currency)
+  end
+
   private
+
+  def set_currency
+    self.currency = currency
+  end
 
   def set_activated_at
     if enabled_changed?
@@ -540,10 +551,10 @@ class Transactable < ActiveRecord::Base
 
   def nullify_not_needed_attributes
     if schedule_booking?
-      self.hourly_price = self.daily_price = self.weekly_price = self.monthly_price = nil
+      self.hourly_price = self.daily_price = self.weekly_price = self.monthly_price = Money.new(nil, currency)
       self.action_hourly_booking = self.action_daily_booking = self.action_free_booking = nil
     else
-      self.fixed_price = nil
+      self.fixed_price = Money.new(nil, currency)
       self.action_schedule_booking = nil
     end
     true

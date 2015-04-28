@@ -15,8 +15,6 @@ class @Dashboard.ListingController
     @initializePriceFields()
     @bindEvents()
     @updateCurrency()
-    if ( @locationRadios.length > 0 )
-      @updateCurrencyFromLocation()
     @setupDocumentRequirements()
 
   bindEvents: =>
@@ -25,10 +23,6 @@ class @Dashboard.ListingController
 
     @container.on 'change', @currencySelect, (event) =>
       @updateCurrency()
-
-    if ( @locationRadios.length > 0 )
-      @locationRadios.on 'change', =>
-        @updateCurrencyFromLocation()
 
     @setupTooltips()
 
@@ -61,9 +55,7 @@ class @Dashboard.ListingController
 
   updateCurrency: () =>
     @currencyHolders.html($('#currency_'+ (@currencySelect.val() || @defalt_currency)).text())
-
-  updateCurrencyFromLocation: ->
-    @currencyLocationHolders.html(@container.find('#location-list input[type="radio"]:checked').next().val())
+    @currencyLocationHolders.html($('#currency_'+ (@currencySelect.val() || @defalt_currency)).text())
 
   initializePriceFields: ->
     @priceFieldsFree = new PriceFields(@container.find('.price-inputs-free:first'))

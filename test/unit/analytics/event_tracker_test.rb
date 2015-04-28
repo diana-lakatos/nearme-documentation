@@ -288,8 +288,8 @@ class EventTrackerTest < ActiveSupport::TestCase
       booking_desks: @reservation.quantity,
       booking_days: @reservation.total_days,
       booking_total: @reservation.total_amount_dollars,
+      booking_currency: @reservation.currency,
       location_address: @reservation.location.address,
-      location_currency: @reservation.location.currency,
       location_suburb: @reservation.location.suburb,
       location_city: @reservation.location.city,
       location_state: @reservation.location.state,
@@ -306,6 +306,7 @@ class EventTrackerTest < ActiveSupport::TestCase
       listing_daily_price: @listing.daily_price.try(:dollars),
       listing_weekly_price: @listing.weekly_price.try(:dollars),
       listing_monthly_price: @listing.monthly_price.try(:dollars),
+      listing_currency: @listing.currency,
       listing_url: "http://example.com/listings/#{@listing.to_param}"
     }
   end
@@ -313,7 +314,6 @@ class EventTrackerTest < ActiveSupport::TestCase
   def location_properties
     {
       location_address: @location.address,
-      location_currency: @location.currency,
       location_suburb: @location.suburb,
       location_city: @location.city,
       location_state: @location.state,
