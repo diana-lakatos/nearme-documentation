@@ -60,6 +60,7 @@ class InstanceView < ActiveRecord::Base
     'buy_sell_market/products/extra_properties',
     'search/mixed/location',
     'search/mixed/listing',
+    'search/mixed/individual_listing',
     'search/list/listing',
     'search/products/product',
     'search/products_table/head',
