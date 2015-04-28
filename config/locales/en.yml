@@ -504,6 +504,8 @@ en:
       no_reservations_yet: "Your locations haven't got any reservations yet."
       no_purchases_yet: 'Your products have not received any orders.'
       no_product_views_yet: "Your products haven't been visited yet."
+    location:
+      are_you_sure: 'If you continue, %{listings_count} listings which belong to this location will also be deleted. Are you really sure you want to proceed?'
   hidden_items:
     registrations:
       show:

@@ -14,4 +14,4 @@
       =link_to "Edit", '#', data: { modal: true, href: edit_dashboard_company_location_path(location) }
       %span.blue |
       =link_to "Remove", dashboard_company_location_path(location), remote: true, method: :delete,
-          data: { confirm: 'Are you sure?' }
+          data: { confirm: location.listings.count.size > 0 ? I18n.t('dashboard.location.are_you_sure', listings_count: location.listings.count) : I18n.t('confirmations.are_you_sure') }
