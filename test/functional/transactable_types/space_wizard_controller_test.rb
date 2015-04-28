@@ -249,7 +249,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
   end
 
   context 'with skip_company' do
-    setup do 
+    setup do
       @instance_with_skip_company = FactoryGirl.create(:instance, skip_company: true)
       @domain = FactoryGirl.create(:domain, target: @instance_with_skip_company)
 
@@ -316,7 +316,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
             "address" => "Poznań, Polska",
             "latitude" => "52.406374",
             "longitude" => "16.925168100000064",
-          },         
+          },
           "industry_ids"=>["#{@industry.id}"],
           "locations_attributes"=>
             {"0"=>

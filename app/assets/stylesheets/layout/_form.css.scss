@@ -135,6 +135,10 @@ form:not(.no_inheritance) {
     }
   }
 
+  .hint-block {
+    font-size: 12px;
+  }
+
   .error-block {
     color: $red;
     text-align: left;
