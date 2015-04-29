@@ -349,7 +349,11 @@ DesksnearMe::Application.routes.draw do
 
     namespace :manage_blog do
       get '/', :to => 'base#index'
-      resources :posts
+      resources :posts do
+        member do
+          delete :delete_image
+        end
+      end
       resources :user_posts
       resource :settings, only: [:edit, :update] do
         collection do
