@@ -1,0 +1,5 @@
+.progress{:'data-progress-container' => true, style: 'display: none;'}
+  = image_tag 'transparent-spinner.gif', class: 'spinner'
+  %span.filename{:'data-filename' => true}
+  .progress-bar{:'data-progress-bar' => true, style: 'width: 0%;'}
+    %span.sr-only
