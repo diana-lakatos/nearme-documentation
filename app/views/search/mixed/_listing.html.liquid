@@ -5,7 +5,7 @@
     </div>
   </div>
   <div class="span5 listing-name-description without-capacity">
-    <span><strong>{{ listing.name | filter_text | custom_sanitize }} {{ listing.quantity }}</strong><span>
+    <span><strong>{{ listing.name | filter_text | custom_sanitize }}</strong><span>
     <p>{{ listing.properties.description | filter_text | custom_sanitize | truncate: 150}}</p>
   </div>
   <div class="span2 listing-price padding-top">
