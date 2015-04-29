@@ -70,7 +70,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       @user.authentications << [fb, ln, tw]
 
       get :show, :id => @user.slug
-      
+
       assert_response 200
       assert_select 'ul li', 'Email Address'
       assert_select 'ul li', 'Facebook'
@@ -220,6 +220,20 @@ class RegistrationsControllerTest < ActionController::TestCase
         assert @user.avatar_transformation_data.empty?
         assert_nil @user.avatar_versions_generated_at
         assert !@user.avatar.file.present?
+      end
+
+      should 'assign avatar and save user if user is in invalid state too' do
+        sign_in @user
+        @user.update_column :email, ''
+        assert !@user.valid?
+        assert_nil @user['avatar']
+        avatar_file = ActionDispatch::Http::UploadedFile.new(
+          tempfile: File.open(Rails.root.join('test/fixtures/listing.jpg')),
+          filename: 'avatar.jpg'
+        )
+        post :avatar, avatar: avatar_file
+        assert_response :success
+        assert_not_nil @user.reload['avatar']
       end
     end
 

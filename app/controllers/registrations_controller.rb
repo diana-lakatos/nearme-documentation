@@ -127,7 +127,7 @@ class RegistrationsController < Devise::RegistrationsController
   def avatar
     @user = current_user
     @user.avatar = params[:avatar]
-    if @user.save
+    if @user.save(validate: false)
       render :text => { :url => @user.avatar_url(:medium),
                         :resize_url =>  edit_avatar_path,
                         :thumbnail_dimensions => @user.avatar.thumbnail_dimensions[:medium],
