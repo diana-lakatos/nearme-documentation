@@ -18,6 +18,4 @@
         - if error_message
           %p.error-block= error_message
 
-    .progress{:'data-progress-container' => true, style: 'display: none;'}
-      .progress-bar{:'data-progress-bar' => true, style: 'width: 0%;'}
-        %span.sr-only
+    = render 'shared/components/progress_bar'

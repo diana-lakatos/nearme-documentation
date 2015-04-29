@@ -37,6 +37,7 @@ class @Fileupload
         file = data.files[0]
         if types.test(file.type) || types.test(file.name)
           progressBar = @fileInputWrapper.find('div[data-progress-container]:first').clone()
+          progressBar.find('span[data-filename]').text(file.name)
           progressBar.show()
           @fileInputWrapper.append(progressBar)
           data.progressBar = progressBar
