@@ -30,7 +30,9 @@ class InstanceView < ActiveRecord::Base
     'reservation_mailer/notify_host_of_confirmation', 'reservation_mailer/notify_host_of_expiration',
     'reservation_mailer/notify_host_of_rejection', 'reservation_mailer/notify_host_with_confirmation',
     'reservation_mailer/notify_host_without_confirmation', 'reservation_mailer/pre_booking',
-    'rating_mailer/line_items/request_rating_of_guest_from_host', 'rating_mailer/line_items/request_rating_of_host_and_product_from_guest'
+    'rating_mailer/line_items/request_rating_of_guest_from_host', 'rating_mailer/line_items/request_rating_of_host_and_product_from_guest',
+    'spree/order_mailer/approved_email', 'spree/order_mailer/cancel_email', 'spree/order_mailer/confirm_email',
+    'spree/order_mailer/notify_seller_email', 'spree/shipment_mailer/shipped_email'
   ].freeze
 
   DEFAULT_SMS_TEMPLATES_PATHS = [
@@ -48,6 +50,7 @@ class InstanceView < ActiveRecord::Base
     'locations/booking_module_listing_description',
     'locations/location_description',
     'locations/listings/listing_description',
+    'locations/booking_module_call_to_actions',
     'locations/booking_module_listing_description_below_dates',
     'locations/booking_module_listing_description_below_call_to_action',
     'locations/booking_module_listing_description_above_call_to_action',
@@ -57,6 +60,7 @@ class InstanceView < ActiveRecord::Base
     'buy_sell_market/products/extra_properties',
     'search/mixed/location',
     'search/mixed/listing',
+    'search/mixed/individual_listing',
     'search/list/listing',
     'search/products/product',
     'search/products_table/head',

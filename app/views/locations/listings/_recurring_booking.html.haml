@@ -96,7 +96,7 @@
               = select_tag :quantity, options_for_select(1..listing.quantity), :class => 'quantity'
             .price{class: "#{'hidden' if listing.action_free_booking?}"}
               Total
-              %span #{currency_content_tag(@location.currency, 0.00, :span, { :rel => false })}
+              %span #{currency_content_tag(listing.currency, 0.00, :span, { :rel => false })}
 
             .book
               - registration_url = new_user_registration_path(return_to: location_url(@listing.location, @listing, restore_reservations: true))

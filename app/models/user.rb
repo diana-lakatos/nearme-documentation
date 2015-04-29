@@ -50,6 +50,7 @@ class User < ActiveRecord::Base
   has_many :blog_posts, class_name: 'UserBlogPost'
   has_many :payment_documents, class_name: 'Attachable::PaymentDocument', dependent: :destroy
   has_many :shipping_categories, class_name: 'Spree::ShippingCategory'
+  has_many :approval_request_attachments, foreign_key: 'uploader_id'
   belongs_to :instance_profile_type
   has_many :payment_documents, class_name: 'Attachable::PaymentDocument', dependent: :destroy
   belongs_to :partner
@@ -158,8 +159,7 @@ class User < ActiveRecord::Base
   validate do |user|
     if user.persisted? && PlatformContext.current.instance.user_info_in_onboarding_flow? && self.custom_validation
       PlatformContext.current.instance.user_required_fields.each do |field|
-        field_to_check = field == 'avatar' ? 'avatar_original_url' : field
-        user.errors.add(field, I18n.t('errors.messages.blank')) unless self.send(field_to_check).present?
+        user.errors.add(field, I18n.t('errors.messages.blank')) unless self.send(field).present?
       end
     end
   end

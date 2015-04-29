@@ -1,0 +1,3 @@
+%span.attachment
+  = image_tag 'dashboard/green-check.png'
+  = link_to t('general.delete'), approval_request_attachment_path(attachment), remote: true, method: :delete, data: {confirm: t('confirmations.are_you_sure'), 'delete-attachment' => true}

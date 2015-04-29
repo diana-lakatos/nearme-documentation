@@ -525,6 +525,8 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
+  resources :approval_request_attachments, only: %i(create destroy)
+
   namespace :dashboard do
 
     resources :api do
@@ -706,6 +708,9 @@ DesksnearMe::Application.routes.draw do
     resources :saved_searches, only: %i(index create update destroy) do
       collection do
         patch :change_alerts_frequency
+      end
+      member do
+        get :search
       end
     end
 

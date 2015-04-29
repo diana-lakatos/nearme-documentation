@@ -23,7 +23,6 @@ Spree::Order.class_eval do
   before_create :store_platform_context_detail
   before_update :reject_empty_documents
 
-  alias_method :old_finalize!, :finalize!
 
   self.per_page = 5
 
@@ -48,15 +47,6 @@ Spree::Order.class_eval do
 
   def manual_payment?
     payment_method == Reservation::PAYMENT_METHODS[:manual]
-  end
-
-  def finalize!
-    old_finalize!
-    deliver_notify_seller_email
-  end
-
-  def deliver_notify_seller_email
-    Spree::OrderMailer.notify_seller_email(self.id).deliver
   end
 
   def total_amount_to_charge
@@ -126,5 +116,42 @@ Spree::Order.class_eval do
   def possible_manual_payment?
     instance.possible_manual_payment?
   end
+
+  # Finalizes an in progress order after checkout is complete.
+  # Called after transition to complete state when payments will have been processed
+  def finalize!
+    # lock all adjustments (coupon promotions, etc.)
+    all_adjustments.each{|a| a.close}
+
+    # update payment and shipment(s) states, and save
+    updater.update_payment_state
+    shipments.each do |shipment|
+      shipment.update!(self)
+      shipment.finalize!
+    end
+
+    updater.update_shipment_state
+    save!
+    updater.run_hooks
+
+    touch :completed_at
+
+    WorkflowStepJob.perform(WorkflowStep::OrderWorkflow::Finalized, id)
+
+    consider_risk
+  end
+
+  def after_cancel
+    shipments.each { |shipment| shipment.cancel! }
+    payments.completed.each { |payment| payment.cancel! }
+    WorkflowStepJob.perform(WorkflowStep::OrderWorkflow::Cancelled, id)
+    self.update!
+  end
+
+  def to_liquid
+    Spree::OrderDrop.new(self)
+  end
+
 end
+
 

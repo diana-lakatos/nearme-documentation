@@ -6,8 +6,8 @@ Feature: A user can recurre book at a space
 
   Background:
     Given a company exists
-      And a location exists with company: that company, currency: "USD"
-      And a transactable exists with location: that location, quantity: 10, photos_count: 1
+      And a location exists with company: that company
+      And a transactable exists with location: that location, quantity: 10, photos_count: 1, currency: "USD"
       And a user exists with name: "John Doe"
       And recurre booking is enabled
 
@@ -24,8 +24,8 @@ Feature: A user can recurre book at a space
     And the reservation total should show $55.00
 
   Scenario: Paying manually should not incur a service fee
-    Given a location exists with company: that company, currency: "RUB"
-    And a transactable exists with location: that location, quantity: 10, booking_type: "recurring"
+    Given a location exists with company: that company
+    And a transactable exists with location: that location, quantity: 10, currency: "RUB", booking_type: "recurring"
     And I am logged in as the user
     When I go to the location's page
     And I select to recurre book and review space for:
@@ -35,8 +35,8 @@ Feature: A user can recurre book at a space
 
   Scenario: Free booking should show 'Free' in place of rates and $0.00 for the total
     Given I am logged in as the user
-    And a location exists with company: that company, currency: "USD"
-    And a transactable exists with location: that location, quantity: 10, daily_price_cents: 0, action_free_booking: true
+    And a location exists with company: that company
+    And a transactable exists with location: that location, quantity: 10, currency: "USD", daily_price_cents: 0, action_free_booking: true
     When I go to the location's page
     Then I should see a free booking module
 

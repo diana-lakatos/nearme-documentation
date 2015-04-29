@@ -62,14 +62,14 @@ class ReservationRequest < Form
 
       if listing.schedule_booking?
         if @dates.is_a?(String)
-          @start_minute = @dates.to_datetime.min.to_i + (60 * @dates.to_datetime.hour.to_i)
+          @start_minute = @dates.to_datetime.try(:min).to_i + (60 * @dates.to_datetime.try(:hour).to_i)
           @end_minute = @start_minute
-          @dates = [@dates.to_datetime.to_date.to_s]
+          @dates = [@dates.try(:to_datetime).try(:to_date).try(:to_s)]
         end
       else
         @dates = @dates.split(',') if @dates.is_a?(String)
       end
-      @dates.each do |date_string|
+      @dates.reject(&:blank?).each do |date_string|
         @reservation.add_period(Date.parse(date_string), start_minute, end_minute)
       end
     end

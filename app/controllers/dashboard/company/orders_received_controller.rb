@@ -45,6 +45,7 @@ class Dashboard::Company::OrdersReceivedController < Dashboard::Company::BaseCon
 
   def approve
     @order.approved_by(current_user)
+    WorkflowStepJob.perform(WorkflowStep::OrderWorkflow::Approved, @order.id)
     flash[:success] = t('flash_messages.manage.order.approved')
     redirect_to :back
   end

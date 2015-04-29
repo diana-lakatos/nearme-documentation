@@ -3,8 +3,8 @@ Feature: User can add locations to wish list
 
   Background:
     Given a company exists
-    And a location exists with company: that company, currency: "USD", name: "My loved location"
-    And a transactable exists with location: that location, quantity: 10, photos_count: 1
+    And a location exists with company: that company, name: "My loved location"
+    And a transactable exists with location: that location, quantity: 10, photos_count: 1, currency: "USD"
     And a user exists
     And wish lists are enabled for the instance
 

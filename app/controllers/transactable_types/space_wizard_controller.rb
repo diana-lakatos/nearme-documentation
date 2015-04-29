@@ -87,7 +87,8 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   def set_common_variables
     redirect_to(transactable_type_new_space_wizard_url(@transactable_type)) && return unless current_user.present?
 
-    @user = current_user
+    # preload associations to correcty make #assign_attributes work correctly
+    @user = User.includes(companies: :locations).find(current_user.id)
     @company = @user.companies.first
     @country = if params[:user] && params[:user][:country_name]
                  params[:user][:country_name]

@@ -66,6 +66,19 @@
 
 .fileupload {
 
+  .attachment {
+    vertical-align: middle;
+    margin-left: 10px;
+
+    img {
+      vertical-align: text-top;
+    }
+
+    a {
+      color: $theme_blue;
+    }
+  }
+
   .progress {
     height: 20px;
     margin-bottom: 20px;

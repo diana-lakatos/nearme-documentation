@@ -1,6 +1,6 @@
 - custom_attribute_names = @transactable_type.custom_attributes.collect { |custom_attribute| custom_attribute.name }
 = f.hidden_field :transactable_type_id, value: @transactable_type.id
-= f.hidden_field :booking_type, value: @transactable.booking_type, 'data-booking-type' => true
+= f.hidden_field :booking_type, value: @transactable.transactable_type.booking_choices.size == 1 ? f.object.transactable_type.booking_choices.first : @transactable.booking_type, 'data-booking-type' => true
 = f.input :id, :as => :hidden
 
 - @form_components.each do |form_component|
@@ -38,6 +38,10 @@
     - when 'amenity_types'
       - unless platform_context.instance.listing_amenity_types.count.zero?
         = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'selectpicker', :multiple => true }
+
+    - when 'action_rfq'
+      - if f.object.transactable_type.action_rfq?
+        = f.input :action_rfq, as: :boolean
     - when 'price'
       = render 'price_form', f: f, form_fields: form_component.form_fields
       - if form_component.form_fields.find { |ff| ff.keys.first == model && ff.values.first == 'schedule' }
@@ -88,6 +92,8 @@
         = f.input :quantity, as: :hidden, value: 1
       -else
         = f.input :quantity
+    - when 'currency'
+      = f.input :currency, :as => :currency, allowed_currencies: @transactable_type.allowed_currencies, default: @transactable_type.default_currency, :input_html => { "data-live-search" => "true", :class => 'selectpicker', :id => 'currency-select' }
     - when *@transactable_type.categories.roots.map { |c| "Category - #{c.name}" }
       - category_name = field.split(" - ")[1]
       - category = @transactable_type.categories.roots.where(name: category_name).first
@@ -106,6 +112,11 @@
         - @transactable_type.custom_attributes.each do |attribute|
           - next if (platform_context.instance.user_based_marketplace_views? && ( attribute.name == 'quantity' || attribute.name == 'capacity' )) || attribute.name != field
           = draw_attribute_for_form(attribute, f)
+.hidden
+  - Money::Currency.table.values.each do |c|
+    %span{:id => "currency_#{c[:iso_code]}"}
+      = c[:symbol]
+  %span{:id => "default_currency"}= @transactable_type.default_currency
 
 - content_for :domready do
   $(function() { new Dashboard.ListingController($('#listing-form')) });

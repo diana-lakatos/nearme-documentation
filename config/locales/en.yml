@@ -16,6 +16,8 @@ en:
         title: 'Title'
         created_at: 'Created at'
         results: 'Results'
+      transactable:
+        action_rfq: 'Request for Quote'
   connections:
     facebook:
       count:
@@ -52,6 +54,7 @@ en:
     save: 'Save'
     daily: 'Daily'
     weekly: 'Weekly'
+    browse: 'Browse'
   transactable_types:
     locations:
       listings:
@@ -324,13 +327,14 @@ en:
         resend: Resend
 
         shipped_email:
-          subject: Shipment Notification
+          subject: 'Shipment Notification'
           dear_customer: 'Dear Customer,'
           instructions: 'Your order has been shipped'
           shipment_summary: 'Shipment Summary'
           track_information: 'Tracking Information: %{tracking}'
           track_link: 'Tracking Link: %{url}'
-          thanks: 'Thank you for your business.'
+          thanks: 'Thank you for your order.'
+
 
       order_mailer:
         resend: RESEND
@@ -348,16 +352,22 @@ en:
           shipping: 'Shipping'
           tax: 'Tax'
 
+        approved_email:
+          subject: 'Approval of Order'
+          dear_customer: 'Dear Customer,'
+          instructions: 'Your order has been approved.'
+
         cancel_email:
           subject: 'Cancellation of Order'
           dear_customer: 'Dear Customer,'
-          instructions: 'Your order has been CANCELED.  Please retain this cancellation information for your records.'
+          instructions: 'Your order has been CANCELLED. Please retain this cancellation information for your records.'
           order_summary_canceled: 'Order Summary [CANCELED]'
 
         notify_seller_email:
-          subject: 'New order'
+          subject: 'New Order'
           dear_seller: 'Dear Seller,'
           instructions_1: 'New order has been placed.'
+          manual_payment_instructions: 'Email to which invoice should be sent: %{email}'
           instructions_2: 'ACTION REQUIRED: Visit your Orders page to approve this order and capture payment.'
           order_summary: 'Order Summary'
 
@@ -495,6 +505,8 @@ en:
       no_reservations_yet: "Your locations haven't got any reservations yet."
       no_purchases_yet: 'Your products have not received any orders.'
       no_product_views_yet: "Your products haven't been visited yet."
+    location:
+      are_you_sure: 'If you continue, %{listings_count} listings which belong to this location will also be deleted. Are you really sure you want to proceed?'
   hidden_items:
     registrations:
       show:
@@ -543,6 +555,7 @@ en:
       index: 'Saved Searches'
     headers:
       alerts_frequency: 'Frequency of Saved Search Alerts'
+      no_results: 'No saved searches found'
     buttons:
       save_search: 'Save Search'
     mailer:
@@ -953,4 +966,8 @@ en:
       public_url: Public URL
       search: Search
       wrong_file_message: 'does not have an accepted extension. Please select a document or an image.'
+
+  approval_request_attachments:
+    please_upload_document: 'Please upload document'
+    wrong_file_message: 'does not have an accepted extension. Please select a pdf document or an image.'
 

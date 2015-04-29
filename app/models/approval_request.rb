@@ -7,6 +7,7 @@ class ApprovalRequest < ActiveRecord::Base
   belongs_to :instance
   belongs_to :uploader, class_name: 'User'
   belongs_to :owner, polymorphic: true
+  belongs_to :approval_request_template
 
   scope :pending, lambda { with_state(:pending) }
   scope :approved, lambda { with_state(:approved) }

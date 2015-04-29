@@ -46,8 +46,7 @@ class InstanceWizardController < ActionController::Base
     end
 
     @instance_creator.update_attribute(:created_instance, true)
-
-    PlatformContext.current = PlatformContext.new(@instance)
+    @instance.set_context!
 
     if params[:marketplace_type] == "Buy/Sell"
       @instance.product_types.create(name: @instance.bookable_noun)

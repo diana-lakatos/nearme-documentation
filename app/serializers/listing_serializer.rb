@@ -4,7 +4,7 @@ class ListingSerializer < ApplicationSerializer
     :day => 'day'
   }
 
-  attributes :id, :name, :description, :company_name, :company_description,
+  attributes :id, :name, :description, :company_name, :company_description, :currency,
     :address, :price, :quantity
 
   attribute :latitude,  key: :lat

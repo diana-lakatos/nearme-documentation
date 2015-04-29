@@ -21,7 +21,6 @@ class Analytics::EventTracker::Serializers::TrackSerializer
     when Location
       {
         location_address: object.address,
-        location_currency: object.currency,
         location_suburb: object.suburb,
         location_city: object.city,
         location_state: object.state,
@@ -37,13 +36,13 @@ class Analytics::EventTracker::Serializers::TrackSerializer
         listing_daily_price: safe_get(object, 'daily_price').try(:dollars),
         listing_weekly_price: safe_get(object, 'weekly_price').try(:dollars),
         listing_monthly_price: safe_get(object, 'monthly_price').try(:dollars),
+        listing_currency: safe_get(object, 'currency'),
         listing_url: Rails.application.routes.url_helpers.listing_url(object)
       }
     when RecurringBooking
       {
         booking_desks: object.quantity,
         location_address: object.location.address,
-        location_currency: object.location.currency,
         location_suburb: object.location.suburb,
         location_city: object.location.city,
         location_state: object.location.state,
@@ -55,8 +54,8 @@ class Analytics::EventTracker::Serializers::TrackSerializer
         booking_desks: object.quantity,
         booking_days: object.total_days,
         booking_total: object.total_amount_dollars,
+        booking_currency: object.currency,
         location_address: object.location.address,
-        location_currency: object.location.currency,
         location_suburb: object.location.suburb,
         location_city: object.location.city,
         location_state: object.location.state,

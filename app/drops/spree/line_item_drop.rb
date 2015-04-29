@@ -1,6 +1,8 @@
 class Spree::LineItemDrop < BaseDrop
   attr_reader :line_item
 
+  delegate :quantity, :order, :variant, to: :line_item
+
   def initialize(line_item)
     @line_item = line_item.decorate
   end
@@ -19,5 +21,13 @@ class Spree::LineItemDrop < BaseDrop
 
   def product_name
     @line_item.product.name
+  end
+
+  def single_money
+    @line_item.single_money.to_s
+  end
+
+  def display_amount
+    @line_item.display_amount.to_s
   end
 end

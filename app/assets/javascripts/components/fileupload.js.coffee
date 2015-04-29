@@ -14,10 +14,12 @@ class @Fileupload
     if @upload_type == 'ckfile'
       @fileCollection = new Ckfile.Collection($(@files_container))
       @dataType = 'html'
+    else if @upload_type == 'attachment'
+      @dataType = 'html'
     else
       @fileCollection = new Photo.Collection(@fileInputWrapper.parent())
       @dataType = 'json'
-      
+
     @fileInput.fileupload
       url: @fileInputWrapper.data('url')
       paramName: @fileInputWrapper.data('name')
@@ -50,5 +52,8 @@ class @Fileupload
           data.progressBar.find('div[data-progress-bar]').css('width', progress + '%')
       done: (e, data) =>
         data.progressBar.remove()
-        fileIndex = @fileCollection.add()
-        @fileCollection.update(fileIndex, data.result)
+        if @upload_type == 'attachment'
+          @fileInputWrapper.parent().find('[data-uploaded]').html(data.result)
+        else
+          fileIndex = @fileCollection.add()
+          @fileCollection.update(fileIndex, data.result)

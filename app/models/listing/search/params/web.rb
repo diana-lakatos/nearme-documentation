@@ -1,7 +1,7 @@
 class Listing::Search::Params::Web < Listing::Search::Params
   attr :location_string
   attr_reader :location_types_ids, :industries_ids, :lntype, :lgtype, :lgpricing,
-    :lntypes, :sort, :dates, :start_date, :end_date, :display_dates, :lg_custom_attributes, :category_ids
+    :lntypes, :sort, :order, :dates, :start_date, :end_date, :display_dates, :lg_custom_attributes, :category_ids
 
   def initialize(options)
     super
@@ -10,6 +10,7 @@ class Listing::Search::Params::Web < Listing::Search::Params
     @lgtype = @options[:lgtype].blank? ? nil : @options[:lgtype]
     @lgpricing = @options[:lgpricing]
     @sort = (@options[:sort].presence || 'relevance').inquiry
+    @order = (@options[:order].presence || 'ASC')
     @dates = (@options[:availability].present? && @options[:availability][:dates][:start].present? &&
               @options[:availability][:dates][:end].present?) ? @options[:availability][:dates] : nil
     @display_dates = (@options[:start_date].present? && @options[:end_date].present?) ?
@@ -42,9 +43,9 @@ class Listing::Search::Params::Web < Listing::Search::Params
 
   def get_category_ids
     categories = Category.where(id: @options[:category_ids].split(',')) if @options[:category_ids]
-    if categories.present? 
+    if categories.present?
       parent_ids = categories.map(&:parent_id)
-      categories.map do |category| 
+      categories.map do |category|
         unless parent_ids.include?(category.id)
           category.self_and_descendants.map(&:id)
         end
