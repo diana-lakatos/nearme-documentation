@@ -6,4 +6,4 @@
         =t('simple_form.labels.listings.schedule')
     .col-md-9
       = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule(schedule: f.object.transactable_type.schedule.try(:schedule)) do |schedule_form|
-        = schedule_form.hidden_field :schedule, class: 'icui'
+        = render 'schedules/fields', f: schedule_form

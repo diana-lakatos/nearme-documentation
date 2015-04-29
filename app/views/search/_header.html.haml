@@ -14,6 +14,8 @@
         = hidden_field_tag :end_date, @searcher.search.display_dates[:end]
         = hidden_field_tag 'availability[dates][start]', @searcher.search.start_date
         = hidden_field_tag 'availability[dates][end]', @searcher.search.end_date
+        - @searcher.filterable_custom_attributes.each do |ca|
+          = hidden_field_tag "lg_custom_attributes[#{ca.name}]", @searcher.search.lg_custom_attributes[ca.name]
         .row-fluid
           .span12
             .list-map-toggle.span2

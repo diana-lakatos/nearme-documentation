@@ -237,6 +237,11 @@ class Search.SearchController extends Search.Controller
       ignore_search_event: 0
       category_ids: _.toArray(@container.find('input[name="category_ids[]"]:checked').map(-> $(this).val())).join(',')
     )
+    custom_attributes = {}
+    for custom_attribute in @container.find('div[data-custom-attribute]')
+      custom_attribute = $(custom_attribute)
+      custom_attributes[custom_attribute.data('custom-attribute')] = _.toArray(custom_attribute.find('input[name="lg_custom_attributes[' + custom_attribute.data('custom-attribute') + '][]"]:checked').map(-> $(this).val())).join(',')
+    @assignFormParams(lg_custom_attributes: custom_attributes)
     @loader.showWithoutLocker()
      # Infinite-Ajax-Scroller [ ias ] which we use disables itself when there are no more results
      # we need to reenable it when it is necessary, and only then - otherwise we will get duplicates

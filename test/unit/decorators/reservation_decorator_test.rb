@@ -154,7 +154,7 @@ class ReservationDecoratorTest < ActionView::TestCase
     end
 
     should 'return hourly_summary_for_first_period with date and default hours' do
-      assert_equal 'January 1 9:00am&ndash;5:00pm (8.00 hours)', @reservation.hourly_summary_for_first_period(true)
+      assert_equal 'January 01, 2014 9:00am&ndash;5:00pm (8.00 hours)', @reservation.hourly_summary_for_first_period(true)
     end
 
     should 'return hourly_summary_for_first_period without date and with special hours' do

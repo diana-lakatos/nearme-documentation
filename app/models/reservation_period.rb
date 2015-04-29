@@ -41,7 +41,7 @@ class ReservationPeriod < ActiveRecord::Base
   end
 
   def as_formatted_string
-    date.strftime '%B %-d %Y'
+    I18n.l(date, format: :long)
   end
 
   private

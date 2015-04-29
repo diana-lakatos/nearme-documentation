@@ -164,11 +164,6 @@ class Search.SearchMixedController extends Search.SearchController
       avilability_end: @container.find('input[availability_dates_end]').val()
       avilability_start: @container.find('input[availability_dates_start]').val()
     )
-    custom_attributes = {}
-    for custom_attribute in @container.find('div[data-custom-attribute]')
-      custom_attribute = $(custom_attribute)
-      custom_attributes[custom_attribute.data('custom-attribute')] = _.toArray(custom_attribute.find('input[name="lg_custom_attributes[' + custom_attribute.data('custom-attribute') + '][]"]:checked').map(-> $(this).val())).join(',')
-    @assignFormParams(lg_custom_attributes: custom_attributes)
     super
 
   renderChildCategories: ->

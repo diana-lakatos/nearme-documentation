@@ -497,7 +497,7 @@ class Reservation < ActiveRecord::Base
 
   def service_fee_calculator
     options = {
-      guest_fee_percent:  service_fee_guest_percent,
+      guest_fee_percent:  manual_payment? ? 0 : service_fee_guest_percent,
       host_fee_percent:   service_fee_host_percent,
       additional_charges: additional_charges
     }

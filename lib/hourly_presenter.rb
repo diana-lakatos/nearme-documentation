@@ -9,18 +9,25 @@ class HourlyPresenter
   end
 
   def hourly_summary_no_html(show_date = false)
-    start_time = start_minute_of_day_to_time.strftime("%l:%M").strip
-    end_time = end_minute_of_day_to_time.strftime("%l:%M%P").strip
-    start_time_suffix = start_minute_of_day_to_time.strftime("%P").strip
-    end_time_suffix = end_minute_of_day_to_time.strftime("%P").strip
-
-    start_time += start_time_suffix unless start_time_suffix == end_time_suffix
-
-    if show_date
-      formatted_date = date.strftime("%B %-e")
-      ('%s %s-%s (%0.2f %s)' % [formatted_date, start_time, end_time, hours, 'hour'.pluralize(hours.to_i)]).html_safe
+    if hours.zero?
+      if show_date
+        "#{I18n.l(date, format: :short)} #{start_minute_of_day_to_time.strftime("%l:%M").strip}"
+      else
+        start_minute_of_day_to_time.strftime("%l:%M").strip
+      end
     else
-      ('%s-%s<br />(%0.2f %s)' % [start_time, end_time, hours, 'hour'.pluralize(hours.to_i)]).html_safe
+      start_time = start_minute_of_day_to_time.strftime("%l:%M").strip
+      end_time = end_minute_of_day_to_time.strftime("%l:%M%P").strip
+      start_time_suffix = start_minute_of_day_to_time.strftime("%P").strip
+      end_time_suffix = end_minute_of_day_to_time.strftime("%P").strip
+
+      start_time += start_time_suffix unless start_time_suffix == end_time_suffix
+
+      if show_date
+        ('%s %s-%s (%0.2f %s)' % [I18n.l(date, format: :short), start_time, end_time, hours, 'hour'.pluralize(hours.to_i)]).html_safe
+      else
+        ('%s-%s<br />(%0.2f %s)' % [start_time, end_time, hours, 'hour'.pluralize(hours.to_i)]).html_safe
+      end
     end
   end
 
@@ -33,17 +40,15 @@ class HourlyPresenter
 
     start_time += start_time_suffix unless start_time_suffix == end_time_suffix
 
-    if options[:schedule_booking]
+    if hours.zero?
       if show_date
-        formatted_date = date.strftime("%B %-e")
-        ('%s%s%s' % [formatted_date, options[:separator], start_time]).html_safe
+        ('%s%s%s' % [I18n.l(date, format: :short), options[:separator], start_time]).html_safe
       else
         ('%s' % [start_time]).html_safe
       end
     else
       if show_date
-        formatted_date = date.strftime("%B %-e")
-        ('%s%s%s&ndash;%s%s(%0.2f %s)' % [formatted_date, options[:separator], start_time, end_time, options[:separator], hours, 'hour'.pluralize(hours.to_i)]).html_safe
+        ('%s%s%s&ndash;%s%s(%0.2f %s)' % [I18n.l(date, format: :short), options[:separator], start_time, end_time, options[:separator], hours, 'hour'.pluralize(hours.to_i)]).html_safe
       else
         ('%s&ndash;%s<br />(%0.2f %s)' % [start_time, end_time, hours, 'hour'.pluralize(hours.to_i)]).html_safe
       end
