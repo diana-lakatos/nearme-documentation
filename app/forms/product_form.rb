@@ -118,6 +118,16 @@ class ProductForm < Form
     @product.errors.add(:images) unless @product.images.map(&:valid?).all?
   end
 
+  def are_all_categories_from_system_profiles?
+    @all_shipping_categories.each do |shipping_category|
+      if shipping_category.from_system_shipping_category_id.blank?
+        return false
+      end
+    end
+
+    true
+  end
+
   def initialize(product, options={})
     @product = product
     @company = @product.company
@@ -126,6 +136,11 @@ class ProductForm < Form
     @all_shipping_categories = []
     @all_shipping_categories = @company.shipping_categories.where(company_default: false, is_system_profile: false) if @company.present? && !@company.new_record?
     @all_shipping_categories = Spree::ShippingCategory.where(user_id: @user.id, company_default: false, is_system_profile: false) if @all_shipping_categories.blank? && @user.present?
+
+    if @all_shipping_categories.present? && are_all_categories_from_system_profiles? && @product.new_record?
+      self.shipping_category_id = @all_shipping_categories.first.id
+    end
+
     if @product.shipping_category.present?
       @shipping_category = @product.shipping_category
       @shipping_category_id = @shipping_category.id
