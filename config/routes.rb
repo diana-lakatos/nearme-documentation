@@ -133,7 +133,7 @@ DesksnearMe::Application.routes.draw do
       resources :transactable_types do
       end
       resources :partners
-      resources :instance_views do
+      resources :instance_views, only: [:index, :new, :create, :edit, :update, :destroy] do
         resources :versions, only: [:index, :show] do
           member do
             get :rollback
