@@ -23,11 +23,19 @@ class LocaleServiceTest < ActiveSupport::TestCase
     assert_equal @instance.primary_locale, locale_service.locale
   end
 
-  should 'return redirect URL when requested locale is same as primary locale' do
+  should 'return redirect URL when requested locale is same as primary locale and no user locale' do
     locale_service = LocaleService.new @instance, 'en', nil, '/en'
     assert locale_service.redirect?
     assert_equal '/', locale_service.redirect_url
     assert_equal @instance.primary_locale, locale_service.locale
+  end
+
+  should 'not return redirect URL when requested locale is same as primary locale and user locale present' do
+    locale_service = LocaleService.new @instance, 'en', 'cs', '/en'
+    refute locale_service.redirect?
+    assert_nil locale_service.redirect_url
+    assert_equal :en, @instance.primary_locale
+    assert_equal :en, locale_service.locale
   end
 
   should "give url locale higher precedence than user locale" do

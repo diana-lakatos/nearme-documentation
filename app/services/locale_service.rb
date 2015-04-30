@@ -38,8 +38,8 @@ class LocaleService
       return
     end
 
-    # Redirect if param_locale is the same as the primary locale or param_locale does not exist
-    if @params_locale.present? && (@params_locale == @primary_locale || !@params_locale_exists)
+    # Redirect if param_locale does not exist or equal to primary locale and no user locale is present
+    if @params_locale.present? && (!@params_locale_exists || (@params_locale == @primary_locale && (!@user_locale.present? || !@user_locale_exists)))
       @redirect_url = url_without_locale
       @locale = @primary_locale
       return
