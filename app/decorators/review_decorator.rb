@@ -13,13 +13,25 @@ class ReviewDecorator < Draper::Decorator
   end
 
   def link_to_object
-    if object.transactable_type.buy_sell?
-      choose_link_by_object(seller: profile_path(feedback_object.product.administrator), 
-        buyer: profile_path(feedback_object.order.user_id), product: product_path(feedback_object.product.id))
+    if feedback_object.respond_to?(:creator_id)
+      seller = profile_path(feedback_object.creator_id)
     else
-      choose_link_by_object(seller: profile_path(feedback_object.creator_id), buyer: profile_path(feedback_object.owner_id),
-        product: listing_path(feedback_object.transactable_id))
+      seller = profile_path(feedback_object.product.administrator)
     end
+
+    if feedback_object.respond_to?(:owner_id)
+      buyer = profile_path(feedback_object.owner_id)
+    else
+      buyer = profile_path(feedback_object.order.user_id)
+    end
+
+    if feedback_object.respond_to?(:transactable_id)
+      product = listing_path(feedback_object.transactable_id)
+    else
+      product = product_path(feedback_object.product.id)
+    end
+
+    choose_link_by_object(seller: seller, buyer: buyer, product: product)
   end
 
   def choose_link_by_object(links)
