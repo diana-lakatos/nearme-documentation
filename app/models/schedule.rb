@@ -8,7 +8,7 @@ class Schedule < ActiveRecord::Base
   belongs_to :scheduable, polymorphic: true
 
   def schedule
-    @schedule ||= IceCube::Schedule.from_hash(JSON.parse(super || '{}'))
+    @schedule ||= IceCube::Schedule === super ? super :  IceCube::Schedule.from_hash(JSON.parse(super || '{}'))
   end
 
 end
