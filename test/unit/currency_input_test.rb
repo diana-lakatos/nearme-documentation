@@ -2,9 +2,10 @@ require 'test_helper'
 
 class CurrencyInputTest < ActiveSupport::TestCase
 
-  should "put all the currencies into the All group" do
+  should "put all except common the currencies into the All group" do
     assert input.grouped_collection[1].name == 'All'
-    assert input.grouped_collection[1].currencies.size == DesksnearMe::Application.config.supported_currencies.size
+    assert (input.grouped_collection[1].currencies.size  + input.grouped_collection[0].currencies.size) ==
+      DesksnearMe::Application.config.supported_currencies.size
   end
 
   should "group the currencies by priority" do

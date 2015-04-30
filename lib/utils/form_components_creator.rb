@@ -30,7 +30,7 @@ module Utils
       end
       create_component!('Tell us a little about your company', [{'company' => 'name'}, {'company' => 'address'}, {'company' => 'industries'} ])
       create_component!("Where is your #{@form_componentable.name} located?", [ { 'location' => 'name'}, { 'location' => 'description'}, { 'location' => 'address'}, { 'location' => 'location_type'}, { 'location' => 'phone'} ])
-      create_component!("Please tell us about the #{@form_componentable.name} you're listing", [{ 'transactable' => 'name' }, { 'transactable' => 'description' }, { 'transactable' => 'listing_type' }, { 'transactable' => 'custom_type' }, { 'transactable' => 'quantity' }, { 'location' => 'currency' }, { 'transactable' => 'price' }, { 'transactable' => 'photos' }])
+      create_component!("Please tell us about the #{@form_componentable.name} you're listing", [{ 'transactable' => 'name' }, { 'transactable' => 'description' }, { 'transactable' => 'listing_type' }, { 'transactable' => 'custom_type' }, { 'transactable' => 'quantity' }, { 'transactable' => 'currency' }, { 'transactable' => 'price' }, { 'transactable' => 'photos' }])
       create_component!("And finally, your contact information?", [{'user' => 'phone'}])
     end
 

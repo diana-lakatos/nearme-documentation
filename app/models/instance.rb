@@ -132,6 +132,16 @@ class Instance < ActiveRecord::Base
     Country.where(name: allowed_countries)
   end
 
+  def allowed_currencies=currencies
+    currencies.reject!(&:blank?)
+    super(currencies)
+  end
+
+  def allowed_countries=countries
+    countries.reject!(&:blank?)
+    super(countries)
+  end
+
   def check_lock
     return if mark_as_locked.nil?
     if mark_as_locked == '1'
