@@ -110,6 +110,7 @@ class DataImporter::Product::Importer
         product.action_rfq = @data_upload.enable_rfq
         product.product_type = @data_upload.importable
         product.user = user
+        product.price = price
         product.shipping_category = shipping_category
       end
     end
