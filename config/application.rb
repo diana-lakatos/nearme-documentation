@@ -8,6 +8,8 @@ groups[:profiling] =  [Rails.env.to_s] if ENV['PERF']
 
 Bundler.require(*Rails.groups(groups)) if defined?(Bundler)
 
+require File.dirname(__FILE__) + '/../lib/null_logger.rb'
+
 module DesksnearMe
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
@@ -132,6 +134,7 @@ module DesksnearMe
 
     config.exceptions_app = self.routes
 
+    config.middleware.swap Rails::Rack::Logger, NullLogger, silenced: %w(/ping)
     # custom rewrites specified in lib/legacy_redirect_handler.rb
     config.middleware.insert_before(Rack::Sendfile, "LegacyRedirectHandler")
     # setting platform_context in app/models/platform_context/rack_setter.rb
