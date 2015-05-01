@@ -81,6 +81,11 @@ class TransactableType < ActiveRecord::Base
     super || instance.allowed_currencies
   end
 
+  def allowed_currencies=currencies
+    currencies.reject!(&:blank?)
+    super(currencies)
+  end
+
   def default_currency
     super.presence || instance.default_currency.presence || 'USD'
   end

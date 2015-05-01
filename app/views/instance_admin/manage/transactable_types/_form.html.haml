@@ -24,7 +24,7 @@
           = f.input :default_country, collection: Country.all, value_method: :name, input_html: { class: 'selectpicker', "data-live-search" => "true"}
     .row
       .input-container.col-xs-6
-        = f.input :allowed_currencies, as: :currency,  input_html: { class: 'selectpicker', "data-live-search" => "true", multiple: true }, hint: "Leave blank to use all currencies"
+        = f.input :allowed_currencies, as: :currency, input_html: { class: 'selectpicker', "data-live-search" => "true", multiple: true }, hint: "Leave blank to use all currencies"
       .input-container.col-xs-6
         = f.input :default_currency, as: :currency,  input_html: { class: 'selectpicker', "data-live-search" => "true"}
     .row

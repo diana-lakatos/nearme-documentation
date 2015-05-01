@@ -9,7 +9,7 @@ class CurrencyInput < SimpleForm::Inputs::GroupedCollectionSelectInput
       [prep_currencies('Common', common), prep_currencies('All', all_currencies - common)]
     else
       common = currencies.select { |c| COMMON_CODES.include? c[:iso_code] }.sort_by { |c| COMMON_CODES.index(c) }.reverse
-      [prep_currencies('Common', common), prep_currencies('All', currencies)]
+      [prep_currencies('Common', common), prep_currencies('All', currencies - common)]
     end
   end
 
