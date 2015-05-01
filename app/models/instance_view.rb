@@ -32,7 +32,10 @@ class InstanceView < ActiveRecord::Base
     'reservation_mailer/notify_host_without_confirmation', 'reservation_mailer/pre_booking',
     'rating_mailer/line_items/request_rating_of_guest_from_host', 'rating_mailer/line_items/request_rating_of_host_and_product_from_guest',
     'spree/order_mailer/approved_email', 'spree/order_mailer/cancel_email', 'spree/order_mailer/confirm_email',
-    'spree/order_mailer/notify_seller_email', 'spree/shipment_mailer/shipped_email'
+    'spree/order_mailer/notify_seller_email', 'spree/shipment_mailer/shipped_email',
+    'support_mailer/rfq_request_received', 'support_mailer/rfq_request_replied',
+    'support_mailer/rfq_request_updated', 'support_mailer/rfq_support_received',
+    'support_mailer/rfq_support_updated'
   ].freeze
 
   DEFAULT_SMS_TEMPLATES_PATHS = [
