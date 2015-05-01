@@ -82,13 +82,12 @@ class BaseUploader < CarrierWave::Uploader::Base
 
   def current_url(version = nil, *args)
     if versions_generated? || !source_url
-      version = :transformed if version.blank? && self.respond_to?(:transformation_data)
-      args.unshift(version) if version && version != :original
-      if !self.class.respond_to?(:delayed_versions) || self.class.delayed_versions.exclude?(version) || versions_generated?
-        url(*args)
-      else
-        default_url(*args)
+      if (version.blank? && self.respond_to?(:transformation_data)) \
+      || (self.class.respond_to?(:delayed_versions) && self.class.delayed_versions.include?(version) && !versions_generated?)
+        version = :transformed
       end
+      args.unshift(version) if version && version != :original
+      url(*args)
     elsif source_url
       #  see https://developers.inkfilepicker.com/docs/web/#convert
       if version && dimensions[version]
