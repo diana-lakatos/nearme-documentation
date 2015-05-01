@@ -115,9 +115,9 @@ class SearchControllerTest < ActionController::TestCase
             filtered_category = FactoryGirl.create(:category, name: "Desk")
             filtered_category_child = FactoryGirl.create(:category, name: "Standing Desk", parent: filtered_category)
             another_category = FactoryGirl.create(:category, name: "Meeting Room")
-            filtered_auckland_1 = FactoryGirl.create(:listing_in_auckland, category_ids: [filtered_category.id]).location
-            filtered_auckland_2 = FactoryGirl.create(:listing_in_auckland, category_ids: [filtered_category_child.id]).location
-            another_auckland = FactoryGirl.create(:listing_in_auckland, category_ids: [another_category.id]).location
+            filtered_auckland_1 = FactoryGirl.create(:listing_in_auckland, category_ids: ["[#{filtered_category.id}]"]).location
+            filtered_auckland_2 = FactoryGirl.create(:listing_in_auckland, category_ids: ["[#{filtered_category_child.id}]"]).location
+            another_auckland = FactoryGirl.create(:listing_in_auckland, category_ids: ["[#{another_category.id}]"]).location
 
             get :index, { loc: 'Auckland', category_ids: filtered_category.id, v: 'mixed', buyable: false}
 
@@ -390,26 +390,26 @@ class SearchControllerTest < ActionController::TestCase
       end
 
       context 'for existing products' do
-        context 'with taxon filter' do
+        context 'with category filter' do
           setup do
-            parent = FactoryGirl.create(:taxon, name: 'Categories')
-            @taxon = FactoryGirl.create(:taxon, name: 'taxon_1', parent: parent)
-            @another_taxon = FactoryGirl.create(:taxon, parent: parent)
-            @filtered_product = FactoryGirl.create(:product, taxons: [@taxon])
-            @another_product = FactoryGirl.create(:product, taxons: [@another_taxon])
+            parent = FactoryGirl.create(:category, name: 'Categories')
+            @category = FactoryGirl.create(:category, name: 'category_1', parent: parent)
+            @another_category = FactoryGirl.create(:category, parent: parent)
+            @filtered_product = FactoryGirl.create(:product, categories: [@category])
+            @another_product = FactoryGirl.create(:product, categories: [@another_category])
           end
 
           should 'filter only filtered products' do
-            get :index, { taxon: @taxon.permalink, v: 'products', buyable: 'true' }
+            get :index, { category_ids: @category.id, v: 'products', buyable: 'true' }
 
             assert_product_in_result(@filtered_product)
             refute_product_in_result(@another_product)
           end
 
           should 'query only filtered products' do
-            another_product2 = FactoryGirl.create(:product, name: 'product three', taxons: [@another_taxon])
+            another_product2 = FactoryGirl.create(:product, name: 'product three', categories: [@another_category])
 
-            get :index, { taxon: @taxon.permalink, v: 'products', buyable: 'true', query: 'product' }
+            get :index, { category_ids: @category.id, v: 'products', buyable: 'true', query: 'product' }
 
             assert_product_in_result(@filtered_product)
             refute_products_in_result([@another_product, another_product2])

@@ -5,7 +5,6 @@
       .span2
         %h4
           = header_name
-          = ": #{header_object.name}" if defined?(header_object) && header_object.present?
       .span10
         %ul
           - options.each do |option|

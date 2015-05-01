@@ -69,6 +69,7 @@
           %li
             %a{'data-toggle' => 'tab', href: '#product-properties', role: 'tab'}
               = t 'buy_sell_market.products.labels.properties'
+
       .tab-content
         %article#product-details.tab-pane{ class: "#{ 'active' if !param_reviews_page_present? }" }
           %p= @product.description.html_safe
@@ -155,6 +156,7 @@
         - if @product.extra_properties.present?
           %article#product-properties.tab-pane
             = render partial: 'extra_properties', locals: { product: @product }
+
     .product-profile-badge
       .vendor-profile
         = render partial: 'administrator', locals: { product: @product, hidden: hidden}

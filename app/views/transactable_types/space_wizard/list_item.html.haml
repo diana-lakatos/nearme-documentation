@@ -47,7 +47,6 @@
 
 
 - content_for :domready do
-  new TaxonAutocomplete($("#boarding_form"));
   new Dashboard.AddressController($("#boarding_form"));
   var boarding_form = new BoardingForm($("#boarding_form"));
   new ShippoFieldsManager(#{raw DimensionsTemplate::UNITS_OF_MEASURE.to_json});

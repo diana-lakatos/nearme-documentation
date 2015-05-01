@@ -2,6 +2,7 @@ class @CategoriesController
 
   constructor: (@container) ->
     @setupCategoriesTrees()
+    @autocomplete()
 
   setupCategoriesTrees: =>
     if @container.find('.category_tree').length > 0
@@ -95,3 +96,36 @@ class @CategoriesController
       $('<input name="'+ category_input_name + '">').attr('type','hidden').val(@id).appendTo(category_tree_inputs);
       return
     return
+
+  autocomplete: () ->
+    if @container.find("input[data-category-autocomplete]").length > 0
+      $.each @container.find("input[data-category-autocomplete]"), (index, select) ->
+        $(select).select2
+          placeholder: "Enter a category"
+          multiple: true
+          initSelection: (element, callback) ->
+            url = autocomplete_categories_path + '/' + $(select).attr('data-category-id')
+            $.getJSON url, { init_selection: 'true', ids: $(select).attr("data-selected-catgories") }, (data) ->
+              callback data
+
+          ajax:
+            url: autocomplete_categories_path + '/' + $(select).attr('data-category-id')
+            datatype: "json"
+            data: (term, page) ->
+              per_page: 50
+              page: page
+              q:
+                name_cont: term
+
+            results: (data, page) ->
+              results: data
+
+          formatResult: (category) ->
+            category.pretty_name
+
+          formatSelection: (category) ->
+            category.pretty_name
+
+
+
+

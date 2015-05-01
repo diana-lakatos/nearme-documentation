@@ -4,14 +4,20 @@ class Search.ProductsSearchController extends Search.Controller
     @loader = new Search.ScreenLockLoader => @container.find('.loading')
     @resultsContainer ||= => @container.find('#results')
     @perPageField = @container.find('select#per_page')
+    @filters_container = $('div[data-search-filters-container]')
+
     @bindEvents()
     @performEndlessScrolling = @form.data('endless-scrolling')
     @initializeEndlessScrolling()
     @reinitializeEndlessScrolling = false
     @perPageValue = @perPageField.find(':selected').val()
     @submitFormWithoutAjax = false
+    @responsiveCategoryTree()
 
   bindEvents: ->
+    @filters_container.on 'click', 'input[type=checkbox]', =>
+      @triggerSearchFromQuery()
+
     $(document).on 'change', @perPageField, (e) =>
       if @perPageValue != @perPageField.find(':selected').val()
         @perPageValue = @perPageField.find(':selected').val()
@@ -34,6 +40,8 @@ class Search.ProductsSearchController extends Search.Controller
     $(document).on 'click', '.pagination a', (e) =>
       e.preventDefault()
       link = $(e.target)
+      if link.attr('href') == undefined
+        link = link.parents('a')
       page_regexp = /page=(\d+)/gm
       @loader.show()
       @triggerSearchFromQuery(page_regexp.exec(link.attr('href'))[1])
@@ -41,9 +49,7 @@ class Search.ProductsSearchController extends Search.Controller
     $(document).on 'click', 'a.clear-filters', (e) =>
       e.preventDefault()
       @submitFormWithoutAjax = true
-      @assignFormParams(
-        taxon: ''
-      )
+      @assignFormParams()
       @form.submit()
 
 
@@ -83,6 +89,7 @@ class Search.ProductsSearchController extends Search.Controller
 
   showResults: (html) ->
     @resultsContainer().replaceWith(html)
+
     if @performEndlessScrolling
       $('.pagination').hide()
 
@@ -109,6 +116,7 @@ class Search.ProductsSearchController extends Search.Controller
     @assignFormParams(
       ignore_search_event: 0
       per_page: @container.find('select#per_page').val()
+      category_ids: _.toArray(@container.find('input[name="category_ids[]"]:checked').map(-> $(this).val())).join(',')
       loc: @form.find("input#search").val()
       page: page || 1
     )

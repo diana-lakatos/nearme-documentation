@@ -38,9 +38,15 @@
 
           {% if platform_context.category_search? %}
             <div class="span3">
-              <select class="no-icon select2" name="category_ids">
+              <select class="no-icon select2 product_category_select" name="category_ids">
                 <option value="" >- Select Category - </option>
-                {% for category in platform_context.all_categories %}
+                {% for category in platform_context.product_categories %}
+                  <option value="{{ category.id }}" >{{ category.name }}</option>
+                {% endfor %}
+              </select>
+              <select class="no-icon select2 service_category_select" name="category_ids">
+                <option value="" >- Select Category - </option>
+                {% for category in platform_context.service_categories %}
                   <option value="{{ category.id }}" >{{ category.name }}</option>
                 {% endfor %}
               </select>
@@ -49,7 +55,7 @@
 
           {% if platform_context.multiple_transactable_types? == true and platform_context.tt_select_type == 'dropdown' %}
             <div class="span2">
-              <select class="no-icon select2" name="transactable_type_id">
+              <select class="no-icon select2 transactable_select" name="transactable_type_id">
                 {% for transactable_type in platform_context.all_transactables %}
                   <option value="{{ transactable_type.id }}" data-buyable="{{transactable_type.buyable?}}">{{ transactable_type.name }}</option>
                 {% endfor %}

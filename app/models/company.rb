@@ -28,11 +28,9 @@ class Company < ActiveRecord::Base
   has_many :option_types, class_name: 'Spree::OptionType', dependent: :destroy
   has_many :order_line_items, class_name: 'Spree::LineItem'
   has_many :orders, class_name: 'Spree::Order'
-  has_many :taxonomies, class_name: 'Spree::Taxonomy', dependent: :destroy
   has_many :tax_categories, class_name: 'Spree::TaxCategory', dependent: :destroy
   has_many :shipping_categories, class_name: 'Spree::ShippingCategory', dependent: :destroy
   has_many :shipping_methods, class_name: 'Spree::ShippingMethod', dependent: :destroy
-  has_many :taxons, class_name: 'Spree::Taxon', dependent: :destroy
   has_many :stock_locations, class_name: 'Spree::StockLocation', dependent: :destroy
   has_many :variants, class_name: 'Spree::Variant', dependent: :destroy
   has_many :zones, class_name: 'Spree::Zone', dependent: :destroy

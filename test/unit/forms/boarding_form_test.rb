@@ -12,10 +12,10 @@ class BoardingFormTest < ActiveSupport::TestCase
     @shipping_category.user_id = @user.id
     @shipping_category.save!
     10.times do
-      FactoryGirl.create(:taxons)
+      FactoryGirl.create(:category)
       FactoryGirl.create(:country)
     end
-    @taxon_ids = Spree::Taxon.all.map(&:id)
+    @category_ids = Category.all.map(&:id)
     @countries = [FactoryGirl.create(:country)]
   end
 
@@ -28,7 +28,7 @@ class BoardingFormTest < ActiveSupport::TestCase
 
       assert_equal @company.name, boarding_attributes[:store_name]
       assert_equal @company.company_address.address, "Poznań, Polska"
-      assert_equal @product.taxons.map(&:id).sort, @taxon_ids.sort
+      assert_equal @product.category_ids.sort, @category_ids.sort
       assert_equal @product.name, "Test Product"
 
     end
@@ -46,7 +46,7 @@ class BoardingFormTest < ActiveSupport::TestCase
         name: "Test Product",
         description: "Test description",
         price: "100",
-        taxon_ids: @taxon_ids.join(","),
+        category_ids: [@category_ids.join(",")],
         quantity: "10",
         shipping_category_id: @shipping_category.id
       }

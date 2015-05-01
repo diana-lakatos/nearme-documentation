@@ -30,8 +30,6 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
-  get '/t/*taxon', to: 'search#index', as: :buy_sell_taxon
-
   mount CustomAttributes::Engine, at: '/custom_attributes'
 
   get 'ping', to: 'ping#index'
@@ -367,6 +365,11 @@ DesksnearMe::Application.routes.draw do
       resource :configuration, only: [:show, :update], controller: 'configuration'
       resource :commissions, :only => [:show, :update], :controller => 'commissions'
       resources :product_types do
+        resources :categories, controller: 'product_types/categories' do
+          member do
+            get :jstree
+          end
+        end
         resources :custom_attributes, controller: 'product_types/custom_attributes'
         resources :data_uploads, only: %i(new index create show), controller: 'product_types/data_uploads' do
           collection do
@@ -385,17 +388,6 @@ DesksnearMe::Application.routes.draw do
       resources :tax_categories
       resources :tax_rates
       resources :zones
-      resources :taxonomies do
-        member do
-          get :jstree
-        end
-        resources :taxons do
-          member do
-            get :jstree
-          end
-        end
-      end
-
       resources :shipping_categories
       resources :shipping_methods
     end
@@ -528,12 +520,14 @@ DesksnearMe::Application.routes.draw do
   resources :approval_request_attachments, only: %i(create destroy)
 
   namespace :dashboard do
+    namespace :api do
+      resources :categories
+    end
 
     resources :api do
       collection do
         get :countries
         get :states
-        get :taxons
       end
     end
 
@@ -743,6 +737,7 @@ DesksnearMe::Application.routes.draw do
 
   resources :product_types do
     resources :product_wizard, only: [:new, :create], controller: 'product_types/product_wizard'
+    resources :categories, only: [:index, :show], :controller => 'transactable_types/categories'
   end
 
   scope '/space' do

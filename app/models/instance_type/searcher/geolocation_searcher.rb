@@ -82,7 +82,11 @@ module InstanceType::Searcher::GeolocationSearcher
     @params[:loc].present? || @params[:query].present?
   end
 
-  def category_options 
-    Category.roots.inject([]) { |options, c| options << [c.id, c.name] } 
+  def searchable_categories
+    Category.services.searchable.roots
+  end
+
+  def category_options(category)
+    category.children.inject([]) { |options, c| options << [c.id, c.translated_name] }
   end
 end

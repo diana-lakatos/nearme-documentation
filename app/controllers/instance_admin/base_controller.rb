@@ -71,7 +71,6 @@ class InstanceAdmin::BaseController < ApplicationController
     'tax_categories' => { default_action: 'index' },
     'tax_rates'      => { default_action: 'index' },
     'zones'          => { default_action: 'index' },
-    'taxonomies'     => { default_action: 'index' },
     'product_types'  => { default_action: 'index' }
   }
 
