@@ -8,13 +8,15 @@ class ConvertTaxonsToCategories < ActiveRecord::Migration
 
   def convert_to_categories(taxons, parent_id=nil)
     taxons.each do |taxon|
-      PlatformContext.current = PlatformContext.new(Instance.find(taxon.instance_id)) if parent_id.nil?
+      instance = Instance.find(taxon.instance_id)
+      PlatformContext.current = PlatformContext.new(instance) if parent_id.nil?
       product_type = Spree::ProductType.first
-      next if product_type.nil? # jump to next when currently no product types added
-      category = product_type.categories.create(taxon.attributes.slice('name', 'position').merge(parent_id: parent_id))
-      puts "Created new category called #{category.name} with id #{category.id} for product_type #{instance.name}"
-      category.products = taxon.products
-      convert_to_categories(taxon.children, category.id)
+      unless product_type.nil?
+        category = product_type.categories.create(taxon.attributes.slice('name', 'position').merge(parent_id: parent_id, search_options: 'exclude', display_options: 'tree'))
+        puts "Created new category called #{category.name} with id #{category.id} for product_type #{instance.name}"
+        category.products = taxon.products
+        convert_to_categories(taxon.children, category.id)
+      end
     end
   end
 end
