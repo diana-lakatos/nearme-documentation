@@ -47,7 +47,7 @@ class InstanceAdmin::CategoriesController < InstanceAdmin::BaseController
   def update
     @category = @categorable.categories.find(params[:id])
     @category.attributes = category_params
-    rename_message =  t 'flash_messages.instance_admin.manage.category.renamed' if @category.name_changed?
+    rename_message =  t 'flash_messages.instance_admin.manage.category.renamed' if @category.name_changed? && @category.root?
     if @category.save
       respond_to do |format|
         format.html do
