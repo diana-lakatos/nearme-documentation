@@ -1,5 +1,7 @@
 class InstanceAdmin::Manage::TransactableTypes::DataUploadsController < InstanceAdmin::DataUploads::BaseController
 
+  before_filter :set_breadcrumbs_title
+
   private
 
   def set_import_job
@@ -12,5 +14,9 @@ class InstanceAdmin::Manage::TransactableTypes::DataUploadsController < Instance
 
   def find_importable
     @importable = TransactableType.find(params[:transactable_type_id])
+  end
+
+  def set_breadcrumbs_title
+    @breadcrumbs_title = 'Service Types'
   end
 end

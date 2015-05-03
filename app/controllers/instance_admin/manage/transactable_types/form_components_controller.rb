@@ -1,5 +1,7 @@
 class InstanceAdmin::Manage::TransactableTypes::FormComponentsController < InstanceAdmin::FormComponentsController
 
+  before_filter :set_breadcrumbs_title
+
   def create_as_copy
     transactable_type_id = params[:copy_template][:form_componentable_id]
     form_type = params[:copy_template][:form_type]
@@ -25,5 +27,9 @@ class InstanceAdmin::Manage::TransactableTypes::FormComponentsController < Insta
 
   def permitting_controller_class
     @controller_scope ||= 'manage'
+  end
+
+  def set_breadcrumbs_title
+    @breadcrumbs_title = 'Service Types'
   end
 end
