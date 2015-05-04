@@ -98,7 +98,7 @@ class Utils::DefaultAlertsCreator::ReservationCreator < Utils::DefaultAlertsCrea
   end
 
   def notify_guest_pre_booking_email!
-    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::OneDayToBooking, name: 'notify_guest_of_payment_request_email', path: 'reservation_mailer/notify_guest_of_payment_request', subject: "[{{platform_context.name}}] {{reservation.owner.first_name}}, your booking is tomorrow!", alert_type: 'email', recipient_type: 'enquirer'})
+    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::OneDayToBooking, name: 'notify_guest_of_payment_request_email', path: 'reservation_mailer/pre_booking', subject: "[{{platform_context.name}}] {{reservation.owner.first_name}}, your booking is tomorrow!", alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   def notify_host_reservation_rejected_email!

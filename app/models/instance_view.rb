@@ -30,12 +30,26 @@ class InstanceView < ActiveRecord::Base
     'reservation_mailer/notify_host_of_confirmation', 'reservation_mailer/notify_host_of_expiration',
     'reservation_mailer/notify_host_of_rejection', 'reservation_mailer/notify_host_with_confirmation',
     'reservation_mailer/notify_host_without_confirmation', 'reservation_mailer/pre_booking',
-    'rating_mailer/line_items/request_rating_of_guest_from_host', 'rating_mailer/line_items/request_rating_of_host_and_product_from_guest',
-    'spree/order_mailer/approved_email', 'spree/order_mailer/cancel_email', 'spree/order_mailer/confirm_email',
-    'spree/order_mailer/notify_seller_email', 'spree/shipment_mailer/shipped_email',
-    'support_mailer/rfq_request_received', 'support_mailer/rfq_request_replied',
-    'support_mailer/rfq_request_updated', 'support_mailer/rfq_support_received',
-    'support_mailer/rfq_support_updated'
+    'reservation_mailer/notify_guest_of_payment_request',
+    'rating_mailer/line_items/request_rating_of_guest_from_host',
+    'rating_mailer/line_items/request_rating_of_host_and_product_from_guest',
+    'spree/order_mailer/approved_email', 'spree/order_mailer/cancel_email',
+    'spree/order_mailer/confirm_email', 'spree/order_mailer/notify_seller_email',
+    'spree/shipment_mailer/shipped_email', 'support_mailer/rfq_request_received',
+    'support_mailer/rfq_request_replied', 'support_mailer/rfq_request_updated',
+    'support_mailer/rfq_support_received', 'support_mailer/rfq_support_updated',
+    'support_mailer/request_received', 'support_mailer/support_received',
+    'support_mailer/request_updated', 'support_mailer/request_replied',
+    'support_mailer/support_updated', 'company_mailer/notify_host_of_no_payout_option',
+    'post_action_mailer/instance_created',
+    'user_message_mailer/email_message_from_host', 'user_message_mailer/email_message_from_guest',
+    'data_upload_mailer/notify_uploader_of_failed_import',
+    'data_upload_mailer/notify_uploader_of_finished_import',
+    'vendor_approval_mailer/notify_admin_of_new_listings',
+    'vendor_approval_mailer/notify_host_of_listing_approval',
+    'vendor_approval_mailer/notify_host_of_user_approval',
+    'user_mailer/notify_about_wrong_phone_number'
+
   ].freeze
 
   DEFAULT_SMS_TEMPLATES_PATHS = [
@@ -45,6 +59,7 @@ class InstanceView < ActiveRecord::Base
     'reservation_sms_notifier/notify_guest_with_state_change',
     'reservation_sms_notifier/notify_host_with_confirmation',
     'user_message_sms_notifier/notify_user_about_new_message'
+
   ].freeze
 
   DEFAULT_EMAIL_TEMPLATE_LAYOUTS_PATHS = ['layouts/mailer'].freeze
@@ -67,7 +82,13 @@ class InstanceView < ActiveRecord::Base
     'search/list/listing',
     'search/products/product',
     'search/products_table/head',
-    'search/products_table/product'
+    'search/products_table/product',
+    'reservation_mailer/social_links',
+    'support_mailer/rfq_review',
+    'support_mailer/rfq_message_history',
+    'support_mailer/new_message_separator',
+    'support_mailer/rfq_host_review',
+    'reservation_mailer/listings_in_near'
   ].freeze
 
   scope :for_instance_type_id, ->(instance_type_id) {

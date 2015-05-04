@@ -21,7 +21,7 @@ class Utils::DefaultAlertsCreator::ListingCreator < Utils::DefaultAlertsCreator:
   end
 
   def create_listing_pending_approval_email!
-    create_alert!({associated_class: WorkflowStep::ListingWorkflow::PendingApproval, name: 'listing_pending_approval_email', path: 'vendor_approval_mailer/notify_admin_of_new_listings', subject: "New listing is pending approval", alert_type: 'email', recipient_type: 'administrator', delay: 0})
+    create_alert!({associated_class: WorkflowStep::ListingWorkflow::PendingApproval, name: 'listing_pending_approval_email', path: 'vendor_approval_mailer/notify_admin_of_new_listings', subject: "New listing is pending approval", alert_type: 'email', recipient_type: 'Administrator', delay: 0})
   end
 
   def create_approved_email!
