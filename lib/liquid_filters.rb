@@ -33,6 +33,16 @@ module LiquidFilters
     end
   end
 
+  def lowest_price_with_cents_with_currency(object, lgpricing_filters = [])
+    prices = object.lowest_price(lgpricing_filters)
+    if prices
+      periods = {monthly: 'month', weekly: 'week', daily: 'day', hourly: 'hour'}
+      { 'price' => self.price_with_cents_with_currency(prices[0]), 'period' =>  periods[prices[1]] }
+    else
+      {}
+    end
+  end
+
   def connections_for(listing, current_user)
     return [] if current_user.nil? || current_user.friends.count.zero?
 
@@ -65,16 +75,6 @@ module LiquidFilters
 
   def price_without_cents_with_currency(money)
     money_without_cents_and_with_symbol(money)
-  end
-
-  def lowest_price_with_cents_with_currency(object, lgpricing_filters)
-    prices = object.lowest_price(lgpricing_filters)
-    if prices
-      periods = {monthly: 'month', weekly: 'week', daily: 'day', hourly: 'hour'}
-      { 'price' => self.price_with_cents_with_currency(prices[0]), 'period' =>  periods[prices[1]] }
-    else
-      {}
-    end
   end
 
   def price_with_cents_with_currency(money)
