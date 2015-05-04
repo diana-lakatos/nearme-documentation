@@ -121,10 +121,18 @@ textarea {
 }
 
 .error {
-
   input, textarea {
     border: solid #ec8473 1px !important; //TODO remove important here
   }
+
+  .select2-container, .category_tree a {
+    border: solid #ec8473 1px !important; //TODO remove important here
+    input, textarea {
+      border: none !important;
+    }
+
+  }
+
 
   .bootstrap-select {
 

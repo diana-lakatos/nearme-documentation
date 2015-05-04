@@ -85,14 +85,8 @@
   - category_name = only_inputs.first.to_s.split(" - ")[1]
   - category = @transactable_type.categories.roots.where(name: category_name).first
   -if category.present?
-    = content_tag :div, id: "category_#{category.id}_tree_content" do
-      = hidden_field_tag "single_choice_category", category.multiple_root_categries == true, class: 'single_choice_category'
-      .control-group
-        = f.label :categories, category_name, :class => 'control-label'
-        .controls
-          #ajax_error{style: 'display: none;'}
-          .category_tree
-          .category_tree_inputs
+    = render partial: 'shared/category_old_bootstrap', locals: { category: category, f: f, categorable: @transactable_type }
+
 
 - if only_inputs.empty? || only_inputs.include?(:currency)
   = f.input :currency, :as => :currency, allowed_currencies: @transactable_type.allowed_currencies, default: @transactable_type.default_currency || "USD", :input_html => { :class => 'custom-select', :id => 'currency-select' }

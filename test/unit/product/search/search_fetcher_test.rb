@@ -4,21 +4,21 @@ class Spree::Product::SearchFetcherTest < ActiveSupport::TestCase
 
   setup do
     Transactable.destroy_all
-    @taxon1 = FactoryGirl.create(:taxon, name: 'taxon 1')
-    @taxon2 = FactoryGirl.create(:taxon, name: 'taxon 2')
+    @category1 = FactoryGirl.create(:category, name: 'category 1')
+    @category2 = FactoryGirl.create(:category, name: 'category 2')
     @product_type = FactoryGirl.create(:product_type, :with_custom_attribute)
     @product1 = FactoryGirl.create(:product, name: 'product one', product_type: @product_type)
-    @product1.taxons << @taxon1
+    @product1.categories << @category1
     @product2 = FactoryGirl.create(:product, name: 'product two', product_type: @product_type)
-    @product2.taxons << @taxon2
+    @product2.categories << @category2
 
     @filters = {}
   end
 
   context 'filters' do
 
-    should 'find products with specified taxon' do
-      @filters.merge!({ taxon: @taxon1.permalink })
+    should 'find products with specified category' do
+      @filters.merge!({ category_ids: @category1.id.to_s })
       assert_equal [@product1], Spree::Product::SearchFetcher.new(@filters).products
     end
 

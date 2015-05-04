@@ -1,16 +1,7 @@
 - title @searcher.query
 - meta_description @searcher.query
 .search-view
-  .crumbs= render_crumbs
   .page-wrapper.row-fluid
-    - if platform_context.display_taxonomy_tree?
-      %nav.span2.taxons_tree_products_list
-        - @taxons.each do |taxon|
-          .nav-categories.collapse.in
-            %ul
-              %li.nav-heading
-                = taxon.name
-              = taxons_tree(taxon, @taxon, 1)
 
     =render 'search/products_list/header'
     - if @searcher.results.any?

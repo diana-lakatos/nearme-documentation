@@ -21,7 +21,7 @@ class TransactableType < ActiveRecord::Base
   has_many :rating_systems
   has_many :reviews
   has_many :instance_views
-  has_many :categories, as: :categorable
+  has_many :categories, as: :categorable, dependent: :destroy
 
   has_one :schedule, as: :scheduable
   accepts_nested_attributes_for :schedule
@@ -79,6 +79,11 @@ class TransactableType < ActiveRecord::Base
 
   def allowed_currencies
     super || instance.allowed_currencies
+  end
+
+  def allowed_currencies=currencies
+    currencies.reject!(&:blank?)
+    super(currencies)
   end
 
   def default_currency

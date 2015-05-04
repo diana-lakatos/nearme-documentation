@@ -6,8 +6,16 @@ class Category < ActiveRecord::Base
   scoped_to_platform_context
   acts_as_nested_set dependent: :destroy
 
+  DISPLAY_OPTIONS = %w(tree autocomplete).freeze
+  SEARCH_OPTIONS = [["Include in search", "include"], ["Exclude from search", "exclude"]].freeze
+
   has_many :categories_transactables
   has_many :transactables, through: :categories_transactables
+
+  has_many :categories_products
+  has_many :products, through: :categories_products
+
+  belongs_to :instance
 
   # Validation
   validates :name, presence: true
@@ -18,7 +26,18 @@ class Category < ActiveRecord::Base
   belongs_to :instance
 
   before_save :set_permalink
-  after_save :update_children_permalink
+  after_save :create_translation_key
+
+  # Scopes
+
+  scope :mandatory, -> { where(mandatory: true) }
+  scope :searchable, -> { where(search_options: 'include') }
+  scope :services, -> { where(categorable_type: 'TransactableType') }
+  scope :products, -> { where(categorable_type: 'Spree::ProductType') }
+
+  def autocomplete?
+    self.display_options == 'autocomplete'
+  end
 
   def child_index=(idx)
     unless self.new_record?
@@ -34,8 +53,23 @@ class Category < ActiveRecord::Base
     permalink.gsub("/", "%2F")
   end
 
-  def update_children_permalink
-    children.each { |c| c.save } if reload.children.any?
+  def include_in_search?
+    self.search_options.include?("include")
+  end
+
+  def pretty_name
+    ancestor_chain = self.ancestors.inject("") do |name, ancestor|
+      name += "#{ancestor.translated_name} -> "
+    end
+    ancestor_chain + translated_name
+  end
+
+  def translated_name
+    I18n.t(translation_key)
+  end
+
+  def to_liquid
+    CategoryDrop.new(self)
   end
 
   def set_permalink
@@ -46,10 +80,16 @@ class Category < ActiveRecord::Base
     end
   end
 
-  def to_liquid
-    CategoryDrop.new(self)
+  def translation_key
+    "#{Translation::CUSTOM_PREFIX}.categories.#{name.to_url.gsub(/[\-|\/|\.]/, '_').downcase}"
+  end
+
+  def create_translation_key
+    instance.locales.each do |locale|
+      translation_attributes = {  locale: locale.code, key: translation_key}
+      @translation = instance.translations.where(translation_attributes).presence ||
+        instance.translations.create(translation_attributes.merge(value: name))
+    end
   end
 end
-
-
 

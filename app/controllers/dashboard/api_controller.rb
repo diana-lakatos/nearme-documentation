@@ -1,10 +1,5 @@
 class Dashboard::ApiController < Dashboard::BaseController
 
-  def taxons
-    taxons = Spree::Taxon.select(:id, :name, :lft, :rgt).order(:permalink)
-    process_collection(taxons, :pretty_name)
-  end
-
   def countries
     countries = Spree::Country.select(:id, :name)
     process_collection(countries)
@@ -24,9 +19,4 @@ class Dashboard::ApiController < Dashboard::BaseController
     render json: collection.order(:name).to_json(methods: methods)
   end
 
-  def taxonomy
-    if params[:taxonomy_id].present?
-      @taxonomy ||= Spree::Taxonomy.accessible_by(current_ability, :read).find(params[:taxonomy_id])
-    end
-  end
 end

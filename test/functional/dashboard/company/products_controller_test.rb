@@ -14,8 +14,8 @@ class Dashboard::Company::ProductsControllerTest < ActionController::TestCase
     @shipping_category.company_id = @company.id
     @shipping_category.save!
     @shipping_method = FactoryGirl.create(:shipping_method, shipping_category_param: @shipping_category)
-    10.times { FactoryGirl.create(:taxons) }
-    @taxon_ids = Spree::Taxon.all.map(&:id)
+    10.times { FactoryGirl.create(:category) }
+    @category_ids = Category.all.map(&:id)
     @countries = Spree::Country.last(10)
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
     InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
@@ -29,15 +29,19 @@ class Dashboard::Company::ProductsControllerTest < ActionController::TestCase
         product_form: product_form_attributes
       }
     end
+    assert_equal Spree::Product.last.categories.map(&:id), @category_ids
   end
 
-  should 'edit product name' do
+  should 'update product' do
+    categories = Category.last(2)
     put :update, {
-      product_form: {name: 'Changed name'},
+      product_form: {name: 'Changed name', category_ids: [categories.map(&:id).join(',')]},
       id: @product.slug,
       product_type_id: @product.product_type.id
     }
-    assert assigns(:product).name, @product.reload.name
+    @product.reload
+    assert_equal 'Changed name', @product.name
+    assert_equal categories.map(&:id).sort, @product.category_ids.sort
   end
 
   should 'create mirror copies of system shipping categories' do
@@ -65,7 +69,7 @@ class Dashboard::Company::ProductsControllerTest < ActionController::TestCase
       name: "Test Product",
       description: "Test description",
       price: "100",
-      taxon_ids: @taxon_ids.join(","),
+      category_ids: [@category_ids.join(",")],
       quantity: "10",
       shipping_category_id: @shipping_category.id
     }

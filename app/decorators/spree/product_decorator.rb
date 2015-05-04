@@ -8,18 +8,6 @@ class Spree::ProductDecorator < Draper::Decorator
     humanized_money_with_symbol(object.price.to_money(Spree::Config.currency))
   end
 
-  def grouped_taxons
-    @grouped_taxons ||=
-        begin
-          result = {}
-          object.taxons.group_by(&:root).each do |taxon_root, taxons|
-            result[taxon_root.name] ||= []
-            result[taxon_root.name] << taxons.map(&:name)
-          end
-          result
-        end
-  end
-
   def cross_sell_products(exclude_product_ids=[], number_of_products=6)
     products_scope = Spree::Product.searchable.limit(number_of_products)
     products_scope = products_scope.where('spree_products.id NOT IN (?)', exclude_product_ids) unless exclude_product_ids.empty?

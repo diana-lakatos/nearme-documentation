@@ -3,7 +3,7 @@ module InstanceType::Searcher
   attr_reader :results, :transactable_type
 
   def result_count
-    @result_count ||= results.count
+    @result_count ||= results.distinct.count
   end
 
   def paginate_results(page, per_page)

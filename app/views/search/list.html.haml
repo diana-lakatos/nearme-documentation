@@ -6,17 +6,17 @@
 - if !platform_context.display_taxonomy_tree? ||  request.xhr?
   = render 'search/list_results'
 - else
-  .span2{"data-search-filters-container" => true}
+  .span3{"data-search-filters-container" => true}
     %section#category-tree
-      - Category.roots.each do |category|
+      - Category.roots.services.searchable.each do |category|
         .nav-categories.collapse.in
           %ul
             %li.nav-heading
               = label_tag "category_#{category.id}" do
                 = check_box_tag("category_ids[]", category.id, @searcher.category_ids.include?(category.id.to_s), id: "category_#{category.id}")
-                = category.name
+                = category.translated_name
             = category_tree(category, @category, 2)
-  .span10
+  .span9
     = render 'search/list_results'
 
 - content_for :domready do

@@ -9,7 +9,7 @@ class Spree::Product::SearchFetcher
     order = Spree::Product.column_names.include?(@filters[:sort]) ? "#{@filters[:sort]} ASC" : nil
     @products = filtered_products.order(order)
     @products = @products.search_by_query([:name, :description, :extra_properties], @filters[:query]) unless @filters[:query].blank?
-    @products = @products.in_taxon(taxon) if taxon.present?
+    @products = @products.joins(:categories).where(categories: {id: category_ids}).distinct unless categories.blank?
     (@filters[:custom_attributes] || {}).each do |field_name, values|
       next if values.blank? || values.all?(&:blank?)
       @products = @products.filtered_by_custom_attribute(field_name, values)
@@ -19,8 +19,12 @@ class Spree::Product::SearchFetcher
 
   private
 
-  def taxon
-    @taxon ||= Spree::Taxon.find_by!(permalink: @filters[:taxon]) unless @filters[:taxon].blank?
+  def categories
+    @categories ||= Category.where(id: @filters[:category_ids].split(',')) unless @filters[:category_ids].blank?
+  end
+
+  def category_ids
+    categories.map { |c| c.self_and_descendants.map(&:id) }.flatten.uniq
   end
 
   def filtered_products

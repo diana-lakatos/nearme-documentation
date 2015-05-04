@@ -94,50 +94,14 @@ module SearchHelper
     location.name != "#{location.company.name} @ #{location.street}"
   end
 
-  def display_taxonomies(root_taxon, current_taxon=nil)
-    return '' if root_taxon.children.empty?
-    content_tag :ul, class: 'taxons-list' do
-      root_taxon.children.map do |taxon|
-        css_class = (current_taxon && current_taxon == taxon) ? 'current' : nil
-        content_tag :li do
-          link_to(taxon.name, buy_sell_taxon_path(taxon), class: css_class) +
-            display_taxonomies(taxon, current_taxon)
-        end
-      end.join("\n").html_safe
-    end
-  end
-
-  def taxons_tree(root_taxon, current_taxon, max_level = 1)
-    return '' if max_level < 1 || root_taxon.children.empty?
-    content_tag :ul, class: 'taxons-list' do
-      root_taxon.children.map do |taxon|
-        css_class = (current_taxon && current_taxon.self_and_ancestors.include?(taxon)) ? ' active' : ''
-        content_tag :li, class: 'nav-item' do
-         link_to(taxon.name, taxon_custom_path(taxon), class: css_class) +
-         taxons_tree(taxon, current_taxon, max_level - 1)
-        end
-      end.join("\n").html_safe
-    end
-  end
-
-  def taxon_custom_path(taxon)
-    current_path = request.fullpath
-    r = /taxon\=([^\&]+)/
-    if current_path.match(r)
-      current_path.gsub(r) { |m| m.gsub("taxon=#{$1}", "taxon=#{taxon.encoded_permalink}") }
-    else
-      current_path + (request.query_parameters.blank? ? "?" : "&") +  "taxon=#{taxon.encoded_permalink}"
-    end
-  end
-
-  def category_tree(root_category, current_category, max_level = 1)
+  def category_tree(root_category, current_category, max_level = 1, selected = [])
     return '' if max_level < 1 || root_category.children.empty?
     content_tag :ul, class: 'categories-list' do
       root_category.children.map do |category|
         content_tag :li, class: 'nav-item' do
           label = label_tag "category_#{category.id}" do
-            check_box_tag("category_ids[]", category.id, false, {id: "category_#{category.id}"}) +
-            category.name
+            check_box_tag("category_ids[]", category.id, selected.include?(category.id.to_s), {id: "category_#{category.id}"}) +
+            category.translated_name
           end
           label + category_tree(category, current_category, max_level - 1)
         end
