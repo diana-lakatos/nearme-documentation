@@ -26,10 +26,8 @@ class CustomMailer < InstanceMailer
       [@step.lister.try(:email)]
     when 'enquirer'
       [@step.enquirer.try(:email)]
-    when 'administrator'
-      InstanceAdmin.includes(:user).pluck(:email)
     else
-      []
+      InstanceAdminRole.where(name: @workflow_alert.send("#{field}_type")).first.try(:instance_admins).try(:joins, :user).try(:pluck, :email) || []
     end + (@workflow_alert.send(field).try(:split, ',') || [])).compact.uniq
   end
 
