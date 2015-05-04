@@ -88,7 +88,7 @@ class Utils::DefaultAlertsCreator::SupportCreatorTest < ActionDispatch::Integrat
       assert mail.html_part.body.include?("I have a lot of questions. Where to start.")
       assert mail.html_part.body.include?("New Support Request")
       assert_contains 'href="http://custom.domain.com/', mail.html_part.body
-      assert_equal InstanceAdmin.all.map(&:user).map(&:email).sort, mail.to.sort
+      assert_equal InstanceAdminRole.first.instance_admins.all.map(&:user).map(&:email).sort, mail.to.sort
       assert_not_contains 'href="http://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert_equal "[Ticket Support #{@message.ticket_id}] #{@platform_context.decorate.name} - #{@message.full_name} has submited a support request", mail.subject
@@ -101,7 +101,7 @@ class Utils::DefaultAlertsCreator::SupportCreatorTest < ActionDispatch::Integrat
       end
       mail = ActionMailer::Base.deliveries.last
       assert mail.html_part.body.include?("I have a lot of questions. Where to start.")
-      assert_equal InstanceAdmin.all.map(&:user).map(&:email).sort, mail.to.sort
+      assert_equal InstanceAdminRole.first.instance_admins.all.map(&:user).map(&:email).sort, mail.to.sort
       assert mail.html_part.body.include?("Ticket Updated")
       assert mail.html_part.body.include?("#{@message.full_name} has updated ticket ##{@message.ticket_id}")
       assert_contains 'href="http://custom.domain.com/', mail.html_part.body

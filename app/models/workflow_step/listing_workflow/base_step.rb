@@ -1,5 +1,9 @@
 class WorkflowStep::ListingWorkflow::BaseStep < WorkflowStep::BaseStep
 
+  def self.belongs_to_transactable_type?
+    true
+  end
+
   def initialize(transactable_id)
     @transactable = Transactable.find_by_id(transactable_id)
   end

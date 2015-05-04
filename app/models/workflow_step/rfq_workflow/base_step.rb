@@ -1,5 +1,9 @@
 class WorkflowStep::RfqWorkflow::BaseStep < WorkflowStep::BaseStep
 
+  def self.belongs_to_transactable_type?
+    true
+  end
+
   def initialize(message_id)
     @message = Support::TicketMessage.find_by_id(message_id)
   end

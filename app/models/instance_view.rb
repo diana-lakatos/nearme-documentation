@@ -178,9 +178,20 @@ class InstanceView < ActiveRecord::Base
   validates_inclusion_of :handler, in: ActionView::Template::Handlers.extensions.map(&:to_s)
   validates_inclusion_of :format, in: Mime::SET.symbols.map(&:to_s)
   validates_uniqueness_of :path, { scope: [:instance_id, :transactable_type_id, :locale, :format, :handler, :partial] }
+  validate :template_path_is_accessible_for_all_alerts, if: lambda { |instance_view| instance_view.persisted? && instance_view.transactable_type_id.present? && instance_view.transactable_type_id_changed? }
 
   before_validation do
     self.locale ||= 'en'
+  end
+
+  def template_path_is_accessible_for_all_alerts
+    workflow_alerts_which_will_ignore_this_instance_view = WorkflowAlert.where(template_path: path).reject(&:makes_sense_to_associate_with_transactable_type?)
+    if workflow_alerts_which_will_ignore_this_instance_view.count > 0
+      self.errors.add(:transactable_type_id, I18n.t('activerecord.errors.models.instance_view.attributes.service_type.not_accessible', workflow_alerts: workflow_alerts_which_will_ignore_this_instance_view.map { |wa| "#{wa.workflow_step.workflow.name} > #{wa.workflow_step.workflow.name} > #{wa.name}" }.join('; ')))
+      false
+    else
+      true
+    end
   end
 
 end

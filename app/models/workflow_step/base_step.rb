@@ -1,5 +1,9 @@
 class WorkflowStep::BaseStep
 
+  def self.belongs_to_transactable_type?
+    false
+  end
+
   def invoke!
     alerts.each do |alert|
       WorkflowAlert::InvokerFactory.get_invoker(alert).invoke!(self)

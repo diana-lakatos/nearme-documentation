@@ -1,5 +1,9 @@
 class WorkflowStep::UserMessageWorkflow::BaseStep < WorkflowStep::BaseStep
 
+  def self.belongs_to_transactable_type?
+    true
+  end
+
   def initialize(user_message_id)
     @user_message = UserMessage.find_by_id(user_message_id)
   end
