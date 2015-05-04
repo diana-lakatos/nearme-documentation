@@ -7,27 +7,29 @@ module Liquid
       details = {}
 
       begin
-        details = {instance_type_id: context.registers[:controller].platform_context.instance_type.try(:id),
-                   instance_id: context.registers[:controller].platform_context.instance.id, handlers: [:liquid],
-                   formats: [format], locale: [::I18n.locale]}
+        details = { instance_id: context.registers[:controller].platform_context.instance.id,
+                    handlers: [:liquid],
+                    formats: [format],
+                    locale: [::I18n.locale]
+        }
 
-        template = InstanceViewResolver.instance.find_templates(template_path, '', true, details).first
+        template_body = InstanceViewResolver.instance.get_body(template_path.split('.').first, '', true, details)
       rescue
         Rails.logger.error "Liquid::BlankFileSystem #{$!}. Details: #{details}"
       end
 
       # Fallback to English
-      if template.nil? && details[:locale].first != :en
+      if template_body.nil? && details[:locale].first != :en
         details[:locale] = [:en]
-        template = InstanceViewResolver.instance.find_templates(template_path, '', true, details).first
+        template_body = InstanceViewResolver.instance.get_body(template_path.split('.').first, '', true, details)
       end
 
-      if template.nil?
+      if template_body.nil?
         template_path_splited = template_path.split('/')
         template_path_splited[-1] = "_#{template_path_splited[-1]}"
         File.read(File.join('app/views', "#{template_path_splited.join('/')}.liquid"))
       else
-        template.render
+        template_body
       end
     end
   end
