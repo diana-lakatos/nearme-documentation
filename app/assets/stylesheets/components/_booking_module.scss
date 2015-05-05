@@ -448,4 +448,8 @@
     }
   }
 
+  div[data-exclusive-price-content=true] {
+    display: none;
+  }
+
 }

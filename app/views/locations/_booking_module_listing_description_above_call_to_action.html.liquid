@@ -6,10 +6,14 @@
   </div>
 {% endif %}
 {% if listing.exclusive_price_available? %}
-  <div class="exclusive-price">
+  <div class="exclusive-price {% if listing.only_exclusive_price_available? %}hidden{%endif %}">
     {{ 'reservations.booking_module.exclusive_price' | translate }}
-    <input class="pull-right" name="exclusive_price" type="checkbox" value="1">
+    <input class="pull-right" name="exclusive_price" type="checkbox" value="1" data-force-check="{% if listing.only_exclusive_price_available? %}1{% else %}0{% endif %}">
     <div class="price"><span>{{ listing.currency | currency_content_tag: listing.exclusive_price, 'span',rel: false }}</span></div>
+  </div>
+  <div data-exclusive-price-content="true">
+    {{ 'reservations.booking_module.exclusive_price_content' | translate }}
+    <input type="text" data-guest-notes="true">
   </div>
 {% endif %}
 {% if listing.price_per_unit? %}

@@ -17,12 +17,17 @@
     .booking-body
       .booking-price
         - if listing.schedule_booking?
-          %span.label
-            = "#{listing.price_with_currency(:fixed_price)}"
-            - if listing.price_per_unit?
-              %span.period= t('reservations.booking_module.per_unit')
-            -else
-              %span.period= t('reservations.booking_module.fixed')
+          - if listing.fixed_price.to_f > 0
+            %span.label
+              = "#{listing.price_with_currency(:fixed_price)}"
+              - if listing.price_per_unit?
+                %span.period= t('reservations.booking_module.per_unit')
+              -else
+                %span.period= t('reservations.booking_module.fixed')
+          - if listing.exclusive_price.to_f > 0
+            %span.label{style: "#{'float: right;' if listing.fixed_price.to_f > 0}"}
+              = "#{listing.price_with_currency(:exclusive_price)}"
+              %span.period= t('simple_form.labels.transactable.price.exclusive_price')
         - else
           %ul.pricing-tabs.nav.nav-tabs{:'data-pricing-tabs' => true}
             - if listing.action_free_booking?
@@ -136,8 +141,9 @@
             = f.hidden_field :quantity
             = f.hidden_field :book_it_out
             = f.hidden_field :exclusive_price
+            = f.hidden_field :guest_notes
             - if listing.schedule_booking?
-              = f.input :dates, collection: listing.schedule_collection, prompt: 'Choose date', label: false, input_html: { :'data-fixed-date-select' => true }
+              = f.input :dates, collection: listing.schedule_collection, include_blank: false, label: false, input_html: { :'data-fixed-date-select' => true }
             - else
               = f.hidden_field :dates
             = f.hidden_field :reservation_type, class: 'reservation_type'

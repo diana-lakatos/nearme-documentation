@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150506162918) do
+ActiveRecord::Schema.define(version: 20150507141654) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1331,6 +1331,7 @@ ActiveRecord::Schema.define(version: 20150506162918) do
     t.integer  "minimum_booking_minutes",                       default: 60
     t.integer  "book_it_out_discount"
     t.integer  "exclusive_price_cents"
+    t.text     "guest_notes"
   end
 
   add_index "reservations", ["administrator_id"], name: "index_reservations_on_administrator_id", using: :btree
@@ -1400,6 +1401,7 @@ ActiveRecord::Schema.define(version: 20150506162918) do
     t.boolean  "exception",       default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "simple_rules"
   end
 
   add_index "schedules", ["instance_id", "scheduable_id", "scheduable_type"], name: "index_schedules_scheduable", using: :btree
@@ -2697,8 +2699,8 @@ ActiveRecord::Schema.define(version: 20150506162918) do
     t.string   "color_gray"
     t.string   "color_black"
     t.string   "color_white"
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.datetime "created_at",                                         null: false
+    t.datetime "updated_at",                                         null: false
     t.integer  "owner_id"
     t.string   "owner_type"
     t.string   "site_name"

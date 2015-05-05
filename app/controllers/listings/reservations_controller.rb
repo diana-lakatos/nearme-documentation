@@ -137,6 +137,7 @@ class Listings::ReservationsController < ApplicationController
         card_number: attributes[:card_number],
         country_name: attributes[:country_name],
         mobile_number: attributes[:mobile_number],
+        guest_notes: attributes[:guest_notes],
         payment_method: attributes[:payment_method],
         waiver_agreement_templates: attributes[:waiver_agreement_templates],
         payment_method_nonce: params[:payment_method_nonce],

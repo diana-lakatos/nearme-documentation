@@ -149,7 +149,7 @@ class Transactable < ActiveRecord::Base
   include Listing::Search
   include AvailabilityRule::TargetHelper
 
-  PRICE_TYPES = [:hourly, :weekly, :daily, :monthly, :fixed]
+  PRICE_TYPES = [:hourly, :weekly, :daily, :monthly, :fixed, :exclusive]
 
   delegate :name, :description, to: :company, prefix: true, allow_nil: true
   delegate :url, to: :company
@@ -525,6 +525,10 @@ class Transactable < ActiveRecord::Base
 
   def exclusive_price_available?
      transactable_type.action_exclusive_price? && exclusive_price > 0
+  end
+
+  def only_exclusive_price_available?
+    exclusive_price_available? && fixed_price.to_f.zero?
   end
 
   def check_book_it_out_minimum_qty

@@ -1,13 +1,13 @@
 class ReservationRequest < Form
 
-  attr_accessor :dates, :start_minute, :end_minute, :book_it_out, :exclusive_price
-  attr_accessor :card_number, :card_exp_month, :card_exp_year, :card_code, :card_holder_first_name,
-                :card_holder_last_name, :payment_method_nonce
-  attr_accessor :waiver_agreement_templates, :documents, :payment_method
+  attr_accessor :dates, :start_minute, :end_minute, :book_it_out, :exclusive_price, :guest_notes,
+    :card_number, :card_exp_month, :card_exp_year, :card_code, :card_holder_first_name,
+    :card_holder_last_name, :payment_method_nonce, :waiver_agreement_templates, :documents,
+    :payment_method
   attr_reader   :reservation, :listing, :location, :user, :client_token, :payment_method_nonce
 
-  def_delegators :@reservation, :quantity, :quantity=, :action_hourly_booking?, :reservation_type=
-  def_delegators :@reservation, :credit_card_payment?, :manual_payment?, :remote_payment?, :nonce_payment?
+  def_delegators :@reservation, :quantity, :quantity=, :action_hourly_booking?, :reservation_type=,
+    :credit_card_payment?, :manual_payment?, :remote_payment?, :nonce_payment?
   def_delegators :@listing,     :confirm_reservations?, :location
   def_delegators :@user,        :mobile_number, :mobile_number=, :country_name, :country_name=, :country
 
@@ -31,8 +31,12 @@ class ReservationRequest < Form
       @reservation = listing.reservations.build
       @instance = platform_context.instance
       @reservation.currency = @listing.currency
+      @reservation.guest_notes = attributes[:guest_notes]
       @reservation.book_it_out_discount = @listing.book_it_out_discount if attributes[:book_it_out] == 'true'
-      @reservation.exclusive_price_cents = @listing.exclusive_price_cents if attributes[:exclusive_price] == 'true'
+      if attributes[:exclusive_price] == 'true'
+        @reservation.exclusive_price_cents = @listing.exclusive_price_cents
+        attributes[:quantity] = @listing.quantity # ignore user's input, exclusive is exclusive - full quantity
+      end
       @billing_gateway = Billing::Gateway::Incoming.new(@user, @instance, @reservation.currency, @listing.company.iso_country_code) if @user
       @client_token = @billing_gateway.try(:client_token) if @billing_gateway.try(:possible?)
       @reservation.user = user
@@ -240,8 +244,8 @@ class ReservationRequest < Form
 
   def build_document document_params
     if reservation.listing.document_requirements.blank? &&
-    PlatformContext.current.instance.documents_upload_enabled? &&
-    !PlatformContext.current.instance.documents_upload.is_vendor_decides?
+        PlatformContext.current.instance.documents_upload_enabled? &&
+        !PlatformContext.current.instance.documents_upload.is_vendor_decides?
 
       document_params.delete :payment_document_info_attributes
       document_params[:user_id] = @user.id

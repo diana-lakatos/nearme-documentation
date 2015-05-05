@@ -712,6 +712,8 @@ en:
       fixed: 'Fixed Price'
       book_it_out: 'Book It Out'
       exclusive_price: 'Exclusive Price'
+      exclusive_price_content: ''
+      only_exclusive_price: 'Only exclusive booking is possible'
       pick_fixed_date: 'Select a date'
       suggest_date: 'What time works best for you?'
       per_unit: 'Per Unit'
