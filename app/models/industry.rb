@@ -8,7 +8,7 @@ class Industry < ActiveRecord::Base
   # attr_accessible :name, :company_ids, :user_ids
 
   validates_presence_of :name
-  validates :name, :uniqueness => true
+  validates :name, uniqueness: {scope: :instance_id}
 
   has_many :company_industries
   has_many :companies, :through => :company_industries
