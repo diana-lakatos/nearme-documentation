@@ -1,4 +1,4 @@
-<div class='booking-description'
+<div class='booking-description'>
   {% assign displayable_properties = "description|capacity|" | split: "|" %}
   {% for property in displayable_properties %}
     {% if listing.properties[property] != blank %}
