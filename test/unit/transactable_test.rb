@@ -525,11 +525,11 @@ class TransactableTest < ActiveSupport::TestCase
         @transactable.fixed_price = Money.new(10000, 'USD')
         @transactable.action_schedule_booking = true
         @transactable.booking_type = 'regular'
-        @transactable.save
+        @transactable.save!
         @transactable.reload
-        assert_equal(@transactable.fixed_price, Money.new(nil, 'USD'))
-        assert_equal(@transactable.currency, 'USD')
-        assert_nil(@transactable.action_schedule_booking)
+        assert_equal Money.new(nil, 'USD'), @transactable.fixed_price
+        assert_equal 'USD', @transactable.currency
+        refute @transactable.action_schedule_booking
       end
     end
   end
