@@ -14,75 +14,72 @@ class User < ActiveRecord::Base
   has_metadata accessors: [:support_metadata]
   friendly_id :name, use: [:slugged, :finders]
 
+  belongs_to :billing_address, class_name: 'Spree::Address'
+  belongs_to :domain
+  belongs_to :instance
+  belongs_to :instance_profile_type
+  belongs_to :partner
+  belongs_to :shipping_address, class_name: 'Spree::Address'
+
+  has_many :administered_locations, class_name: "Location", foreign_key: 'administrator_id', inverse_of: :administrator
+  has_many :administered_listings, class_name: "Transactable", through: :administered_locations, source: :listings, inverse_of: :administrator
   has_many :authentications, dependent: :destroy
-  has_many :instance_clients, as: :client, dependent: :destroy
+  has_many :assigned_tickets, -> { order 'updated_at DESC' }, foreign_key: 'assigned_to_id', class_name: 'Support::Ticket'
+  has_many :assigned_company_tickets, -> { where(target_type: ['Transactable', 'Spree::Product']).order('updated_at DESC') }, foreign_key: 'assigned_to_id', class_name: 'Support::Ticket'
+  has_many :approval_request_attachments, foreign_key: 'uploader_id'
+  has_many :approval_requests, as: :owner, dependent: :destroy
+  has_many :authored_messages, class_name: "UserMessage", foreign_key: 'author_id', inverse_of: :author
+  has_many :blog_posts, class_name: 'UserBlogPost'
+  has_many :categories_categorable, as: :categorable
+  has_many :categories, through: :categories_categorable
+  has_many :charges, foreign_key: 'user_id', dependent: :destroy
   has_many :company_users, -> { order(created_at: :asc) }, dependent: :destroy
   has_many :companies, through: :company_users
   has_many :created_companies, class_name: "Company", foreign_key: 'creator_id', inverse_of: :creator
-  has_many :administered_locations, class_name: "Location", foreign_key: 'administrator_id', inverse_of: :administrator
-  has_many :administered_listings, class_name: "Transactable", through: :administered_locations, source: :listings, inverse_of: :administrator
+  has_many :followed_users, through: :relationships, source: :followed
+  has_many :followers, through: :reverse_relationships, source: :follower
+  has_many :instance_clients, as: :client, dependent: :destroy
+  has_many :industries, through: :user_industries
   has_many :instance_admins, foreign_key: 'user_id', dependent: :destroy
-  has_many :locations, through: :companies, inverse_of: :creator
-  has_many :reservations, foreign_key: 'owner_id'
-  has_many :recurring_bookings, foreign_key: 'owner_id'
   has_many :listings, through: :locations, class_name: 'Transactable', inverse_of: :creator
+  has_many :listing_reservations, through: :listings, source: :reservations, inverse_of: :creator
+  has_many :listing_recurring_bookings, through: :listings, source: :recurring_bookings, inverse_of: :creator
+  has_many :locations, through: :companies, inverse_of: :creator
+  has_many :mailer_unsubscriptions
+  has_many :orders, foreign_key: :user_id, class_name: 'Spree::Order'
   has_many :photos, foreign_key: 'creator_id', inverse_of: :creator
   has_many :products_images, foreign_key: 'uploader_id', class_name: 'Spree::Image'
   has_many :products, foreign_key: 'user_id', class_name: 'Spree::Product'
-  has_many :listing_reservations, through: :listings, source: :reservations, inverse_of: :creator
-  has_many :listing_recurring_bookings, through: :listings, source: :recurring_bookings, inverse_of: :creator
+  has_many :payment_documents, class_name: 'Attachable::PaymentDocument', dependent: :destroy
+  has_many :reservations, foreign_key: 'owner_id'
+  has_many :recurring_bookings, foreign_key: 'owner_id'
   has_many :relationships, class_name: "UserRelationship", foreign_key: 'follower_id', dependent: :destroy
-  has_many :followed_users, through: :relationships, source: :followed
   has_many :reverse_relationships, class_name: "UserRelationship", foreign_key: 'followed_id', dependent: :destroy
-  has_many :followers, through: :reverse_relationships, source: :follower
-  has_many :user_industries, dependent: :destroy
-  has_many :industries, through: :user_industries
-  has_many :mailer_unsubscriptions
-  has_many :charges, foreign_key: 'user_id', dependent: :destroy
-  has_many :authored_messages, class_name: "UserMessage", foreign_key: 'author_id', inverse_of: :author
-  has_many :tickets, -> { order 'updated_at DESC' }, class_name: 'Support::Ticket'
-  has_many :assigned_tickets, -> { order 'updated_at DESC' }, foreign_key: 'assigned_to_id', class_name: 'Support::Ticket'
-  has_many :assigned_company_tickets, -> { where(target_type: ['Transactable', 'Spree::Product']).order('updated_at DESC') }, foreign_key: 'assigned_to_id', class_name: 'Support::Ticket'
-  has_many :requests_for_quotes, -> { where(target_type: ['Transactable', 'Spree::Product']).order('updated_at DESC') }, class_name: 'Support::Ticket'
-  has_many :approval_requests, as: :owner, dependent: :destroy
-  has_many :user_bans
-  has_one :blog, class_name: 'UserBlog'
-  has_many :blog_posts, class_name: 'UserBlogPost'
-  has_many :payment_documents, class_name: 'Attachable::PaymentDocument', dependent: :destroy
-  has_many :shipping_categories, class_name: 'Spree::ShippingCategory'
-  has_many :approval_request_attachments, foreign_key: 'uploader_id'
-  belongs_to :instance_profile_type
-  has_many :payment_documents, class_name: 'Attachable::PaymentDocument', dependent: :destroy
-  belongs_to :partner
-  belongs_to :instance
-  belongs_to :domain
-
-  has_many :orders, foreign_key: :user_id, class_name: 'Spree::Order'
-  belongs_to :billing_address, class_name: 'Spree::Address'
-  belongs_to :shipping_address, class_name: 'Spree::Address'
   has_many :reviews
-
+  has_many :requests_for_quotes, -> { where(target_type: ['Transactable', 'Spree::Product']).order('updated_at DESC') }, class_name: 'Support::Ticket'
+  has_many :saved_searches, dependent: :destroy
+  has_many :shipping_categories, class_name: 'Spree::ShippingCategory'
+  has_many :ticket_message_attachments, foreign_key: 'uploader_id', class_name: 'Support::TicketMessageAttachment'
+  has_many :tickets, -> { order 'updated_at DESC' }, class_name: 'Support::Ticket'
+  has_many :user_industries, dependent: :destroy
+  has_many :user_bans
   has_many :wish_lists, dependent: :destroy
 
-  has_many :saved_searches, dependent: :destroy
+  has_one :blog, class_name: 'UserBlog'
 
-  before_save :ensure_authentication_token
-  before_save :update_notified_mobile_number_flag
-  before_validation :normalize_gender
+  has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
 
   after_create :create_blog
-
   after_destroy :perform_cleanup
+  before_save :ensure_authentication_token
+  before_save :update_notified_mobile_number_flag
   before_restore :recover_companies
+  before_validation :normalize_gender
 
   store :required_fields
 
-  accepts_nested_attributes_for :companies
   accepts_nested_attributes_for :approval_requests
-
-  has_many :ticket_message_attachments, foreign_key: 'uploader_id', class_name: 'Support::TicketMessageAttachment'
-
-  has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
+  accepts_nested_attributes_for :companies
 
   scope :patron_of, lambda { |listing|
     joins(:reservations).where(reservations: { transactable_id: listing.id }).uniq
@@ -202,6 +199,14 @@ class User < ActiveRecord::Base
                           token: token,
                           secret: secret,
                           token_expires_at: expires_at)
+  end
+
+  def category_ids=ids
+    super(ids.map {|e| e.gsub(/\[|\]/, '').split(',')}.flatten.compact)
+  end
+
+  def common_categories(category)
+    categories & category.descendants
   end
 
   def create_blog

@@ -8,5 +8,7 @@ class InstanceProfileType < ActiveRecord::Base
   belongs_to :instance
   has_many :users
 
+  has_many :form_components, as: :form_componentable
+
 end
 

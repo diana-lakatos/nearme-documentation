@@ -1,10 +1,10 @@
-#instance_admins_form
-  %h4 Custom Attributes
-  .content-container
-    .row
-      .table-container.col-xs-12.dropshadow
-        %table.table
-          %tbody
-            %tr.instance-admins-table
-              %td
-                = link_to 'Manage user custom attributes', instance_admin_manage_instance_profile_type_custom_attributes_path(@instance_profile_type)
+.content-container
+  .row
+    .table-container.col-xs-12.dropshadow
+      %table.table
+        %tbody
+          %tr
+            %td
+              = link_to 'Form Components', instance_admin_manage_instance_profile_type_form_components_path(resource), class: 'pull-left btn btn-green btn-bottom-margin'
+              = link_to 'Custom Attributes', instance_admin_manage_instance_profile_type_custom_attributes_path(resource), class: 'pull-left btn btn-green btn-bottom-margin'
+              =#TODO link_to 'Categories', instance_admin_manage_transactable_type_categories_path(resource), class: 'pull-left btn btn-green btn-bottom-margin'

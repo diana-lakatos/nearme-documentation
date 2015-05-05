@@ -2,7 +2,7 @@
 
 .content-container
   .row
-    = link_to 'New Form Component', new_polymorphic_url([:instance_admin, @controller_scope, @form_componentable, FormComponent.new], :form_type => :space_wizard), class: 'pull-right btn btn-green'
+    = link_to 'New Form Component', new_polymorphic_url([:instance_admin, @controller_scope, @form_componentable, FormComponent.new], :form_type => @form_type || :space_wizard), class: 'pull-right btn btn-green'
 
 %h4 Form Components
 .content-container

@@ -52,7 +52,7 @@ class InstanceWizardController < ActionController::Base
       @instance.product_types.create(name: @instance.bookable_noun)
       @instance.update_attribute :default_search_view, 'products'
     end
-    @instance.instance_profile_types.create!(name: 'User Custom Attributes')
+    ipt = @instance.instance_profile_types.create!(name: 'User Custom Attributes')
 
     tp = @instance.transactable_types.create(
       name: @instance.bookable_noun,
@@ -73,6 +73,7 @@ class InstanceWizardController < ActionController::Base
     at.save!
     Utils::FormComponentsCreator.new(tp).create!
     Utils::FormComponentsCreator.new(tp, 'transactable').create!
+    Utils::FormComponentsCreator.new(ipt).create!
     @instance.location_types.create!(name: 'General')
 
     Utils::DefaultAlertsCreator.new.create_all_workflows!

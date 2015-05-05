@@ -1,4 +1,5 @@
 class InstanceAdmin::BuySell::ProductTypes::FormComponentsController < InstanceAdmin::FormComponentsController
+  before_filter :form_type, only: [:index]
 
   def create_as_copy
     product_type_id = params[:copy_template][:form_componentable_id]
@@ -14,6 +15,10 @@ class InstanceAdmin::BuySell::ProductTypes::FormComponentsController < InstanceA
   end
 
   private
+
+  def form_type
+    @form_type = 'product_attributes'
+  end
 
   def find_form_componentable
     @form_componentable = Spree::ProductType.find(params[:product_type_id])

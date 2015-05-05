@@ -288,6 +288,15 @@ DesksnearMe::Application.routes.draw do
           post :enable
         end
         resources :custom_attributes, controller: 'instance_profile_types/custom_attributes'
+        resources :form_components, controller: 'instance_profile_types/form_components' do
+          member do
+            patch :update_rank
+          end
+          collection do
+            post :create_as_copy
+          end
+        end
+        resources :categories, controller: 'instance_profile_types/categories'
       end
 
       resources :transactable_types do
@@ -433,7 +442,6 @@ DesksnearMe::Application.routes.draw do
 
       resource :social_share, :only => [:new], :controller => 'locations/social_share'
     end
-    resources :categories, only: [:index, :show], :controller => 'transactable_types/categories'
   end
 
   resources :locations, :only => [] do
@@ -529,7 +537,11 @@ DesksnearMe::Application.routes.draw do
 
   namespace :dashboard do
     namespace :api do
-      resources :categories
+      resources :categories do 
+        member do
+          get :tree
+        end
+      end
     end
 
     resources :api do

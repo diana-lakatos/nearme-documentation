@@ -4,6 +4,7 @@ class RegistrationsControllerTest < ActionController::TestCase
 
   setup do
     @user = FactoryGirl.create(:user, properties: {company_name: "DesksNearMe", country_name: "United States"})
+    @instance_profile_type = FactoryGirl.create(:instance_profile_type)
     @request.env["devise.mapping"] = Devise.mappings[:user]
     stub_mixpanel
   end

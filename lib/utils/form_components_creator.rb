@@ -47,5 +47,16 @@ module Utils
       @form_componentable.form_components.create(name: name, form_type: @form_type_class, form_fields: form_fields)
     end
 
+    def create_instance_profile_type_components
+      @form_type_class = FormComponent::INSTANCE_PROFILE_TYPES
+      @form_fields = [
+        { "user" => "public_profile" }, { "user" => "password" }, { "user" => "industries" }, { "user" => "email" }, { "user" => "phone" }, { "user" => "job_title" }, { "user" => "avatar" }, { "user" => "biography" }, { "user" => "facebook_url" },
+        { "user" => "twitter_url" }, { "user" => "linkedin_url" }, { "user" => "instagram_url" }, { "user" => "skills_and_interests" },
+        { "user" => "name" }, { "user" => "first_name" }, { "user" => "middle_name" }, { "user" => "last_name" }, { "user" => "gender" },
+        { "user" => "drivers_licence_number" }, { "user" => "gov_number" }, { "user" => "approval_requests" }, { "user" => "google_plus_url" }, { "user" => "degree"},
+        { "user" => "language" }, { "user" => "time_zone" }, { "user" => "current_location" }, { "user" => "company_name" }
+      ]
+      create_component!('Profile', @form_fields)
+    end
   end
 end

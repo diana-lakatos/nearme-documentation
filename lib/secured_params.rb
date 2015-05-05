@@ -186,6 +186,7 @@ class SecuredParams
       :parent_id,
       :child_index,
       :multiple_root_categories,
+      :shared_with_users,
       :search_options,
       :display_options,
       :mandatory
@@ -977,6 +978,7 @@ class SecuredParams
       :linkedin_url, :facebook_url, :google_plus_url, :public_profile,
       :language,
       industry_ids: [],
+      category_ids: [],
       companies_attributes: nested(self.company(transactable_type)),
       approval_requests_attributes: nested(self.approval_request)
     ] + User.public_custom_attributes_names(InstanceProfileType.first.try(:id))

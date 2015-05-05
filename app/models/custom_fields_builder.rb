@@ -17,6 +17,8 @@ class CustomFieldsBuilder
       to_object_field_notation(product_fields, 'product')
     when FormComponent::TRANSACTABLE_ATTRIBUTES
       to_object_field_notation(dashboard_transactable_fields, 'transactable')
+    when FormComponent::INSTANCE_PROFILE_TYPES
+      to_object_field_notation(user_fields, 'user')
     end
   end
 

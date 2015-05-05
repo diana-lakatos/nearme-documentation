@@ -5,8 +5,10 @@
       = f.input :category_ids, as: :array, label: category.translated_name, :placeholder => "Enter a category", input_html: { "data-category-autocomplete" => true, "data-category-id" => category.id, "data-selected-catgories" => f.object.common_categories(category).map(&:id).join(','), value: []}, required: category.mandatory?
 
     - else
-      = content_tag :div, id: "category_#{category.id}_tree_content" do
+      = content_tag :div, class: "tree_container", data: { category_id: category.id } do
         = hidden_field_tag "single_choice_category", category.multiple_root_categories == true, class: 'single_choice_category'
+        = f.hidden_field 'category_ids', multiple: true, class: 'category_ids', value: nil, "data-value" => f.object.category_ids.join(",")
+
         .row
           .col-md-3
             = f.label :categories do

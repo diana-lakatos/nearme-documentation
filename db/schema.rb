@@ -319,10 +319,11 @@ ActiveRecord::Schema.define(version: 20150510125525) do
     t.integer  "rgt"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "multiple_root_categories"
     t.text     "display_options"
     t.text     "search_options"
     t.boolean  "mandatory"
+    t.boolean  "multiple_root_categories"
+    t.boolean  "shared_with_users"
   end
 
   add_index "categories", ["categorable_id"], name: "index_categories_on_categorable_id", using: :btree
@@ -331,25 +332,18 @@ ActiveRecord::Schema.define(version: 20150510125525) do
   add_index "categories", ["partner_id"], name: "index_categories_on_partner_id", using: :btree
   add_index "categories", ["user_id"], name: "index_categories_on_user_id", using: :btree
 
-  create_table "categories_products", force: true do |t|
+  create_table "categories_categorables", force: true do |t|
     t.integer  "category_id"
-    t.integer  "spree_product_id"
+    t.integer  "categorable_id"
+    t.string   "categorable_type"
+    t.integer  "instance_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "instance_id"
   end
 
-  create_table "categories_transactables", force: true do |t|
-    t.integer  "category_id"
-    t.integer  "transactable_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "instance_id"
-  end
-
-  add_index "categories_transactables", ["category_id"], name: "index_categories_transactables_on_category_id", using: :btree
-  add_index "categories_transactables", ["instance_id"], name: "index_categories_transactables_on_instance_id", using: :btree
-  add_index "categories_transactables", ["transactable_id"], name: "index_categories_transactables_on_transactable_id", using: :btree
+  add_index "categories_categorables", ["categorable_id"], name: "index_categories_categorables_on_categorable_id", using: :btree
+  add_index "categories_categorables", ["category_id"], name: "index_categories_categorables_on_category_id", using: :btree
+  add_index "categories_categorables", ["instance_id"], name: "index_categories_categorables_on_instance_id", using: :btree
 
   create_table "charges", force: true do |t|
     t.integer  "payment_id"

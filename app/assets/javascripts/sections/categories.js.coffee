@@ -5,17 +5,18 @@ class @CategoriesController
     @autocomplete()
 
   setupCategoriesTrees: =>
-    if @container.find('.category_tree').length > 0
-      for category_id, i in display_categories
-        @setupCategoriesTreeFor(category_id)
+    if @container.find('.tree_container').length > 0
+      for tree_container, i in @container.find('.tree_container')
+        @setupCategoriesTreeFor( $(tree_container) )
 
-  setupCategoriesTreeFor: (category_id) =>
+  setupCategoriesTreeFor: (tree_container) =>
     that = this
-    tree_content = @container.find("#category_" + category_id + "_tree_content")
-    tree_container = tree_content.find('.category_tree')
-    if tree_container.length > 0
+    category_id = tree_container.attr('data-category-id')
+    category_tree = tree_container.find('.category_tree')
+    if category_tree.length > 0
+      selected_categories = tree_container.find('.category_ids').eq(0).attr('data-value').split(',')
       $.ajax
-        url: (categories_path + '/' + category_id).toString()
+        url: Routes.tree_dashboard_api_category_path(category_id)
         data:
           category_ids: selected_categories,
           category_id: category_id
@@ -27,12 +28,12 @@ class @CategoriesController
               data: category,
               ajax:
                 url: (e) ->
-                  (categories_path + '/' + e.prop('id')).toString()
+                  Routes.tree_dashboard_api_category_path(e.prop('id'))
                 data: {category_ids: selected_categories}
 
             themes:
               theme: "apple",
-              url: jstree_theme_path
+              url: ""
             strings:
               new_node: "New category",
               loading: "Loading ..."
@@ -44,28 +45,29 @@ class @CategoriesController
               cascade: 'up',
               two_state: true
 
-          tree_container.jstree(conf)
+          category_tree.jstree(conf)
             .bind "loaded.jstree", (e, data) ->
-              that.bindClickEvent(tree_container)
+              that.bindClickEvent(category_tree)
+              selected_categories = conf.json_data.ajax.data.category_ids
               if selected_categories.length > 0
-                $.jstree._reference(tree_container).open_all(tree_container.jstree('get_checked', null, true))
+                $.jstree._reference(category_tree).open_all(category_tree.jstree('get_checked', null, true))
                 for category_id, i in selected_categories
-                  tree_container.jstree('check_node', '#' + category_id);
-                  tree_container.jstree('open_node', '#' + category_id);
+                  category_tree.jstree('check_node', $('#' + category_id));
+                  category_tree.jstree('open_node', $('#' + category_id));
 
             .bind "check_node.jstree uncheck_node.jstree ", ->
-              that.setChecboxesValues(tree_content)
+              that.setChecboxesValues(tree_container)
 
             .bind 'check_node.jstree', (e, data) ->
-              if (tree_content.find(".single_choice_category").val() == "false") && data.rslt.obj.attr('root') == 'true'
+              if (tree_container.find(".single_choice_category").val() == "false") && data.rslt.obj.attr('root') == 'true'
                 currentNode = data.rslt.obj.attr('id')
-                tree_container.jstree('get_checked', null, true).each ->
+                category_tree.jstree('get_checked', null, true).each ->
                   if currentNode != @id && $(@).attr("root") == 'true'
-                    $.jstree._reference(tree_container).uncheck_node '#' + @id
+                    $.jstree._reference(category_tree).uncheck_node '#' + @id
                   return
                 return
             .bind 'after_open.jstree', (e, data) ->
-              that.bindClickEvent(tree_container)
+              that.bindClickEvent(category_tree)
             .bind 'check_node.jstree', (e, data) ->
               data.inst.open_all(data.rslt.obj, true)
 
@@ -73,27 +75,27 @@ class @CategoriesController
               data.inst.close_all(data.rslt.obj, true);
               data.rslt.obj.find('li.jstree-checked').removeClass('jstree-checked').addClass('jstree-unchecked')
 
-  bindClickEvent: (tree_container) ->
-    tree_container.find("a").unbind "click"
-    tree_container.find("a").on "click", (e) ->
+  bindClickEvent: (category_tree) ->
+    category_tree.find("a").unbind "click"
+    category_tree.find("a").on "click", (e) ->
       e.preventDefault();
       e.stopPropagation();
-      if tree_container.jstree("is_checked", this)
-        tree_container.jstree("uncheck_node", this)
+      if category_tree.jstree("is_checked", this)
+        category_tree.jstree("uncheck_node", this)
       else
-        tree_container.jstree("check_node", this)
+        category_tree.jstree("check_node", this)
 
   handleAjaxError: (XMLHttpRequest, textStatus, errorThrown) ->
     $.jstree.rollback(last_rollback)
     $("#ajax_error").show().html("<strong>The server returned an error</strong><br />The requested change has not been accepted and the tree has been returned to its previous state, please try again")
 
-  setChecboxesValues: (tree_content) ->
-    tree_container = tree_content.find('.category_tree')
+  setChecboxesValues: (tree_container) ->
+    category_tree = tree_container.find('.category_tree')
     categories_inputs = []
-    category_tree_inputs = tree_content.find(".category_tree_inputs")
+    category_tree_inputs = tree_container.find(".category_tree_inputs")
     category_tree_inputs.html('')
-    tree_container.jstree('get_checked', null, true).each ->
-      $('<input name="'+ category_input_name + '">').attr('type','hidden').val(@id).appendTo(category_tree_inputs);
+    category_tree.jstree('get_checked', null, true).each ->
+      $('<input name="'+ tree_container.find('.category_ids').attr('name') + '">').attr('type','hidden').val(@id).appendTo(category_tree_inputs);
       return
     return
 
@@ -104,12 +106,12 @@ class @CategoriesController
           placeholder: "Enter a category"
           multiple: true
           initSelection: (element, callback) ->
-            url = autocomplete_categories_path + '/' + $(select).attr('data-category-id')
+            url = Routes.dashboard_api_category_path($(select).attr('data-category-id'))
             $.getJSON url, { init_selection: 'true', ids: $(select).attr("data-selected-catgories") }, (data) ->
               callback data
 
           ajax:
-            url: autocomplete_categories_path + '/' + $(select).attr('data-category-id')
+            url: Routes.dashboard_api_category_path($(select).attr('data-category-id'))
             datatype: "json"
             data: (term, page) ->
               per_page: 50
@@ -125,7 +127,4 @@ class @CategoriesController
 
           formatSelection: (category) ->
             category.pretty_name
-
-
-
 

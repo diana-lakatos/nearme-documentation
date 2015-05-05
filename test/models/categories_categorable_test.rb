@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class CategoriesTransactableTest < ActiveSupport::TestCase
+class CategoriesCategorableTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

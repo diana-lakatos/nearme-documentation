@@ -51,11 +51,4 @@
   new Dashboard.AddressController($("#boarding_form"));
   var boarding_form = new BoardingForm($("#boarding_form"));
   new ShippoFieldsManager(#{raw DimensionsTemplate::UNITS_OF_MEASURE.to_json});
-
-  var autocomplete_categories_path = "#{dashboard_api_categories_path}"
-  var selected_categories = #{raw @boarding_form.product_form.category_ids.to_json}
-  var display_categories = #{raw @product_type.categories.roots.map(&:id).to_json}
-  var categories_path = "#{product_type_categories_path(@product_type)}"
-  var jstree_theme_path = "#{stylesheet_path("instance_admin/jstree_themes/apple/style.css")}";
-  var category_input_name = "boarding_form[product_form][category_ids][]"
   new CategoriesController($('#boarding_form'));

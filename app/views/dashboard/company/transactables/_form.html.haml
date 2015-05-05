@@ -113,10 +113,4 @@
 - content_for :domready do
   $(function() { new Dashboard.ListingController($('#listing-form')) });
 
-  var selected_categories = #{raw @transactable.category_ids.to_json}
-  var display_categories = #{raw @transactable_type.categories.roots.map(&:id).to_json}
-  var autocomplete_categories_path = "#{dashboard_api_categories_path}"
-  var categories_path = "#{transactable_type_categories_path(@transactable_type)}"
-  var jstree_theme_path = "#{stylesheet_path("instance_admin/jstree_themes/apple/style.css")}";
-  var category_input_name = "transactable[category_ids][]"
   new CategoriesController($('#listing-form'));

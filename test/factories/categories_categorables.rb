@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :categories_transactable do
+  factory :categories_categorable do
     
   end
 
