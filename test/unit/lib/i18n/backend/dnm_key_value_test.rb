@@ -8,6 +8,7 @@ class DnmKeyValueTest < ActiveSupport::TestCase
     FactoryGirl.create(:translation, :key => 'some_key_for_instance', :value => 'default value', instance_id: nil)
     FactoryGirl.create(:translation, :key => 'some_key_for_instance', :value => 'instance value', instance_id: @instance.id)
     @backend = I18n::Backend::DNMKeyValue.new(Rails.cache)
+    I18n.locale = :en
     @backend.set_instance_id(@instance.id)
   end
 
@@ -94,7 +95,6 @@ class DnmKeyValueTest < ActiveSupport::TestCase
 
   teardown do
     I18n.locale = :en
-    @backend.set_instance_id(@instance.id)
   end
 
   protected

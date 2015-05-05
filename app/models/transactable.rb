@@ -568,9 +568,10 @@ class Transactable < ActiveRecord::Base
     if schedule_booking?
       self.hourly_price = self.daily_price = self.weekly_price = self.monthly_price = Money.new(nil, currency)
       self.action_hourly_booking = self.action_daily_booking = self.action_free_booking = nil
+      self.action_schedule_booking = true
     else
       self.fixed_price = Money.new(nil, currency)
-      self.action_schedule_booking = nil
+      self.action_schedule_booking = false
     end
     true
   end

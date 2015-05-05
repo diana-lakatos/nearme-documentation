@@ -23,10 +23,14 @@ class TransactableDecorator < Draper::Decorator
   end
 
   def lowest_price_with_currency(filter_pricing = [])
-    listing_price = self.lowest_price_with_type(filter_pricing)
-    if listing_price
-      periods = {:monthly => 'month', :weekly => 'week', :daily => 'day', :hourly => 'hour'}
-      "#{self.price_with_currency(listing_price[0])} <span>/ #{periods[listing_price[1]]}</span>".html_safe
+    if self.schedule_booking?
+      self.price_with_currency(self.fixed_price)
+    else
+      listing_price = self.lowest_price_with_type(filter_pricing)
+      if listing_price
+        periods = {:monthly => 'month', :weekly => 'week', :daily => 'day', :hourly => 'hour'}
+        "#{self.price_with_currency(listing_price[0])} <span>/ #{periods[listing_price[1]]}</span>".html_safe
+      end
     end
   end
 
