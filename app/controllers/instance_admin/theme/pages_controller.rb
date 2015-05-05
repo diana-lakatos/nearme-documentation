@@ -56,5 +56,9 @@ class InstanceAdmin::Theme::PagesController < InstanceAdmin::Theme::BaseControll
     params.require(:page).permit(secured_params.page)
   end
 
+  def begin_of_association_chain
+    @theme
+  end
+
 end
 
