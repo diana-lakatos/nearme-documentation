@@ -1,7 +1,21 @@
 - title @searcher.query
 - meta_description @searcher.query
+- content_for :category_tree do
+  - if platform_context.display_taxonomy_tree?
+    %nav.span2{"data-search-filters-container" => 1}
+      %section#category-tree
+        - Category.roots.products.searchable.each do |category|
+          .nav-categories.collapse.in
+            %ul
+              %li.nav-heading
+                = label_tag "category_#{category.id}" do
+                  = check_box_tag("category_ids[]", category.id, @searcher.category_ids.include?(category.id.to_s), id: "category_#{category.id}")
+                  = category.name
+              = category_tree(category, @category, 2, @searcher.category_ids)
 .search-view
+  .crumbs= render_crumbs
   .page-wrapper.row-fluid
+    = yield :category_tree
 
     =render 'search/products_list/header'
     - if @searcher.results.any?
