@@ -3,7 +3,7 @@ class Search.ProductsListSearchController extends Search.Controller
     @initializeEndlessScrolling()
     @initializeSearchButton()
     @responsiveCategoryTree()
-    @filters_container = $('nav[data-search-filters-container]')
+    @filters_container = $('[data-search-filters-container]')
     @loader = new Search.ScreenLockLoader => @container.find('.loading')
 
     @bindEvents()
