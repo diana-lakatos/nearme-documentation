@@ -138,6 +138,9 @@ class Bookings.Controller
             $(option).prop('disabled', true)
           else
             $(option).prop('disabled', false)
+        if parseInt(@quantityField.find('option:selected').val(), 10) > @listing.fixedAvailability()
+          @quantityField.val("#{@listing.fixedAvailability()}")
+          @quantityField.trigger('change')
       else
         @listing.bookedDatesArray = []
 
