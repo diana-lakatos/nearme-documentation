@@ -2,6 +2,8 @@
 # owner.
 class CompileThemeJob < Job
 
+  include Job::LongRunning
+
   def after_initialize(theme)
     @theme = theme
   end

@@ -1,7 +1,6 @@
 .navbar {
 
   .navbar-inner {
-    background: $black;
 
     #header_links {
       background-color: $theme_black;
@@ -14,13 +13,13 @@
       background: image-url($theme_logo) no-repeat;
       filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='#{$theme_logo}', sizingMethod='scale');
 
-      @media (-webkit-min-device-pixel-ratio: 1.5), 
-      (min-resolution: 144dpi) { 
+      @media (-webkit-min-device-pixel-ratio: 1.5),
+      (min-resolution: 144dpi) {
         width: $theme_logo_retina_width;
         height: $theme_logo_retina_height;
         margin-top: $theme_logo_max_height - $theme_logo_retina_height/2;
         background: image-url($theme_logo2x) no-repeat;
-      }     
+      }
     }
 
     @media (max-width: $ipad-width) {
@@ -31,7 +30,7 @@
         margin-top: $theme_logo_max_height - $theme_icon_height/2;
         background: image-url($theme_icon) no-repeat;
 
-        @media (-webkit-min-device-pixel-ratio: 1.5), 
+        @media (-webkit-min-device-pixel-ratio: 1.5),
         (min-resolution: 144dpi) {
           width: $theme_icon_retina_width;
           height: $theme_icon_retina_height;
@@ -72,11 +71,6 @@
    Don't put other styles in here, use the navbar block above this one. */
 
 .navbar-inverse {
-  background: $black;
-  
-  .navbar-inner {
-    background: $black;
-  }
 
   ul.nav {
     li {
@@ -89,8 +83,7 @@
           background:$theme_black;
 
           a:hover{
-              background:$theme_black;
-              color: $gray220;
+            background:$theme_black;
           }
         }
 
@@ -101,7 +94,7 @@
 
       &.active {
         background: $theme_black;
-        
+
         a {
           color: $theme_white;
         }
@@ -109,7 +102,7 @@
 
       &.dropdown.open {
         background: $theme_black;
-        
+
         .dropdown-toggle {
           background: $theme_black;
         }

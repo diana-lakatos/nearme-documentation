@@ -1,15 +1,8 @@
 .box {
   background: $theme_white;
-
-  hr, 
-  .hr {
-    > span {
-      background: $white;
-    }
-  }
 }
 
-.box-inverse {  
+.box-inverse {
   header {
     color: $theme_white;
   }
@@ -26,7 +19,7 @@
 
     &.active {
 
-      a, 
+      a,
       a:hover {
         background: $theme_black;
         color: $theme_white;

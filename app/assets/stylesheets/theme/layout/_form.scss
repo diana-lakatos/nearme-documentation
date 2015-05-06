@@ -1,0 +1,14 @@
+form:not(.no_inheritance) {
+
+  label {
+
+    a[rel=tooltip] {
+      color: $theme_black;
+
+      &:hover {
+        color: $theme_gray;
+      }
+    }
+  }
+
+}

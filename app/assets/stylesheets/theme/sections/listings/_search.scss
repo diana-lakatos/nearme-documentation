@@ -37,7 +37,6 @@ header#listing_search {
 
 /*** Listing View ***/
 section.search section#results.list {
-  margin-top: 80px;
 
   article.listing {
 
@@ -56,7 +55,6 @@ section.search section#results.list {
 
     .info {
       color: $theme_white;
-      @include background-image(linear-gradient(rgba(250, 250, 250, 0), $black));
 
     }
   }
