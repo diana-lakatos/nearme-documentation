@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150505130444) do
+ActiveRecord::Schema.define(version: 20150506162918) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2750,6 +2750,8 @@ ActiveRecord::Schema.define(version: 20150505130444) do
     t.integer  "hero_image_original_width"
     t.integer  "hero_image_original_height"
     t.string   "compiled_dashboard_stylesheet"
+    t.string   "theme_digest",                            limit: 40
+    t.string   "theme_dashboard_digest",                  limit: 40
   end
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree

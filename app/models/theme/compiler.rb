@@ -8,18 +8,26 @@ class Theme::Compiler
   # Generates the new stylesheet assets and updates the theme data accordingly.
   def generate_and_update_assets
 
-    @theme.compiled_stylesheet = {
-      :tempfile => create_compiled_file('theme.scss.erb'),
-      :filename => "theme-application-#{Time.zone.now.to_i}.css"
-    }
+    if cumulative_digest('theme') != @theme.theme_digest
+      @theme.compiled_stylesheet = {
+        :tempfile => create_compiled_file('theme.scss.erb'),
+        :filename => "theme-application-#{Time.zone.now.to_i}.css"
+      }
+      @theme.theme_digest = cumulative_digest('theme')
+    end
 
-    @theme.compiled_dashboard_stylesheet = {
-      :tempfile => create_compiled_file('dashboard_theme.scss.erb'),
-      :filename => "theme-dashboard-#{Time.zone.now.to_i}.css"
-    }
+    if cumulative_digest('dashboard_theme') != @theme.theme_dashboard_digest
+      @theme.compiled_dashboard_stylesheet = {
+        :tempfile => create_compiled_file('dashboard_theme.scss.erb'),
+        :filename => "theme-dashboard-#{Time.zone.now.to_i}.css"
+      }
+      @theme.theme_dashboard_digest = cumulative_digest('dashboard_theme')
+    end
 
-    @theme.skipping_compilation do
-      @theme.save!(validate: false)
+    if @theme.changed?
+      @theme.skipping_compilation do
+        @theme.save!(validate: false)
+      end
     end
   ensure
     gzip_tempfile.close rescue nil
@@ -27,6 +35,28 @@ class Theme::Compiler
   end
 
   private
+
+  def cumulative_digest(base_name)
+    @digests ||= {}
+    return @digests[base_name] if @digests[base_name].present?
+
+    stylesheets_path = Rails.root.join('app', 'assets', 'stylesheets')
+    paths = []
+    paths << (root_css_path = stylesheets_path.join("#{base_name == 'theme' ? 'application' : 'dashboard'}_dynamic.scss"))
+    Dir.glob(stylesheets_path.join('globals') + '*.scss') { |p| paths << p }
+    File.open(root_css_path).each do |l|
+      if p = l.match(/(theme.*)\"/).try(:captures).try(:at, 0)
+        paths << stylesheets_path.join("#{p.sub(/([-_\w]+)$/, '_\1')}.scss")
+      end
+    end
+    @digests[base_name] = Digest::SHA1.hexdigest(
+      compile_erb(erb_template_path("#{base_name}.scss.erb")) + paths.map { |p| file_digest(p) }.join
+    )
+  end
+
+  def file_digest(path)
+    Digest::SHA1.hexdigest(File.read(path))
+  end
 
   def create_compiled_file(base_file_name)
     path = "#{Dir.tmpdir}/#{base_file_name}-ThemeStylesheet#{@theme.id}"
@@ -44,18 +74,25 @@ class Theme::Compiler
     File.open(path, 'rb')
   end
 
-  def render_stylesheet(file_name)
+  def compile_erb(css_template_path)
+    @compiled_erbs ||= {}
+    return @compiled_erbs[css_template_path] if @compiled_erbs[css_template_path].present?
+
     # Load the dynamic css template contents
-    css_template_path = Rails.root.join(
-      'app', 'assets', 'stylesheets', 'dynamic', file_name
-    )
     css_template_content = File.read(css_template_path)
 
     # Render the ERB component of the template, which outputs owner specific
     # SCSS.
-    css_content = ERB.new(css_template_content).result(
-      ERBBinding.new(@theme).get_binding
-    )
+    @compiled_erbs[css_template_path] = ERB.new(css_template_content).result(ERBBinding.new(@theme).get_binding)
+  end
+
+  def erb_template_path(file_name)
+    Rails.root.join('app', 'assets', 'stylesheets', 'dynamic', file_name)
+  end
+
+  def render_stylesheet(file_name)
+    css_template_path = erb_template_path(file_name)
+    css_content = compile_erb(css_template_path)
 
     # Use our standard Asset pipeline configuration, as we will be
     # compiling our standard stylesheets with overridden variables specific

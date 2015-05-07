@@ -1,5 +1,7 @@
 class DataUploadImportJob < Job
 
+  include Job::LongRunning
+
   def after_initialize(data_upload_id)
     @data_upload_id = data_upload_id
   end

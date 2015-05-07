@@ -13,20 +13,54 @@ class CompilerTest < ActiveSupport::TestCase
       theme.support_email = 'support@desksnear.me'
       theme.save!
     end
+    @compiler = Theme::Compiler.new(@theme)
   end
 
   context '#generate_and_update_assets' do
     should 'compile a css file and save it to the Theme' do
-      compiler = Theme::Compiler.new(@theme)
-      compiler.generate_and_update_assets
+      @compiler.generate_and_update_assets
 
-      assert @theme.reload.compiled_stylesheet.present?
-      assert @theme.compiled_dashboard_stylesheet.present?
+      assert_not_nil @theme.reload.compiled_stylesheet
+      assert_not_nil @theme.compiled_dashboard_stylesheet
+      assert_not_nil @theme.theme_digest
+      assert_not_nil @theme.theme_dashboard_digest
     end
 
     should 'render css rule' do
-      compiler = Theme::Compiler.new(@theme)
-      assert compiler.send(:render_stylesheet, 'theme.scss.erb') =~ /#logo/, "Expected to see a CSS rule"
+      assert @compiler.send(:render_stylesheet, 'theme.scss.erb') =~ /#logo/, "Expected to see a CSS rule"
+    end
+
+    should 'not compile css if digests are the same' do
+      Theme.any_instance.stubs(:theme_digest).returns('digest')
+      Theme.any_instance.stubs(:theme_dashboard_digest).returns('digest')
+      Theme::Compiler.any_instance.stubs(:cumulative_digest).returns('digest')
+      @compiler.expects(:create_compiled_file).never
+      @compiler.generate_and_update_assets
+    end
+
+    context '#cumulative_digest' do
+      should 'return sha digest of the files' do
+        assert_not_nil @compiler.send(:cumulative_digest, 'theme')
+      end
+
+      should 'return different results for theme application and dashboard' do
+        assert_not_equal @compiler.send(:cumulative_digest, 'theme'),
+          @compiler.send(:cumulative_digest, 'dashboard_theme')
+      end
+
+      should 'return the same result for if theme css files were not changed' do
+        # new instance of compiler because #cumulative_digest cahes result
+        compiler2 = Theme::Compiler.new(@theme)
+        assert_equal @compiler.send(:cumulative_digest, 'theme'), compiler2.send(:cumulative_digest, 'theme')
+      end
+
+      should 'return different results if theme css files were changed' do
+        first = @compiler.send(:cumulative_digest, 'theme')
+        compiler2 = Theme::Compiler.new(@theme)
+        # to simulate that files are changed
+        Dir.stubs(:glob).returns([])
+        assert_not_equal first, compiler2.send(:cumulative_digest, 'theme')
+      end
     end
   end
 

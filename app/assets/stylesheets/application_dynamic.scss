@@ -1,8 +1,4 @@
-@import "select2";
 @import "compass";
-@import "compass/css3";
-@import "compass/reset";
-@import "compass/css3/transition";
 @import "globals/*";
 
 @import "theme/vendor/chrome_frame";
@@ -15,14 +11,10 @@
 
 @import "theme/components/accordion";
 @import "theme/components/box";
-@import "theme/components/css-arrow";
-@import "theme/components/custom_checkboxes_and_radios";
-@import "theme/components/datepicker";
 @import "theme/components/fileupload";
 @import "theme/components/flash";
 @import "theme/components/google-map";
 @import "theme/components/modal";
-@import "theme/components/multiselect";
 @import "theme/components/nav";
 @import "theme/components/slider";
 
@@ -35,6 +27,3 @@
 @import "theme/sections/sign-up";
 @import "theme/sections/listings/search";
 @import "theme/sections/space/bookings";
-@import "theme/sections/partner_inquiries";
-
-@import "theme/user_blog/user_blog";

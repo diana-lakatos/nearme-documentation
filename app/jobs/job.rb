@@ -69,8 +69,7 @@ class Job
 
   def self.perform_later(when_perform, *args)
     if run_in_background?
-      Delayed::Job.enqueue build_new(*args), run_at: get_performing_time(when_perform),
-        priority: get_priority, instance_id: PlatformContext.current.try(:instance).try(:annotated_id)
+      enqueue(*args, run_at: get_performing_time(when_perform))
     else
       # invoking get_perfming_time is unnecessary, but we want to catch errors in this method in test environment
       get_performing_time(when_perform)
@@ -79,8 +78,7 @@ class Job
   end
 
   def self.perform_async(*args)
-    Delayed::Job.enqueue build_new(*args), priority: get_priority,
-      instance_id: PlatformContext.current.try(:instance).try(:annotated_id)
+    enqueue(*args)
   end
 
   def self.build_new(*args)
@@ -112,9 +110,23 @@ class Job
     ["ReservationExpiryJob", "RecurringBookingExpiryJob"]
   end
 
+  private
+
+  def self.enqueue(*args, run_at: nil)
+    params = {
+      priority:    get_priority,
+      queue:       get_queue,
+      instance_id: PlatformContext.current.try(:instance).try(:annotated_id)
+    }
+    params.merge!(run_at: run_at) if run_at.present?
+    Delayed::Job.enqueue(build_new(*args), params)
+  end
+
   def self.get_priority
     self.respond_to?(:priority) ? self.priority : 20
   end
+
+  def self.get_queue
+    self.respond_to?(:queue) ? self.queue : 'default'
+  end
 end
-
-

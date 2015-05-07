@@ -9,6 +9,18 @@ class JobTest < ActiveSupport::TestCase
     end
   end
 
+  class DefaultQueueJob < Job
+    def perform
+    end
+  end
+
+  class NamedQueueJob < Job
+    include Job::LongRunning
+
+    def perform
+    end
+  end
+
   context 'enqueue' do
 
     should 'add enqueue method to mailers that invokes MailerJob with proper arguments' do
@@ -43,7 +55,7 @@ class JobTest < ActiveSupport::TestCase
 
     should 'raise exception when using time' do
       assert_raise RuntimeError do
-        Job.get_performing_time(Time.now) 
+        Job.get_performing_time(Time.now)
       end
     end
 
@@ -51,6 +63,26 @@ class JobTest < ActiveSupport::TestCase
       Timecop.return
     end
 
+  end
+
+  context '#queue' do
+    setup do
+      DesksnearMe::Application.config.run_jobs_in_background = true
+    end
+
+    teardown do
+      DesksnearMe::Application.config.run_jobs_in_background = false
+    end
+
+    should 'put job in default queue if not queue method provided' do
+      DefaultQueueJob.perform
+      assert_equal 'default', Delayed::Job.last.queue
+    end
+
+    should 'put job in the named queue if queue method provided' do
+      NamedQueueJob.perform
+      assert_equal 'long_running', Delayed::Job.last.queue
+    end
   end
 
 end
