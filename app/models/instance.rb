@@ -87,10 +87,11 @@ class Instance < ActiveRecord::Base
   has_many :locales, dependent: :destroy
   serialize :pricing_options, Hash
 
-  validates_presence_of :name
-  validates_presence_of :marketplace_password, :if => :password_protected
-  validates_presence_of :password_protected, :if => :test_mode, message: I18n.t("activerecord.errors.models.instance.test_mode_needs_password")
-  validates_presence_of :olark_api_key, :if => :olark_enabled
+  validates :category_search_type, presence: true, inclusion: %w(AND OR)
+  validates :name, presence: true
+  validates :marketplace_password, presence: { if: :password_protected }
+  validates :password_protected, presence: { if: :test_mode, message: I18n.t("activerecord.errors.models.instance.test_mode_needs_password") }
+  validates :olark_api_key, presence: { if: :olark_enabled }
   validates :payment_transfers_frequency, presence: true, inclusion: { in: PaymentTransfer::FREQUENCIES }
 
   accepts_nested_attributes_for :domains, allow_destroy: true, reject_if: proc { |params| params[:name].blank? && params.has_key?(:name) }

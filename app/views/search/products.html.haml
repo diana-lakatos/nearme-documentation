@@ -39,6 +39,7 @@
 - if request.xhr?
   = yield :product_results
 - else
+
   = render partial: 'search/categories', locals: { container_class: 'span3' }
 
   .search-view

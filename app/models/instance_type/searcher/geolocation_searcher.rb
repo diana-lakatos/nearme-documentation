@@ -83,7 +83,7 @@ module InstanceType::Searcher::GeolocationSearcher
   end
 
   def searchable_categories
-    Category.services.searchable.roots
+    @transactable_type.categories.searchable.roots
   end
 
   def category_options(category)

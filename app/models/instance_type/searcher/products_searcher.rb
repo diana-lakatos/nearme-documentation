@@ -67,4 +67,8 @@ class InstanceType::Searcher::ProductsSearcher
   def category_ids
     input_value(:category_ids).try { |ids| ids.split(',') } || []
   end
+
+  def searchable_categories
+    @product_type.categories.searchable.roots
+  end
 end
