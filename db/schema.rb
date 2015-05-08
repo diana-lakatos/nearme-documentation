@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150507141654) do
+ActiveRecord::Schema.define(version: 20150508152731) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1398,7 +1398,7 @@ ActiveRecord::Schema.define(version: 20150507141654) do
     t.integer  "scheduable_id"
     t.integer  "instance_id"
     t.datetime "deleted_at"
-    t.boolean  "exception",       default: false
+    t.boolean  "exception",           default: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "simple_rules"
@@ -3237,6 +3237,8 @@ ActiveRecord::Schema.define(version: 20150507141654) do
     t.string   "from_type"
     t.string   "reply_to_type"
   end
+
+  add_index "workflow_alerts", ["instance_id", "workflow_step_id"], name: "index_workflow_alerts_on_instance_id_and_workflow_step_id", using: :btree
 
   create_table "workflow_steps", force: true do |t|
     t.string   "name"
