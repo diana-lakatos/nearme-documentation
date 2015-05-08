@@ -1,7 +1,11 @@
 - title @searcher.query
 - meta_description @searcher.query
+- content_for :category_tree do
+  = render partial: 'search/categories', locals: { container_class: 'span2' }
 .search-view
+  .crumbs= render_crumbs
   .page-wrapper.row-fluid
+    = yield :category_tree
 
     =render 'search/products_list/header'
     - if @searcher.results.any?

@@ -4,13 +4,9 @@
 .search-view
   .crumbs= render_crumbs
   .page-wrapper.row-fluid
-    - if platform_context.display_taxonomy_tree?
-      %nav.span2.taxons_tree
-        - @taxons.each do |taxon|
-          .nav-categories.collapse.in
-            %ul
-              %li.nav-heading= taxon.name
-              = taxons_tree(taxon, @taxon, 1)
+    = render partial: 'search/categories', locals: { container_class: 'span2' }
+    = yield :category_tree
+
     - if @searcher.results.any?
       %section#results.products_table{class: platform_context.display_taxonomy_tree? ? "span10" : "span12"}
         %table
@@ -27,4 +23,6 @@
             = searchable_item_could_not_be_found_text
     = render 'shared/loading_spinner'
 - content_for :domready do
-  $(".span12 .search-icon").click(function () { $("form.search_results").submit() });
+  new Search.ProductsTableSearchController($('form.search_results'), $('.search-view'))
+
+

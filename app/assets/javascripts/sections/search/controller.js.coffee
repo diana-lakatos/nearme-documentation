@@ -202,7 +202,6 @@ class Search.Controller
       @categoryTreeInit()
 
   categoryTreeInit: ->
-
     if ($(window).width() < 767)
       $(".categories-list").hide()
       $(".nav-heading input:checked").parents('.nav-heading').next().show()
@@ -214,7 +213,7 @@ class Search.Controller
       $(".nav-heading input").parents('.nav-heading').next().show()
       $(".nav-heading input").unbind 'change'
 
-    $(".nav-item input[type='checkbox'").on 'change', (event) ->
+    $(".nav-item input[type='checkbox']").on 'change', (event) ->
       if $(event.target).prop('checked')
         $(event.target).parents('ul').prev().find('input:checked').prop('checked', false)
 

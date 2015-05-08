@@ -39,18 +39,8 @@
 - if request.xhr?
   = yield :product_results
 - else
-  - content_for :category_tree do
-    - if platform_context.display_taxonomy_tree?
-      .span3{"data-search-filters-container" => true}
-        %section#category-tree
-          - Category.roots.products.searchable.each do |category|
-            .nav-categories.collapse.in
-              %ul
-                %li.nav-heading
-                  = label_tag "category_#{category.id}" do
-                    = check_box_tag("category_ids[]", category.id, @searcher.category_ids.include?(category.id.to_s), id: "category_#{category.id}")
-                    = category.name
-                = category_tree(category, @category, 2, @searcher.category_ids)
+  = render partial: 'search/categories', locals: { container_class: 'span3' }
+
   .search-view
     .crumbs= render_crumbs
     .page-wrapper.row-fluid

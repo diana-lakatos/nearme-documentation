@@ -1,7 +1,27 @@
-class Search.ProductsListSearchController
+class Search.ProductsListSearchController extends Search.Controller
   constructor: (@form, @container) ->
     @initializeEndlessScrolling()
     @initializeSearchButton()
+    @responsiveCategoryTree()
+    @filters_container = $('[data-search-filters-container]')
+    @loader = new Search.ScreenLockLoader => @container.find('.loading')
+
+    @bindEvents()
+
+  bindEvents: ->
+    @filters_container.on 'click', 'input[type=checkbox]', =>
+      setTimeout =>
+        @triggerSearchFromQuery()
+        100
+
+  triggerSearchFromQuery: (page = false) ->
+    @assignFormParams(
+      ignore_search_event: 0
+      category_ids: _.toArray(@container.find('input[name="category_ids[]"]:checked').map(-> $(this).val())).join(',')
+      page: page || 1
+    )
+    @loader.showWithoutLocker()
+    @form.submit()
 
   initializeSearchButton: ->
     @searchButton = @form.find(".search-icon")
