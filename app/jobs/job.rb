@@ -78,7 +78,7 @@ class Job
   end
 
   def self.perform_async(*args)
-    enqueue(*args)
+    enqueue(*args, run_at: nil)
   end
 
   def self.build_new(*args)
