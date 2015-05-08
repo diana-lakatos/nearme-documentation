@@ -57,7 +57,8 @@ module NearMe
         'nm-production' => 'utility1',
         'nm-staging' => 'rails-app-1',
         'nm-qa-1' => 'rails-qa-1',
-        'nm-qa-2' => 'rails-qa-2'
+        'nm-qa-2' => 'rails-qa-2',
+        'nm-qa-3' => 'rails-qa-3'
       }
     end
 
@@ -67,7 +68,8 @@ module NearMe
         'nm-production' => 'production',
         'nm-staging' => 'staging',
         'nm-qa-1' => 'staging',
-        'nm-qa-2' => 'staging'
+        'nm-qa-2' => 'staging',
+        'nm-qa-3' => 'staging'
       }
     end
 
