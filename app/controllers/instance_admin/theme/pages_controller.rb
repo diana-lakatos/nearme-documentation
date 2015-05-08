@@ -46,6 +46,13 @@ class InstanceAdmin::Theme::PagesController < InstanceAdmin::Theme::BaseControll
     end
   end
 
+  def delete_image
+    resource.remove_hero_image!
+    resource.save!
+
+    redirect_to edit_instance_admin_theme_page_path
+  end
+
   private
 
   def set_redirect_form

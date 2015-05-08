@@ -7,6 +7,8 @@ class ThemeFont < ActiveRecord::Base
 
   after_save :recompile_theme, :if => :theme_font_changed?
 
+  after_destroy :recompile_theme
+
   mount_uploader :bold_eot, ThemeFontUploader
   mount_uploader :bold_svg, ThemeFontUploader
   mount_uploader :bold_ttf, ThemeFontUploader

@@ -12,7 +12,12 @@
     .row.dropshadow
       .input-container.col-xs-12
         = f.input :hero_image
-        = link_to(resource.hero_image.filename, resource.hero_image.url) if resource.hero_image.present?
+
+    - if resource.hero_image.present?
+      .row.dropshadow
+        .input-container.col-xs-12
+          = link_to(resource.hero_image.filename, resource.hero_image.url)
+          = link_to 'Delete', delete_image_instance_admin_theme_page_path, data: { confirm: t('confirmations.are_you_sure') }, method: :delete
 
   .content-container
     .row
