@@ -16,6 +16,12 @@ module NearMe
 
     def create!
       begin
+        iam.client.delete_server_certificate(server_certificate_name: self.name)
+      rescue AWS::ELB::Errors::CertificateNotFound
+      rescue AWS::IAM::Errors::NoSuchEntity
+      end
+
+      begin
         certificate = create_certificate
         sleep 5
         balancer = create_balancer(certificate.arn)
@@ -41,6 +47,20 @@ module NearMe
       elb.delete_load_balancer(load_balancer_name: self.name)
     end
 
+    def update_certificates!
+      begin
+        begin
+          iam.client.delete_server_certificate(server_certificate_name: self.name)
+        rescue AWS::ELB::Errors::CertificateNotFound
+        rescue AWS::IAM::Errors::NoSuchEntity
+        end
+
+        certificate = create_certificate
+        elb.set_load_balancer_listener_ssl_certificate(load_balancer_name: self.name, load_balancer_port: 443, ssl_certificate_id: certificate.arn)
+      rescue Exception => e
+        raise e
+      end
+    end
 
 
     def health_check_params
