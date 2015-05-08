@@ -776,6 +776,7 @@ en:
         sync_mode: 'Delete absent objects'
         enable_rfq: 'Enable request for quote'
         external_id_hint: 'Objects that are already in the system are matched to your CSV based on the External ID. Thus, external IDs should be unique in scope to their parent element (if applicable). Please ensure that you have specified a unique external ID for any new objects in your CSV, otherwise the end result might not be as intended.'
+        default_shipping_category_id: 'Choose default shipping category/profile'
       edit:
         queued: "Import has been scheduled. You'll receive an email when it's done"
         processing: "Import has been scheduled. You'll receive an email when it's done"

@@ -102,7 +102,7 @@ class SecuredParams
   def data_upload
     [
       :csv_file,
-      options: [:send_invitational_email, :sync_mode, :enable_rfq]
+      options: [:send_invitational_email, :sync_mode, :enable_rfq, :default_shipping_category_id]
     ]
 
   end
