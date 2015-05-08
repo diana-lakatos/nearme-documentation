@@ -6,3 +6,25 @@
   }
 
 }
+
+#habla_window_div #habla_oplink_a {
+  font-family: $font-medium;
+}
+
+#habla_window_div #habla_panel_div {
+  font-family: $font-regular;
+}
+
+footer {
+  .social-wrapper {
+    ul.social-icons li a {
+      .text {
+        font-family: $font-medium;
+      }
+    }
+  }
+
+  a, a:visited {
+    font-family: $font-medium;
+  }
+}

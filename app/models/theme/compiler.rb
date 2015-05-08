@@ -46,11 +46,11 @@ class Theme::Compiler
     Dir.glob(stylesheets_path.join('globals') + '*.scss') { |p| paths << p }
     File.open(root_css_path).each do |l|
       if p = l.match(/(theme.*)\"/).try(:captures).try(:at, 0)
-        paths << stylesheets_path.join("#{p.sub(/([-_\w]+)$/, '_\1')}.scss")
+        paths << stylesheets_path.join("#{p.sub(/([-_.\w]+)$/, '_\1')}.scss")
       end
     end
     @digests[base_name] = Digest::SHA1.hexdigest(
-      compile_erb(erb_template_path("#{base_name}.scss.erb")) + paths.map { |p| file_digest(p) }.join
+      Digest::SHA1.hexdigest(compile_erb(erb_template_path("#{base_name}.scss.erb"))) + paths.map { |p| file_digest(p) }.join
     )
   end
 

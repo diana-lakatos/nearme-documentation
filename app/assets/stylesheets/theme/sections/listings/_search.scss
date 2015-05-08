@@ -55,7 +55,7 @@ section.search section#results.list {
 
     .info {
       color: $theme_white;
-
+      @include background-image(linear-gradient(rgba(250, 250, 250, 0), $theme_black));
     }
   }
 
@@ -93,4 +93,14 @@ section.search section#results.mixed {
     }
   }
 
+}
+
+.products_table {
+  table, th, td, p, a {
+    font-family: $font-regular !important;
+  }
+
+  a.btn {
+    font-family: $font-regular !important;
+  }
 }

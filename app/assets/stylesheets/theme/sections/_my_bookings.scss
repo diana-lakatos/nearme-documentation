@@ -1,0 +1,18 @@
+section#reservations {
+  .reservation-list {
+    ul {
+      li {
+        font-family: $font-medium;
+
+        .reservation-information {
+          .dates {
+            font-family: $font-regular;
+          }
+          span:not(.ico-user) {
+            font-family: $font-regular;
+          }
+        }
+      }
+    }
+  }
+}

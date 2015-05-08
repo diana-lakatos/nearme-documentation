@@ -1,6 +1,7 @@
 .navbar {
 
   .navbar-inner {
+    background: $theme_black;
 
     #header_links {
       background-color: $theme_black;
@@ -50,6 +51,7 @@
     li {
 
       a.nav-link {
+        font:normal 16px/22px $font-regular, sans-serif;
 
         span.count {
           color: $theme_black;
@@ -71,6 +73,11 @@
    Don't put other styles in here, use the navbar block above this one. */
 
 .navbar-inverse {
+  background: $theme_black;
+
+  .navbar-inner {
+    background: $theme_black;
+  }
 
   ul.nav {
     li {
