@@ -57,7 +57,7 @@ body.buy-sell-theme {
   }
 
   p, h1, h2, h3, h4, h5, a, label, td {
-    font-family: 'Open Sans', sans-serif;
+    font-family: $font-medium;
     margin: 0;
   }
 
@@ -106,7 +106,7 @@ body.buy-sell-theme {
   }
 
   .btn.blue {
-    background: #5dbded;
+    background: $blue;
     color: #fff;
   }
 
@@ -141,8 +141,7 @@ body.buy-sell-theme {
   .customSelect {
     background: #fff image-url('themes/buy_sell/arrow.png') right no-repeat;
     border: solid #D4D4D4 1px;
-    font-family: 'Open Sans', sans-serif;
-    font-weight: 300;
+    font-family: $font-regular;
     font-size: 14px;
     padding: 0 5px;
     width: 60px;
@@ -902,16 +901,14 @@ body.buy-sell-theme {
       background: #fff image-url('themes/buy_sell/arrow.png') right no-repeat;
       width: 100%;
       padding: 5px 0 5px 5px;
-      font-family: 'Open Sans', sans-serif;
-      font-weight: 300;
+      font-family: $font-regular;
       font-size: 14px;
     }
 
     .hasCustomSelect {
       background: #fff image-url('themes/buy_sell/arrow-down.png') right no-repeat;
       border: solid #D4D4D4 1px;
-      font-family: 'Open Sans', sans-serif;
-      font-weight: 300;
+      font-family: $font-regular;
       font-size: 14px;
       padding: 0 5px;
       width: 60px;
@@ -925,8 +922,7 @@ body.buy-sell-theme {
 
     label {
       vertical-align: top;
-      font-family: 'Open Sans', sans-serif;
-      font-weight: 400;
+      font-family: $font-medium;
       color: #555555;
       font-size: 16px;
     }
@@ -937,8 +933,7 @@ body.buy-sell-theme {
       border-radius: 0;
       width: 100%;
       padding: 5px 10px;
-      font-family: 'Open Sans', sans-serif;
-      font-weight: 300;
+      font-family: $font-regular;
       font-size: 14px;
     }
 
