@@ -40,3 +40,5 @@
       = hidden_field_tag :ignore_search_event, 0
       = hidden_field_tag :page, 1
       = hidden_field_tag :per_page, per_page
+      = hidden_field_tag 'price[min]', 0
+      = hidden_field_tag 'price[max]', @searcher.max_price

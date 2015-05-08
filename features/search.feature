@@ -34,3 +34,15 @@ Feature: A user can search for a listing
     And product exists with name: "Awesome product"
     When I search for product "product"
     Then I see a search results for the product
+
+  Scenario: Wrong Price Range
+    Given a listing in Auckland exists
+    Given Auckland listing has fixed_price: 10
+    When I search for "Auckland" with prices 0 5
+    And I do not see a search result for the Auckland listing
+
+  Scenario: Correct Price Range
+    Given a listing in Auckland exists
+    Given Auckland listing has fixed_price: 10
+    When I search for "Auckland" with prices 0 15
+    Then I see a search result for the Auckland listing

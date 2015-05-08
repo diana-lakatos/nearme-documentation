@@ -108,7 +108,7 @@ class Instance < ActiveRecord::Base
   scope :with_support_imap, -> {  where("support_imap_username <> '' AND encrypted_support_imap_password  <> '' AND support_imap_server  <> '' AND support_imap_port IS NOT NULL") }
 
   store_accessor :search_settings, :date_pickers, :tt_select_type, :date_pickers_mode, :default_products_search_view,
-                 :date_pickers_use_availability_rules, :taxonomy_tree, :saved_search
+                 :date_pickers_use_availability_rules, :taxonomy_tree, :saved_search, :price_slider, :price_types
 
   before_update :check_lock
 
@@ -286,6 +286,14 @@ class Instance < ActiveRecord::Base
   end
 
   def taxonomy_tree
+    super == '1'
+  end
+
+  def price_slider
+    super == '1'
+  end
+
+  def price_types
     super == '1'
   end
 

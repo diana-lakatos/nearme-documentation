@@ -7,6 +7,19 @@ When /^I search for located "([^"]*)"$/ do |text|
   search_for(text)
 end
 
+Given /^Auckland listing has fixed_price: (.*)$/ do |fixed_price|
+  listing = Transactable.last
+  listing.min_fixed_price_cents = 0
+  listing.max_fixed_price_cents = fixed_price.to_i * 100 + 1
+  listing.fixed_price_cents = fixed_price.to_i * 100
+  listing.action_free_booking = true if !listing.has_price?
+  listing.save(validate: false)
+end
+
+When /^I search for "([^"]*)" with prices (\d+) (\d+)$/ do |query, min, max|
+  visit search_path(:q => query, "price[min]" => min, "price[max]" => max, :lgpricing => "fixed")
+end
+
 When /^I search for product "([^"]*)"$/ do |text|
   search_for_product(text)
 end

@@ -153,7 +153,7 @@ class Search.Controller
         for key, val of value
           @form.parent().find('input[name="lg_custom_attributes[' + key + ']"]').val(val)
       else
-        @form.parent().find("input[name=#{field}]").val(value)
+        @form.parent().find("input[name='#{field}']").val(value)
 
   getSearchParams: ->
     form_params = @form.serializeArray()

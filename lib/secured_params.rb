@@ -331,6 +331,8 @@ class SecuredParams
       :payment_transfers_frequency,
       :paypal_email,
       :possible_manual_payment,
+      :price_slider,
+      :price_types,
       :saved_search,
       :search_settings,
       :searcher_type,
