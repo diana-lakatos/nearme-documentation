@@ -61,6 +61,13 @@ class CompilerTest < ActiveSupport::TestCase
         Dir.stubs(:glob).returns([])
         assert_not_equal first, compiler2.send(:cumulative_digest, 'theme')
       end
+
+      should 'return different results if theme is changed' do
+        first = @compiler.send(:cumulative_digest, 'theme')
+        Theme.any_instance.stubs(:icon_image).returns(stub(url: Rails.root.join('test', 'assets', 'icon_image'), remove_previously_stored_files_after_update: true, original_dimensions: [100, 100]))
+        compiler2 = Theme::Compiler.new(@theme)
+        assert_not_equal first, compiler2.send(:cumulative_digest, 'theme')
+      end
     end
   end
 
