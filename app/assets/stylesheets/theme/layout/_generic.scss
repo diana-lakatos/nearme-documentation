@@ -15,7 +15,11 @@ p a:visited {
   }
 }
 
-.truncated-ellipsis {
+strong {
+  font-family: $font-bold;
+}
 
+.truncated-ellipsis {
+  font-family: $font-bold;
   color: $theme_black;
 }

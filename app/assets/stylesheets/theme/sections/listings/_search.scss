@@ -94,3 +94,13 @@ section.search section#results.mixed {
   }
 
 }
+
+.products_table {
+  table, th, td, p, a {
+    font-family: $font-regular !important;
+  }
+
+  a.btn {
+    font-family: $font-regular !important;
+  }
+}

@@ -6,6 +6,10 @@ section.listings {
       .info {
         color: $theme_white;
         @include background-image(linear-gradient(rgba(250, 250, 250, 0), $theme_black));
+
+        .caption {
+          font-family: $font-bold;
+        }
       }
     }
   }
