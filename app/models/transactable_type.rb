@@ -120,6 +120,7 @@ class TransactableType < ActiveRecord::Base
 
   def min_max_prices_are_correct
     Transactable::PRICE_TYPES.each do |price|
+      return unless self.respond_to?(:"min_#{price}_price_cents") && self.respond_to?(:"max_#{price}_price_cents")
       if self.send(:"min_#{price}_price_cents").present? && self.send(:"max_#{price}_price_cents").present?
         errors.add(:"min_#{price}_price_cents", "min can't be greater than max") if self.send(:"min_#{price}_price_cents").to_i > self.send(:"max_#{price}_price_cents").to_i
       end

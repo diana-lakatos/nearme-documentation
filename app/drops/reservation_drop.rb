@@ -3,7 +3,7 @@ class ReservationDrop < BaseDrop
 
   attr_reader :reservation
   delegate :quantity, :subtotal_price, :service_fee_guest, :total_price, :pending?, :listing, :state_to_string,
-  :credit_cart_payment?, :location, :paid, :rejection_reason, :owner, :action_hourly_booking?, to: :reservation
+  :credit_cart_payment?, :location, :paid, :rejection_reason, :owner, :action_hourly_booking?, :guest_notes, to: :reservation
   delegate :transactable_type, to: :listing
   delegate :bookable_noun, :bookable_noun_plural, to: :transactable_type
 

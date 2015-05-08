@@ -40,7 +40,8 @@ class Bookings.Controller
     @bookItOutContainer = @container.find('.book-it-out')
     @bookItOutCheck = @container.find('input#book_it_out')
     @exclusivePriceContainer = @container.find('.exclusive-price')
-    @exclusivePriceCheck = @container.find('input#exclusive_price')
+    @exclusivePriceCheck = @exclusivePriceContainer.find('input')
+    @exclusivePriceContent = @container.find('div[data-exclusive-price-content]')
     @bookItOutTotal = @bookItOutContainer.find('.total')
     @quantityResourceElement = @container.find('.quantity .resource')
     @totalElement = @container.find('.booking-body > .price .total')
@@ -62,7 +63,6 @@ class Bookings.Controller
         @exclusivePrice() if @listing.exclusivePriceAvailable()
 
     @setReservationType()
-
 
   bindEvents: ->
     @bookingTabs.on 'click', (event) =>
@@ -104,6 +104,12 @@ class Bookings.Controller
 
       @datepicker.bind 'timesChanged', (dates) =>
         @updateTimesFromTimePicker()
+
+    if @exclusivePriceCheck.data('force-check') == 1
+      @exclusivePriceCheck.on 'change', ->
+        # do not allow to uncheck
+        $(@).prop('checked', true)
+      @exclusivePriceCheck.trigger('change')
 
   setReservationType: ->
     if @hourlyBookingSelected()
@@ -158,7 +164,7 @@ class Bookings.Controller
     @rfqButton.addClass('click-disabled').find('span.text').text('Requesting...')
 
   quantityWasChanged: (quantity = @quantityField.val())->
-    quantity = quantity.replace(',', '.')
+    quantity = quantity.replace(',', '.') if quantity.replace
     @listing.setDefaultQuantity(parseFloat(quantity, 10))
     @updateQuantityField() unless @listing.isPerUnitBooking()
 
@@ -211,6 +217,9 @@ class Bookings.Controller
     @bookForm.find('[name="reservation_request[quantity]"]').val(@listing.reservationOptions().quantity)
     @bookForm.find('[name="reservation_request[book_it_out]"]').val(@bookItOutSelected())
     @bookForm.find('[name="reservation_request[exclusive_price]"]').val(@exclusivePriceSelected())
+    data_guest_notes = @container.find('[data-guest-notes]')
+    if data_guest_notes && data_guest_notes.is(':visible')
+      @bookForm.find('[name="reservation_request[guest_notes]"]').val(data_guest_notes.val())
     if @listing.withCalendars()
       @bookForm.find('[name="reservation_request[dates]"]').val(@listing.reservationOptions().dates)
       @bookForm.find('[name="reservation_request[start_on]"]').val(@listing.reservationOptions().start_on)
@@ -249,15 +258,19 @@ class Bookings.Controller
       @quantityWasChanged 1
 
   exclusivePriceSelected: ->
-    @listing.exclusivePriceAvailable() && @exclusivePriceCheck.is(':checked')
+    @listing.exclusivePriceAvailable() && (@exclusivePriceCheck.is(':checked') || @exclusivePriceCheck.data('force-check') == 1)
 
   exclusivePrice: ->
     if @exclusivePriceSelected()
       @exclusivePriceContainer.find('.price').hide()
-      @quantityWasChanged @listing.getMaxQuantity()
       @quantityField.prop('disabled', true)
+      @container.find('div.quantity').hide()
+      @exclusivePriceContent.show() if @exclusivePriceContent
+      @updateSummary()
     else
+      @container.find('div.quantity').show()
       @exclusivePriceContainer.find('.price').show()
       @quantityField.prop('disabled', false)
-      @quantityWasChanged 1
+      @exclusivePriceContent.hide() if @exclusivePriceContent
+      @updateSummary()
 

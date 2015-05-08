@@ -24,7 +24,11 @@ class TransactableDecorator < Draper::Decorator
 
   def lowest_price_with_currency(filter_pricing = [])
     if self.schedule_booking?
-      self.price_with_currency(self.fixed_price)
+      if self.fixed_price.to_f > 0
+        "#{self.price_with_currency(self.fixed_price)} <span>/ #{self.transactable_type.action_price_per_unit? ? t("simple_form.labels.transactable.price.per_unit") : t("simple_form.labels.transactable.price.fixed")}</span>".html_safe
+      else
+        "#{self.price_with_currency(self.exclusive_price)} <span>/ #{t("simple_form.labels.transactable.price.exclusive_price")}</span>".html_safe
+      end
     else
       listing_price = self.lowest_price_with_type(filter_pricing)
       if listing_price

@@ -26,13 +26,13 @@
   margin: 40px 0px;
 }
 
-#space, 
+#space,
 .space {
 
   .listing.box {
     overflow: hidden;
     height: $booking-module-height;
-      
+
     @media (min-width: $booking-module-breakpoint-desktop) {
       height: $booking-module-height;
     }
@@ -56,17 +56,19 @@
       @media (max-width: $booking-module-breakpoint-desktop) {
         display: none;
       }
-    } 
+    }
 
     .booking-module-container {
 
       @media (min-width: $booking-module-breakpoint) and (max-width: $booking-module-breakpoint-desktop) {
         top: $listing-header-height;
-        float: right; 
+        float: right;
         clear: both;
         width: 50%;
       }
+
     }
+
   }
 
   .book .btn {
@@ -80,7 +82,7 @@
 
      @media (max-width: $booking-module-breakpoint-desktop) {
       display: block;
-    }   
+    }
   }
 
   .listing-photo-container {
@@ -94,7 +96,7 @@
 
     @media (min-width: $booking-module-breakpoint) and (max-width: $booking-module-breakpoint-desktop) {
       position: relative;
-      float: left; 
+      float: left;
       clear: both;
       margin: -15px 0 0 -15px;
       width: 55%;
@@ -105,16 +107,16 @@
         max-width: $listing-photo-width;
         width: $listing-photo-width;
         height: $listing-photo-height;
-      }       
+      }
     }
 
     @media (max-width: $booking-module-breakpoint) {
       position: relative;
-      float: left; 
+      float: left;
       clear: both;
       margin: -15px 0 0 -15px;
       width: 110%;
-      height: auto;   
+      height: auto;
     }
   }
 
@@ -125,8 +127,8 @@
     @include box-sizing(border-box);
 
     @media  (max-width: $booking-module-breakpoint-desktop) {
-      display: none;     
-    }   
+      display: none;
+    }
   }
 
   .listing-description {
@@ -153,7 +155,7 @@
 
       @media (max-width: $booking-module-breakpoint-desktop) {
         margin-bottom: 0;
-      }      
+      }
     }
   }
 
@@ -171,18 +173,18 @@
 }
 
 .space-reservation-modal {
-  
+
 
   // Fix hr's existing modal
 
   form {
     overflow: visible;
   }
-  
+
   .summary {
     overflow: hidden;
 
-    .date, 
+    .date,
     .subtotal-label,
     .service-fee-label,
     .total-label {
@@ -190,7 +192,7 @@
       width: 30%;
     }
 
-    .bookings, 
+    .bookings,
     .subtotal-amount,
     .service-fee-amount,
     .total-amount {
@@ -204,7 +206,7 @@
   .subtotal-amount,
   .service-fee-label,
   .service-fee-amount,
-  .total-label, 
+  .total-label,
   .total-amount {
     font-weight: bold;
   }
@@ -293,7 +295,7 @@
 }
 
 .quick-book {
-  
+
   .calendar-wrapper {
     display: inline-block;
     padding: 2px 8px;
@@ -304,10 +306,10 @@
 
   .quantity {
     display: inline-block;
-    
+
     select {
       position: absolute;
-      top: 0; 
+      top: 0;
       right: 0;
       margin: 0;
       vertical-align: middle;
