@@ -22,6 +22,14 @@ body.blog {
       border-left: 1px solid $white;
     }
   }
+
+  .blog-container {
+    .content, .blog-post {
+      img {
+        height: auto !important;
+      }
+    }
+  }
 }
 
 .blog {
