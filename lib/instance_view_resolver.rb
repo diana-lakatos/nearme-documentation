@@ -15,9 +15,19 @@ class InstanceViewResolver < DbViewResolver
     views
   end
 
+  def get_body(name, prefix, partial, details)
+    get_templates(name, prefix, partial, details).first.try(:body)
+  end
+
   private
 
   def _find_templates(name, prefix, partial, details)
+    get_templates(name, prefix, partial, details).map do |record|
+      initialize_template(record, record.format)
+    end
+  end
+
+  def get_templates(name, prefix, partial, details)
     conditions = {
       :path => normalize_path(name, prefix),
       :locale => normalize_array(details[:locale]).first,
@@ -33,11 +43,7 @@ class InstanceViewResolver < DbViewResolver
               scope.for_nil_transactable_type.order('instance_id')
             end
 
-    scope = scope.where(conditions)
-
-    scope.map do |record|
-      initialize_template(record, record.format)
-    end
+    scope.where(conditions)
   end
 end
 

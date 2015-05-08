@@ -1,5 +1,9 @@
 class WorkflowStep::ReservationWorkflow::BaseStep < WorkflowStep::BaseStep
 
+  def self.belongs_to_transactable_type?
+    true
+  end
+
   def initialize(reservation_id)
     @reservation = Reservation.find_by_id(reservation_id)
   end

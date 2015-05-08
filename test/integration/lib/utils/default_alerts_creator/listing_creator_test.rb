@@ -93,6 +93,7 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
     end
 
     should 'send email if listing pending approval' do
+      FactoryGirl.create(:instance_admin_role_administrator) unless InstanceAdminRole.where(name: 'Administrator').count > 0
       @listing_creator.create_listing_pending_approval_email!
       @listing = FactoryGirl.create(:transactable)
       Transactable.any_instance.stubs(:is_trusted?).returns(false)

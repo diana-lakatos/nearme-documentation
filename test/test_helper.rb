@@ -216,3 +216,6 @@ class TestDataSeeder
   end
 end
 
+class DummyEvent < WorkflowStep::BaseStep
+end
+

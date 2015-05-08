@@ -1,5 +1,9 @@
 class WorkflowStep::RecurringBookingWorkflow::BaseStep < WorkflowStep::BaseStep
 
+  def self.belongs_to_transactable_type?
+    true
+  end
+
   def initialize(recurring_booking_id)
     @recurring_booking = RecurringBooking.find_by_id(recurring_booking_id)
   end

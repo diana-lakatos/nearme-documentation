@@ -3,6 +3,7 @@ Given /^Inquiry alerts exist$/ do
 end
 
 Given /^Listing alerts exist$/ do
+  FactoryGirl.create(:instance_admin_role_administrator) unless InstanceAdminRole.where(name: 'Administrator').count > 0
   Utils::DefaultAlertsCreator::ListingCreator.new.create_all!
 end
 

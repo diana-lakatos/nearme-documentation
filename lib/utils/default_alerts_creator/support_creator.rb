@@ -13,7 +13,7 @@ class Utils::DefaultAlertsCreator::SupportCreator < Utils::DefaultAlertsCreator:
   end
 
   def create_support_received_email!
-    create_alert!({associated_class: WorkflowStep::SupportWorkflow::Created, name: 'support_received', path: 'support_mailer/support_received', subject: "#{subject_prefix} {{message.full_name}} has submited a support request", alert_type: 'email', recipient_type: 'administrator'})
+    create_alert!({associated_class: WorkflowStep::SupportWorkflow::Created, name: 'support_received', path: 'support_mailer/support_received', subject: "#{subject_prefix} {{message.full_name}} has submited a support request", alert_type: 'email', recipient_type: 'Administrator'})
   end
 
   def create_request_updated_email!
@@ -21,7 +21,7 @@ class Utils::DefaultAlertsCreator::SupportCreator < Utils::DefaultAlertsCreator:
   end
 
   def create_support_updated_email!
-    create_alert!({associated_class: WorkflowStep::SupportWorkflow::Updated, name: 'support_received', path: 'support_mailer/support_updated', subject: "#{subject_prefix} {{message.full_name}} has updated their support request", alert_type: 'email', recipient_type: 'administrator'})
+    create_alert!({associated_class: WorkflowStep::SupportWorkflow::Updated, name: 'support_received', path: 'support_mailer/support_updated', subject: "#{subject_prefix} {{message.full_name}} has updated their support request", alert_type: 'email', recipient_type: 'Administrator'})
   end
 
   def create_request_replied_email!

@@ -17,7 +17,7 @@ class Utils::DefaultAlertsCreator::OrderCreator < Utils::DefaultAlertsCreator::W
   end
 
   def create_notify_seller_email!
-    create_alert!({associated_class: WorkflowStep::OrderWorkflow::Finalized, name: 'confirm_email_to_buyer', path: 'spree/order_mailer/notify_seller_email', subject: "{{'buy_sell_market.checkout.order_mailer.notify_seller_email.subject' | translate }}", alert_type: 'email', recipient_type: 'lister'})
+    create_alert!({associated_class: WorkflowStep::OrderWorkflow::Finalized, name: 'confirm_email_to_seller', path: 'spree/order_mailer/notify_seller_email', subject: "{{'buy_sell_market.checkout.order_mailer.notify_seller_email.subject' | translate }}", alert_type: 'email', recipient_type: 'lister'})
   end
 
   def create_notify_shipped_email!
