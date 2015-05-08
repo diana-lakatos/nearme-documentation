@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150508171018) do
+ActiveRecord::Schema.define(version: 20150508152731) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -319,10 +319,10 @@ ActiveRecord::Schema.define(version: 20150508171018) do
     t.integer  "rgt"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "multiple_root_categories"
     t.text     "display_options"
     t.text     "search_options"
     t.boolean  "mandatory"
-    t.boolean  "multiple_root_categories"
   end
 
   add_index "categories", ["categorable_id"], name: "index_categories_on_categorable_id", using: :btree
@@ -1399,9 +1399,16 @@ ActiveRecord::Schema.define(version: 20150508171018) do
     t.integer  "scheduable_id"
     t.integer  "instance_id"
     t.datetime "deleted_at"
-    t.boolean  "exception",       default: false
+    t.boolean  "exception",           default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "simple_rules"
+    t.datetime "sr_start_datetime"
+    t.time     "sr_from_hour"
+    t.time     "sr_to_hour"
+    t.integer  "sr_every_minutes"
+    t.text     "sr_days_of_week",     default: [],    array: true
+    t.boolean  "use_simple_schedule", default: true
   end
 
   add_index "schedules", ["instance_id", "scheduable_id", "scheduable_type"], name: "index_schedules_scheduable", using: :btree
@@ -2819,8 +2826,8 @@ ActiveRecord::Schema.define(version: 20150508171018) do
     t.boolean  "skip_location"
     t.string   "default_currency"
     t.text     "allowed_currencies"
-    t.text     "allowed_countries"
     t.string   "default_country"
+    t.text     "allowed_countries"
     t.boolean  "action_exclusive_price",                                             default: false
     t.boolean  "action_price_per_unit",                                              default: false
   end
@@ -2871,8 +2878,8 @@ ActiveRecord::Schema.define(version: 20150508171018) do
     t.integer  "minimum_booking_minutes",        default: 60
     t.integer  "book_it_out_discount"
     t.integer  "book_it_out_minimum_qty"
-    t.string   "currency"
     t.integer  "exclusive_price_cents",          default: 0
+    t.string   "currency"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
@@ -3093,9 +3100,9 @@ ActiveRecord::Schema.define(version: 20150508171018) do
     t.boolean  "public_profile",                                     default: false
     t.boolean  "accept_emails",                                      default: true
     t.string   "saved_searches_alerts_frequency",                    default: "daily"
+    t.string   "language",                               limit: 2,   default: "en"
     t.integer  "saved_searches_count",                               default: 0
     t.datetime "saved_searches_alert_sent_at"
-    t.string   "language",                               limit: 2,   default: "en"
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

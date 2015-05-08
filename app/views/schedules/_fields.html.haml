@@ -1,3 +1,24 @@
-= f.hidden_field :schedule, class: 'icui', data: { 'add-duration' => I18n.t('schedule.duration'), 'add-unavailable' => I18n.t('schedule.add_unavailable'), 'add-availability' => I18n.t('schedule.add_availability'), 'availability' => I18n.t('schedule.availability'), 'unavailable' => I18n.t('schedule.unavailable'), 'start-time' => I18n.t('schedule.start_time'), 'event' => I18n.t('schedule.event'), 'specific-dates' => I18n.t('schedule.specific_dates'), 'every' => I18n.t('schedule.every'), 'event-before' => I18n.t('schedule.event_before'), 'this-day-of-week' => I18n.t('schedule.this_day_of_week'), 'this-hour-of-day' => I18n.t('schedule.this_hour_of_day'), 'this-minute-of-hour' => I18n.t('schedule.this_minute_of_hour'), 'this-day-of-nth-week' => I18n.t('schedule.this_day_of_nth_week'), 'this-nth-day-of-month' => I18n.t('schedule.this_nth_day_of_month'), 'this-nth-day-of-year' => I18n.t('schedule.this_nth_day_of_year'), 'pascha-offset' => I18n.t('schedule.pascha_offset'), 'event-occured-less' => I18n.t('schedule.event_occured_less') }, value: f.object.schedule.try(:to_hash).to_json
+%div{:'data-schedule-wrapper' => true}
+  .simple-schedule-form{ :'data-simple-schedule' => "true", style: "#{'display: none;' if !f.object.use_simple_schedule}" }
+    = f.input :sr_start_datetime, label: I18n.t('schedule.sr_start_datetime'), input_html: { class: 'selectpicker' }
+    = f.input :sr_every_minutes, label: I18n.t('schedule.sr_every_minutes') do
+      .every_minutes
+        = f.text_field :sr_every_minutes, size: 4, type: :number, min: 1
+        = "&nbsp; #{t('schedule.minutes')}".html_safe
+    = f.input :sr_from_hour, as: :time, label: I18n.t('schedule.sr_from_hour') do
+      = f.time_select :sr_from_hour, { ampm: true}, { class: 'selectpicker' }
+      = t('schedule.and')
+      = f.time_select :sr_to_hour, { ampm: true}, { class: 'selectpicker' }
+    = f.input :sr_days_of_week, collection: (Date::DAYNAMES.each_with_index.map { |day, index| [day, index.to_s] }), as: :check_boxes, label: I18n.t('schedule.sr_days_of_week')
+    .hidden
+      %input{type: 'radio', name: "#{f.object_name}[use_simple_schedule]", value: "1", checked: f.object.use_simple_schedule, 'data-simple-schedule-radio' => true}
+    = link_to '#', {:'data-toggler' => true} do
+      = t('schedule.switch_to_advanced')
 
+  %div{ :'data-advanced-schedule' => "true", style: "#{'display: none;' if f.object.use_simple_schedule}"}
+    = f.hidden_field :schedule, class: 'icui', data: { 'add-duration' => I18n.t('schedule.duration'), 'add-unavailable' => I18n.t('schedule.add_unavailable'), 'add-availability' => I18n.t('schedule.add_availability'), 'availability' => I18n.t('schedule.availability'), 'unavailable' => I18n.t('schedule.unavailable'), 'start-time' => I18n.t('schedule.start_time'), 'event' => I18n.t('schedule.event'), 'specific-dates' => I18n.t('schedule.specific_dates'), 'every' => I18n.t('schedule.every'), 'event-before' => I18n.t('schedule.event_before'), 'this-day-of-week' => I18n.t('schedule.this_day_of_week'), 'this-hour-of-day' => I18n.t('schedule.this_hour_of_day'), 'this-minute-of-hour' => I18n.t('schedule.this_minute_of_hour'), 'this-day-of-nth-week' => I18n.t('schedule.this_day_of_nth_week'), 'this-nth-day-of-month' => I18n.t('schedule.this_nth_day_of_month'), 'this-nth-day-of-year' => I18n.t('schedule.this_nth_day_of_year'), 'pascha-offset' => I18n.t('schedule.pascha_offset'), 'event-occured-less' => I18n.t('schedule.event_occured_less') }, value: f.object.schedule.try(:to_hash).to_json
+    .hidden
+      %input{type: 'radio', name: "#{f.object_name}[use_simple_schedule]", value: "0", checked: !f.object.use_simple_schedule, 'data-simple-schedule-radio' => true}
+    = link_to '#', {:'data-toggler' => true} do
+      = t('schedule.switch_to_simple')
 

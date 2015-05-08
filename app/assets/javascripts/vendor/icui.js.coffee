@@ -446,7 +446,6 @@ do ($ = jQuery) ->
               "IceCube::MonthlyRule": 'months'
               "IceCube::WeeklyRule": 'weeks'
               "IceCube::DailyRule": 'days',
-              "IceCube::HourlyRule": 'hours'
               }
             </div>
           </div>
@@ -536,7 +535,7 @@ do ($ = jQuery) ->
           <div class="col-md-8 small-padding">
             <select>
               #{Helpers.option "count", translation_holder.data('event-occured-less'), @data.type}"""
-      if @parent.data.rule_type in ["IceCube::YearlyRule", "IceCube::MonthlyRule", "IceCube::WeeklyRule", "IceCube::DailyRule"]
+      if @parent.data.rule_type in ["IceCube::YearlyRule", "IceCube::MonthlyRule", "IceCube::WeeklyRule", "IceCube::DailyRule", "IceCube::HourlyRule"]
         str += Helpers.option "until", translation_holder.data('event-before'), @data.type
         str += Helpers.option "day", translation_holder.data('this-day-of-week'), @data.type
         str += Helpers.option "hour_of_day", translation_holder.data('this-hour-of-day'), @data.type
@@ -827,6 +826,20 @@ do ($ = jQuery) ->
   # representation.
   class ICUI
     constructor: ($el, opts) ->
+      container = $el.closest('div[data-schedule-wrapper]')
+      simple_schedule = container.find('div[data-simple-schedule]')
+      advanced_schedule = container.find('div[data-advanced-schedule]')
+      simple_schedule_radio = simple_schedule.find('input[data-simple-schedule-radio]')
+      advanced_schedule_radio = advanced_schedule.find('input[data-simple-schedule-radio]')
+      container.find('a[data-toggler]').on 'click', (event) ->
+        event.preventDefault()
+        simple_schedule_radio.prop('checked', !simple_schedule_radio.prop('checked'))
+        advanced_schedule_radio.prop('checked', !simple_schedule_radio.prop('checked'))
+        advanced_schedule.toggle()
+        simple_schedule.toggle()
+
+
+
       data = try
         JSON.parse($el.val())
       catch e

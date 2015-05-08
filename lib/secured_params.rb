@@ -878,7 +878,15 @@ class SecuredParams
   end
 
   def schedule
-    [:schedule]
+    [
+      :schedule,
+      :sr_start_datetime,
+      :sr_from_hour,
+      :sr_to_hour,
+      :sr_every_minutes,
+      :use_simple_schedule,
+      sr_days_of_week: []
+    ]
   end
 
   def availability_rule

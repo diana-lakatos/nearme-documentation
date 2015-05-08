@@ -992,5 +992,15 @@ en:
     event: 'Event'
     every: 'every'
     specific_dates: 'specific dates'
+    sr_start_datetime: 'First event'
+    sr_from_hour: 'Between'
+    sr_every_minutes: 'Repeat every'
+    sr_to_hour: 'And'
+    sr_days_of_week: 'On'
+    minutes: 'minutes'
+    and: 'and'
+    switch_to_advanced: 'Switch to advanced settings'
+    switch_to_simple: 'Switch to simple settings'
+
 
 

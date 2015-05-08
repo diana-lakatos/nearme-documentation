@@ -1,0 +1,16 @@
+.simple-schedule-form {
+
+  .bootstrap-select {
+    width: auto !important;
+  }
+
+  .row:first-child {
+    margin-top: 0px;
+  }
+
+  .every_minutes {
+    input {
+      width: auto;
+    }
+  }
+}

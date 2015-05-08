@@ -43,7 +43,7 @@ class Transactable < ActiveRecord::Base
   belongs_to :administrator, class_name: "User", inverse_of: :administered_listings
 
   has_one :location_address, through: :location
-  has_one :schedule, as: :scheduable
+  has_one :schedule, as: :scheduable, dependent: :destroy
   has_one :upload_obligation, as: :item, dependent: :destroy
 
   accepts_nested_attributes_for :availability_rules, allow_destroy: true
