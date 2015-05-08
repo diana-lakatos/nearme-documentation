@@ -6,7 +6,7 @@ namespace :backup do
   task :capture do
     pathname = Pathname.new("/tmp/backup.dump")
 
-    puts "[#{Time.now}] Backing up (pg_dump) ENV DB to #{pathname}"
+    puts "[#{Time.now}] Backing up (pg_dump) ENV DB to #{pathname} (excluding versions tables)"
     `#{Utils::DatabaseConnectionHelper.new(pathname).build_dump_command}`
 
     puts "[#{Time.now}] Uploading #{pathname} to S3"

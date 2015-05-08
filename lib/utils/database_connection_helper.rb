@@ -13,7 +13,7 @@ module Utils
     end
 
     def build_dump_command
-      "PGPASSWORD=#{@password} pg_dump -h #{@host} -U #{@username} -f #{@pathname} -Fc #{@name}"
+      "PGPASSWORD=#{@password} pg_dump -h #{@host} -U #{@username} -f #{@pathname} -Fc #{@name} -T versions"
     end
 
     def build_restore_command
