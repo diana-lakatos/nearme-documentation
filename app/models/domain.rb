@@ -90,17 +90,28 @@ class Domain < ActiveRecord::Base
     # Avoid endless loop because state_machine event methods are triggering after_save
     return true if self.state_changed?
 
-    if !near_me_domain? && self.secured?
+    if can_be_elb_managed?
+      # The load balancer does not exist either because it's in the initial state
+      # or because the creation failed
       if self.unsecured? || self.error?
         self.prepare_elb!
         CreateElbJob.perform(self, self.certificate_body, self.private_key, self.certificate_chain)
+      # The load balancer exists and has a certificate or exists but a certificate update has failed
+      # and we also received a new certificate in the params from the user
       elsif (self.elb_secured? || self.error_update?) && self.certificate_body.present? && self.private_key.present?
         self.prepare_elb_update!
         UpdateElbJob.perform(self, self.certificate_body, self.private_key, self.certificate_chain)
       end
     end
   rescue
-    # Ignore to allow state to be set
+    # Ignore to allow state to be set in dev mode
+    # In production it will avoid showing an error page
+    # but the error will be visible in the column and the
+    # message saved in the DB
+  end
+
+  def can_be_elb_managed?
+    !near_me_domain? && self.secured?
   end
 
   def to_dns_name
