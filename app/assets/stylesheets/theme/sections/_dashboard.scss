@@ -13,10 +13,20 @@ section.dashboard {
     li.new-location {
 
       a {
-        color: $pure-white;
+        background: $theme_blue;
       }
     }
 
+  }
+}
+
+.bank_account_fields {
+  .flash.error {
+    color: $theme_red;
+
+    ul li {
+      color: $theme_red;
+    }
   }
 }
 

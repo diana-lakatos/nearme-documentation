@@ -7,3 +7,12 @@
     }
   }
 }
+
+.space-reservation-modal {
+  .flash {
+    &.error {
+      color: $theme_red;
+    }
+  }
+}
+

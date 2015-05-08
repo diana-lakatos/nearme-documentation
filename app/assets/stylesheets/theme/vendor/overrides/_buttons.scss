@@ -1,7 +1,22 @@
 .btn,
 a.btn {
 
+  &.twitter,
+  &.facebook,
+  &.linkedin,
+  &.instagram {
+
+    &.connected {
+      background: $theme_red;
+
+      &:hover {
+        background: darken($theme_red, 10%);
+      }
+    }
+  }
+
   &.btn-blue {
+    background: $theme_blue;
 
     &:hover {
       background: lighten($theme_blue, 10%);
@@ -21,6 +36,43 @@ a.btn {
 
     &:active {
       background: darken($theme_green, 10%);
+    }
+  }
+
+  &.btn-red {
+    background: $theme_red;
+    &:hover {
+      background: darken($theme_red, 10%);
+    }
+
+    &:active {
+      background: darken($theme_red, 15%);
+    }
+  }
+
+  &.btn-orange {
+    background: $theme_orange;
+
+    &:hover {
+      background: lighten($theme_orange, 10%);
+    }
+
+    &:active {
+      background: darken($theme_orange, 10%);
+    }
+  }
+
+  &.twitter,
+  &.facebook,
+  &.linkedin,
+  &.instagram {
+
+    &.connected {
+      background: $theme_red;
+
+      &:hover {
+        background: darken($theme_red, 10%);
+      }
     }
   }
 }

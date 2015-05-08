@@ -1,10 +1,16 @@
 .photo-action {
+  background-color: $theme_blue;
+
   &:hover {
     background: lighten($theme_blue, 10%);
   }
 }
 
 .fileupload {
+  .photo-item {
+    border: 1px dashed $theme_black;
+  }
+
   .attachment {
     a {
       color: $theme_blue;

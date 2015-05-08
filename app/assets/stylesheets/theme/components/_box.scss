@@ -1,5 +1,12 @@
 .box {
   background: $theme_white;
+
+  hr,
+  .hr {
+    > span {
+      background: $theme_white;
+    }
+  }
 }
 
 .box-inverse {

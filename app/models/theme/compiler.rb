@@ -50,7 +50,7 @@ class Theme::Compiler
       end
     end
     @digests[base_name] = Digest::SHA1.hexdigest(
-      compile_erb(erb_template_path("#{base_name}.scss.erb")) + paths.map { |p| file_digest(p) }.join
+      Digest::SHA1.hexdigest(compile_erb(erb_template_path("#{base_name}.scss.erb"))) + paths.map { |p| file_digest(p) }.join
     )
   end
 
