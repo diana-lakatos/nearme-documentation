@@ -4,21 +4,21 @@ Spree::Product.class_eval do
 
   attr_accessor :validate_exisiting
 
-  has_many :line_items, through: :variants
-  has_many :orders, through: :line_items
-  has_many :categories_products, foreign_key: 'spree_product_id'
-  has_many :categories, through: :categories_products
-
   belongs_to :instance
   belongs_to :user
   belongs_to :company
   belongs_to :administrator, class_name: 'User'
   belongs_to :product_type, class_name: "Spree::ProductType", foreign_key: :product_type_id
 
-  has_many :user_messages, as: :thread_context, inverse_of: :thread_context
-  has_many :impressions, as: :impressionable, dependent: :destroy
-  has_many :wish_list_items, as: :wishlistable
+
+  has_many :categories_products, foreign_key: 'spree_product_id'
+  has_many :categories, through: :categories_products
   has_many :document_requirements, as: :item, dependent: :destroy
+  has_many :impressions, as: :impressionable, dependent: :destroy
+  has_many :line_items, through: :variants
+  has_many :orders, through: :line_items
+  has_many :user_messages, as: :thread_context, inverse_of: :thread_context
+  has_many :wish_list_items, as: :wishlistable
 
   has_one :upload_obligation, as: :item, dependent: :destroy
 

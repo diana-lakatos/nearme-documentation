@@ -39,7 +39,17 @@ class Listing::SearchFetcher
       next if values.blank? || values.all?(&:blank?)
       @listings_scope = @listings_scope.filtered_by_custom_attribute(field_name, values)
     end
-    @listings_scope = @listings_scope.includes(:categories).where(categories: {id: @filters[:category_ids]}) if @filters[:category_ids].present?
+
+    if @filters[:category_ids].present?
+      if PlatformContext.current.instance.category_search_type == "AND"
+        @listings_scope = @listings_scope.
+          joins(:categories_transactables).
+          where(categories_transactables: {category_id: @filters[:category_ids]}).
+          group('transactables.id').having("count(category_id) >= #{@filters[:category_ids].size}")
+      else
+        @listings_scope = @listings_scope.includes(:categories).where(categories: {id: @filters[:category_ids]})
+      end
+    end
 
     # Date pickers
     if availability_filter?

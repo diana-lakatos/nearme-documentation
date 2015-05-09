@@ -44,12 +44,16 @@ class Listing::Search::Params::Web < Listing::Search::Params
   def get_category_ids
     categories = Category.where(id: @options[:category_ids].split(',')) if @options[:category_ids]
     if categories.present?
-      parent_ids = categories.map(&:parent_id)
-      categories.map do |category|
-        unless parent_ids.include?(category.id)
-          category.self_and_descendants.map(&:id)
-        end
-      end.flatten.compact
+      if PlatformContext.current.instance.category_search_type == "OR"
+        parent_ids = categories.map(&:parent_id)
+        categories.map do |category|
+          unless parent_ids.include?(category.id)
+            category.self_and_descendants.map(&:id)
+          end
+        end.flatten.compact
+      else
+        categories.map(&:id)
+      end
     else
       []
     end
