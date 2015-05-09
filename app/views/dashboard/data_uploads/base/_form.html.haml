@@ -13,6 +13,9 @@
       = f.simple_fields_for :options, OpenStruct.new(@data_upload.options) do |option|
         = option.input :sync_mode, wrapper: :bs3_simple, required: false, as: :boolean, inline_label: t('data_upload.manage.new.sync_mode'), label: false, input_html: {class: "margin-right"}
         = option.input :enable_rfq, wrapper: :bs3_simple, required: false, as: :boolean, inline_label: t('data_upload.manage.new.enable_rfq'), label: false, input_html: {class: "margin-right"}
+        - if @importable.is_a?(Spree::ProductType)
+          %br
+          = option.input :default_shipping_category_id, wrapper: :bs3_simple, required: true, include_blank: false, as: :select, collection: Spree::ShippingCategory.system_profiles.map { |c| [c.name, c.id] }, label: t('data_upload.manage.new.default_shipping_category_id'), input_html: {class: "margin-right"}
     %br
     = f.input :csv_file, as: :file
     .btn-toolbar

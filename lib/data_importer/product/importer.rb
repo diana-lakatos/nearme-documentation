@@ -92,9 +92,13 @@ class DataImporter::Product::Importer
 
   def import_shipping_category(params, user, company, &block)
     import_entity(block) do
-      params.merge!(instance_id: PlatformContext.current.instance.id, user_id: user.id, company_id: company.id)
-      params.merge!(name: 'Default') unless params[:name].present?
-      find_or_initialize_by_and_assign(Spree::ShippingCategory, params)
+      if params[:name].present?
+        params.merge!(instance_id: PlatformContext.current.instance.id, user_id: user.id, company_id: company.id)
+        params.merge!(name: 'Default') unless
+        find_or_initialize_by_and_assign(Spree::ShippingCategory, params)
+      else
+        Spree::ShippingCategory.find(@data_upload.default_shipping_category_id)
+      end
     end
   end
 
