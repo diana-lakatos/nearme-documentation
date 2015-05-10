@@ -34,6 +34,7 @@
 //= require user_blog/pagination
 //= require select2
 //= require jquery-fileupload/basic
+//= require jquery_nested_form
 //
 //
 //= require_self

@@ -9,7 +9,7 @@
 
 #space_wizard.row-fluid
   .span8.offset2
-    = simple_form_for @user, url: transactable_type_space_wizard_list_url(@transactable_type), html: { class: "form-horizontal new_company", multipart: true, id: 'list-space-flow-form' }, method: :post do |f|
+    = simple_nested_form_for @user, url: transactable_type_space_wizard_list_url(@transactable_type), html: { class: "form-horizontal new_company", multipart: true, id: 'list-space-flow-form' }, method: :post do |f|
       = f.simple_fields_for :companies, @user.companies.first do |companies_form|
         = companies_form.simple_fields_for :locations, @user.companies.first.locations.first do |locations_form|
           = locations_form.simple_fields_for :listings, @user.companies.first.locations.first.listings.first do |listings_form|

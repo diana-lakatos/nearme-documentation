@@ -1,0 +1,22 @@
+.simple-schedule-form {
+
+  .bootstrap-select {
+    width: auto !important;
+  }
+
+  .row:first-child {
+    margin-top: 0px;
+  }
+
+  .every_hours {
+    input {
+      width: auto;
+    }
+  }
+}
+
+.exclude-rule-fields {
+  .bootstrap-select {
+    width: auto !important;
+  }
+}
