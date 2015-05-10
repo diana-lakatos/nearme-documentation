@@ -13,6 +13,11 @@
       width: auto;
     }
   }
+
+  label.checkbox {
+    clear: both;
+    display: block;
+  }
 }
 
 .exclude-rule-fields {
