@@ -3,12 +3,13 @@
     = f.input :sr_start_datetime, ampm: true, label: I18n.t('schedule.sr_start_datetime'), input_html: { class: 'selectpicker' }
     = f.input :sr_every_hours, label: I18n.t('schedule.sr_every_hours') do
       .every_hours
-        = f.text_field :sr_every_hours, size: 4, type: :number, min: 1
+        = f.text_field :sr_every_hours, size: 4, type: :number, min: 1, data: { hours: true }
         = "&nbsp; #{t('schedule.hours')}".html_safe
-    = f.input :sr_from_hour, as: :time, label: I18n.t('schedule.sr_from_hour') do
-      = f.time_select :sr_from_hour, { ampm: true}, { class: 'selectpicker' }
-      = t('schedule.and')
-      = f.time_select :sr_to_hour, { ampm: true}, { class: 'selectpicker' }
+    = f.input :sr_from_hour, as: :time, label: I18n.t('schedule.sr_from_hour'), wrapper_html: { data: { :'between-hours' => true } } do
+      .between_hours
+        = f.time_select :sr_from_hour, { ampm: true}, { class: 'selectpicker' }
+        = t('schedule.and')
+        = f.time_select :sr_to_hour, { ampm: true}, { class: 'selectpicker' }
     = f.input :sr_days_of_week, collection: (Date::DAYNAMES.each_with_index.map { |day, index| [day, index.to_s] }), as: :check_boxes, label: I18n.t('schedule.sr_days_of_week')
     .hidden
       %input{type: 'radio', name: "#{f.object_name}[use_simple_schedule]", value: "1", checked: f.object.use_simple_schedule, 'data-simple-schedule-radio' => true}

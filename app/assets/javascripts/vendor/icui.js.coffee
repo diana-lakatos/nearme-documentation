@@ -833,6 +833,14 @@ do ($ = jQuery) ->
       advanced_schedule = container.find('div[data-advanced-schedule]')
       simple_schedule_radio = simple_schedule.find('input[data-simple-schedule-radio]')
       advanced_schedule_radio = advanced_schedule.find('input[data-simple-schedule-radio]')
+      between_hours = container.find('[data-between-hours]')
+      hours_input = container.find('input[data-hours]')
+
+      if parseInt(hours_input.val(), 10) > 0
+        between_hours.show()
+      else
+        between_hours.hide()
+
       container.find('a[data-toggler]').on 'click', (event) ->
         event.preventDefault()
         simple_schedule_radio.prop('checked', !simple_schedule_radio.prop('checked'))
@@ -840,7 +848,11 @@ do ($ = jQuery) ->
         advanced_schedule.toggle()
         simple_schedule.toggle()
 
-
+      hours_input.on 'blur', (event) ->
+        if parseInt($(event.target).val(), 10) > 0
+          between_hours.show()
+        else
+          between_hours.hide()
 
       data = try
         JSON.parse($el.val())
