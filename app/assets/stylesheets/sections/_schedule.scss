@@ -8,9 +8,15 @@
     margin-top: 0px;
   }
 
-  .every_minutes {
+  .every_hours {
     input {
       width: auto;
     }
+  }
+}
+
+.exclude-rule-fields {
+  .bootstrap-select {
+    width: auto !important;
   }
 }

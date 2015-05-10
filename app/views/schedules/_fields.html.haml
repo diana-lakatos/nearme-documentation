@@ -1,10 +1,10 @@
 %div{:'data-schedule-wrapper' => true}
   .simple-schedule-form{ :'data-simple-schedule' => "true", style: "#{'display: none;' if !f.object.use_simple_schedule}" }
-    = f.input :sr_start_datetime, label: I18n.t('schedule.sr_start_datetime'), input_html: { class: 'selectpicker' }
-    = f.input :sr_every_minutes, label: I18n.t('schedule.sr_every_minutes') do
-      .every_minutes
-        = f.text_field :sr_every_minutes, size: 4, type: :number, min: 1
-        = "&nbsp; #{t('schedule.minutes')}".html_safe
+    = f.input :sr_start_datetime, ampm: true, label: I18n.t('schedule.sr_start_datetime'), input_html: { class: 'selectpicker' }
+    = f.input :sr_every_hours, label: I18n.t('schedule.sr_every_hours') do
+      .every_hours
+        = f.text_field :sr_every_hours, size: 4, type: :number, min: 1
+        = "&nbsp; #{t('schedule.hours')}".html_safe
     = f.input :sr_from_hour, as: :time, label: I18n.t('schedule.sr_from_hour') do
       = f.time_select :sr_from_hour, { ampm: true}, { class: 'selectpicker' }
       = t('schedule.and')
@@ -22,3 +22,22 @@
     = link_to '#', {:'data-toggler' => true} do
       = t('schedule.switch_to_simple')
 
+  %div{ :'data-exclude-dates' => "true" }
+    %h3= I18n.t('schedule.duration_range')
+    = f.simple_fields_for :schedule_exception_rules do |schedule_exception_rule_form|
+      .exclude-rules-fields
+        .exclude-rule-fields
+          = schedule_exception_rule_form.input :label
+          = schedule_exception_rule_form.input :duration_range_start, label: t('schedule.duration_range') do
+            = schedule_exception_rule_form.datetime_select :duration_range_start, { ampm: true, :default => { :minute => 00 } }, class: 'selectpicker'
+            = t('schedule.and')
+            = schedule_exception_rule_form.datetime_select :duration_range_end, { ampm: true, :default => { :minute => 00 } }, { class: 'selectpicker' }
+            = schedule_exception_rule_form.link_to_remove t('schedule.remove'), data: { confirm: (schedule_exception_rule_form.object.label.present? ? "Are you sure you want to delete #{schedule_exception_rule_form.object.label}?" : false) }
+    = f.link_to_add t('schedule.add_exclude_rule'), :schedule_exception_rules
+
+- content_for :script do
+  :javascript
+    $(document).on('nested:fieldAdded', function(event){
+      var field = event.field;
+      field.find('.selectpicker').selectpicker({'iconShow': false});
+    });

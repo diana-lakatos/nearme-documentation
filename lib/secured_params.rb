@@ -870,7 +870,7 @@ class SecuredParams
         amenity_ids: [],
         category_ids: [],
         waiver_agreement_template_ids: [],
-        schedule_attributes: self.schedule,
+        schedule_attributes: nested(self.schedule),
         document_requirements_attributes: nested(self.document_requirement),
         upload_obligation_attributes: nested(self.upload_obligation)
     ] +
@@ -883,9 +883,18 @@ class SecuredParams
       :sr_start_datetime,
       :sr_from_hour,
       :sr_to_hour,
-      :sr_every_minutes,
+      :sr_every_hours,
       :use_simple_schedule,
-      sr_days_of_week: []
+      sr_days_of_week: [],
+      schedule_exception_rules_attributes: nested(self.schedule_exclude_rule)
+    ]
+  end
+
+  def schedule_exclude_rule
+    [
+      :label,
+      :duration_range_start,
+      :duration_range_end
     ]
   end
 

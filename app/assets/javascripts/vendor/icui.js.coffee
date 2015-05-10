@@ -61,6 +61,8 @@ do ($ = jQuery) ->
     # THis is a wrapper for the most ridicilous API in probably the whole of
     # JavaScript.
     dateFromString: (str) ->
+      unless typeof str == 'string'
+        str = str.time
       [date, time] = str.split(/[\sT]/)
       [y, m, d] = (parseInt(t, 10) for t in date.split('-'))
       [h, min, rest...] = (parseInt(t, 10) for t in time.split(':'))

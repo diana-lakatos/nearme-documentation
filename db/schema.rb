@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150508152731) do
+ActiveRecord::Schema.define(version: 20150510125525) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1391,6 +1391,18 @@ ActiveRecord::Schema.define(version: 20150508152731) do
 
   add_index "saved_searches", ["title", "user_id"], name: "index_saved_searches_on_title_and_user_id", unique: true, using: :btree
 
+  create_table "schedule_exception_rules", force: true do |t|
+    t.string   "label"
+    t.datetime "duration_range_start"
+    t.datetime "duration_range_end"
+    t.integer  "schedule_id"
+    t.integer  "instance_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "schedule_exception_rules", ["instance_id", "schedule_id"], name: "index_schedule_exception_rules_on_instance_id_and_schedule_id", using: :btree
+
   create_table "schedules", force: true do |t|
     t.datetime "start_at"
     t.datetime "end_at"
@@ -1406,7 +1418,7 @@ ActiveRecord::Schema.define(version: 20150508152731) do
     t.datetime "sr_start_datetime"
     t.time     "sr_from_hour"
     t.time     "sr_to_hour"
-    t.integer  "sr_every_minutes"
+    t.integer  "sr_every_hours"
     t.text     "sr_days_of_week",     default: [],    array: true
     t.boolean  "use_simple_schedule", default: true
   end

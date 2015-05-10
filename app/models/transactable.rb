@@ -221,22 +221,24 @@ class Transactable < ActiveRecord::Base
   end
 
   def next_available_occurrences(number_of_occurrences = 10)
-    occurences = {}
-    occurence = Time.now
-    checks_to_be_performed = 100
+    return {} if schedule.nil?
+    occurrences = {}
+    occurrence = Time.now
+    checks_to_be_performed = 1000
+    excluded_ranges = schedule.schedule_exception_rules.where('duration_range_end > ?', occurrence).select('duration_range_start, duration_range_end').map { |ser| ser.duration_range_start..ser.duration_range_end }
     loop do
       checks_to_be_performed -= 1
-      occurence = schedule.try(:schedule).try(:next_occurrences, 10, occurence).try(:first)
-      if occurence
-        start_minute = occurence.to_datetime.min.to_i + (60 * occurence.to_datetime.hour.to_i)
-        availability = self.quantity - desks_booked_on(occurence.to_datetime, start_minute, start_minute)
+      occurrence = schedule.schedule.next_occurrences(10, occurrence).try(:first)
+      if occurrence && excluded_ranges.none? { |r| r.cover?(occurrence) }
+        start_minute = occurrence.to_datetime.min.to_i + (60 * occurrence.to_datetime.hour.to_i)
+        availability = self.quantity - desks_booked_on(occurrence.to_datetime, start_minute, start_minute)
         if availability > 0
-          occurences[occurence.to_datetime.to_i.to_s] = { date: occurence, availability: availability.to_i }
+          occurrences[occurrence.to_datetime.to_i.to_s] = { date: occurrence, availability: availability.to_i }
         end
       end
-      break if occurences.count == number_of_occurrences || occurence.nil? || checks_to_be_performed.zero?
+      break if occurrences.count == number_of_occurrences || occurrence.nil? || checks_to_be_performed.zero?
     end
-    occurences
+    occurrences
   end
 
   def availability_for(date, start_min = nil, end_min = nil)

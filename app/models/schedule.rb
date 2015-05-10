@@ -7,11 +7,16 @@ class Schedule < ActiveRecord::Base
   belongs_to :instance
   belongs_to :scheduable, polymorphic: true
 
+  has_many :schedule_exception_rules
+
   before_save :create_schedule_from_simple_settings, if: :use_simple_schedule
 
-  validates_presence_of :sr_start_datetime, :sr_from_hour, :sr_every_minutes, :sr_to_hour, :sr_days_of_week, if: :use_simple_schedule
+  validates_presence_of :sr_start_datetime, :sr_from_hour, :sr_to_hour, :sr_days_of_week, if: :use_simple_schedule
+  validates_numericality_of :sr_every_hours, greater_than_or_equal_to: 0, allow_nil: true , if: :use_simple_schedule
 
-  before_validation  do
+  accepts_nested_attributes_for :schedule_exception_rules, allow_destroy: true
+
+  after_validation  do
     self.sr_days_of_week = self.sr_days_of_week.reject(&:blank?).map(&:to_i)
   end
 
@@ -21,10 +26,10 @@ class Schedule < ActiveRecord::Base
   end
 
   def create_schedule_from_simple_settings
-    @schedule = IceCube::Schedule.new(sr_start_datetime.to_datetime)
-    if sr_every_minutes % 60 == 0
-      step = sr_every_minutes / 60
-      rule = IceCube::Rule.weekly.day(sr_days_of_week)
+    @schedule = IceCube::Schedule.new(sr_start_datetime)
+    rule = IceCube::Rule.weekly.day(sr_days_of_week)
+    if sr_every_hours.to_i > 0
+      step = sr_every_hours
       hour = sr_start_datetime.hour
       hours = []
       # add all hours after first event
@@ -41,10 +46,8 @@ class Schedule < ActiveRecord::Base
         break if hour < sr_to_hour.hour + sr_from_hour.min.to_f / 60
       end
       rule.hour_of_day(hours.sort)
-      schedule.add_recurrence_rule rule
-    else
-      raise NotImplementedError
     end
+    schedule.add_recurrence_rule rule
     self.schedule = @schedule.to_hash.to_json
   end
 
