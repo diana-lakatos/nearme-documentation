@@ -12,6 +12,10 @@ module InstanceType::Searcher
     Spree::Product.count_by_sql(query)
   end
 
+  def max_price
+    @max_fixed_price ||= results.maximum(:fixed_price_cents).to_i / 100
+  end
+
   def paginate_results(page, per_page)
     page ||= 1
     @results = @results.paginate(page: page, per_page: per_page)

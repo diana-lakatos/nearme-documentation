@@ -733,6 +733,13 @@ en:
 
       buttons:
         update: 'Refresh'
+    price_slider:
+      title: 'Price'
+      buttons:
+        update: 'Refresh'
+
+    price_types:
+      title: 'Pricing Types'
     category:
       title: "Category"
   time:

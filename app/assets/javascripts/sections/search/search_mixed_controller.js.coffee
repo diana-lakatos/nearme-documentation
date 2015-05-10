@@ -12,6 +12,7 @@ class Search.SearchMixedController extends Search.SearchController
     @perPageValue = @perPageField.find(':selected').val()
     @bindLocationsEvents()
     @initializeCarousel()
+    @initializePriceSlide()
     @renderChildCategories()
 
 
@@ -29,6 +30,15 @@ class Search.SearchMixedController extends Search.SearchController
       if @perPageValue != @perPageField.find(':selected').val()
         @perPageValue = @perPageField.find(':selected').val()
         @form.submit()
+
+    @slider = $('#price-slider')
+
+    @slider.on 'set', =>
+      @assignFormParams(
+        'price[min]': @slider.val()[0]
+        'price[max]': @slider.val()[1]
+      )
+      @form.submit()
 
     if @autocompleteEnabled()
       $('input.query').keypress (e) =>
@@ -326,3 +336,23 @@ class Search.SearchMixedController extends Search.SearchController
 
   initializeCarousel: ->
     $('.carousel').carousel({ interval: 7000 })
+
+  initializePriceSlide: =>
+    elem = $('#price-slider')
+    val = parseInt( $("input[name='price[max]']").val() )
+    if val > 0
+      elem.noUiSlider(
+        start: [ 0, val ],
+        behaviour: 'drag',
+        connect: true,
+        range: {
+          'min': 0,
+          'max': val
+        }
+      )
+      elem.Link('upper').to('-inline-<div class="slider-tooltip"></div>', ( value ) ->
+        $(this).html('<strong>$' + parseInt(value) + ' </strong>')
+      )
+      elem.Link('lower').to('-inline-<div class="slider-tooltip"></div>', ( value ) ->
+        $(this).html('<strong>$' + parseInt(value) + ' </strong>')
+      )
