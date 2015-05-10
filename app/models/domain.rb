@@ -9,27 +9,15 @@ class Domain < ActiveRecord::Base
 
   state_machine :state, initial: :unsecured do
     event :prepare_elb do
-      transition [:unsecured, :error] => :preparing
+      transition :unsecured => :preparing
     end
 
     event :elb_created do
       transition :preparing => :elb_secured
     end
 
-    event :prepare_elb_update do
-      transition [:elb_secured, :error_update] => :preparing_update
-    end
-
-    event :elb_updated do
-      transition :preparing_update => :elb_secured
-    end
-
     event :error do
       transition :preparing => :error
-    end
-
-    event :error_update do
-      transition :preparing_update => :error_update
     end
   end
 
@@ -47,7 +35,7 @@ class Domain < ActiveRecord::Base
 
   before_destroy :prevent_destroy_if_only_child
   before_destroy :delete_elb, if: :elb_secured?
-  after_save :create_or_update_elb
+  after_save :create_elb, if: :prepared_for_elb?
 
   after_save :mark_as_default
 
@@ -86,32 +74,9 @@ class Domain < ActiveRecord::Base
     DeleteElbJob.perform(self.to_dns_name)
   end
 
-  def create_or_update_elb
-    # Avoid endless loop because state_machine event methods are triggering after_save
-    return true if self.state_changed?
-
-    if can_be_elb_managed?
-      # The load balancer does not exist either because it's in the initial state
-      # or because the creation failed
-      if self.unsecured? || self.error?
-        self.prepare_elb!
-        CreateElbJob.perform(self, self.certificate_body, self.private_key, self.certificate_chain)
-      # The load balancer exists and has a certificate or exists but a certificate update has failed
-      # and we also received a new certificate in the params from the user
-      elsif (self.elb_secured? || self.error_update?) && self.certificate_body.present? && self.private_key.present?
-        self.prepare_elb_update!
-        UpdateElbJob.perform(self, self.certificate_body, self.private_key, self.certificate_chain)
-      end
-    end
-  rescue
-    # Ignore to allow state to be set in dev mode
-    # In production it will avoid showing an error page
-    # but the error will be visible in the column and the
-    # message saved in the DB
-  end
-
-  def can_be_elb_managed?
-    !near_me_domain? && self.secured?
+  def create_elb
+    self.prepare_elb!
+    CreateElbJob.perform(self, self.certificate_body, self.private_key, self.certificate_chain)
   end
 
   def to_dns_name
@@ -119,11 +84,11 @@ class Domain < ActiveRecord::Base
   end
 
   def deletable?
-    not(preparing? || use_as_default || near_me_domain? || preparing_update?)
+    not(preparing? || use_as_default || near_me_domain?)
   end
 
   def editable?
-    !self.near_me_domain?
+    !self.near_me_domain? && !self.error?
   end
 
   def url
