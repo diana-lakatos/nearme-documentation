@@ -1,9 +1,10 @@
-= simple_form_for [:instance_admin, :settings, LocationType.new], :defaults => {:required => false} do |f|
-  %h4 Add New Location Type
-  .content-container
-    .row.dropshadow
-      .input-container.col-xs-12
-        = f.input :name, label: 'Location Type Name', placeholder: 'Location type name'
-  .content-container
+.content-container
+  %h4
+    = t('instance_admin.settings.locations.add_new_location_type')
+  = simple_form_for [:instance_admin, :settings, LocationType.new], :defaults => {:required => false} do |f|
     .row
-      = f.submit "Add", :disable_with => 'Saving ...', :class => 'btn btn-grey pull-right'
+      .input-container.col-xs-12
+        = f.input :name, label: 'Location Type Name', placeholder: 'Location type name', input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-12
+        = f.submit t('instance_admin.settings.locations.add'), :disable_with => 'Saving ...', :class => 'btn btn-light pull-right'

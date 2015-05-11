@@ -1,16 +1,11 @@
-%h4 Manage Liquid Views
-
 .content-container
   .row
-    = link_to 'Add Liquid View', new_instance_admin_theme_liquid_view_path, class: 'pull-right btn btn-green'
-
-.content-container
-  .row
-    .table-container.col-xs-12.dropshadow
+    .table-container.col-xs-12
       %table.table
         %tbody
           %tr
-            %th Template
+            %th
+              = t('instance_admin.liquid_views.template')
             %th
             %th
             %th
@@ -22,27 +17,31 @@
               %td= liquid_view.transactable_type.try(:name)
               %td
                 .pull-right{style: 'margin-left: 10px'}
-                  = link_to 'Destroy', instance_admin_theme_liquid_view_path(liquid_view), method: :delete,
+                  = link_to t('instance_admin.destroy'), instance_admin_theme_liquid_view_path(liquid_view), method: :delete,
                       data: { confirm: 'Are you sure?' }
                 .pull-right{style: 'margin-left: 10px'}
-                  = link_to 'Edit', edit_instance_admin_theme_liquid_view_path(liquid_view)
+                  = link_to t('instance_admin.edit'), edit_instance_admin_theme_liquid_view_path(liquid_view)
                 .pull-right{style: 'margin-left: 10px'}
-                  = link_to 'Duplicate default', new_instance_admin_theme_liquid_view_path(path: liquid_view.path)
+                  = link_to t('instance_admin.liquid_views.duplicate_default'), new_instance_admin_theme_liquid_view_path(path: liquid_view.path)
                 .pull-right{style: 'margin-left: 10px'}
-                  = link_to 'Versions', versions_instance_admin_theme_liquid_view_path(liquid_view.id), title: 'Show previous versions'
-%h4 Customize defaults
+                  = link_to t('instance_admin.versions'), versions_instance_admin_theme_liquid_view_path(liquid_view.id), title: 'Show previous versions'
 
 .content-container
+  %h4
+    = t('instance_admin.liquid_views.customize_defaults')
   .row
-    .table-container.col-xs-12.dropshadow
+    .table-container.col-xs-12
       %table.table
         %tbody
           %tr
-            %th Template
+            %th
+              = t('instance_admin.liquid_views.template')
 
           - @not_customized_liquid_views_paths.each do |liquid_view_path, formats|
             %tr
               %td= link_to pretty_path(liquid_view_path), new_instance_admin_theme_liquid_view_path(path: liquid_view_path)
 
 
+= content_for :header_buttons do
+  = link_to t('instance_admin.liquid_views.add_liquid_view'), new_instance_admin_theme_liquid_view_path, class: 'pull-right btn btn-blue'
 

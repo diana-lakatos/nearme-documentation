@@ -1,10 +1,13 @@
-%h4 Manage Partners
 .content-container
+  %h4
+    = t('instance_admin.manage.partners.manage_partners')
   .row
-    .table-container.col-xs-12.dropshadow
+    .table-container.col-xs-12
       %table.table
         %tbody
           - platform_context.instance.partners.each do |partner|
             = render 'index_row', partner: partner
-.content-container
-  = link_to 'Add Partner', new_instance_admin_manage_partner_path, class: 'pull-right btn btn-green'
+
+= content_for :header_buttons do
+  = link_to t('instance_admin.manage.partners.add_partner'), new_instance_admin_manage_partner_path, class: 'pull-right btn btn-blue'
+

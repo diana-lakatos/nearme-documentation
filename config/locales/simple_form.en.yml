@@ -18,10 +18,45 @@ en:
     error_notification:
       default_message: "Some errors were found, please take a look:"
     labels:
+      instance:
+        mark_as_locked: "Lock admin settings"
+        name: "Marketplace Name"
+        skip_company: "Don't require company"
+        force_accepting_tos: "Force accepting ToS on sign up"
+        allowed_countries: "Allowed countries"
+        default_country: "Default country"
+        allowed_currencies: "Allowed currencies"
+        default_currency: "Default currency"
+        possible_manual_payment: "Is it possible to skip paying"
+        marketplace_password: 'Password'
+        password_protected: 'Require password to access marketplace'
+        payment_transfers_frequency: 'Payment transfers frequency'
+        apply_text_filters: "Apply text filters"
+        support_email: "Support email"
+        support_imap_username: "Support IMAP username"
+        support_imap_password: "Support IMAP password"
+        support_imap_server: "Support IMAP server"
+        support_imap_port: "Support IMAP port"
+        support_imap_ssl: "Support IMAP SSL"
+        olark_enabled: "Enable Olark support chat"
+      domain:
+        google_analytics_tracking_code: "GA Tracking Code"
+        secured: "Enable HTTPS"
+        use_as_default: "Use as default domain"
+        name: "Domain"
+        certificate_body: "Certificate body"
+        private_key: "Private key"
+        certificate_chain: "Certificate chain (optional for HTTPS)"
+        redirect_code: 'Redirection'
+        redirect_to: 'Redirect to'
+        state: "Status"
+        dns_name: "DNS name"
       locale:
         code: 'Select language'
         custom_name: 'Custom name'
         primary: 'Default'
+      instance_admin_role:
+        name: 'Name'
 
 
       availability_template:
@@ -55,12 +90,41 @@ en:
         logo: 'Logo'
 
       theme:
+        name: Name
+        site_name: Site name
+        meta_title: "Meta title"
+        description: "Meta description"
+        tagline: Tagline
+        phone_number: "Phone number"
+        address: Address
+        contact_email: "Contact email"
+        support_email: "Support email"
+        support_url: "Support url"
+        blog_url: Blog
+        facebook_url: "Facebook URL"
+        twitter_url: "Twitter URL"
+        gplus_url: "Gplus URL"
         favicon_image: 'Favicon (16 x 16px or 32 x 32px)'
         hero_image: 'Hero image'
         icon_image: 'Icon (60 x 60px)'
         icon_retina_image: 'Icon Retina (120 x 120px)'
         logo_image: 'Logo (240 x 60px)'
         logo_retina_image: 'Logo Retina (480 x 120px)'
+        call_to_action: "CTA button text"
+        homepage_content: "Homepage HTML"
+        homepage_css: "Homepage CSS"
+      instance_view:
+        body: "HTML body"
+      liquid_view:
+        path: "View path"
+        transactable_type: "Service Type"
+      page:
+        path: "Path"
+        content: "Content"
+        css_content: "Page CSS"
+        hero_image: "Hero image"
+        redirect_url: "Redirect URL"
+        open_in_new_window: "Open in new window?"
       listings:
         price: 'Price'
         photos: 'Photos'
@@ -105,8 +169,6 @@ en:
         bank_account_number: 'Account Number'
         company_address:
           address: 'Address'
-      domain:
-        google_analytics_tracking_code: "GA Tracking Code"
       company:
         name: 'Company name'
         industries: 'Industries'
@@ -154,6 +216,30 @@ en:
         email: 'Your email address'
 
     placeholders:
+      liquid_view:
+        path: 'liquid/view'
+      content_holder:
+        name: 'Content Holder name'
+      location_amenity_types:
+        name: 'Enter location amenity type'
+      amenities:
+        name: 'Enter location amenity'
+      page:
+        path: "Page title"
+
+      instance_admin_role:
+        name: 'Admin'
+
+      partner:
+        name: "John Smith"
+
+      domain:
+        name: 'example.com'
+        certificate_body: "-----BEGIN CERTIFICATE-----"
+        private_key: "-----BEGIN RSA PRIVATE KEY-----"
+        certificate_chain: "-----BEGIN CERTIFICATE-----"
+        redirect_to: 'http://another.domain.com'
+
       user_blog:
         name: 'What is the name of your blog?'
         header_text: 'Enter the text for the header'
@@ -192,6 +278,10 @@ en:
       session:
         email: 'Email'
         password: 'Password'
+
+      theme:
+        call_to_action: "Find out more"
+        blog_url: 'example.com/blog'
 
     prompts:
       companies:

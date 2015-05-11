@@ -1,74 +1,78 @@
 = simple_form_for [:instance_admin, :manage, @partner], :html => { :multipart => true, :'data-partner-form' => true} do |f|
   .content-container
-    .row.dropshadow
+    %h4
+      = form_title
+    .row
       .input-container.col-xs-6
-        = f.input :name, required: false, placeholder: 'John Smith', input_html: { class: 'form-control' }
+        = f.input :name, required: false, input_html: { class: 'form-control' }
       .input-container.col-xs-6
         = f.input :search_scope_option, :collection => Partner::AVAILABLE_SEARCH_SCOPE_OPTIONS, :prompt => false, input_html: { class: 'form-control' }
 
-  %h4 Domain Name
-  = f.fields_for :domain, f.object.domain || f.object.build_domain do |f|
-    .content-container
-      .row.dropshadow
+  .content-container
+    %h4= t('instance_admin.manage.partners.domain_name')
+    = f.fields_for :domain, f.object.domain || f.object.build_domain do |f|
+      .row
         .input-container.col-xs-12
-          = f.input :name, required: false, placeholder: 'example.com', input_html: { class: 'form-control' }
+          = f.input :name, required: false, input_html: { class: 'form-control' }
 
   - if f.object.has_theme?
 
-    %h4 Custom Theme
     = f.fields_for :theme, f.object.theme, :html => { :multipart => true } do |f|
-      %h4 Title &amp; Description
-      .content-container.dropshadow
+      .content-container
+        %h4= t('instance_admin.manage.partners.custom_theme')
+        %h4= t('instance_admin.manage.partners.title_and_description')
         .row
           .input-container.col-xs-6
-            = f.input :name, :label => 'Name (leave blank to use default theme)', placeholder: 'My Theme', required: false, input_html: { class: 'form-control' }
+            = f.input :name, :label => t('instance_admin.manage.partners.theme_name_label'), placeholder: t('instance_admin.manage.partners.theme_name_placeholder'), required: false, input_html: { class: 'form-control' }
           .input-container.col-xs-6
-            = f.input :site_name, required: false, placeholder: 'My Site', input_html: { class: 'form-control' }
+            = f.input :site_name, required: false, placeholder: t('instance_admin.manage.partners.theme_site_name_placeholder'), input_html: { class: 'form-control' }
         .row
           .input-container.col-xs-12
-            = f.input :tagline, placeholder: 'My Tagline', required: false, input_html: { class: 'form-control' }
+            = f.input :tagline, placeholder: t('instance_admin.manage.partners.theme_tagline_placeholder'), required: false, input_html: { class: 'form-control' }
         .row
           .input-container.col-xs-12
-            = f.input :description, :label => 'Meta description', placeholder: 'Description of site for SEO', required: false, input_html: { class: 'form-control' }
+            = f.input :description, :label => t('instance_admin.manage.partners.theme_description_label'), placeholder: t('instance_admin.manage.partners.theme_description_placeholder'), required: false, input_html: { class: 'form-control' }
 
-      %h4 Brand
-      = render 'instance_admin/theme/design/images.html.haml', f: f
+      .content-container
+        %h4= t('instance_admin.manage.partners.brand')
+        = render 'instance_admin/theme/design/images.html.haml', f: f
 
-      %h4 Contact &amp; Support
-      .content-container.dropshadow
+      .content-container
+        %h4= t('instance_admin.manage.partners.contact_and_support')
         .row
           .input-container.col-xs-6
-            = f.input :phone_number, required: false, placeholder: '(888) 888-8888', input_html: { class: 'form-control' }
+            = f.input :phone_number, required: false, placeholder: t('instance_admin.manage.partners.theme_phone_number_placeholder'), input_html: { class: 'form-control' }
           .input-container.col-xs-6
             .control-group.tel.optional{class: f.object.errors[:contact_email].empty? ? '' : 'error'}
-              %label.tel.optional.control-label{for: "theme_phone_number"} Contact email
+              %label.tel.optional.control-label{for: "theme_phone_number"}
+                = t('instance_admin.manage.partners.theme_contact_email_label')
               .controls
-                = f.input_field :contact_email, placeholder: 'example@gmail.com', pattern: '.*', class: 'form-control'
+                = f.input_field :contact_email, placeholder: t('instance_admin.manage.partners.theme_contact_email_placeholder'), pattern: '.*', class: 'form-control'
                 = f.error :contact_email
         .row
           .input-container.col-xs-6
-            = f.input :support_email, required: false, placeholder: 'example@gmail.com', input_html: { class: 'form-control' }
+            = f.input :support_email, required: false, placeholder: t('instance_admin.manage.partners.theme_support_email_placeholder'), input_html: { class: 'form-control' }
           .input-container.col-xs-6
-            = f.input :support_url, required: false, placeholder: 'mysite.com/support', input_html: { class: 'form-control' }
+            = f.input :support_url, required: false, placeholder: t('instance_admin.manage.partners.theme_support_url_placeholder'), input_html: { class: 'form-control' }
         .row
           .input-container.col-xs-12
-            = f.input :address, required: false, placeholder: '24 Willie Mays Plaza, San Francisco, CA 94107',  input_html: { class: 'form-control' }
+            = f.input :address, required: false, placeholder: t('instance_admin.manage.partners.theme_address_placeholder'),  input_html: { class: 'form-control' }
 
-      %h4 Social Properties
       .content-container
+        %h4= t('instance_admin.manage.partners.social_properties')
         .row
           .input-container.col-xs-6
-            = f.input :blog_url, label: 'Blog', placeholder: 'example.com/blog', input_html: { class: 'form-control' }
+            = f.input :blog_url, input_html: { class: 'form-control' }
           .input-container.col-xs-6
-            = f.input :facebook_url, label: 'Facebook URL', placeholder: 'www.facebook.com/yourMarketplace', input_html: { class: 'form-control' }
-        .row.dropshadow
+            = f.input :facebook_url, placeholder: t('instance_admin.manage.partners.theme_facebook_url_placeholder'), input_html: { class: 'form-control' }
+        .row
           .input-container.col-xs-6
-            = f.input :twitter_url, label: 'Twitter URL', placeholder: 'twitter.com/yourMarketplace', input_html: { class: 'form-control' }
+            = f.input :twitter_url, placeholder: t('instance_admin.manage.partners.theme_twitter_url_placeholder'), input_html: { class: 'form-control' }
           .input-container.col-xs-6
-            = f.input :gplus_url, label: 'Gplus URL', placeholder: 'plus.google.com/yourMarketplace', input_html: { class: 'form-control' }
+            = f.input :gplus_url, placeholder: t('instance_admin.manage.partners.theme_gplus_url_placeholder'), input_html: { class: 'form-control' }
 
-      %h4 Colors
-      .content-container.dropshadow
+      .content-container
+        %h4= t('instance_admin.manage.partners.colors')
         - Theme::COLORS.each_slice(2) do |color|
           .row
             .input-container{ class: "#{color[1] ? 'col-xs-6' : 'col-xs-12'}" }
@@ -77,21 +81,22 @@
               .input-container.col-xs-6
                 = f.input "color_#{color[1]}", input_html: { class: 'form-control' }
 
-      %h4 Homepage
-      .content-container.dropshadow
+      .content-container
+        %h4= t('instance_admin.manage.partners.homepage')
         .row
           .input-container.col-xs-6
-            = f.input :homepage_css, label: 'Homepage CSS', input_html: { class: 'form-control' }
+            = f.input :homepage_css, input_html: { class: 'form-control' }
           .input-container.col-xs-6
-            = f.input :homepage_content, label: 'Homepage HTML', input_html: { class: 'form-control' }
+            = f.input :homepage_content, input_html: { class: 'form-control' }
         .row
           .input-container.col-xs-12
-            = f.input :call_to_action, :placeholder => 'Find out more', input_html: { class: 'form-control' }
+            = f.input :call_to_action, input_html: { class: 'form-control' }
 
-  = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+  = content_for :header_buttons do
+    = f.button :submit, 'Save', class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
 
-  - unless f.object.has_theme?
-    = f.button :submit, 'Add theme', class: 'btn btn-green pull-right', :'data-submit-add-theme' => true
+    - unless f.object.has_theme?
+      = f.button :submit, t('instance_admin.manage.partners.add_theme'), class: 'btn btn-blue pull-right', :'data-submit-add-theme' => true
 
 - content_for :script do
   = render 'shared/modal'

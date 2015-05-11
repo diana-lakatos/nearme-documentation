@@ -1,13 +1,7 @@
-.row
-  .col-xs-12
-    %h4 Posts
-    = link_to 'New post', new_instance_admin_manage_blog_post_path, class: 'pull-right btn btn-green'
-
-%br
-
 .content-container
+  %h4 Posts
   .row
-    .table-container.col-xs-12.dropshadow
+    .table-container.col-xs-12
       %table.table.sortable
         %thead
           %tr
@@ -18,3 +12,7 @@
         %tbody
           - @blog_posts.each do |blog_post|
             = render 'index_row', blog_post: blog_post
+
+= content_for :header_buttons do
+  = link_to 'New post', new_instance_admin_manage_blog_post_path, class: 'pull-right btn btn-blue'
+

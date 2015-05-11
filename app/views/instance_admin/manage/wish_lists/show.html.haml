@@ -1,10 +1,10 @@
-%h4 Wishlist
+.content-container
+  %h4 Wishlist
 
-= simple_form_for @instance, url: instance_admin_manage_wish_lists_path, method: :put, html: { multipart: true } do |f|
-  .content-container.dropshadow
+  = simple_form_for @instance, url: instance_admin_manage_wish_lists_path, method: :put, html: { multipart: true } do |f|
     .row
       .input-container.col-xs-6
-        = f.input :wish_lists_enabled
+        = f.input :wish_lists_enabled, inline_label: true
 
       .input-container.col-xs-3
         .input-col-clearfix
@@ -35,7 +35,6 @@
         = render 'translation_row', translation: selected, index: 2,
             title: t('instance_admin.wish_lists.labels.selected_state')
 
-  .content-container
-    .row
-      = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+    = content_for :header_buttons do
+      = f.button :submit, 'Save', class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
 

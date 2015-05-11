@@ -1,10 +1,11 @@
 #instance_admins_form
-  %h4 Custom Attributes
   .content-container
+    %h4 Custom Attributes
     .row
-      .table-container.col-xs-12.dropshadow
+      .table-container.col-xs-12
         %table.table
           %tbody
             %tr.instance-admins-table
               %td
                 = link_to 'Manage user custom attributes', instance_admin_manage_instance_profile_type_custom_attributes_path(@instance_profile_type)
+

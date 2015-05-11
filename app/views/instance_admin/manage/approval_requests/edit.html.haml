@@ -1,6 +1,3 @@
-%h4
-  #{link_to 'VENDOR APPROVAL', instance_admin_manage_approval_requests_path}  &gt; MANAGE
-
 = simple_form_for [:instance_admin, :manage, @approval_request] do |f|
   .content-container.dropshadow
     .row
@@ -41,7 +38,12 @@
                 = render partial: 'listing_link', locals: { listing: listing, index: index }
 
     .row
-      .input-container.col-xs-12
-        = f.input :notes
+      .input-container.col-xs-3
+        = f.input :notes, input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-3
         = f.collection_select :state_event, @approval_request.state_transitions, :event, :human_to_name, :include_blank => @approval_request.human_state_name
-  = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+
+  = content_for :header_buttons do
+    = f.button :submit, 'Save', class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
+

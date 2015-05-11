@@ -1,12 +1,6 @@
-%h4 Manage Email Layout Templates
-
 .content-container
   .row
-    = link_to 'Add Email Layout Template', new_instance_admin_manage_email_layout_template_path, class: 'pull-right btn btn-green'
-
-.content-container
-  .row
-    .table-container.col-xs-12.dropshadow
+    .table-container.col-xs-12
       %table.table
         %tbody
           %tr
@@ -29,11 +23,11 @@
                   = link_to 'Destroy', instance_admin_manage_email_layout_template_path(email_layout_template),
                       method: :delete, data: { confirm: 'Are you sure?' }
 
-%h4 Customize default
-
 .content-container
+  %h4 Customize default
+
   .row
-    .table-container.col-xs-12.dropshadow
+    .table-container.col-xs-12
       %table.table
         %tbody
           %tr
@@ -46,4 +40,7 @@
               %td= pretty_path email_layout_template_path
               - (%w(html text)- formats).each do |format|
                 %td= link_to format, new_instance_admin_manage_email_layout_template_path(path: email_layout_template_path, email_format: format)
+
+= content_for :header_buttons do
+  = link_to 'Add Email Layout Template', new_instance_admin_manage_email_layout_template_path, class: 'pull-right btn btn-blue'
 

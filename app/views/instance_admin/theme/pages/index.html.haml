@@ -1,21 +1,23 @@
-%h4 Pages
-
-.content-container.dropshadow
+.content-container
+  %h4
+    = t('instance_admin.pages.pages')
   .row
     .table-container.col-xs-12
       %table#pages.table.sortable
         %thead
           %tr
-            %th Name
-            %th Path
+            %th
+              = t('instance_admin.pages.name')
+            %th
+              = t('instance_admin.pages.path')
             %th
         %tbody
           - platform_context.theme.pages.each_with_index do |page|
             = render 'index_row', page: page
 
-.content-container
-  = link_to 'Add page', new_instance_admin_theme_page_path, class: 'btn btn-green pull-right'
-  = link_to 'Add redirect', new_instance_admin_theme_page_path(redirect: true), class: 'btn btn-green pull-right'
+= content_for :header_buttons do
+  = link_to "#{t('instance_admin.add')} #{t('instance_admin.pages.page')}", new_instance_admin_theme_page_path, class: 'btn btn-blue pull-right'
+  = link_to "#{t('instance_admin.add')} #{t('instance_admin.pages.redirect')}", new_instance_admin_theme_page_path(redirect: true), class: 'btn btn-blue pull-right'
 
 - content_for :domready do
   $(function() { new InstanceAdmin.PagesController($('table#pages')); });

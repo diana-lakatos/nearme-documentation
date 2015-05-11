@@ -23,4 +23,6 @@
         = label_tag 'Zones'
         = f.association :zones, collection: Spree::Zone.order(:name).pluck(:name, :id), as: :check_boxes, label: false, item_wrapper_class: 'checkboxes-inline'
 
-  = f.button :submit, class: "btn btn-green pull-right"
+  = content_for :header_buttons do
+    = f.button :submit, class: "btn btn-blue pull-right", data: { 'submit-form' => 1, 'form-selector' => 'form' }
+

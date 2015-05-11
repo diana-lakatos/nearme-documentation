@@ -7,9 +7,9 @@
         .pull-right
           %h4= "#{@ticket.state}".upcase
           %h4
-            =select_tag("user[assigned_to_id]", options_for_select(@admins.compact.map{|a| [a.name, a.id]}, @ticket.assigned_to.try(:id)), prompt: 'UNASSIGNED')
+            =select_tag("user[assigned_to_id]", options_for_select(@admins.compact.map{|a| [a.name, a.id]}, @ticket.assigned_to.try(:id)), prompt: 'UNASSIGNED', class: 'form-control')
 
-    .row.dropshadow
+    .row
       .input-container.col-xs-12
         %h4= @message.subject
 
@@ -22,14 +22,14 @@
                 .clearfix
               .pull-right
                 = render partial: 'support/ticket_message_attachments/form', locals: { f: f }
-                = f.submit 'Update', class: 'btn btn-grey'
-                = f.submit 'Update and Resolve', class: 'btn btn-grey'
+                = f.submit 'Update', class: 'btn btn-light'
+                = f.submit 'Update and Resolve', class: 'btn btn-light'
               .clearfix
 
             = simple_form_for @ticket.attachments.build, url: support_ticket_ticket_message_attachments_path(@ticket), html: { class: 'hidden', :'data-attachment-form'=> true } do |f|
               = f.input :file, as: :file, input_html: { data: { file: true } }
 
-  .content-container.dropshadow{style: "background: white;"}
+  .content-container
     = render partial: 'ticket_message', collection: @ticket.messages
 
   = content_for :script do

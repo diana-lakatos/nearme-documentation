@@ -1,10 +1,9 @@
-.content-container
-  .row-fluid
-    .span12
-      - [:notice, :success, :warning, :error, :deleted].each do |key|
-        - if flash[key].present?
-          %div{class: "alert #{key}", 'data-flash-message' => true}
-            %a.close{"data-dismiss" => "alert", href: "#"} ×
-            %p
-              %i{ :class => instance_admin_ico_for_flash(key)}
-              = flash[key].html_safe
+.row-fluid
+  .span12
+    - [:notice, :error, :success, :warning, :deleted].each do |key|
+      - if flash[key].present?
+        %div{class: "alert #{key}", 'data-flash-message' => true}
+          %a.close{"data-dismiss" => "alert", href: "#"} &nbsp;
+          %p
+            %i{ :class => instance_admin_ico_for_flash(key)}
+            = flash[key].html_safe

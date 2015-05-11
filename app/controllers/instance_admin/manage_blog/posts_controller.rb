@@ -1,6 +1,8 @@
 class InstanceAdmin::ManageBlog::PostsController < InstanceAdmin::ManageBlog::BaseController
   before_filter :load_instance
 
+  before_filter :set_breadcrumbs
+
   def index
     @blog_posts = @blog_instance.blog_posts.by_date
   end
@@ -64,6 +66,10 @@ class InstanceAdmin::ManageBlog::PostsController < InstanceAdmin::ManageBlog::Ba
 
   def post_params
     params.require(:blog_post).permit(secured_params.blog_post)
+  end
+
+  def set_breadcrumbs
+    @breadcrumbs_title = 'Manage Blog'
   end
 
 end

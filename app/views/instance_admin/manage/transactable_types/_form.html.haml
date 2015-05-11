@@ -1,21 +1,19 @@
 = simple_nested_form_for [:instance_admin, :manage, resource], :html => { :multipart => true} do |f|
-  %br
-  %br
-  %h4 Basic Configuration
-  .content-container.dropshadow
+  .content-container
+    %h4 Basic Configuration
     .row
       .input-container.col-xs-12
         = f.input :name, input_html: { class: 'form-control' }
     .row
       .input-container.col-xs-4
-        = f.input :favourable_pricing_rate#, hint: 'In case of multiple pricing schemas, like daily/weekly/monthly, if favourable pricing rate is checked, we will use only one price. If it is unchecked, we will use more favourable pricing only for periods that satisfies condition. For example, if weekly pricing is for 7 days, and someone books 8, with favourable pricing we will calculate it as 8/7 * weekly rate. If favourable pricing is not checked, we will calculate it as 1 * weekly rate + 1 * daily rate'
+        = f.input :favourable_pricing_rate, :inline_label => true#, hint: 'In case of multiple pricing schemas, like daily/weekly/monthly, if favourable pricing rate is checked, we will use only one price. If it is unchecked, we will use more favourable pricing only for periods that satisfies condition. For example, if weekly pricing is for 7 days, and someone books 8, with favourable pricing we will calculate it as 8/7 * weekly rate. If favourable pricing is not checked, we will calculate it as 1 * weekly rate + 1 * daily rate'
       .input-container.col-xs-4
-        = f.input :show_page_enabled, as: :boolean
+        = f.input :show_page_enabled, as: :boolean, :inline_label => true
       .input-container.col-xs-4
-        = f.input :action_overnight_booking, as: :boolean
+        = f.input :action_overnight_booking, as: :boolean, :inline_label => true
     .row
       .input-container.col-xs-12
-        = f.input :skip_location
+        = f.input :skip_location, :inline_label => true
     .row
       - if false # commented out until we have decision how to deal with company/location address
         .input-container.col-xs-6
@@ -37,15 +35,15 @@
 
     .row
       .input-container.col-xs-6
-        = f.input :groupable_with_others, as: :boolean
+        = f.input :groupable_with_others, as: :boolean, :inline_label => true
       .input-container.col-xs-6
-        = f.input :enable_photo_required, as: :boolean
+        = f.input :enable_photo_required, as: :boolean, :inline_label => true
 
-  %h4 Cancellation Policy
-  .content-container.dropshadow
+  .content-container
+    %h4 Cancellation Policy
     .row
       .input-container.col-xs-12
-        = f.input :enable_cancellation_policy, required: false, as: :boolean, label: "Should cancellation policy be enabled?", input_html: { checked: f.object.enable_cancellation_policy.nil? ? f.object.cancellation_policy_enabled.present? : f.object.enable_cancellation_policy=="1" }
+        = f.input :enable_cancellation_policy, required: false, as: :boolean, label: "Should cancellation policy be enabled?", input_html: { checked: f.object.enable_cancellation_policy.nil? ? f.object.cancellation_policy_enabled.present? : f.object.enable_cancellation_policy=="1" }, :inline_label => true
     .row
       .input-container.col-xs-6
         = f.input :cancellation_policy_hours_for_cancellation, label: 'Number of hours before booking to cancel', required: false, input_html: { class: 'form-control' }
@@ -53,8 +51,8 @@
         = f.input :cancellation_policy_penalty_percentage, label: 'Penalty fee (percent of total amount)' do
           = f.input_field :cancellation_policy_penalty_percentage, type: 'tel', class: 'form-control'
 
-  %h4 Booking settings
-  .content-container.dropshadow
+  .content-container
+    %h4 Booking settings
     .row
       .input-container.col-xs-12
         = f.input :hours_to_expiration, required: false, label: "Number of hours before unconfirmed reservation expires", input_html: { class: 'form-control' }
@@ -62,61 +60,61 @@
       .input-container.col-xs-12
         = f.input :minimum_booking_minutes, required: false, label: "Minimum booking minutes (for hourly pricing)", input_html: { class: 'form-control' }
 
-  %h4 Pricing
-  .content-container.dropshadow
+  .content-container
+    %h4 Pricing
     - %w(hourly daily weekly monthly free).each do |price|
       .row
         .input-container.col-xs-4
-          = f.input :"action_#{price}_booking", as: :boolean, label: price
+          = f.input :"action_#{price}_booking", as: :boolean, label: price, :inline_label => true
         - unless price == 'free'
           .input-container.col-xs-4
             = f.input :"min_#{price}_price", input_html: { class: 'form-control' }
           .input-container.col-xs-4
             = f.input :"max_#{price}_price", input_html: { class: 'form-control' }
 
-  %h4 Pricing Options
-  .content-container.dropshadow
+  .content-container
+    %h4 Pricing Options
     .row
       .input-container.col-xs-4
-        = f.input :action_book_it_out, label: "Bulk Booking Discount", as: :boolean
+        = f.input :action_book_it_out, label: "Bulk Booking Discount", as: :boolean, :inline_label => true
       .input-container.col-xs-4
-        = f.input :action_exclusive_price, label: "Enable Exclusive Price", as: :boolean
+        = f.input :action_exclusive_price, label: "Enable Exclusive Price", as: :boolean, :inline_label => true
       .input-container.col-xs-4
-        = f.input :action_price_per_unit, label: "Enable Per Unit Pricing", as: :boolean
+        = f.input :action_price_per_unit, label: "Enable Per Unit Pricing", as: :boolean, :inline_label => true
 
 
-  %h4 Calendar
-  .content-container.dropshadow
+  .content-container
+    %h4 Calendar
     .row
       .input-container.col-xs-12
-        = f.input :action_schedule_booking, as: :boolean, label: 'Schedule Booking', hint: 'Use recurring rules to define recurring services instead of simple availability rules'
+        = f.input :action_schedule_booking, as: :boolean, label: 'Schedule Booking', hint: 'Use recurring rules to define recurring services instead of simple availability rules', :inline_label => true
         - if f.object.action_schedule_booking?
           = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule do |schedule_form|
             = render 'schedules/fields', f: schedule_form
 
-  %h4 Terminology
   .content-container
+    %h4 Terminology
     .row
       .input-container.col-xs-12
         = f.input :bookable_noun, label: 'Bookable Noun (e.g. Desk)', input_html: { class: 'form-control' }
-    .row.dropshadow
+    .row
       .input-container.col-xs-6
         = f.input :lessor, label: 'Lessor (e.g. host)', input_html: { class: 'form-control' }
       .input-container.col-xs-6
         = f.input :lessee, label: 'Lessee (e.g. guest)', input_html: { class: 'form-control' }
 
-  %h4 Allowed Action Types
-  .content-container.dropshadow
+  .content-container
+    %h4 Allowed Action Types
     .row
       .input-container.col-xs-12
-        = f.input :action_rfq, as: :boolean, label: 'Request for Quote'
-        = f.input :action_na, as: :boolean, label: 'NO ACTION'
+        = f.input :action_rfq, as: :boolean, label: 'Request for Quote', :inline_label => true
+        = f.input :action_na, as: :boolean, label: 'NO ACTION', :inline_label => true
 
-  .content-container
-    .row
-      = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+  = content_for :header_buttons do
+    = f.button :submit, 'Save', class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
 
-  .content-container
   - if resource.persisted?
-    %h4 Bulk Upload CSV Fields
-    = render partial: "instance_admin/data_uploads/custom_csv_fields", locals: { f: f }
+    .content-container
+      %h4 Bulk Upload CSV Fields
+      .row
+        = render partial: "instance_admin/data_uploads/custom_csv_fields", locals: { f: f }

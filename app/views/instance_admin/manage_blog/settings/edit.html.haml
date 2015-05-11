@@ -1,4 +1,5 @@
-%h4 Edit settings
+.content-container
+  %h4 Edit settings
+  = simple_form_for @blog_instance, :url => instance_admin_manage_blog_settings_path, :html => { :multipart => true } do |f|
+    = render "form", f: f
 
-= simple_form_for @blog_instance, :url => instance_admin_manage_blog_settings_path, :html => { :multipart => true } do |f|
-  = render "form", f: f

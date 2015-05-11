@@ -44,6 +44,7 @@
 //= require instance_admin/data_tables/dataTables.bootstrap
 //= require instance_admin/sections/translations
 //= require instance_admin/sections/partners
+//= require instance_admin/bootstrap-colorpicker.js
 
 $(function() {
   Fileupload.initialize();

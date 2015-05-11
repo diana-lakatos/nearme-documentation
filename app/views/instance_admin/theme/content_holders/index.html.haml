@@ -1,17 +1,21 @@
-%h4 Content Holders
-
-.content-container.dropshadow
+.content-container
+  %h4
+    = t('instance_admin.content_holders.content_holders')
   .row
     .table-container.col-xs-12
       %table#content_holders.table
         %thead
           %tr
-            %th Name
-            %th Enabled
-            %th Created At
+            %th
+              = t('instance_admin.content_holders.name')
+            %th
+              = t('instance_admin.content_holders.enabled')
+            %th
+              = t('instance_admin.content_holders.created_at')
             %th
         %tbody
           = render partial: 'holder', collection: platform_context.theme.content_holders
 
-.content-container
-  = link_to 'Add content holder', new_instance_admin_theme_content_holder_path, class: 'btn btn-green pull-right'
+= content_for :header_buttons do
+  = link_to t('instance_admin.content_holders.add_content_holder'), new_instance_admin_theme_content_holder_path, class: 'btn btn-blue pull-right'
+

@@ -1,74 +1,77 @@
-= render 'instance_admin/manage/ratings_reviews_shared/header'
+.content-container
+  = render 'instance_admin/manage/ratings_reviews_shared/header'
 
-= form_tag instance_admin_manage_reviews_path, method: :get, enforce_utf8: :false do
-  .filters
-    .filter.period
-      .dropdown.date-dropdown
-        %a#dLabel.dropdown-trigger{"aria-expanded" => "false", "aria-haspopup" => "true", "data-target" => "#", "data-toggle" => "dropdown", :role => "button"}
-          - if params[:date].present?
-            %span.current= selected_date_value(params[:date])
-          - else
-            %span.current
-              = t('instance_admin.manage.reviews.index.title_all')
-          %span.caret
-          = hidden_field_tag 'date', date_param_value
-        %ul.dropdown-menu{"aria-labelledby" => "dLabel", :role => "menu"}
-          %li
-            %a{data: {date: ''}}
-              = t('instance_admin.manage.reviews.index.title_all')
-          - Review::DATE_VALUES.each do |value|
-            %li
-              %a{data: {date: value}}
-                = selected_date_value(value)
-          %li.divider
-          %li.date-range
-            .date-range-header
-              = t('instance_admin.manage.reviews.index.date_range')
-            .from
-              = t('instance_admin.manage.reviews.index.from')
-            %input#from{type: 'text'}
-            .to
-              = t('instance_admin.manage.reviews.index.to')
-            %input#to{type: 'text'}
-            %button.apply-filter.btn.btn-green
-              = t('instance_admin.manage.reviews.index.apply_filter')
-
-    .filter.search
-      %input{placeholder: t('instance_admin.manage.reviews.index.search_by_keyword'), type: 'text'}
-      =fa_icon "search"
-    .filter.more-filters
-      %a
-        = t('instance_admin.manage.reviews.index.more_filters')
-        = fa_icon "angle-right"
-    .filter.export-csv
-      %a{href: instance_admin_manage_reviews_path(params.slice(:date, :rating).merge!(format: 'csv'))}
-        = t('instance_admin.manage.reviews.index.export_csv')
-  .filters-expanded
-    .content-container
-      .row
-        .table-container.col-xs-12
-          .close-link=fa_icon "times"
-          %table.groups
-            %tr.group
-              %td.title
-                = t('instance_admin.manage.reviews.index.service')
-              - @transactable_types.each do |transactable_type|
-                %td
-                  = check_box_tag "transactable_type[]", transactable_type.id, transactable_type_checked?(transactable_type.id), id: "service-#{transactable_type.id}"
-                  %label{for: "service-#{transactable_type.id}"}=transactable_type.name
-            %tr.group
-              %td.title
-                = t('instance_admin.manage.reviews.index.rating')
-              - RatingConstants::VALID_VALUES.to_a.reverse.each do |rating_value|
-                %td.border
-                  = check_box_tag "rating[]", rating_value, rating_checked?(rating_value), id: "#{rating_value}-stars"
-                  %label{for: "#{rating_value}-stars"}
-                    = rating_stars(rating_value)
-      .actions.clearfix
-        %input.btn.btn-green.pull-right{type: 'submit', value: 'apply filters'}
-.content-container.reviews-container
   .row
-    .all-reviews-table.table-container.col-xs-12.dropshadow
+    .text-container
+      = form_tag instance_admin_manage_reviews_path, method: :get, enforce_utf8: :false do
+        .filters
+          .filter.period
+            .dropdown.date-dropdown
+              %a#dLabel.dropdown-trigger{"aria-expanded" => "false", "aria-haspopup" => "true", "data-target" => "#", "data-toggle" => "dropdown", :role => "button"}
+                - if params[:date].present?
+                  %span.current= selected_date_value(params[:date])
+                - else
+                  %span.current
+                    = t('instance_admin.manage.reviews.index.title_all')
+                %span.caret
+                = hidden_field_tag 'date', date_param_value
+              %ul.dropdown-menu{"aria-labelledby" => "dLabel", :role => "menu"}
+                %li
+                  %a{data: {date: ''}}
+                    = t('instance_admin.manage.reviews.index.title_all')
+                - Review::DATE_VALUES.each do |value|
+                  %li
+                    %a{data: {date: value}}
+                      = selected_date_value(value)
+                %li.divider
+                %li.date-range
+                  .date-range-header
+                    = t('instance_admin.manage.reviews.index.date_range')
+                  .from
+                    = t('instance_admin.manage.reviews.index.from')
+                  %input#from{type: 'text'}
+                  .to
+                    = t('instance_admin.manage.reviews.index.to')
+                  %input#to{type: 'text'}
+                  %button.apply-filter.btn.btn-blue
+                    = t('instance_admin.manage.reviews.index.apply_filter')
+      
+          .filter.search
+            %input{placeholder: t('instance_admin.manage.reviews.index.search_by_keyword'), type: 'text'}
+            =fa_icon "search"
+          .filter.more-filters
+            %a
+              = t('instance_admin.manage.reviews.index.more_filters')
+              = fa_icon "angle-right"
+          .filter.export-csv
+            %a{href: instance_admin_manage_reviews_path(params.slice(:date, :rating).merge!(format: 'csv'))}
+              = t('instance_admin.manage.reviews.index.export_csv')
+        .filters-expanded
+          .content-container
+            .row
+              .table-container.col-xs-12
+                .close-link=fa_icon "times"
+                %table.groups
+                  %tr.group
+                    %td.title
+                      = t('instance_admin.manage.reviews.index.service')
+                    - @transactable_types.each do |transactable_type|
+                      %td
+                        = check_box_tag "transactable_type[]", transactable_type.id, transactable_type_checked?(transactable_type.id), id: "service-#{transactable_type.id}"
+                        %label{for: "service-#{transactable_type.id}"}=transactable_type.name
+                  %tr.group
+                    %td.title
+                      = t('instance_admin.manage.reviews.index.rating')
+                    - RatingConstants::VALID_VALUES.to_a.reverse.each do |rating_value|
+                      %td.border
+                        = check_box_tag "rating[]", rating_value, rating_checked?(rating_value), id: "#{rating_value}-stars"
+                        %label{for: "#{rating_value}-stars"}
+                          = rating_stars(rating_value)
+            .actions.clearfix
+              %input.btn.btn-blue.pull-right{type: 'submit', value: 'apply filters'}
+
+  .row
+    .all-reviews-table.table-container.col-xs-12
       %table.table.sortable
         %thead
           %tr
@@ -85,7 +88,11 @@
         %tbody
           = render @reviews
 
-= will_paginate @reviews
+.row
+  .text-container
+    .pull-right
+      = will_paginate @reviews
 
 - content_for :domready do
   new InstanceAdmin.ReviewsController($('.reviews'))
+

@@ -1,12 +1,13 @@
-#instance_admin_roles
-  %h4 Roles
-  .content-container
+.content-container
+  %h4
+    = t('instance_admin.manage.admins.roles')
+  #instance_admin_roles
     .row
-      .table-container.col-xs-12.dropshadow
+      .table-container.col-xs-12
         %table.table
           %thead
             %tr
-              %th Name
+              %th= t('instance_admin.manage.admins.role_name')
               - InstanceAdminRole::PERMISSIONS.each do |p|
                 - next if !platform_context.instance.buyable? && p == 'BuySell'
                 %th
@@ -25,5 +26,5 @@
                 %td
                   - if instance_admin_role.instance_id.present?
                     = link_to instance_admin_manage_admins_instance_admin_role_path(instance_admin_role),
-                        method: :delete, data: { confirm: 'Are you sure?' } do
+                        method: :delete, data: { confirm: t('instance_admin.are_you_sure') } do
                       .fa.fa-trash-o.fa-2x.inline-form-icon

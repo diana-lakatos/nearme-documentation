@@ -1,17 +1,16 @@
-.content-container
-  .row
-    .table-container.col-xs-12.dropshadow
-      %table.table
-        %thead
-          %tr
-            %th Company
-            %th Charges
-            %th Created at
-            %th Transferred At
-            %th State
-            %th Lessor Service Fees
-            %th Lessee Service Fees
-            %th Transfer Amount
+.row
+  .table-container.col-xs-12
+    %table.table
+      %thead
+        %tr
+          %th= t('instance_admin.manage.transfers.company')
+          %th= t('instance_admin.manage.transfers.charges')
+          %th= t('instance_admin.manage.transfers.created_at')
+          %th= t('instance_admin.manage.transfers.transferred_at')
+          %th= t('instance_admin.manage.transfers.state')
+          %th= t('instance_admin.manage.transfers.lessor_service_fees')
+          %th= t('instance_admin.manage.transfers.lessee_service_fees')
+          %th= t('instance_admin.manage.transfers.transfer_amount')
 
-        - @payment_transfers.each do |resource|
-          = render 'instance_admin/manage/transfers/payment_transfer', :resource => resource
+      - @payment_transfers.each do |resource|
+        = render 'instance_admin/manage/transfers/payment_transfer', :resource => resource

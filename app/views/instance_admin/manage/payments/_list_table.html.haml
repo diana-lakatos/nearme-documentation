@@ -1,29 +1,29 @@
-.content-container
-  .row
-    .table-container.col-xs-12.dropshadow
-      %table.table
-        %thead
-          %tr
-            %th Company
-            %th Lessor
-            %th State
-            %th Lessor Service Fees
-            %th Lessee Service Fees
-            %th Payment Amount
-            %th Payment Gateway
-            %th Created at
+.row
+  .table-container.col-xs-12
+    %table.table
+      %thead
+        %tr
+          %th= t('instance_admin.manage.payments.company')
+          %th= t('instance_admin.manage.payments.lessor')
+          %th= t('instance_admin.manage.payments.state')
+          %th= t('instance_admin.manage.payments.lessor_service_fees')
+          %th= t('instance_admin.manage.payments.lessee_service_fees')
+          %th= t('instance_admin.manage.payments.payment_amount')
+          %th= t('instance_admin.manage.payments.payment_gateway')
+          %th= t('instance_admin.manage.payments.created_at')
 
-        - @payments.each do |payment|
-          %tr
-            %td
-              - if payment.company.present?
-                = payment.company.name
-              - else
-                (Deleted)
-            %td= payment.payable.user.try(:name)
-            %td= payment.state
-            %td= humanized_money_with_cents_and_symbol(payment.service_fee_amount_guest)
-            %td= humanized_money_with_cents_and_symbol(payment.service_fee_amount_host)
-            %td= humanized_money_with_cents_and_symbol(payment.subtotal_amount)
-            %td= payment.payable.billing_authorization.try(:payment_gateway_class).try(:split, 'Incoming::').try(:last)
-            %td= l(payment.created_at, format: :long)
+      - @payments.each do |payment|
+        %tr
+          %td
+            - if payment.company.present?
+              = payment.company.name
+            - else
+              = "(#{t('instance_admin.deleted')})"
+          %td= payment.payable.user.try(:name)
+          %td= payment.state
+          %td= humanized_money_with_cents_and_symbol(payment.service_fee_amount_guest)
+          %td= humanized_money_with_cents_and_symbol(payment.service_fee_amount_host)
+          %td= humanized_money_with_cents_and_symbol(payment.subtotal_amount)
+          %td= payment.payable.billing_authorization.try(:payment_gateway_class).try(:split, 'Incoming::').try(:last)
+          %td= l(payment.created_at, format: :long)
+

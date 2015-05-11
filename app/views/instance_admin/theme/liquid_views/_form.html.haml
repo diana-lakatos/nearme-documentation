@@ -1,18 +1,20 @@
 = simple_form_for @liquid_view, as: :liquid_view, url: @liquid_view.persisted? ? instance_admin_theme_liquid_view_path(@liquid_view) : instance_admin_theme_liquid_views_path, method: @liquid_view.persisted? ? :put : :post do |f|
-  %h4
-    = link_to 'Manage liquid view', instance_admin_theme_liquid_views_url
-    =  "> #{pretty_path(@liquid_view.path)}" if @liquid_view.path
-
   .content-container
-    .row
-      .input-container.col-xs-12
-        = f.input :path, label: 'View path', :placeholder => 'liquid/view', disabled: @liquid_view.persisted?, input_html: { class: 'form-control' }
-    .row
-      .input-container.col-xs-12
-        = f.association :transactable_type, label: 'Service Type'
-    .row
-      .input-container.col-xs-12
-        = f.input :body, as: :text, label: 'Body', input_html: { class: 'form-control', :"data-editor" => 'liquid', rows: '30' }
+    %h4
+      = link_to 'Manage liquid view', instance_admin_theme_liquid_views_url
+      =  "> #{pretty_path(@liquid_view.path)}" if @liquid_view.path
 
-    = f.button :submit, 'Save', class: 'btn btn-green pull-right'
-    = link_to 'Cancel', instance_admin_theme_liquid_views_url , class: 'pull-right'
+    .row
+      .input-container.col-xs-12
+        = f.input :path, disabled: @liquid_view.persisted?, input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-12
+        = f.association :transactable_type
+    .row
+      .input-container.col-xs-12
+        = f.input :body, as: :text, input_html: { class: 'form-control', :"data-editor" => 'liquid', rows: '30' }
+
+  = content_for :header_buttons do
+    = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
+    = link_to t('instance_admin.cancel'), instance_admin_theme_liquid_views_url , class: 'btn btn-light pull-right'
+

@@ -1,15 +1,18 @@
-%h4 Payment Gateways
-#payment-gateways
-  .content-container.dropshadow
+.content-container
+  %h4
+    = t('instance_admin.settings.integrations.payment_gateways')
+  #payment-gateways
     .row
       .input-container.col-xs-12
-        %label Country to configure for:
+        %label
+          = t('instance_admin.settings.integrations.payment_gateways_section.country_to_configure_for')
         = form_for("", url: countries_instance_admin_settings_integrations_path, remote: true) do
           = select_tag :country, options_from_collection_for_select(@countries, :alpha2, :name), { prompt: "-- Select Country --", class: "country-select" }
         .payment-gateways-form
     .row
       .input-container.col-xs-12
-        %a{"data-target" => "#instanceAdminModal", "data-toggle" => "modal", "href" => "#{country_instance_payment_gateways_instance_admin_settings_integrations_path}"} Review current settings for all countries
+        %a{"data-target" => "#instanceAdminModal", "data-toggle" => "modal", "href" => "#{country_instance_payment_gateways_instance_admin_settings_integrations_path}"}
+          = t('instance_admin.settings.integrations.payment_gateways_section.review_current_settings_for_all_countries')
     .row
       .instance-payment-gateway-form
 

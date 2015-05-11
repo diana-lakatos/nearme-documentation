@@ -1,7 +1,5 @@
-%h4 Search
-
 = simple_form_for @instance, url: instance_admin_manage_search_path, method: :put, html: { multipart: true } do |f|
-  .content-container.dropshadow
+  .content-container
     .row
       .input-container.col-xs-3
         .input-col-clearfix
@@ -23,62 +21,55 @@
           = f.input :tt_select_type, collection: %w(dropdown radio), include_blank: false,
               input_html: { class: 'form-control' }, label: 'Listing type UI'
 
-  %h4 Date pickers
+  .content-container
+    %h4 Date pickers
 
-  .content-container.dropshadow
     .row
       .input-container.col-xs-4
         .input-col-clearfix
-          = f.input :date_pickers, as: :boolean, label: 'Enable date pickers'
+          = f.input :date_pickers, as: :boolean, label: 'Enable date pickers', inline_label: true
 
       .input-container.col-xs-4
         .input-col-clearfix
           = f.input :date_pickers_use_availability_rules, as: :boolean,
-              label: 'Use availability rules'
+              label: 'Use availability rules', inline_label: true
 
       .input-container.col-xs-4
         .input-col-clearfix
           = f.input :date_pickers_mode, collection: %w(relative absolute), include_blank: false,
               input_html: { class: 'form-control' }, label: 'Search Mode'
 
-  %h4 Category tree search
-
-  .content-container.dropshadow
+  .content-container
+    %h4 Category tree search
     .row
       .input-container.col-xs-6
         .input-col-clearfix
-          = f.input :taxonomy_tree, as: :boolean, label: 'Enable category tree'
+          = f.input :taxonomy_tree, as: :boolean, label: 'Enable category tree', inline_label: true
       .input-container.col-xs-6
         .input-col-clearfix
           = f.input :category_search_type, collection: %w(AND OR), include_blank: false,
               input_html: { class: 'form-control' }
     .row
 
-  %h4 Saved Search
+  .content-container
+    %h4 Saved Search
 
-  .content-container.dropshadow
     .row
       .input-container.col-xs-12
         .input-col-clearfix
-          = f.input :saved_search, as: :boolean, label: 'Enable saved search'
-
-    .row
-
-  %h4 Price filters
-
-  .content-container.dropshadow
-    .row
-      .input-container.col-xs-6
-        .input-col-clearfix
-          = f.input :price_slider, as: :boolean, label: 'Enable price slider'
-
-      .input-container.col-xs-6
-        .input-col-clearfix
-          = f.input :price_types, as: :boolean, label: 'Enable price types'
-
-    .row
+          = f.input :saved_search, as: :boolean, label: 'Enable saved search', inline_label: true
 
   .content-container
+    %h4 Price filters
     .row
-      = f.button :submit, 'Save', class: 'btn btn-green pull-right', data: { disable_with: t('user_blog.labels.please_wait')}
+      .input-container.col-xs-6
+        .input-col-clearfix
+          = f.input :price_slider, as: :boolean, label: 'Enable price slider', inline_label: true
+
+      .input-container.col-xs-6
+        .input-col-clearfix
+          = f.input :price_types, as: :boolean, label: 'Enable price types', inline_label: true
+
+  = content_for :header_buttons do
+    = f.button :submit, 'Save', class: 'btn btn-blue pull-right', data: { disable_with: t('user_blog.labels.please_wait'), 'submit-form' => 1, 'form-selector' => 'form' }
 
