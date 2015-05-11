@@ -41,9 +41,9 @@ class Schedule < ActiveRecord::Base
       # add all hours before the first event
       hour = sr_start_datetime.hour - step
       loop do
+        break if hour < sr_to_hour.hour + sr_from_hour.min.to_f / 60
         hours << hour
         hour -= step
-        break if hour < sr_to_hour.hour + sr_from_hour.min.to_f / 60
       end
       rule.hour_of_day(hours.sort)
     end
