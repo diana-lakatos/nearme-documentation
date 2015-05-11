@@ -52,7 +52,7 @@ class Transactable < ActiveRecord::Base
   accepts_nested_attributes_for :approval_requests
   accepts_nested_attributes_for :document_requirements, allow_destroy: true, reject_if: :document_requirement_hidden?
   accepts_nested_attributes_for :upload_obligation
-  accepts_nested_attributes_for :schedule
+  accepts_nested_attributes_for :schedule, allow_destroy: true
 
   before_destroy :decline_reservations
   before_save :set_currency

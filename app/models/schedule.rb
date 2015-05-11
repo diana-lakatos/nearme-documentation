@@ -7,7 +7,7 @@ class Schedule < ActiveRecord::Base
   belongs_to :instance
   belongs_to :scheduable, polymorphic: true
 
-  has_many :schedule_exception_rules
+  has_many :schedule_exception_rules, dependent: :destroy
 
   before_save :create_schedule_from_simple_settings, if: :use_simple_schedule
 
