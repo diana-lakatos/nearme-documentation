@@ -23,7 +23,7 @@ class TransactableType < ActiveRecord::Base
   has_many :instance_views
   has_many :categories, as: :categorable, dependent: :destroy
 
-  has_one :schedule, as: :scheduable
+  has_one :schedule, as: :scheduable, dependent: :destroy
   accepts_nested_attributes_for :schedule
 
   belongs_to :instance
