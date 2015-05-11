@@ -21,7 +21,6 @@ class InstanceAdmin::Manage::ServiceTypesController < InstanceAdmin::Manage::Bas
       buyable: false
     ))
     if @service_type.save
-      CustomAttributes::CustomAttribute::Creator.new(@service_type, bookable_noun: @service_type.name).create_listing_attributes!
       at = @service_type.availability_templates.build(name: "Working Week", description: "Mon - Fri, 9:00 AM - 5:00 PM")
       (1..5).each do |i|
         at.availability_rules.build(day: i, open_hour: 9, open_minute: 0,close_hour: 17, close_minute: 0)

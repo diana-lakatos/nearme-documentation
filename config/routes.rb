@@ -293,6 +293,7 @@ DesksnearMe::Application.routes.draw do
       resources :service_types do
         put :change_state, on: :member
         resources :custom_attributes, controller: 'service_types/custom_attributes'
+        resources :custom_validators, controller: 'service_types/custom_validators'
         resources :data_uploads, only: %i(new index create show), controller: 'service_types/data_uploads' do
           collection do
             get :download_csv_template
@@ -379,6 +380,7 @@ DesksnearMe::Application.routes.draw do
           end
         end
         resources :custom_attributes, controller: 'product_types/custom_attributes'
+        resources :custom_validators, controller: 'product_types/custom_validators'
         resources :data_uploads, only: %i(new index create show), controller: 'product_types/data_uploads' do
           collection do
             get :download_csv_template

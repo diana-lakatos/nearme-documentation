@@ -27,7 +27,6 @@ FactoryGirl.define do
       after(:build) do |transactable_type|
         TransactableType.transaction do
           transactable_type.availability_templates << FactoryGirl.build(:availability_template, transactable_type: transactable_type)
-          CustomAttributes::CustomAttribute::Creator.new(transactable_type, bookable_noun: "Desk", listing_types: ["Desk", "Meeting Room", "Office Space", "Salon Booth"]).create_listing_attributes!
           transactable_type.form_components << FactoryGirl.build(:form_component_transactable, form_componentable: transactable_type)
         end
       end

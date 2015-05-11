@@ -69,7 +69,6 @@ class InstanceWizardController < ActionController::Base
       at.save!
       Utils::FormComponentsCreator.new(tp, 'transactable').create!
     end
-    CustomAttributes::CustomAttribute::Creator.new(tp, bookable_noun: @instance.bookable_noun).create_attributes!
     tp.create_rating_systems
     
     Utils::FormComponentsCreator.new(tp).create!

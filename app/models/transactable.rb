@@ -121,12 +121,14 @@ class Transactable < ActiveRecord::Base
   }
 
   # == Callbacks
-  before_validation :set_activated_at, :set_enabled, :nullify_not_needed_attributes
+  before_validation :set_activated_at, :set_enabled, :nullify_not_needed_attributes,
+    :set_confirm_reservations
   after_save :set_external_id
   after_save { self.update_column(:opened_on_days, availability.days_open.sort) }
 
   # == Validations
   validates_with PriceValidator
+  validates_with CustomValidators
 
   validates :book_it_out_minimum_qty, numericality: {greater_than_or_equal_to: 0}, allow_blank: true
   validates :book_it_out_discount, numericality: {greater_than: 0, less_than: 100}, allow_blank: true
@@ -156,7 +158,8 @@ class Transactable < ActiveRecord::Base
   delegate :url, to: :company
   delegate :formatted_address, :local_geocoding,
     :latitude, :longitude, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
-  delegate :service_fee_guest_percent, :service_fee_host_percent, :hours_to_expiration, :minimum_booking_minutes, to: :transactable_type
+  delegate :service_fee_guest_percent, :service_fee_host_percent, :hours_to_expiration,
+    :minimum_booking_minutes, :custom_validators, to: :transactable_type
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
   delegate :favourable_pricing_rate, to: :transactable_type
@@ -569,6 +572,12 @@ class Transactable < ActiveRecord::Base
   def set_enabled
     self.enabled = is_trusted? if self.enabled
     true
+  end
+
+  def set_confirm_reservations
+    if confirm_reservations.nil?
+      self.confirm_reservations = transactable_type.availability_options["confirm_reservations"]["default_value"]
+    end
   end
 
   def nullify_not_needed_attributes

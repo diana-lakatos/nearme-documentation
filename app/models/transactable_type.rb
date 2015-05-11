@@ -16,6 +16,7 @@ class TransactableType < ActiveRecord::Base
   has_many :reviews
   has_many :instance_views
   has_many :categories, as: :categorable, dependent: :destroy
+  has_many :custom_validators, as: :validatable
 
   belongs_to :instance
 

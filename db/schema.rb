@@ -482,6 +482,20 @@ ActiveRecord::Schema.define(version: 20150510125525) do
   add_index "custom_attributes", ["instance_id", "transactable_type_id"], name: "index_tta_on_instance_id_and_transactable_type_id", using: :btree
   add_index "custom_attributes", ["target_id", "target_type"], name: "index_custom_attributes_on_target_id_and_target_type", using: :btree
 
+  create_table "custom_validators", force: true do |t|
+    t.integer  "instance_id"
+    t.string   "validatable_type"
+    t.integer  "validatable_id"
+    t.string   "field_name"
+    t.text     "validation_rules"
+    t.text     "valid_values"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "custom_validators", ["instance_id", "validatable_type", "validatable_id"], name: "index_custom_validators_on_i_id_and_v_type_and_v_id", using: :btree
+
   create_table "data_uploads", force: true do |t|
     t.string   "csv_file"
     t.string   "xml_file"
@@ -1417,6 +1431,19 @@ ActiveRecord::Schema.define(version: 20150510125525) do
   end
 
   add_index "schedules", ["instance_id", "scheduable_id", "scheduable_type"], name: "index_schedules_scheduable", using: :btree
+
+  create_table "search_notifications", force: true do |t|
+    t.string   "email"
+    t.integer  "user_id"
+    t.string   "query"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.boolean  "notified",   default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
 
   create_table "spree_addresses", force: true do |t|
     t.string   "firstname"
@@ -2878,9 +2905,10 @@ ActiveRecord::Schema.define(version: 20150510125525) do
     t.integer  "exclusive_price_cents",          default: 0
     t.string   "currency"
     t.string   "name"
+    t.text     "description"
     t.boolean  "confirm_reservations"
     t.datetime "last_request_photos_sent_at"
-    t.integer  "rank"
+    t.string   "capacity"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree

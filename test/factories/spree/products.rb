@@ -10,6 +10,7 @@ FactoryGirl.define do
     shipping_category { |r| Spree::ShippingCategory.first || r.association(:shipping_category) }
     administrator { |p| p.association(:user) }
     company { |p| p.association(:company) }
+    product_type { Spree::ProductType.first || FactoryGirl.create(:product_type)}
 
     # ensure stock item will be created for this products master
     before(:create) { create(:stock_location) if Spree::StockLocation.count == 0 }

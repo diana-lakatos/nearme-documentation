@@ -1,6 +1,5 @@
 class ServiceType < TransactableType
   acts_as_paranoid
-  acts_as_custom_attributes_set
 
   MAX_PRICE = 2147483647
   BOOKING_TYPES = %w(regular overnight recurring schedule).freeze
@@ -17,7 +16,6 @@ class ServiceType < TransactableType
   serialize :availability_options, Hash
 
   before_save :normalize_cancellation_policy_enabled
-  after_save :setup_availability_attributes, :if => lambda { |transactable_type| transactable_type.availability_options_changed? && transactable_type.availability_options.present? }
 
   validates_numericality_of :hours_to_expiration, :minimum_booking_minutes, :cancellation_policy_hours_for_cancellation,
     :cancellation_policy_penalty_percentage, greater_than_or_equal_to: 0
@@ -69,7 +67,7 @@ class ServiceType < TransactableType
   end
 
   def min_max_prices_are_correct
-    Transactable::PRICE_TYPES.each do |price|
+    (Transactable::PRICE_TYPES - [:exclusive]).each do |price|
       if self.send(:"min_#{price}_price_cents").present? && self.send(:"max_#{price}_price_cents").present?
         errors.add(:"min_#{price}_price_cents", "min can't be greater than max") if self.send(:"min_#{price}_price_cents").to_i > self.send(:"max_#{price}_price_cents").to_i
       end
@@ -84,12 +82,6 @@ class ServiceType < TransactableType
   rescue
     errors.add("availability_options[confirm_reservations][public]", "must be set")
     errors.add("availability_options[confirm_reservations][default_value]", "must be set")
-  end
-
-  def setup_availability_attributes
-    tta = custom_attributes.where(:name => :confirm_reservations).first.presence || custom_attributes.build(name: :confirm_reservations, internal: true)
-    tta.attributes = { attribute_type: "boolean", html_tag: "switch", default_value: availability_options["confirm_reservations"]["default_value"], public: availability_options["confirm_reservations"]["public"], validation_rules: self.class.mandatory_boolean_validation_rules }
-    tta.save!
   end
 
   def to_liquid

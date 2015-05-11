@@ -190,6 +190,9 @@ en:
 
       transactable:
         name: "Item Title"
+        description: "Item description"
+        confirm_reservations: 'Confirm reservations'
+        capacity: 'Capacity'
         price_fixed: 'Fixed'
         price_daily: 'Daily'
         price_weekly: 'Weekly'

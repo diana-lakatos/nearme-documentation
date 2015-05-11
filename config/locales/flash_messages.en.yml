@@ -87,6 +87,10 @@ en:
           created: 'Form component has been created.'
           deleted: 'Form component has been deleted.'
           updated: 'Form component has been updated.'
+        custom_validator:
+          created: 'Custom validator has been created.'
+          deleted: 'Custom validator has been deleted.'
+          updated: 'Custom validator has been updated.'
         users:
           user_ban:
             created: 'User has been removed from the marketplace.'
