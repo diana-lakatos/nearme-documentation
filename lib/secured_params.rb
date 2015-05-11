@@ -571,7 +571,7 @@ class SecuredParams
       :availability_templates_attributes => nested(self.availability_template),
       :allowed_currencies => [],
       :action_type_ids => [],
-      schedule_attributes: self.schedule
+      schedule_attributes: nested(self.schedule)
     ]
   end
 
