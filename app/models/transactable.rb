@@ -526,7 +526,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def exclusive_price_available?
-     transactable_type.action_exclusive_price? && exclusive_price > 0
+    transactable_type.action_exclusive_price? && exclusive_price.to_f > 0
   end
 
   def only_exclusive_price_available?
