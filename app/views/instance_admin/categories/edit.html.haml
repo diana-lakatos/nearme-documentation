@@ -1,7 +1,3 @@
-= link_to 'Categories', url_for(['instance_admin', @controller_scope, @categorable, 'categories']), class: 'pull-right btn btn-green'
-= link_to "Delete", url_for(['instance_admin', @controller_scope, @categorable, @category]),  class: 'pull-right btn btn-danger', method: :delete, data: { confirm: 'Are you sure you want to delete this category group?' }, title: 'Delete'
-%h4 Edit Category
-%br
 #category_form
   = render 'form'
   .content-container
@@ -23,3 +19,9 @@
 
     var jstree_theme_path = "#{stylesheet_path("instance_admin/jstree_themes/apple/style.css")}";
     new InstanceAdmin.CategoriesController($('#category_form'), #{@category.id});
+
+
+= content_for :header_buttons do
+  = link_to 'Categories', url_for(['instance_admin', @controller_scope, @categorable, 'categories']), class: 'pull-right btn btn-blue'
+  = link_to "Delete", url_for(['instance_admin', @controller_scope, @categorable, @category]),  class: 'pull-right btn btn-neutral', method: :delete, data: { confirm: 'Are you sure you want to delete this category group?' }, title: 'Delete'
+
