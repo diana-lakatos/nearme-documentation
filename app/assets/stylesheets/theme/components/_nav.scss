@@ -32,6 +32,7 @@
         height: $theme_icon_height;
         margin-top: $theme_logo_max_height - $theme_icon_height/2;
         background: image-url($theme_icon) no-repeat;
+        background-size: auto 100%;
 
         @media (-webkit-min-device-pixel-ratio: 1.5),
         (min-resolution: 144dpi) {
@@ -39,6 +40,7 @@
           height: $theme_icon_retina_height;
           margin-top: $theme_logo_max_height - $theme_icon_retina_height/2;
           background: image-url($theme_icon2x) no-repeat;
+          background-size: auto 100%;
         }
       }
     }
