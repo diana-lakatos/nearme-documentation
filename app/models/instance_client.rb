@@ -7,6 +7,8 @@ class InstanceClient < ActiveRecord::Base
 
   belongs_to :client, :polymorphic => true
   belongs_to :instance
+  belongs_to :payment_gateway
+
   has_many :credit_cards
   before_save :clear_decorator, if: lambda { |ic| ic.encrypted_response_changed? }
 
@@ -17,15 +19,15 @@ class InstanceClient < ActiveRecord::Base
   end
 
   def decorator
-    @decorator ||= case gateway_class
-                   when "Billing::Gateway::Processor::Incoming::Stripe"
+    @decorator ||= case payment_gateway.name
+                   when 'Stripe'
                      InstanceClient::StripeDecorator.new(self)
-                   when "Billing::Gateway::Processor::Incoming::Braintree"
+                   when 'Braintree'
                      InstanceClient::BraintreeDecorator.new(self)
                    when nil
                      nil
                    else
-                     raise NotImplementedError.new("Unknown gateway class: #{gateway_class}")
+                     raise NotImplementedError.new("Unknown gateway class: #{payment_gateway.name}")
                    end
   end
 

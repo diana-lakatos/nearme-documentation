@@ -11,7 +11,7 @@ end
 
 Given /^Instance without payment gateway defined$/ do
   @instance = PlatformContext.current.instance
-  @instance.instance_payment_gateways.destroy_all
+  @instance.payment_gateways.destroy_all
 end
 
 Given /^A buy sell product exist in current marketplace$/ do

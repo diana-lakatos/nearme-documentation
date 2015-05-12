@@ -92,24 +92,36 @@
         .container-fluid
           %h2 Payment Information
           = f.error :payment_method
-          - if @billing_gateway.processor.present?
-            .row-fluid
-              .span3
-                %label
-                  = f.radio_button :payment_method, Spree::Order::PAYMENT_METHODS[:credit_card]
-                  = t('buy_sell_market.checkout.credit_card')
-              .span9
-                - if @order.billing_authorization.nil?
-                  = render 'checkout_credit_card_fields', f: f
-                - else
-                  Credit Card has been already authorized. Please proceed.
+          - if @billing_gateway.present?
+            - if @billing_gateway.nonce_payment?
+              .row-fluid
+                .span3
+                  %label
+                    = f.radio_button :payment_method, Spree::Order::PAYMENT_METHODS[:nonce]
+                    = t('buy_sell_market.checkout.nonce')
+                .span9
+                  - if @order.billing_authorization.nil?
+                    = render 'nonce_payment', f: f
+                  - else
+                    Payment has been already authorized. Please proceed.
+            - else
+              .row-fluid
+                .span3
+                  %label
+                    = f.radio_button :payment_method, Spree::Order::PAYMENT_METHODS[:credit_card]
+                    = t('buy_sell_market.checkout.credit_card')
+                .span9
+                  - if @order.billing_authorization.nil?
+                    = render 'checkout_credit_card_fields', f: f
+                  - else
+                    Payment has been already authorized. Please proceed.
 
           - if @order.possible_manual_payment?
             .row-fluid
               .span3
                 %label
-                = f.radio_button :payment_method, Spree::Order::PAYMENT_METHODS[:manual]
-                = t('buy_sell_market.checkout.manual_payment')
+                  = f.radio_button :payment_method, Spree::Order::PAYMENT_METHODS[:manual]
+                  = t('buy_sell_market.checkout.manual_payment')
               .span9
                 = t('buy_sell_market.checkout.manual_payment_description')
 

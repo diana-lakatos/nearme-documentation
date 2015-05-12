@@ -19,3 +19,4 @@ class Dashboard::Company::BaseController < Dashboard::BaseController
   end
 
 end
+

@@ -1,0 +1,22 @@
+.padding-bottom
+  .row-fluid
+    .span5.text
+      .ico-lock Submit a secure payment.
+    .span7.credit-card-images
+      = image_tag 'credit-cards.png', alt: "Visa, Mastercard, American Express, Discover"
+    .clearfix
+
+= f.error :cc
+#paypal-button
+
+- if @billing_gateway.client_token.present?
+  = javascript_include_tag "https://js.braintreegateway.com/v2/braintree.js"
+  - content_for :script do
+    :javascript
+      $(function() {
+        if('braintree' in window) {
+          braintree.setup("#{@billing_gateway.client_token}", 'paypal', {
+            container: 'paypal-button'
+          });
+        }
+      });

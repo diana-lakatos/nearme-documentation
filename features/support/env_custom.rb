@@ -26,15 +26,10 @@ Before do
   store_model("theme", nil, instance.theme)
   Thread.current[:platform_context] = PlatformContext.new(instance)
   FactoryGirl.create(:instance)
-  FactoryGirl.create(:paypal_payment_gateway)
-  FactoryGirl.create(:stripe_payment_gateway)
-  FactoryGirl.create(:balanced_payment_gateway)
-  FactoryGirl.create(:fetch_payment_gateway)
-  FactoryGirl.create(:braintree_payment_gateway)
 
   ActiveMerchant::Billing::Base.mode = :test
-  Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:authorize).returns({token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe"})
-  Billing::Gateway::Processor::Incoming::Paypal.any_instance.stubs(:authorize).returns({token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Paypal"})
+  PaymentGateway::StripePaymentGateway.any_instance.stubs(:authorize).returns({ token: "token "})
+  PaymentGateway::PaypalPaymentGateway.any_instance.stubs(:authorize).returns({ token: "token" })
   stub = OpenStruct.new(params: {
     "object" => 'customer',
     "id" => 'customer_1',
@@ -46,17 +41,16 @@ Before do
   })
   ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:store).returns(stub).at_least(0)
 
-  ipg = FactoryGirl.create(:stripe_instance_payment_gateway)
-  instance.instance_payment_gateways << FactoryGirl.create(:paypal_instance_payment_gateway)
-
-  instance.instance_payment_gateways << ipg
+  ipg = FactoryGirl.create(:stripe_payment_gateway)
+  instance.payment_gateways << FactoryGirl.create(:paypal_payment_gateway)
+  instance.payment_gateways << ipg
 
   country_ipg = FactoryGirl.create(
-    :country_instance_payment_gateway,
+    :country_payment_gateway,
     country_alpha2_code: "US",
-    instance_payment_gateway_id: ipg.id
+    payment_gateway_id: ipg.id
   )
-  instance.country_instance_payment_gateways << country_ipg
+  instance.country_payment_gateways << country_ipg
 end
 
 def last_json

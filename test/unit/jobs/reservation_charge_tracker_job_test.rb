@@ -4,12 +4,10 @@ class ReservationChargeTrackerJobTest < ActiveSupport::TestCase
 
   setup do
     stub_mixpanel
-    Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:charge)
+    PaymentGateway::StripePaymentGateway.any_instance.expects(:charge)
     @listing = FactoryGirl.create(:transactable, :daily_price => 89.39)
-    @listing.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
-
     @reservation = FactoryGirl.create(:reservation_with_credit_card, :listing => @listing)
-    @reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
+    @reservation.create_billing_authorization(token: "token", payment_gateway: FactoryGirl.create(:stripe_payment_gateway), payment_gateway_mode: "test")
   end
 
   should 'perform tracking of confirmed reservation' do

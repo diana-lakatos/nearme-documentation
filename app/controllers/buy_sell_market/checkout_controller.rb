@@ -48,7 +48,7 @@ class BuySellMarket::CheckoutController < ApplicationController
       if @order.manual_payment? && @order.possible_manual_payment?
         setup_upsell_charges
         create_spree_payment_records
-      elsif @billing_gateway.processor.present?
+      elsif @billing_gateway.present?
         @order.payment_method = Spree::Order::PAYMENT_METHODS[:credit_card]
         @order.card_exp_month = params[:order][:card_exp_month].try(:to_s).try(:strip)
         @order.card_exp_year = params[:order][:card_exp_year].try(:to_s).try(:strip)
@@ -69,16 +69,19 @@ class BuySellMarket::CheckoutController < ApplicationController
           # than we should
         else
           setup_upsell_charges
-          if credit_card.valid?
-          response = @billing_gateway.authorize(@order.total_amount_to_charge, credit_card)
+          if credit_card.valid? || (@billing_gateway.nonce_payment? && params[:payment_method_nonce] != nil)
+            options = @billing_gateway.nonce_payment? ? {payment_method_nonce: params[:payment_method_nonce]} : {}
+            options[:company] = @order.company
+            options[:service_fee_host] = @order.service_fee_amount_host
+            response = @billing_gateway.authorize(@order.total_amount_to_charge, @order.currency, credit_card, options)
           if response[:error].present?
             @order.errors.add(:cc, response[:error])
             @order.billing_authorizations.create!(
               success: false,
-              payment_gateway_class: response[:payment_gateway_class],
-              payment_gateway_mode: PlatformContext.current.instance.test_mode? ? "test" : "live",
+              payment_gateway: @billing_gateway,
+              payment_gateway_mode: @billing_gateway.mode,
               response: response,
-              user_id: current_user.id
+              user_id: current_user.id,
             )
             p = @order.payments.build(amount: @order.total_amount_to_charge, company_id: @order.company_id)
             p.started_processing
@@ -88,10 +91,11 @@ class BuySellMarket::CheckoutController < ApplicationController
             @order.billing_authorizations.create!(
               success: true,
               token: response[:token],
-              payment_gateway_class: response[:payment_gateway_class],
-              payment_gateway_mode: PlatformContext.current.instance.test_mode? ? "test" : "live",
+              payment_gateway: @billing_gateway,
+              payment_gateway_mode: @billing_gateway.mode,
               response: response,
-              user_id: current_user.id
+              user_id: current_user.id,
+              immediate_payout: @billing_gateway.immediate_payout(@order.company)
             )
             create_spree_payment_records
 
@@ -219,8 +223,8 @@ class BuySellMarket::CheckoutController < ApplicationController
   end
 
   def check_billing_gateway
-    @billing_gateway = Billing::Gateway::Incoming.new(current_user, PlatformContext.current.instance, @order.currency, @order.company.iso_country_code)
-    if @billing_gateway.processor.nil? && !@order.possible_manual_payment?
+    @billing_gateway = PlatformContext.current.instance.payment_gateway(@order.company.iso_country_code, @order.currency)
+    if @billing_gateway.nil? && !@order.possible_manual_payment?
       flash[:error] = t('flash_messages.buy_sell.no_payment_gateway')
       redirect_to cart_index_path
     end

@@ -65,8 +65,8 @@ class Instance < ActiveRecord::Base
   has_many :transactable_types
   has_many :service_types
   has_many :product_types, class_name: "Spree::ProductType"
-  has_many :instance_payment_gateways, :inverse_of => :instance
-  has_many :country_instance_payment_gateways, :inverse_of => :instance
+  has_many :payment_gateways, -> { distinct }, through: :country_payment_gateways
+  has_many :country_payment_gateways, inverse_of: :instance
   has_many :users, inverse_of: :instance
   has_many :text_filters, inverse_of: :instance
   has_many :waiver_agreement_templates, as: :target
@@ -102,7 +102,7 @@ class Instance < ActiveRecord::Base
   accepts_nested_attributes_for :listing_amenity_types, allow_destroy: true, reject_if: proc { |params| params[:name].blank? }
   accepts_nested_attributes_for :translations, allow_destroy: true, reject_if: proc { |params| params[:value].blank? && params[:id].blank? }
   accepts_nested_attributes_for :instance_billing_gateways, allow_destroy: true, reject_if: proc { |params| params[:billing_gateway].blank? }
-  accepts_nested_attributes_for :instance_payment_gateways, allow_destroy: true
+  accepts_nested_attributes_for :payment_gateways, allow_destroy: true
   accepts_nested_attributes_for :transactable_types
   accepts_nested_attributes_for :text_filters, allow_destroy: true
 
@@ -222,14 +222,8 @@ class Instance < ActiveRecord::Base
     }
   end
 
-  def paypal_api_config
-    settings = instance_payment_gateways.get_settings_for(:paypal)
-    @paypal_api_config ||= {
-      :app_id    => (self.test_mode? || !Rails.env.production?) ? 'APP-80W284485P519543T' : instance_payment_gateways.get_settings_for(:paypal, :app_id),
-      :username  => settings[:username],
-      :password  => settings[:password],
-      :signature => settings[:signature]
-    }
+  def payment_gateway(country, currency)
+    country_payment_gateways.includes(:payment_gateway).where(country_alpha2_code: country).find { |cpg| cpg.payment_gateway.supports_currency?(currency) }.try(:payment_gateway)
   end
 
   def buyable?
@@ -326,3 +320,4 @@ class Instance < ActiveRecord::Base
     shippo_username.present? && shippo_password.present?
   end
 end
+

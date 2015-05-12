@@ -36,7 +36,6 @@ class TransactableDrop < BaseDrop
   def url
     routes.transactable_type_location_listing_path(@transactable.transactable_type, @transactable.location, @transactable)
   end
-
   alias_method :listing_url, :url
 
   def street

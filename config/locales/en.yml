@@ -556,6 +556,7 @@ en:
         choose_file: 'Choose file'
         no_file_chosen: 'No file chosen'
       credit_card: 'Credit Card'
+      nonce: 'PayPal Payment'
       manual_payment: 'Manual Payment'
       manual_payment_description: 'You will make payment in person'
       invalid_cc: "Those credit card details don't look valid"
@@ -710,6 +711,13 @@ en:
       money_info: "Payment has been authorized but it will be captured only upon confirmation."
       next_payment_transfer: "The next automated payout occurs at %{next_payment_transfer}."
       remember_to_setup_automated_payout: "To receive automated payout please <a href='%{setup_link}'>setup payouts</a>."
+    merchant_account:
+      braintree_marketplace:
+        header: 'Merchant account details'
+        pending: 'Your merchant account is pending verification.'
+        verified: 'Your merchant account has been verified.'
+        failed: 'Verification of your merchant account failed.'
+
     products:
       manage: 'MANAGE PRODUCTS'
     transactables:
@@ -1231,7 +1239,7 @@ en:
     remote: 'Fetch Payment'
 
   payouts:
-    mailing_address: 'Payments Mailing Address'
+    mailing_address: 'Address to send checks'
 
   amenities_attribute: 'Amenities'
   amenity_attribute: 'amenity'

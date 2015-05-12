@@ -7,9 +7,9 @@ class CreditCard < ActiveRecord::Base
 
   belongs_to :instance_client
   belongs_to :instance
+  belongs_to :payment_gateway
   has_many :reservations
 
-  validates_presence_of :gateway_class, :response
   before_create :set_as_default
 
   scope :default, lambda { where(default_card: true).limit(1) }
@@ -19,14 +19,13 @@ class CreditCard < ActiveRecord::Base
   end
 
   def decorator
-    return nil if gateway_class.blank?
-    @decorator ||= case gateway_class
-                   when "Billing::Gateway::Processor::Incoming::Stripe"
+    @decorator ||= case payment_gateway.name
+                   when 'Stripe'
                      CreditCard::StripeDecorator.new(self)
-                   when "Billing::Gateway::Processor::Incoming::Braintree"
+                   when 'Braintree'
                      CreditCard::BraintreeDecorator.new(self)
                    else
-                     raise NotImplementedError.new("Unknown gateway class: #{gateway_class}")
+                     raise NotImplementedError.new("Unknown gateway class: #{payment_gateway.name}")
                    end
   end
 

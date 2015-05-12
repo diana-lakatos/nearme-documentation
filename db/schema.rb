@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150522104236) do
+ActiveRecord::Schema.define(version: 20150524200204) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -256,6 +256,8 @@ ActiveRecord::Schema.define(version: 20150522104236) do
     t.integer  "user_id"
     t.datetime "void_at"
     t.text     "void_response"
+    t.integer  "payment_gateway_id"
+    t.boolean  "immediate_payout",                default: false
   end
 
   add_index "billing_authorizations", ["reference_id", "reference_type"], name: "index_billing_authorizations_on_reference_id_and_reference_type", using: :btree
@@ -341,13 +343,15 @@ ActiveRecord::Schema.define(version: 20150522104236) do
     t.integer  "payment_id"
     t.boolean  "success"
     t.integer  "amount"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.integer  "user_id"
     t.string   "currency"
     t.text     "encrypted_response"
     t.datetime "deleted_at"
     t.integer  "instance_id"
+    t.integer  "payment_gateway_id"
+    t.string   "payment_gateway_mode", limit: 4
   end
 
   create_table "ckeditor_assets", force: true do |t|
@@ -425,12 +429,12 @@ ActiveRecord::Schema.define(version: 20150522104236) do
 
   add_index "content_holders", ["instance_id", "theme_id", "name"], name: "index_content_holders_on_instance_id_and_theme_id_and_name", using: :btree
 
-  create_table "country_instance_payment_gateways", force: true do |t|
+  create_table "country_payment_gateways", force: true do |t|
     t.string   "country_alpha2_code"
-    t.integer  "instance_payment_gateway_id"
+    t.integer  "payment_gateway_id"
     t.integer  "instance_id"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
   end
 
   create_table "credit_cards", force: true do |t|
@@ -442,6 +446,7 @@ ActiveRecord::Schema.define(version: 20150522104236) do
     t.boolean  "default_card"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "payment_gateway_id"
   end
 
   add_index "credit_cards", ["instance_client_id"], name: "index_credit_cards_on_instance_client_id", using: :btree
@@ -725,13 +730,14 @@ ActiveRecord::Schema.define(version: 20150522104236) do
     t.integer  "client_id"
     t.string   "client_type"
     t.integer  "instance_id"
-    t.string   "encrypted_balanced_user_id"
-    t.string   "bank_account_last_four_digits"
     t.datetime "deleted_at"
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
     t.string   "gateway_class"
     t.text     "encrypted_response"
+    t.string   "bank_account_last_four_digits"
+    t.string   "encrypted_balanced_user_id"
+    t.integer  "payment_gateway_id"
   end
 
   create_table "instance_creators", force: true do |t|
@@ -743,15 +749,6 @@ ActiveRecord::Schema.define(version: 20150522104236) do
   end
 
   add_index "instance_creators", ["email"], name: "index_instance_creators_on_email", using: :btree
-
-  create_table "instance_payment_gateways", force: true do |t|
-    t.integer  "instance_id"
-    t.integer  "payment_gateway_id"
-    t.text     "encrypted_live_settings"
-    t.text     "encrypted_test_settings"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-  end
 
   create_table "instance_profile_types", force: true do |t|
     t.string   "name"
@@ -966,6 +963,23 @@ ActiveRecord::Schema.define(version: 20150522104236) do
   add_index "mailer_unsubscriptions", ["user_id", "mailer"], name: "index_mailer_unsubscriptions_on_user_id_and_mailer", unique: true, using: :btree
   add_index "mailer_unsubscriptions", ["user_id"], name: "index_mailer_unsubscriptions_on_user_id", using: :btree
 
+  create_table "merchant_accounts", force: true do |t|
+    t.integer  "instance_id"
+    t.integer  "merchantable_id"
+    t.string   "merchantable_type"
+    t.text     "encrypted_response"
+    t.string   "gateway_class"
+    t.boolean  "enabled",            default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "payment_gateway_id"
+    t.text     "data"
+    t.string   "type"
+    t.string   "state",              default: "pending"
+  end
+
+  add_index "merchant_accounts", ["instance_id", "merchantable_id", "merchantable_type"], name: "index_on_merchant_accounts_on_merchant", using: :btree
+
   create_table "pages", force: true do |t|
     t.string   "path",                              null: false
     t.text     "content"
@@ -1016,26 +1030,29 @@ ActiveRecord::Schema.define(version: 20150522104236) do
   add_index "payment_document_infos", ["instance_id"], name: "index_payment_document_infos_on_instance_id", using: :btree
 
   create_table "payment_gateways", force: true do |t|
-    t.string   "name"
-    t.string   "method_name"
-    t.text     "settings"
-    t.string   "active_merchant_class"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.integer  "instance_id"
+    t.integer  "payment_gateway_id"
+    t.text     "encrypted_live_settings"
+    t.text     "encrypted_test_settings"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.string   "type"
   end
 
   create_table "payment_transfers", force: true do |t|
     t.integer  "company_id"
     t.datetime "transferred_at"
     t.string   "currency"
-    t.integer  "amount_cents",                   default: 0, null: false
-    t.integer  "service_fee_amount_guest_cents", default: 0, null: false
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
-    t.integer  "service_fee_amount_host_cents",  default: 0, null: false
+    t.integer  "amount_cents",                             default: 0, null: false
+    t.integer  "service_fee_amount_guest_cents",           default: 0, null: false
+    t.datetime "created_at",                                           null: false
+    t.datetime "updated_at",                                           null: false
+    t.integer  "service_fee_amount_host_cents",            default: 0, null: false
     t.datetime "deleted_at"
     t.integer  "instance_id"
     t.integer  "partner_id"
+    t.string   "payment_gateway_mode",           limit: 4
+    t.integer  "payment_gateway_id"
   end
 
   add_index "payment_transfers", ["company_id"], name: "index_payment_transfers_on_company_id", using: :btree
@@ -1078,12 +1095,17 @@ ActiveRecord::Schema.define(version: 20150522104236) do
     t.boolean  "success"
     t.integer  "amount"
     t.string   "currency"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
     t.text     "encrypted_response"
     t.datetime "deleted_at"
-    t.boolean  "pending",            default: false
+    t.boolean  "pending",                        default: false
+    t.string   "payment_gateway_mode", limit: 4
+    t.integer  "instance_id"
+    t.integer  "payment_gateway_id"
   end
+
+  add_index "payouts", ["instance_id", "payment_gateway_id"], name: "index_payouts_on_instance_id_and_payment_gateway_id", using: :btree
 
   create_table "photos", force: true do |t|
     t.datetime "created_at"
@@ -1262,9 +1284,11 @@ ActiveRecord::Schema.define(version: 20150522104236) do
     t.integer  "amount"
     t.string   "currency"
     t.datetime "deleted_at"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.integer  "instance_id"
+    t.integer  "payment_gateway_id"
+    t.string   "payment_gateway_mode", limit: 4
   end
 
   create_table "reservation_periods", force: true do |t|
@@ -3164,6 +3188,17 @@ ActiveRecord::Schema.define(version: 20150522104236) do
 
   add_index "waiver_agreements", ["target_id", "target_type"], name: "index_waiver_agreements_on_target_id_and_target_type", using: :btree
   add_index "waiver_agreements", ["waiver_agreement_template_id"], name: "index_waiver_agreements_on_waiver_agreement_template_id", using: :btree
+
+  create_table "webhooks", force: true do |t|
+    t.integer  "instance_id"
+    t.integer  "webhookable_id"
+    t.string   "webhookable_type"
+    t.text     "encrypted_response"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "webhooks", ["instance_id", "webhookable_id", "webhookable_type"], name: "index_webhooks_on_instance_id_and_webhookable", using: :btree
 
   create_table "wish_list_items", force: true do |t|
     t.integer  "instance_id"

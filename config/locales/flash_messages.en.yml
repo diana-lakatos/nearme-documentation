@@ -46,10 +46,6 @@ en:
       no_payment_gateway: 'The seller does not support payments for the selected country.'
     user_blog:
       settings_saved: 'Blog settings has been saved.'
-    dashboard:
-      add_your_company: "Please add your company first"
-      company_not_valid: "Please add necessary details to your company first."
-      no_bookings: "You haven't made any bookings yet!"
     guest_rating:
       already_exists: "Rating for this booking has already been submitted."
       submitted_successfully: "Thanks, your rating was submitted successfully!"
@@ -178,6 +174,10 @@ en:
       no_listings: "There aren't any listings at that location. Check out some other locations."
       browsing_no_listings: "There aren't any active listings at that location. Other users will be redirected to search page."
     dashboard:
+      add_merchant_account: "Please configure your merchant account"
+      add_your_company: "Please add your company first"
+      company_not_valid: "Please add necessary details to your company first."
+      no_bookings: "You haven't made any bookings yet!"
       order:
         deleted: 'Order has been deleted.'
         updated: 'Order has been updated.'

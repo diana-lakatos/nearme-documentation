@@ -52,8 +52,8 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
 
   context 'billing authorization' do
     should 'store failed authorization' do
-      authorize_response = { error: 'No $$$ on account', payment_gateway_class: Billing::Gateway::Processor::Incoming::Stripe }
-      Billing::Gateway::Incoming.any_instance.expects(:authorize).with do |amount, credit_card|
+      authorize_response = { error: 'No $$$ on account' }
+      PaymentGateway.any_instance.expects(:authorize).with do |amount, currency, credit_card, options|
         amount == 55_00
       end.returns(authorize_response)
       post :create, booking_params_for(@listing)
@@ -67,8 +67,8 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
     end
 
     should 'store successful authorization' do
-      authorize_response = { token: 'abc', payment_gateway_class: Billing::Gateway::Processor::Incoming::Stripe }
-      Billing::Gateway::Incoming.any_instance.expects(:authorize).with do |amount, credit_card|
+      authorize_response = { token: 'abc' }
+      PaymentGateway.any_instance.expects(:authorize).with do |amount, currency, credit_card, options|
         amount == 55_00
       end.returns(authorize_response)
       post :create, booking_params_for(@listing)

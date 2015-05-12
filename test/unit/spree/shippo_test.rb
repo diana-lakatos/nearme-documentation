@@ -87,7 +87,7 @@ class ShippoTest < ActionView::TestCase
   context 'shippo' do
 
     setup do
-      FactoryGirl.create(:country_instance_payment_gateway, instance_payment_gateway_id: FactoryGirl.create(:stripe_instance_payment_gateway).id)
+      FactoryGirl.create(:country_payment_gateway, payment_gateway_id: FactoryGirl.create(:stripe_payment_gateway).id)
     end
 
     should 'create spree shipping methods if shippo enabled' do
@@ -145,24 +145,24 @@ class ShippoTest < ActionView::TestCase
 
       credit_card = stub('valid?' => true)
 
-      authorize_response = { token: 'abc', payment_gateway_class: Billing::Gateway::Processor::Incoming::Stripe }
+      @payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
+      authorize_response = { token: 'abc', payment_gateway: @payment_gateway }
 
       ActiveMerchant::Billing::CreditCard.expects(:new).returns(credit_card)
 
-      Billing::Gateway::Incoming.any_instance.expects(:authorize).with do |amount, credit_card|
+      PaymentGateway.any_instance.expects(:authorize).with do |amount, currency, credit_card|
         amount == Money.new(155_00, 'USD') && credit_card == credit_card
       end.returns(authorize_response)
 
       credit_card = ActiveMerchant::Billing::CreditCard.new({})
 
       assert credit_card.valid?
-      billing_gateway = Billing::Gateway::Incoming.new(@user, PlatformContext.current.instance, @order.currency, 'US')
-      response = billing_gateway.authorize(@order.total_amount_to_charge, credit_card)
+      response = @payment_gateway.authorize(@order.total_amount_to_charge, 'USD', credit_card)
       assert !response[:error].present?
 
       @order.create_billing_authorization(
           token: response[:token],
-          payment_gateway_class: response[:payment_gateway_class],
+          payment_gateway: @payment_gateway,
           payment_gateway_mode: PlatformContext.current.instance.test_mode? ? "test" : "live"
       )
       p = @order.payments.build(amount: @order.total_amount_to_charge, company_id: @order.company_id)
@@ -216,7 +216,7 @@ class ShippoTest < ActionView::TestCase
       assert_equal 'complete', @order.state
       assert_not_nil @order.billing_authorization
       assert_equal 'abc', @order.billing_authorization.token
-      assert_equal 'Billing::Gateway::Processor::Incoming::Stripe', @order.billing_authorization.payment_gateway_class
+      assert_equal @payment_gateway.id, @order.billing_authorization.payment_gateway_id
     end
   end
 end

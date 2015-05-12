@@ -27,9 +27,9 @@ module ReservationTestSupport
         end
       end
 
-      billing_gateway = Billing::Gateway::Incoming.new(reservation.owner, listing.instance, reservation.currency, 'US')
+      billing_gateway = PaymentGateway.first || FactoryGirl.create(:stripe_payment_gateway)
       response = billing_gateway.authorize(reservation.total_amount_cents, credit_card)
-      reservation.create_billing_authorization(token: response[:token], payment_gateway_class: response[:payment_gateway_class], payment_gateway_mode: :test)
+      reservation.create_billing_authorization(token: response[:token], payment_gateway: billing_gateway, payment_gateway_mode: :test)
       reservation.save
       reservations << reservation
     end

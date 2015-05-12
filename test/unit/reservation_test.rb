@@ -302,14 +302,14 @@ class ReservationTest < ActiveSupport::TestCase
   context 'expiration' do
 
     setup do
-      Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:charge)
+      PaymentGateway::StripePaymentGateway.any_instance.expects(:charge)
+      @payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
       @reservation = FactoryGirl.build(:reservation_with_credit_card)
-      @reservation.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
 
       @reservation.subtotal_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
       @reservation.service_fee_amount_guest_cents = 10_00
       @reservation.service_fee_amount_host_cents = 10_00
-      @reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
+      @reservation.create_billing_authorization(token: "token", payment_gateway: @payment_gateway, payment_gateway_mode: "test")
       @reservation.save!
     end
 
@@ -354,13 +354,13 @@ class ReservationTest < ActiveSupport::TestCase
       @reservation.subtotal_amount_cents = 100_00 # Set this to force the reservation to have an associated cost
       @reservation.service_fee_amount_guest_cents = 10_00
       @reservation.service_fee_amount_host_cents = 10_00
-      @reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
+      @payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
+      @reservation.create_billing_authorization(token: "token", payment_gateway: @payment_gateway, payment_gateway_mode: "test")
       @reservation.save!
     end
 
     should "attempt to charge user card if paying by credit card" do
-      @reservation.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
-      Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:charge)
+      PaymentGateway::StripePaymentGateway.any_instance.expects(:charge)
       @reservation.confirm
       assert @reservation.reload.paid?
     end

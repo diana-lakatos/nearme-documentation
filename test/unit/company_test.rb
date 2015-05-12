@@ -75,80 +75,8 @@ class CompanyTest < ActiveSupport::TestCase
         @company.schedule_payment_transfer
       end
 
-      should 'not notify host via sms and email if company has payout option' do
-        @created_payment_transfers = [mock()]
-        @company.stubs(:created_payment_transfers).returns(@created_payment_transfers)
-        @company.stubs(:created_payment_transfers).returns([])
-        WorkflowStepJob.expects(:perform).with(::WorkflowStep::PayoutWorkflow::NoPayoutOption, @company.id, @created_payment_transfers).never
-        @company.schedule_payment_transfer
-      end
-
     end
 
-  end
-
-  context 'provide bank account details' do
-
-    setup do
-      @company = FactoryGirl.create(:company)
-      @company.attributes = {
-        :bank_account_number => '123456789',
-        :bank_routing_number => '987654321',
-        :bank_owner_name => 'John Doe'
-      }
-    end
-
-      should 'know last four digits' do
-        assert_equal '6789', @company.last_four_digits_of_bank_account
-      end
-
-      should 'return correct bank account details' do
-        expected_details = {
-          :account_number => '123456789',
-          :bank_code => '987654321',
-          :name => 'John Doe',
-          :type => 'checking'
-        }
-        assert_equal expected_details, @company.balanced_bank_account_details
-      end
-
-      should 'try to store bank account' do
-        Billing::Gateway::Processor::Outgoing::Balanced.expects(:create_customer_with_bank_account!).with do |company|
-          company.id == @company.id
-        end.returns(true).once
-        assert @company.save
-      end
-
-      should 'handle inability to invalidate old account' do
-        Billing::Gateway::Processor::Outgoing::Balanced.expects(:create_customer_with_bank_account!).raises(RuntimeError.new("Bank account should have been invalidated, but it's still valid for InstanceClient(id=1)"))
-        refute @company.save
-        assert @company.errors.include?(:bank_account_form)
-      end
-
-      context 'information missing' do
-
-        should 'not store information if no bank account_number' do
-          @company.bank_account_number = nil
-          Billing::Gateway::Processor::Outgoing::Balanced.expects(:create_customer_with_bank_account!).never
-          refute @company.save
-          assert @company.errors.include?(:bank_account_number)
-        end
-
-        should 'not store information if no bank routing_number' do
-          @company.bank_routing_number = ''
-          Billing::Gateway::Processor::Outgoing::Balanced.expects(:create_customer_with_bank_account!).never
-          refute @company.save
-          assert @company.errors.include?(:bank_routing_number)
-        end
-
-        should 'not store information if no bank name' do
-          @company.bank_owner_name = ''
-          Billing::Gateway::Processor::Outgoing::Balanced.expects(:create_customer_with_bank_account!).never
-          refute @company.save
-          assert @company.errors.include?(:bank_owner_name)
-        end
-
-      end
   end
 
   context 'metadata' do

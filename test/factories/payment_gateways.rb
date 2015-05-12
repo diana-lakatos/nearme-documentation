@@ -1,62 +1,44 @@
 FactoryGirl.define do
   factory :payment_gateway do
-    name "PaymentGateway"
-    settings { {api_key: "present"} }
-    active_merchant_class "ActiveMerchant::Billing::BogusGateway"
+    test_settings { {api_key: "present"} }
+    live_settings { {api_key: "present"} }
 
-    factory :balanced_payment_gateway do
-      name "Balanced"
-      settings { { login: "" } }
-      active_merchant_class "ActiveMerchant::Billing::BalancedGateway"
-    end
-
-    factory :paypal_payment_gateway do
-      name "Paypal"
-      settings {
+    factory :paypal_payment_gateway, class: PaymentGateway::PaypalPaymentGateway do
+      test_settings {
         {
-          email: "",
-          login: "",
-          password: "",
-          signature: "",
-          app_id: ""
+          email: 'sender_test@example.com',
+          login: 'john_test',
+          password: 'pass_test',
+          signature: 'sig_test',
+          app_id: 'app-123_test'
         }
       }
-      active_merchant_class "ActiveMerchant::Billing::PaypalGateway"
-    end
-
-    factory :stripe_payment_gateway do
-      name "Stripe"
-      settings {
+      live_settings {
         {
-          login: ""
+          email: 'sender_live@example.com',
+          login: 'john_live',
+          password: 'pass_live',
+          signature: 'sig_live',
+          app_id: 'app-123_live'
         }
       }
-      active_merchant_class "ActiveMerchant::Billing::StripeGateway"
     end
 
-    factory :fetch_payment_gateway do
-      name "Fetch"
-      method_name 'fetch'
-      settings {
-        {
-          account_id: "",
-          secret_key: ""
-        }
-      }
-      active_merchant_class "Billing::Gateway::Processor::Incoming::Fetch"
+    factory :stripe_payment_gateway, class: PaymentGateway::StripePaymentGateway do
+      test_settings { { login: 'sk_test_r0wxkPFASg9e45UIakAhgpru' } }
+      live_settings { { login: 'sk_test_r0wxkPFASg9e45UIakAhgpru' } }
     end
 
-    factory :braintree_payment_gateway do
-      name "Braintree"
-      settings {
-        {
-          merchant_id: "",
-          public_key: "",
-          private_key: ""
-        }
-      }
-      active_merchant_class "ActiveMerchant::Billing::BraintreeBlueGateway"
+    factory :fetch_payment_gateway, class: PaymentGateway::FetchPaymentGateway do
+      test_settings { { account_id: '123456789', secret_key: '987654321' } }
+      live_settings { { account_id: '123456789', secret_key: '987654321' } }
     end
 
+    factory :braintree_payment_gateway, class: PaymentGateway::BraintreePaymentGateway do
+      type 'PaymentGateway::BraintreePaymentGateway'
+      test_settings { { merchant_id: "123456789", public_key: "987654321", private_key: "321543", supported_currency: 'USD'} }
+      live_settings { { merchant_id: "123456789", public_key: "987654321", private_key: "321543", supported_currency: 'USD'} }
+    end
   end
 end
+
