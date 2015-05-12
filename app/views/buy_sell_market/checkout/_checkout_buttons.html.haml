@@ -11,4 +11,7 @@
 
     .span4
       - if defined? form
-        %button.btn.blue.next= t('buy_sell_market.checkout.buttons.next_step')
+        - if defined?(final) && final
+          %button.btn.blue.next= t('buy_sell_market.checkout.buttons.complete_checkout')
+        - else
+          %button.btn.blue.next= t('buy_sell_market.checkout.buttons.next_step')

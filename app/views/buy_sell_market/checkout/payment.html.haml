@@ -114,7 +114,7 @@
                 = t('buy_sell_market.checkout.manual_payment_description')
 
 
-      = render partial: 'checkout_buttons', locals: { form: f }
+      = render partial: 'checkout_buttons', locals: { form: f, final: true }
 
 - content_for :domready do
   new PaymentController($('.checkout-wizard'))
