@@ -1,5 +1,7 @@
 FactoryGirl.define do
   factory :transactable do
+    name "Listing #{Random.rand(1000)}"
+    description "Aliquid eos ab quia officiis sequi."
     ignore do
       photos_count 0
     end
@@ -14,11 +16,7 @@ FactoryGirl.define do
 
     after(:build) do |listing, evaluator|
       {
-        "listing_type" => "Desk",
-        "quantity" => "1",
-        "confirm_reservations" => true,
-        "description" => "Aliquid eos ab quia officiis sequi.",
-        "name" => "Listing #{Random.rand(1000)}"
+        "listing_type" => "Desk"
       }.each do |key, value|
         listing.properties[key] ||= value if listing.properties[key].nil? if listing.properties.respond_to?(key)
       end
@@ -56,6 +54,14 @@ FactoryGirl.define do
       exclusive_price_cents 89900
     end
 
+    trait :desksnearme do
+      after(:build) do |listing|
+        listing.service_type.custom_attributes << FactoryGirl.create(:custom_attribute, :listing_types)
+        listing.transactable_type.custom_validators << FactoryGirl.create(:custom_validator, field_name: 'name', max_length: 50)
+        listing.transactable_type.custom_validators << FactoryGirl.create(:custom_validator, field_name: 'description', max_length: 250)
+      end
+    end
+
     factory :free_listing do
       after(:build) do |listing|
         listing.daily_price_cents = nil
@@ -82,7 +88,7 @@ FactoryGirl.define do
 
     factory :listing_in_auckland do
       after(:build) do |listing|
-        listing.properties["name"] = "Listing in Auckland #{Random.rand(1000)}"
+        listing.name = "Listing in Auckland #{Random.rand(1000)}"
       end
 
       association(:location, factory: :location_in_auckland)
@@ -90,14 +96,14 @@ FactoryGirl.define do
 
     factory :listing_in_adelaide do
       after(:build) do |listing|
-        listing.properties["name"] = "Listing in Adeilaide #{Random.rand(1000)}"
+        listing.name = "Listing in Adeilaide #{Random.rand(1000)}"
       end
       association(:location, factory: :location_in_adelaide)
     end
 
     factory :listing_in_cleveland do
       after(:build) do |listing|
-        listing.properties["name"] = "Listing in Cleveland #{Random.rand(1000)}"
+        listing.name = "Listing in Cleveland #{Random.rand(1000)}"
       end
 
       association(:location, factory: :location_in_cleveland)
@@ -113,7 +119,7 @@ FactoryGirl.define do
 
     factory :listing_in_san_francisco do
       after(:build) do |listing|
-        listing.properties["name"] = "Listing in San Francisco #{Random.rand(1000)}"
+        listing.name = "Listing in San Francisco #{Random.rand(1000)}"
       end
       association(:location, factory: :location_in_san_francisco)
     end
@@ -121,14 +127,14 @@ FactoryGirl.define do
 
     factory :listing_in_san_francisco_address_components do
       after(:build) do |listing|
-        listing.properties["name"] = "Listing in San Francisco #{Random.rand(1000)}"
+        listing.name = "Listing in San Francisco #{Random.rand(1000)}"
       end
       association(:location, factory: :location_san_francisco_address_components)
     end
 
     factory :listing_in_wellington do
       after(:build) do |listing|
-        listing.properties["name"] = "Listing in Wellington #{Random.rand(1000)}"
+        listing.name = "Listing in Wellington #{Random.rand(1000)}"
       end
 
       association(:location, factory: :location_in_wellington)

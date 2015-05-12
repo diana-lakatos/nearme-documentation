@@ -65,21 +65,16 @@ class TransactableTypeTest < ActiveSupport::TestCase
 
     should "create new transcactable type attribute for confirm reservations with public true and default value true" do
       transactable_type = FactoryGirl.create(:transactable_type)
-      tta = transactable_type.custom_attributes.find { |attr| attr.name == "confirm_reservations" }
-      assert_not_nil tta
-      assert_equal "t", tta.default_value
-      assert_equal "boolean", tta.attribute_type
-      assert_equal "switch", tta.html_tag
-      assert_equal(TransactableType.mandatory_boolean_validation_rules, tta.validation_rules)
-      assert tta.public
+      transactable = FactoryGirl.create(:transactable, transactable_type: transactable_type)
+      assert_not_nil transactable.confirm_reservations
+      assert_equal true, transactable.confirm_reservations
     end
 
     should "create new transcactable type attribute for confirm reservations with public false and default value false" do
       transactable_type = FactoryGirl.create(:transactable_type, availability_options: { "confirm_reservations" => { "default_value" => false, "public" => false } })
-      tta = transactable_type.custom_attributes.find { |attr| attr.name == "confirm_reservations" }
-      assert_not_nil tta
-      assert_equal "f", tta.default_value
-      refute tta.public
+      transactable = FactoryGirl.create(:transactable, transactable_type: transactable_type)
+      assert_not_nil transactable.confirm_reservations
+      assert_equal false, transactable.confirm_reservations
     end
 
     context 'validation' do

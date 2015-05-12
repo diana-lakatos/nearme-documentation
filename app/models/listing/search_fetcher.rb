@@ -65,6 +65,7 @@ class Listing::SearchFetcher
     end
 
     @listings_scope = Transactable.where(id: @listings_scope.pluck(:id))
+    @listings_scope = @listings_scope.search_by_query([:name, :description, :properties], @filters['query'])
     @listings_scope = @listings_scope.order(Transactable.build_order(@filters)) if Transactable.can_order_by?(@filters)
     @listings_scope
   end

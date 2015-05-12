@@ -12,6 +12,7 @@ class InstanceAdmin::BuySell::ProductTypes::CustomValidatorsController < Instanc
 
   def permitting_controller_class
     @controller_scope ||= 'buy_sell'
+    'buysell'
   end
 
   def available_attributes

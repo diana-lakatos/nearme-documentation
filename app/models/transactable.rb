@@ -481,7 +481,7 @@ class Transactable < ActiveRecord::Base
     transactable_type.pricing_options_long_period_names.inject({}) do |hash, price|
       hash[:"#{price}_price_cents"] = "#{price}_price_cents".humanize
       hash
-    end.merge({external_id: 'External Id', enabled: 'Enabled'}).reverse_merge(
+    end.merge({external_id: 'External Id', enabled: 'Enabled', confirm_reservations: 'Confirm reservations'}).reverse_merge(
       transactable_type.custom_attributes.shared.pluck(:name, :label).inject({}) do |hash, arr|
         hash[arr[0].to_sym] = arr[1].presence || arr[0].humanize
         hash
@@ -556,6 +556,27 @@ class Transactable < ActiveRecord::Base
     super.presence || transactable_type.try(:default_currency)
   end
 
+  def self.search_by_query(attributes = [], query)
+    if query.present?
+      words = query.split.map.with_index{|w, i| ["word#{i}".to_sym, "%#{w}%"]}.to_h
+
+      sql = attributes.map do |attrib|
+        if self.columns_hash[attrib.to_s].type == :hstore
+          attrib = "CAST(avals(#{quoted_table_name}.\"#{attrib}\") AS text)"
+        else
+          attrib = "#{quoted_table_name}.\"#{attrib}\""
+        end
+        words.map do |word, value|
+          "#{attrib} ILIKE :#{word}"
+        end
+      end.flatten.join(' OR ')
+
+      where(ActiveRecord::Base.send(:sanitize_sql_array, [sql, words]))
+    else
+      all
+    end
+  end
+
   private
 
   def set_currency
@@ -578,6 +599,7 @@ class Transactable < ActiveRecord::Base
     if confirm_reservations.nil?
       self.confirm_reservations = transactable_type.availability_options["confirm_reservations"]["default_value"]
     end
+    true
   end
 
   def nullify_not_needed_attributes

@@ -1,6 +1,6 @@
 class MigrateCustAttrsToCustValidators < ActiveRecord::Migration
   def up
-    CustomAttributes::CustomAttribute.unscoped.where(deleted_at: nil).find_each do |attribute|
+    CustomAttributes::CustomAttribute.unscoped.where(deleted_at: nil, name: ['name', 'description', 'confirm_reservations', 'last_request_photos_sent_at', 'capacity']).find_each do |attribute|
       if attribute.validation_rules.present? || attribute.valid_values.present?
         CustomValidator.create!(
           field_name: attribute.name,

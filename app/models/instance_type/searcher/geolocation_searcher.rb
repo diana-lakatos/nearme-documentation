@@ -43,7 +43,6 @@ module InstanceType::Searcher::GeolocationSearcher
       begin
         @search_params = @params.merge({
           date_range: search.available_dates,
-          query: search.query,
           transactable_type_id: @transactable_type.id,
           custom_attributes: search.lg_custom_attributes,
           category_ids: search.category_ids,
