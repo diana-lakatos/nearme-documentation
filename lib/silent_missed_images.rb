@@ -5,7 +5,7 @@ class SilentMissedImages
 
   def call(env)
     if env['PATH_INFO'] =~ /^\/instances\/\d+\/uploads\//
-      [404, {}, '']
+      [404, {}, []]
     else
       @app.call(env)
     end
