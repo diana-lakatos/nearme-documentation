@@ -6,7 +6,19 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   before_filter :set_form_components
 
   def index
-    @transactables = @transactable_type.transactables.where(company_id: @company).paginate(page: params[:page], per_page: 20)
+    perform_search = false
+    if params[:search] && params[:search][:query].present?
+      condition, attribute_params = prepare_filtered_hstore_query(@transactable_type, 'properties', params[:search][:query])
+      if condition.present?
+        perform_search = true
+      end
+    end
+
+    if perform_search
+      @transactables = @transactable_type.transactables.where(company_id: @company).where(condition, *attribute_params).paginate(page: params[:page], per_page: 20)
+    else
+      @transactables = @transactable_type.transactables.where(company_id: @company).paginate(page: params[:page], per_page: 20)
+    end
   end
 
   def new
