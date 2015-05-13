@@ -33,7 +33,8 @@
 
 = f.input :quantity, as: :integer, :placeholder => "1"
 
-= f.input :shippo_enabled, label: Spree::Product.human_attribute_name(:shippo_enabled), as: :boolean, input_html: { 'data-js-element-identifier' => 'product_form_shippo_enabled' }
+- if current_instance.shippo_enabled?
+  = f.input :shippo_enabled, label: Spree::Product.human_attribute_name(:shippo_enabled), as: :boolean, input_html: { 'data-js-element-identifier' => 'product_form_shippo_enabled' }
 
 .row.shippo_required_fields_row.enabled
   - if f.object.errors.present?

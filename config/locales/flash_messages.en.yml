@@ -15,7 +15,8 @@ en:
         template_updated: 'Successfully update the dimensions template.'
         template_deleted: 'Successfully deleted the dimensions template.'
       shipping_providers:
-        options_updated: 'Shipping providers options successfully updated.'
+        options_updated: 'Shipping providers options successfully configured.'
+        options_not_updated: "Username or password is not correct. Can't connect to Shippo"
     blog_admin:
       blog_instance:
         blog_instance_updated: 'Blog settings were updated.'

@@ -320,4 +320,8 @@ class Instance < ActiveRecord::Base
   def set_context!
     PlatformContext.current = PlatformContext.new(self)
   end
+
+  def shippo_enabled?
+    shippo_username.present? && shippo_password.present?
+  end
 end

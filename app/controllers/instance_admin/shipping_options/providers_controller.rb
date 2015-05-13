@@ -10,10 +10,11 @@ class InstanceAdmin::ShippingOptions::ProvidersController < InstanceAdmin::Shipp
   end
 
   def update
-    if @instance.update_attributes(instance_params)
+    if ShippoApi::ShippoApi.verify_connection(instance_params) && @instance.update_attributes(instance_params)
       flash[:success] = t('flash_messages.shipping_options.shipping_providers.options_updated')
       redirect_to instance_admin_shipping_options_providers_path
     else
+      flash[:error] = t('flash_messages.shipping_options.shipping_providers.options_not_updated')
       render 'edit'
     end
   end
