@@ -9,7 +9,7 @@
         = f.button :submit, t('instance_admin.settings.configuration.update_lock'), class: 'btn btn-light pull-right'
 
 
-= simple_nested_form_for @instance, :url => instance_admin_settings_configuration_path, :html => { :multipart => true } do |f|
+= simple_nested_form_for @instance, :url => instance_admin_settings_configuration_path, :html => { :multipart => true, :data => { 'edit_instance_form' => 1 } } do |f|
   .content-container
     %h4
       = t('instance_admin.settings.configuration.basic_configuration')
@@ -129,5 +129,5 @@
         = f.submit t('instance_admin.imap_settings.validate_imap_settings'), class: 'btn btn-light', name: 'validate_imap_settings_button'
 
   = content_for :header_buttons do
-    = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
+    = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => '[data-edit-instance-form]' }
 
