@@ -146,6 +146,19 @@ module ShippoApi
       Shippo::api_pass = password
     end
 
+    def self.verify_connection(instance_params)
+      begin
+        if instance_params[:shippo_username].present? && instance_params[:shippo_password].present?
+          Shippo.api_user = instance_params[:shippo_username]
+          Shippo.api_pass = instance_params[:shippo_password]
+          Shippo::Transaction.all
+        end
+        true
+      rescue Shippo::ConnectionError
+        false
+      end
+    end
+
     def get_rates(address_from_info, address_to_info, parcel_info, customs_item_info, customs_declaration_info)
       default_result_rates = []
       result_rates = default_result_rates
