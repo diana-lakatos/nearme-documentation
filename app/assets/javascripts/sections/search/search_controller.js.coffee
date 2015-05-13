@@ -250,6 +250,7 @@ class Search.SearchController extends Search.Controller
       @initializeEndlessScrolling()
     @geocodeSearchQuery =>
       @triggerSearchAndHandleResults =>
+        @movableGoogleMap = $('#search-result-movable-google-map').get(0)
         new Search.SearchResultsGoogleMapController(@resultsContainer(), @movableGoogleMap) if @movableGoogleMap?
         @updateMapWithListingResults() if @map?
 
