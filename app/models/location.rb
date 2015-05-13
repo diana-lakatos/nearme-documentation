@@ -60,7 +60,7 @@ class Location < ActiveRecord::Base
   validates_length_of :description, :maximum => 250, :if => :name_and_description_required
   validates_length_of :name, :maximum => 50, :if => :name_and_description_required
 
-  before_validation :set_location_type
+  before_save :set_location_type
   before_save :assign_default_availability_rules
   after_save :set_external_id
 
@@ -210,8 +210,8 @@ class Location < ActiveRecord::Base
   def set_location_type
     if transactable_type.try(:skip_location)
       self.location_type ||= instance.location_types.first
-      if company.company_address.present?
-        self.location_address ||= company.company_address.dup
+      if company.company_address.present? && self.location_address.nil?
+        self.location_address = company.company_address.dup
         self.location_address.fetch_coordinates!
       end
     end
