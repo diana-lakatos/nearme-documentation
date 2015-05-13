@@ -11,3 +11,9 @@
             %th
         %tbody
           = render partial: 'instance_admin/theme/versions/version', collection: @versions
+
+  .row
+    .text-container.col-xs-12
+      .pull-right
+        = will_paginate @versions
+
