@@ -18,7 +18,7 @@ class InstanceAdmin::Theme::FooterControllerTest < ActionController::TestCase
     end
 
     should 'be listed' do
-      get :versions, parent_resource: "footer"
+      get :versions
       assert_response :success
       assert_select 'table tbody tr:last-child td:first-child', text: @footer.versions.first.id
     end
