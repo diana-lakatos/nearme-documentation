@@ -3,19 +3,17 @@ require 'test_helper'
 class TransactableTest < ActiveSupport::TestCase
 
   context 'desksnearme instance' do
-    subject { FactoryGirl.build(:transactable) }
+    subject { FactoryGirl.build(:transactable, :desksnearme) }
 
     should belong_to(:location)
     should have_many(:reservations)
 
     should validate_presence_of(:location)
     should validate_presence_of(:name)
-    should validate_presence_of(:listing_type)
     should validate_presence_of(:description)
     should validate_presence_of(:quantity)
     should allow_value(10).for(:quantity)
     should_not allow_value(-10).for(:quantity)
-
     should ensure_length_of(:description).is_at_most(250)
     should ensure_length_of(:name).is_at_most(50)
   end
@@ -495,7 +493,7 @@ class TransactableTest < ActiveSupport::TestCase
     end
 
     should "define booking methods" do
-      TransactableType::BOOKING_TYPES.each do |bt|
+      ServiceType::BOOKING_TYPES.each do |bt|
         assert(@transactable.respond_to?("#{bt}_booking?"))
       end
     end

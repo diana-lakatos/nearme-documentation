@@ -1,8 +1,7 @@
-%h4 FAQ
-
 .content-container
+  %h4 FAQ
   .row
-    .table-container.col-xs-12.dropshadow
+    .table-container.col-xs-12
       %table#faqs.table.sortable
         %thead
           %tr
@@ -10,8 +9,9 @@
             %th
         %tbody
           = render partial: 'faq', collection: @faqs
-.content-container
-  = link_to 'Add Question', new_instance_admin_manage_support_faq_path, class: 'btn btn-green pull-right'
+  .row
+    .text-container.col-xs-12
+      = link_to 'Add Question', new_instance_admin_manage_support_faq_path, class: 'btn btn-blue pull-right'
 
 - content_for :domready do
   $(function() { new InstanceAdmin.FaqsController($('table#faqs')); });

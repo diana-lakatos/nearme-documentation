@@ -1,11 +1,5 @@
-.row
-  .col-xs-12
-    %h4 Shipping methods
-    = link_to 'New shipping methods', new_instance_admin_buy_sell_shipping_method_path, class: 'pull-right btn btn-green'
-
-%br
-
 .content-container
+  %h4 Shipping methods
   .row
     .table-container.col-xs-12.dropshadow
       %table.table.sortable
@@ -20,3 +14,7 @@
         %tbody
           - @shipping_methods.each do |shipping_method|
             = render 'index_row', shipping_method: shipping_method
+
+= content_for :header_buttons do
+  = link_to 'New shipping methods', new_instance_admin_buy_sell_shipping_method_path, class: 'pull-right btn btn-blue'
+

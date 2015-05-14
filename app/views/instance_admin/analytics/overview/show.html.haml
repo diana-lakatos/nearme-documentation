@@ -1,46 +1,54 @@
-.sub-header-nav
-  %ul
-    %li
-      = link_to 'Services', instance_admin_analytics_overview_path, class: 'active'
-    %li
-      = link_to 'Products', products_instance_admin_analytics_overview_path
+.content-container
+  .sub-header-nav
+    %ul
+      %li
+        = link_to t('instance_admin.services'), instance_admin_analytics_overview_path, class: 'active'
+      %li
+        = link_to t('instance_admin.products'), products_instance_admin_analytics_overview_path
 
-%h4 Revenue
-.box
-  - if @last_month_revenue.inject(0) { |sum, revenue| sum += revenue.total_amount.to_f; sum }.zero?
-    %p.no_data No revenue yet.
-  - else
-    .chart
-      %canvas#revenue_chart
-%br
-%br
+  %h4
+    = t('instance_admin.revenue')
+  .row
+    .box
+      - if @last_month_revenue.inject(0) { |sum, revenue| sum += revenue.total_amount.to_f; sum }.zero?
+        %p.no_data
+          = t('instance_admin.analytics.no_revenue_yet')
+      - else
+        .chart
+          %canvas#revenue_chart
+  
 
-%h4 Bookings
-.box
-  - if @last_month_bookings.count.zero?
-    %p.no_data No bookings yet.
-  - else
-    .chart
-      %canvas#bookings_chart
-%br
-%br
+  %h4
+    = t('instance_admin.bookings')
+  .row
+    .box
+      - if @last_month_bookings.count.zero?
+        %p.no_data
+          = t('instance_admin.analytics.no_bookings_yet')
+      - else
+        .chart
+          %canvas#bookings_chart
 
-%h4 Listings
-.box
-  - if @last_month_listings.inject(0) { |sum, listing| sum += listing.listings_count.to_f; sum }.zero?
-    %p.no_data Your listings haven't been visited yet.
-  - else
-    .chart
-      %canvas#listings_chart
-%br
-%br
-
-%h4 Downloads
-.box
-  %div
-    = link_to 'Marketplace transactions', instance_admin_analytics_sales_path(format: :csv)
-  %div
-    = link_to 'Marketplace users', instance_admin_analytics_profiles_path(format: :csv)
+  
+  %h4
+    = t('instance_admin.listings')
+  .row
+    .box
+      - if @last_month_listings.inject(0) { |sum, listing| sum += listing.listings_count.to_f; sum }.zero?
+        %p.no_data
+          = t('instance_admin.analytics.no_listings_visits_yet')
+      - else
+        .chart
+          %canvas#listings_chart
+  
+  %h4
+    = t('instance_admin.downloads')
+  .row
+    .text-container
+      %div
+        = link_to t('instance_admin.analytics.marketplace_transactions'), instance_admin_analytics_sales_path(format: :csv)
+      %div
+        = link_to t('instance_admin.analytics.marketplace_users'), instance_admin_analytics_profiles_path(format: :csv)
 
 - content_for :domready do
   new ChartWrapper.Line($('#revenue_chart'), #{@revenue_chart.values.to_json.html_safe}, #{@revenue_chart.labels.to_json.html_safe})

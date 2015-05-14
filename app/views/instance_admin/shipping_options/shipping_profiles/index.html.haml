@@ -1,13 +1,16 @@
-%h2
-  = t('instance_admin.shipping_profiles.shipping_profiles')
+.content-container
+  %h4
+    = t('instance_admin.shipping_profiles.shipping_profiles')
 
-.shipping_method_block.shipping_method_list
-  = render partial: 'categories_list', locals: { shipping_categories: @shipping_categories }
-
-%a.shipping-profile-top.add_shipping_profile{ :href => '#', :data => { :modal => true, 'href' => new_instance_admin_shipping_options_shipping_profile_path, 'modal-class' => 'shipping_profiles_modal' } }
-  =image_tag("themes/buy_sell/icon-cross.png")
-  %span
-    = t('manage.buy_sell.shipping_profiles.add_new_shipping_profile')
+  .row
+    .text-container
+      .shipping_method_block.shipping_method_list
+        = render partial: 'categories_list', locals: { shipping_categories: @shipping_categories }
+    
+      %a.shipping-profile-top.add_shipping_profile{ :href => '#', :data => { :modal => true, 'href' => new_instance_admin_shipping_options_shipping_profile_path, 'modal-class' => 'shipping_profiles_modal' } }
+        =image_tag("themes/buy_sell/icon-cross.png")
+        %span
+          = t('manage.buy_sell.shipping_profiles.add_new_shipping_profile')
 
 = render partial: 'shared/modal'
 

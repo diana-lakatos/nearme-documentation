@@ -148,6 +148,10 @@ module CustomAttributes
             self.save!
           end
 
+          def target_type=(sType)
+            super(sType.to_s)
+          end
+
         end
 
       end

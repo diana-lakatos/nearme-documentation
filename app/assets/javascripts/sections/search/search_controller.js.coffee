@@ -250,9 +250,25 @@ class Search.SearchController extends Search.Controller
       @initializeEndlessScrolling()
     @geocodeSearchQuery =>
       @triggerSearchAndHandleResults =>
+        @movableGoogleMap = $('#search-result-movable-google-map').get(0)
         new Search.SearchResultsGoogleMapController(@resultsContainer(), @movableGoogleMap) if @movableGoogleMap?
         @updateMapWithListingResults() if @map?
 
+
+  reinitializePriceSlider: ->
+    if $('#price-slider').length > 0
+      @reinit = $('.search-max-price:first')
+      noreinitSlider = parseInt( @reinit.attr('data-noreinit-slider') )
+      if isNaN(noreinitSlider) or noreinitSlider < 1
+        max_price = $('.search-max-price:last').attr('data-max-price')
+        @input_price_max = $("input[name='price[max]']")
+        @input_price_max.val(max_price)
+    
+        $('#price-slider').remove()
+        $('.price-slider-container').append('<div id="price-slider" "data-max-price"="' + max_price + '"></div>')
+        
+        @initializePriceSlide()
+      @reinit.attr('data-noreinit-slider', 0)
 
   # Trigger the search after waiting a set time for further updated user input/filters
   triggerSearchFromQueryAfterDelay: _.debounce(->
@@ -268,6 +284,7 @@ class Search.SearchController extends Search.Controller
       @updateUrlForSearchQuery()
       @updateLinksForSearchQuery()
       window.scrollTo(0, 0) if !@map
+      @reinitializePriceSlider()
       @loader.hide()
       callback() if callback
       _.defer => @processingResults = false

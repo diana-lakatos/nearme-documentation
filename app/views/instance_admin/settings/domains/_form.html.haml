@@ -1,24 +1,29 @@
 = simple_form_for [:instance_admin, :settings, @domain] do |f|
-  .content-container
-    .row
-      .input-container.col-xs-12
-        = f.input :secured, as: :boolean, label: "Enable HTTPS", input_html: { checked: f.object.secured? }
-    .row
-      .input-container.col-xs-12
-        = f.input :use_as_default, as: :boolean, label: "Use as default domain", input_html: { checked: f.object.use_as_default?, disabled: f.object.use_as_default? && !f.object.new_record? }
-    .row.dropshadow
-      .input-container.col-xs-12
-        = f.input :name, required: false, label: "Domain", placeholder: "example.com", input_html: { class: 'form-control' }
-      .input-container.col-xs-12
-        = f.input :certificate_body, as: :text, required: false, label: "Certificate body", placeholder: "-----BEGIN CERTIFICATE-----", input_html: { class: 'form-control' }
-      .input-container.col-xs-12
-        = f.input :private_key, as: :text, required: false, label: "Private key", placeholder: "-----BEGIN RSA PRIVATE KEY-----", input_html: { class: 'form-control' }
-      .input-container.col-xs-12
-        = f.input :certificate_chain, as: :text, required: false, label: "Certificate chain (optional for HTTPS)", placeholder: "-----BEGIN CERTIFICATE-----", input_html: { class: 'form-control' }
-      .input-container.col-xs-5
-        = f.input :redirect_code, collection: redirect_codes, include_blank: 'None', label: 'Redirection', input_html: { class: 'form-control' }
-      .input-container.col-xs-7
-        = f.input :redirect_to, required: false, label: 'Redirect to', placeholder: 'http://another.domain.com', input_html: { class: 'form-control' }
+  .row
+    .input-container.col-xs-12
+      = f.input :secured, as: :boolean, input_html: { checked: f.object.secured? }, inline_label: true
+  .row
+    .input-container.col-xs-12
+      = f.input :use_as_default, as: :boolean, input_html: { checked: f.object.use_as_default?, disabled: f.object.use_as_default? && !f.object.new_record? }, inline_label: true
+  .row
+    .input-container.col-xs-12
+      = f.input :name, required: false, input_html: { class: 'form-control' }
+  .row
+    .input-container.col-xs-12
+      = f.input :certificate_body, as: :text, required: false, input_html: { class: 'form-control' }
+  .row
+    .input-container.col-xs-12
+      = f.input :private_key, as: :text, required: false, input_html: { class: 'form-control' }
+  .row
+    .input-container.col-xs-12
+      = f.input :certificate_chain, as: :text, required: false, input_html: { class: 'form-control' }
+  .row
+    .input-container.col-xs-5
+      = f.input :redirect_code, collection: redirect_codes, include_blank: 'None', input_html: { class: 'form-control' }
+    .input-container.col-xs-7
+      = f.input :redirect_to, required: false, input_html: { class: 'form-control' }
 
-  = f.button :submit, 'Save', class: "btn btn-green pull-right"
-  = link_to 'Cancel', instance_admin_settings_domains_url , class: 'btn pull-right'
+  = content_for :header_buttons do
+    = f.button :submit, t('instance_admin.save'), class: "btn btn-blue pull-right", data: { 'submit-form' => 1, 'form-selector' => 'form.edit_domain, form.new_domain' }
+    = link_to t('instance_admin.cancel'), instance_admin_settings_domains_url , class: 'btn btn-light pull-right'
+

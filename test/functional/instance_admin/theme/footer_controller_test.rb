@@ -14,13 +14,14 @@ class InstanceAdmin::Theme::FooterControllerTest < ActionController::TestCase
       with_versioning do
         @footer = FactoryGirl.create(:instance_view_footer, instance: Instance.first)
         @footer.update body: "Updated footer"
+        @footer.versions.update_all(whodunnit: 'me')
       end
     end
 
     should 'be listed' do
-      get :versions, parent_resource: "footer"
+      get :versions
       assert_response :success
-      assert_select 'table tbody tr:first-child td:first-child', text: @footer.versions.first.id
+      assert_select 'table tbody tr:last-child td:first-child', text: @footer.versions.first.id
     end
 
     should "be viewble" do

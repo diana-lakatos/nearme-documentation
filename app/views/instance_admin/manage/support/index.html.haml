@@ -1,16 +1,16 @@
-%h4= "#{@filter_name} tickets"
-.sub-header-nav
-  %ul
-    %li
-      = support_link_to_filter(@filter, 'open')
-    %li
-      = support_link_to_filter(@filter, 'resolved')
-    %li
-      = support_link_to_filter(@filter, 'all')
-
 .content-container
+  .sub-header-nav
+    %ul
+      %li
+        = support_link_to_filter(@filter, 'open')
+      %li
+        = support_link_to_filter(@filter, 'resolved')
+      %li
+        = support_link_to_filter(@filter, 'all')
+  
+  %h4= "#{@filter_name} tickets"
   .row
-    .table-container.col-xs-12.dropshadow
+    .table-container.col-xs-12
       %table.table.table-hover
         %thead
           %tr
@@ -22,7 +22,12 @@
         %tbody
           = render partial: 'ticket', collection: @tickets
 
-= will_paginate @tickets
+
+.row
+  .text-container
+    .pull-right
+      = will_paginate @tickets
 
 - content_for :domready do
   $('abbr.timeago').timeago();
+

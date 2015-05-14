@@ -120,7 +120,6 @@ module ListingsHelpers
   def assert_listing_data(listing, update = false)
     assert_equal 'My Name', listing.name
     assert_equal 'Proin adipiscing nunc vehicula lacus varius dignissim.', listing.description
-    assert_equal 'Meeting Room', listing.listing_type
     assert_equal 5, listing.quantity
     assert_equal 1000, listing.daily_price_cents
     assert_equal 6000, listing.weekly_price_cents

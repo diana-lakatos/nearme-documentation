@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :transactable_type do
+  factory :transactable_type, class: 'ServiceType' do
 
     sequence(:name) { |n| "Transactable Type #{n}" }
 
@@ -16,18 +16,23 @@ FactoryGirl.define do
     bookable_noun 'Desk'
     lessor 'host'
     lessee 'guest'
-    buyable false
+    type 'ServiceType'
+
+    after(:build) do |transactable_type|
+      transactable_type.custom_attributes << FactoryGirl.build(:custom_attribute, :listing_types)
+    end
 
     factory :transactable_type_listing do
       sequence(:name) do |n|
         "Listing #{n}"
       end
+      type 'ServiceType'
 
       after(:build) do |transactable_type|
         TransactableType.transaction do
-          transactable_type.availability_templates << FactoryGirl.build(:availability_template, :transactable_type => transactable_type)
-          CustomAttributes::CustomAttribute::Creator.new(transactable_type, bookable_noun: "Desk", listing_types: ["Desk", "Meeting Room", "Office Space", "Salon Booth"]).create_listing_attributes!
+          transactable_type.availability_templates << FactoryGirl.build(:availability_template, transactable_type: transactable_type)
           transactable_type.form_components << FactoryGirl.build(:form_component_transactable, form_componentable: transactable_type)
+          transactable_type.custom_attributes << FactoryGirl.build(:custom_attribute, :listing_types)
         end
       end
 

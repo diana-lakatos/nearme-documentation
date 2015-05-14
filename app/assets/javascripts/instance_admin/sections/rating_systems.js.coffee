@@ -4,8 +4,8 @@ class @InstanceAdmin.RatingSystemsController
 
   bindEvents: ->
     @toggleSlide('.rating-system', '.table-container', '> .header')
-    @toggleSlide('.service', '.content-container', ' .service-name')
-    @toggleSlide('.service', '.content-container', ' .only-if-both-completed')
+    @toggleSlide('.service', '.ratings-content-container', ' .service-name')
+    @toggleSlide('.service', '.ratings-content-container', ' .only-if-both-completed')
 
     @container.find('.header input[type="checkbox"]').on 'click', ->
       checkedValue = $(@).prop('checked')
@@ -72,5 +72,5 @@ class @InstanceAdmin.RatingSystemsController
           method: 'post'
           data:
             _method: 'put'
-            transactable_type:
+            service_type:
               params

@@ -3,6 +3,7 @@
 = render 'search/meta_tags'
 
 - content_for :mixed_locations do
+  .search-max-price{:'data-max-price' => @searcher.max_price}
   - if @searcher.results.any?
     .locations
       .hidden-locations
@@ -56,7 +57,7 @@
           = render partial: 'search/mixed/filter', locals: { header_name: 'Pricing', selected_values: @searcher.search.lgpricing_filters || [], input_name: 'listing_pricing[]', options: @searcher.filterable_pricing }
         - if platform_context.instance.location_types.count > 1
           = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Location Type', :selected_values => @searcher.search.lntypes_filters || [], :input_name => 'location_types_ids[]', :options => @searcher.filterable_location_types.map { |lt| [lt.name.downcase, lt.name ] } }
-        - if platform_context.instance.price_slider && @searcher.max_price > 0
+        - if platform_context.instance.price_slider
           = render partial: 'search/shared/price_slider'
 
       .sort

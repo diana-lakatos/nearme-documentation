@@ -768,6 +768,8 @@ GEM
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
     state_machine (1.2.0)
+    store_base_sti_class (0.3.0)
+      activerecord (>= 3.0.5)
     stringex (1.5.1)
     stripe (1.16.1)
       json (~> 1.8.1)
@@ -981,6 +983,7 @@ DEPENDENCIES
   sprockets (= 2.11.0)
   sprockets-rails (~> 2.1)
   state_machine (~> 1.2.0)
+  store_base_sti_class
   stripe
   test_after_commit
   thin

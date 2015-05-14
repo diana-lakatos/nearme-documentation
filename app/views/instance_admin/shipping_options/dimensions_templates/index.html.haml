@@ -1,9 +1,12 @@
-- if !@dimensions_templates.length.zero?
-  .content-container.shipping-options.dimensions-templates
-    = render 'list_table', collection: @dimensions_templates
-- else
-  %p.new_dimensions_template_container_explanation
-    You don't have any Dimensions Templates set up yet. Create one now by clicking below
-  %p.new_dimensions_template_link_container
-    = link_to t('instance_admin.shipping_options.dimensions_templates.add_new_dimensions_template'), new_instance_admin_shipping_options_dimensions_template_path
-
+.content-container
+  - if !@dimensions_templates.length.zero?
+    .shipping-options.dimensions-templates
+      = render 'list_table', collection: @dimensions_templates
+  - else
+    .row
+      .text-container
+        %p
+          You don't have any Dimensions Templates set up yet. Create one now by clicking below.
+        %p
+          = link_to t('instance_admin.shipping_options.dimensions_templates.add_new_dimensions_template'), new_instance_admin_shipping_options_dimensions_template_path
+  

@@ -19,13 +19,6 @@ ActiveRecord::Schema.define(version: 20150510125525) do
   enable_extension "btree_gist"
   enable_extension "hstore"
 
-  create_table "action_types", force: true do |t|
-    t.string   "name"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "additional_charge_types", force: true do |t|
     t.string   "name"
     t.text     "description"
@@ -482,6 +475,20 @@ ActiveRecord::Schema.define(version: 20150510125525) do
 
   add_index "custom_attributes", ["instance_id", "transactable_type_id"], name: "index_tta_on_instance_id_and_transactable_type_id", using: :btree
   add_index "custom_attributes", ["target_id", "target_type"], name: "index_custom_attributes_on_target_id_and_target_type", using: :btree
+
+  create_table "custom_validators", force: true do |t|
+    t.integer  "instance_id"
+    t.string   "validatable_type"
+    t.integer  "validatable_id"
+    t.string   "field_name"
+    t.text     "validation_rules"
+    t.text     "valid_values"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "custom_validators", ["instance_id", "validatable_type", "validatable_id"], name: "index_custom_validators_on_i_id_and_v_type_and_v_id", using: :btree
 
   create_table "data_uploads", force: true do |t|
     t.string   "csv_file"
@@ -1418,6 +1425,19 @@ ActiveRecord::Schema.define(version: 20150510125525) do
   end
 
   add_index "schedules", ["instance_id", "scheduable_id", "scheduable_type"], name: "index_schedules_scheduable", using: :btree
+
+  create_table "search_notifications", force: true do |t|
+    t.string   "email"
+    t.integer  "user_id"
+    t.string   "query"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.boolean  "notified",   default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
 
   create_table "spree_addresses", force: true do |t|
     t.string   "firstname"
@@ -2771,15 +2791,6 @@ ActiveRecord::Schema.define(version: 20150510125525) do
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree
 
-  create_table "transactable_type_actions", force: true do |t|
-    t.integer  "action_type_id"
-    t.integer  "transactable_type_id"
-    t.integer  "instance_id"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "transactable_types", force: true do |t|
     t.string   "name"
     t.integer  "instance_id"
@@ -2836,6 +2847,7 @@ ActiveRecord::Schema.define(version: 20150510125525) do
     t.text     "allowed_countries"
     t.boolean  "action_exclusive_price",                                             default: false
     t.boolean  "action_price_per_unit",                                              default: false
+    t.string   "type"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -2886,6 +2898,11 @@ ActiveRecord::Schema.define(version: 20150510125525) do
     t.integer  "book_it_out_minimum_qty"
     t.integer  "exclusive_price_cents",          default: 0
     t.string   "currency"
+    t.string   "name"
+    t.text     "description"
+    t.boolean  "confirm_reservations"
+    t.datetime "last_request_photos_sent_at"
+    t.string   "capacity"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree

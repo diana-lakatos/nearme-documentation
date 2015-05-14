@@ -30,7 +30,7 @@ class InstanceAdmin::BaseController < ApplicationController
     'reviews'            => { controller: '/instance_admin/manage/reviews', default_action: 'index' },
     'wish_lists'         => { controller: '/instance_admin/manage/wish_lists', default_action: 'show' },
     'user_profiles'      => { controller: '/instance_admin/manage/instance_profile_types', default_action: 'index' },
-    'transactable_types' => { controller: '/instance_admin/manage/transactable_types', default_action: 'index', title: 'Service Types' },
+    'service_types'      => { controller: '/instance_admin/manage/service_types', default_action: 'index' },
     'upsell_addons'      => { controller: '/instance_admin/manage/upsell_addons', default_action: 'index', title: 'Upsell & Add-ons' },
     'search'             => { controller: '/instance_admin/manage/search', default_action: 'show', title: 'Search' }
   }

@@ -19,7 +19,6 @@ Feature: A user can search for a listing
   Scenario: Displaying no results found when searching for nonexisting product.
     Given the user exists
     And I log in as a user
-    And the transactable_type_buy_sell exists
     And the product_type exists
     And current instance is buyable
     When I search for product "TV"
@@ -28,7 +27,6 @@ Feature: A user can search for a listing
   Scenario: Displaying search results for a product.
     Given the user exists
     And I log in as a user
-    And the transactable_type_buy_sell exists
     And the product_type exists
     And current instance is buyable
     And product exists with name: "Awesome product"

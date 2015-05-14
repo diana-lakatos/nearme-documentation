@@ -1,104 +1,124 @@
-%h4 Payment Transfer - #{resource.company_including_deleted.name}
-
-- if resource.transferred?
-  %p
-    This payout has been marked as transferred to the Company.
-
-- else
-  = link_to "Mark as manually transferred", transferred_instance_admin_manage_transfer_path(resource),
-      :method => :post,
-      :class => 'btn btn-green'
-
-  - if resource.pending?
-    %p
-      We are waiting for confirmation whether payout was successful or not.
-  - elsif resource.payout_processor.present?
-    = link_to "Payout via #{resource.payout_processor}", payout_instance_admin_manage_transfer_path(resource), method: :post, class: 'btn btn-green', data: { confirm: 'Payment will go live. Do you want to continue?' }
+.content-container
+  %h4 #{t('instance_admin.manage.transfers.payment_transfer')} - #{resource.company_including_deleted.name}
+  
+  - if resource.transferred?
+    .row
+      .text-container
+        = t('instance_admin.manage.transfers.payout_has_been_marked_as_transferred')
+  
   - else
-    %p
-      %i.ico-warning
-      Automatic payout is not available - company has not provided PayPal/ACH details
-
-%hr
-
-.payout-attemps
-  %h4 Automatic payout attempts
-
-  - if resource.payout_attempts.count.zero?
-    No automatic payout attempts have been performed yet.
-  - else
-    - resource.payout_attempts.each do |payout_attempt|
-      .payout_attempt
-        = "#{Money.new(payout_attempt.amount, payout_attempt.currency).format with_currency: true} at #{payout_attempt.created_at.in_time_zone(current_user.time_zone).strftime('%Y-%m-%d %H:%M (%Z)')} - "
-        = 'succeeded' if payout_attempt.success
-        - if payout_attempt.failed?
-          failed
-          = " - #{payout_attempt.failure_message}" if payout_attempt.failure_message.present?
-        - if payout_attempt.pending?
-          pending -
-          = link_to "check and update status", update_status_instance_admin_manage_payout_path(payout_attempt), method: :post, data: { confirm: 'Are you sure you want to check status?' }
-        = (link_to('Confirm', payout_attempt.confirmation_url)).html_safe if payout_attempt.confirmation_url.present?
-
-%hr
-
-.payment-advice
-  %h4 Payout Information
-
-  %div
-    %strong Amount due:
-    = resource.amount.format with_currency: true
-
-  %div
-    %strong Paypal Email:
-    = resource.company_including_deleted.paypal_email
-
-  %div
-    %strong Bank account:
-    = "xxxxxx#{resource.company_including_deleted.instance_clients.first.bank_account_last_four_digits}" if resource.company_including_deleted.instance_clients.first.try(:bank_account_last_four_digits ).present?
-
-  %div
-    %strong Mailing Address:
-    %p
-      = resource.company_including_deleted.mailing_address
-
-%hr
-
-%table.table
-  %tr
-    %th Company
-    %td= resource.company.name
-  %tr
-    %th Transferred at
-    %td= l(resource.transferred_at, format: :long) if resource.transferred_at.present?
-  %tr
-    %th Amount transferred
-    %td= humanized_money_with_cents_and_symbol(resource.amount)
-  %tr
-    %th Guest fee
-    %td= humanized_money_with_cents_and_symbol(resource.service_fee_amount_guest)
-  %tr
-    %th Host fee
-    %td= humanized_money_with_cents_and_symbol(resource.service_fee_amount_host)
+    .row
+      .text-container
+        = link_to t('instance_admin.manage.transfers.mark_as_manually_transferred'), transferred_instance_admin_manage_transfer_path(resource),
+            :method => :post,
+            :class => 'btn btn-blue'
+  
+        - if resource.pending?
+          %p
+            = t('instance_admin.manage.transfers.we_are_waiting_for_confirmation')
+        - elsif resource.payout_processor.present?
+          = link_to "#{t('instance_admin.manage.transfers.payout_via')} #{resource.payout_processor}", payout_instance_admin_manage_transfer_path(resource), method: :post, class: 'btn btn-blue', data: { confirm: t('instance_admin.manage.transfers.payment_will_go_live') }
+        - else
+          %p
+            %i.ico-warning
+            = t('instance_admin.manage.transfers.automatic_payout_is_not_available')
 
 
-%h2
-  Payments included in the payout for:
+.content-container
+  .payout-attemps
+    %h4
+      = t('instance_admin.manage.transfers.automatic_payout_attempts')
+
+    .row
+      .text-container
+        - if resource.payout_attempts.count.zero?
+          = t('instance_admin.manage.transfers.no_automatic_payout_attempts')
+        - else
+          - resource.payout_attempts.each do |payout_attempt|
+            .payout_attempt
+              = "#{Money.new(payout_attempt.amount, payout_attempt.currency).format with_currency: true} #{t('instance_admin.at')} #{payout_attempt.created_at.in_time_zone(current_user.time_zone).strftime('%Y-%m-%d %H:%M (%Z)')} - "
+              = t('instance_admin.succeeded') if payout_attempt.success
+              - if payout_attempt.failed?
+                = t('instance_admin.failed')
+                = " - #{payout_attempt.failure_message}" if payout_attempt.failure_message.present?
+              - if payout_attempt.pending?
+                = "#{t('instance_admin.pending')} - "
+                = link_to "check and update status", update_status_instance_admin_manage_payout_path(payout_attempt), method: :post, data: { confirm: 'Are you sure you want to check status?' }
+              = (link_to(t('instance_admin.confirm'), payout_attempt.confirmation_url)).html_safe if payout_attempt.confirmation_url.present?
+
+.content-container
+  .payment-advice
+    %h4
+      = t('instance_admin.manage.transfers.payout_information')
+
+    .row
+      .text-container
+        %div
+          %strong
+            = t('instance_admin.manage.transfers.amount_due')
+          = resource.amount.format with_currency: true
+  
+        %div
+          %strong
+            = t('instance_admin.manage.transfers.paypal_email')
+          = resource.company_including_deleted.paypal_email
+  
+        %div
+          %strong
+            = t('instance_admin.manage.transfers.bank_account')
+          = "xxxxxx#{resource.company_including_deleted.instance_clients.first.bank_account_last_four_digits}" if resource.company_including_deleted.instance_clients.first.try(:bank_account_last_four_digits ).present?
+  
+        %div
+          %strong
+            = t('instance_admin.manage.transfers.mailing_address')
+          %p
+            = resource.company_including_deleted.mailing_address
+
 .content-container
   .row
-    .table-container.col-xs-12.dropshadow
+    .table-container
       %table.table
-        %thead
-          %tr
-            %th Reference
-            %th Id
-            %th Lessor
-            %th Paid at
+        %tr
+          %th
+            = t('instance_admin.manage.transfers.company')
+          %td
+            = resource.company.name
+        %tr
+          %th
+            = t('instance_admin.manage.transfers.transferred_at')
+          %td= l(resource.transferred_at, format: :long) if resource.transferred_at.present?
+        %tr
+          %th
+            = t('instance_admin.manage.transfers.amount_transferred')
+          %td= humanized_money_with_cents_and_symbol(resource.amount)
+        %tr
+          %th
+            = t('instance_admin.manage.transfers.guest_fee')
+          %td= humanized_money_with_cents_and_symbol(resource.service_fee_amount_guest)
+        %tr
+          %th
+            = t('instance_admin.manage.transfers.host_fee')
+          %td= humanized_money_with_cents_and_symbol(resource.service_fee_amount_host)
 
-        %tbody
-          - resource.payments.each do |payment|
+
+.content-container
+  %h4
+    = t('instance_admin.manage.transfers.payments_included_in_the_payout_for')
+    .row
+      .table-container.col-xs-12
+        %table.table
+          %thead
             %tr
-              %td= payment.payable.class
-              %td= payment.payable.id
-              %td= payment.payable.user.try(:name)
-              %td= l(payment.created_at, format: :long)
-
+              %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.reference')
+              %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.id')
+              %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.lessor')
+              %th= t('instance_admin.manage.transfers.payments_included_in_the_payout_for_section.paid_at')
+  
+          %tbody
+            - resource.payments.each do |payment|
+              %tr
+                %td= payment.payable.class
+                %td= payment.payable.id
+                %td= payment.payable.user.try(:name)
+                %td= l(payment.created_at, format: :long)
+  

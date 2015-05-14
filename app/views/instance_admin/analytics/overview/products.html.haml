@@ -1,39 +1,43 @@
-.sub-header-nav
-  %ul
-    %li
-      = link_to 'Services', instance_admin_analytics_overview_path
-    %li
-      = link_to 'Products', products_instance_admin_analytics_overview_path, class: 'active'
+.content-container
+  .sub-header-nav
+    %ul
+      %li
+        = link_to t('instance_admin.services'), instance_admin_analytics_overview_path
+      %li
+        = link_to t('instance_admin.products'), products_instance_admin_analytics_overview_path, class: 'active'
 
-%h4 Revenue
-.box
-  - if @last_month_revenue.inject(0) { |sum, revenue| sum += revenue.total_amount.to_f; sum }.zero?
-    %p.no_data No revenue yet.
-  - else
-    .chart
-      %canvas#revenue_chart
-%br
-%br
-
-%h4 Sales
-.box
-  - if @last_month_sales.inject(0) { |sum, order| sum += order.orders_count.to_f; sum }.zero?
-    %p.no_data No sales yet.
-  - else
-    .chart
-      %canvas#sales_chart
-%br
-%br
-
-%h4 Products
-.box
-  - if @last_month_products.inject(0) { |sum, product| sum += product.products_count.to_f; sum }.zero?
-    %p.no_data You haven't created any products.
-  - else
-    .chart
-      %canvas#products_chart
-%br
-%br
+  %h4
+    = t('instance_admin.revenue')
+  .row
+    .box
+      - if @last_month_revenue.inject(0) { |sum, revenue| sum += revenue.total_amount.to_f; sum }.zero?
+        %p.no_data
+          = t('instance_admin.analytics.no_revenue_yet')
+      - else
+        .chart
+          %canvas#revenue_chart
+  
+  %h4
+    = t('instance_admin.sales')
+  .row
+    .box
+      - if @last_month_sales.inject(0) { |sum, order| sum += order.orders_count.to_f; sum }.zero?
+        %p.no_data
+          = t('instance_admin.analytics.no_sales_yet')
+      - else
+        .chart
+          %canvas#sales_chart
+  
+  %h4
+    = t('instance_admin.products')
+  .row
+    .box
+      - if @last_month_products.inject(0) { |sum, product| sum += product.products_count.to_f; sum }.zero?
+        %p.no_data
+          = t('instance_admin.analytics.no_products_yet')
+      - else
+        .chart
+          %canvas#products_chart
 
 - content_for :domready do
   new ChartWrapper.Line($('#revenue_chart'), #{@revenue_chart.values.to_json.html_safe}, #{@revenue_chart.labels.to_json.html_safe})

@@ -1,7 +1,7 @@
 - if @additional_charges.blank?
   .content-container.blank-state-container
     .row
-      .table-container.col-xs-12.dropshadow
+      .table-container.col-xs-12
         .text-center
           .question-icon !
           = t('instance_admin.upsell_addons.index.no_addons_yet')
@@ -10,7 +10,7 @@
 - else
   .content-container
     .row
-      .table-container.col-xs-12.dropshadow
+      .table-container.col-xs-12
         %table.table
           %tbody
             %tr

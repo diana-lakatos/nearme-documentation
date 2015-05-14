@@ -216,6 +216,266 @@ en:
         key_created: "Custom translation key has been successfully created: %{key}."
         key_destroyed: 'Custom translation key has been deleted.'
 
+    services: 'Services'
+    products: 'Products'
+    revenue: 'Revenue'
+    bookings: 'Bookings'
+    listings: 'Listings'
+    downloads: 'Downloads'
+    sales: 'Sales'
+    save: "Save"
+    destroy: "Destroy"
+    versions: "Versions"
+    cancel: "Cancel"
+    edit: "Edit"
+    create: "Create"
+    update: "Update"
+    new: "New"
+    add: "Add"
+    show_previous_versions: "Show previous versions"
+    at: at
+    succeeded: succeeded
+    failed: failed
+    pending: pending
+    confirm: 'Confirm'
+    deleted: deleted
+    not_available_na: "N/A"
+    details: Details
+    are_you_sure: "Are you sure?"
+    email: Email
+
+    analytics:
+      no_revenue_yet: 'No revenue yet.'
+      no_sales_yet: 'No sales yet.'
+      no_products_yet: "You haven't created any products yet."
+      no_bookings_yet: 'No bookings yet.'
+      no_listings_visits_yet: "Your listings haven't been visited yet."
+      marketplace_transactions: "Marketplace transactions"
+      marketplace_users: "Marketplace users"
+    settings:
+      configuration:
+        master_lock: 'Master Lock'
+        update_lock: 'Update Lock'
+        basic_configuration: 'Basic Configuration'
+        basic_configuration_section:
+          placeholder_marketplace_name: 'Your marketplace name'
+        leave_blank_to_use_all_countries: "Leave blank to use all countries"
+        leave_blank_to_use_all_currencies: "Leave blank to use all currencies"
+        checkout: "Checkout"
+        checkout_section:
+          label_translation: "Label translation"
+          description_translation: "Description translation"
+        marketplace_password: "Marketplace Password"
+        payment_transfers: "Payment Transfers"
+        text_filters: "Text Filters"
+        text_filters_section:
+          add_text_filter: '+ Add Text Filter'
+          name: Name
+          regexp: Regexp
+          replacement_text: "Replacement Text"
+          ignore_case: "Ignore case"
+        support: "Support"
+      domains:
+        domains: "Domains"
+        domain: "Domain"
+        status: "Status"
+        dns_name: "DNS name"
+        redirects_to: "Redirects to"
+        default: "Default"
+        new_domain: "New domain"
+        edit_domain: "Edit domain"
+        new_csr: "New CSR"
+      hidden_controls:
+        name: "Name"
+        type: "Type"
+        hide: "Hide"
+        update_settings: "Update Settings"
+      locations:
+        location_types: "Location Types"
+        add_new_location_type: "Add New Location Type"
+        add: "Add"
+        types: "Types"
+        delete: "Delete"
+        in_use_by: "in use by"
+        locations: "locations"
+      integrations:
+        payment_gateways: "Payment Gateways"
+        payment_gateways_section:
+          country_to_configure_for: "Country to configure for"
+          select_a_payment_gateway: "Select a payment gateway"
+          review_current_settings_for_all_countries: "Review current settings for all countries"
+          live_settings: Live Settings (used when test mode is off)
+          test_settings: Test Settings (used when test mode is on)
+          use: "Use"
+          for: "For"
+        test_mode: "Test Mode"
+        test_mode_section:
+          test_mode_label: "Use test payment credentials - Marketplace must be password protected in"
+          test_mode_label_link: 'Settings > Configuration'
+        authentication: "Authentication"
+        ga_tracking_codes: "Google Analytics Tracking Codes"
+        sms: "Sms"
+      documents_upload:
+        documents_upload: "Documents Upload"
+        activate_upload_files: "Activate upload files"
+        safety_and_trust: "For safety and trust purposes, some services might need extra documentation from customers before completing the booking."
+        documents_can_be: "These documents can be ids, licenses, certifications, and other files."
+        can_make_this: "You can make this a mandatory requirement within your marketplace, optional or let vendors decide."
+        mark_your_choice: "Please mark your choice below:"
+    theme:
+      info:
+        title_and_description: "Title & Description"
+        contact_info: "Contact Info"
+        social_properties: "Social Properties"
+      design:
+        colors:
+          blue: "Blue"
+          red: "Red"
+          orange: "Orange"
+          green: "Green"
+          gray: "Gray"
+          black: "Black"
+          white: "White"
+        visuals: "Visuals"
+        fonts: "Fonts"
+        fonts_section:
+          regular_font: "Regular font"
+          medium_font: "Medium font"
+          bold_font: "Bold font"
+        call_to_action: "Call to action"
+    homepage:
+      homepage: "Homepage"
+    homepage_template:
+      homepage: "Homepage"
+    pages:
+      pages: Pages
+      name: Name
+      path: Path
+      page: page
+      redirect: redirect
+    header:
+      header: "Header"
+    footer:
+      footer: "Footer"
+    content_holders:
+      content_holders: "Content Holders"
+      content_holder: "Content Holder"
+      name: Name
+      enabled: Enabled
+      content: Content
+      created_at: "Created at"
+      add_content_holder: 'Add content holder'
+    liquid_views:
+      template: Template
+      duplicate_default: "Duplicate default"
+      customize_defaults: "Customize defaults"
+      add_liquid_view: "Add Liquid View"
+    file_upload:
+      upload_file: "Upload File"
+      search: "Search"
+    manage:
+      transfers:
+        payment_transfer: "Payment Transfer"
+        payout_has_been_marked_as_transferred: "This payout has been marked as transferred to the Company."
+        mark_as_manually_transferred: "Mark as manually transferred"
+        we_are_waiting_for_confirmation: "We are waiting for confirmation whether payout was successful or not."
+        payout_via: "Payout via"
+        payment_will_go_live: 'Payment will go live. Do you want to continue?'
+        automatic_payout_is_not_available: "Automatic payout is not available - company has not provided PayPal/ACH details"
+        automatic_payout_attempts: "Automatic payout attempts"
+        no_automatic_payout_attempts: "No automatic payout attempts have been performed yet."
+        payout_information: "Payout Information"
+        amount_due: "Amount due:"
+        paypal_email: "Paypal Email:"
+        bank_account: "Bank account:"
+        mailing_address: "Mailing address:"
+        company: "Company"
+        transferred_at: "Transferred at"
+        amount_transferred: 'Amount transferred'
+        guest_fee: "Guest fee"
+        host_fee: "Host fee"
+        payments_included_in_the_payout_for: "Payments included in the payout for:"
+        payments_included_in_the_payout_for_section:
+          reference: Reference
+          id: ID
+          lessor: Lessor
+          paid_at: "Paid at"
+        resource:
+          plural:
+            payment_transfer: "Payment tranfers"
+        transfers_are_generated_automatically: "Transfers are generated automatically depending on your setting in 'Settings > Configuration' for outstanding charges we've recieved on behalf of hosts. The next batch will be generated at about:"
+        charges: "Charges"
+        created_at: "Created at"
+        transferred_at: "Transferred at"
+        state: "State"
+        lessor_service_fees: "Lessor service fees"
+        lessee_service_fees: "Lessee service fees"
+        transfer_amount: "Transfer amount"
+        retry_possible: "Retry possible"
+      payments:
+        resource:
+          plural:
+            payment: Payments
+        here_you_can_see_all_payments: "Here you can see all payments that are pending transfer. Next transfer will happen at "
+        company: Company
+        lessor: Lessor
+        state: State
+        lessor_service_fees: Lessor service fees
+        lessee_service_fees: Lessee service fees
+        payment_amount: Payment amount
+        payment_gateway: Payment gateway
+        created_at: Created at
+      users:
+        manage_users: "Manage Users"
+        name: Name
+        email: Email
+        signed_up: "Signed Up"
+        login_as: "Login As"
+      admins:
+        admin: "Admin"
+        email: "Email"
+        role: "Role"
+        instance_owner: "Instance Owner"
+        add_admin_to_user_instance: "Add Admin user to Instance"
+        create_new_admin_user: "Create new admin user"
+        create_new_role: "Create new role"
+        user_name: "Full Name"
+        user_name_placeholder: 'John Smith'
+        user_email: Email
+        user_email_placeholder: 'example@gmail.com'
+        roles: Roles
+        role_name: Name
+      partners:
+        manage_partners: 'Manage Partners'
+        add_partner: "Add Partner"
+        theme_name_label: 'Name (leave blank to use default theme)'
+        theme_name_placeholder: 'My Theme'
+        theme_site_name_placeholder: 'My Site'
+        theme_tagline_placeholder: 'My Tagline'
+        theme_description_label: 'Meta description'
+        theme_description_placeholder: 'Description of site for SEO'
+        theme_phone_number_placeholder: '(888) 888-8888'
+        theme_contact_email_label: 'Contact email'
+        theme_contact_email_placeholder: 'example@gmail.com'
+        theme_support_email_placeholder: 'example@gmail.com'
+        theme_support_url_placeholder: 'mysite.com/support'
+        theme_address_placeholder: '24 Willie Mays Plaza, San Francisco, CA 94107'
+        theme_facebook_url_placeholder: 'www.facebook.com/yourMarketplace'
+        theme_twitter_url_placeholder: 'twitter.com/yourMarketplace'
+        theme_gplus_url_placeholder: 'plus.google.com/yourMarketplace'
+        add_theme: 'Add Theme'
+        edit_partner: 'Edit Partner'
+        new_partner: 'New Partner'
+        domain_name: 'Domain Name'
+        custom_theme: "Custom Theme"
+        title_and_description: "Title & Description"
+        brand: "Brand"
+        contact_and_support: "Contact & Support"
+        social_properties: "Social Properties"
+        colors: "Colors"
+        homepage: "Homepage"
+
+
   buy_sell_market:
     products:
       edit_inline: 'Edit your Product'

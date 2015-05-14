@@ -63,6 +63,7 @@ class Instance < ActiveRecord::Base
   has_many :faqs, class_name: 'Support::Faq'
   has_many :tickets, -> { where(target_type: 'Instance').order('created_at DESC') }, class_name: 'Support::Ticket'
   has_many :transactable_types
+  has_many :service_types
   has_many :product_types, class_name: "Spree::ProductType"
   has_many :instance_payment_gateways, :inverse_of => :instance
   has_many :country_instance_payment_gateways, :inverse_of => :instance
@@ -236,7 +237,7 @@ class Instance < ActiveRecord::Base
   end
 
   def bookable?
-    @bookable ||= transactable_types.services.any?
+    @bookable ||= service_types.any?
   end
 
   def marketplace_type
@@ -319,5 +320,9 @@ class Instance < ActiveRecord::Base
 
   def set_context!
     PlatformContext.current = PlatformContext.new(self)
+  end
+
+  def shippo_enabled?
+    shippo_username.present? && shippo_password.present?
   end
 end

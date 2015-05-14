@@ -23,7 +23,7 @@
 
             {% if platform_context.multiple_transactable_types? == true %}
               {% if platform_context.tt_select_type == 'radio' %}
-                {% for transactable_type in platform_context.all_transactables  %}
+                {% for transactable_type in platform_context.transactable_types  %}
                   {{ transactable_type.name}} <input type="radio" name="transactable_type_id" value="{{ transactable_type.id }}" {% if forloop.first == true %} checked {% endif %} data-buyable="{{transactable_type.buyable?}}">
                 {% endfor %}
               {% endif %}
@@ -56,7 +56,7 @@
           {% if platform_context.multiple_transactable_types? == true and platform_context.tt_select_type == 'dropdown' %}
             <div class="span2">
               <select class="no-icon select2 transactable_select" name="transactable_type_id">
-                {% for transactable_type in platform_context.all_transactables %}
+                {% for transactable_type in platform_context.transactable_types %}
                   <option value="{{ transactable_type.id }}" data-buyable="{{transactable_type.buyable?}}">{{ transactable_type.name }}</option>
                 {% endfor %}
               </select>

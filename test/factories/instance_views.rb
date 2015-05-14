@@ -40,6 +40,7 @@ FactoryGirl.define do
       path "layouts/theme_footer"
       format "html"
       handler "liquid"
+      partial true
     end
   end
 end

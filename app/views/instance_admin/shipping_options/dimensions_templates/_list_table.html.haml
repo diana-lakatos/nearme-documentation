@@ -1,5 +1,5 @@
 .row
-  .table-container.col-xs-12.dropshadow
+  .table-container.col-xs-12
     %table.table.sortable
       %thead
         %tr
@@ -15,7 +15,7 @@
             = resource.name
           %td
           %td
-            = link_to "Edit", edit_instance_admin_shipping_options_dimensions_template_path(resource), :class => 'btn btn-green'
+            = link_to "Edit", edit_instance_admin_shipping_options_dimensions_template_path(resource), :class => 'btn btn-blue'
             = link_to "Delete", instance_admin_shipping_options_dimensions_template_path(resource),
-                :class => 'btn btn-green', :method => :delete, data: { confirm: t('confirmations.are_you_sure') }
+                :class => 'btn btn-blue', :method => :delete, data: { confirm: t('confirmations.are_you_sure') }
 

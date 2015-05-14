@@ -275,18 +275,6 @@ module ApplicationHelper
     @breadcrumbs_title.presence || controller.class.to_s.deconstantize.demodulize
   end
 
-  def content_holder_cache_key(name)
-    "theme.#{platform_context.theme.id}.content_holders.#{name}"
-  end
-
-  def inject_content_holder(name)
-    Rails.cache.fetch content_holder_cache_key(name), expires_in: 12.hours do
-      if content_holder = platform_context.content_holders.enabled.find_by_name(name)
-        raw content_holder.content
-      end
-    end
-  end
-
   def credit_card_date
     months = (1..12).map do |m|
       m.to_s.rjust(2, '0')

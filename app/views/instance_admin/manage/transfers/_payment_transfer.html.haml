@@ -3,7 +3,7 @@
     - if resource.company.present?
       = resource.company.name
     - else
-      = "#{resource.company_including_deleted.name} (Deleted)"
+      = "#{resource.company_including_deleted.name} (#{t('instance_admin.deleted')})"
   %td= resource.payments.count
   %td= l(resource.created_at, format: :long)
   %td
@@ -12,12 +12,12 @@
     - else
       - if resource.pending? || resource.failed?
       - elsif resource.payout_processor.present?
-        Retry possible
+        = t('instance_admin.manage.transfers.retry_possible')
       - else
-        N/A
+        = t('instance_admin.not_available_na')
   %td
     = resource.transfer_status
   %td= resource.service_fee_amount_guest.format with_currency: true
   %td= resource.service_fee_amount_host.format with_currency: true
   %td= resource.amount.format with_currency: true
-  %td= link_to "Details", instance_admin_manage_transfer_path(resource)
+  %td= link_to t('instance_admin.details'), instance_admin_manage_transfer_path(resource)

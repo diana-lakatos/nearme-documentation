@@ -13,7 +13,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
     @listing_type = "Desk"
     @amenity_type = FactoryGirl.create(:amenity_type)
     @amenity = FactoryGirl.create(:amenity, amenity_type: @amenity_type)
-    @transactable_type = TransactableType.first
+    @transactable_type = ServiceType.first
   end
 
   context '#new' do
@@ -32,7 +32,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
 
   context "#create" do
     setup do
-      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge!({ transactable_type_id: TransactableType.first.id,
+      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge!({ transactable_type_id: ServiceType.first.id,
                                                                                photos_attributes: [FactoryGirl.attributes_for(:photo)],
                                                                                listing_type: @listing_type,
                                                                                description: "Aliquid eos ab quia officiis sequi.",
@@ -66,6 +66,20 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
         }
       end
       assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type)
+    end
+
+    should 'not create transactable with custom validator' do
+      @transactable_type.custom_validators.create(field_name: 'name', max_length: 5)
+      @transactable_type.update_column :enable_photo_required, false
+      @attributes.delete(:photos_attributes)
+
+      assert_no_difference('@location2.listings.count') do
+        post :create, {
+          transactable: @attributes.merge(location_id: @location2.id),
+          transactable_type_id: @transactable_type.id
+        }
+      end
+      assert_template :new
     end
   end
 

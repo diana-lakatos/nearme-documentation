@@ -1,24 +1,26 @@
 = form_tag instance_admin_buy_sell_configuration_path, method: :put do |f|
-  %h4 Currency
   .content-container
-    .row.dropshadow
+    %h4 Currency
+    .row
       .input-container.col-xs-12
         = label_tag :currency, 'Choose currency'
         = select_tag :currency, currency_options, class: 'form-control'
 
-  %h4 Currency symbol position
   .content-container
-    .row.dropshadow
+    %h4 Currency symbol position
+    .row
       .input-container.col-xs-6
-        = label_tag :currency_symbol_position_before, Spree::Money.new(10, symbol_position: "before")
-        = radio_button_tag :currency_symbol_position, "before", Spree::Config[:currency_symbol_position] == "before"
+        = label_tag :currency_symbol_position_before do
+          = radio_button_tag :currency_symbol_position, "before", Spree::Config[:currency_symbol_position] == "before"
+          = Spree::Money.new(10, symbol_position: "before")
       .input-container.col-xs-6
-        = label_tag :currency_symbol_position_after, Spree::Money.new(10, symbol_position: "after")
-        = radio_button_tag :currency_symbol_position, "after", Spree::Config[:currency_symbol_position] == "after"
+        = label_tag :currency_symbol_position_after do
+          = radio_button_tag :currency_symbol_position, "after", Spree::Config[:currency_symbol_position] == "after"
+          = Spree::Money.new(10, symbol_position: "after") 
 
-  %h4 Currency mark and separator
   .content-container
-    .row.dropshadow
+    %h4 Currency mark and separator
+    .row
       .input-container.col-xs-6
         = label_tag :currency_decimal_mark, 'Currency decimal mark'
         = text_field_tag :currency_decimal_mark, Spree::Config[:currency_decimal_mark], placeholder: 'Enter currency decimal mark', class: 'form-control'
@@ -26,21 +28,26 @@
         = label_tag :currency_thousands_separator, 'Currency thousands separator'
         = text_field_tag :currency_thousands_separator, Spree::Config[:currency_thousands_separator], placeholder: 'Enter currency thousands separator', class: 'form-control'
 
-  %h4 Displaying modules options
   .content-container
-    .row.dropshadow
+    %h4 Displaying modules options
+    .row
       .input-container.col-xs-6
-        = label_tag 'Search results infinite scroll'
-        = hidden_field_tag 'infinite_scroll', '0'
-        = check_box_tag 'infinite_scroll', '1', Spree::Config[:infinite_scroll]
+        = label_tag do
+          = hidden_field_tag 'infinite_scroll', '0'
+          = check_box_tag 'infinite_scroll', '1', Spree::Config[:infinite_scroll]
+          = 'Search results infinite scroll' 
       .input-container.col-xs-6
-        = label_tag 'Random suggested products'
-        = hidden_field_tag 'random_products_for_cross_sell', '0'
-        = check_box_tag 'random_products_for_cross_sell', '1', Spree::Config[:random_products_for_cross_sell]
-    .row.dropshadow
+        = label_tag do
+          = hidden_field_tag 'random_products_for_cross_sell', '0'
+          = check_box_tag 'random_products_for_cross_sell', '1', Spree::Config[:random_products_for_cross_sell]
+          = 'Random suggested products' 
+    .row
       .input-container.col-xs-6
-        = label_tag 'Search results table layout'
-        = hidden_field_tag 'products_table', '0'
-        = check_box_tag 'products_table', '1', Spree::Config[:products_table]
+        = label_tag do
+          = hidden_field_tag 'products_table', '0'
+          = check_box_tag 'products_table', '1', Spree::Config[:products_table]
+          = 'Search results table layout'
 
-  = submit_tag 'Save', class: 'btn btn-green pull-right'
+= content_for :header_buttons do
+  = submit_tag 'Save', class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
+

@@ -1,24 +1,24 @@
-.row-fluid
-  .controls.controls-row
-    %legend.span3 Data import for #{@data_upload.csv_file_identifier}
-
-- if @data_upload.xml_file.blank?
-  %p Your data is being processed. Please refresh the page after few minutes.
-- else
-  %p
-    - if @data_upload.imported_at.nil?
-      Your data has been processed, however nothing has been imported yet! U can #{link_to "preview xml", @data_upload.xml_file.url, target: :blank} that will be imported.
-    - elsif @data_upload.parsing_result_log.blank?
-      Parsing has been scheduled, job is waiting in the queue.
-    - elsif @data_upload.encountered_error.blank?
-      %h2 Data has been imported.
-      %p New entities: #{@data_upload.parse_summary[:new].map { |k, v| "#{k.humanize}: #{v}"}.sort.join(', ')}
-      %p Updated entities: #{@data_upload.parse_summary[:updated].map { |k, v| "#{k.humanize}: #{v}"}.sort.join(', ')}
-      - if @data_upload.parsing_result_log
-        %p Errors encountered:
-        %textarea{disabled: 'disabled', style: "width: 98%", rows: 10}= @data_upload.parsing_result_log
+.content-container
+  %h4 Data import for #{@data_upload.csv_file_identifier}
+  .row
+    .text-container
+      - if @data_upload.xml_file.blank?
+        Your data is being processed. Please refresh the page after few minutes.
       - else
-        No validation errors encountered.
-    - else
-      Data has not been imported due to error during processing. Please verify that #{link_to "preview xml", @data_upload.xml_file.url, target: :blank} is correct.
-
+        %p
+          - if @data_upload.imported_at.nil?
+            Your data has been processed, however nothing has been imported yet! U can #{link_to "preview xml", @data_upload.xml_file.url, target: :blank} that will be imported.
+          - elsif @data_upload.parsing_result_log.blank?
+            Parsing has been scheduled, job is waiting in the queue.
+          - elsif @data_upload.encountered_error.blank?
+            %h2 Data has been imported.
+            %p New entities: #{@data_upload.parse_summary[:new].map { |k, v| "#{k.humanize}: #{v}"}.sort.join(', ')}
+            %p Updated entities: #{@data_upload.parse_summary[:updated].map { |k, v| "#{k.humanize}: #{v}"}.sort.join(', ')}
+            - if @data_upload.parsing_result_log
+              %p Errors encountered:
+              %textarea{disabled: 'disabled', style: "width: 98%", rows: 10}= @data_upload.parsing_result_log
+            - else
+              No validation errors encountered.
+          - else
+            Data has not been imported due to error during processing. Please verify that #{link_to "preview xml", @data_upload.xml_file.url, target: :blank} is correct.
+      

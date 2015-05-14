@@ -1,12 +1,13 @@
-%h4 Fonts
-.content-container.dropshadow
+.content-container
+  %h4
+    = t('instance_admin.theme.design.fonts')
   = f.fields_for :theme_font do |tf_f|
     - ThemeFont::FONT_TYPES.each do |font_type|
       - ThemeFont::FONT_EXTENSIONS.each_slice(2).each do |file_extensions|
         .row
           - file_extensions.each do |file_extension|
             .input-container.col-xs-6
-              = f.label "#{font_type}_#{file_extension}", label: "#{font_type.camelize} font (#{file_extension})"
+              = f.label "#{font_type}_#{file_extension}", label: t("instance_admin.theme.design.fonts_section.#{font_type}_font") + " (#{file_extension})"
               = tf_f.file_field "#{font_type}_#{file_extension}"
               - if tf_f.object.persisted? && tf_f.object.send("#{font_type}_#{file_extension}")
                 = File.basename(tf_f.object.send("#{font_type}_#{file_extension}_url"))

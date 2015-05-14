@@ -299,15 +299,16 @@ DesksnearMe::Application.routes.draw do
         resources :categories, controller: 'instance_profile_types/categories'
       end
 
-      resources :transactable_types do
+      resources :service_types do
         put :change_state, on: :member
-        resources :custom_attributes, controller: 'transactable_types/custom_attributes'
-        resources :data_uploads, only: %i(new index create show), controller: 'transactable_types/data_uploads' do
+        resources :custom_attributes, controller: 'service_types/custom_attributes'
+        resources :custom_validators, controller: 'service_types/custom_validators'
+        resources :data_uploads, only: %i(new index create show), controller: 'service_types/data_uploads' do
           collection do
             get :download_csv_template
           end
         end
-        resources :form_components, controller: 'transactable_types/form_components' do
+        resources :form_components, controller: 'service_types/form_components' do
           member do
             patch :update_rank
           end
@@ -315,7 +316,7 @@ DesksnearMe::Application.routes.draw do
             post :create_as_copy
           end
         end
-        resources :categories, controller: 'transactable_types/categories' do
+        resources :categories, controller: 'service_types/categories' do
           member do
             get :jstree
           end
@@ -388,6 +389,7 @@ DesksnearMe::Application.routes.draw do
           end
         end
         resources :custom_attributes, controller: 'product_types/custom_attributes'
+        resources :custom_validators, controller: 'product_types/custom_validators'
         resources :data_uploads, only: %i(new index create show), controller: 'product_types/data_uploads' do
           collection do
             get :download_csv_template

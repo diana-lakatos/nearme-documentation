@@ -1,5 +1,7 @@
 class InstanceAdmin::Manage::InstanceProfileTypesController < InstanceAdmin::Manage::BaseController
 
+  before_filter :set_breadcrumbs
+
   def index
     @instance_profile_type = InstanceProfileType.first
   end
@@ -20,4 +22,12 @@ class InstanceAdmin::Manage::InstanceProfileTypesController < InstanceAdmin::Man
     flash[:notice] = 'Custom attributes for user have been disabled'
     redirect_to instance_admin_manage_instance_profile_types_path
   end
+
+
+  private
+
+  def set_breadcrumbs
+    @breadcrumbs_title = 'Manage Attributes'
+  end
+
 end

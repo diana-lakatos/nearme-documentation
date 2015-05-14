@@ -1,0 +1,24 @@
+.content-container
+  .row
+    .table-container.col-xs-12
+      %table.table
+        %thead
+          %tr
+            %th Field Name
+            %th Presence
+            %th Inclusion
+            %th Numericality
+            %th
+            %th
+        %tbody
+          - collection.each do |resource|
+            %tr
+              %td= resource.field_name.humanize
+              %td= resource.presence?
+              %td= resource.inclusion?
+              %td= resource.numericality?
+              %td= link_to 'Edit', edit_polymorphic_url([:instance_admin, @controller_scope, @validatable, resource]), class: 'pull-right'
+              %td= link_to "Delete", polymorphic_url([:instance_admin, @controller_scope, @validatable, resource]), :method => :delete, data: { confirm: 'Are you sure you want to delete this validator?' }, :class => "pull-right"
+
+= content_for :header_buttons do
+  = link_to 'Add Validator', new_polymorphic_url([:instance_admin, @controller_scope, @validatable, CustomValidator.new]), class: 'pull-right btn btn-blue'

@@ -1,19 +1,23 @@
-%h4= "Content Holder"
-
-.content-container.show-version
-  .row
-    .input-container.col-xs-12
-      .field-name Name
-      = resource.name
-  .row
-    .input-container.col-xs-12
-      .field-name Enabled
-      = resource.enabled
-  .row
-    .input-container.col-xs-12
-      .field-name Content
-      %textarea.form-control{rows: 15}= resource.content
-
 .content-container
-  .row
-    = link_to 'Edit', edit_instance_admin_theme_content_holder_path(resource), class: 'btn btn-green pull-right'
+  %h4
+    = t('instance_admin.content_holders.content_holder')
+  .show-version
+    .row
+      .input-container.col-xs-12
+        .field-name
+          = t('instance_admin.content_holders.name')
+        = resource.name
+    .row
+      .input-container.col-xs-12
+        .field-name
+          = t('instance_admin.content_holders.enabled')
+        = resource.enabled
+    .row
+      .input-container.col-xs-12
+        .field-name
+          = t('instance_admin.content_holders.content')
+        %textarea.form-control{rows: 15}= resource.content
+
+= content_for :header_buttons do
+  = link_to t('instance_admin.edit'), edit_instance_admin_theme_content_holder_path(resource), class: 'btn btn-blue pull-right'
+

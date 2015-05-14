@@ -20,7 +20,7 @@ class ReservationIcsBuilder
       cal.add_x_property 'X-WR-RELCALID', "#{@user.id}"
       @reservation.periods.each do |period|
         cal.event do |event|
-          event.description = @reservation.listing.description
+          event.description = @reservation.listing.description || ''
           event.summary = @reservation.listing.name
           event.uid = "#{@reservation.id}_#{period.date.to_s}"
           hour = period.start_minute/60.floor

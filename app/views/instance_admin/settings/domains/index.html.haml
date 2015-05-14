@@ -1,22 +1,26 @@
-.row
-  .col-xs-12
-    %h4 Domains
-    = link_to 'New domain', new_instance_admin_settings_domain_path, class: 'pull-right btn btn-green'
-    = link_to 'New CSR', new_instance_admin_settings_certificate_request_path, class: 'pull-right btn btn-green'
-
-%br
-
 .content-container
+  %h4
+    = t('instance_admin.settings.domains.domains')
   .row
-    .table-container.col-xs-12.dropshadow
+    .table-container.col-xs-12
       %table.table.sortable
         %thead
           %tr
-            %th Domain
-            %th Status
-            %th DNS name
-            %th Redirects to
-            %th Default
+            %th
+              = t('instance_admin.settings.domains.domain')
+            %th
+              = t('instance_admin.settings.domains.status')
+            %th
+              = t('instance_admin.settings.domains.dns_name')
+            %th
+              = t('instance_admin.settings.domains.redirects_to')
+            %th
+              = t('instance_admin.settings.domains.default')
             %th
         %tbody
           = render @domains
+
+= content_for :header_buttons do
+  = link_to t('instance_admin.settings.domains.new_domain'), new_instance_admin_settings_domain_path, class: 'pull-right btn btn-blue'
+  = link_to t('instance_admin.settings.domains.new_csr'), new_instance_admin_settings_certificate_request_path, class: 'pull-right btn btn-blue'
+

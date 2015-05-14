@@ -4,7 +4,7 @@ class AvailabilityTemplate < ActiveRecord::Base
   scoped_to_platform_context
 
   has_many :availability_rules, :as => :target, :inverse_of => :target, :dependent => :destroy
-  belongs_to :transactable_type, :inverse_of => :availability_templates
+  belongs_to :transactable_type
   belongs_to :instance
 
   # attr_accessible :transactable_type, :name, :description, :availability_rules, :availability_rules_attributes

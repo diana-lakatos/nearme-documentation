@@ -99,6 +99,16 @@ class SecuredParams
     ]
   end
 
+  def custom_validator
+    [
+      :field_name,
+      :required,
+      :min_length,
+      :max_length,
+      valid_values: []
+    ]
+  end
+
   def data_upload
     [
       :csv_file,
@@ -572,7 +582,7 @@ class SecuredParams
       :availability_templates_attributes => nested(self.availability_template),
       :allowed_currencies => [],
       :action_type_ids => [],
-      schedule_attributes: self.schedule
+      schedule_attributes: nested(self.schedule)
     ]
   end
 
@@ -850,6 +860,7 @@ class SecuredParams
 
   def transactable(transactable_type)
       [
+        :name, :description, :capacity, :confirm_reservations,
         :location_id, :availability_template_id,
         :defer_availability_rules, :free,
         :price_type, :draft, :enabled,
@@ -965,18 +976,38 @@ class SecuredParams
 
   def user(transactable_type = nil)
     [
-      :name, :email, :phone, :job_title, :password, :avatar,
-      :avatar_versions_generated_at, :avatar_transformation_data,
-      :biography, :country_name, :mobile_number,
-      :facebook_url, :twitter_url, :linkedin_url, :instagram_url,
-      :current_location, :company_name, :skills_and_interests,
-      :sms_notifications_enabled, :time_zone,
-      :country_name_required, :skip_password,
-      :country_name, :phone, :mobile_phone,
-      :first_name, :middle_name, :last_name, :gender,
-      :drivers_licence_number, :gov_number, :twitter_url,
-      :linkedin_url, :facebook_url, :google_plus_url, :public_profile,
+      :avatar,
+      :avatar_transformation_data,
+      :avatar_versions_generated_at,
+      :biography,
+      :company_name,
+      :country_name,
+      :country_name_required,
+      :current_location,
+      :drivers_licence_number,
+      :email,
+      :facebook_url,
+      :first_name,
+      :gender,
+      :google_plus_url,
+      :gov_number,
+      :instagram_url,
+      :job_title,
       :language,
+      :last_name,
+      :linkedin_url,
+      :middle_name,
+      :mobile_number,
+      :mobile_phone,
+      :name,
+      :password,
+      :phone,
+      :public_profile,
+      :skills_and_interests,
+      :skip_password,
+      :sms_notifications_enabled,
+      :time_zone,
+      :twitter_url,
       industry_ids: [],
       category_ids: [],
       companies_attributes: nested(self.company(transactable_type)),

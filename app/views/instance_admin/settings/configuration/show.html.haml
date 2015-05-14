@@ -1,116 +1,133 @@
 = simple_form_for @instance, :url => lock_instance_admin_settings_configuration_path, method: :post, :html => { :multipart => true } do |f|
-  %h4 Master lock
   .content-container
-    .row.dropshadow
-      .input-container.col-xs-12
-        = f.input :mark_as_locked, as: :boolean, label: "Lock admin settings", input_html: { checked: f.object.locked? }
-  .content-container
+    %h4
+      = t('instance_admin.settings.configuration.master_lock')
     .row
-      = f.button :submit, 'Update Lock', class: 'btn btn-grey pull-right'
+      .input-container.col-xs-9
+        = f.input :mark_as_locked, as: :boolean, input_html: { checked: f.object.locked? }, inline_label: true
+      .input-container.col-xs-3
+        = f.button :submit, t('instance_admin.settings.configuration.update_lock'), class: 'btn btn-light pull-right'
 
 
-= simple_nested_form_for @instance, :url => instance_admin_settings_configuration_path, :html => { :multipart => true } do |f|
-  %h4 Basic Configuration
+= simple_nested_form_for @instance, :url => instance_admin_settings_configuration_path, :html => { :multipart => true, :data => { 'edit_instance_form' => 1 } } do |f|
   .content-container
+    %h4
+      = t('instance_admin.settings.configuration.basic_configuration')
     .row
       .input-container.col-xs-12
-        = f.input :name, label: 'Marketplace Name', input_html: { class: 'form-control' }, required: false, placeholder: 'Your marketplace name'
+        = f.input :name, input_html: { class: 'form-control' }, required: false, placeholder: t('instance_admin.settings.configuration.basic_configuration_section.placeholder_marketplace_name')
     .row
       .input-container.col-xs-6
-        = f.input :skip_company, label: "Don't require company"
+        = f.input :skip_company, inline_label: true
       .input-container.col-xs-6
-        = f.input :force_accepting_tos, label: "Force accepting ToS on sign up"
+        = f.input :force_accepting_tos, inline_label: true
     .row
       .input-container.col-xs-6
-        = f.input :allowed_countries, collection: Country.all, value_method: :name,  input_html: { class: 'selectpicker', "data-live-search" => "true", multiple: true }, hint: "Leave blank to use all countries"
+        = f.input :allowed_countries, collection: Country.all, value_method: :name,  input_html: { class: 'selectpicker', "data-live-search" => "true", multiple: true }, hint: t('instance_admin.settings.configuration.leave_blank_to_use_all_countries')
       .input-container.col-xs-6
         = f.input :default_country, collection: Country.all, value_method: :name, input_html: { class: 'selectpicker', "data-live-search" => "true"}
     .row
       .input-container.col-xs-6
-        = f.input :allowed_currencies, as: :currency,  input_html: { class: 'selectpicker', "data-live-search" => "true", multiple: true }, hint: "Leave blank to use all currencies"
+        = f.input :allowed_currencies, as: :currency,  input_html: { class: 'selectpicker', "data-live-search" => "true", multiple: true }, hint: t('instance_admin.settings.configuration.leave_blank_to_use_all_currencies')
       .input-container.col-xs-6
         = f.input :default_currency, as: :currency,  input_html: { class: 'selectpicker', "data-live-search" => "true"}
 
-  %h4 Checkout
   .content-container
-    .row.dropshadow
+    %h4
+      = t('instance_admin.settings.configuration.checkout')
+    .row
       .input-container.col-xs-4
-        = f.input :possible_manual_payment, as: :boolean, label: "Is it possible to skip paying", input_html: { checked: f.object.possible_manual_payment? }
-      .input-container.col-xs-4
+        = f.input :possible_manual_payment, as: :boolean, input_html: { checked: f.object.possible_manual_payment? }, inline_label: true
+    .row
+      .input-container.col-xs-6
         .control-group.optional
-          %label.optional.control-label Label translation
+          %label.optional.control-label
+            = t('instance_admin.settings.configuration.checkout_section.label_translation')
           .controls
             %input{name: "instance[custom_translations][buy_sell_market.checkout.manual_payment]", class: 'form-control', value: t('buy_sell_market.checkout.manual_payment') }
-      .input-container.col-xs-4
+      .input-container.col-xs-6
         .control-group.optional
-          %label.optional.control-label Description translation
+          %label.optional.control-label
+            = t('instance_admin.settings.configuration.checkout_section.description_translation')
           .controls
             %input{name: 'instance[custom_translations][buy_sell_market.checkout.manual_payment_description]', class: 'form-control', value: t('buy_sell_market.checkout.manual_payment_description') }
 
-  %h4 Marketplace Password
   .content-container
-    .row.dropshadow
+    %h4
+      = t('instance_admin.settings.configuration.marketplace_password')
+    .row
       .input-container.col-xs-6
-        = f.input :marketplace_password, label: "Password", placeholder: 'Password', as: :string, input_html: { class: 'form-control' }
+        = f.input :marketplace_password, placeholder: t('simple_form.labels.instance.marketplace_password'), as: :string, input_html: { class: 'form-control' }
       .input-container.col-xs-6
-        = f.input :password_protected, as: :boolean, label: "Require password to access marketplace"
+        = f.input :password_protected, as: :boolean, inline_label: true
 
-  %h4 Payment Transfers
   .content-container
-    .row.dropshadow
+    %h4
+      = t('instance_admin.settings.configuration.payment_transfers')
+    .row
       .input-container.col-xs-6
         = f.input :payment_transfers_frequency, collection: PaymentTransfer::FREQUENCIES.collect { |f| [t(".#{f}"), f] }, input_html: { class: 'form-control' }, prompt: true
 
-  %h4 Text Filters
-  .content-container.dropshadow
+  .content-container
+    .row.heading-row
+      .col-xs-6
+        %h4
+          = t('instance_admin.settings.configuration.text_filters')
+      .col-xs-6
+        = f.link_to_add :text_filters, :data => { :target => "#text-filters" } do
+          .btn.btn-blue.pull-right
+            = t('instance_admin.settings.configuration.text_filters_section.add_text_filter')
     .row
       .input-container.col-xs-12
-        = f.input :apply_text_filters, label: "Apply text filters"
+        = f.input :apply_text_filters, inline_label: true
       .fields
-        .row
+        .row.table-header
           .input-container.col-xs-2
-            Name
+            = t('instance_admin.settings.configuration.text_filters_section.name')
           .input-container.col-xs-4
-            Regexp
+            = t('instance_admin.settings.configuration.text_filters_section.regexp')
           .input-container.col-xs-3
-            Replacement Text
+            = t('instance_admin.settings.configuration.text_filters_section.replacement_text')
           .input-container.col-xs-2
-            Ignore case
+            = t('instance_admin.settings.configuration.text_filters_section.ignore_case')
           .input-container.col-xs-1
     #text-filters
       = f.fields_for :text_filters, wrapper: false do |f|
         .fields
           .row
             .input-container.col-xs-2
-              = f.input :name, label: false, placeholder: 'Name', input_html: { class: 'form-control' }
+              = f.input :name, label: false, placeholder: t('instance_admin.settings.configuration.text_filters_section.name'), input_html: { class: 'form-control' }
             .input-container.col-xs-4
-              = f.input :regexp, label: false, placeholder: 'Regexp', input_html: { class: 'form-control' }
+              = f.input :regexp, label: false, placeholder: t('instance_admin.settings.configuration.text_filters_section.regexp'), input_html: { class: 'form-control' }
             .input-container.col-xs-3
-              = f.input :replacement_text, placeholder: 'Replacement Text', label: false, input_html: { class: 'form-control' }
+              = f.input :replacement_text, placeholder: t('instance_admin.settings.configuration.text_filters_section.replacement_text'), label: false, input_html: { class: 'form-control' }
             .input-container.col-xs-2.text-center
-              = f.input :flags, as: :boolean, label: false
+              = f.input :flags, as: :boolean, label: false, inline_label: true
             .input-container.col-xs-1.text-center
               = f.link_to_remove confirm: (f.object.try(:name).present? ? "Are you sure you want to delete #{f.object.name}?" : false) do
                 .fa.fa-trash-o.fa-2x.inline-form-icon.pull-right
 
-  .row
-    .col-xs-12
-      = f.link_to_add :text_filters, :data => { :target => "#text-filters" } do
-        .btn.btn-grey.pull-right
-          + Add Text Filter
-
-  %h4 Support
   .content-container
-    .row.dropshadow
-      .input-container.col-xs-12
-        = f.input :support_email, label: "Support email", placeholder: 'example@gmail.com', input_html: { class: 'form-control' }
-      .input-container.col-xs-12.admin-stylish-inputs
-        = f.input :support_imap_username, input_html: { autocomplete: 'off' }
-        = f.input :support_imap_password, input_html: { autocomplete: 'off', value: f.try(:object).try(:support_imap_password) }
-        = f.input :support_imap_server, input_html: { autocomplete: 'off' }
-        = f.input :support_imap_port, input_html: { autocomplete: 'off' }
-        = f.input :support_imap_ssl, input_html: { autocomplete: 'off' }
+    %h4
+      = t('instance_admin.settings.configuration.support')
+    .row
+      .input-container.col-xs-3
+        = f.input :support_email, placeholder: 'example@gmail.com', input_html: { class: 'form-control' }
+      .input-container.col-xs-3
+        = f.input :support_imap_username, input_html: { autocomplete: 'off' }, input_html: { class: 'form-control' }
+      .input-container.col-xs-3
+        = f.input :support_imap_password, input_html: { autocomplete: 'off', value: f.try(:object).try(:support_imap_password) }, input_html: { class: 'form-control' }
+      .input-container.col-xs-3
+        = f.input :support_imap_server, input_html: { autocomplete: 'off' }, input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-3
+        = f.input :support_imap_port, input_html: { autocomplete: 'off' }, input_html: { class: 'form-control' }
+      .input-container.col-xs-3
+        = f.input :support_imap_ssl, input_html: { autocomplete: 'off' }, inline_label: true
         = f.submit 'Save', class: 'hidden_form_element'
-        = f.submit t('instance_admin.imap_settings.validate_imap_settings'), class: 'btn btn-green', name: 'validate_imap_settings_button'
+      .input-container.col-xs-3
+        = f.submit t('instance_admin.imap_settings.validate_imap_settings'), class: 'btn btn-light', name: 'validate_imap_settings_button'
 
-  = f.button :submit, 'Save', class: 'btn btn-green pull-right'
+  = content_for :header_buttons do
+    = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => '[data-edit-instance-form]' }
+

@@ -1,8 +1,16 @@
-%h4= resource_class.name.underscore.humanize.pluralize
+.content-container
+  %h4
+    = t("instance_admin.manage.payments.resource.plural.#{resource_class.name.underscore}")
+  
+  .row
+    .text-container
+      = t('instance_admin.manage.payments.here_you_can_see_all_payments')
+      #{I18n.l(PaymentTransfers::SchedulerMethods.new(platform_context.instance).next_payment_transfers_date, format: :long)}
+  
+  = render 'list_table'
 
-%p
-  Here you can see all payments that are pending transfer. Next transfer will happen at #{I18n.l(PaymentTransfers::SchedulerMethods.new(platform_context.instance).next_payment_transfers_date, format: :long)}
+.row
+  .text-container
+    .pull-right
+      = will_paginate @payments
 
-= render 'list_table'
-
-= will_paginate @payments

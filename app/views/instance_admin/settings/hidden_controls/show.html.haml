@@ -1,23 +1,25 @@
-%h4 Hidden Controls
 .content-container
+  %h4 Hidden Controls
   = simple_form_for @instance, :url => instance_admin_settings_hidden_controls_path, method: :put do |f|
-    .content-container
-      .row
-        .table-container.col-xs-12.dropshadow
-          %table.table
-            %thead
+    .row
+      .table-container.col-xs-12
+        %table.table
+          %thead
+            %tr
+              %th
+                = t("instance_admin.settings.hidden_controls.name")
+              %th
+                = t("instance_admin.settings.hidden_controls.type")
+              %th
+                = t("instance_admin.settings.hidden_controls.hide")
+          %tbody
+            - HiddenUiControls.all(:auto).each do |key|
               %tr
-                %th Name
-                %th Type
-                %th Hide
-            %tbody
-              - HiddenUiControls.all(:auto).each do |key|
-                %tr
-                  %td= key.display_name
-                  %td= key.display_type
-                  %td
-                    = check_box_tag "hidden_ui_controls[#{key.name}]", '1', key.hidden?
+                %td= key.display_name
+                %td= key.display_type
+                %td
+                  = check_box_tag "hidden_ui_controls[#{key.name}]", '1', key.hidden?
 
-    .content-container
-      .row
-        = f.button :submit, 'Update Settings', class: 'btn btn-green pull-right'
+    = content_for :header_buttons do
+      = f.button :submit, t('instance_admin.settings.hidden_controls.update_settings'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form.edit_instance' }
+

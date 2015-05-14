@@ -1,4 +1,6 @@
-%h4= t 'instance_admin.locales.labels.edit'
+.content-container
+  %h4= t 'instance_admin.locales.labels.edit'
 
-= simple_form_for @locale, url: instance_admin_settings_locale_path(@locale) do |f|
-  = render 'form', f: f
+  = simple_form_for @locale, url: instance_admin_settings_locale_path(@locale) do |f|
+    = render 'form', f: f
+

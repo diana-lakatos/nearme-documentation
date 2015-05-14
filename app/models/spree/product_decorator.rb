@@ -22,6 +22,7 @@ Spree::Product.class_eval do
   has_one :upload_obligation, as: :item, dependent: :destroy
 
   has_custom_attributes target_type: 'Spree::ProductType', target_id: :product_type_id, store_accessor_name: :extra_properties
+  delegate :custom_validators, to: :product_type
 
   scope :approved, -> { where(approved: true) }
   scope :draft, -> { where(draft: true) }
@@ -40,6 +41,7 @@ Spree::Product.class_eval do
 
   validates :slug, uniqueness: { scope: [:instance_id, :company_id, :partner_id, :user_id] }
   validate :shipping_category_presence
+  validates_with CustomValidators
 
   after_save :set_external_id
 

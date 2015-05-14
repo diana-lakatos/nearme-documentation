@@ -1,17 +1,15 @@
-%h4
-  VENDOR APPROVAL
-  %span.pull-right
-    = link_to 'Settings', instance_admin_manage_approval_request_templates_path
-
-.sub-header-nav
-  %ul
-    - %w(pending rejected questioned approved).each do |state|
-      %li
-        = link_to "#{state.capitalize} (#{ApprovalRequest.send(state).count})", instance_admin_manage_approval_requests_path(:show => state), class: " #{'active' if state == params[:show]}"
-
 .content-container
+  .sub-header-nav
+    %ul
+      - %w(pending rejected questioned approved).each do |state|
+        %li
+          = link_to "#{state.capitalize} (#{ApprovalRequest.send(state).count})", instance_admin_manage_approval_requests_path(:show => state), class: " #{'active' if state == params[:show]}"
+
+  %h4
+    VENDOR APPROVAL
+  
   .row
-    .table-container.col-xs-12.dropshadow
+    .table-container.col-xs-12
       %table.table.table-hover
         %thead
           %tr
@@ -36,4 +34,13 @@
                 = resource.decorate.login_as_owner_creator_link
               %td
                 = link_to 'Manage', edit_instance_admin_manage_approval_request_path(resource)
-        = will_paginate @approval_requests
+
+
+.row
+  .text-container
+    .pull-right
+      = will_paginate @approval_requests
+
+= content_for :header_buttons do
+  = link_to 'Settings', instance_admin_manage_approval_request_templates_path, class: 'btn btn-blue'
+

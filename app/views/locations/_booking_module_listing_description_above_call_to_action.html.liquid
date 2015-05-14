@@ -11,7 +11,7 @@
     <input class="pull-right" name="exclusive_price" type="checkbox" value="1" data-force-check="{% if listing.only_exclusive_price_available? %}1{% else %}0{% endif %}">
     <div class="price"><span>{{ listing.currency | currency_content_tag: listing.exclusive_price, 'span',rel: false }}</span></div>
   </div>
-  <div data-exclusive-price-content="true">
+  <div data-exclusive-price-content="true" style="display: none;">
     {{ 'reservations.booking_module.exclusive_price_content' | translate }}
     <input type="text" data-guest-notes="true">
   </div>

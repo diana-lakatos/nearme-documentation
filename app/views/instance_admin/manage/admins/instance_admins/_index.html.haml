@@ -1,14 +1,14 @@
-%form#instance_admins_form
-  %h4 Admin
-  .content-container
+.content-container
+  %h4= t('instance_admin.manage.admins.admin')
+  %form#instance_admins_form
     .row
-      .table-container.col-xs-12.dropshadow
+      .table-container.col-xs-12
         %table.table
           %thead
             %tr
-              %th Admin
-              %th Email
-              %th Role
+              %th= t('instance_admin.manage.admins.admin')
+              %th= t('instance_admin.manage.admins.email')
+              %th= t('instance_admin.manage.admins.role')
               %th
           %tbody
             - platform_context.instance.instance_admins.each do |instance_admin|
@@ -19,7 +19,7 @@
                   = instance_admin.user.try(:email)
                 %td
                   - if instance_admin.instance_owner
-                    Instance Owner
+                    = t('instance_admin.manage.admins.instance_owner')
                   -else
                     = select_tag :instance_admin_role_id, options_from_collection_for_select(instance_admin_roles, "id", "name", instance_admin.instance_admin_role.id), :'data-role-select' => true, :'data-instance-admin-id' => instance_admin.id, :class => 'pull-left'
                     .loading{:'data-loading' => true}
@@ -28,5 +28,5 @@
                   - unless instance_admin.instance_owner
                     .pull-right
                       = link_to instance_admin_manage_admins_instance_admin_path(instance_admin), :method => :delete,
-                          data: { confirm: 'Are you sure?' } do
+                          data: { confirm: t('instance_admin.are_you_sure') } do
                         .fa.fa-trash-o.fa-2x.inline-form-icon

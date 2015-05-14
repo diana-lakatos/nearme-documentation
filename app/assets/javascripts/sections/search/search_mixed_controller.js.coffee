@@ -31,15 +31,6 @@ class Search.SearchMixedController extends Search.SearchController
         @perPageValue = @perPageField.find(':selected').val()
         @form.submit()
 
-    @slider = $('#price-slider')
-
-    @slider.on 'set', =>
-      @assignFormParams(
-        'price[min]': @slider.val()[0]
-        'price[max]': @slider.val()[1]
-      )
-      @form.submit()
-
     if @autocompleteEnabled()
       $('input.query').keypress (e) =>
         if e.which == 13
@@ -51,7 +42,6 @@ class Search.SearchMixedController extends Search.SearchController
             result = results.getBestResult() if results
             @clearBoundParams()
             @setGeolocatedQuery(query, result)
-
             @submit_form = true
             _.defer =>
               google.maps.event.trigger(@autocomplete, 'place_changed')
@@ -340,19 +330,27 @@ class Search.SearchMixedController extends Search.SearchController
   initializePriceSlide: =>
     elem = $('#price-slider')
     val = parseInt( $("input[name='price[max]']").val() )
-    if val > 0
-      elem.noUiSlider(
-        start: [ 0, val ],
-        behaviour: 'drag',
-        connect: true,
-        range: {
-          'min': 0,
-          'max': val
-        }
+    elem.noUiSlider(
+      start: [ 0, val ],
+      behaviour: 'drag',
+      connect: true,
+      range: {
+        'min': 0,
+        'max': val
+      }
+    )
+
+    elem.on 'set', =>
+      $('.search-max-price:first').attr('data-noreinit-slider', 1)
+      @assignFormParams(
+        'price[min]': elem.val()[0]
+        'price[max]': elem.val()[1]
       )
-      elem.Link('upper').to('-inline-<div class="slider-tooltip"></div>', ( value ) ->
-        $(this).html('<strong>$' + parseInt(value) + ' </strong>')
-      )
-      elem.Link('lower').to('-inline-<div class="slider-tooltip"></div>', ( value ) ->
-        $(this).html('<strong>$' + parseInt(value) + ' </strong>')
-      )
+      @form.submit()
+
+    elem.Link('upper').to('-inline-<div class="slider-tooltip"></div>', ( value ) ->
+      $(this).html('<strong>$' + parseInt(value) + ' </strong>')
+    )
+    elem.Link('lower').to('-inline-<div class="slider-tooltip"></div>', ( value ) ->
+      $(this).html('<strong>$' + parseInt(value) + ' </strong>')
+    )

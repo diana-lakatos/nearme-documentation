@@ -17,13 +17,13 @@ Then(/^I can manage blog posts$/) do
   click_link 'New post'
   fill_in 'Title', with: 'Great title!'
   fill_in 'Content', with: 'Content'
-  click_button 'Create Blog post'
+  click_button 'Save'
   page.should have_content('New blog post has been added. ')
   @blog_instance.blog_posts.last.title.should == 'Great title!'
 
   find('//a[title=Edit]').click
   fill_in 'Title', with: 'Another title.'
-  click_button 'Update Blog post'
+  click_button 'Save'
   page.should have_content('Blog post has been updated.')
   @blog_instance.blog_posts.last.title.should == 'Another title.'
 
@@ -36,7 +36,7 @@ Then(/^I can manage settings for a blog$/) do
   visit '/instance_admin/manage_blog/settings/edit'
 
   fill_in 'Name', with: 'Desks Near Me blog'
-  click_button 'Save'
+  click_button 'Hidden submit'
 
   page.should have_content('Blog settings were updated.')
   @blog_instance.reload.name.should == 'Desks Near Me blog'
@@ -91,7 +91,7 @@ Then(/^I can promote one user blog post$/) do
 
   find('//a[title=Edit]').click
   find('//input[id=user_blog_post_highlighted]').set true
-  click_button 'Update User blog post'
+  click_button 'Hidden submit'
   page.should have_content('Blog post has been updated.')
   @user.published_blogs.first.highlighted.should be_true
 end

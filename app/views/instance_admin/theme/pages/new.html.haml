@@ -1,5 +1,6 @@
-%h4= @redirect_form ? 'New Redirect' : 'New Page'
-- if @redirect_form
-  = render :partial => "redirect_form"
-- else
-  = render :partial => "form"
+.content-container
+  %h4= @redirect_form ? "#{t('instance_admin.new')} #{t('instance_admin.pages.redirect')}" : "#{t('instance_admin.new')} #{t('instance_admin.pages.page')}"
+  - if @redirect_form
+    = render :partial => "redirect_form"
+  - else
+    = render :partial => "form"
