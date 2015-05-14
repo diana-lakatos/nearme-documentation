@@ -316,7 +316,7 @@ DesksnearMe::Application.routes.draw do
             post :create_as_copy
           end
         end
-        resources :categories, controller: 'service_types/categories' do
+        resources :categories, except: [:new, :show], controller: 'service_types/categories' do
           member do
             get :jstree
           end
@@ -383,7 +383,7 @@ DesksnearMe::Application.routes.draw do
       resource :configuration, only: [:show, :update], controller: 'configuration'
       resource :commissions, :only => [:show, :update], :controller => 'commissions'
       resources :product_types do
-        resources :categories, controller: 'product_types/categories' do
+        resources :categories, except: [:new, :show], controller: 'product_types/categories' do
           member do
             get :jstree
           end

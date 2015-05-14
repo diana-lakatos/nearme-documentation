@@ -14,6 +14,7 @@
 
 - if @category.present?
   - content_for :domready do
+    var categories_path = "#{url_for(['instance_admin', @controller_scope, @categorable, 'categories'])}";
     new InstanceAdmin.CategoriesController($('#category_form'), #{@category.id});
 
 = content_for :header_buttons do

@@ -9,10 +9,9 @@ class Category < ActiveRecord::Base
   DISPLAY_OPTIONS = %w(tree autocomplete).freeze
   SEARCH_OPTIONS = [["Include in search", "include"], ["Exclude from search", "exclude"]].freeze
 
-  has_many :categories_transactables
-  has_many :categories_products
-  has_many :products, through: :categories_products
-  has_many :transactables, through: :categories_transactables
+  has_many :categories_categorables
+  has_many :categorable_products, through: :categories_categorables, source_type: "Spree::Product"
+  has_many :categorable_transactables, through: :categories_categorables, source_type: "Transactable"
 
   belongs_to :instance
 

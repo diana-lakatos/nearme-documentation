@@ -19,7 +19,7 @@ class @InstanceAdmin.CategoriesController
                   (categories_path + '/' + e.prop('id') + '/jstree').toString()
             themes:
               theme: "apple",
-              url: "/assets/instance_admin/jstree_themes/apple/style.css"
+              url: false
             strings:
               new_node: "New category",
               loading: "Loading ..."

@@ -33,7 +33,7 @@ class @CategoriesController
 
             themes:
               theme: "apple",
-              url: ""
+              url: false
             strings:
               new_node: "New category",
               loading: "Loading ..."

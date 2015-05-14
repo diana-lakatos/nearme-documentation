@@ -3,8 +3,7 @@ class SecuredParams
   def boarding_form(product_type=nil)
     [
       :draft,
-      :store_name,
-      company_address_attributes: nested(self.address),
+      company_attributes: nested(self.company),
       product_form: nested(self.product_form(product_type))
 
     ]

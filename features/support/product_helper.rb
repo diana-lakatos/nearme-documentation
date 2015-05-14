@@ -2,7 +2,7 @@ module ProductHelper
 
   def create_first_shipping_profile
     shipping_category = FactoryGirl.create(:shipping_category)
-    user = model!("the user")
+    user = model!("user")
     shipping_category.user_id = user.id
     shipping_category.save!
   end
@@ -14,12 +14,6 @@ module ProductHelper
     fill_in 'product_form_quantity', with: '100'
 
     find('.shipping_method_block.shipping_method_list input').click
-
-    # TODO possible test enhancement: change zone kind to country type
-    # within '.product_form_shipping_methods_zones_kind' do
-    #   find("button").click
-    #   find("li[rel='1']").click
-    # end
   end
 
   def assert_product_data(product)
@@ -31,6 +25,19 @@ module ProductHelper
     assert_equal 'iPhone description', ActionView::Base.full_sanitizer.sanitize(product.description).strip
     assert_equal 100, product.price
     assert_equal 100, stock_item.stock_movements.sum(:quantity)
+  end
+
+  def add_new_shipping_method
+    find(".add_shipping_profile").click
+    fill_in 'shipping_category_form_name', with: 'DHL'
+    fill_in 'shipping_category_form_shipping_methods_attributes_0_name', with: 'DHL'
+    fill_in 'shipping_category_form_shipping_methods_attributes_0_processing_time', with: '1'
+    fill_in 'shipping_category_form_shipping_methods_attributes_0_calculator_attributes_preferred_amount', with: '1'
+    find('.zone_kind_select').select('Country')
+    first('.country_based_select').click
+    page.should have_css('.select2-result-label')
+    first(".select2-result-label").click
+    click_button('Save')
   end
 end
 

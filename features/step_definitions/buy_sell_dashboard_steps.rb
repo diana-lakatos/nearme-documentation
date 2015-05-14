@@ -2,7 +2,7 @@ Given /^I am adding new product$/ do
   visit new_dashboard_company_product_type_product_path(PlatformContext.current.instance.product_types.first)
 end
 
-Given /^A shipping profile exists$/ do
+Given /^a shipping profile exists$/ do
   create_first_shipping_profile
 end
 

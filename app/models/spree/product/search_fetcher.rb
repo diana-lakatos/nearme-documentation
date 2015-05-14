@@ -12,11 +12,11 @@ class Spree::Product::SearchFetcher
     if categories.present?
       if PlatformContext.current.instance.category_search_type == "AND"
         @products = @products.
-          joins(:categories_products).
-          where(categories_products: {category_id: category_ids}).
-          group('spree_products.id').having("count(category_id) >= #{category_ids.size}")
+          joins(:categories_categorables).
+          where(categories_categorables: {category_id: category_ids}).
+          group('spree_products.id').having("count(categories_categorables.category_id) >= #{category_ids.size}")
       else
-        @products = @products.joins(:categories_products).where(categories_products: {category_id: category_ids}).distinct
+        @products = @products.joins(:categories_categorables).where(categories_categorables: {category_id: category_ids}).distinct
       end
     end
     (@filters[:custom_attributes] || {}).each do |field_name, values|

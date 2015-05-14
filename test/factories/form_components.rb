@@ -23,8 +23,14 @@ FactoryGirl.define do
         { "user" => "language" }, { "user" => "time_zone" }, { "user" => "current_location" }, { "user" => "company_name" }
       ]}
     end
-
-
   end
+end
 
+FactoryGirl.define do
+  factory :product_form_component, class: FormComponent do
+    sequence(:name) { |n| "Section #{n}" }
+    form_type { FormComponent::PRODUCT_ATTRIBUTES }
+    form_componentable { Spree::Product.first.presence || FactoryGirl.create(:product_type) }
+    form_fields { form_componentable.categories.map {|c| [ {'product' => "Category - #{c.name}"} ] } }
+  end
 end

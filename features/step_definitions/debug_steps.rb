@@ -7,5 +7,9 @@ When /^I open page$/ do
 end
 
 Then /^I debug$/ do
-    debugger
+  debugger
+end
+
+Then /^I pry$/ do
+  binding.pry
 end

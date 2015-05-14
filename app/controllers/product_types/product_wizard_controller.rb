@@ -19,7 +19,7 @@ class ProductTypes::ProductWizardController < ApplicationController
     @images = @boarding_form.product_form.product.images
     if @boarding_form.submit(boarding_form_params)
       if @boarding_form.draft?
-        redirect_to new_product_type_space_wizard_path(@product_type), notice: t('flash_messages.space_wizard.draft_saved', bookable_noun: @product_type.name)
+        redirect_to new_product_type_product_wizard_path(@product_type), notice: t('flash_messages.space_wizard.draft_saved', bookable_noun: @product_type.name)
       else
         redirect_to dashboard_company_product_type_products_path(@product_type), notice: t('flash_messages.space_wizard.item_listed', bookable_noun: @product_type.name)
       end

@@ -7,11 +7,6 @@ class InstanceAdmin::CategoriesController < InstanceAdmin::BaseController
     @category = Category.new categorable: @categorable
   end
 
-  def new
-    @form_type = params[:form_type]
-    @category = @categorable.categories.build(:form_type => @form_type)
-  end
-
   def create
     @category = @categorable.categories.build(category_params)
 
@@ -74,7 +69,7 @@ class InstanceAdmin::CategoriesController < InstanceAdmin::BaseController
   private
 
   def redirect_path
-    url_for(['instance_admin', @controller_scope, @categorable, @category]) + '/edit'
+    @redirect_path ||= url_for(['instance_admin', @controller_scope, @categorable, @category]) + '/edit'
   end
 
   def category_params
