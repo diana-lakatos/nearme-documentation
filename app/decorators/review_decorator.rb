@@ -1,10 +1,10 @@
 class ReviewDecorator < Draper::Decorator
   include Draper::LazyHelpers
   include FeedbackDecoratorHelper
-  
+
   delegate_all
 
-  def date_format 
+  def date_format
     if created_at.to_date == Time.zone.today
       I18n.t('decorators.review.today')
     else
@@ -113,8 +113,8 @@ class ReviewDecorator < Draper::Decorator
   end
 
   def line_item_photo
-    if reviewable.product && reviewable.product.variant_images.present?
-      reviewable.product.variant_images.first.attachment_url
+    if reviewable.product && reviewable.product.images.first.present?
+      reviewable.product.images.first.image_url(:medium)
     else
       default_item_photo
     end
