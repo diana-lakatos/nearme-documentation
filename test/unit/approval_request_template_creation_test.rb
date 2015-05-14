@@ -12,7 +12,7 @@ class ApprovalRequestTemplateCreationTest < ActiveSupport::TestCase
       @approval_request_templates << approval_request_template
     end
 
-    TransactableType.destroy_all
+    ServiceType.destroy_all
     @transactable_types = []
     1.upto(3) do
       @transactable_types << FactoryGirl.create(:transactable_type)
@@ -28,7 +28,7 @@ class ApprovalRequestTemplateCreationTest < ActiveSupport::TestCase
     params = { form_type: FormComponent::SPACE_WIZARD, name: I18n.t('instance_admin.form_components.approval_requests_section_title') }
 
     0.upto(2) do |index|
-      form_components = FormComponent.where(params.merge({ form_componentable: @transactable_types[index] }))
+      form_components = @transactable_types[index].form_components.where(params)
       assert_equal 1, form_components.length
       assert_equal true, form_components[0].is_approval_request_surfacing
       all_form_fields = form_components.first.form_fields 

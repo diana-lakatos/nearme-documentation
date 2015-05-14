@@ -5,6 +5,13 @@ FactoryGirl.define do
     label 'My Label'
     hint 'this is my hint'
 
+    trait :listing_types do
+      name 'listing_type'
+      valid_values { ["Desk", "Meeting Room", "Office Space", "Salon Booth"] }
+      attribute_type 'string'
+      required 1
+    end
+
     factory :custom_attribute_required do
       validation_rules { { presence: {} } }
     end

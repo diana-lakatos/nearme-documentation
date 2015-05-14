@@ -8,7 +8,7 @@ module Utils
 
     def create!
       if @class_name.blank?
-        if @form_componentable.is_a?(TransactableType)
+        if @form_componentable.is_a?(ServiceType)
           @form_componentable.form_components.where(form_type: FormComponent::SPACE_WIZARD).destroy_all
         else
           @form_componentable.form_components.destroy_all
@@ -22,7 +22,7 @@ module Utils
 
     protected
 
-    def create_transactable_type_components
+    def create_service_type_components
       @form_type_class = FormComponent::SPACE_WIZARD
       if @form_componentable.instance.user_info_in_onboarding_flow? && @form_componentable.instance.user_required_fields.count > 0
         form_fields = @form_componentable.instance.user_required_fields.map { |f| { 'user' => f.to_s } }
@@ -48,4 +48,5 @@ module Utils
     end
 
   end
+
 end

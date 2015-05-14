@@ -44,7 +44,7 @@ end
 Then /^New locations and transactables from csv should be added$/ do
   company = model!('user').companies.first
   assert_equal ['Czestochowa', 'Rydygiera'], company.locations.pluck(:name).compact.sort
-  assert_equal [["my name", "Rydygiera"], ["my name2", "Rydygiera"]], company.listings.joins(:location).where('locations.name IS NOT NULL').select('transactables.id, name, locations.name as location_name, transactable_type_id, properties').sort.map { |l| [l.name, l.location_name] }
+  assert_equal [["my name", "Rydygiera"], ["my name2", "Rydygiera"]], company.listings.joins(:location).where('locations.name IS NOT NULL').select('transactables.id, transactables.name, locations.name as location_name, transactable_type_id, properties').sort.map { |l| [l.name, l.location_name] }
 end
 
 Given /^#{capture_model} should be updated$/ do |model|

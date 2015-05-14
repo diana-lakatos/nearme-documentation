@@ -185,7 +185,6 @@ namespace :populate do
       PlatformContext.current = PlatformContext.new(instance)
       PlatformContext.scope_to_instance
       tp = TransactableType.where(name: 'Listing').first_or_create!
-      CustomAttributes::CustomAttribute::Creator.new(tp).create_listing_attributes!
       Transactable.update_all(:transactable_type_id => tp.id)
       Transactable.find_each do |t|
         begin

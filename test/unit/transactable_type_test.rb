@@ -10,7 +10,7 @@ class TransactableTypeTest < ActiveSupport::TestCase
 
   context 'pricing_validation_is_correct' do
     setup do
-      @transactable_type = TransactableType.first
+      @transactable_type = ServiceType.first
     end
 
     should 'be valid if max is greater than min' do
@@ -32,12 +32,12 @@ class TransactableTypeTest < ActiveSupport::TestCase
     end
 
     should 'be valid if max is equal to max price' do
-      @transactable_type.max_daily_price_cents = TransactableType::MAX_PRICE
+      @transactable_type.max_daily_price_cents = ServiceType::MAX_PRICE
       assert @transactable_type.valid?
     end
 
     should 'not be valid if max is greater than max price' do
-      @transactable_type.max_daily_price_cents = TransactableType::MAX_PRICE+1
+      @transactable_type.max_daily_price_cents = ServiceType::MAX_PRICE+1
       refute @transactable_type.valid?
     end
 
@@ -65,21 +65,16 @@ class TransactableTypeTest < ActiveSupport::TestCase
 
     should "create new transcactable type attribute for confirm reservations with public true and default value true" do
       transactable_type = FactoryGirl.create(:transactable_type)
-      tta = transactable_type.custom_attributes.find { |attr| attr.name == "confirm_reservations" }
-      assert_not_nil tta
-      assert_equal "t", tta.default_value
-      assert_equal "boolean", tta.attribute_type
-      assert_equal "switch", tta.html_tag
-      assert_equal(TransactableType.mandatory_boolean_validation_rules, tta.validation_rules)
-      assert tta.public
+      transactable = FactoryGirl.create(:transactable, transactable_type: transactable_type)
+      assert_not_nil transactable.confirm_reservations
+      assert_equal true, transactable.confirm_reservations
     end
 
     should "create new transcactable type attribute for confirm reservations with public false and default value false" do
       transactable_type = FactoryGirl.create(:transactable_type, availability_options: { "confirm_reservations" => { "default_value" => false, "public" => false } })
-      tta = transactable_type.custom_attributes.find { |attr| attr.name == "confirm_reservations" }
-      assert_not_nil tta
-      assert_equal "f", tta.default_value
-      refute tta.public
+      transactable = FactoryGirl.create(:transactable, transactable_type: transactable_type)
+      assert_not_nil transactable.confirm_reservations
+      assert_equal false, transactable.confirm_reservations
     end
 
     context 'validation' do
@@ -118,7 +113,7 @@ class TransactableTypeTest < ActiveSupport::TestCase
     end
 
     should "define enabled methods" do
-      TransactableType::BOOKING_TYPES.each do |bt|
+      ServiceType::BOOKING_TYPES.each do |bt|
         assert(@transactable_type.respond_to?("#{bt}_booking_enabled?"))
       end
     end

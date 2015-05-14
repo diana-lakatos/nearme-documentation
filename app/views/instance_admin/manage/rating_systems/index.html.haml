@@ -19,10 +19,10 @@
       .service
         .header
           .service-name
-            %input{type: 'checkbox', checked: transactable_type.enable_reviews?, 'data-url' => change_state_instance_admin_manage_transactable_type_path(transactable_type)}
+            %input{type: 'checkbox', checked: transactable_type.enable_reviews?, 'data-url' => change_state_instance_admin_manage_service_type_path(transactable_type)}
             %label=transactable_type.name
           .only-if-both-completed
-            %input{type: 'checkbox', checked: transactable_type.show_reviews_if_both_completed?, 'data-url' => change_state_instance_admin_manage_transactable_type_path(transactable_type), 'data-service-name' => transactable_type.name}
+            %input{type: 'checkbox', checked: transactable_type.show_reviews_if_both_completed?, 'data-url' => change_state_instance_admin_manage_service_type_path(transactable_type), 'data-service-name' => transactable_type.name}
             %label= t("instance_admin.rating_systems.index.only_if_both_completed_#{transactable_type.buyable? ? 'products' : 'services'}")
         .ratings-content-container{class: "#{'hidden' unless transactable_type.enable_reviews?}"}
           = form_tag update_systems_instance_admin_manage_rating_systems_path, method: :put do

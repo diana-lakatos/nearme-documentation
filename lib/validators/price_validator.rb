@@ -32,7 +32,7 @@ class PriceValidator < ActiveModel::Validator
   private
 
   def max_price(amount)
-    amount.zero? ? (TransactableType::MAX_PRICE/100) : amount
+    amount.zero? ? (ServiceType::MAX_PRICE/100) : amount
   end
 
 end

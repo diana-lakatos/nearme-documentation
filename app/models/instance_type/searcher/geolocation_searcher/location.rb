@@ -5,12 +5,7 @@ class InstanceType::Searcher::GeolocationSearcher::Location
     @transactable_type = transactable_type
     set_options_for_filters
     @params = params
-    scoped_transactables  = fetcher.locations
-    if params['query'].present?
-      query = params['query'].split(' ').join(' & ') + ":*"
-      scoped_transactables = scoped_transactables.where("CAST(avals(properties) AS text) @@ to_tsquery(:q)", q: query)
-    end
-    @results = scoped_transactables
+    @results = fetcher.locations
   end
 
   def filters

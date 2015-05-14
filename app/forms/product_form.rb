@@ -20,6 +20,9 @@ class ProductForm < Form
   validate do
     unless product.valid?
       self.errors.add(:product)
+      product.errors.each do |key, values|
+        self.errors.add(key, values)
+      end
     end
   end
 
@@ -48,8 +51,10 @@ class ProductForm < Form
 
   # DELEGATORS
 
-  def_delegators :@product, :id, :price, :categories, :category_ids, :price=, :name, :name=, :description, :id=, :description=,
-    :shippo_enabled=, :shippo_enabled, :possible_manual_payment, :possible_manual_payment=, :action_rfq, :action_rfq=, :draft?, :draft=, :draft, :extra_properties, :extra_properties=
+  def_delegators :@product, :id, :price, :categories, :category_ids, :price=,
+    :name, :name=, :description, :id=, :description=, :shippo_enabled=, :shippo_enabled,
+    :possible_manual_payment, :possible_manual_payment=, :action_rfq, :action_rfq=,
+    :draft?, :draft=, :draft, :extra_properties, :extra_properties=, :custom_validators
 
   def_delegators :'@product.master', :weight_unit, :weight_unit=, :height_unit, :height_unit=,
     :width_unit, :width_unit=, :depth_unit, :depth_unit=,

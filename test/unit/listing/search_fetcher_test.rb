@@ -14,6 +14,8 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
     @private_listing_type = 'Meeting Room'
     @office_listing_type = 'Office Space'
 
+    custom_attribute = FactoryGirl.build(:custom_attribute, :listing_types)
+    TransactableType.first.custom_attributes << custom_attribute
     @public_listing = FactoryGirl.create(:transactable, listing_type: @public_listing_type, location: @public_location)
     @public_office_listing = FactoryGirl.create(:transactable, listing_type: @office_listing_type, location: @public_location)
     @private_listing = FactoryGirl.create(:transactable, listing_type: @private_listing_type, location: @private_location)

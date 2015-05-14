@@ -14,6 +14,7 @@ class InstanceAdmin::Theme::FooterControllerTest < ActionController::TestCase
       with_versioning do
         @footer = FactoryGirl.create(:instance_view_footer, instance: Instance.first)
         @footer.update body: "Updated footer"
+        @footer.versions.update_all(whodunnit: 'me')
       end
     end
 

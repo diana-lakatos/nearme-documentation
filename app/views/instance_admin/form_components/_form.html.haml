@@ -16,7 +16,7 @@
   = content_for :header_buttons do
     = f.button :submit, 'Save', class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
 
-- collection_for_form_components = PlatformContext.current.instance.decorate.collection_for_form_components_by_type(@form_type)
+- collection_for_form_components = PlatformContext.current.instance.decorate.collection_for_form_components_by_type(@form_type, @form_componentable.class.name)
 - if collection_for_form_components.length > 0
   .content-container
     %h4
@@ -31,4 +31,3 @@
       .row
         .input-container.col-xs-6
           = f.button :submit, 'Copy From Template', class: 'btn btn-blue pull-right'
-        

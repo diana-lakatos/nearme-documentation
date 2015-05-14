@@ -231,7 +231,6 @@ module Utils
       tp = TransactableType.where(name: 'Listing').first_or_initialize
       tp.attributes = FactoryGirl.attributes_for(:transactable_type_listing)
       tp.save!
-      CustomAttributes::CustomAttribute::Creator.new(tp).create_listing_attributes!
     end
 
     def load_listings!

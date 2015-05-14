@@ -88,14 +88,18 @@ en:
           created: 'Form component has been created.'
           deleted: 'Form component has been deleted.'
           updated: 'Form component has been updated.'
+        custom_validator:
+          created: 'Custom validator has been created.'
+          deleted: 'Custom validator has been deleted.'
+          updated: 'Custom validator has been updated.'
         users:
           user_ban:
             created: 'User has been removed from the marketplace.'
             not_created: 'User has not been reomved from the marketplace.'
-        transactable_types:
-          created: 'Transactable Type created.'
-          updated: 'Transactable Type updated.'
-          deleted: 'Transactable Type deleted.'
+        service_types:
+          created: 'Service Type created.'
+          updated: 'Service Type updated.'
+          deleted: 'Service Type deleted.'
         category:
           created: 'Category group created.'
           updated: 'Category group updated.'

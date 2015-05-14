@@ -99,6 +99,16 @@ class SecuredParams
     ]
   end
 
+  def custom_validator
+    [
+      :field_name,
+      :required,
+      :min_length,
+      :max_length,
+      valid_values: []
+    ]
+  end
+
   def data_upload
     [
       :csv_file,
@@ -849,6 +859,7 @@ class SecuredParams
 
   def transactable(transactable_type)
       [
+        :name, :description, :capacity, :confirm_reservations,
         :location_id, :availability_template_id,
         :defer_availability_rules, :free,
         :price_type, :draft, :enabled,
