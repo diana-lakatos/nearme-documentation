@@ -14,7 +14,8 @@ class CreateElbJobTest < ActiveSupport::TestCase
       dns_name = 'test-dns-name.com'
       balancer = stub(:dns_name => dns_name, :create! => nil)
       NearMe::Balancer.expects(:new).returns(balancer)
-      CreateElbJob.perform(@domain, @certificate_body, @private_key, @certificate_chain)
+      CreateElbJob.perform(@domain.id, @certificate_body, @private_key, @certificate_chain)
+      @domain.reload
       assert_equal @domain.dns_name, dns_name
       assert @domain.elb_secured?
     end
@@ -25,7 +26,8 @@ class CreateElbJobTest < ActiveSupport::TestCase
       balancer.stubs(:create!).raises(Exception)
       NearMe::Balancer.expects(:new).returns(balancer)
       assert_raises(Exception) {
-        CreateElbJob.perform(@domain, @certificate_body, @private_key, @certificate_chain)
+        CreateElbJob.perform(@domain.id, @certificate_body, @private_key, @certificate_chain)
+        @domain.reload
         assert_equal @domain.error_message, error_text
         assert @domain.error?
       }

@@ -96,12 +96,12 @@ class Domain < ActiveRecord::Base
       # or because the creation failed
       if self.unsecured? || self.error?
         self.prepare_elb!
-        CreateElbJob.perform(self, self.certificate_body, self.private_key, self.certificate_chain)
+        CreateElbJob.perform(self.id, self.certificate_body, self.private_key, self.certificate_chain)
       # The load balancer exists and has a certificate or exists but a certificate update has failed
       # and we also received a new certificate in the params from the user
       elsif (self.elb_secured? || self.error_update?) && self.certificate_body.present? && self.private_key.present?
         self.prepare_elb_update!
-        UpdateElbJob.perform(self, self.certificate_body, self.private_key, self.certificate_chain)
+        UpdateElbJob.perform(self.id, self.certificate_body, self.private_key, self.certificate_chain)
       end
     end
   rescue

@@ -14,7 +14,8 @@ class UpdateElbJobTest < ActiveSupport::TestCase
       balancer = stub(:dns_name => nil, :update_certificates! => nil)
       balancer.expects(:update_certificates!)
       NearMe::Balancer.expects(:new).returns(balancer)
-      UpdateElbJob.perform(@domain, @certificate_body, @private_key, @certificate_chain)
+      UpdateElbJob.perform(@domain.id, @certificate_body, @private_key, @certificate_chain)
+      @domain.reload
       assert @domain.elb_secured?
     end
 
@@ -25,7 +26,8 @@ class UpdateElbJobTest < ActiveSupport::TestCase
       balancer.stubs(:update_certificates!).raises(Exception)
       NearMe::Balancer.expects(:new).returns(balancer)
       assert_raises(Exception) {
-        UpdateElbJob.perform(@domain, @certificate_body, @private_key, @certificate_chain)
+        UpdateElbJob.perform(@domain.id, @certificate_body, @private_key, @certificate_chain)
+        @domain.reload
         assert_equal @domain.error_message, error_text
         assert @domain.error_update?
       }

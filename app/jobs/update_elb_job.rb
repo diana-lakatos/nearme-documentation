@@ -1,6 +1,6 @@
 class UpdateElbJob < Job
-  def after_initialize(domain, certificate_body, private_key, certificate_chain)
-    @domain = domain
+  def after_initialize(domain_id, certificate_body, private_key, certificate_chain)
+    @domain = Domain.find(domain_id)
     @certificate_body = certificate_body
     @private_key = private_key
     @certificate_chain = certificate_chain
