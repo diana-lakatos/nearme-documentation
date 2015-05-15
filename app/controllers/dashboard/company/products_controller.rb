@@ -10,19 +10,7 @@ class Dashboard::Company::ProductsController < Dashboard::Company::BaseControlle
   before_filter :ensure_system_shipping_categories_copied, only: [:new, :edit]
 
   def index
-    perform_search = false
-    if params[:search] && params[:search][:query].present?
-      condition, attribute_params = prepare_filtered_hstore_query(@product_type, 'extra_properties', params[:search][:query], 'name', 'description')
-      if condition.present?
-        perform_search = true
-      end
-    end
-
-    if perform_search
-      @products = @company.products.of_type(@product_type).where(condition, *attribute_params).paginate(page: params[:page], per_page: 1)
-    else
-      @products = @company.products.of_type(@product_type).paginate(page: params[:page], per_page: 20)
-    end
+    @products = CustomObjectHstoreSearcher.new(@product_type, @company.products.of_type(@product_type)).products(params[:search]).paginate(page: params[:page], per_page: 20)
   end
 
   def new

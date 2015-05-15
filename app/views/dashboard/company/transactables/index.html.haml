@@ -16,7 +16,8 @@
   = simple_form_for :search, wrapper: :bs3, :url => dashboard_company_transactable_type_transactables_path(@transactable_type), :method => :get do |f|
     = f.input :query, label: 'Search your products', input_html: { value: (params[:search] || {})[:query] }
     .row
-      = f.submit :search, class: "btn medium blue pull-right"
+      .col-md-12
+        = f.submit 'Search', class: "btn medium blue pull-right"
 
   .listings-header
     .row

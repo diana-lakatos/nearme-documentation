@@ -6,19 +6,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   before_filter :set_form_components
 
   def index
-    perform_search = false
-    if params[:search] && params[:search][:query].present?
-      condition, attribute_params = prepare_filtered_hstore_query(@transactable_type, 'properties', params[:search][:query])
-      if condition.present?
-        perform_search = true
-      end
-    end
-
-    if perform_search
-      @transactables = @transactable_type.transactables.where(company_id: @company).where(condition, *attribute_params).paginate(page: params[:page], per_page: 20)
-    else
-      @transactables = @transactable_type.transactables.where(company_id: @company).paginate(page: params[:page], per_page: 20)
-    end
+    @transactables = CustomObjectHstoreSearcher.new(@transactable_type, @transactable_type.transactables.where(company_id: @company)).transactables(params[:search]).paginate(page: params[:page], per_page: 20)
   end
 
   def new
