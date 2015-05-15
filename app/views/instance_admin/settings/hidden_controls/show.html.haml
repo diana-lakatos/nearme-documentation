@@ -21,5 +21,5 @@
                   = check_box_tag "hidden_ui_controls[#{key.name}]", '1', key.hidden?
 
     = content_for :header_buttons do
-      = f.button :submit, t('instance_admin.settings.hidden_controls.update_settings'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form.edit_instance' }
+      = f.button :submit, t('instance_admin.settings.hidden_controls.update_settings'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
 
