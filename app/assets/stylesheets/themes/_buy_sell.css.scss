@@ -440,6 +440,10 @@ body.buy-sell-theme {
 
     .profile-listings .row-fluid {
       margin-bottom: 40px;
+
+      &.compact {
+        margin-bottom: 10px;
+      }
     }
 
     .item-img {

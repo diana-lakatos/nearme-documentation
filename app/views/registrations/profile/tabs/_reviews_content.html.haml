@@ -1,18 +1,18 @@
 - unless user_has_own_reviews?
   .rating-averages
     .row-fluid.reviews-summary
-      .span3
+      .span8
         %p= t 'buy_sell_market.products.labels.summary'
-      .span9
+      .span3
         .rating
           - if params[:option].blank? || params[:option] == 'reviews_about_seller'
             = render 'buy_sell_market/products/stars', stars: @user.try(:seller_average_rating).try(:round)
           - else
             = render 'buy_sell_market/products/stars', stars: @user.try(:buyer_average_rating).try(:round)
     - if rating_questions.present?
-      .row-fluid
-        - rating_questions.each do |rating_question|
-          .span3
+      - rating_questions.each do |rating_question|
+        .row-fluid.compact
+          .span8
             %p= rating_question.text
           .span3
             .rating
