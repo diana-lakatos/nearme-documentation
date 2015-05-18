@@ -1,7 +1,8 @@
 - render_without_left_menu!
 
 .page-banner
-  %h1 List a New #{@product_type.name}
+  %h1
+    = "#{t('boarding_wizard.list_a_new')} #{@product_type.name}"
 
 = simple_form_for @boarding_form, wrapper: :bs3, url: product_type_product_wizard_index_path(@product_type), html: { multipart: true, id: "boarding_form" }, method: :post do |f|
   %section.list#seller-info

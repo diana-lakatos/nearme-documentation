@@ -659,6 +659,11 @@ en:
       errors:
         qty: 'Selected quantity is not available.'
 
+  boarding_wizard:
+    list_a_new: "List a New"
+    list_your_first: "List Your First"
+    list_your: "List your"
+
   dashboard:
     nav:
       orders: 'My Orders'
