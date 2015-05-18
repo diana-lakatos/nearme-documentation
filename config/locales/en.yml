@@ -659,6 +659,11 @@ en:
       errors:
         qty: 'Selected quantity is not available.'
 
+  onboarding_wizard:
+    list_a_new: "List a New %{name}"
+    list_your_first: "List Your First %{name}"
+    list_your: "List your %{name}"
+
   dashboard:
     nav:
       orders: 'My Orders'
