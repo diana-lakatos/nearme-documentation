@@ -1,12 +1,12 @@
 - no_footer!
 - no_listing_buttons!
-- title "#{t('boarding_wizard.list_your')} #{@transactable_type.name}"
+- title "#{t('onboarding_wizard.list_your', name: @transactable_type.name)}"
 
 .row-fluid
   .span8.offset2
     %h1
       %span
-        = "#{t('boarding_wizard.list_your_first')} #{@transactable_type.name}"
+        = t('onboarding_wizard.list_your_first', name: @transactable_type.name)
 
 #space_wizard.row-fluid
   .span8.offset2
