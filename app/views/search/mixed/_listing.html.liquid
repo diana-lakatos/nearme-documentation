@@ -6,7 +6,7 @@
   </div>
   <div class="span5 listing-name-description without-capacity">
     <span><strong>{{ listing.name | filter_text | custom_sanitize }}</strong><span>
-    <p>{{ listing.properties.description | filter_text | custom_sanitize | truncate: 150}}</p>
+    <p>{{ listing.description | filter_text | custom_sanitize | truncate: 150}}</p>
   </div>
   <div class="span2 listing-price padding-top">
     {% assign price_info = listing | lowest_price_without_cents_with_currency: lgpricing_filters %}
