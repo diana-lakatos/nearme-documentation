@@ -8,7 +8,7 @@ class ContentHolderTag < Liquid::Tag
   end
 
   def render(context)
-    @template = Liquid::Template.parse(inject_content_holder(@holder_name))
+    @template = Liquid::Template.parse(get_content_holder(@holder_name))
     @template.render( context )
   end
 
