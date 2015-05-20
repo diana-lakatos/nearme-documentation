@@ -2,8 +2,8 @@ require 'test_helper'
 
 class InstanceAdmin::BuySell::ProductTypes::CategoriesControllerTest < ActionController::TestCase
 
-  def setup_categorable
-    @categorable = FactoryGirl.create(:product_type)
+  def setup_categorizable
+    @categorizable = FactoryGirl.create(:product_type)
     @controller_scope = 'buy_sell'
   end
 
@@ -13,7 +13,7 @@ class InstanceAdmin::BuySell::ProductTypes::CategoriesControllerTest < ActionCon
   setup do
     PlatformContext.current = PlatformContext.new(Instance.first)
 
-    setup_categorable
+    setup_categorizable
 
     @user = FactoryGirl.create(:user)
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
@@ -23,27 +23,27 @@ class InstanceAdmin::BuySell::ProductTypes::CategoriesControllerTest < ActionCon
   end
 
   should '#index' do
-    @category = FactoryGirl.create(:category, categorable: @categorable)
-    get :index, @categorable.class.to_s.foreign_key => @categorable.id
+    @category = FactoryGirl.create(:category, categorizable: @categorizable)
+    get :index, @categorizable.class.to_s.foreign_key => @categorizable.id
     assert_response :success
     assert_equal [@category], assigns(:categories)
-    assert_equal assigns(:category).attributes, Category.new(categorable: @categorable).attributes
+    assert_equal assigns(:category).attributes, Category.new(categorizable: @categorizable).attributes
   end
 
   context 'create' do
     should 'create new category' do
       assert_difference 'Category.count' do
-        post :create, @categorable.class.to_s.foreign_key => @categorable.id, category: { name: 'Desks' }
+        post :create, @categorizable.class.to_s.foreign_key => @categorizable.id, category: { name: 'Desks' }
       end
       category = assigns(:category)
       assert_equal 'Desks', category.name
-      assert_equal @categorable.id, category.categorable_id
+      assert_equal @categorizable.id, category.categorizable_id
       assert_redirected_to assigns(:redirect_path)
     end
 
     should 'render category if validation errors' do
       assert_no_difference 'Category.count' do
-        post :create, @categorable.class.to_s.foreign_key => @categorable.id, category: { name: nil }
+        post :create, @categorizable.class.to_s.foreign_key => @categorizable.id, category: { name: nil }
       end
       assert_response :success
       assert_equal nil, assigns(:category).name
@@ -52,30 +52,30 @@ class InstanceAdmin::BuySell::ProductTypes::CategoriesControllerTest < ActionCon
 
   context 'existing category' do
     setup do
-      @category = FactoryGirl.create(:category, categorable: @categorable)
+      @category = FactoryGirl.create(:category, categorizable: @categorizable)
     end
 
     should 'edit' do
-      get :edit, @categorable.class.to_s.foreign_key => @categorable.id, id: @category.id
+      get :edit, @categorizable.class.to_s.foreign_key => @categorizable.id, id: @category.id
       assert_response :success
     end
 
     should 'update' do
       assert_no_difference 'Category.count' do
-        put :update, @categorable.class.to_s.foreign_key => @categorable.id, id: @category.id, category: { name: 'Desks' }
+        put :update, @categorizable.class.to_s.foreign_key => @categorizable.id, id: @category.id, category: { name: 'Desks' }
       end
       category = assigns(:category)
       category.reload
       assert_equal 'Desks', category.name
-      assert_equal @categorable.id, category.categorable_id
+      assert_equal @categorizable.id, category.categorizable_id
       assert_redirected_to assigns(:redirect_path)
     end
 
     should 'destroy' do
       assert_difference 'Category.count', -1 do
-        delete :destroy, @categorable.class.to_s.foreign_key => @categorable.id, id: @category.id
+        delete :destroy, @categorizable.class.to_s.foreign_key => @categorizable.id, id: @category.id
       end
-      assert_redirected_to url_for(['instance_admin', @controller_scope, @categorable, 'categories'])
+      assert_redirected_to url_for(['instance_admin', @controller_scope, @categorizable, 'categories'])
     end
 
   end

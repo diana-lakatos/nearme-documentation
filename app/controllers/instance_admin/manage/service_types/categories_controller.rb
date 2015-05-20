@@ -4,8 +4,8 @@ class InstanceAdmin::Manage::ServiceTypes::CategoriesController < InstanceAdmin:
 
   private
 
-  def find_categorable
-    @categorable = ServiceType.find(params[:service_type_id])
+  def find_categorizable
+    @categorizable = ServiceType.find(params[:service_type_id])
   end
 
   def permitting_controller_class

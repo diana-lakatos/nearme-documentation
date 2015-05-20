@@ -2,8 +2,8 @@ class InstanceAdmin::BuySell::ProductTypes::CategoriesController < InstanceAdmin
 
   private
 
-  def find_categorable
-    @categorable = Spree::ProductType.find(params[:product_type_id])
+  def find_categorizable
+    @categorizable = Spree::ProductType.find(params[:product_type_id])
   end
 
   def permitting_controller_class

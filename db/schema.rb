@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150521175751) do
+ActiveRecord::Schema.define(version: 20150522104236) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -305,38 +305,37 @@ ActiveRecord::Schema.define(version: 20150521175751) do
     t.string   "meta_keywords"
     t.boolean  "in_top_nav",               default: false
     t.integer  "top_nav_positions"
-    t.string   "categorable_type"
-    t.integer  "categorable_id"
+    t.string   "categorizable_type"
+    t.integer  "categorizable_id"
     t.datetime "deleted_at"
     t.integer  "lft"
     t.integer  "rgt"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "multiple_root_categories"
     t.text     "display_options"
     t.text     "search_options"
     t.boolean  "mandatory"
-    t.boolean  "multiple_root_categories"
     t.boolean  "shared_with_users"
   end
 
-  add_index "categories", ["categorable_id"], name: "index_categories_on_categorable_id", using: :btree
+  add_index "categories", ["categorizable_id"], name: "index_categories_on_categorizable_id", using: :btree
   add_index "categories", ["instance_id"], name: "index_categories_on_instance_id", using: :btree
   add_index "categories", ["parent_id"], name: "index_categories_on_parent_id", using: :btree
   add_index "categories", ["partner_id"], name: "index_categories_on_partner_id", using: :btree
   add_index "categories", ["user_id"], name: "index_categories_on_user_id", using: :btree
 
-  create_table "categories_categorables", force: true do |t|
+  create_table "categories_categorizables", force: true do |t|
     t.integer  "category_id"
-    t.integer  "categorable_id"
-    t.string   "categorable_type"
+    t.integer  "categorizable_id"
+    t.string   "categorizable_type"
     t.integer  "instance_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "categories_categorables", ["categorable_id"], name: "index_categories_categorables_on_categorable_id", using: :btree
-  add_index "categories_categorables", ["category_id"], name: "index_categories_categorables_on_category_id", using: :btree
-  add_index "categories_categorables", ["instance_id"], name: "index_categories_categorables_on_instance_id", using: :btree
+  add_index "categories_categorizables", ["category_id"], name: "index_categories_categorizables_on_category_id", using: :btree
+  add_index "categories_categorizables", ["instance_id", "categorizable_id", "categorizable_type"], name: "poly_categorizables", using: :btree
 
   create_table "charges", force: true do |t|
     t.integer  "payment_id"
@@ -2830,8 +2829,8 @@ ActiveRecord::Schema.define(version: 20150521175751) do
     t.boolean  "skip_location"
     t.string   "default_currency"
     t.text     "allowed_currencies"
-    t.text     "allowed_countries"
     t.string   "default_country"
+    t.text     "allowed_countries"
     t.boolean  "action_exclusive_price",                                             default: false
     t.boolean  "action_price_per_unit",                                              default: false
     t.string   "type"
@@ -2883,8 +2882,8 @@ ActiveRecord::Schema.define(version: 20150521175751) do
     t.integer  "minimum_booking_minutes",        default: 60
     t.integer  "book_it_out_discount"
     t.integer  "book_it_out_minimum_qty"
-    t.string   "currency"
     t.integer  "exclusive_price_cents",          default: 0
+    t.string   "currency"
     t.string   "name"
     t.text     "description"
     t.boolean  "confirm_reservations"
@@ -3110,9 +3109,9 @@ ActiveRecord::Schema.define(version: 20150521175751) do
     t.boolean  "public_profile",                                     default: false
     t.boolean  "accept_emails",                                      default: true
     t.string   "saved_searches_alerts_frequency",                    default: "daily"
+    t.string   "language",                               limit: 2,   default: "en"
     t.integer  "saved_searches_count",                               default: 0
     t.datetime "saved_searches_alert_sent_at"
-    t.string   "language",                               limit: 2,   default: "en"
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

@@ -9,9 +9,9 @@ class Category < ActiveRecord::Base
   DISPLAY_OPTIONS = %w(tree autocomplete).freeze
   SEARCH_OPTIONS = [["Include in search", "include"], ["Exclude from search", "exclude"]].freeze
 
-  has_many :categories_categorables
-  has_many :categorable_products, through: :categories_categorables, source_type: "Spree::Product"
-  has_many :categorable_transactables, through: :categories_categorables, source_type: "Transactable"
+  has_many :categories_categorizables
+  has_many :categorizable_products, through: :categories_categorizables, source_type: "Spree::Product"
+  has_many :categorizable_transactables, through: :categories_categorizables, source_type: "Transactable"
 
   belongs_to :instance
 
@@ -20,7 +20,7 @@ class Category < ActiveRecord::Base
 
 
   # Polymprophic association to TransactableType, ProductType
-  belongs_to :categorable, polymorphic: true
+  belongs_to :categorizable, polymorphic: true
   belongs_to :instance
 
   before_save :set_permalink
@@ -29,9 +29,9 @@ class Category < ActiveRecord::Base
   # Scopes
 
   scope :mandatory, -> { where(mandatory: true) }
-  scope :products, -> { where(categorable_type: 'Spree::ProductType') }
+  scope :products, -> { where(categorizable_type: 'Spree::ProductType') }
   scope :searchable, -> { where(search_options: 'include') }
-  scope :services, -> { where(categorable_type: 'TransactableType') }
+  scope :services, -> { where(categorizable_type: 'TransactableType') }
   scope :users, -> { where(shared_with_users: true) }
 
   def autocomplete?
