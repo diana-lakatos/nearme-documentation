@@ -46,7 +46,8 @@ class InstanceAdmin::Theme::PagesControllerTest < ActionController::TestCase
     setup do
       with_versioning do
         @page = FactoryGirl.create(:page, path: 'Page test')
-        @page.update content: "Lorem"
+        @page.update! content: "Lorem"
+        @page.versions.update_all(whodunnit: 'me')
       end
     end
 
