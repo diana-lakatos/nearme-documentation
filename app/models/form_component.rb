@@ -7,7 +7,8 @@ class FormComponent < ActiveRecord::Base
   SPACE_WIZARD = 'space_wizard'
   PRODUCT_ATTRIBUTES = 'product_attributes'
   TRANSACTABLE_ATTRIBUTES = 'transactable_attributes'
-  FORM_TYPES = [SPACE_WIZARD, PRODUCT_ATTRIBUTES, TRANSACTABLE_ATTRIBUTES]
+  INSTANCE_PROFILE_TYPES = 'instance_profile_types'
+  FORM_TYPES = [SPACE_WIZARD, PRODUCT_ATTRIBUTES, TRANSACTABLE_ATTRIBUTES, INSTANCE_PROFILE_TYPES]
 
   include RankedModel
 
@@ -23,6 +24,16 @@ class FormComponent < ActiveRecord::Base
     form_fields.inject([]) do |all_fields_names, field|
       all_fields_names << field[field.keys.first]
       all_fields_names
+    end
+  end
+
+  def form_types(form_componentable)
+    if form_componentable.instance_of?(InstanceProfileType)
+      [INSTANCE_PROFILE_TYPES]
+    elsif form_componentable.instance_of?(TransactableType)
+      [SPACE_WIZARD, TRANSACTABLE_ATTRIBUTES]
+    else
+      [PRODUCT_ATTRIBUTES]
     end
   end
 end

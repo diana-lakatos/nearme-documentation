@@ -26,7 +26,7 @@ class BoardingFormTest < ActiveSupport::TestCase
       @company = Company.last
       @product = @company.products.first
 
-      assert_equal @company.name, boarding_attributes[:store_name]
+      assert_equal @company.name, "Test Store"
       assert_equal @company.company_address.address, "Poznań, Polska"
       assert_equal @product.category_ids.sort, @category_ids.sort
       assert_equal @product.name, "Test Product"
@@ -36,11 +36,13 @@ class BoardingFormTest < ActiveSupport::TestCase
 
   def boarding_attributes
     {
-      store_name: "Test Store",
-      company_address_attributes: {
-        address: "Poznań, Polska",
-        latitude: "52.406374",
-        longitude: "16.925168100000064",
+      company_attributes: {
+        name: "Test Store",
+        company_address_attributes: {
+          address: "Poznań, Polska",
+          latitude: "52.406374",
+          longitude: "16.925168100000064",
+        }
       },
       product_form: {
         name: "Test Product",

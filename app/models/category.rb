@@ -9,11 +9,9 @@ class Category < ActiveRecord::Base
   DISPLAY_OPTIONS = %w(tree autocomplete).freeze
   SEARCH_OPTIONS = [["Include in search", "include"], ["Exclude from search", "exclude"]].freeze
 
-  has_many :categories_transactables
-  has_many :transactables, through: :categories_transactables
-
-  has_many :categories_products
-  has_many :products, through: :categories_products
+  has_many :categories_categorables
+  has_many :categorable_products, through: :categories_categorables, source_type: "Spree::Product"
+  has_many :categorable_transactables, through: :categories_categorables, source_type: "Transactable"
 
   belongs_to :instance
 
@@ -21,7 +19,7 @@ class Category < ActiveRecord::Base
   validates :name, presence: true
 
 
-  # Polymprophic association to TransactableType and ProductType
+  # Polymprophic association to TransactableType, ProductType
   belongs_to :categorable, polymorphic: true
   belongs_to :instance
 
@@ -31,9 +29,10 @@ class Category < ActiveRecord::Base
   # Scopes
 
   scope :mandatory, -> { where(mandatory: true) }
+  scope :products, -> { where(categorable_type: 'Spree::ProductType') }
   scope :searchable, -> { where(search_options: 'include') }
   scope :services, -> { where(categorable_type: 'TransactableType') }
-  scope :products, -> { where(categorable_type: 'Spree::ProductType') }
+  scope :users, -> { where(shared_with_users: true) }
 
   def autocomplete?
     self.display_options == 'autocomplete'

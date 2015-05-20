@@ -9,7 +9,7 @@ Feature: As a user of the site
       And I am logged in as the user
       And Current marketplace is buy_sell
       And a company exists with creator: the user
-      And A shipping profile exists
+      And a shipping profile exists
 
   Scenario: A user can add new product
     Given I am adding new product

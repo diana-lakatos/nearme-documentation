@@ -35,6 +35,7 @@
 //= require select2
 //= require jquery-fileupload/basic
 //= require jquery_nested_form
+//= require js-routes
 //
 //
 //= require_self
@@ -65,6 +66,13 @@ window.DNM = {
     this.initializeBrowsersSpecificCode();
     this.centerSearchBoxOnHomePage();
     this.setFooterPushHeight();
+    this.setRotuesPrefix();
+  },
+
+  setRotuesPrefix: function() {
+    if (I18n.locale.length > 0) {
+      Routes.options.prefix = "/" + I18n.locale;
+    }
   },
 
   initializeIcui: function() {

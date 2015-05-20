@@ -23,3 +23,4 @@ When /^I partially fill in space details$/ do
   fill_in "Name", with:'Desk'
   page.should_not have_content('Processing...')
 end
+

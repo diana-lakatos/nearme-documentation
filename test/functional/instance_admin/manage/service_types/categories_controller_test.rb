@@ -1,13 +1,13 @@
 require 'test_helper'
 
-class InstanceAdmin::BuySell::ProductTypes::CategoriesControllerTest < ActionController::TestCase
+class InstanceAdmin::Manage::ServiceTypes::CategoriesControllerTest < ActionController::TestCase
 
   def setup_categorable
-    @categorable = FactoryGirl.create(:product_type)
-    @controller_scope = 'buy_sell'
+    @categorable = FactoryGirl.create(:transactable_type_csv_template)
+    @controller_scope = 'manage'
   end
 
-  # NOTE - THE PART BELOW IS SHARED WITH InstanceAdmin::Manage::ServiceTypes::CategoriesControllerTest #
+  # NOTE - THE PART BELOW IS SHARED WITH InstanceAdmin::Manage::ProductTypes::CategoriesControllerTest #
   # Please change both files if needed!
 
   setup do

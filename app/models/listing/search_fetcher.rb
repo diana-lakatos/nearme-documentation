@@ -43,9 +43,9 @@ class Listing::SearchFetcher
     if @filters[:category_ids].present?
       if PlatformContext.current.instance.category_search_type == "AND"
         @listings_scope = @listings_scope.
-          joins(:categories_transactables).
-          where(categories_transactables: {category_id: @filters[:category_ids]}).
-          group('transactables.id').having("count(category_id) >= #{@filters[:category_ids].size}")
+          joins(:categories_categorables).
+          where(categories_categorables: {category_id: @filters[:category_ids]}).
+          group('transactables.id').having("count(categories_categorables.category_id) >= #{@filters[:category_ids].size}")
       else
         @listings_scope = @listings_scope.includes(:categories).where(categories: {id: @filters[:category_ids]})
       end

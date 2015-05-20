@@ -37,6 +37,7 @@
 //= require ./advanced_closest
 //= require jquery-fileupload/basic
 //= require jquery_nested_form
+//= require js-routes
 //
 //
 //= require_self

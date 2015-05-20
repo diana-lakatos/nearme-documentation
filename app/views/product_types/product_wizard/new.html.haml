@@ -8,9 +8,9 @@
   %section.list#seller-info
     .container-fluid
       %h2.section-heading Seller Info
-      = f.input :store_name, :placeholder => "What do you want to call your store?"
-      = f.fields_for :company_address_attributes, f.object.company_address do |a|
-        = render 'space_wizard/address', f: a
+      = f.simple_fields_for :company, @company do |companies_form|
+        = render :partial => 'company_form', :locals => { :f => companies_form, :company => companies_form.object, :only_inputs => [ :name, :industries, :address ] }
+
   = f.simple_fields_for f.object.product_form do |product_form|
     %section.list#new-item
       .container-fluid
@@ -52,11 +52,4 @@
   new Dashboard.AddressController($("#boarding_form"));
   var boarding_form = new BoardingForm($("#boarding_form"));
   new ShippoFieldsManager(#{raw DimensionsTemplate::UNITS_OF_MEASURE.to_json});
-
-  var autocomplete_categories_path = "#{dashboard_api_categories_path}"
-  var selected_categories = #{raw @boarding_form.product_form.category_ids.to_json}
-  var display_categories = #{raw @product_type.categories.roots.map(&:id).to_json}
-  var categories_path = "#{product_type_categories_path(@product_type)}"
-  var jstree_theme_path = "#{stylesheet_path("instance_admin/jstree_themes/apple/style.css")}";
-  var category_input_name = "boarding_form[product_form][category_ids][]"
   new CategoriesController($('#boarding_form'));

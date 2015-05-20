@@ -3,8 +3,7 @@ class SecuredParams
   def boarding_form(product_type=nil)
     [
       :draft,
-      :store_name,
-      company_address_attributes: nested(self.address),
+      company_attributes: nested(self.company),
       product_form: nested(self.product_form(product_type))
 
     ]
@@ -196,6 +195,7 @@ class SecuredParams
       :parent_id,
       :child_index,
       :multiple_root_categories,
+      :shared_with_users,
       :search_options,
       :display_options,
       :mandatory
@@ -1008,6 +1008,7 @@ class SecuredParams
       :time_zone,
       :twitter_url,
       industry_ids: [],
+      category_ids: [],
       companies_attributes: nested(self.company(transactable_type)),
       approval_requests_attributes: nested(self.approval_request)
     ] + User.public_custom_attributes_names(InstanceProfileType.first.try(:id))

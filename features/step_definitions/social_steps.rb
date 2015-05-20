@@ -56,6 +56,7 @@ When /I disconnect (.*)/ do |social|
 end
 
 When /I want to disconnect/ do
+  FactoryGirl.create(:instance_profile_type)
   visit edit_user_registration_path
 end
 

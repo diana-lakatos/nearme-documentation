@@ -29,7 +29,7 @@ class InstanceAdmin::BaseController < ApplicationController
     'workflows'          => { controller: '/instance_admin/manage/workflows', default_action: 'index' },
     'reviews'            => { controller: '/instance_admin/manage/reviews', default_action: 'index' },
     'wish_lists'         => { controller: '/instance_admin/manage/wish_lists', default_action: 'show' },
-    'custom_attributes'  => { controller: '/instance_admin/manage/instance_profile_types', default_action: 'index' },
+    'user_profiles'      => { controller: '/instance_admin/manage/instance_profile_types', default_action: 'index' },
     'service_types'      => { controller: '/instance_admin/manage/service_types', default_action: 'index' },
     'upsell_addons'      => { controller: '/instance_admin/manage/upsell_addons', default_action: 'index', title: 'Upsell & Add-ons' },
     'search'             => { controller: '/instance_admin/manage/search', default_action: 'show', title: 'Search' }

@@ -86,10 +86,11 @@ gem 'bootstrap-sass', '~> 2.3.1.0'
 gem "bootstrap-switch-rails"
 gem 'chronic', '~> 0.9.1'
 gem 'jcrop-rails', github: 'bukalapak/jcrop-rails'
+gem "js-routes"
 
 gem 'unicorn'
 
-gem 'ckeditor'
+gem 'ckeditor', github: 'galetahub/ckeditor'
 gem 'orm_adapter', '~> 0.5.0' # needed for ckeditor, see https://github.com/galetahub/ckeditor/issues/375
 gem 'sanitize'
 

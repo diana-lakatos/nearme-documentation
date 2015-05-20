@@ -5,6 +5,7 @@ class RegistrationsController < Devise::RegistrationsController
   skip_before_filter :filter_out_token, :only => [:verify, :unsubscribe]
   before_filter :nm_force_ssl, only: [:new]
   before_filter :find_company, only: [:social_accounts, :edit]
+  before_filter :set_form_components, only: [:edit, :update]
 
   # NB: Devise calls User.new_with_session when building the new User resource.
   # We use this to apply any Provider based authentications to the user record.
@@ -277,6 +278,10 @@ class RegistrationsController < Devise::RegistrationsController
 
   def find_company
     @company = current_user.try(:companies).try(:first)
+  end
+
+  def set_form_components
+    @form_components = InstanceProfileType.first.form_components.where(form_type: FormComponent::INSTANCE_PROFILE_TYPES).rank(:rank)
   end
 
   def signed_up_via

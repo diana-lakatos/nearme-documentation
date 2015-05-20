@@ -312,10 +312,11 @@ ActiveRecord::Schema.define(version: 20150510125525) do
     t.integer  "rgt"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "multiple_root_categories"
     t.text     "display_options"
     t.text     "search_options"
     t.boolean  "mandatory"
+    t.boolean  "multiple_root_categories"
+    t.boolean  "shared_with_users"
   end
 
   add_index "categories", ["categorable_id"], name: "index_categories_on_categorable_id", using: :btree
@@ -324,25 +325,18 @@ ActiveRecord::Schema.define(version: 20150510125525) do
   add_index "categories", ["partner_id"], name: "index_categories_on_partner_id", using: :btree
   add_index "categories", ["user_id"], name: "index_categories_on_user_id", using: :btree
 
-  create_table "categories_products", force: true do |t|
+  create_table "categories_categorables", force: true do |t|
     t.integer  "category_id"
-    t.integer  "spree_product_id"
+    t.integer  "categorable_id"
+    t.string   "categorable_type"
+    t.integer  "instance_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "instance_id"
   end
 
-  create_table "categories_transactables", force: true do |t|
-    t.integer  "category_id"
-    t.integer  "transactable_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "instance_id"
-  end
-
-  add_index "categories_transactables", ["category_id"], name: "index_categories_transactables_on_category_id", using: :btree
-  add_index "categories_transactables", ["instance_id"], name: "index_categories_transactables_on_instance_id", using: :btree
-  add_index "categories_transactables", ["transactable_id"], name: "index_categories_transactables_on_transactable_id", using: :btree
+  add_index "categories_categorables", ["categorable_id"], name: "index_categories_categorables_on_categorable_id", using: :btree
+  add_index "categories_categorables", ["category_id"], name: "index_categories_categorables_on_category_id", using: :btree
+  add_index "categories_categorables", ["instance_id"], name: "index_categories_categorables_on_instance_id", using: :btree
 
   create_table "charges", force: true do |t|
     t.integer  "payment_id"
@@ -1431,19 +1425,6 @@ ActiveRecord::Schema.define(version: 20150510125525) do
   end
 
   add_index "schedules", ["instance_id", "scheduable_id", "scheduable_type"], name: "index_schedules_scheduable", using: :btree
-
-  create_table "search_notifications", force: true do |t|
-    t.string   "email"
-    t.integer  "user_id"
-    t.string   "query"
-    t.float    "latitude"
-    t.float    "longitude"
-    t.boolean  "notified",   default: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-  end
-
-  add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
 
   create_table "spree_addresses", force: true do |t|
     t.string   "firstname"
@@ -2849,8 +2830,8 @@ ActiveRecord::Schema.define(version: 20150510125525) do
     t.boolean  "skip_location"
     t.string   "default_currency"
     t.text     "allowed_currencies"
-    t.string   "default_country"
     t.text     "allowed_countries"
+    t.string   "default_country"
     t.boolean  "action_exclusive_price",                                             default: false
     t.boolean  "action_price_per_unit",                                              default: false
     t.string   "type"
@@ -2902,8 +2883,8 @@ ActiveRecord::Schema.define(version: 20150510125525) do
     t.integer  "minimum_booking_minutes",        default: 60
     t.integer  "book_it_out_discount"
     t.integer  "book_it_out_minimum_qty"
-    t.integer  "exclusive_price_cents",          default: 0
     t.string   "currency"
+    t.integer  "exclusive_price_cents",          default: 0
     t.string   "name"
     t.text     "description"
     t.boolean  "confirm_reservations"
@@ -3129,9 +3110,9 @@ ActiveRecord::Schema.define(version: 20150510125525) do
     t.boolean  "public_profile",                                     default: false
     t.boolean  "accept_emails",                                      default: true
     t.string   "saved_searches_alerts_frequency",                    default: "daily"
-    t.string   "language",                               limit: 2,   default: "en"
     t.integer  "saved_searches_count",                               default: 0
     t.datetime "saved_searches_alert_sent_at"
+    t.string   "language",                               limit: 2,   default: "en"
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

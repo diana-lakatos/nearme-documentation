@@ -69,9 +69,13 @@ class InstanceWizardController < ActionController::Base
       at.save!
       Utils::FormComponentsCreator.new(tp, 'transactable').create!
     end
+
+    ipt = @instance.instance_profile_types.create!(name: 'User Custom Attributes')
+    Utils::FormComponentsCreator.new(ipt).create!
+
     tp.create_rating_systems
-    
     Utils::FormComponentsCreator.new(tp).create!
+
     @instance.location_types.create!(name: 'General')
 
     Utils::DefaultAlertsCreator.new.create_all_workflows!

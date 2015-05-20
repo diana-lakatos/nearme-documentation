@@ -6,4 +6,10 @@ class Dashboard::Api::CategoriesController < Dashboard::Api::BaseController
     process_collection(categories, :pretty_name)
   end
 
+  def tree
+    @selected_categories = Category.where(id: params[:category_ids])
+    @category = Category.find(params[:id])
+    @categories = @category.children.order(:position)
+  end
+
 end
