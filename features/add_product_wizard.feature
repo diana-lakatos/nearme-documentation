@@ -5,6 +5,7 @@ Feature: A user can add a product
   I want to be able to step through an 'Add Product' wizard
   Background:
     Given a wizard_product_type exists with name: "Sock"
+    Given current instance with integrated shipping
     Given a state exists
     Given a country exists
     Given I go to the home page
@@ -24,6 +25,11 @@ Feature: A user can add a product
 
   Scenario: An unregistered user starts by signing up
     And I fill in valid product details
+    And I press "Continue and Preview Listing"
+    Then I should see "Your Sock was listed!"
+
+  Scenario: Create product with integrated shipping
+    And I fill in valid product details with integrated shipping
     And I press "Continue and Preview Listing"
     Then I should see "Your Sock was listed!"
 

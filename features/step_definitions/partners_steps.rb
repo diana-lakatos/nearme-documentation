@@ -10,7 +10,7 @@ end
 
 When(/^I navigate to new partner form$/) do
   Instance.any_instance.stubs(:theme).returns(@theme)
-  click_link "New Partner" 
+  click_link "New Partner"
 end
 
 When(/^I fill partner form with valid details (with|without) theme$/) do |theme_included|
