@@ -15,7 +15,7 @@ require 'spree/testing_support/factories'
 
 reporter_options = { color: true, slow_count: 5 }
 Minitest.backtrace_filter = BacktraceFilter.new
-Minitest::Reporters.use!(Minitest::Reporters::DefaultReporter.new(reporter_options), ENV, Minitest.backtrace_filter)
+Minitest::Reporters.use!(Minitest::Reporters::SpecReporter.new(reporter_options), ENV, Minitest.backtrace_filter)
 
 RoutingFilter.active = false
 

@@ -37,7 +37,7 @@ class InstanceViewResolverTest < ActiveSupport::TestCase
   end
 
   should 'prioritize concrete template if was created last' do
-    FactoryGirl.create(:instance_view, body: 'default')
+    FactoryGirl.create(:instance_view, body: 'default', instance: nil)
     @instance_view = FactoryGirl.create(:instance_view, body: 'concrete', instance_id: @instance.id)
     template = @resolver.find_all("index", "public", false, @details).first
     assert_equal "concrete", template.source
@@ -45,7 +45,7 @@ class InstanceViewResolverTest < ActiveSupport::TestCase
 
   should 'prioritize concrete template if was created first' do
     @instance_view = FactoryGirl.create(:instance_view, body: 'concrete', instance_id: @instance.id)
-    FactoryGirl.create(:instance_view, body: 'default')
+    FactoryGirl.create(:instance_view, body: 'default', instance: nil)
     template = @resolver.find_all("index", "public", false, @details).first
     assert_equal "concrete", template.source
   end

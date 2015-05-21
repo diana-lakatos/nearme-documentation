@@ -6,6 +6,7 @@ FactoryGirl.define do
     format "html"
     handler "haml"
     partial false
+    instance { PlatformContext.current.instance }
 
     factory :instance_view_sms do
       body "Hello {{user.name}}"
