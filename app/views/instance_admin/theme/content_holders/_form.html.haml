@@ -7,7 +7,7 @@
       = f.input :enabled, inline_label: true
   .row
     .input-container.col-xs-12
-      = f.input :content, input_html: { class: 'form-control', rows: "20", data: { editor: 'liquid' } }
+      = f.input :content, input_html: { class: 'form-control editor', rows: "20", data: { editor: 'liquid' } }
 
   = content_for :header_buttons do
     = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
