@@ -231,8 +231,8 @@ form{
 .slide-image.slide-image-mobile { display:none; }
 
 .slide-content { position: absolute; top: 50%; width: 100%; margin-top:-125px; }
-.slide-content h2 { font-size:52px; line-height:1.6; letter-spacing: 4px; margin-bottom: 0; }
-.slide-content h2 br { display:none; }
+.slide-content h1 { font-family:'brandon_bldmedium'; font-size:52px; line-height:1.6; letter-spacing: 4px; margin-bottom: 0; }
+.slide-content h1 br { display:none; }
 
 
 .slide-item .btn.btn-primary:hover { border: 0; background:#2194cd; }
@@ -310,7 +310,7 @@ ul.expandables { margin-bottom: 0px; min-height: 330px; }
     .footer-nav { padding-top:20px; }
     .tab-pane .feature { padding-bottom:70px; }
     .tab-pane .feature .ico { margin-bottom:20px; }
-    .slide-content h2 br { display:block; }
+    .slide-content h1 br { display:block; }
 
     .header .brand { background: url(/assets/platform_home/logo-mobile.png) no-repeat 0 0; width: 106px; height:37px; font-size: 0; line-height: 0; text-indent: -4000px;  margin-bottom:10px; }
 
@@ -353,7 +353,7 @@ ul.expandables { margin-bottom: 0px; min-height: 330px; }
 }
 @media (max-width: 650px) {
     .section.gallery { text-align: left; }
-    .slide-content h2 { font-size:40px;  }
+    .slide-content h1 { font-size:40px;  }
     .main.main-secondary { padding-top:30px; }
     .section-image img { display:block; width: 100%; }
     .carousel-control { display:none; }
@@ -380,6 +380,6 @@ ul.expandables { margin-bottom: 0px; min-height: 330px; }
     .slide-caption { margin-top: 0; top:0;}
 
     .slide-content { top:0; margin-top: 0;}
-    .slide-content h2 { font-size:30px; }
+    .slide-content h1 { font-size:30px; }
 }
 
