@@ -9,6 +9,7 @@ When /^I fill in valid product details$/ do
   page.should have_css('.shipping_method_list input')
   first('.shipping_method_list input').click
   attach_file_via_uploader
+  wait_for_ajax
 end
 
 When /^I partially fill in product details$/ do

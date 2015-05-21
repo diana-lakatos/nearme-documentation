@@ -64,6 +64,7 @@ When /^I fill (location|listing) form with valid details$/ do |model|
   else
     fill_listing_form
   end
+  wait_for_ajax
 end
 
 When /^I (disable|enable) (.*) pricing$/ do |action, period|
