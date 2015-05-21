@@ -8,6 +8,7 @@ class AdditionalChargeType < ActiveRecord::Base
   has_many :additional_charges
 
   validates :name, :status, :amount, :currency, :commission_receiver, presence: true
+  validates :amount, numericality: { less_than: 100000 }
   validate :correct_status, :commission_recipient
 
   scope :mandatory_charges, -> { where(status: 'mandatory') }
