@@ -46,4 +46,4 @@
   - category_name = only_inputs.first.to_s.split(" - ")[1]
   - category = Category.users.roots.where(name: category_name).first
   -if category.present?
-    = render partial: 'shared/category_old_bootstrap', locals: { category: category, f: f, categorable: @transactable_type }
+    = render partial: 'shared/category_old_bootstrap', locals: { category: category, f: f, categorizable: @transactable_type }

@@ -30,8 +30,8 @@ class User < ActiveRecord::Base
   has_many :approval_requests, as: :owner, dependent: :destroy
   has_many :authored_messages, class_name: "UserMessage", foreign_key: 'author_id', inverse_of: :author
   has_many :blog_posts, class_name: 'UserBlogPost'
-  has_many :categories_categorable, as: :categorable
-  has_many :categories, through: :categories_categorable
+  has_many :categories_categorizable, as: :categorizable
+  has_many :categories, through: :categories_categorizable
   has_many :charges, foreign_key: 'user_id', dependent: :destroy
   has_many :company_users, -> { order(created_at: :asc) }, dependent: :destroy
   has_many :companies, through: :company_users

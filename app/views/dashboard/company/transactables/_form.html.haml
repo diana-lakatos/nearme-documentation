@@ -97,7 +97,7 @@
     - when *@transactable_type.categories.roots.map { |c| "Category - #{c.name}" }
       - category_name = field.split(" - ")[1]
       - category = @transactable_type.categories.roots.where(name: category_name).first
-      = render partial: 'shared/category', locals: { category: category, f: f, categorable: @transactable_type }
+      = render partial: 'shared/category', locals: { category: category, f: f, categorizable: @transactable_type }
     - when 'confirm_reservations'
       = f.input :confirm_reservations, as: :bootstrap_switch
     - else

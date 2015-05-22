@@ -10,8 +10,8 @@ Spree::Product.class_eval do
   belongs_to :administrator, class_name: 'User'
   belongs_to :product_type, class_name: "Spree::ProductType", foreign_key: :product_type_id
 
-  has_many :categories_categorables, as: :categorable
-  has_many :categories, through: :categories_categorables
+  has_many :categories_categorizables, as: :categorizable
+  has_many :categories, through: :categories_categorizables
   has_many :document_requirements, as: :item, dependent: :destroy
   has_many :impressions, as: :impressionable, dependent: :destroy
   has_many :line_items, through: :variants

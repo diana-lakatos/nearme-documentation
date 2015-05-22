@@ -2,7 +2,7 @@ class Spree::ProductType < TransactableType
   acts_as_paranoid
 
   has_many :form_components, as: :form_componentable
-  has_many :categories, as: :categorable, dependent: :destroy
+  has_many :categories, as: :categorizable, dependent: :destroy
   has_many :products, class_name: "Spree::Product", inverse_of: :product_type
 
   belongs_to :user
