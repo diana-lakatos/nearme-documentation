@@ -15,6 +15,7 @@ class Locale < ActiveRecord::Base
   before_destroy :check_locale
   after_destroy :delete_instance_keys
   after_destroy :check_user_settings
+  after_create :create_tranlsation_keys_for_categories
 
   scope :by_created_at, -> { order('created_at ASC') }
 
@@ -55,6 +56,12 @@ class Locale < ActiveRecord::Base
   end
 
   private
+
+  def create_tranlsation_keys_for_categories
+    Category.find_each do |category|
+      category.create_translation_key
+    end
+  end
 
   def remove_primary
     self.class.where(primary: true).where.not(id: id).update_all primary: false if primary?

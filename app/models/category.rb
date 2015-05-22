@@ -63,6 +63,10 @@ class Category < ActiveRecord::Base
     ancestor_chain + translated_name
   end
 
+  def self_and_descendants
+    super.where(instance_id: instance_id)
+  end
+
   def translated_name
     I18n.t(translation_key)
   end
