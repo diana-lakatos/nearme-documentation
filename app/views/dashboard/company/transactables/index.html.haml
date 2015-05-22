@@ -12,6 +12,13 @@
       - TransactableType.services.each do |transactable_type|
         %li{class: transactable_type == @transactable_type ? "active" : ""}
           = link_to transactable_type.name.pluralize, dashboard_company_transactable_type_transactables_path(transactable_type)
+
+  = simple_form_for :search, wrapper: :bs3, :url => dashboard_company_transactable_type_transactables_path(@transactable_type), :method => :get do |f|
+    = f.input :query, label: 'Search your products', input_html: { value: (params[:search] || {})[:query] }
+    .row
+      .col-md-12
+        = f.submit 'Search', class: "btn medium blue pull-right"
+
   .listings-header
     .row
       .col-md-3

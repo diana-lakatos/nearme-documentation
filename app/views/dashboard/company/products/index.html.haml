@@ -13,6 +13,12 @@
         %li{class: product_type == @product_type ? "active" : ""}
           = link_to product_type.name.pluralize, dashboard_company_product_type_products_path(product_type)
 
+  = simple_form_for :search, wrapper: :bs3, :url => dashboard_company_products_path, :method => :get do |f|
+    = f.input :query, label: 'Search your products', input_html: { value: (params[:search] || {})[:query] }
+    .row
+      .col-md-12
+        = f.submit 'Search', class: "btn medium blue pull-right"
+
   %br
   .listings-header
     .row

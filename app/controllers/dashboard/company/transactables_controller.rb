@@ -6,7 +6,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   before_filter :set_form_components
 
   def index
-    @transactables = @transactable_type.transactables.where(company_id: @company).paginate(page: params[:page], per_page: 20)
+    @transactables = CustomObjectHstoreSearcher.new(@transactable_type, @transactable_type.transactables.where(company_id: @company)).transactables(params[:search]).paginate(page: params[:page], per_page: 20)
   end
 
   def new

@@ -10,7 +10,7 @@ class Dashboard::Company::ProductsController < Dashboard::Company::BaseControlle
   before_filter :ensure_system_shipping_categories_copied, only: [:new, :edit]
 
   def index
-    @products = @company.products.of_type(@product_type).paginate(page: params[:page], per_page: 20)
+    @products = CustomObjectHstoreSearcher.new(@product_type, @company.products.of_type(@product_type)).products(params[:search]).paginate(page: params[:page], per_page: 20)
   end
 
   def new
