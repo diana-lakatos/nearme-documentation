@@ -147,7 +147,7 @@ Spree::Product.class_eval do
   private
 
   def shipping_category_presence
-    self.shipping_category.present? ? true : errors.add(:shipping_category_id, "shipping category can't be blank")
+    self.shipping_category.present? || self.shippo_enabled? ? true : errors.add(:shipping_category_id, "shipping category can't be blank")
   end
 
   def set_external_id
