@@ -244,8 +244,8 @@ DesksnearMe::Application.routes.draw do
       resource :user_badge, only: [:show, :create, :update], controller: 'user_badge', concerns: :versionable
       resource :homepage, only: [:show, :update], controller: 'homepage', concerns: :versionable
       resource :homepage_template, only: [:show, :create, :update], controller: 'homepage_template', concerns: :versionable
-      resources :content_holders
-      resources :liquid_views, :only => [:index, :new, :create, :edit, :update, :destroy], concerns: :versionable
+      resources :content_holders, only: [:index, :new, :create, :edit, :update, :destroy]
+      resources :liquid_views, only: [:index, :new, :create, :edit, :update, :destroy], concerns: :versionable
       resources :file_uploads do
         collection do
           get :search
