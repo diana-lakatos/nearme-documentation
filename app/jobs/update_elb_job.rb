@@ -1,4 +1,4 @@
-class CreateElbJob < Job
+class UpdateElbJob < Job
   def after_initialize(domain_id, certificate_body, private_key, certificate_chain)
     @domain = Domain.find(domain_id)
     @certificate_body = certificate_body
@@ -7,17 +7,18 @@ class CreateElbJob < Job
   end
 
   def perform
-    b = NearMe::Balancer.new(certificate_body: @certificate_body,
+    begin
+      b = NearMe::Balancer.new(certificate_body: @certificate_body,
                              name: @domain.to_dns_name,
                              private_key: @private_key,
                              certificate_key: @certificate_chain)
-    begin
-      b.create!
-      @domain.elb_created!
-      @domain.update_column(:dns_name, b.dns_name)
+
+      b.update_certificates!
+
+      @domain.elb_updated!
     rescue Exception => e
+      @domain.error_update!
       @domain.update_column(:error_message, e.message)
-      @domain.error!
       raise e
     end
   end

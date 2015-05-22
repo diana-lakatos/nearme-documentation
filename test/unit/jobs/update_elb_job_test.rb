@@ -1,35 +1,35 @@
 require 'test_helper'
 
-class CreateElbJobTest < ActiveSupport::TestCase
+class UpdateElbJobTest < ActiveSupport::TestCase
   context '#perform' do
     setup do
       @domain = FactoryGirl.create(:domain)
-      @domain.prepare_elb!
       @certificate_body = "a"
       @private_key = "b"
       @certificate_chain = ""
     end
 
-    should 'trigger Ballancer creation on valid and save dns_name' do
-      dns_name = 'test-dns-name.com'
-      balancer = stub(:dns_name => dns_name, :create! => nil)
+    should 'trigger Ballancer update' do
+      @domain.update_column(:state, 'preparing_update')
+      balancer = stub(:dns_name => nil, :update_certificates! => nil)
+      balancer.expects(:update_certificates!)
       NearMe::Balancer.expects(:new).returns(balancer)
-      CreateElbJob.perform(@domain.id, @certificate_body, @private_key, @certificate_chain)
+      UpdateElbJob.perform(@domain.id, @certificate_body, @private_key, @certificate_chain)
       @domain.reload
-      assert_equal @domain.dns_name, dns_name
       assert @domain.elb_secured?
     end
 
     should 'raise error when something went wrong and show error state' do
+      @domain.update_column(:state, 'preparing_update')
       error_text = 'error_text'
       balancer = stub(:errors => error_text)
-      balancer.stubs(:create!).raises(Exception)
+      balancer.stubs(:update_certificates!).raises(Exception)
       NearMe::Balancer.expects(:new).returns(balancer)
       assert_raises(Exception) {
-        CreateElbJob.perform(@domain.id, @certificate_body, @private_key, @certificate_chain)
+        UpdateElbJob.perform(@domain.id, @certificate_body, @private_key, @certificate_chain)
         @domain.reload
         assert_equal @domain.error_message, error_text
-        assert @domain.error?
+        assert @domain.error_update?
       }
     end
   end
