@@ -908,6 +908,8 @@ en:
       blog_disabled: "You can't visit your blog, because it's disabled."
 
   orders:
+    empty_list: "You don't have any orders yet"
+
     index:
       title: 'My orders'
 

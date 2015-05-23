@@ -16,7 +16,8 @@ module Metadata
         update_instance_metadata({
           has_draft_listings: listings.reload.draft.any?,
           has_draft_products: products.reload.draft.any?,
-          has_any_active_listings: listings.reload.active.any?
+          has_any_active_listings: listings.reload.active.any?,
+          has_any_active_products: products.reload.not_draft.any?
         })
       end
 
@@ -33,7 +34,8 @@ module Metadata
           companies_metadata: companies.reload.collect(&:id),
           has_draft_listings: listings.reload.draft.any?,
           has_draft_products: products.reload.draft.any?,
-          has_any_active_listings: listings.reload.active.any?
+          has_any_active_listings: listings.reload.active.any?,
+          has_any_active_products: products.reload.not_draft.any?
         })
       end
 

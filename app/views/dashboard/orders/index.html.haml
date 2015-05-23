@@ -7,7 +7,12 @@
     %p MY ORDERS
 
 .dash-body
-  = render partial: 'dashboard/orders/order', collection: @orders
+  - if @orders.any?
+    = render partial: 'dashboard/orders/order', collection: @orders
+  - else
+    .dash-body-container
+      = image_tag 'dashboard/exclamation.png'
+      %p.inline= t 'orders.empty_list'
 
 - unless @orders.empty?
   .row-fluid
