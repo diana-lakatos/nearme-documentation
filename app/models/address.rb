@@ -17,6 +17,7 @@ class Address < ActiveRecord::Base
   validates_presence_of :address, :latitude, :longitude
   before_validation :update_address
   before_validation :parse_address_components
+  before_save :retry_fetch, if: lambda { |a| a.country.nil? }
 
   def self.order_by_distance_sql(latitude, longitude)
     distance_sql(latitude, longitude, order: "distance")
@@ -75,6 +76,11 @@ class Address < ActiveRecord::Base
     self.iso_country_code = data_parser.fetch_address_component("country", :short)
     self.state = data_parser.fetch_address_component("state")
     self.postcode = data_parser.fetch_address_component("postcode")
+  end
+
+  def retry_fetch
+    fetch_coordinates!
+    parse_address_components!
   end
 
   def to_s

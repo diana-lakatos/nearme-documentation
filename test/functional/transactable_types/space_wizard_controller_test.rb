@@ -11,6 +11,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
     FactoryGirl.create(:location_type)
     @partner = FactoryGirl.create(:partner)
     stub_mixpanel
+
     @transactable_type = FactoryGirl.create(:transactable_type_listing)
   end
 
@@ -19,6 +20,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
       PlatformContext.current = PlatformContext.new(@partner)
       @user = FactoryGirl.create(:user)
       sign_in @user
+      stub_us_geolocation
       assert_difference 'Transactable.count' do
         post :submit_listing, get_params
       end
@@ -28,6 +30,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
   end
 
   should 'set correct foreign keys' do
+    stub_us_geolocation
     assert_difference 'Transactable.count' do
       post :submit_listing, get_params
     end
@@ -47,6 +50,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
   context "price must be formatted" do
 
     should "ignore invalid characters in price" do
+      stub_us_geolocation
       assert_difference('Transactable.count', 1) do
         post :submit_listing, get_params("249.31-300.00", '!@#$%^&*()_+=_:;"[]}{\,<.>/?`~', 'i am not valid price I guess', "0")
       end
@@ -57,6 +61,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
     end
 
     should "handle nil and empty prices" do
+      stub_us_geolocation
       assert_difference('Transactable.count', 1) do
         post :submit_listing, get_params(nil, "", "249.00", "0")
       end
@@ -146,11 +151,14 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
       @tracker.expects(:updated_profile_information).with do |user|
         user == @user
       end
+
+      stub_us_geolocation
       post :submit_listing, get_params
     end
 
     should "track draft creation" do
       @tracker.expects(:saved_a_draft)
+      stub_us_geolocation
       post :submit_listing, get_params.merge({"save_as_draft"=>"Save as draft"})
     end
 
@@ -264,6 +272,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
     end
 
     should 'create listing when location skip_company is set to true' do
+      stub_us_geolocation
       assert_difference('Transactable.count', 1) do
         post :submit_listing, @params_without_company_name
       end
@@ -297,10 +306,10 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
 
         company = Company.last
         location = Location.last
-        assert_equal company.latitude, 37.09024
-        assert_equal company.longitude, -95.712891
-        assert_equal location.latitude, 5
-        assert_equal location.longitude, 8
+        assert_equal 37.09024, company.latitude
+        assert_equal -95.712891, company.longitude
+        assert_equal 37.09024, location.latitude
+        assert_equal -95.712891, location.longitude
       end
 
       should 'create listing with company address when location skip_company and skip_listing set' do
@@ -313,8 +322,8 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
         end
 
         location = Location.last
-        assert_equal location.latitude, 37.09024
-        assert_equal location.longitude, -95.712891
+        assert_equal 37.09024, location.latitude
+        assert_equal -95.712891, location.longitude
       end
     end
   end
@@ -325,50 +334,50 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
     {"user" =>
      {"companies_attributes"=>
       {"0" =>
-        {
-          "name"=>"International Secret Intelligence Service",
-          "company_address_attributes" => {
-            "address" => "Poznań, Polska",
-            "latitude" => "52.406374",
-            "longitude" => "16.925168100000064",
-          },
-          "industry_ids"=>["#{@industry.id}"],
-          "locations_attributes"=>
+       {
+         "name"=>"International Secret Intelligence Service",
+         "company_address_attributes" => {
+           "address" => "Poznań, Polska",
+           "latitude" => "52.406374",
+           "longitude" => "16.925168100000064",
+         },
+         "industry_ids"=>["#{@industry.id}"],
+         "locations_attributes"=>
+         {"0"=>
+          {
+            "description"=>"Our historic 11-story Southern Pacific Building, also known as \"The Landmark\", was completed in 1916. We are in the 172 m Spear Tower.",
+            "name" => 'Location',
+            "location_type_id"=>"1",
+            "location_address_attributes" =>
+            {
+              "address"=>"usa",
+              "local_geocoding"=>"10",
+              "latitude"=>"5",
+              "longitude"=>"8",
+              "formatted_address"=>"formatted usa",
+            },
+            "listings_attributes"=>
             {"0"=>
-              {
-                "description"=>"Our historic 11-story Southern Pacific Building, also known as \"The Landmark\", was completed in 1916. We are in the 172 m Spear Tower.",
-                "name" => 'Location',
-                "location_type_id"=>"1",
-                "location_address_attributes" =>
-                {
-                  "address"=>"usa",
-                  "local_geocoding"=>"10",
-                  "latitude"=>"5",
-                  "longitude"=>"8",
-                  "formatted_address"=>"formatted usa",
-                },
-              "listings_attributes"=>
-                {"0"=>
-                  {
-                    "transactable_type_id" => TransactableType.first.id,
-                    "name"=>"Desk",
-                    "description"=>"We have a group of several shared desks available.",
-                    "action_hourly_booking" => false,
-                    "listing_type"=>"Desk",
-                    "quantity"=>"1",
-                    "daily_price"=>daily_price,
-                    "weekly_price"=>weekly_price,
-                    "monthly_price"=> monthly_price,
-                    "action_free_booking"=>free,
-                    "confirm_reservations"=>"0",
-                    "photos_attributes" => [FactoryGirl.attributes_for(:photo)],
-                    "currency"=>"USD"
-                  }
-                },
-              }
-            }
-          },
-        },
+             {
+               "transactable_type_id" => TransactableType.first.id,
+               "name"=>"Desk",
+               "description"=>"We have a group of several shared desks available.",
+               "action_hourly_booking" => false,
+               "listing_type"=>"Desk",
+               "quantity"=>"1",
+               "daily_price"=>daily_price,
+               "weekly_price"=>weekly_price,
+               "monthly_price"=> monthly_price,
+               "action_free_booking"=>free,
+               "confirm_reservations"=>"0",
+               "photos_attributes" => [FactoryGirl.attributes_for(:photo)],
+               "currency"=>"USD"
+             }
+            },
+          }
+         }
+       },
+      },
       "country_name" => "United States",
       "phone" => "123456789"
      },
