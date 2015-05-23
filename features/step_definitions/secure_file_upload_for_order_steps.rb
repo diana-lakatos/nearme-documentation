@@ -20,6 +20,10 @@ When /^User clicks on Next button$/ do
   click_button "Next"
 end
 
+When /^User clicks on Complete Checkout button$/ do
+  click_button "Complete Checkout"
+end
+
 Then /^Sees file cannot be blank$/ do
   page.should have_css('.document-requirements .error-block', count: 1)
   page.should have_content("can't be blank")

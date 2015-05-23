@@ -575,6 +575,7 @@ en:
         next_step_payment: 'Next'
         previous_step: 'Go Back'
         back_to_cart: 'Go Back'
+        complete_checkout: 'Complete Checkout'
 
       errors:
         skip: 'You cannot skip checkout steps'

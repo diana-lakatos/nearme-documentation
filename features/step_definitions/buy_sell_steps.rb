@@ -108,7 +108,7 @@ When /^I fill billing data$/ do
   select 1.years.from_now.month.to_s, from: 'order_card_exp_month'
   select 1.years.from_now.year.to_s, from: 'order_card_exp_year'
   fill_in 'order_card_code', with: '111'
-  click_button 'Next'
+  click_button 'Complete Checkout'
 end
 
 And /^I should see order placed confirmation$/ do

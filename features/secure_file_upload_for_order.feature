@@ -11,7 +11,7 @@ Feature: User can add secure files to order
   Scenario: User sees error if mandatory but no file uploaded
     When User visits order payment page
     Then Sees default file label and field for upload
-    When User clicks on Next button
+    When User clicks on Complete Checkout button
     Then Sees file cannot be blank 
 
   Scenario: User doesn't see error if mandatory and file uploaded
