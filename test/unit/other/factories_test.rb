@@ -10,6 +10,7 @@ class FactoriesTest < ActiveSupport::TestCase
 
     context "Factory: #{factory.name}" do
       should "return valid resource" do
+        stub_us_geolocation
         resource = FactoryGirl.build(factory.name)
         assert resource.valid?, "Resource (#{factory.name}) invalid because of: #{resource.errors.full_messages.join(", ")}" if resource.respond_to?(:valid)
       end

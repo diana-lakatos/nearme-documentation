@@ -3,8 +3,10 @@ FactoryGirl.define do
     address "42 Wallaby Way"
     latitude "-33.856944"
     longitude "151.215278"
+    country 'US'
+
     address_components{{
-       "0"=> {
+      "0"=> {
         "long_name"=>"United States",
         "short_name"=>"US",
         "types"=>["country","political"]},
@@ -16,10 +18,10 @@ FactoryGirl.define do
       latitude "-36.858675"
       longitude "174.777303"
       address_components{{
-       "0"=> {
-        "long_name"=>"New Zealand",
-        "short_name"=>"NZ",
-        "types"=>["country","political"]},
+        "0"=> {
+          "long_name"=>"New Zealand",
+          "short_name"=>"NZ",
+          "types"=>["country","political"]},
       }}
     end
 
@@ -68,25 +70,25 @@ FactoryGirl.define do
       address_components do
         {
           "0"=> {
-          "long_name"=>"Ursynowska",
-          "short_name"=>"Ursynowska",
-          "types"=>["route"]
-        },
+            "long_name"=>"Ursynowska",
+            "short_name"=>"Ursynowska",
+            "types"=>["route"]
+          },
           "1"=>{
-          "long_name"=>"Mokotow",
-          "short_name"=>"Mokotow",
-          "types"=>["sublocality","political"]
-        },
+            "long_name"=>"Mokotow",
+            "short_name"=>"Mokotow",
+            "types"=>["sublocality","political"]
+          },
           "2"=>{
-          "long_name"=>"Warsaw",
-          "short_name"=>"Warsaw",
-          "types"=>["locality","political"]
-        },
+            "long_name"=>"Warsaw",
+            "short_name"=>"Warsaw",
+            "types"=>["locality","political"]
+          },
           "3"=>{
-          "long_name"=> "Warszawa",
-          "short_name"=>"Warszawa",
-          "types"=>["administrative_area_level_3","political"]
-        },
+            "long_name"=> "Warszawa",
+            "short_name"=>"Warszawa",
+            "types"=>["administrative_area_level_3","political"]
+          },
           "4"=>{
             "long_name"=>"Warszawa",
             "short_name"=>"Warszawa",
@@ -119,11 +121,16 @@ FactoryGirl.define do
           "short_name"=>"Warsaw",
           "types"=>["locality","political"]
         },
-          "3"=>{
+        "3"=>{
           "long_name"=> "Warszawa",
           "short_name"=>"Warszawa",
           "types"=>["administrative_area_level_3","political"]
-        }
+        },
+        "4"=>{
+          "long_name"=>"Poland",
+          "short_name"=>"PL",
+          "types"=>["country","political"]
+        },
       }}
     end
 
@@ -140,48 +147,48 @@ FactoryGirl.define do
           "short_name"=>"San Francisco",
           "types"=>["administrative_area_level_2","political"]},
         "2"=>{
-          "long_name"=>"California",
-          "short_name"=>"CA",
-          "types"=>["administrative_area_level_1","political"]},
+            "long_name"=>"California",
+            "short_name"=>"CA",
+            "types"=>["administrative_area_level_1","political"]},
         "3"=>{
-          "long_name"=>"United States",
-          "short_name"=>"US",
-          "types"=>["country","political"]
-        }
+              "long_name"=>"United States",
+              "short_name"=>"US",
+              "types"=>["country","political"]
+            }
       }}
     end
 
     factory :address_vaughan_address_components do
       formatted_address "Major MacKenzie Drive, Vaughan, ON L6A, Canada"
       address_components{{
-         "0"=> {
+        "0"=> {
           "long_name"=>"Major MacKenzie Drive",
           "short_name"=>"Major MacKenzie Dr",
           "types"=>["route"]},
         "1"=>{
-          "long_name"=>"Maple",
-          "short_name"=>"Maple",
-          "types"=>["neighborhood","political"]},
+            "long_name"=>"Maple",
+            "short_name"=>"Maple",
+            "types"=>["neighborhood","political"]},
         "2"=>{
-          "long_name"=>"Vaughan",
-          "short_name"=>"Vaughan",
-          "types"=>["administrative_area_level_3","political"]},
+              "long_name"=>"Vaughan",
+              "short_name"=>"Vaughan",
+              "types"=>["administrative_area_level_3","political"]},
         "3"=>{
-          "long_name"=>"York Regional Municipality",
-          "short_name"=>"York Regional Municipality",
-          "types"=>["administrative_area_level_2","political"]},
+                "long_name"=>"York Regional Municipality",
+                "short_name"=>"York Regional Municipality",
+                "types"=>["administrative_area_level_2","political"]},
         "4"=>{
-          "long_name"=>"Ontario",
-          "short_name"=>"ON",
-          "types"=>["administrative_area_level_1","political"]},
+                  "long_name"=>"Ontario",
+                  "short_name"=>"ON",
+                  "types"=>["administrative_area_level_1","political"]},
         "5"=>{
-          "long_name"=>"Canada",
-          "short_name"=>"CA",
-          "types"=>["country","political"]},
+                    "long_name"=>"Canada",
+                    "short_name"=>"CA",
+                    "types"=>["country","political"]},
         "6"=>{
-          "long_name"=>"L6A",
-          "short_name"=>"L6A",
-          "types"=>["postal_code"]}
+                      "long_name"=>"L6A",
+                      "short_name"=>"L6A",
+                      "types"=>["postal_code"]}
       }}
     end
 

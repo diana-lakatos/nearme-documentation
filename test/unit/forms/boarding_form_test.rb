@@ -21,6 +21,7 @@ class BoardingFormTest < ActiveSupport::TestCase
 
   context "Boarding First Product" do
     should "submit params" do
+      Address.any_instance.stubs(:country).returns('PL')
       assert_equal @boarding_form.submit(boarding_attributes), true
 
       @company = Company.last

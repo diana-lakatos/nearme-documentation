@@ -6,6 +6,10 @@ class AddressTest < ActiveSupport::TestCase
   should validate_presence_of(:latitude)
   should validate_presence_of(:longitude)
 
+  setup do
+    stub_us_geolocation
+  end
+
   context "geolocate ourselves" do
 
     should "not be valid if cannot geolocate" do

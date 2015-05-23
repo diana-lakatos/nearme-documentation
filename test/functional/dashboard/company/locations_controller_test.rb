@@ -7,6 +7,7 @@ class Dashboard::Company::LocationsControllerTest < ActionController::TestCase
     sign_in @user
     @company = FactoryGirl.create(:company, :creator => @user)
     @location_type = FactoryGirl.create(:location_type)
+    stub_us_geolocation
   end
 
   context "#create" do
