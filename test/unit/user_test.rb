@@ -769,7 +769,6 @@ class UserTest < ActiveSupport::TestCase
 
   context 'metadata' do
 
-
     context 'listings_metadata' do
 
       setup do
@@ -781,7 +780,8 @@ class UserTest < ActiveSupport::TestCase
         @user.expects(:update_instance_metadata).with({
           has_draft_listings: false,
           has_draft_products: false,
-          has_any_active_listings: true
+          has_any_active_listings: true,
+          has_any_active_products: false
         })
         @user.populate_listings_metadata!
       end
@@ -791,7 +791,8 @@ class UserTest < ActiveSupport::TestCase
         @user.expects(:update_instance_metadata).with({
           has_draft_listings: true,
           has_draft_products: false,
-          has_any_active_listings: true
+          has_any_active_listings: true,
+          has_any_active_products: false
         })
         @user.populate_listings_metadata!
       end
@@ -801,14 +802,16 @@ class UserTest < ActiveSupport::TestCase
         @user.expects(:update_instance_metadata).with({
           has_draft_listings: true,
           has_draft_products: false,
-          has_any_active_listings: false
+          has_any_active_listings: false,
+          has_any_active_products: false
         })
         @user.populate_listings_metadata!
         @listing.update_column(:draft, nil)
         @user.expects(:update_instance_metadata).with({
           has_draft_listings: false,
           has_draft_products: false,
-          has_any_active_listings: true
+          has_any_active_listings: true,
+          has_any_active_products: false
         })
         @user.populate_listings_metadata!
       end
@@ -818,7 +821,49 @@ class UserTest < ActiveSupport::TestCase
         @user.expects(:update_instance_metadata).with({
           has_draft_listings: false,
           has_draft_products: false,
-          has_any_active_listings: false
+          has_any_active_listings: false,
+          has_any_active_products: false
+        })
+        @user.populate_listings_metadata!
+      end
+    end
+
+    context 'populate_products_metadata' do
+
+      setup do
+        @user = FactoryGirl.create(:user)
+        @company = FactoryGirl.create(:company, creator: @user)
+        @product = FactoryGirl.create(:product, company: @company, user: @user)
+      end
+
+      should 'have active products and no draft products if has only one active product metadata' do
+        @user.expects(:update_instance_metadata).with({
+          has_draft_listings: false,
+          has_draft_products: false,
+          has_any_active_listings: false,
+          has_any_active_products: true
+        })
+        @user.populate_listings_metadata!
+      end
+
+      should 'have draft product if there is only draft product' do
+        @product.update_attribute(:draft, true)
+        @user.expects(:update_instance_metadata).with({
+          has_draft_listings: false,
+          has_draft_products: true,
+          has_any_active_listings: false,
+          has_any_active_products: false
+        })
+        @user.populate_listings_metadata!
+      end
+
+      should 'have no draft and no active products if there is no product at all' do
+        @product.destroy
+        @user.expects(:update_instance_metadata).with({
+          has_draft_listings: false,
+          has_draft_products: false,
+          has_any_active_listings: false,
+          has_any_active_products: false
         })
         @user.populate_listings_metadata!
       end
@@ -838,7 +883,9 @@ class UserTest < ActiveSupport::TestCase
           companies_metadata: [],
           has_draft_listings: false,
           has_draft_products: false,
-          has_any_active_listings: false
+          has_any_active_listings: false,
+          has_any_active_products: false
+
         })
         @user.reload.populate_companies_metadata!
         @listing.company.company_users.create(:user_id => @user.id)
@@ -846,7 +893,8 @@ class UserTest < ActiveSupport::TestCase
           companies_metadata: [@company.id],
           has_draft_listings: false,
           has_draft_products: false,
-          has_any_active_listings: true
+          has_any_active_listings: true,
+          has_any_active_products: false
         })
         @user.reload.populate_companies_metadata!
       end
