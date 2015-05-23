@@ -16,6 +16,8 @@ class WorkflowStep::PayoutWorkflow::BaseStep < WorkflowStep::BaseStep
     @company.creator
   end
 
+  # company:
+  #   Company object
   def data
     { company: @company }
   end

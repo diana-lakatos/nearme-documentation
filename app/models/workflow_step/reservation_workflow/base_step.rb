@@ -20,6 +20,14 @@ class WorkflowStep::ReservationWorkflow::BaseStep < WorkflowStep::BaseStep
     @reservation.owner
   end
 
+  # reservation:
+  #   Reservation object
+  # user:
+  #   listing User object
+  # host:
+  #   enquiring User object
+  # listing:
+  #   Transactable object
   def data
     { reservation: @reservation, user: lister, host: enquirer, listing: @reservation.listing }
   end

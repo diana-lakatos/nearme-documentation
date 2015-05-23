@@ -5,6 +5,10 @@ class WorkflowStep::OrderWorkflow::Shipped < WorkflowStep::OrderWorkflow::BaseSt
     @order = @shipment.order
   end
 
+  # shipment:
+  #   Spree::Shipment object
+  # order:
+  #   Spree::Order object
   def data
     { shipment: @shipment, order: @order }
   end
