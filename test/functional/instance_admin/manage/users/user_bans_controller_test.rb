@@ -11,6 +11,7 @@ class InstanceAdmin::Manage::Users::UserBansControllerTest < ActionController::T
     InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
     sign_in @user
     @user_to_be_banned = FactoryGirl.create(:user)
+    @existing_user_ban = FactoryGirl.create(:user_ban)
   end
 
   context 'create' do
@@ -28,4 +29,13 @@ class InstanceAdmin::Manage::Users::UserBansControllerTest < ActionController::T
     end
   end
 
+  context 'delete' do
+
+    should 'unban user' do
+      assert_no_difference 'UserBan.count' do
+        delete :destroy, { id: @existing_user_ban.id, user_id: @existing_user_ban.user.id }
+      end
+      assert_equal @existing_user_ban.user.reload.banned_at, nil
+    end
+  end
 end
