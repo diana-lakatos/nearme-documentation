@@ -17,6 +17,9 @@ module TransactablesIndex
           end
         end
 
+        indexes :name, type: 'string'
+        indexes :description, type: 'string'
+
       	indexes :object_properties, type: 'object'
         indexes :instance_id, :type => "integer"
         indexes :company_id, :type => "integer"

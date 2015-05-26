@@ -41,6 +41,7 @@ module Elastic
 
     def geo_regular_query
       @filters = initial_service_filters
+      apply_geo_search_filters
       {
         size: query_limit,
         sort: ['_score'],
@@ -149,15 +150,14 @@ module Elastic
       if @query[:query].blank?
         { match_all: { boost: QUERY_BOOST } }
       else
-        { multi_match: build_multi_match(@query[:query], @searchable_custom_attributes) }
+        { multi_match: build_multi_match(@query[:query], @searchable_custom_attributes + ['name^2', 'description']) }
       end
     end
 
     def build_multi_match(query_string, custom_attributes)
       multi_match = {
         query: query_string,
-        fields: custom_attributes,
-        analyzer: ANALYZER
+        fields: custom_attributes
       }
 
       # You should enable fuzzy search manually. Not included in the current release
