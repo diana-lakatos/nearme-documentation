@@ -64,7 +64,6 @@ class Search.SearchMixedController extends Search.SearchController
       unless $(e.target).hasClass('truncated-ellipsis')
         window.location.href = $(e.target).parents('.listing').find('.reserve-listing a').attr('href')
 
-
   initializeSearchButton: ->
     @searchButton = @form.find(".search-icon")
     if @searchButton.length > 0

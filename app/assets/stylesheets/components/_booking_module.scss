@@ -452,4 +452,36 @@
     display: none;
   }
 
+  .reservation_request_dates .select2-container {
+    background: #e6e6e6;
+    transition: border 0.2s ease-in, opacity 0.2s ease-in, color 0.2s ease-in;
+    margin-bottom: 8px;
+    padding: 8px 8px 8px 8px;
+    border-radius: 5px;
+    height: 49px;
+
+    .select2-offscreen {
+      clip: none;
+    }
+
+    .select2-choice {
+      background-color: #e6e6e6;
+      background-image: none;
+      border: none;
+      line-height: 34px;
+      height: auto;
+      box-shadow: none;
+
+      .select2-arrow {
+        @extend .ico-chevron-down;
+        width: 40px;
+        background-image: none;
+        background-color: #e6e6e6;
+        border: none;
+        color: rgb(153, 153, 153);
+      }
+    }
+
+  }
+
 }

@@ -12,6 +12,7 @@ class Bookings.Controller
       @initializeDatepicker()
       @listing.setDates(@datepicker.getDates())
     @bindEvents()
+    @initializeInfiniScroll() if @fixedPriceSelect
     @updateQuantityField()
 
     if @listingData.initial_bookings and @options.submitFormImmediately
@@ -38,7 +39,7 @@ class Bookings.Controller
   bindDomElements: ->
     @quantityField = @container.find('[name=quantity].quantity')
     @bookItOutContainer = @container.find('.book-it-out')
-    @bookItOutCheck = @container.find('input#book_it_out')
+    @bookItOutCheck = @container.find('input[name=book_it_out]')
     @exclusivePriceContainer = @container.find('.exclusive-price')
     @exclusivePriceCheck = @exclusivePriceContainer.find('input')
     @exclusivePriceContent = @container.find('div[data-exclusive-price-content]')
@@ -57,6 +58,7 @@ class Bookings.Controller
     @bookingTabs = @container.find("[data-pricing-tabs] li a")
     if !@listing.withCalendars()
       @fixedPriceSelect = @container.find("[data-fixed-date-select]")
+      @fixedPriceSelectInit = @fixedPriceSelect.data('init-value')
       @fixedPriceSelect.on 'change', (e) =>
         @updateBookingStatus()
         @updateBookItOut() if @listing.bookItOutAvailable()
@@ -138,7 +140,7 @@ class Bookings.Controller
     if @fixedPriceSelect
       if @fixedPriceSelect.val()
         @listing.bookedDatesArray = [@fixedPriceSelect.val()]
-        @listing.bookedDateAvailability = @fixedPriceSelect.find(':selected').data('availability')
+        @listing.bookedDateAvailability = (@fixedPriceSelect.select2('data') || @fixedPriceSelectInit).availability
         for option in @quantityField.find('option')
           if parseInt(option.value) > @listing.fixedAvailability()
             $(option).prop('disabled', true)
@@ -274,3 +276,33 @@ class Bookings.Controller
       @exclusivePriceContent.hide() if @exclusivePriceContent
       @updateSummary()
 
+  initializeInfiniScroll: ->
+    startDate = DNM.util.Url.getParameterByName('start_date')
+    endDate = DNM.util.Url.getParameterByName('end_date')
+    @fixedPriceSelect.select2
+      placeholder: 'Select date'
+      ajax:
+        url: "/listings/#{@listing.getId()}/occurrences"
+        dataType: 'json'
+        data: (term, page) ->
+          {
+            q: term
+            page: page
+            last_occurrence: $(this).data('last_occurrence')
+            start_date: new Date(startDate).toDateString() unless startDate == ''
+            end_date: new Date(endDate).toDateString() unless endDate == ''
+          }
+        results: (data, page) =>
+          more = (data.length == 10)
+          @fixedPriceSelect.data('last_occurrence', data[-1..][0].id) if data.length > 0
+          {
+            results: data
+            more: more
+          }
+        cache: true
+      minimumResultsForSearch: -1
+      formatLoadMore: 'Loading...'
+      formatNoMatches: 'No dates found'
+      escapeMarkup: (m) ->
+        m
+    $(".select2-chosen").text(@fixedPriceSelectInit.text)

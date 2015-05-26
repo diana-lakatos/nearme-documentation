@@ -467,6 +467,10 @@ DesksnearMe::Application.routes.draw do
 
   resources :listings, :only => [:index, :show] do
 
+    member do
+      get :occurrences
+    end
+
     resources :recurring_bookings, :only => [:create, :update], :controller => "listings/recurring_bookings" do
       collection do
         post :review
