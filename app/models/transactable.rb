@@ -120,6 +120,13 @@ class Transactable < ActiveRecord::Base
     where('transactables.action_schedule_booking = ? OR transactables.opened_on_days @> \'{?}\'', true, days)
   }
 
+  scope :overlaps_schedule_start_date, -> (date) {
+    where("
+      ((select count(*) from schedules where scheduable_id = transactables.id and scheduable_type = '#{self.to_s}' limit 1) = 0) 
+      OR 
+      (?::timestamp::date >= (select sr_start_datetime from schedules where scheduable_id = transactables.id and scheduable_type = '#{self.to_s}' limit 1)::timestamp::date)", date)
+  }
+
   # == Callbacks
   before_validation :set_activated_at, :set_enabled, :nullify_not_needed_attributes,
     :set_confirm_reservations

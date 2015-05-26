@@ -62,6 +62,7 @@ class Listing::SearchFetcher
         @listings_scope = @listings_scope.not_booked_absolute(@filters[:date_range].first, @filters[:date_range].last)
         @listings_scope = @listings_scope.only_opened_on_all_of(date_range_to_days)
       end
+      @listings_scope = @listings_scope.overlaps_schedule_start_date(@filters[:date_range].first)
     end
 
     @listings_scope = Transactable.where(id: @listings_scope.pluck(:id))

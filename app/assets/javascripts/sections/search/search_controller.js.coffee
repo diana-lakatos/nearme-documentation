@@ -43,6 +43,7 @@ class Search.SearchController extends Search.Controller
       document.location = "#{document.location.protocol}//#{document.location.host}#{document.location.pathname}?loc=#{DNM.util.Url.getParameterByName('loc')}&transactable_type_id=#{$(event.target).val()}" + date_range
 
     @date_range_btn.on 'click', (event) =>
+      @resetPriceRange()
       @triggerSearchFromQuery()
 
     @closeFilterIfClickedOutside()
@@ -58,6 +59,7 @@ class Search.SearchController extends Search.Controller
       false
 
     @filters_container.on 'click', 'input[type=checkbox]', =>
+      @resetPriceRange()
       @fieldChanged()
 
     @searchField = @form.find('#search')
@@ -73,6 +75,8 @@ class Search.SearchController extends Search.Controller
       @searchField.blur()
 
     @map.on 'viewportChanged', =>
+      @resetPriceRange()
+      
       # NB: The viewport can change during 'query based' result loading, when the map fits
       #     the bounds of the search results. We don't want to trigger a bounding box based
       #     lookup during a controlled viewport change such as this.
@@ -81,6 +85,8 @@ class Search.SearchController extends Search.Controller
 
       @triggerSearchWithBoundsAfterDelay()
 
+  resetPriceRange: ->
+    $("input[name='price[max]']").val(0)
 
   hideFilters: ->
     for filter in @filters
