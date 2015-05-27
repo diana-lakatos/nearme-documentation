@@ -20,6 +20,10 @@ class InstanceAdmin::Manage::Search::SettingsController < InstanceAdmin::Manage:
 
   private
 
+  def permitting_controller_class
+    self.class.to_s.deconstantize.deconstantize.demodulize
+  end
+
   def find_instance
     @instance = platform_context.instance
   end

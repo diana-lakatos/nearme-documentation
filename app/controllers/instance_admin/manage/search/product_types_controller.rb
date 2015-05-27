@@ -32,6 +32,10 @@ class InstanceAdmin::Manage::Search::ProductTypesController < InstanceAdmin::Man
 
   private
 
+  def permitting_controller_class
+    self.class.to_s.deconstantize.deconstantize.demodulize
+  end
+
   def find_product_type
     @product_type = Spree::ProductType.find(params[:product_type_id])
   end

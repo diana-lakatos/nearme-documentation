@@ -32,6 +32,10 @@ class InstanceAdmin::Manage::Search::ServiceTypesController < InstanceAdmin::Man
 
   private
 
+  def permitting_controller_class
+    self.class.to_s.deconstantize.deconstantize.demodulize
+  end
+
   def find_service_type
     @service_type = TransactableType.find(params[:service_type_id])
   end
