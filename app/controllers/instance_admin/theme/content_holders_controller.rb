@@ -6,7 +6,7 @@ class InstanceAdmin::Theme::ContentHoldersController < InstanceAdmin::Theme::Bas
   def create
     @content_holder = PlatformContext.current.theme.content_holders.new(content_holder_params)
     @content_holder.instance = PlatformContext.current.instance
-    create!
+    create!{ instance_admin_theme_content_holders_path }
   end
 
   private
