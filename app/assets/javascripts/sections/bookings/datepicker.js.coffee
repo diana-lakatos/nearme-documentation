@@ -217,6 +217,15 @@ class @Bookings.Datepicker
   # Assign initial dates from a restored session or the default
   # start date.
   assignInitialDates: ->
+    if @startElement.data('start-date')? && @endElement.data('end-date')?
+      startDate = new Date(@startElement.data('start-date'))
+      endDate = new Date(@endElement.data('end-date'))
+      datesFromFilter = true
+    else
+      startDate = @listing.firstAvailableDate
+      endDate = @listing.secondAvailableDate
+      datesFromFilter = false
+
     initialDates = if @listingData.initial_bookings
       # Format is:
       # {quantity: 1, dates: ['2013-11-04', ...] }
@@ -225,10 +234,13 @@ class @Bookings.Datepicker
       # Map bookings to JS dates
       (DNM.util.Date.idToDate(date) for date in @listingData.initial_bookings.dates)
     else if @listing.isOvernightBooking()
-      [@listing.firstAvailableDate, @listing.secondAvailableDate, new Date()]
+      [startDate, endDate, new Date()]
+    else if datesFromFilter
+      [startDate, endDate]
     else
-      [@listing.firstAvailableDate]
+      [startDate]
 
     @trigger 'datesChanged', initialDates
     @setDates(initialDates)
     @listing.setDates(initialDates)
+    @endDatepicker.getModel().setRangeTo(endDate) if datesFromFilter

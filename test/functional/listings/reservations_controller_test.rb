@@ -166,7 +166,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       @transactable = FactoryGirl.create(:transactable, :fixed_price, :with_book_it_out)
       @transactable.transactable_type.update_attributes! action_book_it_out: true
       @params = booking_params_for(@transactable)
-      @params[:reservation_request].merge!({ dates: [@transactable.next_available_occurrences.first.last[:date]], quantity: 10, book_it_out: "true", start_minute: 365, end_minute: 365})
+      @params[:reservation_request].merge!({ dates: [@transactable.next_available_occurrences.first[:id]], quantity: 10, book_it_out: "true", start_minute: 365, end_minute: 365})
     end
 
     should 'create reservation with discount' do
@@ -199,7 +199,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       @transactable = FactoryGirl.create(:transactable, :fixed_price, :with_exclusive_price)
       @transactable.transactable_type.update_attributes! action_exclusive_price: true
       @params = booking_params_for(@transactable)
-      @params[:reservation_request].merge!({ dates: [@transactable.next_available_occurrences.first.last[:date]], quantity: 10, exclusive_price: "true", start_minute: 365, end_minute: 365})
+      @params[:reservation_request].merge!({ dates: [@transactable.next_available_occurrences.first[:id]], quantity: 10, exclusive_price: "true", start_minute: 365, end_minute: 365})
     end
 
     should 'create reservation with exclusive price' do
@@ -225,7 +225,7 @@ class Listings::ReservationsControllerTest < ActionController::TestCase
       @transactable = FactoryGirl.create(:transactable, :fixed_price)
       @transactable.transactable_type.update_attributes! action_price_per_unit: true
       @params = booking_params_for(@transactable)
-      @params[:reservation_request].merge!({ dates: [@transactable.next_available_occurrences.first.last[:date]], quantity: 11.23, start_minute: 365, end_minute: 365})
+      @params[:reservation_request].merge!({ dates: [@transactable.next_available_occurrences.first[:id]], quantity: 11.23, start_minute: 365, end_minute: 365})
     end
 
     should 'create reservation with price per unit' do

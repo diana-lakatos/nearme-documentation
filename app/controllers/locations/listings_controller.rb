@@ -25,7 +25,7 @@ class Locations::ListingsController < ApplicationController
 
   def redirect_to_location_if_show_page_disabled
     unless @listing.transactable_type.show_page_enabled
-      redirect_to transactable_type_location_path(@listing.transactable_type, @location, @listing), status: :found
+      redirect_to transactable_type_location_path(@listing.transactable_type, @location, @listing, params.extract!(:start_date, :end_date)), status: :found
     end
   end
 

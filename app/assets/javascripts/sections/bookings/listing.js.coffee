@@ -39,6 +39,9 @@ class @Bookings.Listing
       @bookedDatesArray = @bookedDatesArray.slice(0,1)
     @data.action_hourly_booking = hourlyBooking
 
+  getId: ->
+    @id
+
   getQuantity: ->
     @defaultQuantity
 

@@ -1,6 +1,6 @@
 class ListingsController < ApplicationController
   before_filter :redirect_if_invalid_page_param, :only => [:index]
-  before_filter :find_listing, :only => [:show]
+  before_filter :find_listing, :only => [:show, :occurrences]
 
   def index
     @listings = Transactable.latest.includes(:transactable_type, :location).paginate(:page => params[:page])
@@ -8,6 +8,11 @@ class ListingsController < ApplicationController
 
   def show
     redirect_to transactable_type_location_listing_path(@listing.transactable_type, @location, @listing), :status => :moved_permanently
+  end
+
+  def occurrences
+    occurrences = @listing.next_available_occurrences(10, params)
+    render json: occurrences, root: false
   end
 
   protected

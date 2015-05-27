@@ -81,7 +81,7 @@
         - unless listing.schedule_booking?
           .tab-content
 
-            .calendar-wrapper.date-start
+            .calendar-wrapper.date-start{ data: { start_date: params[:start_date] } }
               .calendar
                 %span.ico-calender-end
                 %span.calendar-text= t 'booking_module.start'
@@ -92,7 +92,7 @@
                   %span.time-text= t 'booking_module.nine'
 
             - if listing.action_daily_booking? || (listing.action_free_booking? && !listing.action_hourly_booking? && !listing.schedule_booking?)
-              .daily-booking.tab-pane.calendar-wrapper.date-end{id: "daily-booking-#{listing.id}"}
+              .daily-booking.tab-pane.calendar-wrapper.date-end{id: "daily-booking-#{listing.id}", data: { end_date: params[:end_date] }}
                 .calendar
                   %span.ico-calender-start
                   %span.calendar-text= t 'booking_module.end'
@@ -143,7 +143,7 @@
             = f.hidden_field :exclusive_price
             = f.hidden_field :guest_notes
             - if listing.schedule_booking?
-              = f.input :dates, collection: listing.schedule_collection, include_blank: false, label: false, input_html: { :'data-fixed-date-select' => true }
+              = f.input :dates, label: false, input_html: { value: listing.first_available_occurrence[:text], :'data-fixed-date-select' => true, 'data-init-value' => listing.first_available_occurrence.to_json }
             - else
               = f.hidden_field :dates
             = f.hidden_field :reservation_type, class: 'reservation_type'

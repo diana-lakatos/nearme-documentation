@@ -29,6 +29,7 @@ class Search.SearchController extends Search.Controller
     @initializeConnectionsTooltip()
     setTimeout((=> @processingResults = false), 1000)
     @responsiveCategoryTree()
+    @updateLinks()
 
   bindEvents: ->
     @form.bind 'submit', (event) =>
@@ -259,6 +260,7 @@ class Search.SearchController extends Search.Controller
         @movableGoogleMap = $('#search-result-movable-google-map').get(0)
         new Search.SearchResultsGoogleMapController(@resultsContainer(), @movableGoogleMap) if @movableGoogleMap?
         @updateMapWithListingResults() if @map?
+        @updateLinks()
 
 
   reinitializePriceSlider: ->
@@ -352,3 +354,10 @@ class Search.SearchController extends Search.Controller
 
   initializeConnectionsTooltip: ->
     @container.find('.connections:not(.initialized)').addClass('iinitialized').tooltip(html: true, placement: 'top')
+
+  updateLinks: ->
+    if @date_range.length > 1
+      for link in $("div.locations a")
+        href = link.href.replace(/\?.*$/, "")
+        href += "?start_date=#{@date_range[0].value}&end_date=#{@date_range[1].value}"
+        link.href = href
