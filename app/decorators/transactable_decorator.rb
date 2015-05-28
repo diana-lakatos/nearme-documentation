@@ -42,18 +42,13 @@ class TransactableDecorator < Draper::Decorator
     !self.transactable_type.action_na
   end
 
-  def schedule_collection
-    self.next_available_occurrences(10).map do |id, v|
-      [
-        l(v[:date], format: :long),
-        l(v[:date], format: :long),
-        { 'data-availability' => v[:availability] }
-      ]
-    end
-  end
-
   def price_per_unit?
     self.transactable_type.action_price_per_unit?
+  end
+
+  def first_available_occurrence
+    start_date = Date.strptime(params[:start_date], "%m/%d/%Y") if params[:start_date]
+    @first_occurrence ||= next_available_occurrences(1, { start_date: start_date }).first || {}
   end
 
 end

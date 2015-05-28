@@ -18,6 +18,10 @@ class InstanceAdmin::Manage::SearchController < InstanceAdmin::Manage::BaseContr
     end
   end
 
+  def services; end
+  
+  def products; end
+
   private
 
   def find_instance

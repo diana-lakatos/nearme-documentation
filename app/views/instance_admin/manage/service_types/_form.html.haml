@@ -39,8 +39,12 @@
       .input-container.col-xs-6
         = f.input :enable_photo_required, as: :boolean, :inline_label => true
 
-  .content-container
-    %h4 Cancellation Policy
+    .row
+      .input-container.col-xs-6
+        = f.input :searchable, as: :boolean
+
+  %h4 Cancellation Policy
+  .content-container.dropshadow
     .row
       .input-container.col-xs-12
         = f.input :enable_cancellation_policy, required: false, as: :boolean, label: "Should cancellation policy be enabled?", input_html: { checked: f.object.enable_cancellation_policy.nil? ? f.object.cancellation_policy_enabled.present? : f.object.enable_cancellation_policy=="1" }, :inline_label => true

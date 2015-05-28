@@ -10,7 +10,13 @@ class SearchController < ApplicationController
   helper_method :searcher, :result_view, :current_page_offset, :per_page, :first_result_page?
 
   def index
-    @searcher = instantiate_searcher(@transactable_type, params)
+    if @transactable_type.buyable?
+      @searcher = InstanceType::SearcherFactory.new(@transactable_type, params).product_searcher
+    elsif result_view == 'mixed'
+      @searcher = InstanceType::SearcherFactory.new(@transactable_type, params).location_searcher
+    else
+      @searcher = InstanceType::SearcherFactory.new(@transactable_type, params).listing_searcher
+    end
     @searcher.paginate_results(params[:page], per_page)
     event_tracker.conducted_a_search(@searcher.search, @searcher.to_event_params.merge(result_view: result_view)) if should_log_conducted_search?
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]

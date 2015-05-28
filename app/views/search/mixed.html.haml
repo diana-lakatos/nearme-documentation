@@ -61,6 +61,7 @@
                           %input{type: 'radio', name: 'transactable_type_id', value: transactable_type.id, checked: @transactable_type.id == transactable_type.id}
                           %span.filter-label-text
                             = transactable_type.name
+                            
         - @searcher.searchable_categories.each do |category|
           = render :partial => 'search/mixed/filter', :locals => { :header_name => category.translated_name, :selected_values => @searcher.category_ids || [], :input_name => 'category_ids[]', :options => @searcher.category_options(category)}
 

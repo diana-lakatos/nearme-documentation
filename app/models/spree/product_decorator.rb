@@ -1,6 +1,7 @@
 Spree::Product.class_eval do
   include Spree::Scoper
   include Impressionable
+  include Searchable
 
   attr_accessor :validate_exisiting
 

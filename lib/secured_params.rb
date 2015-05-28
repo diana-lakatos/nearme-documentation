@@ -344,7 +344,10 @@ class SecuredParams
       :price_slider,
       :price_types,
       :saved_search,
+      :search_engine,
+      :search_radius,
       :search_settings,
+      :search_text,
       :searcher_type,
       :service_fee_guest_percent,
       :service_fee_host_percent,
@@ -534,7 +537,8 @@ class SecuredParams
   def product_type
     [
       :name,
-      :action_rfq
+      :action_rfq,
+      :searchable
     ]
   end
 

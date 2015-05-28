@@ -4,7 +4,7 @@
       - if current_user && current_user.registration_in_progress?
         - if platform_context.product_types.count == 1
           %li
-            = link_to main_app.product_type_new_space_wizard_path(platform_context.product_types.first), :class => "nav-link btn btn-blue btn-medium" do
+            = link_to main_app.new_product_type_product_wizard_path(platform_context.product_types.first), :class => "nav-link btn btn-blue btn-medium" do
               %span.text= t('ui.header.complete_your_thing', thing: platform_context.product_types.first.name)
               %span.icon.ico-plus
         - else
@@ -57,7 +57,7 @@
             %li
               = link_to main_app.dashboard_company_transactable_type_transactables_path(transactable_type), class: 'nav-link dropdown-toggle' do
                 %div.truncate= t 'top_navbar.manage_bookable', bookable_noun: transactable_type.name.pluralize
-          - if HiddenUiControls.find('main_menu/my_bookings').visible?
+          - if platform_context.bookable? && HiddenUiControls.find('main_menu/my_bookings').visible?
             %li
               = link_to main_app.dashboard_user_reservations_path, class: 'nav-link dropdown-toggle' do
                 %span= t 'top_navbar.my_bookings'
@@ -65,7 +65,7 @@
             %li
               = link_to main_app.dashboard_company_product_type_products_path(product_type), class: 'nav-link dropdown-toggle' do
                 %div.truncate Manage #{product_type.name.pluralize}
-          - if HiddenUiControls.find('main_menu/my_orders').visible?
+          - if platform_context.buyable? && HiddenUiControls.find('main_menu/my_orders').visible?
             %li
               = link_to main_app.dashboard_orders_path, class: 'nav-link dropdown-toggle' do
                 %span= t 'top_navbar.my_orders'

@@ -367,7 +367,18 @@ DesksnearMe::Application.routes.draw do
       resources :waiver_agreement_templates, :only => [:index, :create, :update, :destroy]
 
       resource :wish_lists, only: [:show, :update]
-      resource :search, only: [:show, :update], controller: :search
+
+      namespace :search do
+        resource :settings, only: [:show, :update]
+        resource :product_types, only: [:show, :update] do
+          put :set_search, to: 'product_types#set_search'
+          put :set_custom_attribute, to: 'product_types#set_custom_attribute'
+        end
+        resource :service_types, only: [:show, :update] do
+          put :set_search, to: 'service_types#set_search'
+          put :set_custom_attribute, to: 'service_types#set_custom_attribute'
+        end
+      end
     end
 
     namespace :manage_blog do
@@ -473,6 +484,10 @@ DesksnearMe::Application.routes.draw do
   end
 
   resources :listings, :only => [:index, :show] do
+
+    member do
+      get :occurrences
+    end
 
     resources :recurring_bookings, :only => [:create, :update], :controller => "listings/recurring_bookings" do
       collection do

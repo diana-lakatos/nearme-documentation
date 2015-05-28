@@ -6,6 +6,7 @@ class Transactable < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound;
   end
   include Impressionable
+  include Searchable
   has_metadata accessors: [:photos_metadata]
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id, :listings_public], :location)
 
@@ -120,6 +121,13 @@ class Transactable < ActiveRecord::Base
     where('transactables.action_schedule_booking = ? OR transactables.opened_on_days @> \'{?}\'', true, days)
   }
 
+  scope :overlaps_schedule_start_date, -> (date) {
+    where("
+      ((select count(*) from schedules where scheduable_id = transactables.id and scheduable_type = '#{self.to_s}' limit 1) = 0) 
+      OR 
+      (?::timestamp::date >= (select sr_start_datetime from schedules where scheduable_id = transactables.id and scheduable_type = '#{self.to_s}' limit 1)::timestamp::date)", date)
+  }
+
   # == Callbacks
   before_validation :set_activated_at, :set_enabled, :nullify_not_needed_attributes,
     :set_confirm_reservations
@@ -224,23 +232,34 @@ class Transactable < ActiveRecord::Base
     end
   end
 
-  def next_available_occurrences(number_of_occurrences = 10)
+  def next_available_occurrences(number_of_occurrences = 10, params = {})
     return {} if schedule.nil?
-    occurrences = {}
-    occurrence = Time.now
-    checks_to_be_performed = 1000
-    excluded_ranges = schedule.schedule_exception_rules.where('duration_range_end > ?', occurrence).select('duration_range_start, duration_range_end').map { |ser| ser.duration_range_start..ser.duration_range_end }
+    occurrences = []
+    checks_to_be_performed = 100
+    if params[:page].to_i <= 1
+      @start_date = params[:start_date].try(:to_date).try(:beginning_of_day)
+    else
+      @start_date = params[:last_occurrence].try(:to_date)
+    end
+    @start_date = Time.now if @start_date.nil? || @start_date < Time.now
+    end_date = params[:end_date].try(:to_date).try(:end_of_day)
+    excluded_ranges = schedule.schedule_exception_rules.where('duration_range_end > ?', end_date || Time.now)
+      .select('duration_range_start, duration_range_end').map { |ser| ser.duration_range_start..ser.duration_range_end }
     loop do
       checks_to_be_performed -= 1
-      occurrence = schedule.schedule.next_occurrences(10, occurrence).try(:first)
-      if occurrence && excluded_ranges.none? { |r| r.cover?(occurrence) }
-        start_minute = occurrence.to_datetime.min.to_i + (60 * occurrence.to_datetime.hour.to_i)
-        availability = self.quantity - desks_booked_on(occurrence.to_datetime, start_minute, start_minute)
-        if availability > 0
-          occurrences[occurrence.to_datetime.to_i.to_s] = { date: occurrence, availability: availability.to_i }
+      next_occurrences = schedule.schedule.next_occurrences(number_of_occurrences, @start_date)
+      next_occurrences.each do |occurrence|
+        if occurrence && excluded_ranges.none? { |r| r.cover?(occurrence) } && (!end_date || occurrence <= end_date)
+          start_minute = occurrence.to_datetime.min.to_i + (60 * occurrence.to_datetime.hour.to_i)
+          availability = self.quantity - desks_booked_on(occurrence.to_datetime, start_minute, start_minute)
+          if availability > 0
+            occurrences << { id: I18n.l(occurrence, format: :long), text: I18n.l(occurrence, format: :long), availability: availability.to_i }
+          end
         end
+        @start_date = occurrence
+        break if occurrences.count == number_of_occurrences
       end
-      break if occurrences.count == number_of_occurrences || occurrence.nil? || checks_to_be_performed.zero?
+      break if occurrences.count >= number_of_occurrences || @start_date.nil? || checks_to_be_performed.zero? || (end_date && @start_date > end_date)
     end
     occurrences
   end

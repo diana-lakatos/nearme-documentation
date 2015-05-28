@@ -30,7 +30,7 @@ class FormComponent < ActiveRecord::Base
   def form_types(form_componentable)
     if form_componentable.instance_of?(InstanceProfileType)
       [INSTANCE_PROFILE_TYPES]
-    elsif form_componentable.instance_of?(TransactableType)
+    elsif form_componentable.instance_of?(ServiceType)
       [SPACE_WIZARD, TRANSACTABLE_ATTRIBUTES]
     else
       [PRODUCT_ATTRIBUTES]
