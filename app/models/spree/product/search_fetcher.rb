@@ -23,6 +23,7 @@ class Spree::Product::SearchFetcher
       next if values.blank? || values.all?(&:blank?)
       @products = @products.filtered_by_custom_attribute(field_name, values)
     end
+    @products = @products.price_range(@filters[:price][:min].to_i..@filters[:price][:max].to_i) if @filters[:price] && !@filters[:price][:max].to_i.zero?
     @products
   end
 

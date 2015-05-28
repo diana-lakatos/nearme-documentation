@@ -285,7 +285,7 @@ class Search.SearchController extends Search.Controller
         $('#price-slider').remove()
         $('.price-slider-container').append('<div id="price-slider" "data-max-price"="' + max_price + '"></div>')
         
-        @initializePriceSlide()
+        @initializePriceSlider()
       @reinit.attr('data-noreinit-slider', 0)
 
   # Trigger the search after waiting a set time for further updated user input/filters

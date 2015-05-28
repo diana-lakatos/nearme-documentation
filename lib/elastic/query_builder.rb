@@ -162,7 +162,7 @@ module Elastic
 
       # You should enable fuzzy search manually. Not included in the current release
       if ENABLE_FUZZY
-        multi_match.merge ({
+        multi_match.merge!({
           fuzziness: FUZZYNESS,
           analyzer: ANALYZER
         })

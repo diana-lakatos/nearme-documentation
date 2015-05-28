@@ -42,6 +42,10 @@ class InstanceType::Searcher::ProductsSearcher
       end
   end
 
+  def min_price
+    @params[:price] ? @params[:price][:min].to_i : 0
+  end
+
   def repeated_search?(values)
     @params[:query] && search_query_values.to_s == values.try(:to_s)
   end

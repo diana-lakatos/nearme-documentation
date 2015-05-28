@@ -21,11 +21,14 @@ module InstanceType::Searcher
       @max_fixed_price ||= results.maximum(:fixed_price_cents).to_f / 100
       @max_fixed_price > 0 ? @max_fixed_price + 1 : @max_fixed_price
     rescue
-      0
+      max_price = 0
+      results.each{|r| max_price = r.price if r.try(:price).to_i > max_price}
+      @max_fixed_price ||= max_price
     end
   end
 
   def paginate_results(page, per_page)
+    @result_max_price ||= max_price
     page ||= 1
     result_count
     @results = @results.paginate(page: page.to_i, per_page: per_page.to_i)

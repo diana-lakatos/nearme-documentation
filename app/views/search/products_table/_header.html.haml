@@ -8,6 +8,8 @@
         = hidden_field_tag :transactable_type_id, @transactable_type.id
         = hidden_field_tag :category_ids, (@searcher.category_ids.presence || []).join(',')
         = hidden_field_tag :buyable, true
+        = hidden_field_tag 'price[min]', @searcher.min_price
+        = hidden_field_tag 'price[max]', @searcher.max_price
         .row-fluid
           .span12
             .search-container.span10
