@@ -1,0 +1,8 @@
+.sub-header-nav
+  %ul
+    %li
+      = link_to 'Search Settings', instance_admin_manage_search_settings_path, class: (tab == :global ? 'active' : '')
+    %li
+      = link_to 'Services Search', instance_admin_manage_search_service_types_path, class: (tab == :services ? 'active' : '')
+    %li
+      = link_to 'Products Search', instance_admin_manage_search_product_types_path, class: (tab == :products ? 'active' : '')

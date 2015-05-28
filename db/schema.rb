@@ -873,6 +873,9 @@ ActiveRecord::Schema.define(version: 20150522104236) do
     t.string   "default_currency"
     t.text     "allowed_currencies"
     t.string   "category_search_type",                                          default: "AND"
+    t.string   "search_engine",                                                 default: "postgresql",  null: false
+    t.integer  "search_radius"
+    t.string   "search_text"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1898,6 +1901,7 @@ ActiveRecord::Schema.define(version: 20150522104236) do
     t.text     "custom_csv_fields"
     t.boolean  "action_rfq"
     t.boolean  "possible_manual_payment"
+    t.boolean  "searchable",              default: true
   end
 
   create_table "spree_products", force: true do |t|
@@ -2834,6 +2838,7 @@ ActiveRecord::Schema.define(version: 20150522104236) do
     t.boolean  "action_exclusive_price",                                             default: false
     t.boolean  "action_price_per_unit",                                              default: false
     t.string   "type"
+    t.boolean  "searchable",                                                         default: true
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

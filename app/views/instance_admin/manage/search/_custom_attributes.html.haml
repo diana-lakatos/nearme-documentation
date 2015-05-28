@@ -1,0 +1,19 @@
+
+.row
+  .table-container.col-xs-12
+    %table.table
+      %thead
+        %tr
+          %th Name
+          %th Search
+      %tbody
+        - custom_attributes.each do |resource|
+          %tr
+            %td= resource.name.humanize
+            %td.custom_attribute
+              = image_tag('spinner_mini.gif', class: :hidden, id: "attribute_spinner_#{target_type.id}_#{resource.id}")
+              - if target_type.class.to_s == TransactableType.to_s or target_type.class.to_s == ServiceType.to_s
+                - target_url = set_custom_attribute_instance_admin_manage_search_service_types_path(service_type_id: service_type.id, custom_attribute_id: resource.id)
+              - else
+                - target_url = set_custom_attribute_instance_admin_manage_search_product_types_path(product_type_id: product_type.id, custom_attribute_id: resource.id)
+              %input{type: 'checkbox', checked: resource.searchable?, spinner: "#attribute_spinner_#{target_type.id}_#{resource.id}", 'data-url' => target_url}

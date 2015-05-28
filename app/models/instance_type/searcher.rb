@@ -3,7 +3,11 @@ module InstanceType::Searcher
   attr_reader :results, :transactable_type
 
   def result_count
-    @result_count ||= count_query(results.distinct)
+    if self.class.to_s =~ /Elastic/
+      @search_results_count
+    else
+      @result_count ||= count_query(results.distinct)
+    end
   end
 
   # Hack to get proper count from grouped querry
@@ -13,8 +17,12 @@ module InstanceType::Searcher
   end
 
   def max_price
-    @max_fixed_price ||= results.maximum(:fixed_price_cents).to_i / 100
-    @max_fixed_price > 0 ? @max_fixed_price + 1 : @max_fixed_price
+    begin
+      @max_fixed_price ||= results.maximum(:fixed_price_cents).to_i / 100
+      @max_fixed_price > 0 ? @max_fixed_price + 1 : @max_fixed_price
+    rescue
+      0
+    end
   end
 
   def paginate_results(page, per_page)

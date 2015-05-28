@@ -1,8 +1,8 @@
-class InstanceAdmin::Manage::SearchController < InstanceAdmin::Manage::BaseController
-
+class InstanceAdmin::Manage::Search::SettingsController < InstanceAdmin::Manage::BaseController
   before_filter :find_instance
 
-  before_filter :set_breadcrumbs
+  def index
+  end
 
   def show
   end
@@ -11,18 +11,18 @@ class InstanceAdmin::Manage::SearchController < InstanceAdmin::Manage::BaseContr
     @instance.update_attributes(instance_params)
     if @instance.save
       flash[:success] = t('flash_messages.search.setting_saved')
-      redirect_to instance_admin_manage_search_path
+      redirect_to instance_admin_manage_search_settings_path
     else
       flash[:error] = @instance.errors.full_messages.to_sentence
       render :show
     end
   end
 
-  def services; end
-  
-  def products; end
-
   private
+
+  def permitting_controller_class
+    self.class.to_s.deconstantize.deconstantize.demodulize
+  end
 
   def find_instance
     @instance = platform_context.instance
@@ -31,10 +31,4 @@ class InstanceAdmin::Manage::SearchController < InstanceAdmin::Manage::BaseContr
   def instance_params
     params.require(:instance).permit(secured_params.instance)
   end
-
-  def set_breadcrumbs
-    @breadcrumbs_title = 'Manage Search'
-  end
-
 end
-
