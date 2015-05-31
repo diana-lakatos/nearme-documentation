@@ -20,7 +20,4 @@ class UserBan < ActiveRecord::Base
     user.recover_companies
     user.update_attribute(:banned_at, nil)
   end
-
-
-
 end
