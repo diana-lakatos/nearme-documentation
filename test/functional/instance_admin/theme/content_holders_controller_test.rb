@@ -15,7 +15,7 @@ class InstanceAdmin::Theme::ContentHoldersControllerTest < ActionController::Tes
       assert_difference 'ContentHolder.count', 1 do
         post :create, content_holder: { name: "HEAD", content: "lorem ipsum head", enabled: true }
       end
-      assert_redirected_to instance_admin_theme_content_holder_path(ContentHolder.first)
+      assert_redirected_to instance_admin_theme_content_holders_path
     end
 
     context 'object' do

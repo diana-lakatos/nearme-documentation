@@ -162,6 +162,9 @@ en:
           rating: "Rating"
           user: "User"
           date: "Date"
+        account:
+          ban: "Ban"
+          unban: "Unban"
     rating_systems:
       index:
         any_rating_system: "You don't have any rating system defined yet. Select a service below and create your first rating system."

@@ -94,8 +94,9 @@ en:
           updated: 'Custom validator has been updated.'
         users:
           user_ban:
-            created: 'User has been removed from the marketplace.'
-            not_created: 'User has not been reomved from the marketplace.'
+            created: 'User has been banned from the marketplace.'
+            not_created: 'User has not been banned from the marketplace.'
+            deleted: 'User has been unbanned from the marketplace.'
         service_types:
           created: 'Service Type created.'
           updated: 'Service Type updated.'

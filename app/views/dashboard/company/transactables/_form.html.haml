@@ -21,7 +21,10 @@
             = image_tag 'themes/buy_sell/icon-cross.png'
             %span.blue Add New Location
         .col-md-3
-          %label{:for => ""} Location
+          %label{:for => ""}
+            - if !f.object.transactable_type.skip_location?
+              %abbr{:title => "required"} *
+            Location
         #location-list.col-md-6
           = render @locations, form: f
           .show-more
