@@ -26,7 +26,7 @@ class TransactableDecorator < Draper::Decorator
     if self.schedule_booking?
       if self.fixed_price.to_f > 0
         "#{self.price_with_currency(self.fixed_price)} <span>/ #{self.transactable_type.action_price_per_unit? ? t("simple_form.labels.transactable.price.per_unit") : t("simple_form.labels.transactable.price.fixed")}</span>".html_safe
-      else
+      elsif self.exclusive_price.to_f > 0
         "#{self.price_with_currency(self.exclusive_price)} <span>/ #{t("simple_form.labels.transactable.price.exclusive_price")}</span>".html_safe
       end
     else
