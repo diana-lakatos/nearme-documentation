@@ -51,6 +51,8 @@
               - else
                 [listing deleted]
               %p QTY: #{reservation.quantity}
+              - if reservation.guest_notes.present?
+                %p= t('dashboard.user_reservations.exclusive_price_guests_notes', guest_notes: reservation.guest_notes)
 
         .col-md-4.order-actions
           - unless reservation.archived?

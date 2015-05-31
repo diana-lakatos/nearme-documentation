@@ -6,7 +6,7 @@ class ReservationRequest < Form
     :payment_method
   attr_reader   :reservation, :listing, :location, :user, :client_token, :payment_method_nonce
 
-  def_delegators :@reservation, :quantity, :quantity=, :action_hourly_booking?, :reservation_type=,
+  def_delegators :@reservation, :guest_notes, :quantity, :quantity=, :action_hourly_booking?, :reservation_type=,
     :credit_card_payment?, :manual_payment?, :remote_payment?, :nonce_payment?
   def_delegators :@listing,     :confirm_reservations?, :location
   def_delegators :@user,        :mobile_number, :mobile_number=, :country_name, :country_name=, :country
