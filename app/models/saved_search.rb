@@ -56,7 +56,7 @@ class SavedSearch < ActiveRecord::Base
   end
 
   def change_sort
-    self.query = query.gsub(/&sort=\w+/, '') + '&sort=created_at&order=desc'
+    self.query = query.gsub(/&sort=(\w+)?/, '') + '&sort=created_at&order=desc'
   end
 
 end

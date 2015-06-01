@@ -7,7 +7,7 @@ class Support::TicketMessage < ActiveRecord::Base
 
   # attr_accessible :full_name, :email, :subject, :message
 
-  belongs_to :user
+  belongs_to :user, -> { with_deleted }
   belongs_to :ticket, class_name: 'Support::Ticket', touch: true
   belongs_to :instance
 

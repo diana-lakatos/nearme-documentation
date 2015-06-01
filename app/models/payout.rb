@@ -1,7 +1,7 @@
 class Payout < ActiveRecord::Base
   acts_as_paranoid
   has_paper_trail
-  belongs_to :reference, :polymorphic => true
+  belongs_to :reference, -> { with_deleted }, polymorphic: true
 
   scope :successful, -> { where(:success => true) }
   scope :pending, -> { where(:pending => true) }

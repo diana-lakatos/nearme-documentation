@@ -12,7 +12,7 @@ class Address < ActiveRecord::Base
   geocoded_by :address
 
   belongs_to :instance
-  belongs_to :entity, polymorphic: true
+  belongs_to :entity, -> { with_deleted }, polymorphic: true
 
   validates_presence_of :address, :latitude, :longitude
   before_validation :update_address
@@ -24,9 +24,7 @@ class Address < ActiveRecord::Base
   end
 
   def distance_from(other_latitude, other_longitude)
-    Geocoder::Calculations.distance_between([ latitude,       longitude ],
-                                            [ other_latitude, other_longitude ],
-                                            units: :km)
+    Geocoder::Calculations.distance_between([ latitude, longitude ], [ other_latitude, other_longitude ], units: :km)
   end
 
   def street
