@@ -28,4 +28,8 @@ class WorkflowStep::UserMessageWorkflow::BaseStep < WorkflowStep::BaseStep
     @user_message.thread_context.try(:transactable_type_id)
   end
 
+  def should_be_processed?
+    @user_message.present?
+  end
+
 end
