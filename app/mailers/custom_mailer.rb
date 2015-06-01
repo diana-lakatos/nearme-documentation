@@ -45,7 +45,7 @@ class CustomMailer < InstanceMailer
   def options
     @options ||= {
       template_name: @workflow_alert.template_path,
-      to: filter_emails_to_only_these_which_accepts_emails(get_email_for_type_with_fallback('recipient')),
+      to: filter_emails_to_only_these_which_accepts_emails(get_email_for_type_with_fallback('recipient')).reject(&:blank?),
       from: get_email_for_type_with_fallback('from'),
       reply_to: get_email_for_type_with_fallback('reply_to'),
       cc: filter_emails_to_only_these_which_accepts_emails(@workflow_alert.cc.try(:split, ',') || []),
