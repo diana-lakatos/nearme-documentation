@@ -20,5 +20,9 @@ class WorkflowStep::OrderWorkflow::BaseStep < WorkflowStep::BaseStep
     { order: @order }
   end
 
+  def should_be_processed?
+    @order.present?
+  end
+
 end
 

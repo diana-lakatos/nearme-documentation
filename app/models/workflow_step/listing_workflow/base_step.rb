@@ -28,4 +28,8 @@ class WorkflowStep::ListingWorkflow::BaseStep < WorkflowStep::BaseStep
     @transactable.transactable_type_id
   end
 
+  def should_be_processed?
+    @transactable.present?
+  end
+
 end

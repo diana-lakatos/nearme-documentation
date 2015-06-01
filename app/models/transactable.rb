@@ -3,8 +3,7 @@ class Transactable < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
-  class NotFound < ActiveRecord::RecordNotFound;
-  end
+  class NotFound < ActiveRecord::RecordNotFound; end
   include Impressionable
   include Searchable
   has_metadata accessors: [:photos_metadata]
@@ -123,8 +122,8 @@ class Transactable < ActiveRecord::Base
 
   scope :overlaps_schedule_start_date, -> (date) {
     where("
-      ((select count(*) from schedules where scheduable_id = transactables.id and scheduable_type = '#{self.to_s}' limit 1) = 0) 
-      OR 
+      ((select count(*) from schedules where scheduable_id = transactables.id and scheduable_type = '#{self.to_s}' limit 1) = 0)
+      OR
       (?::timestamp::date >= (select sr_start_datetime from schedules where scheduable_id = transactables.id and scheduable_type = '#{self.to_s}' limit 1)::timestamp::date)", date)
   }
 

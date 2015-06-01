@@ -22,3 +22,4 @@ class WorkflowStep::SavedSearchWorkflow::BaseStep < WorkflowStep::BaseStep
   end
 
 end
+
