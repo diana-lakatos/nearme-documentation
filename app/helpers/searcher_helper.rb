@@ -7,6 +7,7 @@ module SearcherHelper
   end
 
   def find_transactable_type
+
     if params[:buyable] == "true"
       @transactable_type = params[:transactable_type_id].present? ? Spree::ProductType.find(params[:transactable_type_id]) : Spree::ProductType.first
     else

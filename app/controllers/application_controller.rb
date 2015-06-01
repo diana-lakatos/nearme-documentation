@@ -428,7 +428,7 @@ class ApplicationController < ActionController::Base
     {
       :instance_type_id => PlatformContext.current.try(:instance_type).try(:id),
       :instance_id => PlatformContext.current.try(:instance).try(:id),
-      :transactable_type_id => params[:transactable_type_id]
+      :transactable_type_id => params[:transactable_type_id].present? ? params[:transactable_type_id].to_i : nil
     }
   rescue
     {

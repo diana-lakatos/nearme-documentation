@@ -16,6 +16,13 @@ Your listing, '<a href="{{ platform_context.host | append:listing.listing_url }}
     <span style="float: right;"><a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a> x {{ reservation.quantity }}</span>
   </div>
 
+  {% if reservation.guest_notes != blank %}
+    <div class="row">
+      <strong style='display: inline-block;'>Exclusive booking instructions from guest:</strong>
+      <span style="float: right;">{{ reservation.guest_notes }}</span>
+    </div>
+  {% endif %}
+
   <div class="row">
     <table width="100%">
       <tr>

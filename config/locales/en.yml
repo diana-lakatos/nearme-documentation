@@ -162,6 +162,9 @@ en:
           rating: "Rating"
           user: "User"
           date: "Date"
+        account:
+          ban: "Ban"
+          unban: "Unban"
     rating_systems:
       index:
         any_rating_system: "You don't have any rating system defined yet. Select a service below and create your first rating system."
@@ -706,18 +709,19 @@ en:
     user_reservations:
       pending_confirmation: 'Pending confirmation from host. Booking will expire in '
       money_info: "Payment has been authorized but it will be captured only upon confirmation."
+      exclusive_price_guests_notes: 'Exclusive booking instructions: %{guest_notes}'
     host_reservations:
       pending_confirmation: 'You must confirm this booking within <strong>%{time_to_expiry}</strong> or it will expire.'
       money_info: "Payment has been authorized but it will be captured only upon confirmation."
       next_payment_transfer: "The next automated payout occurs at %{next_payment_transfer}."
       remember_to_setup_automated_payout: "To receive automated payout please <a href='%{setup_link}'>setup payouts</a>."
+      exclusive_price_guests_notes: 'Exclusive booking instructions from guest: %{guest_notes}'
     merchant_account:
       braintree_marketplace:
         header: 'Merchant account details'
         pending: 'Your merchant account is pending verification.'
         verified: 'Your merchant account has been verified.'
         failed: 'Verification of your merchant account failed.'
-
     products:
       manage: 'MANAGE PRODUCTS'
     transactables:

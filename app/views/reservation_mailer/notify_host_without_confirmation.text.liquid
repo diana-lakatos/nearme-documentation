@@ -5,6 +5,10 @@ Your listing, '{{ listing.name }}', was just booked!
 Who: {{ reservation.owner.first_name }}
 
 What: {{ listing.name }} x {{ reservation.quantity }}
+{% if reservation.guest_notes != blank %}
+
+Exclusive booking instructions from guest: {{ reservation.guest_notes }}
+{% endif %}
 
 When:
 {% if reservation.action_hourly_booking? %}
