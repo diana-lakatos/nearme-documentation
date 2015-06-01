@@ -41,7 +41,7 @@ class CustomObjectHstoreSearcher
     attributes = @master_object.custom_attributes.reject { |ca| !ca.searchable }
 
     if attributes.length + other_attributes.length > 0
-      condition = "CONCAT(" + (([(ActiveRecord::Base.connection.quote_column_name(hstore_column) + "->?")] * attributes.length) + other_attributes.collect { |oa| ActiveRecord::Base.connection.quote_column_name(oa) }).join(", ' ', ") + ") @@ to_tsquery(?)"
+      condition = "CONCAT(" + (([(ActiveRecord::Base.connection.quote_column_name(hstore_column) + "->?")] * attributes.length) + other_attributes.collect { |oa| ActiveRecord::Base.connection.quote_column_name(oa) }).join(", ' ', ") + ") @@ plainto_tsquery(?)"
       return condition, [attributes.collect { |attr| attr.name }, query].flatten
     end
 
