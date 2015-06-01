@@ -93,6 +93,9 @@ en:
           deleted: 'Custom validator has been deleted.'
           updated: 'Custom validator has been updated.'
         users:
+          deleted: 'User has been successfully deleted.'
+          restored: 'User has been successfully restored.'
+          restore_email_taken: 'User could not be restored, that email address is currently in use.'
           user_ban:
             created: 'User has been banned from the marketplace.'
             not_created: 'User has not been banned from the marketplace.'
@@ -473,3 +476,4 @@ en:
     user_messages:
       message_archived: "Your message was archived!"
       message_sent: "Your message was sent!"
+
