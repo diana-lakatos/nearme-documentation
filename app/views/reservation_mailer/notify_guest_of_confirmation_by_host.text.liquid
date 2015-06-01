@@ -1,42 +1,17 @@
-Your booking for '{{ listing.name }}'</a>  has been cancelled by the {{ platform_context.lessor }}.
+You got it, {{ user.first_name }}!
 
-BOOKING DETAILS --------
+Your booking for {{ listing.name }} {{ platform_context.host | append:listing.listing_url }} has been confirmed! Here it is:
 
-Listing: '{{listing.name}}'.
-{{ platform_context.lessee | capitalize }} instructions: {{ listing.location.special_notes }}
+{{ platform_context.lessor | capitalize }} {{ listing.administrator.first_name }} {{ platform_context.host | append:listing.administrator.user_profile_url }}
+
+What {{ listing.name }} x {{ reservation.quantity }}
+
+{% if reservation.guest_notes != blank %}
+Exclusive booking instructions from guest: {{ reservation.guest_notes }}
 {% endif %}
-Quantity: {{reservation.quantity}}
-{% if reservation.action_hourly_booking? %}
-  Dates:
+When {% if reservation.action_hourly_booking? %}{{ reservation.hourly_summary }}{% else %}{{ reservation.dates_summary }}{% endif %}
+Total {{ reservation.total_price }}
 
-{{ reservation.hourly_summary }}
-{% else %}
-Dates:
+You can manage your booking here: {{ platform_context.host | append:user.bookings_dashboard_url_with_tracking_and_token | append:signature_for_tracking  }}
 
-{{ reservation.dates_summary }}
-{% endif %}
-
-
-{{ platform_context.lessor }}: {{ host.name }} ({{host.email}})
-
-{% if listing.location.phone? %}Contact: {{listing.location.phone}}{% endif %}
-
-Subtotal: {{ reservation.subtotal_price }}
-
-{% if reservation.has_service_fee? %}
-Service fee: {{ reservation.service_fee }}
-{% endif %}
-
-Total: {{ reservation.total_price }}
-{% if reservation.credit_card_payment? %}
-Paid: {{ reservation.paid }}
-Balance: {{ reservation.balance }}
-{% if reservation.pendind? %}
-This reservation is currently pending confirmation, and will be charged when confirmed.
-{% endif %}
-{% endif %}
-------------------------
-
-This booking was previously confirmed, but the plans have changed - I'm sure it's nothing personal.
-
-Don't worry - find others near you ({{ platform_context.host | append:listing.search_url }})!.
+We're always happy to help! If you have any questions about your booking, please send an email to <a href="{{ platform_context.support_email }}">{{ platform_context.support_email }}</a> or contact us at {{ platform_context.phone_number }}.
