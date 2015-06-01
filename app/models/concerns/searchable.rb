@@ -3,7 +3,11 @@ module Searchable
 
   included do    
     include Elasticsearch::Model
-    include Elasticsearch::Model::Callbacks
+    
+    if !Rails.env.test?
+      include Elasticsearch::Model::Callbacks
+    end
+
     include "#{self.to_s.demodulize.pluralize}Index".constantize
   end
 end
