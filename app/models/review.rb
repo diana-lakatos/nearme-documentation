@@ -20,7 +20,6 @@ class Review < ActiveRecord::Base
 
   validates_presence_of :rating, :object, :user, :reviewable, :transactable_type
   validates :rating, inclusion: { in: RatingConstants::VALID_VALUES , message: :rating_is_required }
-  validates_length_of :comment, :maximum => 255
   validates :object, inclusion: { in: RatingConstants::FEEDBACK_TYPES }
   validate  :creator_does_not_review_own_objects
 
@@ -44,7 +43,7 @@ class Review < ActiveRecord::Base
       OR rev.object=?", object
     )
   }
-  
+
   def recalculate_reviewable_average_rating
     if self.reviewable.is_a?(Spree::LineItem)
       recalculate_by_type(-> { self.reviewable.product.user.recalculate_seller_average_rating! },
