@@ -5,14 +5,14 @@ class WishListController < ApplicationController
 
   def add_item
     if current_user.default_wish_list.items.find_by(wishlistable: @item)
-      redirect_to polymorphic_path(@item), notice: t('wish_lists.notices.already_listed')
+      redirect_to redirection_path(@item), notice: t('wish_lists.notices.already_listed')
       return
     end
 
     wish_list_item = current_user.default_wish_list.items.create wishlistable: @item
 
     respond_to do |format|
-      format.html { redirect_to polymorphic_path(wish_list_item.wishlistable), notice: t('wish_lists.notices.item_added') }
+      format.html { redirect_to redirection_path(wish_list_item.wishlistable), notice: t('wish_lists.notices.item_added') }
       format.js
     end
   end
@@ -21,7 +21,7 @@ class WishListController < ApplicationController
     current_user.default_wish_list.items.find_by(wishlistable: @item).destroy
 
     respond_to do |format|
-      format.html { redirect_to polymorphic_path(@item), notice: t('wish_lists.notices.item_removed') }
+      format.html { redirect_to redirection_path(@item), notice: t('wish_lists.notices.item_removed') }
       format.js
     end
   end
@@ -30,6 +30,10 @@ class WishListController < ApplicationController
 
   def check_wish_lists_enabled
     redirect_to(root_path, notice: t('wish_lists.notices.wish_lists_disabled')) unless platform_context.instance.wish_lists_enabled?
+  end
+
+  def redirection_path(object)
+    Transactable === object ? transactable_type_location_listing_path(object.transactable_type, object.location, object) : polymorphic_path(object)
   end
 
   def find_item

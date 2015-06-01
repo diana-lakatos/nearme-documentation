@@ -21,6 +21,12 @@ class WishListControllerTest < ActionController::TestCase
       assert flash[:notice].include?('Item has been added to the list.')
     end
 
+    should 'add transactable' do
+      get :add_item, object_id: @listing.id, wishlistable_type: @listing.class.name
+      assert_response :redirect
+      assert flash[:notice].include?('Item has been added to the list.')
+    end
+
     should 'add product' do
       get :add_item, object_id: @product.id, wishlistable_type: @product.class.name
       assert_response :redirect
