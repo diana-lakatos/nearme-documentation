@@ -95,7 +95,7 @@ class Company < ActiveRecord::Base
   after_create :add_company_to_partially_created_shipping_categories
 
   def email
-    super.presence || creator.email
+    super.presence || creator.try(:email)
   end
 
   def add_company_to_partially_created_shipping_categories
