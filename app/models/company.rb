@@ -11,48 +11,49 @@ class Company < ActiveRecord::Base
 
   attr_accessor :created_payment_transfers, :bank_account_number, :bank_routing_number, :bank_owner_name, :verify_associated
 
-  belongs_to :creator, class_name: "User", inverse_of: :created_companies
-  belongs_to :instance
-  belongs_to :partner
-  belongs_to :payments_mailing_address, class_name: 'Address', foreign_key: 'mailing_address_id'
+  has_many :approval_requests, as: :owner, dependent: :destroy
+  has_many :company_industries, :dependent => :destroy
   has_many :company_users, dependent: :destroy
-  has_many :users, :through => :company_users
-  has_many :locations, dependent: :destroy, inverse_of: :company
+  has_many :data_uploads, as: :target
+  has_many :industries, through: :company_industries
+  has_many :instance_clients, as: :client, dependent: :destroy
   has_many :listings, class_name: 'Transactable', inverse_of: :company
+  has_many :locations, dependent: :destroy, inverse_of: :company
+  has_many :locations_impressions, source: :impressions, through: :locations
+  has_many :option_types, class_name: 'Spree::OptionType', dependent: :destroy
+  has_many :orders, class_name: 'Spree::Order'
+  has_many :order_charges, through: :orders, source: :near_me_payments
+  has_many :order_line_items, class_name: 'Spree::LineItem'
+  has_many :payments
+  has_many :payment_transfers, dependent: :destroy
   has_many :photos, through: :listings
   has_many :products, class_name: 'Spree::Product', inverse_of: :company, dependent: :destroy
   has_many :products_images, through: :products, source: :variant_images
-
+  has_many :products_impressions, source: :impressions, through: :products
   has_many :properties, class_name: 'Spree::Property', dependent: :destroy
   has_many :prototypes, class_name: 'Spree::Prototype', dependent: :destroy
-  has_many :option_types, class_name: 'Spree::OptionType', dependent: :destroy
-  has_many :order_line_items, class_name: 'Spree::LineItem'
-  has_many :orders, class_name: 'Spree::Order'
-  has_many :tax_categories, class_name: 'Spree::TaxCategory', dependent: :destroy
+  has_many :reservations
   has_many :shipping_categories, class_name: 'Spree::ShippingCategory', dependent: :destroy
   has_many :shipping_methods, class_name: 'Spree::ShippingMethod', dependent: :destroy
   has_many :stock_locations, class_name: 'Spree::StockLocation', dependent: :destroy
+  has_many :tax_categories, class_name: 'Spree::TaxCategory', dependent: :destroy
+  has_many :users, :through => :company_users
   has_many :variants, class_name: 'Spree::Variant', dependent: :destroy
+  has_many :waiver_agreement_templates, as: :target
   has_many :zones, class_name: 'Spree::Zone', dependent: :destroy
 
-  has_many :reservations
-  has_many :payments
-  has_many :order_charges, through: :orders, source: :near_me_payments
-  has_many :payment_transfers, :dependent => :destroy
-  has_many :company_industries, :dependent => :destroy
-  has_many :industries, :through => :company_industries
-  has_many :waiver_agreement_templates, as: :target
-  has_many :approval_requests, as: :owner, dependent: :destroy
-  has_one :domain, :as => :target, foreign_key: 'target_id', :dependent => :destroy
-  has_one :theme, :as => :owner, foreign_key: 'owner_id', :dependent => :destroy
-
-  has_many :locations_impressions, :source => :impressions, :through => :locations
-  has_many :products_impressions, :source => :impressions, :through => :products
-  has_many :instance_clients, :as => :client, :dependent => :destroy
-  has_many :data_uploads, as: :target
   has_one :company_address, class_name: 'Address', as: :entity
+  has_one :domain, :as => :target, foreign_key: 'target_id', :dependent => :destroy
+  has_one :theme, as: :owner, foreign_key: 'owner_id', dependent: :destroy
+
+  belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :created_companies
+  belongs_to :instance
+  belongs_to :partner
+  belongs_to :payments_mailing_address, class_name: 'Address', foreign_key: 'mailing_address_id'
+
   delegate :address, :address2, :formatted_address, :postcode, :suburb, :city, :state, :country, :street, :address_components,
    :latitude, :longitude, :state_code, :iso_country_code, to: :company_address, allow_nil: true
+  delegate :service_fee_guest_percent, :service_fee_host_percent, to: :instance, allow_nil: true
 
   before_validation :add_default_url_scheme
   before_save :set_creator_address
@@ -66,8 +67,6 @@ class Company < ActiveRecord::Base
   validates :email, email: true, allow_blank: true
   validate :validate_url_format
 
-  delegate :service_fee_guest_percent, to: :instance, allow_nil: true
-  delegate :service_fee_host_percent, to: :instance, allow_nil: true
 
   # Returns the companies in need of recieving a payment transfer for
   # outstanding payments we've received on their behalf.
@@ -85,10 +84,10 @@ class Company < ActiveRecord::Base
   accepts_nested_attributes_for :approval_requests
   accepts_nested_attributes_for :products, :shipping_methods, :shipping_categories, :stock_locations
 
-  validates_associated :shipping_methods, :if => :verify_associated
-  validates_associated :shipping_categories, :if => :verify_associated
-  validates_associated :products, :if => :verify_associated
-  validates_associated :stock_locations, :if => :verify_associated
+  validates_associated :shipping_methods, if: :verify_associated
+  validates_associated :shipping_categories, if: :verify_associated
+  validates_associated :products, if: :verify_associated
+  validates_associated :stock_locations, if: :verify_associated
 
   validates :paypal_email, email: true, allow_blank: true
 

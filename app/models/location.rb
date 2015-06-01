@@ -18,39 +18,33 @@ class Location < ActiveRecord::Base
   liquid_methods :name
 
   serialize :address_components, JSON
+  serialize :info, Hash
 
   has_many :amenity_holders, as: :holder, dependent: :destroy
   has_many :amenities, through: :amenity_holders
   has_many :assigned_waiver_agreement_templates, as: :target
-  has_many :waiver_agreement_templates, through: :assigned_waiver_agreement_templates
+  has_many :availability_rules, -> { order 'day ASC' }, :as => :target
   has_many :approval_requests, as: :owner, dependent: :destroy
+  has_many :company_industries, through: :company
+  has_many :impressions, :as => :impressionable, :dependent => :destroy
+  has_many :listings, dependent:  :destroy, inverse_of: :location, class_name: 'Transactable'
+  has_many :payments, :through => :reservations
+  has_many :photos, :through => :listings
+  has_many :reservations, :through => :listings
+  has_many :wish_list_items, as: :wishlistable
+  has_many :waiver_agreement_templates, through: :assigned_waiver_agreement_templates
 
-  belongs_to :company, inverse_of: :locations
+  has_one :location_address, class_name: 'Address', as: :entity
+
+  belongs_to :company, -> { with_deleted }, inverse_of: :locations
   belongs_to :location_type
-  belongs_to :administrator, class_name: "User", :inverse_of => :administered_locations
+  belongs_to :administrator, -> { with_deleted }, class_name: "User", inverse_of: :administered_locations
   belongs_to :instance
-  belongs_to :creator, class_name: "User"
+  belongs_to :creator, -> { with_deleted }, class_name: "User"
   delegate :company_users, :url, to: :company, allow_nil: true
   delegate :phone, :to => :creator, :allow_nil => true
   delegate :address, :address2, :formatted_address, :postcode, :suburb, :city, :state, :country, :street, :address_components,
    :latitude, :longitude, :state_code, :iso_country_code, to: :location_address, allow_nil: true
-
-  has_many :listings,
-    dependent:  :destroy,
-    inverse_of: :location,
-    class_name: 'Transactable'
-
-  has_many :reservations, :through => :listings
-  has_many :payments, :through => :reservations
-  has_many :company_industries, through: :company
-  has_many :photos, :through => :listings
-  has_one :location_address, class_name: 'Address', as: :entity
-
-  has_many :availability_rules, -> { order 'day ASC' }, :as => :target
-
-  has_many :impressions, :as => :impressionable, :dependent => :destroy
-
-  has_many :wish_list_items, as: :wishlistable
 
   validates_presence_of :company
   validates_presence_of :location_type_id, if: :location_type_required
@@ -74,7 +68,6 @@ class Location < ActiveRecord::Base
   scope :with_searchable_listings, -> { where(%{ (select count(*) from "transactables" where location_id = locations.id and transactables.draft IS NULL and enabled = 't' and transactables.deleted_at is null) > 0 }) }
 
   # Useful for storing the full geo info for an address, like time zone
-  serialize :info, Hash
 
   # Include a set of helpers for handling availability rules and interface onto them
   include AvailabilityRule::TargetHelper

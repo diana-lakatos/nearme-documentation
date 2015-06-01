@@ -4,10 +4,11 @@ class Support::TicketMessageAttachment < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
+
   belongs_to :instance
-  belongs_to :ticket_message, class_name: 'Support::TicketMessage'
+  belongs_to :ticket_message, -> { with_deleted }, class_name: 'Support::TicketMessage'
   belongs_to :ticket, class_name: 'Support::Ticket'
-  belongs_to :uploader, class_name: 'User'
+  belongs_to :uploader, -> { with_deleted }, class_name: 'User'
 
   mount_uploader :file, PrivateFileUploader
 

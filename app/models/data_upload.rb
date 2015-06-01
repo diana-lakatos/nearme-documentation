@@ -5,9 +5,9 @@ class DataUpload < ActiveRecord::Base
   scoped_to_platform_context
 
   belongs_to :instance
-  belongs_to :importable, polymorphic: true
-  belongs_to :uploader, class_name: 'User'
-  belongs_to :target, polymorphic: true
+  belongs_to :importable, -> { with_deleted }, polymorphic: true
+  belongs_to :uploader, -> { with_deleted }, class_name: 'User'
+  belongs_to :target, -> { with_deleted }, polymorphic: true
   serialize :parse_summary, Hash
 
   mount_uploader :csv_file, DataImportFileUploader

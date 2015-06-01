@@ -6,11 +6,11 @@ class UserMessage < ActiveRecord::Base
 
   attr_accessor :replying_to_id
 
-  belongs_to :author, class_name: 'User'           # person that wrote this message
-  belongs_to :thread_owner, class_name: 'User'     # user that started conversation
-  belongs_to :thread_recipient, class_name: 'User' # user that is conversation recipient
-  belongs_to :thread_context, polymorphic: true    # conversation context: Transactable, Reservation, User
+  belongs_to :author, -> { with_deleted }, class_name: 'User'           # person that wrote this message
   belongs_to :instance
+  belongs_to :thread_owner, -> { with_deleted }, class_name: 'User'     # user that started conversation
+  belongs_to :thread_recipient, -> { with_deleted }, class_name: 'User' # user that is conversation recipient
+  belongs_to :thread_context, -> { with_deleted }, polymorphic: true    # conversation context: Transactable, Reservation, User
 
   validates_presence_of :author_id
   validates_presence_of :thread_owner_id
@@ -22,11 +22,9 @@ class UserMessage < ActiveRecord::Base
   scope :for_thread, ->(thread_owner, thread_recipient, thread_context) {
     where(thread_context_id: thread_context.id, thread_context_type: thread_context.class.to_s, thread_owner_id: thread_owner.id, thread_recipient_id: thread_recipient.id)
   }
-
   scope :for_user, ->(user) {
     where('thread_owner_id = ? OR thread_recipient_id = ?', user.id, user.id).order('user_messages.created_at asc')
   }
-
   scope :by_created, -> {order('created_at desc')}
 
   after_create :update_recipient_unread_message_counter, :mark_as_read_for_author
