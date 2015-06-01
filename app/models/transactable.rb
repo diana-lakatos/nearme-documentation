@@ -35,13 +35,13 @@ class Transactable < ActiveRecord::Base
   has_many :waiver_agreement_templates, through: :assigned_waiver_agreement_templates
   has_many :wish_list_items, as: :wishlistable
   has_many :billing_authorizations, as: :reference
-  belongs_to :transactable_type
-  belongs_to :service_type, foreign_key: 'transactable_type_id'
-  belongs_to :company, inverse_of: :listings
-  belongs_to :location, inverse_of: :listings, touch: true
+  belongs_to :transactable_type, -> { with_deleted }
+  belongs_to :service_type, -> { with_deleted }, foreign_key: 'transactable_type_id'
+  belongs_to :company, -> { with_deleted }, inverse_of: :listings
+  belongs_to :location, -> { with_deleted }, inverse_of: :listings, touch: true
   belongs_to :instance, inverse_of: :listings
-  belongs_to :creator, class_name: "User", inverse_of: :listings, counter_cache: true
-  belongs_to :administrator, class_name: "User", inverse_of: :administered_listings
+  belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :listings, counter_cache: true
+  belongs_to :administrator, -> { with_deleted }, class_name: "User", inverse_of: :administered_listings
 
   has_one :location_address, through: :location
   has_one :schedule, as: :scheduable, dependent: :destroy

@@ -8,7 +8,7 @@ class InstanceAdmin < ActiveRecord::Base
   # attr_accessible :user_id, :instance_admin_role_id, :instance_owner
 
   belongs_to :instance
-  belongs_to :user, :foreign_key => 'user_id'
+  belongs_to :user, -> { with_deleted }, foreign_key: 'user_id'
   belongs_to :instance_admin_role
 
   before_create :mark_as_instance_owner
