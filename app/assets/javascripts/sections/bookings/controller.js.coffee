@@ -12,7 +12,8 @@ class Bookings.Controller
       @initializeDatepicker()
       @listing.setDates(@datepicker.getDates())
     @bindEvents()
-    @initializeInfiniScroll() if @fixedPriceSelect
+    if !@listing.withCalendars() && @fixedPriceSelect.length > 0
+      @initializeInfiniScroll()
     @updateQuantityField()
 
     if @listingData.initial_bookings and @options.submitFormImmediately
