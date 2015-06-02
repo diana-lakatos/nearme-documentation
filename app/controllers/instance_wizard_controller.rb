@@ -38,8 +38,8 @@ class InstanceWizardController < ActionController::Base
         @instance.save!
         @instance.domains.first.update_column(:state, 'elb_secured')
         @instance.domains.first.update_column(:secured, true)
-        @user.instance = @instance
         @user.save!
+        @user.update_column(:instance_id, @instance.id)
       end
     rescue
       flash.now[:error] = @user.errors.full_messages.to_sentence +
