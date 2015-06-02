@@ -25,8 +25,11 @@ class SearchController < ApplicationController
   end
 
   def categories
-    @categories = Category.where(id: params[:category_ids].to_s.split(','))
-    @categories_html = ''
+    category_ids = params[:category_ids].to_s.split(',').map(&:to_i)
+    category_root_id = Category.root.try(:id)
+    @categories = Category.where(id: category_ids).to_a
+    @categories_html = '' 
+    @categories.reject!{|c| c.parent.present? && (c.parent.id != category_root_id) && !category_ids.include?(c.parent.id) }
     @categories.each do |category|
       next if category.children.blank?
       @categories_html << render_to_string(
