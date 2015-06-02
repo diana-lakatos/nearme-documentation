@@ -50,9 +50,9 @@ class Listing::SearchFetcher
         @listings_scope = @listings_scope.includes(:categories).where(categories: {id: @filters[:category_ids]})
       end
     end
-    
+
     @listings_scope = @listings_scope.where('transactables.fixed_price_cents >= ? AND transactables.fixed_price_cents <= ?', @filters[:price][:min].to_i * 100, @filters[:price][:max].to_i * 100) if @filters[:price] && !@filters[:price][:max].to_i.zero?
-    
+
     # Date pickers
     if availability_filter?
       if relative_availability?
@@ -80,7 +80,7 @@ class Listing::SearchFetcher
   end
 
   def availability_filter?
-    @filters[:availability] && @filters[:availability][:dates][:start].present? && @filters[:availability][:dates][:end].present?
+    @filters[:availability] && @filters[:availability][:dates] && @filters[:availability][:dates][:start].present? && @filters[:availability][:dates][:end].present?
   end
 
   def relative_availability?
