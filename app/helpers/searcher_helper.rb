@@ -11,9 +11,9 @@ module SearcherHelper
     if params[:buyable] == "true"
       @transactable_type = params[:transactable_type_id].present? ? Spree::ProductType.find(params[:transactable_type_id]) : Spree::ProductType.first
     else
-      @transactable_type = params[:transactable_type_id].present? ? TransactableType.find(params[:transactable_type_id]) : TransactableType.first
+      @transactable_type = params[:transactable_type_id].present? ? ServiceType.find(params[:transactable_type_id]) : ServiceType.first
     end
-    params[:transactable_type_id] ||= @transactable_type.id
+    params[:transactable_type_id] ||= @transactable_type.try(:id)
     @transactable_type
   end
 
