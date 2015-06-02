@@ -3,12 +3,14 @@
 %ul.nav.nav-tabs#payment-options
   - if f.object.possible_credit_card_payment? || f.object.possible_nonce_payment?
     %li= link_to t('payments.credit_card'), '#credit_card_payment', data: { toggle: 'tab', :'payment-method' => Reservation::PAYMENT_METHODS[:credit_card]}
+  - if f.object.possible_express_payment?
+    %li= link_to t('payments.express_payment'), '#express_payment', data: { toggle: 'tab', :'payment-method' => Reservation::PAYMENT_METHODS[:express_checkout]}
   - if f.object.possible_nonce_payment? && false # tmp hack, remove false later
     %li= link_to t('payments.nonce'), '#nonce_payment', data: { toggle: 'tab', :'payment-method' => Reservation::PAYMENT_METHODS[:nonce]}
-  - if f.object.possible_manual_payment?
-    %li= link_to t('buy_sell_market.checkout.manual_payment'), '#manual_payment', data: { toggle: 'tab', :'payment-method' => Reservation::PAYMENT_METHODS[:manual]}
   - if f.object.possible_remote_payment?
     %li= link_to t('payments.remote'), '#remote_payment', data: { toggle: 'tab', :'payment-method' => Reservation::PAYMENT_METHODS[:remote]}
+  - if f.object.possible_manual_payment?
+    %li= link_to t('buy_sell_market.checkout.manual_payment'), '#manual_payment', data: { toggle: 'tab', :'payment-method' => Reservation::PAYMENT_METHODS[:manual]}
 = f.input :payment_method, as: :hidden, input_html: { :'data-payment-method-input' => true }
 
 .tab-content
@@ -16,15 +18,17 @@
     .tab-pane#credit_card_payment
       = render 'payments/credit_card_fields', f: f
       = render 'listings/reservations/confirm_reservations'
+  - if f.object.possible_express_payment?
+    .tab-pane#express_payment
+      .credit-card-fields
+        .padding-bottom.submit-secure-payment
+          .row-fluid
+            = image_submit_tag("https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png")
+
   - if f.object.possible_nonce_payment? && false # tmp hack, remove false later
     .tab-pane#nonce_payment
       = render 'paypal_fields', f: f
       = render 'listings/reservations/confirm_reservations'
-  - if f.object.possible_manual_payment?
-    .tab-pane#manual_payment
-      .credit-card-fields
-        = t('buy_sell_market.checkout.manual_payment_description')
-      %p.confirm-reservations= t('reservations.manually_confirm', lessor: platform_context.lessor)
   - if f.object.possible_remote_payment?
     .tab-pane#remote_payment
       .credit-card-fields
@@ -35,6 +39,11 @@
             .span7.credit-card-images
               = image_tag 'credit-cards.png', alt: "Visa, Mastercard, American Express, Discover"
             .clearfix
+  - if f.object.possible_manual_payment?
+    .tab-pane#manual_payment
+      .credit-card-fields
+        = t('buy_sell_market.checkout.manual_payment_description')
+      %p.confirm-reservations= t('reservations.manually_confirm', lessor: platform_context.lessor)
       = render 'confirm_reservations'
 
 - content_for :script do

@@ -16,7 +16,7 @@ class PaymentTest < ActiveSupport::TestCase
 
       should 'track charge in mixpanel after successful creation' do
         @reservation.create_billing_authorization(token: "token", payment_gateway: @payment_gateway, payment_gateway_mode: "test")
-        PaymentGateway::StripePaymentGateway.any_instance.stubs(:charge)
+        stub_active_merchant_interaction
         ReservationChargeTrackerJob.expects(:perform_later).with(@reservation.date.end_of_day, @reservation.id).once
         @reservation.payments.create!(
           subtotal_amount: 105.24,

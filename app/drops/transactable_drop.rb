@@ -50,10 +50,11 @@ class TransactableDrop < BaseDrop
   #   returns true if an exclusive price has been defined for this listing
   # only_exclusive_price_available?
   #   returns true if the exclusive price defined for this listing is the only price defined for this listing
+  # possible_express_checkout
+  #   returns true if paypal express gateway defined for country assigned to transactable
   delegate :id, :location_id, :name, :location, :transactable_type, :description, :action_hourly_booking?, :action_rfq?, :creator, :administrator, :last_booked_days,
    :defer_availability_rules?, :lowest_price, :company, :properties, :quantity, :administrator_id, :has_photos?, :book_it_out_available?,
-   :action_free_booking?, :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, :approval_requests, :updated_at, to: :transactable
-
+   :action_free_booking?, :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, :approval_requests, :updated_at, :possible_express_checkout?, to: :transactable
 
   # bookable_noun
   #   name of representing the bookable object transactable on the marketplace as a string (e.g. desk, room etc.)
@@ -86,12 +87,12 @@ class TransactableDrop < BaseDrop
 
   # url to the dashboard area for managing received bookings
   def manage_guests_dashboard_url
-    routes.dashboard_company_host_reservations_path(:token => @transactable.administrator.try(:temporary_token))
+    routes.dashboard_company_host_reservations_path(token_key => @transactable.administrator.try(:temporary_token))
   end
 
   # url to the dashboard area for managing received bookings, with tracking
   def manage_guests_dashboard_url_with_tracking
-    routes.dashboard_company_host_reservations_path(:token => @transactable.administrator.try(:temporary_token), :track_email_event => true)
+    routes.dashboard_company_host_reservations_path(token_key => @transactable.administrator.try(:temporary_token), :track_email_event => true)
   end
 
   # url to the search section of the marketplace, with tracking
@@ -122,7 +123,7 @@ class TransactableDrop < BaseDrop
 
   # url to the section in the app for managing this listing, with tracking
   def manage_listing_url_with_tracking
-    routes.edit_dashboard_company_transactable_type_transactable_path(@transactable.location, @transactable, track_email_event: true, token: @transactable.administrator.try(:temporary_token))
+    routes.edit_dashboard_company_transactable_type_transactable_path(@transactable.location, @transactable, track_email_event: true, token_key => @transactable.administrator.try(:temporary_token))
   end
 
   # url to the application wizard for publishing a new listing
@@ -132,7 +133,7 @@ class TransactableDrop < BaseDrop
 
   # url to the application wizard for publishing a new listing, with tracking
   def space_wizard_list_url_with_tracking
-    routes.transactable_type_space_wizard_list_path(transactable_type, token: @user.try(:temporary_token), track_email_event: true)
+    routes.transactable_type_space_wizard_list_path(transactable_type, token_key => @user.try(:temporary_token), track_email_event: true)
   end
 
   def amenities

@@ -1,5 +1,7 @@
 class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
 
+  has_many :merchant_accounts, class_name: 'MerchantAccount::BraintreeMarketplaceMerchantAccount'
+
   def self.supported_countries
     ['US']
   end

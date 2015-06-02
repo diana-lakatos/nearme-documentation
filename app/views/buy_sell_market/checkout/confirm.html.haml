@@ -1,0 +1,62 @@
+.checkout-wizard
+  .page-wrapper
+    = render 'header'
+
+    = simple_form_for @order, url: wizard_path do |f|
+      = f.hidden_field :express_token
+
+      = render 'summary'
+
+      - if @order.express_token.present?
+        = f.simple_fields_for :bill_address do |b|
+
+          %section.checkout-form#credit-card-select
+            .container-fluid
+              %h2= t('shipping_information')
+              .row-fluid
+                .span3
+                  %label= t('order.name')
+                .span9= @order.bill_address.full_name
+              .row-fluid
+                .span3
+                  %label= t('order.address')
+                .span9
+                  = [@order.bill_address.address1, @order.bill_address.address2].compact.join(', ')
+              .row-fluid
+                .span3
+                  %label= t('order.zipcode')
+                .span9
+                  = @order.bill_address.zipcode
+
+              .row-fluid
+                .span3
+                  %label= t('order.city')
+                .span9
+                  = @order.bill_address.city
+
+              - if @order.bill_address.state.present?
+                .row-fluid
+                  .span3
+                    %label= t('order.state')
+                  .span9
+                    = @order.bill_address.state
+
+              - if @order.bill_address.country.present?
+                .row-fluid
+                  .span3
+                    %label= t('order.country')
+                  .span9
+                    = @order.bill_address.country
+              .row-fluid
+                .span3
+                  %label= t('order.phone')
+                .span9
+                  - if @order.bill_address.phone.present?
+                    = @order.bill_address.phone
+                  - else
+                    = b.input :phone, as: :string, label: false
+
+      = render partial: 'checkout_buttons', locals: { form: f, final: true }
+
+- content_for :domready do
+  new PaymentController($('.checkout-wizard'))

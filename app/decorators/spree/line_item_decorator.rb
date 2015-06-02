@@ -27,6 +27,10 @@ class Spree::LineItemDecorator < Draper::Decorator
     humanized_money_with_symbol(object.price.to_money(Spree::Config.currency))
   end
 
+  def price_in_cents
+    money.cents
+  end
+
   def total
     humanized_money_with_symbol(object.total.to_money(Spree::Config.currency))
   end

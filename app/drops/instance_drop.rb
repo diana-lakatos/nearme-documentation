@@ -9,7 +9,7 @@ class InstanceDrop < BaseDrop
 
   # url to the MPO administration area
   def instance_admin_url
-    routes.instance_admin_path(token: @instance.instance_admins.last.user.try(:temporary_token))
+    routes.instance_admin_path(token_key => @instance.instance_admins.last.user.try(:temporary_token))
   end
 
 end

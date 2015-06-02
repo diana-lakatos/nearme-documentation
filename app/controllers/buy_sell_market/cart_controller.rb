@@ -1,6 +1,9 @@
 class BuySellMarket::CartController < ApplicationController
-  before_filter :authenticate_user!
 
+  skip_before_filter :log_out_if_token_exists
+  skip_before_filter :filter_out_token
+
+  before_filter :authenticate_user!
   before_filter :set_service, only: [:empty, :remove, :add, :update]
   before_filter :set_product, only: [:add]
 

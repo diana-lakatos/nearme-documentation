@@ -48,6 +48,7 @@ gem 'money-rails', github: 'RubyMoney/money-rails'
 gem 'paranoia', '~> 2.0.0'
 gem 'simple_form', '~> 3.1'
 gem 'nested_form'
+gem 'cocoon'
 gem 'nokogiri', '~> 1.6.0'
 gem 'hpricot'
 gem 'amatch'
@@ -175,6 +176,8 @@ end
 group :development do
   gem 'unicorn-rails'
   gem 'rails-dev-boost', github: 'thedarkone/rails-dev-boost'
+  gem "better_errors"
+  gem "binding_of_caller"
   gem 'quiet_assets'
   gem 'pry-nav'
   gem 'pry-doc'

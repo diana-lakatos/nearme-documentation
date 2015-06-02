@@ -46,14 +46,15 @@
             #{@charge_info.response['card']['name']}
 
           - unless @order.canceled?
-            - @order.payments.valid.each do |payment|
+            - @order.payments.each do |payment|
               - if payment.completed?
                 .btn.gray.disabled Payment captured
+              - elsif payment.failed?
+                %p Payment failed
               - else
                 = link_to capture_dashboard_company_orders_received_payment_path(@order.number, payment.id),
                     data: { confirm: 'Are you sure you want to capture payment for this order?' } do
                   .btn.blue Capture
-
 
       %tr
         %td= @order.bill_address.address1
@@ -128,7 +129,7 @@
           %td= item.name_with_link
           %td= item.price
           %td= item.quantity
-          %td= item.total
+          %td= item.display_amount
 
   .divider
 
