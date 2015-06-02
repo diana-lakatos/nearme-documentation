@@ -24,4 +24,8 @@ class WorkflowStep::DataUploadWorkflow::BaseStep < WorkflowStep::BaseStep
     @data_upload.importable_id
   end
 
+  def should_be_processed?
+    @data_upload.present?
+  end
+
 end

@@ -5,7 +5,7 @@ class WorkflowStep::ListingWorkflow::DraftCreated < WorkflowStep::ListingWorkflo
   end
 
   def should_be_processed?
-    @transactable.draft.present?
+    @transactable.try(:draft).present?
   end
 
 end

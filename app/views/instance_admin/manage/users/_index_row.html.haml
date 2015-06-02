@@ -12,3 +12,8 @@
     - else
       = link_to t('instance_admin.manage.users.account.ban'), instance_admin_manage_user_user_bans_path(resource), :method => :post,
         data: { confirm:  'You will unban this user from your marketplace, do you want to continue?' }
+  %td
+    - if resource.deleted?
+      = link_to "Restore", restore_instance_admin_manage_user_path(resource), :method => :post, data: { confirm: 'Are you sure you want to restore this?' }
+    - else
+      = link_to "Delete", instance_admin_manage_user_path(resource), :method => :delete, data: { confirm: 'Are you sure you want to delete this?' }

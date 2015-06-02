@@ -28,4 +28,8 @@ class WorkflowStep::RfqWorkflow::BaseStep < WorkflowStep::BaseStep
     @message.try(:ticket).try(:target).try(:transactable_type_id)
   end
 
+  def should_be_processed?
+    @message.present?
+  end
+
 end

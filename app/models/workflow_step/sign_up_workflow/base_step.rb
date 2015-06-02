@@ -20,4 +20,8 @@ class WorkflowStep::SignUpWorkflow::BaseStep < WorkflowStep::BaseStep
     { user: @user }
   end
 
+  def should_be_processed?
+    @user.present?
+  end
+
 end

@@ -33,6 +33,24 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
     end
   end
 
+  def destroy
+    @user = User.find(params[:id])
+    @user.destroy
+    flash[:success] = t('flash_messages.instance_admin.manage.users.deleted')
+    redirect_to instance_admin_manage_users_path
+  end
+
+  def restore
+    @user = User.with_deleted.find(params[:id])
+    if User.exists?(email: @user.email)
+      flash[:error] = t('flash_messages.instance_admin.manage.users.restore_email_taken')
+    else
+      @user.restore
+      flash[:success] = t('flash_messages.instance_admin.manage.users.restored')
+    end
+    redirect_to instance_admin_manage_users_path
+  end
+
   protected
 
   def collection_search_fields
@@ -40,6 +58,6 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
   end
 
   def collection
-    @users ||= UsersService.new(platform_context, params).get_users.paginate(:page => params[:page])
+    @users ||= UsersService.new(platform_context, params).get_users.with_deleted.paginate(page: params[:page])
   end
 end

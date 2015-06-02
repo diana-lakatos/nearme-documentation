@@ -3,7 +3,7 @@ class ApprovalRequestAttachmentTemplate < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  belongs_to :approval_request_template, inverse_of: :approval_request_attachment_templates
+  belongs_to :approval_request_template, -> { with_deleted }, inverse_of: :approval_request_attachment_templates
   belongs_to :instance
 
   has_many :approval_request_attachments, inverse_of: :approval_request_attachment_template

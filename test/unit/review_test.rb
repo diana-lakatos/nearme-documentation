@@ -14,7 +14,6 @@ class ReviewTest < ActiveSupport::TestCase
   should validate_presence_of(:reviewable)
   should validate_presence_of(:transactable_type)
 
-  should ensure_length_of(:comment).is_at_most(255)
   should validate_inclusion_of(:rating).in_range(RatingConstants::VALID_VALUES).with_message('Rating is required')
 
   context "#scopes" do

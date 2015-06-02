@@ -13,7 +13,7 @@ class DataImporter::Product::CsvFile
   end
 
   def process_next_row
-    current_row = @csv_handle.shift
+    current_row = @csv_handle.shift rescue nil
     MODELS.inject({}) { |hsh, model| hsh[model] = attributes_for(model, current_row); hsh } if current_row
   end
 

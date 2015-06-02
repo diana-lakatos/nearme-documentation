@@ -28,4 +28,8 @@ class WorkflowStep::ReservationWorkflow::BaseStep < WorkflowStep::BaseStep
     @reservation.try(:listing).try(:transactable_type_id)
   end
 
+  def should_be_processed?
+    @reservation.present?
+  end
+
 end

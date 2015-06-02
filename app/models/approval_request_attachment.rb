@@ -4,8 +4,8 @@ class ApprovalRequestAttachment < ActiveRecord::Base
   scoped_to_platform_context
 
   belongs_to :instance
-  belongs_to :uploader, class_name: 'User'
-  belongs_to :approval_request, inverse_of: :approval_request_attachments
+  belongs_to :uploader, -> { with_deleted }, class_name: 'User'
+  belongs_to :approval_request, -> { with_deleted }, inverse_of: :approval_request_attachments
 
   scope :for_attachment_template, -> (template_id) { where(approval_request_attachment_template_id: template_id) }
   scope :free,                    -> { where(approval_request_id: nil) }

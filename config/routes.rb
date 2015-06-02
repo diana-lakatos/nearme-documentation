@@ -330,8 +330,9 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
-      resources :users, only: [:index] do
+      resources :users, only: [:index, :destroy] do
         post :login_as, on: :member
+        post :restore, on: :member
         post :restore_session, on: :collection
         resources :user_bans, only: [:create, :index, :destroy], controller: 'users/user_bans'
       end

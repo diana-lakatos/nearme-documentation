@@ -6,12 +6,14 @@ class Support::Ticket < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  belongs_to :user
-  belongs_to :assigned_to, class_name: 'User'
+  belongs_to :assigned_to, -> { with_deleted }, class_name: 'User'
   belongs_to :instance
-  belongs_to :target, polymorphic: true
+  belongs_to :target, -> { with_deleted }, polymorphic: true
+  belongs_to :user, -> { with_deleted }
+
   has_many :messages, -> {order 'created_at DESC'}, class_name: 'Support::TicketMessage', dependent: :destroy
   has_many :attachments, class_name: 'Support::TicketMessageAttachment'
+
   scope :metadata, -> {select('support_tickets.state, COUNT(*) as count').group(:state)}
   scope :user_metadata, -> {select('support_tickets.instance_id, COUNT(*) as count').group(:instance_id)}
 

@@ -23,6 +23,11 @@ class SavedSearchTest < ActiveSupport::TestCase
       saved_search = create(:saved_search, query: "?loc=Auckland&sort=relevance&query=&transactable_type_id=1&buyable=false&sort=something")
       assert_equal "?loc=Auckland&query=&transactable_type_id=1&buyable=false&sort=created_at&order=desc", saved_search.query
     end
+
+    should 'chnage sorting to created_at desc with empty existing sort too' do
+      saved_search = create(:saved_search, query: "?loc=Auckland&sort=relevance&query=&transactable_type_id=1&buyable=false&sort=")
+      assert_equal "?loc=Auckland&query=&transactable_type_id=1&buyable=false&sort=created_at&order=desc", saved_search.query
+    end
   end
 
 end

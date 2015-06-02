@@ -11,7 +11,7 @@ class Listing::Search::Params::Web < Listing::Search::Params
     @lgpricing = @options[:lgpricing]
     @sort = (@options[:sort].presence || 'relevance').inquiry
     @order = (@options[:order].presence || 'ASC')
-    @dates = (@options[:availability].present? && @options[:availability][:dates][:start].present? &&
+    @dates = (@options[:availability].present? && @options[:availability][:dates] && @options[:availability][:dates][:start].present? &&
               @options[:availability][:dates][:end].present?) ? @options[:availability][:dates] : nil
     @display_dates = (@options[:start_date].present? && @options[:end_date].present?) ?
       { start: @options[:start_date], end: @options[:end_date] } : nil

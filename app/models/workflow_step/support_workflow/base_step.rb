@@ -20,4 +20,8 @@ class WorkflowStep::SupportWorkflow::BaseStep < WorkflowStep::BaseStep
     { message: @message, ticket: @message.ticket }
   end
 
+  def should_be_processed?
+    @message.present?
+  end
+
 end

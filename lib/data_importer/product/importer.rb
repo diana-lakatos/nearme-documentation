@@ -61,7 +61,7 @@ class DataImporter::Product::Importer
   end
 
   def import_user(params, company)
-    user = User.with_deleted.find_or_initialize_by(email: params.delete(:email).downcase) do |u|
+    user = User.with_deleted.find_or_initialize_by(email: params.delete(:email).try(:downcase)) do |u|
       user.restore! if user.deleted?
       password = SecureRandom.hex(8)
       @new_users[u.email] = password

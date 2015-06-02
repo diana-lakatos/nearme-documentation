@@ -17,7 +17,7 @@ class User < ActiveRecord::Base
   belongs_to :billing_address, class_name: 'Spree::Address'
   belongs_to :domain
   belongs_to :instance
-  belongs_to :instance_profile_type
+  belongs_to :instance_profile_type, -> { with_deleted }
   belongs_to :partner
   belongs_to :shipping_address, class_name: 'Spree::Address'
 

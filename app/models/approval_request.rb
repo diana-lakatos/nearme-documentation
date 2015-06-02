@@ -5,9 +5,9 @@ class ApprovalRequest < ActiveRecord::Base
   scoped_to_platform_context
 
   belongs_to :instance
-  belongs_to :uploader, class_name: 'User'
-  belongs_to :owner, polymorphic: true
-  belongs_to :approval_request_template
+  belongs_to :uploader, -> { with_deleted }, class_name: 'User'
+  belongs_to :owner, -> { with_deleted }, polymorphic: true
+  belongs_to :approval_request_template, -> { with_deleted }
 
   scope :pending, lambda { with_state(:pending) }
   scope :approved, lambda { with_state(:approved) }
