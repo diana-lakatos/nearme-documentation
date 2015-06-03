@@ -42,6 +42,7 @@ class ShippingProfileableService
           zone = zone_to_copy.dup
           zone.company_id = @company.try(:id)
           zone.user_id = @user.id
+          zone.name = "Shipping Zone #{self.get_random_string_for_id}"
           zone.shipping_method_ids = [shipping_method.id]
 
           if zone_to_copy.state_ids.blank?
@@ -54,6 +55,11 @@ class ShippingProfileableService
         end
       end
     end
+  end
+
+  def get_random_string_for_id
+    o = [('a'..'z'), ('A'..'Z')].map { |i| i.to_a }.flatten
+    (0...25).map { o[rand(o.length)] }.join
   end
 
 end
