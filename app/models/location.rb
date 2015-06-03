@@ -96,7 +96,7 @@ class Location < ActiveRecord::Base
 
   def assign_default_availability_rules
     if availability_rules.reject(&:marked_for_destruction?).empty?
-      AvailabilityRule.default_template.apply(self)
+      AvailabilityRule.default_template.try(:apply, self)
     end
   end
 
