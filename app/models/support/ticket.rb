@@ -60,7 +60,7 @@ class Support::Ticket < ActiveRecord::Base
       ticket_message = self.messages.new
       ticket_message.email = from
       ticket_message.full_name = message[:from].display_names.first || 'Unknown'
-      ticket_message.subject = message.subject
+      ticket_message.subject = message.subject.presence || '<no subject>'
       ticket_message.message = body
       ticket_message.instance_id = self.instance_id
       self.save!

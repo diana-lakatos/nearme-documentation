@@ -13,7 +13,7 @@ module SearcherHelper
     else
       @transactable_type = params[:transactable_type_id].present? ? TransactableType.find(params[:transactable_type_id]) : TransactableType.first
     end
-    params[:transactable_type_id] ||= @transactable_type.id
+    params[:transactable_type_id] ||= @transactable_type.try(:id)
     @transactable_type
   end
 

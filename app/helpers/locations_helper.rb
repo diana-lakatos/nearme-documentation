@@ -15,6 +15,11 @@ module LocationsHelper
     listings.map { |listing| listing_booking_data(listing) }.to_json
   end
 
+  def listing_json(listing)
+    [listing_booking_data(listing)].to_json
+  end
+
+
   def location_contact_phone(location)
     if location.phone.present?
       content_tag(:p,

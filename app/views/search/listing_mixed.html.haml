@@ -46,13 +46,28 @@
           #listings_map.inner
     .list{:'data-list' => true}
       .filters{:'data-search-filters-container' => true}
+        - if platform_context.transactable_types.services.many?
+          .search-mixed-filter{:'data-transactable-type-filter' => true}
+            .container-fluid
+              .row-fluid
+                .span2
+                  %h4 Service Type
+                .span10
+                  %ul
+                    - platform_context.transactable_types.services.each do |transactable_type|
+                      %li.filter-option
+                        %label.radio.small-radio
+                          %input{type: 'radio', name: 'transactable_type_id', value: transactable_type.id, checked: @transactable_type.id == transactable_type.id}
+                          %span.filter-label-text
+                            = transactable_type.name
         - @searcher.searchable_categories.each do |category|
           = render :partial => 'search/mixed/filter', :locals => { :header_name => category.translated_name, :selected_values => @searcher.category_ids || [], :input_name => 'category_ids[]', :options => @searcher.category_options(category)}
           #categories-children
 
         = render partial: 'search/shared/date_range'
         - @searcher.filterable_custom_attributes.each do |ca|
-          = render partial: 'search/mixed/filter', locals: { header_name: t(ca.label_key), selected_values: @searcher.search.lg_custom_attributes[ca.name.to_sym] || [], input_name: "lg_custom_attributes[#{ca.name}][]", options: ca.valid_values_translated, name: ca.name }
+          - if ca.valid_values_translated.any?
+            = render partial: 'search/mixed/filter', locals: { header_name: t(ca.label_key), selected_values: @searcher.search.lg_custom_attributes[ca.name.to_sym] || [], input_name: "lg_custom_attributes[#{ca.name}][]", options: ca.valid_values_translated, name: ca.name }
         - if platform_context.instance.price_types
           = render partial: 'search/mixed/filter', locals: { header_name: 'Pricing', selected_values: @searcher.search.lgpricing_filters || [], input_name: 'listing_pricing[]', options: @searcher.filterable_pricing }
         - if platform_context.instance.location_types.count > 1

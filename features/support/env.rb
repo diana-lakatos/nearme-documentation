@@ -68,6 +68,22 @@ Before '~@photo' do
   PhotoUploader.enable_processing = false
 end
 
+Around('@elasticsearch') do |scenario, block|
+  Instance.update_all(search_engine: Instance::SEARCH_ENGINES.last)
+  block.call
+  Instance.update_all(search_engine: Instance::SEARCH_ENGINES.first)
+end
+
+Around('@elasticreindex') do |scenario, block|
+  Transactable.send :include, Elasticsearch::Model::Callbacks
+  Spree::Product.send :include, Elasticsearch::Model::Callbacks
+  Transactable.searchable.import force: true
+  Spree::Product.searchable.import force: true
+  block.call
+  Transactable.__elasticsearch__.client.indices.delete index: Transactable.index_name
+  Spree::Product.__elasticsearch__.client.indices.delete index: Spree::Product.index_name
+end
+
 World(CarrierWave::Test::Matchers)
 
 def last_json

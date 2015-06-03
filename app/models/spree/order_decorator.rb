@@ -70,7 +70,7 @@ Spree::Order.class_eval do
   end
 
   def service_fee_amount_host
-    service_fee_calculator.service_fee_guest.cents
+    Money.new(service_fee_calculator.service_fee_host.cents, currency)
   end
 
   def service_fee_calculator

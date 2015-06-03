@@ -25,8 +25,8 @@ module AvailabilityRule::TargetHelper
   # Determine whether the target availability matches one of the predefined templates and return its id
   def availability_template_id
     availability = AvailabilityRule::Summary.new(availability_rules) # Don't defer at all
-    template = TransactableType.first.availability_templates.detect { |template| availability.matches_template?(template) }
-    template.id if template
+    template = ServiceType.first.try(:availability_templates).try(:detect) { |template| availability.matches_template?(template) }
+    template.try(:id)
   end
 end
 

@@ -175,7 +175,7 @@ class BuySellMarket::CheckoutController < ApplicationController
   end
 
   def set_state
-    @order.update_columns(state: step.to_s, updated_at: Time.zone.now)
+    @order.try(:update_columns, {state: step.to_s, updated_at: Time.zone.now})
   end
 
   def set_countries_states

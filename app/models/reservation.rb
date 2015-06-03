@@ -29,11 +29,11 @@ class Reservation < ActiveRecord::Base
   attr_accessor :payment_response_params
 
   belongs_to :instance
-  belongs_to :listing, class_name: 'Transactable', foreign_key: 'transactable_id'
-  belongs_to :owner, :class_name => "User", counter_cache: true
-  belongs_to :creator, class_name: "User"
-  belongs_to :administrator, class_name: "User"
-  belongs_to :company
+  belongs_to :listing, -> { with_deleted }, class_name: 'Transactable', foreign_key: 'transactable_id'
+  belongs_to :owner, -> { with_deleted }, :class_name => "User", counter_cache: true
+  belongs_to :creator, -> { with_deleted }, class_name: "User"
+  belongs_to :administrator, -> { with_deleted }, class_name: "User"
+  belongs_to :company, -> { with_deleted }
   belongs_to :recurring_booking
   belongs_to :platform_context_detail, :polymorphic => true
   belongs_to :credit_card
@@ -45,10 +45,7 @@ class Reservation < ActiveRecord::Base
   has_many :payment_documents, as: :attachable, class_name: 'Attachable::PaymentDocument', dependent: :destroy
   accepts_nested_attributes_for :payment_documents
 
-  has_many :periods,
-    :class_name => "ReservationPeriod",
-    :inverse_of => :reservation,
-    :dependent => :destroy
+  has_many :periods, :class_name => "ReservationPeriod", :inverse_of => :reservation, :dependent => :destroy
 
   has_many :payments, as: :payable, dependent: :destroy
 
@@ -65,11 +62,13 @@ class Reservation < ActiveRecord::Base
   validate :validate_book_it_out, on: :create, :if => lambda { listing && !book_it_out_discount.to_i.zero? }
   validate :validate_exclusive_price, on: :create, :if => lambda { listing && !exclusive_price_cents.to_i.zero? }
 
-  before_create :set_hours_to_expiration, if: lambda { listing }
-  before_create :set_costs, :if => lambda { listing }
   before_validation :set_minimum_booking_minutes, on: :create, if: lambda { listing }
   before_validation :set_currency, on: :create, if: lambda { listing }
   before_validation :set_default_payment_status, on: :create, if: lambda { listing }
+
+  before_create :set_hours_to_expiration, if: lambda { listing }
+  before_create :set_costs, :if => lambda { listing }
+
   after_create :auto_confirm_reservation
 
   def perform_expiry!
