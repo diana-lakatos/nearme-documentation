@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150522104236) do
+ActiveRecord::Schema.define(version: 20150603111236) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -527,8 +527,12 @@ ActiveRecord::Schema.define(version: 20150522104236) do
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
     t.string   "instance_id"
-  end
+    t.string   "platform_context_detail_type"
+    t.integer  "platform_context_detail_id"
+    t.string   "i18n_locale",                  limit: 2
+   end
 
+  add_index "delayed_jobs", ["platform_context_detail_id", "platform_context_detail_type"], name: "index_delayed_jobs_on_platform_context_detail", using: :btree
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
   create_table "dimensions_templates", force: true do |t|

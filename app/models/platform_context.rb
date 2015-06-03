@@ -20,6 +20,7 @@
 class PlatformContext
   DEFAULT_REDIRECT_CODE = 302
   NEAR_ME_REDIRECT_URL = 'http://near-me.com/?domain_not_valid=true'
+  @@instance_view_cache_key = {}
 
   attr_reader :domain, :platform_context_detail, :instance_type, :instance, :theme, :domain,
     :white_label_company, :partner, :request_host, :blog_instance
@@ -33,7 +34,9 @@ class PlatformContext
 
   def self.current=(platform_context)
     Thread.current[:platform_context] = platform_context
-    after_setting_current_callback(platform_context) if platform_context.present?
+    if platform_context.present?
+      after_setting_current_callback(platform_context)
+    end
   end
 
   def self.after_setting_current_callback(platform_context)
@@ -41,6 +44,17 @@ class PlatformContext
     Transactable.clear_custom_attributes_cache
     User.clear_custom_attributes_cache
     Spree::Product.clear_custom_attributes_cache
+    I18N_DNM_BACKEND.set_instance_id(platform_context.instance.id) if defined? I18N_DNM_BACKEND
+    I18n.locale = platform_context.instance.primary_locale
+    @@instance_view_cache_key[platform_context.instance.id] ||= get_instance_view_cache_key(platform_context.instance.id)
+    if @@instance_view_cache_key[platform_context.instance.id] != get_instance_view_cache_key(platform_context.instance.id)
+      @@instance_view_cache_key[platform_context.instance.id] = get_instance_view_cache_key(platform_context.instance.id)
+      InstanceViewResolver.instance.clear_cache
+    end
+  end
+
+  def self.get_instance_view_cache_key(instance_id)
+    @instance_view_cache_key ||= InstanceView.where(instance_id: instance_id).group(:instance_id).pluck('count(*), max(updated_at)').join('-')
   end
 
   def self.scope_to_instance
@@ -214,7 +228,7 @@ class PlatformContext
     Spree::Product.searchable.order('created_at desc').limit(number).all
   end
 
-   def is_root_domain?
+  def is_root_domain?
     root_domains = [Regexp.escape(remove_port_from_hostname(Rails.application.routes.default_url_options[:host])), '0\.0\.0\.0', 'near-me.com', 'api\.desksnear\.me', '127\.0\.0\.1']
     root_domains += ['test\.host', '127\.0\.0\.1', 'example\.org', 'www.example\.com'] if Rails.env.test?
     @request_host =~ Regexp.new("^(#{root_domains.join('|')})$", true)

@@ -38,7 +38,9 @@ class Job
 
   def before(job)
     @platform_context = PlatformContext.current = begin
-                                                    if @platform_context_detail_class.blank? || @platform_context_detail_id.blank?
+                                                    if job.platform_context_detail.present?
+                                                      PlatformContext.new(job.platform_context_detail)
+                                                    elsif @platform_context_detail_class.blank? || @platform_context_detail_id.blank?
                                                       nil
                                                     elsif @platform_context_detail_class.respond_to?(:with_deleted)
                                                       PlatformContext.new(@platform_context_detail_class.with_deleted.find(@platform_context_detail_id))
@@ -47,9 +49,7 @@ class Job
                                                     end
                                                   end
 
-    Transactable.clear_custom_attributes_cache
-    User.clear_custom_attributes_cache
-    Spree::Product.clear_custom_attributes_cache
+    I18n.locale = job.i18n_locale if job.i18n_locale.present?
   end
 
   def after(job)
@@ -116,7 +116,9 @@ class Job
     params = {
       priority:    get_priority,
       queue:       get_queue,
-      instance_id: PlatformContext.current.try(:instance).try(:annotated_id)
+      instance_id: PlatformContext.current.try(:instance).try(:annotated_id),
+      platform_context_detail: PlatformContext.current.platform_context_detail,
+      i18n_locale: I18n.locale
     }
     params.merge!(run_at: run_at) if run_at.present?
     Delayed::Job.enqueue(build_new(*args), params)
