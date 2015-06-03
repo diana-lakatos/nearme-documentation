@@ -1169,7 +1169,9 @@ class SecuredParams
     [
       :name,
       :content,
-      :enabled
+      :enabled,
+      :position,
+      inject_pages: []
     ]
   end
 

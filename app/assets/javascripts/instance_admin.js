@@ -31,6 +31,7 @@
 //= require sections/support/attachment_form
 //= require sections/support/ticket_message_controller
 //= require ./instance_admin/script
+//= require chosen-jquery
 
 //= require instance_admin/jquery-ui-datepicker
 //= require instance_admin/sections/rating_systems
@@ -49,7 +50,9 @@ $(function() {
   Fileupload.initialize();
 })
 
-$('[rel=tooltip]').tooltip()
+$('[rel=tooltip]').tooltip();
+
+$('select.chosen').chosen();
 
 // Graceful degradation for missing inline_labels
 // Make the original label visible

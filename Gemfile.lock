@@ -641,9 +641,9 @@ GEM
       parallel
     paranoia (2.0.5)
       activerecord (~> 4.0)
-    patron (0.4.20)
     parser (2.2.2.3)
       ast (>= 1.1, < 3.0)
+    patron (0.4.20)
     paypal-sdk-adaptivepayments (1.117.0)
       paypal-sdk-core (~> 0.3.0)
     paypal-sdk-core (0.3.1)
@@ -982,8 +982,8 @@ DEPENDENCIES
   paper_trail (= 3.0.0)
   parallel_tests
   paranoia (~> 2.0.0)
-  patron
   parser
+  patron
   paypal-sdk-adaptivepayments
   paypal-sdk-rest
   pg

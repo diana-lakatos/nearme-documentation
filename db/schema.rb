@@ -417,10 +417,12 @@ ActiveRecord::Schema.define(version: 20150603111236) do
     t.integer  "theme_id"
     t.integer  "instance_id"
     t.text     "content"
-    t.boolean  "enabled",     default: true
+    t.boolean  "enabled",      default: true
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "inject_pages", default: [],   array: true
+    t.string   "position"
   end
 
   add_index "content_holders", ["instance_id", "theme_id", "name"], name: "index_content_holders_on_instance_id_and_theme_id_and_name", using: :btree
@@ -1431,6 +1433,19 @@ ActiveRecord::Schema.define(version: 20150603111236) do
   end
 
   add_index "schedules", ["instance_id", "scheduable_id", "scheduable_type"], name: "index_schedules_scheduable", using: :btree
+
+  create_table "search_notifications", force: true do |t|
+    t.string   "email"
+    t.integer  "user_id"
+    t.string   "query"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.boolean  "notified",   default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
 
   create_table "spree_addresses", force: true do |t|
     t.string   "firstname"
@@ -2903,7 +2918,6 @@ ActiveRecord::Schema.define(version: 20150603111236) do
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
   add_index "transactables", ["opened_on_days"], name: "index_transactables_on_opened_on_days", using: :gin
   add_index "transactables", ["parent_transactable_id"], name: "index_transactables_on_parent_transactable_id", using: :btree
-  add_index "transactables", ["properties"], name: "transactables_gin_properties", using: :gin
   add_index "transactables", ["transactable_type_id"], name: "index_transactables_on_transactable_type_id", using: :btree
 
   create_table "translations", force: true do |t|

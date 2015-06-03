@@ -6,6 +6,7 @@
 @import "instance_admin/fonts";
 @import "instance_admin/variables";
 @import "jcrop";
+@import "chosen";
 @import "vendor/overrides/jcrop";
 @import "vendor/icui";
 @import "components/fileupload";
@@ -34,3 +35,4 @@
 @import "sections/schedule";
 @import "instance_admin/search_types";
 @import "instance_admin/bootstrap-colorpicker";
+@import "instance_admin/content_holders";

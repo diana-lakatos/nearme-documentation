@@ -364,6 +364,7 @@ en:
       content_holders: "Content Holders"
       content_holder: "Content Holder"
       name: Name
+      inject_pages: 'Inject Pages'
       enabled: Enabled
       content: Content
       created_at: "Created at"
