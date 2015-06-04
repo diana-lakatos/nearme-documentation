@@ -50,7 +50,8 @@ class DataImporter::Product::Importer
   def get_params
     @product_csv.process_next_row
   rescue NoMethodError
-    @errors << 'Error parsing CSV file'
+    # 1 for headers and 1 for current row
+    @errors << "Error parsing CSV file at line #{processed_rows + 2}"
     nil
   end
 
