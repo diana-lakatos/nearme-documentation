@@ -37,8 +37,6 @@ class Search.Controller
     @keywordField = @form.find('input[name="query"]')
 
     query_value = DNM.util.Url.getParameterByName('loc')
-    if @queryField.val() == '' && !query_value && @autocompleteEnabled()
-      _.defer(=>@geolocateMe())
 
 
     @queryField.bind 'change', =>
