@@ -3,11 +3,11 @@
 .dash-head.clearfix
   %ul
     %li{class: (params[:action] == 'index' && (params[:state].blank? || params[:state] == 'unconfirmed')) ? 'active' : ''}
-      = link_to 'UNCONFIRMED', dashboard_company_host_reservations_path(state: 'unconfirmed')
+      = link_to t('dashboard.host_reservations.unconfirmed'), dashboard_company_host_reservations_path(state: 'unconfirmed')
     %li{class: (params[:action] == 'index' && params[:state] == 'confirmed') ? 'active' : ''}
-      = link_to 'CONFIRMED', dashboard_company_host_reservations_path(state: 'confirmed')
+      = link_to t('dashboard.host_reservations.confirmed'), dashboard_company_host_reservations_path(state: 'confirmed')
     %li{class: (params[:action] == 'index' && params[:state] == 'archived') ? 'active' : ''}
-      = link_to 'ARCHIVED', dashboard_company_host_reservations_path(state: 'archived')
+      = link_to t('dashboard.host_reservations.archived'), dashboard_company_host_reservations_path(state: 'archived')
 
 
 .dash-body

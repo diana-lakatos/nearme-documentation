@@ -5,9 +5,11 @@
       .message
         .row
           - if params[:action] == 'index'
-            %p.no-data No new messages!
+            %p.no-data
+              = t('user_messages.no_new_messages')
           - if params[:action] == 'archived'
-            %p.no-data No archived messages
+            %p.no-data
+              = t('user_messages.no_archived_messages')
     - else
       - @threaded_user_messages.each do |array_key, user_messages|
         = render 'user_message', user_message: user_messages.last.decorate

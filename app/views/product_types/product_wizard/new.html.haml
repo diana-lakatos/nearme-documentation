@@ -28,8 +28,8 @@
                     = render 'forms/product_form', f: product_form, properties_form: properties_form, only_inputs: [ field.to_sym ], form_fields: form_component.form_fields
 
   .submit-bar
-    = f.submit "Continue and Preview Listing", class: "btn medium blue"
-    = f.submit "Save for Later", class: "btn medium green", name: "boarding_form[draft]"
+    = f.submit t('onboarding_wizard.continue_and_preview_listing'), class: "btn medium blue"
+    = f.submit t('onboarding_wizard.save_for_later'), class: "btn medium green", name: "boarding_form[draft]"
 
 
 - content_for :domready do

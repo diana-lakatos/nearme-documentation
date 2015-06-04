@@ -18,6 +18,16 @@ en:
     error_notification:
       default_message: "Some errors were found, please take a look:"
     labels:
+      boarding_form:
+        company:
+          company_address:
+            address: 'Address'
+        product_form:
+          name: 'Item Name'
+          description: 'Item description'
+          price: 'Price'
+          quantity: 'Quantity'
+          shipping_category_id: 'Shipping category'
       instance:
         mark_as_locked: "Lock admin settings"
         name: "Marketplace Name"
@@ -214,11 +224,15 @@ en:
       user:
         biography: 'About me'
         sms_notifications_enabled: 'Enable Text Message Notifications'
+        accept_emails: 'Accept emails'
 
       registration:
         email: 'Your email address'
 
     placeholders:
+      boarding_form:
+        product_form:
+          name: 'Name'
       liquid_view:
         path: 'liquid/view'
       content_holder:
