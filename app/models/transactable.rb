@@ -498,7 +498,10 @@ class Transactable < ActiveRecord::Base
     transactable_type.pricing_options_long_period_names.inject({}) do |hash, price|
       hash[:"#{price}_price_cents"] = "#{price}_price_cents".humanize
       hash
-    end.merge({external_id: 'External Id', enabled: 'Enabled', confirm_reservations: 'Confirm reservations'}).reverse_merge(
+    end.merge({
+        name: 'Name', description: 'Description', quantity: 'Quantity', external_id: 'External Id',
+        enabled: 'Enabled', confirm_reservations: 'Confirm reservations'
+      }).reverse_merge(
       transactable_type.custom_attributes.shared.pluck(:name, :label).inject({}) do |hash, arr|
         hash[arr[0].to_sym] = arr[1].presence || arr[0].humanize
         hash

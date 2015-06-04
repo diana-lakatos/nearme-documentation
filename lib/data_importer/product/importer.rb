@@ -10,7 +10,7 @@ class DataImporter::Product::Importer
     @entities_counters = {created: entities_hash.dup, updated: entities_hash.dup}
     @entities_counters[:deleted] = SYNC_MODELS.inject({}) { |hsh, model| hsh[model] = 0; hsh }
     @processed_entities_ids = {}
-    @validation_errors = []
+    @errors = []
     @new_users = {}
     @all_users = []
     @imported_products = 0
@@ -18,7 +18,7 @@ class DataImporter::Product::Importer
   end
 
   def import
-    while params = @product_csv.process_next_row
+    while params = get_params
       begin
         quantity = params[:'spree/product'].delete(:total_on_hand).to_i if params[:'spree/product'].has_key?(:total_on_hand)
         price    = params[:'spree/product'].delete(:price).to_f if params[:'spree/product'].has_key?(:price)
@@ -47,8 +47,20 @@ class DataImporter::Product::Importer
 
   private
 
+  def get_params
+    @product_csv.process_next_row
+  rescue NoMethodError
+    @errors << 'Error parsing CSV file'
+    nil
+  end
+
   def import_company(params)
-    company = find_or_initialize_by_and_assign(Company, external_id: params.delete(:external_id)) do |company|
+    external_id = params.delete(:external_id)
+    if external_id.nil?
+      @errors << 'Missing mandatory parameter: company external_id'
+      return
+    end
+    company = find_or_initialize_by_and_assign(Company, external_id: external_id) do |company|
       company.restore! if company.deleted?
       company.assign_attributes(params)
     end
@@ -61,7 +73,12 @@ class DataImporter::Product::Importer
   end
 
   def import_user(params, company)
-    user = User.with_deleted.find_or_initialize_by(email: params.delete(:email).try(:downcase)) do |u|
+    email = params.delete(:email).try(:downcase)
+    if email.nil?
+      @errors << 'Missing mandatory parameter: user email'
+      return
+    end
+    user = User.with_deleted.find_or_initialize_by(email: email) do |u|
       user.restore! if user.deleted?
       password = SecureRandom.hex(8)
       @new_users[u.email] = password
@@ -92,18 +109,24 @@ class DataImporter::Product::Importer
 
   def import_shipping_category(params, user, company, &block)
     import_entity(block) do
-      if params[:name].present?
+      if !params[:name].present? && category = Spree::ShippingCategory.find_by(id: @data_upload.default_shipping_category_id)
+        category
+      else
+        params[:name] ||= 'Default'
         params.merge!(instance_id: PlatformContext.current.instance.id, user_id: user.id, company_id: company.id)
         find_or_initialize_by_and_assign(Spree::ShippingCategory, params)
-      else
-        Spree::ShippingCategory.find(@data_upload.default_shipping_category_id)
       end
     end
   end
 
   def import_product(params, user, company, shipping_category, price, &block)
+    external_id = params.delete(:external_id)
+    if external_id.nil?
+      @errors << 'Missing mandatory parameter: product external_id'
+      return
+    end
     import_entity(block) do
-      find_or_initialize_by_and_assign(Spree::Product, external_id: params.delete(:external_id), company_id: company.id) do |product|
+      find_or_initialize_by_and_assign(Spree::Product, external_id: external_id, company_id: company.id) do |product|
         unless product.deleted_at.nil?
           product.update_column(:deleted_at, nil)
           product.master.update_column(:deleted_at, nil)
@@ -187,7 +210,7 @@ class DataImporter::Product::Importer
   end
 
   def log_validation_error(entity)
-    @validation_errors << "Validation error for #{entity.class.name}: #{entity.errors.full_messages.to_sentence}."
+    @errors << "Validation error for #{entity.class.name}: #{entity.errors.full_messages.to_sentence}."
   end
 
   def send_invitation_emails
@@ -211,7 +234,7 @@ class DataImporter::Product::Importer
   end
 
   def store_log
-    if @validation_errors.empty? && @imported_products == @processed_rows
+    if @errors.empty? && @imported_products == @processed_rows
       @data_upload.finish!
     elsif @imported_products != 0
       @data_upload.finish_with_validation_errors!
@@ -219,7 +242,7 @@ class DataImporter::Product::Importer
       @data_upload.fail!
     end
 
-    @data_upload.parsing_result_log = @validation_errors.join("\n")
+    @data_upload.parsing_result_log = @errors.join("\n")
     @data_upload.parse_summary = {
       new:     @entities_counters[:created],
       updated: @entities_counters[:updated],
