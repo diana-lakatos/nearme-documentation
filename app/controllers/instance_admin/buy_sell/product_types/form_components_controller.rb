@@ -4,10 +4,7 @@ class InstanceAdmin::BuySell::ProductTypes::FormComponentsController < InstanceA
   def create_as_copy
     product_type_id = params[:copy_template][:form_componentable_id]
     form_type = params[:copy_template][:form_type]
-
-    product_type = Spree::ProductType.where(:instance_id => PlatformContext.current.instance, :id => product_type_id).first
-
-    product_type.form_components.where(:form_type => form_type).each do |form_component|
+    Spree::ProductType.find(product_type_id).form_components.where(form_type: form_type).each do |form_component|
       @form_componentable.form_components << form_component.dup
     end
 
