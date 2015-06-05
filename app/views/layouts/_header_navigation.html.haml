@@ -57,18 +57,19 @@
             %li
               = link_to main_app.dashboard_company_transactable_type_transactables_path(transactable_type), class: 'nav-link dropdown-toggle' do
                 %div.truncate= t 'top_navbar.manage_bookable', bookable_noun: transactable_type.name.pluralize
-          - if platform_context.bookable? && HiddenUiControls.find('main_menu/my_bookings').visible?
-            %li
-              = link_to main_app.dashboard_user_reservations_path, class: 'nav-link dropdown-toggle' do
-                %span= t 'top_navbar.my_bookings'
           - platform_context.product_types.each do |product_type|
             %li
               = link_to main_app.dashboard_company_product_type_products_path(product_type), class: 'nav-link dropdown-toggle' do
                 %div.truncate Manage #{product_type.name.pluralize}
-          - if platform_context.buyable? && HiddenUiControls.find('main_menu/my_orders').visible?
-            %li
-              = link_to main_app.dashboard_orders_path, class: 'nav-link dropdown-toggle' do
-                %span= t 'top_navbar.my_orders'
+
+        - if platform_context.bookable? && HiddenUiControls.find('main_menu/my_bookings').visible?
+          %li
+            = link_to main_app.dashboard_user_reservations_path, class: 'nav-link dropdown-toggle' do
+              %span= t 'top_navbar.my_bookings'
+        - if platform_context.buyable? && HiddenUiControls.find('main_menu/my_orders').visible?
+          %li
+            = link_to main_app.dashboard_orders_path, class: 'nav-link dropdown-toggle' do
+              %span= t 'top_navbar.my_orders'
 
         - if platform_context.instance.wish_lists_enabled? && HiddenUiControls.find('main_menu/wish_list').visible?
           %li
