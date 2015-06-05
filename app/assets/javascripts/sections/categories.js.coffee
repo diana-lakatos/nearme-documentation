@@ -14,7 +14,8 @@ class @CategoriesController
     category_id = tree_container.attr('data-category-id')
     category_tree = tree_container.find('.category_tree')
     if category_tree.length > 0
-      selected_categories = tree_container.find('.category_ids').eq(0).attr('data-value').split(',')
+      selected_category_ids = tree_container.find('.category_ids:not([data-value=""])').eq(0).attr('data-value')
+      selected_categories = if selected_category_ids == undefined then [] else selected_category_ids.split(',')
       $.ajax
         url: Routes.tree_dashboard_api_category_path(category_id)
         data:

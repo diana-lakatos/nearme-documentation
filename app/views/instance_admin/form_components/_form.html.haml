@@ -1,4 +1,4 @@
-= simple_form_for [:instance_admin, @controller_scope, @form_componentable, resource] do |f|
+= simple_form_for [:instance_admin, @controller_scope, @form_componentable, resource], html: { id: 'form-component'} do |f|
   .content-container
     %h4 Basic Configuration
     .row
@@ -14,9 +14,9 @@
         = render partial: "shared/custom_fields", locals: { f: f, form_componentable: @form_componentable }
 
   = content_for :header_buttons do
-    = f.button :submit, 'Save', class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
+    = f.button :submit, 'Save', class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => '#form-component' }
 
-- collection_for_form_components = PlatformContext.current.instance.decorate.collection_for_form_components_by_type(@form_type, @form_componentable.class.name)
+- collection_for_form_components = current_instance.decorate.collection_for_form_components_by_type(@form_type, @form_componentable)
 - if collection_for_form_components.length > 0
   .content-container
     %h4

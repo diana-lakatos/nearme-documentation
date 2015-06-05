@@ -5,13 +5,9 @@ class InstanceAdmin::Manage::ServiceTypes::FormComponentsController < InstanceAd
   def create_as_copy
     transactable_type_id = params[:copy_template][:form_componentable_id]
     form_type = params[:copy_template][:form_type]
-
-    transactable_type = TransactableType.where(:instance_id => PlatformContext.current.instance, :id => transactable_type_id).first
-
-    transactable_type.form_components.where(:form_type => form_type).each do |form_component|
+    TransactableType.find(transactable_type_id).form_components.where(form_type: form_type).each do |form_component|
       @form_componentable.form_components << form_component.dup
     end
-
     redirect_to redirect_path
   end
 
