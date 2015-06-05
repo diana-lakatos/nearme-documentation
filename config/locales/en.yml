@@ -668,6 +668,12 @@ en:
     list_your_first: "List Your First %{name}"
     list_your: "List your %{name}"
 
+  support:
+    dashboard:
+      support: "Support"
+      tickets: "Tickets"
+      view_all_tickets: "View all tickets"
+      open_a_ticket: "Open a Ticket"
   dashboard:
     nav:
       orders: 'My Orders'
