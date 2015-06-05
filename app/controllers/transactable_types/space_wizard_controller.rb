@@ -28,7 +28,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
 
   def submit_listing
     @user.phone_required = true
-    params[:user][:companies_attributes]["0"][:name] = current_user.name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
+    params[:user][:companies_attributes]["0"][:name] = current_user.first_name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
     @user.assign_attributes(wizard_params)
     @user.companies.first.try(:locations).try(:first).try {|l| l.name_and_description_required = true}
