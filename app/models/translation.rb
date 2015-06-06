@@ -18,6 +18,10 @@ class Translation < ActiveRecord::Base
     where('key LIKE ? AND locale = ?', "#{CUSTOM_PREFIX}.%", 'en')
   end
 
+  def self.default_and_custom_translations_for_instance(instance_id = nil)
+    where("locale = ? AND ((instance_id IS NULL) OR (instance_id = ? AND key LIKE ?)) ", 'en', instance_id, "#{CUSTOM_PREFIX}.%")
+  end
+
   def prepend_custom_label
     self.key = "#{CUSTOM_PREFIX}.#{key.downcase}"
   end
