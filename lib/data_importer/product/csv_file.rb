@@ -6,8 +6,7 @@ class DataImporter::Product::CsvFile
 
   def initialize(data_upload)
     @data_upload = data_upload
-    data = open(data_upload.csv_file.proper_file_path).read
-    data.encode!('UTF-8', 'UTF-8', invalid: :replace, replace: '')
+    data = open(data_upload.csv_file.proper_file_path).read.encode('UTF-8')
     @csv_handle = CSV.new(data, headers: true, header_converters: :downcase, encoding: 'utf-8')
     @importable = data_upload.importable
   end
