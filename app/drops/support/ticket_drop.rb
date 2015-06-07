@@ -45,6 +45,10 @@ class Support::TicketDrop < BaseDrop
   end
 
   def messages
-    ticket.messages.tap(&:shift)
+    if ticket.messages.length > 0
+      ticket.messages[1..-1]
+    else
+      []
+    end
   end
 end
