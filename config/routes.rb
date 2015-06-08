@@ -458,6 +458,7 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
+  resources :reviews, only: [:index]
   resources :locations, :only => [] do
     member do
       get "(:listing_id)", :to => "locations#show", :as => ''
@@ -555,7 +556,7 @@ DesksnearMe::Application.routes.draw do
 
   namespace :dashboard do
     namespace :api do
-      resources :categories do 
+      resources :categories do
         member do
           get :tree
         end

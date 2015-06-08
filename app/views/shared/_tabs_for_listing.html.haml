@@ -1,46 +1,24 @@
 .container-fluid
-  .tab-content-container
-    %ul.nav.nav-tabs.page-tabs{role: 'tablist'}
+  .tab-content-container#navigation-tabs
+    %ul.nav.nav-tabs.page-tabs{role: 'tablist', :'data-tab-header' => true}
       %li{ class: "#{ 'active' if !param_reviews_page_present? }" }
         %a{'data-toggle' => 'tab', href: '#location-details', role: 'tab'}
           = t 'buy_sell_market.products.labels.item_details'
-      - if @listing.has_reviews?
-        %li{ class: "#{ 'active' if param_reviews_page_present? }" }
-          %a{'data-toggle' => 'tab', href: '#listing-reviews', role: 'tab'}
-            #{t('buy_sell_market.products.labels.reviews')}
-            = "(#{@listing.reviews.count})"
-    .tab-content
-      %article#location-details.location.listing.tab-pane{ class: "#{ 'active' if !param_reviews_page_present? }" }
+    .tab-content{:'data-tab-content' => true}
+      %article#location-details.location.listing.tab-pane.active
         = render description_partial
 
-      - if @listing.has_reviews?
-        %article#listing-reviews.tab-pane{ class: "#{ 'active' if param_reviews_page_present? }" }
-          .rating-averages
-            .row-fluid.reviews-summary.first-rating
-              .span3
-                %p= t 'buy_sell_market.products.labels.summary'
-              .span9
-                .rating
-                  = render partial: 'buy_sell_market/products/stars', locals: { stars: @listing.try(:average_rating).try(:round) }
-            - if @rating_questions.present?
-              .row-fluid.row-rating-questions
-                - @rating_questions.each do |rating_question|
-                  .span3
-                    %p= rating_question.text
-                  .span3
-                    .rating
-                      = render partial: 'buy_sell_market/products/stars', locals: { stars:  (@listing.question_average_rating[rating_question.id] || 0).round }
-                  .clear-row
-          -  @reviews.each do |review|
-            .review
-              .row-fluid
-                .span2
-                  = image_tag review.user.avatar_url
-                  %p= review.user.first_name
-                .span10
-                  .rating
-                    = render partial: 'buy_sell_market/products/stars', locals: { stars: review.rating }
-                    %p.review-date= I18n.l(review.created_at, format: :month_year)
-                  %p
-                    = review.comment
-          = will_paginate_styled @reviews, param_name: 'reviews_page'
+
+- content_for :script do
+  :javascript
+    new Reviews.Controller(
+    $('#navigation-tabs'),
+    {
+      path: "#{reviews_path}",
+      reviewables: {
+        product: { id: #{@listing.id}, type: 'Transactable', subject: "#{@listing.transactable_type.bookable_noun}" },
+        seller: { id: #{@listing.creator_id} , type: 'User', subject: "#{@listing.transactable_type.lessor}" }
+      }
+    }
+    )
+
