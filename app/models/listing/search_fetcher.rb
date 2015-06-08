@@ -54,7 +54,7 @@ class Listing::SearchFetcher
     @listings_scope = @listings_scope.where('transactables.fixed_price_cents >= ? AND transactables.fixed_price_cents <= ?', @filters[:price][:min].to_i * 100, @filters[:price][:max].to_i * 100) if @filters[:price] && !@filters[:price][:max].to_i.zero?
 
     # Date pickers
-    if availability_filter?
+    if availability_filter? && @filters[:date_range].first && @filters[:date_range].last
       if relative_availability?
         @listings_scope = @listings_scope.not_booked_relative(@filters[:date_range].first, @filters[:date_range].last)
         @listings_scope = @listings_scope.only_opened_on_at_least_one_of(date_range_to_days)
