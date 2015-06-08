@@ -21,7 +21,7 @@ class ReservationIcsBuilder
       @reservation.periods.each do |period|
         cal.event do |event|
           event.description = @reservation.listing.description || ''
-          event.summary = @reservation.listing.name rescue ''
+          event.summary = @reservation.listing.name || ''
           event.uid = "#{@reservation.id}_#{period.date.to_s}"
           hour = period.start_minute/60.floor
           minute = period.start_minute - (hour * 60)
