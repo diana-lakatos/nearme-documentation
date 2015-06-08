@@ -48,7 +48,7 @@
         $('article#space'),
         {
           bookings: {
-            listings: #{raw location_listings_json},
+            listings: #{raw listing_json(@listing)},
 
             // Have we returned from setting up a session. If there are bookings, the JS controller
             // will trigger showing the booking confirmation modal.

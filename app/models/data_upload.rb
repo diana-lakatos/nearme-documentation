@@ -15,7 +15,7 @@ class DataUpload < ActiveRecord::Base
   validates :csv_file, :presence => true, :file_size => { :maximum => 50.megabytes.to_i }
 
   store :options, accessors: %i(send_invitational_email sync_mode enable_rfq default_shipping_category_id), coder: Hash
-  scope :for_importable, -> (importable) { where(importable: importable) }
+  scope :for_importable, -> (importable) { where(importable_type: importable.class.name, importable_id: importable.id) }
 
   state_machine :state, initial: :queued do
 

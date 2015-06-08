@@ -34,13 +34,13 @@ class InstanceAdmin::Theme::FileUploadsController < InstanceAdmin::Theme::BaseCo
 
   def destroy
     @file = Ckeditor::Asset.where(assetable: PlatformContext.current.instance, id: params[:id]).first
-    @file.destroy
+    @file.try(:destroy)
 
     respond_to do |format|
         format.js {
           render :text => %Q"
-              jQuery('#picture_#{@file.id}').remove();
-              jQuery('#attachment_file_#{@file.id}').remove();
+              jQuery('#picture_#{@file.try(:id)}').remove();
+              jQuery('#attachment_file_#{@file.try(:id)}').remove();
             "
         }
     end

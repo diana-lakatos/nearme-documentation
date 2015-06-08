@@ -130,7 +130,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   end
 
   def find_transactable_type
-    @transactable_type = TransactableType.find(params[:transactable_type_id])
+    @transactable_type = ServiceType.find(params[:transactable_type_id])
   end
 
   def transactable_params

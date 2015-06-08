@@ -2,11 +2,7 @@ class FormAttributes
 
   def user
     [
-      :phone, :job_title, :avatar,
-      :biography, :facebook_url, :twitter_url,
-      :linkedin_url, :instagram_url, :skills_and_interests, :name,
-      :first_name, :middle_name, :last_name, :gender,
-      :drivers_licence_number, :gov_number, :approval_requests
+      :email, :phone, :avatar, :name, :first_name, :middle_name, :last_name, :approval_requests
     ] + User.public_custom_attributes_names(InstanceProfileType.first.try(:id)) +
     Category.users.roots.map { |k| ('Category - ' + k.name).to_sym }.flatten
   end

@@ -21,7 +21,7 @@ class ReservationIcsBuilder
       @reservation.periods.each do |period|
         cal.event do |event|
           event.description = @reservation.listing.description || ''
-          event.summary = @reservation.listing.name rescue ''
+          event.summary = @reservation.listing.name || ''
           event.uid = "#{@reservation.id}_#{period.date.to_s}"
           hour = period.start_minute/60.floor
           minute = period.start_minute - (hour * 60)
@@ -31,7 +31,7 @@ class ReservationIcsBuilder
           event.dtend = period.date.strftime("%Y%m%dT") + "#{"%02d" % hour}#{"%02d" % minute}00"
           event.created = @reservation.created_at
           event.last_modified = @reservation.updated_at
-          event.location = @reservation.listing.address
+          event.location = @reservation.listing.address || ''
           event.url = Rails.application.routes.url_helpers.dashboard_user_reservations_url(id: @reservation.id, host: PlatformContext.current.instance.default_domain.name)
         end
       end

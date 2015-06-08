@@ -14,7 +14,7 @@
 - if instance.location_types.count > 1
   = f.association :location_type, :collection => instance.location_types if only_inputs.empty? || only_inputs.include?(:location_type)
 - elsif
-  = f.hidden_field :location_type_id, value: instance.location_types.first.id
+  = f.hidden_field :location_type_id, value: instance.location_types.first.try(:id)
 = f.input :email if only_inputs.empty? || only_inputs.include?(:email)
 = f.association :administrator, :collection => f.object.company_users.includes(:user).order('users.name').map(&:user), :label_method => 'name', :value_method => 'id', :input_html => { :class => 'custom-select' }, :include_blank => t('simple_form.prompts.location.administrator') if only_inputs.empty? || only_inputs.include?(:administrator)
 = f.input :special_notes, :label => t('simple_form.labels.location.special_notes', lessee: platform_context.lessee.capitalize), :placeholder => t('simple_form.placeholders.location.special_notes', lessee: platform_context.lessee, lessees: platform_context.lessee.pluralize) if only_inputs.empty? || only_inputs.include?(:special_notes)

@@ -6,7 +6,7 @@ config = {
 }
 
 if File.exists?("config/elasticsearch.yml")
-  elastic_config = YAML.load_file("config/elasticsearch.yml").symbolize_keys
+  elastic_config = YAML.load_file("config/elasticsearch.yml").deep_symbolize_keys
   config.merge!(elastic_config[Rails.env.to_sym])
 end
 

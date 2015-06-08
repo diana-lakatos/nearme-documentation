@@ -14,6 +14,8 @@ class Dashboard::Company::AnalyticsController < Dashboard::Company::BaseControll
       prepare_data_for_analytics_orders
     when 'product_views'
       prepare_data_for_analytics_product_views
+    else
+      raise NotImplementedError
     end
   end
 

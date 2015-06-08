@@ -25,8 +25,10 @@ class InstanceAdmin::Settings::LocalesController < InstanceAdmin::Settings::Base
 
   def edit_keys
     @translations = @instance.translations.where(locale: @locale.code)
-    @default_translations = Translation.defaults_for('en').order('key ASC')
-    @custom_translations = @instance.translations.custom_defaults
+    @default_and_custom_translations = LocalesService.new(platform_context, q: params[:q])
+                                                     .get_locales
+                                                     .order('key ASC')
+                                                     .paginate(:page => params[:page], :per_page => 50)
   end
 
   def update

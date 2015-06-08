@@ -48,6 +48,10 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def name=(name)
+    super(name.try(:strip))
+  end
+
   def encoded_permalink
     permalink.gsub("/", "%2F")
   end

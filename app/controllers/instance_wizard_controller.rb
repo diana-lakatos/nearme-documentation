@@ -36,8 +36,10 @@ class InstanceWizardController < ActionController::Base
     begin
       Instance.transaction do
         @instance.save!
-        @user.instance = @instance
+        @instance.domains.first.update_column(:state, 'elb_secured')
+        @instance.domains.first.update_column(:secured, true)
         @user.save!
+        @user.update_column(:instance_id, @instance.id)
       end
     rescue
       flash.now[:error] = @user.errors.full_messages.to_sentence +
@@ -48,7 +50,7 @@ class InstanceWizardController < ActionController::Base
     @instance_creator.update_attribute(:created_instance, true)
     @instance.set_context!
 
-    @instance.instance_profile_types.create!(name: 'User Custom Attributes')
+    ipt = @instance.instance_profile_types.create!(name: 'User Custom Attributes')
     if params[:marketplace_type] == "Buy/Sell"
       tp = @instance.product_types.create(name: @instance.bookable_noun)
       @instance.update_attribute :default_search_view, 'products'
@@ -70,7 +72,6 @@ class InstanceWizardController < ActionController::Base
       Utils::FormComponentsCreator.new(tp, 'transactable').create!
     end
 
-    ipt = @instance.instance_profile_types.create!(name: 'User Custom Attributes')
     Utils::FormComponentsCreator.new(ipt).create!
 
     tp.create_rating_systems

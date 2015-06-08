@@ -6,9 +6,9 @@ Spree::Product.class_eval do
   attr_accessor :validate_exisiting
 
   belongs_to :instance
-  belongs_to :user
-  belongs_to :company
-  belongs_to :administrator, class_name: 'User'
+  belongs_to :user, -> { with_deleted }
+  belongs_to :company, -> { with_deleted }
+  belongs_to :administrator, -> { with_deleted }, class_name: 'User'
   belongs_to :product_type, class_name: "Spree::ProductType", foreign_key: :product_type_id
 
   has_many :categories_categorizables, as: :categorizable

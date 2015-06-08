@@ -6,14 +6,13 @@ class DataImporter::Product::CsvFile
 
   def initialize(data_upload)
     @data_upload = data_upload
-    data = open(data_upload.csv_file.proper_file_path).read
-    data.encode!('UTF-8', 'UTF-8', invalid: :replace, replace: '')
+    data = open(data_upload.csv_file.proper_file_path).read.encode('UTF-8', undef: :replace, replace: '')
     @csv_handle = CSV.new(data, headers: true, header_converters: :downcase, encoding: 'utf-8')
     @importable = data_upload.importable
   end
 
   def process_next_row
-    current_row = @csv_handle.shift rescue nil
+    current_row = @csv_handle.shift
     MODELS.inject({}) { |hsh, model| hsh[model] = attributes_for(model, current_row); hsh } if current_row
   end
 

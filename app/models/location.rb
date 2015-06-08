@@ -87,7 +87,7 @@ class Location < ActiveRecord::Base
   end
 
   def location_type_required
-    !(transactable_type && transactable_type.skip_location)
+    !transactable_type.try(:skip_location) || LocationType.count == 0
   end
 
   def minimum_booking_minutes
@@ -96,7 +96,7 @@ class Location < ActiveRecord::Base
 
   def assign_default_availability_rules
     if availability_rules.reject(&:marked_for_destruction?).empty?
-      AvailabilityRule.default_template.apply(self)
+      AvailabilityRule.default_template.try(:apply, self)
     end
   end
 

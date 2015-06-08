@@ -2,6 +2,8 @@ module InstanceType::Searcher::GeolocationSearcher
   include InstanceType::Searcher
   attr_reader :filterable_location_types, :filterable_custom_attributes, :filterable_pricing, :search
 
+  SEARCHER_DEFAULT_PRICING_TYPES = %w(daily weekly monthly hourly)
+
   def to_event_params
     { search_query: query, result_count: result_count }.merge(filters)
   end
@@ -73,7 +75,7 @@ module InstanceType::Searcher::GeolocationSearcher
 
   def set_options_for_filters
     @filterable_location_types = LocationType.all
-    @filterable_pricing = [["daily", "Daily"], ["weekly", "Weekly"], ["monthly", "Monthly"], ['hourly', "Hourly"]]
+    @filterable_pricing = SEARCHER_DEFAULT_PRICING_TYPES.map{|price| [price, price.capitalize] if @transactable_type.send("action_#{price}_booking")}.compact
     @filterable_custom_attributes = @transactable_type.custom_attributes.searchable
   end
 

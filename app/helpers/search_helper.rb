@@ -64,7 +64,7 @@ module SearchHelper
   end
 
   def meta_title_for_search(platform_context, search, transactable_type_name = '')
-    location_types_names = search.lntypes.blank? ? [] : search.lntypes.pluck(:name)
+    location_types_names = search.try(:lntypes).blank? ? [] : search.lntypes.pluck(:name)
 
     title = location_types_names.empty? ? (transactable_type_name.try(:pluralize).presence || platform_context.bookable_noun.pluralize) : ''
 

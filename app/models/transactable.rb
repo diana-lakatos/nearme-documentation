@@ -70,7 +70,6 @@ class Transactable < ActiveRecord::Base
   scope :for_groupable_transactable_types, -> { joins(:transactable_type).where('transactable_types.groupable_with_others = ?', true) }
   scope :filtered_by_price_types, -> price_types { where([(price_types - ['free']).map { |pt| "#{pt}_price_cents IS NOT NULL" }.join(' OR '),
                                                           ("action_free_booking=true" if price_types.include?('free'))].reject(&:blank?).join(' OR ')) }
-  scope :where_attribute_has_value, -> (attr, value) { where("properties @> '#{attr}=>#{value}'") }
   scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((transactables.properties->?), ',') && ARRAY[?]", property, values) unless values.blank? }
 
   scope :not_booked_relative, -> (start_date, end_date) {

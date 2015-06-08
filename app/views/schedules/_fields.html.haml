@@ -10,7 +10,7 @@
         = f.time_select :sr_from_hour, { ampm: true}, { class: 'selectpicker' }
         = t('schedule.and')
         = f.time_select :sr_to_hour, { ampm: true}, { class: 'selectpicker' }
-    = f.input :sr_days_of_week, collection: (Date::DAYNAMES.each_with_index.map { |day, index| [day, index.to_s] }), as: :check_boxes, label: I18n.t('schedule.sr_days_of_week')
+    = f.input :sr_days_of_week, collection: (Date::DAYNAMES.each_with_index.map { |day, index| [day, f.object.persisted? ? index.to_s : index] }), as: :check_boxes, label: I18n.t('schedule.sr_days_of_week')
     .hidden
       %input{type: 'radio', name: "#{f.object_name}[use_simple_schedule]", value: "1", checked: f.object.use_simple_schedule, 'data-simple-schedule-radio' => true}
     = link_to '#', {:'data-toggler' => true} do
