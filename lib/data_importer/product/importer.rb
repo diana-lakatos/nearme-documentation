@@ -51,7 +51,7 @@ class DataImporter::Product::Importer
     @product_csv.process_next_row
   rescue NoMethodError
     # 1 for headers and 1 for current row
-    @errors << "Error parsing CSV file at line #{processed_rows + 2}"
+    @errors << "Error parsing CSV file at line #{@processed_rows + 2}"
     nil
   end
 
