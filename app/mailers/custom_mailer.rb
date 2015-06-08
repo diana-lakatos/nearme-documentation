@@ -14,6 +14,9 @@ class CustomMailer < InstanceMailer
       nil
     else
       WorkflowAlertLogger.new(@workflow_alert).log!
+      if(locale = recipient_locale).present?
+        I18n.locale = locale
+      end
       mail(options)
     end
   end
@@ -40,6 +43,17 @@ class CustomMailer < InstanceMailer
         nil
       end
     end.compact
+  end
+
+  def recipient_locale
+    case @workflow_alert.recipient_type
+    when 'lister'
+      @step.lister
+    when 'enquirer'
+      @step.enquirer
+    else
+      InstanceAdminRole.where(name: @workflow_alert.recipient_type).try(:first).try(:instance_admins).try(:first).try(:user)
+    end.try(:language)
   end
 
   def options
