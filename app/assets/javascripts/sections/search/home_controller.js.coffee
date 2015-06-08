@@ -6,6 +6,8 @@ class Search.HomeController extends Search.Controller
     @initializeCategorySelect()
 
     super(@form)
+    if @queryField.val() == '' && @autocompleteEnabled()
+      _.defer(=>@geolocateMe())
 
   initializeSearchForm: ->
 
