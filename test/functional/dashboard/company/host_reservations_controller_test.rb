@@ -97,6 +97,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       @tracker.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).host
       end
+      Reservation.any_instance.expects(:schedule_void_payment).once
       put :reject, { id: @reservation.id }
       assert_redirected_to dashboard_company_host_reservations_path
     end
@@ -139,6 +140,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
 
     context 'PUT #reject' do
       should 'set rejection reason' do
+        Reservation.any_instance.expects(:schedule_void_payment).once
         put :reject, { id: @reservation.id, reservation: { rejection_reason: 'Dont like him' } }
         assert_equal @reservation.reload.rejection_reason, 'Dont like him'
       end
@@ -156,6 +158,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       end
 
       should 'store new version after reject' do
+        Reservation.any_instance.expects(:schedule_void_payment).once
         assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
           with_versioning do
             put :reject, { id: @reservation.id, reservation: { rejection_reason: 'Dont like him' } }
