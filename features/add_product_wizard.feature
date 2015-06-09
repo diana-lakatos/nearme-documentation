@@ -5,10 +5,11 @@ Feature: A user can add a product
   I want to be able to step through an 'Add Product' wizard
   Background:
     Given a wizard_product_type exists with name: "Sock"
-    Given current instance with integrated shipping
-    Given a state exists
-    Given a country exists
-    Given I go to the home page
+    And a form component product wizard exists with form_componentable: the wizard_product_type
+    And current instance with integrated shipping
+    And a state exists
+    And a country exists
+    And I go to the home page
     And I follow "List Your" bookable noun
     And I sign up as a user in the modal
     Then I should see "List a New" bookable noun

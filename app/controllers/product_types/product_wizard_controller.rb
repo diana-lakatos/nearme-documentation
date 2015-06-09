@@ -42,7 +42,7 @@ class ProductTypes::ProductWizardController < ApplicationController
   end
 
   def set_form_components
-    @form_components = @product_type.form_components.where(form_type: FormComponent::PRODUCT_ATTRIBUTES).rank(:rank)
+    @form_components = @product_type.form_components.where(form_type: FormComponent::SPACE_WIZARD).rank(:rank)
   end
 
 
