@@ -117,7 +117,7 @@ class Job
       priority:    get_priority,
       queue:       get_queue,
       instance_id: PlatformContext.current.try(:instance).try(:annotated_id),
-      platform_context_detail: PlatformContext.current.platform_context_detail,
+      platform_context_detail: PlatformContext.current.try(:platform_context_detail),
       i18n_locale: I18n.locale
     }
     params.merge!(run_at: run_at) if run_at.present?
