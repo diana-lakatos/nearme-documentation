@@ -182,6 +182,10 @@ class PaymentGateway < ActiveRecord::Base
     self.supported_currencies.include?(currency)
   end
 
+  def payout_supports_country?(country)
+    self.class.supported_countries.include?(country)
+  end
+
   def support_recurring_payment?
     false
   end

@@ -119,7 +119,7 @@ class Reservation < ActiveRecord::Base
     after_transition unconfirmed: :confirmed, do: :schedule_payment_capture, if: lambda { |r| r.recurring_booking_id.present? && r.billing_authorization.nil? }
     after_transition unconfirmed: :confirmed, do: :set_confirmed_at
     after_transition confirmed: [:cancelled_by_guest, :cancelled_by_host], do: [:schedule_refund, :set_cancelled_at]
-    after_transition unconfirmed: [:cancelled_by_guest, :expired], do: [:schedule_void_payment], if: lambda { |r| r.billing_authorization.present? }
+    after_transition unconfirmed: [:cancelled_by_guest, :expired, :rejected], do: [:schedule_void_payment], if: lambda { |r| r.billing_authorization.present? }
 
     event :confirm do
       transition unconfirmed: :confirmed

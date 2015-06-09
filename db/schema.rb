@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150601072718) do
+ActiveRecord::Schema.define(version: 20150603111236) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -520,8 +520,8 @@ ActiveRecord::Schema.define(version: 20150601072718) do
   add_index "data_uploads", ["target_id", "target_type"], name: "index_data_uploads_on_target_id_and_target_type", using: :btree
 
   create_table "delayed_jobs", force: true do |t|
-    t.integer  "priority",    default: 20
-    t.integer  "attempts",    default: 0
+    t.integer  "priority",                               default: 20
+    t.integer  "attempts",                               default: 0
     t.text     "handler"
     t.text     "last_error"
     t.datetime "run_at"
@@ -529,13 +529,13 @@ ActiveRecord::Schema.define(version: 20150601072718) do
     t.datetime "failed_at"
     t.string   "locked_by"
     t.string   "queue"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
     t.string   "instance_id"
     t.string   "platform_context_detail_type"
     t.integer  "platform_context_detail_id"
     t.string   "i18n_locale",                  limit: 2
-   end
+  end
 
   add_index "delayed_jobs", ["platform_context_detail_id", "platform_context_detail_type"], name: "index_delayed_jobs_on_platform_context_detail", using: :btree
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
@@ -734,13 +734,13 @@ ActiveRecord::Schema.define(version: 20150601072718) do
     t.integer  "client_id"
     t.string   "client_type"
     t.integer  "instance_id"
+    t.string   "encrypted_balanced_user_id"
+    t.string   "bank_account_last_four_digits"
     t.datetime "deleted_at"
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
     t.string   "gateway_class"
     t.text     "encrypted_response"
-    t.string   "bank_account_last_four_digits"
-    t.string   "encrypted_balanced_user_id"
     t.integer  "payment_gateway_id"
   end
 

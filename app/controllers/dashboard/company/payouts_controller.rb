@@ -8,7 +8,12 @@ class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
     params[:merchant_account] ||= {}
     @company.assign_attributes(company_params)
     @merchant_account.try(:update_data, params[:merchant_account][:data])
-    if @company.save && (@merchant_account.nil? || @merchant_account.save)
+    res = if @merchant_account.present? && params[:merchant_account][:data].present?
+      @company.save(validate: false) && @merchant_account.save
+    else
+      @company.save
+    end
+    if res
       flash[:success] = t('flash_messages.manage.payouts.updated')
       redirect_to action: :edit
     else
@@ -23,8 +28,8 @@ class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
   end
 
   def build_merchant_account
-    @payment_gateway = platform_context.instance.payment_gateway(@company.iso_country_code, @company.locations.first.try(:listings).try(:first).try(:currency).presence || 'USD')
-    if @payment_gateway.try(:supports_payout?)
+    @payment_gateway = @company.payout_payment_gateway
+    if @payment_gateway.present?
       @merchant_account_form_path = "dashboard/company/merchant_accounts/#{@payment_gateway.type.gsub('PaymentGateway', '').sub('::', '').underscore.tr(' ', '_')}"
       @merchant_account = @payment_gateway.merchant_accounts.where(merchantable_id: @company.id, merchantable_type: 'Company').first
       if @merchant_account.nil?

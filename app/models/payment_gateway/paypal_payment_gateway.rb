@@ -29,6 +29,10 @@ class PaymentGateway::PaypalPaymentGateway < PaymentGateway
     @payout_gateway
   end
 
+  def payout_supports_country?(country)
+    true
+  end
+
   def process_payout(merchant_account, amount)
     @pay = payout_gateway.build_pay({
       :actionType => "PAY",
