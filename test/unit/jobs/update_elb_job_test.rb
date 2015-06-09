@@ -21,16 +21,14 @@ class UpdateElbJobTest < ActiveSupport::TestCase
 
     should 'raise error when something went wrong and show error state' do
       @domain.update_column(:state, 'preparing_update')
-      error_text = 'error_text'
+      error_text = 'Exception'
       balancer = stub(:errors => error_text)
       balancer.stubs(:update_certificates!).raises(Exception)
       NearMe::Balancer.expects(:new).returns(balancer)
-      assert_raises(Exception) {
-        UpdateElbJob.perform(@domain.id, @certificate_body, @private_key, @certificate_chain)
-        @domain.reload
-        assert_equal @domain.error_message, error_text
-        assert @domain.error_update?
-      }
+      UpdateElbJob.perform(@domain.id, @certificate_body, @private_key, @certificate_chain)
+      @domain.reload
+      assert_equal @domain.error_message, error_text
+      assert @domain.error_update?
     end
   end
 end
