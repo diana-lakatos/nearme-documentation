@@ -465,6 +465,7 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
+  resources :reviews, only: [:index]
   resources :locations, :only => [] do
     member do
       get "(:listing_id)", :to => "locations#show", :as => ''

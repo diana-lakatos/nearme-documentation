@@ -69,6 +69,10 @@ class @CategoriesController
                 return
             .bind 'after_open.jstree', (e, data) ->
               that.bindClickEvent(category_tree)
+              that.setChecboxesValues(tree_container)
+            .bind 'after_close.jstree', (e, data) ->
+              that.setChecboxesValues(tree_container)
+
             .bind 'check_node.jstree', (e, data) ->
               data.inst.open_all(data.rslt.obj, true)
 
