@@ -9,16 +9,26 @@ class CustomFieldsBuilder
   def all_valid_object_field_pairs
     case @form_type
     when FormComponent::SPACE_WIZARD
-      to_object_field_notation(user_fields, 'user') +
-        to_object_field_notation(company_fields, 'company') +
-        to_object_field_notation(location_fields, 'location') +
-        to_object_field_notation(transactable_fields, 'transactable')
+      if @form_componentable.instance_of?(ServiceType)
+        to_object_field_notation(user_fields, 'user') +
+          to_object_field_notation(company_fields, 'company') +
+          to_object_field_notation(location_fields, 'location') +
+          to_object_field_notation(transactable_fields, 'transactable')
+      elsif @form_componentable.instance_of?(Spree::ProductType)
+        to_object_field_notation(user_fields, 'user') +
+          to_object_field_notation(company_fields, 'company') +
+          to_object_field_notation(product_fields, 'product')
+      else
+        raise NotImplementedError
+      end
     when FormComponent::PRODUCT_ATTRIBUTES
       to_object_field_notation(product_fields, 'product')
     when FormComponent::TRANSACTABLE_ATTRIBUTES
       to_object_field_notation(dashboard_transactable_fields, 'transactable')
     when FormComponent::INSTANCE_PROFILE_TYPES
       to_object_field_notation(user_fields, 'user')
+    else
+      raise NotImplementedError
     end
   end
 
@@ -56,8 +66,10 @@ class CustomFieldsBuilder
         location_fields
       when 'transactable'
         transactable_fields
+      when 'product'
+        product_fields
       else
-        raise NotImplementedError.new("Unknown object for which field #{field} was defined: #{object}. Valid objects: location, address, transactable, photo")
+        raise NotImplementedError.new("Unknown object for which field #{field} was defined: #{object}. Valid objects: location, address, transactable, product")
       end
     when FormComponent::PRODUCT_ATTRIBUTES
       case object

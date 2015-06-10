@@ -32,8 +32,10 @@ class FormComponent < ActiveRecord::Base
       [INSTANCE_PROFILE_TYPES]
     elsif form_componentable.instance_of?(ServiceType)
       [SPACE_WIZARD, TRANSACTABLE_ATTRIBUTES]
+    elsif form_componentable.instance_of?(Spree::ProductType)
+      [SPACE_WIZARD, PRODUCT_ATTRIBUTES]
     else
-      [PRODUCT_ATTRIBUTES]
+      raise NotImplementedError
     end
   end
 end
