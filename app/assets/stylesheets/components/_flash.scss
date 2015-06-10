@@ -46,21 +46,6 @@
     }
   }
 
-  &.success, &.notice {
-    background-color: $theme_green;
-  }
-
-  &.error {
-    background-color: $theme_red;
-  }
-
-  &.deleted {
-    background-color: $theme_red;
-  }
-
-  &.warning {
-    background-color: $theme_orange;
-  }
 }
 
 .modal-content{
