@@ -16,13 +16,12 @@
     border: none !important;
     @include border-radius($border-radius-default);
     background: url('https://s3.amazonaws.com/desksnearme.assets/img/ui/knob-green.png') center center no-repeat;
-    @include transition(all 0s false false);    
+    @include transition(all 0s false false);
   }
 
   .ui-slider-range {
     position: absolute;
     margin-top: -1px;
     height: 12px;
-    background: darken( $theme_green, 15%);
   }
 }
