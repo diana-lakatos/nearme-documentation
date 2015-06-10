@@ -199,7 +199,7 @@ class Theme < ActiveRecord::Base
     self.remove_compiled_stylesheet = true
     self.compiled_dashboard_stylesheet = true
     self.save(validate: true)
-    self.udpate_columns(theme_digest: nil, theme_dashboard_digest: nil)
+    self.update_attributes(theme_digest: nil, theme_dashboard_digest: nil)
   end
 
   private
