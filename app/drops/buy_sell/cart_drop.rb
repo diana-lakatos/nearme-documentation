@@ -3,6 +3,7 @@ class BuySell::CartDrop < BaseDrop
     @user = user
   end
 
+  # orders for this user
   def orders
     @user.cart_orders
   end

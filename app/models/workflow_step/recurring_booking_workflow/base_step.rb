@@ -20,6 +20,16 @@ class WorkflowStep::RecurringBookingWorkflow::BaseStep < WorkflowStep::BaseStep
     @recurring_booking.owner
   end
 
+  # recurring_booking:
+  #   RecurringBooking object
+  # reservation:
+  #   Reservation object
+  # user:
+  #   listing User object
+  # host:
+  #   enquiring User object
+  # listing:
+  #   Transactable object
   def data
     { recurring_booking: @recurring_booking, reservation: @recurring_booking.reservations.first, user: lister, host: enquirer, listing: @recurring_booking.listing }
   end

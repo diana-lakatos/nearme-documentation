@@ -64,32 +64,102 @@ class InstanceView < ActiveRecord::Base
 
   DEFAULT_EMAIL_TEMPLATE_LAYOUTS_PATHS = ['layouts/mailer'].freeze
 
-  DEFAULT_LIQUID_VIEWS_PATHS = [
-    'locations/booking_module_listing_description',
-    'locations/location_description',
-    'locations/listings/listing_description',
-    'locations/booking_module_call_to_actions',
-    'locations/booking_module_listing_description_below_dates',
-    'locations/booking_module_listing_description_below_call_to_action',
-    'locations/booking_module_listing_description_above_call_to_action',
-    'registrations/profile/user_badge',
-    'locations/google_map',
-    'locations/administrator',
-    'buy_sell_market/products/extra_properties',
-    'search/mixed/location',
-    'search/mixed/listing',
-    'search/mixed/individual_listing',
-    'search/list/listing',
-    'search/products/product',
-    'search/products_table/head',
-    'search/products_table/product',
-    'reservation_mailer/social_links',
-    'support_mailer/rfq_review',
-    'support_mailer/rfq_message_history',
-    'support_mailer/new_message_separator',
-    'support_mailer/rfq_host_review',
-    'reservation_mailer/listings_in_near'
-  ].freeze
+  # Contains documentation to be parsed by the documentation parser
+  # Please keep it up-to-date when adding/modifying new liquid views to 
+  # this array.
+  DEFAULT_LIQUID_VIEWS_PATHS = {
+    'locations/booking_module_listing_description' => {
+      listing: 'TransactableDrop'
+    },
+    'locations/location_description' => {
+      location: 'LocationDrop'
+    },
+    'locations/listings/listing_description' => {
+      listing: 'TransactableDrop'
+    },
+    'locations/booking_module_call_to_actions' => {
+      listing: 'TransactableDrop',
+      book_hash: 'booking information array',
+      rfq_class: 'string',
+      rfq_label: 'string'
+    },
+    'locations/booking_module_listing_description_below_dates' => {
+      listing: 'TransactableDrop'
+    },
+    'locations/booking_module_listing_description_below_call_to_action' => {
+      listing: 'TransactableDrop'
+    },
+    'locations/booking_module_listing_description_above_call_to_action' => {
+      listing: 'TransactableDrop'
+    },
+    'registrations/profile/user_badge' => {
+      platform_context: 'PlatformContextDrop',
+      user: 'UserDrop',
+      is_current_user: 'boolean; true if logged in user is viewing user',
+      company: 'CompanyDrop'
+    },
+    'locations/google_map' => {
+      location: 'LocationDrop'
+    },
+    'locations/administrator' => {
+      administrator: 'UserDrop',
+      listing: 'TransactableDrop'
+    },
+    'buy_sell_market/products/extra_properties' => {
+      product: 'Spree::ProductDrop'
+    },
+    'search/mixed/location' => {
+      location: 'LocationDrop',
+      location_counter: 'integer, index of this location among the search results on this page',
+      transactable_type: 'TransactableTypeDrop',
+      current_page_offset: 'integer, index of the first location on this page among the search results',
+      lgpricing_filters: 'array of pricing type filters (e.g. daily, weekly, hourly etc.)'
+    },
+    'search/mixed/listing' => {
+      listing: 'TransactableDrop',
+      lgpricing_filters: 'array of pricing type filters (e.g. daily, weekly, hourly etc.)'
+    },
+    'search/mixed/individual_listing' => {
+      listing: 'TransactableDrop',
+      listing_counter: 'integer, index of this location among the search results on this page',
+      transactable_type: 'TransactableTypeDrop',
+      current_page_offset: 'integer, index of the first location on this page among the search results',
+      lgpricing_filters: 'array of pricing type filters (e.g. daily, weekly, hourly etc.)'
+    },
+    'search/list/listing' => {
+      listing: 'TransactableDrop',
+      current_user: 'UserDrop'
+    },
+    'search/products/product' => {
+      product: 'Spree::ProductDrop'
+    },
+    'search/products_table/head' => {
+    },
+    'search/products_table/product' => {
+      product: 'Spree::ProductDrop'
+    },
+    'reservation_mailer/social_links' => {
+      platform_context: 'PlatformContextDrop',
+      listing: 'TransactableDrop'
+    },
+    'support_mailer/rfq_review' => {
+      platform_context: 'PlatformContextDrop',
+      ticket: 'Support::TicketDrop'
+    },
+    'support_mailer/rfq_message_history' => {
+      ticket: 'Support::TicketDrop'
+    },
+    'support_mailer/new_message_separator' => {
+    },
+    'support_mailer/rfq_host_review' => {
+      ticket: 'Support::TicketDrop',
+      platform_context: 'PlatformContextDrop'
+    },
+    'reservation_mailer/listings_in_near' => {
+      user: 'UserDrop',
+      platform_context: 'PlatformContextDrop'
+    }
+  }.freeze
 
   scope :for_instance_type_id, ->(instance_type_id) {
     where('instance_type_id IS NULL OR instance_type_id = ?', instance_type_id)
@@ -135,7 +205,7 @@ class InstanceView < ActiveRecord::Base
   end
 
   def self.not_customized_liquid_views_paths
-    DEFAULT_LIQUID_VIEWS_PATHS - self.for_instance_id(PlatformContext.current.instance.id).liquid_views.pluck(:path)
+    DEFAULT_LIQUID_VIEWS_PATHS.keys - self.for_instance_id(PlatformContext.current.instance.id).liquid_views.pluck(:path)
   end
 
   def self.not_customized_email_templates_paths

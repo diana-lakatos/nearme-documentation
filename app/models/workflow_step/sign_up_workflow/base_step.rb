@@ -16,6 +16,8 @@ class WorkflowStep::SignUpWorkflow::BaseStep < WorkflowStep::BaseStep
     @user
   end
 
+  # user:
+  #   User object
   def data
     { user: @user }
   end

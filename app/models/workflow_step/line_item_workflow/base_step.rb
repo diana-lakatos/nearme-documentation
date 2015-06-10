@@ -15,6 +15,12 @@ class WorkflowStep::LineItemWorkflow::BaseStep < WorkflowStep::BaseStep
     @line_item.order.user
   end
 
+  # line_item:
+  #   LineItem object
+  # user:
+  #   User object
+  # host:
+  #   enquiring User object
   def data
     { line_item: @line_item, user: lister, host: enquirer }
   end
