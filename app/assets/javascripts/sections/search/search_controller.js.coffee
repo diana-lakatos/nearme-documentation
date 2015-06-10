@@ -244,7 +244,7 @@ class Search.SearchController extends Search.Controller
     categories_selects = []
     @container.find('input[name="categories_ids[]"]').each ->
       value = $(this).val()
-      if value != ''
+      if value && value != ''
         values = value.split(',')
         categories_selects = categories_selects.concat(values)
 

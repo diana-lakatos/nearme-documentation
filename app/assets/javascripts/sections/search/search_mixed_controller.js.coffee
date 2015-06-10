@@ -246,7 +246,6 @@ class Search.SearchMixedController extends Search.SearchController
     if @container.find("input[data-category-autocomplete]").length > 0
       $.each @container.find("input[data-category-autocomplete]"), (index, select) ->
         $(select).select2(
-          placeholder: "Enter a category"
           multiple: true
           initSelection: (element, callback) ->
             url = Routes.dashboard_api_category_path($(select).attr('data-category-id'))
@@ -266,10 +265,10 @@ class Search.SearchMixedController extends Search.SearchController
               results: data
 
           formatResult: (category) ->
-            category.name
+            category.translated_name
 
           formatSelection: (category) ->
-            category.name
+            category.translated_name
         ).on('change', (e) ->
           self.fieldChanged()
         ).select2('val', $(select).attr("data-selected-categories"))
