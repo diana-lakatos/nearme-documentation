@@ -2,7 +2,7 @@ class ReviewsController < ApplicationController
 
   def index
     if params[:reviewable_parent_type].blank? || params[:object].blank?
-      render :nothing
+      render nothing: true
     else
       @reviewable_parent = case params[:reviewable_parent_type]
        when 'Transactable'
