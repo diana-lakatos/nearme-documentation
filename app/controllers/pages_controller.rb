@@ -21,7 +21,7 @@ class PagesController < ApplicationController
     when "host_signup"
       "landing"
     when "show"
-      "application"
+      layout_name
     else
       false
     end

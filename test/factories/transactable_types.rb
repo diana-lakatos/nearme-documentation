@@ -96,4 +96,8 @@ FactoryGirl.define do
       end
     end
   end
+
+  factory :project_type, class: 'ProjectType' do
+    sequence(:name) { |n| "Project #{n}" }
+  end
 end

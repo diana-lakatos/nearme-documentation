@@ -1,6 +1,9 @@
 class InstanceAdmin::Settings::IntegrationsController < InstanceAdmin::Settings::BaseController
   before_filter :find_payment_gateways
 
+  def show
+  end
+
   def countries
     if params[:country].present?
       @payment_gateways = PaymentGateway.supported_at(params[:country])

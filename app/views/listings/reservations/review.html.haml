@@ -94,7 +94,7 @@
 
         - if should_display_checkout_extra_fields?(f.object.checkout_extra_fields.user, true)
           %br
-          = render 'shared/checkout_extra_fields', f: f, show_company_name: true
+          = render 'shared/checkout_extra_fields', f: f, show_company_name: @reservation.show_company_name
 
         = render 'documents', :f => f
         = render 'payments/payment_options', :f => f

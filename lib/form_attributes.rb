@@ -63,5 +63,12 @@ class FormAttributes
     Spree::Product.public_custom_attributes_names(product_type.id).map { |k| Hash === k ? k.keys : k }.flatten +
     product_type.categories.roots.map { |k| ('Category - ' + k.name).to_sym }.flatten
   end
+
+  def project(transactable_type = nil)
+    [
+      :name, :description, :topics, :photos
+    ] +
+    Project.public_custom_attributes_names(transactable_type.id).map { |k| Hash === k ? k.keys : k }.flatten
+  end
 end
 

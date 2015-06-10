@@ -1,0 +1,9 @@
+/ grid
+.grid-a-search-a
+  .wrap
+    - projects.each do |project|
+      = render 'shared/project', project: project
+
+    / more
+    %p.more-a{:'data-see-more' => true, :'data-see-more-type' => see_more_type}
+      = link_to t(:see_more), see_more_route, remote: true

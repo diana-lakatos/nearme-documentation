@@ -59,13 +59,13 @@ module DesksnearMe
 
     config.assets.precompile += [
       "vendor/jquery.backgroundSize.min.js","vendor/respond.proxy.js", "vendor/respond.min.js",
-      "admin.js", "blog.js", "blog_admin.js", "chrome_frame.js", "instance_admin.js",
+      "admin.js", "blog.js", "blog_admin.js", "chrome_frame.js", "instance_admin.js", "community.js",
       "platform_home.js", "analytics/sessioncam.js", "blog/admin/*"
     ]
     config.assets.precompile += [
       "browser_specific/ie8.css", "admin.css", "blog.css", "blog_admin.css", "errors.css",
       "instance_admin.css", "platform_home.css", "instance_admin/shipping_profiles_includes.css",
-      "dashboard.css", 'vendor/powerange.css', 'instance_wizard.css'
+      "dashboard.css", 'vendor/powerange.css', 'instance_wizard.css', "community.css"
     ]
 
     config.assets.precompile += [
@@ -138,7 +138,7 @@ module DesksnearMe
     config.instagram_secret = "5c0652ad06984bf09e4987c8fc5ea8f1"
 
     config.exceptions_app = self.routes
-    
+
     # setting platform_context in app/models/platform_context/rack_setter.rb
     config.middleware.use "PlatformContext::RackSetter"
     config.middleware.use Rack::Deflater

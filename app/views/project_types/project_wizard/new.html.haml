@@ -1,0 +1,30 @@
+- render_without_left_menu!
+
+.page-banner
+  %h1
+    = t('onboarding_wizard.list_a_new', name: @transactable_type.name)
+
+= simple_nested_form_for @user, wrapper: :bs3, url: project_type_project_wizard_index_path(@transactable_type), html: { multipart: true, id: "project_form" }, method: :post do |f|
+  = f.simple_fields_for :projects, @project do |project_form|
+    = project_form.simple_fields_for :properties, project_form.object.properties do |properties_form|
+      = project_form.input :id, :as => :hidden if project_form.object.persisted?
+      = project_form.input :transactable_type_id, as: :hidden, input_html: { value: @transactable_type.id }
+      - @form_components.each do |form_component|
+        %section.list
+          .container-fluid
+            %h2.section-heading= form_component.name
+
+            - form_component.form_fields.each do |form_field|
+              - model = form_field.keys.first
+              - field = form_field[model]
+              - if model == 'user'
+                = render :partial => 'registrations/attributes', :locals => { f: user_form, only_inputs: [field.to_sym], country: @country }
+              - elsif model == 'project'
+                = render 'projects/project_form', f: project_form, properties_form: properties_form, only_inputs: [ field.to_sym ], form_fields: form_component.form_fields
+
+  .submit-bar
+    = f.submit "Save Project", class: "btn medium blue"
+
+
+- content_for :domready do
+  new Dashboard.AddressController($("#project_form"));

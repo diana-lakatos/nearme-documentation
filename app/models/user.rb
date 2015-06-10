@@ -1,6 +1,9 @@
 class User < ActiveRecord::Base
+  geocoded_by :current_location, :latitude  => :last_geolocated_location_latitude, :longitude => :last_geolocated_location_longitude
 
   include Spree::UserPaymentSource
+  include ActivityFeedService::Follower
+  include ActivityFeedService::Followed
 
   has_paper_trail ignore: [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
                            :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
@@ -25,6 +28,9 @@ class User < ActiveRecord::Base
   belongs_to :spree_shipping_address, class_name: 'Spree::Address', foreign_key: 'shipping_address_id'
   has_many :shipping_addresses
 
+  has_many :activity_feed_events, as: :event_source, dependent: :destroy
+  has_many :activity_feed_subscriptions, foreign_key: 'follower_id'
+  has_many :activity_feed_subscriptions_as_followed, as: :followed
   has_many :administered_locations, class_name: "Location", foreign_key: 'administrator_id', inverse_of: :administrator
   has_many :administered_listings, class_name: "Transactable", through: :administered_locations, source: :listings, inverse_of: :administrator
   has_many :authentications, dependent: :destroy
@@ -39,7 +45,12 @@ class User < ActiveRecord::Base
   has_many :charges, foreign_key: 'user_id', dependent: :destroy
   has_many :company_users, -> { order(created_at: :asc) }, dependent: :destroy
   has_many :companies, through: :company_users
+  has_many :comments, inverse_of: :creator
   has_many :created_companies, class_name: "Company", foreign_key: 'creator_id', inverse_of: :creator
+  has_many :feed_followers, -> { where(activity_feed_subscriptions: { active: true}) }, through: :activity_feed_subscriptions, source: :activity_feed_subscriptions_as_followed
+  has_many :feed_followed_projects, -> { where(activity_feed_subscriptions: { active: true}) }, through: :activity_feed_subscriptions, source: :followed, source_type: 'Project'
+  has_many :feed_followed_topics, -> { where(activity_feed_subscriptions: { active: true}) }, through: :activity_feed_subscriptions, source: :followed, source_type: 'Topic'
+  has_many :feed_followed_users, -> { where(activity_feed_subscriptions: { active: true}) }, through: :activity_feed_subscriptions,  source: :followed, source_type: 'User'
   has_many :followed_users, through: :relationships, source: :followed
   has_many :followers, through: :reverse_relationships, source: :follower
   has_many :instance_clients, as: :client, dependent: :destroy
@@ -54,6 +65,10 @@ class User < ActiveRecord::Base
   has_many :photos, foreign_key: 'creator_id', inverse_of: :creator
   has_many :products_images, foreign_key: 'uploader_id', class_name: 'Spree::Image'
   has_many :products, foreign_key: 'user_id', class_name: 'Spree::Product'
+  has_many :projects, foreign_key: 'creator_id', inverse_of: :creator
+  has_many :project_collaborators, -> { approved }
+  has_many :projects_collaborated, through: :project_collaborators, source: :project
+  has_many :project_collaborators
   has_many :payment_documents, class_name: 'Attachable::PaymentDocument', dependent: :destroy
   has_many :reservations, foreign_key: 'owner_id'
   has_many :recurring_bookings, foreign_key: 'owner_id'
@@ -67,11 +82,11 @@ class User < ActiveRecord::Base
   has_many :tickets, -> { order 'updated_at DESC' }, class_name: 'Support::Ticket'
   has_many :user_industries, dependent: :destroy
   has_many :user_bans
+  has_many :user_status_updates
   has_many :wish_lists, dependent: :destroy
   has_many :dimensions_templates, as: :entity
 
   has_one :blog, class_name: 'UserBlog'
-
   has_one :current_address, class_name: 'Address', as: :entity
 
   has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
@@ -86,6 +101,8 @@ class User < ActiveRecord::Base
 
   accepts_nested_attributes_for :approval_requests
   accepts_nested_attributes_for :companies
+  accepts_nested_attributes_for :projects
+  accepts_nested_attributes_for :current_address
 
   scope :patron_of, lambda { |listing|
     joins(:reservations).where(reservations: { transactable_id: listing.id }).uniq
@@ -94,6 +111,8 @@ class User < ActiveRecord::Base
   scope :by_search_query, lambda { |query|
     where("name ilike ? or email ilike ?", query, query)
   }
+
+  scope :featured, -> { where(featured: true) }
 
   scope :without, lambda { |users|
     users_ids = users.respond_to?(:pluck) ? users.pluck(:id) : Array.wrap(users).collect(&:id)
@@ -131,8 +150,15 @@ class User < ActiveRecord::Base
   scope :admin,     -> { where(admin: true) }
   scope :not_admin, -> { where("admin iS NULL") }
 
+  #TODO make sure that works after collaborators are implemented
+  scope :by_topic, -> (topic_ids) { includes(:topics).where(topics: {id: topic_ids}) if topic_ids.present?}
+
+  scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((users.properties->?), ',') && ARRAY[?]", property, values) if values.present? }
+
   mount_uploader :avatar, AvatarUploader
+  mount_uploader :cover_image, CoverImageUploader
   skip_callback :commit, :after, :remove_avatar!
+  skip_callback :commit, :after, :remove_cover_image!
 
   MAX_NAME_LENGTH = 30
 
@@ -203,11 +229,23 @@ class User < ActiveRecord::Base
     super.order('deleted_at IS NOT NULL, deleted_at DESC')
   end
 
+  def self.featured
+    where(featured: true)
+  end
+
+  def self.filtered_by_role(values)
+    if values.present? && 'Other'.in?(values)
+      role_attribute = PlatformContext.current.instance.instance_profile_type.custom_attributes.find_by(name: 'role')
+      values += role_attribute.valid_values.reject{ |val| val =~ /Featured|Innovator|Black Belt/i }
+    end
+    filtered_by_custom_attribute('role', values)
+  end
+
   def apply_omniauth(omniauth)
-    self.name = omniauth['info']['name'] if name.blank?
-    self.email = omniauth['info']['email'] if email.blank?
+    self.name = omniauth['info']['name'].presence || ("#{omniauth['info']['first_name']} #{omniauth['info']['last_name']}").presence || ("#{omniauth['info']['First_name']} #{omniauth['info']['Last_name']}").presence || ("#{omniauth['extra'] && omniauth['extra']['raw_info'] && omniauth['extra']['raw_info']['First_name']} #{omniauth['extra'] && omniauth['extra']['raw_info'] && omniauth['extra']['raw_info']['Last_name']}")if name.blank?
+    self.email = omniauth['info']['email'].presence || omniauth['extra'] && omniauth['extra']['raw_info'] && omniauth['extra']['raw_info']['email_address'] if email.blank?
     expires_at = omniauth['credentials'] && omniauth['credentials']['expires_at'] ? Time.at(omniauth['credentials']['expires_at']) : nil
-    token = omniauth['credentials'] && omniauth['credentials']['token']
+    token = (omniauth['credentials'] && omniauth['credentials']['token']).presence || (omniauth['extra'] && omniauth['extra']['raw_info'] && (omniauth['extra']['raw_info']['enterprise_id'].presence || omniauth['extra']['raw_info']['CustID']))
     secret = omniauth['credentials'] && omniauth['credentials']['secret']
     authentications.build(provider: omniauth['provider'],
                           uid: omniauth['uid'],
@@ -215,6 +253,10 @@ class User < ActiveRecord::Base
                           token: token,
                           secret: secret,
                           token_expires_at: expires_at)
+  end
+
+  def all_projects
+    projects | projects_collaborated
   end
 
   def category_ids=ids
@@ -265,6 +307,11 @@ class User < ActiveRecord::Base
 
   def last_name
     (self.read_attribute(:last_name)) || get_last_name_from_name
+  end
+
+  def secret_name
+    secret_name = last_name.present? ? last_name[0] : middle_name.try(:[], 0)
+    secret_name.present? ? "#{first_name} #{secret_name[0]}." : first_name
   end
 
   # Whether to validate the presence of a password
@@ -354,6 +401,10 @@ class User < ActiveRecord::Base
 
   def friends
     self.followed_users.without(self)
+  end
+
+  def social_friends_ids
+    authentications.collect{|a| a.social_connection.connections rescue nil}.flatten.compact
   end
 
   def friends_know_host_of(listing)
@@ -473,6 +524,15 @@ class User < ActiveRecord::Base
       email: email,
       phone: phone
     }
+  end
+
+  def should_render_tutorial?
+    if self.tutorial_displayed?
+      false
+    else
+      self.tutorial_displayed = true
+      self.save!
+    end
   end
 
   def is_instance_owner?
@@ -657,7 +717,7 @@ class User < ActiveRecord::Base
   end
 
   def registration_completed?
-    companies.first.try(:valid?) && !(has_draft_listings || has_draft_products)
+    (companies.first.try(:valid?) || projects.first.present?) && !(has_draft_listings || has_draft_products)
   end
 
   def has_any_active_products
@@ -759,6 +819,61 @@ class User < ActiveRecord::Base
     save(validate: false)
   end
 
+  def self.search_by_query(attributes = [], query)
+    if query.present?
+      words = query.split.map.with_index{|w, i| ["word#{i}".to_sym, "%#{w}%"]}.to_h
+
+      sql = attributes.map do |attrib|
+        if self.columns_hash[attrib.to_s].type == :hstore
+          attrib = "CAST(avals(#{quoted_table_name}.\"#{attrib}\") AS text)"
+        else
+          attrib = "#{quoted_table_name}.\"#{attrib}\""
+        end
+        words.map do |word, value|
+          "#{attrib} ILIKE :#{word}"
+        end
+      end.flatten.join(' OR ')
+
+      where(ActiveRecord::Base.send(:sanitize_sql_array, [sql, words]))
+    else
+      all
+    end
+  end
+
+  def self.custom_order(order, user)
+    case order
+    when /featured/i
+      order('users.featured DESC')
+    when /people i know/i
+      return all unless user.try(:id)
+      order sanitize_sql(["(SELECT 1 FROM user_relationships WHERE follower_id = ? AND followed_id = users.id LIMIT 1) ASC", user.id])
+    when /most popular/i
+      #TODO check most popular sort after followers are implemented
+      order('followers_count DESC')
+    when /distance/i
+      return all unless user
+      near(user.current_geolocation, 8_000_000, units: :km, order: 'distance')
+      #TODO check most popular sort after followers are implemented
+    when /number of projects/i
+      #TODO fix Number of projects sort after contributors are implemented
+      # joins(:followed_projects).order('count(projects.id) DESC')
+    else
+      all
+    end
+  end
+
+  def current_geolocation
+    if last_geolocated_location_latitude.to_f.zero? || last_geolocated_location_longitude.to_f.zero?
+      current_location
+    else
+      [last_geolocated_location_latitude, last_geolocated_location_longitude]
+    end
+  end
+
+  def can_update_feed_status?(record)
+    record == self || self.is_instance_owner? || record.try(:creator) === self || record.try(:user_id) === self.id
+  end
+
   private
 
   def get_first_name_from_name
@@ -788,4 +903,3 @@ class User < ActiveRecord::Base
     end
   end
 end
-

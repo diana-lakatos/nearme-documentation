@@ -6,9 +6,10 @@ class FormComponent < ActiveRecord::Base
 
   SPACE_WIZARD = 'space_wizard'
   PRODUCT_ATTRIBUTES = 'product_attributes'
+  PROJECT_ATTRIBUTES = 'project_attributes'
   TRANSACTABLE_ATTRIBUTES = 'transactable_attributes'
   INSTANCE_PROFILE_TYPES = 'instance_profile_types'
-  FORM_TYPES = [SPACE_WIZARD, PRODUCT_ATTRIBUTES, TRANSACTABLE_ATTRIBUTES, INSTANCE_PROFILE_TYPES]
+  FORM_TYPES = [SPACE_WIZARD, PRODUCT_ATTRIBUTES, TRANSACTABLE_ATTRIBUTES, INSTANCE_PROFILE_TYPES, PROJECT_ATTRIBUTES]
 
   include RankedModel
 
@@ -34,6 +35,8 @@ class FormComponent < ActiveRecord::Base
       [SPACE_WIZARD, TRANSACTABLE_ATTRIBUTES]
     elsif form_componentable.instance_of?(Spree::ProductType)
       [SPACE_WIZARD, PRODUCT_ATTRIBUTES]
+    elsif form_componentable.instance_of?(ProjectType)
+      [SPACE_WIZARD, PROJECT_ATTRIBUTES]
     else
       raise NotImplementedError
     end

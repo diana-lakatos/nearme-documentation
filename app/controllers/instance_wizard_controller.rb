@@ -69,7 +69,6 @@ class InstanceWizardController < ActionController::Base
         at.availability_rules.build(day: i, open_hour: 9, open_minute: 0,close_hour: 17, close_minute: 0)
       end
       at.save!
-      Utils::FormComponentsCreator.new(tp, 'transactable').create!
     end
 
     Utils::FormComponentsCreator.new(ipt).create!

@@ -2,12 +2,14 @@
 @import "instance_admin/bootstrap-theme";
 @import "instance_admin/bootstrap-select";
 @import "bootstrap3-switch";
+@import "chosen";
 
 @import "select2";
 @import "compass";
 
 @import "jcrop";
 @import "vendor/overrides/jcrop";
+@import "vendor/overrides/chosen";
 @import "vendor/icui";
 
 @import "globals/*";

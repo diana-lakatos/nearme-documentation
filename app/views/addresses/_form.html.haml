@@ -2,7 +2,7 @@
 %div{'data-address-field' => true, class: "control-group #{"error" if f.object.errors.any?}"}
   = f.label :address, label, class: "control-label", required: true
   .controls
-    = f.text_field :address, :'data-behavior' => 'address-autocomplete', placeholder: "", 'data-address-input' => true
+    = f.text_field :address, :'data-behavior' => 'address-autocomplete', 'data-address-input' => true
     - if f.object.errors.include?(:address) || f.object.errors.include?(:latitude)
       %p.error-block
         - if f.object.errors[:address].present?
@@ -10,7 +10,7 @@
         - else
           = t('locations.does_not_exist')
 
-    .map{:style => "display: none", :'data-marker' => image_path("components/map-pin.png")}
+    .map{style: "display: none", :'data-marker' => image_path("components/map-pin.png")}
       .map-container{:style => "height: 240px; width: 100%;"}
 
     = f.hidden_field :should_check_address, value: (@transactable_type.try(:rental_shipping) || params[:should_check_address])
@@ -25,7 +25,7 @@
     = f.hidden_field :country, 'data-country' => true
     = f.hidden_field :postcode, 'data-postcode' => true
 
-    .address-component-wrapper.hidden
+    .address-component-wrapper.hidden{hidden: "hidden"}
       .address-component-template
         - # we need this input to avoid hardcoding 'name' parameter for dynamically inserted inputs for address_components
         - # i.e. in dashboard we use location[address_component], but in list your space it is user[company_attribues]... etc

@@ -29,11 +29,52 @@ module Utils
       end
       print_out "Instance cache update started..."
       Instance.find_each{|i| i.fast_recalculate_cache_key!}
-      
+
       print_out "Translation populator report:"
       print_out "  #{count[:existed]} translations already existed."
       print_out "  #{count[:created]} translations were created."
       print_out "  #{count[:updated]} translations were updated."
+      print_out " ********** "
+      community_go!
+    end
+
+    def community_go!
+      Instance.where(is_community: true).find_each do |i|
+        count = {existed: 0, created: 0, updated: 0}
+        i.set_context!
+        puts "Populating community translations for: #{i.name}"
+        Dir.glob(Rails.root.join('config', 'community_locales', '*.yml')).each do |yml_filename|
+          print_out "File: #{yml_filename}"
+          en_locales = YAML.load_file(yml_filename)
+          en_locales_hash = convert_hash_to_dot_notation(en_locales['en'])
+
+          en_locales_hash.each_pair do |key, value|
+            t = Translation.find_or_initialize_by(locale: 'en', key: key, instance_id: i.id)
+
+            if t.persisted? && t.value != value
+              t.value = value
+              t.save!
+              print_out "  Translation updated: key: #{key}, value: #{t.value} -> #{value}"
+              count[:updated] += 1
+            elsif t.persisted?
+              count[:existed] += 1
+            else
+              t.value = value
+              t.save!
+              print_out "  Translation created: key: #{key}, value: #{value}"
+              count[:created] += 1
+            end
+          end
+        end
+        print_out "Instance cache update started..."
+        i.fast_recalculate_cache_key!
+
+        print_out "Translation populator report:"
+        print_out "  #{count[:existed]} translations already existed."
+        print_out "  #{count[:created]} translations were created."
+        print_out "  #{count[:updated]} translations were updated."
+      end
+
     end
 
     protected

@@ -1,0 +1,3 @@
+$container = window.clickedFollowButton.parents("[data-follow-button]")
+window.newFollowButton = $container.html("<%= escape_javascript(render(partial: 'shared/follow_button', locals: { object: @object })) %>").find("a")
+window.FollowButton.initialize()

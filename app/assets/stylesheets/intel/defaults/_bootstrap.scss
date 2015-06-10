@@ -1,0 +1,35 @@
+/*!
+ * Boostrap
+/* ---------------------------------------- */
+
+.row [class*=col-] {
+    margin-bottom: 0;
+}
+
+.nav-tabs > li:last-child {
+    margin-bottom: -1px !important;
+}
+
+.nav-tabs > li.last-child {
+    margin-bottom: -1px !important;
+}
+
+.dropdown-menu li:before,
+.nav li:before,
+.list-unstyled li:before,
+.list-inline li:before {
+    display: none;
+}
+
+.dl-horizontal dd {
+    padding-left: 0;
+}
+
+.checkbox-inline:first-child {
+    display: inline-block;
+    margin-bottom: 0;
+}
+
+.btn {
+    height: auto;
+}

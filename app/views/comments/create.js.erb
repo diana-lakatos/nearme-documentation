@@ -1,0 +1,7 @@
+<% if @comment.errors.present? %>
+  $('[data-new-comment]').parents(".control-group").addClass("error")
+<% else %>
+  $('[data-new-comment]').parents(".control-group").removeClass("error")
+  $('[data-comments]').prepend('<%= escape_javascript( render @comment ) %>');
+  $('[data-new-comment]').val('')
+<% end %>

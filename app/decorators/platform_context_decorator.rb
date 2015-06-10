@@ -4,11 +4,11 @@ class PlatformContextDecorator
            :platform_context_detail, :secured_constraint, :latest_products, to: :platform_context
 
   delegate :tagline, :support_url, :blog_url, :twitter_url, :twitter_handle, :facebook_url, :gplus_url, :address,
-           :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :compiled_dashboard_stylesheet, :meta_title, :pages, :logo_image,
+           :phone_number, :site_name, :description, :support_email, :compiled_stylesheet, :compiled_dashboard_stylesheet, :meta_title, :pages, :hero_image, :logo_image,
            :favicon_image, :icon_image, :icon_retina_image, :call_to_action, :is_company_theme?, :content_holders, to: :theme
 
   delegate :bookable_noun, :lessor, :lessee, :name, :buyable?, :bookable?,
-           :transactable_types, :product_types, :service_types, to: :instance
+           :transactable_types, :product_types, :project_types, :service_types, to: :instance
 
   liquid_methods :lessors
 

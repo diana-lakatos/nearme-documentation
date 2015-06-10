@@ -22,7 +22,6 @@ module SimpleForm
         lookups << :"simple_form.#{namespace}.defaults.#{lookup_action}.#{reflection_or_attribute_name}"
         lookups << :"simple_form.#{namespace}.defaults.#{reflection_or_attribute_name}"
         lookups << default
-
         I18n.t(lookups.shift, default: lookups).presence
       end
 

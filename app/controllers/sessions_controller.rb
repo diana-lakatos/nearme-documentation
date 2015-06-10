@@ -74,7 +74,7 @@ class SessionsController < Devise::SessionsController
     elsif login_from_instance_admin?
       'instance_admin'
     else
-      'application'
+      layout_name
     end
   end
 

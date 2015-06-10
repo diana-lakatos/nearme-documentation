@@ -1,0 +1,4 @@
+.nested-fields
+  = f.input :id, as: :hidden
+  = f.input :email, as: :email, label: t('collaborator_email', default: 'Collaborator Email'), input_html: { data: {"project-collaborator-email": true }}, wrapper_html: { class: 'sep' }, required: false
+  = link_to_remove_association t('remove', default: 'Remove'), f

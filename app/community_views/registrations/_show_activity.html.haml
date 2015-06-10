@@ -1,0 +1,20 @@
+/ content wrapper
+.wrap-a.reduce-top
+  .contain
+    / layout
+    .page-a
+      .primary
+        / white box
+        .box-a
+          %h1.h2
+            = t('activity_feed.title')
+
+          = render 'shared/activity_feed', object: object, feed: feed
+      .secondary
+        / white box
+        .box-a
+          %h2
+            = t :about
+          %p= @user.properties.try(:biography)
+
+        = render 'shared/featured_projects', projects: Project.featured.where.not(id: current_user.try(:feed_followed_projects) || []).take(10)

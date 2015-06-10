@@ -30,7 +30,7 @@ class Transactable < ActiveRecord::Base
   has_many :document_requirements, as: :item, dependent: :destroy, inverse_of: :item
   has_many :inquiries, inverse_of: :listing
   has_many :impressions, :as => :impressionable, :dependent => :destroy
-  has_many :photos, dependent: :destroy, inverse_of: :listing do
+  has_many :photos, as: :owner, dependent: :destroy do
     def thumb
       (first || build).thumb
     end
@@ -69,7 +69,7 @@ class Transactable < ActiveRecord::Base
   before_save :set_is_trusted
 
   # == Scopes
-  scope :featured, -> { where(%{ (select count(*) from "photos" where transactable_id = "listings".id) > 0  }).
+  scope :featured, -> { where(%{ (select count(*) from "photos" where owner_type LIKE 'Transactable' AND owner_id = "listings".id) > 0  }).
                         includes(:photos).order(%{ random() }).limit(5) }
   scope :draft, -> { where('transactables.draft IS NOT NULL') }
   scope :active, -> { where('transactables.draft IS NULL') }
@@ -186,7 +186,7 @@ class Transactable < ActiveRecord::Base
   delegate :url, to: :company
   delegate :formatted_address, :local_geocoding, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
   delegate :service_fee_guest_percent, :service_fee_host_percent, :hours_to_expiration,
-    :minimum_booking_minutes, :custom_validators, to: :transactable_type
+    :minimum_booking_minutes, :custom_validators, :show_company_name, to: :transactable_type
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
   delegate :favourable_pricing_rate, to: :transactable_type

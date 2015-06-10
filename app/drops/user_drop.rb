@@ -45,7 +45,7 @@ class UserDrop < BaseDrop
     :country_name, :phone, :current_location, to: :user
 
   def initialize(user)
-    @user = user
+    @user = user.decorate
   end
 
   # string containing the location of the user making use of the various fields
@@ -157,6 +157,10 @@ class UserDrop < BaseDrop
     routes.profile_path(@user.slug)
   end
 
+  def profile_url
+    urlify(routes.profile_path(@user.slug))
+  end
+
   # url to the section in the application where a user can change his password
   def set_password_url_with_token
     routes.set_password_path(token_key => @user.try(:temporary_token))
@@ -208,6 +212,15 @@ class UserDrop < BaseDrop
   # url to the "big" version of a user's avatar image
   def avatar_url_big
     ActionController::Base.helpers.asset_url(@user.avatar_url(:big))
+  end
+
+  # url to the "thumb" version of a user's avatar image
+  def avatar_url_thumb
+    ActionController::Base.helpers.asset_url(@user.avatar_url(:thumb))
+  end
+
+  def avatar_url_bigger
+    ActionController::Base.helpers.asset_url(@user.avatar_url(:bigger))
   end
 
   # url to a user's public profile

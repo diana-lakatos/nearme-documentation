@@ -8,6 +8,7 @@ module ApplicationHelper
   include CustomAttributes::ApplicationHelper
   include SearchEnginesStructuredDataHelper
   include TagListHelper
+  include CommunityHelper
 
   def timeago(time)
     content_tag(:abbr, time, title: time.to_time.iso8601, class: :timeago)
@@ -270,8 +271,8 @@ module ApplicationHelper
     end
   end
 
-  def active_class(arg1, arg2)
-    'active' if arg1 == arg2
+  def active_class(arg1, arg2, class_name = 'active')
+    class_name if arg1 == arg2
   end
 
   def hide_tab?(tab)
@@ -361,5 +362,19 @@ module ApplicationHelper
       window.I18n.locale = '#{I18n.locale.to_s}';
       window.I18n.t = #{js_translations};
     }.html_safe
+  end
+
+  # Styled only for comunity layout
+  def readmore(text, limit=255)
+    if text.size < limit
+      text
+    else
+      text[0..limit] + content_tag(:span, content_tag(:span, text[limit + 1..-1]), class: 'readmore-a', data: {label: t(:read_more)})
+    end
+  end
+
+  def setup_activity_feed_event(event)
+    event = ActivityFeedService::Event.new(event)
+    OpenStruct.new(text: event.text, image: event.image)
   end
 end

@@ -148,6 +148,15 @@ SimpleForm.setup do |config|
     b.use :error, :wrap_with => { :tag => 'col-md-9', :class => 'help-inline' }
   end
 
+  config.wrappers :inline_checkbox, :tag => 'div', :class => 'control-group', :error_class => 'error', :boolean_style => 'inline' do |b|
+    b.use :html5
+    b.use :placeholder
+    b.use :input
+    b.use :label
+    b.use :error, :wrap_with => { :tag => 'p', :class => 'error-block' }
+    b.use :hint,  :wrap_with => { :tag => 'p', :class => 'help-block' }
+  end
+
   # Wrappers for forms and inputs using the Twitter Bootstrap toolkit.
   # Check the Bootstrap docs (http://twitter.github.com/bootstrap)
   # to learn about the different styles for forms and inputs,

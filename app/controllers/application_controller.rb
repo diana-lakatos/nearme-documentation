@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::Base
-
-  prepend_view_path InstanceViewResolver.instance
+  before_filter :prepend_view_paths
 
   force_ssl if: :require_ssl?
 
@@ -69,8 +68,16 @@ class ApplicationController < ActionController::Base
     if request.xhr?
       false
     else
-      "application"
+      layout_name
     end
+  end
+
+  def layout_name
+    PlatformContext.current.instance.is_community? ? "community" : "application"
+  end
+
+  def dashboard_or_community_layout
+    PlatformContext.current.instance.is_community? ? 'community' : 'dashboard'
   end
 
   # This method invalidates default PlatformContext and ensures that our scope is Instance [ disregarding listings_public for relevant models ].
@@ -101,7 +108,12 @@ class ApplicationController < ActionController::Base
     @bookable ||= platform_context.instance.bookable?
   end
 
-  helper_method :buyable?, :bookable?
+  # maybe we will rename project to follow? making this followable? for now this stupid name :)
+  def projectable?
+    @projectable ||= platform_context.instance.projectable?
+  end
+
+  helper_method :buyable?, :bookable?, :projectable?
 
   # Provides an EventTracker instance for the current request.
   #
@@ -109,35 +121,35 @@ class ApplicationController < ActionController::Base
   # the application controllers.
   def event_tracker
     @event_tracker ||= begin
-      Analytics::EventTracker.new(mixpanel, google_analytics)
-    end
+                         Analytics::EventTracker.new(mixpanel, google_analytics)
+                       end
   end
 
   def mixpanel
     @mixpanel ||= begin
                     # Load any persisted session properties
-      session_properties = if cookies.signed[:mixpanel_session_properties].present?
-                             ActiveSupport::JSON.decode(cookies.signed[:mixpanel_session_properties]) rescue nil
-                           end
+                    session_properties = if cookies.signed[:mixpanel_session_properties].present?
+                                           ActiveSupport::JSON.decode(cookies.signed[:mixpanel_session_properties]) rescue nil
+                                         end
 
-      # Gather information about requests
-      request_details = {
-        :current_host => request.try(:host)
-      }
+                    # Gather information about requests
+                    request_details = {
+                      :current_host => request.try(:host)
+                    }
 
-      # Detect an anonymous identifier, if any.
-      anonymous_identity = cookies.signed[:mixpanel_anonymous_id]
+                    # Detect an anonymous identifier, if any.
+                    anonymous_identity = cookies.signed[:mixpanel_anonymous_id]
 
-      AnalyticWrapper::MixpanelApi.new(
-        AnalyticWrapper::MixpanelApi.mixpanel_instance(),
-        :current_user => current_user,
-        :request_details => request_details,
-        :anonymous_identity => anonymous_identity,
-        :session_properties => session_properties,
-        :request_params => params,
-        :request => user_signed_in? ? nil : request # we assume that logged in user is not a bot
-      )
-    end
+                    AnalyticWrapper::MixpanelApi.new(
+                      AnalyticWrapper::MixpanelApi.mixpanel_instance(),
+                      :current_user => current_user,
+                      :request_details => request_details,
+                      :anonymous_identity => anonymous_identity,
+                      :session_properties => session_properties,
+                      :request_params => params,
+                      :request => user_signed_in? ? nil : request # we assume that logged in user is not a bot
+                    )
+                  end
   end
 
   helper_method :mixpanel
@@ -258,6 +270,8 @@ class ApplicationController < ActionController::Base
     case name.to_s
     when 'space'
       WizardInfo.new(name.to_s, new_space_wizard_url)
+    when 'onboarding'
+      WizardInfo.new(name.to_s, onboarding_index_url)
     end
   end
 
@@ -364,7 +378,8 @@ class ApplicationController < ActionController::Base
   end
 
   def redirect_if_marketplace_password_protected
-    if platform_context.instance.password_protected? && !session["authenticated_in_marketplace_#{platform_context.instance.id}".to_sym]
+    bypass = session["authenticated_in_marketplace_#{platform_context.instance.id}".to_sym] || params[:controller] =~ /^webhooks\//
+    if platform_context.instance.password_protected? && !bypass
       if current_user.nil? || !InstanceAdminAuthorizer.new(current_user).instance_admin?
         session[:marketplace_return_to] = request.path if request.get? && !request.xhr?
         redirect_to main_app.new_marketplace_session_path
@@ -483,6 +498,11 @@ class ApplicationController < ActionController::Base
   end
 
   helper_method :ckeditor_toolbar_creator
+
+  def prepend_view_paths
+    prepend_view_path("app/community_views") if PlatformContext.current.instance.is_community?
+    prepend_view_path InstanceViewResolver.instance
+  end
 
 end
 

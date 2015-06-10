@@ -16,7 +16,6 @@ class InstanceAdmin::BuySell::ProductTypesController < InstanceAdmin::BuySell::B
     @product_type = product_type_scope.new(product_type_params)
     if @product_type.save
       Utils::FormComponentsCreator.new(@product_type).create!
-      Utils::FormComponentsCreator.new(@product_type, 'product').create!
       @product_type.create_rating_systems
       flash[:success] = t 'flash_messages.instance_admin.buy_sell.product_types.created'
       redirect_to instance_admin_buy_sell_product_types_path

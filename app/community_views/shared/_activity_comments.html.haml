@@ -1,0 +1,27 @@
+.comments
+  / comment
+  .comment-a
+    %figure
+      = image_tag space_listing_placeholder_path(width: 50, height: 50)
+    %p.author
+      = t(:user_said, user_link: link_to('Richard M.', root_url)).html_safe
+    %blockquote
+      %p I’m a software engineer and I’m currently the head of Google’s Payments team.
+    %p.meta
+      %time
+        = t :hours, count: 3
+      %span &bull;
+      = link_to t(:report_as_spam), root_url
+  / comment
+  .comment-a
+    %figure
+      = image_tag space_listing_placeholder_path(width: 50, height: 50)
+    %p.author
+      = t(:user_said, user_link: link_to('Susie Q.', root_url)).html_safe
+    %blockquote
+      %p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate sunt veniam, dolorem similique dolore veritatis, id consequatur aliquam rerum sint nostrum labore magni maiores exercitationem quo dolores dicta delectus nihil!
+    %p.meta
+      %time
+        = t :hours, count: 3
+      %span &bull;
+      = link_to t(:report_as_spam), root_url

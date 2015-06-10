@@ -1,8 +1,9 @@
 module SearcherHelper
 
   def result_view
+    return @result_view = 'community' if PlatformContext.current.instance.is_community?
     @result_view = params[:v].presence || (@transactable_type.buyable? ? PlatformContext.current.instance.default_products_search_view : PlatformContext.current.instance.default_search_view)
-    @result_view = @result_view.in?(Instance::SEARCH_SERVICE_VIEWS + Instance::SEARCH_PRODUCTS_VIEWS) ? @result_view : 'mixed'
+    @result_view = @result_view.in?(Instance::SEARCH_SERVICE_VIEWS + Instance::SEARCH_PRODUCTS_VIEWS + Instance::SEARCH_COMMUNITY_VIEWS) ? @result_view : 'mixed'
     (@result_view.in?(Instance::SEARCH_PRODUCTS_VIEWS) && !@transactable_type.buyable?) ? 'mixed' : @result_view
     (@result_view.in?(Instance::SEARCH_SERVICE_VIEWS) && @transactable_type.buyable?) ? 'products' : @result_view
   end

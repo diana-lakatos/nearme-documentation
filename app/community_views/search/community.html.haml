@@ -1,0 +1,28 @@
+.wrap-a.reduce-top
+  .contain
+    / tabs
+    %nav.tabs-a.trio.search-types
+      %ul
+        %li{ class: active_class(params[:search_type], 'people', 'is-active')}
+          = link_to t(:people), '', data: { search_type: 'people'}
+        %li{ class: active_class(params[:search_type], 'projects', 'is-active')}
+          = link_to t(:projects), '', data: { search_type: 'projects'}
+        %li{ class: active_class(params[:search_type], 'topics', 'is-active')}
+          = link_to t(:topics), '', data: { search_type: 'topics'}
+    / white box
+    .box-a
+      .search-container
+        / filters
+        = render "search/filters/#{params[:search_type]}"
+        .grid-a-search-a
+          .wrap.search-results
+            = render "#{params[:search_type]}"
+        / more
+      .pagination-more-a
+        - if @searcher.results.next_page
+          %p.more-a{data: { next_page: @searcher.results.next_page }}
+            = link_to t(:see_more), '#'
+
+- content_for :page_scripts do
+  :javascript
+    new Search($('#search_filter'));
