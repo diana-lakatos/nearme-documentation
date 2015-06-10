@@ -17,8 +17,11 @@ class AuthenticationsController < ApplicationController
     elsif @oauth.email_taken_by_other_user?(current_user)
       user_changed_email_and_someone_else_picked_it
       # There is no authentication in our system, but user is logged in - we just add authentications to his account
-    elsif current_user
+    elsif current_user && !@oauth.authentication
       new_authentication_for_existing_user
+      # there is a user logged in and the authentication belongs to him
+    elsif current_user && @oauth.authentication && current_user.id == @oauth.authentication.user.id
+      same_user_already_logged_in
       # There is no authentication in our system, and the user is not logged in. Hence, we create a new user and then new authentication
     else
       if @oauth.create_user(cookies[:google_analytics_id])
@@ -73,6 +76,10 @@ class AuthenticationsController < ApplicationController
     else
       super
     end
+  end
+
+  def same_user_already_logged_in
+    redirect_to root_path
   end
 
   def already_connected_to_other_user
