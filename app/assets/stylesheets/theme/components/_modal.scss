@@ -1,8 +1,15 @@
 .modal-container {
 
   &.sign-up-modal {
-    
+
     .modal-content {
+
+      .actions {
+
+        input[type="submit"] {
+          background: $theme_green;
+        }
+      }
 
       .pnotice {
         a {

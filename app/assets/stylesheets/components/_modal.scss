@@ -51,7 +51,7 @@
   }
 
   &.sign-up-modal {
-    
+
     .modal-close {
       top: 12px;
       right: 20px;
@@ -70,7 +70,7 @@
 
         span {
           color: $gray220;
-        }  
+        }
       }
 
       // fix for IE8 sign in/sign up modal opacity issues
@@ -95,7 +95,7 @@
 
     .modal-loading {
       background: transparent;
-    }    
+    }
   }
 }
 
