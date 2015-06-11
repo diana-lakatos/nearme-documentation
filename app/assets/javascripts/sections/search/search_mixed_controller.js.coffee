@@ -14,6 +14,7 @@ class Search.SearchMixedController extends Search.SearchController
     @initializeCarousel()
     @initializePriceSlide()
     @renderChildCategories()
+    @autocompleteCategories()
 
 
   bindEvents: =>
@@ -239,6 +240,38 @@ class Search.SearchMixedController extends Search.SearchController
   fieldChanged: (field, value) ->
     @renderChildCategories()
     @triggerSearchFromQueryAfterDelay()
+
+  autocompleteCategories: () ->
+    self = this
+    if @container.find("input[data-category-autocomplete]").length > 0
+      $.each @container.find("input[data-category-autocomplete]"), (index, select) ->
+        $(select).select2(
+          multiple: true
+          initSelection: (element, callback) ->
+            url = Routes.dashboard_api_category_path($(select).attr('data-category-id'))
+            $.getJSON url, { init_selection: 'true', ids: $(select).attr("data-selected-categories") }, (data) ->
+              callback data
+
+          ajax:
+            url: Routes.dashboard_api_category_path($(select).attr('data-category-id'))
+            datatype: "json"
+            data: (term, page) ->
+              per_page: 50
+              page: page
+              q:
+                name_cont: term
+
+            results: (data, page) ->
+              results: data
+
+          formatResult: (category) ->
+            category.translated_name
+
+          formatSelection: (category) ->
+            category.translated_name
+        ).on('change', (e) ->
+          self.fieldChanged()
+        ).select2('val', $(select).attr("data-selected-categories"))
 
 
   updateUrlForSearchQuery: ->
