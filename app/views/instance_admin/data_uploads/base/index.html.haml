@@ -6,17 +6,21 @@
         %thead
           %tr
             %th File Name
-            %th Data preview
+            %th State
+            - if params[:service_type_id].present?
+              %th Data preview
             %th Imported at
-            %th Success
+            %th Created by
             %th Created at
         %tbody
           - @data_uploads.each do |resource|
             %tr
               %td= link_to resource.csv_file_identifier, {action: :show, id: resource}
-              %td= link_to resource.xml_file_identifier, resource.xml_file.try(:url), target: :blank if resource.xml_file.present?
+              %td= resource.state
+              - if params[:service_type_id].present?
+                %td= link_to resource.xml_file_identifier, resource.xml_file.try(:url), target: :blank if resource.xml_file.present?
               %td= resource.imported_at
-              %td= resource.encountered_error.blank?
+              %td= resource.uploader.email
               %td= resource.created_at
 
 = content_for :header_buttons do

@@ -8,7 +8,7 @@ class InstanceAdmin::DataUploads::BaseController < InstanceAdmin::BaseController
   end
 
   def index
-    @data_uploads = PlatformContext.current.instance.data_uploads.for_importable(@importable).all
+    @data_uploads = DataUpload.for_importable(@importable).includes(:uploader)
   end
 
   def create
