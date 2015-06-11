@@ -16,6 +16,8 @@ class WorkflowStep::DataUploadWorkflow::BaseStep < WorkflowStep::BaseStep
     @data_upload.uploader
   end
 
+  # data_upload
+  #   DataUpload object
   def data
     { data_upload: @data_upload }
   end

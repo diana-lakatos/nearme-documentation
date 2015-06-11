@@ -12,7 +12,7 @@ class InstanceAdmin::Theme::LiquidViewsController < InstanceAdmin::Theme::BaseCo
   end
 
   def new
-    if params[:path] && InstanceView::DEFAULT_LIQUID_VIEWS_PATHS.include?(params[:path])
+    if params[:path] && InstanceView::DEFAULT_LIQUID_VIEWS_PATHS.keys.include?(params[:path])
       @body = File.read(File.join(Rails.root, 'app', 'views', "#{DbViewResolver.virtual_path(params[:path].dup, true)}.html.liquid"))
     else
       @body = ''

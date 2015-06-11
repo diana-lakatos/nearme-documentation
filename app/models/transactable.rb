@@ -9,6 +9,8 @@ class Transactable < ActiveRecord::Base
   has_metadata accessors: [:photos_metadata]
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id, :listings_public], :location)
 
+  DEFAULT_ATTRIBUTES = %w(name description capacity)
+
   has_custom_attributes target_type: 'ServiceType', target_id: :transactable_type_id
 
   has_many :availability_rules, -> { order 'day ASC' }, as: :target, dependent: :destroy, inverse_of: :target

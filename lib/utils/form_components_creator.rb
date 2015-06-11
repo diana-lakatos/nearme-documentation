@@ -8,14 +8,13 @@ module Utils
 
     def create!
       if @class_name.blank?
-        if @form_componentable.is_a?(ServiceType)
-          @form_componentable.form_components.where(form_type: FormComponent::SPACE_WIZARD).destroy_all
-        else
-          @form_componentable.form_components.destroy_all
-        end
+        @form_componentable.form_components.where(form_type: FormComponent::SPACE_WIZARD).destroy_all
         send("create_#{@form_componentable.class.model_name.param_key}_components")
       elsif @class_name == 'transactable'
         @form_componentable.form_components.where(form_type: FormComponent::TRANSACTABLE_ATTRIBUTES).destroy_all
+        send("create_#{@class_name}_components")
+      elsif @class_name == 'product'
+        @form_componentable.form_components.where(form_type: FormComponent::PRODUCT_ATTRIBUTES).destroy_all
         send("create_#{@class_name}_components")
       end
     end
@@ -32,10 +31,22 @@ module Utils
       create_component!("Where is your #{@form_componentable.name} located?", [ { 'location' => 'name'}, { 'location' => 'description'}, { 'location' => 'address'}, { 'location' => 'location_type'}, { 'location' => 'phone'} ])
       create_component!("Please tell us about the #{@form_componentable.name} you're listing", [{ 'transactable' => 'name' }, { 'transactable' => 'description' }, { 'transactable' => 'listing_type' }, { 'transactable' => 'custom_type' }, { 'transactable' => 'quantity' }, { 'transactable' => 'currency' }, { 'transactable' => 'price' }, { 'transactable' => 'photos' }])
       create_component!("And finally, your contact information?", [{'user' => 'phone'}])
+
     end
 
     def create_product_type_components
+      @form_type_class = FormComponent::SPACE_WIZARD
+      create_component!('Seller Info', [{'company' => 'name'}, {'company' => 'address'}])
+      create_component!("List New #{@form_componentable.name}", [ { 'product' => 'name'}, { 'product' => 'description'}, { 'product' => 'photos'}, { 'product' => 'action_rfq' }, { 'product' => 'price'}, { 'product' => 'quantity'}, { 'product' => 'integrated_shipping'}, { 'product' => 'documents_upload'} ])
+      if @form_componentable.categories.any?
+        create_component!("#{@form_componentable.name} Specifics", @form_componentable.categories.map {|c| {'product' => "Category - #{c.name}"} })
+      end
+      create_component!("Shipping Info", [{'product' => 'shipping_info'}])
+    end
+
+    def create_product_components
       @form_type_class = FormComponent::PRODUCT_ATTRIBUTES
+      create_component!("Main", [ { 'product' => 'name'}, { 'product' => 'description'}, { 'product' => 'photos'}, { 'product' => 'action_rfq' }, { 'product' => 'price'}, { 'product' => 'quantity'}, { 'product' => 'integrated_shipping'}, { 'product' => 'documents_upload'}, {'product' => 'shipping_info'} ] + @form_componentable.categories.map {|c| {'product' => "Category - #{c.name}"} })
     end
 
     def create_transactable_components

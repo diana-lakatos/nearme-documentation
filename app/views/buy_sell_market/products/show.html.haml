@@ -71,8 +71,9 @@
               = t 'buy_sell_market.products.labels.properties'
 
       .tab-content
-        %article#product-details.tab-pane{ class: "#{ 'active' if !param_reviews_page_present? }" }
-          %p= @product.description.html_safe
+        - if @product.description.present?
+          %article#product-details.tab-pane{ class: "#{ 'active' if !param_reviews_page_present? }" }
+            %p= @product.description.html_safe
 
         - if @product.has_reviews?
           %article#product-reviews.tab-pane{ class: "#{ 'active' if param_reviews_page_present? }" }
