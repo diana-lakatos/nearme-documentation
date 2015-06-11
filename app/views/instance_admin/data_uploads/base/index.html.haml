@@ -21,7 +21,11 @@
                 %td= link_to resource.xml_file_identifier, resource.xml_file.try(:url), target: :blank if resource.xml_file.present?
               %td= resource.imported_at
               %td= resource.uploader.email
-              %td= resource.created_at
+              %td= l(resource.created_at, format: :long)
+  .row
+    .text-container
+      .pull-right
+        = will_paginate @data_uploads
 
 = content_for :header_buttons do
   = link_to 'Download CSV Template', {action: :download_csv_template}, class: 'pull-right btn btn-blue'
