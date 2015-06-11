@@ -9,6 +9,7 @@
     = f.simple_fields_for :company, @boarding_form.company do |companies_form|
       = f.simple_fields_for f.object.product_form do |product_form|
         = product_form.simple_fields_for :extra_properties, product_form.object.extra_properties do |properties_form|
+          = product_form.input :id, :as => :hidden if product_form.object.product.persisted?
           - @form_components.each do |form_component|
             - data_hash ||= nil
             - if form_component.form_fields.include?({ 'product' => 'shipping_info' })

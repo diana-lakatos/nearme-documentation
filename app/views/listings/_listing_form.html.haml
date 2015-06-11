@@ -4,8 +4,12 @@
 - if only_inputs.empty? || only_inputs.include?(:approval_requests)
   = render :partial => 'approval_requests/form', :locals => { f: f }
 
-= f.hidden_field :transactable_type_id, value: @transactable_type.id
-= f.hidden_field :booking_type, value: f.object.transactable_type.booking_choices.size == 1 ? f.object.transactable_type.booking_choices.first : f.object.booking_type, 'data-booking-type' => true
+- if only_inputs.empty? || only_inputs.include?(:transactable_type_id)
+  = f.hidden_field :transactable_type_id, value: @transactable_type.id
+
+- if only_inputs.empty? || only_inputs.include?(:booking_type)
+  = f.hidden_field :booking_type, value: f.object.transactable_type.booking_choices.size == 1 ? f.object.transactable_type.booking_choices.first : f.object.booking_type, 'data-booking-type' => true
+
 - if only_inputs.empty? || only_inputs.include?(:enabled)
   .control-group
     = f.label :enabled, t('simple_form.switch.enabled'), :class => 'control-label'
@@ -13,9 +17,7 @@
       .switch{'data-on-label' => "", 'data-off-label' => "", 'data-ajax-updateable' => f.object.persisted?}
         = f.check_box :enabled, disabled: !f.object.is_trusted?
 
-= f.input :id, :as => :hidden if only_inputs.empty? || only_inputs.include?(:id)
 - @transactable_type.custom_attributes.each do |attribute|
-  - next if platform_context.instance.user_based_marketplace_views?
   = draw_attribute_for_form(attribute, f) if only_inputs.empty? || only_inputs.include?(attribute.name.to_sym)
 - [:name, :description, :confirm_reservations, :capacity].each do |attrib|
   - if only_inputs.empty? || only_inputs.include?(attrib)
