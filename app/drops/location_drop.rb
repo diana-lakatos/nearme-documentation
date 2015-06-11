@@ -30,13 +30,17 @@ class LocationDrop < BaseDrop
   #   suburb name for this location as string
   # company
   #   company object for this location
+  # administrator
+  #   user object returning current administrator for this location
+  # creator
+  #   user object returning creator of this location
   # address
   #   address for this location as string
   # latitude
   #   latitude for this location as a floating point number
   # longitude
   #   longitude for this location as a floating point number
-  delegate :id, :slug, :listings, :lowest_price, :name, :description, :phone, :street, :city, :suburb, :company, :address, :latitude, :longitude, to: :location
+  delegate :id, :slug, :listings, :lowest_price, :name, :description, :phone, :street, :city, :suburb, :company, :address, :latitude, :longitude, :creator, :administrator, to: :location
 
   def initialize(location)
     @location = location
