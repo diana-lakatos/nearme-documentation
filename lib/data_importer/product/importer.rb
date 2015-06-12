@@ -11,7 +11,7 @@ class DataImporter::Product::Importer
     @entities_counters[:deleted] = SYNC_MODELS.inject({}) { |hsh, model| hsh[model] = 0; hsh }
     @processed_entities_ids = {}
     @data_upload.parsing_result_log = ""
-    @errors = []
+    @log_entries = []
     @new_users = {}
     @all_users = []
     @imported_products = []
@@ -126,7 +126,7 @@ class DataImporter::Product::Importer
       return
     end
     if params[:name].present? && params[:name].size > 255
-      add_error("Product name is too long: #{params[:name]}")
+      add_warning("Product name is too long: #{params[:name]}")
       params[:name] = params[:name][0..251] + '...'
     end
     import_entity(block) do
@@ -238,14 +238,18 @@ class DataImporter::Product::Importer
   end
 
   def add_error(error)
-    @errors << "#{@current_row}. #{error}"
+    @log_entries << "Error on line #{@current_row}. #{error}"
+  end
+
+  def add_warning(warning)
+    @log_entries << "Warning on line #{@current_row}. #{warning}"
   end
 
   def store_log
-    unless @errors.empty?
-      @data_upload.parsing_result_log += (@errors.join("\n") << "\n\n")
+    unless @log_entries.empty?
+      @data_upload.parsing_result_log += (@log_entries.join("\n") << "\n")
       @data_upload.save(validate: false)
-      @errors = []
+      @log_entries = []
     end
   end
 

@@ -12,7 +12,7 @@
           %p New entities: #{@data_upload.parse_summary[:new].map { |k, v| "#{k.to_s.humanize}: #{v}"}.sort.join(', ')}
           %p Updated entities: #{@data_upload.parse_summary[:updated].map { |k, v| "#{k.to_s.humanize}: #{v}"}.sort.join(', ')}
           - if @data_upload.parsing_result_log
-            %p Errors encountered:
+            %p Errors and warnings encountered:
             %textarea{disabled: 'disabled', style: "width: 98%", rows: 10}= @data_upload.parsing_result_log
           - else
             No validation errors encountered.
