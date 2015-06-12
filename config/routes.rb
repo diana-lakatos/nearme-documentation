@@ -687,7 +687,11 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :images
-    resources :orders, only: [:index, :show]
+    resources :orders, only: [:index, :show] do
+      member do
+        get :success
+      end
+    end
     resources :photos, :only => [:create, :destroy, :edit, :update]
     resources :reviews, :only => [:index, :create, :update, :destroy]
 

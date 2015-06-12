@@ -9,6 +9,10 @@ class InstanceAdmin::Theme::ContentHoldersController < InstanceAdmin::Theme::Bas
     create!{ instance_admin_theme_content_holders_path }
   end
 
+  def update
+    update!{ instance_admin_theme_content_holders_path }
+  end
+
   private
 
   def content_holder_params

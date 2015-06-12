@@ -47,6 +47,20 @@ class LocationsControllerTest < ActionController::TestCase
         assert_response :success
       end
 
+      should 'display a content holder' do
+        holder = FactoryGirl.create :content_holder, inject_pages: ['service/product_page'], content: "{{ @listing.street }} and whatever"
+        get :show, id: @location.id, listing_id: @listing
+        assert response.body.include?("#{@listing.location.street} and whatever")
+      end
+
+      should 'display two content holders' do
+        holder = FactoryGirl.create :content_holder, inject_pages: ['service/product_page'], content: "{{ @listing.street }} and whatever"
+        holder = FactoryGirl.create :content_holder, inject_pages: ['service/product_page'], content: "This is an id of listing: {{ @listing.id }}"
+        get :show, id: @location.id, listing_id: @listing
+        assert response.body.include?("#{@listing.location.street} and whatever")
+        assert response.body.include?("This is an id of listing: #{ @listing.id }")
+      end
+
       should 'redirect to individual listing page if enabled' do
         @listing.transactable_type.update_attribute(:show_page_enabled, true)
         get :show, id: @location.id, listing_id: @listing
