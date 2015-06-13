@@ -10,7 +10,7 @@
         %br
         .row
           .section.col-sm-6.col-sm-offset-3
-            = simple_form_for :instance_creator, :url => '/marketplace/new' do |f|
+            = simple_form_for :instance_creator, :url => '/new' do |f|
               = f.text_field :email, size: 40, class: 'form-control'
               %br
               = f.submit "Submit", class: 'btn btn-primary pull-right'
