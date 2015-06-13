@@ -15,7 +15,7 @@
       .container-fluid
         %h2.section-heading List New Item
         = render 'forms/product_form', f: product_form
-    
+
     = product_form.simple_fields_for :extra_properties, product_form.object.extra_properties do |properties_form|
       - @form_components.each do |form_component|
         %section.list
@@ -26,7 +26,6 @@
               - field = form_field[model]
               - if model == 'product'
                 - @product_type.custom_attributes.each do |attribute|
-                  - next if platform_context.instance.user_based_marketplace_views? && ( attribute.name == 'quantity' || attribute.name == 'capacity' )
                   = draw_attribute_for_form(attribute, properties_form) if field.to_sym == attribute.name.to_sym
 
     %section.list#shipping-info{ :data => { 'js-element-identifier' => 'initial_shipping_profiles_section' } }

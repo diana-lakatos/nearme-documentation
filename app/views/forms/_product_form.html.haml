@@ -1,6 +1,4 @@
 - only_inputs ||= []
-= f.input :id, :as => :hidden if f.object.product.persisted?
-
 - if only_inputs.empty? || only_inputs.include?(:name)
   = f.input :name, label: "Item Name", placeholder: "Name"
 - if only_inputs.empty? || only_inputs.include?(:description)
@@ -43,7 +41,6 @@
 - @product_type.custom_attributes.each do |attribute|
   - if only_inputs.empty? || only_inputs.include?(attribute.name.to_sym)
     = draw_attribute_for_form(attribute, properties_form)
-
 
 - if only_inputs.empty? || @product_type.categories.roots.map { |c| "Category - #{c.name}".to_sym }.include?(only_inputs.first)
   - category_name = only_inputs.first.to_s.split(" - ")[1]
