@@ -72,8 +72,7 @@
             .container-fluid
               = (yield(:content).empty? ? yield : yield(:content)) unless render_content_outside_container?
             - unless no_footer?
-              - cache(platform_context.footer_cache_key) do
-                = render 'layouts/footer'
+              = render 'layouts/footer'
 
             = (yield(:content).empty? ? yield : yield(:content)) if render_content_outside_container?
         - unless no_footer?

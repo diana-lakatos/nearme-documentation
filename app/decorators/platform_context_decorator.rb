@@ -83,17 +83,8 @@ class PlatformContextDecorator
     searcher_type == "fulltext_geo"
   end
 
-  def footer_cache_key
-    "footer_#{platform_context_detail_key}_#{normalized_footer_cache_timestamp}"
-  end
-
   def platform_context_detail_key
     @platform_context_detail_key = "#{platform_context_detail.class.to_s.downcase}_#{platform_context_detail.id}"
-  end
-
-  def normalized_footer_cache_timestamp
-    instance_view_footer_timestamp = @platform_context.instance.instance_views.find_by(:path => 'layouts/theme_footer').try(:updated_at)
-    normalize_timestamp([pages.maximum(:updated_at), theme.updated_at, instance_view_footer_timestamp].compact.max)
   end
 
   def normalize_timestamp(timestamp)
