@@ -1,0 +1,26 @@
+= f.simple_fields_for f.object.checkout_extra_fields do |cef|
+  = cef.simple_fields_for cef.object.user do |uf|
+    - if uf.object.field_blank_or_changed?(:country_name) || uf.object.field_blank_or_changed?(:mobile_number)
+      .contact-information-fields
+        .row-fluid
+          .span6
+            = uf.label :country_name, "Country", class: 'control-label'
+            .controls.country-name
+              = uf.input :country_name, label: false, as: :select, collection: user_country_name_options, selected: user_country_default(@country), input_html: { class: "custom-select" }
+      
+          .span6
+            .mobile-number-field.column
+              = uf.label :mobile_number
+              .controls
+                .phone-number-country-code-field
+                  .country-calling-code
+                    = "+#{uf.object.country.calling_code}" if uf.object.country
+                  = uf.text_field :mobile_number
+          .clearfix
+
+    - (uf.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
+      - if attribute.public? && uf.object.field_blank_or_changed?(attribute.name) && ::CustomAttributes::CustomAttribute::FormElementDecorator.new(attribute).options[:required]
+        = draw_attribute_for_form(attribute, uf)
+
+    = render :partial => 'approval_requests/form', :locals => { f: uf, object: uf.object, only_required: true, only_missing: true }
+

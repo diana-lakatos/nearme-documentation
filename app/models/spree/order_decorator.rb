@@ -42,6 +42,10 @@ Spree::Order.class_eval do
 
   validates_inclusion_of :payment_method, in: PAYMENT_METHODS.values, allow_nil: true
 
+  def checkout_extra_fields(attributes = {})
+    @checkout_extra_fields ||= CheckoutExtraFields.new(self.user, attributes)
+  end
+
   def credit_card_payment?
     payment_method == Reservation::PAYMENT_METHODS[:credit_card]
   end

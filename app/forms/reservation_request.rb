@@ -3,13 +3,12 @@ class ReservationRequest < Form
   attr_accessor :dates, :start_minute, :end_minute, :book_it_out, :exclusive_price, :guest_notes,
     :card_number, :card_exp_month, :card_exp_year, :card_code, :card_holder_first_name,
     :card_holder_last_name, :payment_method_nonce, :waiver_agreement_templates, :documents,
-    :payment_method
+    :payment_method, :checkout_extra_fields
   attr_reader   :reservation, :listing, :location, :user, :client_token, :payment_method_nonce
 
   def_delegators :@reservation, :guest_notes, :quantity, :quantity=, :action_hourly_booking?, :reservation_type=,
     :credit_card_payment?, :manual_payment?, :remote_payment?, :nonce_payment?
   def_delegators :@listing,     :confirm_reservations?, :location
-  def_delegators :@user,        :mobile_number, :mobile_number=, :country_name, :country_name=, :country
 
   before_validation :setup_active_merchant_customer, :if => lambda { reservation.try(:valid?) && user.try(:valid?) }
   before_validation :build_documents, :if => lambda { reservation.present? && documents.present? }
@@ -18,12 +17,12 @@ class ReservationRequest < Form
   validates :reservation, :presence => true
   validates :user,        :presence => true
 
-  validate :validate_phone_and_country
   validate :waiver_agreements_accepted
 
   validate :files_cannot_be_empty, :if => lambda { reservation.present? }
 
-  def initialize(listing, user, platform_context, attributes = {})
+  def initialize(listing, user, platform_context, attributes = {}, checkout_extra_fields = {})
+    @checkout_extra_fields = CheckoutExtraFields.new(user, checkout_extra_fields)
     @listing = listing
     @waiver_agreement_templates = []
     @user = user
@@ -83,10 +82,6 @@ class ReservationRequest < Form
     valid? && save_reservation
   end
 
-  def display_phone_and_country_block?
-    !user.has_phone_and_country? || user.phone_or_country_was_changed?
-  end
-
   def reservation_periods
     reservation.periods
   end
@@ -143,18 +138,11 @@ class ReservationRequest < Form
     @reservation.payment_method = payment_method
   end
 
-  def validate_phone_and_country
-    add_error("Please complete the contact details", :contact_info) unless user_has_mobile_phone_and_country?
-  end
-
-  def user_has_mobile_phone_and_country?
-    user && user.country_name.present? && user.mobile_number.present?
-  end
-
   def save_reservation
     remove_empty_optional_documents
     User.transaction do
-      user.save!
+      checkout_extra_fields.save!
+
       if active_merchant_payment?
         reservation.build_billing_authorization(
           success: true,

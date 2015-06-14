@@ -94,6 +94,19 @@ And /^I choose shipping method$/ do
   click_button 'Next'
 end
 
+Given /^Extra fields are prepared$/ do
+  ensure_required_custom_attribute_is_present
+
+  @user.update_column(:instance_profile_type_id, InstanceProfileType.first.id)
+  @user.update_column(:mobile_number, '')
+  @user = User.find(@user.id)
+end
+
+Then /^I should see the checkout extra fields$/ do
+  page.should have_css('input#order_checkout_extra_fields_user_license_number')
+  page.should have_css('input#order_checkout_extra_fields_user_mobile_number')
+end
+
 Then /^I should see order summary page$/ do
   assert page.body.should have_content("Order Summary")
   @order = @user.orders.first
@@ -111,8 +124,17 @@ When /^I fill billing data$/ do
   click_button 'Complete Checkout'
 end
 
+When /^I fill in the extra checkout field$/ do
+  fill_in 'order_checkout_extra_fields_user_license_number', with: '123123412345'
+  fill_in 'order_checkout_extra_fields_user_mobile_number', with: '123123412345'
+end
+
 And /^I should see order placed confirmation$/ do
   assert page.body.should have_content(I18n.t('buy_sell_market.checkout.notices.order_placed'))
+end
+
+And /^I shouldn't see order placed confirmation$/ do
+  page.should_not have_content(I18n.t('buy_sell_market.checkout.notices.order_placed'))
 end
 
 Then /^The product should not be included in my cart$/ do

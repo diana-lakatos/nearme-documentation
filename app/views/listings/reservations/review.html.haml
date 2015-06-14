@@ -59,11 +59,9 @@
             .summary-line-value.total-amount= @reservation.total_price
             .clearfix
 
-        - if @reservation_request.display_phone_and_country_block?
-
-          %h2= t 'reservations_review.contact_information'
-
-          = render 'contact_information_fields', :f => f
+        - if should_display_checkout_extra_fields?(f.object.checkout_extra_fields.user)
+          %br
+          = render 'shared/checkout_extra_fields', :f => f
 
         = render 'documents', :f => f
         = render 'payments/payment_options', :f => f
@@ -90,10 +88,10 @@
       new PhoneNumbers.FieldsForm(
         $('form.payment'),
         {
-          countrySelector : '#reservation_request_country_name',
-          mobileSelector  : '#reservation_request_mobile_number',
-          phoneSelector   : '#reservation_request_phone',
-          sameAsSelector  : '#reservation_request_mobile_same_as_phone'
+          countrySelector : '#reservation_request_checkout_extra_fields_user_country_name',
+          mobileSelector  : '#reservation_request_checkout_extra_fields_user_mobile_number',
+          phoneSelector   : '#reservation_request_checkout_extra_fields_user_phone',
+          sameAsSelector  : '#reservation_request_checkout_extra_fields_user_mobile_same_as_phone'
         }
       );
       window.sessioncamConfiguration.customDataObjects.push( { key: "event", value: "booking_modal_opened" } );

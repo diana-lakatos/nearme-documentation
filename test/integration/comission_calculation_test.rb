@@ -79,8 +79,6 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
         card_code: '411',
         card_holder_first_name: 'Maciej',
         card_holder_last_name: 'Krajowski',
-        country_name: 'United States',
-        mobile_number: '57489473'
       }
     }
   end

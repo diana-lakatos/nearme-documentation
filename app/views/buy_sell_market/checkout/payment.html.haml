@@ -87,6 +87,13 @@
                       %span{ "data-file-name" => true }
                         = t 'buy_sell_market.checkout.labels.no_file_chosen'
 
+      - if should_display_checkout_extra_fields?(f.object.checkout_extra_fields.user)
+        %section.checkout-form#checkout-extra-fields
+          .container-fluid
+            %h2
+              = t('buy_sell_market.checkout_extra_fields.fill_in_these_details')
+            = render 'shared/checkout_extra_fields', :f => f
+
       %section.checkout-form#credit-card-select
 
         .container-fluid
@@ -130,3 +137,18 @@
 
 - content_for :domready do
   new PaymentController($('.checkout-wizard'))
+
+- content_for :script do
+  :javascript
+    $(function() {
+      new PhoneNumbers.FieldsForm(
+        $('body'),
+        {
+          countrySelector : '#order_checkout_extra_fields_user_country_name',
+          mobileSelector  : '#order_checkout_extra_fields_user_mobile_number',
+          phoneSelector   : '#order_checkout_extra_fields_user_phone',
+          sameAsSelector  : '#order_checkout_extra_fields_user_mobile_same_as_phone'
+        }
+      );
+    });
+

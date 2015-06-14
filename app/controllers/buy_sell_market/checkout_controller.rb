@@ -24,6 +24,7 @@ class BuySellMarket::CheckoutController < ApplicationController
       packages = @order.shipments.map { |s| s.to_package }
       @differentiator = Spree::Stock::Differentiator.new(@order, packages)
     when :payment
+      build_approval_request_for_object(current_user)
       @additional_charges = platform_context.instance.additional_charge_types
     when :complete
       flash[:success] = t('buy_sell_market.checkout.notices.order_placed')
@@ -42,6 +43,13 @@ class BuySellMarket::CheckoutController < ApplicationController
     end
     params[:order] ||= {}
     if @order.payment?
+      checkout_extra_fields = @order.checkout_extra_fields(params[:order][:checkout_extra_fields])
+      begin
+        checkout_extra_fields.save!
+      rescue
+        render_step order_state and return
+      end
+
       @additional_charges = platform_context.instance.additional_charge_types
       checkout_service.update_payment_documents
       @order.payment_method = params[:order][:payment_method]

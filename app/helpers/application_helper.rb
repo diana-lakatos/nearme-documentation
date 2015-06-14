@@ -284,4 +284,31 @@ module ApplicationHelper
     {month: months, year: years}
   end
 
+  # This is needed because the extra fields need to be placed in a container
+  def should_display_checkout_extra_fields?(user)
+    if user.field_blank_or_changed?(:country_name) || user.field_blank_or_changed?(:mobile_number)
+      return true
+    end
+
+    (user.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
+      if attribute.public? && user.field_blank_or_changed?(attribute.name) && ::CustomAttributes::CustomAttribute::FormElementDecorator.new(attribute).options[:required]
+        return true
+      end
+    end
+
+    if ar = user.current_approval_requests.first
+      if ar.approval_request_template.required_written_verification && ar.message.blank?
+        return true
+      end
+
+      ar.approval_request_template.approval_request_attachment_templates.each do |attachment_template|
+        next if !attachment_template.required?
+        attachment = user.approval_request_attachments.for_request_or_free(ar.id).for_attachment_template(attachment_template.id).first
+        return true if attachment.nil?
+      end
+    end
+
+    false
+  end
+
 end

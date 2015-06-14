@@ -157,6 +157,22 @@ Feature: A user can book at a space
      Then the user should have the transactable reserved for 'next week Monday'
       And the user should have the transactable reserved for 'next week Tuesday'
 
+  Scenario: A logged in user can't book a transactable without filling in extra fields
+    Given I am logged in as the user
+    Given Extra fields are prepared for booking
+      Then I fail to book space for without extra fields:
+          | Transactable     | Date         | Quantity  |
+          | the transactable | next week Monday  | 1         |
+          | the transactable | next week Tuesday | 1         |
+
+  Scenario: A logged in user can book a transactable with filling in extra fields
+    Given I am logged in as the user
+    Given Extra fields are prepared for booking
+      Then I book space for with extra fields:
+          | Transactable     | Date         | Quantity  |
+          | the transactable | next week Monday  | 1         |
+          | the transactable | next week Tuesday | 1         |
+
   @borked
   Scenario: Booking for a 'automatically confirm' listing should show relevant details
     Given bookings for the transactable do not need to be confirmed
