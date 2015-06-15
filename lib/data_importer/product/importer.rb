@@ -10,16 +10,17 @@ class DataImporter::Product::Importer
     @entities_counters = {created: entities_hash.dup, updated: entities_hash.dup}
     @entities_counters[:deleted] = SYNC_MODELS.inject({}) { |hsh, model| hsh[model] = 0; hsh }
     @processed_entities_ids = {}
-    @errors = []
+    @data_upload.parsing_result_log = ""
+    @log_entries = []
     @new_users = {}
     @all_users = []
-    @imported_products = 0
-    @processed_rows = 0
+    @imported_products = []
+    @current_row = 0
   end
 
   def import
     while params = get_params
-      begin
+      unless params.empty?
         quantity = params[:'spree/product'].delete(:total_on_hand).to_i if params[:'spree/product'].has_key?(:total_on_hand)
         price    = params[:'spree/product'].delete(:price).to_f if params[:'spree/product'].has_key?(:price)
         import_company(params[:company]) do |company|
@@ -34,31 +35,30 @@ class DataImporter::Product::Importer
             end
           end
         end
-      ensure
-        @processed_rows += 1
       end
+      store_log
     end
 
+    finish
     delete_absent_entities if @data_upload.sync_mode
     send_invitation_emails if @data_upload.send_invitational_email
-    store_log
     send_notification
   end
 
   private
 
   def get_params
+    @current_row += 1
     @product_csv.process_next_row
-  rescue NoMethodError
-    # 1 for headers and 1 for current row
-    @errors << "Error parsing CSV file at line #{@processed_rows + 2}"
-    nil
+  rescue
+    add_error('Error parsing CSV file at line')
+    {}
   end
 
   def import_company(params)
     external_id = params.delete(:external_id)
     if external_id.nil?
-      @errors << 'Missing mandatory parameter: company external_id'
+      add_error('Missing mandatory parameter: company external_id')
       return
     end
     company = find_or_initialize_by_and_assign(Company, external_id: external_id) do |company|
@@ -76,7 +76,7 @@ class DataImporter::Product::Importer
   def import_user(params, company)
     email = params.delete(:email).try(:downcase)
     if email.nil?
-      @errors << 'Missing mandatory parameter: user email'
+      add_error('Missing mandatory parameter: user email')
       return
     end
     user = User.with_deleted.find_or_initialize_by(email: email) do |u|
@@ -99,7 +99,6 @@ class DataImporter::Product::Importer
       company.creator_id = user.id if company.creator_id.nil?
       company.users << user unless company.users.include?(user)
       company.save!
-      entity_created(company)
       @all_users << user unless @all_users.include?(user)
       yield(user)
     else
@@ -123,8 +122,12 @@ class DataImporter::Product::Importer
   def import_product(params, user, company, shipping_category, price, &block)
     external_id = params.delete(:external_id)
     if external_id.nil?
-      @errors << 'Missing mandatory parameter: product external_id'
+      add_error('Missing mandatory parameter: product external_id')
       return
+    end
+    if params[:name].present? && params[:name].size > 255
+      add_warning("Product name is too long: #{params[:name]}")
+      params[:name] = params[:name][0..251] + '...'
     end
     import_entity(block) do
       find_or_initialize_by_and_assign(Spree::Product, external_id: external_id, company_id: company.id) do |product|
@@ -181,7 +184,7 @@ class DataImporter::Product::Importer
     end
 
     if entity.errors.empty?
-      @imported_products += 1 if entity.is_a?(Spree::Product)
+      @imported_products << entity.id if entity.is_a?(Spree::Product)
       block.call(entity) if block
     else
       log_validation_error(entity)
@@ -211,7 +214,7 @@ class DataImporter::Product::Importer
   end
 
   def log_validation_error(entity)
-    @errors << "Validation error for #{entity.class.name}: #{entity.errors.full_messages.to_sentence}."
+    add_error("Validation error for #{entity.class.name}: #{entity.errors.full_messages.to_sentence}.")
   end
 
   def send_invitation_emails
@@ -234,16 +237,31 @@ class DataImporter::Product::Importer
     end
   end
 
+  def add_error(error)
+    @log_entries << "Error on line #{@current_row}. #{error}"
+  end
+
+  def add_warning(warning)
+    @log_entries << "Warning on line #{@current_row}. #{warning}"
+  end
+
   def store_log
-    if @errors.empty? && @imported_products == @processed_rows
+    unless @log_entries.empty?
+      @data_upload.parsing_result_log += (@log_entries.join("\n") << "\n")
+      @data_upload.save(validate: false)
+      @log_entries = []
+    end
+  end
+
+  def finish
+    if @imported_products.uniq.size == @current_row
       @data_upload.finish!
-    elsif @imported_products != 0
+    elsif !@imported_products.empty?
       @data_upload.finish_with_validation_errors!
     else
       @data_upload.fail!
     end
 
-    @data_upload.parsing_result_log = @errors.join("\n")
     @data_upload.parse_summary = {
       new:     @entities_counters[:created],
       updated: @entities_counters[:updated],

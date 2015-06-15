@@ -14,6 +14,7 @@
       = f.simple_fields_for :companies, @user.companies.first do |companies_form|
         = companies_form.simple_fields_for :locations, @user.companies.first.locations.first do |locations_form|
           = locations_form.simple_fields_for :listings, @user.companies.first.locations.first.listings.first do |listings_form|
+            = render 'listings/listing_form', f: listings_form, listing: listings_form.object, only_inputs: [ :transactable_type_id, :booking_type, :id ]
             - @form_components.each do |form_component|
               %h2= form_component.name
               %br

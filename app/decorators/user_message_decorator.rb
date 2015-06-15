@@ -4,7 +4,7 @@ class UserMessageDecorator < Draper::Decorator
   delegate_all
 
   def recipient_name
-    recipient.name
+    recipient.first_name
   end
 
   def css_class(user = nil)

@@ -15,11 +15,7 @@ class FormAttributes
       :description,
       :address,
       :industries,
-      :payments_mailing_address,
-      :paypal_email,
-      :bank_owner_name,
-      :bank_routing_number,
-      :bank_account_number,
+      :payments_mailing_address
     ]
   end
 
@@ -49,7 +45,18 @@ class FormAttributes
   end
 
   def product(product_type = nil)
-    Spree::Product.public_custom_attributes_names(product_type.id).map { |k| Hash === k ? k.keys : k }.flatten
+    [
+      :name,
+      :description,
+      :photos,
+      :price,
+      :quantity,
+      :integrated_shipping,
+      :shipping_info,
+      :action_rfq,
+      :documents_upload
+    ] +
+    Spree::Product.public_custom_attributes_names(product_type.id).map { |k| Hash === k ? k.keys : k }.flatten +
     product_type.categories.roots.map { |k| ('Category - ' + k.name).to_sym }.flatten
   end
 end

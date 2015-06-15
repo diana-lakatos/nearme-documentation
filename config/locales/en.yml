@@ -364,6 +364,7 @@ en:
       content_holders: "Content Holders"
       content_holder: "Content Holder"
       name: Name
+      inject_pages: 'Inject Pages'
       enabled: Enabled
       content: Content
       created_at: "Created at"
@@ -1004,6 +1005,7 @@ en:
       suggest_date: 'What time works best for you?'
       per_unit: 'Per Unit'
       number_of_units: 'Number Of Units'
+      not_bookable: 'Suggest date'
   search:
     list:
       additional_social_connections:

@@ -13,6 +13,10 @@ class WorkflowStep::SignUpWorkflow::CreatedViaBulkUploader < WorkflowStep::SignU
     @user
   end
 
+  # user:
+  #   User object
+  # user_password:
+  #   string
   def data
     { user: @user, user_password: @password }
   end

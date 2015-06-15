@@ -1,5 +1,9 @@
 class WorkflowStep::ListingWorkflow::DraftCreated < WorkflowStep::ListingWorkflow::BaseStep
 
+  # user:
+  #   creator User object
+  # listing:
+  #   Transactable object
   def data
     { user: @transactable.creator, listing: @transactable }
   end

@@ -1,4 +1,5 @@
 class Dashboard::OrdersController < Dashboard::BaseController
+  before_filter :find_order, except: [:index]
 
   def index
     @rating_systems = reviews_service.get_rating_systems
@@ -6,10 +7,17 @@ class Dashboard::OrdersController < Dashboard::BaseController
   end
 
   def show
-    @order = current_user.orders.find_by_number(params[:id])
+  end
+
+  def success
+    render action: :show
   end
 
   private
+
+  def find_order
+    @order = current_user.orders.find_by_number(params[:id])
+  end
 
   def reviews_service
     @reviews_service ||= ReviewsService.new(current_user, platform_context.instance, params)

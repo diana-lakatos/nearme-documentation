@@ -3,6 +3,7 @@ class SecuredParams
   def boarding_form(product_type=nil)
     [
       :draft,
+      user_attributes: nested(self.user),
       company_attributes: nested(self.company),
       product_form: nested(self.product_form(product_type))
 
@@ -1167,7 +1168,9 @@ class SecuredParams
     [
       :name,
       :content,
-      :enabled
+      :enabled,
+      :position,
+      inject_pages: []
     ]
   end
 

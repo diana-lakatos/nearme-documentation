@@ -1,4 +1,4 @@
-= simple_form_for instance, :url => '/marketplace/create', :html => { :multipart => true } do |f|
+= simple_form_for instance, :url => '/create', :html => { :multipart => true } do |f|
   = hidden_field_tag "instance_creator[email]", @instance_creator.email
 
   - if user.new_record?

@@ -1,5 +1,6 @@
 %tr
   %td= link_to holder.name, [:edit, :instance_admin, :theme, holder]
+  %td= holder.inject_pages.map(&:humanize).join(', ')
   %td= holder.enabled
   %td= l holder.created_at, format: :long
   %td

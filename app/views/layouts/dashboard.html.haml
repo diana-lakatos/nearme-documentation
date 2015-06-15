@@ -1,6 +1,8 @@
 !!!
 %html
   %head
+    -cache content_holder_for_path_cache_key, expires_in: 12.hours, skip_digest: true do
+      = render 'layouts/content_holder_injector'
     - if content_for(:canonical_url)
       %link{rel:"canonical", href: yield(:canonical_url)}
     - if ActionController::Base.asset_host
@@ -50,6 +52,7 @@
       = javascript_include_tag :chrome_frame
 
   %body
+    = yield(:body_top)
     = render 'shared/render_flash'
     - unless no_navbar?
       .container
@@ -71,3 +74,4 @@
     = javascript_include_tag :dashboard
     = render 'layouts/initializers'
     = render 'layouts/scripts'
+    = yield(:body_bottom)

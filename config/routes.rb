@@ -36,6 +36,15 @@ DesksnearMe::Application.routes.draw do
 
   mount Ckeditor::Engine => '/ckeditor'
 
+  constraints host: 'setup.near-me.com' do
+    get '/', to: 'instance_wizard#index'
+    get '/new', to: 'instance_wizard#new'
+    post '/new', to: 'instance_wizard#new'
+    post '/create', to: 'instance_wizard#create'
+  end
+
+  # This is still in place as a backup incase something goes wrong with the new hosted near-me.com site.
+  # TODO: Delete this entire near-me.com constraints block after July 15th. (Plus all the near-me.com code).
   constraints host: 'near-me.com' do
     get '/features-setup', :to => 'platform_home#features_setup'
     get '/features-design', :to => 'platform_home#features_design'
@@ -694,7 +703,11 @@ DesksnearMe::Application.routes.draw do
     end
 
     resources :images
-    resources :orders, only: [:index, :show]
+    resources :orders, only: [:index, :show] do
+      member do
+        get :success
+      end
+    end
     resources :photos, :only => [:create, :destroy, :edit, :update]
     resources :reviews, :only => [:index, :create, :update, :destroy]
 

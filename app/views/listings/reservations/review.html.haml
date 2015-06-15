@@ -79,7 +79,7 @@
               %p.error-block= f.object.errors[:"waiver_agreement_template_#{wat.id}"].first
 
         = f.button :submit, t('reservations_review.buttons.request'),
-            disable_with: t('reservations_review.disabled_buttons.request')
+            disable_with: t('reservations_review.disabled_buttons.request'), class: 'btn-green'
 
 - content_for :domready do
   new PaymentController($('.reservation-wizard'))

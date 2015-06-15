@@ -25,7 +25,7 @@ class InstanceAdmin::Theme::ContentHoldersControllerTest < ActionController::Tes
 
       should 'be edited' do
         put :update, id: @holder.id, content_holder: { enabled: false }
-        assert_redirected_to instance_admin_theme_content_holder_path(@holder)
+        assert_redirected_to instance_admin_theme_content_holders_path
         holder = ContentHolder.find @holder.id
         assert_equal holder.enabled, false
       end

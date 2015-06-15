@@ -27,7 +27,7 @@ class BuySellMarket::CheckoutController < ApplicationController
       @additional_charges = platform_context.instance.additional_charge_types
     when :complete
       flash[:success] = t('buy_sell_market.checkout.notices.order_placed')
-      redirect_to dashboard_order_path(params[:order_id])
+      redirect_to success_dashboard_order_path(params[:order_id])
       return
     end
 

@@ -1,6 +1,6 @@
 class BoardingForm < Form
 
-  attr_accessor :product_form, :company, :user, :company_attributes
+  attr_accessor :product_form, :company, :user, :user_attributes, :company_attributes
 
   def_delegators :@product, :draft?
 
@@ -32,6 +32,7 @@ class BoardingForm < Form
     params[:product_form].merge!(draft: params.delete(:draft).nil? ? false : true)
 
     store_attributes(params)
+    @user.assign_attributes(params[:user_attributes])
     @company.assign_attributes(params[:company_attributes])
 
     if draft? || valid?
