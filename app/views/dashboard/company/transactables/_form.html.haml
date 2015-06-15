@@ -105,8 +105,7 @@
       = f.input :confirm_reservations, as: :bootstrap_switch
     - else
       - if custom_attribute_names.include?(field)
-        - @transactable_type.custom_attributes.each do |attribute|
-          = draw_attribute_for_form(attribute, f)
+        = draw_attribute_for_form(@transactable_type.custom_attributes.find_by(name: field), f)
       -elsif f.object.attributes.include?(field)
         = f.input field
 .hidden
