@@ -27,6 +27,7 @@ module InstanceType::Searcher
 
   def paginate_results(page, per_page)
     page ||= 1
+    result_count
     @results = @results.paginate(page: page.to_i, per_page: per_page.to_i)
   end
 
