@@ -1,5 +1,5 @@
 %tr
-  %td= resource.name
+  %td= link_to resource.name, profile_path(resource)
   %td= resource.email
   %td= resource.created_at.strftime("%b %-d, %Y")
   %td
