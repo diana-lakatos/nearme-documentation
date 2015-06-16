@@ -54,7 +54,7 @@
           placeholder: t('simple_form.placeholders.registration.we_can_contact_you')
 
       .actions
-        = f.submit t('sign_up_form.buttons.sign_up'), disable_with: t('sign_up_form.disabled_buttons.sign_up')
+        = f.submit t('sign_up_form.buttons.sign_up'), disable_with: t('sign_up_form.disabled_buttons.sign_up'), class: 'btn btn-green'
 
 - if request.xhr?
   :javascript

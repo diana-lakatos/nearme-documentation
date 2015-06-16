@@ -26,7 +26,7 @@ class @ShippoFieldsManager
               select_element.append($("<option></option>").attr("value", new_element).text(new_element));
           select_element.trigger('change')
 
-    if $('#product_errors_present').length == 0
+    if $('form#product_form').data('new-record') && $('#product_errors_present').length == 0
       @setDefaultOptionAsSelected()
 
     $('[data-js-element-identifier="product_form_templates_list"]').trigger('change')

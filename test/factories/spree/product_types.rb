@@ -9,7 +9,7 @@ FactoryGirl.define do
     factory :wizard_product_type do
       after(:build) do |product_type|
         Spree::ProductType.transaction do
-          product_type.form_components << FactoryGirl.build(:product_form_component, form_componentable: product_type)
+          product_type.form_components << FactoryGirl.build(:form_component_product, form_componentable: product_type)
         end
       end
     end

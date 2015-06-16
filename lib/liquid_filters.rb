@@ -87,7 +87,13 @@ module LiquidFilters
   end
 
   def translate_property(property, target_acting_as_set)
-    translate("simple_form.labels.#{target_acting_as_set.translation_key_suffix}.#{property}")
+    if Transactable::DEFAULT_ATTRIBUTES.include? property
+      # These are the hard coded attributes that have their own column on the transactables table
+      translate("simple_form.labels.transactable.#{property}")
+    else
+      # These are the custom attributes added by the MPO
+      translate("simple_form.labels.#{target_acting_as_set.translation_key_suffix}.#{property}")
+    end
   end
 
   def translate(key, options={})
@@ -108,6 +114,7 @@ module LiquidFilters
 
   def custom_sanitize(html = '')
     return '' if html.blank?
+    html.gsub!("\r\n", "<br />")
     if PlatformContext.current.instance.custom_sanitize_config.present?
       @custom_sanitizer ||= CustomSanitizer.new(PlatformContext.current.instance.custom_sanitize_config)
       @custom_sanitizer.sanitize(html).html_safe

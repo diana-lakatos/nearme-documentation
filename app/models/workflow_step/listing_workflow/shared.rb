@@ -16,6 +16,16 @@ class WorkflowStep::ListingWorkflow::Shared < WorkflowStep::ListingWorkflow::Bas
     @transactable.creator
   end
 
+  # listing:
+  #   Transactable
+  # email:
+  #   string, user email
+  # name:
+  #   string, user name
+  # message:
+  #   string, message
+  # sharer:
+  #   User object (sharing user)
   def data
     { listing: @transactable, email: @user_email, name: @user_name, message: @message, sharer: @user }
   end

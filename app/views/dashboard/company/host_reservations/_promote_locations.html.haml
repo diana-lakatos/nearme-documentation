@@ -2,7 +2,8 @@
   - if locations.present?
     - locations.each do |location|
       %h2 #{location.name}
-      %p You currently have no reservations. Promote your locations by tweeting or sharing a direct link!
+      %p
+        = t('dashboard.host_reservations.no_reservations_promote_reservations')
 
       .text-center.sharelocation
         %span

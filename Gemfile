@@ -215,5 +215,7 @@ gem 'pry-rails'
 gem 'awesome_print'
 gem 'i18n_data'
 
+gem 'parser'
+
 # Remove '0.4.0' when updating to RoR 4.2
 gem 'routing-filter', '~> 0.4.0'

@@ -16,6 +16,10 @@ class WorkflowStep::SupportWorkflow::BaseStep < WorkflowStep::BaseStep
     @message.ticket.assigned_to || User.new(email: @message.email, name: @message.full_name)
   end
 
+  # message:
+  #   Support::TicketMessage object
+  # ticket:
+  #   Support::Ticket object to which the message belongs
   def data
     { message: @message, ticket: @message.ticket }
   end

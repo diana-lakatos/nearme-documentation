@@ -1,7 +1,7 @@
 - custom_attribute_names = @transactable_type.custom_attributes.collect { |custom_attribute| custom_attribute.name }
 = f.hidden_field :transactable_type_id, value: @transactable_type.id
 = f.hidden_field :booking_type, value: @transactable.transactable_type.booking_choices.size == 1 ? f.object.transactable_type.booking_choices.first : @transactable.booking_type, 'data-booking-type' => true
-= f.input :id, :as => :hidden
+= f.input :id, as: :hidden
 
 - @form_components.each do |form_component|
   %h4
@@ -105,9 +105,7 @@
       = f.input :confirm_reservations, as: :bootstrap_switch
     - else
       - if custom_attribute_names.include?(field)
-        - @transactable_type.custom_attributes.each do |attribute|
-          - next if (platform_context.instance.user_based_marketplace_views? && ( attribute.name == 'quantity' || attribute.name == 'capacity' )) || attribute.name != field
-          = draw_attribute_for_form(attribute, f)
+        = draw_attribute_for_form(@transactable_type.custom_attributes.find_by(name: field), f)
       -elsif f.object.attributes.include?(field)
         = f.input field
 .hidden

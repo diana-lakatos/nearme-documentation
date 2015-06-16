@@ -20,6 +20,10 @@ class WorkflowStep::UserMessageWorkflow::BaseStep < WorkflowStep::BaseStep
     @user_message.recipient
   end
 
+  # user_message
+  #   UserMessage object
+  # user
+  #   User object
   def data
     { user_message: @user_message, user: @user_message.recipient }
   end

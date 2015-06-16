@@ -16,6 +16,8 @@ class WorkflowStep::InquiryWorkflow::BaseStep < WorkflowStep::BaseStep
     @inquiry.listing.creator
   end
 
+  # inquiry:
+  #   Inquiry object
   def data
     { inquiry: @inquiry }
   end

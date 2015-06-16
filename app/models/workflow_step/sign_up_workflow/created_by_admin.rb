@@ -9,6 +9,10 @@ class WorkflowStep::SignUpWorkflow::CreatedByAdmin < WorkflowStep::SignUpWorkflo
     @creator
   end
 
+  # new_user:
+  #   User object
+  # creator:
+  #   User object
   def data
     { new_user: @user, creator: @creator }
   end

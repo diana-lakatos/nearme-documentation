@@ -240,9 +240,19 @@ class Search.SearchController extends Search.Controller
   # Note that the behaviour semantics are different to manually moving the map.
   triggerSearchFromQuery: ->
     # we want to log any new search query
+    categories_checkboxes = _.toArray(@container.find('input[name="category_ids[]"]:checked').map(-> $(this).val()))
+    categories_selects = []
+    @container.find('input[name="categories_ids[]"]').each ->
+      value = $(this).val()
+      if value && value != ''
+        values = value.split(',')
+        categories_selects = categories_selects.concat(values)
+
+    all_categories = categories_selects.concat(categories_checkboxes)
+
     @assignFormParams(
       ignore_search_event: 0
-      category_ids: _.toArray(@container.find('input[name="category_ids[]"]:checked').map(-> $(this).val())).join(',')
+      category_ids: all_categories.join(',')
     )
     custom_attributes = {}
     for custom_attribute in @container.find('div[data-custom-attribute]')

@@ -28,6 +28,15 @@ class InstanceAdmin::Theme::ContentHoldersTest < ActionDispatch::IntegrationTest
       end
     end
 
+    context 'for paths' do
+      should 'be displayed in listing show and not at root_path' do
+        location = FactoryGirl.create :location_in_auckland
+        holder = FactoryGirl.create :content_holder, inject_pages: ['service/product_page'], content: "content from holder whatever"
+        get root_path
+        refute response.body.include?(holder.content)
+      end
+    end
+
   end
 
 end

@@ -1,5 +1,6 @@
 .modal-header
-  .modal-title Your purchase was successful!
+  .modal-title
+    = t('dashboard.reservations.purchase_was_successful')
 .modal-body
   = link_to 'Add to Calendar', export_dashboard_user_reservation_path(@reservation, format: :ics),
       class: 'btn blue'

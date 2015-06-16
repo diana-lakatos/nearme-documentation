@@ -20,6 +20,8 @@ class WorkflowStep::ListingWorkflow::BaseStep < WorkflowStep::BaseStep
     @transactable.creator
   end
 
+  # listing:
+  #   Transactable object
   def data
     { listing: @transactable }
   end

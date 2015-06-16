@@ -8,7 +8,7 @@ class InstanceAdmin::DataUploads::BaseController < InstanceAdmin::BaseController
   end
 
   def index
-    @data_uploads = PlatformContext.current.instance.data_uploads.for_importable(@importable).all
+    @data_uploads = DataUpload.for_importable(@importable).includes(:uploader).order(created_at: :desc).paginate(page: params[:page])
   end
 
   def create
@@ -24,7 +24,7 @@ class InstanceAdmin::DataUploads::BaseController < InstanceAdmin::BaseController
   end
 
   def show
-    @data_upload = PlatformContext.current.instance.data_uploads.for_importable(@importable).find(params[:id])
+    @data_upload = DataUpload.for_importable(@importable).find(params[:id])
   end
 
   def download_csv_template

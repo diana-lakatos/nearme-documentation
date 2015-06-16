@@ -16,6 +16,8 @@ class WorkflowStep::OrderWorkflow::BaseStep < WorkflowStep::BaseStep
     @order.company.creator
   end
 
+  # order
+  #   Spree::Order object
   def data
     { order: @order }
   end

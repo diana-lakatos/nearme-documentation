@@ -4,6 +4,12 @@ class WorkflowStep::InstanceWorkflow::Created < WorkflowStep::InstanceWorkflow::
     @user_password = password
   end
 
+  # user_password:
+  #   string
+  # instance:
+  #   Instance object
+  # user:
+  #   User object
   def data
     super.merge(user_password: @user_password)
   end
