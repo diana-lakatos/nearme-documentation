@@ -1,6 +1,7 @@
 .box
   - if @visits.total_entries.zero?
-    %p.no_data Your locations haven't been visited yet.
+    %p.no_data
+      = t('dashboard.analytics.no_location_visits_yet')
   - else
     .chart
       .total.right
