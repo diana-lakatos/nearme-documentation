@@ -52,9 +52,11 @@ module InstanceType::Searcher::GeolocationSearcher
           listing_pricing: search.lgpricing.blank? ? [] : search.lgpricing_filters,
           sort: search.sort
         })
+        radius = PlatformContext.current.instance.search_radius.to_i
+        radius = search.radius.to_i if radius.zero?
         @search_params.merge!({
           midpoint: search.midpoint,
-          radius: search.radius,
+          radius: radius,
         }) if located || adjust_to_map
 
         ::Listing::SearchFetcher.new(@search_params)
