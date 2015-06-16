@@ -47,6 +47,17 @@ module UsersHelper
     params[:reviews_page].present?
   end
 
+  def active_tab?(tab)
+    case tab
+    when 'products'
+      !param_reviews_page_present? && @products.count > 0
+    when 'services'
+      !param_reviews_page_present? && @listings.count > 0
+    when 'reviews' 
+      param_reviews_page_present? || @company.nil?
+    end
+  end
+
   def user_filter_checked?(filter)
     params[:filters].try(:include?, filter.to_s)
   end
