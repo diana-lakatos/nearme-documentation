@@ -10,9 +10,9 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Listing
     fetcher.to_a.map do |f|
       scoped_transactables << ::Transactable.where(id: f['_id'].to_i).first
     end
-    scoped_transactables.uniq!
-    @search_results_count = scoped_transactables.count
-    @results = scoped_transactables
+    scoped_transactables_compacted = scoped_transactables.compact.uniq
+    @search_results_count = scoped_transactables_compacted.count
+    @results = scoped_transactables_compacted
   end
 
   def filters
