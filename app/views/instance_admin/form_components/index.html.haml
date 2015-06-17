@@ -8,8 +8,8 @@
             %tr
               %td= resource.name.humanize
               %td= resource.form_type
-              %td= link_to 'Edit', edit_polymorphic_url([:instance_admin, @controller_scope, @form_componentable, resource]), class: 'pull-right'
-              %td= link_to "Delete", polymorphic_url([:instance_admin, @controller_scope, @form_componentable, resource]), :method => :delete, data: { confirm: 'Are you sure you want to delete this transactable type?' }, class: "pull-right"
+              %td= link_to 'Edit', edit_polymorphic_path([:instance_admin, @controller_scope, @form_componentable, resource]), class: 'pull-right'
+              %td= link_to "Delete", polymorphic_path([:instance_admin, @controller_scope, @form_componentable, resource]), :method => :delete, data: { confirm: 'Are you sure you want to delete this transactable type?' }, class: "pull-right"
 
 - @form_components.group_by(&:form_type).each do |form_type, form_components|
   .content-container
@@ -23,9 +23,9 @@
                 = form_component.name
 
 = content_for :header_buttons do
-  = link_to 'New Form Component', new_polymorphic_url([:instance_admin, @controller_scope, @form_componentable, FormComponent.new], :form_type => @form_type || :space_wizard), class: 'pull-right btn btn-blue'
+  = link_to 'New Form Component', new_polymorphic_path([:instance_admin, @controller_scope, @form_componentable, FormComponent.new], :form_type => @form_type || :space_wizard), class: 'pull-right btn btn-blue'
 
 = content_for :script do
   :javascript
-    new FormComponents("ol.formComponentPanelList", "#{@form_componentable.id}")
+    new FormComponents("ol.formComponentPanelList", "#{polymorphic_path([:instance_admin, @controller_scope, @form_componentable, FormComponent.new])}")
 
