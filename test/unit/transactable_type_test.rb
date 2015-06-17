@@ -61,47 +61,6 @@ class TransactableTypeTest < ActiveSupport::TestCase
 
   end
 
-  context 'availability rules settings' do
-
-    should "create new transcactable type attribute for confirm reservations with public true and default value true" do
-      transactable_type = FactoryGirl.create(:transactable_type)
-      transactable = FactoryGirl.create(:transactable, transactable_type: transactable_type)
-      assert_not_nil transactable.confirm_reservations
-      assert_equal true, transactable.confirm_reservations
-    end
-
-    should "create new transcactable type attribute for confirm reservations with public false and default value false" do
-      transactable_type = FactoryGirl.create(:transactable_type, availability_options: { "confirm_reservations" => { "default_value" => false, "public" => false } })
-      transactable = FactoryGirl.create(:transactable, transactable_type: transactable_type)
-      assert_not_nil transactable.confirm_reservations
-      assert_equal false, transactable.confirm_reservations
-    end
-
-    context 'validation' do
-
-      should 'be valid if all is set' do
-        assert FactoryGirl.build(:transactable_type, availability_options: { "confirm_reservations" => { "default_value" => false, "public" => false } }).valid?
-      end
-
-      should 'not be valid if default value is not set' do
-        refute FactoryGirl.build(:transactable_type, availability_options: { "confirm_reservations" => { "default_value" => nil, "public" => false } }).valid?
-      end
-
-      should 'not be valid if public is not set' do
-        refute FactoryGirl.build(:transactable_type, availability_options: { "confirm_reservations" => { "default_value" => true, "public" => nil } }).valid?
-      end
-
-      should 'not be valid if options are not set at all' do
-        refute FactoryGirl.build(:transactable_type, availability_options: nil).valid?
-      end
-
-      should 'not be valid if options do not contain confirm reservations' do
-        refute FactoryGirl.build(:transactable_type, availability_options: { "confirm_reservations" => nil}).valid?
-      end
-
-    end
-  end
-
   context '#booking_choices' do
     setup do
       @transactable_type = TransactableType.first
