@@ -6,6 +6,7 @@ class Charge < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :payment, -> { with_deleted }
+  belongs_to :payment_gateway
 
   scope :successful, -> { where(:success => true) }
 

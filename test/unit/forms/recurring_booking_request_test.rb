@@ -41,13 +41,13 @@ class RecurringBookingRequestTest < ActiveSupport::TestCase
     context 'determine payment method' do
 
       should 'set credit card' do
-        Billing::Gateway::Incoming.any_instance.stubs(:possible?).returns(true)
-        assert_equal @recurring_booking_request.payment_method, Reservation::PAYMENT_METHODS[:credit_card]
+        Instance.any_instance.stubs(:payment_gateway).returns(FactoryGirl.build(:stripe_payment_gateway))
+        assert_equal Reservation::PAYMENT_METHODS[:credit_card], RecurringBookingRequest.new(@listing, @user, PlatformContext.new(@instance), @attributes).payment_method
       end
 
       should 'set manual' do
-        Billing::Gateway::Incoming.any_instance.stubs(:possible?).returns(false)
-        assert_equal @recurring_booking_request.payment_method, Reservation::PAYMENT_METHODS[:manual]
+        Instance.any_instance.stubs(:payment_gateway).returns(nil)
+        assert_equal Reservation::PAYMENT_METHODS[:manual], RecurringBookingRequest.new(@listing, @user, PlatformContext.new(@instance), @attributes).payment_method
       end
     end
   end

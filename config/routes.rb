@@ -84,6 +84,13 @@ DesksnearMe::Application.routes.draw do
   end
 
   root :to => "home#index"
+  namespace :webhooks do
+    resource :braintree_marketplace, only: [] do
+      collection do
+        match '', via: [:get, :post], as: :webhook, action: :webhook
+      end
+    end
+  end
 
   get '/404', :to => 'errors#not_found'
   get '/422', :to => 'errors#server_error'
@@ -188,9 +195,9 @@ DesksnearMe::Application.routes.draw do
         collection do
           post :countries
           post :payment_gateways
-          post :country_instance_payment_gateway
-          get :country_instance_payment_gateways
-          match :create_or_update_instance_payment_gateway, via: [:post, :put, :patch]
+          post :country_payment_gateway
+          get :country_payment_gateways
+          match :create_or_update_payment_gateway, via: [:post, :put, :patch]
         end
       end
       resource :locations, :only => [:show, :update], :controller => 'locations'

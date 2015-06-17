@@ -1,7 +1,7 @@
 - if @reservation_request.confirm_reservations?
   %p.confirm-reservations
     = t('reservations.manually_confirm', lessor: platform_context.lessor)
-    - if @reservation_request.nonce_payment_available?
+    - if @reservation_request.possible_nonce_payment?
       = t('reservations.paypal_and_cc_charge_after_confirmation')
     - else
       = t('reservations.charge_after_confirmation')

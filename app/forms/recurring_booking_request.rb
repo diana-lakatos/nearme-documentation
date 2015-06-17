@@ -37,7 +37,7 @@ class RecurringBookingRequest < Form
       @recurring_booking.quantity = [1, quantity.to_i].max
       @recurring_booking.schedule_params = schedule_params
       @recurring_booking.currency = @listing.currency
-      @billing_gateway = Billing::Gateway::Incoming.new(@user, @instance, @recurring_booking.currency, @listing.company.iso_country_code) if @user
+      @billing_gateway = @instance.payment_gateway(@listing.company.iso_country_code, @recurring_booking.currency)
       @recurring_booking.payment_method = payment_method
       @count = 0
       @recurring_booking.schedule.occurrences(@recurring_booking.end_on || Time.zone.now + 20.years)[0..@recurring_booking.occurrences].each do |date|
@@ -86,7 +86,7 @@ class RecurringBookingRequest < Form
   def payment_method
     @payment_method = if @listing.action_free_booking?
                         Reservation::PAYMENT_METHODS[:free]
-                      elsif @billing_gateway.try(:possible?)
+                      elsif @billing_gateway.present?
                         Reservation::PAYMENT_METHODS[:credit_card]
                       else
                         Reservation::PAYMENT_METHODS[:manual]
@@ -123,11 +123,10 @@ class RecurringBookingRequest < Form
       @recurring_booking.reservations.each do |reservation|
         if reservation.valid?
           if !reservation.listing.action_free_booking? && reservation.payment_method == Reservation::PAYMENT_METHODS[:credit_card] && !@charged
-            mode = @instance.test_mode? ? "test" : "live"
             reservation.build_billing_authorization(
               token: @token,
-              payment_gateway_class: @gateway_class,
-              payment_gateway_mode: mode
+              payment_gateway: @billing_gateway,
+              payment_gateway_mode: @billing_gateway.mode
             )
             @charged = true
           end
@@ -158,12 +157,11 @@ class RecurringBookingRequest < Form
       )
 
       if credit_card.valid?
-        response = @billing_gateway.authorize(@reservation.total_amount_cents, credit_card)
+        response = @billing_gateway.authorize(@reservation.total_amount_cents, @reservation.currency, credit_card)
         if response[:error].present?
           add_error(response[:error], :cc)
         else
           @token = response[:token]
-          @gateway_class = response[:payment_gateway_class]
           if (credit_card_id = @billing_gateway.store_credit_card(@reservation.owner, credit_card)).nil?
             add_error("Unfortunately we have some internal issues with processing your credit card. There is nothing you can do, changing credit card will not help. Please try again later", :cc)
           else

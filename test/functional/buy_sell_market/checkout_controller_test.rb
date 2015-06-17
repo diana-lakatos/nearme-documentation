@@ -28,8 +28,8 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
       end
 
       should 'redirect if no payment gateway available for given country' do
-        FactoryGirl.create(:stripe_instance_payment_gateway)
-        FactoryGirl.create(:country_instance_payment_gateway)
+        FactoryGirl.create(:stripe_payment_gateway)
+        FactoryGirl.create(:country_payment_gateway)
         @order.company.company_address.update_column(:iso_country_code, 'PL')
         get :show, order_id: @order, id: 'address'
         assert_redirected_to cart_index_path
@@ -39,7 +39,7 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
     context 'with billing gateway' do
 
       setup do
-        FactoryGirl.create(:country_instance_payment_gateway, instance_payment_gateway_id: FactoryGirl.create(:stripe_instance_payment_gateway).id)
+        FactoryGirl.create(:country_payment_gateway, payment_gateway_id: FactoryGirl.create(:stripe_payment_gateway).id)
       end
 
       context 'address' do
@@ -62,16 +62,16 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
       context 'payment' do
 
         setup do
-          FactoryGirl.create(:country_instance_payment_gateway, instance_payment_gateway_id: FactoryGirl.create(:stripe_instance_payment_gateway).id)
+          @payment_gateway = FactoryGirl.create(:country_payment_gateway, payment_gateway_id: FactoryGirl.create(:stripe_payment_gateway).id).payment_gateway
           @order = FactoryGirl.create(:order_waiting_for_payment, user: @user, service_fee_buyer_percent: 10, currency: 'PLN')
         end
 
         should 'correct proceed to complete state if all is ok' do
           @credit_card = stub('valid?' => true)
-          @authorize_response = { token: 'abc', payment_gateway_class: Billing::Gateway::Processor::Incoming::Stripe }
+          @authorize_response = { token: 'abc' }
           ActiveMerchant::Billing::CreditCard.expects(:new).returns(@credit_card)
-          Billing::Gateway::Incoming.any_instance.expects(:authorize).with do |amount, credit_card|
-            amount == Money.new(155_00, 'PLN')  && credit_card == @credit_card
+          PaymentGateway.any_instance.expects(:authorize).with do |amount, currency, credit_card|
+            amount == Money.new(155_00, 'PLN')  && credit_card == @credit_card && currency == 'PLN'
           end.returns(@authorize_response)
           assert_difference 'Spree::Payment.count' do
             put :update, order_id: @order, id: 'payment'
@@ -87,7 +87,7 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
           assert_not_nil @order.billing_authorization
           assert @order.billing_authorization.success?
           assert_equal 'abc', @order.billing_authorization.token
-          assert_equal 'Billing::Gateway::Processor::Incoming::Stripe', @order.billing_authorization.payment_gateway_class
+          assert_equal @payment_gateway.id, @order.billing_authorization.payment_gateway_id
         end
 
         should 'render error if CC is invalid' do
@@ -102,9 +102,9 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
         end
 
         should 'render error if authorization failed' do
-          authorize_response = { error: 'No $$$ on account', payment_gateway_class: Billing::Gateway::Processor::Incoming::Stripe }
+          authorize_response = { error: 'No $$$ on account' }
           ActiveMerchant::Billing::CreditCard.expects(:new).returns(stub('valid?' => true))
-          Billing::Gateway::Incoming.any_instance.expects(:authorize).returns(authorize_response)
+          PaymentGateway.any_instance.expects(:authorize).returns(authorize_response)
           assert_difference 'Spree::Payment.count' do
             put :update, order_id: @order, id: 'payment'
           end

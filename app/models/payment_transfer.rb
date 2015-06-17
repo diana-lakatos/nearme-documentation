@@ -10,6 +10,7 @@ class PaymentTransfer < ActiveRecord::Base
   belongs_to :company
   belongs_to :instance
   belongs_to :partner
+  belongs_to :payment_gateway
 
   has_many :payments, :dependent => :nullify
 
@@ -67,14 +68,17 @@ class PaymentTransfer < ActiveRecord::Base
 
   # Attempt to payout through the billing gateway
   def payout
-    return if !billing_gateway.possible?
+
+    return if !billing_gateway.present?
     return if transferred?
     return if amount <= 0
 
     # Generates a ChargeAttempt with this record as the reference.
     payout = billing_gateway.payout(
+      company,
       amount: amount,
-      reference: self
+      reference: self,
+      payment_gateway_mode: payment_gateway_mode
     )
 
     if payout.success
@@ -101,13 +105,13 @@ class PaymentTransfer < ActiveRecord::Base
   end
 
   def payout_processor
-    billing_gateway.processor_class
+    billing_gateway
   end
 
   def possible_automated_payout_not_supported?
     # true if instance makes it possible to make automated payout for given currency, but company does not support it
     # false if either company can process this payment transfer automatically or instance does not support it
-    !billing_gateway.possible? && billing_gateway.support_automated_payout?
+    billing_gateway.try(:supports_payout?) && company.merchant_accounts.where(payment_gateway: billing_gateway).count.zero?
   end
 
   def update_payout_status(payout)
@@ -132,6 +136,19 @@ class PaymentTransfer < ActiveRecord::Base
   end
 
   def billing_gateway
-    @billing_gateway ||= Billing::Gateway::Outgoing.new(company, currency)
+    if @billing_gateway.nil?
+      concrete_payment_gateway = payment_gateway || instance.payment_gateway(company.iso_country_code, currency)
+      @billing_gateway = if concrete_payment_gateway.try(:supports_payout?)
+                           concrete_payment_gateway
+                           # this is hack for now - currently we might accept payments via Stripe, but do payout via PayPal
+                         else
+                           concrete_payment_gateway = instance.payment_gateways.find do |pg|
+                             pg.supports_payout? && pg.supports_currency?(currency) && pg.class.supported_countries.include?(company.iso_country_code)
+                           end
+                           concrete_payment_gateway
+                         end
+    end
+    @billing_gateway
   end
+
 end

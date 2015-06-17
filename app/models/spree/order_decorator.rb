@@ -36,6 +36,7 @@ Spree::Order.class_eval do
 
   PAYMENT_METHODS = {
     :credit_card => 'credit_card',
+    :nonce       => 'nonce',
     :manual      => 'manual',
   }
 

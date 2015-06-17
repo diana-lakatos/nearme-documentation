@@ -10,7 +10,8 @@ class BillingAuthorization < ActiveRecord::Base
 
   belongs_to :instance
   belongs_to :reference, polymorphic: true
-  validates :payment_gateway_class, presence: true
+  belongs_to :payment_gateway
+
   validates_presence_of :token, if: lambda { |billing_authorization| billing_authorization.success? }
 
   def void!
@@ -20,7 +21,11 @@ class BillingAuthorization < ActiveRecord::Base
   end
 
   def billing_gateway
-    @billing_gateway ||= payment_gateway_class.to_s.constantize.new(reference.owner, instance, reference.currency)
+    if @billing_gateway.nil?
+      @billing_gateway = payment_gateway
+      @billing_gateway.force_mode(payment_gateway_mode)
+    end
+    @billing_gateway
   end
 end
 

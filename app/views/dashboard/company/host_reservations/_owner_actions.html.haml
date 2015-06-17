@@ -1,10 +1,10 @@
 - if reservation.can_host_cancel?
   = form_for reservation, method: :post, url: host_cancel_dashboard_company_host_reservation_path(reservation, listing_id: reservation.listing) do |f|
-    = f.submit 'Cancel', confirm: 'Do you really want to cancel this reservation?', class: 'btn dark-gray full'
+    = f.submit 'Cancel', data: { confirm: 'Do you really want to cancel this reservation?' }, class: 'btn dark-gray full'
 
 - if reservation.can_confirm?
   = form_for reservation, method: :post, url: confirm_dashboard_company_host_reservation_path(reservation, listing_id: reservation.listing) do |f|
-    = f.submit 'Confirm', confirm: 'Do you want to confirm this reservation?', class: 'btn blue full'
+    = f.submit 'Confirm', data: { confirm: 'Do you want to confirm this reservation?' }, class: 'btn blue full'
 
 - if reservation.can_reject?
   = link_to 'Decline', '#', class: 'btn dark-gray full', data: { modal: true, href: rejection_form_dashboard_company_host_reservation_path(reservation, listing_id:reservation.listing) }

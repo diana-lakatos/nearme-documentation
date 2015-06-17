@@ -21,7 +21,7 @@ class InstanceAdmin::Theme::ContentHoldersTest < ActionDispatch::IntegrationTest
         FactoryGirl.create :content_holder, name: 'liquid holder', content: "{{ platform_context.address }} and whatever"
         PlatformContext.current.theme.update_attributes! address: "super address from holder"
         PlatformContext.current.instance.instance_views.where(path: 'layouts/theme_footer').delete_all
-        FactoryGirl.create(:instance_view_footer, body: "{% inject_content_holder liquid holder %}")
+        FactoryGirl.create(:instance_view_footer, body: "{% inject_content_holder liquid holder %}", instance: PlatformContext.current.instance)
         get root_path
         # TODO: uncomment
         # assert response.body.include?("super address from holder and whatever")

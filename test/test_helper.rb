@@ -18,6 +18,7 @@ Minitest.backtrace_filter = BacktraceFilter.new
 Minitest::Reporters.use!(Minitest::Reporters::DefaultReporter.new(reporter_options), ENV, Minitest.backtrace_filter)
 
 RoutingFilter.active = false
+ActiveMerchant::Billing::Base.mode = :test
 
 # Disable carrierwave processing in tests
 # It can be enabled on a per-test basis as needed.
@@ -121,23 +122,17 @@ ActiveSupport::TestCase.class_eval do
   end
 
   def stub_billing_gateway(instance)
-    instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
-    ipg = FactoryGirl.create(:stripe_instance_payment_gateway)
-    instance.instance_payment_gateways << ipg
-
     country_ipg = FactoryGirl.create(
-      :country_instance_payment_gateway,
+      :country_payment_gateway,
       country_alpha2_code: "US",
-      instance_payment_gateway_id: ipg.id
+      payment_gateway: FactoryGirl.create(:stripe_payment_gateway)
     )
-
-    instance.country_instance_payment_gateways << country_ipg
+    country_ipg.update_column(:instance_id, instance.id)
   end
 
   def stub_active_merchant_interaction
-    Billing::Gateway::Processor::Incoming::Stripe.stubs(:setup_api_on_initialize).returns(ActiveMerchant::Billing::BogusGateway.new)
-    Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:authorize).returns({token: "54533", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe"})
-    Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:charge).returns(true)
+    PaymentGateway.any_instance.stubs(:authorize).returns({token: "54533"})
+    PaymentGateway.any_instance.stubs(:charge).returns(true)
     stub = OpenStruct.new(params: {
       "object" => 'customer',
       "id" => 'customer_1',
@@ -150,6 +145,7 @@ ActiveSupport::TestCase.class_eval do
     ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:store).returns(stub).at_least(0)
   end
 end
+
 
 ActionController::TestCase.class_eval do
   include Rails.application.routes.url_helpers
@@ -206,12 +202,7 @@ class TestDataSeeder
       @@data_seeded = true
       instance = FactoryGirl.create(:instance)
       PlatformContext.current = PlatformContext.new(instance)
-      FactoryGirl.create(:balanced_payment_gateway)
-      FactoryGirl.create(:paypal_payment_gateway)
-      FactoryGirl.create(:stripe_payment_gateway)
       FactoryGirl.create(:transactable_type_listing)
-      FactoryGirl.create(:fetch_payment_gateway)
-      FactoryGirl.create(:braintree_payment_gateway)
     end
   end
 end

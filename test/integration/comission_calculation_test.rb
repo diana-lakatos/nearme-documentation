@@ -14,18 +14,20 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     @listing.transactable_type.update_attribute(:service_fee_guest_percent, 15)
     @instance.update_attribute(:payment_transfers_frequency, 'daily')
 
-    FactoryGirl.create(:paypal_instance_payment_gateway)
+    CountryPaymentGateway.delete_all
+    payment_gateway = FactoryGirl.create(:paypal_payment_gateway)
+    FactoryGirl.create(:country_payment_gateway, payment_gateway: payment_gateway, country_alpha2_code: 'US')
+    FactoryGirl.create(:paypal_merchant_account, payment_gateway: payment_gateway, merchantable: @listing.company)
 
     @reservation = FactoryGirl.create(:reservation_with_credit_card, listing: @listing)
     stub_billing_gateway(@instance)
     stub_active_merchant_interaction
-    @billing_gateway = Billing::Gateway::Incoming.new(@reservation.owner, @instance, @reservation.currency, 'US')
+    @billing_gateway = @instance.payment_gateway('US', @reservation.currency)
 
     response = @billing_gateway.authorize(@reservation.total_amount_cents, credit_card)
-    @reservation.create_billing_authorization(token: response[:token], payment_gateway_class: response[:payment_gateway_class])
+    @reservation.create_billing_authorization(token: response[:token], payment_gateway: payment_gateway)
     @reservation.save!
 
-    @listing.company.update_attribute(:paypal_email, 'receiver@example.com')
     create_logged_in_user
   end
 

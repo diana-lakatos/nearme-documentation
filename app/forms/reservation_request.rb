@@ -37,8 +37,8 @@ class ReservationRequest < Form
         @reservation.exclusive_price_cents = @listing.exclusive_price_cents
         attributes[:quantity] = @listing.quantity # ignore user's input, exclusive is exclusive - full quantity
       end
-      @billing_gateway = Billing::Gateway::Incoming.new(@user, @instance, @reservation.currency, @listing.company.iso_country_code) if @user
-      @client_token = @billing_gateway.try(:client_token) if @billing_gateway.try(:possible?)
+      @billing_gateway = @instance.payment_gateway(@listing.company.iso_country_code, @reservation.currency)
+      @client_token = @billing_gateway.try(:client_token)
       @reservation.user = user
       @reservation.additional_charges << get_additional_charges(attributes)
       @reservation = @reservation.decorate
@@ -77,7 +77,6 @@ class ReservationRequest < Form
         @reservation.add_period(Date.parse(date_string), start_minute, end_minute)
       end
     end
-
   end
 
   def process
@@ -110,7 +109,7 @@ class ReservationRequest < Form
   end
 
   def possible_credit_card_payment?
-    @billing_gateway.try(:possible?) && !possible_nonce_payment? && !possible_remote_payment? && !is_free?
+    @billing_gateway.present? && !possible_nonce_payment? && !possible_remote_payment? && !is_free?
   end
 
   def possible_manual_payment?
@@ -118,15 +117,11 @@ class ReservationRequest < Form
   end
 
   def possible_remote_payment?
-    @billing_gateway.try(:possible?) && @billing_gateway.try(:remote?) && !is_free?
+    @billing_gateway.try(:remote?) && !is_free?
   end
 
   def possible_nonce_payment?
-    nonce_payment_available? && payment_method_nonce.present? && !is_free?
-  end
-
-  def nonce_payment_available?
-    @billing_gateway.try(:nonce_payment?) if @billing_gateway.try(:possible?)
+    @billing_gateway.try(:nonce_payment?) && !is_free?
   end
 
   private
@@ -161,14 +156,14 @@ class ReservationRequest < Form
     User.transaction do
       user.save!
       if active_merchant_payment?
-        mode = @instance.test_mode? ? "test" : "live"
         reservation.build_billing_authorization(
           success: true,
           token: @token,
-          payment_gateway_class: @gateway_class,
-          payment_gateway_mode: mode,
+          payment_gateway: @billing_gateway,
+          payment_gateway_mode: @billing_gateway.mode,
           response: @response,
-          user_id: @user.id
+          user_id: @user.id,
+          immediate_payout: @billing_gateway.immediate_payout(@listing.company)
         )
         if reservation.listing.transactable_type.cancellation_policy_enabled.present?
           reservation.cancellation_policy_hours_for_cancellation = reservation.listing.transactable_type.cancellation_policy_hours_for_cancellation
@@ -198,19 +193,20 @@ class ReservationRequest < Form
 
       if payment_method_nonce.present? || credit_card.valid?
         options = payment_method_nonce.present? ? {payment_method_nonce: payment_method_nonce} : {}
-        @response = @billing_gateway.authorize(@reservation.total_amount_cents, credit_card, options)
+        options[:company] = @listing.company
+        options[:service_fee_host] = Money.new(@reservation.send(:service_fee_calculator).service_fee_host.try(:cents), @reservation.currency)
+        @response = @billing_gateway.authorize(@reservation.total_amount_cents, @reservation.currency, credit_card, options)
         if @response[:error].present?
           @listing.billing_authorizations.create(
             success: false,
             response: @response,
-            payment_gateway_class: @response[:payment_gateway_class],
-            payment_gateway_mode: (@instance.test_mode? ? "test" : "live"),
+            payment_gateway: @billing_gateway,
+            payment_gateway_mode: @billing_gateway.mode,
             user_id: @user.id
           )
           add_error(@response[:error], :cc)
         else
           @token = @response[:token]
-          @gateway_class = @response[:payment_gateway_class]
         end
       else
         add_error("Those credit card details don't look valid", :cc)

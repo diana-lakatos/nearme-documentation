@@ -196,4 +196,8 @@ class ReservationDecorator < Draper::Decorator
     @date_presenter ||= DatePresenter.new(periods.map(&:date))
   end
 
+  def service_fee_calculator
+    object.send(:service_fee_calculator)
+  end
+
 end

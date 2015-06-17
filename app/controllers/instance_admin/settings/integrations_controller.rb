@@ -14,50 +14,42 @@ class InstanceAdmin::Settings::IntegrationsController < InstanceAdmin::Settings:
   end
 
   def payment_gateways
-    @payment_gateway = PaymentGateway.find(params[:payment_gateway])
     @country = Country.find_by_alpha2(params[:country])
-    @instance_payment_gateway = instance_payment_gateway
-
+    @payment_gateway = PaymentGateway.find_or_initialize_by_gateway_name(params[:payment_gateway])
     respond_to do | format |
       format.js
     end
   end
 
-  def country_instance_payment_gateways
-    @country_instance_payment_gateways = @instance.country_instance_payment_gateways
+  def country_payment_gateways
+    @country_payment_gateways = @instance.country_payment_gateways
     render layout: false
   end
 
-  def create_or_update_instance_payment_gateway
-    @payment_gateway = PaymentGateway.find(params[:instance_payment_gateway][:payment_gateway_id])
-    @instance_payment_gateway = instance_payment_gateway
-
-    if @instance_payment_gateway.id.nil?
-      @instance_payment_gateway.assign_attributes(instance_payment_gateway_params)
-      @instance_payment_gateway.save!
-    else
-      @instance_payment_gateway.update_attributes(instance_payment_gateway_params)
-    end
-
+  def create_or_update_payment_gateway
+    @payment_gateway = PaymentGateway.find_or_initialize_by_type(params[:payment_gateway][:type])
+    @payment_gateway.assign_attributes(payment_gateway_params(@payment_gateway))
+    @payment_gateway.save!
     flash[:success] = "Successfully updated payment gateway settings."
     redirect_to instance_admin_settings_integrations_path
   end
 
   private
 
-  def instance_payment_gateway_params
-    params.require(:instance_payment_gateway).permit(secured_params.instance_payment_gateway).tap do |whitelisted|
-      whitelisted[:live_settings] = params[:instance_payment_gateway][:live_settings]
-      whitelisted[:test_settings] = params[:instance_payment_gateway][:test_settings]
+  def payment_gateway_params(payment_gateway)
+    params.require(:payment_gateway).permit(secured_params.payment_gateway).tap do |whitelisted|
+      # we need to invoke slice like .slice(:a, :b) instead of .slice([:a, b]), hence the *
+      whitelisted[:live_settings] = params[:payment_gateway][:live_settings].slice(*payment_gateway.class.settings.stringify_keys.keys)
+      whitelisted[:test_settings] = params[:payment_gateway][:test_settings].slice(*payment_gateway.class.settings.stringify_keys.keys)
     end
   end
 
-  def instance_payment_gateway(attributes=nil)
-    @instance.instance_payment_gateways.where(payment_gateway_id: @payment_gateway.id).first || @payment_gateway.instance_payment_gateways.build
+  def payment_gateway(attributes=nil)
+    @instance.payment_gateways.where(payment_gateway_id: @payment_gateway.id).first || @payment_gateway.payment_gateways.build
   end
 
   def find_payment_gateways
-    @payment_gateways = PaymentGateway.all
+    @payment_gateways = PaymentGateway::PAYMENT_GATEWAYS.keys
     @countries = Country.with_payment_gateway_support
   end
 

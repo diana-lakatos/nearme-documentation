@@ -15,7 +15,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
       @reservation_1.payments.to_a,
       @reservation_2.payments.to_a
     ].flatten
-    Billing::Gateway::Outgoing.any_instance.stubs(:payout).returns(stub(:success => true)).at_least(0)
+    PaymentGateway.any_instance.stubs(:payout).returns(stub(:success => true)).at_least(0)
   end
 
   context "creating" do
@@ -102,8 +102,6 @@ class PaymentTransferTest < ActiveSupport::TestCase
     end
 
     should "calculate correctly the total sum for transfers with refunds" do
-      #Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).returns(Refund.new(:success => true))
-
       @refunds_payments[0].payable.user_cancel!
       @refunds_payments[1].payable.host_cancel!
       @refunds_payments[0].refund
@@ -148,20 +146,19 @@ class PaymentTransferTest < ActiveSupport::TestCase
 
   context 'payout' do
     setup do
-      Billing::Gateway::Processor::Outgoing::ProcessorFactory.stubs(:paypal_supported?).returns(true).once
-      Billing::Gateway::Processor::Outgoing::ProcessorFactory.stubs(:receiver_supports_paypal?).returns(true).once
-      @payment_transfer = @company.payment_transfers.build
+      @payment_transfer = @company.payment_transfers.build(currency: 'USD')
       @payment_transfer.payments = @payments
+      FactoryGirl.create(:country_payment_gateway, payment_gateway: FactoryGirl.create(:paypal_payment_gateway), country_alpha2_code: @company.iso_country_code)
     end
 
     should 'be not paid if attempt to payout failed' do
-      Billing::Gateway::Outgoing.any_instance.expects(:payout).with { |hash| Money === hash[:amount] && @payment_transfer == hash[:reference] }.once.returns(stub(:success => false))
+      PaymentGateway.any_instance.expects(:payout).with { |company, hash| company == @payment_transfer.company &&  Money === hash[:amount] && @payment_transfer == hash[:reference] }.once.returns(stub(:success => false))
       @payment_transfer.save!
       refute @payment_transfer.transferred?
     end
 
     should 'be paid if attempt to payout succeeded' do
-      Billing::Gateway::Outgoing.any_instance.expects(:payout).with { |hash| Money === hash[:amount] && @payment_transfer == hash[:reference] }.once.returns(stub(:success => true))
+      PaymentGateway.any_instance.expects(:payout).with { |company, hash| company == @payment_transfer.company && Money === hash[:amount] && @payment_transfer == hash[:reference] }.once.returns(stub(:success => true))
       @payment_transfer.save!
       assert @payment_transfer.transferred?
     end
@@ -170,31 +167,31 @@ class PaymentTransferTest < ActiveSupport::TestCase
   context 'possible_automated_payout_not_supported?' do
 
     setup do
-      @payment_transfer = @company.payment_transfers.build
+      @payment_transfer = @company.payment_transfers.build(currency: 'USD')
       @payment_transfer.payments = @payments
+      @paypal_gateway = FactoryGirl.create(:paypal_payment_gateway)
     end
 
     should "return true if possible processor exists but company has not provided settings" do
-      Billing::Gateway::Outgoing.any_instance.stubs(:possible?).returns(false)
-      Billing::Gateway::Outgoing.any_instance.stubs(:support_automated_payout?).returns(true)
+      CountryPaymentGateway.delete_all
+      FactoryGirl.create(:country_payment_gateway, payment_gateway: @paypal_gateway, country_alpha2_code: @company.iso_country_code)
+      FactoryGirl.create(:paypal_merchant_account, payment_gateway: @paypal_gateway, merchantable: FactoryGirl.create(:company))
       assert @payment_transfer.possible_automated_payout_not_supported?
     end
 
     should "return false if there is no potential processor and company has not provided settings" do
-      Billing::Gateway::Outgoing.any_instance.stubs(:possible?).returns(false)
-      Billing::Gateway::Outgoing.any_instance.stubs(:support_automated_payout?).returns(false)
+      CountryPaymentGateway.delete_all
       refute @payment_transfer.possible_automated_payout_not_supported?
     end
 
     should "return false if there is no possible processor and company has provided settings" do
-      Billing::Gateway::Outgoing.any_instance.stubs(:possible?).returns(true)
-      Billing::Gateway::Outgoing.any_instance.stubs(:support_automated_payout?).returns(false)
+      FactoryGirl.create(:paypal_merchant_account, payment_gateway: @paypal_gateway, merchantable: @company)
       refute @payment_transfer.possible_automated_payout_not_supported?
     end
 
     should "return false if possible processor exists and company has provided settings" do
-      Billing::Gateway::Outgoing.any_instance.stubs(:possible?).returns(true)
-      Billing::Gateway::Outgoing.any_instance.stubs(:support_automated_payout?).returns(true)
+      FactoryGirl.create(:country_payment_gateway, payment_gateway: @paypal_gateway, country_alpha2_code: @company.iso_country_code)
+      FactoryGirl.create(:paypal_merchant_account, payment_gateway: @paypal_gateway, merchantable: @company)
       refute @payment_transfer.possible_automated_payout_not_supported?
     end
 
@@ -203,7 +200,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
   context 'foreign keys' do
     setup do
       @company = FactoryGirl.create(:company)
-      @payment_transfer = FactoryGirl.create(:payment_transfer, :company => @company)
+      @payment_transfer = FactoryGirl.create(:payment_transfer, company: @company)
     end
 
     should 'assign correct key immediately' do

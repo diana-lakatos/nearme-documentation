@@ -34,6 +34,7 @@ Feature: A user can edit their settings
 
   Scenario: A user can update payouts settings
     Given a company exists with creator: the user
+    Given paypal gateway is properly configured
     And I go to the payouts page
     When I update payouts settings
     Then The company payouts settings should be updated

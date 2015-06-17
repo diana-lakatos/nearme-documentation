@@ -57,7 +57,8 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
   context 'other actions' do
     setup do
       @reservation = FactoryGirl.create(:reservation_with_credit_card)
-      @reservation.create_billing_authorization(token: "123", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
+      @payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
+      @reservation.create_billing_authorization(token: "123", payment_gateway: @payment_gateway, payment_gateway_mode: "test")
       @user = @reservation.listing.creator
       sign_in @user
       stub_mixpanel
@@ -96,6 +97,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       @tracker.expects(:updated_profile_information).with do |user|
         user == assigns(:reservation).host
       end
+      Reservation.any_instance.expects(:schedule_void_payment).once
       put :reject, { id: @reservation.id }
       assert_redirected_to dashboard_company_host_reservations_path
     end
@@ -120,7 +122,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
 
     should "refund booking on cancel" do
       ActiveMerchant::Billing::Base.mode = :test
-      gateway.authorize(@reservation.total_amount_cents, credit_card)
+      @payment_gateway.authorize(@reservation.total_amount_cents, @reservation.currency, credit_card)
       @reservation.confirm
 
       sign_in @reservation.listing.creator
@@ -138,6 +140,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
 
     context 'PUT #reject' do
       should 'set rejection reason' do
+        Reservation.any_instance.expects(:schedule_void_payment).once
         put :reject, { id: @reservation.id, reservation: { rejection_reason: 'Dont like him' } }
         assert_equal @reservation.reload.rejection_reason, 'Dont like him'
       end
@@ -155,6 +158,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       end
 
       should 'store new version after reject' do
+        Reservation.any_instance.expects(:schedule_void_payment).once
         assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
           with_versioning do
             put :reject, { id: @reservation.id, reservation: { rejection_reason: 'Dont like him' } }
@@ -186,16 +190,12 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
     )
   end
 
-  def gateway
-    Billing::Gateway::Processor::Incoming::ProcessorFactory.create(@user, @user.instance, "USD", 'US')
-  end
-
   def setup_refund_for_reservation(reservation)
     reservation.payments.last.charges.successful.create(amount: reservation.total_amount_cents)
-    Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:refund_identification)
+    PaymentGateway::StripePaymentGateway.any_instance.stubs(:refund_identification)
       .returns({id: "123"}.to_json)
     ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:refund)
-      .returns(ActiveMerchant::Billing::BogusGateway.new.refund(reservation.total_amount_cents, "123"))
+      .returns(ActiveMerchant::Billing::BogusGateway.new.refund(reservation.total_amount_cents, reservation.currency, "123"))
   end
 end
 

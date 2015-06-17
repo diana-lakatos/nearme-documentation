@@ -14,7 +14,7 @@ class ReservationRequestTest < ActiveSupport::TestCase
       }
       stub_billing_gateway(@listing.instance)
       stub_active_merchant_interaction
-      Billing::Gateway::Incoming.any_instance.stubs(:possible?).returns(true)
+      Instance.any_instance.stubs(:payment_gateway).returns(FactoryGirl.create(:stripe_payment_gateway))
     end
 
     should 'ask for credit card details if manual payment disabled' do
@@ -69,13 +69,13 @@ class ReservationRequestTest < ActiveSupport::TestCase
 
       context 'determine payment method' do
         should 'set credit card' do
-          Billing::Gateway::Incoming.any_instance.stubs(:possible?).returns(true)
+          Instance.any_instance.stubs(:payment_gateway).returns(FactoryGirl.create(:stripe_payment_gateway))
           @reservation_request = ReservationRequest.new(@listing, @user, PlatformContext.new(@instance), @attributes)
           assert_equal @reservation_request.payment_method, Reservation::PAYMENT_METHODS[:credit_card]
         end
 
         should 'set manual' do
-          Billing::Gateway::Incoming.any_instance.stubs(:possible?).returns(false)
+          Instance.any_instance.stubs(:payment_gateway).returns(nil)
           @reservation_request = ReservationRequest.new(@listing, @user, PlatformContext.new(@instance), @attributes)
           assert_equal Reservation::PAYMENT_METHODS[:manual], @reservation_request.payment_method
         end

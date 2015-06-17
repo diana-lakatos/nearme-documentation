@@ -2,18 +2,21 @@ require 'test_helper'
 
 class PaymentTest < ActiveSupport::TestCase
 
+  setup do
+    @payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
+  end
+
   context 'capture' do
     setup do
       @reservation = FactoryGirl.create(:reservation_with_credit_card)
-      @reservation.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
       stub_mixpanel
     end
 
     context 'mixpanel' do
 
       should 'track charge in mixpanel after successful creation' do
-        @reservation.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
-        Billing::Gateway::Processor::Incoming::Stripe.any_instance.stubs(:charge)
+        @reservation.create_billing_authorization(token: "token", payment_gateway: @payment_gateway, payment_gateway_mode: "test")
+        PaymentGateway::StripePaymentGateway.any_instance.stubs(:charge)
         ReservationChargeTrackerJob.expects(:perform_later).with(@reservation.date.end_of_day, @reservation.id).once
         @reservation.payments.create!(
           subtotal_amount: 105.24,
@@ -28,20 +31,19 @@ class PaymentTest < ActiveSupport::TestCase
     setup do
       @charge = FactoryGirl.create(:charge, :response => 'charge_response')
       @payment = @charge.payment
-      @payment.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
-      @payment.payable.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
+      @payment.payable.create_billing_authorization(token: "token", payment_gateway: @payment_gateway, payment_gateway_mode: "test")
     end
 
     should 'find the right charge if there were failing attempts' do
       @charge.update_attribute(:success, false)
       FactoryGirl.create(:charge, :payment => @payment, :response => { id: "id" })
-      Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).once.returns(Refund.new(:success => true))
+      PaymentGateway::StripePaymentGateway.any_instance.expects(:refund).once.returns(Refund.new(:success => true))
       @payment.refund
       assert @payment.reload.refunded?
     end
 
     should 'not be refunded if failed' do
-      Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).with do |amount, reference, charge_response|
+      PaymentGateway::StripePaymentGateway.any_instance.expects(:refund).with do |amount, reference, charge_response|
         amount = 0; charge_response = { id: nil }
       end.returns(Refund.new(:success => false))
       @payment.refund
@@ -49,27 +51,27 @@ class PaymentTest < ActiveSupport::TestCase
     end
 
     should 'return if successful charge was not returned' do
-      Billing::Gateway::Incoming.any_instance.expects(:refund).never
+      PaymentGateway.any_instance.expects(:refund).never
       @charge.update_attribute(:success, false)
       @payment.refund
       refute @payment.reload.refunded?
     end
 
     should 'return if payment was already refunded' do
-      Billing::Gateway::Incoming.any_instance.expects(:refund).never
+      PaymentGateway.any_instance.expects(:refund).never
       @payment.update_attribute(:refunded_at, Time.zone.now)
       @payment.refund
     end
 
     should 'return if payment was not paid' do
-      Billing::Gateway::Incoming.any_instance.expects(:refund).never
+      PaymentGateway.any_instance.expects(:refund).never
       @payment.update_attribute(:paid_at, nil)
       @payment.refund
       refute @payment.reload.refunded?
     end
 
     should 'refund via billing gateway with correct arguments if all ok' do
-      Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).once.returns(Refund.new(:success => true))
+      PaymentGateway::StripePaymentGateway.any_instance.expects(:refund).once.returns(Refund.new(:success => true))
       @payment.refund
     end
 
@@ -83,7 +85,7 @@ class PaymentTest < ActiveSupport::TestCase
 
       should 'refund proper amount when guest cancels' do
         @payment.payable.update_column(:state, 'cancelled_by_guest')
-        Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).once.returns(Refund.new(:success => true))
+        PaymentGateway::StripePaymentGateway.any_instance.expects(:refund).once.returns(Refund.new(:success => true))
         assert_equal 1000, @payment.subtotal_amount_cents
 
         assert_equal 400, @payment.amount_to_be_refunded
@@ -98,7 +100,7 @@ class PaymentTest < ActiveSupport::TestCase
 
       should 'refund proper amount when host cancels' do
         @payment.payable.update_column(:state, 'cancelled_by_host')
-        Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).once.returns(Refund.new(:success => true))
+        PaymentGateway::StripePaymentGateway.any_instance.expects(:refund).once.returns(Refund.new(:success => true))
         assert_equal 1000, @payment.subtotal_amount_cents
 
         assert_equal 1100, @payment.amount_to_be_refunded
@@ -136,7 +138,7 @@ class PaymentTest < ActiveSupport::TestCase
 
       should 'trigger refund method with proper amount when guest cancels ' do
         @payment.payable.update_column(:state, 'cancelled_by_guest')
-        Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).once.with do |amount, reference, response|
+        PaymentGateway::StripePaymentGateway.any_instance.expects(:refund).once.with do |amount, reference, response|
           amount == 4000
         end.returns(Refund.new(:success => true))
         @payment.refund
@@ -144,7 +146,7 @@ class PaymentTest < ActiveSupport::TestCase
 
       should 'trigger refund method with proper amount when host cancels ' do
         @payment.payable.update_column(:state, 'cancelled_by_host')
-        Billing::Gateway::Processor::Incoming::Stripe.any_instance.expects(:refund).once.with do |amount, reference, response|
+        PaymentGateway::StripePaymentGateway.any_instance.expects(:refund).once.with do |amount, reference, response|
           amount == 11000
         end.returns(Refund.new(:success => true))
         @payment.refund
@@ -162,8 +164,7 @@ class PaymentTest < ActiveSupport::TestCase
 
     setup do
       @payment = FactoryGirl.build(:payment_unpaid)
-      @payment.instance.instance_payment_gateways << FactoryGirl.create(:stripe_instance_payment_gateway)
-      @payment.payable.create_billing_authorization(token: "token", payment_gateway_class: "Billing::Gateway::Processor::Incoming::Stripe", payment_gateway_mode: "test")
+      @payment.payable.create_billing_authorization(token: "token", payment_gateway: @payment_gateway, payment_gateway_mode: "test")
     end
 
     should 'trigger capture on save' do
@@ -172,7 +173,7 @@ class PaymentTest < ActiveSupport::TestCase
     end
 
     should 'not charge again if already charged' do
-      Billing::Gateway::Incoming.any_instance.expects(:charge).never
+      PaymentGateway.any_instance.expects(:charge).never
       @payment.stubs(:paid_at).returns(Time.zone.now)
       @payment.capture
     end

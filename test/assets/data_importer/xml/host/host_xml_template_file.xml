@@ -2,6 +2,7 @@
 <companies>
   <company id="user-name@example.com">
     <name><![CDATA[UserName]]></name>
+    <email><![CDATA[user-name@example.com]]></email>
     <external_id><![CDATA[user-name@example.com]]></external_id>
     <users>
       <user>

@@ -1,6 +1,11 @@
 class Payout < ActiveRecord::Base
+  auto_set_platform_context
+  scoped_to_platform_context
   acts_as_paranoid
   has_paper_trail
+
+  belongs_to :instance
+  belongs_to :payment_gateway
   belongs_to :reference, -> { with_deleted }, polymorphic: true
 
   scope :successful, -> { where(:success => true) }

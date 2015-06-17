@@ -6,6 +6,7 @@ class Refund < ActiveRecord::Base
 
   scope :successful, -> { where(:success => true) }
   belongs_to :payment
+  belongs_to :payment_gateway
 
   monetize :amount, with_model_currency: :currency
   serialize :response, Hash

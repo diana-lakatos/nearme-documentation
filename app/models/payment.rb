@@ -107,20 +107,20 @@ class Payment < ActiveRecord::Base
     # Generates a ChargeAttempt with this record as the payable.
 
     if payable.billing_authorization.nil? && !payable.remote_payment?
-      response = billing_gateway.authorize(payable.total_amount_cents, payable.credit_card.token, { customer: payable.credit_card.instance_client.customer_id, order_id: payable.id })
+      response = billing_gateway.authorize(payable.total_amount_cents, payable.currency, payable.credit_card.token, { customer: payable.credit_card.instance_client.customer_id, order_id: payable.id })
       if response[:error].present?
         raise Billing::Gateway::PaymentAttemptError, "Failed authorization of credit card token of InstanceClient(id=#{payable.owner.instance_clients.first.try(:id)}) - #{response[:error]}"
       else
         payable.create_billing_authorization(
           token: response[:token],
-          payment_gateway_class: billing_gateway.class.name,
-          payment_gateway_mode: PlatformContext.current.instance.test_mode? ? "test" : "live"
+          payment_gateway: billing_gateway,
+          payment_gateway_mode: billing_gateway.mode
         )
       end
     end
 
     begin
-      billing_gateway.charge(total_amount_cents, self, payable.billing_authorization.try(:token))
+      billing_gateway.charge(payable.owner, total_amount_cents, currency, self, payable.billing_authorization.try(:token))
       touch(:paid_at)
 
       if payable.respond_to?(:date)
@@ -134,6 +134,10 @@ class Payment < ActiveRecord::Base
 
   end
 
+  def payment_gateway_mode
+    charges.successful.first.try(:payment_gateway_mode)
+  end
+
   def refund
     return if !paid?
     return if refunded?
@@ -142,7 +146,7 @@ class Payment < ActiveRecord::Base
     successful_charge = charges.successful.first
     return if successful_charge.nil?
 
-    refund = billing_gateway.refund(amount_to_be_refunded, self, successful_charge)
+    refund = billing_gateway.refund(amount_to_be_refunded, currency, self, successful_charge)
 
     if refund.success?
       touch(:refunded_at)
@@ -171,11 +175,7 @@ class Payment < ActiveRecord::Base
   private
 
   def billing_gateway
-    @billing_gateway ||= if payable.billing_authorization.try(:payment_gateway_class).present?
-                           payable.billing_authorization.payment_gateway_class.to_s.constantize.new(payable.owner, instance, currency)
-                         else
-                           Billing::Gateway::Incoming.new(payable.owner, instance, currency, payable.company.iso_country_code)
-                         end
+    @billing_gateway ||= payable.billing_authorization.try(:payment_gateway) || instance.payment_gateway(payable.company.iso_country_code, currency)
   end
 
   def assign_currency

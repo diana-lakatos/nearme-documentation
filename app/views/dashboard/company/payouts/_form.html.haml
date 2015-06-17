@@ -1,28 +1,4 @@
 = f.simple_fields_for :payments_mailing_address, (f.object.payments_mailing_address.presence || f.object.build_payments_mailing_address) do |address_form|
   = render :partial => 'addresses/form', :locals => { :f => address_form, label: t('payouts.mailing_address') }
 
-%br
-
-%h3.with-margin= t 'simple_form.labels.company.payout.via_paypal'
-= f.input :paypal_email, placeholder: t('simple_form.hints.company.paypal_email'), hint: false
-
-- if platform_context.supported_payout_via_ach?
-  %h3.with-margin= t 'simple_form.labels.company.payout.via_ach'
-  - account_entered = f.object.instance_clients.first.try(:encrypted_balanced_user_id)
-
-  - if account_entered
-    %div
-      %p= t 'simple_form.labels.company.payout.ach_update'
-
-  - if f.object.errors[:bank_account_form].present?
-    .bank_account_fields
-      .flash.error
-        %ul
-          - f.object.errors[:bank_account_form].each do |e|
-            %li= e
-
-          %li= t 'simple_form.labels.company.payout.ach_error'
-
-  = f.input :bank_owner_name, placeholder: account_entered ? '●●●●●●●●● ●●●●●●●●●' : ''
-  = f.input :bank_routing_number, placeholder: account_entered ? '●●●●●●●●●' : ''
-  = f.input :bank_account_number, placeholder: account_entered ? '●●●●●●●●●' : ''
+= render @merchant_account_form_path, f: f, merchant_account: @merchant_account if @merchant_account_form_path

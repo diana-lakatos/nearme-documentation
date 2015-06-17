@@ -20,6 +20,7 @@ class Company < ActiveRecord::Base
   has_many :listings, class_name: 'Transactable', inverse_of: :company
   has_many :locations, dependent: :destroy, inverse_of: :company
   has_many :locations_impressions, source: :impressions, through: :locations
+  has_many :merchant_accounts, as: :merchantable, dependent: :nullify
   has_many :option_types, class_name: 'Spree::OptionType', dependent: :destroy
   has_many :orders, class_name: 'Spree::Order'
   has_many :order_charges, through: :orders, source: :near_me_payments
@@ -51,14 +52,8 @@ class Company < ActiveRecord::Base
   belongs_to :partner
   belongs_to :payments_mailing_address, class_name: 'Address', foreign_key: 'mailing_address_id'
 
-  delegate :address, :address2, :formatted_address, :postcode, :suburb, :city, :state, :country, :street, :address_components,
-   :latitude, :longitude, :state_code, :iso_country_code, to: :company_address, allow_nil: true
-  delegate :service_fee_guest_percent, :service_fee_host_percent, to: :instance, allow_nil: true
-
   before_validation :add_default_url_scheme
   before_save :set_creator_address
-
-  before_save :create_bank_account_in_balanced!, :if => lambda { |c| c.bank_account_number.present? || c.bank_routing_number.present? || c.bank_owner_name.present? }
 
   validates_presence_of :name
   validates_presence_of :industries, :if => proc { |c| c.instance.present? && c.instance.has_industries? && !c.instance.skip_company? }
@@ -67,6 +62,10 @@ class Company < ActiveRecord::Base
   validates :email, email: true, allow_blank: true
   validate :validate_url_format
 
+  delegate :address, :address2, :formatted_address, :postcode, :suburb, :city, :state, :country, :street, :address_components,
+    :latitude, :longitude, :state_code, :iso_country_code, to: :company_address, allow_nil: true
+  delegate :service_fee_guest_percent, :service_fee_host_percent, to: :instance, allow_nil: true
+  delegate :first_name, :last_name, :mobile_number, to: :creator
 
   # Returns the companies in need of recieving a payment transfer for
   # outstanding payments we've received on their behalf.
@@ -92,6 +91,10 @@ class Company < ActiveRecord::Base
   validates :paypal_email, email: true, allow_blank: true
 
   after_create :add_company_to_partially_created_shipping_categories
+
+  def email
+    super.presence || creator.try(:email)
+  end
 
   def add_company_to_partially_created_shipping_categories
     if self.creator_id.present?
@@ -120,11 +123,11 @@ class Company < ActiveRecord::Base
     self.created_payment_transfers = []
     transaction do
       charges_without_payment_transfer = payments.needs_payment_transfer
-      charges_without_payment_transfer.group_by(&:currency).each do |currency, charges|
-        payment_transfer = payment_transfers.create!(
-          payments: charges
-        )
-        self.created_payment_transfers << payment_transfer if payment_transfer.possible_automated_payout_not_supported?
+      charges_without_payment_transfer.group_by(&:currency).each do |currency, all_charges|
+        all_charges.group_by(&:payment_gateway_mode).each do |mode, charges|
+          payment_transfer = payment_transfers.create!(payments: charges, payment_gateway_mode: mode)
+          self.created_payment_transfers << payment_transfer if possible_payout_not_configured?(instance.payment_gateway(iso_country_code, currency))
+        end
       end
     end
     # we want to notify company owner (once no matter how many payment transfers have been generated!)
@@ -134,30 +137,20 @@ class Company < ActiveRecord::Base
     end
   end
 
-  def possible_automated_payout_not_supported?(currency)
-    billing_gateway = Billing::Gateway::Outgoing.new(self, currency)
-    !billing_gateway.possible? && billing_gateway.support_automated_payout?
+  def payout_payment_gateway
+    if @payment_gateway.nil?
+      currency = locations.first.try(:listings).try(:first).try(:currency).presence || 'USD'
+      @payment_gateway = instance.payment_gateway(iso_country_code, currency)
+      # tmp hack before we will have proper multiple payment gateways for one country handling. the problem is that we might accept payments via Stripe, but would like to payout via PayPal
+      if !@payment_gateway.try(:supports_payout?)
+        @payment_gateway = PaymentGateway.where(instance: instance).all.find { |pg| pg.supports_currency?(currency) && pg.payout_supports_country?(iso_country_code) && pg.supports_payout? }
+      end
+    end
+    @payment_gateway
   end
 
-  def to_balanced_params
-    {
-      name: name,
-      email: email.presence || creator.try(:email),
-      phone: creator.try(:phone)
-    }
-  end
-
-  def balanced_bank_account_details
-    {
-      :account_number => bank_account_number,
-      :bank_code => bank_routing_number,
-      :name => bank_owner_name,
-      :type => 'checking'
-    }
-  end
-
-  def last_four_digits_of_bank_account
-    bank_account_number.to_s[-4, 4]
+  def possible_payout_not_configured?(payment_gateway)
+    payment_gateway.try(:supports_payout?) && merchant_accounts.verified_on_payment_gateway(payment_gateway.id).count.zero?
   end
 
   def to_liquid
@@ -182,42 +175,6 @@ class Company < ActiveRecord::Base
               end
 
     errors.add(:url, "must be a valid URL") unless valid
-  end
-
-  # TODO: Exctract to another object
-  def create_bank_account_in_balanced!
-    [:bank_account_number, :bank_routing_number, :bank_owner_name].each do |mandatory_field|
-      errors.add(mandatory_field, 'cannot be blank') if self.send(mandatory_field).blank?
-    end
-    if errors.any?
-      false
-    else
-      begin
-        # when more processors will support ACH, we will want to use some kind of wrapper instead of calling BalancedProcessor directly
-        Billing::Gateway::Processor::Outgoing::Balanced.create_customer_with_bank_account!(self)
-      rescue Balanced::Unauthorized => e
-        errors.add(:bank_account_form, 'We could not validate your bank account details at this time. Please try again later.')
-        ExceptionTracker.track_exception(e)
-        false
-      end
-    end
-  rescue Balanced::BadRequest => e
-    { '[bank_code]' => :bank_routing_number, '[account_number]' => :bank_account_number}.each do |balanced_field, our_form_field|
-      if e.message.include?(balanced_field)
-        errors.add(our_form_field, e.message.split("#{balanced_field} - ").last.split(' Your request id is ').first)
-      end
-    end
-    if errors.empty?
-      if e.message.include?('Routing number is invalid')
-        errors.add(:bank_routing_number, 'is invalid')
-      else
-        errors.add(:bank_account_form,  e.message.split(" - ").last.split(' Your request id is ').first)
-      end
-    end
-    false
-  rescue RuntimeError => e
-    errors.add(:bank_account_form, 'Invalidating previous bank account failed. Please try again later.')
-    false
   end
 
   def self.csv_fields
@@ -265,3 +222,4 @@ class Company < ActiveRecord::Base
   end
 
 end
+

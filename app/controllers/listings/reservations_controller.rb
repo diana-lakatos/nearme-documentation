@@ -64,8 +64,8 @@ class Listings::ReservationsController < ApplicationController
 
   # Renders remote payment form
   def remote_payment
-    @billing_gateway = Billing::Gateway::Incoming.new(current_user, @reservation.instance, @reservation.currency, @reservation.listing.company.iso_country_code)
-    @billing_gateway.processor.set_payment_data(@reservation)
+    @billing_gateway = @reservation.instance.payment_gateway(@reservation.listing.company.iso_country_code, @reservation.currency)
+    @billing_gateway.set_payment_data(@reservation)
   end
 
   def hourly_availability_schedule

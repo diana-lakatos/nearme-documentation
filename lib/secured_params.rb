@@ -392,7 +392,7 @@ class SecuredParams
       custom_translations: [:'buy_sell_market.checkout.manual_payment', :'buy_sell_market.checkout.manual_payment_description'],
       user_required_fields: [],
       domains_attributes: nested(self.domain),
-      instance_payment_gateways_attributes: nested(self.instance_payment_gateway),
+      payment_gateways_attributes: nested(self.payment_gateway),
       listing_amenity_types_attributes: nested(self.amenity_type),
       location_types_attributes: nested(self.location_type),
       location_amenity_types_attributes: nested(self.amenity_type),
@@ -603,13 +603,12 @@ class SecuredParams
     ]
   end
 
-  def instance_payment_gateway
+  def payment_gateway
     [
-      :payment_gateway_id,
+      :type,
       :live_settings,
       :test_settings,
       :country,
-      :name,
       :supported_countries
     ]
   end

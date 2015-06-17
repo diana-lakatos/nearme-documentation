@@ -88,8 +88,8 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
 
   def setup_payment_gateway
     res = reservation
-    @billing_gateway = Billing::Gateway::Incoming.new(current_user, res.instance, res.currency, res.listing.company.iso_country_code)
-    @billing_gateway.processor.set_payment_data(res)
+    @billing_gateway = res.instance.payment_gateway(res.listing.company.iso_country_code, res.currency)
+    @billing_gateway.set_payment_data(res)
   end
 
   def reservations

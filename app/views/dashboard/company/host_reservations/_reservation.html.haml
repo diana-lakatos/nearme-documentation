@@ -30,7 +30,7 @@
           - if reservation.billing_authorization.present?
             %p= I18n.t('dashboard.host_reservations.money_info')
             %p= I18n.t('dashboard.host_reservations.next_payment_transfer', next_payment_transfer: reservation.next_payment_transfer)
-            - if @company.possible_automated_payout_not_supported?(reservation.currency)
+            - if reservation.company.possible_payout_not_configured?(reservation.billing_authorization.payment_gateway)
               %p
                 %i.ico-warning
                 = I18n.t('dashboard.host_reservations.remember_to_setup_automated_payout', setup_link: edit_dashboard_company_payouts_path).html_safe
