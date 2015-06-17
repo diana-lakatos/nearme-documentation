@@ -4,7 +4,7 @@ class Category < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
-  acts_as_nested_set dependent: :destroy
+  acts_as_nested_set dependent: :destroy, order: :position
 
   DISPLAY_OPTIONS = %w(tree autocomplete).freeze
   SEARCH_OPTIONS = [["Include in search", "include"], ["Exclude from search", "exclude"]].freeze

@@ -74,7 +74,7 @@ class @CategoriesController
               that.setChecboxesValues(tree_container)
 
             .bind 'check_node.jstree', (e, data) ->
-              data.inst.open_all(data.rslt.obj, true)
+              data.inst.open_node(data.rslt.obj, true)
 
             .bind 'uncheck_node.jstree', (e, data) ->
               data.inst.close_all(data.rslt.obj, true);

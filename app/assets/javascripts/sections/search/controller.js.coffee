@@ -211,7 +211,12 @@ class Search.Controller
       $(".nav-heading input").parents('.nav-heading').next().show()
       $(".nav-heading input").unbind 'change'
 
+    $('.nav-categories  > ul > .categories-list > .nav-item ').find('.categories-list').hide()
+
     $(".nav-item input[type='checkbox']").on 'change', (event) ->
       if $(event.target).prop('checked')
-        $(event.target).parents('ul').prev().find('input:checked').prop('checked', false)
+        $(event.target).parent().next().show()
+      else
+        $(event.target).parent().parent().find('.categories-list').hide()
+        $(event.target).parent().next().find('input:checked').prop('checked', false)
 
