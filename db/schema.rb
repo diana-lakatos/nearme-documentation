@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150617153611) do
+ActiveRecord::Schema.define(version: 20150617175715) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2921,7 +2921,7 @@ ActiveRecord::Schema.define(version: 20150617153611) do
     t.string   "currency"
     t.string   "name"
     t.text     "description"
-    t.boolean  "confirm_reservations"
+    t.boolean  "confirm_reservations",           default: true
     t.datetime "last_request_photos_sent_at"
     t.string   "capacity"
   end
