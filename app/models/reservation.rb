@@ -327,7 +327,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def total_amount_dollars
-    total_amount_cents/100.0
+    total_amount_cents/Money::Currency.new(currency).subunit_to_unit.to_f
   end
 
   def total_negative_amount_dollars

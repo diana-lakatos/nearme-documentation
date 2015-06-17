@@ -43,7 +43,7 @@ gem 'sass', '~> 3.2.2'
 gem 'haml'
 gem 'le'
 gem 'mini_magick', "~> 4.0.1"
-gem 'money-rails', '1.2.0'
+gem 'money-rails', github: 'RubyMoney/money-rails'
 gem 'paranoia', '~> 2.0.0'
 gem 'simple_form', '~> 3.0.3'
 gem 'nested_form'

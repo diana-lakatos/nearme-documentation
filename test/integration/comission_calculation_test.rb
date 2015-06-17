@@ -2,37 +2,9 @@ require "test_helper"
 
 class ComissionCalculationTest < ActionDispatch::IntegrationTest
 
-  setup do
-    stub_what_has_to_be_stubbed
-    @instance = Instance.first
-    @instance.update_attribute(:service_fee_host_percent, 10)
-    @instance.update_attribute(:service_fee_guest_percent, 15)
-    @instance.update_attribute(:payment_transfers_frequency, 'daily')
-    @listing = FactoryGirl.create(:transactable, :daily_price => 25.00)
 
-    @listing.transactable_type.update_attribute(:service_fee_host_percent, 10)
-    @listing.transactable_type.update_attribute(:service_fee_guest_percent, 15)
-    @instance.update_attribute(:payment_transfers_frequency, 'daily')
-
-    CountryPaymentGateway.delete_all
-    payment_gateway = FactoryGirl.create(:paypal_payment_gateway)
-    FactoryGirl.create(:country_payment_gateway, payment_gateway: payment_gateway, country_alpha2_code: 'US')
-    FactoryGirl.create(:paypal_merchant_account, payment_gateway: payment_gateway, merchantable: @listing.company)
-
-    @reservation = FactoryGirl.create(:reservation_with_credit_card, listing: @listing)
-    stub_billing_gateway(@instance)
-    stub_active_merchant_interaction
-    @billing_gateway = @instance.payment_gateway('US', @reservation.currency)
-
-    response = @billing_gateway.authorize(@reservation.total_amount_cents, credit_card)
-    @reservation.create_billing_authorization(token: response[:token], payment_gateway: payment_gateway)
-    @reservation.save!
-
-    create_logged_in_user
-  end
-
-  should 'ensure that comission after payout is correct' do
-
+  should 'ensure that comission after payout is correct with VND which has 10 - 1 subunit conversion rate' do
+    mockup_database_with_currency('VND')
     post_via_redirect "/listings/#{@listing.id}/reservations", booking_params
 
     @reservation.confirm
@@ -41,15 +13,103 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
 
     @payment = @reservation.payments.last
     assert @payment.paid?
-    charge = @payment.charges.new(amount: @payment.total_amount_cents, success: true)
-    assert_equal 2875, charge.amount
+    charge = @payment.charges.new(amount: @payment.total_amount_cents, success: true, currency: @payment.currency)
+    assert_equal 28.75.to_money('VND'), charge.amount_money
 
     PaymentTransferSchedulerJob.perform
 
     @payment_transfer = @reservation.company.payment_transfers.last
     assert_equal 1, @reservation.company.payment_transfers.count
     assert @payment_transfer.transferred?
-    assert_equal 2250, @payment_transfer.payout_attempts.successful.first.amount
+    assert_equal 22.5.to_money('VND'), @payment_transfer.payout_attempts.successful.first.amount_money
+  end
+
+  should 'ensure that comission after payout is correct with IQD which has 1000 - 1 subunit conversion rate' do
+    mockup_database_with_currency('IQD')
+    post_via_redirect "/listings/#{@listing.id}/reservations", booking_params
+
+    @reservation.confirm
+
+    post_via_redirect "/listings/#{FactoryGirl.create(:transactable).id}/reservations", booking_params
+
+    @payment = @reservation.payments.last
+    assert @payment.paid?
+    charge = @payment.charges.new(amount: @payment.total_amount_cents, success: true, currency: @payment.currency)
+    assert_equal 28.75.to_money('IQD'), charge.amount_money
+
+    PaymentTransferSchedulerJob.perform
+
+    @payment_transfer = @reservation.company.payment_transfers.last
+    assert_equal 1, @reservation.company.payment_transfers.count
+    assert @payment_transfer.transferred?
+    assert_equal 22.5.to_money('IQD'), @payment_transfer.payout_attempts.successful.first.amount_money
+  end
+
+  should 'ensure that comission after payout is correct with MGA which has 5 - 1 subunit conversion rate' do
+    mockup_database_with_currency('MGA')
+    post_via_redirect "/listings/#{@listing.id}/reservations", booking_params
+
+    @reservation.confirm
+
+    post_via_redirect "/listings/#{FactoryGirl.create(:transactable).id}/reservations", booking_params
+
+    @payment = @reservation.payments.last
+    assert @payment.paid?
+    charge = @payment.charges.new(amount: @payment.total_amount_cents, success: true, currency: @payment.currency)
+    assert_equal 28.75.to_money('MGA'), charge.amount_money
+
+    PaymentTransferSchedulerJob.perform
+
+    @payment_transfer = @reservation.company.payment_transfers.last
+    assert_equal 1, @reservation.company.payment_transfers.count
+    assert @payment_transfer.transferred?
+    assert_equal 22.5.to_money('MGA'), @payment_transfer.payout_attempts.successful.first.amount_money
+  end
+
+  should 'ensure that comission after payout is correct with JPY which has 1 - 1 subunit conversion rate' do
+    mockup_database_with_currency('JPY')
+    post_via_redirect "/listings/#{@listing.id}/reservations", booking_params
+
+    @reservation.confirm
+
+    post_via_redirect "/listings/#{FactoryGirl.create(:transactable).id}/reservations", booking_params
+
+    @payment = @reservation.payments.last
+    assert @payment.paid?
+
+    charge = @payment.charges.new(amount: @payment.total_amount_cents, success: true, currency: @payment.currency)
+    assert_equal 28.75.to_money('JPY'), charge.amount_money
+
+    PaymentTransferSchedulerJob.perform
+
+    @payment_transfer = @reservation.company.payment_transfers.last
+    assert_equal 1, @reservation.company.payment_transfers.count
+    assert @payment_transfer.transferred?
+    assert_equal 22.5.to_money('JPY'), @payment_transfer.payout_attempts.successful.first.amount_money
+
+  end
+
+  should 'ensure that comission after payout is correct with USD which has 100 - 1 subunit conversion rate' do
+    mockup_database_with_currency('USD')
+    post_via_redirect "/listings/#{@listing.id}/reservations", booking_params
+
+    @reservation.confirm
+
+    post_via_redirect "/listings/#{FactoryGirl.create(:transactable).id}/reservations", booking_params
+
+    @payment = @reservation.payments.last
+    assert @payment.paid?
+
+    charge = @payment.charges.new(amount: @payment.total_amount_cents, success: true, currency: @payment.currency)
+    assert_equal 28.75.to_money('USD'), charge.amount_money
+
+    PaymentTransferSchedulerJob.perform
+
+    @payment_transfer = @reservation.company.payment_transfers.last
+    assert_equal 1, @reservation.company.payment_transfers.count
+    assert @payment_transfer.transferred?
+    assert_equal (22.5).to_money('USD'), @payment_transfer.payout_attempts.successful.first.amount_money
+
   end
 
   private
@@ -95,5 +155,35 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
       :year               => "2020",
       :verification_value => "411"
     )
+  end
+
+  def mockup_database_with_currency(currency = 'USD')
+    stub_what_has_to_be_stubbed
+    @instance = Instance.first
+    @instance.update_attribute(:service_fee_host_percent, 10)
+    @instance.update_attribute(:service_fee_guest_percent, 15)
+    @instance.update_attribute(:payment_transfers_frequency, 'daily')
+    @listing = FactoryGirl.create(:transactable, currency: currency, :daily_price => 25.00)
+
+    @listing.transactable_type.update_attribute(:service_fee_host_percent, 10)
+    @listing.transactable_type.update_attribute(:service_fee_guest_percent, 15)
+    @instance.update_attribute(:payment_transfers_frequency, 'daily')
+
+    CountryPaymentGateway.delete_all
+    payment_gateway = FactoryGirl.create(:paypal_payment_gateway)
+    FactoryGirl.create(:country_payment_gateway, payment_gateway: payment_gateway, country_alpha2_code: 'US')
+    FactoryGirl.create(:paypal_merchant_account, payment_gateway: payment_gateway, merchantable: @listing.company)
+    PaymentGateway::PaypalPaymentGateway.any_instance.stubs(:supported_currencies).returns([currency])
+
+    @reservation = FactoryGirl.create(:reservation_with_credit_card, listing: @listing)
+    stub_billing_gateway(@instance)
+    stub_active_merchant_interaction
+    @billing_gateway = @instance.payment_gateway('US', @reservation.currency)
+
+    response = @billing_gateway.authorize(@reservation.total_amount_cents, credit_card)
+    @reservation.create_billing_authorization(token: response[:token], payment_gateway: payment_gateway)
+    @reservation.save!
+
+    create_logged_in_user
   end
 end

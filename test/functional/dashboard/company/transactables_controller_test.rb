@@ -32,7 +32,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
 
   context "#create" do
     setup do
-      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge!({ transactable_type_id: ServiceType.first.id,
+      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge({ transactable_type_id: ServiceType.first.id,
                                                                                photos_attributes: [FactoryGirl.attributes_for(:photo)],
                                                                                listing_type: @listing_type,
                                                                                description: "Aliquid eos ab quia officiis sequi.",
@@ -40,6 +40,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
                                                                                daily_price: 10,
                                                                                amenity_ids: [@amenity.id] })
       @attributes.delete(:photo_not_required)
+      @attributes.delete(:daily_price_cents)
     end
 
     should 'log' do
@@ -66,6 +67,34 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
         }
       end
       assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type)
+    end
+
+    context 'different subunit to unit conversion rate' do
+
+      should 'work for currencies with 1 to 1 ratio' do
+        post :create, {
+          transactable: @attributes.merge(location_id: @location2.id, currency: 'JPY'),
+          transactable_type_id: @transactable_type.id
+        }
+        assert_equal 10.to_money('JPY'), assigns(:transactable).daily_price
+
+      end
+
+      should 'work for currencies with 5 to 1 ratio' do
+        post :create, {
+          transactable: @attributes.merge(location_id: @location2.id, currency: 'MGA'),
+          transactable_type_id: @transactable_type.id
+        }
+        assert_equal 10.to_money('MGA'), assigns(:transactable).daily_price
+      end
+
+      should 'work for currencies with 1000 to 1 ratio' do
+        post :create, {
+          transactable: @attributes.merge(location_id: @location2.id, currency: 'BHD'),
+          transactable_type_id: @transactable_type.id
+        }
+        assert_equal 10.to_money('BHD'), assigns(:transactable).daily_price
+      end
     end
 
     should 'not create transactable with custom validator' do
@@ -122,6 +151,13 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
           @related_transactable.reload
           assert_equal 'new name', @related_transactable.name
           assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type)
+        end
+
+        should 'properly update price if currency is set to JPY' do
+          @related_transactable.update_attribute(:currency, 'JPY')
+          put :update, id: @related_transactable.id, transactable: { daily_price: 100 }, transactable_type_id: @transactable_type.id
+          @related_transactable.reload
+          assert_equal 100.to_money('JPY'), @related_transactable.daily_price
         end
       end
 
