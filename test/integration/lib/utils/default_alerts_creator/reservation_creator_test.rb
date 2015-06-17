@@ -207,6 +207,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
 
         assert_equal [@reservation.owner.email], mail.to
         assert_equal "[#{@platform_context.decorate.name}] Can we help, #{@reservation.owner.first_name}?", mail.subject
+        assert_not_contains 'Liquid error:', mail.html_part.body
       end
 
       should 'not include reason when it is not present' do
@@ -226,7 +227,8 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
 
       should 'include nearme listings when it is present' do
         @listing = FactoryGirl.create(:transactable)
-        User.any_instance.stubs(:listings_in_near).returns([@listing])
+        @listing2 = FactoryGirl.create(:transactable, :fixed_price, :with_book_it_out, :with_exclusive_price)
+        User.any_instance.stubs(:listings_in_near).returns([@listing, @listing2])
 
         assert_difference 'ActionMailer::Base.deliveries.size' do
           WorkflowStepJob.perform(::WorkflowStep::ReservationWorkflow::Rejected, @reservation.id)
@@ -234,6 +236,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
         mail = ActionMailer::Base.deliveries.last
 
         assert_contains @listing.name, mail.html_part.body
+        assert_not_contains 'Liquid error:', mail.html_part.body
       end
 
       should 'not include nearme listings when it is not present' do

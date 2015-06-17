@@ -35,8 +35,8 @@ module SearchHelper
   def price_information(listing)
     if listing.schedule_booking?
       arr = []
-      arr << "#{money_without_cents_and_with_symbol(listing.fixed_price)} / #{listing.transactable_type.action_price_per_unit? ? t("simple_form.labels.transactable.price.per_unit") : t("simple_form.labels.transactable.price.fixed")}" if listing.fixed_price.to_f > 0
-      arr << "#{money_without_cents_and_with_symbol(listing.exclusive_price)} / #{t("simple_form.labels.transactable.price.exclusive_price")}" if listing.exclusive_price.to_f > 0
+      arr << "#{money_without_cents_and_with_symbol(listing.fixed_price)} / #{listing.transactable_type.action_price_per_unit? ? I18n.t("simple_form.labels.transactable.price.per_unit") : I18n.t("simple_form.labels.transactable.price.fixed")}" if listing.fixed_price.to_f > 0
+      arr << "#{money_without_cents_and_with_symbol(listing.exclusive_price)} / #{I18n.t("simple_form.labels.transactable.price.exclusive_price")}" if listing.exclusive_price.to_f > 0
       arr.join(' | ')
     else
       if listing.action_hourly_booking? && !listing.hourly_price.to_f.zero?
