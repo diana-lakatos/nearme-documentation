@@ -12,6 +12,7 @@ module Auth
       user = User.new
       user.apply_omniauth(@auth_params)
       user.google_analytics_id = google_analytics_id
+      user.instance_profile_type_id = InstanceProfileType.first.try(:id)
       user.save
     end
 

@@ -114,6 +114,7 @@ module LiquidFilters
 
   def custom_sanitize(html = '')
     return '' if html.blank?
+    html.gsub!("\r\n", "<br />")
     if PlatformContext.current.instance.custom_sanitize_config.present?
       @custom_sanitizer ||= CustomSanitizer.new(PlatformContext.current.instance.custom_sanitize_config)
       @custom_sanitizer.sanitize(html).html_safe

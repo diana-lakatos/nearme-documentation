@@ -61,11 +61,11 @@ module DashboardHelper
   def no_reservations_info_for_state(state)
     case state.to_s
     when 'unconfirmed'
-      'You have no unconfirmed reservations.'
+      t('dashboard.host_reservations.no_unconfirmed_reservations')
     when 'confirmed'
-      "You haven't confirmed any reservations yet."
+      t('dashboard.host_reservations.no_confirmed_reservations')
     when 'archived'
-      "You don't have any archived reservations."
+      t('dashboard.host_reservations.no_archived_reservations')
     end
   end
 

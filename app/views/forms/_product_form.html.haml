@@ -1,12 +1,13 @@
 - only_inputs ||= []
 - if only_inputs.empty? || only_inputs.include?(:name)
-  = f.input :name, label: "Item Name", placeholder: "Name"
+  = f.input :name
 - if only_inputs.empty? || only_inputs.include?(:description)
-  = f.input :description, label: "Item description", as: :ckeditor, :input_html => { :ckeditor => { :toolbar => 'simple' } }, placeholder: "Description"
+  = f.input :description, as: :ckeditor, :input_html => { :ckeditor => { :toolbar => 'simple' } }, placeholder: "Description"
 - if only_inputs.empty? || only_inputs.include?(:photos)
   .row
     .col-md-3
-      %label Photos
+      %label
+        = t('forms.product_form.photos')
     .col-md-9
       .loading{:style => "display: none"}
         = image_tag "spinner.gif"

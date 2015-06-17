@@ -4,9 +4,9 @@
   %ul
     - actions = ['booking_successful', 'upcoming', 'booking_failed']
     %li{class: actions.include?(params[:action]) ? 'active' : ''}
-      = link_to 'UPCOMING', upcoming_dashboard_user_reservations_path
+      = link_to t('dashboard.user_reservations.upcoming'), upcoming_dashboard_user_reservations_path
     %li{class: params[:action] == 'archived' ? 'active' : ''}
-      = link_to 'ARCHIVED', archived_dashboard_user_reservations_path
+      = link_to t('dashboard.user_reservations.archived'), archived_dashboard_user_reservations_path
 
 .dash-body
   = render 'index'

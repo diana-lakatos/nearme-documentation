@@ -1,6 +1,7 @@
 .box
   - if @payments.empty?
-    %p.no_data You have not received any payments in the preceding 7 day period.
+    %p.no_data
+      = t('dashboard.analytics.no_payments_received_last_7_days')
   - else
     .chart
       .total.right

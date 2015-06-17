@@ -669,6 +669,11 @@ en:
     list_a_new: "List a New %{name}"
     list_your_first: "List Your First %{name}"
     list_your: "List your %{name}"
+    seller_info: "Seller Info"
+    list_new_item: "List New %{name}"
+    shipping_info: "Shipping Info"
+    continue_and_preview_listing: "Continue and Preview Listing"
+    save_for_later: "Save for Later"
 
   support:
     dashboard:
@@ -677,6 +682,11 @@ en:
       view_all_tickets: "View all tickets"
       open_a_ticket: "Open a Ticket"
   dashboard:
+    items:
+      list_new_item: "List New Item"
+      search:
+        search_your_products: 'Search your products'
+        search: 'Search'
     nav:
       orders: 'My Orders'
       user_reservations: 'My Bookings'
@@ -717,7 +727,16 @@ en:
       pending_confirmation: 'Pending confirmation from host. Booking will expire in '
       money_info: "Payment has been authorized but it will be captured only upon confirmation."
       exclusive_price_guests_notes: 'Exclusive booking instructions: %{guest_notes}'
+      upcoming: "UPCOMING"
+      archived: "ARCHIVED"
     host_reservations:
+      unconfirmed: 'UNCONFIRMED'
+      confirmed: 'CONFIRMED'
+      archived: 'ARCHIVED'
+      no_unconfirmed_reservations: 'You have no unconfirmed reservations.'
+      no_confirmed_reservations: "You haven't confirmed any reservations yet."
+      no_archived_reservations: "You don't have any archived reservations."
+      no_reservations_promote_reservations: "You currently have no reservations. Promote your locations by tweeting or sharing a direct link!"
       pending_confirmation: 'You must confirm this booking within <strong>%{time_to_expiry}</strong> or it will expire.'
       money_info: "Payment has been authorized but it will be captured only upon confirmation."
       next_payment_transfer: "The next automated payout occurs at %{next_payment_transfer}."
@@ -729,6 +748,8 @@ en:
         pending: 'Your merchant account is pending verification.'
         verified: 'Your merchant account has been verified.'
         failed: 'Verification of your merchant account failed.'
+    reservations:
+      purchase_was_successful: "Your purchase was successful!"
     products:
       manage: 'MANAGE PRODUCTS'
     transactables:
@@ -790,6 +811,8 @@ en:
       no_reservations_yet: "Your locations haven't got any reservations yet."
       no_purchases_yet: 'Your products have not received any orders.'
       no_product_views_yet: "Your products haven't been visited yet."
+      no_location_visits_yet: "Your locations haven't been visited yet."
+      no_payments_received_last_7_days: "You have not received any payments in the preceding 7 day period."
     location:
       are_you_sure: 'If you continue, %{listings_count} listings which belong to this location will also be deleted. Are you really sure you want to proceed?'
   hidden_items:
@@ -1047,6 +1070,8 @@ en:
       one: "Inbox (1)"
       other: "Inbox (%{count})"
       zero: Inbox
+    no_new_messages: "No new messages!"
+    no_archived_messages: 'No archived messages'
   validation_messages:
     price_too_high: '%{price} is too high'
     price_too_low: '%{price} is too low'
@@ -1299,6 +1324,9 @@ en:
     add_exclude_rule: 'Add unavailable period'
     duration_range: 'Exclude between'
     remove: 'Remove'
+  forms:
+    product_form:
+      photos: 'Photos'
 
 
 
