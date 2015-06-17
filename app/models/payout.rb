@@ -68,4 +68,8 @@ class Payout < ActiveRecord::Base
     reference.try(:update_payout_status, self)
   end
 
+  def amount_money
+    Money.new(amount, currency)
+  end
+
 end

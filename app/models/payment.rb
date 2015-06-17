@@ -158,7 +158,7 @@ class Payment < ActiveRecord::Base
 
   def amount_to_be_refunded
     if payable.respond_to?(:cancelled_by_guest?) && payable.cancelled_by_guest?
-      (subtotal_amount_cents * (1 - self.cancellation_policy_penalty_percentage.to_f/100.0)).to_i
+      (subtotal_amount_cents * (1 - self.cancellation_policy_penalty_percentage.to_f/BigDecimal(100))).to_i
     else
       total_amount_cents
     end

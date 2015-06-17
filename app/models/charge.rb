@@ -26,4 +26,8 @@ class Charge < ActiveRecord::Base
     self.response = response
     save!
   end
+
+  def amount_money
+    Money.new(amount, currency)
+  end
 end

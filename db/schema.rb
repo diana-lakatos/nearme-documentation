@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150603111236) do
+ActiveRecord::Schema.define(version: 20150617153611) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1052,11 +1052,11 @@ ActiveRecord::Schema.define(version: 20150603111236) do
     t.integer  "company_id"
     t.datetime "transferred_at"
     t.string   "currency"
-    t.integer  "amount_cents",                             default: 0, null: false
-    t.integer  "service_fee_amount_guest_cents",           default: 0, null: false
-    t.datetime "created_at",                                           null: false
-    t.datetime "updated_at",                                           null: false
-    t.integer  "service_fee_amount_host_cents",            default: 0, null: false
+    t.integer  "amount_cents",                                                     default: 0,   null: false
+    t.decimal  "service_fee_amount_guest_cents",           precision: 8, scale: 2, default: 0.0, null: false
+    t.datetime "created_at",                                                                     null: false
+    t.datetime "updated_at",                                                                     null: false
+    t.decimal  "service_fee_amount_host_cents",            precision: 8, scale: 2, default: 0.0, null: false
     t.datetime "deleted_at"
     t.integer  "instance_id"
     t.integer  "partner_id"
@@ -1071,21 +1071,21 @@ ActiveRecord::Schema.define(version: 20150603111236) do
   create_table "payments", force: true do |t|
     t.integer  "reservation_id"
     t.integer  "subtotal_amount_cents"
-    t.integer  "service_fee_amount_guest_cents"
+    t.decimal  "service_fee_amount_guest_cents",             precision: 8, scale: 2
     t.datetime "paid_at"
     t.datetime "failed_at"
-    t.datetime "created_at",                                             null: false
-    t.datetime "updated_at",                                             null: false
+    t.datetime "created_at",                                                                       null: false
+    t.datetime "updated_at",                                                                       null: false
     t.string   "currency"
     t.datetime "deleted_at"
     t.integer  "payment_transfer_id"
-    t.integer  "service_fee_amount_host_cents",              default: 0, null: false
+    t.decimal  "service_fee_amount_host_cents",              precision: 8, scale: 2, default: 0.0, null: false
     t.datetime "refunded_at"
     t.integer  "instance_id"
     t.integer  "company_id"
     t.integer  "partner_id"
-    t.integer  "cancellation_policy_hours_for_cancellation", default: 0
-    t.integer  "cancellation_policy_penalty_percentage",     default: 0
+    t.integer  "cancellation_policy_hours_for_cancellation",                         default: 0
+    t.integer  "cancellation_policy_penalty_percentage",                             default: 0
     t.text     "recurring_booking_error"
     t.string   "payable_type"
     t.integer  "payable_id"
@@ -1265,17 +1265,17 @@ ActiveRecord::Schema.define(version: 20150603111236) do
     t.text     "schedule_params"
     t.string   "state"
     t.string   "currency"
-    t.string   "payment_method",                     default: "manual", null: false
+    t.string   "payment_method",                                             default: "manual", null: false
     t.integer  "platform_context_detail_id"
     t.string   "platform_context_detail_type"
-    t.integer  "service_fee_amount_guest_cents",     default: 0,        null: false
-    t.integer  "service_fee_amount_host_cents",      default: 0,        null: false
+    t.decimal  "service_fee_amount_guest_cents",     precision: 8, scale: 2, default: 0.0,      null: false
+    t.decimal  "service_fee_amount_host_cents",      precision: 8, scale: 2, default: 0.0,      null: false
     t.integer  "subtotal_amount_cents"
     t.string   "rejection_reason"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "credit_card_id"
-    t.integer  "hours_before_reservation_to_charge", default: 24
+    t.integer  "hours_before_reservation_to_charge",                         default: 24
     t.integer  "occurrences"
   end
 
@@ -1332,17 +1332,17 @@ ActiveRecord::Schema.define(version: 20150603111236) do
     t.string   "confirmation_email"
     t.integer  "subtotal_amount_cents"
     t.string   "currency"
-    t.datetime "created_at",                                                        null: false
-    t.datetime "updated_at",                                                        null: false
+    t.datetime "created_at",                                                                                null: false
+    t.datetime "updated_at",                                                                                null: false
     t.datetime "deleted_at"
     t.text     "comment"
     t.boolean  "create_charge"
-    t.string   "payment_method",                                default: "manual",  null: false
-    t.string   "payment_status",                                default: "unknown", null: false
-    t.float    "quantity",                                      default: 1.0,       null: false
-    t.integer  "service_fee_amount_guest_cents"
+    t.string   "payment_method",                                                        default: "manual",  null: false
+    t.string   "payment_status",                                                        default: "unknown", null: false
+    t.float    "quantity",                                                              default: 1.0,       null: false
+    t.decimal  "service_fee_amount_guest_cents",                precision: 8, scale: 2
     t.string   "rejection_reason"
-    t.integer  "service_fee_amount_host_cents",                 default: 0,         null: false
+    t.decimal  "service_fee_amount_host_cents",                 precision: 8, scale: 2, default: 0.0,       null: false
     t.integer  "platform_context_detail_id"
     t.string   "platform_context_detail_type"
     t.integer  "instance_id"
@@ -1350,19 +1350,19 @@ ActiveRecord::Schema.define(version: 20150603111236) do
     t.integer  "administrator_id"
     t.integer  "company_id"
     t.integer  "partner_id"
-    t.boolean  "listings_public",                               default: true
+    t.boolean  "listings_public",                                                       default: true
     t.datetime "confirmed_at"
     t.datetime "cancelled_at"
-    t.integer  "cancellation_policy_hours_for_cancellation",    default: 0
-    t.integer  "cancellation_policy_penalty_percentage",        default: 0
+    t.integer  "cancellation_policy_hours_for_cancellation",                            default: 0
+    t.integer  "cancellation_policy_penalty_percentage",                                default: 0
     t.integer  "recurring_booking_id"
     t.integer  "credit_card_id"
     t.datetime "request_guest_rating_email_sent_at"
     t.datetime "request_host_and_product_rating_email_sent_at"
     t.string   "type"
     t.string   "reservation_type"
-    t.integer  "hours_to_expiration",                           default: 24,        null: false
-    t.integer  "minimum_booking_minutes",                       default: 60
+    t.integer  "hours_to_expiration",                                                   default: 24,        null: false
+    t.integer  "minimum_booking_minutes",                                               default: 60
     t.integer  "book_it_out_discount"
     t.integer  "exclusive_price_cents"
     t.text     "guest_notes"
@@ -1457,19 +1457,6 @@ ActiveRecord::Schema.define(version: 20150603111236) do
   end
 
   add_index "schedules", ["instance_id", "scheduable_id", "scheduable_type"], name: "index_schedules_scheduable", using: :btree
-
-  create_table "search_notifications", force: true do |t|
-    t.string   "email"
-    t.integer  "user_id"
-    t.string   "query"
-    t.float    "latitude"
-    t.float    "longitude"
-    t.boolean  "notified",   default: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-  end
-
-  add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
 
   create_table "spree_addresses", force: true do |t|
     t.string   "firstname"
@@ -1660,8 +1647,8 @@ ActiveRecord::Schema.define(version: 20150603111236) do
     t.decimal  "included_tax_total",                            precision: 10, scale: 2, default: 0.0, null: false
     t.decimal  "pre_tax_amount",                                precision: 8,  scale: 2, default: 0.0
     t.integer  "payment_transfer_id"
-    t.decimal  "service_fee_amount_guest_cents",                precision: 5,  scale: 2, default: 0.0
-    t.decimal  "service_fee_amount_host_cents",                 precision: 5,  scale: 2, default: 0.0
+    t.decimal  "service_fee_amount_guest_cents",                precision: 8,  scale: 2, default: 0.0
+    t.decimal  "service_fee_amount_host_cents",                 precision: 8,  scale: 2, default: 0.0
     t.integer  "instance_id"
     t.integer  "company_id"
     t.integer  "partner_id"
@@ -1788,8 +1775,8 @@ ActiveRecord::Schema.define(version: 20150603111236) do
     t.integer  "state_lock_version",                                                 default: 0,       null: false
     t.integer  "platform_context_detail_id"
     t.string   "platform_context_detail_type"
-    t.integer  "service_fee_amount_guest_cents",                                     default: 0
-    t.integer  "service_fee_amount_host_cents",                                      default: 0
+    t.decimal  "service_fee_amount_guest_cents",            precision: 8,  scale: 2, default: 0.0
+    t.decimal  "service_fee_amount_host_cents",             precision: 8,  scale: 2, default: 0.0
     t.string   "payment_method"
   end
 
@@ -2942,6 +2929,7 @@ ActiveRecord::Schema.define(version: 20150603111236) do
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
   add_index "transactables", ["opened_on_days"], name: "index_transactables_on_opened_on_days", using: :gin
   add_index "transactables", ["parent_transactable_id"], name: "index_transactables_on_parent_transactable_id", using: :btree
+  add_index "transactables", ["properties"], name: "transactables_gin_properties", using: :gin
   add_index "transactables", ["transactable_type_id"], name: "index_transactables_on_transactable_type_id", using: :btree
 
   create_table "translations", force: true do |t|
