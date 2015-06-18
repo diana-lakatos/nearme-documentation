@@ -18,7 +18,6 @@ class CreateElbJob < Job
     rescue Exception => e
       @domain.update_column(:error_message, e.message)
       @domain.error!
-      raise e
     end
   end
 end
