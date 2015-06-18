@@ -38,6 +38,10 @@ class UserBlogPost < ActiveRecord::Base
                                                                                             published_at).last
   end
 
+  def to_liquid
+    UserBlogPostDrop.new(self)
+  end
+
   private
 
   def should_generate_new_friendly_id?

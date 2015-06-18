@@ -31,7 +31,7 @@ class InstanceViewResolver < DbViewResolver
     conditions = {
       :path => normalize_path(name, prefix),
       :locale => normalize_array(details[:locale]).first,
-      :format => normalize_array(details[:formats]).first,
+      :format => normalize_array(details[:formats]),
       :handler => normalize_array(details[:handlers]),
       :partial => partial || false
     }

@@ -28,7 +28,9 @@ class UserDrop < BaseDrop
   # administered_locations_pageviews_30_day_total
   #   total number of impressions for the locations of the first company created by this user
   #   if it exists, otherwise for the administered locations
-  delegate :name, :friends, :friends_know_host_of, :mutual_friends, :know_host_of, :with_mutual_friendship_source, :job_title, :first_name, :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, to: :user
+  delegate :name, :friends, :friends_know_host_of, :mutual_friends, :know_host_of,
+    :with_mutual_friendship_source, :job_title, :first_name, :email, :full_mobile_number,
+    :administered_locations_pageviews_30_day_total, :blog, to: :user
 
   def initialize(user)
     @user = user
@@ -205,6 +207,10 @@ class UserDrop < BaseDrop
   # marketplace's internal messaging system
   def user_message_path
     routes.new_user_user_message_path(user_id: @user.slug)
+  end
+
+  def user_blog_posts_list_path
+    routes.user_blog_posts_list_path(@user)
   end
 end
 

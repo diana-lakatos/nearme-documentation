@@ -12,12 +12,17 @@ class InstanceAdmin::Theme::LiquidViewsController < InstanceAdmin::Theme::BaseCo
   end
 
   def new
-    if params[:path] && InstanceView::DEFAULT_LIQUID_VIEWS_PATHS.keys.include?(params[:path])
-      @body = File.read(File.join(Rails.root, 'app', 'views', "#{DbViewResolver.virtual_path(params[:path].dup, true)}.html.liquid"))
+    if params[:path] && view = InstanceView::DEFAULT_LIQUID_VIEWS_PATHS[params[:path]]
+      view_path = DbViewResolver.virtual_path(params[:path].dup, view.fetch(:is_partial, true))
+      @body = File.read(File.join(Rails.root, 'app', 'views', "#{view_path}.html.liquid"))
     else
       @body = ''
     end
-    @liquid_view = platform_context.instance.instance_views.build(path: params[:path], body: @body)
+    @liquid_view = platform_context.instance.instance_views.build(
+      path: params[:path],
+      body: @body,
+      partial: view.fetch(:is_partial, true)
+    )
   end
 
   def edit
@@ -29,7 +34,6 @@ class InstanceAdmin::Theme::LiquidViewsController < InstanceAdmin::Theme::BaseCo
     @liquid_view.handler = 'liquid'
     @liquid_view.transactable_type = @transactable_type
     @liquid_view.view_type = InstanceView::VIEW_VIEW
-    @liquid_view.partial = true
     if @liquid_view.save
       flash[:success] = t 'flash_messages.instance_admin.manage.liquid_views.created'
       redirect_to action: :index

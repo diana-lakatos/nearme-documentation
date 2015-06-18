@@ -17,4 +17,9 @@ class UserBlog < ActiveRecord::Base
     raise NotFound unless enabled?
     self
   end
+
+  def to_liquid
+    UserBlogDrop.new(self)
+  end
+
 end

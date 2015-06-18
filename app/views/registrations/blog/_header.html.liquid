@@ -1,0 +1,24 @@
+<div class="header">
+  <div class="header-text-and-logo">
+    <div class="v-wrap">
+      <div class="v-box">
+        <a href='{{@user.user_blog_posts_list_path}}' >
+          <span class="header-text visible-phone">
+            {% if @user.blog.header_icon_present? %}
+              <img src='{{ @user.blog.header_icon_url }}' />
+            {% else %}
+              {{ @user.blog.name }}
+            {% endif %}
+          </span>
+          {% if @user.blog.header_logo_present? %}
+            <img src='{{@user.blog.header_logo_url}}' />
+          {% else %}
+            <span class="header-text hidden-phone">
+              {{ @user.blog.name }}
+            </span>
+          {% endif %}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
