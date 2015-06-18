@@ -13,6 +13,6 @@
                     = check_box_tag("parent_category_ids[]", category.id, @searcher.category_ids.include?(category.id.to_s), hidden: true, id: "category_#{category.id}")
 
                   = category.name
-              = category_tree(category, @category, 2, @searcher.category_ids)
+              = category_tree(category, @category, 4, @searcher.category_ids)
 
 
