@@ -27,6 +27,8 @@ module TransactablesIndex
         indexes :transactable_type_id, :type => "integer"
         indexes :administrator_id, :type => "integer"
 
+        indexes :categories, type: 'integer'
+
         indexes :enabled, :type => "boolean"
         indexes :action_rfq, :type => "boolean"
         indexes :action_hourly_booking, :type => "boolean"
@@ -58,14 +60,16 @@ module TransactablesIndex
           custom_attrs[custom_attribute] = self.send(custom_attribute).to_s.downcase
         end
       end
-      self.as_json(only: Transactable.mappings.to_hash[:transactable][:properties].keys.delete_if{|prop| prop == :custom_attributes}).
-        merge(geo_location: self.geo_location).
-        merge(custom_attributes: custom_attrs).
-        merge(location_type_id: self.location.location_type_id).
-        merge(hourly_price_cents: self.hourly_price_cents.to_i).
-        merge(daily_price_cents: self.daily_price_cents.to_i).
-        merge(weekly_price_cents: self.weekly_price_cents.to_i).
-        merge(monthly_price_cents: self.monthly_price_cents.to_i)
+      self.as_json(only: Transactable.mappings.to_hash[:transactable][:properties].keys.delete_if{|prop| prop == :custom_attributes}).merge(
+        geo_location: self.geo_location,
+        custom_attributes: custom_attrs,
+        location_type_id: self.location.location_type_id,
+        hourly_price_cents: self.hourly_price_cents.to_i,
+        daily_price_cents: self.daily_price_cents.to_i,
+        weekly_price_cents: self.weekly_price_cents.to_i,
+        monthly_price_cents: self.monthly_price_cents.to_i,
+        categories: self.categories.pluck(:id)
+      )
     end
 
     def self.esearch(query)
