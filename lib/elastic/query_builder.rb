@@ -205,6 +205,26 @@ module Elastic
           end
         end
       end
+  
+      category_search_type = PlatformContext.current.instance.category_search_type
+
+      if @query[:category_ids] && @query[:category_ids].any?
+        if category_search_type == 'OR'
+          @filters << {
+            terms: {
+              categories: @query[:category_ids].map(&:to_i)
+            }
+          }
+        elsif category_search_type == 'AND'
+          @query[:category_ids].each do |category|
+            @filters << {
+              terms: {
+                categories: [category.to_i]
+              }
+            }
+          end
+        end
+      end
 
       if @query[:listing_pricing] && @query[:listing_pricing].any?
         @query[:listing_pricing].each do |lp|

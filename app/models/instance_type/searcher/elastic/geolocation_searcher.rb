@@ -44,11 +44,12 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
     @fetcher ||=
       begin
         @search_params = @params.merge({
-          :date_range => search.available_dates,
+          date_range: search.available_dates,
           custom_attributes: search.lg_custom_attributes,
           location_types_ids: search.location_types_ids,
           listing_pricing: search.lgpricing.blank? ? [] : search.lgpricing_filters,
-          :sort => search.sort
+          category_ids: category_ids,
+          sort: search.sort
         })
         
         geo_searcher_params = initialize_search_params
