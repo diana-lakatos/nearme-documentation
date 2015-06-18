@@ -250,6 +250,7 @@ class Bookings.Controller
 
   bookItOut: (element) ->
     if $(element).is(':checked')
+      @exclusivePriceCheck.attr('checked', false).trigger('change')
       @bookItOutTotal.parents('.price').hide()
       @totalElement.text (@listing.bookItOutSubtotal()/100).toFixed(2)
       @listing.setDefaultQuantity @listing.fixedAvailability()
@@ -265,6 +266,7 @@ class Bookings.Controller
 
   exclusivePrice: ->
     if @exclusivePriceSelected()
+      @bookItOutCheck.attr('checked', false).trigger('change')
       @exclusivePriceContainer.find('.price').hide()
       @quantityField.prop('disabled', true)
       @container.find('div.quantity').hide()
@@ -307,3 +309,4 @@ class Bookings.Controller
       escapeMarkup: (m) ->
         m
     $(".select2-chosen").text(@fixedPriceSelectInit.text)
+    @fixedPriceSelect.trigger('change')
