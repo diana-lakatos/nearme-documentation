@@ -209,6 +209,13 @@ class RegistrationsControllerTest < ActionController::TestCase
         assert_equal 90, @user.avatar_transformation_data[:rotate]
       end
 
+      should 'show error message when transformation fails' do
+        sign_in @user
+        stub_image_url("http://www.example.com/image.jpg")
+        put :update_avatar, format: :js, crop: { w: -1000, h: 2.0, x: 10, y: 20 }, rotate: 90
+        response.body.include?('Unable to save image')
+      end
+
       should 'delete everything related to avatar when destroying avatar' do
         stub_image_url('http://www.example.com/image1.jpg')
         sign_in @user
