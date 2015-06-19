@@ -20,12 +20,14 @@ module CarrierWave
           # external url has not changed, meaning we can just recreate versions
         uploader = @model.send(@field)
         uploader.delayed_processing = true
-        all ? uploader.recreate_versions! : uploader.recreate_versions!(*uploader.class.delayed_versions)
 
         begin
+          all ? uploader.recreate_versions! : uploader.recreate_versions!(*uploader.class.delayed_versions)
           touch_versions_timestamp_and_callback
         rescue ::ActiveRecord::RecordNotFound
           @model.class.with_deleted.find @model.id # check for paranoid deletetion, throw if not found
+        rescue ProcessingError
+          @model.destroy
         end
 
         uploader.delayed_processing = false
