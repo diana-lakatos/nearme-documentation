@@ -40,6 +40,8 @@ class Domain < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => :deleted_at
   validates_length_of :name, :maximum => 150
+  validates_length_of :google_analytics_tracking_code, maximum: 15
+
   validates :name, domain_name: true
   validates_presence_of :certificate_body, if: :prepared_for_elb?
   validates_presence_of :private_key, if: :prepared_for_elb?
