@@ -1,5 +1,5 @@
 - name ||= nil
-.search-mixed-filter{:'data-div-cached-listings-ids' => header_name.underscore.tr(" ","-").gsub('desk', 'listing') + '-listings-ids', :'data-filter' => true, :"data-custom-attribute" => name}
+.search-mixed-filter{:'data-category-id' => local_assigns.has_key?(:category_id) ? category_id : '', :'data-div-cached-listings-ids' => header_name.underscore.tr(" ","-").gsub('desk', 'listing') + '-listings-ids', :'data-filter' => true, :"data-custom-attribute" => name}
   .container-fluid
     .row-fluid
       .span2
@@ -13,4 +13,3 @@
                 %input{type: 'checkbox', name: input_name, value: option[0], checked: selected_values.include?(option[0].to_s) }
                 %span.filter-label-text
                   #{option[1]}
-                  

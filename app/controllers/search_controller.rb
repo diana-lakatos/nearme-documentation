@@ -35,6 +35,7 @@ class SearchController < ApplicationController
       @categories_html << render_to_string(
         partial: 'search/mixed/filter',
         locals: {
+          category_id: category.id,
           header_name: category.translated_name,
           selected_values: params[:category_ids].split(',') || [],
           input_name: 'category_ids[]',
