@@ -2,13 +2,13 @@
   %td= support_ticket_title_with_link(ticket)
   %td
     .time
-      =timeago(ticket.created_at)
-    .user
-      = support_author(ticket.first_message)
-  %td
-    .time
       =timeago(ticket.updated_at)
     .user
       = support_author(ticket.recent_message)
+  %td
+    .time
+      =timeago(ticket.created_at)
+    .user
+      = support_author(ticket.first_message)
   %td
     = ticket.state.titleize

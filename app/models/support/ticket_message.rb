@@ -81,6 +81,10 @@ class Support::TicketMessage < ActiveRecord::Base
     end
   end
 
+  def full_name
+    user ? user.name : self[:full_name]
+  end
+
   def to_liquid
     Support::TicketMessageDrop.new(self)
   end
