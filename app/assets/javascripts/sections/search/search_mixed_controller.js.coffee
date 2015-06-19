@@ -168,14 +168,29 @@ class Search.SearchMixedController extends Search.SearchController
 
   renderChildCategories: ->
     category_ids = _.toArray(@container.find('input[name="category_ids[]"]:checked').map(-> $(this).val())).join(',')
+    @container.find('#categories-children').html('')
+    container = @container
 
     $.ajax(
       url  : '/search/categories'
       type : 'GET',
       data : {category_ids: category_ids },
       success: (data, textStatus, jqXHR) =>
-        @container.find('#categories-children').html(data)
-        CustomInputs.initialize();
+        @container.find('#categories-children').hide().html(data)
+        subcategories = []
+        @container.find('.categories-children').html('')
+        @container.find('#categories-children').find('.search-mixed-filter').each (index, elem) ->
+          subcat = $(elem).clone()
+          category_id = parseInt(subcat.attr('data-category-id'))
+          newdiv = $("<div class='categories-children'></div>")
+          newdiv.append(subcat)
+          filter = container.find('input[name="category_ids[]"][value="' + category_id + '"]').closest('.search-mixed-filter')
+          if filter.next().hasClass('categories-children')
+            filter.next().html(newdiv.html())
+          else
+            filter.after(newdiv)
+        @container.find('#categories-children').html('')
+        CustomInputs.initialize()
     )
 
   updateResultsCount: ->
