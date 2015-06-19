@@ -56,6 +56,7 @@ class Reservation < ActiveRecord::Base
   validates :periods, :length => { :minimum => 1 }, :if => lambda { self.deleted_at_changed? && self.periods.with_deleted.count.zero? }
   validates :quantity, :numericality => { :greater_than_or_equal_to => 1 }
   validates :owner_id, :presence => true, :unless => lambda { owner.present? }
+  validates :rejection_reason, length: { maximum: 255 }
   validate :validate_all_dates_available, on: :create, :if => lambda { listing }
   validate :validate_booking_selection, on: :create, :if => lambda { listing }
   validate :validate_book_it_out, on: :create, :if => lambda { listing && !book_it_out_discount.to_i.zero? }
