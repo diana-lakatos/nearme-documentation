@@ -4,7 +4,9 @@ class Registrations::BlogController < ApplicationController
 
   def index
     @user = blog_user
-    @blog_posts = UserBlogPostDecorator.decorate_collection(blog_user.published_blogs.paginate(page: params[:page]))
+    @blog_posts = blog_user.published_blogs.paginate(page: params[:page])
+    @no_footer = true
+    @render_content_outside_container = true
 
     respond_to do |format|
       format.html
@@ -14,7 +16,8 @@ class Registrations::BlogController < ApplicationController
 
   def show
     @user = blog_user
-    @blog_post = blog_user.published_blogs.find(params[:id]).decorate
+    @blog_post = blog_user.published_blogs.find(params[:id])
+    @render_content_outside_container = true
   end
 
   private

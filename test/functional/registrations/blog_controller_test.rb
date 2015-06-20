@@ -44,7 +44,20 @@ class Registrations::BlogControllerTest < ActionController::TestCase
         refute assigns(:blog_posts).include?(@unpublished_blog_post)
         assert_equal [@another_blog_post.id, @blog_post.id].sort, assigns(:blog_posts).map(&:id).sort
         assert_response :success
+        assert_select "#infinite-scrolling .pagination .next_page", false
+        assert_select "#infinite-scrolling .pagination .previous_page", false
       end
+
+      should 'show pagination links' do
+        UserBlogPost.per_page = 2
+        @blog_post = FactoryGirl.create(:published_user_blog_post, user: @user)
+        get :index, user_id: @user.id
+        assert_response :success
+        assert_select "#infinite-scrolling .pagination .next_page"
+        assert_select "#infinite-scrolling .pagination .previous_page"
+        refute response.body.include?('Liquid error')
+      end
+
     end
 
     context '#show' do
@@ -52,6 +65,7 @@ class Registrations::BlogControllerTest < ActionController::TestCase
         get :show, user_id: @user.id, id: @blog_post
         assert_equal @user, assigns(:user)
         assert_equal @blog_post, assigns(:blog_post)
+        refute response.body.include?('Liquid error')
         assert_response :success
       end
 

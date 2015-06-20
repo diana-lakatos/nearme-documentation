@@ -2,6 +2,7 @@ module LiquidFilters
   include MoneyRails::ActionViewExtension
   include CurrencyHelper
   include ActionView::Helpers::NumberHelper
+  include WillPaginate::ViewHelpers
 
   def shorten_url(url)
     if DesksnearMe::Application.config.googl_api_key.present?
@@ -101,6 +102,12 @@ module LiquidFilters
   end
   alias_method :t, :translate
 
+  def localize(datetime, format = 'long')
+    datetime = datetime.to_date if datetime.is_a?(String)
+    I18n.l(datetime, format: format.to_sym)
+  end
+  alias_method :l, :localize
+
   def filter_text(text = '')
     return '' if text.blank?
     if PlatformContext.current.instance.apply_text_filters
@@ -121,6 +128,12 @@ module LiquidFilters
     else
       html
     end
+  end
+
+  def pagination_links(collection)
+    will_paginate collection,
+                  controller: @context.registers[:controller],
+                  renderer: 'LiquidLinkRenderer'
   end
 
 end

@@ -218,6 +218,7 @@ class SecuredParams
       :body,
       :path,
       :locale,
+      :partial,
       :transactable_type_id
     ]
   end

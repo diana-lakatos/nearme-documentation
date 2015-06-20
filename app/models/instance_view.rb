@@ -158,6 +158,28 @@ class InstanceView < ActiveRecord::Base
     'reservation_mailer/listings_in_near' => {
       user: 'UserDrop',
       platform_context: 'PlatformContextDrop'
+    },
+    'registrations/blog/header' => {
+      blog_post: 'UserBlogPostDrop',
+      user: 'UserDrop'
+    },
+    'registrations/blog/social_buttons' => {
+      blog_post: 'UserBlogPostDrop',
+      user: 'UserDrop'
+    },
+    'registrations/blog/blog_post' => {
+      blog_post: 'UserBlogPostDrop',
+      user: 'UserDrop'
+    },
+    'registrations/blog/index' => {
+      blog_post: 'UserBlogPostDrop',
+      user: 'UserDrop',
+      is_partial: false
+    },
+    'registrations/blog/show' => {
+      blog_post: 'UserBlogPostDrop',
+      user: 'UserDrop',
+      is_partial: false
     }
   }.freeze
 
@@ -177,7 +199,7 @@ class InstanceView < ActiveRecord::Base
   }
 
   scope :liquid_views, -> {
-    custom_views.where(handler: 'liquid', partial: true)
+    custom_views.where(handler: 'liquid')
   }
 
   scope :custom_views, -> {
