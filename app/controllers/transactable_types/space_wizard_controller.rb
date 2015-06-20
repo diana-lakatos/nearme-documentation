@@ -30,8 +30,10 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     @user.phone_required = true
     params[:user][:companies_attributes]["0"][:name] = current_user.first_name if platform_context.instance.skip_company? && params[:user][:companies_attributes]["0"][:name].blank?
     set_listing_draft_timestamp(params[:save_as_draft] ? Time.zone.now : nil)
+    set_proper_currency
     @user.assign_attributes(wizard_params)
-    @user.companies.first.try(:locations).try(:first).try {|l| l.name_and_description_required = true}
+    # TODO: tmp hack, the way we use rails-money does not work if you pass currency and daily_price at the same time
+    @user.companies.first.try(:locations).try(:first).try(:listings).try(:first).try(:assign_attributes, wizard_params[:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"]) rescue nil
     @user.companies.first.creator = current_user
     build_objects
     build_approval_requests
@@ -131,6 +133,12 @@ class TransactableTypes::SpaceWizardController < ApplicationController
 
   def set_transactable_type_id
     params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:transactable_type_id] = @transactable_type.id
+  end
+
+  def set_proper_currency
+    params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:currency] = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:currency].presence || PlatformContext.current.instance.default_currency
+  rescue
+    nil
   end
 
   def set_listing_draft_timestamp(timestamp)
