@@ -120,6 +120,7 @@ class Payment < ActiveRecord::Base
     end
 
     begin
+
       billing_gateway.charge(payable.owner, total_amount_cents, currency, self, payable.billing_authorization.try(:token))
       touch(:paid_at)
 
