@@ -316,6 +316,10 @@ class Instance < ActiveRecord::Base
     locales.default_locale || :en
   end
 
+  def default_currency
+    super.presence || 'USD'
+  end
+
   def set_context!
     PlatformContext.current = PlatformContext.new(self)
   end

@@ -8,7 +8,7 @@
         = check_box_tag "enable_#{price}", "1", f.object.send("#{price}_price").present?, class: "enable_#{price}", :'data-behavior' => 'enable-price'
   .col-md-5
     .input-group
-      %span.input-group-addon.currency_addon= currency_symbol_from_code(@transactable.location.try(:currency) || 'USD') 
+      %span.input-group-addon.currency_addon= currency_symbol_from_code(@transactable.try(:currency) || PlatformContext.current.instance.default_currency)
       = f.number_field "#{price}_price", as: :decimal, label: false, class: 'mini price-input', :'data-type' => 'price-input'
   .col-md-3
     %span.periodicity /#{label}
