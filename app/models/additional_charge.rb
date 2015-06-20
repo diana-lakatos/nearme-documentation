@@ -28,7 +28,12 @@ class AdditionalCharge < ActiveRecord::Base
   def copy_ac_type_data
     return if additional_charge_type_id.blank?
     self.name = additional_charge_type.name
-    self.amount_cents = additional_charge_type.amount_cents
+
+    #amount in additional_charge_type is in USD. If we try to copy amount_cents, it already includes conversion to cents in 100 to 1 ratio.
+    # If additional charge is in different currency, we need to make sure that we make proper conversion from 100 to 1 ratio into currency's ratio.
+    # MGA for example uses 5 to 1 ratio, so if amount to copy is 25, we transform it into 2500. We then divide this by 100 / 5 -> 2500 / 20 -> 125.
+    # It is then correct amount, because 125 / 5 gives us again initial 25 full 'dollar' amount. Test coverage in test/integrations/commissions<tab>
+    self.amount_cents = additional_charge_type.amount_cents / (100 / Money::Currency.new(currency).subunit_to_unit.to_f)
     self.commission_receiver = additional_charge_type.commission_receiver
     self.status = additional_charge_type.status
   end

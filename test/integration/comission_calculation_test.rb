@@ -14,7 +14,7 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     @payment = @reservation.payments.last
     assert @payment.paid?
     charge = @payment.charges.new(amount: @payment.total_amount_cents, success: true, currency: @payment.currency)
-    assert_equal 28.75.to_money('VND'), charge.amount_money
+    assert_equal 43.75.to_money('VND'), charge.amount_money
 
     PaymentTransferSchedulerJob.perform
 
@@ -35,7 +35,7 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     @payment = @reservation.payments.last
     assert @payment.paid?
     charge = @payment.charges.new(amount: @payment.total_amount_cents, success: true, currency: @payment.currency)
-    assert_equal 28.75.to_money('IQD'), charge.amount_money
+    assert_equal 43.75.to_money('IQD'), charge.amount_money
 
     PaymentTransferSchedulerJob.perform
 
@@ -56,7 +56,7 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     @payment = @reservation.payments.last
     assert @payment.paid?
     charge = @payment.charges.new(amount: @payment.total_amount_cents, success: true, currency: @payment.currency)
-    assert_equal 28.75.to_money('MGA'), charge.amount_money
+    assert_equal 43.75.to_money('MGA'), charge.amount_money
 
     PaymentTransferSchedulerJob.perform
 
@@ -78,7 +78,7 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     assert @payment.paid?
 
     charge = @payment.charges.new(amount: @payment.total_amount_cents, success: true, currency: @payment.currency)
-    assert_equal 28.75.to_money('JPY'), charge.amount_money
+    assert_equal 43.75.to_money('JPY'), charge.amount_money
 
     PaymentTransferSchedulerJob.perform
 
@@ -101,7 +101,7 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     assert @payment.paid?
 
     charge = @payment.charges.new(amount: @payment.total_amount_cents, success: true, currency: @payment.currency)
-    assert_equal 28.75.to_money('USD'), charge.amount_money
+    assert_equal 43.75.to_money('USD'), charge.amount_money
 
     PaymentTransferSchedulerJob.perform
 
@@ -163,6 +163,8 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     @instance.update_attribute(:service_fee_host_percent, 10)
     @instance.update_attribute(:service_fee_guest_percent, 15)
     @instance.update_attribute(:payment_transfers_frequency, 'daily')
+    additional_charge_type = FactoryGirl.create(:additional_charge_type, currency: currency)
+    additional_charge_type.update_attribute(:amount, 15)
     @listing = FactoryGirl.create(:transactable, currency: currency, :daily_price => 25.00)
 
     @listing.transactable_type.update_attribute(:service_fee_host_percent, 10)

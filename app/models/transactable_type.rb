@@ -44,7 +44,7 @@ class TransactableType < ActiveRecord::Base
   end
 
   def default_currency
-    super.presence || instance.default_currency.presence || 'USD'
+    super.presence || instance.default_currency
   end
 
   def destroy_translations!

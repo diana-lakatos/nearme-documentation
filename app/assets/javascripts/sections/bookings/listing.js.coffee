@@ -4,7 +4,6 @@ class @Bookings.Listing
   defaultQuantity: 1
 
   constructor: (@data) ->
-    console.log @data
     @id = parseInt(@data.id, 10)
     @bookedDatesArray = []
     @bookedDateAvailability = 0
