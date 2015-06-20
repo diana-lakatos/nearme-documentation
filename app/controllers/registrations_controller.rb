@@ -151,8 +151,7 @@ class RegistrationsController < Devise::RegistrationsController
     if @user.save
       render partial: 'dashboard/photos/resize_succeeded'
     else
-      render partial: 'dashboard/photos/resize_form', :locals => { :form_url => update_avatar_path, :object => current_user.avatar, :object_url => current_user.avatar_url(:original) }
-      render :edit_avatar
+      edit_avatar
     end
   end
 

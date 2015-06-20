@@ -2,6 +2,8 @@
   .modal-title= t('manage.photos.crop_and_rotate')
 .modal-body
   = form_tag form_url, :method => :put, :id => 'crop-form', 'data-id' => object.model.id do
+    -if @user.errors.any?
+      .error Unable to save image
     %a.badge.rotate-photo.photo-action{href: '#'}
       Rotate
     = image_tag object_url, 'data-image' => true, data: { rotate: object.transformation_rotate, crop: object.transformation_crop, original_dimensions: object.original_dimensions}
