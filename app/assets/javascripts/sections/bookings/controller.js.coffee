@@ -194,7 +194,7 @@ class Bookings.Controller
   updateSummary: ->
     @totalElement.text(
       (
-        @listing.bookingSubtotal(@bookItOutSelected(), @exclusivePriceSelected())/100
+        @listing.bookingSubtotal(@bookItOutSelected(), @exclusivePriceSelected())/@listing.data.subunit_to_unit_rate
       ).toFixed(2)
     )
 
@@ -244,7 +244,7 @@ class Bookings.Controller
   updateBookItOut: ->
     if @listing.bookItOutAvailableForDate()
       @bookItOutContainer.show()
-      @bookItOutTotal.text((@listing.bookItOutSubtotal()/100).toFixed(0))
+      @bookItOutTotal.text((@listing.bookItOutSubtotal()/@listing.data.subunit_to_unit_rate).toFixed(0))
     else
       @bookItOutContainer.hide()
 
@@ -252,7 +252,7 @@ class Bookings.Controller
     if $(element).is(':checked')
       @exclusivePriceCheck.attr('checked', false).trigger('change')
       @bookItOutTotal.parents('.price').hide()
-      @totalElement.text (@listing.bookItOutSubtotal()/100).toFixed(2)
+      @totalElement.text (@listing.bookItOutSubtotal()/@listing.data.subunit_to_unit_rate).toFixed(2)
       @listing.setDefaultQuantity @listing.fixedAvailability()
       @updateQuantityField()
       @quantityField.prop('disabled', true)

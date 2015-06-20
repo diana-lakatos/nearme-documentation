@@ -1,5 +1,5 @@
 class @Bookings.AdditionalChargesCalculator
-  constructor: (@container) ->
+  constructor: (@container, @subunit_to_unit_rate = 100) ->
 
   getMandatoryCharges: ->
     @container.find('[data-mandatory-charge]')
@@ -21,4 +21,4 @@ class @Bookings.AdditionalChargesCalculator
           total += parseFloat($charge.data().optionalCharge)
       else
         total += parseFloat($charge.data().mandatoryCharge)
-    total * 100
+    total * @subunit_to_unit_rate

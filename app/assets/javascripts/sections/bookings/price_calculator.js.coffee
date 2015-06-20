@@ -6,7 +6,7 @@
 class @Bookings.PriceCalculator
 
   constructor: (@listing) ->
-    @additionalCharges = new Bookings.AdditionalChargesCalculator($("#additional-charges-#{@listing.id}"))
+    @additionalCharges = new Bookings.AdditionalChargesCalculator($("#additional-charges-#{@listing.id}"), @listing.data.subunit_to_unit_rate)
 
   getPrice: ->
     total = _.inject(@contiguousBlocks(), (sum, block) =>
@@ -67,7 +67,7 @@ class @Bookings.PriceCalculator
 
   class @HourlyPriceCalculator
     constructor: (@listing) ->
-      @additionalCharges = new Bookings.AdditionalChargesCalculator($("#additional-charges-#{@listing.id}"))
+      @additionalCharges = new Bookings.AdditionalChargesCalculator($("#additional-charges-#{@listing.id}"), @listing.data.subunit_to_unit_rate)
 
     getPrice: ->
       bookedHours = (@listing.minutesBooked()/60)*@listing.bookedDates().length
@@ -76,7 +76,7 @@ class @Bookings.PriceCalculator
 
   class @FixedPriceCalculator
     constructor: (@listing) ->
-      @additionalCharges = new Bookings.AdditionalChargesCalculator($("#additional-charges-#{@listing.id}"))
+      @additionalCharges = new Bookings.AdditionalChargesCalculator($("#additional-charges-#{@listing.id}"), @listing.data.subunit_to_unit_rate)
 
     getPrice: ->
       total = @listing.fixedPrice*@listing.getQuantity()
