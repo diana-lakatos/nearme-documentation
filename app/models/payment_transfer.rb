@@ -81,6 +81,7 @@ class PaymentTransfer < ActiveRecord::Base
       payment_gateway_mode: payment_gateway_mode
     )
 
+
     if payout.success
       touch(:transferred_at)
     end
