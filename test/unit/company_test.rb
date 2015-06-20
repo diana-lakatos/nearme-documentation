@@ -96,4 +96,34 @@ class CompanyTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context 'iso_country_code' do
+
+    setup do
+      Address.destroy_all
+    end
+
+    context 'without default on instance' do
+
+      should 'return nil if company has no address' do
+        assert_equal nil, @company.iso_country_code
+      end
+    end
+
+    context 'with default on instance' do
+      setup do
+        PlatformContext.current.instance.update_attribute(:default_country, 'Poland')
+      end
+
+      should 'return instance country code if not  present' do
+        @company.iso_country_code
+        assert_equal 'PL', @company.iso_country_code
+      end
+
+      should 'return address country if present' do
+        FactoryGirl.create(:address, entity: @company)
+        assert_equal 'US', @company.iso_country_code
+      end
+    end
+  end
 end

@@ -226,6 +226,19 @@ class Instance < ActiveRecord::Base
     }
   end
 
+  def default_country_code
+    if default_country.present?
+      codes = IsoCountryCodes.search_by_name(default_country)
+      if codes.uniq.length == 1
+        codes.first.alpha2
+      else
+        raise "Ambiguous default country: #{default_country}, possible codes: #{codes.map(&:alpha2)}"
+      end
+    else
+      nil
+    end
+  end
+
   def payment_gateway(country, currency)
     country_payment_gateways.includes(:payment_gateway).where(country_alpha2_code: country).find { |cpg| cpg.payment_gateway.supports_currency?(currency) }.try(:payment_gateway)
   end

@@ -63,7 +63,7 @@ class Company < ActiveRecord::Base
   validate :validate_url_format
 
   delegate :address, :address2, :formatted_address, :postcode, :suburb, :city, :state, :country, :street, :address_components,
-    :latitude, :longitude, :state_code, :iso_country_code, to: :company_address, allow_nil: true
+    :latitude, :longitude, :state_code, to: :company_address, allow_nil: true
   delegate :service_fee_guest_percent, :service_fee_host_percent, to: :instance, allow_nil: true
   delegate :first_name, :last_name, :mobile_number, to: :creator
 
@@ -94,6 +94,10 @@ class Company < ActiveRecord::Base
 
   def email
     super.presence || creator.try(:email)
+  end
+
+  def iso_country_code
+    company_address.try(:iso_country_code) || instance.default_country_code
   end
 
   def add_company_to_partially_created_shipping_categories
