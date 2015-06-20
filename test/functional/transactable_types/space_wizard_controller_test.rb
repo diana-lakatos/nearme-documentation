@@ -49,10 +49,41 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
 
   context "price must be formatted" do
 
+    should 'be able to handle 1 to 1 unit to subunit conversion date passed manually' do
+      stub_us_geolocation
+      assert_difference('Transactable.count', 1) do
+        post :submit_listing, get_params(daily_price: "25", currency: 'JPY')
+      end
+      @listing = assigns(:listing)
+      assert_equal 25.to_money('JPY'), @listing.daily_price
+      assert_equal 25, @listing.daily_price_cents
+    end
+
+    should 'be able to handle 5 to 1 unit to subunit conversion date passed manually' do
+      stub_us_geolocation
+      assert_difference('Transactable.count', 1) do
+        post :submit_listing, get_params(daily_price: "25", currency: 'MGA')
+      end
+      @listing = assigns(:listing)
+      assert_equal 25.to_money('MGA'), @listing.daily_price
+      assert_equal 125, @listing.daily_price_cents
+    end
+
+    should 'be able to handle 5 to 1 unit to subunit conversion if it is default currency' do
+      stub_us_geolocation
+      PlatformContext.current.instance.update_attribute(:default_currency, 'MGA')
+      assert_difference('Transactable.count', 1) do
+        post :submit_listing, get_params(daily_price: "25", currency: '')
+      end
+      @listing = assigns(:listing)
+      assert_equal 25.to_money('MGA'), @listing.daily_price
+      assert_equal 125, @listing.daily_price_cents
+    end
+
     should "ignore invalid characters in price" do
       stub_us_geolocation
       assert_difference('Transactable.count', 1) do
-        post :submit_listing, get_params("249.31-300.00", '!@#$%^&*()_+=_:;"[]}{\,<.>/?`~', 'i am not valid price I guess', "0")
+        post :submit_listing, get_params(daily_price: "249.31-300.00", weekly_price: '!@#$%^&*()_+=_:;"[]}{\,<.>/?`~', monthly_price: 'i am not valid price I guess', free: "0")
       end
       @listing = assigns(:listing)
       assert_equal 24931, @listing.daily_price_cents
@@ -63,7 +94,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
     should "handle nil and empty prices" do
       stub_us_geolocation
       assert_difference('Transactable.count', 1) do
-        post :submit_listing, get_params(nil, "", "249.00", "0")
+        post :submit_listing, get_params(daily_price: nil, weekly_price: "", monthly_price: "249.00", free: "0")
       end
       @listing = assigns(:listing)
       assert_nil @listing.daily_price
@@ -330,7 +361,9 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
 
   private
 
-  def get_params(daily_price = nil, weekly_price = nil, monthly_price = nil, free = "1")
+  def get_params(options = {})
+    free = options[:daily_price].to_f + options[:weekly_price].to_f + options[:monthly_price].to_f == 0
+    options.reverse_merge!(daily_price: nil, weekly_price: nil, monthly_price: nil, free: free, currency: 'USD')
     {"user" =>
      {"companies_attributes"=>
       {"0" =>
@@ -365,13 +398,13 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
                "action_hourly_booking" => false,
                "listing_type"=>"Desk",
                "quantity"=>"1",
-               "daily_price"=>daily_price,
-               "weekly_price"=>weekly_price,
-               "monthly_price"=> monthly_price,
-               "action_free_booking"=>free,
+               "daily_price"=>options[:daily_price],
+               "weekly_price"=>options[:weekly_price],
+               "monthly_price"=> options[:monthly_price],
+               "action_free_booking"=>options[:free],
                "confirm_reservations"=>"0",
                "photos_attributes" => [FactoryGirl.attributes_for(:photo)],
-               "currency"=>"USD"
+               "currency"=>options[:currency]
              }
             },
           }

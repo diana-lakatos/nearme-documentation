@@ -159,6 +159,12 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
           @related_transactable.reload
           assert_equal 100.to_money('JPY'), @related_transactable.daily_price
         end
+
+        should 'properly update price if currency changes' do
+          put :update, id: @related_transactable.id, transactable: { daily_price: 100, currency: 'JPY' }, transactable_type_id: @transactable_type.id
+          @related_transactable.reload
+          assert_equal 100.to_money('JPY'), @related_transactable.daily_price
+        end
       end
 
       context "#destroy" do

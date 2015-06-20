@@ -22,7 +22,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     # Some currencies have different subunit to unit converion rate. If you do Transactable.new(daily_price: 8, currency: 'JPY') it will
     # incorrectly make daily_price_cents = 8 despite 1 - 1 conversiton rate, because currency at the time of doing this is nil, fallbacking
     # to USD with currency rate 100 - 1. So we want to make sure that currency is assigned.
-    @transactable.currency = transactable_params[:currency]
+    @transactable.currency = transactable_params[:currency] if transactable_params[:currency].present?
     @transactable.assign_attributes(transactable_params)
     @transactable.company = @company
     @transactable.location ||= @company.locations.first if @transactable_type.skip_location?
@@ -55,6 +55,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   end
 
   def update
+    @transactable.currency = transactable_params[:currency] if transactable_params[:currency].present?
     @transactable.assign_attributes(transactable_params)
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
     respond_to do |format|
