@@ -177,18 +177,28 @@ class Search.SearchMixedController extends Search.SearchController
       data : {category_ids: category_ids },
       success: (data, textStatus, jqXHR) =>
         @container.find('#categories-children').hide().html(data)
-        subcategories = []
+        subcategories_parents = []
         @container.find('.categories-children').html('')
-        @container.find('#categories-children').find('.search-mixed-filter').each (index, elem) ->
+        @container.find('#categories-children').find('.search-mixed-filter').each (index, elem) =>
           subcat = $(elem).clone()
           category_id = parseInt(subcat.attr('data-category-id'))
-          newdiv = $("<div class='categories-children'></div>")
-          newdiv.append(subcat)
           filter = container.find('input[name="category_ids[]"][value="' + category_id + '"]').closest('.search-mixed-filter')
+
+          new_category = !(filter.get(0) in subcategories_parents)
+
+          if new_category
+            newdiv = $("<div class='categories-children'></div>")
+            newdiv.append(subcat)
+
           if filter.next().hasClass('categories-children')
-            filter.next().html(newdiv.html())
+            if new_category
+              filter.next().html(newdiv.html())
+            else
+              filter.next().append(subcat)
           else
             filter.after(newdiv)
+
+          subcategories_parents.push filter.get(0)
         @container.find('#categories-children').html('')
         CustomInputs.initialize()
     )
