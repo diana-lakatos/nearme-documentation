@@ -939,6 +939,29 @@ class UserTest < ActiveSupport::TestCase
 
   end
 
+  context 'custom uniqueness validation' do
+    should "allow to create new account with email that belongs to user in other marketplace" do
+      @other_user = FactoryGirl.create(:user)
+      @other_user.update_column(:instance_id, PlatformContext.current.instance.id + 1)
+      assert_nothing_raised do
+        FactoryGirl.create(:user, email: @other_user.email)
+      end
+    end
+    should "not allow to create new account if other user exists with this email in this marketplace" do
+      @user = FactoryGirl.create(:user)
+      assert_raise ActiveRecord::RecordInvalid do
+        FactoryGirl.create(:user, email: @user.email)
+      end
+    end
+    should "not allow to create new account with email that belongs to admin" do
+      @admin = FactoryGirl.create(:admin)
+      @admin.update_column(:instance_id, PlatformContext.current.instance.id + 1)
+      assert_raise ActiveRecord::RecordInvalid do
+        FactoryGirl.create(:user, email: @admin.email)
+      end
+    end
+  end
+
   private
 
   def setup_user_with_all_objects
@@ -958,8 +981,8 @@ class UserTest < ActiveSupport::TestCase
     FactoryGirl.build(:upload_obligation, level: UploadObligation::LEVELS[0], item: @listing)
     document_requirement = FactoryGirl.create(:document_requirement, item: @listing)
     @payment_document= FactoryGirl.create(:attachable_payment_document, attachable: @reservation, user: @user,
-      payment_document_info: FactoryGirl.create(:payment_document_info, document_requirement: document_requirement)
-    )
+                                          payment_document_info: FactoryGirl.create(:payment_document_info, document_requirement: document_requirement)
+                                         )
     @objects = [@user, @user_industry, @authentication, @company, @company_industry,
                 @location, @listing, @photo, @payment_document]
   end
