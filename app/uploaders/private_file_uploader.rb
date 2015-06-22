@@ -1,7 +1,7 @@
 class PrivateFileUploader < BaseUploader
 
   def extension_white_list
-    %w(jpg jpeg png pdf)
+    %w(jpg jpeg png pdf doc docx)
   end
 
   def fog_public
