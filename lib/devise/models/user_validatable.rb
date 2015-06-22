@@ -18,7 +18,7 @@ module Devise
 
         base.class_eval do
           validates_presence_of   :email, if: :email_required?
-          validates_uniqueness_of :email, allow_blank: true, scope: [:instance_id, :deleted_at], if: :email_changed?
+          validates_uniqueness_of :email, allow_blank: true, conditions: -> { where('(instance_id = ? or admin = ?) AND deleted_at IS NULL', PlatformContext.current.instance.id, true) }, if: :email_changed?
           validates               :email, email: true, if: :email_changed?
 
           validates_presence_of     :password, if: :password_required?
