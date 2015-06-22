@@ -1,7 +1,7 @@
 %h2 Select Payment Method
 
 %ul.nav.nav-tabs#payment-options
-  - if f.object.possible_credit_card_payment?
+  - if f.object.possible_credit_card_payment? || f.object.possible_nonce_payment?
     %li= link_to t('payments.credit_card'), '#credit_card_payment', data: { toggle: 'tab', :'payment-method' => Reservation::PAYMENT_METHODS[:credit_card]}
   - if f.object.possible_nonce_payment?
     %li= link_to t('payments.nonce'), '#nonce_payment', data: { toggle: 'tab', :'payment-method' => Reservation::PAYMENT_METHODS[:nonce]}
@@ -12,7 +12,7 @@
 = f.input :payment_method, as: :hidden, input_html: { :'data-payment-method-input' => true }
 
 .tab-content
-  - if f.object.possible_credit_card_payment?
+  - if f.object.possible_credit_card_payment?  || f.object.possible_nonce_payment?
     .tab-pane#credit_card_payment
       = render 'payments/credit_card_fields', f: f
       = render 'listings/reservations/confirm_reservations'
