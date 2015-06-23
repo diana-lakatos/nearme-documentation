@@ -69,8 +69,8 @@ module CustomAttributes
           end
 
           def normalize_html_options
-            self.input_html_options = normalize_input_html_options if input_html_options_string.present?
-            self.wrapper_html_options = normalize_wrapper_html_options if wrapper_html_options_string.present?
+            self.input_html_options = normalize_input_html_options if !input_html_options_string.nil?
+            self.wrapper_html_options = normalize_wrapper_html_options if !wrapper_html_options_string.nil?
           end
 
           def normalize_input_html_options
