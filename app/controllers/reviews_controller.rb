@@ -30,7 +30,7 @@ class ReviewsController < ApplicationController
        @total_reviews = @reviews.length
        @reviews = @reviews.paginate(page: params[:page], total_entries: @total_reviews)
        @rating_questions = RatingSystem.active_with_subject(params[:subject]).try(:rating_questions)
-       render json: { tab_content: render_to_string(template: 'reviews/index'), tab_header: render_to_string(partial: 'reviews/tab_header') }
+       render json: { tab_content: render_to_string(template: 'reviews/index', formats: [:html]), tab_header: render_to_string(partial: 'reviews/tab_header', formats: [:html]) }
     end
   end
 
