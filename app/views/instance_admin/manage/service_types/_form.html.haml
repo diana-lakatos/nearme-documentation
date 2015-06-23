@@ -10,9 +10,6 @@
       .input-container.col-xs-4
         = f.input :show_page_enabled, as: :boolean, :inline_label => true
       .input-container.col-xs-4
-        = f.input :action_overnight_booking, as: :boolean, :inline_label => true
-    .row
-      .input-container.col-xs-12
         = f.input :skip_location, :inline_label => true
     .row
       - if false # commented out until we have decision how to deal with company/location address
@@ -89,6 +86,11 @@
 
   .content-container
     %h4 Calendar
+    .row
+      .input-container.col-xs-6
+        = f.input :action_overnight_booking, as: :boolean, :inline_label => true
+      .input-container.col-xs-6
+        = f.input :action_regular_booking, as: :boolean, :inline_label => true
     .row
       .input-container.col-xs-12
         = f.input :action_schedule_booking, as: :boolean, label: 'Schedule Booking', hint: 'Use recurring rules to define recurring services instead of simple availability rules', :inline_label => true

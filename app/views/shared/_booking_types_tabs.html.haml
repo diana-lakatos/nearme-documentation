@@ -10,7 +10,7 @@
             = link_to t(".booking_type_#{booking_type}"), "#booking-type-#{booking_type}", 'data-booking-type' => booking_type, 'data-toggle' => 'tab'
 
 .tab-content.control-group
-  %div{id: 'booking-type-regular', class: "tab-pane #{booking_types_active_toggle(f.object, 'regular', true)}"}
+  %div{id: 'booking-type-regular', class: "tab-pane #{booking_types_active_toggle(f.object, ['regular', 'overnight'], true)}"}
     = yield :booking_type_regular_tab_content
   %div{id: 'booking-type-schedule', class: "tab-pane #{booking_types_active_toggle(f.object, 'schedule', true)}"}
     = yield :booking_type_schedule_tab_content

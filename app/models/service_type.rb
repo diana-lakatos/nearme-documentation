@@ -21,6 +21,7 @@ class ServiceType < TransactableType
     :cancellation_policy_penalty_percentage, greater_than_or_equal_to: 0
   validate :min_max_prices_are_correct
   validate :availability_options_are_correct
+  validate :check_booking_options
   validates_presence_of :cancellation_policy_hours_for_cancellation, :cancellation_policy_penalty_percentage, if: lambda { |transactable_type| transactable_type.enable_cancellation_policy }
   validates_inclusion_of :cancellation_policy_penalty_percentage, in: 0..100, allow_nil: true, message: 'must be between 0 and 100', if: lambda { |transactable_type| transactable_type.enable_cancellation_policy }
 
@@ -84,6 +85,14 @@ class ServiceType < TransactableType
     errors.add("availability_options[confirm_reservations][default_value]", "must be set")
   end
 
+  def check_booking_options
+    if booking_choices.empty?
+      errors.add(:action_regular_booking, "at least one option must be checked")
+      errors.add(:action_overnight_booking, "at least one option must be checked")
+      errors.add(:action_schedule_booking, "at least one option must be checked")
+    end
+  end
+
   def to_liquid
     ServiceTypeDrop.new(self)
   end
@@ -94,11 +103,7 @@ class ServiceType < TransactableType
 
   def booking_choices
     BOOKING_TYPES.select do |booking_type|
-      if booking_type == 'regular'
-        %w(hourly daily weekly monthly free).any? { |period| attributes["action_#{period}_booking"] }
-      else
-        attributes["action_#{booking_type}_booking"]
-      end
+      attributes["action_#{booking_type}_booking"]
     end
   end
 

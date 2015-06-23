@@ -105,30 +105,33 @@ class @Dashboard.ListingController
                 ".document-requirements .add-new", true)
 
   setupBookingType: =>
-    bookingTypeInput = $('input[data-booking-type]')
-    allPeriodsLabel = $('div[data-all-periods-label]')
-    dailyLabel = $('div[data-daily-label]')
-
-    periodInputs = {}
+    @periodInputs = {}
+    @allPeriodsLabel = $('div[data-all-periods-label]')
+    @dailyLabel = $('div[data-daily-label]')
+    @bookingTypeInput = $('input[data-booking-type]')
     for period in ['hourly', 'daily', 'weekly', 'monthly']
-      periodInputs[period] = @container.find("div[data-period=\"#{period}\"]")
+      @periodInputs[period] = @container.find("div[data-period=\"#{period}\"]")
+    @changeBookingType($('ul[data-booking-type-list] li.active a[data-toggle="tab"]'))
 
     $('ul[data-booking-type-list] a[data-toggle="tab"]').on 'show.bs.tab', (e) =>
-      bookingType = $(e.target).attr('data-booking-type')
-      bookingTypeInput.val(bookingType)
+      @changeBookingType(e.target)
 
+  changeBookingType: (target) =>
+    if $(target).length > 0
+      bookingType = $(target).attr('data-booking-type')
+      @bookingTypeInput.val(bookingType)
       if bookingType == 'overnight'
-        periodInputs.hourly.hide()
+        @periodInputs.hourly.hide()
       else
-        periodInputs.hourly.show()
+        @periodInputs.hourly.show()
 
       if bookingType == 'recurring'
-        periodInputs.weekly.hide()
-        periodInputs.monthly.hide()
-        allPeriodsLabel.hide()
-        dailyLabel.show()
+        @periodInputs.weekly.hide()
+        @periodInputs.monthly.hide()
+        @allPeriodsLabel.hide()
+        @dailyLabel.show()
       else
-        periodInputs.weekly.show()
-        periodInputs.monthly.show()
-        allPeriodsLabel.show()
-        dailyLabel.hide()
+        @periodInputs.weekly.show()
+        @periodInputs.monthly.show()
+        @allPeriodsLabel.show()
+        @dailyLabel.hide()
