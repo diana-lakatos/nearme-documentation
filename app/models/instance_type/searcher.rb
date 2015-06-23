@@ -17,13 +17,12 @@ module InstanceType::Searcher
   end
 
   def max_price
-    begin
+    return 0 if results.empty?
+    if results.first.is_a?(Spree::Product)
+      @max_fixed_price ||= results.map{|r| r.try(:price).to_i}.max
+    else
       @max_fixed_price ||= results.maximum(:fixed_price_cents).to_f / 100
       @max_fixed_price > 0 ? @max_fixed_price + 1 : @max_fixed_price
-    rescue
-      max_price = 0
-      results.each{|r| max_price = r.price if r.try(:price).to_i > max_price}
-      @max_fixed_price ||= max_price
     end
   end
 
