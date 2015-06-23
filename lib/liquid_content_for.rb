@@ -1,8 +1,8 @@
 module Liquid
   class ContentFor < Liquid::Block
     def initialize(tag_name, content_for_symbol, tokens)
-       super
-       @content_for_symbol = content_for_symbol.strip.gsub(/\A'|'\Z/, '').to_sym
+      super
+      @content_for_symbol = content_for_symbol.strip.gsub(/\A'|'\Z/, '').to_sym
     end
 
     def render(context)

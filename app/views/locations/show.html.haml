@@ -13,7 +13,8 @@
 
       .container-row
         .two-thirds.column.left
-          = render 'locations/location_photos', location: @location
+          - cache(@location, expires_in: cache_expires_in_for(:location)) do
+            = render 'locations/location_photos', location: @location
 
           .padding-row
 
@@ -23,7 +24,8 @@
         .one-third.column.left
           .toggleable-booking-modules
             - @listings.each_with_index do |listing, index|
-              = render 'locations/listings/booking', listing: listing, collapsed: index > 0
+              - cache(listing, expires_in: cache_expires_in_for(:listing)) do
+                = render 'locations/listings/booking', listing: listing, collapsed: index > 0
               .padding-row
 
           - if platform_context.instance.wish_lists_enabled?

@@ -86,7 +86,7 @@ class RegistrationsController < Devise::RegistrationsController
       @products = @company.products.paginate(page: params[:products_page], per_page: 8)
     end
     if @company.present? && bookable?
-      @listings = @company.listings.paginate(page: params[:services_page], per_page: 8)
+      @listings = @company.listings.includes(:location).paginate(page: params[:services_page], per_page: 8)
     end
     @reviews = @user.reviews_about_seller.paginate(page: params[:reviews_page])
     @reviews_about_buyer = @user.reviews_about_buyer

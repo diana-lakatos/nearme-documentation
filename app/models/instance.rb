@@ -116,6 +116,7 @@ class Instance < ActiveRecord::Base
                  :date_pickers_use_availability_rules, :taxonomy_tree, :saved_search, :price_slider, :price_types
 
   before_update :check_lock
+  after_save :recalculate_cache_key!, if: -> { custom_sanitize_config_changed? }
 
   def authentication_supported?(provider)
     self.send(:"#{provider.downcase}_consumer_key").present? && self.send(:"#{provider.downcase}_consumer_secret").present?
@@ -348,5 +349,18 @@ class Instance < ActiveRecord::Base
   def or_category_search?
     category_search_type == "OR"
   end
+
+  def recalculate_cache_key!
+    update_column(:context_cache_key, [Digest::SHA1.hexdigest(custom_sanitize_config.to_s + text_filters.pluck(:id, :updated_at).to_s), Time.now.to_s].join('timestamp'))
+  end
+
+  def fast_recalculate_cache_key!
+    if context_cache_key
+      update_column(:context_cache_key, [context_cache_key.split('timestamp').first, Time.now.to_s].join('timestamp'))
+    else
+      recalculate_cache_key!
+    end
+  end
+
 end
 

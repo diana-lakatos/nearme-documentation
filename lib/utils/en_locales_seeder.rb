@@ -27,8 +27,9 @@ module Utils
           end
         end
       end
-
-
+      print_out "Instance cache update started..."
+      Instance.find_each{|i| i.fast_recalculate_cache_key!}
+      
       print_out "Translation populator report:"
       print_out "  #{count[:existed]} translations already existed."
       print_out "  #{count[:created]} translations were created."

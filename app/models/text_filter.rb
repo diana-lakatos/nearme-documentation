@@ -10,10 +10,17 @@ class TextFilter < ActiveRecord::Base
   validates_presence_of :name, :regexp
   validate :regexp_valid
 
+  after_save :update_instance_cache_key
+  after_destroy :update_instance_cache_key
+
   def regexp_valid
     Regexp.new(regexp)
   rescue => e
     errors.add(:regexp, e.to_s)
+  end
+
+  def update_instance_cache_key
+    instance.recalculate_cache_key!
   end
 
 end

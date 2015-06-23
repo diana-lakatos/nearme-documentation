@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150707121726) do
+ActiveRecord::Schema.define(version: 20150708142623) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -881,6 +881,7 @@ ActiveRecord::Schema.define(version: 20150707121726) do
     t.integer  "search_radius"
     t.string   "search_text"
     t.integer  "last_index_job_id"
+    t.string   "context_cache_key"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree

@@ -318,4 +318,8 @@ module ApplicationHelper
     date
   end
 
+  def cache_expires_in_for(cache_model = '')
+    Rails.configuration.default_cache_expires_in
+  end
+
 end

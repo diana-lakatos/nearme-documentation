@@ -15,4 +15,3 @@
 {% else %}
   <input type="submit" value="{{ 'reservations.book' | translate }}" {% for prop in book_hash %}{{prop[0]}}="{{prop[1]}}"{% endfor %}>
 {% endif %}
-
