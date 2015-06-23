@@ -3,7 +3,7 @@
 %ul.nav.nav-tabs#payment-options
   - if f.object.possible_credit_card_payment? || f.object.possible_nonce_payment?
     %li= link_to t('payments.credit_card'), '#credit_card_payment', data: { toggle: 'tab', :'payment-method' => Reservation::PAYMENT_METHODS[:credit_card]}
-  - if f.object.possible_nonce_payment?
+  - if f.object.possible_nonce_payment? && false # tmp hack, remove false later
     %li= link_to t('payments.nonce'), '#nonce_payment', data: { toggle: 'tab', :'payment-method' => Reservation::PAYMENT_METHODS[:nonce]}
   - if f.object.possible_manual_payment?
     %li= link_to t('buy_sell_market.checkout.manual_payment'), '#manual_payment', data: { toggle: 'tab', :'payment-method' => Reservation::PAYMENT_METHODS[:manual]}
@@ -16,7 +16,7 @@
     .tab-pane#credit_card_payment
       = render 'payments/credit_card_fields', f: f
       = render 'listings/reservations/confirm_reservations'
-  - if f.object.possible_nonce_payment?
+  - if f.object.possible_nonce_payment? && false # tmp hack, remove false later
     .tab-pane#nonce_payment
       = render 'paypal_fields', f: f
       = render 'listings/reservations/confirm_reservations'
