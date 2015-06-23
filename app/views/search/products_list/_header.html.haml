@@ -10,6 +10,8 @@
       = hidden_field_tag :category_ids, (@searcher.category_ids.presence || []).join(',')
       = hidden_field_tag :page, 1
       = hidden_field_tag :buyable, params[:buyable]
+      = hidden_field_tag 'price[min]', @searcher.min_price
+      = hidden_field_tag 'price[max]', @searcher.max_price
       .row-fluid
         .geolocation-input.span11
           %input#search.query{:name => 'query', :placeholder => platform_context.search_field_placeholder, :type => "text", :value => @searcher.query, :autocomplete => "off", 'data-disable-autocomplete' => true}
@@ -17,3 +19,5 @@
           .search-icon.btn.btn-green
             %span.ico-search
               %span.text= t 'homepage.buttons.search'
+
+        

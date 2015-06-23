@@ -17,15 +17,22 @@ module InstanceType::Searcher
   end
 
   def max_price
-    begin
-      @max_fixed_price ||= results.maximum(:fixed_price_cents).to_f / 100
-      @max_fixed_price > 0 ? @max_fixed_price + 1 : @max_fixed_price
-    rescue
-      0
+    return 0 if results.empty?
+    if results.first.is_a?(Spree::Product)
+      @max_fixed_price ||= results.map{|r| r.try(:price).to_i}.max
+    else
+      if self.class.to_s =~ /Elastic/
+        @max_fixed_price ||= results.map{|r| r.try(:fixed_price_cents).to_f}.max / 100
+        @max_fixed_price > 0 ? @max_fixed_price + 1 : @max_fixed_price
+      else
+        @max_fixed_price ||= results.maximum(:fixed_price_cents).to_f / 100
+        @max_fixed_price > 0 ? @max_fixed_price + 1 : @max_fixed_price
+      end
     end
   end
 
   def paginate_results(page, per_page)
+    @result_max_price ||= max_price
     page ||= 1
     result_count
     @results = @results.paginate(page: page.to_i, per_page: per_page.to_i)

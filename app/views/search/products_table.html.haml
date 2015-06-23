@@ -7,6 +7,10 @@
     = render partial: 'search/categories', locals: { container_class: 'span2' }
     = yield :category_tree
 
+    .span10
+      - if platform_context.instance.price_slider
+        = render partial: 'search/shared/product_table_slider'
+    .search-max-price{:'data-max-price' => @searcher.max_price, :'data-min-price' => @searcher.min_price}
     - if @searcher.results.any?
       %section#results.products_table{class: platform_context.display_taxonomy_tree? ? "span10" : "span12"}
         %table

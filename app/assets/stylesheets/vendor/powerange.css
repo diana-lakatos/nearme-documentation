@@ -313,10 +313,32 @@
   border-top: 5px solid black;
 }
 
+.slider-padding-list {
+  padding-top: 35px;
+}
+
 .slider-padding {
-  padding-top: 35px
+  padding-top: 35px;
+}
+
+@media (max-width: 585px) {
+  .slider-padding {
+    padding-top: 5px;
+  }
+}
+
+.slider-lesser-width {
+  width: 55%;
+}
+
+.slider-padding-bottom {
+  padding-bottom: 15px;
 }
 
 .slider-padding-right {
-  padding-right: 20px;
+  padding-right: 30px;
+}
+
+.slider-padding-left {
+  padding-left: 15px;
 }

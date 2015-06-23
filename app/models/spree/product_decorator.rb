@@ -33,6 +33,13 @@ Spree::Product.class_eval do
   scope :of_type, -> (product_type) { where(product_type: product_type) }
   scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((#{Spree::Product.quoted_table_name}.extra_properties->?), ',') && ARRAY[?]", property, values) unless values.blank? }
 
+  scope :price_range, -> (prices) {
+    where('
+      (SELECT count(spree_prices.*) FROM "spree_prices"  WHERE "spree_prices"."variant_id" = (SELECT  "spree_variants".id FROM "spree_variants"  WHERE "spree_variants"."deleted_at" IS NULL AND "spree_variants"."product_id" = spree_products.id AND "spree_variants"."is_master" = \'t\' LIMIT 1)
+      AND spree_prices.amount >= ' + prices.first.to_i.to_s + ' AND spree_prices.amount <= ' + prices.last.to_i.to_s + ') > 0
+    ')
+  }
+
   _validators.reject! { |key, _| [:slug, :shipping_category_id].include?(key) }
 
   _validate_callbacks.each do |callback|

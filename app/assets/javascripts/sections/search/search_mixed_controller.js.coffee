@@ -12,7 +12,7 @@ class Search.SearchMixedController extends Search.SearchController
     @perPageValue = @perPageField.find(':selected').val()
     @bindLocationsEvents()
     @initializeCarousel()
-    @initializePriceSlide()
+    @initializePriceSlider()
     @renderChildCategories()
     @autocompleteCategories()
 
@@ -384,7 +384,7 @@ class Search.SearchMixedController extends Search.SearchController
   initializeCarousel: ->
     $('.carousel').carousel({ interval: 7000 })
 
-  initializePriceSlide: =>
+  initializePriceSlider: =>
     elem = $('#price-slider')
     val = parseInt( $("input[name='price[max]']").val() )
     elem.noUiSlider(

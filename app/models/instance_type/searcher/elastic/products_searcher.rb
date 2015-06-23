@@ -83,6 +83,10 @@ class InstanceType::Searcher::Elastic::ProductsSearcher
     @product_type.categories.searchable.roots
   end
 
+  def min_price
+    @params[:price] ? @params[:price][:min].to_i : 0
+  end
+
   private
 
   def initialize_searcher_params
