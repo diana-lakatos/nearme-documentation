@@ -39,7 +39,7 @@ module Liquid
       cache_keys = generate_cache_keys(
         Hash[ cache_models.map{|cm| [cm, context[transform_complex_key(cm)]]} ]
       )
-      key_to_fetch = PlatformContext.current.instance.id.to_s + PlatformContext.current.instance.context_cache_key + I18n.locale.to_s + cache_keys
+      key_to_fetch = PlatformContext.current.instance.id.to_s + PlatformContext.current.instance.context_cache_key.to_s + ::I18n.locale.to_s + cache_keys
       Rails.cache.fetch(key_to_fetch, expires_in: Rails.configuration.default_cache_expires_in) do
         super
       end
