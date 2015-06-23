@@ -105,7 +105,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     @user.companies.build if @user.companies.first.nil?
     @user.companies.first.locations.build if @user.companies.first.locations.first.nil?
     @user.companies.first.locations.first.transactable_type = @transactable_type
-    @user.companies.first.locations.first.listings.build({:transactable_type_id => @transactable_type.id}) if @user.companies.first.locations.first.listings.first.nil?
+    @user.companies.first.locations.first.listings.build({transactable_type_id: @transactable_type.id, booking_type: @transactable_type.booking_choices.first}) if @user.companies.first.locations.first.listings.first.nil?
   end
 
   def redirect_to_dashboard_if_registration_completed

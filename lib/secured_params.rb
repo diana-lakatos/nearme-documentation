@@ -563,6 +563,7 @@ class SecuredParams
       :bookable_noun, :lessor, :lessee,
       :action_rfq,
       :action_overnight_booking,
+      :action_regular_booking,
       :action_booking,
       :action_recurring_booking,
       :action_free_booking,

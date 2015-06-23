@@ -48,7 +48,7 @@
     - when 'price'
       = render 'price_form', f: f, form_fields: form_component.form_fields
       - if form_component.form_fields.find { |ff| ff.keys.first == model && ff.values.first == 'schedule' }
-        - if f.object.transactable_type.regular_booking_enabled?
+        - if overnight_or_regular_booking?(f.object.transactable_type)
           = render 'availability_rules_form', f: f
         - if f.object.transactable_type.schedule_booking_enabled?
           = render 'schedule_form', f: f

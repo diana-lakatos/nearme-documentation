@@ -10,7 +10,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   end
 
   def new
-    @transactable = @transactable_type.transactables.build company: @company
+    @transactable = @transactable_type.transactables.build company: @company, booking_type: @transactable_type.booking_choices.first
     @transactable.availability_template_id = @transactable_type.availability_templates.try(:first).try(:id)
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
     @photos = current_user.photos.where(transactable_id: nil)

@@ -19,7 +19,7 @@
       %div.price_container
         =f.input :book_it_out_discount, label: t('simple_form.labels.transactable.book_it_out_discount'), hint: t('simple_form.hints.transactable.book_it_out_discount')
         =f.input :book_it_out_minimum_qty, label: t('simple_form.labels.transactable.book_it_out_minimum_qty'), hint: t('simple_form.hints.transactable.book_it_out_minimum_qty')
-- if f.object.transactable_type.regular_booking_enabled?
+- if overnight_or_regular_booking?(f.object.transactable_type)
   - content_for :booking_type_regular_tab_content do
     %div{:class => "control-group #{"error" if f.object.errors.include?(:free).present?}"}
       = f.label :daily_price, :price, :class => 'control-label flush-top' do
