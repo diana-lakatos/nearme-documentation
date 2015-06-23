@@ -13,6 +13,6 @@ Then(/^I should be able to enable my blog$/) do
   find_by_id('user_blog_enabled').set true
   find_by_id('user_blog_name').set 'Super cool blog'
   click_button 'Save'
-  page.should have_content('Blog settings has been saved.')
+  page.should have_content('Blog settings have been saved.')
   @user.blog.enabled.should be_true
 end
