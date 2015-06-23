@@ -6,7 +6,7 @@
           .span6
             = uf.label :country_name, "Country", class: 'control-label'
             .controls.country-name
-              = uf.input :country_name, label: false, as: :select, collection: user_country_name_options, selected: user_country_default(@country), input_html: { class: "custom-select" }
+              = uf.input :country_name, label: false, as: :select, collection: user_country_name_options, selected: user_country_default(@country), input_html: { class: "custom-select", data: { 'country-selector' => 1 } }
       
           .span6
             .mobile-number-field.column
@@ -15,12 +15,13 @@
                 .phone-number-country-code-field
                   .country-calling-code
                     = "+#{uf.object.country.calling_code}" if uf.object.country
-                  = uf.text_field :mobile_number
+                  = uf.text_field :mobile_number, data: { 'mobile-number' => 1 }
           .clearfix
 
-    - (uf.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
-      - if attribute.public? && uf.object.field_blank_or_changed?(attribute.name) && ::CustomAttributes::CustomAttribute::FormElementDecorator.new(attribute).options[:required]
-        = draw_attribute_for_form(attribute, uf)
+    = uf.simple_fields_for :properties, uf.object.properties do |properties_form|
+      - (uf.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
+        - if attribute.public? && uf.object.field_blank_or_changed?(attribute.name) && ::CustomAttributes::CustomAttribute::FormElementDecorator.new(attribute).options[:required]
+          = draw_attribute_for_form(attribute, properties_form)
 
     = render :partial => 'approval_requests/form', :locals => { f: uf, object: uf.object, only_required: true, only_missing: true }
 

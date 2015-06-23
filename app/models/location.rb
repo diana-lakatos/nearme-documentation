@@ -153,6 +153,10 @@ class Location < ActiveRecord::Base
     @approval_request_templates ||= PlatformContext.current.instance.approval_request_templates.for("Location")
   end
 
+  def current_approval_requests
+    self.approval_requests.to_a.reject { |ar| !self.approval_request_templates.pluck(:id).include?(ar.approval_request_template_id) }
+  end
+
   def approval_request_acceptance_cancelled!
     listings.find_each(&:approval_request_acceptance_cancelled!)
   end

@@ -189,6 +189,10 @@ class Company < ActiveRecord::Base
     @approval_request_templates ||= PlatformContext.current.instance.approval_request_templates.for("Company")
   end
 
+  def current_approval_requests
+    self.approval_requests.to_a.reject { |ar| !self.approval_request_templates.pluck(:id).include?(ar.approval_request_template_id) }
+  end
+
   def is_trusted?
     if approval_request_templates.count > 0
       self.approval_requests.approved.count > 0

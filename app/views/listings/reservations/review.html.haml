@@ -86,13 +86,7 @@
   :javascript
     $(function() {
       new PhoneNumbers.FieldsForm(
-        $('form.payment'),
-        {
-          countrySelector : '#reservation_request_checkout_extra_fields_user_country_name',
-          mobileSelector  : '#reservation_request_checkout_extra_fields_user_mobile_number',
-          phoneSelector   : '#reservation_request_checkout_extra_fields_user_phone',
-          sameAsSelector  : '#reservation_request_checkout_extra_fields_user_mobile_same_as_phone'
-        }
+        $('form.payment')
       );
       window.sessioncamConfiguration.customDataObjects.push( { key: "event", value: "booking_modal_opened" } );
     });

@@ -103,7 +103,7 @@ Given /^Extra fields are prepared$/ do
 end
 
 Then /^I should see the checkout extra fields$/ do
-  page.should have_css('input#order_checkout_extra_fields_user_license_number')
+  page.should have_css('input#order_checkout_extra_fields_user_properties_license_number')
   page.should have_css('input#order_checkout_extra_fields_user_mobile_number')
 end
 
@@ -125,7 +125,7 @@ When /^I fill billing data$/ do
 end
 
 When /^I fill in the extra checkout field$/ do
-  fill_in 'order_checkout_extra_fields_user_license_number', with: '123123412345'
+  fill_in 'order_checkout_extra_fields_user_properties_license_number', with: '123123412345'
   fill_in 'order_checkout_extra_fields_user_mobile_number', with: '123123412345'
 end
 

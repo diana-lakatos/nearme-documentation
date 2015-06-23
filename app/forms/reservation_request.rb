@@ -141,7 +141,7 @@ class ReservationRequest < Form
   def save_reservation
     remove_empty_optional_documents
     User.transaction do
-      checkout_extra_fields.save!
+      checkout_extra_fields.save! if checkout_extra_fields.are_fields_present?
 
       if active_merchant_payment?
         reservation.build_billing_authorization(

@@ -10,12 +10,27 @@ class CheckoutExtraFields < Form
     @secured_params = SecuredParams.new
   end
 
-  def save!
-    return if @user.blank? || @attributes.blank? || @attributes['user'].blank?
+  def are_fields_present?
+    if @user.blank? || @attributes.blank? || @attributes['user'].blank?
+      return false
+    end
 
+    true
+  end
+
+  def save!
     @user_attributes = @attributes.require(:user).permit(@secured_params.user)
     @user_attributes.each do |key, value|
       @user.send("#{key}=", value)
+    end
+
+    public_attributes = User.public_custom_attributes_names(InstanceProfileType.first.try(:id))
+    if @attributes['user'].present? && @attributes['user']['properties'].present?
+      @attributes['user']['properties'].each do |key, value|
+        next if !public_attributes.include?(key)
+
+        @user.properties.send("#{key}=", value)
+      end
     end
 
     if @user_attributes['mobile_number'].present? && @user.phone.blank?

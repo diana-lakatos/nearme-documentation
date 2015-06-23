@@ -412,8 +412,8 @@ section.reservations {
 
 body.reservations-review, body.reservations-create {
   .control-fileupload .btn-blue {
-    background: #5dbded none repeat scroll 0 0;
-    color: #fff;
+    background: $blue none repeat scroll 0 0;
+    color: $white;
   }
   .control-fileupload .fileupload .fileinput-button {
     cursor: pointer;
