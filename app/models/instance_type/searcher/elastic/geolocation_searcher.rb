@@ -57,7 +57,8 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
         if located || adjust_to_map
           radius = PlatformContext.current.instance.search_radius.to_i
           radius = search.radius.to_i if radius.zero?
-          Transactable.geo_search(geo_searcher_params.merge(@search_params).merge({distance: "#{radius}km", lat: search.midpoint.first.to_s, lon: search.midpoint.last.to_s}))
+          lat, lng = search.midpoint.nil? ? [0.0, 0.0] : search.midpoint.map(&:to_s)
+          Transactable.geo_search(geo_searcher_params.merge(@search_params).merge({distance: "#{radius}km", lat: lat, lon: lng}))
         else
           Transactable.regular_search(geo_searcher_params.merge(@search_params))
         end
@@ -68,7 +69,7 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
     {
       :loc => @params[:loc],
       :query => @params[:query],
-      :industries_ids => @params[:industries_ids],
+      :industries_ids => @params[:industries_ids]
     }.merge(filters)
   end
 
