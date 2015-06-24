@@ -45,7 +45,7 @@ en:
       taxon_updated: 'Taxon updated.'
       no_payment_gateway: 'The seller does not support payments for the selected country.'
     user_blog:
-      settings_saved: 'Blog settings has been saved.'
+      settings_saved: 'Blog settings have been saved.'
     guest_rating:
       already_exists: "Rating for this booking has already been submitted."
       submitted_successfully: "Thanks, your rating was submitted successfully!"
@@ -299,9 +299,9 @@ en:
     wish_list_items:
       item_deleted: 'Item has ben successfully deleted.'
       all_items_deleted: 'All items have been successfully deleted.'
-      setting_saved: 'Wish lists settings has been saved.'
+      setting_saved: 'Wish lists settings have been saved.'
     search:
-      setting_saved: 'Search settings has been saved.'
+      setting_saved: 'Search settings have been saved.'
 
     manage:
       category:
