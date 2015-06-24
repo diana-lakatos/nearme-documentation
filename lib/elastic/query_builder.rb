@@ -194,6 +194,12 @@ module Elastic
         }
       end
 
+      @filters << { 
+        term: {
+          enabled: true
+        }
+      }
+
       if @query[:lg_custom_attributes]
         @query[:lg_custom_attributes].each do |key, value|
           unless value.blank?
