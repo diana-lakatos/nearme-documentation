@@ -22,7 +22,8 @@ module ListingsHelper
       subunit_to_unit_rate: Money::Currency.new(listing.currency).subunit_to_unit,
       quantity: listing.quantity,
       initial_bookings: @initial_bookings ? @initial_bookings[listing.id] : {},
-      booking_type: listing.booking_type
+      booking_type: listing.booking_type,
+      continuous_dates: listing.transactable_type.action_continuous_dates_booking
     }
     if listing.schedule_booking?
       base_data.merge!({

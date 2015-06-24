@@ -584,6 +584,7 @@ class SecuredParams
       :action_price_per_unit,
       :skip_location,
       :default_currency,
+      :action_continuous_dates_booking,
       :bookable_noun, :lessor, :lessee, :action_schedule_booking,
       :availability_templates_attributes => nested(self.availability_template),
       :allowed_currencies => [],
