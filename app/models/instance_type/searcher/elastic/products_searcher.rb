@@ -56,7 +56,6 @@ class InstanceType::Searcher::Elastic::ProductsSearcher
           sort: search.sort
         })
         product_searcher = initialize_searcher_params
-        
         fetched = Spree::Product.search(product_searcher.merge(@search_params).merge(limit: 100))
         
         product_ids = fetched.to_a.map{|f| f['_id'].to_i }
