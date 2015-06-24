@@ -9,7 +9,8 @@ class HiddenUiControls
       'dashboard/orders_received',
       'registrations/show#products',
       'main_menu/my_orders',
-      'main_menu/cart'
+      'main_menu/cart',
+      'dashboard/products/bulk_upload'
   ]
 
   SERVICE_KEYS = [
@@ -17,7 +18,8 @@ class HiddenUiControls
       'dashboard/transactables',
       'dashboard/host_reservations',
       'registrations/show#services',
-      'main_menu/my_bookings'
+      'main_menu/my_bookings',
+      'dashboard/transactables/bulk_upload'
   ]
 
   COMMON_KEYS = [
@@ -63,7 +65,14 @@ class HiddenUiControls
   def self.keys(type=:auto)
     case type
     when :auto
-      PlatformContext.current.instance.buyable? ? buy_sell_keys : service_keys
+      instance = PlatformContext.current.instance
+      if instance.buyable? && instance.bookable?
+        all_keys
+      elsif instance.buyable?
+        buy_sell_keys
+      elsif instance.bookable?
+        service_keys
+      end
     when :buy_sell
       buy_sell_keys
     when :service
