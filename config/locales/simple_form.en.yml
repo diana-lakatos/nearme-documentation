@@ -221,6 +221,8 @@ en:
         book_it_out_discount: "Book It Out discount"
       transactable_type:
         action_book_it_out: 'Enable Book it Out option'
+      service_type:
+        action_continuous_dates_booking: 'Action continuous dates booking'
       user:
         biography: 'About me'
         sms_notifications_enabled: 'Enable Text Message Notifications'
@@ -316,6 +318,8 @@ en:
       transactable:
         book_it_out_discount: "Set your % discount amount"
         book_it_out_minimum_qty: "Book it Out is only available if the set minimum quantity is available"
+      service_type:
+        action_continuous_dates_booking: "Allow user to select only contiguous dates when booking"
 
     required:
       mark: '*'
