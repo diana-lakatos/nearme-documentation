@@ -68,14 +68,21 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   private
 
   def filter_error_messages(messages)
-    pattern = /^Companies locations listings photos /
-    messages.collect do |message|
-      if message.to_s.match(pattern)
-        message.to_s.gsub(pattern, '')
+    pattern_listings_photos = /^Companies locations listings photos /
+    # Transformation
+    messages = messages.collect do |message|
+      if message.to_s.match(pattern_listings_photos)
+        message.to_s.gsub(pattern_listings_photos, '')
       else
         message
       end
     end
+    # Rejection
+    messages = messages.reject do |message|
+      message.to_s.match(/latitude|longitude/i)
+    end
+
+    messages
   end
 
   def find_transactable_type
