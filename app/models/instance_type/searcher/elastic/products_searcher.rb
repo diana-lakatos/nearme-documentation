@@ -57,7 +57,12 @@ class InstanceType::Searcher::Elastic::ProductsSearcher
         })
         product_searcher = initialize_searcher_params
         
-        Spree::Product.search(product_searcher.merge(@search_params).merge(limit: 100)).records
+        fetched = Spree::Product.search(product_searcher.merge(@search_params).merge(limit: 100))
+        
+        product_ids = fetched.to_a.map{|f| f['_id'].to_i }
+        products = Spree::Product.where(id: product_ids)
+        products = products.price_range(@params[:price][:min].to_i..@params[:price][:max].to_i) if @params[:price] && !@params[:price][:max].to_i.zero?
+        products
       end
   end
 
