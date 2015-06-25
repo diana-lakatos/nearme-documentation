@@ -39,7 +39,7 @@ class Utils::DefaultAlertsCreator::RfqCreatorTest < ActionDispatch::IntegrationT
       assert mail.html_part.body.include?("I have a lot of questions. Where to start.")
       assert mail.html_part.body.include?("Offer Received")
       assert_contains 'href="http://custom.domain.com/', mail.html_part.body
-      assert_equal [@message.email], mail.to
+      assert_equal [@message.ticket.user.email], mail.to
       assert_not_contains 'href="http://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert_equal "Your Request for Quote has been received", mail.subject
@@ -52,7 +52,7 @@ class Utils::DefaultAlertsCreator::RfqCreatorTest < ActionDispatch::IntegrationT
       end
       mail = ActionMailer::Base.deliveries.last
       assert mail.html_part.body.include?("I have a lot of questions. Where to start.")
-      assert_equal [@message.email], mail.to
+      assert_equal [@message.ticket.user.email], mail.to
       assert mail.html_part.body.include?("Offer Updated")
       assert_contains 'href="http://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="http://example.com', mail.html_part.body
@@ -68,7 +68,7 @@ class Utils::DefaultAlertsCreator::RfqCreatorTest < ActionDispatch::IntegrationT
       mail = ActionMailer::Base.deliveries.last
       assert mail.html_part.body.include?("I have a lot of questions. Where to start.")
       assert mail.html_part.body.include?("has replied to your offer.")
-      assert_equal [@message.email], mail.to
+      assert_equal [@message.ticket.user.email], mail.to
       assert_contains 'href="http://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="http://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
