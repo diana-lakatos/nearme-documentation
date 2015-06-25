@@ -28,9 +28,7 @@ module Elastic
       {
         size: query_limit,
         sort: ['_score'],
-        query: {
-          multi_match: products_match_query
-        },
+        query: products_match_query,
         filter: {
           bool: {
             must: @filters
@@ -172,16 +170,32 @@ module Elastic
     end
 
     def products_match_query
-      build_multi_match(@query[:name], @searchable_custom_attributes + ['name^2', 'description'])
+      if @query[:name].blank?
+        { match_all: { boost: QUERY_BOOST } }
+      else
+        { multi_match: build_multi_match(@query[:name], @searchable_custom_attributes + ['name^2', 'description']) }
+      end
     end
 
     def apply_product_search_filters
+      category_search_type = PlatformContext.current.instance.category_search_type
+
       if @query[:category_ids] && @query[:category_ids].any?
-        @filters << {
-          terms: {
-            categories: @query[:category_ids].map(&:to_i)
+        if category_search_type == 'OR'
+          @filters << {
+            terms: {
+              categories: @query[:category_ids].map(&:to_i)
+            }
           }
-        }
+        elsif category_search_type == 'AND'
+          @query[:category_ids].each do |category|
+            @filters << {
+              terms: {
+                categories: [category.to_i]
+              }
+            }
+          end
+        end
       end
     end
 

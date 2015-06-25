@@ -340,5 +340,13 @@ class Instance < ActiveRecord::Base
   def shippo_enabled?
     shippo_username.present? && shippo_password.present?
   end
+
+  def and_category_search?
+    category_search_type == "AND"
+  end
+
+  def or_category_search?
+    category_search_type == "OR"
+  end
 end
 
