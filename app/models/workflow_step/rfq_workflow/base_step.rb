@@ -13,11 +13,11 @@ class WorkflowStep::RfqWorkflow::BaseStep < WorkflowStep::BaseStep
   end
 
   def enquirer
-    @message.user || User.new(email: @message.email, name: @message.full_name)
+    @message.ticket.user || User.new(email: @message.email, name: @message.full_name)
   end
 
   def lister
-    @message.ticket.assigned_to || User.new(email: @message.email, name: @message.full_name)
+    @message.ticket.assigned_to || @message.user
   end
 
   # message:
