@@ -10,7 +10,7 @@ class Spree::Product::SearchFetcher
     @products = filtered_products.order(order)
     @products = @products.search_by_query([:name, :description, :extra_properties], @filters[:query]) unless @filters[:query].blank?
     if categories.present?
-      if PlatformContext.current.instance.category_search_type == "AND"
+      if PlatformContext.current.instance.and_category_search?
         @products = @products.
           joins(:categories_categorizables).
           where(categories_categorizables: {category_id: category_ids}).
@@ -34,7 +34,11 @@ class Spree::Product::SearchFetcher
   end
 
   def category_ids
-    categories.map { |c| c.self_and_descendants.map(&:id) }.flatten.uniq
+    if PlatformContext.current.instance.and_category_search?
+      categories.map(&:id)
+    else
+      categories.map{ |c| c.self_and_descendants.map(&:id) }.flatten.uniq
+    end
   end
 
   def filtered_products
