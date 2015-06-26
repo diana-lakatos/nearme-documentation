@@ -951,6 +951,7 @@ ActiveRecord::Schema.define(version: 20150707121726) do
     t.boolean  "mark_to_be_bulk_update_deleted", default: false
     t.integer  "wish_list_items_count",          default: 0
     t.integer  "opened_on_days",                 default: [],                 array: true
+    t.string   "time_zone"
   end
 
   add_index "locations", ["address_id"], name: "index_locations_on_address_id", using: :btree

@@ -54,9 +54,10 @@ class Location < ActiveRecord::Base
   validates_length_of :description, :maximum => 250, :if => :name_and_description_required
   validates_length_of :name, :maximum => 50, :if => :name_and_description_required
 
-  before_save :set_location_type
+  before_save :set_location_type, :set_time_zone
   before_save :assign_default_availability_rules
   after_save :set_external_id
+  after_save :update_schedules_timezones
 
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :history, :finders, :scoped], scope: :instance
@@ -181,6 +182,12 @@ class Location < ActiveRecord::Base
     { name: 'Location Name', email: 'Location Email', external_id: 'Location External Id', location_type: 'Location Type', description: 'Location Description', special_notes: 'Location Special Notes' }
   end
 
+  def update_schedules_timezones(force = false)
+    if force || time_zone_changed?
+      Schedule.where(scheduable_type: 'Transactable', scheduable_id: listings).find_each(&:save!)
+    end
+  end
+
   private
 
   def company_and_city
@@ -217,4 +224,11 @@ class Location < ActiveRecord::Base
       end
     end
   end
+
+  def set_time_zone
+    if time_zone.blank? && latitude && longitude
+      self.time_zone = NearestTimeZone.to(latitude, longitude)
+    end
+  end
+
 end

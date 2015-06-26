@@ -9,7 +9,7 @@
 - if only_inputs.empty? || only_inputs.include?(:address)
   = f.simple_fields_for :location_address, (f.object.location_address.presence || f.object.build_location_address) do |address_form|
     = render :partial => 'addresses/form', :locals => { :f => address_form }
-
+= f.input :time_zone if only_inputs.empty? || only_inputs.include?(:time_zone)
 = f.input :description, :as => :limited_text, :limit => 250, :required => !f.object.listings.first.try(:description).try(:present?), :input_html => { :maxlength => 250, :rows => 2 } if only_inputs.empty? || only_inputs.include?(:description)
 - if instance.location_types.count > 1
   = f.association :location_type, :collection => instance.location_types if only_inputs.empty? || only_inputs.include?(:location_type)

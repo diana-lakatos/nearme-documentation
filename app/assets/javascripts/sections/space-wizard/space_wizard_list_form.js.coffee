@@ -24,6 +24,8 @@ class @SpaceWizardSpaceForm
       buttons.removeAttr "data-disable-with"
       buttons.attr "disabled", true
 
+    @setDefaultTimezone()
+
   unlockInput: (with_focus = true) ->
     if @input_number < @input_length
       input = @container.find('> .control-group').eq(@input_number).removeClass('input-disabled').find(':input').removeAttr("disabled").eq(0)
@@ -72,3 +74,9 @@ class @SpaceWizardSpaceForm
 
   allValid: ->
     @container.find('.error-block').length == 0
+
+  setDefaultTimezone: =>
+    tz = jstz.determine().name()
+    if tz.length > 0 && $("select.time_zone").length > 0 && $("select.time_zone").val().length == 0
+      timezone = tz.split('/').pop()
+      $("select.time_zone").val(timezone)

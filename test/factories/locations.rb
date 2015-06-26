@@ -6,6 +6,7 @@ FactoryGirl.define do
     association(:location_type, factory: :location_type)
     company
     association :location_address, factory: :address
+    time_zone 'UTC'
 
     factory :location_in_auckland do
       association :location_address, factory: :address_in_auckland

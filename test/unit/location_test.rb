@@ -229,4 +229,16 @@ class LocationTest < ActiveSupport::TestCase
     @location = FactoryGirl.create(:location)
     assert_not_nil @location.reload.external_id
   end
+
+  context 'timezone' do
+    should 'update related transactables schedules when timezone changes' do
+      location = FactoryGirl.create(:location)
+      @listing = FactoryGirl.create(:transactable, :fixed_price, :location => location)
+      first_occurence_in_utc = @listing.schedule.schedule.next_occurrences(1)
+      location.time_zone = "Pacific Time (US & Canada)"
+      assert location.save
+      first_occurence_in_pst = @listing.reload.schedule.schedule.next_occurrences(1)
+      refute first_occurence_in_pst[0] == first_occurence_in_utc[0]
+    end
+  end
 end

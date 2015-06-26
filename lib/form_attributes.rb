@@ -21,7 +21,7 @@ class FormAttributes
 
   def location
     [
-      :description, :email, :info,
+      :description, :email, :info, :time_zone,
       :phone, :availability_rules, :special_notes,
       :location_type, :photos, :name, :address,
     ]

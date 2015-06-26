@@ -229,5 +229,9 @@ class Company < ActiveRecord::Base
     end
   end
 
+  def time_zone
+    ActiveSupport::TimeZone::MAPPING.select {|k, v| v == NearestTimeZone.to(latitude, longitude) }.keys.first
+  end
+
 end
 
