@@ -268,13 +268,14 @@ ActiveRecord::Schema.define(version: 20150702163715) do
     t.integer  "owner_id"
     t.string   "owner_type"
     t.string   "facebook_app_id"
-    t.boolean  "enabled",         default: false
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.boolean  "enabled",            default: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
     t.string   "header_logo"
     t.string   "header_icon"
     t.string   "header_text"
     t.string   "header_motto"
+    t.boolean  "allow_video_embeds", default: false
   end
 
   create_table "blog_posts", force: true do |t|
