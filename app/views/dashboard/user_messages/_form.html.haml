@@ -1,8 +1,9 @@
 .modal-header
-  .modal-title= "Send a message to #{@user_message.recipient_name}"
+  .modal-title
+    = t('user_messages.send_a_message_to', recipient_name: @user_message.recipient_name)
 .modal-body
   = simple_form_for @user_message, url: @user_message.create_path, data: { modal: true } do |f|
     .errors
     = f.input :body
     .btn-toolbar
-      = f.submit "Send", class: "btn btn-green pull-right"
+      = f.submit t('user_messages.send_message'), class: "btn btn-green pull-right"

@@ -1073,6 +1073,8 @@ en:
       zero: Inbox
     no_new_messages: "No new messages!"
     no_archived_messages: 'No archived messages'
+    send_a_message_to: "Send a message to %{recipient_name}"
+    send_message: "Send"
   validation_messages:
     price_too_high: '%{price} is too high'
     price_too_low: '%{price} is too low'
