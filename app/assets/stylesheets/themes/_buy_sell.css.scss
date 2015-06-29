@@ -779,6 +779,34 @@ body.buy-sell-theme {
       padding-bottom: 5px;
     }
 
+    section.checkout-form#checkout-extra-fields {
+      .control-fileupload .btn-blue {
+        background: $blue none repeat scroll 0 0;
+        color: $white;
+      }
+      .control-fileupload .fileupload .fileinput-button {
+        cursor: pointer;
+        margin-bottom: 8px;
+        text-align: center;
+        height: 35px;
+      }
+      .control-fileupload .btn {
+        background-image: none;
+        border: 1px solid transparent;
+        cursor: pointer;
+        display: inline-block;
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 1.42857;
+        margin-bottom: 0;
+        padding: 6px 12px;
+        text-align: center;
+        vertical-align: middle;
+        white-space: nowrap;
+        border-radius: 0;
+      }
+    }
+
     h2.page-heading {
       margin-bottom: 30px;
     }

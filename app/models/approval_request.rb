@@ -47,6 +47,10 @@ class ApprovalRequest < ActiveRecord::Base
 
   end
 
+  def message_blank_or_changed?
+    self.message.blank? || (self.message_was != self.message)
+  end
+
   def notify_owner_of_cancelling_acceptance
     owner.approval_request_acceptance_cancelled! if owner.respond_to?(:approval_request_acceptance_cancelled!)
   end

@@ -45,11 +45,38 @@ Then /^I should have a cancelled reservation on "([^"]*)"$/ do |date|
   user.cancelled_reservations.collect { |r| Chronic.parse(r.date) }.should include Chronic.parse(date)
 end
 
+Given /^Extra fields are prepared for booking$/ do
+  ensure_required_custom_attribute_is_present
+
+  User.last.update_column(:instance_profile_type_id, InstanceProfileType.first.id)
+  User.last.update_column(:mobile_number, '')
+end
+
 When /^I book space for:$/ do |table|
   step "I select to book space for:", table
   step "I click to review the booking"
   step "I provide reservation credit card details"
   step "I click to confirm the booking"
+end
+
+When /^I book space for with extra fields:$/ do |table|
+  step "I select to book space for:", table
+  step "I click to review the booking"
+  step "I provide reservation credit card details"
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_properties_license_number')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_mobile_number')
+  fill_in 'reservation_request_checkout_extra_fields_user_properties_license_number', with: '123123412345'
+  fill_in 'reservation_request_checkout_extra_fields_user_mobile_number', with: '123123412345'
+  step "I click to confirm the booking"
+end
+
+When /^I fail to book space for without extra fields:$/ do |table|
+  step "I select to book space for:", table
+  step "I click to review the booking"
+  step "I provide reservation credit card details"
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_properties_license_number')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_mobile_number')
+  step "I click and fail to confirm the booking"
 end
 
 When /^I book space as new user for:$/ do |table|
@@ -175,6 +202,11 @@ end
 When /^I click to confirm the booking$/ do
   click_button "Request Booking"
   page.should have_content('Your reservation has been made')
+end
+
+When /^I click and fail to confirm the booking$/ do
+  click_button "Request Booking"
+  page.should_not have_content('Your reservation has been made')
 end
 
 Then(/^I should see the booking confirmation screen for:$/) do |table|

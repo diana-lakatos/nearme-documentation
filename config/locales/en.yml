@@ -482,6 +482,8 @@ en:
 
 
   buy_sell_market:
+    checkout_extra_fields:
+      fill_in_these_details: "Please fill in these details"
     products:
       edit_inline: 'Edit your Product'
       buttons:
@@ -1293,6 +1295,7 @@ en:
 
   approval_request_attachments:
     please_upload_document: 'Please upload document'
+    please_fill_in_message: "Please fill in message"
     wrong_file_message: 'does not have an accepted extension. Please select a pdf document or an image.'
   schedule:
     add_availability: 'Add Availability'

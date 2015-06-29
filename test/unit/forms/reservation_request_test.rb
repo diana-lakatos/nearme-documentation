@@ -149,31 +149,6 @@ class ReservationRequestTest < ActiveSupport::TestCase
       end
     end
 
-    context "#display_phone_and_country_block?" do
-      context "country_name is blank" do
-        setup do
-          @user.stubs(:country_name).returns(nil)
-        end
-        should "return true" do
-          assert @reservation_request.display_phone_and_country_block?
-        end
-      end
-
-      context "phone is blank" do
-        setup do
-          @user.stubs(:phone).returns(nil)
-        end
-        should "return true" do
-          assert @reservation_request.display_phone_and_country_block?
-        end
-      end
-
-      context "country_name and phone are set" do
-        should "return false" do
-          assert !@reservation_request.display_phone_and_country_block?
-        end
-      end
-    end
   end
 
 end

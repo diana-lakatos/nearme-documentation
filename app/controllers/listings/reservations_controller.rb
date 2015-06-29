@@ -9,6 +9,7 @@ class Listings::ReservationsController < ApplicationController
   before_filter :find_current_country, :only => [:review, :create]
 
   def review
+    build_approval_request_for_object(current_user)
     reservations_service.build_documents
     event_tracker.reviewed_a_booking(@reservation_request.reservation)
   end
@@ -144,7 +145,8 @@ class Listings::ReservationsController < ApplicationController
         additional_charge_ids: attributes[:additional_charge_ids],
         reservation_type: attributes[:reservation_type],
         documents: params_documents[:documents_attributes]
-      }
+      },
+      attributes[:checkout_extra_fields]
     )
   end
 

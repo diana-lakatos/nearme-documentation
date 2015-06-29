@@ -140,6 +140,7 @@ class User < ActiveRecord::Base
   validates :mobile_number, phone_number: true,
     if: ->(u) {u.mobile_number.present?}
   validates_presence_of :country_name, if: lambda { phone_required || country_name_required }
+  validates_presence_of :mobile_number, if: lambda { mobile_number_required }
 
   validates :current_location, length: { maximum: 50 }
   validates :company_name, length: { maximum: 50 }
@@ -164,7 +165,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable,
     :rememberable, :trackable, :user_validatable, :token_authenticatable, :temporary_token_authenticatable
 
-  attr_accessor :phone_required, :country_name_required, :skip_password, :verify_identity
+  attr_accessor :phone_required, :country_name_required, :skip_password, :verify_identity, :mobile_number_required
 
   serialize :sms_preferences, Hash
   serialize :instance_unread_messages_threads_count, Hash
@@ -287,6 +288,12 @@ class User < ActiveRecord::Base
 
   def phone_or_country_was_changed?
     (phone_changed? && phone_was.blank?) || (country_name_changed? && country_name_was.blank?)
+  end
+
+  def field_blank_or_changed?(field_name)
+    # ugly hack, but properties do not respond to _changed, _was etc.
+    db_field_value = User.find(self.id).send(field_name)
+    self.send(field_name).blank? || (db_field_value != self.send(field_name))
   end
 
   def full_mobile_number_updated?
@@ -585,6 +592,10 @@ class User < ActiveRecord::Base
 
   def approval_request_approved!
     listings.find_each(&:approval_request_approved!)
+  end
+
+  def current_approval_requests
+    self.approval_requests.to_a.reject { |ar| !self.approval_request_templates.pluck(:id).include?(ar.approval_request_template_id) }
   end
 
   def active_for_authentication?
