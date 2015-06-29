@@ -15,7 +15,7 @@ module CustomAttributes
         end
 
         define_method(:translation_key_suffix_was) do
-          underscore(self.name_was)
+          underscore(name_was)
         end
 
         define_method(:translation_key_pluralized_suffix) do
