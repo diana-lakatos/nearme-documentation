@@ -216,8 +216,8 @@ Then(/^I should see the booking confirmation screen for:$/) do |table|
   if reservation[:start_minute]
     # Hourly booking
     date = I18n.l(reservation[:date], format: :short)
-    start_time = reservation[:start_at].strftime("%H:%M")
-    end_time   = reservation[:end_at].strftime("%H:%M").strip
+    start_time = reservation[:start_at].strftime("%-H:%M")
+    end_time   = reservation[:end_at].strftime("%-H:%M")
     assert page.has_content?(date), "Expected to see: #{date}"
     assert page.has_content?(start_time), "Expected to see: #{start_time}"
     assert page.has_content?(end_time), "Expected to see: #{end_time}"
