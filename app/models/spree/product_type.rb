@@ -1,5 +1,4 @@
 class Spree::ProductType < TransactableType
-  acts_as_paranoid
 
   has_many :form_components, as: :form_componentable
   has_many :categories, as: :categorizable, dependent: :destroy

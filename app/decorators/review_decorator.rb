@@ -12,33 +12,21 @@ class ReviewDecorator < Draper::Decorator
     end
   end
 
-  def link_to_object
-    if feedback_object.respond_to?(:creator_id)
-      seller = profile_path(feedback_object.creator_id)
+  def transactable_path
+    if reviewable.respond_to?(:transactable_id)
+      listing_path(reviewable.transactable_id)
     else
-      seller = profile_path(feedback_object.product.administrator)
+      product_path(reviewable.product)
     end
-
-    if feedback_object.respond_to?(:owner_id)
-      buyer = profile_path(feedback_object.owner_id)
-    else
-      buyer = profile_path(feedback_object.order.user_id)
-    end
-
-    if feedback_object.respond_to?(:transactable_id)
-      product = listing_path(feedback_object.transactable_id)
-    else
-      product = product_path(feedback_object.product.id)
-    end
-
-    choose_link_by_object(seller: seller, buyer: buyer, product: product)
   end
 
-  def choose_link_by_object(links)
+  def link_to_object
+    return I18n.t('instance_admin.manage.reviews.index.missing') if reviewable.nil?
+
     case object.object
-      when 'seller' then link_to_new_tab(I18n.t('helpers.reviews.user'), links[:seller])
-      when 'buyer' then link_to_new_tab(I18n.t('helpers.reviews.user'), links[:buyer])
-      when 'product' then link_to_new_tab(I18n.t('helpers.reviews.product'), links[:product])
+      when 'seller' then link_to_new_tab(I18n.t('helpers.reviews.user'), profile_path(reviewable.seller_type_review_receiver))
+      when 'buyer' then link_to_new_tab(I18n.t('helpers.reviews.user'), profile_path(reviewable.buyer_type_review_receiver))
+      when 'product' then link_to_new_tab(I18n.t('helpers.reviews.product'), transactable_path)
     end
   end
 
@@ -46,15 +34,11 @@ class ReviewDecorator < Draper::Decorator
     h.link_to name, path, target: "_blank"
   end
 
-  def feedback_object
-    object.reviewable
-  end
-
   def link_to_seller_profile
     if reservation?
-      h.link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(feedback_object.creator)
+      h.link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(reviewable.creator)
     else
-      h.link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(feedback_object.product.administrator)
+      h.link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(reviewable.product.administrator)
     end
   end
 
@@ -70,6 +54,10 @@ class ReviewDecorator < Draper::Decorator
     end
 
     reviewable_info(info)
+  end
+
+  def feedback_object
+    object.reviewable
   end
 
   private

@@ -125,6 +125,7 @@ en:
     manage:
       reviews:
         index:
+          missing: "Missing object"
           today: "Today"
           yesterday: "Yesterday"
           week_ago: "Last week"
