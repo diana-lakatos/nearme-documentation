@@ -71,6 +71,9 @@ class Reservation < ActiveRecord::Base
 
   after_create :auto_confirm_reservation
 
+  alias_method :seller_type_review_receiver, :creator
+  alias_method :buyer_type_review_receiver, :owner
+
   def perform_expiry!
     if unconfirmed? && !deleted?
       expire!

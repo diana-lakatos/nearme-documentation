@@ -15,4 +15,12 @@ Spree::LineItem.class_eval do
   def to_liquid
     Spree::LineItemDrop.new(self)
   end
+
+  def seller_type_review_receiver
+    product.administrator
+  end
+
+  def buyer_type_review_receiver
+    order.user
+  end
 end

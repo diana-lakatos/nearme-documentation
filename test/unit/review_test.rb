@@ -34,7 +34,26 @@ class ReviewTest < ActiveSupport::TestCase
         assert_equal 1, reviews_of_product.count
         assert_equal reviews_of_product.first, @review_of_product
       end
+    end
 
+    context '#links' do
+      setup do
+        ['seller', 'product', 'buyer'].each { |review_type| FactoryGirl.create(:review, object: review_type ) }
+        ['seller', 'product', 'buyer'].each { |review_type| FactoryGirl.create(:order_review, object: review_type ) }
+        @reviews = Review.all
+      end
+
+      should 'link properly' do
+        @reviews.each { |review|  assert_link_presence(review) }
+      end
+
+      should 'create link even when reviewable is missing' do
+        @reviews.each do |review|
+          review.reviewable.destroy
+          review.reload
+          assert_missing_link(review)
+        end
+      end
     end
 
     context '#with_rating' do
@@ -102,5 +121,13 @@ class ReviewTest < ActiveSupport::TestCase
         assert_equal 2, Review.count
       end
     end
+  end
+
+  def assert_link_presence(review)
+    assert review.decorate.link_to_object.present?
+  end
+
+  def assert_missing_link(review)
+    assert I18n.t('instance_admin.manage.reviews.index.missing'), review.decorate.link_to_object
   end
 end
