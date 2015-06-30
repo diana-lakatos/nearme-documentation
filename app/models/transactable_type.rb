@@ -8,6 +8,11 @@ class TransactableType < ActiveRecord::Base
 
   AVAILABLE_TYPES = ['Listing', 'Buy/Sell']
 
+  INTERNAL_FIELDS = [
+    :name, :description, :capacity, :quantity, :confirm_reservations,
+    :last_request_photos_sent_at, :capacity
+  ]
+
   attr_accessor :enable_cancellation_policy
 
   has_many :form_components, as: :form_componentable
@@ -24,6 +29,7 @@ class TransactableType < ActiveRecord::Base
   serialize :allowed_currencies, Array
 
   after_update :destroy_translations!, if: lambda { |transactable_type| transactable_type.name_changed? }
+  after_create :create_translations!
 
   validates_presence_of :name
 
@@ -47,6 +53,16 @@ class TransactableType < ActiveRecord::Base
     super.presence || instance.default_currency
   end
 
+  def create_translations!
+    INTERNAL_FIELDS.each do |field|
+      attribute = CustomAttributes::CustomAttribute.new(target: self, instance: instance, html_tag: :input, name: field.to_s)
+      attribute.label = instance.translations.find_by(key: attribute.label_key_was, locale: 'en').try(:value) || attribute.name.humanize
+      attribute.hint = instance.translations.find_by(key: attribute.hint_key_was, locale: 'en').try(:value)
+      attribute.placeholder = instance.translations.find_by(key: attribute.placeholder_key_was, locale: 'en').try(:value)
+      attribute.create_translations
+    end
+  end
+
   def destroy_translations!
     ids = Translation.where('instance_id = ? AND (key like ? OR key like ?)', PlatformContext.current.instance.id, "%.#{self.translation_key_suffix_was}.%", "%.#{self.translation_key_pluralized_suffix_was}.%").inject([]) do |ids_to_delete, t|
       if t.key  =~ /\Asimple_form\.(.+).#{self.translation_key_suffix_was}\.(.+)\z/ || t.key  =~ /\Asimple_form\.(.+).#{self.translation_key_pluralized_suffix_was}\.(.+)\z/
@@ -54,8 +70,9 @@ class TransactableType < ActiveRecord::Base
       end
       ids_to_delete
     end
-    Translation.destroy(ids)
+    create_translations!
     custom_attributes.reload.each(&:create_translations)
+    Translation.destroy(ids)
   end
 
   def self.mandatory_boolean_validation_rules

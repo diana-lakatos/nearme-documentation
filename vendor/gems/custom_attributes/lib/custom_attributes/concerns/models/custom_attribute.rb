@@ -103,16 +103,32 @@ module CustomAttributes
             "simple_form.labels.#{translation_key_suffix}"
           end
 
+          def label_key_was
+            "simple_form.labels.#{translation_key_suffix_was}"
+          end
+
           def hint_key
             "simple_form.hints.#{translation_key_suffix}"
+          end
+
+          def hint_key_was
+            "simple_form.hints.#{translation_key_suffix_was}"
           end
 
           def placeholder_key
             "simple_form.placeholders.#{translation_key_suffix}"
           end
 
+          def placeholder_key_was
+            "simple_form.placeholders.#{translation_key_suffix_was}"
+          end
+
           def prompt_key
             "simple_form.prompts.#{translation_key_suffix}"
+          end
+
+          def prompt_key_was
+            "simple_form.prompts.#{translation_key_suffix_was}"
           end
 
           def valid_value_translation_key(valid_value)
@@ -121,6 +137,10 @@ module CustomAttributes
 
           def translation_key_suffix
             self.target.translation_key_suffix + '.' + name
+          end
+
+          def translation_key_suffix_was
+            self.target.translation_key_suffix_was + '.' + name
           end
 
           def translation_key_pluralized_suffix
