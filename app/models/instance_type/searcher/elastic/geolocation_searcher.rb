@@ -99,4 +99,34 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
     category.children.inject([]) { |options, c| options << [c.id, c.translated_name] }
   end
 
+  def date_range_to_days
+    @filters[:date_range].inject([]) do |days, date|
+      # we need only weekdays, so no point in iterating further
+      return days if days.count == 7
+      days << date.wday
+    end.sort
+  end
+
+  def availability_filter?
+    @params[:availability] && @params[:availability][:dates] && @params[:availability][:dates][:start].present? && @params[:availability][:dates][:end].present?
+  end
+
+  def relative_availability?
+    @relative ||= PlatformContext.current.instance.date_pickers_relative_mode?
+  end
+
+  def available_listings(listings_scope)
+    if availability_filter? && @filters[:date_range].first && @filters[:date_range].last
+      if relative_availability?
+        listings_scope = listings_scope.not_booked_relative(@filters[:date_range].first, @filters[:date_range].last)
+        listings_scope = listings_scope.only_opened_on_at_least_one_of(date_range_to_days)
+      else
+        listings_scope = listings_scope.not_booked_absolute(@filters[:date_range].first, @filters[:date_range].last)
+        listings_scope = listings_scope.only_opened_on_all_of(date_range_to_days)
+      end
+      listings_scope = listings_scope.overlaps_schedule_start_date(@filters[:date_range].first)
+    end
+    listings_scope
+  end
+
 end

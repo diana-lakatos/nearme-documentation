@@ -128,6 +128,11 @@ class Transactable < ActiveRecord::Base
       (?::timestamp::date >= (select sr_start_datetime from schedules where scheduable_id = transactables.id and scheduable_type = '#{self.to_s}' limit 1)::timestamp::date)", date)
   }
 
+  scope :order_by_array_of_ids, -> (listing_ids) {
+    listing_ids_decorated = listing_ids.each_with_index.map {|lid, i| "WHEN transactables.id=#{lid} THEN #{i}" }
+    order("CASE #{listing_ids_decorated.join("\n")} END")
+  }
+
   # == Callbacks
   before_validation :set_activated_at, :set_enabled, :nullify_not_needed_attributes,
     :set_confirm_reservations

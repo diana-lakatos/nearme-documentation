@@ -5,16 +5,25 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Location
     @transactable_type = transactable_type
     set_options_for_filters
     @params = params
-    scoped_transactables = []
+    @filters = {date_range: search.available_dates}
+    transactable_ids = []
+    location_ids = []
 
-    fetcher.to_a.map do |f|
-      scoped_transactables << ::Location.where(id: f['_source']['location_id'].to_i).first
-    end
-    scoped_transactables_compacted = scoped_transactables.compact.uniq
-    @search_results_count = scoped_transactables_compacted.count
+    fetcher.to_a.each{|f| 
+      location_ids << f['_source']['location_id'].to_i
+      transactable_ids << f['_id'].to_i 
+    }
+    location_ids.uniq!
+
+    listings_scope = Transactable.where(id: transactable_ids)
+    listings_scope = available_listings(listings_scope)
+    filtered_listings = Transactable.where(id: listings_scope.pluck(:id))
+
+    scoped_transactables_compacted = ::Location.includes(:listings).where(id: location_ids).order_by_array_of_ids(location_ids).merge(filtered_listings).all
+    @search_results_count = filtered_listings.count
     @results = scoped_transactables_compacted
   end
-
+  
   def filters
     search_filters = {}
     search_filters[:location_type_filter] = search.location_types_ids.map { |lt| lt.respond_to?(:name) ? lt.name : lt } if search.location_types_ids && !search.location_types_ids.empty?
