@@ -4,8 +4,9 @@ class WorkflowStep::ListingWorkflow::BaseStep < WorkflowStep::BaseStep
     true
   end
 
-  def initialize(transactable_id)
+  def initialize(transactable_id, approval_request_id = nil)
     @transactable = Transactable.find_by_id(transactable_id)
+    @approval_request = @transactable.approval_requests.find(approval_request_id) if approval_request_id
   end
 
   def workflow_type
@@ -23,7 +24,10 @@ class WorkflowStep::ListingWorkflow::BaseStep < WorkflowStep::BaseStep
   # listing:
   #   Transactable object
   def data
-    { listing: @transactable }
+    { 
+      listing: @transactable,
+      approval_request: @approval_request
+    }
   end
 
   def transactable_type_id

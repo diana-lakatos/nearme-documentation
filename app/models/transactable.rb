@@ -505,6 +505,14 @@ class Transactable < ActiveRecord::Base
     update_attribute(:enabled, true) if is_trusted?
   end
 
+  def approval_request_rejected!(approval_request_id)
+    WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Rejected, self.id, approval_request_id)
+  end
+
+  def approval_request_questioned!(approval_request_id)
+    WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Questioned, self.id, approval_request_id)
+  end
+
   def self.csv_fields(transactable_type)
     transactable_type.pricing_options_long_period_names.inject({}) do |hash, price|
       hash[:"#{price}_price_cents"] = "#{price}_price_cents".humanize

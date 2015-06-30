@@ -132,6 +132,36 @@ class Utils::DefaultAlertsCreator::ListingCreatorTest < ActionDispatch::Integrat
       assert_not_contains 'Liquid error:', mail.html_part.body
     end
 
+    should 'send email to host if listing rejected' do
+      @listing_creator.create_rejected_email!
+      @listing = FactoryGirl.create(:transactable)
+      Transactable.any_instance.stubs(:is_trusted?).returns(true)
+      @user = @listing.creator
+      assert_difference 'ActionMailer::Base.deliveries.size' do
+        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Rejected, @listing.id)
+      end
+      mail = ActionMailer::Base.deliveries.last
+      assert_equal "#{@listing.name} has been rejected!", mail.subject
+      assert mail.html_part.body.include?(@user.first_name)
+      assert_equal [@user.email], mail.to
+      assert_not_contains 'Liquid error:', mail.html_part.body
+    end
+
+    should 'send email to host if listing questioned' do
+      @listing_creator.create_questioned_email!
+      @listing = FactoryGirl.create(:transactable)
+      Transactable.any_instance.stubs(:is_trusted?).returns(true)
+      @user = @listing.creator
+      assert_difference 'ActionMailer::Base.deliveries.size' do
+        WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::Questioned, @listing.id)
+      end
+      mail = ActionMailer::Base.deliveries.last
+      assert_equal "#{@listing.name} is being reviewed!", mail.subject
+      assert mail.html_part.body.include?(@user.first_name)
+      assert_equal [@user.email], mail.to
+      assert_not_contains 'Liquid error:', mail.html_part.body
+    end
+
   end
 
 end

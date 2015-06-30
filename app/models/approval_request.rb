@@ -28,6 +28,8 @@ class ApprovalRequest < ActiveRecord::Base
   state_machine :state, :initial => :pending do
     after_transition :approved => :pending, :do => :notify_owner_of_cancelling_acceptance
     after_transition :pending => :approved, :do => :notify_owner_of_acceptance
+    after_transition :pending => :rejected, :do => :notify_owner_of_rejection
+    after_transition :pending => :questionable, :do => :notify_owner_of_question
 
     event :review do
       transition [:approved, :rejected, :questionable] => :pending
@@ -47,6 +49,10 @@ class ApprovalRequest < ActiveRecord::Base
 
   end
 
+  def to_liquid
+    ApprovalRequestDrop.new(self)
+  end
+
   def message_blank_or_changed?
     self.message.blank? || (self.message_was != self.message)
   end
@@ -57,6 +63,14 @@ class ApprovalRequest < ActiveRecord::Base
 
   def notify_owner_of_acceptance
     owner.approval_request_approved! if owner.respond_to?(:approval_request_approved!)
+  end
+
+  def notify_owner_of_rejection
+    owner.approval_request_rejected!(self.id) if owner.respond_to?(:approval_request_rejected!)
+  end
+
+  def notify_owner_of_question
+    owner.approval_request_questioned!(self.id) if owner.respond_to?(:approval_request_questioned!)
   end
 end
 
