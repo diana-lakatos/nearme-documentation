@@ -20,7 +20,8 @@ class Utils::DefaultAlertsCreator::SupportCreatorTest < ActionDispatch::Integrat
     setup do
       stub_mixpanel
       @user = FactoryGirl.create(:user)
-      @message = FactoryGirl.create(:support_ticket_message, user: @user)
+      @ticket = FactoryGirl.create(:support_ticket, user: @user)
+      @message = FactoryGirl.create(:support_ticket_message, user: @user, ticket: @ticket)
       @platform_context = PlatformContext.current
       @instance_admin = FactoryGirl.create(:instance_admin)
       @instance = @platform_context.instance
