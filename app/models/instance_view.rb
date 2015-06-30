@@ -171,14 +171,39 @@ class InstanceView < ActiveRecord::Base
       blog_post: 'UserBlogPostDrop',
       user: 'UserDrop'
     },
-    'registrations/blog/index' => {
+    'registrations/blog/show' => {
       blog_post: 'UserBlogPostDrop',
       user: 'UserDrop',
       is_partial: false
     },
-    'registrations/blog/show' => {
-      blog_post: 'UserBlogPostDrop',
+    'registrations/blog/index' => {
+      blog_posts: 'UserBlogPostDrop',
       user: 'UserDrop',
+      is_partial: false
+    },
+    'blog/blog_posts/header' => {
+      blog_post: 'BlogPostDrop',
+      blog_instance: 'BlogInstanceDrop',
+      is_partial: true
+    },
+    'blog/blog_posts/social_buttons' => {
+      blog_post: 'BlogPostDrop',
+      blog_instance: 'BlogInstanceDrop',
+      is_partial: true
+    },
+    'blog/blog_posts/blog_post' => {
+      blog_post: 'BlogPostDrop',
+      blog_instance: 'BlogInstanceDrop',
+      is_partial: true
+    },
+    'blog/blog_posts/show' => {
+      blog_post: 'BlogPostDrop',
+      blog_instance: 'BlogInstanceDrop',
+      is_partial: false
+    },
+    'blog/blog_posts/index' => {
+      blog_posts: 'BlogPostDrop',
+      blog_instance: 'BlogInstanceDrop',
       is_partial: false
     }
   }.freeze

@@ -1,0 +1,17 @@
+<div class='blog-container'>
+  <div class='blog-posts'>
+    {% for blog_post in @blog_posts %}
+      {% include 'blog/blog_posts/blog_post.html' %}
+    {% endfor %}
+  </div>
+</div>
+
+<img src='{{ "spinner.gif" | image_url }}' class='hidden-spinner hidden' alt='Spinner' />
+
+{{ @blog_posts | pagination_links }}
+
+<script>
+  $(function() {
+    new BlogPostsController();
+  });
+</script>

@@ -20,4 +20,8 @@ class BlogInstance < ActiveRecord::Base
     Instance === owner ? owner : nil
   end
 
+  def to_liquid
+    BlogInstanceDrop.new(self)
+  end
+
 end

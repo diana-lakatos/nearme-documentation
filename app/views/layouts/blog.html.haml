@@ -17,26 +17,7 @@
     = javascript_include_tag :blog
 
   %body.blog
-    .container-fluid.header-container
-      .navbar.navbar-inverse.navbar-fixed-top
-        .navbar-inner.nav-links
-          - if @blog_instance.is_near_me?
-            = link_to 'Near Me', root_url, :id => "nm-blog-logo"
-          - else
-            = link_to platform_context.name, root_url, :id => "logo"
-          %span.blog-header Blog
-    .header
-      = render 'layouts/blog_header_text_logo', blog_instance: @blog_instance
-
-      - header = @blog_post.try(:header).presence || @blog_instance.header
-      - if header.present?
-        .header-image
-          = link_to blog_posts_path do
-            = image_tag header.url, title: @blog_instance.name
-      - else
-        .heading
-          = link_to @blog_instance.name, blog_posts_path
-
+    = render 'blog/blog_posts/header'
     .blog-container
       = yield
 

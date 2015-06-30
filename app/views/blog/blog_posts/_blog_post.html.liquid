@@ -1,0 +1,29 @@
+<div class='blog-post'>
+  <div class='clearfix'>
+    <div class='col-sm-10'>
+      <h2>
+        <a href='{{ blog_post.post_path }}'>{{ blog_post.title }}</a>
+      </h2>
+    </div>
+    <div class='col-sm-2 date'>
+      {{ blog_post.published_at | localize: 'day_and_month' }}
+    </div>
+    <div class='col-sm-12 content'>
+      <p>{{ blog_post.excerpt }}</p>
+    </div>
+  </div>
+  {% if blog_post.show_author_avatar? %}
+    <div class='clearfix avatar'>
+      {% if blog_post.author_avatar_present? %}
+        <div class='col-sm-1'>
+          <div class='avatar-container' style="background-image: url({{ blog_post.author_avatar_thumb_url }});"></div>
+        </div>
+      {% endif %}
+      {% if blog_post.author_name_present? %}
+        <div class='col-sm-11' class="{% if blog_post.author_avatar_present? %} with-avatar {% endif %}">
+          <div class='author-name'>{{ blog_post.author_name }}</div>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
