@@ -1062,6 +1062,8 @@ en:
       day_month_year: "%m/%d/%Y"
       only_date: "%B %d, %-Y"
       month_year: "%B %Y"
+      start_hours: "%H:%M"
+      end_hours: "%H:%M"
   date:
     formats:
       short: '%B %d, %-Y'
