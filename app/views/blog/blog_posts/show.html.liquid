@@ -1,0 +1,79 @@
+{% content_for meta %}
+  <meta property="og:title" content='{{ @blog_post.title }}' />
+  <meta property="og:description" content='{{ @blog_post.excerpt }}' />
+  <meta property="og:type" content="website"  />
+  <meta property="og:site_name" content='{{ platform_context.name }}' />
+  <meta property="og:url" content='{{ "original_url" | request_parameter }}' />
+{% endcontent_for %}
+
+{% if @blog_instance.facebook_app_id_present? %}
+  <div id='fb-root'></div>
+  <script>
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId={{ @blog_instance.facebook_app_id }}";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
+{% endif %}
+
+{% content_for title %} 
+  {{ @blog_post.title }}
+{% endcontent_for %}
+
+<div class='blog-post-detail'>
+  <h1>{{ @blog_post.title }}</h1>
+
+  {% include 'blog/blog_posts/social_buttons.html' %}
+
+  <div class='content'>
+    {{ @blog_post.content }}
+  </div>
+
+  <div class='info row'>
+    <div class='date col-sm-5'>
+      Published {{ @blog_post.published_at | localize: 'only_date' }}
+    </div>
+    <div class='social col-sm-7 clearfix'>
+      {% include 'blog/blog_posts/social_buttons.html' %}
+    </div>
+  </div>
+
+  <div class='author row'>
+    {% if @blog_post.author_avatar_present? %}
+      <div class="avatar col-sm-2 hidden-xs">
+        <div class='avatar-container' style="background-image: url({{ @blog_post.author_avatar_medium_url }});"></div>
+      </div>
+    {% endif %}
+    <div class='biography {% if @blog_post.author_avatar_present? %} col-sm-10 {% else %} col-sm-12 {% endif %}'>
+      <h3>{{ @blog_post.author_name }}</h3>
+      <p>{{ @blog_post.author_biography }}</p>
+    </div>
+  </div>
+
+  <div class='container-fluid'>
+    <div class='links row'>
+      {% if blog_post.previous_blog_post != nil %}
+        <div class='col-xs-6'>
+          <a class='previous-blog-post' href='{{ blog_post.previous_post_path }}'>
+            LAST STORY
+          </a>
+        </div>
+      {% endif%}
+      {% if blog_post.next_blog_post != nil %}
+        <div class='col-xs-6'>
+          <a class='next-blog-post' href='{{ blog_post.next_post_path }}'>
+            NEXT STORY
+          </a>
+        </div>
+      {% endif%}
+    </div>
+  </div>
+
+  {% if @blog_instance.facebook_app_id_present? %}
+    <div class='fb-comments' data-numposts="5" data-colorscheme="light" data-href='{{ @blog_post.post_url }}'></div>
+  {% endif %}
+
+</div>

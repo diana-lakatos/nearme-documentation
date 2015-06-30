@@ -38,6 +38,10 @@ class BlogPost < ActiveRecord::Base
     title.parameterize != slug
   end
 
+  def to_liquid
+    BlogPostDrop.new(self)
+  end
+
   private
 
   def sanitize_content

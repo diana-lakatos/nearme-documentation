@@ -136,5 +136,15 @@ module LiquidFilters
                   renderer: 'LiquidLinkRenderer'
   end
 
+  def request_parameter(method)
+    if @context.registers[:controller].request.respond_to?(method)
+      @context.registers[:controller].request.send(method.to_sym)
+    end
+  end
+
+  def image_url(path_to_file)
+    ActionController::Base.helpers.image_url(path_to_file)
+  end
+
 end
 
