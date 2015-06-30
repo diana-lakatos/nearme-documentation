@@ -6,6 +6,8 @@ class Utils::DefaultAlertsCreator::ListingCreator < Utils::DefaultAlertsCreator:
     share_with_user_email!
     create_listing_pending_approval_email!
     create_approved_email!
+    create_rejected_email!
+    create_questioned_email!
   end
 
   def create_listing_created_email!
@@ -26,6 +28,14 @@ class Utils::DefaultAlertsCreator::ListingCreator < Utils::DefaultAlertsCreator:
 
   def create_approved_email!
     create_alert!({associated_class: WorkflowStep::ListingWorkflow::Approved, name: 'listing_approved_email', path: 'vendor_approval_mailer/notify_host_of_listing_approval', subject: "{{ listing.name }} has been approved!", alert_type: 'email', recipient_type: 'lister', delay: 0})
+  end
+
+  def create_rejected_email!
+    create_alert!({associated_class: WorkflowStep::ListingWorkflow::Rejected, name: 'listing_rejected_email', path: 'vendor_approval_mailer/notify_host_of_listing_rejection', subject: "{{ listing.name }} has been rejected!", alert_type: 'email', recipient_type: 'lister', delay: 0})
+  end
+
+  def create_questioned_email!
+    create_alert!({associated_class: WorkflowStep::ListingWorkflow::Questioned, name: 'listing_questioned_email', path: 'vendor_approval_mailer/notify_host_of_listing_questioned', subject: "{{ listing.name }} is being reviewed!", alert_type: 'email', recipient_type: 'lister', delay: 0})
   end
 
   protected

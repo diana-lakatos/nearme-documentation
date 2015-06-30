@@ -52,7 +52,7 @@ class TransactableDrop < BaseDrop
   #   returns true if the exclusive price defined for this listing is the only price defined for this listing
   delegate :id, :location_id, :name, :location, :transactable_type, :description, :action_hourly_booking?, :action_rfq?, :creator, :administrator, :last_booked_days,
    :defer_availability_rules?, :lowest_price, :company, :properties, :quantity, :administrator_id, :has_photos?, :book_it_out_available?,
-   :action_free_booking?, :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, to: :transactable
+   :action_free_booking?, :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, :approval_requests, to: :transactable
 
 
   # bookable_noun
