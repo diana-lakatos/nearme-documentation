@@ -8,16 +8,19 @@ class RatingQuestionTest < ActiveSupport::TestCase
 
   should validate_presence_of(:text)
 
+  setup do
+    @rating_system = FactoryGirl.create(:rating_system)
+  end
+
   context 'validate' do
     setup do
-      @rating_system = FactoryGirl.create(:rating_system)
       FactoryGirl.create_list(:rating_question, 5, rating_system: @rating_system)
     end
 
     context 'check_questions_quantity' do
       should 'have error message' do
         question = FactoryGirl.build(:rating_question, rating_system: @rating_system)
-        assert_equal false, question.valid?
+        refute question.valid?
       end
     end
   end
@@ -25,15 +28,16 @@ class RatingQuestionTest < ActiveSupport::TestCase
   context 'after_create' do
     context '#create_empty_answers' do
       setup do
-        @review = FactoryGirl.create(:review)
-        @params = FactoryGirl.attributes_for(:rating_question, instance: @review.instance)
+        @review = FactoryGirl.create(:review, rating_system: @rating_system)
+        @review_other = FactoryGirl.create(:review)
+        @params = FactoryGirl.attributes_for(:rating_question, rating_system_id: @rating_system.id, instance: @review.instance)
       end
 
       should 'have rating answer' do
-        question = RatingQuestion.new @params
-        question.save!
-        assert_equal true, RatingAnswer.all.present?
-        assert_equal 1, RatingAnswer.count
+        RatingQuestion.create!(@params)
+        assert_equal 0, @review_other.rating_answers.count
+        assert_equal 1, @review.rating_answers.count
+
       end
     end
   end

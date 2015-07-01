@@ -14,6 +14,13 @@ class Spree::ProductType < TransactableType
     true
   end
 
+  def create_rating_systems
+    [instance.lessee, name].each do |subject|
+      rating_system = instance.rating_systems.create(subject: subject, transactable_type_id: id)
+      RatingConstants::VALID_VALUES.each { |value| rating_system.rating_hints.create(value: value, instance: instance) }
+    end
+  end
+
   def to_liquid
     Spree::ProductTypeDrop.new(self)
   end

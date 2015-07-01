@@ -226,7 +226,7 @@ class Reservation < ActiveRecord::Base
   validates_presence_of :payment_method, :in => Reservation::PAYMENT_METHODS.values
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
 
-  delegate :location, to: :listing
+  delegate :location, :transactable_type_id, to: :listing
   delegate :administrator=, to: :location
   delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :listing, allow_nil: true
 

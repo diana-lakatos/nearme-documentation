@@ -7,8 +7,9 @@ class Dashboard::ReviewsControllerTest < ActionController::TestCase
     User.any_instance.stubs(:registration_completed?).returns(true)
     sign_in @user
     @current_instance = PlatformContext.current.instance
-    @current_instance.rating_systems.update_all(active: true)
+    @rating_system = @current_instance.rating_systems.first
     @reservation = FactoryGirl.create(:past_reservation, user: @user)
+    @current_instance.rating_systems.update_all(active: true, transactable_type_id: @reservation.transactable_type_id)
   end
 
   context '#index' do
@@ -20,28 +21,28 @@ class Dashboard::ReviewsControllerTest < ActionController::TestCase
 
   context '#create' do
     should 'respond with success' do
-      post :create, review: FactoryGirl.attributes_for(:review, object: 'product', user: @user, reviewable_id: @reservation.id, reviewable_type: @reservation.class.name, instance: @current_instance)
+      post :create, rating_system_id: @rating_system.id, review: FactoryGirl.attributes_for(:review, object: 'product', user: @user, reviewable_id: @reservation.id, reviewable_type: @reservation.class.name, instance: @current_instance)
       assert_response :success
     end
 
     should 'respond with failure if rating is blank' do
-      post :create, review: FactoryGirl.attributes_for(:review, rating: '', object: 'product', user: @user, reviewable_id: @reservation.id, reviewable_type: @reservation.class.name, instance: @current_instance)
+      post :create, rating_system_id: @rating_system.id, review: FactoryGirl.attributes_for(:review, rating: '', object: 'product', user: @user, reviewable_id: @reservation.id, reviewable_type: @reservation.class.name, instance: @current_instance)
       assert_response 422
     end
   end
 
   context '#update' do
     setup do
-      @review = FactoryGirl.create(:review, object: 'product', user: @user, reviewable_id: @reservation.id, reviewable_type: @reservation.class.name, instance: @current_instance)
+      @review = FactoryGirl.create(:review, rating_system_id: @rating_system.id, object: 'product', user: @user, reviewable_id: @reservation.id, reviewable_type: @reservation.class.name, instance: @current_instance)
     end
 
     should 'respond with success' do
-      put :update, id: @review.id, review: {rating: 3, reviewable_type: @review.reviewable_type, reviewable_id: @review.reviewable_id, instance_id: @current_instance.id}
+      put :update, id: @review.id, rating_system_id: @rating_system.id, review: {rating: 3, reviewable_type: @review.reviewable_type, reviewable_id: @review.reviewable_id, instance_id: @current_instance.id}
       assert_response :success
     end
 
     should 'respond with failure' do
-      put :update, id: @review.id, review: {rating: '', reviewable_type: @review.reviewable_type, reviewable_id: @review.reviewable_id, instance_id: @current_instance.id}
+      put :update, id: @review.id, rating_system_id: @rating_system.id, review: {rating: '', reviewable_type: @review.reviewable_type, reviewable_id: @review.reviewable_id, instance_id: @current_instance.id}
       assert_response 422
     end
   end

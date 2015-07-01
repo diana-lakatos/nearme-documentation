@@ -14,7 +14,7 @@ class @Dashboard.ReviewsController
       if searchString
         if searchString.match /period=\w+/
           window.location.search = searchString.replace /period=\w+/, periodSearchString
-        else 
+        else
           window.location.search += "&#{periodSearchString}"
       else
         window.location.search = periodSearchString
@@ -42,6 +42,7 @@ class @Dashboard.ReviewsController
       e.preventDefault()
       form = $(e.currentTarget)
       submitBtn = form.find('input[type="submit"]')
+      ratingSystemId = form.find('.review').data('rating-system-id')
       reviewableId = form.find('.review').data('reviewable-id')
       reviewableType = form.find('.review').data('reviewable-type')
       transactableTypeId = form.find('.review input[name=transactable_type_id]').val()
@@ -52,6 +53,7 @@ class @Dashboard.ReviewsController
         url: createReviewPath
         method: 'POST'
         data:
+          rating_system_id: ratingSystemId
           review:
             rating: form.find('.rating').first().raty('score')
             comment: commentArea.val()
@@ -138,7 +140,7 @@ class @Dashboard.ReviewsController
         readOnly: true
         score: ->
           return $(@).data('score');
-        
+
   disableRatingStarts: (form) =>
     score = form.find('input[name=score]').val()
     form.find('.rating').data('score', score)

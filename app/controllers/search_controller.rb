@@ -28,7 +28,7 @@ class SearchController < ApplicationController
     category_ids = params[:category_ids].to_s.split(',').map(&:to_i)
     category_root_ids = Category.roots.map(&:id)
     @categories = Category.where(id: category_ids).to_a
-    @categories_html = '' 
+    @categories_html = ''
     @categories.reject!{|c| c.parent.present? && ( !category_root_ids.include?(c.parent.id) ) && !category_ids.include?(c.parent.id) }
     @categories.each do |category|
       next if category.children.blank?

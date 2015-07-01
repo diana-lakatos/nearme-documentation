@@ -8,6 +8,10 @@ Spree::Order.class_eval do
 
   attr_accessor :card_number, :card_code, :card_exp_month, :card_exp_year, :card_holder_first_name, :card_holder_last_name
   scope :completed, -> { where(state: 'complete') }
+  scope :approved, -> { where.not(approved_at: nil) }
+  scope :paid, -> { where(payment_state: 'paid') }
+  scope :shipped, -> { where(shipment_state: 'shipped') }
+  scope :reviewable, -> { completed.approved.paid.shipped }
 
   has_one :billing_authorization, -> { where(success: true) }, as: :reference
   has_many :billing_authorizations, as: :reference
@@ -89,6 +93,14 @@ Spree::Order.class_eval do
 
   def monetize(amount)
     Money.new(amount*Money::Currency.new(self.currency).subunit_to_unit, currency)
+  end
+
+  def reviewable?
+    completed? && approved_at.present? && paid? && shipped?
+  end
+
+  def paid?
+    payment_state == 'paid'
   end
 
   # hackish hacky hack

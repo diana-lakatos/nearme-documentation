@@ -47,22 +47,22 @@ class ReviewsService
       6.months.ago.to_date
     else
       year = @params[:period].to_i
-      [DateTime.new(year).to_date, DateTime.new(year).end_of_year.to_date] 
+      [DateTime.new(year).to_date, DateTime.new(year).end_of_year.to_date]
     end
   end
 
   def get_rating_systems
     active_rating_systems = RatingSystem.includes(:rating_hints, :rating_questions).active
     {
-      active_rating_systems: active_rating_systems,
-      buyer_rating_system: active_rating_systems.find_by(subject:  @current_instance.lessee),
-      seller_rating_system: active_rating_systems.find_by(subject:  @current_instance.lessor),
-      product_rating_system: active_rating_systems.find_by(subject:  @current_instance.bookable_noun)
+      active_rating_systems: active_rating_systems.group_by { |rating_system| rating_system.transactable_type_id },
+      buyer_rating_system: active_rating_systems.where(subject:  @current_instance.lessee).group_by { |rating_system| rating_system.transactable_type_id },
+      seller_rating_system: active_rating_systems.where(subject:  @current_instance.lessor).group_by { |rating_system| rating_system.transactable_type_id },
+      product_rating_system: active_rating_systems.where.not(subject:  [@current_instance.lessee, @current_instance.lessor]).group_by { |rating_system| rating_system.transactable_type_id }
     }
   end
 
   def get_line_items_for_owner_and_creator
-    orders_ids = @current_user.orders.complete.pluck(:id)
+    orders_ids = @current_user.orders.reviewable.pluck(:id)
     creator_products = Spree::Product.where(administrator_id: @current_user.id)
     creator_line_items_ids = []
     creator_products.each{|p| creator_line_items_ids << p.line_items.pluck(:id) }
@@ -113,7 +113,7 @@ class ReviewsService
   end
 
   def get_transactable_type_id
-    @params[:review][:reviewable_type] == 'Reservation' ? Reservation.find(@params[:review][:reviewable_id]).listing.transactable_type_id : @current_instance.buyable_transactable_type.id
+    @params[:review][:reviewable_type] == 'Reservation' ? Reservation.find(@params[:review][:reviewable_id]).listing.transactable_type_id : Spree::LineItem.find(@params[:review][:reviewable_id]).product.product_type_id
   end
 
   private

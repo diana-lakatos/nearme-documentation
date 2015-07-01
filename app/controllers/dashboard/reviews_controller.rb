@@ -10,9 +10,10 @@ class Dashboard::ReviewsController < Dashboard::BaseController
   def create
     @review = current_user.reviews.build
     @review.transactable_type_id = reviews_service.get_transactable_type_id
+    @review.rating_system_id = RatingSystem.find(params[:rating_system_id]).id
     if @review.update(review_params)
       rating_answers_params.values.each do |rating_answer_param|
-        @review.rating_answers.create(rating_answer_param)
+        @review.rating_answers.create!(rating_answer_param)
       end
       @review.recalculate_reviewable_average_rating
       render partial: 'create_comment_congratulations', status: 200
@@ -68,7 +69,7 @@ class Dashboard::ReviewsController < Dashboard::BaseController
 
   def render_errors(field)
     {
-      "#{field}_error" => render_to_string(partial: "#{field}_error", layout: false, 
+      "#{field}_error" => render_to_string(partial: "#{field}_error", layout: false,
         locals: {error: @review.errors.messages[field].map(&:capitalize).join(', ')})
     }
   end
