@@ -2,7 +2,7 @@ require 'test_helper'
 
 class SearchControllerTest < ActionController::TestCase
   setup do
-    stub_request(:get, /.*maps\.googleapis\.com.*/)
+    stub_request(:get, /.*maps\.googleapis\.com.*/).to_return(status: 404, body: {}.to_json, headers: {})
     stub_mixpanel
     PlatformContext.current = PlatformContext.new(Instance.first)
   end
@@ -430,27 +430,32 @@ class SearchControllerTest < ActionController::TestCase
 
         context 'without filter' do
           setup do
-            @product1 = FactoryGirl.create(:product, name: 'product_one')
-            @product2 = FactoryGirl.create(:product, name: 'product_two')
             @product_type = FactoryGirl.create(:product_type, :with_custom_attribute)
+            @product1 = FactoryGirl.create(:product, name: 'product_one', product_type: @product_type)
+            @product2 = FactoryGirl.create(:product, name: 'product_two', product_type: @product_type)
             @product3 = FactoryGirl.create(:product, name: 'product three', product_type: @product_type)
             @product3.extra_properties['manufacturer'] = "Bosh"
             @product3.save
           end
 
+          should 'not show products that belong to different product type' do
+            get :index, query: 'product_one', v: 'products', buyable: 'true', transactable_type_id: FactoryGirl.create(:product_type).id
+            refute_products_in_result([@product1, @product2, @product3])
+          end
+
           should 'show only valid products' do
-            get :index, query: 'product_one', v: 'products', buyable: 'true'
+            get :index, query: 'product_one', v: 'products', buyable: 'true', transactable_type_id: @product_type.id
             assert_product_in_result(@product1)
             refute_products_in_result([@product2, @product3])
           end
 
           should 'show only valid products like' do
-            get :index, query: 'product one', v: 'products', buyable: 'true'
+            get :index, query: 'product one', v: 'products', buyable: 'true', transactable_type_id: @product_type.id
             assert_products_in_result([@product1, @product2, @product3])
           end
 
           should 'show only valid products from extra_properties' do
-            get :index, query: 'product_one bosh', v: 'products', buyable: 'true'
+            get :index, query: 'product_one bosh', v: 'products', buyable: 'true', transactable_type_id: @product_type.id
             assert_products_in_result([@product1, @product3])
             refute_product_in_result(@product2)
           end

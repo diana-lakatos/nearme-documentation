@@ -42,6 +42,6 @@ class Spree::Product::SearchFetcher
   end
 
   def filtered_products
-    Spree::Product.searchable
+    Spree::Product.searchable.where(product_type_id: @filters[:transactable_type_id])
   end
 end

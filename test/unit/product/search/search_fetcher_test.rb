@@ -12,7 +12,10 @@ class Spree::Product::SearchFetcherTest < ActiveSupport::TestCase
     @product2 = FactoryGirl.create(:product, name: 'product two', product_type: @product_type)
     @product2.categories << @category2
 
-    @filters = {}
+    @irrelevant_product = FactoryGirl.create(:product, name: 'product irrelevant', product_type: FactoryGirl.create(:product_type))
+    @irrelevant_product.categories << @category1
+
+    @filters = {transactable_type_id: @product_type.id}
   end
 
   context 'filters' do
@@ -31,7 +34,7 @@ class Spree::Product::SearchFetcherTest < ActiveSupport::TestCase
       setup do
         @product3 = FactoryGirl.create(:product, name: 'product three', product_type: @product_type)
         @product3.extra_properties['manufacturer'] = "Bosh"
-        @product3.save
+        @product3.save!
       end
 
       should 'find products with any keyword from query in properties' do
