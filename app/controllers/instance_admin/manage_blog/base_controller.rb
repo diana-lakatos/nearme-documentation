@@ -11,4 +11,5 @@ class InstanceAdmin::ManageBlog::BaseController < InstanceAdmin::ResourceControl
   def find_blog_instance
     @blog_instance = platform_context.instance.blog_instance
   end
+
 end

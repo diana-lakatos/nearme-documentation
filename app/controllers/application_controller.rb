@@ -478,5 +478,11 @@ class ApplicationController < ActionController::Base
     object
   end
 
+  def ckeditor_toolbar_creator
+    @ckeditor_toolbar_creator ||= CkeditorToolbarCreator.new(params)
+  end
+
+  helper_method :ckeditor_toolbar_creator
+
 end
 

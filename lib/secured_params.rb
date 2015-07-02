@@ -245,6 +245,7 @@ class SecuredParams
   def blog_instance
     [
       :enabled,
+      :allow_video_embeds,
       :name,
       :header,
       :facebook_app_id,

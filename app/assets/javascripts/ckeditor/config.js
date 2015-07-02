@@ -2,8 +2,6 @@
 
 CKEDITOR.editorConfig = function(config) {
 
-  config.toolbar = 'simple';
-
   config.toolbar_simple =
   [
     ['Cut','Copy','Paste',], ['Undo','Redo'],
