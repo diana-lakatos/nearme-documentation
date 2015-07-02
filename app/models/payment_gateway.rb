@@ -88,7 +88,7 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def settings
-    test_mode? ? test_settings : live_settings
+    (test_mode? ? test_settings : live_settings).with_indifferent_access
   end
 
   def test_mode?
