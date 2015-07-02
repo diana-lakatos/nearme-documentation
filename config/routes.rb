@@ -380,6 +380,7 @@ DesksnearMe::Application.routes.draw do
 
       namespace :search do
         resource :settings, only: [:show, :update]
+        resource :elastic, only: [:show, :update], controller: 'elastic'
         resource :product_types, only: [:show, :update] do
           put :set_search, to: 'product_types#set_search'
           put :set_custom_attribute, to: 'product_types#set_custom_attribute'

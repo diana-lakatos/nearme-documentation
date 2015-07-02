@@ -322,6 +322,7 @@ class SecuredParams
       :instagram_consumer_key,
       :instagram_consumer_secret,
       :instance_billing_gateways_attributes,
+      :last_index_job_id,
       :linkedin_consumer_key,
       :linkedin_consumer_secret,
       :live_balanced_api_key,
