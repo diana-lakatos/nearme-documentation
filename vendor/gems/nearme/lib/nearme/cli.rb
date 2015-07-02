@@ -101,7 +101,7 @@ DESC
 
     nearme capture -e nm-production
 
-    will dump the qa-1 stack db and store it in S3
+    will dump the nm-production stack db and store it in S3
 DESC
     method_option "stack", required: true, type: :string,
                   aliases: :e, default: 'nm-production', desc: "AWS OpsWorks stack name"
