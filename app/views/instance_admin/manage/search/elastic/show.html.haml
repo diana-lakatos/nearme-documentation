@@ -1,0 +1,17 @@
+.content-container
+  = render partial: 'instance_admin/manage/search/tabs', locals: {tab: :elastic}
+
+  = simple_form_for @instance, url: instance_admin_manage_search_elastic_path, method: :put, html: { multipart: true } do |f|
+  
+    %h4.control-label
+      %b Last index status
+    
+    .row
+      .input-container.col-xs-6
+        .input-col-clearfix
+          = @job_status
+  
+    %hr
+  
+    = content_for :header_buttons do
+      = f.button :submit, 'Perform re-index', class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }  
