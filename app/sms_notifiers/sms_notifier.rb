@@ -66,6 +66,10 @@ class SmsNotifier < AbstractController::Base
     @message || NullMessage.new
   end
 
+  def platform_context
+    PlatformContext.current
+  end
+
   private
 
   # Build the SMS Message to send
