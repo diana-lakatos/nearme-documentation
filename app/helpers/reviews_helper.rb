@@ -23,13 +23,6 @@ module ReviewsHelper
     params[:period] == period
   end
 
-  def selected_date_value(date)
-    Review::DATE_VALUES.each do |value|
-      return I18n.t("instance_admin.manage.reviews.index.#{value}") if value == date
-    end
-    date
-  end
-
   def show_completed_feedback?
     params[:tab] == 'completed'
   end

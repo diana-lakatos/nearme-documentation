@@ -29,7 +29,7 @@ class ReviewsServiceTest < ActiveSupport::TestCase
     end
 
     should 'return csv with reviews' do
-      csv = @reviews_service.generate_csv_for(@reviews)
+      csv = ReviewsService.generate_csv_for(@reviews)
       assert csv.include?(@review_1)
       assert csv.include?(@review_2)
     end

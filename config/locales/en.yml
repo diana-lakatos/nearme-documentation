@@ -122,51 +122,6 @@ en:
     nav:
       brand:
         open_marketplace: 'Open Marketplace'
-    manage:
-      reviews:
-        index:
-          missing: "Missing object"
-          today: "Today"
-          yesterday: "Yesterday"
-          week_ago: "Last week"
-          month_ago: "Last month"
-          3_months_ago: "Last 3 months"
-          6_months_ago: "Last 6 months"
-          title_all: "All"
-          date_range: "Date range"
-          from: "From:"
-          to: "To:"
-          apply_filter: "Apply filter"
-          search_by_keyword: "Search by keyword"
-          more_filters: "More filters"
-          export_csv: "Export csv"
-          service: "Service"
-          rating: "Rating"
-          object: "Object"
-          user: "User"
-          date: "Date"
-      users:
-        index:
-          today: "Today"
-          yesterday: "Yesterday"
-          week_ago: "Last week"
-          month_ago: "Last month"
-          3_months_ago: "Last 3 months"
-          6_months_ago: "Last 6 months"
-          title_all: "All"
-          date_range: "Date range"
-          from: "From:"
-          to: "To:"
-          apply_filter: "Apply filter"
-          search_by_keyword: "Search by keyword"
-          more_filters: "More filters"
-          service: "Service"
-          rating: "Rating"
-          user: "User"
-          date: "Date"
-        account:
-          ban: "Ban"
-          unban: "Unban"
     rating_systems:
       index:
         any_rating_system: "You don't have any rating system defined yet. Select a service below and create your first rating system."
@@ -380,6 +335,30 @@ en:
       upload_file: "Upload File"
       search: "Search"
     manage:
+      admin_searchable:
+        today: "Today"
+        yesterday: "Yesterday"
+        week_ago: "Last week"
+        month_ago: "Last month"
+        3_months_ago: "Last 3 months"
+        6_months_ago: "Last 6 months"
+        title_all: "All"
+        date_range: "Date range"
+        from: "From:"
+        to: "To:"
+        apply_filter: "Apply filter"
+        search_by_keyword: "Search by keyword"
+      reviews:
+        index:
+          missing: "Missing object"
+          more_filters: "More filters"
+          export_csv: "Export csv"
+          service: "Service"
+          rating: "Rating"
+          object: "Object"
+          user: "User"
+          date: "Date"
+
       transfers:
         payment_transfer: "Payment Transfer"
         payout_has_been_marked_as_transferred: "This payout has been marked as transferred to the Company."
@@ -437,6 +416,15 @@ en:
         email: Email
         signed_up: "Signed Up"
         login_as: "Login As"
+        index:
+          more_filters: "More filters"
+          service: "Service"
+          rating: "Rating"
+          user: "User"
+          date: "Date"
+        account:
+          ban: "Ban"
+          unban: "Unban"
       admins:
         admin: "Admin"
         email: "Email"

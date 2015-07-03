@@ -58,6 +58,12 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
   end
 
   def collection
-    @users ||= UsersService.new(platform_context, params).get_users.with_deleted.paginate(page: params[:page])
+    if @users.blank?
+      @user_search_form = InstanceAdmin::UserSearchForm.new
+      @user_search_form.validate(params)
+      @users = SearchService.new(User.for_instance(PlatformContext.current.instance).order('created_at DESC').with_deleted).search(@user_search_form.to_search_params).paginate(page: params[:page])
+    end
+
+    @users
   end
 end

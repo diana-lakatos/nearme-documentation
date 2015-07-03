@@ -12,13 +12,13 @@
                   %span.current= selected_date_value(params[:date])
                 - else
                   %span.current
-                    = t('instance_admin.manage.users.index.title_all')
+                    = t('instance_admin.manage.admin_searchable.title_all')
                 %span.caret
                 = hidden_field_tag 'date', date_param_value
               %ul.dropdown-menu{"aria-labelledby" => "dLabel", :role => "menu"}
                 %li
                   %a{data: {date: ''}}
-                    = t('instance_admin.manage.users.index.title_all')
+                    = t('instance_admin.manage.admin_searchable.title_all')
                 - Review::DATE_VALUES.each do |value|
                   %li
                     %a{data: {date: value}}
@@ -26,18 +26,18 @@
                 %li.divider
                 %li.date-range
                   .date-range-header
-                    = t('instance_admin.manage.users.index.date_range')
+                    = t('instance_admin.manage.admin_searchable.date_range')
                   .from
-                    = t('instance_admin.manage.users.index.from')
+                    = t('instance_admin.manage.admin_searchable.from')
                   %input#from{type: 'text'}
                   .to
-                    = t('instance_admin.manage.users.index.to')
+                    = t('instance_admin.manage.admin_searchable.to')
                   %input#to{type: 'text'}
                   %button.apply-filter.btn.btn-blue
-                    = t('instance_admin.manage.users.index.apply_filter')
+                    = t('instance_admin.manage.admin_searchable.apply_filter')
 
           .filter.search
-            %input{placeholder: t('instance_admin.manage.users.index.search_by_keyword'), type: 'text', name: 'q', value: params[:q]}
+            %input{placeholder: t('instance_admin.manage.admin_searchable.search_by_keyword'), type: 'text', name: 'q', value: params[:q]}
             =fa_icon "search"
 
   .row

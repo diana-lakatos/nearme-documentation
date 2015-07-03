@@ -34,17 +34,9 @@ class InstanceAdmin::Manage::ApprovalRequestsController < InstanceAdmin::Manage:
 
   def find_approval_request
     params[:show] ||= 'pending'
-    @approval_requests = ApprovalRequest.all
-    @approval_requests = case params[:show]
-    when "approved"
-      @approval_requests.approved
-    when "rejected"
-      @approval_requests.rejected
-    when "questioned"
-      @approval_requests.questioned
-    else
-      @approval_requests.pending
-    end.paginate(page: params[:page] || 1)
+    @approval_request_search_form = InstanceAdmin::ApprovalRequestSearchForm.new
+    @approval_request_search_form.validate(params)
+    @approval_requests = SearchService.new(ApprovalRequest.order('created_at DESC')).search(@approval_request_search_form.to_search_params).paginate(page: params[:page])
   end
 
   def approval_request_params

@@ -31,7 +31,7 @@ class ReviewsService
     collections
   end
 
-  def generate_csv_for(reviews)
+  def self.generate_csv_for(reviews)
     CSV.generate do |csv|
       csv.add_row %w(id object rating user created_at)
       reviews.each do |review|

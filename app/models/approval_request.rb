@@ -4,6 +4,8 @@ class ApprovalRequest < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
+  DATE_VALUES = ['today', 'yesterday', 'week_ago', 'month_ago', '3_months_ago', '6_months_ago']
+
   belongs_to :instance
   belongs_to :uploader, -> { with_deleted }, class_name: 'User'
   belongs_to :owner, -> { with_deleted }, polymorphic: true
@@ -13,6 +15,16 @@ class ApprovalRequest < ActiveRecord::Base
   scope :approved, lambda { with_state(:approved) }
   scope :rejected, lambda { with_state(:rejected) }
   scope :questioned, lambda { with_state(:questionable) }
+
+  scope :with_date, ->(date) { where(created_at: date) }
+
+  scope :by_search_query, -> (q) { 
+    joins("LEFT join locations on locations.id = owner_id AND owner_type = 'Location'").
+    joins("LEFT join users on users.id = owner_id AND owner_type = 'User'").
+    joins("LEFT join transactables on transactables.id = owner_id AND owner_type = 'Transactable'").
+    joins("LEFT join companies on companies.id = owner_id AND owner_type = 'Company'").
+    where("locations.name ilike ? or users.name ilike ? or transactables.name ilike ? or companies.name ilike ?", q, q, q, q)
+  }
 
   before_create :set_defaults
 
