@@ -88,10 +88,10 @@ module DesksnearMe
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [
-      :password, :bank_routing_number, :bank_account_number, :response,
+      :password, :bank_account_number, :response,
       :marketplace_password, :olark_api_key, :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key,
       :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret, :instagram_consumer_key, :instagram_consumer_secret,
-      :stripe_id, :paypal_id, :balanced_user_id, :balanced_credit_card_id, :live_settings, :test_settings
+      :live_settings, :test_settings, :card_number, :card_exp_month, :card_exp_year, :card_code
     ]
 
     config.generators do |g|

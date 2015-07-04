@@ -10,7 +10,7 @@ class ReservationRequest < Form
     :credit_card_payment?, :manual_payment?, :remote_payment?, :nonce_payment?
   def_delegators :@listing,     :confirm_reservations?, :location
 
-  before_validation :setup_active_merchant_customer, :if => lambda { reservation.try(:valid?) && user.try(:valid?) }
+  before_validation :setup_active_merchant_customer, :if => lambda { reservation.try(:valid?) && @user.try(:valid?) }
   before_validation :build_documents, :if => lambda { reservation.present? && documents.present? }
 
   validates :listing,     :presence => true
@@ -22,10 +22,10 @@ class ReservationRequest < Form
   validate :files_cannot_be_empty, :if => lambda { reservation.present? }
 
   def initialize(listing, user, platform_context, attributes = {}, checkout_extra_fields = {})
-    @checkout_extra_fields = CheckoutExtraFields.new(user, checkout_extra_fields)
     @listing = listing
     @waiver_agreement_templates = []
-    @user = user
+    @checkout_extra_fields = CheckoutExtraFields.new(user, checkout_extra_fields)
+    @user = @checkout_extra_fields.user
     if @listing
       @reservation = listing.reservations.build
       @instance = platform_context.instance
@@ -44,12 +44,12 @@ class ReservationRequest < Form
     end
 
     store_attributes(attributes)
+
     @reservation.try(:payment_method=, (payment_method.present? && payment_methods.include?(payment_method.to_s)) ? payment_method : payment_methods.first)
     self.payment_method = @reservation.try(:payment_method)
 
     if @user
-      @user.phone_required = true
-      @user.phone = @user.mobile_number
+      @user.phone ||= @user.mobile_number
       @card_holder_first_name ||= @user.first_name
       @card_holder_last_name ||= @user.last_name
     end
@@ -79,7 +79,11 @@ class ReservationRequest < Form
   end
 
   def process
-    valid? && save_reservation
+    @checkout_extra_fields.assign_attributes! if @checkout_extra_fields.are_fields_present?
+    @checkout_extra_fields.valid?
+    @checkout_extra_fields.errors.full_messages.each { |m| add_error(m, :base) }
+    # todo yeah, duplicated.. well.. it's almost 3am and this code will need to be refactored anyway, sry - MK
+    @checkout_extra_fields.valid? && valid? && save_reservation
   end
 
   def reservation_periods
