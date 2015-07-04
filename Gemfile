@@ -1,4 +1,4 @@
-ruby '2.1.5'
+ruby '2.2.2'
 
 source 'http://rubygems.org'
 
@@ -145,6 +145,7 @@ gem 'store_base_sti_class'
 
 group :profiling do
   gem 'rack-mini-profiler'
+  gem 'flamegraph'
   gem 'bullet'
 end
 
@@ -171,13 +172,14 @@ group :development, :staging do
 end
 
 group :development do
+  gem 'unicorn-rails'
+  gem 'rails-dev-boost'
   gem 'quiet_assets'
-  gem 'thin'
   gem 'pry-nav'
   gem 'pry-doc'
   gem 'spring'
   gem 'spring-commands-cucumber'
-  gem "parallel_tests"
+  gem 'parallel_tests'
 end
 
 group :test do
