@@ -93,6 +93,11 @@
             %h2
               = t('buy_sell_market.checkout_extra_fields.fill_in_these_details')
             = render 'shared/checkout_extra_fields', :f => f
+            - if @order.errors[:checkout_fields].present?
+              .flash.error
+                %ul
+                  - @order.errors[:checkout_fields].each do |error|
+                    %li.error-block= error
 
       %section.checkout-form#credit-card-select
 

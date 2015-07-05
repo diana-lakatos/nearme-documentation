@@ -44,9 +44,12 @@ class BuySellMarket::CheckoutController < ApplicationController
     params[:order] ||= {}
     if @order.payment?
       checkout_extra_fields = @order.checkout_extra_fields(params[:order][:checkout_extra_fields])
-      begin
+      checkout_extra_fields.assign_attributes! if checkout_extra_fields.are_fields_present?
+
+      if checkout_extra_fields.valid?
         checkout_extra_fields.save! if checkout_extra_fields.are_fields_present?
-      rescue ActiveRecord::RecordInvalid => error
+      else
+        checkout_extra_fields.errors.full_messages.each { |m| @order.errors[:checkout_fields] ||= []; @order.errors[:checkout_fields] << m }
         render_step order_state and return
       end
 
