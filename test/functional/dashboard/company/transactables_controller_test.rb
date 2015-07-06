@@ -28,6 +28,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
       assert_select 'label.checkbox', @waiver_agreement_template2.name
       assert_select 'label.checkbox', @waiver_agreement_template3.name
     end
+
   end
 
   context "#create" do

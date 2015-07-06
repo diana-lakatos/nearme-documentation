@@ -95,44 +95,30 @@ module CustomAttributes
 
           def valid_values_translated
             valid_values.map do |valid_value|
-              [I18n.translate(valid_value_translation_key(valid_value)), valid_value]
+              [I18n.translate(valid_value_translation_key(valid_value), default: valid_value), valid_value]
             end
           end
 
-          def label_key
-            "simple_form.labels.#{translation_key_suffix}"
-          end
+          %w(label hint placeholder prompt).each do |element|
+            define_method "#{element}_key" do
+              "#{translation_key_prefix}.#{element.pluralize}.#{name}"
+            end
 
-          def label_key_was
-            "simple_form.labels.#{translation_key_suffix_was}"
-          end
-
-          def hint_key
-            "simple_form.hints.#{translation_key_suffix}"
-          end
-
-          def hint_key_was
-            "simple_form.hints.#{translation_key_suffix_was}"
-          end
-
-          def placeholder_key
-            "simple_form.placeholders.#{translation_key_suffix}"
-          end
-
-          def placeholder_key_was
-            "simple_form.placeholders.#{translation_key_suffix_was}"
-          end
-
-          def prompt_key
-            "simple_form.prompts.#{translation_key_suffix}"
-          end
-
-          def prompt_key_was
-            "simple_form.prompts.#{translation_key_suffix_was}"
+            define_method "#{element}_key_was" do
+              "#{translation_key_prefix_was}.#{element.pluralize}.#{name}"
+            end
           end
 
           def valid_value_translation_key(valid_value)
-            "simple_form.valid_values.#{translation_key_suffix}.#{underscore(valid_value)}"
+            "#{translation_key_prefix}.valid_values.#{name}.#{underscore(valid_value)}"
+          end
+
+          def translation_key_prefix
+            self.target.translation_namespace
+          end
+
+          def translation_key_prefix_was
+            self.target.translation_namespace_was
           end
 
           def translation_key_suffix

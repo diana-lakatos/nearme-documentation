@@ -59,4 +59,5 @@ class BoardingForm < Form
     @store_name = @company.name
     @product_form.assign_all_attributes
   end
+
 end

@@ -64,9 +64,9 @@ class TransactableType < ActiveRecord::Base
   end
 
   def destroy_translations!
-    ids = Translation.where('instance_id = ? AND (key like ? OR key like ?)', PlatformContext.current.instance.id, "%.#{self.translation_key_suffix_was}.%", "%.#{self.translation_key_pluralized_suffix_was}.%").inject([]) do |ids_to_delete, t|
-      if t.key  =~ /\Asimple_form\.(.+).#{self.translation_key_suffix_was}\.(.+)\z/ || t.key  =~ /\Asimple_form\.(.+).#{self.translation_key_pluralized_suffix_was}\.(.+)\z/
-          ids_to_delete << t.id
+    ids = Translation.where('instance_id = ? AND  key like ?', PlatformContext.current.instance.id, "#{self.translation_namespace_was}.%").inject([]) do |ids_to_delete, t|
+      if t.key  =~ /\A#{self.translation_namespace_was}\.(.+)\z/
+        ids_to_delete << t.id
       end
       ids_to_delete
     end

@@ -45,8 +45,6 @@ class SecuredParams
       upload_obligation_attributes: nested(self.upload_obligation),
       shipping_methods_attributes: nested(self.spree_shipping_method),
       extra_properties:  Spree::Product.public_custom_attributes_names((product_type.presence || PlatformContext.current.try(:instance).try(:product_types).try(:first)).try(:id)),
-      document_requirements_attributes: nested(self.document_requirement),
-      upload_obligation_attributes: nested(self.upload_obligation)
     ]
   end
 

@@ -59,7 +59,6 @@ class InstanceAdmin::Settings::LocalesController < InstanceAdmin::Settings::Base
     @translation.attributes = translation_params
 
     if @translation.valid?(:instance_admin)
-      @translation.prepend_custom_label
       @translation.save(context: :instance_admin)
 
       flash[:success] = t 'instance_admin.locales.notices.key_created', key: @translation.key

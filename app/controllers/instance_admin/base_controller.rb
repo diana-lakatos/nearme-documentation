@@ -18,7 +18,6 @@ class InstanceAdmin::BaseController < ApplicationController
     'users'              => { controller: '/instance_admin/manage/users', default_action: 'index' },
     'admins'             => { controller: '/instance_admin/manage/admins', default_action: 'index' },
     'partners'           => { controller: '/instance_admin/manage/partners', default_action: 'index' },
-    'reviews'            => { controller: '/instance_admin/manage/reviews', default_action: 'index' },
     'support'            => { controller: '/instance_admin/manage/support', default_action: 'index' },
     'faq'                => { controller: '/instance_admin/manage/support/faqs', default_action: 'index' },
     'approval_requests'  => { controller: '/instance_admin/manage/approval_requests', default_action: 'index' },

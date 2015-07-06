@@ -121,7 +121,7 @@ class CustomAttributeTest < ActiveSupport::TestCase
   private
 
   def label_translations_exist(label)
-    translation = Translation.where(key: 'simple_form.labels.my_transactable_type.my_attribute').first
+    translation = Translation.where(key: @custom_attribute.label_key).first
     if label.present?
       assert translation.present?
       assert_equal label, translation.value
@@ -131,7 +131,7 @@ class CustomAttributeTest < ActiveSupport::TestCase
   end
 
   def placeholder_translations_exist(placeholder)
-    translation = Translation.where(key: 'simple_form.placeholders.my_transactable_type.my_attribute').first
+    translation = Translation.where(key: @custom_attribute.placeholder_key).first
     if placeholder.present?
       assert translation.present?
       assert_equal placeholder, translation.value
@@ -141,7 +141,7 @@ class CustomAttributeTest < ActiveSupport::TestCase
   end
 
   def hint_translations_exist(hint)
-    translation = Translation.where(key: 'simple_form.hints.my_transactable_type.my_attribute').first
+    translation = Translation.where(key: @custom_attribute.hint_key).first
     if hint.present?
       assert translation.present?
       assert_equal hint, translation.value
@@ -151,7 +151,7 @@ class CustomAttributeTest < ActiveSupport::TestCase
   end
 
   def prompt_translation_exists(prompt)
-    translation = Translation.where(key: 'simple_form.prompts.my_transactable_type.my_attribute').first
+    translation = Translation.where(key: @custom_attribute.prompt_key).first
     if prompt.present?
       assert_equal prompt, translation.value
     else
@@ -162,10 +162,10 @@ class CustomAttributeTest < ActiveSupport::TestCase
   def valid_valus_translations_exist(valid_values)
     valid_values ||= {}
     if valid_values.empty?
-      assert_equal 0, Translation.where('key LIKE ?', "simple_form.valid_values.my_transactable_type.my_attribute.%").count
+      assert_equal 0, Translation.where('key LIKE ?', "#{@custom_attribute.translation_key_prefix}.valid_values.my_attribute.%").count
     else
       valid_values.each do |key, value|
-        assert_equal value, Translation.where(key: "simple_form.valid_values.my_transactable_type.my_attribute.#{key}").first.value
+        assert_equal value, Translation.where(key: @custom_attribute.valid_value_translation_key(key)).first.value
       end
     end
   end
