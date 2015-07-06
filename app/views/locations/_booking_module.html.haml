@@ -3,7 +3,7 @@
 - listing = listing.decorate
 - old = lookup_context.transactable_type_id
 - lookup_context.transactable_type_id = listing.transactable_type_id if old != listing.transactable_type_id
-.booking-module-container{:class => "#{booking_module_class(listing)} #{collapsed ? " collapsed" : ""}", :'data-toggleable-booking-module' => true}
+.booking-module-container{:class => "#{booking_module_class(listing)} #{collapsed ? " collapsed" : ""}", :'data-toggleable-booking-module' => true, id: "booking-module-#{listing.id}"}
   .booking-module
     .booking-header
       %a.toggleable-booking-trigger{:href => location_path(listing.location, listing), :'data-booking-trigger' => true}
@@ -172,10 +172,10 @@
 
   - content_for :domready do
     $("##{listing.to_param} .quantity select").customSelect();
-    $('.pricing-tabs a').click(function (e) {
+    $("#booking-module-#{listing.id} .pricing-tabs a").click(function (e) {
     e.preventDefault();
     $(this).tab('show');
     })
-    $('.pricing-tabs a.possible:first').tab('show');
+    $("#booking-module-#{listing.id} .pricing-tabs a.possible:first").tab('show');
 
 - lookup_context.transactable_type_id = old
