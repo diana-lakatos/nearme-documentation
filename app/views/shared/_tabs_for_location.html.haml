@@ -1,0 +1,25 @@
+.container-fluid
+  .tab-content-container#navigation-tabs
+    %ul.nav.nav-tabs.page-tabs{role: 'tablist', :'data-tab-header' => true}
+      %li{ class: "#{ 'active' if !param_reviews_page_present? }" }
+        %a{'data-toggle' => 'tab', href: '#location-details', role: 'tab'}
+          = t 'buy_sell_market.products.labels.item_details'
+    .tab-content{:'data-tab-content' => true}
+      %article#location-details.location.listing.tab-pane.active
+        = render description_partial
+
+-# tmp hack before rewrite of this - if location has multiple listings, this will be wrong, so do not display before fix
+- if params[:listing_id] || @listings.count == 1 || @listings.map(&:transactable_type_id).uniq.count == 1
+  - content_for :script do
+    :javascript
+      new Reviews.Controller(
+      $('#navigation-tabs'),
+      {
+        path: "#{reviews_path}",
+        reviewables: {
+          product: { id: #{@listing.id}, type: 'Transactable', subject: "#{@listing.transactable_type.bookable_noun}" },
+          seller: { id: #{@listing.creator_id} , type: 'User', subject: "#{@listing.transactable_type.lessor}" }
+        }
+      }
+      )
+
