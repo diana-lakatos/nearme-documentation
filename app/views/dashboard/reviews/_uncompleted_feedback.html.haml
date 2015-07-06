@@ -1,5 +1,5 @@
 = form_tag dashboard_reviews_path, class: 'create-form' do
-  .review{'data-reviewable-id' => feedback.id, 'data-reviewable-type' => feedback.class.name, 'data-object' => subject}
+  .review{'data-rating-system-id' => rating_system.id, 'data-reviewable-id' => feedback.id, 'data-reviewable-type' => feedback.class.name, 'data-object' => subject}
     = hidden_field_tag :reviewable_id, feedback.id
     = hidden_field_tag :reviewable_type, feedback.class.name
     .row-fluid.clearfix
@@ -7,9 +7,9 @@
         = render 'order_image', feedback: feedback
         .review-actions
           = render 'review_title', feedback: feedback
-          %p 
-            = t('dashboard.reviews.feedback.leave').upcase 
-            = subject.upcase 
+          %p
+            = t('dashboard.reviews.feedback.leave').upcase
+            = subject.upcase
             = t('dashboard.reviews.feedback.title').upcase
           .rating.editable{'data-hints' => rating_system.rating_hints.map(&:description_or_value).reverse}
           = render 'show_details_link', subject: subject, id: feedback.id

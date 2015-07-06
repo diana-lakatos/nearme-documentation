@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150702163715) do
+ActiveRecord::Schema.define(version: 20150702193526) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1392,6 +1392,7 @@ ActiveRecord::Schema.define(version: 20150702163715) do
     t.datetime "deleted_at"
     t.integer  "transactable_type_id"
     t.string   "reviewable_type"
+    t.integer  "rating_system_id"
   end
 
   add_index "reviews", ["deleted_at"], name: "index_reviews_on_deleted_at", using: :btree

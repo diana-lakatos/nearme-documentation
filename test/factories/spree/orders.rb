@@ -66,6 +66,7 @@ FactoryGirl.define do
             end
             order.reload
           end
+
           factory :shipped_order do
             after(:create) do |order|
               order.shipments.each do |shipment|
@@ -74,9 +75,15 @@ FactoryGirl.define do
               end
               order.reload
             end
+
           end
         end
 
+        factory :reviewable_order do
+          after(:create) do |order|
+            order.update_columns(shipment_state: 'shipped', payment_state: 'paid', approved_at: Time.zone.now)
+          end
+        end
       end
     end
   end

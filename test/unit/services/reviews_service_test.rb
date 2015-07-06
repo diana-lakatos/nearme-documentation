@@ -16,7 +16,7 @@ class ReviewsServiceTest < ActiveSupport::TestCase
       assert_equal @review_5_stars, reviews.first
     end
   end
-  
+
   context '#generate_csv_for' do
     setup do
       @reviews = FactoryGirl.create_list(:review, 2)
@@ -34,7 +34,7 @@ class ReviewsServiceTest < ActiveSupport::TestCase
       assert csv.include?(@review_2)
     end
   end
-  
+
   context '#filter_period' do
     setup do
       @user = FactoryGirl.create(:user)
@@ -93,16 +93,15 @@ class ReviewsServiceTest < ActiveSupport::TestCase
     end
 
     should 'return rating systems' do
-      @rating_system = FactoryGirl.create(:active_rating_system)
+      @rating_system = FactoryGirl.create(:active_rating_system, transactable_type_id: 1)
       rating_systems = @reviews_service.get_rating_systems
-      assert_includes rating_systems[:active_rating_systems], @rating_system
+      assert_equal @rating_system, rating_systems[:active_rating_systems][1].first
     end
   end
 
   context '#get_line_items_for_owner_and_creator' do
     setup do
-      @order = create(:completed_order_with_totals)
-      @order.update(completed_at: Date.today.yesterday)
+      @order = create(:reviewable_order)
       @line_items = @order.line_items
 
       @line_items.each do |line_item|
@@ -117,16 +116,21 @@ class ReviewsServiceTest < ActiveSupport::TestCase
       @reviews_service = ReviewsService.new(user, instance)
     end
 
-    should 'return line items' do
+    should 'return line items if order is reviewable' do
       result = @reviews_service.get_line_items_for_owner_and_creator
-      assert_equal result[:owner_line_items].count, @line_items.count
+      assert_equal @line_items.count, result[:owner_line_items].count
+    end
+
+    should 'not return line items if order is not reviewable' do
+      @order.update_column(:shipment_state, 'pending')
+      result = @reviews_service.get_line_items_for_owner_and_creator
+      assert_equal 0, result[:owner_line_items].count
     end
   end
 
   context '#get_orders_reviews' do
     setup do
-      @order = create(:completed_order_with_totals)
-      @order.update(completed_at: Date.today.yesterday)
+      @order = create(:reviewable_order)
       @line_items = { owner_line_items: @order.line_items, creator_line_items: @order.line_items }
       user = @order.user
       instance = user.instance
@@ -212,7 +216,7 @@ class ReviewsServiceTest < ActiveSupport::TestCase
       review = create(:review, object: 'seller', instance: instance, reviewable: reservation, user: user)
       params = { review: { reviewable_id: reservation.id, reviewable_type: reservation.class.name } }
       reviews_service = ReviewsService.new(user, instance, params)
-      
+
       result = reviews_service.get_transactable_type_id()
       assert_equal result, review.transactable_type_id
     end
@@ -223,6 +227,7 @@ class ReviewsServiceTest < ActiveSupport::TestCase
       instance = completed_order.instance
       transactable_type_buy_sell = FactoryGirl.create(:transactable_type_buy_sell)
       line_item = completed_order.line_items.first
+      line_item.product.update_attribute(:product_type_id, transactable_type_buy_sell.id)
       review = create(:review, object: 'seller', instance: instance, reviewable: line_item, user: user)
       params = { review: { reviewable_id: line_item.id, reviewable_type: line_item.class.name } }
       reviews_service = ReviewsService.new(user, instance, params)

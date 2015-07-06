@@ -26,6 +26,7 @@ Given(/^I receive an email request for (host and listing|guest) rating$/) do |ki
 end
 
 When(/^I submit rating with (valid|invalid) values$/) do |valid|
+  RatingSystem.update_all(transactable_type_id: @reservation.listing.transactable_type_id)
   visit dashboard_reviews_path
   page.should have_css('.box.reviews .tab-pane.active')
   page.should have_css('.rating img')
@@ -40,14 +41,18 @@ When(/^I submit rating with (valid|invalid) values$/) do |valid|
 end
 
 When(/^I edit (host|product|guest) rating with (valid|invalid) values$/) do |object, valid|
-  object_review = if object == 'host'
-      'seller'
-    elsif object == 'product'
-      'product'
-    else
-      'buyer'
-    end
-  FactoryGirl.create(:review, object: object_review, reviewable: @reservation, user: @user, rating: 5)
+  RatingSystem.update_all(transactable_type_id: @reservation.listing.transactable_type_id)
+  object_review = case object
+                  when 'host'
+                    'seller'
+                  when 'product'
+                    'product'
+                  when 'guest'
+                    'buyer'
+                  end
+  rating_system = RatingSystem.where(subject: object).first
+  rating_system ||= RatingSystem.where.not(subject: ['host', 'guest']).first
+  FactoryGirl.create(:review, rating_system_id: rating_system.id, object: object_review, reviewable: @reservation, user: @user, rating: 5)
 
   visit dashboard_reviews_path(tab: 'completed')
 
@@ -63,6 +68,7 @@ When(/^I edit (host|product|guest) rating with (valid|invalid) values$/) do |obj
 end
 
 When(/^I remove review$/) do
+  RatingSystem.update_all(transactable_type_id: @reservation.listing.transactable_type_id)
   review = FactoryGirl.create(:review, object: 'seller', reviewable: @reservation, user: @user, rating: 5)
   visit dashboard_reviews_path(tab: 'completed')
   page.driver.accept_js_confirms!

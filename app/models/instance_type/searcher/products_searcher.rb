@@ -37,7 +37,6 @@ class InstanceType::Searcher::ProductsSearcher
           category_ids: search.category_ids,
           sort: search.sort
         })
-
         Spree::Product::SearchFetcher.new(@search_params)
       end
   end

@@ -152,6 +152,10 @@ Spree::Product.class_eval do
     super && product_type.try(:action_rfq?)
   end
 
+  def transactable_type_id
+    product_type_id
+  end
+
   private
 
   def shipping_category_presence

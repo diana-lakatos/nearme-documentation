@@ -33,7 +33,7 @@
               = mail_to platform_context.support_email, t('dashboard.reviews.feedback.contact_name_support', name: @current_instance.name)
 
     .reviews-additional-content.collapse{id: "#{subject}-#{feedback.reviewable.id}"}
-      - feedback.rating_answers.each do |answer|
+      - feedback.rating_answers.reject { |answer| answer.rating_question.nil? }.each do |answer|
         .row-fluid.clearfix
           .span12
             %span= answer.rating_question.text

@@ -45,21 +45,21 @@
             -#  = link_to order.shipments.first.tracking, target: '_blank' do
             -#    %col-md-.btn.blue= t'orders.buttons.track'
 
-            - if has_active_rating_system? and !received_orders
+            - if has_active_rating_system? && order.reviewable? && !received_orders
 
               - if item.has_seller_reviews?
                 = link_to dashboard_reviews_path(tab: 'completed') do
-                  %col-md-.btn.blue= t 'orders.buttons.update_seller_feedback'
+                  %span.btn.blue= t 'orders.buttons.update_seller_feedback'
               - else
                 = link_to dashboard_reviews_path do
-                  %col-md-.btn.gray= t 'orders.buttons.seller_feedback'
+                  %span.btn.gray= t 'orders.buttons.seller_feedback'
               %br
               - if item.has_product_reviews?
                 = link_to dashboard_reviews_path(tab: 'completed') do
-                  %col-md-.btn.blue= t 'orders.buttons.update_product_review'
+                  %span.btn.blue= t 'orders.buttons.update_product_review'
               - else
                 = link_to dashboard_reviews_path do
-                  %col-md-.btn.gray= t 'orders.buttons.product_review'
+                  %span.btn.gray= t 'orders.buttons.product_review'
 
             - if manage
               - if order.approved?
@@ -95,12 +95,13 @@
           .additional-item
             = render 'dashboard/orders/line_item', item: item
             .col-md-4
+            - if order.reviewable? && !received_orders
               - if item.has_product_reviews?
                 = link_to dashboard_reviews_path(tab: 'completed') do
-                  %col-md-.btn.blue= t 'orders.buttons.update_product_review'
+                  %span.btn.blue= t 'orders.buttons.update_product_review'
               - else
                 = link_to dashboard_reviews_path do
-                  %col-md-.btn.gray= t 'orders.buttons.product_review'
+                  %span.btn.gray= t 'orders.buttons.product_review'
 
       - order.payment_documents.each do |pd|
         .payment-document

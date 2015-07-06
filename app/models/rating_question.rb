@@ -19,8 +19,8 @@ class RatingQuestion < ActiveRecord::Base
   private
 
   def create_empty_answers
-    Review.find_each do |review|
-      review.rating_answers.create(rating_question_id: self.id)
+    rating_system.reviews.pluck(:id).each do |review_id|
+      rating_answers.create!(review_id: review_id)
     end
   end
 
