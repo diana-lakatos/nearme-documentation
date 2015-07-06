@@ -2,10 +2,15 @@ require 'csv'
 
 class DataImporter::CsvFile::TemplateCsvFile < DataImporter::CsvFile
 
-  def initialize(path, importable, options = {})
-    @importable = importable
-    @options = options.symbolize_keys.reverse_merge(send_invitational_email: false, sync_mode: false)
-    super(path)
+  def initialize(data_upload, *csv_fields_to_check_for)
+    @importable = data_upload.importable
+    @options = data_upload.options.symbolize_keys.reverse_merge(send_invitational_email: false, sync_mode: false)
+    if csv_fields_to_check_for.present?
+      @csv_handle, invalid_rows = DataImporter::CsvFileValidator.new(data_upload.csv_file.proper_file_path, *csv_fields_to_check_for).strip_invalid_rows
+      data_upload.update_column(:parsing_result_log, invalid_rows.join("\n")) unless invalid_rows.blank?
+    else
+      super(data_upload.csv_file.proper_file_path)
+    end
     @header_metadata = parse_header(@csv_handle.shift)
     @warnings = { header: [] }
     @csv_attributes = {}

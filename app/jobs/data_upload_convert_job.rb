@@ -8,6 +8,7 @@ class DataUploadConvertJob < Job
 
   def perform
     @data_upload = DataUpload.find(@data_upload_id)
+
     @data_upload.process! unless @data_upload.processing?
     xml_path = "#{Dir.tmpdir}/#{@data_upload.importable_id}-#{Time.zone.now.to_i}.xml"
     DataImporter::CsvToXmlConverter.new(csv_file, xml_path, @data_upload.importable).convert
@@ -22,7 +23,7 @@ class DataUploadConvertJob < Job
   protected
 
   def csv_file
-    @csv_file ||= DataImporter::CsvFile::TemplateCsvFile.new(@data_upload.csv_file.proper_file_path, @data_upload.importable, @data_upload.options)
+    @csv_file ||= DataImporter::CsvFile::TemplateCsvFile.new(@data_upload, 'Company External Id')
   end
 
 end

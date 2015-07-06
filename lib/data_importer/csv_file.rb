@@ -6,11 +6,7 @@ class DataImporter::CsvFile < DataImporter::File
 
   def initialize(path)
     super(path)
-    if @path.to_s =~ /^http/
-      @csv_handle = CSV.new(open(@path))
-    else
-      @csv_handle = CSV.open(@path, "r")
-    end
+    @csv_handle = CSV.new(open(@path))
   end
 
   def next_row

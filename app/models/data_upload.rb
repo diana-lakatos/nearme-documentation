@@ -40,7 +40,7 @@ class DataUpload < ActiveRecord::Base
     end
 
     event :fail do
-      transition [:processing, :importing] => :failed
+      transition any => :failed
     end
   end
 

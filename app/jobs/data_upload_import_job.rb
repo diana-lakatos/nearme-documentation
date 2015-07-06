@@ -19,12 +19,16 @@ class DataUploadImportJob < Job
       @xml_file = DataImporter::XmlFile.new(xml_path, @data_upload.importable, {synchronizer: @synchronizer, trackers: @trackers })
       begin
         @xml_file.parse
-        @validation_errors_tracker.to_s.blank? ? @data_upload.finish : @data_upload.finish_with_validation_errors
+        @validation_errors_tracker.to_s.blank? && @data_upload.parsing_result_log.present? ? @data_upload.finish : @data_upload.finish_with_validation_errors
       rescue
         @data_upload.encountered_error = "#{$!.inspect}\n\n#{$@[0..5]}"
         @data_upload.fail
       ensure
-        @data_upload.parsing_result_log = @validation_errors_tracker.to_s
+        unless @data_upload.parsing_result_log.blank?
+          @data_upload.parsing_result_log << "\n" << @validation_errors_tracker.to_s
+        else
+          @data_upload.parsing_result_log = @validation_errors_tracker.to_s
+        end
         @data_upload.parse_summary = { new: @summary_tracker.new_entities, updated: @summary_tracker.updated_entities, deleted:  @summary_tracker.deleted_entities}
         @data_upload.save!
         @data_upload.touch(:imported_at)
