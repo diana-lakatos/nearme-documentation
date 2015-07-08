@@ -174,7 +174,7 @@ end
 
 group :development do
   gem 'unicorn-rails'
-  gem 'rails-dev-boost'
+  gem 'rails-dev-boost', github: 'thedarkone/rails-dev-boost'
   gem 'quiet_assets'
   gem 'pry-nav'
   gem 'pry-doc'
