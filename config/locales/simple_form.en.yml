@@ -180,7 +180,7 @@ en:
         bank_routing_number: 'Routing Number'
         bank_account_number: 'Account Number'
         company_address:
-          address: 'Address'
+          address: 'Company Address'
       company:
         name: 'Company name'
         industries: 'Industries'
@@ -193,7 +193,7 @@ en:
         bank_routing_number: 'Routing Number'
         bank_account_number: 'Account Number'
         company_address:
-          address: 'Address'
+          address: 'Company Address'
         payout:
           via_paypal: 'Payouts via Paypal'
           via_ach: 'Payouts via ACH (US only)'
@@ -317,11 +317,21 @@ en:
       company:
         mailing_address: 'Checks for revenue will be sent to this address. Find out more about payments in the Support Center.'
         paypal_email: 'If you specify a PayPal email, we will make a PayPal transfer instead of sending checks.'
+        name: ''
+        email: ''
+      companies:
+        name: ''
+        email: ''
+      listings:
+        name: ''
       transactable:
         book_it_out_discount: "Set your % discount amount"
         book_it_out_minimum_qty: "Book it Out is only available if the set minimum quantity is available"
       service_type:
         action_continuous_dates_booking: "Allow user to select only contiguous dates when booking"
+      user:
+        mobile_number: ''
+        phone: ''
 
     required:
       mark: '*'

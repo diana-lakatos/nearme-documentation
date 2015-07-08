@@ -156,6 +156,14 @@ Spree::Product.class_eval do
     product_type_id
   end
 
+  def translation_namespace
+    product_type.try(:translation_namespace)
+  end
+
+  def translation_namespace_was
+    product_type.try(:translation_namespace_was)
+  end
+
   private
 
   def shipping_category_presence

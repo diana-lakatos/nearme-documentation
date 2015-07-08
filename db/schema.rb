@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150702193526) do
+ActiveRecord::Schema.define(version: 20150707121726) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2948,6 +2948,7 @@ ActiveRecord::Schema.define(version: 20150702193526) do
     t.datetime "updated_at",                     null: false
   end
 
+  add_index "translations", ["instance_id", "locale", "key"], name: "index_translations_on_instance_id_and_locale_and_key", unique: true, using: :btree
   add_index "translations", ["instance_id", "updated_at"], name: "index_translations_on_instance_id_and_updated_at", using: :btree
 
   create_table "unit_prices", force: true do |t|

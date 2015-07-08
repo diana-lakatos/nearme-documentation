@@ -613,6 +613,14 @@ class Transactable < ActiveRecord::Base
     end
   end
 
+  def translation_namespace
+    service_type.try(:translation_namespace)
+  end
+
+  def translation_namespace_was
+    service_type.try(:translation_namespace_was)
+  end
+
   private
 
   def set_currency

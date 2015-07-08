@@ -88,7 +88,7 @@ class Category < ActiveRecord::Base
   end
 
   def translation_key
-    "#{Translation::CUSTOM_PREFIX}.categories.#{name.to_url.gsub(/[\-|\/|\.]/, '_').downcase}"
+    "categories.#{name.to_url.gsub(/[\-|\/|\.]/, '_').downcase}"
   end
 
   def create_translation_key

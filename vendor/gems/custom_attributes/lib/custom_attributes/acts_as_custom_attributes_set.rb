@@ -31,6 +31,14 @@ module CustomAttributes
           string.underscore.tr(' ', '_') rescue ''
         end
 
+        define_method(:translation_namespace) do
+          underscore "#{self.class.name.demodulize}.#{self.name}"
+        end
+
+        define_method(:translation_namespace_was) do
+          underscore "#{self.class.name.demodulize}.#{(self.name_was || self.name)}"
+        end
+
       end
     end
 

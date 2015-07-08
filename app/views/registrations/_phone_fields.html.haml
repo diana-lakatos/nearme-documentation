@@ -12,6 +12,8 @@
         .country-calling-code
           = "+#{f.object.country.calling_code}" if f.object.country
         = f.text_field :phone, data: { 'phone' => true }
+        - if t('simple_form.hints.user.phone', default: '').present?
+          %p.help-block= t('simple_form.hints.user.phone', default: '')
 
       - if f.object.errors[:phone].present?
         .error-block= f.object.errors[:phone].to_sentence
@@ -23,6 +25,8 @@
         .country-calling-code
           = "+#{f.object.country.calling_code}" if f.object.country
         = f.text_field :mobile_number, data: { 'mobile-number' => true }
+        - if t('simple_form.hints.user.mobile_number', default: '').present?
+          %p.help-block= t('simple_form.hints.user.mobile_number', default: '')
 
       = label_tag do
         = check_box_tag "#{f.object.class.name.underscore}_mobile_same_as_phone", '1', (f.object.phone == f.object.mobile_number), data: { 'same-as-phone-checkbox' => true }
