@@ -25,7 +25,7 @@ module AvailabilityRulesHelper
     end
 
     # Add choices for each of the pre-defined templates
-    TransactableType.first.availability_templates.each do |template|
+    ServiceType.first.availability_templates.each do |template|
       choices << [template.id, t('simple_form.labels.availability_template.full_name.' + template.name.underscore.tr(' ', '_')), { :id => "availability_template_id_#{template.id}" }]
     end
 

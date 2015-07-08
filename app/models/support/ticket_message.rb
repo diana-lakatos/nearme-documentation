@@ -47,9 +47,8 @@ class Support::TicketMessage < ActiveRecord::Base
   def receive(message, params)
     from = message.from[0]
     ticket_id = params['ticket_id']
-
-    match_data = s.match(/charset=(?<encoding>[\w\d-]+)/)
-    body = match_data && match_data[:encoding] ? message.body.to_s.force_encoding(encoding).encode('UTF-8') : message.body.to_s
+    encoding = Array.wrap(message.content_type.split('charset=')).last
+    body = message.body.to_s.force_encoding(encoding).encode('UTF-8')
 
     if can_reply?(from, ticket_id)
       self.email = from
