@@ -18,17 +18,17 @@ Feature: A user can search for a listing
 
   Scenario: Displaying no results found when searching for nonexisting product.
     Given the user exists
-    And I log in as a user
-    And the product_type exists
     And current instance is buyable
+    And the product_type exists
+    And I log in as a user
     When I search for product "TV"
     Then I should see "No results found"
 
   Scenario: Displaying search results for a product.
     Given the user exists
-    And I log in as a user
-    And the product_type exists
     And current instance is buyable
+    And the product_type exists
+    And I log in as a user
     And product exists with name: "Awesome product"
     When I search for product "product"
     Then I see a search results for the product

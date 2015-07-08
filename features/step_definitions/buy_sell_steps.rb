@@ -1,7 +1,6 @@
 Given /^Current marketplace is buy_sell$/ do
   TransactableType.destroy_all
   @instance = PlatformContext.current.instance
-  FactoryGirl.create(:transactable_type_buy_sell)
   FactoryGirl.create(:product_type, instance: @instance)
   Utils::SpreeDefaultsLoader.new(@instance).load!
   @instance.update_attribute(:service_fee_host_percent, 10)
@@ -139,6 +138,7 @@ And /^I shouldn't see order placed confirmation$/ do
 end
 
 Then /^The product should not be included in my cart$/ do
+  assert page.body.should have_css('.checkout a div')
   find('.checkout a div').click
   assert page.body.should have_content(I18n.t('flash_messages.buy_sell.no_payment_gateway'))
 end

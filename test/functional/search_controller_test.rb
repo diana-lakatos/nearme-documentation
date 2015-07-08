@@ -7,6 +7,17 @@ class SearchControllerTest < ActionController::TestCase
     PlatformContext.current = PlatformContext.new(Instance.first)
   end
 
+  context 'for anything when no TransactableType exists' do
+    setup do
+      TransactableType.destroy_all
+    end
+
+    should 'redirect to homepage' do
+      get :index, loc: "Anywhere"
+      assert_redirected_to root_path
+    end
+  end
+
   context 'for transactable type listing' do
     setup do
       FactoryGirl.create(:transactable_type_listing)

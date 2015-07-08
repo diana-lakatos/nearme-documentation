@@ -302,6 +302,7 @@ en:
       setting_saved: 'Wish lists settings have been saved.'
     search:
       setting_saved: 'Search settings have been saved.'
+      missing_transactable_type: 'There is nothing to search yet!'
 
     manage:
       category:

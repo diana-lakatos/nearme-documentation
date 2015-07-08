@@ -6,8 +6,8 @@ Feature: Buy Sell Marketplace
 
   Background:
     Given a user exists
-    And I am logged in as the user
     And Current marketplace is buy_sell
+    And I am logged in as the user
 
   Scenario: A user can buy a product
     Given A buy sell product exist in current marketplace
