@@ -47,13 +47,11 @@ class Support::TicketMessage < ActiveRecord::Base
   def receive(message, params)
     from = message.from[0]
     ticket_id = params['ticket_id']
-    encoding = Array.wrap(message.content_type.split('charset=')).last
-    body = message.body.to_s.force_encoding(encoding).encode('UTF-8')
 
     if can_reply?(from, ticket_id)
       self.email = from
       self.ticket_id = ticket_id
-      self.message = body
+      self.message = Support::Ticket.body_for_message(message)
       self.instance_id = ticket.first_message.instance_id
 
       if user_message?
