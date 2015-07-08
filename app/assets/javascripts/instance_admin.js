@@ -34,20 +34,9 @@
 //= require sections/support/ticket_message_controller
 //= require ./instance_admin/script
 //= require chosen-jquery
-
 //= require instance_admin/jquery-ui-datepicker
-//= require instance_admin/sections/rating_systems
-//= require instance_admin/sections/reviews
-
-//= require instance_admin/sections/approval_requests
-
-//= require instance_admin/sections/wish_lists
-//= require instance_admin/sections/users
-//= require instance_admin/sections/documents_upload
-
 //= require instance_admin/data_tables/jquery.dataTables.min
 //= require instance_admin/data_tables/dataTables.bootstrap
-//= require instance_admin/sections/partners
 //= require instance_admin/bootstrap-colorpicker.js
 
 $(function() {
