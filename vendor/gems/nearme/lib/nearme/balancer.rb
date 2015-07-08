@@ -55,7 +55,11 @@ module NearMe
         rescue AWS::IAM::Errors::NoSuchEntity
         end
 
+        sleep 2
         certificate = create_certificate
+        sleep 12 # give time for the cert to instantiate on the aws side (i.e. win the race condition)
+                 # a proper fix for this and the above is in the next release (NM-)2152.
+
         elb.set_load_balancer_listener_ssl_certificate(load_balancer_name: self.name, load_balancer_port: 443, ssl_certificate_id: certificate.arn)
       rescue Exception => e
         raise e
