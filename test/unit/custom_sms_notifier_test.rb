@@ -28,11 +28,8 @@ class CustomSmsNotifierTest < ActiveSupport::TestCase
     @user = FactoryGirl.create(:user, name: 'John Doe')
     @step = DummyWorkflow::DummyStep.new('dummy value', @user)
     @render_response = "Hello John Doe"
-    @to = "1234"
-    @from = "4567"
     @sms_template = FactoryGirl.create(:instance_view_sms)
-    CustomSmsNotifier.any_instance.stubs(:options).returns({to: @to, from: @from, template_name: @sms_template.path})
-    WorkflowAlert.stubs(:find).returns(stub())
+    WorkflowAlert.stubs(:find).returns(stub(template_path: @sms_template.path))
     CustomSmsNotifier.any_instance.stubs(:user).returns(@user)
   end
 
@@ -41,14 +38,32 @@ class CustomSmsNotifierTest < ActiveSupport::TestCase
     should "send correct custom sms" do
       sms = CustomSmsNotifier.custom_sms(@step , 1)
       assert sms.instance_of?(SmsNotifier::Message)
-      assert_equal @to, sms.to
-      assert_equal @from, sms.from
+      assert_equal @user.full_mobile_number, sms.to
       assert_equal @render_response, sms.body
     end
+
 
     should 'use logger instead of db by default for test' do
       WorkflowAlertLogger.any_instance.expects(:db_log!).never
       CustomSmsNotifier.custom_sms(@step , 1)
+    end
+
+    context 'association with transactable type' do
+      setup do
+        @transactable_type = FactoryGirl.create(:transactable_type)
+        @transactable_type_sms_template = FactoryGirl.create(:instance_view_sms, transactable_type_id: @transactable_type.id, body: 'Hello from transactable type')
+      end
+
+      should 'be able to find template associated with transactable type if data object associated with it' do
+        @step.stubs(:transactable_type_id).returns(@transactable_type.id)
+        sms = CustomSmsNotifier.custom_sms(@step , 1)
+        assert_equal 'Hello from transactable type', sms.body
+      end
+
+      should 'ignore template associated with not related transactable type' do
+        sms = CustomSmsNotifier.custom_sms(@step , 1)
+        assert_equal @render_response, sms.body
+      end
     end
 
   end
