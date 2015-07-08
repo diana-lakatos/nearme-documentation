@@ -34,6 +34,7 @@ gem 'twitter', "~> 5.5.1"
 # Installing instagram from the master branch will fix ruby 2.2 circular dependency warning
 gem 'instagram', github: '0tofu/instagram-ruby-gem', branch: 'master'
 
+gem 'reform', '~> 2.0.0.rc2'
 gem 'tilt'
 gem 'yui-compressor'
 gem 'fog'

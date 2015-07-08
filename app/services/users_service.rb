@@ -1,4 +1,5 @@
 class UsersService
+
   def initialize(platform_context = nil, options = {})
     @platform_context = platform_context
     @options = options
@@ -35,4 +36,5 @@ class UsersService
   def date_range(start_date, end_date = Time.zone.today)
     start_date.beginning_of_day..end_date.end_of_day
   end
+
 end

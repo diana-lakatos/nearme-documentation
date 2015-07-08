@@ -311,4 +311,11 @@ module ApplicationHelper
     false
   end
 
+  def selected_date_value(date)
+    Review::DATE_VALUES.each do |value|
+      return I18n.t("instance_admin.manage.admin_searchable.#{value}") if value == date
+    end
+    date
+  end
+
 end

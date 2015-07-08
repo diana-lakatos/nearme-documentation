@@ -15,6 +15,8 @@
 //= require components/modal
 //= require jcrop
 //= require sections/search_instance_admin
+//= require javascript_module
+//= require ./instance_admin/searchable_admin_resource
 //= require_tree ./instance_admin/sections
 //= require jquery_nested_form
 //= require ./vendor/urlify
@@ -36,6 +38,8 @@
 //= require instance_admin/jquery-ui-datepicker
 //= require instance_admin/sections/rating_systems
 //= require instance_admin/sections/reviews
+
+//= require instance_admin/sections/approval_requests
 
 //= require instance_admin/sections/wish_lists
 //= require instance_admin/sections/users

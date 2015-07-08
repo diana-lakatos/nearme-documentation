@@ -7,6 +7,46 @@
 
   %h4
     VENDOR APPROVAL
+
+  .row
+    .text-container
+      = form_tag instance_admin_manage_approval_requests_path, method: :get, enforce_utf8: :false do
+        .filters
+          .filter.period
+            .dropdown.date-dropdown
+              %a#dLabel.dropdown-trigger{"aria-expanded" => "false", "aria-haspopup" => "true", "data-target" => "#", "data-toggle" => "dropdown", :role => "button"}
+                - if params[:date].present?
+                  %span.current= selected_date_value(params[:date])
+                - else
+                  %span.current
+                    = t('instance_admin.manage.admin_searchable.title_all')
+                %span.caret
+                = hidden_field_tag 'date', date_param_value
+              %ul.dropdown-menu{"aria-labelledby" => "dLabel", :role => "menu"}
+                %li
+                  %a{data: {date: ''}}
+                    = t('instance_admin.manage.admin_searchable.title_all')
+                - ApprovalRequest::DATE_VALUES.each do |value|
+                  %li
+                    %a{data: {date: value}}
+                      = selected_date_value(value)
+                %li.divider
+                %li.date-range
+                  .date-range-header
+                    = t('instance_admin.manage.admin_searchable.date_range')
+                  .from
+                    = t('instance_admin.manage.admin_searchable.from')
+                  %input#from{type: 'text'}
+                  .to
+                    = t('instance_admin.manage.admin_searchable.to')
+                  %input#to{type: 'text'}
+                  %button.apply-filter.btn.btn-blue
+                    = t('instance_admin.manage.admin_searchable.apply_filter')
+
+          .filter.search
+            %input{placeholder: t('instance_admin.manage.admin_searchable.search_by_keyword'), type: 'text', name: 'q', value: params[:q]}
+            =fa_icon "search"
+        = hidden_field_tag :show, params[:show]
   
   .row
     .table-container.col-xs-12
@@ -43,4 +83,7 @@
 
 = content_for :header_buttons do
   = link_to 'Settings', instance_admin_manage_approval_request_templates_path, class: 'btn btn-blue'
+
+- content_for :domready do
+  new InstanceAdmin.ApprovalRequestsController($('.approval_requests'))
 

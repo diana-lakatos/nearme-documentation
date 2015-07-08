@@ -85,6 +85,10 @@ class User < ActiveRecord::Base
     joins(:reservations).where(reservations: { transactable_id: listing.id }).uniq
   }
 
+  scope :by_search_query, lambda { |query|
+    where("name ilike ? or email ilike ?", query, query)
+  }
+
   scope :without, lambda { |users|
     users_ids = users.respond_to?(:pluck) ? users.pluck(:id) : Array.wrap(users).collect(&:id)
     users_ids.any? ? where('users.id NOT IN (?)', users_ids) : all

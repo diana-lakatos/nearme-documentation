@@ -1,5 +1,8 @@
-class @InstanceAdmin.ReviewsController
+class @InstanceAdmin.ReviewsController extends @JavascriptModule
+  @include SearchableAdminResource
+
   constructor: (@container) ->
+    @commonBindEvents()
     @bindEvents()
 
   bindEvents: ->
@@ -18,18 +21,3 @@ class @InstanceAdmin.ReviewsController
       @container.find('.more-filters').removeClass('active')
       @container.find('.more-filters .fa').toggleClass('fa-angle-down fa-angle-right')
 
-    @container.find('.date-dropdown').on 'click', 'li:not(.date-range)', ->
-      $('.date-dropdown').find('li.selected').removeClass('selected')
-      $(@).addClass('selected')
-      dateValue = $(@).find('a').data('date')
-      selected = $(@).find('a').text()
-      $('.dropdown-trigger .current').text(selected)
-      $('.dropdown-trigger input[type="hidden"]').attr('value', dateValue)
-      $(@).parents('form').submit()
-
-    @container.find('.date-dropdown').on 'click', '.apply-filter', ->
-      startDate = $('#from').val()
-      endDate = $('#to').val()
-      if startDate && endDate
-        $('input[type="hidden"]#date').val(startDate + '-' + endDate)
-        $(@).parents('form').submit()

@@ -1,4 +1,4 @@
-class @InstanceAdmin.UsersController extends @JavascriptModule
+class @InstanceAdmin.ApprovalRequestsController extends @JavascriptModule
   @include SearchableAdminResource
 
   constructor: (@container) ->

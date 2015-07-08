@@ -44,6 +44,10 @@ class Review < ActiveRecord::Base
       OR rev.object=?", object
     )
   }
+  scope :by_search_query, -> (query) {
+    joins(:user).
+    where("users.name ilike ?", query)
+  }
 
   def recalculate_reviewable_average_rating
     if self.reviewable.is_a?(Spree::LineItem)
