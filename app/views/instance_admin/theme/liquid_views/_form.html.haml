@@ -12,8 +12,13 @@
         = f.association :transactable_type
     .row
       .input-container.col-xs-12
+        - if @base_view.present?
+          = f.input :partial, as: :hidden
+        - else
+          = f.input :partial
+    .row
+      .input-container.col-xs-12
         = f.input :body, as: :text, input_html: { class: 'form-control editor', :"data-editor" => 'liquid', rows: '30' }
-        = f.input :partial, as: :hidden
   = content_for :header_buttons do
     = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
     = link_to t('instance_admin.cancel'), instance_admin_theme_liquid_views_url , class: 'btn btn-light pull-right'
