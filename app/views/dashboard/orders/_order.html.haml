@@ -103,7 +103,10 @@
                 = link_to dashboard_reviews_path do
                   %span.btn.gray= t 'orders.buttons.product_review'
 
+      - if order.payment_documents.length > 0
+        = t('dashboard.payment_documents.files_sent_to_me')
       - order.payment_documents.each do |pd|
         .payment-document
+          = pd.try(:payment_document_info).try(:document_requirement).try(:label)
           = link_to pd.file.file_name, pd.file.url, target: '_blank'
 
