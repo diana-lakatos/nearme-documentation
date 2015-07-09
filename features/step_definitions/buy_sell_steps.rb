@@ -45,12 +45,13 @@ When /^I add buy sell product to cart$/ do
 end
 
 Then /^The product should be included in my cart$/ do
+  wait_for_ajax
+  assert page.body.should have_content(@product.name)
   @order = @user.orders.first
   assert @order.present?
   assert_equal 1, @order.line_items.count
   @line_item = @order.line_items.first
   assert_equal 1, @line_item.quantity
-  assert page.body.should have_content(@product.name)
   assert page.should have_css("div.item-description")
 end
 
