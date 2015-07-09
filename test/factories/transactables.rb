@@ -42,7 +42,10 @@ FactoryGirl.define do
       fixed_price_cents 10000
       booking_type 'schedule'
       quantity 10
-      schedule
+      after(:create) do |listing|
+        listing.schedule = FactoryGirl.create(:simple_schedule, scheduable: listing)
+        listing.save!
+      end
     end
 
     trait :with_book_it_out do

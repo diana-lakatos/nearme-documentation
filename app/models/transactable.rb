@@ -230,8 +230,9 @@ class Transactable < ActiveRecord::Base
     if schedule_booking?
       hour = start_min/60
       minute = start_min - (60 * hour)
-      # to datetime is to have date in UTC otherwise we won't be able to check in IceCube schedule :|
-      self.schedule.schedule.occurs_at?("#{date} #{hour}:#{minute}".to_datetime.to_time.utc)
+      Time.zone = location.time_zone
+      self.schedule.schedule.occurs_at?(Time.zone.parse("#{date} #{hour}:#{minute}"))
+      Time.zone = "UTC"
     else
       availability.open_on?(:date => date, :start_minute => start_min, :end_minute => end_min)
     end

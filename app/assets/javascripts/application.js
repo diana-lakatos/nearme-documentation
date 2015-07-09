@@ -23,6 +23,7 @@
 //= require ./vendor/markerclusterer
 //= require ./vendor/icui
 //= require ./vendor/strftime
+//= require ./vendor/jstz
 //= require recurring_select
 //= require history_jquery
 //= require ./vendor/underscore

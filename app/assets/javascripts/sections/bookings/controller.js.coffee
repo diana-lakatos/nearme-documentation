@@ -308,5 +308,5 @@ class Bookings.Controller
       formatNoMatches: 'No dates found'
       escapeMarkup: (m) ->
         m
-    $(".select2-chosen").text(@fixedPriceSelectInit.text)
+    @container.find(".select2-chosen").text(@fixedPriceSelectInit.text)
     @fixedPriceSelect.trigger('change')

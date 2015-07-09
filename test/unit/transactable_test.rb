@@ -531,4 +531,14 @@ class TransactableTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context 'schedule booking timezone offset' do
+    should 'display occurrences including offset' do
+      location = FactoryGirl.create(:location, time_zone: "Pacific/Honolulu")
+      @transactable =  FactoryGirl.create(:transactable, :fixed_price, location: location)
+      @transactable_utc =  FactoryGirl.create(:transactable, :fixed_price)
+      refute @transactable.next_available_occurrences(1)[0][:text] == @transactable_utc.next_available_occurrences(1)[0][:text]
+      assert @transactable.next_available_occurrences(1)[0][:text].to_time.to_i < @transactable_utc.next_available_occurrences(1)[0][:text].to_time.to_i
+    end
+  end
 end

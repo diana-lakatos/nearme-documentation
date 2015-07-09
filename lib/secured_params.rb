@@ -855,6 +855,7 @@ class SecuredParams
       :location_type_id, :photos,
       :administrator_id, :name, :location_address,
       :availability_template_id,
+      :time_zone,
       availability_rules_attributes: nested(self.availability_rule),
       location_address_attributes: nested(self.address),
       listings_attributes: nested(self.transactable(transactable_type)),
