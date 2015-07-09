@@ -10,7 +10,7 @@ class CreateElbJob < Job
     b = NearMe::Balancer.new(certificate_body: @certificate_body,
                              name: @domain.to_dns_name,
                              private_key: @private_key,
-                             certificate_key: @certificate_chain)
+                             certificate_chain: @certificate_chain)
     begin
       b.create!
       @domain.elb_created!
