@@ -45,7 +45,7 @@ class LocationsController < ApplicationController
   def find_listing
     # tmp hack before migrating to Rails 4.1 - with deleted breaks default scope
     if params[:listing_id]
-      scope = @location.listings
+      scope = @location.listings.includes(:transactable_type).includes(:availability_rules)
       scope = scope.for_transactable_type_id(@transactable_type.id) if @transactable_type.present?
       @listing = scope.find(params[:listing_id])
     end
@@ -66,7 +66,7 @@ class LocationsController < ApplicationController
   end
 
   def find_listings
-    @listings = @location.listings
+    @listings = @location.listings.includes(:transactable_type).includes(:availability_rules)
     if @transactable_type.present?
       @listings = @listings.for_transactable_type_id(@transactable_type.id)
     else

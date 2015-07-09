@@ -18,7 +18,7 @@ gem 'raygun4ruby'
 gem 'liquid'
 gem 'active_model_serializers', '~> 0.8.1'
 gem 'carrierwave'
-gem 'devise', "~> 3.0.0"
+gem 'devise', '~> 3.0.0'
 
 gem 'aws-sdk', '1.27.0'
 
@@ -30,7 +30,7 @@ gem 'omniauth-instagram'
 
 gem 'koala', '~> 1.7.0rc1' # facebook Graph API
 gem 'linkedin-oauth2', '~> 0.1.1'
-gem 'twitter', "~> 5.5.1"
+gem 'twitter', '~> 5.5.1'
 # Installing instagram from the master branch will fix ruby 2.2 circular dependency warning
 gem 'instagram', github: '0tofu/instagram-ruby-gem', branch: 'master'
 
@@ -43,7 +43,7 @@ gem 'nearest_time_zone'
 gem 'sass', '~> 3.2.2'
 gem 'haml'
 gem 'le'
-gem 'mini_magick', "~> 4.0.1"
+gem 'mini_magick', '~> 4.0.1'
 gem 'money-rails', github: 'RubyMoney/money-rails'
 gem 'paranoia', '~> 2.0.0'
 gem 'simple_form', '~> 3.0.3'
@@ -70,12 +70,12 @@ gem 'rack-rewrite', :require => 'rack/rewrite'
 
 gem 'state_machine', '~> 1.2.0'
 gem 'will_paginate'
-gem "compass-rails", '1.1.7'
+gem 'compass-rails', '1.1.7'
 gem 'animate'
-gem "coffee-rails"
+gem 'coffee-rails'
 gem 'delayed_job_active_record', '~> 4.0.0'
 gem 'daemons'
-gem "rdiscount"
+gem 'rdiscount'
 gem 'attr_encrypted'
 gem 'stripe'
 gem 'paypal-sdk-rest'
@@ -84,14 +84,14 @@ gem 'balanced', '~> 0.8.1'
 gem 'braintree'
 gem 'faraday', '~> 0.8.6'
 gem 'friendly_id', '~> 5.0.4'
-gem "non-stupid-digest-assets"
+gem 'non-stupid-digest-assets'
 gem 'asset_sync'
 gem 'sass-rails', github: 'rails/sass-rails', branch: '4-0-stable'
 gem 'bootstrap-sass', '~> 2.3.1.0'
-gem "bootstrap-switch-rails"
+gem 'bootstrap-switch-rails'
 gem 'chronic', '~> 0.9.1'
 gem 'jcrop-rails', github: 'bukalapak/jcrop-rails'
-gem "js-routes"
+gem 'js-routes'
 
 gem 'unicorn'
 
@@ -113,12 +113,12 @@ gem 'twilio-ruby'
 gem 'googl'
 
 gem 'jquery-rails', '~> 3.1'
-gem "select2-rails"
+gem 'select2-rails'
 gem 'chosen-rails', '~> 1.2.0'
 gem 'spectrum-rails'
 
 gem 'inherited_resources', '~> 1.5.0'
-gem "historyjs-rails"
+gem 'historyjs-rails'
 
 gem 'ranked-model'
 
@@ -160,7 +160,7 @@ group :coverage do
 end
 
 group :assets do
-  gem 'uglifier', "~>2.1.0"
+  gem 'uglifier', '~>2.1.0'
 end
 
 group :development, :test, :staging do

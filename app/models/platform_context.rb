@@ -50,6 +50,7 @@ class PlatformContext
     if @@instance_view_cache_key[platform_context.instance.id] != get_instance_view_cache_key(platform_context.instance.id)
       @@instance_view_cache_key[platform_context.instance.id] = get_instance_view_cache_key(platform_context.instance.id)
       InstanceViewResolver.instance.clear_cache
+      InstanceViewResolver.instance.fast_recalculate_cache_key!
     end
   end
 

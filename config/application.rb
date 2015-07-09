@@ -140,6 +140,8 @@ module DesksnearMe
     config.middleware.insert_before(Rack::Sendfile, "LegacyRedirectHandler")
     # setting platform_context in app/models/platform_context/rack_setter.rb
     config.middleware.use "PlatformContext::RackSetter"
+    config.middleware.use Rack::Deflater
+
     config.mixpanel = (YAML.load_file(Rails.root.join("config", "mixpanel.yml"))[Rails.env] || {}).with_indifferent_access
     config.google_analytics = (YAML.load_file(Rails.root.join("config", "google_analytics.yml"))[Rails.env] || {}).with_indifferent_access
     config.near_me_analytics = (YAML.load_file(Rails.root.join("config", "near_me_analytics.yml"))[Rails.env] || {}).with_indifferent_access
@@ -176,5 +178,7 @@ module DesksnearMe
     config.run_jobs_in_background = true
     config.send_real_sms = false
     config.googl_api_key = nil
+
+    config.default_cache_expires_in = 5.minutes
   end
 end

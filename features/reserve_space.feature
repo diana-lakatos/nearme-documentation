@@ -85,12 +85,12 @@ Feature: A user can book at a space
       | the transactable | Monday | 2        |
 
   Scenario: Not logged in user is prompted to log in during booking flow
-     When I book space as new user for:
-          | Transactable     | Date         | Quantity  |
-          | the transactable | next week Monday  | 1         |
-          | the transactable | next week Tuesday | 1         |
-     Then user should have the transactable reserved for 'next week Monday'
-      And user should have the transactable reserved for 'next week Tuesday'
+    When I book space as new user for:
+      | Transactable     | Date         | Quantity  |
+      | the transactable | next week Monday  | 1         |
+      | the transactable | next week Tuesday | 1         |
+    Then user should have the transactable reserved for 'next week Monday'
+    And user should have the transactable reserved for 'next week Tuesday'
 
   Scenario: Hourly reserved listing can be booked
     Given the transactable is reserved hourly
