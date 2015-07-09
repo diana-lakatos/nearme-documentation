@@ -29,6 +29,13 @@ class Support::Ticket < ActiveRecord::Base
 
   accepts_nested_attributes_for :messages
 
+  def self.body_for_message(message)
+    part = message.multipart? ? message.parts[0] : message
+
+    match_data = part.content_type.match(/charset=(?<encoding>[\w\d-]+)/)
+    match_data ? part.body.to_s.force_encoding(match_data[:encoding]).encode('UTF-8') : part.body.to_s
+  end
+
   def verb
     (self.state + 'ed').humanize
   end
@@ -44,15 +51,6 @@ class Support::Ticket < ActiveRecord::Base
   def receive(message, params)
     from = message.from[0]
 
-    if message.multipart?
-      part = message.parts[0]
-    else
-      part = message
-    end
-
-    encoding = Array.wrap(part.content_type.split('charset=')).last || 'UTF-8'
-    body = part.body.to_s.force_encoding(encoding).encode('UTF-8')
-
     self.instance = PlatformContext.current.instance
     self.target = PlatformContext.current.instance
 
@@ -61,7 +59,7 @@ class Support::Ticket < ActiveRecord::Base
       ticket_message.email = from
       ticket_message.full_name = message[:from].display_names.first || 'Unknown'
       ticket_message.subject = message.subject.presence || '<no subject>'
-      ticket_message.message = body
+      ticket_message.message = self.class.body_for_message(message)
       ticket_message.instance_id = self.instance_id
       self.save!
       WorkflowStepJob.perform(WorkflowStep::SupportWorkflow::Created, ticket_message.id)
