@@ -19,7 +19,7 @@ class InstanceWizardController < ActionController::Base
   def create
     @instance = Instance.new(instance_params)
 
-    unless instance_params[:domains_attributes] && instance_params[:domains_attributes]["0"][:name]
+    unless @instance.domains.first.present?
       flash.now[:error] = "You must create a domain, e.g. your-market.near-me.com"
       render :new and return
     end

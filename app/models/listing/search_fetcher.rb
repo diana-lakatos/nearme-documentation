@@ -13,11 +13,11 @@ class Listing::SearchFetcher
   end
 
   def listings
-    @listings = filtered_listings.joins(:location).merge(filtered_locations)
+    @listings = filtered_listings.includes(:company).joins(:location).merge(filtered_locations)
   end
 
   def locations
-    @locations = filtered_locations.includes(:listings).merge(filtered_listings)
+    @locations = filtered_locations.includes(:company).includes(:listings).merge(filtered_listings)
   end
 
   private
@@ -32,7 +32,7 @@ class Listing::SearchFetcher
   end
 
   def filtered_listings
-    @listings_scope = Transactable.searchable.where(transactable_type_id: @filters[:transactable_type_id])
+    @listings_scope = Transactable.includes(:transactable_type).searchable.where(transactable_type_id: @filters[:transactable_type_id])
     @listings_scope = @listings_scope.filtered_by_price_types(@filters[:listing_pricing] & (Transactable::PRICE_TYPES + [:free]).map(&:to_s)) if @filters[:listing_pricing]
 
     (@filters[:custom_attributes] || {}).each do |field_name, values|

@@ -1022,6 +1022,9 @@ en:
       number_of_units: 'Number Of Units'
       not_bookable: 'Suggest date'
   search:
+    header:
+      list: "List"
+      map: "Map"
     list:
       additional_social_connections:
         one: 'Plus one more connection'

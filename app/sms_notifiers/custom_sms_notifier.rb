@@ -33,7 +33,8 @@ class CustomSmsNotifier < InstanceSmsNotifier
     {
       template_name: @workflow_alert.template_path,
       to: user.try(:full_mobile_number),
-      fallback: { email: user.try(:email) }
+      fallback: { email: user.try(:email) },
+      transactable_type_id: @step.transactable_type_id
     }
   end
 

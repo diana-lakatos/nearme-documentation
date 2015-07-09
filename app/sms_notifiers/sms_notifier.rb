@@ -74,8 +74,10 @@ class SmsNotifier < AbstractController::Base
 
   # Build the SMS Message to send
   def sms(options)
+    lookup_context.class.register_detail(:transactable_type_id) { nil }
     @platform_context = PlatformContext.current.decorate
     @template_path = options.fetch(:template_name, nil)
+    @transactable_type_id = options.fetch(:transactable_type_id, nil)
     options[:body] ||= render_message.try(:strip)
     @message = Message.new(options)
   end
@@ -83,6 +85,7 @@ class SmsNotifier < AbstractController::Base
   # Render the correct template with instance variables and
   # return the rendered template as a string.
   def render_message
+    lookup_context.transactable_type_id = @transactable_type_id
     render :template => template_path, :formats => [:text], :handlers => [:liquid]
   end
 
