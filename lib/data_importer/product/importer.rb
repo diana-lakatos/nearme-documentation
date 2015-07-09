@@ -80,13 +80,12 @@ class DataImporter::Product::Importer
       return
     end
     user = User.with_deleted.find_or_initialize_by(email: email) do |u|
-      user.restore! if user.deleted?
       password = SecureRandom.hex(8)
       @new_users[u.email] = password
       u.password = u.password_confirmation = password
       u.country_name = 'United States'
     end
-    user.update_column(:deleted_at, nil) unless user.deleted_at.nil?
+    user.restore! if user.deleted?
     user.assign_attributes(params)
 
     if user.new_record? && user.save
