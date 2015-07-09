@@ -1,8 +1,8 @@
 .content-container
-  %h4 Edit settings
+  %h4= t('instance_admin.blog.settings.edit_settings')
   - if @blog_instance.present?
     = simple_form_for @blog_instance, url: instance_admin_manage_blog_settings_path, html: { multipart: true } do |f|
       = render "form", f: f
   - else
-    %p Blog is not available.
+    %p= t('instance_admin.blog.settings.blog_not_available')
 

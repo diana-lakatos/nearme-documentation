@@ -5,14 +5,14 @@
       %table.table.sortable
         %thead
           %tr
-            %th Name
-            %th Created at
-            %th Published at
+            %th= t('instance_admin.blog.posts.name')
+            %th= t('instance_admin.blog.posts.created_at')
+            %th= t('instance_admin.blog.posts.published_at')
             %th
         %tbody
           - @blog_posts.each do |blog_post|
             = render 'index_row', blog_post: blog_post
 
 = content_for :header_buttons do
-  = link_to 'New post', new_instance_admin_manage_blog_post_path, class: 'pull-right btn btn-blue'
+  = link_to t('instance_admin.blog.posts.new_post'), new_instance_admin_manage_blog_post_path, class: 'pull-right btn btn-blue'
 

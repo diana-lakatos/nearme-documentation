@@ -3,17 +3,17 @@
     .row
       .table-container.col-xs-12
         - if @approval_request.message.present?
-          %h3 Written Verfication
+          %h3= t('instance_admin.manage.approval_requests.written_verification')
           %div= @approval_request.message
         - if @approval_request.approval_request_attachments.any?
-          %h3 Attachments
+          %h3= t('instance_admin.manage.approval_requests.attachments')
         %table.table.table-hover
           %thead
             %tr
               %th #
-              %th Label
-              %th File
-              %th Uploaded by
+              %th= t('instance_admin.manage.approval_requests.label')
+              %th= t('instance_admin.manage.approval_requests.file')
+              %th= t('instance_admin.manage.approval_requests.uploaded_by')
           %tbody
             - @approval_request.approval_request_attachments.each_with_index do |ara, index|
               %tr
@@ -29,7 +29,7 @@
           %thead
             %tr
               %th #
-              %th Name
+              %th= t('instance_admin.manage.approval_requests.name')
           %tbody
             - if Transactable === @approval_request.owner
               = render partial: 'listing_link', locals: { listing: @approval_request.owner, index: 0 }
@@ -45,5 +45,5 @@
         = f.collection_select :state_event, @approval_request.state_transitions, :event, :human_to_name, :include_blank => @approval_request.human_state_name
 
   = content_for :header_buttons do
-    = f.button :submit, 'Save', class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
+    = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
 

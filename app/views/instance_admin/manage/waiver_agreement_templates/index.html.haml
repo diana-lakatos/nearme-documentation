@@ -1,5 +1,5 @@
 .content-container
-  %h4 Manage Waiver Agreement Template
+  %h4= t('instance_admin.manage.waiver_agreements.manage_waiver_agreement_template')
 
   = simple_form_for [:instance_admin, :manage, @waiver_agreement_template], :html => { :multipart => true } do |f|
     .row
@@ -11,8 +11,8 @@
 
 
     = content_for :header_buttons do
-      = f.button :submit, 'Save', class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
+      = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
       - if @waiver_agreement_template.persisted?
-        = link_to 'Delete', instance_admin_manage_waiver_agreement_template_path(@waiver_agreement_template),
-            method: :delete, data: { confirm: 'Are you sure?' }
+        = link_to t('instance_admin.delete'), instance_admin_manage_waiver_agreement_template_path(@waiver_agreement_template),
+            method: :delete, data: { confirm: t('instance_admin.are_you_sure?') }
 

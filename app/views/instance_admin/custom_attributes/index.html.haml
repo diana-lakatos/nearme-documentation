@@ -4,10 +4,10 @@
       %table.table
         %thead
           %tr
-            %th Name
-            %th Search?
-            %th Public?
-            %th Internal?
+            %th= t('instance_admin.manage.custom_attributes.name')
+            %th= t('instance_admin.manage.custom_attributes.search')
+            %th= t('instance_admin.manage.custom_attributes.public')
+            %th= t('instance_admin.manage.custom_attributes.internal')
             %th
             %th
         %tbody
@@ -17,9 +17,9 @@
               %td= resource.searchable
               %td= resource.public
               %td= resource.internal
-              %td= link_to 'Edit', edit_polymorphic_url([:instance_admin, @controller_scope, @target, resource]), class: 'pull-right'
+              %td= link_to t('instance_admin.edit'), edit_polymorphic_url([:instance_admin, @controller_scope, @target, resource]), class: 'pull-right'
               - unless resource.required_internally?
-                %td= link_to "Delete", polymorphic_url([:instance_admin, @controller_scope, @target, resource]), :method => :delete, data: { confirm: 'Are you sure you want to delete this attribute?' }, :class => "pull-right"
+                %td= link_to t('instance_admin.delete'), polymorphic_url([:instance_admin, @controller_scope, @target, resource]), :method => :delete, data: { confirm: t('instance_admin.are_you_sure') }, :class => "pull-right"
 
 = content_for :header_buttons do
-  = link_to 'Add Attribute', new_polymorphic_url([:instance_admin, @controller_scope, @target, CustomAttributes::CustomAttribute.new]), class: 'pull-right btn btn-blue'
+  = link_to t('instance_admin.manage.custom_attributes.add_attribute'), new_polymorphic_url([:instance_admin, @controller_scope, @target, CustomAttributes::CustomAttribute.new]), class: 'pull-right btn btn-blue'

@@ -1,17 +1,17 @@
 .content-container
-  %h4 Manage Data Uploads for #{@importable.name}
+  %h4= t('instance_admin.manage.data_uploads.manage_data_uploads_for', name: @importable.name)
   .row
     .table-container.col-xs-12
       %table.table
         %thead
           %tr
-            %th File Name
-            %th State
+            %th= t('instance_admin.manage.data_uploads.file_name')
+            %th= t('instance_admin.manage.data_uploads.state')
             - if params[:service_type_id].present?
-              %th Data preview
-            %th Imported at
-            %th Created by
-            %th Created at
+              %th= t('instance_admin.manage.data_uploads.data_preview')
+            %th= t('instance_admin.manage.data_uploads.imported_at')
+            %th= t('instance_admin.manage.data_uploads.created_by')
+            %th= t('instance_admin.manage.data_uploads.created_at')
         %tbody
           - @data_uploads.each do |resource|
             %tr
@@ -28,6 +28,6 @@
         = will_paginate @data_uploads
 
 = content_for :header_buttons do
-  = link_to 'Download CSV Template', {action: :download_csv_template}, class: 'pull-right btn btn-blue'
-  = link_to 'New Data Upload', {action: :new}, class: 'pull-right btn btn-blue'
+  = link_to t('instance_admin.manage.data_uploads.download_csv_template'), {action: :download_csv_template}, class: 'pull-right btn btn-blue'
+  = link_to t('instance_admin.manage.data_uploads.new_data_upload'), {action: :new}, class: 'pull-right btn btn-blue'
 

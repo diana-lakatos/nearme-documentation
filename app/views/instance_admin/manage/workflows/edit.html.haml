@@ -1,4 +1,4 @@
 .content-container
-  %h4 Edit #{resource.name}
+  %h4= t('instance_admin.edit_object', object_name: resource.name)
   = render :partial => "form"
 

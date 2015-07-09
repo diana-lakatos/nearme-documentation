@@ -4,18 +4,18 @@
     .text-container
       %p
         - if @data_upload.imported_at.nil?
-          Your data has been processed, however nothing has been imported yet! You can #{link_to "preview xml", @data_upload.xml_file.url, target: :blank} that will be imported.
+          = t('instance_admin.manage.data_uploads.your_data_has_been_processed', href: link_to(t('instance_admin.manage.data_uploads.preview_the_xml'), @data_upload.xml_file.url, target: :blank)).html_safe
         - elsif @data_upload.parsing_result_log.blank?
-          Parsing has been scheduled, job is waiting in the queue.
+          = t('instance_admin.manage.data_uploads.parsing_has_been_scheduled')
         - elsif @data_upload.encountered_error.blank?
-          %h2 Data has been imported.
-          %p New entities: #{@data_upload.parse_summary[:new].map { |k, v| "#{k.to_s.humanize}: #{v}"}.sort.join(', ')}
-          %p Updated entities: #{@data_upload.parse_summary[:updated].map { |k, v| "#{k.to_s.humanize}: #{v}"}.sort.join(', ')}
+          %h2= t('instance_admin.manage.data_uploads.data_has_been_imported')
+          %p= "#{t('instance_admin.manage.data_uploads.new_entities')}: #{@data_upload.parse_summary[:new].map { |k, v| "#{k.to_s.humanize}: #{v}"}.sort.join(', ')}"
+          %p= "#{t('instance_admin.manage.data_uploads.updated_entities')}: #{@data_upload.parse_summary[:updated].map { |k, v| "#{k.to_s.humanize}: #{v}"}.sort.join(', ')}"
           - if @data_upload.parsing_result_log
-            %p Errors and warnings encountered:
+            %p= "#{t('instance_admin.manage.data_uploads.errors_and_warnings_encountered')}:"
             %textarea{disabled: 'disabled', style: "width: 98%", rows: 10}= @data_upload.parsing_result_log
           - else
-            No validation errors encountered.
+            = t('instance_admin.manage.data_uploads.no_validation_errors')
         - else
-          Data has not been imported due to error during processing. Please verify that #{link_to "preview xml", @data_upload.xml_file.url, target: :blank} is correct.
+          = t('instance_admin.manage.data_uploads.data_has_not_been_imported', href: link_to(t('instance_admin.manage.data_uploads.preview_xml'), @data_upload.xml_file.url, target: :blank)).html_safe
 

@@ -4,7 +4,7 @@
       %table.table
         %tbody
           %tr
-            %th Template
+            %th= t('instance_admin.manage.sms_templates.template')
             %th
             %th
             %th
@@ -15,21 +15,21 @@
               %td= sms_template.transactable_type.try(:name)
               %td
                 .pull-right
-                  = link_to 'Edit', edit_instance_admin_manage_sms_template_path(sms_template)
+                  = link_to t('instance_admin.edit'), edit_instance_admin_manage_sms_template_path(sms_template)
               %td
                 .pull-right
-                  = link_to 'Destroy', instance_admin_manage_sms_template_path(sms_template), method: :delete,
-                      data: { confirm: 'Are you sure?' }
+                  = link_to t('instance_admin.destroy'), instance_admin_manage_sms_template_path(sms_template), method: :delete,
+                      data: { confirm: t('instance_admin.are_you_sure') }
 
 .content-container
-  %h4 Customize default
+  %h4= t('instance_admin.manage.sms_templates.customize_default')
   .row
     .table-container.col-xs-12
       %table.table
         %tbody
           %tr
-            %th Template
-            %th Customize
+            %th= t('instance_admin.manage.sms_templates.template')
+            %th= t('instance_admin.manage.sms_templates.customize')
 
           - @not_customized_sms_templates_paths.each do |sms_template_path|
             %tr
@@ -38,5 +38,5 @@
 
 
 = content_for :header_buttons do
-  = link_to 'Add Sms Template', new_instance_admin_manage_sms_template_path, class: 'pull-right btn btn-blue'
+  = link_to t('instance_admin.manage.sms_templates.add_sms_template'), new_instance_admin_manage_sms_template_path, class: 'pull-right btn btn-blue'
 

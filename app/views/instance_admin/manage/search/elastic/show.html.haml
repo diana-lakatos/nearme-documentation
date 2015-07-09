@@ -4,7 +4,7 @@
   = simple_form_for @instance, url: instance_admin_manage_search_elastic_path, method: :put, html: { multipart: true } do |f|
   
     %h4.control-label
-      %b Last index status
+      %b= t('instance_admin.manage.search.elastic_search.last_index_status')
     
     .row
       .input-container.col-xs-6
@@ -14,4 +14,4 @@
     %hr
   
     = content_for :header_buttons do
-      = f.button :submit, 'Perform re-index', class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }  
+      = f.button :submit, t('instance_admin.manage.search.elastic_search.perform_reindex'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }  

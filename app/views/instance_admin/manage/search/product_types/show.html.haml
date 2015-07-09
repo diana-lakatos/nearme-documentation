@@ -1,7 +1,7 @@
 .content-container
   = render partial: 'instance_admin/manage/search/tabs', locals: {tab: :products}
   
-  %h4 Products Custom Search
+  %h4= t('instance_admin.manage.search.products_search.products_custom_search')
   %br
   
   .services
@@ -19,7 +19,7 @@
             %ul
               %li
                 %a{'data-product-type-custom-attributes' => "#product_type_#{product_type.id}_custom_attributes", class: "product_type_custom_attributes", href: '#'}
-                  Custom Attributes
+                  = t('instance_admin.manage.search.custom_attributes.custom_attributes')
                   %span.caret
           %div{id: "product_type_#{product_type.id}_custom_attributes"}
             = render partial: 'instance_admin/manage/search/custom_attributes', locals: {product_type: product_type, custom_attributes: product_type.custom_attributes.order('internal, name'), target_type: product_type}

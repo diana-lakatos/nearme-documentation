@@ -4,8 +4,8 @@
       %table.table
         %tbody
           %tr
-            %th Template
-            %th Format
+            %th= t('instance_admin.manage.email_layouts.template')
+            %th= t('instance_admin.manage.email_layouts.format')
             %th
             %th
             %th
@@ -17,22 +17,22 @@
               %td= email_layout_template.transactable_type.try(:name)
               %td
                 .pull-right
-                  = link_to 'Edit', edit_instance_admin_manage_email_layout_template_path(email_layout_template)
+                  = link_to t('instance_admin.edit'), edit_instance_admin_manage_email_layout_template_path(email_layout_template)
               %td
                 .pull-right
-                  = link_to 'Destroy', instance_admin_manage_email_layout_template_path(email_layout_template),
-                      method: :delete, data: { confirm: 'Are you sure?' }
+                  = link_to t('instance_admin.destroy'), instance_admin_manage_email_layout_template_path(email_layout_template),
+                      method: :delete, data: { confirm: t('instance_admin.are_you_sure') }
 
 .content-container
-  %h4 Customize default
+  %h4= t('instance_admin.manage.email_layouts.customize_default')
 
   .row
     .table-container.col-xs-12
       %table.table
         %tbody
           %tr
-            %th Template
-            %th{colspan: 2} Customize
+            %th= t('instance_admin.manage.email_layouts.template')
+            %th{colspan: 2}= t('instance_admin.manage.email_layouts.customize')
 
           - @not_customized_email_template_layouts_paths.each do |email_layout_template_path, formats|
             - next if formats.count == 2
@@ -42,5 +42,5 @@
                 %td= link_to format, new_instance_admin_manage_email_layout_template_path(path: email_layout_template_path, email_format: format)
 
 = content_for :header_buttons do
-  = link_to 'Add Email Layout Template', new_instance_admin_manage_email_layout_template_path, class: 'pull-right btn btn-blue'
+  = link_to t('instance_admin.manage.email_layouts.add_email_layout_template'), new_instance_admin_manage_email_layout_template_path, class: 'pull-right btn btn-blue'
 

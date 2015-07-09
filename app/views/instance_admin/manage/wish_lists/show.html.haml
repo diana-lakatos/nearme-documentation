@@ -1,5 +1,5 @@
 .content-container
-  %h4 Wishlist
+  %h4= t('instance_admin.manage.wishlists.wishlists')
 
   = simple_form_for @instance, url: instance_admin_manage_wish_lists_path, method: :put, html: { multipart: true } do |f|
     .row
