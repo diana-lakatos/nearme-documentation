@@ -19,10 +19,10 @@
         .row-fluid
           .span12
             .list-map-toggle.span2
-              %a.list{ href: search_path(params.merge(v: 'list')), class: active_class(result_view, 'list'), title: 'List' }
-                List
-              %a.map{ href: search_path(params.merge(v: platform_context.map_view)), class: active_class(result_view, platform_context.map_view), title: 'Map' }
-                Map
+              %a.list{ href: search_path(params.merge(v: 'list')), class: active_class(result_view, 'list'), title: t('search.header.list') }
+                = t('search.header.list')
+              %a.map{ href: search_path(params.merge(v: platform_context.map_view)), class: active_class(result_view, platform_context.map_view), title: t('search.header.map') }
+                = t('search.header.map')
             .geolocation-input{ :class => (platform_context.fulltext_geo_search? ? 'span3' : 'span6')}
               .geolocation
                 %span.ico-crosshairs
