@@ -103,7 +103,7 @@ Spree::Product.class_eval do
   end
 
   def administrator
-    super.presence || user
+    super.presence || User.with_deleted.find_by(id: user_id)
   end
 
   def administrator_location

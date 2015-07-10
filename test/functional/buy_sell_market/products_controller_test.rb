@@ -20,6 +20,23 @@ class BuySellMarket::ProductsControllerTest < ActionController::TestCase
         get :show, id: @product
       end
     end
+
+    context 'no user' do
+      should 'render user info even if deleted' do
+        @user = @product.administrator
+        @user.destroy
+        get :show, id: @product
+        assert_select 'h1', @product.name
+        assert_select '.vendor-info h2', @user.name
+        assert_response :success
+      end
+      should 'render show even if user is hard-deleted' do
+        @product.administrator.delete
+        get :show, id: @product
+        assert_select 'h1', @product.name
+        assert_response :success
+      end
+    end
   end
 
 end
