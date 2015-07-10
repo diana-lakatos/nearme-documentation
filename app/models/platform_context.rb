@@ -46,16 +46,18 @@ class PlatformContext
     Spree::Product.clear_custom_attributes_cache
     I18N_DNM_BACKEND.set_instance_id(platform_context.instance.id) if defined? I18N_DNM_BACKEND
     I18n.locale = platform_context.instance.primary_locale
-    @@instance_view_cache_key[platform_context.instance.id] ||= get_instance_view_cache_key(platform_context.instance.id)
-    if @@instance_view_cache_key[platform_context.instance.id] != get_instance_view_cache_key(platform_context.instance.id)
-      @@instance_view_cache_key[platform_context.instance.id] = get_instance_view_cache_key(platform_context.instance.id)
+    instance_view_cache_key = get_instance_view_cache_key(platform_context.instance.id)
+    @@instance_view_cache_key[platform_context.instance.id] ||= instance_view_cache_key
+    if @@instance_view_cache_key[platform_context.instance.id] != instance_view_cache_key
+      @@instance_view_cache_key[platform_context.instance.id] = instance_view_cache_key
       InstanceViewResolver.instance.clear_cache
-      InstanceViewResolver.instance.fast_recalculate_cache_key!
+      # we will need to change place of this - we will invoke this N times, where N is number of servers, but we need only once as this is stored in DB
+      platform_context.instance.fast_recalculate_cache_key!
     end
   end
 
   def self.get_instance_view_cache_key(instance_id)
-    @instance_view_cache_key ||= InstanceView.where(instance_id: instance_id).group(:instance_id).pluck('count(*), max(updated_at)').join('-')
+    InstanceView.where(instance_id: instance_id).group(:instance_id).pluck('count(*), max(updated_at)').join('-')
   end
 
   def self.scope_to_instance
