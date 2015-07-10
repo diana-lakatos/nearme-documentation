@@ -8,13 +8,14 @@ module SearcherHelper
   end
 
   def find_transactable_type
-    if params[:buyable] == "true"
-      @transactable_type = params[:transactable_type_id].present? ? Spree::ProductType.find(params[:transactable_type_id]) : Spree::ProductType.first
-    else
-      @transactable_type = params[:transactable_type_id].present? ? TransactableType.find(params[:transactable_type_id]) : TransactableType.first
-    end
+    @transactable_type = TransactableType.find(params[:transactable_type_id]) if params[:transactable_type_id].present?
+    @transactable_type ||= (params[:buyable] == 'true' ?  Spree::ProductType.first : ServiceType.first)
     params[:transactable_type_id] ||= @transactable_type.try(:id)
-    @transactable_type
+
+    if @transactable_type.blank?
+      flash[:error] = t('flash_messages.search.missing_transactable_type')
+      redirect_to root_path
+    end
   end
 
   def instantiate_searcher(transactable_type, params)
