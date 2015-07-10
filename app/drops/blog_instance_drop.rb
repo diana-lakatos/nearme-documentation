@@ -34,7 +34,7 @@ class BlogInstanceDrop < BaseDrop
 
   # check if header_text is present
   def header_text_present?
-    @blog.header_text.present? 
+    @blog.header_text.present?
   end
 
   # check if header_motto is present

@@ -20,6 +20,10 @@ class BlogInstance < ActiveRecord::Base
     Instance === owner ? owner : nil
   end
 
+  def meta_description
+    [name, header_text, header_motto].reject(&:empty?).join(' - ')
+  end
+
   def to_liquid
     BlogInstanceDrop.new(self)
   end
