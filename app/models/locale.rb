@@ -17,6 +17,8 @@ class Locale < ActiveRecord::Base
   after_destroy :check_user_settings
   after_create :create_tranlsation_keys_for_categories
 
+  include Cacheable
+
   scope :by_created_at, -> { order('created_at ASC') }
 
   def self.remove_locale_from_url(url)
@@ -86,4 +88,5 @@ class Locale < ActiveRecord::Base
   def check_user_settings
     instance.users.where(language: code).update_all(language: instance.primary_locale)
   end
+
 end
