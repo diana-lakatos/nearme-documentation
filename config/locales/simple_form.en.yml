@@ -30,6 +30,8 @@ en:
           price: 'Price'
           quantity: 'Quantity'
           shipping_category_id: 'Shipping category'
+      product_form:
+        action_rfq: "Enable request for quote"
       instance:
         mark_as_locked: "Lock admin settings"
         name: "Marketplace Name"
