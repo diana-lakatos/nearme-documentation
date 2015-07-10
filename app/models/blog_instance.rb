@@ -21,7 +21,7 @@ class BlogInstance < ActiveRecord::Base
   end
 
   def meta_description
-    [name, header_text, header_motto].reject(&:empty?).join(' - ')
+    [name, header_text, header_motto].reject(&:blank?).join(' - ')
   end
 
   def to_liquid
