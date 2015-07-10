@@ -14,6 +14,7 @@ class Translation < ActiveRecord::Base
   validates :value, presence: true, on: :instance_admin
   validate :key_format, on: :instance_admin
 
+  include Cacheable
 
   def key_format
     if key.match /[!@#$%^&*()\-+:\/'";,?}{\[\]\\<>\|=±`~§]|\s/
