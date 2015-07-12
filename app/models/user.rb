@@ -656,10 +656,6 @@ class User < ActiveRecord::Base
     companies.first.try(:valid?) && !(has_draft_listings || has_draft_products)
   end
 
-  def has_draft_products
-    companies.any? && companies.first.products.any? && !companies.first.products.first.valid?
-  end
-
   def has_any_active_products
     companies.any? && companies.first.products.not_draft.any?
   end
