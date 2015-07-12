@@ -17,7 +17,7 @@ class InstanceAdmin::Analytics::OverviewControllerTest < ActionController::TestC
       get :show
       assert_response :success
       assert_equal(
-        [{"listings_count"=>1, "listing_date"=>Date.today, "transactable_type_id"=>TransactableType.first.id, "id"=> nil}].to_json,
+        [{"id"=> nil, "transactable_type_id"=>TransactableType.first.id, "listings_count"=>1, "listing_date"=>Date.today}].to_json,
         assigns(:last_month_listings).map(&:attributes).to_json
       )
     end

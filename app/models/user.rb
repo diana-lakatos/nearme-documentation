@@ -1,4 +1,7 @@
 class User < ActiveRecord::Base
+
+  include Spree::UserPaymentSource
+
   has_paper_trail ignore: [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
                            :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
                            :unlock_token, :locked_at, :google_analytics_id, :browser, :browser_version, :platform,
@@ -42,8 +45,8 @@ class User < ActiveRecord::Base
   has_many :industries, through: :user_industries
   has_many :instance_admins, foreign_key: 'user_id', dependent: :destroy
   has_many :listings, through: :locations, class_name: 'Transactable', inverse_of: :creator
-  has_many :listing_reservations, through: :listings, source: :reservations, inverse_of: :creator
-  has_many :listing_recurring_bookings, through: :listings, source: :recurring_bookings, inverse_of: :creator
+  has_many :listing_reservations, class_name: 'Reservation', through: :listings, source: :reservations, inverse_of: :creator
+  has_many :listing_recurring_bookings, class_name: 'RecurringBooking', through: :listings, source: :recurring_bookings, inverse_of: :creator
   has_many :locations, through: :companies, inverse_of: :creator
   has_many :mailer_unsubscriptions
   has_many :orders, foreign_key: :user_id, class_name: 'Spree::Order'
@@ -170,8 +173,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  devise :database_authenticatable, :registerable, :recoverable,
-    :rememberable, :trackable, :user_validatable, :token_authenticatable, :temporary_token_authenticatable
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable,
+    :user_validatable, :token_authenticatable, :temporary_token_authenticatable
 
   attr_accessor :phone_required, :country_name_required, :skip_password, :verify_identity, :mobile_number_required, :last_name_required
 
@@ -749,6 +752,11 @@ class User < ActiveRecord::Base
 
   def reviews_about_buyer
     Review.about_buyer(self)
+  end
+
+  def ensure_authentication_token!
+    ensure_authentication_token
+    save(validate: false)
   end
 
   private

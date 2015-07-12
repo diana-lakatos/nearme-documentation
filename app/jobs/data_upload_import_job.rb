@@ -22,7 +22,7 @@ class DataUploadImportJob < Job
         @validation_errors_tracker.to_s.blank? && @data_upload.parsing_result_log.present? ? @data_upload.finish : @data_upload.finish_with_validation_errors
       rescue
         @data_upload.encountered_error = "#{$!.inspect}\n\n#{$@[0..5]}"
-        @data_upload.fail
+        @data_upload.failure
       ensure
         unless @data_upload.parsing_result_log.blank?
           @data_upload.parsing_result_log << "\n" << @validation_errors_tracker.to_s

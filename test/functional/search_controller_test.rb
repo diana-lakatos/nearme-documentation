@@ -97,7 +97,6 @@ class SearchControllerTest < ActionController::TestCase
             filtered_listing_type = "Desk"
             another_listing_type = "Meeting Room"
             service_type = ServiceType.first || FactoryGirl.create(:transactable_type_listing)
-            service_type.custom_attributes << FactoryGirl.create(:custom_attribute, :listing_types)
             filtered_auckland = FactoryGirl.create(:listing_in_auckland, transactable_type: service_type, properties: { listing_type: filtered_listing_type }).location
             another_auckland = FactoryGirl.create(:listing_in_auckland, transactable_type: service_type, properties: { listing_type: another_listing_type }).location
 

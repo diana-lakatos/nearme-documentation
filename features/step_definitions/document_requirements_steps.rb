@@ -20,7 +20,7 @@ And /^Fill in form for another document requirement for product$/ do
 end
 
 And /^Document requirement for transactable exists$/ do
-  @document_requirement = FactoryGirl.create(:document_requirement, 
+  @document_requirement = FactoryGirl.create(:document_requirement,
     label: "Passport", description: "Provide your passport", item: listing)
 end
 
@@ -37,7 +37,7 @@ And /^Updated document requirement should be present in form$/ do
 end
 
 And /^Updated document requirement should be present in product form$/ do
-  assert_document_requirement_data("product_form")  
+  assert_document_requirement_data("product_form")
 end
 
 And /^Two document requirements should be present in form$/ do

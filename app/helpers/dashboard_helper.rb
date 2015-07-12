@@ -101,4 +101,13 @@ module DashboardHelper
         || (content && transactable.booking_type.in?(%w(overnight recurring)) && booking_type.include?('regular'))
     end
   end
+
+  def currency_options
+    currencies = ::Money::Currency.table.map do |code, details|
+      iso = details[:iso_code]
+      [iso, "#{details[:name]} (#{iso})"]
+    end
+    options_from_collection_for_select(currencies, :first, :last, Spree::Config[:currency])
+  end
+
 end

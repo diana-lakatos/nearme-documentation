@@ -5,7 +5,7 @@ class ShippingCategoryForm < Form
   validates :name, presence: true, length: {minimum: 3}
   validate :validate_shipping_methods, :list_of_countries_or_states_cannot_be_empty
 
-  def_delegators :'@shipping_category', :shipping_methods, :name, :name=
+  delegate :shipping_methods, :name, :name=, to: :@shipping_category
 
   def initialize(shipping_category, options = {})
     @shipping_category = shipping_category

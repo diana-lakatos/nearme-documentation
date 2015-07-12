@@ -4,5 +4,5 @@
 
 <p>Click the link below to unlock your account:</p>
 
-<p><%= link_to 'Unlock my account', unlock_url(@resource, :unlock_token => @resource.unlock_token, host: PlatformContext.current.domain.try(:name) || ActionMailer::Base.default_url_options[:host]) %></p>
+<p><%= link_to 'Unlock my account', unlock_url(@resource, :unlock_token => @token, host: PlatformContext.current.domain.try(:name) || ActionMailer::Base.default_url_options[:host]) %></p>
 

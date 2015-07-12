@@ -2,7 +2,7 @@ class BoardingForm < Form
 
   attr_accessor :product_form, :company, :user, :user_attributes, :company_attributes
 
-  def_delegators :@product, :draft?
+  delegate :draft?, to: :@product
 
   # Validations:
 

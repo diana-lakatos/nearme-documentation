@@ -46,7 +46,7 @@ class BuySell::CheckoutService
           if document.last['id'].present?
             Attachable::PaymentDocument.find_by(id: document.last['id']).update_attributes(document.last)
           else
-            @order.payment_documents.create(document.last)
+            @order.payment_documents.create(document.last.to_hash)
           end
         end
       end

@@ -20,5 +20,7 @@ class VersionRegenerationJob < Job
     if @object.is_a?(Photo) && @object.listing.present?
       @object.listing_populate_photos_metadata!
     end
+  rescue ActiveRecord::RecordNotFound
+    # photo was deleted
   end
 end

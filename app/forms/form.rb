@@ -1,5 +1,4 @@
 class Form
-  extend Forwardable
 
   extend ActiveModel::Naming
   include ActiveModel::Conversion
@@ -20,6 +19,10 @@ class Form
     end
   end
 
+  def persisted?
+    false
+  end
+
   private
 
   def add_errors(errors_messages, attribute = :base)
@@ -36,9 +39,5 @@ class Form
 
   def has_error?(attribute = :base)
     errors.include?(attribute)
-  end
-
-  def persisted?
-    false
   end
 end

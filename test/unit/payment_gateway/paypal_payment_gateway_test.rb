@@ -19,7 +19,7 @@ class PaymentGateway::PaypalPaymentGatewayTest < ActiveSupport::TestCase
   context 'payout' do
 
     setup do
-      @merchant_account = FactoryGirl.create(:merchant_account, payment_gateway: @paypal_processor, merchantable: FactoryGirl.create(:company), data: { email: 'receiver@example.com' })
+      @merchant_account = FactoryGirl.create(:paypal_merchant_account, payment_gateway: @paypal_processor, merchantable: FactoryGirl.create(:company), data: { email: 'receiver@example.com' })
       @company = @merchant_account.merchantable
     end
 

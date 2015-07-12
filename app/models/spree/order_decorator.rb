@@ -1,4 +1,11 @@
 Spree::Order.class_eval do
+
+  const_set(:PAYMENT_METHODS,
+    :credit_card => 'credit_card',
+    :nonce       => 'nonce',
+    :manual      => 'manual',
+  )
+
   include Spree::Scoper
 
   belongs_to :company, -> { with_deleted }
@@ -52,7 +59,7 @@ Spree::Order.class_eval do
     :manual      => 'manual',
   }
 
-  validates_inclusion_of :payment_method, in: PAYMENT_METHODS.values, allow_nil: true
+  validates_inclusion_of :payment_method, in: const_get(:PAYMENT_METHODS).values, allow_nil: true
   validate :validate_credit_card, if: Proc.new {|o| o.payment? && o.credit_card_payment? }
 
   def validate_credit_card
@@ -79,9 +86,7 @@ Spree::Order.class_eval do
   end
 
   def create_pending_payment!
-    p = payments.build(amount: total_amount_to_charge, company_id: company_id)
-    p.pend
-    p.save!
+    payments.create(amount: total_amount_to_charge, company_id: company_id)
   end
 
   def create_failed_payment!
@@ -260,9 +265,9 @@ Spree::Order.class_eval do
   end
 
   def after_cancel
-    shipments.each { |shipment| shipment.cancel! }
-    payments.completed.each { |payment| payment.cancel! }
-    near_me_payments.each {|payment| payment.refund }
+    shipments.each(&:cancel!)
+    payments.completed.each(&:cancel!)
+    near_me_payments.each(&:refund)
     WorkflowStepJob.perform(WorkflowStep::OrderWorkflow::Cancelled, id)
     self.update!
   end

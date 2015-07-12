@@ -150,21 +150,21 @@ class CustomMailerTest < ActiveSupport::TestCase
       should 'email to unsubscribed lister' do
         WorkflowAlert.stubs(:find).returns(stub(@default_hash.merge(recipient_type: 'lister')))
         @lister.update_attribute(:accept_emails, false)
-        mail = CustomMailer.custom_mail(@step, 1)
+        mail = CustomMailer.custom_mail(@step, 1).message
         assert_kind_of ActionMailer::Base::NullMail, mail
       end
 
       should 'email to unsubscribed enquirer' do
         WorkflowAlert.stubs(:find).returns(stub(@default_hash.merge(recipient_type: 'enquirer')))
         @enquirer.update_attribute(:accept_emails, false)
-        mail = CustomMailer.custom_mail(@step, 1)
+        mail = CustomMailer.custom_mail(@step, 1).message
         assert_kind_of ActionMailer::Base::NullMail, mail
       end
 
       should 'email to hardcoded email if user exists and is unsubscribed' do
         WorkflowAlert.stubs(:find).returns(stub(@default_hash.merge(to: 'some_user@example.com')))
         FactoryGirl.create(:user, email: 'some_user@example.com', accept_emails: false)
-        mail = CustomMailer.custom_mail(@step, 1)
+        mail = CustomMailer.custom_mail(@step, 1).message
         assert_kind_of ActionMailer::Base::NullMail, mail
       end
     end
@@ -207,9 +207,9 @@ class CustomMailerTest < ActiveSupport::TestCase
     end
 
     should 'create correct log entry for sms' do
-      WorkflowAlert.stubs(:find).returns(stub(default_hash))
+      WorkflowAlert.stubs(:find).returns(stub(default_hash.merge(from: 'ghost@example.com')))
       WorkflowAlertLogger.any_instance.expects(:db_log!)
-      CustomMailer.custom_mail(@step, 1)
+      CustomMailer.custom_mail(@step, 1).deliver
     end
 
     teardown do
