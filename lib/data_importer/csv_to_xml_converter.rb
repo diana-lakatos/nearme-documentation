@@ -165,7 +165,7 @@ class DataImporter::CsvToXmlConverter
   end
 
   def new_company?
-    if @last_company != @hash[:company][:external_id]
+    if !@hash[:company][:external_id] || @last_company != @hash[:company][:external_id]
       @last_company = @hash[:company][:external_id]
       @last_location = nil
       @last_listing = nil
@@ -177,7 +177,7 @@ class DataImporter::CsvToXmlConverter
   end
 
   def new_listing?
-    if @last_listing != @hash[:listing][:external_id]
+    if !@hash[:listing][:external_id] || @last_listing != @hash[:listing][:external_id]
       @last_listing = @hash[:listing][:external_id]
       true
     else
@@ -186,7 +186,7 @@ class DataImporter::CsvToXmlConverter
   end
 
   def new_user?
-    if @last_user != @hash[:user][:email]
+    if !@hash[:user][:email] || @last_user != @hash[:user][:email]
       @last_user = @hash[:user][:email]
       true
     else
