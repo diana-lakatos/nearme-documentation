@@ -7,7 +7,7 @@ class SmsNotifier::Message
 
   class DummyTwilioClient
     def initialize(key, secret)
-      @key = key,
+      @key = key
       @secret = secret
     end
 
@@ -18,6 +18,12 @@ class SmsNotifier::Message
   end
 
   SMS_SIZE = 160
+  # see https://www.twilio.com/docs/errors/reference for details
+  # 21407: This Phone Number type does not support SMS or MMS
+  # 21421: PhoneNumber is invalid
+  # 21601: Phone number is not a valid SMS-capable/MMS-capable inbound phone number
+  # 21614: 'To' number is not a valid mobile number
+  ERROR_CODES_FOR_FALLBACK = [21407, 21421, 21601, 21614].freeze
 
   def initialize(data)
     @data = data.reverse_merge(from: from_number)
@@ -48,23 +54,35 @@ class SmsNotifier::Message
   end
 
   def deliver
-    return if twilio_client.nil?
-    validate!
-
-    begin
-      send_twilio_message
-    rescue Twilio::REST::RequestError => e
-      # TODO: use codes instead of messages
-      if e.message.include?('is not a valid phone number') || e.message.include?('is not a mobile number')
-        fallback_user.notify_about_wrong_phone_number if fallback_user.present?
-      else
-        raise e
+    if valid?
+      begin
+        send_twilio_message
+        return true
+      rescue Twilio::REST::RequestError => e
+        if should_fallback_to_email?(e.code)
+          # if error code is caused by malfromed phone number, notify user via email if possible
+          fallback_user.notify_about_wrong_phone_number if fallback_user.present?
+        else
+          # notify MPO about some kind of twilio issue and re-raise error to re-try background job
+          Rails.application.config.marketplace_error_logger.log_issue(
+            MarketplaceErrorLogger::BaseLogger::SMS_ERROR,
+            "#{e.message} (error code=#{e.code}; to number=#{@data[:to]})",
+            raise: true
+          )
+        end
+        return false
       end
+    else
+      return false
     end
   end
   alias_method :deliver!, :deliver
 
   private
+
+  def should_fallback_to_email?(code)
+    ERROR_CODES_FOR_FALLBACK.include?(code)
+  end
 
   def twilio_client
     @twilio_client ||= build_twilio_client
@@ -80,8 +98,15 @@ class SmsNotifier::Message
 
   end
 
-  def validate!
-    raise SmsNotifier::Message::TooLong.new("SMS size is too long (#{@data[:body].size}) - #{@data[:body]}") if @data[:body].size > SMS_SIZE
+  def valid?
+    if twilio_client.nil?
+      false
+    elsif @data[:body].size > SMS_SIZE
+      Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::SMS_ERROR, "Body size is longer than #{SMS_SIZE} - #{@data[:body]} (#{@data[:body].size} characters)")
+      false
+    else
+      true
+    end
   end
 
   def send_twilio_message
@@ -102,7 +127,7 @@ class SmsNotifier::Message
 
   def raise_error_if_config_invalid
     if config[:key].blank? || config[:secret].blank? || config[:from].blank?
-      raise SmsNotifier::Message::InvalidTwilioConfig.new("Missing key or secret: #{config.inspect}")
+      Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::SMS_ERROR, "Twilio configuration is missing key, secret or from number")
     end
   end
 

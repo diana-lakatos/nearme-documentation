@@ -42,12 +42,6 @@ class CustomSmsNotifierTest < ActiveSupport::TestCase
       assert_equal @render_response, sms.body
     end
 
-
-    should 'use logger instead of db by default for test' do
-      WorkflowAlertLogger.any_instance.expects(:db_log!).never
-      CustomSmsNotifier.custom_sms(@step , 1)
-    end
-
     context 'association with transactable type' do
       setup do
         @transactable_type = FactoryGirl.create(:transactable_type)
@@ -64,23 +58,6 @@ class CustomSmsNotifierTest < ActiveSupport::TestCase
         sms = CustomSmsNotifier.custom_sms(@step , 1)
         assert_equal @render_response, sms.body
       end
-    end
-
-  end
-
-  context 'logger' do
-
-    setup do
-      WorkflowAlertLogger.setup { |config| config.logger_type = :db }
-    end
-
-    should 'create correct log entry for sms' do
-      WorkflowAlertLogger.any_instance.expects(:db_log!)
-      CustomSmsNotifier.custom_sms(@step , 1)
-    end
-
-    teardown do
-      WorkflowAlertLogger.setup { |config| config.logger_type = :none }
     end
 
   end

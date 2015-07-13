@@ -9,7 +9,8 @@ class InstanceAdmin::BaseController < ApplicationController
   skip_before_filter :redirect_if_marketplace_password_protected
 
   ANALYTICS_CONTROLLERS = {
-    'overview' => { default_action: 'show' }
+    'overview' => { default_action: 'show' },
+    'logs' => { default_action: 'index' }
   }
 
   MANAGE_CONTROLLERS = {

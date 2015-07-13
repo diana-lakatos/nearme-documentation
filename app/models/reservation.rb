@@ -1,5 +1,6 @@
 class Reservation < ActiveRecord::Base
   class NotFound < ActiveRecord::RecordNotFound; end
+  class InvalidPaymentState < StandardError; end
   has_paper_trail
   acts_as_paranoid
   auto_set_platform_context
@@ -420,7 +421,7 @@ class Reservation < ActiveRecord::Base
     return if !(active_merchant_payment? && paid?)
     payment = payments.paid.first
     if payment.nil?
-      BackgroundIssueLogger.log_issue("[reservation refund] Unexpected state", "support@desksnear.me", "Reservation id: #{self.id}. It's marked as paid via credit card but payment has not been created.")
+      raise InvalidPaymentState.new("[Refund] Reservation id=#{self.id} is marked as paid but payment has not been created - invalid state")
     else
       counter = counter + 1
       if payment.refund
@@ -428,7 +429,7 @@ class Reservation < ActiveRecord::Base
       elsif counter < 3
         ReservationRefundJob.perform_later(Time.zone.now + (counter * 6).hours, self.id, counter)
       else
-        BackgroundIssueLogger.log_issue("[reservation refund] Refund 3 times failed", "support@desksnear.me", "Reservation id: #{self.id}. We did not manage to automatically refund payment")
+        Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::REFUND_ERROR, "Refund for Reservation id=#{self.id} failed 3 times, manual intervation needed.")
       end
     end
     true

@@ -42,7 +42,11 @@ class SmsNotifierJob < Job
 
   def perform
     raise "Unknown PlatformContext" if PlatformContext.current.nil?
-    @sms_notifier_class.send(:"#{@sms_notifier_method}", *@args).tap { |sms_notifier| sms_notifier.deliver! }
+    @sms_notifier_class.send(:"#{@sms_notifier_method}", *@args).tap do |sms_notifier|
+      if sms_notifier.deliver!
+        WorkflowAlertLogger.new(WorkflowAlert.find(@args[1])).log!
+      end
+    end
   end
 
   def self.priority

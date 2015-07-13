@@ -1,0 +1,5 @@
+require_relative 'marketplace_error_logger/base_logger.rb'
+require_relative 'marketplace_error_logger/dummy_logger.rb'
+require_relative 'marketplace_error_logger/active_record_logger.rb'
+module MarketplaceErrorLogger
+end

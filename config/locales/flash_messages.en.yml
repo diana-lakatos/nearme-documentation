@@ -53,6 +53,9 @@ en:
       already_exists: "Rating for this booking has already been submitted."
       submitted_successfully: "Thanks, your rating was submitted successfully!"
     instance_admin:
+      analytics:
+        logs:
+          deleted: 'Log has been archived.'
       imap_settings:
         could_not_validate: 'Your IMAP settings appear to be invalid'
         validation_successful: 'Your IMAP settings are valid'

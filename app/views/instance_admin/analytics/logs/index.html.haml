@@ -1,0 +1,31 @@
+.content-container
+  %h4
+    = t("instance_admin.analytics.logs.header")
+
+  - if @logs.empty?
+    .row
+      .text-container
+        = t('instance_admin.analytics.logs.no_logs')
+  - else
+    .row
+      .table-container.col-xs-12
+        %table.table.table-striped
+          %thead
+            %tr
+              %th= t('instance_admin.analytics.logs.error_type')
+              %th= t('instance_admin.analytics.logs.message')
+              %th= t('instance_admin.analytics.logs.created_at')
+              %th
+
+          - @logs.each do |log|
+            %tr
+              %td= log.error_type
+              %td
+                %p= log.message
+              %td= l(log.created_at, format: :long)
+              %td= link_to t('instance_admin.analytics.logs.archive'), instance_admin_analytics_log_path(log), method: :delete, data: { confirm: 'Are you sure?' }
+
+    .row
+      .text-container
+        .pull-right
+          = will_paginate @logs

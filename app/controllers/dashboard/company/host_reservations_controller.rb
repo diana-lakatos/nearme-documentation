@@ -33,7 +33,6 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
 
   def reject
     if @reservation.reject(rejection_reason)
-      ReservationIssueLogger.rejected_with_reason @reservation, current_user if rejection_reason.present?
       WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::Rejected, @reservation.id)
       event_tracker.rejected_a_booking(@reservation)
       track_reservation_update_profile_informations

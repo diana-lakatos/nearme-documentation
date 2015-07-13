@@ -70,14 +70,15 @@ class SmsNotifierTest < ActiveSupport::TestCase
       should "trigger twilio delivery" do
         message = SmsNotifier::Message.new(:to => "1", :from => "2", :body => "test")
         @sms_client.expects(:create).with(:to => "1", :from => "2", :body => "test")
-        message.deliver
+        assert message.deliver
       end
 
       should "raise an exception if message body size is greater than 160 chars" do
         message = SmsNotifier::Message.new(:to => "1", :from => "2", :body => "w"*200)
-        assert_raise SmsNotifier::Message::TooLong do
-          message.deliver
+        Rails.application.config.marketplace_error_logger.class.any_instance.stubs(:log_issue).with do |error_type, msg|
+          error_type == MarketplaceErrorLogger::BaseLogger::SMS_ERROR && msg.include?("w"*200) && msg.include?('200')
         end
+        refute message.deliver
       end
     end
   end
