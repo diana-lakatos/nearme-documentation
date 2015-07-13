@@ -81,7 +81,7 @@ class SmsNotifier::Message
   end
 
   def validate!
-    raise SmsNotifier::Message::TooLong.new("SMS size is too long (#{@data[:body].size})") if @data[:body].size > SMS_SIZE
+    raise SmsNotifier::Message::TooLong.new("SMS size is too long (#{@data[:body].size}) - #{@data[:body]}") if @data[:body].size > SMS_SIZE
   end
 
   def send_twilio_message
