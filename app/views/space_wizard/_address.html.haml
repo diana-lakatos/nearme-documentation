@@ -31,3 +31,6 @@
           - address_component.each do |key, value|
             %input{name: "#{f.object_name}[address_components][#{index}][#{key}]", value: value, class: 'address_components_input'}
 
+  - if f.object.errors.present?
+    %col-md-9.help-inline= f.object.errors.first[1]
+
