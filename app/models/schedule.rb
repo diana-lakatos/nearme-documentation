@@ -65,7 +65,11 @@ class Schedule < ActiveRecord::Base
 
   def start_datetime_with_timezone
     if scheduable.try(:location) && scheduable.location.time_zone.present?
-      (sr_start_datetime || schedule.start_time).in_time_zone(scheduable.location.time_zone)
+      if use_simple_schedule
+        sr_start_datetime.in_time_zone(scheduable.location.time_zone)
+      else
+        schedule.start_time.in_time_zone(scheduable.location.time_zone)
+      end
     else
       (sr_start_datetime || schedule.start_time)
     end

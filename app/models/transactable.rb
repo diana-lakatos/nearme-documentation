@@ -259,7 +259,7 @@ class Transactable < ActiveRecord::Base
           start_minute = occurrence.to_datetime.min.to_i + (60 * occurrence.to_datetime.hour.to_i)
           availability = self.quantity - desks_booked_on(occurrence.to_datetime, start_minute, start_minute)
           if availability > 0
-            occurrences << { id: I18n.l(occurrence, format: :long), text: I18n.l(occurrence, format: :long), availability: availability.to_i }
+            occurrences << { id: I18n.l(occurrence.utc, format: :long), text: I18n.l(occurrence.utc, format: :long), availability: availability.to_i }
           end
         end
         @start_date = occurrence

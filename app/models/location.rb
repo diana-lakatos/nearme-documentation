@@ -183,7 +183,7 @@ class Location < ActiveRecord::Base
   end
 
   def update_schedules_timezones(force = false)
-    if force || time_zone_changed?
+    if force || self.time_zone_changed?
       Schedule.where(scheduable_type: 'Transactable', scheduable_id: listings).find_each(&:save!)
     end
   end
