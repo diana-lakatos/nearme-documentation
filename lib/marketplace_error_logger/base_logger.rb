@@ -10,6 +10,7 @@ module MarketplaceErrorLogger
     # constants used for 'error type' field
     SMS_ERROR = 'SMS Not Sent'
     REFUND_ERROR = 'Refund failed'
+    IMAP_ERROR = 'Email receiver failed'
 
     def log_issue(error_type, message, options = {})
       raise NotImplementedError

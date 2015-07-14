@@ -3,24 +3,28 @@ class Support::ReceiveMails
     isv = ImapSettingsValidator.new(PlatformContext.current.instance)
     if isv.validate_settings
       # Mailman connects to the mailbox and checks for new emails
-      Mailman::Application.run(config) do
-        # If subject is following one of following patterns, invoke 'receive'
-        # method in Support::TicketMessage class - it will just create new ticket message
-        # in our system
-        subject("[Support Ticket #%ticket_id%]", Support::TicketMessage)
-        subject("[Ticket Support #%ticket_id%]", Support::TicketMessage)
-        subject("[Ticket Support %ticket_id%]", Support::TicketMessage)
+      begin
+        Mailman::Application.run(config) do
+          # If subject is following one of following patterns, invoke 'receive'
+          # method in Support::TicketMessage class - it will just create new ticket message
+          # in our system
+          subject("[Support Ticket #%ticket_id%]", Support::TicketMessage)
+          subject("[Ticket Support #%ticket_id%]", Support::TicketMessage)
+          subject("[Ticket Support %ticket_id%]", Support::TicketMessage)
 
-        # If subject does not follow our convention, it means that this is new email
-        # and we will create a Support::Ticket for it. We will also notify
-        # enquirer and all administrators (via custom alerts - this can be changed per
-        # marketplace ) that we received the email
-        default do
-          Support::Ticket.new.receive(message, params)
+          # If subject does not follow our convention, it means that this is new email
+          # and we will create a Support::Ticket for it. We will also notify
+          # enquirer and all administrators (via custom alerts - this can be changed per
+          # marketplace ) that we received the email
+          default do
+            Support::Ticket.new.receive(message, params)
+          end
         end
+      rescue Net::IMAP::NoResponseError => e
+        Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::IMAP_ERROR, e.to_s)
       end
     else
-      puts "#{PlatformContext.current.instance.name}(id=#{PlatformContext.current.instance.id}) support_imap settings are not valid"
+      Rails.application.config.marketplace_error_logger.log_issue(MarketplaceErrorLogger::BaseLogger::IMAP_ERROR, "support_imap settings are not valid")
     end
   end
 
