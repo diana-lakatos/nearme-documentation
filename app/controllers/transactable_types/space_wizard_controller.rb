@@ -86,7 +86,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   end
 
   def find_transactable_type
-    @transactable_type = TransactableType.includes(:custom_attributes).find(params[:transactable_type_id])
+    @transactable_type = ServiceType.includes(:custom_attributes).find(params[:transactable_type_id])
   end
 
   def set_form_components
