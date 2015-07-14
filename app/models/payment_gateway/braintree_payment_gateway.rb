@@ -27,7 +27,7 @@ class PaymentGateway::BraintreePaymentGateway < PaymentGateway
     @supported_currencies ||= Array.wrap(settings[:supported_currency])
   end
 
-  def support_recurring_payment?
+  def supports_recurring_payment?
     true
   end
 

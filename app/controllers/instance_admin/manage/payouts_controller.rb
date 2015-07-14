@@ -11,5 +11,4 @@ class InstanceAdmin::Manage::PayoutsController < InstanceAdmin::Manage::BaseCont
     end
     redirect_to instance_admin_manage_transfer_path(@payout.reference)
   end
-
 end

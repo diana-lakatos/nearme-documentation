@@ -17,6 +17,7 @@
         = t('instance_admin.not_available_na')
   %td
     = resource.transfer_status
+  %td= resource.total_service_fee.format with_currency: true
   %td= resource.service_fee_amount_guest.format with_currency: true
   %td= resource.service_fee_amount_host.format with_currency: true
   %td= resource.amount.format with_currency: true

@@ -1,8 +1,14 @@
-include ActionView::Helpers::SanitizeHelper
-
 class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
-  include PayPal::SDK::Core::Logging
+
+  include ActionView::Helpers::SanitizeHelper
   include PaymentGateway::ActiveMerchantGateway
+  include PaymentExtention::PaypalMerchantBoarding
+
+  has_many :merchant_accounts, class_name: 'MerchantAccount::PaypalMerchantAccount'
+
+  # Global setting for all marketplaces
+  # Send to paypal with every action as BN CODE
+  ActiveMerchant::Billing::Gateway.application_id = 'NearMe_SP'
 
   def self.settings
     {
@@ -10,12 +16,25 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
       login: "",
       password: "",
       signature: "",
-      app_id: ""
+      app_id: "",
+      partner_id: ""
     }
+  end
+
+  def self.active_merchant_class
+    ActiveMerchant::Billing::PaypalExpressGateway
+  end
+
+  def self.supported_countries
+    ["US", "GB", "PL"]
   end
 
   def authorize(authoriazable, options = {})
     PaymentAuthorizer::PaypalExpressPaymentAuthorizer.new(self, authoriazable, options).process!
+  end
+
+  def gateway_capture(amount, token, options)
+    gateway(@payable.merchant_payer_id).capture(amount, token, options)
   end
 
   def custom_capture_options
@@ -25,17 +44,43 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
     }
   end
 
-  def self.active_merchant_class
-    ActiveMerchant::Billing::PaypalExpressGateway
-  end
-
   def express_checkout?
     true
   end
 
+  def supports_boarding_merchant?
+    true
+  end
+
+  def type_name
+    "paypal"
+  end
+
+  def gateway(subject=nil)
+    if @gateway.nil? || subject.present?
+      ActiveMerchant::Billing::Base.mode = :test if test_mode?
+      @gateway = self.class.active_merchant_class.new(
+        login: settings[:login],
+        password: settings[:password],
+        signature: settings[:signature],
+        subject: subject
+      )
+    end
+    @gateway
+  end
+
+  def immediate_payout(company)
+    merchant_account(company).present?
+  end
+
+  def payout(company, options)
+    response = gateway.reference_transaction(options[:reference].total_service_fee_cents, { reference_id: merchant_account(company).billing_agreement_id })
+    OpenStruct.new(success: response.success?)
+  end
+
   def process_express_checkout(transactable, options)
     @transactable = transactable
-    @response = gateway.setup_authorization(@transactable.total_amount_cents , options.merge(
+    @response = gateway(@transactable.merchant_payer_id).setup_authorization(@transactable.total_amount_cents , options.deep_merge(
       {
         currency: @transactable.currency,
         allow_guest_checkout: true,
@@ -46,6 +91,52 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
         tax: @transactable.tax_total_cents
       })
     )
+  end
+
+  def set_billing_agreement(options)
+    @response = gateway.setup_authorization(0, options.deep_merge({ billing_agreement: {
+      type: "MerchantInitiatedBilling",
+      description: "#{PlatformContext.current.instance.name} Billing Agreement"
+    }}))
+  end
+
+  def redirect_url
+    gateway.redirect_url_for(token)
+  end
+
+  def refund_identification(charge)
+    charge.response.params["transaction_id"]
+  end
+
+  def supported_currencies
+    ["USD", "GBP", "EUR", "JPY", "CAD", "PLN"]
+  end
+
+  def token
+    @token ||= @response.token
+  end
+
+  def supports_payout?
+    true
+  end
+
+  def supports_paypal_chain_payments?
+    settings[:partner_id].present?
+  end
+
+  private
+
+  # Callback invoked by processor when charge was successful
+  def charge_successful(response)
+    if @payment.payable.billing_authorization.immediate_payout?
+      @payment.company.payment_transfers.create!(payments: [@payment.reload], payment_gateway_mode: mode, payment_gateway_id: self.id)
+    end
+    @charge.charge_successful(response)
+  end
+
+
+  def merchant_payer_id
+    @merchant_account.payer_id
   end
 
   def line_items
@@ -78,41 +169,4 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
       }
     end
   end
-
-  def gateway
-    if @gateway.nil?
-      ActiveMerchant::Billing::Base.mode = :test if test_mode?
-      @gateway = self.class.active_merchant_class.new(
-        login: settings[:login],
-        password: settings[:password],
-        signature: settings[:signature]
-      )
-    end
-    @gateway
-  end
-
-  def host
-    "http://#{Rails.application.routes.default_url_options[:host]}"
-  end
-
-  def redirect_url
-    gateway.redirect_url_for(token)
-  end
-
-  def token
-    @token ||= @response.token
-  end
-
-  def supported_currencies
-    ["USD", "GBP", "EUR", "JPY", "CAD"]
-  end
-
-  def supports_payout?
-    false
-  end
-
-  def refund_identification(charge)
-    charge.response.params["transaction_id"]
-  end
 end
-

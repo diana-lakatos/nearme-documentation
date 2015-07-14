@@ -162,6 +162,10 @@ class Dashboard::Company::ProductsControllerTest < ActionController::TestCase
     end
   end
 
+  def should_finish_merchant_boarding
+    "http://localhost:3000/dashboard/company/payouts/boarding_complete?&merchantIdInPayPal=ATBHLEKDY29XC&permissionsGranted=true&consentStatus=true&productIntentID=addipmt&isEmailConfirmed=false&returnMessage=To%20access%20payments%20from%20your%20customers,%20please%20confirm%20your%20email%20address%20by%20following%20the%20instructions%20PayPal%20emailed%20to%20you."
+  end
+
   def product_form_attributes
     {
       name: "Test Product",
