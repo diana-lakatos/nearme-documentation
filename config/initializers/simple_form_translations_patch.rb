@@ -5,7 +5,7 @@ module SimpleForm
   module Inputs
     class Base
 
-      def translate(namespace, default='')
+      def translate_from_namespace(namespace, default='')
         model_names = lookup_model_names.dup
         lookups     = []
         if translation_namespace = @builder.object.try(:translation_namespace)
