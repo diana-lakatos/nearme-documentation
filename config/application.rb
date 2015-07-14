@@ -180,7 +180,7 @@ module DesksnearMe
     config.send_real_sms = false
     config.googl_api_key = nil
 
-    config.default_cache_expires_in = 5.minutes
+    config.default_cache_expires_in = 30.minutes
     config.marketplace_error_logger = MarketplaceErrorLogger::ActiveRecordLogger.new
   end
 end
