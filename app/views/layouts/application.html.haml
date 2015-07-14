@@ -57,7 +57,7 @@
 
   %body{class: theme_class(@theme_name)}
     = yield(:body_top)
-    .dnm-page-body{:class => "#{'main-page' if current_page?(root_url)}" }
+    .dnm-page-body{:class => "#{'main-page' if home_page?}" }
       = render 'shared/render_flash'
       .content-wrapper
         .dnm-page{class: dnm_page_class}

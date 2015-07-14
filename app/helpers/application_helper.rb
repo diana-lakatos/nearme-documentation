@@ -216,7 +216,11 @@ module ApplicationHelper
   end
 
   def home_page?
-    current_page?(controller: 'home', action: 'index')
+    # the first condition has been added because /en [ where en was default language ] was returning true,
+    # however /da was returning false, even though it was home page as well. This was causing issues with
+    # homepage content / homepage css etc. The second condition is there just in case it was fixing other issue.
+    # Btw: adding language: I18n.locale to second condition does not work :)
+    params[:controller] == 'home' && params[:action] == 'index' || current_page?(controller: 'home', action: 'index')
   rescue
     false
   end
