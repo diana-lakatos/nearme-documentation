@@ -2,6 +2,10 @@ class PaymentGateway::PaypalPaymentGateway < PaymentGateway
   include PayPal::SDK::Core::Logging
   include PaymentGateway::ActiveMerchantGateway
 
+  # Global setting for all marketplaces
+  # Send to paypal with every action as BN CODE
+  ActiveMerchant::Billing::Gateway.application_id = 'NearMe_SP'
+
   def self.settings
     {
       email: "",
@@ -82,13 +86,14 @@ class PaymentGateway::PaypalPaymentGateway < PaymentGateway
     charge.response.params["transaction_id"]
   end
 
+  def supports_payout?
+    true
+  end
+
   def supported_currencies
     ["USD", "GBP", "EUR", "JPY", "CAD"]
   end
 
-  def supports_payout?
-    true
-  end
 
 end
 

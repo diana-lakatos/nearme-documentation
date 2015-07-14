@@ -8,6 +8,26 @@
     = render partial: 'form', locals: { f: f }
     .submit-bar
       = f.submit 'Save', class: 'btn medium blue'
-
+    - if @merchant_account.try(:persisted?) && @payment_gateway.supports_paypal_chain_payments?
+      %br
+      .panel.panel-default
+        .panel-heading= t('payouts.in_chain_settings')
+        .panel-body
+          - if @merchant_account.permissions_granted
+            %p= link_to "Change PayPal Account", @merchant_account.boarding_url, class: 'btn medium blue'
+            %br
+            - if @merchant_account.billing_agreement_id.blank?
+              .well= t("payouts.grant_permission_info", fee: sprintf('%i%', current_instance.service_fee_host_percent) )
+              = link_to t("payouts.grant_permission"), new_dashboard_company_paypal_agreement_path, class: 'btn medium blue'
+            - else
+              %p= t("payouts.paypal_chain_payment_set")
+              %p
+                = link_to t("payoits.revoke_permission"),
+                  dashboard_company_paypal_agreement_path(@merchant_account),
+                  method: :delete,
+                  class: 'btn medium blue',
+                  data: { confirm: t("payouts.revoke_permission_confirmation") }
+          - else
+            = link_to "Connect via PayPal", @merchant_account.boarding_url, class: 'btn medium blue'
 - content_for :domready do
   new Dashboard.AddressController($('[data-payouts-form="1"]'));

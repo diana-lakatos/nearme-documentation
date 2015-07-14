@@ -342,7 +342,7 @@ class ApplicationController < ActionController::Base
   end
 
   def log_out_if_token_exists
-    if current_user && params[:token].present?
+    if current_user && params[TemporaryTokenAuthenticatable::PARAMETER_NAME].present?
       Rails.logger.info "#{current_user.email} is being logged out due to token param"
       sign_out current_user
     end

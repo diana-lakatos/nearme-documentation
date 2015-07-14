@@ -476,6 +476,10 @@ class User < ActiveRecord::Base
     administered_locations.size > 0
   end
 
+  def iso_country_code
+    default_company.try(:iso_country_code)
+  end
+
   def user_messages
     UserMessage.for_user(self)
   end

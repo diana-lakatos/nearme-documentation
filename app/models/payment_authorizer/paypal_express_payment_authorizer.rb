@@ -4,7 +4,7 @@ class PaymentAuthorizer::PaypalExpressPaymentAuthorizer < PaymentAuthorizer
     if @authorizable.express_token.blank?
       setup_authorization
     else
-      @response = @payment_gateway.gateway.authorize(@authorizable.total_amount_cents, @options)
+      @response = @payment_gateway.gateway(@authorizable.merchant_payer_id).authorize(@authorizable.total_amount_cents, @options)
       @response.success? ? handle_success : handle_failure
     end
   end

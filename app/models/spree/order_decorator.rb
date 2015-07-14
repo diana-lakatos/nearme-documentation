@@ -90,27 +90,31 @@ Spree::Order.class_eval do
     p.failure!
   end
 
+  def merchant_payer_id
+    company.paypal_merchant_account.try(:payer_id)
+  end
+
   def express_token=(token)
     write_attribute(:express_token, token)
     if !token.blank?
       express_gateway = PlatformContext.current.instance.payment_gateway(self.company.iso_country_code, self.currency)
-      details = express_gateway.gateway.details_for(token)
+      details = express_gateway.gateway(merchant_payer_id).details_for(token)
       self.express_payer_id = details.params["payer_id"]
-      self.build_bill_address({
-        firstname: details.params["first_name"],
-        lastname: details.params["last_name"],
-        address1: details.params["PayerInfo"]["Address"]["Street1"],
-        address2: details.params["PayerInfo"]["Address"]["Street2"],
-        city: details.params["PayerInfo"]["Address"]["CityName"],
-        zipcode: details.params["PayerInfo"]["Address"]["PostalCode"],
-        phone: details.params["phone"] || user.phone,
-        state_name: details.params["PayerInfo"]["Address"]["StateOrProvince"],
-        alternative_phone: details.params["PayerInfo"]["Address"]["Street1"],
-        state_id: Spree::Country.find_by_iso(details.params["PayerInfo"]["Address"]["Country"]).try{ |c| c.states.where(abbr: details.params["PayerInfo"]["Address"]["StateOrProvince"]).first.try(:id) },
-        country_id: Spree::Country.find_by_iso(details.params["PayerInfo"]["Address"]["Country"]).try(:id),
-      })
 
-      self.use_billing = true
+      # self.build_bill_address({
+      #   firstname: details.params["first_name"],
+      #   lastname: details.params["last_name"],
+      #   address1: details.params["PayerInfo"]["Address"]["Street1"],
+      #   address2: details.params["PayerInfo"]["Address"]["Street2"],
+      #   city: details.params["PayerInfo"]["Address"]["CityName"],
+      #   zipcode: details.params["PayerInfo"]["Address"]["PostalCode"],
+      #   phone: details.params["phone"] || user.phone,
+      #   state_name: details.params["PayerInfo"]["Address"]["StateOrProvince"],
+      #   alternative_phone: details.params["PayerInfo"]["Address"]["Street1"],
+      #   state_id: Spree::Country.find_by_iso(details.params["PayerInfo"]["Address"]["Country"]).try{ |c| c.states.where(abbr: details.params["PayerInfo"]["Address"]["StateOrProvince"]).first.try(:id) },
+      #   country_id: Spree::Country.find_by_iso(details.params["PayerInfo"]["Address"]["Country"]).try(:id),
+      # })
+      # self.use_billing = true
 
     end
   end

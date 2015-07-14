@@ -42,6 +42,7 @@ class PaymentTransfer < ActiveRecord::Base
   #
   # Note that this is the gross amount excluding the service fee that we charged
   # to the end user. The service fee is our cut of the revenue.
+  monetize :total_service_fee_cents, with_model_currency: :currency
   monetize :amount_cents, with_model_currency: :currency
   monetize :service_fee_amount_guest_cents, with_model_currency: :currency
   monetize :service_fee_amount_host_cents, with_model_currency: :currency
@@ -118,6 +119,10 @@ class PaymentTransfer < ActiveRecord::Base
   def update_payout_status(payout)
     return false unless billing_gateway.processor.status_updateable?
     billing_gateway.processor.update_payout_status(payout)
+  end
+
+  def total_service_fee_cents
+    self.service_fee_amount_host_cents + self.service_fee_amount_guest_cents
   end
 
   private

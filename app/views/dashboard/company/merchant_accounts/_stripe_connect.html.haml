@@ -1,8 +1,8 @@
 %h3= t('dashboard.merchant_account.header')
 
 = f.fields_for :stripe_connect_merchant_account do |maf|
-
   - if merchant_account.persisted?
+    = maf.hidden_field :id
     %div= t("dashboard.merchant_account.#{merchant_account.state}")
 
   - if merchant_account.errors.present?
