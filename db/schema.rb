@@ -976,6 +976,16 @@ ActiveRecord::Schema.define(version: 20150713215755) do
   add_index "mailer_unsubscriptions", ["user_id", "mailer"], name: "index_mailer_unsubscriptions_on_user_id_and_mailer", unique: true, using: :btree
   add_index "mailer_unsubscriptions", ["user_id"], name: "index_mailer_unsubscriptions_on_user_id", using: :btree
 
+  create_table "marketplace_errors", force: true do |t|
+    t.integer  "instance_id"
+    t.string   "error_type"
+    t.text     "message"
+    t.text     "stacktrace"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "merchant_accounts", force: true do |t|
     t.integer  "instance_id"
     t.integer  "merchantable_id"

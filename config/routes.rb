@@ -168,17 +168,18 @@ DesksnearMe::Application.routes.draw do
   get '/wish_list/remove_item', to: 'wish_list#remove_item'
 
   namespace :instance_admin do
-    get '/', :to => 'base#index'
+    get '/', to: 'base#index'
 
     namespace :analytics do
-      get '/', :to => 'base#index'
-      resource :overview, :only => [:show], :controller => 'overview' do
+      get '/', to: 'base#index'
+      resource :overview, only: [:show], controller: 'overview' do
         member do
           get :products
         end
       end
-      resource :sales, :only => [:show]
-      resource :profiles, :only => [:show]
+      resource :sales, only: [:show]
+      resource :profiles, only: [:show]
+      resources :logs, only: [:index, :destroy]
     end
 
     namespace :settings do

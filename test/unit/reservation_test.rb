@@ -279,7 +279,9 @@ class ReservationTest < ActiveSupport::TestCase
       @reservation.update_column(:payment_method, 'credit_card')
       Payment.any_instance.expects(:refund).returns(false)
       ReservationRefundJob.expects(:perform_later).never
-      BackgroundIssueLogger.expects(:log_issue)
+      Rails.application.config.marketplace_error_logger.class.any_instance.stubs(:log_issue).with do |error_type, msg|
+        error_type == MarketplaceErrorLogger::BaseLogger::REFUND_ERROR && msg.include?("Refund for Reservation id=#{@reservation.id}")
+      end
       @reservation.send(:attempt_payment_refund, 2)
       assert_equal Reservation::PAYMENT_STATUSES[:paid], @reservation.reload.payment_status
     end

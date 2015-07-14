@@ -212,6 +212,14 @@ en:
       no_listings_visits_yet: "Your listings haven't been visited yet."
       marketplace_transactions: "Marketplace transactions"
       marketplace_users: "Marketplace users"
+      logs:
+        header: "Logged errors"
+        no_logs: "No errors have been logged so far."
+        error_type: "Type"
+        message: "Message"
+        created_at: "Created at"
+        archive: 'Archive'
+
     settings:
       configuration:
         master_lock: 'Master Lock'

@@ -13,7 +13,6 @@ class CustomSmsNotifier < InstanceSmsNotifier
       set_variables
       @step.callback_to_adjust_data_after_check(sms(options))
       set_variables
-      WorkflowAlertLogger.new(@workflow_alert).log!
       I18n.locale = user.try(:language) if user.try(:language).present?
       sms(options)
     else

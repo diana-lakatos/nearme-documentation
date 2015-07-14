@@ -39,7 +39,6 @@ class Dashboard::HostRecurringBookingsController < Dashboard::BaseController
 
   def reject
     if @recurring_booking.reject(rejection_reason)
-      ReservationIssueLogger.rejected_with_reason @recurring_booking, current_user if rejection_reason.present?
       WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::Rejected, @recurring_booking.id)
       notify_guest_about_recurring_booking_status_change
       event_tracker.rejected_a_recurring_booking(@recurring_booking)
