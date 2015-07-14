@@ -24,9 +24,9 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
       @waiver_agreement_template2 = FactoryGirl.create(:waiver_agreement_template, target: @company)
       @waiver_agreement_template3 = FactoryGirl.create(:waiver_agreement_template, target: @company)
       get :new, transactable_type_id: @transactable_type.id
-      assert_select 'label.checkbox', @waiver_agreement_template1.name
-      assert_select 'label.checkbox', @waiver_agreement_template2.name
-      assert_select 'label.checkbox', @waiver_agreement_template3.name
+      assert_select 'label', @waiver_agreement_template1.name
+      assert_select 'label', @waiver_agreement_template2.name
+      assert_select 'label', @waiver_agreement_template3.name
     end
 
   end
