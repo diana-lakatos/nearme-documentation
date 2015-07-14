@@ -32,9 +32,9 @@ class ValidatorTest < ActiveSupport::TestCase
       refute @sample_model.valid?, @sample_model.errors.full_messages.inspect
     end
 
-    should 'not allow nil' do
+    should 'allow nil' do
       @sample_model.properties.attr = nil
-      refute @sample_model.valid?, @sample_model.errors.full_messages.inspect
+      assert @sample_model.valid?
     end
 
   end
