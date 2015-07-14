@@ -15,6 +15,7 @@
           %tbody
             - @default_and_custom_translations.each_with_index do |translation, index|
               - instance_translation = @translations.detect { |t| t.key == translation.key }
+              - next if instance_translation && translation.instance_id.nil?
               %tr
                 %td{'data-search' => "#{instance_translation ? (instance_translation.value.present? ? translation.value : instance_translation.value) : translation.value} #{translation.key}" }
                   .row

@@ -539,7 +539,6 @@ class TransactableTest < ActiveSupport::TestCase
       @transactable =  FactoryGirl.create(:transactable, :fixed_price, location: location_pacific)
       @transactable_utc =  FactoryGirl.create(:transactable, :fixed_price, location: location_dublin )
       assert_not_equal @transactable.next_available_occurrences(1)[0][:text], @transactable_utc.next_available_occurrences(1)[0][:text]
-      assert @transactable.next_available_occurrences(1)[0][:text].to_time.to_i < @transactable_utc.next_available_occurrences(1)[0][:text].to_time.to_i
     end
   end
 end
