@@ -73,7 +73,7 @@ en:
       continue: 'Continue'
       crop_and_rotate: 'Crop And Rotate'
     listings:
-      no_trust_explanation: "The object, your company, location or your user are pending approval. The object will remain disabled pending approval."
+      no_trust_explanation: "Your listing will remain disabled until approved."
       photos:
         waiting_for_photo_processing: "Waiting for photo processing to finish"
     buy_sell:
