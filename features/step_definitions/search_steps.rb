@@ -16,6 +16,13 @@ Given /^Auckland listing has fixed_price: (.*)$/ do |fixed_price|
   listing.save(validate: false)
 end
 
+Given /^this listing has location type (.*)$/ do |lntype|
+  location = Transactable.last.location
+  location_type = LocationType.where(name: lntype).first_or_create!(instance_id: PlatformContext.current.instance.id)
+  location.location_type = location_type
+  location.save(validate: false)
+end
+
 Given /^Elasticsearch is turned (.*)$/ do |switch|
   if switch.strip.downcase == 'on'
     Instance.update_all(search_engine: Instance::SEARCH_ENGINES.last)
@@ -40,6 +47,35 @@ Then /^Elasticsearch (.*) index should be (.*)$/ do |index_name, action_name|
   end
 end
 
+Then /^I see all results for location types (.*) and (.*)$/ do |lntype1, lntype2|
+  Transactable.all.select{|t| [lntype1, lntype2].include?(t.location.location_type.name)}.each do |t|
+    page.should have_selector('.listing[data-id="' + t.id.to_s + '"]')
+  end
+end
+
+Then /^I click on Location Types$/ do
+  click_link 'Location Types'
+end
+
+When /^I (check|uncheck) location type (.*)$/ do |action_type, lntype|
+  include_hidden_fields do
+    find("input[value='#{lntype.downcase}']").click
+  end
+  while (page.evaluate_script('$.active') == 0) do
+    sleep(1)
+  end
+end
+
+Then /^I do( not)? see result for the (.*) listing$/ do |confirmation, lntype|
+  listing = Transactable.all.select{|t| lntype == t.location.location_type.name}.first
+  listing_selector = '.listing[data-id="' + listing.id.to_s + '"]'
+  if !confirmation
+    page.should have_selector(listing_selector)
+  else
+    page.should_not have_selector(listing_selector)
+  end
+end
+
 When /^I search for "([^"]*)" with prices (\d+) (\d+)$/ do |query, min, max|
   visit search_path(:q => query, "price[min]" => min, "price[max]" => max, :lgpricing => "fixed")
 end
@@ -50,6 +86,10 @@ end
 
 When /^I performed search for "([^"]*)"$/ do |query|
   visit search_path(:q => query)
+end
+
+When /^I search for "([^"]*)" with location type (.*) forcing list view$/ do |query, lntype|
+  visit search_path(q: query, lntype: lntype.downcase, v: 'list')
 end
 
 When /^I make another search for "([^"]*)"$/ do |query|
