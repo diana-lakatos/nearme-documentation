@@ -51,7 +51,7 @@ class Spree::OrderDecorator < Draper::Decorator
   end
 
   def company_name
-    content_tag :strong, object.company.name
+    content_tag :strong, object.company.try(:name)
   end
 
   def bill_address
