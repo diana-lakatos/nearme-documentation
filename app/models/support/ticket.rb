@@ -32,7 +32,7 @@ class Support::Ticket < ActiveRecord::Base
   def self.body_for_message(message)
     part = message.multipart? ? message.parts[0] : message
 
-    match_data = part.content_type.match(/charset=(?<encoding>[\w\d-]+)/)
+    match_data = part.content_type.try(:match, /charset=(?<encoding>[\w\d-]+)/)
     match_data ? part.body.to_s.force_encoding(match_data[:encoding]).encode('UTF-8') : part.body.to_s
   end
 
