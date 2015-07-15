@@ -435,6 +435,8 @@ en:
           unban: "Unban"
       admins:
         admin: "Admin"
+        switch_owner: 'Switch Owner'
+        make_owner: 'Make Owner'
         email: "Email"
         role: "Role"
         instance_owner: "Instance Owner"

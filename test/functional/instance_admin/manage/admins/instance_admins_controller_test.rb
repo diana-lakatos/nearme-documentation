@@ -62,12 +62,14 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsControllerTest < ActionContro
 
       setup do
         @instance_admin = FactoryGirl.create(:instance_admin, :user_id => @user.id, :instance_id => Instance.first.id)
+        @user_2 = FactoryGirl.create(:user)
+        @instance_admin_2 = FactoryGirl.create(:instance_admin, :user_id => @user_2.id, :instance_id => Instance.first.id)
       end
 
       should 'update the role' do
         InstanceAdmin.any_instance.stubs(:instance_owner).returns(false)
         @role = FactoryGirl.create(:instance_admin_role)
-        put :update, { :id => @instance_admin.id, :instance_admin_role_id => @role.id  }
+        post :update, { :id => @instance_admin.id, :instance_admin_role_id => @role.id  }
         assert_equal @role.id, assigns(:instance_admin).instance_admin_role_id
       end
 
@@ -92,6 +94,14 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsControllerTest < ActionContro
         @instance_admin.update_attribute(:instance_admin_role_id, role_id)
         put :update, { :id => @instance_admin.id, :instance_admin_role_id => InstanceAdminRole.default_role.id }
         assert_equal role_id, assigns(:instance_admin).instance_admin_role_id
+      end
+
+      should 'allow to switch which admin is the owner' do
+        assert @instance_admin.instance_owner
+        assert !@instance_admin_2.instance_owner
+        post :update, mark_as_owner: true, id: @instance_admin_2.id
+        assert !@instance_admin.reload.instance_owner
+        assert @instance_admin_2.reload.instance_owner
       end
     end
 

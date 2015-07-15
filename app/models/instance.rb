@@ -362,5 +362,13 @@ class Instance < ActiveRecord::Base
     end
   end
 
+  def is_instance_owner?(user)
+    user == instance_owner
+  end
+
+  def instance_owner
+    instance_admins.where(instance_owner: true).first.try(:user)
+  end
+
 end
 

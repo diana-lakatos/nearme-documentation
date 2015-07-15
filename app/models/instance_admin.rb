@@ -5,13 +5,11 @@ class InstanceAdmin < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
-  # attr_accessible :user_id, :instance_admin_role_id, :instance_owner
-
   belongs_to :instance
   belongs_to :user, -> { with_deleted }, foreign_key: 'user_id'
   belongs_to :instance_admin_role
 
-  before_create :mark_as_instance_owner
+  before_create :mark_as_instance_owner_if_none
   before_save :assign_default_role_if_empty
 
   validates_presence_of :user_id
@@ -32,7 +30,7 @@ class InstanceAdmin < ActiveRecord::Base
     self.instance_admin_role_id = InstanceAdminRole.default_role.try(:id)
   end
 
-  def mark_as_instance_owner
+  def mark_as_instance_owner_if_none
     return unless self.instance_id
     self.instance ||= Instance.find(self.instance_id)
     if instance.instance_admins.empty?
@@ -41,4 +39,8 @@ class InstanceAdmin < ActiveRecord::Base
     end
   end
 
+  def mark_as_instance_owner
+    self.update(instance_owner: true)
+    instance.instance_admins.where(instance_owner: true).where.not(id: self.id).update_all(instance_owner: false)
+  end
 end
