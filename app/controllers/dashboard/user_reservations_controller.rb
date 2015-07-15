@@ -57,7 +57,7 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
   end
 
   def booking_successful_modal
-    render template: 'dashboard/user_reservations/booking_successful_modal', formats: [:html]
+    render template: 'dashboard/user_reservations/booking_successful_modal', formats: [:html], layout: false
   end
 
   def booking_failed_modal
