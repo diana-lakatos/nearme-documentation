@@ -231,6 +231,21 @@ en:
         biography: 'About me'
         sms_notifications_enabled: 'Enable Text Message Notifications'
         accept_emails: 'Accept emails'
+        public_profile: "Public profile"
+        industries: "Industries"
+        email: "Email"
+        country_name: "Country"
+        phone: "Phone number"
+        mobile_number: "Mobile number"
+        avatar: "Profile Photo"
+        name: "Name"
+        first_name: "First name"
+        middle_name: "Middle name"
+        last_name: "Last name"
+        language: "Language"
+        time_zone: "Time zone"
+        current_location: "Current location"
+
 
       registration:
         email: 'Your email address'

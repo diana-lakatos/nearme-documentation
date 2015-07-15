@@ -23,7 +23,7 @@
 
   = render partial: 'shared/category', locals: { category: category, f: f }
 
-= f.input :email, label: "Email" if only_inputs.empty? || only_inputs.include?(:email)
+= f.input :email if only_inputs.empty? || only_inputs.include?(:email)
 
 - if only_inputs.empty? || only_inputs.include?(:language)
   = f.input :language, collection: platform_context.instance.locales.by_created_at, label_method: :display_name,
@@ -33,14 +33,14 @@
 
 - if only_inputs.empty? || only_inputs.include?(:phone)
   %div{'data-phone-fields-container' => true}
-    = f.input :country_name, :label => "Country", :as => :select, :collection => user_country_name_options, :selected => user_country_default(@country), input_html: { 'data-country-selector' => true, class: 'selectpicker', "data-live-search" => "true" }, :required => true, include_blank: true
+    = f.input :country_name, :as => :select, :collection => user_country_name_options, :selected => user_country_default(@country), input_html: { 'data-country-selector' => true, class: 'selectpicker', "data-live-search" => "true" }, :required => true, include_blank: true
 
     .row{:class => ('error' if f.object.errors[:phone].present?) }
       .col-md-3
         = f.label :phone, :class => 'control-label required' do
           - if f.object.phone_required
             %abbr{:title => "required"} *
-          Phone number
+          = t('simple_form.labels.user.phone')
 
       .col-md-9.input-container
         .phone-number-country-code-field
@@ -65,7 +65,7 @@
         - if f.object.errors[:mobile_number].present?
           .error-block= f.object.errors[:mobile_number].to_sentence
 
-= f.input :current_location, label: "Current location", as: :string if only_inputs.empty? || only_inputs.include?(:current_location)
+= f.input :current_location, as: :string if only_inputs.empty? || only_inputs.include?(:current_location)
 = f.input :company_name, label: "Company name", as: :string if only_inputs.empty? || only_inputs.include?(:company_name)
 = f.association :industries, :blank => false, input_html: { class: 'selectpicker', "data-live-search" => "true" } if only_inputs.empty? || only_inputs.include?(:industries)
 = f.input :password, :label => (f.object.persisted? ? "Change password" : "Password" ) if only_inputs.empty? || only_inputs.include?(:password)
@@ -73,7 +73,7 @@
 - if only_inputs.empty? || only_inputs.include?(:avatar)
   .row{:class => ('error' if f.object.errors[:avatar].present?)}
     .col-md-3
-      = f.label :avatar, "Profile Photo"
+      = f.label :avatar
     .col-md-9
       .col-md-4
         .single-photo
