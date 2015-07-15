@@ -172,6 +172,8 @@ en:
           created: 'Product Type created.'
           updated: 'Product Type updated.'
           deleted: 'Product Type deleted.'
+      data_uploads:
+        created: 'Your data has been processed successfully and is now being imported.'
     listings:
       listing_disabled: "This listing has been temporarily disabled by the owner. Displaying other listings in this location."
       listing_disabled_but_admin: "This listing has been temporarily disabled by the owner. Other users will not be able to browse it."
