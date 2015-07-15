@@ -93,7 +93,7 @@ module LiquidFilters
       translate("simple_form.labels.transactable.#{property}")
     else
       # These are the custom attributes added by the MPO
-      translate("simple_form.labels.#{target_acting_as_set.translation_key_suffix}.#{property}")
+      translate("#{target_acting_as_set.translation_namespace}.labels.#{property}")
     end
   end
 

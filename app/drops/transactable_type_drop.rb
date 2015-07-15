@@ -9,7 +9,9 @@ class TransactableTypeDrop < BaseDrop
   #   if enabled the listing will have a page separate from the location's
   # translation_key_suffix
   #   translation key suffix that is added to translations specific to this transactable type
-  delegate :id, :buyable?, :show_page_enabled?, :translation_key_suffix, to: :transactable_type
+  # translation_namespace
+  #   translation namespace that is a prefix for translation keys specific to this transactable type
+  delegate :id, :buyable?, :show_page_enabled?, :translation_key_suffix, :translation_namespace, to: :transactable_type
 
   def initialize(transactable_type)
     @transactable_type = transactable_type
