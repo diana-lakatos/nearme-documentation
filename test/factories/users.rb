@@ -7,13 +7,10 @@ FactoryGirl.define do
     country_name "United States"
     phone "18889983375"
     mobile_number "18889983375"
-    job_title "Manager"
-    biography "I'm cool!"
     current_location "Prague"
     company_name "DesksNearMe"
     last_geolocated_location_longitude 14.437800
     last_geolocated_location_latitude 50.075538
-    skills_and_interests { "I'm skilled boss." }
     sms_notifications_enabled true
     sms_preferences { Hash[%w(user_message reservation_state_changed new_reservation).map{|sp| [sp, '1']}] }
     instance_unread_messages_threads_count Hash.new

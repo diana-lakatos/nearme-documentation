@@ -68,7 +68,6 @@ class Analytics::EventTracker::Serializers::TrackSerializer
         last_name: object.last_name,
         email: object.email,
         phone: object.phone,
-        job_title: object.job_title,
         industries: object.industries.map(&:name),
         created: object.created_at,
         location_number: object.locations.count,

@@ -74,7 +74,6 @@ class User < ActiveRecord::Base
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
   before_restore :recover_companies
-  before_validation :normalize_gender
 
   store :required_fields
 
@@ -296,8 +295,12 @@ class User < ActiveRecord::Base
 
   def field_blank_or_changed?(field_name)
     # ugly hack, but properties do not respond to _changed, _was etc.
-    db_field_value = User.find(self.id).send(field_name)
-    self.send(field_name).blank? || (db_field_value != self.send(field_name))
+    if self.respond_to?(field_name)
+      self.send(field_name).blank? || self.send("#{field_name}_changed?")
+    else
+      db_field_value = User.find(self.id).properties[field_name]
+      self.properties[field_name].blank? || (db_field_value != self.properties[field_name])
+    end
   end
 
   def full_mobile_number_updated?
@@ -615,14 +618,6 @@ class User < ActiveRecord::Base
 
   def self.csv_fields
     { email: 'User Email', name: 'User Name' }
-  end
-
-  def normalize_gender
-    return if self.gender.nil?
-    self.gender.downcase!
-    unless ['male', 'female', 'unknown'].include?(gender)
-      self.gender = nil
-    end
   end
 
   def published_blogs

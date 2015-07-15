@@ -3,111 +3,113 @@
 = f.hidden_field :booking_type, value: @transactable.transactable_type.booking_choices.size == 1 ? f.object.transactable_type.booking_choices.first : @transactable.booking_type, 'data-booking-type' => true
 = f.input :id, as: :hidden
 
-- @form_components.each do |form_component|
-  %h4
-    = form_component.name
-  - form_component.form_fields.each do |form_field|
+= f.simple_fields_for :properties, f.object.properties do |properties_form|
 
-    - model = form_field.keys.first
-    - field = form_field[model]
+  - @form_components.each do |form_component|
+    %h4
+      = form_component.name
+    - form_component.form_fields.each do |form_field|
 
-    - next if field == 'schedule'
+      - model = form_field.keys.first
+      - field = form_field[model]
 
-    - case field
-    - when 'location_id'
-      .row.edit-locations
-        .col-md-3.add-new
-          = link_to '#', data: { modal: true, href: new_dashboard_company_location_path } do
-            = image_tag 'themes/buy_sell/icon-cross.png'
-            %span.blue Add New Location
-        .col-md-3
-          %label{:for => ""}
-            - if !f.object.transactable_type.skip_location?
-              %abbr{:title => "required"} *
-            Location
-        #location-list.col-md-6
-          = render @locations, form: f
-          .show-more
-            %a{"data-target" => ".hidden-location", "data-toggle" => "collapse", :href => "#"} Show more locations
-        - if f.object.errors.messages[:location]
-          .col-md-12.error
-            .error-block
-              You need to pick up location
-    - when 'approval_requests'
-      = render :partial => 'approval_requests/form', :locals => { f: f }
-    - when 'enabled'
-      .switch_meta_container{ class: (!f.object.is_trusted? ? "no_trust_explanation_needed" : ""), data: { explanation: t('manage.listings.no_trust_explanation') } }
-        = f.input :enabled, as: :bootstrap_switch, disabled: !f.object.is_trusted?
-    - when 'amenity_types'
-      - unless platform_context.instance.listing_amenity_types.count.zero?
-        = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'selectpicker', :multiple => true }
+      - next if field == 'schedule'
 
-    - when 'action_rfq'
-      - if f.object.transactable_type.action_rfq?
-        = f.input :action_rfq, as: :boolean
-    - when 'price'
-      = render 'price_form', f: f, form_fields: form_component.form_fields
-      - if form_component.form_fields.find { |ff| ff.keys.first == model && ff.values.first == 'schedule' }
-        - if overnight_or_regular_booking?(f.object.transactable_type)
-          = render 'availability_rules_form', f: f
-        - if f.object.transactable_type.schedule_booking_enabled?
-          = render 'schedule_form', f: f
-      = render 'shared/booking_types_tabs', f: f
-    - when 'photos'
-      .row
-        .col-md-3
-          = f.label :photos
-        .col-md-9
-          .loading{:style => "display: none"}
-            = image_tag "spinner.gif"
-            %br/
-            .span= t('manage.listings.photos.waiting_for_photo_processing')
-          = new_file_upload_input("#{f.object_name}[photos_attributes][0][image]",
-                                          dashboard_photos_path,
-                                          Photo.new.image.thumbnail_dimensions[:medium],
-                                          "Add Photo",
-                                          :required => true,
-                                          :error => f.object.errors.include?(:photos).present? ? "Please upload at least one photo." : nil) do
-            - # caches img so it is displayed even for the first photo. Without this, loader icon is not displayed for the first photo
-            .hidden.thumbnail-processing
-              .loading-icon
-            = hidden_field_tag "#{f.object_name}", nil, placeholder: t('ui.photo_uploader.caption'), id: 'photo-item-input-template', disabled: true, 'data-number' => 0, 'data-no-caption' => true
-            - unless @photos.nil?
-              - @photos.each_with_index do |photo|
-                = get_fileupload_photo_html(photo.image_url(:medium),
-                                            destroy_space_wizard_photo_path(:id => photo.id),
-                                            edit_dashboard_photo_path(photo),
-                                            :div,
-                                            id: photo.id) do
-                  -# text_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][caption]", photo.caption, :placeholder => t('ui.photo_uploader.caption')
-                  = hidden_field_tag "#{f.object_name}[photo_ids][]", photo.id
-                  = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][id]", photo.id
-                  = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][position]", photo.position, class: 'photo-position-input'
+      - case field
+      - when 'location_id'
+        .row.edit-locations
+          .col-md-3.add-new
+            = link_to '#', data: { modal: true, href: new_dashboard_company_location_path } do
+              = image_tag 'themes/buy_sell/icon-cross.png'
+              %span.blue Add New Location
+          .col-md-3
+            %label{:for => ""}
+              - if !f.object.transactable_type.skip_location?
+                %abbr{:title => "required"} *
+              Location
+          #location-list.col-md-6
+            = render @locations, form: f
+            .show-more
+              %a{"data-target" => ".hidden-location", "data-toggle" => "collapse", :href => "#"} Show more locations
+          - if f.object.errors.messages[:location]
+            .col-md-12.error
+              .error-block
+                You need to pick up location
+      - when 'approval_requests'
+        = render :partial => 'approval_requests/form', :locals => { f: f }
+      - when 'enabled'
+        .switch_meta_container{ class: (!f.object.is_trusted? ? "no_trust_explanation_needed" : ""), data: { explanation: t('manage.listings.no_trust_explanation') } }
+          = f.input :enabled, as: :bootstrap_switch, disabled: !f.object.is_trusted?
+      - when 'amenity_types'
+        - unless platform_context.instance.listing_amenity_types.count.zero?
+          = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'selectpicker', :multiple => true }
 
-    - when 'waiver_agreement_templates'
-      - if @company.waiver_agreement_templates.any?
-        = f.association :waiver_agreement_templates, collection: @company.waiver_agreement_templates.order(:name).pluck(:name, :id), as: :check_boxes
-    - when 'documents_upload'
-      - if platform_context.instance.documents_upload_enabled?
-        = render "forms/document_requirements", f: f
-    - when 'quantity'
-      -if @transactable_type.action_price_per_unit?
-        = f.input :quantity, as: :hidden, value: 1
-      -else
-        = f.input :quantity
-    - when 'currency'
-      = f.input :currency, :as => :currency, allowed_currencies: @transactable_type.allowed_currencies, default: @transactable_type.default_currency, :input_html => { "data-live-search" => "true", :class => 'selectpicker', :id => 'currency-select' }
-    - when *@transactable_type.categories.roots.map { |c| "Category - #{c.name}" }
-      - category_name = field.split(" - ")[1]
-      - category = @transactable_type.categories.roots.where(name: category_name).first
-      = render partial: 'shared/category', locals: { category: category, f: f, categorizable: @transactable_type }
-    - when 'confirm_reservations'
-      = f.input :confirm_reservations, as: :bootstrap_switch
-    - else
-      - if custom_attribute_names.include?(field)
-        = draw_attribute_for_form(@transactable_type.custom_attributes.find_by(name: field), f)
-      -elsif f.object.attributes.include?(field)
-        = f.input field
+      - when 'action_rfq'
+        - if f.object.transactable_type.action_rfq?
+          = f.input :action_rfq, as: :boolean
+      - when 'price'
+        = render 'price_form', f: f, form_fields: form_component.form_fields
+        - if form_component.form_fields.find { |ff| ff.keys.first == model && ff.values.first == 'schedule' }
+          - if overnight_or_regular_booking?(f.object.transactable_type)
+            = render 'availability_rules_form', f: f
+          - if f.object.transactable_type.schedule_booking_enabled?
+            = render 'schedule_form', f: f
+        = render 'shared/booking_types_tabs', f: f
+      - when 'photos'
+        .row
+          .col-md-3
+            = f.label :photos
+          .col-md-9
+            .loading{:style => "display: none"}
+              = image_tag "spinner.gif"
+              %br/
+              .span= t('manage.listings.photos.waiting_for_photo_processing')
+            = new_file_upload_input("#{f.object_name}[photos_attributes][0][image]",
+                                            dashboard_photos_path,
+                                            Photo.new.image.thumbnail_dimensions[:medium],
+                                            "Add Photo",
+                                            :required => true,
+                                            :error => f.object.errors.include?(:photos).present? ? "Please upload at least one photo." : nil) do
+              - # caches img so it is displayed even for the first photo. Without this, loader icon is not displayed for the first photo
+              .hidden.thumbnail-processing
+                .loading-icon
+              = hidden_field_tag "#{f.object_name}", nil, placeholder: t('ui.photo_uploader.caption'), id: 'photo-item-input-template', disabled: true, 'data-number' => 0, 'data-no-caption' => true
+              - unless @photos.nil?
+                - @photos.each_with_index do |photo|
+                  = get_fileupload_photo_html(photo.image_url(:medium),
+                                              destroy_space_wizard_photo_path(:id => photo.id),
+                                              edit_dashboard_photo_path(photo),
+                                              :div,
+                                              id: photo.id) do
+                    -# text_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][caption]", photo.caption, :placeholder => t('ui.photo_uploader.caption')
+                    = hidden_field_tag "#{f.object_name}[photo_ids][]", photo.id
+                    = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][id]", photo.id
+                    = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][position]", photo.position, class: 'photo-position-input'
+
+      - when 'waiver_agreement_templates'
+        - if @company.waiver_agreement_templates.any?
+          = f.association :waiver_agreement_templates, collection: @company.waiver_agreement_templates.order(:name).pluck(:name, :id), as: :check_boxes
+      - when 'documents_upload'
+        - if platform_context.instance.documents_upload_enabled?
+          = render "forms/document_requirements", f: f
+      - when 'quantity'
+        -if @transactable_type.action_price_per_unit?
+          = f.input :quantity, as: :hidden, value: 1
+        -else
+          = f.input :quantity
+      - when 'currency'
+        = f.input :currency, :as => :currency, allowed_currencies: @transactable_type.allowed_currencies, default: @transactable_type.default_currency, :input_html => { "data-live-search" => "true", :class => 'selectpicker', :id => 'currency-select' }
+      - when *@transactable_type.categories.roots.map { |c| "Category - #{c.name}" }
+        - category_name = field.split(" - ")[1]
+        - category = @transactable_type.categories.roots.where(name: category_name).first
+        = render partial: 'shared/category', locals: { category: category, f: f, categorizable: @transactable_type }
+      - when 'confirm_reservations'
+        = f.input :confirm_reservations, as: :bootstrap_switch
+      - else
+        - if custom_attribute_names.include?(field)
+          = draw_attribute_for_form(@transactable_type.custom_attributes.find_by(name: field), properties_form)
+        -elsif f.object.attributes.include?(field)
+          = f.input field
 .hidden
   - Money::Currency.table.values.each do |c|
     %span{:id => "currency_#{c[:iso_code]}"}

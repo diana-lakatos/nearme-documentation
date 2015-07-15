@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150713215755) do
+ActiveRecord::Schema.define(version: 20150716184155) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2904,7 +2904,7 @@ ActiveRecord::Schema.define(version: 20150713215755) do
     t.datetime "draft"
     t.datetime "activated_at"
     t.boolean  "listings_public"
-    t.boolean  "enabled"
+    t.boolean  "enabled",                        default: true
     t.text     "metadata"
     t.datetime "created_at",                                         null: false
     t.datetime "updated_at",                                         null: false
@@ -3104,9 +3104,6 @@ ActiveRecord::Schema.define(version: 20150713215755) do
     t.string   "phone"
     t.string   "unconfirmed_email"
     t.string   "unlock_token"
-    t.string   "job_title"
-    t.text     "biography"
-    t.datetime "mailchimp_synchronized_at"
     t.string   "country_name"
     t.string   "mobile_number"
     t.datetime "notified_about_mobile_number_issue_at"
@@ -3125,7 +3122,6 @@ ActiveRecord::Schema.define(version: 20150713215755) do
     t.integer  "avatar_original_width"
     t.text     "current_location"
     t.text     "company_name"
-    t.text     "skills_and_interests"
     t.string   "slug"
     t.float    "last_geolocated_location_longitude"
     t.float    "last_geolocated_location_latitude"
@@ -3143,9 +3139,6 @@ ActiveRecord::Schema.define(version: 20150713215755) do
     t.string   "first_name"
     t.string   "middle_name"
     t.string   "last_name"
-    t.string   "gender"
-    t.string   "drivers_licence_number"
-    t.string   "gov_number"
     t.string   "twitter_url"
     t.string   "linkedin_url"
     t.string   "facebook_url"

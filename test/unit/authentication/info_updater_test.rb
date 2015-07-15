@@ -6,7 +6,6 @@ class Authentication::InfoUpdaterTest < ActiveSupport::TestCase
     setup do
       @authentication = FactoryGirl.create(:authentication)
       @user = @authentication.user
-      @user.biography = nil
     end
 
     should 'update authentication and its user according to social info' do
@@ -24,7 +23,6 @@ class Authentication::InfoUpdaterTest < ActiveSupport::TestCase
       @user.reload; @authentication.reload
       assert_equal 'http://twitter.com/desksnearme', @authentication.profile_url
       assert_not_equal 'Desks Near Me', @user.name
-      assert_not_equal 'Something about me', @user.biography
       assert @user.avatar.to_s.include?('avatar.jpg')
       assert @authentication.information_fetched.present?
     end

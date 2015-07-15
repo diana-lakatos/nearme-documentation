@@ -339,7 +339,6 @@ class EventTrackerTest < ActiveSupport::TestCase
       industries: @user.industries.map(&:name),
       email: @user.email,
       phone: @user.phone,
-      job_title: @user.job_title,
       created: @user.created_at,
       location_number: @user.locations.count,
       listing_number: @user.listings.count,

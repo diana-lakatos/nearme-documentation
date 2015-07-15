@@ -12,20 +12,6 @@ class AccessorsTest < ActionDispatch::IntegrationTest
       @custom_attribute = FactoryGirl.create(:custom_attribute, name: 'destroy', target: @sample_model_type)
     end
 
-    context 'to be deleted tests, compatibility test' do
-      should 'reflect changes' do
-        @custom_attribute.update_attribute(:name, 'attr')
-        @sample_model = FactoryGirl.create(:sample_model, sample_model_type: @sample_model_type)
-        @sample_model.apply_custom_attributes
-        @sample_model.attr = 10
-        assert_equal 10, @sample_model.attr
-        assert_equal 10, @sample_model.properties.attr
-        @sample_model.properties.attr = 15
-        assert_equal 15, @sample_model.attr
-        assert_equal 15, @sample_model.properties.attr
-      end
-    end
-
     context 'basic' do
 
       setup do

@@ -102,7 +102,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
                 assert_equal 15, @listing.weekly_price_cents
                 assert_equal 30, @listing.monthly_price_cents
                 assert_equal true, @listing.enabled
-                assert_equal 'my attrs! 1', @listing.my_attribute
+                assert_equal 'my attrs! 1', @listing.properties.my_attribute
               end
 
               should 'have the right details (listing2)' do
@@ -113,7 +113,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
                 assert_equal 15, @listing.weekly_price_cents
                 assert_equal 30, @listing.monthly_price_cents
                 assert_equal true, @listing.enabled
-                assert_equal 'my attrs! 2', @listing.my_attribute
+                assert_equal 'my attrs! 2', @listing.properties.my_attribute
               end
 
               context '#photos' do
@@ -160,7 +160,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
                 assert_equal 15, @listing.weekly_price_cents
                 assert_equal 30, @listing.monthly_price_cents
                 assert_equal true, @listing.enabled
-                assert_equal 'my attrs! 3', @listing.my_attribute
+                assert_equal 'my attrs! 3', @listing.properties.my_attribute
               end
 
               context '#' do
@@ -273,7 +273,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
                   assert_equal 15, @listing.weekly_price_cents
                   assert_equal 30, @listing.monthly_price_cents
                   assert_equal true, @listing.enabled
-                  assert_equal 'my attrs! 1', @listing.my_attribute
+                  assert_equal 'my attrs! 1', @listing.properties.my_attribute
                 end
 
                 should 'have the right details (listing2)' do
@@ -284,7 +284,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
                   assert_equal 15, @listing.weekly_price_cents
                   assert_equal 30, @listing.monthly_price_cents
                   assert_equal true, @listing.enabled
-                  assert_equal 'my attrs! 2', @listing.my_attribute
+                  assert_equal 'my attrs! 2', @listing.properties.my_attribute
                 end
 
                 context '#photos' do
@@ -331,7 +331,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
                   assert_equal 15, @listing.weekly_price_cents
                   assert_equal 30, @listing.monthly_price_cents
                   assert_equal true, @listing.enabled
-                  assert_equal 'my attrs! 3', @listing.my_attribute
+                  assert_equal 'my attrs! 3', @listing.properties.my_attribute
                 end
 
                 should 'have correct original url (photo belonging to listing 3)' do
@@ -346,7 +346,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
                   assert_equal 15, @listing.weekly_price_cents
                   assert_equal 30, @listing.monthly_price_cents
                   assert_equal true, @listing.enabled
-                  assert_equal 'my attrs! 4', @listing.my_attribute
+                  assert_equal 'my attrs! 4', @listing.properties.my_attribute
                 end
 
               end

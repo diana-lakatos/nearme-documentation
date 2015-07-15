@@ -19,7 +19,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
       @xml_file = FactoryGirl.create(:xml_template_file)
       @xml_file.parse
       @company = @instance.companies.find_by_external_id('1')
-      @transactable_to_be_deleted = FactoryGirl.create(:transactable, my_attribute: 'name', location: @company.locations.first)
+      @transactable_to_be_deleted = FactoryGirl.create(:transactable, properties: { my_attribute: 'name' }, location: @company.locations.first)
     end
 
     should 'remove listings which do not exist in csv if sync is on for the company' do
@@ -49,7 +49,6 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
     end
     assert_not_nil Transactable.find_by_external_id('1')
     assert_nil Transactable.find_by_external_id('2')
-    assert_equal 20, Transactable.find_by_external_id('1').daily_price_cents
   end
 
 end

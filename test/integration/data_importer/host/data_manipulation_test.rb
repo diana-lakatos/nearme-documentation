@@ -91,7 +91,7 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
   should 'should be able to restore location instead of creating new one' do
     setup_current_data
     setup_data_for_other_user
-    @listing_to_not_be_reverted = FactoryGirl.create(:transactable, location: @location_empty, name: 'my name2', my_attribute: 'attribute')
+    @listing_to_not_be_reverted = FactoryGirl.create(:transactable, location: @location_empty, name: 'my name2', properties: { my_attribute: 'attribute'})
     @listing_to_not_be_reverted.destroy
     assert_no_difference 'Location.count' do
       @location_empty.destroy
@@ -183,13 +183,13 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     @user = FactoryGirl.create(:user)
     @company = FactoryGirl.create(:company, creator: @user)
     @location_not_empty = FactoryGirl.create(:location_rydygiera, name: 'Rydygiera', company: @company, location_type: @location_type, external_id: 2)
-    @listing_one = FactoryGirl.create(:transactable, location: @location_not_empty, name: 'my name', my_attribute: 'attribute', daily_price: 89, external_id: 4353)
+    @listing_one = FactoryGirl.create(:transactable, location: @location_not_empty, name: 'my name', properties: { my_attribute: 'attribute' }, daily_price: 89, external_id: 4353)
     stub_image_url('http://www.example.com/image1.jpg')
     stub_image_url('http://www.example.com/image2.jpg')
     stub_image_url('http://www.example.com/image3.jpg')
     @photo_one = FactoryGirl.create(:photo, listing: @listing_one, image_original_url: 'http://www.example.com/image1.jpg')
     @photo_two = FactoryGirl.create(:photo, listing: @listing_one, image_original_url: 'http://www.example.com/image2.jpg')
-    @listing_two = FactoryGirl.create(:transactable, location: @location_not_empty, name: 'my name2', my_attribute: 'attribute', daily_price: 89, external_id: 4354)
+    @listing_two = FactoryGirl.create(:transactable, location: @location_not_empty, name: 'my name2', properties: { my_attribute: 'attribute' }, daily_price: 89, external_id: 4354)
     @location_empty = FactoryGirl.create(:location_czestochowa, name: 'Czestochowa', company: @company, location_type: @location_type, external_id: 1)
   end
 
@@ -197,10 +197,10 @@ class DataImporter::Host::DataManipulationTest < ActiveSupport::TestCase
     @other_user = FactoryGirl.create(:user)
     @other_company = FactoryGirl.create(:company, creator: @other_user)
     @other_location_not_empty = FactoryGirl.create(:location_rydygiera, company: @other_company, location_type: @location_type, external_id: 2)
-    @other_listing_one = FactoryGirl.create(:transactable, location: @other_location_not_empty, name: 'my other name', my_attribute: 'attribute', daily_price: 10, external_id: 4353)
+    @other_listing_one = FactoryGirl.create(:transactable, location: @other_location_not_empty, name: 'my other name', properties: { my_attribute: 'attribute' }, daily_price: 10, external_id: 4353)
     stub_image_url('http://www.example.com/other-image.jpg')
     @other_photo_one = FactoryGirl.create(:photo, listing: @other_listing_one, image_original_url: 'http://www.example.com/other-image.jpg')
-    @other_listing_two = FactoryGirl.create(:transactable, location: @other_location_not_empty, name: 'the other', my_attribute: 'attribute', daily_price: 10, external_id: "no-touch")
+    @other_listing_two = FactoryGirl.create(:transactable, location: @other_location_not_empty, name: 'the other', properties: { my_attribute: 'attribute' }, daily_price: 10, external_id: "no-touch")
   end
 
   def setup_data_upload(csv_path, sync_mode = false)
