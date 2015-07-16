@@ -31,7 +31,7 @@ class InstanceAdmin < ActiveRecord::Base
   end
 
   def mark_as_instance_owner
-    self.update(instance_owner: true)
+    self.update(instance_owner: true, instance_admin_role_id: InstanceAdminRole.administrator_role.try(:id))
     instance.instance_admins.where(instance_owner: true).where.not(id: self.id).update_all(instance_owner: false)
   end
 
