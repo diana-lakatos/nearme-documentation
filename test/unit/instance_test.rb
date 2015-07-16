@@ -46,12 +46,6 @@ class InstanceTest < ActiveSupport::TestCase
     should 'return the instance owner' do
       assert @instance_owner.user, @instance.instance_owner
     end
-
-    should 'return if the user is the owner or not' do
-      assert     @instance.is_instance_owner?(@instance_owner.user)
-      assert_not @instance.is_instance_owner?(FactoryGirl.create(:user))
-    end
-
   end
 
   context 'buyable_transactable_type' do

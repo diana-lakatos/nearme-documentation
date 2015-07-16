@@ -6,6 +6,13 @@ class UserTest < ActiveSupport::TestCase
 
   should have_many(:industries)
 
+  context "instance owner method" do
+    should "return true if the user is an instance owner" do
+      @instance_owner = FactoryGirl.create(:instance_admin)
+      assert @instance_owner.user.is_instance_owner?
+    end
+  end
+
   context "#social_connections" do
     should "be empty for new user" do
       user = FactoryGirl.build(:user)

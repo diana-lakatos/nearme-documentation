@@ -30,6 +30,13 @@ class InstanceAdmin < ActiveRecord::Base
     self.instance_admin_role_id = InstanceAdminRole.default_role.try(:id)
   end
 
+  def mark_as_instance_owner
+    self.update(instance_owner: true)
+    instance.instance_admins.where(instance_owner: true).where.not(id: self.id).update_all(instance_owner: false)
+  end
+
+  private
+
   def mark_as_instance_owner_if_none
     return unless self.instance_id
     self.instance ||= Instance.find(self.instance_id)
@@ -37,10 +44,5 @@ class InstanceAdmin < ActiveRecord::Base
       self.instance_owner = true
       self.instance_admin_role_id = InstanceAdminRole.administrator_role.try(:id)
     end
-  end
-
-  def mark_as_instance_owner
-    self.update(instance_owner: true)
-    instance.instance_admins.where(instance_owner: true).where.not(id: self.id).update_all(instance_owner: false)
   end
 end

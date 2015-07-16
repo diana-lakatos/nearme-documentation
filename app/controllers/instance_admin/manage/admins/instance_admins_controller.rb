@@ -29,12 +29,12 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsController < InstanceAdmin::M
       @instance_admin.update_attribute(:instance_admin_role_id, InstanceAdminRole.find(params[:instance_admin_role_id]).id)
     end
 
-    if params[:mark_as_owner] && platform_context.instance.is_instance_owner?(current_user)
+    if params[:mark_as_owner] && current_user.is_instance_owner?
       @instance_admin.mark_as_instance_owner
     end
 
     if request.xhr?
-      render :nothing => true
+      render nothing: true
     else
       redirect_to action: :index
     end

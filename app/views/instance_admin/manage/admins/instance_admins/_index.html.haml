@@ -9,7 +9,7 @@
               %th= t('instance_admin.manage.admins.admin')
               %th= t('instance_admin.manage.admins.email')
               %th= t('instance_admin.manage.admins.role')
-              -if platform_context.instance.is_instance_owner?(current_user)
+              -if current_user.is_instance_owner?
                 %th= t('instance_admin.manage.admins.switch_owner')
               %th
           %tbody
@@ -26,7 +26,7 @@
                     = select_tag :instance_admin_role_id, options_from_collection_for_select(instance_admin_roles, "id", "name", instance_admin.instance_admin_role.id), :'data-role-select' => true, :'data-instance-admin-id' => instance_admin.id, :class => 'pull-left'
                     .loading{:'data-loading' => true}
                       = image_tag('spinner_mini.gif')
-                -if platform_context.instance.is_instance_owner?(current_user)
+                -if current_user.is_instance_owner?
                   %td
                     - unless instance_admin.instance_owner
                       = link_to t('instance_admin.manage.admins.make_owner'), instance_admin_manage_admins_instance_admin_path(instance_admin, mark_as_owner: true), :method => :put, data: {:confirm => "Are you sure you want to transfer ownership of this instance?"}
