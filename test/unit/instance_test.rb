@@ -36,6 +36,18 @@ class InstanceTest < ActiveSupport::TestCase
     end
   end
 
+  context 'instance owner' do
+    setup do
+      @instance_owner = FactoryGirl.create(:instance_admin)
+      @instance.instance_admins << @instance_owner
+      @instance.save
+    end
+
+    should 'return the instance owner' do
+      assert @instance_owner.user, @instance.instance_owner
+    end
+  end
+
   context 'buyable_transactable_type' do
     setup do
       @transactable_type_buy_sell = FactoryGirl.create(:transactable_type_buy_sell, instance: @instance)

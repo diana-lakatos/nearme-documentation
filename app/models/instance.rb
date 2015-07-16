@@ -362,5 +362,9 @@ class Instance < ActiveRecord::Base
     end
   end
 
+  def instance_owner
+    instance_admins.where(instance_owner: true).first.try(:user)
+  end
+
 end
 

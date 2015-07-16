@@ -24,10 +24,20 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsController < InstanceAdmin::M
 
   def update
     @instance_admin = InstanceAdmin.find(params[:id])
-    unless @instance_admin.instance_owner
+
+    if params[:instance_admin_role_id] && !@instance_admin.instance_owner
       @instance_admin.update_attribute(:instance_admin_role_id, InstanceAdminRole.find(params[:instance_admin_role_id]).id)
     end
-    render :nothing => true
+
+    if params[:mark_as_owner] && current_user.is_instance_owner?
+      @instance_admin.mark_as_instance_owner
+    end
+
+    if request.xhr?
+      render nothing: true
+    else
+      redirect_to action: :index
+    end
   end
 
   def destroy
