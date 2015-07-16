@@ -29,7 +29,7 @@
                 -if current_user.is_instance_owner?
                   %td
                     - unless instance_admin.instance_owner
-                      = link_to t('instance_admin.manage.admins.make_owner'), instance_admin_manage_admins_instance_admin_path(instance_admin, mark_as_owner: true), :method => :put, data: {:confirm => "Are you sure you want to transfer ownership of this instance?"}
+                      = link_to t('instance_admin.manage.admins.make_owner'), instance_admin_manage_admins_instance_admin_path(instance_admin, mark_as_owner: true), :method => :put, data: {:confirm => "Are you sure you want to transfer ownership of this instance? Only the new owner will be able to revert this change."}
                 %td
                   - unless instance_admin.instance_owner
                     .pull-right
