@@ -84,7 +84,10 @@ class Location < ActiveRecord::Base
   after_save do
     days = availability_rules.order(:day).pluck(:day)
     self.update_column(:opened_on_days, days)
-    self.listings.each { |l| l.update_column(:opened_on_days, days) if l.defer_availability_rules? }
+    self.listings.each do |l|
+      l.update_column(:opened_on_days, days) if l.defer_availability_rules?
+      ElasticIndexerJob.perform(:update, l.class.to_s, l.id)
+    end
   end
 
   def name_and_description_required
