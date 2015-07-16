@@ -19,6 +19,14 @@ class Address < ActiveRecord::Base
   before_validation :parse_address_components
   before_save :retry_fetch, if: lambda { |a| a.country.nil? }
 
+  after_save do
+    if entity.is_a?(Location)
+      entity.listings.each do |l|
+        ElasticIndexerJob.perform(:update, l.class.to_s, l.id)
+      end
+    end
+  end
+
   def self.order_by_distance_sql(latitude, longitude)
     distance_sql(latitude, longitude, order: "distance")
   end
@@ -145,4 +153,3 @@ class Address < ActiveRecord::Base
   end
 
 end
-
