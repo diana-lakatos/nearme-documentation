@@ -253,6 +253,7 @@ class Search.SearchController extends Search.Controller
     @assignFormParams(
       ignore_search_event: 0
       category_ids: all_categories.join(',')
+      lntype: _.toArray($('input[name="location_types_ids[]"]:checked').map(-> $(this).val())).join(',')
     )
     custom_attributes = {}
     for custom_attribute in @container.find('div[data-custom-attribute]')

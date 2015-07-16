@@ -16,6 +16,22 @@ Feature: A user can search for a listing
     Then I see a search result for the Auckland listing
     And I do not see a search result for the Adelaide listing
 
+  Scenario: Results in list mode should respect location type
+    Given a listing in Auckland exists
+    Given this listing has location type CoffeeShop
+    Given a listing in Auckland exists
+    Given this listing has location type Winery
+    When I search for "Auckland" with location type CoffeeShop forcing list view
+    Then I do see result for the CoffeeShop listing
+    Then I do not see result for the Winery listing
+    Then I click on Location Types
+    When I check location type Winery
+    When I check location type CoffeeShop
+    Then I see all results for location types CoffeeShop and Winery
+    When I uncheck location type CoffeeShop
+    Then I do see result for the Winery listing
+    Then I do not see result for the CoffeeShop listing
+
   Scenario: Displaying no results found when searching for nonexisting product.
     Given the user exists
     And current instance is buyable
