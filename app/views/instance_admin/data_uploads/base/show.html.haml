@@ -4,7 +4,7 @@
     .text-container
       %p
         - if @data_upload.imported_at.nil?
-          Your data has been processed, however nothing has been imported yet! U can #{link_to "preview xml", @data_upload.xml_file.url, target: :blank} that will be imported.
+          Your data has been processed, however nothing has been imported yet! You can #{link_to "preview xml", @data_upload.xml_file.url, target: :blank} that will be imported.
         - elsif @data_upload.parsing_result_log.blank?
           Parsing has been scheduled, job is waiting in the queue.
         - elsif @data_upload.encountered_error.blank?
