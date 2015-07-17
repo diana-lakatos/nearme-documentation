@@ -148,7 +148,7 @@ class RegistrationsController < Devise::RegistrationsController
   def update_avatar
     @user = current_user
     @user.avatar_transformation_data = { :crop => params[:crop], :rotate => params[:rotate] }
-    if @user.save
+    if @user.save(validate: false)
       render partial: 'dashboard/photos/resize_succeeded'
     else
       edit_avatar
@@ -158,7 +158,7 @@ class RegistrationsController < Devise::RegistrationsController
   def destroy_avatar
     @user = current_user
     @user.remove_avatar!
-    @user.save!
+    @user.save(validate: false)
     render :text => {}, :status => 200, :content_type => 'text/plain'
   end
 
