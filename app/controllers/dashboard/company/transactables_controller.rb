@@ -140,7 +140,10 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   end
 
   def transactable_params
-    params.require(:transactable).permit(secured_params.transactable(@transactable_type))
+    params.require(:transactable).permit(secured_params.transactable(@transactable_type)).tap do |whitelisted|
+      whitelisted[:properties] = params[:transactable][:properties] rescue {}
+    end
+
   end
 
   def build_document_requirements_and_obligation

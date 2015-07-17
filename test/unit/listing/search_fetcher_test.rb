@@ -16,12 +16,12 @@ class Listing::SearchFetcherTest < ActiveSupport::TestCase
 
     custom_attribute = FactoryGirl.build(:custom_attribute, :listing_types)
     TransactableType.first.custom_attributes << custom_attribute
-    @public_listing = FactoryGirl.create(:transactable, listing_type: @public_listing_type, location: @public_location)
-    @public_office_listing = FactoryGirl.create(:transactable, listing_type: @office_listing_type, location: @public_location)
-    @private_listing = FactoryGirl.create(:transactable, listing_type: @private_listing_type, location: @private_location)
-    @private_office_listing = FactoryGirl.create(:transactable, listing_type: @office_listing_type, location: @private_location)
+    @public_listing = FactoryGirl.create(:transactable, properties: { listing_type: @public_listing_type }, location: @public_location)
+    @public_office_listing = FactoryGirl.create(:transactable, properties: { listing_type: @office_listing_type }, location: @public_location)
+    @private_listing = FactoryGirl.create(:transactable, properties: { listing_type: @private_listing_type }, location: @private_location)
+    @private_office_listing = FactoryGirl.create(:transactable, properties: { listing_type: @office_listing_type }, location: @private_location)
 
-    @public_listing_other_tt = FactoryGirl.create(:transactable, transactable_type: FactoryGirl.create(:transactable_type), listing_type: @public_listing_type, location: @public_location)
+    @public_listing_other_tt = FactoryGirl.create(:transactable, transactable_type: FactoryGirl.create(:transactable_type), properties: { listing_type: @public_listing_type }, location: @public_location)
 
     @free_listing = FactoryGirl.create(:free_listing)
 

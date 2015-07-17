@@ -245,18 +245,18 @@ class UserTest < ActiveSupport::TestCase
     context 'when special requirements per instance' do
       setup do
         @instance = FactoryGirl.create(:instance, user_info_in_onboarding_flow: true)
-        @instance.user_required_fields = [:gender]
+        @instance.user_required_fields = [:middle_name]
         PlatformContext.current = PlatformContext.new(@instance)
       end
 
-      should 'be valid without gender if has not been peristed yet' do
-        @user = FactoryGirl.build(:user, gender: nil)
+      should 'be valid without middle_name if has not been peristed yet' do
+        @user = FactoryGirl.build(:user, middle_name: nil)
         @user.custom_validation = true
         assert @user.valid?
       end
 
-      should 'be valid without gender if user_info_in_onboarding_flow is set to false' do
-        @user = FactoryGirl.create(:user, gender: nil)
+      should 'be valid without middle_name if user_info_in_onboarding_flow is set to false' do
+        @user = FactoryGirl.create(:user, middle_name: nil)
         @user.custom_validation = true
         refute @user.valid?
         @instance.update_attribute(:user_info_in_onboarding_flow, false)
@@ -266,28 +266,22 @@ class UserTest < ActiveSupport::TestCase
       context 'user has been persisted' do
 
         setup do
-          @user = FactoryGirl.create(:user, gender: nil)
+          @user = FactoryGirl.create(:user, middle_name: nil)
           @user.custom_validation = true
         end
 
-        should 'not be valid without gender' do
+        should 'not be valid without middle_name' do
           refute @user.valid?
         end
 
-        should 'be valid even without gender if custom validation disabled' do
+        should 'be valid even without middle_name if custom validation disabled' do
           @user.custom_validation = nil
           assert @user.valid?
         end
 
-        should 'be valid with gender' do
-          @user.gender = 'male'
+        should 'be valid with middle_name' do
+          @user.middle_name = 'male'
           assert @user.valid?
-        end
-
-        should 'do not allow to enter weird thing to gender' do
-          @user.gender = 'elf'
-          refute @user.save
-          assert_nil @user.gender
         end
 
       end
@@ -939,8 +933,8 @@ class UserTest < ActiveSupport::TestCase
 
     should 'be able to set value' do
       assert_nothing_raised do
-        @user.custom_profile_attr = 'hello'
-        assert_equal 'hello', @user.custom_profile_attr
+        @user.properties.custom_profile_attr = 'hello'
+        assert_equal 'hello', @user.properties.custom_profile_attr
       end
     end
 

@@ -59,6 +59,7 @@ class Transactable < ActiveRecord::Base
 
   before_destroy :decline_reservations
   before_save :set_currency
+  before_save :set_is_trusted
 
   # == Scopes
   scope :featured, -> { where(%{ (select count(*) from "photos" where transactable_id = "listings".id) > 0  }).
@@ -215,8 +216,9 @@ class Transactable < ActiveRecord::Base
     respond_to?(:defer_availability_rules) && !transactable_type.skip_location?
   end
 
-  def set_custom_defaults
-    self.enabled = is_trusted? if self.enabled.nil?
+  def set_is_trusted
+    self.enabled = self.enabled && is_trusted?
+    true
   end
 
   # Are we deferring availability rules to the Location?

@@ -17,8 +17,6 @@ class UserDrop < BaseDrop
   # know_host_of
   #   returns an array of user objects containing users that are followed by the administrator
   #   of the listing passed as a parameter
-  # job_title
-  #   job title for this user
   # first_name
   #   first name of this user
   # email
@@ -29,7 +27,7 @@ class UserDrop < BaseDrop
   #   total number of impressions for the locations of the first company created by this user
   #   if it exists, otherwise for the administered locations
   delegate :name, :friends, :friends_know_host_of, :mutual_friends, :know_host_of,
-    :with_mutual_friendship_source, :job_title, :first_name, :email, :full_mobile_number,
+    :with_mutual_friendship_source, :first_name, :email, :full_mobile_number,
     :administered_locations_pageviews_30_day_total, :blog, to: :user
 
   def initialize(user)
@@ -156,12 +154,12 @@ class UserDrop < BaseDrop
     routes.set_password_path(:token => @user.try(:temporary_token), :track_email_event => true)
   end
 
-  # url for verifying (confirming) a user's email 
+  # url for verifying (confirming) a user's email
   def verify_user_url
     routes.verify_user_path(@user.id, @user.email_verification_token, :track_email_event => true)
   end
 
-  # url for verifying (confirming) a user's email 
+  # url for verifying (confirming) a user's email
   def bookings_dashboard_url
     routes.dashboard_user_reservations_path
   end

@@ -396,7 +396,6 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
                "name"=>"Desk",
                "description"=>"We have a group of several shared desks available.",
                "action_hourly_booking" => false,
-               "listing_type"=>"Desk",
                "quantity"=>"1",
                "daily_price"=>options[:daily_price],
                "weekly_price"=>options[:weekly_price],
@@ -404,7 +403,10 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
                "action_free_booking"=>options[:free],
                "confirm_reservations"=>"0",
                "photos_attributes" => [FactoryGirl.attributes_for(:photo)],
-               "currency"=>options[:currency]
+               "currency"=>options[:currency],
+               "properties" => {
+                 "listing_type"=>"Desk",
+               }
              }
             },
           }

@@ -74,12 +74,17 @@ class TransactableTest < ActiveSupport::TestCase
 
         should 'be enabled if is trusted' do
           Transactable.any_instance.stubs(:is_trusted?).returns(true)
-          assert FactoryGirl.build(:transactable).enabled?
+          assert FactoryGirl.create(:transactable).enabled?
         end
 
         should 'not be enabled if is not trusted' do
           Transactable.any_instance.stubs(:is_trusted?).returns(false)
-          refute FactoryGirl.build(:transactable).enabled?
+          refute FactoryGirl.create(:transactable, enabled: true).enabled?
+        end
+
+        should 'not be enabled if trusted but opted to be disabled' do
+          Transactable.any_instance.stubs(:is_trusted?).returns(true)
+          refute FactoryGirl.create(:transactable, enabled: false).enabled?
         end
 
       end

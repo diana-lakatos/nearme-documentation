@@ -231,7 +231,12 @@ class DataImporter::XmlFile < DataImporter::File
   def assign_attributes(object, node)
     xml_attributes = Transactable === object ? object.class.xml_attributes(@transactable_type) : object.class.xml_attributes
     object.attributes = xml_attributes.inject({}) do |attributes, attribute|
-      attributes[attribute] = node.xpath(attribute.to_s).text unless :location_type == attribute.to_sym || node.xpath(attribute.to_s).text.blank?
+      if object.respond_to?(:properties) && !object.respond_to?(attribute)
+        attributes[:properties] ||= {}
+        attributes[:properties][attribute] = node.xpath(attribute.to_s).text
+      else
+        attributes[attribute] = node.xpath(attribute.to_s).text unless :location_type == attribute.to_sym || node.xpath(attribute.to_s).text.blank?
+      end
       attributes
     end
   end

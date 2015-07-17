@@ -41,16 +41,23 @@ class DataImporter::Host::CsvCurrentDataGenerator < DataImporter::File
       if @csv_fields_builder.valid_object_field_pair?(object_field_pair)
         object = object_field_pair.keys.first
         field = object_field_pair[object]
-        data_row << case object
-        when 'location'
-          location
-        when 'address'
-          address
-        when 'transactable'
-          transactable
-        when 'photo'
-          photo
-        end.try(:send, field)
+        model = case object
+                when 'location'
+                  location
+                when 'address'
+                  address
+                when 'transactable'
+                  transactable
+                when 'photo'
+                  photo
+                end
+        data_row << begin
+                      if (object == 'transactable' && model.present? && !model.respond_to?(field))
+                        model.try(:properties).try(:send, field)
+                      else
+                        model.try(:send, field)
+                      end
+        end
       end
       data_row
     end

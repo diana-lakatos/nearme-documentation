@@ -252,6 +252,12 @@ class V1::ListingsController < V1::BaseController
     end
 
     def listing_params
-      params.require(:listing).permit(secured_params.transactable(TransactableType.first))
+      params[:listing] ||= {}
+      params[:listing][:properties] ||= {}
+      params[:listing][:properties][:listing_type] = params[:listing].delete(:listing_type)
+      params.require(:listing).permit(secured_params.transactable(TransactableType.first)).tap do |whitelisted|
+        whitelisted[:properties] ||= {}
+        whitelisted[:properties][:listing_type] = params[:listing][:properties][:listing_type]
+      end
     end
 end

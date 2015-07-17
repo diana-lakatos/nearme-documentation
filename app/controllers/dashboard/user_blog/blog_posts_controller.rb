@@ -7,7 +7,7 @@ class Dashboard::UserBlog::BlogPostsController < Dashboard::UserBlog::BaseContro
   end
 
   def new
-    @blog_post = current_user.blog_posts.new author_name: current_user.name, author_biography: current_user.biography,
+    @blog_post = current_user.blog_posts.new author_name: current_user.name, author_biography: current_user.properties.try(:biography),
                                              published_at: Time.zone.now.to_date
   end
 

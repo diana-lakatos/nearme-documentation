@@ -14,27 +14,29 @@
       = f.simple_fields_for :companies, @user.companies.first do |companies_form|
         = companies_form.simple_fields_for :locations, @user.companies.first.locations.first do |locations_form|
           = locations_form.simple_fields_for :listings, @user.companies.first.locations.first.listings.first do |listings_form|
-            = render 'listings/listing_form', f: listings_form, listing: listings_form.object, only_inputs: [ :transactable_type_id, :booking_type, :id ]
-            - @form_components.each do |form_component|
-              %h2= form_component.name
-              %br
-              .box
-                - form_component.form_fields.each do |form_field|
-                  - model = form_field.keys.first
-                  - field = form_field[model]
-                  - if model == 'user'
-                    = render :partial => 'registrations/attributes', :locals => { f: f, only_inputs: [field.to_sym], country: @country }
-                  - elsif model == 'company'
-                    = render :partial => 'companies/company_form', :locals => { :f => companies_form, :company => companies_form.object, :only_inputs => [ field.to_sym ] }
-                  - elsif model == 'location'
-                    = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => locations_form.object, :only_inputs => [ field.to_sym ] }
-                  - elsif model == 'transactable'
-                    = render 'listings/listing_form', f: listings_form, listing: listings_form.object, only_inputs: [ field.to_sym ], photos: @photos, form_fields: form_component.form_fields
-            .hidden
-              - Money::Currency.table.values.each do |c|
-                %span{:id => "currency_#{c[:iso_code]}"}
-                  = c[:symbol]
-              %span{:id => "default_currency"}= @transactable_type.default_currency
+            = listings_form.simple_fields_for :properties, @user.companies.first.locations.first.listings.first.properties do |properties_form|
+              = render 'listings/listing_form', f: listings_form, properties_form: properties_form, listing: listings_form.object, only_inputs: [ :transactable_type_id, :booking_type, :id ]
+
+              - @form_components.each do |form_component|
+                %h2= form_component.name
+                %br
+                .box
+                  - form_component.form_fields.each do |form_field|
+                    - model = form_field.keys.first
+                    - field = form_field[model]
+                    - if model == 'user'
+                      = render :partial => 'registrations/attributes', :locals => { f: f, only_inputs: [field.to_sym], country: @country }
+                    - elsif model == 'company'
+                      = render :partial => 'companies/company_form', :locals => { :f => companies_form, :company => companies_form.object, :only_inputs => [ field.to_sym ] }
+                    - elsif model == 'location'
+                      = render :partial => 'locations/location_form', :locals => { :f => locations_form, :location => locations_form.object, :only_inputs => [ field.to_sym ] }
+                    - elsif model == 'transactable'
+                      = render 'listings/listing_form', f: listings_form, properties_form: properties_form, listing: listings_form.object, only_inputs: [ field.to_sym ], photos: @photos, form_fields: form_component.form_fields
+              .hidden
+                - Money::Currency.table.values.each do |c|
+                  %span{:id => "currency_#{c[:iso_code]}"}
+                    = c[:symbol]
+                %span{:id => "default_currency"}= @transactable_type.default_currency
 
         .actions
           .centerbuttons

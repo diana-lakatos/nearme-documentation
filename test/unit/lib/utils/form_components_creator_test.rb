@@ -16,8 +16,7 @@ class Utils::FormComponentsCreatorTest < ActiveSupport::TestCase
     end
 
     should 'create 5 sections if user info is enabled' do
-      @transactable_type.instance.update_attribute(:user_info_in_onboarding_flow, true)
-      @transactable_type.instance.update_attribute(:user_required_fields, [:job_title])
+      @transactable_type.instance.update_attributes(user_info_in_onboarding_flow: true, user_required_fields: [:middle_name])
       @form_component_creator = Utils::FormComponentsCreator.new(@transactable_type)
       assert_difference 'FormComponent.count', 5 do
         @form_component_creator.create!

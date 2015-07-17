@@ -35,7 +35,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
     setup do
       @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge({ transactable_type_id: ServiceType.first.id,
                                                                                photos_attributes: [FactoryGirl.attributes_for(:photo)],
-                                                                               listing_type: @listing_type,
+                                                                               properties: { listing_type: @listing_type },
                                                                                description: "Aliquid eos ab quia officiis sequi.",
                                                                                name: "Listing #{Random.rand(1000)}",
                                                                                daily_price: 10,
@@ -287,7 +287,7 @@ class Dashboard::Company::TransactablesControllerTest < ActionController::TestCa
   context 'versions' do
 
     should 'track version change on create' do
-      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge({transactable_type_id: TransactableType.first.id, photos_attributes: [FactoryGirl.attributes_for(:photo)], listing_type: @listing_type, daily_price: 10, description: "Aliquid eos ab quia officiis sequi.", name: "Listing #{Random.rand(1000)}" })
+      @attributes = FactoryGirl.attributes_for(:transactable).reverse_merge({transactable_type_id: TransactableType.first.id, photos_attributes: [FactoryGirl.attributes_for(:photo)], properties: { listing_type: @listing_type }, daily_price: 10, description: "Aliquid eos ab quia officiis sequi.", name: "Listing #{Random.rand(1000)}" })
       @attributes.delete(:photo_not_required)
       stub_mixpanel
       assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Transactable", "create").count') do

@@ -168,11 +168,14 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   end
 
   def wizard_params
-    params.require(:user).permit(secured_params.user(@transactable_type))
-  end
+    params.require(:user).permit(secured_params.user(@transactable_type)).tap do |whitelisted|
+      begin
+        whitelisted[:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:properties] = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:properties] rescue {}
+      rescue
+        nil
+      end
 
-  def boarding_form_params
-    params.require(:boarding_form).permit(secured_params.boarding_form(@product_type))
+    end
   end
 
   def build_approval_requests
