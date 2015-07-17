@@ -6,6 +6,11 @@ FactoryGirl.define do
     hint 'this is my hint'
     required 0
 
+    after(:create) do |attribute|
+      CustomAttributes::CustomAttribute.clear_cache(attribute.target_type) if attribute.target_type
+      I18N_DNM_BACKEND.update_cache(Instance.first.id) if defined? I18N_DNM_BACKEND
+    end
+
     trait :listing_types do
       name 'listing_type'
       valid_values { ["Desk", "Meeting Room", "Office Space", "Salon Booth"] }
@@ -54,6 +59,16 @@ FactoryGirl.define do
       html_tag 'select'
       prompt 'My Prompt'
       valid_values { ['Value One', 'Value Two'] }
+    end
+
+    factory :custom_attibute_license do
+      name 'license_number'
+      attribute_type 'string'
+      html_tag 'input'
+      required '1'
+      public '1'
+      label 'License number'
+      validation_rules { { presence: {} } }
     end
 
     factory :user_custom_attribute do

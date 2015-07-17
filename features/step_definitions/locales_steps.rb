@@ -20,6 +20,7 @@ And(/^we have translations in place$/) do
   FactoryGirl.create(:translation, locale: 'cs', key: 'top_navbar.messages', value: 'Zprávy')
   FactoryGirl.create(:translation, locale: 'pl', key: 'top_navbar.messages', value: 'Wiadomości',
                      instance_id: Instance.first.id)
+  I18N_DNM_BACKEND.update_cache(Instance.first.id)
 end
 
 And /^(?:|I )change language to "([^"]*)"$/ do |language|

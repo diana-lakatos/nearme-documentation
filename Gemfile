@@ -145,6 +145,10 @@ gem 'spree', github: 'spree/spree', branch: '2-3-stable'
 gem 'domainatrix'
 gem 'store_base_sti_class'
 
+group :staging, :production do
+  gem 'message_bus'
+end
+
 group :profiling, :development do
   gem 'rack-mini-profiler', require: false
   gem 'flamegraph'
@@ -174,7 +178,7 @@ group :development, :staging do
 end
 
 group :development do
-  gem 'unicorn-rails'
+  gem 'thin'
   gem 'rails-dev-boost', github: 'thedarkone/rails-dev-boost'
   gem "better_errors"
   gem "binding_of_caller"
@@ -208,6 +212,7 @@ group :test do
   gem 'vcr'
   gem 'test_after_commit'
   gem 'rails-perftest'
+  gem 'message_bus', require: false
 end
 gem 'mailman'
 

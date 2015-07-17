@@ -52,6 +52,14 @@ Before do
     payment_gateway_id: ipg.id
   )
   instance.country_payment_gateways << country_ipg
+  I18N_DNM_BACKEND.update_cache(instance.id) if defined? I18N_DNM_BACKEND
+  InstanceViewResolver.instance.clear_cache
+end
+
+After do
+  Transactable.clear_custom_attributes_cache
+  User.clear_custom_attributes_cache
+  Spree::Product.clear_custom_attributes_cache
 end
 
 def last_json
