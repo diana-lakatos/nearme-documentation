@@ -5,6 +5,7 @@ FactoryGirl.define do
     locale 'en'
     key 'translation_key'
     value 'translation-value'
+    instance { Instance.first }
 
     factory :czech_translation do
       locale 'cs'

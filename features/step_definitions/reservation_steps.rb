@@ -46,7 +46,12 @@ Then /^I should have a cancelled reservation on "([^"]*)"$/ do |date|
 end
 
 Given /^Extra fields are prepared for booking$/ do
-  ensure_required_custom_attribute_is_present
+  messages = NearMeMessageBus.track_publish do
+    ensure_required_custom_attribute_is_present
+  end
+  messages.uniq.each do |message|
+    CacheExpiration.handle_cache_expiration message
+  end
 
   User.last.update_column(:instance_profile_type_id, InstanceProfileType.first.id)
   User.last.update_column(:mobile_number, '')
