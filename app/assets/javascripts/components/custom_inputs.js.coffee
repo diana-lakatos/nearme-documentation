@@ -32,17 +32,17 @@ class @CustomInputs
         $(element).removeClass(@checkBoxChecked)
 
       $(@checkBoxInput + ":checked").each (index, element) =>
-        $(element).parent(@checkBox).addClass(@checkBoxChecked)
+        $(element).parents(@checkBox).addClass(@checkBoxChecked)
 
       $(@checkBoxInput + ":disabled").each (index, element) =>
-        $(element).parent(@checkBox).addClass(@checkBoxDisabled)
+        $(element).parents(@checkBox).addClass(@checkBoxDisabled)
 
     if $(@radioInput).length
       $(@radio).each (index, element) =>
         $(element).removeClass(@radioOn)
 
       $(@radioInput + ":checked").each (index, element) =>
-        $(element).parent(@radio).addClass(@radioOn)
+        $(element).parents(@radio).addClass(@radioOn)
 
       $(@radioInput + ":disabled").each (index, element) =>
-        $(element).parent(@radio).addClass(@radioDisabled)
+        $(element).parents(@radio).addClass(@radioDisabled)
