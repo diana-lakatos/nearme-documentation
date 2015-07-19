@@ -28,11 +28,11 @@ en:
         instance_view:
           attributes:
             service_type:
-              not_accessible: "can't associate Service Type with this template, becuase this template is used by following workflow alerts, which are irrelevant to Service Type: %{workflow_alerts}"
+              not_accessible: "can't associate Service Type with this template, because this template is used by the following workflow alerts, which are irrelevant to Service Type: %{workflow_alerts}"
         workflow_alert:
           attributes:
             template_path:
-              not_accessible: 'this template path is associated with Service Type, but service type is irrelevant to this workflow alert. Please choose different template or de-associate service type from the chosen one.'
+              not_accessible: 'this template path is associated with Service Type, but Service Type is irrelevant to this workflow alert. Please choose a different template or de-associate Service Type from the chosen one.'
         user:
           attributes:
             email:
