@@ -41,7 +41,7 @@ en:
         default_country: "Default country"
         allowed_currencies: "Allowed currencies"
         default_currency: "Default currency"
-        possible_manual_payment: "Is it possible to skip paying"
+        possible_manual_payment: "Is it possible to skip paying?"
         marketplace_password: 'Password'
         password_protected: 'Require password to access marketplace'
         payment_transfers_frequency: 'Payment transfers frequency'
@@ -330,7 +330,7 @@ en:
         book_it_out_discount: "Set your % discount amount"
         book_it_out_minimum_qty: "Book it Out is only available if the set minimum quantity is available"
       service_type:
-        action_continuous_dates_booking: "Allow user to select only contiguous dates when booking"
+        action_continuous_dates_booking: "Allow user to select only continuous dates when booking"
       user:
         mobile_number: ''
         phone: ''
