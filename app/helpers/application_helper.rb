@@ -290,7 +290,9 @@ module ApplicationHelper
 
   # This is needed because the extra fields need to be placed in a container
   def should_display_checkout_extra_fields?(user)
-    if user.field_blank_or_changed?(:country_name) || user.field_blank_or_changed?(:mobile_number)
+    if user.field_blank_or_changed?(:country_name) || user.field_blank_or_changed?(:mobile_number) ||
+      user.field_blank_or_changed?(:first_name) || user.field_blank_or_changed?(:last_name) ||
+      user.field_blank_or_changed?(:phone)
       return true
     end
 

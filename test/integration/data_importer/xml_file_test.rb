@@ -233,7 +233,7 @@ class DataImporter::XmlFileTest < ActiveSupport::TestCase
           end
 
           should '1 should have the right details' do
-            assert_equal "UserName", @company.name
+            assert_equal "UserName UserLast", @company.name
           end
 
           context '#locations' do

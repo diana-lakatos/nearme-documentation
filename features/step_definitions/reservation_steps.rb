@@ -50,6 +50,9 @@ Given /^Extra fields are prepared for booking$/ do
 
   User.last.update_column(:instance_profile_type_id, InstanceProfileType.first.id)
   User.last.update_column(:mobile_number, '')
+  User.last.update_column(:first_name, '')
+  User.last.update_column(:last_name, '')
+  User.last.update_column(:phone, '')
 end
 
 When /^I book space for:$/ do |table|
@@ -65,8 +68,14 @@ When /^I book space for with extra fields:$/ do |table|
   step "I provide reservation credit card details"
   page.should have_css('input#reservation_request_checkout_extra_fields_user_properties_license_number')
   page.should have_css('input#reservation_request_checkout_extra_fields_user_mobile_number')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_first_name')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_last_name')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_phone')
   fill_in 'reservation_request_checkout_extra_fields_user_properties_license_number', with: '123123412345'
   fill_in 'reservation_request_checkout_extra_fields_user_mobile_number', with: '123123412345'
+  fill_in 'reservation_request_checkout_extra_fields_user_first_name', with: 'Aaa'
+  fill_in 'reservation_request_checkout_extra_fields_user_last_name', with: 'Aaa'
+  fill_in 'reservation_request_checkout_extra_fields_user_phone', with: '12312341'
   step "I click to confirm the booking"
 end
 
@@ -76,6 +85,73 @@ When /^I fail to book space for without extra fields:$/ do |table|
   step "I provide reservation credit card details"
   page.should have_css('input#reservation_request_checkout_extra_fields_user_properties_license_number')
   page.should have_css('input#reservation_request_checkout_extra_fields_user_mobile_number')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_first_name')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_last_name')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_phone')
+  step "I click and fail to confirm the booking"
+end
+
+When /^I fail to book space for without extra fields mobile number:$/ do |table|
+  step "I select to book space for:", table
+  step "I click to review the booking"
+  step "I provide reservation credit card details"
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_properties_license_number')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_mobile_number')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_first_name')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_last_name')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_phone')
+  fill_in 'reservation_request_checkout_extra_fields_user_properties_license_number', with: '123123412345'
+  fill_in 'reservation_request_checkout_extra_fields_user_first_name', with: 'Aaa'
+  fill_in 'reservation_request_checkout_extra_fields_user_last_name', with: 'Aaa'
+  fill_in 'reservation_request_checkout_extra_fields_user_phone', with: '123123412345'
+  step "I click and fail to confirm the booking"
+end
+
+When /^I fail to book space for without extra fields license number:$/ do |table|
+  step "I select to book space for:", table
+  step "I click to review the booking"
+  step "I provide reservation credit card details"
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_properties_license_number')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_mobile_number')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_first_name')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_last_name')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_phone')
+  fill_in 'reservation_request_checkout_extra_fields_user_mobile_number', with: '123123412345'
+  fill_in 'reservation_request_checkout_extra_fields_user_first_name', with: 'Aaa'
+  fill_in 'reservation_request_checkout_extra_fields_user_last_name', with: 'Aaa'
+  fill_in 'reservation_request_checkout_extra_fields_user_phone', with: '12312341'
+  step "I click and fail to confirm the booking"
+end
+
+When /^I fail to book space for without extra fields last name:$/ do |table|
+  step "I select to book space for:", table
+  step "I click to review the booking"
+  step "I provide reservation credit card details"
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_properties_license_number')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_mobile_number')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_first_name')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_last_name')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_phone')
+  fill_in 'reservation_request_checkout_extra_fields_user_properties_license_number', with: '123123412345'
+  fill_in 'reservation_request_checkout_extra_fields_user_mobile_number', with: '123123412345'
+  fill_in 'reservation_request_checkout_extra_fields_user_first_name', with: 'Aaa'
+  fill_in 'reservation_request_checkout_extra_fields_user_phone', with: '12312341'
+  step "I click and fail to confirm the booking"
+end
+
+When /^I fail to book space for without extra fields first name:$/ do |table|
+  step "I select to book space for:", table
+  step "I click to review the booking"
+  step "I provide reservation credit card details"
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_properties_license_number')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_mobile_number')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_first_name')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_last_name')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_phone')
+  fill_in 'reservation_request_checkout_extra_fields_user_properties_license_number', with: '123123412345'
+  fill_in 'reservation_request_checkout_extra_fields_user_mobile_number', with: '123123412345'
+  fill_in 'reservation_request_checkout_extra_fields_user_last_name', with: 'Aaa'
+  fill_in 'reservation_request_checkout_extra_fields_user_phone', with: '12312341'
   step "I click and fail to confirm the booking"
 end
 
@@ -87,6 +163,8 @@ When /^I book space as new user for:$/ do |table|
   #select "New Zealand", :from => 'reservation_request_country_name'
   page.execute_script "$('select#reservation_request_country_name option[value=\"New Zealand\"]').prop('selected', true).trigger('change');"
   fill_in 'Mobile number', with: '8889983375'
+  fill_in 'reservation_request_checkout_extra_fields_user_phone', with: '123123412345'
+  fill_in 'reservation_request_checkout_extra_fields_user_last_name', with: 'Name'
   step "I provide reservation credit card details"
   step "I click to confirm the booking"
 end

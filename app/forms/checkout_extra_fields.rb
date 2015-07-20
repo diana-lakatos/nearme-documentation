@@ -8,6 +8,8 @@ class CheckoutExtraFields < Form
     @user = User.find(user.id) if user.present?
     @attributes = attributes
     @secured_params = SecuredParams.new
+    @all_attachments_present = true
+    @all_approval_requests_messages_present = true
   end
 
   def are_fields_present?
@@ -60,7 +62,10 @@ class CheckoutExtraFields < Form
   def valid?
     @user.country_name_required = true
     @user.mobile_number_required = true
-    @user.valid?
+    @user.phone_required = true
+    @user.last_name_required = true
+
+    @user.valid? && @all_attachments_present && @all_approval_requests_messages_present
   end
 
   def errors

@@ -120,7 +120,7 @@ class Authentication::TokenBasedLoginTest < ActionDispatch::IntegrationTest
   end
 
   def logged_in_as(user)
-    response.body.include?(user.name)
+    response.body.include?(user.first_name)
   end
 
   def url_with_login_token(token)

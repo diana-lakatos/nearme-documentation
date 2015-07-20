@@ -173,6 +173,38 @@ Feature: A user can book at a space
             | the transactable | next week Monday  | 1         |
             | the transactable | next week Tuesday | 1         |
 
+    Scenario: A logged in user can't book a transactable without filling in mobile number
+      Given I am logged in as the user
+      Given Extra fields are prepared for booking
+        Then I fail to book space for without extra fields mobile number:
+            | Transactable     | Date         | Quantity  |
+            | the transactable | next week Monday  | 1         |
+            | the transactable | next week Tuesday | 1         |
+
+    Scenario: A logged in user can't book a transactable without filling in last name
+      Given I am logged in as the user
+      Given Extra fields are prepared for booking
+        Then I fail to book space for without extra fields last name:
+            | Transactable     | Date         | Quantity  |
+            | the transactable | next week Monday  | 1         |
+            | the transactable | next week Tuesday | 1         |
+
+    Scenario: A logged in user can't book a transactable without filling in license number
+      Given I am logged in as the user
+      Given Extra fields are prepared for booking
+        Then I fail to book space for without extra fields license number:
+            | Transactable     | Date         | Quantity  |
+            | the transactable | next week Monday  | 1         |
+            | the transactable | next week Tuesday | 1         |
+
+    Scenario: A logged in user can't book a transactable without filling in first name
+      Given I am logged in as the user
+      Given Extra fields are prepared for booking
+        Then I fail to book space for without extra fields first name:
+            | Transactable     | Date         | Quantity  |
+            | the transactable | next week Monday  | 1         |
+            | the transactable | next week Tuesday | 1         |
+
     @borked
     Scenario: Booking for a 'automatically confirm' listing should show relevant details
       Given bookings for the transactable do not need to be confirmed

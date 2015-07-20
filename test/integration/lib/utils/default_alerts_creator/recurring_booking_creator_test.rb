@@ -80,7 +80,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
       end
       mail = ActionMailer::Base.deliveries.last
 
-      assert_contains @reservation.listing.creator.name, mail.html_part.body
+      assert_contains @reservation.listing.creator.first_name, mail.html_part.body
       assert_equal [@reservation.listing.creator.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name} cancelled a recurring booking for '#{@reservation.listing.name}' at #{@reservation.location.street}", mail.subject
     end
@@ -105,7 +105,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
         WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithAutoConfirmation, @recurring_booking.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_contains @reservation.listing.creator.name, mail.html_part.body
+      assert_contains @reservation.listing.creator.first_name, mail.html_part.body
       assert_contains @expected_dates, mail.html_part.body
       assert_equal [@reservation.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name}, your recurring booking has been confirmed", mail.subject
@@ -117,7 +117,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
         WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithAutoConfirmation, @recurring_booking.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_contains @reservation.listing.creator.name, mail.html_part.body
+      assert_contains @reservation.listing.creator.first_name, mail.html_part.body
       assert_contains @expected_dates, mail.html_part.body
       assert_equal [@reservation.host.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name} just booked your #{@platform_context.decorate.bookable_noun}!", mail.subject
@@ -129,7 +129,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
         WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithoutAutoConfirmation, @recurring_booking.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_contains @reservation.listing.creator.name, mail.html_part.body
+      assert_contains @reservation.listing.creator.first_name, mail.html_part.body
       assert_equal [@reservation.listing.creator.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name} just booked your #{@platform_context.decorate.bookable_noun}!", mail.subject
     end
@@ -152,7 +152,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
         WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::ManuallyConfirmed, @recurring_booking.id)
       end
       mail = ActionMailer::Base.deliveries.last
-      assert_contains @reservation.listing.creator.name, mail.html_part.body
+      assert_contains @reservation.listing.creator.first_name, mail.html_part.body
       assert_contains @expected_dates, mail.html_part.body
       assert_equal [@reservation.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name}, your recurring booking has been confirmed", mail.subject
@@ -165,7 +165,7 @@ class Utils::DefaultAlertsCreator::RecurringBookingCreatorTest < ActionDispatch:
       end
       mail = ActionMailer::Base.deliveries.last
 
-      assert_contains @reservation.listing.creator.name, mail.html_part.body
+      assert_contains @reservation.listing.creator.first_name, mail.html_part.body
       assert_equal [@reservation.listing.creator.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] Thanks for confirming!", mail.subject
     end
