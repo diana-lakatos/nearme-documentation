@@ -38,7 +38,7 @@ Feature: User can add document requirements during listing form submission
       And Show form for another document requirement
       And Fill in form for another document requirement
       And I submit the transactable form
-      And I should see "Great, your listing's details have been updated."
+      And I should see translation for "flash_messages.manage.listings.listing_updated"
      Then the transactable should be updated
      And Visit edit listing page
      And Updated document requirement should be present in form
