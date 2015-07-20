@@ -22,7 +22,9 @@ Feature: User can add document requirements during listing form submission
       And I fill listing form with valid details
       And Fill in document requirement fields
       And I submit the transactable form
-      And I should see "Great, your new Desk has been added!"
+      And I should see translation for "flash_messages.manage.listings.desk_added":
+        | Variable | Value |
+        | bookable_noun | Desk |
      Then Listing with my details should be created
 
   Scenario: A user can edit existing listing and document requirements
