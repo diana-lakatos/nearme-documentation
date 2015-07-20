@@ -1,11 +1,11 @@
 = simple_form_for @instance, :url => instance_admin_buy_sell_commissions_path do |f|
   .content-container
-    %h4 Commissions
+    %h4= t('instance_admin.buy_sell.commissions.commissions')
     .row
       .input-container.col-xs-6
-        = f.input :service_fee_guest_percent, label: 'Service fee paid by BUYER', input_html: { class: 'form-control' }
+        = f.input :service_fee_guest_percent, input_html: { class: 'form-control' }
       .input-container.col-xs-6
-        = f.input :service_fee_host_percent, label: 'Service fee paid by SELLER', input_html: { class: 'form-control' }
+        = f.input :service_fee_host_percent, input_html: { class: 'form-control' }
 
   = content_for :header_buttons do
     = submit_tag 'Save', class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }

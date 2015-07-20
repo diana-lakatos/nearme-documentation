@@ -6,7 +6,7 @@
           = link_to "#{state.capitalize} (#{ApprovalRequest.send(state).count})", instance_admin_manage_approval_requests_path(:show => state), class: " #{'active' if state == params[:show]}"
 
   %h4
-    VENDOR APPROVAL
+    = t('instance_admin.manage.approval_requests.vendor_approval')
 
   .row
     .text-container
@@ -53,11 +53,11 @@
       %table.table.table-hover
         %thead
           %tr
-            %th Object Name
-            %th Object Type
-            %th Notes
-            %th Created At
-            %th Creator
+            %th= t('instance_admin.manage.approval_requests.object_name')
+            %th= t('instance_admin.manage.approval_requests.object_type')
+            %th= t('instance_admin.manage.approval_requests.notes')
+            %th= t('instance_admin.manage.approval_requests.created_at')
+            %th= t('instance_admin.manage.approval_requests.creator')
 
         %tbody
           - @approval_requests.each do |resource|
@@ -73,7 +73,7 @@
               %td
                 = resource.decorate.login_as_owner_creator_link
               %td
-                = link_to 'Manage', edit_instance_admin_manage_approval_request_path(resource)
+                = link_to t('instance_admin.manage.approval_requests.manage'), edit_instance_admin_manage_approval_request_path(resource)
 
 
 .row
@@ -82,7 +82,7 @@
       = will_paginate @approval_requests
 
 = content_for :header_buttons do
-  = link_to 'Settings', instance_admin_manage_approval_request_templates_path, class: 'btn btn-blue'
+  = link_to t('instance_admin.manage.approval_requests.settings'), instance_admin_manage_approval_request_templates_path, class: 'btn btn-blue'
 
 - content_for :domready do
   new InstanceAdmin.ApprovalRequestsController($('.approval_requests'))

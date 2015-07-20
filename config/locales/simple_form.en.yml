@@ -18,6 +18,8 @@ en:
     error_notification:
       default_message: "Some errors were found, please take a look:"
     labels:
+      support_ticket_message:
+        message: "Message"
       user_message:
         body: "Body"
       boarding_form:
@@ -53,6 +55,20 @@ en:
         support_imap_port: "Support IMAP port"
         support_imap_ssl: "Support IMAP SSL"
         olark_enabled: "Enable Olark support chat"
+        tt_select_type: 'Listing type UI (Homepage)'
+        default_search_view: 'Service view'
+        default_products_search_view: 'Products view'
+        date_pickers: 'Enable date pickers'
+        date_pickers_use_availability_rules: 'Use availability rules'
+        date_pickers_mode: 'Search Mode'
+        search_radius: 'Select Radius'
+        search_text: 'Enter Custom Search Text'
+        taxonomy_tree: 'Enable category tree'
+        saved_search: 'Enable saved search'
+        price_slider: 'Enable price slider'
+        price_types: 'Enable price types'
+        service_fee_guest_percent: 'Service fee paid by BUYER'
+        service_fee_host_percent: 'Service fee paid by SELLER'
       domain:
         google_analytics_tracking_code: "GA Tracking Code"
         secured: "Enable HTTPS"
@@ -102,6 +118,7 @@ en:
         author_biography: 'Author Bio'
         author_avatar_img: 'Author avatar'
         logo: 'Logo'
+        highlighted: 'Promote to marketplace-wide blog'
 
       theme:
         name: Name
@@ -227,6 +244,22 @@ en:
         action_book_it_out: 'Enable Book it Out option'
       service_type:
         action_continuous_dates_booking: 'Action continuous dates booking'
+        service_fee_guest_percent: 'Guest Service Fee Percent'
+        service_fee_host_percent: 'Host Service Fee Percent'
+        enable_cancellation_policy: "Should cancellation policy be enabled?"
+        cancellation_policy_hours_for_cancellation: 'Number of hours before booking to cancel'
+        cancellation_policy_penalty_percentage: 'Penalty fee (percent of total amount)'
+        hours_to_expiration: "Number of hours before unconfirmed reservation expires"
+        minimum_booking_minutes: "Minimum booking minutes (for hourly pricing)"
+        action_book_it_out: "Bulk Booking Discount"
+        action_exclusive_price: "Enable Exclusive Price"
+        action_price_per_unit: "Enable Per Unit Pricing"
+        action_schedule_booking: 'Schedule Booking'
+        bookable_noun: 'Bookable Noun (e.g. Desk)'
+        lessor: 'Lessor (e.g. host)'
+        lessee: 'Lessee (e.g. guest)' 
+        action_rfq: 'Request for Quote'
+        action_na: 'NO ACTION'
       user:
         biography: 'About me'
         sms_notifications_enabled: 'Enable Text Message Notifications'
@@ -234,6 +267,31 @@ en:
 
       registration:
         email: 'Your email address'
+
+      data_upload:
+        csv_file: "CSV File"
+        options:
+          send_invitational_email: "Send invitational email"
+          enable_rfq: "Enable request for quote"
+          default_shipping_category_id: "Choose default shipping category/profile"
+
+      category:
+        name: 'New category group'
+
+      blog_instance:
+        owner:
+          user_blogs_enabled: 'Enable user blogs'
+
+      product_type:
+        action_rfq: 'Request for Quote'
+
+      dimensions_template:
+        name: "Template Name"
+        unit_of_measure: "Units of Measure"
+        weight_unit: "Type of Unit"
+        height_unit: "Type of Unit"
+        width_unit: "Type of Unit"
+        depth_unit: "Type of Unit"
 
     placeholders:
       boarding_form:
@@ -273,8 +331,8 @@ en:
         title: 'What is the title of the post?'
         published_at: 'When will this be published'
         slug: 'Enter a slug'
-        author_name: ''
-        author_bio: ''
+        author_name: 'Enter the name of the author'
+        author_bio: 'Enter a bio for the author'
 
       companies:
         name: 'Enter your business name'
@@ -306,6 +364,41 @@ en:
         call_to_action: "Find out more"
         blog_url: 'example.com/blog'
 
+      category:
+        name: 'What is the name of the category group?'
+
+      additional_charge_type:
+        name: "What's the name of this upsell?"
+        description: "Please, describe this upsell"
+        amount: 'Enter amount'
+
+      instance:
+        search_text: 'Please, enter your location'
+
+      blog_post:
+        title: 'What is the title of the post?'
+        slug: 'Enter an optional slug'
+        author_name: 'Enter the name of the author'
+        author_biography: 'Enter a bio for the author'
+
+      blog_instance:
+        name: 'Enter blog name'
+        facebook_app_id: 'Enter facebook app ID'
+        header_text: 'Enter blog header text'
+        header_motto: 'Enter blog motto'
+
+      tax_category:
+        name: 'What is the name of the tax category?'
+        description: 'Enter description'
+
+      tax_rate:
+        name: 'What is the name of the tax rate?'
+        amount: 'Tax rates are a decimal amount to aid in calculations, (i.e. if the tax rate is 5% then enter 0.05)'
+
+      zone:
+        name: 'What is the name of the zone?'
+        description: 'Enter description'
+
     prompts:
       companies:
         industries: 'Select one or more'
@@ -313,6 +406,7 @@ en:
         industries: 'Select one or more'
       location:
         administrator: 'Default'
+
     hints:
       location:
         name: 'A unique title that describes the location.'
@@ -331,9 +425,17 @@ en:
         book_it_out_minimum_qty: "Book it Out is only available if the set minimum quantity is available"
       service_type:
         action_continuous_dates_booking: "Allow user to select only continuous dates when booking"
+        allowed_countries: "Leave blank to use all countries"
+        allowed_currencies: "Leave blank to use all currencies"
+        action_schedule_booking: 'Use recurring rules to define recurring services instead of simple availability rules'
       user:
         mobile_number: ''
         phone: ''
+      sms_template:
+        body: 'Please make sure the Message will not be longer than 160 characters, otherwise it will NOT be sent'
+      instance:
+        date_pickers: 'Enable date pickers'
+        date_pickers_use_availability_rules: 'Use availability rules'
 
     required:
       mark: '*'

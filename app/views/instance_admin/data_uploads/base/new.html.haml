@@ -1,25 +1,25 @@
 = simple_form_for @data_upload, url: {action: :create}, html: {multipart: true} do |f|
   .content-container
-    %h4 Data Upload
+    %h4= t('instance_admin.manage.data_uploads.data_upload')
     .row
       .input-container.col-xs-12
-        = f.input :csv_file, as: :file, label: 'CSV File', required: false, input_html: { class: 'form-control' }
+        = f.input :csv_file, as: :file, required: false, input_html: { class: 'form-control' }
 
   = f.simple_fields_for :options, OpenStruct.new(@data_upload.options) do |option|
     .content-container
       .row
         .input-container.col-xs-12
-          = option.input :send_invitational_email, required: false, as: :boolean, label: "Send invitational email", inline_label: true
+          = option.input :send_invitational_email, required: false, as: :boolean, inline_label: true
       .row
         .input-container.col-xs-12
-          = option.input :enable_rfq, required: false, as: :boolean, label: "Enable request for quote", inline_label: true
+          = option.input :enable_rfq, required: false, as: :boolean, inline_label: true
 
       - if @importable.is_a?(Spree::ProductType)
         .row
           .input-container.col-xs-12
-            = option.input :default_shipping_category_id, required: true, include_blank: false, as: :select, collection: Spree::ShippingCategory.system_profiles.map { |c| [c.name, c.id] }, label: "Choose default shipping category/profile"
+            = option.input :default_shipping_category_id, required: true, include_blank: false, as: :select, collection: Spree::ShippingCategory.system_profiles.map { |c| [c.name, c.id] }
 
   = content_for :header_buttons do
-    = link_to 'Download CSV Template', {action: :download_csv_template}, class: 'pull-left btn btn-blue'
-    = f.button :submit, 'Upload', class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
+    = link_to t('instance_admin.manage.data_uploads.download_csv_template'), {action: :download_csv_template}, class: 'pull-left btn btn-blue'
+    = f.button :submit, t('instance_admin.manage.data_uploads.upload'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
   

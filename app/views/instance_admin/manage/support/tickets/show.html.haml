@@ -3,7 +3,7 @@
     .row
       .input-container.col-xs-12
         .pull-left
-          %h4= "Request ##{@ticket.id}"
+          %h4= t('instance_admin.manage.support.request_no', number: @ticket.id)
         .pull-right
           %h4= "#{@ticket.state}".upcase
           %h4
@@ -22,8 +22,8 @@
                 .clearfix
               .pull-right
                 = render partial: 'support/ticket_message_attachments/form', locals: { f: f }
-                = f.submit 'Update', class: 'btn btn-light'
-                = f.submit 'Update and Resolve', class: 'btn btn-light'
+                = f.submit t('instance_admin.manage.support.update'), class: 'btn btn-light'
+                = f.submit t('instance_admin.manage.support.update_and_resolve'), class: 'btn btn-light'
               .clearfix
 
             = simple_form_for @ticket.attachments.build, url: support_ticket_ticket_message_attachments_path(@ticket), html: { class: 'hidden', :'data-attachment-form'=> true } do |f|

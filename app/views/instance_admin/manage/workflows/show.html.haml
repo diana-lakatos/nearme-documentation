@@ -7,4 +7,4 @@
           - resource.workflow_steps.each do |workflow_step|
             %tr
               %td= link_to workflow_step.name, instance_admin_manage_workflow_workflow_step_path(resource, workflow_step)
-              %td= link_to 'Edit', edit_instance_admin_manage_workflow_workflow_step_path(resource, workflow_step), class: 'pull-right'
+              %td= link_to t('instance_admin.edit'), edit_instance_admin_manage_workflow_workflow_step_path(resource, workflow_step), class: 'pull-right'

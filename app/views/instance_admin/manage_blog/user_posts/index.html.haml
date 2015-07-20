@@ -11,11 +11,11 @@
       %table.table.sortable
         %thead
           %tr
-            %th Name
-            %th Created at
-            %th Published at
-            %th Owner
-            %th Promoted
+            %th= t('instance_admin.blog.user_posts.name')
+            %th= t('instance_admin.blog.user_posts.created_at')
+            %th= t('instance_admin.blog.user_posts.published_at')
+            %th= t('instance_admin.blog.user_posts.owner')
+            %th= t('instance_admin.blog.user_posts.promoted')
             %th.actions-2
         %tbody
           - @blog_posts.each do |blog_post|

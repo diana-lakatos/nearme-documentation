@@ -4,8 +4,8 @@
       %table.table
         %tbody
           %tr
-            %th Template
-            %th Format
+            %th= t('instance_admin.manage.email_templates.template')
+            %th= t('instance_admin.manage.email_templates.format')
             %th
             %th
             %th
@@ -17,22 +17,22 @@
               %td= email_template.transactable_type.try(:name)
               %td
                 .pull-right
-                  = link_to 'Edit', edit_instance_admin_manage_email_template_path(email_template)
+                  = link_to t('instance_admin.edit'), edit_instance_admin_manage_email_template_path(email_template)
               %td
                 .pull-right
-                  = link_to 'Destroy', instance_admin_manage_email_template_path(email_template), method: :delete,
-                      data: { confirm: 'Are you sure?' }
+                  = link_to t('instance_admin.destroy'), instance_admin_manage_email_template_path(email_template), method: :delete,
+                      data: { confirm: t('instance_admin.are_you_sure') }
 
 .content-container
-  %h4 Customize default
+  %h4= t('instance_admin.manage.email_templates.customize_default')
 
   .row
     .table-container.col-xs-12
       %table.table
         %tbody
           %tr
-            %th Template
-            %th{colspan: 2} Customize
+            %th= t('instance_admin.manage.email_templates.template')
+            %th{colspan: 2}= t('instance_admin.manage.email_templates.customize')
 
           - @not_customized_email_templates_paths.each do |email_template_path, formats|
             - next if formats.count == 2
@@ -43,5 +43,5 @@
 
 
 = content_for :header_buttons do
-  = link_to 'Add Email Template', new_instance_admin_manage_email_template_path, class: 'pull-right btn btn-blue'
+  = link_to t('instance_admin.manage.email_templates.add_email_template'), new_instance_admin_manage_email_template_path, class: 'pull-right btn btn-blue'
 

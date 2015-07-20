@@ -4,10 +4,10 @@
       %table.table
         %thead
           %tr
-            %th Field Name
-            %th Presence
-            %th Inclusion
-            %th Numericality
+            %th= t('instance_admin.manage.custom_validators.field_name')
+            %th= t('instance_admin.manage.custom_validators.presence')
+            %th= t('instance_admin.manage.custom_validators.inclusion')
+            %th= t('instance_admin.manage.custom_validators.numericality')
             %th
             %th
         %tbody
@@ -17,8 +17,8 @@
               %td= resource.presence?
               %td= resource.inclusion?
               %td= resource.numericality?
-              %td= link_to 'Edit', edit_polymorphic_url([:instance_admin, @controller_scope, @validatable, resource]), class: 'pull-right'
-              %td= link_to "Delete", polymorphic_url([:instance_admin, @controller_scope, @validatable, resource]), :method => :delete, data: { confirm: 'Are you sure you want to delete this validator?' }, :class => "pull-right"
+              %td= link_to t('instance_admin.edit'), edit_polymorphic_url([:instance_admin, @controller_scope, @validatable, resource]), class: 'pull-right'
+              %td= link_to t('instance_admin.delete'), polymorphic_url([:instance_admin, @controller_scope, @validatable, resource]), :method => :delete, data: { confirm: t('instance_admin.are_you_sure') }, :class => "pull-right"
 
 = content_for :header_buttons do
-  = link_to 'Add Validator', new_polymorphic_url([:instance_admin, @controller_scope, @validatable, CustomValidator.new]), class: 'pull-right btn btn-blue'
+  = link_to t('instance_admin.manage.custom_validators.add_validator'), new_polymorphic_url([:instance_admin, @controller_scope, @validatable, CustomValidator.new]), class: 'pull-right btn btn-blue'

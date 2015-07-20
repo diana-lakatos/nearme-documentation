@@ -1,7 +1,7 @@
 = simple_form_for [:instance_admin, :manage, @blog_post], :html => { :multipart => true } do |f|
   .row
     .input-container.col-xs-12
-      = f.input :title, :placeholder => 'What is the title of the post?', required: false, :input_html => { class: 'form-control', :data => { :slug_changed => @blog_post.slug_changed?, :slug_source => true }}
+      = f.input :title, required: false, :input_html => { class: 'form-control', :data => { :slug_changed => @blog_post.slug_changed?, :slug_source => true }}
   .row
     .input-container.col-xs-12
       = f.input :content, required: false, :as => :ckeditor, :input_html => { :ckeditor => { :toolbar => ckeditor_toolbar_creator.toolbar } }
@@ -13,7 +13,7 @@
       = f.input :published_at, required: false, as: :date, include_blank: true, :input_html => { class: 'form-control' }
   .row
     .input-container.col-xs-12
-      = f.input :slug, :data => {:slug => true}, placeholder: 'Enter an optional slug', :input_html => { class: 'form-control'}
+      = f.input :slug, :data => {:slug => true}, :input_html => { class: 'form-control'}
   .row
     .input-container.col-xs-12
       = f.input :header
@@ -24,7 +24,7 @@
   %h4 Author
   .row
     .input-container.col-xs-12
-      = f.input :author_name, placeholder: 'Enter the name of the author', :input_html => { class: 'form-control'}
+      = f.input :author_name, :input_html => { class: 'form-control'}
   .row
     .input-container.col-xs-12
       = f.input :author_avatar, :input_html => { class: 'form-control'}
@@ -33,8 +33,8 @@
         = link_to 'Delete', delete_image_instance_admin_manage_blog_post_path(:image_type => 'author_avatar'), data: { confirm: t('confirmations.are_you_sure') }, method: :delete
   .row
     .input-container.col-xs-12
-      = f.input :author_biography, placeholder: 'Enter a bio for the author', :input_html => { class: 'form-control'}
-      = f.submit 'Save', class: 'hidden_form_element'
+      = f.input :author_biography, :input_html => { class: 'form-control'}
+      = f.submit t('instance_admin.save'), class: 'hidden_form_element'
 
   = content_for :header_buttons do
     = f.button :submit, class: "btn btn-blue pull-right", data: { disable_with: t('user_blog.labels.please_wait'), 'submit-form' => 1, 'form-selector' => 'form' }

@@ -3,11 +3,11 @@
     %table.table.sortable
       %thead
         %tr
-          %th Name
-          %th Details
+          %th= t('instance_admin.shipping_options.dimensions_templates.name')
+          %th= t('instance_admin.shipping_options.dimensions_templates.details')
           %th
             %span.header-link
-              = link_to '+ Add New Dimension Template', new_instance_admin_shipping_options_dimensions_template_path
+              = link_to t('instance_admin.shipping_options.dimensions_templates.add_new_dimensions_template'), new_instance_admin_shipping_options_dimensions_template_path
 
       - collection.each do |resource|
         %tr
@@ -15,7 +15,7 @@
             = resource.name
           %td
           %td
-            = link_to "Edit", edit_instance_admin_shipping_options_dimensions_template_path(resource), :class => 'btn btn-blue'
-            = link_to "Delete", instance_admin_shipping_options_dimensions_template_path(resource),
+            = link_to t('instance_admin.edit'), edit_instance_admin_shipping_options_dimensions_template_path(resource), :class => 'btn btn-blue'
+            = link_to t('instance_admin.delete'), instance_admin_shipping_options_dimensions_template_path(resource),
                 :class => 'btn btn-blue', :method => :delete, data: { confirm: t('confirmations.are_you_sure') }
 

@@ -7,17 +7,17 @@
         = support_link_to_filter(@filter, 'resolved')
       %li
         = support_link_to_filter(@filter, 'all')
-  
+
   %h4= "#{@filter_name} tickets"
   .row
     .table-container.col-xs-12
       %table.table.table-hover
         %thead
           %tr
-            %th Ticket
-            %th Updated
-            %th Created
-            %th State
+            %th= t('instance_admin.manage.support.ticket')
+            %th= t('instance_admin.manage.support.updated')
+            %th= t('instance_admin.manage.support.created')
+            %th= t('instance_admin.manage.support.state')
 
         %tbody
           = render partial: 'ticket', collection: @tickets

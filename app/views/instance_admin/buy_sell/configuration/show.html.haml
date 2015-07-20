@@ -1,13 +1,13 @@
 = form_tag instance_admin_buy_sell_configuration_path, method: :put do |f|
   .content-container
-    %h4 Currency
+    %h4= t('instance_admin.buy_sell.configuration.currency')
     .row
       .input-container.col-xs-12
-        = label_tag :currency, 'Choose currency'
+        = label_tag :currency, t('instance_admin.buy_sell.configuration.choose_currency')
         = select_tag :currency, currency_options, class: 'form-control'
 
   .content-container
-    %h4 Currency symbol position
+    %h4= t('instance_admin.buy_sell.configuration.currency_symbol_position')
     .row
       .input-container.col-xs-6
         = label_tag :currency_symbol_position_before do
@@ -19,35 +19,35 @@
           = Spree::Money.new(10, symbol_position: "after") 
 
   .content-container
-    %h4 Currency mark and separator
+    %h4= t('instance_admin.buy_sell.configuration.currency_mark_and_separator')
     .row
       .input-container.col-xs-6
-        = label_tag :currency_decimal_mark, 'Currency decimal mark'
+        = label_tag :currency_decimal_mark, t('instance_admin.buy_sell.configuration.currency_decimal_mark')
         = text_field_tag :currency_decimal_mark, Spree::Config[:currency_decimal_mark], placeholder: 'Enter currency decimal mark', class: 'form-control'
       .input-container.col-xs-6
-        = label_tag :currency_thousands_separator, 'Currency thousands separator'
+        = label_tag :currency_thousands_separator, t('instance_admin.buy_sell.configuration.currency_thousands_separator')
         = text_field_tag :currency_thousands_separator, Spree::Config[:currency_thousands_separator], placeholder: 'Enter currency thousands separator', class: 'form-control'
 
   .content-container
-    %h4 Displaying modules options
+    %h4= t('instance_admin.buy_sell.configuration.displaying_modules_options')
     .row
       .input-container.col-xs-6
         = label_tag do
           = hidden_field_tag 'infinite_scroll', '0'
           = check_box_tag 'infinite_scroll', '1', Spree::Config[:infinite_scroll]
-          = 'Search results infinite scroll' 
+          = t('instance_admin.buy_sell.configuration.search_results_infinite_scroll')
       .input-container.col-xs-6
         = label_tag do
           = hidden_field_tag 'random_products_for_cross_sell', '0'
           = check_box_tag 'random_products_for_cross_sell', '1', Spree::Config[:random_products_for_cross_sell]
-          = 'Random suggested products' 
+          = t('instance_admin.buy_sell.configuration.random_suggested_products')
     .row
       .input-container.col-xs-6
         = label_tag do
           = hidden_field_tag 'products_table', '0'
           = check_box_tag 'products_table', '1', Spree::Config[:products_table]
-          = 'Search results table layout'
+          = t('instance_admin.buy_sell.configuration.search_results_table_layout')
 
 = content_for :header_buttons do
-  = submit_tag 'Save', class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
+  = submit_tag t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
 

@@ -4,9 +4,9 @@
       .table-container.col-xs-12
         .text-center
           .question-icon !
-          = t('instance_admin.upsell_addons.index.no_addons_yet')
+          = t('instance_admin.manage.upsell_addons.no_addons_yet')
           %br
-          = link_to '+ Add new Upsell', new_instance_admin_manage_upsell_addon_path
+          = link_to t('instance_admin.manage.upsell_addons.add_new_upsell'), new_instance_admin_manage_upsell_addon_path
 - else
   .content-container
     .row
@@ -14,10 +14,10 @@
         %table.table
           %tbody
             %tr
-              %td Name
-              %td Service
-              %td Amount
-              %td Status
-              %td= link_to '+ Add Upsell', new_instance_admin_manage_upsell_addon_path
+              %td= t('instance_admin.manage.upsell_addons.name')
+              %td= t('instance_admin.manage.upsell_addons.service')
+              %td= t('instance_admin.manage.upsell_addons.amount')
+              %td= t('instance_admin.manage.upsell_addons.status')
+              %td= link_to t('instance_admin.manage.upsell_addons.add_upsell'), new_instance_admin_manage_upsell_addon_path
             - @additional_charges.each do |ac|
               = render partial: 'additional_charge', locals: { additional_charge: ac }

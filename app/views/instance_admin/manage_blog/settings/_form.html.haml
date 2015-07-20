@@ -8,11 +8,11 @@
 .row
   .input-container.col-xs-12
     = f.simple_fields_for :owner do |i|
-      = i.input :user_blogs_enabled, label: 'Enable user blogs', inline_label: true
+      = i.input :user_blogs_enabled, inline_label: true
 
 .row
   .input-container.col-xs-6
-    = f.input :name, placeholder: 'Enter blog name', input_html: { class: 'form-control' }
+    = f.input :name, input_html: { class: 'form-control' }
   .input-container.col-xs-6
     = f.input :header, input_html: { class: 'form-control' }
 
@@ -24,13 +24,13 @@
 
 .row
   .input-container.col-xs-12
-    = f.input :facebook_app_id, placeholder: 'Enter facebook app ID', input_html: { class: 'form-control' }
+    = f.input :facebook_app_id, input_html: { class: 'form-control' }
 
 .row
   .input-container.col-xs-6
-    = f.input :header_text, placeholder: 'Enter blog header text', input_html: { class: 'form-control' }
+    = f.input :header_text, input_html: { class: 'form-control' }
   .input-container.col-xs-6
-    = f.input :header_motto, placeholder: 'Enter blog motto', input_html: { class: 'form-control' }
+    = f.input :header_motto, input_html: { class: 'form-control' }
 
 .row
   .input-container.col-xs-12
@@ -52,8 +52,8 @@
   .row
     .input-container.col-xs-12
       = link_to(@blog_instance.header_icon.filename, @blog_instance.header_icon.url)
-      = link_to 'Delete', delete_image_instance_admin_manage_blog_settings_path(:image_type => :header_icon), data: { confirm: t('confirmations.are_you_sure') }, method: :delete
+      = link_to t('instance_admin.delete'), delete_image_instance_admin_manage_blog_settings_path(:image_type => :header_icon), data: { confirm: t('confirmations.are_you_sure') }, method: :delete
 
 = content_for :header_buttons do
-  = f.button :submit, "Save", class: 'btn btn-blue pull-right', data: { disable_with: t('user_blog.labels.please_wait'), 'submit-form' => 1, 'form-selector' => 'form' }
+  = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { disable_with: t('user_blog.labels.please_wait'), 'submit-form' => 1, 'form-selector' => 'form' }
 

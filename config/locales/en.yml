@@ -119,6 +119,9 @@ en:
     shipping_options:
       dimensions_templates:
         add_new_dimensions_template: '+ Add new dimension template'
+        you_dont_have_set_up: "You don't have any Dimensions Templates set up yet. Create one now by clicking below."
+        name: "Name"
+        details: "Details"
     nav:
       brand:
         open_marketplace: 'Open Marketplace'
@@ -138,9 +141,6 @@ en:
       header:
         all_reviews: "All Reviews"
         settings: "Settings"
-    upsell_addons:
-      index:
-        no_addons_yet: "You don't have any add-ons yet. Click on the link below and start upselling now"
     wish_lists:
       labels:
         name: 'LIST TITLE'
@@ -184,10 +184,12 @@ en:
     downloads: 'Downloads'
     sales: 'Sales'
     save: "Save"
+    delete: "Delete"
     destroy: "Destroy"
     versions: "Versions"
     cancel: "Cancel"
     edit: "Edit"
+    edit_object: "Edit %{object_name}"
     create: "Create"
     update: "Update"
     new: "New"
@@ -478,7 +480,246 @@ en:
         social_properties: "Social Properties"
         colors: "Colors"
         homepage: "Homepage"
-
+      support:
+        ticket: "Ticket"
+        updated: "Updated"
+        created: "Created"
+        state: "State"
+        filter_name:
+          open: "Open"
+          resolved: "Resolved"
+          all: "All"
+        request_no: "Request #%{number}"
+        update: "Update"
+        update_and_resolve: "Update and Resolve"
+      faq:
+        faq: "FAQ"
+        name: "Name"
+        add_question: "Add Question"
+      approval_requests:
+        vendor_approval: "VENDOR APPROVAL"
+        object_name: "Object Name"
+        object_type: "Object Type"
+        notes: "Notes"
+        created_at: "Created At"
+        creator: "Creator"
+        manage: "Manage"
+        settings: "Settings"
+        label: "Label"
+        file: "File"
+        uploaded_by: "Uploaded by"
+        written_verification: "Written Verification"
+        attachments: "Attachments"
+        name: "Name"
+        preview: "Preview"
+      waiver_agreements:
+        manage_waiver_agreement_template: "Manage Waiver Agreement Template"
+      email_layouts:
+        template: "Template"
+        format: "Format"
+        customize_default: "Customize default"
+        customize: "Customize"
+        add_email_layout_template: "Add Email Layout Template"
+        template_path: "Template path"
+        service_type: "Service Type"
+        path_must_start_with_layouts: "Path must start with 'layouts/'"
+      email_templates:
+        template: "Template"
+        format: "Format"
+        customize_default: "Customize default"
+        customize: "Customize"
+        add_email_template: 'Add Email Template'
+        template_path: "Template path"
+        service_type: "Service Type"
+      sms_templates:
+        template: "Template"
+        customize: "Customize"
+        customize_default: "Customize default"
+        add_sms_template: 'Add Sms Template'
+        template_name: 'Template Name'
+        service_type: 'Service Type'
+      wishlists:
+        wishlists: "Wishlists"
+      user_profiles:
+        custom_attributes: "Custom Attributes"
+        form_components: "Form Components"
+      custom_attributes:
+        name: "Name"
+        search: "Search?"
+        public: "Public?"
+        internal: "Internal?"
+        new_attribute: "New Attribute"
+        edit_attribute: "Edit Attribute"
+        add_attribute: 'Add Attribute'
+        valid_values_separate_with_comma: 'Valid values (separate with coma)'
+        input_html_options: 'Input Html Options(key1 => value1, key2 => value2)'
+        wrapper_html_options: 'Wrapper Html Options(key1 => value1, key2 => value2)'
+      form_components:
+        form_components: "Form Components"
+        new_form_component: 'New Form Component'
+        basic_configuration: "Basic Configuration"
+        fields_in_this_component: "Fields in this component"
+        copy_from_template: "Copy From Template"
+        template: "Template"
+      service_types:
+        form_components: "Form Components"
+        data_upload: "Data Upload"
+        custom_attributes: "Custom Attributes"
+        custom_validators: "Custom Validators"
+        categories: "Categories"
+        new_service_type: 'New Service Type'
+        basic_configuration: "Basic Configuration"
+        cancellation_policy: "Cancellation Policy"
+        booking_settings: "Booking settings"
+        pricing: "Pricing"
+        pricing_options: "Pricing Options"
+        calendar: "Calendar"
+        terminology: "Terminology"
+        allowed_action_types: "Allowed Action Types"
+        pricing_types:
+          hourly: "Hourly"
+          daily: "Daily"
+          weekly: "Weekly"
+          monthly: "Monthly"
+          free: "Free"
+      data_uploads:
+        manage_data_uploads_for: 'Manage Data Uploads for %{name}'
+        data_import_for: "Data import for %{name}"
+        file_name: "File Name"
+        state: "State"
+        data_preview: "Data preview"
+        imported_at: "Imported at"
+        created_by: "Created by"
+        created_at: "Created at"
+        download_csv_template: 'Download CSV Template'
+        new_data_upload: 'New Data Upload'
+        data_upload: "Data Upload"
+        upload: "Upload"
+        your_data_has_been_processed: "Your data has been processed, however nothing has been imported yet! You can %{href} that will be imported."
+        preview_the_xml: "preview the xml"
+        preview_xml: "preview xml"
+        parsing_has_been_scheduled: "Parsing has been scheduled, job is waiting in the queue."
+        data_has_been_imported: "Data has been imported."
+        new_entities: "New entities"
+        updated_entities: "Updated entities"
+        errors_and_warnings_encountered: "Errors and warnings encountered"
+        no_validation_errors: "No validation errors encountered."
+        data_has_not_been_imported: "Data has not been imported due to error during processing. Please verify that %{href} is correct."
+      custom_validators:
+        field_name: "Field Name"
+        presence: "Presence"
+        inclusion: "Inclusion"
+        numericality: "Numericality"
+        add_validator: 'Add Validator'
+      categories:
+        right_click_a_child_in_the_tree: "Right click a child in the tree to access the menu for adding, deleting or sorting a child."
+        categories: 'Categories'
+        are_you_sure_delete_category_group: 'Are you sure you want to delete this category group?'
+        create_category: 'Create Category'
+      upsell_addons:
+        no_addons_yet: "You don't have any add-ons yet. Click on the link below and start upselling now"
+        add_new_upsell: '+ Add new Upsell'
+        name: "Name"
+        service: "Service"
+        amount: "Amount"
+        status: "Status"
+        add_upsell: '+ Add Upsell'
+        add_new_upsell: "Add New Upsell"
+        edit_upsell: "Edit Upsell"
+        select_optional_or_mandatory: 'Select Optional or Mandatory'
+        select_the_service_associated: 'Select the service that is associated to this upsell'
+        select_commission_receiver: 'Select commission receiver'
+      search:
+        type_of_search: "Type of search"
+        date_pickers: "Date pickers"
+        search_radius: "Search Radius"
+        category_tree_search: "Category tree search"
+        saved_search: "Saved Search"
+        price_filters: "Price filters"
+        tabs:
+          search_settings: 'Search Settings'
+          services_search: 'Services Search'
+          products_search: 'Products Search'
+          elastic_search: 'ElasticSearch'
+        custom_attributes:
+          name: "Name"
+          search: "Search"
+          custom_attributes: "Custom Attributes"
+        elastic_search:
+          last_index_status: "Last index status"
+          perform_reindex: "Perform re-index"
+        products_search:
+          products_custom_search: "Products Custom Search"
+          custom_attributes: "Custom Attributes"
+        services_search:
+          services_custom_search: "Services Custom Search"
+    blog:
+      posts:
+        name: "Name"
+        created_at: "Created at"
+        published_at: "Published at"
+        new_post: "New post"
+        create_blog_post: "Create blog post"
+      user_posts:
+        name: "Name"
+        created_at: "Created at"
+        published_at: "Published at"
+        owner: "Owner"
+        promoted: "Promoted"
+        edit_post: "Edit Post"
+      settings:
+        edit_settings: "Edit settings"
+        blog_not_available: "Blog is not available."
+    buy_sell:
+      configuration:
+        currency: "Currency"
+        choose_currency: "Choose currency"
+        currency_symbol_position: "Currency symbol position"
+        currency_mark_and_separator: "Currency mark and separator"
+        currency_decimal_mark: 'Currency decimal mark'
+        currency_thousands_separator: 'Currency thousands separator'
+        displaying_modules_options: "Displaying modules options"
+        search_results_infinite_scroll: 'Search results infinite scroll'
+        random_suggested_products: 'Random suggested products'
+        search_results_table_layout: 'Search results table layout'
+      commissions:
+        commissions: "Commissions"
+      tax_categories:
+        tax_categories: "Tax categories"
+        name: "Name"
+        description: "Description"
+        default: "Default"
+        new_tax_category: 'New Tax Category'
+        edit_tax_category: "Edit Tax Category"
+      tax_rates:
+        tax_rates: "Tax rates"
+        zone: "Zone"
+        name: "Name"
+        category: "Category"
+        amount: "Amount"
+        included_in_price: "Included in price"
+        new_tax_rate: "New Tax Rate"
+        edit_tax_rate: "Edit Tax Rate"
+      zones:
+        zones: "Zones"
+        name: "Name"
+        description: "Description"
+        default_tax_zone: "Default tax zone"
+        new_zone: "New Zone"
+        edit_zone: "Edit Zone"
+        country_based: "Country based"
+        state_based: "State based"
+        states: "States"
+        countries: "Countries"
+      product_types:
+        manage_product_types: "Manage Product Types"
+        form_components: "Form Components"
+        data_upload: "Data Upload"
+        custom_attributes: "Custom Attributes"
+        custom_validators: "Custom Validators"
+        categories: "Categories"
+        new_product_type: "New Product Type"
+        edit_product_type: "Edit Product Type"
 
   buy_sell_market:
     checkout_extra_fields:

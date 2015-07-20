@@ -1,5 +1,5 @@
 
-= render partial: 'form', locals: { form_title: 'Save', form_method: :put }
+= render partial: 'form', locals: { form_title: t('instance_admin.save'), form_method: :put }
 
 - content_for :domready do
   new DimensionsTemplates(#{raw DimensionsTemplate::UNITS_OF_MEASURE.to_json});
