@@ -107,5 +107,5 @@
         = t('dashboard.payment_documents.files_sent_to_me')
       - order.payment_documents.each do |pd|
         .payment-document
-          = link_to (pd.try(:payment_document_info).try(:document_requirement).try(:label) || pd.file.file_name), pd.file.url, target: '_blank'
+          = link_to (pd.try(:payment_document_info).try(:document_requirement).try(:label).presence || pd.file.file_name), pd.file.url, target: '_blank'
 
