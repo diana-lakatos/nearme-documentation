@@ -31,6 +31,7 @@ class CompanyTest < ActiveSupport::TestCase
       @company.theme = FactoryGirl.create(:theme)
       FactoryGirl.create(:domain, {target: @company})
       @company.save!
+      @company.reload
     end
     should 'know when white label settings are enabled' do
       @company.update_attribute(:white_label_enabled, true)
@@ -112,7 +113,7 @@ class CompanyTest < ActiveSupport::TestCase
 
     context 'with default on instance' do
       setup do
-        PlatformContext.current.instance.update_attribute(:default_country, 'Poland')
+        @company.instance.update_attribute(:default_country, 'Poland')
       end
 
       should 'return instance country code if not  present' do

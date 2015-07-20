@@ -25,7 +25,7 @@ class PlatformContextDecorator
   end
 
   def single_type?
-    [self.transactable_types.services.count, self.product_types.count].sum == 1
+    self.transactable_types.count == 1
   end
 
   def to_liquid

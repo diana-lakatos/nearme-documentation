@@ -1,4 +1,5 @@
 class Theme < ActiveRecord::Base
+  include DomainsCacheable
   has_paper_trail :ignore => [:updated_at, :compiled_stylesheet, :compiled_dashboard_stylesheet]
   acts_as_paranoid
   DEFAULT_EMAIL = 'support@desksnear.me'

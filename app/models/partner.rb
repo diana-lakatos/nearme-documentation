@@ -1,4 +1,5 @@
 class Partner < ActiveRecord::Base
+  include DomainsCacheable
   auto_set_platform_context
 
   has_paper_trail

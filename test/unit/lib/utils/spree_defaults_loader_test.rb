@@ -52,8 +52,7 @@ class SpreeDefaultsLoaderTest < ActiveSupport::TestCase
   context 'load multiple instances' do
     setup do
       @test_instance = create(:instance, name: 'Test instance')
-      @domain = FactoryGirl.create(:domain, :target => @test_instance)
-
+      @test_instance.domains << @domain = FactoryGirl.create(:domain)
       PlatformContext.current = PlatformContext.new(@test_instance)
       Utils::SpreeDefaultsLoader.new(@test_instance).load!
     end

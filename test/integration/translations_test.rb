@@ -21,6 +21,7 @@ class TranslationsTest < ActionDispatch::IntegrationTest
     assert_response :redirect
     post create_key_instance_admin_settings_locales_path, translation: { key: "#{@transactable_type.translation_namespace}.hints.name", value: "Very helpful hint!"}
     assert_response :redirect
+    PlatformContext.current.instance.reload
     get new_dashboard_company_transactable_type_transactable_path(@transactable_type)
     assert_select 'label[for=transactable_name]', 'Super Name for XYZ'
     assert_select '.transactable_name p', 'Very helpful hint!'

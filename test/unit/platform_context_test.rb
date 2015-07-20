@@ -37,7 +37,7 @@ class PlatformContextTest < ActiveSupport::TestCase
     end
 
     should 'be able to bypass non-existent www subdomain' do
-      example_www_domain = FactoryGirl.create(:domain, name: 'www.example.co.uk', target: FactoryGirl.create(:instance))
+      example_www_domain = FactoryGirl.create(:domain, name: 'www.example.co.uk')
       rq = PlatformContext.new('example.co.uk')
       assert_equal example_www_domain, rq.domain
     end

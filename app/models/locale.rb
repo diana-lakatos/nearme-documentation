@@ -5,7 +5,7 @@ class Locale < ActiveRecord::Base
   # Generates /^\/(aa|ab|af|ak|sq|am|ar|an|hy|as|...|zu)(?=\/|$)/
   DOMAIN_PATTERN = %r(^/(#{I18nData.languages.map { |l| Regexp.escape(l[0].downcase) }.join('|')})(?=/|$))
 
-  belongs_to :instance
+  belongs_to :instance, touch: true
 
   validates_presence_of :code, :instance_id
   validates_uniqueness_of :code, scope: :instance_id
@@ -43,6 +43,12 @@ class Locale < ActiveRecord::Base
 
   def self.default_locale
     find_by(primary: true).try(:code).try(:to_sym)
+  end
+
+  def self.find_by_code(code)
+    Rails.cache.fetch("locale.find_by_code_#{code}_#{PlatformContext.current.instance.cache_key}") do
+      find_by(code: code)
+    end
   end
 
   def self.available_locales

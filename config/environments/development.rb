@@ -1,3 +1,5 @@
+require 'rack-mini-profiler'
+
 DesksnearMe::Application.configure do
   config.use_only_ssl = false
   config.cache_classes = false
@@ -41,4 +43,13 @@ DesksnearMe::Application.configure do
   config.action_mailer.smtp_settings = { :address => "localhost", :port => 1025 }
 
   config.middleware.insert_after(ActionDispatch::Static, SilentMissedImages)
+
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.rails_logger = true
+  end
 end
+
+Rack::MiniProfilerRails.initialize!(Rails.application)
+Rails.application.middleware.delete(Rack::MiniProfiler)
+Rails.application.middleware.insert_after(Rack::Deflater, Rack::MiniProfiler)

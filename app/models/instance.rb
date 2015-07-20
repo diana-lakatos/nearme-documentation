@@ -1,4 +1,5 @@
 class Instance < ActiveRecord::Base
+  include DomainsCacheable
   has_paper_trail
 
   has_metadata :accessors => [:support_metadata]
@@ -327,7 +328,9 @@ class Instance < ActiveRecord::Base
   end
 
   def primary_locale
-    locales.default_locale || :en
+    Rails.cache.fetch("locale.primary_#{cache_key}") do
+      locales.default_locale || :en
+    end
   end
 
   def default_currency
