@@ -170,6 +170,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   def wizard_params
     params.require(:user).permit(secured_params.user(@transactable_type)).tap do |whitelisted|
       begin
+        whitelisted[:properties] = params[:user][:properties] rescue {}
         whitelisted[:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:properties] = params[:user][:companies_attributes]["0"][:locations_attributes]["0"][:listings_attributes]["0"][:properties] rescue {}
       rescue
         nil
