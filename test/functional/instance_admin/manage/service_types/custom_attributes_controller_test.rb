@@ -54,25 +54,4 @@ class InstanceAdmin::Manage::ServiceTypes::CustomAttributesControllerTest < Acti
     end
   end
 
-  context 'internal fields' do
-    setup do
-      @custom_attribute = FactoryGirl.create(:custom_attribute, target: @service_type, name: 'internal_attribute', internal: true, label: 'Label')
-    end
-
-    should 'not be able to change name' do
-      put :update, service_type_id: @service_type.id, id: @custom_attribute.id, custom_attribute: { label: 'New Label', name: 'new_name' }
-      assert_response :redirect
-      assert_equal 'New Label', @custom_attribute.reload.label
-      assert_equal 'internal_attribute', @custom_attribute.name
-    end
-
-    should 'not be able to destroy internal attribute' do
-      assert_raise ActiveRecord::RecordNotFound do
-        delete :destroy, service_type_id: @service_type.id, id: @custom_attribute.id
-      end
-    end
-
-
-
-  end
 end
