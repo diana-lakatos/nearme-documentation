@@ -26,6 +26,13 @@
             - @listings.each_with_index do |listing, index|
               - cache(listing, expires_in: cache_expires_in_for(:listing)) do
                 = render 'locations/listings/booking', listing: listing, collapsed: index > 0
+              - content_for :domready do
+                $("##{listing.to_param} .quantity select").customSelect();
+                $("#booking-module-#{listing.id} .pricing-tabs a").click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+                })
+                $("#booking-module-#{listing.id} .pricing-tabs a.possible:first").tab('show');
               .padding-row
 
           - if platform_context.instance.wish_lists_enabled?
