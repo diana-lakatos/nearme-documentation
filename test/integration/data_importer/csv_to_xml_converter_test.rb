@@ -15,7 +15,7 @@ class DataImporter::CsvToXmlConverterTest < ActiveSupport::TestCase
 
       should 'transform csv template correctly' do
         @xml_path = '/tmp/template.xml'
-        @converter = DataImporter::CsvToXmlConverter.new(@csv_file, @xml_path)
+        @converter = DataImporter::CsvToXmlConverter.new(@csv_file, @xml_path, nil)
         @converter.convert
         assert FileUtils.compare_file(@xml_path, @xml_file.path), "diff #{@xml_path} #{@xml_file.path} <- files not equal"
       end
@@ -31,7 +31,7 @@ class DataImporter::CsvToXmlConverterTest < ActiveSupport::TestCase
 
     should 'transform csv template correctly' do
       @xml_path = '/tmp/template.xml'
-      @converter = DataImporter::CsvToXmlConverter.new(@csv_file, @xml_path)
+      @converter = DataImporter::CsvToXmlConverter.new(@csv_file, @xml_path, nil)
       @converter.convert
       assert FileUtils.compare_file(@xml_path, @xml_file.path), "diff #{@xml_path} #{@xml_file.path} <- files not equal"
     end

@@ -20,15 +20,15 @@ class DataUpload < ActiveRecord::Base
   state_machine :state, initial: :queued do
 
     event :process do
-      transition queued: :processing
+      transition [:queued, :failed] => :processing
     end
 
     event :queue do
-      transition processing: :queued
+      transition any => :queued
     end
 
     event :import do
-      transition queued: :importing
+      transition [:queued, :processing] => :importing
     end
 
     event :finish do
