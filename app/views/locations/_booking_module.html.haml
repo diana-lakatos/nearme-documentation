@@ -170,12 +170,4 @@
 
     .clearfix
 
-  - content_for :domready do
-    $("##{listing.to_param} .quantity select").customSelect();
-    $("#booking-module-#{listing.id} .pricing-tabs a").click(function (e) {
-    e.preventDefault();
-    $(this).tab('show');
-    })
-    $("#booking-module-#{listing.id} .pricing-tabs a.possible:first").tab('show');
-
 - lookup_context.transactable_type_id = old
