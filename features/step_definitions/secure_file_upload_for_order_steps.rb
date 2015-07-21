@@ -44,7 +44,7 @@ end
 And /^File should be saved$/ do
   visit dashboard_orders_path
   page.should have_css(".payment-document", count: 1)
-  page.should have_content(Attachable::PaymentDocument.first.file.file_name)
+  page.should have_content(Attachable::PaymentDocument.first.payment_document_info.document_requirement.label)
 end
 
 And /^File should not be saved$/ do
@@ -81,7 +81,8 @@ end
 And /^Two files should be saved$/ do
   visit dashboard_orders_path
   page.should have_css(".payment-document", count: 2)
-  page.should have_content(Attachable::PaymentDocument.first.file.file_name, count: 2)
+  page.should have_content(Attachable::PaymentDocument.first.payment_document_info.document_requirement.label, count: 1)
+  page.should have_content(Attachable::PaymentDocument.second.payment_document_info.document_requirement.label, count: 1)
 end
 
 Given /^Document upload is disabled$/ do
