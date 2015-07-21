@@ -15,7 +15,7 @@
         %p= distance_of_time_in_words_or_date_in_time_zone(user_message.created_at, current_user.time_zone)
     .col-md-6
       %p.message-title= user_messages_decorator.user_message_context_link(user_message)
-      %p= truncate(mask_phone_and_email_if_necessary(user_message.body), length: 60)
+      %p= truncate(user_message.body, length: 60)
 
     .col-md-1.message-action
       = link_to "Read", user_message.show_path, class: 'btn btn-green'

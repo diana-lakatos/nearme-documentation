@@ -1,6 +1,7 @@
 class UserMessageDecorator < Draper::Decorator
   include Rails.application.routes.url_helpers
   include ActionDispatch::Routing::PolymorphicRoutes
+  include ApplicationHelper
   delegate_all
 
   def recipient_name
@@ -49,6 +50,10 @@ class UserMessageDecorator < Draper::Decorator
     else
       polymorphic_path([thread_context_with_deleted, self.object, :archive], options)
     end
+  end
+
+  def body
+    mask_phone_and_email_if_necessary(self[:body])
   end
 
 

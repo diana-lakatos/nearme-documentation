@@ -1,5 +1,4 @@
 - title t('reservations.rfq_long')
-- @ticket = @ticket.decorate
 
 .dash-page
   .dash-head.clearfix
@@ -26,9 +25,7 @@
     %p.pull-right
       Status:
       %span{class: "#{@ticket.state}"}= @ticket.state.titleize
-
   .dash-body.thread
-
     = render partial: 'dashboard/company/support/tickets/ticket_message', collection: @ticket.messages, spacer_template: 'dashboard/company/support/tickets/spacer'
 
     - if @ticket.open?

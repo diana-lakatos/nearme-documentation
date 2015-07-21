@@ -7,7 +7,7 @@ class Dashboard::UserRequestsForQuotesController < Dashboard::BaseController
   end
 
   def show
-    @ticket = current_user.tickets.find(params[:id])
+    @ticket = current_user.tickets.find(params[:id]).decorate
     @message = Support::TicketMessage.new(attachments: @ticket.attachments.where(ticket_message_id: nil, uploader_id: current_user.id))
   end
 

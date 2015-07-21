@@ -15,4 +15,8 @@ class Support::TicketDecorator < Draper::Decorator
   def self.collection_decorator_class
     PaginatingDecorator
   end
+
+  def messages
+    Support::TicketMessageDecorator.decorate_collection(super)
+  end
 end
