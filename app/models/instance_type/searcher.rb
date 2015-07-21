@@ -22,7 +22,13 @@ module InstanceType::Searcher
       @max_fixed_price ||= results.map{|r| r.try(:price).to_i}.max
     else
       if self.class.to_s =~ /Elastic/
-        @max_fixed_price ||= results.map{|r| r.try(:fixed_price_cents).to_f}.max / 100
+        @max_fixed_price ||= results.map{|r| 
+          if r.is_a?(Location)
+            r.listings.maximum(:fixed_price_cents).to_f
+          else
+            r.try(:fixed_price_cents).to_f
+          end
+        }.max / 100
         @max_fixed_price > 0 ? @max_fixed_price + 1 : @max_fixed_price
       else
         @max_fixed_price ||= results.maximum(:fixed_price_cents).to_f / 100
