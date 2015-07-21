@@ -126,6 +126,7 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
       end
       listings_scope = listings_scope.overlaps_schedule_start_date(@filters[:date_range].first)
     end
+    listings_scope = listings_scope.where('transactables.fixed_price_cents >= ? AND transactables.fixed_price_cents <= ?', @params[:price][:min].to_i * 100, @params[:price][:max].to_i * 100) if @params[:price] && !@params[:price][:max].to_i.zero?
     listings_scope
   end
 
