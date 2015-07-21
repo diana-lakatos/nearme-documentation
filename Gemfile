@@ -181,6 +181,7 @@ group :development do
   gem 'spring'
   gem 'spring-commands-cucumber'
   gem 'parallel_tests'
+  gem 'mailcatcher'
 end
 
 group :test do

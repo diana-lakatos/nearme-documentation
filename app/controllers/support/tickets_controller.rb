@@ -34,7 +34,7 @@ class Support::TicketsController < Support::BaseController
   end
 
   def show
-    @ticket = current_user.tickets.find(params[:id])
+    @ticket = current_user.tickets.find(params[:id]).decorate
     if @ticket.target_rfq?
       redirect_to dashboard_user_requests_for_quote_path(@ticket)
     else

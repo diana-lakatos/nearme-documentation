@@ -1,11 +1,12 @@
 class Support::TicketMessageDrop < BaseDrop
 
   include ActionView::Helpers::TextHelper
+  include ApplicationHelper
 
   attr_reader :message
 
   def initialize(message)
-    @message = message
+    @message = message.decorate
   end
 
   def date

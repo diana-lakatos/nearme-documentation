@@ -10,6 +10,6 @@
           %abbr.timeago{:title => "#{ticket_message.created_at.to_time.iso8601}"}
             = ticket_message.created_at
       %p
-        =simple_format(mask_phone_and_email_if_necessary(ticket_message.message))
+        =simple_format(ticket_message.message)
         .attachments.clearfix
           = render partial: 'dashboard/company/support/tickets/attachment', collection: ticket_message.attachments, as: :ticket_message_attachment

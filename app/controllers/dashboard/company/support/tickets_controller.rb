@@ -27,7 +27,7 @@ class Dashboard::Company::Support::TicketsController < Dashboard::Company::BaseC
   private
 
   def find_ticket
-    @ticket = current_user.assigned_company_tickets.find(params[:id])
+    @ticket = current_user.assigned_company_tickets.find(params[:id]).decorate
   end
 
   def translated_filter_name(name)
