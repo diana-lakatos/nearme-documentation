@@ -39,7 +39,6 @@ module CustomAttributes
     end
 
     def default_options
-      Rails.logger.debug "got: #{I18n.translate(attribute.prompt_key, default: '').presence || nil}"
       @default_options ||= {
         input_html: input_html_options,
         label: I18n.translate(attribute.label_key, default: attribute.name),
