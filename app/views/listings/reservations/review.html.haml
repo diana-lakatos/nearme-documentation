@@ -76,7 +76,8 @@
             - if f.object.errors.include?(:"waiver_agreement_template_#{wat.id}")
               %p.error-block= f.object.errors[:"waiver_agreement_template_#{wat.id}"].first
 
-        = f.button :submit, t('reservations_review.buttons.request'),
+        - unless f.object.possible_express_payment?
+          = f.button :submit, t('reservations_review.buttons.request'),
             disable_with: t('reservations_review.disabled_buttons.request'), class: 'btn-green'
 
 - content_for :domready do

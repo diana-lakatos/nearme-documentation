@@ -1,0 +1,50 @@
+- @owners_counter ||= 0
+
+.nested-fields
+
+  - if @owners_counter == 1
+    %h4= t('dashboard.merchant_account.additional_owners')
+
+
+  - if @owners_counter != 0
+    .string.optional
+      .row
+        .col-md-3
+          = f.label :first_name, t('dashboard.merchant_account.first_name'), class: 'string optional control-label'
+        .col-md-9.input-container
+          = f.text_field :first_name, class: 'string optional'
+
+    .string.optional
+      .row
+        .col-md-3
+          = f.label :last_name, t('dashboard.merchant_account.last_name'), class: 'string optional control-label'
+        .col-md-9.input-container
+          = f.text_field :last_name, class: 'string optional'
+
+  .string.optional
+    .row
+      .col-md-3
+        = f.label :dob, t('dashboard.merchant_account.dob'), class: 'string optional control-label'
+      .col-md-9.input-container
+        = f.text_field :dob, placeholder: 'YYYY-MM-DD', class: 'string optional'
+
+  - if (@owners_counter == 0 && merchant_account.needs?('legal_entity.verification.document')) || @owners_counter != 0
+    .string.optional
+      .row
+        .col-md-3
+          = f.label :document, t('dashboard.merchant_account.document'), class: 'string optional control-label'
+        .col-md-9.input-container
+          = f.file_field :document
+
+  - if @owners_counter != 0
+    - MerchantAccountOwner::StripeConnectMerchantAccountOwner::ADDRESS_ATTRIBUTES.each do |address_attr|
+      .string.optional
+        .row
+          .col-md-3
+            = f.label address_attr, t("dashboard.merchant_account.#{address_attr}"), class: 'string optional control-label'
+          .col-md-9.input-container
+            = f.text_field address_attr, class: 'string optional'
+
+    = link_to_remove_association t('dashboard.merchant_account.remove_owner'), f
+
+- @owners_counter += 1

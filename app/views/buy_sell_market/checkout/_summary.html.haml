@@ -1,0 +1,86 @@
+%section.checkout-form
+  .container-fluid
+    %h2= t 'buy_sell_market.checkout.labels.order_summary'
+    %table.payment-summary
+      %thead
+        %th= t 'buy_sell_market.checkout.labels.item'
+        %th= t 'buy_sell_market.checkout.labels.price'
+        %th= t 'buy_sell_market.checkout.labels.qty'
+        %th= t 'buy_sell_market.checkout.labels.total'
+
+      %tbody
+        - @order.line_items.each do |item|
+          %tr
+            %td= item.name
+            %td= item.single_money
+            %td= item.quantity
+            %td= item.display_amount
+
+      - if @additional_charges.try(:optional_charges).present? && !@order.paypal_express_payment?
+        %thead
+          %th#options= t 'buy_sell_market.checkout.labels.options'
+        %tbody{:'data-additional-charges' => true }
+          - @additional_charges.optional_charges.each do |charge|
+            - charge.currency = @order.currency
+            %tr{:'data-additional-charge-wrapper' => true }
+              %td
+                = check_box_tag 'additional_charge_ids[]', charge.id, params[:additional_charge_ids].try(:include?, "#{charge.id}")
+                = charge.name
+
+              %td= humanized_money_with_cents_and_symbol charge.amount
+              %td 1
+              %td #{currency_content_tag(charge.amount.currency, charge.amount, :span, { class: 'additional-charge', rel: false }, { :'data-additional-charge-price' => true})}
+    .divider
+
+    %table.payment-totals{align: 'right'}
+      %tr
+        %td= t 'buy_sell_market.checkout.labels.subtotal'
+        %td= humanized_money_with_cents_and_symbol @order.monetize(@order.item_total)
+      %tr
+        %td= t 'buy_sell_market.checkout.labels.shipping'
+        %td= humanized_money_with_cents_and_symbol @order.monetize(@order.shipment_total)
+      %tr
+        %td= t 'buy_sell_market.checkout.labels.tax'
+        %td= humanized_money_with_cents_and_symbol @order.monetize(@order.additional_tax_total)
+      %tr
+        %td= t 'buy_sell_market.checkout.labels.service_fee'
+        %td
+          #{currency_content_tag(@order.service_fee_guest_without_charges.currency, @order.service_fee_guest_without_charges, :span, { :rel => false }, { class: '', :'data-service-fee' => true})}
+
+
+      - if @additional_charges.try(:mandatory_charges).present?
+        - @additional_charges.mandatory_charges.each do |charge|
+          %tr
+            %td= charge.name
+            %td= humanized_money_with_cents_and_symbol charge.amount
+      %tr
+        %td.total= t 'buy_sell_market.checkout.labels.total2'
+        %td.total #{currency_content_tag(@order.total_amount_to_charge.currency, @order.total_amount_to_charge, :span, { :rel => false }, { :'data-total-price' => true})}
+
+- if platform_context.instance.documents_upload_enabled?
+  %section.checkout-form
+    .container-fluid
+      %h2= t 'buy_sell_market.checkout.labels.required_documents'
+      = t 'buy_sell_market.checkout.labels.the_following_documents'
+      .document-requirements
+        = f.simple_fields_for :payment_documents do |pd|
+          = pd.hidden_field :id
+          = pd.hidden_field :user_id
+          .row-fluid
+            .span3.title
+              = pd.simple_fields_for :payment_document_info do |pdi|
+                = pdi.hidden_field :attachment_id
+                = pdi.hidden_field :document_requirement_id
+                = pdi.object.document_requirement.label
+            .span9.upload{ 'data-upload' => true }
+              = pd.input :file, as: :file, label: false, input_html: { hidden: true }
+              - if pd.object.file.present?
+                %button{ type: 'button', class: 'btn-upload-payment-document', 'data-upload-document' =>true }
+                  = t 'buy_sell_market.checkout.labels.choose_another_file'
+                %span{ "data-file-name" => true }
+                  = link_to pd.object.file.file_name, pd.object.file.url, target: '_blank'
+              - else
+                %button{ type: 'button', class: 'btn-upload-payment-document', 'data-upload-document' =>true }
+                  = t 'buy_sell_market.checkout.labels.choose_file'
+                %span{ "data-file-name" => true }
+                  = t 'buy_sell_market.checkout.labels.no_file_chosen'

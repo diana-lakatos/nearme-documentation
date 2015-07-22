@@ -6,12 +6,15 @@ Spree::Order.class_eval do
   belongs_to :partner
   belongs_to :platform_context_detail, polymorphic: true
 
-  attr_accessor :card_number, :card_code, :card_exp_month, :card_exp_year, :card_holder_first_name, :card_holder_last_name
+  attr_reader :card_number, :card_code, :card_exp_month, :card_exp_year, :card_holder_first_name, :card_holder_last_name
+  attr_accessor :payment_method_nonce
+
   scope :completed, -> { where(state: 'complete') }
   scope :approved, -> { where.not(approved_at: nil) }
   scope :paid, -> { where(payment_state: 'paid') }
   scope :shipped, -> { where(shipment_state: 'shipped') }
   scope :reviewable, -> { completed.approved.paid.shipped }
+  scope :cart, -> { where(state: ['cart', 'address', 'delivery', 'payment', 'confirm']).order('created_at ASC') }
 
   has_one :billing_authorization, -> { where(success: true) }, as: :reference
   has_many :billing_authorizations, as: :reference
@@ -27,6 +30,11 @@ Spree::Order.class_eval do
   before_create :store_platform_context_detail
   before_update :reject_empty_documents
 
+  [:card_number, :card_code, :card_exp_month, :card_exp_year, :card_holder_first_name, :card_holder_last_name].each do |accessor|
+    define_method("#{accessor}=") do |attribute|
+      instance_variable_set("@#{accessor}", attribute.try(:to_s).try(:strip))
+    end
+  end
 
   self.per_page = 5
 
@@ -45,25 +53,117 @@ Spree::Order.class_eval do
   }
 
   validates_inclusion_of :payment_method, in: PAYMENT_METHODS.values, allow_nil: true
+  validate :validate_credit_card, if: Proc.new {|o| o.payment? && o.credit_card_payment? }
+
+  def validate_credit_card
+    errors.add(:cc, I18n.t('buy_sell_market.checkout.invalid_cc')) unless credit_card.valid?
+  end
 
   def checkout_extra_fields(attributes = {})
     @checkout_extra_fields ||= CheckoutExtraFields.new(self.user, attributes)
   end
 
   def credit_card_payment?
-    payment_method == Reservation::PAYMENT_METHODS[:credit_card]
+    payment_method == PAYMENT_METHODS[:credit_card]
+  end
+
+  def credit_card
+    @credit_card ||= ActiveMerchant::Billing::CreditCard.new(
+      first_name: card_holder_first_name,
+      last_name: card_holder_last_name,
+      number: card_number,
+      month: card_exp_month.to_s,
+      year: card_exp_year.to_s,
+      verification_value: card_code
+    )
+  end
+
+  def create_pending_payment!
+    p = payments.build(amount: total_amount_to_charge, company_id: company_id)
+    p.pend
+    p.save!
+  end
+
+  def create_failed_payment!
+    p = payments.build(amount: total_amount_to_charge, company_id: company_id)
+    p.started_processing
+    p.failure!
+  end
+
+  def express_token=(token)
+    write_attribute(:express_token, token)
+    if !token.blank?
+      express_gateway = PlatformContext.current.instance.payment_gateway(self.company.iso_country_code, self.currency)
+      details = express_gateway.gateway.details_for(token)
+      self.express_payer_id = details.params["payer_id"]
+      self.build_bill_address({
+        firstname: details.params["first_name"],
+        lastname: details.params["last_name"],
+        address1: details.params["PayerInfo"]["Address"]["Street1"],
+        address2: details.params["PayerInfo"]["Address"]["Street2"],
+        city: details.params["PayerInfo"]["Address"]["CityName"],
+        zipcode: details.params["PayerInfo"]["Address"]["PostalCode"],
+        phone: details.params["phone"] || user.phone,
+        state_name: details.params["PayerInfo"]["Address"]["StateOrProvince"],
+        alternative_phone: details.params["PayerInfo"]["Address"]["Street1"],
+        state_id: Spree::Country.find_by_iso(details.params["PayerInfo"]["Address"]["Country"]).try{ |c| c.states.where(abbr: details.params["PayerInfo"]["Address"]["StateOrProvince"]).first.try(:id) },
+        country_id: Spree::Country.find_by_iso(details.params["PayerInfo"]["Address"]["Country"]).try(:id),
+      })
+
+      self.use_billing = true
+
+    end
+  end
+
+  def set_credit_card(order_params)
+    self.payment_method = PAYMENT_METHODS[:credit_card]
+    self.card_exp_month = order_params[:card_exp_month].try(:to_s).try(:strip)
+    self.card_exp_year = order_params[:card_exp_year].try(:to_s).try(:strip)
+    self.card_number = order_params[:card_number].try(:to_s).try(:strip)
+    self.card_code = order_params[:card_code].try(:to_s).try(:strip)
+    self.card_holder_first_name = order_params[:card_holder_first_name].try(:to_s).try(:strip)
+    self.card_holder_last_name = order_params[:card_holder_last_name].try(:to_s).try(:strip)
   end
 
   def manual_payment?
-    payment_method == Reservation::PAYMENT_METHODS[:manual]
+    payment_method == PAYMENT_METHODS[:manual]
+  end
+
+  def payable?
+    payment? || (confirm? && express_token.present?)
+  end
+
+  def possible_manual_payment?
+    instance.possible_manual_payment?
+  end
+
+  def paypal_express_payment?
+    self.express_token.present?
   end
 
   def total_amount_to_charge
     monetize(self.total) + service_fee_amount_guest
   end
 
+  def total_amount_to_charge_cents
+    total_amount_to_charge.cents
+  end
+
   def total_amount_without_fee
     monetize(self.total)
+  end
+
+  def tax_total_cents
+    monetize(tax_total).cents
+  end
+
+  # LineItems and Fee summary (without taxes)
+  def subtotal_amount_cents
+    monetize(self.amount).cents + service_fee_amount_guest.cents
+  end
+
+  def seller_iso_country_code
+    line_items.first.product.company.company_address.iso_country_code
   end
 
   def subtotal_amount_to_charge
@@ -79,6 +179,10 @@ Spree::Order.class_eval do
   end
 
   def service_fee_amount_host
+    Money.new(service_fee_calculator.service_fee_host.cents, currency)
+  end
+
+  def service_fee_amount_host_cents
     Money.new(service_fee_calculator.service_fee_host.cents, currency)
   end
 
@@ -128,10 +232,6 @@ Spree::Order.class_eval do
     if self.state == "complete"
       self.payment_documents = self.payment_documents.reject { |document| document.file.blank? }
     end
-  end
-
-  def possible_manual_payment?
-    instance.possible_manual_payment?
   end
 
   # Finalizes an in progress order after checkout is complete.

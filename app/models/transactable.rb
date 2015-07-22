@@ -586,6 +586,10 @@ class Transactable < ActiveRecord::Base
     super && self.transactable_type.action_rfq?
   end
 
+  def possible_express_checkout?
+    instance.payment_gateway(company.iso_country_code, currency).try(:express_checkout?)
+  end
+
   # TODO: to be deleted once we get rid of instance views
   def has_action?(*args)
     action_rfq?

@@ -28,8 +28,9 @@ Before do
   FactoryGirl.create(:instance)
 
   ActiveMerchant::Billing::Base.mode = :test
-  PaymentGateway::StripePaymentGateway.any_instance.stubs(:authorize).returns({ token: "token "})
-  PaymentGateway::PaypalPaymentGateway.any_instance.stubs(:authorize).returns({ token: "token" })
+
+  PaymentAuthorizer.any_instance.stubs(:gateway_authorize).returns(OpenStruct.new(success?: true, authorization: "token "))
+
   stub = OpenStruct.new(params: {
     "object" => 'customer',
     "id" => 'customer_1',

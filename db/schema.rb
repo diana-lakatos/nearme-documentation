@@ -986,19 +986,33 @@ ActiveRecord::Schema.define(version: 20150716184155) do
     t.datetime "updated_at"
   end
 
+  create_table "merchant_account_owners", force: true do |t|
+    t.integer  "instance_id"
+    t.integer  "merchant_account_id"
+    t.text     "data"
+    t.string   "document"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "type"
+  end
+
+  add_index "merchant_account_owners", ["instance_id"], name: "index_merchant_account_owners_on_instance_id", using: :btree
+  add_index "merchant_account_owners", ["merchant_account_id"], name: "index_merchant_account_owners_on_merchant_account_id", using: :btree
+
   create_table "merchant_accounts", force: true do |t|
     t.integer  "instance_id"
     t.integer  "merchantable_id"
     t.string   "merchantable_type"
     t.text     "encrypted_response"
     t.string   "gateway_class"
-    t.boolean  "enabled",            default: false
+    t.boolean  "enabled",                             default: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "payment_gateway_id"
     t.text     "data"
     t.string   "type"
-    t.string   "state",              default: "pending"
+    t.string   "state",                               default: "pending"
+    t.string   "internal_payment_gateway_account_id"
   end
 
   add_index "merchant_accounts", ["instance_id", "merchantable_id", "merchantable_type"], name: "index_on_merchant_accounts_on_merchant", using: :btree
@@ -1380,6 +1394,8 @@ ActiveRecord::Schema.define(version: 20150716184155) do
     t.integer  "book_it_out_discount"
     t.integer  "exclusive_price_cents"
     t.text     "guest_notes"
+    t.string   "express_token"
+    t.string   "express_payer_id"
   end
 
   add_index "reservations", ["administrator_id"], name: "index_reservations_on_administrator_id", using: :btree
@@ -1507,7 +1523,7 @@ ActiveRecord::Schema.define(version: 20150716184155) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "state"
-    t.integer  "order_id"
+    t.integer  "order_id",                                                 null: false
     t.boolean  "included",                                 default: false
   end
 
@@ -1793,6 +1809,8 @@ ActiveRecord::Schema.define(version: 20150716184155) do
     t.decimal  "service_fee_amount_guest_cents",            precision: 8,  scale: 2, default: 0.0
     t.decimal  "service_fee_amount_host_cents",             precision: 8,  scale: 2, default: 0.0
     t.string   "payment_method"
+    t.string   "express_token"
+    t.string   "express_payer_id"
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id", using: :btree

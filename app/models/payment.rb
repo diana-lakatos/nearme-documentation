@@ -9,9 +9,9 @@ class Payment < ActiveRecord::Base
 
   # === Associations
 
-  # Payable association connects Payment with Reservation and Spree::Order
   belongs_to :company, -> { with_deleted }
   belongs_to :instance
+  # Payable association connects Payment with Reservation and Spree::Order
   belongs_to :payable, polymorphic: true
 
   has_many :charges, dependent: :destroy
@@ -61,7 +61,7 @@ class Payment < ActiveRecord::Base
   monetize :total_amount_cents, with_model_currency: :currency
 
   def total_amount_cents
-    subtotal_amount_cents + service_fee_amount_guest_cents
+    subtotal_amount.cents + service_fee_amount_guest.cents
   end
 
   def subtotal_amount_cents_after_refund
@@ -70,14 +70,14 @@ class Payment < ActiveRecord::Base
     if self.payable.respond_to?(:cancelled_by_host?) && self.payable.cancelled_by_host?
       result = 0
     else
-      result = subtotal_amount_cents - refunds.successful.sum(:amount)
+      result = subtotal_amount.cents - refunds.successful.sum(:amount)
     end
 
     result
   end
 
   def final_service_fee_amount_host_cents
-    result = self.service_fee_amount_host_cents
+    result = self.service_fee_amount_host.cents
 
     if (self.payable.respond_to?(:cancelled_by_host?) && self.payable.cancelled_by_host?) || (self.payable.respond_to?(:cancelled_by_guest?) && self.payable.cancelled_by_guest?)
       result = 0
@@ -87,7 +87,7 @@ class Payment < ActiveRecord::Base
   end
 
   def final_service_fee_amount_guest_cents
-    result = self.service_fee_amount_guest_cents
+    result = self.service_fee_amount_guest.cents
 
     if self.payable.respond_to?(:cancelled_by_host?) && self.payable.cancelled_by_host?
       result = 0
@@ -105,27 +105,21 @@ class Payment < ActiveRecord::Base
     return if paid?
 
     # Generates a ChargeAttempt with this record as the payable.
-
-    if payable.billing_authorization.nil? && !payable.remote_payment?
-      response = billing_gateway.authorize(payable.total_amount_cents, payable.currency, payable.credit_card.token, { customer: payable.credit_card.instance_client.customer_id, order_id: payable.id })
-      if response[:error].present?
-        raise Billing::Gateway::PaymentAttemptError, "Failed authorization of credit card token of InstanceClient(id=#{payable.owner.instance_clients.first.try(:id)}) - #{response[:error]}"
-      else
-        payable.create_billing_authorization(
-          token: response[:token],
-          payment_gateway: billing_gateway,
-          payment_gateway_mode: billing_gateway.mode
-        )
+    if payable.billing_authorization.nil? && !(payable.remote_payment? || payable.manual_payment?)
+      unless billing_gateway.authorize(payable, { customer: payable.credit_card.instance_client.customer_id, order_id: payable.id })
+        raise Billing::Gateway::PaymentAttemptError, "Failed authorization of credit card token of InstanceClient(id=#{payable.owner.instance_clients.first.try(:id)}) - #{payable.errors[:ccc].try(:first)}"
       end
     end
 
     begin
-
-      billing_gateway.charge(payable.owner, total_amount_cents, currency, self, payable.billing_authorization.try(:token))
-      touch(:paid_at)
-
-      if payable.respond_to?(:date)
-        ReservationChargeTrackerJob.perform_later(payable.date.end_of_day, payable.id)
+      charge = billing_gateway.charge(payable.owner, total_amount.cents, currency, self, payable.billing_authorization.try(:token))
+      if charge.success?
+        touch(:paid_at)
+        if payable.respond_to?(:date)
+          ReservationChargeTrackerJob.perform_later(payable.date.end_of_day, payable.id)
+        end
+      else
+        touch(:failed_at)
       end
     rescue => e
       # Needs to be retried at a later time...
@@ -159,9 +153,9 @@ class Payment < ActiveRecord::Base
 
   def amount_to_be_refunded
     if payable.respond_to?(:cancelled_by_guest?) && payable.cancelled_by_guest?
-      (subtotal_amount_cents * (1 - self.cancellation_policy_penalty_percentage.to_f/BigDecimal(100))).to_i
+      (subtotal_amount.cents * (1 - self.cancellation_policy_penalty_percentage.to_f/BigDecimal(100))).to_i
     else
-      total_amount_cents
+      total_amount.cents
     end
   end
 

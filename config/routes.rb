@@ -15,6 +15,7 @@ DesksnearMe::Application.routes.draw do
       resources :checkout do
         collection do
           get 'get_states'
+          get 'express'
         end
       end
     end
@@ -88,6 +89,12 @@ DesksnearMe::Application.routes.draw do
     resource :braintree_marketplace, only: [] do
       collection do
         match '', via: [:get, :post], as: :webhook, action: :webhook
+      end
+    end
+
+    resource :stripe_connect, only: [] do
+      collection do
+        match '', via: %i(get post), as: :webhook, action: :webhook
       end
     end
   end
@@ -519,6 +526,8 @@ DesksnearMe::Application.routes.draw do
       collection do
         post :review
         post :store_reservation_request
+        get :return_express_checkout
+        get :cancel_express_checkout
       end
 
       member do
