@@ -21,14 +21,14 @@ class DataImporter::Product::Importer
   def import
     while params = get_params
       unless params.empty?
-        quantity = params[:'spree/product'].delete(:total_on_hand).to_i if params[:'spree/product'].has_key?(:total_on_hand)
+        quantity = params[:'spree/product'].has_key?(:total_on_hand) ? params[:'spree/product'].delete(:total_on_hand).to_i : 1
         price    = params[:'spree/product'].delete(:price).to_f if params[:'spree/product'].has_key?(:price)
         import_company(params[:company]) do |company|
           import_user(params[:user], company) do |user|
             import_shipping_category(params[:'spree/shipping_category'], user, company) do |shipping_category|
               import_product(params[:'spree/product'], user, company, shipping_category, price) do |product|
                 import_master_variant(params[:'spree/variant'], product, price) do |variant|
-                  import_stock_item(variant, quantity) if quantity
+                  import_stock_item(company, variant, quantity) if quantity
                   import_image(params[:'spree/image'], variant) if params[:'spree/image'].present?
                 end
               end
@@ -157,12 +157,12 @@ class DataImporter::Product::Importer
     end
   end
 
-  def import_stock_item(variant, quantity, &block)
-    import_entity(block) do
-      find_or_initialize_by_and_assign(Spree::StockItem, variant_id: variant.id) do |stock_item|
-        stock_item.set_count_on_hand(quantity)
-      end
+  def import_stock_item(company, variant, quantity, &block)
+    stock_location = company.stock_locations.first || company.stock_locations.create(propagate_all_variants: false, name: "Default")
+    item = import_entity(block) do
+      find_or_initialize_by_and_assign(Spree::StockItem, variant_id: variant.id, stock_location_id: stock_location.id, backorderable: false)
     end
+    item.stock_movements.create(quantity: quantity - item.stock_movements.sum(:quantity))
   end
 
   def import_image(params, variant)
