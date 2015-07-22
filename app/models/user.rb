@@ -1,11 +1,11 @@
 
 class User < ActiveRecord::Base
   has_paper_trail ignore: [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
-                              :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
-                              :unlock_token, :locked_at, :google_analytics_id, :browser, :browser_version, :platform,
-                              :avatar_versions_generated_at, :last_geolocated_location_longitude,
-                              :last_geolocated_location_latitude, :instance_unread_messages_threads_count, :sso_log_out,
-                              :avatar_transformation_data, :metadata]
+                           :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
+                           :unlock_token, :locked_at, :google_analytics_id, :browser, :browser_version, :platform,
+                           :avatar_versions_generated_at, :last_geolocated_location_longitude,
+                           :last_geolocated_location_latitude, :instance_unread_messages_threads_count, :sso_log_out,
+                           :avatar_transformation_data, :metadata]
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context allow_admin: :admin
@@ -160,7 +160,11 @@ class User < ActiveRecord::Base
   validate do |user|
     if user.persisted? && PlatformContext.current.instance.user_info_in_onboarding_flow? && self.custom_validation
       PlatformContext.current.instance.user_required_fields.each do |field|
-        user.errors.add(field, I18n.t('errors.messages.blank')) unless self.send(field).present?
+        if self.respond_to?(field)
+          user.errors.add(field, I18n.t('errors.messages.blank')) unless self.send(field).present?
+        else
+          user.properties.errors.add(field, I18n.t('errors.messages.blank')) unless self.properties[field].present?
+        end
       end
     end
   end
@@ -759,7 +763,7 @@ class User < ActiveRecord::Base
 
   def question_average_rating(reviews)
     @rating_answers_rating ||= RatingAnswer.where(review_id: reviews.pluck(:id))
-                                 .group(:rating_question_id).average(:rating)
+      .group(:rating_question_id).average(:rating)
   end
 
   def recalculate_seller_average_rating!
