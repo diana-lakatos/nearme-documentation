@@ -41,7 +41,7 @@ module CustomAttributes
     def default_options
       @default_options ||= {
         input_html: input_html_options,
-        label: I18n.translate(attribute.label_key, default: attribute.name),
+        label: I18n.translate(attribute.label_key, default: attribute.name.try(:humanize)),
         hint: I18n.translate(attribute.hint_key, default: '').presence || nil,
         placeholder: I18n.translate(attribute.placeholder_key, default:  '').presence || nil,
         include_blank: I18n.translate(attribute.prompt_key, default: '').presence || nil,

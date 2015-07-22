@@ -115,7 +115,7 @@ class RegistrationsController < Devise::RegistrationsController
       event_tracker.updated_profile_information(@user)
       redirect_to dashboard_profile_path
     else
-      flash[:error] = @user.errors.full_messages.join(', ')
+      flash[:error] = (@user.errors.full_messages + @user.properties.errors.full_messages).join(', ')
       @company = current_user.companies.first
       @country = resource.country_name
       render :edit, layout: "dashboard"

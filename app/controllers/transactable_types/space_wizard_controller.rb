@@ -60,7 +60,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
       redirect_to dashboard_company_transactable_type_transactables_path(@transactable_type)
     else
       @photos = @user.first_listing ? @user.first_listing.photos : nil
-      flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(filter_error_messages(@user.errors.full_messages))
+      flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(filter_error_messages(@user.errors.full_messages + @user.properties.errors.full_messages))
       render :list
     end
   end
