@@ -22,9 +22,7 @@ FactoryGirl.define do
     end
 
     after(:create) do |p|
-      Spree::StockLocation.all.each do |stock_location|
-        stock_location.stock_items.where(:variant_id => p.master.id).first.adjust_count_on_hand(10)
-      end
+      p.stock_items.each { |stock_item| stock_item.adjust_count_on_hand(10) }
     end
 
     factory :custom_product do
