@@ -15,6 +15,9 @@ class @AvailabilityRulesController
       # Update for initial state
       @updateCustomState()
       @updateDayStates()
+      if @selector.filter(':checked').attr('data-custom-rules')?
+        $( document ).ready ->
+          $('select').trigger('render')
 
   setupDefaults: ->
     @container.find('.close-time select').each ->
