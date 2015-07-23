@@ -67,7 +67,7 @@ class InstanceView < ActiveRecord::Base
   DEFAULT_EMAIL_TEMPLATE_LAYOUTS_PATHS = ['layouts/mailer'].freeze
 
   # Contains documentation to be parsed by the documentation parser
-  # Please keep it up-to-date when adding/modifying new liquid views to 
+  # Please keep it up-to-date when adding/modifying new liquid views to
   # this array.
   DEFAULT_LIQUID_VIEWS_PATHS = {
     'locations/booking_module_listing_description' => {
@@ -218,7 +218,8 @@ class InstanceView < ActiveRecord::Base
     where('instance_id IS NULL OR instance_id = ?', instance_id)
   }
 
-  scope :for_nil_transactable_type, ->  { where('transactable_type_id IS NULL') }
+  scope :for_nil_transactable_type, ->  { where(transactable_type_id: nil) }
+  scope :for_not_nil_transactable_type, ->  { where.not(transactable_type_id: nil) }
 
 
   scope :for_transactable_type_id, -> (transactable_type_id) {
@@ -247,6 +248,10 @@ class InstanceView < ActiveRecord::Base
 
   def self.all_email_templates_paths
     (DEFAULT_EMAIL_TEMPLATES_PATHS + self.for_instance_id(PlatformContext.current.instance.id).custom_emails.pluck(:path)).uniq
+  end
+
+  def self.email_templates_paths_wo_transactable_type
+    all_email_templates_paths - self.for_instance_id(PlatformContext.current.instance.id).custom_emails.for_not_nil_transactable_type.pluck(:path)
   end
 
   def self.not_customized_sms_templates_paths
@@ -297,7 +302,7 @@ class InstanceView < ActiveRecord::Base
   validates_inclusion_of :handler, in: ActionView::Template::Handlers.extensions.map(&:to_s)
   validates_inclusion_of :format, in: Mime::SET.symbols.map(&:to_s)
   validates_uniqueness_of :path, { scope: [:instance_id, :transactable_type_id, :locale, :format, :handler, :partial] }
-  validate :template_path_is_accessible_for_all_alerts, if: lambda { |instance_view| instance_view.persisted? && instance_view.transactable_type_id.present? && instance_view.transactable_type_id_changed? }
+  validate :template_path_is_accessible_for_all_alerts, if: lambda { |instance_view| instance_view.transactable_type_id.present? }
 
   before_validation do
     self.locale ||= 'en'
