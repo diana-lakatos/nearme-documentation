@@ -24,9 +24,5 @@ class PaymentGateway::StripePaymentGateway < PaymentGateway
   def support_recurring_payment?
     true
   end
-
-  def credit_card_payment?
-    true
-  end
 end
 

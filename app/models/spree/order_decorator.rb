@@ -145,7 +145,7 @@ Spree::Order.class_eval do
     monetize(self.total) + service_fee_amount_guest
   end
 
-  def total_amount_to_charge_cents
+  def total_amount_cents
     total_amount_to_charge.cents
   end
 
