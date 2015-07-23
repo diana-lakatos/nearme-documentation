@@ -20,13 +20,13 @@
           = af.hidden_field :id, :disabled => !active if af.object.persisted?
           = af.hidden_field :day, :disabled => !active
           .day-name= af.object.day_name
-          .open-time= af.select :open_time, availability_time_options, {}, :disabled => !active
-          .close-time= af.select :close_time, availability_time_options, {}, :disabled => !active
           .closed-flag
             = af.check_box :_destroy, :class => "closed checkbox", :checked => !active, :style => "display: none"
             %label.checkbox
               = check_box_tag "open", "1", active, :class => "open-checkbox"
               = t('simple_form.labels.availability_rule.open')
+          .open-time= af.select :open_time, availability_time_options, {}, :disabled => !active
+          .close-time= af.select :close_time, availability_time_options, {}, :disabled => !active
       - if f.object.errors.any? { |e| e.to_s == "availability_rules.day_#{day}" }
         .error-block
           = f.object.errors["availability_rules.day_#{day}".to_sym][0]
