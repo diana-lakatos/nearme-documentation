@@ -27,6 +27,7 @@ class TransactableType < ActiveRecord::Base
 
   serialize :custom_csv_fields, Array
   serialize :allowed_currencies, Array
+  serialize :availability_options, Hash
 
   after_update :destroy_translations!, if: lambda { |transactable_type| transactable_type.name_changed? }
   after_create :create_translations!

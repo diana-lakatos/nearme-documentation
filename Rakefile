@@ -7,5 +7,5 @@ require 'rake'
 DesksnearMe::Application.load_tasks
 
 Rake::Task["db:seed"].enhance do
-  Rake::Task["populate:en_locales"].invoke
+  Utils::EnLocalesSeeder.new.go!
 end
