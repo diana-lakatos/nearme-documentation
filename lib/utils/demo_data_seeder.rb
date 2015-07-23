@@ -101,7 +101,6 @@ module Utils
         Data.domains.each_with_index.map do |url, index|
           company_email = "info@#{url}"
           user = FactoryGirl.create(:demo_user, :name => Faker::Name.name, :email => company_email,
-                                    # :biography => Faker::Lorem.paragraph.truncate(200),
                                     :industries => industries.sample(2))
           users << user
 

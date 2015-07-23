@@ -270,24 +270,62 @@ module Utils
     def load_integration_keys!
       dnm_instance = Instance.first
 
-      if dnm_instance
-        # settings = { login: 'sk_test_lpr4WQXQdncpXjjX6IJx01W7' }
-        # InstancePaymentGateway.create(instance_id: dnm_instance.id, payment_gateway_id: , live_settings: settings, test_settings: settings)
+      [
+        {
+          type: "PaymentGateway::StripePaymentGateway", 
+          test_settings: { login: "sk_test_sPLnOkI5mvXCoUuaqi5j6djR" },
+          live_settings: { login: "sk_live_qfvqBDKaG1guI1wuorkgLI7Y" }
+        },
 
-        dnm_instance.facebook_consumer_key = '432038396866156'
-        dnm_instance.facebook_consumer_secret = '71af86082de1c38a3523a4c8f44aca2d'
+        {
+          type: "PaymentGateway::PaypalPaymentGateway", 
+          test_settings: { 
+            email: "lemkowski-facilitator@gmail.com", 
+            login: "lemkowski-facilitator_api1.gmail.com", 
+            password: "Y6C36E7MFJXDPR2R", 
+            signature: "ArlmEAw8pfNvMKXKC-AaWEzRgFraAzAbIZ3ybNtEPynnqHCO.XUNcqR4" 
+          },
+          live_settings: { 
+            email: "lemkowski-facilitator@gmail.com", 
+            login: "lemkowski-facilitator_api1.gmail.com", 
+            password: "Y6C36E7MFJXDPR2R", 
+            signature: "ArlmEAw8pfNvMKXKC-AaWEzRgFraAzAbIZ3ybNtEPynnqHCO.XUNcqR4" 
+          }
+        },
 
-        dnm_instance.twitter_consumer_key = 'IZeQXx4YyCdTQ9St3tmyw'
-        dnm_instance.twitter_consumer_secret = 'ZlxMPIhNPBn4QbOSHqkN1p7hKghGZTOtR1fDsPSX8'
-
-        dnm_instance.linkedin_consumer_key = '4q9xfgn60bik'
-        dnm_instance.linkedin_consumer_secret = 'lRmKVrc0RPpfKDCV'
-
-        dnm_instance.instagram_consumer_key = '566499e0d6e647518d8f4cec0a42f3d6'
-        dnm_instance.instagram_consumer_secret = '5c0652ad06984bf09e4987c8fc5ea8f1'
-
-        dnm_instance.save!
+        {
+          type: "PaymentGateway::BraintreeMarketplacePaymentGateway", 
+          test_settings: { 
+            merchant_id: "jry7nqs72wcsqxtr",
+            public_key: "7g9bjxznhnc2x244",
+            private_key: "cd6dc220d0585d332709d13497c8873b",
+            supported_currency: "USD"
+          },
+          live_settings: { 
+            merchant_id: "jry7nqs72wcsqxtr",
+            public_key: "7g9bjxznhnc2x244",
+            private_key: "cd6dc220d0585d332709d13497c8873b",
+            supported_currency: "USD"
+          }
+        }
+      ].each do | payment_gateway |
+        PaymentGateway.create(payment_gateway.merge(instance_id: dnm_instance.id))
       end
+
+
+      dnm_instance.facebook_consumer_key = '432038396866156'
+      dnm_instance.facebook_consumer_secret = '71af86082de1c38a3523a4c8f44aca2d'
+
+      dnm_instance.twitter_consumer_key = 'IZeQXx4YyCdTQ9St3tmyw'
+      dnm_instance.twitter_consumer_secret = 'ZlxMPIhNPBn4QbOSHqkN1p7hKghGZTOtR1fDsPSX8'
+
+      dnm_instance.linkedin_consumer_key = '4q9xfgn60bik'
+      dnm_instance.linkedin_consumer_secret = 'lRmKVrc0RPpfKDCV'
+
+      dnm_instance.instagram_consumer_key = '566499e0d6e647518d8f4cec0a42f3d6'
+      dnm_instance.instagram_consumer_secret = '5c0652ad06984bf09e4987c8fc5ea8f1'
+
+      dnm_instance.save!
     end
 
     def create_reservation(listing, date, attribs = {})
