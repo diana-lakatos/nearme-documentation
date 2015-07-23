@@ -24,6 +24,10 @@ FactoryGirl.define do
       form_fields { [ {'transactable' => 'schedule'},{'transactable' => 'location_id'}, { 'transactable' => 'price' }, {'transactable' => 'description'}, { 'transactable' => 'photos' }, {'transactable' => 'quantity'}, { 'transactable' => 'name' }, { 'transactable' => 'listing_type' }, { 'transactable' => 'waiver_agreement_templates'}, {'transactable' => 'documents_upload'} ] }
     end
 
+    factory :form_component_with_user_custom_attributes do
+      form_fields { [ {'user' => 'user_custom_attribute'} ] }
+    end
+
     factory :form_component_instance_profile_type do
       form_type { FormComponent::INSTANCE_PROFILE_TYPES }
 

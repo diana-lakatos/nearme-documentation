@@ -7,6 +7,9 @@ Feature: A user can login
     Given the Twitter OAuth request is successful
     When I sign up with Twitter
     Then an account should be created for that Twitter user
+    When I follow "Log Out"
+    And I sign in with Twitter
+    Then I should see "Log Out"
 
   Scenario: A user can login with Facebook
     Given the Facebook OAuth request is successful

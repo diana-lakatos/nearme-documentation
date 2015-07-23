@@ -13,8 +13,8 @@ Feature: A user can edit their settings
     And a transactable_type_listing exists with name: "Listing"
 
   Scenario: A user can successfully edit his settings
-    Given a custom attribute job_title with type string and html_tag input exists
-    Given a custom attribute biography with type string and html_tag textarea exists
+    Given a user_custom_attribute exists with name: "job_title", attribute_type: "string", html_tag: "input", label: "Job title"
+    Given a user_custom_attribute exists with name: "biography", attribute_type: "string", html_tag: "textarea", label: "Biography"
     Given I go to the account settings page
     And I fill in "First name" with "Keith"
     And I fill in "Job title" with "My job"

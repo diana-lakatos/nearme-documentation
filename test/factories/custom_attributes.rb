@@ -4,6 +4,7 @@ FactoryGirl.define do
     attribute_type "integer"
     label 'My Label'
     hint 'this is my hint'
+    required 0
 
     trait :listing_types do
       name 'listing_type'
@@ -53,6 +54,15 @@ FactoryGirl.define do
       html_tag 'select'
       prompt 'My Prompt'
       valid_values { ['Value One', 'Value Two'] }
+    end
+
+    factory :user_custom_attribute do
+      target { InstanceProfileType.first || FactoryGirl.create(:instance_profile_type) }
+      attribute_type 'string'
+      factory :required_user_custom_attribute do
+        validation_rules { { 'presence' => {} } }
+      end
+
     end
 
   end
