@@ -106,10 +106,6 @@ class PaymentGateway < ActiveRecord::Base
     settings.present? && country_payment_gateways.where(country_alpha2_code: country_alpha2_code).any?
   end
 
-  def credit_card_payment?
-    false
-  end
-
   def manual_payment?
     instance.possible_manual_payment?
   end
@@ -262,6 +258,12 @@ class PaymentGateway < ActiveRecord::Base
   def merchant_account(company)
     return nil if company.nil?
     company.merchant_accounts.where(payment_gateway: self).where.not(state: 'failed').first
+  end
+
+  def credit_card_payment?
+    gateway.supported_cardtypes.present?
+  rescue Exception
+    false
   end
 
   protected

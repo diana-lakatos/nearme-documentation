@@ -114,6 +114,5 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
   def refund_identification(charge)
     charge.response.params["transaction_id"]
   end
-
 end
 
