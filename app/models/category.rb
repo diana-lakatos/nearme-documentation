@@ -25,6 +25,8 @@ class Category < ActiveRecord::Base
 
   before_save :set_permalink
   after_save :create_translation_key
+  after_save :rename_form_component, if: -> (category) { category.name_changed? }
+  after_destroy :rename_form_component
 
   # Scopes
 
@@ -96,6 +98,22 @@ class Category < ActiveRecord::Base
       translation_attributes = {  locale: locale.code, key: translation_key}
       @translation = instance.translations.where(translation_attributes).presence ||
         instance.translations.create(translation_attributes.merge(value: name))
+    end
+  end
+
+  def rename_form_component
+    if categorizable.try(:form_components)
+      categorizable.form_components.each do |fc|
+        old_field = fc.form_fields.select{|pair| pair.first[1] =~ /Category - #{name_was}$/}
+        if old_field.present?
+          if deleted_at
+            fc.form_fields.delete(old_field[0])
+          else
+            old_field[0].values[0].gsub!(name_was, name)
+          end
+          fc.save!
+        end
+      end
     end
   end
 end
