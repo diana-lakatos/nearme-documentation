@@ -1,4 +1,3 @@
-require 'message_bus'
 DesksnearMe::Application.configure do
   config.eager_load = true
 
@@ -45,8 +44,7 @@ DesksnearMe::Application.configure do
   config.action_mailer.asset_host     = "https://production-nearme.netdna-ssl.com"
 
   config.paypal_mode = 'live'
-  config.redis_settings = YAML.load_file(Rails.root.join("config", "redis.yml"))[Rails.env.to_s]
-  config.message_bus_handler = MessageBus
+  config.redis_settings = YAML.load_file(Rails.root.join("config", "redis.yml"))["production"]
   config.cache_store = :redis_store, {
     :host => config.redis_settings["host"],
     :port => config.redis_settings["port"].to_i,

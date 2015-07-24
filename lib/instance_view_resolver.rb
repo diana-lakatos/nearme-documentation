@@ -19,26 +19,6 @@ class InstanceViewResolver < DbViewResolver
     get_templates(name, prefix, partial, details).first.try(:body)
   end
 
-  def expire_cache_for_path(path, instance_id = nil)
-    cache = @cache.instance_variable_get("@data")
-    instance_id ||= PlatformContext.current.instance.id
-
-    cache.keys.compact.select{|k| k.instance_id == instance_id}.each do |instance_key|
-      components = path.split('/')
-      components = [instance_key, components.pop, components.join('/')]
-      length = components.length
-      tmp_cache = cache
-      (0...length).each do |i|
-        if i == length - 1
-          tmp_cache.send("delete", components[length - 1])
-        else
-          tmp_cache = tmp_cache.send("[]", components[i])
-          break if tmp_cache.keys.empty?
-        end
-      end
-    end
-  end
-
   private
 
   def _find_templates(name, prefix, partial, details)
