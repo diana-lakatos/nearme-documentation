@@ -1,6 +1,4 @@
 class InstanceView < ActiveRecord::Base
-  include Cacheable
-
   has_paper_trail
   belongs_to :instance_type
   belongs_to :instance
@@ -318,10 +316,6 @@ class InstanceView < ActiveRecord::Base
     else
       true
     end
-  end
-
-  def expire_cache_options
-    { args: { path: path } }
   end
 
 end

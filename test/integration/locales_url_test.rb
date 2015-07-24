@@ -31,15 +31,11 @@ class LocalesUrlTest < ActionDispatch::IntegrationTest
   end
 
   should 'give url locale higher preference than user locale' do
-    messages = NearMeMessageBus.track_publish do
-      FactoryGirl.create(:locale, code: 'de')
-    end
+    FactoryGirl.create(:locale, code: 'de')
     FactoryGirl.create(:locale, code: 'cs')
     Utils::EnLocalesSeeder.new.go!
     user = FactoryGirl.create(:user, language: 'cs')
-    messages.each do |message|
-      CacheExpiration.handle_cache_expiration message
-    end
+
     get 'http://www.example.com/'
     assert_response :success
     assert :en, I18n.locale

@@ -28,5 +28,4 @@ DesksnearMe::Application.configure do
   config.run_jobs_in_background = false
   config.allow_concurrency = false
   config.marketplace_error_logger = MarketplaceErrorLogger::DummyLogger.new
-  config.message_bus_handler = NullMessageBus
 end
