@@ -27,7 +27,7 @@ class @PaymentController
       if target.is(':checked')
         new_price = @totalPriceValue + charge_price
       else
-        new_price = @totalPriceValue - charge_price
+        new_price = @totalPriceValue
       @totalPriceContainer.html(new_price.toFixed(2))
 
     @paymentOptions.on 'change', (e) =>
@@ -48,5 +48,5 @@ class @PaymentController
       @serviceFeeRow.hide()
     else
       @serviceFeeRow.show()
-      @totalPriceContainer.html(@totalPriceValue)
+      @totalPriceContainer.html(@totalPriceValue.toFixed(2))
 
