@@ -35,7 +35,7 @@ class PaymentGateway::BraintreePaymentGateway < PaymentGateway
   end
 
   def nonce_payment?
-    true
+    false #true
   end
 end
 
