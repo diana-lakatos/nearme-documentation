@@ -5,6 +5,7 @@
     %p= t('dashboard.nav.edit')
     %p.pull-right= link_to "View Profile", user_path(current_user)
   .dash-body
+    = I18n.t('test_key', default: 'heeellooo')
     = render :partial => "registrations/form", :locals => { :url => registration_path(resource_name), :country => @country }
 
 - content_for :domready do

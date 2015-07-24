@@ -41,11 +41,15 @@ Given /^a custom attribute (.*) with type (.*) and html_tag (.*) exists$/ do |na
   i = instance.instance_profile_type
   i = InstanceProfileType.create!(instance_id: instance.id) unless i
   User.last.update_attribute(:instance_profile_type_id, i.id)
-  i.custom_attributes.create!({
-    name: name, attribute_type: attribute_type, html_tag: html_tag,
-    required: '0', public: '1',
-    label: name.gsub('_', ' ').capitalize,
-    valid_values: []
-  })
+  messages = NearMeMessageBus.track_publish do
+    i.custom_attributes.create!({
+      name: name, attribute_type: attribute_type, html_tag: html_tag,
+      required: '0', public: '1',
+      label: name.gsub('_', ' ').capitalize,
+      valid_values: []
+    })
+  end
+  messages.each do |message|
+    CacheExpiration.handle_cache_expiration message
+  end
 end
- 
