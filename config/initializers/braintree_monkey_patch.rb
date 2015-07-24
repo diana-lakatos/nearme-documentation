@@ -9,11 +9,6 @@ module BraintreeSDK
     end
   end
 
-  def generate_token(options={})
-    options.merge!({version: 2})
-    @braintree_gateway.client_token.generate(options)
-  end
-
   def create_transaction_parameters(money, credit_card_or_vault_id, options)
     parameters = {
       :amount => amount(money).to_s,

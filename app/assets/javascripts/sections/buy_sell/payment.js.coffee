@@ -8,6 +8,8 @@ class @PaymentController
     @serviceFeeValue = parseFloat(@container.find('[data-service-fee]').html())
     @paymentOptions = @container.find(':radio')
     @manualRadio = @container.find(":radio[value='manual']")
+    @paypalButton = @container.find("#paypal-button")
+    @creditCardInputs = @container.find("#credit-card input")
     @bindEvents()
 
   bindEvents: =>
@@ -33,6 +35,12 @@ class @PaymentController
       @hideServiceFee(target)
 
     @hideServiceFee(@manualRadio)
+
+    @paypalButton.on "click", (e) =>
+      @container.find('#order_payment_method_nonce').prop('checked',true)
+
+    @creditCardInputs.on "focus", (e) =>
+      @container.find('#order_payment_method_credit_card').prop('checked',true)
 
   hideServiceFee: (target) =>
     if target.is(':checked') && target.val() == 'manual'

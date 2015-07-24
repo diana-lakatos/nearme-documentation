@@ -19,7 +19,8 @@ class PaymentGateway::BraintreePaymentGateway < PaymentGateway
   end
 
   def client_token
-    @client_token ||= gateway.generate_token
+    configure_braintree_class
+    @client_token ||= Braintree::ClientToken.generate
   end
 
   def supported_currencies
@@ -35,7 +36,16 @@ class PaymentGateway::BraintreePaymentGateway < PaymentGateway
   end
 
   def nonce_payment?
-    false #true
+    true
+  end
+
+  private
+
+  def configure_braintree_class
+    Braintree::Configuration.environment = settings["environment"]
+    Braintree::Configuration.merchant_id = settings["merchant_id"]
+    Braintree::Configuration.public_key  = settings["public_key"]
+    Braintree::Configuration.private_key = settings["private_key"]
   end
 end
 
