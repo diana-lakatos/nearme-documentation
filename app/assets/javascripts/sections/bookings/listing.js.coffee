@@ -8,6 +8,7 @@ class @Bookings.Listing
     @bookedDatesArray = []
     @bookedDateAvailability = 0
     @maxQuantity = @data.quantity
+    @initial_bookings = @data.initial_bookings || {}
     if @withCalendars()
       @firstAvailableDate = DNM.util.Date.idToDate(@data.first_available_date)
       @secondAvailableDate = DNM.util.Date.idToDate(@data.second_available_date)
@@ -171,18 +172,21 @@ class @Bookings.Listing
 
   reservationOptions: ->
     options = {
-      quantity: @getQuantity()
+      quantity: @initial_bookings.quantity || @getQuantity()
+      book_it_out: @initial_bookings.book_it_out,
+      exclusive_price: @initial_bookings.exclusive_price
+      guest_notes: @initial_bookings.guest_notes
+      dates: @initial_bookings.dates || @bookedDays()
     }
     if @withCalendars()
-      options.dates = @bookedDays()
       # Hourly reserved listings send through the start/end minute of
       # the day with the booking request.
       if @isReservedHourly()
-        options.start_minute = @startMinute
-        options.end_minute   = @endMinute
+        options.start_minute = @initial_bookings.start_minute || @startMinute
+        options.end_minute   = @initial_bookings.end_minute || @endMinute
       if @isRecurringBooking()
-        options.start_on = @startOn
-        options.end_on   = @endOn
+        options.start_on = @initial_bookings.start_on || @startOn
+        options.end_on   = @initial_bookings.end_on || @endOn
 
     options
 

@@ -44,6 +44,16 @@ class ReservationPeriod < ActiveRecord::Base
     I18n.l(date, format: :long)
   end
 
+  def date_with_time
+    if listing.schedule_booking?
+      hour = start_minute/60
+      minute = start_minute - (60 * hour)
+      Time.parse("#{date} #{hour}:#{minute}").to_formatted_s(:db)
+    else
+      date.strftime('%Y-%m-%d')
+    end
+  end
+
   private
 
   def validate_start_end_times

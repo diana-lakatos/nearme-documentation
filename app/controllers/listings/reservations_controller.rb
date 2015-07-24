@@ -114,8 +114,13 @@ class Listings::ReservationsController < ApplicationController
     #  { '123' => { 'date' => '2012-08-10', 'quantity => '1' }, ... }
     session[:stored_reservation_bookings] = {
       @listing.id => {
-        :quantity => @reservation_request.reservation.quantity,
-        :dates => @reservation_request.reservation.periods.map { |period| period.date.strftime('%Y-%m-%d') }
+        quantity: @reservation_request.reservation.quantity,
+        dates: @reservation_request.reservation.periods.map(&:date_with_time),
+        start_minute: @reservation_request.start_minute,
+        end_minute: @reservation_request.end_minute,
+        book_it_out: @reservation_request.book_it_out,
+        exclusive_price: @reservation_request.exclusive_price,
+        guest_notes: @reservation_request.reservation.guest_notes
       }
     }
     head 200 if params[:action] == 'store_reservation_request'

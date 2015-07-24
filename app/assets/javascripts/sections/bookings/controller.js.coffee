@@ -217,19 +217,20 @@ class Bookings.Controller
       @storeFormFields()
 
   setFormFields: ->
-    @bookForm.find('[name="reservation_request[quantity]"]').val(@listing.reservationOptions().quantity)
-    @bookForm.find('[name="reservation_request[book_it_out]"]').val(@bookItOutSelected())
-    @bookForm.find('[name="reservation_request[exclusive_price]"]').val(@exclusivePriceSelected())
+    options = @listing.reservationOptions()
+    @bookForm.find('[name="reservation_request[quantity]"]').val(options.quantity)
+    @bookForm.find('[name="reservation_request[book_it_out]"]').val(options.book_it_out || @bookItOutSelected())
+    @bookForm.find('[name="reservation_request[exclusive_price]"]').val(options.exclusive_price || @exclusivePriceSelected())
     data_guest_notes = @container.find('[data-guest-notes]')
+    @bookForm.find('[name="reservation_request[dates]"]').val(options.dates)
     if data_guest_notes && data_guest_notes.is(':visible')
-      @bookForm.find('[name="reservation_request[guest_notes]"]').val(data_guest_notes.val())
+      @bookForm.find('[name="reservation_request[guest_notes]"]').val(options.guest_notes || data_guest_notes.val())
     if @listing.withCalendars()
-      @bookForm.find('[name="reservation_request[dates]"]').val(@listing.reservationOptions().dates)
-      @bookForm.find('[name="reservation_request[start_on]"]').val(@listing.reservationOptions().start_on)
-      @bookForm.find('[name="reservation_request[end_on]"]').val(@listing.reservationOptions().end_on)
+      @bookForm.find('[name="reservation_request[start_on]"]').val(options.start_on)
+      @bookForm.find('[name="reservation_request[end_on]"]').val(options.end_on)
       if @listing.isReservedHourly()
-        @bookForm.find('[name="reservation_request[start_minute]"]').val(@listing.reservationOptions().start_minute)
-        @bookForm.find('[name="reservation_request[end_minute]"]').val(@listing.reservationOptions().end_minute)
+        @bookForm.find('[name="reservation_request[start_minute]"]').val(options.start_minute)
+        @bookForm.find('[name="reservation_request[end_minute]"]').val(options.end_minute)
 
   storeFormFields: ->
     $.post @storeReservationRequestUrl, @bookForm.serialize() + "&commit=#{@formTrigger.data('behavior')}", (data) =>
