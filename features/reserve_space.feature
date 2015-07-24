@@ -173,6 +173,14 @@ Feature: A user can book at a space
             | the transactable | next week Monday  | 1         |
             | the transactable | next week Tuesday | 1         |
 
+    Scenario: A logged in user can book a transactable with filling in extra fields without company name
+      Given I am logged in as the user
+      Given Extra fields are prepared for booking
+        Then I book space for with extra fields without company_name:
+            | Transactable     | Date         | Quantity  |
+            | the transactable | next week Monday  | 1         |
+            | the transactable | next week Tuesday | 1         |
+
     Scenario: A logged in user can't book a transactable without filling in mobile number
       Given I am logged in as the user
       Given Extra fields are prepared for booking

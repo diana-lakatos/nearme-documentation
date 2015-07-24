@@ -35,6 +35,9 @@
     - if uf.object.field_blank_or_changed?(:last_name)
       = uf.input :last_name
 
+    - if defined?(show_company_name) && show_company_name && uf.object.field_blank_or_changed?(:company_name)
+      = uf.input :company_name, as: :string
+
     = uf.simple_fields_for :properties, uf.object.properties do |properties_form|
       - (uf.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
         - if attribute.public? && uf.object.field_blank_or_changed?(attribute.name) && ::CustomAttributes::CustomAttribute::FormElementDecorator.new(attribute).options[:required]

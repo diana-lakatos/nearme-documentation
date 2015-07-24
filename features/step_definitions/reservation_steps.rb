@@ -53,6 +53,7 @@ Given /^Extra fields are prepared for booking$/ do
   User.last.update_column(:first_name, '')
   User.last.update_column(:last_name, '')
   User.last.update_column(:phone, '')
+  User.last.update_column(:company_name, '')
 end
 
 When /^I book space for:$/ do |table|
@@ -71,6 +72,26 @@ When /^I book space for with extra fields:$/ do |table|
   page.should have_css('input#reservation_request_checkout_extra_fields_user_first_name')
   page.should have_css('input#reservation_request_checkout_extra_fields_user_last_name')
   page.should have_css('input#reservation_request_checkout_extra_fields_user_phone')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_company_name')
+  fill_in 'reservation_request_checkout_extra_fields_user_properties_license_number', with: '123123412345'
+  fill_in 'reservation_request_checkout_extra_fields_user_mobile_number', with: '123123412345'
+  fill_in 'reservation_request_checkout_extra_fields_user_first_name', with: 'Aaa'
+  fill_in 'reservation_request_checkout_extra_fields_user_last_name', with: 'Aaa'
+  fill_in 'reservation_request_checkout_extra_fields_user_phone', with: '12312341'
+  fill_in 'reservation_request_checkout_extra_fields_user_company_name', with: '12312341'
+  step "I click to confirm the booking"
+end
+
+When /^I book space for with extra fields without company_name:$/ do |table|
+  step "I select to book space for:", table
+  step "I click to review the booking"
+  step "I provide reservation credit card details"
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_properties_license_number')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_mobile_number')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_first_name')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_last_name')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_phone')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_company_name')
   fill_in 'reservation_request_checkout_extra_fields_user_properties_license_number', with: '123123412345'
   fill_in 'reservation_request_checkout_extra_fields_user_mobile_number', with: '123123412345'
   fill_in 'reservation_request_checkout_extra_fields_user_first_name', with: 'Aaa'
@@ -88,6 +109,7 @@ When /^I fail to book space for without extra fields:$/ do |table|
   page.should have_css('input#reservation_request_checkout_extra_fields_user_first_name')
   page.should have_css('input#reservation_request_checkout_extra_fields_user_last_name')
   page.should have_css('input#reservation_request_checkout_extra_fields_user_phone')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_company_name')
   step "I click and fail to confirm the booking"
 end
 
@@ -100,10 +122,12 @@ When /^I fail to book space for without extra fields mobile number:$/ do |table|
   page.should have_css('input#reservation_request_checkout_extra_fields_user_first_name')
   page.should have_css('input#reservation_request_checkout_extra_fields_user_last_name')
   page.should have_css('input#reservation_request_checkout_extra_fields_user_phone')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_company_name')
   fill_in 'reservation_request_checkout_extra_fields_user_properties_license_number', with: '123123412345'
   fill_in 'reservation_request_checkout_extra_fields_user_first_name', with: 'Aaa'
   fill_in 'reservation_request_checkout_extra_fields_user_last_name', with: 'Aaa'
   fill_in 'reservation_request_checkout_extra_fields_user_phone', with: '123123412345'
+  fill_in 'reservation_request_checkout_extra_fields_user_company_name', with: '12312341'
   step "I click and fail to confirm the booking"
 end
 
@@ -116,10 +140,12 @@ When /^I fail to book space for without extra fields license number:$/ do |table
   page.should have_css('input#reservation_request_checkout_extra_fields_user_first_name')
   page.should have_css('input#reservation_request_checkout_extra_fields_user_last_name')
   page.should have_css('input#reservation_request_checkout_extra_fields_user_phone')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_company_name')
   fill_in 'reservation_request_checkout_extra_fields_user_mobile_number', with: '123123412345'
   fill_in 'reservation_request_checkout_extra_fields_user_first_name', with: 'Aaa'
   fill_in 'reservation_request_checkout_extra_fields_user_last_name', with: 'Aaa'
   fill_in 'reservation_request_checkout_extra_fields_user_phone', with: '12312341'
+  fill_in 'reservation_request_checkout_extra_fields_user_company_name', with: '12312341'
   step "I click and fail to confirm the booking"
 end
 
@@ -132,10 +158,12 @@ When /^I fail to book space for without extra fields last name:$/ do |table|
   page.should have_css('input#reservation_request_checkout_extra_fields_user_first_name')
   page.should have_css('input#reservation_request_checkout_extra_fields_user_last_name')
   page.should have_css('input#reservation_request_checkout_extra_fields_user_phone')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_company_name')
   fill_in 'reservation_request_checkout_extra_fields_user_properties_license_number', with: '123123412345'
   fill_in 'reservation_request_checkout_extra_fields_user_mobile_number', with: '123123412345'
   fill_in 'reservation_request_checkout_extra_fields_user_first_name', with: 'Aaa'
   fill_in 'reservation_request_checkout_extra_fields_user_phone', with: '12312341'
+  fill_in 'reservation_request_checkout_extra_fields_user_company_name', with: '12312341'
   step "I click and fail to confirm the booking"
 end
 
@@ -148,10 +176,12 @@ When /^I fail to book space for without extra fields first name:$/ do |table|
   page.should have_css('input#reservation_request_checkout_extra_fields_user_first_name')
   page.should have_css('input#reservation_request_checkout_extra_fields_user_last_name')
   page.should have_css('input#reservation_request_checkout_extra_fields_user_phone')
+  page.should have_css('input#reservation_request_checkout_extra_fields_user_company_name')
   fill_in 'reservation_request_checkout_extra_fields_user_properties_license_number', with: '123123412345'
   fill_in 'reservation_request_checkout_extra_fields_user_mobile_number', with: '123123412345'
   fill_in 'reservation_request_checkout_extra_fields_user_last_name', with: 'Aaa'
   fill_in 'reservation_request_checkout_extra_fields_user_phone', with: '12312341'
+  fill_in 'reservation_request_checkout_extra_fields_user_company_name', with: '12312341'
   step "I click and fail to confirm the booking"
 end
 

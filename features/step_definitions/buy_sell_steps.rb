@@ -102,6 +102,7 @@ Given /^Extra fields are prepared$/ do
   @user.update_column(:first_name, '')
   @user.update_column(:last_name, '')
   @user.update_column(:phone, '')
+  @user.update_column(:company_name, '')
 
   @user = User.find(@user.id)
 end
@@ -112,6 +113,7 @@ Then /^I should see the checkout extra fields$/ do
   page.should have_css('input#order_checkout_extra_fields_user_first_name')
   page.should have_css('input#order_checkout_extra_fields_user_last_name')
   page.should have_css('input#order_checkout_extra_fields_user_phone')
+  page.should_not have_css('input#order_checkout_extra_fields_company_name')
 end
 
 Then /^I should see order summary page$/ do
