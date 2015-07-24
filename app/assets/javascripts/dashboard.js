@@ -39,6 +39,7 @@
 //= require jquery-fileupload/basic
 //= require jquery_nested_form
 //= require js-routes
+//= require custom_liquid_tags
 //
 //
 //= require_self
