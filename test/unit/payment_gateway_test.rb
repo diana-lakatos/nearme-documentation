@@ -34,11 +34,11 @@ class PaymentGatewayTest < ActiveSupport::TestCase
   class PaymentGateway::TestPaymentGateway < PaymentGateway
     class TestGateway
 
-      def authorize(money, payment, options = {})
-        if options[:error]
+      def authorize(*args)
+        if args[1] == "2"
           OpenStruct.new(success?: false, message: 'fail')
         else
-          OpenStruct.new(success?: true, authorization: "auhorization_token")
+          OpenStruct.new(success?: true, authorization: "a")
         end
       end
 
@@ -69,135 +69,79 @@ class PaymentGatewayTest < ActiveSupport::TestCase
       charge.response.params["id"]
     end
 
-    def credit_card_payment?
-      true
-    end
-
-    def supported_currencies
-      ["USD"]
-    end
-
   end
 
   SUCCESS_RESPONSE = {"paid_amount"=>"10.00"}
   FAILURE_RESPONSE = {"paid_amount"=>"10.00", "error"=>"fail"}
 
-  context 'payments' do
+  setup do
+    @user = FactoryGirl.create(:user)
+    @test_processor = PaymentGateway::TestPaymentGateway.create!
+  end
+
+  context '#authorize' do
+    should "authorize when provided right details" do
+      assert_equal({token: 'a'}, @test_processor.authorize(1000, 'USD', "1"))
+    end
+
+    should "not authorize when provided the wrong details" do
+      assert_equal({error: 'fail'}, @test_processor.authorize(1000, 'USD', "2"))
+    end
+  end
+
+  context '#charge' do
     setup do
-      @user = FactoryGirl.create(:user)
-      @test_processor = PaymentGateway::TestPaymentGateway.new(country: 'US')
-      @test_processor.save!
+      @rc = FactoryGirl.create(:payment)
     end
 
-    context 'authorize' do
-      setup do
-        @transactable = FactoryGirl.create(:transactable)
-        @reservation_request = ReservationRequest.new(
-          @transactable,
-          @user,
-          PlatformContext.current,
-          FactoryGirl.attributes_for(:reservation_request)
-        )
-      end
+    should 'create charge object' do
+      @test_processor.charge(@user, 1000, 'USD', @rc, "53433")
+      charge = Charge.last
 
-      should "authorize when provided right details" do
-        assert_equal('auhorization_token', @test_processor.authorize(@reservation_request))
-        billing_authorization = BillingAuthorization.last
-        assert billing_authorization.success?
-        assert_equal @test_processor, billing_authorization.payment_gateway
-        assert_equal(billing_authorization.response, OpenStruct.new(success?: true, authorization: "auhorization_token"))
-      end
-
-      should "not authorize when authorization response is not success" do
-        assert_equal(false, @test_processor.authorize(@reservation_request, {error: true}))
-        billing_authorization = BillingAuthorization.last
-        assert_equal true, @reservation_request.errors.present?
-        assert_equal @test_processor, billing_authorization.payment_gateway
-        assert_equal billing_authorization, @transactable.billing_authorizations.last
-        assert_equal billing_authorization.success?, false
-        assert_equal(billing_authorization.response, OpenStruct.new(success?: false, message: 'fail'))
-      end
+      assert_equal @user.id, charge.user_id
+      assert_equal 10_00, charge.amount
+      assert_equal 'USD', charge.currency
+      assert_equal @rc, charge.payment
+      assert_equal SUCCESS_RESPONSE, charge.response.params
+      assert charge.success?
     end
 
+    should 'fail' do
+      @test_processor.charge(@user, 1000, 'USD', @rc, "2")
+      charge = Charge.last
+      assert_equal FAILURE_RESPONSE, charge.response.params
+      refute charge.success?
+    end
+  end
 
-    context 'authorize validation error' do
-      should "not authorize when provided the wrong details" do
-        @transactable = FactoryGirl.create(:transactable)
-        @reservation_request = ReservationRequest.new(
-          @transactable,
-          @user,
-          PlatformContext.current,
-          FactoryGirl.attributes_for(:reservation_request_with_not_valid_cc)
-        )
-
-        assert_equal(false, @test_processor.authorize(@reservation_request, {error: true}))
-        assert_equal [I18n.t('buy_sell_market.checkout.invalid_cc')], @reservation_request.errors[:cc]
-      end
+  context 'refund' do
+    setup do
+      @charge = FactoryGirl.create(:charge)
+      @payment = @charge.payment
+      @currency = 'JPY'
     end
 
-    context '#capture/#charge' do
-      should 'create charge object when saving payment with successful billing_authorization' do
-
-        reservation = FactoryGirl.create(:reservation_with_credit_card, user: @user)
-        billing_authorization = FactoryGirl.create(:billing_authorization,
-          reference: reservation,
-          payment_gateway: @test_processor)
-
-        payment = FactoryGirl.create(:payment_unpaid, payable: reservation.reload)
-        charge = Charge.last
-        assert_equal @user.id, charge.user_id
-        assert_equal 110_00, charge.amount
-        assert_equal 'USD', charge.currency
-        assert_equal payment, charge.payment
-        assert_equal SUCCESS_RESPONSE, charge.response.params
-        assert_equal payment.paid?, true
-        assert charge.success?
-      end
-
-      should 'fail' do
-        reservation = FactoryGirl.create(:reservation_with_credit_card, user: @user)
-        billing_authorization = FactoryGirl.create(:billing_authorization,
-          reference: reservation,
-          payment_gateway: @test_processor,
-          token: '2')
-        payment = FactoryGirl.create(:payment_unpaid, payable: reservation.reload)
-
-        charge = Charge.last
-        assert_equal FAILURE_RESPONSE, charge.response.params
-        assert_equal payment.paid?, false
-        refute charge.success?
-      end
+    should 'create refund object when succeeded' do
+      charge_params = { "id" => "3" }
+      charge_response = ActiveMerchant::Billing::Response.new true, 'OK', charge_params
+      @charge.update_attribute(:response, charge_response)
+      refund = @test_processor.refund(1000, @currency, @payment, @charge)
+      assert_equal 1000, refund.amount
+      assert_equal 'JPY', refund.currency
+      assert_equal SUCCESS_RESPONSE, refund.response.params
+      assert_equal @payment, refund.payment
+      assert refund.success?
     end
 
-    context 'refund' do
-      setup do
-        @charge = FactoryGirl.create(:charge)
-        @payment = @charge.payment
-        @currency = 'JPY'
-      end
-
-      should 'create refund object when succeeded' do
-        charge_params = { "id" => "3" }
-        charge_response = ActiveMerchant::Billing::Response.new true, 'OK', charge_params
-        @charge.update_attribute(:response, charge_response)
-        refund = @test_processor.refund(1000, @currency, @payment, @charge)
-        assert_equal 1000, refund.amount
-        assert_equal 'JPY', refund.currency
-        assert_equal SUCCESS_RESPONSE, refund.response.params
-        assert_equal @payment, refund.payment
-        assert refund.success?
-      end
-
-      should 'create refund object when failed' do
-        charge_params = { "id" => "2" }
-        charge_response = ActiveMerchant::Billing::Response.new true, 'OK', charge_params
-        @charge.update_attribute(:response, charge_response)
-        refund = @test_processor.refund(1000, @currency, @payment, @charge)
-        assert_equal 1000, refund.amount
-        assert_equal 'JPY', refund.currency
-        assert_equal FAILURE_RESPONSE, refund.response.params
-        refute refund.success?
-      end
+    should 'create refund object when failed' do
+      charge_params = { "id" => "2" }
+      charge_response = ActiveMerchant::Billing::Response.new true, 'OK', charge_params
+      @charge.update_attribute(:response, charge_response)
+      refund = @test_processor.refund(1000, @currency, @payment, @charge)
+      assert_equal 1000, refund.amount
+      assert_equal 'JPY', refund.currency
+      assert_equal FAILURE_RESPONSE, refund.response.params
+      refute refund.success?
     end
   end
 

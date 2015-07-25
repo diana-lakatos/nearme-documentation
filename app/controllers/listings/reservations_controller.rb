@@ -1,13 +1,10 @@
 class Listings::ReservationsController < ApplicationController
 
-  skip_before_filter :filter_out_token, only: [:return_express_checkout, :cancel_express_checkout]
-  skip_before_filter :log_out_if_token_exists, only: [:return_express_checkout, :cancel_express_checkout]
-
   before_filter :secure_payment_with_token, :only => [:review]
   before_filter :load_payment_with_token, :only => [:review]
   before_filter :find_listing
   before_filter :find_reservation, only: [:booking_successful, :remote_payment, :booking_failed]
-  before_filter :build_reservation_request, :only => [:review, :create, :store_reservation_request, :express_checkout]
+  before_filter :build_reservation_request, :only => [:review, :create, :store_reservation_request]
   before_filter :require_login_for_reservation, :only => [:review, :create]
   before_filter :find_current_country, :only => [:review, :create]
 
@@ -59,31 +56,11 @@ class Listings::ReservationsController < ApplicationController
       card_message = @reservation.credit_card_payment? ? t('flash_messages.reservations.credit_card_will_be_charged') : ''
       flash[:notice] = t('flash_messages.reservations.reservation_made', message: card_message)
 
-      if @reservation.remote_payment?
-        redirect_to remote_payment_dashboard_user_reservation_path(@reservation, host: platform_context.decorate.host)
-      elsif @reservation_request.possible_express_payment?
-        redirect_to @reservation_request.express_checkout_redirect_url
-      else
-        redirect_to booking_successful_dashboard_user_reservation_path(@reservation, host: platform_context.decorate.host)
-      end
+      redirect_to remote_payment_dashboard_user_reservation_path(@reservation, host: platform_context.decorate.host) and return if @reservation.remote_payment?
+      redirect_to booking_successful_dashboard_user_reservation_path(@reservation, host: platform_context.decorate.host)
     else
       render :review
     end
-  end
-
-  def return_express_checkout
-    reservation = Reservation.find_by_express_token(params[:token])
-    reservation.express_payer_id = params[:PayerID]
-    if reservation.authorize
-      redirect_to booking_successful_dashboard_user_reservation_path(reservation, host: platform_context.decorate.host)
-    else
-      redirect_to booking_failed_dashboard_user_reservation_path(reservation, host: platform_context.decorate.host)
-    end
-  end
-
-  def cancel_express_checkout
-    reservation = Reservation.find_by_express_token(params[:token])
-    redirect_to booking_failed_dashboard_user_reservation_path(reservation, host: platform_context.decorate.host)
   end
 
   # Renders remote payment form
@@ -164,6 +141,8 @@ class Listings::ReservationsController < ApplicationController
         card_exp_year: attributes[:card_exp_year],
         card_code: attributes[:card_code],
         card_number: attributes[:card_number],
+        country_name: attributes[:country_name],
+        mobile_number: attributes[:mobile_number],
         guest_notes: attributes[:guest_notes],
         payment_method: attributes[:payment_method],
         waiver_agreement_templates: attributes[:waiver_agreement_templates],

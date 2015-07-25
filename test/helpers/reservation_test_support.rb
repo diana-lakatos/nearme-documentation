@@ -11,26 +11,42 @@ module ReservationTestSupport
 
   # Prepares some charged reservations for a listing
   def prepare_charged_reservations_for_listing(listing, count = 1, options = {})
-    user = FactoryGirl.create(:user)
     stub_billing_gateway(listing.instance)
     stub_active_merchant_interaction
 
     date = Time.zone.now.advance(:weeks => 1).beginning_of_week.to_date
     reservations = []
     count.times do |i|
-      reservation_request_attributes = FactoryGirl.attributes_for(:reservation_request)
-      reservation_request_attributes.merge!({ dates:[(date + i).to_s(:db)] })
-
-      reservation_request = ReservationRequest.new(listing, user, PlatformContext.current, reservation_request_attributes )
-      reservation_request.process
-
+      reservation = FactoryGirl.create(:reservation_with_credit_card,
+        :listing => listing,
+        :date => date + i
+      )
       if options.has_key?("reservation_#{i}".to_sym)
-        reservation_request.reservation.update_attributes(options["reservation_#{i}".to_sym])
+        options["reservation_#{i}".to_sym].each do |key, value|
+          reservation.update_attribute(key, value)
+        end
       end
 
-      reservations << reservation_request.reservation
+      billing_gateway = PaymentGateway.first || FactoryGirl.create(:stripe_payment_gateway)
+      response = billing_gateway.authorize(reservation.total_amount_cents, credit_card)
+      reservation.create_billing_authorization(token: response[:token], payment_gateway: billing_gateway, payment_gateway_mode: :test)
+      reservation.save
+      reservations << reservation
     end
 
     reservations.each(&:confirm)
   end
+
+  def credit_card
+    ActiveMerchant::Billing::CreditCard.new(
+      first_name: "Name",
+      last_name: "Last Name",
+      number: "4242424242424241",
+      month: "05",
+      year: "2020",
+      verification_value: "411"
+    )
+  end
+
 end
+

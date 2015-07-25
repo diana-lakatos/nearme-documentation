@@ -21,7 +21,7 @@ class CompanyDrop < BaseDrop
 
   # Url to the section for adding user's paypal account where he will get paid. Includes tracking and authentication token.
   def add_paypal_url_with_tracking_and_token
-    routes.edit_dashboard_company_payouts_path(token_key => @company.creator.temporary_token, track_email_event: true)
+    routes.edit_dashboard_company_payouts_path(token: @company.creator.temporary_token, track_email_event: true)
   end
 
   # returns list of created payment transfer as a string (list of currency amounts)
@@ -32,7 +32,7 @@ class CompanyDrop < BaseDrop
 
   # Url to the section for adding user's paypal account where he will get paid. Without tracking, includes authentication token.
   def add_paypal_path_with_token
-    routes.edit_dashboard_company_payouts_path(anchor: 'company_paypal_email', token_key => @company.creator.temporary_token)
+    routes.edit_dashboard_company_payouts_path(anchor: 'company_paypal_email', token: @company.creator.temporary_token)
   end
 
   # returns the path to editing the company

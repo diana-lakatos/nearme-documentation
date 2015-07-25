@@ -21,10 +21,6 @@ class Company < ActiveRecord::Base
   has_many :locations, dependent: :destroy, inverse_of: :company
   has_many :locations_impressions, source: :impressions, through: :locations
   has_many :merchant_accounts, as: :merchantable, dependent: :nullify
-  MerchantAccount::MERCHANT_ACCOUNTS.each do |name, klass|
-    # also include owners if association exist
-    has_one "#{name}_merchant_account".to_sym, -> { klass.reflections.keys.include?(:owners) ? includes(:owners) : self }, class_name: klass.to_s, as: :merchantable, dependent: :nullify
-  end
   has_many :option_types, class_name: 'Spree::OptionType', dependent: :destroy
   has_many :orders, class_name: 'Spree::Order'
   has_many :order_charges, through: :orders, source: :near_me_payments
@@ -86,9 +82,6 @@ class Company < ActiveRecord::Base
   accepts_nested_attributes_for :payments_mailing_address
   accepts_nested_attributes_for :approval_requests
   accepts_nested_attributes_for :products, :shipping_methods, :shipping_categories, :stock_locations
-  MerchantAccount::MERCHANT_ACCOUNTS.each do |name, _|
-    accepts_nested_attributes_for "#{name}_merchant_account".to_sym, allow_destroy: true
-  end
 
   validates_associated :shipping_methods, if: :verify_associated
   validates_associated :shipping_categories, if: :verify_associated

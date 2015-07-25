@@ -1,6 +1,6 @@
 module TemporaryTokenAuthenticatable
   # This is the parameter name that is matched in the URL as the login token.
-  PARAMETER_NAME = 'temporary_token'
+  PARAMETER_NAME = 'token'
 
   class Strategy < Devise::Strategies::Authenticatable
     def authenticate!

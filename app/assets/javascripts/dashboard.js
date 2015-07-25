@@ -38,7 +38,6 @@
 //= require ./advanced_closest
 //= require jquery-fileupload/basic
 //= require jquery_nested_form
-//= require cocoon
 //= require js-routes
 //
 //

@@ -24,8 +24,4 @@ Spree::LineItem.class_eval do
   def buyer_type_review_receiver
     order.user
   end
-
-  def price_in_cents
-    monetize(price).cents
-  end
 end

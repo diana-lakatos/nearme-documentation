@@ -1,12 +1,20 @@
 class MerchantAccount::BraintreeMarketplaceMerchantAccount < MerchantAccount
 
-  ATTRIBUTES = %w(bank_routing_number bank_account_number ssn date_of_birth tos)
-  include MerchantAccount::Concerns::DataAttributes
+  def update_data(data)
+    self.data = data.slice("bank_routing_number", "bank_account_number", "ssn", "date_of_birth", "tos").symbolize_keys if data
+    true
+  end
 
-  with_options unless: :skip_validation do
-    validates_presence_of   :bank_routing_number, message: 'Bank routing number is blank'
-    validates_presence_of   :bank_account_number, message: 'Bank account number is blank'
-    validates_acceptance_of :tos, message: 'Terms of Services must be accepted'
+  def form_path
+    'dashboard/company/merchant_accounts/braintree_marketplace'
+  end
+
+  def data_correctness
+    unless skip_validation
+      errors.add(:data, 'Bank routing number is blank') if data[:bank_routing_number].blank?
+      errors.add(:data, 'Bank account number is blank') if data[:bank_account_number].blank?
+      errors.add(:data, 'Terms of Services must be accepted') if data[:tos] != "1"
+    end
   end
 
   def onboard!
@@ -22,7 +30,8 @@ class MerchantAccount::BraintreeMarketplaceMerchantAccount < MerchantAccount
   def handle_result(result)
     if result.success?
       self.response = result.to_yaml
-      bank_account_number = bank_account_number.to_s[-4, 4]
+      data[:bank_account_number] = data[:bank_account_number].to_s[-4, 4]
+      data[:bank_routing_number] = nil
       true
     else
       result.errors.each { |e| errors.add(:data, e.message); }
@@ -37,8 +46,8 @@ class MerchantAccount::BraintreeMarketplaceMerchantAccount < MerchantAccount
         first_name: merchantable.first_name,
         last_name: merchantable.last_name,
         email: merchantable.email,
-        ssn: ssn,
-        date_of_birth: date_of_birth,
+        ssn: data[:ssn],
+        date_of_birth: data[:date_of_birth],
         address: {
           street_address: merchantable.address,
           locality: merchantable.city,
@@ -49,15 +58,15 @@ class MerchantAccount::BraintreeMarketplaceMerchantAccount < MerchantAccount
       funding: {
         descriptor: merchantable.name,
         destination: Braintree::MerchantAccount::FundingDestination::Bank,
-        account_number: bank_account_number,
-        routing_number: bank_routing_number
+        account_number: data[:bank_account_number],
+        routing_number: data[:bank_routing_number]
       },
     }
   end
 
   def create_params
     common_params.deep_merge({
-      tos_accepted: tos == "1",
+      tos_accepted: data[:tos] == "1",
       id: custom_braintree_id,
       master_merchant_account_id: payment_gateway.settings[:master_merchant_account_id]
     })

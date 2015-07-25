@@ -122,8 +122,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
 
     should "refund booking on cancel" do
       ActiveMerchant::Billing::Base.mode = :test
-      @reservation.stubs(credit_card: credit_card, payment_method_nonce: nil )
-      @payment_gateway.authorize(@reservation)
+      @payment_gateway.authorize(@reservation.total_amount_cents, @reservation.currency, credit_card)
       @reservation.confirm
 
       sign_in @reservation.listing.creator
@@ -169,7 +168,7 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
 
       should 'store new version after cancel' do
         @reservation.confirm
-        assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count', 2) do
+        assert_difference('PaperTrail::Version.where("item_type = ? AND event = ?", "Reservation", "update").count') do
           with_versioning do
             post :host_cancel, { id: @reservation.id }
           end

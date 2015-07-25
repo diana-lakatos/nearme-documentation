@@ -1,11 +1,5 @@
 require 'test_helper'
 
-
-## NOTE
-## RecurringBooking is temporary out of service
-## Some refactor will happen in this area we are soon.
-
-
 class RecurringBookingRequestTest < ActiveSupport::TestCase
 
   setup do
@@ -60,9 +54,9 @@ class RecurringBookingRequestTest < ActiveSupport::TestCase
 
   context "validations" do
     context "valid arguments" do
-      # should "be valid" do
-      #   assert @recurring_booking_request.valid?
-      # end
+      should "be valid" do
+        assert @recurring_booking_request.valid?
+      end
     end
 
     context "invalid arguments" do
@@ -97,36 +91,36 @@ class RecurringBookingRequestTest < ActiveSupport::TestCase
   context "#process" do
     context "valid" do
       context "no problems with saving recurring_booking" do
-        # should "return true" do
-        #   assert_difference 'Reservation.count', 7 do
-        #     assert @recurring_booking_request.process, @recurring_booking_request.errors.full_messages
-        #   end
-        # end
+        should "return true" do
+          assert_difference 'Reservation.count', 7 do
+            assert @recurring_booking_request.process, @recurring_booking_request.errors.full_messages
+          end
+        end
       end
 
-      # should "if one reservation is invalid, should not save the rest" do
+      should "if one reservation is invalid, should not save the rest" do
 
-      #   @listing.stubs(:available_on?).with do |date, quantity, minute_start, minute_end|
-      #     date != @first_monday.to_date + 14.days
-      #   end.at_least(0).returns(true)
-      #   @listing.stubs(:available_on?).with do |date, quantity, minute_start, minute_end|
-      #     date == @first_monday.to_date + 14.days
-      #   end.returns(false)
-      #   assert_difference 'Reservation.count', 6 do
-      #     assert @recurring_booking_request.process, @recurring_booking_request.errors.full_messages
-      #   end
-      # end
+        @listing.stubs(:available_on?).with do |date, quantity, minute_start, minute_end|
+          date != @first_monday.to_date + 14.days
+        end.at_least(0).returns(true)
+        @listing.stubs(:available_on?).with do |date, quantity, minute_start, minute_end|
+          date == @first_monday.to_date + 14.days
+        end.returns(false)
+        assert_difference 'Reservation.count', 6 do
+          assert @recurring_booking_request.process, @recurring_booking_request.errors.full_messages
+        end
+      end
 
       context "something went wrong when saving recurring_booking" do
         setup do
           @recurring_booking_request.stubs(:save_reservations).returns(false)
         end
 
-        # should "return false" do
-        #   assert_no_difference 'Reservation.count' do
-        #     assert !@recurring_booking_request.process
-        #   end
-        # end
+        should "return false" do
+          assert_no_difference 'Reservation.count' do
+            assert !@recurring_booking_request.process
+          end
+        end
       end
     end
 

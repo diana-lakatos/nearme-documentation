@@ -17,8 +17,8 @@ class PaymentGateway::FetchPaymentGatewayTest < ActiveSupport::TestCase
 
     @reservation = FactoryGirl.create(:reservation_with_remote_payment, currency: 'NZD')
     @reservation.payment_response_params = SUCCESS_FETCH_RESPONSE
-    assert_difference 'Payment.count' do
-      assert_difference 'Charge.count' do
+    assert_difference 'Charge.count' do
+      assert_difference 'Payment.count' do
         @reservation.charge
       end
     end
@@ -37,8 +37,8 @@ class PaymentGateway::FetchPaymentGatewayTest < ActiveSupport::TestCase
 
     @reservation = FactoryGirl.create(:reservation_with_remote_payment, currency: 'NZD')
     @reservation.payment_response_params = FAILED_FETCH_RESPONSE
-    assert_difference 'Payment.count' do
-      assert_difference 'Charge.count' do
+    assert_difference 'Charge.count' do
+      assert_difference 'Payment.count' do
         @reservation.charge
       end
     end

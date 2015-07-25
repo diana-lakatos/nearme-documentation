@@ -131,10 +131,8 @@ ActiveSupport::TestCase.class_eval do
   end
 
   def stub_active_merchant_interaction
-    PaymentAuthorizer.any_instance.stubs(:gateway_authorize).returns(OpenStruct.new(success?: true, authorization: "54533"))
-    PaymentGateway.any_instance.stubs(:gateway_capture).returns(OpenStruct.new(success?: true, params: {"id" => '12345'}))
-    PaymentGateway.any_instance.stubs(:gateway_refund).returns(OpenStruct.new(success?: true, params: {"id" => '12345'}))
-
+    PaymentGateway.any_instance.stubs(:authorize).returns({token: "54533"})
+    PaymentGateway.any_instance.stubs(:charge).returns(true)
     stub = OpenStruct.new(params: {
       "object" => 'customer',
       "id" => 'customer_1',

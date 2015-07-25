@@ -152,7 +152,7 @@ class PlatformContextDrop < BaseDrop
     @instance.date_pickers
   end
 
-  # returns the type of select for this marketplace to be used when
+  # returns the type of select for this marketplace to be used when 
   # multiple service types are defined (e.g. radio, dropdown etc.)
   def tt_select_type
     @instance.tt_select_type

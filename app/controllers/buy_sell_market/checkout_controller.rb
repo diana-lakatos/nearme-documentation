@@ -2,55 +2,47 @@ class BuySellMarket::CheckoutController < ApplicationController
   include Wicked::Wizard
   include Spree::Core::ControllerHelpers::StrongParameters
 
+  before_filter :authenticate_user!
 
-  CHECKOUT_STEPS = [:address, :delivery, :payment, :confirm, :complete]
+  CHECKOUT_STEPS = [:address, :delivery, :payment, :complete]
   steps *CHECKOUT_STEPS
 
-  skip_before_filter :log_out_if_token_exists
-  skip_before_filter :filter_out_token
-
-  before_filter :authenticate_user!
   before_filter :set_theme
   before_filter :set_order
-  before_filter :check_step, only: [:show, :update]
+  before_filter :check_step, except: [:get_states]
   before_filter :set_state, only: [:show]
   before_filter :check_qty_on_step, only: [:show, :update]
-  before_filter :assign_order_attributes, only: [:update]
-  before_filter :set_payment_gateway, only: [:show, :update, :express]
-  before_filter :set_countries_states, only: [:show, :update]
+  before_filter :check_billing_gateway, only: [:show, :update]
 
   def show
     case step
     when :address
       @order.restart_checkout_flow
+      @order.use_billing = 1
+      set_countries_states
     when :delivery
       packages = @order.shipments.map { |s| s.to_package }
       @differentiator = Spree::Stock::Differentiator.new(@order, packages)
     when :payment
       build_approval_request_for_object(current_user)
-      checkout_service.build_payment_documents
       @additional_charges = platform_context.instance.additional_charge_types
-    when :confirm
-      if express_checkout_token.present?
-        @additional_charges = platform_context.instance.additional_charge_types
-        @order.express_token = express_checkout_token
-      else
-        @order.next
-        jump_to next_step
-      end
     when :complete
-      @current_order = nil
       flash[:success] = t('buy_sell_market.checkout.notices.order_placed')
       redirect_to success_dashboard_order_path(params[:order_id])
       return
     end
 
+    checkout_service.build_payment_documents if step == :payment
 
     render_wizard
   end
 
   def update
-    if @order.payable?
+    if step == :address
+      set_countries_states
+    end
+    params[:order] ||= {}
+    if @order.payment?
       checkout_extra_fields = @order.checkout_extra_fields(params[:order][:checkout_extra_fields])
       checkout_extra_fields.assign_attributes! if checkout_extra_fields.are_fields_present?
 
@@ -60,24 +52,105 @@ class BuySellMarket::CheckoutController < ApplicationController
         checkout_extra_fields.errors.full_messages.each { |m| @order.errors[:checkout_fields] ||= []; @order.errors[:checkout_fields] << m }
         render_step order_state and return
       end
-      # Remove this line when refactoring Additional Costs/Charges
+
       @additional_charges = platform_context.instance.additional_charge_types
-
       checkout_service.update_payment_documents
-      setup_upsell_charges
+      @order.payment_method = params[:order][:payment_method]
+      if @order.manual_payment? && @order.possible_manual_payment?
+        setup_upsell_charges
+        create_spree_payment_records
+      elsif @billing_gateway.present?
+        @order.payment_method = Spree::Order::PAYMENT_METHODS[:credit_card]
+        @order.card_exp_month = params[:order][:card_exp_month].try(:to_s).try(:strip)
+        @order.card_exp_year = params[:order][:card_exp_year].try(:to_s).try(:strip)
+        @order.card_number = params[:order][:card_number].try(:to_s).try(:strip)
+        @order.card_code = params[:order][:card_code].try(:to_s).try(:strip)
+        @order.card_holder_first_name = params[:order][:card_holder_first_name].try(:to_s).try(:strip)
+        @order.card_holder_last_name = params[:order][:card_holder_last_name].try(:to_s).try(:strip)
+        credit_card = ActiveMerchant::Billing::CreditCard.new(
+          first_name: @order.card_holder_first_name,
+          last_name: @order.card_holder_last_name,
+          number: @order.card_number,
+          month: @order.card_exp_month.to_s,
+          year: @order.card_exp_year.to_s,
+          verification_value: @order.card_code
+        )
+        if @order.billing_authorization.present?
+          # all done, proceeding, we don't want to setup upsell charges as this might result in charging less/more
+          # than we should
+        else
+          setup_upsell_charges
+          if credit_card.valid? || (@billing_gateway.nonce_payment? && params[:payment_method_nonce] != nil)
+            options = @billing_gateway.nonce_payment? ? {payment_method_nonce: params[:payment_method_nonce]} : {}
+            options[:company] = @order.company
+            options[:service_fee_host] = @order.service_fee_amount_host
+            response = @billing_gateway.authorize(@order.total_amount_to_charge, @order.currency, credit_card, options)
+          if response[:error].present?
+            @order.errors.add(:cc, response[:error])
+            @order.billing_authorizations.create!(
+              success: false,
+              payment_gateway: @billing_gateway,
+              payment_gateway_mode: @billing_gateway.mode,
+              response: response,
+              user_id: current_user.id,
+            )
+            p = @order.payments.build(amount: @order.total_amount_to_charge, company_id: @order.company_id)
+            p.started_processing
+            p.failure!
+            render_step order_state and return
+          else
+            @order.billing_authorizations.create!(
+              success: true,
+              token: response[:token],
+              payment_gateway: @billing_gateway,
+              payment_gateway_mode: @billing_gateway.mode,
+              response: response,
+              user_id: current_user.id,
+              immediate_payout: @billing_gateway.immediate_payout(@order.company)
+            )
+            create_spree_payment_records
 
-      # This is temporal solution that should be removed when we support multiple payment gateways for one country
-      @payment_gateway = PaymentGateway::ManualPaymentGateway.new if @order.manual_payment? && @order.possible_manual_payment?
+            # Charging the client with the right calculated service fees
+            # It includes any upsell charges and percentage fee that can apply to the order
+            @order.update(
+              service_fee_amount_guest_cents: @order.service_fee_amount_guest_cents,
+              service_fee_amount_host_cents:  @order.service_fee_amount_host_cents
+            )
+          end
+          else
+            @order.errors.add(:cc, I18n.t('buy_sell_market.checkout.invalid_cc'))
+            render_step order_state and return
+          end
+        end
+      else
+        @order.errors.add(:payment_method, I18n.t('buy_sell_market.checkout.invalid_payment_method'))
+        render_step order_state and return
+      end
+      unless @order.next
+        flash.now[:error] = spree_errors
+        render_step order_state and return
+      end
+    elsif @order.update_from_params(params, permitted_checkout_attributes)
+      if step == :address
+        save_user_addresses
+        set_countries_states
+      end
 
-      @payment_gateway.authorize(@order)
-    elsif @order.save && @order.address?
-      save_user_addresses
+      unless @order.next
+        flash.now[:error] = spree_errors
+        render_step order_state and return
+      end
+
+      if @order.completed?
+        @current_order = nil
+        render_step :complete and return # TODO Refactor to redirect
+      end
+    else
+      set_countries_states if step == :address
+      render_step order_state and return
     end
 
-    # We don't want to override validation messages by calling next
-    jump_to next_step if spree_errors.blank? && @order.valid? && (@order.complete? || @order.next)
-
-    flash.now[:error] = spree_errors if spree_errors.present?
+    jump_to next_step
     render_wizard
   end
 
@@ -85,29 +158,7 @@ class BuySellMarket::CheckoutController < ApplicationController
     @states = Spree::State.where(country_id: params[:country_id])
   end
 
-  def express
-    if @payment_gateway.express_checkout?
-      @payment_gateway.process_express_checkout(@order, {
-       ip: request.remote_ip,
-       return_url: order_checkout_url(order_id: @order, id: 'confirm', host: request.host_with_port),
-       cancel_return_url: cart_index_url(host: request.host_with_port)
-       })
-      redirect_to @payment_gateway.redirect_url
-    else
-      redirect_to cart_index_path, error: t('buy_sell_market.checkout.errors.skip')
-    end
-  end
-
   private
-
-  def assign_order_attributes
-    params[:order][:payment_method_nonce] = params[:payment_method_nonce] if params[:order] && params[:payment_method_nonce]
-    @order.assign_attributes(spree_order_params)
-  end
-
-  def express_checkout_token
-    params[:token]
-  end
 
   def set_theme
     @theme_name = 'buy-sell-theme'
@@ -116,7 +167,6 @@ class BuySellMarket::CheckoutController < ApplicationController
 
   def check_qty_on_step
     return true if step == :complete
-    return true if step == :confirm && params[:token].blank?
 
     qty_check_serivce = BuySell::OrderQtyCheckService.new(@order)
     unless qty_check_serivce.check
@@ -131,16 +181,12 @@ class BuySellMarket::CheckoutController < ApplicationController
 
   def check_step
     return true if step == :address
-    return true if step == :confirm && params[:token].blank?
 
     if CHECKOUT_STEPS.index(step) > CHECKOUT_STEPS.index(order_state)
-      @order.try(:restart_checkout_flow)
+      @order.restart_checkout_flow
       flash[:error] = t('buy_sell_market.checkout.errors.skip')
       redirect_to cart_index_path
-      return
     end
-
-    redirect_to cart_index_path if CHECKOUT_STEPS.index(step) < 4 && @order.paypal_express_payment?
   end
 
   def set_state
@@ -148,11 +194,9 @@ class BuySellMarket::CheckoutController < ApplicationController
   end
 
   def set_countries_states
-    if @order.address?
-      @countries = Spree::Country.order('name')
-      @billing_states = billing_states
-      @shipping_states = shipping_states
-    end
+    @countries = Spree::Country.order('name')
+    @billing_states = billing_states
+    @shipping_states = shipping_states
   end
 
   def billing_states
@@ -164,14 +208,15 @@ class BuySellMarket::CheckoutController < ApplicationController
   end
 
   def set_order
-    @order ||= if (step == :complete) || ((step == :confirm) && params[:token].blank?)
-      current_user.orders.find_by(number: params[:order_id])
-    else
-      current_user.cart_orders.find_by(number: params[:order_id]).try(:decorate)
-    end
+    @order ||= if step == :complete
+                 current_user.orders.find_by(number: params[:order_id])
+               else
+                 current_user.cart_orders.find_by(number: params[:order_id]).try(:decorate)
+               end
   end
 
   def setup_upsell_charges
+
     @order.additional_charges.destroy_all
     additional_charge_ids = AdditionalChargeType.get_mandatory_and_optional_charges(params[:additional_charge_ids]).pluck(:id)
     additional_charge_ids.each do |id|
@@ -181,19 +226,18 @@ class BuySellMarket::CheckoutController < ApplicationController
   end
 
   def spree_errors
-    @order.errors.messages.values.join("\n") if @order.errors.present?
+    @order.errors.full_messages.join("\n")
   end
 
   def order_state
     @order.state.to_sym
   end
 
-  def set_payment_gateway
-    @payment_gateway = current_instance.payment_gateway(@order.company.iso_country_code, @order.currency)
-
-    if @payment_gateway.nil?
+  def check_billing_gateway
+    @billing_gateway = PlatformContext.current.instance.payment_gateway(@order.company.iso_country_code, @order.currency)
+    if @billing_gateway.nil? && !@order.possible_manual_payment?
       flash[:error] = t('flash_messages.buy_sell.no_payment_gateway')
-      redirect_to(cart_index_path)
+      redirect_to cart_index_path
     end
   end
 
@@ -201,9 +245,11 @@ class BuySellMarket::CheckoutController < ApplicationController
     @checkout_service ||= BuySell::CheckoutService.new(current_user, @order, params)
   end
 
-  def spree_order_params
-    params[:order] ||= {}
-    params.require(:order).permit(secured_params.spree_order + permitted_checkout_attributes)
+  def create_spree_payment_records
+    p = @order.payments.build(amount: @order.total_amount_to_charge, company_id: @order.company_id)
+    p.pend
+    p.save!
   end
+
 end
 

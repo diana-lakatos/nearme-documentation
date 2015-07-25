@@ -77,7 +77,7 @@ class ReservationDrop < BaseDrop
 
   # url to the dashboard area for managing own reservations
   def bookings_dashboard_url
-    routes.dashboard_user_reservations_path(:reservation_id => @reservation, token_key => @reservation.owner.temporary_token)
+    routes.dashboard_user_reservations_path(:reservation_id => @reservation, :token => @reservation.owner.temporary_token)
   end
 
   # url to the dashboard area for managing received bookings
@@ -86,11 +86,11 @@ class ReservationDrop < BaseDrop
   end
 
   def export_to_ical_url
-    routes.export_reservation_path(@reservation, format: :ics, token_key => @reservation.owner.try(:temporary_token))
+    routes.export_reservation_path(@reservation, format: :ics, token: @reservation.owner.try(:temporary_token))
   end
 
   def remote_payment_url
-    routes.remote_payment_dashboard_user_reservation_path(@reservation, token_key => @reservation.owner.try(:temporary_token))
+    routes.remote_payment_dashboard_user_reservation_path(@reservation, token: @reservation.owner.try(:temporary_token))
   end
 
   # date at which the reservation was created formatted as a string
@@ -100,12 +100,12 @@ class ReservationDrop < BaseDrop
 
   # url for confirming the recurring booking
   def reservation_confirm_url
-    routes.confirm_dashboard_company_host_reservation_path(@reservation, token_key => @reservation.listing.administrator.try(:temporary_token))
+    routes.confirm_dashboard_company_host_reservation_path(@reservation, token: @reservation.listing.administrator.try(:temporary_token))
   end
 
   # url for confirming the recurring booking with tracking
   def reservation_confirm_url_with_tracking
-    routes.confirm_dashboard_company_host_reservation_path(@reservation, token_key => @reservation.listing.administrator.try(:temporary_token), track_email_event: true)
+    routes.confirm_dashboard_company_host_reservation_path(@reservation, token: @reservation.listing.administrator.try(:temporary_token), track_email_event: true)
   end
 
   # reservation date (first date)

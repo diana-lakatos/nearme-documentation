@@ -445,20 +445,6 @@ class SecuredParams
     ]
   end
 
-  def spree_order
-    [
-      :card_number,
-      :card_code,
-      :card_exp_month,
-      :card_exp_year,
-      :card_holder_first_name,
-      :card_holder_last_name,
-      :express_token,
-      :payment_method,
-      :payment_method_nonce
-    ]
-  end
-
   def spree_variant
     [
       :sku,
@@ -823,19 +809,12 @@ class SecuredParams
       company_address_attributes: nested(self.address),
       payments_mailing_address_attributes: nested(self.address),
       theme_attributes: self.theme,
-      industry_ids: []
-    ] << {
+      industry_ids: [],
       products_attributes: nested(self.spree_product),
       shipping_categories_attributes: nested(self.spree_shipping_category),
       shipping_methods_attributes: nested(self.spree_shipping_method),
-      stock_locations_attributes: nested(self.spree_stock_location),
-    }.merge(MerchantAccount::MERCHANT_ACCOUNTS.inject({}) do |hsh, (name, klass)|
-      attributes = nested(klass::ATTRIBUTES)
-      owner_klass = "MerchantAccountOwner::#{name.classify}MerchantAccountOwner".safe_constantize
-      attributes << {owners_attributes: nested([:document] + owner_klass::ATTRIBUTES)} if owner_klass
-      hsh["#{name}_merchant_account_attributes".to_sym] = attributes
-      hsh
-    end)
+      stock_locations_attributes: nested(self.spree_stock_location)
+    ]
   end
 
   def domain

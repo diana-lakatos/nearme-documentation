@@ -8,16 +8,13 @@ class Authentication::TokenBasedLoginTest < ActionDispatch::IntegrationTest
     @verifier = User::TemporaryTokenVerifier.new(@user)
     instance = Instance.first
     instance.domains << FactoryGirl.create(:domain, name: "www.example.com")
-
-    @temporary_token_name = TemporaryTokenAuthenticatable::PARAMETER_NAME
   end
-
   context 'using a valid token' do
     context "redirects" do
       should 'without token parameter' do
         get url_with_login_token(@verifier.generate)
         follow_redirect!
-        assert_nil request.filtered_parameters[@temporary_token_name]
+        assert_nil request.filtered_parameters['token']
         assert_logged_in_as @user
       end
 
@@ -91,19 +88,19 @@ class Authentication::TokenBasedLoginTest < ActionDispatch::IntegrationTest
     end
 
     should 'be relogged if he uses token' do
-      get_via_redirect edit_dashboard_company_transactable_type_transactable_path(@transactable_type, @transactable, @temporary_token_name => @transactable.creator.authentication_token)
+      get_via_redirect edit_dashboard_company_transactable_type_transactable_path(@transactable_type, @transactable, :token => @transactable.creator.authentication_token)
       assert_response :success
     end
 
     should 'be prompted login form if he uses wrong token' do
-      get edit_dashboard_company_transactable_type_transactable_path(@transactable_type, @transactable, @temporary_token_name => 'this one is certainly wrong one')
+      get edit_dashboard_company_transactable_type_transactable_path(@transactable_type, @transactable, :token => 'this one is certainly wrong one')
       follow_redirect!
       assert_response :redirect
       assert_redirected_to new_user_session_path(return_to: edit_dashboard_company_transactable_type_transactable_url(@transactable_type, @transactable))
     end
 
     should 'be redirected back after login when token is wrong' do
-      get_via_redirect edit_dashboard_company_transactable_type_transactable_path(@transactable_type, @transactable, @temporary_token_name => 'this one is certainly wrong one')
+      get_via_redirect edit_dashboard_company_transactable_type_transactable_path(@transactable_type, @transactable, :token => 'this one is certainly wrong one')
       post 'users/sign_in', {'user[email]' => @user.email, 'user[password]' => @user.password}
       assert_redirected_to new_user_session_path(return_to: new_user_session_url)
     end

@@ -70,8 +70,8 @@ class PaymentGateway::PaypalPaymentGateway < PaymentGateway
         password: settings[:password],
         signature: settings[:signature]
       )
+      @gateway
     end
-    @gateway
   end
 
   def custom_authorize_options

@@ -39,7 +39,7 @@ end
 
 When /^I update payouts settings$/ do
   fill_in "company_payments_mailing_address_attributes_address", with: "Adelaide, South Australia, Australia"
-  fill_in "company_paypal_merchant_account_attributes_email", with: "paypal-update@example.com"
+  fill_in "merchant_account_data_paypal_email", with: "paypal-update@example.com"
   find('input[@type="submit"]').click
 end
 
@@ -52,7 +52,7 @@ Then /^The company payouts settings should be updated$/ do
   company = model!("the company")
   assert_equal "Adelaide SA, Australia", company.mailing_address
   assert_equal 1, company.reload.merchant_accounts.count
-  assert_equal({ 'email' => "paypal-update@example.com" }, company.merchant_accounts.first.try(:data))
+  assert_equal({ email: "paypal-update@example.com" }, company.merchant_accounts.first.try(:data))
   assert_equal @paypal_gateway.id, company.reload.merchant_accounts.first.payment_gateway_id
 end
 

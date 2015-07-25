@@ -6,7 +6,7 @@ class RecurringBookingRequest < Form
   attr_reader   :recurring_booking, :listing, :location, :user
 
   def_delegators :@recurring_booking, :credit_card_payment?, :manual_payment?, :reservation_type=
-  def_delegators :@listing,     :confirm_reservations?, :location, :action_hourly_booking?, :company, :currency
+  def_delegators :@listing,     :confirm_reservations?, :location, :action_hourly_booking?
   def_delegators :@user,        :mobile_number, :mobile_number=, :country_name, :country_name=, :country
 
   before_validation :setup_credit_card_customer, :if => lambda { recurring_booking.try(:reservations).try(:first) and user and user.valid?}
@@ -142,26 +142,22 @@ class RecurringBookingRequest < Form
     false
   end
 
-
-  def  credit_card
-    ActiveMerchant::Billing::CreditCard.new(
-      first_name: card_holder_first_name.to_s,
-      last_name: card_holder_last_name.to_s,
-      number: card_number.to_s,
-      month: card_exp_month.to_s,
-      year: card_exp_year.to_s,
-      verification_value: card_code.to_s
-    )
-end
-
-
   def setup_credit_card_customer
     clear_errors(:cc)
     return true unless using_credit_card?
 
     begin
+      credit_card = ActiveMerchant::Billing::CreditCard.new(
+        first_name: card_holder_first_name.to_s,
+        last_name: card_holder_last_name.to_s,
+        number: card_number.to_s,
+        month: card_exp_month.to_s,
+        year: card_exp_year.to_s,
+        verification_value: card_code.to_s
+      )
+
       if credit_card.valid?
-        response = @billing_gateway.authorize(self)
+        response = @billing_gateway.authorize(@reservation.total_amount_cents, @reservation.currency, credit_card)
         if response[:error].present?
           add_error(response[:error], :cc)
         else

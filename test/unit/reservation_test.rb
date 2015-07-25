@@ -304,7 +304,7 @@ class ReservationTest < ActiveSupport::TestCase
   context 'expiration' do
 
     setup do
-      stub_active_merchant_interaction
+      PaymentGateway::StripePaymentGateway.any_instance.expects(:charge)
       @payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
       @reservation = FactoryGirl.build(:reservation_with_credit_card)
 
@@ -362,7 +362,7 @@ class ReservationTest < ActiveSupport::TestCase
     end
 
     should "attempt to charge user card if paying by credit card" do
-      stub_active_merchant_interaction
+      PaymentGateway::StripePaymentGateway.any_instance.expects(:charge)
       @reservation.confirm
       assert @reservation.reload.paid?
     end

@@ -11,7 +11,7 @@
   .span2{class: first_item ? '' : 'price'}
     - if first_item
       %p PRICE
-    %p.value= item.single_money
+    %p.value= item.price
 
   .span2{class: first_item ? '' : 'quantity'}
     - if first_item
@@ -22,7 +22,7 @@
   .span2{class: first_item ? '' : 'total'}
     - if first_item
       %p TOTAL
-    %p.value= item.display_amount
+    %p.value= item.total
 
   .span1
     - if first_item

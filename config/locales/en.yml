@@ -986,49 +986,11 @@ en:
       remember_to_setup_automated_payout: "To receive automated payout please <a href='%{setup_link}'>setup payouts</a>."
       exclusive_price_guests_notes: 'Exclusive booking instructions from guest: %{guest_notes}'
     merchant_account:
-      header: 'Merchant account details'
-      pending: 'Your merchant account is pending verification.'
-      verified: 'Your merchant account has been verified.'
-      failed: 'Verification of your merchant account failed.'
-      currency: 'Currency'
-      select_currency: '- Select Currency -'
-      bank_routing_number:
-        us: 'Routing Number'
-        ca: 'Routing Number'
-        au: 'BSB number'
-        euuk: 'Routing Number'
-      bank_account_number:
-        us: 'Bank Account Number'
-        ca: 'Bank Account Number'
-        au: 'Bank Account Number'
-        euuk: 'Bank Account Number'
-      dob: 'Date of Birth'
-      account_type: 'Account Type'
-      select_account_type: '- Select Account Type -'
-      company: 'Company'
-      individual: 'Individual'
-      ssn_last_4: 'Last 4 SSN digits'
-      business_tax_id:
-        us: 'Employer Identification Number'
-        ca: 'Business Number'
-        au: 'ACN / ABN'
-        euuk: 'Company Number'
-      business_vat_id: 'VAT number'
-      personal_id_number:
-        us: 'Social Security Number'
-        ca: 'Social Insurance Number'
-      document: 'Government ID or Passport'
-      add_owner: 'Add owner'
-      remove_owner: 'Remove owner'
-      first_name: 'First Name'
-      last_name: 'Last Name'
-      address_country: 'Country'
-      address_state: 'State/Province/County'
-      address_city: 'City/Suburb/Town/Village'
-      address_postal_code: 'Zip/Postal Code'
-      address_line1: 'Address line 1 (Street address/PO Box/Company name)'
-      address_line2: 'Address line 2 (Apartment/Suite/Building)'
-      additional_owners: 'Additional owners'
+      braintree_marketplace:
+        header: 'Merchant account details'
+        pending: 'Your merchant account is pending verification.'
+        verified: 'Your merchant account has been verified.'
+        failed: 'Verification of your merchant account failed.'
     reservations:
       purchase_was_successful: "Your purchase was successful!"
     products:

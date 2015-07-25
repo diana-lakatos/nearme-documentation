@@ -4,13 +4,18 @@ class ApplicationController < ActionController::Base
 
   force_ssl if: :require_ssl?
 
-  protect_from_forgery
-  layout :layout_for_request_type
-
   before_filter :set_locale
   before_filter :log_out_if_token_exists
   before_filter :log_out_if_sso_logout
   before_filter :redirect_to_set_password_unless_unnecessary
+
+  protect_from_forgery
+  layout :layout_for_request_type
+
+  # We need to persist some mixpanel attributes for subsequent
+  # requests.
+  after_filter :apply_persisted_mixpanel_attributes
+  after_filter :store_client_taggable_events
   before_filter :first_time_visited?
   before_filter :store_referal_info
   before_filter :platform_context
@@ -18,11 +23,6 @@ class ApplicationController < ActionController::Base
   before_filter :redirect_if_marketplace_password_protected
   before_filter :set_raygun_custom_data
   before_filter :filter_out_token
-
-  # We need to persist some mixpanel attributes for subsequent
-  # requests.
-  after_filter :apply_persisted_mixpanel_attributes
-  after_filter :store_client_taggable_events
 
   def current_user
     super.try(:decorate)
@@ -237,7 +237,7 @@ class ApplicationController < ActionController::Base
   end
 
   def filter_out_token
-    redirect_to url_without_authentication_token(request.original_url) if params[TemporaryTokenAuthenticatable::PARAMETER_NAME]
+    redirect_to url_without_authentication_token(request.original_url) if params[:token]
   end
 
   def after_sign_up_path_for(resource)
@@ -384,7 +384,7 @@ class ApplicationController < ActionController::Base
   def url_without_authentication_token(url)
     uri = Addressable::URI.parse(url)
     parameters = uri.query_values
-    parameters.try(:delete, TemporaryTokenAuthenticatable::PARAMETER_NAME)
+    parameters.try(:delete, 'token')
     parameters = nil if not parameters.present?
     uri.query_values = parameters
     uri.to_s

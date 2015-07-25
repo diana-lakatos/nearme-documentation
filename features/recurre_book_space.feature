@@ -43,13 +43,13 @@ Feature: A user can recurre book at a space
   Scenario: Booking and paying by credit card via Stripe
     Given I am logged in as the user
     When I go to the location's page
-    # And  I recurre book space for:
-    #   | Transactable     | Start On   | End On                  | Quantity |
-    #   | the transactable | Monday     | 14 days from now Friday | 1        |
-    # And  I follow "Manage"
-    # Then I should be redirected to recurring bookings page
-    # And  I should see "credit card will be charged when your reservation is confirmed"
-    # And  the user should have a billing profile
+    And  I recurre book space for:
+      | Transactable     | Start On   | End On                  | Quantity |
+      | the transactable | Monday     | 14 days from now Friday | 1        |
+    And  I follow "Manage"
+    Then I should be redirected to recurring bookings page
+    And  I should see "credit card will be charged when your reservation is confirmed"
+    And  the user should have a billing profile
 
   Scenario: As an anonymous user I should be asked to sign up before booking
     When I go to the location's page
@@ -73,8 +73,8 @@ Feature: A user can recurre book at a space
     And the reservation service fee should show $100.00
     And the reservation total should show $1,100.00
     And I provide reservation credit card details
-    # When I click to confirm the booking
-    # Then the user should have a recurring booking:
-    #   | Transactable     | Start On   | End On                  | Quantity | Start | End   |
-    #   | the transactable | Monday     | 14 days from now Friday | 2        | 9:00  | 14:00 |
+    When I click to confirm the booking
+    Then the user should have a recurring booking:
+      | Transactable     | Start On   | End On                  | Quantity | Start | End   |
+      | the transactable | Monday     | 14 days from now Friday | 2        | 9:00  | 14:00 |
 

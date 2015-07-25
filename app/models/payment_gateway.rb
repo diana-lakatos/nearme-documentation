@@ -11,6 +11,22 @@ class PaymentGateway < ActiveRecord::Base
   serialize :test_settings, Hash
   serialize :live_settings, Hash
 
+  PAYMENT_GATEWAYS = {
+    'AuthorizeNet' => PaymentGateway::AuthorizeNetPaymentGateway,
+    'Braintree' => PaymentGateway::BraintreePaymentGateway,
+    'Braintree Marketplace' => PaymentGateway::BraintreeMarketplacePaymentGateway,
+    'Fetch' => PaymentGateway::FetchPaymentGateway,
+    'Ogone' => PaymentGateway::OgonePaymentGateway,
+    'Paypal' => PaymentGateway::PaypalPaymentGateway,
+    'Paystation' => PaymentGateway::PaystationPaymentGateway,
+    'SagePay' => PaymentGateway::SagePayPaymentGateway,
+    'Spreedly' => PaymentGateway::SpreedlyPaymentGateway,
+    'Stripe' => PaymentGateway::StripePaymentGateway,
+    'Worldpay' => PaymentGateway::WorldpayPaymentGateway,
+  }.freeze
+
+  attr_encrypted :test_settings, :live_settings, key: DesksnearMe::Application.config.secret_token, marshal: true
+
   belongs_to :instance
   belongs_to :payment_gateway
 
@@ -23,29 +39,8 @@ class PaymentGateway < ActiveRecord::Base
   has_many :credit_cards
   has_many :merchant_accounts
 
-  PAYMENT_GATEWAYS = {
-    'AuthorizeNet' => PaymentGateway::AuthorizeNetPaymentGateway,
-    'Braintree' => PaymentGateway::BraintreePaymentGateway,
-    'Braintree Marketplace' => PaymentGateway::BraintreeMarketplacePaymentGateway,
-    'Fetch' => PaymentGateway::FetchPaymentGateway,
-    'Ogone' => PaymentGateway::OgonePaymentGateway,
-    'Paypal' => PaymentGateway::PaypalPaymentGateway,
-    'PaypalExpress' => PaymentGateway::PaypalExpressPaymentGateway,
-    'Paystation' => PaymentGateway::PaystationPaymentGateway,
-    'SagePay' => PaymentGateway::SagePayPaymentGateway,
-    'Spreedly' => PaymentGateway::SpreedlyPaymentGateway,
-    'Stripe' => PaymentGateway::StripePaymentGateway,
-    'Stripe Connect' => PaymentGateway::StripeConnectPaymentGateway,
-    'Worldpay' => PaymentGateway::WorldpayPaymentGateway,
-    'Manual' => PaymentGateway::ManualPaymentGateway,
-  }.freeze
-
-  attr_encrypted :test_settings, :live_settings, key: DesksnearMe::Application.config.secret_token, marshal: true
-
   attr_accessor :country
   after_save :set_country_config
-
-  #- CLASS METHODS STARTS HERE
 
   def self.supported_countries
     raise NotImplementedError.new("#{self.name} has not implemented self.supported_countries")
@@ -57,6 +52,10 @@ class PaymentGateway < ActiveRecord::Base
 
   def self.find_or_initialize_by_type(type)
     PaymentGateway.where(type: type.to_s).first || PaymentGateway::PAYMENT_GATEWAYS.values.find { |value| value.to_s == type }.new
+  end
+
+  def name
+    @name ||= PaymentGateway::PAYMENT_GATEWAYS.key(self.class)
   end
 
   def self.countries
@@ -76,16 +75,6 @@ class PaymentGateway < ActiveRecord::Base
     raise NotImplementedError.new("#{self.name} active_merchant_class not implemented")
   end
 
-  #- END CLASS METHODS
-
-  def authorize(authoriazable, options = {})
-    PaymentAuthorizer.new(self, authoriazable, options).process!
-  end
-
-  def name
-    @name ||= PaymentGateway::PAYMENT_GATEWAYS.key(self.class)
-  end
-
   def gateway
     raise NotImplementedError
   end
@@ -102,14 +91,6 @@ class PaymentGateway < ActiveRecord::Base
     (test_mode? ? test_settings : live_settings).with_indifferent_access
   end
 
-  def configured?(country_alpha2_code)
-    settings.present? && country_payment_gateways.where(country_alpha2_code: country_alpha2_code).any?
-  end
-
-  def manual_payment?
-    instance.possible_manual_payment?
-  end
-
   def test_mode?
     @test_mode.nil? ? instance.test_mode? : @test_mode
   end
@@ -122,8 +103,21 @@ class PaymentGateway < ActiveRecord::Base
     @test_mode = (mode == 'live' ? false : true)
   end
 
+  def authorize(amount, currency, credit_card, options = {})
+    options = options.merge(custom_authorize_options).merge({currency: currency, merchant_account: merchant_account(options[:company])})
+    response = gateway.authorize(amount, credit_card, options.with_indifferent_access)
+    if response.success?
+      return {
+        token: response.authorization,
+      }
+    else
+      return {
+        error: response.message
+      }
+    end
+  end
+
   def charge(user, amount, currency, payment, token)
-    @payable = payment.payable
     @charge = charges.create(
       amount: amount,
       payment: payment,
@@ -134,16 +128,13 @@ class PaymentGateway < ActiveRecord::Base
 
     begin
       options = custom_capture_options.merge(currency: currency)
-      response = gateway_capture(amount, token, options.with_indifferent_access)
+      response = gateway.capture(amount, token, options.with_indifferent_access)
+
       response.success? ? charge_successful(response) : charge_failed(response)
       @charge
     rescue => e
       raise PaymentGateway::PaymentAttemptError, e
     end
-  end
-
-  def gateway_capture(amount, token, options)
-    gateway.capture(amount, token, options)
   end
 
   def void(billing_authorization)
@@ -164,16 +155,12 @@ class PaymentGateway < ActiveRecord::Base
 
     begin
       options = custom_refund_options.merge(currency: currency)
-      response = gateway_refund(amount, charge, options.with_indifferent_access)
+      response = gateway.refund(amount, refund_identification(charge), options.with_indifferent_access)
       response.success? ? refund_successful(response) : refund_failed(response)
       @refund
     rescue => e
       raise PaymentGateway::PaymentRefundError, e
     end
-  end
-
-  def gateway_refund(amount, charge, options)
-    gateway.refund(amount, refund_identification(charge), options)
   end
 
   def store_credit_card(client, credit_card)
@@ -221,10 +208,6 @@ class PaymentGateway < ActiveRecord::Base
     nil
   end
 
-  def express_checkout?
-    false
-  end
-
   def payout(company, payout_details)
     force_mode(payout_details[:payment_gateway_mode])
     merchant_account = merchant_account(company)
@@ -255,18 +238,12 @@ class PaymentGateway < ActiveRecord::Base
     raise NotImplementedError
   end
 
+  protected
+
   def merchant_account(company)
     return nil if company.nil?
     company.merchant_accounts.where(payment_gateway: self).where.not(state: 'failed').first
   end
-
-  def credit_card_payment?
-    gateway.supported_cardtypes.present?
-  rescue Exception
-    false
-  end
-
-  protected
 
   # Callback invoked by processor when charge was successful
   def charge_successful(response)
