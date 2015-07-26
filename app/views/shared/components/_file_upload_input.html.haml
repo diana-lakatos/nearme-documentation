@@ -1,6 +1,6 @@
 .fileupload
   - if uploaded_content_placement == :top
-    .uploaded{ data: {uploaded: true, row: "#{options[:row]}"}, style: "float: right; #{"height: #{options[:height]}px" if options[:height].to_f > 0}" }
+    .uploaded{ data: {uploaded: true, row: "#{options[:row]}"}, style: "#{"height: #{options[:height]}px" if options[:height].to_f > 0}" }
       = uploaded_content
 
   %div{:'data-fileupload-wrapper' => true, :'data-url' => url, :'data-name' => name}
