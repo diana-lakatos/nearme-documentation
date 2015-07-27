@@ -20,16 +20,14 @@ class ReviewsController < ApplicationController
          @reviews = @reviewable_parent.reviews
          @average_rating = @reviewable_parent.try(:average_rating)
          @question_average_rating = @reviewable_parent.question_average_rating
-         @total_reviews = @reviews.length
        when 'seller'
          @reviews = @reviewable_parent.reviews_about_seller
          @average_rating = @reviewable_parent.seller_average_rating
          @question_average_rating = @reviewable_parent.question_average_rating(@reviews)
-         # it's not duplication :|
-         @total_reviews = @reviews.count
        else
          raise NotImplementedError
        end
+       @total_reviews = @reviews.length
        @reviews = @reviews.paginate(page: params[:page], total_entries: @total_reviews)
        @rating_questions = RatingSystem.active_with_subject(params[:subject]).try(:rating_questions)
        render json: { tab_content: render_to_string(template: 'reviews/index', formats: [:html]), tab_header: render_to_string(partial: 'reviews/tab_header', formats: [:html]) }
