@@ -20,7 +20,8 @@
       %section.checkout-form
         .container-fluid
           %h2= t 'buy_sell_market.checkout.labels.shipping_address'
-          = f.input :use_billing, as: :boolean, inline_label: t('buy_sell_market.checkout.labels.billing_address_shipping'), label: false
+          = f.input :use_billing, as: :boolean, inline_label: t('buy_sell_market.checkout.labels.billing_address_shipping'), label: false, input_html: { checked: true }
+
           #shipping-address
             = f.simple_fields_for :ship_address do |s|
               = s.input :firstname, placeholder: t('buy_sell_market.checkout.placeholders.first_name')

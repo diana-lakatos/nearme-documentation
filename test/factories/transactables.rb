@@ -95,6 +95,7 @@ FactoryGirl.define do
       end
 
       association(:location, factory: :location_in_auckland)
+      currency 'NZD'
     end
 
     factory :listing_in_adelaide do

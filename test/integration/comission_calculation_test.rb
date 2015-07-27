@@ -83,15 +83,6 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     }
   end
 
-  def credit_card
-    ActiveMerchant::Billing::CreditCard.new(
-      :number             => "4242424242424242",
-      :month              => "12",
-      :year               => "2020",
-      :verification_value => "411"
-    )
-  end
-
   def mockup_database_with_currency(currency = 'USD')
     stub_what_has_to_be_stubbed
     @instance = Instance.first
@@ -106,11 +97,13 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     @instance.update_attribute(:payment_transfers_frequency, 'daily')
 
     CountryPaymentGateway.delete_all
-    payment_gateway = FactoryGirl.create(:paypal_payment_gateway)
+    payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
+    payout_gateway = FactoryGirl.create(:paypal_payment_gateway)
     FactoryGirl.create(:country_payment_gateway, payment_gateway: payment_gateway, country_alpha2_code: 'US')
-    FactoryGirl.create(:paypal_merchant_account, payment_gateway: payment_gateway, merchantable: @listing.company)
-    Company.any_instance.stubs(:payout_payment_gateway).returns(payment_gateway)
-    PaymentTransfer.any_instance.stubs(:billing_gateway).returns(payment_gateway)
+    FactoryGirl.create(:paypal_merchant_account, payment_gateway: payout_gateway, merchantable: @listing.company)
+    Company.any_instance.stubs(:payout_payment_gateway).returns(payout_gateway)
+    Instance.any_instance.stubs(:payment_gateway).returns(payment_gateway)
+    PaymentTransfer.any_instance.stubs(:billing_gateway).returns(payout_gateway)
     PaymentGateway.any_instance.stubs(:supported_currencies).returns([currency])
 
     create_logged_in_user
@@ -120,7 +113,7 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     stub_billing_gateway(@instance)
     # todo: this is proper way of stubbing probably - only 3rd party gateway integration, need to use it globally
     stubs = {
-      authorize: stub(authorization: "54533", success?: true),
+      authorize: OpenStruct.new(authorization: "54533", success?: true),
       capture: OpenStruct.new(success?: true),
       refund: OpenStruct.new(success?: true),
       void: OpenStruct.new(success?: true)
@@ -137,6 +130,7 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     assert_difference "@listing.reservations.count" do
       post_via_redirect "/listings/#{@listing.id}/reservations", booking_params
     end
+
     @reservation = @listing.reservations.last
     assert_equal @listing.currency, @reservation.currency
     assert_equal 25.to_money(@listing.currency), @reservation.subtotal_amount

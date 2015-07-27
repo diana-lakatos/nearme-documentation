@@ -2,7 +2,7 @@ require 'test_helper'
 
 class FactoriesTest < ActiveSupport::TestCase
 
-  SPREE_EXCLUDED_FACTORIES = ['admin_user', 'user_with_addreses']
+  SPREE_EXCLUDED_FACTORIES = ['admin_user', 'user_with_addreses', 'reservation_request', 'reservation_request_with_not_valid_cc']
 
   FactoryGirl.factories.each do |factory|
     next if factory.class_name.to_s.gsub(/::.*/, '') == 'Spree' ||

@@ -12,10 +12,11 @@ class Reservation < ActiveRecord::Base
 
   PAYMENT_METHODS = {
     :credit_card => 'credit_card',
-    :manual      => 'manual',
-    :nonce       => 'nonce',
-    :remote      => 'remote',
-    :free        => 'free'
+    :express_checkout => 'express_checkout',
+    :manual => 'manual',
+    :nonce => 'nonce',
+    :remote => 'remote',
+    :free => 'free'
   }.freeze
 
   PAYMENT_STATUSES = {
@@ -227,9 +228,14 @@ class Reservation < ActiveRecord::Base
   validates_presence_of :payment_method, :in => Reservation::PAYMENT_METHODS.values
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
 
-  delegate :location, :transactable_type_id, to: :listing
+  delegate :location, :transactable_type_id, :billing_authorizations, to: :listing
   delegate :administrator=, to: :location
   delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :listing, allow_nil: true
+
+  def authorize
+    billing_gateway = instance.payment_gateway(listing.company.iso_country_code, currency)
+    billing_gateway.present? ? billing_gateway.authorize(self) : false
+  end
 
   def set_confirmed_at
     touch(:confirmed_at)
@@ -259,6 +265,7 @@ class Reservation < ActiveRecord::Base
   def first_period
     @first_period ||= periods.sort_by(&:date).first
   end
+
   def date
     first_period.date
   end
@@ -318,6 +325,7 @@ class Reservation < ActiveRecord::Base
   def subtotal_amount_cents
     super || price_calculator.price.cents rescue nil
   end
+  alias_method :price_in_cents, :subtotal_amount_cents
 
   def service_fee_amount_guest_cents
     super || service_fee_calculator.service_fee_guest.cents rescue nil
@@ -326,6 +334,7 @@ class Reservation < ActiveRecord::Base
   def service_fee_guest_wo_charges
     service_fee_calculator.service_fee_guest_wo_ac rescue nil
   end
+  alias_method :service_fee_guest_without_charges, :service_fee_guest_wo_charges
 
   def service_fee_amount_host_cents
     super || service_fee_calculator.service_fee_host.cents rescue nil
@@ -359,11 +368,15 @@ class Reservation < ActiveRecord::Base
   end
 
   def active_merchant_payment?
-    credit_card_payment? || nonce_payment?
+    credit_card_payment? || nonce_payment? || express_checkout_payment?
   end
 
   def credit_card_payment?
     payment_method == Reservation::PAYMENT_METHODS[:credit_card]
+  end
+
+  def express_checkout_payment?
+    payment_method == Reservation::PAYMENT_METHODS[:express_checkout]
   end
 
   def nonce_payment?

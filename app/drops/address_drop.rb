@@ -10,7 +10,7 @@ class AddressDrop < BaseDrop
   #   returns the city as a string
   # suburb
   #   returns the suburb as a string
-  delegate :street, :address, :city, :suburb, to: :address_object
+  delegate :street, :address, :city, :suburb, :iso_country_code, to: :address_object
 
   def initialize(address_object)
     @address_object = address_object

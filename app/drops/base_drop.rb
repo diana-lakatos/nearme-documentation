@@ -19,4 +19,8 @@ class BaseDrop < Liquid::Drop
   def platform_context_decorator
     @platform_context_decorator ||= PlatformContext.current.decorate
   end
+
+  def token_key
+    TemporaryTokenAuthenticatable::PARAMETER_NAME
+  end
 end

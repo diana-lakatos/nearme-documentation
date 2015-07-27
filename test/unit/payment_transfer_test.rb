@@ -79,24 +79,19 @@ class PaymentTransferTest < ActiveSupport::TestCase
           :cancellation_policy_penalty_percentage => 50
         }
       })
+
       @refunds_company = listing.company
 
       @refunds_payment_transfer = @refunds_company.payment_transfers.build
 
-      @refunds_reservation_1 = @refunds_company.reservations.order(:id).first
-      @refunds_reservation_2 = @refunds_company.reservations.order(:id).second
-
-      @refunds_payments = [
-        @refunds_reservation_1.payments.to_a,
-        @refunds_reservation_2.payments.to_a
-      ].flatten
+      @refunds_payments = @refunds_company.reservations.order(:id).map { |r| r.payments.to_a }.flatten
     end
 
     should "calculate correctly the total sum for transfers without refunds" do
       @refunds_payment_transfer.payments = @refunds_payments
       @refunds_payment_transfer.save!
 
-      assert_equal 1000 + 1000 - 100 - 150, @refunds_payment_transfer.amount_cents
+      assert_equal 1000 + 1000 - 100 - 150, @refunds_payment_transfer.amount_cents # 1750
       assert_equal 150 + 200, @refunds_payment_transfer.service_fee_amount_guest_cents
       assert_equal 100 + 150, @refunds_payment_transfer.service_fee_amount_host_cents
     end
@@ -104,13 +99,9 @@ class PaymentTransferTest < ActiveSupport::TestCase
     should "calculate correctly the total sum for transfers with refunds" do
       @refunds_payments[0].payable.user_cancel!
       @refunds_payments[1].payable.host_cancel!
-      @refunds_payments[0].refund
-      @refunds_payments[1].refund
 
       assert_equal 400, @refunds_payments[0].amount_to_be_refunded
       assert_equal 1000 + 200, @refunds_payments[1].amount_to_be_refunded
-      Refund.create(:success => true, :amount => 400, :payment => @refunds_payments[0])
-      Refund.create(:success => true, :amount => 1000 + 200, :payment => @refunds_payments[1])
 
       @refunds_payment_transfer.payments = @refunds_payments
       @refunds_payment_transfer.save!

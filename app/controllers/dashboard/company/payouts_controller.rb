@@ -1,22 +1,18 @@
 class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
+
+  before_action :get_payment_gateway_data
   before_action :build_merchant_account
 
   def edit
+    @merchant_account.owners.build if @merchant_account.respond_to?(:owners) && !@merchant_account.owners.present?
   end
 
   def update
-    params[:merchant_account] ||= {}
-    @company.assign_attributes(company_params)
-    @merchant_account.try(:update_data, params[:merchant_account][:data])
-    res = if @merchant_account.present? && params[:merchant_account][:data].present?
-      @company.save(validate: false) && @merchant_account.save
-    else
-      @company.save
-    end
-    if res
+    if @company.update_attributes(company_params)
       flash[:success] = t('flash_messages.manage.payouts.updated')
       redirect_to action: :edit
     else
+      @merchant_account = @company.send("#{@payment_gateway_type}_merchant_account")
       render :edit
     end
   end
@@ -27,19 +23,18 @@ class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
     params.require(:company).permit(secured_params.company)
   end
 
-  def build_merchant_account
+  def get_payment_gateway_data
     @payment_gateway = @company.payout_payment_gateway
     if @payment_gateway.present?
-      @merchant_account_form_path = "dashboard/company/merchant_accounts/#{@payment_gateway.type.gsub('PaymentGateway', '').sub('::', '').underscore.tr(' ', '_')}"
-      @merchant_account = @payment_gateway.merchant_accounts.where(merchantable_id: @company.id, merchantable_type: 'Company').first
-      if @merchant_account.nil?
-        @merchant_account = case @payment_gateway
-                            when PaymentGateway::BraintreeMarketplacePaymentGateway
-                              MerchantAccount::BraintreeMarketplaceMerchantAccount
-                            when PaymentGateway::PaypalPaymentGateway
-                              MerchantAccount::PaypalMerchantAccount
-                            end.try(:new, merchantable_id: @company.id, merchantable_type: 'Company', payment_gateway: @payment_gateway)
-      end
+      @payment_gateway_type = @payment_gateway.type.gsub('PaymentGateway', '').sub('::', '').underscore.tr(' ', '_')
+      @merchant_account_form_path = "dashboard/company/merchant_accounts/#{@payment_gateway_type}"
+    end
+  end
+
+  def build_merchant_account
+    if @payment_gateway.present?
+      @merchant_account = @company.send("#{@payment_gateway_type}_merchant_account") \
+        || @company.send("build_#{@payment_gateway_type}_merchant_account", payment_gateway_id: @payment_gateway.id)
     end
   end
 

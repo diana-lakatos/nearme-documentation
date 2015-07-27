@@ -15,6 +15,5 @@ class MerchantAccountDrop < BaseDrop
   def data
     merchant_account.data.stringify_keys
   end
-
 end
 

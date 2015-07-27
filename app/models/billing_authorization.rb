@@ -12,6 +12,8 @@ class BillingAuthorization < ActiveRecord::Base
   belongs_to :reference, polymorphic: true
   belongs_to :payment_gateway
 
+  scope :success, -> { where(success: true) }
+
   validates_presence_of :token, if: lambda { |billing_authorization| billing_authorization.success? }
 
   def void!

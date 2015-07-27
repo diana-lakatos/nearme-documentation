@@ -7,3 +7,6 @@ class ActiveModel::Name
     to_s.underscore
   end
 end
+
+# to suppress warning message about the 'MerchantAccount#fail'
+StateMachine::Machine.ignore_method_conflicts = true
