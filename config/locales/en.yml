@@ -1244,6 +1244,8 @@ en:
     cancellation_fee: "The penalty fee for cancelling is %{fee}%. Service fee is not refunded."
     no_cancellation_fee: "You will get full refund except of service fee."
     no_bookings_html: "You don't have any %{type} bookings. <a href='/search'>Find %{bookable_nouns} near you!</a>"
+    upcoming: 'upcoming'
+    archived: 'archived'
     payment_in_person: "You will make payment in person."
     rfq: 'Request Quote'
     rfq_short: 'RFQ'

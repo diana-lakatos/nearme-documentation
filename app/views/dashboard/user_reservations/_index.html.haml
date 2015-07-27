@@ -1,7 +1,7 @@
 - only_reservations ||= false
 - if @reservations.empty? && @recurring_booking.nil? && @recurring_bookings.try(:empty?)
   %p.text-center
-    = t('reservations.no_bookings_html', {bookable_nouns: platform_context.bookable_nouns, type: params[:action]})
+    = t('reservations.no_bookings_html', {bookable_nouns: platform_context.bookable_nouns, type: booking_type_from_action(params[:action])})
 - else
 
   - if @reservation

@@ -32,4 +32,11 @@ module ReservationsHelper
     listing_reservations_url(listing, options)
   end
 
+  def booking_type_from_action(action)
+    booking_type = I18n.t('reservations.upcoming')
+    booking_type = I18n.t('reservations.archived') if action == 'archived'
+
+    booking_type
+  end
+
 end
