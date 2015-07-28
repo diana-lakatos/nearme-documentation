@@ -21,6 +21,7 @@ class ContentHolder < ActiveRecord::Base
     'buy_sell_market/products#show' => 'service/product_page',
     'locations#show' => 'service/product_page',
     'locations/listings#show' => 'service/product_page',
+    'search#index' =>'search_results'
   }
 
 
