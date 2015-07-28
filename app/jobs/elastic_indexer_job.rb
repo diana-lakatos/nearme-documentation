@@ -10,6 +10,7 @@ class ElasticIndexerJob < Job
   end
 
   def perform
+    return if Rails.env.test?
     client = Elasticsearch::Model.client
     begin
       case @operation.to_s

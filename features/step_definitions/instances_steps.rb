@@ -35,17 +35,3 @@ And(/^current instance is buyable$/) do
   instance = PlatformContext.current.instance
   instance.update_attribute(:default_search_view, 'products')
 end
-
-Given /^a custom attribute (.*) with type (.*) and html_tag (.*) exists$/ do |name, attribute_type, html_tag|
-  instance = Instance.unscoped.first
-  i = instance.instance_profile_type
-  i = InstanceProfileType.create!(instance_id: instance.id) unless i
-  User.last.update_attribute(:instance_profile_type_id, i.id)
-  i.custom_attributes.create!({
-    name: name, attribute_type: attribute_type, html_tag: html_tag,
-    required: '0', public: '1',
-    label: name.gsub('_', ' ').capitalize,
-    valid_values: []
-  })
-end
- 

@@ -19,6 +19,10 @@ When /I sign up with (.*)$/ do |social|
   sign_up_with_provider(social)
 end
 
+When /I sign in with Twitter$/ do
+  sign_in_with_provider('Twitter')
+end
+
 When /I sign up as (.*) in the modal/ do |model|
   work_in_modal do
     within '.sign-up-modal' do
