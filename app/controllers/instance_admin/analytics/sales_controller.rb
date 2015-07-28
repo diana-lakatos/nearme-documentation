@@ -2,7 +2,8 @@ class InstanceAdmin::Analytics::SalesController < InstanceAdmin::Analytics::Base
 
   def show
     sql = 'SELECT reservations.*, ARRAY_AGG(reservation_periods.date) AS date, '\
-    'transactables.properties AS transactable_properties '\
+    'transactables.properties AS transactable_properties, '\
+    'transactables.deleted_at AS transactable_deleted_at '\
     'FROM reservations '\
     'JOIN transactables '\
     'ON reservations.transactable_id = transactables.id '\
