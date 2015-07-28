@@ -16,11 +16,11 @@ class ReviewsController < ApplicationController
        end.with_deleted.find(params[:reviewable_parent_id])
 
        case params[:object]
-       when 'product'
+       when RatingConstants::PRODUCT
          @reviews = @reviewable_parent.reviews
          @average_rating = @reviewable_parent.try(:average_rating)
          @question_average_rating = @reviewable_parent.question_average_rating
-       when 'seller'
+       when RatingConstants::SELLER
          @reviews = @reviewable_parent.reviews_about_seller
          @average_rating = @reviewable_parent.seller_average_rating
          @question_average_rating = @reviewable_parent.question_average_rating(@reviews)

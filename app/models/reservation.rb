@@ -51,7 +51,7 @@ class Reservation < ActiveRecord::Base
   has_many :payments, as: :payable, dependent: :destroy
 
   has_one :billing_authorization, as: :reference
-  has_many :reviews
+  has_many :reviews, as: :reviewable
 
   validates :transactable_id, :presence => true
   # the if statement for periods is needed to make .recover work - otherwise reservation would be considered not valid even though it is

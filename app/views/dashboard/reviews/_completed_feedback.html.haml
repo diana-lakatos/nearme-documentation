@@ -1,7 +1,8 @@
 = form_tag dashboard_reviews_path, class: 'update-form' do
-  .review{'data-reviewable-id' => feedback.reviewable.id, 'data-reviewable-type' => feedback.reviewable.class.name, 'data-object' => subject}
-    = hidden_field_tag :reviewable_id, feedback.reviewable.id
-    = hidden_field_tag :reviewable_type, feedback.reviewable.class.name
+  .review{'data-rating-system-id' => rating_system.id, 'data-reviewable-id' => feedback.reviewable_id, 'data-reviewable-type' => feedback.reviewable_type}
+    = hidden_field_tag :reviewable_id, feedback.reviewable_id
+    = hidden_field_tag :reviewable_type, feedback.reviewable_type
+    = hidden_field_tag :rating_system_id, rating_system.id
     .row-fluid.clearfix
       .span8
         = render 'order_image', feedback: feedback
@@ -17,12 +18,12 @@
                   data: { confirm: t('dashboard.reviews.feedback.are_you_sure') } do
                 %i.ico-trash
 
-          = render 'show_details_link', subject: subject, id: feedback.reviewable.id
+          = render 'show_details_link', subject: subject, id: feedback.reviewable_id
 
       .span4
         = render 'order_info_created', created_at: feedback.reviewable.created_at
         .order-info
-          = render 'order_info_id', id: feedback.reviewable.id
+          = render 'order_info_id', id: feedback.reviewable_id
           - if feedback.decorate.line_item?
             = link_to t('dashboard.reviews.feedback.view_order_details'), dashboard_order_path(feedback.reviewable.order)
         .order-info

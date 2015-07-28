@@ -547,7 +547,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def reviews
-    @reviews ||= Review.where(object: 'product', reviewable_type: 'Reservation', reviewable_id: self.reservations.pluck(:id))
+    @reviews ||= Review.where(rating_system_id: RatingSystem.for_transactables.pluck(:id), reviewable_type: 'Reservation', reviewable_id: self.reservations.pluck(:id))
   end
 
   def has_reviews?

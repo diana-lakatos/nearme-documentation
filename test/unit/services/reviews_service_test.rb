@@ -20,7 +20,7 @@ class ReviewsServiceTest < ActiveSupport::TestCase
   context '#generate_csv_for' do
     setup do
       @reviews = FactoryGirl.create_list(:review, 2)
-      columns = *%w{id object rating user_name created_at}
+      columns = *%w{id rating user_name created_at}
       @review_1 = @reviews.first.attributes.values_at(columns).join(',')
       @review_2 = @reviews.last.attributes.values_at(columns).join(',')
       user = @reviews.first.user
@@ -134,7 +134,9 @@ class ReviewsServiceTest < ActiveSupport::TestCase
       @line_items = { owner_line_items: @order.line_items, creator_line_items: @order.line_items }
       user = @order.user
       instance = user.instance
-      @review = create(:review, object: 'seller', instance: instance, reviewable: @order.line_items.first, user: user)
+      rs = FactoryGirl.create(:rating_system, subject: RatingConstants::HOST)
+      reviewable =  @order.line_items.first
+      @review = create(:review, rating_system_id: rs.id, instance: instance, reviewable_id: reviewable.id, reviewable_type: reviewable.class.to_s, user: user)
       @reviews_service = ReviewsService.new(user, instance)
     end
 
@@ -151,7 +153,10 @@ class ReviewsServiceTest < ActiveSupport::TestCase
       @line_items = { owner_line_items: @order.line_items, creator_line_items: @order.line_items }
       user = @order.user
       instance = user.instance
-      @review = create(:review, object: 'seller', instance: instance, reviewable: @order.line_items.first, user: user)
+      
+      rs = FactoryGirl.create(:rating_system, subject: RatingConstants::HOST)
+      reviewable =  @order.line_items.first
+      @review = create(:review, rating_system_id: rs.id, instance: instance, reviewable_id: reviewable.id, reviewable_type: reviewable.class.to_s, user: user)
       @reviews_service = ReviewsService.new(user, instance)
     end
 
@@ -181,7 +186,8 @@ class ReviewsServiceTest < ActiveSupport::TestCase
       @reservation = FactoryGirl.create(:past_reservation, user: user, instance: user.instance)
       instance = @reservation.instance
       @reservations = { owner_reservations: user.reservations, creator_reservations: user.reservations }
-      @review = create(:review, object: 'seller', instance: instance, reviewable: @reservation, user: user)
+      rs = FactoryGirl.create(:rating_system, subject: RatingConstants::HOST)
+      @review = create(:review, rating_system_id: rs.id, instance: instance, reviewable_id: @reservation.id, reviewable_type: @reservation.class.to_s, user: user)
       @reviews_service = ReviewsService.new(user, instance)
     end
 
@@ -197,7 +203,8 @@ class ReviewsServiceTest < ActiveSupport::TestCase
       @reservations = FactoryGirl.create_list(:past_reservation, 2, user: user, instance: user.instance)
       instance = user.instance
       @reservations_hash = { owner_reservations: user.reservations, creator_reservations: user.reservations }
-      @review = create(:review, object: 'seller', instance: instance, reviewable: @reservations.first, user: user)
+      rs = FactoryGirl.create(:rating_system, subject: RatingConstants::HOST)
+      @review = create(:review, rating_system_id: rs.id, instance: instance, reviewable_id: @reservations.first.id, reviewable_type: @reservations.first.class.to_s, user: user)
       @reviews_service = ReviewsService.new(user, instance)
     end
 
@@ -213,7 +220,8 @@ class ReviewsServiceTest < ActiveSupport::TestCase
       user = FactoryGirl.create(:user)
       reservation = FactoryGirl.create(:past_reservation, user: user, instance: user.instance)
       instance = user.instance
-      review = create(:review, object: 'seller', instance: instance, reviewable: reservation, user: user)
+      rs = FactoryGirl.create(:rating_system, subject: RatingConstants::HOST)
+      review = create(:review, rating_system_id: rs.id, instance: instance, reviewable_id: reservation.id, reviewable_type: reservation.class.to_s, user: user)
       params = { review: { reviewable_id: reservation.id, reviewable_type: reservation.class.name } }
       reviews_service = ReviewsService.new(user, instance, params)
 
@@ -228,7 +236,8 @@ class ReviewsServiceTest < ActiveSupport::TestCase
       transactable_type_buy_sell = FactoryGirl.create(:transactable_type_buy_sell)
       line_item = completed_order.line_items.first
       line_item.product.update_attribute(:product_type_id, transactable_type_buy_sell.id)
-      review = create(:review, object: 'seller', instance: instance, reviewable: line_item, user: user)
+      rs = FactoryGirl.create(:rating_system, subject: RatingConstants::HOST)
+      review = create(:review, rating_system_id: rs.id, instance: instance, reviewable_id: line_item.id, reviewable_type: line_item.class.to_s, user: user)
       params = { review: { reviewable_id: line_item.id, reviewable_type: line_item.class.name } }
       reviews_service = ReviewsService.new(user, instance, params)
 

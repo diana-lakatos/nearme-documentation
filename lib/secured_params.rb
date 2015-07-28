@@ -1128,7 +1128,6 @@ class SecuredParams
     [
       :rating,
       :comment,
-      :object,
       :date,
       :transactable_type_id,
       :reviewable_id,

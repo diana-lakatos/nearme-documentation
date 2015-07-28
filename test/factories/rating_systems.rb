@@ -3,7 +3,7 @@
 FactoryGirl.define do
   factory :rating_system do
     instance
-    subject { [instance.bookable_noun, instance.lessor, instance.lessee].sample }
+    subject { %w(transactable host guest).sample }
     active false
   end
 
