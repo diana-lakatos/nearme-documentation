@@ -16,17 +16,7 @@
     %h3 #{t('orders.labels.total')} #{order.display_item_total}
 
 .checkout
-  - if paypal_express_gateway_available?(order)
-    = link_to_express_checkout(order)
-
-    - if order.manual_payment?
-      = link_to order_checkout_path(order, 'address') do
-        .btn.blue
-          = image_tag 'themes/buy_sell/arrow-right.png'
-          = t('buy_sell_market.cart.buttons.checkout')
-
-  - else
-    = link_to order_checkout_path(order, 'address') do
-      .btn.blue
-        = image_tag 'themes/buy_sell/arrow-right.png'
-        = t('buy_sell_market.cart.buttons.checkout')
+  = link_to order_checkout_path(order, 'address') do
+    .btn.blue
+      = image_tag 'themes/buy_sell/arrow-right.png'
+      = t('buy_sell_market.cart.buttons.checkout')

@@ -28,7 +28,7 @@ class Spree::LineItemDecorator < Draper::Decorator
   end
 
   def price_in_cents
-    money.cents
+    single_money.cents
   end
 
   def total

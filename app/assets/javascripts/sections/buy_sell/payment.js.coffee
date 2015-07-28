@@ -23,11 +23,14 @@ class @PaymentController
 
     @container.find('[data-additional-charges]').on 'change', (e) =>
       target = $(e.target)
-      charge_price = parseFloat(target.closest('[data-additional-charge-wrapper]').find('[data-additional-charge-price]').html())
-      if target.is(':checked')
-        new_price = @totalPriceValue + charge_price
-      else
-        new_price = @totalPriceValue
+      checked_charges = []
+      @container.find("[data-additional-charge-wrapper]").each -> 
+        if $(this).find("input:checked").length > 0
+          checked_charges.push(parseFloat($(this).find('[data-additional-charge-price]').html()))
+
+      charge_price = _.reduce(checked_charges, ((memo, num) -> memo + num), 0)
+
+      new_price = @totalPriceValue + charge_price
       @totalPriceContainer.html(new_price.toFixed(2))
 
     @paymentOptions.on 'change', (e) =>

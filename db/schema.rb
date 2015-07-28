@@ -991,9 +991,9 @@ ActiveRecord::Schema.define(version: 20150716184155) do
     t.integer  "merchant_account_id"
     t.text     "data"
     t.string   "document"
+    t.string   "type"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "type"
   end
 
   add_index "merchant_account_owners", ["instance_id"], name: "index_merchant_account_owners_on_instance_id", using: :btree
@@ -1523,7 +1523,7 @@ ActiveRecord::Schema.define(version: 20150716184155) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "state"
-    t.integer  "order_id",                                                 null: false
+    t.integer  "order_id"
     t.boolean  "included",                                 default: false
   end
 
@@ -3176,6 +3176,7 @@ ActiveRecord::Schema.define(version: 20150716184155) do
     t.string   "language",                               limit: 2,   default: "en"
     t.integer  "saved_searches_count",                               default: 0
     t.datetime "saved_searches_alert_sent_at"
+    t.string   "paypal_merchant_id"
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
