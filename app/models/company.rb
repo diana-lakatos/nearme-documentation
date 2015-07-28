@@ -1,4 +1,5 @@
 class Company < ActiveRecord::Base
+  include DomainsCacheable
   has_paper_trail
   acts_as_paranoid
   auto_set_platform_context

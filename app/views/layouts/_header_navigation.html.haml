@@ -2,7 +2,7 @@
   - if (!no_listing_buttons? || platform_context.white_label_company_user?(current_user)) && HiddenUiControls.find('main_menu/cta').visible?
     - if platform_context.single_type?
       - if current_user && current_user.registration_in_progress?
-        - if platform_context.product_types.count == 1
+        - if current_user.has_draft_products
           %li
             = link_to main_app.new_product_type_product_wizard_path(platform_context.product_types.first), :class => "nav-link btn btn-blue btn-medium" do
               %span.text= t('ui.header.complete_your_thing', thing: platform_context.product_types.first.name)

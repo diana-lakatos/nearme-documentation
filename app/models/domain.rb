@@ -33,7 +33,7 @@ class Domain < ActiveRecord::Base
     end
   end
 
-  belongs_to :target, :polymorphic => true
+  belongs_to :target, polymorphic: true, touch: true
 
   before_validation lambda { self.name = self.name.try(:strip) }
 
@@ -52,6 +52,7 @@ class Domain < ActiveRecord::Base
   after_save :create_or_update_elb
 
   after_save :mark_as_default
+  after_commit :clear_cache
 
   validates_presence_of :target_type
 
@@ -64,19 +65,18 @@ class Domain < ActiveRecord::Base
   delegate :white_label_enabled?, :to => :target
 
   def self.where_hostname(hostname)
-    domain = find_by(name: hostname)
-    # Domain was not found, lets figure out the correct name
-    unless domain
-      parsed_url = Domainatrix.parse(hostname)
-      # a.b.example.com => example.com, a.b.c.near-me.co.uk => near-me.co.uk
-      without_subdomains = parsed_url.domain_with_public_suffix
-      domain = find_by(name: without_subdomains)
-      unless domain
-        www_hostname = "www.#{without_subdomains}"
-        domain = find_by(name: www_hostname)
-      end
+    domain_lookup(hostname).each do |host|
+      break if @domain = includes(:target => :theme).find_by(name: host)
     end
-    domain
+    @domain
+  end
+
+  def self.domain_lookup(hostname)
+    parsed_url = Domainatrix.parse(hostname)
+    # a.b.example.com => example.com, a.b.c.near-me.co.uk => near-me.co.uk
+    without_subdomains = parsed_url.domain_with_public_suffix
+    www_hostname = "www.#{without_subdomains}"
+    [hostname, without_subdomains, www_hostname]
   end
 
   def prepared_for_elb?
@@ -151,6 +151,12 @@ class Domain < ActiveRecord::Base
 
   def redirect?
     redirect_code.present? && redirect_to.present?
+  end
+
+  def clear_cache
+    (self.class.domain_lookup(name) + self.class.domain_lookup(name_was)).uniq.each do |hostname|
+      Rails.cache.delete "domains_cache_#{hostname}"
+    end
   end
 
   private

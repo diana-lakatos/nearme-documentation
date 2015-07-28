@@ -89,26 +89,28 @@ class PlatformContext
   end
 
   def fetch_secured_domain
-    result = nil
+    Rails.cache.fetch("secured_domains_for_#{@request_host}_#{@instance.cache_key}") do
+      result = nil
 
-    if !@request_host.blank?
-      result = @instance.domains.secured.where_hostname(@request_host)
+      if !@request_host.blank?
+        result = @instance.domains.secured.where_hostname(@request_host)
+      end
+
+      if result.blank?
+        result = @instance.domains.secured.first
+      end
+
+      if Rails.env.development?
+        result ||= @instance.domains.first
+      end
+
+      result
     end
-
-    if result.blank?
-      result = @instance.domains.secured.first
-    end
-
-    if Rails.env.development?
-      result ||= @instance.domains.first
-    end
-
-    result
   end
 
   def secured_constraint
-    if secure_domain = fetch_secured_domain
-      {host: secure_domain.name, protocol: 'https', only_path: false}
+    if @secure_domain ||= fetch_secured_domain
+      {host: @secure_domain.name, protocol: 'https', only_path: false}
     else
       if PlatformContext.current.instance.id == Instance.first.id
         {host: Rails.application.routes.default_url_options[:host], protocol: 'https', only_path: false}
@@ -241,7 +243,9 @@ class PlatformContext
   private
 
   def fetch_domain
-    Domain.where_hostname(@request_host)
+    Rails.cache.fetch("domains_cache_#{@request_host}") do
+      Domain.where_hostname(@request_host)
+    end
   end
 
   def remove_port_from_hostname(hostname)

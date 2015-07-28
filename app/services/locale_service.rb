@@ -9,8 +9,8 @@ class LocaleService
     @requested_path = requested_path
 
     @primary_locale = instance.primary_locale
-    @params_locale_exists = instance.locales.find_by(code: @params_locale.to_s)
-    @user_locale_exists = instance.locales.find_by(code: @user_locale.to_s)
+    @params_locale_exists = instance.locales.find_by_code(@params_locale.to_s)
+    @user_locale_exists = instance.locales.find_by_code(@user_locale.to_s)
 
     @redirect_url = nil
     @locale = nil
@@ -44,7 +44,6 @@ class LocaleService
       @locale = @primary_locale
       return
     end
-
     # Set either primary or requested language
     @locale = @params_locale.present? ? @params_locale : @primary_locale
   end

@@ -14,6 +14,7 @@ class LocalesUrlTest < ActionDispatch::IntegrationTest
 
   should 'redirect to path without locale for default locale' do
     FactoryGirl.create(:primary_locale, code: 'aa')
+    PlatformContext.current.instance.reload
     get 'http://www.example.com/aa/'
     assert_redirected_to 'http://www.example.com/'
   end

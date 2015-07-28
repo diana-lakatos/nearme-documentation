@@ -4,9 +4,11 @@ class LocaleServiceTest < ActiveSupport::TestCase
 
   def setup
     @instance = Instance.first
-    FactoryGirl.create(:primary_locale)
-    FactoryGirl.create(:locale, code: 'cs')
-    FactoryGirl.create(:locale, code: 'fr')
+    @instance.locales << FactoryGirl.create(:primary_locale)
+    @instance.locales << FactoryGirl.create(:locale, code: 'cs')
+    @instance.locales << FactoryGirl.create(:locale, code: 'fr')
+    @instance.reload
+    PlatformContext.current.instance.reload
   end
 
   should 'not return redirect URL for no locale given' do

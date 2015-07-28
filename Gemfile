@@ -145,8 +145,8 @@ gem 'spree', github: 'spree/spree', branch: '2-3-stable'
 gem 'domainatrix'
 gem 'store_base_sti_class'
 
-group :profiling do
-  gem 'rack-mini-profiler'
+group :profiling, :development do
+  gem 'rack-mini-profiler', require: false
   gem 'flamegraph'
   gem 'bullet'
 end
