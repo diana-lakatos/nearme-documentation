@@ -6,6 +6,7 @@ class V1::ProfileControllerTest < ActionController::TestCase
     @user = FactoryGirl.create(:user)
     @user.ensure_authentication_token!
     @request.headers['Authorization'] = @user.authentication_token
+    @user.update_attribute(:last_name, nil)
   end
 
   test "should show profile" do

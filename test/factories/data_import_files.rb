@@ -4,7 +4,7 @@ FactoryGirl.define do
 
     initialize_with do
       FactoryGirl.create(:location_type, name: 'My Type') unless LocationType.where(name: 'My Type').count > 0
-      new(DataUpload.create(uploader: FactoryGirl.create(:user, name: 'UserName', email: 'user-name@example.com'), importable: FactoryGirl.create(:transactable_type_csv_template), csv_file: File.open(Rails.root.join('test', 'assets', 'data_importer', 'csv', 'csv_template_file.csv'))))
+      new(DataUpload.create(uploader: FactoryGirl.create(:user, name: 'UserName UserLast', email: 'user-name@example.com'), importable: FactoryGirl.create(:transactable_type_csv_template), csv_file: File.open(Rails.root.join('test', 'assets', 'data_importer', 'csv', 'csv_template_file.csv'))))
     end
   end
 

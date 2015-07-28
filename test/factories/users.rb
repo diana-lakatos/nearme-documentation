@@ -15,6 +15,13 @@ FactoryGirl.define do
     sms_preferences { Hash[%w(user_message reservation_state_changed new_reservation).map{|sp| [sp, '1']}] }
     instance_unread_messages_threads_count Hash.new
 
+    after(:create) do |u|
+      if u.last_name.blank?
+        u.last_name = 'User'
+        u.save!
+      end
+    end
+
     factory :user_without_country_name do
       country_name nil
     end

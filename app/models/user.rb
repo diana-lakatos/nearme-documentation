@@ -144,6 +144,7 @@ class User < ActiveRecord::Base
     if: ->(u) {u.mobile_number.present?}
   validates_presence_of :country_name, if: lambda { phone_required || country_name_required }
   validates_presence_of :mobile_number, if: lambda { mobile_number_required }
+  validates_presence_of :last_name, if: lambda { last_name_required }
 
   validates :current_location, length: { maximum: 50 }
   validates :company_name, length: { maximum: 50 }
@@ -172,7 +173,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable,
     :rememberable, :trackable, :user_validatable, :token_authenticatable, :temporary_token_authenticatable
 
-  attr_accessor :phone_required, :country_name_required, :skip_password, :verify_identity, :mobile_number_required
+  attr_accessor :phone_required, :country_name_required, :skip_password, :verify_identity, :mobile_number_required, :last_name_required
 
   serialize :sms_preferences, Hash
   serialize :instance_unread_messages_threads_count, Hash

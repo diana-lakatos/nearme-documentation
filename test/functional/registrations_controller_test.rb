@@ -57,7 +57,7 @@ class RegistrationsControllerTest < ActionController::TestCase
       get :show, :id => @user.slug
 
       assert_response 200
-      assert_select ".vendor-info h3", @user.name
+      assert_select ".vendor-info h3", @user.first_name
       assert_select ".vendor-info p", "United States"
       assert_select ".vendor-profile a", "Contact Host"
     end

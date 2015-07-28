@@ -1,6 +1,6 @@
 = f.simple_fields_for f.object.checkout_extra_fields do |cef|
   = cef.simple_fields_for cef.object.user do |uf|
-    - if uf.object.field_blank_or_changed?(:country_name) || uf.object.field_blank_or_changed?(:mobile_number)
+    - if uf.object.field_blank_or_changed?(:country_name) || uf.object.field_blank_or_changed?(:mobile_number) || uf.object.field_blank_or_changed?(:phone)
       .contact-information-fields
         .row-fluid
           .span6
@@ -16,7 +16,27 @@
                   .country-calling-code
                     = "+#{uf.object.country.calling_code}" if uf.object.country
                   = uf.text_field :mobile_number, data: { 'mobile-number' => 1 }
+
+        .row-fluid
+          .span6
+          .span6
+            .phone-number-field.column
+              = uf.label :phone
+              .controls
+                .phone-number-country-code-field
+                  .country-calling-code
+                    = "+#{uf.object.country.calling_code}" if uf.object.country
+                  = uf.text_field :phone, data: { 'phone' => 1 }
           .clearfix
+
+    - if uf.object.field_blank_or_changed?(:first_name)
+      = uf.input :first_name
+
+    - if uf.object.field_blank_or_changed?(:last_name)
+      = uf.input :last_name
+
+    - if defined?(show_company_name) && show_company_name && uf.object.field_blank_or_changed?(:company_name)
+      = uf.input :company_name, as: :string
 
     = uf.simple_fields_for :properties, uf.object.properties do |properties_form|
       - (uf.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
