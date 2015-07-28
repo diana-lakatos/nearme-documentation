@@ -1,41 +1,43 @@
 require "test_helper"
 
-class ComissionCalculationTest < ActionDispatch::IntegrationTest
+class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
 
 
-  should 'ensure that comission after payout is correct with VND which has 10 - 1 subunit conversion rate' do
-    mockup_database_with_currency('VND')
-    create_reservation!
-    confirm_reservation!
-    schedule_payment_transfer!
-  end
+  context 'regular two-step payout' do
+    should 'ensure that comission after payout is correct with VND which has 10 - 1 subunit conversion rate' do
+      mockup_database_with_currency('VND')
+      create_reservation!
+      confirm_reservation!
+      schedule_payment_transfer!
+    end
 
-  should 'ensure that comission after payout is correct with IQD which has 1000 - 1 subunit conversion rate' do
-    mockup_database_with_currency('IQD')
-    create_reservation!
-    confirm_reservation!
-    schedule_payment_transfer!
-  end
+    should 'ensure that comission after payout is correct with IQD which has 1000 - 1 subunit conversion rate' do
+      mockup_database_with_currency('IQD')
+      create_reservation!
+      confirm_reservation!
+      schedule_payment_transfer!
+    end
 
-  should 'ensure that comission after payout is correct with MGA which has 5 - 1 subunit conversion rate' do
-    mockup_database_with_currency('MGA')
-    create_reservation!
-    confirm_reservation!
-    schedule_payment_transfer!
-  end
+    should 'ensure that comission after payout is correct with MGA which has 5 - 1 subunit conversion rate' do
+      mockup_database_with_currency('MGA')
+      create_reservation!
+      confirm_reservation!
+      schedule_payment_transfer!
+    end
 
-  should 'ensure that comission after payout is correct with JPY which has 1 - 1 subunit conversion rate' do
-    mockup_database_with_currency('JPY')
-    create_reservation!
-    confirm_reservation!
-    schedule_payment_transfer!
-  end
+    should 'ensure that comission after payout is correct with JPY which has 1 - 1 subunit conversion rate' do
+      mockup_database_with_currency('JPY')
+      create_reservation!
+      confirm_reservation!
+      schedule_payment_transfer!
+    end
 
-  should 'ensure that comission after payout is correct with USD which has 100 - 1 subunit conversion rate' do
-    mockup_database_with_currency('USD')
-    create_reservation!
-    confirm_reservation!
-    schedule_payment_transfer!
+    should 'ensure that comission after payout is correct with USD which has 100 - 1 subunit conversion rate' do
+      mockup_database_with_currency('USD')
+      create_reservation!
+      confirm_reservation!
+      schedule_payment_transfer!
+    end
   end
 
   private
@@ -118,11 +120,10 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
       refund: OpenStruct.new(success?: true),
       void: OpenStruct.new(success?: true)
     }
-    gateway = stub(authorize: stubs[:authorize],
-                   capture: stubs[:capture],
-                   refund: stubs[:refund],
-                   void: stubs[:void],
-                  )
+    gateway = stub(capture: stubs[:capture], refund: stubs[:refund], void: stubs[:void],)
+    gateway.expects(:authorize).with do |total_amount_cents, credit_card_or_token, options|
+      total_amount_cents == 43.75.to_money(@listing.currency).cents
+    end.returns(stubs[:authorize])
     PaymentGateway::StripePaymentGateway.any_instance.stubs(:gateway).returns(gateway).at_least(0)
     PaymentGateway::PaypalPaymentGateway.any_instance.stubs(:gateway).returns(gateway).at_least(0)
     PaymentGateway::StripePaymentGateway.any_instance.stubs(:credit_card_payment?).returns(true)
@@ -132,18 +133,19 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     end
 
     @reservation = @listing.reservations.last
+    assert_not_nil @listing.reservations.last.billing_authorization
+    refute @listing.reservations.last.billing_authorization.immediate_payout
     assert_equal @listing.currency, @reservation.currency
     assert_equal 25.to_money(@listing.currency), @reservation.subtotal_amount
-    # assert_equal 3.75.to_money(@listing.currency), @reservation.service_fee_guest_wo_charges
+    assert_equal 3.75.to_money(@listing.currency), @reservation.service_fee_guest_wo_charges  if %w(USD IQD).include?(@listing.currency)
     assert_equal 18.75.to_money(@listing.currency), @reservation.service_fee_amount_guest
+    assert_equal 2.5.to_money(@listing.currency), @reservation.service_fee_amount_host if %w(USD IQD).include?(@listing.currency)
     assert_equal 43.75.to_money(@listing.currency), @reservation.total_amount
     assert_equal 1, @reservation.additional_charges.count
     additional_charge = @reservation.additional_charges.last
     assert_equal @listing.currency, additional_charge.currency
     assert_equal 15.to_money(@listing.currency), additional_charge.amount
 
-    # create a dummy reservation, unrelated to the test, to ensure we calculate commission only to relevant ones
-    post_via_redirect "/listings/#{FactoryGirl.create(:transactable).id}/reservations", booking_params
   end
 
   def confirm_reservation!
@@ -167,6 +169,8 @@ class ComissionCalculationTest < ActionDispatch::IntegrationTest
     assert_equal 1, @reservation.company.payment_transfers.count
     assert @payment_transfer.transferred?
     assert_equal 22.5.to_money(@listing.currency), @payment_transfer.payout_attempts.successful.first.amount_money
+    assert_equal 18.75.to_money(@listing.currency), @payment_transfer.service_fee_amount_guest if %w(USD IQD).include?(@listing.currency)
+    assert_equal 2.5.to_money(@listing.currency), @payment_transfer.service_fee_amount_host if %w(USD IQD).include?(@listing.currency)
   end
 
 end

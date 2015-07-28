@@ -82,7 +82,7 @@ class PaymentAuthorizer
         currency: @authorizable.currency,
         merchant_account: @payment_gateway.merchant_account(@authorizable.company),
         payment_method_nonce: @authorizable.payment_method_nonce,
-        service_fee_host: @authorizable.service_fee_amount_host_cents
+        service_fee_host: @authorizable.service_fee_amount_host_cents + @authorizable.service_fee_amount_guest_cents
       }).with_indifferent_access
     end
 

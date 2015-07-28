@@ -332,7 +332,7 @@ class Reservation < ActiveRecord::Base
   alias_method :price_in_cents, :subtotal_amount_cents
 
   def service_fee_amount_guest_cents
-    super || service_fee_calculator.service_fee_guest.cents rescue nil
+    persisted? ? super : service_fee_calculator.service_fee_guest.cents rescue nil
   end
 
   def service_fee_guest_wo_charges
@@ -341,7 +341,7 @@ class Reservation < ActiveRecord::Base
   alias_method :service_fee_guest_without_charges, :service_fee_guest_wo_charges
 
   def service_fee_amount_host_cents
-    super || service_fee_calculator.service_fee_host.cents rescue nil
+    persisted? ? super : service_fee_calculator.service_fee_host.cents rescue nil
   end
 
   def total_amount_dollars

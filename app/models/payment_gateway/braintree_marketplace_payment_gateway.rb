@@ -40,6 +40,7 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
         payment_transfer.update_attribute(:transferred_at, nil)
       end
     end
+    charge_record
   end
 
   def payout(*args)
@@ -47,7 +48,8 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
   end
 
   def client_token
-    @client_token ||= gateway.generate_token
+    configure_braintree_class
+    @client_token ||= Braintree::ClientToken.generate
   end
 
   def refund_identification(charge)
@@ -72,6 +74,13 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
 
   def immediate_payout(company)
     merchant_account(company).present?
+  end
+
+  def configure_braintree_class
+    Braintree::Configuration.environment = settings["environment"]
+    Braintree::Configuration.merchant_id = settings["merchant_id"]
+    Braintree::Configuration.public_key  = settings["public_key"]
+    Braintree::Configuration.private_key = settings["private_key"]
   end
 
 end

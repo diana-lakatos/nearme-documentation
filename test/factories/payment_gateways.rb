@@ -39,6 +39,12 @@ FactoryGirl.define do
       test_settings { { merchant_id: "123456789", public_key: "987654321", private_key: "321543", supported_currency: 'USD'} }
       live_settings { { merchant_id: "123456789", public_key: "987654321", private_key: "321543", supported_currency: 'USD'} }
     end
+
+    factory :braintree_marketplace_payment_gateway, class: PaymentGateway::BraintreeMarketplacePaymentGateway do
+      type 'PaymentGateway::BraintreeMarketplacePaymentGateway'
+      test_settings { { merchant_id: "123456789", public_key: "987654321", private_key: "321543", supported_currency: 'USD', master_merchant_account_id: 'master_id'} }
+      live_settings { { merchant_id: "123456789", public_key: "987654321", private_key: "321543", supported_currency: 'USD', master_merchant_account_id: 'master_id'} }
+    end
   end
 end
 

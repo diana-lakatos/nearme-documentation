@@ -101,8 +101,8 @@ class ReservationDecoratorTest < ActionView::TestCase
     setup do
       stub_mixpanel
       @reservation = FactoryGirl.build(:reservation_with_credit_card,
-                                       subtotal_amount_cents: 500_00,
-                                       service_fee_amount_guest_cents: 50_00).decorate
+                                       subtotal_amount_cents: 50_00,
+                                       service_fee_amount_guest_cents: 5_00).decorate
     end
 
     should 'return that its pending' do
