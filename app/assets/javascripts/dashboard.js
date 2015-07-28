@@ -40,6 +40,7 @@
 //= require jquery_nested_form
 //= require cocoon
 //= require js-routes
+//= require custom_liquid_tags
 //
 //
 //= require_self

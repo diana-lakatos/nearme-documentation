@@ -37,6 +37,7 @@
 //= require jquery-fileupload/basic
 //= require jquery_nested_form
 //= require js-routes
+//= require custom_liquid_tags
 //
 //
 //= require_self
@@ -296,11 +297,3 @@ function centerSearchBox(){
   wood_box_height = $('.wood-box').height()
   $('#search_row').css('margin-top', (image_height)/2 - search_height/2 + navbar_height/2 - wood_box_height/2 + 'px');
 }
-
-// Global handler of liquid select locale tag
-$(function() {
-  $('select.locales_languages_select').change(function() {
-    location.href = $(this).val();
-  });
-});
-
