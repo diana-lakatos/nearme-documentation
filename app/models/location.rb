@@ -230,7 +230,8 @@ class Location < ActiveRecord::Base
 
   def set_time_zone
     if time_zone.blank? && latitude && longitude
-      self.time_zone = NearestTimeZone.to(latitude, longitude)
+      tz = NearestTimeZone.to(latitude, longitude)
+      self.time_zone = ActiveSupport::TimeZone::MAPPING.select {|k, v| v == tz }.keys.first
     end
   end
 

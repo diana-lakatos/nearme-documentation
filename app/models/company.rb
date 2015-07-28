@@ -237,7 +237,11 @@ class Company < ActiveRecord::Base
   end
 
   def time_zone
-    ActiveSupport::TimeZone::MAPPING.select {|k, v| v == NearestTimeZone.to(latitude, longitude) }.keys.first
+    if latitude && longitude
+      ActiveSupport::TimeZone::MAPPING.select {|k, v| v == NearestTimeZone.to(latitude, longitude) }.keys.first
+    else
+     creator.time_zone
+    end
   end
 
 end
