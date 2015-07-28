@@ -594,7 +594,7 @@ class User < ActiveRecord::Base
   end
 
   def approval_request_templates
-    @approval_request_templates ||= PlatformContext.current.instance.approval_request_templates.for("User")
+    @approval_request_templates ||= PlatformContext.current.instance.approval_request_templates.for("User").older_than(created_at)
   end
 
   def is_trusted?
