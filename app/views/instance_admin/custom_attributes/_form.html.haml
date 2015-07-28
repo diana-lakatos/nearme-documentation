@@ -1,12 +1,12 @@
 = simple_form_for [:instance_admin, @controller_scope, @target, resource], :html => { :multipart => true} do |f|
   .row
     .input-container.col-xs-6
-      = f.input :name, required: false, input_html: { class: 'form-control' }, disabled: f.object.required_internally?
+      = f.input :name, required: false, input_html: { class: 'form-control' }
     .input-container.col-xs-6
       = f.input :label, input_html: { class: 'form-control' }
   .row
     .input-container.col-xs-6
-      = f.input :attribute_type, required: false, :as => :select, disabled: f.object.required_internally?, :collection => CustomAttributes::CustomAttribute::ATTRIBUTE_TYPES.map { |t| [t.humanize, t] }, :prompt => "Choose...", input_html: { class: 'form-control' }
+      = f.input :attribute_type, required: false, as: :select, collection: CustomAttributes::CustomAttribute::ATTRIBUTE_TYPES.map { |t| [t.humanize, t] }, prompt: "Choose...", input_html: { class: 'form-control' }
     .input-container.col-xs-6
       = f.input :html_tag, as: :select, collection: CustomAttributes::CustomAttribute::HTML_TAGS.map { |t| [t.humanize, t] }, include_blank: true, prompt: "Choose...", input_html: { class: 'form-control' }
   .row

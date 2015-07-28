@@ -72,12 +72,7 @@ class SecuredParams
 
   def custom_attribute
     [ :name,
-      :attribute_type
-    ] + self.custom_attribute_internal
-  end
-
-  def custom_attribute_internal
-    [
+      :attribute_type,
       :html_tag,
       :prompt,
       :required,
