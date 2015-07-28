@@ -12,7 +12,7 @@
       - if uploaded_content_placement == :right
         %span.uploaded{ data: {uploaded: true, row: "#{options[:row]}"}, :style => "float: right; #{"height: #{options[:height]}px" if options[:height].to_f > 0}" }
           = uploaded_content
-      - if hint
+      - if hint.present?
         %p.hint-block= hint
       - if error_message
         %p.error-block= error_message

@@ -1618,6 +1618,9 @@ en:
   forms:
     product_form:
       photos: 'Photos'
+    errors:
+      user_form:
+        avatar: "Please upload at least one photo."
 
 
 

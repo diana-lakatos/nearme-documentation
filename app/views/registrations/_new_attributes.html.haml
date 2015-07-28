@@ -75,6 +75,9 @@
     .col-md-3
       = f.label :avatar
     .col-md-9
+      - if is_i18n_set?('forms.hints.user_form.avatar')
+        %p.photo-uploader-hint
+          = t('forms.hints.user_form.avatar')
       .col-md-4
         .single-photo
           = new_file_upload_input("avatar",

@@ -60,7 +60,8 @@
                                   Photo.new.image.thumbnail_dimensions[:medium],
                                   "Browse",
                                   :required => true,
-                                  :error => f.object.errors.include?(:photos).present? ? "Please upload at least one photo." : nil) do
+                                  :error => f.object.errors.include?(:photos).present? ? t('forms.errors.user_form.avatar') : nil,
+                                  :hint => I18n.t('forms.hints.space_wizard.photos', :default => '')) do
     - # caches img so it is displayed even for the first photo. Without this, loader icon is not displayed for the first photo
     .hidden.thumbnail-processing
       .loading-icon

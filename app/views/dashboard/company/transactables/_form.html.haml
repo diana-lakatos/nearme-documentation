@@ -60,6 +60,9 @@
           .col-md-3
             = f.label :photos
           .col-md-9
+            - if is_i18n_set?('forms.hints.transactable_form.photos')
+              %p.photo-uploader-hint
+                = t('forms.hints.transactable_form.photos')
             .loading{:style => "display: none"}
               = image_tag "spinner.gif"
               %br/

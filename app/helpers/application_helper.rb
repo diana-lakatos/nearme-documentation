@@ -328,4 +328,10 @@ module ApplicationHelper
     Rails.configuration.default_cache_expires_in
   end
 
+  def is_i18n_set?(key)
+    I18n.t(key, raise: true)
+  rescue
+    false
+  end
+
 end
