@@ -58,7 +58,7 @@ class BlogPostDrop < BaseDrop
 
   # full url for post page
   def post_url
-    routes.blog_post_url(@blog_post)
+    routes.blog_post_url(@blog_post, host: platform_context_decorator.instance.default_domain.name)
   end
 
   # path for post page
