@@ -963,7 +963,7 @@ DEPENDENCIES
   binding_of_caller
   bootstrap-sass (~> 2.3.1.0)
   bootstrap-switch-rails
-  braintree
+  braintree (= 2.46.0)
   bullet
   byebug
   capybara (= 2.2.1)
