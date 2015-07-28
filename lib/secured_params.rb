@@ -450,7 +450,8 @@ class SecuredParams
       :card_holder_last_name,
       :express_token,
       :payment_method,
-      :payment_method_nonce
+      :payment_method_nonce,
+      :start_express_checkout
     ]
   end
 

@@ -7,14 +7,14 @@ Spree::Order.class_eval do
   belongs_to :platform_context_detail, polymorphic: true
 
   attr_reader :card_number, :card_code, :card_exp_month, :card_exp_year, :card_holder_first_name, :card_holder_last_name
-  attr_accessor :payment_method_nonce
+  attr_accessor :payment_method_nonce, :start_express_checkout
 
   scope :completed, -> { where(state: 'complete') }
   scope :approved, -> { where.not(approved_at: nil) }
   scope :paid, -> { where(payment_state: 'paid') }
   scope :shipped, -> { where(shipment_state: 'shipped') }
   scope :reviewable, -> { completed.approved.paid.shipped }
-  scope :cart, -> { where(state: ['cart', 'address', 'delivery', 'payment', 'confirm']).order('created_at ASC') }
+  scope :cart, -> { where(state: ['cart', 'address', 'delivery', 'payment']).order('created_at ASC') }
 
   has_one :billing_authorization, -> { where(success: true) }, as: :reference
   has_many :billing_authorizations, as: :reference
@@ -161,6 +161,7 @@ Spree::Order.class_eval do
   def subtotal_amount_cents
     monetize(self.amount).cents + service_fee_amount_guest.cents
   end
+  alias_method :total_amount_cents_without_shipping, :subtotal_amount_cents
 
   def seller_iso_country_code
     line_items.first.product.company.company_address.iso_country_code
@@ -184,6 +185,10 @@ Spree::Order.class_eval do
 
   def service_fee_amount_host_cents
     Money.new(service_fee_calculator.service_fee_host.cents, currency)
+  end
+
+  def shipping_costs_cents
+    monetize(shipment_total).cents
   end
 
   def service_fee_calculator

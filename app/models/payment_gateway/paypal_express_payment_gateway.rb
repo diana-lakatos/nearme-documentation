@@ -40,8 +40,8 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
         currency: @transactable.currency,
         allow_guest_checkout: true,
         items: line_items + service_fee + additional_charges,
-        subtotal: @transactable.subtotal_amount_cents,
-        shipping: 0,
+        subtotal: @transactable.total_amount_cents_without_shipping,
+        shipping: @transactable.shipping_costs_cents,
         handling: 0,
         tax: @transactable.tax_total_cents
       })
@@ -70,7 +70,7 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
   end
 
   def additional_charges
-    PlatformContext.current.instance.additional_charge_types.mandatory_charges.map do |charge|
+    @transactable.additional_charges.map do |charge|
       {
         name: charge.name,
         quantity: 1,

@@ -3,7 +3,7 @@ class BuySellMarket::CheckoutController < ApplicationController
   include Spree::Core::ControllerHelpers::StrongParameters
 
 
-  CHECKOUT_STEPS = [:address, :delivery, :payment, :confirm, :complete]
+  CHECKOUT_STEPS = [:address, :delivery, :payment, :complete]
   steps *CHECKOUT_STEPS
 
   skip_before_filter :log_out_if_token_exists
@@ -30,14 +30,7 @@ class BuySellMarket::CheckoutController < ApplicationController
       build_approval_request_for_object(current_user)
       checkout_service.build_payment_documents
       @additional_charges = platform_context.instance.additional_charge_types
-    when :confirm
-      if express_checkout_token.present?
-        @additional_charges = platform_context.instance.additional_charge_types
-        @order.express_token = express_checkout_token
-      else
-        @order.next
-        jump_to next_step
-      end
+      @order.express_token = express_checkout_token if express_checkout_token.present?
     when :complete
       @current_order = nil
       flash[:success] = t('buy_sell_market.checkout.notices.order_placed')
@@ -45,11 +38,16 @@ class BuySellMarket::CheckoutController < ApplicationController
       return
     end
 
-
     render_wizard
   end
 
   def update
+    if @order.start_express_checkout
+      setup_upsell_charges
+      redirect_to(action: :express)
+      return
+    end
+
     if @order.payable?
       checkout_extra_fields = @order.checkout_extra_fields(params[:order][:checkout_extra_fields])
       checkout_extra_fields.assign_attributes! if checkout_extra_fields.are_fields_present?
@@ -88,10 +86,11 @@ class BuySellMarket::CheckoutController < ApplicationController
   def express
     if @payment_gateway.express_checkout?
       @payment_gateway.process_express_checkout(@order, {
-       ip: request.remote_ip,
-       return_url: order_checkout_url(order_id: @order, id: 'confirm', host: request.host_with_port),
-       cancel_return_url: cart_index_url(host: request.host_with_port)
-       })
+        ip: request.remote_ip,
+        return_url: order_checkout_url(order_id: @order, id: 'payment', host: request.host_with_port),
+        cancel_return_url: cart_index_url(host: request.host_with_port)
+      })
+
       redirect_to @payment_gateway.redirect_url
     else
       redirect_to cart_index_path, error: t('buy_sell_market.checkout.errors.skip')
@@ -101,7 +100,6 @@ class BuySellMarket::CheckoutController < ApplicationController
   private
 
   def assign_order_attributes
-    params[:order][:payment_method_nonce] = params[:payment_method_nonce] if params[:order] && params[:payment_method_nonce]
     @order.assign_attributes(spree_order_params)
   end
 
@@ -116,7 +114,6 @@ class BuySellMarket::CheckoutController < ApplicationController
 
   def check_qty_on_step
     return true if step == :complete
-    return true if step == :confirm && params[:token].blank?
 
     qty_check_serivce = BuySell::OrderQtyCheckService.new(@order)
     unless qty_check_serivce.check
@@ -131,7 +128,6 @@ class BuySellMarket::CheckoutController < ApplicationController
 
   def check_step
     return true if step == :address
-    return true if step == :confirm && params[:token].blank?
 
     if CHECKOUT_STEPS.index(step) > CHECKOUT_STEPS.index(order_state)
       @order.try(:restart_checkout_flow)
@@ -139,8 +135,6 @@ class BuySellMarket::CheckoutController < ApplicationController
       redirect_to cart_index_path
       return
     end
-
-    redirect_to cart_index_path if CHECKOUT_STEPS.index(step) < 4 && @order.paypal_express_payment?
   end
 
   def set_state
@@ -164,10 +158,15 @@ class BuySellMarket::CheckoutController < ApplicationController
   end
 
   def set_order
-    @order ||= if (step == :complete) || ((step == :confirm) && params[:token].blank?)
+    @order ||= if (step == :complete)
       current_user.orders.find_by(number: params[:order_id])
     else
       current_user.cart_orders.find_by(number: params[:order_id]).try(:decorate)
+    end
+
+    if @order.blank?
+      flash[:error] = t('buy_sell_market.checkout.order_missing')
+      redirect_to cart_index_path
     end
   end
 
@@ -203,6 +202,7 @@ class BuySellMarket::CheckoutController < ApplicationController
 
   def spree_order_params
     params[:order] ||= {}
+    params[:order][:payment_method_nonce] = params[:payment_method_nonce] if params[:payment_method_nonce]
     params.require(:order).permit(secured_params.spree_order + permitted_checkout_attributes)
   end
 end

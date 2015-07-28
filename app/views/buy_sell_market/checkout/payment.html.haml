@@ -54,7 +54,17 @@
               .span9
                 = t('buy_sell_market.checkout.manual_payment_description')
 
-      = render partial: 'checkout_buttons', locals: { form: f, final: true }
+          - if @payment_gateway.express_checkout?
+            - if @order.express_token.blank?
+              = f.hidden_field :start_express_checkout, value: true
+              = image_submit_tag("https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif")
+            - else
+              = t('buy_sell_market.checkout.payment_authorized')
+              = f.hidden_field :express_token
+      - if @payment_gateway.express_checkout? && @order.express_token.blank?
+        = render partial: 'checkout_buttons'
+      - else
+        = render partial: 'checkout_buttons', locals: { form: f, final: true }
 
 - content_for :domready do
   new PaymentController($('.checkout-wizard'))

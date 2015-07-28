@@ -109,6 +109,10 @@ class Reservation < ActiveRecord::Base
     super.presence || creator
   end
 
+  def shipping_costs_cents
+    0
+  end
+
   monetize :total_amount_cents, with_model_currency: :currency
   monetize :subtotal_amount_cents, with_model_currency: :currency
   monetize :service_fee_amount_guest_cents, with_model_currency: :currency

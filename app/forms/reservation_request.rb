@@ -11,7 +11,8 @@ class ReservationRequest < Form
   def_delegators :@reservation, :guest_notes, :quantity, :quantity=, :action_hourly_booking?, :reservation_type=,
                                 :credit_card_payment?, :manual_payment?, :remote_payment?, :nonce_payment?, :currency,
                                 :company, :service_fee_amount_host_cents, :total_amount_cents, :create_billing_authorization,
-                                :express_token, :express_token=, :express_payer_id, :service_fee_guest_without_charges, :subtotal_amount_cents
+                                :express_token, :express_token=, :express_payer_id, :service_fee_guest_without_charges,
+                                :additional_charges, :shipping_costs_cents
 
   before_validation :build_documents, :if => lambda { reservation.present? && documents.present? }
 
@@ -151,6 +152,10 @@ class ReservationRequest < Form
 
   def line_items
     [@reservation]
+  end
+
+  def total_amount_cents_without_shipping
+    total_amount_cents
   end
 
   private

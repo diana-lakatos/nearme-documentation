@@ -808,6 +808,8 @@ en:
       manual_payment_description: 'You will make payment in person'
       invalid_cc: "Those credit card details don't look valid"
       invalid_payment_method: "Please choose payment method"
+      payment_authorized: 'Your payment is now authorized, please confirm your order.'
+      order_missing: 'Sorry, we can not find this order.'
 
       placeholders:
         first_name: 'Enter your first name'

@@ -15,6 +15,14 @@
             %td= item.single_money
             %td= item.quantity
             %td= item.display_amount
+        - @order.additional_charges.each do |additional_charge|
+          %tr
+            %td
+              = additional_charge.name
+              = hidden_field_tag 'additional_charge_ids[]', additional_charge.additional_charge_type_id
+            %td= humanized_money_with_cents_and_symbol additional_charge.amount
+            %td= 1
+            %td= humanized_money_with_cents_and_symbol additional_charge.amount
 
       - if @additional_charges.try(:optional_charges).present? && !@order.paypal_express_payment?
         %thead
