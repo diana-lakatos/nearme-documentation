@@ -1,7 +1,7 @@
 class BlogPostDrop < BaseDrop
 
   attr_reader :blog_post
-  
+
   # title
   #   Post's title
   # previous_blog_post
