@@ -28,6 +28,10 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
     @params[:loc].present? || @params[:nx].present? && @params[:sx].present?
   end
 
+  def global_map
+    !@params[:loc].present?
+  end
+
   def search
     @search ||= ::Listing::Search::Params::Web.new(@params)
   end
@@ -53,11 +57,15 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
         })
         
         geo_searcher_params = initialize_search_params
-        
         if located || adjust_to_map
           radius = PlatformContext.current.instance.search_radius.to_i
           radius = search.radius.to_i if radius.zero?
           lat, lng = search.midpoint.nil? ? [0.0, 0.0] : search.midpoint.map(&:to_s)
+          if !search.country.blank? && search.city.blank? || global_map
+            @search_params.merge!({
+              bounding_box: search.bounding_box
+            })
+          end
           Transactable.geo_search(geo_searcher_params.merge(@search_params).merge({distance: "#{radius}km", lat: lat, lon: lng}))
         else
           Transactable.regular_search(geo_searcher_params.merge(@search_params))

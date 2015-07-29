@@ -187,5 +187,6 @@ module DesksnearMe
 
     config.default_cache_expires_in = 30.minutes
     config.marketplace_error_logger = MarketplaceErrorLogger::ActiveRecordLogger.new
+    config.force_disable_es = false
   end
 end

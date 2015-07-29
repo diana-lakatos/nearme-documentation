@@ -43,14 +43,21 @@ DesksnearMe::Application.configure do
   config.action_mailer.smtp_settings = { :address => "localhost", :port => 1025 }
   config.message_bus_handler = NullMessageBus
 
+  config.force_disable_es = ENV['ENABLE_ES'] ? false : true
+
   config.middleware.insert_after(ActionDispatch::Static, SilentMissedImages)
 
-  config.after_initialize do
-    Bullet.enable = true
-    Bullet.rails_logger = true
+  if defined?(Bullet)
+    config.after_initialize do
+      Bullet.enable = true
+      Bullet.rails_logger = true
+    end
   end
 end
 
-Rack::MiniProfilerRails.initialize!(Rails.application)
-Rails.application.middleware.delete(Rack::MiniProfiler)
-Rails.application.middleware.insert_after(Rack::Deflater, Rack::MiniProfiler)
+if !ENV['DISABLE_PROFILER']
+  Rack::MiniProfilerRails.initialize!(Rails.application)
+  Rails.application.middleware.delete(Rack::MiniProfiler)
+  Rails.application.middleware.insert_after(Rack::Deflater, Rack::MiniProfiler)
+end
+

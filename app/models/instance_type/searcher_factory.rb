@@ -1,9 +1,15 @@
 class InstanceType::SearcherFactory
 
+  DEFAULT_SEARCH_MODULE = 'postgres'
+
   attr_accessor :factory_type, :transactable_type, :params
 
   def initialize(transactable_type, params)
-    @factory_type = PlatformContext.current.instance.search_engine
+    @factory_type = if Rails.configuration.force_disable_es
+      DEFAULT_SEARCH_MODULE
+    else
+      PlatformContext.current.instance.search_engine
+    end
     @transactable_type = transactable_type
     @params = params
   end

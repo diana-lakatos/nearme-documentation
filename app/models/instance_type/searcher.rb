@@ -6,12 +6,8 @@ module InstanceType::Searcher
     if self.class.to_s =~ /Elastic/
       @search_results_count
     else
-      @result_count ||= count_query(results.distinct)
+      @result_count ||= results.distinct.all.count rescue results.distinct.to_a.count
     end
-  end
-
-  def count_query(query)
-    query.count("*", distinct: true)
   end
 
   def max_price
