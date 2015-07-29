@@ -70,6 +70,7 @@ class BuySellMarket::CheckoutController < ApplicationController
       @payment_gateway.authorize(@order)
     elsif @order.save && @order.address?
       save_user_addresses
+      update_blank_user_fields
     end
 
     # We don't want to override validation messages by calling next
@@ -124,6 +125,10 @@ class BuySellMarket::CheckoutController < ApplicationController
 
   def save_user_addresses
     BuySell::SaveUserAddressesService.new(current_user).save_addresses(@order.bill_address, @order.ship_address)
+  end
+
+  def update_blank_user_fields
+    BuySell::UpdateBlankUserFieldsService.new(current_user).update_blank_user_fields(@order.bill_address)
   end
 
   def check_step
