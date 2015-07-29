@@ -7,8 +7,7 @@
       %link{rel:"canonical", href: yield(:canonical_url)}
     - if ActionController::Base.asset_host
       %link{rel:"dns-prefetch", href:"//#{ActionController::Base.asset_host}"}
-    %title
-      = title_tag
+    %title= title_tag
     %meta{:'http-equiv' => "x-dns-prefetch-control", content: "off"}
     %link{rel:"dns-prefetch", href:"//s3.amazonaws.com"}
     %link{rel:"dns-prefetch", href:"//maps.googleapis.com"}
