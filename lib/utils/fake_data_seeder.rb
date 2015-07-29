@@ -183,7 +183,6 @@ module Utils
         Data.domains.map do |url|
           company_email = "info@#{url}"
           user = FactoryGirl.create(:user, :name => Faker::Name.name, :email => company_email,
-                                    :biography => Faker::Lorem.paragraph.truncate(200),
                                     :industries => industries.sample(2))
           users << user
 
@@ -236,8 +235,9 @@ module Utils
     def load_listings!
       @listings ||= do_task "Loading listings" do
         locations.map do |location|
-          ["Desk", "Meeting Room", "Office Space", "Salon Booth"].sample(rand(1..4)).map do |name|
-            transactable = FactoryGirl.build(:transactable, :listing_type => name, :name => "#{name} #{Faker::Company.name}".truncate(50, :separator => ''), :location => location,
+
+          ListingType.all.sample(rand(1..4)).map do |lt|
+            transactable = FactoryGirl.build(:transactable, :listing_type_id => lt.id, :name => "#{lt.name} #{Faker::Company.name}".truncate(50, :separator => ''), :location => location,
                                :description => Faker::Lorem.paragraph.truncate(200), :photos_count => 0)
             transactable.save(:validate => false)
             transactable
@@ -269,91 +269,63 @@ module Utils
 
     def load_integration_keys!
       dnm_instance = Instance.first
-      create_payment_gateways
-      @stripe = PaymentGateway.where(name: "Stripe").first
 
-      if dnm_instance
-        settings = { login: 'sk_test_lpr4WQXQdncpXjjX6IJx01W7' }
-        InstancePaymentGateway.create(instance_id: dnm_instance.id, payment_gateway_id: @stripe.id, live_settings: settings, test_settings: settings)
+      [
+        {
+          type: "PaymentGateway::StripePaymentGateway", 
+          test_settings: { login: "sk_test_sPLnOkI5mvXCoUuaqi5j6djR" },
+          live_settings: { login: "sk_live_qfvqBDKaG1guI1wuorkgLI7Y" }
+        },
 
-        dnm_instance.facebook_consumer_key = '432038396866156'
-        dnm_instance.facebook_consumer_secret = '71af86082de1c38a3523a4c8f44aca2d'
+        {
+          type: "PaymentGateway::PaypalPaymentGateway", 
+          test_settings: { 
+            email: "lemkowski-facilitator@gmail.com", 
+            login: "lemkowski-facilitator_api1.gmail.com", 
+            password: "Y6C36E7MFJXDPR2R", 
+            signature: "ArlmEAw8pfNvMKXKC-AaWEzRgFraAzAbIZ3ybNtEPynnqHCO.XUNcqR4" 
+          },
+          live_settings: { 
+            email: "lemkowski-facilitator@gmail.com", 
+            login: "lemkowski-facilitator_api1.gmail.com", 
+            password: "Y6C36E7MFJXDPR2R", 
+            signature: "ArlmEAw8pfNvMKXKC-AaWEzRgFraAzAbIZ3ybNtEPynnqHCO.XUNcqR4" 
+          }
+        },
 
-        dnm_instance.twitter_consumer_key = 'IZeQXx4YyCdTQ9St3tmyw'
-        dnm_instance.twitter_consumer_secret = 'ZlxMPIhNPBn4QbOSHqkN1p7hKghGZTOtR1fDsPSX8'
-
-        dnm_instance.linkedin_consumer_key = '4q9xfgn60bik'
-        dnm_instance.linkedin_consumer_secret = 'lRmKVrc0RPpfKDCV'
-
-        dnm_instance.instagram_consumer_key = '566499e0d6e647518d8f4cec0a42f3d6'
-        dnm_instance.instagram_consumer_secret = '5c0652ad06984bf09e4987c8fc5ea8f1'
-
-        dnm_instance.save!
+        {
+          type: "PaymentGateway::BraintreeMarketplacePaymentGateway", 
+          test_settings: { 
+            merchant_id: "jry7nqs72wcsqxtr",
+            public_key: "7g9bjxznhnc2x244",
+            private_key: "cd6dc220d0585d332709d13497c8873b",
+            supported_currency: "USD"
+          },
+          live_settings: { 
+            merchant_id: "jry7nqs72wcsqxtr",
+            public_key: "7g9bjxznhnc2x244",
+            private_key: "cd6dc220d0585d332709d13497c8873b",
+            supported_currency: "USD"
+          }
+        }
+      ].each do | payment_gateway |
+        PaymentGateway.create(payment_gateway.merge(instance_id: dnm_instance.id))
       end
-    end
 
-    def create_payment_gateways
-      # create default payment_gateways
-      stripe_settings = { login: "" }
-      balanced_settings = { login: "" }
-      paypal_settings = { email: "", login: "", password: "", signature: "", app_id: "" }
-      swipe_settings = { login: "", api_key: "" }
-      sagepay_settings = { login: "", password: "" }
-      worldpay_settings = { login: "" }
-      paystation_settings = { paystation_id: "", gateway_id: "" }
-      authorize_net_settings = { login: "", password: "" }
-      ogone_settings = { login: "", user: "", password: "" }
-      spreedly_settings = { login: "", password: "", gateway_token: "" }
 
-      payment_gateways = [
-        {
-          name: "Stripe",
-          settings: stripe_settings,
-          active_merchant_class: "ActiveMerchant::Billing::StripeGateway"
-        },
-        {
-          name: "Balanced",
-          settings: balanced_settings,
-          active_merchant_class: "ActiveMerchant::Billing::BalancedGateway"
-        },
-        {
-          name: "PayPal",
-          settings: paypal_settings,
-          active_merchant_class: "ActiveMerchant::Billing::PaypalGateway"
-        },
-        {
-          name: "SagePay",
-          settings: sagepay_settings,
-          active_merchant_class: "ActiveMerchant::Billing::SagePayGateway"
-        },
-        {
-          name: "Worldpay",
-          settings: worldpay_settings,
-          active_merchant_class: "ActiveMerchant::Billing::WorldpayGateway"
-        },
-        {
-          name: "Paystation",
-          settings: paystation_settings,
-          active_merchant_class: "ActiveMerchant::Billing::PaystationGateway"
-        },
-        {
-          name: "AuthorizeNet",
-          settings: authorize_net_settings,
-          active_merchant_class: "ActiveMerchant::Billing::AuthorizeNetGateway"
-        },
-        {
-          name: "Ogone",
-          settings: ogone_settings,
-          active_merchant_class: "ActiveMerchant::Billing::OgoneGateway"
-        },
-        {
-          name: "Spreedly",
-          settings: spreedly_settings,
-          active_merchant_class: "ActiveMerchant::Billing::SpreedlyCoreGateway"
-        },
-      ]
+      dnm_instance.facebook_consumer_key = '432038396866156'
+      dnm_instance.facebook_consumer_secret = '71af86082de1c38a3523a4c8f44aca2d'
 
-      PaymentGateway.create(payment_gateways)
+      dnm_instance.twitter_consumer_key = 'IZeQXx4YyCdTQ9St3tmyw'
+      dnm_instance.twitter_consumer_secret = 'ZlxMPIhNPBn4QbOSHqkN1p7hKghGZTOtR1fDsPSX8'
+
+      dnm_instance.linkedin_consumer_key = '4q9xfgn60bik'
+      dnm_instance.linkedin_consumer_secret = 'lRmKVrc0RPpfKDCV'
+
+      dnm_instance.instagram_consumer_key = '566499e0d6e647518d8f4cec0a42f3d6'
+      dnm_instance.instagram_consumer_secret = '5c0652ad06984bf09e4987c8fc5ea8f1'
+
+      dnm_instance.save!
     end
 
     def create_reservation(listing, date, attribs = {})
@@ -433,7 +405,7 @@ module Utils
 
             user.blog_posts.create!(title: blog_post[:title], content: blog_post[:content],
                                     excerpt: blog_post[:excerpt], author_name: user.name,
-                                    author_biography: user.biography, created_at: created_at,
+                                    author_biography: Faker::Lorem.paragraph, created_at: created_at,
                                     published_at: created_at + rand(4).days)
           end
         end
