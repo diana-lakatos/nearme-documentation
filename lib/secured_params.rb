@@ -829,7 +829,7 @@ class SecuredParams
       attributes = nested(klass::ATTRIBUTES)
       owner_klass = "MerchantAccountOwner::#{name.classify}MerchantAccountOwner".safe_constantize
       attributes << {owners_attributes: nested([:document] + owner_klass::ATTRIBUTES)} if owner_klass
-      hsh["#{name}_merchant_account_attributes".to_sym] = attributes
+      hsh[:"#{name}_merchant_account_attributes"] = attributes
       hsh
     end)
   end

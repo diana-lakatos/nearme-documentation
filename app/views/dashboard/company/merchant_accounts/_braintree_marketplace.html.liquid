@@ -12,13 +12,14 @@
     </div>
   {% endif %}
 
+  <input type="hidden" name="company[braintree_marketplace_merchant_account_attributes][id]" value="{{ merchant_account.id}}">
   <div class="string optional company_braintree_marketplace_merchant_account_attributes_bank_routing_number">
     <div class="row">
       <div class="col-md-3">
         <label class="string optional control-label" for="company_braintree_marketplace_merchant_account_attributes_bank_routing_number">Routing Number</label>
       </div>
       <div class="col-md-9 input-container">
-        <input class="string optional" id="company_braintree_marketplace_merchant_account_attributes_bank_routing_number" name="company[braintree_marketplace_merchant_account_attributes][bank_routing_number]" placeholder="" type="text" value="{{ merchant_account.bank_routing_number}}">
+        <input class="string optional" id="company_braintree_marketplace_merchant_account_attributes_bank_routing_number" name="company[braintree_marketplace_merchant_account_attributes][bank_routing_number]" placeholder="" type="text" value="{{ merchant_account.data.bank_routing_number}}">
       </div>
     </div>
   </div>
@@ -28,7 +29,7 @@
         <label class="string optional control-label" for="company_braintree_marketplace_merchant_account_attributes_bank_account_number">Account Number</label>
       </div>
       <div class="col-md-9 input-container">
-        <input class="string optional" id="company_braintree_marketplace_merchant_account_attributes_bank_account_number" name="company[braintree_marketplace_merchant_account_attributes][bank_account_number]" placeholder="" type="text" value="{{ merchant_account.bank_account_number}}">
+        <input class="string optional" id="company_braintree_marketplace_merchant_account_attributes_bank_account_number" name="company[braintree_marketplace_merchant_account_attributes][bank_account_number]" placeholder="" type="text" value="{{ merchant_account.data.bank_account_number}}">
       </div>
     </div>
   </div>
@@ -39,34 +40,90 @@
         <label class="string optional control-label" for="company_braintree_marketplace_merchant_account_attributes_date_of_birth" placeholder="YYYY-MM-DD">Date of Birth</label>
       </div>
       <div class="col-md-9 input-container">
-        <input class="string optional" id="company_braintree_marketplace_merchant_account_attributes_date_of_birth" name="company[braintree_marketplace_merchant_account_attributes][date_of_birth]" placeholder="YYYY-MM-DD" type="text" value="{{ merchant_account.date_of_birth}}">
+        <input class="string optional" id="company_braintree_marketplace_merchant_account_attributes_date_of_birth" name="company[braintree_marketplace_merchant_account_attributes][date_of_birth]" placeholder="YYYY-MM-DD" type="text" value="{{ merchant_account.data.date_of_birth}}">
       </div>
     </div>
   </div>
 
-<input type="checkbox" name="company[braintree_marketplace_merchant_account_attributes][tos]" value="1" {% if merchant_account.tos == "1" %}checked="checked"{% endif %}> {{ platform_context.name }} uses Braintree, a division of PayPal, Inc. (Braintree) for payment processing services. By using the Braintree payment processing services you agree to the Braintree Payment Services Agreement available at <a href="https://www.braintreepayments.com/legal/gateway-agreement">https://www.braintreepayments.com/legal/gateway-agreement</a>, and the applicable bank agreement available at <a href="https://www.braintreepayments.com/legal/cea-wells">https://www.braintreepayments.com/legal/cea-wells</a>
 
-<!--
-  OR
+  <div class="string optional company_braintree_marketplace_merchant_account_attributes_first_name">
+    <div class="row">
+      <div class="col-md-3">
+        <label class="string optional control-label" for="company_braintree_marketplace_merchant_account_attributes_first_name">First Name</label>
+      </div>
+      <div class="col-md-9 input-container">
+        <input class="string optional" id="company_braintree_marketplace_merchant_account_attributes_first_name" name="company[braintree_marketplace_merchant_account_attributes][first_name]" placeholder="" type="text" value="{{ merchant_account.data.first_name}}">
+      </div>
+    </div>
+  </div>
+
+  <div class="string optional company_braintree_marketplace_merchant_account_attributes_last_name">
+    <div class="row">
+      <div class="col-md-3">
+        <label class="string optional control-label" for="company_braintree_marketplace_merchant_account_attributes_last_name">Last Name</label>
+      </div>
+      <div class="col-md-9 input-container">
+        <input class="string optional" id="company_braintree_marketplace_merchant_account_attributes_last_name" name="company[braintree_marketplace_merchant_account_attributes][last_name]" placeholder="" type="text" value="{{ merchant_account.data.last_name}}">
+      </div>
+    </div>
+  </div>
+
   <div class="string optional company_braintree_marketplace_merchant_account_attributes_email">
-  <div class="row">
-  <div class="col-md-3">
-  <label class="string optional control-label" for="company_braintree_marketplace_merchant_account_attributes_email">Email</label>
+    <div class="row">
+      <div class="col-md-3">
+        <label class="string optional control-label" for="company_braintree_marketplace_merchant_account_attributes_email">E-mail</label>
+      </div>
+      <div class="col-md-9 input-container">
+        <input class="string optional" id="company_braintree_marketplace_merchant_account_attributes_email" name="company[braintree_marketplace_merchant_account_attributes][email]" placeholder="" type="text" value="{{ merchant_account.data.email}}">
+      </div>
+    </div>
   </div>
-  <div class="col-md-9 input-container">
-  <input class="string optional" id="company_braintree_marketplace_merchant_account_attributes_email" name="company[braintree_marketplace_merchant_account_attributes][email]" placeholder="" type="text">
+
+  <div class="string optional company_braintree_marketplace_merchant_account_attributes_street_address">
+    <div class="row">
+      <div class="col-md-3">
+        <label class="string optional control-label" for="company_braintree_marketplace_merchant_account_attributes_street_address">Street Address</label>
+      </div>
+      <div class="col-md-9 input-container">
+        <input class="string optional" id="company_braintree_marketplace_merchant_account_attributes_street_address" name="company[braintree_marketplace_merchant_account_attributes][street_address]" placeholder="" type="text" value="{{ merchant_account.data.street_address}}">
+      </div>
+    </div>
   </div>
+
+  <div class="string optional company_braintree_marketplace_merchant_account_attributes_locality">
+    <div class="row">
+      <div class="col-md-3">
+        <label class="string optional control-label" for="company_braintree_marketplace_merchant_account_attributes_locality">City</label>
+      </div>
+      <div class="col-md-9 input-container">
+        <input class="string optional" id="company_braintree_marketplace_merchant_account_attributes_locality" name="company[braintree_marketplace_merchant_account_attributes][locality]" placeholder="" type="text" value="{{ merchant_account.data.locality}}">
+      </div>
+    </div>
   </div>
+
+  <div class="string optional company_braintree_marketplace_merchant_account_attributes_region">
+    <div class="row">
+      <div class="col-md-3">
+        <label class="string optional control-label" for="company_braintree_marketplace_merchant_account_attributes_region">Region</label>
+      </div>
+      <div class="col-md-9 input-container">
+        <input class="string optional" id="company_braintree_marketplace_merchant_account_attributes_region" name="company[braintree_marketplace_merchant_account_attributes][region]" placeholder="" type="text" value="{{ merchant_account.data.region}}">
+      </div>
+    </div>
   </div>
-  OR
-  <div class="string optional company_braintree_marketplace_merchant_account_attributes_phone_number">
-  <div class="row">
-  <div class="col-md-3">
-  <label class="string optional control-label" for="company_braintree_marketplace_merchant_account_attributes_phone_number">Phone Number</label>
+
+  <div class="string optional company_braintree_marketplace_merchant_account_attributes_postal_code">
+    <div class="row">
+      <div class="col-md-3">
+        <label class="string optional control-label" for="company_braintree_marketplace_merchant_account_attributes_postal_code">Postal Code</label>
+      </div>
+      <div class="col-md-9 input-container">
+        <input class="string optional" id="company_braintree_marketplace_merchant_account_attributes_postal_code" name="company[braintree_marketplace_merchant_account_attributes][postal_code]" placeholder="" type="text" value="{{ merchant_account.data.postal_code}}">
+      </div>
+    </div>
   </div>
-  <div class="col-md-9 input-container">
-  <input class="string optional" id="company_braintree_marketplace_merchant_account_attributes_phone_number" name="company[braintree_marketplace_merchant_account_attributes][phone_number]" placeholder="" type="text">
-  </div>
-  </div>
-  </div>
--->
+
+
+<input type="hidden" name="company[braintree_marketplace_merchant_account_attributes][terms_of_service]" value="0">
+<input type="checkbox" name="company[braintree_marketplace_merchant_account_attributes][terms_of_service]" value="1" {% if merchant_account.data.terms_of_service == "1" %}checked="checked"{% endif %}> {{ platform_context.name }} uses Braintree, a division of PayPal, Inc. (Braintree) for payment processing services. By using the Braintree payment processing services you agree to the Braintree Payment Services Agreement available at <a href="https://www.braintreepayments.com/legal/gateway-agreement">https://www.braintreepayments.com/legal/gateway-agreement</a>, and the applicable bank agreement available at <a href="https://www.braintreepayments.com/legal/cea-wells">https://www.braintreepayments.com/legal/cea-wells</a>
+

@@ -4,6 +4,7 @@ class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
   before_action :build_merchant_account
 
   def edit
+    @merchant_account.try(:initialize_defaults) if @merchant_account.try(:new_record?)
     @merchant_account.owners.build if @merchant_account.respond_to?(:owners) && !@merchant_account.owners.present?
   end
 

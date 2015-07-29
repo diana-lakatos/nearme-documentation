@@ -1,12 +1,25 @@
 class MerchantAccount::BraintreeMarketplaceMerchantAccount < MerchantAccount
 
-  ATTRIBUTES = %w(bank_routing_number bank_account_number ssn date_of_birth tos)
+  ATTRIBUTES = %w(bank_routing_number bank_account_number ssn date_of_birth terms_of_service first_name last_name email street_address locality region postal_code)
   include MerchantAccount::Concerns::DataAttributes
 
   with_options unless: :skip_validation do
-    validates_presence_of   :bank_routing_number, message: 'Bank routing number is blank'
-    validates_presence_of   :bank_account_number, message: 'Bank account number is blank'
-    validates_acceptance_of :tos, message: 'Terms of Services must be accepted'
+    validates_presence_of :bank_routing_number, :bank_account_number, :first_name, :last_name,
+      :street_address, :locality, :region, :postal_code
+    validates_acceptance_of :terms_of_service
+  end
+
+  def initialize_defaults
+    data.reverse_merge!({
+        'terms_of_service' => false,
+        'first_name' => merchantable.try(:first_name),
+        'last_name' => merchantable.try(:last_name),
+        'email' => merchantable.try(:email),
+        'street_address' => merchantable.try(:address),
+        'locality' => merchantable.try(:city),
+        'region' => (merchantable.address_components.values.find { |arr| arr["types"].include?('administrative_area_level_1') }["short_name"] rescue ""),
+        'postal_code' => merchantable.try(:postcode)
+    })
   end
 
   def onboard!
@@ -22,7 +35,7 @@ class MerchantAccount::BraintreeMarketplaceMerchantAccount < MerchantAccount
   def handle_result(result)
     if result.success?
       self.response = result.to_yaml
-      bank_account_number = bank_account_number.to_s[-4, 4]
+      data['bank_account_number'] = data['bank_account_number'].to_s[-4, 4]
       true
     else
       result.errors.each { |e| errors.add(:data, e.message); }
@@ -34,16 +47,16 @@ class MerchantAccount::BraintreeMarketplaceMerchantAccount < MerchantAccount
   def common_params
     {
       individual: {
-        first_name: merchantable.first_name,
-        last_name: merchantable.last_name,
-        email: merchantable.email,
+        first_name: first_name,
+        last_name: last_name,
+        email: email,
         ssn: ssn,
         date_of_birth: date_of_birth,
         address: {
-          street_address: merchantable.address,
-          locality: merchantable.city,
-          region: (merchantable.address_components.values.find { |arr| arr["types"].include?('administrative_area_level_1') }["short_name"] rescue ""),
-          postal_code: merchantable.postcode
+          street_address: street_address,
+          locality: locality,
+          region: region,
+          postal_code: postal_code
         }
       },
       funding: {
@@ -57,7 +70,7 @@ class MerchantAccount::BraintreeMarketplaceMerchantAccount < MerchantAccount
 
   def create_params
     common_params.deep_merge({
-      tos_accepted: tos == "1",
+      tos_accepted: terms_of_service == "1",
       id: custom_braintree_id,
       master_merchant_account_id: payment_gateway.settings[:master_merchant_account_id]
     })
