@@ -13,12 +13,14 @@ class LineItemDecoratorTest < ActionView::TestCase
       end
 
       should 'have no seller reviews' do
-        FactoryGirl.create(:review, reviewable: @line_item, object: 'product', instance: @order.instance)
+        rs = FactoryGirl.create(:rating_system, subject: RatingConstants::TRANSACTABLE)
+        FactoryGirl.create(:review, reviewable_id: @line_item.id, reviewable_type: @line_item.class.to_s, rating_system_id: rs.id, instance: @order.instance)
         refute @line_item.has_seller_reviews?
       end
 
       should 'have seller reviews' do
-        FactoryGirl.create(:review, reviewable: @line_item, object: 'seller', instance: @order.instance)
+        rs = FactoryGirl.create(:rating_system, subject: RatingConstants::HOST)
+        FactoryGirl.create(:review, reviewable_id: @line_item.id, reviewable_type: @line_item.class.to_s, rating_system_id: rs.id, instance: @order.instance)
         assert @line_item.has_seller_reviews?
       end
     end
@@ -29,12 +31,14 @@ class LineItemDecoratorTest < ActionView::TestCase
       end
 
       should 'have no seller reviews' do
-        FactoryGirl.create(:review, reviewable: @line_item, object: 'product', instance: @order.instance)
+        rs = FactoryGirl.create(:rating_system, subject: RatingConstants::TRANSACTABLE)
+        FactoryGirl.create(:review, reviewable_id: @line_item.id, reviewable_type: @line_item.class.to_s, rating_system_id: rs.id, instance: @order.instance)
         assert @line_item.has_product_reviews?
       end
 
       should 'have seller reviews' do
-        FactoryGirl.create(:review, reviewable: @line_item, object: 'seller', instance: @order.instance)
+        rs = FactoryGirl.create(:rating_system, subject: RatingConstants::HOST)
+        FactoryGirl.create(:review, reviewable_id: @line_item.id, reviewable_type: @line_item.class.to_s, rating_system_id: rs.id, instance: @order.instance)
         refute @line_item.has_product_reviews?
       end
     end

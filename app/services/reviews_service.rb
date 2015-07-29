@@ -33,9 +33,9 @@ class ReviewsService
 
   def self.generate_csv_for(reviews)
     CSV.generate do |csv|
-      csv.add_row %w(id object rating user created_at)
+      csv.add_row %w(id rating user created_at)
       reviews.each do |review|
-        csv.add_row review.attributes.values_at(*%w{id object rating user_name created_at})
+        csv.add_row review.attributes.values_at(*%w{id rating user_name created_at})
       end
     end
   end
@@ -55,9 +55,9 @@ class ReviewsService
     active_rating_systems = RatingSystem.includes(:rating_hints, :rating_questions).active
     {
       active_rating_systems: active_rating_systems.group_by { |rating_system| rating_system.transactable_type_id },
-      buyer_rating_system: active_rating_systems.where(subject:  @current_instance.lessee).group_by { |rating_system| rating_system.transactable_type_id },
-      seller_rating_system: active_rating_systems.where(subject:  @current_instance.lessor).group_by { |rating_system| rating_system.transactable_type_id },
-      product_rating_system: active_rating_systems.where.not(subject:  [@current_instance.lessee, @current_instance.lessor]).group_by { |rating_system| rating_system.transactable_type_id }
+      buyer_rating_system: active_rating_systems.where(subject:  RatingConstants::GUEST).group_by { |rating_system| rating_system.transactable_type_id },
+      seller_rating_system: active_rating_systems.where(subject:  RatingConstants::HOST).group_by { |rating_system| rating_system.transactable_type_id },
+      product_rating_system: active_rating_systems.where(subject: RatingConstants::TRANSACTABLE).group_by { |rating_system| rating_system.transactable_type_id }
     }
   end
 
@@ -74,9 +74,9 @@ class ReviewsService
 
   def get_orders_reviews(line_items)
     {
-      seller_collection: reviews_with_object('seller').by_line_items(line_items[:owner_line_items].pluck(:id)),
-      product_collection: reviews_with_object('product').by_line_items(line_items[:owner_line_items].pluck(:id)),
-      buyer_collection: reviews_with_object('buyer').by_line_items(line_items[:creator_line_items].pluck(:id))
+      seller_collection: reviews_with_object(RatingConstants::SELLER).by_line_items(line_items[:owner_line_items].pluck(:id)),
+      product_collection: reviews_with_object(RatingConstants::PRODUCT).by_line_items(line_items[:owner_line_items].pluck(:id)),
+      buyer_collection: reviews_with_object(RatingConstants::BUYER).by_line_items(line_items[:creator_line_items].pluck(:id))
     }
   end
 
@@ -98,9 +98,9 @@ class ReviewsService
 
   def get_reviews_by(reservations)
     {
-      seller_collection: reviews_with_object('seller').by_reservations(reservations[:owner_reservations].pluck(:id)),
-      product_collection: reviews_with_object('product').by_reservations(reservations[:owner_reservations].pluck(:id)),
-      buyer_collection: reviews_with_object('buyer').by_reservations(reservations[:creator_reservations].pluck(:id))
+      seller_collection: reviews_with_object(RatingConstants::SELLER).by_reservations(reservations[:owner_reservations].pluck(:id)),
+      product_collection: reviews_with_object(RatingConstants::PRODUCT).by_reservations(reservations[:owner_reservations].pluck(:id)),
+      buyer_collection: reviews_with_object(RatingConstants::BUYER).by_reservations(reservations[:creator_reservations].pluck(:id))
     }
   end
 

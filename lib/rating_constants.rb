@@ -3,5 +3,15 @@ module RatingConstants
   MAX_RATING = 5
   VALID_VALUES = (1..MAX_QUESTIONS_QUANTITY)
 
-  FEEDBACK_TYPES = ['seller', 'product', 'buyer']
+  SELLER = 'seller'
+  PRODUCT = 'product'
+  BUYER = 'buyer'
+  FEEDBACK_TYPES = [SELLER, PRODUCT, BUYER]
+
+  HOST = 'host'
+  TRANSACTABLE = 'transactable'
+  GUEST = 'guest'
+  RATING_SYSTEM_SUBJECTS = [HOST, TRANSACTABLE, GUEST]
+
+  RATING_MAPPING = Hash[FEEDBACK_TYPES.zip(RATING_SYSTEM_SUBJECTS)].freeze
 end
