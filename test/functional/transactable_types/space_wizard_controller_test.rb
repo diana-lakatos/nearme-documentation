@@ -146,6 +146,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
       setup do
         FactoryGirl.create(:approval_request_template, required_written_verification: true)
         FactoryGirl.create(:form_component, form_componentable: @transactable_type)
+        @user.update! created_at: 1.minute.from_now
       end
 
       should 'show form to write message'  do

@@ -194,7 +194,7 @@ class Company < ActiveRecord::Base
   end
 
   def approval_request_templates
-    @approval_request_templates ||= PlatformContext.current.instance.approval_request_templates.for("Company")
+      @approval_request_templates ||= PlatformContext.current.instance.approval_request_templates.for("Company").older_than(created_at)
   end
 
   def current_approval_requests

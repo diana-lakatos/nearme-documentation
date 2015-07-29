@@ -207,6 +207,8 @@ class UserTest < ActiveSupport::TestCase
         setup do
           FactoryGirl.create(:approval_request_template)
           @approval_request = FactoryGirl.build(:approval_request)
+          @user.save!
+          @user.update! created_at: 1.minute.from_now
         end
 
         should 'not be trusted without approval_requests' do

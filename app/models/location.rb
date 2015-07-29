@@ -158,7 +158,7 @@ class Location < ActiveRecord::Base
   end
 
   def approval_request_templates
-    @approval_request_templates ||= PlatformContext.current.instance.approval_request_templates.for("Location")
+    @approval_request_templates ||= PlatformContext.current.instance.approval_request_templates.for("Location").older_than(created_at)
   end
 
   def current_approval_requests
