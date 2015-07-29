@@ -329,9 +329,7 @@ module ApplicationHelper
   end
 
   def is_i18n_set?(key)
-    I18n.t(key, raise: true)
-  rescue
-    false
+    I18n.t(key, default: '').present?
   end
 
 end
