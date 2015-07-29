@@ -39,7 +39,7 @@ end
 
 Then /^Sees two seller reviews$/ do
   page.should have_css('.review', count: 2)
-  page.should have_content(@user)
+  page.should have_content(@user.first_name)
 end
 
 Given /^Reviews left by the user exist$/ do
