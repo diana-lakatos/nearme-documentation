@@ -184,7 +184,11 @@ Spree::Order.class_eval do
   end
 
   def service_fee_amount_host_cents
-    Money.new(service_fee_calculator.service_fee_host.cents, currency)
+    Money.new(service_fee_calculator.service_fee_host.cents, currency).cents
+  end
+
+  def service_fee_amount_guest_cents
+    Money.new(service_fee_calculator.service_fee_guest.cents, currency).cents
   end
 
   def shipping_costs_cents

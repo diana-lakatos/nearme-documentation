@@ -13,6 +13,8 @@ class AdditionalCharge < ActiveRecord::Base
 
   monetize :amount_cents, with_model_currency: :currency
 
+  scope :mandatory, -> { where(status: 'mandatory') }
+
   def mandatory?
     status == 'mandatory'
   end

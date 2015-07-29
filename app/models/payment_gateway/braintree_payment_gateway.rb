@@ -39,6 +39,10 @@ class PaymentGateway::BraintreePaymentGateway < PaymentGateway
     true
   end
 
+  def credit_card_payment?
+    true
+  end
+
   private
 
   def configure_braintree_class

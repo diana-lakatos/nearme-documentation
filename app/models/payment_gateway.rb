@@ -261,9 +261,7 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def credit_card_payment?
-    gateway.supported_cardtypes.present?
-  rescue Exception
-    false
+    gateway.try(:supported_cardtypes).present?
   end
 
   protected

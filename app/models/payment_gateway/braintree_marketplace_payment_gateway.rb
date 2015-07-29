@@ -60,10 +60,6 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
     settings[:supported_currency]
   end
 
-  def nonce_payment?
-    true
-  end
-
   def requires_company_onboarding?
     true
   end
@@ -75,6 +71,12 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
   def immediate_payout(company)
     merchant_account(company).present?
   end
+
+  def credit_card_payment?
+    true
+  end
+
+  protected
 
   def configure_braintree_class
     Braintree::Configuration.environment = settings["environment"]

@@ -35,6 +35,7 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
         payment_transfer.update_attribute(:transferred_at, nil)
       end
     end
+    charge_record
   end
 
   def support_any_currency!

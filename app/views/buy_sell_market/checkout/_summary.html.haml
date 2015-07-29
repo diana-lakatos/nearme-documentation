@@ -24,11 +24,12 @@
             %td= 1
             %td= humanized_money_with_cents_and_symbol additional_charge.amount
 
-      - if @additional_charges.try(:optional_charges).present? && !@order.paypal_express_payment?
+      - additional_charges = @additional_charges.try(:optional_charges).try(:where).try(:not, id: @order.additional_charges.where(status: 'optional').pluck(:additional_charge_type_id))
+      - if additional_charges.present? && !@order.paypal_express_payment?
         %thead
           %th#options= t 'buy_sell_market.checkout.labels.options'
         %tbody{:'data-additional-charges' => true }
-          - @additional_charges.optional_charges.each do |charge|
+          - additional_charges.optional_charges.each do |charge|
             - charge.currency = @order.currency
             %tr{:'data-additional-charge-wrapper' => true }
               %td

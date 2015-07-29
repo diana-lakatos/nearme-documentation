@@ -22,7 +22,6 @@
         .container-fluid
           %h2 Payment Information
           = f.error :payment_method
-
           - if @payment_gateway.credit_card_payment?
             .row-fluid
               .span3
