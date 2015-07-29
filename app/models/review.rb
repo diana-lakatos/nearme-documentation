@@ -133,8 +133,7 @@ class Review < ActiveRecord::Base
       RatingConstants::RATING_MAPPING[object]
     end
 
-    includes(:rating_system).
-    where(rating_systems: { subject: subject })
+    includes(:rating_system).where(rating_systems: { subject: subject })
   end
 
   protected
