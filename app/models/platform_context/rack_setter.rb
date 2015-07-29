@@ -11,6 +11,7 @@ class PlatformContext::RackSetter
   end
 
   def call(env)
+    return @app.call(env) if env['PATH_INFO'] =~ /^\/assets\//
     ::PlatformContext.clear_current
     request = ActionDispatch::Request.new(env)
     platform_context = ::PlatformContext.new(request.host)

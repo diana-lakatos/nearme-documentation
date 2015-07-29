@@ -42,6 +42,11 @@ module DesksnearMe
       Dir.glob(File.join(File.dirname(__FILE__), "../app/controllers/spree/**/*_decorator*.rb")) do |c|
         Rails.configuration.cache_classes ? require(c) : load(c)
       end
+
+      # Load message Subscribers
+      Dir.glob(File.join(File.dirname(__FILE__), "../app/subscribers/*.rb")) do |c|
+        Rails.configuration.cache_classes ? require(c) : load(c)
+      end
     end
 
     # Only load the plugins named here, in the order given (default is alphabetical).

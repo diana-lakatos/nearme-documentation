@@ -41,6 +41,7 @@ DesksnearMe::Application.configure do
   config.googl_api_key = 'AIzaSyBV7BhIuT6s2HbprOP4jfXSmpdBFmocSMg'
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = { :address => "localhost", :port => 1025 }
+  config.message_bus_handler = NullMessageBus
 
   config.middleware.insert_after(ActionDispatch::Static, SilentMissedImages)
 

@@ -4,15 +4,7 @@ module CheckoutExtraFieldsHelper
     instance = Instance.unscoped.first
     i = instance.instance_profile_type
     i = InstanceProfileType.create!(instance_id: instance.id) unless i
-    i.custom_attributes.create!({
-      name: 'license_number', attribute_type: 'string', html_tag: 'input',
-      required: '1', public: '1',
-      label: 'License number',
-      valid_values: []
-    })
-    attribute = i.custom_attributes.first
-    attribute.validation_rules = { :presence => {} }
-    attribute.save
+    i.custom_attributes << FactoryGirl.create(:custom_attibute_license, target: i)
   end
 
 end
