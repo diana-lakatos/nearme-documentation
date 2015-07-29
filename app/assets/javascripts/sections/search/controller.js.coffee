@@ -196,12 +196,12 @@ class Search.Controller
   responsiveCategoryTree: ->
     if $("#category-tree").length > 0
       $(window).resize =>
-        @categoryTreeInit()
-      @categoryTreeInit()
+        @categoryTreeInit(true)
+      @categoryTreeInit(false)
 
-  categoryTreeInit: ->
+  categoryTreeInit: (windowResized)->
     if ($(window).width() < 767)
-      $(".categories-list").hide()
+      $("#category-tree .categories-list:first").hide()
       $(".nav-heading input:checked").parents('.nav-heading').next().show()
       $(".nav-heading input").on 'change', (event) ->
         $(".nav-heading input:not(:checked)").parents('.nav-heading').next().hide('slow')
@@ -211,7 +211,8 @@ class Search.Controller
       $(".nav-heading input").parents('.nav-heading').next().show()
       $(".nav-heading input").unbind 'change'
 
-    $('.nav-categories  > ul > .categories-list > .nav-item ').find('.categories-list').hide()
+    unless windowResized
+      $('.nav-categories  > ul > .categories-list > .nav-item ').find('.categories-list').hide()
 
     $(".nav-item input[type='checkbox']").on 'change', (event) ->
       if $(event.target).prop('checked')
