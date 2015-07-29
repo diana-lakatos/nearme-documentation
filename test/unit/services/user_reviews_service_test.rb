@@ -8,7 +8,10 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
     end
 
     should "return reviews_left_by_seller" do
-      review_on_buyer = FactoryGirl.create(:review, object: 'buyer', user: @user)
+      @reviewable = FactoryGirl.create(:reservation)
+      review_on_buyer = create_review_for(RatingConstants::GUEST, {user: @user, reviewable: @reviewable })
+      review_on_seller = create_review_for(RatingConstants::HOST, {user: @user, reviewable: @reviewable })
+
       params = {:option => 'reviews_left_by_seller'}
       user_reviews_service = UserReviewsService.new(@user, @platform_context, params)
       reviews_left_by_seller = user_reviews_service.reviews_by_role
@@ -18,13 +21,16 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
     end
 
     should "return reviews_left_by_buyer" do
-      review_on_seller = FactoryGirl.create(:review, object: 'seller', user: @user)
-      review_on_product = FactoryGirl.create(:review, object: 'product', user: @user)
+      @reviewable = FactoryGirl.create(:reservation)
+      review_on_buyer = create_review_for(RatingConstants::GUEST, {user: @user, reviewable: @reviewable })
+      review_on_seller = create_review_for(RatingConstants::HOST, {user: @user, reviewable: @reviewable })
+      review_on_product = create_review_for(RatingConstants::TRANSACTABLE, {user: @user, reviewable: @reviewable})
+      
       params = {:option => 'reviews_left_by_buyer'}
       user_reviews_service = UserReviewsService.new(@user, @platform_context, params)
       reviews_left_by_buyer = user_reviews_service.reviews_by_role
 
-      assert_equal @user.reload.reviews.for_seller_and_product.sort, reviews_left_by_buyer.sort
+      assert_equal @user.reviews.for_seller_and_product.sort, reviews_left_by_buyer.sort
       assert_includes reviews_left_by_buyer, review_on_seller
       assert_includes reviews_left_by_buyer, review_on_product
     end
@@ -37,7 +43,7 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
       end
 
       should "return reviews_about_seller" do
-        review = FactoryGirl.create(:review, object: 'seller', user: @owner_of_reservation, reviewable: @reservation)
+        review = create_review_for(RatingConstants::HOST, { user: @owner_of_reservation, reviewable_id: @reservation.id, reviewable_type: @reservation.class.to_s })
         params = {:option => 'reviews_about_seller'}
         user_reviews_service = UserReviewsService.new(@user, @platform_context, params)
         reviews_about_seller = user_reviews_service.reviews_by_role
@@ -48,7 +54,7 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
 
       should "return reviews_about_buyer" do
         user = FactoryGirl.create(:user)
-        review = FactoryGirl.create(:review, object: 'buyer', user: user, reviewable: @reservation)
+        review = create_review_for(RatingConstants::GUEST, { user: user, reviewable_id: @reservation.id, reviewable_type: @reservation.class.to_s })
         params = {:option => 'reviews_about_buyer'}
         user_reviews_service = UserReviewsService.new(@owner_of_reservation, @platform_context, params)
         reviews_about_buyer = user_reviews_service.reviews_by_role
@@ -69,7 +75,7 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
       end
 
       should "return reviews_about_seller" do
-        review = FactoryGirl.create(:review, object: 'seller', user: @buyer, reviewable: @line_item)
+        review = create_review_for(RatingConstants::HOST, {user: @buyer, reviewable_id: @line_item.id, reviewable_type: @line_item.class.to_s })
         params = {:option => 'reviews_about_seller'}
         user_reviews_service = UserReviewsService.new(@user, @platform_context, params)
         reviews_about_seller = user_reviews_service.reviews_by_role
@@ -79,7 +85,7 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
       end
 
       should "return reviews_about_buyer" do
-        review = FactoryGirl.create(:review, object: 'buyer', user: @user, reviewable: @line_item)
+        review = create_review_for(RatingConstants::GUEST, { user: @user, reviewable_id: @line_item.id, reviewable_type: @line_item.class.to_s})
         params = {:option => 'reviews_about_buyer'}
         user_reviews_service = UserReviewsService.new(@buyer, @platform_context, params)
         reviews_about_buyer = user_reviews_service.reviews_by_role
@@ -116,5 +122,10 @@ class UserReviewsServiceTest < ActiveSupport::TestCase
 
       assert_equal rating_questions, rating_questions_by_role
     end
+  end
+
+  def create_review_for(type, opts={})
+    rs = FactoryGirl.create(:rating_system, subject: type)
+    FactoryGirl.create(:review, opts.merge({ rating_system_id: rs.id }))
   end
 end

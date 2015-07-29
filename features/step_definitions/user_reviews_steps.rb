@@ -6,6 +6,12 @@ Given /^User exists$/ do
   @user = FactoryGirl.create(:user)
 end
 
+Given /^Rating systems exists$/ do
+  @rs_for_products = FactoryGirl.create(:rating_system, subject: RatingConstants::TRANSACTABLE)
+  @rs_for_buyer = FactoryGirl.create(:rating_system, subject: RatingConstants::GUEST)
+  @rs_for_seller = FactoryGirl.create(:rating_system, subject: RatingConstants::HOST)
+end
+
 When /^Goes to reviews tab$/ do
   find('[data-reviews-count]').click
 end
@@ -16,29 +22,34 @@ end
 
 Given /^Reviews about the seller exist$/ do
   @user = FactoryGirl.create(:user)
+  
   @reservation = FactoryGirl.create(:reservation)
   @reservation.update_column(:creator_id, @user.id)
+
   @order = FactoryGirl.create(:order_with_line_items, line_items_count: 1)
   line_item = @order.line_items.first
-  variant = line_item.variant
-  product = variant.product.update(user: @user)
-  review_for_reservation = FactoryGirl.create(:review, object: 'seller', user: @reservation.owner, reviewable: @reservation)
-  review_for_order = FactoryGirl.create(:review, object: 'seller', user: @order.user, reviewable: line_item)
+  product = line_item.variant.product.update(user: @user)
+
+  FactoryGirl.create(:review, rating_system_id: @rs_for_seller.id, user: @user, reviewable: @reservation)
+  FactoryGirl.create(:review, rating_system_id: @rs_for_seller.id, user: @user, reviewable: line_item)
+  
+  FactoryGirl.create(:review, rating_system_id: @rs_for_buyer.id, user: @user, reviewable: @reservation)
+  FactoryGirl.create(:review, rating_system_id: @rs_for_buyer.id, user: @user, reviewable: line_item)
 end
 
 Then /^Sees two seller reviews$/ do
   page.should have_css('.review', count: 2)
-  page.should have_content(@reservation.owner.first_name)
-  page.should have_content(@order.user.first_name)
+  page.should have_content(@user)
 end
 
 Given /^Reviews left by the user exist$/ do
-  @review_by_seller = FactoryGirl.create(:review, object: 'buyer', user: @user)
-  @review_by_buyer = FactoryGirl.create(:review, object: 'seller', user: @user)
+  @reviewable = FactoryGirl.create(:reservation)
+  @review_by_buyer = FactoryGirl.create(:review, rating_system_id: @rs_for_seller.id, user: @user, reviewable: @reviewable)
 end
 
 And /^seller respond to review$/ do
-  FactoryGirl.create(:review, object: 'seller', reviewable: @user.reviews.for_buyer.first.reviewable)
+  @reviewable ||= FactoryGirl.create(:reservation)
+  @review_by_seller = FactoryGirl.create(:review, rating_system_id: @rs_for_buyer.id, user: @user, reviewable: @reviewable)
 end
 
 Given /^TransactableType has show_reviews_if_both_completed field set to (.*)$/ do |value|
@@ -56,7 +67,7 @@ And /^Review for buyer$/ do
 end
 
 And /^should not see Review for buyer$/ do
-  page.should_not have_css('.review', count: 1)
+  page.should_not have_css('.review')
   page.should_not have_content(@review_by_seller.reviewable.owner.first_name)
 end
 
@@ -71,8 +82,11 @@ Then /^List of reviews should be updated$/ do
 end
 
 Given /^Reviews left by the user exist for pagination$/ do
-  @review_by_seller = FactoryGirl.create_list(:review, 10, object: 'buyer', user: @user)
-  @review_by_buyer = FactoryGirl.create_list(:review, 10, object: 'seller', user: @user)
+  10.times do
+    @reservation = FactoryGirl.create(:reservation)
+    @review_by_seller = FactoryGirl.create(:review, rating_system_id: @rs_for_seller.id, user: @user, reviewable: @reservation)
+    @review_by_buyer = FactoryGirl.create(:review, rating_system_id: @rs_for_buyer.id, user: @user, reviewable: @reservation)
+  end
 end
 
 And /^Pagination with active first page$/ do

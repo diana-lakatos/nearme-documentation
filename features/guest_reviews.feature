@@ -27,15 +27,15 @@ Feature: Guest can rate a reservation
     Then I should see error message
 
   Scenario: A guest updates a review with selected rating
-    When I edit product rating with valid values
+    When I edit transactable rating with valid values
     Then I should see updated feedback
 
   Scenario: A guest updates a review with unselected rating
-    When I edit product rating with invalid values
+    When I edit transactable rating with invalid values
     Then I should see error message
 
   Scenario: A guest updates a review with selected rating
-    When I edit product rating with valid values
+    When I edit transactable rating with valid values
     Then I should see updated feedback
 
   Scenario: A guest deletes a review

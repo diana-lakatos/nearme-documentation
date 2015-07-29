@@ -13,8 +13,13 @@ class RatingSystem < ActiveRecord::Base
   accepts_nested_attributes_for :rating_questions, reject_if: lambda { |attrs| attrs['text'].blank? }, allow_destroy: true
   accepts_nested_attributes_for :rating_hints
 
+  validates_inclusion_of :subject, in: RatingConstants::RATING_SYSTEM_SUBJECTS
+
   default_scope { order('active ASC') }
 
   scope :active, -> { where(active: true) }
   scope :active_with_subject, ->(subject) { active.find_by(subject: subject) }
+  scope :for_transactables, ->{ where(subject: RatingConstants::TRANSACTABLE) }
+  scope :for_hosts, ->{ where(subject: RatingConstants::HOST) }
+  scope :for_guests, ->{ where(subject: RatingConstants::GUEST) }
 end

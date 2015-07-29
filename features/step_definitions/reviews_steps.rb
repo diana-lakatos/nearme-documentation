@@ -2,6 +2,7 @@ require Rails.root.join 'test/helpers/stub_helper'
 include StubHelper
 
 Given /^I am (host|guest) of a past reservation$/ do |kind|
+  %w(transactable guest host).each { |subject| FactoryGirl.create(:rating_system, subject: subject, active: true) }
   @reservation = FactoryGirl.create(:past_reservation)
   @user = if kind == 'guest'
             @reservation.owner
@@ -40,19 +41,11 @@ When(/^I submit rating with (valid|invalid) values$/) do |valid|
   click_button 'Submit Review'
 end
 
-When(/^I edit (host|product|guest) rating with (valid|invalid) values$/) do |object, valid|
+When(/^I edit (host|transactable|guest) rating with (valid|invalid) values$/) do |object, valid|
   RatingSystem.update_all(transactable_type_id: @reservation.listing.transactable_type_id)
-  object_review = case object
-                  when 'host'
-                    'seller'
-                  when 'product'
-                    'product'
-                  when 'guest'
-                    'buyer'
-                  end
   rating_system = RatingSystem.where(subject: object).first
   rating_system ||= RatingSystem.where.not(subject: ['host', 'guest']).first
-  FactoryGirl.create(:review, rating_system_id: rating_system.id, object: object_review, reviewable: @reservation, user: @user, rating: 5)
+  FactoryGirl.create(:review, rating_system_id: rating_system.id, reviewable_id: @reservation.id, reviewable_type: @reservation.class.to_s, user: @user, rating: 5)
 
   visit dashboard_reviews_path(tab: 'completed')
 
@@ -69,7 +62,7 @@ end
 
 When(/^I remove review$/) do
   RatingSystem.update_all(transactable_type_id: @reservation.listing.transactable_type_id)
-  review = FactoryGirl.create(:review, object: 'seller', reviewable: @reservation, user: @user, rating: 5)
+  review = FactoryGirl.create(:review, rating_system_id: RatingSystem.for_hosts.first.id, reviewable_id: @reservation.id, reviewable_type: @reservation.class.to_s, user: @user, rating: 5)
   visit dashboard_reviews_path(tab: 'completed')
   page.driver.accept_js_confirms!
 

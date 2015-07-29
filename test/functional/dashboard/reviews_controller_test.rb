@@ -21,19 +21,19 @@ class Dashboard::ReviewsControllerTest < ActionController::TestCase
 
   context '#create' do
     should 'respond with success' do
-      post :create, rating_system_id: @rating_system.id, review: FactoryGirl.attributes_for(:review, object: 'product', user: @user, reviewable_id: @reservation.id, reviewable_type: @reservation.class.name, instance: @current_instance)
+      post :create, rating_system_id: @rating_system.id, review: FactoryGirl.attributes_for(:review, user: @user, reviewable_id: @reservation.id, reviewable_type: @reservation.class.name, instance: @current_instance)
       assert_response :success
     end
 
     should 'respond with failure if rating is blank' do
-      post :create, rating_system_id: @rating_system.id, review: FactoryGirl.attributes_for(:review, rating: '', object: 'product', user: @user, reviewable_id: @reservation.id, reviewable_type: @reservation.class.name, instance: @current_instance)
+      post :create, rating_system_id: @rating_system.id, review: FactoryGirl.attributes_for(:review, rating: '', user: @user, reviewable_id: @reservation.id, reviewable_type: @reservation.class.name, instance: @current_instance)
       assert_response 422
     end
   end
 
   context '#update' do
     setup do
-      @review = FactoryGirl.create(:review, rating_system_id: @rating_system.id, object: 'product', user: @user, reviewable_id: @reservation.id, reviewable_type: @reservation.class.name, instance: @current_instance)
+      @review = FactoryGirl.create(:review, rating_system_id: @rating_system.id, user: @user, reviewable_id: @reservation.id, reviewable_type: @reservation.class.name, instance: @current_instance)
     end
 
     should 'respond with success' do
@@ -49,7 +49,7 @@ class Dashboard::ReviewsControllerTest < ActionController::TestCase
 
   context '#destroy' do
     setup do
-      @review = FactoryGirl.create(:review, object: 'product', reviewable: @reservation, user: @user, instance: @current_instance)
+      @review = FactoryGirl.create(:review, reviewable_id: @reservation.id, reviewable_type: @reservation.class.to_s, user: @user, instance: @current_instance, rating_system_id: @rating_system.id)
     end
 
     should 'redirect to dashboard_reviews_path' do

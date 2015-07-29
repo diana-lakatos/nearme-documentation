@@ -46,7 +46,6 @@ class @Dashboard.ReviewsController
       reviewableId = form.find('.review').data('reviewable-id')
       reviewableType = form.find('.review').data('reviewable-type')
       transactableTypeId = form.find('.review input[name=transactable_type_id]').val()
-      object = form.find('.review').data('object')
       commentArea = form.find('.comment-wrapper textarea')
       createReviewPath = form.attr('action')
       $.ajax
@@ -60,7 +59,6 @@ class @Dashboard.ReviewsController
             reviewable_id: reviewableId
             reviewable_type: reviewableType
             transactable_type_id: transactableTypeId
-            object: object
           rating_answers:
             for questionRating in form.find('.additional-ratings')
               {rating_question_id: $(questionRating).data('questionId'), rating: $(questionRating).find('.rating').raty('score') || ''}
