@@ -28,6 +28,10 @@ module InstanceType::Searcher::GeolocationSearcher
     @params[:loc].present? || @params[:nx].present? && @params[:sx].present?
   end
 
+  def global_map
+    !@params[:loc].present?
+  end
+
   def search
     @search ||= ::Listing::Search::Params::Web.new(@params)
   end
@@ -54,10 +58,18 @@ module InstanceType::Searcher::GeolocationSearcher
         })
         radius = PlatformContext.current.instance.search_radius.to_i
         radius = search.radius.to_i if radius.zero?
-        @search_params.merge!({
-          midpoint: search.midpoint,
-          radius: radius,
-        }) if located || adjust_to_map
+        
+        if located || adjust_to_map
+          @search_params.merge!({
+            midpoint: search.midpoint,
+            radius: radius,
+          })
+          if !search.country.blank? && search.city.blank? || global_map
+            @search_params.merge!({
+              bounding_box: search.bounding_box
+            })
+          end
+        end
 
         ::Listing::SearchFetcher.new(@search_params)
       end

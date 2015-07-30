@@ -13,6 +13,7 @@ module Elastic
 
     def initialize(query, searchable_custom_attributes)
       @query = query
+      @bounding_box = query[:bounding_box]
       @searchable_custom_attributes = searchable_custom_attributes
       @filters = []
       @not_filters = []
@@ -115,17 +116,36 @@ module Elastic
     end
 
     def geo_filters
-      [
-        {
-          geo_distance: {
-            distance: @query[:distance],
-            geo_location: {
-              lat: @query[:lat],
-              lon: @query[:lon]
+      if @bounding_box
+        [
+          {
+            geo_bounding_box: {
+              geo_location: {
+                top_left: {
+                  lat: @bounding_box.first.first.to_f, 
+                  lon: @bounding_box.last.last.to_f + 1.0
+                },
+                bottom_right: {
+                  lat: @bounding_box.last.first.to_f,
+                  lon: @bounding_box.first.last.to_f + 1.0
+                }
+              }
             }
           }
-        }
-      ]
+        ]
+      else
+        [
+          {
+            geo_distance: {
+              distance: @query[:distance],
+              geo_location: {
+                lat: @query[:lat],
+                lon: @query[:lon]
+              }
+            }
+          }
+        ]
+      end
     end
 
     def geo_sort

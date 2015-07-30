@@ -19,6 +19,11 @@ class Address < ActiveRecord::Base
   before_validation :parse_address_components
   before_save :retry_fetch, if: lambda { |a| a.country.nil? }
 
+  scope :bounding_box, -> (box) {
+    where('addresses.latitude > ? AND addresses.latitude < ?', box.last.first, box.first.first).
+    where('addresses.longitude > ? AND addresses.longitude < ?', box.last.last, box.first.last)
+  }
+
   after_save do
     if entity.is_a?(Location)
       entity.listings.each do |l|

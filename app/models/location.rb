@@ -66,6 +66,7 @@ class Location < ActiveRecord::Base
   scope :filtered_by_industries_ids,  lambda { |industry_ids| joins(:company_industries).where('company_industries.industry_id IN (?)', industry_ids) }
   scope :no_id, -> { where :id => nil }
   scope :near, lambda { |*args| all.merge(Address.near(*args).select('locations.*')) }
+  scope :bounding_box, lambda { |box, midpoint| all.merge(Address.within_bounding_box(box.reverse).select('locations.*')) }
   scope :with_searchable_listings, -> { where(%{ (select count(*) from "transactables" where location_id = locations.id and transactables.draft IS NULL and enabled = 't' and transactables.deleted_at is null) > 0 }) }
 
   scope :order_by_array_of_ids, -> (location_ids) {
