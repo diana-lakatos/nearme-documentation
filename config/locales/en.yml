@@ -1417,6 +1417,7 @@ en:
     log_in: 'Log In'
     manage_blog: 'Manage Blog'
     account: 'Account'
+    view_profile: 'View Profile'
     messages: 'Messages'
     log_out: 'Log Out'
     my_bookings: 'My Bookings'
