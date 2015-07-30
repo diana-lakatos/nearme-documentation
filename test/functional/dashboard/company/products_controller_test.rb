@@ -33,7 +33,7 @@ class Dashboard::Company::ProductsControllerTest < ActionController::TestCase
           product_form: product_form_attributes
         }
       end
-      assert_equal Spree::Product.last.categories.map(&:id), @category_ids
+      assert_equal @category_ids.sort, Spree::Product.last.categories.map(&:id).sort
     end
 
     should 'update product' do
