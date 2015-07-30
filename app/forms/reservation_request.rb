@@ -96,10 +96,9 @@ class ReservationRequest < Form
     @checkout_extra_fields.assign_attributes! if @checkout_extra_fields.are_fields_present?
     @checkout_extra_fields.valid?
     @checkout_extra_fields.errors.full_messages.each { |m| add_error(m, :base) }
-    # todo yeah, duplicated.. well.. it's almost 3am and this code will need to be refactored anyway, sry - MK
     clear_errors(:cc)
     # This is temporal solution that should be removed when we support multiple payment gateways for one country
-    @billing_gateway = PaymentGateway::ManualPaymentGateway.new if manual_payment? && possible_manual_payment?
+    @billing_gateway = PaymentGateway::ManualPaymentGateway.new if (manual_payment? && possible_manual_payment?) || is_free?
     @checkout_extra_fields.valid? && valid? && @billing_gateway.authorize(self) && save_reservation
   end
 
