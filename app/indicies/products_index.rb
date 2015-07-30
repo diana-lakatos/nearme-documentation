@@ -4,8 +4,8 @@ module ProductsIndex
   included do |base|
     cattr_accessor :custom_attributes
 
-    settings index: { number_of_shards: 1, number_of_replicas: 0 } do
-      mapping dynamic: 'false' do
+    settings index: { number_of_shards: 1 } do
+      mapping do
         indexes :custom_attributes, type: 'object' do
           if Rails.env.staging? or Rails.env.production?
             mapped = Spree::ProductType.all.map{ |product_type|
@@ -40,10 +40,12 @@ module ProductsIndex
 
     def as_indexed_json(options={})
       custom_attrs = {}
-      @@custom_attributes ||= Spree::ProductType.all.map{ |product_type|
+      instance_id = Spree::ProductType.first.try(:instance_id)
+      @@custom_attributes ||= {}
+      @@custom_attributes[instance_id] ||= Spree::ProductType.all.map{ |product_type|
         product_type.custom_attributes.map(&:name)
       }.flatten.uniq
-      for custom_attribute in @@custom_attributes
+      for custom_attribute in @@custom_attributes[instance_id]
         custom_attrs[custom_attribute] = self.extra_properties.send(custom_attribute).to_s if self.extra_properties.respond_to?(custom_attribute)
       end
       self.as_json(only: Spree::Product.mappings.to_hash[:product][:properties].keys.delete_if{|prop| prop == :custom_attributes}).
