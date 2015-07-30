@@ -10,10 +10,8 @@ module InstanceType::Searcher
     end
   end
 
-  # Hack to get proper count from grouped querry
   def count_query(query)
-    query = "SELECT count(*) AS count_all FROM (#{query.to_sql}) x"
-    Spree::Product.count_by_sql(query)
+    query.count("*", distinct: true)
   end
 
   def max_price
@@ -40,7 +38,6 @@ module InstanceType::Searcher
   def paginate_results(page, per_page)
     @result_max_price ||= max_price
     page ||= 1
-    result_count
     @results = @results.paginate(page: page.to_i, per_page: per_page.to_i)
   end
 
