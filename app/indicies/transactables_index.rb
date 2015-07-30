@@ -20,7 +20,7 @@ module TransactablesIndex
         indexes :name, type: 'string'
         indexes :description, type: 'string'
 
-      	indexes :object_properties, type: 'object'
+        indexes :object_properties, type: 'object'
         indexes :instance_id, :type => "integer"
         indexes :company_id, :type => "integer"
         indexes :location_id, :type => "integer"
@@ -56,9 +56,7 @@ module TransactablesIndex
         service_type.custom_attributes.map(&:name)
       }.flatten.uniq
       for custom_attribute in @@custom_attributes
-        if self.respond_to?(custom_attribute)
-          custom_attrs[custom_attribute] = self.send(custom_attribute).to_s.downcase
-        end
+        custom_attrs[custom_attribute] = self.properties.send(custom_attribute).to_s.downcase if self.properties.respond_to?(custom_attribute)
       end
       self.as_json(only: Transactable.mappings.to_hash[:transactable][:properties].keys.delete_if{|prop| prop == :custom_attributes}).merge(
         geo_location: self.geo_location,

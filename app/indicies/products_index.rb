@@ -6,7 +6,7 @@ module ProductsIndex
 
     settings index: { number_of_shards: 1, number_of_replicas: 0 } do
       mapping dynamic: 'false' do
-      	indexes :custom_attributes, type: 'object' do
+        indexes :custom_attributes, type: 'object' do
           if Rails.env.staging? or Rails.env.production?
             mapped = Spree::ProductType.all.map{ |product_type|
               product_type.custom_attributes.map(&:name)
@@ -44,9 +44,7 @@ module ProductsIndex
         product_type.custom_attributes.map(&:name)
       }.flatten.uniq
       for custom_attribute in @@custom_attributes
-        if self.respond_to?(custom_attribute)
-          custom_attrs[custom_attribute] = self.send(custom_attribute).to_s
-        end
+        custom_attrs[custom_attribute] = self.extra_properties.send(custom_attribute).to_s if self.extra_properties.respond_to?(custom_attribute)
       end
       self.as_json(only: Spree::Product.mappings.to_hash[:product][:properties].keys.delete_if{|prop| prop == :custom_attributes}).
         merge(geo_location: self.geo_location).
