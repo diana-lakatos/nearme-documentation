@@ -6,6 +6,7 @@ module ApplicationHelper
   include FileuploadHelper
   include SharingHelper
   include CustomAttributes::ApplicationHelper
+  include SearchEnginesStructuredDataHelper
 
   def timeago(time)
     content_tag(:abbr, time, title: time.to_time.iso8601, class: :timeago)

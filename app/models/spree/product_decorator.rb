@@ -2,6 +2,7 @@ Spree::Product.class_eval do
   include Spree::Scoper
   include Impressionable
   include Searchable
+  include SitemapService::Callbacks
 
   attr_accessor :validate_exisiting
 
@@ -172,5 +173,13 @@ Spree::Product.class_eval do
 
   def set_external_id
     self.update_column(:external_id, "manual-#{id}") if self.external_id.blank?
+  end
+
+  def should_create_sitemap_node?
+    !draft? && approved?    
+  end
+
+  def should_update_sitemap_node?
+    !draft? && approved?
   end
 end

@@ -4,6 +4,8 @@
   %td= domain.dns_name
   %td= domain.redirect_to
   %td= domain.use_as_default ? "Yes" : "No"
+  %td= domain.uploaded_sitemap.file.present? ? t('instance_admin.settings.domains.uploaded') : t('instance_admin.settings.domains.auto_generated')
+  %td= domain.uploaded_robots_txt.file.present? ? t('instance_admin.settings.domains.uploaded') : t('instance_admin.settings.domains.auto_generated')
   %td
     .pull-right
       - if domain.deletable?

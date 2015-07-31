@@ -6,17 +6,13 @@
       %table.table.sortable
         %thead
           %tr
-            %th
-              = t('instance_admin.settings.domains.domain')
-            %th
-              = t('instance_admin.settings.domains.status')
-            %th
-              = t('instance_admin.settings.domains.dns_name')
-            %th
-              = t('instance_admin.settings.domains.redirects_to')
-            %th
-              = t('instance_admin.settings.domains.default')
-            %th
+            %th= t('instance_admin.settings.domains.domain')
+            %th= t('instance_admin.settings.domains.status')
+            %th= t('instance_admin.settings.domains.dns_name')
+            %th= t('instance_admin.settings.domains.redirects_to')
+            %th= t('instance_admin.settings.domains.default')
+            %th= t('instance_admin.settings.domains.sitemap')
+            %th= t('instance_admin.settings.domains.robots')
         %tbody
           = render @domains
 

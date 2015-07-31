@@ -16,8 +16,9 @@
             = hidden_field_tag :buyable, true
             = hidden_field_tag :category_ids, @searcher.category_ids
             = hidden_field_tag :page, params[:page]
-            = hidden_field_tag 'price[min]', @searcher.min_price
-            = hidden_field_tag 'price[max]', @searcher.max_price
+            - if platform_context.instance.price_slider
+              = hidden_field_tag 'price[min]', @searcher.min_price
+              = hidden_field_tag 'price[max]', @searcher.max_price
             %button.btn.blue.search
               = image_tag 'themes/buy_sell/search-icon.png'
             - @searcher.filterable_custom_attributes.each do |ca|

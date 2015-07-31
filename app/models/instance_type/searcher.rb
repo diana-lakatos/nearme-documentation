@@ -10,6 +10,10 @@ module InstanceType::Searcher
     end
   end
 
+  def count_query(query)
+    query.count("*", distinct: true)
+  end
+
   def max_price
     return 0 if results.empty?
     if results.first.is_a?(Spree::Product)
