@@ -40,12 +40,12 @@ module ProductsIndex
 
     def as_indexed_json(options={})
       custom_attrs = {}
-      instance_id = Spree::ProductType.first.try(:instance_id)
+      product_instance_id = self.instance_id
       @@custom_attributes ||= {}
-      @@custom_attributes[instance_id] ||= Spree::ProductType.all.map{ |product_type|
+      @@custom_attributes[product_instance_id] ||= Spree::ProductType.where(instance_id: product_instance_id).all.map{ |product_type|
         product_type.custom_attributes.map(&:name)
       }.flatten.uniq
-      for custom_attribute in @@custom_attributes[instance_id]
+      for custom_attribute in @@custom_attributes[product_instance_id]
         custom_attrs[custom_attribute] = self.extra_properties.send(custom_attribute).to_s if self.extra_properties.respond_to?(custom_attribute)
       end
       self.as_json(only: Spree::Product.mappings.to_hash[:product][:properties].keys.delete_if{|prop| prop == :custom_attributes}).

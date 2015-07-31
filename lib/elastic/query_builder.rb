@@ -103,12 +103,18 @@ module Elastic
     end
 
     def initial_product_filters
-      searchable_product_type_ids = Spree::ProductType.where(searchable: true).map(&:id)
-      searchable_product_type_ids = [0] if searchable_product_type_ids.empty?
+      product_type_id = @query[:product_type_id].to_i
+      searchable_product_types = Spree::ProductType.where(searchable: true).map(&:id)
+      searchable_product_type_ids = if product_type_id
+        [product_type_id] & searchable_product_types
+      else
+        searchable_product_types = [0] if searchable_product_types.empty?
+        searchable_product_types
+      end
       [
         initial_instance_filter,
         {
-          term: {
+          terms: {
             product_type_id: searchable_product_type_ids
           }
         }
@@ -123,11 +129,11 @@ module Elastic
               geo_location: {
                 top_left: {
                   lat: @bounding_box.first.first.to_f, 
-                  lon: @bounding_box.last.last.to_f + 1.0
+                  lon: @bounding_box.last.last.to_f
                 },
                 bottom_right: {
                   lat: @bounding_box.last.first.to_f,
-                  lon: @bounding_box.first.last.to_f + 1.0
+                  lon: @bounding_box.first.last.to_f
                 }
               }
             }

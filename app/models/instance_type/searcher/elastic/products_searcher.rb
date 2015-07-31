@@ -94,7 +94,7 @@ class InstanceType::Searcher::Elastic::ProductsSearcher
   private
 
   def initialize_searcher_params
-    {instance_id: PlatformContext.current.instance.id}
+    {instance_id: PlatformContext.current.instance.id, product_type_id: @product_type.try(:id)}
   end
 
 end
