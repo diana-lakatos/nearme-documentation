@@ -11,7 +11,7 @@ class SitemapService::Generator
     @domain = Domain.find(domain_id)
     @base_url = @domain.url
     
-    @domain.target.set_context! rescue @domain.target.instance.set_context!
+    PlatformContext.current = PlatformContext.new(@domain.target)
 
     self.nodes = []
 

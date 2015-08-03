@@ -2,10 +2,11 @@ require 'test_helper'
 
 class SitemapServiceTest < ActiveSupport::TestCase
   setup do
-    @instance = Instance.first || create(:instance)
-    @page = create(:page, instance_id: @instance.id)
-    @transactable = create(:transactable, instance_id: @instance.id)
-    @product = create(:product, instance_id: @instance.id)
+    @instance = Instance.first
+    @instance.set_context!
+    @page = create(:page)
+    @transactable = create(:transactable)
+    @product = create(:product)
     @domain = @instance.domains.first
   end
 
@@ -22,8 +23,8 @@ class SitemapServiceTest < ActiveSupport::TestCase
 
       xml = SitemapService::Generator.new(@instance).xml
       SitemapService.save_changes!(@domain, xml)
-      assert_equal @domain.uploaded_sitemap.file.present?, false
-      assert_equal @domain.sitemap, xml.to_s.squish
+      refute @domain.uploaded_sitemap.file.present?
+      assert_equal xml.to_s.squish, @domain.sitemap
     end
 
     should 'use SitemapService::Generator if #generated_sitemap fails' do
@@ -31,16 +32,16 @@ class SitemapServiceTest < ActiveSupport::TestCase
       @domain.remove_generated_sitemap = true
       @domain.save
 
-      assert_equal @domain.uploaded_sitemap.file.present?, false
-      assert_equal @domain.generated_sitemap.file.present?, false
-      assert_equal @domain.sitemap, SitemapService::Generator.for_domain(@domain).to_s.squish
+      refute @domain.uploaded_sitemap.file.present?
+      refute @domain.generated_sitemap.file.present?
+      assert_equal SitemapService::Generator.for_domain(@domain).to_s.squish, @domain.sitemap
     end
   end
 
   context "Generator" do
     should "respond_to class attributes" do
-      assert_equal SitemapService::Generator.respond_to?(:nodes), true
-      assert_equal SitemapService::Generator.respond_to?(:xml), true
+      assert SitemapService::Generator.respond_to?(:nodes)
+      assert SitemapService::Generator.respond_to?(:xml)
     end
 
     context "#initialize" do
@@ -51,7 +52,7 @@ class SitemapServiceTest < ActiveSupport::TestCase
 
       should "populate @@xml" do
         assert_not_nil @xml
-        assert_equal @xml.class, Nokogiri::XML::Document
+        assert_equal Nokogiri::XML::Document, @xml.class
       end
 
       should "contain nodes for each record" do
@@ -63,8 +64,8 @@ class SitemapServiceTest < ActiveSupport::TestCase
         # Opening and closing comment tags
         klasses = SitemapService::Node.descendants - [SitemapService::Node::FakeNode]
         klasses.each do |node_child_klass|
-          assert_equal @xml.xpath("//comment()[contains(.,'#{node_child_klass.comment_mark}')]").first.present?, true
-          assert_equal @xml.xpath("//comment()[contains(.,'/#{node_child_klass.comment_mark}')]").first.present?, true
+          assert @xml.xpath("//comment()[contains(.,'#{node_child_klass.comment_mark}')]").first.present?
+          assert @xml.xpath("//comment()[contains(.,'/#{node_child_klass.comment_mark}')]").first.present?
         end
       end
     end
@@ -93,10 +94,10 @@ class SitemapServiceTest < ActiveSupport::TestCase
           @node.location
         end
 
-        assert_equal @node.lastmod, @timestamp.iso8601
-        assert_equal @node.changefreq, "weekly"
-        assert_equal @node.priority, "0.5"
-        assert_equal @node.image, nil
+        assert_equal @timestamp.iso8601, @node.lastmod
+        assert_equal "weekly", @node.changefreq
+        assert_equal "0.5", @node.priority
+        assert_nil @node.image
       end
 
       should "#to_xml" do
@@ -117,19 +118,19 @@ class SitemapServiceTest < ActiveSupport::TestCase
       end
 
       should "#location" do
-        assert_equal @static_node.location, "/"
+        assert_equal "/", @static_node.location
       end
 
       should "#lastmod" do
-        assert_equal @static_node.lastmod, nil
+        assert_nil @static_node.lastmod
       end
 
       should "#changefreq" do
-        assert_equal @static_node.changefreq, "monthly"
+        assert_equal "monthly", @static_node.changefreq
       end
 
       should "#priority" do
-        assert_equal @static_node.priority, "0.5"
+        assert_equal "0.5", @static_node.priority
       end
     end
 
@@ -203,14 +204,14 @@ class SitemapServiceTest < ActiveSupport::TestCase
   context "Callbacks" do
     should "after_create #create_sitemap_node" do
       5.times do
-        create(:page, instance_id: @instance.id)
+        create(:page)
         assert_nodes_between_comment(@domain, SitemapService::Node::PageNode.comment_mark, Page.count)
       end
     end
 
     should "after_update #update_sitemap_node" do
       5.times do
-        create(:page, instance_id: @instance.id)
+        create(:page)
         assert_nodes_between_comment(@domain, SitemapService::Node::PageNode.comment_mark, Page.count)
       end
       
@@ -237,7 +238,7 @@ class SitemapServiceTest < ActiveSupport::TestCase
       amount = 5
       
       amount.times do
-        pages << create(:page, instance_id: @instance.id)
+        pages << create(:page)
         assert_nodes_between_comment(@domain, SitemapService::Node::PageNode.comment_mark, Page.count)
       end
 
@@ -252,11 +253,11 @@ class SitemapServiceTest < ActiveSupport::TestCase
   end
 
   def assert_node_content(xml, node, content)
-    assert_equal xml.css("#{node}:contains('#{content}')").try(:first).present?, true
+    assert xml.css("#{node}:contains('#{content}')").try(:first).present?
   end
 
   def assert_node_absence(xml, node, content)
-    assert_equal xml.css("#{node}:contains('#{content}')").try(:first).present?, false
+    refute xml.css("#{node}:contains('#{content}')").try(:first).present?
   end
 
   def assert_node_count(xml, node, count)

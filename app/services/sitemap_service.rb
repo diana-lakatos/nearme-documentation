@@ -64,17 +64,22 @@ module SitemapService
   end
 
   def tmp_filename_for(domain)
-    "#{tmp_path}/sitemap-for-domain-#{domain.id.to_s}.xml"
+    domain.id.to_s
   end
 
   def save_changes!(domain, sitemap_xml)
     system "mkdir", "-p", tmp_path
 
-    File.open(tmp_filename_for(domain), "w") { |f| f.write(sitemap_xml.to_s.squish) }
-    domain.generated_sitemap = File.open(tmp_filename_for(domain))
-    domain.save
+    tmp_file = Tempfile.new([tmp_filename_for(domain), ".xml"])
+    begin
+      tmp_file.write(sitemap_xml.to_s.squish)
+      domain.generated_sitemap = tmp_file
+      domain.save!
+    ensure
+      tmp_file.close
+      tmp_file.unlink
+    end
 
-    system "rm", SitemapService.tmp_filename_for(domain)
   end
 end
 

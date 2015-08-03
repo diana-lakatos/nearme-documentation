@@ -1,0 +1,10 @@
+%div{class: 'hidden', itemscope: true, itemtype: 'http://schema.org/Product'}
+  %span{itemprop: 'name'}= transactable.name
+  %img{itemprop: 'image', src: transactable.photos.first.try(:image).try(:url), alt: transactable.name}
+
+  %span{itemprop: 'description'}= transactable.description.present? ? transactable.description : transactable.name
+
+  - if transactable.reviews.count > 0
+    %span{itemprop: 'aggregateRating', itemscope: true, itemtype: 'http://schema.org/AggregateRating'}
+      %span{itemprop: 'ratingValue'}= transactable.reviews.count > 0 ? 0 : transactable.try(:average_rating).try(:round)
+      %span{itemprop: 'reviewCount'}= transactable.reviews.count

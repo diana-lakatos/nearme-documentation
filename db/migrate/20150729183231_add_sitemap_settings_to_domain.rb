@@ -4,8 +4,6 @@ class AddSitemapSettingsToDomain < ActiveRecord::Migration
     add_column :domains, :generated_sitemap, :string
     add_column :domains, :uploaded_sitemap, :string
     add_column :domains, :uploaded_robots_txt, :string
-
-    SitemapGeneratorJob.perform
   end
 
   def down
