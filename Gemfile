@@ -140,7 +140,8 @@ gem 'iso_country_codes'
 gem 'shippo'
 
 gem 'spree', github: 'spree/spree', branch: '2-3-stable'
-#gem 'spree_auth_devise', github: 'spree/spree_auth_devise', branch: '2-2-stable'
+
+gem 'video_info'
 
 gem 'domainatrix'
 gem 'store_base_sti_class'
