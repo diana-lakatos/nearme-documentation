@@ -12,7 +12,7 @@ class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
     @merchant_account = @company.send("#{@payment_gateway_type}_merchant_account") if @payment_gateway_type
     if @company.update_attributes(company_params)
       flash[:success] = t('flash_messages.manage.payouts.updated')
-      redirect_to action: :edit
+      redirect_to @merchant_account.try(:redirect_url) || {action: :edit}
     else
       render :edit
     end

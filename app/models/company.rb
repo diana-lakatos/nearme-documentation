@@ -170,7 +170,7 @@ class Company < ActiveRecord::Base
   def boarding_payment_gateway
     currency = locations.first.try(:listings).try(:first).try(:currency).presence || 'USD'
     @boarding_payment_gateway ||= PaymentGateway.where(instance: instance).all.find do |pg|
-      pg.supports_currency?(currency) && pg.payout_supports_country?(iso_country_code) && pg.supports_boarding_merchant?
+      pg.supports_currency?(currency) && pg.payout_supports_country?(iso_country_code) && pg.supports_paypal_chain_payments?
     end
   end
 

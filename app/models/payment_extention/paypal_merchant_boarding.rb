@@ -8,8 +8,11 @@ module PaymentExtention::PaypalMerchantBoarding
   private
 
   def available_products
-    products = "addipmt"                                   # Express Checkout
-    # products = "wp_pro"  if @merchant.iso_country_code == 'US' # Payments Pro
+    if @merchant.iso_country_code == 'US' && !self.express_checkout?
+      products = "wp_pro"
+    else
+      products = "addipmt"
+    end
   end
 
   def boarding_url_host_and_path
@@ -40,7 +43,7 @@ module PaymentExtention::PaypalMerchantBoarding
       "AUTH_CAPTURE",
       "REFERENCE_TRANSACTION",
       "BILLING_AGREEMENT",
-      # "DIRECT_PAYMENT",
+      "DIRECT_PAYMENT",
       # "BUTTON_MANAGER",
       # "ACCOUNT_BALANCE",
       # "TRANSACTION_DETAILS",

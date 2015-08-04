@@ -1588,7 +1588,7 @@ en:
     mailing_address: 'Address to send checks'
     paypal_chain_payment_set: "Thank you for granting permissions. Use the same button to change permissions if needed."
     grant_permission: "Grant permission"
-    grant_permission_info: "In order to operate on our platform you need to grant us permission so we can charge %{fee} service fee from each transaction"
+    grant_permission_info: "In order to operate on our platform you need to grant us permission so we can charge service fees"
     revoke_permission: 'Revoke permission'
     revoke_permission_confirmation: 'Are you sure you want to revoke permission?'
     in_chain_settings: 'Chain payment settings'

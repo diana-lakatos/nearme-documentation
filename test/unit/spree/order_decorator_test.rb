@@ -29,6 +29,16 @@ class OrderDecoratorTest < ActionView::TestCase
         # assert_product_quantity(9)
       end
     end
+
+    context 'cancel order' do
+      should 'cancel associated payments and do the refund' do
+        @order = create(:order_ready_to_ship)
+        @order.create_pending_payment!
+        @order.payments.each { |p| p.complete! }
+        @order.finalize!
+        @order.cancel!
+      end
+    end
   end
 
   def assert_product_quantity(quantity)

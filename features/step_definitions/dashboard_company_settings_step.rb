@@ -52,7 +52,7 @@ Then /^The company payouts settings should be updated$/ do
   company = model!("the company")
   assert_equal "Adelaide SA, Australia", company.mailing_address
   assert_equal 1, company.reload.merchant_accounts.count
-  assert_equal({ 'email' => "paypal-update@example.com" }, company.merchant_accounts.first.try(:data))
+  assert_equal({ 'email' => "paypal-update@example.com", "merchant_token" => company.merchant_accounts.first.merchant_token }, company.merchant_accounts.first.try(:data))
   assert_equal @paypal_gateway.id, company.reload.merchant_accounts.first.payment_gateway_id
 end
 

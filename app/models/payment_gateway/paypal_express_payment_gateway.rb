@@ -26,7 +26,7 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
   end
 
   def self.supported_countries
-    ["US", "GB", "PL"]
+    ["AL", "DZ", "AD", "AO", "AI", "AG", "AR", "AM", "AW", "AU", "AT", "AZ", "BS", "BH", "BB", "BE", "BZ", "BJ", "BM", "BT", "BO", "BA", "BW", "BR", "BN", "BG", "BF", "BI", "KH", "CA", "CV", "KY", "TD", "CL", "CN", "CO", "KM", "CD", "CG", "CK", "CR", "HR", "CY", "CZ", "DK", "DJ", "DM", "DO", "EC", "EG", "SV", "ER", "EE", "ET", "FK", "FJ", "FI", "FR", "GF", "PF", "GA", "GM", "GE", "DE", "GI", "GR", "GL", "GD", "GP", "GU", "GT", "GN", "GW", "GY", "VA", "HN", "HK", "HU", "IS", "IN", "ID", "IE", "IL", "IT", "JM", "JP", "JO", "KZ", "KE", "KI", "KR", "KW", "KG", "LA", "LV", "LS", "LI", "LT", "LU", "MG", "MW", "MY", "MV", "ML", "MT", "MH", "MQ", "MR", "MU", "YT", "MX", "FM", "MN", "MS", "MA", "MZ", "NA", "NR", "NP", "NL", "NC", "NZ", "NI", "NE", "NU", "NF", "NO", "OM", "PW", "PA", "PG", "PE", "PH", "PN", "PL", "PT", "QA", "RE", "RO", "RU", "RW", "SH", "KN", "LC", "PM", "VC", "WS", "SM", "ST", "SA", "SN", "RS", "SC", "SL", "SG", "SK", "SI", "SB", "SO", "ZA", "KR", "ES", "LK", "SR", "SJ", "SZ", "SE", "CH", "TW", "TJ", "TZ", "TH", "TG", "TO", "TT", "TN", "TR", "TM", "TC", "TV", "UG", "UA", "AE", "GB", "US", "UY", "VU", "VE", "VN", "VG", "WF", "YE", "ZM"]
   end
 
   def authorize(authoriazable, options = {})
@@ -34,7 +34,7 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
   end
 
   def gateway_capture(amount, token, options)
-    gateway(@payable.merchant_payer_id).capture(amount, token, options)
+    gateway(@payable.merchant_subject).capture(amount, token, options)
   end
 
   def custom_capture_options
@@ -45,10 +45,6 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
   end
 
   def express_checkout?
-    true
-  end
-
-  def supports_boarding_merchant?
     true
   end
 
@@ -69,18 +65,25 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
     @gateway
   end
 
+  alias_method :express_gateway, :gateway
+
   def immediate_payout(company)
     merchant_account(company).present?
   end
 
   def payout(company, options)
-    response = gateway.reference_transaction(options[:reference].total_service_fee_cents, { reference_id: merchant_account(company).billing_agreement_id })
-    OpenStruct.new(success: response.success?)
+    reference_id = merchant_account(company).try(:billing_agreement_id)
+    if reference_id
+      response = gateway.reference_transaction(options[:reference].total_service_fee_cents, { reference_id: reference_id })
+      OpenStruct.new(success: response.success?)
+    else
+      OpenStruct.new(success: false)
+    end
   end
 
   def process_express_checkout(transactable, options)
     @transactable = transactable
-    @response = gateway(@transactable.merchant_payer_id).setup_authorization(@transactable.total_amount_cents , options.deep_merge(
+    @response = gateway(@transactable.merchant_subject).setup_authorization(@transactable.total_amount_cents , options.deep_merge(
       {
         currency: @transactable.currency,
         allow_guest_checkout: true,
@@ -135,8 +138,8 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
   end
 
 
-  def merchant_payer_id
-    @merchant_account.payer_id
+  def merchant_subject
+    @merchant_account.subject
   end
 
   def line_items
