@@ -12,7 +12,7 @@ class ReservationRequest < Form
     :credit_card_payment?, :manual_payment?, :remote_payment?, :nonce_payment?, :currency,
     :service_fee_amount_host_cents, :total_amount_cents, :create_billing_authorization,
     :express_token, :express_token=, :express_payer_id, :service_fee_guest_without_charges,
-    :additional_charges, :shipping_costs_cents, :service_fee_amount_guest_cents, :merchant_payer_id
+    :additional_charges, :shipping_costs_cents, :service_fee_amount_guest_cents, :merchant_subject
 
   before_validation :build_documents, :if => lambda { reservation.present? && documents.present? }
 

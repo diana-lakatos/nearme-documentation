@@ -127,3 +127,6 @@
 <input type="hidden" name="company[braintree_marketplace_merchant_account_attributes][terms_of_service]" value="0">
 <input type="checkbox" name="company[braintree_marketplace_merchant_account_attributes][terms_of_service]" value="1" {% if merchant_account.data.terms_of_service == "1" %}checked="checked"{% endif %}> {{ platform_context.name }} uses Braintree, a division of PayPal, Inc. (Braintree) for payment processing services. By using the Braintree payment processing services you agree to the Braintree Payment Services Agreement available at <a href="https://www.braintreepayments.com/legal/gateway-agreement">https://www.braintreepayments.com/legal/gateway-agreement</a>, and the applicable bank agreement available at <a href="https://www.braintreepayments.com/legal/cea-wells">https://www.braintreepayments.com/legal/cea-wells</a>
 
+<div class="submit-bar">
+  <input class="btn medium blue" type="submit" value="Save">
+</div>

@@ -19,11 +19,11 @@
               = payment.company.name
             - else
               = "(#{t('instance_admin.deleted')})"
-          %td= payment.payable.user.try(:name)
+          %td= payment.payable.user.try(:name) if payment.payable
           %td= payment.state
           %td= humanized_money_with_cents_and_symbol(payment.service_fee_amount_guest)
           %td= humanized_money_with_cents_and_symbol(payment.service_fee_amount_host)
           %td= humanized_money_with_cents_and_symbol(payment.subtotal_amount)
-          %td= payment.payable.billing_authorization.payment_gateway.name
+          %td= payment.payable.billing_authorization.payment_gateway.name if payment.payable
           %td= l(payment.created_at, format: :long)
 

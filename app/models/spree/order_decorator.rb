@@ -90,15 +90,15 @@ Spree::Order.class_eval do
     p.failure!
   end
 
-  def merchant_payer_id
-    company.paypal_merchant_account.try(:payer_id)
+  def merchant_subject
+    company.paypal_merchant_account.try(:subject)
   end
 
   def express_token=(token)
     write_attribute(:express_token, token)
     if !token.blank?
       express_gateway = PlatformContext.current.instance.payment_gateway(self.company.iso_country_code, self.currency)
-      details = express_gateway.gateway(merchant_payer_id).details_for(token)
+      details = express_gateway.gateway(merchant_subject).details_for(token)
       self.express_payer_id = details.params["payer_id"]
 
       # self.build_bill_address({

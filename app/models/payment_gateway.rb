@@ -107,10 +107,6 @@ class PaymentGateway < ActiveRecord::Base
     (test_mode? ? test_settings : live_settings).with_indifferent_access
   end
 
-  def supports_boarding_merchant?
-    false
-  end
-
   def supports_paypal_chain_payments?
     false
   end

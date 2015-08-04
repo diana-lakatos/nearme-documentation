@@ -4,10 +4,10 @@ class MerchantAccount::PaypalMerchantAccount < MerchantAccount
     account_status product_intent_id return_message is_email_confirmed billing_agreement_id payer_id)
   include MerchantAccount::Concerns::DataAttributes
 
-  after_create :generate_merchant_token!
+  after_initialize :generate_merchant_token!
 
   def create_billing_agreement(token)
-    response = payment_gateway.gateway.store(token)
+    response = payment_gateway.express_gateway.store(token)
     if response.success?
       self.billing_agreement_id = response.params["BillingAgreementID"]
       save!
@@ -17,7 +17,7 @@ class MerchantAccount::PaypalMerchantAccount < MerchantAccount
   end
 
   def destroy_billing_agreement
-    response = payment_gateway.gateway.unstore(self.billing_agreement_id)
+    response = payment_gateway.express_gateway.unstore(self.billing_agreement_id)
     if response.success?
       self.billing_agreement_id = nil
       save!
@@ -26,12 +26,24 @@ class MerchantAccount::PaypalMerchantAccount < MerchantAccount
     end
   end
 
-  def boarding_url
-     payment_gateway.boarding_url(self)
+  def redirect_url
+    chain_payments? ? payment_gateway.boarding_url(self) : super
   end
 
   def iso_country_code
     merchantable.try(:iso_country_code)
+  end
+
+  def chain_payments?
+    payment_gateway.supports_paypal_chain_payments?
+  end
+
+  def chain_payment_set?
+    billing_agreement_id.present?
+  end
+
+  def subject
+    self.billing_agreement_id.present? ? self.payer_id : nil
   end
 
   # def setup_rest_api
@@ -63,7 +75,6 @@ class MerchantAccount::PaypalMerchantAccount < MerchantAccount
   # end
 
   def boarding_complete(response)
-
     self.payer_id = response["merchantIdInPayPal"]
 
     # Indicates whether API permissions were successfully granted from the merchant’s account to yours.
@@ -106,8 +117,7 @@ class MerchantAccount::PaypalMerchantAccount < MerchantAccount
   private
 
   def generate_merchant_token!
-     self.merchant_token = "#{self.id}#{rand(2**32..2**64-1)}"
-     self.save!
+     self.merchant_token ||= "#{self.id}#{rand(2**32..2**64-1)}"
   end
 end
 

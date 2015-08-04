@@ -394,8 +394,8 @@ class Reservation < ActiveRecord::Base
     payment_method == Reservation::PAYMENT_METHODS[:manual]
   end
 
-  def merchant_payer_id
-    listing.company.paypal_merchant_account.try(:payer_id)
+  def merchant_subject
+    listing.company.paypal_merchant_account.try(:subject)
   end
 
   def possible_manual_payment?
