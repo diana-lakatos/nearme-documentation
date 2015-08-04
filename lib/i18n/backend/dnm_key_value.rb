@@ -3,7 +3,12 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
   attr_accessor :instance_id
 
   def initialize(cache, subtrees=true)
-    @cache, @subtrees, @store = cache, subtrees, {}
+    @cache, @subtrees = cache, subtrees
+    rebuild!
+  end
+
+  def rebuild!
+    @store, @timestamps = {}, {}
     prepare_store
   end
 
@@ -25,11 +30,13 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
 
   def populate(_instance_id)
     _instance_key = instance_key(_instance_id)
-    @store[_instance_key] = {}
+    @store[_instance_key] ||= {}
     translations_scope = (_instance_id.nil? ? Translation.defaults : Translation.for_instance(_instance_id))
+    translations_scope = translations_scope.where('updated_at > ?', @timestamps[_instance_id]) if @timestamps[_instance_id].present?
     translations_scope.pluck(:locale, :key, :value, :instance_id).each do |translation|
       store_translation(translation)
     end
+    @timestamps[_instance_id] = Time.zone.now
   end
 
   def store_translation(translation)
