@@ -255,6 +255,12 @@ en:
         new_domain: "New domain"
         edit_domain: "Edit domain"
         new_csr: "New CSR"
+        sitemap: "Sitemap (sitemap.xml)"
+        robots: "Robots (robots.txt)"
+        uploaded: "Uploaded"
+        auto_generated: "Auto-generated"
+        remove_uploaded_sitemap: "Remove uploaded sitemap.xml"
+        remove_uploaded_robots: "Remove uploaded robots.txt"
       hidden_controls:
         name: "Name"
         type: "Type"

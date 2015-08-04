@@ -17,8 +17,8 @@ db/sphinx
 config/*.sphinx.conf
 config/redis.yml
 config/application.yml
-config/elasticsearch.yml
 config/database.yml
+config/elasticsearch.yml
 log
 tmp
 *.swo

@@ -3,6 +3,7 @@
 
 - meta_title @product.name
 - meta_description @product.try(:description).to_s.truncate(250, :separator => ' ')
+= product_structured_data
 
 %section.product-head
   .container-fluid

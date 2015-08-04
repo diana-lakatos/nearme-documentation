@@ -1,0 +1,3 @@
+User-Agent: *
+Disallow: /locations/*/host
+Sitemap: https://desksnear.me/sitemap.xml

@@ -3,15 +3,16 @@ class Transactable < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
-  class NotFound < ActiveRecord::RecordNotFound; end
+  
   include Impressionable
   include Searchable
-  has_metadata accessors: [:photos_metadata]
-  inherits_columns_from_association([:company_id, :administrator_id, :creator_id, :listings_public], :location)
+  include SitemapService::Callbacks
 
   DEFAULT_ATTRIBUTES = %w(name description capacity)
 
   has_custom_attributes target_type: 'ServiceType', target_id: :transactable_type_id
+  has_metadata accessors: [:photos_metadata]
+  inherits_columns_from_association([:company_id, :administrator_id, :creator_id, :listings_public], :location)
 
   has_many :availability_rules, -> { order 'day ASC' }, as: :target, dependent: :destroy, inverse_of: :target
   has_many :approval_requests, as: :owner, dependent: :destroy
@@ -677,5 +678,14 @@ class Transactable < ActiveRecord::Base
     attributes['hidden'] == '1'
   end
 
+  def should_create_sitemap_node?
+    draft.nil? && enabled?    
+  end
+
+  def should_update_sitemap_node?
+    draft.nil? && enabled?
+  end
+
+  class NotFound < ActiveRecord::RecordNotFound; end
 end
 
