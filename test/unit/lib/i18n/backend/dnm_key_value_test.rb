@@ -5,8 +5,8 @@ class DnmKeyValueTest < ActiveSupport::TestCase
   setup do
     @translation_global = FactoryGirl.create(:translation, :key => 'translation_key', :value => 'global value', instance_id: nil)
     @instance = PlatformContext.current.instance
-    FactoryGirl.create(:translation, :key => 'some_key_for_instance', :value => 'default value', instance_id: nil)
-    FactoryGirl.create(:translation, :key => 'some_key_for_instance', :value => 'instance value', instance_id: @instance.id)
+    @default_translation = FactoryGirl.create(:translation, :key => 'some_key_for_instance', :value => 'default value', instance_id: nil)
+    @instance_translation = FactoryGirl.create(:translation, :key => 'some_key_for_instance', :value => 'instance value', instance_id: @instance.id)
     @backend = I18n::Backend::DNMKeyValue.new(Rails.cache)
     I18n.locale = :en
     @backend.set_instance_id(@instance.id)
@@ -25,6 +25,13 @@ class DnmKeyValueTest < ActiveSupport::TestCase
     @backend.update_cache(@instance.id)
     assert_equal 'value updated', translate('translation_key')
   end
+
+  # TODO: we do not have deleted feature, but this is to remember about unit test if we add it ;)
+  #should 'be able to notice translation was deleted' do
+  #  @instance_translation.destroy
+  #  @backend.update_cache(@instance.id)
+  #  assert_equal 'default value', translate('some_key_for_instance')
+  #end
 
   should 'get translation from given instance' do
     assert_equal 'instance value', translate('some_key_for_instance')
