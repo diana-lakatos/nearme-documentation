@@ -26,6 +26,7 @@ class LiquidView
 
     assigns['platform_context'] = PlatformContext.current.decorate
     assigns['current_year'] = Date.current.year
+    assigns['current_url'] = @view.controller.request.original_url
 
     if content_for_layout = @view.instance_variable_get("@content_for_layout")
       assigns['content_for_layout'] = content_for_layout
