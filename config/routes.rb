@@ -505,7 +505,7 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
-  resources :listings, :only => [:index, :show] do
+  resources :listings, only: [] do
 
     member do
       get :occurrences

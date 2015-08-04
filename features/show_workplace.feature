@@ -1,7 +1,7 @@
 Feature: A user can see a space
   In order to make a reservation on a transactable
   As a user
-  Can wee a space
+  Can see a space
 
   Scenario: A user can see a transactable
     Given a transactable exists with name: "Rad Annex", description: "Its a great place to work"
