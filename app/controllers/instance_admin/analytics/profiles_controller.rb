@@ -1,7 +1,7 @@
 class InstanceAdmin::Analytics::ProfilesController < InstanceAdmin::Analytics::BaseController
 
   def show
-    users = User.with_deleted.pluck('users.id, users.email, users.name,
+    users = User.without(User.unscoped.admin).with_deleted.pluck('users.id, users.email, users.name,
       users.reservations_count, users.transactables_count, users.mobile_number,
       users.current_location, users.properties, users.deleted_at')
 

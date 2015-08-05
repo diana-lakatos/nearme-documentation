@@ -9,7 +9,7 @@ class InstanceAdmin::Analytics::OverviewControllerTest < ActionController::TestC
     InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
   end
 
-  context 'show' do
+  context 'GET #show' do
 
     should 'show listings from last 30 days' do
       @fresh_transactable = FactoryGirl.create(:transactable)
