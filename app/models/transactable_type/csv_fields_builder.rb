@@ -1,14 +1,14 @@
 class TransactableType::CsvFieldsBuilder
 
-  def initialize(importable)
+  def initialize(importable, additional_models = [])
     @importable = importable
     @models = if import_model == :transactable
-        models = [:address, import_model, :photo]
-        models.unshift(:location) unless @importable.skip_location?
-        models
-      else
-        [import_model, :'spree/variant', :'spree/shipping_category', :'spree/image']
-      end
+                models = [:address, import_model, :photo]
+                models.unshift(:location) unless @importable.skip_location?
+                additional_models + models
+              else
+                additional_models + [import_model, :'spree/variant', :'spree/shipping_category', :'spree/image']
+              end
   end
 
   def all_valid_object_field_pairs

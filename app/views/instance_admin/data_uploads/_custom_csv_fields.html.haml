@@ -1,5 +1,5 @@
 %ol.draggablePanelList
-  - csv_fields_builder = TransactableType::CsvFieldsBuilder.new(f.object)
+  - csv_fields_builder = TransactableType::CsvFieldsBuilder.new(f.object, [:company])
 
   - all_fields = csv_fields_builder.object_field_pairs.clone
   - csv_fields_builder.all_valid_object_field_pairs.each do |pair|
@@ -11,11 +11,7 @@
       %li.panel.panel-info
         %div.panel-heading
           = csv_fields_builder.get_label(object_field_pair)
-          - if field == 'external_id'
-            %span= check_box_tag "", field, true, disabled: true
-            %span.hidden= check_box_tag "#{f.object_name}[custom_csv_fields][]", "#{object}=>#{field}", true
-          - else
-            %span= check_box_tag "#{f.object_name}[custom_csv_fields][]", "#{object}=>#{field}", csv_fields_builder.object_field_pairs.include?(object_field_pair)
+          %span= check_box_tag "#{f.object_name}[custom_csv_fields][]", "#{object}=>#{field}", csv_fields_builder.object_field_pairs.include?(object_field_pair)
 
 = content_for :script do
   :javascript

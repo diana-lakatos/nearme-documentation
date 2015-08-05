@@ -31,6 +31,10 @@ class Photo < ActiveRecord::Base
     self.remote_image_url = value
   end
 
+  def original_image_url
+    self.image_url(:original)
+  end
+
   def self.xml_attributes
     self.csv_fields.keys
   end
