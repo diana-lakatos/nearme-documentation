@@ -1174,52 +1174,6 @@ ActiveRecord::Schema.define(version: 20150824113435) do
   add_index "photos", ["instance_id"], name: "index_photos_on_instance_id", using: :btree
   add_index "photos", ["transactable_id"], name: "index_photos_on_listing_id", using: :btree
 
-  create_table "platform_contacts", force: true do |t|
-    t.string   "name"
-    t.string   "email"
-    t.string   "subject"
-    t.text     "comments"
-    t.boolean  "subscribed",        default: false
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
-    t.string   "company"
-    t.string   "marketplace_type"
-    t.string   "referer"
-    t.string   "lead_source"
-    t.string   "location"
-    t.string   "previous_research"
-    t.string   "phone"
-  end
-
-  create_table "platform_demo_requests", force: true do |t|
-    t.string   "name"
-    t.string   "email"
-    t.string   "company"
-    t.string   "phone"
-    t.text     "comments"
-    t.boolean  "subscribed", default: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-  end
-
-  create_table "platform_emails", force: true do |t|
-    t.string   "email"
-    t.datetime "notified_at"
-    t.datetime "unsubscribed_at"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-  end
-
-  create_table "platform_inquiries", force: true do |t|
-    t.string   "name"
-    t.string   "surname"
-    t.string   "email"
-    t.string   "industry"
-    t.text     "message"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "rating_answers", force: true do |t|
     t.integer  "rating"
     t.integer  "rating_question_id"

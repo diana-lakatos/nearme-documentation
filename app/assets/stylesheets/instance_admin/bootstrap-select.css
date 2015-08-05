@@ -81,13 +81,13 @@
 .btn.dropdown-toggle.selectpicker.btn-default { color: #a5a5a5; }
 
 .form-group.error .btn.dropdown-toggle.selectpicker.btn-default { color: #a5a5a5;
-    background: #fff url(platform_home/field-error.png) no-repeat right 10px;
+    background: #fff no-repeat right 10px;
     border-color: #df4c38;
 }
 
 .form-group.success .btn.dropdown-toggle.selectpicker.btn-default
 {
-    background: #fff url(platform_home/field-success.png) no-repeat right 10px;
+    background: #fff no-repeat right 10px;
     border-color: #167bb9;
 }
 .bootstrap-select.btn-group .btn .filter-option {
