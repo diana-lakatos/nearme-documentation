@@ -5,16 +5,14 @@
 # * CustomAttributes
 class CacheExpiration
   class << self
-    def handle_cache_expiration(msg)
-      case msg.data[:cache_type]
+    def handle_cache_expiration(data)
+      case data[:cache_type]
       when 'InstanceView'
-        expire_instance_view_cache(msg.data[:args][:path], msg.data[:instance_id])
+        expire_instance_view_cache(data[:args][:path], data[:instance_id])
       when /Translation|Locale/
-        expire_cache_for_translations(msg.data[:instance_id])
+        expire_cache_for_translations(data[:instance_id])
       when 'CustomAttribute'
-        expire_cache_for_custom_attributes(msg.data[:args][:target_type])
-      else
-        raise NotImplementedError
+        expire_cache_for_custom_attributes(data[:args][:target_type])
       end
     end
 
