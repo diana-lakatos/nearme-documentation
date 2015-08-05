@@ -130,7 +130,7 @@ en:
           updated: 'Workflow alert has been updated.'
         waiver_agreement_templates:
           created: 'Waiver agreement template has been created.'
-          already_created: 'Waiver agreement template has been already created.'
+          already_created: 'Waiver agreement template has already been created.'
           deleted: 'Waiver agreement template has been deleted.'
           updated: 'Waiver agreement template has been updated.'
         upsell_addons:
@@ -284,7 +284,7 @@ en:
         created: "Import has been scheduled. You'll receive an email when it's done."
         scheduled: 'Data has been scheduled to be imported.'
         deleted: 'Data Upload has been deleted.'
-        not_scheduled: 'The task has not been queued. Either data has been already imported or task is already in queue.'
+        not_scheduled: 'The task has not been queued. Either data has already been imported or task is already in queue.'
         too_many_rows: 'Max amount of rows in CSV is %{max}'
       waiver_agreement_templates:
         created: 'Waiver agreement template has been created.'
@@ -407,7 +407,7 @@ en:
         created: "Import has been scheduled. You'll receive an email when it's done."
         scheduled: 'Data has been scheduled to be imported.'
         deleted: 'Data Upload has been deleted.'
-        not_scheduled: 'The task has not been queued. Either data has been already imported or task is already in queue.'
+        not_scheduled: 'The task has not been queued. Either data has already been imported or task is already in queue.'
         too_many_rows: 'Max amount of rows in CSV is %{max}'
       waiver_agreement_templates:
         created: 'Waiver agreement template has been created.'
@@ -437,7 +437,7 @@ en:
       payout_successful: 'Payout succeeded'
       payout_already_successful: 'This payout has already been marked as transferred.'
     registrations:
-      address_already_verified: "The email address has been already verified"
+      address_already_verified: "The email address has already been verified"
       address_not_verified: "Oops - we could not verify your email address. Please make sure that the url has not been malformed"
       address_verified: "Perfect, your email has been confirmed. Thanks!"
       already_unsubscribed: "You were already unsubscribed."
