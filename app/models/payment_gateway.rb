@@ -79,6 +79,7 @@ class PaymentGateway < ActiveRecord::Base
   #- END CLASS METHODS
 
   def authorize(authoriazable, options = {})
+    options.merge!(custom_authorize_options)
     PaymentAuthorizer.new(self, authoriazable, options).process!
   end
 
