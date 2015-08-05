@@ -276,7 +276,6 @@ module Utils
           test_settings: { login: "sk_test_sPLnOkI5mvXCoUuaqi5j6djR" },
           live_settings: { login: "sk_live_qfvqBDKaG1guI1wuorkgLI7Y" }
         },
-
         {
           type: "PaymentGateway::PaypalPaymentGateway", 
           test_settings: { 

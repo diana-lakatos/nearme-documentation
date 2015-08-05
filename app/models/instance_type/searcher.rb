@@ -6,8 +6,12 @@ module InstanceType::Searcher
     if self.class.to_s =~ /Elastic/
       @search_results_count
     else
-      @result_count ||= results.distinct.all.count rescue results.distinct.to_a.count
+      @result_count ||= results.distinct.to_a.count
     end
+  end
+
+  def count_query(query)
+    query.count("*", distinct: true)
   end
 
   def max_price
@@ -16,7 +20,7 @@ module InstanceType::Searcher
       @max_fixed_price ||= results.map{|r| r.try(:price).to_i}.max
     else
       if self.class.to_s =~ /Elastic/
-        @max_fixed_price ||= results.map{|r| 
+        @max_fixed_price ||= results.map{|r|
           if r.is_a?(Location)
             r.listings.maximum(:fixed_price_cents).to_f
           else

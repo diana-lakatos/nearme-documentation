@@ -451,6 +451,12 @@ en:
       instance:
         date_pickers: 'Enable date pickers'
         date_pickers_use_availability_rules: 'Use availability rules'
+      user_blog_post:
+        hero_image: 'Suggested image size is 850 x 262 pixels'
+        author_avatar_img: 'Suggested image size is 144 x 144 pixels'
+      user_blog:
+        header_logo: "Suggested image size is 240 x 60 pixels"
+        header_icon: "Suggested image size is 60 x 60 pixels"
 
     required:
       mark: '*'

@@ -848,7 +848,11 @@ class SecuredParams
       :private_key,
       :certificate_chain,
       :redirect_to,
-      :redirect_code
+      :redirect_code,
+      :uploaded_sitemap,
+      :remove_uploaded_sitemap,
+      :uploaded_robots_txt,
+      :remove_uploaded_robots_txt
     ]
   end
 

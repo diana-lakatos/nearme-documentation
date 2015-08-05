@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150724185020) do
+ActiveRecord::Schema.define(version: 20150729183231) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -603,6 +603,10 @@ ActiveRecord::Schema.define(version: 20150724185020) do
     t.string   "redirect_to"
     t.integer  "redirect_code"
     t.boolean  "use_as_default",                 default: false
+    t.boolean  "sitemap_enabled",                default: false
+    t.string   "generated_sitemap"
+    t.string   "uploaded_sitemap"
+    t.string   "uploaded_robots_txt"
   end
 
   add_index "domains", ["deleted_at"], name: "index_domains_on_deleted_at", using: :btree
@@ -3174,6 +3178,7 @@ ActiveRecord::Schema.define(version: 20150724185020) do
     t.string   "language",                               limit: 2,   default: "en"
     t.integer  "saved_searches_count",                               default: 0
     t.datetime "saved_searches_alert_sent_at"
+    t.string   "paypal_merchant_id"
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

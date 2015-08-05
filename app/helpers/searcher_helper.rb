@@ -28,4 +28,10 @@ module SearcherHelper
     end
   end
 
+  def search_breadcrumb(searcher)
+    text = "#{searcher.result_count} results"
+    text += " for \"#{@searcher.query}\"" if searcher.query.present?
+    text
+  end
+
 end

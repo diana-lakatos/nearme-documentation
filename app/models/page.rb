@@ -11,6 +11,8 @@ class Page < ActiveRecord::Base
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :finders, :scoped], scope: :theme
 
+  include SitemapService::Callbacks
+
   mount_uploader :hero_image, HeroImageUploader
   skip_callback :commit, :after, :remove_hero_image!
 

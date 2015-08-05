@@ -146,5 +146,10 @@ module LiquidFilters
     ActionController::Base.helpers.image_url(path_to_file)
   end
 
+  def videoify(url = '')
+    return url if url.blank?
+    VideoEmbedder.new(url).html.html_safe
+  end
+
 end
 

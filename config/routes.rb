@@ -2,6 +2,7 @@
 require Rails.root.join('app', 'controllers', 'registrations_controller.rb') if Rails.env.test?
 
 DesksnearMe::Application.routes.draw do
+
   # lib/routing_filters/filters/language.rb
   filter :language, exclude: %r(^/.*admin|^/near-me.com|^/api|^/v\d+)
 
@@ -867,13 +868,9 @@ DesksnearMe::Application.routes.draw do
     end
 
     resource :social, only: [:show], controller: 'social' do
-      # Hmm, can this be better?
-      resource :facebook, only: [:show, :update, :destroy],
-               controller: 'social_provider', provider: 'facebook'
-      resource :twitter, only: [:show, :update, :destroy],
-               controller: 'social_provider', provider: 'twitter'
-      resource :linkedin, only: [:show, :update, :destroy],
-               controller: 'social_provider', provider: 'linkedin'
+      %w(facebook twitter linkedin).each do |social|
+        resource social.to_sym, only: [:show, :update, :destroy], controller: 'social_provider', provider: social
+      end
     end
 
     get 'amenities', to: 'amenities#index'
@@ -889,6 +886,9 @@ DesksnearMe::Application.routes.draw do
   get "/rent-legal-desks", to: 'locations#vertical_law'
   get "/rent-hairdressing-booth-stations", to: redirect(subdomain: 'rent-salon-space', path: '/')
   get "/rent-design-desks", to: 'locations#vertical_design'
+
+  get "/sitemap.xml", to: "seo#sitemap", format: "xml", as: :sitemap
+  get "/robots.txt", to: "seo#robots", format: "txt", as: :robots
 
   if defined? MailView
     mount PlatformMailerPreview => 'mail_view/platform'

@@ -1,7 +1,6 @@
 class Domain < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid
-  # attr_accessible :name, :target, :target_id, :target_type, :secured
 
   REDIRECT_CODES = [301, 302]
 
@@ -63,6 +62,10 @@ class Domain < ActiveRecord::Base
   scope :default, -> { where(use_as_default: true) }
 
   delegate :white_label_enabled?, :to => :target
+
+  mount_uploader :uploaded_robots_txt, RobotsTxtUploader
+  mount_uploader :generated_sitemap, SitemapUploader
+  mount_uploader :uploaded_sitemap, SitemapUploader
 
   def self.where_hostname(hostname)
     domain_lookup(hostname).each do |host|
@@ -157,6 +160,14 @@ class Domain < ActiveRecord::Base
     (self.class.domain_lookup(name) + self.class.domain_lookup(name_was)).uniq.each do |hostname|
       Rails.cache.delete "domains_cache_#{hostname}"
     end
+  end
+
+  def sitemap
+    SitemapService.content_for(self)
+  end
+
+  def robots
+    RobotsTxtService.content_for(self)
   end
 
   private

@@ -7,7 +7,7 @@
     .row
       .span3
         %p.search-breadcrumbs
-          #{@searcher.result_count} results for "#{@searcher.query}"
+          = search_breadcrumb(@searcher)
       .span9
         .search-bar
           %form{action: search_path(v: 'products'), method: 'get', id: 'search_form'}
@@ -34,7 +34,7 @@
         - if platform_context.instance.price_slider
           = render partial: 'search/shared/product_price_slider'
 
-          
+
     - @searcher.results.decorate.in_groups_of(3) do |line|
       .row
         - line.compact.each do |product|
