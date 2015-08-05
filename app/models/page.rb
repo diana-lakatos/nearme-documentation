@@ -24,7 +24,7 @@ class Page < ActiveRecord::Base
   before_save :convert_to_html, :if => lambda { |page| page.content.present? && (page.content_changed? || page.html_content.blank?) }
 
   def to_liquid
-    PageDrop.new(self)
+    @page_drop ||= PageDrop.new(self)
   end
 
   def redirect?

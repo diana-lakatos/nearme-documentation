@@ -154,7 +154,7 @@ class Address < ActiveRecord::Base
   end
 
   def to_liquid
-    AddressDrop.new(self)
+    @address_drop ||= AddressDrop.new(self)
   end
 
 end

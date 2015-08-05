@@ -22,6 +22,6 @@ class Spree::ProductType < TransactableType
   end
 
   def to_liquid
-    Spree::ProductTypeDrop.new(self)
+    @spree_product_type_drop ||= Spree::ProductTypeDrop.new(self)
   end
 end

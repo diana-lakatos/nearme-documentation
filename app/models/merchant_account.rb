@@ -48,7 +48,7 @@ class MerchantAccount < ActiveRecord::Base
   serialize :data, Hash
 
   def to_liquid
-    MerchantAccountDrop.new(self)
+    @mechant_account_drop ||= MerchantAccountDrop.new(self)
   end
 
   def data_correctness(*args)

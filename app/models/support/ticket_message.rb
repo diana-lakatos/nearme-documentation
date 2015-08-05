@@ -84,6 +84,6 @@ class Support::TicketMessage < ActiveRecord::Base
   end
 
   def to_liquid
-    Support::TicketMessageDrop.new(self)
+    @support_ticket_message_drop ||= Support::TicketMessageDrop.new(self)
   end
 end

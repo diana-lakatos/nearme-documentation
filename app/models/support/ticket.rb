@@ -107,7 +107,7 @@ class Support::Ticket < ActiveRecord::Base
   end
 
   def to_liquid
-    Support::TicketDrop.new(self)
+    @support_ticket_drop ||= Support::TicketDrop.new(self)
   end
 
   def reservation_dates

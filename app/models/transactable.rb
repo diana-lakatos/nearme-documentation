@@ -3,7 +3,7 @@ class Transactable < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
-  
+
   include Impressionable
   include Searchable
   include SitemapService::Callbacks
@@ -447,7 +447,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def to_liquid
-    TransactableDrop.new(self)
+    @transactable_drop ||= TransactableDrop.new(self)
   end
 
   def self.xml_attributes(transactable_type = nil)
@@ -679,7 +679,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def should_create_sitemap_node?
-    draft.nil? && enabled?    
+    draft.nil? && enabled?
   end
 
   def should_update_sitemap_node?

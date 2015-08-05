@@ -39,7 +39,7 @@ class BlogPost < ActiveRecord::Base
   end
 
   def to_liquid
-    BlogPostDrop.new(self)
+    @blog_post_drop ||= BlogPostDrop.new(self)
   end
 
   private

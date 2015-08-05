@@ -78,7 +78,7 @@ class UserMessage < ActiveRecord::Base
   end
 
   def to_liquid
-    UserMessageDrop.new(self)
+    @user_message_drop ||= UserMessageDrop.new(self)
   end
 
   def send_notification

@@ -18,7 +18,7 @@ class ApprovalRequest < ActiveRecord::Base
 
   scope :with_date, ->(date) { where(created_at: date) }
 
-  scope :by_search_query, -> (q) { 
+  scope :by_search_query, -> (q) {
     joins("LEFT join locations on locations.id = owner_id AND owner_type = 'Location'").
     joins("LEFT join users on users.id = owner_id AND owner_type = 'User'").
     joins("LEFT join transactables on transactables.id = owner_id AND owner_type = 'Transactable'").
@@ -62,7 +62,7 @@ class ApprovalRequest < ActiveRecord::Base
   end
 
   def to_liquid
-    ApprovalRequestDrop.new(self)
+    @approval_request_drop ||= ApprovalRequestDrop.new(self)
   end
 
   def message_blank_or_changed?

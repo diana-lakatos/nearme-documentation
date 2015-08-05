@@ -184,7 +184,7 @@ class Instance < ActiveRecord::Base
   end
 
   def to_liquid
-    InstanceDrop.new(self)
+    @instance_drop ||= InstanceDrop.new(self)
   end
 
   def authenticate(password)

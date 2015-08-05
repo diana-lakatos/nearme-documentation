@@ -2,7 +2,7 @@ Spree::Shipment.class_eval do
   include Spree::Scoper
 
   def to_liquid
-    Spree::ShipmentDrop.new(self)
+    @spree_shipment_drop ||= Spree::ShipmentDrop.new(self)
   end
 
   private

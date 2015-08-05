@@ -94,7 +94,7 @@ class ServiceType < TransactableType
   end
 
   def to_liquid
-    ServiceTypeDrop.new(self)
+    @service_type_drop ||= ServiceTypeDrop.new(self)
   end
 
   def wizard_path

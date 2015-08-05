@@ -424,7 +424,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def to_liquid
-    ReservationDrop.new(self)
+    @reservation_drop ||= ReservationDrop.new(self)
   end
 
   def name

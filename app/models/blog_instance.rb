@@ -25,7 +25,7 @@ class BlogInstance < ActiveRecord::Base
   end
 
   def to_liquid
-    BlogInstanceDrop.new(self)
+    @blog_instance_drop ||= BlogInstanceDrop.new(self)
   end
 
 end
