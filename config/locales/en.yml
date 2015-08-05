@@ -573,6 +573,7 @@ en:
         copy_from_template: "Copy From Template"
         template: "Template"
       service_types:
+        service_types: "Service Types"
         form_components: "Form Components"
         data_upload: "Data Upload"
         custom_attributes: "Custom Attributes"

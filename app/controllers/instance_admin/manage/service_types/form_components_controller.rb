@@ -26,6 +26,9 @@ class InstanceAdmin::Manage::ServiceTypes::FormComponentsController < InstanceAd
   end
 
   def set_breadcrumbs_title
-    @breadcrumbs_title = 'Service Types'
+    @breadcrumbs_title = BreadcrumbsList.new(
+      { :url => instance_admin_manage_service_types_path, :title => t('instance_admin.manage.service_types.service_types') },
+      { :title => t('instance_admin.manage.service_types.form_components') }
+    )
   end
 end

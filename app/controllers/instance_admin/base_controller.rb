@@ -128,4 +128,13 @@ class InstanceAdmin::BaseController < ApplicationController
     @instance_admin_roles ||= InstanceAdminRole.all
   end
   helper_method :instance_admin_roles
+
+  def append_to_breadcrumbs(title, url = nil)
+    if @breadcrumbs_title.kind_of?(BreadcrumbsList)
+      @breadcrumbs_title.append_location(title, url)
+    else
+      @breadcrumbs_title = title
+    end
+  end
+
 end

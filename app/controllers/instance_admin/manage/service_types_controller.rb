@@ -2,6 +2,8 @@ class InstanceAdmin::Manage::ServiceTypesController < InstanceAdmin::Manage::Bas
 
   before_filter :set_theme, except: [:change_state]
 
+  before_filter :set_breadcrumbs
+
   def index
     @service_types = ServiceType.all
   end
@@ -62,6 +64,10 @@ class InstanceAdmin::Manage::ServiceTypesController < InstanceAdmin::Manage::Bas
   end
 
   private
+
+  def set_breadcrumbs
+    @breadcrumbs_title = t('instance_admin.manage.service_types.service_types')
+  end
 
   def set_theme
     @theme_name = 'orders-theme'

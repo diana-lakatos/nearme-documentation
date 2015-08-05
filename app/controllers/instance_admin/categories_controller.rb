@@ -36,7 +36,7 @@ class InstanceAdmin::CategoriesController < InstanceAdmin::BaseController
   end
 
   def edit
-    @breadcrumbs_title = 'Edit Category'
+    append_to_breadcrumbs(t('instance_admin.edit'))
     @category = @categorizable.categories.find(params[:id])
   end
 
