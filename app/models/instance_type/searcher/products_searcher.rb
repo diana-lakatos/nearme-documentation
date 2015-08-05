@@ -72,6 +72,6 @@ class InstanceType::Searcher::ProductsSearcher
   end
 
   def searchable_categories
-    @product_type.categories.searchable.roots
+    @product_type.categories.searchable.roots.includes(children: [:children])
   end
 end
