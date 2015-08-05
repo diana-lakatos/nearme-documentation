@@ -1,18 +1,19 @@
 require 'message_bus'
 
 # Mock class to use in development and test environments
-class NullMessageBus
+class TestMessageBus
   class << self
-    attr_accessor :redis_config
 
     def message_handler
       @handler ||= Rails.configuration.message_bus_handler
     end
 
     def publish(channel, data, opts = nil)
+      msg = MessageBus::Message.new(-1, 0, channel, data)
       if @tracking
-        m = MessageBus::Message.new(-1, 0, channel, data)
-        @tracking << m
+        @tracking << msg
+      else
+        CacheExpiration.handle_cache_expiration(msg.data)
       end
       0
     end
