@@ -355,7 +355,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def to_param
-    "#{id}-#{properties["name"].parameterize}"
+    "#{id}-#{name}".parameterize
   rescue
     id
   end
