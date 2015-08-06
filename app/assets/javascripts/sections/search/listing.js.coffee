@@ -15,8 +15,8 @@ class Search.Listing
   constructor: (element) ->
     @_element = $(element)
     @_id  = parseInt(@_element.data('id'), 10)
-    @_lat = parseFloat(@_element.data('latitude'))
-    @_lng = parseFloat(@_element.data('longitude'))
+    @_lat = parseFloat(@_element.data('latitude')) || 0.0
+    @_lng = parseFloat(@_element.data('longitude')) || 0.0
     @_location = parseInt(@_element.data('location'))
     @_name = @_element.attr('data-name')
     @bindEvents()
