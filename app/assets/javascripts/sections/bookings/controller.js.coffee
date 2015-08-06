@@ -26,6 +26,7 @@ class Bookings.Controller
       new Bookings.RecurringBookingController(@container.find('form[data-recurring-booking-form]'))
     @updateSummary()
     @delayedUpdateBookingStatus()
+    @quantityField.customSelect()
 
   # We need to set up delayed methods per each instance, not the prototype.
   # Otherwise, it will debounce for any instance calling the method.

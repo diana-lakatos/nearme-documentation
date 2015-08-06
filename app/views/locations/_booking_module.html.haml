@@ -81,7 +81,7 @@
         - unless listing.schedule_booking?
           .tab-content
 
-            .calendar-wrapper.date-start{ data: { start_date: params[:start_date] } }
+            .calendar-wrapper.date-start
               .calendar
                 %span.ico-calender-end
                 %span.calendar-text= t 'booking_module.start'
@@ -92,7 +92,7 @@
                   %span.time-text= t 'booking_module.nine'
 
             - if listing.action_daily_booking? || (listing.action_free_booking? && !listing.action_hourly_booking? && !listing.schedule_booking?)
-              .daily-booking.tab-pane.calendar-wrapper.date-end{id: "daily-booking-#{listing.id}", data: { end_date: params[:end_date] }}
+              .daily-booking.tab-pane.calendar-wrapper.date-end{id: "daily-booking-#{listing.id}"}
                 .calendar
                   %span.ico-calender-start
                   %span.calendar-text= t 'booking_module.end'
@@ -169,13 +169,5 @@
           = render 'locations/booking_module_not_bookable', listing: listing
 
     .clearfix
-
-  - content_for :domready do
-    $("##{listing.to_param} .quantity select").customSelect();
-    $("#booking-module-#{listing.id} .pricing-tabs a").click(function (e) {
-    e.preventDefault();
-    $(this).tab('show');
-    })
-    $("#booking-module-#{listing.id} .pricing-tabs a.possible:first").tab('show');
 
 - lookup_context.transactable_type_id = old

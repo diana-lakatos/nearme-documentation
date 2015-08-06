@@ -3,7 +3,7 @@ class Transactable < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
-  
+
   include Impressionable
   include Searchable
   include SitemapService::Callbacks
@@ -549,15 +549,15 @@ class Transactable < ActiveRecord::Base
   end
 
   def reviews
-    @reviews ||= Review.where(rating_system_id: RatingSystem.for_transactables.pluck(:id), reviewable_type: 'Reservation', reviewable_id: self.reservations.pluck(:id))
+    @reviews ||= Review.where(rating_system_id: RatingSystem.for_transactables, reviewable_type: 'Reservation', reviewable_id: self.reservations.pluck(:id))
   end
 
   def has_reviews?
-    reviews.count > 0
+    reviews.size > 0
   end
 
   def question_average_rating
-    @rating_answers_rating ||= RatingAnswer.where(review_id: reviews.pluck(:id))
+    @rating_answers_rating ||= RatingAnswer.where(review_id: reviews.map(&:id))
       .group(:rating_question_id).average(:rating)
   end
 
@@ -679,7 +679,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def should_create_sitemap_node?
-    draft.nil? && enabled?    
+    draft.nil? && enabled?
   end
 
   def should_update_sitemap_node?

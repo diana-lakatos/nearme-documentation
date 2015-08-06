@@ -5,7 +5,7 @@ class RatingAnswer < ActiveRecord::Base
   acts_as_paranoid
 
   belongs_to :rating_question
-  belongs_to :review
+  belongs_to :review, touch: true
   belongs_to :instance
 
   validates_presence_of :rating_question_id, :review_id
