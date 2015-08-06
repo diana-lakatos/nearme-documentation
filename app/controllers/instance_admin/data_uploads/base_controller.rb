@@ -32,6 +32,10 @@ class InstanceAdmin::DataUploads::BaseController < InstanceAdmin::BaseController
       filename: "#{@importable.name.parameterize}_csv_template.csv"
   end
 
+  def download_current_data
+    send_data DataImporter::CsvCurrentDataGenerator.new(@importable).generate_csv, filename: "current_data.csv"
+  end
+
   private
 
   def data_upload_params
@@ -39,4 +43,6 @@ class InstanceAdmin::DataUploads::BaseController < InstanceAdmin::BaseController
     params[:data_upload][:options][:sync_mode] = '0'
     params.require(:data_upload).permit(secured_params.data_upload).merge(uploader: current_user, importable: @importable)
   end
+
 end
+

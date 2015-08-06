@@ -598,6 +598,7 @@ en:
         created_by: "Created by"
         created_at: "Created at"
         download_csv_template: 'Download CSV Template'
+        download_current_data: 'Download Current Data'
         new_data_upload: 'New Data Upload'
         data_upload: "Data Upload"
         upload: "Upload"

@@ -331,6 +331,7 @@ DesksnearMe::Application.routes.draw do
         resources :data_uploads, only: %i(new index create show), controller: 'service_types/data_uploads' do
           collection do
             get :download_csv_template
+            get :download_current_data
           end
         end
         resources :form_components, controller: 'service_types/form_components' do
