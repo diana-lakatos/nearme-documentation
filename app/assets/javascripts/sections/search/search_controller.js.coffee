@@ -368,7 +368,7 @@ class Search.SearchController extends Search.Controller
 
   updateLinks: ->
     if @date_range.length > 1
-      for link in $("div.locations a")
+      for link in $("div.locations a:not(.carousel-control)")
         href = link.href.replace(/\?.*$/, "")
         href += "?start_date=#{@date_range[0].value}&end_date=#{@date_range[1].value}"
         link.href = href
