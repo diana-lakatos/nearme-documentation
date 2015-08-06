@@ -34,7 +34,9 @@ module CustomAttributes
     end
 
     def get_or_build_translation(key)
-      Translation.where(locale: 'en', key: key, instance_id: @custom_attribute.instance_id).first_or_initialize
+      translation = Translation.where(locale: 'en', key: key, instance_id: @custom_attribute.instance_id).first_or_initialize
+      translation.skip_expire_cache = true
+      translation
     end
 
     def input_translations!

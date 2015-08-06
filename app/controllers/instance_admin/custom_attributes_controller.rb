@@ -36,8 +36,9 @@ class InstanceAdmin::CustomAttributesController < InstanceAdmin::ResourceControl
 
   def update
     @custom_attribute = @target.custom_attributes.find(params[:id])
-    if @custom_attribute.update_attributes(custom_attributes_params)
-      @custom_attribute.set_validation_rules!
+    @custom_attribute.attributes = custom_attributes_params
+    @custom_attribute.set_validation_rules
+    if @custom_attribute.save
       flash[:success] = t 'flash_messages.instance_admin.manage.custom_attributes.updated'
       redirect_to redirection_path
     else

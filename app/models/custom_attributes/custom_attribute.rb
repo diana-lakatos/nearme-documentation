@@ -16,6 +16,7 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
 
   def create_translations
     ::CustomAttributes::CustomAttribute::TranslationCreator.new(self).create_translations!
+    expire_cache_key(cache_type: 'Translation')
   end
 
   def expire_cache_options
