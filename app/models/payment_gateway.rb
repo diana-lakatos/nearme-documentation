@@ -262,6 +262,8 @@ class PaymentGateway < ActiveRecord::Base
 
   def credit_card_payment?
     gateway.try(:supported_cardtypes).present?
+  rescue NotImplementedError
+    false
   end
 
   protected
