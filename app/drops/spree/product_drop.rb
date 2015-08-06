@@ -1,4 +1,5 @@
 class Spree::ProductDrop < BaseDrop
+  include CategoriesHelper
 
   attr_reader :product
 
@@ -59,6 +60,14 @@ class Spree::ProductDrop < BaseDrop
   # url to the thumbnail image for this product (or a placeholder if image is missing)
   def thumbnail_url
     image_url(@product.images.first.try(:image_url, :thumb).presence) || image_url(Placeholder.new(height: 96, width: 96).path).to_s
+  end
+
+  # returns hash of categories { "<name>" => { "name" => '<translated_name', "children" => [<collection of chosen values] } }
+  def categories
+    if @categories.nil?
+      @categories = build_categories_hash_for_object(@product, @product.product_type.categories.roots.includes(:children))
+    end
+    @categories
   end
 
 end

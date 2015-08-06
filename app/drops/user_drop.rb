@@ -1,6 +1,7 @@
 class UserDrop < BaseDrop
 
   include ActionView::Helpers::AssetUrlHelper
+  include CategoriesHelper
 
   attr_reader :user
 
@@ -216,6 +217,14 @@ class UserDrop < BaseDrop
 
   def user_blog_posts_list_path
     routes.user_blog_posts_list_path(@user)
+  end
+
+  # returns hash of categories { "<name>" => { "name" => '<translated_name', "children" => [<collection of chosen values] } }
+  def categories
+    if @categories.nil?
+      @categories = build_categories_hash_for_object(@user, Category.users.roots.includes(:children))
+    end
+    @categories
   end
 end
 

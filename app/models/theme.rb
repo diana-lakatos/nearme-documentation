@@ -88,7 +88,7 @@ class Theme < ActiveRecord::Base
   end
 
   def to_liquid
-    ThemeDrop.new(self)
+    @theme_drop ||= ThemeDrop.new(self)
   end
 
   def skipping_compilation(&blk)

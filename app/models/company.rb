@@ -166,7 +166,7 @@ class Company < ActiveRecord::Base
   end
 
   def to_liquid
-    CompanyDrop.new(self)
+    @company_drop ||= CompanyDrop.new(self)
   end
 
   def add_default_url_scheme

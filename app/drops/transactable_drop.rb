@@ -3,6 +3,7 @@ class TransactableDrop < BaseDrop
   include AvailabilityRulesHelper
   include SearchHelper
   include MoneyRails::ActionViewExtension
+  include CategoriesHelper
 
   attr_reader :transactable
 
@@ -53,8 +54,8 @@ class TransactableDrop < BaseDrop
   # possible_express_checkout
   #   returns true if paypal express gateway defined for country assigned to transactable
   delegate :id, :location_id, :name, :location, :transactable_type, :description, :action_hourly_booking?, :action_rfq?, :creator, :administrator, :last_booked_days,
-   :defer_availability_rules?, :lowest_price, :company, :properties, :quantity, :administrator_id, :has_photos?, :book_it_out_available?,
-   :action_free_booking?, :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, :approval_requests, :updated_at, :possible_express_checkout?, to: :transactable
+    :defer_availability_rules?, :lowest_price, :company, :properties, :quantity, :administrator_id, :has_photos?, :book_it_out_available?,
+    :action_free_booking?, :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, :approval_requests, :updated_at, :possible_express_checkout?, to: :transactable
 
   # bookable_noun
   #   name of representing the bookable object transactable on the marketplace as a string (e.g. desk, room etc.)
@@ -178,6 +179,14 @@ class TransactableDrop < BaseDrop
   # returns the total number of reviews for this listing
   def reviews_count
     @transactable.reviews.count
+  end
+
+  # returns hash of categories { "<name>" => { "name" => '<translated_name', "children" => [<collection of chosen values] } }
+  def categories
+    if @categories.nil?
+      @categories = build_categories_hash_for_object(@transactable, @transactable.transactable_type.categories.roots.includes(:children))
+    end
+    @categories
   end
 
 end

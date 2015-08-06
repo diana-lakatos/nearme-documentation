@@ -59,7 +59,7 @@ class DataUpload < ActiveRecord::Base
   end
 
   def to_liquid
-    DataUploadDrop.new(self)
+    @data_upload_drop ||= DataUploadDrop.new(self)
   end
 
 end

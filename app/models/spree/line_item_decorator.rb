@@ -14,7 +14,7 @@ Spree::LineItem.class_eval do
   end
 
   def to_liquid
-    Spree::LineItemDrop.new(self)
+    @spree_line_item_drop ||= Spree::LineItemDrop.new(self)
   end
 
   def seller_type_review_receiver

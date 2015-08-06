@@ -275,7 +275,7 @@ Spree::Order.class_eval do
   end
 
   def to_liquid
-    Spree::OrderDrop.new(self)
+    @spree_order_drop ||= Spree::OrderDrop.new(self)
   end
 
 end

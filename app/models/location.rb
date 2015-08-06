@@ -139,7 +139,7 @@ class Location < ActiveRecord::Base
   end
 
   def to_liquid
-    LocationDrop.new(self)
+    @location_drop ||= LocationDrop.new(self)
   end
 
   def timezone

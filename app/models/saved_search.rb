@@ -46,7 +46,7 @@ class SavedSearch < ActiveRecord::Base
   end
 
   def to_liquid
-    SavedSearchDrop.new(self)
+    @saved_search_drop ||= SavedSearchDrop.new(self)
   end
 
   private

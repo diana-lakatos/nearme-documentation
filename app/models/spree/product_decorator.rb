@@ -100,7 +100,7 @@ Spree::Product.class_eval do
   end
 
   def to_liquid
-    Spree::ProductDrop.new(self)
+    @spree_product_drop ||= Spree::ProductDrop.new(self)
   end
 
   def administrator
@@ -176,7 +176,7 @@ Spree::Product.class_eval do
   end
 
   def should_create_sitemap_node?
-    !draft? && approved?    
+    !draft? && approved?
   end
 
   def should_update_sitemap_node?

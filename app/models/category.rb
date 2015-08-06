@@ -78,7 +78,7 @@ class Category < ActiveRecord::Base
   end
 
   def to_liquid
-    CategoryDrop.new(self)
+    @category_drop ||= CategoryDrop.new(self)
   end
 
   def set_permalink
