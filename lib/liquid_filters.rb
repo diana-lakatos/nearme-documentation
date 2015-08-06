@@ -151,5 +151,8 @@ module LiquidFilters
     VideoEmbedder.new(url).html.html_safe
   end
 
+  def json(object)
+    return object.to_json
+  end
 end
 
