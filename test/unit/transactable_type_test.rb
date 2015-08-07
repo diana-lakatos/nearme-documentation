@@ -86,10 +86,10 @@ class TransactableTypeTest < ActiveSupport::TestCase
     end
 
     should 'remove old translations when changing name' do
-      translations = Translation.where('instance_id = ? AND (key like ? OR key like ?)', Instance.first.id, '%my_custom_tt%', '%my_custom_tts%')
+      translations = Translation.where('instance_id = ? AND (key like ? OR key like ?)', PlatformContext.current.instance.id, '%my_custom_tt%', '%my_custom_tts%')
       refute translations.empty?
       @transactable_type.update_attribute(:name, 'my new name')
-      translations = Translation.where('instance_id = ? AND (key like ? OR key like ?)', Instance.first.id, '%my_custom_tt%', '%my_custom_tts%')
+      translations = Translation.where('instance_id = ? AND (key like ? OR key like ?)', PlatformContext.current.instance.id, '%my_custom_tt%', '%my_custom_tts%')
       assert translations.empty?, 'Expected old translations to be deleted'
     end
 
@@ -97,14 +97,14 @@ class TransactableTypeTest < ActiveSupport::TestCase
       assert_no_difference 'Translation.count' do
         @transactable_type.update_attribute(:name, 'My new name')
       end
-      translations = Translation.where('instance_id = ? AND (key like ? OR key like ?)', Instance.first.id, '%my_new_name%', '%my_new_name%')
+      translations = Translation.where('instance_id = ? AND (key like ? OR key like ?)', PlatformContext.current.instance.id, '%my_new_name%', '%my_new_name%')
       refute translations.empty?, 'Expected new translations to be created'
     end
 
     should 'not destroy random translations' do
-      t1 = FactoryGirl.create(:translation, instance_id: Instance.first.id, key: 'random.translation_my_custom_tt_suffix')
-      t2 = FactoryGirl.create(:translation, instance_id: Instance.first.id, key: 'random.my_custom_tt')
-      t3 = FactoryGirl.create(:translation, instance_id: Instance.first.id, key: 'random.my_custom_tt.something')
+      t1 = FactoryGirl.create(:translation, instance_id: PlatformContext.current.instance.id, key: 'random.translation_my_custom_tt_suffix')
+      t2 = FactoryGirl.create(:translation, instance_id: PlatformContext.current.instance.id, key: 'random.my_custom_tt')
+      t3 = FactoryGirl.create(:translation, instance_id: PlatformContext.current.instance.id, key: 'random.my_custom_tt.something')
       @transactable_type.update_attribute(:name, 'My new name')
       assert t1.reload.present?
       assert t2.reload.present?

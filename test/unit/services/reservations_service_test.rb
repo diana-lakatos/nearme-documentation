@@ -10,10 +10,9 @@ class ReservationsServiceTest < ActiveSupport::TestCase
       @attributes = {
         :dates => [@date.to_s(:db)]
       }
-      @instance = Instance.first || create(:instance)
       FactoryGirl.create(:document_requirement, item: @listing)
       FactoryGirl.create(:upload_obligation, level: UploadObligation::LEVELS[0], item: @listing)
-      @reservation_request = ReservationRequest.new(@listing, @user, PlatformContext.new(@instance), @attributes)
+      @reservation_request = ReservationRequest.new(@listing, @user, PlatformContext.current, @attributes)
       @reservation_service = Listings::ReservationsService.new(@user, @reservation_request)
     end
 

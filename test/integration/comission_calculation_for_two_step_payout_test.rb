@@ -43,8 +43,6 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
   private
 
   def create_logged_in_user
-    instance = Instance.first
-    instance.domains << FactoryGirl.create(:domain, name: "www.example.com")
     @guest = FactoryGirl.create(:user)
     post_via_redirect '/users/sign_in', :user => { :email => @guest.email, :password => @guest.password }
   end
@@ -85,7 +83,7 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
 
   def mockup_database_with_currency(currency = 'USD')
     stub_what_has_to_be_stubbed
-    @instance = Instance.first
+    @instance = PlatformContext.current.instance
     @instance.update_attribute(:service_fee_host_percent, 10)
     @instance.update_attribute(:service_fee_guest_percent, 15)
     @instance.update_attribute(:payment_transfers_frequency, 'daily')

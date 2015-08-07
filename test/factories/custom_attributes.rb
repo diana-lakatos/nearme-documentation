@@ -8,7 +8,7 @@ FactoryGirl.define do
 
     after(:create) do |attribute|
       CustomAttributes::CustomAttribute.clear_cache(attribute.target_type) if attribute.target_type
-      I18N_DNM_BACKEND.update_cache(Instance.first.id) if defined? I18N_DNM_BACKEND
+      I18N_DNM_BACKEND.update_cache(PlatformContext.current.instance.id) if defined? I18N_DNM_BACKEND
     end
 
     trait :listing_types do

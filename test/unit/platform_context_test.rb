@@ -4,14 +4,14 @@ class PlatformContextTest < ActiveSupport::TestCase
   context 'root_secured? and secured? for root domain' do
     should 'be true when root is secured' do
       PlatformContext.stubs(:root_secured => true)
-      ctx = PlatformContext.new(Instance.first)
+      ctx = PlatformContext.current
       assert ctx.root_secured?
       assert ctx.secured?
     end
 
     should 'be false when root is not secured' do
       PlatformContext.stubs(:root_secured => false)
-      ctx = PlatformContext.new(Instance.first)
+      ctx = PlatformContext.current
       refute ctx.root_secured?
       refute ctx.secured?
     end
@@ -147,11 +147,11 @@ class PlatformContextTest < ActiveSupport::TestCase
     end
 
     should 'First instance if domain is desksnearme.com' do
-      FactoryGirl.create(:domain, :name => 'desksnearme.com', :target => Instance.first)
+      FactoryGirl.create(:domain, :name => 'desksnearme.com', :target => PlatformContext.current.instance)
       rq = PlatformContext.new('desksnearme.com')
-      assert_equal Instance.first, rq.instance
-      assert_equal Instance.first, rq.platform_context_detail
-      assert_equal Instance.first.theme, rq.theme
+      assert_equal PlatformContext.current.instance, rq.instance
+      assert_equal PlatformContext.current.instance, rq.platform_context_detail
+      assert_equal PlatformContext.current.instance.theme, rq.theme
     end
 
     should 'instance linked to domain that matches request.host' do
@@ -215,7 +215,7 @@ class PlatformContextTest < ActiveSupport::TestCase
   context 'white_label_company_user?' do
 
     setup do
-      @platform_context = PlatformContext.new(Instance.first)
+      @platform_context = PlatformContext.current
       @company = FactoryGirl.create(:white_label_company)
       @user = @company.creator
       @another_user = FactoryGirl.create(:user)

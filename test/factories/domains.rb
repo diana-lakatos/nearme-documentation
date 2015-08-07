@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :domain do
     sequence(:name) {|n| "desksnear#{n}.me" }
     target_type "Instance"
-    target_id { (Instance.first.presence || FactoryGirl.create(:instance)).id }
+    target_id { (PlatformContext.current.instance || FactoryGirl.create(:instance)).id }
     use_as_default { target.respond_to?(:domains) && target.domains.default.any? ? false : true }
 
     factory :secured_domain do

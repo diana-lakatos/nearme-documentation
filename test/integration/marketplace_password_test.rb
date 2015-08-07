@@ -5,13 +5,9 @@ class MarketplacePasswordTest < ActionDispatch::IntegrationTest
   setup do
     @user = FactoryGirl.create(:user)
     stub_mixpanel
-    @instance = Instance.first
-    @role = FactoryGirl.create(:instance_admin_role)
-    @role.update_attribute(:permission_analytics, false)
-    @role.update_attribute(:permission_settings, true)
-    @instance_admin = FactoryGirl.create(:instance_admin, :user_id => @user.id, :instance_id => @instance.id)
-    @instance_admin.update_attribute(:instance_owner, false)
-    @instance_admin.update_attribute(:instance_admin_role_id, @role.id)
+    @instance = PlatformContext.current.instance
+    @role = FactoryGirl.create(:instance_admin_role, permission_analytics: false, permission_settings: true)
+    @instance_admin = FactoryGirl.create(:instance_admin, user_id: @user.id, instance_id: @instance.id, instance_owner: false, instance_admin_role_id: @role.id)
   end
 
   should 'not redirect to marketplace password page if marketplace is not password-protected' do

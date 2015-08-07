@@ -5,8 +5,7 @@ class InstanceAdmin::Manage::Admins::InstanceAdminRolesControllerTest < ActionCo
   setup do
     @user = FactoryGirl.create(:user)
     sign_in @user
-    FactoryGirl.create(:instance) unless Instance.first
-    InstanceAdmin.create(:user_id => @user.id).update_attribute(:instance_id, Instance.first.id)
+    InstanceAdmin.create(:user_id => @user.id).update_attribute(:instance_id, PlatformContext.current.instance.id)
   end
 
   context 'crud' do
@@ -18,7 +17,7 @@ class InstanceAdmin::Manage::Admins::InstanceAdminRolesControllerTest < ActionCo
     context 'create' do
 
       should 'be able to add new role correct permissions' do
-        assert_difference "Instance.first.instance_admin_roles.size" do
+        assert_difference "PlatformContext.current.instance.instance_admin_roles.count" do
           post :create, :instance_admin_role => { :name => 'new role' }
         end
         assert_equal 'new role', assigns(:instance_admin_role).name
@@ -26,8 +25,8 @@ class InstanceAdmin::Manage::Admins::InstanceAdminRolesControllerTest < ActionCo
       end
 
       should 'not duplicate role' do
-        FactoryGirl.create(:instance_admin_role, :name => 'existing', :instance_id => Instance.first.id)
-        assert_no_difference "Instance.first.instance_admin_roles.size" do
+        FactoryGirl.create(:instance_admin_role, :name => 'existing', :instance_id => PlatformContext.current.instance.id)
+        assert_no_difference "PlatformContext.current.instance.instance_admin_roles.count" do
           post :create, :instance_admin_role => { :name => 'existing' }
         end
       end
