@@ -24,7 +24,13 @@ class Company < ActiveRecord::Base
   has_many :merchant_accounts, as: :merchantable, dependent: :nullify
   MerchantAccount::MERCHANT_ACCOUNTS.each do |name, klass|
     # also include owners if association exist
-    has_one "#{name}_merchant_account".to_sym, -> { klass.reflections.keys.include?(:owners) ? includes(:owners) : self }, class_name: klass.to_s, as: :merchantable, dependent: :nullify
+    has_one :"#{name}_merchant_account",
+      -> {
+        assoc = klass.reflections.keys.include?(:owners) ? includes(:owners) : self
+        pg = klass::SEPARATE_TEST_ACCOUNTS && "PaymentGateway::#{name.classify}PaymentGateway".constantize.find_by(instance_id: PlatformContext.current.instance.id)
+        pg ? assoc.where(test: pg.test_mode?) : assoc
+      },
+      class_name: klass.to_s, as: :merchantable, dependent: :nullify
   end
   has_many :option_types, class_name: 'Spree::OptionType', dependent: :destroy
   has_many :orders, class_name: 'Spree::Order'

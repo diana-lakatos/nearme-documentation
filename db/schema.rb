@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150729183231) do
+ActiveRecord::Schema.define(version: 20150807111623) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1016,6 +1016,7 @@ ActiveRecord::Schema.define(version: 20150729183231) do
     t.string   "type"
     t.string   "state",                               default: "pending"
     t.string   "internal_payment_gateway_account_id"
+    t.boolean  "test",                                default: false
   end
 
   add_index "merchant_accounts", ["instance_id", "merchantable_id", "merchantable_type"], name: "index_on_merchant_accounts_on_merchant", using: :btree

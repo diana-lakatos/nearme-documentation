@@ -3,6 +3,8 @@ class MerchantAccount < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
 
+  SEPARATE_TEST_ACCOUNTS = false
+
   attr_encrypted :response, key: DesksnearMe::Application.config.secret_token, if: DesksnearMe::Application.config.encrypt_sensitive_db_columns, marshal: true
 
   has_many :webhooks, as: :webhookable, dependent: :destroy
@@ -28,6 +30,7 @@ class MerchantAccount < ActiveRecord::Base
 
   attr_accessor :skip_validation
 
+  before_create :set_test_mode_if_necessary, if: -> { self.class::SEPARATE_TEST_ACCOUNTS }
   before_create :onboard!
   before_update :update_onboard!, unless: lambda { |merchant_account| merchant_account.skip_validation }
 
@@ -58,6 +61,13 @@ class MerchantAccount < ActiveRecord::Base
   end
 
   def update_onboard!(*args)
+  end
+
+  private
+
+  def set_test_mode_if_necessary
+    self.test = PlatformContext.current.instance.test_mode?
+    true
   end
 
 end

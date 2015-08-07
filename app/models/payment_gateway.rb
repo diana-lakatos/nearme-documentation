@@ -258,7 +258,10 @@ class PaymentGateway < ActiveRecord::Base
 
   def merchant_account(company)
     return nil if company.nil?
-    company.merchant_accounts.where(payment_gateway: self).where.not(state: 'failed').first
+    merchant_account_class = self.class.name.gsub('PaymentGateway', 'MerchantAccount').safe_constantize
+    if merchant_account_class
+      merchant_account_class.where(test: merchant_account_class::SEPARATE_TEST_ACCOUNTS && test_mode?).where.not(state: 'failed').first
+    end
   end
 
   def credit_card_payment?
