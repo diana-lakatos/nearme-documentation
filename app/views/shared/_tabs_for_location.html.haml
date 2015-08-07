@@ -4,9 +4,17 @@
       %li{ class: "#{ 'active' if !param_reviews_page_present? }" }
         %a{'data-toggle' => 'tab', href: '#location-details', role: 'tab'}
           = t 'buy_sell_market.products.labels.item_details'
+      - if @platform_context.instance.seller_attachments_enabled? && (attachments = @listing.attachments_for_user(current_user)) && attachments.present?
+        %li
+          %a{'data-toggle' => 'tab', href: '#location-documents', role: 'tab'}
+            = t 'seller_attachments.seller_attachments'
     .tab-content{:'data-tab-content' => true}
       %article#location-details.location.listing.tab-pane.active
         = render description_partial
+      - if @platform_context.instance.seller_attachments_enabled? && (attachments = @listing.attachments_for_user(current_user)) && attachments.present?
+        %article#location-documents.location.listing.tab-pane
+          - attachments.each do |attachment|
+            %p= link_to attachment.decorate.title, seller_attachment_path(attachment), target: '_blank'
 
 -# tmp hack before rewrite of this - if location has multiple listings, this will be wrong, so do not display before fix
 - if params[:listing_id] || @listings.count == 1 || @listings.map(&:transactable_type_id).uniq.count == 1

@@ -1,4 +1,7 @@
 class Dashboard::Company::TransactablesController < Dashboard::Company::BaseController
+
+  include AttachmentsHelper
+
   before_filter :find_transactable_type
   before_filter :find_transactable, :except => [:index, :new, :create]
   before_filter :find_locations
@@ -14,6 +17,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     @transactable.availability_template_id = @transactable_type.availability_templates.try(:first).try(:id)
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
     @photos = current_user.photos.where(owner_id: nil)
+    @attachments = current_user.attachments.where(assetable_id: nil)
     build_document_requirements_and_obligation if platform_context.instance.documents_upload_enabled?
   end
 
@@ -26,6 +30,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     @transactable.assign_attributes(transactable_params)
     @transactable.company = @company
     @transactable.location ||= @company.locations.first if @transactable_type.skip_location?
+    @transactable.attachment_ids = attachment_ids_for(@transactable)
 
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
 
@@ -40,6 +45,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
       flash.now[:error] = t('flash_messages.product.complete_fields') + view_context.array_to_unordered_list(@transactable.errors.full_messages)
       @photos = @transactable.photos
       build_document_requirements_and_obligation
+      @attachments = @transactable.attachments
       render :new
     end
   end
@@ -50,6 +56,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
 
   def edit
     @photos = @transactable.photos
+    @attachments = @transactable.attachments
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
     build_document_requirements_and_obligation if platform_context.instance.documents_upload_enabled?
@@ -57,6 +64,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
 
   def update
     @transactable.currency = transactable_params[:currency] if transactable_params[:currency].present?
+    @transactable.attachment_ids = attachment_ids_for(@transactable)
     @transactable.assign_attributes(transactable_params)
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
     respond_to do |format|
@@ -71,6 +79,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
           flash.now[:error] = t('flash_messages.product.complete_fields') + view_context.array_to_unordered_list(@transactable.errors.full_messages)
           @photos = @transactable.photos
           build_document_requirements_and_obligation
+          @attachments = @transactable.attachments
           render :edit
         end
       }

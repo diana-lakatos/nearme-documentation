@@ -1,0 +1,40 @@
+.content-container
+  %h4
+    = t('instance_admin.settings.seller_attachments.seller_attachments')
+
+  = simple_form_for @instance, url: instance_admin_settings_seller_attachments_path(@instance) do |f|
+
+    .row
+      .input-container.col-xs-12
+        .control-group
+          .switch-wrapper
+            .switch
+              .row
+                .col-md-3
+                  %span.uploads-enable-title
+                    = t('instance_admin.settings.seller_attachments.activate_seller_attachments')
+                .col-md-9
+                  = f.check_box :seller_attachments_enabled, "data-activate-seller-attachments" => true
+
+    .row
+      .input-container.col-xs-12
+        .description
+          = t('instance_admin.settings.seller_attachments.description')
+
+        .description-for-enabled{ class: "#{ @instance.seller_attachments_enabled? ? '' : 'hide' }", "data-description-for-enabled" => true }
+          .description
+            = t('instance_admin.settings.seller_attachments.formats', formats: SellerAttachmentUploader.new.extension_white_list.join(', '))
+            %br
+            = t('instance_admin.settings.seller_attachments.choices')
+            %br
+            %br
+            = t('instance_admin.settings.seller_attachments.choice')
+
+        .options-wrapper{ class: "#{ @instance.seller_attachments_enabled? ? '' : 'hide' }", "data-options-wrapper" => true }
+          = f.input :seller_attachments_access_level, as: :radio_buttons, collection: Instance::SELLER_ATTACHMENTS_ACCESS_LEVELS.map { |access_level| [t("instance_admin.settings.seller_attachments.access_levels.#{access_level}"), access_level] }, label: false
+
+    = content_for :header_buttons do
+      = f.submit t('instance_admin.save'), class: "btn btn-blue pull-right", data: { 'submit-form' => 1, 'form-selector' => 'form' }
+
+- content_for :domready do
+  new InstanceAdmin.SellerAttachmentsController($('.seller_attachments'))

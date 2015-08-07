@@ -90,6 +90,7 @@
 
       .clearfix
       = render 'locations/booking_module_listing_description'
+
       - if listing.actions_allowed?
         - unless listing.schedule_booking?
           .tab-content

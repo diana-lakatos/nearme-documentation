@@ -1,5 +1,4 @@
 - only_inputs ||= []
-- photo_input_name_prefix = f.object_name if local_assigns[:photo_input_name_prefix].nil?
 
 - if only_inputs.empty? || only_inputs.include?(:approval_requests)
   = render :partial => 'approval_requests/form', :locals => { f: f }
@@ -55,7 +54,7 @@
     %br/
     .span= t('manage.listings.photos.waiting_for_photo_processing')
   = file_upload_input_with_label('Photos',
-                                  "#{photo_input_name_prefix}[photos_attributes][0][image]",
+                                  "#{f.object_name}[photos_attributes][0][image]",
                                   dashboard_photos_path,
                                   Photo.new.image.thumbnail_dimensions[:medium],
                                   t('simple_form.labels.listing.upload_photos'),
@@ -65,7 +64,7 @@
     - # caches img so it is displayed even for the first photo. Without this, loader icon is not displayed for the first photo
     .hidden.thumbnail-processing
       .loading-icon
-    = hidden_field_tag "#{photo_input_name_prefix}", nil, :placeholder => t('ui.photo_uploader.caption'), :id => 'photo-item-input-template', :disabled => true, 'data-number' => 0
+    = hidden_field_tag "#{f.object_name}", nil, :placeholder => t('ui.photo_uploader.caption'), :id => 'photo-item-input-template', :disabled => true, 'data-number' => 0
     - unless @photos.nil?
       - @photos.each_with_index do |photo|
         - next unless photo.persisted?
@@ -74,10 +73,22 @@
                                     edit_dashboard_photo_path(photo),
                                     :div,
                                     id: photo.id) do
-          = text_field_tag "#{photo_input_name_prefix}[photos_attributes][#{photo.id}][caption]", photo.caption, :placeholder => t('ui.photo_uploader.caption')
-          = hidden_field_tag "#{photo_input_name_prefix}[photo_ids][]", photo.id
-          = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{photo.id}][id]", photo.id
-          = hidden_field_tag "#{photo_input_name_prefix}[photos_attributes][#{photo.id}][position]", photo.position, class: 'photo-position-input'
+          = text_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][caption]", photo.caption, :placeholder => t('ui.photo_uploader.caption')
+          = hidden_field_tag "#{f.object_name}[photo_ids][]", photo.id
+          = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][id]", photo.id
+          = hidden_field_tag "#{f.object_name}[photos_attributes][#{photo.id}][position]", photo.position, class: 'photo-position-input'
+
+- if @platform_context.instance.seller_attachments_enabled? && (only_inputs.empty? || only_inputs.include?(:seller_attachments))
+  .with-upload-button
+    = file_upload_input_with_label('Attachments', "#{f.object_name}[attachments_attributes][0][data]", dashboard_seller_attachments_path, nil, t('seller_attachments.upload_attachments'), "no-multiple" => true, file_types: '(\.|\/)(' + Ckeditor.attachment_file_types.join('|') + ')$', upload_type: 'ckfile', files_container: 'ul[data-attachments-container]', append_result: '1', wrong_file_message: t('seller_attachments.wrong_file_message', formats: Ckeditor.attachment_file_types.join(', '))) do
+      %ul.seller-attachments{data: {'attachments-container' => true}}
+        - if @attachments.present?
+          - @attachments.each do |attachment|
+            = render 'dashboard/seller_attachments/attachment', attachment: attachment
+
+    - content_for :domready do
+      new SellerAttachmentAccessLevelSelector();
+
 
 - if only_inputs.empty? || only_inputs.include?(:quantity)
   -if @transactable_type.action_price_per_unit?

@@ -31,6 +31,21 @@
               = hidden_field_tag "#{f.object_name}[images_attributes][#{image.id}][id]", image.id
               = hidden_field_tag "#{f.object_name}[images_attributes][#{image.id}][position]", image.position, class: 'photo-position-input'
 
+- if @platform_context.instance.seller_attachments_enabled? && (only_inputs.empty? || only_inputs.include?(:seller_attachments))
+  .row
+    .col-md-3
+      %label
+        = t('forms.product_form.attachments')
+    .col-md-9.with-upload-button
+      = file_upload_input("#{f.object_name}[attachments_attributes][0][data]", dashboard_seller_attachments_path, nil, t('seller_attachments.upload_attachments'), "no-multiple" => true, file_types: '(\.|\/)(' + Ckeditor.attachment_file_types.join('|') + ')$', upload_type: 'ckfile', files_container: 'ul[data-attachments-container]', append_result: '1', wrong_file_message: t('seller_attachments.wrong_file_message', formats: Ckeditor.attachment_file_types.join(', '))) do
+        %ul.seller-attachments{data: {'attachments-container' => true}}
+          - if @attachments.present?
+            - @attachments.each do |attachment|
+              = render 'dashboard/seller_attachments/attachment', attachment: attachment
+
+  - content_for :domready do
+    new SellerAttachmentAccessLevelSelector();
+
 - if only_inputs.empty? || only_inputs.include?(:shipping_info)
   .row.shipping_method_block.shipping_method_list
     = render 'dashboard/base/shipping_profiles_list', f: f

@@ -1,4 +1,7 @@
 class Dashboard::Company::ProductsController < Dashboard::Company::BaseController
+
+  include AttachmentsHelper
+
   before_filter :find_product_type
   before_filter :find_product, only: [:edit, :update, :destroy]
   before_filter :set_form_components
@@ -18,15 +21,18 @@ class Dashboard::Company::ProductsController < Dashboard::Company::BaseControlle
     @product_form = ProductForm.new(@product)
     @product_form.assign_all_attributes
     @images = current_user.products_images.where(viewable_id: nil, viewable_type: nil)
+    @attachments = current_user.attachments.where(assetable_id: nil)
   end
 
   def create
     @product = @company.products.build(user: current_user, product_type: @product_type)
     @product_form = ProductForm.new(@product)
+    @product_form.product.attachment_ids = attachment_ids_for(@product_form.product)
     if @product_form.submit(product_form_params)
       redirect_to location_after_save, notice: t('flash_messages.manage.product.created')
     else
       @images = @product_form.product.images
+      @attachments = current_user.attachments.where(assetable_id: nil)
       flash.now[:error] = t('flash_messages.product.complete_fields')
       flash.now[:error] = t('flash_messages.product.missing_fields_invalid') if @product_form.required_field_missing?
       render :new
@@ -37,15 +43,18 @@ class Dashboard::Company::ProductsController < Dashboard::Company::BaseControlle
     @product_form = ProductForm.new(@product)
     @product_form.assign_all_attributes
     @images = @product_form.product.images
+    @attachments = @product_form.product.attachments
   end
 
   def update
     return_to = params[:return_to].presence || location_after_save
     @product_form = ProductForm.new(@product)
+    @product_form.product.attachment_ids = attachment_ids_for(@product_form.product)
     if @product_form.submit(product_form_params)
       redirect_to return_to, notice: t('flash_messages.manage.product.updated')
     else
       @images = @product_form.product.images.uniq
+      @attachments = current_user.attachments.where(assetable_id: nil)
       flash.now[:error] = t('flash_messages.product.complete_fields')
       flash.now[:error] = t('flash_messages.product.missing_fields_invalid') if @product_form.required_field_missing?
       render :edit
