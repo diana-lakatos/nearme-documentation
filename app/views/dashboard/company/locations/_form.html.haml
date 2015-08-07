@@ -1,12 +1,13 @@
 .modal-header
-  .modal-title Add New Location
+  .modal-title
+    = t('locations.add_new_location')
 .modal-body
   = simple_form_for [:dashboard, :company, @location], html: {id: 'location-form'}, wrapper: :bs3_simple, data: { modal: true }  do |f|
     .errors
     = render :partial => 'location_form', :locals => { :f => f, :location => @location }
 
     .btn-toolbar
-      = f.submit 'Save Location', id: 'submit-link', class: "btn blue pull-right"
+      = f.submit t('locations.save_location'), id: 'submit-link', class: "btn blue pull-right"
 
 :javascript
   DNM.initializeBootstrap();

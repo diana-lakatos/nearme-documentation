@@ -8,7 +8,7 @@
         - if f.object.errors[:address].present?
           = f.object.errors[:address][0]
         - else
-          does not exists
+          = t('locations.does_not_exist')
 
     .map{:style => "display: none", :'data-marker' => image_path("components/map-pin.png")}
       .map-container{:style => "height: 240px; width: 100%;"}

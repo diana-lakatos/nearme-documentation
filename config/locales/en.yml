@@ -63,6 +63,11 @@ en:
         book_at: 'Book at'
         the_listing: 'The listing'
         admin_logout_confirmation: 'This will log you out and re-log you in as location administrator.'
+  locations:
+    add_new_location: "Add New Location"
+    save_location: "Save Location"
+    does_not_exist: "does not exist"
+
   manage:
     companies:
       theme_image_deleted: "That image has been deleted."
