@@ -59,29 +59,49 @@ class @InstanceAdmin.RatingSystemsController
     @container.on 'click', '.remove-question.enabled', ->
       parent = $(@).parent()
       questions = $(@).parents('.questions')
+      ratingSystem = $(@).parents('.rating-system')
+
+      questionsCount = self.questionsCount(ratingSystem)
+      
+      if questionsCount == 2
+        ratingSystem.find('.questions .remove-question').removeClass('enabled')
+
       if parent.find('.question-id').val().length
         parent.find('input[type="checkbox"]').prop('checked', true)
         parent.hide()
       else
         parent.remove()
-      index = 1
-      questions.find('.number:visible').each ()->
-        $(@).text("#{index}.")
-        index += 1
-      
-      self.keyDownEvents()
+
+      self.updateQuestionNumbers(questions);
+
 
   keyDownEvents: ->
-    @container.on 'keydown', '.question-input', ->
+    self = @
+
+    @container.on 'input', '.question-input', ->
       parent = $(@).parent()
       questions = $(@).parents('.questions')
-      questionsCount = $(@).parents('.rating-system').find('.question:visible').length
+      ratingSystem = $(@).parents('.rating-system')
+
+      questionsCount = self.questionsCount(ratingSystem)
+      questions.find('.remove-question').addClass('enabled')
+
       if parent.next().length is 0 and questionsCount < 5
         newQuestion = $(@).parent().clone()
         newQuestion.appendTo(questions)
-        parent.find('.remove-question').addClass('enabled')
-        parent.next().find('.number').text("#{questionsCount + 1}.")
+        
         newQuestion.find('input').each ()->
           $(@).attr('id', $(@).attr('id').replace(/attributes\_\d+/, "attributes_#{questionsCount}"))
           $(@).attr('name', $(@).attr('name').replace(/attributes\]\[\d+/, "attributes][#{questionsCount}"))
-          $(@).val("")
+          $(@).val('')
+
+        self.updateQuestionNumbers(questions)
+
+  questionsCount: (ratingSystem, event) ->
+    ratingSystem.find('.question:visible').length
+
+  updateQuestionNumbers: (questions) ->
+    index = 1
+    questions.find('.number:visible').each ()->
+      $(@).text("#{index}.")
+      index += 1
