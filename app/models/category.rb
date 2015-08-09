@@ -18,7 +18,6 @@ class Category < ActiveRecord::Base
   # Validation
   validates :name, presence: true
 
-
   # Polymprophic association to TransactableType, ProductType
   belongs_to :categorizable, polymorphic: true
   belongs_to :instance
@@ -74,7 +73,7 @@ class Category < ActiveRecord::Base
   end
 
   def translated_name
-    I18n.t(translation_key)
+    I18n.t(translation_key, default: name)
   end
 
   def to_liquid
@@ -95,10 +94,15 @@ class Category < ActiveRecord::Base
 
   def create_translation_key
     instance.locales.each do |locale|
-      translation_attributes = {  locale: locale.code, key: translation_key}
-      @translation = instance.translations.where(translation_attributes).presence ||
-        instance.translations.create(translation_attributes.merge(value: name))
+      translation_attributes = { value: name_was, locale: locale.code, key: translation_key }
+
+      old_translation = instance.translations.where(translation_attributes).first
+      old_translation.try(:destroy) if old_translation.present?
+
+      instance.translations.create(translation_attributes.merge(value: name))
     end
+
+    I18N_DNM_BACKEND.update_cache(self.instance_id)
   end
 
   def rename_form_component
