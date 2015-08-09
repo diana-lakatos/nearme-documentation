@@ -421,7 +421,7 @@ en:
         user_does_not_exists: "A user does not exist with the specified email address."
         user_is_not_in_company: "You can't delete user which is not in your company."
       payouts:
-        updated: 'Payment methods have been updated.'
+        updated: 'Payout information has been updated.'
     marketplace_sessions:
       wrong_password: 'Wrong password!'
     partner_inquiries:
