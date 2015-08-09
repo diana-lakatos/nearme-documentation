@@ -141,7 +141,6 @@ module DesksnearMe
 
     config.exceptions_app = self.routes
 
-    config.middleware.swap Rails::Rack::Logger, NullLogger, silenced: %w(/ping)
     # custom rewrites specified in lib/legacy_redirect_handler.rb
     config.middleware.insert_before(Rack::Sendfile, "LegacyRedirectHandler")
     # setting platform_context in app/models/platform_context/rack_setter.rb

@@ -27,6 +27,8 @@ DesksnearMe::Application.configure do
   config.assets.compile = false
   config.assets.manifest = "#{Rails.root}/config/manifest.json"
 
+  config.middleware.swap Rails::Rack::Logger, NullLogger, silence: %w('/ping')
+
   # Clould services credentials
   CarrierWave.configure do |config|
     config.fog_credentials = {
