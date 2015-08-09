@@ -3178,7 +3178,6 @@ ActiveRecord::Schema.define(version: 20150729183231) do
     t.string   "language",                               limit: 2,   default: "en"
     t.integer  "saved_searches_count",                               default: 0
     t.datetime "saved_searches_alert_sent_at"
-    t.string   "paypal_merchant_id"
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

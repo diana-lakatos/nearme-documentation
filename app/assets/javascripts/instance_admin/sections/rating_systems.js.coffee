@@ -11,31 +11,9 @@ class @InstanceAdmin.RatingSystemsController
       checkedValue = $(@).prop('checked')
       $(@).prop('checked', !checkedValue)
 
-    @container.on 'click', '.remove-question.enabled', ->
-      parent = $(@).parent()
-      questions = $(@).parents('.questions')
-      if parent.find('.question-id').val().length
-        parent.find('input[type="checkbox"]').prop('checked', true)
-        parent.hide()
-      else
-        parent.remove()
-      index = 1
-      questions.find('.number:visible').each ()->
-        $(@).text("#{index}.")
-        index += 1
-
-    @container.on 'keydown', '.question-input', ->
-      parent = $(@).parent()
-      questions = $(@).parents('.questions')
-      questionsCount = $(@).parents('.rating-system').find('.question:visible').length
-      if $(@).val().length is 0 and parent.next().length is 0 and questionsCount < 5
-        newQuestion = $(@).parent().clone()
-        newQuestion.appendTo(questions)
-        parent.find('.remove-question').addClass('enabled')
-        parent.next().find('.number').text("#{questionsCount + 1}.")
-        newQuestion.find('input').each ()->
-          $(@).attr('id', $(@).attr('id').replace(/attributes\_\d+/, "attributes_#{questionsCount}"))
-          $(@).attr('name', $(@).attr('name').replace(/attributes\]\[\d+/, "attributes][#{questionsCount}"))
+    
+    @removeQuestionEvents()
+    @keyDownEvents()
 
   toggleSlide: (clickElement, container, selector) ->
     @container.find(clickElement + selector).on 'click', ->
@@ -74,3 +52,36 @@ class @InstanceAdmin.RatingSystemsController
             _method: 'put'
             service_type:
               params
+   
+  removeQuestionEvents: ->
+    self = @
+
+    @container.on 'click', '.remove-question.enabled', ->
+      parent = $(@).parent()
+      questions = $(@).parents('.questions')
+      if parent.find('.question-id').val().length
+        parent.find('input[type="checkbox"]').prop('checked', true)
+        parent.hide()
+      else
+        parent.remove()
+      index = 1
+      questions.find('.number:visible').each ()->
+        $(@).text("#{index}.")
+        index += 1
+      
+      self.keyDownEvents()
+
+  keyDownEvents: ->
+    @container.on 'keydown', '.question-input', ->
+      parent = $(@).parent()
+      questions = $(@).parents('.questions')
+      questionsCount = $(@).parents('.rating-system').find('.question:visible').length
+      if parent.next().length is 0 and questionsCount < 5
+        newQuestion = $(@).parent().clone()
+        newQuestion.appendTo(questions)
+        parent.find('.remove-question').addClass('enabled')
+        parent.next().find('.number').text("#{questionsCount + 1}.")
+        newQuestion.find('input').each ()->
+          $(@).attr('id', $(@).attr('id').replace(/attributes\_\d+/, "attributes_#{questionsCount}"))
+          $(@).attr('name', $(@).attr('name').replace(/attributes\]\[\d+/, "attributes][#{questionsCount}"))
+          $(@).val("")

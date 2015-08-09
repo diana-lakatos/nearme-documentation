@@ -15,7 +15,7 @@ class InstanceAdmin::Manage::RatingSystemsController < InstanceAdmin::Manage::Ba
     @rating_systems.each do |rating_system|
       rating_system.update(rating_system_params[rating_system.id.to_s])
     end
-    redirect_to instance_admin_manage_rating_systems_path
+    redirect_to instance_admin_manage_rating_systems_path, notice: t('flash_messages.instance_admin.manage.rating_systems.updated')
   end 
 
   private
