@@ -18,7 +18,7 @@
         %p= order.display_completed_at
       .col-md-3
         %p= t('orders.labels.total')
-        %p= order.total_amount_to_charge
+        %p= humanized_money_with_cents_and_symbol(order.total_amount_to_charge)
       .col-md-3
         %p= t('orders.labels.ship_to')
         %p= order.display_shipping_address
@@ -40,11 +40,6 @@
           = render 'dashboard/orders/line_item', item: item
 
           .col-md-4.order-actions
-            -# Jaromir: Disabled due to the missing UI on product listing
-            -#- if order.shipped? && !order.shipments.first.tracking
-            -#  = link_to order.shipments.first.tracking, target: '_blank' do
-            -#    %col-md-.btn.blue= t'orders.buttons.track'
-
             - if has_active_rating_system? && order.reviewable? && !received_orders
 
               - if item.has_seller_reviews?
@@ -104,8 +99,4 @@
                   %span.btn.gray= t 'orders.buttons.product_review'
 
       - if order.payment_documents.length > 0
-        = t('dashboard.payment_documents.files_sent_to_me')
-      - order.payment_documents.each do |pd|
-        .payment-document
-          = link_to (pd.try(:payment_document_info).try(:document_requirement).try(:label).presence || pd.file.file_name), pd.file.url, target: '_blank'
-
+        = render 'payment_documents', payment_documents: order.payment_documents

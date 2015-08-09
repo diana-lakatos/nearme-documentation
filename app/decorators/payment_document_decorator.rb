@@ -3,6 +3,10 @@ class Attachable::PaymentDocumentDecorator < Draper::Decorator
   
   delegate_all
 
+  def document_info_label
+    object.try(:payment_document_info).try(:document_requirement).try(:label).presence || object.file.file_name 
+  end
+
   def attachable_link
     if attachable.is_a?(Spree::Order)
       if attachable.user == current_user
