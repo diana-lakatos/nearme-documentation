@@ -37,4 +37,8 @@
           - address_component.each do |key, value|
             %input{name: "#{f.object_name}[address_components][#{index}][#{key}]", value: value, class: 'address_components_input'}
 
+    - if is_i18n_set?('simple_form.hints.location.address')
+      %p.help-block
+        = t('simple_form.hints.location.address')
+
 
