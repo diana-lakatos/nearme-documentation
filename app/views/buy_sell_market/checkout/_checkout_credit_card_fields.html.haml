@@ -14,13 +14,13 @@
     .span3
       = f.label :card_holder_first_name, "First Name"
     .span9
-      = f.input_field :card_holder_first_name, class: 'sessioncamexclude', required: true, autocomplete: :off
+      = f.input_field :card_holder_first_name, class: 'sessioncamexclude', required: true, autocomplete: :off, value: (f.object.card_holder_first_name.presence || current_user.first_name)
 
   .row-fluid
     .span3
       = f.label :card_holder_last_name, "Last Name"
     .span9
-      = f.input_field :card_holder_last_name, class: 'sessioncamexclude', required: true, autocomplete: :off
+      = f.input_field :card_holder_last_name, class: 'sessioncamexclude', required: true, autocomplete: :off, value: (f.object.card_holder_last_name.presence || current_user.last_name)
 
   .row-fluid
     .span3.card-info{class: "#{"error" if f.object.errors.include?(:number).present?}"}
