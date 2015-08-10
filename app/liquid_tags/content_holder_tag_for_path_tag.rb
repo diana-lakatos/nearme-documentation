@@ -1,4 +1,4 @@
-class ContentHolderTagForPath < Liquid::Tag
+class ContentHolderTagForPathTag < Liquid::Tag
   include ContentHoldersHelper
 
   def initialize(tag_name, holder_name, tokens)
@@ -13,11 +13,10 @@ class ContentHolderTagForPath < Liquid::Tag
     if group_name = ContentHolder::INJECT_PAGES[[controller, action].join('#')]
       contents = get_content_holders_for_path(group_name).map(&:with_content_for).join
       @template = Liquid::Template.parse(contents)
-      @template.render( context )
+      @template.render(context)
     end
   end
 
 end
 
-Liquid::Template.register_tag('inject_content_holder_for_path', ContentHolderTagForPath)
-
+Liquid::Template.register_tag('inject_content_holder_for_path', ContentHolderTagForPathTag)

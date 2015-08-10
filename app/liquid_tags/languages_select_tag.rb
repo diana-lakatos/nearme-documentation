@@ -1,14 +1,9 @@
-class LanguagesSelectTag < Liquid::Tag
-  include ActionView::Helpers::FormTagHelper
-  include ActionView::Helpers::FormOptionsHelper
-
-  def initialize(tag_name, param, tokens)
-    super
-
-    @param = param
+class LanguagesSelectTag < SelectTag
+  def name
+    'locales[languages_select]'
   end
 
-  def render(context)
+  def collection
     original_path = context.registers.try('[]', :controller).try(:request).try(:original_fullpath) || '/'
     default_url = Locale.change_locale_in_url(original_path, I18n.locale)
 
@@ -19,10 +14,12 @@ class LanguagesSelectTag < Liquid::Tag
       [name, value]
     end
 
-    select_tag('locales[languages_select]', options_from_collection_for_select(options, :first, :second, default_url), :class => 'locales_languages_select')
+    options_from_collection_for_select(options, :first, :second, default_url)
   end
 
+  def classes
+    %w(locales_languages_select)
+  end
 end
 
 Liquid::Template.register_tag('languages_select', LanguagesSelectTag)
-

@@ -32,5 +32,10 @@ class TransactableTypeDrop < BaseDrop
     name.pluralize
   end
 
+  def to_json
+    {
+      id: @transactable_type.id,
+      name: @transactable_type.name
+    }.to_json
+  end
 end
-
