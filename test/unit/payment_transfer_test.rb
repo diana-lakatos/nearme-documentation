@@ -172,6 +172,7 @@ class PaymentTransferTest < ActiveSupport::TestCase
 
     should "return false if there is no potential processor and company has not provided settings" do
       CountryPaymentGateway.delete_all
+      PaymentGateway.delete_all
       refute @payment_transfer.possible_automated_payout_not_supported?
     end
 

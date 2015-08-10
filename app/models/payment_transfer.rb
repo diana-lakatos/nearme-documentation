@@ -143,7 +143,7 @@ class PaymentTransfer < ActiveRecord::Base
                            concrete_payment_gateway
                            # this is hack for now - currently we might accept payments via Stripe, but do payout via PayPal
                          else
-                           concrete_payment_gateway = instance.payment_gateways.find do |pg|
+                           concrete_payment_gateway = PaymentGateway.where(instance: instance).all.find do |pg|
                              pg.supports_payout? && pg.supports_currency?(currency) && pg.class.supported_countries.include?(company.iso_country_code)
                            end
                            concrete_payment_gateway
