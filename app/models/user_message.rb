@@ -75,6 +75,8 @@ class UserMessage < ActiveRecord::Base
         thread_context_id: thread_context_id,
         thread_context_type: thread_context_type
     ).update_all( column => true )
+
+    update_unread_message_counter_for(user)
   end
 
   def to_liquid
