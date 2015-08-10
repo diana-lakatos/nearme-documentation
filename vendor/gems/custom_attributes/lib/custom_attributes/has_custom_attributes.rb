@@ -9,8 +9,8 @@ module CustomAttributes
     module ClassMethods
       def has_custom_attributes(options = {})
         @options = options.reverse_merge(store_accessor_name: :properties)
-        raise '(vendor/gems/custom_attributes) please provide mandaotry :target_id option' if @options[:target_id].nil?
-        raise '(vendor/gems/custom_attributes) please provide mandaotry :target_type option' if @options[:target_type].nil?
+        raise '(vendor/gems/custom_attributes) please provide mandatory :target_id option' if @options[:target_id].nil?
+        raise '(vendor/gems/custom_attributes) please provide mandatory :target_type option' if @options[:target_type].nil?
 
         define_method(:custom_attributes_names_types_hash) do
           custom_attributes.inject({}) do |hstore_attrs, attr_array|
