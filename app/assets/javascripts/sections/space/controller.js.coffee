@@ -68,6 +68,7 @@ class @Space.Controller
     $.when.apply($, deferreds).done =>
       @fullScreenGalleryContainer.find(".loading").hide()
       carousel.fadeIn 1000
+      $(window).resize()
 
 
   adjustBookingModulePosition: ->
