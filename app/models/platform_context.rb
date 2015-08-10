@@ -44,7 +44,10 @@ class PlatformContext
     Transactable.clear_custom_attributes_cache
     User.clear_custom_attributes_cache
     Spree::Product.clear_custom_attributes_cache
-    I18N_DNM_BACKEND.set_instance_id(platform_context.instance.id) if defined? I18N_DNM_BACKEND
+    if defined? I18N_DNM_BACKEND
+      I18N_DNM_BACKEND.set_instance_id(platform_context.instance.id)
+      I18N_DNM_BACKEND.update_cache(platform_context.instance.id)
+    end
     I18n.locale = platform_context.instance.primary_locale
     instance_view_cache_key = get_instance_view_cache_key(platform_context.instance.id)
     @@instance_view_cache_key[platform_context.instance.id] ||= instance_view_cache_key
