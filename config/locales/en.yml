@@ -1358,6 +1358,7 @@ en:
       day_and_month: "%^b %-d"
       day_month_year: "%m/%d/%Y"
       only_date: "%B %d, %-Y"
+      only_date_short: "%-e %b, %Y"
       month_year: "%B %Y"
       start_hours: "%-H:%M"
       end_hours: "%-H:%M"
@@ -1367,6 +1368,7 @@ en:
       day_and_month: "%^b %-d"
       day_month_year: "%m/%d/%Y"
       month_year: "%B %Y"
+      only_date_short: "%-e %b, %Y"
   user_messages:
     inbox:
       one: "Inbox (1)"

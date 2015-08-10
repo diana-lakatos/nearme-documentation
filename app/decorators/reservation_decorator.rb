@@ -103,8 +103,8 @@ class ReservationDecorator < Draper::Decorator
   end
 
   def long_dates
-    first = date.strftime('%-e %b, %Y')
-    last = last_date.strftime('%-e %b, %Y')
+    first = I18n.l(date, format: :only_date_short)
+    last = I18n.l(last_date, format: :only_date_short)
 
     first == last ? first : "#{first} - #{last}"
   end
