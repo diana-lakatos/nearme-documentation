@@ -277,7 +277,11 @@ module ApplicationHelper
   end
 
   def admin_breadcrumbs
-    @breadcrumbs_title.presence || controller.class.to_s.deconstantize.demodulize
+    if @breadcrumbs_title.present?
+      @breadcrumbs_title.to_s
+    else
+      controller.class.to_s.deconstantize.demodulize
+    end
   end
 
   def credit_card_date

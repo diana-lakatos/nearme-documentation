@@ -13,6 +13,9 @@ class InstanceAdmin::Manage::ServiceTypes::CategoriesController < InstanceAdmin:
   end
 
   def set_breadcrumbs_title
-    @breadcrumbs_title = 'Service Types'
+    @breadcrumbs_title = BreadcrumbsList.new(
+      { :url => instance_admin_manage_service_types_path, :title => t('instance_admin.manage.service_types.service_types') },
+      { :url => instance_admin_manage_service_type_categories_path, :title => t('instance_admin.manage.service_types.categories') }
+    )
   end
 end

@@ -46,6 +46,9 @@ class InstanceAdmin::CustomValidatorsController  < InstanceAdmin::ResourceContro
   end
 
   def set_breadcrumbs
-    @breadcrumbs_title = 'Manage Validators'
+    @breadcrumbs_title = BreadcrumbsList.new(
+      { :url => instance_admin_manage_service_types_path, :title => t('instance_admin.manage.service_types.service_types') },
+      { :url => instance_admin_manage_service_type_custom_validators_path, :title => t('instance_admin.manage.service_types.custom_validators') }
+    )
   end
 end
