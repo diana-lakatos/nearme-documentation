@@ -31,10 +31,15 @@
             = render @locations, form: f
             .show-more
               %a{"data-target" => ".hidden-location", "data-toggle" => "collapse", :href => "#"} Show more locations
+
+            - if is_i18n_set?('simple_form.hints.transactable.locations')
+              = t('simple_form.hints.transactable.locations')
+
           - if f.object.errors.messages[:location]
             .col-md-12.error
               .error-block
                 You need to pick up location
+
       - when 'approval_requests'
         = render :partial => 'approval_requests/form', :locals => { f: f }
       - when 'enabled'
