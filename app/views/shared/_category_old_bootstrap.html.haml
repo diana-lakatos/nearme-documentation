@@ -19,3 +19,8 @@
             .category_tree_inputs
             - if error.present?
               .help-inline= error.first
+
+            - if is_i18n_set?('simple_form.hints.listings.categories')
+              .help-block
+                = t('simple_form.hints.listings.categories')
+
