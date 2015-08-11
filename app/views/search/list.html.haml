@@ -18,7 +18,7 @@
                 - else
                   = check_box_tag("parent_category_ids[]", category.id, @searcher.category_ids.include?(category.id.to_s), hidden: true, id: "category_#{category.id}")
                 = category.translated_name
-            = category_tree(category, @category, 2)
+            = category_tree(category, @category, 2, @searcher.category_ids)
   .span9
     = render 'search/list_results'
 

@@ -13,7 +13,8 @@ class Search.SearchMixedController extends Search.SearchController
     @bindLocationsEvents()
     @initializeCarousel()
     @initializePriceSlider()
-    @renderChildCategories()
+    params_category_ids = DNM.util.Url.getParameterByName('category_ids').split(',')
+    @renderChildCategories(params_category_ids)
     @autocompleteCategories()
 
 
@@ -165,8 +166,10 @@ class Search.SearchMixedController extends Search.SearchController
     )
     super
 
-  renderChildCategories: ->
-    category_ids = _.toArray(@container.find('input[name="category_ids[]"]:checked').map(-> $(this).val())).join(',')
+  renderChildCategories: (params_category_ids = [])->
+    category_ids = _.toArray(@container.find('input[name="category_ids[]"]:checked').map(-> $(this).val()))
+    Array::push.apply category_ids, params_category_ids
+    category_ids = category_ids.join(',')
     @container.find('#categories-children').html('')
     container = @container
 

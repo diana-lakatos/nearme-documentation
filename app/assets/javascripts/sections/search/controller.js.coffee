@@ -200,6 +200,12 @@ class Search.Controller
       @categoryTreeInit(false)
 
   categoryTreeInit: (windowResized)->
+    unless windowResized
+      $('.nav-categories  > ul > .categories-list > .nav-item ').find('.categories-list').hide()
+
+    for target in $(".nav-item input[type='checkbox']:checked")
+      $(target).parent().next().show()
+
     if ($(window).width() < 767)
       $("#category-tree .categories-list:first").hide()
       $(".nav-heading input:checked").parents('.nav-heading').next().show()
@@ -210,9 +216,6 @@ class Search.Controller
     else
       $(".nav-heading input").parents('.nav-heading').next().show()
       $(".nav-heading input").unbind 'change'
-
-    unless windowResized
-      $('.nav-categories  > ul > .categories-list > .nav-item ').find('.categories-list').hide()
 
     $(".nav-item input[type='checkbox']").on 'change', (event) ->
       if $(event.target).prop('checked')
