@@ -38,7 +38,7 @@ class @CategoriesController
             strings:
               new_node: "New category",
               loading: "Loading ..."
-            plugins: ["themes", "json_data", "dnd", "checkbox", 'real_checkboxes']
+            plugins: ["themes", "json_data", "checkbox", 'real_checkboxes']
             checkbox:
               real_checkboxes: false,
               three_state: false,

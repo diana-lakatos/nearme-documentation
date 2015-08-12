@@ -6,7 +6,6 @@ class SecuredParams
       user_attributes: nested(self.user),
       company_attributes: nested(self.company),
       product_form: nested(self.product_form(product_type))
-
     ]
   end
 

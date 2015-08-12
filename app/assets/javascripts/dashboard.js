@@ -70,6 +70,8 @@
 //= require ./vendor/bootstrap-modal-fullscreen
 //= require bootstrap-switch
 
+/*  This should be rewritten at some point */
+
 window.DNM = {
   UI: {},
   initialize : function() {
@@ -191,7 +193,7 @@ window.DNM = {
 }
 
 $(function() {
-  DNM.initialize()
+  DNM.initialize();
 })
 
 jQuery.ajaxSetup({
