@@ -8,5 +8,9 @@ class String
     end
   end
 
+  def to_yml_key
+    gsub(/[\-|\/|\.]/, '_').downcase
+  end
+
 end
 

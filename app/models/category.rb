@@ -25,7 +25,7 @@ class Category < ActiveRecord::Base
   before_save :set_permalink
   after_save :create_translation_key
   after_save :rename_form_component, if: -> (category) { category.name_changed? }
-  after_destroy :rename_form_component
+  after_destroy :rename_form_component, :remove_translation_key
 
   # Scopes
 
@@ -89,20 +89,23 @@ class Category < ActiveRecord::Base
   end
 
   def translation_key
-    "categories.#{name.to_url.gsub(/[\-|\/|\.]/, '_').downcase}"
+    "categories.#{name.to_url.to_yml_key}"
+  end
+
+  def translation_key_was
+    "categories.#{name_was.to_url.to_yml_key}"
   end
 
   def create_translation_key
+    remove_translation_key if name_changed? && name_was
     instance.locales.each do |locale|
-      translation_attributes = { value: name_was, locale: locale.code, key: translation_key }
-
-      old_translation = instance.translations.where(translation_attributes).first
-      old_translation.try(:destroy) if old_translation.present?
-
-      instance.translations.create(translation_attributes.merge(value: name))
+      translation_attributes = { locale: locale.code, key: translation_key }
+      instance.translations.find_or_create_by(translation_attributes) { |t| t.value = name }
     end
+  end
 
-    I18N_DNM_BACKEND.update_cache(self.instance_id)
+  def remove_translation_key
+    instance.translations.where(locale: instance.locales.map(&:code), key: translation_key_was).destroy_all
   end
 
   def rename_form_component
