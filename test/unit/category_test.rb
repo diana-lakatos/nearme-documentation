@@ -45,18 +45,11 @@ class CategoryTest < ActiveSupport::TestCase
     end
 
     should 'create translation based on name' do
-      assert Translation.where(value: @category.name, locale: @locale.code, key: @category.translation_key).present?
-      
-      old_translation = Translation.where({ locale: @locale.code, key: @category.translation_key }).first.value
-      assert_equal @category.name, old_translation
-
-      @category.update_attribute :name, 'New Name'
-      translation = Translation.where(locale: @locale.code, key: @category.translation_key, value: 'New Name')
-
-      refute (old_translation == @category.reload.translation_key)
-      
-      assert translation.any?
-      assert_equal translation.count, 1
+      assert Translation.where(value: @category.name, locale: @locale.code, key: @category.translation_key).exists?
+      old_translation_key = @category.translation_key
+      @category.update! name: 'New Name'
+      refute Translation.where(locale: @locale.code, key: old_translation_key).exists?
+      assert Translation.where(value: @category.name, locale: @locale.code, key: @category.translation_key).exists?
     end
 
     should 'create translations for existing categories when adding new locale' do
