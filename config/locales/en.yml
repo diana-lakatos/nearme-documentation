@@ -1636,6 +1636,10 @@ en:
     errors:
       user_form:
         avatar: "Please upload at least one photo."
+    photos:
+      collection:
+        rotate_and_crop: 'Rotate & Crop'
+        delete: "Delete"
 
 
 
