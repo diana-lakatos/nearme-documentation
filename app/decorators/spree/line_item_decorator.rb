@@ -8,7 +8,7 @@ class Spree::LineItemDecorator < Draper::Decorator
   MAX_QTY_FOR_SELECT = 15
 
   def name_with_link(target='')
-    link_to object.name, product_url(object.product), target: target
+    link_to object.product.name, product_url(object.product), target: target
   end
 
   def description

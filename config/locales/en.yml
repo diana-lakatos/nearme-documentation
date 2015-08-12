@@ -1085,6 +1085,7 @@ en:
       add_new_document_requirement: "Add new Document Requirement"
     payment_documents:
       files_sent_to_me: "Files sent to me"
+      files_sent_by_me: "Files sent by me"
       files_uploaded_by_me: "Files uploaded by me"
       order: "Order"
       reservation: "Reservation"

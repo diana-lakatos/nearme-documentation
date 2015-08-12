@@ -10,10 +10,13 @@ module Attachable
 
     self.per_page = 20
 
+    scope :uploaded_by, ->(user_id){ where(user_id: user_id) }
+    scope :not_uploaded_by, ->(user_id){ where.not(user_id: user_id) }
+
     private
 
     def check_file_presence?
-      payment_document_info.document_requirement.item.upload_obligation.required?
+      payment_document_info.try(:document_requirement).try(:item).try(:upload_obligation).try(:required?).presence || false
     end
   end
 end
