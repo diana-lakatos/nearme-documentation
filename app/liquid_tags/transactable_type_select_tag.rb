@@ -7,7 +7,7 @@ class TransactableTypeSelectTag < SelectTag
     TransactableType
   end
 
-  def collection
+  def collection(context: nil)
     order = @param.present? ? @param.strip.to_sym : :asc
     options_from_collection_for_select(klass.all.order(name: order), :id, :name)
   end

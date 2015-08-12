@@ -3,7 +3,7 @@ class LanguagesSelectTag < SelectTag
     'locales[languages_select]'
   end
 
-  def collection
+  def collection(context: nil)
     original_path = context.registers.try('[]', :controller).try(:request).try(:original_fullpath) || '/'
     default_url = Locale.change_locale_in_url(original_path, I18n.locale)
 

@@ -7,7 +7,7 @@ class SelectTag < Liquid::Tag
   end
 
   def render(context)
-    select_tag(name, collection, class: classes.join(" "))
+    select_tag(name, collection(context: context), class: classes.join(" "))
   end
 
   def name
