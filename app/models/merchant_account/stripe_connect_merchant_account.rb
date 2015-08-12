@@ -1,5 +1,7 @@
 class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
+  SEPARATE_TEST_ACCOUNTS = true
+
   ATTRIBUTES = %w(currency bank_routing_number bank_account_number tos account_type business_tax_id business_vat_id ssn_last_4 personal_id_number)
   ACCOUNT_TYPES = %w(individual company)
 

@@ -79,6 +79,9 @@ class PaymentGatewayTest < ActiveSupport::TestCase
 
   end
 
+  class MerchantAccount::TestMerchantAccount < MerchantAccount
+  end
+
   SUCCESS_RESPONSE = {"paid_amount"=>"10.00"}
   FAILURE_RESPONSE = {"paid_amount"=>"10.00", "error"=>"fail"}
 
@@ -244,7 +247,7 @@ class PaymentGatewayTest < ActiveSupport::TestCase
     end
   end
 
-  class TestPayoutProcessor < PaymentGateway
+  class PaymentGateway::TestPayoutPaymentGateway < PaymentGateway
 
     attr_accessor :success, :pending
 
@@ -260,17 +263,19 @@ class PaymentGatewayTest < ActiveSupport::TestCase
 
   end
 
+  class MerchantAccount::TestPayoutMerchantAccount < MerchantAccount
+  end
 
   context 'payout' do
 
     setup do
-      @test_processor = TestPayoutProcessor.create!
+      @test_processor = PaymentGateway::TestPayoutPaymentGateway.create!
       @payment_transfer = FactoryGirl.create(:payment_transfer_unpaid)
       @amount = Money.new(1234, 'JPY')
 
       CountryPaymentGateway.delete_all
       FactoryGirl.create(:country_payment_gateway, payment_gateway: @test_processor, country_alpha2_code: 'US')
-      FactoryGirl.create(:paypal_merchant_account, payment_gateway: @test_processor, merchantable: @payment_transfer.company)
+      MerchantAccount::TestPayoutMerchantAccount.create(payment_gateway: @test_processor, merchantable: @payment_transfer.company, state: 'verified')
     end
 
     should 'create payout object when succeeded' do

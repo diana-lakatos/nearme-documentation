@@ -45,6 +45,12 @@ FactoryGirl.define do
       test_settings { { merchant_id: "123456789", public_key: "987654321", private_key: "321543", supported_currency: 'USD', master_merchant_account_id: 'master_id'} }
       live_settings { { merchant_id: "123456789", public_key: "987654321", private_key: "321543", supported_currency: 'USD', master_merchant_account_id: 'master_id'} }
     end
+
+    factory :stripe_connect_payment_gateway, class: PaymentGateway::StripeConnectPaymentGateway do
+      type 'PaymentGateway::StripeConnectPaymentGateway'
+      test_settings { {login: "123456789"} }
+      live_settings { {login: "123456789"} }
+    end
   end
 end
 
