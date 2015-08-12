@@ -2,10 +2,10 @@
   = t('dashboard.payment_documents.files_sent_to_me')
   - payment_documents.not_uploaded_by(current_user.id).each do |pd|
     .payment-document
-      = link_to pd.document_info_label, pd.file.url, target: :blank
+      = link_to pd.decorate.document_info_label, pd.file.url, target: :blank
 
 - if payment_documents.uploaded_by(current_user.id).exists?
   = t('dashboard.payment_documents.files_sent_by_me')
   - payment_documents.uploaded_by(current_user.id).each do |pd|
     .payment-document
-      = link_to pd.document_info_label, pd.file.url, target: :blank
+      = link_to pd.decorate.document_info_label, pd.file.url, target: :blank
