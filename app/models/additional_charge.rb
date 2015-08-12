@@ -5,7 +5,7 @@ class AdditionalCharge < ActiveRecord::Base
 
   after_initialize :copy_ac_type_data, if: :new_record?
 
-  belongs_to :instance
+  belongs_to :instance, touch: true
   belongs_to :additional_charge_type
   belongs_to :target, polymorphic: true
 

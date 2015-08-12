@@ -22,4 +22,11 @@ class RatingSystem < ActiveRecord::Base
   scope :for_transactables, ->{ where(subject: RatingConstants::TRANSACTABLE) }
   scope :for_hosts, ->{ where(subject: RatingConstants::HOST) }
   scope :for_guests, ->{ where(subject: RatingConstants::GUEST) }
+
+  after_commit :expire_cache
+
+  def expire_cache
+    Rails.cache.delete_matched('reviews_view/*')
+  end
+
 end

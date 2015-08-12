@@ -217,9 +217,9 @@ class @Bookings.Datepicker
   # Assign initial dates from a restored session or the default
   # start date.
   assignInitialDates: ->
-    if @startElement.data('start-date')? && @endElement.data('end-date')?
-      startDate = new Date(@startElement.data('start-date'))
-      endDate = new Date(@endElement.data('end-date'))
+    if DNM.util.Url.getParameterByName('start_date') && DNM.util.Url.getParameterByName('end_date')
+      startDate = new Date(DNM.util.Url.getParameterByName('start_date'))
+      endDate = new Date(DNM.util.Url.getParameterByName('end_date'))
       datesFromFilter = true
     else
       startDate = @listing.firstAvailableDate

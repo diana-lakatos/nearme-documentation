@@ -35,6 +35,8 @@ class Review < ActiveRecord::Base
   scope :for_seller_and_product, -> { with_object([RatingConstants::SELLER, RatingConstants::PRODUCT]) }
   scope :by_search_query, -> (query) { joins(:user).where("users.name ILIKE ?", query) }
 
+  after_commit :expire_cache
+
   def recalculate_reviewable_average_rating
     if self.reviewable.is_a?(Spree::LineItem)
       recalculate_by_type(-> { self.reviewable.product.user.recalculate_seller_average_rating! },
@@ -51,7 +53,7 @@ class Review < ActiveRecord::Base
     subject = RatingConstants::RATING_MAPPING[object]
 
     raise "You can't ask for another side review from a transactable." if subject == RatingConstants::TRANSACTABLE
-    
+
     opposite_subject = if subject == RatingConstants::HOST
       RatingConstants::GUEST
     else
@@ -71,7 +73,7 @@ class Review < ActiveRecord::Base
     where_string = <<-SQL
       user_rating_systems.subject = '$opposite_subject' AND
       reviews.user_id = '$user_id' AND
-      
+
       EXISTS (
         SELECT *
         FROM reviews AS other_side_reviews
@@ -83,7 +85,7 @@ class Review < ActiveRecord::Base
           other_side_reviews.reviewable_type = reviews.reviewable_type
       )
 
-      OR 
+      OR
 
       user_rating_systems.subject = 'transactable' AND
       reviews.user_id = '$user_id'
@@ -102,10 +104,10 @@ class Review < ActiveRecord::Base
     SQL
 
     join_string = <<-SQL
-      INNER JOIN reviews AS rev ON 
-      rev.reviewable_type = reviews.reviewable_type AND 
+      INNER JOIN reviews AS rev ON
+      rev.reviewable_type = reviews.reviewable_type AND
       rev.reviewable_id = reviews.reviewable_id
-      
+
       INNER JOIN rating_systems as rs ON
       reviews.rating_system_id = rs.id
     SQL
@@ -115,8 +117,8 @@ class Review < ActiveRecord::Base
       rs.subject = '$subject' OR
 
       NOT (
-        SELECT tt.show_reviews_if_both_completed 
-        FROM transactable_types AS tt 
+        SELECT tt.show_reviews_if_both_completed
+        FROM transactable_types AS tt
         WHERE tt.id = reviews.transactable_type_id
       )
     SQL
@@ -134,6 +136,10 @@ class Review < ActiveRecord::Base
     end
 
     includes(:rating_system).where(rating_systems: { subject: subject })
+  end
+
+  def expire_cache
+    Rails.cache.delete_matched("reviews_view/#{reviewable.cache_key}/*")
   end
 
   protected
