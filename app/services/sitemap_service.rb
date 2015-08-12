@@ -74,7 +74,7 @@ module SitemapService
     begin
       tmp_file.write(sitemap_xml.to_s.squish)
       domain.generated_sitemap = tmp_file
-      domain.save!
+      domain.save(validate: false)
     ensure
       tmp_file.close
       tmp_file.unlink
