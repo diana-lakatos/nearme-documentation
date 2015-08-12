@@ -23,7 +23,22 @@
 
   .order-body
     .order-status
-      %h3= reservation.state.humanize.capitalize
+      .row
+        .col-md-3
+          %h4
+            = t("dashboard.host_reservations.reservation_state")
+        .col-md-9{class: reservation.confirmed? ? 'info' : "warn" }
+          = reservation.state.humanize.capitalize
+        .col-md-3
+          %h4
+            = t("dashboard.host_reservations.payment_state")
+        .col-md-9{class: reservation.paid? ? 'info' : "warn" }
+          = reservation.payment_status.humanize.capitalize
+        .col-md-3
+          %h4
+            = t("dashboard.host_reservations.payment_method")
+        .col-md-9{class: reservation.paid? ? 'info' : "warn" }
+          = t("dashboard.host_reservations.payment_methods." + reservation.payment_method)
       - if reservation.can_confirm?
         %p= reservation.manage_booking_status_info_new
         - if reservation.active_merchant_payment?

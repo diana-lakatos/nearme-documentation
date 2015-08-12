@@ -636,6 +636,7 @@ DesksnearMe::Application.routes.draw do
           put :reject
           get :rejection_form
           post :host_cancel
+          post :mark_as_paid
           get :request_payment
         end
       end
