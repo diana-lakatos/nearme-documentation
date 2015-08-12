@@ -61,7 +61,6 @@ FactoryGirl.define do
         transactable_type.availability_templates << FactoryGirl.build(:availability_template, :transactable_type => transactable_type)
         transactable_type.custom_attributes = [
           FactoryGirl.build(:custom_attribute_required, target: transactable_type, name: 'my_attribute', attribute_type: 'string'),
-          FactoryGirl.build(:custom_attribute, target: transactable_type, name: 'name', label: 'my name label', attribute_type: 'string')
         ]
       end
     end
