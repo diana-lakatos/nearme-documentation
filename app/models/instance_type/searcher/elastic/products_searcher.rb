@@ -8,6 +8,7 @@ class InstanceType::Searcher::Elastic::ProductsSearcher
     set_options_for_filters
     @params = params
     @results = fetcher
+    @search_results_count = @results.count
   end
 
   def filters
@@ -57,9 +58,9 @@ class InstanceType::Searcher::Elastic::ProductsSearcher
         })
         product_searcher = initialize_searcher_params
         fetched = Spree::Product.search(product_searcher.merge(@search_params).merge(limit: 100))
-        
+
         product_ids = fetched.to_a.map{|f| f['_id'].to_i }
-        products = Spree::Product.where(id: product_ids)
+        products = Spree::Product.where(id: product_ids).includes(:company, master: [:default_price])
         products = products.price_range(@params[:price][:min].to_i..@params[:price][:max].to_i) if @params[:price] && !@params[:price][:max].to_i.zero?
         products
       end
