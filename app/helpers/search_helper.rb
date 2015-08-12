@@ -106,7 +106,7 @@ module SearchHelper
             check_box_tag("category_ids[]", category.id, selected.include?(category.id.to_s), {id: "category_#{category.id}"}) +
             category.translated_name
           end
-          label + category_tree(category, current_category, max_level - 1)
+          label + category_tree(category, current_category, max_level - 1, selected)
         end
       end.join("\n").html_safe
     end

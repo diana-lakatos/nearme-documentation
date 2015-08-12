@@ -8,7 +8,7 @@
               %li.nav-heading
                 = label_tag "category_#{category.id}" do
                   - if current_instance.category_search_type == "OR"
-                    = check_box_tag("category_ids[]", category.id, @searcher.category_ids.include?(category.id.to_s), id: "category_#{category.id}")
+                    = check_box_tag("category_ids[]", category.id, @searcher.category_ids.include?(category.id.to_s), hidden: true, id: "category_#{category.id}")
                   - else
                     = check_box_tag("parent_category_ids[]", category.id, @searcher.category_ids.include?(category.id.to_s), hidden: true, id: "category_#{category.id}")
 
