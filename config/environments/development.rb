@@ -44,6 +44,7 @@ DesksnearMe::Application.configure do
   config.message_bus_handler = NullMessageBus
   config.force_disable_es = ENV['ENABLE_ES'] ? false : true
 
+  config.middleware.swap Rails::Rack::Logger, NullLogger, silence: %w(mini-profiler)
   config.middleware.insert_after(ActionDispatch::Static, SilentMissedImages)
 
   if defined?(Bullet)
