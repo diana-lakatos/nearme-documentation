@@ -143,7 +143,11 @@ class Location < ActiveRecord::Base
   end
 
   def timezone
-    NearestTimeZone.to(latitude, longitude)
+    if latitude && longitude
+      NearestTimeZone.to(latitude, longitude)
+    else
+      self.company.try(:time_zone)
+    end
   end
 
   def local_time
