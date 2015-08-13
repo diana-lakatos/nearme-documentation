@@ -216,8 +216,8 @@ class Search.Controller
 
     $(".nav-item input[type='checkbox']").on 'change', (event) ->
       if $(event.target).prop('checked')
-        $(event.target).parent().next().show()
+        $(event.target).closest('label').next().show()
       else
-        $(event.target).parent().parent().find('.categories-list').hide()
-        $(event.target).parent().next().find('input:checked').prop('checked', false)
+        $(event.target).closest('li').find('.categories-list').hide()
+        $(event.target).closest('label').next().find('input:checked').prop('checked', false)
 
