@@ -19,7 +19,7 @@ class PaymentGateway::PaypalPaymentGateway < PaymentGateway
   def payout_gateway
     if @payout_gateway.nil?
       PayPal::SDK.configure(
-        :app_id    => settings[:app_id],
+        :app_id    => (test_mode? || !Rails.env.production?) ? 'APP-80W284485P519543T' : settings[:app_id],
         :username  => settings[:login],
         :password  => settings[:password],
         :signature => settings[:signature]
@@ -87,7 +87,7 @@ class PaymentGateway::PaypalPaymentGateway < PaymentGateway
   end
 
   def supports_payout?
-    settings[:app_id].present?
+    true
   end
 
 end
