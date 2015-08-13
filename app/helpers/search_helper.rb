@@ -102,9 +102,9 @@ module SearchHelper
     content_tag :ul, class: 'categories-list' do
       root_category.children.map do |category|
         content_tag :li, class: 'nav-item' do
-          label = label_tag "category_#{category.id}" do
-            check_box_tag("category_ids[]", category.id, selected.include?(category.id.to_s), {id: "category_#{category.id}"}) +
-            category.translated_name
+          label = label_tag "category_#{category.id}", class: 'category-label' do
+            content_tag(:span, check_box_tag("category_ids[]", category.id, selected.include?(category.id.to_s), {id: "category_#{category.id}", class: 'category-checkbox'}), class: 'category-checkbox-container') +
+            content_tag(:span, category.translated_name, class: 'category-title')
           end
           label + category_tree(category, current_category, max_level - 1, selected)
         end

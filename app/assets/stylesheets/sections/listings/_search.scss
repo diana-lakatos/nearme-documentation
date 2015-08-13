@@ -733,8 +733,17 @@ section.search section#category-tree {
   margin-top: 145px;
 
   label {
-    display: inline-block;
+    display: table-row;
     width:100%;
+
+    span.category-checkbox-container {
+      display: table-cell;
+    }
+
+    span.category-title {
+      display: table-cell;
+      cursor: default;
+    }
   }
 
   .nav-heading {
