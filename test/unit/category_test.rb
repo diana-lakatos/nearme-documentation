@@ -57,6 +57,16 @@ class CategoryTest < ActiveSupport::TestCase
       @category.reload
       assert_equal @category.name, @category.instance.translations.where({ locale: @locale.code, key: @category.translation_key }).first.value
     end
+
+    should 'remove translations when category has been deleted' do
+      translation = Translation.where(value: @category.name, locale: @locale.code, key: @category.translation_key).first
+      assert translation.present?
+      
+      @category.destroy
+      
+      translation = Translation.where(value: @category.name, locale: @locale.code, key: @category.translation_key).first
+      refute translation.present?
+    end
   end
 end
 
