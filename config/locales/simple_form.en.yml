@@ -166,6 +166,7 @@ en:
         price: 'Price'
         photos: 'Photos'
         upload_photos: 'Browse'
+        add_photo: "Add Photo"
       locations:
         name: 'Location name'
         description: 'Location description'

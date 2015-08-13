@@ -75,7 +75,7 @@
             = new_file_upload_input("#{f.object_name}[photos_attributes][0][image]",
                                             dashboard_photos_path,
                                             Photo.new.image.thumbnail_dimensions[:medium],
-                                            "Add Photo",
+                                            t('simple_form.labels.listing.add_photo'),
                                             :required => true,
                                             :error => f.object.errors.include?(:photos).present? ? "Please upload at least one photo." : nil) do
               - # caches img so it is displayed even for the first photo. Without this, loader icon is not displayed for the first photo

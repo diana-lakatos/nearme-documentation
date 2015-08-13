@@ -58,7 +58,7 @@
                                   "#{photo_input_name_prefix}[photos_attributes][0][image]",
                                   dashboard_photos_path,
                                   Photo.new.image.thumbnail_dimensions[:medium],
-                                  "Browse",
+                                  t('simple_form.labels.listing.upload_photos'),
                                   :required => true,
                                   :error => f.object.errors.include?(:photos).present? ? t('forms.errors.user_form.avatar') : nil,
                                   :hint => I18n.t('forms.hints.space_wizard.photos', :default => '')) do

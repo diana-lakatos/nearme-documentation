@@ -84,11 +84,11 @@ module FileuploadHelper
   private
 
   def delete_photo_link(destroy_photo_path)
-    link_to('Delete', '' , {"data-url" => destroy_photo_path, :class => 'badge delete-photo delete-photo-thumb photo-action'})
+    link_to(t('forms.photos.collection.delete'), '' , {"data-url" => destroy_photo_path, :class => 'badge delete-photo delete-photo-thumb photo-action'})
   end
 
   def resize_photo_link(resize_photo_path, id)
-    link_to('Rotate & Crop', '#', { data: {modal: true, href: resize_photo_path, 'ajax-options' => { id: id }}, :class => 'badge resize-photo photo-action'})
+    link_to(t('forms.photos.collection.rotate_and_crop'), '#', { data: {modal: true, href: resize_photo_path, 'ajax-options' => { id: id }}, :class => 'badge resize-photo photo-action'})
   end
 
   def get_uploaded_content(options, &block)
