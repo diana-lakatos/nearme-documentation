@@ -42,7 +42,7 @@ DesksnearMe::Application.configure do
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = { :address => "localhost", :port => 1025 }
   config.message_bus_handler = NullMessageBus
-  config.force_disable_es = ENV['ENABLE_ES'] ? false : true
+  config.force_disable_es = false
 
   config.middleware.swap Rails::Rack::Logger, NullLogger, silence: %w(mini-profiler)
   config.middleware.insert_after(ActionDispatch::Static, SilentMissedImages)
