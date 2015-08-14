@@ -16,6 +16,8 @@
                 %abbr{title: 'required'} *
               = category.translated_name
           .col-md-9
+            - if is_i18n_set?('simple_form.hints.shared.categories')
+              %p.spaced-helper-text= t('simple_form.hints.shared.categories')
             #ajax_error{style: 'display: none;'}
             .category_tree
             .category_tree_inputs
