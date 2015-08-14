@@ -187,5 +187,6 @@ module DesksnearMe
     config.default_cache_expires_in = 30.minutes
     config.marketplace_error_logger = MarketplaceErrorLogger::ActiveRecordLogger.new
     config.force_disable_es = false
+    config.active_merchant_billing_gateway_app_id = 'NearMe_SP'
   end
 end

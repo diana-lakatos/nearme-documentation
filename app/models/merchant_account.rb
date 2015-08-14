@@ -72,7 +72,7 @@ class MerchantAccount < ActiveRecord::Base
   end
 
   def redirect_url
-    "/dashboard/company/payouts/edit"
+    Rails.application.routes.url_helpers.edit_dashboard_company_payouts_path
   end
 end
 

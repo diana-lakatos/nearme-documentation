@@ -5,7 +5,7 @@ class PaymentGateway::PaypalPaymentGateway < PaymentGateway
 
   # Global setting for all marketplaces
   # Send to paypal with every action as BN CODE
-  ActiveMerchant::Billing::Gateway.application_id = 'NearMe_SP'
+  ActiveMerchant::Billing::Gateway.application_id = Rails.configuration.active_merchant_billing_gateway_app_id
 
   def self.settings
     {
