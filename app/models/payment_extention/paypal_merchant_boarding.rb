@@ -1,4 +1,6 @@
 module PaymentExtention::PaypalMerchantBoarding
+  WP_PRO = "wp_pro"
+  ADDIPMT = "addipmt"
 
   def boarding_url(merchant)
     @merchant = merchant
@@ -9,9 +11,9 @@ module PaymentExtention::PaypalMerchantBoarding
 
   def available_products
     if @merchant.iso_country_code == 'US' && !self.express_checkout?
-      products = "wp_pro"
+      products = WP_PRO
     else
-      products = "addipmt"
+      products = ADDIPMT
     end
   end
 
@@ -25,10 +27,10 @@ module PaymentExtention::PaypalMerchantBoarding
       "partnerId" => settings["partner_id"],
       "productIntentID" => available_products,
       "countryCode" => @merchant.iso_country_code,
-      "displayMode" => "regular", # or minibrowser
+      "displayMode" => "regular",
       "integrationType" => "T",
       "permissionNeeded" => merchant_permissions,
-      "returnToPartnerUrl" => host + '/dashboard/company/payouts/boarding_complete',#CGI::escape(host + '/dashboard/company/payouts/boarding_complete'),
+      "returnToPartnerUrl" => host + '/dashboard/company/payouts/boarding_complete',
       "receiveCredentials" => "FALSE",
       "showPermissions" => "TRUE",
       "productSelectionNeeded" => "FALSE",
@@ -43,20 +45,7 @@ module PaymentExtention::PaypalMerchantBoarding
       "AUTH_CAPTURE",
       "REFERENCE_TRANSACTION",
       "BILLING_AGREEMENT",
-      "DIRECT_PAYMENT",
-      # "BUTTON_MANAGER",
-      # "ACCOUNT_BALANCE",
-      # "TRANSACTION_DETAILS",
-      # "TRANSACTION_SEARCH",
-      # "RECURRING_PAYMENTS",
-      # "MANAGE_PENDING_TRANSACTION_STATUS",
-      # "NON_REFERENCED_CREDIT",
-      # "MASS_PAY",
-      # "ENCRYPTED_WEBSITE_PAYMENTS",
-      # "MOBILE_CHECKOUT",
-      # "AIR_TRAVEL",
-      # "INVOICING",
-      # "ACCESS_BASIC_PERSONAL_DATA",
+      "DIRECT_PAYMENT"
     ].join(',')
   end
 

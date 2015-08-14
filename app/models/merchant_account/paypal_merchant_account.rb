@@ -46,34 +46,6 @@ class MerchantAccount::PaypalMerchantAccount < MerchantAccount
     self.billing_agreement_id.present? ? self.payer_id : nil
   end
 
-  # def setup_rest_api
-  #   require 'paypal-sdk-rest'
-
-  #   PayPal::SDK.configure(
-  #     :mode => "sandbox",
-  #     :client_id => "ATohC66_bMAvdXGPVCRO36Nm5GOW-2mkyrIzfuw1gzF0nR7Dcj2IUE-urKoLGefxLDaryhhL_rN0wwGN",
-  #     :client_secret => "EH2Ww2WwJScL8wJA8EkKIW56FH3h0vEwbCxT6poMb4vkFQ2R9RLcDnDqUMaHaJP791vOd63h8wgrDhv1",
-  #     :openid_redirect_uri  => "https://erosy.localtunnel.me",
-  #     :ssl_options => { }
-  #   )
-
-  #   include PayPal::SDK::OpenIDConnect
-
-  #   rest = PayPal::SDK::Core::API::REST.new
-  #   token = rest.token
-
-  #   path = "v1/customer/partners/GYNF63X9QS4D8/merchant-integrations"
-  #   options = { tracking_id: 169439463323667316512 }
-
-  #   rest.get(path, options)
-
-  #   PayPal::SDK::REST.set_config(
-  #     :mode => "sandbox", # "sandbox" or "live"
-  #     :client_id => "ATohC66_bMAvdXGPVCRO36Nm5GOW-2mkyrIzfuw1gzF0nR7Dcj2IUE-urKoLGefxLDaryhhL_rN0wwGN",
-  #     :client_secret => "EH2Ww2WwJScL8wJA8EkKIW56FH3h0vEwbCxT6poMb4vkFQ2R9RLcDnDqUMaHaJP791vOd63h8wgrDhv1",
-  #     :openid_redirect_uri  =>"https://erosy.localtunnel.me")
-  # end
-
   def boarding_complete(response)
     self.payer_id = response["merchantIdInPayPal"]
 
@@ -96,16 +68,13 @@ class MerchantAccount::PaypalMerchantAccount < MerchantAccount
     self.account_status = response["accountStatus"]
 
     # The product that the merchant was signed up for. At this time, the only possible value is addipmt.
-    # isEmailConfirmed
-    # Indicates whether the merchant’s email address is confirmed at PayPal.
-    # Possible values:
-    # true (email address is confirmed)
-    # false (email address is not confirmed)
     self.product_intent_id =  response["productIntentID"]
 
     # A text message, which you can display to the merchant, which indicates what they need to do next at PayPal in order to begin accepting payments.
     self.return_message = response["returnMessage"]
-    self.is_email_confirmed = response["isEmailConfirmed"]
+
+    # Indicates whether the merchant’s email address is confirmed at PayPal.
+    self.is_email_confirmed = response["isEmailConfirmed"] == 'true'
 
     if self.permissions_granted && self.payer_id.present?
       self.verify

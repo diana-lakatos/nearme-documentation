@@ -38,6 +38,7 @@ When /^I update company settings$/ do
 end
 
 When /^I update payouts settings$/ do
+  p page.html
   fill_in "company_payments_mailing_address_attributes_address", with: "Adelaide, South Australia, Australia"
   fill_in "company_paypal_merchant_account_attributes_email", with: "paypal-update@example.com"
   find('input[@type="submit"]').click

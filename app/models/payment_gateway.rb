@@ -92,7 +92,8 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def host
-    "http://#{PlatformContext.current.decorate.host}#{Rails.env.development? ? ':3000' : ''}"
+    port = ":3000"
+    "http://#{PlatformContext.current.decorate.host}#{Rails.env.development? ? port : ''}"
   end
 
   def set_country_config
