@@ -18,6 +18,23 @@ en:
         results: 'Results'
       transactable:
         action_rfq: 'Request for Quote'
+      "user/companies/locations/listings":
+        action_free_booking: "Price type"
+        price_type: "Price type"
+        Categories: "Categories"
+      "user/companies/locations":
+        location_type_id: "Location type"
+        description: "Location description"
+        name: "Location name"
+      "user/companies/locations/location_address":
+        address: "Location address"
+      "user/companies":
+        name: "Company name"
+        industries: "Company industry"
+      "user/companies/company_address":
+        address: "Company address"
+      "companies/locations/listings":
+        properties: "Property"
   connections:
     facebook:
       count:

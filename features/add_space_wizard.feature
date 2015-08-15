@@ -43,3 +43,8 @@ Feature: A user can add a space
     Then I go to the home page
     When I search for "USA"
     Then I should see "International"
+
+  Scenario: An unregistered user starts by signing up
+    When I press "Submit"
+    Then I should see shortened error messages
+
