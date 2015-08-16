@@ -532,7 +532,6 @@ class SearchControllerTest < ActionController::TestCase
 
   def assert_nothing_found
     assert_select 'h1', 1, 'No results found'
-    assert_select 'p', 1, "The address you entered couldn't be found"
   end
 
   def assert_no_products_found
