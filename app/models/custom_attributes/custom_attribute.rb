@@ -20,7 +20,7 @@ class CustomAttributes::CustomAttribute < ActiveRecord::Base
   end
 
   def expire_cache_options
-    { args: { target_type: self.target_type } }
+    { target_type: self.target_type }
   end
 end
 
