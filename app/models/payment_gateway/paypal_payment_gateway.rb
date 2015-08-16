@@ -126,7 +126,7 @@ class PaymentGateway::PaypalPaymentGateway < PaymentGateway
   end
 
   def supports_paypal_chain_payments?
-    true
+    false
   end
 
   def supported_currencies

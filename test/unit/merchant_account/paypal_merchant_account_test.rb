@@ -52,6 +52,6 @@ class MerchantAccount::PaypalMerchantAccountTest < ActiveSupport::TestCase
     @merchant.save!
 
     @merchant.reload.boarding_complete(response)
-    assert (@merchant.state = 'failed')
+    assert (@merchant.state == 'failed')
   end
 end
