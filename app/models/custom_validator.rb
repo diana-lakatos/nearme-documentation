@@ -33,6 +33,14 @@ class CustomValidator < ActiveRecord::Base
     self.max_length = validation_rules['length']['maximum'] rescue nil
   end
 
+  def valid_values=(values)
+    if values.is_a? String
+      self[:valid_values] = values.split(',')
+    else
+      super
+    end
+  end
+
   def set_validation_rules
     self.validation_rules ||= {}
     self.required.to_i == 1 ? (self.validation_rules['presence'] = {}) : self.validation_rules.delete('presence')
