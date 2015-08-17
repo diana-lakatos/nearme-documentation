@@ -1,4 +1,5 @@
 class Webhooks::StripeConnectsController < ActionController::Base
+  skip_before_filter :redirect_if_marketplace_password_protected
 
   def webhook
     if request.post? && merchant_account = MerchantAccount::StripeConnectMerchantAccount.find_by(internal_payment_gateway_account_id: params[:user_id])

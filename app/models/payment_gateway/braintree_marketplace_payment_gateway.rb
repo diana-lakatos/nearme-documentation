@@ -76,8 +76,6 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
     true
   end
 
-  protected
-
   def configure_braintree_class
     Braintree::Configuration.environment = settings["environment"]
     Braintree::Configuration.merchant_id = settings["merchant_id"]
