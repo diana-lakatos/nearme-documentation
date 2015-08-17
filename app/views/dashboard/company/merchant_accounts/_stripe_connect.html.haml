@@ -1,8 +1,8 @@
 %h3= t('dashboard.merchant_account.header')
 
 = f.fields_for :stripe_connect_merchant_account do |maf|
-
   - if merchant_account.persisted?
+    = maf.hidden_field :id
     %div= t("dashboard.merchant_account.#{merchant_account.state}")
 
   - if merchant_account.errors.present?
@@ -82,6 +82,9 @@
 
   = maf.check_box :tos
   Payment processing services for #{platform_context.lessee} on #{platform_context.name} are provided by Stripe and are subject to the <a href="https://stripe.com/connect/account-terms" target="_blank">Stripe Connected Account Agreement</a>, which includes the <a href="https://stripe.com/us/terms" target="_blank">Stripe Terms of Service</a> (collectively, the “Stripe Services Agreement”). By agreeing to [this agreement / these terms / etc.] or continuing to operate as a #{platform_context.lessee} on #{platform_context.name}, you agree to be bound by the Stripe Services Agreement, as the same may be modified by Stripe from time to time. As a condition of #{platform_context.name} enabling payment processing services through Stripe, you agree to provide #{platform_context.name} accurate and complete information about you and your business, and you authorize #{platform_context.name} to share it and transaction information related to your use of the payment processing services provided by Stripe.
+
+.submit-bar
+  = f.submit 'Save', class: 'btn medium blue'
 
 - content_for :domready do
   new Dashboard.StripeConnectController($('form[data-payouts-form'));

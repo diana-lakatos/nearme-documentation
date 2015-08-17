@@ -91,6 +91,11 @@ class PaymentGateway < ActiveRecord::Base
     raise NotImplementedError
   end
 
+  def host
+    port = ":3000"
+    "http://#{PlatformContext.current.decorate.host}#{Rails.env.development? ? port : ''}"
+  end
+
   def set_country_config
     if country.present?
       country_payment_gateway = self.instance.country_payment_gateways.where(country_alpha2_code: country).first_or_initialize
@@ -101,6 +106,23 @@ class PaymentGateway < ActiveRecord::Base
 
   def settings
     (test_mode? ? test_settings : live_settings).with_indifferent_access
+  end
+
+  def supports_paypal_chain_payments?
+    false
+  end
+
+  def supports_currency?(currency)
+    return true if defined? self.support_any_currency!
+    self.supported_currencies.include?(currency)
+  end
+
+  def supports_payout?
+    false
+  end
+
+  def supports_recurring_payment?
+    false
   end
 
   def configured?(country_alpha2_code)
@@ -115,6 +137,10 @@ class PaymentGateway < ActiveRecord::Base
     @test_mode.nil? ? instance.test_mode? : @test_mode
   end
 
+  def type_name
+    type.gsub('PaymentGateway', '').sub('::', '').underscore.tr(' ', '_')
+  end
+
   def mode
     test_mode? ? 'test' : 'live'
   end
@@ -124,7 +150,8 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def charge(user, amount, currency, payment, token)
-    @payable = payment.payable
+    @payment = payment
+    @payable = @payment.payable
     @charge = charges.create(
       amount: amount,
       payment: payment,
@@ -178,7 +205,7 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def store_credit_card(client, credit_card)
-    return nil unless support_recurring_payment?
+    return nil unless supports_recurring_payment?
 
     @instance_client = self.instance_clients.where(client: client).first_or_initialize
     options = { email: client.email, default_card: true, customer: @instance_client.customer_id }
@@ -191,17 +218,8 @@ class PaymentGateway < ActiveRecord::Base
     @credit_card.id
   end
 
-  def supports_currency?(currency)
-    return true if defined? self.support_any_currency!
-    self.supported_currencies.include?(currency)
-  end
-
   def payout_supports_country?(country)
     self.class.supported_countries.include?(country)
-  end
-
-  def support_recurring_payment?
-    false
   end
 
   # Set to true if payment gateway requires redirect to external page
@@ -248,19 +266,16 @@ class PaymentGateway < ActiveRecord::Base
     false
   end
 
-  def supports_payout?
-    false
-  end
-
   def onboard!(*args)
     raise NotImplementedError
   end
 
   def merchant_account(company)
     return nil if company.nil?
+
     merchant_account_class = self.class.name.gsub('PaymentGateway', 'MerchantAccount').safe_constantize
     if merchant_account_class
-      merchant_account_class.where(test: merchant_account_class::SEPARATE_TEST_ACCOUNTS && test_mode?).where.not(state: 'failed').first
+      merchant_account_class.where(test: merchant_account_class::SEPARATE_TEST_ACCOUNTS && test_mode?).where(state: 'verified').first
     end
   end
 

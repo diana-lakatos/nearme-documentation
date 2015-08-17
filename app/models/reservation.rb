@@ -329,7 +329,10 @@ class Reservation < ActiveRecord::Base
   def subtotal_amount_cents
     super || price_calculator.price.cents rescue nil
   end
-  alias_method :price_in_cents, :subtotal_amount_cents
+
+  def price_in_cents
+    subtotal_amount_cents / quantity
+  end
 
   def service_fee_amount_guest_cents
     persisted? ? super : service_fee_calculator.service_fee_guest.cents rescue nil
@@ -389,6 +392,10 @@ class Reservation < ActiveRecord::Base
 
   def manual_payment?
     payment_method == Reservation::PAYMENT_METHODS[:manual]
+  end
+
+  def merchant_subject
+    listing.company.paypal_merchant_account.try(:subject)
   end
 
   def possible_manual_payment?

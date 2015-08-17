@@ -1,3 +1,5 @@
+require 'active_merchant/billing/gateways/paypal/paypal_express_response'
+
 class Charge < ActiveRecord::Base
   has_paper_trail
   acts_as_paranoid

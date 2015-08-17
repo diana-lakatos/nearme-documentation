@@ -50,6 +50,10 @@ ActiveSupport::TestCase.class_eval do
     PlatformContext.current = PlatformContext.new(Instance.first)
   end
 
+  def current_instance
+    PlatformContext.current.instance
+  end
+
   def with_versioning
     was_enabled = PaperTrail.enabled?
     PaperTrail.enabled = true

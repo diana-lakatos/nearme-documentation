@@ -39,6 +39,14 @@ Feature: A user can edit their settings
     When I update payouts settings
     Then The company payouts settings should be updated
 
+
+  Scenario: A user can update payouts settings when payout gateway is missing
+    Given a company exists with creator: the user
+    Given no payout gateway defined
+    And I go to the payouts page
+    When I update payouts settings
+    Then The company payouts settings should be updated
+
   Scenario: A user without listing will not see settings
     Given a company exists with creator: the user
       And a location exists with company: the company

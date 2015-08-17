@@ -9,6 +9,7 @@ class MerchantAccount < ActiveRecord::Base
 
   has_many :webhooks, as: :webhookable, dependent: :destroy
 
+  # Relates with Company
   belongs_to :merchantable, polymorphic: true
   belongs_to :instance
   belongs_to :payment_gateway
@@ -70,5 +71,8 @@ class MerchantAccount < ActiveRecord::Base
     true
   end
 
+  def redirect_url
+    Rails.application.routes.url_helpers.edit_dashboard_company_payouts_path
+  end
 end
 

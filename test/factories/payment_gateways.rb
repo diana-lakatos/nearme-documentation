@@ -24,6 +24,30 @@ FactoryGirl.define do
       }
     end
 
+    factory :paypal_express_payment_gateway, class: PaymentGateway::PaypalExpressPaymentGateway do
+      test_settings {
+        {
+          email: 'sender_test@example.com',
+          login: 'john_test',
+          password: 'pass_test',
+          signature: 'sig_test',
+          app_id: 'app-123_test',
+          partner_id: "2EWXNHVCGY3JL"
+        }
+      }
+      live_settings {
+        {
+          email: 'sender_live@example.com',
+          login: 'john_live',
+          password: 'pass_live',
+          signature: 'sig_live',
+          app_id: 'app-123_live',
+          partner_id: "2EWXNHVCGY3JL"
+        }
+      }
+    end
+
+
     factory :stripe_payment_gateway, class: PaymentGateway::StripePaymentGateway do
       test_settings { { login: 'sk_test_r0wxkPFASg9e45UIakAhgpru' } }
       live_settings { { login: 'sk_test_r0wxkPFASg9e45UIakAhgpru' } }

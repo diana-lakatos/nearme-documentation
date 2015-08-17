@@ -9,13 +9,20 @@ class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
   end
 
   def update
+    @merchant_account = @company.send("#{@payment_gateway_type}_merchant_account") if @payment_gateway_type
     if @company.update_attributes(company_params)
       flash[:success] = t('flash_messages.manage.payouts.updated')
-      redirect_to action: :edit
+      redirect_to @merchant_account.try(:redirect_url) || {action: :edit}
     else
-      @merchant_account = @company.send("#{@payment_gateway_type}_merchant_account")
       render :edit
     end
+  end
+
+  def boarding_complete
+    @merchant_account = @company.send("#{@payment_gateway_type}_merchant_account")
+    @merchant_account.boarding_complete(params)
+    flash[:notice] = params["returnMessage"]
+    redirect_to action: :edit
   end
 
   private
@@ -27,7 +34,7 @@ class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
   def get_payment_gateway_data
     @payment_gateway = @company.payout_payment_gateway
     if @payment_gateway.present?
-      @payment_gateway_type = @payment_gateway.type.gsub('PaymentGateway', '').sub('::', '').underscore.tr(' ', '_')
+      @payment_gateway_type = @payment_gateway.type_name
       @merchant_account_form_path = "dashboard/company/merchant_accounts/#{@payment_gateway_type}"
     end
   end
@@ -38,6 +45,5 @@ class Dashboard::Company::PayoutsController < Dashboard::Company::BaseController
         || @company.send("build_#{@payment_gateway_type}_merchant_account", payment_gateway_id: @payment_gateway.id)
     end
   end
-
 end
 

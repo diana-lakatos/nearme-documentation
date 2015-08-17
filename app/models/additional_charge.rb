@@ -7,6 +7,8 @@ class AdditionalCharge < ActiveRecord::Base
 
   belongs_to :instance, touch: true
   belongs_to :additional_charge_type
+
+  # Target is Spree::Order or Reservation
   belongs_to :target, polymorphic: true
 
   validates :additional_charge_type_id, presence: true

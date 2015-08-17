@@ -1,3 +1,5 @@
+require 'active_merchant/billing/gateways/paypal/paypal_express_response'
+
 class BillingAuthorization < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
