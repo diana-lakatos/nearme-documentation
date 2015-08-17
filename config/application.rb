@@ -9,6 +9,7 @@ groups[:profiling] =  [Rails.env.to_s] if ENV['PERF']
 Bundler.require(*Rails.groups(groups)) if defined?(Bundler)
 
 require File.dirname(__FILE__) + '/../lib/null_logger.rb'
+require File.dirname(__FILE__) + '/../lib/null_redis_cache.rb'
 require File.dirname(__FILE__) + '/../lib/marketplace_error_logger.rb'
 
 module DesksnearMe
@@ -40,11 +41,6 @@ module DesksnearMe
 
       # Load Spree controllers's decorators
       Dir.glob(File.join(File.dirname(__FILE__), "../app/controllers/spree/**/*_decorator*.rb")) do |c|
-        Rails.configuration.cache_classes ? require(c) : load(c)
-      end
-
-      # Load message Subscribers
-      Dir.glob(File.join(File.dirname(__FILE__), "../app/subscribers/*.rb")) do |c|
         Rails.configuration.cache_classes ? require(c) : load(c)
       end
     end
@@ -188,5 +184,6 @@ module DesksnearMe
     config.marketplace_error_logger = MarketplaceErrorLogger::ActiveRecordLogger.new
     config.force_disable_es = false
     config.active_merchant_billing_gateway_app_id = 'NearMe_SP'
+    config.redis_cache_client = NullRedisCache
   end
 end

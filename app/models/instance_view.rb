@@ -321,7 +321,7 @@ class InstanceView < ActiveRecord::Base
   end
 
   def expire_cache_options
-    { args: { path: path } }
+    { path: path }
   end
 
 end

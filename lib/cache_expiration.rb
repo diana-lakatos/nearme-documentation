@@ -5,27 +5,43 @@
 # * CustomAttributes
 class CacheExpiration
   class << self
-    def handle_cache_expiration(data)
-      case data[:cache_type]
-      when 'InstanceView'
-        expire_instance_view_cache(data[:args][:path], data[:instance_id])
-      when /Translation|Locale/
-        expire_cache_for_translations(data[:instance_id])
-      when 'CustomAttribute'
-        expire_cache_for_custom_attributes(data[:args][:target_type])
+
+    def update_memory_cache
+      if RedisCache.client.exists('cache_expiration')
+        last_update = RedisCache.client.get("last_cache_update_#{current_worker_id}").to_f
+        RedisCache.client.zrangebyscore('cache_expiration', "(#{last_update}", '+inf', with_scores: true).each do |value, score|
+          handle_cache_expiration(value)
+          RedisCache.client.set("last_cache_update_#{current_worker_id}", score)
+        end
       end
     end
 
-    def expire_instance_view_cache(path, instance_id)
-      InstanceViewResolver.instance.expire_cache_for_path(path, instance_id)
+    def current_worker_id
+      "#{ENV['HOSTNAME']}_#{Process.pid}"
     end
 
-    def expire_cache_for_translations(instance_id)
-      I18N_DNM_BACKEND.update_cache(instance_id) if defined? I18N_DNM_BACKEND
+    def handle_cache_expiration(data)
+      @data = JSON.parse(data).with_indifferent_access
+      case @data[:cache_type]
+      when 'InstanceView'
+        expire_instance_view_cache
+      when /Translation|Locale/
+        expire_cache_for_translations
+      when 'CustomAttribute'
+        expire_cache_for_custom_attributes
+      end
     end
 
-    def expire_cache_for_custom_attributes(target)
-      CustomAttributes::CustomAttribute.clear_cache(target)
+    def expire_instance_view_cache
+      InstanceViewResolver.instance.expire_cache_for_path(@data[:path], @data[:instance_id])
+    end
+
+    def expire_cache_for_translations
+      I18N_DNM_BACKEND.update_cache(@data[:instance_id]) if defined? I18N_DNM_BACKEND
+    end
+
+    def expire_cache_for_custom_attributes
+      CustomAttributes::CustomAttribute.clear_cache(@data[:target_type], @data[:instance_id])
     end
   end
 end
