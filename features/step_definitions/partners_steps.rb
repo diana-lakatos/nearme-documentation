@@ -32,7 +32,7 @@ Then(/^I see a partner form with prefilled values$/) do
 end
 
 Then(/^Images from instance theme should be copied to partner's theme$/) do
-  partner = Partner.last 
+  partner = Partner.last
   assert_not_equal partner.theme, partner.instance.theme
   %w(logo_image logo_retina_image icon_image icon_retina_image hero_image).each do |image_attr|
     assert partner.theme.send("#{image_attr}_url").try(:include?, image_attr), "Partner theme should have #{image_attr} in '#{partner.theme.send("#{image_attr}_url")}'"
