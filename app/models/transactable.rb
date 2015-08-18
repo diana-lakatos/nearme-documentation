@@ -391,7 +391,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def first_available_date
-    date = Date.tomorrow
+    date = Date.today
 
     max_date = date + 31.days
     date = date + 1.day until availability_for(date) > 0 || date==max_date

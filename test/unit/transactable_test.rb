@@ -254,12 +254,6 @@ class TransactableTest < ActiveSupport::TestCase
       Timecop.return
     end
 
-    should "return monday for friday" do
-      friday = Time.zone.today.sunday + 5.days
-      Timecop.freeze(friday.beginning_of_day)
-      assert_equal friday+3.day, @listing.first_available_date
-    end
-
     should "return monday for saturday" do
       saturday = Time.zone.today.sunday + 6.days
       Timecop.freeze(saturday.beginning_of_day)
@@ -275,7 +269,7 @@ class TransactableTest < ActiveSupport::TestCase
     should "return tuesday for monday" do
       tuesday = Time.zone.today.sunday + 2
       Timecop.freeze(tuesday.beginning_of_day)
-      assert_equal tuesday+1.day, @listing.first_available_date
+      assert_equal tuesday, @listing.first_available_date
     end
 
     should "return monday for tuesday if the whole week is booked" do
@@ -297,7 +291,7 @@ class TransactableTest < ActiveSupport::TestCase
       assert_equal tuesday+6.day, @listing.first_available_date
     end
 
-    should "return thursday for tuesday if there is one desk left" do
+    should "return wednesday for tuesday if there is one desk left" do
       WorkflowStepJob.expects(:perform).twice.with do |klass, int|
         klass == WorkflowStep::ReservationWorkflow::CreatedWithoutAutoConfirmation
       end
@@ -307,13 +301,13 @@ class TransactableTest < ActiveSupport::TestCase
       tuesday = Time.zone.today.sunday + 2
       Timecop.freeze(tuesday.beginning_of_day)
       # book all seats on wednesday
-      res = @listing.reserve!(FactoryGirl.build(:user), [tuesday+1.day], 2)
+      res = @listing.reserve!(FactoryGirl.build(:user), [tuesday], 2)
       res.confirm
       # leave one seat free on thursday
-      res = @listing.reserve!(FactoryGirl.build(:user), [tuesday+2.day], 1)
+      res = @listing.reserve!(FactoryGirl.build(:user), [tuesday+1.day], 1)
       res.confirm
       # the soonest day should be the one with at least one seat free
-      assert_equal tuesday+2.day, @listing.first_available_date
+      assert_equal tuesday+1.day, @listing.first_available_date
     end
 
     should "return wednesday for monday if hourly reservation and custom availability template" do
