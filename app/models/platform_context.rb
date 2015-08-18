@@ -41,22 +41,9 @@ class PlatformContext
 
   def self.after_setting_current_callback(platform_context)
     ActiveRecord::Base.establish_connection(platform_context.instance.db_connection_string) if platform_context.instance.db_connection_string.present?
-    Transactable.clear_custom_attributes_cache
-    User.clear_custom_attributes_cache
-    Spree::Product.clear_custom_attributes_cache
-    if defined? I18N_DNM_BACKEND
-      I18N_DNM_BACKEND.set_instance_id(platform_context.instance.id)
-      I18N_DNM_BACKEND.update_cache(platform_context.instance.id)
-    end
+    CacheExpiration.update_memory_cache
+    I18N_DNM_BACKEND.set_instance_id(platform_context.instance.id) if defined? I18N_DNM_BACKEND
     I18n.locale = platform_context.instance.primary_locale
-    instance_view_cache_key = get_instance_view_cache_key(platform_context.instance.id)
-    @@instance_view_cache_key[platform_context.instance.id] ||= instance_view_cache_key
-    if @@instance_view_cache_key[platform_context.instance.id] != instance_view_cache_key
-      @@instance_view_cache_key[platform_context.instance.id] = instance_view_cache_key
-      InstanceViewResolver.instance.clear_cache
-      # we will need to change place of this - we will invoke this N times, where N is number of servers, but we need only once as this is stored in DB
-      platform_context.instance.fast_recalculate_cache_key!
-    end
   end
 
   def self.get_instance_view_cache_key(instance_id)

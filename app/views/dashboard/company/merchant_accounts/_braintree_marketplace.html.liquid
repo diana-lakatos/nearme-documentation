@@ -1,16 +1,19 @@
-<h3>{{ 'dashboard.merchant_account.header' | translate }}</h3>
-
+<br />
 {% if merchant_account.persisted? %}
-  <div>{{ "dashboard.merchant_account." | append:merchant_account.state | translate }}</div>
+  <div>
+    <h2 class='text-danger'> {{ "dashboard.merchant_account." | append:merchant_account.state | translate }}</h2>
+  </div>
 {% endif %}
+<br />
 
-  {% if merchant_account.errors != blank %}
-    <div class="error">
-      <p class="error-block">
-      {{ merchant_account.errors }}
-      </p>
-    </div>
-  {% endif %}
+<h3>{{ 'dashboard.merchant_account.header' | translate }}</h3>
+{% if merchant_account.errors != blank %}
+  <div class="error">
+    <p class="error-block">
+    {{ merchant_account.errors }}
+    </p>
+  </div>
+{% endif %}
 
   <input type="hidden" name="company[braintree_marketplace_merchant_account_attributes][id]" value="{{ merchant_account.id}}">
   <div class="string optional company_braintree_marketplace_merchant_account_attributes_bank_routing_number">

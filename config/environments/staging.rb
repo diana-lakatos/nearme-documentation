@@ -1,4 +1,3 @@
-require 'message_bus'
 DesksnearMe::Application.configure do
   config.eager_load = true
 
@@ -61,8 +60,7 @@ DesksnearMe::Application.configure do
   #   username == 'desksnearme' && password == 'sharethem'
   # end
   config.redis_settings = YAML.load_file(Rails.root.join("config", "redis.yml"))["staging"]
-  MessageBus.redis_config = config.redis_settings
-  config.message_bus_handler = MessageBus
+  config.redis_cache_client = Redis
   config.cache_store = :redis_store, {
     :host => config.redis_settings["host"],
     :port => config.redis_settings["port"].to_i,
