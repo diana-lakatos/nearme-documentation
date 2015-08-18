@@ -735,6 +735,8 @@ en:
         edit_product_type: "Edit Product Type"
 
   buy_sell_market:
+    buyer: "buyer"
+    seller: "seller"
     checkout_extra_fields:
       fill_in_these_details: "Please fill in these details"
     products:

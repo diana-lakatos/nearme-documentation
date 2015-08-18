@@ -1,6 +1,6 @@
 {{ user.first_name }}, your booking has been declined
 
-Your booking for '{{ listing.name }}' has been declined by the {{ platform_context.lessor }}.{% if reservation.has_rejection_reason %} They said:
+Your booking for '{{ listing.name }}' has been declined by the {{ listing.lessor }}.{% if reservation.has_rejection_reason %} They said:
 
 {{ reservation.rejection_reason }}{% endif %}
 {% if user.listings_in_near.size > 0 %}But we have you covered! Here are some alternatives, similar to the listing you tried to book:

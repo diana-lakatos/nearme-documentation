@@ -63,7 +63,15 @@ class TransactableDrop < BaseDrop
   #   name of representing the bookable object (plural) transactable on the marketplace as a string (e.g. desks, rooms etc.)
   # action_price_per_unit
   #   returns true if there is a single unit available of the transactable item for a given time period
-  delegate :bookable_noun, :bookable_noun_plural, :action_price_per_unit, to: :transactable_type
+  # lessor
+  #   the name of the type of entity selling the products
+  # lessee
+  #   the name of the type of entity buying the products
+  # lessors
+  #   pluralized version of lessor
+  # lessees
+  #   pluralized version of lessee
+  delegate :bookable_noun, :bookable_noun_plural, :action_price_per_unit, :lessor, :lessee, :lessors, :lessees, to: :transactable_type
 
   # latitude
   #   returns the latitude of the location of this listing as a floating point number

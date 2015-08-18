@@ -2,7 +2,7 @@ You got it, {{ user.first_name }}!
 
 Your booking for {{ listing.name }} {{ platform_context.host | append:listing.listing_url }} has been confirmed! Here it is:
 
-{{ platform_context.lessor | capitalize }} {{ listing.administrator.first_name }} {{ platform_context.host | append:listing.administrator.user_profile_url }}
+{{ listing.lessor | capitalize }} {{ listing.administrator.first_name }} {{ platform_context.host | append:listing.administrator.user_profile_url }}
 
 What {{ listing.name }} x {{ reservation.quantity }}
 

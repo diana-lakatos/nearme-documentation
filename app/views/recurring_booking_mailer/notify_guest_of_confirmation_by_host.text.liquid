@@ -1,9 +1,9 @@
-Your booking for '{{ listing.name }}'</a>  has been cancelled by the {{ platform_context.lessor }}.
+Your booking for '{{ listing.name }}'</a>  has been cancelled by the {{ listing.lessor }}.
 
 BOOKING DETAILS --------
 
 Listing: '{{listing.name}}'.
-{{ platform_context.lessee | capitalize }} instructions: {{ listing.location.special_notes }}
+{{ listing.lessee | capitalize }} instructions: {{ listing.location.special_notes }}
 {% endif %}
 Quantity: {{reservation.quantity}}
 {% if reservation.action_hourly_booking? %}
@@ -17,7 +17,7 @@ Dates:
 {% endif %}
 
 
-{{ platform_context.lessor }}: {{ host.name }} ({{host.email}})
+{{ listing.lessor }}: {{ host.name }} ({{host.email}})
 
 {% if listing.location.phone? %}Contact: {{listing.location.phone}}{% endif %}
 
