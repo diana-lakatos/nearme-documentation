@@ -6,7 +6,7 @@ When /^I begin to reset the password for that user$/ do
     find('#user_email').set(user.email)
     click_on 'Reset Password'
   end
-  page.should have_content('You will receive an email with instructions about how to reset your password in a few minutes.')
+  page.should have_content('You will receive an email with instructions on how to reset your password in a few minutes.')
 end
 
 Then /^a password reset email should be sent to that user$/ do

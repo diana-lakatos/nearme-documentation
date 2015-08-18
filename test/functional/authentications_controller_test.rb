@@ -136,7 +136,7 @@ class AuthenticationsControllerTest < ActionController::TestCase
           post :create
         end
       end
-      assert flash[:error].include?('Your Twitter email is already linked to an account')
+      assert flash[:error].include?('is already linked to an account')
     end
 
     context "should successfully sign up and log"  do
