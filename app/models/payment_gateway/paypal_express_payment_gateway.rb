@@ -80,13 +80,53 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
     merchant_account(company).present?
   end
 
-  def payout(company, options)
-    reference_id = merchant_account(company).try(:billing_agreement_id)
-    if reference_id
-      response = gateway.reference_transaction(options[:reference].total_service_fee_cents, { reference_id: reference_id })
-      OpenStruct.new(success: response.success?)
+  def process_payout(merchant_account, amount, reference)
+    reference_id = merchant_account.try(:billing_agreement_id)
+    response = if reference.total_service_fee.cents > 0
+      gateway.reference_transaction(reference.total_service_fee.cents, { reference_id: reference_id })
     else
-      OpenStruct.new(success: false)
+      OpenStruct.new(success: true, success?: true, refunded_ammount: reference.total_service_fee.cents)
+    end
+
+    if response.success?
+      payout_successful(response)
+    else
+      payout_failed(response)
+    end
+  end
+
+  def gateway_refund(amount, charge, options)
+    if refund_service_fee(options)
+      gateway(@payment.payable.merchant_subject).refund(amount, refund_identification(charge), options)
+    else
+      OpenStruct.new(success: false, success?: false)
+    end
+  end
+
+  def refund_service_fee(options)
+    @payment_transfer = @payment.payment_transfer
+
+    service_fee_refund = @payment.refunds.create(
+      amount: @payment_transfer.total_service_fee.cents,
+      currency: @payment.currency,
+      payment: @payment,
+      payment_gateway_mode: mode
+    )
+
+    payment_transfer = @payment.payment_transfer
+    payout = payment_transfer.payout_attempts.successful.first
+    refund_response = if @payment_transfer.total_service_fee.cents > 0
+      gateway.refund(@payment_transfer.total_service_fee.cents, refund_identification(payout), options)
+    else
+      OpenStruct.new(success: true, success?: true, refunded_ammount: @payment_transfer.total_service_fee.cents)
+    end
+
+    if refund_response.success?
+      service_fee_refund.refund_successful(refund_response)
+      true
+    else
+      service_fee_refund.refund_failed(refund_response)
+      false
     end
   end
 

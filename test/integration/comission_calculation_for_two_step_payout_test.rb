@@ -64,9 +64,7 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
     stub_request(:post, "https://www.googleapis.com/urlshortener/v1/url")
     api_mock = mock()
     api_mock.expects(:build_pay)
-    pay_response_mock = mock()
-    pay_response_mock.stubs(:success? => true, :to_yaml => 'yaml', :paymentExecStatus => 'COMPLETED')
-    api_mock.expects(:pay).returns(pay_response_mock)
+    api_mock.expects(:pay).returns(OpenStruct.new(:success? => true, :to_yaml => 'yaml', :paymentExecStatus => 'COMPLETED'))
     PayPal::SDK::AdaptivePayments::API.expects(:new).returns(api_mock)
   end
 
