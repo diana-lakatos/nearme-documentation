@@ -1,3 +1,5 @@
+require 'active_merchant/billing/gateways/paypal/paypal_express_response'
+
 class Payout < ActiveRecord::Base
   auto_set_platform_context
   scoped_to_platform_context
@@ -14,8 +16,9 @@ class Payout < ActiveRecord::Base
   scope :need_status_verification, -> { where('(pending = ? OR success = ?) AND created_at > ? AND created_at < ?', true, true, Time.zone.now - 7.days, Time.zone.now - 1.day) }
 
   monetize :amount, with_model_currency: :currency
+  serialize :response, Hash
 
-  attr_encrypted :response, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
+  attr_encrypted :response, :key => DesksnearMe::Application.config.secret_token, marshal: true
 
   def payout_pending(response)
     self.pending = true
@@ -26,7 +29,7 @@ class Payout < ActiveRecord::Base
   def payout_successful(response = nil)
     self.success = true
     self.pending = false
-    self.response = response.to_yaml if response
+    self.response = response
     save!
     self.reference.try(:success!)
   end
@@ -40,9 +43,6 @@ class Payout < ActiveRecord::Base
   end
 
   alias_method :decrypted_response, :response
-  def response
-    @response_object ||= Billing::Gateway::Processor::Response::ResponseFactory.create(decrypted_response)
-  end
 
   def failure_message
     response.failure_message

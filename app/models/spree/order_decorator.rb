@@ -258,6 +258,7 @@ Spree::Order.class_eval do
   def after_cancel
     shipments.each { |shipment| shipment.cancel! }
     payments.completed.each { |payment| payment.cancel! }
+    near_me_payments.each {|payment| payment.refund }
     WorkflowStepJob.perform(WorkflowStep::OrderWorkflow::Cancelled, id)
     self.update!
   end

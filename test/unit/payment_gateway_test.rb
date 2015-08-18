@@ -251,7 +251,7 @@ class PaymentGatewayTest < ActiveSupport::TestCase
 
     attr_accessor :success, :pending
 
-    def process_payout(merchant_account, amount)
+    def process_payout(merchant_account, amount, reference)
       if self.pending
         payout_pending('pending payout response')
       elsif self.success
@@ -314,7 +314,7 @@ class PaymentGatewayTest < ActiveSupport::TestCase
 
     should 'be invoked with right arguments' do
       Payout.any_instance.stubs(:should_be_verified_after_time?).returns(false)
-      @test_processor.expects(:process_payout).with do |merchant_account, payout_argument|
+      @test_processor.expects(:process_payout).with do |merchant_account, payout_argument, reference|
         payout_argument == @amount
       end
       @test_processor.payout(@payment_transfer.company, {:amount => @amount, :reference => @payment_transfer})
