@@ -55,7 +55,7 @@ en:
     instance_admin:
       analytics:
         logs:
-          deleted: 'Log has been archived.'
+          deleted: 'Log has been deleted.'
       imap_settings:
         could_not_validate: 'Your IMAP settings appear to be invalid'
         validation_successful: 'Your IMAP settings are valid'
