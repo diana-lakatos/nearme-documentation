@@ -180,6 +180,7 @@ class PaymentGateway < ActiveRecord::Base
   end
 
   def refund(amount, currency, payment, charge)
+    @payment = payment
     force_mode(charge.payment_gateway_mode)
     @refund = refunds.create(
       amount: amount,
@@ -247,19 +248,20 @@ class PaymentGateway < ActiveRecord::Base
   def payout(company, payout_details)
     force_mode(payout_details[:payment_gateway_mode])
     merchant_account = merchant_account(company)
-      if merchant_account
-        amount, reference = payout_details[:amount], payout_details[:reference]
-        @payout = payouts.create(
-          amount: amount.cents,
-          currency: amount.currency.iso_code,
-          reference: reference,
-          payment_gateway_mode: mode
-        )
-        process_payout(merchant_account, amount)
-        @payout
-      else
-        OpenStruct.new(success: false)
-      end
+
+    if merchant_account
+      amount, reference = payout_details[:amount], payout_details[:reference]
+      @payout = payouts.create(
+        amount: amount.cents,
+        currency: amount.currency.iso_code,
+        reference: reference,
+        payment_gateway_mode: mode
+      )
+      process_payout(merchant_account, amount, reference)
+      @payout
+    else
+      OpenStruct.new(success: false)
+    end
   end
 
   def immediate_payout(company)

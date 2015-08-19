@@ -71,7 +71,7 @@ class PaymentGateway::PaypalPaymentGateway < PaymentGateway
     @express_gateway
   end
 
-  def process_payout(merchant_account, amount)
+  def process_payout(merchant_account, amount, reference)
     @pay = payout_gateway.build_pay({
       :actionType => "PAY",
       :currencyCode => amount.currency.iso_code,
@@ -96,7 +96,7 @@ class PaymentGateway::PaypalPaymentGateway < PaymentGateway
         raise "Unknown payment exec status: #{@pay_response.paymentExecStatus}"
       end
     else
-      payout_failed(@pay_response.error)
+      payout_failed(@pay_response)
     end
   end
 

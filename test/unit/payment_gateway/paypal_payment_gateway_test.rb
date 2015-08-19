@@ -3,7 +3,7 @@ require 'test_helper'
 class PaymentGateway::PaypalPaymentGatewayTest < ActiveSupport::TestCase
 
   setup do
-      @paypal_processor = FactoryGirl.build(:paypal_payment_gateway, live_settings: {email: "sender@example.com"}, test_settings: {email: "sender@example.com"})
+    @paypal_processor = FactoryGirl.build(:paypal_payment_gateway, live_settings: {email: "sender@example.com"}, test_settings: {email: "sender@example.com"})
   end
 
   should "#setup_api_on_initialize should return a ActiveMerchant PaypalGateway object" do
@@ -31,7 +31,7 @@ class PaymentGateway::PaypalPaymentGatewayTest < ActiveSupport::TestCase
       api_mock.expects(:pay).returns(pay_response_mock)
       PayPal::SDK::AdaptivePayments::API.expects(:new).returns(api_mock)
       @paypal_processor.expects(:payout_successful)
-      @paypal_processor.process_payout(@merchant_account, Money.new(1000, 'EUR'))
+      @paypal_processor.process_payout(@merchant_account, Money.new(1000, 'EUR'), nil)
     end
 
     should "create a Payout record with pending when has to be confirmed" do
@@ -42,7 +42,7 @@ class PaymentGateway::PaypalPaymentGatewayTest < ActiveSupport::TestCase
       api_mock.expects(:pay).returns(pay_response_mock)
       PayPal::SDK::AdaptivePayments::API.expects(:new).returns(api_mock)
       @paypal_processor.expects(:payout_pending).with(pay_response_mock)
-      @paypal_processor.process_payout(@merchant_account, Money.new(1000, 'EUR'))
+      @paypal_processor.process_payout(@merchant_account, Money.new(1000, 'EUR'), nil)
     end
 
     should "create a Payout record with failure on failure" do
@@ -56,7 +56,7 @@ class PaymentGateway::PaypalPaymentGatewayTest < ActiveSupport::TestCase
       api_mock.expects(:pay).returns(pay_response_mock)
       PayPal::SDK::AdaptivePayments::API.expects(:new).returns(api_mock)
       @paypal_processor.expects(:payout_failed)
-      @paypal_processor.process_payout(@merchant_account, Money.new(1000, 'EUR'))
+      @paypal_processor.process_payout(@merchant_account, Money.new(1000, 'EUR'), nil)
     end
 
     should 'build pay object with right arguments' do
@@ -80,7 +80,7 @@ class PaymentGateway::PaypalPaymentGatewayTest < ActiveSupport::TestCase
       pay_response_mock.stubs(:success? => true, :to_yaml => 'yaml', :paymentExecStatus => 'COMPLETED')
       api_mock.expects(:pay).returns(pay_response_mock)
       @paypal_processor.expects(:payout_successful)
-      @paypal_processor.process_payout(@merchant_account, Money.new(1234, 'EUR'))
+      @paypal_processor.process_payout(@merchant_account, Money.new(1234, 'EUR'), nil)
     end
   end
 

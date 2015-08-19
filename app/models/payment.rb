@@ -11,6 +11,7 @@ class Payment < ActiveRecord::Base
 
   belongs_to :company, -> { with_deleted }
   belongs_to :instance
+  belongs_to :payment_transfer
   # Payable association connects Payment with Reservation and Spree::Order
   belongs_to :payable, polymorphic: true
 
