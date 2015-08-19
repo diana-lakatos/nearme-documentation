@@ -58,7 +58,11 @@ class SessionsController < Devise::SessionsController
   end
 
   def set_return_to
-    session[:user_return_to] = params[:return_to] if params[:return_to].present?
+    # We can't prevent Devise from setting return_to to users/sign_in on unsuccessful sign in
+    # so we then prevent saving it if present
+    if params[:return_to].present? && !params[:return_to].to_s.match(/users\/sign_in/)
+      session[:user_return_to] = params[:return_to]
+    end
   end
 
   def resolve_layout
