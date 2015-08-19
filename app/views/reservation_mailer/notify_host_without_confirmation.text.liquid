@@ -21,7 +21,7 @@ Total: {{ reservation.total_price }}
 
 Exciting, right? You can manage this booking from the Dashboard.
 
-Manage {{ platform_context.lessees | capitalize }}: {{ platform_context.host | append:listing.manage_guests_dashboard_url_with_tracking | append:signature_for_tracking }}
+Manage {{ listing.lessees | capitalize }}: {{ platform_context.host | append:listing.manage_guests_dashboard_url_with_tracking | append:signature_for_tracking }}
 
 If you need help, send an email to {{ platform_context.support_email }} or contact us at {{ platform_context.phone_number }}.
 

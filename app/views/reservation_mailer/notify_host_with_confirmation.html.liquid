@@ -45,10 +45,10 @@ Your listing, '<a href="{{ platform_context.host | append:listing.listing_url }}
 
 </div>
 
-<p>Exciting, right? Please, confirm the booking and let's get the {{ platform_context.lessee }} set up!</p>
+<p>Exciting, right? Please, confirm the booking and let's get the {{ listing.lessee }} set up!</p>
 
 <a class="btn" href="{{ platform_context.host | append:reservation.reservation_confirm_url_with_tracking | append:signature_for_tracking }}">Confirm Booking</a>
 
-<p>Not ready for {{ platform_context.lessees }}? You can manage your bookings <a href="{{ platform_context.host | append:listing.manage_guests_dashboard_url }}">here</a>.</p>
+<p>Not ready for {{ listing.lessees }}? You can manage your bookings <a href="{{ platform_context.host | append:listing.manage_guests_dashboard_url }}">here</a>.</p>
 
 <p>If you need help, send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a> or contact us at {{ platform_context.phone_number }}.</p>

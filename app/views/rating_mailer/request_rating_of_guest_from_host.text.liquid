@@ -1,11 +1,11 @@
-How was {{ reservation.owner.first_name }}, your recent {{ platform_context.lessee }}?
+How was {{ reservation.owner.first_name }}, your recent {{ listing.lessee }}?
 
 We would love to hear about your experience with {{ reservation.owner.first_name }}.
 
-Your opinion is very important and it will help us ensure that our {{ platform_context.lessees }} are a good fit for you.
+Your opinion is very important and it will help us ensure that our {{ listing.lessees }} are a good fit for you.
 
 Please take a moment to give us your feedback!
 
 Write a Review: {{ platform_context.host | append:reservation.reviews_reservation_url }}
 
-If you'd prefer to talk to us directly, please send an email to {{ platform_context.support_email }} or call us on {{ platform_context.phone_number }} - we love to talk with our {{platform_context.lessors}}.
+If you'd prefer to talk to us directly, please send an email to {{ platform_context.support_email }} or call us on {{ platform_context.phone_number }} - we love to talk with our {{listing.lessors}}.
