@@ -225,7 +225,7 @@ en:
         error_type: "Type"
         message: "Message"
         created_at: "Created at"
-        archive: 'Archive'
+        delete: 'Delete'
 
     settings:
       configuration:
