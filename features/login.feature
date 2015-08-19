@@ -62,7 +62,7 @@ Feature: A user can login
     Given Existing user with Facebook email
     And the Facebook OAuth request with email is successful
     And I try to sign up with Facebook
-    Then I should see "email is already linked"
+    Then I should see "is already linked to an account"
     Then there should be no Facebook account
 
   Scenario: User signed up with social provider can set up his password

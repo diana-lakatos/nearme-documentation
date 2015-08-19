@@ -22,7 +22,7 @@ Feature: A user can edit their settings
     And I fill in "Email" with "new@email.com"
     And I upload avatar
     When I press "Save"
-    Then I should see "You updated your account successfully."
+    Then I should see "You have updated your account successfully."
     And a user should exist with email: "new@email.com"
 
   Scenario: A user can select industries for self
