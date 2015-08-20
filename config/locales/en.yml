@@ -1050,6 +1050,8 @@ en:
       manage: 'MANAGE PRODUCTS'
     transactables:
       manage: 'MANAGE LISTINGS'
+      pricing:
+        free: "Free"
     reviews:
       templates:
         comments: "Comments"
@@ -1075,6 +1077,13 @@ en:
         submit_review: "Submit Review"
         leave: "Leave"
         title: "Feedback"
+        leave_subject_feedback: "Leave %{subject} Feedback"
+        subject:
+          seller: "seller"
+          product: "product"
+          buyer: "buyer"
+          host: "host"
+          guest: "guest"
       index:
         title: "Reviews"
         rate_your_experience: "Rate Your Experience"

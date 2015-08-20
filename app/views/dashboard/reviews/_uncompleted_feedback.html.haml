@@ -9,9 +9,7 @@
         .review-actions
           = render 'review_title', feedback: feedback
           %p
-            = t('dashboard.reviews.feedback.leave').upcase
-            = subject.upcase
-            = t('dashboard.reviews.feedback.title').upcase
+            = t('dashboard.reviews.feedback.leave_subject_feedback', subject: t("dashboard.reviews.feedback.subject.#{subject}", default: 'user')).upcase
           .rating.editable{'data-hints' => rating_system.rating_hints.map(&:description_or_value).reverse}
           = render 'show_details_link', subject: subject, id: feedback.id
 
