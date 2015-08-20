@@ -182,7 +182,8 @@ module Elastic
     def build_multi_match(query_string, custom_attributes)
       multi_match = {
         query: query_string,
-        fields: custom_attributes
+        fields: custom_attributes,
+        operator: "and"
       }
 
       # You should enable fuzzy search manually. Not included in the current release
