@@ -21,6 +21,7 @@
 //= require ./vendor/jquery.ias
 //= require ./vendor/markerclusterer
 //= require ./vendor/icui
+//= require ./vendor/jquery.tokeninput
 //= require ./vendor/strftime
 //= require ./vendor/jstz
 //= require recurring_select

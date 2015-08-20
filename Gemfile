@@ -146,6 +146,8 @@ gem 'video_info'
 gem 'domainatrix'
 gem 'store_base_sti_class'
 
+gem 'acts-as-taggable-on', '~> 3.4'
+
 group :profiling, :development do
   gem 'rack-mini-profiler', require: false
   gem 'flamegraph'

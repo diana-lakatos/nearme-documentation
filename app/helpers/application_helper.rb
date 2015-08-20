@@ -7,6 +7,7 @@ module ApplicationHelper
   include SharingHelper
   include CustomAttributes::ApplicationHelper
   include SearchEnginesStructuredDataHelper
+  include TagListHelper
 
   def timeago(time)
     content_tag(:abbr, time, title: time.to_time.iso8601, class: :timeago)
@@ -339,4 +340,13 @@ module ApplicationHelper
     I18n.t(key, default: '').present?
   end
 
+  def javascript_i18n_include_tag
+    js_translations = I18n.t("js").to_json
+
+    %Q{
+      window.I18n = {};
+      window.I18n.locale = '#{I18n.locale.to_s}';
+      window.I18n.t = #{js_translations};
+    }.html_safe
+  end
 end

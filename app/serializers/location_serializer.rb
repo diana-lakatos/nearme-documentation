@@ -15,11 +15,11 @@ class LocationSerializer < ActiveModel::Serializer
      # Return the availability rules as a hash in the same format as the API spec
     object.availability_full_week.map do |d|
       {
-          day:d[:day],
-          id: d[:rule].id,
-          day_name: d[:rule].day_name,
-          open_time: d[:rule].open_time,
-          close_time: d[:rule].close_time
+        day: d[:day],
+        id: d[:rule].id,
+        day_name: d[:rule].day_name,
+        open_time: d[:rule].open_time,
+        close_time: d[:rule].close_time
        }
     end
 

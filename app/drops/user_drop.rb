@@ -233,4 +233,3 @@ class UserDrop < BaseDrop
     @categories
   end
 end
-

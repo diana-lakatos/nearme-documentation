@@ -9,6 +9,7 @@ Regular visitor can see recent blog posts, paginate to history and check blog po
   Scenario: Blog admin can manage blog instance
     Given I am logged in as blog admin for this blog instance
     Then I can manage blog posts
+    And I can manage tags for posts
     And I can manage settings for a blog
 
   Scenario: Visitor can click through blog

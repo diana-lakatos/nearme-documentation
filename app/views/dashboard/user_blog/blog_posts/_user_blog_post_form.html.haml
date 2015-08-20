@@ -4,8 +4,8 @@
 = f.input :excerpt, as: :ckeditor, input_html: { ckeditor: { toolbar: 'simple' } }
 
 = f.input :published_at, as: :string, readonly: true
-
 = f.input :slug
+= f.input :tag_list, input_html: { data: data_tags_options(f.object) }
 
 = f.input :hero_image
 = @blog_post.decorate.image_preview(:hero_image)
@@ -19,9 +19,6 @@
 = javascript_include_tag 'vendor/jquery.min'
 = javascript_include_tag 'vendor/jquery-ui-1.10.4.custom.min'
 
-:javascript
-  $('#user_blog_post_published_at').datepicker({
-        showOtherMonths: true,
-        selectOtherMonths: false,
-        dateFormat: 'yy-mm-dd'
-    });
+= content_for :domready do
+  $('#user_blog_post_published_at').datepicker({ showOtherMonths: true, selectOtherMonths: false, dateFormat: 'yy-mm-dd'});
+  new Tags()

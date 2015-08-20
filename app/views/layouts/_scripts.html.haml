@@ -3,8 +3,6 @@
 
 = yield :script
 
-:javascript
-  var I18n = { locale: "#{ I18n.locale }" }
-
 = javascript_tag do
+  = javascript_i18n_include_tag
   = yield :domready
