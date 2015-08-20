@@ -4,10 +4,10 @@ module ProductsIndex
   included do |base|
     cattr_accessor :custom_attributes
 
-    settings index: { number_of_shards: 1 } do
+    settings(index: BaseIndex.default_index_options) do
       mapping do
         indexes :custom_attributes, type: 'object' do
-          if Rails.env.staging? or Rails.env.production?
+          if Rails.env.staging? || Rails.env.production?
             mapped = Spree::ProductType.all.map{ |product_type|
               product_type.custom_attributes.map(&:name)
             }.flatten.uniq
@@ -40,18 +40,26 @@ module ProductsIndex
 
     def as_indexed_json(options={})
       custom_attrs = {}
-      product_instance_id = self.instance_id
       @@custom_attributes ||= {}
-      @@custom_attributes[product_instance_id] ||= Spree::ProductType.where(instance_id: product_instance_id).all.map{ |product_type|
-        product_type.custom_attributes.map(&:name)
-      }.flatten.uniq
+      product_types = Spree::ProductType.all
+
+      @@custom_attributes[product_instance_id] ||= product_types.map do |pt| 
+        pt.custom_attributes.map(&:name) 
+      end.flatten.uniq
+
       for custom_attribute in @@custom_attributes[product_instance_id]
-        custom_attrs[custom_attribute] = self.extra_properties.send(custom_attribute).to_s if self.extra_properties.respond_to?(custom_attribute)
+        if self.extra_properties.respond_to?(custom_attribute)
+          custom_attrs[custom_attribute] = self.extra_properties.send(custom_attribute).to_s
+        end
       end
-      self.as_json(only: Spree::Product.mappings.to_hash[:product][:properties].keys.delete_if{|prop| prop == :custom_attributes}).
+
+      allowed_keys = Spree::Product.mappings.to_hash[:product][:properties].keys.delete_if { |prop| prop == :custom_attributes }
+
+      self.as_json(only: allowed_keys).
         merge(geo_location: self.geo_location).
         merge(custom_attributes: custom_attrs).
-        merge(categories: self.categories.map(&:id))
+        merge(categories: self.categories.map(&:id)).
+        merge(BaseIndex.override_text_values(self))
     end
 
     def self.custom_attributes_names

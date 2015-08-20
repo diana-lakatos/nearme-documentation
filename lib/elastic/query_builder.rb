@@ -174,7 +174,8 @@ module Elastic
       if @query[:query].blank?
         { match_all: { boost: QUERY_BOOST } }
       else
-        { multi_match: build_multi_match(@query[:query], @searchable_custom_attributes + ['name^2', 'description']) }
+        query = BaseIndex.sanitize_string(@query[:name])
+        { multi_match: build_multi_match(query, @searchable_custom_attributes + ['name^20', 'description']) }
       end
     end
 
@@ -199,7 +200,8 @@ module Elastic
       if @query[:name].blank?
         { match_all: { boost: QUERY_BOOST } }
       else
-        { multi_match: build_multi_match(@query[:name], @searchable_custom_attributes + ['name^2', 'description']) }
+        query = BaseIndex.sanitize_string(@query[:name])
+        { multi_match: build_multi_match(query, @searchable_custom_attributes + ['name^20', 'description']) }
       end
     end
 

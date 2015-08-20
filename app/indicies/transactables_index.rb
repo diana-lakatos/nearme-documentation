@@ -4,10 +4,10 @@ module TransactablesIndex
   included do |base|
     cattr_accessor :custom_attributes
 
-    settings index: { number_of_shards: 1 } do
+    settings(index: BaseIndex.default_index_options) do
       mapping do
         indexes :custom_attributes, type: 'object' do
-          if Rails.env.staging? or Rails.env.production?
+          if Rails.env.staging? || Rails.env.production?
             mapped = TransactableType.all.map{ |service_type|
               service_type.custom_attributes.map(&:name)
             }.flatten.uniq
@@ -21,20 +21,20 @@ module TransactablesIndex
         indexes :description, type: 'string'
 
         indexes :object_properties, type: 'object'
-        indexes :instance_id, :type => "integer"
-        indexes :company_id, :type => "integer"
-        indexes :location_id, :type => "integer"
-        indexes :transactable_type_id, :type => "integer"
-        indexes :administrator_id, :type => "integer"
+        indexes :instance_id, :type => 'integer'
+        indexes :company_id, :type => 'integer'
+        indexes :location_id, :type => 'integer'
+        indexes :transactable_type_id, :type => 'integer'
+        indexes :administrator_id, :type => 'integer'
 
         indexes :categories, type: 'integer'
 
-        indexes :enabled, :type => "boolean"
-        indexes :action_rfq, :type => "boolean"
-        indexes :action_hourly_booking, :type => "boolean"
-        indexes :action_free_booking, :type => "boolean"
-        indexes :action_recurring_booking, :type => "boolean"
-        indexes :action_daily_booking, :type => "boolean"
+        indexes :enabled, :type => 'boolean'
+        indexes :action_rfq, :type => 'boolean'
+        indexes :action_hourly_booking, :type => 'boolean'
+        indexes :action_free_booking, :type => 'boolean'
+        indexes :action_recurring_booking, :type => 'boolean'
+        indexes :action_daily_booking, :type => 'boolean'
 
         indexes :hourly_price_cents, :type => 'integer'
         indexes :daily_price_cents, :type => 'integer'
@@ -52,13 +52,20 @@ module TransactablesIndex
 
     def as_indexed_json(options={})
       custom_attrs = {}
-      @@custom_attributes ||= TransactableType.all.map{ |service_type|
+      
+      @@custom_attributes ||= TransactableType.all.map do |service_type|
         service_type.custom_attributes.map(&:name)
-      }.flatten.uniq
+      end.flatten.uniq
+
       for custom_attribute in @@custom_attributes
-        custom_attrs[custom_attribute] = self.properties.send(custom_attribute).to_s.downcase if self.properties.respond_to?(custom_attribute)
+        if self.properties.respond_to?(custom_attribute)
+          custom_attrs[custom_attribute] = self.properties.send(custom_attribute).to_s.downcase
+        end
       end
-      self.as_json(only: Transactable.mappings.to_hash[:transactable][:properties].keys.delete_if{|prop| prop == :custom_attributes}).merge(
+
+      allowed_keys = Transactable.mappings.to_hash[:transactable][:properties].keys.delete_if { |prop| prop == :custom_attributes }
+
+      self.as_json(only: allowed_keys).merge(
         geo_location: self.geo_location,
         custom_attributes: custom_attrs,
         location_type_id: self.location.location_type_id,
@@ -67,7 +74,7 @@ module TransactablesIndex
         weekly_price_cents: self.weekly_price_cents.to_i,
         monthly_price_cents: self.monthly_price_cents.to_i,
         categories: self.categories.pluck(:id)
-      )
+      ).merge(BaseIndex.override_text_values(self))
     end
 
     def self.esearch(query)
