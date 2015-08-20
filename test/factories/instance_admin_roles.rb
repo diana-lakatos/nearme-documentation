@@ -4,7 +4,7 @@ FactoryGirl.define do
   factory :instance_admin_role do
 
     sequence(:name) { |n| "InstanceAdminRole #{n}" }
-    instance_id { (Instance.first.presence || FactoryGirl.create(:instance)).id }
+    instance_id { (PlatformContext.current.instance || FactoryGirl.create(:instance)).id }
     permission_analytics true
     permission_settings false
     permission_theme false

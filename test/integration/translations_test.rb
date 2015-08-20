@@ -5,8 +5,6 @@ class TranslationsTest < ActionDispatch::IntegrationTest
   setup do
     @admin = FactoryGirl.create(:admin)
     stub_mixpanel
-    instance = Instance.first
-    instance.domains << FactoryGirl.create(:domain, name: "www.example.com")
     @transactable_type = ServiceType.first
     @company = FactoryGirl.create(:company, creator: @admin)
     @location = FactoryGirl.create(:location, company: @company)

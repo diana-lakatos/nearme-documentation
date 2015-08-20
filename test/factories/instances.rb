@@ -37,7 +37,7 @@ FactoryGirl.define do
     end
 
     after(:create) do |instance, evaluator|
-      instance.theme = FactoryGirl.create(:theme, :skip_compilation => true) unless instance.theme
+      instance.theme = FactoryGirl.create(:theme, skip_compilation: true, owner: instance) unless instance.theme
 
       if evaluator.generate_rating_systems
         RatingConstants::RATING_SYSTEM_SUBJECTS.each do |subject|

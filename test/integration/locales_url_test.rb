@@ -3,8 +3,9 @@ require 'test_helper'
 class LocalesUrlTest < ActionDispatch::IntegrationTest
 
   setup do
+    I18n.locale = :en
     RoutingFilter.active = true
-    FactoryGirl.create(:primary_locale, code: 'en')
+    @primary_locale = FactoryGirl.create(:primary_locale, code: 'en')
   end
 
   should 'redirect to default language if locale does not exist' do
@@ -13,6 +14,7 @@ class LocalesUrlTest < ActionDispatch::IntegrationTest
   end
 
   should 'redirect to path without locale for default locale' do
+    @primary_locale.update_attribute(:primary, false)
     FactoryGirl.create(:primary_locale, code: 'aa')
     PlatformContext.current.instance.reload
     get 'http://www.example.com/aa/'
@@ -32,6 +34,7 @@ class LocalesUrlTest < ActionDispatch::IntegrationTest
   end
 
   should 'give url locale higher preference than user locale' do
+    Locale.destroy_all
     FactoryGirl.create(:locale, code: 'de')
     FactoryGirl.create(:locale, code: 'cs')
     Utils::EnLocalesSeeder.new.go!

@@ -4,7 +4,6 @@ class SearchControllerTest < ActionController::TestCase
   setup do
     stub_request(:get, /.*maps\.googleapis\.com.*/).to_return(status: 404, body: {}.to_json, headers: {})
     stub_mixpanel
-    PlatformContext.current = PlatformContext.new(Instance.first)
   end
 
   context 'for anything when no TransactableType exists' do
@@ -219,8 +218,7 @@ class SearchControllerTest < ActionController::TestCase
            @adelaide_super = FactoryGirl.create(:listing_in_adelaide)
            @adelaide_super.description = "super location"
            @adelaide_super.save
-           PlatformContext.current.instance.searcher_type = "fulltext_geo"
-           PlatformContext.current.instance.save
+           PlatformContext.current.instance.update_attribute(:searcher_type, "fulltext_geo")
         end
 
         context 'on mixed results page' do

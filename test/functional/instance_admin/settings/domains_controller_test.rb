@@ -8,7 +8,7 @@ class InstanceAdmin::Settings::DomainsControllerTest < ActionController::TestCas
       sign_in @user
       InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
       InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)
-      @domain = Instance.first.default_domain
+      @domain = PlatformContext.current.instance.default_domain
     end
 
     should 'show list' do

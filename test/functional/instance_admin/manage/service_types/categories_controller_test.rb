@@ -11,8 +11,6 @@ class InstanceAdmin::Manage::ServiceTypes::CategoriesControllerTest < ActionCont
   # Please change both files if needed!
 
   setup do
-    PlatformContext.current = PlatformContext.new(Instance.first)
-
     setup_categorizable
 
     @user = FactoryGirl.create(:user)

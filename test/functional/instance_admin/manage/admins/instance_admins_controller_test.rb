@@ -21,14 +21,14 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsControllerTest < ActionContro
       end
 
       should 'be able to add user by email' do
-        assert_difference "Instance.first.instance_admins.size" do
+        assert_difference "PlatformContext.current.instance.instance_admins.count" do
           post :create, { :email => @user_to_be_added.email }
         end
       end
 
       should 'not duplicate instance admin' do
-        FactoryGirl.create(:instance_admin, :user_id => @user.id, :instance_id => Instance.first.id)
-        assert_no_difference "Instance.first.instance_admins.size" do
+        FactoryGirl.create(:instance_admin, :user_id => @user.id, :instance_id => PlatformContext.current.instance.id)
+        assert_no_difference "PlatformContext.current.instance.instance_admins.count" do
           post :create, { :email => @user.email }
         end
       end
@@ -49,7 +49,7 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsControllerTest < ActionContro
 
       should 'return error message if user has not been found' do
         email = "idontexist@example.com"
-        assert_no_difference "Instance.first.instance_admins.size" do
+        assert_no_difference "PlatformContext.current.instance.instance_admins.size" do
           post :create, { :email => email }
         end
         assert_equal flash[:error], "Unfortunately we could not find user with email \"#{email}\""
@@ -61,9 +61,9 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsControllerTest < ActionContro
     context 'update' do
 
       setup do
-        @instance_admin = FactoryGirl.create(:instance_admin, :user_id => @user.id, :instance_id => Instance.first.id)
+        @instance_admin = FactoryGirl.create(:instance_admin, :user_id => @user.id, :instance_id => PlatformContext.current.instance.id)
         @user_2 = FactoryGirl.create(:user)
-        @instance_admin_2 = FactoryGirl.create(:instance_admin, :user_id => @user_2.id, :instance_id => Instance.first.id)
+        @instance_admin_2 = FactoryGirl.create(:instance_admin, :user_id => @user_2.id, :instance_id => PlatformContext.current.instance.id)
       end
 
       should 'update the role' do
@@ -108,8 +108,8 @@ class InstanceAdmin::Manage::Admins::InstanceAdminsControllerTest < ActionContro
     context 'destroy' do
 
       setup do
-        @instance_owner = FactoryGirl.create(:instance_admin, :user_id => FactoryGirl.create(:user).id, :instance_id => Instance.first.id)
-        @instance_admin = FactoryGirl.create(:instance_admin, :user_id => FactoryGirl.create(:user).id, :instance_id => Instance.first.id)
+        @instance_owner = FactoryGirl.create(:instance_admin, :user_id => FactoryGirl.create(:user).id, :instance_id => PlatformContext.current.instance.id)
+        @instance_admin = FactoryGirl.create(:instance_admin, :user_id => FactoryGirl.create(:user).id, :instance_id => PlatformContext.current.instance.id)
       end
 
       should 'allow to destroy regular instance admin' do
