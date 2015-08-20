@@ -43,11 +43,11 @@ module ProductsIndex
       @@custom_attributes ||= {}
       product_types = Spree::ProductType.all
 
-      @@custom_attributes[product_instance_id] ||= product_types.map do |pt| 
+      @@custom_attributes[PlatformContext.current.instance.id] ||= product_types.map do |pt| 
         pt.custom_attributes.map(&:name) 
       end.flatten.uniq
 
-      for custom_attribute in @@custom_attributes[product_instance_id]
+      for custom_attribute in @@custom_attributes[PlatformContext.current.instance.id]
         if self.extra_properties.respond_to?(custom_attribute)
           custom_attrs[custom_attribute] = self.extra_properties.send(custom_attribute).to_s
         end
