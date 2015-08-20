@@ -152,7 +152,12 @@ module LiquidFilters
   end
 
   def json(object)
-    return object.to_json
+    object.to_json
   end
+
+  def sha1(object)
+    Digest::SHA1.hexdigest object
+  end
+
 end
 
