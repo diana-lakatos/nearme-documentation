@@ -19,7 +19,6 @@
 //= require ./vendor/jQueryRotate
 //= require ./vendor/placeholder
 //= require ./vendor/jquery.ias
-//= require ./vendor/ZeroClipboard
 //= require ./vendor/markerclusterer
 //= require ./vendor/icui
 //= require ./vendor/strftime
@@ -102,7 +101,6 @@ window.DNM = {
   initializeComponents: function(scope) {
     Multiselect.initialize(scope);
     Flash.initialize(scope);
-    Clipboard.initialize(scope);
     Limiter.initialize(scope);
     Fileupload.initialize(scope);
   },
