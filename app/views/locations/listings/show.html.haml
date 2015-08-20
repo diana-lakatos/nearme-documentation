@@ -24,7 +24,8 @@
 
         .one-third.column.left
           .toggleable-booking-modules
-            = render 'locations/listings/booking', listing: @listing, collapsed: false
+            - cache([@listing, user_signed_in?, @listing.instance.context_cache_key.to_s]) do
+              = render 'locations/listings/booking', listing: @listing, collapsed: false
             .padding-row
 
           - if platform_context.instance.wish_lists_enabled?
