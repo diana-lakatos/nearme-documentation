@@ -233,9 +233,9 @@ class @Bookings.Datepicker
 
       # Map bookings to JS dates
       (DNM.util.Date.idToDate(date) for date in @listingData.initial_bookings.dates)
-    else if @listing.isOvernightBooking()
-      [startDate, endDate, new Date()]
     else if datesFromFilter
+      [startDate, endDate]
+    else if @listing.isOvernightBooking()
       [startDate, endDate]
     else
       [startDate]
