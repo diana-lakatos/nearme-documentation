@@ -30,7 +30,7 @@
         - if f.object.transactable_type.action_daily_booking || f.object.transactable_type.action_weekly_booking || f.object.transactable_type.action_monthly_booking
           %div.price-inputs-daily
             %label.checkbox
-              = f.check_box :action_daily_booking
+              = f.check_box :action_daily_booking, checked: only_one_option_available?(f.object, 'daily')
               = render 'listings/periods_label', transactable: f.object
 
             .price-input-options
@@ -42,7 +42,7 @@
         - if f.object.transactable_type.action_hourly_booking
           %div.price-inputs-hourly{'data-period' => 'hourly', style: "#{'display: none;' if f.object.overnight_booking?}"}
             %label.checkbox
-              = f.check_box :action_hourly_booking
+              = f.check_box :action_hourly_booking, checked: only_one_option_available?(f.object, 'hourly')
               = t("simple_form.labels.transactable.price_hourly")
 
             .price-input-options
@@ -55,7 +55,7 @@
         - if f.object.transactable_type.action_free_booking
           %div.price-inputs-free
             %label.checkbox
-              = f.check_box :action_free_booking
+              = f.check_box :action_free_booking, checked: only_one_option_available?(f.object, 'free')
               = t("simple_form.labels.transactable.price_free")
 
         - if f.object.errors.include?(:price_type).present?
