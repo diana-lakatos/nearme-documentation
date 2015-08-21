@@ -179,6 +179,17 @@ class ReservationTest < ActiveSupport::TestCase
       assert_equal 0, @payment.cancellation_policy_penalty_percentage
     end
 
+    should 'not confirm when capture fails' do
+      @reservation = FactoryGirl.create(:reservation_with_credit_card, :state => 'unconfirmed')
+      assert_difference 'Payment.count' do
+        @reservation.confirm!
+      end
+      @payment = @reservation.payments.last
+      assert_equal false, @payment.paid?
+      assert_equal "failed", @reservation.reload.payment_status
+      assert_equal false, @reservation.confirmed?
+    end
+
   end
 
   context 'attempt_payment_refund' do
@@ -186,6 +197,7 @@ class ReservationTest < ActiveSupport::TestCase
       @charge = FactoryGirl.create(:charge)
       @reservation = @charge.payment.payable
       @reservation.stubs(:attempt_payment_capture).returns(true)
+      @reservation.stubs(:payment_capture).returns(true)
       @reservation.confirm!
       @reservation.update_column(:payment_status, Reservation::PAYMENT_STATUSES[:paid])
     end
@@ -709,7 +721,7 @@ class ReservationTest < ActiveSupport::TestCase
   context 'attempt payment capture' do
 
     setup do
-      @reservation = FactoryGirl.create(:reservation)
+      @reservation = FactoryGirl.create(:reservation_with_credit_card)
     end
 
     should 'not attempt to capture payment' do

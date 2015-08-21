@@ -10,7 +10,8 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
     if @reservation.confirmed?
       flash[:warning] = t('flash_messages.manage.reservations.reservation_already_confirmed')
     else
-      if @reservation.confirm
+      @reservation.confirm
+      if @reservation.confirmed?
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::ManuallyConfirmed, @reservation.id)
         event_tracker.confirmed_a_booking(@reservation)
         track_reservation_update_profile_informations
@@ -59,6 +60,17 @@ class Dashboard::Company::HostReservationsController < Dashboard::Company::BaseC
       flash[:deleted] = t('flash_messages.manage.reservations.reservation_cancelled')
     else
       flash[:error] = t('flash_messages.manage.reservations.reservation_not_confirmed')
+    end
+
+    redirect_to dashboard_company_host_reservations_url
+  end
+
+  def mark_as_paid
+    if @reservation.manual_payment? && !@reservation.paid?
+      @reservation.update_attribute(:payment_status, Reservation::PAYMENT_STATUSES[:paid])
+      flash[:deleted] = t('flash_messages.manage.reservations.payment_confirmed')
+    else
+      flash[:error] = t('flash_messages.manage.reservations.payment_failed')
     end
 
     redirect_to dashboard_company_host_reservations_url

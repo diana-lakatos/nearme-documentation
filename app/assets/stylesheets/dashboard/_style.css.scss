@@ -244,6 +244,19 @@ h4{
   .row {
     margin: 20px 0;
   }
+  .order-status {
+    .col-md-3 {
+      margin-left: 0px;
+      padding-left: 0px;
+    }
+
+    .warn {
+      color: $color-red;
+    }
+    .info {
+      color: $color-green;
+    }
+  }
 }
 
 .order-item .col-md-8, .additional-item .col-md-8 {

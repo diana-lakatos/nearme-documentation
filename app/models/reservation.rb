@@ -125,14 +125,13 @@ class Reservation < ActiveRecord::Base
       object.validate_all_dates_available
       object.errors.empty?
     end
-    after_transition unconfirmed: :confirmed, do: :attempt_payment_capture, if: lambda { |r| r.billing_authorization.present? }
-    after_transition unconfirmed: :confirmed, do: :schedule_payment_capture, if: lambda { |r| r.recurring_booking_id.present? && r.billing_authorization.nil? }
     after_transition unconfirmed: :confirmed, do: :set_confirmed_at
     after_transition confirmed: [:cancelled_by_guest, :cancelled_by_host], do: [:schedule_refund, :set_cancelled_at]
     after_transition unconfirmed: [:cancelled_by_guest, :expired, :rejected], do: [:schedule_void_payment], if: lambda { |r| r.billing_authorization.present? }
 
     event :confirm do
-      transition unconfirmed: :confirmed
+      transition unconfirmed: :confirmed, if: lambda {|reservation| reservation.payment_capture }
+      transition unconfirmed: same
     end
 
     event :reject do
@@ -459,8 +458,22 @@ class Reservation < ActiveRecord::Base
     true
   end
 
+  def payment_capture
+    return true if manual_payment?
+
+    if billing_authorization.present?
+      attempt_payment_capture
+      paid?
+    elsif recurring_booking_id.present?
+      schedule_payment_capture
+      true
+    else
+      false
+    end
+  end
+
   def attempt_payment_capture
-    return if !active_merchant_payment? || paid? || !confirmed?
+    return if !active_merchant_payment? || paid? || !unconfirmed?
     generate_payment
   end
 
