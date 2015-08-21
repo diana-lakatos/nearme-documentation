@@ -80,6 +80,7 @@
               = pd.simple_fields_for :payment_document_info do |pdi|
                 = pdi.hidden_field :attachment_id
                 = pdi.hidden_field :document_requirement_id
+                %abbr{ title: "required" } *
                 = pdi.object.document_requirement.label
             .span9.upload{ 'data-upload' => true }
               = pd.input :file, as: :file, label: false, input_html: { hidden: true }
