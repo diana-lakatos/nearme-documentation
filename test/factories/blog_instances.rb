@@ -4,7 +4,7 @@ FactoryGirl.define do
     sequence(:name) do |n|
       "Blog #{n}"
     end
-    owner { Instance.first.presence || FactoryGirl.create(:instance) }
+    owner { PlatformContext.current.instance }
     enabled true
   end
 

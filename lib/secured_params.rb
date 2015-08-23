@@ -97,7 +97,7 @@ class SecuredParams
       :required,
       :min_length,
       :max_length,
-      valid_values: []
+      :valid_values
     ]
   end
 

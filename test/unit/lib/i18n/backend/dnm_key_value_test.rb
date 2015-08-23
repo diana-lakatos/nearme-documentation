@@ -3,13 +3,15 @@ require 'test_helper'
 class DnmKeyValueTest < ActiveSupport::TestCase
 
   setup do
-    @translation_global = FactoryGirl.create(:translation, :key => 'translation_key', :value => 'global value', instance_id: nil)
+    I18n.locale = :en
     @instance = PlatformContext.current.instance
+    @translation_global = FactoryGirl.create(:translation, :key => 'translation_key', :value => 'global value', instance_id: nil)
     @default_translation = FactoryGirl.create(:translation, :key => 'some_key_for_instance', :value => 'default value', instance_id: nil)
     @instance_translation = FactoryGirl.create(:translation, :key => 'some_key_for_instance', :value => 'instance value', instance_id: @instance.id)
-    @backend = I18n::Backend::DNMKeyValue.new(Rails.cache)
-    I18n.locale = :en
+    @backend = I18n::Backend::DNMKeyValue.new(nil)
     @backend.set_instance_id(@instance.id)
+    @backend.update_cache(@instance.id)
+
   end
 
   should 'handle advanced features ' do
@@ -62,29 +64,29 @@ class DnmKeyValueTest < ActiveSupport::TestCase
   end
 
   should 'return another languages' do
+    I18n.locale = :cs
     @translation = FactoryGirl.create(:czech_translation, value: 'Jaromír je král', instance_id: @instance.id)
     @backend.update_cache(@instance.id)
-    I18n.locale = :cs
     assert_equal 'Jaromír je král', translate('translation_key')
   end
 
   should 'fallback to English if instance language key does not exist' do
-    @backend.update_cache(@instance.id)
     I18n.locale = :cs
+    @backend.update_cache(@instance.id)
     assert_equal 'global value', translate('translation_key')
   end
 
   should 'fallback to English if instance language key is empty' do
+    I18n.locale = :cs
     @translation = FactoryGirl.create(:czech_translation, value: '', instance_id: @instance.id)
     @backend.update_cache(@instance.id)
-    I18n.locale = :cs
     assert_equal 'global value', translate('translation_key')
   end
 
   should 'fallback to English if instance language key is nil' do
+    I18n.locale = :cs
     @translation = FactoryGirl.create(:czech_translation, value: nil, instance_id: @instance.id)
     @backend.update_cache(@instance.id)
-    I18n.locale = :cs
     assert_equal 'global value', translate('translation_key')
   end
 

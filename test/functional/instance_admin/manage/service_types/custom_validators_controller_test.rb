@@ -60,11 +60,12 @@ class InstanceAdmin::Manage::ServiceTypes::CustomValidatorsControllerTest < Acti
 
     should 'update form compponents' do
       assert_no_difference 'CustomValidator.count' do
-        put :update, service_type_id: @service_type.id, id: @custom_validator.id, custom_validator: { field_name: 'description'}
+        put :update, service_type_id: @service_type.id, id: @custom_validator.id, custom_validator: { field_name: 'description', valid_values: 'true,false'}
       end
       custom_validator = assigns(:validator)
       custom_validator.reload
       assert_equal 'description', custom_validator.field_name
+      assert_equal custom_validator.valid_values, ['true', 'false']
       assert_redirected_to instance_admin_manage_service_type_custom_validators_path(@service_type)
     end
 

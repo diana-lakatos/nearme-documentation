@@ -8,9 +8,8 @@ class PlatformContext::DynamicScopeAssigner < ActiveSupport::TestCase
   MODELS_WITH_LISTINGS_PUBLIC = [:location, :transactable, :reservation]
 
   setup do
-    @platform_context = PlatformContext.new(Instance.first)
     PlatformContext.clear_current
-    PlatformContext.current = @platform_context
+    PlatformContext.current = PlatformContext.new(Instance.first)
   end
 
   context 'default scope' do

@@ -2,12 +2,10 @@ require 'test_helper'
 
 class SitemapServiceTest < ActiveSupport::TestCase
   setup do
-    @instance = Instance.first
-    @instance.set_context!
     @page = create(:page)
     @transactable = create(:transactable)
     @product = create(:product)
-    @domain = @instance.domains.first
+    @domain = PlatformContext.current.domain
   end
 
   context ".content_for" do
@@ -21,7 +19,7 @@ class SitemapServiceTest < ActiveSupport::TestCase
       @domain.remove_uploaded_sitemap = true
       @domain.save
 
-      xml = SitemapService::Generator.new(@instance).xml
+      xml = SitemapService::Generator.new(PlatformContext.current.instance).xml
       SitemapService.save_changes!(@domain, xml)
       refute @domain.uploaded_sitemap.file.present?
       assert_equal xml.to_s.squish, @domain.sitemap
@@ -46,7 +44,7 @@ class SitemapServiceTest < ActiveSupport::TestCase
 
     context "#initialize" do
       setup do
-        SitemapService::Generator.new(@instance)
+        SitemapService::Generator.new(PlatformContext.current.instance)
         @xml = SitemapService::Generator.xml
       end
 
@@ -71,7 +69,7 @@ class SitemapServiceTest < ActiveSupport::TestCase
     end
 
     should ".for_domain" do
-      domain2 = create(:domain, target_id: @instance.id)
+      domain2 = create(:domain, target_id: PlatformContext.current.instance.id)
 
       xml1 = SitemapService::Generator.for_domain(@domain)
       xml2 = SitemapService::Generator.for_domain(domain2)
@@ -111,7 +109,7 @@ class SitemapServiceTest < ActiveSupport::TestCase
         assert_includes xml.content, node.image
       end
     end
-    
+
     context "StaticNode" do
       setup do
         @static_node = SitemapService::Node::StaticNode.new(@domain.url, "/")
@@ -214,12 +212,12 @@ class SitemapServiceTest < ActiveSupport::TestCase
         create(:page)
         assert_nodes_between_comment(@domain, SitemapService::Node::PageNode.comment_mark, Page.count)
       end
-      
+
       page = Page.last
-      
+
       old_slug = page.path
       old_path = url_helpers.pages_path(page.path)
-      
+
       assert_node_content Nokogiri::XML(@domain.sitemap), "url loc", old_path
 
       page.path = "another-path"
@@ -236,7 +234,7 @@ class SitemapServiceTest < ActiveSupport::TestCase
     should "after_destroy #destroy_sitemap_node" do
       pages = []
       amount = 5
-      
+
       amount.times do
         pages << create(:page)
         assert_nodes_between_comment(@domain, SitemapService::Node::PageNode.comment_mark, Page.count)

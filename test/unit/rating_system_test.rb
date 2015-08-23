@@ -11,8 +11,8 @@ class RatingSystemTest < ActiveSupport::TestCase
   context "instance methods" do
     context "set subject correctly" do
       setup do
-        @instance = Instance.first
-        @rating_system = FactoryGirl.build(:rating_system, instance_id: @instance.id)
+        @instance = PlatformContext.current.instance
+        @rating_system = FactoryGirl.build(:rating_system)
         @transactable_type = FactoryGirl.create(:transactable_type_buy_sell)
         @rating_system.transactable_type_id = @transactable_type.id
       end

@@ -31,7 +31,7 @@ class SessionsControllerTest < ActionController::TestCase
   should 'not be able to log in to banned instance' do
     @user.update_attribute(:banned_at, Time.zone.now)
     post :create, user: { email: @user.email, password: @user.password }
-    assert_equal 'Your account was not activated yet.', flash[:alert]
+    assert_equal 'Your account has not been activated yet.', flash[:alert]
   end
 
   context 'versions' do

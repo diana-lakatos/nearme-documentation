@@ -42,9 +42,10 @@ class SecuredDomainTest < ActionDispatch::IntegrationTest
     context 'via unsecured protocol' do
       should 'be redirected to secured login' do
         domain = FactoryGirl.create(:unsecured_domain, name: 'unsecured.com')
+        secured_domain = FactoryGirl.create(:secured_domain, name: 'secured.com')
         host! domain.name
         get dashboard_url
-        assert_redirected_to new_user_session_url(host: 'example.com', protocol: 'https', return_to: dashboard_url)
+        assert_redirected_to new_user_session_url(host: secured_domain.name, protocol: 'https', return_to: dashboard_url)
       end
 
       should 'be redirected back with valid token' do

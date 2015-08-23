@@ -225,7 +225,7 @@ en:
         error_type: "Type"
         message: "Message"
         created_at: "Created at"
-        archive: 'Archive'
+        delete: 'Delete'
 
     settings:
       configuration:
@@ -735,6 +735,8 @@ en:
         edit_product_type: "Edit Product Type"
 
   buy_sell_market:
+    buyer: "buyer"
+    seller: "seller"
     checkout_extra_fields:
       fill_in_these_details: "Please fill in these details"
     products:
@@ -988,6 +990,9 @@ en:
       upcoming: "UPCOMING"
       archived: "ARCHIVED"
     host_reservations:
+      reservation_state: "Reservation state: "
+      payment_state: "Payment state: "
+      payment_method: "Payment method: "
       unconfirmed: 'UNCONFIRMED'
       confirmed: 'CONFIRMED'
       archived: 'ARCHIVED'
@@ -1000,6 +1005,14 @@ en:
       next_payment_transfer: "The next automated payout occurs at %{next_payment_transfer}."
       remember_to_setup_automated_payout: "To receive automated payout please <a href='%{setup_link}'>setup payouts</a>."
       exclusive_price_guests_notes: 'Exclusive booking instructions from guest: %{guest_notes}'
+      payment_methods:
+        credit_card: "Credit Card"
+        express_checkout: "PayPal"
+        manual: "Manual payment"
+        nonce: "PayPal"
+        remote: "Fetch"
+        free: "None"
+
     merchant_account:
       header: 'Merchant account details'
       pending: 'Your merchant account is pending verification.'

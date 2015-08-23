@@ -19,10 +19,10 @@ When:
 
 Total: {{ reservation.total_price }}
 
-Exciting, right? Please, confirm the booking and let's get the {{ platform_context.lessee }} set up!
+Exciting, right? Please, confirm the booking and let's get the {{ listing.lessee }} set up!
 
 Confirm Booking {{ platform_context.host | append:reservation.reservation_confirm_url_with_tracking | append:signature_for_tracking }}
 
-Not ready for {{ platform_context.lessees }}? You can manage your bookings here: {{ platform_context.host | append:listing.manage_guests_dashboard_url }}
+Not ready for {{ listing.lessees }}? You can manage your bookings here: {{ platform_context.host | append:listing.manage_guests_dashboard_url }}
 
 If you need help, send an email to {{ platform_context.support_email }} or contact us at {{ platform_context.phone_number }}.

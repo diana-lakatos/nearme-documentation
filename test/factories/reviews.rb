@@ -4,8 +4,7 @@ FactoryGirl.define do
   factory :review do
     rating { rand(RatingConstants::VALID_VALUES) }
     user
-    instance { Instance.first.presence || FactoryGirl.create(:instance) }
-    reviewable { FactoryGirl.create(:reservation, instance: instance)  }
+    reviewable { FactoryGirl.create(:reservation)  }
     transactable_type { instance.transactable_types.first }
 
     factory :order_review do

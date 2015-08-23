@@ -147,10 +147,6 @@ gem 'video_info'
 gem 'domainatrix'
 gem 'store_base_sti_class'
 
-group :staging, :production do
-  gem 'message_bus'
-end
-
 group :profiling, :development do
   gem 'rack-mini-profiler', require: false
   gem 'flamegraph'
@@ -214,7 +210,6 @@ group :test do
   gem 'vcr'
   gem 'test_after_commit'
   gem 'rails-perftest'
-  gem 'message_bus', require: false
 end
 gem 'mailman'
 

@@ -5,18 +5,18 @@ class TranslationTest < ActiveSupport::TestCase
   should belong_to(:instance)
 
     should 'inform subscribers about create' do
-      messages = NearMeMessageBus.track_publish do
+      messages = RedisCache.client.track do
         translation = FactoryGirl.create(:translation)
       end
       assert messages.any?
-      assert messages[0].channel == '/cache_expiration'
-      assert messages[0].data[:cache_type] == 'Translation'
-      assert messages[0].data[:instance_id] == PlatformContext.current.instance.id
+      data = JSON.parse messages[0]
+      assert data['cache_type'] == 'Translation'
+      assert data['instance_id'] == PlatformContext.current.instance.id
     end
 
     should 'inform subscribers about update' do
       translation = FactoryGirl.create(:translation)
-      messages = NearMeMessageBus.track_publish do
+      messages = RedisCache.client.track do
         translation.save
       end
       assert messages.any?
@@ -24,7 +24,7 @@ class TranslationTest < ActiveSupport::TestCase
 
     should 'inform subscribers about destroy' do
       translation = FactoryGirl.create(:translation)
-      messages = NearMeMessageBus.track_publish do
+      messages = RedisCache.client.track do
         translation.destroy
       end
       assert messages.any?

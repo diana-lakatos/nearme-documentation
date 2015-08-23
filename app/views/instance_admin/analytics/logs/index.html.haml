@@ -23,7 +23,7 @@
               %td
                 %p= log.message
               %td= l(log.created_at, format: :long)
-              %td= link_to t('instance_admin.analytics.logs.archive'), instance_admin_analytics_log_path(log), method: :delete, data: { confirm: 'Are you sure?' }
+              %td= link_to t('instance_admin.analytics.logs.delete'), instance_admin_analytics_log_path(log), method: :delete, data: { confirm: 'Are you sure?' }
 
     .row
       .text-container

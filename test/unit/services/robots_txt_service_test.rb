@@ -2,8 +2,7 @@ require 'test_helper'
 
 class RobotsTxtServiceTest < ActiveSupport::TestCase
   setup do
-    @instance = Instance.first || create(:instance)
-    @domain = @instance.domains.first
+    @domain = PlatformContext.current.domain
   end
 
   context '.content_for' do

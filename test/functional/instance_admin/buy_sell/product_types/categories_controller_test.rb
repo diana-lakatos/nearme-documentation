@@ -11,10 +11,7 @@ class InstanceAdmin::BuySell::ProductTypes::CategoriesControllerTest < ActionCon
   # Please change both files if needed!
 
   setup do
-    PlatformContext.current = PlatformContext.new(Instance.first)
-
     setup_categorizable
-
     @user = FactoryGirl.create(:user)
     InstanceAdminAuthorizer.any_instance.stubs(:instance_admin?).returns(true)
     InstanceAdminAuthorizer.any_instance.stubs(:authorized?).returns(true)

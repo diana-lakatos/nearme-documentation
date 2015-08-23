@@ -24,4 +24,21 @@ class Spree::ProductType < TransactableType
   def to_liquid
     @spree_product_type_drop ||= Spree::ProductTypeDrop.new(self)
   end
+
+  def lessor
+    I18n.t('buy_sell_market.seller', :default => 'seller')
+  end
+
+  def lessee
+    I18n.t('buy_sell_market.buyer', :default => 'buyer')
+  end
+
+  def lessors
+    lessor.to_s.pluralize
+  end
+
+  def lessees
+    lessee.to_s.pluralize
+  end
+
 end

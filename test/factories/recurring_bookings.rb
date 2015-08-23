@@ -8,7 +8,7 @@ FactoryGirl.define do
     end_minute nil
     schedule_params { { validations: { day: [1, 2, 3] }, rule_type: "IceCube::WeeklyRule", interval: 1, week_start: 0 } }
     platform_context_detail_type "Instance"
-    platform_context_detail_id { (Instance.first.presence || FactoryGirl.create(:instance)).id }
+    platform_context_detail_id { PlatformContext.current.instance.id }
     quantity 1
     state 'unconfirmed'
 

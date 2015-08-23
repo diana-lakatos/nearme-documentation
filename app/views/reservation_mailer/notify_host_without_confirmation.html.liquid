@@ -47,7 +47,7 @@ Your listing, '<a href="{{ platform_context.host | append:listing.listing_url }}
 
 <p>Exciting, right? You can manage this booking from the Dashboard.</p>
 
-<a class="btn" href="{{ platform_context.host | append:listing.manage_guests_dashboard_url_with_tracking | append:signature_for_tracking }}">Manage {{ platform_context.lessees | capitalize }}</a>
+<a class="btn" href="{{ platform_context.host | append:listing.manage_guests_dashboard_url_with_tracking | append:signature_for_tracking }}">Manage {{ listing.lessees | capitalize }}</a>
 
 <p>If you need help, send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a> or contact us at {{ platform_context.phone_number }}.</p>
 

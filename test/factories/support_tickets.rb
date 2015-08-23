@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :support_ticket, :class => 'Support::Ticket' do
-    target { (Instance.first.presence || FactoryGirl.create(:instance)) }
+    target { PlatformContext.current.instance }
     ignore do
       messages_count 1
     end

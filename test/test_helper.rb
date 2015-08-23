@@ -47,7 +47,7 @@ ActiveSupport::TestCase.class_eval do
     TestDataSeeder.seed!
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.start
-    PlatformContext.current = PlatformContext.new(Instance.first)
+    PlatformContext.current = PlatformContext.new(Instance.first || FactoryGirl.create(:instance))
   end
 
   def current_instance

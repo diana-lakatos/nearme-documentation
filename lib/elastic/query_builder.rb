@@ -174,14 +174,16 @@ module Elastic
       if @query[:query].blank?
         { match_all: { boost: QUERY_BOOST } }
       else
-        { multi_match: build_multi_match(@query[:query], @searchable_custom_attributes + ['name^2', 'description']) }
+        query = BaseIndex.sanitize_string(@query[:name])
+        { multi_match: build_multi_match(query, @searchable_custom_attributes + ['name^20', 'description']) }
       end
     end
 
     def build_multi_match(query_string, custom_attributes)
       multi_match = {
         query: query_string,
-        fields: custom_attributes
+        fields: custom_attributes,
+        operator: "and"
       }
 
       # You should enable fuzzy search manually. Not included in the current release
@@ -199,7 +201,8 @@ module Elastic
       if @query[:name].blank?
         { match_all: { boost: QUERY_BOOST } }
       else
-        { multi_match: build_multi_match(@query[:name], @searchable_custom_attributes + ['name^2', 'description']) }
+        query = BaseIndex.sanitize_string(@query[:name])
+        { multi_match: build_multi_match(query, @searchable_custom_attributes + ['name^20', 'description']) }
       end
     end
 

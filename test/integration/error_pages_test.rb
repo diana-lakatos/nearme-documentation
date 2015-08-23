@@ -3,7 +3,7 @@ require "test_helper"
 class ErrorPagesTest < ActionDispatch::IntegrationTest
 
   setup do
-    create(:domain, target: Instance.first, name: 'near-me.com')
+    create(:domain, target: PlatformContext.current.instance, name: 'near-me.com')
   end
 
   test "Redirect to near-me.com if domain not configured" do

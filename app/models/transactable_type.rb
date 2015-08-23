@@ -99,5 +99,13 @@ class TransactableType < ActiveRecord::Base
     end
   end
 
+  def lessors
+    lessor.to_s.pluralize
+  end
+
+  def lessees
+    lessee.to_s.pluralize
+  end
+
 end
 

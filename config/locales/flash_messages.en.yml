@@ -55,7 +55,7 @@ en:
     instance_admin:
       analytics:
         logs:
-          deleted: 'Log has been archived.'
+          deleted: 'Log has been deleted.'
       imap_settings:
         could_not_validate: 'Your IMAP settings appear to be invalid'
         validation_successful: 'Your IMAP settings are valid'
@@ -405,6 +405,8 @@ en:
         reservation_not_confirmed: "Your reservation could not be confirmed."
         reservation_rejected: "You have rejected the reservation. Maybe next time!"
         payment_requested: "Your request has been sent"
+        payment_confirmed: "Payment status has been successfully updated."
+        payment_failed: "Payment status can not be change"
       data_upload:
         created: "Import has been scheduled. You'll receive an email when it's done."
         scheduled: 'Data has been scheduled to be imported.'

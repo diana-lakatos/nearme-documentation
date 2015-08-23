@@ -7,9 +7,7 @@ class PagesControllerTest < ActionController::TestCase
     context 'a full page' do
       setup do
         Page.any_instance.stubs(:hero_image).returns(stub({:present? => true, :url => 'url'}))
-        @page = FactoryGirl.create(:page,
-                                   content: "# Page heading \nSome text",
-                                   theme: Instance.first.theme)
+        @page = FactoryGirl.create(:page, content: "# Page heading \nSome text")
       end
 
       should 'return a content page with hero image and markdown content' do
@@ -24,9 +22,7 @@ class PagesControllerTest < ActionController::TestCase
 
     context 'a wrong path' do
       setup do
-        @page = FactoryGirl.create(:page,
-                                   theme: Instance.first.theme,
-                                   content: "# Page heading \nSome text")
+        @page = FactoryGirl.create(:page, content: "# Page heading \nSome text")
       end
 
       should 'raise standard exception and store it in session' do
