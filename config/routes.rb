@@ -615,6 +615,7 @@ DesksnearMe::Application.routes.draw do
       end
 
       resources :locations
+      resources :dimensions_templates
       resources :payment_documents do
         collection do
           get :sent_to_me

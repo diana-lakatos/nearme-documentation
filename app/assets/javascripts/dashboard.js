@@ -2,6 +2,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require javascript_module
 //= require ./vendor/jquery-ui-1.10.4.custom.min.js
 //= require ./vendor/jquery.ui.touch-punch
 //= require ./vendor/customSelect.jquery
@@ -41,6 +42,8 @@
 //= require cocoon
 //= require js-routes
 //= require custom_liquid_tags
+//= require dimensions_templates_select_behaviors
+//= require dimensions_templates_admin_behaviors
 //
 //
 //= require_self

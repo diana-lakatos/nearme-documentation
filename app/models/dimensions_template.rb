@@ -16,7 +16,10 @@ class DimensionsTemplate < ActiveRecord::Base
   }
 
   belongs_to :instance
+
   belongs_to :creator, :foreign_key => :creator_id, class_name: User
+
+  belongs_to :entity, polymorphic: true
 
   validates_presence_of  :name, :weight, :height, :width, :depth
 

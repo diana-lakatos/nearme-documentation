@@ -87,6 +87,12 @@ en:
         book_at: 'Book at'
         the_listing: 'The listing'
         admin_logout_confirmation: 'This will log you out and re-log you in as location administrator.'
+  transactables:
+    rental_shipping_types:
+      no_rental: 'Not rental'
+      delivery: 'Delivery'
+      pick_up: 'Pick up'
+      both: 'Delivery or pick up'
   locations:
     add_new_location: "Add New Location"
     save_location: "Save Location"
@@ -1757,3 +1763,24 @@ en:
       collection:
         rotate_and_crop: 'Rotate & Crop'
         delete: "Delete"
+
+  measure_units:
+    weight:
+      oz: 'oz'
+      pound: 'pound'
+      g: 'g'
+      kg: 'kg'
+    length:
+      in: 'in'
+      ft: 'ft'
+      cm: 'cm'
+      m: 'm'
+
+  dimensions_templates:
+    form:
+      templates: "Templates"
+      add_new_dimensions_template: "Add New Dimensions Template"
+    modal:
+      add_new_dimensions_template: "Add New Dimensions Template"
+      save_dimensions_template: "Save dimensions template"
+

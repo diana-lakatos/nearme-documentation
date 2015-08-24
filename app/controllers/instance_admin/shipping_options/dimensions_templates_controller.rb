@@ -2,17 +2,18 @@ class InstanceAdmin::ShippingOptions::DimensionsTemplatesController < InstanceAd
   before_filter :set_breadcrumbs
 
   def index
-    @dimensions_templates = DimensionsTemplate.all
+    @dimensions_templates = current_instance.dimensions_templates
   end
 
   def new
     @breadcrumbs_title = 'New Dimension Template'
-    @dimensions_template = DimensionsTemplate.all.build
+    @dimensions_template = current_instance.dimensions_templates.build
   end
 
   def create
-    @dimensions_template = DimensionsTemplate.all.build(template_params)
+    @dimensions_template = current_instance.dimensions_templates.build(template_params)
     @dimensions_template.creator = current_user
+    @dimensions_template.entity = current_instance
 
     dimensions_template_editor = DimensionsTemplateEditorService.new(@dimensions_template)
     if dimensions_template_editor.save
@@ -24,11 +25,11 @@ class InstanceAdmin::ShippingOptions::DimensionsTemplatesController < InstanceAd
   end
 
   def edit
-    @dimensions_template = DimensionsTemplate.find(params[:id])
+    @dimensions_template = current_instance.dimensions_templates.find(params[:id])
   end
 
   def update
-    @dimensions_template = DimensionsTemplate.find(params[:id])
+    @dimensions_template = current_instance.dimensions_templates.find(params[:id])
 
     dimensions_template_editor = DimensionsTemplateEditorService.new(@dimensions_template)
     if dimensions_template_editor.update_attributes(template_params)
@@ -40,7 +41,7 @@ class InstanceAdmin::ShippingOptions::DimensionsTemplatesController < InstanceAd
   end
 
   def destroy
-    @dimensions_template = DimensionsTemplate.find(params[:id])
+    @dimensions_template = current_instance.dimensions_templates.find(params[:id])
     @dimensions_template.destroy
     flash[:success] = t('flash_messages.shipping_options.dimensions_templates.template_deleted')
     redirect_to instance_admin_shipping_options_dimensions_templates_path

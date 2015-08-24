@@ -19,6 +19,7 @@
 //= require javascript_module
 //= require ./instance_admin/searchable_admin_resource
 //= require ./instance_admin/searchable_admin_service
+//= require dimensions_templates_admin_behaviors
 //= require_tree ./instance_admin/sections
 //= require jquery_nested_form
 //= require ./vendor/urlify
