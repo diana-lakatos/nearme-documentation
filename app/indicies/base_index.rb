@@ -1,6 +1,6 @@
 module BaseIndex
   module_function
-  
+
   PUNCTUATION = ". , / - _ \\ + = ~ * % $ !".split(" ").freeze
 
   def default_index_options
@@ -12,7 +12,7 @@ module BaseIndex
     string_keys = record.class.columns_hash.map {|k,v| k if %w(text string).include?(v.type.to_s) }.compact
 
     string_keys.each do |key|
-      new_values[key] = sanitize_string(record.send(key)) if record.send(key).present?
+      new_values[key] = sanitize_string(record.send(key)) if record.send(key).present? && record.send(key).is_a?(String)
     end
 
     return new_values.symbolize_keys
