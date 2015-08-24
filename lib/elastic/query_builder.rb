@@ -128,7 +128,7 @@ module Elastic
             geo_bounding_box: {
               geo_location: {
                 top_left: {
-                  lat: @bounding_box.first.first.to_f, 
+                  lat: @bounding_box.first.first.to_f,
                   lon: @bounding_box.last.last.to_f
                 },
                 bottom_right: {
@@ -174,7 +174,7 @@ module Elastic
       if @query[:query].blank?
         { match_all: { boost: QUERY_BOOST } }
       else
-        query = BaseIndex.sanitize_string(@query[:name])
+        query = BaseIndex.sanitize_string(@query[:query])
         { multi_match: build_multi_match(query, @searchable_custom_attributes + ['name^20', 'description']) }
       end
     end
@@ -237,7 +237,7 @@ module Elastic
         }
       end
 
-      @filters << { 
+      @filters << {
         term: {
           enabled: true
         }
@@ -254,7 +254,7 @@ module Elastic
           end
         end
       end
-  
+
       category_search_type = PlatformContext.current.instance.category_search_type
 
       if @query[:category_ids] && @query[:category_ids].any?
