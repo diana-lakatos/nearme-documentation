@@ -616,6 +616,8 @@ ActiveRecord::Schema.define(version: 20150921093013) do
     t.text     "details"
     t.datetime "deleted_at"
     t.boolean  "use_as_default",                                      default: false
+    t.integer  "entity_id"
+    t.string   "entity_type"
   end
 
   create_table "document_requirements", force: :cascade do |t|
@@ -944,6 +946,7 @@ ActiveRecord::Schema.define(version: 20150921093013) do
     t.string   "context_cache_key",                     limit: 255
     t.string   "encrypted_webhook_token"
     t.boolean  "is_community",                                                              default: false
+    t.string   "encrypted_shippo_api_token"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -3093,6 +3096,7 @@ ActiveRecord::Schema.define(version: 20150921093013) do
     t.boolean  "action_regular_booking",                                                         default: true
     t.boolean  "action_continuous_dates_booking",                                                default: false
     t.boolean  "search_location_type_filter",                                                    default: true
+    t.boolean  "rental_shipping",                                                                default: false
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -3148,6 +3152,7 @@ ActiveRecord::Schema.define(version: 20150921093013) do
     t.boolean  "confirm_reservations",                       default: true
     t.datetime "last_request_photos_sent_at"
     t.string   "capacity",                       limit: 255
+    t.string   "rental_shipping_type",                       default: "no_rental"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree

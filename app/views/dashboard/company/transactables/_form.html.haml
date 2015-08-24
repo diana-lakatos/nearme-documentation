@@ -40,6 +40,10 @@
               .error-block
                 You need to pick up location
 
+      - when 'rental_shipping_type'
+        - if @transactable_type.rental_shipping
+          = render 'shared/rental_shipping_type', f: f
+
       - when 'approval_requests'
         = render :partial => 'approval_requests/form', :locals => { f: f }
       - when 'enabled'

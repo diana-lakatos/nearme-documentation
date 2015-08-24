@@ -1,0 +1,13 @@
+.modal-header
+  .modal-title
+    = t('dimensions_templates.modal.add_new_dimensions_template')
+.modal-body.dimensions-template-container
+  = simple_form_for [:dashboard, :company, @dimensions_template], html: {id: 'dimensions-template-form'}, data: { modal: true } do |f|
+    .content-container
+      = render partial: 'shared/dimensions_templates_admin_fields', locals: { f: f }
+
+      .btn-toolbar
+        = f.submit t('dimensions_templates.modal.save_dimensions_template'), id: 'submit-link', class: "btn blue pull-right"
+
+:javascript
+  new UserDimensionsTemplates(#{raw DimensionsTemplate::UNITS_OF_MEASURE.to_json});

@@ -8,7 +8,7 @@ class Instance < ActiveRecord::Base
     :live_paypal_client_secret, :marketplace_password, :test_stripe_api_key, :test_paypal_username, :test_paypal_password,
     :test_paypal_signature, :test_paypal_app_id, :test_paypal_client_id, :test_paypal_client_secret, :olark_api_key,
     :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key, :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret,
-    :instagram_consumer_key, :instagram_consumer_secret, :db_connection_string, :shippo_username, :shippo_password,
+    :instagram_consumer_key, :instagram_consumer_secret, :db_connection_string, :shippo_username, :shippo_password, :shippo_api_token,
     :twilio_consumer_key, :twilio_consumer_secret, :test_twilio_consumer_key, :test_twilio_consumer_secret, :support_imap_password,
     :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
@@ -80,7 +80,6 @@ class Instance < ActiveRecord::Base
   has_many :industries
   has_many :user_blog_posts
   has_many :instance_views
-  has_many :dimensions_templates
   has_many :rating_systems, dependent: :destroy
   has_many :reviews, dependent: :destroy
   has_many :rating_questions
@@ -89,6 +88,7 @@ class Instance < ActiveRecord::Base
   has_many :additional_charge_types
   has_one :documents_upload, dependent: :destroy
   has_many :locales, dependent: :destroy
+  has_many :dimensions_templates, as: :entity
   serialize :pricing_options, Hash
 
   validates :category_search_type, presence: true, inclusion: %w(AND OR)
@@ -342,7 +342,7 @@ class Instance < ActiveRecord::Base
   end
 
   def shippo_enabled?
-    shippo_username.present? && shippo_password.present?
+    shippo_api_token.present?
   end
 
   def and_category_search?

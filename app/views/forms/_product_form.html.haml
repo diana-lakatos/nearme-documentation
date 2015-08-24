@@ -75,33 +75,10 @@
         = t('manage.buy_sell.dimensions_templates.explanation2')
 
     .dimensions_select_container
-      = f.input :unit_of_measure, as: :hidden, input_html: { 'data-js-element-identifier' => 'product_form_unit_of_measure' }
       = content_tag :select, id: 'select_instance_dimensions_template', class: 'dimensions-templates product-form', :data => { 'js-element-identifier' => 'product_form_templates_list' } do
         = options_for_dimensions_templates_select(platform_context.instance.dimensions_templates)
 
-    .dimensions_element_container
-      .first
-        = f.input :weight, as: :decimal, input_html: { :class => 'shippo_decimal_field', 'data-js-element-identifier' => 'product_form_input_weight' }
-      .last
-        = f.input :weight_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[f.object.unit_of_measure]['weight'], label: Spree::Variant.human_attribute_name(:weight_unit), input_html: { 'data-js-element-identifier' => 'product_form_input_weight_unit' }
-
-    .dimensions_element_container
-      .first
-        = f.input :depth, as: :decimal, input_html: { :class => 'shippo_decimal_field', 'data-js-element-identifier' => 'product_form_input_depth' }
-      .last
-        = f.input :depth_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[f.object.unit_of_measure]['length'], label: Spree::Variant.human_attribute_name(:depth_unit), as: :select, input_html: { 'data-js-element-identifier' => 'product_form_input_depth_unit' }
-
-    .dimensions_element_container
-      .first
-        = f.input :width, as: :decimal, input_html: { :class => 'shippo_decimal_field', 'data-js-element-identifier' => 'product_form_input_width' }
-      .last
-        = f.input :width_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[f.object.unit_of_measure]['length'], label: Spree::Variant.human_attribute_name(:width_unit), as: :select, input_html: { 'data-js-element-identifier' => 'product_form_input_width_unit' }
-
-    .dimensions_element_container
-      .first
-        = f.input :height, as: :decimal, input_html: { :class => 'shippo_decimal_field', 'data-js-element-identifier' => 'product_form_input_height' }
-      .last
-        = f.input :height_unit, collection: DimensionsTemplate::UNITS_OF_MEASURE[f.object.unit_of_measure]['length'], label: Spree::Variant.human_attribute_name(:height_unit), as: :select, input_html: { 'data-js-element-identifier' => 'product_form_input_height_unit' }
+    = render partial: 'shared/dimensions_templates_user_fields', locals: { dt: f }
 
 - if only_inputs.empty? || only_inputs.include?(:documents_upload)
   - if platform_context.instance.documents_upload_enabled?
