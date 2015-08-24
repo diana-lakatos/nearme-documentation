@@ -13,7 +13,6 @@ class Payout < ActiveRecord::Base
   scope :successful, -> { where(:success => true) }
   scope :pending, -> { where(:pending => true) }
   scope :failed, -> { where(:pending => false, :success => false) }
-  scope :need_status_verification, -> { where('(pending = ? OR success = ?) AND created_at > ? AND created_at < ?', true, true, Time.zone.now - 7.days, Time.zone.now - 1.day) }
 
   monetize :amount, with_model_currency: :currency
   serialize :response, Hash
@@ -62,10 +61,6 @@ class Payout < ActiveRecord::Base
 
   def confirmation_url
     response.confirmation_url if pending? && !reference.transferred?
-  end
-
-  def update_status
-    reference.try(:update_payout_status, self)
   end
 
   def amount_money

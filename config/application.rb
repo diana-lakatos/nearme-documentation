@@ -172,8 +172,6 @@ module DesksnearMe
     config.stripe_api_key = nil
     config.stripe_public_key = nil
 
-    config.balanced_api_key = nil
-
     config.secure_app = true
     config.root_secured = true
     config.run_jobs_in_background = true
