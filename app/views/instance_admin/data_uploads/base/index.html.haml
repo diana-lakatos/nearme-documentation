@@ -29,6 +29,6 @@
 
 = content_for :header_buttons do
   = link_to t('instance_admin.manage.data_uploads.download_csv_template'), {action: :download_csv_template}, class: 'pull-right btn btn-blue'
-  = link_to t('instance_admin.manage.data_uploads.download_current_data'), {action: :download_current_data}, class: 'pull-right btn btn-blue'
+  = link_to t('instance_admin.manage.data_uploads.download_current_data'), {action: :download_current_data}, class: 'pull-right btn btn-blue' if @importable.is_a?(ServiceType)
   = link_to t('instance_admin.manage.data_uploads.new_data_upload'), {action: :new}, class: 'pull-right btn btn-blue'
 
