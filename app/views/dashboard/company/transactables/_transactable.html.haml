@@ -8,8 +8,8 @@
     .col-md-3.listing-attr
       %p= @transactable_type.skip_location? ? transactable.quantity : transactable.location.try(&:name)
     .col-md-2.listing-attr
-      %p= transactable.decorate.lowest_price_with_currency || t('Free')
+      %p= transactable.decorate.lowest_price_with_currency || t('dashboard.transactables.pricing.free')
     .col-md-1.listing-attr
-      = link_to "Edit", edit_dashboard_company_transactable_type_transactable_path(@transactable_type, transactable)
-      = link_to "Delete", dashboard_company_transactable_type_transactable_path(@transactable_type, transactable),
+      = link_to t('general.edit'), edit_dashboard_company_transactable_type_transactable_path(@transactable_type, transactable)
+      = link_to t('general.delete'), dashboard_company_transactable_type_transactable_path(@transactable_type, transactable),
           method: :delete, data: { confirm: t('confirmations.are_you_sure_you_want_to_delete_this_item') }, style: 'margin-top:0px;'
