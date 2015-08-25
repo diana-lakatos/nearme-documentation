@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150819091151) do
+ActiveRecord::Schema.define(version: 20150824113435) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -740,7 +740,6 @@ ActiveRecord::Schema.define(version: 20150819091151) do
     t.integer  "client_id"
     t.string   "client_type"
     t.integer  "instance_id"
-    t.string   "encrypted_balanced_user_id"
     t.string   "bank_account_last_four_digits"
     t.datetime "deleted_at"
     t.datetime "created_at",                    null: false
@@ -810,7 +809,6 @@ ActiveRecord::Schema.define(version: 20150819091151) do
     t.string   "encrypted_live_paypal_client_id"
     t.string   "encrypted_live_paypal_client_secret"
     t.string   "encrypted_live_stripe_api_key"
-    t.string   "encrypted_live_balanced_api_key"
     t.string   "encrypted_marketplace_password"
     t.integer  "min_hourly_price_cents"
     t.integer  "max_hourly_price_cents"
@@ -830,7 +828,6 @@ ActiveRecord::Schema.define(version: 20150819091151) do
     t.string   "encrypted_test_paypal_client_secret"
     t.string   "encrypted_test_stripe_api_key"
     t.string   "test_stripe_public_key"
-    t.string   "encrypted_test_balanced_api_key"
     t.string   "encrypted_olark_api_key"
     t.boolean  "olark_enabled",                                                 default: false
     t.string   "encrypted_facebook_consumer_key"

@@ -25,14 +25,6 @@ namespace :cron do
       PaymentTransferSchedulerJob.perform
     end
 
-    run_job "Update Payment Transfers status" do
-      Instance.find_each do |i|
-        PlatformContext.current = PlatformContext.new(i)
-        UpdatePayoutStatusJob.perform
-        PlatformContext.current = nil
-      end
-    end
-
     run_job "Send saved searches daily alerts" do
       SavedSearchesAlertsJob.perform(:daily)
     end

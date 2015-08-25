@@ -3,7 +3,7 @@ class InstanceClient < ActiveRecord::Base
   scoped_to_platform_context
   acts_as_paranoid
 
-  attr_encrypted :balanced_user_id, :balanced_credit_card_id, :response, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
+  attr_encrypted :response, :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   belongs_to :client, :polymorphic => true
   belongs_to :instance

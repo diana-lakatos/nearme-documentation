@@ -116,11 +116,6 @@ class PaymentTransfer < ActiveRecord::Base
     billing_gateway.try(:supports_payout?) && company.merchant_accounts.where(payment_gateway: billing_gateway).count.zero?
   end
 
-  def update_payout_status(payout)
-    return false unless billing_gateway.processor.status_updateable?
-    billing_gateway.processor.update_payout_status(payout)
-  end
-
   def total_service_fee_cents
     self.service_fee_amount_host_cents + self.service_fee_amount_guest_cents
   end
