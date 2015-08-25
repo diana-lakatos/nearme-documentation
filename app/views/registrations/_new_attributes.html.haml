@@ -23,7 +23,7 @@
 
   = render partial: 'shared/category', locals: { category: category, f: f }
 
-= f.input :email if only_inputs.empty? || only_inputs.include?(:email)
+= f.input(:email, required: true) if only_inputs.empty? || only_inputs.include?(:email)
 
 - if only_inputs.empty? || only_inputs.include?(:language)
   = f.input :language, collection: platform_context.instance.locales.by_created_at, label_method: :display_name,

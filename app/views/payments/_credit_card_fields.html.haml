@@ -16,14 +16,20 @@
   .padding-bottom.credit-card
     .row-fluid
       .span6
-        = f.label :card_holder_first_name, t('payments.cc_fields.first_name'), class: 'control-label'
+        = f.label :card_holder_first_name, class: 'control-label' do
+          %abbr{ title: "required" } *
+          = t('payments.cc_fields.first_name')
         = f.input_field :card_holder_first_name, class: 'sessioncamexclude', required: true, autocomplete: :off
       .span6
-        = f.label :card_holder_last_name, t('payments.cc_fields.last_name'), class: 'control-label'
+        = f.label :card_holder_last_name, class: 'control-label' do
+          %abbr{ title: "required" } *
+          = t('payments.cc_fields.last_name')
         = f.input_field :card_holder_last_name, class: 'sessioncamexclude', required: true, autocomplete: :off
     .row-fluid
       .span6.card-info{class: "#{"error" if f.object.errors.include?(:number).present?}"}
-        = f.label :card_number, t('payments.cc_fields.card_number'), class: 'control-label'
+        = f.label :card_number, class: 'control-label' do
+          %abbr{ title: "required" } *
+          = t('payments.cc_fields.card_number')
         .controls.card-number.input-icon-holder-right
           = f.input_field :card_number, required: true, placeholder: 'aaaa aaaa aaaa aaaa', class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: "off", 'data-card-number' => true
           %span.ico-credit-card
@@ -35,7 +41,9 @@
         .visible-phone
           = f.label :card_exp_month, t('payments.cc_fields.expiration_date_month'), class: 'control-label'
         .hidden-phone
-          = f.label :card_exp_month, t('payments.cc_fields.expiration_date'), class: 'control-label'
+          = f.label :card_exp_month, class: 'control-label' do
+            %abbr{ title: "required" } *
+            = t('payments.cc_fields.expiration_date')
         .controls.card-expires
           = f.input_field :card_exp_month, collection: credit_card_date[:month], prompt: false, class: 'sessioncamexclude no-icon select2'
 
@@ -57,7 +65,9 @@
             = f.object.errors[:card_exp_year].first
 
       .span2.card-info.security.column.right{class: "#{"error" if f.object.errors.include?(:cvc).present?}"}
-        = f.label :card_code, t('payments.cc_fields.security_code'), class: 'control-label'
+        = f.label :card_code, class: 'control-label' do
+          %abbr{ title: "required" } *
+          = t('payments.cc_fields.security_code')
         .controls.card-code
           = f.input_field :card_code, input_html: {size: 3}, placeholder: 'CCV', required: true, class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: "off", 'data-card-code' => true
         - if f.object.errors[:cvc].present?

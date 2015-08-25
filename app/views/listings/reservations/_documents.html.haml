@@ -8,6 +8,8 @@
           .row-fluid
             .span3
               %label
+                - if doc.is_file_required?
+                  %abbr{ title: "required" } *
                 = f.object.listing.document_requirements[index].label
             .span9.upload{ 'data-upload' => true }
               %button{ type: 'button', class: 'btn-upload-payment-document', 'data-upload-document' => true }

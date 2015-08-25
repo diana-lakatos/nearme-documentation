@@ -6,16 +6,14 @@ module Attachable
 
     accepts_nested_attributes_for :payment_document_info
 
-    validates_presence_of :file, if: :check_file_presence?
+    validates_presence_of :file, if: :is_file_required?
 
     self.per_page = 20
 
     scope :uploaded_by, ->(user_id){ where(user_id: user_id) }
     scope :not_uploaded_by, ->(user_id){ where.not(user_id: user_id) }
 
-    private
-
-    def check_file_presence?
+    def is_file_required?
       payment_document_info.try(:document_requirement).try(:item).try(:upload_obligation).try(:required?).presence || false
     end
   end
