@@ -1,0 +1,12 @@
+- if @recurring_bookings.blank?
+  %p.text-center
+    = t('recurring_bookings.no_bookings_html', {bookable_nouns: platform_context.bookable_nouns, type: booking_type_from_action(params[:action])})
+- else
+  - if @recurring_booking
+    = render 'recurring_booking_successful'
+
+  - (@recurring_bookings - [@recurring_booking]).each_with_index do |recurring_booking, index|
+    = render 'recurring_booking', recurring_booking: recurring_booking.decorate
+
+- content_for :domready do
+  $('a[data-toggle-periods]').on('click', function(e){ $(e.target).parent().parent().parent().find('div[data-toggleable-periods]').toggle(); return false });

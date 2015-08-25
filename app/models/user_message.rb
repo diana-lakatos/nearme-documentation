@@ -125,7 +125,7 @@ class UserMessage < ActiveRecord::Base
     case thread_context
     when Transactable, User, Spree::Product
       true
-    when Reservation
+    when Reservation, RecurringBooking
       author == thread_context.owner ||
         author == thread_context.listing.administrator ||
         author == thread_context.listing.creator ||

@@ -6,38 +6,34 @@
 
   <div class="row">
     <strong style='display: inline-block;'>{{listing.lessor | capitalize}}</strong>
-    <span style="float: right;"><a href="{{ platform_context.host | append:listing.administrator.user_profile_url }}">{{ listing.administrator.first_name }}</a></span>
+    <span style="float: right;"><a href="{{ platform_context.host | append:listing.administrator.user_profile_url }}">{{ host.first_name }}</a></span>
   </div>
 
   <div class="row">
     <strong style='display: inline-block;'>What</strong>
-    <span style="float: right;"><a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a> x {{ reservation.quantity }}</span>
+    <span style="float: right;"><a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a> x {{ recurring_booking.quantity }}</span>
   </div>
 
   <div class="row">
     <table width="100%">
       <tr>
-        <td valign="top"><strong style='display: inline-block;'>When</strong></td>
+        <td valign="top"><strong style='display: inline-block;'>Starting at</strong></td>
         <td style="text-align: right;">
-          {% if reservation.action_hourly_booking? %}
-            {{ reservation.hourly_summary }}
-          {% else %}
-            {{ reservation.dates_summary }}
-          {% endif %}
+          {{ recurring_booking.start_date }}
         </td>
       </tr>
     </table>
   </div>
 
   <div class="row">
-    <strong style='display: inline-block;'>Total</strong>
-    <span style="float: right; clear: right;">{{ reservation.total_price }}</span>
+    <strong style='display: inline-block;'>Total per {{ recurring_booking.interval }}</strong>
+    <span style="float: right; clear: right;">{{ recurring_booking.total_price }}</span>
   </div>
 
 </div>
 
 <p>You can manage your booking here:</p>
 
-<a class="btn" href="{{ platform_context.host | append:user.bookings_dashboard_url_with_tracking_and_token | append:signature_for_tracking  }}">My Bookings</a>
+<a class="btn" href="{{ platform_context.host | append:recurring_booking.bookings_dashboard_url_with_tracking | append:signature_for_tracking  }}">My Bookings</a>
 
 <p>We're always happy to help! If you have any questions about your booking, please send an email to <a href="{{ platform_context.support_email }}">{{ platform_context.support_email }}</a> or contact us at {{ platform_context.phone_number }}.</p>

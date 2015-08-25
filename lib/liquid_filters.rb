@@ -35,7 +35,14 @@ module LiquidFilters
     lgpricing_filters ||= []
     prices = object.lowest_price(lgpricing_filters)
     if prices
-      periods = {monthly: t('periods.month'), weekly: t('periods.week'), daily: object.try(:overnight_booking?) ? t('periods.night') : t('periods.day'), hourly: t('periods.hour')}
+      periods = {
+        monthly: t('periods.month'),
+        weekly: t('periods.week'),
+        daily: object.try(:overnight_booking?) ? t('periods.night') : t('periods.day'),
+        hourly: t('periods.hour'),
+        weekly_subscription: t('periods.week'),
+        monthly_subscriptiont: ('periods.month')
+      }
       { 'price' => self.price_without_cents_with_currency(prices[0]), 'period' =>  periods[prices[1]] }
     else
       object.try(:action_free_booking?) ? { 'free' => true } : {}

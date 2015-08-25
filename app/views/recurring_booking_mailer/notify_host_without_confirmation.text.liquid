@@ -2,22 +2,17 @@ Good news, {{ user.first_name }}!
 
 Your listing, '{{ listing.name }}', was just booked!
 
-Who: {{ reservation.owner.first_name }}
+Who: {{ recurring_booking.owner.first_name }}
 
-What: {{ listing.name }} x {{ reservation.quantity }}
+What: {{ listing.name }} x {{ recurring_booking.quantity }}
 
-When:
-{% if reservation.action_hourly_booking? %}
-  {{ reservation.hourly_summary }}
-{% else %}
-  {{ reservation.dates_summary }}
-{% endif %}
+When: {{ recurring_booking.start_date }}
 
-Total: {{ reservation.total_price }}
+Total: {{ recurring_booking.total_price }}
 
 Exciting, right? You can manage this booking from the Dashboard.
 
-Manage {{ listing.lessees | capitalize }}: {{ platform_context.host | append:listing.manage_guests_dashboard_url_with_tracking | append:signature_for_tracking }}
+Manage {{ listing.lessees | capitalize }}: {{ platform_context.host | append:recurring_booking.manage_guests_dashboard_url | append:signature_for_tracking }}
 
 If you need help, send an email to {{ platform_context.support_email }} or contact us at {{ platform_context.phone_number }}.
 

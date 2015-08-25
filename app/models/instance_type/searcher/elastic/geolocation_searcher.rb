@@ -58,6 +58,7 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
   def set_options_for_filters
     @filterable_location_types = LocationType.all
     @filterable_pricing = SEARCHER_DEFAULT_PRICING_TYPES.map{|price| [price, I18n.t("search.pricing_types.#{price}")] if @transactable_type.send("action_#{price}_booking")}.compact
+    @filterable_pricing += [['weekly_subscription', I18n.t("search.pricing_types.weekly")], ['monthly_subscription', I18n.t("search.pricing_types.monthly")]] if @transactable_type.action_subscription_booking
     @filterable_custom_attributes = @transactable_type.custom_attributes.searchable.where(" NOT (custom_attributes.attribute_type = 'string' AND custom_attributes.html_tag IN ('input', 'textarea'))")
     per_page = [@params[:per_page].to_i, 20].max
     @offset = [((@params[:page].to_i - 1) * per_page), 0].max

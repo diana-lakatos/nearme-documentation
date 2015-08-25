@@ -2,7 +2,7 @@
   Your recurring booking was requested successfully!
 
 .reservation-list.just-booked
-  = render 'dashboard/user_reservations/recurring_booking', recurring_booking: @recurring_booking.decorate
+  = render 'recurring_booking', recurring_booking: @recurring_booking.decorate
 
 - unless (@recurring_bookings - [@recurring_booking]).empty?
   %h4.other-reservation-separator

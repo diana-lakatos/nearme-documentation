@@ -9,16 +9,15 @@ require 'test_helper'
 class RecurringBookingRequestTest < ActiveSupport::TestCase
 
   setup do
-    @listing = FactoryGirl.create(:transactable, :name => "blah")
+    @listing = FactoryGirl.create(:transactable, :name => "blah", monthly_subscription_price: 99)
     @instance = @listing.instance
     @user = FactoryGirl.create(:user, name: "Firstname Lastname")
-    @first_monday = Time.zone.now.next_week
-    @last_thursday = (Time.zone.now + 3.weeks).next_week + 3.days
 
     @attributes = {
       schedule_params: "{\"validations\":{\"day\":[1, 5]}, \"rule_type\":\"IceCube::WeeklyRule\", \"interval\":1, \"week_start\":0}",
       start_on: @first_monday,
       end_on: @last_thursday,
+      interval: 'monthly',
       quantity: 1,
       card_number: 4242424242424242,
       card_exp_month: '05',
@@ -40,10 +39,6 @@ class RecurringBookingRequestTest < ActiveSupport::TestCase
       assert_equal @recurring_booking_request.listing, @listing
     end
 
-    should "add proper reservations" do
-      assert !@recurring_booking_request.recurring_booking.reservations.empty?
-    end
-
     context 'determine payment method' do
 
       should 'set credit card' do
@@ -59,11 +54,6 @@ class RecurringBookingRequestTest < ActiveSupport::TestCase
   end
 
   context "validations" do
-    context "valid arguments" do
-      # should "be valid" do
-      #   assert @recurring_booking_request.valid?
-      # end
-    end
 
     context "invalid arguments" do
       context "no listing" do
@@ -95,71 +85,16 @@ class RecurringBookingRequestTest < ActiveSupport::TestCase
   end
 
   context "#process" do
-    context "valid" do
-      context "no problems with saving recurring_booking" do
-        # should "return true" do
-        #   assert_difference 'Reservation.count', 7 do
-        #     assert @recurring_booking_request.process, @recurring_booking_request.errors.full_messages
-        #   end
-        # end
-      end
-
-      # should "if one reservation is invalid, should not save the rest" do
-
-      #   @listing.stubs(:available_on?).with do |date, quantity, minute_start, minute_end|
-      #     date != @first_monday.to_date + 14.days
-      #   end.at_least(0).returns(true)
-      #   @listing.stubs(:available_on?).with do |date, quantity, minute_start, minute_end|
-      #     date == @first_monday.to_date + 14.days
-      #   end.returns(false)
-      #   assert_difference 'Reservation.count', 6 do
-      #     assert @recurring_booking_request.process, @recurring_booking_request.errors.full_messages
-      #   end
-      # end
-
-      context "something went wrong when saving recurring_booking" do
-        setup do
-          @recurring_booking_request.stubs(:save_reservations).returns(false)
-        end
-
-        # should "return false" do
-        #   assert_no_difference 'Reservation.count' do
-        #     assert !@recurring_booking_request.process
-        #   end
-        # end
-      end
-    end
 
     context "invalid" do
+
       setup do
         @recurring_booking_request.stubs(:valid?).returns(false)
       end
+
       should "return false" do
         assert !@recurring_booking_request.process
       end
-    end
-  end
-
-  context "#recurring_booking_periods" do
-    should "return proper values" do
-      monday = @first_monday.to_date
-      assert_equal [monday, monday + 4.days, monday + 7.days, monday + 11.days, monday + 14.days, monday + 18.days, monday + 21.days], @recurring_booking_request.dates.sort
-    end
-
-    should 'create no more than 50 reservations' do
-      @attributes = {
-        schedule_params: "{\"validations\":{\"day\":[1, 5]}, \"rule_type\":\"IceCube::WeeklyRule\", \"interval\":1, \"week_start\":0}",
-        start_on: @first_monday,
-        end_on: @last_thursday + 50.years,
-        quantity: 1,
-        card_number: 4242424242424242,
-        card_exp_month: '05',
-        card_exp_year: '2020',
-        card_code: "411"
-      }
-      @recurring_booking_request = RecurringBookingRequest.new(@listing, @user, PlatformContext.new(@instance), @attributes)
-      assert_equal 50, @recurring_booking_request.dates.count
-      assert_equal 50, @recurring_booking_request.recurring_booking.reservations.size
     end
   end
 

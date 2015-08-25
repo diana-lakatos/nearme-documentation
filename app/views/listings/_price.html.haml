@@ -19,6 +19,23 @@
       %div.price_container
         =f.input :book_it_out_discount, label: t('simple_form.labels.transactable.book_it_out_discount'), hint: t('simple_form.hints.transactable.book_it_out_discount')
         =f.input :book_it_out_minimum_qty, label: t('simple_form.labels.transactable.book_it_out_minimum_qty'), hint: t('simple_form.hints.transactable.book_it_out_minimum_qty')
+
+- if f.object.transactable_type.action_subscription_booking
+  - content_for :booking_type_subscription_tab_content do
+    %div{:class => "control-group #{"error" if f.object.errors[:monthly_subscription].present? || f.object.errors[:weekly_subscription].present?}"}
+      = f.label :daily_price, :price, :class => 'control-label flush-top' do
+        %abbr{:title => "required"}= t('simple_form.required.mark')
+        =t('simple_form.labels.listings.price')
+      .controls
+        .price-inputs-subscription{'data-period' => 'subscription', style: "#{'display: none;' if f.object.overnight_booking?}"}
+          %label.checkbox
+            = f.check_box :action_subscription_booking, checked: only_one_option_available?(f.object, 'subscription')
+            = t('simple_form.labels.listings.subscription_periods')
+
+          .price-input-options
+            .price-inputs-wrapper.left
+              = render 'listings/price_field', :f => f, :price => 'weekly_subscription', :label => t("simple_form.labels.transactable.price.weekly_subscription"), :include_checkbox => true
+              = render 'listings/price_field', :f => f, :price => 'monthly_subscription', :label => t("simple_form.labels.transactable.price.monthly_subscription"), :include_checkbox => true
 - if overnight_or_regular_booking?(f.object.transactable_type)
   - content_for :booking_type_regular_tab_content do
     %div{:class => "control-group #{"error" if f.object.errors.include?(:free).present?}"}
@@ -38,6 +55,17 @@
                 - f.object.transactable_type.daily_options_names.each do |price|
                   %div{'data-period' => price, style: "#{'display: none;' if price != 'daily' && f.object.recurring_booking?}"}
                     = render 'listings/price_field', :f => f, :price => price, :label => t("simple_form.labels.transactable.price.#{price}"), :include_checkbox => true
+
+        - if f.object.transactable_type.action_subscription_booking
+          .price-inputs-subscription
+            %label.checkbox
+              = f.check_box :action_subscription_booking, checked: only_one_option_available?(f.object, 'subscription')
+              = t('simple_form.labels.listings.subscription_periods')
+            .price-input-options
+              .price-inputs-wrapper.left
+                %div
+                  = render 'listings/price_field', :f => f, :price => 'weekly_subscription', :label => t("simple_form.labels.transactable.price.weekly_subscription"), :include_checkbox => true
+                  = render 'listings/price_field', :f => f, :price => 'monthly_subscription', :label => t("simple_form.labels.transactable.price.monthly_subscription"), :include_checkbox => true
 
         - if f.object.transactable_type.action_hourly_booking
           %div.price-inputs-hourly{'data-period' => 'hourly', style: "#{'display: none;' if f.object.overnight_booking?}"}

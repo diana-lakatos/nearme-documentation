@@ -221,7 +221,7 @@ class PaymentGateway < ActiveRecord::Base
     response = gateway.store(credit_card, options)
     @instance_client.response ||= response.to_yaml
     @instance_client.save!
-    @credit_card = credit_cards.where(instance_client: @instance_client).first_or_initialize
+    @credit_card = credit_cards.build(instance_client: @instance_client)
     @credit_card.response = response.to_yaml
     @credit_card.save!
     @credit_card.id

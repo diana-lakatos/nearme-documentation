@@ -213,7 +213,7 @@ class Instance < ActiveRecord::Base
   end
 
   def test_mode?
-    super || (!Rails.env.staging? && !Rails.env.production?)
+    read_attribute(:test_mode) || (!Rails.env.staging? && !Rails.env.production?)
   end
 
   def default_twilio_config
@@ -260,6 +260,10 @@ class Instance < ActiveRecord::Base
 
   def projectable?
     @projectable ||= project_types.any?
+  end
+
+  def subscribable?
+    @subscribable ||= service_types.any?{ |st| st.action_subscription_booking }
   end
 
   def marketplace_type

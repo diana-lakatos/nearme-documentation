@@ -7,7 +7,7 @@ class CreditCard::StripeDecorator
   end
 
   def token
-    @token ||= response.params["object"] == 'card' ? response.params["id"] : response.params["cards"]["data"].last["id"]
+    @token ||= response.params["object"] == 'card' ? response.params["id"] : response.params["default_source"]
   end
 
   def response

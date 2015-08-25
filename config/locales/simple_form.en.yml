@@ -175,6 +175,7 @@ en:
         upload_photos: 'Browse'
         schedule: 'Availability Schedule'
         exclusive_price: 'Exclusive Price'
+        subscription_periods: 'Weekly, Monthly Subscriptions'
       listing:
         price: 'Price'
         photos: 'Photos'
@@ -253,6 +254,8 @@ en:
           hourly: 'hour'
           exclusive_price: 'full quantity'
           per_unit: "per unit"
+          weekly_subscription: 'weekly'
+          monthly_subscription: 'monthly'
         book_it_out_minimum_qty: "Book It Out minimum quantity"
         book_it_out_discount: "Book It Out discount"
         amenities: "Amenities"

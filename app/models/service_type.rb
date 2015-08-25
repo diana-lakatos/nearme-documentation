@@ -2,7 +2,7 @@ class ServiceType < TransactableType
   acts_as_paranoid
 
   MAX_PRICE = 2147483647
-  BOOKING_TYPES = %w(regular overnight recurring schedule).freeze
+  BOOKING_TYPES = %w(regular overnight recurring schedule subscription).freeze
 
   attr_accessor :enable_cancellation_policy
 
@@ -68,7 +68,8 @@ class ServiceType < TransactableType
   end
 
   def min_max_prices_are_correct
-    (Transactable::PRICE_TYPES - [:exclusive]).each do |price|
+    Transactable::PRICE_TYPES.each do |price|
+      next unless respond_to?(:"min_#{price}_price_cents") || respond_to?(:"max_#{price}_price_cents")
       if self.send(:"min_#{price}_price_cents").present? && self.send(:"max_#{price}_price_cents").present?
         errors.add(:"min_#{price}_price_cents", "min can't be greater than max") if self.send(:"min_#{price}_price_cents").to_i > self.send(:"max_#{price}_price_cents").to_i
       end

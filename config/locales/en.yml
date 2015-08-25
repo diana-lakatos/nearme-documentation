@@ -1060,8 +1060,8 @@ en:
       edit: 'Edit Profile'
       social_accounts: 'Trust & Verification'
       notification_preferences: 'Notification Preferences'
-      user_recurring_bookings: 'My Bookings'
-      host_recurring_bookings: 'Bookings Received'
+      user_recurring_bookings: 'My Subscriptions'
+      host_recurring_bookings: 'Subscriptions Received'
       blog_posts: 'Posts'
       blog_settings: 'Settings'
       reviews: 'Reviews'
@@ -1083,6 +1083,17 @@ en:
       archived: "ARCHIVED"
       track_package: 'Track Package'
       return_label: 'Return Label'
+    user_recurring_bookings:
+      active: "ACTIVE"
+      archived: "ARCHIVED"
+      monthly_price: 'Monthly price'
+      weekly_price: 'Weekly price'
+      starts_from: 'Starts from'
+      placed: 'Reservation placed'
+      next_payment_at: 'Next payment'
+      rejection_reason: 'Rejection reason'
+      user_note: 'User note: '
+
     host_reservations:
       reservation_state: "Reservation state: "
       payment_state: "Payment state: "
@@ -1090,6 +1101,9 @@ en:
       unconfirmed: 'UNCONFIRMED'
       confirmed: 'CONFIRMED'
       archived: 'ARCHIVED'
+      overdue: 'OVERDUE'
+      active: "ACTIVE"
+      paid_until: 'Paid until'
       no_unconfirmed_reservations: 'You have no unconfirmed reservations.'
       no_confirmed_reservations: "You haven't confirmed any reservations yet."
       no_archived_reservations: "You don't have any archived reservations."
@@ -1424,6 +1438,10 @@ en:
       instagram_info: "Connect your Instagram account and link your visual content."
 
     accept_terms_of_service: 'confirm that you accept the <a href="/pages/legal" target="_blank">Terms of Service and Privacy Policy</a>'
+  recurring_bookings:
+    no_bookings_html: "You don't have any %{type} subscriptions. <a href='/search'>Find %{bookable_nouns} near you!</a>"
+    overbooked: "Subscription can't be confirmed due to overbooking."
+    active: 'active'
   reservations:
     charge_after_confirmation: "You will not be charged until the booking is confirmed."
     manually_confirm: "This %{lessor} manually confirms all bookings."
@@ -1585,6 +1603,7 @@ en:
     manage_bookable: 'Manage %{bookable_noun}'
     marketplace_admin: 'Marketplace Admin'
     cart: 'CART %{cart}'
+    my_subscriptions: 'My Subscriptions'
 
   sign_up_form:
     sign_up_to: 'Sign up to %{marketplace_name}'
@@ -1656,6 +1675,8 @@ en:
     end: 'End'
     nine: '9:00am'
     weekly_on: 'Weekly on'
+    weekly: 'Weekly'
+    monthly: 'Monthly'
     custom: 'Custom'
     total: 'Total'
 
@@ -1700,9 +1721,14 @@ en:
 
   recurring_reservations_review:
     total: 'Total per reservation'
+    total_per_interval: 'Total %{interval} payment'
+    starts_from: 'Subscription from'
+    weekly: 'weekly'
+    monthly: 'monthly'
+    prorated_info: 'First payment will be proportional to days left till the end of the month.'
 
     errors:
-      whoops: "Whoops! We couldn't make that recurring purchase."
+      whoops: "Whoops! We couldn't create that subscription."
 
   payments:
     heading: 'Submit a secure payment.'

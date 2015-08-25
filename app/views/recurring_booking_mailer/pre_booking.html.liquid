@@ -2,6 +2,6 @@
 
 <p>It's almost time to enjoy '<a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a>'.</p>
 
-<p><a href="{{ platform_context.host | append:user.bookings_dashboard_url_with_token }}">Manage your booking here</a></p>
+<p><a href="{{ platform_context.host | append:recurring_booking.bookings_dashboard_url }}">Manage your booking here</a></p>
 
 <p>We're always happy to help! If you have any questions about your booking, please send an email to <a href="mailto: {{ platform_context.support_email }}"> {{ platform_context.support_email }} </a> or contact us at {{ platform_context.phone_number }}.</p>
