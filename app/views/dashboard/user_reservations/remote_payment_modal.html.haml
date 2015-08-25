@@ -1,11 +1,11 @@
 .modal-header
   .modal-title You are now being redirected.
 .modal-body
-  = form_tag @billing_gateway.processor.gateway_url, :method => :post, id: 'remote-payment' do
-    - @billing_gateway.processor.payment_data.each do |key, val|
+  = form_tag @reservation.payment_gateway.gateway_url, :method => :post, id: 'remote-payment' do
+    - @reservation.payment_gateway.payment_data.each do |key, val|
       = hidden_field_tag key, val
 
-  =image_tag(@billing_gateway.processor.logo_image)
+  =image_tag(@reservation.payment_gateway.logo_image)
 
 :javascript
   $(function() {

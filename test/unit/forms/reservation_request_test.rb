@@ -4,32 +4,24 @@ class ReservationRequestTest < ActiveSupport::TestCase
 
   context 'payment method' do
 
-    setup do
-      @listing = FactoryGirl.create(:transactable, :name => "blah")
+    should 'use correct payment_method' do
+      @listing = FactoryGirl.create(:transactable, :name => "blah", currency: "USD")
       @user = FactoryGirl.create(:user, name: "Firstname Lastname")
-      @date = @listing.first_available_date
-      @attributes = {
-        :dates => [@date.to_s(:db)],
-        payment_method: 'manual'
-      }
-      stub_billing_gateway(@listing.instance)
       stub_active_merchant_interaction
-      Instance.any_instance.stubs(:payment_gateway).returns(FactoryGirl.create(:stripe_payment_gateway))
+
+      {stripe_payment_gateway: "credit_card", manual_payment_gateway: "manual"}.each do |payment_gateway_name, payment_method_type|
+        payment_gateway = FactoryGirl.create(payment_gateway_name)
+        payment_method = payment_gateway.payment_methods.where(payment_method_type: payment_method_type).first
+        attributes = {
+          dates: [@listing.first_available_date.to_s(:db)],
+          payment_method_id: payment_method.id
+        }
+        reservation_request = ReservationRequest.new(@listing, @user, PlatformContext.current, attributes)
+        assert_equal payment_method_type, reservation_request.payment_method.payment_method_type
+        assert_equal payment_gateway, reservation_request.payment_method.payment_gateway
+      end
     end
 
-    should 'ask for credit card details if manual payment disabled' do
-      PlatformContext.current.instance.update_attribute(:possible_manual_payment, false)
-      reservation_request = ReservationRequest.new(@listing, @user, PlatformContext.current, @attributes)
-      refute reservation_request.valid?
-      assert_equal 'credit_card', reservation_request.payment_method
-    end
-
-    should 'make reservation if manual payment enabled' do
-      PlatformContext.current.instance.update_attribute(:possible_manual_payment, true)
-      reservation_request = ReservationRequest.new(@listing, @user, PlatformContext.current, @attributes)
-      assert_equal 'manual', reservation_request.payment_method
-      assert reservation_request.valid?
-    end
   end
 
   context 'credit card' do
@@ -37,17 +29,22 @@ class ReservationRequestTest < ActiveSupport::TestCase
       @listing = FactoryGirl.create(:transactable, :name => "blah")
       @user = FactoryGirl.create(:user, name: "Firstname Lastname")
       @date = @listing.first_available_date
+
+      @stripe_payment_gateway = FactoryGirl.create(:stripe_payment_gateway)
+      @manual_payment_gateway = FactoryGirl.create(:manual_payment_gateway)
+
       @attributes = {
-        :dates => [@date.to_s(:db)],
-        :card_number => 4242424242424242,
+        dates: [@date.to_s(:db)],
+        payment_method_id: @stripe_payment_gateway.payment_methods.first.id,
+        card_number: 4242424242424242,
         card_exp_month: '05',
         card_exp_year: '2020',
-        :card_code => "411"
+        card_code: "411"
       }
-      stub_billing_gateway(@listing.instance)
+
+      @reservation_request = ReservationRequest.new(@listing, @user, PlatformContext.current, @attributes)
+
       stub_active_merchant_interaction
-      @instance = Instance.first || create(:instance)
-      @reservation_request = ReservationRequest.new(@listing, @user, PlatformContext.new(@instance), @attributes)
     end
 
     context "#initialize" do
@@ -69,15 +66,15 @@ class ReservationRequestTest < ActiveSupport::TestCase
 
       context 'determine payment method' do
         should 'set credit card' do
-          Instance.any_instance.stubs(:payment_gateway).returns(FactoryGirl.create(:stripe_payment_gateway))
-          @reservation_request = ReservationRequest.new(@listing, @user, PlatformContext.new(@instance), @attributes)
-          assert_equal @reservation_request.payment_method, Reservation::PAYMENT_METHODS[:credit_card]
+          @attributes.merge!({ payment_method_id: @stripe_payment_gateway.payment_methods.first.id })
+          @reservation_request = ReservationRequest.new(@listing, @user, PlatformContext.current, @attributes)
+          assert_equal "credit_card", @reservation_request.payment_method.payment_method_type
         end
 
         should 'set manual' do
-          Instance.any_instance.stubs(:payment_gateway).returns(nil)
-          @reservation_request = ReservationRequest.new(@listing, @user, PlatformContext.new(@instance), @attributes)
-          assert_equal Reservation::PAYMENT_METHODS[:manual], @reservation_request.payment_method
+          @attributes.merge!({ payment_method_id: @manual_payment_gateway.payment_methods.first.id })
+          @reservation_request = ReservationRequest.new(@listing, @user, PlatformContext.current, @attributes)
+          assert_equal "manual", @reservation_request.payment_method.payment_method_type
         end
       end
     end
@@ -92,14 +89,14 @@ class ReservationRequestTest < ActiveSupport::TestCase
       context "invalid arguments" do
         context "no listing" do
           should "be invalid" do
-            reservation_request = ReservationRequest.new(nil, @user, PlatformContext.new(@instance), @attributes)
+            reservation_request = ReservationRequest.new(nil, @user, PlatformContext.current, @attributes)
             assert !reservation_request.valid?
           end
         end
 
         context "no user" do
           should "be invalid" do
-            reservation_request = ReservationRequest.new(@listing, nil, PlatformContext.new(@instance), @attributes)
+            reservation_request = ReservationRequest.new(@listing, nil, PlatformContext.current, @attributes)
             assert !reservation_request.valid?
           end
         end

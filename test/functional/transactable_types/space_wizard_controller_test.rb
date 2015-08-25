@@ -120,6 +120,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
 
     should "be set to Greece" do
       VCR.use_cassette "freegeoip_greece" do
+        FactoryGirl.create(:country, name: "Greece", iso: "GR")
         # Set request ip to an ip address in Greece
         @request.env['REMOTE_ADDR'] = '2.87.255.255'
         get :list, transactable_type_id: @transactable_type.id
@@ -130,6 +131,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
 
     should "be set to Brazil" do
       VCR.use_cassette "freegeoip_brazil" do
+        FactoryGirl.create(:country, name: "Brazil", iso: "BR")
         # Set request ip to an ip address in Brazil
         @request.env['REMOTE_ADDR'] = '139.82.255.255'
         get :list, transactable_type_id: @transactable_type.id

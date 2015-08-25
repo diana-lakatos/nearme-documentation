@@ -38,7 +38,7 @@
           %h4
             = t("dashboard.host_reservations.payment_method")
         .col-md-9{class: reservation.paid? ? 'info' : "warn" }
-          = t("dashboard.host_reservations.payment_methods." + reservation.payment_method)
+          = t("dashboard.host_reservations.payment_methods." + reservation.payment_method.name)
         - if reservation.listing.possible_delivery?
           .col-md-3
             %h4

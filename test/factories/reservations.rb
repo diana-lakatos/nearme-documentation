@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :reservation do
     association :user
     association :listing, factory: :transactable
+    association :payment_method, factory: :manual_payment_method
     date { Time.zone.today }
     payment_status 'pending'
     quantity 1
@@ -22,12 +23,12 @@ FactoryGirl.define do
     end
 
     factory :reservation_with_credit_card do
-      payment_method 'credit_card'
+      association :payment_method, factory: :credit_card_payment_method
     end
 
     factory :reservation_with_remote_payment do
       association :listing, factory: :listing_in_auckland
-      payment_method 'remote'
+      association :payment_method, factory: :remote_payment_method
       after(:create) do |reservation|
         FactoryGirl.create(:billing_authorization, reference: reservation)
       end

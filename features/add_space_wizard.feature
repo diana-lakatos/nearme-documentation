@@ -9,6 +9,7 @@ Feature: A user can add a space
     Given a transactable_type_listing exists with name: "Listing"
     And a form component exists with form_componentable: the transactable_type_listing
     And a industry exists with name: "Industry"
+    And a country_nz exists
 
     Given I go to the home page
     And I follow "List Your" bookable noun

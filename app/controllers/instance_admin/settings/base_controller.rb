@@ -15,19 +15,23 @@ class InstanceAdmin::Settings::BaseController < InstanceAdmin::BaseController
       if @instance.update_attributes(instance_params)
         flash.now[:success] = t('flash_messages.instance_admin.settings.settings_updated')
         find_or_build_billing_gateway_for_usd
-        redirect_to action: :show
+        redirect_to action: default_action
       else
         flash.now[:error] = @instance.errors.full_messages.to_sentence
         find_or_build_billing_gateway_for_usd
-        render :show
+        render default_action
       end
     else
       find_or_build_billing_gateway_for_usd
-      render :show
+      render default_action
     end
   end
 
   private
+
+  def default_action
+    :show
+  end
 
   def find_or_build_billing_gateway_for_usd
     InstanceBillingGateway.find{|bg| bg.currency == 'USD'} || @instance.instance_billing_gateways.build(currency: 'USD')

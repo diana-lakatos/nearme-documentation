@@ -51,6 +51,8 @@ $('[rel=tooltip]').tooltip();
 
 $('select.chosen').chosen();
 
+$("input.bootstrap_switch").bootstrapSwitch();
+
 // Graceful degradation for missing inline_labels
 // Make the original label visible
 $('.control-group.boolean .controls label.checkbox').each(function() {

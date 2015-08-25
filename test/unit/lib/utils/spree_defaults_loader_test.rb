@@ -4,6 +4,8 @@ class SpreeDefaultsLoaderTest < ActiveSupport::TestCase
 
   setup do
     @instance = Instance.first
+    Currency.destroy_all
+    Country.destroy_all
     @loader = Utils::SpreeDefaultsLoader.new(@instance)
   end
 

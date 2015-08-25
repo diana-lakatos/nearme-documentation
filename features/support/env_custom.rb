@@ -42,16 +42,9 @@ Before do
   })
   ActiveMerchant::Billing::StripeGateway.any_instance.stubs(:store).returns(stub).at_least(0)
 
-  ipg = FactoryGirl.create(:stripe_payment_gateway)
-  instance.payment_gateways << FactoryGirl.create(:paypal_payment_gateway)
-  instance.payment_gateways << ipg
+  FactoryGirl.create(:stripe_payment_gateway)
+  FactoryGirl.create(:paypal_adaptive_payment_gateway)
 
-  country_ipg = FactoryGirl.create(
-    :country_payment_gateway,
-    country_alpha2_code: "US",
-    payment_gateway_id: ipg.id
-  )
-  instance.country_payment_gateways << country_ipg
   I18N_DNM_BACKEND.update_cache(instance.id) if defined? I18N_DNM_BACKEND
   InstanceViewResolver.instance.clear_cache
 end

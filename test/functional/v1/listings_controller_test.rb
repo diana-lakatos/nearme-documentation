@@ -7,6 +7,7 @@ class V1::ListingsControllerTest < ActionController::TestCase
   setup do
     FactoryGirl.create(:transactable_type_listing)
     @listing = FactoryGirl.create(:transactable)
+    FactoryGirl.create(:manual_payment_gateway)
   end
 
   ##

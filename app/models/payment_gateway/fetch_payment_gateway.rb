@@ -1,5 +1,7 @@
 class PaymentGateway::FetchPaymentGateway < PaymentGateway
 
+  supported :multiple_currency, :remote_payment
+
   def self.settings
     {
       account_id: "",
@@ -18,10 +20,6 @@ class PaymentGateway::FetchPaymentGateway < PaymentGateway
     ["NZD"]
   end
 
-  def remote?
-    return true
-  end
-
   def logo_image
     'fetch-payment-logo.png'
   end
@@ -32,6 +30,10 @@ class PaymentGateway::FetchPaymentGateway < PaymentGateway
     else
       "https://my.fetchpayments.co.nz/webpayments/default.aspx"
     end
+  end
+
+  def authorize(authoriazable, options = {})
+    true
   end
 
   def verify

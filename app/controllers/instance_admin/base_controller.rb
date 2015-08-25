@@ -48,6 +48,7 @@ class InstanceAdmin::BaseController < ApplicationController
 
   SETTINGS_CONTROLLERS = {
     'configuration'        => { default_action: 'show' },
+    'payments'             => { default_action: 'index' },
     'domains'              => { default_action: 'index' },
     'hidden_controls'      => { default_action: 'show' },
     'locations'            => { default_action: 'show' },

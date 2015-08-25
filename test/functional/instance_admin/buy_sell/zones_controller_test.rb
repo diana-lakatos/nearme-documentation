@@ -21,7 +21,7 @@ class InstanceAdmin::BuySell::ZonesControllerTest < ActionController::TestCase
 
   context "create" do
     should 'allow create zone' do
-      @country = FactoryGirl.create(:country)
+      @country = FactoryGirl.create(:spree_country)
       assert_difference 'Spree::Zone.count', 1 do
         post :create, zone: { 
                         name: 'new name',

@@ -1,0 +1,7 @@
+.row-fluid
+  - if f.object.express_token.blank?
+    = f.hidden_field :start_express_checkout, value: true
+    = image_submit_tag("https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif")
+  - else
+    = t('buy_sell_market.checkout.payment_authorized')
+    = f.hidden_field :express_token

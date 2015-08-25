@@ -7,14 +7,10 @@ Spree::Order.class_eval do
   )
 
   include Spree::Scoper
-
-  belongs_to :company, -> { with_deleted }
-  belongs_to :instance
-  belongs_to :partner
-  belongs_to :platform_context_detail, polymorphic: true
+  include Payment::PaymentModule
 
   attr_reader :card_number, :card_code, :card_exp_month, :card_exp_year, :card_holder_first_name, :card_holder_last_name
-  attr_accessor :payment_method_nonce, :start_express_checkout
+  attr_accessor :payment_method_nonce, :start_express_checkout, :express_checkout_redirect_url
 
   scope :completed, -> { where(state: 'complete') }
   scope :approved, -> { where.not(approved_at: nil) }
@@ -22,6 +18,12 @@ Spree::Order.class_eval do
   scope :shipped, -> { where(shipment_state: 'shipped') }
   scope :reviewable, -> { completed.approved.paid.shipped }
   scope :cart, -> { where(state: ['cart', 'address', 'delivery', 'payment']).order('created_at ASC') }
+
+  belongs_to :company, -> { with_deleted }
+  belongs_to :instance
+  belongs_to :partner
+  belongs_to :platform_context_detail, polymorphic: true
+  belongs_to :payment_method
 
   has_one :billing_authorization, -> { where(success: true) }, as: :reference
   has_many :billing_authorizations, as: :reference
@@ -53,14 +55,12 @@ Spree::Order.class_eval do
     callback.raw_filter.attributes.delete(:email) if callback.raw_filter.is_a?(EmailValidator)
   end
 
-  PAYMENT_METHODS = {
-    :credit_card => 'credit_card',
-    :nonce       => 'nonce',
-    :manual      => 'manual',
-  }
-
-  validates_inclusion_of :payment_method, in: const_get(:PAYMENT_METHODS).values, allow_nil: true
   validate :validate_credit_card, if: Proc.new {|o| o.payment? && o.credit_card_payment? }
+  validates_presence_of :payment_method_id, if: Proc.new {|o| o.completed? }
+
+  def payment_method
+    PaymentMethod.find_by_id(payment_method_id)
+  end
 
   def validate_credit_card
     errors.add(:cc, I18n.t('buy_sell_market.checkout.invalid_cc')) unless credit_card.valid?
@@ -68,10 +68,6 @@ Spree::Order.class_eval do
 
   def checkout_extra_fields(attributes = {})
     @checkout_extra_fields ||= CheckoutExtraFields.new(self.user, attributes)
-  end
-
-  def credit_card_payment?
-    payment_method == PAYMENT_METHODS[:credit_card]
   end
 
   def credit_card
@@ -96,20 +92,27 @@ Spree::Order.class_eval do
   end
 
   def merchant_subject
-    company.paypal_merchant_account.try(:subject)
+    company.paypal_express_chain_merchant_account.try(:subject)
   end
 
   def express_token=(token)
     write_attribute(:express_token, token)
     if !token.blank?
-      express_gateway = PlatformContext.current.instance.payment_gateway(self.company.iso_country_code, self.currency)
-      details = express_gateway.gateway(merchant_subject).details_for(token)
+      details = payment_gateway.gateway(merchant_subject).details_for(token)
       self.express_payer_id = details.params["payer_id"]
     end
   end
 
+  def express_return_url
+    PlatformContext.current.decorate.build_url_for_path("/orders/#{self.number}/checkout/payment")
+  end
+
+  def express_cancel_return_url
+    PlatformContext.current.decorate.build_url_for_path("/cart")
+  end
+
   def set_credit_card(order_params)
-    self.payment_method = PAYMENT_METHODS[:credit_card]
+    # self.payment_method = PAYMENT_METHODS[:credit_card]
     self.card_exp_month = order_params[:card_exp_month].try(:to_s).try(:strip)
     self.card_exp_year = order_params[:card_exp_year].try(:to_s).try(:strip)
     self.card_number = order_params[:card_number].try(:to_s).try(:strip)
@@ -118,16 +121,12 @@ Spree::Order.class_eval do
     self.card_holder_last_name = order_params[:card_holder_last_name].try(:to_s).try(:strip)
   end
 
-  def manual_payment?
-    payment_method == PAYMENT_METHODS[:manual]
-  end
-
   def payable?
     payment? || (confirm? && express_token.present?)
   end
 
-  def possible_manual_payment?
-    instance.possible_manual_payment?
+  def is_free?
+    self.total.zero?
   end
 
   def paypal_express_payment?
@@ -276,6 +275,9 @@ Spree::Order.class_eval do
     @spree_order_drop ||= Spree::OrderDrop.new(self)
   end
 
+  def confirm_reservations?
+    false
+  end
 end
 
 

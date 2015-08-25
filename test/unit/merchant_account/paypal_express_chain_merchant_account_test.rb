@@ -1,11 +1,11 @@
 require 'test_helper'
-class MerchantAccount::PaypalMerchantAccountTest < ActiveSupport::TestCase
+class MerchantAccount::PaypalExpressChainMerchantAccountTest < ActiveSupport::TestCase
 
   setup do
     @instance = current_instance
     @company = create(:company)
-    @payout_gateway = FactoryGirl.create :paypal_express_payment_gateway
-    @merchant = @company.create_paypal_merchant_account(payment_gateway: @payout_gateway)
+    @payout_gateway = FactoryGirl.create :paypal_express_chain_payment_gateway
+    @merchant = @company.create_paypal_express_chain_merchant_account(payment_gateway: @payout_gateway)
   end
 
   should "create_billing_agreement"

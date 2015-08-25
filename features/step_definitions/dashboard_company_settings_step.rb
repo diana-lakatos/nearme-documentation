@@ -39,7 +39,7 @@ end
 
 When /^I update payouts settings$/ do
   if @paypal_gateway.present?
-    fill_in "company_paypal_merchant_account_attributes_email", with: "paypal-update@example.com"
+    fill_in "company_paypal_adaptive_merchant_account_attributes_email", with: "paypal-update@example.com"
   else
     fill_in "company_payments_mailing_address_attributes_address", with: "Adelaide, South Australia, Australia"
   end
@@ -47,13 +47,11 @@ When /^I update payouts settings$/ do
 end
 
 Given /^no payout gateway defined$/ do
-  CountryPaymentGateway.destroy_all
   PaymentGateway.destroy_all
 end
 
 Given /^paypal gateway is properly configured$/ do
-  CountryPaymentGateway.destroy_all
-  @paypal_gateway = FactoryGirl.create(:country_payment_gateway, payment_gateway: FactoryGirl.create(:paypal_payment_gateway), country_alpha2_code: Company.last.iso_country_code).payment_gateway
+  @paypal_gateway ||= PaymentGateway::PaypalAdaptivePaymentGateway.first || FactoryGirl.create(:paypal_adaptive_payment_gateway)
 end
 
 Then /^The company payouts settings should be updated$/ do
@@ -62,8 +60,8 @@ Then /^The company payouts settings should be updated$/ do
     assert_equal "Adelaide SA, Australia", company.mailing_address
   else
     assert_equal 1, company.reload.merchant_accounts.count
-    assert_equal({ 'email' => "paypal-update@example.com", "merchant_token" => company.merchant_accounts.first.merchant_token }, company.merchant_accounts.first.try(:data))
-    assert_equal @paypal_gateway.id, company.reload.merchant_accounts.first.payment_gateway_id
+    assert_equal @paypal_gateway.id, company.reload.merchant_accounts.last.payment_gateway_id
+    assert company.reload.merchant_accounts.last.verified?
   end
 end
 
