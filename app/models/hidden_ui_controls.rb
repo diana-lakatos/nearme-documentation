@@ -10,7 +10,8 @@ class HiddenUiControls
       'registrations/show#products',
       'main_menu/my_orders',
       'main_menu/cart',
-      'dashboard/products/bulk_upload'
+      'dashboard/products/bulk_upload',
+      'dashboard/products/search'
   ]
 
   SERVICE_KEYS = [
@@ -19,7 +20,8 @@ class HiddenUiControls
       'dashboard/host_reservations',
       'registrations/show#services',
       'main_menu/my_bookings',
-      'dashboard/transactables/bulk_upload'
+      'dashboard/transactables/bulk_upload',
+      'dashboard/transactables/search'
   ]
 
   COMMON_KEYS = [
