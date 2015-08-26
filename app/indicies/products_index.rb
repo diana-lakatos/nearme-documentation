@@ -4,7 +4,20 @@ module ProductsIndex
   included do |base|
     cattr_accessor :custom_attributes
 
-    settings(index: BaseIndex.default_index_options) do
+    settings(
+      index: { 
+        number_of_shards: 1,
+        analysis: {
+          analyzer: {
+            customAnalyzer: {
+              type: 'custom',
+              tokenizer: 'whitespace',
+              filter: ["standard", "lowercase"]
+            }
+          }
+        }
+      }
+    ) do
       mapping do
         indexes :custom_attributes, type: 'object' do
           if Rails.env.staging? || Rails.env.production?
@@ -41,16 +54,15 @@ module ProductsIndex
     def as_indexed_json(options={})
       custom_attrs = {}
       @@custom_attributes ||= {}
+      product_instance_id = self.instance_id
       product_types = Spree::ProductType.all
 
-      @@custom_attributes[PlatformContext.current.instance.id] ||= product_types.map do |pt| 
-        pt.custom_attributes.map(&:name) 
-      end.flatten.uniq
+      @@custom_attributes[product_instance_id] ||= Spree::ProductType.where(instance_id: product_instance_id).all.map{ |product_type|
+        product_type.custom_attributes.map(&:name)
+      }.flatten.uniq
 
-      for custom_attribute in @@custom_attributes[PlatformContext.current.instance.id]
-        if self.extra_properties.respond_to?(custom_attribute)
-          custom_attrs[custom_attribute] = BaseIndex.sanitize_string(self.extra_properties.send(custom_attribute).to_s)
-        end
+      for custom_attribute in @@custom_attributes[product_instance_id]
+        custom_attrs[custom_attribute] = self.extra_properties.send(custom_attribute).to_s if self.extra_properties.respond_to?(custom_attribute)
       end
 
       allowed_keys = Spree::Product.mappings.to_hash[:product][:properties].keys.delete_if { |prop| prop == :custom_attributes }
@@ -58,8 +70,7 @@ module ProductsIndex
       self.as_json(only: allowed_keys).
         merge(geo_location: self.geo_location).
         merge(custom_attributes: custom_attrs).
-        merge(categories: self.categories.map(&:id)).
-        merge(BaseIndex.override_text_values(self))
+        merge(categories: self.categories.map(&:id))
     end
 
     def self.custom_attributes_names

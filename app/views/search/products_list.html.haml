@@ -16,7 +16,7 @@
     - if @searcher.results.any?
       %section#results{ class: "products_list #{platform_context.display_taxonomy_tree? ? 'span10 with_taxons' : 'span12 no_taxons'}" }
         = render partial: 'search/products_list/product', collection: @searcher.results
-        = will_paginate @searcher.results
+        = will_paginate @searcher.prepeared_results
         = render 'shared/loading_spinner'
     - else
       %section#results{ class: "no_products_list no_results #{platform_context.display_taxonomy_tree? ? 'span10 with_taxons' : 'span12 no_taxons'}" }

@@ -4,7 +4,7 @@ module TransactablesIndex
   included do |base|
     cattr_accessor :custom_attributes
 
-    settings(index: BaseIndex.default_index_options) do
+    settings(index: { number_of_shards: 1 }) do
       mapping do
         indexes :custom_attributes, type: 'object' do
           if Rails.env.staging? || Rails.env.production?
@@ -59,7 +59,7 @@ module TransactablesIndex
 
       for custom_attribute in @@custom_attributes
         if self.properties.respond_to?(custom_attribute)
-          custom_attrs[custom_attribute] = BaseIndex.sanitize_string(self.properties.send(custom_attribute).to_s.downcase)
+          custom_attrs[custom_attribute] = self.properties.send(custom_attribute).to_s.downcase
         end
       end
 
@@ -74,7 +74,7 @@ module TransactablesIndex
         weekly_price_cents: self.weekly_price_cents.to_i,
         monthly_price_cents: self.monthly_price_cents.to_i,
         categories: self.categories.pluck(:id)
-      ).merge(BaseIndex.override_text_values(self))
+      )
     end
 
     def self.esearch(query)

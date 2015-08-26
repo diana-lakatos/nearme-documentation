@@ -10,6 +10,8 @@ module Elastic
     GEO_UNIT = 'km'
     GEO_ORDER = 'asc'
     MAX_RESULTS = 1000
+    PER_PAGE = 20
+    PAGE = 0
 
     def initialize(query, searchable_custom_attributes)
       @query = query
@@ -23,11 +25,26 @@ module Elastic
       @query[:limit] || MAX_RESULTS
     end
 
+    def query_per_page
+      per_page = @query[:per_page].to_i
+      (per_page > 0) ? per_page : PER_PAGE
+    end
+
+    def query_page
+      page = @query[:page].to_i
+      (page > 1) ? page : PAGE
+    end
+
+    def query_offset
+      query_page * query_per_page
+    end
+
     def product_query
       @filters = initial_product_filters
       apply_product_search_filters
       {
-        size: query_limit,
+        size: query_per_page,
+        from: query_offset,
         sort: ['_score'],
         query: products_match_query,
         filter: {
@@ -174,8 +191,8 @@ module Elastic
       if @query[:query].blank?
         { match_all: { boost: QUERY_BOOST } }
       else
-        query = BaseIndex.sanitize_string(@query[:query])
-        { multi_match: build_multi_match(query, @searchable_custom_attributes + ['name^20', 'description']) }
+        query = @query[:query]
+        { multi_match: build_multi_match(query, @searchable_custom_attributes + ['name^2', 'description']) }
       end
     end
 
@@ -202,8 +219,8 @@ module Elastic
       if @query[:name].blank?
         { match_all: { boost: QUERY_BOOST } }
       else
-        query = BaseIndex.sanitize_string(@query[:name])
-        { multi_match: build_multi_match(query, @searchable_custom_attributes + ['name^20', 'description']) }
+        query = @query[:name]
+        { multi_match: build_multi_match(query, @searchable_custom_attributes + ['name^2', 'description']) }
       end
     end
 

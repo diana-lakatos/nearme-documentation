@@ -36,9 +36,17 @@ module InstanceType::Searcher
   end
 
   def paginate_results(page, per_page)
+    @page = page
+    @per_page = per_page
     @result_max_price ||= max_price
     page ||= 1
-    @results = @results.paginate(page: page.to_i, per_page: per_page.to_i)
+    unless self.class.to_s =~ /Elastic::ProductsSearcher/
+      @results = @results.paginate(page: page.to_i, per_page: per_page.to_i)
+    end
+  end
+
+  def prepeared_results
+    (@per_page..result_count).to_a.paginate(page: (@page || 1).to_i, per_page: @per_page.to_i)
   end
 
 end

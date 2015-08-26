@@ -16,7 +16,7 @@
         %table
           = render partial: 'search/products_table/head'
           = render partial: 'search/products_table/product', collection: @searcher.results
-        = will_paginate @searcher.results
+        = will_paginate @searcher.prepeared_results
     - else
       %section#results.no_results{class: platform_context.display_taxonomy_tree? ? "span10" : "span12"}
         .text-center
