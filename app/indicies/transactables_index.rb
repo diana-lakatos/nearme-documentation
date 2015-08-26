@@ -59,7 +59,7 @@ module TransactablesIndex
 
       for custom_attribute in @@custom_attributes
         if self.properties.respond_to?(custom_attribute)
-          custom_attrs[custom_attribute] = self.properties.send(custom_attribute).to_s.downcase
+          custom_attrs[custom_attribute] = BaseIndex.sanitize_string(self.properties.send(custom_attribute).to_s.downcase)
         end
       end
 

@@ -183,7 +183,8 @@ module Elastic
       multi_match = {
         query: query_string,
         fields: custom_attributes,
-        operator: "and"
+        operator: "and",
+        type: :phrase_prefix
       }
 
       # You should enable fuzzy search manually. Not included in the current release

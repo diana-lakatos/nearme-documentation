@@ -49,7 +49,7 @@ module ProductsIndex
 
       for custom_attribute in @@custom_attributes[PlatformContext.current.instance.id]
         if self.extra_properties.respond_to?(custom_attribute)
-          custom_attrs[custom_attribute] = self.extra_properties.send(custom_attribute).to_s
+          custom_attrs[custom_attribute] = BaseIndex.sanitize_string(self.extra_properties.send(custom_attribute).to_s)
         end
       end
 
