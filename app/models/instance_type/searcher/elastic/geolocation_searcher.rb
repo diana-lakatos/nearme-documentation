@@ -57,7 +57,7 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
         })
         
         geo_searcher_params = initialize_search_params
-        if located || adjust_to_map
+        fetched = if located || adjust_to_map
           radius = PlatformContext.current.instance.search_radius.to_i
           radius = search.radius.to_i if radius.zero?
           lat, lng = search.midpoint.nil? ? [0.0, 0.0] : search.midpoint.map(&:to_s)
@@ -70,6 +70,8 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
         else
           Transactable.regular_search(geo_searcher_params.merge(@search_params))
         end
+        #@search_results_count = fetched.response[:hits][:total]
+        fetched
       end
   end
 

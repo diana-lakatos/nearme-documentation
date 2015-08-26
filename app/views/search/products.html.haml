@@ -40,8 +40,8 @@
         - line.compact.each do |product|
           = render 'search/products/product', { product: product }
 
-    - if @searcher.results.total_pages > 1
-      = will_paginate_styled(@searcher.results)
+    - if @searcher.prepeared_results.total_pages > 1
+      = will_paginate_styled(@searcher.prepeared_results)
 
     = render 'shared/loading_spinner'
     - unless @searcher.results.any?
