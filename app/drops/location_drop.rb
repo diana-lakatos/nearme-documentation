@@ -20,6 +20,8 @@ class LocationDrop < BaseDrop
   #   name of this location as string
   # description
   #   description of this location as string
+  # location_type_name
+  #   name of the location type to which location belongs as a string
   # phone
   #   phone number for this location as string
   # street
@@ -159,6 +161,10 @@ class LocationDrop < BaseDrop
   # formatted string containing the company name and parts of the location
   def default_title
     [location.company.name, location.suburb, location.city, location.country == "United States" ? location.state_code : location.country].reject(&:blank?).join(' - ')
+  end
+
+  def location_type_name
+    @location.location_type.try(:name)
   end
 
   # names of amenities for this location

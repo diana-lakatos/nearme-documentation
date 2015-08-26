@@ -5,6 +5,8 @@ class UserDrop < BaseDrop
 
   attr_reader :user
 
+  # id
+  #   unique id of the user
   # name
   #   full name for this user
   # friends
@@ -20,6 +22,10 @@ class UserDrop < BaseDrop
   #   of the listing passed as a parameter
   # first_name
   #   first name of this user
+  # middle_name
+  #   middle name of this user
+  # last_name
+  #   last name of this user
   # email
   #   email for this user
   # full_mobile_number
@@ -33,10 +39,10 @@ class UserDrop < BaseDrop
   #   user phone number including country code
   # current_location
   #   current location of the user
-  delegate :name, :friends, :friends_know_host_of, :mutual_friends, :know_host_of,
-    :with_mutual_friendship_source, :first_name, :email, :full_mobile_number,
-    :administered_locations_pageviews_30_day_total, :blog, :country_name,
-    :phone, :current_location, to: :user
+  delegate :id, :name, :friends, :friends_know_host_of, :mutual_friends, :know_host_of,
+    :with_mutual_friendship_source, :first_name, :middle_name, :last_name,
+    :email, :full_mobile_number, :administered_locations_pageviews_30_day_total, :blog,
+    :country_name, :phone, :current_location, to: :user
 
   def initialize(user)
     @user = user
