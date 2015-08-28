@@ -24,6 +24,7 @@ FactoryGirl.define do
       after(:create) do |order, evaluator|
         create_list(:line_item, evaluator.line_items_count, order: order, currency: order.currency)
         order.line_items.reload
+        order.products.update_all(company_id: order.company_id)
 
         # For some reason shipment is created with the new StockLocation which has no stock items
         create(:shipment, shipping_methods: [FactoryGirl.create(:shipping_method)], stock_location: order.products.first.stock_items.first.stock_location, order: order, address: FactoryGirl.create(:address_engine))

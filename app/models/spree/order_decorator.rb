@@ -189,7 +189,7 @@ Spree::Order.class_eval do
       host_fee_percent:   (manual_payment? ? 0 : instance.service_fee_host_percent),
       additional_charges: additional_charges
     }
-    @service_fee_calculator ||= Payment::ServiceFeeCalculator.new(subtotal_amount_to_charge, options)
+    @service_fee_calculator ||= ::Payment::ServiceFeeCalculator.new(subtotal_amount_to_charge, options)
   end
 
   def monetize(amount)
@@ -207,6 +207,10 @@ Spree::Order.class_eval do
   # hackish hacky hack
   def owner
     user
+  end
+
+  def owner_id
+    user_id
   end
 
   def purchase_shippo_rate

@@ -93,6 +93,10 @@ Spree::Product.class_eval do
     end
   end
 
+  def creator_id
+    company.creator_id
+  end
+
   def cross_sell_products
     cross_sell_skus.map do |variant_sku|
       Spree::Variant.where(sku: variant_sku).first.try(:product)
@@ -116,7 +120,7 @@ Spree::Product.class_eval do
   end
 
   def reviews
-    @reviews ||= Review.where(rating_system_id: RatingSystem.for_transactables.pluck(:id), reviewable_type: 'Spree::LineItem', reviewable_id: self.line_items.unscope(where: :is_master).pluck(:id))
+    @reviews ||= Review.for_reviewables(self.line_items.unscope(where: :is_master).pluck(:id), 'Spree::LineItem')
   end
 
   def reviews_count

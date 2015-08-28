@@ -49,6 +49,8 @@ class @Space.Controller
       event.preventDefault()
       $(event.target).closest('[data-toggleable-booking-module]').toggleClass('collapsed')
       $(event.target).closest('.booking-module').find('select').trigger('render')
+      if $(event.target).closest('[data-toggleable-booking-module]').find('.pricing-tabs li.active').length == 0
+        $(event.target).closest('[data-toggleable-booking-module]').find('.pricing-tabs a.possible:first').click()
 
   loadFullGalleryPhotos: ->
     @fullScreenGalleryContainer.find(".loading").show()

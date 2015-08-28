@@ -18,8 +18,19 @@ FactoryGirl.define do
     lessee 'guest'
     type 'ServiceType'
 
+    ignore do
+      generate_rating_systems false
+    end
+
     after(:build) do |transactable_type|
       transactable_type.custom_attributes << FactoryGirl.build(:custom_attribute, :listing_types)
+    end
+
+    after(:create) do |transactable_type, evaluator|
+      if evaluator.generate_rating_systems
+        transactable_type.create_rating_systems
+        transactable_type.rating_systems.update_all(active: true)
+      end
     end
 
     factory :transactable_type_listing do

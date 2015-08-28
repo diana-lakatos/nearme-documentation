@@ -3,9 +3,10 @@
 FactoryGirl.define do
   factory :review do
     rating { rand(RatingConstants::VALID_VALUES) }
+    association(:reviewable, factory: :reservation)
+    rating_system
+    transactable_type { TransactableType.first }
     user
-    reviewable { FactoryGirl.create(:reservation)  }
-    transactable_type { instance.transactable_types.first }
 
     factory :order_review do
       reviewable { FactoryGirl.create(:order_with_line_items, instance: instance).line_items.first  }
