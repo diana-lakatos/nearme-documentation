@@ -1,19 +1,62 @@
 require 'test_helper'
 
 class ReviewTest < ActiveSupport::TestCase
-  should belong_to(:instance)
-  should belong_to(:reviewable)
-  should belong_to(:user)
-  should belong_to(:transactable_type)
 
-  should have_many(:rating_answers).dependent(:destroy)
+  context 'before validation callbacks' do
+    setup do
+      @reviewable = FactoryGirl.create(:reservation)
+    end
 
-  should validate_presence_of(:rating)
-  should validate_presence_of(:user)
-  should validate_presence_of(:reviewable)
-  should validate_presence_of(:transactable_type)
+    should 'assign foreign keys' do
+      @review = FactoryGirl.create(:review, reviewable: @reviewable, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::HOST))
+      assert_equal @reviewable.owner_id, @review.buyer_id
+      assert_equal @reviewable.creator_id, @review.seller_id
+      assert_equal RatingConstants::HOST, @review.subject
+    end
 
-  should validate_inclusion_of(:rating).in_range(RatingConstants::VALID_VALUES).with_message('Rating is required')
+    context 'displayable' do
+      context 'TT has two sided reviews disabled' do
+        should 'set to true' do
+          assert FactoryGirl.create(:review).displayable
+        end
+      end
+
+      context  'TT has two sided reviews enabled' do
+        setup do
+          TransactableType.update_all(show_reviews_if_both_completed: true)
+        end
+
+        should 'set to false if no corresponding review ' do
+          refute FactoryGirl.create(:review, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::GUEST)).displayable
+        end
+
+        should  'set to true for transactable review ' do
+          assert FactoryGirl.create(:review, user: @reviewable.owner, reviewable: @reviewable, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::TRANSACTABLE)).displayable
+        end
+
+        should  'set to true for guest review if corresponding review exists' do
+          FactoryGirl.create(:review, user: @reviewable.owner, reviewable: @reviewable, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::HOST))
+          assert FactoryGirl.create(:review, user: @reviewable.creator, reviewable: @reviewable, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::GUEST)).displayable
+        end
+
+        should  'set to true for host review if corresponding review exists' do
+          FactoryGirl.create(:review, user: @reviewable.creator, reviewable: @reviewable, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::GUEST))
+          assert FactoryGirl.create(:review, user: @reviewable.owner, reviewable: @reviewable, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::HOST)).displayable
+        end
+
+        should  'set to false if corresponding review exists but for transactable' do
+          FactoryGirl.create(:review, user: @reviewable.owner, reviewable: @reviewable, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::TRANSACTABLE))
+          refute FactoryGirl.create(:review, user: @reviewable.owner, reviewable: @reviewable, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::HOST)).displayable
+        end
+
+        should  'set to false for host review if review exists for guest but for other reviewable' do
+          other_reviewable = FactoryGirl.create(:reservation, owner: @reviewable.creator)
+          FactoryGirl.create(:review, user: @reviewable.creator, reviewable: other_reviewable, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::HOST))
+          refute FactoryGirl.create(:review, user: @reviewable.creator, reviewable: @reviewable, rating_system: FactoryGirl.create(:rating_system, subject: RatingConstants::GUEST)).displayable
+        end
+      end
+    end
+  end
 
   context "scopes" do
     setup do
@@ -22,43 +65,17 @@ class ReviewTest < ActiveSupport::TestCase
       @rating_system_of_buyer = FactoryGirl.create(:rating_system, subject: "guest")
     end
 
-    context '.with_object' do
-      setup do
-        @review_of_seller = FactoryGirl.create(:review, rating_system_id: @rating_system_of_seller.id)
-        @review_of_product = FactoryGirl.create(:review, rating_system_id: @rating_system_of_product.id)
-        @review_of_buyer = FactoryGirl.create(:review, rating_system_id: @rating_system_of_buyer.id)        
-      end
-
-      should 'select only review of seller' do
-        reviews_of_seller = Review.with_object(RatingConstants::SELLER)
-        assert_equal 1, reviews_of_seller.count
-        assert_equal reviews_of_seller.first, @review_of_seller
-      end
-
-      should 'select only review of product' do
-        reviews_of_product = Review.with_object(RatingConstants::PRODUCT)
-        assert_equal 1, reviews_of_product.count
-        assert_equal reviews_of_product.first, @review_of_product
-      end
-
-      should 'select only review of buyer' do
-        reviews_of_buyer = Review.with_object(RatingConstants::BUYER)
-        assert_equal 1, reviews_of_buyer.count
-        assert_equal reviews_of_buyer.first, @review_of_buyer
-      end
-    end
-
     context 'links' do
       setup do
         [
-          @rating_system_of_seller, 
-          @rating_system_of_product, 
+          @rating_system_of_seller,
+          @rating_system_of_product,
           @rating_system_of_buyer
-        ].each do |rs| 
-          FactoryGirl.create(:review, rating_system_id: rs.id)
-          FactoryGirl.create(:order_review, rating_system_id: rs.id)
+        ].each do |rs|
+          FactoryGirl.create(:review, rating_system: rs)
+          FactoryGirl.create(:order_review, rating_system: rs)
         end
-        
+
         @reviews = Review.all
       end
 
@@ -118,8 +135,8 @@ class ReviewTest < ActiveSupport::TestCase
     context '.by_reservations' do
       setup do
         @reservations = FactoryGirl.create_list(:reservation, 2)
-        @first_review = FactoryGirl.create(:review, reviewable_id: @reservations.first.id, reviewable_type: @reservations.first.class.to_s)
-        second_review = FactoryGirl.create(:review, reviewable_id: @reservations.last.id, reviewable_type: @reservations.last.class.to_s)
+        FactoryGirl.create(:review, reviewable: @reservations.last)
+        @first_review = FactoryGirl.create(:review, reviewable: @reservations.first)
       end
 
       should 'return reviews by reservation' do
@@ -131,8 +148,8 @@ class ReviewTest < ActiveSupport::TestCase
     context '.by_line_items' do
       setup do
         @line_items = FactoryGirl.create_list(:line_item, 2)
-        @first_review = FactoryGirl.create(:review, reviewable_id: @line_items.first.id, reviewable_type: @line_items.first.class.to_s)
-        second_review = FactoryGirl.create(:review, reviewable_id: @line_items.last.id, reviewable_type: @line_items.last.class.to_s)
+        FactoryGirl.create(:review, reviewable: @line_items.last)
+        @first_review = FactoryGirl.create(:review, reviewable: @line_items.first)
       end
 
       should 'return reviews by reservation' do
@@ -141,46 +158,6 @@ class ReviewTest < ActiveSupport::TestCase
       end
     end
 
-    context ".both_sides_reviewed_for" do
-      setup do
-        Review.destroy_all
-
-        @host = FactoryGirl.create(:user)
-        @guest = FactoryGirl.create(:user)
-        
-        @host_rating_system_id = FactoryGirl.create(:rating_system, subject: "host").id
-        @guest_rating_system_id = FactoryGirl.create(:rating_system, subject: "guest").id
-
-        @reviewable = FactoryGirl.create(:reservation)
-        @reviewable2 = FactoryGirl.create(:reservation)
-
-      end
-
-      should 'not show reviews if host havent reviewed guest' do
-        assert_empty Review.both_sides_reviewed_for(RatingConstants::SELLER, @host.id)
-        assert_empty Review.both_sides_reviewed_for(RatingConstants::BUYER, @guest.id)
-
-        FactoryGirl.create(:review, user_id: @guest.id, rating_system_id: @host_rating_system_id, reviewable: @reviewable)
-
-        assert_empty Review.both_sides_reviewed_for(RatingConstants::SELLER, @host.id)
-        assert_empty Review.both_sides_reviewed_for(RatingConstants::BUYER, @guest.id)
-
-        FactoryGirl.create(:review, user_id: @host.id, rating_system_id: @guest_rating_system_id, reviewable: @reviewable)
-
-        assert_equal Review.both_sides_reviewed_for(RatingConstants::SELLER, @host.id).count, 1
-        assert_equal Review.both_sides_reviewed_for(RatingConstants::BUYER, @guest.id).count, 1
-
-        FactoryGirl.create(:review, user_id: @guest.id, rating_system_id: @host_rating_system_id, reviewable: @reviewable2)
-
-        assert_equal Review.both_sides_reviewed_for(RatingConstants::SELLER, @host.id).count, 1
-        assert_equal Review.both_sides_reviewed_for(RatingConstants::BUYER, @guest.id).count, 1
-
-        FactoryGirl.create(:review, user_id: @host.id, rating_system_id: @guest_rating_system_id, reviewable: @reviewable2)
-
-        assert_equal Review.both_sides_reviewed_for(RatingConstants::SELLER, @host.id).count, 2
-        assert_equal Review.both_sides_reviewed_for(RatingConstants::BUYER, @guest.id).count, 2
-      end
-    end
   end
 
   def assert_link_presence(review)

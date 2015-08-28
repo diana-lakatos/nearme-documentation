@@ -25,7 +25,7 @@
               = link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(feedback.creator)
           - if platform_context.support_email
             %p
-              = mail_to platform_context.support_email, t('dashboard.reviews.feedback.contact_name_support', name: @current_instance.name)
+              = mail_to platform_context.support_email, t('dashboard.reviews.feedback.contact_name_support', name: PlatformContext.current.instance.name)
 
     .reviews-additional-content.collapse{id: "#{subject}-#{feedback.id}"}
       - rating_system.rating_questions.each do |q|

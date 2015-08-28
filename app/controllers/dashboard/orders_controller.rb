@@ -20,6 +20,6 @@ class Dashboard::OrdersController < Dashboard::BaseController
   end
 
   def reviews_service
-    @reviews_service ||= ReviewsService.new(current_user, platform_context.instance, params)
+    @reviews_service ||= ReviewsService.new(current_user, params)
   end
 end

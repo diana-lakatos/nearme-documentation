@@ -4,10 +4,11 @@ FactoryGirl.define do
   factory :rating_system do
     instance
     subject { %w(transactable host guest).sample }
-    active false
+    transactable_type { TransactableType.first }
+    active true
   end
 
-  factory :active_rating_system, parent: :rating_system do
-    active true
+  factory :not_active_rating_system, parent: :rating_system do
+    active false
   end
 end

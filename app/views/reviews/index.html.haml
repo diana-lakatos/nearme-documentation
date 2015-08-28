@@ -2,6 +2,6 @@
   - if params[:page].present?
     = render 'reviews/reviews'
   - else
-    %article.tab-pane{id: "#{params[:object]}-reviews"}
+    %article.tab-pane{id: "#{params[:subject]}-reviews"}
       = render 'reviews/reviews'
 

@@ -1,131 +1,165 @@
 require 'test_helper'
 
 class UserReviewsServiceTest < ActiveSupport::TestCase
-  context "#reviews_by_role" do
+  context 'reviews by role' do
     setup do
-      @user = FactoryGirl.create(:user)
-      @platform_context = PlatformContext.current
+      @host_listing = FactoryGirl.create(:transactable)
+      @guest_listing = FactoryGirl.create(:transactable)
+      @reservation = FactoryGirl.create(:reservation, listing: @host_listing, user: @guest_listing.creator)
+      @other_reservation = FactoryGirl.create(:reservation, listing: @guest_listing, user: @host_listing.creator)
     end
 
-    should "return reviews_left_by_seller" do
-      @reviewable = FactoryGirl.create(:reservation)
-      review_on_buyer = create_review_for(RatingConstants::GUEST, {user: @user, reviewable: @reviewable })
-      review_on_seller = create_review_for(RatingConstants::HOST, {user: @user, reviewable: @reviewable })
+    context "#reviews_by_role if no both sides reviews" do
 
-      params = {:option => 'reviews_left_by_seller'}
-      user_reviews_service = UserReviewsService.new(@user, @platform_context, params)
-      reviews_left_by_seller = user_reviews_service.reviews_by_role
+      should "reviews_by_role returns proper result for all options if both reviewed is false" do
+        @reviews = create_reviews
+        assert_equal reviews_ids([:host_rates_guest]), reviews_by_role(@reservation.creator, 'reviews_left_by_seller')
+        assert_equal reviews_ids([:guest_rates_as_host_other_guest]), reviews_by_role(@reservation.owner, 'reviews_left_by_seller')
 
-      assert_equal @user.reviews.for_buyer.sort, reviews_left_by_seller.sort
-      assert_includes reviews_left_by_seller, review_on_buyer
+        assert_equal reviews_ids([:host_rates_as_guest_other_host, :host_rates_as_guest_other_transactable]), reviews_by_role(@reservation.creator, 'reviews_left_by_buyer')
+        assert_equal reviews_ids([:guest_rates_host, :guest_rates_transactable]), reviews_by_role(@reservation.owner, 'reviews_left_by_buyer')
+
+        assert_equal reviews_ids([:guest_rates_host]), reviews_by_role(@reservation.creator, 'reviews_about_seller')
+        assert_equal reviews_ids([:host_rates_as_guest_other_host]), reviews_by_role(@reservation.owner, 'reviews_about_seller')
+
+        assert_equal reviews_ids([:guest_rates_as_host_other_guest]), reviews_by_role(@reservation.creator, 'reviews_about_buyer')
+        assert_equal reviews_ids([:host_rates_guest]), reviews_by_role(@reservation.owner, 'reviews_about_buyer')
+      end
+
+      should "still display guest reviews if host hasn't reviewed" do
+        @reviews = create_reviews_without_host_rates_guest
+        assert_equal reviews_ids([]), reviews_by_role(@reservation.creator, 'reviews_left_by_seller')
+        assert_equal reviews_ids([:guest_rates_as_host_other_guest]), reviews_by_role(@reservation.owner, 'reviews_left_by_seller')
+
+        assert_equal reviews_ids([:host_rates_as_guest_other_host, :host_rates_as_guest_other_transactable]), reviews_by_role(@reservation.creator, 'reviews_left_by_buyer')
+        assert_equal reviews_ids([:guest_rates_host, :guest_rates_transactable]), reviews_by_role(@reservation.owner, 'reviews_left_by_buyer')
+
+        assert_equal reviews_ids([:guest_rates_host]), reviews_by_role(@reservation.creator, 'reviews_about_seller')
+        assert_equal reviews_ids([:host_rates_as_guest_other_host]), reviews_by_role(@reservation.owner, 'reviews_about_seller')
+
+        assert_equal reviews_ids([:guest_rates_as_host_other_guest]), reviews_by_role(@reservation.creator, 'reviews_about_buyer')
+        assert_equal reviews_ids([]), reviews_by_role(@reservation.owner, 'reviews_about_buyer')
+      end
     end
 
-    should "return reviews_left_by_buyer" do
-      @reviewable = FactoryGirl.create(:reservation)
-      review_on_buyer = create_review_for(RatingConstants::GUEST, {user: @user, reviewable: @reviewable })
-      review_on_seller = create_review_for(RatingConstants::HOST, {user: @user, reviewable: @reviewable })
-      review_on_product = create_review_for(RatingConstants::TRANSACTABLE, {user: @user, reviewable: @reviewable})
-      
-      params = {:option => 'reviews_left_by_buyer'}
-      user_reviews_service = UserReviewsService.new(@user, @platform_context, params)
-      reviews_left_by_buyer = user_reviews_service.reviews_by_role
-
-      assert_equal @user.reviews.for_seller_and_product.sort, reviews_left_by_buyer.sort
-      assert_includes reviews_left_by_buyer, review_on_seller
-      assert_includes reviews_left_by_buyer, review_on_product
-    end
-
-    context "for reviews on Reservation" do
+    context "#reviews_by_role if no both sides reviews" do
       setup do
-        @owner_of_reservation = FactoryGirl.create(:user)
-        @reservation = FactoryGirl.create(:reservation, owner: @owner_of_reservation, creator: FactoryGirl.create(:user))
-        @reservation.update_column(:creator_id, @user.id)
+        TransactableType.update_all(show_reviews_if_both_completed: true)
       end
 
-      should "return reviews_about_seller" do
-        review = create_review_for(RatingConstants::HOST, { user: @owner_of_reservation, reviewable_id: @reservation.id, reviewable_type: @reservation.class.to_s })
-        params = {:option => 'reviews_about_seller'}
-        user_reviews_service = UserReviewsService.new(@user, @platform_context, params)
-        reviews_about_seller = user_reviews_service.reviews_by_role
+      should "change nothing if everyone reviewed everything" do
+        @reviews = create_reviews
+        assert_equal reviews_ids([:host_rates_guest]), reviews_by_role(@reservation.creator, 'reviews_left_by_seller')
+        assert_equal reviews_ids([:guest_rates_as_host_other_guest]), reviews_by_role(@reservation.owner, 'reviews_left_by_seller')
 
-        assert_equal @user.reviews_about_seller.sort, reviews_about_seller.sort
-        assert_includes reviews_about_seller, review
+        assert_equal reviews_ids([:host_rates_as_guest_other_host, :host_rates_as_guest_other_transactable]), reviews_by_role(@reservation.creator, 'reviews_left_by_buyer')
+        assert_equal reviews_ids([:guest_rates_host, :guest_rates_transactable]), reviews_by_role(@reservation.owner, 'reviews_left_by_buyer')
+
+        assert_equal reviews_ids([:guest_rates_host]), reviews_by_role(@reservation.creator, 'reviews_about_seller')
+        assert_equal reviews_ids([:host_rates_as_guest_other_host]), reviews_by_role(@reservation.owner, 'reviews_about_seller')
+
+        assert_equal reviews_ids([:guest_rates_as_host_other_guest]), reviews_by_role(@reservation.creator, 'reviews_about_buyer')
+        assert_equal reviews_ids([:host_rates_guest]), reviews_by_role(@reservation.owner, 'reviews_about_buyer')
       end
 
-      should "return reviews_about_buyer" do
-        user = FactoryGirl.create(:user)
-        review = create_review_for(RatingConstants::GUEST, { user: user, reviewable_id: @reservation.id, reviewable_type: @reservation.class.to_s })
-        params = {:option => 'reviews_about_buyer'}
-        user_reviews_service = UserReviewsService.new(@owner_of_reservation, @platform_context, params)
-        reviews_about_buyer = user_reviews_service.reviews_by_role
+      should "do not display host and guest ratings if host rating is missing" do
+        @reviews = create_reviews_without_guest_rates_host
+        assert_equal reviews_ids([]), reviews_by_role(@reservation.creator, 'reviews_left_by_seller')
+        assert_equal reviews_ids([:guest_rates_as_host_other_guest]), reviews_by_role(@reservation.owner, 'reviews_left_by_seller')
 
-        assert_equal @owner_of_reservation.reviews_about_buyer, reviews_about_buyer
-        assert_includes reviews_about_buyer, review
+        assert_equal reviews_ids([:host_rates_as_guest_other_host, :host_rates_as_guest_other_transactable]), reviews_by_role(@reservation.creator, 'reviews_left_by_buyer')
+        assert_equal reviews_ids([:guest_rates_transactable]), reviews_by_role(@reservation.owner, 'reviews_left_by_buyer')
+
+        assert_equal reviews_ids([]), reviews_by_role(@reservation.creator, 'reviews_about_seller')
+        assert_equal reviews_ids([:host_rates_as_guest_other_host]), reviews_by_role(@reservation.owner, 'reviews_about_seller')
+
+        assert_equal reviews_ids([:guest_rates_as_host_other_guest]), reviews_by_role(@reservation.creator, 'reviews_about_buyer')
+        assert_equal reviews_ids([]), reviews_by_role(@reservation.owner, 'reviews_about_buyer')
+      end
+
+      should "do not display host and guest ratings if guest rating is missing" do
+        @reviews = create_reviews_without_host_rates_guest
+        assert_equal reviews_ids([]), reviews_by_role(@reservation.creator, 'reviews_left_by_seller')
+        assert_equal reviews_ids([:guest_rates_as_host_other_guest]), reviews_by_role(@reservation.owner, 'reviews_left_by_seller')
+
+        assert_equal reviews_ids([:host_rates_as_guest_other_host, :host_rates_as_guest_other_transactable]), reviews_by_role(@reservation.creator, 'reviews_left_by_buyer')
+        assert_equal reviews_ids([:guest_rates_transactable]), reviews_by_role(@reservation.owner, 'reviews_left_by_buyer')
+
+        assert_equal reviews_ids([]), reviews_by_role(@reservation.creator, 'reviews_about_seller')
+        assert_equal reviews_ids([:host_rates_as_guest_other_host]), reviews_by_role(@reservation.owner, 'reviews_about_seller')
+
+        assert_equal reviews_ids([:guest_rates_as_host_other_guest]), reviews_by_role(@reservation.creator, 'reviews_about_buyer')
+        assert_equal reviews_ids([]), reviews_by_role(@reservation.owner, 'reviews_about_buyer')
       end
     end
 
+  end
 
-    context "for reviews on Order" do
-      setup do
-        @buyer = FactoryGirl.create(:user)
-        order = FactoryGirl.create(:order_with_line_items, user: @buyer)
-        @line_item = order.line_items.first
-        variant = @line_item.variant
-        product = variant.product.update(user: @user)
-      end
+  context "for reviews on Order" do
+    setup do
+      @buyer = FactoryGirl.create(:user)
+      order = FactoryGirl.create(:order_with_line_items, user: @buyer)
+      @user = order.line_items.first.product.company.creator
+      @line_item = order.line_items.first
+    end
 
-      should "return reviews_about_seller" do
-        review = create_review_for(RatingConstants::HOST, {user: @buyer, reviewable_id: @line_item.id, reviewable_type: @line_item.class.to_s })
-        params = {:option => 'reviews_about_seller'}
-        user_reviews_service = UserReviewsService.new(@user, @platform_context, params)
-        reviews_about_seller = user_reviews_service.reviews_by_role
+    should "return reviews_about_seller" do
+      review = create_review_for(RatingConstants::HOST, {user: @buyer, reviewable_id: @line_item.id, reviewable_type: @line_item.class.to_s })
+      user_reviews_service = UserReviewsService.new(@user, {:option => 'reviews_about_seller'})
+      assert_equal [review.id], user_reviews_service.reviews_by_role.pluck(:id).sort
+    end
 
-        assert_equal @user.reviews_about_seller, reviews_about_seller
-        assert_includes reviews_about_seller, review
-      end
-
-      should "return reviews_about_buyer" do
-        review = create_review_for(RatingConstants::GUEST, { user: @user, reviewable_id: @line_item.id, reviewable_type: @line_item.class.to_s})
-        params = {:option => 'reviews_about_buyer'}
-        user_reviews_service = UserReviewsService.new(@buyer, @platform_context, params)
-        reviews_about_buyer = user_reviews_service.reviews_by_role
-
-        assert_equal @buyer.reviews_about_buyer, reviews_about_buyer
-        assert_includes reviews_about_buyer, review
-      end
+    should "return reviews_about_buyer" do
+      review = create_review_for(RatingConstants::GUEST, { user: @user, reviewable_id: @line_item.id, reviewable_type: @line_item.class.to_s})
+      user_reviews_service = UserReviewsService.new(@buyer, {:option => 'reviews_about_buyer'})
+      assert_equal [review.id], user_reviews_service.reviews_by_role.pluck(:id).sort
     end
   end
 
-  context "#rating_questions_by_role" do
-    setup do
-      @instance = FactoryGirl.create(:instance, generate_rating_systems: false)
-      PlatformContext.current = PlatformContext.new(@instance)
-      @platform_context = PlatformContext.current
-    end
-
-    should "return rating_questions for lessor rating system" do
-      rating_system = FactoryGirl.create(:active_rating_system, subject: @platform_context.instance.lessor, instance: @instance )
-      rating_questions = (1..2).map { FactoryGirl.create(:rating_question, rating_system: rating_system, instance: @instance ) }
-      params = {:option => 'reviews_about_seller'}
-      @user_reviews_service = UserReviewsService.new(@user, @platform_context, params)
-      rating_questions_by_role = @user_reviews_service.rating_questions_by_role
-
-      assert_equal rating_questions, rating_questions_by_role
-    end
-
-    should "return rating_questions for lessee rating system" do
-      rating_system = FactoryGirl.create(:active_rating_system, subject: @platform_context.instance.lessee, instance: @instance )
-      rating_questions = (1..2).map { FactoryGirl.create(:rating_question, rating_system: rating_system, instance: @instance ) }
-      params = {:option => 'reviews_about_buyer'}
-      @user_reviews_service = UserReviewsService.new(@user, @platform_context, params)
-      rating_questions_by_role = @user_reviews_service.rating_questions_by_role
-
-      assert_equal rating_questions, rating_questions_by_role
-    end
-  end
+  protected
 
   def create_review_for(type, opts={})
     rs = FactoryGirl.create(:rating_system, subject: type)
     FactoryGirl.create(:review, opts.merge({ rating_system_id: rs.id }))
+  end
+
+  def create_reviews
+    reviews = {}
+    reviews[:host_rates_guest] = create_review_for(RatingConstants::GUEST, {user: @host_listing.creator, reviewable: @reservation })
+    reviews[:guest_rates_host] = create_review_for(RatingConstants::HOST, {user: @guest_listing.creator, reviewable: @reservation })
+    reviews[:guest_rates_transactable] = create_review_for(RatingConstants::TRANSACTABLE, {user: @guest_listing.creator, reviewable: @reservation})
+    reviews[:host_rates_as_guest_other_transactable] = create_review_for(RatingConstants::TRANSACTABLE, {user: @host_listing.creator, reviewable: @other_reservation })
+    reviews[:guest_rates_as_host_other_guest] = create_review_for(RatingConstants::GUEST, {user: @guest_listing.creator, reviewable: @other_reservation})
+    reviews[:host_rates_as_guest_other_host] = create_review_for(RatingConstants::HOST, {user: @host_listing.creator, reviewable: @other_reservation })
+    reviews
+  end
+
+  def create_reviews_without_guest_rates_host
+    reviews = {}
+    reviews[:host_rates_guest] = create_review_for(RatingConstants::GUEST, {user: @host_listing.creator, reviewable: @reservation })
+    reviews[:guest_rates_transactable] = create_review_for(RatingConstants::TRANSACTABLE, {user: @guest_listing.creator, reviewable: @reservation})
+    reviews[:host_rates_as_guest_other_transactable] = create_review_for(RatingConstants::TRANSACTABLE, {user: @host_listing.creator, reviewable: @other_reservation })
+    reviews[:guest_rates_as_host_other_guest] = create_review_for(RatingConstants::GUEST, {user: @guest_listing.creator, reviewable: @other_reservation})
+    reviews[:host_rates_as_guest_other_host] = create_review_for(RatingConstants::HOST, {user: @host_listing.creator, reviewable: @other_reservation })
+    reviews
+  end
+
+  def create_reviews_without_host_rates_guest
+    reviews = {}
+    reviews[:guest_rates_host] = create_review_for(RatingConstants::HOST, {user: @guest_listing.creator, reviewable: @reservation })
+    reviews[:guest_rates_transactable] = create_review_for(RatingConstants::TRANSACTABLE, {user: @guest_listing.creator, reviewable: @reservation})
+    reviews[:host_rates_as_guest_other_transactable] = create_review_for(RatingConstants::TRANSACTABLE, {user: @host_listing.creator, reviewable: @other_reservation })
+    reviews[:guest_rates_as_host_other_guest] = create_review_for(RatingConstants::GUEST, {user: @guest_listing.creator, reviewable: @other_reservation})
+    reviews[:host_rates_as_guest_other_host] = create_review_for(RatingConstants::HOST, {user: @host_listing.creator, reviewable: @other_reservation })
+    reviews
+  end
+  def reviews_ids(symbols)
+    symbols.inject([]) do |arr, symbol|
+      arr << @reviews[symbol].id
+    end.sort
+  end
+
+  def reviews_by_role(user, role)
+    UserReviewsService.new(user, {:option => role}).reviews_by_role.pluck(:id).sort.uniq
   end
 end

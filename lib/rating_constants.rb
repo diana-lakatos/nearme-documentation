@@ -1,17 +1,12 @@
 module RatingConstants
   MAX_QUESTIONS_QUANTITY = 5
   MAX_RATING = 5
-  VALID_VALUES = (1..MAX_QUESTIONS_QUANTITY)
+  VALID_VALUES = (1..MAX_QUESTIONS_QUANTITY).freeze
 
-  SELLER = 'seller'
-  PRODUCT = 'product'
-  BUYER = 'buyer'
-  FEEDBACK_TYPES = [SELLER, PRODUCT, BUYER]
+  HOST = 'host'.freeze
+  TRANSACTABLE = 'transactable'.freeze
+  GUEST = 'guest'.freeze
+  RATING_SYSTEM_SUBJECTS = [HOST, TRANSACTABLE, GUEST].freeze
 
-  HOST = 'host'
-  TRANSACTABLE = 'transactable'
-  GUEST = 'guest'
-  RATING_SYSTEM_SUBJECTS = [HOST, TRANSACTABLE, GUEST]
-
-  RATING_MAPPING = Hash[FEEDBACK_TYPES.zip(RATING_SYSTEM_SUBJECTS)].freeze
 end
+
