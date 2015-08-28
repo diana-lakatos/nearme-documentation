@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150824113435) do
+ActiveRecord::Schema.define(version: 20150828193058) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -258,6 +258,7 @@ ActiveRecord::Schema.define(version: 20150824113435) do
     t.text     "void_response"
     t.integer  "payment_gateway_id"
     t.boolean  "immediate_payout",                default: false
+    t.integer  "merchant_account_id"
   end
 
   add_index "billing_authorizations", ["reference_id", "reference_type"], name: "index_billing_authorizations_on_reference_id_and_reference_type", using: :btree
