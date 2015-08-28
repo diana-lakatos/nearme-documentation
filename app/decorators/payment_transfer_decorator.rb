@@ -3,28 +3,22 @@ class PaymentTransferDecorator < Draper::Decorator
   delegate_all
 
   def transfer_status
-    if transferred?
-      'Paid'
-    elsif payout_attempts.last.present?
-      if pending?
-        'Pending'
-      elsif failed?
-        'Failed'
-      else
-        'Paid'
-      end
+    if failed?
+      I18n.t('instance_admin.failed')
+    elsif transferred?
+      I18n.t('instance_admin.paid')
     else
-      'N/A'
+      I18n.t('instance_admin.not_vailable')
     end
   end
 
   def css_row_class
-    if transferred?
+    if failed?
+      'danger'
+    elsif transferred?
       'success'
     elsif pending?
       'info'
-    elsif failed?
-      'danger'
     else
       'warning'
     end

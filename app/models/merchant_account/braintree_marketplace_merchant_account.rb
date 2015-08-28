@@ -1,5 +1,6 @@
 class MerchantAccount::BraintreeMarketplaceMerchantAccount < MerchantAccount
 
+  SEPARATE_TEST_ACCOUNTS = true
   ATTRIBUTES = %w(bank_routing_number bank_account_number ssn date_of_birth terms_of_service first_name last_name email street_address locality region postal_code)
   include MerchantAccount::Concerns::DataAttributes
 
@@ -28,7 +29,7 @@ class MerchantAccount::BraintreeMarketplaceMerchantAccount < MerchantAccount
   end
 
   def update_onboard!
-    result = payment_gateway.update_onboard!(custom_braintree_id, common_params)
+    result = payment_gateway.update_onboard!(internal_payment_gateway_account_id, common_params)
     handle_result(result)
   end
 
@@ -36,6 +37,7 @@ class MerchantAccount::BraintreeMarketplaceMerchantAccount < MerchantAccount
     if result.success?
       self.response = result.to_yaml
       data['bank_account_number'] = data['bank_account_number'].to_s[-4, 4]
+      self.internal_payment_gateway_account_id ||= custom_braintree_id
       true
     else
       result.errors.each { |e| errors.add(:data, e.message); }

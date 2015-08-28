@@ -201,15 +201,17 @@ en:
     add: "Add"
     show_previous_versions: "Show previous versions"
     at: at
-    succeeded: succeeded
-    failed: failed
-    pending: pending
+    succeeded: 'Succeeded'
+    failed: 'Failed'
+    paid: 'Paid'
+    not_vailable: 'N/A'
+    pending: 'Pending'
     confirm: 'Confirm'
-    deleted: deleted
+    deleted: 'Deleted'
     not_available_na: "N/A"
-    details: Details
+    details: 'Details'
     are_you_sure: "Are you sure?"
-    email: Email
+    email: 'Email'
 
     analytics:
       no_revenue_yet: 'No revenue yet.'
@@ -383,7 +385,9 @@ en:
       transfers:
         payment_transfer: "Payment Transfer"
         payout_has_been_marked_as_transferred: "This payout has been marked as transferred to the Company."
+        payout_failed: "We were notified that this payment transfer failed to be delivered, most likely due to wrong payout information. Please follow up with the host and once issues are resolved, manually mark the payment as not failed."
         mark_as_manually_transferred: "Mark as manually transferred"
+        mark_as_manually_resolved: "Mark as not failed"
         we_are_waiting_for_confirmation: "We are waiting for confirmation whether payout was successful or not."
         payout_via: "Payout via"
         payment_will_go_live: 'Payment will go live. Do you want to continue?'

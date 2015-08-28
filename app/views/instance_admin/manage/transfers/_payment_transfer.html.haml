@@ -11,7 +11,7 @@
       = l(resource.transferred_at, format: :long)
     - else
       - if resource.pending? || resource.failed?
-      - elsif resource.payout_processor.present?
+      - elsif resource.payout_processor.present? && !resource.payout_processor.supports_immediate_payout?
         = t('instance_admin.manage.transfers.retry_possible')
       - else
         = t('instance_admin.not_available_na')

@@ -7,6 +7,12 @@ class InstanceAdmin::Manage::TransfersController < InstanceAdmin::Manage::BaseCo
     @payment_transfers = PaymentTransferDecorator.decorate_collection(PaymentTransfer.includes(:payout_attempts).order('created_at DESC').paginate(:page => params[:page]))
   end
 
+  def not_failed
+    resource.update_attribute(:failed_at, nil)
+    flash[:notice] = t('flash_messages.payments.marked_as_not_failed')
+    redirect_to instance_admin_manage_transfer_path(resource)
+  end
+
   def transferred
     resource.mark_transferred
     flash[:notice] = t('flash_messages.payments.marked_transferred')

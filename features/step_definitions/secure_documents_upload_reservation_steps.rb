@@ -23,7 +23,7 @@ And (/^I book product$/) do
 end
 
 And (/^I make booking request$/) do
-  PaymentGateway.any_instance.stubs(:authorize).returns({ token: '12345' })
+  PaymentAuthorizer.any_instance.stubs(:authorize).returns(OpenStruct.new({ token: '12345', success?: true }))
   PaymentGateway.any_instance.stubs(:gateway_capture).returns(ActiveMerchant::Billing::Response.new(true, 'OK', { "id" => '12345' }))
   click_button "Request Booking"
 end

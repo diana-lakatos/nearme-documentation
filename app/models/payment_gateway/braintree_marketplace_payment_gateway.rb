@@ -24,6 +24,14 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
     @gateway ||= ActiveMerchant::Billing::BraintreeMarketplacePayments.new(settings)
   end
 
+  def verify_webhook(*args)
+    gateway.verify(*args)
+  end
+
+  def parse_webhook(*args)
+    gateway.parse_webhook(*args)
+  end
+
   def onboard!(*args)
     gateway.onboard!(*args)
   end
@@ -48,8 +56,7 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
   end
 
   def client_token
-    configure_braintree_class
-    @client_token ||= Braintree::ClientToken.generate
+    @client_token ||= gateway.client_token
   end
 
   def refund_identification(charge)
@@ -72,15 +79,12 @@ class PaymentGateway::BraintreeMarketplacePaymentGateway < PaymentGateway
     merchant_account(company).present?
   end
 
-  def credit_card_payment?
+  def supports_immediate_payout?
     true
   end
 
-  def configure_braintree_class
-    Braintree::Configuration.environment = settings["environment"]
-    Braintree::Configuration.merchant_id = settings["merchant_id"]
-    Braintree::Configuration.public_key  = settings["public_key"]
-    Braintree::Configuration.private_key = settings["private_key"]
+  def credit_card_payment?
+    true
   end
 
 end

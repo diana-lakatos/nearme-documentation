@@ -119,6 +119,8 @@ class Payment < ActiveRecord::Base
         if payable.respond_to?(:date)
           ReservationChargeTrackerJob.perform_later(payable.date.end_of_day, payable.id)
         end
+        # this works for braintree, might not work for others - to be moved to separate class etc, and ideally somewhere else... hackish hack as a quick win
+        update_attribute(:external_transaction_id, payable.try(:billing_authorization).try(:response).try(:authorization))
       else
         touch(:failed_at)
       end
@@ -141,6 +143,7 @@ class Payment < ActiveRecord::Base
 
     successful_charge = charges.successful.first
     return if successful_charge.nil?
+    return if PaymentGateway::BraintreeMarketplacePaymentGateway === billing_gateway
 
     refund = billing_gateway.refund(amount_to_be_refunded, currency, self, successful_charge)
 

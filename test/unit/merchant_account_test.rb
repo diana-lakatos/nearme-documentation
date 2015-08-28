@@ -2,17 +2,6 @@ require 'test_helper'
 
 class MerchantAccountTest < ActiveSupport::TestCase
 
-  context 'payment gateway with single test/live merchant account' do
-    should 'have single merchant account for test and live modes' do
-      Instance.any_instance.stubs(test_mode?: true)
-      ActiveMerchant::Billing::BraintreeMarketplacePayments.any_instance.stubs(:onboard!).returns(OpenStruct.new(success?: true))
-      merchant_account = FactoryGirl.create(:braintree_marketplace_merchant_account)
-      assert_equal merchant_account.merchantable.reload.braintree_marketplace_merchant_account, merchant_account
-      Instance.any_instance.stubs(test_mode?: false)
-      assert_equal merchant_account.merchantable.reload.braintree_marketplace_merchant_account, merchant_account
-    end
-  end
-
   context 'payment gateway with separate test/live merchant accounts' do
     setup do
       MerchantAccount::StripeConnectMerchantAccount.any_instance.stubs(:onboard!)

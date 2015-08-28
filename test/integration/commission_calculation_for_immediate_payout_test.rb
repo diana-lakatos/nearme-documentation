@@ -64,7 +64,6 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
     payment_gateway = FactoryGirl.create(:braintree_marketplace_payment_gateway)
     FactoryGirl.create(:country_payment_gateway, payment_gateway: payment_gateway, country_alpha2_code: 'US')
     ActiveMerchant::Billing::BraintreeMarketplacePayments.any_instance.stubs(:onboard!).returns(OpenStruct.new(success?: true))
-    Braintree::ClientToken.stubs(:generate).returns('my_token')
     FactoryGirl.create(:braintree_marketplace_merchant_account, payment_gateway: payment_gateway, merchantable: @listing.company)
     Instance.any_instance.stubs(:payment_gateway).returns(payment_gateway)
     PaymentTransfer.any_instance.stubs(:billing_gateway).returns(payment_gateway)
@@ -82,7 +81,7 @@ class ComissionCalculationForImmediatePayoutTest < ActionDispatch::IntegrationTe
       refund: OpenStruct.new(success?: true),
       void: OpenStruct.new(success?: true)
     }
-    gateway = stub(capture: stubs[:capture], refund: stubs[:refund], void: stubs[:void])
+    gateway = stub(capture: stubs[:capture], refund: stubs[:refund], void: stubs[:void], client_token: 'my_token')
     gateway.expects(:authorize).with do |total_amount_cents, credit_card_or_token, options|
       total_amount_cents == 43.75.to_money(@listing.currency).cents && options['service_fee_host'] == (18.75 + 2.5).to_money(@listing.currency).cents
     end.returns(stubs[:authorize])

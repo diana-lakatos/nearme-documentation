@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150828193058) do
+ActiveRecord::Schema.define(version: 20150901151857) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1092,6 +1092,7 @@ ActiveRecord::Schema.define(version: 20150828193058) do
     t.integer  "partner_id"
     t.string   "payment_gateway_mode",           limit: 4
     t.integer  "payment_gateway_id"
+    t.datetime "failed_at"
   end
 
   add_index "payment_transfers", ["company_id"], name: "index_payment_transfers_on_company_id", using: :btree
@@ -1119,6 +1120,7 @@ ActiveRecord::Schema.define(version: 20150828193058) do
     t.text     "recurring_booking_error"
     t.string   "payable_type"
     t.integer  "payable_id"
+    t.string   "external_transaction_id"
   end
 
   add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree

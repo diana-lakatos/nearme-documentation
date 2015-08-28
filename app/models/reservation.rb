@@ -121,17 +121,16 @@ class Reservation < ActiveRecord::Base
   monetize :exclusive_price_cents, with_model_currency: :currency, allow_nil: true
 
   state_machine :state, initial: :unconfirmed do
-    before_transition unconfirmed: :confirmed do |object, transaction|
-      object.validate_all_dates_available
-      object.errors.empty?
+    before_transition unconfirmed: :confirmed do |reservation, transaction|
+      reservation.validate_all_dates_available
+      reservation.errors.empty? && reservation.payment_capture
     end
     after_transition unconfirmed: :confirmed, do: :set_confirmed_at
     after_transition confirmed: [:cancelled_by_guest, :cancelled_by_host], do: [:schedule_refund, :set_cancelled_at]
     after_transition unconfirmed: [:cancelled_by_guest, :expired, :rejected], do: [:schedule_void_payment], if: lambda { |r| r.billing_authorization.present? }
 
     event :confirm do
-      transition unconfirmed: :confirmed, if: lambda {|reservation| reservation.payment_capture }
-      transition unconfirmed: same
+      transition unconfirmed: :confirmed
     end
 
     event :reject do
@@ -490,6 +489,8 @@ class Reservation < ActiveRecord::Base
     # NB: A future story is to separate out extended reservation payments
     #     across multiple payment dates, in which case a Reservation would
     #     have more than one Payment.
+    #
+    #
     payment = payments.build(
       subtotal_amount: subtotal_amount,
       service_fee_amount_guest: service_fee_amount_guest,

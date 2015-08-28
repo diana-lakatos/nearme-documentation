@@ -3,7 +3,8 @@ require 'test_helper'
 class LocaleServiceTest < ActiveSupport::TestCase
 
   def setup
-    @instance = PlatformContext.current.instance
+    @instance = FactoryGirl.create(:instance)
+    PlatformContext.current = PlatformContext.new(@instance)
     @instance.locales << FactoryGirl.create(:primary_locale)
     @instance.locales << FactoryGirl.create(:locale, code: 'cs')
     @instance.locales << FactoryGirl.create(:locale, code: 'fr')

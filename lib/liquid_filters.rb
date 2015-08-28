@@ -103,6 +103,10 @@ module LiquidFilters
     end
   end
 
+  def humanize(key)
+    key.try(:humanize)
+  end
+
   def translate(key, options={})
     I18n.t(key, options.deep_symbolize_keys)
   end

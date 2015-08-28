@@ -365,6 +365,7 @@ DesksnearMe::Application.routes.draw do
         member do
           post :transferred
           post :payout
+          post :not_failed
         end
 
         collection do

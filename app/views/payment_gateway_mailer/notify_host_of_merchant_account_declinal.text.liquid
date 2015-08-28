@@ -1,0 +1,11 @@
+We are sorry, {{ merchantable.creator.first_name }}!
+
+Unfortunately your payout information has been declined during verification of your account.
+
+Reason: {{ error_message }}
+
+In order to receive automated payouts, you will need to review and update your payout details.
+
+Update payout information {{ platform_context.host | append:merchantable.payout_path }}
+
+We're glad to help! If you have any questions, please contact us at {{ platform_context.support_email }} or give us a call at {{ platform_context.phone_number }}.

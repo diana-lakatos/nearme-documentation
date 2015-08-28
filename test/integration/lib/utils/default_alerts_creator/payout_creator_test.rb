@@ -28,8 +28,8 @@ class Utils::DefaultAlertsCreator::PayoutTest < ActionDispatch::IntegrationTest
     end
     mail = ActionMailer::Base.deliveries.last
     assert mail.html_part.body.include?('You earned 78.87$, 46.50€'), "Did not include correct information about earnings:\n#{mail.html_part.body}"
-    assert mail.html_part.body.include?('But first, we need you to add your PayPal email address so we can make the payment.'), "Did not include correct copy:\n#{mail.html_part.body}"
-    assert mail.html_part.body.include?("http://notifcations.com/dashboard/company/payouts/edit?temporary_token=abc&track_email_event=true&email_signature=") && mail.html_part.body.include?('#company_paypal_email'), "Did not include correct url to add paypal form:\n#{mail.html_part.body}"
+    assert mail.html_part.body.include?('But first, we need you'), "Did not include correct copy:\n#{mail.html_part.body}"
+    assert mail.html_part.body.include?("http://notifcations.com/dashboard/notification_preferences/edit"), "Did not include correct url to add paypal form:\n#{mail.html_part.body}"
     assert_equal [@company.creator.email], mail.to
 
   end

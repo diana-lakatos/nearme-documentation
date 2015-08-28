@@ -1,0 +1,9 @@
+We are sorry, {{ merchantable.creator.first_name }}!
+
+Unfortunately we were not able to deliver you automated payout, which was triggered on {{ disbursement.disbursement_date | localize }} due to the following reason: {{ disbursement.exception_message  | humanize }}
+
+{% if disbursement.follow_up_action == 'update_funding_information' %}The issue will not be resolved without your action. Once you update your payout information, we will automatically re-try the payout.
+Update payout information {{ platform_context.host | append:merchantable.payout_path }}
+{% else %}Suggested follow up action: {{ disbursement.follow_up_action | humanize }}{% endif %}
+
+We're glad to help! If you have any questions, please contact us at {{ platform_context.support_email }} or give us a call at {{ platform_context.phone_number }}.

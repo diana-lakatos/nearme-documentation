@@ -161,7 +161,7 @@ class ReservationTest < ActiveSupport::TestCase
     should 'create reservation charge with cancellation policy if enabled ignoring updated values' do
       @reservation = FactoryGirl.create(:reservation_with_credit_card, :state => 'unconfirmed', cancellation_policy_hours_for_cancellation: 47, cancellation_policy_penalty_percentage: 60)
       assert_difference 'Payment.count' do
-        @reservation.confirm!
+        @reservation.payment_capture
       end
       @payment = @reservation.payments.last
       assert_equal 47, @payment.cancellation_policy_hours_for_cancellation
@@ -172,7 +172,7 @@ class ReservationTest < ActiveSupport::TestCase
       @reservation = FactoryGirl.create(:reservation_with_credit_card, :state => 'unconfirmed')
       TransactableType.update_all(cancellation_policy_enabled: nil)
       assert_difference 'Payment.count' do
-        @reservation.confirm!
+        @reservation.payment_capture
       end
       @payment = @reservation.payments.last
       assert_equal 0, @payment.cancellation_policy_hours_for_cancellation
@@ -182,7 +182,7 @@ class ReservationTest < ActiveSupport::TestCase
     should 'not confirm when capture fails' do
       @reservation = FactoryGirl.create(:reservation_with_credit_card, :state => 'unconfirmed')
       assert_difference 'Payment.count' do
-        @reservation.confirm!
+        @reservation.payment_capture
       end
       @payment = @reservation.payments.last
       assert_equal false, @payment.paid?
@@ -222,6 +222,29 @@ class ReservationTest < ActiveSupport::TestCase
 
     end
 
+    context 'payment capture' do
+      setup do
+        @reservation = FactoryGirl.create(:reservation, state: 'unconfirmed')
+      end
+
+      should 'not be invoked when we check if reservation can be confirmed' do
+        @reservation.expects(:payment_capture).never
+        @reservation.can_confirm?
+      end
+
+      should 'not be confirmed if payment capture fails' do
+        @reservation.stubs(:payment_capture).returns(false)
+        @reservation.confirm
+        refute @reservation.confirmed?
+      end
+
+      should 'be confirmed if payment capture succeeds ' do
+        @reservation.expects(:payment_capture).returns(true)
+        @reservation.confirm
+        assert @reservation.confirmed?
+      end
+    end
+
     context 'void' do
 
       context 'manual payment reservation' do
@@ -250,11 +273,6 @@ class ReservationTest < ActiveSupport::TestCase
           @reservation.expire!
         end
 
-        should 'not schedule void on confirmation' do
-          Payment.any_instance.expects(:capture).once
-          @reservation.confirm!
-          ReservationVoidPaymentJob.expects(:perform).never
-        end
       end
 
     end
@@ -729,14 +747,14 @@ class ReservationTest < ActiveSupport::TestCase
       @reservation.stubs(:recurring_booking_id).returns(1).at_least(0)
       @reservation.expects(:attempt_payment_capture).never
       @reservation.expects(:schedule_payment_capture).once
-      @reservation.confirm!
+      @reservation.payment_capture
     end
 
     should 'do not schedule payment capture if has no billing authorization but also do not belong to recurring booking ' do
       @reservation.stubs(:billing_authorization).returns(nil).at_least(0)
       @reservation.stubs(:recurring_booking_id).returns(nil).at_least(0)
       @reservation.expects(:schedule_payment_capture).never
-      @reservation.confirm!
+      @reservation.payment_capture
     end
 
     should 'attempt if have billing authorization' do
@@ -744,7 +762,7 @@ class ReservationTest < ActiveSupport::TestCase
       @reservation.stubs(:recurring_booking_id).returns(nil).at_least(0)
       @reservation.expects(:attempt_payment_capture).once
       @reservation.expects(:schedule_payment_capture).never
-      @reservation.confirm!
+      @reservation.payment_capture
     end
 
   end
