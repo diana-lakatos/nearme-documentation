@@ -13,6 +13,8 @@ if Spree::Stock::Estimator.methods.include?(:new)
       end
 
       def self.create_shippo_spree_objects_for_package(package)
+        return if package.try(:order).try('completed?')
+
         shippo_address_to = ShippoApi::ShippoAddressInfo.new(:send_to, package.order.ship_address, package)
         shippo_address_from = ShippoApi::ShippoAddressInfo.new(:send_from, package.stock_location, package)
 
