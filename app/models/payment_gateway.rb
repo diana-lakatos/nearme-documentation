@@ -277,7 +277,7 @@ class PaymentGateway < ActiveRecord::Base
 
     merchant_account_class = self.class.name.gsub('PaymentGateway', 'MerchantAccount').safe_constantize
     if merchant_account_class
-      merchant_account_class.where(test: merchant_account_class::SEPARATE_TEST_ACCOUNTS && test_mode?).where(state: 'verified').first
+      merchant_account_class.where(merchantable: company, test: merchant_account_class::SEPARATE_TEST_ACCOUNTS && test_mode?).where(state: 'verified').first
     end
   end
 

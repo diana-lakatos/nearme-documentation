@@ -50,7 +50,8 @@ class PaymentAuthorizer
         billing_authoriazation_params.merge(
           {
             success: true,
-            immediate_payout: @payment_gateway.immediate_payout(@authorizable.company)
+            immediate_payout: @payment_gateway.immediate_payout(@authorizable.company),
+            merchant_account_id: @payment_gateway.merchant_account(@authorizable.company).try(:id)
           }
         )
       )

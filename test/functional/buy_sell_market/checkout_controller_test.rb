@@ -130,7 +130,10 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
           PlatformContext.current.instance.update_attributes(service_fee_host_percent: 15, service_fee_guest_percent: 10)
           @order = FactoryGirl.create(:order_waiting_for_payment, user: @user, currency: 'USD')
           ActiveMerchant::Billing::BraintreeMarketplacePayments.any_instance.stubs(:onboard!).returns(OpenStruct.new(success?: true))
-          FactoryGirl.create(:braintree_marketplace_merchant_account, payment_gateway: @payment_gateway, merchantable: @order.company)
+          # create unrelated merchant account
+          FactoryGirl.create(:braintree_marketplace_merchant_account, payment_gateway: @payment_gateway, merchantable: FactoryGirl.create(:company))
+          # create related merchant account, the one who should receive $$$
+          @merchant_account = FactoryGirl.create(:braintree_marketplace_merchant_account, payment_gateway: @payment_gateway, merchantable: @order.company)
           stubs = {
             authorize: OpenStruct.new(authorization: "54533", success?: true),
             capture: OpenStruct.new(success?: true),
@@ -166,6 +169,7 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
           assert_not_nil @order.billing_authorization
           assert @order.billing_authorization.success?
           assert_equal '54533', @order.billing_authorization.token
+          assert_equal @merchant_account.id, @order.billing_authorization.merchant_account_id
           assert @order.billing_authorization.immediate_payout
           assert_equal @payment_gateway.id, @order.billing_authorization.payment_gateway_id
         end
