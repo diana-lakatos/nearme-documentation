@@ -6,7 +6,7 @@ class Translation < ActiveRecord::Base
   scope :for_instance, lambda { |instance_id| where('instance_id = ?', instance_id) }
   scope :defaults, -> { where('instance_id is null') }
   scope :updated_after, lambda { |updated_at| where('updated_at > ?', updated_at.to_time) }
-  scope :default_and_custom_translations_for_instance, -> (instance_id) { where('locale = ? AND (instance_id IS NULL OR instance_id = ? )', 'en', instance_id) }
+  scope :default_and_custom_translations_for_instance, -> (instance_id, locale) { where(locale: ['en', locale]).where('instance_id IS NULL OR instance_id = ?', instance_id) }
 
   validates :key, presence: true,
     uniqueness: { scope: [:instance_id, :locale], case_sensitive: false},
