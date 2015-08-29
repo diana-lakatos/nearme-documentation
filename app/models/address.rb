@@ -72,6 +72,21 @@ class Address < ActiveRecord::Base
     @state_code ||= Address::GoogleGeolocationDataParser.new(address_components).fetch_address_component("state", :short)
   end
 
+  def street_number
+    result = nil
+
+    if address_components.present?
+      address_components.each do |key, value|
+        if value['types'] == 'street_number'
+          result = value['long_name']
+          break
+        end
+      end
+    end
+
+    result
+  end
+
   def parse_address_components
     if address_components_changed?
       parse_address_components!

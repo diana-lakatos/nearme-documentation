@@ -26,8 +26,7 @@ module ShippoApi
 
   class ShippoAddressInfo < ShippoObject
     PERMANENT_OPTIONS = {
-      :object_purpose => 'PURCHASE',
-      :street_no => ""
+      :object_purpose => 'PURCHASE'
     }
     REQUIRED_PARAMS = [:object_purpose, :name, :company, :street1, :street_no, :street2, :city, :state, :zip, :country, :phone, :email]
 
@@ -47,6 +46,7 @@ module ShippoApi
         options[:country] = address_object.try(:country).try(:iso)
         options[:phone] = address_object.phone
         options[:email] = package.order.user.email
+        options[:street_no] = ''
       elsif purpose == :send_from
         stock_location = spree_object
         options = {}
@@ -68,6 +68,7 @@ module ShippoApi
           options[:country] = company.iso_country_code
           options[:phone] = creator_user.phone
           options[:email] = creator_user.email
+          options[:street_no] = company.try(:company_address).try(:street_number).to_s
         end
       else
         raise ShippoUnknownParameterType options.class.to_s
