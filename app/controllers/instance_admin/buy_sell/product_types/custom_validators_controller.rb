@@ -18,4 +18,11 @@ class InstanceAdmin::BuySell::ProductTypes::CustomValidatorsController < Instanc
   def available_attributes
     @attributes = Spree::Product.column_names.map{ |column| [column.humanize, column] }
   end
+
+  def set_breadcrumbs
+    @breadcrumbs_title = BreadcrumbsList.new(
+      { :url => instance_admin_buy_sell_product_types_path, :title => t('instance_admin.buy_sell.product_types.product_types') },
+      { :url => instance_admin_buy_sell_product_type_custom_validators_path, :title => t('instance_admin.manage.service_types.custom_validators') }
+    )
+  end
 end

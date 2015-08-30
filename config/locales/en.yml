@@ -725,6 +725,7 @@ en:
         states: "States"
         countries: "Countries"
       product_types:
+        product_types: "Product Types"
         manage_product_types: "Manage Product Types"
         form_components: "Form Components"
         data_upload: "Data Upload"
