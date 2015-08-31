@@ -16,12 +16,29 @@ class CacheExpiration
       end
     end
 
+    def rebuild_cache_for_new_worker
+      if RedisCache.client.exists('cache_expiration_persisted')
+        last_update = RedisCache.client.get("last_cache_update_#{current_worker_id}").to_f
+        processed_instances = []
+        messages = RedisCache.client.zrangebyscore('cache_expiration_persisted', "(#{last_update}", '+inf', with_scores: true)
+        messages.each do |value, score|
+          data = JSON.parse(value).with_indifferent_access
+          data.delete(:timestamp)
+          unless processed_instances.include?(data)
+            handle_cache_expiration(data)
+            processed_instances << data
+          end
+        end
+        RedisCache.client.set("last_cache_update_#{current_worker_id}", messages.last[1]) if messages.last
+      end
+    end
+
     def current_worker_id
       "#{ENV['HOSTNAME']}_#{Process.pid}"
     end
 
     def handle_cache_expiration(data)
-      @data = JSON.parse(data).with_indifferent_access
+      @data = data.is_a?(String) ? JSON.parse(data).with_indifferent_access : data
       case @data[:cache_type]
       when 'InstanceView'
         expire_instance_view_cache
