@@ -45,7 +45,7 @@ class Dashboard::Company::ProductsController < Dashboard::Company::BaseControlle
     if @product_form.submit(product_form_params)
       redirect_to return_to, notice: t('flash_messages.manage.product.updated')
     else
-      @images = @product_form.product.images
+      @images = @product_form.product.images.uniq
       flash.now[:error] = t('flash_messages.product.complete_fields')
       flash.now[:error] = t('flash_messages.product.missing_fields_invalid') if @product_form.required_field_missing?
       render :edit

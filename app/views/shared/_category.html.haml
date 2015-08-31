@@ -7,7 +7,7 @@
     - else
       = content_tag :div, class: "tree_container", data: { category_id: category.id } do
         = hidden_field_tag "single_choice_category", category.multiple_root_categories == true, class: 'single_choice_category'
-        = f.hidden_field 'category_ids', multiple: true, class: 'category_ids', value: nil, "data-value" => f.object.category_ids.join(",")
+        = f.hidden_field 'category_ids', multiple: true, class: 'category_ids', value: nil, "data-value" => f.object.common_categories(category).map(&:id).join(',')
 
         .row
           .col-md-3
