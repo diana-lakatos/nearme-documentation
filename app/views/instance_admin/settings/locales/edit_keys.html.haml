@@ -31,7 +31,7 @@
                         %input{type: 'hidden', name: "instance[translations_attributes][#{index}][_destroy]", value: 'false'}
                         %input{type: 'hidden', name: "instance[translations_attributes][#{index}][id]", value: instance_translation.id}
                       - else
-                        %input.form-control{id: "instance_translations_#{index}", type: 'text', name: "instance[translations_attributes][#{index}][value]", value: '', placeholder: translation.value}
+                        %input.form-control{id: "instance_translations_#{index}", type: 'text', name: "instance[translations_attributes][#{index}][value]", value: '', placeholder: translation.value, class: 'locale-item-input' }
 
             = content_for :header_buttons do
               = f.button :submit, t('instance_admin.locales.buttons.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
