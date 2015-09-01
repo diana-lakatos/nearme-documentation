@@ -709,6 +709,7 @@ ActiveRecord::Schema.define(version: 20150911155802) do
     t.boolean  "permission_support",         default: false
     t.boolean  "permission_buysell",         default: false
     t.boolean  "permission_shippingoptions", default: false
+    t.boolean  "permission_reports",         default: false
   end
 
   add_index "instance_admin_roles", ["instance_id"], name: "index_instance_admin_roles_on_instance_id", using: :btree

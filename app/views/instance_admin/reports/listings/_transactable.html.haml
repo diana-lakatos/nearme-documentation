@@ -1,0 +1,5 @@
+%tr
+  %td= link_to transactable.id, instance_admin_reports_listing_path(transactable)
+  %td= transactable.name
+  %td= transactable.description.to_s.truncate(100)
+  %td= transactable.properties.to_h.to_s.truncate(100)

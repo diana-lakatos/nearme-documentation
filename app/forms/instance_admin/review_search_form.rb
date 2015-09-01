@@ -14,19 +14,19 @@ class InstanceAdmin::ReviewSearchForm < SearchForm
     }
 
     if q.present?
-      result[:by_search_query] = "%#{q}%"
+      result[:by_search_query] = ["%#{q}%"]
     end
 
     if rating.present?
-      result[:with_rating] = rating
+      result[:with_rating] = [rating]
     end
 
     if date.present?
-      result[:with_date] = date_from_params
+      result[:with_date] = [date_from_params]
     end
 
     if transactable_type.present?
-      result[:with_transactable_type] = transactable_type
+      result[:with_transactable_type] = [transactable_type]
     end
 
     result

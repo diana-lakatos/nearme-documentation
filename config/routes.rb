@@ -148,6 +148,20 @@ DesksnearMe::Application.routes.draw do
       resources :logs, only: [:index, :destroy]
     end
 
+    namespace :reports do
+      resources :listings do
+        collection do
+          get :download_report
+        end
+      end
+
+      resources :products do
+        collection do
+          get :download_report
+        end
+      end
+    end
+
     namespace :settings do
       get '/', :to => 'base#index'
       resources :domains, except: :show

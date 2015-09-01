@@ -15,11 +15,11 @@ class InstanceAdmin::ApprovalRequestSearchForm < SearchForm
     }
 
     if q.present?
-       result[:by_search_query] = "%#{q}%"
+       result[:by_search_query] = ["%#{q}%"]
     end
 
     if date.present?
-      result[:with_date] = date_from_params
+      result[:with_date] = [date_from_params]
     end
 
     if VALID_STATES.include?(show)
