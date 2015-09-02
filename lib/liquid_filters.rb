@@ -10,6 +10,12 @@ module LiquidFilters
     else
       Googl.shorten(url).short_url
     end
+  rescue e
+    if Rails.env.production?
+      raise e
+    else
+     'http://limitreached'
+    end
   end
 
   def in_groups_of(array, integer)
