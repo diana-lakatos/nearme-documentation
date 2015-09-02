@@ -18,7 +18,7 @@
           .row
             %h4= t('amenities_attribute')
             .input-container.col-xs-12
-              %table.table.amenities{id: "#{type}-amenities-#{f_at.object.id}", width: '100%'}
+              %table.table.amenities{class: "#{type}-amenities-#{f_at.object.id}", width: '100%'}
                 = f_at.fields_for :amenities, wrapper: false do |fa|
                   %tr.fields
                     %td
@@ -27,7 +27,7 @@
                       %td.pull-right= fa.link_to_remove t('instance_admin.settings.locations.delete')
                     - else
                       %td.pull-right= "(#{t('instance_admin.settings.locations.in_use_by')} #{fa.object.send(type.pluralize).count} #{t('instance_admin.settings.locations.locations')})"
-              %p.pull-right= f_at.link_to_add "#{t('instance_admin.settings.locations.add')} #{t('amenity_attribute')}", :amenities, :model_object => Amenity.new, :data => { :target => "##{type}-amenities-#{f_at.object.id}" }
+              %p.pull-right= f_at.link_to_add "#{t('instance_admin.settings.locations.add')} #{t('amenity_attribute')}", :amenities, :model_object => Amenity.new, :data => { :target => ".#{type}-amenities-#{f_at.object.id}" }
 
   .row
     .input-container.col-xs-12
