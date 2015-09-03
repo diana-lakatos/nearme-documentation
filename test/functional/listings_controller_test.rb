@@ -2,34 +2,22 @@ require 'test_helper'
 
 class ListingsControllerTest < ActionController::TestCase
 
-  context '#index' do
+  context 'GET #occurrences.json' do
     setup do
-      FactoryGirl.create(:instance)
+      @listing = FactoryGirl.create(:transactable)
     end
 
-    context '#params page' do
-      should 'show listings if no page param is defined' do
-        get :index
-        assert :success
-      end
-
-      should 'redirect if page param is string' do
-        get :index, :page => 'this is string'
-        assert_redirected_to listings_path(:page => 1)
-      end
-
-      should 'redirect if page param is 0' do
-        get :index, :page => 0
-        assert_redirected_to listings_path(:page => 1)
-      end
-
-      should 'redirect if page param is mixed integer and string' do
-        get :index, :page => '12this is string'
-        assert_redirected_to listings_path(:page => 1)
-      end
+    
+    should 'render json' do
+      get :occurrences, id: @listing.id
+      assert :success
     end
 
+    should 'have occurrences' do
+      11.times { FactoryGirl.create(:transactable) }
+      get :occurrences, id: @listing.id
+      assert 10, JSON.parse(response.body).length
+    end
   end
-
 end
 

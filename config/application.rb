@@ -136,9 +136,7 @@ module DesksnearMe
     config.instagram_secret = "5c0652ad06984bf09e4987c8fc5ea8f1"
 
     config.exceptions_app = self.routes
-
-    # custom rewrites specified in lib/legacy_redirect_handler.rb
-    config.middleware.insert_before(Rack::Sendfile, "LegacyRedirectHandler")
+    
     # setting platform_context in app/models/platform_context/rack_setter.rb
     config.middleware.use "PlatformContext::RackSetter"
     config.middleware.use Rack::Deflater

@@ -27,7 +27,8 @@ module NavigationHelpers
       edit_dashboard_company_white_label_path(model!('the user').companies.first)
 
     when /the transactable's page/
-      listing_path(model!('the transactable'))
+      listing = model!('the transactable')
+      transactable_type_location_listing_path( listing.transactable_type, listing.location, listing )
 
     when /the transactables page/
       listings_path
