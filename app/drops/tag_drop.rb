@@ -13,4 +13,8 @@ class TagDrop < BaseDrop
   def initialize(tag)
     @tag = tag
   end
+
+  def to_s
+    @tag.name
+  end
 end

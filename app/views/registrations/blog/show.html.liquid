@@ -5,7 +5,6 @@
 {% endcontent_for %}
 
 <div class='blog-container'>
-
   <div class='blog-post-detail'>
     <div class='hero-image'>
       {% if blog_post.hero_image_present? %}
@@ -18,8 +17,10 @@
     {% include 'registrations/blog/social_buttons.html' %}
 
     <div class='content'>
+      <p> Tagged as: {{ tags | join:", " }}.</p>
       {{ blog_post.content }}
     </div>
+    
     <div class='info row-fluid'>
       <div class='date span5'>
         Published {{ blog_post.published_at | localize: 'only_date' }}

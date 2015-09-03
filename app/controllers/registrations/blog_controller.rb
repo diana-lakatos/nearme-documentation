@@ -20,6 +20,7 @@ class Registrations::BlogController < ApplicationController
     @user = blog_user
     @blog_post = blog_user.published_blogs.find(params[:id])
     @render_content_outside_container = true
+    @tags = @blog_post.tags
   end
 
   private

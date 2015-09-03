@@ -11,6 +11,7 @@ class Blog::BlogPostsController < Blog::ApplicationController
   end
 
   def show
+    @tags = @blog_post.tags
   end
 
   private

@@ -170,7 +170,7 @@ module LiquidFilters
     params = @context.registers[:controller].params
     current_filters = params[:tags].try(:split, ",").presence || []
 
-    if params[:tags].try(:include?, tag.slug).presence
+    if current_filters.try(:include?, tag.slug).presence
       filters_without_current = (current_filters - [tag.slug]).join(",")
       
       href = "?tags=#{filters_without_current}"
