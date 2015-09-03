@@ -33,12 +33,13 @@
         %td= @order.ship_address.full_name
         %td{rowspan: 6}
           - @order.shipments.each do |shipment|
-            From
-            %strong= shipment.stock_location.name
-            via
-            %br
-            %strong=shipment.selected_shipping_rate.name
-            %br
+            - if shipment.selected_shipping_rate.present?
+              From
+              %strong= shipment.stock_location.name
+              via
+              %br
+              %strong=shipment.selected_shipping_rate.name
+              %br
 
         %td
           - if @charge_info && @charge_info.response['card']
