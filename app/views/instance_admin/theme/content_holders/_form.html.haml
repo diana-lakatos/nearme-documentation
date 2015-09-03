@@ -16,4 +16,4 @@
 
   = content_for :header_buttons do
     = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
-    = link_to t('instance_admin.cancel'), [:instance_admin, :theme, resource] , class: 'btn btn-blue pull-right'
+    = link_to t('instance_admin.cancel'), instance_admin_theme_content_holders_path , class: 'btn btn-blue pull-right'
