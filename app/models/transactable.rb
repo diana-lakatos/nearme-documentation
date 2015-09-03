@@ -433,8 +433,9 @@ class Transactable < ActiveRecord::Base
       {1 => 0.to_money}
     else
       Hash[
-        [[1, daily_price], [booking_days_per_week, weekly_price], [booking_days_per_month, monthly_price]]
-      ].reject { |size, price| !price || price.zero? }
+        [[1, daily_price], [booking_days_per_week, weekly_price], [booking_days_per_month, monthly_price]].
+          reject { |size, price| !price || price.zero? }
+      ]
     end
   end
 
