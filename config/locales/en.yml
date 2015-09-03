@@ -73,6 +73,9 @@ en:
     daily: 'Daily'
     weekly: 'Weekly'
     browse: 'Browse'
+    day:
+      one: "day"
+      other: "days"
   transactable_types:
     locations:
       listings:
