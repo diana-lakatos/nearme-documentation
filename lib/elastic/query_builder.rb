@@ -13,7 +13,7 @@ module Elastic
     PER_PAGE = 20
     PAGE = 0
 
-    def initialize(query, searchable_custom_attributes)
+    def initialize(query, searchable_custom_attributes=nil)
       @query = query
       @bounding_box = query[:bounding_box]
       @searchable_custom_attributes = searchable_custom_attributes

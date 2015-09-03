@@ -1,0 +1,9 @@
+en:
+  js:
+    components:
+      tag_list:
+        no_results: 
+          instance_admin: No results found. Press "enter" to add a tag.
+          default: No results found. Please try using another term.
+        hint: Type in a search term to find existing tags. Press space to see all options.
+        searching: Searching...

@@ -790,6 +790,8 @@ DesksnearMe::Application.routes.draw do
 
   end #end /dashboard namespace
 
+  resources :tags, only: :index
+
   resources :reservations do
     resources :payment_notifications, controller: 'reservations/payment_notifications'
   end

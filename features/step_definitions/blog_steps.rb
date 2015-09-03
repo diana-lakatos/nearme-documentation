@@ -32,6 +32,18 @@ Then(/^I can manage blog posts$/) do
   @blog_instance.blog_posts.reload.should be_empty
 end
 
+And(/^I can manage tags for posts/) do
+  visit '/instance_admin/manage_blog/posts'
+  click_link 'New post'
+  fill_in 'Title', with: 'Great title!'
+  fill_in 'Content', with: 'Content'
+  fill_in 'Tag list', with: 'tag1,tag2'
+  
+  assert_difference 'Tagging.count', 2 do
+    click_button 'Save'
+  end
+end
+
 Then(/^I can manage settings for a blog$/) do
   visit '/instance_admin/manage_blog/settings/edit'
 

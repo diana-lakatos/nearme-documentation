@@ -4,7 +4,9 @@ class Registrations::BlogController < ApplicationController
 
   def index
     @user = blog_user
-    @blog_posts = blog_user.published_blogs.paginate(page: params[:page])
+    @blog_posts = get_blog_posts
+    @tags = blog_user.published_blogs.tags.alphabetically
+
     @no_footer = true
     @render_content_outside_container = true
 
@@ -37,5 +39,16 @@ class Registrations::BlogController < ApplicationController
     end
 
     blog_user.blog.test_enabled
+  end
+
+  def get_blog_posts
+    posts = if params[:tags].present?
+      selected_tags = Tag.where(slug: params[:tags].split(",")).pluck(:name)
+      @user.published_blogs.tagged_with(selected_tags, any: true)
+    else
+      @user.published_blogs
+    end
+
+    posts.paginate(page: params[:page])
   end
 end

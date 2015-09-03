@@ -1,11 +1,13 @@
 class BlogPost < ActiveRecord::Base
-
-  belongs_to :blog_instance
-  belongs_to :user # user who created this post
-
-  delegate :instance, to: :blog_instance
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :history, :finders]
+
+  include Taggable
+
+  belongs_to :blog_instance
+  belongs_to :user
+
+  delegate :instance, to: :blog_instance
 
   before_validation :sanitize_content
   validates_presence_of :blog_instance, :user, :title, :content, :published_at
@@ -13,7 +15,7 @@ class BlogPost < ActiveRecord::Base
   mount_uploader :header, HeroImageUploader
   mount_uploader :author_avatar, SimpleAvatarUploader
 
-  scope :by_date, -> { order('COALESCE(published_at, created_at) desc') }
+  scope :by_date, -> { order('COALESCE(published_at, created_at) DESC') }
   scope :published, -> { where("published_at < ? OR published_at IS NULL", Time.zone.now ) }
 
 

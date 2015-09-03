@@ -1,4 +1,3 @@
-
 class User < ActiveRecord::Base
   has_paper_trail ignore: [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
                            :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
@@ -9,6 +8,7 @@ class User < ActiveRecord::Base
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context allow_admin: :admin
+  acts_as_tagger
 
   extend FriendlyId
   has_metadata accessors: [:support_metadata]
@@ -833,6 +833,5 @@ class User < ActiveRecord::Base
       errors.add(:name, :last_name_too_long, count: User::MAX_NAME_LENGTH)
     end
   end
-
 end
 

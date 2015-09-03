@@ -1,6 +1,12 @@
 <div class='blog-container'>
+  <ul class='tags-filters'>
+    {% for tag in tags %}
+      <li class='tag-filter-link'>{{ tag | tag_filter_link }}</li>
+    {% endfor %}
+  </ul>
+  
   <div class='blog-posts'>
-    {% for blog_post in @blog_posts %}
+    {% for blog_post in blog_posts %}
       {% include 'blog/blog_posts/blog_post.html' %}
     {% endfor %}
   </div>

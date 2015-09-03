@@ -3,6 +3,7 @@ module LiquidFilters
   include CurrencyHelper
   include ActionView::Helpers::NumberHelper
   include WillPaginate::ViewHelpers
+  include ActionView::Helpers::UrlHelper
 
   def shorten_url(url)
     if DesksnearMe::Application.config.googl_api_key.present?
@@ -165,5 +166,24 @@ module LiquidFilters
     Digest::SHA1.hexdigest object
   end
 
-end
+  def tag_filter_link(tag, custom_classes=[])
+    params = @context.registers[:controller].params
+    current_filters = params[:tags].try(:split, ",").presence || []
 
+    if params[:tags].try(:include?, tag.slug).presence
+      filters_without_current = (current_filters - [tag.slug]).join(",")
+      
+      href = "?tags=#{filters_without_current}"
+      classes = %w(add selected)
+    else
+      filters = (current_filters + [tag.slug]).uniq.join(",")
+
+      href = "?tags=#{filters}"
+      classes = %w(add)
+    end
+
+    classes.push(custom_classes).flatten!.uniq! if custom_classes.present?
+
+    link_to(tag.name, href, class: classes.join(" "))
+  end
+end

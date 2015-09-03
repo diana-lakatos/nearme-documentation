@@ -13,6 +13,7 @@
 //= require jquery-fileupload/basic
 //= require components/fileupload
 //= require components/modal
+//= require components/tags
 //= require jcrop
 //= require sections/search_instance_admin
 //= require javascript_module
@@ -22,6 +23,7 @@
 //= require ./vendor/urlify
 //= require ./vendor/icui
 //= require ./vendor/strftime
+//= require ./vendor/jquery.tokeninput
 //= require ./blog/admin/blog_posts_form
 //= require lib/timeago.jquery
 //= require ckeditor/basepath

@@ -6,10 +6,8 @@ class Blog::BlogPostsController < Blog::ApplicationController
   before_filter :find_post, :only => [:show]
 
   def index
-    @instance_blog_posts = @blog_instance.blog_posts.published
-    @user_blog_posts = instance.user_blog_posts.includes(:user).published.highlighted
-    @blog_posts = @instance_blog_posts + @user_blog_posts
-    @blog_posts = @blog_posts.sort_by(&:published_at).reverse.paginate(page: params[:page], per_page: 10)
+    @tags = Tag.alphabetically
+    @blog_posts = get_blog_posts.sort_by(&:published_at).reverse.paginate(page: params[:page], per_page: 10)
   end
 
   def show
@@ -37,6 +35,20 @@ class Blog::BlogPostsController < Blog::ApplicationController
     return if @blog_instance.enabled?
     flash[:notice] = 'This blog is currently inactive.'
     redirect_to root_path
+  end
+
+  def get_blog_posts
+    @instance_blog_posts = @blog_instance.blog_posts.published
+    @user_blog_posts = instance.user_blog_posts.includes(:user).published.highlighted
+
+    posts = if params[:tags].present?
+      selected_tags = Tag.where(slug: params[:tags].split(",")).pluck(:name)
+      @instance_blog_posts.tagged_with(selected_tags, any: true) + @user_blog_posts.tagged_with(selected_tags, any: true)
+    else
+      @instance_blog_posts + @user_blog_posts
+    end
+
+    posts.paginate(page: params[:page])
   end
 
 end

@@ -1,11 +1,13 @@
 class UserBlogPost < ActiveRecord::Base
+  extend FriendlyId
+  friendly_id :slug_candidates, use: [:slugged, :history, :finders]
+
+  include Taggable
+
   auto_set_platform_context
   scoped_to_platform_context
 
   belongs_to :user
-
-  extend FriendlyId
-  friendly_id :slug_candidates, use: [:slugged, :history, :finders]
 
   mount_uploader :hero_image, HeroImageUploader
   mount_uploader :author_avatar_img, AuthorAvatarUploader

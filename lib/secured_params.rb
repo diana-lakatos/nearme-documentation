@@ -259,7 +259,8 @@ class SecuredParams
       :header,
       :author_name,
       :author_biography,
-      :author_avatar
+      :author_avatar,
+      :tag_list
     ]
   end
 
@@ -287,7 +288,8 @@ class SecuredParams
         :author_name,
         :author_biography,
         :author_avatar_img,
-        :logo
+        :logo,
+        :tag_list
     ]
   end
 
