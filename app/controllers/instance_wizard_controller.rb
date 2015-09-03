@@ -1,6 +1,6 @@
 class InstanceWizardController < ActionController::Base
   protect_from_forgery
-  layout 'platform_home'
+  layout 'instance_wizard'
 
   before_filter :check_whitelist, only: [:new, :create]
   before_filter :find_or_build_user, only: [:new, :create]

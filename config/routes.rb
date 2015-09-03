@@ -45,46 +45,6 @@ DesksnearMe::Application.routes.draw do
     post '/create', to: 'instance_wizard#create'
   end
 
-  # This is still in place as a backup incase something goes wrong with the new hosted near-me.com site.
-  # TODO: Delete this entire near-me.com constraints block after July 15th. (Plus all the near-me.com code).
-  constraints host: 'near-me.com' do
-    get '/features-setup', :to => 'platform_home#features_setup'
-    get '/features-design', :to => 'platform_home#features_design'
-    get '/features-manage', :to => 'platform_home#features_manage'
-    get '/features-marketing', :to => 'platform_home#features_marketing'
-    get '/features-payments', :to => 'platform_home#features_payments'
-    get '/features-analytics', :to => 'platform_home#features_analytics'
-    get '/features-security', :to => 'platform_home#features_security'
-    get '/features-integration', :to => 'platform_home#features_integration'
-    get '/features-support', :to => 'platform_home#features_support'
-    get '/', :to => 'platform_home#index'
-    get '/features', :to => 'platform_home#features'
-    get '/clients', :to => 'platform_home#clients'
-    get '/contact', :to => 'platform_home#contact'
-    post '/contact-submit', :to => 'platform_home#contact_submit'
-    get '/about', :to => 'platform_home#about'
-    get '/brand', :to => 'platform_home#brand'
-    get '/press-media', :to => 'platform_home#press_media'
-    get '/careers', :to => 'platform_home#careers'
-    get '/advisors', :to => 'platform_home#advisors'
-    get '/faq-page', :to => 'platform_home#faq_page'
-    get '/privacy-policy', :to => 'platform_home#privacy_policy'
-    get '/unsubscribe/:unsubscribe_key', :to => 'platform_home#unsubscribe', :as => 'platform_email_unsubscribe'
-    get '/resubscribe/:resubscribe_key', :to => 'platform_home#resubscribe', :as => 'platform_email_resubscribe'
-
-    get '/marketplace', to: 'instance_wizard#index'
-    get '/marketplace/new', to: 'instance_wizard#new'
-    post '/marketplace/new', to: 'instance_wizard#new'
-    post '/marketplace/create', to: 'instance_wizard#create'
-
-    get '/blog', to: redirect("http://blog.near-me.com", status: 301)
-
-    constraints protocol: 'https://' do # Read the commit message for rationale
-      get '/demo-requests/DsNvigiE6I9ZGwtsFGrcIw', :to => 'platform_home#demo_requests'
-      get '/contacts/tgKQstjun1AgHWJ1kgevNg', :to => 'platform_home#contacts'
-    end
-  end
-
   root :to => "home#index"
   namespace :webhooks do
     resource :braintree_marketplace, only: [] do
@@ -167,8 +127,6 @@ DesksnearMe::Application.routes.draw do
       resources :custom_attributes
     end
     resources :pages
-    get '/platform_home', to: 'platform_home#edit', as: 'edit_platform_home'
-    post '/platform_home', to: 'platform_home#update', as: 'platform_home'
   end
 
   resources :marketplace_sessions, only: [:new, :create]
@@ -889,10 +847,12 @@ DesksnearMe::Application.routes.draw do
   end
 
   get "/dashboard/api", to: 'dashboard#api', as: :spree
+
   get "/pages/:path", to: 'pages#show', as: :pages
+  
   get "/w-hotels-desks-near-me", to: 'locations#w_hotels', as: :w_hotels_location
   get "/W-hotels-desks-near-me", to: 'locations#w_hotels'
-  get "/careers", to: 'pages#careers'
+
   get "/rent-accounting-desks", to: 'locations#vertical_accounting'
   get "/rent-legal-desks", to: 'locations#vertical_law'
   get "/rent-hairdressing-booth-stations", to: redirect(subdomain: 'rent-salon-space', path: '/')
@@ -900,8 +860,4 @@ DesksnearMe::Application.routes.draw do
 
   get "/sitemap.xml", to: "seo#sitemap", format: "xml", as: :sitemap
   get "/robots.txt", to: "seo#robots", format: "txt", as: :robots
-
-  if defined? MailView
-    mount PlatformMailerPreview => 'mail_view/platform'
-  end
 end
