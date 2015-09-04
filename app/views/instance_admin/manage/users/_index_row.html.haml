@@ -6,12 +6,13 @@
     = link_to t('instance_admin.manage.users.login_as'), login_as_instance_admin_manage_user_path(resource), :method => :post,
         data: { confirm: 'This will log you out and re-log you in as this user' }
   %td
-    - if resource.banned?
-      = link_to t('instance_admin.manage.users.account.unban'), instance_admin_manage_user_user_ban_path(resource, resource.user_bans.first), :method => :delete,
-        data: { confirm:  'You will ban this user from logging in to your marketplace, do you want to continue?' }
-    - else
-      = link_to t('instance_admin.manage.users.account.ban'), instance_admin_manage_user_user_bans_path(resource), :method => :post,
-        data: { confirm:  'You will unban this user from your marketplace, do you want to continue?' }
+    - if !resource.deleted?
+      - if resource.banned?
+        = link_to t('instance_admin.manage.users.account.unban'), instance_admin_manage_user_user_ban_path(resource, resource.user_bans.first), :method => :delete,
+          data: { confirm:  'You will ban this user from logging in to your marketplace, do you want to continue?' }
+      - else
+        = link_to t('instance_admin.manage.users.account.ban'), instance_admin_manage_user_user_bans_path(resource), :method => :post,
+          data: { confirm:  'You will unban this user from your marketplace, do you want to continue?' }
   %td
     - if resource.deleted?
       = link_to "Restore", restore_instance_admin_manage_user_path(resource), :method => :post, data: { confirm: 'Are you sure you want to restore this?' }
