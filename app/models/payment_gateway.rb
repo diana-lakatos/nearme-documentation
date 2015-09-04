@@ -295,6 +295,10 @@ class PaymentGateway < ActiveRecord::Base
     false
   end
 
+  def supports_immediate_payout?
+    false
+  end
+
   protected
 
   # Callback invoked by processor when charge was successful
@@ -342,10 +346,6 @@ class PaymentGateway < ActiveRecord::Base
   # Callback invoked by processor when payout is pending
   def payout_pending(response)
     @payout.payout_pending(response)
-  end
-
-  def supports_immediate_payout?
-    false
   end
 
 end
