@@ -5,6 +5,13 @@
     .row
       .text-container
         = t('instance_admin.manage.transfers.payout_has_been_marked_as_transferred')
+    - if resource.failed_at.present?
+      .row
+        .text-container
+          = t('instance_admin.manage.transfers.payout_failed')
+      .row
+        .text-container
+          = link_to t('instance_admin.manage.transfers.mark_as_manually_resolved'), not_failed_instance_admin_manage_transfer_path(resource), method: :post, class: 'btn btn-blue'
 
   - else
     .row
@@ -24,27 +31,28 @@
             = t('instance_admin.manage.transfers.automatic_payout_is_not_available')
 
 
-.content-container
-  .payout-attemps
-    %h4
-      = t('instance_admin.manage.transfers.automatic_payout_attempts')
+- if resource.payout_processor.supports_immediate_payout?
+  .content-container
+    .payout-attemps
+      %h4
+        = t('instance_admin.manage.transfers.automatic_payout_attempts')
 
-    .row
-      .text-container
-        - if resource.payout_attempts.count.zero?
-          = t('instance_admin.manage.transfers.no_automatic_payout_attempts')
-        - else
-          - resource.payout_attempts.each do |payout_attempt|
-            .payout_attempt
-              = "#{Money.new(payout_attempt.amount, payout_attempt.currency).format with_currency: true} #{t('instance_admin.at')} #{payout_attempt.created_at.in_time_zone(current_user.time_zone).strftime('%Y-%m-%d %H:%M (%Z)')} - "
-              = t('instance_admin.succeeded') if payout_attempt.success
-              - if payout_attempt.failed?
-                = t('instance_admin.failed')
-                = " - #{payout_attempt.failure_message}" if payout_attempt.failure_message.present?
-              - if payout_attempt.pending?
-                = "#{t('instance_admin.pending')} - "
-                = link_to "check and update status", update_status_instance_admin_manage_payout_path(payout_attempt), method: :post, data: { confirm: 'Are you sure you want to check status?' }
-              = (link_to(t('instance_admin.confirm'), payout_attempt.confirmation_url)).html_safe if payout_attempt.confirmation_url.present?
+      .row
+        .text-container
+          - if resource.payout_attempts.count.zero?
+            = t('instance_admin.manage.transfers.no_automatic_payout_attempts')
+          - else
+            - resource.payout_attempts.each do |payout_attempt|
+              .payout_attempt
+                = "#{Money.new(payout_attempt.amount, payout_attempt.currency).format with_currency: true} #{t('instance_admin.at')} #{payout_attempt.created_at.in_time_zone(current_user.time_zone).strftime('%Y-%m-%d %H:%M (%Z)')} - "
+                = t('instance_admin.succeeded') if payout_attempt.success
+                - if payout_attempt.failed?
+                  = t('instance_admin.failed')
+                  = " - #{payout_attempt.failure_message}" if payout_attempt.failure_message.present?
+                - if payout_attempt.pending?
+                  = "#{t('instance_admin.pending')} - "
+                  = link_to "check and update status", update_status_instance_admin_manage_payout_path(payout_attempt), method: :post, data: { confirm: 'Are you sure you want to check status?' }
+                = (link_to(t('instance_admin.confirm'), payout_attempt.confirmation_url)).html_safe if payout_attempt.confirmation_url.present?
 
 .content-container
   .payment-advice
@@ -58,15 +66,13 @@
             = t('instance_admin.manage.transfers.amount_due')
           = resource.amount.format with_currency: true
 
-        %div
-          %strong
-            = t('instance_admin.manage.transfers.paypal_email')
-          = resource.company_including_deleted.paypal_email
-
-        %div
-          %strong
-            = t('instance_admin.manage.transfers.bank_account')
-          = "xxxxxx#{resource.company_including_deleted.instance_clients.first.bank_account_last_four_digits}" if resource.company_including_deleted.instance_clients.first.try(:bank_account_last_four_digits ).present?
+        - resource.company_including_deleted.merchant_accounts(test: PlatformContext.current.instance.test_mode?).each do |merchant_account|
+          %div
+            %strong
+              = merchant_account.type.gsub('MerchantAccount::', '').gsub('MerchantAccount', '').underscore.humanize
+            - { id: merchant_account.internal_payment_gateway_account_id, state: merchant_account.state }.merge(merchant_account.data || {}).each do |key, value|
+              %br
+              = "#{key}: #{value}"
 
         %div
           %strong

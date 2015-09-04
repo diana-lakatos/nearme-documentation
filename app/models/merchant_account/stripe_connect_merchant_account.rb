@@ -2,7 +2,7 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
   SEPARATE_TEST_ACCOUNTS = true
 
-  ATTRIBUTES = %w(currency bank_routing_number bank_account_number tos account_type business_tax_id business_vat_id ssn_last_4 personal_id_number)
+  ATTRIBUTES = %w(currency bank_routing_number bank_account_number tos account_type business_tax_id business_vat_id ssn_last_4 personal_id_number first_name last_name)
   ACCOUNT_TYPES = %w(individual company)
 
   SUPPORTED_CURRENCIES = {
@@ -17,8 +17,10 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
 
   has_many :owners, -> { order(:id) }, class_name: 'MerchantAccountOwner::StripeConnectMerchantAccountOwner', foreign_key: 'merchant_account_id', dependent: :destroy
 
-  validates_presence_of   :bank_routing_number, message: 'Bank routing number is blank'
-  validates_presence_of   :bank_account_number, message: 'Bank account number is blank'
+  validates_presence_of   :bank_routing_number, message: "Bank routing number can't be be blank"
+  validates_presence_of   :bank_account_number, message: "Bank account number can't be blank"
+  validates_presence_of   :last_name, message: "First name can't be blank"
+  validates_presence_of   :first_name, message: "Last name can't be blank"
   validates_inclusion_of  :account_type, in: ACCOUNT_TYPES, message: 'Account type should be selected'
   validates_acceptance_of :tos, message: 'Terms of Services must be accepted'
 
@@ -65,8 +67,8 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
         date: Time.now.to_i
       },
       legal_entity: {
-        first_name: merchantable.creator.first_name,
-        last_name: merchantable.creator.last_name
+        first_name: first_name,
+        last_name: last_name
       },
       decline_charge_on: {
         cvc_failure: true
@@ -102,7 +104,9 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
       ssn_last_4:         ssn_last_4,
       business_tax_id:    business_tax_id,
       business_vat_id:    business_vat_id,
-      personal_id_number: personal_id_number
+      personal_id_number: personal_id_number,
+      first_name: first_name,
+      last_name: last_name
     }
 
     if owners.count == 1
@@ -142,11 +146,18 @@ class MerchantAccount::StripeConnectMerchantAccount < MerchantAccount
     }.merge(legal_entity: legal_entity_hash)
   end
 
-  def change_state_if_needed(stripe_account)
-    if !verified? && stripe_account.charges_enabled && stripe_account.transfers_enabled && stripe_account.verification.fields_needed.empty?
-      verify(persisted?)
+  def change_state_if_needed(stripe_account, &block)
+    if !verified? && stripe_account.charges_enabled && stripe_account.transfers_enabled
+      if stripe_account.verification.fields_needed.empty?
+        verify(persisted?)
+        yield('verified') if block_given?
+      else
+        fail(persisted?)
+        yield('failed') if block_given?
+      end
     elsif verified? && (!stripe_account.charges_enabled || !stripe_account.transfers_enabled || !stripe_account.verification.fields_needed.empty?)
-      to_pending(persisted?)
+      fail(persisted?)
+      yield('failed') if block_given?
     end
   end
 

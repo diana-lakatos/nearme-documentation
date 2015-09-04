@@ -28,6 +28,9 @@ FactoryGirl.define do
     factory :reservation_with_remote_payment do
       association :listing, factory: :listing_in_auckland
       payment_method 'remote'
+      after(:create) do |reservation|
+        FactoryGirl.create(:billing_authorization, reference: reservation)
+      end
     end
 
     factory :reservation_in_san_francisco do

@@ -35,6 +35,11 @@ class CompanyDrop < BaseDrop
     routes.edit_dashboard_company_payouts_path(anchor: 'company_paypal_email', token_key => @company.creator.temporary_token)
   end
 
+  # Url to the section for adding/updating user's payout information.
+  def payout_path
+    routes.edit_dashboard_company_payouts_path
+  end
+
   # returns the path to editing the company
   def edit_path
     routes.edit_dashboard_company_path(@company)

@@ -200,7 +200,7 @@ class ReservationRequest < Form
 
   def build_documents
     documents.each do |document|
-      document_requirement_id = document.try(:fetch, 'payment_document_info_attributes').try(:fetch, 'document_requirement_id')
+      document_requirement_id = document.try(:fetch, 'payment_document_info_attributes', nil).try(:fetch, 'document_requirement_id', nil)
       document_requirement = DocumentRequirement.find_by(id: document_requirement_id)
       upload_obligation = document_requirement.try(:item).try(:upload_obligation)
       if upload_obligation && !upload_obligation.not_required?

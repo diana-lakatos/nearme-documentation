@@ -19,6 +19,8 @@ FactoryGirl.define do
     factory :stripe_connect_merchant_account, class: 'MerchantAccount::StripeConnectMerchantAccount' do
       data { { 'bank_routing_number' => '110000000', 'bank_account_number' => '000123456789', 'account_type' => 'company'} }
       payment_gateway { FactoryGirl.create(:stripe_connect_payment_gateway) }
+      first_name 'John'
+      last_name 'Doe'
     end
   end
 end

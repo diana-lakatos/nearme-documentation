@@ -37,6 +37,19 @@
         = maf.label :bank_account_number, t("dashboard.merchant_account.bank_account_number.#{merchant_account.location}"), class: 'string optional control-label'
       .col-md-9.input-container
         = maf.text_field :bank_account_number, class: 'string optional'
+    .string.optional
+      .row
+        .col-md-3
+          = maf.label :first_name, t('dashboard.merchant_account.first_name'), class: 'string optional control-label'
+        .col-md-9.input-container
+          = maf.text_field :first_name, class: 'string optional'
+
+    .string.optional
+      .row
+        .col-md-3
+          = maf.label :last_name, t('dashboard.merchant_account.last_name'), class: 'string optional control-label'
+        .col-md-9.input-container
+          = maf.text_field :last_name, class: 'string optional'
 
   - if merchant_account.needs?('legal_entity.business_tax_id')
     .hidden.string.optional{'data-account-type' => 'company'}

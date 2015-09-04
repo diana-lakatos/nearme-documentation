@@ -91,6 +91,14 @@ class PaymentGateway < ActiveRecord::Base
     raise NotImplementedError
   end
 
+  def parse_webhook(*args)
+    raise NotImplementedError
+  end
+
+  def verify_webhook(*args)
+    raise NotImplementedError
+  end
+
   def host
     port = ":3000"
     "http://#{PlatformContext.current.decorate.host}#{Rails.env.development? ? port : ''}"
@@ -334,6 +342,10 @@ class PaymentGateway < ActiveRecord::Base
   # Callback invoked by processor when payout is pending
   def payout_pending(response)
     @payout.payout_pending(response)
+  end
+
+  def supports_immediate_payout?
+    false
   end
 
 end

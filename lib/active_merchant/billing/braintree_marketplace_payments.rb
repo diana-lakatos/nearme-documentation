@@ -11,6 +11,18 @@ module ActiveMerchant
         @helper_gateway = ActiveMerchant::Billing::BraintreeBlueGateway.new(settings)
       end
 
+      def verify(bt_challenge)
+        Braintree::WebhookNotification.verify(bt_challenge)
+      end
+
+      def parse_webhook(bt_signature, bt_payload)
+        Braintree::WebhookNotification.parse(bt_signature, bt_payload)
+      end
+
+      def client_token
+        Braintree::ClientToken.generate
+      end
+
       def generate_token
         @helper_gateway.generate_token
       end
@@ -23,7 +35,7 @@ module ActiveMerchant
         # Braintree does not support all options, so we extend it
         transaction_params = @helper_gateway.send(:create_transaction_parameters, amount, credit_card, options)
         if options[:merchant_account]
-          transaction_params[:merchant_account_id] = options[:merchant_account].custom_braintree_id
+          transaction_params[:merchant_account_id] = options[:merchant_account].internal_payment_gateway_account_id
           transaction_params[:service_fee_amount] = @helper_gateway.send(:amount, options[:service_fee_host]).to_s
         end
         @helper_gateway.send(:commit) do

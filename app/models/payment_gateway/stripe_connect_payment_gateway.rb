@@ -19,6 +19,14 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
     @gateway ||= ActiveMerchant::Billing::StripeConnectPayments.new(settings)
   end
 
+  def parse_webhook(*args)
+    gateway.parse_webhook(*args)
+  end
+
+  def retrieve_account(*args)
+    gateway.retrieve_account(*args)
+  end
+
   def onboard!(*args)
     gateway.onboard!(*args)
   end
@@ -52,6 +60,10 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
 
   def immediate_payout(company)
     merchant_account(company).present?
+  end
+
+  def supports_immediate_payout?
+    true
   end
 
   def refund_identification(charge)
