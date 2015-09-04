@@ -54,6 +54,10 @@ class PaymentGateway::StripeConnectPaymentGateway < PaymentGateway
     true
   end
 
+  def supports_immediate_payout?
+    true
+  end
+
   def payout(*args)
     OpenStruct.new(success: true, success?: true)
   end
