@@ -171,6 +171,10 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
     settings[:partner_id].present?
   end
 
+  def supports_immediate_payout?
+    true
+  end
+
   private
 
   # Callback invoked by processor when charge was successful

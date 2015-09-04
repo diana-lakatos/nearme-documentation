@@ -89,7 +89,7 @@ class PaymentTransfer < ActiveRecord::Base
   end
 
   def pending?
-    false
+    payout_attempts.last && payout_attempts.last.pending? && payout_attempts.last.should_be_verified_after_time?
   end
 
   def failed?

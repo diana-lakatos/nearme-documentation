@@ -10,7 +10,8 @@
     - if resource.transferred_at.present?
       = l(resource.transferred_at, format: :long)
     - else
-      - if resource.pending? || resource.failed?
+      - if resource.pending?
+        = t('instance_admin.manage.transfers.pending')
       - elsif resource.payout_processor.present? && !resource.payout_processor.supports_immediate_payout?
         = t('instance_admin.manage.transfers.retry_possible')
       - else
