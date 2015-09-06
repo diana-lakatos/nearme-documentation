@@ -4,46 +4,6 @@ module InstanceType::Searcher::GeolocationSearcher
 
   SEARCHER_DEFAULT_PRICING_TYPES = %w(daily weekly monthly hourly)
 
-  def to_event_params
-    { search_query: query, result_count: result_count }.merge(filters)
-  end
-
-  def query
-    @query ||= search.query
-  end
-
-  def keyword
-    @keyword ||= search.keyword
-  end
-
-  def located
-    @params[:lat].present? and @params[:lng].present?
-  end
-
-  def input_value(input_name)
-    @params[input_name]
-  end
-
-  def adjust_to_map
-    @params[:loc].present? || @params[:nx].present? && @params[:sx].present?
-  end
-
-  def global_map
-    !@params[:loc].present?
-  end
-
-  def search
-    @search ||= ::Listing::Search::Params::Web.new(@params)
-  end
-
-  def category_ids
-    input_value(:category_ids).try { |ids| ids.split(',') } || []
-  end
-
-  def categories
-    @categories ||= Category.where(id: category_ids) if input_value(:category_ids)
-  end
-
   def fetcher
     @fetcher ||=
       begin
@@ -54,11 +14,13 @@ module InstanceType::Searcher::GeolocationSearcher
           category_ids: search.category_ids,
           location_types_ids: search.location_types_ids,
           listing_pricing: search.lgpricing.blank? ? [] : search.lgpricing_filters,
-          sort: search.sort
+          sort: search.sort,
+          query: search.keyword,
+          loc: search.loc,
         })
         radius = PlatformContext.current.instance.search_radius.to_i
         radius = search.radius.to_i if radius.zero?
-        
+
         if located || adjust_to_map
           @search_params.merge!({
             midpoint: search.midpoint,
@@ -75,6 +37,10 @@ module InstanceType::Searcher::GeolocationSearcher
       end
   end
 
+  def search
+    @search ||= ::Listing::Search::Params::Web.new(@params)
+  end
+
   def search_query_values
     {
       loc: @params[:loc],
@@ -83,25 +49,15 @@ module InstanceType::Searcher::GeolocationSearcher
     }.merge(filters)
   end
 
-  def repeated_search?(values)
-    (@params[:loc] || @params[:query]) && search_query_values.to_s == values.try(:to_s)
-  end
-
   def set_options_for_filters
     @filterable_location_types = LocationType.all
     @filterable_pricing = SEARCHER_DEFAULT_PRICING_TYPES.map{|price| [price, I18n.t("search.pricing_types.#{price}")] if @transactable_type.send("action_#{price}_booking")}.compact
     @filterable_custom_attributes = @transactable_type.custom_attributes.searchable
   end
 
-  def should_log_conducted_search?
-    @params[:loc].present? || @params[:query].present?
-  end
-
-  def searchable_categories
-    @transactable_type.categories.searchable.roots
-  end
-
-  def category_options(category)
-    category.children.inject([]) { |options, c| options << [c.id, c.translated_name] }
+  def max_price
+    return 0 if !PlatformContext.current.instance.price_slider || results.blank?
+    @max_fixed_price ||= results.maximum(:fixed_price_cents).to_f / 100
+    @max_fixed_price > 0 ? @max_fixed_price + 1 : @max_fixed_price
   end
 end

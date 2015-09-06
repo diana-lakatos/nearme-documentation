@@ -1,7 +1,7 @@
 class Home.Controller
 
   constructor: (@container) ->
-    @callToAction = @container.find('a[data-call-to-action]') 
+    @callToAction = @container.find('a[data-call-to-action]')
     @howItWorks = @container.find('section.how-it-works')
     @homepageContentTopOffset = 20
     @form = $("form#listing_search")
@@ -9,7 +9,6 @@ class Home.Controller
     @prodQueryField = @form.find('input#search_prod')
     @transactableTypeRadio = @form.find("input[name='transactable_type_id']")
     @transactableTypeSelect = @form.find("select[name='transactable_type_id']")
-    @isBuyableField = @form.find("input#is_buyable")
     @crosshairs = @form.find("div.geolocation")
     @bindEvents()
 
@@ -21,11 +20,6 @@ class Home.Controller
         scrollTop: content_top
         900
       false
-
-    @form.on 'submit', (event) =>
-      if @prodQueryField.length > 0 && @isBuyableField.val() isnt "true"
-        @prodQueryField.val('')
-      true
 
     if @transactableTypeRadio.length > 0
       @toggleGeocoding(@transactableTypeRadio)
@@ -43,14 +37,18 @@ class Home.Controller
       field = field.find("option:selected")
 
     is_buyable = field.data('buyable')
-    @isBuyableField.val(is_buyable)
+    @queryField.data('buyable', is_buyable)
 
     if @prodQueryField.length > 0
       if is_buyable
+        @queryField.prop('disabled', true)
         @queryField.hide()
         @crosshairs.hide()
+        @prodQueryField.prop('disabled', false)
         @prodQueryField.show()
       else
+        @queryField.prop('disabled', false)
         @queryField.show()
         @crosshairs.show()
         @prodQueryField.hide()
+        @prodQueryField.prop('disabled', true)

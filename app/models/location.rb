@@ -11,9 +11,7 @@ class Location < ActiveRecord::Base
 
   include Impressionable
 
-  attr_accessor :name_and_description_required
-  attr_accessor :searched_locations, :search_rank
-  attr_accessor :transactable_type
+  attr_accessor :name_and_description_required, :search_rank, :transactable_type
 
   liquid_methods :name
 
@@ -71,7 +69,7 @@ class Location < ActiveRecord::Base
 
   scope :order_by_array_of_ids, -> (location_ids) {
     location_ids_decorated = location_ids.each_with_index.map {|lid, i| "WHEN locations.id=#{lid} THEN #{i}" }
-    order("CASE #{location_ids_decorated.join("\n")} END")
+    order("CASE #{location_ids_decorated.join(' ')} END") if location_ids.present?
   }
   # Useful for storing the full geo info for an address, like time zone
 
@@ -159,7 +157,7 @@ class Location < ActiveRecord::Base
   end
 
   def lowest_price(available_price_types = [])
-    (searched_locations || listings.searchable).map{|l| l.lowest_price_with_type(available_price_types)}.compact.sort{|a, b| a[0].to_f <=> b[0].to_f}.first
+    (listings.loaded? ? listings : listings.searchable).map{|l| l.lowest_price_with_type(available_price_types)}.compact.sort{|a, b| a[0].to_f <=> b[0].to_f}.first
   end
 
   def approval_request_templates

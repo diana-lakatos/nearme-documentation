@@ -16,14 +16,14 @@
         .span12
           - if platform_context.instance.default_search_view.present?
             .list-map-toggle.span2
-              %a.list{ href: search_path(params.merge(v: 'list')), class: active_class(result_view, 'list'), title: t('search.header.list') }
+              %a.list{ href: search_path(params.merge(v: 'list')), class: active_class(result_view, 'list'), title: t('search.header.list'), data: { view: 'list' } }
                 = t('search.header.list')
-              %a.map{ href: search_path(params.merge(v: platform_context.map_view)), class: active_class(result_view, platform_context.map_view), title: t('search.header.map') }
+              %a.map{ href: search_path(params.merge(v: platform_context.map_view)), class: active_class(result_view, platform_context.map_view), title: t('search.header.map'), data: { view: platform_context.map_view } }
                 = t('search.header.map')
           .geolocation-input{ :class => (platform_context.fulltext_geo_search? ? 'span4' : 'span8')}
             .geolocation
               %span.ico-crosshairs
-            %input#search.query{:name => platform_context.search_input_name, :placeholder => platform_context.search_field_placeholder, :type => "text", :value => @searcher.input_value(platform_context.search_input_name), :autocomplete => "off", 'data-disable-autocomplete' => platform_context.fulltext_search?}
+            %input#search.query{:name => platform_context.search_input_name, :placeholder => platform_context.bookable_search_field_placeholder, :type => "text", :value => @searcher.input_value(platform_context.search_input_name), :autocomplete => "off", 'data-disable-autocomplete' => platform_context.fulltext_search?}
           -if platform_context.fulltext_geo_search?
             .keyword-input.span4
               .search-loop-icon
@@ -40,5 +40,5 @@
       = hidden_field_tag :ignore_search_event, 0
       = hidden_field_tag :page, 1
       = hidden_field_tag :per_page, per_page
-      = hidden_field_tag 'price[min]', 0
-      = hidden_field_tag 'price[max]', @searcher.max_price
+      = hidden_field_tag 'price[min]', @searcher.current_min_price
+      = hidden_field_tag 'price[max]', @searcher.current_max_price

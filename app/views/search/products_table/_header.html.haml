@@ -7,13 +7,12 @@
         = hidden_field_tag :page, 1
         = hidden_field_tag :transactable_type_id, @transactable_type.id
         = hidden_field_tag :category_ids, (@searcher.category_ids.presence || []).join(',')
-        = hidden_field_tag :buyable, true
-        = hidden_field_tag 'price[min]', @searcher.min_price
-        = hidden_field_tag 'price[max]', @searcher.max_price
+        = hidden_field_tag 'price[min]', @searcher.current_min_price
+        = hidden_field_tag 'price[max]', @searcher.current_max_price
         .row-fluid
           .span12
-            .search-container.span10
+            .search-container.span11
               %input#search{:name => "query", :placeholder => platform_context.search_field_placeholder, :type => "text", :value => @searcher.query, :class => "query", :autocomplete => "off"}
-            .search-icon.btn.btn-green.span2
+            .search-icon.btn.btn-green.span1
               %span.ico-search
 

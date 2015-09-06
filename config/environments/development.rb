@@ -3,11 +3,11 @@ require 'rack-mini-profiler'
 DesksnearMe::Application.configure do
   config.use_only_ssl = false
   config.cache_classes = false
+  config.action_controller.perform_caching = false
 
   config.eager_load = false
 
   config.consider_all_requests_local       = true
-  config.action_controller.perform_caching = false
   config.reload_classes_only_on_change = true
 
   config.action_mailer.raise_delivery_errors = false
@@ -44,7 +44,6 @@ DesksnearMe::Application.configure do
 
   config.middleware.swap Rails::Rack::Logger, NullLogger, silence: %w(mini-profiler)
   config.middleware.insert_after(ActionDispatch::Static, SilentMissedImages)
-
   if defined?(Bullet)
     config.after_initialize do
       Bullet.enable = true
@@ -57,5 +56,6 @@ if !ENV['DISABLE_PROFILER']
   Rack::MiniProfilerRails.initialize!(Rails.application)
   Rails.application.middleware.delete(Rack::MiniProfiler)
   Rails.application.middleware.insert_after(Rack::Deflater, Rack::MiniProfiler)
+  ActiveRecordQueryTrace.enabled = false
 end
 

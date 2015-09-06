@@ -34,7 +34,7 @@ module Liquid
     def transform_complex_key(complex_key)
       complex_key.split('.').first
     end
-  
+
     def render(context)
       cache_keys = generate_cache_keys(
         Hash[ cache_models.map{|cm| [cm, context[transform_complex_key(cm)]]} ]
@@ -63,6 +63,6 @@ module Liquid
       generated_keys.join('-')
     end
   end
-  
+
   Liquid::Template.register_tag('cache_for', CacheFor)
 end

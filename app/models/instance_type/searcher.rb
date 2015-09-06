@@ -3,50 +3,91 @@ module InstanceType::Searcher
   attr_reader :results, :transactable_type
 
   def result_count
-    if self.class.to_s =~ /Elastic/
-      @search_results_count
-    else
-      @result_count ||= results.distinct.to_a.count
-    end
+    @search_results_count || @results.try(:total_entries) || @results.size
+  end
+
+  def query
+    @query ||= search.query
+  end
+
+  def input_value(input_name)
+    @params[input_name]
+  end
+
+  def category_ids
+    input_value(:category_ids).try { |ids| ids.split(',') } || []
+  end
+
+  def categories
+    @categories ||= Category.where(id: category_ids) if input_value(:category_ids)
+  end
+
+  def category_options(category)
+    category.children.inject([]) { |options, c| options << [c.id, c.translated_name] }
+  end
+
+  def should_log_conducted_search?
+    @params[:loc].present? || @params[:query].present?
+  end
+
+  def to_event_params
+    { search_query: query, result_count: result_count }.merge(filters)
+  end
+
+  def keyword
+    @keyword ||= search.keyword
+  end
+
+  def located
+    @params[:lat].present? and @params[:lng].present?
+  end
+
+  def adjust_to_map
+    @params[:loc].present? || @params[:nx].present? && @params[:sx].present?
+  end
+
+  def global_map
+    !@params[:loc].present?
+  end
+
+  def repeated_search?(values)
+    (@params[:loc] || @params[:query]) && search_query_values.to_s == values.try(:to_s)
+  end
+
+  def offset
+    @offset || @results.offset
+  end
+
+  def min_price
+    @params[:price] ? @params[:price][:min].to_i : 0
   end
 
   def count_query(query)
     query.count("*", distinct: true)
   end
 
-  def max_price
-    return 0 if results.empty?
-    if results.first.is_a?(Spree::Product)
-      @max_fixed_price ||= results.map{|r| r.try(:price).to_i}.max
-    else
-      if self.class.to_s =~ /Elastic/
-        @max_fixed_price ||= results.map{|r|
-          if r.is_a?(Location)
-            r.listings.maximum(:fixed_price_cents).to_f
-          else
-            r.try(:fixed_price_cents).to_f
-          end
-        }.max / 100
-        @max_fixed_price > 0 ? @max_fixed_price + 1 : @max_fixed_price
-      else
-        @max_fixed_price ||= results.maximum(:fixed_price_cents).to_f / 100
-        @max_fixed_price > 0 ? @max_fixed_price + 1 : @max_fixed_price
-      end
-    end
+  def postgres_filters?
+    true
   end
 
-  def paginate_results(page, per_page)
-    @page = page
-    @per_page = per_page
-    @result_max_price ||= max_price
-    page ||= 1
-    unless self.class.to_s =~ /Elastic::ProductsSearcher/
-      @results = @results.paginate(page: page.to_i, per_page: per_page.to_i)
-    end
+  def searchable_categories
+    @transactable_type.categories.searchable.roots.includes(children: [:children])
   end
 
-  def prepeared_results
-    (@per_page..result_count).to_a.paginate(page: (@page || 1).to_i, per_page: @per_page.to_i)
+  def current_min_price
+    @params[:price] && @params[:price][:min]
+  end
+
+  def current_max_price
+    @params[:price] && @params[:price][:max]
+  end
+
+  def paginate_results(page = 1, per_page)
+    paginated_results(page || 1, per_page)
+  end
+
+  def paginated_results(page, per_page)
+    @results = @results.paginate(page: page, per_page: per_page, total_entries: @search_results_count)
   end
 
 end

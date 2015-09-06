@@ -1,10 +1,11 @@
 class InstanceType::Searcher::ProductsSearcher
   include InstanceType::Searcher
 
-  attr_reader :search, :filterable_custom_attributes
+  attr_reader :filterable_custom_attributes, :search
 
   def initialize(product_type, params)
     @product_type = product_type
+    @transactable_type = @product_type
     set_options_for_filters
     @params = params
     @results = fetcher.products
@@ -14,18 +15,6 @@ class InstanceType::Searcher::ProductsSearcher
     search_filters = {}
     search_filters[:custom_attributes] = @params[:lg_custom_attributes] unless @params[:lg_custom_attributes].blank?
     search_filters
-  end
-
-  def to_event_params
-    { search_query: query, result_count: result_count }.merge(filters)
-  end
-
-  def query
-    @query ||= search.query
-  end
-
-  def search
-    @search ||= Spree::Product::Search::Params::Web.new(@params)
   end
 
   def fetcher
@@ -41,12 +30,8 @@ class InstanceType::Searcher::ProductsSearcher
       end
   end
 
-  def min_price
-    @params[:price] ? @params[:price][:min].to_i : 0
-  end
-
-  def repeated_search?(values)
-    @params[:query] && search_query_values.to_s == values.try(:to_s)
+  def search
+    @search ||= Spree::Product::Search::Params::Web.new(@params)
   end
 
   def set_options_for_filters
@@ -59,19 +44,18 @@ class InstanceType::Searcher::ProductsSearcher
     }.merge(filters)
   end
 
-  def should_log_conducted_search?
-    @params[:query].present?
+  def prices
+    @prices ||= @results.map(&:price)
   end
 
-  def input_value(input_name)
-    @params[input_name]
+  def min_price
+    return 0 if !PlatformContext.current.instance.price_slider || results.blank?
+    @min_fixed_price ||= prices.min
   end
 
-  def category_ids
-    input_value(:category_ids).try { |ids| ids.split(',') } || []
+  def max_price
+    return 0 if !PlatformContext.current.instance.price_slider || results.blank?
+    @max_fixed_price ||= prices.max
   end
 
-  def searchable_categories
-    @product_type.categories.searchable.roots.includes(children: [:children])
-  end
 end

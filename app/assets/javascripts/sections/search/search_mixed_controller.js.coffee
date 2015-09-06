@@ -16,6 +16,7 @@ class Search.SearchMixedController extends Search.SearchController
     params_category_ids = DNM.util.Url.getParameterByName('category_ids').split(',')
     @renderChildCategories(params_category_ids)
     @autocompleteCategories()
+    @setListingCounter()
 
 
   bindEvents: =>
@@ -122,7 +123,7 @@ class Search.SearchMixedController extends Search.SearchController
 
   getListingsFromResults: ->
     listings = []
-    @hiddenResultsContainer().find('.location-marker').each (i, el) =>
+    @resultsContainer().find('.location-marker').each (i, el) =>
       listing = @listingForElementOrBuild(el)
       listings.push listing
     listings
@@ -261,6 +262,7 @@ class Search.SearchMixedController extends Search.SearchController
     @updateResultsCount()
     @list_container().scrollTop(0)
     @bindLocationsEvents()
+    @setListingCounter()
 
 
   # Trigger automatic updating of search results
@@ -386,30 +388,12 @@ class Search.SearchMixedController extends Search.SearchController
   initializeCarousel: ->
     $('.carousel').carousel({ interval: 7000 })
 
-  initializePriceSlider: =>
-    elem = $('#price-slider')
-    val = parseInt( $("input[name='price[max]']").val() )
-    elem.noUiSlider(
-      start: [ 0, val ],
-      behaviour: 'drag',
-      connect: true,
-      range: {
-        'min': 0,
-        'max': val
-      }
-    )
+  reinitializePriceSlider: =>
+    $('#price-slider').remove()
+    $('.price-slider-container').append('<div id="price-slider"></div>')
+    super
 
-    elem.on 'set', =>
-      $('.search-max-price:first').attr('data-noreinit-slider', 1)
-      @assignFormParams(
-        'price[min]': elem.val()[0]
-        'price[max]': elem.val()[1]
-      )
-      @form.submit()
-
-    elem.Link('upper').to('-inline-<div class="slider-tooltip"></div>', ( value ) ->
-      $(this).html('<strong>$' + parseInt(value) + ' </strong>')
-    )
-    elem.Link('lower').to('-inline-<div class="slider-tooltip"></div>', ( value ) ->
-      $(this).html('<strong>$' + parseInt(value) + ' </strong>')
-    )
+  setListingCounter: ->
+    offset = parseInt @container.find('.search-pagination').data('offset')
+    for counter, i in @container.find(".location-counter")
+      $(counter).text(i + offset)

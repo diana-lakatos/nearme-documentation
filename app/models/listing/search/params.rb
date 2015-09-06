@@ -34,11 +34,15 @@ class Listing::Search::Params
   end
 
   def query
-    @options[:loc] || @options[:q] || @options[:address] || @options[:query]
+    (@options[:loc] || @options[:q] || @options[:address] || @options[:query])
   end
 
   def keyword
-    @options[:query]
+    @options[:query][0, 200] if @options[:query]
+  end
+
+  def loc
+    @options[:loc][0, 200] if @options[:loc]
   end
 
   def radius

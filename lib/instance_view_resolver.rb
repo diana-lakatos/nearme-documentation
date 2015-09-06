@@ -55,7 +55,6 @@ class InstanceViewResolver < DbViewResolver
       :handler => normalize_array(details[:handlers]),
       :partial => partial || false
     }
-
     scope = ::InstanceView.for_instance_id(details[:instance_id])
     scope = if details[:transactable_type_id].present?
               scope.for_transactable_type_id(details[:transactable_type_id]).order('instance_id, transactable_type_id')

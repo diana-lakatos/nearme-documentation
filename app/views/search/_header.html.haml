@@ -20,9 +20,9 @@
         .row-fluid
           .span12
             .list-map-toggle.span2
-              %a.list{ href: search_path(params.merge(v: 'list')), class: active_class(result_view, 'list'), title: t('search.header.list') }
+              %a.list{ href: search_path(params.merge(v: 'list')), class: active_class(result_view, 'list'), title: t('search.header.list'), data: { view: 'list' } }
                 = t('search.header.list')
-              %a.map{ href: search_path(params.merge(v: platform_context.map_view)), class: active_class(result_view, platform_context.map_view), title: t('search.header.map') }
+              %a.map{ href: search_path(params.merge(v: platform_context.map_view)), class: active_class(result_view, platform_context.map_view), title: t('search.header.map'), data: { view: platform_context.map_view } }
                 = t('search.header.map')
             .geolocation-input{ :class => (platform_context.fulltext_geo_search? ? 'span3' : 'span6')}
               .geolocation
@@ -44,7 +44,7 @@
     .search-filters{:'data-search-filters-container' => true, :class => platform_context.domain.name.include?('desksnear.me') ? '' : 'two-filters'}
       - @searcher.filterable_custom_attributes.each do |ca|
         = render partial: 'search/filter', locals: { header_name: t(ca.label_key), selected_values: params[:lg_custom_attributes] ? params[:lg_custom_attributes][ca.name] || [] : [], input_name: "lg_custom_attributes[#{ca.name}][]", options: ca.valid_values_translated, name: ca.name }
-      - if platform_context.instance.location_types.count > 1
+      - if platform_context.instance.location_types.many?
         = render partial: 'search/filter', locals: { header_name: 'Location Types', selected_values: params[:location_types_ids] || [], input_name: 'location_types_ids[]', options: @searcher.filterable_location_types.map { |lt| [lt.name.downcase, lt.name ] } }
       - if @filterable_industries
         = render partial: 'search/filter', locals: { header_name: 'Industries', selected_values: params[:industries_ids] || [], input_name: 'industries_ids[]', options: @searcher.filterable_industries.map { |i| [i.id, i.name] } }

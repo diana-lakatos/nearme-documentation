@@ -14,7 +14,7 @@
               %span.icon.ico-plus
 
       - elsif !current_user.try(:registration_completed?)
-        = render partial: 'layouts/list_your_bookable', locals: { transactable_type: platform_context.product_types.first || platform_context.service_types.first }
+        = render partial: 'layouts/list_your_bookable', locals: { transactable_type: platform_context.transactable_types.first }
     - else
       - if current_user && current_user.registration_in_progress?
         %li

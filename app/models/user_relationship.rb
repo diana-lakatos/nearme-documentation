@@ -10,8 +10,8 @@ class UserRelationship < ActiveRecord::Base
 
   validates :follower_id, presence: true
 
-  belongs_to :follower, class_name: "User"
-  belongs_to :followed, class_name: "User"
+  belongs_to :follower, class_name: "User", touch: true
+  belongs_to :followed, class_name: "User", touch: true
   belongs_to :authentication
 
 end

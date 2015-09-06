@@ -359,7 +359,7 @@ class Instance < ActiveRecord::Base
 
   def fast_recalculate_cache_key!
     if context_cache_key
-      update_column(:context_cache_key, [context_cache_key.split('timestamp').first, Time.now.to_s].join('timestamp'))
+      update_column(:context_cache_key, [context_cache_key.split('timestamp').first, Time.now.to_i].join('timestamp'))
     else
       recalculate_cache_key!
     end

@@ -9,7 +9,7 @@ module SearcherHelper
 
   def find_transactable_type
     @transactable_type = TransactableType.find(params[:transactable_type_id]) if params[:transactable_type_id].present?
-    @transactable_type ||= (params[:buyable] == 'true' ?  Spree::ProductType.first : ServiceType.first)
+    @transactable_type ||= (PlatformContext.current.instance.buyable? ?  Spree::ProductType.first : ServiceType.first)
     params[:transactable_type_id] ||= @transactable_type.try(:id)
 
     if @transactable_type.blank?

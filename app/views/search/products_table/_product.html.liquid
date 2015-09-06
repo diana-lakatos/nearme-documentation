@@ -1,8 +1,10 @@
 {% cache_for product, product.company, product.total_on_hand, table %}
   <tr>
     <td class="image">
-      <a href="{{ product.url }}"">
-        <img src="{{ product.thumbnail_url }}" title="{{ product.name }}" alt="{{ product.name }}"">
+      <a href="{{ product.url }}">
+      {% if product.thumbnail_url.length > 0 %}
+        <img src="{{ product.thumbnail_url }}" title="{{ product.name }}" alt="{{ product.name }}">
+      {% endif %}
       </a>
     </td>
     <td>

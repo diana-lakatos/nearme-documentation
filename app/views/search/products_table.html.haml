@@ -3,22 +3,22 @@
   = render 'search/products_table/header'
 .search-view
   .crumbs= render_crumbs
-  .page-wrapper.row-fluid
+  .page-wrapper.row-fluid.products_table
     = render partial: 'search/categories', locals: { container_class: 'span2' }
     = yield :category_tree
 
-    .span10
-      - if platform_context.instance.price_slider
+    - if platform_context.instance.price_slider
+      .span10
         = render partial: 'search/shared/product_table_slider'
     .search-max-price{:'data-max-price' => @searcher.max_price, :'data-min-price' => @searcher.min_price}
     - if @searcher.results.any?
-      %section#results.products_table{class: platform_context.display_taxonomy_tree? ? "span10" : "span12"}
+      %section#results.products_table
         %table
           = render partial: 'search/products_table/head'
           = render partial: 'search/products_table/product', collection: @searcher.results
-        = will_paginate @searcher.prepeared_results
+        = will_paginate @searcher.results
     - else
-      %section#results.no_results{class: platform_context.display_taxonomy_tree? ? "span10" : "span12"}
+      %section#results.no_results
         .text-center
           %br/
           %br/

@@ -1,7 +1,7 @@
-- if locations.total_pages > 1
-  .search-pagination
+.search-pagination{data: {offset: @searcher.offset + 1}}
+  - if locations.total_pages > 1
     .page-entries-info
-      = locations.offset + 1
+      = @searcher.offset + 1
       = '-'
       = [locations.total_entries, locations.per_page * locations.current_page].min
       of
