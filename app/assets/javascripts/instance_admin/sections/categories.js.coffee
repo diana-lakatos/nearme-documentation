@@ -58,7 +58,7 @@ class @InstanceAdmin.CategoriesController
       # surpress form submit on enter/return
       $(document).keypress (e) ->
         if e.keyCode == 13
-          e.preventDefault() 
+          e.preventDefault()
 
 
   handleAjaxError: (XMLHttpRequest, textStatus, errorThrown) ->
@@ -135,16 +135,15 @@ class @InstanceAdmin.CategoriesController
 
   categoryTreeMenu: (obj, context) ->
     edit_url = categories_path + '/' + obj.prop("id") + '/edit'
-    create:
-      label: "<i class='fa fa-plus'></i> Add",
-      action: (obj) -> context.create(obj)
-    rename:
-      label: "<i class='fa fa-pencil'></i> Rename",
-      action: (obj) -> context.rename(obj)
-    remove:
-      label: "<i class='fa fa-trash-o'></i> Remove",
-      action: (obj) -> context.remove(obj)
-    # edit:
-    #   separator_before: true,
-    #   label: "<i class='fa fa-edit'></i> Edit",
-    #   action: (obj) -> window.location = edit_url
+    actions =
+      create:
+        label: "<i class='fa fa-plus'></i> Add",
+        action: (obj) -> context.create(obj)
+    if obj.attr('is_root') != 'true'
+      actions.rename =
+        label: "<i class='fa fa-pencil'></i> Rename",
+        action: (obj) -> context.rename(obj)
+      actions.remove =
+        label: "<i class='fa fa-trash-o'></i> Remove",
+        action: (obj) -> context.remove(obj)
+    actions
