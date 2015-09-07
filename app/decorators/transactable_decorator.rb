@@ -33,7 +33,8 @@ class TransactableDecorator < Draper::Decorator
       listing_price = self.lowest_price_with_type(filter_pricing)
       if listing_price
         periods = {:monthly => 'month', :weekly => 'week', :daily => 'day', :hourly => 'hour'}
-        "#{self.price_with_currency(listing_price[0])} <span>/ #{periods[listing_price[1]]}</span>".html_safe
+        translated_period = I18n.t("dashboard.transactables.pricing_periods.#{periods[listing_price[1]]}")
+        "#{self.price_with_currency(listing_price[0])} <span>/ #{translated_period}</span>".html_safe
       end
     end
   end
