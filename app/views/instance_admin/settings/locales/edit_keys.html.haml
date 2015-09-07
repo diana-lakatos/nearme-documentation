@@ -26,12 +26,20 @@
                       %input{type: 'hidden', name: "instance[translations_attributes][#{index}][key]", value: translation.key}
                       %input{type: 'hidden', name: "instance[translations_attributes][#{index}][instance_id]", value: @instance.id}
                       %input{type: 'hidden', name: "instance[translations_attributes][#{index}][locale]", value: @locale.code}
-                      - if instance_translation
-                        %input.form-control{id: "instance_translations_#{index}", type: 'text', name: "instance[translations_attributes][#{index}][value]", value: instance_translation.value, placeholder: translation.value}
-                        %input{type: 'hidden', name: "instance[translations_attributes][#{index}][_destroy]", value: 'false'}
-                        %input{type: 'hidden', name: "instance[translations_attributes][#{index}][id]", value: instance_translation.id}
-                      - else
-                        %input.form-control{id: "instance_translations_#{index}", type: 'text', name: "instance[translations_attributes][#{index}][value]", value: '', placeholder: translation.value, class: 'locale-item-input' }
+                      .translations-input-container
+                        .left
+                          - if instance_translation
+                            %input.form-control{id: "instance_translations_#{index}", type: 'text', name: "instance[translations_attributes][#{index}][value]", value: instance_translation.value, class: 'locale-item-input'}
+                            %input{type: 'hidden', name: "instance[translations_attributes][#{index}][_destroy]", value: 'false'}
+                            %input{type: 'hidden', name: "instance[translations_attributes][#{index}][id]", value: instance_translation.id}
+                          - else
+                            %input.form-control{id: "instance_translations_#{index}", type: 'text', name: "instance[translations_attributes][#{index}][value]", value: '', class: 'locale-item-input' }
+                        .right
+                          %input{type: 'button', value: t('instance_admin.locales.buttons.show_default'), class: 'translation-default-button'}
+                        .clear
+                        .default-text
+                          = "#{t('instance_admin.locales.labels.default_text')}:"
+                          = translation.value
 
             = content_for :header_buttons do
               = f.button :submit, t('instance_admin.locales.buttons.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }

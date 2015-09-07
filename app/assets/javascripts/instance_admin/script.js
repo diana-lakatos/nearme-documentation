@@ -131,3 +131,7 @@ $("[data-submit-form]").click(function() {
   $($(this).attr('data-form-selector')).submit();
 });
 
+$('.translation-default-button').click(function() {
+  jQuery(this).closest('.translations-input-container').find('.default-text').toggle();
+});
+
