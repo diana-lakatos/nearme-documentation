@@ -187,12 +187,14 @@ en:
         new_key: 'Add Translation Key'
         example_key: 'Example: home.welcome.label'
         default_en_value: 'Default English text'
+        default_text: "Default text"
 
       buttons:
         add: 'Add language'
         save: 'Save'
         edit_keys: 'Edit keys'
         new_key: 'Add key'
+        show_default: "Show Default"
 
       confirmations:
         delete: 'Are you sure?'
