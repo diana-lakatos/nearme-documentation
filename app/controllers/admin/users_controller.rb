@@ -1,5 +1,6 @@
 class Admin::UsersController < Admin::ResourceController
   skip_before_filter :require_administrator, :only => [:restore_session]
+  before_filter :set_platform_context_if_nil, only: [:update]
 
   def login_as
     admin_user = current_user
@@ -36,6 +37,10 @@ class Admin::UsersController < Admin::ResourceController
 
   def user_params
     params.require(:user).permit(secured_params.user)
+  end
+
+  def set_platform_context_if_nil
+    resource.instance.set_context! if PlatformContext.current.blank? && resource.instance
   end
 end
 
