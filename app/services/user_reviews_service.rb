@@ -11,6 +11,8 @@ class UserReviewsService
       when 'reviews_about_buyer' then @user.reviews_about_buyer
       when 'reviews_left_by_seller' then Review.both_sides_reviewed_for(RatingConstants::SELLER, @user.id)
       when 'reviews_left_by_buyer' then Review.both_sides_reviewed_for(RatingConstants::BUYER, @user.id)
+      else
+        []
     end
   end
 
