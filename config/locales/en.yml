@@ -1093,6 +1093,11 @@ en:
       manage: 'MANAGE LISTINGS'
       pricing:
         free: "Free"
+      pricing_periods:
+        month: "month"
+        week: "week"
+        day: "day"
+        hour: "hour"
     reviews:
       templates:
         comments: "Comments"
@@ -1379,6 +1384,11 @@ en:
       number_of_units: 'Number Of Units'
       not_bookable: 'Suggest date'
   search:
+    pricing_types:
+      daily: "Daily"
+      weekly: "Weekly"
+      monthly: "Monthly"
+      hourly: "Hourly"
     header:
       list: "List"
       map: "Map"
