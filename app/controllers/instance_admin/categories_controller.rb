@@ -33,6 +33,7 @@ class InstanceAdmin::CategoriesController < InstanceAdmin::BaseController
       @category = @categorizable.categories.find(params[:id])
       @categories = @category.children.order(:position)
     end
+    render json: {} if @categories.empty?
   end
 
   def edit
