@@ -169,7 +169,7 @@ class ProductForm < Form
     @stock_item = @stock_location.stock_items.where(variant_id: @product.master.id).first || @stock_location.stock_items.build(backorderable: false)
     @stock_item.variant = @product.master
     @stock_movement = @stock_item.stock_movements.build stock_item: @stock_item
-    @document_requirements = [] unless PlatformContext.current.instance.documents_upload_enabled?
+    @document_requirements ||= []
   end
 
   def submit(params)
@@ -190,16 +190,18 @@ class ProductForm < Form
   end
 
   def save!(options={})
-    @user.save!(validate: !draft?)
-    @company.save!(validate: !draft?)
-    @product.save!(validate: !draft?)
-    @product.images.each { |i| i.save!(validate: false) }
-    @product.classifications.each { |x| x.save!(validate: !draft?) }
-    @upload_obligation.save!
-    @document_requirements.each { |x| x.save! }
-    @stock_location.save!(validate: !draft?)
-    @stock_item.save!(validate: !draft?)
-    @shipping_category.try(:save!, validate: !draft?)
+    User.transaction do
+      @user.save!(validate: !draft?)
+      @company.save!(validate: !draft?)
+      @product.save!(validate: !draft?)
+      @product.images.each { |i| i.save!(validate: false) }
+      @product.classifications.each { |x| x.save!(validate: !draft?) }
+      @upload_obligation.save!
+      @document_requirements.each { |x| x.save! }
+      @stock_location.save!(validate: !draft?)
+      @stock_item.save!(validate: !draft?)
+      @shipping_category.try(:save!, validate: !draft?)
+    end
   end
 
   def images_attributes=(attributes)
