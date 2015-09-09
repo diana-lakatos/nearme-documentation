@@ -49,6 +49,8 @@
           = f.text_field :phone, data: { 'phone' => true }
         - if f.object.errors[:phone].present?
           .error-block= f.object.errors[:phone].to_sentence
+        - if is_i18n_set?('simple_form.hints.user.phone')
+          %p.help-block= t('simple_form.hints.user.phone', default: '')
 
     .row.mobile-number-field{:class => ('error' if f.object.errors[:mobile_number].present?)}
       .col-md-3
@@ -64,6 +66,8 @@
 
         - if f.object.errors[:mobile_number].present?
           .error-block= f.object.errors[:mobile_number].to_sentence
+        - if is_i18n_set?('simple_form.hints.user.mobile_number')
+          %p.help-block= t('simple_form.hints.user.mobile_number', default: '')
 
 = f.input :current_location, as: :string if only_inputs.empty? || only_inputs.include?(:current_location)
 = f.input :company_name, label: "Company name", as: :string if only_inputs.empty? || only_inputs.include?(:company_name)
