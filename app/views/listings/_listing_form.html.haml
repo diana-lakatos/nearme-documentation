@@ -68,6 +68,7 @@
     = hidden_field_tag "#{photo_input_name_prefix}", nil, :placeholder => t('ui.photo_uploader.caption'), :id => 'photo-item-input-template', :disabled => true, 'data-number' => 0
     - unless @photos.nil?
       - @photos.each_with_index do |photo|
+        - next unless photo.persisted?
         = get_fileupload_photo_html(photo.image_url(:medium),
                                     destroy_space_wizard_photo_path(:id => photo.id),
                                     edit_dashboard_photo_path(photo),
