@@ -20,6 +20,7 @@
         = hidden_field_tag "#{f.object_name}", nil, :placeholder => t('ui.photo_uploader.caption'), :id => 'photo-item-input-template', 'data-no-caption' => true, 'data-association-name' => 'image', :disabled => true, 'data-number' => 0
         - unless @images.nil?
           - @images.each_with_index do |image|
+            - next unless image.persisted?
             = get_fileupload_photo_html(image.image_url(:medium),
                                         dashboard_image_path(:id => image.id),
                                         edit_dashboard_image_path(image),
