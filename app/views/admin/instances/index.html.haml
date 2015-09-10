@@ -1,5 +1,11 @@
 %h1= resource_class.name.underscore.humanize.pluralize
 
+.row-fluid
+  %h4
+    = t('admin.general.search')
+  .pull-left
+    = render 'search_form'
+
 %table.table.table-striped
   %thead
     %tr
