@@ -1,6 +1,6 @@
 module TransactablesIndex
   extend ActiveSupport::Concern
-  
+
   included do |base|
     cattr_accessor :custom_attributes
 
@@ -8,8 +8,8 @@ module TransactablesIndex
       mapping do
         indexes :custom_attributes, type: 'object' do
           if Rails.env.staging? || Rails.env.production?
-            mapped = TransactableType.all.map{ |service_type|
-              service_type.custom_attributes.map(&:name)
+            mapped = ServiceType.all.map{ |service_type|
+              service_type.custom_attributes.pluck(:name)
             }.flatten.uniq
             for custom_attribute in mapped
               indexes custom_attribute, type: 'string'
@@ -52,12 +52,9 @@ module TransactablesIndex
 
     def as_indexed_json(options={})
       custom_attrs = {}
-      
-      @@custom_attributes ||= TransactableType.all.map do |service_type|
-        service_type.custom_attributes.map(&:name)
-      end.flatten.uniq
+      custom_attribs = self.service_type.cached_custom_attributes.map{ |c| c[0] }
 
-      for custom_attribute in @@custom_attributes
+      for custom_attribute in custom_attribs
         if self.properties.respond_to?(custom_attribute)
           custom_attrs[custom_attribute] = self.properties.send(custom_attribute).to_s.downcase
         end
@@ -87,14 +84,19 @@ module TransactablesIndex
       __elasticsearch__.search(query_builder.geo_regular_query)
     end
 
-    def self.searchable_custom_attributes
-      TransactableType.where(searchable: true).map{ |product_type|
-        product_type.custom_attributes.where(searchable: true).map(&:name)
-      }.flatten.uniq.map{|m| "custom_attributes.#{m}"}
+    def self.searchable_custom_attributes(service_type = nil)
+      if service_type
+        # m[0] - name, m[7] - searchable
+        service_type.cached_custom_attributes.map{|m| "custom_attributes.#{m[0]}" if m[7] == true}.compact.uniq
+      else
+        ServiceType.where(searchable: true).map{ |service_type|
+          service_type.custom_attributes.where(searchable: true).map{|m| "custom_attributes.#{m.name}"}
+        }.flatten.uniq
+      end
     end
 
-    def self.geo_search(query)
-      query_builder = Elastic::QueryBuilder.new(query.with_indifferent_access, searchable_custom_attributes)
+    def self.geo_search(query, service_type = nil)
+      query_builder = Elastic::QueryBuilder.new(query.with_indifferent_access, searchable_custom_attributes(service_type))
       __elasticsearch__.search(query_builder.geo_query)
     end
 

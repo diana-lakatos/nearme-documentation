@@ -39,6 +39,10 @@ module CustomAttributes
           underscore "#{self.class.name.demodulize}.#{(self.name_was || self.name)}"
         end
 
+        define_method(:cached_custom_attributes) do
+          CustomAttributes::CustomAttribute.get_from_cache(self.id, self.class.name)
+        end
+
       end
     end
 

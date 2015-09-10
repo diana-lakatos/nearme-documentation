@@ -11,7 +11,7 @@ module Elastic
     GEO_ORDER = 'asc'
     MAX_RESULTS = 1000
     PER_PAGE = 20
-    PAGE = 0
+    PAGE = 1
 
     def initialize(query, searchable_custom_attributes=nil)
       @query = query
@@ -32,11 +32,11 @@ module Elastic
 
     def query_page
       page = @query[:page].to_i
-      (page > 1) ? page : PAGE
+      (page > 0) ? page : PAGE
     end
 
     def query_offset
-      query_page * query_per_page
+      (query_page - 1) * query_per_page
     end
 
     def product_query
@@ -45,11 +45,33 @@ module Elastic
       {
         size: query_per_page,
         from: query_offset,
+        fields: [],
         sort: ['_score'],
         query: products_match_query,
         filter: {
           bool: {
             must: @filters
+          }
+        },
+        aggs: {
+          filtered_price_range: {
+            filter: {
+              bool: {
+                must: @filters
+              }
+            },
+            aggs: {
+              max_price: {
+                max: {
+                  field: "price"
+                }
+              },
+              min_price: {
+                min: {
+                  field: "price"
+                }
+              }
+            }
           }
         }
       }
@@ -60,6 +82,8 @@ module Elastic
       apply_geo_search_filters
       {
         size: query_limit,
+        from: query_offset,
+        fields: ["_id", "location_id"],
         sort: ['_score'],
         query: match_query,
         filter: {
@@ -75,6 +99,8 @@ module Elastic
       apply_geo_search_filters
       {
         size: query_limit,
+        from: query_offset,
+        fields: ["_id", "location_id"],
         query: {
           filtered: {
             query: match_query,
@@ -99,7 +125,7 @@ module Elastic
     end
 
     def initial_service_filters
-      searchable_service_type_ids = [@query[:transactable_type_id].to_i] & TransactableType.where(searchable: true).map(&:id)
+      searchable_service_type_ids = [@query[:transactable_type_id].to_i]
       searchable_service_type_ids = [0] if searchable_service_type_ids.empty?
       [
       	initial_instance_filter,
@@ -226,6 +252,17 @@ module Elastic
 
     def apply_product_search_filters
       category_search_type = PlatformContext.current.instance.category_search_type
+
+      if PlatformContext.current.instance.price_slider && @query[:price] && @query[:price][:max].present?
+        @filters << {
+          range: {
+            price: {
+              gte: @query[:price][:min] || 0,
+              lte: @query[:price][:max]
+            }
+          }
+        }
+      end
 
       if @query[:category_ids] && @query[:category_ids].any?
         if category_search_type == 'OR'

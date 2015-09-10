@@ -6,6 +6,6 @@ class Spree::Product::Search::Params
   end
 
   def query
-    @options[:query] || @options[:q] || @options[:address] || @options[:loc]
+    (@options[:query] || @options[:q] || @options[:address] || @options[:loc]).try(:[], 0, 200)
   end
 end

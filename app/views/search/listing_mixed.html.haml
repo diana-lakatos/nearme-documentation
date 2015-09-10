@@ -3,16 +3,17 @@
 = render 'search/meta_tags'
 
 - content_for :mixed_locations do
-  .search-max-price{:'data-max-price' => @searcher.max_price}
-  - if @searcher.results.any?
+  .search-max-price{:'data-max-price' => @searcher.max_price, :'data-min-price' => @searcher.min_price}
+  - if @searcher.results.present?
     .locations
       .hidden-locations
-        = render partial: 'search/map/location_marker', collection: @searcher.results, as: :location
         %input{type: 'hidden', id: 'result_count', value: @searcher.result_count}
         %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, @searcher.search, @searcher.transactable_type.name)}
       = render 'search/mixed/pagination', locations: @searcher.results, result_count: @searcher.result_count
-      - @searcher.results.each_with_index do |listing, listing_counter|
-        = render partial: 'search/mixed/individual_listing', locals: {listing: listing, listing_counter: listing_counter, transactable_type: @searcher.transactable_type, current_page_offset: current_page_offset, lgpricing_filters: @searcher.search.lgpricing_filters }
+      - @searcher.results.each_with_index do |listing|
+        - cache i18n_cache_key('listing_mixed', listing, listing.company, @searcher.search.lgpricing_filters) do
+          = render partial: 'search/map/location_marker', locals: {location: listing}
+          = render partial: 'search/mixed/individual_listing', locals: {listing: listing, transactable_type: @searcher.transactable_type, lgpricing_filters: @searcher.search.lgpricing_filters }
       = render 'search/mixed/pagination', locations: @searcher.results, result_count: @searcher.result_count
   - elsif !@searcher.located
     .locations
@@ -71,7 +72,7 @@
             = render partial: 'search/mixed/filter', locals: { header_name: t(ca.label_key), selected_values: @searcher.search.lg_custom_attributes[ca.name.to_sym] || [], input_name: "lg_custom_attributes[#{ca.name}][]", options: ca.valid_values_translated, name: ca.name }
         - if platform_context.instance.price_types
           = render partial: 'search/mixed/filter', locals: { header_name: 'Pricing', selected_values: @searcher.search.lgpricing_filters || [], input_name: 'listing_pricing[]', options: @searcher.filterable_pricing }
-        - if platform_context.instance.location_types.count > 1
+        - if platform_context.instance.location_types.many?
           = render :partial => 'search/mixed/filter', :locals => { :header_name => 'Location Type', :selected_values => @searcher.search.lntypes_filters || [], :input_name => 'location_types_ids[]', :options => @searcher.filterable_location_types.map { |lt| [lt.name.downcase, lt.name ] } }
         - if platform_context.instance.price_slider
           = render partial: 'search/shared/price_slider'
@@ -83,7 +84,7 @@
             results
         .per-page
           %span per page
-          = select_tag :per_page, options_for_select(['20', '50', '100'].map{|v| [v, v]})
+          = select_tag :per_page, options_for_select(['20', '50', '100'].map{|v| [v, v]}, params[:per_page])
         = render 'search/save'
 
       - if not request.xhr?

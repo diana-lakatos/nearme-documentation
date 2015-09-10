@@ -67,6 +67,10 @@ class PlatformContextDecorator
     end
   end
 
+  def bookable_search_field_placeholder
+    instance.searcher_type == 'fulltext' ? I18n.t('homepage.search_field_placeholder.full_text') : I18n.t('homepage.search_field_placeholder.location')
+  end
+
   def search_by_keyword_placeholder
     I18n.t('homepage.search_field_placeholder.full_text')
   end

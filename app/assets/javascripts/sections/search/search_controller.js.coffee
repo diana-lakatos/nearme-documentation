@@ -44,7 +44,6 @@ class Search.SearchController extends Search.Controller
       document.location = "#{document.location.protocol}//#{document.location.host}#{document.location.pathname}?loc=#{DNM.util.Url.getParameterByName('loc')}&transactable_type_id=#{$(event.target).val()}" + date_range
 
     @date_range_btn.on 'click', (event) =>
-      @resetPriceRange()
       @triggerSearchFromQuery()
 
     @closeFilterIfClickedOutside()
@@ -60,7 +59,6 @@ class Search.SearchController extends Search.Controller
       false
 
     @filters_container.on 'click', 'input[type=checkbox]', =>
-      @resetPriceRange()
       @fieldChanged()
 
     @searchField = @form.find('#search')
@@ -76,8 +74,7 @@ class Search.SearchController extends Search.Controller
       @searchField.blur()
 
     @map.on 'viewportChanged', =>
-      @resetPriceRange()
-      
+
       # NB: The viewport can change during 'query based' result loading, when the map fits
       #     the bounds of the search results. We don't want to trigger a bounding box based
       #     lookup during a controlled viewport change such as this.
@@ -85,9 +82,6 @@ class Search.SearchController extends Search.Controller
       return unless @redoSearchMapControl.isEnabled()
 
       @triggerSearchWithBoundsAfterDelay()
-
-  resetPriceRange: ->
-    $("input[name='price[max]']").val(0)
 
   hideFilters: ->
     for filter in @filters
@@ -274,21 +268,6 @@ class Search.SearchController extends Search.Controller
         @updateLinks()
 
 
-  reinitializePriceSlider: ->
-    if $('#price-slider').length > 0
-      @reinit = $('.search-max-price:first')
-      noreinitSlider = parseInt( @reinit.attr('data-noreinit-slider') )
-      if isNaN(noreinitSlider) or noreinitSlider < 1
-        max_price = $('.search-max-price:last').attr('data-max-price')
-        @input_price_max = $("input[name='price[max]']")
-        @input_price_max.val(max_price)
-    
-        $('#price-slider').remove()
-        $('.price-slider-container').append('<div id="price-slider" "data-max-price"="' + max_price + '"></div>')
-        
-        @initializePriceSlider()
-      @reinit.attr('data-noreinit-slider', 0)
-
   # Trigger the search after waiting a set time for further updated user input/filters
   triggerSearchFromQueryAfterDelay: _.debounce(->
     @triggerSearchFromQuery()
@@ -357,9 +336,10 @@ class Search.SearchController extends Search.Controller
     params = @getSearchParams()
 
     $('.list-map-toggle a', @form).each ->
+      view = $(this).data('view')
       for k, param of params
         if param["name"] == 'v'
-          param["value"] = (if $(this).hasClass('map') then 'mixed' else 'list')
+          param["value"] = view
       _url = "#{url}?#{$.param(params)}&ignore_search_event=1"
       $(this).attr('href', _url)
 

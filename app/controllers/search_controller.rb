@@ -4,8 +4,8 @@ class SearchController < ApplicationController
   include SearchHelper
   include SearcherHelper
 
-  before_filter :theme_name
   before_filter :find_transactable_type
+  before_filter :theme_name
 
   helper_method :searcher, :result_view, :current_page_offset, :per_page, :first_result_page?
 
@@ -85,7 +85,7 @@ class SearchController < ApplicationController
   end
 
   def theme_name
-    @theme_name = 'buy-sell-theme' if params[:buyable] == "true"
+    @theme_name = 'buy-sell-theme' if @transactable_type.buyable?
   end
 
 end

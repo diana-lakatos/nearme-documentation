@@ -11,7 +11,7 @@
 
 - if f.object.name_and_description_required
   = f.input :description, :as => :limited_text, :limit => 250, :required => !f.object.listings.first.try(:description).try(:present?), :input_html => { :maxlength => 250, :rows => 2 } if only_inputs.empty? || only_inputs.include?(:description)
-- if platform_context.instance.location_types.count > 1
+- if platform_context.instance.location_types.many?
   = f.association :location_type, :collection => platform_context.instance.location_types, input_html: {class: 'selectpicker'} if only_inputs.empty? || only_inputs.include?(:location_type)
 - elsif
   = f.hidden_field :location_type_id, value: platform_context.instance.location_types.first.id

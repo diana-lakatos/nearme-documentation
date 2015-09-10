@@ -1052,17 +1052,27 @@ section.search {
 
 /*** List Table View ***/
 
-section#results.products_table, nav.taxons_tree {
+ nav.taxons_tree {
   margin-top: 100px;
+}
+
+section.products_table {
+  margin-top: 45px;
 }
 
 .products_table {
 
   .search-icon {
     margin-left: 0;
+    width: 112px !important;
+  }
+
+  section#category-tree{
+    margin-top: 45px !important;
   }
 
   table {
+    margin: auto;
     min-width: 958px;
 
     @media (max-width: $search-bar-breakpoint-desktop) {

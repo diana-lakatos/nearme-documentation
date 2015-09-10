@@ -92,7 +92,7 @@ module CustomAttributes
           end
 
           def self.find_as_array(target_id, target_type)
-            self.where(target_id: target_id, target_type: target_type).pluck(:name, :attribute_type, :default_value, :public, :validation_rules, :valid_values, :html_tag)
+            self.where(target_id: target_id, target_type: target_type).pluck(:name, :attribute_type, :default_value, :public, :validation_rules, :valid_values, :html_tag, :searchable)
           end
 
           def valid_values_translated

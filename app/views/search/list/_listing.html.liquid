@@ -1,4 +1,3 @@
-{% cache_for listing, listing.company, list %}
   <article class='listing' data-id="{{listing.id}}" data-name="{{listing.name}}" data-latitude="{{listing.latitude}}" data-longitude="{{listing.longitude}}">
     <a href="{{ listing.url }}">
       <div class="heading">
@@ -7,14 +6,14 @@
           <div class="span10">
             {{ listing.company.name | filter_text | custom_sanitize }}
           </div>
-{% endcache_for %}
-          {% assign connections = listing | connections_for: current_user %}
-          {% if connections.size > 0 %}
-            <div class="span2 connections" rel='tooltip' title="{{ connections | connections _tooltip: 5 }}">
-              <span class="ico-group">{{ connections.size }}</span>
-            </div>
+          {% if user_has_firends %}
+            {% assign connections = listing | connections_for: current_user %}
+            {% if connections.size > 0 %}
+              <div class="span2 connections" rel='tooltip' title="{{ connections | connections _tooltip: 5 }}">
+                <span class="ico-group">{{ connections.size }}</span>
+              </div>
+            {% endif %}
           {% endif %}
-{% cache_for listing, listing.photos, list %}
         </div>
       </div>
     </a>
@@ -39,4 +38,3 @@
       </div>
     </div>
   </article>
-{% endcache_for %}

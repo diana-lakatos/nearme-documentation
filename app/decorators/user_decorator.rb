@@ -34,6 +34,10 @@ class UserDecorator < Draper::Decorator
     object.current_location ? object.country_name : object.current_location
   end
 
+  def has_friends
+    @count.nil? ? @count = !friends.count.zero? : @count
+  end
+
   private
 
   def user_messages_decorator_for(instance)

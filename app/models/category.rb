@@ -19,7 +19,7 @@ class Category < ActiveRecord::Base
   validates :name, presence: true
 
   # Polymprophic association to TransactableType, ProductType
-  belongs_to :categorizable, polymorphic: true
+  belongs_to :categorizable, polymorphic: true, touch: true
   belongs_to :instance
 
   before_save :set_permalink

@@ -29,7 +29,7 @@ end
 
 
 When /^I search for buy sell "([^"]*)"$/ do |product_name|
-  visit search_path(query: product_name, buyable: true)
+  visit search_path(query: product_name)
 end
 
 Then /^I should see relevant buy sell products$/ do

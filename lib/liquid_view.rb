@@ -29,11 +29,6 @@ class LiquidView
     assigns['current_url'] = @view.try(:controller).try(:request).try(:original_url)
     assigns['current_user'] = @view.try(:controller).try(:current_user)
 
-    transactable_types = assigns['transactable_types'].presence || TransactableType.all
-    assigns['transactable_types'] = transactable_types.map(&:to_liquid)
-    assigns['service_types'] = transactable_types.services.map(&:to_liquid)
-    assigns['product_types'] = transactable_types.products.map(&:to_liquid)
-
     if content_for_layout = @view.instance_variable_get("@content_for_layout")
       assigns['content_for_layout'] = content_for_layout
     elsif @view.content_for?(:layout)

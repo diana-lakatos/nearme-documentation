@@ -132,7 +132,7 @@ class Transactable < ActiveRecord::Base
 
   scope :order_by_array_of_ids, -> (listing_ids) {
     listing_ids_decorated = listing_ids.each_with_index.map {|lid, i| "WHEN transactables.id=#{lid} THEN #{i}" }
-    order("CASE #{listing_ids_decorated.join("\n")} END")
+    order("CASE #{listing_ids_decorated.join(' ')} END") if listing_ids.present?
   }
 
   # == Callbacks

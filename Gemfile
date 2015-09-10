@@ -4,6 +4,7 @@ source 'http://rubygems.org'
 
 gem 'rails', '4.1.12'
 gem 'pg'
+gem 'will_paginate'
 gem 'elasticsearch-persistence'
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
@@ -70,7 +71,6 @@ gem 'paper_trail', '3.0.0'
 gem 'rack-rewrite', :require => 'rack/rewrite'
 
 gem 'state_machine', '~> 1.2.0'
-gem 'will_paginate'
 gem 'compass-rails', '1.1.7'
 gem 'animate'
 gem 'coffee-rails'
@@ -190,6 +190,7 @@ group :development do
   gem 'spring-commands-cucumber'
   gem 'parallel_tests'
   gem 'mailcatcher'
+  gem 'active_record_query_trace'
 end
 
 group :test do

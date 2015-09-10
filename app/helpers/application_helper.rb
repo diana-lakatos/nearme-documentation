@@ -336,6 +336,10 @@ module ApplicationHelper
     Rails.configuration.default_cache_expires_in
   end
 
+  def i18n_cache_key(*args)
+    args.compact + [PlatformContext.current.instance.context_cache_key.to_s, I18n.locale]
+  end
+
   def is_i18n_set?(key)
     I18n.t(key, default: '').present?
   end

@@ -2,6 +2,7 @@
 # Extended by Search.HomeController and Search.SearchController
 class Search.Controller
   constructor: (@form) ->
+    @unfilteredPrice = 0
     @initializeFields()
     @initializeGeolocateButton()
     @initializeSearchButton()
@@ -40,6 +41,9 @@ class Search.Controller
 
 
     @queryField.bind 'change', =>
+      @fieldChanged('query', @queryField.val())
+
+    @keywordField.bind 'change', =>
       @fieldChanged('query', @queryField.val())
 
     @queryField.bind 'focus', =>
@@ -204,7 +208,7 @@ class Search.Controller
       $('.nav-categories  > ul > .categories-list > .nav-item ').find('.categories-list').hide()
 
     for target in $(".nav-item input[type='checkbox']:checked")
-      $(target).parent().next().show()
+      $(target).parents('.nav-item:first').find('ul.categories-list:first').show()
 
     if ($(window).width() < 767)
       $("#category-tree .categories-list:first").hide()
@@ -224,3 +228,44 @@ class Search.Controller
         $(event.target).closest('li').find('.categories-list').hide()
         $(event.target).closest('label').next().find('input:checked').prop('checked', false)
 
+  reinitializePriceSlider: ->
+    if $('#price-slider').length > 0
+      @initializePriceSlider()
+
+  initializePriceSlider: =>
+    elem = $('#price-slider')
+    if elem.length > 0
+      val = parseInt( $("input[name='price[max]']").val() )
+      if isNaN(val)
+        val = parseInt( $('.search-max-price:first').attr('data-max-price') )
+
+      start_val = parseInt( $("input[name='price[min]']").val() )
+      if isNaN(start_val)
+        start_val = parseInt( $('.search-max-price:first').attr('data-min-price') )
+
+      if val > @unfilteredPrice
+        @unfilteredPrice = val
+      unless start_val >= 0 && val >= 0
+        start_val = val = 0
+      elem.noUiSlider
+        start: [ start_val, val ],
+        behaviour: 'drag',
+        connect: true,
+        range:
+          min: 0,
+          max: @unfilteredPrice
+
+      elem.on 'change', =>
+        $('.search-max-price:first').attr('data-max-price', elem.val()[1])
+        @assignFormParams(
+          'price[min]': elem.val()[0]
+          'price[max]': elem.val()[1]
+        )
+        @form.submit()
+
+      elem.Link('upper').to('-inline-<div class="slider-tooltip"></div>', ( value ) ->
+        $(this).html('<strong>$' + parseInt(value) + ' </strong>')
+      )
+      elem.Link('lower').to('-inline-<div class="slider-tooltip"></div>', ( value ) ->
+        $(this).html('<strong>$' + parseInt(value) + ' </strong>')
+      )
