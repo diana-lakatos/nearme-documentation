@@ -103,18 +103,26 @@
   .divider
 
   %h2 Shipping
-  %table.payment-summary
-    %thead
-      %tr
-        %th NUMBER
-        %th STATE
-        %th STOCK LOCATION
-    %tbody
-      - @order.shipments.each do |shipment|
+  - @order.shipments.each do |shipment|
+    %table.payment-summary
+      %thead
+      %tbody
         %tr
+          %td NUMBER
           %td= shipment.number
+        %tr
+          %td STATE
           %td= shipment.state
+        %tr
+          %td STOCK LOCATION
           %td= shipment.stock_location.name
+        %tr
+          %td LABEL URL
+          %td= shipment.shippo_label_url
+        %tr
+          %td TRACKING NUMBER
+          %td= shipment.shippo_tracking_number
+        %tr
           %td
             - if shipment.ready?
               = link_to ship_dashboard_company_orders_received_shipment_path(@order.number, shipment),

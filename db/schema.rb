@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150901151857) do
+ActiveRecord::Schema.define(version: 20150911155802) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2152,15 +2152,17 @@ ActiveRecord::Schema.define(version: 20150901151857) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "stock_location_id"
-    t.decimal  "adjustment_total",     precision: 10, scale: 2, default: 0.0
-    t.decimal  "additional_tax_total", precision: 10, scale: 2, default: 0.0
-    t.decimal  "promo_total",          precision: 10, scale: 2, default: 0.0
-    t.decimal  "included_tax_total",   precision: 10, scale: 2, default: 0.0, null: false
-    t.decimal  "pre_tax_amount",       precision: 8,  scale: 2, default: 0.0
+    t.decimal  "adjustment_total",       precision: 10, scale: 2, default: 0.0
+    t.decimal  "additional_tax_total",   precision: 10, scale: 2, default: 0.0
+    t.decimal  "promo_total",            precision: 10, scale: 2, default: 0.0
+    t.decimal  "included_tax_total",     precision: 10, scale: 2, default: 0.0, null: false
+    t.decimal  "pre_tax_amount",         precision: 8,  scale: 2, default: 0.0
     t.integer  "instance_id"
     t.integer  "company_id"
     t.integer  "partner_id"
     t.integer  "user_id"
+    t.text     "shippo_label_url"
+    t.text     "shippo_tracking_number"
   end
 
   add_index "spree_shipments", ["address_id"], name: "index_spree_shipments_on_address_id", using: :btree

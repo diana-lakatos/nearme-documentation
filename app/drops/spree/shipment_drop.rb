@@ -13,7 +13,11 @@ class Spree::ShipmentDrop < BaseDrop
   #   quantity shipped, variant - the product variant to which this shipment refers
   # tracking
   #   tracking information for this shipment
-  delegate :id, :order, :manifest, :tracking, to: :shipment
+  # shippo_tracking_number
+  #   tracking number from Shippo
+  # shippo_label_url
+  #   label URL from Shippo
+  delegate :id, :order, :manifest, :tracking, :shippo_tracking_number, :shippo_label_url, to: :shipment
 
   def initialize(shipment)
     @shipment = shipment

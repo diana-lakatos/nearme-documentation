@@ -929,6 +929,15 @@ en:
           instructions_2: 'ACTION REQUIRED: Visit your Orders page to approve this order and capture payment.'
           order_summary: 'Order Summary'
 
+        shipping_info_for_buyer_email:
+          subject: "Here is the shipping information for your recent order"
+          here_is_tracking_code: "Here is the shipping tracking code for your recent order"
+
+        shipping_info_for_seller_email:
+          subject: "Here is the shipping information for your recent order"
+          here_is_shippo_label: "Here is the Shippo label for your last order"
+          here_is_tracking_code: "Here is the shipping tracking code for your recent order"
+
     cart:
       labels:
         index: 'Shopping cart'

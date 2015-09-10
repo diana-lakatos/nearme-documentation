@@ -203,8 +203,8 @@ class ShippoTest < ActionView::TestCase
 
       assert_not_nil shipping_method.order.shippo_rate_purchased_at
       assert_kind_of Time, shipping_method.order.shippo_rate_purchased_at
-      assert_equal 'CG1234512345', shipping_method.shippo_tracking_number
-      assert_equal 'http://usps.com/track?id=CG123123', shipping_method.shippo_label_url
+      assert_equal 'CG1234512345', shipping_method.order.shipments.first.shippo_tracking_number
+      assert_equal 'http://usps.com/track?id=CG123123', shipping_method.order.shipments.first.shippo_label_url
 
       payment = @order.reload.payments.first
       assert_not_nil payment
