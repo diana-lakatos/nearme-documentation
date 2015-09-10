@@ -134,6 +134,9 @@ en:
         shipping_cost: 'Shipping Cost'
         enter_name_for_shipping_profile: 'Enter a name for your shipping profile'
         ready_to_ship_in: 'Ready to ship in...'
+  admin:
+    general:
+      search: "Search"
   instance_admin:
     form_components:
       approval_requests_section_title: 'Approval Requests'
