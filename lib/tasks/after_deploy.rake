@@ -1,7 +1,7 @@
 namespace :after_deploy do
   desc 'Runs required tasks after deployment'
   task :run => [:environment] do
-    ['after_deploy:clear_rails_cache', 'reprocess:css'].each do |task_name|
+    ['after_deploy:clear_rails_cache', 'reprocess:css', 'schedule_recurring_jobs'].each do |task_name|
       p "[#{Time.now}]Invoking: #{task_name}"
       Rake::Task[task_name].invoke
     end
@@ -12,5 +12,20 @@ namespace :after_deploy do
     Rails.cache.clear
     RedisCache.clear
   end
-end
 
+  desc "Schedule Recurring Jobs"
+  task :schedule_recurring_jobs => [:environment] do
+    # removing all recurring jobs from previous deployment/application restart
+    Delayed::Job.where(queue: "recurring-jobs").delete_all
+
+    # and queuing them again
+    ScrapeSupportEmails.schedule!
+    SendRatingReminders.schedule!
+    SchedulePaymentTransfers.schedule!
+    SendSearchesDailyAlerts.schedule!
+    PrepareFriendFinders.schedule!
+    SendSearchesWeeklyAlerts.schedule!
+    SendAnalyticsMails.schedule!
+
+  end
+end
