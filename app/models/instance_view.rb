@@ -40,6 +40,7 @@ class InstanceView < ActiveRecord::Base
     'rating_mailer/line_items/request_rating_of_host_and_product_from_guest',
     'spree/order_mailer/approved_email', 'spree/order_mailer/cancel_email',
     'spree/order_mailer/confirm_email', 'spree/order_mailer/notify_seller_email',
+    'spree/order_mailer/shipping_info_for_buyer', 'spree/order_mailer/shipping_info_for_seller',
     'spree/shipment_mailer/shipped_email', 'support_mailer/rfq_request_received',
     'support_mailer/rfq_request_replied', 'support_mailer/rfq_request_updated',
     'support_mailer/rfq_support_received', 'support_mailer/rfq_support_updated',
