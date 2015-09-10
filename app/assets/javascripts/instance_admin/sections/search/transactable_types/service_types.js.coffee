@@ -7,4 +7,6 @@ class @InstanceAdmin.SearchServiceTypesController extends @InstanceAdmin.SearchT
     return 'data-service-type-custom-attributes'
 
   transactable_data: (checkbox) =>
-    return { transactable_type: {searchable: checkbox.prop('checked')}}
+    data = { transactable_type: {}}
+    data.transactable_type[checkbox.prop('name')] = checkbox.prop('checked')
+    data

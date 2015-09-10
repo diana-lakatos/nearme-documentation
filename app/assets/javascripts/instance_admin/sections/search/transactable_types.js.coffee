@@ -4,10 +4,13 @@ class @InstanceAdmin.SearchTransactableTypeController
     @bindEvents()
 
   bindEvents: =>
-    @container.find('.service .header input').each (i, element) =>
+    @container.find('.service .header .service-name input').each (i, element) =>
       @toogle_custom_attributes($(element))
 
-     @container.find('.service .header').click (event) =>
+     @container.find('.service .header input').click (event) =>
+       @updateSearchable($(event.target))
+
+     @container.find('.service .header .service-name').click (event) =>
       clicker = $(event.target)
       input = @toogle_custom_attributes(clicker)
       @updateSearchable(input)
@@ -22,8 +25,7 @@ class @InstanceAdmin.SearchTransactableTypeController
       $(clicker.attr(@data_selector_name())).toggleClass('hidden')
 
   toogle_custom_attributes: (clicker) =>
-    index = $('.header').index(clicker.parent('.header'))
-    content = $($('.search-system').get(index))
+    content = clicker.parents('.service').find('.search-system')
     input = null
     if clicker.prop('checked') != undefined
       input = clicker

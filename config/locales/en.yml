@@ -716,6 +716,7 @@ en:
           custom_attributes: "Custom Attributes"
         services_search:
           services_custom_search: "Services Custom Search"
+          search_location_type_filter: "Display Location Type filter?"
     blog:
       posts:
         name: "Name"
