@@ -42,7 +42,7 @@ class InstanceType::Searcher::Elastic::GeolocationSearcher::Location
     return 0 if !PlatformContext.current.instance.price_slider || results.blank?
     @max_fixed_price ||= results.map{|r|
       r.listings.map(&:fixed_price_cents).max
-    }.max / 100
+    }.max.to_i / 100
     @max_fixed_price > 0 ? @max_fixed_price + 1 : @max_fixed_price
   end
 
