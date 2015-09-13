@@ -2,7 +2,7 @@ class Spree::ProductType < TransactableType
 
   has_many :form_components, as: :form_componentable
   has_many :categories, as: :categorizable, dependent: :destroy
-  has_many :products, class_name: "Spree::Product", inverse_of: :product_type
+  has_many :products, dependent: :destroy, class_name: "Spree::Product", inverse_of: :product_type
 
   belongs_to :user
 
