@@ -38,7 +38,7 @@ module LiquidFilters
       periods = {monthly: 'month', weekly: 'week', daily: 'day', hourly: 'hour'}
       { 'price' => self.price_without_cents_with_currency(prices[0]), 'period' =>  periods[prices[1]] }
     else
-      {}
+      object.try(:action_free_booking?) ? { 'free' => true } : {}
     end
   end
 
@@ -176,7 +176,7 @@ module LiquidFilters
 
     if current_filters.try(:include?, tag.slug).presence
       filters_without_current = (current_filters - [tag.slug]).join(",")
-      
+
       href = "?tags=#{filters_without_current}"
       classes = %w(add selected)
     else

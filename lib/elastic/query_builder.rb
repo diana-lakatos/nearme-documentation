@@ -332,11 +332,16 @@ module Elastic
 
       if @query[:listing_pricing] && @query[:listing_pricing].any?
         @query[:listing_pricing].each do |lp|
+          @filters << {
+            term: {
+              "action_#{lp}_booking" => true
+            }
+          }
           @not_filters << {
             term: {
               "#{lp}_price_cents" => 0
             }
-          }
+          } unless lp == 'free'
         end
       end
     end
