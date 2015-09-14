@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150901151857) do
+ActiveRecord::Schema.define(version: 20150914133209) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -257,7 +257,7 @@ ActiveRecord::Schema.define(version: 20150901151857) do
     t.datetime "void_at"
     t.text     "void_response"
     t.integer  "payment_gateway_id"
-    t.boolean  "immediate_payout",                default: false
+    t.boolean  "immediate_payout",                            default: false
     t.integer  "merchant_account_id"
   end
 
@@ -603,8 +603,8 @@ ActiveRecord::Schema.define(version: 20150901151857) do
     t.string   "dns_name",                       limit: 255
     t.string   "redirect_to",                    limit: 255
     t.integer  "redirect_code"
-    t.boolean  "use_as_default",                 default: false
-    t.boolean  "sitemap_enabled",                default: false
+    t.boolean  "use_as_default",                             default: false
+    t.boolean  "sitemap_enabled",                            default: false
     t.string   "generated_sitemap"
     t.string   "uploaded_sitemap"
     t.string   "uploaded_robots_txt"
@@ -711,7 +711,7 @@ ActiveRecord::Schema.define(version: 20150901151857) do
     t.boolean  "permission_support",                     default: false
     t.boolean  "permission_buysell",                     default: false
     t.boolean  "permission_shippingoptions",             default: false
-	t.boolean  "permission_reports",         			 default: false
+    t.boolean  "permission_reports",                     default: false
   end
 
   add_index "instance_admin_roles", ["instance_id"], name: "index_instance_admin_roles_on_instance_id", using: :btree
@@ -1018,7 +1018,7 @@ ActiveRecord::Schema.define(version: 20150901151857) do
     t.string   "type",                                limit: 255
     t.string   "state",                               limit: 255, default: "pending"
     t.string   "internal_payment_gateway_account_id", limit: 255
-    t.boolean  "test",                                default: false
+    t.boolean  "test",                                            default: false
   end
 
   add_index "merchant_accounts", ["instance_id", "merchantable_id", "merchantable_type"], name: "index_on_merchant_accounts_on_merchant", using: :btree
@@ -1384,7 +1384,7 @@ ActiveRecord::Schema.define(version: 20150901151857) do
     t.integer  "rating_system_id"
     t.integer  "buyer_id"
     t.integer  "seller_id"
-    t.boolean  "displayable",          default: true
+    t.boolean  "displayable",                      default: true
     t.string   "subject"
   end
 
@@ -2232,21 +2232,21 @@ ActiveRecord::Schema.define(version: 20150901151857) do
   add_index "spree_roles_users", ["user_id"], name: "index_spree_roles_users_on_user_id", using: :btree
 
   create_table "spree_shipments", force: :cascade do |t|
-    t.string   "tracking",             limit: 255
-    t.string   "number",               limit: 255
-    t.decimal  "cost",                             precision: 10, scale: 2, default: 0.0
+    t.string   "tracking",               limit: 255
+    t.string   "number",                 limit: 255
+    t.decimal  "cost",                               precision: 10, scale: 2, default: 0.0
     t.datetime "shipped_at"
     t.integer  "order_id"
     t.integer  "address_id"
-    t.string   "state",                limit: 255
+    t.string   "state",                  limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "stock_location_id"
-    t.decimal  "adjustment_total",                 precision: 10, scale: 2, default: 0.0
-    t.decimal  "additional_tax_total",             precision: 10, scale: 2, default: 0.0
-    t.decimal  "promo_total",                      precision: 10, scale: 2, default: 0.0
-    t.decimal  "included_tax_total",               precision: 10, scale: 2, default: 0.0, null: false
-    t.decimal  "pre_tax_amount",                   precision: 12, scale: 4, default: 0.0, null: false
+    t.decimal  "adjustment_total",                   precision: 10, scale: 2, default: 0.0
+    t.decimal  "additional_tax_total",               precision: 10, scale: 2, default: 0.0
+    t.decimal  "promo_total",                        precision: 10, scale: 2, default: 0.0
+    t.decimal  "included_tax_total",                 precision: 10, scale: 2, default: 0.0, null: false
+    t.decimal  "pre_tax_amount",                     precision: 12, scale: 4, default: 0.0, null: false
     t.integer  "instance_id"
     t.integer  "company_id"
     t.integer  "partner_id"
@@ -2799,19 +2799,7 @@ ActiveRecord::Schema.define(version: 20150901151857) do
   add_index "support_tickets", ["target_id", "target_type"], name: "index_support_tickets_on_target_id_and_target_type", using: :btree
   add_index "support_tickets", ["user_id"], name: "index_support_tickets_on_user_id", using: :btree
 
-  create_table "text_filters", force: :cascade do |t|
-    t.string   "name",             limit: 255
-    t.string   "regexp",           limit: 255
-    t.string   "replacement_text", limit: 255
-    t.integer  "flags"
-    t.integer  "instance_id"
-    t.integer  "creator_id"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-   create_table "taggings", force: :cascade do |t|
+  create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id"
     t.integer  "taggable_id"
     t.string   "taggable_type"
@@ -2834,6 +2822,17 @@ ActiveRecord::Schema.define(version: 20150901151857) do
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
 
+  create_table "text_filters", force: :cascade do |t|
+    t.string   "name",             limit: 255
+    t.string   "regexp",           limit: 255
+    t.string   "replacement_text", limit: 255
+    t.integer  "flags"
+    t.integer  "instance_id"
+    t.integer  "creator_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "theme_fonts", force: :cascade do |t|
     t.integer  "theme_id"
@@ -2989,7 +2988,7 @@ ActiveRecord::Schema.define(version: 20150901151857) do
     t.boolean  "searchable",                                                                     default: true
     t.boolean  "action_regular_booking",                                                         default: true
     t.boolean  "action_continuous_dates_booking",                                                default: false
-	t.boolean  "search_location_type_filter",                                        			 default: true
+    t.boolean  "search_location_type_filter",                                                    default: true
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
