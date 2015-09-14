@@ -1,0 +1,5 @@
+%tr
+  %td= link_to product.id, instance_admin_reports_product_path(id: product.id)
+  %td= product.name
+  %td= product.description.to_s.truncate(100)
+  %td= product.extra_properties.to_h.to_s.truncate(100)

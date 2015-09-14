@@ -9,6 +9,7 @@ class Transactable < ActiveRecord::Base
   include SitemapService::Callbacks
 
   DEFAULT_ATTRIBUTES = %w(name description capacity)
+  DATE_VALUES = ['today', 'yesterday', 'week_ago', 'month_ago', '3_months_ago', '6_months_ago']
 
   has_custom_attributes target_type: 'ServiceType', target_id: :transactable_type_id
   has_metadata accessors: [:photos_metadata]
@@ -134,6 +135,8 @@ class Transactable < ActiveRecord::Base
     listing_ids_decorated = listing_ids.each_with_index.map {|lid, i| "WHEN transactables.id=#{lid} THEN #{i}" }
     order("CASE #{listing_ids_decorated.join(' ')} END") if listing_ids.present?
   }
+
+  scope :with_date, ->(date) { where(created_at: date) }
 
   # == Callbacks
   before_validation :set_activated_at, :set_enabled, :nullify_not_needed_attributes,

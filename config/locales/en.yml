@@ -239,6 +239,13 @@ en:
     are_you_sure: "Are you sure?"
     email: 'Email'
 
+    general:
+      product: "Product"
+      products: "Products"
+      listing: "Listing"
+      listings: "Listings"
+      reports: "Reports"
+
     analytics:
       no_revenue_yet: 'No revenue yet.'
       no_sales_yet: 'No sales yet.'
@@ -254,6 +261,18 @@ en:
         message: "Message"
         created_at: "Created at"
         delete: 'Delete'
+
+    reports:
+      all_service_types: "All service types"
+      all_product_types: "All product types"
+      download_report_as_csv: "Download report as CSV"
+      attribute: "Attribute"
+      value: "Value"
+      fields:
+        id: "ID"
+        name: "Name"
+        description: "Description"
+        properties: "Properties"
 
     settings:
       configuration:
