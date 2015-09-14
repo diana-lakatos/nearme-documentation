@@ -26,6 +26,10 @@ namespace :reviews do
           puts "\tSkipping review(id=#{r.id}) - no rating system"
         end
       end
+      User.find_each do |u|
+        u.recalculate_left_as_buyer_average_rating!
+        u.recalculate_left_as_seller_average_rating!
+      end
     end
   end
 end
