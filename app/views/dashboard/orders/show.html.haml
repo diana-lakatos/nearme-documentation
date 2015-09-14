@@ -23,6 +23,9 @@
             %br
             %strong=shipment.selected_shipping_rate.name
             %br
+            - if shipment.shippo_tracking_number.present?
+              Tracking number:
+              = shipment.shippo_tracking_number
 
         %td
           - if @charge_info && @charge_info.response['card']

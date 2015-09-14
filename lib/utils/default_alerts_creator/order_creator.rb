@@ -6,6 +6,8 @@ class Utils::DefaultAlertsCreator::OrderCreator < Utils::DefaultAlertsCreator::W
     create_notify_seller_email!
     create_notify_shipped_email!
     create_notify_approved_email!
+    create_notify_buyer_of_shipping_info_email!
+    create_notify_seller_of_shipping_info_email!
   end
 
   def create_confirm_email!
@@ -26,6 +28,14 @@ class Utils::DefaultAlertsCreator::OrderCreator < Utils::DefaultAlertsCreator::W
 
   def create_notify_approved_email!
     create_alert!({associated_class: WorkflowStep::OrderWorkflow::Approved, name: 'approved_email_to_buyer', path: 'spree/order_mailer/approved_email', subject: "{{'buy_sell_market.checkout.order_mailer.approved_email.subject' | translate}} {{ order.number }}", alert_type: 'email', recipient_type: 'enquirer'})
+  end
+
+  def create_notify_buyer_of_shipping_info_email!
+    create_alert!({associated_class: WorkflowStep::OrderWorkflow::ShippingInfo, name: 'shipping_info_for_buyer', path: 'spree/order_mailer/shipping_info_for_buyer', subject: "{{'buy_sell_market.checkout.order_mailer.shipping_info_for_buyer_email.subject' | translate}}", alert_type: 'email', recipient_type: 'enquirer'})
+  end
+
+  def create_notify_seller_of_shipping_info_email!
+    create_alert!({associated_class: WorkflowStep::OrderWorkflow::ShippingInfo, name: 'shipping_info_for_seller', path: 'spree/order_mailer/shipping_info_for_seller', subject: "{{'buy_sell_market.checkout.order_mailer.shipping_info_for_seller_email.subject' | translate}}", alert_type: 'email', recipient_type: 'lister'})
   end
 
   protected
