@@ -2,7 +2,6 @@ class Review < ActiveRecord::Base
   has_paper_trail
   auto_set_platform_context
   scoped_to_platform_context
-
   acts_as_paranoid
 
   self.per_page = 10
@@ -11,14 +10,18 @@ class Review < ActiveRecord::Base
   LAST_6_MONTHS = '6_months'
   DATE_VALUES = ['today', 'yesterday', 'week_ago', 'month_ago', '3_months_ago', '6_months_ago']
 
-  belongs_to :user
+  belongs_to :user, -> { with_deleted }
+  belongs_to :seller, -> { with_deleted }, class_name: 'User'
+  belongs_to :buyer, -> { with_deleted }, class_name: 'User'
   belongs_to :reviewable, polymorphic: true
   belongs_to :instance
   belongs_to :transactable_type
-  belongs_to :rating_system
+  belongs_to :rating_system, -> { with_deleted }
 
   has_many :rating_answers, -> { order(:id) }, dependent: :destroy
 
+  before_validation :set_foreign_keys_and_subject, on: :create
+  before_validation :set_displayable, on: :create
   validates_presence_of :rating, :user, :reviewable, :transactable_type
   validates :rating, inclusion: { in: RatingConstants::VALID_VALUES , message: :rating_is_required }
   validate  :creator_does_not_review_own_objects
@@ -30,135 +33,75 @@ class Review < ActiveRecord::Base
   scope :with_transactable_type, ->(transactable_type_id) { where(transactable_type_id: transactable_type_id) }
   scope :by_reservations, ->(id) { where(reviewable_id: id, reviewable_type: 'Reservation').includes(rating_answers: [:rating_question]) }
   scope :by_line_items, ->(id) { where(reviewable_id: id, reviewable_type: 'Spree::LineItem').includes(rating_answers: [:rating_question]) }
-  scope :for_buyer, ->{ with_object(RatingConstants::BUYER) }
-  scope :for_seller, ->{ with_object(RatingConstants::SELLER) }
-  scope :for_seller_and_product, -> { with_object([RatingConstants::SELLER, RatingConstants::PRODUCT]) }
   scope :by_search_query, -> (query) { joins(:user).where("users.name ILIKE ?", query) }
+  scope :displayable, -> { where(displayable: true).joins(:rating_system).where('rating_systems.active = ?', true) }
+  scope :about_seller , -> (user) { displayable.where(seller_id: user.id, subject: RatingConstants::HOST).where.not(user_id: user.id) }
+  scope :about_buyer, -> (user) { displayable.where(buyer_id: user.id, subject: [RatingConstants::GUEST]).where.not(user_id: user.id) }
+  scope :left_by_seller, -> (user) { displayable.where(seller_id: user.id, user_id: user.id, subject: RatingConstants::GUEST) }
+  scope :left_by_buyer, -> (user) { displayable.where(buyer_id: user.id, user_id: user.id, subject: [RatingConstants::HOST, RatingConstants::TRANSACTABLE]) }
+  scope :for_reviewables, -> (ids, type) { where(subject: RatingConstants::TRANSACTABLE, reviewable_id: ids, reviewable_type: type) }
+  scope :active_with_subject, -> (subject) { joins(:rating_system).merge(RatingSystem.active_with_subject(subject)) }
+  scope :for_type_of_transactable_type, -> (type) { joins(:rating_system).merge(RatingSystem.for_type_of_transactable_type(type) ) }
 
   after_commit :expire_cache
 
   def recalculate_reviewable_average_rating
-    if self.reviewable.is_a?(Spree::LineItem)
-      recalculate_by_type(-> { self.reviewable.product.user.recalculate_seller_average_rating! },
-                          -> { self.reviewable.order.user.recalculate_buyer_average_rating! },
-                          -> { self.reviewable.product.recalculate_average_rating! })
+    if self.reviewable_type == "Spree::LineItem"
+      recalculate_by_type(-> { self.reviewable.product.recalculate_average_rating! })
+
     else
-      recalculate_by_type(-> { self.reviewable.creator.recalculate_seller_average_rating! },
-                          -> { self.reviewable.owner.recalculate_buyer_average_rating! },
-                          -> { self.reviewable.listing.recalculate_average_rating! })
+      recalculate_by_type(-> { self.reviewable.listing.recalculate_average_rating! })
     end
-  end
-
-  def self.both_sides_reviewed_for(object, user_id)
-    subject = RatingConstants::RATING_MAPPING[object]
-
-    raise "You can't ask for another side review from a transactable." if subject == RatingConstants::TRANSACTABLE
-
-    opposite_subject = if subject == RatingConstants::HOST
-      RatingConstants::GUEST
-    else
-      RatingConstants::HOST
-    end
-
-    select_string = <<-SQL
-      DISTINCT reviews.*
-    SQL
-
-    join_string = <<-SQL
-      -- Join the user's rating_system
-      INNER JOIN rating_systems AS user_rating_systems ON
-        reviews.rating_system_id = user_rating_systems.id
-    SQL
-
-    where_string = <<-SQL
-      user_rating_systems.subject = '$opposite_subject' AND
-      reviews.user_id = '$user_id' AND
-
-      EXISTS (
-        SELECT *
-        FROM reviews AS other_side_reviews
-        INNER JOIN rating_systems AS other_side_rating_systems ON
-          other_side_reviews.rating_system_id = other_side_rating_systems.id
-        WHERE
-          other_side_rating_systems.subject = '$subject' AND
-          other_side_reviews.reviewable_id = reviews.reviewable_id AND
-          other_side_reviews.reviewable_type = reviews.reviewable_type
-      )
-
-      OR
-
-      user_rating_systems.subject = 'transactable' AND
-      reviews.user_id = '$user_id'
-    SQL
-
-    where_string.gsub!("$subject", subject)
-    where_string.gsub!("$opposite_subject", opposite_subject)
-    where_string.gsub!("$user_id", user_id.to_s)
-
-    select(select_string).joins(join_string).where(where_string)
-  end
-
-  def self.reviews_from(object)
-    select_string = <<-SQL
-      DISTINCT reviews.*
-    SQL
-
-    join_string = <<-SQL
-      INNER JOIN reviews AS rev ON
-      rev.reviewable_type = reviews.reviewable_type AND
-      rev.reviewable_id = reviews.reviewable_id
-
-      INNER JOIN rating_systems as rs ON
-      reviews.rating_system_id = rs.id
-    SQL
-
-    where_string = <<-SQL
-      rs.subject = 'transactable' OR
-      rs.subject = '$subject' OR
-
-      NOT (
-        SELECT tt.show_reviews_if_both_completed
-        FROM transactable_types AS tt
-        WHERE tt.id = reviews.transactable_type_id
-      )
-    SQL
-
-    where_string.gsub!("$subject", RatingConstants::RATING_MAPPING[object])
-    select(select_string).joins(join_string).where(where_string)
-  end
-
-
-  def self.with_object(object)
-    subject = if object.is_a?(Array)
-      object.map { |object| RatingConstants::RATING_MAPPING[object] }
-    else
-      RatingConstants::RATING_MAPPING[object]
-    end
-
-    includes(:rating_system).where(rating_systems: { subject: subject })
   end
 
   def expire_cache
-    Rails.cache.delete_matched("reviews_view/#{reviewable.cache_key}/*")
+    Rails.cache.delete_matched("reviews_view/#{(reviewable.try(:product) || reviewable.listing).cache_key}/*")
+    Rails.cache.delete_matched("reviews_view/#{seller.cache_key}/*")
+    Rails.cache.delete_matched("reviews_view/#{buyer.cache_key}/*")
   end
 
   protected
 
+  def set_foreign_keys_and_subject
+    self.buyer_id = reviewable.owner_id
+    self.seller_id = reviewable.creator_id
+    self.subject = rating_system.subject
+  end
+
+  def set_displayable
+    if [RatingConstants::HOST, RatingConstants::GUEST].include?(subject)
+      review = Review.find_by(reviewable_id: reviewable_id, reviewable_type: reviewable_type, subject: [RatingConstants::HOST, RatingConstants::GUEST])
+      review.try(:update_column, :displayable, true)
+      review.try(:recalculate_reviewable_average_rating)
+      if review.nil? && transactable_type.show_reviews_if_both_completed
+        self.displayable = false
+      end
+    end
+    true
+  end
+
   def creator_does_not_review_own_objects
-    if user_id.present? && (user_id == reviewable.try(:creator_id) && user_id == reviewable.try(:owner_id))
+    if buyer_id == seller_id
       errors.add(:base, I18n.t('errors.messages.cant_review_own_product'))
     end
   end
 
   private
 
-  def recalculate_by_type(recalculate_seller, recalculate_buyer, recalculate_product)
-    block = case rating_system.subject
-      when RatingConstants::HOST then recalculate_seller
-      when RatingConstants::GUEST then recalculate_buyer
-      when RatingConstants::TRANSACTABLE then recalculate_product
-      else recalculate_product
+  def recalculate_by_type(recalculate_product)
+    case rating_system.subject
+    when RatingConstants::HOST
+      self.seller.recalculate_seller_average_rating!
+      self.buyer.recalculate_left_as_buyer_average_rating!
+    when RatingConstants::GUEST
+      self.buyer.recalculate_buyer_average_rating!
+      self.seller.recalculate_left_as_seller_average_rating!
+    when RatingConstants::TRANSACTABLE
+      recalculate_product.call
+      self.buyer.recalculate_left_as_buyer_average_rating!
+    else
+      raise NotImplementedError
     end
-    block.call
+    true
   end
 end

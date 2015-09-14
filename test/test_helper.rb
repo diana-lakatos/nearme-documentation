@@ -206,9 +206,8 @@ class TestDataSeeder
   def self.seed!
     if !@@data_seeded
       @@data_seeded = true
-      instance = FactoryGirl.create(:instance)
-      PlatformContext.current = PlatformContext.new(instance)
-      FactoryGirl.create(:transactable_type_listing)
+      FactoryGirl.create(:instance).set_context!
+      FactoryGirl.create(:transactable_type_listing, generate_rating_systems: true)
     end
   end
 end

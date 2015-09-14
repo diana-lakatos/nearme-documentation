@@ -1271,13 +1271,13 @@ en:
       visitor:
         no_products: '%{name} does not offer any products yet.'
         no_services: '%{name} does not offer any services yet.'
-        no_reviews: "%{name} did not received any reviews yet."
+        no_reviews: "%{name} has not received any reviews yet."
         no_blog_posts: '%{name} does not have any blog posts yet.'
 
       user:
         no_products: "You don't have any products."
         no_services: "You don't have any services."
-        no_reviews: "You did not received any reviews."
+        no_reviews: "You haven't received any reviews."
         no_blog_posts: "You don't have any blog posts."
 
       tabs:
@@ -1364,6 +1364,7 @@ en:
     tell_us: 'Tell us a little about yourself'
     custom_attributes: 'Custom Attributes'
     sort: 'Sort:'
+    choose: 'Choose:'
     sms_preferences:
       new_reservation: 'I receive a reservation request.'
       reservation_state_changed: 'A reservation I have requested is accepted or declined.'
@@ -1668,10 +1669,10 @@ en:
       booking_type_recurring: 'Recurring'
 
   user_reviews:
-    reviews_about_this_seller: "Reviews about this seller"
-    reviews_left_by_this_seller: "Reviews left by this seller"
-    reviews_about_this_buyer: "Reviews about this buyer"
-    reviews_left_by_this_buyer: "Reviews left by this buyer"
+    reviews_about_this_seller: "How others rated %{first_name} as a seller"
+    reviews_left_by_this_seller: "How %{first_name} rated others as a seller"
+    reviews_about_this_buyer: "How others rated %{first_name} as an buyer"
+    reviews_left_by_this_buyer: "How %{first_name} rated others as an buyer"
 
   payments:
     credit_card: 'Credit Card Payment'

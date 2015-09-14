@@ -10,7 +10,7 @@
 
 .text-center
   - key = (current_user && current_user.id == params[:id].to_i) ? 'user' : 'visitor'
-  = t "user_profile.labels.#{key}.no_#{tab.to_s}", name: @user.name
+  = t "user_profile.labels.#{key}.no_#{tab.to_s}", name: @user.first_name
 
   - if key == 'user' && tab != :reviews && link.present?
     %br

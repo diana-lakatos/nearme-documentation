@@ -1,7 +1,6 @@
 class Dashboard::ReviewsController < Dashboard::BaseController
 
   def index
-    @current_instance = platform_context.instance
     completed_tab = params[:tab] == 'completed'
     @rating_systems = reviews_service.get_rating_systems
     @collections = reviews_service.get_reviews_collection(completed_tab)
@@ -75,6 +74,6 @@ class Dashboard::ReviewsController < Dashboard::BaseController
   end
 
   def reviews_service
-    @reviews_service ||= ReviewsService.new(current_user, platform_context.instance, params)
+    @reviews_service ||= ReviewsService.new(current_user, params)
   end
 end

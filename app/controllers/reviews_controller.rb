@@ -1,7 +1,7 @@
 class ReviewsController < ApplicationController
 
   def index
-    if params[:reviewable_parent_type].blank? || params[:object].blank?
+    if params[:subject].blank? || params[:reviewable_parent_type].blank? || params[:reviewable_parent_id].blank?
       render nothing: true, status: :bad_request
     else
       @reviewable_parent = case params[:reviewable_parent_type]
@@ -15,15 +15,16 @@ class ReviewsController < ApplicationController
          raise NotImplementedError
        end.with_deleted.find(params[:reviewable_parent_id])
 
+       # do not try to set default params[:page] - see reviews/index.html.haml
        tab_content, tab_header =
-        Rails.cache.fetch(['reviews_view', @reviewable_parent, params[:subject], params[:page]], expires_in: 2.hours) do
-         case params[:object]
-         when RatingConstants::PRODUCT
-           @reviews = @reviewable_parent.reviews
+         Rails.cache.fetch(['reviews_view', @reviewable_parent, params[:subject], params[:page].present? ? params[:page] : 1], expires_in: 2.hours) do
+         case params[:subject]
+         when RatingConstants::TRANSACTABLE
+           @reviews = @reviewable_parent.reviews.includes(:rating_answers, { rating_system: :rating_questions })
            @average_rating = @reviewable_parent.try(:average_rating)
            @question_average_rating = @reviewable_parent.question_average_rating
-         when RatingConstants::SELLER
-           @reviews = @reviewable_parent.reviews_about_seller
+         when RatingConstants::HOST
+           @reviews = Review.about_seller(@reviewable_parent).includes(:rating_answers, { rating_system: :rating_questions })
            @average_rating = @reviewable_parent.seller_average_rating
            @question_average_rating = @reviewable_parent.question_average_rating(@reviews)
          else

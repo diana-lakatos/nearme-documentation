@@ -31,7 +31,7 @@
 
           - if platform_context.support_email
             %p
-              = mail_to platform_context.support_email, t('dashboard.reviews.feedback.contact_name_support', name: @current_instance.name)
+              = mail_to platform_context.support_email, t('dashboard.reviews.feedback.contact_name_support', name: PlatformContext.current.instance.name)
 
     .reviews-additional-content.collapse{id: "#{subject}-#{feedback.reviewable.id}"}
       - feedback.rating_answers.reject { |answer| answer.rating_question.nil? }.each do |answer|

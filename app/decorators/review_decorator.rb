@@ -63,7 +63,7 @@ class ReviewDecorator < Draper::Decorator
   private
 
   def reviewable_info(attrs)
-    h.image_tag(attrs[:photo]) + content_tag(:p, attrs[:name])
+    h.image_tag(attrs[:photo]) + content_tag(:p, attrs[:name], class: 'name-info')
   end
 
   def own_info
@@ -71,13 +71,7 @@ class ReviewDecorator < Draper::Decorator
   end
 
   def get_user_info
-    target_user = if reservation?
-      object.rating_system.try(:subject) == RatingConstants::HOST ? reviewable.creator : reviewable.owner
-    else
-      object.rating_system.try(:subject) == RatingConstants::HOST ? reviewable.product.user : reviewable.order.user
-    end
-
-    user_info_for(target_user)
+    user_info_for(object.subject == RatingConstants::HOST ? seller : buyer)
   end
 
   def user_info_for(target_user)

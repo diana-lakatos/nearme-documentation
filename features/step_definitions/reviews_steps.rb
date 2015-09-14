@@ -2,8 +2,8 @@ require Rails.root.join 'test/helpers/stub_helper'
 include StubHelper
 
 Given /^I am (host|guest) of a past reservation$/ do |kind|
-  %w(transactable guest host).each { |subject| FactoryGirl.create(:rating_system, subject: subject, active: true) }
   @reservation = FactoryGirl.create(:past_reservation)
+  %w(transactable guest host).each { |subject| FactoryGirl.create(:rating_system, subject: subject, active: true, transactable_type: @reservation.listing.transactable_type) }
   @user = if kind == 'guest'
             @reservation.owner
           elsif kind == 'host'

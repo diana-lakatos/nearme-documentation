@@ -14,10 +14,10 @@ class InstanceAdmin::Manage::ServiceTypesController < InstanceAdmin::Manage::Bas
 
   def create
     @service_type = ServiceType.new(service_type_params.merge(
-      action_free_booking: true, 
+      action_free_booking: true,
       action_hourly_booking: true,
-      action_daily_booking: true, 
-      action_weekly_booking: true, 
+      action_daily_booking: true,
+      action_weekly_booking: true,
       action_monthly_booking: true,
       availability_options: { "defer_availability_rules" => true, "confirm_reservations" => { "default_value" => true, "public" => true } },
       buyable: false
@@ -30,7 +30,7 @@ class InstanceAdmin::Manage::ServiceTypesController < InstanceAdmin::Manage::Bas
       at.save!
       Utils::FormComponentsCreator.new(@service_type).create!
       Utils::FormComponentsCreator.new(@service_type, 'transactable').create!
-      RatingSystemsInitializerService.new(@service_type).create_rating_systems!
+      @service_type.create_rating_systems
       flash[:success] = t 'flash_messages.instance_admin.manage.service_types.created'
       redirect_to instance_admin_manage_service_types_path
     else

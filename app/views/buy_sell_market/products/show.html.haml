@@ -97,18 +97,7 @@
                       .span3
                         .rating
                           = render partial: 'stars', locals: { stars:  (@product.question_average_rating[rating_question.id] || 0).round }
-            - @reviews.each do |review|
-              .review
-                .row-fluid
-                  .span2
-                    = image_tag review.user.avatar_url
-                    %p= review.user.first_name
-                  .span10
-                    .rating
-                      = render partial: 'stars', locals: { stars: review.rating }
-                      %p.review-date= I18n.l(review.created_at, format: :month_year)
-                    %p
-                      = review.comment
+            = render partial: 'reviews/review', collection: @reviews
             = will_paginate_styled @reviews, param_name: 'reviews_page'
 
         - unless hidden.include?(:shipping)

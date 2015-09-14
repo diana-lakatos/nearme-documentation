@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150911155802) do
+ActiveRecord::Schema.define(version: 20150914133209) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1379,13 +1379,16 @@ ActiveRecord::Schema.define(version: 20150911155802) do
     t.integer  "transactable_type_id"
     t.string   "reviewable_type"
     t.integer  "rating_system_id"
+    t.integer  "buyer_id"
+    t.integer  "seller_id"
+    t.boolean  "displayable",          default: true
+    t.string   "subject"
   end
 
   add_index "reviews", ["deleted_at"], name: "index_reviews_on_deleted_at", using: :btree
   add_index "reviews", ["instance_id"], name: "index_reviews_on_instance_id", using: :btree
+  add_index "reviews", ["rating_system_id", "reviewable_id", "reviewable_type"], name: "index_reviews_on_rating_system_id_and_reviewable", unique: true, using: :btree
   add_index "reviews", ["reviewable_id", "reviewable_type"], name: "index_reviews_on_reviewable_id_and_reviewable_type", using: :btree
-  add_index "reviews", ["reviewable_id"], name: "index_reviews_on_reviewable_id", using: :btree
-  add_index "reviews", ["reviewable_type"], name: "index_reviews_on_reviewable_type", using: :btree
   add_index "reviews", ["transactable_type_id"], name: "index_reviews_on_transactable_type_id", using: :btree
   add_index "reviews", ["user_id"], name: "index_reviews_on_user_id", using: :btree
 
@@ -2145,7 +2148,7 @@ ActiveRecord::Schema.define(version: 20150911155802) do
   create_table "spree_shipments", force: true do |t|
     t.string   "tracking"
     t.string   "number"
-    t.decimal  "cost",                 precision: 10, scale: 2, default: 0.0
+    t.decimal  "cost",                   precision: 10, scale: 2, default: 0.0
     t.datetime "shipped_at"
     t.integer  "order_id"
     t.integer  "address_id"
@@ -2698,19 +2701,7 @@ ActiveRecord::Schema.define(version: 20150911155802) do
   add_index "support_tickets", ["target_id", "target_type"], name: "index_support_tickets_on_target_id_and_target_type", using: :btree
   add_index "support_tickets", ["user_id"], name: "index_support_tickets_on_user_id", using: :btree
 
-  create_table "text_filters", force: true do |t|
-    t.string   "name"
-    t.string   "regexp"
-    t.string   "replacement_text"
-    t.integer  "flags"
-    t.integer  "instance_id"
-    t.integer  "creator_id"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-   create_table "taggings", force: true do |t|
+  create_table "taggings", force: true do |t|
     t.integer  "tag_id"
     t.integer  "taggable_id"
     t.string   "taggable_type"
@@ -2732,6 +2723,18 @@ ActiveRecord::Schema.define(version: 20150911155802) do
   end
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
+
+  create_table "text_filters", force: true do |t|
+    t.string   "name"
+    t.string   "regexp"
+    t.string   "replacement_text"
+    t.integer  "flags"
+    t.integer  "instance_id"
+    t.integer  "creator_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "theme_fonts", force: true do |t|
     t.integer  "theme_id"
@@ -3161,6 +3164,8 @@ ActiveRecord::Schema.define(version: 20150911155802) do
     t.integer  "saved_searches_count",                               default: 0
     t.datetime "saved_searches_alert_sent_at"
     t.string   "paypal_merchant_id"
+    t.float    "left_by_seller_average_rating",                      default: 0.0
+    t.float    "left_by_buyer_average_rating",                       default: 0.0
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

@@ -94,8 +94,8 @@ class TransactableType < ActiveRecord::Base
 
   def create_rating_systems
     RatingConstants::RATING_SYSTEM_SUBJECTS.each do |subject|
-      rating_system = instance.rating_systems.create(subject: subject, transactable_type_id: id)
-      RatingConstants::VALID_VALUES.each { |value| rating_system.rating_hints.create(value: value, instance: instance) }
+      rating_system = self.rating_systems.create!(subject: subject)
+      RatingConstants::VALID_VALUES.each { |value| rating_system.rating_hints.create!(value: value) }
     end
   end
 

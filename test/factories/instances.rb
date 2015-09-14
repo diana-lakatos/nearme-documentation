@@ -32,19 +32,8 @@ FactoryGirl.define do
     date_pickers_use_availability_rules '1'
     default_products_search_view 'products'
 
-    ignore do
-      generate_rating_systems true
-    end
-
     after(:create) do |instance, evaluator|
       instance.theme = FactoryGirl.create(:theme, skip_compilation: true, owner: instance) unless instance.theme
-
-      if evaluator.generate_rating_systems
-        RatingConstants::RATING_SYSTEM_SUBJECTS.each do |subject|
-          rating_system = FactoryGirl.create(:active_rating_system, subject: subject, instance: instance)
-          RatingConstants::VALID_VALUES.each { |value| FactoryGirl.create(:rating_hint, value: value, instance: instance, rating_system: rating_system) }
-        end
-      end
     end
 
     after(:create) do |instance|

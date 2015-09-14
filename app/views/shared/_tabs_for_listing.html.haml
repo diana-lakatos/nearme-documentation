@@ -15,10 +15,10 @@
     $('#navigation-tabs'),
     {
       path: "#{reviews_path}",
-      reviewables: {
-        product: { id: #{@listing.id}, type: 'Transactable', subject: "#{@listing.transactable_type.bookable_noun}" },
-        seller: { id: #{@listing.creator_id} , type: 'User', subject: "#{@listing.transactable_type.lessor}" }
-      }
+      reviewables: [
+         { id: #{@listing.id}, type: 'Transactable', subject: "#{RatingConstants::TRANSACTABLE}" },
+         { id: #{@listing.creator_id}, type: 'User', subject: "#{RatingConstants::HOST}" }
+        ]
     }
     )
 

@@ -1,0 +1,18 @@
+.review{id: dom_id(review)}
+  .row-fluid
+    .span2
+      =review.decorate.show_reviewable_info
+    .span10
+      .rating
+        = render 'buy_sell_market/products/stars', stars: review.rating
+        %p.review-date= I18n.l(review.created_at.to_date, format: :short)
+      %p.comment
+        = review.comment
+      .review-details-questions
+        - review.rating_system.rating_questions.each do |rating_question|
+          .row-fluid.compact
+            .span8
+              %span.question= rating_question.text
+            .span3
+              .rating
+                = render 'buy_sell_market/products/stars', stars: review.rating_answers.find { |ra| ra.rating_question_id == rating_question.id }.try(:rating).to_i

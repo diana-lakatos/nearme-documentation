@@ -114,14 +114,14 @@
       .input-container.col-xs-3
         = f.input :support_email, placeholder: 'example@gmail.com', input_html: { class: 'form-control' }
       .input-container.col-xs-3
-        = f.input :support_imap_username, input_html: { autocomplete: 'off' }, input_html: { class: 'form-control' }
+        = f.input :support_imap_username, input_html: { autocomplete: 'off' }
       .input-container.col-xs-3
-        = f.input :support_imap_password, input_html: { autocomplete: 'off', value: f.try(:object).try(:support_imap_password) }, input_html: { class: 'form-control' }
+        = f.input :support_imap_password, input_html: { autocomplete: 'off', value: f.try(:object).try(:support_imap_password) }
       .input-container.col-xs-3
-        = f.input :support_imap_server, input_html: { autocomplete: 'off' }, input_html: { class: 'form-control' }
+        = f.input :support_imap_server, input_html: { autocomplete: 'off' }
     .row
       .input-container.col-xs-3
-        = f.input :support_imap_port, input_html: { autocomplete: 'off' }, input_html: { class: 'form-control' }
+        = f.input :support_imap_port, input_html: { autocomplete: 'off' }
       .input-container.col-xs-3
         = f.input :support_imap_ssl, input_html: { autocomplete: 'off' }, inline_label: true
         = f.submit 'Save', class: 'hidden_form_element'

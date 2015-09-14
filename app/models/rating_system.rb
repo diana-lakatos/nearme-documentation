@@ -18,7 +18,9 @@ class RatingSystem < ActiveRecord::Base
   default_scope { order('active ASC') }
 
   scope :active, -> { where(active: true) }
-  scope :active_with_subject, ->(subject) { active.find_by(subject: subject) }
+  scope :active_with_subject, ->(subject) { active.with_subject(subject) }
+  scope :with_subject, -> (subject) { where(subject: subject) }
+  scope :for_type_of_transactable_type, -> (type) { joins(:transactable_type).where('transactable_types.type = ?', type) }
   scope :for_transactables, ->{ where(subject: RatingConstants::TRANSACTABLE) }
   scope :for_hosts, ->{ where(subject: RatingConstants::HOST) }
   scope :for_guests, ->{ where(subject: RatingConstants::GUEST) }
