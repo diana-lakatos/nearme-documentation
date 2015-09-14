@@ -458,7 +458,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def payment_capture
-    return true if manual_payment?
+    return true if manual_payment? || total_amount_cents == 0
 
     if billing_authorization.present?
       attempt_payment_capture
