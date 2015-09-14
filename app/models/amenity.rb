@@ -3,8 +3,8 @@ class Amenity < ActiveRecord::Base
 
   belongs_to :amenity_type
   has_many :amenity_holders, dependent: :destroy
-  has_many :listings, through: :amenity_holders, source: :holder, source_type: 'Transactable', inverse_of: :amenities
-  has_many :locations, through: :amenity_holders, source: :holder, source_type: 'Location', inverse_of: :amenities
+  has_many :listings, through: :amenity_holders, source: :holder, source_type: 'Transactable', inverse_of: :amenities, class_name: 'Transactable'
+  has_many :locations, through: :amenity_holders, source: :holder, source_type: 'Location', inverse_of: :amenities, class_name: 'Location'
 
   validates_presence_of :name
 
