@@ -29,7 +29,11 @@
       <div class="info">
         <div class="price">
           {% assign price_info = listing | lowest_price_without_cents_with_currency %}
-          <span>{{ 'search.price_from' | translate }} {{ price_info.price}} / {{ price_info.period }}</span>
+          {% if price_info.price %}
+            <span>{{ 'search.price_from' | translate }} {{ price_info.price}} / {{ price_info.period }}</span>
+          {% elsif price_info.free %}
+            <span>{{ 'search.free_listing' | translate }}</span>
+          {% endif %}
         </div>
       </div>
       <div class="listing-google-map-wrapper">

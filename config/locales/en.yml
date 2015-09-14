@@ -1421,6 +1421,7 @@ en:
       weekly: "Weekly"
       monthly: "Monthly"
       hourly: "Hourly"
+      free: "Free"
     header:
       list: "List"
       map: "Map"
@@ -1432,6 +1433,7 @@ en:
       view_listing: 'View listing'
     reserve: 'reserve'
     price_from: 'From'
+    free_listing: 'Free'
 
     date_range:
       title: 'Date range'
