@@ -1,6 +1,6 @@
 module InstanceType::Searcher
 
-  attr_reader :results, :transactable_type
+  attr_reader :results
 
   def result_count
     @search_results_count || @results.try(:total_entries) || @results.size
@@ -88,6 +88,10 @@ module InstanceType::Searcher
 
   def paginated_results(page, per_page)
     @results = @results.paginate(page: page, per_page: per_page, total_entries: @search_results_count)
+  end
+
+  def transactable_type
+    @transactable_type_decorator ||= @transactable_type.decorate
   end
 
 end

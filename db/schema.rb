@@ -2887,6 +2887,7 @@ ActiveRecord::Schema.define(version: 20150911155802) do
     t.boolean  "searchable",                                                         default: true
     t.boolean  "action_regular_booking",                                             default: true
     t.boolean  "action_continuous_dates_booking",                                    default: false
+    t.boolean  "search_location_type_filter",                                        default: true
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
