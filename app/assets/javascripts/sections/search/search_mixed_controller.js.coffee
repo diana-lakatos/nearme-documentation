@@ -308,7 +308,7 @@ class Search.SearchMixedController extends Search.SearchController
     params = @getSearchParams()
     filtered_params = []
     for k, param of params
-      if $.inArray(param["name"], ['ignore_search_event', 'country', 'v', 'lat', 'lon']) < 0
+      if $.inArray(param["name"], ['ignore_search_event', 'country', 'v']) < 0
         filtered_params.push {name: param["name"], value: param["value"]}
     if @sortValue != 'relevance'
       filtered_params.push {name: 'sort', value: @sortValue}
@@ -375,6 +375,8 @@ class Search.SearchMixedController extends Search.SearchController
     params = { country: null, state: null, city: null, suburb: null, street: null, postcode: null }
 
     if result
+      params['lat'] = result.lat()
+      params['lng'] = result.lng()
       params['country'] = result.country()
       params['state']   = result.state()
       params['city']    = result.city()
