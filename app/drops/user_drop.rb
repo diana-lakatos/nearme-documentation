@@ -232,4 +232,9 @@ class UserDrop < BaseDrop
     end
     @categories
   end
+
+  # User's current address
+  def address
+    @user.current_address.presence || @user.locations.first.try(:location_address)
+  end
 end

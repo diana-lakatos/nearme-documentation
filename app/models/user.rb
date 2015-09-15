@@ -67,6 +67,8 @@ class User < ActiveRecord::Base
 
   has_one :blog, class_name: 'UserBlog'
 
+  has_one :current_address, class_name: 'Address', as: :entity
+
   has_custom_attributes target_type: 'InstanceProfileType', target_id: :instance_profile_type_id
 
   after_create :create_blog

@@ -70,5 +70,21 @@ class AddressTest < ActiveSupport::TestCase
     end
   end
 
+  context "update fields from coords" do
+    should "call fetch address on new object with coords" do
+      @address = Address.new
+      @address.latitude = 44.25
+      @address.longitude = 26.11
+      assert true, @address.should_fetch_address?
+    end
+
+    should "call fetch address on object with changed coords" do
+      @address = FactoryGirl.create(:address)
+      @address.latitude = 44.25
+      @address.longitude = 26.11
+      assert true, @address.should_fetch_address?
+    end
+  end
+
 
 end

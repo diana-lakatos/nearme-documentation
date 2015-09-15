@@ -210,9 +210,9 @@ class RegistrationsController < Devise::RegistrationsController
       @user = current_user
       delta = 0.0001
       if ((@user.last_geolocated_location_longitude.to_f - params[:longitude].to_f).abs > delta) || ((@user.last_geolocated_location_latitude.to_f - params[:latitude].to_f).abs > delta)
-        @user.last_geolocated_location_longitude = params[:longitude]
-        @user.last_geolocated_location_latitude = params[:latitude]
-        @user.save
+        @user.update_attributes(last_geolocated_location_longitude: params[:longitude], last_geolocated_location_latitude: params[:latitude])
+
+        UserGeolocationJob.perform(@user.id)
       end
     end
     render :nothing => true
