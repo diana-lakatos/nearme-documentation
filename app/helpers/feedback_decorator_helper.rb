@@ -9,7 +9,7 @@ module FeedbackDecoratorHelper
 
   def order_image
     if reservation? && feedback_object.listing && feedback_object.listing.has_photos?
-      h.image_tag feedback_object.listing.photos.last.image_url(:medium)
+      h.link_to(h.image_tag(feedback_object.listing.photos.rank(:position).first.image_url(:medium)), h.transactable_type_location_listing_path(feedback_object.listing.transactable_type, feedback_object.listing.location, feedback_object.listing))
     elsif line_item? && feedback_object.product && feedback_object.product.variant_images.present?
       h.image_tag feedback_object.product.variant_images.first.image_url(:medium)
     else
