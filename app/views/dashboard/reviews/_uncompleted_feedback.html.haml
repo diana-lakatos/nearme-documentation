@@ -22,7 +22,17 @@
         .order-info
           %p
             - if feedback.decorate.reservation?
-              = link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(feedback.creator)
+              - if rating_system.subject == RatingConstants::GUEST
+                = link_to t('dashboard.reviews.feedback.view_guest_profile'), user_path(feedback.owner)
+              - else
+                = link_to t('dashboard.reviews.feedback.view_host_profile'), user_path(feedback.creator)
+            - else
+              - if rating_system.subject == RatingConstants::GUEST
+                = link_to t('dashboard.reviews.feedback.view_buyer_profile'), user_path(feedback.order.user)
+              - else
+                = link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(feedback.order.company.creator)
+
+
           - if platform_context.support_email
             %p
               = mail_to platform_context.support_email, t('dashboard.reviews.feedback.contact_name_support', name: PlatformContext.current.instance.name)

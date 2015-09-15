@@ -34,9 +34,26 @@ class ReviewDecorator < Draper::Decorator
     h.link_to name, path, target: "_blank"
   end
 
+  def link_to_user_profile
+    if rating_system.subject == RatingConstants::GUEST
+      link_to_buyer_profile
+    else
+      link_to_seller_profile
+    end
+  end
+
+  def link_to_buyer_profile
+    if reservation?
+      h.link_to t('dashboard.reviews.feedback.view_guest_profile'), user_path(reviewable.owner)
+    else
+      h.link_to t('dashboard.reviews.feedback.view_buyer_profile'), user_path(reviewable.order.user)
+    end
+
+  end
+
   def link_to_seller_profile
     if reservation?
-      h.link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(reviewable.creator)
+      h.link_to t('dashboard.reviews.feedback.view_host_profile'), user_path(reviewable.creator)
     else
       h.link_to t('dashboard.reviews.feedback.view_seller_profile'), user_path(reviewable.product.administrator)
     end
