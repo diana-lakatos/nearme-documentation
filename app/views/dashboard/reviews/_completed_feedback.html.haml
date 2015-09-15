@@ -27,7 +27,7 @@
           - if feedback.decorate.line_item?
             = link_to t('dashboard.reviews.feedback.view_order_details'), dashboard_order_path(feedback.reviewable.order)
         .order-info
-          %p= feedback.decorate.link_to_seller_profile
+          %p= feedback.decorate.link_to_user_profile
 
           - if platform_context.support_email
             %p
