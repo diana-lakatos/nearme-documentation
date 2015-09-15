@@ -370,23 +370,6 @@ class Search.SearchMixedController extends Search.SearchController
       )
 
 
-  # Returns special search params based on a geolocation result (Search.Geolocator.Result), or no result.
-  searchParamsFromGeolocationResult: (result) ->
-    params = { country: null, state: null, city: null, suburb: null, street: null, postcode: null }
-
-    if result
-      params['lat'] = result.lat()
-      params['lng'] = result.lng()
-      params['country'] = result.country()
-      params['state']   = result.state()
-      params['city']    = result.city()
-      params['suburb']  = result.suburb()
-      params['street']  = result.street()
-      params['postcode'] = result.postcode()
-    params['loc'] = @buildSeoFriendlyQuery(result)
-
-    params
-
   initializeCarousel: ->
     $('.carousel').carousel({ interval: 7000 })
 
