@@ -23,7 +23,7 @@ class Listing::Search::Params::Web < Listing::Search::Params
   end
 
   def bounding_box
-    @bounding_box ||= [[@options[:nx], @options[:ny]], [@options[:sx], @options[:sy]]] if @options[:nx].present?
+    @bounding_box ||= [[@options[:sx], @options[:sy]], [@options[:nx], @options[:ny]]] if @options[:nx].present?
     super
   end
 
