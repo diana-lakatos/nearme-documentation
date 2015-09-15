@@ -79,6 +79,15 @@ module ShippoApi
 
       set_params_from_hash(options)
     end
+
+    def self.valid?(shippo_address_id)
+      result = Shippo.request(:get, "/addresses/#{shippo_address_id}/validate/")
+
+      result[:object_state] == 'VALID'
+    rescue
+      false
+    end
+
   end
 
   class ShippoParcelInfo < ShippoObject
@@ -166,6 +175,11 @@ module ShippoApi
 
       address_from = Shippo::Address.create(address_from_info.to_hash)
       address_to = Shippo::Address.create(address_to_info.to_hash)
+
+      if !ShippoAddressInfo.valid?(address_from.to_hash[:object_id]) || !ShippoAddressInfo.valid?(address_to.to_hash[:object_id])
+        return default_result_rates
+      end
+
       parcel = Shippo::Parcel.create(parcel_info.to_hash)
       customs_item = nil
       customs_declaration = nil
