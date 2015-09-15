@@ -1824,3 +1824,8 @@ en:
       add_new_dimensions_template: "Add New Dimensions Template"
       save_dimensions_template: "Save dimensions template"
 
+  user_workflow:
+    unread_messages:
+      unread_messages_subject: "You have unread messages"
+      you_have_unread_messages: "This is a notification to let you know you have unread messages waiting for you in your inbox."
+
