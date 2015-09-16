@@ -38,6 +38,14 @@ class ComissionCalculationForTwoStepPayoutTest < ActionDispatch::IntegrationTest
       confirm_reservation!
       schedule_payment_transfer!
     end
+
+    should 'ensure that comission after payout is correct with USD which has 100 - 1 subunit conversion rate for overnight booking' do
+      mockup_database_with_currency('USD')
+      @listing.update!({ booking_type: 'overnight' })
+      create_reservation!
+      confirm_reservation!
+      schedule_payment_transfer!
+    end
   end
 
   private

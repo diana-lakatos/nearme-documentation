@@ -142,9 +142,6 @@ class @Bookings.Listing
 
   # Set the dates active on this listing for booking
   setDates: (dates) ->
-    # If the booking mode is overnight, discard the last day. This is because
-    # we use night-of semantics (i.e. Mon-Wed would be the nights of Mon & Tues)
-    dates.pop() if @isOvernightBooking()
     @bookedDatesArray = dates
 
   # Set the start/end minutes for an hourly listing reservation.

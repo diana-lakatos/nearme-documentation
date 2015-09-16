@@ -17,7 +17,8 @@ class Reservation::DailyPriceCalculator
   # Returns the total price for the listing and it's chosen
   # periods. Returns nil if the selection is unbookable
   def price
-    contiguous_blocks.map do |block|
+    blocks = listing.overnight_booking? ? real_contiguous_blocks : contiguous_blocks
+    blocks.map do |block|
       price_for_days(block.size) * @reservation.quantity rescue 0.0
     end.sum.to_money
   end
@@ -32,12 +33,17 @@ class Reservation::DailyPriceCalculator
     }
   end
 
+  def number_of_nights
+    real_contiguous_blocks.map{|group| group.many? ? group.size - 1 : group.size }.sum
+  end
+
   private
 
   # Price for contiguous days in as a Money object
   def price_for_days(days)
     prices = listing.try(:prices_by_days)
 
+    days -= 1 if listing.overnight_booking? && days > 1
     if prices
       # Determine the matching block size and price
       block_size = prices.keys.sort.inject { |largest_block, block_days|
@@ -69,6 +75,10 @@ class Reservation::DailyPriceCalculator
 
   def contiguous_blocks
     @contiguous_block_finder.contiguous_blocks
+  end
+
+  def real_contiguous_blocks
+    @contiguous_block_finder.real_contiguous_blocks
   end
 
 end

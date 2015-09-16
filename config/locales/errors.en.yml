@@ -45,6 +45,8 @@ en:
           attributes:
             free: "must be free if no prices are provided"
             book_it_out_minimum_qty: "Must be less than or equal to quantity"
+            cant_set_montly_price: "Cant't set monthly price if listing is not open 7 days a week."
+            no_consecutive_days: "Booking will not be possible if no consecutive days are open."
         spree/shipping_method:
           attributes:
             base:
