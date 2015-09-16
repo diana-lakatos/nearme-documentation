@@ -7,7 +7,6 @@ class @Bookings.TimePicker
     @allMinutes = []
     @disabledStartTimes = []
     @disabledEndTimes = []
-
     @openMinute = if options.openMinute? then options.openMinute else 9*60
     @closeMinute = options.closeMinute or 18*60
     @minimumBookingMinutes = options.minimumBookingMinutes
@@ -21,6 +20,7 @@ class @Bookings.TimePicker
     @startTime = @view.startTime
     @endTime = @view.endTime
     @loading = @view.loading
+    @changeDisplayedHour()
 
 
     # Populate the time selects based on the open hours
@@ -46,13 +46,16 @@ class @Bookings.TimePicker
       @trigger 'change'
 
     @bind 'change', =>
-      @container.find('.time-text').text(@formatMinute(@startTime.val()))
+      @changeDisplayedHour()
 
   show: ->
     @view.show()
 
   hide: ->
     @view.hide()
+
+  changeDisplayedHour: ->
+    @container.find('.time-text').text(@formatMinute(@startTime.val()))
 
   # Return the selected start minute
   startMinute: ->
