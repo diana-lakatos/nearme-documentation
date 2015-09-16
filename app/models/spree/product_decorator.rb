@@ -21,10 +21,16 @@ Spree::Product.class_eval do
   has_many :user_messages, as: :thread_context, inverse_of: :thread_context
   has_many :wish_list_items, as: :wishlistable
 
+  has_one :master,
+    -> { where("is_master = ?", true) },
+    inverse_of: :product,
+    class_name: 'Spree::Variant'
+
   has_one :upload_obligation, as: :item, dependent: :destroy
 
   has_custom_attributes target_type: 'Spree::ProductType', target_id: :product_type_id, store_accessor_name: :extra_properties
   delegate :custom_validators, to: :product_type
+  delegate :populate_listings_metadata!, to: :user, prefix: true, allow_nil: true
 
   scope :approved, -> { where(approved: true) }
   scope :draft, -> { where(draft: true) }
@@ -57,6 +63,7 @@ Spree::Product.class_eval do
   validates_with CustomValidators
 
   after_save :set_external_id
+  after_commit :user_populate_listings_metadata!, if: :should_populate_user_listings_metadata?
 
   store_accessor :status, [:current_status]
 
@@ -171,6 +178,10 @@ Spree::Product.class_eval do
 
   def translation_namespace_was
     product_type.try(:translation_namespace_was)
+  end
+
+  def should_populate_user_listings_metadata?
+    paranoia_destroyed? || %w(id draft).any? { |attr| metadata_relevant_attribute_changed?(attr) }
   end
 
   private

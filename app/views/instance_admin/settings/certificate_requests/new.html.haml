@@ -1,6 +1,6 @@
 .content-container
   %h4 Generate CSR
-  = simple_form_for [:instance_admin, :settings, @certificate_request] do |f|
+  = simple_form_for @certificate_request, url: instance_admin_settings_certificate_request_path do |f|
     .row
       .input-container.col-xs-12
         = f.input :country, label: "ISO Country Code", as: :string, placeholder: "US", input_html: { class: 'form-control' }

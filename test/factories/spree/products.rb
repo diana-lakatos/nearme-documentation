@@ -15,11 +15,11 @@ FactoryGirl.define do
     # ensure stock item will be created for this products master
     before(:create) { create(:stock_location) if Spree::StockLocation.count == 0 }
 
-    after(:create) do |p|
-      create_list(:variant, 1, product: p, is_master: true)
-      p.reload
-      p.variants_including_master.each { |v| v.save! }
-    end
+    # after(:create) do |p|
+    #   create_list(:variant, 1, product: p, is_master: true)
+    #   p.reload
+    #   p.variants_including_master.each { |v| v.save! }
+    # end
 
     after(:create) do |p|
       p.stock_items.each { |stock_item| stock_item.adjust_count_on_hand(10) }

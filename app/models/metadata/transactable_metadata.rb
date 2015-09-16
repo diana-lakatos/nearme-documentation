@@ -5,13 +5,13 @@ module Metadata
     included do
 
       attr_accessor :skip_metadata
-      after_commit :location_populate_photos_metadata!, :if => lambda { |l| !l.skip_metadata && l.should_populate_location_photos_metadata? }
-      after_commit :creator_populate_listings_metadata!, :if => lambda { |l| !l.skip_metadata && l.should_populate_creator_listings_metadata? }
-      delegate :populate_photos_metadata!, to: :location, :prefix => true
-      delegate :populate_listings_metadata!, to: :creator, :prefix => true
+      after_commit :location_populate_photos_metadata!, if: lambda { |l| !l.skip_metadata && l.should_populate_location_photos_metadata? }
+      after_commit :creator_populate_listings_metadata!, if: lambda { |l| !l.skip_metadata && l.should_populate_creator_listings_metadata? }
+      delegate :populate_photos_metadata!, to: :location, prefix: true
+      delegate :populate_listings_metadata!, to: :creator, prefix: true, allow_nil: true
 
       def populate_photos_metadata!
-        update_metadata({ :photos_metadata => build_photos_metadata_array })
+        update_metadata({ photos_metadata: build_photos_metadata_array })
         location_populate_photos_metadata!
       end
 
@@ -27,7 +27,7 @@ module Metadata
       end
 
       def should_populate_creator_listings_metadata?
-        self.destroyed? || %w(id draft).any? { |attr| metadata_relevant_attribute_changed?(attr) }
+        self.paranoia_destroyed? || %w(id draft).any? { |attr| metadata_relevant_attribute_changed?(attr) }
       end
 
     end

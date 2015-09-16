@@ -18,7 +18,7 @@ module Metadata
           has_draft_products: products.reload.draft.any?,
           has_any_active_listings: listings.reload.active.any?,
           has_any_active_products: products.reload.not_draft.any?
-        })
+        }) if persisted?
       end
 
       def populate_instance_admins_metadata!

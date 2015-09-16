@@ -22,7 +22,7 @@ module ProductHelper
 
     assert !product.shipping_category_id.nil?
     assert_equal 'iPhone', product.name
-    assert_equal 'iPhone description', ActionView::Base.full_sanitizer.sanitize(product.description).strip
+    assert_equal 'iPhone description', ActionView::Base.full_sanitizer.sanitize(product.description.strip)
     assert_equal 100, product.price
     assert_equal 100, stock_item.stock_movements.sum(:quantity)
   end

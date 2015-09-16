@@ -2,6 +2,8 @@ module MerchantAccount::Concerns::DataAttributes
   extend ActiveSupport::Concern
 
   included do
+    serialize :data, Hash
+
     self::ATTRIBUTES.each do |attr|
       define_method attr do
         data[attr]

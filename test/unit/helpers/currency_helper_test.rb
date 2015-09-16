@@ -20,8 +20,8 @@ class CurrencyHelperTest < ActionView::TestCase
     assert_equal wrap_with_span_with_tooltip("$10.00", 'CAD', '$'), number_to_currency_symbol('CAD', 10)
   end
 
-  private 
+  private
   def wrap_with_span_with_tooltip(text, unit, symbol)
-    "<span rel=\"tooltip\" title=\"#{unit}\" unit=\"#{symbol}\">#{text}</span>"
+    "<span unit=\"#{symbol}\" rel=\"tooltip\" title=\"#{unit}\">#{text}</span>"
   end
 end

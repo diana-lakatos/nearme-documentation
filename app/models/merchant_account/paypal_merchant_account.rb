@@ -79,7 +79,7 @@ class MerchantAccount::PaypalMerchantAccount < MerchantAccount
     if self.permissions_granted && self.payer_id.present?
       self.verify
     else
-      self.fail
+      self.failure
     end
   end
 

@@ -9,14 +9,17 @@ class BuySell::CartService
 
   def add_product(product, quantity=1)
     setup_order(product)
-    populator = Spree::OrderPopulator.new(@order, @order.currency)
+    populator = Spree::OrderContents.new(@order)
+    populator.currency = @order.currency
 
-    unless populator.populate(product.master.id, quantity)
+    begin
+      populator.add(product.master, quantity)
+    rescue
       update_order(@order)
       @errors << populator.errors.full_messages.join('\n')
       return false
     end
-    
+
     update_order(@order)
   end
 

@@ -4,9 +4,8 @@ module CustomAttributes
   class CollectionProxy
     include ActiveModel::Validations
     include Enumerable
-    extend Forwardable
 
-    def_delegators :@hash, :each
+    delegate :each, to: :@hash
 
     def initialize(model, store_accessor_name)
       @model = model
@@ -57,20 +56,18 @@ module CustomAttributes
     protected
 
     def custom_property_type_cast(value, type)
-      klass = ActiveRecord::ConnectionAdapters::Column
-
       return [] if value.nil? && type == :array
       return nil if value.nil?
       case type
       when :string, :text        then value
       when :integer              then value.to_i rescue value ? 1 : 0
       when :float                then value.to_f
-      when :decimal              then klass.value_to_decimal(value)
-      when :datetime, :timestamp then klass.string_to_time(value).try(:in_time_zone)
-      when :time                 then klass.string_to_dummy_time(value)
-      when :date                 then klass.value_to_date(value)
-      when :binary               then klass.binary_to_string(value)
-      when :boolean              then klass.value_to_boolean(value)
+      when :decimal              then ActiveRecord::Type::Decimal.new.type_cast_from_database(value)
+      when :datetime, :timestamp then ActiveRecord::Type::DateTime.new.type_cast_from_database(value).try(:in_time_zone)
+      when :time                 then ActiveRecord::Type::Time.new.type_cast_from_database(value)
+      when :date                 then ActiveRecord::Type::Date.new.type_cast_from_database(value)
+      when :binary               then ActiveRecord::Type::Binary.new.type_cast_from_database(value)
+      when :boolean              then ActiveRecord::Type::Boolean.new.type_cast_from_database(value)
       when :array                then value.split(',').map(&:strip)
       else value
       end

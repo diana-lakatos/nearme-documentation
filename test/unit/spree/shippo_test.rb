@@ -35,7 +35,9 @@ class ShippoTest < ActionView::TestCase
     User.any_instance.expects('name').at_least(0).returns('user name')
     User.any_instance.expects('phone').at_least(0).returns('1231231234')
     User.any_instance.expects('email').at_least(0).returns('user@company.com')
-    User.any_instance.expects('companies').at_least(0).returns([Company.new])
+    companies = [Company.new]
+    companies.stubs(:reload).returns([Company.new])
+    User.any_instance.expects('companies').at_least(0).returns(companies)
 
     Company.any_instance.expects('name').at_least(0).returns('company name')
     Company.any_instance.expects('street').at_least(0).returns('1 Microsoft Way')
@@ -165,9 +167,7 @@ class ShippoTest < ActionView::TestCase
           payment_gateway: @payment_gateway,
           payment_gateway_mode: PlatformContext.current.instance.test_mode? ? "test" : "live"
       )
-      p = @order.payments.build(amount: @order.total_amount_to_charge, company_id: @order.company_id)
-      p.pend
-      p.save!
+      p = @order.payments.create(amount: @order.total_amount_to_charge, company_id: @order.company_id)
 
       shipping_category = Spree::ShippingCategory.create!(
         :name => 'Default',
@@ -212,7 +212,6 @@ class ShippoTest < ActionView::TestCase
       assert_equal 'USD', payment.currency
       assert_equal @order.company_id, payment.company_id
       assert_equal @order.instance_id, payment.instance_id
-      assert_equal 'pending', payment.state
       assert_equal 'complete', @order.state
       assert_not_nil @order.billing_authorization
       assert_equal 'abc', @order.billing_authorization.token

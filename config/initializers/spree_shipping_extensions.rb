@@ -141,7 +141,7 @@ if Spree::Stock::Estimator.methods.include?(:new)
           result
         end
 
-        define_method(:shipping_rates) do |package, frontend_only = true|
+        define_method(:shipping_rates) do |package, shipping_method_filter = ShippingMethod::DISPLAY_ON_FRONT_END|
           shippo_order_status = get_shippo_order_status(package)
 
           if shippo_order_status == :shippo
@@ -151,11 +151,11 @@ if Spree::Stock::Estimator.methods.include?(:new)
           if shippo_order_status == :mixed
             []
           else
-            old_shipping_rates.bind(self).(package, frontend_only)
+            old_shipping_rates.bind(self).(package, shipping_method_filter)
           end
         end
 
-        define_method(:shipping_methods) do |package|
+        define_method(:shipping_methods) do |package, ui_filter|
           shippo_order_status = get_shippo_order_status(package)
 
           if shippo_order_status == :shippo
@@ -165,7 +165,7 @@ if Spree::Stock::Estimator.methods.include?(:new)
             # will return an empty list in this case
             []
           else
-            old_shipping_methods.bind(self).(package)
+            old_shipping_methods.bind(self).(package, ui_filter)
           end
         end
       end

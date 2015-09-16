@@ -1,3 +1,8 @@
+require 'mocha/api'
+
+Class.send(:include, Mocha::ClassMethods)
+World(Mocha::API)
+
 Before do
   mocha_setup
 end

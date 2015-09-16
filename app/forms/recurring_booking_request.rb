@@ -5,9 +5,9 @@ class RecurringBookingRequest < Form
                 :card_holder_last_name, :occurrences
   attr_reader   :recurring_booking, :listing, :location, :user
 
-  def_delegators :@recurring_booking, :credit_card_payment?, :manual_payment?, :reservation_type=
-  def_delegators :@listing,     :confirm_reservations?, :location, :action_hourly_booking?, :company, :currency
-  def_delegators :@user,        :mobile_number, :mobile_number=, :country_name, :country_name=, :country
+  delegate :credit_card_payment?, :manual_payment?, :reservation_type=, to: :recurring_booking
+  delegate :confirm_reservations?, :location, :action_hourly_booking?, :company, to: :listing
+  delegate :mobile_number, :mobile_number=, :country_name, :country_name=, :country, to: :user
 
   before_validation :setup_credit_card_customer, :if => lambda { recurring_booking.try(:reservations).try(:first) and user and user.valid?}
 

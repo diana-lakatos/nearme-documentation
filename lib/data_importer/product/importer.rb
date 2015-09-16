@@ -258,7 +258,7 @@ class DataImporter::Product::Importer
     elsif !@imported_products.empty?
       @data_upload.finish_with_validation_errors!
     else
-      @data_upload.fail!
+      @data_upload.failure!
     end
 
     @data_upload.parse_summary = {
