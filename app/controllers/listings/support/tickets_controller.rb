@@ -72,7 +72,7 @@ class Listings::Support::TicketsController < ApplicationController
     else
       sub = "Offer: #{@listing.name} - "
     end
-    sub += "#{@ticket.reservation_details['quantity']}"# x #{@hourly_presenter.present? ? "#{@hourly_presenter.hours} #{'hour'.pluralize(@hourly_presenter.hours.to_i)}" : @date_presenter.days_in_words}"
+    sub += "#{@ticket.reservation_details['quantity']}"# x #{@hourly_presenter.present? ? "#{@hourly_presenter.hours} #{I18n.t('hour', count: @hourly_presenter.hours.to_i)}" : @date_presenter.days_in_words}"
     sub
   end
 

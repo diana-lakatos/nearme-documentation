@@ -57,6 +57,9 @@ en:
   night:
     one: "1 night"
     other: "%{count} nights"
+  hour:
+    one: "hour"
+    other: "hours"
   desk:
     reservation_rejected_body: "%{user} declined reservation with reason: %{reason}"
     reservation_rejected_title: "[internal] User has declined reservation"
@@ -341,7 +344,7 @@ en:
           for: "For"
         test_mode: "Test Mode"
         test_mode_section:
-          test_mode_label: "Use test payment credentials - Marketplace must be password protected in"
+          test_mode_label: "Use test payment credentials and test Twilio credentials - Marketplace must be password protected in. No live transactions or real sms-es will be sent"
           test_mode_label_link: 'Settings > Configuration'
         authentication: "Authentication"
         ga_tracking_codes: "Google Analytics Tracking Codes"

@@ -57,21 +57,9 @@ class TransactableDrop < BaseDrop
     :defer_availability_rules?, :lowest_price, :company, :properties, :quantity, :administrator_id, :has_photos?, :book_it_out_available?,
     :action_free_booking?, :currency, :exclusive_price_available?, :only_exclusive_price_available?, :capacity, :approval_requests, :updated_at, :possible_express_checkout?, to: :transactable
 
-  # bookable_noun
-  #   name of representing the bookable object transactable on the marketplace as a string (e.g. desk, room etc.)
-  # bookable_noun_plural
-  #   name of representing the bookable object (plural) transactable on the marketplace as a string (e.g. desks, rooms etc.)
   # action_price_per_unit
   #   returns true if there is a single unit available of the transactable item for a given time period
-  # lessor
-  #   the name of the type of entity selling the products
-  # lessee
-  #   the name of the type of entity buying the products
-  # lessors
-  #   pluralized version of lessor
-  # lessees
-  #   pluralized version of lessee
-  delegate :bookable_noun, :bookable_noun_plural, :action_price_per_unit, :lessor, :lessee, :lessors, :lessees, to: :transactable_type
+  delegate :action_price_per_unit, to: :transactable_type
 
   # latitude
   #   returns the latitude of the location of this listing as a floating point number
@@ -87,6 +75,36 @@ class TransactableDrop < BaseDrop
 
   def initialize(transactable)
     @transactable = transactable
+  end
+
+  #   name of representing the bookable object transactable on the marketplace as a string (e.g. desk, room etc.)
+  def bookable_noun
+    transactable_type.to_liquid.bookable_noun
+  end
+
+  #   name of representing the bookable object (plural) transactable on the marketplace as a string (e.g. desks, rooms etc.)
+  def bookable_noun_plural
+    transactable_type.to_liquid.bookable_noun_plural
+  end
+
+  #   the name of the type of entity selling the products
+  def lessor
+    transactable_type.to_liquid.lessor
+  end
+
+  #   the name of the type of entity buying the products
+  def lessee
+    transactable_type.to_liquid.lessee
+  end
+
+  #   pluralized version of lessor
+  def lessors
+    transactable_type.to_liquid.lessors
+  end
+
+  #   pluralized version of lessee
+  def lessees
+    transactable_type.to_liquid.lessees
   end
 
   # availability for this listing as a string in a human-readable format

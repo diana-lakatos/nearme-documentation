@@ -20,7 +20,7 @@
                 - ServiceType.all.each do |transactable_type|
                   %li
                     %a{data: { 'item-type-id' => transactable_type.id}}
-                      = transactable_type.name
+                      = transactable_type.translated_bookable_noun
           .filter.period
             = render :partial => 'instance_admin/shared/admin_searchable_dates'
 

@@ -23,12 +23,12 @@ Feature: A user can add a space
     Then I should see "Your draft has been saved!"
     And I fill in valid space details
     And I press "Submit"
-    Then I should see "Your Listing was listed!"
+    Then I should see "Your Desk was listed!"
 
   Scenario: An unregistered user starts by signing up
     When I fill in valid space details
     And I press "Submit"
-    Then I should see "Your Listing was listed!"
+    Then I should see "Your Desk was listed!"
 
   Scenario: An unregistered user starts by signing up
     When I press "Submit"

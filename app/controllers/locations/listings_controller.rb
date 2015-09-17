@@ -10,7 +10,6 @@ class Locations::ListingsController < ApplicationController
     @listing.track_impression(request.remote_ip)
     event_tracker.viewed_a_listing(@listing, { logged_in: user_signed_in? })
     @reviews = @listing.reviews.paginate(page: params[:reviews_page])
-    @rating_questions = RatingSystem.active_with_subject(@listing.transactable_type.bookable_noun).try(:rating_questions)
   end
 
   protected

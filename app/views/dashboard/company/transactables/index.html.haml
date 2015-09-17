@@ -12,7 +12,7 @@
     %ul
       - TransactableType.services.each do |transactable_type|
         %li{class: transactable_type == @transactable_type ? "active" : ""}
-          = link_to transactable_type.name.pluralize, dashboard_company_transactable_type_transactables_path(transactable_type)
+          = link_to transactable_type.translated_bookable_noun(10), dashboard_company_transactable_type_transactables_path(transactable_type)
 
   - if HiddenUiControls.find('dashboard/transactables/search').visible?
     = simple_form_for :search, wrapper: :bs3, :url => dashboard_company_transactable_type_transactables_path(@transactable_type), :method => :get do |f|

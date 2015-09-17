@@ -29,13 +29,16 @@ class TransactableType < ActiveRecord::Base
   serialize :allowed_currencies, Array
   serialize :availability_options, Hash
 
-  after_update :destroy_translations!, if: lambda { |transactable_type| transactable_type.name_changed? }
+  after_update :destroy_translations!, if: lambda { |transactable_type| transactable_type.name_changed? || transactable_type.bookable_noun_changed? || transactable_type.lessor_changed? || transactable_type.lessee_changed? }
   after_create :create_translations!
 
   validates_presence_of :name
 
   scope :products, -> { where(type: 'Spree::ProductType') }
   scope :services, -> { where(type: 'ServiceType') }
+
+  delegate :translation_namespace, :translation_namespace_was, :translation_key_suffix, :translation_key_suffix_was,
+    :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager
 
   def any_rating_system_active?
     self.rating_systems.any?(&:active)
@@ -54,30 +57,32 @@ class TransactableType < ActiveRecord::Base
     super.presence || instance.default_currency
   end
 
+  def translated_bookable_noun(count = 1)
+    translation_manager.find_key_with_count('name', count)
+  end
+
+  def translated_lessor(count = 1)
+    translation_manager.find_key_with_count('lessor', count)
+  end
+
+  def translated_lessee(count = 1)
+    translation_manager.find_key_with_count('lessee', count)
+  end
+
   def create_translations!
-    INTERNAL_FIELDS.each do |field|
-      attribute = CustomAttributes::CustomAttribute.new(target: self, instance: instance, html_tag: :input, name: field.to_s)
-      attribute.label = instance.translations.find_by(key: attribute.label_key_was, locale: 'en').try(:value) || attribute.name.humanize
-      attribute.hint = instance.translations.find_by(key: attribute.hint_key_was, locale: 'en').try(:value)
-      attribute.placeholder = instance.translations.find_by(key: attribute.placeholder_key_was, locale: 'en').try(:value)
-      attribute.create_translations
-    end
+    translation_manager.create_translations!
   end
 
   def destroy_translations!
-    ids = Translation.where('instance_id = ? AND  key like ?', PlatformContext.current.instance.id, "#{self.translation_namespace_was}.%").inject([]) do |ids_to_delete, t|
-      if t.key  =~ /\A#{self.translation_namespace_was}\.(.+)\z/
-        ids_to_delete << t.id
-      end
-      ids_to_delete
-    end
-    create_translations!
-    custom_attributes.reload.each(&:create_translations)
-    Translation.destroy(ids)
+    translation_manager.destroy_translations!
   end
 
   def self.mandatory_boolean_validation_rules
     { "inclusion" => { "in" => [true, false], "allow_nil" => false } }
+  end
+
+  def translation_manager
+    @translation_manager ||= TransactableType::TransactableTypeTranslationManager.new(self)
   end
 
   def to_liquid
@@ -88,23 +93,11 @@ class TransactableType < ActiveRecord::Base
     action_rfq?
   end
 
-  def bookable_noun_plural
-    (bookable_noun.presence || name).pluralize
-  end
-
   def create_rating_systems
     RatingConstants::RATING_SYSTEM_SUBJECTS.each do |subject|
       rating_system = self.rating_systems.create!(subject: subject)
       RatingConstants::VALID_VALUES.each { |value| rating_system.rating_hints.create!(value: value) }
     end
-  end
-
-  def lessors
-    lessor.to_s.pluralize
-  end
-
-  def lessees
-    lessee.to_s.pluralize
   end
 
 end

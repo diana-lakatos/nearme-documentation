@@ -5,12 +5,12 @@
         - if current_user.has_draft_products
           %li
             = link_to main_app.new_product_type_product_wizard_path(platform_context.product_types.first), :class => "nav-link btn btn-blue btn-medium" do
-              %span.text= t('ui.header.complete_your_thing', thing: platform_context.product_types.first.name)
+              %span.text= t('ui.header.complete_your_thing', thing: platform_context.product_types.first.translated_bookable_noun)
               %span.icon.ico-plus
         - else
           %li
             = link_to main_app.transactable_type_new_space_wizard_path(platform_context.transactable_types.first), :class => "nav-link btn btn-blue btn-medium" do
-              %span.text= t('ui.header.complete_your_thing', thing: platform_context.transactable_types.first.name)
+              %span.text= t('ui.header.complete_your_thing', thing: platform_context.transactable_types.first.translated_bookable_noun)
               %span.icon.ico-plus
 
       - elsif !current_user.try(:registration_completed?)
@@ -20,7 +20,7 @@
         %li
           - tt = current_user.first_listing.try(:transactable_type) || Spree::ProductType.first
           = link_to main_app.transactable_type_new_space_wizard_path(tt), :class => "nav-link btn btn-blue btn-medium" do
-            %span.text= t('ui.header.complete_your_thing', thing: tt.name)
+            %span.text= t('ui.header.complete_your_thing', thing: tt.translated_bookable_noun)
             %span.icon.ico-plus
       - elsif !current_user.try(:registration_completed?)
         %li.dropdown
@@ -56,11 +56,11 @@
           - platform_context.service_types.each do |transactable_type|
             %li
               = link_to main_app.dashboard_company_transactable_type_transactables_path(transactable_type), class: 'nav-link dropdown-toggle' do
-                %div.truncate= t 'top_navbar.manage_bookable', bookable_noun: transactable_type.name.pluralize
+                %div.truncate= t 'top_navbar.manage_bookable', bookable_noun: transactable_type.translated_bookable_noun(10)
           - platform_context.product_types.each do |product_type|
             %li
               = link_to main_app.dashboard_company_product_type_products_path(product_type), class: 'nav-link dropdown-toggle' do
-                %div.truncate Manage #{product_type.name.pluralize}
+                %div.truncate= t('top_navbar.manage_bookable', bookable_noun: product_type.translated_bookable_noun(10))
 
         - if platform_context.bookable? && HiddenUiControls.find('main_menu/my_bookings').visible?
           %li
