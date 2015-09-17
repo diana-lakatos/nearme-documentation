@@ -103,10 +103,12 @@ class ReservationDecorator < Draper::Decorator
   end
 
   def long_dates
-    first = I18n.l(date, format: :only_date_short)
-    last = I18n.l(last_date, format: :only_date_short)
+    date_presenter.selected_dates_summary_no_html(:only_date_short)
+  end
 
-    first == last ? first : "#{first} - #{last}"
+  def total_units_text
+    unit = listing.overnight_booking? ? 'general.night' : 'general.day'
+    [total_units, I18n.t(unit, count: reservation.total_units)].join(' ')
   end
 
   def format_reservation_periods
@@ -172,10 +174,6 @@ class ReservationDecorator < Draper::Decorator
         '%d hours, %d minutes' % [hours, minutes]
       end
     end
-  end
-
-  def humanized_number_of_periods
-    listing.overnight_booking? ? date_presenter.nights_in_words : date_presenter.days_in_words
   end
 
   def feedback_object

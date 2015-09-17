@@ -72,7 +72,15 @@ class AvailabilityRule::Summary
   # Returns an array of days that the listing is open for
   # Days are 0..6, where 0 is Sunday and 6 is Saturday
   def days_open
-    @rules.map { |rule| rule.day }
+    @days_open ||= @rules.map { |rule| rule.day }
+  end
+
+  def consecutive_days_open?
+    return true if days_open.size >= 4
+    days_open.sort.each_with_index do |day, i|
+      return true if day + 1 == days_open[i + 1]
+    end
+    false
   end
 
   # Returns the minute of the day that the listing opens, or nil

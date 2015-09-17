@@ -195,6 +195,7 @@ group :development do
   gem 'mailcatcher'
   gem 'active_record_query_trace'
   gem 'web-console', '~> 2.0'
+  gem 'parallel_tests'
 end
 
 group :test do

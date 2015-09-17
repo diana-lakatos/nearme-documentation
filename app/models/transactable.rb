@@ -159,6 +159,7 @@ class Transactable < ActiveRecord::Base
 
   validate :check_book_it_out_minimum_qty, if: ->(record) { record.book_it_out_minimum_qty.present? }
   validate :validate_mandatory_categories
+  validate :booking_availability, if: ->(record) { record.overnight_booking? }
 
   def validate_mandatory_categories
     transactable_type.categories.mandatory.each do |mandatory_category|
@@ -414,9 +415,9 @@ class Transactable < ActiveRecord::Base
     if action_free_booking? || (action_hourly_booking? && hourly_price_cents.to_i > 0) || daily_price_cents.to_i > 0 || (daily_price_cents.to_i + weekly_price_cents.to_i + monthly_price_cents.to_i).zero?
       1
     elsif weekly_price_cents.to_i > 0
-      booking_days_per_week
+      booking_units_per_week
     elsif monthly_price_cents.to_i > 0
-      booking_days_per_month
+      booking_units_per_month
     else
       1
     end
@@ -426,8 +427,24 @@ class Transactable < ActiveRecord::Base
     @booking_days_per_week ||= availability.days_open.length
   end
 
+  def booking_nights_per_week
+    booking_days_per_week - 1
+  end
+
+  def booking_units_per_week
+    overnight_booking? ? booking_nights_per_week : booking_days_per_week
+  end
+
   def booking_days_per_month
     @booking_days_per_month ||= transactable_type.days_for_monthly_rate.zero? ? booking_days_per_week * 4 : transactable_type.days_for_monthly_rate
+  end
+
+  def booking_nights_per_month
+    transactable_type.days_for_monthly_rate.zero? ? booking_days_per_month - 1 : transactable_type.days_for_monthly_rate
+  end
+
+  def booking_units_per_month
+    overnight_booking? ? booking_nights_per_month : booking_days_per_month
   end
 
   # Returns a hash of booking block sizes to prices for that block size.
@@ -436,7 +453,7 @@ class Transactable < ActiveRecord::Base
       {1 => 0.to_money}
     else
       Hash[
-        [[1, daily_price], [booking_days_per_week, weekly_price], [booking_days_per_month, monthly_price]].
+        [[1, daily_price], [booking_units_per_week, weekly_price], [booking_units_per_month, monthly_price]].
           reject { |size, price| !price || price.zero? }
       ]
     end
@@ -692,6 +709,15 @@ class Transactable < ActiveRecord::Base
 
   def should_update_sitemap_node?
     draft.nil? && enabled?
+  end
+
+  def booking_availability
+    if monthly_price_cents.to_i > 0 && availability.days_open.length < 7
+      errors.add(:monthly_price, I18n.t('activerecord.errors.models.transactable.attributes.cant_set_montly_price'))
+    end
+    unless availability.consecutive_days_open?
+      errors.add(:availability_rules, I18n.t('activerecord.errors.models.transactable.attributes.no_consecutive_days'))
+    end
   end
 
   class NotFound < ActiveRecord::RecordNotFound; end

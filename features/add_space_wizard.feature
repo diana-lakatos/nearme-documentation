@@ -30,20 +30,6 @@ Feature: A user can add a space
     And I press "Submit"
     Then I should see "Your Listing was listed!"
 
-  Scenario: A draft listing does not show up in search
-   When I partially fill in space details
-    And I press "Save as draft"
-    Then I go to the home page
-    When I search for "USA"
-    Then I should see "No results found"
-    And I follow "Complete Your Listing"
-    And I fill in valid space details
-    And I press "Submit"
-    Then I should see "Your Listing was listed!"
-    Then I go to the home page
-    When I search for "USA"
-    Then I should see "International"
-
   Scenario: An unregistered user starts by signing up
     When I press "Submit"
     Then I should see shortened error messages

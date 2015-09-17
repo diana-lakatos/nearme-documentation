@@ -109,6 +109,17 @@ class AvailabilityRuleTest < ActiveSupport::TestCase
         assert !@object.availability.open_on?(:day => 0, :hour => 9)
         assert_equal AvailabilityTemplate.first.id, @object.availability_template_id
       end
+
+      should 'consecutive days open to return true' do
+        assert @object.availability.consecutive_days_open?
+      end
+    end
+
+    context "Mon-Wed-Fri" do
+      should 'consecutive days open to return false' do
+        @object.availability_template_id = FactoryGirl.create(:availability_template_every_other_day).id
+        refute @object.availability.consecutive_days_open?
+      end
     end
 
   end

@@ -118,11 +118,14 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
       end
 
       should 'if any upcoming bookings' do
-        FactoryGirl.create(:reservation, owner: @user)
-
+        @reservation = FactoryGirl.create(:reservation, owner: @user)
+        @reservation.add_period((Time.zone.now.next_week + 4.days).to_date)
+        @reservation.save
         get :upcoming
         assert_response :success
         assert_select ".order", 1
+        dates = @reservation.periods.map{|p| I18n.l(p.date, format: :only_date_short) }.join(' ; ')
+        assert_select ".order .dates", dates
       end
 
       should 'if any archived bookings' do

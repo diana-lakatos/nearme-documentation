@@ -69,8 +69,7 @@
               - if reservation.guest_notes.present?
                 %p= t('dashboard.host_reservations.exclusive_price_guests_notes', guest_notes: reservation.guest_notes)
               %p
-                = reservation.total_days
-                = t('general.day', count: reservation.total_days)
+                = reservation.total_units_text
 
         .col-md-4.order-actions
           = render 'dashboard/company/host_reservations/owner_actions', reservation: reservation
