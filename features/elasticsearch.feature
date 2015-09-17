@@ -16,15 +16,6 @@ Feature: A user can search for a listing
     Then I see a search result for the Auckland listing
     And I do not see a search result for the Adelaide listing
 
-  Scenario: Should output expected country results
-    Given a listing in Auckland exists
-    And a listing in Adelaide exists
-    When I search for "Adelaide"
-    And I make another search for "Australia"
-    And I leave the page and hit back
-    Then I see a search result for the Adelaide listing
-    And I do not see a search result for the Auckland listing
-
   Scenario: Switching search engine type should not affect the search results
     Given a listing in Auckland exists
     And a listing in Adelaide exists

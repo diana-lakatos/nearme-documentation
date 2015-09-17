@@ -70,11 +70,19 @@ class SearchControllerTest < ActionController::TestCase
             another_industry = FactoryGirl.create(:industry)
             filtered_auckland = FactoryGirl.create(:company, industries: [filtered_industry], locations: [FactoryGirl.create(:location_in_auckland)]).locations.first
             another_auckland = FactoryGirl.create(:company, industries: [another_industry], locations: [FactoryGirl.create(:location_in_auckland)]).locations.first
+            draft_auckland = FactoryGirl.create(:company, industries: [filtered_industry], locations: [FactoryGirl.create(:location_in_auckland)]).locations.first.tap do |location|
+              location.listings.update_all(draft: Time.zone.now)
+            end
+            disabled_auckland = FactoryGirl.create(:company, industries: [filtered_industry], locations: [FactoryGirl.create(:location_in_auckland)]).locations.first.tap do |location|
+              location.listings.update_all(enabled: false)
+            end
 
             get :index, { loc: 'Auckland', industries_ids: [filtered_industry.id], v: 'list' }
 
             assert_location_in_result(filtered_auckland)
             refute_location_in_result(another_auckland)
+            refute_location_in_result(draft_auckland)
+            refute_location_in_result(disabled_auckland)
           end
         end
 
