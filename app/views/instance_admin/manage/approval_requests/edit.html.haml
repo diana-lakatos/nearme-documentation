@@ -24,7 +24,7 @@
 
     .row
       .table-container.col-xs-12
-        %h3= TransactableType.first.name.humanize.pluralize
+        %h3= TransactableType.first.translated_bookable_noun(10)
         %table.table.table-hover
           %thead
             %tr

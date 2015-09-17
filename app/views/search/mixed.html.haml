@@ -9,7 +9,7 @@
       .hidden-locations
         = render partial: 'search/map/location_marker', collection: @searcher.results, as: :location
         %input{type: 'hidden', id: 'result_count', value: @searcher.result_count}
-        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, @searcher.search, @searcher.transactable_type.name)}
+        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, @searcher.search, @searcher.transactable_type.translated_bookable_noun)}
       = render 'search/mixed/pagination', locations: @searcher.results, result_count: @searcher.result_count
       - @searcher.results.each_with_index do |location, location_counter|
         - cache i18n_cache_key('mixed', location, location.company, @searcher.search.lgpricing_filters) do
@@ -20,7 +20,7 @@
     .locations
       .hidden-locations
         %input{type: 'hidden', id: 'result_count', value: @searcher.result_count}
-        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, @searcher.search, @searcher.transactable_type.name)}
+        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, @searcher.search, @searcher.transactable_type.translated_bookable_noun)}
       %div.no_results
         = render 'shared/loading_spinner'
         .text-center
@@ -31,7 +31,7 @@
     .locations
       .hidden-locations
         %input{type: 'hidden', id: 'result_count', value: @searcher.result_count}
-        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, @searcher.search, @searcher.transactable_type.name)}
+        %input{type: 'hidden', name: 'meta_title', value: meta_title_for_search(platform_context, @searcher.search, @searcher.transactable_type.translated_bookable_noun)}
       %div.no_results
         = render 'shared/loading_spinner'
 
@@ -59,7 +59,7 @@
                         %label.radio.small-radio
                           %input{type: 'radio', name: 'transactable_type_id', value: transactable_type.id, checked: @transactable_type.id == transactable_type.id}
                           %span.filter-label-text
-                            = transactable_type.name
+                            = transactable_type.translated_bookable_noun
 
         - @searcher.searchable_categories.each do |category|
           - unless category.autocomplete?

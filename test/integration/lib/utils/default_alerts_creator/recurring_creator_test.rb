@@ -49,7 +49,8 @@ class Utils::DefaultAlertsCreator::RecurringCreatorTest < ActionDispatch::Integr
       assert_equal "Share your listing '#{@listing.name}' at #{@listing.location.street } and increase bookings!", mail.subject
       assert mail.html_part.body.include?(@user.first_name)
       assert_equal [@user.email], mail.to
-      assert mail.html_part.body.include?("Share your listing on Facebook, Twitter, and LinkedIn, and start seeing #{@platform_context.decorate.lessees} book your Desk.")
+      assert_contains "Share your listing on Facebook, Twitter, and LinkedIn, and start seeing #{@listing.transactable_type.translated_lessee(10)} book your Desk.", mail.html_part.body
+      assert_not_contains "translation missing:", mail.html_part.body
       assert mail.html_part.body.include?(@listing.name)
       assert_contains 'href="http://custom.domain.com/', mail.html_part.body
       assert_not_contains 'href="http://example.com', mail.html_part.body
