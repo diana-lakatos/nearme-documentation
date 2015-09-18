@@ -25,7 +25,7 @@
             .only-if-both-completed
               %input{type: 'checkbox', checked: transactable_type.show_reviews_if_both_completed?, 'data-url' => change_state_instance_admin_manage_service_type_path(transactable_type), 'data-service-name' => transactable_type.name}
               %label= t("instance_admin.rating_systems.index.only_if_both_completed_#{transactable_type.buyable? ? 'products' : 'services'}")
-        
+
         .ratings-content-container{class: "#{'hidden' unless transactable_type.enable_reviews?}"}
           = form_tag update_systems_instance_admin_manage_rating_systems_path, method: :put do
             - transactable_type.rating_systems.each_with_index do |rating_system, index|
@@ -35,7 +35,7 @@
                 .header
                   = hidden_field_tag "rating_systems[#{rating_system.id}][active]", false
                   = check_box_tag "rating_systems[#{rating_system.id}][active]", true, rating_system.active?, id: "active", 'data-subject' => rating_system.subject
-                  %label.title{for: "seller"}=rating_system.subject
+                  %label.title{for: "seller"}= t("instance_admin.rating_systems.rate_subject.#{rating_system.subject}")
                 .table-container.col-xs-12{class: "#{'hidden' unless rating_system.active?}"}
                   .stars-description
                     .title
