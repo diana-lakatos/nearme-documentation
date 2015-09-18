@@ -59,7 +59,7 @@
                     - @transactable_types.each do |transactable_type|
                       %td
                         = check_box_tag "transactable_type[]", transactable_type.id, transactable_type_checked?(transactable_type.id), id: "service-#{transactable_type.id}"
-                        %label{for: "service-#{transactable_type.id}"}=transactable_type.name
+                        %label{for: "service-#{transactable_type.id}"}=transactable_type.translated_bookable_noun
                   %tr.group
                     %td.title
                       = t('instance_admin.manage.reviews.index.rating')

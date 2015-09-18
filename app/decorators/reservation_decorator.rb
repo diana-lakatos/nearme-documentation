@@ -78,15 +78,9 @@ class ReservationDecorator < Draper::Decorator
     humanized_money_with_cents_and_symbol(balance/100.0)
   end
 
-  def dates
-    periods.map do |period|
-      "#{period.date.strftime('%Y-%m-%d')} (#{'desk'.pluralize(quantity)})"
-    end.to_sentence
-  end
-
   def dates_to_array
     periods.map do |period|
-      "#{period.date.strftime('%Y-%m-%d')}"
+      "#{I18n.l(period.date.to_date, :long)}"
     end
   end
 

@@ -77,6 +77,7 @@ class I18n::Backend::DNMKeyValue < I18n::Backend::KeyValue
     key = normalize_flat_keys(locale, key, scope, options[:separator])
 
     value = lookup_for_instance_key locale, key
+
     value = lookup_for_default_key locale, key if value.blank?
 
     # Fallback to English

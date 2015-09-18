@@ -11,7 +11,9 @@ class TransactableTypeDrop < BaseDrop
   #   translation key suffix that is added to translations specific to this transactable type
   # translation_namespace
   #   translation namespace that is a prefix for translation keys specific to this transactable type
-  delegate :id, :buyable?, :show_page_enabled?, :translation_key_suffix, :translation_namespace, to: :transactable_type
+  # translated_bookable_noun
+  #   translated name of this transactable type, based on current language
+  delegate :id, :buyable?, :action_price_per_unit, :show_page_enabled?, :translated_bookable_noun, :translation_key_suffix, :translation_namespace, to: :transactable_type
 
   def initialize(transactable_type)
     @transactable_type = transactable_type
@@ -19,7 +21,7 @@ class TransactableTypeDrop < BaseDrop
 
   # name for the bookable item this transactable type represents (e.g. desk, room etc.)
   def name
-    @transactable_type.bookable_noun.presence || @transactable_type.name
+    @transactable_type.translated_bookable_noun
   end
 
   # name for the bookable item this transactable type represents (e.g. desk, room etc.)
@@ -29,7 +31,7 @@ class TransactableTypeDrop < BaseDrop
 
   # name (plural) for the bookable item this transactable type represents (e.g. desks, rooms etc.)
   def bookable_noun_plural
-    name.pluralize
+    @transactable_type.translated_bookable_noun(10)
   end
 
   def to_json
@@ -37,5 +39,21 @@ class TransactableTypeDrop < BaseDrop
       id: @transactable_type.id,
       name: @transactable_type.name
     }.to_json
+  end
+
+  def lessor
+    @transactable_type.translated_lessor
+  end
+
+  def lessee
+    @transactable_type.translated_lessee
+  end
+
+  def lessors
+    @transactable_type.translated_lessor(10)
+  end
+
+  def lessees
+    @transactable_type.translated_lessee(10)
   end
 end

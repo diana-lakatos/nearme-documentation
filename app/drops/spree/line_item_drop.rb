@@ -47,22 +47,22 @@ class Spree::LineItemDrop < BaseDrop
 
   # returns the name of the type of entity selling the products (e.g. seller)
   def lessor
-    @line_item.product.product_type.lessor
+    @line_item.product.product_type.to_liquid.lessor
   end
 
   # returns the name of the type of entity buying the products (e.g. buyer)
   def lessee
-    @line_item.product.product_type.lessee
+    @line_item.product.product_type.to_liquid.lessee
   end
 
   # pluralized version of lessor
   def lessors
-    @line_item.product.product_type.lessors
+    @line_item.product.product_type.to_liquid.lessors
   end
 
   # pluralized version of lessee
   def lessees
-    @line_item.product.product_type.lessees
+    @line_item.product.product_type.to_liquid.lessees
   end
 
 end
