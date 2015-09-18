@@ -27,6 +27,7 @@ class RatingReminderJob < Job
     end
 
     reservations.each do |reservation|
+      next if reservation.owner.id == reservation.creator.id
       if reservation.request_guest_rating_email_sent_at.blank? && RatingSystem.active_with_subject(RatingConstants::GUEST).where(transactable_type_id: reservation.transactable_type_id).exists?
         WorkflowStepJob.perform(WorkflowStep::ReservationWorkflow::GuestRatingRequested, reservation.id)
         reservation.update_column(:request_guest_rating_email_sent_at, Time.zone.now)
