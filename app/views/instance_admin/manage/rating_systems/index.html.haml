@@ -35,7 +35,7 @@
                 .header
                   = hidden_field_tag "rating_systems[#{rating_system.id}][active]", false
                   = check_box_tag "rating_systems[#{rating_system.id}][active]", true, rating_system.active?, id: "active", 'data-subject' => rating_system.subject
-                  %label.title{for: "seller"}=rating_system.subject
+                  %label.title{for: "seller"}= t("instance_admin.rating_systems.rate_subject.#{rating_system.subject}")
                 .table-container.col-xs-12{class: "#{'hidden' unless rating_system.active?}"}
                   .stars-description
                     .title

@@ -169,6 +169,10 @@ en:
         save: "Save"
         only_if_both_completed_services: "Only display reviews if both Guest and Host have completed"
         only_if_both_completed_products: "Only display reviews if both buyer and seller have completed"
+      rate_subject:
+        guest: 'Host/Seller rates Guest/Buyer'
+        host: 'Guest/Buyer rates Host/Seller'
+        transactable: 'Guest/Buyer rates Listing/Product'
     rating_reviews_shared:
       header:
         all_reviews: "All Reviews"
