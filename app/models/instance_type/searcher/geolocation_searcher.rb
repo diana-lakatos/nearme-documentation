@@ -2,7 +2,7 @@ module InstanceType::Searcher::GeolocationSearcher
   include InstanceType::Searcher
   attr_reader :filterable_location_types, :filterable_custom_attributes, :filterable_pricing, :search
 
-  SEARCHER_DEFAULT_PRICING_TYPES = %w(daily weekly monthly hourly)
+  SEARCHER_DEFAULT_PRICING_TYPES = %w(daily weekly monthly hourly free)
 
   def fetcher
     @fetcher ||=
