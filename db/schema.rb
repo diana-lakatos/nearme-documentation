@@ -605,9 +605,9 @@ ActiveRecord::Schema.define(version: 20150917160135) do
     t.integer  "redirect_code"
     t.boolean  "use_as_default",                             default: false
     t.boolean  "sitemap_enabled",                            default: false
-    t.string   "generated_sitemap"
-    t.string   "uploaded_sitemap"
-    t.string   "uploaded_robots_txt"
+    t.string   "generated_sitemap",              limit: 255
+    t.string   "uploaded_sitemap",               limit: 255
+    t.string   "uploaded_robots_txt",            limit: 255
   end
 
   add_index "domains", ["deleted_at"], name: "index_domains_on_deleted_at", using: :btree
@@ -744,7 +744,6 @@ ActiveRecord::Schema.define(version: 20150917160135) do
     t.integer  "client_id"
     t.string   "client_type",                   limit: 255
     t.integer  "instance_id"
-    t.string   "encrypted_balanced_user_id",    limit: 255
     t.string   "bank_account_last_four_digits", limit: 255
     t.datetime "deleted_at"
     t.datetime "created_at",                                null: false
@@ -1124,7 +1123,7 @@ ActiveRecord::Schema.define(version: 20150917160135) do
     t.text     "recurring_booking_error"
     t.string   "payable_type",                               limit: 255
     t.integer  "payable_id"
-    t.string   "external_transaction_id"
+    t.string   "external_transaction_id",                    limit: 255
   end
 
   add_index "payments", ["company_id"], name: "index_payments_on_company_id", using: :btree
@@ -1385,7 +1384,7 @@ ActiveRecord::Schema.define(version: 20150917160135) do
     t.integer  "buyer_id"
     t.integer  "seller_id"
     t.boolean  "displayable",                      default: true
-    t.string   "subject"
+    t.string   "subject",              limit: 255
   end
 
   add_index "reviews", ["deleted_at"], name: "index_reviews_on_deleted_at", using: :btree
@@ -2802,9 +2801,9 @@ ActiveRecord::Schema.define(version: 20150917160135) do
   create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id"
     t.integer  "taggable_id"
-    t.string   "taggable_type"
+    t.string   "taggable_type", limit: 255
     t.integer  "tagger_id"
-    t.string   "tagger_type"
+    t.string   "tagger_type",   limit: 255
     t.string   "context",       limit: 128
     t.integer  "instance_id"
     t.datetime "created_at"
@@ -2814,10 +2813,10 @@ ActiveRecord::Schema.define(version: 20150917160135) do
   add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context", using: :btree
 
   create_table "tags", force: :cascade do |t|
-    t.string  "name"
-    t.string  "slug"
+    t.string  "name",           limit: 255
+    t.string  "slug",           limit: 255
     t.integer "instance_id"
-    t.integer "taggings_count", default: 0
+    t.integer "taggings_count",             default: 0
   end
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
@@ -3261,7 +3260,7 @@ ActiveRecord::Schema.define(version: 20150917160135) do
     t.string   "language",                               limit: 2,   default: "en"
     t.integer  "saved_searches_count",                               default: 0
     t.datetime "saved_searches_alert_sent_at"
-    t.string   "paypal_merchant_id"
+    t.string   "paypal_merchant_id",                     limit: 255
     t.float    "left_by_seller_average_rating",                      default: 0.0
     t.float    "left_by_buyer_average_rating",                       default: 0.0
   end
