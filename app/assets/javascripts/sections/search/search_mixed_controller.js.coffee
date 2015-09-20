@@ -65,7 +65,10 @@ class Search.SearchMixedController extends Search.SearchController
 
     $(document).on 'click', '.list .locations .location .listing', (e) =>
       unless $(e.target).hasClass('truncated-ellipsis')
-        window.location.href = $(e.target).parents('.listing').find('.reserve-listing a').attr('href')
+        if $(e.target).hasClass('listing')
+          window.location.href = $(e.target).find('.reserve-listing a').attr('href')
+        else
+          window.location.href = $(e.target).parents('.listing').find('.reserve-listing a').attr('href')
 
   initializeSearchButton: ->
     @searchButton = @form.find(".search-icon")
