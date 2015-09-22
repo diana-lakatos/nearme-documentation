@@ -58,7 +58,6 @@ class DataImporter::CsvTemplateGeneratorTest < ActiveSupport::TestCase
       should 'contain only public attributes' do
         result_csv = DataImporter::CsvTemplateGenerator.new(@product_type, true).generate
         assert result_csv.include?('User Email'), "User email not included in: #{result_csv}"
-        assert result_csv.include?('Company Name'), "Company Name not included in: #{result_csv}"
         assert result_csv.include?('Product Name'), "Product Name not included in: #{result_csv}"
         assert result_csv.include?('My Public Attribute'), "Public attribute not included in: #{result_csv}"
         refute result_csv.include?('My Private Attribute'), "Private attribute included in: #{result_csv}"
