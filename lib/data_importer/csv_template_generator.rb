@@ -6,7 +6,7 @@ class DataImporter::CsvTemplateGenerator < DataImporter::File
     @importable = importable
     @include_user_fields = include_user_fields
     @models = if import_model == :transactable
-        [:location, :address, import_model, :photo]
+        [:company, :location, :address, import_model, :photo]
       else
         [import_model, :'spree/variant', :'spree/shipping_category', :'spree/image']
       end
@@ -19,7 +19,7 @@ class DataImporter::CsvTemplateGenerator < DataImporter::File
   private
 
   def required_fields
-    (@include_user_fields ? static_fields(%i(user company)) : []) + if @importable.custom_csv_fields.empty?
+    (@include_user_fields ? static_fields(%i(user)) : []) + if @importable.custom_csv_fields.empty?
         static_fields
       else
         custom_fields(@importable.custom_csv_fields)
