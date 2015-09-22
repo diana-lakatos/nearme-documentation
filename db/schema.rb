@@ -11,13 +11,41 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150917160135) do
+ActiveRecord::Schema.define(version: 20150921093013) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "btree_gin"
   enable_extension "btree_gist"
   enable_extension "hstore"
+
+  create_table "activity_feed_events", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.string   "event"
+    t.integer  "followed_id"
+    t.string   "followed_type"
+    t.text     "affected_objects_identifiers", default: [], array: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "activity_feed_events", ["instance_id", "followed_id", "followed_type"], name: "activity_feed_events_instance_followed", using: :btree
+  add_index "activity_feed_events", ["instance_id"], name: "index_activity_feed_events_on_instance_id", using: :btree
+
+  create_table "activity_feed_subscriptions", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "follower_id"
+    t.string   "follower_type"
+    t.integer  "followed_id"
+    t.string   "followed_type"
+    t.string   "followed_identifier"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "activity_feed_subscriptions", ["instance_id", "followed_id", "followed_type"], name: "activity_feed_subscriptions_instance_followed", using: :btree
+  add_index "activity_feed_subscriptions", ["instance_id", "follower_id", "follower_type"], name: "activity_feed_subscriptions_instance_follower", using: :btree
+  add_index "activity_feed_subscriptions", ["instance_id"], name: "index_activity_feed_subscriptions_on_instance_id", using: :btree
 
   create_table "additional_charge_types", force: :cascade do |t|
     t.string   "name",                           limit: 255
@@ -497,6 +525,33 @@ ActiveRecord::Schema.define(version: 20150917160135) do
 
   add_index "custom_validators", ["instance_id", "validatable_type", "validatable_id"], name: "index_custom_validators_on_i_id_and_v_type_and_v_id", using: :btree
 
+  create_table "data_source_contents", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "data_source_id"
+    t.hstore   "content"
+    t.string   "external_id"
+    t.datetime "externally_created_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "data_source_contents", ["instance_id", "data_source_id"], name: "index_data_source_contents_on_instance_id_and_data_source_id", using: :btree
+
+  create_table "data_sources", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "data_sourcable_id"
+    t.string   "data_sourcable_type"
+    t.string   "type"
+    t.text     "settings"
+    t.text     "fields",               default: [], array: true
+    t.datetime "deleted_at"
+    t.datetime "last_synchronized_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "data_sources", ["instance_id", "data_sourcable_id", "data_sourcable_type"], name: "index_data_sources_on_data_sourcable", using: :btree
+
   create_table "data_uploads", force: :cascade do |t|
     t.string   "csv_file",            limit: 255
     t.string   "xml_file",            limit: 255
@@ -712,6 +767,7 @@ ActiveRecord::Schema.define(version: 20150917160135) do
     t.boolean  "permission_buysell",                     default: false
     t.boolean  "permission_shippingoptions",             default: false
     t.boolean  "permission_reports",                     default: false
+    t.boolean  "permission_projects",                    default: false
   end
 
   add_index "instance_admin_roles", ["instance_id"], name: "index_instance_admin_roles_on_instance_id", using: :btree
@@ -886,6 +942,8 @@ ActiveRecord::Schema.define(version: 20150917160135) do
     t.string   "search_text",                           limit: 255
     t.integer  "last_index_job_id"
     t.string   "context_cache_key",                     limit: 255
+    t.string   "encrypted_webhook_token"
+    t.boolean  "is_community",                                                              default: false
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -1174,11 +1232,44 @@ ActiveRecord::Schema.define(version: 20150917160135) do
     t.integer  "image_original_width"
     t.integer  "instance_id"
     t.boolean  "mark_to_be_bulk_update_deleted",             default: false
+    t.integer  "owner_id"
+    t.string   "owner_type"
   end
 
   add_index "photos", ["creator_id"], name: "index_photos_on_creator_id", using: :btree
+  add_index "photos", ["instance_id", "owner_id", "owner_type"], name: "index_photos_on_owner", using: :btree
   add_index "photos", ["instance_id"], name: "index_photos_on_instance_id", using: :btree
   add_index "photos", ["transactable_id"], name: "index_photos_on_listing_id", using: :btree
+
+  create_table "project_topics", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "project_id"
+    t.integer  "topic_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "project_topics", ["instance_id", "project_id", "topic_id"], name: "index_project_topics_on_instance_id_and_project_id_and_topic_id", using: :btree
+
+  create_table "projects", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "creator_id"
+    t.hstore   "properties"
+    t.datetime "deleted_at"
+    t.integer  "transactable_type_id"
+    t.integer  "wish_list_items_count", default: 0
+    t.string   "name"
+    t.text     "description"
+    t.string   "external_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "seek_collaborators",    default: false
+    t.text     "summary"
+    t.boolean  "featured",              default: false
+    t.integer  "followers_count",       default: 0,     null: false
+  end
+
+  add_index "projects", ["instance_id", "creator_id"], name: "index_projects_on_instance_id_and_creator_id", using: :btree
 
   create_table "rating_answers", force: :cascade do |t|
     t.integer  "rating"
@@ -2927,6 +3018,20 @@ ActiveRecord::Schema.define(version: 20150917160135) do
 
   add_index "themes", ["owner_id", "owner_type"], name: "index_themes_on_owner_id_and_owner_type", using: :btree
 
+  create_table "topics", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "category_id"
+    t.string   "name"
+    t.text     "description"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "featured",        default: false
+    t.integer  "followers_count", default: 0,     null: false
+  end
+
+  add_index "topics", ["instance_id", "category_id"], name: "index_topics_on_instance_id_and_category_id", using: :btree
+
   create_table "transactable_types", force: :cascade do |t|
     t.string   "name",                                       limit: 255
     t.integer  "instance_id"
@@ -3178,6 +3283,16 @@ ActiveRecord::Schema.define(version: 20150917160135) do
   add_index "user_relationships", ["follower_id", "followed_id", "deleted_at"], name: "index_user_relationships_on_follower_id_and_followed_id", unique: true, using: :btree
   add_index "user_relationships", ["follower_id"], name: "index_user_relationships_on_follower_id", using: :btree
 
+  create_table "user_topics", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "user_id"
+    t.integer  "topic_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_topics", ["instance_id", "user_id", "topic_id"], name: "index_user_topics_on_instance_id_and_user_id_and_topic_id", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "email",                                  limit: 255, default: "",                                                                                  null: false
     t.string   "encrypted_password",                     limit: 128, default: "",                                                                                  null: false
@@ -3263,6 +3378,9 @@ ActiveRecord::Schema.define(version: 20150917160135) do
     t.string   "paypal_merchant_id",                     limit: 255
     t.float    "left_by_seller_average_rating",                      default: 0.0
     t.float    "left_by_buyer_average_rating",                       default: 0.0
+    t.boolean  "featured",                                           default: false
+    t.integer  "followers_count",                                    default: 0,                                                                                   null: false
+    t.integer  "following_count",                                    default: 0,                                                                                   null: false
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
