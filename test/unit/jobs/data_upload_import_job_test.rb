@@ -53,7 +53,7 @@ class DataUploadImportJobTest < ActiveSupport::TestCase
                    :save! => true,
                    :queued? => true,
                    :import! => true,
-                   fail: true,
+                   failure: true,
                    sync_mode: false,
                    succeeded?: true,
                    touch: true

@@ -39,14 +39,14 @@ class DataUpload < ActiveRecord::Base
       transition importing: :partially_succeeded
     end
 
-    event :fail do
+    event :failure do
       transition any => :failed
     end
   end
 
   %w(sync_mode send_invitational_email enable_rfq).each do |attr|
     define_method attr do
-      ActiveRecord::ConnectionAdapters::Column.value_to_boolean(attributes['options'][attr])
+      ActiveRecord::Type::Boolean.new.type_cast_from_database(attributes['options'][attr])
     end
   end
 

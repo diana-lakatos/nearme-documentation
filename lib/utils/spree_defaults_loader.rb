@@ -27,8 +27,7 @@ module Utils
 
       Spree.config do |config|
         config.require_master_price = false
-        config.display_currency = false
-        config.allow_ssl_in_staging = false
+        # config.allow_ssl_in_staging = false
         config.currency = 'USD'
       end
       # Spree::Config.address_requires_state = false

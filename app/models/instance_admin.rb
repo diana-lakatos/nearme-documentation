@@ -16,7 +16,7 @@ class InstanceAdmin < ActiveRecord::Base
   validates_uniqueness_of :user_id, scope: :instance_id
 
   delegate :name, to: :user, allow_nil: true
-  delegate :first_permission_have_access_to, to: :instance_admin_role
+  delegate :first_permission_have_access_to, to: :instance_admin_role, allow_nil: true
 
   scope :for_user, ->(user) {
     where('instance_admins.user_id = ?', user.id)

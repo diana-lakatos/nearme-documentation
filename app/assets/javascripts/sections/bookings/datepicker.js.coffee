@@ -111,7 +111,6 @@ class @Bookings.Datepicker
     # to set the mode to Pick.
     if dates.length > 1 && !@listing.isOvernightBooking()
       @setDatepickerToPickMode()
-
     @updateElementText()
     @trigger 'datesChanged', @endDatepicker.getDates()
 

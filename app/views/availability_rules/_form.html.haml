@@ -30,4 +30,8 @@
       - if f.object.errors.any? { |e| e.to_s == "availability_rules.day_#{day}" }
         .error-block
           = f.object.errors["availability_rules.day_#{day}".to_sym][0]
+    - if f.object.errors[:"listings.availability_rules"].present?
+      .control-group.error
+        .error-block
+          = f.object.errors[:"listings.availability_rules"][0]
 

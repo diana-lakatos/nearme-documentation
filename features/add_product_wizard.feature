@@ -40,7 +40,7 @@ Feature: A user can add a product
     Then I go to the home page
     And I search for product "Nice Sock"
     Then I should see "No results found"
-    And I follow "List Your Sock"
+    And I follow "Complete Your Sock"
     And I fill in valid product details
     And I press "Continue and Preview Listing"
     Then I should see "Your Sock was listed!"

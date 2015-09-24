@@ -42,7 +42,7 @@ class Authentication::TokenBasedLoginTest < ActionDispatch::IntegrationTest
       setup do
         # Emulate a devise login
         @other_user = FactoryGirl.create(:user)
-        post_via_redirect 'users/sign_in', 'user[email]' => @other_user.email, 'user[password]' => @other_user.password
+        post_via_redirect new_user_session_path, 'user[email]' => @other_user.email, 'user[password]' => @other_user.password
       end
 
       should "logout existing user and login with token instead" do
@@ -83,7 +83,7 @@ class Authentication::TokenBasedLoginTest < ActionDispatch::IntegrationTest
       @transactable_type = TransactableType.first
       @transactable = FactoryGirl.create(:transactable, location: FactoryGirl.create(:location_in_auckland))
       @user = @transactable.creator
-      post_via_redirect 'users/sign_in', 'user[email]' => @user.email, 'user[password]' => @user.password
+      post_via_redirect new_user_session_path, 'user[email]' => @user.email, 'user[password]' => @user.password
     end
 
     should 'be relogged if he uses token' do
@@ -100,7 +100,7 @@ class Authentication::TokenBasedLoginTest < ActionDispatch::IntegrationTest
 
     should 'be redirected back after login when token is wrong' do
       get_via_redirect edit_dashboard_company_transactable_type_transactable_path(@transactable_type, @transactable, @temporary_token_name => 'this one is certainly wrong one')
-      post 'users/sign_in', {'user[email]' => @user.email, 'user[password]' => @user.password}
+      post new_user_session_path, {'user[email]' => @user.email, 'user[password]' => @user.password}
       assert_redirected_to new_user_session_path(return_to: new_user_session_url)
     end
   end

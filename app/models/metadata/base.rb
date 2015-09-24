@@ -108,9 +108,8 @@ module Metadata::Base
                 self.#{metadata_column}[key] = value
               end
             end
-
             tmp_#{metadata_column} = #{metadata_column}
-            update_column(:#{metadata_column}, self.#{metadata_column}.to_yaml)
+            update_column(:#{metadata_column}, self.#{metadata_column})
             self.touch unless new_record?
             self.#{metadata_column} = tmp_#{metadata_column}
           end
@@ -125,7 +124,7 @@ module Metadata::Base
             end
 
             tmp_#{metadata_column} = #{metadata_column}
-            update_column(:#{metadata_column}, self.#{metadata_column}.to_yaml)
+            update_column(:#{metadata_column}, self.#{metadata_column})
             self.touch unless new_record?
             self.#{metadata_column} = tmp_#{metadata_column}
           end

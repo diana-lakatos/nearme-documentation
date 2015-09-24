@@ -80,6 +80,9 @@ en:
     day:
       one: "day"
       other: "days"
+    night:
+      one: "night"
+      other: "nights"
   transactable_types:
     locations:
       listings:
@@ -1472,6 +1475,7 @@ en:
     formats:
       day_and_month: "%^b %-d"
       day_month_year: "%m/%d/%Y"
+      full_day_month: "%A, %B %-e"
       only_date: "%B %d, %-Y"
       only_date_short: "%-e %b, %Y"
       month_year: "%B %Y"
@@ -1481,6 +1485,7 @@ en:
     formats:
       short: '%B %d, %-Y'
       day_and_month: "%^b %-d"
+      full_day_month: "%A, %B %-e"
       day_month_year: "%m/%d/%Y"
       month_year: "%B %Y"
       only_date_short: "%-e %b, %Y"

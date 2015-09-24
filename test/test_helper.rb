@@ -3,7 +3,7 @@ ENV["RAILS_ENV"] ||= "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'minitest/autorun'
-require 'minitest/reporters'
+# require 'minitest/reporters'
 require 'mocha/setup'
 require 'mocha/mini_test'
 require 'webmock/minitest'

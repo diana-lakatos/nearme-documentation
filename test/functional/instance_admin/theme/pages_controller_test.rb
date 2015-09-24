@@ -54,7 +54,7 @@ class InstanceAdmin::Theme::PagesControllerTest < ActionController::TestCase
     should 'be listed' do
       get :versions, id: @page.id
       assert_response :success
-      assert_select 'table tbody tr:first-child td:first-child', text: @page.versions.reorder(created_at: :desc).first.id
+      assert_select 'table tbody tr:first-child td:first-child', text: @page.versions.reorder(created_at: :desc).first.id.to_s
     end
 
     should "be viewable" do

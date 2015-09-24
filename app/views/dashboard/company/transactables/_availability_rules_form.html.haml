@@ -22,6 +22,10 @@
       - unless f.object.class == Location
         .col-md-3
       .custom-availability-rules{class: f.object.class == Location ? 'col-md-12' : 'col-md-9' ,:style => ('display: none' unless availability_custom?(f.object))}
+        - if f.object.errors[:availability_rules].present?
+          .control-group.error
+            .error-block
+              = f.object.errors[:availability_rules][0]
 
         - availability_summary_for_rules(f.object.availability_rules).each_day do |day, rule|
           .row.half-margin{:class => "day day-#{day} control-group #{'error' if f.object.errors.any? { |e| e.to_s == "availability_rules.day_#{day}" }}"}

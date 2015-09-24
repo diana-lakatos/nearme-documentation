@@ -1,10 +1,10 @@
 module InstanceAdmin::Versionable
   extend ActiveSupport::Concern
 
-  included do 
+  included do
     before_filter :find_version, only: [:show_version, :rollback]
   end
-  
+
   def versions
     @versions = resource.versions.where.not(whodunnit: nil).reorder(created_at: :desc).paginate(page: params[:page])
     render template: "instance_admin/theme/versions/index"
@@ -52,5 +52,5 @@ module InstanceAdmin::Versionable
   def find_version
     @version = resource.versions.find params[:version_id]
   end
-  
+
 end

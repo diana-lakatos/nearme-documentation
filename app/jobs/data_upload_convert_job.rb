@@ -17,7 +17,7 @@ class DataUploadConvertJob < Job
     DataUploadImportJob.perform(@data_upload.id)
   rescue
     @data_upload.encountered_error = "#{$!.inspect}\n\n#{$@[0..5]}"
-    @data_upload.fail!
+    @data_upload.failure!
   end
 
   protected

@@ -1,7 +1,6 @@
 class MerchantAccountService
-  extend Forwardable
 
-  def_delegators :@concrete_service, :form_path, :form_data
+  delegate :form_path, :form_data, to: :@concrete_service
 
   def initialize(merchantable)
     @merchantable = merchantable

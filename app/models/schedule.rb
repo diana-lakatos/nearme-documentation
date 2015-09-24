@@ -18,7 +18,7 @@ class Schedule < ActiveRecord::Base
   accepts_nested_attributes_for :schedule_exception_rules, allow_destroy: true
 
   after_validation  do
-    self.sr_days_of_week = self.sr_days_of_week.reject(&:blank?).map(&:to_i)
+    self.sr_days_of_week = self.sr_days_of_week.reject(&:blank?)
   end
 
 
@@ -33,7 +33,7 @@ class Schedule < ActiveRecord::Base
 
   def create_schedule_from_simple_settings
     @schedule = IceCube::Schedule.new(start_datetime_with_timezone)
-    rule = IceCube::Rule.weekly.day(sr_days_of_week)
+    rule = IceCube::Rule.weekly.day(sr_days_of_week.map(&:to_i))
     if sr_every_hours.to_i > 0
       step = sr_every_hours
       hour = sr_start_datetime.hour

@@ -92,8 +92,6 @@ module ListingsHelpers
       check "enable_weekly"
       fill_in "listing_weekly_price", with: "60"
 
-      check "enable_monthly"
-      fill_in "listing_monthly_price", with: "200"
       page.find("#enable_weekly").set(true)
     else
       page.first('#location-list .locations label').click
@@ -111,8 +109,6 @@ module ListingsHelpers
       check "enable_weekly"
       fill_in "transactable_weekly_price", with: "60"
 
-      check "enable_monthly"
-      fill_in "transactable_monthly_price", with: "200"
       page.find("#enable_weekly").set(true)
     end
   end
@@ -123,7 +119,6 @@ module ListingsHelpers
     assert_equal 5, listing.quantity
     assert_equal 1000, listing.daily_price_cents
     assert_equal 6000, listing.weekly_price_cents
-    assert_equal 20000, listing.monthly_price_cents
   end
 end
 

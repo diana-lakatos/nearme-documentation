@@ -44,12 +44,10 @@ class MerchantAccount < ActiveRecord::Base
       transition [:pending, :failed] => :verified
     end
 
-    event :fail do
+    event :failure do
       transition [:pending, :verified] => :failed
     end
   end
-
-  serialize :data, Hash
 
   def to_liquid
     @mechant_account_drop ||= MerchantAccountDrop.new(self)

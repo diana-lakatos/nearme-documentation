@@ -32,6 +32,7 @@ class OrderDecoratorTest < ActionView::TestCase
 
     context 'cancel order' do
       should 'cancel associated payments and do the refund' do
+        Spree::Payment.any_instance.stubs(cancel!: true)
         @order = create(:order_ready_to_ship)
         @order.create_pending_payment!
         @order.payments.each { |p| p.complete! }

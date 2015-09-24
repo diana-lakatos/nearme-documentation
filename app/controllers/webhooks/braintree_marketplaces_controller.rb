@@ -15,7 +15,7 @@ class Webhooks::BraintreeMarketplacesController < Webhooks::BaseWebhookControlle
           merchant_account.verify!
           WorkflowStepJob.perform(WorkflowStep::PaymentGatewayWorkflow::MerchantAccountApproved, merchant_account.id)
         else
-          merchant_account.fail!
+          merchant_account.failure!
           WorkflowStepJob.perform(WorkflowStep::PaymentGatewayWorkflow::MerchantAccountDeclined, merchant_account.id, notification.try(:errors).try(:map, &:message).try(:join, ', '))
         end
         # notification concerns payment transfer - we are notified that it succeded or it failed. It's crucial to handle DisbursementException, otherwise
@@ -53,4 +53,3 @@ class Webhooks::BraintreeMarketplacesController < Webhooks::BaseWebhookControlle
   end
 
 end
-

@@ -8,5 +8,17 @@ FactoryGirl.define do
         availability_template.availability_rules << FactoryGirl.build(:availability_rule, :target => availability_template, day: i)
       end
     end
+
+    factory :availability_template_every_other_day do
+      after(:build) do |availability_template|
+        availability_template.availability_rules = []
+        [1,3,5].each do |i|
+          availability_template.availability_rules << FactoryGirl.build(:availability_rule, :target => availability_template, day: i)
+        end
+      end
+    end
+
   end
+
+
 end
