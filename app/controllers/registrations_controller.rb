@@ -276,7 +276,8 @@ class RegistrationsController < Devise::RegistrationsController
   def set_return_to
     # We can't prevent Devise from setting return_to to users/sign_in on unsuccessful sign in
     # so we then prevent saving it if present
-    if params[:return_to].present? && !params[:return_to].to_s.match(/users\/sign_in/)
+    disallowed_regex = /(users\/sign_in|users\/password)/
+    if params[:return_to].present? && !params[:return_to].to_s.match(disallowed_regex)
       session[:user_return_to] = params[:return_to]
     end
   end
