@@ -6,7 +6,8 @@ class FactoriesTest < ActiveSupport::TestCase
 
   FactoryGirl.factories.each do |factory|
     next if factory.class_name.to_s.gsub(/::.*/, '') == 'Spree' ||
-      SPREE_EXCLUDED_FACTORIES.include?(factory.name.to_s)
+      SPREE_EXCLUDED_FACTORIES.include?(factory.name.to_s) ||
+      factory.name.in?(%i(payment_with_refund user_with_addresses)) #bug in spree: not mentioned class_name
 
     context "Factory: #{factory.name}" do
       should "return valid resource" do

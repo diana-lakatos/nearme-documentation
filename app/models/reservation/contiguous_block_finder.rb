@@ -25,6 +25,20 @@ class Reservation::ContiguousBlockFinder
     blocks.values
   end
 
+  def real_contiguous_blocks
+    dates = @reservation.periods.map(&:date).sort
+
+    @dates ||= dates.inject([]) { |groups, datetime|
+      date = datetime.to_date
+      if groups.last && ((groups.last.last+1.day) == date)
+        groups.last << date
+      else
+        groups << [date]
+      end
+      groups
+    }
+  end
+
   private
 
   def listing

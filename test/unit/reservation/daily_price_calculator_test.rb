@@ -14,6 +14,7 @@ class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
     @listing.stubs(:open_on?).returns(true)
     @listing.stubs(:availability_for).returns(10)
     @listing.stubs(:minimum_booking_days).returns(1)
+    @listing.stubs(:overnight_booking?).returns(false)
 
     @reservation.stubs(:listing).returns(@listing)
 
@@ -130,6 +131,39 @@ class Reservation::DailyPriceCalculatorTest < ActiveSupport::TestCase
 
         should "take into account listing availability" do
           assert_equal 500.to_money*2, @calculator.price
+        end
+      end
+
+      context "semantics with availability for overnight" do
+        setup do
+          @listing.stubs(:overnight_booking?).returns(true)
+
+          # We set up a set of dates with gaps that are deemed "contiguous" by our
+          # custom definition.
+          @dates = [Time.zone.today, Time.zone.today + 1.days, Time.zone.today + 2.days, Time.zone.today + 4.days]
+          @dates.each do |date|
+            @listing.stubs(:availability_for).with(date).returns(1)
+            @listing.stubs(:open_on?).with(date).returns(true)
+          end
+
+          @listing.stubs(:open_on?).with(Time.zone.today + 3.days).returns(false)
+
+          seed_reservation_dates(@dates)
+
+          # The expectation is to have blocks:
+          # [today, today+1, today+2]
+          # [today+4]
+          #
+          # If a 'week' pricing is applied on 3 consecutive nights, then the pricing should be
+          # 2d + 1d
+          @listing.stubs(:prices_by_days).returns({
+            1 => 100.to_money,
+            3 => 400.to_money
+          })
+        end
+
+        should "take into account open availability" do
+          assert_equal 100.to_money*3, @calculator.price
         end
       end
     end

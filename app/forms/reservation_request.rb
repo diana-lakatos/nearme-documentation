@@ -6,13 +6,14 @@ class ReservationRequest < Form
     :payment_method, :checkout_extra_fields, :express_checkout_redirect_url, :mobile_number
   attr_reader   :reservation, :listing, :location, :user, :client_token, :payment_method_nonce
 
-  def_delegators :@listing,     :confirm_reservations?, :location, :billing_authorizations, :company
-  def_delegators :@user,        :country_name, :country_name=, :country
-  def_delegators :@reservation, :guest_notes, :quantity, :quantity=, :action_hourly_booking?, :reservation_type=,
+  delegate :confirm_reservations?, :location, :billing_authorizations, :company, to: :@listing
+  delegate :country_name, :country_name=, :country, to: :@user
+  delegate :guest_notes, :quantity, :quantity=, :action_hourly_booking?, :reservation_type=,
     :credit_card_payment?, :manual_payment?, :remote_payment?, :nonce_payment?, :currency,
     :service_fee_amount_host_cents, :total_amount_cents, :create_billing_authorization,
     :express_token, :express_token=, :express_payer_id, :service_fee_guest_without_charges,
-    :additional_charges, :shipping_costs_cents, :service_fee_amount_guest_cents, :merchant_subject
+    :additional_charges, :shipping_costs_cents, :service_fee_amount_guest_cents, :merchant_subject,
+    to: :@reservation
 
   before_validation :build_documents, :if => lambda { reservation.present? && documents.present? }
 

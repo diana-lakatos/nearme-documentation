@@ -9,7 +9,7 @@ end
 When /^User visits order payment page$/ do
   visit "/orders/#{@order.number}/checkout/payment"
 end
-    
+
 Then /^Sees default file label and field for upload$/ do
   page.should have_css('.document-requirements')
   page.should have_css('.btn-upload-payment-document', count: 1)

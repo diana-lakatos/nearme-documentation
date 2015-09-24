@@ -22,7 +22,7 @@ class BuySellMarket::CheckoutController < ApplicationController
   def show
     case step
     when :address
-      @order.restart_checkout_flow
+      @order.reload.restart_checkout_flow
     when :delivery
       packages = @order.shipments.map { |s| s.to_package }
       @differentiator = Spree::Stock::Differentiator.new(@order, packages)

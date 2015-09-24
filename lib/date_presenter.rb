@@ -7,15 +7,15 @@ class DatePresenter
     @dates = dates.sort
   end
 
-  def selected_dates_summary_no_html
+  def selected_dates_summary_no_html(format = :full_day_month)
     items = dates_in_groups.map do |block|
       if block.size == 1
-        period_to_string(block.first)
+        period_to_string(block.first, format)
       else
-        period_to_string(block.first) + " - " + period_to_string(block.last)
+        period_to_string(block.first, format) + " - " + period_to_string(block.last, format)
       end
     end
-    items.join(';')
+    items.join(' ; ')
   end
 
   def selected_dates_summary(options = {})
@@ -46,8 +46,8 @@ class DatePresenter
     }
   end
 
-  def period_to_string(date)
-    date.strftime('%A, %B %-e')
+  def period_to_string(date, format = :full_day_month)
+    I18n.l(date, format: format)
   end
 
   def days_in_words
@@ -55,7 +55,8 @@ class DatePresenter
   end
 
   def nights_in_words
-    I18n.t('night', count: days).titleize
+    days_count = dates_in_groups.map{|group| group.many? ? group.size - 1 : group.size }.sum
+    I18n.t('night', count: days_count).titleize
   end
 
   def days

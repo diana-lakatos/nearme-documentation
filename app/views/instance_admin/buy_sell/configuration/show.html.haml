@@ -12,11 +12,11 @@
       .input-container.col-xs-6
         = label_tag :currency_symbol_position_before do
           = radio_button_tag :currency_symbol_position, "before", Spree::Config[:currency_symbol_position] == "before"
-          = Spree::Money.new(10, symbol_position: "before")
+          = Spree::Money.new(10, symbol_position: :before)
       .input-container.col-xs-6
         = label_tag :currency_symbol_position_after do
           = radio_button_tag :currency_symbol_position, "after", Spree::Config[:currency_symbol_position] == "after"
-          = Spree::Money.new(10, symbol_position: "after") 
+          = Spree::Money.new(10, symbol_position: :after)
 
   .content-container
     %h4= t('instance_admin.buy_sell.configuration.currency_mark_and_separator')

@@ -4,6 +4,11 @@ Spree::Variant.class_eval do
 
   belongs_to :company
 
+  has_one :default_price,
+    -> { where("currency = ?", Spree::Config[:currency]) },
+    class_name: 'Spree::Price',
+    dependent: :destroy
+
   validates_with UnitsOfMeasureValidator, :attributes => [:unit_of_measure, :weight_unit, :height_unit, :width_unit, :depth_unit]
 
   before_save :update_native_fields_from_user_fields

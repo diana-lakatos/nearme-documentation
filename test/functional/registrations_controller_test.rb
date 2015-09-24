@@ -30,7 +30,7 @@ class RegistrationsControllerTest < ActionController::TestCase
         assert_no_difference('User.count') do
           post :create, user: user_attributes
         end
-        assert_select '.legal .error-block', 'must be accepted'
+        assert_select 'p.error-block', 'must be accepted'
       end
 
       should 'sign up after accepting ToS' do
@@ -313,7 +313,7 @@ class RegistrationsControllerTest < ActionController::TestCase
   end
 
   private
-  j
+
   def user_attributes
     { name: 'Test User', email: 'user@example.com', password: 'secret' }
   end

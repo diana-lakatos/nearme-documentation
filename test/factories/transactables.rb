@@ -59,7 +59,7 @@ FactoryGirl.define do
 
     trait :desksnearme do
       after(:build) do |listing|
-        listing.service_type.custom_attributes << FactoryGirl.create(:custom_attribute, :listing_types)
+        listing.service_type.custom_attributes << FactoryGirl.create(:custom_attribute, :listing_types) unless listing.service_type.custom_attributes.find_by(name: 'listing_type')
         listing.transactable_type.custom_validators << FactoryGirl.create(:custom_validator, field_name: 'name', max_length: 50)
         listing.transactable_type.custom_validators << FactoryGirl.create(:custom_validator, field_name: 'description', max_length: 250)
       end

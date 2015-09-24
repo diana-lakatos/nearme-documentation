@@ -81,7 +81,6 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
           assert_equal 'PLN', payment.currency
           assert_equal @order.company_id, payment.company_id
           assert_equal @order.instance_id, payment.instance_id
-          assert_equal 'pending', payment.state
           assert_equal 'complete', @order.state
           assert_not_nil @order.billing_authorization
           assert @order.billing_authorization.success?
@@ -164,7 +163,6 @@ class BuySellMarket::CheckoutControllerTest < ActionController::TestCase
           assert_equal 'USD', payment.currency
           assert_equal @order.company_id, payment.company_id
           assert_equal @order.instance_id, payment.instance_id
-          assert_equal 'pending', payment.state
           assert_equal 'complete', @order.state
           assert_not_nil @order.billing_authorization
           assert @order.billing_authorization.success?

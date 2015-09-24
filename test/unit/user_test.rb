@@ -732,11 +732,11 @@ class UserTest < ActiveSupport::TestCase
       setup_user_with_all_objects
       @user.destroy
       @objects.each do |object|
-        assert object.reload.destroyed?, "#{object.class.name} was expected to be deleted via dependent => destroy but wasn't"
+        assert object.reload.paranoia_destroyed?, "#{object.class.name} was expected to be deleted via dependent => destroy but wasn't"
       end
       @user.restore(:recursive => true)
       @objects.each do |object|
-        refute object.reload.destroyed?, "#{object.class.name} was expected to be restored, but is still deleted"
+        refute object.reload.paranoia_destroyed?, "#{object.class.name} was expected to be restored, but is still deleted"
       end
     end
 

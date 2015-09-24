@@ -14,11 +14,16 @@ class Dashboard::Company::HostReservationsControllerTest < ActionController::Tes
       @unrelated_listing.update_attribute(:instance_id, FactoryGirl.create(:instance).id)
     end
 
-    should 'show related guests' do
+    should 'show related guests and appropriate units' do
       FactoryGirl.create(:reservation, owner: @user, listing: @related_listing)
       get :index
       assert_response :success
       assert_select ".order", 1
+      assert_select ".order .order-item .inline p:last-child", "1 day"
+      @related_listing.update!({booking_type: 'overnight'})
+      get :index
+      assert_response :success
+      assert_select ".order .order-item .inline p:last-child", "1 night"
     end
 
     should 'show related locations when no related guests' do

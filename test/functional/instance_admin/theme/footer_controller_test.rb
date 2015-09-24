@@ -21,7 +21,7 @@ class InstanceAdmin::Theme::FooterControllerTest < ActionController::TestCase
     should 'be listed' do
       get :versions
       assert_response :success
-      assert_select 'table tbody tr:first-child td:first-child', text: @footer.versions.reorder(created_at: :desc).first.id
+      assert_select 'table tbody tr:first-child td:first-child', text: @footer.versions.reorder(created_at: :desc).first.id.to_s
     end
 
     should "be viewble" do

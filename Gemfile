@@ -2,9 +2,8 @@ ruby '2.2.2'
 
 source 'http://rubygems.org'
 
-gem 'rails', '4.1.12'
+gem 'rails', '4.2.4'
 gem 'pg'
-gem 'will_paginate'
 gem 'elasticsearch-persistence'
 gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
@@ -18,8 +17,10 @@ gem 'redis-rails', '~> 4.0.0'
 gem 'raygun4ruby'
 gem 'liquid'
 gem 'active_model_serializers', '~> 0.8.1'
+gem 'rabl'
 gem 'carrierwave'
-gem 'devise', '~> 3.0.0'
+gem 'devise', '~> 3.5.0'
+gem 'devise-token_authenticatable'
 
 gem 'aws-sdk', '1.27.0'
 
@@ -46,8 +47,8 @@ gem 'haml'
 gem 'le'
 gem 'mini_magick', '~> 4.0.1'
 gem 'money-rails', github: 'RubyMoney/money-rails'
-gem 'paranoia', '~> 2.0.0'
 gem 'simple_form', '~> 3.1'
+gem 'paranoia', '~> 2.1.0'
 gem 'nested_form'
 gem 'cocoon'
 gem 'nokogiri', '~> 1.6.0'
@@ -71,7 +72,8 @@ gem 'paper_trail', '3.0.0'
 gem 'rack-rewrite', :require => 'rack/rewrite'
 
 gem 'state_machine', '~> 1.2.0'
-gem 'compass-rails', '1.1.7'
+gem 'will_paginate'
+gem 'compass-rails'
 gem 'animate'
 gem 'coffee-rails'
 gem 'delayed_job_active_record', '~> 4.0.0'
@@ -86,11 +88,11 @@ gem 'paypal-sdk-merchant'
 gem 'paypal-sdk-adaptivepayments'
 gem 'braintree', '2.46.0'
 gem 'faraday', '~> 0.8.6'
-gem 'friendly_id', '~> 5.0.4'
+gem 'friendly_id', '~> 5.1'
 gem 'non-stupid-digest-assets'
 gem 'asset_sync'
 gem 'sass-rails', github: 'rails/sass-rails', branch: '4-0-stable'
-gem 'bootstrap-sass', '~> 2.3.1.0'
+gem 'bootstrap-sass', '~> 2.3'
 gem 'bootstrap-switch-rails'
 gem 'chronic', '~> 0.9.1'
 gem 'jcrop-rails', github: 'bukalapak/jcrop-rails'
@@ -98,6 +100,7 @@ gem 'js-routes'
 
 gem 'unicorn'
 
+gem 'stringex'
 gem 'ckeditor', github: 'galetahub/ckeditor'
 gem 'orm_adapter', '~> 0.5.0' # needed for ckeditor, see https://github.com/galetahub/ckeditor/issues/375
 gem 'sanitize'
@@ -115,12 +118,12 @@ gem 'dropbox-api'
 gem 'twilio-ruby'
 gem 'googl'
 
-gem 'jquery-rails', '~> 3.1'
+gem 'jquery-rails', '~> 4.0'
 gem 'select2-rails'
 gem 'chosen-rails', '~> 1.2.0'
 gem 'spectrum-rails'
 
-gem 'inherited_resources', '~> 1.5.0'
+gem 'inherited_resources', '~> 1.6'
 gem 'historyjs-rails'
 
 gem 'ranked-model'
@@ -141,12 +144,12 @@ gem 'iso_country_codes'
 
 gem 'shippo'
 
-gem 'spree', github: 'spree/spree', branch: '2-3-stable'
-
 gem 'video_info'
+gem 'spree_core', github: 'spree/spree', branch: '3-0-stable'
+#gem 'spree_auth_devise', github: 'spree/spree_auth_devise', branch: '2-2-stable'
 
 gem 'domainatrix'
-gem 'store_base_sti_class'
+gem 'store_base_sti_class', github: 'jcarreti/store_base_sti_class', branch: 'rails4-2'
 
 gem 'acts-as-taggable-on', '~> 3.4'
 
@@ -191,6 +194,8 @@ group :development do
   gem 'parallel_tests'
   gem 'mailcatcher'
   gem 'active_record_query_trace'
+  gem 'web-console', '~> 2.0'
+  gem 'parallel_tests'
 end
 
 group :test do
@@ -230,5 +235,4 @@ gem 'i18n_data'
 
 gem 'parser'
 
-# Remove '0.4.0' when updating to RoR 4.2
-gem 'routing-filter', '~> 0.4.0'
+gem 'routing-filter', '~> 0.5.0'

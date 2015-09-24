@@ -73,24 +73,21 @@ class SpreeDefaultsLoaderTest < ActiveSupport::TestCase
     should 'mantain preferences for other instances after preference change' do
       PlatformContext.current = PlatformContext.new(@test_instance)
 
-      Spree::Config.display_currency =  true
-      Spree::Config.allow_ssl_in_staging = true
+      # Spree::Config.allow_ssl_in_staging = true
       Spree::Config.currency = 'PLN'
 
       PlatformContext.current = PlatformContext.new(@instance)
       check_default_preferences
 
       PlatformContext.current = PlatformContext.new(@test_instance)
-      assert_equal Spree::Config.display_currency, true
-      assert_equal Spree::Config.allow_ssl_in_staging, true
+      # assert_equal Spree::Config.allow_ssl_in_staging, true
       assert_equal Spree::Config.currency, 'PLN'
     end
 
   end
 
   def check_default_preferences
-    assert_equal Spree::Config.display_currency, false
-    assert_equal Spree::Config.allow_ssl_in_staging, false
+    # assert_equal Spree::Config.allow_ssl_in_staging, false
     assert_equal Spree::Config.currency, 'USD'
   end
 end

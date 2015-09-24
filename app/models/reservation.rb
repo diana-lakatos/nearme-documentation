@@ -359,6 +359,14 @@ class Reservation < ActiveRecord::Base
     periods.size
   end
 
+  def total_nights
+    price_calculator.number_of_nights
+  end
+
+  def total_units
+    listing.overnight_booking? ? total_nights : total_days
+  end
+
   # Number of desks booked accross all days
   def desk_days
     # NB: use of 'size' not 'count' here is deliberate - seats/periods may not be persisted at this point!
