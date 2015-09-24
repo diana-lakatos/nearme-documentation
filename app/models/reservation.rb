@@ -9,6 +9,7 @@ class Reservation < ActiveRecord::Base
 
   before_create :store_platform_context_detail
   after_create :create_waiver_agreements
+  after_create :copy_dimensions_template
 
   PAYMENT_METHODS = {
     :credit_card => 'credit_card',
@@ -52,6 +53,7 @@ class Reservation < ActiveRecord::Base
 
   has_one :billing_authorization, as: :reference
   has_many :reviews, as: :reviewable
+  has_one :dimensions_template, as: :entity
 
   validates :transactable_id, :presence => true
   # the if statement for periods is needed to make .recover work - otherwise reservation would be considered not valid even though it is
@@ -645,6 +647,16 @@ class Reservation < ActiveRecord::Base
     assigned_waiver_agreement_templates.each do |t|
       waiver_agreements.create(waiver_agreement_template: t, vendor_name: host.name, guest_name: owner.name)
     end
+  end
+
+  def copy_dimensions_template
+    if listing.dimensions_template.present?
+      copied_dimensions_template = listing.dimensions_template.dup
+      copied_dimensions_template.entity = self
+      copied_dimensions_template.save!
+    end
+
+    true
   end
 
 end

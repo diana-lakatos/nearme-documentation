@@ -247,6 +247,176 @@ textarea {
   }
 }
 
+.modal-body.dimensions-template-container {
+   margin-top: 0 !important;
+
+   input {
+     margin: 0;
+   }
+
+   .btn-toolbar {
+     margin: 25px 0 0 0;
+   }
+
+  .dimensions_select_container {
+    margin-left: 212px;
+    padding-right: 17px;
+  }
+
+  .explanation {
+    margin-left: 212px;
+
+    .last {
+      margin-bottom: 15px;
+    }
+  }
+
+  .dimensions_element_container {
+    .first {
+        .col-md-3 {
+          display: block;
+          font-size: 80%;
+          float: none;
+          width: 140px;
+        }
+
+        .col-md-9 {
+          display: block;
+          float: none;
+          width: auto;
+        }
+
+        .row {
+          margin-top: 12px;
+          margin-bottom: 12px;
+        }
+
+        width: 80%;
+        float: left;
+    }
+
+    .last {
+      padding-left: 10px;
+      .row {
+        .col-md-3 {
+          display: block;
+          font-size: 80%;
+          float: none;
+          width: 140px;
+        }
+
+        .col-md-9 {
+          display: block;
+          float: none;
+          width: 100%;
+          select {
+            margin: 15px 0 15px 0;
+          }
+        }
+
+        margin-top: 12px;
+        margin-bottom: 12px;
+      }
+
+      width: 20%;
+      float: left;
+    }
+  }
+
+  &.disabled {
+    display: block;
+    position: absolute;
+    top: -5000px;
+    left: -5000px;
+  }
+
+  &.enabled {
+    display: block;
+    position: relative;
+  }
+}
+
+.services-dimensions-templates {
+   margin-top: 0 !important;
+
+  .dimensions_select_container {
+    margin-left: 212px;
+    padding-right: 17px;
+  }
+
+  .dimensions_element_container {
+    margin-left: 198px;
+  }
+
+  .explanation {
+    margin-left: 212px;
+
+    .last {
+      margin-bottom: 15px;
+    }
+  }
+
+  .dimensions_element_container {
+    .first {
+        .col-md-3 {
+          display: block;
+          font-size: 80%;
+          float: none;
+          width: 140px;
+        }
+
+        .col-md-9 {
+          display: block;
+          float: none;
+          width: auto;
+        }
+
+        .row {
+          margin-top: 12px;
+          margin-bottom: 12px;
+        }
+
+        width: 70%;
+        float: left;
+    }
+
+    .last {
+      .row {
+        .col-md-3 {
+          display: block;
+          font-size: 80%;
+          float: none;
+          width: 140px;
+        }
+
+        .col-md-9 {
+          display: block;
+          float: none;
+          width: 100%;
+        }
+
+        margin-top: 12px;
+        margin-bottom: 12px;
+      }
+
+      width: 30%;
+      float: left;
+    }
+  }
+
+  &.disabled {
+    display: block;
+    position: absolute;
+    top: -5000px;
+    left: -5000px;
+  }
+
+  &.enabled {
+    display: block;
+    position: relative;
+  }
+}
+
 .product_shipping_profile_fields_row {
 
   &.disabled {

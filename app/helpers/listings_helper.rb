@@ -126,4 +126,10 @@ module ListingsHelper
     [friends, hosts, host_friends, mutual_visitors].flatten
   end
 
+  def dimensions_templates_collection
+    (@platform_context.instance.dimensions_templates + current_user.dimensions_templates).map do |dt|
+      ["#{dt.name} (#{dt.height} #{t(dt.height_unit, scope: 'measure_units.length')} x #{dt.width} #{t(dt.width_unit, scope: 'measure_units.length')} x #{dt.depth} #{t(dt.depth_unit, scope: 'measure_units.length')}, #{dt.weight} #{t(dt.weight_unit, scope: 'measure_units.weight')})", dt.id]
+    end
+  end
+
 end

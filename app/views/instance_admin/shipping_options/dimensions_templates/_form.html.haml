@@ -1,43 +1,14 @@
 
 = simple_form_for @dimensions_template, :url => [:instance_admin, :shipping_options, @dimensions_template], :html => { :autocomplete => 'off', :method => form_method } do |f|
-  - if @dimensions_template.unit_of_measure == 'imperial'
-    - weight_units = DimensionsTemplate::UNITS_OF_MEASURE['imperial']['weight']
-    - size_units = DimensionsTemplate::UNITS_OF_MEASURE['imperial']['length']
-  - else
-    - weight_units = DimensionsTemplate::UNITS_OF_MEASURE['metric']['weight']
-    - size_units = DimensionsTemplate::UNITS_OF_MEASURE['metric']['length']
 
   .content-container
-    .row
-      .input-container.col-xs-6
-        = f.input :name, required: true, input_html: { class: 'form-control' }
-      .input-container.col-xs-6
-        = f.input :unit_of_measure, as: :select, include_blank: false, collection: DimensionsTemplate::UNITS_OF_MEASURE.keys, required: true, input_html: { class: 'form-control', 'data-js-element-identifier' => 'admin_dimensions_template_select' }
-    .row
-      .input-container.col-xs-6
-        = f.input :weight, required: true, input_html: { class: 'form-control' }
-      .input-container.col-xs-6
-        = f.input :weight_unit, as: :select, include_blank: false, collection: weight_units, required: true, input_html: { class: 'form-control', 'data-js-element-identifier' => 'admin_dimensions_template_form_weight' }
-    .row
-      .input-container.col-xs-6
-        = f.input :height, required: true, input_html: { class: 'form-control' }
-      .input-container.col-xs-6
-        = f.input :height_unit, as: :select, include_blank: false, collection: size_units, required: true, input_html: { class: 'form-control', 'data-js-element-identifier' => 'admin_dimensions_template_form_height' }
-    .row
-      .input-container.col-xs-6
-        = f.input :width, required: true, input_html: { class: 'form-control' }
-      .input-container.col-xs-6
-        = f.input :width_unit, as: :select, include_blank: false, collection: size_units, required: true, input_html: { class: 'form-control', 'data-js-element-identifier' => 'admin_dimensions_template_form_width' }
-    .row
-      .input-container.col-xs-6
-        = f.input :depth, required: true, input_html: { class: 'form-control' }
-      .input-container.col-xs-6
-        = f.input :depth_unit, as: :select, include_blank: false, collection: size_units, required: true, input_html: { class: 'form-control', 'data-js-element-identifier' => 'admin_dimensions_template_form_depth' }
+    = render partial: 'shared/dimensions_templates_admin_fields', locals: { f: f }
+
     .row
       .input-container.col-xs-12
         = f.input :use_as_default, required: true, inline_label: true
 
-    = content_for :header_buttons do
-      = link_to t('instance_admin.cancel'), instance_admin_shipping_options_dimensions_templates_path, class: 'btn btn-blue'
-      = f.submit form_title, class: 'btn btn-blue', data: { 'submit-form' => 1, 'form-selector' => 'form' }
+      = content_for :header_buttons do
+        = link_to t('instance_admin.cancel'), instance_admin_shipping_options_dimensions_templates_path, class: 'btn btn-blue'
+        = f.submit form_title, class: 'btn btn-blue', data: { 'submit-form' => 1, 'form-selector' => 'form' }
 

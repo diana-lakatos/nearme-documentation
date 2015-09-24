@@ -67,6 +67,7 @@ class User < ActiveRecord::Base
   has_many :user_industries, dependent: :destroy
   has_many :user_bans
   has_many :wish_lists, dependent: :destroy
+  has_many :dimensions_templates, as: :entity
 
   has_one :blog, class_name: 'UserBlog'
 
