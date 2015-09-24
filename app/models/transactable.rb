@@ -10,6 +10,10 @@ class Transactable < ActiveRecord::Base
 
   DEFAULT_ATTRIBUTES = %w(name description capacity)
 
+  DATE_VALUES = ['today', 'yesterday', 'week_ago', 'month_ago', '3_months_ago', '6_months_ago']
+
+  RENTAL_SHIPPING_TYPES = %w(no_rental delivery pick_up both).freeze
+
   has_custom_attributes target_type: 'ServiceType', target_id: :transactable_type_id
   has_metadata accessors: [:photos_metadata]
   inherits_columns_from_association([:company_id, :administrator_id, :creator_id, :listings_public], :location)
@@ -45,6 +49,7 @@ class Transactable < ActiveRecord::Base
   belongs_to :instance, inverse_of: :listings
   belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :listings, counter_cache: true
   belongs_to :administrator, -> { with_deleted }, class_name: "User", inverse_of: :administered_listings
+  has_one :dimensions_template, as: :entity
 
   has_one :location_address, through: :location
   has_one :schedule, as: :scheduable, dependent: :destroy
@@ -57,6 +62,7 @@ class Transactable < ActiveRecord::Base
   accepts_nested_attributes_for :document_requirements, allow_destroy: true, reject_if: :document_requirement_hidden?
   accepts_nested_attributes_for :upload_obligation
   accepts_nested_attributes_for :schedule, allow_destroy: true
+  accepts_nested_attributes_for :dimensions_template, allow_destroy: true
 
   before_destroy :decline_reservations
   before_save :set_currency
@@ -135,6 +141,8 @@ class Transactable < ActiveRecord::Base
     order("CASE #{listing_ids_decorated.join(' ')} END") if listing_ids.present?
   }
 
+  scope :with_date, ->(date) { where(created_at: date) }
+
   # == Callbacks
   before_validation :set_activated_at, :set_enabled, :nullify_not_needed_attributes,
     :set_confirm_reservations
@@ -153,6 +161,8 @@ class Transactable < ActiveRecord::Base
   validates :photos, length: {:minimum => 1}, unless: ->(record) { record.photo_not_required || !record.transactable_type.enable_photo_required }
   validates :quantity, presence: true
   validates :quantity, numericality: {greater_than: 0}
+  validates :rental_shipping_type, inclusion: { in: RENTAL_SHIPPING_TYPES }
+  validates_presence_of :dimensions_template, if: lambda { |record| ['delivery', 'both'].include?(record.rental_shipping_type) }
 
   validate :check_book_it_out_minimum_qty, if: ->(record) { record.book_it_out_minimum_qty.present? }
   validate :validate_mandatory_categories

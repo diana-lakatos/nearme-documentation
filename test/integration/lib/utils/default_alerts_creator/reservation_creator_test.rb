@@ -57,6 +57,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_equal [@reservation.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] Your booking for '#{@reservation.listing.name}' at #{@reservation.location.street} was cancelled by the host", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
+      assert_not_contains "translation missing:", mail.html_part.body
     end
 
     should "#notify_host_of_cancellation_by_host" do
@@ -69,6 +70,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_equal [@reservation.listing.administrator.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] You just declined a booking", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
+      assert_not_contains "translation missing:", mail.html_part.body
     end
 
     should "#notify_guest_of_cancellation_by_guest" do
@@ -81,6 +83,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_equal [@reservation.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] You just cancelled a booking", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
+      assert_not_contains "translation missing:", mail.html_part.body
     end
 
     should "#notify_host_of_cancellation_by_guest" do
@@ -94,6 +97,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_equal [@reservation.listing.creator.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name} cancelled a booking for '#{@reservation.listing.name}' at #{@reservation.location.street}", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
+      assert_not_contains "translation missing:", mail.html_part.body
     end
 
     should "#notify_guest_of_expiration" do
@@ -109,6 +113,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_equal [@reservation.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] Your booking for '#{@reservation.listing.name}' at #{@reservation.location.street} has expired", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
+      assert_not_contains "translation missing:", mail.html_part.body
     end
 
     should 'notify_guest_reservation_created_and_confirmed_email!' do
@@ -122,6 +127,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_equal [@reservation.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name}, your booking has been confirmed", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
+      assert_not_contains "translation missing:", mail.html_part.body
     end
 
     should 'notify host of confirmation email' do
@@ -135,6 +141,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_equal [@reservation.host.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name} just booked your #{@platform_context.decorate.bookable_noun}!", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
+      assert_not_contains "translation missing:", mail.html_part.body
     end
 
     should 'ask host for confirmation email' do
@@ -147,6 +154,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_equal [@reservation.listing.creator.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name} just booked your #{@platform_context.decorate.bookable_noun}!", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
+      assert_not_contains "translation missing:", mail.html_part.body
     end
 
     should 'inform guest about booking' do
@@ -160,6 +168,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_equal [@reservation.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name}, your booking is pending confirmation", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
+      assert_not_contains "translation missing:", mail.html_part.body
     end
 
     should 'inform guest of manual confirmation' do
@@ -173,6 +182,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_equal [@reservation.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name}, your booking has been confirmed", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
+      assert_not_contains "translation missing:", mail.html_part.body
     end
 
     should 'inform host of manual confirmation' do
@@ -186,6 +196,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_equal [@reservation.listing.creator.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] Thanks for confirming!", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
+      assert_not_contains "translation missing:", mail.html_part.body
     end
 
     context 'guest rejection' do
@@ -223,6 +234,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
 
         assert_equal [@reservation.owner.email], mail.to
         assert_equal "[#{@platform_context.decorate.name}] Can we help, #{@reservation.owner.first_name}?", mail.subject
+        assert_not_contains "translation missing:", mail.html_part.body
       end
 
       should 'include nearme listings when it is present' do
@@ -237,6 +249,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
 
         assert_contains @listing.name, mail.html_part.body
         assert_not_contains 'Liquid error:', mail.html_part.body
+        assert_not_contains "translation missing:", mail.html_part.body
       end
 
       should 'not include nearme listings when it is not present' do
@@ -261,6 +274,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_equal [@reservation.listing.administrator.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] Can we help, #{@reservation.listing.administrator.first_name}?", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
+      assert_not_contains "translation missing:", mail.html_part.body
     end
 
     should 'request payment' do
@@ -274,6 +288,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_equal [@reservation.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] Your booking for '#{@reservation.listing.name}' at #{@reservation.location.street} requires payment", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
+      assert_not_contains "translation missing:", mail.html_part.body
     end
 
     should 'pre booking' do
@@ -287,6 +302,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_equal [@reservation.owner.email], mail.to
       assert_equal "[#{@platform_context.decorate.name}] #{@reservation.owner.first_name}, your booking is tomorrow!", mail.subject
       assert_not_contains 'Liquid error:', mail.html_part.body
+      assert_not_contains "translation missing:", mail.html_part.body
     end
 
     should 'one reservation' do
@@ -307,6 +323,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_contains @reservation.listing.name, mail.html_part.body
       assert_equal [@reservation.owner.email], mail.to
       assert_not_contains 'Liquid error:', mail.html_part.body
+      assert_not_contains "translation missing:", mail.html_part.body
     end
 
     should 'request_rating_of_guest_from_host_email' do
@@ -324,6 +341,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_not_contains 'href="http://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert_not_contains 'Liquid error:', mail.html_part.body
+      assert_not_contains "translation missing:", mail.html_part.body
     end
 
     should 'request_rating_of_host_from_guest_email!' do
@@ -342,6 +360,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
       assert_not_contains 'href="http://example.com', mail.html_part.body
       assert_not_contains 'href="/', mail.html_part.body
       assert_not_contains 'Liquid error:', mail.html_part.body
+      assert_not_contains "translation missing:", mail.html_part.body
     end
 
 
@@ -397,6 +416,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
           assert sms.body =~ Regexp.new("Your booking for #{@reservation.listing.name} was confirmed. View booking:"), "wrong body: #{sms.body}"
           assert sms.body =~ /http:\/\/goo.gl/, "Sms body does not include http://goo.gl: #{sms.body}"
           assert_not_contains 'Liquid error:', sms.body
+          assert_not_contains "translation missing:", sms.body
         end
 
       end
@@ -420,6 +440,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
           assert sms.body =~ Regexp.new("Your booking for #{@reservation.listing.name} was declined. View booking:"), "wrong body: #{sms.body}"
           assert sms.body =~ /http:\/\/goo.gl/, "Sms body does not include http://goo.gl: #{sms.body}"
           assert_not_contains 'Liquid error:', sms.body
+          assert_not_contains "translation missing:", sms.body
         end
 
       end
@@ -443,6 +464,7 @@ class Utils::DefaultAlertsCreator::ReservationCreatorTest < ActionDispatch::Inte
           assert sms.body =~ Regexp.new("Your booking for #{@reservation.listing.name} was cancelled. View booking:"), "wrong body: #{sms.body}"
           assert sms.body =~ /http:\/\/goo.gl/, "Sms body does not include http://goo.gl: #{sms.body}"
           assert_not_contains 'Liquid error:', sms.body
+          assert_not_contains "translation missing:", sms.body
         end
       end
     end

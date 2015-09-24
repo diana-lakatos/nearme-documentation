@@ -31,7 +31,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
 
     if @transactable.save
       WorkflowStepJob.perform(WorkflowStep::ListingWorkflow::PendingApproval, @transactable.id) unless @transactable.is_trusted?
-      flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.bookable_noun)
+      flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.translated_bookable_noun)
       flash[:error] = t('manage.listings.no_trust_explanation') if !@transactable.is_trusted?
       event_tracker.created_a_listing(@transactable, { via: 'dashboard' })
       event_tracker.updated_profile_information(current_user)

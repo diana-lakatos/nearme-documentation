@@ -45,7 +45,7 @@ class InstanceAdmin::Manage::Search::ServiceTypesController < InstanceAdmin::Man
   end
 
   def transactable_type_params
-    params.require(:transactable_type).permit(:searchable)
+    params.require(:transactable_type).permit(:searchable, :search_location_type_filter)
   end
 
   def custom_attribute_params

@@ -57,9 +57,6 @@ class ReservationDecoratorTest < ActionView::TestCase
         assert_equal '6 Jan - 14 Jan', @reservation.short_dates
       end
 
-      should 'return right dates' do
-        assert_equal '2014-01-06 (desk), 2014-01-13 (desk), and 2014-01-14 (desk)', @reservation.dates
-      end
     end
 
     teardown do

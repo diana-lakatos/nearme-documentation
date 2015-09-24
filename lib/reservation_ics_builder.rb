@@ -18,7 +18,7 @@ class ReservationIcsBuilder
     @calendar ||= RiCal.Calendar do |cal|
       cal.add_x_property 'X-WR-CALNAME', @reservation.listing.company.instance.name
       cal.add_x_property 'X-WR-RELCALID', "#{@user.id}"
-      @reservation.periods.each do |period|
+      @reservation.periods.order('date ASC').find_each do |period|
         cal.event do |event|
           event.description = @reservation.listing.description || ''
           event.summary = @reservation.listing.name || ''

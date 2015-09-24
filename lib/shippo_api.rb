@@ -24,6 +24,63 @@ module ShippoApi
     end
   end
 
+  class ShippoToAddressFillerFromSpree
+
+    def initialize(spree_object, package)
+      @options = {}
+
+      address_object = spree_object
+
+      @options[:name] = "#{address_object.first_name} #{address_object.last_name}"
+      @options[:company] = address_object.company
+      @options[:street1] =  address_object.address1
+      @options[:street2] = address_object.address2
+      @options[:city] = address_object.city
+      @options[:state] = address_object.try(:state).try(:abbr)
+      @options[:zip] = address_object.zipcode
+      @options[:country] = address_object.try(:country).try(:iso)
+      @options[:phone] = address_object.phone
+      @options[:email] = package.order.user.email
+      @options[:street_no] = ''
+    end
+
+    def to_hash
+      @options
+    end
+  end
+
+  class ShippoFromAddressFillerFromSpree
+
+    def initialize(spree_object, package)
+      @options = {}
+      stock_location = spree_object
+
+      # We take the info instead from the user's first company as the address_object
+      # in the current implementation will not have the info set
+      products = package.contents.map(&:variant).map(&:product).compact.uniq
+      creator_user = products.try(:first).try(:user)
+      company = creator_user.try(:companies).try(:first)
+
+      if company.present?
+        @options[:name] = creator_user.name
+        @options[:company] = company.name
+        @options[:street1] =  company.street
+        @options[:street2] = ''
+        @options[:city] = company.city
+        @options[:state] = company.state_code
+        @options[:zip] = company.postcode
+        @options[:country] = company.iso_country_code
+        @options[:phone] = creator_user.phone
+        @options[:email] = creator_user.email
+        @options[:street_no] = company.try(:company_address).try(:street_number).to_s
+      end
+    end
+
+    def to_hash
+      @options
+    end
+  end
+
   class ShippoAddressInfo < ShippoObject
     PERMANENT_OPTIONS = {
       :object_purpose => 'PURCHASE'
@@ -31,53 +88,40 @@ module ShippoApi
     REQUIRED_PARAMS = [:object_purpose, :name, :company, :street1, :street_no, :street2, :city, :state, :zip, :country, :phone, :email]
 
 
-    def initialize(purpose, spree_object, package)
-      if purpose == :send_to
-        address_object = spree_object
-        options = {}
-
-        options[:name] = "#{address_object.first_name} #{address_object.last_name}"
-        options[:company] = address_object.company
-        options[:street1] =  address_object.address1
-        options[:street2] = address_object.address2
-        options[:city] = address_object.city
-        options[:state] = address_object.try(:state).try(:abbr)
-        options[:zip] = address_object.zipcode
-        options[:country] = address_object.try(:country).try(:iso)
-        options[:phone] = address_object.phone
-        options[:email] = package.order.user.email
-        options[:street_no] = ''
-      elsif purpose == :send_from
-        stock_location = spree_object
-        options = {}
-
-        # We take the info instead from the user's first company as the address_object
-        # in the current implementation will not have the info set
-        products = package.contents.map(&:variant).map(&:product).compact.uniq
-        creator_user = products.try(:first).try(:user)
-        company = creator_user.try(:companies).try(:first)
-
-        if company.present?
-          options[:name] = creator_user.name
-          options[:company] = company.name
-          options[:street1] =  company.street
-          options[:street2] = ''
-          options[:city] = company.city
-          options[:state] = company.state_code
-          options[:zip] = company.postcode
-          options[:country] = company.iso_country_code
-          options[:phone] = creator_user.phone
-          options[:email] = creator_user.email
-          options[:street_no] = company.try(:company_address).try(:street_number).to_s
-        end
-      else
-        raise ShippoUnknownParameterType options.class.to_s
-      end
+    def initialize(filler_object)
+      options = filler_object.to_hash
 
       options = options.merge(PERMANENT_OPTIONS)
       @required_params = REQUIRED_PARAMS
 
       set_params_from_hash(options)
+    end
+
+    def self.valid?(shippo_address_id)
+      result = Shippo.request(:get, "/addresses/#{shippo_address_id}/validate/")
+
+      result[:object_state] == 'VALID'
+    rescue
+      false
+    end
+
+  end
+
+  class ShippoParcelInfoFillerFromSpree
+
+    def initialize(package)
+      @options = {}
+
+      @options[:length] = package.contents.first.try(:variant).try(:depth)
+      @options[:width] = package.contents.first.try(:variant).try(:width)
+      @options[:height] = package.contents.first.try(:variant).try(:height)
+      @options[:distance_unit] = :in
+      @options[:weight] = package.weight
+      @options[:mass_unit] = :oz
+    end
+
+    def to_hash
+      @options
     end
   end
 
@@ -86,14 +130,9 @@ module ShippoApi
 
     def initialize(options)
       if !options.is_a?(Hash)
-        package = options
-        options = {}
-        options[:length] = package.contents.first.try(:variant).try(:depth)
-        options[:width] = package.contents.first.try(:variant).try(:width)
-        options[:height] = package.contents.first.try(:variant).try(:height)
-        options[:distance_unit] = :in
-        options[:weight] = package.weight
-        options[:mass_unit] = :oz
+        filler_object = options
+
+        options = filler_object.to_hash
       end
 
       @required_params = REQUIRED_PARAMS
@@ -142,20 +181,18 @@ module ShippoApi
     MAX_GET_RATE_ATTEMPTS = 5
     MAX_BUY_RATE_ATTEMPTS = 5
 
-    def initialize(username, password)
-      Shippo::api_user = username
-      Shippo::api_pass = password
+    def initialize(api_token)
+      Shippo::api_token = api_token
     end
 
     def self.verify_connection(instance_params)
       begin
-        if instance_params[:shippo_username].present? && instance_params[:shippo_password].present?
-          Shippo.api_user = instance_params[:shippo_username]
-          Shippo.api_pass = instance_params[:shippo_password]
+        if instance_params[:shippo_api_token].present?
+          Shippo::api_token = instance_params[:shippo_api_token]
           Shippo::Transaction.all
         end
         true
-      rescue Shippo::ConnectionError
+      rescue Shippo::APIError
         false
       end
     end
@@ -166,6 +203,11 @@ module ShippoApi
 
       address_from = Shippo::Address.create(address_from_info.to_hash)
       address_to = Shippo::Address.create(address_to_info.to_hash)
+
+      if !ShippoAddressInfo.valid?(address_from.to_hash[:object_id]) || !ShippoAddressInfo.valid?(address_to.to_hash[:object_id])
+        return default_result_rates
+      end
+
       parcel = Shippo::Parcel.create(parcel_info.to_hash)
       customs_item = nil
       customs_declaration = nil

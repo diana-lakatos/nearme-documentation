@@ -49,7 +49,7 @@ class SecuredParams
 
   def instance_shipping_providers
     [
-      :shippo_username, :shippo_password,
+      :shippo_api_token
     ]
   end
 
@@ -349,8 +349,7 @@ class SecuredParams
       :searcher_type,
       :service_fee_guest_percent,
       :service_fee_host_percent,
-      :shippo_password,
-      :shippo_username,
+      :shippo_api_token,
       :skip_company,
       :stripe_currency,
       :support_email,
@@ -597,6 +596,7 @@ class SecuredParams
       :default_currency,
       :action_continuous_dates_booking,
       :bookable_noun, :lessor, :lessee, :action_schedule_booking,
+      :rental_shipping,
       :availability_templates_attributes => nested(self.availability_template),
       :allowed_currencies => [],
       :action_type_ids => [],
@@ -906,12 +906,14 @@ class SecuredParams
         :action_daily_booking,
         :last_request_photos_sent_at, :activated_at, :rank,
         :transactable_type_id, :transactable_type, :booking_type,
+        :rental_shipping_type, :dimensions_template_id,
         photos_attributes: nested(self.photo),
         approval_requests_attributes: nested(self.approval_request),
         availability_rules_attributes: nested(self.availability_rule),
         photo_ids: [],
         amenity_ids: [],
         category_ids: [],
+        dimensions_template_attributes: nested(self.dimensions_template),
         waiver_agreement_template_ids: [],
         schedule_attributes: nested(self.schedule),
         document_requirements_attributes: nested(self.document_requirement),

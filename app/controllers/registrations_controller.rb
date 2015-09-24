@@ -210,9 +210,9 @@ class RegistrationsController < Devise::RegistrationsController
       @user = current_user
       delta = 0.0001
       if ((@user.last_geolocated_location_longitude.to_f - params[:longitude].to_f).abs > delta) || ((@user.last_geolocated_location_latitude.to_f - params[:latitude].to_f).abs > delta)
-        @user.last_geolocated_location_longitude = params[:longitude]
-        @user.last_geolocated_location_latitude = params[:latitude]
-        @user.save
+        @user.update_attributes(last_geolocated_location_longitude: params[:longitude], last_geolocated_location_latitude: params[:latitude])
+
+        UserGeolocationJob.perform(@user.id)
       end
     end
     render :nothing => true
@@ -276,7 +276,8 @@ class RegistrationsController < Devise::RegistrationsController
   def set_return_to
     # We can't prevent Devise from setting return_to to users/sign_in on unsuccessful sign in
     # so we then prevent saving it if present
-    if params[:return_to].present? && !params[:return_to].to_s.match(/users\/sign_in/)
+    disallowed_regex = /(users\/sign_in|users\/password)/
+    if params[:return_to].present? && !params[:return_to].to_s.match(disallowed_regex)
       session[:user_return_to] = params[:return_to]
     end
   end

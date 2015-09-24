@@ -12,6 +12,8 @@
     {% assign price_info = listing | lowest_price_without_cents_with_currency: lgpricing_filters %}
     {% if price_info.price %}
       {{ price_info.price}} / <span>{{ price_info.period }}</span>
+    {% elsif price_info.free %}
+      <span>{{ 'search.free_listing' | translate }}</span>
     {% endif %}
   </div>
   <div class="span2 reserve-listing padding-top">

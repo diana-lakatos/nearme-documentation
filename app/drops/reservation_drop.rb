@@ -38,7 +38,7 @@ class ReservationDrop < BaseDrop
   #   string representing the object to be booked (e.g. desk, room etc.)
   # bookable_noun_plural
   #   string representing the object (plural) to be booked (e.g. desks, rooms etc.)
-  delegate :bookable_noun, :bookable_noun_plural, to: :transactable_type
+  delegate :bookable_noun, :bookable_noun_plural, to: :transactable_type_drop
 
   def initialize(reservation)
     @reservation = reservation.decorate
@@ -116,5 +116,9 @@ class ReservationDrop < BaseDrop
   # url to the reviews section in the user's dashboard
   def reviews_reservation_url
     routes.dashboard_reviews_path
+  end
+
+  def transactable_type_drop
+    transactable_type.to_liquid
   end
 end

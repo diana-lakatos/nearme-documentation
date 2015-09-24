@@ -1,0 +1,2 @@
+= content_tag :select, id: 'select_instance_dimensions_template', class: 'dimensions-templates', :data => { 'js-element-identifier' => 'product_form_templates_list' } do
+  = options_for_dimensions_templates_select(platform_context.instance.dimensions_templates + current_user.dimensions_templates)

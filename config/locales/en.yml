@@ -57,6 +57,9 @@ en:
   night:
     one: "1 night"
     other: "%{count} nights"
+  hour:
+    one: "hour"
+    other: "hours"
   desk:
     reservation_rejected_body: "%{user} declined reservation with reason: %{reason}"
     reservation_rejected_title: "[internal] User has declined reservation"
@@ -84,6 +87,12 @@ en:
         book_at: 'Book at'
         the_listing: 'The listing'
         admin_logout_confirmation: 'This will log you out and re-log you in as location administrator.'
+  transactables:
+    rental_shipping_types:
+      no_rental: 'Not rental'
+      delivery: 'Delivery'
+      pick_up: 'Pick up'
+      both: 'Delivery or pick up'
   locations:
     add_new_location: "Add New Location"
     save_location: "Save Location"
@@ -166,6 +175,10 @@ en:
         save: "Save"
         only_if_both_completed_services: "Only display reviews if both Guest and Host have completed"
         only_if_both_completed_products: "Only display reviews if both buyer and seller have completed"
+      rate_subject:
+        guest: 'Host/Seller rates Guest/Buyer'
+        host: 'Guest/Buyer rates Host/Seller'
+        transactable: 'Guest/Buyer rates Listing/Product'
     rating_reviews_shared:
       header:
         all_reviews: "All Reviews"
@@ -239,6 +252,13 @@ en:
     are_you_sure: "Are you sure?"
     email: 'Email'
 
+    general:
+      product: "Product"
+      products: "Products"
+      listing: "Listing"
+      listings: "Listings"
+      reports: "Reports"
+
     analytics:
       no_revenue_yet: 'No revenue yet.'
       no_sales_yet: 'No sales yet.'
@@ -254,6 +274,18 @@ en:
         message: "Message"
         created_at: "Created at"
         delete: 'Delete'
+
+    reports:
+      all_service_types: "All service types"
+      all_product_types: "All product types"
+      download_report_as_csv: "Download report as CSV"
+      attribute: "Attribute"
+      value: "Value"
+      fields:
+        id: "ID"
+        name: "Name"
+        description: "Description"
+        properties: "Properties"
 
     settings:
       configuration:
@@ -319,7 +351,7 @@ en:
           for: "For"
         test_mode: "Test Mode"
         test_mode_section:
-          test_mode_label: "Use test payment credentials - Marketplace must be password protected in"
+          test_mode_label: "Use test payment credentials and test Twilio credentials - Marketplace must be password protected in. No live transactions or real sms-es will be sent"
           test_mode_label_link: 'Settings > Configuration'
         authentication: "Authentication"
         ga_tracking_codes: "Google Analytics Tracking Codes"
@@ -697,6 +729,7 @@ en:
           custom_attributes: "Custom Attributes"
         services_search:
           services_custom_search: "Services Custom Search"
+          search_location_type_filter: "Display Location Type filter?"
     blog:
       posts:
         name: "Name"
@@ -1407,6 +1440,7 @@ en:
       weekly: "Weekly"
       monthly: "Monthly"
       hourly: "Hourly"
+      free: "Free"
     header:
       list: "List"
       map: "Map"
@@ -1418,6 +1452,7 @@ en:
       view_listing: 'View listing'
     reserve: 'reserve'
     price_from: 'From'
+    free_listing: 'Free'
 
     date_range:
       title: 'Date range'
@@ -1728,3 +1763,24 @@ en:
       collection:
         rotate_and_crop: 'Rotate & Crop'
         delete: "Delete"
+
+  measure_units:
+    weight:
+      oz: 'oz'
+      pound: 'pound'
+      g: 'g'
+      kg: 'kg'
+    length:
+      in: 'in'
+      ft: 'ft'
+      cm: 'cm'
+      m: 'm'
+
+  dimensions_templates:
+    form:
+      templates: "Templates"
+      add_new_dimensions_template: "Add New Dimensions Template"
+    modal:
+      add_new_dimensions_template: "Add New Dimensions Template"
+      save_dimensions_template: "Save dimensions template"
+

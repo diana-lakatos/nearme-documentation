@@ -332,6 +332,15 @@ module ApplicationHelper
     date
   end
 
+  def selected_transactable_type(transactable_type_id, default_text = '')
+    transactable_type = TransactableType.find_by_id(transactable_type_id)
+    if transactable_type
+      transactable_type.name
+    else
+      default_text
+    end
+  end
+
   def cache_expires_in_for(cache_model = '')
     Rails.configuration.default_cache_expires_in
   end

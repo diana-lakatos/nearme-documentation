@@ -188,7 +188,6 @@ class @Bookings.Datepicker
   # Sets up the time picker view controller which handles the user selecting the
   # start/end times for the reservation.
   initializeTimePicker: ->
-
     options = {
       openMinute: @listing.data.earliest_open_minute,
       closeMinute: @listing.data.latest_close_minute,
@@ -217,14 +216,18 @@ class @Bookings.Datepicker
   # Assign initial dates from a restored session or the default
   # start date.
   assignInitialDates: ->
-    if DNM.util.Url.getParameterByName('start_date') && DNM.util.Url.getParameterByName('end_date')
+    startDate = null
+    endDate = null
+    if DNM.util.Url.getParameterByName('start_date')
       startDate = new Date(DNM.util.Url.getParameterByName('start_date'))
-      endDate = new Date(DNM.util.Url.getParameterByName('end_date'))
-      datesFromFilter = true
-    else
+      for i in [0..50]
+        if @endDatepicker.getModel().canSelectDate(DNM.util.Date.nextDateIterator(startDate)())
+          endDate = DNM.util.Date.nextDateIterator(startDate)()
+          break
+
+    if startDate == null || endDate == null
       startDate = @listing.firstAvailableDate
       endDate = @listing.secondAvailableDate
-      datesFromFilter = false
 
     initialDates = if @listingData.initial_bookings
       # Format is:
@@ -233,8 +236,6 @@ class @Bookings.Datepicker
 
       # Map bookings to JS dates
       (DNM.util.Date.idToDate(date) for date in @listingData.initial_bookings.dates)
-    else if datesFromFilter
-      [startDate, endDate]
     else if @listing.isOvernightBooking()
       [startDate, endDate]
     else
@@ -243,4 +244,3 @@ class @Bookings.Datepicker
     @trigger 'datesChanged', initialDates
     @setDates(initialDates)
     @listing.setDates(initialDates)
-    @endDatepicker.getModel().setRangeTo(endDate) if datesFromFilter

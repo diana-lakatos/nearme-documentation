@@ -12,11 +12,11 @@ class InstanceAdmin::UserSearchForm < SearchForm
     result = {}
 
     if q.present?
-      result[:by_search_query] = "%#{q}%"
+      result[:by_search_query] = ["%#{q}%"]
     end
 
     if date.present?
-      result[:with_date] = date_from_params
+      result[:with_date] = [date_from_params]
     end
 
     if filters.try(:include?, 'guest')

@@ -40,6 +40,8 @@
           {% assign price_info = listing | lowest_price_without_cents_with_currency: lgpricing_filters %}
           {% if price_info.price %}
             {{ 'search.price_from' | translate }} <span>{{ price_info.price }}</span> / {{ price_info.period }}
+          {% elsif price_info.free %}
+            <span>{{ 'search.free_listing' | translate }}</span>
           {% endif %}
         </div>
       </div>

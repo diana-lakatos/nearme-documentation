@@ -42,7 +42,14 @@ class LocationDrop < BaseDrop
   #   latitude for this location as a floating point number
   # longitude
   #   longitude for this location as a floating point number
-  delegate :id, :slug, :listings, :lowest_price, :name, :description, :phone, :street, :city, :suburb, :company, :address, :latitude, :longitude, :creator, :administrator, :updated_at, to: :location
+  # postcode
+  #   post code for this location
+  # country
+  #   country for this location
+  # state
+  #   state for this location
+  delegate :id, :slug, :listings, :lowest_price, :name, :description, :phone, :street, :city, :suburb, :company, :address, :latitude, :longitude, :creator, :administrator, :updated_at, :postcode,
+    :country, :state, to: :location
 
   def initialize(location)
     @location = location

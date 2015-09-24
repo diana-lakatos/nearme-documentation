@@ -7,18 +7,20 @@
       e.stopPropagation()
 
     @container.find('.date-dropdown').on 'click', 'li:not(.date-range)', ->
-      $('.date-dropdown').find('li.selected').removeClass('selected')
+      parentContainer = $(@).closest('.filter')
+      parentContainer.find('.date-dropdown').find('li.selected').removeClass('selected')
       $(@).addClass('selected')
       dateValue = $(@).find('a').data('date')
       selected = $(@).find('a').text()
-      $('.dropdown-trigger .current').text(selected)
-      $('.dropdown-trigger input[type="hidden"]').attr('value', dateValue)
+      parentContainer.find('.dropdown-trigger .current').text(selected)
+      parentContainer.find('.dropdown-trigger input[type="hidden"]').attr('value', dateValue)
       $(@).parents('form').submit()
 
     @container.find('.date-dropdown').on 'click', '.apply-filter', ->
-      startDate = $('#from').val()
-      endDate = $('#to').val()
+      parentContainer = $(@).closest('.filter')
+      startDate = parentContainer.find('#from').val()
+      endDate = parentContainer.find('#to').val()
       if startDate && endDate
-        $('input[type="hidden"]#date').val(startDate + '-' + endDate)
+        parentContainer.find('input[type="hidden"]#date').val(startDate + '-' + endDate)
         $(@).parents('form').submit()
 

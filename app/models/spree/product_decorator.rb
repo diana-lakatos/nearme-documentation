@@ -41,6 +41,10 @@ Spree::Product.class_eval do
     ')
   }
 
+  scope :for_product_type_id, -> product_type_id { where(product_type_id: product_type_id) }
+
+  scope :with_date, ->(date) { where(created_at: date) }
+
   _validators.reject! { |key, _| [:slug, :shipping_category_id].include?(key) }
 
   _validate_callbacks.each do |callback|

@@ -1,5 +1,3 @@
-<% asset_host = Rails.application.config.action_controller.asset_host %>
-
 class @SearchResultsGoogleMapMarker
   @displayPngMarker: ->
     if $.browser.msie
@@ -11,7 +9,7 @@ class @SearchResultsGoogleMapMarker
   @markerOptions:
     hover:
       image:
-        url: '<%= asset_host %>/assets/sections/search/marker-hover.svg'
+        url: '<%= asset_url('markers/marker-hover.svg') %>'
         size: new google.maps.Size(20,29)
         scaledSize: new google.maps.Size(20,29)
         origin: new google.maps.Point(0,0)
@@ -19,7 +17,7 @@ class @SearchResultsGoogleMapMarker
 
     default:
       image:
-        url: '<%= asset_host %>/assets/sections/search/marker-default.svg'
+        url: '<%= asset_url('markers/marker-default.svg') %>'
         size: new google.maps.Size(20,29)
         scaledSize: new google.maps.Size(20,29)
         origin: new google.maps.Point(0,0)
@@ -28,7 +26,7 @@ class @SearchResultsGoogleMapMarker
   @markerPngOptions:
     hover:
       image: new google.maps.MarkerImage(
-        '<%= asset_host %>/assets/sections/search/marker-hover.png',
+        '<%= asset_url('markers/marker-hover.svg') %>',
         new google.maps.Size(40,57),
         new google.maps.Point(0,0),
         new google.maps.Point(10,29),
@@ -37,7 +35,7 @@ class @SearchResultsGoogleMapMarker
 
     default:
       image: new google.maps.MarkerImage(
-        '<%= asset_host %>/assets/sections/search/marker-default.png',
+        '<%= asset_url('markers/marker-default.svg') %>',
         new google.maps.Size(40,57),
         new google.maps.Point(0,0),
         new google.maps.Point(10,29),
