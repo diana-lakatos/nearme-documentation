@@ -10,7 +10,7 @@ class BuySell::SaveUserAddressesService
     bill_address.attributes = address_attributes(billing_address)
     bill_address.save!
 
-    ship_address = @user.shipping_address
+    ship_address = @user.spree_shipping_address
     ship_address = Spree::Address.new unless ship_address
     ship_address.attributes = address_attributes(shipping_address)
     ship_address.save!

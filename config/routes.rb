@@ -500,6 +500,7 @@ DesksnearMe::Application.routes.draw do
     resources :reservations, :only => [:create, :update], :controller => 'listings/reservations' do
       collection do
         post :review
+        post :address
         post :store_reservation_request
         get :return_express_checkout
         get :cancel_express_checkout

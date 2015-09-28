@@ -22,7 +22,8 @@ class User < ActiveRecord::Base
   belongs_to :instance
   belongs_to :instance_profile_type, -> { with_deleted }
   belongs_to :partner
-  belongs_to :shipping_address, class_name: 'Spree::Address'
+  belongs_to :spree_shipping_address, class_name: 'Spree::Address', foreign_key: 'shipping_address_id'
+  has_many :shipping_addresses
 
   has_many :administered_locations, class_name: "Location", foreign_key: 'administrator_id', inverse_of: :administrator
   has_many :administered_listings, class_name: "Transactable", through: :administered_locations, source: :listings, inverse_of: :administrator
@@ -264,6 +265,12 @@ class User < ActiveRecord::Base
 
   def last_name
     (self.read_attribute(:last_name)) || get_last_name_from_name
+  end
+
+  def phone_with_country_code
+    if has_phone_and_country?
+      Country.new(name: country_name).calling_code + phone
+    end
   end
 
   # Whether to validate the presence of a password

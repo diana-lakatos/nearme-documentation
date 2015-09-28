@@ -1212,4 +1212,31 @@ class SecuredParams
   def saved_search
     %i(title query)
   end
+
+  def shipment
+    [
+      :is_insured,
+      :direction,
+      :shippo_rate_id,
+      shipping_address_attributes: self.shipping_address
+    ]
+  end
+
+  def shipping_address
+    [
+      :user_id,
+      :shippo_id,
+      :name,
+      :company,
+      :street1,
+      :street2,
+      :city,
+      :zip,
+      :state,
+      :phone,
+      :email,
+      :country
+    ]
+  end
+
 end

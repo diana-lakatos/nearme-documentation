@@ -235,7 +235,21 @@ section.reservations {
   }
 }
 
-.reservations-review, .reservations-create {
+.reservations-review, .reservations-create, .reservations-address {
+
+   #shipping-address.hide {
+    display: none;
+  }
+
+  .radio_buttons .radio {
+    display: block;
+  }
+
+  .delivery-options {
+    .controls {
+      margin-left: 15px !important;
+    }
+  }
 
   .header {
 

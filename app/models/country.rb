@@ -20,6 +20,13 @@ class Country
     nil
   end
 
+  def calling_code
+    country = IsoCountryCodes.search_by_name(@name).first
+    country.calling_code
+  rescue
+    ''
+  end
+
   class << self
     def countries
       @countries ||= load_countries

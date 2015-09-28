@@ -1066,6 +1066,8 @@ en:
       exclusive_price_guests_notes: 'Exclusive booking instructions: %{guest_notes}'
       upcoming: "UPCOMING"
       archived: "ARCHIVED"
+      track_package: 'Track Package'
+      return_label: 'Return Label'
     host_reservations:
       reservation_state: "Reservation state: "
       payment_state: "Payment state: "
@@ -1637,6 +1639,7 @@ en:
       days_first: 'Please select days first'
 
   reservations_review:
+    shipping_address: 'Shipping address'
     heading: 'Review your booking'
     summary: 'Order summary'
     subtotal: 'Subtotal'
@@ -1650,14 +1653,20 @@ en:
     submit_secure_payment: 'Submit a secure payment.'
     cc_image_alt: 'Visa, Mastercard, American Express, Discover'
     wat_accept: 'I have read and accept %{link_to_wat}'
+    delivery_type: 'Delivery Type'
+    pick_up: 'Pick Up'
+    delivery: 'Delivery'
 
     buttons:
       request: 'Request Booking'
+      continue: 'Continue'
 
     disabled_buttons:
       request: 'Booking...'
+      processing: 'Processing...'
 
     errors:
+      only_whoops: "Whoops!"
       whoops: "Whoops! We couldn't make that reservation."
       book_it_out_quantity: "Quantity for Book It Out option should equal maximal available quantity."
       book_it_out_not_available: 'Book It Out option is no longer available'
