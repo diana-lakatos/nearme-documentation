@@ -906,6 +906,7 @@ class SecuredParams
         :action_daily_booking,
         :last_request_photos_sent_at, :activated_at, :rank,
         :transactable_type_id, :transactable_type, :booking_type,
+        :insurance_value,
         :rental_shipping_type, :dimensions_template_id,
         photos_attributes: nested(self.photo),
         approval_requests_attributes: nested(self.approval_request),

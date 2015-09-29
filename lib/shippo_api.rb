@@ -256,7 +256,7 @@ module ShippoApi
       return default_result_rates
     end
 
-    def create_shipment(address_from, address_to, parcel, customs_declaration = nil)
+    def create_shipment(address_from, address_to, parcel, customs_declaration = nil, extra = {})
       shipment_info = {
         :object_purpose => 'PURCHASE',
         :submission_type => 'DROPOFF',
@@ -268,6 +268,8 @@ module ShippoApi
       if !customs_declaration.nil?
         shipment_info.merge!({ :customs_declaration => customs_declaration })
       end
+
+      shipment_info.merge!(extra)
 
       Shippo::Shipment.create(shipment_info)
     end

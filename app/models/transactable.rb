@@ -199,6 +199,7 @@ class Transactable < ActiveRecord::Base
   monetize :monthly_price_cents, with_model_currency: :currency, allow_nil: true
   monetize :fixed_price_cents, with_model_currency: :currency, allow_nil: true
   monetize :exclusive_price_cents, with_model_currency: :currency, allow_nil: true
+  monetize :insurance_value_cents, with_model_currency: :currency, allow_nil: true
 
   # Defer to the parent Location for availability rules unless this Listing has specific
   # rules.

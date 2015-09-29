@@ -244,6 +244,7 @@ en:
         price_monthly: 'Monthly'
         price_hourly: 'Hourly'
         price_free: 'Free'
+        insurance_value: 'Shipping insurance value'
         price:
           fixed: 'fixed price'
           daily: 'day'

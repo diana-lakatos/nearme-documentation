@@ -16,6 +16,7 @@ class Shipment < ActiveRecord::Base
   scope :inbound, -> { where(direction: 'inbound') }
 
   def get_rates(reservation)
+    self.reservation ||= reservation
     company_address = instance.shippo_api.create_address(reservation.company.address_to_shippo)[:object_id]
     if outbound?
       address_from = company_address
@@ -25,7 +26,7 @@ class Shipment < ActiveRecord::Base
       address_to = company_address
     end
     parcel = reservation.listing.dimensions_template.get_shippo_id
-    shipment = instance.shippo_api.create_shipment(address_from, address_to, parcel)
+    shipment = instance.shippo_api.create_shipment(address_from, address_to, parcel, customs_declaration, insurance)
     rates = instance.shippo_api.get_rates_for_shipment(shipment)
   end
 
@@ -54,6 +55,24 @@ class Shipment < ActiveRecord::Base
       end
     end
     self.save
+  end
+
+  def insurance
+    if is_insured && reservation.listing.insurance_value > 0
+      {
+        insurance_amount: reservation.listing.insurance_value.to_f,
+        insurance_currency: reservation.listing.currency,
+        extra: {
+          insurance_content: reservation.listing.name
+        }
+      }
+    else
+      {}
+    end
+  end
+
+  def customs_declaration
+    nil
   end
 
   def to_liquid

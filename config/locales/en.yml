@@ -1661,7 +1661,7 @@ en:
     submit_secure_payment: 'Submit a secure payment.'
     cc_image_alt: 'Visa, Mastercard, American Express, Discover'
     wat_accept: 'I have read and accept %{link_to_wat}'
-    delivery_type: 'Delivery Type'
+    delivery_type: 'Delivery'
     pick_up: 'Pick Up'
     delivery: 'Delivery'
 

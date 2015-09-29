@@ -51,7 +51,8 @@
       }
     }
 
-    toggleAddressForm($('input[name="reservation_request[delivery_type]"]:checked'));
+    if($('input[name="reservation_request[delivery_type]"]:checked').length > 0)
+      toggleAddressForm($('input[name="reservation_request[delivery_type]"]:checked'));
 
     $('input[name="reservation_request[delivery_type]"]').on('change', function(){
       toggleAddressForm($(this));
