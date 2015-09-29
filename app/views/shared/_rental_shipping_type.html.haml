@@ -1,4 +1,4 @@
-= f.input :rental_shipping_type, collection: Transactable::RENTAL_SHIPPING_TYPES.map { |val| [t(val, scope: 'transactables.rental_shipping_types'), val] }, prompt: false, input_html: {'data-rental-shipping-type' => true}
+= f.input :rental_shipping_type, collection: Transactable::RENTAL_SHIPPING_TYPES.map { |val| [t(val, scope: 'transactables.rental_shipping_types'), val] }, prompt: false, input_html: {'data-rental-shipping-type' => true, 'data-initial-render' => (f.object.new_record? && !f.object.errors.present?) }
 
 %div{data: {'dimensions-templates' => true}, class: 'services-dimensions-templates control-group'}
   - if defined?(space_wizard)

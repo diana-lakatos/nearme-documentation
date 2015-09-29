@@ -12,9 +12,17 @@ class @RentalShippingTypeSelector extends @JavascriptModule
       @toggleDimensionsContainer()
 
     setTimeout (=>
+      @changeDefaultRentalTypeToDelivery()
       @toggleDimensionsContainer()
       return
     ), 200
+
+  # We do this from JS to avoid interfering with Rails' default which
+  # needs to be "not rental"
+  changeDefaultRentalTypeToDelivery: () ->
+    if $('[data-rental-shipping-type]').data('initial-render') == true
+      $('[data-rental-shipping-type] option[value="delivery"]').prop('selected', true)
+      $('[data-rental-shipping-type]').trigger('render')
 
   toggleDimensionsContainer: () ->
     if @select.val() == 'delivery' || @select.val() == 'both'
