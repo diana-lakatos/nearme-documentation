@@ -16,3 +16,10 @@
   - elsif reservation.manual_payment?
     = form_for reservation, method: :post, url: mark_as_paid_dashboard_company_host_reservation_path(reservation, listing_id: reservation.listing) do |f|
       = f.submit 'Mark as paid', data: { confirm: 'Do you want to mark this reservation as paid?' }, class: 'btn grey full'
+- if reservation.confirmed?
+  - if reservation.shipments.outbound.first
+    = link_to t('dashboard.host_reservations.shipping_label'), reservation.shipments.outbound.first.try(:label_url), class: 'btn blue full'
+    = link_to t('dashboard.host_reservations.track_package'), reservation.shipments.outbound.first.try(:tracking_url_provider), class: 'btn blue full'
+  - if reservation.shipments.inbound.first
+    = link_to t('dashboard.host_reservations.return_label'), reservation.shipments.inbound.first.try(:label_url), class: 'btn gray full'
+    = link_to t('dashboard.host_reservations.return_track_package'), reservation.shipments.inbound.first.try(:tracking_url_provider), class: 'btn gray full'

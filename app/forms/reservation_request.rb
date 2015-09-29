@@ -19,9 +19,10 @@ class ReservationRequest < Form
 
   before_validation :build_documents, :if => lambda { reservation.present? && documents.present? }
 
-  validates :listing,     :presence => true
-  validates :reservation, :presence => true
-  validates :user,        :presence => true
+  validates :listing,      presence: true
+  validates :reservation,  presence: true
+  validates :user,         presence: true
+  validates :delivery_ids, presence: true, if: -> { with_delivery? &&  reservation.shipments.any? }
 
   validate :validate_acceptance_of_waiver_agreements
   validate :validate_credit_card, if: lambda { reservation.present? && reservation.credit_card_payment? }
@@ -141,7 +142,7 @@ class ReservationRequest < Form
   end
 
   def with_delivery?
-    @listing.rental_shipping_type == 'delivery' || (@listing.rental_shipping_type == 'both' && delivery_type == 'delivery')
+    PlatformContext.current.instance.shippo_enabled? && (@listing.rental_shipping_type == 'delivery' || (@listing.rental_shipping_type == 'both' && delivery_type == 'delivery'))
   end
 
   def possible_credit_card_payment?
@@ -179,15 +180,21 @@ class ReservationRequest < Form
 
   def get_shipping_rates
     rates = []
+    # Get rates for both ways shipping (rental shipping)
     @reservation.shipments.each do |shipment|
       shipment.get_rates(@reservation).map{|rate| rate[:direction] = shipment.direction; rates << rate }
     end
     rates = rates.flatten.group_by{ |rate| rate[:servicelevel_name] }
     rates.to_a.map do |type, rate|
+      # Skip if service is available only in one direction
       next if rate.one?
-      currency_subunits = Money::Currency.find(rate[0][:currency]).subunit_to_unit
       price_sum = Money.new(rate.sum{|r| r[:amount_cents].to_f }, rate[0][:currency])
-      [ "#{price_sum.format} - #{rate[0][:provider]} #{rate[0][:servicelevel_name]} - #{rate[0][:duration_terms]}", rate.map{|r| "#{r[:direction]}:#{r[:object_id]}" }.join(','), {data: {price_formatted: price_sum.format, price: price_sum.to_f}}]
+      # Format options for simple_form radio
+      [
+        [ price_sum.format, "#{rate[0][:provider]} #{rate[0][:servicelevel_name]}", rate[0][:duration_terms]].join(' - '),
+        rate.map{|r| "#{r[:direction]}:#{r[:object_id]}" }.join(','),
+        { data: { price_formatted: price_sum.format, price: price_sum.to_f } }
+      ]
     end.compact
   end
 

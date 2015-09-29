@@ -16,24 +16,29 @@ class DimensionsTemplate < ActiveRecord::Base
   }
 
   belongs_to :instance
-
   belongs_to :creator, :foreign_key => :creator_id, class_name: User
-
   belongs_to :entity, polymorphic: true
 
   validates_presence_of  :name, :weight, :height, :width, :depth
-
   validates_with UnitsOfMeasureValidator, :attributes => [:unit_of_measure, :weight_unit, :height_unit, :width_unit, :depth_unit]
-
   validates_numericality_of :weight, :height, :width, :depth, greater_than: 0
+
+  ['depth', 'height', 'width'].each do |dimension|
+    define_method "converted_#{dimension}" do
+      if common_unit?
+        self[dimension]
+      else
+        convert(self[dimension], self["#{dimension}_unit"])
+      end
+    end
+  end
 
   def get_shippo_id
     self.shippo_id.presence || create_shippo_parcel[:object_id]
   end
 
   def create_shippo_parcel
-    api = ShippoApi::ShippoApi.new(instance.shippo_api_token)
-    parcel = api.create_parcel(self.to_shippo)
+    parcel = instance.shippo_api.create_parcel(self.to_shippo)
     update_attribute :shippo_id, parcel[:object_id]
     parcel
   end
@@ -47,16 +52,6 @@ class DimensionsTemplate < ActiveRecord::Base
       weight: weight,
       mass_unit: weight_unit
     }
-  end
-
-  ['depth', 'height', 'width'].each do |dimension|
-    define_method "converted_#{dimension}" do
-      if common_unit?
-        self[dimension]
-      else
-        convert(self[dimension], self["#{dimension}_unit"])
-      end
-    end
   end
 
   def convert(dimension, from_unit)

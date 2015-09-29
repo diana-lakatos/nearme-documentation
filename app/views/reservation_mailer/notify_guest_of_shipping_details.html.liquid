@@ -1,3 +1,9 @@
-<p>Here are the shipping details for tracking your recently rented item:</p>
+<p>Here are the shipping details for "{{ listing.name }}":</p>
 
-<p>{{ outbound_shipping_details }}</p>
+<h3>Outbound Delivery</h3>
+<p>Shipping Tracking number: {{ outbound_shipping.tracking_number }}</p>
+<p><a href="{{ outbound_shipping.tracking_url_provider }}">Track package</p>
+
+<h3>Return Delivery</h3>
+<p><a href="{{ inbound_shipping.label_url }}">Return shipping label</p>
+<p><a href="{{ inbound_shipping.tracking_url_provider }}">Track return delivery</p>

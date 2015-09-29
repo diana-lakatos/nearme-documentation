@@ -64,10 +64,10 @@
 
             - if reservation.confirmed?
               = link_to 'Add to iCal', export_dashboard_user_reservation_path(reservation, format: :ics), class: 'btn gray full'
-            - if reservation.shipments.inbound.first
-              = link_to t('dashboard.user_reservations.return_label'), reservation.shipments.inbound.first.try(:label_url), class: 'btn gray full'
-            - if reservation.shipments.outbound.first
-              = link_to t('dashboard.user_reservations.track_package'), reservation.shipments.outbound.first.try(:tracking_url_provider), class: 'btn gray full'
+              - if reservation.shipments.inbound.first
+                = link_to t('dashboard.user_reservations.return_label'), reservation.shipments.inbound.first.try(:label_url), class: 'btn gray full'
+              - if reservation.shipments.outbound.first
+                = link_to t('dashboard.user_reservations.track_package'), reservation.shipments.outbound.first.try(:tracking_url_provider), class: 'btn gray full'
 
     - if reservation.payment_documents.present?
       .row

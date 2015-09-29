@@ -13,9 +13,8 @@ class ShippingAddress < ActiveRecord::Base
 
 
   def validate_shippo_address
-    api = ShippoApi::ShippoApi.new(instance.shippo_api_token)
     validation = if self.shippo_id.present?
-      api.validate_address(self.shippo_id)
+      instance.shippo_api.validate_address(self.shippo_id)
     else
       create_shippo_address.validate
     end
@@ -34,8 +33,7 @@ class ShippingAddress < ActiveRecord::Base
   end
 
   def create_shippo_address
-    api = ShippoApi::ShippoApi.new(instance.shippo_api_token)
-    address = api.create_address(to_shippo)
+    address = instance.shippo_api.create_address(to_shippo)
     self.shippo_id = address[:object_id]
     address
   end

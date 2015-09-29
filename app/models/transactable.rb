@@ -624,6 +624,10 @@ class Transactable < ActiveRecord::Base
     instance.payment_gateway(company.iso_country_code, currency).try(:express_checkout?)
   end
 
+  def possible_delivery?
+    rental_shipping_type.in?(['delivery', 'both'])
+  end
+
   # TODO: to be deleted once we get rid of instance views
   def has_action?(*args)
     action_rfq?

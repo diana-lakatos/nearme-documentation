@@ -3,6 +3,7 @@ class @PaymentController
   constructor: (@container) ->
     @totalPriceContainer = @container.find('[data-total-price]')
     @totalPriceValue = parseFloat(@totalPriceContainer.html())
+    @totalAmount = $('.summary-line-value.total-amount')
     @deliveryPriceContainer = $('.summary-line-value.delivery-amount')
 
     @serviceFeeRow = @container.find('[data-service-fee]').parents('tr')
@@ -16,9 +17,9 @@ class @PaymentController
   bindEvents: =>
     @container.find('input[name="reservation_request[delivery_ids]"]').on 'change', (e) =>
       @deliveryPriceContainer.html($(e.target).data('price-formatted'))
-      total = parseFloat($('.summary-line-value.total-amount').data('total-amount'))
+      total = parseFloat(@totalAmount.data('total-amount'))
       total += parseFloat($(e.target).data('price'))
-      $('.summary-line-value.total-amount').text($('.summary-line-value.total-amount').data('currency-symbol') + total.toFixed(2))
+      @totalAmount.text(@totalAmount.data('currency-symbol') + total.toFixed(2))
 
     @container.find('[data-upload-document]').on 'click', (e) ->
       $(@).closest('[data-upload]').find('input[type=file]').click()

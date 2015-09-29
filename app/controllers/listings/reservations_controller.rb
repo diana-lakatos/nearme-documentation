@@ -10,21 +10,16 @@ class Listings::ReservationsController < ApplicationController
   before_filter :build_reservation_request, :only => [:review, :address, :create, :store_reservation_request, :express_checkout]
   before_filter :require_login_for_reservation, :only => [:review, :create, :address]
   before_filter :find_current_country, :only => [:review, :create, :address]
+  before_filter :prepare_for_review, only: [:review, :address]
 
   def review
-    build_approval_request_for_object(current_user)
-    reservations_service.build_documents
-    event_tracker.reviewed_a_booking(@reservation_request.reservation)
-    if params[:step] != "address" && @listing.rental_shipping_type.in?(['delivery', 'both'])
+    if @listing.possible_delivery?
       initialize_shipping_address
       return render :address
     end
   end
 
   def address
-    build_approval_request_for_object(current_user)
-    reservations_service.build_documents
-    event_tracker.reviewed_a_booking(@reservation_request.reservation)
     if @reservation_request.delivery_type == 'pick_up' || @reservation_request.reservation.shipments.first.shipping_address.valid?
       return render :review
     end
@@ -145,8 +140,14 @@ class Listings::ReservationsController < ApplicationController
   def initialize_shipping_address
     user_last_address = current_user.shipping_addresses.last.try(:dup)
     @reservation_request.reservation.shipments.new(
-      shipping_address:  user_last_address || ShippingAddress.new(email: current_user.email, phone: current_user.phone_with_country_code)
+      shipping_address:  user_last_address || ShippingAddress.new(email: current_user.email, phone: current_user.full_mobile_number)
     )
+  end
+
+  def prepare_for_review
+    build_approval_request_for_object(current_user)
+    reservations_service.build_documents
+    event_tracker.reviewed_a_booking(@reservation_request.reservation)
   end
 
   def require_login_for_reservation

@@ -182,6 +182,10 @@ class Company < ActiveRecord::Base
     @company_drop ||= CompanyDrop.new(self)
   end
 
+  def address_to_shippo
+    ShippoApi::ShippoFromAddressFillerFromSpree.new(self)
+  end
+
   def add_default_url_scheme
     if url.present? && !/^(http|https):\/\//.match(url)
       new_url = "http://#{url}"

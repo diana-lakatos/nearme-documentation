@@ -267,12 +267,6 @@ class User < ActiveRecord::Base
     (self.read_attribute(:last_name)) || get_last_name_from_name
   end
 
-  def phone_with_country_code
-    if has_phone_and_country?
-      Country.new(name: country_name).calling_code + phone
-    end
-  end
-
   # Whether to validate the presence of a password
   def password_required?
     # we want to enforce skipping password for instance_admin/users#create

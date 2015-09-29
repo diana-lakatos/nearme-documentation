@@ -16,21 +16,17 @@ class Shipment < ActiveRecord::Base
   scope :inbound, -> { where(direction: 'inbound') }
 
   def get_rates(reservation)
-    api = ShippoApi::ShippoApi.new(instance.shippo_api_token)
+    company_address = instance.shippo_api.create_address(reservation.company.address_to_shippo)[:object_id]
     if outbound?
-      address_from = api.create_address(ShippoApi::ShippoFromAddressFillerFromSpree.new(reservation.company))[:object_id]
+      address_from = company_address
       address_to = shipping_address.get_shippo_id
     else
       address_from = shipping_address.get_shippo_id
-      address_to = api.create_address(ShippoApi::ShippoFromAddressFillerFromSpree.new(reservation.company))[:object_id]
+      address_to = company_address
     end
     parcel = reservation.listing.dimensions_template.get_shippo_id
-    shipment = api.create_shipment(address_from, address_to, parcel)
-    rates = api.get_rates_for_shipment(shipment)
-  end
-
-  def direction
-    super || 'outbound'
+    shipment = instance.shippo_api.create_shipment(address_from, address_to, parcel)
+    rates = instance.shippo_api.get_rates_for_shipment(shipment)
   end
 
   def outbound?
@@ -38,8 +34,7 @@ class Shipment < ActiveRecord::Base
   end
 
   def set_attributes
-    api = ShippoApi::ShippoApi.new(instance.shippo_api_token)
-    rate = api.get_rate(shippo_rate_id)
+    rate = instance.shippo_api.get_rate(shippo_rate_id)
     self.price = rate[:amount_cents]
     self.price_currency = rate[:currency]
     self.insurance_value = rate[:insurance_amount_cents]
@@ -47,8 +42,7 @@ class Shipment < ActiveRecord::Base
   end
 
   def create_shippo_shipment!
-    api = ShippoApi::ShippoApi.new(instance.shippo_api_token)
-    transaction = api.create_transaction(shippo_rate_id)
+    transaction = instance.shippo_api.create_transaction(shippo_rate_id)
     if transaction.present?
       if transaction[:object_status] == 'ERROR'
         self.shippo_errors = transaction[:messages].to_json
@@ -60,6 +54,10 @@ class Shipment < ActiveRecord::Base
       end
     end
     self.save
+  end
+
+  def to_liquid
+    @shipment_drop ||= ShipmentDrop.new(self)
   end
 
 end

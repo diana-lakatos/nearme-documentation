@@ -1084,6 +1084,11 @@ en:
       next_payment_transfer: "The next automated payout occurs at %{next_payment_transfer}."
       remember_to_setup_automated_payout: "To receive automated payout please <a href='%{setup_link}'>setup payouts</a>."
       exclusive_price_guests_notes: 'Exclusive booking instructions from guest: %{guest_notes}'
+      track_package: 'Track package'
+      return_track_package: 'Track return package'
+      shipping_label: 'Shipping label'
+      return_label: 'Return shipping label'
+      delivery_type: 'Delivery type:'
       payment_methods:
         credit_card: "Credit Card"
         express_checkout: "PayPal"
@@ -1091,6 +1096,9 @@ en:
         nonce: "PayPal"
         remote: "Fetch"
         free: "None"
+      delivery:
+        pick_up: 'Pick up'
+        delivery: 'Delivery'
 
     merchant_account:
       header: 'Merchant account details'

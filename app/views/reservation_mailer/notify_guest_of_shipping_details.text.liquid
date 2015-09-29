@@ -1,3 +1,9 @@
-Here are the shipping details for tracking your recently rented item:
+Here are the shipping details for "{{ listing.name }}":
 
-{{ outbound_shipping_details }}
+Outbound Delivery
+Shipping Tracking number: {{ outbound_shipping.tracking_number }}
+Track outbound delivery: {{ outbound_shipping.tracking_url_provider }}
+
+Return Delivery
+Return shipping label: {{ inbound_shipping.label_url }}
+Track return delivery: {{ inbound_shipping.tracking_url_provider }}
