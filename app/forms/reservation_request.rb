@@ -179,13 +179,14 @@ class ReservationRequest < Form
   end
 
   def get_shipping_rates
+    return @options unless @options.nil?
     rates = []
     # Get rates for both ways shipping (rental shipping)
     @reservation.shipments.each do |shipment|
       shipment.get_rates(@reservation).map{|rate| rate[:direction] = shipment.direction; rates << rate }
     end
     rates = rates.flatten.group_by{ |rate| rate[:servicelevel_name] }
-    rates.to_a.map do |type, rate|
+    @options = rates.to_a.map do |type, rate|
       # Skip if service is available only in one direction
       next if rate.one?
       price_sum = Money.new(rate.sum{|r| r[:amount_cents].to_f }, rate[0][:currency])

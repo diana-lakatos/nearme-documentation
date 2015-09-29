@@ -15,6 +15,7 @@ class Address < ActiveRecord::Base
   belongs_to :entity, -> { with_deleted }, polymorphic: true
 
   validates_presence_of :address, :latitude, :longitude
+  validate :check_address
   before_validation :update_address
   before_validation :parse_address_components
   before_save :retry_fetch, if: lambda { |a| a.country.nil? }
@@ -29,6 +30,12 @@ class Address < ActiveRecord::Base
       entity.listings.each do |l|
         ElasticIndexerJob.perform(:update, l.class.to_s, l.id)
       end
+    end
+  end
+
+  def check_address
+    unless postcode && city && state && street
+      errors.add(:address, I18n.t('errors.messages.inaccurate_address'))
     end
   end
 

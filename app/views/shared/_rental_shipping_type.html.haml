@@ -7,6 +7,8 @@
       %div.price-containter
         %span.currency-holder
         = f.number_field :insurance_value, as: :decimal, class: 'price-input'
+      .error
+        = f.error :insurance_value
     %label.control-label
       = t('dimensions_templates.form.templates')
     .controls.dimensions-templates-select-container
@@ -21,6 +23,8 @@
           %span.input-group-addon.currency_addon
             = currency_symbol_from_code(@transactable.try(:currency) || PlatformContext.current.instance.default_currency)
           = f.number_field :insurance_value, as: :decimal
+        .error
+          = f.error :insurance_value
     .row
       .col-md-3
         %label

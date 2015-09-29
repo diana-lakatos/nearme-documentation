@@ -24,7 +24,7 @@ class ShippingAddress < ActiveRecord::Base
   end
 
   def country_and_state
-    errors.add(:state, 'Wrong state name') unless iso_state_code
+    errors.add(:state, 'Wrong state name') if iso_country_code.in?(%w(US CA)) && iso_state_code.nil?
     errors.add(:country, 'Wrong country') unless iso_country_code
   end
 

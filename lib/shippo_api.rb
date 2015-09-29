@@ -39,7 +39,7 @@ module ShippoApi
       @options[:state] = address_object.try(:state).try(:abbr)
       @options[:zip] = address_object.zipcode
       @options[:country] = address_object.try(:country).try(:iso)
-      @options[:phone] = address_object.phone
+      @options[:phone] = address_object.full_mobile_number
       @options[:email] = package.order.user.email
       @options[:street_no] = ''
     end
@@ -67,7 +67,7 @@ module ShippoApi
         @options[:state] = company.state_code
         @options[:zip] = company.postcode
         @options[:country] = company.iso_country_code
-        @options[:phone] = creator_user.phone
+        @options[:phone] = creator_user.full_mobile_number
         @options[:email] = creator_user.email
         @options[:street_no] = company.try(:company_address).try(:street_number).to_s
       end
@@ -275,12 +275,16 @@ module ShippoApi
     end
 
     def get_rates_for_shipment(shipment)
-      Timeout::timeout(10) do
-        while ["QUEUED","WAITING"].include?(shipment.object_status) do
-          shipment = Shippo::Shipment.get(shipment["object_id"])
+      begin
+        Timeout::timeout(10) do
+          while ["QUEUED","WAITING"].include?(shipment.object_status) do
+            shipment = Shippo::Shipment.get(shipment["object_id"])
+          end
         end
+        shipment.rates().map{ |rate| decorate_rate(rate) }
+      rescue Timeout::Error
+        []
       end
-      shipment.rates().map{ |rate| decorate_rate(rate) }
     end
 
     def create_transaction(shippo_rate_id)

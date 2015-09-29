@@ -19,6 +19,34 @@ ActiveRecord::Schema.define(version: 20150929134754) do
   enable_extension "btree_gist"
   enable_extension "hstore"
 
+  create_table "activity_feed_events", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.string   "event"
+    t.integer  "followed_id"
+    t.string   "followed_type"
+    t.text     "affected_objects_identifiers", default: [], array: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "activity_feed_events", ["instance_id", "followed_id", "followed_type"], name: "activity_feed_events_instance_followed", using: :btree
+  add_index "activity_feed_events", ["instance_id"], name: "index_activity_feed_events_on_instance_id", using: :btree
+
+  create_table "activity_feed_subscriptions", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "follower_id"
+    t.string   "follower_type"
+    t.integer  "followed_id"
+    t.string   "followed_type"
+    t.string   "followed_identifier"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "activity_feed_subscriptions", ["instance_id", "followed_id", "followed_type"], name: "activity_feed_subscriptions_instance_followed", using: :btree
+  add_index "activity_feed_subscriptions", ["instance_id", "follower_id", "follower_type"], name: "activity_feed_subscriptions_instance_follower", using: :btree
+  add_index "activity_feed_subscriptions", ["instance_id"], name: "index_activity_feed_subscriptions_on_instance_id", using: :btree
+
   create_table "additional_charge_types", force: :cascade do |t|
     t.string   "name",                           limit: 255
     t.text     "description"
@@ -433,15 +461,6 @@ ActiveRecord::Schema.define(version: 20150929134754) do
 
   add_index "content_holders", ["instance_id", "theme_id", "name"], name: "index_content_holders_on_instance_id_and_theme_id_and_name", using: :btree
 
-  create_table "country_instance_payment_gateways", id: false, force: :cascade do |t|
-    t.integer  "id",                                      default: "nextval('country_instance_payment_gateways_id_seq'::regclass)", null: false
-    t.string   "country_alpha2_code",         limit: 255
-    t.integer  "instance_payment_gateway_id"
-    t.integer  "instance_id"
-    t.datetime "created_at",                                                                                                        null: false
-    t.datetime "updated_at",                                                                                                        null: false
-  end
-
   create_table "country_payment_gateways", force: :cascade do |t|
     t.string   "country_alpha2_code", limit: 255
     t.integer  "payment_gateway_id"
@@ -803,15 +822,6 @@ ActiveRecord::Schema.define(version: 20150929134754) do
 
   add_index "instance_creators", ["email"], name: "index_instance_creators_on_email", using: :btree
 
-  create_table "instance_payment_gateways", force: :cascade do |t|
-    t.integer  "instance_id"
-    t.integer  "payment_gateway_id"
-    t.text     "encrypted_live_settings"
-    t.text     "encrypted_test_settings"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-  end
-
   create_table "instance_profile_types", force: :cascade do |t|
     t.string   "name",        limit: 255
     t.integer  "instance_id"
@@ -1133,17 +1143,6 @@ ActiveRecord::Schema.define(version: 20150929134754) do
     t.string   "type",                    limit: 255
   end
 
-  create_table "payment_gateways_bck", id: false, force: :cascade do |t|
-    t.integer  "id",                                  default: "nextval('payment_gateways_id_seq'::regclass)", null: false
-    t.integer  "instance_id"
-    t.integer  "payment_gateway_id"
-    t.text     "encrypted_live_settings"
-    t.text     "encrypted_test_settings"
-    t.datetime "created_at",                                                                                   null: false
-    t.datetime "updated_at",                                                                                   null: false
-    t.string   "type",                    limit: 255
-  end
-
   create_table "payment_transfers", force: :cascade do |t|
     t.integer  "company_id"
     t.datetime "transferred_at"
@@ -1271,6 +1270,7 @@ ActiveRecord::Schema.define(version: 20150929134754) do
     t.boolean  "seek_collaborators",    default: false
     t.text     "summary"
     t.boolean  "featured",              default: false
+    t.integer  "followers_count",       default: 0,     null: false
   end
 
   add_index "projects", ["instance_id", "creator_id"], name: "index_projects_on_instance_id_and_creator_id", using: :btree
@@ -1547,19 +1547,6 @@ ActiveRecord::Schema.define(version: 20150929134754) do
 
   add_index "schedules", ["instance_id", "scheduable_id", "scheduable_type"], name: "index_schedules_scheduable", using: :btree
 
-  create_table "search_notifications", force: :cascade do |t|
-    t.string   "email",      limit: 255
-    t.integer  "user_id"
-    t.string   "query",      limit: 255
-    t.float    "latitude"
-    t.float    "longitude"
-    t.boolean  "notified",               default: false
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
-  end
-
-  add_index "search_notifications", ["user_id"], name: "index_search_notifications_on_user_id", using: :btree
-
   create_table "shipments", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "reservation_id"
@@ -1639,7 +1626,7 @@ ActiveRecord::Schema.define(version: 20150929134754) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "state",           limit: 255
-    t.integer  "order_id"
+    t.integer  "order_id",                                                             null: false
     t.boolean  "included",                                             default: false
   end
 
@@ -1731,6 +1718,7 @@ ActiveRecord::Schema.define(version: 20150929134754) do
     t.string   "name",                        limit: 255
     t.integer  "user_id"
     t.integer  "payment_method_id"
+    t.boolean  "default",                                 default: false, null: false
   end
 
   add_index "spree_credit_cards", ["address_id"], name: "index_spree_credit_cards_on_address_id", using: :btree
@@ -1925,6 +1913,9 @@ ActiveRecord::Schema.define(version: 20150929134754) do
     t.string   "payment_method",                 limit: 255
     t.string   "express_token",                  limit: 255
     t.string   "express_payer_id",               limit: 255
+    t.datetime "canceled_at"
+    t.integer  "canceler_id"
+    t.integer  "store_id"
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id", using: :btree
@@ -2110,6 +2101,7 @@ ActiveRecord::Schema.define(version: 20150929134754) do
     t.string   "external_id",             limit: 255
     t.boolean  "action_rfq"
     t.boolean  "possible_manual_payment"
+    t.boolean  "promotionable",                       default: true
     t.string   "meta_title"
   end
 
@@ -2196,22 +2188,23 @@ ActiveRecord::Schema.define(version: 20150929134754) do
   add_index "spree_promotion_rules_users", ["user_id"], name: "index_promotion_rules_users_on_user_id", using: :btree
 
   create_table "spree_promotions", force: :cascade do |t|
-    t.string   "description",  limit: 255
+    t.string   "description",           limit: 255
     t.datetime "expires_at"
     t.datetime "starts_at"
-    t.string   "name",         limit: 255
-    t.string   "type",         limit: 255
+    t.string   "name",                  limit: 255
+    t.string   "type",                  limit: 255
     t.integer  "usage_limit"
-    t.string   "match_policy", limit: 255, default: "all"
-    t.string   "code",         limit: 255
-    t.boolean  "advertise",                default: false
-    t.string   "path",         limit: 255
+    t.string   "match_policy",          limit: 255, default: "all"
+    t.string   "code",                  limit: 255
+    t.boolean  "advertise",                         default: false
+    t.string   "path",                  limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "instance_id"
     t.integer  "company_id"
     t.integer  "partner_id"
     t.integer  "user_id"
+    t.integer  "promotion_category_id"
   end
 
   add_index "spree_promotions", ["advertise"], name: "index_spree_promotions_on_advertise", using: :btree
@@ -2221,6 +2214,7 @@ ActiveRecord::Schema.define(version: 20150929134754) do
   add_index "spree_promotions", ["id", "type"], name: "index_spree_promotions_on_id_and_type", using: :btree
   add_index "spree_promotions", ["instance_id"], name: "index_spree_promotions_on_instance_id", using: :btree
   add_index "spree_promotions", ["partner_id"], name: "index_spree_promotions_on_partner_id", using: :btree
+  add_index "spree_promotions", ["promotion_category_id"], name: "index_spree_promotions_on_promotion_category_id", using: :btree
   add_index "spree_promotions", ["starts_at"], name: "index_spree_promotions_on_starts_at", using: :btree
   add_index "spree_promotions", ["user_id"], name: "index_spree_promotions_on_user_id", using: :btree
 
@@ -2311,15 +2305,6 @@ ActiveRecord::Schema.define(version: 20150929134754) do
   add_index "spree_reimbursements", ["customer_return_id"], name: "index_spree_reimbursements_on_customer_return_id", using: :btree
   add_index "spree_reimbursements", ["order_id"], name: "index_spree_reimbursements_on_order_id", using: :btree
 
-  create_table "spree_return_authorization_inventory_units", force: :cascade do |t|
-    t.integer  "return_authorization_id"
-    t.integer  "inventory_unit_id"
-    t.integer  "exchange_variant_id"
-    t.datetime "received_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "spree_return_authorization_reasons", force: :cascade do |t|
     t.string   "name"
     t.boolean  "active",     default: true
@@ -2336,7 +2321,10 @@ ActiveRecord::Schema.define(version: 20150929134754) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "stock_location_id"
+    t.integer  "return_authorization_reason_id"
   end
+
+  add_index "spree_return_authorizations", ["return_authorization_reason_id"], name: "index_return_authorizations_on_return_authorization_reason_id", using: :btree
 
   create_table "spree_return_items", force: :cascade do |t|
     t.integer  "return_authorization_id"
@@ -2463,6 +2451,7 @@ ActiveRecord::Schema.define(version: 20150929134754) do
     t.string   "shippo_rate_id",         limit: 230
     t.text     "shippo_label_url"
     t.text     "shippo_tracking_number"
+    t.string   "code"
   end
 
   add_index "spree_shipping_methods", ["company_id"], name: "index_spree_shipping_methods_on_company_id", using: :btree
@@ -2653,6 +2642,7 @@ ActiveRecord::Schema.define(version: 20150929134754) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.integer  "user_id"
+    t.string   "tax_code"
   end
 
   add_index "spree_tax_categories", ["company_id"], name: "index_spree_tax_categories_on_company_id", using: :btree
@@ -3085,7 +3075,8 @@ ActiveRecord::Schema.define(version: 20150929134754) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "featured",    default: false
+    t.boolean  "featured",        default: false
+    t.integer  "followers_count", default: 0,     null: false
   end
 
   add_index "topics", ["instance_id", "category_id"], name: "index_topics_on_instance_id_and_category_id", using: :btree
@@ -3151,19 +3142,6 @@ ActiveRecord::Schema.define(version: 20150929134754) do
     t.boolean  "action_regular_booking",                                                         default: true
     t.boolean  "action_continuous_dates_booking",                                                default: false
     t.boolean  "search_location_type_filter",                                                    default: true
-    t.string   "default_search_view"
-    t.string   "search_engine"
-    t.string   "searcher_type"
-    t.integer  "search_radius"
-    t.string   "search_placeholder"
-    t.boolean  "show_categories"
-    t.string   "category_search_type"
-    t.boolean  "allow_save_search"
-    t.boolean  "show_price_slider"
-    t.boolean  "search_price_types_filter"
-    t.boolean  "show_date_pickers"
-    t.boolean  "date_pickers_use_availability_rules"
-    t.string   "date_pickers_mode"
     t.boolean  "rental_shipping",                                                                default: false
   end
 
@@ -3185,8 +3163,8 @@ ActiveRecord::Schema.define(version: 20150929134754) do
     t.boolean  "listings_public"
     t.boolean  "enabled",                                    default: true
     t.text     "metadata"
-    t.datetime "created_at",                                                       null: false
-    t.datetime "updated_at",                                                       null: false
+    t.datetime "created_at",                                                     null: false
+    t.datetime "updated_at",                                                     null: false
     t.integer  "transactable_type_id"
     t.integer  "parent_transactable_id"
     t.string   "external_id",                    limit: 255
@@ -3204,12 +3182,12 @@ ActiveRecord::Schema.define(version: 20150929134754) do
     t.integer  "fixed_price_cents"
     t.integer  "min_fixed_price_cents"
     t.integer  "max_fixed_price_cents"
-    t.float    "average_rating",                             default: 0.0,         null: false
+    t.float    "average_rating",                             default: 0.0,       null: false
     t.string   "booking_type",                   limit: 255, default: "regular"
     t.boolean  "manual_payment",                             default: false
     t.integer  "wish_list_items_count",                      default: 0
     t.integer  "quantity",                                   default: 1
-    t.integer  "opened_on_days",                             default: [],                       array: true
+    t.integer  "opened_on_days",                             default: [],                     array: true
     t.integer  "minimum_booking_minutes",                    default: 60
     t.integer  "book_it_out_discount"
     t.integer  "book_it_out_minimum_qty"
@@ -3227,6 +3205,7 @@ ActiveRecord::Schema.define(version: 20150929134754) do
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
   add_index "transactables", ["opened_on_days"], name: "index_transactables_on_opened_on_days", using: :gin
   add_index "transactables", ["parent_transactable_id"], name: "index_transactables_on_parent_transactable_id", using: :btree
+  add_index "transactables", ["properties"], name: "transactables_gin_properties", using: :gin
   add_index "transactables", ["transactable_type_id"], name: "index_transactables_on_transactable_type_id", using: :btree
 
   create_table "translations", force: :cascade do |t|
@@ -3290,24 +3269,6 @@ ActiveRecord::Schema.define(version: 20150929134754) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "highlighted",                   default: false
-    t.integer  "instance_id"
-  end
-
-  create_table "user_blog_posts_bck", id: false, force: :cascade do |t|
-    t.integer  "id"
-    t.integer  "user_id"
-    t.string   "title",             limit: 255
-    t.string   "slug",              limit: 255
-    t.string   "hero_image",        limit: 255
-    t.text     "content"
-    t.text     "excerpt"
-    t.datetime "published_at"
-    t.string   "author_name",       limit: 255
-    t.text     "author_biography"
-    t.string   "author_avatar_img", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "highlighted"
     t.integer  "instance_id"
   end
 
@@ -3470,6 +3431,8 @@ ActiveRecord::Schema.define(version: 20150929134754) do
     t.float    "left_by_seller_average_rating",                      default: 0.0
     t.float    "left_by_buyer_average_rating",                       default: 0.0
     t.boolean  "featured",                                           default: false
+    t.integer  "followers_count",                                    default: 0,                                                                                   null: false
+    t.integer  "following_count",                                    default: 0,                                                                                   null: false
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

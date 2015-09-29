@@ -153,7 +153,7 @@ class Transactable < ActiveRecord::Base
   validates_with PriceValidator
   validates_with CustomValidators
 
-  validates :book_it_out_minimum_qty, numericality: {greater_than_or_equal_to: 0}, allow_blank: true
+  validates :book_it_out_minimum_qty, :insurance_value, numericality: {greater_than_or_equal_to: 0}, allow_blank: true
   validates :book_it_out_discount, numericality: {greater_than: 0, less_than: 100}, allow_blank: true
   validates :booking_type, inclusion: { in: ServiceType::BOOKING_TYPES }
   validates :currency, presence: true, allow_nil: false, currency: true

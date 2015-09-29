@@ -194,6 +194,10 @@ class Location < ActiveRecord::Base
     end
   end
 
+  def address_to_shippo
+    ShippoApi::ShippoFromAddressFillerFromSpree.new(self).to_hash
+  end
+
   private
 
   def company_and_city

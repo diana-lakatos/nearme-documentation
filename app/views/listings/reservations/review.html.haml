@@ -50,8 +50,12 @@
         - if @reservation_request.with_delivery?
           %hr.thin
           %h2 Delivery
-          .delivery-options
-            = f.input :delivery_ids, collection: @reservation_request.get_shipping_rates, as: :radio_buttons, label: false, checked: @reservation_request.delivery_ids
+          - if @reservation_request.get_shipping_rates.any?
+            .delivery-options
+              = f.input :delivery_ids, collection: @reservation_request.get_shipping_rates, as: :radio_buttons, label: false, checked: @reservation_request.delivery_ids
+          - else
+            .error.flash
+              %p= t 'reservations_review.errors.no_delivery_options'
         %hr.thin
 
         %h2= t 'reservations_review.summary'

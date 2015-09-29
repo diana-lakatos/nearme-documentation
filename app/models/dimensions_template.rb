@@ -7,7 +7,7 @@ class DimensionsTemplate < ActiveRecord::Base
   UNITS_OF_MEASURE = {
     'imperial' => {
       'length' => ['in', 'ft'],
-      'weight' => ['oz', 'pound'],
+      'weight' => ['oz', 'lb'],
     },
     'metric' => {
       'length' => ['cm', 'm'],
@@ -18,6 +18,8 @@ class DimensionsTemplate < ActiveRecord::Base
   belongs_to :instance
   belongs_to :creator, :foreign_key => :creator_id, class_name: User
   belongs_to :entity, polymorphic: true
+
+  before_update :remove_shippo_id
 
   validates_presence_of  :name, :weight, :height, :width, :depth
   validates_with UnitsOfMeasureValidator, :attributes => [:unit_of_measure, :weight_unit, :height_unit, :width_unit, :depth_unit]
@@ -33,13 +35,17 @@ class DimensionsTemplate < ActiveRecord::Base
     end
   end
 
+  def remove_shippo_id
+    self.shippo_id = nil
+  end
+
   def get_shippo_id
     self.shippo_id.presence || create_shippo_parcel[:object_id]
   end
 
   def create_shippo_parcel
     parcel = instance.shippo_api.create_parcel(self.to_shippo)
-    update_attribute :shippo_id, parcel[:object_id]
+    update_column :shippo_id, parcel[:object_id]
     parcel
   end
 

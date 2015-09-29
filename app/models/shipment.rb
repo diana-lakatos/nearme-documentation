@@ -17,13 +17,15 @@ class Shipment < ActiveRecord::Base
 
   def get_rates(reservation)
     self.reservation ||= reservation
-    company_address = instance.shippo_api.create_address(reservation.company.address_to_shippo)[:object_id]
+    location_address = reservation.location.address_to_shippo
+    location_address[:company] = reservation.company.name
+    location_address = instance.shippo_api.create_address(location_address)[:object_id]
     if outbound?
-      address_from = company_address
+      address_from = location_address
       address_to = shipping_address.get_shippo_id
     else
       address_from = shipping_address.get_shippo_id
-      address_to = company_address
+      address_to = location_address
     end
     parcel = reservation.listing.dimensions_template.get_shippo_id
     shipment = instance.shippo_api.create_shipment(address_from, address_to, parcel, customs_declaration, insurance)
