@@ -1,4 +1,4 @@
-- css_class = defined?(:is_active) ? "is-active" : ""
+- css_class = local_assigns[:is_active].present? ? "is-active" : ""
 
 %div.comment{:class => css_class}
   - if current_user

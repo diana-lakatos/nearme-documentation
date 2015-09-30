@@ -8,5 +8,6 @@
         = render 'shared/person', user: user
 
   / more
-  %p.more-a{:'data-see-more' => true, :'data-see-more-type' => see_more_type}
-    = link_to t(:see_more), see_more_route, remote: true
+  - if users.next_page
+    %p.more-a{:'data-see-more' => true, :'data-see-more-type' => see_more_type}
+      = link_to t(:see_more), see_more_route, remote: true

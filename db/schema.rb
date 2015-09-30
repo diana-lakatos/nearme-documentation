@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151015163009) do
+ActiveRecord::Schema.define(version: 20151015194117) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -400,6 +400,19 @@ ActiveRecord::Schema.define(version: 20151015163009) do
   add_index "ckeditor_assets", ["assetable_type", "assetable_id"], name: "idx_ckeditor_assetable", using: :btree
   add_index "ckeditor_assets", ["assetable_type", "type", "assetable_id"], name: "idx_ckeditor_assetable_type", using: :btree
   add_index "ckeditor_assets", ["instance_id"], name: "index_ckeditor_assets_on_instance_id", using: :btree
+
+  create_table "comment_spam_reports", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "comment_id"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "comment_spam_reports", ["comment_id"], name: "index_comment_spam_reports_on_comment_id", using: :btree
+  add_index "comment_spam_reports", ["instance_id"], name: "index_comment_spam_reports_on_instance_id", using: :btree
+  add_index "comment_spam_reports", ["user_id"], name: "index_comment_spam_reports_on_user_id", using: :btree
 
   create_table "comments", force: :cascade do |t|
     t.integer  "commentable_id"
@@ -1313,11 +1326,11 @@ ActiveRecord::Schema.define(version: 20151015163009) do
     t.string   "external_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "followers_count",       default: 0,     null: false
     t.boolean  "seek_collaborators",    default: false
     t.text     "summary"
     t.boolean  "featured",              default: false
     t.datetime "draft_at"
+    t.integer  "followers_count",       default: 0,     null: false
   end
 
   add_index "projects", ["instance_id", "creator_id"], name: "index_projects_on_instance_id_and_creator_id", using: :btree
@@ -3167,7 +3180,6 @@ ActiveRecord::Schema.define(version: 20151015163009) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "followers_count",                   default: 0,     null: false
     t.boolean  "featured",                          default: false
     t.string   "cover_image"
     t.integer  "cover_image_original_height"
@@ -3181,6 +3193,7 @@ ActiveRecord::Schema.define(version: 20151015163009) do
     t.text     "image_transformation_data"
     t.string   "image_original_url"
     t.datetime "image_versions_generated_at"
+    t.integer  "followers_count",                   default: 0,     null: false
   end
 
   add_index "topics", ["instance_id", "category_id"], name: "index_topics_on_instance_id_and_category_id", using: :btree
@@ -3560,8 +3573,6 @@ ActiveRecord::Schema.define(version: 20151015163009) do
     t.string   "paypal_merchant_id",                     limit: 255
     t.float    "left_by_seller_average_rating",                      default: 0.0
     t.float    "left_by_buyer_average_rating",                       default: 0.0
-    t.integer  "followers_count",                                    default: 0,                                                                                   null: false
-    t.integer  "following_count",                                    default: 0,                                                                                   null: false
     t.boolean  "featured",                                           default: false
     t.integer  "projects_count"
     t.boolean  "onboarding_completed",                               default: false
@@ -3572,6 +3583,8 @@ ActiveRecord::Schema.define(version: 20151015163009) do
     t.string   "cover_image_original_url"
     t.datetime "cover_image_versions_generated_at"
     t.boolean  "tutorial_displayed",                                 default: false
+    t.integer  "followers_count",                                    default: 0,                                                                                   null: false
+    t.integer  "following_count",                                    default: 0,                                                                                   null: false
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

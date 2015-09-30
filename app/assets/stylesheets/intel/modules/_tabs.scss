@@ -3,6 +3,10 @@
 .tabs-a {
     margin-bottom: 30px;
 
+    *  {
+      outline: 0;
+    }
+
     + .box-a {
         margin-top: -36px;
     }

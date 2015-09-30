@@ -1,27 +1,21 @@
-- if event.event.to_sym == :user_commented
-  - commented_event = event.event_source.commentable
-
-  %section
-    %article.status-a
-      %header
-        %figure
-          = link_to commented_event.followed do
-            = image_tag(event.followed.try(:image).presence || event.followed.try(:avatar).presence || space_listing_placeholder_path(width: 80, height: 80))
-      %section
-        %h3.hx= link_to commented_event.name, commented_event.followed
-        %p= commented_event.description
-
-      = render 'shared/activity_status_footer', event: commented_event, is_active: true
-
+- if [:user_commented_on_project, :user_commented].include?(event.event.to_sym)
+  - followed = event.event_source.commentable
+  - body = event.event_source.body
+  - image = "intel/status-a-chat-a.png"
 - else
-  %section
-    %article.status-a
-      %header
-        %figure
-          = link_to event.followed do
-            = image_tag(event.followed.try(:image).presence || event.followed.try(:avatar).presence || space_listing_placeholder_path(width: 80, height: 80))
-      %section
-        %h3.hx= link_to event.name, event.followed
-        %p= event.description
+  - followed = event.followed
+  - body = event.description
+  - image = (followed.try(:image).presence || followed.try(:avatar)).try(:url, :medium).presence
+  - title = link_to event.name, followed
 
-      = render 'shared/activity_status_footer', event: event
+%section
+  %article.status-a
+    %header
+      %figure
+        = link_to followed do
+          = image.present? ? image_tag(image) : image_tag(space_listing_placeholder_path(width: 80, height: 80))
+    %section
+      %h3.hx= title if title.present?
+      %p= body
+
+    = render 'shared/activity_status_footer', event: event

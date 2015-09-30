@@ -8,5 +8,7 @@
       - topics.each do |topic|
         = render 'shared/topic', topic: topic
 
-  %p.more-a{:'data-see-more' => true, :'data-see-more-type' => "followingProjects"}
-    = link_to t(:see_more), see_more_following_topics_path(id: @user.id, type: @user.class.name), remote: true
+  /more
+  - if topics.next_page
+    %p.more-a{:'data-see-more' => true, :'data-see-more-type' => "projects"}
+      = link_to t(:see_more), see_more_following_topics_path(id: @user.id, type: @user.class.name), remote: true

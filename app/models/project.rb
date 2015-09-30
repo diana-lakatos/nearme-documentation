@@ -1,6 +1,4 @@
 class Project < ActiveRecord::Base
-  include ActivityFeedService::Followed
-
   has_paper_trail
   acts_as_paranoid
   auto_set_platform_context
@@ -8,6 +6,7 @@ class Project < ActiveRecord::Base
   has_custom_attributes target_type: 'ProjectType', target_id: :transactable_type_id
 
   attr_reader :collaborator_email
+  attr_readonly :followers_count
 
   DEFAULT_ATTRIBUTES = %w(name description)
 
@@ -77,13 +76,22 @@ class Project < ActiveRecord::Base
   after_commit :user_created_project_event, on: :create
   def user_created_project_event
     event = :user_created_project
-    ActivityFeedService.create_event(event, self, [self.creator], self)
+    affected_objects = [self.creator] + self.topics
+    ActivityFeedService.create_event(event, self, affected_objects, self)
   end
 
   after_commit :user_added_photos_to_project_event, on: :update
   def user_added_photos_to_project_event
     if self.photos.map(&:id_changed?)
       event = :user_added_photos_to_project
+      ActivityFeedService.create_event(event, self, [self.creator], self)
+    end
+  end
+
+  after_commit :user_added_links_to_project_event, on: :update
+  def user_added_links_to_project_event
+    if self.links.map(&:id_changed?)
+      event = :user_added_links_to_project
       ActivityFeedService.create_event(event, self, [self.creator], self)
     end
   end

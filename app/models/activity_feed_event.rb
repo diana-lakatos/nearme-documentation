@@ -1,8 +1,5 @@
 class ActivityFeedEvent < ActiveRecord::Base
-
   # TODO:
-  # user_commented
-  # 
   # topic_idz_content_pushed_to_page
 
   EVENT_WHITELIST = %w(
@@ -15,10 +12,13 @@ class ActivityFeedEvent < ActiveRecord::Base
     user_updated_topic_status
 
     user_added_photos_to_project
+    user_added_links_to_project
 
     user_created_project
-    topic_created
     user_commented
+    user_commented_on_project
+
+    topic_created
   ).freeze
 
   attr_accessor :affected_objects
@@ -38,7 +38,7 @@ class ActivityFeedEvent < ActiveRecord::Base
   before_create :update_affected_objects
   def update_affected_objects
     if self.affected_objects.present?
-      objects = self.affected_objects.map { |object| ActivityFeedService::Helpers.object_identifier_for(object) }
+      objects = self.affected_objects.compact.map { |object| ActivityFeedService::Helpers.object_identifier_for(object) }
       identifier = [ActivityFeedService::Helpers.object_identifier_for(followed)]
       self.affected_objects_identifiers = (identifier + objects).uniq
     end
@@ -70,8 +70,10 @@ class ActivityFeedEvent < ActiveRecord::Base
       user_updated_project_status
       user_updated_topic_status
       user_added_photos_to_project
+      user_added_links_to_project
       topic_created
-      user_commented
+      user_commented_on_project
+      user_commented_on_event
     ).include?(event)
   end
 
@@ -91,4 +93,7 @@ class ActivityFeedEvent < ActiveRecord::Base
     end
   end
 
+  def self.with_identifiers(sql_array)
+    where("affected_objects_identifiers && ?", sql_array).order(created_at: :desc).uniq
+  end
 end

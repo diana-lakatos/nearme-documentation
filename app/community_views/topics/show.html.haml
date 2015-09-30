@@ -13,7 +13,7 @@
         %li
           = link_to '#followers', role: "tab", :'data-toggle' => "tab" do
             = t :followers
-            %small= "(#{@topic.followers_count})"
+            %small= "(#{@topic.feed_followers.count})"
         %li
           = link_to '#projects', role: "tab", :'data-toggle' => "tab" do
             = t :projects
@@ -32,4 +32,15 @@
       .contain
         .box-a= render 'shared/show_followers', object: @topic
   #projects.tab-pane.fade{:role => "tabpanel"}
-    = render 'show_projects', object: @topic
+    / content wrapper
+    .wrap-a.reduce-top
+      .contain
+        / white box
+        .box-a
+          = simple_form_for :search_filter, url: root_url do |f|
+            .filters-a
+              .results
+                = f.input :sort, as: :select, collection: ['Name', 'Date'], input_html: { class: 'selectize', data: { placeholder: t(:sort, scope: [:simple_form, :placeholders, :search_filter] )}}, wrapper_html: { class: 'sort' }
+
+          = render 'shared/listing_projects', projects: @topic_projects, see_more_type: "projects", see_more_route: see_more_projects_path(id: @topic.id, type: @topic.class.name)
+
