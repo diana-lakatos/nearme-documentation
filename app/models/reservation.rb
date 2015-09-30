@@ -552,7 +552,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def create_shipments!
-    CreateShippoShipmentsJob.perform(self) if shipments.any?
+    CreateShippoShipmentsJob.perform(self.id) if shipments.any?
   end
 
   private

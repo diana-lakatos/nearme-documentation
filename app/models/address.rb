@@ -7,6 +7,7 @@ class Address < ActiveRecord::Base
   #   :formatted_address, :postcode, :city, :state, :country, :street, :address_components
 
   attr_accessor :local_geocoding # set this to true in js
+  attr_accessor :should_check_address
 
   serialize :address_components, JSON
   geocoded_by :address
@@ -15,7 +16,7 @@ class Address < ActiveRecord::Base
   belongs_to :entity, -> { with_deleted }, polymorphic: true
 
   validates_presence_of :address, :latitude, :longitude
-  validate :check_address
+  validate :check_address, if: lambda { |l| l.should_check_address == 'true' }
   before_validation :update_address
   before_validation :parse_address_components
   before_save :retry_fetch, if: lambda { |a| a.country.nil? }

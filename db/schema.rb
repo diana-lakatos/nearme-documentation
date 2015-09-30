@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150929134754) do
+ActiveRecord::Schema.define(version: 20150930135828) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -3198,7 +3198,7 @@ ActiveRecord::Schema.define(version: 20150929134754) do
     t.boolean  "confirm_reservations",                       default: true
     t.datetime "last_request_photos_sent_at"
     t.string   "capacity",                       limit: 255
-    t.string   "rental_shipping_type",                       default: "no_rental"
+    t.string   "rental_shipping_type"
     t.integer  "insurance_value_cents"
   end
 

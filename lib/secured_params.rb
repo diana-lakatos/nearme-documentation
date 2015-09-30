@@ -860,7 +860,7 @@ class SecuredParams
   def address
     [
       :address, :address2, :formatted_address, :postcode,
-      :suburb, :city, :state, :country, :street,
+      :suburb, :city, :state, :country, :street, :should_check_address,
       :latitude, :local_geocoding, :longitude, :state_code,
       address_components: [:long_name , :short_name, :types]
     ]

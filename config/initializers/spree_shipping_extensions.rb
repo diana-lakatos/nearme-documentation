@@ -16,6 +16,7 @@ if Spree::Stock::Estimator.methods.include?(:new)
         return if package.try(:order).try('completed?')
         products = package.contents.map(&:variant).map(&:product).compact.uniq
         company = products.try(:first).try(:company)
+        return if company.nil?
         shippo_address_to = ShippoApi::ShippoAddressInfo.new(ShippoApi::ShippoToAddressFillerFromSpree.new(package.order.ship_address, package))
         shippo_address_from = ShippoApi::ShippoAddressInfo.new(ShippoApi::ShippoFromAddressFillerFromSpree.new(company))
 

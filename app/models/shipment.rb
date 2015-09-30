@@ -60,7 +60,7 @@ class Shipment < ActiveRecord::Base
   end
 
   def insurance
-    if is_insured && reservation.listing.insurance_value > 0
+    if is_insured && reservation.listing.insurance_value.to_f > 0
       {
         insurance_amount: reservation.listing.insurance_value.to_f,
         insurance_currency: reservation.listing.currency,

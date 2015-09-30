@@ -39,7 +39,7 @@ module ShippoApi
       @options[:state] = address_object.try(:state).try(:abbr)
       @options[:zip] = address_object.zipcode
       @options[:country] = address_object.try(:country).try(:iso)
-      @options[:phone] = address_object.full_mobile_number
+      @options[:phone] = address_object.phone
       @options[:email] = package.order.user.email
       @options[:street_no] = ''
     end
@@ -69,7 +69,7 @@ module ShippoApi
         @options[:country] = company.iso_country_code
         @options[:phone] = creator_user.full_mobile_number
         @options[:email] = creator_user.email
-        @options[:street_no] = company.try(:company_address).try(:street_number).to_s
+        @options[:street_no] = company.street_number.to_s
       end
     end
 

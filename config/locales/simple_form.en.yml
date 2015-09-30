@@ -439,6 +439,8 @@ en:
         administrator: 'Default'
 
     hints:
+      reservation_request:
+        delivery_ids: ''
       location:
         name: 'A unique title that describes the location.'
       company:

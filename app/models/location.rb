@@ -42,7 +42,7 @@ class Location < ActiveRecord::Base
   delegate :company_users, :url, to: :company, allow_nil: true
   delegate :phone, :to => :creator, :allow_nil => true
   delegate :address, :address2, :formatted_address, :postcode, :suburb, :city, :state, :country, :street, :address_components,
-   :latitude, :longitude, :state_code, :iso_country_code, to: :location_address, allow_nil: true
+   :latitude, :longitude, :state_code, :iso_country_code, :street_number, to: :location_address, allow_nil: true
 
   validates_presence_of :company
   validates_presence_of :location_type_id, if: :location_type_required

@@ -1664,6 +1664,7 @@ en:
     delivery_type: 'Delivery'
     pick_up: 'Pick Up'
     delivery: 'Delivery'
+    delivery_hint: 'Prices include return delivery'
 
     buttons:
       request: 'Request Booking'

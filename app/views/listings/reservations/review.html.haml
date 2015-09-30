@@ -51,6 +51,7 @@
           %hr.thin
           %h2 Delivery
           - if @reservation_request.get_shipping_rates.any?
+            %p= t 'reservations_review.delivery_hint'
             .delivery-options
               = f.input :delivery_ids, collection: @reservation_request.get_shipping_rates, as: :radio_buttons, label: false, checked: @reservation_request.delivery_ids
           - else

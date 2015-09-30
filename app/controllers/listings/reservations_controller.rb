@@ -15,13 +15,13 @@ class Listings::ReservationsController < ApplicationController
   def review
     if @listing.possible_delivery?
       initialize_shipping_address
-      return render :address
+      render :address and return
     end
   end
 
   def address
     if @reservation_request.delivery_type == 'pick_up' || @reservation_request.reservation.shipments.first.shipping_address.valid?
-      return render :review
+      render :review and return
     end
     @errors = @reservation_request.reservation.shipments.first.shipping_address.errors
   end

@@ -304,6 +304,10 @@ class Transactable < ActiveRecord::Base
     super.presence || creator
   end
 
+  def rental_shipping_type
+    service_type.rental_shipping ? super : 'no_rental'
+  end
+
   def desks_booked_on(date, start_minute = nil, end_minute = nil)
     scope = reservations.confirmed.joins(:periods).where(:reservation_periods => {:date => date})
 

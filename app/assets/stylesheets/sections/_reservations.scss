@@ -237,9 +237,31 @@ section.reservations {
 
 .reservations-review, .reservations-create, .reservations-address {
 
-   #shipping-address.hide {
+   #shipping-address {
+
+    .select2-container {
+      a.select2-choice {
+        background: #e6e6e6;
+        height: 45px;
+        border: none;
+
+        .select2-chosen {
+          line-height: 43px;
+        }
+        .select2-arrow {
+          width: 23px;
+
+          b {
+            background-size: 77px 73px !important;
+          }
+        }
+      }
+    }
+
+  .hide {
     display: none;
   }
+}
 
   .radio_buttons .radio {
     display: block;
