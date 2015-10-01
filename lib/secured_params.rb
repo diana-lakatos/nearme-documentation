@@ -860,7 +860,7 @@ class SecuredParams
   def address
     [
       :address, :address2, :formatted_address, :postcode,
-      :suburb, :city, :state, :country, :street,
+      :suburb, :city, :state, :country, :street, :should_check_address,
       :latitude, :local_geocoding, :longitude, :state_code,
       address_components: [:long_name , :short_name, :types]
     ]
@@ -906,6 +906,7 @@ class SecuredParams
         :action_daily_booking,
         :last_request_photos_sent_at, :activated_at, :rank,
         :transactable_type_id, :transactable_type, :booking_type,
+        :insurance_value,
         :rental_shipping_type, :dimensions_template_id,
         photos_attributes: nested(self.photo),
         approval_requests_attributes: nested(self.approval_request),
@@ -1212,4 +1213,31 @@ class SecuredParams
   def saved_search
     %i(title query)
   end
+
+  def shipment
+    [
+      :is_insured,
+      :direction,
+      :shippo_rate_id,
+      shipping_address_attributes: self.shipping_address
+    ]
+  end
+
+  def shipping_address
+    [
+      :user_id,
+      :shippo_id,
+      :name,
+      :company,
+      :street1,
+      :street2,
+      :city,
+      :zip,
+      :state,
+      :phone,
+      :email,
+      :country
+    ]
+  end
+
 end

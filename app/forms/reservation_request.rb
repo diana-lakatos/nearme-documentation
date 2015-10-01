@@ -3,7 +3,8 @@ class ReservationRequest < Form
   attr_accessor :dates, :start_minute, :end_minute, :book_it_out, :exclusive_price, :guest_notes,
     :card_number, :card_exp_month, :card_exp_year, :card_code, :card_holder_first_name,
     :card_holder_last_name, :payment_method_nonce, :waiver_agreement_templates, :documents,
-    :payment_method, :checkout_extra_fields, :express_checkout_redirect_url, :mobile_number
+    :payment_method, :checkout_extra_fields, :express_checkout_redirect_url, :mobile_number, :delivery_ids,
+    :delivery_type
   attr_reader   :reservation, :listing, :location, :user, :client_token, :payment_method_nonce
 
   delegate :confirm_reservations?, :location, :billing_authorizations, :company, to: :@listing
@@ -12,14 +13,16 @@ class ReservationRequest < Form
     :credit_card_payment?, :manual_payment?, :remote_payment?, :nonce_payment?, :currency,
     :service_fee_amount_host_cents, :total_amount_cents, :create_billing_authorization,
     :express_token, :express_token=, :express_payer_id, :service_fee_guest_without_charges,
-    :additional_charges, :shipping_costs_cents, :service_fee_amount_guest_cents, :merchant_subject,
+    :additional_charges, :shipping_costs_cents, :service_fee_amount_guest_cents, :merchant_subject, :shipments,
+    :shipments_attributes=,
     to: :@reservation
 
   before_validation :build_documents, :if => lambda { reservation.present? && documents.present? }
 
-  validates :listing,     :presence => true
-  validates :reservation, :presence => true
-  validates :user,        :presence => true
+  validates :listing,      presence: true
+  validates :reservation,  presence: true
+  validates :user,         presence: true
+  validates :delivery_ids, presence: true, if: -> { with_delivery? &&  reservation.shipments.any? }
 
   validate :validate_acceptance_of_waiver_agreements
   validate :validate_credit_card, if: lambda { reservation.present? && reservation.credit_card_payment? }
@@ -34,6 +37,7 @@ class ReservationRequest < Form
       @reservation = @listing.reservations.build
       @instance = platform_context.instance
       @reservation.currency = @listing.currency
+      @reservation.company = @listing.company
       @reservation.guest_notes = attributes[:guest_notes]
       @reservation.book_it_out_discount = @listing.book_it_out_discount if attributes[:book_it_out] == 'true'
       if attributes[:exclusive_price] == 'true'
@@ -45,13 +49,14 @@ class ReservationRequest < Form
       @reservation.user = user
       @reservation.additional_charges << get_additional_charges(attributes)
       @reservation = @reservation.decorate
+      attributes = update_shipments(attributes)
     end
 
     store_attributes(attributes)
 
     @reservation.try(:payment_method=, (payment_method.present? && payment_methods.include?(payment_method.to_s)) ? payment_method : payment_methods.first)
     self.payment_method = @reservation.try(:payment_method)
-
+    build_return_shipment
     if @user
       @user.phone ||= @user.mobile_number
       @card_holder_first_name ||= @user.first_name
@@ -121,8 +126,23 @@ class ReservationRequest < Form
     @payment_methods
   end
 
+  def update_shipments(attributes)
+    if attributes[:delivery_ids].present? && attributes[:shipments_attributes]
+      ids = attributes[:delivery_ids].split(',').each do |delivery|
+        attributes[:shipments_attributes].each_value do |attribs|
+          attribs['shippo_rate_id'] = delivery.split(':')[1] if attribs['direction'] == delivery.split(':')[0]
+        end
+      end
+    end
+    attributes
+  end
+
   def is_free?
     @listing.try(:action_free_booking?) && @reservation.try(:additional_charges).try(:count).try(:zero?)
+  end
+
+  def with_delivery?
+    PlatformContext.current.instance.shippo_enabled? && (@listing.rental_shipping_type == 'delivery' || (@listing.rental_shipping_type == 'both' && delivery_type == 'delivery'))
   end
 
   def possible_credit_card_payment?
@@ -155,7 +175,28 @@ class ReservationRequest < Form
   end
 
   def total_amount_cents_without_shipping
-    total_amount_cents
+    total_amount_cents - shipping_costs_cents
+  end
+
+  def get_shipping_rates
+    return @options unless @options.nil?
+    rates = []
+    # Get rates for both ways shipping (rental shipping)
+    @reservation.shipments.each do |shipment|
+      shipment.get_rates(@reservation).map{|rate| rate[:direction] = shipment.direction; rates << rate }
+    end
+    rates = rates.flatten.group_by{ |rate| rate[:servicelevel_name] }
+    @options = rates.to_a.map do |type, rate|
+      # Skip if service is available only in one direction
+      next if rate.one?
+      price_sum = Money.new(rate.sum{|r| r[:amount_cents].to_f }, rate[0][:currency])
+      # Format options for simple_form radio
+      [
+        [ price_sum.format, "#{rate[0][:provider]} #{rate[0][:servicelevel_name]}", rate[0][:duration_terms]].join(' - '),
+        rate.map{|r| "#{r[:direction]}:#{r[:object_id]}" }.join(','),
+        { data: { price_formatted: price_sum.format, price: price_sum.to_f } }
+      ]
+    end.compact
   end
 
   private
@@ -243,6 +284,17 @@ class ReservationRequest < Form
       )
 
       reservation.listing.upload_obligation.save
+    end
+  end
+
+  def build_return_shipment
+    if with_delivery? && @reservation.shipments.one? && @reservation.shipments.first.shipping_address.valid?
+      outbound_shipping = @reservation.shipments.first
+      inbound_shipping = outbound_shipping.dup
+      inbound_shipping.direction = 'inbound'
+      outbound_shipping.shipping_address.create_shippo_address
+      inbound_shipping.shipping_address = outbound_shipping.shipping_address
+      @reservation.shipments << inbound_shipping
     end
   end
 

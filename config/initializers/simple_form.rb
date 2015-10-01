@@ -71,6 +71,19 @@ SimpleForm.setup do |config|
     end
   end
 
+  config.wrappers :bs_phone, :tag => 'div', :class => 'control-group', :error_class => 'error' do |b|
+    b.use :html5
+    b.use :placeholder
+    b.use :label
+    b.wrapper :tag => 'div', :class => 'controls' do |ba|
+      ba.wrapper :tag => 'div', :class => 'phone-number-country-code-field' do |prepend|
+        prepend.use :input
+      end
+      ba.use :error, :wrap_with => { :tag => 'p', :class => 'error-block' }
+      ba.use :hint,  :wrap_with => { :tag => 'p', :class => 'help-block' }
+    end
+  end
+
   config.wrappers :prepend, :tag => 'div', :class => "control-group", :error_class => 'error' do |b|
     b.use :html5
     b.use :placeholder

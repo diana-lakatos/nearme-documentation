@@ -6,7 +6,7 @@ class PhoneNumbers.FieldsForm
     _.defaults @,
       container       : $('div[data-phone-fields-container]')
       countrySelector : 'select[data-country-selector]'
-      codeSelector    : '.country-calling-code'
+      codeSelector    : '.phone-number-country-code-field'
       mobileSelector  : 'input[data-mobile-number]'
       phoneSelector   : 'input[data-phone]'
       sameAsSelector  : 'input[data-same-as-phone-checkbox]'
@@ -47,8 +47,10 @@ class PhoneNumbers.FieldsForm
       "+#{code}"
     else
       ""
-
-    @callingCodeText.text(code)
+    if @callingCodeText.find('.country-calling-code').length > 0
+      @callingCodeText.find('.country-calling-code').text(code)
+    else
+      @callingCodeText.prepend("<div class='country-calling-code'>#{code}</div>")
     @mobileNumberField.prop('disabled', (code is ""))
     @phoneNumberField.prop('disabled', (code is ""))
 

@@ -344,8 +344,10 @@ textarea {
     padding-right: 17px;
   }
 
-  .dimensions_element_container {
-    margin-left: 198px;
+  @media (min-width: 992px) {
+    .dimensions_element_container {
+      margin-left: 198px;
+    }
   }
 
   .explanation {

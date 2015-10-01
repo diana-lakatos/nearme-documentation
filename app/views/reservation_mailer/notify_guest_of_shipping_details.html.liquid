@@ -1,0 +1,9 @@
+<p>Here are the shipping details for "{{ listing.name }}":</p>
+
+<h2>Outbound Delivery</h2>
+<p>Shipping Tracking number: {{ outbound_shipping.tracking_number }}</p>
+<p><a href="{{ outbound_shipping.tracking_url_provider }}">Track package</a></p>
+
+<h2>Return Delivery</h2>
+<p><a href="{{ inbound_shipping.label_url }}">Return shipping label</a></p>
+<p><a href="{{ inbound_shipping.tracking_url_provider }}">Track return delivery</a></p>

@@ -345,6 +345,10 @@ class Instance < ActiveRecord::Base
     shippo_api_token.present?
   end
 
+  def shippo_api
+    @api ||= ShippoApi::ShippoApi.new(shippo_api_token)
+  end
+
   def and_category_search?
     category_search_type == "AND"
   end

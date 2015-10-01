@@ -1066,6 +1066,8 @@ en:
       exclusive_price_guests_notes: 'Exclusive booking instructions: %{guest_notes}'
       upcoming: "UPCOMING"
       archived: "ARCHIVED"
+      track_package: 'Track Package'
+      return_label: 'Return Label'
     host_reservations:
       reservation_state: "Reservation state: "
       payment_state: "Payment state: "
@@ -1082,6 +1084,11 @@ en:
       next_payment_transfer: "The next automated payout occurs at %{next_payment_transfer}."
       remember_to_setup_automated_payout: "To receive automated payout please <a href='%{setup_link}'>setup payouts</a>."
       exclusive_price_guests_notes: 'Exclusive booking instructions from guest: %{guest_notes}'
+      track_package: 'Track package'
+      return_track_package: 'Track return package'
+      shipping_label: 'Shipping label'
+      return_label: 'Return shipping label'
+      delivery_type: 'Delivery type:'
       payment_methods:
         credit_card: "Credit Card"
         express_checkout: "PayPal"
@@ -1089,6 +1096,9 @@ en:
         nonce: "PayPal"
         remote: "Fetch"
         free: "None"
+      delivery:
+        pick_up: 'Pick up'
+        delivery: 'Delivery'
 
     merchant_account:
       header: 'Merchant account details'
@@ -1637,6 +1647,7 @@ en:
       days_first: 'Please select days first'
 
   reservations_review:
+    shipping_address: 'Shipping address'
     heading: 'Review your booking'
     summary: 'Order summary'
     subtotal: 'Subtotal'
@@ -1650,18 +1661,26 @@ en:
     submit_secure_payment: 'Submit a secure payment.'
     cc_image_alt: 'Visa, Mastercard, American Express, Discover'
     wat_accept: 'I have read and accept %{link_to_wat}'
+    delivery_type: 'Delivery'
+    pick_up: 'Pick Up'
+    delivery: 'Delivery'
+    delivery_hint: 'Prices include return delivery'
 
     buttons:
       request: 'Request Booking'
+      continue: 'Continue'
 
     disabled_buttons:
       request: 'Booking...'
+      processing: 'Processing...'
 
     errors:
+      only_whoops: "Whoops!"
       whoops: "Whoops! We couldn't make that reservation."
       book_it_out_quantity: "Quantity for Book It Out option should equal maximal available quantity."
       book_it_out_not_available: 'Book It Out option is no longer available'
       exclusive_price_not_available: 'Exclusive Price option is no longer available'
+      no_delivery_options: 'There are no delivery options available.'
 
   recurring_reservations_review:
     total: 'Total per reservation'

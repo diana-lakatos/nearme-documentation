@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150921093013) do
+ActiveRecord::Schema.define(version: 20150930135828) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -618,6 +618,7 @@ ActiveRecord::Schema.define(version: 20150921093013) do
     t.boolean  "use_as_default",                                      default: false
     t.integer  "entity_id"
     t.string   "entity_type"
+    t.string   "shippo_id"
   end
 
   create_table "document_requirements", force: :cascade do |t|
@@ -1545,6 +1546,51 @@ ActiveRecord::Schema.define(version: 20150921093013) do
   end
 
   add_index "schedules", ["instance_id", "scheduable_id", "scheduable_type"], name: "index_schedules_scheduable", using: :btree
+
+  create_table "shipments", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "reservation_id"
+    t.boolean  "is_insured",            default: false
+    t.integer  "price"
+    t.string   "price_currency"
+    t.integer  "insurance_value"
+    t.string   "insurance_currency"
+    t.string   "label_url"
+    t.string   "tracking_number"
+    t.string   "tracking_url_provider"
+    t.string   "shippo_rate_id"
+    t.string   "shippo_transaction_id"
+    t.text     "shippo_errors"
+    t.string   "direction",             default: "outbound"
+    t.datetime "deleted_at"
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
+  end
+
+  add_index "shipments", ["instance_id", "reservation_id"], name: "index_shipments_on_instance_id_and_reservation_id", using: :btree
+
+  create_table "shipping_addresses", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "shipment_id"
+    t.integer  "user_id"
+    t.string   "shippo_id"
+    t.string   "name"
+    t.string   "company"
+    t.string   "street1"
+    t.string   "street2"
+    t.string   "city"
+    t.string   "state"
+    t.string   "zip"
+    t.string   "country"
+    t.string   "phone"
+    t.string   "email"
+    t.datetime "deleted_at"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "shipping_addresses", ["instance_id", "shipment_id"], name: "index_shipping_addresses_on_instance_id_and_shipment_id", using: :btree
+  add_index "shipping_addresses", ["instance_id", "user_id"], name: "index_shipping_addresses_on_instance_id_and_user_id", using: :btree
 
   create_table "spree_addresses", force: :cascade do |t|
     t.string   "firstname",         limit: 255
@@ -3152,7 +3198,8 @@ ActiveRecord::Schema.define(version: 20150921093013) do
     t.boolean  "confirm_reservations",                       default: true
     t.datetime "last_request_photos_sent_at"
     t.string   "capacity",                       limit: 255
-    t.string   "rental_shipping_type",                       default: "no_rental"
+    t.string   "rental_shipping_type"
+    t.integer  "insurance_value_cents"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree

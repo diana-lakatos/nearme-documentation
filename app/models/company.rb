@@ -74,7 +74,7 @@ class Company < ActiveRecord::Base
   validate :validate_url_format
 
   delegate :address, :address2, :formatted_address, :postcode, :suburb, :city, :state, :country, :street, :address_components,
-    :latitude, :longitude, :state_code, to: :company_address, allow_nil: true
+    :latitude, :longitude, :state_code, :street_number, to: :company_address, allow_nil: true
   delegate :service_fee_guest_percent, :service_fee_host_percent, to: :instance, allow_nil: true
   delegate :first_name, :last_name, :mobile_number, to: :creator
 
@@ -180,6 +180,10 @@ class Company < ActiveRecord::Base
 
   def to_liquid
     @company_drop ||= CompanyDrop.new(self)
+  end
+
+  def address_to_shippo
+    ShippoApi::ShippoFromAddressFillerFromSpree.new(self)
   end
 
   def add_default_url_scheme

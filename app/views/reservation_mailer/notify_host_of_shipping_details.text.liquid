@@ -1,0 +1,10 @@
+Here are the shipping details for "{{ listing.name }}":
+
+Outbound Delivery
+Shipping Tracking number: {{ outbound_shipping.tracking_number }}
+Delivery Shipping label: {{ outbound_shipping.label_url }}
+Track outbound delivery: {{ outbound_shipping.tracking_url_provider }}
+
+Return Delivery
+Return shipping label: {{ inbound_shipping.label_url }}
+Track return delivery: {{ inbound_shipping.tracking_url_provider }}

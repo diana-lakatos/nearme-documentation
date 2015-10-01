@@ -3,6 +3,8 @@ class @PaymentController
   constructor: (@container) ->
     @totalPriceContainer = @container.find('[data-total-price]')
     @totalPriceValue = parseFloat(@totalPriceContainer.html())
+    @totalAmount = $('.summary-line-value.total-amount')
+    @deliveryPriceContainer = $('.summary-line-value.delivery-amount')
 
     @serviceFeeRow = @container.find('[data-service-fee]').parents('tr')
     @serviceFeeValue = parseFloat(@container.find('[data-service-fee]').html())
@@ -13,6 +15,12 @@ class @PaymentController
     @bindEvents()
 
   bindEvents: =>
+    @container.find('input[name="reservation_request[delivery_ids]"]').on 'change', (e) =>
+      @deliveryPriceContainer.html($(e.target).data('price-formatted'))
+      total = parseFloat(@totalAmount.data('total-amount'))
+      total += parseFloat($(e.target).data('price'))
+      @totalAmount.text(@totalAmount.data('currency-symbol') + total.toFixed(2))
+
     @container.find('[data-upload-document]').on 'click', (e) ->
       $(@).closest('[data-upload]').find('input[type=file]').click()
 
@@ -24,7 +32,7 @@ class @PaymentController
     @container.find('[data-additional-charges]').on 'change', (e) =>
       target = $(e.target)
       checked_charges = []
-      @container.find("[data-additional-charge-wrapper]").each -> 
+      @container.find("[data-additional-charge-wrapper]").each ->
         if $(this).find("input:checked").length > 0
           checked_charges.push(parseFloat($(this).find('[data-additional-charge-price]').html()))
 

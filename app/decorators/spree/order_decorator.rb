@@ -92,7 +92,7 @@ class Spree::OrderDecorator < Draper::Decorator
   end
 
   def fill_address_from_user(address, billing_address=true)
-    address_info = billing_address ? current_user.billing_address : current_user.shipping_address
+    address_info = billing_address ? current_user.billing_address : current_user.spree_shipping_address
 
     address.firstname = current_user.first_name
     address.lastname = current_user.last_name

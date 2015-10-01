@@ -153,7 +153,7 @@ class Transactable < ActiveRecord::Base
   validates_with PriceValidator
   validates_with CustomValidators
 
-  validates :book_it_out_minimum_qty, numericality: {greater_than_or_equal_to: 0}, allow_blank: true
+  validates :book_it_out_minimum_qty, :insurance_value, numericality: {greater_than_or_equal_to: 0}, allow_blank: true
   validates :book_it_out_discount, numericality: {greater_than: 0, less_than: 100}, allow_blank: true
   validates :booking_type, inclusion: { in: ServiceType::BOOKING_TYPES }
   validates :currency, presence: true, allow_nil: false, currency: true
@@ -199,6 +199,7 @@ class Transactable < ActiveRecord::Base
   monetize :monthly_price_cents, with_model_currency: :currency, allow_nil: true
   monetize :fixed_price_cents, with_model_currency: :currency, allow_nil: true
   monetize :exclusive_price_cents, with_model_currency: :currency, allow_nil: true
+  monetize :insurance_value_cents, with_model_currency: :currency, allow_nil: true
 
   # Defer to the parent Location for availability rules unless this Listing has specific
   # rules.
@@ -301,6 +302,10 @@ class Transactable < ActiveRecord::Base
 
   def administrator
     super.presence || creator
+  end
+
+  def rental_shipping_type
+    service_type.rental_shipping ? super : 'no_rental'
   end
 
   def desks_booked_on(date, start_minute = nil, end_minute = nil)
@@ -622,6 +627,10 @@ class Transactable < ActiveRecord::Base
 
   def possible_express_checkout?
     instance.payment_gateway(company.iso_country_code, currency).try(:express_checkout?)
+  end
+
+  def possible_delivery?
+    rental_shipping_type.in?(['delivery', 'both'])
   end
 
   # TODO: to be deleted once we get rid of instance views

@@ -3,18 +3,27 @@ class Listings::ReservationsController < ApplicationController
   skip_before_filter :filter_out_token, only: [:return_express_checkout, :cancel_express_checkout]
   skip_before_filter :log_out_if_token_exists, only: [:return_express_checkout, :cancel_express_checkout]
 
-  before_filter :secure_payment_with_token, :only => [:review]
-  before_filter :load_payment_with_token, :only => [:review]
+  before_filter :secure_payment_with_token, :only => [:review, :address]
+  before_filter :load_payment_with_token, :only => [:review, :address]
   before_filter :find_listing
   before_filter :find_reservation, only: [:booking_successful, :remote_payment, :booking_failed]
-  before_filter :build_reservation_request, :only => [:review, :create, :store_reservation_request, :express_checkout]
-  before_filter :require_login_for_reservation, :only => [:review, :create]
-  before_filter :find_current_country, :only => [:review, :create]
+  before_filter :build_reservation_request, :only => [:review, :address, :create, :store_reservation_request, :express_checkout]
+  before_filter :require_login_for_reservation, :only => [:review, :create, :address]
+  before_filter :find_current_country, :only => [:review, :create, :address]
+  before_filter :prepare_for_review, only: [:review, :address]
 
   def review
-    build_approval_request_for_object(current_user)
-    reservations_service.build_documents
-    event_tracker.reviewed_a_booking(@reservation_request.reservation)
+    if @listing.possible_delivery?
+      initialize_shipping_address
+      render :address and return
+    end
+  end
+
+  def address
+    if @reservation_request.delivery_type == 'pick_up' || @reservation_request.reservation.shipments.first.shipping_address.valid?
+      render :review and return
+    end
+    @errors = @reservation_request.reservation.shipments.first.shipping_address.errors
   end
 
   def load_payment_with_token
@@ -128,6 +137,19 @@ class Listings::ReservationsController < ApplicationController
 
   private
 
+  def initialize_shipping_address
+    user_last_address = current_user.shipping_addresses.last.try(:dup)
+    @reservation_request.reservation.shipments.new(
+      shipping_address:  user_last_address || ShippingAddress.new(email: current_user.email, phone: current_user.full_mobile_number)
+    )
+  end
+
+  def prepare_for_review
+    build_approval_request_for_object(current_user)
+    reservations_service.build_documents
+    event_tracker.reviewed_a_booking(@reservation_request.reservation)
+  end
+
   def require_login_for_reservation
     unless user_signed_in?
       store_reservation_request
@@ -170,7 +192,10 @@ class Listings::ReservationsController < ApplicationController
         payment_method_nonce: params[:payment_method_nonce],
         additional_charge_ids: attributes[:additional_charge_ids],
         reservation_type: attributes[:reservation_type],
-        documents: params_documents[:documents_attributes]
+        documents: params_documents[:documents_attributes],
+        delivery_type: attributes[:delivery_type],
+        delivery_ids: attributes[:delivery_ids],
+        shipments_attributes: params_shipment[:reservation].try(:[],:shipments_attributes)
       },
       attributes[:checkout_extra_fields]
     )
@@ -198,6 +223,10 @@ class Listings::ReservationsController < ApplicationController
 
   def params_documents
     params.require(:reservation_request).permit(documents_attributes: [:id, :file, :user_id, payment_document_info_attributes: [:attachment_id, :document_requirement_id]])
+  end
+
+  def params_shipment
+    params.require(:reservation_request).permit(reservation: { shipments_attributes: secured_params.shipment })
   end
 end
 
