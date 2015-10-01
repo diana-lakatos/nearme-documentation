@@ -1282,7 +1282,6 @@ class SecuredParams
     %i(title query)
   end
 
-<<<<<<< HEAD
   def shipment
     [
       :is_insured,
@@ -1309,7 +1308,6 @@ class SecuredParams
     ]
   end
 
-=======
   def user_status_update
     [
       :text,
@@ -1320,5 +1318,4 @@ class SecuredParams
       :updateable_type
     ]
   end
->>>>>>> f51c566... NM-1869 Intel Platform
 end
