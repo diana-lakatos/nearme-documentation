@@ -67,6 +67,6 @@ DesksnearMe::Application.configure do
     :namespace => "cache"
   }
   config.root_secured = false
-  config.secure_app = false
+  config.secure_app = true
   config.send_real_sms = true
 end

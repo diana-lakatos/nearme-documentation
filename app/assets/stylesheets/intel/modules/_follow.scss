@@ -1,0 +1,118 @@
+/* follow */
+
+.card-b {
+    overflow: hidden;
+    position: relative;
+    min-height: 200px;
+    padding-left: 250px;
+    background: #F3F3F3;
+
+    &.is-active {
+        box-shadow: 0 0 0 4px #fff, 0 0 0 5px #1f73b6;
+    }
+
+    &:after {
+        display: table;
+        clear: both;
+        content: '';
+    }
+
+    figure {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 250px;
+        margin: 0;
+        background-position: 50% 0;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    figure img {
+        display: none;
+        width: 100%;
+    }
+
+    .wrap {
+        margin: 0;
+        padding: 25px 30px;
+    }
+
+    .hx {
+        margin: 0 0 15px;
+        color: #0071c5;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    p {
+        margin: 0 0 15px;
+    }
+
+    .location:before {
+        display: inline-block;
+        content: '\e607';
+        margin: 0 5px 0 0;
+        font: 14px/1 $font-icons;
+        line-height: inherit;
+        vertical-align: top;
+    }
+
+    .check {
+        position: absolute;
+        right: 13px;
+        bottom: 10px;
+        margin: 0;
+    }
+
+    :root & .check .tick-a + label:before {
+        margin-right: 0;
+    }
+
+    .check span {
+        display: none;
+    }
+
+    @include bp-range($screen-lg, $screen-tablet) {
+
+        .grid-a-follow-a & {
+            padding-left: 200px;
+        }
+
+        .grid-a-follow-a & figure {
+            width: 200px;
+        }
+    }
+
+    @include bp($screen-mobile) {
+        padding-left: 200px;
+
+        figure {
+            width: 200px;
+        }
+    }
+
+    @include bp($screen-xs) {
+        padding-left: 0;
+
+        .wrap {
+            padding: 20px 20px 30px;
+        }
+
+        figure {
+            position: static;
+            left: auto;
+            right: auto;
+            bottom: auto;
+            top: auto;
+            width: auto;
+            background: none !important;
+        }
+
+        figure img {
+            display: block;
+            width: 100%;
+        }
+    }
+}

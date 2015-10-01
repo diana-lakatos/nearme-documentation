@@ -29,12 +29,17 @@ gem 'omniauth-twitter'
 gem 'omniauth-facebook', github: 'mkdynamic/omniauth-facebook', tag: 'v2.0.0.pre1'
 gem 'omniauth-linkedin'
 gem 'omniauth-instagram'
+gem 'omniauth-saml'
+gem 'omniauth-google-oauth2'
+gem 'omniauth-github'
 
 gem 'koala', '~> 1.7.0rc1' # facebook Graph API
 gem 'linkedin-oauth2', '~> 0.1.1'
 gem 'twitter', '~> 5.5.1'
 # Installing instagram from the master branch will fix ruby 2.2 circular dependency warning
 gem 'instagram', github: '0tofu/instagram-ruby-gem', branch: 'master'
+gem 'github_api'
+gem 'google-api-client', '0.9.pre3'
 
 gem 'reform', '~> 2.0.0.rc2'
 gem 'tilt'
@@ -48,7 +53,7 @@ gem 'le'
 gem 'mini_magick', '~> 4.0.1'
 gem 'money-rails', github: 'RubyMoney/money-rails'
 gem 'simple_form', '~> 3.1'
-gem 'paranoia', '~> 2.1.0'
+gem "paranoia", :github => "radar/paranoia", :branch => "rails4"
 gem 'nested_form'
 gem 'cocoon'
 gem 'nokogiri', '~> 1.6.0'
@@ -87,7 +92,7 @@ gem 'paypal-sdk-rest', '~> 1.3.2'
 gem 'paypal-sdk-merchant'
 gem 'paypal-sdk-adaptivepayments'
 gem 'braintree', '2.46.0'
-gem 'faraday', '~> 0.8.6'
+gem 'faraday', '~> 0.9'
 gem 'friendly_id', '~> 5.1'
 gem 'non-stupid-digest-assets'
 gem 'asset_sync'
@@ -195,7 +200,6 @@ group :development do
   gem 'mailcatcher'
   gem 'active_record_query_trace'
   gem 'web-console', '~> 2.0'
-  gem 'parallel_tests'
 end
 
 group :test do
@@ -219,6 +223,7 @@ group :test do
   gem 'vcr'
   gem 'test_after_commit'
   gem 'rails-perftest'
+  gem 'selenium-webdriver'
 end
 gem 'mailman'
 
@@ -236,3 +241,5 @@ gem 'i18n_data'
 gem 'parser'
 
 gem 'routing-filter', '~> 0.5.0'
+
+gem 'autoprefixer-rails'

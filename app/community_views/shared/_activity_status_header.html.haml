@@ -1,0 +1,10 @@
+- activity_feed_event = setup_activity_feed_event(event)
+
+- if event.followed.present?
+  %header
+    %figure= image_tag activity_feed_event.image
+    %p.desc= activity_feed_event.text
+
+    %p.meta
+      %time
+        = event.created_at.strftime("%d/%m/%y")

@@ -76,7 +76,7 @@ module Auth
     end
 
     def token
-      @auth_params['credentials']['token']
+      @auth_params['credentials']['token'].presence || @auth_params['extra']['raw_info']['enterprise_id'] .presence || @auth_params['extra']['raw_info']['CustID']
     end
 
     def secret

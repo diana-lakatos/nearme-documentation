@@ -1,0 +1,13 @@
+= simple_form_for [:instance_admin, :manage, @topic], html: { class: 'form-a', data: { modal: true } } do |f|
+  .modal-header
+    .modal-title
+      Edit #{@topic.name}
+
+    %button.modal-close
+      %span.intelicon-close-outlined
+      Close
+  .modal-body
+    .fields
+      = f.input :featured, as: :switch, label: 'Featured'
+  .modal-footer
+    = f.submit 'Update'

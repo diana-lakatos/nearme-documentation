@@ -1,0 +1,18 @@
+= render 'shared/google_map_scripts'
+
+.wrap-a.reduce-top
+  .contain
+
+    %h1.h2
+      = t :my_account
+
+    %nav.tabs-a.trio
+      %ul
+        %li.is-active
+          = link_to t(:edit_profile), dashboard_profile_path
+        %li
+          = link_to t(:notifications), '#notifications'
+        %li
+          = link_to t(:social_accounts), social_accounts_path
+
+    = render "edit_profile"

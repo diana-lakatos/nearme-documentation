@@ -1,8 +1,12 @@
 class Dashboard::BaseController < ApplicationController
-  layout 'dashboard'
-
   before_filter :authenticate_user!
   before_filter :find_company
+
+  protected
+
+  def layout_name
+    dashboard_or_community_layout
+  end
 
   private
 

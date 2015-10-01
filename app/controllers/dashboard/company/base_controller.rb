@@ -1,6 +1,4 @@
 class Dashboard::Company::BaseController < Dashboard::BaseController
-  layout 'dashboard'
-
   before_filter :authenticate_user!
   before_filter :redirect_unless_registration_completed
   before_filter :find_company

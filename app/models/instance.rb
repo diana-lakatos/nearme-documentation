@@ -9,7 +9,9 @@ class Instance < ActiveRecord::Base
     :test_paypal_signature, :test_paypal_app_id, :test_paypal_client_id, :test_paypal_client_secret, :olark_api_key,
     :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key, :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret,
     :instagram_consumer_key, :instagram_consumer_secret, :db_connection_string, :shippo_username, :shippo_password, :shippo_api_token,
-    :twilio_consumer_key, :twilio_consumer_secret, :test_twilio_consumer_key, :test_twilio_consumer_secret, :support_imap_password,
+    :twilio_consumer_key, :twilio_consumer_secret, :test_twilio_consumer_key, :test_twilio_consumer_secret, :support_imap_password, :webhook_token,
+    :google_oauth2_consumer_key, :google_oauth2_consumer_secret,
+    :github_consumer_key, :github_consumer_secret,
     :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   attr_accessor :mark_as_locked
@@ -27,6 +29,7 @@ class Instance < ActiveRecord::Base
   SEARCH_MODULES = { 'elasticsearch' => 'Elastic' }
   SEARCH_SERVICE_VIEWS = %w(mixed list listing_mixed)
   SEARCH_PRODUCTS_VIEWS = %w(products products_table products_list)
+  SEARCH_COMMUNITY_VIEWS = %w(community)
   PRICING_OPTIONS = %w(free hourly daily weekly monthly fixed)
 
   API_KEYS.each do |meth|
@@ -70,6 +73,7 @@ class Instance < ActiveRecord::Base
   has_many :product_types, class_name: "Spree::ProductType"
   has_many :payment_gateways, -> { distinct }, through: :country_payment_gateways
   has_many :country_payment_gateways, inverse_of: :instance
+  has_many :project_types, class_name: "ProjectType"
   has_many :users, inverse_of: :instance
   has_many :text_filters, inverse_of: :instance
   has_many :waiver_agreement_templates, as: :target
@@ -114,8 +118,9 @@ class Instance < ActiveRecord::Base
   scope :with_deleted, -> { all }
 
   store_accessor :search_settings, :date_pickers, :tt_select_type, :date_pickers_mode, :default_products_search_view,
-                 :date_pickers_use_availability_rules, :taxonomy_tree, :saved_search, :price_slider, :price_types
+    :date_pickers_use_availability_rules, :taxonomy_tree, :saved_search, :price_slider, :price_types
 
+  before_create :generate_webhook_token
   before_update :check_lock
   after_save :recalculate_cache_key!, if: -> { custom_sanitize_config_changed? }
 
@@ -253,6 +258,10 @@ class Instance < ActiveRecord::Base
     @bookable ||= service_types.any?
   end
 
+  def projectable?
+    @projectable ||= project_types.any?
+  end
+
   def marketplace_type
     TransactableType::AVAILABLE_TYPES[buyable? ? 1 : 0]
   end
@@ -371,6 +380,10 @@ class Instance < ActiveRecord::Base
 
   def instance_owner
     instance_admins.where(instance_owner: true).first.try(:user)
+  end
+
+  def generate_webhook_token
+    self.webhook_token = SecureRandom.uuid.gsub(/\-/,'')
   end
 
 end

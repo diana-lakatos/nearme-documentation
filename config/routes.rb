@@ -3,6 +3,9 @@ require Rails.root.join('app', 'controllers', 'registrations_controller.rb') if 
 
 DesksnearMe::Application.routes.draw do
 
+  get 'comments/index'
+  get 'comments/create'
+
   # lib/routing_filters/filters/language.rb
   filter :language, exclude: %r(^/.*admin|^/near-me.com|^/api|^/v\d+)
 
@@ -47,6 +50,11 @@ DesksnearMe::Application.routes.draw do
 
   root :to => "home#index"
   namespace :webhooks do
+    resource :'profile', only: [] do
+      collection do
+        match '', via: [:get, :post], as: :webhook, action: :webhook
+      end
+    end
     resource :braintree_marketplace, only: [] do
       collection do
         match '', via: [:get, :post], as: :webhook, action: :webhook
@@ -262,6 +270,8 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
+      resources :projects, only: [:edit, :update]
+      resources :topics, only: [:edit, :update]
       resources :reviews, only: [:index]
       resources :rating_systems, only: [:index] do
         put '/update_systems', to: 'rating_systems#update_systems', on: :collection
@@ -321,7 +331,7 @@ DesksnearMe::Application.routes.draw do
         end
       end
 
-      resources :users, only: [:index, :destroy] do
+      resources :users, only: [:index, :destroy, :edit, :update] do
         post :login_as, on: :member
         post :restore, on: :member
         post :restore_session, on: :collection
@@ -438,6 +448,29 @@ DesksnearMe::Application.routes.draw do
       end
     end
 
+    namespace :projects do
+      get '/', :to => 'base#index'
+      resources :project_types do
+        resources :custom_attributes, controller: 'project_types/custom_attributes'
+        resources :custom_validators, controller: 'project_types/custom_validators'
+        resources :categories, except: [:new, :show], controller: 'project_types/categories' do
+          member do
+            get :jstree
+          end
+        end
+        resources :form_components, controller: 'project_types/form_components' do
+          member do
+            patch :update_rank
+          end
+          collection do
+            post :create_as_copy
+          end
+        end
+      end
+      resources :topics
+      resources :spam_reports
+    end
+
   end
 
   resources :blog_posts, path: 'blog', only: [:index, :show], controller: 'blog/blog_posts'
@@ -478,6 +511,14 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
+  resources :topics, only: [:show]
+  resources :projects, only: [:show] do
+    resources :project_collaborators, only: [:create, :destroy]
+    resources :comments, only: [:update, :create, :index, :destroy] do
+      resources :spam_reports,  only: [:create, :destroy]
+    end
+  end
+
   resources :listings, only: [] do
 
     member do
@@ -515,6 +556,7 @@ DesksnearMe::Application.routes.draw do
 
   end
 
+  resources :onboarding
 
   match '/auth/:provider/callback' => 'authentications#create', via: [:get, :post]
   get "/auth/failure", to: "authentications#failure"
@@ -523,6 +565,13 @@ DesksnearMe::Application.routes.draw do
     post "users/avatar", :to => "registrations#avatar", :as => "avatar"
     get "users/edit_avatar", :to => "registrations#edit_avatar", :as => "edit_avatar"
     match "users/update_avatar", :to => "registrations#update_avatar", :as => "update_avatar", via: [:patch, :put]
+    delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
+
+    post "users/cover_image", :to => "registrations#cover_image", :as => "cover_image"
+    get "users/cover_image", :to => "registrations#edit_cover_image", :as => "edit_cover_image"
+    match "users/cover_image", :to => "registrations#update_cover_image", :as => "update_cover_image", via: [:patch, :put]
+    delete "users/cover_image", :to => "registrations#destroy_cover_image", :as => "destroy_cover_image"
+
     get "users/set_password", :to => "registrations#set_password", :as => "set_password"
     match "users/update_password", :to => "registrations#update_password", :as => "update_password", via: [:patch, :put]
     get "users/edit_notification_preferences", :to => "registrations#edit_notification_preferences", :as => "edit_notification_preferences"
@@ -531,7 +580,6 @@ DesksnearMe::Application.routes.draw do
     post "users/store_geolocated_location", :to => "registrations#store_geolocated_location", :as => "store_geolocated_location"
     get "users/", :to => "registrations#new"
     get "users/verify/:id/:token", :to => "registrations#verify", :as => "verify_user"
-    delete "users/avatar", :to => "registrations#destroy_avatar", :as => "destroy_avatar"
     get "users/:id", :to => "registrations#show", :as => "profile"
     get "users/:user_id/blog", :to => "registrations/blog#index", :as => "user_blog_posts_list"
     get "users/:user_id/blog/:id", :to => "registrations/blog#show", :as => "user_blog_post_show"
@@ -578,6 +626,12 @@ DesksnearMe::Application.routes.draw do
         delete :delete_image
       end
       resources :posts, controller: 'user_blog/blog_posts'
+    end
+
+    resources :project_types do
+      resources :projects do
+        resources :project_collaborators, only: [:create, :update, :destroy]
+      end
     end
 
     namespace :company do
@@ -773,7 +827,7 @@ DesksnearMe::Application.routes.draw do
 
   get '/dashboard', controller: 'dashboard/dashboard', action: 'index'
 
-  get "/search", :to => "search#index", :as => :search
+  get "/search/(:search_type)", :to => "search#index", :as => :search
   get "/search/categories", :to => "search#categories"
 
   resource :event_tracker, only: [:create], :controller => 'event_tracker'
@@ -784,6 +838,31 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
+  post "/follow", to: "activity_feed#follow", as: :follow
+  delete "/unfollow", to: "activity_feed#unfollow", as: :unfollow
+
+  get "/see_more_activity_feed", to: "activity_feed#activity_feed", as: :see_more_activity_feed
+  get "/see_more_following_people", to: "activity_feed#following_people", as: :see_more_following_people
+  get "/see_more_following_projects", to: "activity_feed#following_projects", as: :see_more_following_projects
+  get "/see_more_following_topics", to: "activity_feed#following_topics", as: :see_more_following_topics
+  get "/see_more_followers", to: "activity_feed#followers", as: :see_more_followers
+  get "/see_more_projects", to: "activity_feed#projects", as: :see_more_projects
+
+  resources :user_status_updates, only: [ :create ]
+
+  resources :activity_feed_event do
+    resources :spam_reports,  only: [:create, :destroy]
+
+    resources :comments, only: [:update, :create, :index, :destroy] do
+      resources :spam_reports,  only: [:create, :destroy]
+    end
+  end
+
+  resources :activity_feed_subscription, only: [] do
+    resources :comments, only: [:update, :create, :index, :destroy] do
+      resources :comment_spam_reports,  only: [:create, :destroy]
+    end
+  end
 
   resources :transactable_types do
     get '/new', as: "new_space_wizard", controller: 'transactable_types/space_wizard', action: 'new'
@@ -794,6 +873,11 @@ DesksnearMe::Application.routes.draw do
 
   resources :product_types do
     resources :product_wizard, only: [:new, :create], controller: 'product_types/product_wizard'
+    resources :categories, only: [:index, :show], :controller => 'transactable_types/categories'
+  end
+
+  resources :project_types do
+    resources :project_wizard, only: [:new, :create], controller: 'project_types/project_wizard'
     resources :categories, only: [:index, :show], :controller => 'transactable_types/categories'
   end
 

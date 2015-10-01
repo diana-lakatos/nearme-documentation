@@ -357,6 +357,7 @@ en:
           test_mode_label: "Use test payment credentials and test Twilio credentials - Marketplace must be password protected in. No live transactions or real sms-es will be sent"
           test_mode_label_link: 'Settings > Configuration'
         authentication: "Authentication"
+        webhook_token: "Webhook token"
         ga_tracking_codes: "Google Analytics Tracking Codes"
         sms: "Sms"
       documents_upload:

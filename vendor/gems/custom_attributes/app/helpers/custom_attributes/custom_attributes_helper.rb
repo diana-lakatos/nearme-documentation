@@ -1,7 +1,7 @@
 module CustomAttributes
   module CustomAttributesHelper
-    def draw_attribute_for_form(attribute, form)
-      return nil unless attribute.public && attribute.html_tag.present?
+    def draw_attribute_for_form(attribute, form, with_private = false)
+      return nil unless (attribute.public || with_private) && attribute.html_tag.present?
       form_element = ::CustomAttributes::CustomAttribute::FormElementDecorator.new(attribute)
       case attribute.html_tag.to_sym
       when :input, :select, :textarea, :radio_buttons, :date, :date_time, :time

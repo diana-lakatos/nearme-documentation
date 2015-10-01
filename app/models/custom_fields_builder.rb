@@ -18,11 +18,16 @@ class CustomFieldsBuilder
         to_object_field_notation(user_fields, 'user') +
           to_object_field_notation(company_fields, 'company') +
           to_object_field_notation(product_fields, 'product')
+      elsif @form_componentable.instance_of?(ProjectType)
+        to_object_field_notation(user_fields, 'user') +
+          to_object_field_notation(project_fields, 'project')
       else
-        raise NotImplementedError
+        raise NotImplementedError.new("Unknown form type: #{@form_type}")
       end
     when FormComponent::PRODUCT_ATTRIBUTES
       to_object_field_notation(product_fields, 'product')
+    when FormComponent::PROJECT_ATTRIBUTES
+      to_object_field_notation(project_fields, 'project')
     when FormComponent::TRANSACTABLE_ATTRIBUTES
       to_object_field_notation(dashboard_transactable_fields, 'transactable')
     when FormComponent::INSTANCE_PROFILE_TYPES
@@ -107,6 +112,10 @@ class CustomFieldsBuilder
 
   def product_fields
     @product_fields ||= form_attributes.product(@form_componentable).map(&:to_s)
+  end
+
+  def project_fields
+    @project_fields ||= form_attributes.project(@form_componentable).map(&:to_s)
   end
 
   def to_object_field_notation(array, object)

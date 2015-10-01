@@ -1,11 +1,12 @@
 class AuthenticationsController < ApplicationController
 
   skip_before_filter :redirect_to_set_password_unless_unnecessary, :only => [:create, :setup]
+  skip_before_filter :verify_authenticity_token
 
   def create
     @omniauth = request.env["omniauth.auth"]
     @oauth = Auth::Omni.new(@omniauth)
-    # if we are logged in as X, and we try to connect authentication that belongs to Y, we raise this error to prevent re-logging. 
+    # if we are logged in as X, and we try to connect authentication that belongs to Y, we raise this error to prevent re-logging.
     if @oauth.already_connected?(current_user)
       update_profile
       already_connected_to_other_user
@@ -37,15 +38,15 @@ class AuthenticationsController < ApplicationController
   def destroy
     @authentication = current_user.authentications.find(params[:id])
     if @authentication.can_be_deleted?
-      @authentication.destroy!
+      @authentication.really_destroy!
       log_disconnect_social_provider
-      flash[:deleted] = t('flash_messages.authentications.disconnected', 
+      flash[:deleted] = t('flash_messages.authentications.disconnected',
                           provider_name: @authentication.provider.titleize)
     else
-      flash[:warning] = t('flash_messages.authentications.unable_to_disconnect', 
+      flash[:warning] = t('flash_messages.authentications.unable_to_disconnect',
                           provider_name: @authentication.provider.titleize)
     end
-    redirect_to social_accounts_url
+    redirect_to redirect_after_callback_to || social_accounts_url
   end
 
   # Clear any omniauth data stored in session
@@ -79,12 +80,12 @@ class AuthenticationsController < ApplicationController
   end
 
   def same_user_already_logged_in
-    redirect_to root_path
+    redirect_to redirect_after_callback_to || root_path
   end
 
   def already_connected_to_other_user
     flash[:error] = t('flash_messages.authentications.already_connected_to_other_user') if use_flash_messages?
-    redirect_to social_accounts_path
+    redirect_to redirect_after_callback_to || social_accounts_path
   end
 
   def signed_in_successfully
@@ -102,14 +103,14 @@ class AuthenticationsController < ApplicationController
     flash[:error] = t('omniauth.email_taken_html', provider: @omniauth['provider'].titleize,
                       sign_in_link: view_context.link_to('sign in', new_user_session_path),
                       recovery_link: view_context.link_to('recover your password', new_user_password_path))
-    redirect_to root_path
+    redirect_to redirect_after_callback_to || root_path
   end
 
   def new_authentication_for_existing_user
     @oauth.create_authentication!(current_user)
     log_connect_social_provider
     flash[:success] = t('flash_messages.authentications.authentication_successful')
-    redirect_to social_accounts_path
+    redirect_to redirect_after_callback_to || social_accounts_path
   end
 
   def new_user_created_successfully
@@ -149,6 +150,12 @@ class AuthenticationsController < ApplicationController
 
   def update_profile
     @oauth.authentication.update_info
+  end
+
+  def redirect_after_callback_to
+    ret = cookies[:redirect_after_callback_to]
+    cookies[:redirect_after_callback_to] = nil
+    ret
   end
 
 end

@@ -1,0 +1,20 @@
+/* text styling */
+
+.tx-a {
+    color: #53565a;
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1.5;
+
+    @include bp($screen-mobile) {
+        font-size: 16px;
+    }
+}
+
+.tx-b {
+    margin-bottom: 15px;
+    color: #2071B9;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 1.3;
+}
