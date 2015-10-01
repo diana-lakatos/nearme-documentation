@@ -1,0 +1,5 @@
+<% if @spamable.class == ActivityFeedEvent %>
+  $("[data-event=<%= @spamable.id %>]").html('<%= escape_javascript( render partial: "shared/activity_status", locals: {event: @spamable} ) %>')
+<% else %>
+  $("[data-<%= @spamable.class.name.downcase %>-id=<%= @spamable.id %>]").html('<%= escape_javascript( render @spamable ) %>')
+<% end %>

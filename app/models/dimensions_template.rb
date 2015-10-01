@@ -7,7 +7,7 @@ class DimensionsTemplate < ActiveRecord::Base
   UNITS_OF_MEASURE = {
     'imperial' => {
       'length' => ['in', 'ft'],
-      'weight' => ['oz', 'pound'],
+      'weight' => ['oz', 'lb'],
     },
     'metric' => {
       'length' => ['cm', 'm'],
@@ -16,15 +16,75 @@ class DimensionsTemplate < ActiveRecord::Base
   }
 
   belongs_to :instance
-
   belongs_to :creator, :foreign_key => :creator_id, class_name: User
-
   belongs_to :entity, polymorphic: true
 
+  before_update :remove_shippo_id
+
   validates_presence_of  :name, :weight, :height, :width, :depth
-
   validates_with UnitsOfMeasureValidator, :attributes => [:unit_of_measure, :weight_unit, :height_unit, :width_unit, :depth_unit]
-
   validates_numericality_of :weight, :height, :width, :depth, greater_than: 0
+
+  ['depth', 'height', 'width'].each do |dimension|
+    define_method "converted_#{dimension}" do
+      if common_unit?
+        self[dimension]
+      else
+        convert(self[dimension], self["#{dimension}_unit"])
+      end
+    end
+  end
+
+  def remove_shippo_id
+    self.shippo_id = nil
+  end
+
+  def get_shippo_id
+    self.shippo_id.presence || create_shippo_parcel[:object_id]
+  end
+
+  def create_shippo_parcel
+    parcel = instance.shippo_api.create_parcel(self.to_shippo)
+    update_column :shippo_id, parcel[:object_id]
+    parcel
+  end
+
+  def to_shippo
+    {
+      length: converted_depth,
+      width: converted_width,
+      height: converted_height,
+      distance_unit: common_distance_unit,
+      weight: weight,
+      mass_unit: weight_unit
+    }
+  end
+
+  def convert(dimension, from_unit)
+    case from_unit
+    when 'm'
+      dimension * 100
+    when 'ft'
+      dimension * 12
+    else
+      dimension
+    end
+  end
+
+  def common_unit?
+    [width_unit, height_unit, depth_unit].uniq.size == 1
+  end
+
+  def common_distance_unit
+    if common_unit?
+      width_unit
+    else
+      imperial? ? 'in' : 'cm'
+    end
+  end
+
+  def imperial?
+    unit_of_measure == "imperial"
+  end
 
 end

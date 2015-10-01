@@ -1,0 +1,20 @@
+.fileupload{class: "#{options['no-multiple'] ? 'single-photo' : 'multi-photo'}"}
+  - if options[:'top-label'].present?
+    .photo-top-label
+      = options[:'top-label']
+  .uploaded
+    = uploaded_content
+
+  %div{:'data-fileupload-wrapper' => true, :'data-url' => url, :'data-name' => name}
+    .new-photo
+      = label_tag name, text
+      = file_field_tag name, multiple: !options['no-multiple'], accept: "image/*", capture: 'capture'
+
+
+    - if hint
+      %p.hint-block= hint
+    - if error_message
+      %p.error-block= error_message
+
+
+    = render 'shared/components/progress_bar'

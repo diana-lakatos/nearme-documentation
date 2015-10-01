@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :address do
-    address "42 Wallaby Way"
+    address "42 Wallaby Way, North Highlands, California"
     latitude "-33.856944"
     longitude "151.215278"
     country 'US'
@@ -14,7 +14,7 @@ FactoryGirl.define do
 
     factory :address_in_auckland do
       city "Auckland"
-      address "Parnell, Auckland 1010 New Zealand"
+      address "40 St Georges Bay Rd, Parnell, Auckland 1052, Nowa Zelandia"
       latitude "-36.858675"
       longitude "174.777303"
       address_components{{
@@ -26,19 +26,19 @@ FactoryGirl.define do
     end
 
     factory :address_in_adelaide do
-      address "Adelaide"
+      address "233 Grote St, Adelaide SA 5000, Australia"
       latitude "-41.4391386"
       longitude "147.1405474"
     end
 
     factory :address_in_cleveland do
-      address "1100 Rock and Roll Boulevard"
+      address "1100 Rock and Roll Boulevard, Cleveland, Ohio"
       latitude "41.508806"
       longitude "-81.69548"
     end
 
     factory :address_in_san_francisco do
-      address "Golden Gate Bridge"
+      address "125 Ellis St, San Francisco, CA 94102"
       latitude "37.819959"
       longitude "-122.478696"
     end

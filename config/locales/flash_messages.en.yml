@@ -176,6 +176,11 @@ en:
           deleted: 'Product Type deleted.'
       data_uploads:
         created: 'Your data has been processed successfully and is now being imported.'
+      projects:
+        topics:
+          updated: "Successfully updated topic"
+        project_types: 
+          updated: "Successfully updated project type"
     listings:
       listing_disabled: "This listing has been temporarily disabled by the owner. Displaying other listings in this location."
       listing_disabled_but_admin: "This listing has been temporarily disabled by the owner. Other users will not be able to browse it."
@@ -490,4 +495,26 @@ en:
     user_messages:
       message_archived: "Your message was archived!"
       message_sent: "Your message was sent!"
+    projects:
+      form_component:
+        created: 'Form component has been created.'
+        deleted: 'Form component has been deleted.'
+        updated: 'Form component has been updated.'
+      custom_validator:
+        created: 'Custom validator has been created.'
+        deleted: 'Custom validator has been deleted.'
+        updated: 'Custom validator has been updated.'
+      project_types:
+        created: 'Project Type created.'
+        updated: 'Project Type updated.'
+        deleted: 'Project Type deleted.'
+      category:
+        created: 'Category group created.'
+        updated: 'Category group updated.'
+        deleted: 'Category group deleted.'
+        renamed: 'Remember to reconfigure form component with new name and adjust translations!'
+      custom_attributes:
+        created: 'New attribute created.'
+        updated: 'Attribute updated.'
+        deleted: 'Attribute deleted.'
 

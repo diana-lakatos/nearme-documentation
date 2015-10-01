@@ -1,0 +1,27 @@
+- if project
+  .cell
+    %article.card-a{"data-equalize" => true}
+      %figure
+        = link_to project_path(project) do
+          -# tmp rescue - need to recreate versions
+          = image_tag project.cover_photo.image_url(:project_cover)#, width: PhotoUploader.dimensions[:project_standard][:width], height: PhotoUploader.dimensions[:project_standard][:height]
+          - if project.featured?
+            %figcaption
+              = t :featured
+      %ul.numbers
+        %li
+          = t :collaborators
+          %span= project.project_collaborators.approved.count
+        %li
+          = t :followers
+          %span= project.followers.count
+      %p.action
+        %p{:'data-follow-button' => true}
+          = render partial: 'shared/follow_button', locals: { object: project, css_class: 'tiny' }
+      %h3.hx
+        = link_to project.name, project_path(project)
+      %p.user
+        = link_to user_path(project.creator) do
+          = image_tag project.creator.avatar.url(:thumb), width: 30, height: 30
+          = project.creator.name
+      %p= custom_sanitze project.description.truncate(100)

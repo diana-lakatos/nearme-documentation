@@ -1,0 +1,60 @@
+= render 'shared/onboarding_heading', active_step: 4
+
+.wrap-a.white
+  .contain
+    = simple_form_for @user, url: wizard_path, html: { class: 'form-a', method: :put } do |f|
+      .fields
+        = f.simple_fields_for :properties, f.object.properties do |properties_form|
+          - @custom_attributes.each do |attribute|
+            = draw_attribute_for_form(attribute, properties_form)
+
+        %p
+          = t :more_info, scope: [:onboarding]
+
+        / = f.input :avatar, as: :photo_upload, wrapper_html: { class: 'sep' }, required: false
+        / = f.input :cover_image, as: :photo_upload, wrapper_html: { class: 'sep' }, required: false
+        .row{:class => ('error' if f.object.errors[:cover_image].present?)}
+          .col-md-3
+            = f.label :cover_image
+          .col-md-9
+            - if is_i18n_set?('forms.hints.user_form.cover_image')
+              %p.photo-uploader-hint
+                = t('forms.hints.user_form.cover_image')
+            .col-md-4
+              .single-photo
+                = new_file_upload_input("cover_image",
+                  cover_image_path,
+                  @user.cover_image.thumbnail_dimensions[:thumbnail],
+                  "Upload Photo",
+                  "no-multiple" => true,
+                  :error => f.object.errors.include?(:avatar).present? ? "Please upload avatar." : nil) do
+                  - if current_user.attributes['avatar']
+                    = fileupload_photo(@user.cover_image_url,
+                      destroy_cover_image_path,
+                      edit_cover_image_path,
+                      :div)
+
+        .row{:class => ('error' if f.object.errors[:avatar].present?)}
+          .col-md-3
+            = f.label :avatar
+          .col-md-9
+            - if is_i18n_set?('forms.hints.user_form.avatar')
+              %p.photo-uploader-hint
+                = t('forms.hints.user_form.avatar')
+            .col-md-4
+              .single-photo
+                = new_file_upload_input("avatar",
+                  avatar_path,
+                  @user.avatar.thumbnail_dimensions[:community_thumbnail],
+                  "Upload Photo",
+                  "no-multiple" => true,
+                  :error => f.object.errors.include?(:avatar).present? ? "Please upload avatar." : nil) do
+                  - if current_user.attributes['avatar']
+                    = fileupload_photo(@user.avatar_url(:medium),
+                      destroy_avatar_path,
+                      edit_avatar_path,
+                      :div)
+
+      %p.action
+        %button.button-a{type: "submit"}
+          = t :finish

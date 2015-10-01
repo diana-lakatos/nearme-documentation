@@ -75,25 +75,36 @@ class RegistrationsController < Devise::RegistrationsController
     @country = current_user.country_name
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
     build_approval_request_for_object(current_user) unless current_user.is_trusted?
-    render :edit, layout: 'dashboard'
+    render :edit, layout: dashboard_or_community_layout
   end
 
   def show
     @theme_name = 'buy-sell-theme'
-    @user = User.find(params[:id]).decorate
-    @company = @user.companies.first
-    if @company.present? && buyable?
-      @products = @company.products.paginate(page: params[:products_page], per_page: 8)
-    end
-    if @company.present? && bookable?
-      @listings = @company.listings.includes(:location).paginate(page: params[:services_page], per_page: 8)
-    end
-    if RatingSystem.active.any?
-      @reviews_count = Review.about_seller(@user).count
-      @reviews_about_buyer_count = Review.about_buyer(@user).count
-      @reviews_left_by_seller_count = Review.left_by_seller(@user).count
-      @reviews_left_by_buyer_count = Review.left_by_buyer(@user).count
-      @total_reviews_count = @reviews_count + @reviews_about_buyer_count + @reviews_left_by_seller_count + @reviews_left_by_buyer_count
+    @user = User.find(params[:id])
+
+    if platform_context.instance.is_community?
+      @projects = IntelFakerService.projects(4)
+
+      @feed = ActivityFeedService.new(@user)
+      @events = @feed.events(params)
+
+      @following = @user.feed_following(params)
+      @followers = @user.feed_followers(params)
+    else
+      @company = @user.companies.first
+      if @company.present? && buyable?
+        @products = @company.products.paginate(page: params[:products_page], per_page: 8)
+      end
+      if @company.present? && bookable?
+        @listings = @company.listings.includes(:location).paginate(page: params[:services_page], per_page: 8)
+      end
+      if RatingSystem.active.any?
+        @reviews_count = Review.about_seller(@user).count
+        @reviews_about_buyer_count = Review.about_buyer(@user).count
+        @reviews_left_by_seller_count = Review.left_by_seller(@user).count
+        @reviews_left_by_buyer_count = Review.left_by_buyer(@user).count
+        @total_reviews_count = @reviews_count + @reviews_about_buyer_count + @reviews_left_by_seller_count + @reviews_left_by_buyer_count
+      end
     end
   end
 
@@ -121,7 +132,7 @@ class RegistrationsController < Devise::RegistrationsController
       flash[:error] = (@user.errors.full_messages + @user.properties.errors.full_messages).join(', ')
       @company = current_user.companies.first
       @country = resource.country_name
-      render :edit, layout: "dashboard"
+      render :edit, layout: dashboard_or_community_layout
     end
   end
 
@@ -161,6 +172,42 @@ class RegistrationsController < Devise::RegistrationsController
   def destroy_avatar
     @user = current_user
     @user.remove_avatar!
+    @user.save(validate: false)
+    render :text => {}, :status => 200, :content_type => 'text/plain'
+  end
+
+  def cover_image
+    @user = current_user
+    @user.cover_image = params[:cover_image]
+    if @user.save(validate: false)
+      render :text => { :url => @user.cover_image_url,
+                        :resize_url =>  edit_cover_image_path,
+                        :thumbnail_dimensions => @user.cover_image.thumbnail_dimensions[:thumbnail],
+                        :destroy_url => destroy_cover_image_path }.to_json, :content_type => 'text/plain'
+    else
+      render :text => [{:error => @user.errors.full_messages}].to_json,:content_type => 'text/plain', :status => 422
+    end
+  end
+
+  def edit_cover_image
+    if request.xhr?
+      render partial: 'dashboard/photos/resize_form', :locals => { :form_url => update_cover_image_path, :object => current_user.cover_image, :object_url => current_user.cover_image_url(:original) }
+    end
+  end
+
+  def update_cover_image
+    @user = current_user
+    @user.cover_image_transformation_data = { :crop => params[:crop], :rotate => params[:rotate] }
+    if @user.save(validate: false)
+      render partial: 'dashboard/photos/resize_succeeded'
+    else
+      edit_cover_image
+    end
+  end
+
+  def destroy_cover_image
+    @user = current_user
+    @user.remove_cover_image!
     @user.save(validate: false)
     render :text => {}, :status => 200, :content_type => 'text/plain'
   end
@@ -240,7 +287,8 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def social_accounts
-    render layout: 'dashboard'
+    cookies[:redirect_after_callback_to] = {value: request.path, expires: 1.hour.from_now}
+    render layout: dashboard_or_community_layout
   end
 
   def edit_notification_preferences
@@ -330,5 +378,5 @@ class RegistrationsController < Devise::RegistrationsController
       whitelisted[:properties] = params[:user][:properties] if params[:user][:properties]
     end
   end
-end
 
+end

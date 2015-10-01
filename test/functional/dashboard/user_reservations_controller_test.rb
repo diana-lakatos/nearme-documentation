@@ -63,7 +63,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
                          "DESCRIPTION:Aliquid eos ab quia officiis sequi.",
                          "URL:#{url}",
                          "SUMMARY:ICS Listing",
-                         "LOCATION:42 Wallaby Way",
+                         "LOCATION:42 Wallaby Way\\, North Highlands\\, California",
                          "END:VEVENT",
                          "BEGIN:VEVENT",
                          "CREATED;VALUE=DATE-TIME:20130628T100500Z",
@@ -74,7 +74,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
                          "DESCRIPTION:Aliquid eos ab quia officiis sequi.",
                          "URL:#{url}",
                          "SUMMARY:ICS Listing",
-                         "LOCATION:42 Wallaby Way",
+                         "LOCATION:42 Wallaby Way\\, North Highlands\\, California",
                          "END:VEVENT",
                          "BEGIN:VEVENT",
                          "CREATED;VALUE=DATE-TIME:20130628T100500Z",
@@ -85,7 +85,7 @@ class Dashboard::UserReservationsControllerTest < ActionController::TestCase
                          "DESCRIPTION:Aliquid eos ab quia officiis sequi.",
                          "URL:#{url}",
                          "SUMMARY:ICS Listing",
-                         "LOCATION:42 Wallaby Way",
+                         "LOCATION:42 Wallaby Way\\, North Highlands\\, California",
                          "END:VEVENT",
                          "END:VCALENDAR"]
       assert_equal expected_result, response.body.split("\r\n").reject { |el| el.include?('DTSTAMP') }

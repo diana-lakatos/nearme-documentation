@@ -1,0 +1,55 @@
+.user-a
+  - if @user.cover_image.present?
+    .bg{style: "background-image: url(#{@user.cover_image.url})"}
+  - else
+    .bg
+  .contain
+    .header
+      %figure
+        = image_tag @user.avatar.url(:big), size: "180x180", alt: @user.name
+      %h2.hx= @user.name
+      = @user.decorate.display_address
+      - if @user.featured?
+        %p.label.featured
+          = t :featured_user
+    %nav.navbar-a
+      %ul.nav.nav-tabs{role: "tablist"}
+        %li.active
+          = link_to '#activity', role: "tab", :'data-toggle' => "tab" do
+            = t(:activity)
+        %li
+          = link_to '#following', role: "tab", :'data-toggle' => "tab" do
+            = t :following
+            %small= "(#{@user.following_count})"
+        %li
+          = link_to '#followers', role: "tab", :'data-toggle' => "tab" do
+            = t :followers
+            %small= "(#{@user.followers_count})"
+        %li
+          = link_to '#projects', role: "tab", :'data-toggle' => "tab" do
+            = t :projects
+            %small= "(#{@user.all_projects.count})"
+      %p
+        - if current_user.try(:id) == resource.id
+          = link_to t(:edit), dashboard_profile_path, class: 'button-a small'
+        - elsif current_user && InstanceAdminAuthorizer.new(current_user).authorized?('Manage')
+          = link_to t(:edit), edit_instance_admin_manage_user_path, class: 'button-a small', rel: "modal"
+        - if current_user.try(:id) != resource.id
+          %p{:'data-follow-button' => true}
+            = render partial: 'shared/follow_button', locals: { object: @user }
+
+.tab-content
+  #activity.tab-pane.fade.active{:role => "tabpanel"}
+    = render 'show_activity', object: @user, feed: @feed
+
+  #following.tab-pane.fade{:role => "tabpanel"}
+    = render 'show_following', object: @user, projects: @following.projects, topics: @following.topics, users: @following.users
+
+  #followers.tab-pane.fade{:role => "tabpanel"}
+    .wrap-a.reduce-top
+      .contain
+        .box-a= render 'shared/show_followers', object: @user
+
+  #projects.tab-pane.fade{:role => "tabpanel"}
+    = render 'show_projects', object: @user
+

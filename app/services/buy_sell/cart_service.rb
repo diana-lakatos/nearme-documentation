@@ -14,13 +14,13 @@ class BuySell::CartService
 
     begin
       populator.add(product.master, quantity)
-    rescue
       update_order(@order)
-      @errors << populator.errors.full_messages.join('\n')
+    rescue ActiveRecord::RecordInvalid => e
+      update_order(@order) rescue '' # I have no idea what I'm doing. This was throwing exception
+      @errors << e.to_s
       return false
     end
 
-    update_order(@order)
   end
 
   def remove_item(item_id)

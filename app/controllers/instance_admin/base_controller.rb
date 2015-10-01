@@ -85,6 +85,12 @@ class InstanceAdmin::BaseController < ApplicationController
     'shipping_profiles' => { default_action: 'index' },
   }
 
+  PROJECTS_CONTROLLERS = {
+    'project_types'  => { default_action: 'index' },
+    'topics'  => { default_action: 'index' },
+    'spam_reports'  => { default_action: 'index' }
+  }
+
   def index
     redirect_to url_for([:instance_admin, @authorizer.first_permission_have_access_to])
   end

@@ -51,15 +51,12 @@ module ShippoApi
 
   class ShippoFromAddressFillerFromSpree
 
-    def initialize(spree_object, package)
+    def initialize(company)
       @options = {}
-      stock_location = spree_object
 
       # We take the info instead from the user's first company as the address_object
       # in the current implementation will not have the info set
-      products = package.contents.map(&:variant).map(&:product).compact.uniq
-      creator_user = products.try(:first).try(:user)
-      company = creator_user.try(:companies).try(:first)
+      creator_user = company.creator
 
       if company.present?
         @options[:name] = creator_user.name
@@ -70,9 +67,9 @@ module ShippoApi
         @options[:state] = company.state_code
         @options[:zip] = company.postcode
         @options[:country] = company.iso_country_code
-        @options[:phone] = creator_user.phone
+        @options[:phone] = creator_user.full_mobile_number
         @options[:email] = creator_user.email
-        @options[:street_no] = company.try(:company_address).try(:street_number).to_s
+        @options[:street_no] = company.street_number.to_s
       end
     end
 
@@ -197,7 +194,42 @@ module ShippoApi
       end
     end
 
-    def get_rates(address_from_info, address_to_info, parcel_info, customs_item_info, customs_declaration_info)
+    def create_address(address)
+      address = {
+        object_purpose: 'PURCHASE'
+      }.merge(address)
+      Shippo::Address.create(address)
+    end
+
+    def get_address(id)
+      Shippo::Address.get(id)
+    end
+
+    def validate_address(id)
+      get_address(id).validate
+    end
+
+    def create_parcel(parcel)
+      Shippo::Parcel.create(parcel)
+    end
+
+    def get_rate(id)
+      rate = Shippo::Rate.get(id)
+      decorate_rate(rate)
+    end
+
+    def decorate_rate(rate)
+      rate = rate.to_hash
+      currency_subunits = Money::Currency.find(rate[:currency]).subunit_to_unit
+      rate[:amount_cents] = rate[:amount].to_f * currency_subunits
+      if rate[:insurance_amount] && rate[:insurance_currency]
+        currency_subunits = Money::Currency.find(rate[:insurance_currency]).subunit_to_unit
+        rate[:insurance_amount_cents] = rate[:insurance_amount].to_f * currency_subunits
+      end
+      rate
+    end
+
+    def get_rates(address_from_info, address_to_info, parcel_info, customs_item_info = nil, customs_declaration_info = nil)
       default_result_rates = []
       result_rates = default_result_rates
 
@@ -217,7 +249,14 @@ module ShippoApi
         customs_declaration = Shippo::Customs_Declaration.create(customs_declaration_info.to_hash.merge({ :items => customs_item['object_id'] }))
       end
 
+      shipment = create_shipment(address_from, address_to, parcel, customs_declaration)
 
+      get_rates_for_shipment(shipment)
+    rescue
+      return default_result_rates
+    end
+
+    def create_shipment(address_from, address_to, parcel, customs_declaration = nil, extra = {})
       shipment_info = {
         :object_purpose => 'PURCHASE',
         :submission_type => 'DROPOFF',
@@ -230,33 +269,40 @@ module ShippoApi
         shipment_info.merge!({ :customs_declaration => customs_declaration })
       end
 
-      shipment = Shippo::Shipment.create(shipment_info)
+      shipment_info.merge!(extra)
 
-      attempts = 0
-      while ["QUEUED","WAITING"].include?(shipment.object_status) && (attempts < MAX_GET_RATE_ATTEMPTS) do
-        shipment = Shippo::Shipment.get(shipment["object_id"])
-        attempts += 1
+      Shippo::Shipment.create(shipment_info)
+    end
+
+    def get_rates_for_shipment(shipment)
+      begin
+        Timeout::timeout(10) do
+          while ["QUEUED","WAITING"].include?(shipment.object_status) do
+            shipment = Shippo::Shipment.get(shipment["object_id"])
+          end
+        end
+        shipment.rates().map{ |rate| decorate_rate(rate) }
+      rescue Timeout::Error
+        []
       end
+    end
 
-      result_rates = shipment.rates()
+    def create_transaction(shippo_rate_id)
+      transaction = Shippo::Transaction.create(:rate => shippo_rate_id)
 
-      result_rates
-    rescue
-      return default_result_rates
+      Timeout::timeout(30) do
+        while ["QUEUED","WAITING"].include?(transaction.object_status) do
+          transaction = Shippo::Transaction.get(transaction["object_id"])
+        end
+      end
+      transaction
     end
 
     def purchase_rate(shippo_rate_id)
       default_result_purchase = nil
       result_purchase = default_result_purchase
 
-      transaction = Shippo::Transaction.create(:rate => shippo_rate_id)
-
-      attempts = 0
-      while ["QUEUED","WAITING"].include?(transaction.object_status) && (attempts < MAX_BUY_RATE_ATTEMPTS) do
-        transaction = Shippo::Transaction.get(transaction["object_id"])
-        attempts += 1
-      end
-
+      transaction = create_transaction(shippo_rate_id)
       if transaction.object_status != "ERROR"
         result_purchase = ShippoTransactionResultInfo.new(:label_url => transaction.label_url, :tracking_number => transaction.tracking_number)
       end

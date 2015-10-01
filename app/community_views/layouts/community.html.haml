@@ -1,0 +1,28 @@
+!!!
+%html{:lang => "en"}
+
+  = render 'shared/head'
+
+  %body
+    .root-a
+      .wrap
+        %header#top.top-a
+          .inner
+            .contain
+              %h1.logo
+                = link_to root_url, accesskey: 'h' do
+                  = image_tag "intel/logo-white.png", width: 59, height: 39, alt: 'Intel'
+                  = t :developer_mesh
+
+              = render 'shared/topnav' unless @omit_topnav
+
+        %section#content.content-a
+          = yield
+
+        = yield :tutorial
+
+    = render 'shared/footer'
+
+    = render 'shared/components/modal'
+    = javascript_include_tag 'community'
+    = yield :page_scripts

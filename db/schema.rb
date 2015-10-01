@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150923210250) do
+ActiveRecord::Schema.define(version: 20151001150516) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,25 +27,24 @@ ActiveRecord::Schema.define(version: 20150923210250) do
     t.text     "affected_objects_identifiers", default: [], array: true
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "event_source_id"
+    t.string   "event_source_type"
   end
 
   add_index "activity_feed_events", ["instance_id", "followed_id", "followed_type"], name: "activity_feed_events_instance_followed", using: :btree
-  add_index "activity_feed_events", ["instance_id"], name: "index_activity_feed_events_on_instance_id", using: :btree
 
   create_table "activity_feed_subscriptions", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "follower_id"
-    t.string   "follower_type"
     t.integer  "followed_id"
     t.string   "followed_type"
     t.string   "followed_identifier"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "active",              default: true
   end
 
   add_index "activity_feed_subscriptions", ["instance_id", "followed_id", "followed_type"], name: "activity_feed_subscriptions_instance_followed", using: :btree
-  add_index "activity_feed_subscriptions", ["instance_id", "follower_id", "follower_type"], name: "activity_feed_subscriptions_instance_follower", using: :btree
-  add_index "activity_feed_subscriptions", ["instance_id"], name: "index_activity_feed_subscriptions_on_instance_id", using: :btree
 
   create_table "additional_charge_types", force: :cascade do |t|
     t.string   "name",                           limit: 255
@@ -402,6 +401,21 @@ ActiveRecord::Schema.define(version: 20150923210250) do
   add_index "ckeditor_assets", ["assetable_type", "type", "assetable_id"], name: "idx_ckeditor_assetable_type", using: :btree
   add_index "ckeditor_assets", ["instance_id"], name: "index_ckeditor_assets_on_instance_id", using: :btree
 
+  create_table "comments", force: :cascade do |t|
+    t.integer  "commentable_id"
+    t.string   "commentable_type"
+    t.text     "body"
+    t.string   "title"
+    t.integer  "creator_id"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  add_index "comments", ["creator_id"], name: "index_comments_on_creator_id", using: :btree
+  add_index "comments", ["instance_id", "commentable_id", "commentable_type"], name: "index_on_commentable", using: :btree
+
   create_table "companies", force: :cascade do |t|
     t.integer  "creator_id"
     t.string   "name",                limit: 255
@@ -618,6 +632,7 @@ ActiveRecord::Schema.define(version: 20150923210250) do
     t.boolean  "use_as_default",                                      default: false
     t.integer  "entity_id"
     t.string   "entity_type",     limit: 255
+    t.string   "shippo_id"
   end
 
   create_table "document_requirements", force: :cascade do |t|
@@ -944,16 +959,28 @@ ActiveRecord::Schema.define(version: 20150923210250) do
     t.string   "search_text",                             limit: 255
     t.integer  "last_index_job_id"
     t.string   "context_cache_key",                       limit: 255
+    t.string   "encrypted_shippo_api_token",              limit: 255
     t.string   "encrypted_webhook_token"
     t.boolean  "is_community",                                                                default: false
     t.string   "encrypted_github_consumer_key",           limit: 255
     t.string   "encrypted_github_consumer_secret",        limit: 255
     t.string   "encrypted_google_oauth2_consumer_key",    limit: 255
     t.string   "encrypted_google_oauth2_consumer_secret", limit: 255
-    t.string   "encrypted_shippo_api_token",              limit: 255
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
+
+  create_table "links", force: :cascade do |t|
+    t.string   "url"
+    t.string   "image"
+    t.string   "text"
+    t.integer  "instance_id"
+    t.integer  "linkable_id"
+    t.string   "linkable_type"
+    t.datetime "deleted_at"
+  end
+
+  add_index "links", ["instance_id", "linkable_id", "linkable_type"], name: "index_links_on_instance_id_and_linkable_id_and_linkable_type", using: :btree
 
   create_table "listing_types", force: :cascade do |t|
     t.string   "name",        limit: 255
@@ -1284,10 +1311,10 @@ ActiveRecord::Schema.define(version: 20150923210250) do
     t.string   "external_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "followers_count",       default: 0,     null: false
     t.boolean  "seek_collaborators",    default: false
     t.text     "summary"
     t.boolean  "featured",              default: false
-    t.integer  "followers_count",       default: 0,     null: false
     t.datetime "draft_at"
   end
 
@@ -1564,6 +1591,66 @@ ActiveRecord::Schema.define(version: 20150923210250) do
   end
 
   add_index "schedules", ["instance_id", "scheduable_id", "scheduable_type"], name: "index_schedules_scheduable", using: :btree
+
+  create_table "shipments", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "reservation_id"
+    t.boolean  "is_insured",            default: false
+    t.integer  "price"
+    t.string   "price_currency"
+    t.integer  "insurance_value"
+    t.string   "insurance_currency"
+    t.string   "label_url"
+    t.string   "tracking_number"
+    t.string   "tracking_url_provider"
+    t.string   "shippo_rate_id"
+    t.string   "shippo_transaction_id"
+    t.text     "shippo_errors"
+    t.string   "direction",             default: "outbound"
+    t.datetime "deleted_at"
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
+  end
+
+  add_index "shipments", ["instance_id", "reservation_id"], name: "index_shipments_on_instance_id_and_reservation_id", using: :btree
+
+  create_table "shipping_addresses", force: :cascade do |t|
+    t.integer  "instance_id"
+    t.integer  "shipment_id"
+    t.integer  "user_id"
+    t.string   "shippo_id"
+    t.string   "name"
+    t.string   "company"
+    t.string   "street1"
+    t.string   "street2"
+    t.string   "city"
+    t.string   "state"
+    t.string   "zip"
+    t.string   "country"
+    t.string   "phone"
+    t.string   "email"
+    t.datetime "deleted_at"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "shipping_addresses", ["instance_id", "shipment_id"], name: "index_shipping_addresses_on_instance_id_and_shipment_id", using: :btree
+  add_index "shipping_addresses", ["instance_id", "user_id"], name: "index_shipping_addresses_on_instance_id_and_user_id", using: :btree
+
+  create_table "spam_reports", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "spamable_id"
+    t.integer  "instance_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.string   "spamable_type"
+    t.string   "ip_address"
+  end
+
+  add_index "spam_reports", ["instance_id"], name: "index_spam_reports_on_instance_id", using: :btree
+  add_index "spam_reports", ["spamable_id"], name: "index_spam_reports_on_spamable_id", using: :btree
+  add_index "spam_reports", ["user_id"], name: "index_spam_reports_on_user_id", using: :btree
 
   create_table "spree_addresses", force: :cascade do |t|
     t.string   "firstname",         limit: 255
@@ -2295,6 +2382,7 @@ ActiveRecord::Schema.define(version: 20150923210250) do
     t.datetime "updated_at"
     t.integer  "stock_location_id"
     t.integer  "return_authorization_reason_id"
+    t.integer  "instance_id"
   end
 
   add_index "spree_return_authorizations", ["return_authorization_reason_id"], name: "index_return_authorizations_on_return_authorization_reason_id", using: :btree
@@ -3048,11 +3136,31 @@ ActiveRecord::Schema.define(version: 20150923210250) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "featured",        default: false
-    t.integer  "followers_count", default: 0,     null: false
+    t.integer  "followers_count",                   default: 0,     null: false
+    t.boolean  "featured",                          default: false
+    t.string   "cover_image"
+    t.integer  "cover_image_original_height"
+    t.integer  "cover_image_original_width"
+    t.text     "cover_image_transformation_data"
+    t.string   "cover_image_original_url"
+    t.datetime "cover_image_versions_generated_at"
+    t.string   "image"
+    t.integer  "image_original_height"
+    t.integer  "image_original_width"
+    t.text     "image_transformation_data"
+    t.string   "image_original_url"
+    t.datetime "image_versions_generated_at"
   end
 
   add_index "topics", ["instance_id", "category_id"], name: "index_topics_on_instance_id_and_category_id", using: :btree
+
+  create_table "topics_user_status_updates", id: false, force: :cascade do |t|
+    t.integer "topic_id",              null: false
+    t.integer "user_status_update_id", null: false
+  end
+
+  add_index "topics_user_status_updates", ["topic_id", "user_status_update_id"], name: "topic_usu_id", using: :btree
+  add_index "topics_user_status_updates", ["user_status_update_id", "topic_id"], name: "usu_topic_id", using: :btree
 
   create_table "transactable_types", force: :cascade do |t|
     t.string   "name",                                       limit: 255
@@ -3114,8 +3222,9 @@ ActiveRecord::Schema.define(version: 20150923210250) do
     t.boolean  "searchable",                                                                     default: true
     t.boolean  "action_regular_booking",                                                         default: true
     t.boolean  "action_continuous_dates_booking",                                                default: false
-    t.boolean  "search_location_type_filter",                                                    default: true
     t.boolean  "rental_shipping",                                                                default: false
+    t.boolean  "search_location_type_filter",                                                    default: true
+    t.boolean  "show_company_name",                                                              default: true
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -3136,8 +3245,8 @@ ActiveRecord::Schema.define(version: 20150923210250) do
     t.boolean  "listings_public"
     t.boolean  "enabled",                                    default: true
     t.text     "metadata"
-    t.datetime "created_at",                                                       null: false
-    t.datetime "updated_at",                                                       null: false
+    t.datetime "created_at",                                                     null: false
+    t.datetime "updated_at",                                                     null: false
     t.integer  "transactable_type_id"
     t.integer  "parent_transactable_id"
     t.string   "external_id",                    limit: 255
@@ -3155,12 +3264,12 @@ ActiveRecord::Schema.define(version: 20150923210250) do
     t.integer  "fixed_price_cents"
     t.integer  "min_fixed_price_cents"
     t.integer  "max_fixed_price_cents"
-    t.float    "average_rating",                             default: 0.0,         null: false
+    t.float    "average_rating",                             default: 0.0,       null: false
     t.string   "booking_type",                   limit: 255, default: "regular"
     t.boolean  "manual_payment",                             default: false
     t.integer  "wish_list_items_count",                      default: 0
     t.integer  "quantity",                                   default: 1
-    t.integer  "opened_on_days",                             default: [],                       array: true
+    t.integer  "opened_on_days",                             default: [],                     array: true
     t.integer  "minimum_booking_minutes",                    default: 60
     t.integer  "book_it_out_discount"
     t.integer  "book_it_out_minimum_qty"
@@ -3171,7 +3280,8 @@ ActiveRecord::Schema.define(version: 20150923210250) do
     t.boolean  "confirm_reservations",                       default: true
     t.datetime "last_request_photos_sent_at"
     t.string   "capacity",                       limit: 255
-    t.string   "rental_shipping_type",           limit: 255, default: "no_rental"
+    t.string   "rental_shipping_type"
+    t.integer  "insurance_value_cents"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
@@ -3307,6 +3417,19 @@ ActiveRecord::Schema.define(version: 20150923210250) do
   add_index "user_relationships", ["follower_id", "followed_id", "deleted_at"], name: "index_user_relationships_on_follower_id_and_followed_id", unique: true, using: :btree
   add_index "user_relationships", ["follower_id"], name: "index_user_relationships_on_follower_id", using: :btree
 
+  create_table "user_status_updates", force: :cascade do |t|
+    t.text     "text"
+    t.integer  "user_id"
+    t.integer  "instance_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.integer  "updateable_id"
+    t.string   "updateable_type"
+  end
+
+  add_index "user_status_updates", ["instance_id"], name: "index_user_status_updates_on_instance_id", using: :btree
+  add_index "user_status_updates", ["updateable_id", "updateable_type"], name: "usu_updateable", using: :btree
+
   create_table "user_topics", force: :cascade do |t|
     t.integer  "instance_id"
     t.integer  "user_id"
@@ -3402,11 +3525,18 @@ ActiveRecord::Schema.define(version: 20150923210250) do
     t.string   "paypal_merchant_id",                     limit: 255
     t.float    "left_by_seller_average_rating",                      default: 0.0
     t.float    "left_by_buyer_average_rating",                       default: 0.0
-    t.boolean  "featured",                                           default: false
     t.integer  "followers_count",                                    default: 0,                                                                                   null: false
     t.integer  "following_count",                                    default: 0,                                                                                   null: false
+    t.boolean  "featured",                                           default: false
     t.integer  "projects_count"
     t.boolean  "onboarding_completed",                               default: false
+    t.string   "cover_image"
+    t.integer  "cover_image_original_height"
+    t.integer  "cover_image_original_width"
+    t.text     "cover_image_transformation_data"
+    t.string   "cover_image_original_url"
+    t.datetime "cover_image_versions_generated_at"
+    t.boolean  "tutorial_displayed",                                 default: false
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

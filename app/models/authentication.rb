@@ -26,7 +26,7 @@ class Authentication < ActiveRecord::Base
   after_create :find_friends
   after_create :update_info
 
-  PROVIDERS = ["Facebook", "LinkedIn", "Twitter", "Instagram"]
+  PROVIDERS = ["Facebook", "LinkedIn", "Twitter", "Instagram", "Google_OAuth2", "Github"]
   ALLOWED_LOGIN_PROVIDERS = PROVIDERS - ["Instagram"]
 
   def social_connection
@@ -47,7 +47,7 @@ class Authentication < ActiveRecord::Base
   end
 
   def self.provider_class(provider)
-    "Authentication::#{provider.titleize}Provider".constantize
+    "Authentication::#{provider.camelize}Provider".constantize
   end
 
   def connections_count

@@ -13,7 +13,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
     @transactable = @transactable_type.transactables.build company: @company, booking_type: @transactable_type.booking_choices.first
     @transactable.availability_template_id = @transactable_type.availability_templates.try(:first).try(:id)
     build_approval_request_for_object(@transactable) unless @transactable.is_trusted?
-    @photos = current_user.photos.where(transactable_id: nil)
+    @photos = current_user.photos.where(owner_id: nil)
     build_document_requirements_and_obligation if platform_context.instance.documents_upload_enabled?
   end
 

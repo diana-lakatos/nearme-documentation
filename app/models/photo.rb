@@ -10,9 +10,8 @@ class Photo < ActiveRecord::Base
 
   ranks :position, with_same: [:transactable_id]
 
-  belongs_to :listing, -> { with_deleted }, class_name: "Transactable", foreign_key: 'transactable_id'
+  belongs_to :owner, -> { with_deleted }, polymorphic: true
   belongs_to :creator, -> { with_deleted }, class_name: "User"
-  # attr_accessible :creator_id, :transactable_id, :caption, :image, :image_versions_generated_at, :image_transformation_data, :position
   belongs_to :instance
 
   default_scope -> { rank(:position) }
@@ -25,6 +24,26 @@ class Photo < ActiveRecord::Base
 
   # Don't delete the photo from s3
   skip_callback :commit, :after, :remove_image!
+
+  def listing
+    owner_type == 'Transactable' ? owner : nil
+  end
+
+  def listing=(object)
+    self.owner = object
+  end
+
+  after_commit :project_file_added_callback, on: [:create, :update]
+
+  def project_file_added_callback
+    if image_changed? && owner.class == Project
+      ActivityFeedEvent.create(
+        followed: self.owner,
+        affected_objects: self.owner.topics.to_a,
+        event: :project_file_added
+      )
+    end
+  end
 
   def image_original_url=(value)
     super

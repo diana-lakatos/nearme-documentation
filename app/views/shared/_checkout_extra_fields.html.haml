@@ -1,53 +1,17 @@
 = f.simple_fields_for f.object.checkout_extra_fields do |cef|
   = cef.simple_fields_for cef.object.user do |uf|
-    - if uf.object.field_blank_or_changed?(:country_name) || uf.object.field_blank_or_changed?(:mobile_number) || uf.object.field_blank_or_changed?(:phone)
-      .contact-information-fields
-        .row-fluid
-          .span6
-            = uf.label :country_name, class: 'control-label' do
-              %abbr{title: 'required'} *
-              = t('simple_form.labels.user.country_name')
-
-            .controls.country-name
-              = uf.input :country_name, label: false, as: :select, collection: user_country_name_options, selected: user_country_default(@country), input_html: { class: "custom-select", data: { 'country-selector' => 1 } }
-      
-          .span6
-            .mobile-number-field.column
-              = uf.label :mobile_number do
-                %abbr{title: 'required'} *
-                = t('simple_form.labels.user.mobile_number')
-              .controls
-                .phone-number-country-code-field
-                  .country-calling-code
-                    = "+#{uf.object.country.calling_code}" if uf.object.country
-                  = uf.text_field :mobile_number, data: { 'mobile-number' => 1 }
-                - if uf.object.errors[:"mobile_number"].present?
-                  %p.error-block= uf.object.errors['mobile_number'].first
-
-        .row-fluid
-          .span6
-          .span6
-            .phone-number-field.column
-              = uf.label :phone do
-                %abbr{title: 'required'} *
-                = t('simple_form.labels.user.phone')
-              .controls
-                .phone-number-country-code-field
-                  .country-calling-code
-                    = "+#{uf.object.country.calling_code}" if uf.object.country
-                  = uf.text_field :phone, data: { 'phone' => 1 }
-                - if uf.object.errors[:"phone"].present?
-                  %p.error-block= uf.object.errors['phone'].first
-          .clearfix
-
     - if uf.object.field_blank_or_changed?(:first_name)
       = uf.input :first_name, required: true
-
     - if uf.object.field_blank_or_changed?(:last_name)
       = uf.input :last_name, required: true
-
     - if defined?(show_company_name) && show_company_name && uf.object.field_blank_or_changed?(:company_name)
       = uf.input :company_name, as: :string
+    - if uf.object.field_blank_or_changed?(:country_name)
+      = uf.input :country_name, as: :select, collection: user_country_name_options, selected: user_country_default(@country), input_html: { class: "select2", data: { 'country-selector' => 1 } }
+    - if uf.object.field_blank_or_changed?(:phone)
+      = uf.input :phone, required: true, wrapper: :bs_phone
+    - if uf.object.field_blank_or_changed?(:mobile_number)
+      = uf.input :mobile_number, required: true, wrapper: :bs_phone
 
     = uf.simple_fields_for :properties, uf.object.properties do |properties_form|
       - (uf.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|

@@ -1,0 +1,10 @@
+- step_context = ("step_" + active_step.to_s).to_sym
+.wrap-a.reduce
+  .contain
+    .header-a
+      %h2.hx
+        = t :title, scope: [:onboarding, step_context]
+      %p.tx-a
+        = t :description, scope: [:onboarding, step_context]
+      %p.step
+        = t :step_x_of_total, step: active_step, total: 4, scope: [:onboarding]

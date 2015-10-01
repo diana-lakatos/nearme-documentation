@@ -30,7 +30,7 @@ class Transactable < ActiveRecord::Base
   has_many :document_requirements, as: :item, dependent: :destroy, inverse_of: :item
   has_many :inquiries, inverse_of: :listing
   has_many :impressions, :as => :impressionable, :dependent => :destroy
-  has_many :photos, dependent: :destroy, inverse_of: :listing do
+  has_many :photos, as: :owner, dependent: :destroy do
     def thumb
       (first || build).thumb
     end
@@ -69,7 +69,7 @@ class Transactable < ActiveRecord::Base
   before_save :set_is_trusted
 
   # == Scopes
-  scope :featured, -> { where(%{ (select count(*) from "photos" where transactable_id = "listings".id) > 0  }).
+  scope :featured, -> { where(%{ (select count(*) from "photos" where owner_type LIKE 'Transactable' AND owner_id = "listings".id) > 0  }).
                         includes(:photos).order(%{ random() }).limit(5) }
   scope :draft, -> { where('transactables.draft IS NOT NULL') }
   scope :active, -> { where('transactables.draft IS NULL') }
@@ -153,7 +153,7 @@ class Transactable < ActiveRecord::Base
   validates_with PriceValidator
   validates_with CustomValidators
 
-  validates :book_it_out_minimum_qty, numericality: {greater_than_or_equal_to: 0}, allow_blank: true
+  validates :book_it_out_minimum_qty, :insurance_value, numericality: {greater_than_or_equal_to: 0}, allow_blank: true
   validates :book_it_out_discount, numericality: {greater_than: 0, less_than: 100}, allow_blank: true
   validates :booking_type, inclusion: { in: ServiceType::BOOKING_TYPES }
   validates :currency, presence: true, allow_nil: false, currency: true
@@ -186,7 +186,7 @@ class Transactable < ActiveRecord::Base
   delegate :url, to: :company
   delegate :formatted_address, :local_geocoding, :distance_from, :address, :postcode, :administrator=, to: :location, allow_nil: true
   delegate :service_fee_guest_percent, :service_fee_host_percent, :hours_to_expiration,
-    :minimum_booking_minutes, :custom_validators, to: :transactable_type
+    :minimum_booking_minutes, :custom_validators, :show_company_name, to: :transactable_type
   delegate :name, to: :creator, prefix: true
   delegate :to_s, to: :name
   delegate :favourable_pricing_rate, to: :transactable_type
@@ -199,6 +199,7 @@ class Transactable < ActiveRecord::Base
   monetize :monthly_price_cents, with_model_currency: :currency, allow_nil: true
   monetize :fixed_price_cents, with_model_currency: :currency, allow_nil: true
   monetize :exclusive_price_cents, with_model_currency: :currency, allow_nil: true
+  monetize :insurance_value_cents, with_model_currency: :currency, allow_nil: true
 
   # Defer to the parent Location for availability rules unless this Listing has specific
   # rules.
@@ -301,6 +302,10 @@ class Transactable < ActiveRecord::Base
 
   def administrator
     super.presence || creator
+  end
+
+  def rental_shipping_type
+    service_type.rental_shipping ? super : 'no_rental'
   end
 
   def desks_booked_on(date, start_minute = nil, end_minute = nil)
@@ -622,6 +627,10 @@ class Transactable < ActiveRecord::Base
 
   def possible_express_checkout?
     instance.payment_gateway(company.iso_country_code, currency).try(:express_checkout?)
+  end
+
+  def possible_delivery?
+    rental_shipping_type.in?(['delivery', 'both'])
   end
 
   # TODO: to be deleted once we get rid of instance views

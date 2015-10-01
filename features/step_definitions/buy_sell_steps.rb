@@ -112,7 +112,6 @@ Then /^I should see the checkout extra fields$/ do
   page.should have_css('input#order_checkout_extra_fields_user_mobile_number')
   page.should have_css('input#order_checkout_extra_fields_user_first_name')
   page.should have_css('input#order_checkout_extra_fields_user_last_name')
-  page.should have_css('input#order_checkout_extra_fields_user_phone')
   page.should_not have_css('input#order_checkout_extra_fields_company_name')
 end
 

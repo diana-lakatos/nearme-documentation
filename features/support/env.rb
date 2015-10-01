@@ -14,6 +14,9 @@ require 'cucumber/rails'
 require 'capybara-screenshot/cucumber'
 Capybara::Screenshot.autosave_on_failure = false
 
+require 'rack/utils'
+Capybara.app = Rack::ShowExceptions.new(DesksnearMe::Application)
+
 
 Capybara.default_wait_time = 10
 
