@@ -61,6 +61,10 @@
             %li
               = link_to main_app.dashboard_company_product_type_products_path(product_type), class: 'nav-link dropdown-toggle' do
                 %div.truncate= t('top_navbar.manage_bookable', bookable_noun: product_type.translated_bookable_noun(10))
+          - platform_context.project_types.each do |project_type|
+            %li
+              = link_to main_app.dashboard_project_type_projects_path(project_type), class: 'nav-link dropdown-toggle' do
+                %div.truncate My #{project_type.translated_bookable_noun(10)}
 
         - if platform_context.bookable? && HiddenUiControls.find('main_menu/my_bookings').visible?
           %li

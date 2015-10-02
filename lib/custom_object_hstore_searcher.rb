@@ -21,6 +21,23 @@ class CustomObjectHstoreSearcher
     end
   end
 
+  # todo - something is wrong with this code :) there is huge overlap of code between this and transactables/products
+  def projects(search)
+    perform_search = false
+    if search && search[:query].present?
+      condition, attribute_params = prepare_filtered_hstore_query('properties', search[:query], 'name', 'description')
+      if condition.present?
+        perform_search = true
+      end
+    end
+
+    if perform_search
+      @initial_scope.where(condition, *attribute_params)
+    else
+      @initial_scope
+    end
+  end
+
   def products(search)
     perform_search = false
     if search && search[:query].present?

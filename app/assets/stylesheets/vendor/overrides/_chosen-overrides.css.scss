@@ -55,7 +55,7 @@ ul.chzn-choices.chzn-choices-active{
   @include form-field-focus;
 }
 
-// overwrite default width - make its width dynamic instead of constant 
+// overwrite default width - make its width dynamic instead of constant
 .control-group .chzn-container-multi{
   width: auto !important;
   display: block !important;

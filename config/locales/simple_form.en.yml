@@ -18,6 +18,19 @@ en:
     error_notification:
       default_message: "Some errors were found, please take a look:"
     labels:
+      shipment:
+        is_insured: 'Insure parcel'
+      shipping_address:
+        name: 'Name'
+        company: 'Company'
+        city: 'City'
+        zip: 'Postcode'
+        state: 'State'
+        phone: 'Phone'
+        email: 'Email'
+        country: 'Country'
+        street1: 'Address'
+        street2: 'Address'
       support_ticket_message:
         message: "Message"
       user_message:
@@ -231,6 +244,7 @@ en:
         price_monthly: 'Monthly'
         price_hourly: 'Hourly'
         price_free: 'Free'
+        insurance_value: 'Shipping insurance value'
         price:
           fixed: 'fixed price'
           daily: 'day'
@@ -259,7 +273,7 @@ en:
         action_schedule_booking: 'Schedule Booking'
         bookable_noun: 'Bookable Noun (e.g. Desk)'
         lessor: 'Lessor (e.g. host)'
-        lessee: 'Lessee (e.g. guest)' 
+        lessee: 'Lessee (e.g. guest)'
         action_rfq: 'Request for Quote'
         action_na: 'NO ACTION'
       user:
@@ -425,6 +439,8 @@ en:
         administrator: 'Default'
 
     hints:
+      reservation_request:
+        delivery_ids: ''
       location:
         name: 'A unique title that describes the location.'
       company:

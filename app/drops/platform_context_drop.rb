@@ -43,6 +43,9 @@ class PlatformContextDrop < BaseDrop
   # logo_image
   #   logo image object containing the logo image for this marketplace
   #   logo_image.url returns the url of this logo_image
+  # hero_image
+  #   logo image object containing the logo image for this marketplace
+  #   hero_image.url returns the url of this hero_image
   # tagline
   #   tagline for this marketplace as string
   # search_field_placeholder
@@ -73,7 +76,7 @@ class PlatformContextDrop < BaseDrop
   #   HTML name of the input element to be used in search pages
   delegate :name, :bookable_noun, :pages, :platform_context, :blog_url, :twitter_url, :lessor, :lessors, :lessee, :lessees,
     :searcher_type, :search_by_keyword_placeholder, :fulltext_search?, :facebook_url, :address, :phone_number, :gplus_url,
-    :site_name, :support_url, :support_email, :logo_image, :tagline, :homepage_content, :fulltext_geo_search?,
+    :site_name, :support_url, :support_email, :logo_image, :hero_image,  :tagline, :homepage_content, :fulltext_geo_search?,
     :is_company_theme?, :call_to_action, :latest_products, :buyable?, :bookable?, :transactable_types, :product_types,
     :bookable_nouns, :bookable_nouns_plural, :search_input_name, to: :platform_context_decorator
 
@@ -96,6 +99,11 @@ class PlatformContextDrop < BaseDrop
   # url to the logo image
   def logo_url
     @platform_context_decorator.logo_image.url || image_url("assets/platform_home/logo-01-dark.png").to_s
+  end
+
+  # url to the hero image
+  def hero_url
+    @platform_context_decorator.hero_image.url || image_url("intel/hero-a-bg-a.jpg").to_s
   end
 
   # url to the "checked badge" image
@@ -199,6 +207,11 @@ class PlatformContextDrop < BaseDrop
   # "fulltext_category" or "geo_category"
   def category_search?
     fulltext_category_search? || geo_category_search?
+  end
+
+  def project_space_wizard_path
+    @project_type ||= ProjectType.first
+    routes.new_project_type_project_wizard_path(@project_type) if @project_type
   end
 
   private

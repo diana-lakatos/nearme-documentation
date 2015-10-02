@@ -36,6 +36,7 @@ class InstanceView < ActiveRecord::Base
     'reservation_mailer/notify_host_of_rejection', 'reservation_mailer/notify_host_with_confirmation',
     'reservation_mailer/notify_host_without_confirmation', 'reservation_mailer/pre_booking',
     'reservation_mailer/notify_guest_of_payment_request',
+    'reservation_mailer/notify_guest_of_shipping_details', 'reservation_mailer/notify_host_of_shipping_details',
     'rating_mailer/line_items/request_rating_of_guest_from_host',
     'rating_mailer/line_items/request_rating_of_host_and_product_from_guest',
     'spree/order_mailer/approved_email', 'spree/order_mailer/cancel_email',

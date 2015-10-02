@@ -1,0 +1,94 @@
+class ActivityFeedEvent < ActiveRecord::Base
+
+  # TODO:
+  # user_commented
+  # 
+  # topic_idz_content_pushed_to_page
+
+  EVENT_WHITELIST = %w(
+    user_followed_user
+    user_followed_project
+    user_followed_topic
+
+    user_updated_user_status
+    user_updated_project_status
+    user_updated_topic_status
+
+    user_added_photos_to_project
+
+    user_created_project
+    topic_created
+    user_commented
+  ).freeze
+
+  attr_accessor :affected_objects
+
+  auto_set_platform_context
+  scoped_to_platform_context
+
+  belongs_to :followed, -> { with_deleted }, polymorphic: true
+  belongs_to :event_source, polymorphic: true, dependent: :destroy
+
+  has_many :comments, as: :commentable, dependent: :destroy
+  has_many :spam_reports, as: :spamable
+
+  validates_inclusion_of :followed_type, in: ActivityFeedService::Helpers::FOLLOWED_WHITELIST
+  validates_inclusion_of :event, in: EVENT_WHITELIST
+
+  before_create :update_affected_objects
+  def update_affected_objects
+    if self.affected_objects.present?
+      objects = self.affected_objects.map { |object| ActivityFeedService::Helpers.object_identifier_for(object) }
+      identifier = [ActivityFeedService::Helpers.object_identifier_for(followed)]
+      self.affected_objects_identifiers = (identifier + objects).uniq
+    end
+  end
+
+  def name
+    followed.try(:name).presence || followed.id
+  end
+
+  def description
+    followed.try(:description).presence || event_source.try(:description) || quotation_for(event_source.try(:text))
+  end
+
+  def quotation_for(text)
+    if text.present?
+      "&#147;#{text}&#148;".html_safe
+    end
+  end
+
+  def event=(value)
+    super(value.try(:to_s))
+  end
+
+  def has_body?
+    %w(
+      user_created_project
+      user_created_topic
+      user_updated_user_status
+      user_updated_project_status
+      user_updated_topic_status
+      user_added_photos_to_project
+      topic_created
+      user_commented
+    ).include?(event)
+  end
+
+  def i18n_key
+    "activity_feed.events.#{event}"
+  end
+
+  def creator
+    event_source.try(:user)
+  end
+
+  def reported_by(user, ip)
+    if user
+      self.spam_reports.where(user: user).first
+    else
+      self.spam_reports.where(ip_address: ip, user: nil).first
+    end
+  end
+
+end

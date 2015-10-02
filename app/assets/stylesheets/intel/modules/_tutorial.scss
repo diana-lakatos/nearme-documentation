@@ -1,0 +1,210 @@
+/* tutorial */
+
+.tutorial-a {
+    display: none;
+    margin: 0;
+    color: #fff;
+    font-size: 30px;
+    text-align: center;
+
+    &.is-active {
+        display: block;
+    }
+
+    .mask {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1001;
+        margin: 0;
+        border: 0 solid rgba(0, 0, 0, 0.8);
+    }
+
+    .slide {
+        display: none;
+        position: absolute;
+        z-index: 1002;
+        margin: 0;
+    }
+
+    .slide.is-active {
+        display: block;
+    }
+
+    .wrap {
+        position: relative;
+        max-width: 650px;
+    }
+
+    .wrap:before {
+        position: absolute;
+        left: 20px;
+        top: 100%;
+        content: '\e61e';
+        margin: -45px 0 0;
+        font: 100px/1 $font-icons;
+    }
+
+    .s3 .wrap:before {
+        left: auto;
+        right: 10px;
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+    }
+
+    .s4 .wrap:before {
+        left: 100%;
+        top: 0;
+        -webkit-transform: scaleX(-1) rotate(90deg);
+        transform: scaleX(-1) rotate(90deg);
+    }
+
+    .dots-a {
+        margin: 0 0 50px;
+    }
+
+    .dots-a span {
+        border-color: #fff;
+    }
+
+    .dots-a .is-active span {
+        background-color: #fff;
+    }
+
+    .button-a {
+        font-size: 22px;
+    }
+
+    .s1 {
+        left: 50%;
+        top: 200px;
+        margin-left: 200px;
+    }
+
+    .s2 {
+        left: 50%;
+        top: 100px;
+        margin-left: 200px;
+    }
+
+    .s3 {
+        right: 50%;
+        top: 100px;
+        margin-right: -100px;
+    }
+
+    .s4 {
+        left: 50%;
+        top: 150px;
+        margin-left: 60px;
+    }
+
+    @include bp(1800px) {
+
+        .s4 {
+            right: 190px;
+            top: 150px;
+        }
+    }
+
+    @include bp($screen-lg) {
+        font-size: 20px;
+
+        .wrap {
+            max-width: 450px;
+        }
+
+        .wrap:before {
+            font-size: 80px;
+        }
+
+        .button-a {
+            min-width: 100px;
+            padding: 7px 19px;
+            font-size: 16px;
+        }
+
+        .dots-a {
+            margin-bottom: 30px;
+        }
+
+        .dots-a span {
+            width: 12px;
+            height: 12px;
+        }
+
+        .s1 {
+            left: auto;
+            right: 20px;
+            max-width: 360px;
+        }
+
+        .s1 .wrap:before {
+            left: auto;
+            right: 100%;
+            margin-right: -70px;
+        }
+
+        .s2 {
+            left: auto;
+            right: 20px;
+            top: 125px;
+            max-width: 380px;
+        }
+
+        .s3 {
+            right: 450px;
+            top: 100px;
+            margin-right: 0;
+        }
+
+        .s4 {
+            left: auto;
+            right: 160px;
+            margin-left: 0;
+        }
+
+        .s4 .wrap:before {
+            margin-left: 30px;
+        }
+    }
+
+    @include bp($screen-tablet) {
+
+        .mask {
+            border-color: transparent;
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .slide {
+            position: fixed;
+            left: 30px;
+            right: 30px;
+            top: 50%;
+            bottom: auto;
+            max-width: 100%;
+            margin: 0;
+            -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+        }
+
+        .slide .wrap {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .slide .wrap:before {
+            display: none;
+        }
+    }
+
+    @include bp($screen-mobile) {
+        font-size: 16px;
+    }
+}
+
+.no-touch .is-tutorial .top-a > .inner {
+    position: relative;
+}

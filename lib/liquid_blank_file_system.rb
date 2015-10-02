@@ -7,11 +7,11 @@ module Liquid
       details = {}
 
       begin
-        details = { instance_id: context.registers[:controller].platform_context.instance.id,
-                    handlers: [:liquid],
-                    formats: [format],
-                    locale: [::I18n.locale]
-        }
+        details = {
+          handlers: [:liquid],
+          formats: [format],
+          locale: [::I18n.locale]
+        }.merge(context.registers[:controller].send(:details_for_lookup))
 
         template_body = InstanceViewResolver.instance.get_body(template_path.split('.').first, '', true, details)
       rescue

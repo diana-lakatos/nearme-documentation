@@ -266,30 +266,30 @@ class SecuredParams
 
   def user_blog
     [
-        :enabled,
-        :name,
-        :header_image,
-        :header_text,
-        :header_motto,
-        :header_logo,
-        :header_icon,
-        :facebook_app_id
+      :enabled,
+      :name,
+      :header_image,
+      :header_text,
+      :header_motto,
+      :header_logo,
+      :header_icon,
+      :facebook_app_id
     ]
   end
 
   def user_blog_post
     [
-        :title,
-        :published_at,
-        :slug,
-        :hero_image,
-        :content,
-        :excerpt,
-        :author_name,
-        :author_biography,
-        :author_avatar_img,
-        :logo,
-        :tag_list
+      :title,
+      :published_at,
+      :slug,
+      :hero_image,
+      :content,
+      :excerpt,
+      :author_name,
+      :author_biography,
+      :author_avatar_img,
+      :logo,
+      :tag_list
     ]
   end
 
@@ -313,6 +313,10 @@ class SecuredParams
       :default_search_view,
       :facebook_consumer_key,
       :facebook_consumer_secret,
+      :google_oauth2_consumer_key,
+      :google_oauth2_consumer_secret,
+      :github_consumer_key,
+      :github_consumer_secret,
       :force_accepting_tos,
       :instagram_consumer_key,
       :instagram_consumer_secret,
@@ -597,6 +601,7 @@ class SecuredParams
       :action_continuous_dates_booking,
       :bookable_noun, :lessor, :lessee, :action_schedule_booking,
       :rental_shipping,
+      :show_company_name,
       :availability_templates_attributes => nested(self.availability_template),
       :allowed_currencies => [],
       :action_type_ids => [],
@@ -802,6 +807,15 @@ class SecuredParams
     ]
   end
 
+  def comment
+    [
+      :body,
+      :title,
+      :creator_id,
+      :report_as_spam
+    ]
+  end
+
   def company(transactable_type = nil)
     [
       :name,
@@ -860,7 +874,7 @@ class SecuredParams
   def address
     [
       :address, :address2, :formatted_address, :postcode,
-      :suburb, :city, :state, :country, :street,
+      :suburb, :city, :state, :country, :street, :should_check_address,
       :latitude, :local_geocoding, :longitude, :state_code,
       address_components: [:long_name , :short_name, :types]
     ]
@@ -888,38 +902,60 @@ class SecuredParams
   end
 
   def transactable(transactable_type)
-      [
-        :name, :description, :capacity, :confirm_reservations,
-        :location_id, :availability_template_id,
-        :defer_availability_rules, :free,
-        :price_type, :draft, :enabled,
-        :hourly_price, :daily_price, :weekly_price, :monthly_price, :fixed_price, :fixed_price_cents,
-        :hourly_price_cents, :daily_price_cents, :weekly_price_cents, :monthly_price_cents,
-        :book_it_out_discount,
-        :book_it_out_minimum_qty,
-        :exclusive_price,
-        :action_rfq,
-        :quantity, :currency,
-        :action_recurring_booking,
-        :action_hourly_booking,
-        :action_free_booking,
-        :action_daily_booking,
-        :last_request_photos_sent_at, :activated_at, :rank,
-        :transactable_type_id, :transactable_type, :booking_type,
-        :rental_shipping_type, :dimensions_template_id,
-        photos_attributes: nested(self.photo),
-        approval_requests_attributes: nested(self.approval_request),
-        availability_rules_attributes: nested(self.availability_rule),
-        photo_ids: [],
-        amenity_ids: [],
-        category_ids: [],
-        dimensions_template_attributes: nested(self.dimensions_template),
-        waiver_agreement_template_ids: [],
-        schedule_attributes: nested(self.schedule),
-        document_requirements_attributes: nested(self.document_requirement),
-        upload_obligation_attributes: nested(self.upload_obligation)
+    [
+      :name, :description, :capacity, :confirm_reservations,
+      :location_id, :availability_template_id,
+      :defer_availability_rules, :free,
+      :price_type, :draft, :enabled,
+      :hourly_price, :daily_price, :weekly_price, :monthly_price, :fixed_price, :fixed_price_cents,
+      :hourly_price_cents, :daily_price_cents, :weekly_price_cents, :monthly_price_cents,
+      :book_it_out_discount,
+      :book_it_out_minimum_qty,
+      :exclusive_price,
+      :action_rfq,
+      :quantity, :currency,
+      :action_recurring_booking,
+      :action_hourly_booking,
+      :action_free_booking,
+      :action_daily_booking,
+      :last_request_photos_sent_at, :activated_at, :rank,
+      :transactable_type_id, :transactable_type, :booking_type,
+      :insurance_value,
+      :rental_shipping_type, :dimensions_template_id,
+      photos_attributes: nested(self.photo),
+      approval_requests_attributes: nested(self.approval_request),
+      availability_rules_attributes: nested(self.availability_rule),
+      photo_ids: [],
+      amenity_ids: [],
+      category_ids: [],
+      dimensions_template_attributes: nested(self.dimensions_template),
+      waiver_agreement_template_ids: [],
+      schedule_attributes: nested(self.schedule),
+      document_requirements_attributes: nested(self.document_requirement),
+      upload_obligation_attributes: nested(self.upload_obligation)
     ] +
     Transactable.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:transactable_types).try(:first)).try(:id))
+  end
+
+  def project(transactable_type, is_project_owner = false)
+    based_params = ([
+      :description,
+      :transactable_type_id,
+      :seek_collaborators,
+      photos_attributes: nested(self.photo),
+      links_attributes: nested(self.link),
+      photo_ids: [],
+      topic_ids: [],
+    ] + Project.public_custom_attributes_names((transactable_type || PlatformContext.current.try(:instance).try(:project_types).try(:first)).try(:id)))
+    based_params += [ :name, :summary, new_collaborators: [ :email, :id, :_destroy ], new_collaborators_attributes: nested(self.project_collaborator) ] if is_project_owner
+    based_params
+  end
+
+  def project_collaborator
+    [
+      :approved,
+      :email
+    ]
   end
 
   def schedule
@@ -999,9 +1035,20 @@ class SecuredParams
 
   def photo
     [
+      :id,
       :image,
       :caption,
       :position
+    ]
+  end
+
+  def link
+    [
+      :_destroy,
+      :id,
+      :url,
+      :text,
+      :image
     ]
   end
 
@@ -1041,8 +1088,10 @@ class SecuredParams
       :twitter_url,
       industry_ids: [],
       category_ids: [],
+      current_address_attributes: nested(self.address),
       companies_attributes: nested(self.company(transactable_type)),
-      approval_requests_attributes: nested(self.approval_request)
+      approval_requests_attributes: nested(self.approval_request),
+      projects_attributes: nested(self.project(transactable_type)),
     ] + User.public_custom_attributes_names(InstanceProfileType.first.try(:id))
   end
 
@@ -1060,6 +1109,18 @@ class SecuredParams
   def workflow
     [
       :name
+    ]
+  end
+
+  def topic
+    [
+      :about,
+      :name,
+      :image,
+      :cover_image,
+      :featured,
+      :category_id,
+      data_source_attributes: nested(self.data_source)
     ]
   end
 
@@ -1084,6 +1145,14 @@ class SecuredParams
       :subject,
       :layout_path
     ] + (step_associated_class.present? && defined?(step_associated_class.constantize::CUSTOM_OPTIONS) ? [custom_options: step_associated_class.constantize::CUSTOM_OPTIONS] : [])
+  end
+
+  def data_source
+    [
+      :type,
+      settings: [:endpoint],
+      fields: [],
+    ]
   end
 
   def waiver_agreement_template
@@ -1211,5 +1280,42 @@ class SecuredParams
 
   def saved_search
     %i(title query)
+  end
+
+  def shipment
+    [
+      :is_insured,
+      :direction,
+      :shippo_rate_id,
+      shipping_address_attributes: self.shipping_address
+    ]
+  end
+
+  def shipping_address
+    [
+      :user_id,
+      :shippo_id,
+      :name,
+      :company,
+      :street1,
+      :street2,
+      :city,
+      :zip,
+      :state,
+      :phone,
+      :email,
+      :country
+    ]
+  end
+
+  def user_status_update
+    [
+      :text,
+      :user_id,
+      :instance_id,
+      :topic_ids,
+      :updateable_id,
+      :updateable_type
+    ]
   end
 end

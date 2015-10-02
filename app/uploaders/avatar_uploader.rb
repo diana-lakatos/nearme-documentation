@@ -21,7 +21,10 @@ class AvatarUploader < BaseUploader
   self.dimensions = {
     :thumb => { :width => 96, :height => 96 },
     :medium => { :width => 144, :height => 144 },
+    :community_thumbnail => { :width => 200, :height => 200 },
+    :community_small => { :width => 250, :height => 200 },
     :big => { :width => 279, :height => 279 },
+    :bigger => { :width => 460, :height => 460 },
     :large => { :width => 1280, :height => 960 }
   }
 
@@ -48,9 +51,18 @@ class AvatarUploader < BaseUploader
     process resize_to_fill: [dimensions[:big][:width], dimensions[:big][:height]]
   end
 
+  version :bigger, from_version: :transformed, if: :delayed_processing? do
+    process resize_to_fill: [dimensions[:bigger][:width], dimensions[:bigger][:height]]
+  end
+
   version :large, from_version: :transformed, if: :delayed_processing? do
     process resize_to_fill: [dimensions[:large][:width], dimensions[:large][:height]]
   end
+
+  version :community_small do
+    process resize_to_fill: [dimensions[:community_small][:width], dimensions[:community_small][:height]]
+  end
+
 
   def default_url(*args)
     version = args.shift

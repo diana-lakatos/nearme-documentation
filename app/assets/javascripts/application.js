@@ -128,7 +128,7 @@ window.DNM = {
     })
 
     container.find('.select2').select2({
-      minimumResultsForSearch: -1
+      minimumResultsForSearch: 20
     });
   },
 

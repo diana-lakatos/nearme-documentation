@@ -1,0 +1,115 @@
+en:
+  simple_form:
+    "yes": 'Yes'
+    "no": 'No'
+    required:
+      text: 'required'
+      mark: '*'
+      # You can uncomment the line below if you need to overwrite the whole required html.
+      # When using html, text and mark won't be used.
+      # html: '<abbr title="required">*</abbr>'
+    error_notification:
+      default_message: "Please review the problems below:"
+
+    placeholders:
+      defaults:
+        topic_ids: 'Topic'
+      search:
+        search: 'Search'
+
+      activity_feed:
+        content: 'What are you working on?'
+        topics: 'Select topics'
+
+      comment:
+        comment: 'Please, leave a comment'
+
+      search_filter:
+        sort: 'Sort by:'
+
+      address:
+        address: 'Enter your city'
+      onboarding:
+        short_bio: 'Ex: I’m a IoT advocate and a technology wizard'
+
+      project:
+        name: 'Enter the name of your project'
+        summary: 'Summarize this project in less than 140 characters'
+        description: 'Tell us all about this project'
+        Topic: 'Select Topic'
+        link_url: 'Link to'
+        link_label: 'Text to display'
+        add_collaborators: 'Enter email address'
+        links:
+          url: 'Link to'
+          text: 'Text to Display'
+          photo: 'Photo'
+
+      profile:
+        bio: 'Describe yourself in less than 140 characters'
+        about: 'Tell us all about yourself project'
+        location: 'Enter your city'
+
+
+
+    labels:
+      defaults:
+        topic_ids: 'Topic'
+        seek_collaborators: 'Seeking Collaborators'
+      activity_feed:
+        topics: 'Select topics'
+
+      search_filter:
+        sort: 'Sort by:'
+        collaborators: 'Seeking Collaborators'
+
+      onboarding:
+        location: 'Location'
+        'follow[]': 'Follow'
+        short_bio: 'Short Bio'
+        photo: 'Profile Photo'
+
+      project:
+        name: 'Project Name'
+        summary: 'Summary'
+        description: 'Description'
+        topic: 'Topic'
+        add_collaborators: 'Add Collaborators'
+        seek_collaborators: 'Seeking Collaborators'
+
+      photos:
+        file: 'Photo'
+        is_cover: 'Cover image'
+
+      links:
+        url: 'Link to'
+        label: 'Label'
+        photo: 'Photo'
+
+      profile:
+        bio: 'Short Bio'
+        about: 'About You'
+        avatar: 'Profile Photo'
+        cover: 'Cover Image'
+        location: 'Location'
+
+
+      notifications:
+        accept_emails: 'Accept Emails'
+
+    hints:
+      project:
+        seek_collaborators: 'You can add people to help your project'
+
+  search_submit: 'Go'
+
+  helpers:
+    submit:
+      search:
+        submit: 'Go'
+      activity_feed:
+        submit: 'Post'
+      comment:
+        submit: 'Post'
+      onboarding:
+        submit: 'Continue'

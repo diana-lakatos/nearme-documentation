@@ -1,0 +1,66 @@
+.wrap-a.white.reduce
+  .contain
+    / project header
+    .project-a
+      %figure
+        = image_tag @project.cover_photo.image_url(:project_cover), width: PhotoUploader.dimensions[:project_cover][:width], height: PhotoUploader.dimensions[:project_cover][:height], alt: @project.name
+        - if @project.featured?
+          %figcaption
+            = t :featured
+      .wrap
+        %h1= @project.name
+        - if current_user && InstanceAdminAuthorizer.new(current_user).authorized?('Manage')
+          %p= link_to t(:edit), edit_instance_admin_manage_project_path(@project), class: 'button-a small', rel: "modal"
+        .user
+          %figure
+            = link_to user_path(@project.creator) do
+              = image_tag @project.creator.avatar.url(:thumb), width: 40, height: 40, alt: @project.creator.name
+          %h3.hx
+            = link_to @project.creator.name, user_path(@project.creator)
+          %p.location= "#{@project.creator.current_address.try(:city)}, #{@project.creator.current_address.try(:state)}"
+        %p.tx-a= @project.summary
+        %p.topics
+          = @project.topics.map { |t| link_to(t.name, topic_path(t)) }.join(', ').html_safe
+      .bignums-a
+        %ul
+          %li
+            %span
+              %strong= @project.project_collaborators.approved.count
+              = t :collaborators
+            - if @project_collaborator
+              = link_to t(:leave_project), project_project_collaborator_path(@project, @project_collaborator), method: :delete , class: 'button-a small red', confirm: t("leave_project_confirm")
+            - elsif @project.seek_collaborators
+              = link_to t(:join_project), project_project_collaborators_path(@project), method: :post , class: 'button-a small'
+          %li
+            %span
+              %strong= @followers.count
+              = t :followers
+            %p{:'data-follow-button' => true}
+              = render partial: 'shared/follow_button', locals: { object: @project }
+
+/ content wrapper
+.wrap-a.reduce-top
+  .contain
+    / tabs
+    %nav.tabs-a.trio
+      %ul.nav.nav-tabs{role: "tablist"}
+        %li.active= link_to t(:about), '#about', role: "tab", :'data-toggle' => "tab"
+        %li= link_to t(:activity), '#activity', role: "tab", :'data-toggle' => "tab"
+        %li= link_to t(:comments), '#comments', role: "tab", :'data-toggle' => "tab"
+        %li= link_to t(:collaborators), '#collaborators', role: "tab", :'data-toggle' => "tab"
+        %li= link_to t(:followers), '#followers', role: "tab", :'data-toggle' => "tab"
+
+    / white box
+    .box-a
+      .tab-content
+        #about.tab-pane.fade.active{:role => "tabpanel"}
+          = render 'show_about'
+        #activity.tab-pane.fade{:role => "tabpanel"}
+          = render 'shared/activity_feed', object: @project, feed: @feed
+        #comments.tab-pane.fade{:role => "tabpanel"}
+          = render 'comments/comments', comment: @comment
+        #collaborators.tab-pane.fade{:role => "tabpanel"}
+          = render 'show_collaborators'
+        #followers.tab-pane.fade{:role => "tabpanel"}
+          = render 'shared/show_followers', object: @project
+

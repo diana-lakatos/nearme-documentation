@@ -17,7 +17,7 @@ module CarrierWave
         # return if there is no persisted AR object (e.g. photo was deleted before crop job ran)
         return unless @model.persisted?
 
-          # external url has not changed, meaning we can just recreate versions
+        # external url has not changed, meaning we can just recreate versions
         uploader = @model.send(@field)
         uploader.delayed_processing = true
 
@@ -27,7 +27,9 @@ module CarrierWave
         rescue ::ActiveRecord::RecordNotFound
           @model.class.with_deleted.find @model.id # check for paranoid deletetion, throw if not found
         rescue ProcessingError
-          @model.destroy
+          # I don't understand this code, doesn't make much sense to me. I guess @model can be instance of Theme, User etc. wtf?
+          # So I just added this condition just in case, but this is meant for complete rewrite.
+          @model.destroy if Photo === @model
         end
 
         uploader.delayed_processing = false

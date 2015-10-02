@@ -54,6 +54,8 @@ class Reservation < ActiveRecord::Base
   has_one :billing_authorization, as: :reference
   has_many :reviews, as: :reviewable
   has_one :dimensions_template, as: :entity
+  has_many :shipments, dependent: :destroy
+  accepts_nested_attributes_for :shipments
 
   validates :transactable_id, :presence => true
   # the if statement for periods is needed to make .recover work - otherwise reservation would be considered not valid even though it is
@@ -112,7 +114,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def shipping_costs_cents
-    0
+    shipments.sum(:price)
   end
 
   monetize :total_amount_cents, with_model_currency: :currency
@@ -125,7 +127,12 @@ class Reservation < ActiveRecord::Base
   state_machine :state, initial: :unconfirmed do
     before_transition unconfirmed: :confirmed do |reservation, transaction|
       reservation.validate_all_dates_available
-      reservation.errors.empty? && reservation.payment_capture
+      if reservation.errors.empty? && reservation.payment_capture
+        reservation.create_shipments!
+        true
+      else
+        false
+      end
     end
     after_transition unconfirmed: :confirmed, do: :set_confirmed_at
     after_transition confirmed: [:cancelled_by_guest, :cancelled_by_host], do: [:schedule_refund, :set_cancelled_at]
@@ -232,7 +239,7 @@ class Reservation < ActiveRecord::Base
   validates_presence_of :payment_method, :in => Reservation::PAYMENT_METHODS.values
   validates_presence_of :payment_status, :in => PAYMENT_STATUSES.values, :allow_blank => true
 
-  delegate :location, :transactable_type_id, :billing_authorizations, to: :listing
+  delegate :location, :show_company_name, :transactable_type_id, :billing_authorizations, to: :listing
   delegate :administrator=, to: :location
   delegate :favourable_pricing_rate, :service_fee_guest_percent, :service_fee_host_percent, to: :listing, allow_nil: true
 
@@ -323,7 +330,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def total_amount_cents
-    subtotal_amount_cents + service_fee_amount_guest_cents rescue nil
+    subtotal_amount_cents + service_fee_amount_guest_cents + shipping_costs_cents rescue nil
   end
 
   def subtotal_amount_cents
@@ -542,6 +549,10 @@ class Reservation < ActiveRecord::Base
     if invalid_dates.any?
       errors.add(:base, "Unfortunately the following bookings are no longer available: #{invalid_dates.map(&:as_formatted_string).join(', ')}")
     end
+  end
+
+  def create_shipments!
+    CreateShippoShipmentsJob.perform(self.id) if shipments.any?
   end
 
   private

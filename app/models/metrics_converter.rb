@@ -10,7 +10,7 @@ class MetricsConverter
     case @unit_type
     when "oz"
       @value
-    when "pound"
+    when "lb"
       (@value * 16).round(2)
     when 'g'
       (@value / 28.3495).round(2)

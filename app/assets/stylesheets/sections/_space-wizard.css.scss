@@ -1,5 +1,27 @@
 section.space_wizard {
 
+  .select2-container {
+    padding-bottom: 8px;
+
+    a.select2-choice {
+      background: #e6e6e6;
+      height: 45px;
+      border: none;
+
+      .select2-chosen {
+        line-height: 43px;
+      }
+
+      .select2-arrow {
+        width: 23px;
+
+        b {
+          background-size: 77px 73px !important;
+        }
+      }
+    }
+  }
+
   #space_wizard {
 
   	margin: 0 0 60px 0;

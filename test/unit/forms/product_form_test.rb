@@ -13,7 +13,7 @@ class ProductFormTest < ActiveSupport::TestCase
     should 'convert shipping dimensions (imperial) to other units of measure' do
       @product_form = ProductForm.new(@product, {})
       @product_form.weight = 101
-      @product_form.weight_unit = 'pound'
+      @product_form.weight_unit = 'lb'
       @product_form.height = 103
       @product_form.height_unit = 'ft'
       @product_form.width = 102

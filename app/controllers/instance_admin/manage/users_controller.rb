@@ -6,6 +6,17 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
   def index
   end
 
+  def edit
+    @user = User.find(params[:id])
+    render layout: false
+  end
+
+  def update
+    @user = User.find(params[:id])
+    @user.update_columns(params[:user])
+    render layout: false
+  end
+
   def login_as
     admin_user = current_user
     sign_out

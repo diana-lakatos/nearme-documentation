@@ -1,0 +1,8 @@
+$container = $("<%= @container %>")
+content = "<%= escape_javascript(render(partial: @partial, collection: @collection, as: @as, locals: { object: @object })) %>"
+$moreButton = $container.find(".more-a")
+$(content).insertBefore($moreButton)
+
+if("<%= @hide %>" == "true") {
+  $moreButton.hide()
+}

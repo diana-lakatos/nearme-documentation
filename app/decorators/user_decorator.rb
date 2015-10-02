@@ -34,6 +34,10 @@ class UserDecorator < Draper::Decorator
     object.current_location ? object.country_name : object.current_location
   end
 
+  def display_address
+    content_tag :p, object.current_address.address, class: 'location' if object.current_address
+  end
+
   def has_friends
     @count.nil? ? @count = !friends.count.zero? : @count
   end

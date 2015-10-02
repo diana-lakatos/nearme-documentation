@@ -1,0 +1,5 @@
+- if event.event_source.present?
+  %article.status-a{data: { event: event.id }}
+    = render 'shared/activity_status_header', event: event
+    = render 'shared/activity_status_body', event: event if event.has_body?
+    = render 'shared/activity_status_footer', event: event unless event.has_body?

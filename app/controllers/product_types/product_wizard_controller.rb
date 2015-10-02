@@ -6,7 +6,7 @@ class ProductTypes::ProductWizardController < ApplicationController
   before_filter :set_form_components
   before_filter :ensure_system_shipping_categories_copied, only: [:new]
 
-  layout "dashboard"
+  layout :dashboard_or_community_layout
 
   def new
     @boarding_form = BoardingForm.new(current_user, @product_type)

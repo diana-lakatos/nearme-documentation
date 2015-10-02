@@ -33,4 +33,20 @@ namespace :backup do
 
     puts "[#{Time.now}] Done"
   end
+
+  task :download do
+    pathname = Pathname.new("/tmp/backup.dump")
+
+    puts "[#{Time.now}] Downloading from S3 to local #{pathname}"
+    Utils::S3FileHelper.new(pathname).download_file!
+  end
+
+  task :restore_from_local  do
+    pathname = Pathname.new("/tmp/backup.dump")
+
+    puts "[#{Time.now}] Restoring #{pathname} to ENV DB"
+    `#{Utils::DatabaseConnectionHelper.new(pathname).build_restore_command}`
+
+    puts "[#{Time.now}] Done"
+  end
 end

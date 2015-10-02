@@ -4,8 +4,6 @@ module Metadata
 
     included do
 
-      delegate :populate_photos_metadata!, :to => :listing, :prefix => true
-
       attr_accessor :skip_metadata
       after_commit :listing_populate_photos_metadata!, :if => lambda { |p| !p.skip_metadata && p.should_populate_metadata? }
 
@@ -14,7 +12,7 @@ module Metadata
       end
 
       def relevant_attribute_changed?
-        %w(deleted_at caption position transactable_id image crop_x crop_y crop_h crop_w rotation_angle image_original_url image_transformation_data).any? do |attr|
+        %w(deleted_at caption position owner_id image crop_x crop_y crop_h crop_w rotation_angle image_original_url image_transformation_data).any? do |attr|
           metadata_relevant_attribute_changed?(attr)
         end
       end
@@ -25,6 +23,10 @@ module Metadata
           golden:  image_url(:golden) ,
           large: image_url(:large)
         }
+      end
+
+      def listing_populate_photos_metadata!
+        listing.try(:populate_photos_metadata!)
       end
 
       def to_location_metadata

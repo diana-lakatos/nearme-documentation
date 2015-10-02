@@ -14,6 +14,10 @@ class HiddenUiControls
       'dashboard/products/search'
   ]
 
+  PROJECT_KEYS = [
+    'dashboard/projects'
+  ]
+
   SERVICE_KEYS = [
       'dashboard/user_reservations',
       'dashboard/transactables',
@@ -98,11 +102,15 @@ class HiddenUiControls
   end
 
   def self.all_keys
-    BUY_SELL_KEYS + SERVICE_KEYS + COMMON_KEYS
+    BUY_SELL_KEYS + SERVICE_KEYS + PROJECT_KEYS + COMMON_KEYS
   end
 
   def self.buy_sell_keys
     BUY_SELL_KEYS + COMMON_KEYS
+  end
+
+  def self.projects_keys
+    PROJECT_KEYS
   end
 
   def self.service_keys

@@ -1,0 +1,223 @@
+# Files in the config/locales directory are used for internationalization
+# and are automatically loaded by Rails. If you want to use locales other
+# than English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t 'hello'
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t('hello') %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# To learn more, please read the Rails Internationalization guide
+# available at http://guides.rubyonrails.org/i18n.html.
+
+en:
+  global_page_title: 'Intel Developer Mesh'
+
+  # layout
+
+  developer_mesh: 'Developer Mesh'
+
+
+  # top bar
+  skip_to_navigation: 'Skip to navigation'
+  skip_to_content: 'Skip to content'
+  skip_to_footer: 'Skip to footer'
+
+  people: 'People'
+  projects: 'Projects'
+  topics: 'Topics'
+  profile: 'Profile'
+  my_projects: 'My Projects'
+  favorites: 'Favorites'
+  account: 'Account'
+  log_out: 'Log Out'
+  log_in: 'Log In'
+  add_project: 'Add Project'
+
+  # footer
+  developer_zone: 'Developer Zone'
+  help: 'Help'
+  terms_of_service: 'Terms of Service'
+  trademarks: 'Trademarks'
+  privacy: 'Privacy'
+  cookies: 'Cookies'
+  join_us_on: 'Join Us On'
+
+  # home activity
+  user_possessive:
+    male: 'his'
+    female: 'her'
+  user_updated_status: "%{user_link} updated %{possessive} status"
+  user_created_project: "%{user_link} created a new %{project_link}"
+  user_shared_article: "%{user_link} shared an article on the %{page_link}"
+  user_added_collaborator: "%{user_link} added a new collaborator to the %{project_link} project"
+  user_added_photo: "%{user_link} added a photo to the %{project_link} project"
+  user_added_comment_discussion: "%{user_link} added a new comment in %{discussion_link}"
+  comment: 'Comment'
+  report_as_spam: 'Report as Spam'
+  cancel_spam_report: 'Cancel spam report'
+  load_more_comments: 'Load more comments'
+  remove_comment: 'Remove'
+  user_said: '%{user_link} said'
+  project: 'project'
+  see_more: 'See More'
+
+  # featured
+  featured_projects: 'Featured Projects'
+  featured_users: 'Featured Users'
+  featured_topics: 'Featured Topics'
+  view_all: 'View All'
+  follow: 'Follow'
+
+
+  # home overview
+  hero_slogan: 'Connect with the World’s Brightest Minds'
+  hero_description: 'Find world-class developers, revolutionary designers, rockstar collaborators and globally-disruptive projects.'
+  join_now: 'Join Now'
+  explore_the_most_popular_projects: 'Explore the most popular projects in Connect and collaborate on those that interest you'
+  connect_with_influencers: Connect with Influencers
+  connect_with_influencers_description: Follow our evangelists and learn about the latest news and top projects in the Connect Network
+  featured_topics_description: 'Follow the topics that interest you and discover projects and information related to them'
+
+  # user activity
+  featured_user: 'Featured User'
+  activity: 'Activity'
+  following: 'Following'
+  followers: 'Followers'
+  projects: 'Projects'
+  about: 'About'
+
+
+  # search
+  search: "Search"
+  filter_by: 'Filter by:'
+  results_count: 'Results'
+  innovator: 'Innovator'
+  black_belt: 'Black Belt'
+  unfollow: 'Unfollow'
+  featured: 'Featured'
+  collaborators: 'Collaborators'
+
+  # projects
+  join_project: 'Join Project'
+  leave_project: 'Leave Project'
+  leave_project_confirm: 'Are you sure that you want to leave this project?'
+  comments: 'Comments'
+  gallery: 'Gallery'
+  description: 'Description'
+  links: 'Links'
+  read_more: '... Read More'
+
+  # time
+  hours:
+    one: '1hr'
+    other: '%{count}hrs'
+
+
+  # tutorial
+  step_no: 'Step %{number}'
+  tutorial:
+    step_1: 'The Feed will show you the most interesting and recent activity from IDZ Connect'
+    step_2: 'To post a status update, type your update in text box at the top of the Activity Feed.'
+    step_3: 'Discover the most interesting projects, users and topics and start following them'
+    step_4: 'Start your own project by hitting the button in the top right corner of the page'
+  next: 'Next'
+  finish: 'Finish'
+
+  # onboarding
+  onboarding:
+    step_1:
+      title: 'Where are you located?'
+      description: 'Let us know your location to provide you with relevant projects and information in your area.'
+    step_2:
+      title: 'Connect your social accounts'
+      description: 'Link your social accounts, find your friends, and add your own content to IDZ Mesh'
+    step_3:
+      title: 'Follow some of the most interesting people on Mesh'
+      description: 'Based on your interests we have selected some users, topics and projects that are right up your alley!'
+    step_4:
+      title: 'Congrats! Your account has been successfully created.'
+      description: 'Introduce yourself to the community in the most interesting way! It will make it easy for people to find you and follow you.'
+
+    more_info: 'You can add more information and complete your profile in your personal account'
+    step_x_of_total: 'Step %{step} of %{total}'
+
+  continue: 'Continue'
+  connect_with_service: 'Connect with %{service}'
+  connect: 'Connect'
+  people_to_follow: 'People to Follow'
+  projects_to_follow: 'Projects to Follow'
+  topics_to_follow: 'Topics to Follow'
+  add_photo: 'Add Photo'
+  skip: 'Skip'
+  location_placeholder: 'Enter your city'
+
+
+  # projects
+  my_projects: 'My Projects'
+  picture: 'Picture'
+  name: 'Name'
+  summary: 'Summary'
+  role: 'Role'
+  status: 'Status'
+  edit: 'Edit'
+  remove: 'Remove'
+  owner: 'Owner'
+  collaborator: 'Collaborator'
+  published: 'Published'
+  draft: 'Draft'
+  empty_cta: 'You haven’t added any project yet. Create your first one now!'
+  publish_project: 'Publish Project'
+  save_for_later: 'Save for Later'
+  images: 'Images'
+  add_another_photo: 'Add another photo'
+  add_link: 'Add link'
+  add_collaborator: 'Add collaborator'
+  or: 'or'
+  upload_image: 'Upload Image'
+  edit_project: 'Edit Project'
+  actions: 'Actions'
+  approve: 'Approve'
+  approved: 'Approved'
+  pending: 'Pending'
+  save_changes: 'Save Changes'
+  delete_project: 'Delete Project'
+
+  # account
+  my_account: 'My Account'
+  edit_profile: 'Edit Profile'
+  notifications: 'Notifications'
+  social_accounts: 'Social Accounts'
+  disconnect: 'Disconnect'
+
+  #validation
+  not_exist: "does not exist"
+
+  # activity feed
+  activity_feed:
+    title: "Activity Feed"
+    user_status_text: "What are you working on?"
+    user_status_submit: "Post"
+    verbs:
+      follow: "Follow"
+      unfollow: "Unfollow"
+    events:
+      user_followed_user: '%{follower} started following user %{followed}'
+      user_followed_project: '%{follower} started following project %{followed}'
+      user_followed_topic: '%{follower} started following topic %{followed}'
+      user_created_project: '%{user} created project %{project}'
+      user_updated_user_status: '%{user} updated %{updated} status'
+      user_updated_project_status: '%{user} updated project %{updated} status'
+      user_updated_topic_status: '%{user} updated topic %{updated} status'
+      user_added_photos_to_project: '%{user} added photos to project %{project}'
+      topic_created: '%{topic} has been created'
+      user_commented: "%{user} added a comment on %{followed}'s %{activity}"

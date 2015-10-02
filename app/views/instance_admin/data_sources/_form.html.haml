@@ -1,0 +1,5 @@
+= f.simple_fields_for :settings, OpenStruct.new(f.object.settings) do |settings_form|
+  - f.object.class.settings.keys.each do |field|
+    .row
+      .input-container.col-xs-12
+        = settings_form.input field, input_html: { class: 'form-control' }

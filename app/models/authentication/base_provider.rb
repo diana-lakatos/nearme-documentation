@@ -46,7 +46,13 @@ class Authentication::BaseProvider
     @new_connections = connections.without(user.friends)
   end
 
+  def revoke
+    raise NotImplementedError
+  end
+
+
   protected
+
   def connection
     raise NotImplementedError
   end

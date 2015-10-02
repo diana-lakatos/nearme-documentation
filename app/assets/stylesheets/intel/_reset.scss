@@ -1,0 +1,71 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    overflow-y: scroll;
+    font-size: 100.01%;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+body {
+    background: #f5f6f8;
+    font-size: 62.5%;
+}
+
+body,
+textarea,
+input,
+select,
+option,
+button {
+    color: #666;
+    font: 14px/1.5 $font-default;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+div,
+form,
+blockquote,
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+menu,
+nav,
+section,
+ul,
+ol,
+dl,
+p,
+table,
+pre,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    display: block;
+    margin: 0 0 20px;
+}
+
+:last-child {
+    margin-bottom: 0 !important;
+}
+
+.last-child {
+    margin-bottom: 0 !important;
+}
+
+body >:not(.root-a),
+body >:not(.root-a) div,
+body >:not(.root-a) form {
+    margin-bottom: 0;
+}

@@ -1,0 +1,69 @@
+/ white box
+.box-a
+  = simple_form_for resource, url: registration_path(resource_name), html: { class: 'form-a' } do |f|
+    .fields
+      = f.simple_fields_for :properties, f.object.properties do |properties_form|
+        - if f.object.instance_profile_type
+          - f.object.instance_profile_type.custom_attributes.each do |attribute|
+            = draw_attribute_for_form(attribute, properties_form)
+
+      %p
+        = t :more_info, scope: [:onboarding]
+
+      %fieldset.media-group.sep
+        %legend Cover Photo
+
+        - if is_i18n_set?('forms.hints.user_form.cover_image')
+          %p.photo-uploader-hint
+            = t('forms.hints.user_form.cover_image')
+
+        .single-photo
+          = new_file_upload_input("cover_image",
+            cover_image_path,
+            resource.cover_image.thumbnail_dimensions[:thumbnail],
+            "Upload Photo",
+            "no-multiple" => true,
+            :error => f.object.errors.include?(:cover_image).present? ? "Please upload cover image." : nil) do
+            - if current_user.attributes['cover_image']
+
+              .photo-item{:id => "cover-photo-thumbnail"}
+                = image_tag resource.cover_image_url
+                .media-actions
+                  %button.button-a.small.action--edit{:type => "button", :data => { :"resize-photo" => true, :modal => true, :href => edit_cover_image_path }, :title => t('forms.photos.collection.rotate_and_crop')}
+                    %span.intelicon-edit
+
+                  %button.button-a.small.red.action--remove{:type => "button", :data => { :"delete-photo" => true, :url => destroy_cover_image_path }, :title => t('forms.photos.collection.delete') }
+                    %span.intelicon-trash-outlined
+
+      %fieldset.media-group.sep
+        %legend Avatar
+
+        - if is_i18n_set?('forms.hints.user_form.avatar')
+          %p.photo-uploader-hint
+            = t('forms.hints.user_form.avatar')
+
+        .single-photo
+          = new_file_upload_input("avatar",
+            avatar_path,
+            resource.avatar.thumbnail_dimensions[:community_thumbnail],
+            "Upload Photo",
+            "no-multiple" => true,
+            :error => f.object.errors.include?(:avatar).present? ? "Please upload avatar." : nil) do
+            - if current_user.attributes['avatar']
+
+              .photo-item{:id => "cover-photo-thumbnail"}
+                = image_tag resource.avatar_url(:medium)
+                .media-actions
+                  %button.button-a.small.action--edit{:type => "button", :data => { :"resize-photo" => true, :modal => true, :href => edit_avatar_path }, :title => t('forms.photos.collection.rotate_and_crop')}
+                    %span.intelicon-edit
+
+                  %button.button-a.small.red.action--remove{:type => "button", :data => { :"delete-photo" => true, :url => destroy_avatar_path }, :title => t('forms.photos.collection.delete') }
+                    %span.intelicon-trash-outlined
+
+
+    = f.simple_fields_for :current_address, (f.object.current_address.presence || f.object.build_current_address) do |address_form|
+      .fields.location
+        = render :partial => 'addresses/form', locals: { f: address_form, label: "Location"}
+
+    %p.action
+      = f.button :submit

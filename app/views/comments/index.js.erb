@@ -1,0 +1,9 @@
+<% @comments.each do |comment| %>
+  $('[data-comments]').append('<%= escape_javascript( render comment ) %>');
+<% end %>
+
+<% if @comments.total_pages == @comments.current_page %>
+  $('[data-load-more-comments]').replaceWith("")
+<% else %>
+  $('[data-load-more-comments]').replaceWith("<%= escape_javascript link_to t(:load_more_comments), url_for([@commentable, "comments"]), data: { remote: true, "load-more-comments": true, params: { page: params[:page].to_i + 1 }} %>")
+<% end %>

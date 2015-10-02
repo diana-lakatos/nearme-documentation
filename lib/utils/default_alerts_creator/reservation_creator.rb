@@ -24,6 +24,8 @@ class Utils::DefaultAlertsCreator::ReservationCreator < Utils::DefaultAlertsCrea
     notify_guest_one_booking_suggestions_email!
     request_rating_of_guest_from_host_email!
     request_rating_of_host_from_guest_email!
+    create_notify_host_of_shipping_details_email!
+    create_notify_guest_of_shipping_details_email!
   end
 
   def notify_guest_of_expiration_email!
@@ -115,6 +117,14 @@ class Utils::DefaultAlertsCreator::ReservationCreator < Utils::DefaultAlertsCrea
 
   def request_rating_of_host_from_guest_email!
     create_alert!({associated_class: WorkflowStep::ReservationWorkflow::HostRatingRequested, name: 'request_rating_of_host_from_guest', path: 'rating_mailer/request_rating_of_host_from_guest', subject: "[{{platform_context.name}}] How was your experience at '{{reservation.listing.name}}'?", alert_type: 'email', recipient_type: 'enquirer'})
+  end
+
+  def create_notify_host_of_shipping_details_email!
+    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::ShippingDetails, name: 'notify_host_of_shipping_details', path: 'reservation_mailer/notify_host_of_shipping_details', subject: "[{{platform_context.name}}] Here are your shipping details", alert_type: 'email', recipient_type: 'lister'})
+  end
+
+  def create_notify_guest_of_shipping_details_email!
+    create_alert!({associated_class: WorkflowStep::ReservationWorkflow::ShippingDetails, name: 'notify_guest_of_shipping_details', path: 'reservation_mailer/notify_guest_of_shipping_details', subject: "[{{platform_context.name}}] Here are your shipping details", alert_type: 'email', recipient_type: 'enquirer'})
   end
 
   protected
