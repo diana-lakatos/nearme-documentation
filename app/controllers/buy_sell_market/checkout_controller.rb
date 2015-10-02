@@ -185,7 +185,7 @@ class BuySellMarket::CheckoutController < ApplicationController
   end
 
   def spree_errors
-    @order.errors.messages.values.join("\n") if @order.errors.present?
+    @order.errors.full_messages.join("\n") if @order.errors.present?
   end
 
   def order_state
