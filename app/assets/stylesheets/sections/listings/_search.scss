@@ -732,51 +732,13 @@ header#listing_search {
 section.search section#category-tree {
   margin-top: 145px;
 
-  label {
-    display: table-row;
-    width:100%;
-
-    span.category-checkbox-container {
-      display: table-cell;
-    }
-
-    span.category-title {
-      display: table-cell;
-      cursor: default;
-    }
-  }
-
-  .nav-heading {
-    font-weight: 300;
-    color: #000;
-  }
-  .nav-item {
-    input {
-      margin-left: 15px;
-    }
-
-    a {
-      font-size: 15px;
-      color: #858585;
-      font-weight: 300;
-      padding-left: 2px;
-    }
-    .categories-list {
-      margin-left: 15px;
-    }
-  }
-
   .nav-item a.active {
     color: #5dbded;
     font-weight: 400;
   }
-  @media (max-width: $ipad-width) {
-    margin-top: 0px;
 
-    li {
-      padding: 5px;
-      border: 1px solid $theme_white;
-    }
+  .nav-item ul {
+    margin-left: 20px;
   }
 }
 
@@ -1770,6 +1732,62 @@ section.search section#results.mixed {
 
     a {
       color: $theme_blue;
+    }
+  }
+}
+
+
+div.search-view-listing {
+  margin-bottom: 50px;
+
+  .search-mixed-filter {
+    .slider {
+      margin: 70px 20px 30px;
+    }
+  }
+
+  section#category-tree {
+    margin-top: 20px;
+  }
+
+  .results-count {
+    margin-bottom: 30px;
+  }
+
+  label {
+    display: block;
+  }
+
+  select {
+    width: 100%;
+  }
+
+  .search-input {
+    margin-bottom: 10px;
+
+    input {
+      float: left;
+      width: calc(100% - 40px);
+      font-size: 16px;
+      padding: 0 10px;
+      border: none;
+      background: #fff;
+      box-sizing: border-box;
+      height: 36px;
+    }
+
+    .btn {
+      float: right;
+      width: 36px;
+      height: 36px;
+      position: relative;
+      padding: 0;
+
+      img {
+        display: block;
+        vertical-align: top;
+        float: left;
+      }
     }
   }
 }

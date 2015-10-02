@@ -228,6 +228,11 @@ class Search.Controller
         $(event.target).closest('li').find('.categories-list').hide()
         $(event.target).closest('label').next().find('input:checked').prop('checked', false)
 
+  updatePriceSlider: ()->
+    start_value = $('.search-max-price:first').attr('data-min-price')
+    end_value = $('.search-max-price:first').attr('data-max-price')
+    $('#price-slider').val([start_value, end_value])
+
   reinitializePriceSlider: ->
     if $('#price-slider').length > 0
       @initializePriceSlider()
