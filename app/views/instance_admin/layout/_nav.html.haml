@@ -100,7 +100,7 @@
               %a{href: "#{url_for controller: settings.fetch(:controller, "/instance_admin/shipping_options/" + controller_name), action: settings[:default_action]}", :class => ("active" if controller.controller_name == (settings[:controller] || controller_name).split('/').last)}
                 %span= "#{controller_name.titleize}"
 
-    - if @authorizer.authorized?('Projects')
+    - if @authorizer.authorized?('Projects') && current_instance.is_community?
       %li#projects
         %a{"data-parent" => "#projects", "data-toggle" => "collapse", :href => "#projects-sub"}
           %i.fa.fa-note
