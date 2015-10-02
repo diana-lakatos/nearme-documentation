@@ -1,0 +1,48 @@
+// Flash messages
+@mixin alert-color($class, $background, $color: null, $close: null) {
+    @if ($color == null) {
+        $color: darken($background, 20%);
+    }
+    @if ($close == null) {
+        $close: lighten($background, 30%);
+    }
+    &.#{$class} {
+        background: $background;
+        color: $color;
+
+        .close {
+            color: $close;
+        }
+    }
+}
+
+.alert {
+    margin: 0;
+    // transition: all .3s ease;
+    overflow: hidden;
+
+    .contain {
+        position: relative;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .close {
+        vertical-align: middle;
+        margin-left: 20px;
+        padding: 0;
+        background: none;
+        text-align: center;
+        border: none;
+        font-size: 16px;
+        color: inherit;
+    }
+
+    @include alert-color(error, #f00, #fff);
+    @include alert-color(notice, #00aeef, #fff);
+    @include alert-color(warning, #FAA21B);
+    @include alert-color(success, #11a21f, #fff);
+    @include alert-color(deleted, #FAA21B);
+}

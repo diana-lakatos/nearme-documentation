@@ -1,5 +1,6 @@
 en:
   flash_messages:
+    close_label: "Remove this alert"
     authentications:
       already_connected_to_other_user: "The social provider you have chosen is already connected to other user. Please log out first if you want to log in to other account."
       authentication_successful: "Authentication successful."
@@ -179,7 +180,7 @@ en:
       projects:
         topics:
           updated: "Successfully updated topic"
-        project_types: 
+        project_types:
           updated: "Successfully updated project type"
     listings:
       listing_disabled: "This listing has been temporarily disabled by the owner. Displaying other listings in this location."
