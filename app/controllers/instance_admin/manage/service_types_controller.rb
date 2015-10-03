@@ -29,7 +29,6 @@ class InstanceAdmin::Manage::ServiceTypesController < InstanceAdmin::Manage::Bas
       end
       at.save!
       Utils::FormComponentsCreator.new(@service_type).create!
-      Utils::FormComponentsCreator.new(@service_type, 'transactable').create!
       @service_type.create_rating_systems
       flash[:success] = t 'flash_messages.instance_admin.manage.service_types.created'
       redirect_to instance_admin_manage_service_types_path
