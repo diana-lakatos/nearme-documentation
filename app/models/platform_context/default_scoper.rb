@@ -149,7 +149,7 @@ module PlatformContext::DefaultScoper
     def return_partner_scope_if_partner
       if @klass.column_names.include?('partner_id')
         return %Q{
-          if PlatformContext.current.partner.present? && PlatformContext.current.partner.search_scope_option.all_associated_listings?
+          if PlatformContext.current.partner.present? && PlatformContext.current.partner.search_scope_option == 'all_associated_listings'
             scope.where(:"#{@klass.table_name}.partner_id" => PlatformContext.current.partner.id)
           else
         }
