@@ -28,8 +28,6 @@ class Schedule < ActiveRecord::Base
                   else
                     IceCube::Schedule.from_hash(JSON.parse(super || '{}'))
                   end
-  rescue
-    IceCube::Schedule.from_hash(JSON.parse('{}'))
   end
 
   def set_timezone

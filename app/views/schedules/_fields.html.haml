@@ -17,7 +17,7 @@
       = t('schedule.switch_to_advanced')
 
   %div{ :'data-advanced-schedule' => "true", style: "#{'display: none;' if f.object.use_simple_schedule}"}
-    = f.hidden_field :schedule, class: 'icui', data: data_fields_for_schedule, value: f.object.schedule.try(:to_hash).to_json
+    = f.hidden_field :schedule, class: 'icui', data: data_fields_for_schedule, value: f.object.schedule.try(:to_hash).try(:to_json)
     .hidden
       %input{type: 'radio', name: "#{f.object_name}[use_simple_schedule]", value: "0", checked: !f.object.use_simple_schedule, 'data-simple-schedule-radio' => true}
     = link_to '#', {:'data-toggler' => true} do
