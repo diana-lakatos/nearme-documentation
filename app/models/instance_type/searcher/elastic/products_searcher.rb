@@ -31,7 +31,13 @@ class InstanceType::Searcher::Elastic::ProductsSearcher
         product_searcher = initialize_searcher_params
         @fetched = Spree::Product.search(product_searcher.merge(@search_params), @product_type)
         @search_results_count = @fetched.response[:hits][:total]
-        products = Spree::Product.where(id: @fetched.map(&:id)).includes(:variants, :company, master: [:default_price])
+
+        # This below is a small hack to make an EXISTS clause and prevent PG::ProtocolViolation.
+        # The reason is that we need to supply parameters, and ActiveRecord doesn't auto-generate it.
+        # https://github.com/rails/rails/issues/20077
+        #
+        sql = Spree::Product.where(id: @fetched.map(&:id)).includes(:variants, :company, master: [:default_price]).exists.to_sql
+        products = Spree::Product.where(sql)
       end
   end
 
