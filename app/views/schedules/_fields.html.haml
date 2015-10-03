@@ -17,7 +17,7 @@
       = t('schedule.switch_to_advanced')
 
   %div{ :'data-advanced-schedule' => "true", style: "#{'display: none;' if f.object.use_simple_schedule}"}
-    = f.hidden_field :schedule, class: 'icui', data: { 'add-duration' => I18n.t('schedule.duration'), 'add-unavailable' => I18n.t('schedule.add_unavailable'), 'add-availability' => I18n.t('schedule.add_availability'), 'availability' => I18n.t('schedule.availability'), 'unavailable' => I18n.t('schedule.unavailable'), 'start-time' => I18n.t('schedule.start_time'), 'event' => I18n.t('schedule.event'), 'specific-dates' => I18n.t('schedule.specific_dates'), 'every' => I18n.t('schedule.every'), 'event-before' => I18n.t('schedule.event_before'), 'this-day-of-week' => I18n.t('schedule.this_day_of_week'), 'this-hour-of-day' => I18n.t('schedule.this_hour_of_day'), 'this-minute-of-hour' => I18n.t('schedule.this_minute_of_hour'), 'this-day-of-nth-week' => I18n.t('schedule.this_day_of_nth_week'), 'this-nth-day-of-month' => I18n.t('schedule.this_nth_day_of_month'), 'this-nth-day-of-year' => I18n.t('schedule.this_nth_day_of_year'), 'pascha-offset' => I18n.t('schedule.pascha_offset'), 'event-occured-less' => I18n.t('schedule.event_occured_less') }, value: f.object.schedule.try(:to_hash).to_json
+    = f.hidden_field :schedule, class: 'icui', data: data_fields_for_schedule, value: f.object.schedule.try(:to_hash).to_json
     .hidden
       %input{type: 'radio', name: "#{f.object_name}[use_simple_schedule]", value: "0", checked: !f.object.use_simple_schedule, 'data-simple-schedule-radio' => true}
     = link_to '#', {:'data-toggler' => true} do
