@@ -65,7 +65,7 @@ module TransactablesIndex
       self.as_json(only: allowed_keys).merge(
         geo_location: self.geo_location,
         custom_attributes: custom_attrs,
-        location_type_id: self.location.location_type_id,
+        location_type_id: self.location.try(:location_type_id),
         hourly_price_cents: self.hourly_price_cents.to_i,
         daily_price_cents: self.daily_price_cents.to_i,
         weekly_price_cents: self.weekly_price_cents.to_i,

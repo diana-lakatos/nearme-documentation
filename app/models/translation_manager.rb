@@ -29,19 +29,17 @@ class TranslationManager
 
   def create_singular_translation(key, value)
     if value.present?
-      Translation.where(locale: 'en', key: singular_key_with_namespace(key), instance_id: @object.instance_id).first_or_initialize do |t|
-        t.value = value
-        t.save!
-      end
+      t = Translation.where(locale: 'en', key: singular_key_with_namespace(key), instance_id: @object.instance_id).first_or_initialize
+      t.value = value
+      t.save!
     end
   end
 
   def create_plural_translation(key, value)
     if value.present?
-      Translation.where(locale: 'en', key: plural_key_with_namespace(key), instance_id: @object.instance_id).first_or_initialize.tap do |t|
-        t.value = value.pluralize
-        t.save!
-      end
+      t = Translation.where(locale: 'en', key: plural_key_with_namespace(key), instance_id: @object.instance_id).first_or_initialize
+      t.value = value.pluralize
+      t.save!
     end
   end
 

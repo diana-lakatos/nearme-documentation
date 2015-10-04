@@ -60,6 +60,12 @@ en:
   hour:
     one: "hour"
     other: "hours"
+  periods:
+    month: "month"
+    week: "week"
+    day: "day"
+    night: "night"
+    hour: "hour"
   desk:
     reservation_rejected_body: "%{user} declined reservation with reason: %{reason}"
     reservation_rejected_title: "[internal] User has declined reservation"
