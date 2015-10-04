@@ -1025,6 +1025,10 @@ en:
       tickets: "Tickets"
       view_all_tickets: "View all tickets"
       open_a_ticket: "Open a Ticket"
+    statuses:
+      past:
+        open: "Opened"
+        resolved: "Resolved"
   dashboard:
     items:
       list_new_item: "List New Item"
