@@ -17,7 +17,7 @@ class DataImporter::CsvCurrentDataGenerator < DataImporter::File
       if company.locations.any?
         company.locations.order('instance_id, external_id').each do |location|
           if location.listings.any?
-            location.listings.order('instance_id, external_id').each do |listing|
+            location.listings.where(transactable_type: @transactable_type).order('instance_id, external_id').each do |listing|
               if listing.photos.any?
                 listing.photos.each do |photo|
                   csv << get_data_row(company, location, location.location_address, listing, photo)
