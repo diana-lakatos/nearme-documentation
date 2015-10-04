@@ -29,6 +29,7 @@ class SearchController < ApplicationController
       next if category.children.blank?
       @categories_html << render_to_string(
         partial: 'search/mixed/filter',
+        formats: [:html],
         locals: {
           category_id: category.id,
           header_name: category.translated_name,

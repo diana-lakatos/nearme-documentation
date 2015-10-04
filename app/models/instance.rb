@@ -371,6 +371,8 @@ class Instance < ActiveRecord::Base
   end
 
   def fast_recalculate_cache_key!
+    # this is needed, otherwise it won't matter that we update context_cache - we will use cached, old one due to domain
+    domains.pluck(:name).each { |name| Rails.cache.delete("domains_cache_#{name}") }
     if context_cache_key
       update_column(:context_cache_key, [context_cache_key.split('timestamp').first, Time.now.to_i].join('timestamp'))
     else

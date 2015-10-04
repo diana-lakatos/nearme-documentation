@@ -81,17 +81,17 @@ if Spree::Stock::Estimator.methods.include?(:new)
 
             rates.each do |rate|
               shipping_method = Spree::ShippingMethod.create!(
-                :name => "#{rate['provider']} #{rate['servicelevel_name']}",
+                :name => "#{rate[:provider]} #{rate[:servicelevel_name]}",
                 :display_on => 'both',
                 :instance_id => shipping_category.instance_id,
                 :company_id => shipping_category.company_id,
                 :partner_id => shipping_category.partner_id,
                 :user_id => shipping_category.user_id,
                 :order_id => package.order.id,
-                :precalculated_cost => rate['amount'],
+                :precalculated_cost => rate[:amount],
                 :calculator => Spree::Calculator::Shipping::PrecalculatedCostCalculator.new,
                 :shipping_categories => [shipping_category],
-                :shippo_rate_id => rate['object_id']
+                :shippo_rate_id => rate[:object_id]
               )
 
             end

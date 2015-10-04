@@ -18,8 +18,8 @@ class ShippoTest < ActionView::TestCase
 
   def setup_stubs_for_shippo_order_testing(get_rates = true, no_categories = false, shippo_enabled = true)
     shippo_mock_rates = [
-      mock.stubs('provider' => 'USPS', 'servicelevel_name' => 'Library Mail', 'amount' => 2.56, 'object_id' => 'ab47a600b2114eb4899cb698731b97ff'),
-      mock.stubs('provider' => 'USPS', 'servicelevel_name' => 'First-Class Package/Mail Parcel', 'amount' => 4.58, 'object_id' => 'adf6939b914a46f1b72882935b7244be')
+      mock.stubs(provider: 'USPS', servicelevel_name: 'Library Mail', amount: 2.56, object_id: 'ab47a600b2114eb4899cb698731b97ff'),
+      mock.stubs(provider: 'USPS', servicelevel_name: 'First-Class Package/Mail Parcel', amount: 4.58, object_id: 'adf6939b914a46f1b72882935b7244be')
     ]
 
     if shippo_enabled
