@@ -5,5 +5,5 @@
         %abbr{:title => "required"}= t('simple_form.required.mark')
         =t('simple_form.labels.listings.schedule')
     .col-md-9
-      = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule(schedule: f.object.transactable_type.schedule.try(:schedule)) do |schedule_form|
+      = f.simple_fields_for :schedule, f.object.schedule || f.object.build_schedule(schedule: f.object.transactable_type.schedule.try(:schedule).try(:to_hash).try(:to_json)) do |schedule_form|
         = render 'schedules/fields', f: schedule_form
