@@ -233,6 +233,9 @@ SimpleForm.setup do |config|
   # matches the regexp as value.
   # config.input_mappings = { /count/ => :integer }
 
+  # This is needed otheriwse f.input :country will throw an exception...
+  config.input_mappings = { /country/ => :string }
+
   # Default priority for time_zone inputs.
   # config.time_zone_priority = nil
 

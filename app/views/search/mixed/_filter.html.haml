@@ -2,7 +2,7 @@
 .search-mixed-filter{:'data-category-id' => local_assigns.has_key?(:category_id) ? category_id : '', :'data-div-cached-listings-ids' => header_name.underscore.tr(" ","-").gsub('desk', 'listing') + '-listings-ids', :'data-filter' => true, :"data-custom-attribute" => name}
   .container-fluid
     .row-fluid
-      .span2
+      .span2{title: header_name}
         %h4
           = header_name
       .span10
