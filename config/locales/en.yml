@@ -74,6 +74,9 @@ en:
       question_quantity: "Only %{number} questions or less for one rating system"
   general:
     processing: 'Processing ...'
+    submit: 'Submit'
+    cancel: 'Cancel'
+    submit_draft: 'Save as draft'
     or_spaced: ' or '
     edit: Edit
     delete: Delete
@@ -1032,6 +1035,7 @@ en:
   dashboard:
     items:
       list_new_item: "List New Item"
+      edit_item: "Edit Item"
       search:
         search_your_products: 'Search your products'
         search: 'Search'
