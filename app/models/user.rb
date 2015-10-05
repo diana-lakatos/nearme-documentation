@@ -95,6 +95,10 @@ class User < ActiveRecord::Base
   after_destroy :perform_cleanup
   before_save :ensure_authentication_token
   before_save :update_notified_mobile_number_flag
+  before_create do
+    self.instance_profile_type_id ||= PlatformContext.current.present? ? InstanceProfileType.first.try(:id) : InstanceProfileType.where(instance_id: self.instance_id).try(:first).try(:id)
+  end
+
   before_restore :recover_companies
 
   store :required_fields
