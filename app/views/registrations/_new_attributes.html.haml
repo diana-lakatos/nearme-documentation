@@ -70,6 +70,9 @@
           %p.help-block= t('simple_form.hints.user.mobile_number', default: '')
 
 = f.input :current_location, as: :string if only_inputs.empty? || only_inputs.include?(:current_location)
+- if only_inputs.empty? || only_inputs.include?(:current_address)
+  = f.simple_fields_for :current_address, (f.object.current_address || f.object.build_current_address) do |address_form|
+    = render :partial => 'addresses/column_form', :locals => { :f => address_form }
 = f.input :company_name, label: "Company name", as: :string if only_inputs.empty? || only_inputs.include?(:company_name)
 = f.association :industries, :blank => false, input_html: { class: 'selectpicker', "data-live-search" => "true" } if only_inputs.empty? || only_inputs.include?(:industries)
 = f.input :password, :label => (f.object.persisted? ? "Change password" : "Password" ) if only_inputs.empty? || only_inputs.include?(:password)
