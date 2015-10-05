@@ -37,7 +37,7 @@ class Support::Ticket < ActiveRecord::Base
   end
 
   def verb
-    (self.state + 'ed').humanize
+    I18n.t("support.statuses.past.#{self.state}")
   end
 
   def open_text

@@ -827,8 +827,8 @@ DesksnearMe::Application.routes.draw do
 
   get '/dashboard', controller: 'dashboard/dashboard', action: 'index'
 
-  get "/search/(:search_type)", :to => "search#index", :as => :search
   get "/search/categories", :to => "search#categories"
+  get "/search/(:search_type)", :to => "search#index", :as => :search
 
   resource :event_tracker, only: [:create], :controller => 'event_tracker'
 
