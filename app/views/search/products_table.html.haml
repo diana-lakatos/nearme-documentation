@@ -3,27 +3,31 @@
   = render 'search/products_table/header'
 .search-view
   .crumbs= render_crumbs
-  .page-wrapper.row-fluid.products_table
-    = render partial: 'search/categories', locals: { container_class: 'span2' }
-    = yield :category_tree
+  .page-wrapper
+    .search__filter-row
+      .row-fluid
+        = render partial: 'search/categories', locals: { container_class: 'span2' }
+        = yield :category_tree
 
-    - if platform_context.instance.price_slider
-      .span10
-        = render partial: 'search/shared/product_table_slider'
-    .search-max-price{:'data-max-price' => @searcher.max_price, :'data-min-price' => @searcher.min_price}
-    - if @searcher.results.any?
-      %section#results.products_table
-        %table
-          = render partial: 'search/products_table/head'
-          = render partial: 'search/products_table/product', collection: @searcher.results
-        = will_paginate @searcher.results
-    - else
-      %section#results.no_results
-        .text-center
-          %br/
-          %br/
-          %h1.tk-adelle.fat= t 'buy_sell_market.products.search_results.no_results'
-    = render 'shared/loading_spinner'
+        - if platform_context.instance.price_slider
+          .span10
+            = render partial: 'search/shared/product_table_slider'
+        .search-max-price{:'data-max-price' => @searcher.max_price, :'data-min-price' => @searcher.min_price}
+    .row-fluid
+      - if @searcher.results.any?
+        %section#results.products_table
+          .search__table-responsive
+            %table.search__table
+              = render partial: 'search/products_table/head'
+              = render partial: 'search/products_table/product', collection: @searcher.results
+          = will_paginate @searcher.results
+      - else
+        %section#results.no_results
+          .text-center
+            %br/
+            %br/
+            %h1.tk-adelle.fat= t 'buy_sell_market.products.search_results.no_results'
+      = render 'shared/loading_spinner'
 - content_for :domready do
   new Search.ProductsTableSearchController($('form.search_results'), $('.search-view'))
 

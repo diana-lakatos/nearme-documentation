@@ -20,10 +20,9 @@ class Search.ProductsSearchController extends Search.Controller
     @filters_container.on 'click', 'input[type=checkbox]', =>
       @triggerSearchFromQuery()
 
-    $(document).on 'change', @perPageField, (e) =>
-      if @perPageValue != @perPageField.find(':selected').val()
-        @perPageValue = @perPageField.find(':selected').val()
-        @triggerSearchFromQuery()
+    $(document).on 'change', '.search-attribute-filter select', (e) =>
+      @perPageValue = @perPageField.find(':selected').val()
+      @triggerSearchFromQuery()
 
     @form.bind 'submit', (event) =>
       if @submitFormWithoutAjax == false
@@ -55,7 +54,7 @@ class Search.ProductsSearchController extends Search.Controller
       @form.submit()
 
   rebindForm: ->
-    $('select').customSelect()
+    $('select').select2({ allowClear: true })
     @form = $('#search_form')
     @performEndlessScrolling = @form.data('endless-scrolling')
     @form.bind 'submit', (event) =>
@@ -163,7 +162,7 @@ class Search.ProductsSearchController extends Search.Controller
       @updateLinksForSearchQuery()
       window.scrollTo(0, 0)
       @rebindForm()
-      @reinitializePriceSlider()
+      @updatePriceSlider()
       @loader.hide()
       callback() if callback
       _.defer => @processingResults = false

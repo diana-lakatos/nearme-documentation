@@ -1,33 +1,41 @@
 - title @searcher.query
 - meta_description @searcher.query
 - content_for :category_tree do
-  = render partial: 'search/categories', locals: { container_class: 'span2' }
+  = render partial: 'search/categories', locals: { container_class: nil }
 .search-view
   .crumbs= render_crumbs
-  .page-wrapper.row-fluid
+  .page-wrapper
+    .row-fluid
+      =render 'search/products_list/header'
 
-    = yield :category_tree
+    .row-fluid
 
-    =render 'search/products_list/header'
-    .span10
-      - if platform_context.instance.price_slider
-        = render partial: 'search/shared/product_list_slider'
-    - if @searcher.results.any?
-      %section#results{ class: "products_list #{platform_context.display_taxonomy_tree? ? 'span10 with_taxons' : 'span12 no_taxons'}" }
-        .search-max-price{:'data-max-price' => @searcher.max_price, :'data-min-price' => @searcher.min_price}
-        = render partial: 'search/products_list/product', collection: @searcher.results
-        = will_paginate @searcher.results
-        = render 'shared/loading_spinner'
-    - else
-      %section#results{ class: "no_products_list no_results #{platform_context.display_taxonomy_tree? ? 'span10 with_taxons' : 'span12 no_taxons'}" }
-        = render 'shared/loading_spinner'
-        .text-center
-          %br/
-          %br/
-          %h1.tk-adelle.fat
-            = t('buy_sell_market.products.search_results.no_results')
-          %p
-            = t('buy_sell_market.products.search_results.product_could_not_be_found')
+      .span2
+
+        - if platform_context.instance.price_slider
+          = render partial: 'search/shared/product_list_slider'
+
+        .search__filter-row
+          = yield :category_tree
+
+      .span10
+
+        - if @searcher.results.any?
+          %section#results{ class: "products_list #{platform_context.display_taxonomy_tree? ? 'with_taxons' : 'no_taxons'}" }
+            .search-max-price{:'data-max-price' => @searcher.max_price, :'data-min-price' => @searcher.min_price}
+            = render partial: 'search/products_list/product', collection: @searcher.results
+            = will_paginate @searcher.results
+            = render 'shared/loading_spinner'
+        - else
+          %section#results{ class: "no_products_list no_results #{platform_context.display_taxonomy_tree? ? 'with_taxons' : 'no_taxons'}" }
+            = render 'shared/loading_spinner'
+            .text-center
+              %br/
+              %br/
+              %h1.tk-adelle.fat
+                = t('buy_sell_market.products.search_results.no_results')
+              %p
+                = t('buy_sell_market.products.search_results.product_could_not_be_found')
 
 - content_for :domready do
   new Search.ProductsListSearchController($('#listing_search form'), $("#content"));
