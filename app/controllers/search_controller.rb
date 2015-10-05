@@ -16,7 +16,7 @@ class SearchController < ApplicationController
     event_tracker.conducted_a_search(@searcher.search, @searcher.to_event_params.merge(result_view: result_view)) if should_log_conducted_search?
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
     remember_search_query
-    render "search/#{result_view}"
+    render "search/#{result_view}", formats: [:html]
   end
 
   def categories
