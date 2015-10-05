@@ -14,7 +14,7 @@ module AuthenticationsHelper
     end
 
     def connection_description
-      "Connected via #{title} as <a href='#{destination_url}'>#{display_url}</a>".html_safe
+      destination_url ? "Connected via #{title} as <a href='#{destination_url}'>#{display_url}</a>".html_safe : ''
     end
   end
 
@@ -52,7 +52,7 @@ module AuthenticationsHelper
   class FacebookProvider < AuthProvider
 
     def destination_url
-      "#{@auth['info']['urls']['link']}"
+      "#{@auth['info']['urls']['link']}" rescue nil
     end
 
     def display_url

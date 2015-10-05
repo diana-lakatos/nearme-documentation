@@ -24,5 +24,5 @@
 
   = content_for :header_buttons do
     = f.button :submit, 'Save', class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
-    = link_to 'Cancel', instance_admin_manage_approval_request_templates_path , class: 'btn btn-light pull-right'
+    = link_to I18n.t('general.cancel')', instance_admin_manage_approval_request_templates_path , class: 'btn btn-light pull-right'
 
