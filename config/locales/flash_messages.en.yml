@@ -472,6 +472,7 @@ en:
       draft_saved: "Your draft has been saved!"
       space_listed: "Your %{bookable_noun} was listed! You can provide more details about your location and listing from this page."
       item_listed: "Your %{bookable_noun} was listed! You can provide more details about your location and listing from this page."
+      finish_other_first: "Please complete %{already_started_noun} before trying to create %{wanted_create_noun}."
     support:
       ticket:
         created: 'Ticket has been created.'

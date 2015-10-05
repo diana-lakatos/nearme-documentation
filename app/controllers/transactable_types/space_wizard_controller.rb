@@ -2,6 +2,7 @@ class TransactableTypes::SpaceWizardController < ApplicationController
 
   before_filter :find_transactable_type
   before_filter :redirect_to_dashboard_if_registration_completed, only: [:new, :list]
+  before_filter :redirect_to_dashboard_if_started_other_listing, only: [:new, :list]
   before_filter :set_form_components
   before_filter :set_common_variables, :only => [:list, :submit_listing]
   before_filter :sanitize_price_parameters, :only => [:submit_listing]
@@ -208,6 +209,14 @@ class TransactableTypes::SpaceWizardController < ApplicationController
     @user.companies.first.approval_requests = []
     @user.companies.first.locations.first.approval_requests = []
     @user.companies.first.locations.first.listings.first.approval_requests = []
+  end
+
+  def redirect_to_dashboard_if_started_other_listing
+    listing = current_user.companies.try(:first).try(:locations).try(:first).try(:listings).try(:first)
+    if listing.try(:transactable_type_id) != @transactable_type.id
+      flash[:warning] = t('flash_messages.space_wizard.finish_other_first', wanted_create_noun: @transactable_type.translated_bookable_noun, already_started_noun: listing.transactable_type.translated_bookable_noun)
+      redirect_to transactable_type_new_space_wizard_path(listing.transactable_type)
+    end
   end
 
 end
