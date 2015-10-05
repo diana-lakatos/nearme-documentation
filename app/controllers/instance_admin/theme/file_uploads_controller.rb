@@ -19,6 +19,8 @@ class InstanceAdmin::Theme::FileUploadsController < InstanceAdmin::Theme::BaseCo
 
       if @attachment.save
         render(partial: 'asset', locals: { asset: @attachment })
+      else
+        render text: I18n.t('flash_messages.instance_admin.theme.file_uploads.failed', errors: @attachment.errors.full_messages.join(', '))
       end
     end
   end
