@@ -13,8 +13,8 @@ class UserGeolocationJob < Job
         address = user.current_address
       end
 
-      address.latitude = @user.last_geolocated_location_latitude
-      address.longitude = @user.last_geolocated_location_longitude
+      address.latitude = user.last_geolocated_location_latitude
+      address.longitude = user.last_geolocated_location_longitude
 
       address.save!
     end

@@ -165,6 +165,8 @@ en:
 
       theme:
         theme_updated_successfully: 'Theme updated.'
+        file_uploads:
+          failed: 'Failed to upload file: %{errors}'
       admins:
         instance_admin_roles:
           role_added: "Great, new role has been added!"
@@ -179,7 +181,7 @@ en:
       projects:
         topics:
           updated: "Successfully updated topic"
-        project_types: 
+        project_types:
           updated: "Successfully updated project type"
     listings:
       listing_disabled: "This listing has been temporarily disabled by the owner. Displaying other listings in this location."
