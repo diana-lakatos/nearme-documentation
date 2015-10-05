@@ -385,6 +385,7 @@ class SecuredParams
       :user_based_marketplace_views,
       :user_blogs_enabled,
       :user_info_in_onboarding_flow,
+      :webhook_token,
       :wish_lists_enabled,
       :wish_lists_icon_set,
       allowed_currencies: [],
