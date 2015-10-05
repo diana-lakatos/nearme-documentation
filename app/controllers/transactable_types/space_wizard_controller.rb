@@ -212,8 +212,8 @@ class TransactableTypes::SpaceWizardController < ApplicationController
   end
 
   def redirect_to_dashboard_if_started_other_listing
-    listing = current_user.companies.try(:first).try(:locations).try(:first).try(:listings).try(:first)
-    if listing.try(:transactable_type_id) != @transactable_type.id
+    listing = current_user.try(:companies).try(:first).try(:locations).try(:first).try(:listings).try(:first)
+    if listing.present? && listing.transactable_type_id != @transactable_type.id
       flash[:warning] = t('flash_messages.space_wizard.finish_other_first', wanted_create_noun: @transactable_type.translated_bookable_noun, already_started_noun: listing.transactable_type.translated_bookable_noun)
       redirect_to transactable_type_new_space_wizard_path(listing.transactable_type)
     end
