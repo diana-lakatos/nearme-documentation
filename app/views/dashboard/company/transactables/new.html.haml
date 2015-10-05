@@ -1,7 +1,7 @@
 .dash-head.clearfix
-  = link_to 'MANAGE LISTINGS', dashboard_company_transactable_type_transactables_path(@transactable_type)
+  = link_to t('dashboard.transactables.manage'), dashboard_company_transactable_type_transactables_path(@transactable_type)
   &gt;
-  %p LIST NEW ITEM
+  %p= t('dashboard.items.list_new_item')
 .dash-body
   = simple_nested_form_for [:dashboard, :company, @transactable_type.becomes(TransactableType), @transactable], wrapper: :bs3, :html => { :multipart => true, id: 'listing-form' } do |f|
 
@@ -9,5 +9,5 @@
 
     .submit-bar
       = link_to dashboard_company_transactable_type_transactables_path(@transactable_type) do
-        .btn.gray Cancel
-      = f.submit "Save item", class: "btn medium blue"
+        .btn.gray= t('general.cancel')
+      = f.submit t('general.save'), class: "btn medium blue"
