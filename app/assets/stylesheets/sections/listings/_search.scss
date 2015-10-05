@@ -727,10 +727,17 @@ header#listing_search {
   }
 
 }
+.search__filter-row {
+  margin-top: 50px;
+}
 
 /*** Listing View ***/
 section.search section#category-tree {
-  margin-top: 145px;
+  // margin-top: 145px;
+
+  .span2 & {
+    margin-top: 0;
+  }
 
   .nav-item a.active {
     color: #5dbded;
@@ -1787,6 +1794,20 @@ div.search-view-listing {
         display: block;
         vertical-align: top;
         float: left;
+      }
+    }
+  }
+}
+
+
+@media screen and (max-width: 768px) {
+  .search__table-responsive {
+    overflow: auto;
+    width: 100%;
+
+    > .search__table {
+      td, th {
+        white-space: nowrap;
       }
     }
   }

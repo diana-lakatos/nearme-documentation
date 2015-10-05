@@ -3,8 +3,8 @@
     .heading
       %h3.name
         = product.name
-      .company.row-fluid
-        .span10
+      .row-fluid
+        .span10.company
           = product.company.name
         - if (connections = connections_for(product, current_user)).count > 0
           .span2.connections{:rel => 'tooltip', :title => connection_tooltip_for(connections)}
