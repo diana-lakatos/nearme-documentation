@@ -150,6 +150,8 @@ module DesksnearMe
     config.perform_mixpanel_requests = true
     config.perform_google_analytics_requests = true
     config.perform_social_jobs = true
+    # we do not use it, but won't harm
+    config.active_job.queue_adapter = :delayed_job
 
     config.action_dispatch.rescue_responses.merge!('Page::NotFound' => :not_found)
     config.action_dispatch.rescue_responses.merge!('Location::NotFound' => :not_found)
