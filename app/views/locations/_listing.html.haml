@@ -6,7 +6,7 @@
     .images
       .image
         - if listing.has_photos?
-          = image_tag listing.photos.first.image_url(:space_listing), :alt => mask_phone_and_email_if_necessary(listing.name)
+          = image_tag listing.photos.first.image_url(:space_listing), :alt => mask_phone_and_email_if_necessary(listing.name), :title => mask_phone_and_email_if_necessary(listing.name)
         - else
           = image_tag space_listing_placeholder_path(:height => 254, :width => 410), :title => mask_phone_and_email_if_necessary(listing.name), :alt => mask_phone_and_email_if_necessary(listing.name)
 

@@ -40,6 +40,9 @@ class TransactableType < ActiveRecord::Base
   delegate :translation_namespace, :translation_namespace_was, :translation_key_suffix, :translation_key_suffix_was,
     :translation_key_pluralized_suffix, :translation_key_pluralized_suffix_was, :underscore, to: :translation_manager
 
+  extend FriendlyId
+  friendly_id :name, use: [:slugged, :history, :finders, :scoped], scope: :instance
+
   def any_rating_system_active?
     self.rating_systems.any?(&:active)
   end

@@ -70,11 +70,11 @@ module SearchHelper
     end
 
     if not search.is_united_states?
-      title += search_location.empty? ? ' in ' : ', '
+      title += title.empty? ? "Search" : (search_location.empty? ? ' in ' : ', ')
       title += search.country.to_s
     end
 
-    title + (additional_meta_title.present? ? " | " + additional_meta_title : '')
+    title
   end
 
   def meta_description_for_search(platform_context, search)

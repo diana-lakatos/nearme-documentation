@@ -3271,9 +3271,11 @@ ActiveRecord::Schema.define(version: 20151016100737) do
     t.boolean  "search_location_type_filter",                                                    default: true
     t.boolean  "show_company_name",                                                              default: true
     t.boolean  "action_subscription_booking"
+    t.string   "slug"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
+  add_index "transactable_types", ["slug"], name: "index_transactable_types_on_slug", using: :btree
 
   create_table "transactables", force: :cascade do |t|
     t.integer  "instance_type_id"
@@ -3331,11 +3333,15 @@ ActiveRecord::Schema.define(version: 20151016100737) do
     t.boolean  "action_subscription_booking"
     t.integer  "weekly_subscription_price_cents"
     t.integer  "monthly_subscription_price_cents"
+    t.string   "slug"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
   add_index "transactables", ["opened_on_days"], name: "index_transactables_on_opened_on_days", using: :gin
   add_index "transactables", ["parent_transactable_id"], name: "index_transactables_on_parent_transactable_id", using: :btree
+  add_index "transactables", ["properties"], name: "transactables_gin_properties", using: :gin
+  add_index "transactables", ["slug"], name: "index_transactables_on_slug", using: :btree
+
   add_index "transactables", ["transactable_type_id"], name: "index_transactables_on_transactable_type_id", using: :btree
 
   create_table "translations", force: :cascade do |t|

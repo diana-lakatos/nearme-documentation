@@ -485,22 +485,6 @@ DesksnearMe::Application.routes.draw do
 
   resources :blog_posts, path: 'blog', only: [:index, :show], controller: 'blog/blog_posts'
 
-  resources :transactable_types, only: [] do
-    resources :locations, :only => [] do
-      member do
-        get "(:listing_id)", :to => "locations#show", :as => ''
-      end
-
-      resources :listings, :controller => 'locations/listings', :only => [:show] do
-        member do
-          get :ask_a_question
-        end
-      end
-
-      resource :social_share, :only => [:new], :controller => 'locations/social_share'
-    end
-  end
-
   resources :reviews, only: [:index]
   resources :locations, :only => [] do
     member do
@@ -958,6 +942,22 @@ DesksnearMe::Application.routes.draw do
 
     get 'amenities', to: 'amenities#index'
     get 'organizations', to: 'organizations#index'
+  end
+
+  resources :transactable_types, only: [], path: "/" do
+    resources :locations, :only => [], path: "/" do
+      member do
+        get "(:listing_id)", :to => "locations#show", :as => ''
+      end
+
+      resources :listings, controller: 'locations/listings', only: [:show] do
+        member do
+          get :ask_a_question
+        end
+      end
+
+      resource :social_share, :only => [:new], :controller => 'locations/social_share'
+    end
   end
 
   # delayed_job web gui

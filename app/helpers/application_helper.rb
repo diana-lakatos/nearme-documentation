@@ -33,8 +33,8 @@ module ApplicationHelper
 
   def title_tag
     [
-      (additional_meta_title.presence ? additional_meta_title : ''),
-      (show_title? ? content_for(:title) : platform_context.tagline.to_s)
+      (show_title? ? content_for(:title) : nil),
+      (additional_meta_title.present? ? additional_meta_title : nil)
     ].compact.join(" | ")
   end
 

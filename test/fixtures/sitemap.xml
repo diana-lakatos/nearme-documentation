@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
-  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" 
-  xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-  <url> 
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  <url>
 
-    <loc>http://www.example.com/foo.html</loc> 
+    <loc>http://www.example.com/foo.html</loc>
     <image:image>
-       <image:loc>http://example.com/image.jpg</image:loc> 
+       <image:loc>http://example.com/image.jpg</image:loc>
     </image:image>
 
-    <video:video>     
+    <video:video>
       <video:content_loc>
         http://www.example.com/video123.flv
       </video:content_loc>
@@ -19,20 +17,20 @@
       <video:thumbnail_loc>
         http://www.example.com/thumbs/123.jpg
       </video:thumbnail_loc>
-      <video:title>Grilling steaks for summer</video:title>  
+      <video:title>Grilling steaks for summer</video:title>
       <video:description>
         Cook the perfect steak every time.
       </video:description>
     </video:video>
   </url>
 
-  <url> 
-    <loc>http://www.example.com/foo2.html</loc> 
+  <url>
+    <loc>http://www.example.com/foo2.html</loc>
     <image:image>
-       <image:loc>http://example.com/image.jpg</image:loc> 
+       <image:loc>http://example.com/image.jpg</image:loc>
     </image:image>
 
-    <video:video>     
+    <video:video>
       <video:content_loc>
         http://www.example.com/video123.flv
       </video:content_loc>
@@ -42,7 +40,7 @@
       <video:thumbnail_loc>
         http://www.example.com/thumbs/123.jpg
       </video:thumbnail_loc>
-      <video:title>Grilling steaks for summer</video:title>  
+      <video:title>Grilling steaks for summer</video:title>
       <video:description>
         Cook the perfect steak every time.
       </video:description>

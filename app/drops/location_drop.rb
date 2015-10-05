@@ -167,7 +167,15 @@ class LocationDrop < BaseDrop
 
   # formatted string containing the company name and parts of the location
   def default_title
-    [location.company.name, location.suburb, location.city, location.country == "United States" ? location.state_code : location.country].reject(&:blank?).join(' - ')
+    location.name
+    location_compound_address = [
+      location.company.name,
+      location.suburb,
+      location.city,
+      location.country == "United States" ? location.state_code : location.country
+    ].reject(&:blank?).join(', ')
+
+    "#{location.name} | #{location_compound_address}"
   end
 
   def location_type_name

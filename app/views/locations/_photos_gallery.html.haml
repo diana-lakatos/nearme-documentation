@@ -14,9 +14,9 @@
 
           .item{:class => ("active" if index == 0), :'data-modalize' => true}
             - if fullscreen
-              %img{:alt => listing_name, :'data-src' => photo_metadata[photo_size.to_sym]}
+              %img{:alt => listing_name, :title => listing_name, :'data-src' => photo_metadata[photo_size.to_sym]}
             - else
-              = image_tag photo_metadata[photo_size.to_sym], :alt => listing_name
+              = image_tag photo_metadata[photo_size.to_sym], :alt => listing_name, title: listing_name
             .info
               .caption
                 = "#{photo_metadata[:caption]} ##{listing_name}".strip
