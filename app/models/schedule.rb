@@ -23,7 +23,11 @@ class Schedule < ActiveRecord::Base
 
 
   def schedule
-    @schedule ||= IceCube::Schedule === super ? super :  IceCube::Schedule.from_hash(JSON.parse(super || '{}'))
+    @schedule ||= if IceCube::Schedule === super
+                    super
+                  else
+                    IceCube::Schedule.from_hash(JSON.parse(super || '{}'))
+                  end
   end
 
   def set_timezone

@@ -20,9 +20,9 @@ class TransactableType::TransactableTypeTranslationManager < TranslationManager
       end
       ids_to_delete
     end
+    Translation.destroy(ids)
     create_translations!
     @object.custom_attributes.reload.each(&:create_translations)
-    Translation.destroy(ids)
   end
 
 end
