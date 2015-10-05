@@ -4,7 +4,7 @@
   .col-md-9
     = f.simple_fields_for :upload_obligation do |f|
       = f.input :level, as: :radio_buttons, :collection => UploadObligation::LEVELS, label: false, wrapper: :bs3_simple
-    .fields{class: "#{'hidden' if f.object.upload_obligation.not_required?}"}
+    .fields.document-requirements-fields{class: "#{'hidden' if f.object.upload_obligation.not_required?}"}
       .note= t('dashboard.document_requirements.enter_your_documents')
       = f.simple_fields_for :document_requirements do |document_requirement|
         = render "forms/document_requirement_form", f: document_requirement
