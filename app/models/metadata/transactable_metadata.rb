@@ -7,7 +7,7 @@ module Metadata
       attr_accessor :skip_metadata
       after_commit :location_populate_photos_metadata!, if: lambda { |l| !l.skip_metadata && l.should_populate_location_photos_metadata? }
       after_commit :creator_populate_listings_metadata!, if: lambda { |l| !l.skip_metadata && l.should_populate_creator_listings_metadata? }
-      delegate :populate_photos_metadata!, to: :location, prefix: true
+      delegate :populate_photos_metadata!, to: :location, prefix: true, allow_nil: true
       delegate :populate_listings_metadata!, to: :creator, prefix: true, allow_nil: true
 
       def populate_photos_metadata!
