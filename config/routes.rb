@@ -135,6 +135,12 @@ DesksnearMe::Application.routes.draw do
       resources :custom_attributes
     end
     resources :pages
+
+    resource :instance_reports do
+      member do
+        get :download_urls
+      end
+    end
   end
 
   resources :marketplace_sessions, only: [:new, :create]
