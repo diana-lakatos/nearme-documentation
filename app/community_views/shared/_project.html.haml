@@ -4,7 +4,7 @@
       %figure
         = link_to project_path(project) do
           -# tmp rescue - need to recreate versions
-          = image_tag project.cover_photo.image_url(:project_cover)#, width: PhotoUploader.dimensions[:project_standard][:width], height: PhotoUploader.dimensions[:project_standard][:height]
+          = image_tag project.cover_photo.image_url(:project_cover)
           - if project.featured?
             %figcaption
               = t :featured

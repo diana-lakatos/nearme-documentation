@@ -1,5 +1,6 @@
 en:
   flash_messages:
+    close_label: "Remove this alert"
     authentications:
       already_connected_to_other_user: "The social provider you have chosen is already connected to other user. Please log out first if you want to log in to other account."
       authentication_successful: "Authentication successful."
@@ -472,6 +473,7 @@ en:
       draft_saved: "Your draft has been saved!"
       space_listed: "Your %{bookable_noun} was listed! You can provide more details about your location and listing from this page."
       item_listed: "Your %{bookable_noun} was listed! You can provide more details about your location and listing from this page."
+      finish_other_first: "Please complete %{already_started_noun} before trying to create %{wanted_create_noun}."
     support:
       ticket:
         created: 'Ticket has been created.'
