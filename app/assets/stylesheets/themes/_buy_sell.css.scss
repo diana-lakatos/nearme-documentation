@@ -1314,7 +1314,7 @@ body.buy-sell-theme {
       float: left;
     }
 
-    .search-results .row {
+    .search-results .row-fluid {
       margin-bottom: 40px;
     }
 
@@ -1341,12 +1341,18 @@ body.buy-sell-theme {
       float: left;
       color: #858585;
       font-weight: 300;
+      width: 75%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .details .price {
       float: right;
       color: #5dc988;
       font-weight: 300;
+      width: 25%;
+      text-align: right;
     }
 
     /*===== PAGINATION =====*/
@@ -1388,7 +1394,7 @@ body.buy-sell-theme {
         width: 80%;
       }
 
-      .search-results .row {
+      .search-results .row-fluid {
         margin: 0;
       }
 
