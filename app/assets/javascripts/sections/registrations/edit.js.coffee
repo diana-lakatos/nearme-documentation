@@ -2,6 +2,7 @@ class @EditUserForm
 
   constructor: () ->
     @bindEvents()
+    new Dashboard.AddressController($('#edit_user'))
 
   bindEvents: ->
     $('.services_list').on 'click', '.provider-not-disconnectable', (event) =>

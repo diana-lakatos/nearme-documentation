@@ -39,6 +39,8 @@
                 = link_to "Instance Creators", admin_instance_creators_url
               %li{:class => ("active" if request.url.include?(admin_instances_url))}
                 = link_to "Instances", admin_instances_url
+              %li{:class => ("active" if request.url.include?(admin_instance_reports_url))}
+                = link_to "Instance Reports", admin_instance_reports_url
 
         .span9
           - flash.each do |type, message|

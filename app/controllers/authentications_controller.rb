@@ -125,7 +125,7 @@ class AuthenticationsController < ApplicationController
 
   def failed_to_create_new_user
     session[:omniauth] = @omniauth.except('extra')
-    redirect_to root_path
+    redirect_to new_user_registration_url(:wizard => wizard_id)
   end
 
   def log_sign_up

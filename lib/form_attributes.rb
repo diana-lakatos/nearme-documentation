@@ -2,7 +2,7 @@ class FormAttributes
 
   def user
     [
-      :email, :phone, :avatar, :name, :first_name, :middle_name, :last_name, :approval_requests
+      :email, :phone, :avatar, :name, :first_name, :middle_name, :last_name, :approval_requests, :current_address
     ] + User.public_custom_attributes_names(InstanceProfileType.first.try(:id)).map { |k| Hash === k ? k.keys : k }.flatten +
     Category.users.roots.map { |k| ('Category - ' + k.name).to_sym }.flatten
   end
