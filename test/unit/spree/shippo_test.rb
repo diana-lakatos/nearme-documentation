@@ -16,7 +16,7 @@ class ShippoTest < ActionView::TestCase
     result
   end
 
-  def setup_stubs_for_shippo_order_testing(get_rates = true, no_categories = false, shippo_enabled = true)
+  def setup_stubs_for_shippo_order_testing(get_rates = true, no_categories = false, shippo_enabled = true, insurance_enabled = false)
     shippo_mock_rates = [
       mock.stubs(provider: 'USPS', servicelevel_name: 'Library Mail', amount: 2.56, object_id: 'ab47a600b2114eb4899cb698731b97ff'),
       mock.stubs(provider: 'USPS', servicelevel_name: 'First-Class Package/Mail Parcel', amount: 4.58, object_id: 'adf6939b914a46f1b72882935b7244be')
@@ -28,6 +28,11 @@ class ShippoTest < ActionView::TestCase
     else
       Spree::Product.any_instance.expects('shippo_enabled?').at_least(0).returns(false)
       Spree::Product.any_instance.expects('shippo_enabled').at_least(0).returns(false)
+    end
+
+    if insurance_enabled
+      Spree::Product.any_instance.expects('insurance_amount').at_least(0).returns(500)
+      Spree::Order.any_instance.expects('insurance_enabled?').at_least(0).returns(true)
     end
 
     Spree::Product.any_instance.expects('user').at_least(0).returns(User.new)
@@ -49,10 +54,11 @@ class ShippoTest < ActionView::TestCase
     if get_rates
       shippo_api_mock = mock
       ignored_params = [:street2, :email, :street_no]
-      shippo_api_mock.expects(:get_rates).at_least(1).with do |address_from_info, address_to_info, parcel_info, customs_item_info, customs_declaration_info|
+      shippo_api_mock.expects(:get_rates).at_least(1).with do |address_from_info, address_to_info, parcel_info, customs_item_info, customs_declaration_info, insurance|
         check_all_params_not_blank(ShippoApi::ShippoAddressInfo::REQUIRED_PARAMS.reject { |p| ignored_params.include?(p) }, address_from_info) &&
         check_all_params_not_blank(ShippoApi::ShippoAddressInfo::REQUIRED_PARAMS.reject { |p| ignored_params.include?(p) }, address_to_info) &&
-        check_all_params_not_blank(ShippoApi::ShippoParcelInfo::REQUIRED_PARAMS, parcel_info)
+        check_all_params_not_blank(ShippoApi::ShippoParcelInfo::REQUIRED_PARAMS, parcel_info) &&
+        ((!insurance_enabled && insurance.nil?) || (insurance_enabled && insurance.present?))
       end.returns(shippo_mock_rates)
       ShippoApi::ShippoApi.expects(:new).returns(shippo_api_mock)
     end
@@ -98,6 +104,14 @@ class ShippoTest < ActionView::TestCase
       assert_equal 2, order.line_items.map(&:variant).map(&:shipping_category).uniq.map(&:shipping_methods).flatten.compact.length
       assert_equal 2, order.line_items.map(&:variant).map(&:shipping_category).uniq.map(&:shipping_methods).flatten.compact.map(&:shipping_rates).flatten.compact.length
       assert_equal 2, Spree::Shipment.find_by(:order_id => order.id).shipping_methods.length
+
+      assert order.next
+
+      assert_equal 'payment', order.state
+    end
+
+    should 'call get rates with insurance if needed' do
+      order = setup_stubs_for_shippo_order_testing(true, false, true, true)
 
       assert order.next
 

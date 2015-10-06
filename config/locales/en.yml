@@ -12,6 +12,8 @@ en:
         height_unit: 'Type of Unit'
         width_unit: 'Type of Unit'
         depth_unit: 'Type of Unit'
+      spree/order:
+        insurance_enabled: "Enable shipping insurance (if available)"
       saved_search:
         title: 'Title'
         created_at: 'Created at'
@@ -145,6 +147,7 @@ en:
       dimensions_templates:
         explanation1: 'This will provide a tracking code and a shipping label for your product sale.'
         explanation2: "Select your item's dimensions from the menu below or add your own measures."
+      insurance_explanation: "The insurance covers up to $5,000.00 per package. Packages shipped via Canada Post, FedEx Smart Post, UPS Mail Innovations, and USPS First Class Mail are limited to $1,000.00, per package. Leave zero for no insurance."
       shipping_profiles:
         add_new_shipping_profile: 'Create New Shipping Profile'
         add_new_shipping_rule: 'Add New Shipping Rule'
