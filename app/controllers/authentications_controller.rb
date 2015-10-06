@@ -125,7 +125,7 @@ class AuthenticationsController < ApplicationController
 
   def failed_to_create_new_user
     session[:omniauth] = @omniauth.except('extra')
-    redirect_to new_user_registration_url(:wizard => wizard_id)
+    redirect_to root_path
   end
 
   def log_sign_up
@@ -153,9 +153,7 @@ class AuthenticationsController < ApplicationController
   end
 
   def redirect_after_callback_to
-    ret = cookies[:redirect_after_callback_to]
-    cookies[:redirect_after_callback_to] = nil
-    ret
+    cookies.delete :redirect_after_callback_to
   end
 
 end
