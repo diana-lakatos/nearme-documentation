@@ -9,7 +9,7 @@ module ProductsIndex
         number_of_shards: 1,
         analysis: {
           analyzer: {
-            customAnalyzer: {
+            custom_analyzer: {
               type: 'custom',
               tokenizer: 'whitespace',
               filter: ["standard", "lowercase"]
