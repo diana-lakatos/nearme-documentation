@@ -33,7 +33,7 @@ gem 'omniauth-saml'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-github'
 
-gem 'koala', '~> 1.7.0rc1' # facebook Graph API
+gem 'koala'
 gem 'linkedin-oauth2', '~> 0.1.1'
 gem 'twitter', '~> 5.5.1'
 # Installing instagram from the master branch will fix ruby 2.2 circular dependency warning

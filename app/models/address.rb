@@ -180,4 +180,14 @@ class Address < ActiveRecord::Base
     @address_drop ||= AddressDrop.new(self)
   end
 
+  def self.sanitize_bounding_box(bounding_box)
+    bounding_box.collect do |element|
+      if element.is_a?(Array)
+        sanitize_bounding_box(element)
+      else
+        element.to_f
+      end
+    end
+  end
+
 end

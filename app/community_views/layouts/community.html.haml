@@ -16,6 +16,8 @@
 
               = render 'shared/topnav' unless @omit_topnav
 
+        = render 'shared/render_flash'
+
         %section#content.content-a
           = yield
 

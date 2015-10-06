@@ -34,13 +34,13 @@ class @SetupNestedForm
             if $(hiddenElement).parents(wrapper).is(':visible')
               $(hiddenElement).data('hide', true)
               $(hiddenElement).prop("checked", true)
-          @form.find('.document-requirements .fields').hide('slow')
+          @form.find('.document-requirements .document-requirements-fields').hide('slow')
         else
           for hiddenElement in @form.find(hiddenField)
             if $(hiddenElement).data('hide')
               $(hiddenElement).prop("checked", false)
               $(hiddenElement).removeData('hide')
-          @form.find('.document-requirements .fields').removeClass('hidden')
-          @form.find('.document-requirements .fields').show('slow')
+          @form.find('.document-requirements .document-requirements-fields').removeClass('hidden')
+          @form.find('.document-requirements .document-requirements-fields').show('slow')
 
   

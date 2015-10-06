@@ -36,4 +36,5 @@ $(function(){
     window.SeeMore.initialize();
     window.Fileupload.initialize();
     window.ProjectLinks.initialize();
+    window.FlashMessage.initialize();
 });

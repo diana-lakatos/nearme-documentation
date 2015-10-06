@@ -623,7 +623,7 @@ GEM
       activesupport (>= 3.0.0)
     kdtree (0.3)
     kgio (2.9.2)
-    koala (1.7.0rc1)
+    koala (2.2.0)
       addressable
       faraday
       multi_json
@@ -1149,7 +1149,7 @@ DEPENDENCIES
   jquery-rails (~> 4.0)
   js-routes
   json_spec
-  koala (~> 1.7.0rc1)
+  koala
   launchy
   le
   linkedin-oauth2 (~> 0.1.1)
@@ -1250,6 +1250,3 @@ DEPENDENCIES
   wicked
   will_paginate
   yui-compressor
-
-BUNDLED WITH
-   1.10.6
