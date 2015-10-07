@@ -343,7 +343,7 @@ class Instance < ActiveRecord::Base
   end
 
   def default_currency
-    super.presence || 'USD'
+    read_attribute(:default_currency).presence || 'USD'
   end
 
   def set_context!
