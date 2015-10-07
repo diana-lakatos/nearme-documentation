@@ -8,6 +8,9 @@ class Blog::BlogPostsController < Blog::ApplicationController
   def index
     @tags = Tag.alphabetically
     @blog_posts = get_blog_posts.sort_by(&:published_at).reverse.paginate(page: params[:page], per_page: 10)
+    respond_to do |format|
+      format.html { render :index }
+    end
   end
 
   def show
