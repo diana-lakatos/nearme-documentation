@@ -1172,6 +1172,7 @@ en:
         week: "week"
         day: "day"
         hour: "hour"
+        night: "night"
     reviews:
       templates:
         comments: "Comments"
