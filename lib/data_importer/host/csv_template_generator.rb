@@ -3,10 +3,10 @@ class DataImporter::Host::CsvTemplateGenerator < DataImporter::CsvTemplateGenera
   def initialize(importable)
     @importable = importable
     @models = if import_model == :transactable
-      [:location, :address, import_model, :photo]
-    else
-      [import_model, :'spree/variant', :'spree/shipping_category', :'spree/image']
-    end
+                [:company, :location, :address, import_model, :photo]
+              else
+                [:company, import_model, :'spree/variant', :'spree/shipping_category', :'spree/image']
+              end
   end
 
 end

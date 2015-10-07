@@ -2,7 +2,7 @@
   %td= link_to blog_post.title, edit_instance_admin_manage_blog_user_post_path(blog_post)
   %td= l blog_post.created_at, format: :only_date
   %td= l(blog_post.published_at, format: :only_date) if blog_post.published_at
-  %td= link_to blog_post.user.name, user_path(blog_post.user), target: '_blank'
+  %td= blog_post.user.present? ? (link_to blog_post.user.name, user_path(blog_post.user), target: '_blank') : ''
   %td= check_box_tag("highlighted", blog_post.highlighted, blog_post.highlighted, disabled: true)
   %td
     .pull-right
