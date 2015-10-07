@@ -5,7 +5,7 @@ class BlogPost < ActiveRecord::Base
   include Taggable
 
   belongs_to :blog_instance
-  belongs_to :user
+  belongs_to :user, -> { with_deleted }
 
   delegate :instance, to: :blog_instance
 
