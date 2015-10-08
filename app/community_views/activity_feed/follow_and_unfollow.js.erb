@@ -1,3 +1,9 @@
-$container = window.clickedFollowButton.parents("[data-follow-button]")
-window.newFollowButton = $container.html("<%= escape_javascript(render(partial: 'shared/follow_button', locals: { object: @object })) %>").find("a")
-window.FollowButton.initialize()
+(function(){
+    var btn = $('[data-follow-button] [data-object-id="<%= @object.id %>"]');
+    var updated = $('<%= escape_javascript(render(partial: 'shared/follow_button', locals: { object: @object })) %>');
+
+    btn
+        .attr('href', updated.attr('href'))
+        .data('method', updated.data('method'))
+        .html(updated.html());
+}());
