@@ -6,10 +6,10 @@ class DataImporter::CsvTemplateGenerator < DataImporter::File
     @importable = importable
     @include_user_fields = include_user_fields
     @models = if import_model == :transactable
-        [:company, :location, :address, import_model, :photo]
-      else
-        [import_model, :'spree/variant', :'spree/shipping_category', :'spree/image']
-      end
+                [:company, :location, :address, import_model, :photo]
+              else
+                [:company, import_model, :'spree/variant', :'spree/shipping_category', :'spree/image']
+              end
   end
 
   def generate
@@ -20,10 +20,10 @@ class DataImporter::CsvTemplateGenerator < DataImporter::File
 
   def required_fields
     (@include_user_fields ? static_fields(%i(user)) : []) + if @importable.custom_csv_fields.empty?
-        static_fields
-      else
-        custom_fields(@importable.custom_csv_fields)
-      end
+                                                              static_fields
+    else
+      custom_fields(@importable.custom_csv_fields)
+    end
   end
 
   def static_fields(models = nil)
@@ -41,8 +41,8 @@ class DataImporter::CsvTemplateGenerator < DataImporter::File
       elsif model.to_sym.in?(@models)
         model.to_s.classify.constantize.csv_fields
       else
-        raise NotImplementedError.new("Unknown model for which field #{field} was defined: #{model}. Valid models: #{@models.join(', ')}")
-      end.with_indifferent_access.fetch(field)
+        {}
+      end.with_indifferent_access.fetch(field, nil)
     end
   end
 

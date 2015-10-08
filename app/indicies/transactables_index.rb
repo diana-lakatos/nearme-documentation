@@ -85,7 +85,7 @@ module TransactablesIndex
     end
 
     def self.searchable_custom_attributes(service_type = nil)
-      if service_type
+      if service_type.present?
         # m[0] - name, m[7] - searchable
         service_type.cached_custom_attributes.map{|m| "custom_attributes.#{m[0]}" if m[7] == true}.compact.uniq
       else

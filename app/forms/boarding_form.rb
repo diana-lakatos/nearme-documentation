@@ -9,15 +9,27 @@ class BoardingForm < Form
   validate :validate_product, :validate_company
 
   def validate_product
-    errors.add(:product_form, "doesn't look like valid product") unless @product_form.valid?
+    unless @product_form.valid?
+      @product_form.errors.full_messages.each do |m|
+        errors.add(:product_form, m)
+      end
+    end
   end
 
   def validate_company
-    errors.add(:company, :invalid) unless @company.valid?
+    unless @company.valid?
+      @company.errors.full_messages.each do |m|
+        errors.add(:company, m)
+      end
+    end
   end
 
   def validate_user
-    errors.add(:user, :invalid) unless @user.valid?
+    unless @user.valid?
+      @user.errors.full_messages.each do |m|
+        errors.add(:user, m)
+      end
+    end
   end
 
   def initialize(user, product_type)
