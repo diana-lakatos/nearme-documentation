@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151001150516) do
+ActiveRecord::Schema.define(version: 20151006164627) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2169,7 +2169,6 @@ ActiveRecord::Schema.define(version: 20151001150516) do
   add_index "spree_products", ["company_id"], name: "index_spree_products_on_company_id", using: :btree
   add_index "spree_products", ["deleted_at"], name: "index_spree_products_on_deleted_at", using: :btree
   add_index "spree_products", ["external_id", "company_id"], name: "index_spree_products_on_external_id_and_company_id", unique: true, using: :btree
-  add_index "spree_products", ["extra_properties"], name: "spree_products_gin_extra_properties", using: :gin
   add_index "spree_products", ["instance_id"], name: "index_spree_products_on_instance_id", using: :btree
   add_index "spree_products", ["name"], name: "index_spree_products_on_name", using: :btree
   add_index "spree_products", ["partner_id"], name: "index_spree_products_on_partner_id", using: :btree
@@ -3287,7 +3286,6 @@ ActiveRecord::Schema.define(version: 20151001150516) do
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
   add_index "transactables", ["opened_on_days"], name: "index_transactables_on_opened_on_days", using: :gin
   add_index "transactables", ["parent_transactable_id"], name: "index_transactables_on_parent_transactable_id", using: :btree
-  add_index "transactables", ["properties"], name: "transactables_gin_properties", using: :gin
   add_index "transactables", ["transactable_type_id"], name: "index_transactables_on_transactable_type_id", using: :btree
 
   create_table "translations", force: :cascade do |t|
