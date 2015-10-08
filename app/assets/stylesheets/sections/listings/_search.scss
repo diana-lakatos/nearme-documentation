@@ -733,7 +733,10 @@ header#listing_search {
 
 /*** Listing View ***/
 section.search section#category-tree {
-  // margin-top: 145px;
+
+  &.list-view-category-tree {
+    margin-top: 145px;
+  }
 
   .span2 & {
     margin-top: 0;
@@ -746,6 +749,12 @@ section.search section#category-tree {
 
   .nav-item ul {
     margin-left: 20px;
+  }
+
+  @media (max-width: 750px) {
+    &.list-view-category-tree {
+      margin-top: 0;
+    }
   }
 }
 
