@@ -7,6 +7,6 @@
 
   - local_variables = { site_name: s_name, current_url: c_url, description: desc, site_title: s_title,  site_image_url: s_image_url }
 
-  = render partial: 'social/facebook', locals: local_variables
+  = render partial: 'social/facebook', locals: local_variables rescue '' # trying to silent encoding issue...
   = render partial: 'social/gplus', locals: local_variables
   = render partial: 'social/twitter', locals: local_variables
