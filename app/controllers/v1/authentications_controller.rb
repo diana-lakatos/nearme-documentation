@@ -30,7 +30,7 @@ class V1::AuthenticationsController < V1::BaseController
     raise DNM::Unauthorized if uid.blank?
 
     # Look for a user for those credentials
-    auth = Authentication.find_by_provider_and_uid(params[:provider], uid)
+    auth = Authentication.find_by(provider: params[:provider].try(:to_s), uid: uid.to_s)
 
     if auth.nil? || auth.user.nil?
       # No Auth? Gonna raise an error...

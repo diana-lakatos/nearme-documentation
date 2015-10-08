@@ -2,9 +2,10 @@ class InstanceAdmin::ManageBlog::PostsController < InstanceAdmin::ManageBlog::Ba
   before_filter :load_instance
 
   before_filter :set_breadcrumbs
+  before_filter :redirect_to_index_if_no_blog_instance, except: :index
 
   def index
-    @blog_posts = @blog_instance.blog_posts.by_date
+    @blog_posts = @blog_instance.try(:blog_posts).try(:by_date) || []
   end
 
   def new
@@ -70,6 +71,13 @@ class InstanceAdmin::ManageBlog::PostsController < InstanceAdmin::ManageBlog::Ba
 
   def set_breadcrumbs
     @breadcrumbs_title = 'Manage Blog'
+  end
+
+  def redirect_to_index_if_no_blog_instance
+    unless @blog_instance.present?
+      flash[:error] = 'Blog has not been set up.'
+      redirect_to instance_admin_manage_blog_posts_path
+    end
   end
 
 end

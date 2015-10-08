@@ -3,6 +3,10 @@
 .page-banner
   %h1
     = t('onboarding_wizard.list_a_new', name: @product_type.name)
+  - if @errors.present?
+    %div{class: "alert alert-danger alert-dismissible", role: "alert", style: 'position: relative; cursor: inherit; padding: 20px;'}
+      %h1{style: 'margin-bottom: 15px'}= t('flash_messages.space_wizard.complete_fields')
+      = @errors.html_safe
 
 = simple_form_for @boarding_form, wrapper: :bs3, url: product_type_product_wizard_index_path(@product_type), html: { multipart: true, id: "boarding_form" }, method: :post do |f|
   = f.simple_fields_for :user, @boarding_form.user do |user_form|
