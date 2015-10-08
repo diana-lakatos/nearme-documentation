@@ -401,19 +401,6 @@ ActiveRecord::Schema.define(version: 20151016100737) do
   add_index "ckeditor_assets", ["assetable_type", "type", "assetable_id"], name: "idx_ckeditor_assetable_type", using: :btree
   add_index "ckeditor_assets", ["instance_id"], name: "index_ckeditor_assets_on_instance_id", using: :btree
 
-  create_table "comment_spam_reports", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "comment_id"
-    t.integer  "instance_id"
-    t.datetime "deleted_at"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-  end
-
-  add_index "comment_spam_reports", ["comment_id"], name: "index_comment_spam_reports_on_comment_id", using: :btree
-  add_index "comment_spam_reports", ["instance_id"], name: "index_comment_spam_reports_on_instance_id", using: :btree
-  add_index "comment_spam_reports", ["user_id"], name: "index_comment_spam_reports_on_user_id", using: :btree
-
   create_table "comments", force: :cascade do |t|
     t.integer  "commentable_id"
     t.string   "commentable_type"
@@ -1131,22 +1118,24 @@ ActiveRecord::Schema.define(version: 20151016100737) do
   add_index "merchant_accounts", ["instance_id", "merchantable_id", "merchantable_type"], name: "index_on_merchant_accounts_on_merchant", using: :btree
 
   create_table "pages", force: :cascade do |t|
-    t.string   "path",               limit: 255,                 null: false
+    t.string   "path",                      limit: 255,                 null: false
     t.text     "content"
-    t.string   "hero_image",         limit: 255
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
+    t.string   "hero_image",                limit: 255
+    t.datetime "created_at",                                            null: false
+    t.datetime "updated_at",                                            null: false
     t.integer  "theme_id"
-    t.string   "slug",               limit: 255
+    t.string   "slug",                      limit: 255
     t.integer  "position"
     t.text     "html_content"
     t.datetime "deleted_at"
-    t.string   "redirect_url",       limit: 255
-    t.boolean  "open_in_new_window",             default: true
+    t.string   "redirect_url",              limit: 255
+    t.boolean  "open_in_new_window",                    default: true
     t.integer  "instance_id"
     t.text     "css_content"
-    t.boolean  "no_layout",                      default: false
-    t.string   "extension"
+    t.boolean  "no_layout",                             default: false
+    t.string   "metadata_title"
+    t.string   "metadata_meta_description"
+    t.integer  "redirect_code"
   end
 
   add_index "pages", ["instance_id"], name: "index_pages_on_instance_id", using: :btree
@@ -3341,9 +3330,7 @@ ActiveRecord::Schema.define(version: 20151016100737) do
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
   add_index "transactables", ["opened_on_days"], name: "index_transactables_on_opened_on_days", using: :gin
   add_index "transactables", ["parent_transactable_id"], name: "index_transactables_on_parent_transactable_id", using: :btree
-  add_index "transactables", ["properties"], name: "transactables_gin_properties", using: :gin
   add_index "transactables", ["slug"], name: "index_transactables_on_slug", using: :btree
-
   add_index "transactables", ["transactable_type_id"], name: "index_transactables_on_transactable_type_id", using: :btree
 
   create_table "translations", force: :cascade do |t|

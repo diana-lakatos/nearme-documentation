@@ -11,6 +11,8 @@ class Page < ActiveRecord::Base
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :finders, :scoped], scope: :theme
 
+  validates_uniqueness_of :slug, scope: :theme_id
+
   include SitemapService::Callbacks
 
   mount_uploader :hero_image, HeroImageUploader
@@ -36,19 +38,16 @@ class Page < ActiveRecord::Base
     (is_http_https && Domain.pluck(:name).any?{|d| self.redirect_url.include?(d)}) || !is_http_https
   end
 
-  def normalize_friendly_id(value)
-    sep = "-"
-    if value.include?(".")
-      self.extension = value.split(".").last
-      value = value.split(".").first
-    end
+  def self.possible_slugs(slug, format)
+    [slug, "#{slug}.#{format}"]
+  end
 
-    parameterized_string = ActiveSupport::Inflector.transliterate(value)
-    parameterized_string.gsub!(/[^a-z0-9\-_]+/, sep)
-    re_sep = Regexp.escape(sep)
-    parameterized_string.gsub!(/#{re_sep}{2,}/, sep)
-    parameterized_string.gsub!(/^#{re_sep}|#{re_sep}$/, '')
-    parameterized_string.downcase
+  def self.redirect_statuses
+    {
+      "301 - Moved Permanently" => 301,
+      "302 - Found" => 302,
+      "307 - Temporary Redirect" => 307
+    }
   end
 
   private
@@ -60,8 +59,7 @@ class Page < ActiveRecord::Base
   end
 
   def should_generate_new_friendly_id?
-    return false if slug.present?
-    path_changed? || slug_changed?
+    !slug.present?
   end
 
   def slug_candidates

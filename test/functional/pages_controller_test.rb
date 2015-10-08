@@ -11,7 +11,7 @@ class PagesControllerTest < ActionController::TestCase
       end
 
       should 'return a content page with hero image and markdown content' do
-        get :show, :path => @page.path
+        get :show, :slug => @page.slug
 
         assert_response :success
         assert_select "#hero img"
@@ -27,7 +27,7 @@ class PagesControllerTest < ActionController::TestCase
 
       should 'raise standard exception and store it in session' do
         assert_raises Page::NotFound do
-          get :show, :path => 'wrong-path'
+          get :show, :slug => 'wrong-path'
         end
       end
 

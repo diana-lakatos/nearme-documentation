@@ -70,7 +70,12 @@ module SearchHelper
     end
 
     if not search.is_united_states?
-      title += title.empty? ? "Search" : (search_location.empty? ? ' in ' : ', ')
+      title += if title.empty?
+        I18n.t("metadata.search.title.search")
+      else
+        search_location.empty? ? I18n.t("metadata.search.title.in") : ', '
+      end
+
       title += search.country.to_s
     end
 

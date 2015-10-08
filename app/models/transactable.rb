@@ -204,7 +204,12 @@ class Transactable < ActiveRecord::Base
   monetize :monthly_subscription_price_cents, with_model_currency: :currency, allow_nil: true
 
   extend FriendlyId
-  friendly_id :name, use: [:slugged, :history, :finders, :scoped], scope: :instance
+  friendly_id :slug_candidates, use: [:slugged, :finders, :scoped], scope: :instance
+  def slug_candidates
+    [
+      [:name, DateTime.now.strftime("%b %d %Y")]
+    ]
+  end
 
   # Defer to the parent Location for availability rules unless this Listing has specific
   # rules.

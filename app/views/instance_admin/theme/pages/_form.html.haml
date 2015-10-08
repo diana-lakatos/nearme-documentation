@@ -5,8 +5,7 @@
 
   .row
     .input-container.col-xs-12
-      - slug_value = resource.extension.present? ? "#{resource.slug}.#{resource.extension}" : resource.slug
-      = f.input :slug, :placeholder => 'Page URL', input_html: { class: 'form-control', disabled: resource.id.present?, value: slug_value }
+      = f.input :slug, :placeholder => 'New Slug', input_html: { class: 'form-control' }
 
   .row
     .input-container.col-xs-12
@@ -20,6 +19,14 @@
   .row
     .input-container.col-xs-12
       = f.input :hero_image
+
+  .row
+    .input-container.col-xs-12
+      = f.input :metadata_title, hint: "A good title has between 40 - 250 characters", input_html: { class: 'form-control' }
+
+  .row
+    .input-container.col-xs-12
+      = f.input :metadata_meta_description, as: :text, hint: "A good meta description has between 100 - 350 characters", input_html: { class: 'form-control' }
 
   - if resource.hero_image.present?
     .row

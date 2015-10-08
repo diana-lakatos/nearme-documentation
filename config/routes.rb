@@ -960,7 +960,7 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
-  get "/:path", to: 'pages#show', as: :pages, constraints: PageConstraints.new
+  get "/:slug(.:format)", to: 'pages#show', as: :pages, constraints: PageConstraints.new
 
   # delayed_job web gui
   match "/delayed_job" => DelayedJobWeb, :anchor => false, via: [:get, :post]

@@ -160,7 +160,7 @@ class SitemapServiceTest < ActiveSupport::TestCase
       end
 
       should "#location" do
-        assert_equal url_helpers.location_path(@transactable.location.slug, listing_id: @transactable.id), @transactable_node.location
+        assert_equal url_helpers.location_path(@transactable.location.slug, listing_id: @transactable.slug), @transactable_node.location
       end
 
       should "#lastmod" do
@@ -215,17 +215,17 @@ class SitemapServiceTest < ActiveSupport::TestCase
 
       page = Page.last
 
-      old_slug = page.path
-      old_path = url_helpers.pages_path(page.path)
+      old_slug = page.slug
+      old_path = url_helpers.pages_path(page.slug)
 
       assert_node_content Nokogiri::XML(@domain.sitemap), "url loc", old_path
 
-      page.path = "another-path"
+      page.slug = "another-path"
       page.save
 
-      assert_not_equal old_slug, page.path
+      assert_not_equal old_slug, page.slug
 
-      new_path = url_helpers.pages_path(page.path)
+      new_path = url_helpers.pages_path(page.slug)
 
       assert_node_content Nokogiri::XML(@domain.sitemap), "url loc", new_path
       assert_node_absence Nokogiri::XML(@domain.sitemap), "url loc", old_path
