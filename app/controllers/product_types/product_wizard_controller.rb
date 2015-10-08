@@ -24,8 +24,7 @@ class ProductTypes::ProductWizardController < ApplicationController
         redirect_to dashboard_company_product_type_products_path(@product_type), notice: t('flash_messages.space_wizard.item_listed', bookable_noun: @product_type.name)
       end
     else
-      flash.now[:error] = t('flash_messages.product.complete_fields')
-      flash.now[:error] = t('flash_messages.product.missing_fields_invalid') if @boarding_form.product_form.required_field_missing?
+      @errors = view_context.array_to_unordered_list(@boarding_form.errors.full_messages)
       render :new
     end
 

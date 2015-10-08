@@ -41,8 +41,8 @@ class DataImporter::CsvTemplateGenerator < DataImporter::File
       elsif model.to_sym.in?(@models)
         model.to_s.classify.constantize.csv_fields
       else
-        raise NotImplementedError.new("Unknown model for which field #{field} was defined: #{model}. Valid models: #{@models.join(', ')}")
-      end.with_indifferent_access.fetch(field)
+        {}
+      end.with_indifferent_access.fetch(field, nil)
     end
   end
 

@@ -4,11 +4,11 @@
     %nav.tabs-a.trio.search-types
       %ul
         %li{ class: active_class(params[:search_type], 'people', 'is-active')}
-          = link_to t(:people), '', data: { search_type: 'people'}
+          = link_to t(:people), search_url(search_type: :people), data: { search_type: 'people'}
         %li{ class: active_class(params[:search_type], 'projects', 'is-active')}
-          = link_to t(:projects), '', data: { search_type: 'projects'}
+          = link_to t(:projects), search_url(search_type: :projects), data: { search_type: 'projects'}
         %li{ class: active_class(params[:search_type], 'topics', 'is-active')}
-          = link_to t(:topics), '', data: { search_type: 'topics'}
+          = link_to t(:topics), search_url(search_type: :topics), data: { search_type: 'topics'}
     / white box
     .box-a
       .search-container

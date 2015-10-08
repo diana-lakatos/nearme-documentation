@@ -32,7 +32,6 @@ $(function(){
     window.Tutorial.initialize();
     window.Forms.initialize();
     window.Fixes.initialize();
-    window.FollowButton.initialize();
     window.SeeMore.initialize();
     window.Fileupload.initialize();
     window.ProjectLinks.initialize();
