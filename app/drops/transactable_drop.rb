@@ -130,7 +130,7 @@ class TransactableDrop < BaseDrop
 
   # url to the listing page for this listing
   def url
-    routes.transactable_type_location_listing_path(@transactable.service_type.slug, @transactable.location, @transactable)
+    routes.transactable_type_location_listing_path(@transactable.service_type, @transactable.location, @transactable)
   end
   alias_method :listing_url, :url
 

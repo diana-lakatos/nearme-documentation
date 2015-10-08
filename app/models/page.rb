@@ -36,6 +36,21 @@ class Page < ActiveRecord::Base
     (is_http_https && Domain.pluck(:name).any?{|d| self.redirect_url.include?(d)}) || !is_http_https
   end
 
+  def normalize_friendly_id(value)
+    sep = "-"
+    if value.include?(".")
+      self.extension = value.split(".").last
+      value = value.split(".").first
+    end
+
+    parameterized_string = ActiveSupport::Inflector.transliterate(value)
+    parameterized_string.gsub!(/[^a-z0-9\-_]+/, sep)
+    re_sep = Regexp.escape(sep)
+    parameterized_string.gsub!(/#{re_sep}{2,}/, sep)
+    parameterized_string.gsub!(/^#{re_sep}|#{re_sep}$/, '')
+    parameterized_string.downcase
+  end
+
   private
 
   def convert_to_html
@@ -45,11 +60,13 @@ class Page < ActiveRecord::Base
   end
 
   def should_generate_new_friendly_id?
-    slug.blank? || path_changed?
+    return false if slug.present?
+    path_changed? || slug_changed?
   end
 
   def slug_candidates
     [
+      :slug,
       :path,
       [:path, DateTime.now.strftime("%b %d %Y")]
     ]

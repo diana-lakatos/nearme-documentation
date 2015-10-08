@@ -1131,11 +1131,11 @@ ActiveRecord::Schema.define(version: 20151016100737) do
   add_index "merchant_accounts", ["instance_id", "merchantable_id", "merchantable_type"], name: "index_on_merchant_accounts_on_merchant", using: :btree
 
   create_table "pages", force: :cascade do |t|
-    t.string   "path",               limit: 255,                null: false
+    t.string   "path",               limit: 255,                 null: false
     t.text     "content"
     t.string   "hero_image",         limit: 255
-    t.datetime "created_at",                                    null: false
-    t.datetime "updated_at",                                    null: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
     t.integer  "theme_id"
     t.string   "slug",               limit: 255
     t.integer  "position"
@@ -1145,6 +1145,8 @@ ActiveRecord::Schema.define(version: 20151016100737) do
     t.boolean  "open_in_new_window",             default: true
     t.integer  "instance_id"
     t.text     "css_content"
+    t.boolean  "no_layout",                      default: false
+    t.string   "extension"
   end
 
   add_index "pages", ["instance_id"], name: "index_pages_on_instance_id", using: :btree

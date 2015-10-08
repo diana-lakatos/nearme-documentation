@@ -129,7 +129,8 @@ class LocationsController < ApplicationController
     end
   rescue
     # Just in case we don't find the transactable type.
-    redirect_to request.referer
+    path = request.referer.present? ? request.referer : root_path
+    redirect_to path
   end
 
 end
