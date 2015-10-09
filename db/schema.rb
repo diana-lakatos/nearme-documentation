@@ -3384,19 +3384,20 @@ ActiveRecord::Schema.define(version: 20151006164627) do
 
   create_table "user_messages", force: :cascade do |t|
     t.integer  "thread_owner_id"
-    t.integer  "author_id",                                          null: false
+    t.integer  "author_id",                               null: false
     t.integer  "thread_recipient_id"
     t.integer  "thread_context_id"
     t.string   "thread_context_type",    limit: 255
     t.text     "body"
-    t.boolean  "archived_for_owner",                 default: false
-    t.boolean  "archived_for_recipient",             default: false
-    t.datetime "created_at",                                         null: false
-    t.datetime "updated_at",                                         null: false
-    t.boolean  "read_for_owner",                     default: false
-    t.boolean  "read_for_recipient",                 default: false
+    t.boolean  "archived_for_owner",      default: false
+    t.boolean  "archived_for_recipient",  default: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
+    t.boolean  "read_for_owner",          default: false
+    t.boolean  "read_for_recipient",      default: false
     t.datetime "deleted_at"
     t.integer  "instance_id"
+    t.datetime "unread_last_reminded_at"
   end
 
   add_index "user_messages", ["instance_id"], name: "index_user_messages_on_instance_id", using: :btree

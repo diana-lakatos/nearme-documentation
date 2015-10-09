@@ -26,6 +26,7 @@ namespace :after_deploy do
     PrepareFriendFinders.schedule!
     SendSearchesWeeklyAlerts.schedule!
     SendAnalyticsMails.schedule!
+    SendUnreadMessagesReminders.schedule!
 
   end
 end
