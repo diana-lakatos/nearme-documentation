@@ -20,7 +20,6 @@ class DataImporter::XmlFile < DataImporter::File
     parse_instance do
       parse_companies do
         parse_locations do
-          parse_address
           parse_availabilities
           parse_amenities
           parse_listings do
@@ -120,6 +119,16 @@ class DataImporter::XmlFile < DataImporter::File
         ApprovalRequest.with_deleted.where(owner: @location).update_all(deleted_at: nil)
         Impression.with_deleted.where(impressionable: @location).update_all(deleted_at: nil)
       end
+
+      # We do this here because assigning / building a location address to a
+      # location can make it invalid and we need to know in advance not think it's
+      # valid and then end up with it actually being invalid
+      location_node.xpath('location_address').each do |address_node|
+        @address = @location.location_address || @location.build_location_address
+        assign_attributes(@address, address_node)
+        @address.formatted_address = [@address.read_attribute(:address), @address.suburb, @address.city, @address.postcode].compact.join(', ')
+      end
+
       if @location.valid?
         trigger_event('object_valid', @location)
         yield
@@ -138,14 +147,6 @@ class DataImporter::XmlFile < DataImporter::File
         @synchronizer.unmark_object!(@location)
         trigger_event('object_not_valid', @location, @location.external_id)
       end
-    end
-  end
-
-  def parse_address
-    @node.xpath('location_address').each do |address_node|
-      @address = @location.location_address || @location.build_location_address
-      assign_attributes(@address, address_node)
-      @address.formatted_address = [@address.read_attribute(:address), @address.suburb, @address.city, @address.postcode].compact.join(', ')
     end
   end
 
