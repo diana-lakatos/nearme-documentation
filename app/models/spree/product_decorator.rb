@@ -201,4 +201,13 @@ Spree::Product.class_eval do
   def should_update_sitemap_node?
     !draft? && approved?
   end
+
+  # We override this method because when many records are deleted at once
+  # especially if some have a null slug, then the original Spree
+  # method may set more than one to have the same new date-based slug
+  def punch_slug
+    # punch slug with date prefix to allow reuse of original
+    update_column :slug, "#{Time.now.to_i}_#{String.get_random_string[0..12]}_#{slug}"[0..254] unless frozen?
+  end
+
 end
