@@ -1,0 +1,15 @@
+- title "Subscriptions (#{@recurring_bookings.count})"
+
+.dash-head.clearfix
+  %ul
+    - actions = ['booking_successful', 'active', 'booking_failed']
+    %li{class: actions.include?(params[:action]) ? 'active' : ''}
+      = link_to t('dashboard.user_recurring_bookings.active'), active_dashboard_user_recurring_bookings_path
+    %li{class: params[:action] == 'archived' ? 'active' : ''}
+      = link_to t('dashboard.user_recurring_bookings.archived'), archived_dashboard_user_recurring_bookings_path
+
+.dash-body
+  = render 'index'
+
+= render 'modals'
+

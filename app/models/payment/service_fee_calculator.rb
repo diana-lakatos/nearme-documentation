@@ -19,7 +19,6 @@ class Payment::ServiceFeeCalculator
     @amount * @host_fee_percent / BigDecimal(100)
   end
 
-  private
   # Returns the total price of all the additional charges that were applied to the reservation
   def additional_charges_amount
     return @additional_charges.collect(&:amount).sum if @additional_charges.present?

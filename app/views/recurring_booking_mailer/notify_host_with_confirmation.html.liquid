@@ -1,31 +1,27 @@
 <h2>Good news, {{ user.first_name }}!</h2>
 
 <p>
-Your listing, '<a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a>', was just booked!
+Your listing, '<a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a>', was just subscribed!
 </p>
 
 <div class="booking-details">
 
   <div class="row">
     <strong style='display: inline-block;'>Who</strong>
-    <span style="float: right;"><a href="{{ platform_context.host | append:reservation.owner.user_profile_url }}">{{ reservation.owner.first_name }}</a></span>
+    <span style="float: right;"><a href="{{ platform_context.host | append:recurring_booking.owner.user_profile_url }}">{{ recurring_booking.owner.first_name }}</a></span>
   </div>
 
   <div class="row">
     <strong style='display: inline-block;'>What</strong>
-    <span style="float: right;"><a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a> x {{ reservation.quantity }}</span>
+    <span style="float: right;"><a href="{{ platform_context.host | append:listing.listing_url }}">{{ listing.name }}</a> x {{ recurring_booking.quantity }}</span>
   </div>
 
   <div class="row">
     <table width="100%">
       <tr>
-        <td valign="top"><strong style='display: inline-block;'>When</strong></td>
+        <td valign="top"><strong style='display: inline-block;'>Starting at</strong></td>
         <td style="text-align: right;">
-          {% if reservation.action_hourly_booking? %}
-            {{ reservation.hourly_summary }}
-          {% else %}
-            {{ reservation.dates_summary }}
-          {% endif %}
+          {{ recurring_booking.start_date }}
         </td>
       </tr>
     </table>
@@ -33,15 +29,15 @@ Your listing, '<a href="{{ platform_context.host | append:listing.listing_url }}
 
   <div class="row">
     <strong style='display: inline-block;'>Total</strong>
-    <span style="float: right;">{{ reservation.total_price }}</span>
+    <span style="float: right;">{{ recurring_booking.subtotal_price }}</span>
   </div>
 
 </div>
 
 <p>Exciting, right? Please, confirm the booking and let's get the {{ listing.lessee }} set up!</p>
 
-<a class="btn" href="{{ platform_context.host | append:reservation.reservation_confirm_url_with_tracking | append:signature_for_tracking }}">Confirm Booking</a>
+<a class="btn" href="{{ platform_context.host | append:recurring_booking.reservation_confirm_url_with_tracking | append:signature_for_tracking }}">Confirm Booking</a>
 
-<p>Not ready for {{ listing.lessees }}? You can manage your bookings <a href="{{ platform_context.host | append:listing.manage_guests_dashboard_url }}">here</a>.</p>
+<p>Not ready for {{ listing.lessees }}? You can manage your bookings <a href="{{ platform_context.host | append:recurring_booking.manage_guests_dashboard_url }}">here</a>.</p>
 
 <p>If you need help, send an email to <a href="mailto:{{ platform_context.support_email }}">{{ platform_context.support_email }}</a> or contact us at {{ platform_context.phone_number }}.</p>

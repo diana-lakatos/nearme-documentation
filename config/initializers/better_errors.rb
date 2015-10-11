@@ -1,1 +1,1 @@
-BetterErrors.editor = :macvim if defined? BetterErrors
+BetterErrors.editor = :sublime if defined? BetterErrors

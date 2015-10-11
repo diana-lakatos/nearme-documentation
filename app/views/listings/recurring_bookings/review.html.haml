@@ -1,5 +1,4 @@
 - @recurring_booking = @recurring_booking_request.recurring_booking.decorate
-- @decorated_reservation = @recurring_booking.reservations.first.decorate
 
 .row-fluid
   .span8.offset2
@@ -10,9 +9,8 @@
 
     .box
       %h2
-        = @recurring_booking_request.recurring_booking.schedule.to_s
         %p
-          = @recurring_booking.short_dates
+          = "#{t('recurring_reservations_review.starts_from')} #{l(@recurring_booking.start_on, format: :short)}"
           - if @recurring_booking_request.action_hourly_booking?
             %br
             = @recurring_booking.hourly_summary
@@ -24,17 +22,8 @@
           .flash.error
             %p= t 'recurring_reservations_review.errors.whoops'
             %ul
-              - @recurring_booking_request.errors[:base].each do |error|
+              - @recurring_booking_request.errors.full_messages.each do |error|
                 %li= error
-
-        .selected-dates-summary
-          %hr.thin
-          - dates_length = @recurring_booking.reservations.size
-          - @recurring_booking.reservations.each_with_index do |r, index|
-            %span{"class" => "#{r.valid? ? 'ico-check' : 'ico-close'} "}
-            = r.periods.first.date.strftime('%a, %Y-%m-%d')
-            - unless dates_length == index + 1
-              %hr.thin
 
         %hr.thin
 
@@ -43,27 +32,18 @@
         .order-summary
           .summary-line
             .summary-line-label= t 'reservations_review.subtotal'
-            .summary-line-value.subtotal-amount= @decorated_reservation.subtotal_price
+            .summary-line-value.subtotal-amount= @recurring_booking.subtotal_price
             .clearfix
 
-          - if @decorated_reservation.has_service_fee?
+          - if @recurring_booking.has_service_fee?
             .summary-line
               .summary-line-label= t 'reservations_review.service_fee'
-              .summary-line-value.service-fee-amount= @decorated_reservation.service_fee_guest
+              .summary-line-value.service-fee-amount= @recurring_booking.service_fee_guest
               .clearfix
 
-
-          - if @decorated_reservation.additional_charges.any?
-            - @decorated_reservation.additional_charges.each do |charge|
-              .summary-line
-                .summary-line-label= charge.name
-                .summary-line-value.service-fee-amount= charge.amount
-                = hidden_field_tag "#{f.object_name}[additional_charge_ids][]", charge.additional_charge_type_id
-                .clearfix
-
           .summary-line
-            .summary-line-label= t 'recurring_reservations_review.total'
-            .summary-line-value.total-amount= @decorated_reservation.total_price
+            .summary-line-label= t 'recurring_reservations_review.total_per_interval', interval: t("recurring_reservations_review.#{@recurring_booking.interval}")
+            .summary-line-value.total-amount= @recurring_booking.total_price
             .clearfix
 
         - if @recurring_booking_request.display_phone_and_country_block?
@@ -73,28 +53,20 @@
           = render 'contact_information_fields', :f => f
 
 
-        - if @decorated_reservation.credit_card_payment?
+        %h2= t 'reservations_review.payment'
 
-          %h2= t 'reservations_review.payment'
+        - unless @recurring_booking.weekly?
+          %p= t 'recurring_reservations_review.prorated_info'
 
-          = render 'payments/credit_card_fields', :f => f
+        = render 'credit_card_fields', :f => f
 
-          - if @recurring_booking_request.confirm_reservations?
-            %p.confirm-reservations= "This #{platform_context.lessor} manually confirms all bookings. Your card will not be charged until the booking is confirmed."
-
-        - elsif @decorated_reservation.manual_payment?
-
-          %h2= t 'reservations_review.payment'
-
-          .box.gray= t('reservations.payment_in_person')
-          %p= t('reservations.manually_confirm', lessor: platform_context.lessor)
-
-        = f.button :submit, t('reservations_review.buttons.request'), disable_with: t('reservations_review.disabled_buttons.request')
+        = f.button :submit, t('reservations_review.buttons.request'), data: { disable_with: t('reservations_review.disabled_buttons.request') }
 
 - content_for :script do
+  = javascript_include_tag "https://js.stripe.com/v1/"
   :javascript
     $(function() {
-      new Bookings.ReservationRequestFormController($('form.payment'));
+      new PaymentController($('.reservation-wizard'))
       new PhoneNumbers.FieldsForm(
         $('form.payment'),
         {
@@ -106,3 +78,7 @@
       );
       window.sessioncamConfiguration.customDataObjects.push( { key: "event", value: "booking_modal_opened" } );
     });
+    $(function() {
+      $('input[data-card-number]').eq(0).payment('formatCardNumber');
+      $('input[data-card-code]').eq(0).payment('formatCardCVC');
+    })

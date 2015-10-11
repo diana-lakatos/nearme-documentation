@@ -14,3 +14,5 @@
     = yield :booking_type_regular_tab_content
   %div{id: 'booking-type-schedule', class: "tab-pane #{booking_types_active_toggle(f.object, 'schedule', true)}"}
     = yield :booking_type_schedule_tab_content
+  %div{id: 'booking-type-subscription', class: "tab-pane #{booking_types_active_toggle(f.object, 'subscription', true)}"}
+    = yield :booking_type_subscription_tab_content

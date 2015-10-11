@@ -4,7 +4,7 @@ class Bookings.RecurringBookingController
 
   constructor: (@form) ->
     @weeklyRadioButton = @form.find('[data-recurring-weekly]')
-    @customRadioButton = @form.find('[data-recurring-custom]')
+    @RadioButton = @form.find('[data-recurring-monthly]')
     @recurringSelect = @form.find('.recurring_select')
     @firstTimeSelect = true
 

@@ -70,6 +70,10 @@
           %li
             = link_to main_app.dashboard_user_reservations_path, class: 'nav-link dropdown-toggle' do
               %span= t 'top_navbar.my_bookings'
+        - if subscribable? && HiddenUiControls.find('main_menu/my_subscriptions').visible?
+          %li
+            = link_to main_app.active_dashboard_user_recurring_bookings_path, class: 'nav-link dropdown-toggle' do
+              %span= t 'top_navbar.my_subscriptions'
         - if platform_context.buyable? && HiddenUiControls.find('main_menu/my_orders').visible?
           %li
             = link_to main_app.dashboard_orders_path, class: 'nav-link dropdown-toggle' do

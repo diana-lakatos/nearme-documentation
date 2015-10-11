@@ -52,6 +52,7 @@ module InstanceType::Searcher::GeolocationSearcher
   def set_options_for_filters
     @filterable_location_types = LocationType.all
     @filterable_pricing = SEARCHER_DEFAULT_PRICING_TYPES.map{|price| [price, I18n.t("search.pricing_types.#{price}")] if @transactable_type.send("action_#{price}_booking")}.compact
+    @filterable_pricing += [['weekly_subscription', I18n.t("search.pricing_types.weekly")], ['monthly_subscription', I18n.t("search.pricing_types.monthly")]] if @transactable_type.action_subscription_booking
     @filterable_custom_attributes = @transactable_type.custom_attributes.searchable
   end
 

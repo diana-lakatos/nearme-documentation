@@ -17,7 +17,6 @@
                 - f.object.transactable_type.daily_options_names.each do |price|
                   .row.half-margin{'data-period' => price, style: "#{'display: none;' if price != 'daily' && f.object.recurring_booking?}"}
                     = render 'price_field', :f => f, :price => price, :label => t("simple_form.labels.transactable.price.#{price}"), :include_checkbox => true
-
         - if f.object.transactable_type.action_hourly_booking
           .row.price-inputs-hourly.half-margin{'data-period' => 'hourly', style: "#{'display: none;' if f.object.overnight_booking?}"}
             .col-md-1
@@ -40,6 +39,22 @@
         - if f.object.errors.include?(:free).present?
           %p.error-block
             = t('errors.messages.free_if_zero')
+- if f.object.transactable_type.action_subscription_booking
+  - content_for :booking_type_subscription_tab_content do
+    %div{:class => "row #{"error" if f.object.errors[:monthly_subscription].present? || f.object.errors[:weekly_subscription].present?}"}
+      .col-md-3
+        = f.label :daily_price, :price, :class => 'control-label flush-top' do
+          %abbr{:title => "required"}= t('simple_form.required.mark')
+          =t('simple_form.labels.listings.price')
+      .col-md-9
+        .row.half-margin.price-inputs-subscription{'data-period' => 'subscription', style: "#{'display: none;' if f.object.overnight_booking?}"}
+          .col-md-1
+            = f.check_box :action_subscription_booking, checked: only_one_option_available?(f.object, 'subscription')
+          .col-md-11
+            = t('simple_form.labels.listings.subscription_periods')
+            .row.half-margin.price-input-options{style: "#{'display: none;' unless f.object.action_subscription_booking?}"}
+              = render 'price_field', :f => f, :price => 'weekly_subscription', :label => t("simple_form.labels.transactable.price.weekly_subscription"), :include_checkbox => true
+              = render 'price_field', :f => f, :price => 'monthly_subscription', :label => t("simple_form.labels.transactable.price.monthly_subscription"), :include_checkbox => true
 
 - if f.object.transactable_type.schedule_booking_enabled?
   - content_for :booking_type_schedule_tab_content do
