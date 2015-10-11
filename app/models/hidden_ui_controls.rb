@@ -20,10 +20,13 @@ class HiddenUiControls
 
   SERVICE_KEYS = [
       'dashboard/user_reservations',
+      'dashboard/user_recurring_bookings',
       'dashboard/transactables',
       'dashboard/host_reservations',
+      'dashboard/host_recurring_bookings',
       'registrations/show#services',
       'main_menu/my_bookings',
+      'main_menu/my_subscriptions',
       'dashboard/transactables/bulk_upload',
       'dashboard/transactables/search'
   ]

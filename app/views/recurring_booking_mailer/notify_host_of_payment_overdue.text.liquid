@@ -1,0 +1,11 @@
+{{ user.first_name }},
+
+We were unable to charge {{ recurring_booking.owner.first_name }}'s credit card for subscription of '{{ listing.name }}' {{ platform_context.host | append:listing.listing_url }}
+
+{{ recurring_booking.owner.first_name }} has been notified and we'll retry operation tomorrow.
+
+Amount: {{ recurring_booking.last_unpaid_amount }}
+
+You can manage your bookings here: {{ platform_context.host | append:recurring_booking.manage_guests_dashboard_url }}
+
+We're always happy to help! If you have any questions about your booking, please send an email to {{ platform_context.support_email }} or contact us at {{ platform_context.phone_number }}.

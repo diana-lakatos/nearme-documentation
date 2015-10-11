@@ -1,24 +1,19 @@
 Good news, {{ user.first_name }}!
 
-Your listing, '{{ listing.name }}', was just booked!
+Your listing, '{{ listing.name }}', was just subscribed!
 
-Who: {{ reservation.owner.first_name }}
+Who: {{ recurring_booking.owner.first_name }}
 
-What: {{ listing.name }} x {{ reservation.quantity }}
+What: {{ listing.name }} x {{ recurring_booking.quantity }}
 
-When:
-{% if reservation.action_hourly_booking? %}
-  {{ reservation.hourly_summary }}
-{% else %}
-  {{ reservation.dates_summary }}
-{% endif %}
+Starting at: {{ recurring_booking.start_date }}
 
-Total: {{ reservation.total_price }}
+Total: {{ recurring_booking.subtotal_price }}
 
 Exciting, right? Please, confirm the booking and let's get the {{ listing.lessee }} set up!
 
-Confirm Booking {{ platform_context.host | append:reservation.reservation_confirm_url_with_tracking | append:signature_for_tracking }}
+Confirm Booking {{ platform_context.host | append:recurring_booking.reservation_confirm_url_with_tracking | append:signature_for_tracking }}
 
-Not ready for {{ listing.lessees }}? You can manage your bookings here: {{ platform_context.host | append:listing.manage_guests_dashboard_url }}
+Not ready for {{ listing.lessees }}? You can manage your bookings here: {{ platform_context.host | append:recurring_booking.manage_guests_dashboard_url }}
 
 If you need help, send an email to {{ platform_context.support_email }} or contact us at {{ platform_context.phone_number }}.

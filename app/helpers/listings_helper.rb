@@ -65,7 +65,8 @@ module ListingsHelper
         action_hourly_booking: listing.action_hourly_booking? && listing.hourly_price_cents.to_i > 0,
         action_daily_booking: listing.action_daily_booking?,
         hourly_price_cents: listing.hourly_price_cents,
-        hourly_availability_schedule: hourly_availability
+        hourly_availability_schedule: hourly_availability,
+        subscription_prices: listing.subscription_variants
       })
     end
     base_data

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151006164627) do
+ActiveRecord::Schema.define(version: 20151011094217) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -824,6 +824,8 @@ ActiveRecord::Schema.define(version: 20151006164627) do
     t.string   "gateway_class",                 limit: 255
     t.text     "encrypted_response"
     t.integer  "payment_gateway_id"
+    t.integer  "merchant_account_id"
+    t.integer  "user_id"
   end
 
   create_table "instance_creators", force: :cascade do |t|
@@ -1376,6 +1378,26 @@ ActiveRecord::Schema.define(version: 20151006164627) do
   add_index "rating_systems", ["instance_id"], name: "index_rating_systems_on_instance_id", using: :btree
   add_index "rating_systems", ["transactable_type_id"], name: "index_rating_systems_on_transactable_type_id", using: :btree
 
+  create_table "recurring_booking_periods", force: :cascade do |t|
+    t.integer  "recurring_booking_id"
+    t.integer  "instance_id",                    null: false
+    t.date     "period_start_date"
+    t.date     "period_end_date"
+    t.integer  "subtotal_amount_cents"
+    t.integer  "service_fee_amount_guest_cents"
+    t.integer  "service_fee_amount_host_cents"
+    t.integer  "credit_card_id"
+    t.string   "currency"
+    t.datetime "deleted_at"
+    t.datetime "paid_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "recurring_booking_periods", ["credit_card_id"], name: "index_recurring_booking_periods_on_credit_card_id", using: :btree
+  add_index "recurring_booking_periods", ["instance_id"], name: "index_recurring_booking_periods_on_instance_id", using: :btree
+  add_index "recurring_booking_periods", ["recurring_booking_id", "period_start_date", "period_end_date"], name: "index_recurring_booking_periods_on_fk_and_dates", unique: true, using: :btree
+
   create_table "recurring_bookings", force: :cascade do |t|
     t.integer  "transactable_id"
     t.integer  "owner_id"
@@ -1406,6 +1428,12 @@ ActiveRecord::Schema.define(version: 20151006164627) do
     t.integer  "credit_card_id"
     t.integer  "hours_before_reservation_to_charge",                                     default: 24
     t.integer  "occurrences"
+    t.string   "interval"
+    t.date     "paid_until"
+    t.date     "next_charge_date"
+    t.integer  "payment_gateway_id"
+    t.string   "test_mode"
+    t.text     "guest_notes"
   end
 
   add_index "recurring_bookings", ["administrator_id"], name: "index_recurring_bookings_on_administrator_id", using: :btree
@@ -3224,6 +3252,7 @@ ActiveRecord::Schema.define(version: 20151006164627) do
     t.boolean  "rental_shipping",                                                                default: false
     t.boolean  "search_location_type_filter",                                                    default: true
     t.boolean  "show_company_name",                                                              default: true
+    t.boolean  "action_subscription_booking"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
@@ -3242,45 +3271,48 @@ ActiveRecord::Schema.define(version: 20151006164627) do
     t.datetime "draft"
     t.datetime "activated_at"
     t.boolean  "listings_public"
-    t.boolean  "enabled",                                    default: true
+    t.boolean  "enabled",                                      default: true
     t.text     "metadata"
-    t.datetime "created_at",                                                     null: false
-    t.datetime "updated_at",                                                     null: false
+    t.datetime "created_at",                                                       null: false
+    t.datetime "updated_at",                                                       null: false
     t.integer  "transactable_type_id"
     t.integer  "parent_transactable_id"
-    t.string   "external_id",                    limit: 255
-    t.boolean  "mark_to_be_bulk_update_deleted",             default: false
-    t.boolean  "action_rfq",                                 default: false
-    t.boolean  "action_hourly_booking",                      default: false
-    t.boolean  "action_free_booking",                        default: false
-    t.boolean  "action_recurring_booking",                   default: false
-    t.boolean  "action_daily_booking",                       default: false
-    t.integer  "hourly_price_cents",                         default: 0
-    t.integer  "daily_price_cents",                          default: 0
-    t.integer  "weekly_price_cents",                         default: 0
-    t.integer  "monthly_price_cents",                        default: 0
+    t.string   "external_id",                      limit: 255
+    t.boolean  "mark_to_be_bulk_update_deleted",               default: false
+    t.boolean  "action_rfq",                                   default: false
+    t.boolean  "action_hourly_booking",                        default: false
+    t.boolean  "action_free_booking",                          default: false
+    t.boolean  "action_recurring_booking",                     default: false
+    t.boolean  "action_daily_booking",                         default: false
+    t.integer  "hourly_price_cents",                           default: 0
+    t.integer  "daily_price_cents",                            default: 0
+    t.integer  "weekly_price_cents",                           default: 0
+    t.integer  "monthly_price_cents",                          default: 0
     t.boolean  "action_schedule_booking"
     t.integer  "fixed_price_cents"
     t.integer  "min_fixed_price_cents"
     t.integer  "max_fixed_price_cents"
-    t.float    "average_rating",                             default: 0.0,       null: false
-    t.string   "booking_type",                   limit: 255, default: "regular"
-    t.boolean  "manual_payment",                             default: false
-    t.integer  "wish_list_items_count",                      default: 0
-    t.integer  "quantity",                                   default: 1
-    t.integer  "opened_on_days",                             default: [],                     array: true
-    t.integer  "minimum_booking_minutes",                    default: 60
+    t.float    "average_rating",                               default: 0.0,       null: false
+    t.string   "booking_type",                     limit: 255, default: "regular"
+    t.boolean  "manual_payment",                               default: false
+    t.integer  "wish_list_items_count",                        default: 0
+    t.integer  "quantity",                                     default: 1
+    t.integer  "opened_on_days",                               default: [],                     array: true
+    t.integer  "minimum_booking_minutes",                      default: 60
     t.integer  "book_it_out_discount"
     t.integer  "book_it_out_minimum_qty"
-    t.integer  "exclusive_price_cents",                      default: 0
-    t.string   "currency",                       limit: 255
-    t.string   "name",                           limit: 255
+    t.integer  "exclusive_price_cents",                        default: 0
+    t.string   "currency",                         limit: 255
+    t.string   "name",                             limit: 255
     t.text     "description"
-    t.boolean  "confirm_reservations",                       default: true
+    t.boolean  "confirm_reservations",                         default: true
     t.datetime "last_request_photos_sent_at"
-    t.string   "capacity",                       limit: 255
+    t.string   "capacity",                         limit: 255
     t.string   "rental_shipping_type"
     t.integer  "insurance_value_cents"
+    t.boolean  "action_subscription_booking"
+    t.integer  "weekly_subscription_price_cents"
+    t.integer  "monthly_subscription_price_cents"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
@@ -3384,19 +3416,20 @@ ActiveRecord::Schema.define(version: 20151006164627) do
 
   create_table "user_messages", force: :cascade do |t|
     t.integer  "thread_owner_id"
-    t.integer  "author_id",                                          null: false
+    t.integer  "author_id",                                           null: false
     t.integer  "thread_recipient_id"
     t.integer  "thread_context_id"
-    t.string   "thread_context_type",    limit: 255
+    t.string   "thread_context_type",     limit: 255
     t.text     "body"
-    t.boolean  "archived_for_owner",                 default: false
-    t.boolean  "archived_for_recipient",             default: false
-    t.datetime "created_at",                                         null: false
-    t.datetime "updated_at",                                         null: false
-    t.boolean  "read_for_owner",                     default: false
-    t.boolean  "read_for_recipient",                 default: false
+    t.boolean  "archived_for_owner",                  default: false
+    t.boolean  "archived_for_recipient",              default: false
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
+    t.boolean  "read_for_owner",                      default: false
+    t.boolean  "read_for_recipient",                  default: false
     t.datetime "deleted_at"
     t.integer  "instance_id"
+    t.datetime "unread_last_reminded_at"
   end
 
   add_index "user_messages", ["instance_id"], name: "index_user_messages_on_instance_id", using: :btree

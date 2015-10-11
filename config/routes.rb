@@ -602,7 +602,7 @@ DesksnearMe::Application.routes.draw do
 
   get "users/:id/reviews_collections", :to => "user_reviews#reviews_collections", :as => "reviews_collections"
 
-  resources :listings, :users, :reservations, :products do
+  resources :listings, :users, :reservations, :products, :recurring_bookings do
     resources :user_messages, controller: "dashboard/user_messages", except: [:index] do
       patch :archive
       put :archive
@@ -672,6 +672,17 @@ DesksnearMe::Application.routes.draw do
           post :host_cancel
           post :mark_as_paid
           get :request_payment
+        end
+      end
+
+      resources :host_recurring_bookings do
+        member do
+          post :confirm
+          get :confirm
+          patch :reject
+          put :reject
+          get :rejection_form
+          post :host_cancel
         end
       end
 
@@ -747,16 +758,6 @@ DesksnearMe::Application.routes.draw do
     resource :notification_preferences, only: [:edit, :update]
 
     resources :companies, only: [:edit, :update, :show]
-    resources :host_recurring_bookings do
-      member do
-        post :confirm
-        get :confirm
-        patch :reject
-        put :reject
-        get :rejection_form
-        post :host_cancel
-      end
-    end
 
     resources :images
     resources :orders, only: [:index, :show] do
@@ -786,11 +787,9 @@ DesksnearMe::Application.routes.draw do
         get :booking_successful
         get :booking_failed
         get :booking_successful_modal
-        get :recurring_booking_successful_modal
         get :booking_failed_modal
         get :remote_payment
         get :remote_payment_modal
-        get :recurring_booking_successful
       end
       collection do
         get :upcoming
@@ -800,10 +799,13 @@ DesksnearMe::Application.routes.draw do
 
     resources :user_recurring_bookings, :except => [:destroy] do
       member do
+        get :booking_successful_modal
         post :user_cancel
         get :export
         get :booking_successful
-        get :upcoming
+      end
+      collection do
+        get :active
         get :archived
       end
     end

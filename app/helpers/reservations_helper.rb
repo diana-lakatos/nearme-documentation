@@ -35,6 +35,7 @@ module ReservationsHelper
   def booking_type_from_action(action)
     booking_type = I18n.t('reservations.upcoming')
     booking_type = I18n.t('reservations.archived') if action == 'archived'
+    booking_type = I18n.t('recurring_bookings.active') if action == 'active'
 
     booking_type
   end

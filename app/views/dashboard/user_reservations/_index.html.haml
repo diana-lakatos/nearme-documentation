@@ -1,18 +1,10 @@
-- only_reservations ||= false
-- if @reservations.empty? && @recurring_booking.nil? && @recurring_bookings.try(:empty?)
+- if @reservations.empty?
   %p.text-center
     = t('reservations.no_bookings_html', {bookable_nouns: platform_context.bookable_nouns, type: booking_type_from_action(params[:action])})
 - else
 
   - if @reservation
     = render 'dashboard/user_reservations/reservation_successful'
-
-  - if @recurring_booking && !only_reservations
-    = render 'dashboard/user_reservations/recurring_booking_successful'
-
-  - if !only_reservations
-    - (@recurring_bookings - [@recurring_booking]).each_with_index do |recurring_booking, index|
-      = render 'dashboard/user_reservations/recurring_booking', recurring_booking: recurring_booking.decorate
 
   - (@reservations - [@reservation]).each_with_index do |reservation, index|
     = render 'dashboard/user_reservations/reservation', reservation: reservation.decorate

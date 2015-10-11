@@ -10,6 +10,34 @@ class RecurringBookingDecorator < Draper::Decorator
     periods.size
   end
 
+  def subtotal_price
+    if subtotal_amount.to_f.zero?
+      "Free!"
+    else
+      humanized_money_with_cents_and_symbol(subtotal_amount)
+    end
+  end
+
+  def service_fee_guest
+    if service_fee_amount_guest.to_f.zero?
+      "Free!"
+    else
+      humanized_money_with_cents_and_symbol(service_fee_amount_guest)
+    end
+  end
+
+  def total_price(current_user = nil)
+    if total_amount.to_f.zero?
+      "Free!"
+    else
+      humanized_money_with_cents_and_symbol(total_amount)
+    end
+  end
+
+  def last_unpaid_amount
+    humanized_money_with_cents_and_symbol recurring_booking_periods.where(paid_at: nil).last.try(:monetized_total_amount)
+  end
+
   def selected_dates_summary(options = {})
     wrapper = options[:wrapper].presence || :p
     separator = options[:separator].presence || :br
@@ -82,7 +110,7 @@ class RecurringBookingDecorator < Draper::Decorator
 
   def long_dates
     first = start_on.strftime('%-e %b, %Y')
-    last = end_on.strftime('%-e %b, %Y')
+    last = end_on.try(:strftime, '%-e %b, %Y')
 
     first == last ? first : "#{first} - #{last}"
   end
@@ -122,7 +150,7 @@ class RecurringBookingDecorator < Draper::Decorator
   end
 
   def user_message_summary(user_message)
-    link_to user_message.thread_context.name, location_path(user_message.thread_context.location, user_message.thread_context.listing)
+    link_to user_message.thread_context.listing.name, location_path(user_message.thread_context.location, user_message.thread_context.listing)
   end
 
   def state_to_string

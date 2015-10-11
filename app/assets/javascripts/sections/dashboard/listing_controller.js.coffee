@@ -61,11 +61,13 @@ class @Dashboard.ListingController
     @priceFieldsFree = new PriceFields(@container.find('.price-inputs-free:first'))
     @priceFieldsHourly = new PriceFields(@container.find('.price-inputs-hourly:first'))
     @priceFieldsDaily = new PriceFields(@container.find('.price-inputs-daily:first'))
+    @priceFieldsSubscription = new PriceFields(@container.find('.price-inputs-subscription:first'))
 
 
     @freeInput = @container.find('.price-inputs-free').find('input:checkbox:first')
     @dailyInput = @container.find('.price-inputs-daily').find('input:checkbox:first')
     @hourlyInput = @container.find('.price-inputs-hourly').find('input:checkbox:first')
+    @subscriptionInput = @container.find('.price-inputs-subscription').find('input:checkbox:first')
 
     @hideNotCheckedPriceFields()
 
@@ -80,15 +82,22 @@ class @Dashboard.ListingController
       @freeInput.prop('checked', false)
       @togglePriceFields()
 
+    @subscriptionInput.on 'change', (e) =>
+      @freeInput.prop('checked', false)
+      @togglePriceFields()
+
   togglePriceFields: ->
     if @freeInput.is(':checked')
       @priceFieldsFree.show()
       @dailyInput.prop('checked', false)
       @hourlyInput.prop('checked', false)
+      @subscriptionInput.prop('checked', false)
     if @hourlyInput.is(':checked')
       @priceFieldsHourly.show()
     if @dailyInput.is(':checked')
       @priceFieldsDaily.show()
+    if @subscriptionInput.is(':checked')
+      @priceFieldsSubscription.show()
 
     @hideNotCheckedPriceFields()
 
@@ -96,6 +105,7 @@ class @Dashboard.ListingController
     @priceFieldsFree.hide() unless @freeInput.is(':checked')
     @priceFieldsHourly.hide() unless @hourlyInput.is(':checked')
     @priceFieldsDaily.hide() unless @dailyInput.is(':checked')
+    @priceFieldsSubscription.hide() unless @subscriptionInput.is(':checked')
 
   setupDocumentRequirements: ->
     nestedForm = new SetupNestedForm(@container)
@@ -109,7 +119,7 @@ class @Dashboard.ListingController
     @allPeriodsLabel = $('div[data-all-periods-label]')
     @dailyLabel = $('div[data-daily-label]')
     @bookingTypeInput = $('input[data-booking-type]')
-    for period in ['hourly', 'daily', 'weekly', 'monthly']
+    for period in ['hourly', 'daily', 'weekly', 'monthly', 'subscription']
       @periodInputs[period] = @container.find("div[data-period=\"#{period}\"]")
     @changeBookingType($('ul[data-booking-type-list] li.active a[data-toggle="tab"]'))
 

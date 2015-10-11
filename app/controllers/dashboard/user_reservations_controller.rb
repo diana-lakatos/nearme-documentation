@@ -36,7 +36,6 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
   def upcoming
     @reservation  = reservation if params[:id]
     @reservations = reservations.no_recurring.not_archived.to_a.sort_by(&:date)
-    @recurring_bookings = recurring_bookings.not_archived.order(:start_on, :end_on)
 
     event_tracker.track_event_within_email(current_user, request) if params[:track_email_event]
     render :index
@@ -44,7 +43,6 @@ class Dashboard::UserReservationsController < Dashboard::BaseController
 
   def archived
     @reservations = reservations.no_recurring.archived.to_a.sort_by(&:date)
-    @recurring_bookings = recurring_bookings.archived.order(:start_on, :end_on)
     render :index
   end
 

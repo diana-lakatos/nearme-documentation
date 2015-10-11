@@ -1,6 +1,6 @@
 class UserMessageThreadConfigurator
 
-  AVAILABLE_CONTEXTS = [Transactable, User, Reservation, Spree::Product]
+  AVAILABLE_CONTEXTS = [Transactable, User, Reservation, Spree::Product, RecurringBooking]
 
   def initialize(user_message, request_params)
     @user_message = user_message

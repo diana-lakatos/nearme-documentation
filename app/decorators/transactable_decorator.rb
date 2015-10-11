@@ -32,7 +32,7 @@ class TransactableDecorator < Draper::Decorator
     else
       listing_price = self.lowest_price_with_type(filter_pricing)
       if listing_price
-        periods = {monthly: t('periods.month'), weekly: t('periods.week'), daily: self.try(:overnight_booking?) ? t('periods.night') : t('periods.day'), hourly: t('periods.hour')}
+        periods = {monthly: t('periods.month'), weekly: t('periods.week'), monthly_subscription: t('periods.month'), weekly_subscription: t('periods.week'), daily: self.try(:overnight_booking?) ? t('periods.night') : t('periods.day'), hourly: t('periods.hour')}
         translated_period = I18n.t("dashboard.transactables.pricing_periods.#{periods[listing_price[1]]}")
         "#{self.price_with_currency(listing_price[0])} <span>/ #{translated_period}</span>".html_safe
       end
