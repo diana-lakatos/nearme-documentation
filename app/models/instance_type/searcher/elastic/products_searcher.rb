@@ -41,7 +41,7 @@ class InstanceType::Searcher::Elastic::ProductsSearcher
   end
 
   def paginated_results(page, per_page)
-    @results = @results.paginate(page: page, per_page: per_page, total_entries: @search_results_count).offset(0)
+    @results = @results.paginate(page: sanitize_pagination_number(page), per_page: sanitize_pagination_number(per_page, 20), total_entries: @search_results_count).offset(0)
   end
 
   def set_options_for_filters
