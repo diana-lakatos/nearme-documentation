@@ -60,6 +60,26 @@ class Location < ActiveRecord::Base
   extend FriendlyId
   friendly_id :slug_candidates, use: [:slugged, :history, :finders, :scoped], scope: :instance
 
+  # We do this (:dependent => :delete_all) because:
+  # * we want to have acts_as_paranoid out of the equation on the friendly_id_slugs (history table) because 
+  #   with it, the uniqueness constraints on the table will fail because of lingering records that friendly_id
+  #   is not able to find when deciding a slug is available (because it's not using with_deleted)
+  # * removing dependent destroy is not an option to just keep records there; it merely results in the 
+  #   nullification of sluggable_id which makes friendly_id still not able to find
+  #   them when looking for existing slugs because it's using a join on location (by sluggable_id);
+  #   even if it were not nullified it would probably still not be able to find them because of the join on locations
+  #   (which no longer exist)
+  # * removing acts_as_paranoid on the friendly_id_slugs is not an option at this point because it's being
+  #   added by Spree (!) and messing with it at this point would add even more complications (before we remove Spree)
+  # * Using :dependent => :delete_all effectively disables acts_as_paranoid on the friendly_id_slugs table as it just deletes the 
+  #   records from the database avoiding the acts_as_paranoid overrides
+  # * after removing Spree, the proper fix would be to remove acts_as_paranoid on the FriendlyId::Slug
+  has_many :slugs, -> {order("friendly_id_slugs.id DESC")}, {
+    :as         => :sluggable,
+    :dependent => :delete_all,
+    :class_name => 'FriendlyId::Slug'
+  }
+
   scope :filtered_by_location_types_ids,  lambda { |location_types_ids| where(location_type_id: location_types_ids) }
   scope :filtered_by_industries_ids,  lambda { |industry_ids| joins(:company_industries).where('company_industries.industry_id IN (?)', industry_ids) }
   scope :no_id, -> { where :id => nil }
