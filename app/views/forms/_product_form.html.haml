@@ -80,6 +80,14 @@
 
     = render partial: 'shared/dimensions_templates_user_fields', locals: { dt: f }
 
+    .explanation
+      %p
+        &nbsp;
+      %p
+        = t('manage.buy_sell.insurance_explanation')
+
+    = f.input :insurance_amount, as: :price, input_html: { currency: currency_symbol_from_code(Spree::Config[:currency] ) }
+
 - if only_inputs.empty? || only_inputs.include?(:documents_upload)
   - if platform_context.instance.documents_upload_enabled?
     = render "forms/document_requirements", f: f

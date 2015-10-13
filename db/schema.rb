@@ -2004,6 +2004,7 @@ ActiveRecord::Schema.define(version: 20151011094217) do
     t.datetime "canceled_at"
     t.integer  "canceler_id"
     t.integer  "store_id"
+    t.boolean  "insurance_enabled",                                                   default: false,   null: false
   end
 
   add_index "spree_orders", ["approver_id"], name: "index_spree_orders_on_approver_id", using: :btree
@@ -2177,20 +2178,21 @@ ActiveRecord::Schema.define(version: 20151011094217) do
     t.integer  "user_id"
     t.hstore   "extra_properties"
     t.hstore   "status"
-    t.boolean  "products_public",                     default: true
-    t.boolean  "approved",                            default: true
-    t.text     "cross_sell_skus",                     default: [],                 array: true
+    t.boolean  "products_public",                                              default: true
+    t.boolean  "approved",                                                     default: true
+    t.text     "cross_sell_skus",                                              default: [],                 array: true
     t.integer  "administrator_id"
-    t.boolean  "shippo_enabled",                      default: false
-    t.boolean  "draft",                               default: false
-    t.float    "average_rating",                      default: 0.0,   null: false
-    t.integer  "wish_list_items_count",               default: 0
+    t.boolean  "shippo_enabled",                                               default: false
+    t.boolean  "draft",                                                        default: false
+    t.float    "average_rating",                                               default: 0.0,   null: false
+    t.integer  "wish_list_items_count",                                        default: 0
     t.integer  "product_type_id"
     t.string   "external_id",             limit: 255
     t.boolean  "action_rfq"
     t.boolean  "possible_manual_payment"
-    t.boolean  "promotionable",                       default: true
+    t.boolean  "promotionable",                                                default: true
     t.string   "meta_title"
+    t.decimal  "insurance_amount",                    precision: 10, scale: 2, default: 0.0,   null: false
   end
 
   add_index "spree_products", ["available_on"], name: "index_spree_products_on_available_on", using: :btree
@@ -2533,13 +2535,15 @@ ActiveRecord::Schema.define(version: 20151011094217) do
     t.integer  "company_id"
     t.integer  "partner_id"
     t.integer  "user_id"
-    t.integer  "processing_time",                                            default: 0
+    t.integer  "processing_time",                                             default: 0
     t.integer  "order_id"
-    t.decimal  "precalculated_cost",                 precision: 8, scale: 2
+    t.decimal  "precalculated_cost",                 precision: 8,  scale: 2
     t.string   "shippo_rate_id",         limit: 230
     t.text     "shippo_label_url"
     t.text     "shippo_tracking_number"
     t.string   "code"
+    t.decimal  "insurance_amount",                   precision: 10, scale: 2, default: 0.0, null: false
+    t.string   "insurance_currency"
   end
 
   add_index "spree_shipping_methods", ["company_id"], name: "index_spree_shipping_methods_on_company_id", using: :btree
