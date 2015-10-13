@@ -1,7 +1,6 @@
 class RecurringBookingDrop < BaseDrop
-  include ReservationsHelper
 
-  attr_reader :reservation
+  attr_reader :recurring_booking
 
   # quantity
   #   number of reserved items
@@ -15,19 +14,17 @@ class RecurringBookingDrop < BaseDrop
   #   returns true if the payment status is pending
   # listing
   #   service object for which the booking occurred
-  # state_to_string
-  #   current state of the object (e.g. unconfirmed etc.) as a humanized string
   # credit_card_payment?
   #   returns true if the payment method for the reservation was credit card
-  # paid
-  #   returns the paid amount (if confirmed) otherwise returns the current state
-  #   of the object
   # rejection_reason
   #   returns the reason as string for which the reservation has been rejected
   # owner
   #   user object containing the person who made the booking
-  delegate :quantity, :subtotal_price, :service_fee_guest, :total_price, :pending?, :listing, :state_to_string,
-  :credit_cart_payment?, :paid, :rejection_reason, :owner, to: :reservation
+  # last_unpaid_amount
+  #   Last amount we weren't able to charge
+  delegate :quantity, :subtotal_price, :guest_service_fee, :total_price, :pending?,
+    :credit_card_payment?, :rejection_reason, :owner, :interval, :has_service_fee?,
+    :last_unpaid_amount, to: :recurring_booking
 
   # transactable_type
   #   the object describing the type of item to be booked (e.g. desk, room etc.)
@@ -37,29 +34,20 @@ class RecurringBookingDrop < BaseDrop
 
   # bookable_noun
   #   string representing the item to be booked (e.g. desk, room etc.)
-  # bookable_noun_plural
-  #   string representing the plural of the item to be booked (e.g. desks, rooms etc.)
-  delegate :bookable_noun, :bookable_noun_plural, to: :transactable_type
+  # translated_bookable_noun
+  #   string representing translated item to be booked (e.g. desk, room etc.)
+  delegate :bookable_noun, :translated_bookable_noun, to: :transactable_type
 
   def initialize(recurring_booking)
     @recurring_booking = recurring_booking.decorate
-    @reservation = recurring_booking.reservations.first.decorate
   end
 
-  # Hourly summary as string for the first booked period
-  def hourly_summary
-    @reservation.hourly_summary_for_first_period
+  def listing
+    @listing_drop ||= recurring_booking.listing.to_liquid
   end
 
-  # Summary as a string for the selected (booked) dates
-  def dates_summary
-    @reservation.selected_dates_summary(wrapper: :span)
-  end
-
-  # returns the difference between the paid sum and the total sum
-  # formatted as a string (including currency etc.)
-  def balance
-    @reservation.formatted_balance
+  def location
+    @location_drop ||= recurring_booking.location.to_liquid
   end
 
   # returns true if there is a rejection reason for this reservation
@@ -69,60 +57,52 @@ class RecurringBookingDrop < BaseDrop
 
   # returns the search query URL for the same type of service as this reservation and for this location
   def search_url
-    routes.search_path(q: location_query_string(@reservation.listing.location), transactable_type_id: @reservation.transactable_type.id)
+    routes.search_path(q: location_query_string(@recurring_booking.listing.location), transactable_type_id: @recurring_booking.listing.transactable_type.id)
   end
 
   # url to the dashboard area for managing own reservations
   def bookings_dashboard_url
-    routes.dashboard_user_reservations_path(:reservation_id => @reservation, token_key => @reservation.owner.temporary_token)
+    routes.dashboard_user_recurring_bookings_path(token_key => @recurring_booking.owner.temporary_token)
+  end
+
+  # url to the dashboard area for managing own reservations with tracking
+  def bookings_dashboard_url_with_tracking
+    routes.dashboard_user_recurring_bookings_path(token_key => @recurring_booking.owner.temporary_token, track_email_event: true)
   end
 
   # url to the dashboard area for managing received bookings
   def manage_guests_dashboard_url
-    routes.dashboard_company_host_reservations_path
-  end
-
-  def guest_rating_reservation_url
-    routes.guest_rating_path(@reservation.id, token_key => @reservation.listing.administrator.try(:temporary_token))
-  end
-
-  def guest_rating_reservation_url_with_tracking
-    routes.guest_rating_path(@reservation.id, token_key => @reservation.listing.administrator.try(:temporary_token), track_email_event: true)
-  end
-
-  def host_rating_reservation_url
-    routes.host_rating_path(@reservation.id, token_key => @reservation.owner.try(:temporary_token))
-  end
-
-  def host_rating_reservation_url_with_tracking
-    routes.host_rating_path(@reservation.id, token_key => @reservation.owner.try(:temporary_token), track_email_event: true)
-  end
-
-  def export_to_ical_url
-    routes.export_reservation_path(@reservation, format: :ics, token_key => @reservation.owner.try(:temporary_token))
-  end
-
-  def remote_payment_url
-    routes.remote_payment_reservation_path(@reservation, token_key => @reservation.owner.try(:temporary_token))
+    routes.dashboard_company_host_recurring_bookings_path
   end
 
   # date at which the reservation was created formatted as a string
   def created_at
-    @reservation.created_at.strftime("%A,%e %B")
+    @recurring_booking.created_at.strftime("%A,%e %B")
   end
 
   # url for confirming the recurring booking
   def reservation_confirm_url
-    routes.confirm_dashboard_host_recurring_booking_path(@reservation.listing, @reservation, token_key => @reservation.listing.administrator.try(:temporary_token))
+    routes.confirm_dashboard_company_host_recurring_booking_path(@recurring_booking, listing_id: @recurring_booking.listing, token_key => @recurring_booking.creator.try(:temporary_token))
   end
 
   # url for confirming the recurring booking with tracking
   def reservation_confirm_url_with_tracking
-    routes.confirm_dashboard_host_recurring_booking_path(@reservation.listing, @reservation, token_key => @reservation.listing.administrator.try(:temporary_token), :track_email_event => true)
+    routes.confirm_dashboard_company_host_recurring_booking_path(@recurring_booking, listing_id: @recurring_booking.listing, token_key => @recurring_booking.creator.try(:temporary_token), :track_email_event => true)
   end
 
   # reservation date (first date)
   def start_date
-    @reservation.date.strftime('%b %e')
+    @recurring_booking.start_on.strftime('%b %e')
   end
+
+  # string representing the plural of the item to be booked (e.g. desks, rooms etc.)
+  def bookable_noun_plural
+    transactable_type.translated_bookable_noun(4)
+  end
+
+  # current state of the object (e.g. unconfirmed etc.) as a humanized string
+  def state_to_string
+    @recurring_booking.state.to_s.humanize
+  end
+
 end

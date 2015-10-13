@@ -105,14 +105,15 @@ class Payment < ActiveRecord::Base
   def capture
     return if paid?
 
-    # Generates a ChargeAttempt with this record as the payable.
-    if payable.billing_authorization.nil? && !(payable.remote_payment? || payable.manual_payment?)
-      unless billing_gateway.authorize(payable, { customer: payable.credit_card.instance_client.customer_id, order_id: payable.id })
-        raise Billing::Gateway::PaymentAttemptError, "Failed authorization of credit card token of InstanceClient(id=#{payable.owner.instance_clients.first.try(:id)}) - #{payable.errors[:ccc].try(:first)}"
-      end
-    end
-
     begin
+      # Generates a ChargeAttempt with this record as the payable.
+
+      if payable.try(:billing_authorization).nil? && !(payable.try(:remote_payment?) || payable.try(:manual_payment?))
+        unless billing_gateway.authorize(payable, { customer: payable.credit_card.instance_client.customer_id, order_id: payable.id })
+          raise "Failed authorization of credit card token of InstanceClient(id=#{payable.owner.instance_clients.first.try(:id)}) - #{payable.errors[:ccc].try(:first)}"
+        end
+      end
+
       charge = billing_gateway.charge(payable.owner, total_amount.cents, currency, self, payable.billing_authorization.try(:token))
       if charge.success?
         touch(:paid_at)
@@ -174,7 +175,7 @@ class Payment < ActiveRecord::Base
   private
 
   def billing_gateway
-    @billing_gateway ||= payable.billing_authorization.try(:payment_gateway) || instance.payment_gateway(payable.company.iso_country_code, currency)
+    @billing_gateway ||= payable.billing_authorization.try(:payment_gateway) || payable.try(:payment_gateway) || instance.payment_gateway(payable.company.iso_country_code, currency)
   end
 
   def assign_currency

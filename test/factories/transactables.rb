@@ -27,6 +27,12 @@ FactoryGirl.define do
       end
     end
 
+    factory :subscription_transactable do
+      action_subscription_booking true
+      weekly_subscription_price_cents 450
+      monthly_subscription_price_cents 1670
+    end
+
     factory :always_open_listing do
       after(:create) do |listing|
         listing.availability.each_day do |dow, rule|

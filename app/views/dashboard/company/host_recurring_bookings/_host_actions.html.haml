@@ -1,0 +1,12 @@
+- if recurring_booking.can_host_cancel?
+  = form_for recurring_booking, method: :post, url: host_cancel_dashboard_company_host_recurring_booking_path(recurring_booking, listing_id: recurring_booking.listing) do |f|
+    = f.submit t('general.cancel'), data: { confirm: 'Do you really want to cancel subscription?' }, class: 'btn dark-gray full'
+
+- if recurring_booking.can_confirm?
+  = form_for recurring_booking, method: :post, url: confirm_dashboard_company_host_recurring_booking_path(recurring_booking, listing_id: recurring_booking.listing) do |f|
+    = f.submit 'Confirm', data: { confirm: 'Do you want to confirm subscription?' }, class: 'btn blue full'
+
+- if recurring_booking.can_reject?
+  = link_to 'Decline', '#',
+      data: { modal: true, href: rejection_form_dashboard_company_host_recurring_booking_path(recurring_booking, listing_id: recurring_booking.listing) }, class: 'btn dark-gray full'
+

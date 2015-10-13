@@ -159,8 +159,7 @@ class Transactable < ActiveRecord::Base
   validates :currency, presence: true, allow_nil: false, currency: true
   validates :location, :transactable_type, presence: true
   validates :photos, length: {:minimum => 1}, unless: ->(record) { record.photo_not_required || !record.transactable_type.enable_photo_required }
-  validates :quantity, presence: true
-  validates :quantity, numericality: {greater_than: 0}
+  validates :quantity, presence: true, numericality: {greater_than: 0}
   validates :rental_shipping_type, inclusion: { in: RENTAL_SHIPPING_TYPES }
   validates_presence_of :dimensions_template, if: lambda { |record| ['delivery', 'both'].include?(record.rental_shipping_type) }
 
@@ -178,7 +177,7 @@ class Transactable < ActiveRecord::Base
   include Listing::Search
   include AvailabilityRule::TargetHelper
 
-  PRICE_TYPES = [:hourly, :weekly, :daily, :monthly, :fixed, :exclusive]
+  PRICE_TYPES = [:hourly, :weekly, :daily, :monthly, :fixed, :exclusive, :weekly_subscription, :monthly_subscription]
 
   delegate :latitude, :longitude, to: :location_address, allow_nil: true
 
@@ -200,6 +199,8 @@ class Transactable < ActiveRecord::Base
   monetize :fixed_price_cents, with_model_currency: :currency, allow_nil: true
   monetize :exclusive_price_cents, with_model_currency: :currency, allow_nil: true
   monetize :insurance_value_cents, with_model_currency: :currency, allow_nil: true
+  monetize :weekly_subscription_price_cents, with_model_currency: :currency, allow_nil: true
+  monetize :monthly_subscription_price_cents, with_model_currency: :currency, allow_nil: true
 
   # Defer to the parent Location for availability rules unless this Listing has specific
   # rules.
@@ -331,6 +332,10 @@ class Transactable < ActiveRecord::Base
     PRICE_TYPES.map { |price| self.send("#{price}_price_cents") }.compact.any? { |price| !price.zero? }
   end
 
+  def subscription_variants
+    { weekly: weekly_subscription_price_cents, monthly: monthly_subscription_price_cents }.select{ |k,v| v.to_i > 0 }.with_indifferent_access
+  end
+
   #TODO refactor
   def lowest_price_with_type(available_price_types = [])
     PRICE_TYPES.reject { |price|
@@ -349,6 +354,10 @@ class Transactable < ActiveRecord::Base
     PRICE_TYPES.map { |price|
       self.send(:"#{price}_price_cents=", nil) if self.respond_to?(:"#{price}_price_cents=")
     }
+  end
+
+  def price_for_subscription(period)
+    subscription_variants[period]
   end
 
   def desks_available?(date)

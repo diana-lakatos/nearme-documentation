@@ -33,61 +33,61 @@ class PaymentAuthorizer
 
   private
 
-    def gateway_authorize
-      @payment_gateway.gateway.authorize(@authorizable.total_amount_cents, credit_card_or_token, @options)
-    end
+  def gateway_authorize
+    @payment_gateway.gateway.authorize(@authorizable.total_amount_cents, credit_card_or_token, @options)
+  end
 
-    def handle_failure
-      @authorizable.errors.add(:cc, @response.message)
-      @authorizable.billing_authorizations.create billing_authoriazation_params.merge({ success: false })
-      @authorizable.create_failed_payment! if @authorizable.instance_of?(Spree::Order)
+  def handle_failure
+    @authorizable.errors.add(:cc, @response.message)
+    @authorizable.billing_authorizations.create(billing_authoriazation_params.merge({ success: false })) if @authorizable.respond_to?(:billing_authorizations)
+    @authorizable.create_failed_payment! if @authorizable.instance_of?(Spree::Order)
 
-      false
-    end
+    false
+  end
 
-    def handle_success
-      @authorizable.create_billing_authorization(
-        billing_authoriazation_params.merge(
-          {
-            success: true,
-            immediate_payout: @payment_gateway.immediate_payout(@authorizable.company),
-            merchant_account_id: @payment_gateway.merchant_account(@authorizable.company).try(:id)
-          }
-        )
+  def handle_success
+    @authorizable.create_billing_authorization(
+      billing_authoriazation_params.merge(
+        {
+          success: true,
+          immediate_payout: @payment_gateway.immediate_payout(@authorizable.company),
+          merchant_account_id: @payment_gateway.merchant_account(@authorizable.company).try(:id)
+        }
       )
-      @authorizable.create_pending_payment! if @authorizable.instance_of?(Spree::Order)
-      @response.authorization
-    end
+    )
+    @authorizable.create_pending_payment! if @authorizable.instance_of?(Spree::Order)
+    @response.authorization
+  end
 
-    def billing_authoriazation_params
-      {
-        token: @response.authorization,
-        response: @response,
-        payment_gateway: @payment_gateway,
-        payment_gateway_mode: @payment_gateway.mode,
-        user_id: @authorizable.user.id,
-      }
-    end
+  def billing_authoriazation_params
+    {
+      token: @response.authorization,
+      response: @response,
+      payment_gateway: @payment_gateway,
+      payment_gateway_mode: @payment_gateway.mode,
+      user_id: @authorizable.user.id,
+    }
+  end
 
-    def credit_card_or_token
-      @authorizable.credit_card.try(:token) || @authorizable.credit_card
-    end
+  def credit_card_or_token
+    @authorizable.credit_card.try(:token) || @authorizable.credit_card
+  end
 
-    def payment_record
-      @authorizable.payments.build(amount: @authorizable.total_amount_to_charge, company_id: @authorizable.company_id)
-    end
+  def payment_record
+    @authorizable.payments.build(amount: @authorizable.total_amount_to_charge, company_id: @authorizable.company_id)
+  end
 
-    def prepare_options(options)
-      options.merge({
-        company: @authorizable.company,
-        currency: @authorizable.currency,
-        merchant_account: @payment_gateway.merchant_account(@authorizable.company),
-        payment_method_nonce: @authorizable.payment_method_nonce,
-        service_fee_host: @authorizable.service_fee_amount_host_cents + @authorizable.service_fee_amount_guest_cents
-      }).with_indifferent_access
-    end
+  def prepare_options(options)
+    options.merge({
+      company: @authorizable.company,
+      currency: @authorizable.currency,
+      merchant_account: @payment_gateway.merchant_account(@authorizable.company),
+      payment_method_nonce: @authorizable.try(:payment_method_nonce),
+      service_fee_host: @authorizable.service_fee_amount_host_cents + @authorizable.service_fee_amount_guest_cents
+    }).with_indifferent_access
+  end
 
-    def platform_context
-      PlatformContext.current
-    end
+  def platform_context
+    PlatformContext.current
+  end
 end

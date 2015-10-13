@@ -35,11 +35,14 @@ module TransactablesIndex
         indexes :action_free_booking, :type => 'boolean'
         indexes :action_recurring_booking, :type => 'boolean'
         indexes :action_daily_booking, :type => 'boolean'
+        indexes :action_subscription_booking, :type => 'boolean'
 
         indexes :hourly_price_cents, :type => 'integer'
         indexes :daily_price_cents, :type => 'integer'
         indexes :weekly_price_cents, :type => 'integer'
         indexes :monthly_price_cents, :type => 'integer'
+        indexes :weekly_subscription_price_cents, :type => 'integer'
+        indexes :monthly_subscription_price_cents, :type => 'integer'
 
         indexes :location_type_id, type: 'integer'
 

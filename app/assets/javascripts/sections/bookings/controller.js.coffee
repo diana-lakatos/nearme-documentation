@@ -22,8 +22,6 @@ class Bookings.Controller
       else
         @reviewBooking()
 
-    if @listing.isRecurringBooking()
-      new Bookings.RecurringBookingController(@container.find('form[data-recurring-booking-form]'))
     @updateSummary()
     @delayedUpdateBookingStatus()
     @quantityField.customSelect()
@@ -47,7 +45,7 @@ class Bookings.Controller
     @exclusivePriceContent = @container.find('div[data-exclusive-price-content]')
     @bookItOutTotal = @bookItOutContainer.find('.total')
     @quantityResourceElement = @container.find('.quantity .resource')
-    @totalElement = @container.find('.booking-body > .price .total')
+    @totalElement = @container.find('.book .price .total')
     @daysElement = @container.find('.total-days')
     @additionalCharges = @container.find('[data-optional-charge-select]')
     @bookButton = @container.find('[data-behavior=reviewBooking]')
@@ -58,6 +56,7 @@ class Bookings.Controller
     @storeReservationRequestUrl = @bookButton.data('store-reservation-request-url')
     @userSignedIn = @bookButton.data('user-signed-in')
     @bookingTabs = @container.find("[data-pricing-tabs] li a")
+    @subscriptionPeriodRadios = @container.find('input[name="reservation_request[interval]"]')
     if !@listing.withCalendars()
       @fixedPriceSelect = @container.find("[data-fixed-date-select]")
       @fixedPriceSelectInit = @fixedPriceSelect.data('init-value')
@@ -69,10 +68,21 @@ class Bookings.Controller
     @setReservationType()
 
   bindEvents: ->
+    @subscriptionPeriodRadios.on 'change', (event) =>
+      period = $(event.target).data('subscription')
+      @container.find("li[data-subscription=#{period}] a").tab('show')
+      @listing.setSubscriptionPeriod(period)
+      @updateBookingStatus()
+
     @bookingTabs.on 'click', (event) =>
-      @listing.setHourlyBooking(@hourlyBookingSelected())
-      @datepicker.setDates(@listing.bookedDatesArray)
-      @setReservationType()
+      if @listing.isRecurringBooking()
+        period = $(event.target).parents('li').data('subscription')
+        @container.find("input[data-subscription=#{period}]").click()
+        @listing.setSubscriptionPeriod(period)
+      else
+        @listing.setHourlyBooking(@hourlyBookingSelected())
+        @datepicker.setDates(@listing.bookedDatesArray)
+        @setReservationType()
       @updateBookingStatus()
 
     @bookButton.on 'click', (event) =>

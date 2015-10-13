@@ -4,7 +4,6 @@ class Listings::RecurringBookingsController < ApplicationController
   before_filter :find_listing
   before_filter :require_login_for_recurring_booking, :only => [:review, :create]
   before_filter :build_recurring_booking_request, only: [:review, :create, :store_recurring_booking_request]
-  before_filter :redirect_if_invalid, only: [:review]
   before_filter :secure_payment_with_token, only: [:review]
   before_filter :load_payment_with_token, only: [:review]
   before_filter :find_recurring_booking, only: [:booking_successful]
@@ -36,7 +35,6 @@ class Listings::RecurringBookingsController < ApplicationController
     @recurring_booking = @recurring_booking_request.recurring_booking
     if @recurring_booking_request.process
       if @recurring_booking_request.confirm_reservations?
-        @recurring_booking.schedule_expiry
         WorkflowStepJob.perform(WorkflowStep::RecurringBookingWorkflow::CreatedWithoutAutoConfirmation, @recurring_booking.id)
         event_tracker.updated_profile_information(@recurring_booking.owner)
         event_tracker.updated_profile_information(@recurring_booking.host)
@@ -45,10 +43,10 @@ class Listings::RecurringBookingsController < ApplicationController
       end
 
       event_tracker.requested_a_recurring_booking(@recurring_booking)
-      card_message = @recurring_booking.credit_card_payment? ? t('flash_messages.reservations.credit_card_will_be_charged') : ''
+      card_message = t('flash_messages.reservations.credit_card_will_be_charged')
       flash[:notice] = t('flash_messages.reservations.reservation_made', message: card_message)
 
-      redirect_to recurring_booking_successful_dashboard_user_reservation_path(@recurring_booking)
+      redirect_to booking_successful_dashboard_user_recurring_booking_path(@recurring_booking)
     else
       render :review
     end
@@ -82,9 +80,8 @@ class Listings::RecurringBookingsController < ApplicationController
         :quantity => @recurring_booking_request.recurring_booking.quantity,
         :schedule_params => @recurring_booking_request.recurring_booking.schedule_params,
         :start_on => @recurring_booking_request.recurring_booking.start_on.to_date,
-        :end_on => @recurring_booking_request.recurring_booking.end_on.to_date,
-        :start_minute => @recurring_booking_request.recurring_booking.start_minute,
-        :end_minute => @recurring_booking_request.recurring_booking.end_minute
+        :dates => @recurring_booking_request.recurring_booking.start_on.to_date,
+        :interval => @recurring_booking_request.recurring_booking.interval
       }
     }
     head 200 if params[:action] == 'store_recurring_booking_request'
@@ -115,12 +112,9 @@ class Listings::RecurringBookingsController < ApplicationController
       platform_context,
       {
         quantity: attributes[:quantity],
+        interval: attributes[:interval],
         schedule_params: attributes[:schedule_params],
-        start_minute: attributes[:start_minute],
-        end_minute: attributes[:end_minute],
-        occurrences: attributes[:occurrences],
-        start_on: attributes[:start_on].to_date,
-        end_on: attributes[:end_on].to_date,
+        start_on: attributes[:start_on].to_date || attributes[:dates].try(:to_date),
         card_exp_month: attributes[:card_exp_month],
         card_exp_year: attributes[:card_exp_year],
         card_code: attributes[:card_code],
@@ -129,16 +123,10 @@ class Listings::RecurringBookingsController < ApplicationController
         card_holder_last_name: attributes[:card_holder_last_name],
         country_name: attributes[:country_name],
         mobile_number: attributes[:mobile_number],
-        additional_charge_ids: attributes[:additional_charge_ids]
+        additional_charge_ids: attributes[:additional_charge_ids],
+        guest_notes: attributes[:guest_notes]
       }
     )
-  end
-
-  def redirect_if_invalid
-    unless @recurring_booking_request.recurring_booking.at_least_one_valid_reservation
-      flash[:error] = @recurring_booking_request.recurring_booking.errors[:reservations][0]
-      redirect_to location_path(@listing.location)
-    end
   end
 
   def set_section_name

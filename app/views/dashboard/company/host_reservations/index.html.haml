@@ -19,15 +19,10 @@
             = render 'promote_locations', locations: @company.locations
           - else
             - only_reservations ||= false
-            - if @guest_list.reservations.empty? && !only_reservations && @guest_list.recurring_bookings.empty?
+            - if @guest_list.reservations.empty? && !only_reservations
               .text-center
                 = no_reservations_info_for_state(@guest_list.state)
 
             - else
-              -if  !only_reservations
-                - @guest_list.recurring_bookings.each do |recurring_booking|
-                  = render 'dashboard/host_recurring_bookings/recurring_booking', recurring_booking: recurring_booking
-
-
               - @guest_list.reservations.each do |reservation|
                 = render 'reservation', reservation: reservation

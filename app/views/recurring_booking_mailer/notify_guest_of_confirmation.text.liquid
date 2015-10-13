@@ -2,19 +2,15 @@ You got it, {{ user.first_name }}!
 
 Your booking for '{{ listing.name }}' has been confirmed! Here it is:
 
-{{ listing.lessor | capitalize}}: {{ listing.administrator.first_name }}
+{{ listing.lessor | capitalize}}: {{ host.first_name }}
 
-What: {{ listing.name }} x {{ reservation.quantity }}
+What: {{ listing.name }} x {{ recurring_booking.quantity }}
 
-When:
-{% if reservation.action_hourly_booking? %}
-  {{ reservation.hourly_summary }}
-{% else %}
-  {{ reservation.dates_summary }}
-{% endif %}
+Starting at:
+{{ recurring_booking.start_date }}
 
-Total: {{ reservation.total_price }}
+Total: {{ recurring_booking.total_price }}
 
-You can manage your booking here: {{ platform_context.host | append:user.bookings_dashboard_url_with_tracking_and_token | append:signature_for_tracking }}
+You can manage your booking here: {{ platform_context.host | append:recurring_booking.bookings_dashboard_url_with_tracking | append:signature_for_tracking }}
 
 We're always happy to help! If you have any questions about your booking, please send an email to {{ platform_context.support_email }} or contact us at {{ platform_context.phone_number }}.

@@ -108,12 +108,16 @@ class ApplicationController < ActionController::Base
     @bookable ||= platform_context.instance.bookable?
   end
 
+  def subscribable?
+    @subscribable ||= platform_context.instance.subscribable?
+  end
+
   # maybe we will rename project to follow? making this followable? for now this stupid name :)
   def projectable?
     @projectable ||= platform_context.instance.projectable?
   end
 
-  helper_method :buyable?, :bookable?, :projectable?
+  helper_method :buyable?, :bookable?, :projectable?, :subscribable?
 
   # Provides an EventTracker instance for the current request.
   #

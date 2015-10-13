@@ -58,4 +58,3 @@ if !ENV['DISABLE_PROFILER']
   Rails.application.middleware.insert_after(Rack::Deflater, Rack::MiniProfiler)
   ActiveRecordQueryTrace.enabled = false
 end
-

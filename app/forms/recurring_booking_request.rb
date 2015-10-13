@@ -2,18 +2,19 @@ class RecurringBookingRequest < Form
 
   attr_accessor :start_minute, :end_minute, :start_on, :end_on, :schedule_params, :quantity
   attr_accessor :card_number, :card_exp_month, :card_exp_year, :card_code, :card_holder_first_name,
-                :card_holder_last_name, :occurrences
+                :card_holder_last_name, :interval, :payment_method_nonce, :total_amount_cents,
+                :guest_notes
   attr_reader   :recurring_booking, :listing, :location, :user
 
-  delegate :credit_card_payment?, :manual_payment?, :reservation_type=, to: :recurring_booking
+  delegate :credit_card_payment?, :manual_payment?, :reservation_type=, :currency,
+    :service_fee_amount_host_cents, :service_fee_amount_guest_cents, :billing_authorization,
+    :create_billing_authorization, to: :recurring_booking
   delegate :confirm_reservations?, :location, :action_hourly_booking?, :company, to: :listing
   delegate :mobile_number, :mobile_number=, :country_name, :country_name=, :country, to: :user
 
-  before_validation :setup_credit_card_customer, :if => lambda { recurring_booking.try(:reservations).try(:first) and user and user.valid?}
-
-  validates :listing,     :presence => true
-  validates :recurring_booking, :presence => true
-  validates :user,        :presence => true
+  validates :listing, :user, :recurring_booking, presence: true
+  validates :card_number, :card_exp_month, :card_exp_year, :card_code, :card_holder_first_name,
+            :card_holder_last_name, presence: true
 
   validate :validate_phone_and_country
 
@@ -29,38 +30,22 @@ class RecurringBookingRequest < Form
     if @listing
       @recurring_booking = @listing.recurring_bookings.build
       @recurring_booking.owner = user
-      @recurring_booking.start_minute = start_minute.to_i if @listing.action_hourly_booking?
-      @recurring_booking.end_minute = end_minute.to_i if @listing.action_hourly_booking?
+      @recurring_booking.creator = @listing.creator
+      @recurring_booking.interval = interval
+      @recurring_booking.guest_notes = guest_notes
       @recurring_booking.start_on = start_on || Date.current
-      @recurring_booking.end_on = end_on
-      @recurring_booking.occurrences = occurrences.to_i - 1 <= 0 ? 49 : [occurrences.to_i - 1, 49].min
+      @recurring_booking.next_charge_date = @recurring_booking.start_on
       @recurring_booking.quantity = [1, quantity.to_i].max
       @recurring_booking.schedule_params = schedule_params
       @recurring_booking.currency = @listing.currency
       @billing_gateway = @instance.payment_gateway(@listing.company.iso_country_code, @recurring_booking.currency)
       @recurring_booking.payment_method = payment_method
-      @count = 0
-      @recurring_booking.schedule.occurrences(@recurring_booking.end_on || Time.zone.now + 20.years)[0..@recurring_booking.occurrences].each do |date|
-        @reservation = @recurring_booking.reservations.build
-        @reservation.listing = @listing
-        @reservation.reservation_type = @listing.action_hourly_booking ? 'hourly' : 'daily'
-        @reservation.currency = @listing.currency
-        @reservation.add_period(date, @recurring_booking.start_minute, @recurring_booking.end_minute)
-        @reservation.payment_method = @recurring_booking.payment_method
-        @reservation.quantity = @recurring_booking.quantity
-        @reservation.user = user
-        @reservation.additional_charges << get_additional_charges
-        @reservation = @reservation.decorate
-        @last_date = date
-        @count += 1
-      end
-      @recurring_booking.end_on ||= @last_date
-      @recurring_booking.occurrences ||= @count
-      @recurring_booking.service_fee_amount_guest_cents = @reservation.try(:service_fee_amount_guest_cents)
-      @recurring_booking.service_fee_amount_host_cents = @reservation.try(:service_fee_amount_host_cents)
-      @recurring_booking.subtotal_amount_cents = @reservation.try(:subtotal_amount_cents)
-
+      @recurring_booking.subtotal_amount = @recurring_booking.total_amount_calculator.subtotal_amount
+      @recurring_booking.service_fee_amount_guest = @recurring_booking.guest_service_fee
+      @recurring_booking.service_fee_amount_host = @recurring_booking.host_service_fee
+      self.total_amount_cents = @recurring_booking.total_amount.cents
     end
+
 
     if @user
       @user.phone_required = true
@@ -72,7 +57,7 @@ class RecurringBookingRequest < Form
   end
 
   def process
-    valid? && save_reservations
+    valid? && setup_credit_card_customer && errors.empty? && save_reservations
   end
 
   def display_phone_and_country_block?
@@ -93,8 +78,15 @@ class RecurringBookingRequest < Form
                       end
   end
 
-  def dates
-    @recurring_booking.reservations.map { |r| r.periods.map(&:date) }.flatten
+  def credit_card
+    ActiveMerchant::Billing::CreditCard.new(
+      first_name: card_holder_first_name.to_s,
+      last_name: card_holder_last_name.to_s,
+      number: card_number.to_s,
+      month: card_exp_month.to_s,
+      year: card_exp_year.to_s,
+      verification_value: card_code.to_s
+    )
   end
 
   private
@@ -119,22 +111,9 @@ class RecurringBookingRequest < Form
   def save_reservations
     User.transaction do
       user.save!
-      @charged = false
-      @recurring_booking.reservations.each do |reservation|
-        if reservation.valid?
-          if !reservation.listing.action_free_booking? && reservation.payment_method == Reservation::PAYMENT_METHODS[:credit_card] && !@charged
-            reservation.build_billing_authorization(
-              token: @token,
-              payment_gateway: @billing_gateway,
-              payment_gateway_mode: @billing_gateway.mode
-            )
-            @charged = true
-          end
-          reservation.credit_card_id = @recurring_booking.credit_card_id
-        else
-          @recurring_booking.reservations = @recurring_booking.reservations - [reservation]
-        end
-      end
+      @recurring_booking.payment_gateway = @billing_gateway
+      @recurring_booking.payment_method = 'credit_card'
+      @recurring_booking.test_mode = @billing_gateway.test_mode?
       @recurring_booking.save!
     end
   rescue ActiveRecord::RecordInvalid => error
@@ -143,16 +122,6 @@ class RecurringBookingRequest < Form
   end
 
 
-  def  credit_card
-    ActiveMerchant::Billing::CreditCard.new(
-      first_name: card_holder_first_name.to_s,
-      last_name: card_holder_last_name.to_s,
-      number: card_number.to_s,
-      month: card_exp_month.to_s,
-      year: card_exp_year.to_s,
-      verification_value: card_code.to_s
-    )
-end
 
 
   def setup_credit_card_customer
@@ -162,11 +131,9 @@ end
     begin
       if credit_card.valid?
         response = @billing_gateway.authorize(self)
-        if response[:error].present?
-          add_error(response[:error], :cc)
-        else
-          @token = response[:token]
-          if (credit_card_id = @billing_gateway.store_credit_card(@reservation.owner, credit_card)).nil?
+        if response
+          @token = response
+          if (credit_card_id = @billing_gateway.store_credit_card(@recurring_booking.owner, credit_card)).nil?
             add_error("Unfortunately we have some internal issues with processing your credit card. There is nothing you can do, changing credit card will not help. Please try again later", :cc)
           else
             @recurring_booking.credit_card_id = credit_card_id
@@ -181,7 +148,7 @@ end
   end
 
   def using_credit_card?
-    @reservation.try(:credit_card_payment?)
+    true
   end
 
 end

@@ -29,11 +29,17 @@
       %ul
         %li.nav-head
           = t('dashboard.nav.services_header')
+        - if subscribable?
+          = dashboard_menu_item 'dashboard/user_recurring_bookings', active_dashboard_user_recurring_bookings_path,
+            active: params[:controller].include?('user_recurring_bookings')
         = dashboard_menu_item 'dashboard/user_reservations', dashboard_user_reservations_path,
-          active: (params[:controller].include?('user_recurring_bookings') || params[:controller].include?('user_reservations'))
+          active: params[:controller].include?('user_reservations')
         - if current_user.registration_completed?
           = dashboard_menu_item 'dashboard/host_reservations', dashboard_company_host_reservations_path,
-            active: (params[:controller].include?('host_recurring_bookings') || params[:controller].include?('host_reservations'))
+            active: params[:controller].include?('host_reservations')
+          - if subscribable?
+            = dashboard_menu_item 'dashboard/host_recurring_bookings', dashboard_company_host_recurring_bookings_path,
+              active: params[:controller].include?('host_recurring_bookings')
           = dashboard_menu_item 'dashboard/transactables', dashboard_company_transactable_type_transactables_path(TransactableType.first)
 
     - if current_user.registration_completed? && @company

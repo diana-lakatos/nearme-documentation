@@ -9,6 +9,7 @@ class @Bookings.Listing
     @bookedDateAvailability = 0
     @maxQuantity = @data.quantity
     @initial_bookings = @data.initial_bookings || {}
+    @subscriptionPeriod = Object.keys(@data.subscription_prices)[0]
     if @withCalendars()
       @firstAvailableDate = DNM.util.Date.idToDate(@data.first_available_date)
       @secondAvailableDate = DNM.util.Date.idToDate(@data.second_available_date)
@@ -56,7 +57,7 @@ class @Bookings.Listing
     @data.action_hourly_booking
 
   isRecurringBooking: ->
-    @data.booking_type == 'recurring'
+    @data.booking_type == 'subscription'
 
   isOvernightBooking: ->
     @data.booking_type == 'overnight'
@@ -124,8 +125,16 @@ class @Bookings.Listing
       @priceCalculator().getPriceForBookItOut()
     else if exclusive_price
       @exclusivePrice
+    else if @isRecurringBooking()
+      @subscriptionPeriodPrice() * @getQuantity()
     else
       @priceCalculator().getPrice()
+
+  subscriptionPeriodPrice: ->
+    @data.subscription_prices[@subscriptionPeriod]
+
+  setSubscriptionPeriod: (period) ->
+    @subscriptionPeriod = period
 
   bookItOutSubtotal: ->
     @priceCalculator().getPriceForBookItOut()

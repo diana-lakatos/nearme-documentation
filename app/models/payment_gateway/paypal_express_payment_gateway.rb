@@ -49,7 +49,8 @@ class PaymentGateway::PaypalExpressPaymentGateway < PaymentGateway
   end
 
   def merchant_account(company)
-    MerchantAccount::PaypalMerchantAccount.where(test: MerchantAccount::PaypalMerchantAccount::SEPARATE_TEST_ACCOUNTS && test_mode?).where(state: 'verified').first
+    return nil if company.nil?
+    MerchantAccount::PaypalMerchantAccount.where(merchantable: company, test: MerchantAccount::PaypalMerchantAccount::SEPARATE_TEST_ACCOUNTS && test_mode?).where(state: 'verified').first
   end
 
   def express_checkout?

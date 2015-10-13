@@ -57,7 +57,8 @@ class InstanceView < ActiveRecord::Base
     'vendor_approval_mailer/notify_host_of_listing_rejection',
     'vendor_approval_mailer/notify_host_of_listing_questioned',
     'vendor_approval_mailer/notify_host_of_user_approval',
-    'user_mailer/notify_about_wrong_phone_number'
+    'user_mailer/notify_about_wrong_phone_number',
+    'user_mailer/notify_about_unread_messages',
 
   ].freeze
 

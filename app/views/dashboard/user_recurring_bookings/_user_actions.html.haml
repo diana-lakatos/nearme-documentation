@@ -1,3 +1,3 @@
 - unless recurring_booking.archived?
   = form_for recurring_booking, method: :post, url: user_cancel_dashboard_user_recurring_booking_path(recurring_booking) do |f|
-    = f.submit 'Cancel', confirm: 'Do you really want to cancel this recurring booking?', class: 'btn dark-gray full'
+    = f.submit 'Cancel', data: { confirm: 'Do you really want to cancel this recurring booking?' }, class: 'btn dark-gray full'

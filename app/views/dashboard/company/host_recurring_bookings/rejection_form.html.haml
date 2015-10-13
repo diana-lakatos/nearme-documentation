@@ -1,6 +1,6 @@
 .modal-header
   .modal-title= t('Are you sure you want to decline?')
 .modal-body
-  = simple_form_for(@recurring_booking, url: reject_dashboard_host_recurring_booking_path(@recurring_booking, listing_id: @listing)) do |f|
+  = simple_form_for(@recurring_booking, url: reject_dashboard_company_host_recurring_booking_path(@recurring_booking, listing_id: @listing)) do |f|
     = f.input :rejection_reason, placeholder: 'Optionally, provide a reason.', label: false, tabindex: '1'
     = f.submit 'Decline', class: 'btn red full'

@@ -24,5 +24,10 @@ class PaymentGateway::StripePaymentGateway < PaymentGateway
   def supports_recurring_payment?
     true
   end
+
+  def gateway
+    ActiveMerchant::Billing::Base.mode = :test if test_mode?
+    @gateway ||= ActiveMerchant::Billing::StripeCustomGateway.new(settings)
+  end
 end
 
