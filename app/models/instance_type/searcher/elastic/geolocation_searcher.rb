@@ -115,7 +115,7 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
   end
 
   def paginated_results(page, per_page)
-    @results = @results.paginate(page: page.to_i, per_page: per_page.to_i, total_entries: @search_results_count)
+    @results = @results.paginate(page: sanitize_pagination_number(page), per_page: sanitize_pagination_number(per_page, 20), total_entries: @search_results_count)
     @results = @results.offset(0) unless postgres_filters?
   end
 
