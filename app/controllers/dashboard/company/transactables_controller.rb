@@ -18,7 +18,7 @@ class Dashboard::Company::TransactablesController < Dashboard::Company::BaseCont
   end
 
   def create
-    @transactable = @transactable_type.transactables.build
+    @transactable = @transactable_type.transactables.build(creator: current_user)
     # Some currencies have different subunit to unit converion rate. If you do Transactable.new(daily_price: 8, currency: 'JPY') it will
     # incorrectly make daily_price_cents = 8 despite 1 - 1 conversiton rate, because currency at the time of doing this is nil, fallbacking
     # to USD with currency rate 100 - 1. So we want to make sure that currency is assigned.
