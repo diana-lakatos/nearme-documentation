@@ -19,7 +19,6 @@ class Address < ActiveRecord::Base
   validate :check_address, if: lambda { |l| l.should_check_address == 'true' }
   before_validation :update_address
   before_validation :parse_address_components
-  before_save :retry_fetch, if: lambda { |a| a.country.nil? }
 
   scope :bounding_box, -> (box) {
     where('addresses.latitude > ? AND addresses.latitude < ?', box.last.first, box.first.first).
@@ -110,11 +109,6 @@ class Address < ActiveRecord::Base
     self.iso_country_code = data_parser.fetch_address_component("country", :short)
     self.state = data_parser.fetch_address_component("state")
     self.postcode = data_parser.fetch_address_component("postcode")
-  end
-
-  def retry_fetch
-    fetch_coordinates!
-    parse_address_components!
   end
 
   def to_s

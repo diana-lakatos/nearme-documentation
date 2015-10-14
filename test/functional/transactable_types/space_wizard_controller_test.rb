@@ -330,6 +330,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
 
       should 'create listing when location skip_company is set to true and address is missing' do
         stub_us_geolocation
+
         @params_without_company_name['user']['companies_attributes']['0'].delete('company_address_attributes')
 
         assert_difference('Location.count', 1) do
@@ -340,8 +341,8 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
         location = Location.last
         assert_equal 37.09024, company.latitude
         assert_equal -95.712891, company.longitude
-        assert_equal 37.09024, location.latitude
-        assert_equal -95.712891, location.longitude
+        assert_equal 5, location.latitude
+        assert_equal 8, location.longitude
       end
 
       should 'create listing with company address when location skip_company and skip_listing set' do
