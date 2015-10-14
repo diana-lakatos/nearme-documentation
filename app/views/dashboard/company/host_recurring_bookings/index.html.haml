@@ -4,7 +4,7 @@
   %ul
     %li{class: (params[:action] == 'index' && (params[:state].blank? || params[:state] == 'unconfirmed')) ? 'active' : ''}
       = link_to t('dashboard.host_reservations.unconfirmed'), dashboard_company_host_recurring_bookings_path(state: 'unconfirmed')
-    %li{class: (params[:action] == 'index' && params[:state] == 'active') ? 'active' : ''}
+    %li{class: (params[:action] == 'index' && params[:state] == 'confirmed') ? 'active' : ''}
       = link_to t('dashboard.host_reservations.active'), dashboard_company_host_recurring_bookings_path(state: 'confirmed')
     %li{class: (params[:action] == 'index' && params[:state] == 'overdue') ? 'active' : ''}
       = link_to t('dashboard.host_reservations.overdue'), dashboard_company_host_recurring_bookings_path(state: 'overdue')
