@@ -47,12 +47,12 @@
           %abbr{:title => "required"}= t('simple_form.required.mark')
           =t('simple_form.labels.listings.price')
       .col-md-9
-        .row.half-margin.price-inputs-subscription{'data-period' => 'subscription', style: "#{'display: none;' if f.object.overnight_booking?}"}
+        .row.half-margin.price-inputs-subscription{'data-period' => 'subscription' }
           .col-md-1
             = f.check_box :action_subscription_booking, checked: only_one_option_available?(f.object, 'subscription')
           .col-md-11
             = t('simple_form.labels.listings.subscription_periods')
-            .row.half-margin.price-input-options{style: "#{'display: none;' unless f.object.action_subscription_booking?}"}
+            .row.half-margin.price-input-options
               = render 'price_field', :f => f, :price => 'weekly_subscription', :label => t("simple_form.labels.transactable.price.weekly_subscription"), :include_checkbox => true
               = render 'price_field', :f => f, :price => 'monthly_subscription', :label => t("simple_form.labels.transactable.price.monthly_subscription"), :include_checkbox => true
 
