@@ -90,6 +90,7 @@ class Transactable < ActiveRecord::Base
          INNER JOIN "reservation_periods" ON "reservation_periods"."reservation_id" = "reservations"."id"
          WHERE
           "reservations"."instance_id" = ? AND
+          COALESCE("reservations"."reservation_type", \'daily\') != \'hourly\' AND
           "reservations"."deleted_at" IS NULL AND
           "reservations"."state" NOT IN (\'cancelled_by_guest\',\'cancelled_by_host\',\'rejected\',\'expired\') AND
           "reservation_periods"."date" BETWEEN ? AND ?
