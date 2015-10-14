@@ -76,7 +76,13 @@ class LocationsController < ApplicationController
 
   def redirect_if_no_active_listings
     if current_user_can_manage_location?
-      flash.now[:warning] = t('flash_messages.locations.browsing_no_listings') if @listings.searchable.empty?
+      # We only show non-draft listings even to the admin because otherwise weird errors can occur
+      # when showing him incomplete listings, especially if he tries to book it
+      @listings = @listings.active
+
+      # If from among the non-draft listings remaining all are enabled=false (that is, visible.empty?)
+      # we show a warning to the admin
+      flash.now[:warning] = t('flash_messages.locations.browsing_no_listings') if @listings.visible.empty?
     else
       @listings = @listings.searchable
     end

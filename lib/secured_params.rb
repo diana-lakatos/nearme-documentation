@@ -24,6 +24,7 @@ class SecuredParams
       :price,
       :quantity,
       :shippo_enabled,
+      :insurance_amount,
       :weight,
       :depth,
       :width,
@@ -456,7 +457,8 @@ class SecuredParams
       :express_token,
       :payment_method,
       :payment_method_nonce,
-      :start_express_checkout
+      :start_express_checkout,
+      :insurance_enabled
     ]
   end
 

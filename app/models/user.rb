@@ -263,8 +263,8 @@ class User < ActiveRecord::Base
     projects | projects_collaborated
   end
 
-  def category_ids=ids
-    super(ids.map {|e| e.gsub(/\[|\]/, '').split(',')}.flatten.compact)
+  def category_ids=(ids)
+    super(ids.map {|e| e.gsub(/\[|\]/, '').split(',')}.flatten.compact.map(&:to_i))
   end
 
   def common_categories(category)

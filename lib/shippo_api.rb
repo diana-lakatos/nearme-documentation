@@ -229,7 +229,7 @@ module ShippoApi
       rate
     end
 
-    def get_rates(address_from_info, address_to_info, parcel_info, customs_item_info = nil, customs_declaration_info = nil)
+    def get_rates(address_from_info, address_to_info, parcel_info, customs_item_info = nil, customs_declaration_info = nil, insurance = nil)
       default_result_rates = []
       result_rates = default_result_rates
 
@@ -249,7 +249,9 @@ module ShippoApi
         customs_declaration = Shippo::Customs_Declaration.create(customs_declaration_info.to_hash.merge({ :items => customs_item['object_id'] }))
       end
 
-      shipment = create_shipment(address_from, address_to, parcel, customs_declaration)
+      extra_info = {}
+      extra_info = insurance if insurance.present?
+      shipment = create_shipment(address_from, address_to, parcel, customs_declaration, extra_info)
 
       get_rates_for_shipment(shipment)
     rescue

@@ -90,6 +90,7 @@ class Transactable < ActiveRecord::Base
          INNER JOIN "reservation_periods" ON "reservation_periods"."reservation_id" = "reservations"."id"
          WHERE
           "reservations"."instance_id" = ? AND
+          COALESCE("reservations"."reservation_type", \'daily\') != \'hourly\' AND
           "reservations"."deleted_at" IS NULL AND
           "reservations"."state" NOT IN (\'cancelled_by_guest\',\'cancelled_by_host\',\'rejected\',\'expired\') AND
           "reservation_periods"."date" BETWEEN ? AND ?
@@ -169,7 +170,7 @@ class Transactable < ActiveRecord::Base
 
   def validate_mandatory_categories
     transactable_type.categories.mandatory.each do |mandatory_category|
-      errors.add(mandatory_category.name, I18n.t('errors.messages.blank')) if common_categories(mandatory_category).blank?
+      errors.add(mandatory_category.name, I18n.t('errors.messages.blank')) if common_categories(mandatory_category).blank? && (!mandatory_category.shared_with_users || (mandatory_category.shared_with_users && creator.common_categories(mandatory_category).blank?))
     end
   end
 
@@ -213,7 +214,7 @@ class Transactable < ActiveRecord::Base
   end
 
   def category_ids=ids
-    super(ids.map {|e| e.gsub(/\[|\]/, '').split(',')}.flatten.compact)
+    super(ids.map {|e| e.gsub(/\[|\]/, '').split(',')}.flatten.compact.map(&:to_i))
   end
 
   def common_categories(category)

@@ -485,16 +485,12 @@ class ApplicationController < ActionController::Base
     if (art = object.approval_request_templates.first).present?
       unless ar = object.approval_requests.find { |approval_request| approval_request.approval_request_template_id == art.id }
         ar = object.approval_requests.build(approval_request_template_id: art.id)
-        # We do this because in the space_wizard controller in list, we may be building approval_requests for
-        # an existing (saved) listing which is a draft; in this way, approval requests are added to the object but not
-        # committed to the DB immediately - they will only be saved to the DB when the parent object is saved, and for drafts
-        # we make sure we remove the approval requests before saving the parent object
-        object.association(:approval_requests).add_to_target(ar)
+        object.approval_requests << ar
       end
       ar.required_written_verification = art.required_written_verification
       art.approval_request_attachment_templates.each do |arat|
         if ara = current_user.approval_request_attachments.for_request_or_free(ar.id).for_attachment_template(arat.id).first
-          ar.association(:approval_request_attachments).add_to_target(ara)
+          ar.approval_request_attachments << ara
         end
       end
     end
