@@ -15,15 +15,16 @@ class OnboardingController < ApplicationController
       cookies[:redirect_after_callback_to] = {value: view_context.wizard_path(step), expires: 10.minutes.from_now}
       @supported_providers = Authentication.available_providers
     when :followings
-      @topics = Topic.featured.take(4)
+      quantity = 6
+      @topics = Topic.featured.take(quantity)
 
-      friends_projects = Project.where(creator_id: @user.social_friends_ids).take(4)
-      featured_projects = Project.featured.take(4 - friends_projects.count)
+      friends_projects = Project.where(creator_id: @user.social_friends_ids).take(quantity)
+      featured_projects = Project.featured.take(quantity - friends_projects.count)
       @projects = friends_projects + featured_projects
 
-      friends = User.where(id: @user.social_friends_ids).take(4)
-      nearby = User.near([current_user.current_address.latitude, current_user.current_address.longitude], 100).take(4 - friends.count)
-      featured = User.featured.without(@user).includes(:current_address, :instance_profile_type).take(4 - friends.count - nearby.count)
+      friends = User.where(id: @user.social_friends_ids).take(quantity)
+      nearby = User.near([current_user.current_address.latitude, current_user.current_address.longitude], 100).take(quantity - friends.count)
+      featured = User.featured.without(@user).includes(:current_address, :instance_profile_type).take(quantity - friends.count - nearby.count)
       @people = friends + nearby + featured
     when :finish
       @custom_attributes = @user.instance_profile_type.custom_attributes.includes(:target).where(public: true).all
