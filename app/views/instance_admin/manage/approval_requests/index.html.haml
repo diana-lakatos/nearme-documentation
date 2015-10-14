@@ -3,7 +3,7 @@
     %ul
       - %w(pending rejected questioned approved).each do |state|
         %li
-          = link_to "#{state.capitalize} (#{ApprovalRequest.send(state).count})", instance_admin_manage_approval_requests_path(:show => state), class: " #{'active' if state == params[:show]}"
+          = link_to "#{state.capitalize} (#{ApprovalRequest.send(state).for_non_drafts.count})", instance_admin_manage_approval_requests_path(:show => state), class: " #{'active' if state == params[:show]}"
 
   %h4
     = t('instance_admin.manage.approval_requests.vendor_approval')
