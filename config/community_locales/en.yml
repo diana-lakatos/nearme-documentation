@@ -96,6 +96,13 @@ en:
   projects: 'Projects'
   about: 'About'
 
+  # user profile
+  user_profile:
+    empty_resultset:
+      users: 'No users to show at the moment.'
+      topics: 'No topics to show at the moment.'
+      projects: 'No projects to show at the moment.'
+
 
   # search
   search: "Search"

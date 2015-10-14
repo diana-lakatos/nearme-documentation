@@ -1,9 +1,12 @@
-/ grid
-.grid-a-search-a
-  .wrap
-    - users.each do |user|
-      = render 'shared/person', user: user
+- if users.empty?
+  %p.empty-resultset= t('user_profile.empty_resultset.users')
+- else
+  / grid
+  .grid-a-search-a
+    .wrap
+      - users.each do |user|
+        = render 'shared/person', user: user
 
-    / more
-    %p.more-a{:'data-see-more' => true, :'data-see-more-type' => see_more_type}
-      = link_to t(:see_more), see_more_route, remote: true
+  / more
+  %p.more-a{:'data-see-more' => true, :'data-see-more-type' => see_more_type}
+    = link_to t(:see_more), see_more_route, remote: true
