@@ -145,12 +145,12 @@ class Instance < ActiveRecord::Base
     Country.where(name: allowed_countries)
   end
 
-  def allowed_currencies=currencies
+  def allowed_currencies=(currencies)
     currencies.reject!(&:blank?)
     super(currencies)
   end
 
-  def allowed_countries=countries
+  def allowed_countries=(countries)
     countries.reject!(&:blank?)
     super(countries)
   end
@@ -181,11 +181,11 @@ class Instance < ActiveRecord::Base
   end
 
   def lessor
-    super.presence || "host"
+    read_attribute(:lessor).presence || "host"
   end
 
   def lessee
-    super.presence || "guest"
+    read_attribute(:lessee).presence || "guest"
   end
 
   def to_liquid
@@ -313,27 +313,27 @@ class Instance < ActiveRecord::Base
   end
 
   def taxonomy_tree
-    super == '1'
+    read_attribute(:taxonomy_tree) == '1'
   end
 
   def price_slider
-    super == '1'
+    read_attribute(:price_slider) == '1'
   end
 
   def price_types
-    super == '1'
+    read_attribute(:price_types) == '1'
   end
 
   def date_pickers
-    super == '1'
+    read_attribute(:date_pickers) == '1'
   end
 
   def date_pickers_use_availability_rules
-    super == '1'
+    read_attribute(:date_pickers_use_availability_rules) == '1'
   end
 
   def saved_search
-    super == '1'
+    read_attribute(:saved_search) == '1'
   end
 
   def date_pickers_relative_mode?
