@@ -3,11 +3,6 @@
     - line.each do |transactable|
       .span6
         - if transactable
-          = link_to location_listing_path(transactable.location, transactable) do
-            .item-img
-              = image_tag(transactable.photos.first.try(:image_url, :large))
-            .details.clearfix
-              %p= transactable.name
-              %p.name= transactable.location.address
+          = render 'registrations/profile/tabs/transactable', transactable: transactable
 
 = will_paginate_styled @listings, param_name: 'services_page'

@@ -65,6 +65,11 @@ class LocationDrop < BaseDrop
     routes.location_path(@location, @location.listings.first)
   end
 
+  # fully qualified url
+  def full_url
+    routes.location_url(@location, @location.listings.first)
+  end
+
   def tweet_url
     tweet_location_path(routes.location_url(@location))
   end
