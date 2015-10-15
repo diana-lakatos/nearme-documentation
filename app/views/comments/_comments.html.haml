@@ -5,15 +5,15 @@
     .publish-a
       = simple_form_for [comment.commentable, comment], remote: true  do |f|
         %figure
-          = image_tag current_user.avatar.url(:thumb), width: 80, height: 80
+          = image_tag current_user.avatar.url(:thumb)
 
-        = f.input :body, label: false, input_html: { data: {'new-comment': true}, cols: 40, rows: 3 }
+        = f.input :body, label: false, input_html: { data: {'new-comment-for': comment.commentable.id }, cols: 40, rows: 3 }
 
         %p.action
           = f.button :submit, class: 'button-a tiny'
 
   - comments =  comment.commentable.comments.order("created_at DESC").paginate(page: 1, per_page: 10)
-  .comments{"data-comments": true}= render comments
+  .comments{ "data-comments-for": comment.commentable.id }= render comments
 
   .aligncenter
     - if comments.total_pages > comments.current_page
