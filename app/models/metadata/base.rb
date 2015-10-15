@@ -115,11 +115,20 @@ module Metadata::Base
           end
 
           def update_instance_#{metadata_column}(*args)
+            # We do this to allow changes in admin to users
+            # where we don't have an instance_id; that's mostly
+            # deleting objects; for super admins data may not be set 
+            # for the right instance under certain complex operations
+            # but that's OK as for now we're mostly using the workaround
+            # for allowing the deletion of objects
+            instance_id_for_metadata = get_instance_id_for_metadata
+            return nil if instance_id_for_metadata.blank?
+
             args.each do |arg|
               raise Metadata::Base::InvalidArgumentError.new("#{metadata_column} must be Hash") unless arg.kind_of?(Hash)
-              self.#{metadata_column}[PlatformContext.current.instance.id.to_s] ||= {}
+              self.#{metadata_column}[instance_id_for_metadata] ||= {}
               arg.each do |key, value|
-                self.#{metadata_column}[PlatformContext.current.instance.id.to_s][key] = value
+                self.#{metadata_column}[instance_id_for_metadata][key] = value
               end
             end
 
@@ -130,8 +139,15 @@ module Metadata::Base
           end
 
           def get_instance_#{metadata_column}(attr)
-            return nil if #{metadata_column}.nil? || #{metadata_column}[PlatformContext.current.instance.id.to_s].nil?
-            #{metadata_column}[PlatformContext.current.instance.id.to_s][attr]
+            instance_id_for_metadata = get_instance_id_for_metadata
+            return nil if instance_id_for_metadata.blank?
+
+            return nil if #{metadata_column}.nil? || #{metadata_column}[instance_id_for_metadata].nil?
+            #{metadata_column}[instance_id_for_metadata][attr]
+          end
+
+          def get_instance_id_for_metadata
+            (PlatformContext.current.try(:instance).try(:id) || self.try(:instance_id)).to_s
           end
         EOV
 
