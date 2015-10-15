@@ -23,7 +23,8 @@ module ListingsHelper
       quantity: listing.quantity,
       initial_bookings: @initial_bookings ? @initial_bookings[listing.id] : {},
       booking_type: listing.booking_type,
-      continuous_dates: listing.transactable_type.action_continuous_dates_booking
+      continuous_dates: listing.transactable_type.action_continuous_dates_booking,
+      subscription_prices: listing.subscription_variants
     }
     if listing.schedule_booking?
       base_data.merge!({
@@ -66,7 +67,6 @@ module ListingsHelper
         action_daily_booking: listing.action_daily_booking?,
         hourly_price_cents: listing.hourly_price_cents,
         hourly_availability_schedule: hourly_availability,
-        subscription_prices: listing.subscription_variants
       })
     end
     base_data
