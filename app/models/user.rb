@@ -67,9 +67,9 @@ class User < ActiveRecord::Base
   has_many :products_images, foreign_key: 'uploader_id', class_name: 'Spree::Image'
   has_many :products, foreign_key: 'user_id', class_name: 'Spree::Product'
   has_many :projects, foreign_key: 'creator_id', inverse_of: :creator
-  has_many :project_collaborators, -> { approved }
   has_many :projects_collaborated, through: :project_collaborators, source: :project
   has_many :project_collaborators
+  has_many :approved_project_collaborations, -> { approved }, class_name: 'ProjectCollaborator'
   has_many :payment_documents, class_name: 'Attachable::PaymentDocument', dependent: :destroy
   has_many :reservations, foreign_key: 'owner_id'
   has_many :recurring_bookings, foreign_key: 'owner_id'
@@ -146,6 +146,12 @@ class User < ActiveRecord::Base
     joins(:followers).select('"users".*, "user_relationships"."follower_id" AS mutual_friendship_source')
   }
 
+  scope :friends_of, -> (user) {
+    joins(
+      sanitize_sql(['INNER JOIN user_relationships on followed_id = users.id and follower_id = ?', user.id])
+    ) if user.try(:id)
+  }
+
   scope :for_instance, -> (instance) {
     where(:'users.instance_id' => instance.id)
   }
@@ -154,10 +160,15 @@ class User < ActiveRecord::Base
 
   scope :admin,     -> { where(admin: true) }
   scope :not_admin, -> { where("admin iS NULL") }
+  scope :with_joined_project_collaborations, -> { joins("LEFT OUTER JOIN project_collaborators pc ON users.id = pc.user_id AND (pc.approved_at IS NOT NULL AND pc.deleted_at IS NULL)")}
 
-  #TODO make sure that works after collaborators are implemented
-  scope :by_topic, -> (topic_ids) { includes(:topics).where(topics: {id: topic_ids}) if topic_ids.present?}
-
+  scope :by_topic, -> (topic_ids) do
+    if topic_ids.present?
+      with_joined_project_collaborations.
+      joins(" LEFT OUTER JOIN project_topics pt on pt.project_id = pc.project_id").
+      where(pt: {topic_id: topic_ids}).group('users.id')
+    end
+  end
   scope :filtered_by_custom_attribute, -> (property, values) { where("string_to_array((users.properties->?), ',') && ARRAY[?]", property, values) if values.present? }
 
   mount_uploader :avatar, AvatarUploader
@@ -848,20 +859,17 @@ class User < ActiveRecord::Base
   def self.custom_order(order, user)
     case order
     when /featured/i
-      order('users.featured DESC')
+      where(featured: true)
     when /people i know/i
-      return all unless user.try(:id)
-      order sanitize_sql(["(SELECT 1 FROM user_relationships WHERE follower_id = ? AND followed_id = users.id LIMIT 1) ASC", user.id])
+      friends_of(user)
     when /most popular/i
-      #TODO check most popular sort after followers are implemented
       order('followers_count DESC')
     when /distance/i
       return all unless user
       near(user.current_geolocation, 8_000_000, units: :km, order: 'distance')
-      #TODO check most popular sort after followers are implemented
     when /number of projects/i
-      #TODO fix Number of projects sort after contributors are implemented
-      # joins(:followed_projects).order('count(projects.id) DESC')
+      with_joined_project_collaborations.group('users.id').
+        order('count(pc.id) DESC')
     else
       all
     end

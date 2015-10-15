@@ -64,10 +64,11 @@ class Project < ActiveRecord::Base
       #TODO check most popular sort after followers are implemented
       order('projects.followers_count DESC')
     when /contributors/i
-      #TODO check contributors search after followers are implemented
-      joins(:contributors).order('count(contributors.id) DESC')
+      group('projects.id').
+        joins("LEFT OUTER JOIN project_collaborators pc ON projects.id = pc.project_id AND (pc.approved_at IS NOT NULL AND pc.deleted_at IS NULL)").
+        order('count(pc.id) DESC')
     when /featured/i
-      order('projects.featured DESC')
+      where(featured: true)
     else
       all
     end
