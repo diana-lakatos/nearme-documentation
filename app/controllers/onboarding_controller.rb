@@ -22,9 +22,9 @@ class OnboardingController < ApplicationController
       featured_projects = Project.featured.take(quantity - friends_projects.count)
       @projects = friends_projects + featured_projects
 
-      friends = User.where(id: @user.social_friends_ids).take(quantity)
-      nearby = User.near([current_user.current_address.latitude, current_user.current_address.longitude], 100).take(quantity - friends.count)
-      featured = User.featured.without(@user).includes(:current_address, :instance_profile_type).take(quantity - friends.count - nearby.count)
+      friends = @user.social_friends.take(quantity)
+      nearby =  @user.nearby_friends(100).take(quantity - friends.count)
+      featured = User.featured.without(@user).take(quantity - friends.count - nearby.count)
       @people = friends + nearby + featured
     when :finish
       @custom_attributes = @user.instance_profile_type.custom_attributes.includes(:target).where(public: true).all

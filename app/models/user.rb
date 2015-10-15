@@ -878,6 +878,14 @@ class User < ActiveRecord::Base
     record == self || self.is_instance_owner? || record.try(:creator) === self || record.try(:user_id) === self.id
   end
 
+  def social_friends
+    User.where(id: social_friends_ids)
+  end
+
+  def nearby_friends(distance)
+    User.near([current_address.latitude, current_address.longitude], distance)
+  end
+
   private
 
   def get_first_name_from_name

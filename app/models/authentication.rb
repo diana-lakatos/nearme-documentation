@@ -26,7 +26,7 @@ class Authentication < ActiveRecord::Base
   after_create :find_friends
   after_create :update_info
 
-  PROVIDERS = ["Facebook", "LinkedIn", "Twitter", "Instagram", "Google_OAuth2", "Github"]
+  PROVIDERS = ["Facebook", "LinkedIn", "Twitter", "Instagram", "Google", "Github"]
   ALLOWED_LOGIN_PROVIDERS = PROVIDERS - ["Instagram"]
 
   def social_connection
