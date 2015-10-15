@@ -14,7 +14,6 @@ class @ProjectLinks
       @updateUploadLabel $(e.target).closest('.control-group')
 
     for error_block in @wrapper.find('[data-link-wrapper] .error-block')
-      console.log error_block
       $(error_block).closest('[data-link-wrapper]').find('[data-link-edit]').click()
 
 
