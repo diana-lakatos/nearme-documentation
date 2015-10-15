@@ -41,7 +41,7 @@ class Project < ActiveRecord::Base
   scope :featured, -> { where(featured: true) }
 
   accepts_nested_attributes_for :photos, allow_destroy: true
-  accepts_nested_attributes_for :links, allow_destroy: true
+  accepts_nested_attributes_for :links, reject_if: :all_blank, allow_destroy: true
 
   attr_accessor :photo_not_required
 

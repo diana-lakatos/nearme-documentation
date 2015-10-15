@@ -10,8 +10,14 @@ class @ProjectLinks
     @wrapper.on 'click', '[data-link-remove]', (e)=>
       @hideOnRemove $(e.target).closest('.link')
 
-    @wrapper.on 'change', 'input[type=file]', (e)=>
+    @wrapper.on 'change', 'input[type=file]', (e) =>
       @updateUploadLabel $(e.target).closest('.control-group')
+
+    for error_block in @wrapper.find('[data-link-wrapper] .error-block')
+      console.log error_block
+      $(error_block).closest('[data-link-wrapper]').find('[data-link-edit]').click()
+
+
 
   enableEditForm: (link)->
     link.find('.media-group_link-form').show()
