@@ -1123,6 +1123,7 @@ class SecuredParams
     [
       :about,
       :name,
+      :description,
       :image,
       :cover_image,
       :featured,
