@@ -313,27 +313,27 @@ class Instance < ActiveRecord::Base
   end
 
   def taxonomy_tree
-    read_attribute(:taxonomy_tree) == '1'
+    super == '1'
   end
 
   def price_slider
-    read_attribute(:price_slider) == '1'
+    super == '1'
   end
 
   def price_types
-    read_attribute(:price_types) == '1'
+    super == '1'
   end
 
   def date_pickers
-    read_attribute(:date_pickers) == '1'
+    super == '1'
   end
 
   def date_pickers_use_availability_rules
-    read_attribute(:date_pickers_use_availability_rules) == '1'
+    super == '1'
   end
 
   def saved_search
-    read_attribute(:saved_search) == '1'
+    super == '1'
   end
 
   def date_pickers_relative_mode?
