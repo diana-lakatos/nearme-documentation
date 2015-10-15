@@ -20,6 +20,7 @@
       %span.or
         = t :or
       = f.input :image, as: :file, input_html: { accept: "image/*", capture: "capture" }
+      = f.input :image_cache, as: :hidden
 
   .fieldset-actions
     - if f.object.url.present?
