@@ -17,11 +17,12 @@
         = f.submit I18n.t('activity_feed.user_status_submit'), class: 'button-a tiny'
 
 - if feed.events.count > 0
-  = render partial: "shared/activity_status", collection: feed.events, as: :event, locals: { object: object }
+  .content-container
+    = render partial: "shared/activity_status", collection: feed.events, as: :event, locals: { object: object }
 
   - if feed.has_next_page?
-    %p.more-a{:'data-see-more' => true, :'data-see-more-type' => "activityFeed"}
-      = link_to t(:see_more), see_more_activity_feed_path(id: feed.owner_id, type: feed.owner_type), remote: true
+    %p.more-a{:'data-see-more' => true}
+      = link_to t(:see_more), see_more_activity_feed_path(id: feed.owner_id, type: feed.owner_type), remote: true, data: { next_page: feed.events.next_page }
 
 - else
   %p= t("activity_feed.no_interactions_yet")

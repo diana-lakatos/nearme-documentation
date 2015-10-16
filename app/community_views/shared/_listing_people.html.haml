@@ -3,11 +3,10 @@
 - else
   / grid
   .grid-a-search-a
-    .wrap
+    .wrap.content-container
       - users.each do |user|
         = render 'shared/person', user: user
 
   / more
-  - if users.next_page
-    %p.more-a{:'data-see-more' => true, :'data-see-more-type' => see_more_type}
-      = link_to t(:see_more), see_more_route, remote: true
+  %p.more-a{:'data-see-more' => true, class: "#{users.next_page ? '' : 'hide-initially'}"}
+    = link_to t(:see_more), see_more_route, remote: true, data: { next_page: users.next_page }

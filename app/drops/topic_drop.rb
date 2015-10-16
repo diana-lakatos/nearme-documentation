@@ -22,4 +22,20 @@ class TopicDrop < BaseDrop
   def cover_image_big
     @topic.cover_image.url(:big)
   end
+
+  def background_style_big
+    if cover_image_big.present?
+      "background-image: url(#{ActionController::Base.helpers.image_url(cover_image_big)});"
+    else
+      ''
+    end
+  end
+
+  def background_style
+    if cover_image.present?
+      "background-image: url(#{ActionController::Base.helpers.image_url(cover_image)});"
+    else
+      ''
+    end
+  end
 end

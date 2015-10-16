@@ -30,17 +30,11 @@
   #followers.tab-pane.fade{:role => "tabpanel"}
     .wrap-a.reduce-top
       .contain
-        .box-a= render 'shared/show_followers', object: @topic
+        .box-a= render 'shared/show_followers', followers_type: 'followers', see_more_route: see_more_followers_path(id: @topic.id, type: 'Topic', container: '#followers'), collection: @followers
   #projects.tab-pane.fade{:role => "tabpanel"}
     / content wrapper
     .wrap-a.reduce-top
       .contain
         / white box
         .box-a
-          = simple_form_for :search_filter, url: root_url do |f|
-            .filters-a
-              .results
-                = f.input :sort, as: :select, collection: ['Name', 'Date'], input_html: { class: 'selectize', data: { placeholder: t(:sort, scope: [:simple_form, :placeholders, :search_filter] )}}, wrapper_html: { class: 'sort' }
-
-          = render 'shared/listing_projects', projects: @topic_projects, see_more_type: "projects", see_more_route: see_more_projects_path(id: @topic.id, type: @topic.class.name)
-
+          = render 'shared/show_projects', projects: @all_projects, container: '#projects', see_more_route: see_more_projects_path(id: @topic.id, type: @topic.class.name, container: '#projects')
