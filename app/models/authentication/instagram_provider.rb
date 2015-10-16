@@ -39,7 +39,7 @@ class Authentication::InstagramProvider < Authentication::BaseProvider
   private
 
   def connection
-    @connection ||= Instagram.client(:access_token => token)
+    @connection ||= Instagram.client(access_token: token)
   end
 
 end

@@ -2,13 +2,22 @@ class Authentication::LinkedinProvider < Authentication::BaseProvider
 
   META   = { name: "LinkedIn",
              url: "http://linkedin.com/",
-             auth: "OAuth 1.0a" }
+             auth: "OAuth 2.0" }
   FIELDS = ["id", "first-name", "last-name", "headline", "industry", "picture-url", "public-profile-url", "location"]
+
+  def self.setup_proc
+    lambda do |env|
+      instance = PlatformContext.current.instance
+      env['omniauth.strategy'].options[:client_id] = instance.send(:"#{provider}_consumer_key").try(:strip)
+      env['omniauth.strategy'].options[:client_secret] = instance.send(:"#{provider}_consumer_secret").try(:strip)
+      env['omniauth.strategy'].options[:redirect_uri] = "https://#{instance.default_domain.name}/auth/#{provider}/callback"
+    end
+  end
 
   def friend_ids
     begin
       @friend_ids ||= connection.connections.all.collect(&:id)
-    rescue LinkedIn::Errors::AccessDeniedError
+    rescue LinkedIn::InvalidRequest
       raise ::Authentication::InvalidToken
     end
   end
@@ -16,7 +25,7 @@ class Authentication::LinkedinProvider < Authentication::BaseProvider
   def info
     begin
       @info ||= Info.new(connection.profile(fields: FIELDS))
-    rescue LinkedIn::Errors::AccessDeniedError
+    rescue LinkedIn::InvalidRequest
       raise ::Authentication::InvalidToken
     end
   end
@@ -40,7 +49,7 @@ class Authentication::LinkedinProvider < Authentication::BaseProvider
 
   private
   def connection
-    @connection ||= LinkedIn::Client.new.tap{|c| c.set_access_token(token)}
+    @connection ||= LinkedIn::API.new token
   end
 
 end

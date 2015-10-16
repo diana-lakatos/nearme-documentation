@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151011094217) do
+ActiveRecord::Schema.define(version: 20151015163009) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -869,26 +869,26 @@ ActiveRecord::Schema.define(version: 20151011094217) do
   add_index "instance_views", ["instance_id", "transactable_type_id", "path", "locale", "format", "handler"], name: "instance_path_with_format_and_handler", unique: true, using: :btree
 
   create_table "instances", force: :cascade do |t|
-    t.string   "name",                                    limit: 255
-    t.datetime "created_at",                                                                                          null: false
-    t.datetime "updated_at",                                                                                          null: false
-    t.string   "bookable_noun",                           limit: 255,                         default: "Desk"
-    t.decimal  "service_fee_guest_percent",                           precision: 5, scale: 2, default: 0.0
-    t.string   "lessor",                                  limit: 255
-    t.string   "lessee",                                  limit: 255
-    t.boolean  "skip_company",                                                                default: false
+    t.string   "name",                                  limit: 255
+    t.datetime "created_at",                                                                                        null: false
+    t.datetime "updated_at",                                                                                        null: false
+    t.string   "bookable_noun",                         limit: 255,                         default: "Desk"
+    t.decimal  "service_fee_guest_percent",                         precision: 5, scale: 2, default: 0.0
+    t.string   "lessor",                                limit: 255
+    t.string   "lessee",                                limit: 255
+    t.boolean  "skip_company",                                                              default: false
     t.text     "pricing_options"
-    t.decimal  "service_fee_host_percent",                            precision: 5, scale: 2, default: 0.0
-    t.string   "live_stripe_public_key",                  limit: 255
-    t.string   "paypal_email",                            limit: 255
-    t.string   "encrypted_live_paypal_username",          limit: 255
-    t.string   "encrypted_live_paypal_password",          limit: 255
-    t.string   "encrypted_live_paypal_signature",         limit: 255
-    t.string   "encrypted_live_paypal_app_id",            limit: 255
-    t.string   "encrypted_live_paypal_client_id",         limit: 255
-    t.string   "encrypted_live_paypal_client_secret",     limit: 255
-    t.string   "encrypted_live_stripe_api_key",           limit: 255
-    t.string   "encrypted_marketplace_password",          limit: 255
+    t.decimal  "service_fee_host_percent",                          precision: 5, scale: 2, default: 0.0
+    t.string   "live_stripe_public_key",                limit: 255
+    t.string   "paypal_email",                          limit: 255
+    t.string   "encrypted_live_paypal_username",        limit: 255
+    t.string   "encrypted_live_paypal_password",        limit: 255
+    t.string   "encrypted_live_paypal_signature",       limit: 255
+    t.string   "encrypted_live_paypal_app_id",          limit: 255
+    t.string   "encrypted_live_paypal_client_id",       limit: 255
+    t.string   "encrypted_live_paypal_client_secret",   limit: 255
+    t.string   "encrypted_live_stripe_api_key",         limit: 255
+    t.string   "encrypted_marketplace_password",        limit: 255
     t.integer  "min_hourly_price_cents"
     t.integer  "max_hourly_price_cents"
     t.integer  "min_daily_price_cents"
@@ -897,77 +897,77 @@ ActiveRecord::Schema.define(version: 20151011094217) do
     t.integer  "max_weekly_price_cents"
     t.integer  "min_monthly_price_cents"
     t.integer  "max_monthly_price_cents"
-    t.boolean  "password_protected",                                                          default: false
-    t.boolean  "test_mode",                                                                   default: false
-    t.string   "encrypted_test_paypal_username",          limit: 255
-    t.string   "encrypted_test_paypal_password",          limit: 255
-    t.string   "encrypted_test_paypal_signature",         limit: 255
-    t.string   "encrypted_test_paypal_app_id",            limit: 255
-    t.string   "encrypted_test_paypal_client_id",         limit: 255
-    t.string   "encrypted_test_paypal_client_secret",     limit: 255
-    t.string   "encrypted_test_stripe_api_key",           limit: 255
-    t.string   "test_stripe_public_key",                  limit: 255
-    t.string   "encrypted_olark_api_key",                 limit: 255
-    t.boolean  "olark_enabled",                                                               default: false
-    t.string   "encrypted_facebook_consumer_key",         limit: 255
-    t.string   "encrypted_facebook_consumer_secret",      limit: 255
-    t.string   "encrypted_linkedin_consumer_key",         limit: 255
-    t.string   "encrypted_linkedin_consumer_secret",      limit: 255
-    t.string   "encrypted_twitter_consumer_key",          limit: 255
-    t.string   "encrypted_twitter_consumer_secret",       limit: 255
-    t.string   "encrypted_instagram_consumer_key",        limit: 255
-    t.string   "encrypted_instagram_consumer_secret",     limit: 255
+    t.boolean  "password_protected",                                                        default: false
+    t.boolean  "test_mode",                                                                 default: false
+    t.string   "encrypted_test_paypal_username",        limit: 255
+    t.string   "encrypted_test_paypal_password",        limit: 255
+    t.string   "encrypted_test_paypal_signature",       limit: 255
+    t.string   "encrypted_test_paypal_app_id",          limit: 255
+    t.string   "encrypted_test_paypal_client_id",       limit: 255
+    t.string   "encrypted_test_paypal_client_secret",   limit: 255
+    t.string   "encrypted_test_stripe_api_key",         limit: 255
+    t.string   "test_stripe_public_key",                limit: 255
+    t.string   "encrypted_olark_api_key",               limit: 255
+    t.boolean  "olark_enabled",                                                             default: false
+    t.string   "encrypted_facebook_consumer_key",       limit: 255
+    t.string   "encrypted_facebook_consumer_secret",    limit: 255
+    t.string   "encrypted_linkedin_consumer_key",       limit: 255
+    t.string   "encrypted_linkedin_consumer_secret",    limit: 255
+    t.string   "encrypted_twitter_consumer_key",        limit: 255
+    t.string   "encrypted_twitter_consumer_secret",     limit: 255
+    t.string   "encrypted_instagram_consumer_key",      limit: 255
+    t.string   "encrypted_instagram_consumer_secret",   limit: 255
     t.integer  "instance_type_id"
     t.text     "metadata"
-    t.string   "support_email",                           limit: 255
-    t.string   "encrypted_db_connection_string",          limit: 255
-    t.string   "stripe_currency",                         limit: 255,                         default: "USD"
-    t.boolean  "user_info_in_onboarding_flow",                                                default: false
-    t.string   "default_search_view",                     limit: 255,                         default: "mixed"
-    t.boolean  "user_based_marketplace_views",                                                default: false
-    t.string   "searcher_type",                           limit: 255,                         default: "geo"
+    t.string   "support_email",                         limit: 255
+    t.string   "encrypted_db_connection_string",        limit: 255
+    t.string   "stripe_currency",                       limit: 255,                         default: "USD"
+    t.boolean  "user_info_in_onboarding_flow",                                              default: false
+    t.string   "default_search_view",                   limit: 255,                         default: "mixed"
+    t.boolean  "user_based_marketplace_views",                                              default: false
+    t.string   "searcher_type",                         limit: 255,                         default: "geo"
     t.datetime "master_lock"
-    t.boolean  "apply_text_filters",                                                          default: false
+    t.boolean  "apply_text_filters",                                                        default: false
     t.text     "user_required_fields"
     t.boolean  "force_accepting_tos"
     t.text     "custom_sanitize_config"
-    t.string   "payment_transfers_frequency",             limit: 255,                         default: "fortnightly"
+    t.string   "payment_transfers_frequency",           limit: 255,                         default: "fortnightly"
     t.text     "hidden_ui_controls"
-    t.string   "encrypted_shippo_username",               limit: 255
-    t.string   "encrypted_shippo_password",               limit: 255
-    t.string   "twilio_from_number",                      limit: 255
-    t.string   "test_twilio_from_number",                 limit: 255
-    t.string   "encrypted_test_twilio_consumer_key",      limit: 255
-    t.string   "encrypted_test_twilio_consumer_secret",   limit: 255
-    t.string   "encrypted_twilio_consumer_key",           limit: 255
-    t.string   "encrypted_twilio_consumer_secret",        limit: 255
-    t.boolean  "user_blogs_enabled",                                                          default: false
-    t.boolean  "wish_lists_enabled",                                                          default: false
-    t.string   "wish_lists_icon_set",                     limit: 255,                         default: "heart"
+    t.string   "encrypted_shippo_username",             limit: 255
+    t.string   "encrypted_shippo_password",             limit: 255
+    t.string   "twilio_from_number",                    limit: 255
+    t.string   "test_twilio_from_number",               limit: 255
+    t.string   "encrypted_test_twilio_consumer_key",    limit: 255
+    t.string   "encrypted_test_twilio_consumer_secret", limit: 255
+    t.string   "encrypted_twilio_consumer_key",         limit: 255
+    t.string   "encrypted_twilio_consumer_secret",      limit: 255
+    t.boolean  "user_blogs_enabled",                                                        default: false
+    t.boolean  "wish_lists_enabled",                                                        default: false
+    t.string   "wish_lists_icon_set",                   limit: 255,                         default: "heart"
     t.boolean  "possible_manual_payment"
-    t.string   "support_imap_username",                   limit: 255
-    t.string   "encrypted_support_imap_password",         limit: 255
-    t.string   "support_imap_server",                     limit: 255
+    t.string   "support_imap_username",                 limit: 255
+    t.string   "encrypted_support_imap_password",       limit: 255
+    t.string   "support_imap_server",                   limit: 255
     t.integer  "support_imap_port"
     t.boolean  "support_imap_ssl"
-    t.hstore   "search_settings",                                                             default: {},            null: false
-    t.string   "default_country",                         limit: 255
+    t.hstore   "search_settings",                                                           default: {},            null: false
+    t.string   "default_country",                       limit: 255
     t.text     "allowed_countries"
-    t.string   "default_currency",                        limit: 255
+    t.string   "default_currency",                      limit: 255
     t.text     "allowed_currencies"
-    t.string   "category_search_type",                    limit: 255,                         default: "AND"
-    t.string   "search_engine",                           limit: 255,                         default: "postgresql",  null: false
+    t.string   "category_search_type",                  limit: 255,                         default: "AND"
+    t.string   "search_engine",                         limit: 255,                         default: "postgresql",  null: false
     t.integer  "search_radius"
-    t.string   "search_text",                             limit: 255
+    t.string   "search_text",                           limit: 255
     t.integer  "last_index_job_id"
-    t.string   "context_cache_key",                       limit: 255
-    t.string   "encrypted_shippo_api_token",              limit: 255
+    t.string   "context_cache_key",                     limit: 255
+    t.string   "encrypted_shippo_api_token",            limit: 255
     t.string   "encrypted_webhook_token"
-    t.boolean  "is_community",                                                                default: false
-    t.string   "encrypted_github_consumer_key",           limit: 255
-    t.string   "encrypted_github_consumer_secret",        limit: 255
-    t.string   "encrypted_google_oauth2_consumer_key",    limit: 255
-    t.string   "encrypted_google_oauth2_consumer_secret", limit: 255
+    t.boolean  "is_community",                                                              default: false
+    t.string   "encrypted_github_consumer_key",         limit: 255
+    t.string   "encrypted_github_consumer_secret",      limit: 255
+    t.string   "encrypted_google_consumer_key",         limit: 255
+    t.string   "encrypted_google_consumer_secret",      limit: 255
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -2161,7 +2161,7 @@ ActiveRecord::Schema.define(version: 20151011094217) do
   end
 
   create_table "spree_products", force: :cascade do |t|
-    t.string   "name",                    limit: 255, default: "",    null: false
+    t.string   "name",                    limit: 255,                          default: "",    null: false
     t.text     "description"
     t.datetime "available_on"
     t.datetime "deleted_at"
@@ -2542,7 +2542,7 @@ ActiveRecord::Schema.define(version: 20151011094217) do
     t.text     "shippo_label_url"
     t.text     "shippo_tracking_number"
     t.string   "code"
-    t.decimal  "insurance_amount",                   precision: 10, scale: 2, default: 0.0, null: false
+    t.decimal  "insurance_amount",                   precision: 10, scale: 2, default: 0.0
     t.string   "insurance_currency"
   end
 
