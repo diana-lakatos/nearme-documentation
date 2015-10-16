@@ -5,12 +5,18 @@ class ProjectCollaboratorsController < ApplicationController
 
   def create
     @project.project_collaborators.create(user: current_user)
-    redirect_to project_path(@project)
+    @collaborators_count = @project.reload.project_collaborators.approved.count
+    respond_to do |format|
+      format.js { render :collaborators_button }
+    end
   end
 
   def destroy
     @project.project_collaborators.where(user: current_user).destroy_all
-    redirect_to project_path(@project)
+    @collaborators_count = @project.reload.project_collaborators.approved.count
+    respond_to do |format|
+      format.js { render :collaborators_button }
+    end
   end
 
   protected

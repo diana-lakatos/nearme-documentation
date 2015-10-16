@@ -2,8 +2,6 @@ class User < ActiveRecord::Base
   geocoded_by :current_location, :latitude  => :last_geolocated_location_latitude, :longitude => :last_geolocated_location_longitude
 
   include Spree::UserPaymentSource
-  include ActivityFeedService::Follower
-  include ActivityFeedService::Followed
 
   has_paper_trail ignore: [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
                            :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
@@ -20,6 +18,9 @@ class User < ActiveRecord::Base
   has_metadata accessors: [:support_metadata]
   friendly_id :name, use: [:slugged, :finders]
 
+  attr_readonly :following_count
+  attr_readonly :followers_count
+
   belongs_to :billing_address, class_name: 'Spree::Address'
   belongs_to :domain
   belongs_to :instance
@@ -27,7 +28,6 @@ class User < ActiveRecord::Base
   belongs_to :partner
   belongs_to :spree_shipping_address, class_name: 'Spree::Address', foreign_key: 'shipping_address_id'
   has_many :shipping_addresses
-
   has_many :activity_feed_events, as: :event_source, dependent: :destroy
   has_many :activity_feed_subscriptions, foreign_key: 'follower_id'
   has_many :activity_feed_subscriptions_as_followed, as: :followed
@@ -47,10 +47,11 @@ class User < ActiveRecord::Base
   has_many :companies, through: :company_users
   has_many :comments, inverse_of: :creator
   has_many :created_companies, class_name: "Company", foreign_key: 'creator_id', inverse_of: :creator
-  has_many :feed_followers, -> { where(activity_feed_subscriptions: { active: true}) }, through: :activity_feed_subscriptions, source: :activity_feed_subscriptions_as_followed
-  has_many :feed_followed_projects, -> { where(activity_feed_subscriptions: { active: true}) }, through: :activity_feed_subscriptions, source: :followed, source_type: 'Project'
-  has_many :feed_followed_topics, -> { where(activity_feed_subscriptions: { active: true}) }, through: :activity_feed_subscriptions, source: :followed, source_type: 'Topic'
-  has_many :feed_followed_users, -> { where(activity_feed_subscriptions: { active: true}) }, through: :activity_feed_subscriptions,  source: :followed, source_type: 'User'
+  has_many :feed_followers, through: :activity_feed_subscriptions, source: :followed, source_type: 'User'
+  has_many :feed_followed_projects, through: :activity_feed_subscriptions, source: :followed, source_type: 'Project'
+  has_many :feed_followed_topics, through: :activity_feed_subscriptions, source: :followed, source_type: 'Topic'
+  has_many :feed_followed_users, through: :activity_feed_subscriptions,  source: :followed, source_type: 'User'
+  has_many :feed_following, through: :activity_feed_subscriptions, source: :follower
   has_many :followed_users, through: :relationships, source: :followed
   has_many :followers, through: :reverse_relationships, source: :follower
   has_many :instance_clients, as: :client, dependent: :destroy
@@ -260,7 +261,7 @@ class User < ActiveRecord::Base
   end
 
   def all_projects
-    projects | projects_collaborated
+    projects.merge(projects_collaborated)
   end
 
   def category_ids=(ids)
@@ -884,6 +885,18 @@ class User < ActiveRecord::Base
 
   def nearby_friends(distance)
     User.near([current_address.latitude, current_address.longitude], distance)
+  end
+
+  def feed_subscribed_to?(object)
+    activity_feed_subscriptions.where(followed: object).any?
+  end
+
+  def feed_follow!(object)
+    activity_feed_subscriptions.where(followed: object).first_or_create!
+  end
+
+  def feed_unfollow!(object)
+    activity_feed_subscriptions.where(followed: object).destroy_all
   end
 
   private

@@ -16,7 +16,7 @@ class ActivityFeedControllerTest < ActionController::TestCase
 
   should 'DELETE #destroy' do
     FactoryGirl.create(:activity_feed_subscription, follower: @user, followed: @another_user)
-    assert_difference "ActivityFeedSubscription.active.count", -1 do
+    assert_difference "ActivityFeedSubscription.count", -1 do
       delete :unfollow, id: @another_user.id, type: "User", format: :js
     end
   end

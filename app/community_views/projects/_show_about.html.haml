@@ -4,7 +4,7 @@
   %p= @project.description
 
 - if @project.photos.except_cover.any?
-  %h4 = t :gallery
+  %h4= t :gallery
   %ul.gallery-a
     - @project.photos.except_cover.each do |p|
       %li

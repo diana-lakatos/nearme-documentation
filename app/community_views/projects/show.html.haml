@@ -25,15 +25,13 @@
         %ul
           %li
             %span
-              %strong= @project.project_collaborators.approved.count
+              %strong{:'data-collaborators-count' => true}= @project.project_collaborators.approved.count
               = t :collaborators
-            - if @project_collaborator
-              = link_to t(:leave_project), project_project_collaborator_path(@project, @project_collaborator), method: :delete , class: 'button-a small red', confirm: t("leave_project_confirm")
-            - elsif @project.seek_collaborators
-              = link_to t(:join_project), project_project_collaborators_path(@project), method: :post , class: 'button-a small'
+            %p{:'data-collaborators-button' => true}
+              = render partial: 'shared/collaborators_button', locals: { project: @project }
           %li
             %span
-              %strong= @followers.count
+              %strong{:'data-followers-count' => true}= @followers.total_entries
               = t :followers
             %p{:'data-follow-button' => true}
               = render partial: 'shared/follow_button', locals: { object: @project }

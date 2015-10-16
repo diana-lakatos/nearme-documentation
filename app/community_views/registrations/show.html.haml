@@ -20,7 +20,7 @@
         %li
           = link_to '#following', role: "tab", :'data-toggle' => "tab" do
             = t :following
-            %small= "(#{@user.following_count})"
+            %small= "(#{@user.activity_feed_subscriptions.count})"
         %li
           = link_to '#followers', role: "tab", :'data-toggle' => "tab" do
             = t :followers
@@ -43,7 +43,39 @@
     = render 'show_activity', object: @user, feed: @feed
 
   #following.tab-pane.fade{:role => "tabpanel"}
-    = render 'show_following', object: @user, projects: @following.projects, topics: @following.topics, users: @following.users
+    / content wrapper
+    .wrap-a.reduce-top
+      .contain
+        / tabs
+        %nav.tabs-a.trio
+          %ul.nav.nav-tabs{role: "tablist"}
+            %li.active
+              = link_to '#following-people', role: "tab", :'data-toggle' => "tab" do
+                = t :people
+                %small= "(#{@users_followed.total_entries})"
+            %li
+              = link_to '#following-projects', role: "tab", :'data-toggle' => "tab" do
+                = t :projects
+                %small= "(#{@projects_followed.total_entries})"
+            %li
+              = link_to '#following-topics', role: "tab", :'data-toggle' => "tab" do
+                = t :topics
+                %small= "(#{@topics_followed.total_entries})"
+        / white box
+        .box-a
+          = simple_form_for :search_filter, url: root_url do |f|
+            .filters-a
+              .results
+                = f.input :sort, as: :select, collection: ['Name', 'Date'], input_html: { class: 'selectize', data: { placeholder: t(:sort, scope: [:simple_form, :placeholders, :search_filter] )}}, wrapper_html: { class: 'sort' }
+
+          .tab-content
+            #following-people.tab-pane.fade.active
+              = render "shared/listing_people", users: @users_followed, see_more_type: "followingPeople", see_more_route: see_more_following_people_path(id: @user.id, type: @user.class.name)
+            #following-projects.tab-pane.fade
+              = render "shared/listing_projects", projects: @projects_followed, see_more_type: "followingProjects", see_more_route: see_more_following_projects_path(id: @user.id, type: @user.class.name)
+            #following-topics.tab-pane.fade
+              = render "shared/listing_topics", topics: @topics_followed
+
 
   #followers.tab-pane.fade{:role => "tabpanel"}
     .wrap-a.reduce-top
@@ -51,5 +83,16 @@
         .box-a= render 'shared/show_followers', object: @user
 
   #projects.tab-pane.fade{:role => "tabpanel"}
-    = render 'show_projects', object: @user
+    / content wrapper
+    .wrap-a.reduce-top
+      .contain
+        / white box
+        .box-a
+          = simple_form_for :search_filter, url: root_url do |f|
+            .filters-a
+              .results
+                = f.input :sort, as: :select, collection: ['Name', 'Date'], input_html: { class: 'selectize', data: { placeholder: t(:sort, scope: [:simple_form, :placeholders, :search_filter] )}}, wrapper_html: { class: 'sort' }
+
+          = render 'shared/listing_projects', projects: @all_projects, see_more_type: "projects", see_more_route: see_more_projects_path(id: @user.id, type: @user.class.name)
+
 

@@ -14,7 +14,7 @@
           %span= project.project_collaborators.approved.count
         %li
           = t :followers
-          %span= project.followers.count
+          %span= project.followers_count
       %p.action
         %p{:'data-follow-button' => true}
           = render partial: 'shared/follow_button', locals: { object: project, css_class: 'tiny' }

@@ -399,4 +399,10 @@ module ApplicationHelper
       'pascha-offset' => I18n.t('schedule.pascha_offset'),
       'event-occured-less' => I18n.t('schedule.event_occured_less')}
   end
+
+  def body_classes
+    body_classes = []
+    body_classes << "signed-in" if user_signed_in?
+    body_classes.join(" ")
+  end
 end

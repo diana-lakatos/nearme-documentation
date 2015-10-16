@@ -1,12 +1,11 @@
 class Topic < ActiveRecord::Base
-  include ActivityFeedService::Followed
-
   has_paper_trail
   acts_as_paranoid
   auto_set_platform_context
   scoped_to_platform_context
 
   belongs_to :category
+  attr_readonly :followers_count
 
   has_many :activity_feed_events, as: :event_source, dependent: :destroy
   has_many :activity_feed_subscriptions, as: :followed
