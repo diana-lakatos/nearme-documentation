@@ -11,11 +11,17 @@ class Dashboard::ProjectCollaboratorsController < Dashboard::BaseController
 
   def update
     @project_collaborator.update_attributes(project_collaborator_params)
+    WorkflowStepJob.perform(WorkflowStep::ProjectWorkflow::CollaboratorApproved, @project_collaborator.id)
     render_project_collaborator
   end
 
   def destroy
     @project_collaborator.destroy
+    if current_user.id == @project_collaborator.user_id
+      WorkflowStepJob.perform(WorkflowStep::ProjectWorkflow::CollaboratorHasQuit, @project_collaborator.project_id, @project_collaborator.user_id)
+    else
+      WorkflowStepJob.perform(WorkflowStep::ProjectWorkflow::CollaboratorDeclined, @project_collaborator.project_id, @project_collaborator.user_id)
+    end
     render nothing: true
   end
 

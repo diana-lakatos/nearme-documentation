@@ -1,6 +1,4 @@
 class Project < ActiveRecord::Base
-  include ActivityFeedService::Followed
-
   has_paper_trail
   acts_as_paranoid
   auto_set_platform_context
@@ -8,8 +6,10 @@ class Project < ActiveRecord::Base
   has_custom_attributes target_type: 'ProjectType', target_id: :transactable_type_id
 
   attr_reader :collaborator_email
+  attr_readonly :followers_count
 
   DEFAULT_ATTRIBUTES = %w(name description)
+  SORT_OPTIONS = ['All', 'Featured', 'Most Recent', 'Most Popular', 'Contributors']
 
   belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :projects, counter_cache: true
   belongs_to :transactable_type, -> { with_deleted }, foreign_key: 'transactable_type_id'
@@ -40,9 +40,13 @@ class Project < ActiveRecord::Base
   scope :by_topic, -> (topic_ids) { includes(:topics).where(topics: {id: topic_ids}) if topic_ids.present?}
   scope :seek_collaborators, -> { where(seek_collaborators: true) }
   scope :featured, -> { where(featured: true) }
+  scope :by_search_query, lambda { |query|
+    where("name ilike ? or description ilike ? or summary ilike ?", query, query, query)
+  }
+  scope :with_date, ->(date) { where(created_at: date) }
 
   accepts_nested_attributes_for :photos, allow_destroy: true
-  accepts_nested_attributes_for :links, allow_destroy: true
+  accepts_nested_attributes_for :links, reject_if: :all_blank, allow_destroy: true
 
   attr_accessor :photo_not_required
 
@@ -65,10 +69,11 @@ class Project < ActiveRecord::Base
       #TODO check most popular sort after followers are implemented
       order('projects.followers_count DESC')
     when /contributors/i
-      #TODO check contributors search after followers are implemented
-      joins(:contributors).order('count(contributors.id) DESC')
+      group('projects.id').
+        joins("LEFT OUTER JOIN project_collaborators pc ON projects.id = pc.project_id AND (pc.approved_at IS NOT NULL AND pc.deleted_at IS NULL)").
+        order('count(pc.id) DESC')
     when /featured/i
-      order('projects.featured DESC')
+      where(featured: true)
     else
       all
     end
@@ -77,13 +82,22 @@ class Project < ActiveRecord::Base
   after_commit :user_created_project_event, on: :create
   def user_created_project_event
     event = :user_created_project
-    ActivityFeedService.create_event(event, self, [self.creator], self)
+    affected_objects = [self.creator] + self.topics
+    ActivityFeedService.create_event(event, self, affected_objects, self)
   end
 
   after_commit :user_added_photos_to_project_event, on: :update
   def user_added_photos_to_project_event
     if self.photos.map(&:id_changed?)
       event = :user_added_photos_to_project
+      ActivityFeedService.create_event(event, self, [self.creator], self)
+    end
+  end
+
+  after_commit :user_added_links_to_project_event, on: :update
+  def user_added_links_to_project_event
+    if self.links.map(&:id_changed?)
+      event = :user_added_links_to_project
       ActivityFeedService.create_event(event, self, [self.creator], self)
     end
   end

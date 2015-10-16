@@ -310,12 +310,13 @@ class SecuredParams
       :db_connection_string,
       :default_country,
       :default_currency,
+      :default_oauth_signin_provider,
       :default_products_search_view,
       :default_search_view,
       :facebook_consumer_key,
       :facebook_consumer_secret,
-      :google_oauth2_consumer_key,
-      :google_oauth2_consumer_secret,
+      :google_consumer_key,
+      :google_consumer_secret,
       :github_consumer_key,
       :github_consumer_secret,
       :force_accepting_tos,
@@ -1055,7 +1056,8 @@ class SecuredParams
       :id,
       :url,
       :text,
-      :image
+      :image,
+      :image_cache
     ]
   end
 
@@ -1123,6 +1125,7 @@ class SecuredParams
     [
       :about,
       :name,
+      :description,
       :image,
       :cover_image,
       :featured,

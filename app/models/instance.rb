@@ -10,8 +10,7 @@ class Instance < ActiveRecord::Base
     :facebook_consumer_key, :facebook_consumer_secret, :twitter_consumer_key, :twitter_consumer_secret, :linkedin_consumer_key, :linkedin_consumer_secret,
     :instagram_consumer_key, :instagram_consumer_secret, :db_connection_string, :shippo_username, :shippo_password, :shippo_api_token,
     :twilio_consumer_key, :twilio_consumer_secret, :test_twilio_consumer_key, :test_twilio_consumer_secret, :support_imap_password, :webhook_token,
-    :google_oauth2_consumer_key, :google_oauth2_consumer_secret,
-    :github_consumer_key, :github_consumer_secret,
+    :google_consumer_key, :google_consumer_secret, :github_consumer_key, :github_consumer_secret,
     :key => DesksnearMe::Application.config.secret_token, :if => DesksnearMe::Application.config.encrypt_sensitive_db_columns
 
   attr_accessor :mark_as_locked
@@ -313,27 +312,27 @@ class Instance < ActiveRecord::Base
   end
 
   def taxonomy_tree
-    read_attribute(:taxonomy_tree) == '1'
+    super == '1'
   end
 
   def price_slider
-    read_attribute(:price_slider) == '1'
+    super == '1'
   end
 
   def price_types
-    read_attribute(:price_types) == '1'
+    super == '1'
   end
 
   def date_pickers
-    read_attribute(:date_pickers) == '1'
+    super == '1'
   end
 
   def date_pickers_use_availability_rules
-    read_attribute(:date_pickers_use_availability_rules) == '1'
+    super == '1'
   end
 
   def saved_search
-    read_attribute(:saved_search) == '1'
+    super == '1'
   end
 
   def date_pickers_relative_mode?

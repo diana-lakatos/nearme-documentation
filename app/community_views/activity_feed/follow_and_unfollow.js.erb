@@ -6,4 +6,6 @@
         .attr('href', updated.attr('href'))
         .data('method', updated.data('method'))
         .html(updated.html());
+
+    btn.parent().parent().find("[data-followers-count]").html(parseInt("<%= @followers_count %>"));
 }());

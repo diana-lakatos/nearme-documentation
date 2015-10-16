@@ -51,6 +51,8 @@
             = t('instance_admin.manage.users.email')
           %th
             = t('instance_admin.manage.users.signed_up')
+          - if PlatformContext.current.instance.is_community?
+            %th
           %th
           %th
           %th

@@ -25,9 +25,9 @@ class Company < ActiveRecord::Base
   MerchantAccount::MERCHANT_ACCOUNTS.each do |name, klass|
     # also include owners if association exist
     has_one :"#{name}_merchant_account",
-      -> {
+      ->(record) {
         assoc = klass.reflections.keys.include?(:owners) ? includes(:owners) : self
-        pg = klass::SEPARATE_TEST_ACCOUNTS && "PaymentGateway::#{name.classify}PaymentGateway".constantize.find_by(instance_id: PlatformContext.current.instance.id)
+        pg = klass::SEPARATE_TEST_ACCOUNTS && "PaymentGateway::#{name.classify}PaymentGateway".constantize.find_by(instance_id: (PlatformContext.current.try(:instance).try(:id) || record.instance_id))
         pg ? assoc.where(test: pg.test_mode?) : assoc
       },
       class_name: klass.to_s, as: :merchantable, dependent: :nullify

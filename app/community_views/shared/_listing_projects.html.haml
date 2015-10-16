@@ -1,9 +1,12 @@
-/ grid
-.grid-a-search-a
-  .wrap
-    - projects.each do |project|
-      = render 'shared/project', project: project
+- if projects.empty?
+  %p.empty-resultset= t('user_profile.empty_resultset.projects')
+- else
+  / grid
+  .grid-a-search-a
+    .wrap.content-container
+      - projects.each do |project|
+        = render 'shared/project', project: project
 
-    / more
-    %p.more-a{:'data-see-more' => true, :'data-see-more-type' => see_more_type}
-      = link_to t(:see_more), see_more_route, remote: true
+  / more
+  %p.more-a{:'data-see-more' => true, class: "#{projects.next_page ? '' : 'hide-initially'}"}
+    = link_to t(:see_more), see_more_route, remote: true, data: { next_page: projects.try(:next_page) }

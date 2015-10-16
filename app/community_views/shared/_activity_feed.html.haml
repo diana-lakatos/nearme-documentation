@@ -3,7 +3,8 @@
 - if current_user.try(:can_update_feed_status?, object) == true
   .publish-a
     = simple_form_for UserStatusUpdate.new do |f|
-      %figure= image_tag(current_user.try(:avatar).presence || space_listing_placeholder_path(width: 80, height: 80))
+      - image = current_user.try(:avatar).try(:url, :medium)
+      %figure= image_tag(image || space_listing_placeholder_path(width: 80, height: 80))
 
       = f.input :text, label: false, placeholder: I18n.t('activity_feed.user_status_text'), input_html: { cols: 40, rows: 3 }
 
@@ -15,8 +16,13 @@
       %p.action
         = f.submit I18n.t('activity_feed.user_status_submit'), class: 'button-a tiny'
 
-= render partial: "shared/activity_status", collection: feed.events, as: :event, locals: { object: object }
+- if feed.events.count > 0
+  .content-container
+    = render partial: "shared/activity_status", collection: feed.events, as: :event, locals: { object: object }
 
-- if feed.next_page?
-  %p.more-a{:'data-see-more' => true, :'data-see-more-type' => "activityFeed"}
-    = link_to t(:see_more), see_more_activity_feed_path(id: feed.owner_id, type: feed.owner_type), remote: true
+  - if feed.has_next_page?
+    %p.more-a{:'data-see-more' => true}
+      = link_to t(:see_more), see_more_activity_feed_path(id: feed.owner_id, type: feed.owner_type), remote: true, data: { next_page: feed.events.next_page }
+
+- else
+  %p= t("activity_feed.no_interactions_yet")

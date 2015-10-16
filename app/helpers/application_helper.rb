@@ -162,7 +162,7 @@ module ApplicationHelper
   end
 
   def array_to_unordered_list(arr = [])
-    arr.map{|s| "<li>#{s}</li>"}.join.tap{|s| "<ul>#{s}</ul>"}
+    arr.map{|s| "<li>#{s}</li>"}.join.prepend('<ul>') << '</ul>'
   end
 
   def section_class(section_name = nil)
@@ -398,5 +398,11 @@ module ApplicationHelper
       'this-nth-day-of-year' => I18n.t('schedule.this_nth_day_of_year'),
       'pascha-offset' => I18n.t('schedule.pascha_offset'),
       'event-occured-less' => I18n.t('schedule.event_occured_less')}
+  end
+
+  def body_classes
+    body_classes = []
+    body_classes << "signed-in" if user_signed_in?
+    body_classes.join(" ")
   end
 end

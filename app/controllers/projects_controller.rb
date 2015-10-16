@@ -3,11 +3,11 @@ class ProjectsController < ApplicationController
 
   before_filter :find_project, only: [:show]
   before_filter :build_comment, only: [:show]
-  before_filter :find_project_collaborator, only: [:show]
 
   def show
     @feed = ActivityFeedService.new(@project)
-    @followers = @project.feed_followers(params)
+    @followers = @project.feed_followers.paginate(pagination_params)
+    @collaborators = @project.collaborating_users.paginate(pagination_params)
   end
 
   protected
@@ -21,8 +21,11 @@ class ProjectsController < ApplicationController
     @comments = @project.comments.includes(:user).order("created_at DESC")
   end
 
-  def find_project_collaborator
-    @project_collaborator = @project.project_collaborators.where(user: current_user).first
+  def pagination_params
+    {
+      page: 1,
+      per_page: ActivityFeedService::Helpers::FOLLOWED_PER_PAGE
+    }
   end
 end
 

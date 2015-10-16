@@ -9,7 +9,12 @@ class @Bookings.Listing
     @bookedDateAvailability = 0
     @maxQuantity = @data.quantity
     @initial_bookings = @data.initial_bookings || {}
-    @subscriptionPeriod = Object.keys(@data.subscription_prices)[0]
+
+    if @data.subscription_prices
+      @subscriptionPeriod = Object.keys(@data.subscription_prices)[0]
+    else
+      @subscriptionPeriod = {}
+
     if @withCalendars()
       @firstAvailableDate = DNM.util.Date.idToDate(@data.first_available_date)
       @secondAvailableDate = DNM.util.Date.idToDate(@data.second_available_date)

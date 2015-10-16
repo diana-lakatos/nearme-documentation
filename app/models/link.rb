@@ -5,7 +5,7 @@ class Link < ActiveRecord::Base
 
   belongs_to :linkable, polymorphic: true
 
-  validates_presence_of  :url
+  validates_url :url, { no_local: true, schemes: %w(http https) }
 
   mount_uploader :image, LinkImageUploader
 

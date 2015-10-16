@@ -8,13 +8,20 @@ class InstanceAdmin::Manage::UsersController < InstanceAdmin::Manage::BaseContro
 
   def edit
     @user = User.find(params[:id])
-    render layout: false
+    if request.xhr?
+      render :modal_edit, layout: false
+    end
   end
 
   def update
     @user = User.find(params[:id])
     @user.update_columns(params[:user])
-    render layout: false
+    if request.xhr?
+      render layout: false
+    else
+      flash[:success] = "#{@user.first_name} has been updated successfully"
+      redirect_to instance_admin_manage_users_path
+    end
   end
 
   def login_as

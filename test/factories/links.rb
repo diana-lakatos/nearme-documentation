@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :link do
-    url "www.google.com"
+    url "http://www.google.com"
     text "Gooooogle"
   end
 end

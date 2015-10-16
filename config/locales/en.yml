@@ -88,6 +88,7 @@ en:
     daily: 'Daily'
     weekly: 'Weekly'
     browse: 'Browse'
+    required: 'required'
     day:
       one: "day"
       other: "days"
@@ -306,6 +307,7 @@ en:
       configuration:
         master_lock: 'Master Lock'
         update_lock: 'Update Lock'
+        user_authorization: 'User Authorization'
         basic_configuration: 'Basic Configuration'
         basic_configuration_section:
           placeholder_marketplace_name: 'Your marketplace name'

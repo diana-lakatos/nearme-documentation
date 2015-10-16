@@ -13,7 +13,7 @@
         %li
           = link_to '#followers', role: "tab", :'data-toggle' => "tab" do
             = t :followers
-            %small= "(#{@topic.followers_count})"
+            %small= "(#{@topic.feed_followers.count})"
         %li
           = link_to '#projects', role: "tab", :'data-toggle' => "tab" do
             = t :projects
@@ -30,6 +30,11 @@
   #followers.tab-pane.fade{:role => "tabpanel"}
     .wrap-a.reduce-top
       .contain
-        .box-a= render 'shared/show_followers', object: @topic
+        .box-a= render 'shared/show_followers', followers_type: 'followers', see_more_route: see_more_followers_path(id: @topic.id, type: 'Topic', container: '#followers'), collection: @followers
   #projects.tab-pane.fade{:role => "tabpanel"}
-    = render 'show_projects', object: @topic
+    / content wrapper
+    .wrap-a.reduce-top
+      .contain
+        / white box
+        .box-a
+          = render 'shared/show_projects', projects: @all_projects, container: '#projects', see_more_route: see_more_projects_path(id: @topic.id, type: @topic.class.name, container: '#projects')

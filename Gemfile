@@ -26,7 +26,7 @@ gem 'aws-sdk', '1.27.0'
 
 gem 'omniauth'
 gem 'omniauth-twitter'
-gem 'omniauth-facebook', github: 'mkdynamic/omniauth-facebook', tag: 'v2.0.0.pre1'
+gem 'omniauth-facebook'
 gem 'omniauth-linkedin'
 gem 'omniauth-instagram'
 gem 'omniauth-saml'
@@ -34,12 +34,13 @@ gem 'omniauth-google-oauth2'
 gem 'omniauth-github'
 
 gem 'koala'
-gem 'linkedin-oauth2', '~> 0.1.1'
+gem 'linkedin-oauth2', '~> 1.0'
+gem 'omniauth-linkedin-oauth2'
 gem 'twitter', '~> 5.5.1'
 # Installing instagram from the master branch will fix ruby 2.2 circular dependency warning
 gem 'instagram', github: '0tofu/instagram-ruby-gem', branch: 'master'
 gem 'github_api'
-gem 'google-api-client', '0.9.pre3'
+gem 'google_plus'
 
 gem 'reform', '~> 2.0.0.rc2'
 gem 'tilt'
@@ -157,6 +158,8 @@ gem 'domainatrix'
 gem 'store_base_sti_class', github: 'jcarreti/store_base_sti_class', branch: 'rails4-2'
 
 gem 'acts-as-taggable-on', '~> 3.4'
+
+gem 'validate_url'
 
 group :profiling, :development do
   gem 'rack-mini-profiler', require: false

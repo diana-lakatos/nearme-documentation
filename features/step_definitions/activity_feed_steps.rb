@@ -47,7 +47,7 @@ Then(/^I should see the event on my Activity Feed$/) do
 end
 
 Then(/^I shouldn't be following it anymore$/) do
-  subscriptions = ActivityFeedSubscription.where(follower: @user, followed: @resource).active
+  subscriptions = ActivityFeedSubscription.where(follower: @user, followed: @resource)
   subscriptions.count.should == 0
 end
 

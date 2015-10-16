@@ -26,8 +26,8 @@ class Authentication < ActiveRecord::Base
   after_create :find_friends
   after_create :update_info
 
-  PROVIDERS = ["Facebook", "LinkedIn", "Twitter", "Instagram", "Google_OAuth2", "Github"]
-  ALLOWED_LOGIN_PROVIDERS = PROVIDERS - ["Instagram"]
+  PROVIDERS = ["Facebook", "LinkedIn", "Twitter", "Instagram", "Google", "Github"]
+  ALLOWED_LOGIN_PROVIDERS = PROVIDERS + ["SAML"] - ["Instagram"]
 
   def social_connection
     @social_connection ||= self.class.provider_class(provider).new_from_authentication(self)
