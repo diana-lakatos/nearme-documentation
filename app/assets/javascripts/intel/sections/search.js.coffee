@@ -49,10 +49,10 @@ class @Search
 
 
 # Triggers a search with default UX behaviour and semantics.
-  triggerSearchAndHandleResults: (url, data) ->
+  triggerSearchAndHandleResults: (data) ->
     @queryInput().val(@topnavFormQuery.val())
     @pageInput().val(1)
-    @triggerSearchRequest(url, data).success (html) =>
+    @triggerSearchRequest(data).success (html) =>
       @showResults(html)
       @reinitializeElements()
       @replaceSeeMore(html)

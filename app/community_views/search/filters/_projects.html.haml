@@ -16,4 +16,4 @@
         %span= @searcher.result_count
         = t :results_count
 
-      = f.input :sort, as: :select, collection: ['Featured', 'Most Recent', 'Most Popular', 'Contributors'], input_html: { class: 'selectize', data: { placeholder: t(:sort, scope: [:simple_form, :placeholders, :search_filter] )}}, wrapper_html: { class: 'sort' }, selected: params[:sort]
+      = f.input :sort, as: :select, collection: ['All', 'Featured', 'Most Recent', 'Most Popular', 'Contributors'], prompt: t(:sort, scope: [:simple_form, :placeholders, :search_filter]), input_html: { class: 'selectize' }, wrapper_html: { class: 'sort' }, selected: params[:sort]
