@@ -9,10 +9,12 @@
 
     = f.input :description, as: :text, input_html: { cols: 40, rows: 8 }
 
-    = f.association :topics, as: :select, input_html: { multiple: true, class: 'selectize', data: { placeholder: t(:topics, scope: [:simple_form, :placeholders, :activity_feed]) } }, wrapper_html: { class: 'topics' }
+    = f.association :topics, as: :select, input_html: { multiple: true, class: 'selectize', data: { placeholder: t(:topics, scope: [:simple_form, :placeholders, :activity_feed]) } }, wrapper_html: { class: 'topics' }, required: true
 
     %fieldset.media-group.sep
-      %legend= t :images
+      %legend
+        %abbr{:title => t('general.required')} *
+        = t :images
 
       - if is_i18n_set?('forms.hints.transactable_form.photos')
         %p.photo-uploader-hint
