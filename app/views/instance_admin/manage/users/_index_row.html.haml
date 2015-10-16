@@ -2,6 +2,9 @@
   %td= link_to resource.name, profile_path(resource)
   %td= resource.email
   %td= resource.created_at.strftime("%b %-d, %Y")
+  - if PlatformContext.current.instance.is_community?
+    %td= link_to t('general.edit'), edit_instance_admin_manage_user_path(resource)
+
   %td
     - if resource != current_user
       = link_to t('instance_admin.manage.users.login_as'), login_as_instance_admin_manage_user_path(resource), :method => :post,
