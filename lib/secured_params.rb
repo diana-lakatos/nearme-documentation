@@ -310,6 +310,7 @@ class SecuredParams
       :db_connection_string,
       :default_country,
       :default_currency,
+      :default_oauth_signin_provider,
       :default_products_search_view,
       :default_search_view,
       :facebook_consumer_key,
