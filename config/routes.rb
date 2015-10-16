@@ -52,6 +52,7 @@ DesksnearMe::Application.routes.draw do
   namespace :webhooks do
     resource :'profile', only: [] do
       collection do
+        match 'create_profile', via: [:get, :post], as: :create_profile, action: :create
         match '', via: [:get, :post], as: :webhook, action: :webhook
       end
     end
