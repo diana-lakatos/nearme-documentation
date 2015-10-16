@@ -1,6 +1,7 @@
 class SessionsController < Devise::SessionsController
   skip_before_filter :redirect_to_set_password_unless_unnecessary, only: [:destroy]
   before_filter :sso_logout, only: [:destroy]
+  before_filter :omniauth_login, only: [:new]
   skip_before_filter :require_no_authentication, only: [:show] , if: lambda { |c| request.xhr? }
   skip_before_filter :redirect_if_marketplace_password_protected, only: [:store_correct_ip]
   after_filter :render_or_redirect_after_create, only: [:create]
@@ -52,6 +53,16 @@ class SessionsController < Devise::SessionsController
   end
 
   private
+
+  def omniauth_login
+    provider = PlatformContext.current.instance.default_oauth_signin_provider
+    if provider.present? && !login_from_instance_admin?
+      path = "/auth/#{provider}"
+      p = params.except(:action, :controller)
+      path << "?#{p.to_query}" if p.present?
+      redirect_to path
+    end
+  end
 
   def sso_logout
     current_user.log_out! if current_user
