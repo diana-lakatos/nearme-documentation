@@ -1,9 +1,12 @@
-- hide_more = false if local_assigns[:hide_more].nil?
+- if topics.empty?
+  %p.empty-resultset= t('user_profile.empty_resultset.topics')
+- else
+  - hide_more = false if local_assigns[:hide_more].nil?
 
-.grid-a-search-a
-  .wrap
-    - topics.each do |topic|
-      = render 'shared/topic', topic: topic
+  .grid-a-search-a
+    .wrap
+      - topics.each do |topic|
+        = render 'shared/topic', topic: topic
 
-    %p.more-a{:'data-see-more' => true, :'data-see-more-type' => "followingProjects"}
-      = link_to t(:see_more), see_more_following_topics_path(id: @user.id, type: @user.class.name), remote: true
+  %p.more-a{:'data-see-more' => true, :'data-see-more-type' => "followingProjects"}
+    = link_to t(:see_more), see_more_following_topics_path(id: @user.id, type: @user.class.name), remote: true
