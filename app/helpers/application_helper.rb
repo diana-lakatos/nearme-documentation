@@ -162,7 +162,7 @@ module ApplicationHelper
   end
 
   def array_to_unordered_list(arr = [])
-    arr.map{|s| "<li>#{s}</li>"}.join.tap{|s| "<ul>#{s}</ul>"}
+    arr.map{|s| "<li>#{s}</li>"}.join.prepend('<ul>') << '</ul>'
   end
 
   def section_class(section_name = nil)
