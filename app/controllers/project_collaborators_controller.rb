@@ -4,8 +4,9 @@ class ProjectCollaboratorsController < ApplicationController
   before_filter :find_project
 
   def create
-    @project.project_collaborators.create(user: current_user)
+    project_collaborator = @project.project_collaborators.create(user: current_user)
     @collaborators_count = @project.reload.project_collaborators.approved.count
+    WorkflowStepJob.perform(WorkflowStep::ProjectWorkflow::CollaboratorPendingApproval, project_collaborator.id)
     respond_to do |format|
       format.js { render :collaborators_button }
     end

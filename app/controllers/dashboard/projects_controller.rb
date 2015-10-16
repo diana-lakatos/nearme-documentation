@@ -4,7 +4,7 @@ class Dashboard::ProjectsController < Dashboard::BaseController
   before_filter :set_form_components, only: [:new, :create, :edit, :update]
 
   def index
-    @projects = CustomObjectHstoreSearcher.new(@transactable_type, @transactable_type.projects.where(creator_id: current_user.id)).projects(params[:search]).paginate(page: params[:page], per_page: 20)
+    @projects = CustomObjectHstoreSearcher.new(@transactable_type, @transactable_type.projects.where(creator_id: current_user.id)).projects(params[:search]).order('created_at DESC').paginate(page: params[:page], per_page: 20)
   end
 
   def new
@@ -16,7 +16,7 @@ class Dashboard::ProjectsController < Dashboard::BaseController
     @project = @transactable_type.projects.build(project_params)
     @project.creator = current_user
     if @project.save
-      flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.bookable_noun)
+      flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.translated_bookable_noun)
       redirect_to dashboard_project_type_projects_path(@transactable_type)
     else
       flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(@project.errors.full_messages)

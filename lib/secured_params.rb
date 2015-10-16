@@ -1056,7 +1056,8 @@ class SecuredParams
       :id,
       :url,
       :text,
-      :image
+      :image,
+      :image_cache
     ]
   end
 
@@ -1124,6 +1125,7 @@ class SecuredParams
     [
       :about,
       :name,
+      :description,
       :image,
       :cover_image,
       :featured,

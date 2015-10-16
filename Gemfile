@@ -159,6 +159,8 @@ gem 'store_base_sti_class', github: 'jcarreti/store_base_sti_class', branch: 'ra
 
 gem 'acts-as-taggable-on', '~> 3.4'
 
+gem 'validate_url'
+
 group :profiling, :development do
   gem 'rack-mini-profiler', require: false
   gem 'flamegraph'

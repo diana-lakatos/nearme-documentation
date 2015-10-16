@@ -16,8 +16,6 @@ class ProjectCollaborator < ActiveRecord::Base
 
   scope :approved, -> { where.not(approved_at: nil) }
 
-  after_create :notify_project_owner
-
   def name
     @name ||= user.try(:name)
   end
@@ -38,11 +36,4 @@ class ProjectCollaborator < ActiveRecord::Base
     self.user = User.find_by_email(email)
   end
 
-  private
-
-  def notify_project_owner
-    if self.pending?
-      #TODO add Workflow Alert
-    end
-  end
 end

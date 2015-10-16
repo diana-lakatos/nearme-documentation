@@ -39,9 +39,13 @@ class Project < ActiveRecord::Base
   scope :by_topic, -> (topic_ids) { includes(:topics).where(topics: {id: topic_ids}) if topic_ids.present?}
   scope :seek_collaborators, -> { where(seek_collaborators: true) }
   scope :featured, -> { where(featured: true) }
+  scope :by_search_query, lambda { |query|
+    where("name ilike ? or description ilike ? or summary ilike ?", query, query, query)
+  }
+  scope :with_date, ->(date) { where(created_at: date) }
 
   accepts_nested_attributes_for :photos, allow_destroy: true
-  accepts_nested_attributes_for :links, allow_destroy: true
+  accepts_nested_attributes_for :links, reject_if: :all_blank, allow_destroy: true
 
   attr_accessor :photo_not_required
 

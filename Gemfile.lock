@@ -1002,6 +1002,9 @@ GEM
     uuid (2.3.8)
       macaddr (~> 1.0)
     uuidtools (2.1.5)
+    validate_url (1.0.2)
+      activemodel (>= 3.0.0)
+      addressable
     vcr (2.9.3)
     video_info (2.4.2)
       addressable
@@ -1209,6 +1212,7 @@ DEPENDENCIES
   unicorn
   unicorn-worker-killer
   useragent
+  validate_url
   vcr
   video_info
   voight_kampff

@@ -1,9 +1,9 @@
 .content-container
-  %h4= t('instance_admin.manage.users.manage_users')
+  %h4 Projects
 
   .row
     .text-container
-      = form_tag instance_admin_manage_users_path, method: :get, enforce_utf8: :false do
+      = form_tag instance_admin_projects_projects_path, method: :get, enforce_utf8: :false do
         .filters
           .filter.period
             .dropdown.date-dropdown
@@ -47,18 +47,12 @@
         %tr
           %th
             = t('instance_admin.manage.users.name')
-          %th
-            = t('instance_admin.manage.users.email')
-          %th
-            = t('instance_admin.manage.users.signed_up')
-          - if PlatformContext.current.instance.is_community?
-            %th
-          %th
+          %th Featured
+          %th Created at
           %th
           %th
         - collection.each do |resource|
           = render 'index_row', :resource => resource
-
 
 .row
   .text-container
@@ -66,4 +60,4 @@
       = will_paginate collection
 
 - content_for :domready do
-  new InstanceAdmin.UsersController($('.users'))
+  new InstanceAdmin.UsersController($('.projects'))
