@@ -61,7 +61,7 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
     @filterable_pricing += [['weekly_subscription', I18n.t("search.pricing_types.weekly")], ['monthly_subscription', I18n.t("search.pricing_types.monthly")]] if @transactable_type.action_subscription_booking
     @filterable_custom_attributes = @transactable_type.custom_attributes.searchable.where(" NOT (custom_attributes.attribute_type = 'string' AND custom_attributes.html_tag IN ('input', 'textarea'))")
     per_page = [@params[:per_page].to_i, 20].max
-    @offset = [((@params[:page].to_i - 1) * per_page), 0].max
+    @offset = [((@params[:page].to_pagination_number - 1) * per_page), 0].max
     @to = @offset + per_page + 5
   end
 
@@ -115,7 +115,7 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
   end
 
   def paginated_results(page, per_page)
-    @results = @results.paginate(page: sanitize_pagination_number(page), per_page: sanitize_pagination_number(per_page, 20), total_entries: @search_results_count)
+    @results = @results.paginate(page: page.to_pagination_number, per_page: per_page.to_pagination_number(20), total_entries: @search_results_count)
     @results = @results.offset(0) unless postgres_filters?
   end
 

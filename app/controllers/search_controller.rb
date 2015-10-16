@@ -68,11 +68,11 @@ class SearchController < ApplicationController
   end
 
   def first_result_page?
-    !params[:page] || params[:page].to_i==1
+    !params[:page] || params[:page].to_pagination_number==1
   end
 
   def per_page
-    (params[:per_page] || 20).to_i
+    (params[:per_page] || 20).to_pagination_number(20)
   end
 
   def ignore_search_event_flag_false?
