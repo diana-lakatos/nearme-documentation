@@ -9,6 +9,7 @@ class Project < ActiveRecord::Base
   attr_readonly :followers_count
 
   DEFAULT_ATTRIBUTES = %w(name description)
+  SORT_OPTIONS = ['All', 'Featured', 'Most Recent', 'Most Popular', 'Contributors']
 
   belongs_to :creator, -> { with_deleted }, class_name: "User", inverse_of: :projects, counter_cache: true
   belongs_to :transactable_type, -> { with_deleted }, foreign_key: 'transactable_type_id'

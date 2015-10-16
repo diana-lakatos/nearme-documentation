@@ -1,8 +1,16 @@
 $container = $("<%= @container %>")
 content = "<%= escape_javascript(render(partial: @partial, collection: @collection, as: @as, locals: { object: @object })) %>"
 $moreButton = $container.find(".more-a")
-$(content).insertBefore($moreButton)
+<% if @collection.offset == 0 %>
+  $container.find('.content-container').html(content)
+<% elsif %>
+  $container.find('.content-container').append(content)
+<% end %>
 
-if("<%= @hide %>" == "true") {
+
+<% if @collection.next_page %>
+  $moreButton.show()
+  $moreButton.find('a').data('next-page', '<%= @collection.next_page %>')
+<% elsif %>
   $moreButton.hide()
-}
+<%  end %>

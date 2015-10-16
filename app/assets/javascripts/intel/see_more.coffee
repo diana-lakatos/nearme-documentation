@@ -1,35 +1,30 @@
 class @SeeMore
   constructor: ->
-    @setupAttributes()
     @events()
-
-  setupAttributes: ->
-    if window.seeMoreAttributes == undefined
-      window.seeMoreAttributes = new Object(
-        activityFeed:       { page: 1 },
-        followingPeople:    { page: 1 },
-        followingProjects:  { page: 1 },
-        followingTopics:    { page: 1 },
-        following:          { page: 1 },
-        followers:          { page: 1 },
-        projects:           { page: 1 }
-      )
 
   events: ->
     $buttons = $("[data-see-more]").find("a")
+    $('form.sort-form').on 'change', (e) ->
+      $(e.target).submit()
 
     $buttons.on "click", (event)->
       event.preventDefault()
       $button = $(event.target)
-      type = $button.parent("[data-see-more]").attr("data-see-more-type")
-      oldPage = window.seeMoreAttributes[type].page
-      nextPage = window.seeMoreAttributes[type].page++ && window.seeMoreAttributes[type].page
+      nextPage = $button.data('next-page')
       moreUrl = $button.attr("href")
+      sortType = $button.closest('.tab-pane').find('form.sort-form select[name="[sort]"]').val()
 
       if /page=/i.test(moreUrl)
-        $button.attr("href", moreUrl.replace("page=#{oldPage}", "page=#{nextPage}"))
+        moreUrl = moreUrl.replace(/page=\d/, "page=#{nextPage}")
       else
-        $button.attr("href", moreUrl + "&page=#{nextPage}")
+        moreUrl = moreUrl + "&page=#{nextPage}"
+
+      if /sort=/i.test(moreUrl)
+        moreUrl = moreUrl.replace(/sort=[\w ]*/, "sort=#{sortType}")
+      else
+        moreUrl = moreUrl + "&sort=#{sortType}"
+
+      $button.attr("href", moreUrl)
 
 
   @initialize: ->

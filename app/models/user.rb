@@ -3,6 +3,8 @@ class User < ActiveRecord::Base
 
   include Spree::UserPaymentSource
 
+  SORT_OPTIONS = ['All', 'Featured', 'People I know', 'Most Popular', 'Distance', 'Number of Projects']
+
   has_paper_trail ignore: [:remember_token, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at,
                            :current_sign_in_ip, :last_sign_in_ip, :updated_at, :failed_attempts, :authentication_token,
                            :unlock_token, :locked_at, :google_analytics_id, :browser, :browser_version, :platform,
@@ -30,7 +32,7 @@ class User < ActiveRecord::Base
   has_many :shipping_addresses
   has_many :activity_feed_events, as: :event_source, dependent: :destroy
   has_many :activity_feed_subscriptions, foreign_key: 'follower_id'
-  has_many :activity_feed_subscriptions_as_followed, as: :followed
+  has_many :activity_feed_subscriptions_as_followed, as: :followed, class_name: 'ActivityFeedSubscription'
   has_many :administered_locations, class_name: "Location", foreign_key: 'administrator_id', inverse_of: :administrator
   has_many :administered_listings, class_name: "Transactable", through: :administered_locations, source: :listings, inverse_of: :administrator
   has_many :authentications, dependent: :destroy
@@ -47,7 +49,7 @@ class User < ActiveRecord::Base
   has_many :companies, through: :company_users
   has_many :comments, inverse_of: :creator
   has_many :created_companies, class_name: "Company", foreign_key: 'creator_id', inverse_of: :creator
-  has_many :feed_followers, through: :activity_feed_subscriptions, source: :followed, source_type: 'User'
+  has_many :feed_followers, through: :activity_feed_subscriptions_as_followed, source: :follower
   has_many :feed_followed_projects, through: :activity_feed_subscriptions, source: :followed, source_type: 'Project'
   has_many :feed_followed_topics, through: :activity_feed_subscriptions, source: :followed, source_type: 'Topic'
   has_many :feed_followed_users, through: :activity_feed_subscriptions,  source: :followed, source_type: 'User'
@@ -148,7 +150,7 @@ class User < ActiveRecord::Base
 
   scope :friends_of, -> (user) {
     joins(
-      sanitize_sql(['INNER JOIN user_relationships on followed_id = users.id and follower_id = ?', user.id])
+      sanitize_sql(['INNER JOIN user_relationships ur on ur.followed_id = users.id and ur.follower_id = ?', user.id])
     ) if user.try(:id)
   }
 
@@ -272,7 +274,10 @@ class User < ActiveRecord::Base
   end
 
   def all_projects
-    projects.merge(projects_collaborated)
+    Project.where("
+      creator_id = ? OR
+      EXISTS (SELECT 1 from project_collaborators pc WHERE pc.project_id = projects.id AND pc.user_id = ?)",
+    id, id)
   end
 
   def category_ids=(ids)

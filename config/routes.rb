@@ -859,6 +859,7 @@ DesksnearMe::Application.routes.draw do
   get "/see_more_following_topics", to: "activity_feed#following_topics", as: :see_more_following_topics
   get "/see_more_followers", to: "activity_feed#followers", as: :see_more_followers
   get "/see_more_projects", to: "activity_feed#projects", as: :see_more_projects
+  get "/see_more_collaborators", to: "activity_feed#collaborators", as: :see_more_collaborators
 
   resources :user_status_updates, only: [ :create ]
 

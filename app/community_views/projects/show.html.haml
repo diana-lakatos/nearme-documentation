@@ -58,7 +58,7 @@
         #comments.tab-pane.fade{:role => "tabpanel"}
           = render 'comments/comments', comment: @comment
         #collaborators.tab-pane.fade{:role => "tabpanel"}
-          = render 'show_collaborators'
+          = render 'shared/show_followers', see_more_route: see_more_collaborators_path(id: @project.id, type: 'Project', container: '#collaborators'), collection: @collaborators, container: '#collaborators'
         #followers.tab-pane.fade{:role => "tabpanel"}
-          = render 'shared/show_followers', object: @project
+          = render 'shared/show_followers', see_more_route: see_more_followers_path(id: @project.id, type: 'Project', container: '#followers'), container: '#followers', collection: @followers
 

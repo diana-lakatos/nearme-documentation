@@ -1,0 +1,28 @@
+/ content wrapper
+.wrap-a.reduce-top
+  .contain
+    / tabs
+    %nav.tabs-a.trio
+      %ul.nav.nav-tabs{role: "tablist"}
+        %li.active
+          = link_to '#following-people', role: "tab", :'data-toggle' => "tab" do
+            = t :people
+            %small= "(#{@users_followed.total_entries})"
+        %li
+          = link_to '#following-projects', role: "tab", :'data-toggle' => "tab" do
+            = t :projects
+            %small= "(#{@projects_followed.total_entries})"
+        %li
+          = link_to '#following-topics', role: "tab", :'data-toggle' => "tab" do
+            = t :topics
+            %small= "(#{@topics_followed.total_entries})"
+    / white box
+    .box-a
+      .tab-content
+        #following-people.tab-pane.fade.active
+          = render 'shared/sort_form', form_url: see_more_following_people_path(id: @user.id, type: @user.class.name), sort_options: User::SORT_OPTIONS, container: '#following-people'
+          = render "shared/listing_people", users: @users_followed, see_more_type: "followingPeople", see_more_route: see_more_following_people_path(id: @user.id, type: @user.class.name, container: '#following-people')
+        #following-projects.tab-pane.fade
+          = render "shared/show_projects", projects: @projects_followed, container: '#following-projects', see_more_route: see_more_following_projects_path(id: @user.id, type: @user.class.name, container: '#following-projects')
+        #following-topics.tab-pane.fade
+          = render "shared/listing_topics", topics: @topics_followed
