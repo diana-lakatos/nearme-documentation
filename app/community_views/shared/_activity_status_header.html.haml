@@ -2,7 +2,7 @@
 
 - if event.followed.present?
   %header
-    %figure= image_tag activity_feed_event.image
+    %figure= image_tag(activity_feed_event.image.try(:thumb).presence || activity_feed_event.image)
     %p.desc= activity_feed_event.text
 
     %p.meta
