@@ -37,6 +37,10 @@ class Topic < ActiveRecord::Base
     ActivityFeedService.create_event(event, self, affected_objects, self)
   end
 
+  def all_projects
+    projects
+  end
+
   def self.search_by_query(attributes = [], query)
     if query.present?
       words = query.split.map.with_index{|w, i| ["word#{i}".to_sym, "%#{w}%"]}.to_h
