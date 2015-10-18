@@ -85,7 +85,7 @@ class Address < ActiveRecord::Base
 
     if address_components.present?
       address_components.each do |key, value|
-        if value['types'] == 'street_number'
+        if Array(value['types']).include?('street_number')
           result = value['long_name']
           break
         end
