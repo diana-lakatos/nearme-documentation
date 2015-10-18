@@ -21,7 +21,7 @@ class @UI
 
   # toggles visibility of the comment form
   @toggleCommentForm: ()->
-    $('[data-comment]').on "click", (event) ->
+    $('body').on 'click', '[data-comment]', (event) ->
       event.preventDefault()
       $(this).closest('footer').find('> .comment').toggleClass 'is-active'
 
