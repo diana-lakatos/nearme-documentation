@@ -58,6 +58,9 @@ class Project < ActiveRecord::Base
   # TODO: move to form object
   after_save :trigger_workflow_alert_for_added_collaborators
 
+  before_restore :restore_photos
+  before_restore :restore_links
+
   def self.featured
     where(featured: true)
   end
@@ -149,6 +152,25 @@ class Project < ActiveRecord::Base
       next unless user.present?
       unless self.project_collaborators.where(user: user).exists?
         WorkflowStepJob.perform(WorkflowStep::ProjectWorkflow::CollaboratorAddedByProjectOwner, self.project_collaborators.create!(user: user, approved_at: Time.zone.now).id)
+      end
+    end
+  end
+
+
+  def restore_photos
+    self.photos.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', self.deleted_at - 30.seconds, self.deleted_at + 30.seconds).each do |photo|
+      begin
+        photo.restore(recursive: true)
+      rescue
+      end
+    end
+  end
+
+  def restore_links
+    self.links.only_deleted.where('deleted_at >= ? AND deleted_at <= ?', self.deleted_at - 30.seconds, self.deleted_at + 30.seconds).each do |link|
+      begin
+        link.restore(recursive: true)
+      rescue
       end
     end
   end
