@@ -2,6 +2,7 @@ class ProjectsController < ApplicationController
   layout :dashboard_or_community_layout
 
   before_filter :find_project, only: [:show]
+  before_filter :redirect_if_draft, only: [:show]
   before_filter :build_comment, only: [:show]
 
   def show
@@ -14,6 +15,10 @@ class ProjectsController < ApplicationController
 
   def find_project
     @project = Project.find(params[:id])
+  end
+
+  def redirect_if_draft
+    redirect_to root_url, notice: I18n.t('draft_project') if @project.draft? && @project.creator != current_user
   end
 
   def build_comment

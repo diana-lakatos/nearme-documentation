@@ -15,6 +15,7 @@ class Dashboard::ProjectsController < Dashboard::BaseController
   def create
     @project = @transactable_type.projects.build(project_params)
     @project.creator = current_user
+    @project.draft_at = Time.now if params[:save_for_later]
     if @project.save
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.translated_bookable_noun)
       redirect_to dashboard_project_type_projects_path(@transactable_type)
@@ -35,6 +36,8 @@ class Dashboard::ProjectsController < Dashboard::BaseController
 
   def update
     @project.assign_attributes(project_params)
+    draft = @project.draft_at
+    @project.draft_at = nil if params[:submit]
     respond_to do |format|
       format.html {
         if @project.save
@@ -43,6 +46,7 @@ class Dashboard::ProjectsController < Dashboard::BaseController
         else
           flash.now[:error] = t('flash_messages.product.complete_fields') + view_context.array_to_unordered_list(@project.errors.full_messages)
           @photos = @project.photos
+          @project.draft_at = draft
           render :edit
         end
       }

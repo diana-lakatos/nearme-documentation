@@ -66,7 +66,7 @@ class ActivityFeedController < ApplicationController
 
     @partial = "shared/project"
     @as = :project
-    @collection = @object.feed_followed_projects.custom_order(params[:sort]).paginate(pagination_params)
+    @collection = @object.feed_followed_projects.enabled.custom_order(params[:sort]).paginate(pagination_params)
 
     respond_to do |format|
       format.js { render :see_more }
@@ -102,7 +102,7 @@ class ActivityFeedController < ApplicationController
 
     @partial = "shared/project"
     @as = :project
-    @collection = @object.all_projects.custom_order(params[:sort]).paginate(pagination_params)
+    @collection = @object.all_projects.enabled.custom_order(params[:sort]).paginate(pagination_params)
 
     respond_to do |format|
       format.js { render :see_more }

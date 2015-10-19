@@ -18,7 +18,7 @@ class OnboardingController < ApplicationController
       quantity = 6
       @topics = Topic.featured.take(quantity)
 
-      friends_projects = Project.where(creator_id: @user.social_friends_ids).take(quantity)
+      friends_projects = Project.enabled.where(creator_id: @user.social_friends_ids).take(quantity)
       featured_projects = Project.featured.take(quantity - friends_projects.count)
       @projects = friends_projects + featured_projects
 
@@ -44,7 +44,7 @@ class OnboardingController < ApplicationController
       render_wizard @user
     when :followings
       @user.feed_followed_users << User.where(id: followed_params[:people]) if followed_params[:people]
-      @user.feed_followed_projects << Project.where(id: followed_params[:projects]) if followed_params[:projects]
+      @user.feed_followed_projects << Project.enabled.where(id: followed_params[:projects]) if followed_params[:projects]
       @user.feed_followed_topics << Topic.where(id: followed_params[:topics]) if followed_params[:topics]
       render_wizard @user
     when :finish
