@@ -52,6 +52,7 @@ class Project < ActiveRecord::Base
 
   validates :photos, length: {minimum: 1}, unless: ->(record) { record.photo_not_required || !record.transactable_type.enable_photo_required }
   validates :topics, length: {:minimum => 1}
+  validates :summary, length: { maximum: 140 }
   validates_presence_of :name
 
   # TODO: move to form object
