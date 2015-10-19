@@ -179,7 +179,7 @@ module ShippoApi
     MAX_BUY_RATE_ATTEMPTS = 5
 
     def initialize(api_token)
-      Shippo::api_token = api_token
+      Shippo::api_token = api_token.to_s
     end
 
     def self.verify_connection(instance_params)
