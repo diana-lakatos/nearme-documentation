@@ -1,5 +1,7 @@
 class Dashboard::Company::WaiverAgreementTemplatesController < Dashboard::Company::BaseController
 
+  before_action :check_if_waiver_agreement_enabled
+
   def index
     @waiver_agreement_templates = @company.waiver_agreement_templates
   end
@@ -44,6 +46,14 @@ class Dashboard::Company::WaiverAgreementTemplatesController < Dashboard::Compan
   end
 
   private
+
+  def check_if_waiver_agreement_enabled
+    unless PlatformContext.current.instance.custom_waiver_agreements?
+      flash[:warning] = t 'flash_messages.manage.waiver_agreement_templates.disabled'
+      redirect_to dashboard_path
+    end
+  end
+
   def redirect_to_index
     redirect_to dashboard_company_waiver_agreement_templates_url
     render_redirect_url_as_json if request.xhr?
