@@ -79,12 +79,12 @@
         %tbody
           = render current_user.id == f.object.creator_id ? @project.project_collaborators : current_user.project_collaborators.find_by(project: f.object)
 
-      - if current_user.id == f.object.creator_id
-        #new_collaborators
-          = f.simple_fields_for :new_collaborators do |new_collaborator_form|
-            = render 'dashboard/projects/new_collaborator_fields', f: new_collaborator_form
-          .links
-            = link_to_add_association t(:add_collaborator), f, :new_collaborators, class: 'button-a small'
+    - if current_user.id == f.object.creator_id
+      #new_collaborators
+        = f.simple_fields_for :new_collaborators do |new_collaborator_form|
+          = render 'dashboard/projects/new_collaborator_fields', f: new_collaborator_form
+        .links
+          = link_to_add_association t(:add_collaborator), f, :new_collaborators, class: 'button-a small'
 
 
   %p.action
