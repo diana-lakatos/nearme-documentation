@@ -181,9 +181,13 @@ en:
         created: 'Your data has been processed successfully and is now being imported.'
       projects:
         topics:
+          created: "Successfully created topic"
           updated: "Successfully updated topic"
+          deleted: "Successfully deleted topic"
         project_types:
+          created: "Successfully created project type"
           updated: "Successfully updated project type"
+          deleted: "Successfully deleted project type"
     listings:
       listing_disabled: "This listing has been temporarily disabled by the owner. Displaying other listings in this location."
       listing_disabled_but_admin: "This listing has been temporarily disabled by the owner. Other users will not be able to browse it."

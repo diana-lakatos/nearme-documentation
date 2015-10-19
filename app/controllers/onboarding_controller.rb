@@ -77,7 +77,7 @@ class OnboardingController < ApplicationController
     end
 
     def redirect_if_completed
-      redirect_to root_path if current_user.onboarding_completed
+      redirect_to root_path if !user_signed_in? || current_user.onboarding_completed
     end
 
 end

@@ -19,7 +19,7 @@ class Dashboard::ProjectsController < Dashboard::BaseController
       flash[:success] = t('flash_messages.manage.listings.desk_added', bookable_noun: @transactable_type.translated_bookable_noun)
       redirect_to dashboard_project_type_projects_path(@transactable_type)
     else
-      flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(@project.errors.full_messages)
+      flash.now[:error] = t('flash_messages.product.complete_fields') + view_context.array_to_unordered_list(@project.errors.full_messages)
       @photos = @project.photos
       render :new
     end
@@ -41,7 +41,7 @@ class Dashboard::ProjectsController < Dashboard::BaseController
           flash[:success] = t('flash_messages.manage.listings.listing_updated')
           redirect_to dashboard_project_type_projects_path(@transactable_type)
         else
-          flash.now[:error] = t('flash_messages.space_wizard.complete_fields') + view_context.array_to_unordered_list(@project.errors.full_messages)
+          flash.now[:error] = t('flash_messages.product.complete_fields') + view_context.array_to_unordered_list(@project.errors.full_messages)
           @photos = @project.photos
           render :edit
         end

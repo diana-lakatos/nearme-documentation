@@ -36,7 +36,7 @@
     - if current_user
       .user
         %p.name
-          = link_to dashboard_profile_path do
+          = link_to profile_path(current_user) do
             = image_tag current_user.avatar.url(:thumb), size: "40x40"
             = current_user.first_name
         %ul

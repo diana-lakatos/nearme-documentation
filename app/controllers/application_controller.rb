@@ -508,5 +508,16 @@ class ApplicationController < ActionController::Base
     prepend_view_path InstanceViewResolver.instance
   end
 
+  # It's a valid single param, not an array, hash etc. or some other thing
+  def is_valid_single_param?(param)
+    if param.present?
+      # This will raise an exception if it's not convertible to integer
+      param.to_i
+    end
+    true
+  rescue
+    false
+  end
+
 end
 

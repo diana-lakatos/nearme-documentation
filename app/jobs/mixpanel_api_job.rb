@@ -6,7 +6,8 @@ class MixpanelApiJob < Job
   end
 
   def perform
-    @mixpanel.send(@method, *@args) if DesksnearMe::Application.config.perform_mixpanel_requests
+    @sanitized_args = @args.utf8_convert_sanitize
+    @mixpanel.send(@method, *@sanitized_args) if DesksnearMe::Application.config.perform_mixpanel_requests
   end
 
 end
