@@ -10,7 +10,9 @@
         = f.submit I18n.t('activity_feed.user_status_submit'), class: 'button-a tiny'
 
 - comments =  comment.commentable.comments.order("created_at DESC").paginate(page: 1, per_page: 10)
-.comments{ "data-comments-for": comment.commentable.id }= render comments
+.comments{ "data-comments-for": comment.commentable.id }<
+  - comments.each do |comment|
+    = render 'comments/activity_feed_comment', comment: comment
 
 .aligncenter
   - if comments.total_pages > comments.current_page
