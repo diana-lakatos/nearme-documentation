@@ -87,14 +87,7 @@ module InstanceType::Searcher
   end
 
   def paginated_results(page, per_page)
-    @results = @results.paginate(page: sanitize_pagination_number(page), per_page: sanitize_pagination_number(per_page, 20), total_entries: @search_results_count)
-  end
-
-  # We do this to prevent will_paginate from throwing errors because of invalid page numbers, per_page etc.
-  def sanitize_pagination_number(number, default = 1)
-    number = number.to_i
-    number = default if number.zero?
-    number
+    @results = @results.paginate(page: page.to_pagination_number, per_page: per_page.to_pagination_number(20), total_entries: @search_results_count)
   end
 
   def transactable_type

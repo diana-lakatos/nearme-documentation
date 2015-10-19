@@ -31,7 +31,7 @@ module Elastic
     end
 
     def query_page
-      page = @query[:page].to_i
+      page = @query[:page].to_pagination_number
       (page > 0) ? page : PAGE
     end
 
