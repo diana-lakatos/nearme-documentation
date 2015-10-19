@@ -8,9 +8,9 @@
           - @faqs.each do |faq|
             .faq.closed
               .question
-                = faq.question
+                = faq.question.html_safe
               .answer
-                = faq.answer
+                = faq.answer.html_safe
       .span4
         %h2
           = t('support.dashboard.tickets')
