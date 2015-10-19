@@ -22,7 +22,7 @@ en:
         topics: 'Select topics'
 
       comment:
-        comment: 'Please, leave a comment'
+        body: 'Please, leave a comment'
 
       search_filter:
         sort: 'Sort by:'
