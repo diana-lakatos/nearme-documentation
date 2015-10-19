@@ -30,7 +30,7 @@
   #followers.tab-pane.fade{:role => "tabpanel"}
     .wrap-a.reduce-top
       .contain
-        .box-a= render 'shared/show_followers', container: 'followers', see_more_route: see_more_followers_path(id: @topic.id, type: 'Topic', container: '#followers'), collection: @followers
+        .box-a= render 'shared/show_followers', container: '#followers', see_more_route: see_more_followers_path(id: @topic.id, type: 'Topic', container: '#followers'), collection: @followers
   #projects.tab-pane.fade{:role => "tabpanel"}
     / content wrapper
     .wrap-a.reduce-top
