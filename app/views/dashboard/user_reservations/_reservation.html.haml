@@ -73,4 +73,4 @@
       .row
         - reservation.payment_documents.each do |pd|
           .payment-document
-            = link_to pd.file.file_name, pd.file.url, target: '_blank'
+            = pd.decorate.uploaded_file_link

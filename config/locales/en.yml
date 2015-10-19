@@ -1088,6 +1088,7 @@ en:
       archived: "ARCHIVED"
       track_package: 'Track Package'
       return_label: 'Return Label'
+      uploaded_file: "Uploaded file"
     user_recurring_bookings:
       active: "ACTIVE"
       archived: "ARCHIVED"
