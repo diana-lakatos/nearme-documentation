@@ -99,6 +99,23 @@
             }
         }
     }
+
+    .project-summary-wrapper {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        padding-right: 30px;
+
+        &:after {
+            position: absolute;
+            content: "";
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 30px;
+            background: linear-gradient(90deg, transparent, #fff);
+        }
+    }
 }
 
 .empty-projects {
