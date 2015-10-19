@@ -10,6 +10,7 @@ class Locations::ListingsController < ApplicationController
     @listing.track_impression(request.remote_ip)
     event_tracker.viewed_a_listing(@listing, { logged_in: user_signed_in? })
     @reviews = @listing.reviews.paginate(page: params[:reviews_page])
+    render formats: [:html]
   end
 
   protected
