@@ -207,6 +207,7 @@ class Transactable < ActiveRecord::Base
   friendly_id :slug_candidates, use: [:slugged, :finders, :scoped], scope: :instance
   def slug_candidates
     [
+      :name,
       [:name, DateTime.now.strftime("%b %d %Y")]
     ]
   end

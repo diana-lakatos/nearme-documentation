@@ -671,7 +671,8 @@ class SecuredParams
       :open_in_new_window,
       :no_layout,
       :metadata_title,
-      :metadata_meta_description
+      :metadata_meta_description,
+      :metadata_canonical_url
     ]
   end
 

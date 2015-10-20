@@ -245,7 +245,7 @@ class SitemapServiceTest < ActiveSupport::TestCase
         amount = 3 + (Page.count - 1)
         page.destroy
         assert_node_count Nokogiri::XML(@domain.reload.sitemap), "url loc", amount
-        assert_node_absence Nokogiri::XML(@domain.reload.sitemap), "url loc", page.path
+        assert_node_absence Nokogiri::XML(@domain.reload.sitemap), "url loc", page.slug
       end
     end
   end

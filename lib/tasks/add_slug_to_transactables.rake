@@ -17,6 +17,11 @@ task add_slug_to_transactables: :environment do
       tt.slug = tt.send(:set_slug)
       tt.save(validate: false)
     end
+
+    Page.find_each do |p|
+      p.slug = p.send(:set_slug)
+      p.save(validate: false)
+    end
   end
 
   SitemapGeneratorJob.perform

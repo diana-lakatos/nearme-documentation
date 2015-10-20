@@ -255,7 +255,6 @@ class TransactableTest < ActiveSupport::TestCase
     end
 
     should "return monday for saturday" do
-      binding.pry
       saturday = Time.zone.today.sunday + 6.days
       Timecop.freeze(saturday.beginning_of_day)
       assert_equal saturday+2.day, @listing.first_available_date
