@@ -2,6 +2,7 @@ class ProjectCollaboratorsController < ApplicationController
   layout :dashboard_or_community_layout
 
   before_filter :find_project
+  before_action :authenticate_user!
 
   def create
     project_collaborator = @project.project_collaborators.create(user: current_user)
