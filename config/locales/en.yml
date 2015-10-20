@@ -1533,6 +1533,7 @@ en:
       month_year: "%B %Y"
       start_hours: "%-H:%M"
       end_hours: "%-H:%M"
+      date_time: "%d/%m/%y %l:%M%P"
   date:
     formats:
       short: '%B %d, %-Y'
