@@ -1,9 +1,9 @@
-<article class="location" data-id="{{listing.id}}" data-name="{{listing.name}}", data-latitude="{{listing.latitude}}" data-longitude="{{listing.longitude}}">
+<article class="location" data-id="{{listing.id}}" data-name="{{listing.name}}" data-latitude="{{listing.latitude}}" data-longitude="{{listing.longitude}}">
   <div class="location-counter"></div>
   <div class="row-fluid header">
     <div class="span5 location-photos-container">
       <div class="location-photos">
-        <div class="carousel" id="location-gallery-{{listing.id}}" data-interva="false"}>
+        <div class="carousel" id="location-gallery-{{listing.id}}" data-interval="false">
           <div class="carousel-inner">
             {% if listing.photos.size > 0 %}
               {% capture item_active %}active{% endcapture %}

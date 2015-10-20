@@ -5,6 +5,7 @@
 #        and notifies observers when it is changed.
 class Search.SearchController extends Search.Controller
   constructor: (form, @container) ->
+
     super(form)
     @redirectIfNecessary()
     @initializeDateRangeField()
@@ -348,8 +349,8 @@ class Search.SearchController extends Search.Controller
 
   updateLinks: ->
     if @date_range.length > 1
-      for link in $("div.locations a:not(.carousel-control)")
-        continue if link.closest('.pagination')
+      $("div.locations a:not(.carousel-control)").each (index, link)=>
+        return if $(link).closest('.pagination')
         href = link.href.replace(/\?.*$/, "")
         href += "?start_date=#{@date_range[0].value}&end_date=#{@date_range[1].value}"
         link.href = href
