@@ -1033,6 +1033,9 @@ en:
       tickets: "Tickets"
       view_all_tickets: "View all tickets"
       open_a_ticket: "Open a Ticket"
+    user:
+      tickets: 'Your Support Requests'
+      no_tickets: 'You have no open tickets.'
     statuses:
       past:
         open: "Opened"
