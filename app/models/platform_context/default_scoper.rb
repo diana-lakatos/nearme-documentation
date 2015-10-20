@@ -70,7 +70,12 @@ module PlatformContext::DefaultScoper
           def self.platform_context_default_scope
             scope = self.all
             return scope if PlatformContext.current.nil?
-            #{scope_builder.return_instance_scope_if_forced}
+
+            # we want to scope all records to instance no matter what, though it's not needed.
+            # the reason is that this assigns instance_id automatically
+            scope = #{scope_builder.instance_scope}
+            return scope if PlatformContext.scoped_to_instance?
+
             # check if current platform context is white label company, and if so scope to it. If record should not be scoped to company
             # (for example ListingType), continue
             #{scope_builder.return_company_scope_if_white_label_company}
@@ -82,10 +87,10 @@ module PlatformContext::DefaultScoper
             # to partner, continue to instance
             #{scope_builder.return_partner_scope_if_partner}
             # either model does not respond to company/partner scope or platform context is instance. Either way, just scope to instance
-            #{scope_builder.instance_scope}
+            scope
             # we could have build if / else statement without end, just add them to avoid syntax errors
-            #{scope_builder.close_end_for_company_scope_if_needed}
             #{scope_builder.close_end_for_partner_scope_if_needed}
+            #{scope_builder.close_end_for_company_scope_if_needed}
           end
         RUBY
       end
@@ -114,17 +119,13 @@ module PlatformContext::DefaultScoper
       @options = options
     end
 
-    def return_instance_scope_if_forced
-      "#{instance_scope} if PlatformContext.scoped_to_instance?"
-    end
-
     def instance_scope
       if @options[:allow_nil]
-        "return scope.where('#{@klass.table_name}.instance_id = ? OR #{@klass.table_name}.instance_id is null', PlatformContext.current.instance.id)"
+        "scope.where('#{@klass.table_name}.instance_id = ? OR #{@klass.table_name}.instance_id is null', PlatformContext.current.instance.id)"
       elsif @options[:allow_admin].present?
-        "return scope.where('#{@klass.table_name}.instance_id = ? OR #{@klass.table_name}.#{@options[:allow_admin]} = ?', PlatformContext.current.instance.id, true)"
+        "scope.where('#{@klass.table_name}.instance_id = ? OR #{@klass.table_name}.#{@options[:allow_admin]} = ?', PlatformContext.current.instance.id, true)"
       else
-        "return scope.where(:'#{@klass.table_name}.instance_id' => PlatformContext.current.instance.id)"
+        "scope.where(:'#{@klass.table_name}.instance_id' => PlatformContext.current.instance.id)"
       end
     end
 
