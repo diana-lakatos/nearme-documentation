@@ -8,6 +8,9 @@ en:
       disconnected: "Successfully disconnected your %{provider_name}"
       signed_in_successfully: "Signed in successfully."
       unable_to_disconnect: "We are unable to disconnect your account from %{provider_name}. Make sure you have at least one other account linked so you can log in!"
+      inactive_for_authentication:
+        banned: "We cannot authorize you, because you have been banned from the marketplace."
+        unknown: "We cannot authorize you."
     authorizations:
       not_authorized: "Sorry, you do not have permission to view that page."
     shipping_options:
