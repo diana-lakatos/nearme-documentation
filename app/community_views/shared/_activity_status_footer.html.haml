@@ -11,4 +11,4 @@
       = link_to t(:report_as_spam), url_for([event, event.spam_reports.build]), remote: true, method: :post
 
 
-  = render 'comments/comments', comment: event.comments.build, is_active: is_active
+  = render 'comments/activity_feed_comments', comment: event.comments.build, is_active: is_active
