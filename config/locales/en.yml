@@ -1476,6 +1476,12 @@ en:
     per_day: 'PER DAY'
     per_week: 'PER WEEK'
     per_month: 'PER MONTH'
+    slash_per_hour: '/ hour'
+    slash_per_night: '/ night'
+    slash_per_day: '/ day'
+    slash_per_week: '/ week'
+    slash_per_month: '/ month'
+    from_price: "From"
     first_day: 'Select a start date'
     last_day: 'Select an end date'
     booking_module:

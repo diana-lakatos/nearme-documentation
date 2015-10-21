@@ -32,13 +32,13 @@ module SearchHelper
       arr.join(' | ')
     else
       if listing.action_hourly_booking? && !listing.hourly_price.to_f.zero?
-        "From #{humanized_money_with_symbol(listing.hourly_price)} / hour"
+        "#{I18n.t('reservations.from_price')} #{humanized_money_with_symbol(listing.hourly_price)} #{I18n.t('reservations.slash_per_hour')}"
       elsif !listing.daily_price.to_f.zero?
-        "From #{humanized_money_with_symbol(listing.daily_price)} / day"
+        "#{I18n.t('reservations.from_price')} #{humanized_money_with_symbol(listing.daily_price)} #{listing.overnight_booking? ? I18n.t('reservations.slash_per_night') : I18n.t('reservations.slash_per_day')}"
       elsif !listing.weekly_price.to_f.zero?
-        "From #{humanized_money_with_symbol(listing.weekly_price)} / week"
+        "#{I18n.t('reservations.from_price')} #{humanized_money_with_symbol(listing.weekly_price)} #{I18n.t('reservations.slash_per_week')}"
       elsif !listing.monthly_price.to_f.zero?
-        "From #{humanized_money_with_symbol(listing.monthly_price)} / month"
+        "#{I18n.t('reservations.from_price')} #{humanized_money_with_symbol(listing.monthly_price)} #{I18n.t('reservations.slash_per_month')}"
       end
     end
   end
