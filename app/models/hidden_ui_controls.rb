@@ -75,14 +75,11 @@ class HiddenUiControls
   def self.keys(type=:auto)
     case type
     when :auto
-      instance = PlatformContext.current.instance
-      if instance.buyable? && instance.bookable?
-        all_keys
-      elsif instance.buyable?
-        buy_sell_keys
-      elsif instance.bookable?
-        service_keys
-      end
+      # We now return all keys on auto
+      # as the instance is actually both especially
+      # before the admin created any product/service types
+      # and we can't know what he wants
+      all_keys
     when :buy_sell
       buy_sell_keys
     when :service

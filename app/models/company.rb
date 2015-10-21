@@ -94,7 +94,7 @@ class Company < ActiveRecord::Base
   accepts_nested_attributes_for :approval_requests
   accepts_nested_attributes_for :products, :shipping_methods, :shipping_categories, :stock_locations
   MerchantAccount::MERCHANT_ACCOUNTS.each do |name, _|
-    accepts_nested_attributes_for "#{name}_merchant_account".to_sym, allow_destroy: true
+    accepts_nested_attributes_for "#{name}_merchant_account".to_sym, allow_destroy: true, update_only: true
   end
 
   validates_associated :shipping_methods, if: :verify_associated

@@ -7,8 +7,8 @@
     %span &bull;
     - if report = event.reported_by(current_user, request.remote_ip)
       = link_to t(:cancel_spam_report), url_for([event, report]), remote: true, method: :delete
-    - else
+    - elsif current_user
       = link_to t(:report_as_spam), url_for([event, event.spam_reports.build]), remote: true, method: :post
 
 
-  = render 'comments/comments', comment: event.comments.build, is_active: is_active
+  = render 'comments/activity_feed_comments', comment: event.comments.build, is_active: is_active

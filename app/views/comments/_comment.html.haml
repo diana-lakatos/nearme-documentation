@@ -4,20 +4,18 @@
       = image_tag comment.creator.avatar.url(:thumb)
     %p.desc
       = link_to comment.creator.decorate.secret_name, profile_path(comment.creator)
-    %p.meta
-      %time= comment.created_at.strftime("%m/%d/%Y")
   %section
     %p
       = readmore(comment.body)
 
   %footer
     %p.actions
-      %time
-        = distance_of_time_in_words_or_date_in_time_zone(comment.created_at)
+      %time{datetime: comment.created_at.strftime('%Y-%m-%d %H:%M')}= I18n.l(comment.created_at, format: :date_time)
+
       %span &bull;
       - if report = comment.reported_by(current_user, request.remote_ip)
         = link_to t(:cancel_spam_report), url_for([comment.commentable, comment, report]), remote: true, method: :delete
-      - else
+      - elsif current_user
         = link_to t(:report_as_spam), url_for([comment.commentable, comment, comment.spam_reports.build]), remote: true, method: :post
 
       - if comment.can_remove?(current_user)

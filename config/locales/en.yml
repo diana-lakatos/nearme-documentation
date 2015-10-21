@@ -1033,6 +1033,9 @@ en:
       tickets: "Tickets"
       view_all_tickets: "View all tickets"
       open_a_ticket: "Open a Ticket"
+    user:
+      tickets: 'Your Support Requests'
+      no_tickets: 'You have no open tickets.'
     statuses:
       past:
         open: "Opened"
@@ -1530,6 +1533,7 @@ en:
       month_year: "%B %Y"
       start_hours: "%-H:%M"
       end_hours: "%-H:%M"
+      date_time: "%d/%m/%y %l:%M%P"
   date:
     formats:
       short: '%B %d, %-Y'
