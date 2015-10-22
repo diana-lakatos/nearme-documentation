@@ -42,8 +42,7 @@
                 %td.col-name
                   = link_to project.name, project_path(project)
                 %td.col-summary
-                  .project-summary-wrapper
-                    = project.summary
+                  = project.summary
                 %td.col-role
                   = t(project.creator_id == current_user.id ? :owner : :collaborator)
                 %td.col-status
