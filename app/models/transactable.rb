@@ -681,6 +681,10 @@ class Transactable < ActiveRecord::Base
     service_type.try(:translation_namespace_was)
   end
 
+  def required?(attribute)
+    RequiredFieldChecker.new(self, attribute).required?
+  end
+
   private
 
   def set_currency

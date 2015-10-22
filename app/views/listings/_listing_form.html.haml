@@ -22,7 +22,7 @@
 
 - [:name, :description, :confirm_reservations, :capacity].each do |attrib|
   - if only_inputs.empty? || only_inputs.include?(attrib)
-    = f.input attrib
+    = f.input attrib, required: f.object.required?(attrib)
 
 - unless platform_context.instance.listing_amenity_types.count.zero?
   = f.association :amenities, :collection => platform_context.instance.listing_amenity_types.order(:name), :as => :grouped_select, :group_method => :amenities, :group_label_method => :name, :blank => false, :input_html => { 'data-placeholder' => "Select one or more", :class => 'custom-select', :multiple => true } if only_inputs.empty? || only_inputs.include?(:amenities)

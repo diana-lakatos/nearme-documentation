@@ -2,7 +2,7 @@
 - if only_inputs.empty? || only_inputs.include?(:name)
   = f.input :name
 - if only_inputs.empty? || only_inputs.include?(:description)
-  = f.input :description, as: :ckeditor, :input_html => { :ckeditor => { :toolbar => 'simple' } }, placeholder: "Description"
+  = f.input :description, as: :ckeditor, :input_html => { :ckeditor => { :toolbar => 'simple' } }, placeholder: "Description", required: f.object.product.required?(:description)
 - if only_inputs.empty? || only_inputs.include?(:photos)
   .row
     .col-md-3
@@ -51,7 +51,7 @@
     = render partial: 'shared/category', locals: { category: category, f: f, categorizable: @product_type }
 
 - if only_inputs.empty? || only_inputs.include?(:price)
-  = f.input :price, as: :price, input_html: { currency: currency_symbol_from_code(Spree::Config[:currency] ) }
+  = f.input :price, as: :price, input_html: { currency: currency_symbol_from_code(Spree::Config[:currency] ) }, required: true
 
 - if only_inputs.empty? || only_inputs.include?(:action_rfq)
   - if f.object.product.product_type.action_rfq?
