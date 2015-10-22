@@ -6,6 +6,10 @@ FactoryGirl.define do
     creator
     photo_not_required true
 
+    trait :featured do
+      featured true
+    end
+
     initialize_with do
       new(transactable_type: (ProjectType.first.presence || FactoryGirl.create(:project_type)))
     end

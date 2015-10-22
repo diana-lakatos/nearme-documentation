@@ -39,31 +39,28 @@ class Project < ActiveRecord::Base
 
   scope :by_topic, -> (topic_ids) { includes(:topics).where(topics: {id: topic_ids}) if topic_ids.present?}
   scope :seek_collaborators, -> { where(seek_collaborators: true) }
-  scope :featured, -> { where(featured: true) }
+  scope :featured, -> { enabled.where(featured: true) }
   scope :by_search_query, lambda { |query|
     where("name ilike ? or description ilike ? or summary ilike ?", query, query, query)
   }
   scope :with_date, ->(date) { where(created_at: date) }
+  scope :enabled, -> { where(draft_at: nil) }
 
   accepts_nested_attributes_for :photos, allow_destroy: true
   accepts_nested_attributes_for :links, reject_if: :all_blank, allow_destroy: true
 
   attr_accessor :photo_not_required
 
-  validates :photos, length: {minimum: 1}, unless: ->(record) { record.photo_not_required || !record.transactable_type.enable_photo_required }
-  validates :topics, length: {:minimum => 1}
-  validates :summary, length: { maximum: 140 }
-  validates_presence_of :name
+  validates :photos, length: {minimum: 1}, unless: ->(record) { record.draft? || record.photo_not_required || !record.transactable_type.enable_photo_required }
+  validates :topics, length: {:minimum => 1}, unless: ->(record) { record.draft? }
+  validates :summary, length: { maximum: 140 }, unless: ->(record) { record.draft? }
+  validates :name, presence: true, unless: ->(record) { record.draft? }
 
   # TODO: move to form object
-  after_save :trigger_workflow_alert_for_added_collaborators
+  after_save :trigger_workflow_alert_for_added_collaborators, unless: ->(record) { record.draft? }
 
   before_restore :restore_photos
   before_restore :restore_links
-
-  def self.featured
-    where(featured: true)
-  end
 
   def self.custom_order(order)
     case order
@@ -125,6 +122,14 @@ class Project < ActiveRecord::Base
     else
       all
     end
+  end
+
+  def draft?
+    draft_at.present?
+  end
+
+  def enabled?
+    draft_at.nil?
   end
 
   def cover_photo

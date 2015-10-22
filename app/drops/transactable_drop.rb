@@ -134,6 +134,11 @@ class TransactableDrop < BaseDrop
   end
   alias_method :listing_url, :url
 
+  # url to the listing page for this listing - location prefixed
+  def location_prefixed_path
+    routes.location_listing_path(@transactable.location, @transactable)
+  end
+
   # street name for the location of this listing
   def street
     @transactable.location.street

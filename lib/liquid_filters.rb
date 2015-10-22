@@ -28,7 +28,7 @@ module LiquidFilters
   end
 
   def location_path(transactable_type, location)
-    Rails.application.routes.url_helpers.transactable_type_location_path(transactable_type.id, location.slug)
+    Rails.application.routes.url_helpers.transactable_type_location_path(transactable_type.slug, location.slug)
   end
 
   def lowest_price_without_cents_with_currency(object, lgpricing_filters = [])

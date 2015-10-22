@@ -7,6 +7,8 @@
     .input-container.col-xs-6
       = f.input :redirect_url, input_html: { class: 'form-control' }
     .input-container.col-xs-6
+      = f.input :redirect_code, collection: Page.redirect_statuses, input_html: { class: 'form-control' }
+    .input-container.col-xs-6.checkbox
       = f.input :open_in_new_window, input_html: { class: '' }, inline_label: true
 
   = content_for :header_buttons do

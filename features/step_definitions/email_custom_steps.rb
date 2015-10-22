@@ -12,7 +12,7 @@ Then /^a shared listing email is( not)? sent to "([^"]+)"$/ do |no_email, email|
     last_email = emails_for(email).select { |e| e.subject.include?("shared a listing") }.empty?.should be_true
   else
     last_email = last_email_for(email)
-    last_email.html_part.body.should include location_path(@listing.location)
+    last_email.html_part.body.should include transactable_type_location_listing_path(@listing.service_type, @listing.location, @listing)
   end
 end
 

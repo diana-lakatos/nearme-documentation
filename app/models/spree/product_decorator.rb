@@ -184,6 +184,10 @@ Spree::Product.class_eval do
     paranoia_destroyed? || %w(id draft).any? { |attr| metadata_relevant_attribute_changed?(attr) }
   end
 
+  def required?(attribute)
+    RequiredFieldChecker.new(self, attribute).required?
+  end
+
   private
 
   def shipping_category_presence

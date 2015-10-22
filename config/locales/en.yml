@@ -1091,6 +1091,7 @@ en:
       archived: "ARCHIVED"
       track_package: 'Track Package'
       return_label: 'Return Label'
+      uploaded_file: "Uploaded file"
     user_recurring_bookings:
       active: "ACTIVE"
       archived: "ARCHIVED"
@@ -1476,6 +1477,12 @@ en:
     per_day: 'PER DAY'
     per_week: 'PER WEEK'
     per_month: 'PER MONTH'
+    slash_per_hour: '/ hour'
+    slash_per_night: '/ night'
+    slash_per_day: '/ day'
+    slash_per_week: '/ week'
+    slash_per_month: '/ month'
+    from_price: "From"
     first_day: 'Select a start date'
     last_day: 'Select an end date'
     booking_module:
@@ -1864,3 +1871,8 @@ en:
       unread_messages_subject: "You have unread messages"
       you_have_unread_messages: "This is a notification to let you know you have unread messages waiting for you in your inbox."
 
+  metadata:
+    search:
+      title:
+        search: "Search"
+        in: " in "

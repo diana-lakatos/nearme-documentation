@@ -44,16 +44,16 @@ class PageTest < ActiveSupport::TestCase
 
   context 'url slugging' do
     should 'create unique slugs per theme' do
-      page_one = FactoryGirl.create(:page, :theme => @instance.theme, path: 'faq')
-      page_two = FactoryGirl.create(:page, :theme => @instance.theme, path: 'faq')
-      assert page_one.slug == 'faq'
-      assert page_two.slug != 'faq'
+      FactoryGirl.create(:page, :theme => @instance.theme, slug: 'faq')
+      assert_raises "ActiveRecord::RecordInvalid" do
+        FactoryGirl.create(:page, :theme => @instance.theme, slug: 'faq')
+      end
     end
 
     should 'allow the same slug in two different themes' do
       @instance_two = FactoryGirl.create(:instance)
-      page_one = FactoryGirl.create(:page, :theme => @instance.theme, path: 'company')
-      page_two = FactoryGirl.create(:page, :theme => @instance_two.theme, path: 'company')
+      page_one = FactoryGirl.create(:page, :theme => @instance.theme, slug: 'company')
+      page_two = FactoryGirl.create(:page, :theme => @instance_two.theme, slug: 'company')
       assert page_one.slug == 'company'
       assert page_two.slug == 'company'
     end
@@ -63,15 +63,6 @@ class PageTest < ActiveSupport::TestCase
       original_slug = page.slug
       page.save!
       assert page.slug == original_slug
-    end
-
-    should 'generate a new slug on save if the path attribute changed' do
-      page = FactoryGirl.create(:page, theme: @instance.theme)
-      original_slug = page.slug
-      page.path = 'New Page Path'
-      page.save!
-      assert page.slug != original_slug
-      assert page.slug == 'new-page-path'
     end
   end
 

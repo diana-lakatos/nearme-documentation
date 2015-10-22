@@ -32,10 +32,14 @@ module ApplicationHelper
   end
 
   def title_tag
-    [
-      (additional_meta_title.presence ? additional_meta_title : ''),
-      (show_title? ? content_for(:title) : platform_context.tagline.to_s)
-    ].compact.join(" | ")
+    if home_page? && platform_context.theme.tagline.present?
+      "#{platform_context.theme.meta_title} | #{platform_context.theme.tagline}"
+    else
+      [
+        (show_title? ? content_for(:title) : nil),
+        (additional_meta_title.present? ? additional_meta_title : nil)
+      ].compact.join(" | ")
+    end
   end
 
   def meta_description(description)

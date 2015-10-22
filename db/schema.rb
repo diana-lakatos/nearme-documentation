@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151016100737) do
+ActiveRecord::Schema.define(version: 20151020175308) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -400,19 +400,6 @@ ActiveRecord::Schema.define(version: 20151016100737) do
   add_index "ckeditor_assets", ["assetable_type", "assetable_id"], name: "idx_ckeditor_assetable", using: :btree
   add_index "ckeditor_assets", ["assetable_type", "type", "assetable_id"], name: "idx_ckeditor_assetable_type", using: :btree
   add_index "ckeditor_assets", ["instance_id"], name: "index_ckeditor_assets_on_instance_id", using: :btree
-
-  create_table "comment_spam_reports", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "comment_id"
-    t.integer  "instance_id"
-    t.datetime "deleted_at"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-  end
-
-  add_index "comment_spam_reports", ["comment_id"], name: "index_comment_spam_reports_on_comment_id", using: :btree
-  add_index "comment_spam_reports", ["instance_id"], name: "index_comment_spam_reports_on_instance_id", using: :btree
-  add_index "comment_spam_reports", ["user_id"], name: "index_comment_spam_reports_on_user_id", using: :btree
 
   create_table "comments", force: :cascade do |t|
     t.integer  "commentable_id"
@@ -1131,20 +1118,25 @@ ActiveRecord::Schema.define(version: 20151016100737) do
   add_index "merchant_accounts", ["instance_id", "merchantable_id", "merchantable_type"], name: "index_on_merchant_accounts_on_merchant", using: :btree
 
   create_table "pages", force: :cascade do |t|
-    t.string   "path",               limit: 255,                null: false
+    t.string   "path",                      limit: 255,                 null: false
     t.text     "content"
-    t.string   "hero_image",         limit: 255
-    t.datetime "created_at",                                    null: false
-    t.datetime "updated_at",                                    null: false
+    t.string   "hero_image",                limit: 255
+    t.datetime "created_at",                                            null: false
+    t.datetime "updated_at",                                            null: false
     t.integer  "theme_id"
-    t.string   "slug",               limit: 255
+    t.string   "slug",                      limit: 255
     t.integer  "position"
     t.text     "html_content"
     t.datetime "deleted_at"
-    t.string   "redirect_url",       limit: 255
-    t.boolean  "open_in_new_window",             default: true
+    t.string   "redirect_url",              limit: 255
+    t.boolean  "open_in_new_window",                    default: true
     t.integer  "instance_id"
     t.text     "css_content"
+    t.boolean  "no_layout",                             default: false
+    t.string   "metadata_title"
+    t.string   "metadata_meta_description"
+    t.integer  "redirect_code"
+    t.string   "metadata_canonical_url"
   end
 
   add_index "pages", ["instance_id"], name: "index_pages_on_instance_id", using: :btree
@@ -3271,9 +3263,11 @@ ActiveRecord::Schema.define(version: 20151016100737) do
     t.boolean  "search_location_type_filter",                                                    default: true
     t.boolean  "show_company_name",                                                              default: true
     t.boolean  "action_subscription_booking"
+    t.string   "slug"
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree
+  add_index "transactable_types", ["slug"], name: "index_transactable_types_on_slug", using: :btree
 
   create_table "transactables", force: :cascade do |t|
     t.integer  "instance_type_id"
@@ -3331,11 +3325,13 @@ ActiveRecord::Schema.define(version: 20151016100737) do
     t.boolean  "action_subscription_booking"
     t.integer  "weekly_subscription_price_cents"
     t.integer  "monthly_subscription_price_cents"
+    t.string   "slug"
   end
 
   add_index "transactables", ["external_id", "location_id"], name: "index_transactables_on_external_id_and_location_id", unique: true, using: :btree
   add_index "transactables", ["opened_on_days"], name: "index_transactables_on_opened_on_days", using: :gin
   add_index "transactables", ["parent_transactable_id"], name: "index_transactables_on_parent_transactable_id", using: :btree
+  add_index "transactables", ["slug"], name: "index_transactables_on_slug", using: :btree
   add_index "transactables", ["transactable_type_id"], name: "index_transactables_on_transactable_type_id", using: :btree
 
   create_table "translations", force: :cascade do |t|

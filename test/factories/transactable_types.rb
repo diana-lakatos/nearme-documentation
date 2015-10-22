@@ -56,7 +56,7 @@ FactoryGirl.define do
 
     factory :transactable_type_buy_sell do
       sequence(:name) do |n|
-        "Buy/Sell"
+        "Buy/Sell #{n}"
       end
       buyable true
     end

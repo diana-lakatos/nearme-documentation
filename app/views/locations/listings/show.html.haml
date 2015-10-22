@@ -1,8 +1,6 @@
-- title render 'locations/title', location: @location
+- title "#{@listing.name} | #{@location.name}"
 - canonical_url location_path(@location)
-
-- content_for :meta_description do
-  = "#{t('transactable_types.locations.listings.book_at')} #{@location.company.try(:name)}. #{mask_phone_and_email_if_necessary(@listing.description).try(:truncate, 28)}"
+- meta_description "#{mask_phone_and_email_if_necessary(@location.description).try(:truncate, 130)}"
 
 = transactable_structured_data
 

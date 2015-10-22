@@ -2,10 +2,7 @@
 
 .row-fluid.reservation-wizard
   .span8.offset2
-    .header
-      %h1= t 'reservations_review.heading'
-      %p.location-name= @reservation_request.listing.name
-      %p.location-address= @reservation_request.location.address
+    = render 'header', listing: @reservation_request.listing, location: @reservation_request.location
 
     .box
       %h2

@@ -32,13 +32,13 @@ module SearchHelper
       arr.join(' | ')
     else
       if listing.action_hourly_booking? && !listing.hourly_price.to_f.zero?
-        "From #{humanized_money_with_symbol(listing.hourly_price)} / hour"
+        "#{I18n.t('reservations.from_price')} #{humanized_money_with_symbol(listing.hourly_price)} #{I18n.t('reservations.slash_per_hour')}"
       elsif !listing.daily_price.to_f.zero?
-        "From #{humanized_money_with_symbol(listing.daily_price)} / day"
+        "#{I18n.t('reservations.from_price')} #{humanized_money_with_symbol(listing.daily_price)} #{listing.overnight_booking? ? I18n.t('reservations.slash_per_night') : I18n.t('reservations.slash_per_day')}"
       elsif !listing.weekly_price.to_f.zero?
-        "From #{humanized_money_with_symbol(listing.weekly_price)} / week"
+        "#{I18n.t('reservations.from_price')} #{humanized_money_with_symbol(listing.weekly_price)} #{I18n.t('reservations.slash_per_week')}"
       elsif !listing.monthly_price.to_f.zero?
-        "From #{humanized_money_with_symbol(listing.monthly_price)} / month"
+        "#{I18n.t('reservations.from_price')} #{humanized_money_with_symbol(listing.monthly_price)} #{I18n.t('reservations.slash_per_month')}"
       end
     end
   end
@@ -58,7 +58,8 @@ module SearchHelper
   def meta_title_for_search(platform_context, search, transactable_type_name = '')
     location_types_names = search.try(:lntypes).blank? ? [] : search.lntypes.pluck(:name)
 
-    title = location_types_names.empty? ? transactable_type_name : ''
+    title = params.try(:[], :lg_custom_attributes).try(:[], :listing_type)
+    title = title.present? && title.respond_to?(:gsub) ? title.gsub(",", ", ") : (location_types_names.empty? ? transactable_type_name : '')
 
     title += %Q{#{location_types_names.join(', ')}}
     search_location = []
@@ -69,20 +70,19 @@ module SearchHelper
       title += %Q{ in #{search_location.join(', ')}}
     end
 
-    if not search.is_united_states?
-      title += search_location.empty? ? ' in ' : ', '
-      title += search.country.to_s
+    title += if title.empty?
+      I18n.t("metadata.search.title.search")
+    else
+      search_location.empty? ? I18n.t("metadata.search.title.in") : ', '
     end
 
-    title + (additional_meta_title.present? ? " | " + additional_meta_title : '')
+    title += search.country.to_s
+
+    title
   end
 
   def meta_description_for_search(platform_context, search)
-    description = %Q{#{search.city}, #{search.is_united_states? ? search.state_short : search.state}}
-    if not search.is_united_states?
-      description << ", #{search.country}"
-    end
-    description
+    platform_context.theme.description
   end
 
   def display_search_result_subheader_for?(location)
