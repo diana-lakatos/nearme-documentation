@@ -10,10 +10,13 @@ class AuthenticationsController < ApplicationController
     if @oauth.already_connected?(current_user)
       update_profile
       already_connected_to_other_user
-      # Usual scenario - user already used social provider to log in to our system, everything in db is already set up
-    elsif !current_user && @oauth.authentication
+    # Usual scenario - user already used social provider to log in to our system, everything in db is already set up
+    elsif !current_user && @oauth.authentication && @oauth.authenticated_user && @oauth.authenticated_user.active_for_authentication?
       update_profile
       signed_in_successfully
+    # Banned user already used social provider to log in to our system, everything in db is already set up
+    elsif !current_user && @oauth.authentication && @oauth.authenticated_user && !@oauth.authenticated_user.active_for_authentication?
+      user_is_inactive_for_authentication(@oauth.authenticated_user)
       # Email is already taken - don't allow to steal account
     elsif @oauth.email_taken_by_other_user?(current_user)
       user_changed_email_and_someone_else_picked_it
@@ -80,6 +83,11 @@ class AuthenticationsController < ApplicationController
   end
 
   def same_user_already_logged_in
+    redirect_to redirect_after_callback_to || root_path
+  end
+
+  def user_is_inactive_for_authentication(user)
+    flash[:error] = t("flash_messages.authentications.inactive_for_authentication.#{user.banned? ? "banned" : "unknown"}")
     redirect_to redirect_after_callback_to || root_path
   end
 
