@@ -46,10 +46,10 @@
                 %td.col-role
                   = t(project.creator_id == current_user.id ? :owner : :collaborator)
                 %td.col-status
-                  - if project.try(:draft)
+                  - if project.draft?
                     %span.status-draft
                       = t('draft')
-                  - elsif project.try(:enabled)
+                  - elsif project.try(:enabled?)
                     %span.status-published
                       = t('published')
 

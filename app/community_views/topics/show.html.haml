@@ -17,7 +17,7 @@
         %li
           = link_to '#projects', role: "tab", :'data-toggle' => "tab" do
             = t :projects
-            %small= "(#{@topic.projects.count})"
+            %small= "(#{@topic.projects.enabled.count})"
       %p{:'data-follow-button' => true}
         = render partial: 'shared/follow_button', locals: { object: @topic }
         - if current_user && InstanceAdminAuthorizer.new(current_user).authorized?('Manage')
