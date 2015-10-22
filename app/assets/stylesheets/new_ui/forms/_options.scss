@@ -1,0 +1,33 @@
+.form-options {
+    @include clear;
+    padding: 0 $padding-base-horizontal;
+    margin-top: -20px;
+    margin-bottom: 10px;
+
+    .form-group {
+        margin-bottom: 0;
+    }
+
+    .options {
+        float: left;
+
+        label {
+            font-size: 12px;
+            font-weight: normal;
+        }
+    }
+
+    .actions {
+        float: right;
+        .info {
+            font-size: 12px;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+
+        .btn {
+            width: 100%;
+            display: block;
+        }
+    }
+}

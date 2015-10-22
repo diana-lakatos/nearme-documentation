@@ -1,6 +1,6 @@
 .box
   - if @visits.total_entries.zero?
-    %p.no_data
+    %p.empty-resultset
       = t('dashboard.analytics.no_location_visits_yet')
   - else
     .chart

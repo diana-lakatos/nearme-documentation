@@ -22,11 +22,10 @@
       %legend Availability Templates
       = f.simple_fields_for :availability_templates, resource.availability_templates.first || resource.availability_templates.build do |f_at|
         - if f_at.object.availability_rules.empty?
-          - (1..5).each do |i|
-            - f_at.object.availability_rules.build(day: i, open_hour: 9, close_hour: 17, open_minute: 0, close_minute: 0)
+          - f_at.object.availability_rules.build(days: (1..5).to_a, open_hour: 9, close_hour: 17, open_minute: 0, close_minute: 0)
         - f_at.object.availability_rules.each do |ar|
           = f_at.simple_fields_for :availability_rules, ar do |f_ar|
-            = f_ar.input :day
+            = f_ar.input :days
             = f_ar.input :open_hour
             = f_ar.input :open_minute
             = f_ar.input :close_hour

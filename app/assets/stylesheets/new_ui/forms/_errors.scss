@@ -1,0 +1,68 @@
+.form-group.has-error {
+    .control-label {
+        color: inherit;
+    }
+
+    .help-block {
+        font-style: italic;
+    }
+}
+
+.errors-global {
+    margin: 0 30px 30px;
+    padding: 30px;
+    border: 3px;
+    background: $errors-global-background;
+    border: 3px solid $errors-global-border;
+    border-radius: $border-radius-base;
+
+    @media (min-width: $screen-desktop) {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    h3 {
+        font-size: 16px;
+        font-weight: normal;
+        margin: 0 0 15px;
+
+        b {
+            color: $errors-global-emf;
+            font-weight: normal;
+        }
+    }
+
+    h4 {
+        font-size: 12px;
+        font-weight: normal;
+        margin: 15px 0 10px;
+    }
+
+    ul {
+        padding: 0 0 0 10px;
+        margin: 0;
+        list-style: none;
+    }
+
+    li {
+        font-style: italic;
+        color: $errors-global-emf;
+
+        &:before {
+            @include fa-icon();
+            content: $fa-var-exclamation-circle;
+            margin-right: 5px;
+        }
+    }
+}
+
+.error-count {
+    color: $state-danger-text;
+    margin-left: 5px;
+
+    &:before {
+        @include fa-icon();
+        content: $fa-var-exclamation-circle;
+        margin-right: 5px;
+    }
+}

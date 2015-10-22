@@ -9,13 +9,22 @@ class Dashboard::PhotosController < Dashboard::AssetsController
     @photo.image = @image
     @photo.creator_id = current_user.id
     if @photo.save
+
+      sizes = {}
+      @photo.image.thumbnail_dimensions.each_with_index do |dimensions, index|
+        sizes[dimensions[0]] = { width: dimensions[1][:width], height: dimensions[1][:height], url: @photo.image_url(dimensions[0].to_sym) }
+      end
+
+      sizes[:full] = { url: @photo.image_url }
+
       render :text => {
         :id => @photo.id,
         :transactable_id => @photo.owner_id,
         :thumbnail_dimensions => 'Project' === @owner_type ? @photo.image.thumbnail_dimensions[:project_thumbnail] : @photo.image.thumbnail_dimensions[:medium],
         :url => 'Project' === @owner_type ? @photo.image_url(:project_thumbnail) : @photo.image_url(:medium) ,
         :destroy_url => destroy_space_wizard_photo_path(@photo),
-        :resize_url =>  edit_dashboard_photo_path(@photo)
+        :resize_url =>  edit_dashboard_photo_path(@photo),
+        :sizes => sizes
       }.to_json,
       :content_type => 'text/plain'
     else

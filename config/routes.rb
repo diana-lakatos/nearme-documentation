@@ -246,6 +246,8 @@ DesksnearMe::Application.routes.draw do
       resource :design, :only => [:show, :update], :controller => 'design' do
         member do
           delete 'delete_font'
+          get :revert_to_old_ui
+          get :convert_to_new_ui
         end
       end
 
@@ -616,6 +618,7 @@ DesksnearMe::Application.routes.draw do
       resources :categories do
         member do
           get :tree
+          get :tree_new_ui
         end
       end
     end
@@ -631,7 +634,11 @@ DesksnearMe::Application.routes.draw do
       collection do
         delete :delete_image
       end
-      resources :posts, controller: 'user_blog/blog_posts'
+      resources :posts, controller: 'user_blog/blog_posts' do
+        member do
+          delete :delete_image
+        end
+      end
     end
 
     resources :project_types do
@@ -767,7 +774,12 @@ DesksnearMe::Application.routes.draw do
     end
     resources :photos, :only => [:create, :destroy, :edit, :update]
     resources :seller_attachments, only: %i(create update destroy)
-    resources :reviews, :only => [:index, :create, :update, :destroy]
+    resources :reviews, :only => [:index, :create, :update, :destroy] do
+      collection do
+        get :rate
+        get :completed
+      end
+    end
 
     resources :transactable_types, only: [] do
       resources :listings, only: [:new, :create] do

@@ -1,0 +1,33 @@
+- title t('dashboard.nav.white_labels')
+
+- content_for :page_header do
+  %h1= yield :title
+
+= dashboard_simple_form_for @company, :url => dashboard_company_white_label_path(@company), :html => {multipart: true, :id => 'white-label-form' } do |f|
+  .panel
+    .panel-body
+      = f.input :white_label_enabled, as: :switch, input_html: { data: { toggle: "collapse", target: "#white-label-fields", :"white-label-enabler" => true}}
+
+      #white-label-fields{'data-white-label-settings-container' => true, class: @company.white_label_enabled ? "collapse in" : "collapse"}
+        = f.simple_fields_for :domain, f.object.domain || Domain.new do |domain_form|
+          = domain_form.check_box :white_label_enabled, :checked => f.object.white_label_enabled, 'data-white-label-settings' => true, :class => 'hidden'
+          = domain_form.input :name, :as => :limited_string, :limit => 50, :required => true
+
+          = domain_form.input :google_analytics_tracking_code
+
+        = f.simple_fields_for :theme, (f.object.theme || f.object.build_theme) do |theme_form|
+          = theme_form.check_box :white_label_enabled, :checked => f.object.white_label_enabled, 'data-white-label-settings' => true, :class => 'hidden'
+
+          = render :partial => 'dashboard/shared/fields/theme', :locals => { :f => theme_form }
+
+          %hr/
+
+          = f.input :listings_public, as: :switch
+
+
+  .panel.form-actions
+    .panel-body
+      = f.submit t('dashboard.white_labels.save')
+
+/ - content_for :domready do
+/   $(function() { new CompanyForm($('#edit_company')) });

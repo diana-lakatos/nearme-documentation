@@ -1,0 +1,20 @@
+(function($){
+  'use strict';
+
+  $('html').trigger('hide.dialog');
+
+  var
+    select = $('[data-location-field]')[0].selectize,
+    actionsContainer = $('[data-location-actions]');
+
+  select.updateOption('<%= @location.id %>', { value: '<%= @location.id %>', text: '<%= @location.name %>' });
+  // select.refreshOptions();
+
+  actionsContainer.find('[data-location-id="<%= @location.id %>"]').remove();
+  actionsContainer.append('<%= escape_javascript( render @location ) %>');
+
+  $('main').prepend('<%= escape_javascript( render "dashboard/shared/flash") %>');
+
+}(window.jQuery));
+
+<% flash.discard %>

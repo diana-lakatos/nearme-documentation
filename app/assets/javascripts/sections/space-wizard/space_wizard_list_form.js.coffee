@@ -1,11 +1,11 @@
 class @SpaceWizardSpaceForm
 
   constructor: (@container) ->
-
+    @bindCocoonEvents()
     #THIS CODE IS COMMENTED BECAUSE CLIENT_SIDE_VALIDATION 3.2.5 GEM IS NOT STABLE AT THE TIME BEING.
     # 3.2.5 version does not validate nested inputs [ listing fields ], version 3.2.1 validates listing fields,
-    # but does not validate company name. 
-    
+    # but does not validate company name.
+
     #$('.custom-select').chosen()
     #@container.find('.control-group').addClass('input-disabled').find(':input').attr("disabled", true)
     #$(".custom-select").trigger("liszt:updated")
@@ -52,6 +52,14 @@ class @SpaceWizardSpaceForm
     @container.on 'change', 'select', (event) =>
       if $(event.target).closest('#company_industry_ids').length == 0
         $(event.target).closest('.control-group').next().removeClass('input-disabled').find(':input').removeAttr('disabled').focus()
+
+  bindCocoonEvents: =>
+    @container.find('.custom-availability-rules').on 'cocoon:before-remove', (e,fields)->
+      $(fields).closest('.nested-container').find('.transactable_availability_template_availability_rules__destroy input').val('true')
+
+    @container.find('.custom-availability-rules').on 'cocoon:after-insert', (e,fields)->
+      CustomInputs.initialize();
+      DNM.initializeCustomSelects($(fields));
 
   successfulValidationHandler: (element) =>
     index = element.closest('.control-group').index()

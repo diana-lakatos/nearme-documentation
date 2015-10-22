@@ -1,0 +1,57 @@
+@mixin fontello-icon($code) {
+    @extend %fontello;
+    content: $code;
+
+    @content
+}
+
+
+@mixin clear {
+  &:after {
+    content: " "; // 1
+    display: table; // 2
+    clear: both;
+  }
+}
+
+@mixin triangle($direction, $color, $size: .5em, $spread: null){
+  content: "";
+  display: inline-block;
+  border-style: solid;
+  border-color: transparent;
+  vertical-align: middle;
+  @if $spread == null {
+    $spread: $size;
+  }
+  @if $direction == up {
+    border-bottom-color: $color;
+    border-bottom-width: $size;
+    border-top-width: 0;
+    border-left-width: $spread;
+    border-right-width: $spread;
+  } @else if $direction == right {
+    border-left-color: $color;
+    border-left-width: $size;
+    border-right-width: 0;
+    border-top-width: $spread;
+    border-bottom-width: $spread;
+  } @else if $direction == down {
+    border-top-color: $color;
+    border-top-width: $size;
+    border-bottom-width: 0;
+    border-left-width: $spread;
+    border-right-width: $spread;
+  } @else if $direction == left {
+    border-right-color: $color;
+    border-right-width: $size;
+    border-left-width: 0;
+    border-top-width: $spread;
+    border-bottom-width: $spread;
+  }
+}
+
+@mixin sr-only {
+    position: absolute;
+    left: -999em;
+    top: 0;
+}

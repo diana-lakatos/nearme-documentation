@@ -1,0 +1,67 @@
+.credit-card-fields
+  - if @recurring_booking_request.errors[:cc].present?
+    .flash.error
+      %ul
+        - @recurring_booking_request.errors[:cc].each do |e|
+          %li= e
+
+  .padding-bottom.submit-secure-payment
+    .row-fluid
+      .span5.text
+        .ico-lock Submit a secure payment.
+      .span7.credit-card-images
+        = image_tag 'credit-cards.png', alt: "Visa, Mastercard, American Express, Discover"
+      .clearfix
+
+  .padding-bottom.credit-card
+    .row-fluid
+      .span6
+        = f.label :card_holder_first_name, "First Name", class: 'control-label'
+        = f.input_field :card_holder_first_name, class: 'sessioncamexclude', required: true, autocomplete: :off
+      .span6
+        = f.label :card_holder_last_name, "Last Name", class: 'control-label'
+        = f.input_field :card_holder_last_name, class: 'sessioncamexclude', required: true, autocomplete: :off
+    .row-fluid
+      .span6.card-info{class: "#{"error" if f.object.errors.include?(:number).present?}"}
+        = f.label :card_number, "Card number", class: 'control-label'
+        .controls.card-number.input-icon-holder-right
+          = f.input_field :card_number, required: true, placeholder: 'aaaa aaaa aaaa aaaa', class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: "off", 'data-card-number' => true
+          %span.ico-credit-card
+        - if f.object.errors[:number].present?
+          %p.error-block
+            = f.object.errors[:number].first
+
+      .span2.card-info.expiry.column.left{class: "#{"error" if f.object.errors.include?(:card_exp_month).present?}"}
+        .visible-phone
+          = f.label :card_exp_month, t('payments.cc_fields.expiration_date_month'), class: 'control-label'
+        .hidden-phone
+          = f.label :card_exp_month, t('payments.cc_fields.expiration_date'), class: 'control-label'
+        .controls.card-expires
+          = f.input_field :card_exp_month, collection: credit_card_date[:month], prompt: false, class: 'sessioncamexclude no-icon select2'
+
+        - if f.object.errors[:card_exp_month].present?
+          %p.error-block
+            = f.object.errors[:card_exp_month].first
+
+      .span2.card-info.expiry.column.left{class: "#{"error" if f.object.errors.include?(:card_exp_year).present?}"}
+        .hidden-phone
+          %label.control-label
+            &nbsp;
+        .visible-phone
+          = f.label :card_exp_year, t('payments.cc_fields.expiration_date_year'), class: 'control-label'
+        .controls.card-expires
+          = f.input_field :card_exp_year, collection: credit_card_date[:year], prompt: false, class: 'sessioncamexclude no-icon select2'
+
+        - if f.object.errors[:card_exp_year].present?
+          %p.error-block
+            = f.object.errors[:card_exp_year].first
+
+      .span2.card-info.security.column.right{class: "#{"error" if f.object.errors.include?(:cvc).present?}"}
+        = f.label :card_code, "Security code", class: 'control-label'
+        .controls.card-code
+          = f.input_field :card_code, size: 3, placeholder: 'CCV', required: true, class: 'sessioncamexclude', pattern: "[0-9]*", autocomplete: "off", 'data-card-code' => true
+        - if f.object.errors[:cvc].present?
+          %p.error-block
+            = f.object.errors[:cvc].first
+
+  .clearfix

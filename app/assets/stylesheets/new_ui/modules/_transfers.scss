@@ -1,0 +1,14 @@
+.chart-transfers {
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid $gray-lighter;
+
+  .total {
+    margin-bottom: 10px;
+    text-align: right;
+  }
+
+  .currency {
+    margin-left: 10px;
+  }
+}

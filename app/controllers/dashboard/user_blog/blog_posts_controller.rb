@@ -1,6 +1,6 @@
 class Dashboard::UserBlog::BlogPostsController < Dashboard::UserBlog::BaseController
 
-  before_filter :find_user_blog_post, only: [:edit, :update, :destroy]
+  before_filter :find_user_blog_post, only: [:edit, :update, :destroy, :delete_image]
 
   def index
     redirect_to dashboard_blog_path
@@ -38,6 +38,20 @@ class Dashboard::UserBlog::BlogPostsController < Dashboard::UserBlog::BaseContro
     @blog_post.destroy
     flash[:success] = t('flash_messages.blog_admin.blog_posts.blog_post_deleted')
     redirect_to dashboard_blog_path
+  end
+
+  def delete_image
+    # We avoid interpolation because easy to go wrong and add security vulnerabilities
+    case params[:image_type]
+    when 'hero_image'
+      @blog_post.remove_hero_image!
+      @blog_post.save!
+    when 'author_avatar_img'
+      @blog_post.remove_author_avatar_img!
+      @blog_post.save!
+    end
+
+    redirect_to edit_dashboard_blog_post_path(@blog_post)
   end
 
   private

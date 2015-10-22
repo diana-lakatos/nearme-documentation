@@ -1,0 +1,46 @@
+// form controls
+.form-control {
+    font-size: $form-element-font-size;
+    box-shadow: none;
+    padding: 0 15px;
+
+    &[maxlength]:not(textarea) {
+        width: auto;
+        max-width: 100%;
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+    &[disabled], &[readonly] {
+        opacity: 0.8;
+    }
+}
+
+
+.input-group-btn > .btn {
+  font-size: 16px;
+  border-color: $input-border;
+  padding-bottom: 7px;
+}
+
+
+// input group addons
+.input-group-addon {
+  padding-left: 15px;
+  padding-right: 15px;
+  font-size: $form-element-font-size;
+}
+
+// helpers
+.form-control-option {
+    margin-top: -10px;
+    text-align: right;
+}
+
+.form-control-option-add:before {
+    content: "+ ";
+}
+

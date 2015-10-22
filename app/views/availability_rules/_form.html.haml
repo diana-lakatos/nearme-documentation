@@ -11,27 +11,18 @@
         = label_text
 
   .controls.custom-availability-rules{:style => ('display: none' unless availability_custom?(f.object))}
+    .availability-rules-wrapper
 
-    - availability_summary_for_rules(f.object.availability_rules).each_day do |day, rule|
-      %div{:class => "day day-#{day} control-group #{'error' if f.object.errors.any? { |e| e.to_s == "availability_rules.day_#{day}" }}"}
-        - # NB: We mark new records for destruction so that they conveniently pre-check the _destory checkbox.
-        = f.fields_for(:availability_rules, rule || AvailabilityRule.new(:day => day).tap { |r| r.mark_for_destruction }) do |af|
-          - active = availability_custom?(f.object) && !af.object.marked_for_destruction?
-          = af.hidden_field :id, :disabled => !active if af.object.persisted?
-          = af.hidden_field :day, :disabled => !active
-          .day-name= af.object.day_name
-          .closed-flag
-            = af.check_box :_destroy, :class => "closed checkbox", :checked => !active, :style => "display: none"
-            %label.checkbox
-              = check_box_tag "open", "1", active, :class => "open-checkbox"
-              = t('simple_form.labels.availability_rule.open')
-          .open-time= af.select :open_time, availability_time_options, {}, :disabled => !active
-          .close-time= af.select :close_time, availability_time_options, {}, :disabled => !active
-      - if f.object.errors.any? { |e| e.to_s == "availability_rules.day_#{day}" }
-        .error-block
-          = f.object.errors["availability_rules.day_#{day}".to_sym][0]
-    - if f.object.errors[:"listings.availability_rules"].present?
-      .control-group.error
-        .error-block
-          = f.object.errors[:"listings.availability_rules"][0]
+      = f.simple_fields_for :availability_template, get_availability_template_object(f.object) do |at|
+        = at.input :id, as: :hidden, input_html: { value: at.object.id }
+        .nested-fields-set
+          = at.simple_fields_for(:availability_rules) do |af|
+            .nested-container
+              = af.input :_destroy, as: :hidden
+              = render 'dashboard/company/transactables/time_availability', f: af, index: 1
 
+        %p
+          = t(:different_availability_info, scope: [:pricing, :availability])
+
+        %p
+          = link_to_add_association t(:add_availability, scope: [:pricing, :availability]) , at, :availability_rules, partial: 'dashboard/company/transactables/time_availability', class: 'btn btn-gray-light btn-medium', data: { association_insertion_node: '.nested-fields-set', association_insertion_method: :append }

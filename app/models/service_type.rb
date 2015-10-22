@@ -47,10 +47,6 @@ class ServiceType < TransactableType
     end
   end
 
-  def defer_availability_rules?
-    availability_options && availability_options["defer_availability_rules"]
-  end
-
   def daily_options_names
     pricing_options = []
     pricing_options << "daily" if action_daily_booking
@@ -73,6 +69,10 @@ class ServiceType < TransactableType
     pricing_options << "weekly_subscription" if action_weekly_subscription_booking
     pricing_options << "monthly_subscription" if action_monthly_subscription_booking
     pricing_options
+  end
+
+  def available_price_types
+    Transactable::PRICE_TYPES.select{ |price| self.try("action_#{price}_booking") }
   end
 
   def min_max_prices_are_correct
@@ -128,6 +128,10 @@ class ServiceType < TransactableType
 
   def buyable?
     false
+  end
+
+  def hide_location_availability
+    skip_location? || !availability_options["defer_availability_rules"]
   end
 
   def available_search_views

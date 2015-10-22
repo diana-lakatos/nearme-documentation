@@ -1,0 +1,3 @@
+= f.simple_fields_for :properties, f.object.properties do |properties_form|
+  - (f.object.instance_profile_type.try(:custom_attributes) || []).each do |attribute|
+    = draw_attribute_for_form(attribute, properties_form) if only_inputs.empty? || only_inputs.include?(attribute.name.to_sym)

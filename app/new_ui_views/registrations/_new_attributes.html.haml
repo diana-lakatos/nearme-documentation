@@ -1,0 +1,20 @@
+-# This file is intended to replace _attributes.html.haml eventually
+-# TODO Adjust _attributes partial to bs3 when redo space wizard form
+
+- resource ||= current_user
+- only_inputs ||= []
+- only_inputs.map!(&:to_sym)
+
+- %w(approval_requests name properties categories email language time_zone phones current_location company_name industries password avatar public_profile).each do |attr|
+  = render "registrations/attributes/#{attr}", only_inputs: only_inputs, f: f, resource: resource
+
+
+
+
+
+
+
+
+
+
+

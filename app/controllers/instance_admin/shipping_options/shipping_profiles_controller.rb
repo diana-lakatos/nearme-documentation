@@ -73,6 +73,10 @@ class InstanceAdmin::ShippingOptions::ShippingProfilesController < InstanceAdmin
 
   private
 
+  def prepend_view_paths
+    prepend_view_path InstanceViewResolver.instance
+  end
+
   def get_company
     @company = current_user.companies.first || Company.new
   end

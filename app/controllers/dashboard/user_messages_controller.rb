@@ -22,14 +22,31 @@ class Dashboard::UserMessagesController < Dashboard::BaseController
   def create
     @user_message = current_user.authored_messages.new(message_params).decorate
     @user_message.set_message_context_from_request_params(params)
+
+
     if @user_message.save
       @user_message.send_notification
-      flash[:notice] = t('flash_messages.user_messages.message_sent')
-      redirect_to dashboard_user_message_path(@user_message)
-      render_redirect_url_as_json if request.xhr?
+
+      if request.xhr?
+        if current_instance.new_ui? and !@user_message.first_in_thread?
+          render :partial => 'user_message_for_show', locals: { user_message: @user_message }
+        else
+          flash[:notice] = t('flash_messages.user_messages.message_sent')
+          redirect_to dashboard_user_message_path(@user_message)
+          render_redirect_url_as_json
+        end
+      else
+        flash[:notice] = t('flash_messages.user_messages.message_sent')
+        redirect_to dashboard_user_message_path(@user_message)
+      end
+
     else
       if request.xhr?
-        render :partial => "form"
+        if current_instance.new_ui?
+          render :partial => "dashboard_form"
+        else
+          render :partial => "form"
+        end
       else
         @displayed_user_message = @user_message
         @user_messages = UserMessage.for_thread(@user_message.thread_owner_with_deleted, @user_message.thread_recipient_with_deleted, @user_message.thread_context_with_deleted).by_created.decorate

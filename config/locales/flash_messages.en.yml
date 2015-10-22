@@ -494,7 +494,7 @@ en:
       complete_fields: "Please complete all fields!"
       missing_fields_invalid: "The form is missing required fields. Please contact administrator for further information."
     space_wizard:
-      complete_fields: "Please complete all fields! Alternatively, you can Save a Draft for later."
+      complete_fields: "Please complete all fields! Alternatively, you can Save for later."
       draft_saved: "Your draft has been saved!"
       space_listed: "Your %{bookable_noun} was listed! You can provide more details about your location and listing from this page."
       item_listed: "Your %{bookable_noun} was listed! You can provide more details about your location and listing from this page."

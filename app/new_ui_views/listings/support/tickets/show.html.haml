@@ -1,0 +1,24 @@
+.row-fluid.support.detail
+  .span8.offset2
+    %h1 Request ##{@ticket.id}
+    .box
+      .header.clearfix
+        .left
+          %h2
+            =@ticket.subject
+        .right
+          %h2
+            =@ticket.state.titleize
+      .form
+        -if @ticket.open?
+          =simple_form_for @message, url: support_ticket_ticket_messages_path(@ticket, @message) do |f|
+            = f.input :message, as: :text, label: false
+            .row-fluid
+              .span6
+                = f.submit 'Update', class: 'btn btn-green'
+              .span6
+                = f.submit 'Close Ticket', class: 'btn btn-white'
+      = render partial: 'support/ticket_messages/ticket_message', collection: @ticket.messages, spacer_template: 'support/ticket_messages/spacer'
+
+- content_for :domready do
+  $('abbr.timeago').timeago();

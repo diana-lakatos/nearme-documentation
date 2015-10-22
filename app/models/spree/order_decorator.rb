@@ -238,8 +238,8 @@ Spree::Order.class_eval do
     Money.new(amount*Money::Currency.new(self.currency).subunit_to_unit, currency)
   end
 
-  def reviewable?
-    completed? && approved_at.present? && paid? && shipped?
+  def reviewable?(current_user)
+    current_user != company.creator && completed? && approved_at.present? && paid? && shipped?
   end
 
   def paid?

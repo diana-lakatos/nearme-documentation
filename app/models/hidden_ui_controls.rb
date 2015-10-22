@@ -51,6 +51,8 @@ class HiddenUiControls
       'registrations/show#reviews',
       'registrations/show#blog_posts',
       'dashboard/reviews',
+      'dashboard/reviews_completed',
+      'dashboard/reviews_rate',
       'dashboard/wish_list_items',
       'main_menu/manage_items',
       'main_menu/cta',

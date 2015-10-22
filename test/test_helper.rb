@@ -202,7 +202,10 @@ class TestDataSeeder
   def self.seed!
     if !@@data_seeded
       @@data_seeded = true
-      FactoryGirl.create(:instance).set_context!
+      instance = FactoryGirl.create(:instance)
+      instance.set_context!
+      instance.build_availability_templates
+      instance.save!
       FactoryGirl.create(:transactable_type_listing, generate_rating_systems: true)
       FactoryGirl.create(:country_us)
       FactoryGirl.create(:country_pl)

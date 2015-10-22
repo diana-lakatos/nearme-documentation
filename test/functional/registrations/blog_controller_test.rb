@@ -70,9 +70,8 @@ class Registrations::BlogControllerTest < ActionController::TestCase
       end
 
       should 'not find unpublished user blog post' do
-        assert_raise(ActiveRecord::RecordNotFound) do
-          get :show, user_id: @user.id, id: @unpublished_blog_post
-        end
+        get :show, user_id: @user.id, id: @unpublished_blog_post
+        assert_response :redirect
       end
     end
 

@@ -1,0 +1,26 @@
+- if @orders.total_entries.zero?
+  %p.empty-resultset
+    = no_purchases_yet_text
+- else
+  %figure.chart-a
+    %figcaption
+      = t('dashboard.analytics.total.orders', total: @chart.total)
+      |
+      = t('dashboard.analytics.7_days_total')
+
+    %canvas#chart
+
+  %table.table.table-simple
+    %thead
+      %tr
+        %th= t('dashboard.analytics.columns.date')
+        %th= t('dashboard.analytics.columns.orders')
+
+    - @orders.each do |order|
+      %tr
+        %td= order.orders_date
+        %td= order.orders_count
+
+- content_for :analytics_pagination do
+  = will_paginate_dashboard @orders, :params => { :analytics_mode => 'orders' }
+

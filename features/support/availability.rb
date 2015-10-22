@@ -1,19 +1,8 @@
 module AvailabilitySupport
   def availability_data_from_table(table)
-    days = {}
-    (0..6).to_a.each do |day|
-      days[day] = {}
+    table.hashes.map do |rule|
+      { open: rule['Open Time'], close: rule['Close Time'], days: rule['Days'].split(',').map(&:to_i) }
     end
-
-    table.hashes.each do |rule|
-      days[rule['Day'].to_i] = if rule['Available'] != 'No'
-        { :open => rule['Open Time'], :close => rule['Close Time'] }
-      else
-        {}
-      end
-    end
-
-    days
   end
 end
 

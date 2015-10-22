@@ -1,0 +1,39 @@
+%div.dimension-templates-fields{:"data-dimension-templates" => true, id: section_id }
+
+  - if @dimensions_template.unit_of_measure == 'imperial'
+    - weight_units = DimensionsTemplate::UNITS_OF_MEASURE['imperial']['weight']
+    - size_units = DimensionsTemplate::UNITS_OF_MEASURE['imperial']['length']
+  - else
+    - weight_units = DimensionsTemplate::UNITS_OF_MEASURE['metric']['weight']
+    - size_units = DimensionsTemplate::UNITS_OF_MEASURE['metric']['length']
+
+  .row
+    .col-xs-6
+      = f.input :name, required: true
+    .col-xs-6
+      = f.input :unit_of_measure, as: :select, include_blank: false, collection: DimensionsTemplate::UNITS_OF_MEASURE.keys, required: true, input_html: { 'data-shipping-unit-of-measure': true }
+  .row
+    .col-xs-6
+      = f.input :weight, required: true, as: :decimal, input_html: { 'data-shipping-dimension': 'weight' }
+
+    .col-xs-6
+      = f.input :weight_unit, as: :select, collection: weight_units, required: true, input_html: { 'data-shipping-dimension-unit': 'weight' }
+  .row
+    .col-xs-6
+      = f.input :height, required: true, input_html: { 'data-shipping-dimension': 'height' }
+    .col-xs-6
+      = f.input :height_unit, as: :select, collection: size_units, required: true, input_html: { 'data-shipping-dimension-unit': 'height' }
+  .row
+    .col-xs-6
+      = f.input :width, required: true, input_html: { 'data-shipping-dimension': 'width' }
+    .col-xs-6
+      = f.input :width_unit, as: :select, include_blank: false, collection: size_units, required: true, input_html: { 'data-shipping-dimension-unit': 'width' }
+  .row
+    .col-xs-6
+      = f.input :depth, required: true, input_html: { 'data-shipping-dimension': 'depth' }
+    .col-xs-6
+      = f.input :depth_unit, as: :select, include_blank: false, collection: size_units, required: true, input_html: { 'data-shipping-dimension-unit': 'depth' }
+
+:javascript
+  new DNM.DimensionTemplates('##{section_id}', #{raw DimensionsTemplate::UNITS_OF_MEASURE.to_json});
+

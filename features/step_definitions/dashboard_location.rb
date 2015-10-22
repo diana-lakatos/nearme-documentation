@@ -142,39 +142,38 @@ end
 
 When /^I select custom availability:$/ do |table|
   choose 'availability_rules_custom'
-
-  days = availability_data_from_table(table)
-  days.each do |day, rule|
-    within ".availability-rules .day-#{day}" do
-      if rule.present?
-        page.find('.open-checkbox').set(true)
-        page.find("select[name*=open_time] option[value='#{rule[:open]}']").select_option
-        page.find("select[name*=close_time] option[value='#{rule[:close]}']").select_option
-      else
-        page.find('.open-checkbox').set(false)
-      end
+  (0..6).each do |day|
+    page.find("#transactable_availability_template_attributes_availability_rules_attributes_0_days_#{day}").set(false)
+  end
+  rules = availability_data_from_table(table)
+  rules.each do |rule|
+    fill_in "transactable_availability_template_attributes_availability_rules_attributes_0_open_time", with: rule[:open]
+    fill_in "transactable_availability_template_attributes_availability_rules_attributes_0_close_time", with: rule[:close]
+    rule[:days].each do |day|
+      page.find("#transactable_availability_template_attributes_availability_rules_attributes_0_days_#{day}").set(true)
     end
   end
 end
 
 Then /^#{capture_model} should have availability:$/ do |model, table|
   object = model!(model)
-  days = availability_data_from_table(table)
-
-  object.availability.each_day do |day, rule|
-    if days[day].present?
-      assert rule, "#{day} should have a rule"
-      oh, om = days[day][:open].split(':').map(&:to_i)
-      ch, cm = days[day][:close].split(':').map(&:to_i)
-      assert_equal oh, rule.open_hour, "#{day} should have open hour = #{oh}"
-      assert_equal om, rule.open_minute, "#{day} should have open minute = #{om}"
-      assert_equal ch, rule.close_hour, "#{day} should have close hour = #{ch}"
-      assert_equal cm, rule.close_minute, "#{day} should have close minute = #{cm}"
-    else
-      assert_nil rule, "#{day} should not be open"
+  rules = availability_data_from_table(table)
+  availability = object.availability
+  rules.each do |rule|
+    rule[:days].each do |day|
+      availability_rule = availability.rule_for_day(day)
+      assert availability_rule, "#{day} should have a rule"
+      oh, om = rule[:open].split(':').map(&:to_i)
+      ch, cm = rule[:close].split(':').map(&:to_i)
+      assert_equal oh, availability_rule.open_hour, "#{day} should have open hour = #{oh}"
+      assert_equal om, availability_rule.open_minute, "#{day} should have open minute = #{om}"
+      assert_equal ch, availability_rule.close_hour, "#{day} should have close hour = #{ch}"
+      assert_equal cm, availability_rule.close_minute, "#{day} should have close minute = #{cm}"
+    end
+    ((0..6).to_a - rule[:days]).each do |day|
+      refute availability.rule_for_day(day), "#{day} should not have a rule"
     end
   end
-
 end
 
 And /^I populate listing metadata for all users$/ do

@@ -61,4 +61,20 @@ Spree::Zone.class_eval do
     end
   end
 
+  def countries_json
+    out = []
+    if kind == 'country'
+      out = members.map { |m| { id: m.zoneable.id, name: m.zoneable.name }}
+    end
+    JSON.generate(out)
+  end
+
+  def states_json
+    out = []
+    if kind == 'state'
+      out = members.map { |m| { id: m.zoneable.id, name: m.zoneable.name }}
+    end
+    JSON.generate(out)
+  end
+
 end

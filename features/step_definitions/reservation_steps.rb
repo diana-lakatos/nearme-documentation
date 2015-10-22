@@ -213,7 +213,7 @@ When /^the (visitor|owner) (confirm|decline|cancel)s the reservation$/ do |user,
     visit dashboard_company_host_reservations_path
   end
   if action == 'cancel' and user == 'owner'
-    within('.dash-head') { click_on 'CONFIRMED'}
+    within('.dash-head') { click_on 'Confirmed'}
   end
   if action == 'decline'
     step 'I reject reservation with reason'

@@ -23,7 +23,7 @@ module Metadata
       end
 
       def should_populate_location_photos_metadata?
-        location.present? && %w(name).any? { |attr| metadata_relevant_attribute_changed?(attr) }
+        location.present? && %w(name location_id).any? { |attr| metadata_relevant_attribute_changed?(attr) }
       end
 
       def should_populate_creator_listings_metadata?

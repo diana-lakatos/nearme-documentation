@@ -1,0 +1,84 @@
+%ul.nav.navbar-nav.navbar-right
+  - if (!no_listing_buttons? || platform_context.white_label_company_user?(current_user)) && HiddenUiControls.find('main_menu/cta').visible?
+
+    -# Single type platform
+    - if platform_context.single_type?
+
+      - if current_user && current_user.registration_in_progress?
+        - if current_user.has_draft_products
+          %li= link_to t('ui.header.complete_your_thing', thing: platform_context.product_types.first.translated_bookable_noun), main_app.new_product_type_product_wizard_path(platform_context.product_types.first)
+
+        - else
+          %li= link_to t('ui.header.complete_your_thing', thing: platform_context.transactable_types.first.translated_bookable_noun), main_app.transactable_type_new_space_wizard_path(platform_context.transactable_types.first)
+
+      - elsif !current_user.try(:registration_completed?)
+        = render partial: 'layouts/list_your_bookable', locals: { transactable_type: platform_context.transactable_types.first }
+
+    - else
+      - if current_user && current_user.registration_in_progress?
+        %li
+          - tt = current_user.first_listing.try(:transactable_type) || Spree::ProductType.first
+          = link_to t('ui.header.complete_your_thing', thing: tt.translated_bookable_noun), main_app.transactable_type_new_space_wizard_path(tt)
+
+      - elsif !current_user.try(:registration_completed?)
+        = dropdown_menu t('ui.header.list_your'), { wrapper_tag: :li } do
+          - platform_context.transactable_types.each do |tt|
+            = render partial: 'layouts/list_your_bookable', locals: { transactable_type: tt }
+
+  - if user_signed_in?
+    - if buyable? && current_user.cart_orders.any? && HiddenUiControls.find('main_menu/cart').visible?
+      %li
+        - cart = CartDecorator.new(current_user)
+        = link_to cart_index_path do
+          %span.fa.fa-shopping-cart.visible-xs-inline
+          %span.hidden-xs= t('top_navbar.cart_dashboard')
+          = "(#{cart.line_items_count})"
+          %span.hidden-xs= cart.total_display.html_safe
+
+    = dropdown_menu current_user.first_name, { wrapper_tag: :li } do
+      - if current_user.instance_admins_metadata
+        %li= link_to t('top_navbar.marketplace_admin'), user_menu_instance_admin_path(current_user.instance_admins_metadata), target: '_blank'
+
+      - if platform_context.white_label_company_user?(current_user) && (current_user.has_any_active_listings || current_user.has_any_active_products) && HiddenUiControls.find('main_menu/manage_items').visible?
+        - platform_context.service_types.each do |transactable_type|
+          %li= link_to t('top_navbar.manage_bookable', bookable_noun: transactable_type.translated_bookable_noun(10)), main_app.dashboard_company_transactable_type_transactables_path(transactable_type)
+
+        - platform_context.product_types.each do |product_type|
+          %li= link_to t('top_navbar.manage_bookable', bookable_noun: product_type.translated_bookable_noun(10)), main_app.dashboard_company_product_type_products_path(product_type)
+
+        - platform_context.project_types.each do |project_type|
+          %li= link_to "My #{project_type.translated_bookable_noun(10)}", main_app.dashboard_project_type_projects_path(project_type)
+
+      - if platform_context.bookable? && HiddenUiControls.find('main_menu/my_bookings').visible?
+        %li= link_to t('top_navbar.my_bookings'), main_app.dashboard_user_reservations_path
+
+      - if platform_context.buyable? && HiddenUiControls.find('main_menu/my_orders').visible?
+        %li= link_to t('top_navbar.my_orders'), main_app.dashboard_orders_path
+
+      - if platform_context.instance.wish_lists_enabled? && HiddenUiControls.find('main_menu/wish_list').visible?
+        %li= link_to t('wish_lists.name'), main_app.dashboard_wish_list_items_path
+
+      - if !current_user.requests_for_quotes.empty? && HiddenUiControls.find('main_menu/rfq').visible?
+        %li= link_to t('reservations.rfq_menu_text'), main_app.dashboard_user_requests_for_quotes_path
+
+      - if platform_context.instance.user_blogs_enabled? && HiddenUiControls.find('main_menu/manage_blog').visible?
+        %li= link_to t('top_navbar.manage_blog'), main_app.dashboard_blog_path
+
+      - if HiddenUiControls.find('main_menu/account').visible?
+        %li= link_to t('top_navbar.account'), main_app.dashboard_profile_path
+
+      - if HiddenUiControls.find('main_menu/view_profile').visible?
+        %li= link_to t('top_navbar.view_profile'), main_app.user_path(current_user), rel: 'external'
+
+      %li= link_to t('top_navbar.log_out'), main_app.destroy_user_session_path, :method => :delete, class: 'nav-link dropdown-toggle', :data => {:user => current_user.first_name }
+
+    - if HiddenUiControls.find('main_menu/messages').visible?
+      %li.visible-lg-block= link_to t('top_navbar.messages'), main_app.dashboard_user_messages_path, class: 'nav-link'
+
+  - else
+    %li
+      = link_to_registration get_return_to_url, platform_context.secured_constraint, secure_links?, data: { modal: true, 'modal-class' => 'sign-up-modal' } do
+        = t('top_navbar.sign_up')
+    %li
+      = link_to_login get_return_to_url, platform_context.secured_constraint, secure_links?, data: { modal: true, 'modal-class' => 'sign-up-modal' } do
+        = t('top_navbar.log_in')

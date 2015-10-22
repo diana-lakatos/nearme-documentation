@@ -1,0 +1,12 @@
+%li{ class: "type-#{File.extname(attachment.file.file.filename).gsub('.','')}", data: {'attachment' => attachment.id } }
+  .attachment-container
+    %span.link
+      = link_to attachment.file.file.filename, attachment.file.url, download: attachment.file.file.filename
+    %span.meta
+      %time{ datetime: attachment.created_at }
+        = l(attachment.created_at, format: :only_date)
+
+      - if attachment.file.size
+        %span.size= number_to_human_size(attachment.file.size)
+
+  %button.action--remove{ type: :button, data: { delete: true, url: approval_request_attachment_path(attachment), "label-confirm": t('attachment_upload.are_you_sure_you_want_to_delete_this_attachment') }}

@@ -1,0 +1,11 @@
+= f.input_field :quantity, as: :hidden
+
+.hidden
+  = f.select_recurring :schedule_params
+
+= f.input :start_on, as: :hidden, input_html: {value: @recurring_booking_request.start_on}
+= f.input :end_on, as: :hidden, input_html: {value: @recurring_booking_request.end_on}
+= f.input :start_minute, as: :hidden, input_html: {value: @recurring_booking_request.start_minute}
+= f.input :end_minute, as: :hidden, input_html: {value: @recurring_booking_request.end_minute}
+= f.input :interval, as: :hidden, input_html: {value: @recurring_booking_request.interval}
+= f.input :guest_notes, as: :hidden, input_html: {value: @recurring_booking_request.guest_notes}

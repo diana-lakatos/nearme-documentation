@@ -512,6 +512,8 @@ class ApplicationController < ActionController::Base
   helper_method :ckeditor_toolbar_creator
 
   def prepend_view_paths
+    # a quick and dirty hack for Chris D to let him start working
+    prepend_view_path("app/#{PlatformContext.current.instance.priority_view_path}_views") if PlatformContext.current.instance.priority_view_path && ['new_ui'].include?(PlatformContext.current.instance.priority_view_path)
     prepend_view_path("app/community_views") if PlatformContext.current.instance.is_community?
     prepend_view_path InstanceViewResolver.instance
   end

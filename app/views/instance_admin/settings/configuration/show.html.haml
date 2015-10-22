@@ -23,9 +23,9 @@
         = f.input :force_accepting_tos, inline_label: true
     .row
       .input-container.col-xs-6
-        = f.input :allowed_countries, collection: Country.all, value_method: :name,  input_html: { class: 'selectpicker', "data-live-search" => "true", multiple: true }, hint: t('instance_admin.settings.configuration.leave_blank_to_use_all_countries')
+        = f.input :allowed_countries, collection: Country.all, value_method: :name,  input_html: { "data-live-search" => "true", multiple: true }, hint: t('instance_admin.settings.configuration.leave_blank_to_use_all_countries')
       .input-container.col-xs-6
-        = f.input :default_country, collection: Country.all, value_method: :name, input_html: { class: 'selectpicker', "data-live-search" => "true"}
+        = f.input :default_country, collection: Country.all, value_method: :name, input_html: { "data-live-search" => "true"}
     .row
       .input-container.col-xs-6
         = f.input :allowed_currencies, as: :currency,  input_html: { class: 'selectpicker', "data-live-search" => "true", multiple: true }, hint: t('instance_admin.settings.configuration.leave_blank_to_use_all_currencies')

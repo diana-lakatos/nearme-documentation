@@ -23,7 +23,7 @@ class ElasticIndexerJob < Job
         else raise ArgumentError, "ElasticIndexer Unknown operation '#{@operation}'"
       end
     rescue StandardError => e
-      raise e if e.is_a?(Faraday::Error::ConnectionFailed)
+      raise e if e.is_a?(Faraday::Error::ConnectionFailed) && !Rails.env.development?
     end
   end
 end

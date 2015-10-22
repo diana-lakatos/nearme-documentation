@@ -1,0 +1,57 @@
+- title t "dashboard.products.manage"
+- content_for :page_header do
+  %h1= yield :title
+
+-# top navigation in listing, this has to be duplicated
+-# for different mobile / desktop elements
+
+%nav.panel-nav-mobile.visible-sm.visible-xs
+  = dropdown_menu @product_type.name.pluralize, { wrapper_class: 'links' } do
+    - Spree::ProductType.all.each do |product_type|
+      %li{class: product_type == @product_type ? "active" : ""}
+        = link_to product_type.name.pluralize, dashboard_company_product_type_products_path(product_type)
+
+  .options
+    = link_to new_dashboard_company_product_type_product_path(@product_type), class: "btn btn-primary" do
+      %span.fa.fa-plus
+      = t('dashboard.items.new_listing_short')
+
+
+%nav.panel-nav.hidden-xs.hidden-sm
+  %ul.tabs.pull-left
+    - Spree::ProductType.all.each do |product_type|
+      %li{class: product_type == @product_type ? "active" : ""}
+        = link_to product_type.name.pluralize, dashboard_company_product_type_products_path(product_type)
+
+  .pull-right.options
+    - if HiddenUiControls.find('dashboard/transactables/bulk_upload').visible?
+      = link_to t('data_upload.manage.bulk_upload'), new_dashboard_company_product_type_data_upload_path(@product_type), data: { modal: true }
+
+    = link_to new_dashboard_company_product_type_product_path(@product_type), class: "btn btn-primary navbar-btn" do
+      %span.fa.fa-plus
+      = t('dashboard.items.list_new_item')
+
+.panel.panel-default
+  .panel-body
+
+    - if HiddenUiControls.find('dashboard/products/search').visible?
+      = dashboard_simple_form_for '', url: dashboard_company_product_type_products_path(@product_type), :method => :get, html: { class: 'search' } do |f|
+        = f.input :query, as: :search, label: t('dashboard.items.search.search_your_products'), input_html: { value: (params[:search] || {})[:query] }, label_html: { class: 'sr-only' }
+        = f.button :submit, t('dashboard.items.search.search'), class: "hidden-xs hidden-sm btn btn-default"
+
+  - if @products.empty?
+    %p.empty-resultset= t('dashboard.items.empty', name: @product_type.name.pluralize.downcase)
+  - else
+    %table.table.table-listing
+      %thead.hidden-sm.hidden-xs
+        %tr
+          %th.thumb{:scope => "col"}= t('dashboard.items.columns.photo')
+          %th.name{:scope => "col"}= t('dashboard.items.columns.name')
+          %th.quantity{:scope => "col"}= t('dashboard.items.columns.quantity')
+          %th.price{:scope => "col"}= t('dashboard.items.columns.price')
+          %td.actions
+      %tbody
+        - @products.each do |product|
+          = render 'product', product: product.decorate
+
+= will_paginate_dashboard @products

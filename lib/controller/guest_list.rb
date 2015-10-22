@@ -22,7 +22,7 @@ module Controller
         @state = DEFAULT_STATE
       end
       data = send(@state.to_sym)
-      @reservations = data[:reservations].decorate
+      @reservations = data[:reservations].try(:decorate)
       @recurring_bookings = data[:recurring_bookings]
       self
     end

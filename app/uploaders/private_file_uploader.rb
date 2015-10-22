@@ -1,7 +1,7 @@
 class PrivateFileUploader < BaseUploader
 
   def extension_white_list
-    %w(jpg jpeg png pdf doc docx)
+    Rails.application.config.private_upload_file_types
   end
 
   def fog_public

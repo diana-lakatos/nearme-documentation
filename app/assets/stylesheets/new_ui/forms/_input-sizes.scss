@@ -1,0 +1,19 @@
+// custom input widths
+@media (min-width: $screen-sm-min) {
+    .form-control-xs,
+    .form-inline .form-control-xs,
+    .form-inline .form-control-xs .input-group {
+        > input, > select, > textarea {
+            max-width: 70px;
+        }
+    }
+
+    .form-control-sm,
+    .form-inline .form-control-sm,
+    .form-control-sm .input-group,
+    .form-inline .form-control-sm .input-group {
+        > input, > select, > textarea {
+            max-width: 140px;
+        }
+    }
+}

@@ -11,7 +11,7 @@
 
       .col-md-3
         %p= t("dashboard.user_recurring_bookings.#{recurring_booking.interval}_price")
-        %p= humanized_money_with_cents_and_symbol(current_user == recurring_booking.host ? recurring_booking.total_amount - recurring_booking.service_fee_amount_guest : recurring_booking.total_amount)
+        %p= recurring_booking.total_price_for(current_user)
 
       - if recurring_booking.recurring_booking_periods.any?
         .col-md-3

@@ -1,0 +1,5 @@
+.form-inline
+  -if @transactable_type.action_price_per_unit?
+    = f.input :quantity, as: :hidden, value: 1, wrapper_html: { class: 'form-control-sm'}, label_html: { class: 'block-label' }
+  -else
+    = f.input :quantity, wrapper_html: { class: 'form-control-sm'}, label_html: { class: 'block-label' }

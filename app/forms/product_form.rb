@@ -66,6 +66,10 @@ class ProductForm < Form
     categories & category.descendants
   end
 
+  def common_categories_json(category)
+    JSON.generate(common_categories(category).map { |c| { id: c.id, name: c.translated_name }})
+  end
+
   def category_ids=ids
     @product.category_ids= ids.map {|e| e.gsub(/\[|\]/, '').split(',')}.flatten.compact
   end

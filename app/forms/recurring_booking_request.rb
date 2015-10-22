@@ -57,7 +57,15 @@ class RecurringBookingRequest < Form
   end
 
   def process
-    valid? && setup_credit_card_customer && errors.empty? && save_reservations
+    valid? && check_overbooking && setup_credit_card_customer && errors.empty? && save_reservations
+  end
+
+  def check_overbooking
+    unless confirm_reservations? || @recurring_booking.check_overbooking
+      errors.add(:base, @recurring_booking.errors[:base].first)
+      return false
+    end
+    true
   end
 
   def display_phone_and_country_block?

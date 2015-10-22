@@ -1,0 +1,15 @@
+- title t('dashboard.waiver_agreements.title')
+
+- content_for :page_header do
+  %h1= yield :title
+
+  .options
+    = link_to t('dashboard.waiver_agreements.add_html'), new_dashboard_company_waiver_agreement_template_path, data: { modal: true }
+
+.panel
+  .panel-body
+    - if @waiver_agreement_templates.empty?
+      %p.empty-resultset= t('dashboard.waiver_agreements.no_entries')
+    - else
+      = render @waiver_agreement_templates
+

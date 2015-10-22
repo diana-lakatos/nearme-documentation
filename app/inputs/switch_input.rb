@@ -6,9 +6,9 @@ class SwitchInput < SimpleForm::Inputs::BooleanInput
 
     template.content_tag(:div, :class => 'onoffswitch') do
       build_check_box(unchecked_value, merged_input_options) +
-      @builder.label(label_target, { class: 'onoffswitch-label'}) {
-        template.content_tag(:div, '', { class: 'onoffswitch-inner' }) + template.content_tag(:span, '', {class: 'onoffswitch-switch'})
-      }
+      @builder.label(label_target, { class: 'onoffswitch-label'}) do
+        template.content_tag(:div, '', { class: 'onoffswitch-inner', data: { :"label-off" => 'Off', :"label-on" => 'On' } }) + template.content_tag(:span, '', {class: 'onoffswitch-switch'})
+      end
     end
   end
 end

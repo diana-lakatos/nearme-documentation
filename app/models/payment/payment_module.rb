@@ -18,7 +18,7 @@ module Payment::PaymentModule
   end
 
   def active_merchant_payment?
-    self.payment_method.capturable?
+    self.payment_method.try(:capturable?)
   end
 
   def payment_gateway

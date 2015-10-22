@@ -1,0 +1,25 @@
+%hr/
+
+.transactable-schedule-container
+
+  %h4.control-label
+    = t :event_runs, scope: [:pricing, :schedule]
+
+  - f.object.schedule_rules.build if f.object.schedule_rules.blank?
+  = f.simple_fields_for :schedule_rules  do |schedule_rule_form|
+    - Time.use_zone(f.object.scheduable.try(:timezone).presence || f.object.timezone) do
+      = render 'schedules/schedule_rule_fields', f: schedule_rule_form
+
+  %p.sep.add-availability-wrapper
+    %span
+      = t :different_event_availability_info, scope: [:pricing, :availability]
+
+    = link_to_add_association f, :schedule_rules, partial: 'schedules/schedule_rule_fields', class: 'button-a small' do
+      %button.btn.btn-primary{:type => "button"}
+        = t :add_availability, scope: [:pricing, :availability]
+
+  %hr/
+
+  = render 'schedules/unavailability', f: f
+
+%hr/

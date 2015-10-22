@@ -5,36 +5,37 @@ module AvailabilityRulesHelper
   end
 
   def availability_choices(object)
-    # Whether or not the "Custom" rules option is checked. There is a case where this is forced off (defer)
-    custom_checked = object.availability_template_id.blank?
-
     # Our set of choice options
-    choices = []
-
-    # Are we dealing with an object that can "defer" availability rules to another object?
-    if object.respond_to?(:display_defered_availability_rules?) && object.display_defered_availability_rules?
-      defer_options = { :id => "availability_rules_defer", :'data-clear-rules' => true }
-      if object.defer_availability_rules?
-        defer_options[:checked] = true
-
-        # In deferring, custom is not checked.
-        custom_checked = false
-      end
-
-      choices << ['', t('simple_form.labels.availability_template.use_parent_availability'), defer_options]
-    end
+    choices = {}
 
     # Add choices for each of the pre-defined templates
-    ServiceType.first.availability_templates.each do |template|
-      choices << [template.id, t('simple_form.labels.availability_template.full_name.' + template.name.underscore.tr(' ', '_')), { :id => "availability_template_id_#{template.id}" }]
+    parent_objects = [object.instance, object.try(:service_type), object].compact
+    AvailabilityTemplate.for_parents(parent_objects).order("transactable_type_id ASC").decorate.each do |template|
+      options = {
+        id: "availability_template_id_#{template.id}",
+        description: template.translated_description
+      }
+      options[:'data-custom-rules'] = true if template.custom_for_transactable?
+      choices[template.parent_type] ||= []
+      choices[template.parent_type] << [template.id, template.translated_name, options]
     end
 
-    # Add choice for the 'Custom' rule creation
-    custom_options = { :id => "availability_rules_custom", :'data-custom-rules' => true }
-    custom_options[:checked] = custom_checked if custom_checked
-    choices << ['custom', t('simple_form.labels.availability_template.custom'), custom_options]
+    unless object.try(:hide_defered_availability_rules?)
+      defer_options = { :id => "availability_rules_defer" }
+      defer_options[:description] = t('simple_form.hints.availability_template.description.location_hours')
+      choices['use_location'] = [['', t('simple_form.labels.availability_template.use_parent_availability'), defer_options]]
+    end
 
-    # Return our set of choices
+    #Add choice for the 'Custom' rule creation
+    unless choices['Transactable']
+      custom_options = { :id => "availability_rules_custom", :'data-custom-rules' => true, description: t('simple_form.hints.availability_template.description.custom')}
+      custom_options[:checked] = object.availability_template.try(:custom_for_transactable?)
+      choices['Transactable'] = [['custom', t('simple_form.labels.availability_template.custom'), custom_options]]
+    end
+
+    # Return our set of choices in proper order
+    choices = [choices['Instance'], choices['ServiceType'], choices['use_location'], choices['User'], choices['Transactable']].flatten(1).compact
+    choices.first.last[:checked] = true unless choices.find{|ch| ch.last[:checked]}
     choices
   end
 
@@ -50,7 +51,7 @@ module AvailabilityRulesHelper
   end
 
   def availability_custom?(object)
-    object.availability_template_id.blank? && (!object.respond_to?(:defer_availability_rules) || !object.defer_availability_rules?)
+    object.availability_template.try(:custom_for_transactable?)
   end
 
   # First revision of this method. Will be refined!
