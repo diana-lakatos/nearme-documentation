@@ -27,7 +27,7 @@ class ActivityFeedEvent < ActiveRecord::Base
   scoped_to_platform_context
 
   belongs_to :followed, -> { with_deleted }, polymorphic: true
-  belongs_to :event_source, polymorphic: true, dependent: :destroy
+  belongs_to :event_source, polymorphic: true
 
   has_many :comments, as: :commentable, dependent: :destroy
   has_many :spam_reports, as: :spamable

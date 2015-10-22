@@ -1,5 +1,4 @@
 class TransactableType::TransactableTypeTranslationManager < TranslationManager
-
   def create_translations!
     TransactableType::INTERNAL_FIELDS.each do |field|
       attribute = CustomAttributes::CustomAttribute.new(target: @object, instance: @object.instance, html_tag: :input, name: field.to_s)
@@ -24,6 +23,4 @@ class TransactableType::TransactableTypeTranslationManager < TranslationManager
     create_translations!
     @object.custom_attributes.reload.each(&:create_translations)
   end
-
 end
-

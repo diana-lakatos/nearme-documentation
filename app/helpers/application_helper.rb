@@ -409,4 +409,9 @@ module ApplicationHelper
     body_classes << "signed-in" if user_signed_in?
     body_classes.join(" ")
   end
+
+  def image_for_followed(followed)
+    image = (followed.try(:image).presence || followed.try(:avatar)).try(:url, :medium)
+    image.present? ? image : followed.try(:cover_photo).try(:image).try(:url, :medium)
+  end
 end
