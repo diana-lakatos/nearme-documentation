@@ -53,7 +53,7 @@ class Utils::DefaultAlertsCreator::DataUploadCreatorTest < ActionDispatch::Integ
         assert_contains "New entities: User: 0, Company: 0, Location: 2, Transactable: 3, Photo: 4", mail.html_part.body
         assert_contains "Updated entities: User: 0, Company: 0, Location: 9, Transactable: 8, Photo: 7", mail.html_part.body
         assert_contains "Deleted entities: User: 1", mail.html_part.body
-        assert_contains "href=\"http://custom.domain.com/dashboard/company/transactable_types/#{@data_upload.importable_id}/transactables/new", mail.html_part.body
+        assert_contains "href=\"http://custom.domain.com/dashboard/company/transactable_types/#{@data_upload.importable.slug}/transactables/new", mail.html_part.body
         assert_not_contains 'href="http://example.com', mail.html_part.body
         assert_not_contains 'href="/', mail.html_part.body
 
@@ -62,7 +62,7 @@ class Utils::DefaultAlertsCreator::DataUploadCreatorTest < ActionDispatch::Integ
         assert_contains "New entities: User: 0, Company: 0, Location: 2, Transactable: 3, Photo: 4", mail.text_part.body
         assert_contains "Updated entities: User: 0, Company: 0, Location: 9, Transactable: 8, Photo: 7", mail.text_part.body
         assert_contains "Deleted entities: User: 1", mail.text_part.body
-        assert_contains "http://custom.domain.com/dashboard/company/transactable_types/#{@data_upload.importable_id}/transactables/new", mail.text_part.body
+        assert_contains "http://custom.domain.com/dashboard/company/transactable_types/#{@data_upload.importable.slug}/transactables/new", mail.text_part.body
       end
 
       should 'not include deleted if irrelevant' do

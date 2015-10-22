@@ -1,8 +1,9 @@
-- title render 'locations/title', location: @location
-
-- meta_title @location.name
+- if params[:listing_id].present?
+  - title "#{@listing.name} | #{@location.name}"
+- else
+  - title render('locations/title', location: @location)
 - canonical_url location_path(@location)
-- meta_description "#{t('transactable_types.locations.listings.book_at')} #{@location.company.try(:name)}. #{mask_phone_and_email_if_necessary(@location.description).try(:truncate, 28)}"
+- meta_description "#{mask_phone_and_email_if_necessary(@location.description).try(:truncate, 130)}"
 = transactable_structured_data
 
 - content_for :hero do

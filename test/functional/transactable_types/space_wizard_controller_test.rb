@@ -238,21 +238,21 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
     should 'redirect to manage listings page if has listings' do
       create_listing
       get :new, transactable_type_id: @transactable_type.id
-      assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.id)
+      assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.slug)
     end
 
     should 'redirect to new location if no listings' do
       create_listing
       @location.destroy
       get :new, transactable_type_id: @transactable_type.id
-      assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.id)
+      assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.slug)
     end
 
     should 'redirect to new listing if no listings but with one location' do
       create_listing
       @listing.destroy
       get :new, transactable_type_id: @transactable_type.id
-      assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.id)
+      assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.slug)
     end
 
     should 'redirect to dashboard if no listings but more than one location' do
@@ -260,7 +260,7 @@ class TransactableTypes::SpaceWizardControllerTest < ActionController::TestCase
       @listing.destroy
       FactoryGirl.create(:location, :company => @company)
       get :new, transactable_type_id: @transactable_type.id
-      assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.id)
+      assert_redirected_to dashboard_company_transactable_type_transactables_path(@transactable_type.slug)
     end
 
     should 'redirect to space wizard list if no listings' do

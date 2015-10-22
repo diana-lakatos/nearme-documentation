@@ -390,6 +390,4 @@ class Instance < ActiveRecord::Base
   def generate_webhook_token
     self.webhook_token = SecureRandom.uuid.gsub(/\-/,'')
   end
-
 end
-

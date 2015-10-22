@@ -9,7 +9,7 @@
               {% capture item_active %}active{% endcapture %}
               {% for photo in listing.photos %}
                 <div class="item {{item_active}}">
-                  <a href="{{ listing.url }}"><img src="{{ photo.space_listing }}" alt="{{ listing.name }}" /></a>
+                  <a href="{{ listing.url }}"><img src="{{ photo.space_listing }}" alt="{{ listing.name }}" title="{{ listing.name }}" /></a>
                 </div>
                 {% capture item_active %}{% endcapture %}
               {% endfor %}

@@ -1864,3 +1864,8 @@ en:
       unread_messages_subject: "You have unread messages"
       you_have_unread_messages: "This is a notification to let you know you have unread messages waiting for you in your inbox."
 
+  metadata:
+    search:
+      title:
+        search: "Search"
+        in: " in "

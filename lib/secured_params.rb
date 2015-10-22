@@ -667,7 +667,12 @@ class SecuredParams
       :slug,
       :position,
       :redirect_url,
-      :open_in_new_window
+      :redirect_code,
+      :open_in_new_window,
+      :no_layout,
+      :metadata_title,
+      :metadata_meta_description,
+      :metadata_canonical_url
     ]
   end
 

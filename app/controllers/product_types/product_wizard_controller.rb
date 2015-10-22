@@ -37,7 +37,7 @@ class ProductTypes::ProductWizardController < ApplicationController
   end
 
   def find_product_type
-    @product_type = Spree::ProductType.includes(:custom_attributes).find(params[:product_type_id])
+    @product_type = Spree::ProductType.friendly.includes(:custom_attributes).find(params[:product_type_id])
   end
 
   def set_form_components

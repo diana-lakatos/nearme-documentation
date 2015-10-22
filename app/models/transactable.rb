@@ -203,6 +203,15 @@ class Transactable < ActiveRecord::Base
   monetize :weekly_subscription_price_cents, with_model_currency: :currency, allow_nil: true
   monetize :monthly_subscription_price_cents, with_model_currency: :currency, allow_nil: true
 
+  extend FriendlyId
+  friendly_id :slug_candidates, use: [:slugged, :finders, :scoped], scope: :instance
+  def slug_candidates
+    [
+      :name,
+      [:name, DateTime.now.strftime("%b %d %Y")]
+    ]
+  end
+
   # Defer to the parent Location for availability rules unless this Listing has specific
   # rules.
   def availability
@@ -378,12 +387,6 @@ class Transactable < ActiveRecord::Base
 
   def has_photos?
     photos_metadata.try(:count).to_i > 0
-  end
-
-  def to_param
-    "#{id}-#{name}".parameterize
-  rescue
-    id
   end
 
   def reserve!(reserving_user, dates, quantity)

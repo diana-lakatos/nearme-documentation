@@ -10,7 +10,7 @@ class SitemapService::Generator
   def self.for_domain(domain_id)
     @domain = Domain.find(domain_id)
     @base_url = @domain.url
-    
+
     PlatformContext.current = PlatformContext.new(@domain.target)
 
     self.nodes = []
