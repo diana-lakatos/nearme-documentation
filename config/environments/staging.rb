@@ -40,12 +40,12 @@ DesksnearMe::Application.configure do
       :path_style                 => true
     }
     config.fog_directory        = 'near-me.staging'
-    config.asset_host           = '//staging-uploads-nearme.netdna-ssl.com'
+    config.asset_host           = 'https://staging-uploads-nearme.netdna-ssl.com'
     config.storage              = :fog
   end
 
-  config.action_controller.asset_host = "//staging-nearme.netdna-ssl.com"
-  config.action_mailer.asset_host     = "//staging-nearme.netdna-ssl.com"
+  config.action_controller.asset_host = "https://staging-nearme.netdna-ssl.com"
+  config.action_mailer.asset_host     = "https://staging-nearme.netdna-ssl.com"
 
   config.paypal_email = "admin-facilitator@desksnear.me"
   config.paypal_username = "admin-facilitator_api1.desksnear.me"
