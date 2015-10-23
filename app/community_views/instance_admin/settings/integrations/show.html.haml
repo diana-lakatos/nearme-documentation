@@ -1,0 +1,65 @@
+= simple_nested_form_for @instance, :url => instance_admin_settings_integrations_path, :html => { :multipart => true } do |f|
+  .content-container
+    %h4
+      = t('instance_admin.settings.integrations.test_mode')
+    .row
+      .input-container.col-xs-12
+        = f.input :test_mode, required: false, as: :boolean, label: (t('instance_admin.settings.integrations.test_mode_section.test_mode_label') + " " + link_to(t('instance_admin.settings.integrations.test_mode_section.test_mode_label_link'), instance_admin_settings_configuration_path, :target => "_blank")).html_safe, inline_label: true
+    .row
+      .input-container.col-xs-12
+        = f.button :submit, t('instance_admin.save'), class: 'btn btn-light pull-right'
+
+  .content-container
+    %h4
+      = t('instance_admin.settings.integrations.authentication')
+    - Authentication::PROVIDERS.each do |provider|
+      .row
+        .input-container.col-xs-6
+          = f.input :"#{provider.downcase}_consumer_key", label: "#{provider} Consumer Key", required: false, input_html: { class: 'form-control' }
+        .input-container.col-xs-6
+          = f.input :"#{provider.downcase}_consumer_secret", label: "#{provider} Consumer Secret", required: false, input_html: { class: 'form-control' }
+
+  .content-container
+    %h4
+      = t('instance_admin.settings.configuration.user_authorization')
+    .row
+      .input-container.col-xs-12
+        = f.input :default_oauth_signin_provider, collection: Authentication::ALLOWED_LOGIN_PROVIDERS.map(&:downcase), input_html: { class: 'form-control' }, required: false
+
+  .content-container
+    %h4
+      = t('instance_admin.settings.integrations.webhook_token')
+    .row
+      .input-container.col-xs-6
+        = f.input :webhook_token, input_html: { class: 'form-control' }, label: false
+
+  .content-container
+    %h4
+      = t('instance_admin.settings.integrations.ga_tracking_codes')
+    .row
+      .input-container.col-xs-12
+        = f.simple_fields_for :domains do |domains_form|
+          = domains_form.input :google_analytics_tracking_code, label: domains_form.object.name, placeholder: "UA-10000000-1", input_html: { class: 'form-control' }
+
+  .content-container
+    %h4
+      = t('instance_admin.settings.integrations.sms')
+    .row
+      .input-container.col-xs-6
+        = f.input :"twilio_consumer_key", label: "Twilio Account Sid", required: false, input_html: { class: 'form-control' }
+      .input-container.col-xs-6
+        = f.input :"test_twilio_consumer_key", label: "Twilio Account Test Sid", required: false, input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-6
+        = f.input :"twilio_consumer_secret", label: "Twilio Auth Token", required: false, input_html: { class: 'form-control' }
+      .input-container.col-xs-6
+        = f.input :"test_twilio_consumer_secret", label: "Twilio Test Auth Token", required: false, input_html: { class: 'form-control' }
+    .row
+      .input-container.col-xs-6
+        = f.input :"twilio_from_number", label: "Twilio 'From' Number", required: false, input_html: { class: 'form-control' }
+      .input-container.col-xs-6
+        = f.input :"test_twilio_from_number", label: "Twilio Test 'From' Number", required: false, input_html: { class: 'form-control' }
+
+    = content_for :header_buttons do
+      = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form.edit_instance' }
+

@@ -1,0 +1,36 @@
+= simple_form_for [:instance_admin, :projects, @topic], :html => { :multipart => true} do |f|
+  .row
+    .input-container.col-xs-12
+      = f.input :name, input_html: { class: 'form-control' }
+  .row
+    .input-container.col-xs-12
+      = f.input :featured, input_html: { class: 'checkbox' }
+  .row
+    .input-container.col-xs-12
+      = f.input :description, input_html: { class: 'form-control' }
+  .row
+    .input-container.col-xs-12
+      = f.input :image, input_html: { class: 'form-control' }
+      = image_tag @topic.image.url(:medium)
+  .row
+    .input-container.col-xs-12
+      = f.input :cover_image, input_html: { class: 'form-control' }
+      = image_tag @topic.cover_image.url(:medium)
+
+  .row
+    .input-container.col-xs-12
+      = f.association :category, input_html: { class: 'form-control' }
+
+  = f.simple_fields_for :data_source, @topic.data_source || DataSource::RssDataSource.new(data_sourcable: @topic) do |data_source_form|
+
+    = data_source_form.input :id, as: :hidden
+    %input{type: 'hidden', name: "#{data_source_form.object_name}[type]", value: 'DataSource::RssDataSource'}
+
+    .row
+      .input-container.col-xs-12
+        = data_source_form.input :fields, as: :check_boxes, collection: [ :title, :description, :dc_creator]
+    = render 'instance_admin/data_sources/form', f: data_source_form
+
+  = content_for :header_buttons do
+    = f.button :submit, 'Save', class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }
+
