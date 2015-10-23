@@ -960,7 +960,10 @@ DesksnearMe::Application.routes.draw do
     end
   end
 
-  get "/:slug(.:format)", to: 'pages#show', as: :pages, constraints: PageConstraints.new
+  # Legacy pages redirect. Can be removed in Feb 16th. The redirect matches the route below.
+  get "/pages/:slug(.:format)" => redirect { |request, params| "/#{params[:slug]}" }
+
+  get "/:slug(.:format)", to: 'pages#show', as: :pages, constraints: Constraints::PageConstraints.new
 
   # delayed_job web gui
   match "/delayed_job" => DelayedJobWeb, :anchor => false, via: [:get, :post]
