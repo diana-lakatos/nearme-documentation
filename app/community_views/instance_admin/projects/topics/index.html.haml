@@ -1,0 +1,17 @@
+.content-container
+  %h4 Manage Topics
+  .row
+    .table-container.col-xs-12
+      %table.table
+        %tbody
+          - @topics.each do |resource|
+            %tr
+              %td= resource.name.humanize
+              %td= resource.category.try(:name)
+              %td= resource.data_source.settings['endpoint'] if resource.data_source
+              %td= link_to 'Edit', edit_instance_admin_projects_topic_path(resource), class: 'pull-right'
+              %td= link_to "Delete #{resource.category.try(:name)}", instance_admin_projects_topic_path(resource), method: :delete, data: { confirm: "Are you sure you want to delete this topic?", class: "pull-right" }
+
+= content_for :header_buttons do
+  = link_to 'New Topic', new_instance_admin_projects_topic_path, class: 'pull-right btn btn-blue'
+
