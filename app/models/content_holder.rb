@@ -3,8 +3,10 @@ class ContentHolder < ActiveRecord::Base
   scoped_to_platform_context
   class NotFound < ActiveRecord::RecordNotFound; end
 
+  ANY_PAGE = 'any_page'
+
   scope :enabled, -> { where(enabled: true) }
-  scope :by_inject_pages, -> (path_group) { where("? = ANY (inject_pages)", path_group) }
+  scope :by_inject_pages, -> (path_group) { where("(? = ANY (inject_pages)) OR (? = ANY (inject_pages))", path_group, ANY_PAGE) }
 
   belongs_to :theme
   belongs_to :instance
@@ -29,11 +31,7 @@ class ContentHolder < ActiveRecord::Base
     [name, name_was].each do |field|
       Rails.cache.delete("theme.#{theme_id}.content_holders.names.#{field}")
     end
-    (inject_pages + inject_pages_was).uniq.each do |page|
-      INJECT_PAGES.each_pair do |controller, group|
-        Rails.cache.delete("views/theme.#{theme_id}.content_holders.paths.#{controller}") if group == page
-      end
-    end
+    Rails.cache.delete_matched("views/theme.#{theme_id}.content_holders.paths.*")
   end
 
   def with_content_for
