@@ -56,5 +56,5 @@
       .contain
         / white box
         .box-a
-          = render 'shared/show_projects', projects: @all_projects, container: '#projects', see_more_route: see_more_projects_path(id: @user.id, type: @user.class.name, container: '#projects')
+          = render 'shared/show_projects', projects: @all_projects, container: '#projects', see_more_route: see_more_projects_path(id: @user.id, type: @user.class.name, container: '#projects'), sort_options: Project::SORT_OPTIONS + ['Pending approvals']
 

@@ -33,6 +33,10 @@ class ProjectDrop < BaseDrop
     urlify(routes.edit_dashboard_project_type_project_path(@project.transactable_type, @project))
   end
 
+  def edit_url_with_token
+    urlify(routes.edit_dashboard_project_type_project_path(@project.transactable_type, @project, token_key => @project.creator.try(:temporary_token), anchor: :collaborators))
+  end
+
   def topics_names
     project.topics.pluck(:name).join(', ')
   end

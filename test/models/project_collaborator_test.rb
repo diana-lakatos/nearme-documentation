@@ -20,7 +20,12 @@ class ProjectCollaboratorTest < ActiveSupport::TestCase
       assert @project_collaborator.pending?
 
       @project_collaborator.update_attributes({approved: 'true'})
+      assert @project_collaborator.approved_by_owner?
+      refute @project_collaborator.approved_by_user?
+      @project_collaborator.approve_by_user!
+      assert @project_collaborator.approved_by_user?
       assert @project_collaborator.approved?
+      refute @project_collaborator.pending?
 
       assert_equal [@project_collaborator], @project_collaborator.project.project_collaborators.approved
     end

@@ -161,6 +161,10 @@ class UserDrop < BaseDrop
     urlify(routes.profile_path(@user.slug))
   end
 
+  def projects_profile_url_with_token
+    urlify(routes.profile_path(@user.slug, token_key => @user.try(:temporary_token), anchor: :projects))
+  end
+
   # url to the section in the application where a user can change his password
   def set_password_url_with_token
     routes.set_password_path(token_key => @user.try(:temporary_token))
