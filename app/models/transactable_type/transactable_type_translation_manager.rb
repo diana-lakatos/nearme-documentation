@@ -1,5 +1,4 @@
 class TransactableType::TransactableTypeTranslationManager < TranslationManager
-
   def create_translations!
     TransactableType::INTERNAL_FIELDS.each do |field|
       attribute = CustomAttributes::CustomAttribute.new(target: @object, instance: @object.instance, html_tag: :input, name: field.to_s)
@@ -20,10 +19,8 @@ class TransactableType::TransactableTypeTranslationManager < TranslationManager
       end
       ids_to_delete
     end
-    Translation.destroy(ids)
     create_translations!
     @object.custom_attributes.reload.each(&:create_translations)
+    Translation.destroy(ids) unless translation_namespace_was == translation_namespace
   end
-
 end
-

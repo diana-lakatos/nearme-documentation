@@ -20,14 +20,6 @@
             {% if platform_context.searcher_type == "geo" and platform_context.bookable? == true and platform_context.buyable? == true %}
               <input class="query" id="search_prod" name="query" placeholder="{{ platform_context.search_field_placeholder }}" type="text" style="display: none;" />
             {% endif %}
-
-            {% if transactable_types.size > 1 %}
-              {% if platform_context.tt_select_type == 'radio' %}
-                {% for transactable_type in transactable_types %}
-                  {{ transactable_type.name}} <input type="radio" name="transactable_type_id" value="{{ transactable_type.id }}" {% if forloop.first == true %} checked {% endif %} data-buyable="{{transactable_type.buyable?}}">
-                {% endfor %}
-              {% endif %}
-            {% endif %}
           </div>
 
           {% if platform_context.fulltext_geo_search? %}
@@ -83,6 +75,18 @@
             <div id="suggest_location" style="display: none"></div>
           </div>
         </div>
+
+        {% if transactable_types.size > 1 and platform_context.tt_select_type == 'radio' %}
+          <div class="row-fluid">
+            <div class="span10">
+              <div class="search-transactable--radio">
+                {% for transactable_type in transactable_types %}
+                <label for="transactable-type-{{ transactable_type.id }}"><input type="radio" name="transactable_type_id" value="{{ transactable_type.id }}" id="transactable-type-{{ transactable_type.id }}" {% if forloop.first == true %} checked {% endif %} data-buyable="{{transactable_type.buyable?}}"> {{ transactable_type.name}}</label>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
       </div>
 
       <input type="submit"/>

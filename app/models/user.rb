@@ -162,7 +162,7 @@ class User < ActiveRecord::Base
 
   scope :admin,     -> { where(admin: true) }
   scope :not_admin, -> { where("admin iS NULL") }
-  scope :with_joined_project_collaborations, -> { joins("LEFT OUTER JOIN project_collaborators pc ON users.id = pc.user_id AND (pc.approved_at IS NOT NULL AND pc.deleted_at IS NULL)")}
+  scope :with_joined_project_collaborations, -> { joins("LEFT OUTER JOIN project_collaborators pc ON users.id = pc.user_id AND (pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL AND pc.deleted_at IS NULL)")}
 
   scope :by_topic, -> (topic_ids) do
     if topic_ids.present?
@@ -273,12 +273,25 @@ class User < ActiveRecord::Base
                           token_expires_at: expires_at)
   end
 
-  def all_projects
-    Project.where("
+  def all_projects(with_pending = false)
+    projects = Project.where("
       creator_id = ? OR
-      EXISTS (SELECT 1 from project_collaborators pc WHERE pc.project_id = projects.id AND pc.user_id = ?)",
-    id, id)
+      EXISTS (SELECT 1 from project_collaborators pc WHERE pc.project_id = projects.id AND pc.user_id = ? AND deleted_at IS NULL)
+      ",id, id)
+    if with_pending
+      projects = projects.select(
+        ActiveRecord::Base.send(:sanitize_sql_array,
+          ["projects.*,
+            (SELECT pc.id from project_collaborators pc WHERE pc.project_id = projects.id AND pc.user_id = ? AND ( approved_by_user_at IS NULL OR approved_by_owner_at IS NULL) AND deleted_at IS NULL LIMIT 1) as pending_collaboration
+            ",
+            id
+          ]
+        )
+      )
+    end
+    projects
   end
+
 
   def category_ids=(ids)
     super(ids.map {|e| e.gsub(/\[|\]/, '').split(',')}.flatten.compact.map(&:to_i))

@@ -71,10 +71,12 @@ class Project < ActiveRecord::Base
       order('projects.followers_count DESC')
     when /contributors/i
       group('projects.id').
-        joins("LEFT OUTER JOIN project_collaborators pc ON projects.id = pc.project_id AND (pc.approved_at IS NOT NULL AND pc.deleted_at IS NULL)").
+        joins("LEFT OUTER JOIN project_collaborators pc ON projects.id = pc.project_id AND (pc.approved_by_owner_at IS NOT NULL AND pc.approved_by_user_at IS NOT NULL AND pc.deleted_at IS NULL)").
         order('count(pc.id) DESC')
     when /featured/i
       where(featured: true)
+    when /pending/i
+      where("(SELECT pc.id from project_collaborators pc WHERE pc.project_id = projects.id AND pc.user_id = 6520 AND ( approved_by_user_at IS NULL OR approved_by_owner_at IS NULL) AND deleted_at IS NULL LIMIT 1) IS NOT NULL")
     else
       all
     end
@@ -83,24 +85,9 @@ class Project < ActiveRecord::Base
   after_commit :user_created_project_event, on: :create
   def user_created_project_event
     event = :user_created_project
-    affected_objects = [self.creator] + self.topics
+    user = self.creator.try(:object).presence || self.creator
+    affected_objects = [user] + self.topics
     ActivityFeedService.create_event(event, self, affected_objects, self)
-  end
-
-  after_commit :user_added_photos_to_project_event, on: :update
-  def user_added_photos_to_project_event
-    if self.photos.map(&:id_changed?)
-      event = :user_added_photos_to_project
-      ActivityFeedService.create_event(event, self, [self.creator], self)
-    end
-  end
-
-  after_commit :user_added_links_to_project_event, on: :update
-  def user_added_links_to_project_event
-    if self.links.map(&:id_changed?)
-      event = :user_added_links_to_project
-      ActivityFeedService.create_event(event, self, [self.creator], self)
-    end
   end
 
   def to_liquid
@@ -156,7 +143,7 @@ class Project < ActiveRecord::Base
       user = User.find_by(email: collaborator_email)
       next unless user.present?
       unless self.project_collaborators.where(user: user).exists?
-        WorkflowStepJob.perform(WorkflowStep::ProjectWorkflow::CollaboratorAddedByProjectOwner, self.project_collaborators.create!(user: user, approved_at: Time.zone.now).id)
+        WorkflowStepJob.perform(WorkflowStep::ProjectWorkflow::CollaboratorAddedByProjectOwner, self.project_collaborators.create!(user: user, approved_by_owner_at: Time.zone.now).id)
       end
     end
   end

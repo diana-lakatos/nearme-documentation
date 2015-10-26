@@ -280,6 +280,19 @@ section.search#content {
       margin-bottom: 8px;
     }
   }
+
+  .search-transactable--radio {
+    padding: 10px 0 0;
+    label {
+      margin: 0 20px 0 0;
+      display: inline-block;
+      white-space: nowrap;
+
+      input {
+        padding: 0;
+      }
+    }
+  }
 }
 
 .select2-results {

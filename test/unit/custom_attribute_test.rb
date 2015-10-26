@@ -4,10 +4,6 @@ class CustomAttributeTest < ActiveSupport::TestCase
 
   context 'translations' do
 
-    setup do
-      CustomAttributes::CustomAttribute::TranslationCreator.any_instance.stubs(:should_create_translations?).returns(true)
-    end
-
     context 'input' do
       setup do
         @custom_attribute = FactoryGirl.create(:custom_attribute_input,

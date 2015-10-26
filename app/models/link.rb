@@ -10,6 +10,14 @@ class Link < ActiveRecord::Base
 
   mount_uploader :image, LinkImageUploader
 
+  after_commit :user_added_links_to_project_event, on: [:create, :update]
+  def user_added_links_to_project_event
+    if linkable_type == "Project"
+      event = :user_added_links_to_project
+      ActivityFeedService.create_event(event, self.linkable, [self.linkable.creator], self.linkable)
+    end
+  end
+
   protected
 
   def text_or_image_present

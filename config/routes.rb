@@ -507,7 +507,11 @@ DesksnearMe::Application.routes.draw do
 
   resources :topics, only: [:show]
   resources :projects, only: [:show] do
-    resources :project_collaborators, only: [:create, :destroy]
+    resources :project_collaborators, only: [:create, :destroy] do
+      member do
+        get :accept
+      end
+    end
     resources :comments, only: [:update, :create, :index, :destroy] do
       resources :spam_reports,  only: [:create, :destroy]
     end

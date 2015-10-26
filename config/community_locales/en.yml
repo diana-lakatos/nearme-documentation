@@ -194,11 +194,17 @@ en:
   edit_project: 'Edit Project'
   actions: 'Actions'
   approve: 'Approve'
+  decline: 'Decline'
+  cancel_request: "Cancel request"
   approved: 'Approved'
   pending: 'Pending'
   save_changes: 'Save Changes'
   delete_project: 'Delete Project'
   draft_project: 'This project is disabled.'
+
+  #collaborators
+  collaboration_cancelled: "Collaboration request has been cancelled."
+  collaboration_accepted: "Collaboration request has been approved."
 
   # account
   my_account: 'My Account'

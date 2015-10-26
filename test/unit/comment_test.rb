@@ -31,8 +31,10 @@ class CommentTest < ActiveSupport::TestCase
     # 2) Project created for followed
     # 3) User commented on activity feed event
     # 4 and 5) Topics created for projects above.
+    # 6 and 7) Link / Photo events
+    # 8) For user.
     #
-    assert_difference "ActivityFeedEvent.count", 6 do
+    assert_difference "ActivityFeedEvent.count", 8 do
       FactoryGirl.create(:comment, commentable: FactoryGirl.create(:activity_feed_event))
     end
   end
