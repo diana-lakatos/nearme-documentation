@@ -62,7 +62,7 @@
           = render 'dashboard/projects/link_fields', f: link_form
         .fieldset-actions
           = link_to_add_association t(:add_link), f, :links, class: 'button-a small'
-
+    %anchor#collaborators
     - if current_user.id == f.object.creator_id
       = f.input :seek_collaborators, as: :switch, wrapper_html: { class: 'sep' }
 

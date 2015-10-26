@@ -36,6 +36,7 @@ class WorkflowStep::ProjectWorkflow::BaseStep < WorkflowStep::BaseStep
       project_collaborator: @project_collaborator,
       project: @project,
       user: @user,
+      enquirer: @user,
       owner: @owner
     }
   end

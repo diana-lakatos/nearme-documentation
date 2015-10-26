@@ -1,5 +1,10 @@
-<h1>Hello, {{ user.first_name }}</h1>
+<h1>Hi {{ user.first_name }},</h1>
 
-<p><a href="{{ owner.profile_url }}">{{ owner.first_name }}</a> has added you to collaborator list for project called <a href="{{ project.show_url }}">{{ project.name }}</a>
-<p>If you believe you were added by mistake, you can <a href="{{ project.edit_url }}">remove yourself from collaborators list</a>
+<p>
+  <a href="{{ owner.profile_url }}">{{ owner.name }}</a>  has invited you to become
+  a collaborator on <a href="{{ project.show_url }}">{{ project.name }}</a>.
+  Learn more about the project.
+</p>
+
+<p><a href="{{ user.projects_profile_url_with_token }}" >Accept | Decline invitation</a></p>
 
