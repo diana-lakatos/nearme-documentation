@@ -224,10 +224,13 @@ class RegistrationsController < Devise::RegistrationsController
     @user = current_user
     @user.password = params[:user][:password]
     @user.skip_password = false
+    @user.custom_validation = false
+    @user.skip_custom_attribute_validation = true
     if @user.save
       flash[:success] = t('flash_messages.registrations.password_set')
       redirect_to edit_user_registration_path(:token => @user.authentication_token)
     else
+      flash[:success] = @user.errors.full_messages.join(', ')
       render :set_password
     end
   end
