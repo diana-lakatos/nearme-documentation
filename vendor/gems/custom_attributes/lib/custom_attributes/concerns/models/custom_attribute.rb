@@ -43,9 +43,12 @@ module CustomAttributes
           before_save :normalize_html_options
 
           def self.clear_cache(target_type, instance_id = nil)
-            instance = instance_id ? Instance.find(instance_id) : PlatformContext.current.try(:instance)
-            return unless instance
-            instance.send(target_type.demodulize.underscore.pluralize).pluck(:id).each do |target_id|
+            instance = Instance.find(instance_id) if instance_id
+            if defined?(PlatformContext)
+              instance ||= PlatformContext.current.try(:instance)
+              return unless instance
+            end
+            (instance.try(:send, target_type.demodulize.underscore.pluralize).try(:pluck, :id) || target_type.constantize.pluck(:id)).each do |target_id|
               if (timestamp = ::CustomAttributes::CustomAttribute::CacheTimestampsHolder.get(target_id, target_type)).present?
                 if self.with_changed_attributes(target_id, target_type, timestamp).count > 0
                   ::CustomAttributes::CustomAttribute::CacheDataHolder.destroy(target_id, target_type)

@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 20141003121911) do
     t.boolean  "internal",             default: false
     t.integer  "target_id"
     t.string   "target_type"
+    t.boolean  "searchable"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

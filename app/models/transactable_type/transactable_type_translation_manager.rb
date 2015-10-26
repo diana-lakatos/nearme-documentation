@@ -7,6 +7,9 @@ class TransactableType::TransactableTypeTranslationManager < TranslationManager
       attribute.placeholder = @object.instance.translations.find_by(key: attribute.placeholder_key_was, locale: 'en').try(:value)
       attribute.create_translations
     end
+    create_plural_and_singular_translation('name', @object.bookable_noun.presence || @object.name)
+    create_plural_and_singular_translation('lessor', @object.lessor)
+    create_plural_and_singular_translation('lessee', @object.lessee)
   end
 
   def destroy_translations!
@@ -16,16 +19,8 @@ class TransactableType::TransactableTypeTranslationManager < TranslationManager
       end
       ids_to_delete
     end
-    if translation_namespace_was != translation_namespace
-      create_translations!
-      Translation.destroy(ids)
-    end
-    create_plural_and_singular_translations!
-  end
-
-  def create_plural_and_singular_translations!
-    create_plural_and_singular_translation('name', @object.bookable_noun.presence || @object.name)
-    create_plural_and_singular_translation('lessor', @object.lessor)
-    create_plural_and_singular_translation('lessee', @object.lessee)
+    create_translations!
+    @object.custom_attributes.reload.each(&:create_translations)
+    Translation.destroy(ids) unless translation_namespace_was == translation_namespace
   end
 end

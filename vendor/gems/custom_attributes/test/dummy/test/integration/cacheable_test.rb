@@ -16,7 +16,7 @@ class CacheableTest < ActionDispatch::IntegrationTest
       @sample_model.custom_attributes
       assert_equal [@sample_model_type.id], CustomAttributes::CustomAttribute::CacheDataHolder.custom_attributes_as_array['SampleModelType'].keys
       assert_equal 1, CustomAttributes::CustomAttribute::CacheDataHolder.custom_attributes_as_array['SampleModelType'][@sample_model_type.id].count
-      assert_equal [@custom_attribute.name, @custom_attribute.attribute_type, @custom_attribute.default_value, @custom_attribute.public, nil, [], nil], CustomAttributes::CustomAttribute::CacheDataHolder.custom_attributes_as_array['SampleModelType'][@sample_model_type.id].first
+      assert_equal [@custom_attribute.name, @custom_attribute.attribute_type, @custom_attribute.default_value, @custom_attribute.public, nil, [], nil, nil], CustomAttributes::CustomAttribute::CacheDataHolder.custom_attributes_as_array['SampleModelType'][@sample_model_type.id].first
       assert_equal [@sample_model_type.id], CustomAttributes::CustomAttribute::CacheTimestampsHolder.custom_attributes_cache_update_at['SampleModelType'].keys
       assert_equal Time.zone.now.utc.to_i, CustomAttributes::CustomAttribute::CacheTimestampsHolder.custom_attributes_cache_update_at['SampleModelType'][@sample_model_type.id].to_i
     end
@@ -38,7 +38,6 @@ class CacheableTest < ActionDispatch::IntegrationTest
       Timecop.freeze(Time.zone.now + 10.seconds) do
         SampleModel.clear_custom_attributes_cache
         @sample_model.custom_attributes
-        assert_equal 2, CustomAttributes::CustomAttribute::CacheDataHolder.custom_attributes_as_array['SampleModelType'][@sample_model_type.id].count
         assert_equal ['my_attribute', 'my_second_attribute'], CustomAttributes::CustomAttribute::CacheDataHolder.custom_attributes_as_array['SampleModelType'][@sample_model_type.id].map { |arr| arr[0] }.sort
         assert_not_equal old_time, CustomAttributes::CustomAttribute::CacheTimestampsHolder.custom_attributes_cache_update_at['SampleModelType'][@sample_model_type.id]
         assert_equal Time.now.utc, CustomAttributes::CustomAttribute::CacheTimestampsHolder.custom_attributes_cache_update_at['SampleModelType'][@sample_model_type.id]
