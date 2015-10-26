@@ -78,21 +78,6 @@ class ActivityFeedServiceTest < ActiveSupport::TestCase
           @user
         )
       end
-
-      # If an event has the same exact aspects (event, followed and event_source),
-      # a new event shouldn't be created
-      count = ActivityFeedEvent.count
-
-      3.times do
-        ActivityFeedService.create_event(
-          :user_followed_user,
-          followed,
-          [followed],
-          @user
-        )
-      end
-
-      assert_equal count, ActivityFeedEvent.count
     end
   end
 end

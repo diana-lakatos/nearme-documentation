@@ -33,15 +33,11 @@ class Photo < ActiveRecord::Base
     self.owner = object
   end
 
-  after_commit :project_file_added_callback, on: [:create, :update]
-
-  def project_file_added_callback
-    if image_changed? && owner.class == Project
-      ActivityFeedEvent.create(
-        followed: self.owner,
-        affected_objects: self.owner.topics.to_a,
-        event: :project_file_added
-      )
+  after_commit :user_added_photos_to_project_event, on: [:create, :update]
+  def user_added_photos_to_project_event
+    if owner_type == "Project"
+      event = :user_added_photos_to_project
+      ActivityFeedService.create_event(event, self.owner, [self.owner.creator], self.owner)
     end
   end
 

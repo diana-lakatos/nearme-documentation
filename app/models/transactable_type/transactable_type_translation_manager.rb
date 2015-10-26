@@ -1,5 +1,4 @@
 class TransactableType::TransactableTypeTranslationManager < TranslationManager
-
   def create_translations!
     TransactableType::INTERNAL_FIELDS.each do |field|
       attribute = CustomAttributes::CustomAttribute.new(target: @object, instance: @object.instance, html_tag: :input, name: field.to_s)
@@ -29,6 +28,4 @@ class TransactableType::TransactableTypeTranslationManager < TranslationManager
     create_plural_and_singular_translation('lessor', @object.lessor)
     create_plural_and_singular_translation('lessee', @object.lessee)
   end
-
 end
-

@@ -519,5 +519,8 @@ class ApplicationController < ActionController::Base
     false
   end
 
+  def user_for_paper_trail
+    user_signed_in? ? current_user.id : PaperTrail.whodunnit
+  end
 end
 

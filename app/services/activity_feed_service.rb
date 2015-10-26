@@ -30,19 +30,13 @@ class ActivityFeedService
   end
 
   def self.create_event(event, followed, affected_objects, event_source)
-    activity_feed_event = ActivityFeedEvent.where(
+    activity_feed_event = ActivityFeedEvent.create(
       followed_id: followed.id,
       followed_type: followed.class.name,
       event_source_id: event_source.id,
       event_source_type: event_source.class.name,
       event: event,
-    ).first_or_initialize
-
-    if activity_feed_event.id.present?
-      activity_feed_event.touch
-    else
-      activity_feed_event.affected_objects = affected_objects
-      activity_feed_event.save
-    end
+      affected_objects: affected_objects
+    )
   end
 end

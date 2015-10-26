@@ -5,7 +5,7 @@
 - else
   - followed = event.followed
   - body = event.description
-  - image = (followed.try(:image).presence || followed.try(:avatar)).try(:url, :medium).presence
+  - image = image_for_followed(followed)
   - title = link_to event.name, followed
 
 %section

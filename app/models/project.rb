@@ -85,24 +85,9 @@ class Project < ActiveRecord::Base
   after_commit :user_created_project_event, on: :create
   def user_created_project_event
     event = :user_created_project
-    affected_objects = [self.creator] + self.topics
+    user = self.creator.try(:object).presence || self.creator
+    affected_objects = [user] + self.topics
     ActivityFeedService.create_event(event, self, affected_objects, self)
-  end
-
-  after_commit :user_added_photos_to_project_event, on: :update
-  def user_added_photos_to_project_event
-    if self.photos.map(&:id_changed?)
-      event = :user_added_photos_to_project
-      ActivityFeedService.create_event(event, self, [self.creator], self)
-    end
-  end
-
-  after_commit :user_added_links_to_project_event, on: :update
-  def user_added_links_to_project_event
-    if self.links.map(&:id_changed?)
-      event = :user_added_links_to_project
-      ActivityFeedService.create_event(event, self, [self.creator], self)
-    end
   end
 
   def to_liquid
