@@ -4,12 +4,10 @@ Feature: A user can search for a listing
   As a user
   I want to search for a listing
 
-  Background:
-    And I am on the home page
-
   Scenario: Returning to the search results shows the previous results
     Given a listing in Auckland exists
     And a listing in Adelaide exists
+    And I am on the home page
     When I search for "Adelaide"
     And I make another search for "Auckland"
     And I leave the page and hit back
@@ -21,6 +19,7 @@ Feature: A user can search for a listing
     Given this listing has location type CoffeeShop
     Given a listing in Auckland exists
     Given this listing has location type Winery
+    And I am on the home page
     When I search for "Auckland" with location type CoffeeShop forcing list view
     Then I do see result for the CoffeeShop listing
     Then I do not see result for the Winery listing
@@ -34,7 +33,6 @@ Feature: A user can search for a listing
 
   Scenario: Displaying no results found when searching for nonexisting product.
     Given the user exists
-    And current instance is buyable
     And the product_type exists
     And I log in as a user
     When I search for product "TV"
@@ -42,7 +40,6 @@ Feature: A user can search for a listing
 
   Scenario: Displaying search results for a product.
     Given the user exists
-    And current instance is buyable
     And the product_type exists
     And I log in as a user
     And product exists with name: "Awesome product"

@@ -86,7 +86,7 @@ module ProductsIndex
     end
 
     def self.search(query, product_type = nil)
-      query_builder = Elastic::QueryBuilder.new(query.with_indifferent_access, searchable_custom_attributes(product_type))
+      query_builder = Elastic::QueryBuilder.new(query.with_indifferent_access, searchable_custom_attributes(product_type), product_type)
       __elasticsearch__.search(query_builder.product_query)
     end
 

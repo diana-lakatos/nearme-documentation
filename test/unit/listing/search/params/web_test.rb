@@ -19,7 +19,7 @@ class Listing::Search::Params::WebTest <  ActiveSupport::TestCase
   end
 
   def build_params(options)
-    Listing::Search::Params::Web.new(options)
+    Listing::Search::Params::Web.new(options, TransactableType.first)
   end
 
 end

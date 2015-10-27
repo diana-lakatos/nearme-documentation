@@ -1011,9 +1011,9 @@ ActiveRecord::Schema.define(version: 20151105191133) do
     t.string   "encrypted_google_consumer_secret",      limit: 255
     t.string   "default_oauth_signin_provider"
     t.boolean  "custom_waiver_agreements",                                                  default: true
+    t.string   "time_zone"
     t.string   "seller_attachments_access_level",       limit: 255,                         default: "disabled",    null: false
     t.integer  "seller_attachments_documents_num",                                          default: 10,            null: false
-    t.string   "time_zone"
   end
 
   add_index "instances", ["instance_type_id"], name: "index_instances_on_instance_type_id", using: :btree
@@ -3356,6 +3356,19 @@ ActiveRecord::Schema.define(version: 20151105191133) do
     t.boolean  "show_company_name",                                                              default: true
     t.boolean  "action_subscription_booking"
     t.string   "slug"
+    t.string   "default_search_view"
+    t.string   "search_engine"
+    t.string   "searcher_type"
+    t.integer  "search_radius"
+    t.boolean  "show_categories"
+    t.string   "category_search_type"
+    t.boolean  "allow_save_search"
+    t.boolean  "show_price_slider"
+    t.boolean  "search_price_types_filter"
+    t.boolean  "show_date_pickers"
+    t.boolean  "date_pickers_use_availability_rules"
+    t.string   "date_pickers_mode"
+    t.integer  "position",                                                                       default: 0
   end
 
   add_index "transactable_types", ["instance_id"], name: "index_transactable_types_on_instance_id", using: :btree

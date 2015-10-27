@@ -1,0 +1,60 @@
+%h4.control-label
+  %b= t('instance_admin.manage.search.search_results')
+
+.row
+  .input-container.col-xs-6
+    .input-col-clearfix
+      = f.input :searchable, as: :boolean, inline_label: true
+  .input-container.col-xs-6
+    .input-col-clearfix
+      = f.input :search_engine, collection: Instance::SEARCH_ENGINES, include_blank: false, input_html: { class: 'form-control' }
+
+.row
+  .input-container.col-xs-6
+    .input-col-clearfix
+      = f.input :searcher_type, collection: Instance::SEARCH_TYPES.map { |s| [s.humanize, s]}, include_blank: false, input_html: { class: 'form-control' }
+  .input-container.col-xs-6
+    .input-col-clearfix
+      = f.input :default_search_view, collection: f.object.available_search_views, include_blank: false, input_html: { class: 'form-control' }
+
+%hr
+%h4= t('instance_admin.manage.search.search_radius')
+
+.row
+  .input-container.col-xs-6
+    .input-col-clearfix
+      = f.input :search_radius, as: :integer, input_html: { class: 'form-control' }
+
+%hr
+%h4= t('instance_admin.manage.search.category_tree_search')
+.row
+  .input-container.col-xs-6
+    .input-col-clearfix
+      = f.input :show_categories, as: :boolean, inline_label: true
+  .input-container.col-xs-6
+    .input-col-clearfix
+      = f.input :category_search_type, collection: %w(AND OR), include_blank: false,
+          input_html: { class: 'form-control' }
+.row
+
+%hr
+%h4= t('instance_admin.manage.search.saved_search')
+.row
+  .input-container.col-xs-12
+    .input-col-clearfix
+      = f.input :allow_save_search, as: :boolean, inline_label: true
+
+%hr
+%h4= t('instance_admin.manage.search.price_filters')
+
+.row
+  .input-container.col-xs-6
+    .input-col-clearfix
+      = f.input :show_price_slider, as: :boolean, inline_label: true
+
+  .input-container.col-xs-6
+    .input-col-clearfix
+      = f.input :search_price_types_filter, as: :boolean, inline_label: true
+
+= content_for :header_buttons do
+  = f.button :submit, t('instance_admin.save'), class: 'btn btn-blue pull-right', data: { 'submit-form' => 1, 'form-selector' => 'form' }

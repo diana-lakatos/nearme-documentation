@@ -28,7 +28,7 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
 
         geo_searcher_params = initialize_search_params
         if located || adjust_to_map
-          radius = PlatformContext.current.instance.search_radius.to_i
+          radius = @transactable_type.search_radius.to_i
           radius = search.radius.to_i if radius.zero?
           lat, lng = search.midpoint.nil? ? [0.0, 0.0] : search.midpoint.map(&:to_s)
           if !search.country.blank? && search.city.blank? || global_map
@@ -38,13 +38,13 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
           end
           Transactable.geo_search(geo_searcher_params.merge(@search_params).merge({distance: "#{radius}km", lat: lat, lon: lng}), @transactable_type)
         else
-          Transactable.regular_search(geo_searcher_params.merge(@search_params))
+          Transactable.regular_search(geo_searcher_params.merge(@search_params), @transactable_type)
         end
       end
   end
 
   def search
-    @search ||= ::Listing::Search::Params::Web.new(@params)
+    @search ||= ::Listing::Search::Params::Web.new(@params, @transactable_type)
   end
 
   def search_query_values
@@ -82,7 +82,7 @@ module InstanceType::Searcher::Elastic::GeolocationSearcher
   end
 
   def relative_availability?
-    @relative ||= PlatformContext.current.instance.date_pickers_relative_mode?
+    @relative ||= @transactable_type.date_pickers_relative_mode?
   end
 
   def available_listings(listings_scope)

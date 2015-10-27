@@ -1,4 +1,4 @@
-- if current_user && platform_context.display_saved_search? && HiddenUiControls.find('dashboard/saved_searches').visible?
+- if current_user && @searcher.transactable_type.display_saved_search? && HiddenUiControls.find('dashboard/saved_searches').visible?
 
   - content_for :domready do
     new Search.SaveSearchController($('#listing_search form'));

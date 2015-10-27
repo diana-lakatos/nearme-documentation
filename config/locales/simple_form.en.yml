@@ -68,7 +68,7 @@ en:
         support_imap_ssl: "Support IMAP SSL"
         olark_enabled: "Enable Olark support chat"
         tt_select_type: 'Listing type UI (Homepage)'
-        default_search_view: 'Service view'
+        listing_type_order: 'Listing type UI order (Homepage)'
         default_products_search_view: 'Products view'
         date_pickers: 'Enable date pickers'
         date_pickers_use_availability_rules: 'Use availability rules'
@@ -278,6 +278,13 @@ en:
         lessee: 'Lessee (e.g. guest)'
         action_rfq: 'Request for Quote'
         action_na: 'NO ACTION'
+        searchable: 'Enable search'
+        allow_save_search: 'Allow user to save search?'
+        search_price_types_filter: "Show price filters?"
+        show_price_slider: "Show price slider?"
+        show_date_pickers: "Show date pickers?"
+        show_categories: "Show categories?"
+        date_pickers_use_availability_rules: 'Use availability rules'
       user:
         biography: 'About me'
         sms_notifications_enabled: 'Enable Text Message Notifications'
@@ -296,6 +303,12 @@ en:
         language: "Language"
         time_zone: "Time zone"
         current_location: "Current location"
+      product_type:
+        searchable: 'Enable search'
+        allow_save_search: 'Allow user to save search?'
+        search_price_types_filter: "Show price filters?"
+        show_price_slider: "Show price slider?"
+        show_categories: "Show categories?"
 
 
       registration:

@@ -1,4 +1,5 @@
 = simple_form_for [:instance_admin, :buy_sell, @product_type], :html => { :multipart => true} do |f|
+  %input{ name: :action_name, type: :hidden, value: :edit }
   %h4 Basic Configuration
   .row
     .input-container.col-xs-12

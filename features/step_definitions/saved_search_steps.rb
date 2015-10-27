@@ -1,6 +1,6 @@
 Given(/^saved search enabled$/) do
-  Instance.find_each do |instance|
-    instance.saved_search = '1'
+  TransactableType.find_each do |instance|
+    instance.allow_save_search = true
     instance.save!
   end
 end

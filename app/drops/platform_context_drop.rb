@@ -24,8 +24,6 @@ class PlatformContextDrop < BaseDrop
   #   type of search for this marketplace as set by the marketplace admin from the marketplace administration interface
   # search_by_keyword_placeholder
   #   placeholder text for searching by keyword; usually is "Search by keyword" unless a translation key has been added for this string by the marketplace admin
-  # fulltext_search?
-  #   returns true if the searcher_type for this marketplace is either "fulltext" or "fulltext_category"
   # facebook_url
   #   url for the Facebook page of this marketplace
   # address
@@ -48,8 +46,6 @@ class PlatformContextDrop < BaseDrop
   #   hero_image.url returns the url of this hero_image
   # tagline
   #   tagline for this marketplace as string
-  # search_field_placeholder
-  #   placeholder text for search fields
   # homepage_content
   #   HTML for the homepage (theme) as set in the admin section by the marketplace admin
   # fulltext_geo_search?
@@ -75,8 +71,8 @@ class PlatformContextDrop < BaseDrop
   # search_input_name
   #   HTML name of the input element to be used in search pages
   delegate :name, :bookable_noun, :pages, :platform_context, :blog_url, :twitter_url, :lessor, :lessors, :lessee, :lessees,
-    :searcher_type, :search_by_keyword_placeholder, :fulltext_search?, :facebook_url, :address, :phone_number, :gplus_url,
-    :site_name, :support_url, :support_email, :logo_image, :hero_image,  :tagline, :homepage_content, :fulltext_geo_search?,
+    :search_by_keyword_placeholder, :facebook_url, :address, :phone_number, :gplus_url,
+    :site_name, :support_url, :support_email, :logo_image, :hero_image, :tagline, :homepage_content,
     :is_company_theme?, :call_to_action, :latest_products, :buyable?, :bookable?, :transactable_types, :product_types,
     :bookable_nouns, :bookable_nouns_plural, :search_input_name, to: :platform_context_decorator
 
@@ -84,11 +80,6 @@ class PlatformContextDrop < BaseDrop
   def initialize(platform_context_decorator)
     @platform_context_decorator = platform_context_decorator
     @instance = platform_context_decorator.instance
-  end
-
-  # search field placeholder as a string
-  def search_field_placeholder
-    @instance.search_text.blank? ? @platform_context_decorator.search_field_placeholder : @instance.search_text
   end
 
   # name of the bookable item for this marketplace (plural) as a string
@@ -136,19 +127,9 @@ class PlatformContextDrop < BaseDrop
     theme_color('blue')
   end
 
-  # array of category objects for this marketplace's service types
-  def service_categories
-    transactable_types.services.map{ |t| t.categories.searchable.roots }.flatten
-  end
-
-  # array of category objects for this marketplace's product types
-  def product_categories
-    product_types.map{ |t| t.categories.searchable.roots }.flatten
-  end
-
   # returns true if this marketplace has multiple service types defined
   def multiple_transactable_types?
-    transactable_types.many?
+    transactable_types.searchable.many?
   end
 
   # url for editing the notification preferences
@@ -156,57 +137,10 @@ class PlatformContextDrop < BaseDrop
     urlify(routes.edit_dashboard_notification_preferences_path)
   end
 
-  # returns true if the option to display the date pickers
-  # is set for this marketplace
-  def display_date_pickers?
-    @instance.date_pickers
-  end
-
   # returns the type of select for this marketplace to be used when
   # multiple service types are defined (e.g. radio, dropdown etc.)
   def tt_select_type
     @instance.tt_select_type
-  end
-
-  # returns the container class and input size to be used for the search area
-  # of the marketplace's homepage
-  def calculate_elements
-    sum = 2 #search button
-    sum += 4 if display_date_pickers?
-    sum += 2 if multiple_transactable_types? && tt_select_type != 'radio'
-    sum += 3 if category_search?
-    input_size = 12 - sum #span12
-    input_size /= 2 if fulltext_geo_search? #two input fields
-    container = input_size == 2 ? "span12" : "span10 offset1"
-    [container, input_size]
-  end
-
-  # returns the container class to be used for the search area
-  # of the marketplace's homepage
-  def calculate_container
-    calculate_elements[0]
-  end
-
-  # returns the input size to be used for the search area of the
-  # marketplace's homepage
-  def calculate_input_size
-    "span#{calculate_elements[1]}"
-  end
-
-  # returns true if the set marketplace searcher_type is "fulltext_category"
-  def fulltext_category_search?
-    @instance.searcher_type == 'fulltext_category'
-  end
-
-  # returns true if the set marketplace searcher_type is "geo_category"
-  def geo_category_search?
-    @instance.searcher_type == 'geo_category'
-  end
-
-  # returns true if the marketplace searcher_type has been set to either
-  # "fulltext_category" or "geo_category"
-  def category_search?
-    fulltext_category_search? || geo_category_search?
   end
 
   def project_space_wizard_path

@@ -1,7 +1,8 @@
 class Spree::Product::SearchFetcher
   extend ::NewRelic::Agent::MethodTracer
 
-  def initialize(filters = {})
+  def initialize(filters = {}, transactable_type)
+    @transactable_type = transactable_type
     @filters = filters
   end
 
@@ -10,7 +11,7 @@ class Spree::Product::SearchFetcher
     @products = filtered_products.order(order)
     @products = @products.search_by_query([:name, :description, :extra_properties], @filters[:query]) unless @filters[:query].blank?
     if categories.present?
-      if PlatformContext.current.instance.and_category_search?
+      if @transactable_type.and_category_search?
         @products = @products.
           joins(:categories_categorizables).
           where(categories_categorizables: {category_id: category_ids}).
@@ -34,7 +35,7 @@ class Spree::Product::SearchFetcher
   end
 
   def category_ids
-    if PlatformContext.current.instance.and_category_search?
+    if @transactable_type.and_category_search?
       categories.map(&:id)
     else
       categories.map{ |c| c.self_and_descendants.map(&:id) }.flatten.uniq

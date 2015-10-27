@@ -5,13 +5,13 @@ class InstanceType::SearcherFactory
   attr_accessor :factory_type, :transactable_type, :params
 
   def initialize(transactable_type, params, result_view, current_user)
+    @transactable_type = transactable_type
+    @result_view = result_view
     @factory_type = if Rails.configuration.force_disable_es
       DEFAULT_SEARCH_MODULE
     else
-      PlatformContext.current.instance.search_engine
+      @transactable_type.search_engine
     end
-    @result_view = result_view
-    @transactable_type = transactable_type
     @params = params
     @current_user = current_user
   end

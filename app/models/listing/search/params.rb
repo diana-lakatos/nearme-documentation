@@ -7,7 +7,7 @@ class Listing::Search::Params
   attr_accessor :geocoder
   attr_reader :availability, :price, :amenities, :options, :search_area, :midpoint, :bounding_box, :location
 
-  def initialize(options)
+  def initialize(options, transactable_type)
     @geocoder = Listing::Search::Geocoder
     @options = options.respond_to?(:deep_symbolize_keys) ? options.deep_symbolize_keys : options.symbolize_keys
 

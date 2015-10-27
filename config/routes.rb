@@ -324,6 +324,7 @@ DesksnearMe::Application.routes.draw do
       end
 
       resources :service_types do
+        get :search_settings, on: :member
         put :change_state, on: :member
         resources :custom_attributes, controller: 'service_types/custom_attributes'
         resources :custom_validators, controller: 'service_types/custom_validators'
@@ -387,18 +388,11 @@ DesksnearMe::Application.routes.draw do
       resources :waiver_agreement_templates, :only => [:index, :create, :update, :destroy]
 
       resource :wish_lists, only: [:show, :update]
-
-      namespace :search do
-        resource :settings, only: [:show, :update]
-        resource :elastic, only: [:show, :update], controller: 'elastic'
-        resource :product_types, only: [:show, :update] do
-          put :set_search, to: 'product_types#set_search'
-          put :set_custom_attribute, to: 'product_types#set_custom_attribute'
+      resource :search, only: [:show, :update], controller: 'search' do
+        collection do
+          put :sort_transactable_types
         end
-        resource :service_types, only: [:show, :update] do
-          put :set_search, to: 'service_types#set_search'
-          put :set_custom_attribute, to: 'service_types#set_custom_attribute'
-        end
+        resource :elastic, only: [:show, :update], controller: 'search/elastic'
       end
     end
 
@@ -422,6 +416,7 @@ DesksnearMe::Application.routes.draw do
       resource :configuration, only: [:show, :update], controller: 'configuration'
       resource :commissions, :only => [:show, :update], :controller => 'commissions'
       resources :product_types do
+        get :search_settings, on: :member
         resources :categories, except: [:new, :show], controller: 'product_types/categories' do
           member do
             get :jstree
